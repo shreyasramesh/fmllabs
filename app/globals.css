@@ -293,6 +293,33 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Mobile readability: larger base font on small screens */
+@media (max-width: 768px) {
+  html {
+    font-size: 17px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  body {
+    line-height: 1.6;
+  }
+}
+@media (max-width: 480px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+/* Override fixed pixel font sizes on mobile - they don't scale with html font-size */
+@media (max-width: 640px) {
+  .text-\[9px\] {
+    font-size: 0.75rem;
+  }
+  .text-\[10px\] {
+    font-size: 0.8125rem;
+  }
+}
+
 /* Element themes: light mode only - dark mode always uses original :root.dark */
 
 /* Air - muted yellow palette */

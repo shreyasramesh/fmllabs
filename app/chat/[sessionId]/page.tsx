@@ -1512,13 +1512,17 @@ export default function ChatPage() {
   const [sidebarOpen, setSidebarOpenState] = useState(true);
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (isAnonymous) {
+      setSidebarOpenState(true);
+      return;
+    }
     try {
       const stored = sessionStorage.getItem(SIDEBAR_STORAGE_KEY);
       setSidebarOpenState(stored === null ? true : stored === "true");
     } catch {
       /* ignore */
     }
-  }, []);
+  }, [isAnonymous]);
   const setSidebarOpen = useCallback((open: boolean) => {
     setSidebarOpenState(open);
     try {
@@ -1539,6 +1543,11 @@ export default function ChatPage() {
   const [overachieverMessage, setOverachieverMessage] = useState<string | null>(
     null
   );
+  const [isSafari, setIsSafari] = useState(false);
+  useEffect(() => {
+    if (typeof navigator === "undefined") return;
+    setIsSafari(/safari/i.test(navigator.userAgent) && !/chrome|crios/i.test(navigator.userAgent));
+  }, []);
 
   useEffect(() => {
     if (!libraryPanelOpen && !selectedMentalModel) return;
@@ -1828,9 +1837,9 @@ export default function ChatPage() {
             : "bg-background border-neutral-200 dark:border-neutral-800"
         }`}
       >
-        {/* Left: sidebar header (desktop only when sidebar open) */}
+        {/* Left: sidebar header (desktop only when sidebar open) - fades with sidebar */}
         <div
-          className={`hidden shrink-0 lg:flex w-72 items-center justify-between px-4 border-r ${incognitoMode ? "border-neutral-700 dark:border-neutral-300" : "border-neutral-200 dark:border-neutral-800"} ${!sidebarOpen ? "lg:hidden" : ""}`}
+          className={`hidden shrink-0 lg:flex w-72 items-center justify-between px-4 border-r overflow-hidden transition-[width,opacity] duration-300 ease-out ${incognitoMode ? "border-neutral-700 dark:border-neutral-300" : "border-neutral-200 dark:border-neutral-800"} ${sidebarOpen ? "lg:w-72 lg:opacity-100" : "lg:w-0 lg:min-w-0 lg:opacity-0 lg:pointer-events-none lg:border-r-0"}`}
         >
           <Link
             href="/"
@@ -1972,12 +1981,15 @@ export default function ChatPage() {
       </header>
 
       <div className="flex flex-1 min-h-0 overflow-hidden">
-      {/* Sidebar - fixed overlay on mobile; in-flow on desktop when open */}
+      {/* Sidebar - fixed overlay on mobile; in-flow on desktop when open. Fade in/out animation. */}
       <aside
-        className={`z-40 w-72 bg-background border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col min-h-0 transition-[transform,opacity] duration-300 ease-out
+        className={`z-40 w-72 bg-background border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col min-h-0 transition-[transform,opacity,width] duration-300 ease-out
           fixed inset-y-0 left-0 lg:static lg:inset-auto lg:translate-x-0
-          ${sidebarOpen ? "translate-x-0 opacity-100" : "-translate-x-full lg:translate-x-0 opacity-0 pointer-events-none"}
-          ${sidebarOpen ? "lg:flex" : "lg:hidden"}`}
+          ${sidebarOpen
+            ? "translate-x-0 opacity-100 lg:w-72"
+            : "-translate-x-full opacity-0 pointer-events-none lg:translate-x-0 lg:w-0 lg:min-w-0 lg:overflow-hidden lg:border-r-0"
+          }
+          lg:flex`}
       >
         {/* Mobile overlay: sidebar has its own header. Desktop: header is in shared top bar, no header here */}
         <div className="h-14 min-h-[44px] pt-[env(safe-area-inset-top)] shrink-0 lg:hidden">
@@ -1997,10 +2009,10 @@ export default function ChatPage() {
             </button>
           </div>
         </div>
-        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+        <div className="flex-1 min-h-0 flex flex-col overflow-y-auto overscroll-contain">
         {!isAnonymous && (
         <>
-        <div className="flex-1 min-h-0 flex flex-col overflow-hidden px-2 py-1.5">
+        <div className="flex-1 min-h-0 flex flex-col min-w-0 px-2 py-1.5">
           {/* New conversation - always visible at top of sidebar */}
           <Link
             href={incognitoMode ? "/chat/incognito" : "/chat/new"}
@@ -2347,14 +2359,12 @@ export default function ChatPage() {
         </div>
       </aside>
 
-      {/* Overlay when sidebar open on mobile */}
-      {sidebarOpen && (
-        <div
-          className={`fixed inset-0 bg-black/30 z-30 lg:hidden animate-fade-in ${featureTourStep === null ? "backdrop-blur-sm" : ""}`}
-          onClick={() => setSidebarOpen(false)}
-          aria-hidden
-        />
-      )}
+      {/* Overlay when sidebar open on mobile - fades in/out */}
+      <div
+        className={`fixed inset-0 bg-black/30 z-30 lg:hidden transition-opacity duration-300 ease-out ${featureTourStep === null ? "backdrop-blur-sm" : ""} ${sidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+        onClick={() => setSidebarOpen(false)}
+        aria-hidden
+      />
 
       {/* Main chat area */}
       <main className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
@@ -2882,7 +2892,7 @@ export default function ChatPage() {
             </div>
           )}
           <div className="flex flex-col items-center justify-center px-4 pt-2 pb-2 sm:pt-3 sm:pb-3 min-w-0 gap-1.5 sm:gap-2">
-            {voiceModeOpen ? (
+            {voiceModeOpen && !isAnonymous ? (
               <FullVoiceMode
                 embed
                 onClose={() => setVoiceModeOpen(false)}
@@ -2963,7 +2973,7 @@ export default function ChatPage() {
               </div>
               <VoiceInputButton
                 onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
-                onLongPress={() => setVoiceModeOpen(true)}
+                onLongPress={!isAnonymous ? () => setVoiceModeOpen(true) : undefined}
                 language={language}
                 disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                 ariaLabel="Voice input"
@@ -3082,10 +3092,10 @@ export default function ChatPage() {
                 <div className="flex items-center gap-2 shrink-0">
                   <VoiceInputButton
                     onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
-                    onLongPress={() => {
+                    onLongPress={!isAnonymous ? () => {
                       setInputExpandModalOpen(false);
                       setVoiceModeOpen(true);
-                    }}
+                    } : undefined}
                     language={language}
                     disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                     ariaLabel="Voice input"
@@ -3371,7 +3381,7 @@ export default function ChatPage() {
                             onKeyDown={(e) => e.key === "Enter" && handleMentalModelClick(id)}
                             className="relative h-full w-full transition-transform duration-300 [transform-style:preserve-3d] group-hover/tile:[transform:rotateY(180deg)] cursor-pointer"
                           >
-                            <div className="absolute inset-0 w-full h-full rounded-xl bg-neutral-100 dark:bg-neutral-800 text-white p-3 flex items-center justify-center [backface-visibility:hidden] border border-neutral-200 dark:border-neutral-700 overflow-hidden pointer-events-none" style={{ backgroundImage: `url(/images/${id.replace(/_/g, "-")}.png)`, backgroundSize: "cover", backgroundPosition: "center" }} aria-hidden>
+                            <div className={`absolute inset-0 w-full h-full rounded-xl bg-neutral-100 dark:bg-neutral-800 text-white p-3 flex items-center justify-center [backface-visibility:hidden] border border-neutral-200 dark:border-neutral-700 overflow-hidden pointer-events-none transition-opacity duration-300 ${isSafari ? "group-hover/tile:opacity-0" : ""}`} style={{ backgroundImage: `url(/images/${id.replace(/_/g, "-")}.png)`, backgroundSize: "cover", backgroundPosition: "center" }} aria-hidden>
                               <div className="absolute inset-0 bg-black/50" aria-hidden />
                               <span className="relative z-10 text-xs font-medium capitalize tracking-wide text-center line-clamp-3 drop-shadow-sm">{name}</span>
                             </div>
