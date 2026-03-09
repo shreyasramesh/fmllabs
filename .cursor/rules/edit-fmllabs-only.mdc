@@ -1,0 +1,12 @@
+---
+description: All edits must be in fmllabs only; do not modify and-then-what
+alwaysApply: true
+---
+
+# Edit fmllabs Only
+
+**Do not modify the `and-then-what` directory.** It is deprecated.
+
+- Make all code changes only in the `fmllabs` project
+- When editing files, use paths under `/Users/shrey/projects/fmllabs/` (or relative paths within this workspace)
+- Never edit files in `/Users/shrey/projects/and-then-what/`

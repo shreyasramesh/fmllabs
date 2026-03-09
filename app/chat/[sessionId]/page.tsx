@@ -1753,8 +1753,8 @@ export default function ChatPage() {
         }`}
       >
         <div className="h-14 px-4 flex items-center justify-between border-b border-neutral-200/80 dark:border-neutral-800 shrink-0">
-          <Link href="/" className="font-semibold text-lg text-foreground min-w-0">
-            fml labs
+          <Link href="/" className="font-semibold text-lg text-foreground min-w-0 truncate" title="figure my life (fml) labs">
+            figure my life (fml) labs
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -2039,16 +2039,6 @@ export default function ChatPage() {
                 Sign in
           </Link>
             )}
-          <Link
-              href="/chat/new"
-              onClick={() => setSidebarOpen(false)}
-              className="flex-shrink-0 w-11 h-11 rounded-full bg-accent hover:bg-accent/90 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-200 active:scale-95"
-              aria-label="New conversation"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                <path d="M12 5v14M5 12h14" />
-              </svg>
-            </Link>
           </div>
           <div className="flex flex-col items-center gap-1">
             <button
