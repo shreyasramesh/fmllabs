@@ -1,0 +1,97 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Pensamento Probabilístico
+# Modelo Mental / Viés Cognitivo - Exemplo de Entrada
+
+id: probabilistic_thinking
+name: Pensamento Probabilístico
+
+quick_introduction: |
+  O pensamento probabilístico é o hábito de raciocinar em termos de probabilidades
+  em vez de certezas. Em vez de "isso vai acontecer?", perguntamos "quão provável é
+  isso?". Ele abraça a incerteza e a usa para tomar melhores decisões.
+
+one_liner: Pense em probabilidades, não em certezas—abrace a incerteza.
+
+try_this:
+  - Substitua "vai acontecer?" por "quão provável é que aconteça?".
+  - Considere múltiplos cenários e atribua probabilidades aproximadas.
+  - Atualize suas crenças à medida que novas evidências chegam.
+
+ask_yourself:
+  - Estou pensando em termos binários quando probabilidades seriam mais precisas?
+  - Qual é a faixa de resultados plausíveis?
+
+in_more_detail: |
+  A maioria dos resultados do mundo real é incerta. O pensamento probabilístico
+  substitui o sim/não binário por crenças graduadas. Envolve considerar múltiplos
+  cenários, atribuir probabilidades aproximadas e atualizar à medida que as
+  evidências chegam. É o oposto da excessiva confiança e do pensamento em
+  preto e branco.
+
+  Práticas chave incluem: pensar em faixas, considerar taxas base, atualizar
+  crenças com evidências e distinguir entre risco (probabilidades conhecidas)
+  e incerteza (probabilidades desconhecidas). Melhora a calibração e a
+  qualidade da decisão.
+
+why_this_is_important: |
+  O pensamento probabilístico reduz a excessiva confiança, melhora a previsão e
+  leva a melhores decisões sob incerteza. É essencial para investir,
+  estratégia e qualquer domínio onde o futuro é incerto.
+
+when_to_use:
+  - tomada_de_decisao
+  - avaliacao_de_risco
+  - investimento
+  - resolucao_de_problemas
+
+how_can_you_spot_it:
+  likelihood_language: |
+    "Provavelmente", "é provável", "improvável" em vez de "vai" ou "não vai".
+  scenario_thinking: |
+    Considerar múltiplos futuros possíveis com probabilidades aproximadas.
+  calibration: |
+    Previsões que correspondem às frequências reais de resultados ao longo do tempo.
+  uncertainty_acknowledgment: |
+    Declarar explicitamente o que você não sabe.
+
+examples:
+  forecasting: |
+    "Acho que há 60% de chance de cumprirmos o prazo" em vez de "Nós
+    cumprimos o prazo".
+  investing: |
+    "Isso tem 30% de chance de 2x e 70% de chance de -50%" em vez de
+    "Isso vai bombar".
+  strategy: |
+    Planejar para múltiplos cenários (melhor, base, pior caso) com probabilidades aproximadas.
+  hiring: |
+    "Com base na entrevista, eu colocaria 70% de probabilidade de que eles
+    terão sucesso" em vez de "Eles são uma ótima contratação".
+
+real_world_implications: |
+  O pensamento probabilístico melhora a calibração, reduz surpresas e permite
+  melhor gerenciamento de risco. É central para previsão eficaz e
+  tomada de decisão sob incerteza.
+
+professional_application:
+  networking_and_relationship_building: |
+    Comunique-se em probabilidades quando apropriado — "Estou razoavelmente confiante" vs.
+    "Tenho certeza". Isso constrói confiança ao sinalizar humildade epistêmica.
+  collaborative_learning_initiative: |
+    Incentive as equipes a expressar incerteza. Use mercados de previsão ou
+    exercícios de calibração para melhorar o julgamento probabilístico.
+
+how_can_this_be_misapplied:
+  false_precision: |
+    Atribuir probabilidades exatas (por exemplo, 73%) quando você não pode ser tão preciso.
+  analysis_paralysis: |
+    Nunca agir porque "não podemos ter certeza".
+  hedging_overuse: |
+    Qualificar tudo a ponto de ser inútil.
+  dismissing_intuition: |
+    Supercorrigir para ignorar fortes sentimentos instintivos quando eles podem carregar informações válidas.
+
+related_content:
+  - bayes_theorem
+  - base_rate_fallacy
+  - illusion_of_control
+  - narrative_fallacy

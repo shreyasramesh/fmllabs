@@ -1,0 +1,106 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Efeito Dunning-Kruger
+# Modelo Mental / Viés Cognitivo - Exemplo de Entrada
+
+id: dunning_kruger_effect
+name: Efeito Dunning-Kruger
+
+quick_introduction: |
+  O efeito Dunning-Kruger descreve um viés cognitivo onde pessoas com conhecimento
+  ou habilidade limitada em um domínio superestimam sua competência, enquanto
+  especialistas tendem a subestimá-la. Quanto menos você sabe, mais confiante
+  você pode estar.
+
+one_liner: Quanto menos você sabe, mais confiante você pode estar.
+
+try_this:
+  - Em novos domínios, assuma que você está superconfiante — busque feedback e calibração.
+  - Quando especialistas expressarem dúvida, leve isso a sério; eles podem conhecer os casos excepcionais.
+  - Perceba quando novatos são mais certos do que especialistas em um campo.
+
+ask_yourself:
+  - Estou no "pico do Monte da Estupidez" ou no "vale da humildade"?
+  - Tenho a capacidade metacognitiva para avaliar minha própria competência aqui?
+
+in_more_detail: |
+  A pesquisa de Dunning e Kruger mostrou que indivíduos incompetentes
+  carecem da capacidade metacognitiva de reconhecer sua própria incompetência.
+  Para avaliar seu desempenho, você precisa das mesmas habilidades necessárias
+  para ter um bom desempenho — então os não qualificados são duplamente
+  desfavorecidos: eles têm um desempenho ruim e não sabem disso.
+
+  À medida que a competência aumenta, as pessoas frequentemente experimentam
+  um "vale da humildade" onde reconhecem o quanto não sabem. Verdadeiros
+  especialistas podem ter subconfiança porque estão agudamente cientes das
+  nuances e dos casos excepcionais.
+
+why_this_is_important: |
+  Reconhecer o efeito Dunning-Kruger ajuda você a calibrar sua própria
+  confiança, evitar superestimar as opiniões de novatos e apreciar a humildade
+  de especialistas. É essencial para aprendizado, contratação e tomada de
+  decisão.
+
+when_to_use:
+  - aprendizado
+  - tomada_de_decisão
+  - liderança
+  - movimentacoes_de_carreira
+
+how_can_you_spot_it:
+  novice_overconfidence: |
+    Alguém com pouca experiência expressa opiniões fortes e não qualificadas.
+  expert_underconfidence: |
+    Pessoas altamente qualificadas hesitam e expressam incerteza mais do que
+    pessoas menos qualificadas.
+  inability_to_recognize_quality: |
+    Pobres desempenhos não conseguem distinguir trabalho bom de ruim em seu domínio.
+  confidence_competence_mismatch: |
+    Confiança e habilidade real são inversamente correlacionadas entre iniciantes.
+
+examples:
+  social_media: |
+    Pessoas com conhecimento superficial de um tópico discutem confiantemente
+    com especialistas do domínio.
+  hiring: |
+    Candidatos que têm um desempenho ruim em entrevistas às vezes avaliam seu
+    próprio desempenho como alto.
+  investing: |
+    Novos investidores podem estar superconfiantes após vitórias iniciais,
+    sem reconhecer a sorte.
+  workplace: |
+    Funcionários juniores podem superestimar sua prontidão para promoção,
+    enquanto os seniores duvidam de si mesmos.
+
+real_world_implications: |
+  O efeito Dunning-Kruger afeta a educação, contratação, política e o
+  discurso público. Explica por que más ideias são amplificadas e por que
+  especialistas podem ser descartados. A calibração importa para a tomada
+  de decisão individual e coletiva.
+
+professional_application:
+  networking_and_relationship_building: |
+    Quando alguém está muito confiante, considere se ele pode estar na
+    zona Dunning-Kruger. Busque perspectivas diversas, incluindo aquelas de
+    pessoas que expressam incerteza.
+  collaborative_learning_initiative: |
+    Crie culturas onde admitir incerteza seja valorizado. Incentive
+    exercícios de calibração e feedback que ajudem as pessoas a avaliar
+    precisamente sua competência.
+
+how_can_this_be_misapplied:
+  dismissing_all_confidence: |
+    Assumir que pessoas confiantes estão sempre erradas; às vezes a confiança
+    é justificada.
+  false_modesty: |
+    Especialistas fingindo saber menos do que sabem para parecerem humildes.
+  gatekeeping: |
+    Usar Dunning-Kruger para descartar qualquer um que discorde de "especialistas"
+    sem engajar seus argumentos.
+  self_doubt_paralysis: |
+    Autocorreção a ponto de nunca confiar em seu próprio julgamento.
+
+related_content:
+  - circle_of_competence
+  - circle_of_competence
+  - confirmation_bias
+  - curse_of_knowledge

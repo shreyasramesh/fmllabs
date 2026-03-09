@@ -1,0 +1,106 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Endowment Effect
+# Mental Model / Cognitive Bias - Example Entry
+
+id: endowment_effect
+name: Endowment Effect
+
+quick_introduction: |
+  The endowment effect is the tendency to value something more highly simply
+  because we own it. We demand more to give up an object than we would pay
+  to acquire it. Ownership creates attachment that distorts our valuation.
+
+one_liner: We value what we own more than what we don't—ownership creates attachment.
+
+try_this:
+  - Ask: What would I pay to acquire this if I didn't own it?
+  - When selling, imagine you're buying—would you pay your asking price?
+  - Notice when ownership is inflating your valuation.
+
+ask_yourself:
+  - Am I overvaluing this because I own it?
+  - Would a neutral buyer agree with my price?
+
+in_more_detail: |
+  In experiments, people randomly given a mug demand roughly twice as much to
+  sell it as others are willing to pay to buy it. The mere fact of ownership
+  increases perceived value. This is related to loss aversion—giving up
+  something feels like a loss, and we're loss-averse. But the effect goes
+  beyond that: we incorporate owned things into our identity.
+
+  The endowment effect affects negotiations, consumer behavior, and
+  organizational change. It explains why people overvalue their homes,
+  their ideas, and their current roles. It creates friction in trades
+  and transitions.
+
+why_this_is_important: |
+  Recognizing the endowment effect helps you negotiate more effectively,
+  make clearer decisions about what to keep or let go, and understand
+  why others overvalue what they have. It also explains resistance to
+  change.
+
+when_to_use:
+  - decision-making
+  - negotiation
+  - investing
+  - career_moves
+
+how_can_you_spot_it:
+  ownership_premium: |
+    "I wouldn't sell it for that" when you wouldn't pay that to buy it.
+  attachment_to_possession: |
+    Valuing things more once we have them.
+  resistance_to_trading: |
+    Reluctance to trade or exchange even when it would be rational.
+  overvaluation_of_own_ideas: |
+    Our ideas, projects, or roles feel more valuable because they're ours.
+
+examples:
+  real_estate: |
+    Homeowners often overprice their homes—they value them more than
+    the market does.
+  negotiations: |
+    Sellers demand more than buyers will pay; the gap reflects
+    endowment effect.
+  career: |
+    Overvaluing our current job, company, or role when considering
+    a change.
+  ideas: |
+    "Not invented here" and "my idea" bias—we overvalue what we've
+    created or own.
+
+real_world_implications: |
+  The endowment effect creates market friction, slows beneficial
+  exchanges, and fuels resistance to change. It affects mergers,
+  reorganizations, and personal transitions. Understanding it
+  improves negotiation and change management.
+
+professional_application:
+  networking_and_relationship_building: |
+    When someone resists change, consider that they may be experiencing
+    endowment effect—they value the status quo more because they "own"
+    it. Frame change in terms of what they gain, not just what they give up.
+  collaborative_learning_initiative: |
+    When introducing new processes, acknowledge that people are attached
+    to current ways. Create psychological safety to "let go" of the
+    old before embracing the new.
+
+how_can_this_be_misapplied:
+  dismissing_legitimate_attachment: |
+    Some attachment is rational—sentimental value, switching costs.
+    Not all resistance is endowment effect.
+  manipulation: |
+    Creating false sense of ownership to extract higher prices (e.g.,
+    "try it for free" to trigger endowment).
+  undervaluing_continuity: |
+    Assuming all resistance to change is irrational when continuity
+    has real value.
+  cold_rationality: |
+    Dismissing emotional attachment as "just endowment effect" when
+    it reflects genuine values.
+
+related_content:
+  - loss_aversion_bias
+  - sunk_cost_fallacy
+  - anchoring_bias
+  - scarcity_bias

@@ -1,0 +1,93 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Availability Cascade
+# Mental Model / Cognitive Bias - Example Entry
+
+id: availability_cascade
+name: アベイラビリティ・カスケード
+
+quick_introduction: |
+  アベイラビリティ・カスケードとは、アイデアが公の議論で繰り返し共有されることで、そのもっともらしさを増していく自己強化的なプロセスです。議論されるほど「利用可能」になり、より多くの人がそれを信じるようになり、さらに議論されるようになります。集合的な信念は、その根拠となる真実にかかわらず、勢いを増します。
+
+one_liner: アイデアが繰り返されるほど、証拠にかかわらず、もっともらしく見える。
+
+try_this:
+  - Ask: Is this belief widespread because it's true, or because it's repeated? (この信念は、真実だから広まっているのか、それとも繰り返し共有されているから広まっているのか？)
+  - Seek primary sources before accepting "what everyone knows." (「みんなが知っていること」を受け入れる前に、一次情報源を探す。)
+  - Notice when repetition alone is driving your sense of plausibility. (繰り返しだけで、もっともらしさへの感覚が生まれていることに気づく。)
+
+ask_yourself:
+  - Would I believe this if I'd heard it only once? (一度しか聞いていなかったら、これを信じるだろうか？)
+  - Am I conflating "everyone says so" with "the evidence supports it"? (「みんながそう言っている」と「証拠がそれを支持している」を混同していないか？)
+
+in_more_detail: |
+  Timur KuranとCass Sunsteinは、アベイラビリティ・カスケードがどのように機能するかを説明しました：情報のアベイラビリティ（どれだけ頻繁に何かを聞くか）と、もっともらしさ（どれだけ信じやすいかに見えるか）は互いを強化します。メディア報道、ソーシャルメディア、公の議論は、特定のアイデアを増幅させます。アイデアがアベイラビリティのしきい値に達すると、たとえそれが偽りであったり誇張されていたりしても、急速に広まり「共通の知識」となる可能性があります。
+
+  アベイラビリティ・カスケードは、有益（重要な警告を広める）であることも、有害（パニックや誤情報を広める）であることもあります。これらは、アベイラビリティ・ヒューリスティックと社会的証明に駆動されます。
+
+why_this_is_important: |
+  アベイラビリティ・カスケードを認識することは、広範な信念が証拠を反映しているのか、それとも単なる繰り返しを反映しているのかを評価するのに役立ちます。これは、アイデアがどのようにバイラルになり、集合的な信念がどのように間違っているのかを説明します。メディアリテラシーと批判的思考にとって不可欠です。
+
+when_to_use:
+  - 意思決定 (decision-making)
+  - リスク評価 (risk_assessment)
+  - 学習 (learning)
+  - リーダーシップ (leadership)
+
+how_can_you_spot_it:
+  repetition_plausibility_spiral: |
+    アイデアが繰り返されるほど、もっともらしく見える。
+  media_amplification: |
+    報道が信念を駆動し、信念がさらなる報道を駆動する。
+  social_proof_belief: |
+    「みんなが信じている」が、信念の証拠となる。
+  threshold_effects: |
+    アイデアが可視性のしきい値を超えると、急速に広がる。
+
+examples:
+  health_scares: |
+    ある研究が製品が危険だと示唆し、メディアがそれを増幅させ、
+    人々はそれを避けるようになり、さらに報道が続く。リスクは
+    誇張されている可能性がある。
+  financial_panic: |
+    銀行破綻の噂が広まり、人々が預金を引き出し、その取り付け騒ぎは
+    自己成就的になる。
+  social_media: |
+    ある物語がバイラルになり、繰り返しが信念を増し、信念が
+    共有を増す。真実とバイラル性は乖離しうる。
+  organizational: |
+    人員削減に関する噂が広まり、不安が増し、行動が変化し、
+    その反応を通じて噂はもっともらしさを増す。
+
+real_world_implications: |
+  アベイラビリティ・カスケードは、世論、政策、市場を形成します。
+  これらは、重要な真実と危険な虚偽の両方を広める可能性があります。
+  批判的思考には、証拠に基づいた信念と、カスケード駆動の信念を
+  区別することが必要です。
+
+professional_application:
+  networking_and_relationship_building: |
+    あるアイデアが「どこにでもある」とき、「それは真実だから
+    繰り返されているのか、それとも真実だから繰り返されているのか？」と問う。
+    一次情報源を探す。
+  collaborative_learning_initiative: |
+    増幅する前に検証する規範を作成する。「みんなが知っていること」を
+    疑問視することを奨励する。証拠を反映したコンセンサスと、
+    アベイラビリティを反映したコンセンサスを区別する。
+
+how_can_this_be_misapplied:
+  dismissing_all_consensus: |
+    時には広範な信念は正しい。すべての一般的なアイデアが
+    カスケードであると仮定しない。
+  conspiracy_thinking: |
+    「アベイラビリティ・カスケード」を使用して、正当な懸念を
+    作為的なものとして却下する。
+  false_skepticism: |
+    人気があるという理由で、よく裏付けられたアイデアを拒否する。
+  contrarianism: |
+    広く信じられていることは何でも間違っていると仮定する。
+
+related_content:
+  - availability_heuristic
+  - confirmation_bias
+  - groupthink
+  - bystander_effect

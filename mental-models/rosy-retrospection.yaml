@@ -1,0 +1,103 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Rosy Retrospection
+# Mental Model / Cognitive Bias - Example Entry
+
+id: rosy_retrospection
+name: Rosy Retrospection
+
+quick_introduction: |
+  Rosy retrospection is the tendency to remember the past as better than it was.
+  We recall past experiences more positively over time, smoothing over difficulties
+  and amplifying the good. "The good old days" often weren't as good as we remember.
+
+one_liner: We remember the past as better than it was—"the good old days" weren't that good.
+
+try_this:
+  - When comparing to the past, ask: What was I actually feeling then?
+  - Keep a journal to compare memory with reality later.
+  - Notice when nostalgia is coloring your judgment of the present.
+
+ask_yourself:
+  - Am I idealizing the past?
+  - Would I have been happy then if I could time-travel back?
+
+in_more_detail: |
+  We tend to remember positive aspects of past experiences and forget or
+  minimize the negative. Vacations, jobs, and relationships feel better in
+  nostalgia than they did in the moment. This can lead to unrealistic
+  comparisons—we judge the present against an idealized past.
+
+  Rosy retrospection affects decision-making when we repeat past choices
+  expecting the same (remembered) outcome. It can also fuel nostalgia for
+  eras that were objectively worse. It's the opposite of negativity bias
+  in memory.
+
+why_this_is_important: |
+  Recognizing rosy retrospection helps you make more realistic comparisons
+  and avoid repeating past mistakes based on idealized memories. It also
+  explains why we sometimes long for the past despite current progress.
+
+when_to_use:
+  - decision-making
+  - career_moves
+  - relationship_building
+  - learning
+
+how_can_you_spot_it:
+  idealized_past: |
+    "Things were better back then" when objective measures may show otherwise.
+  selective_positive_memory: |
+    Remembering the good and forgetting the bad from past experiences.
+  nostalgia_as_evidence: |
+    Using fond memories as evidence that past choices were right.
+  present_undervaluation: |
+    The present feels worse than it is because we compare to an idealized past.
+
+examples:
+  career: |
+    "My old job was great" when you left for good reasons—memory has smoothed
+    over the frustrations.
+  relationships: |
+    "We were so happy" about a past relationship—forgetting the conflicts that
+    led to its end.
+  childhood: |
+    "Kids had it better in my day" when many objective measures (health,
+    safety, opportunity) have improved.
+  projects: |
+    "That project went smoothly" when it actually had many delays—we remember
+    the outcome, not the process.
+
+real_world_implications: |
+  Rosy retrospection affects life satisfaction, career decisions, and
+  nostalgia-driven choices. It can lead to repeating past mistakes or
+  unrealistic comparisons. It also explains the appeal of "back to the
+  good old days" rhetoric.
+
+professional_application:
+  networking_and_relationship_building: |
+    When considering reconnecting with past colleagues or returning to past
+    roles, separate nostalgia from reality. Document your reasons for
+    leaving at the time; review them before returning.
+  collaborative_learning_initiative: |
+    In retrospectives, use contemporaneous notes or data rather than memory
+    to evaluate what actually happened. Memory smooths over difficulties.
+
+how_can_this_be_misapplied:
+  dismissing_nostalgia: |
+    Not all nostalgia is misleading—sometimes the past was genuinely better
+    in some ways.
+  invalidating_memories: |
+    Telling people their positive memories are "wrong" when they may reflect
+    genuine subjective experience.
+  overcorrection: |
+    Assuming the past was always worse than we remember—sometimes it was
+    better.
+  present_bias: |
+    Using rosy retrospection as an excuse to dismiss legitimate concerns
+    about current decline.
+
+related_content:
+  - hindsight_bias
+  - negativity_bias
+  - availability_heuristic
+  - impact_bias

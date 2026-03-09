@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Second-Order Thinking
+# Mental Model / Cognitive Bias - Example Entry
+
+id: second_order_thinking
+name: 二阶思维
+
+quick_introduction: |
+  二阶思维是指考虑行动的行动所带来的后果。一阶思维问“如果我做X会发生什么？”二阶思维则问“然后呢？”以及“在那之后又会怎样？”它能显现出意料之外的影响。
+
+one_liner: 问“然后呢？”——考虑后果的后果。
+
+try_this:
+  - 对于任何决定，至少问两次“然后呢？”。
+  - 考虑别人将如何回应你的行动——以及他们对那个回应的回应。
+  - 注意一阶效应在连锁反应中是否会逆转或变得复杂。
+
+ask_yourself:
+  - 我是否已考虑过二阶（及三阶）效应？
+  - 我可能忽略了哪些意料之外的后果？
+
+in_more_detail: |
+  霍华德·马克斯（Howard Marks）在投资领域推广了这一概念。一阶思维：“这将上涨。”二阶思维：“如果它上涨，别人会注意到，更多人会买入，它会涨得更高——直到它被高估并崩盘。”后果的连锁反应常常会逆转或使一阶效应变得复杂。
+
+  二阶思维更难——它需要更多的脑力劳动和想象力。但它可以防止许多错误。好的战略家会提前几步思考，并考虑别人将如何回应。
+
+why_this_is_important: |
+  二阶思维可以防止意料之外的后果，并提高决策质量。它对于战略、政策以及任何行动会引发反应的领域都至关重要。
+
+when_to_use:
+  - 决策
+  - 问题解决
+  - 策略
+  - 风险评估
+
+how_can_you_spot_it:
+  consequence_chains: |
+    “如果我做X，就会发生Y，然后发生Z……”
+  reaction_anticipation: |
+    考虑别人将如何回应你的行动。
+  unintended_effects: |
+    寻找副作用和反馈循环。
+  reversals: |
+    与一阶效应相矛盾或逆转的二阶效应。
+
+examples:
+  investing: |
+    “如果每个人都认为这是一项好投资，那么它可能已经很拥挤了——
+    优势可能已经消失。”
+  policy: |
+    “如果我们补贴X，需求会增加，价格会上升——补贴真的有帮助吗？”
+  negotiation: |
+    “如果我在这里强硬施压，他们会在那里进行报复——净效应是什么？”
+  incentives: |
+    “如果我们奖励这个指标，人们就会钻空子——他们实际上会做什么？”
+
+real_world_implications: |
+  二阶思维是战略思维的标志。它可以防止政策失败、意料之外的激励措施和天真的乐观主义。它区分了优秀和卓越的决策者。
+
+professional_application:
+  networking_and_relationship_building: |
+    在采取行动之前，问：“他们会如何回应？我将如何回应他们的回应？”考虑关系动态，而不仅仅是眼前的交流。
+  collaborative_learning_initiative: |
+    在规划中，进行“然后呢？”的练习。绘制后果链。在意料之外的效应出现之前就识别它们。
+
+how_can_this_be_misapplied:
+  analysis_paralysis: |
+    思考的步骤过多，以至于从未采取行动。
+  false_complexity: |
+    假设二阶效应总是占主导地位，而实际上可能一阶效应就已足够。
+  overconfidence: |
+    相信你能预测长串的后果，而事实上不确定性会累积。
+  pessimism: |
+    总是在后果链中假设最坏的情况。
+
+related_content:
+  - inversion
+  - pareto_principle
+  - map_is_not_the_territory
+  - bayes_theorem

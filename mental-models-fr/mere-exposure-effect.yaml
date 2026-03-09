@@ -1,0 +1,102 @@
+id: mere_exposure_effect
+name: Effet de la simple exposition
+
+quick_introduction: |
+  L'effet de la simple exposition est la tendance à développer une préférence pour les choses
+  simplement parce que nous y sommes familiers. Une exposition répétée, même sans
+  renforcement, augmente l'appréciation. Nous avons tendance à préférer ce que nous connaissons.
+
+one_liner: La familiarité engendre l'affection — nous préférons ce que nous avons déjà vu.
+
+try_this:
+  - Demandez : Est-ce que j'aime ceci parce que c'est bien, ou parce que c'est familier ?
+  - Lors de l'évaluation d'options, corrigez l'exposition : les nouvelles choses commencent avec un désavantage.
+  - Remarquez quand la répétition influence votre préférence.
+
+ask_yourself:
+  - Est-ce que je préfère quelque chose principalement parce que je l'ai déjà vu auparavant ?
+  - Choisirais-je différemment si l'exposition était égale ?
+
+in_more_detail: |
+  Robert Zajonc a montré que l'exposition répétée à des stimuli (visages, mots, formes)
+  augmente l'affect positif à leur égard, même lorsque nous n'avons pas
+  consciemment conscience de l'exposition. La familiarité engendre l'affection, et non le mépris (dans de nombreux
+  cas). L'effet est plus fort lorsque nous n'analysons pas et lorsque l'exposition
+  est subtile.
+
+  L'effet de la simple exposition affecte la préférence pour les marques, l'attraction interpersonnelle
+  et le jugement esthétique. Il explique pourquoi nous préférons la musique familière,
+  pourquoi la publicité fonctionne par répétition, et pourquoi nous pouvons préférer
+  les personnes que nous avons déjà vues, même sans interaction.
+
+why_this_is_important: |
+  Reconnaître l'effet de la simple exposition vous aide à comprendre vos propres
+  préférences et à résister à la manipulation par la répétition. Il explique également
+  pourquoi la visibilité et la présence sont importantes pour les relations et les
+  marques. La familiarité est une influence puissante mais souvent inconsciente.
+
+when_to_use:
+  - construction_relations
+  - prise_de_decision
+  - leadership
+  - apprentissage
+
+how_can_you_spot_it:
+  familiarity_preference: |
+    Préférer les options que nous avons déjà vues à celles qui sont nouvelles.
+  repetition_influence: |
+    L'exposition répétée augmente l'appréciation sans persuasion explicite.
+  unconscious_influence: |
+    L'effet fonctionne même lorsque nous n'avons pas conscience de l'exposition.
+  brand_recognition: |
+    Les marques familières sont préférées même lorsque nous ne pouvons pas expliquer pourquoi.
+
+examples:
+  advertising: |
+    L'exposition répétée à une marque augmente la préférence, même sans
+    messages persuasifs.
+  music: |
+    Les chansons que nous avons déjà entendues ont tendance à être plus appréciées que les nouvelles
+    dès la première écoute.
+  people: |
+    Nous avons tendance à apprécier davantage les personnes que nous avons vues à plusieurs reprises (par exemple, camarades de classe,
+    collègues) que les étrangers, même sans interaction.
+  ideas: |
+    Les idées que nous avons rencontrées auparavant nous semblent plus confortables et
+    crédibles que les nouvelles.
+
+real_world_implications: |
+  L'effet de la simple exposition façonne le comportement des consommateurs, les préférences politiques
+  et l'attraction sociale. Il est exploité dans le marketing
+  et peut créer des avantages déloyaux pour le familier. Il explique également
+  pourquoi la diversité d'exposition est importante : la familiarité avec
+  la différence réduit les biais.
+
+professional_application:
+  networking_and_relationship_building: |
+    La visibilité compte. Se présenter, être présent et être
+    vu crée une familiarité qui renforce l'affection. Ne sous-estimez pas
+    la valeur des contacts répétés à faible enjeu.
+  collaborative_learning_initiative: |
+    Exposez les gens à diverses perspectives et personnes de manière répétée ;
+    la familiarité peut réduire les biais. Mais sachez que la simple exposition
+    peut également renforcer la préférence pour le statu quo.
+
+how_can_this_be_misapplied:
+  manipulation: |
+    Créer délibérément une exposition répétée pour manipuler
+    les préférences sans consentement.
+  false_familiarity: |
+    Supposer que la familiarité équivaut à la qualité ; parfois, les
+    options nouvelles sont meilleures.
+  exclusion: |
+    Si seules certaines personnes bénéficient de l'exposition, elles obtiennent un avantage déloyal.
+    Considérez qui a accès à la visibilité.
+  stagnation: |
+    S'appuyer excessivement sur la familiarité et ne jamais essayer de nouvelles choses.
+
+related_content:
+  - ben_franklin_effect
+  - availability_heuristic
+  - baader_meinhof_phenomenon
+  - halo_effect

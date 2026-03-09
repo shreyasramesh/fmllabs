@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Empathy Gap
+# Mental Model / Cognitive Bias - Example Entry
+
+id: empathy_gap
+name: Empathy Gap
+
+quick_introduction: |
+  The empathy gap is the difficulty of understanding and predicting the mental
+  states of others when we're in a different state ourselves. When we're
+  calm, we underestimate how we'll feel when angry or hungry. When we're
+  full, we underestimate how much we'll want food when hungry.
+
+one_liner: We underestimate how we'll feel—and how others feel—in different states.
+
+try_this:
+  - When calm, make commitments for when you'll be stressed; pre-commit.
+  - Don't judge others in a state you're not in—hungry, tired, scared.
+  - Ask: Am I projecting my current state onto my future self or others?
+
+ask_yourself:
+  - Am I underestimating how I'll feel in a different state?
+  - Would I understand this person better if I were in their state?
+
+in_more_detail: |
+  We have trouble imagining how we'll feel in different circumstances—and
+  how others feel when they're in states we're not currently in. A sober
+  person underestimates the pull of addiction. A well-rested person
+  underestimates the impact of sleep deprivation. We project our current
+  state onto others and onto our future selves.
+
+  The empathy gap affects decisions we make for our future selves (e.g.,
+  committing to exercise when we're motivated), decisions we make for
+  others, and our ability to understand people in different states.
+
+why_this_is_important: |
+  Recognizing the empathy gap improves decision-making for future you,
+  empathy for others, and understanding of our own variability. It
+  explains why we make commitments we can't keep and why we misunderstand
+  others in distress.
+
+when_to_use:
+  - decision-making
+  - relationship_building
+  - leadership
+  - conflict_resolution
+
+how_can_you_spot_it:
+  current_state_projection: |
+    Assuming others feel as we do now, or that future we will feel as we
+    do now.
+  underestimating_emotional_state: |
+    "What's the big deal?" when we're not in the state they're in.
+  commitment_failures: |
+    Making choices based on current motivation that we won't follow through
+    on when motivation fades.
+  misunderstanding_others: |
+    Dismissing others' experiences because we can't imagine them from our
+    current state.
+
+examples:
+  hunger: |
+    Grocery shopping when full—we buy less than we'll want when hungry.
+  addiction: |
+    Non-addicts underestimate the difficulty of quitting; addicts in
+    recovery may underestimate the pull when they're using.
+  conflict: |
+    When calm, we underestimate how we'll react in the moment of
+    confrontation.
+  motivation: |
+    Signing up for a 6am class when we're motivated—and not going when
+    we're sleepy.
+
+real_world_implications: |
+  The empathy gap affects addiction treatment, policy, and interpersonal
+  understanding. It explains why we make commitments we break and why we
+  often fail to understand others' perspectives. It's a barrier to
+  empathy and good decision-making.
+
+professional_application:
+  networking_and_relationship_building: |
+    When someone is stressed, angry, or in a different state, don't
+    assume they'll reason as you would. Try to imagine their state.
+    When making commitments, consider how you'll feel when motivation
+    fades.
+  collaborative_learning_initiative: |
+    When planning, consider how the team will feel when tired, under
+    pressure, or frustrated. Design for those states, not just the
+    motivated planning state.
+
+how_can_this_be_misapplied:
+  overattribution: |
+    Dismissing all misunderstanding as "empathy gap" when sometimes
+    people genuinely have different values.
+  excusing_behavior: |
+    "They couldn't help it—empathy gap" when people are responsible
+    for managing their states.
+  false_relativism: |
+    Assuming we can never understand others when we can improve with
+    effort and experience.
+  self_excuse: |
+    Using the empathy gap to justify our own failures of follow-through.
+
+related_content:
+  - impact_bias
+  - hyperbolic_discounting
+  - fundamental_attribution_error
+  - availability_heuristic

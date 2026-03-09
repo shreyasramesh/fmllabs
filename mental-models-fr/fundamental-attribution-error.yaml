@@ -1,0 +1,88 @@
+id: fundamental_attribution_error
+name: Erreur d'attribution fondamentale
+
+quick_introduction: |
+  L'erreur d'attribution fondamentale est la tendance à attribuer le comportement des autres
+  à leur caractère ou à leur personnalité, tout en attribuant notre propre comportement à
+  des facteurs situationnels. Nous jugeons les autres par leurs actions et nous-mêmes par nos
+  intentions.
+
+one_liner: Nous jugeons les autres par leurs actions, nous-mêmes par nos intentions.
+
+try_this:
+  - Quand quelqu'un vous frustre, demandez : Quels facteurs situationnels pourraient expliquer cela ?
+  - Appliquez aux autres la même générosité que vous vous appliquez à vous-même.
+  - Remarquez quand vous attribuez le comportement des autres au caractère, et non aux circonstances.
+
+ask_yourself:
+  - Expliquerais-je mon propre comportement de la même manière que j'explique le leur ?
+  - Qu'est-ce que je pourrais manquer concernant leur situation ?
+
+in_more_detail: |
+  Quand quelqu'un nous coupe la route dans la circulation, nous pensons "quel imbécile". Quand nous coupons la route à quelqu'un, nous pensons "j'étais obligé, j'étais pressé". Nous expliquons nos propres échecs par la circonstance ("la circulation était terrible") et les échecs des autres par la disposition ("ils sont paresseux"). L'inverse est vrai pour le succès : nous nous attribuons le mérite, nous attribuons le succès des autres à la chance.
+
+  L'erreur est "fondamentale" car elle est omniprésente et persistante. Elle
+  mine l'empathie, alimente les conflits et fausse l'évaluation des performances.
+
+why_this_is_important: |
+  Reconnaître l'erreur d'attribution fondamentale améliore les relations,
+  réduit les conflits et conduit à des jugements plus justes. Elle encourage à considérer
+  le contexte avant de conclure que quelqu'un "est" d'une certaine manière.
+
+when_to_use:
+  - construction_relations
+  - resolution_conflits
+  - leadership
+  - prise_decision
+
+how_can_you_spot_it:
+  dispositional_explanation_for_others: |
+    "C'est juste le genre de personne" pour expliquer le comportement des autres.
+  situational_explanation_for_self: |
+    "Je n'avais pas le choix" ou "Les circonstances m'ont obligé" pour expliquer le nôtre.
+  character_vs_context: |
+    Supposer le caractère alors que la situation pourrait expliquer le comportement.
+  asymmetric_standards: |
+    Tenir les autres à des normes plus strictes que celles que nous nous imposons.
+
+examples:
+  traffic: |
+    L'erreur d'un autre conducteur = "mauvais conducteur". Notre erreur = "situation inévitable".
+  workplace: |
+    Le délai manqué d'un collègue = "irresponsable". Notre délai manqué =
+    "surchargé et personne n'aurait pu faire mieux".
+  politics: |
+    Les opinions des opposants = "ils sont stupides ou méchants". Nos opinions = "réponse rationnelle
+    aux faits".
+  performance: |
+    Le succès des autres = "chanceux". Notre succès = "mérité grâce à un travail acharné".
+
+real_world_implications: |
+  L'erreur d'attribution fondamentale alimente les conflits, nuit au travail d'équipe et
+  fausse l'embauche et l'évaluation des performances. La corriger améliore
+  la culture organisationnelle et les relations personnelles.
+
+professional_application:
+  networking_and_relationship_building: |
+    Quand quelqu'un vous déçoit, demandez "Quels facteurs situationnels pourraient expliquer cela ?" avant de conclure qu'il est peu fiable ou difficile.
+  collaborative_learning_initiative: |
+    Dans les retours et les évaluations, encouragez les interprétations "la situation d'abord".
+    Formez les managers à considérer le contexte avant d'attribuer au caractère.
+
+how_can_this_be_misapplied:
+  excusing_all_behavior: |
+    Rejeter chaque action comme "situationnelle" alors que certains comportements reflètent
+    le caractère.
+  no_accountability: |
+    Utiliser l'erreur pour éviter de tenir les gens responsables des choix qu'ils ont faits.
+  self_deprecation: |
+    Surcorrection pour toujours se blâmer soi-même et ne jamais reconnaître la responsabilité des autres.
+  ignoring_patterns: |
+    Quand quelqu'un se comporte mal de manière répétée dans différentes situations, la disposition peut
+    être pertinente.
+
+related_content:
+  - hanlons_razor
+  - in_group_bias
+  - confirmation_bias
+  - halo_effect

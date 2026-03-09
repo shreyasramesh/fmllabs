@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# La carte n'est pas le territoire
+# Modèle Mental / Biais Cognitif - Entrée d'exemple
+
+id: map_is_not_the_territory
+name: La carte n'est pas le territoire
+
+quick_introduction: |
+  "La carte n'est pas le territoire" signifie qu'une représentation de la réalité n'est pas la réalité
+  elle-même. Les modèles, les théories et les descriptions sont des simplifications utiles, mais ils
+  laissent toujours quelque chose de côté. Confondre la carte avec le territoire mène à l'erreur.
+
+one_liner: La carte n'est pas le territoire — tous les modèles sont faux ; certains sont utiles.
+
+try_this:
+  - Quand un modèle ne correspond pas à la réalité, mettez à jour la carte — ne forcez pas la réalité à s'y conformer.
+  - Demandez : Qu'est-ce que ce modèle laisse de côté ? Quand pourrait-il échouer ?
+  - Traitez les modèles comme des outils, pas comme la vérité.
+
+ask_yourself:
+  - Est-ce que je confonds mon modèle avec la réalité ?
+  - Le territoire a-t-il changé depuis ma dernière observation ?
+
+in_more_detail: |
+  Alfred Korzybski a introduit cette idée dans la sémantique générale. Une carte d'une ville est
+  utile pour la navigation, mais ce n'est pas la ville — elle omet les détails, devient obsolète et
+  ne peut jamais tout capturer. Il en va de même pour les modèles mentaux, les théories scientifiques
+  et les organigrammes.
+
+  Tous les modèles sont faux ; certains sont utiles. Le danger est de traiter un modèle comme s'il
+  était la vérité entière, surtout lorsque le territoire a changé. Une bonne réflexion
+  exige de mettre à jour les cartes lorsque la réalité ne correspond pas.
+
+why_this_is_important: |
+  Reconnaître que les cartes diffèrent du territoire évite la surconfiance dans les modèles,
+  encourage la mise à jour des croyances et réduit le risque d'agir sur des informations obsolètes ou
+  simplifiées à l'excès.
+
+when_to_use:
+  - prise_de_decision
+  - resolution_de_problemes
+  - apprentissage
+  - evaluation_des_risques
+
+how_can_you_spot_it:
+  model_reality_confusion: |
+    Traiter un cadre ou une théorie comme s'il décrivait pleinement la réalité.
+  outdated_assumptions: |
+    Agir sur la base d'informations ou de modèles qui ne correspondent plus aux conditions actuelles.
+  oversimplification: |
+    Ignorer les nuances parce que la "carte" ne les inclut pas.
+  map_worship: |
+    Défendre un modèle lorsque des preuves le contredisent plutôt que de le mettre à jour.
+
+examples:
+  organizational_charts: |
+    Supposer que la structure hiérarchique reflète la façon dont le travail est réellement effectué.
+  financial_models: |
+    Traiter une projection de tableur comme une prédiction plutôt qu'un scénario.
+  stereotypes: |
+    Appliquer des généralisations de groupe à des individus.
+  strategy_docs: |
+    Exécuter un plan tel qu'il est écrit lorsque le marché a évolué.
+
+real_world_implications: |
+  La distinction carte-territoire est fondamentale pour la science, l'ingénierie et
+  la philosophie. Elle sous-tend la mise à jour bayésienne, la méthodologie agile et l'humilité épistémique. L'ignorer
+  conduit à une pensée rigide et à des stratégies échouées.
+
+professional_application:
+  networking_and_relationship_building: |
+    Votre modèle mental d'une personne peut être obsolète. Mettez-le à jour par une interaction directe
+    plutôt que de vous fier à de vieilles impressions.
+  collaborative_learning_initiative: |
+    Encouragez les équipes à traiter les plans et les modèles comme des hypothèses à tester et à
+    réviser, et non comme des vérités figées.
+
+how_can_this_be_misapplied:
+  radical_skepticism: |
+    Conclure qu'aucune carte n'est utile et que toute connaissance est suspecte.
+  constant_revision: |
+    Mettre à jour si fréquemment qu'aucune compréhension stable n'émerge.
+  dismissing_models: |
+    Rejeter des simplifications utiles parce qu'elles ne sont "pas le territoire".
+  relativism: |
+    Prétendre que toutes les cartes sont également valides alors que certaines correspondent clairement mieux au territoire.
+
+related_content:
+  - narrative_fallacy
+  - confirmation_bias
+  - bayes_theorem
+  - illusion_of_control

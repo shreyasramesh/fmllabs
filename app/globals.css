@@ -1,0 +1,282 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Message entrance animation */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.35s ease-out forwards;
+}
+
+/* What I can do: swipe right (left to right) */
+@keyframes swipe-right {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.animate-swipe-right {
+  animation: swipe-right 0.25s ease-out forwards;
+}
+
+/* What I can do: reveal down (top to bottom) */
+@keyframes reveal-down {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-reveal-down {
+  animation: reveal-down 0.25s ease-out forwards;
+}
+
+/* Fade out to top */
+@keyframes fade-out-up {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+.animate-fade-out-up {
+  animation: fade-out-up 0.25s ease-in forwards;
+}
+
+/* Overlay fade */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out forwards;
+}
+
+/* Ensure loading animations run (Tailwind can be purged or overridden) */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+@keyframes dots {
+  0%, 20% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Softer cursor blink (~530ms cycle, smooth opacity) */
+@keyframes cursor-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+.animate-cursor-blink {
+  animation: cursor-blink 1s ease-in-out infinite;
+}
+.animate-dots {
+  animation: dots 1.4s ease-in-out infinite both;
+}
+
+/* Bouncing dots for loading states */
+@keyframes bounce-dot {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px);
+  }
+}
+.animate-bounce-dot {
+  animation: bounce-dot 1.4s ease-in-out infinite both;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+.animate-shimmer {
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Subtle shimmer for Generate button - less jitter */
+@keyframes shimmer-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.92; }
+}
+.animate-shimmer-subtle {
+  animation: shimmer-subtle 2.5s ease-in-out infinite;
+}
+
+/* Shimmer sweep for Generate button text - light streak moves across */
+@keyframes shimmer-sweep {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Shimmer on hover - like Cursor's "Planning next moves" */
+.shimmer-text-hover {
+  background: linear-gradient(
+    90deg,
+    var(--foreground) 0%,
+    var(--foreground) 38%,
+    color-mix(in srgb, var(--foreground) 55%, white) 50%,
+    var(--foreground) 62%,
+    var(--foreground) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-position: 200% 0;
+}
+.shimmer-text-hover:hover {
+  animation: shimmer-sweep 1.2s ease-out forwards;
+}
+
+.animate-shimmer-sweep {
+  background: linear-gradient(
+    90deg,
+    currentColor 0%,
+    currentColor 38%,
+    color-mix(in srgb, currentColor 70%, white 50%) 50%,
+    currentColor 62%,
+    currentColor 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-sweep 2.5s ease-in-out infinite;
+}
+
+@keyframes celebrate-scale {
+  0% { transform: scale(0.9); opacity: 0; }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-celebrate {
+  animation: celebrate-scale 0.4s ease-out forwards;
+}
+
+@keyframes marquee-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+@keyframes marquee-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+.animate-marquee-left {
+  animation: marquee-left 45s linear infinite;
+}
+.animate-marquee-right {
+  animation: marquee-right 45s linear infinite;
+}
+.marquee-paused {
+  animation-play-state: paused;
+}
+
+/* Claude.ai-inspired light mode: warm cream, soft contrast */
+:root {
+  --background: #FBF8F4;
+  --foreground: #1a1a1a;
+  --muted: #6b6b6b;
+  --border-light: #e8e4df;
+  --section-bg: #f5f2ed;
+  --selection-bg: #1A3631;
+  --selection-color: #ffffff;
+  --accent: #C47B4A;
+}
+
+:root.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --accent: #d4936a;
+  --selection-bg: #4a9188;
+  --selection-color: #0f1f1d;
+}
+
+::selection {
+  color: var(--selection-color);
+  background-color: var(--selection-bg);
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Suppress native mobile text selection menu (Copy/Share) while keeping selection for our bubbles */
+.no-touch-callout {
+  -webkit-touch-callout: none;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

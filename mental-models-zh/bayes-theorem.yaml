@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Bayes Theorem
+# Mental Model / Cognitive Bias - Example Entry
+
+id: bayes_theorem
+name: 贝叶斯定理
+
+quick_introduction: |
+  贝叶斯定理描述了在收到新证据时如何更新假设的概率。它将信念应该与证据支持它们的程度成比例地改变这一想法形式化——不是全有或全无，而是渐进地改变。
+
+one_liner: 根据证据支持的程度更新信念。
+
+try_this:
+  - 从先验信念开始；如果你错了，问问证据有多大可能出现。
+  - 渐进更新——不要因为一个数据点就从 0% 变为 100%。
+  - 考虑替代假设：证据是否也适用于它们？
+
+ask_yourself:
+  - 这个证据实际上有多大程度地改变了概率？
+  - 我是在更新我的信念，还是仅仅在确认我已经想到的事情？
+
+in_more_detail: |
+  该定理指出，给定证据的假设的概率等于先验概率乘以给定假设的证据的可能性，除以证据的概率。在实践中：从你的先验信念开始，看看新证据与你的假设与替代假设的一致性如何，然后相应地进行更新。
+
+  贝叶斯思维通过要求你考虑如果你错了，证据有多大的可能性出现，来对抗确认偏见。它是概率推理和科学更新的基础。
+
+why_this_is_important: |
+  贝叶斯思维在不确定性下的决策能力有所提高，帮助你避免过度自信，并为从证据中学习提供了框架。它对于诊断、预测和任何存在不确定性的领域都至关重要。
+
+when_to_use:
+  - 决策制定
+  - 问题解决
+  - 风险评估
+  - 学习
+
+how_can_you_spot_it:
+  prior_and_update: |
+    从基本信念开始，并根据新证据进行调整。
+  likelihood_ratio_thinking: |
+    问“如果我对了和错了，这个证据有多大的可能性？”
+  incremental_updating: |
+    信念会随着证据逐渐变化，而不是突然改变。
+  base_rate_respect: |
+    先验概率（基本比率）很重要，而不仅仅是最新数据点。
+
+examples:
+  medical_diagnosis: |
+    罕见病的阳性检测结果——先验（低患病率）意味着阳性结果通常是假阳性。贝叶斯定理更新了概率。
+  forecasting: |
+    在新的数据到来时更新预测，而不是坚持最初的估计。
+  hiring: |
+    从角色匹配的基本比率开始，然后根据面试表现进行更新。
+  investing: |
+    随着新信息（收益、新闻）的到来，更新公司成功的概率。
+
+real_world_implications: |
+  贝叶斯思维是现代人工智能、医学诊断和科学推理的基础。它纠正了基本比率忽视和确认偏见。对于任何存在不确定性的领域来说，它都是一个强大的工具。
+
+professional_application:
+  networking_and_relationship_building: |
+    根据新证据更新你对人的看法，而不是固守最初的印象。在解释行为时，要考虑基本比率（例如，这种行为有多普遍？）。
+  collaborative_learning_initiative: |
+    鼓励团队在讨论前明确陈述先验信念，然后在呈现证据时进行更新。减少锚定效应和确认偏见。
+
+how_can_this_be_misapplied:
+  overprecision: |
+    在不确定性很高的情况下分配精确的概率。
+  prior_rigidity: |
+    坚持强烈的先验信念，并且不根据新证据进行足够的更新。
+  base_rate_tyranny: |
+    因为基本比率表明相反的情况，而忽略了强有力的证据——有时证据应该起主导作用。
+  false_sophistication: |
+    使用贝叶斯语言来显得严谨，但实际上并没有进行推理。
+
+related_content:
+  - base_rate_fallacy
+  - confirmation_bias
+  - probabilistic_thinking
+  - map_is_not_the_territory

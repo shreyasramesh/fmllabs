@@ -1,0 +1,98 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Dunning-Kruger Effect
+# Mental Model / Cognitive Bias - Example Entry
+
+id: dunning_kruger_effect
+name: Dunning-Kruger Effect
+
+quick_introduction: |
+  The Dunning-Kruger effect describes a cognitive bias where people with limited
+  knowledge or skill in a domain overestimate their competence, while experts tend
+  to underestimate theirs. The less you know, the more confident you may be.
+
+one_liner: The less you know, the more confident you may be.
+
+try_this:
+  - In new domains, assume you're overconfident—seek feedback and calibration.
+  - When experts express doubt, take it seriously; they may know the edge cases.
+  - Notice when novices are more certain than experts in a field.
+
+ask_yourself:
+  - Am I in the "peak of Mount Stupid" or the "valley of humility"?
+  - Do I have the metacognitive ability to evaluate my own competence here?
+
+in_more_detail: |
+  Dunning and Kruger's research showed that incompetent individuals lack the
+  metacognitive ability to recognize their own incompetence. To evaluate your
+  performance, you need the same skills required to perform well—so the unskilled
+  are doubly disadvantaged: they perform poorly and don't know it.
+
+  As competence increases, people often experience a "valley of humility" where they
+  recognize how much they don't know. True experts may underconfidence because they
+  are acutely aware of nuance and edge cases.
+
+why_this_is_important: |
+  Recognizing the Dunning-Kruger effect helps you calibrate your own confidence,
+  avoid overestimating novices' opinions, and appreciate expert humility. It's
+  essential for learning, hiring, and decision-making.
+
+when_to_use:
+  - learning
+  - decision-making
+  - leadership
+  - career_moves
+
+how_can_you_spot_it:
+  novice_overconfidence: |
+    Someone with little experience expresses strong, unqualified opinions.
+  expert_underconfidence: |
+    Highly skilled people hedge and express uncertainty more than less skilled people.
+  inability_to_recognize_quality: |
+    Poor performers can't distinguish good from bad work in their domain.
+  confidence_competence_mismatch: |
+    Confidence and actual ability are inversely correlated among beginners.
+
+examples:
+  social_media: |
+    People with surface-level knowledge of a topic confidently argue with domain
+    experts.
+  hiring: |
+    Candidates who perform poorly in interviews sometimes rate their own performance
+    highly.
+  investing: |
+    New investors may be overconfident after early wins, not recognizing luck.
+  workplace: |
+    Junior employees may overestimate their readiness for promotion while seniors
+    doubt themselves.
+
+real_world_implications: |
+  The Dunning-Kruger effect affects education, hiring, politics, and public discourse.
+  It explains why bad ideas get amplified and why experts can be dismissed. Calibration
+  matters for individual and collective decision-making.
+
+professional_application:
+  networking_and_relationship_building: |
+    When someone is very confident, consider whether they might be in the
+    Dunning-Kruger zone. Seek diverse perspectives, including from those who
+    express uncertainty.
+  collaborative_learning_initiative: |
+    Create cultures where admitting uncertainty is valued. Encourage calibration
+    exercises and feedback that helps people accurately assess their competence.
+
+how_can_this_be_misapplied:
+  dismissing_all_confidence: |
+    Assuming that confident people are always wrong; sometimes confidence is
+    warranted.
+  false_modesty: |
+    Experts pretending to know less than they do to appear humble.
+  gatekeeping: |
+    Using Dunning-Kruger to dismiss anyone who disagrees with "experts" without
+    engaging their arguments.
+  self_doubt_paralysis: |
+    Overcorrecting to the point of never trusting your own judgment.
+
+related_content:
+  - circle_of_competence
+  - circle_of_competence
+  - confirmation_bias
+  - curse_of_knowledge

@@ -1,0 +1,80 @@
+id: fundamental_attribution_error
+name: Error de Atribución Fundamental
+
+quick_introduction: |
+  El error de atribución fundamental es la tendencia a atribuir el comportamiento de otros a su carácter o personalidad, mientras que atribuimos nuestro propio comportamiento a factores situacionales. Juzgamos a los demás por sus acciones y a nosotros mismos por nuestras intenciones.
+
+one_liner: Juzgamos a los demás por sus acciones, a nosotros mismos por nuestras intenciones.
+
+try_this:
+  - Cuando alguien te frustre, pregunta: ¿Qué factores situacionales podrían explicar esto?
+  - Aplica la misma generosidad a los demás que te aplicas a ti mismo.
+  - Date cuenta cuando atribuyes el comportamiento de otros al carácter, no a las circunstancias.
+
+ask_yourself:
+  - ¿Explicaría mi propio comportamiento de la misma manera que estoy explicando el suyo?
+  - ¿Qué podría estar pasando por alto sobre su situación?
+
+in_more_detail: |
+  Cuando alguien nos corta el paso en el tráfico, pensamos "qué imbécil". Cuando cortamos el paso a alguien, pensamos "tuve que hacerlo, tenía prisa". Explicamos nuestros propios fracasos por las circunstancias ("el tráfico era terrible") y los fracasos de los demás por su disposición ("son perezosos"). Lo contrario ocurre con el éxito: nos atribuimos el mérito a nosotros mismos, atribuimos el éxito de los demás a la suerte.
+
+  El error es "fundamental" porque es generalizado y persistente. Socava la empatía, alimenta el conflicto y distorsiona la evaluación del desempeño.
+
+why_this_is_important: |
+  Reconocer el error de atribución fundamental mejora las relaciones, reduce el conflicto y conduce a juicios más justos. Anima a considerar el contexto antes de concluir que alguien "es" de cierta manera.
+
+when_to_use:
+  - construcción_de_relaciones
+  - resolución_de_conflictos
+  - liderazgo
+  - toma_de_decisiones
+
+how_can_you_spot_it:
+  dispositional_explanation_for_others: |
+    "Es que es así" al explicar el comportamiento de los demás.
+  situational_explanation_for_self: |
+    "No tuve otra opción" o "Las circunstancias me obligaron" al explicarnos a nosotros mismos.
+  character_vs_context: |
+    Asumir el carácter cuando la situación podría explicar el comportamiento.
+  asymmetric_standards: |
+    Someter a los demás a estándares más estrictos de los que nos aplicamos a nosotros mismos.
+
+examples:
+  traffic: |
+    El error de otro conductor = "mal conductor". Nuestro error = "situación inevitable".
+  workplace: |
+    La fecha límite incumplida de un colega = "irresponsable". Nuestra fecha límite incumplida =
+    "sobrecargado y nadie podría haberlo hecho mejor".
+  politics: |
+    Las opiniones de los oponentes = "son estúpidos o malvados". Nuestras opiniones = "respuesta racional
+    a los hechos".
+  performance: |
+    El éxito de otros = "suerte". Nuestro éxito = "ganado con trabajo duro".
+
+real_world_implications: |
+  El error de atribución fundamental alimenta el conflicto, socava el trabajo en equipo y distorsiona la contratación y la evaluación del desempeño. Corregirlo mejora la cultura organizacional y las relaciones personales.
+
+professional_application:
+  networking_and_relationship_building: |
+    Cuando alguien te decepciona, pregúntate "¿Qué factores situacionales podrían explicar esto?" antes de concluir que es poco fiable o difícil.
+  collaborative_learning_initiative: |
+    En la retroalimentación y las revisiones, fomenta interpretaciones de "primero la situación".
+    Capacita a los gerentes para considerar el contexto antes de atribuir al carácter.
+
+how_can_this_be_misapplied:
+  excusing_all_behavior: |
+    Desestimar cada acción como "situacional" cuando cierto comportamiento sí refleja
+    el carácter.
+  no_accountability: |
+    Usar el error para evitar responsabilizar a las personas por las elecciones que sí hicieron.
+  self_deprecation: |
+    Sobrerrectificar para culparse siempre a uno mismo y nunca reconocer la responsabilidad de los demás.
+  ignoring_patterns: |
+    Cuando alguien se comporta mal repetidamente en diversas situaciones, la disposición
+    puede ser relevante.
+
+related_content:
+  - hanlons_razor
+  - in_group_bias
+  - confirmation_bias
+  - halo_effect

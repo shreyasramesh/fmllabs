@@ -1,0 +1,104 @@
+id: confirmation_bias
+name: Biais de confirmation
+
+quick_introduction: |
+  Le biais de confirmation est la tendance à rechercher, interpréter et
+  se souvenir d'informations d'une manière qui confirme nos croyances
+  existantes. Nous accordons plus de poids aux preuves qui nous soutiennent
+  et nous ignorons ou rejetons les preuves qui contredisent nos points de
+  vue. Nous posons des questions qui confirment plutôt que qui testent
+  nos hypothèses.
+
+one_liner: Nous cherchons et nous souvenons de ce qui confirme nos croyances ; nous ignorons ce qui les contredit.
+
+try_this:
+  - Demandez : Qu'est-ce qui prouverait que j'ai tort ? Cherchez activement les preuves qui infirment votre opinion.
+  - Remarquez quand vous accordez plus de poids à l'information qui confirme qu'à celle qui contredit.
+  - Considérez le point de vue opposé aussi sérieusement que le vôtre.
+
+ask_yourself:
+  - Est-ce que je teste mon hypothèse ou est-ce que je la confirme seulement ?
+  - Quand ai-je changé d'avis pour la dernière fois sur la base de nouvelles preuves ?
+
+in_more_detail: |
+  Nous ne traitons pas l'information de manière neutre. Nous cherchons la confirmation,
+  interprétons l'ambiguïté comme un soutien, et nous souvenons plus des succès
+  que des échecs. Nous nous entourons de personnes et de médias partageant les mêmes idées.
+  Nous demandons « Pourquoi ai-je raison ? » plutôt que « Qu'est-ce qui prouverait que j'ai tort ? ».
+  Cela nous rend trop confiants et lents à nous adapter.
+
+  Le biais de confirmation est l'un des biais les plus omniprésents et les mieux documentés.
+  Il affecte la science, la politique, les relations et les affaires. Le surmonter
+  nécessite un effort délibéré et des processus structurés.
+
+why_this_is_important: |
+  Reconnaître le biais de confirmation est essentiel pour une bonne prise de décision et
+  un bon apprentissage. Cela vous aide à rechercher des preuves qui infirment, à
+  envisager des hypothèses alternatives et à mettre à jour vos croyances lorsque cela
+  est justifié. C'est le fondement de la pensée scientifique.
+
+when_to_use:
+  - prise_de_decision
+  - apprentissage
+  - resolution_de_problemes
+  - evaluation_des_risques
+
+how_can_you_spot_it:
+  seeking_support: |
+    Rechercher des preuves qui confirment plutôt que qui testent votre point de vue.
+  asymmetric_interpretation: |
+    Interpréter des preuves ambiguës comme un soutien à votre position.
+  discounting_disconfirming: |
+    Ignorer ou minimiser les preuves qui contredisent vos croyances.
+  selective_exposure: |
+    Consommer uniquement des informations provenant de sources qui sont
+    en accord avec vous.
+
+examples:
+  hiring: |
+    Former une impression positive précoce, puis poser des questions qui
+    confirment que le candidat est excellent.
+  investing: |
+    Après avoir acheté une action, rechercher des nouvelles positives et
+    ignorer les analyses négatives.
+  relationships: |
+    Interpréter les actions d'un partenaire à travers un prisme qui confirme
+    votre opinion à son sujet (bonne ou mauvaise).
+  politics: |
+    Accepter l'information de votre camp sans esprit critique et rejeter
+    l'information équivalente de l'autre camp.
+
+real_world_implications: |
+  Le biais de confirmation perpétue les fausses croyances, alimente la polarisation
+  et entraîne des erreurs coûteuses. C'est l'ennemi d'une bonne science et d'une
+  bonne prise de décision. Le surmonter nécessite une recherche délibérée de
+  preuves qui infirment.
+
+professional_application:
+  networking_and_relationship_building: |
+    Lors de la formation d'opinions sur les personnes, recherchez activement
+    des preuves qui infirment. Demandez « Qu'est-ce qui changerait mon opinion ? »
+    et cherchez ces éléments.
+  collaborative_learning_initiative: |
+    Utilisez l'avocat du diable, les équipes rouges et les pré-mortems pour faire
+    émerger des perspectives qui infirment. Récompensez les personnes qui
+    remettent en question les points de vue dominants avec de bonnes preuves.
+
+how_can_this_be_misapplied:
+  false_balance: |
+    Traiter tous les points de vue comme également valides alors que des preuves
+    soutiennent fortement un côté.
+  excessive_skepticism: |
+    Rejeter toutes les preuves comme étant du « biais de confirmation » alors
+    que certaines croyances sont bien étayées.
+  contrarianism: |
+    Adopter le point de vue opposé uniquement pour éviter le biais de confirmation,
+    alors que le point de vue initial pourrait être correct.
+  analysis_paralysis: |
+    Ne jamais s'engager sur un point de vue parce que « nous pourrions être biaisés ».
+
+related_content:
+  - false_consensus_effect
+  - availability_heuristic
+  - bayes_theorem
+  - dunning_kruger_effect

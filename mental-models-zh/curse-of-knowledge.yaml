@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 知识诅咒
+# 心智模型 / 认知偏见 - 示例条目
+
+id: curse_of_knowledge
+name: 知识诅咒
+
+quick_introduction: |
+  知识诅咒是指一旦你知道了某件事，就很难想象不知道这件事是什么样的。专家们很难教初学者，因为他们无法重新创造初学者的视角。一旦你知道了，你就会忘记不知道是什么样子。
+
+one_liner: 一旦你知道了某件事，你就会忘记不知道是什么样子。
+
+try_this:
+  - 解释时，从基本原理开始——假设你的听众一无所知。
+  - 让初学者复述一遍；他们的困惑会暴露你的盲点。
+  - 注意你是否跳过了步骤或使用了他人可能不知道的行话。
+
+ask_yourself:
+  - 我是否假设他人拥有和我一样的背景知识？
+  - 没有我背景的人能理解这个吗？
+
+in_more_detail: |
+  在一个经典的实验中，知道谜题答案的人敲击歌曲的节奏，并期望其他人能猜出来——他们高估了显而易见性。敲击者无法在脑海中“取消听到”这首歌。知识是“粘稠”的；很难模拟无知。
+
+  知识诅咒会影响教学、沟通、产品设计和领导力。我们假设他人拥有和我们一样的背景。我们使用行话。我们跳过步骤。当人们不“明白”时，我们会感到惊讶。
+
+why_this_is_important: |
+  认识到知识诅咒可以改善教学、沟通和产品设计。它可以帮助你从他人的角度出发，而不是只从自己的角度出发。这对于有效的知识转移至关重要。
+
+when_to_use:
+  - 学习
+  - 领导力
+  - 问题解决
+  - 关系建立
+
+how_can_you_spot_it:
+  obvious_to_you: |
+    “这很明显”是因为你已经知道了答案，所以才显得明显。
+  jargon_use: |
+    使用听众不知道的术语而不加以定义。
+  skipped_steps: |
+    假设他人会填补你遗漏的信息。
+  frustration_with_learners: |
+    “他们怎么就看不懂呢？”当你拥有他们不具备的背景知识时。
+
+examples:
+  teaching: |
+    一位数学教授跳过了对他们来说“显而易见”但对学生至关重要的步骤。
+  product_design: |
+    设计师创建了对他们来说有意义但让新用户感到困惑的界面。
+  onboarding: |
+    经验丰富的员工忘记了新员工不知道的事情，并提供了不足的培训。
+  writing: |
+    作者假设读者拥有相同的背景，从而遗漏了必要的上下文。
+
+real_world_implications: |
+  知识诅咒会导致沟通障碍、产品失败和教学无效。这是专家可能成为糟糕教师的原因之一。克服它需要有意识地努力去 adopt 听众的视角。
+
+professional_application:
+  networking_and_relationship_building: |
+    解释时，从对方的水平开始。问“他们已经知道了什么？”与没有你背景的人测试你的沟通。
+  collaborative_learning_initiative: |
+    使用“像我五岁一样解释”的练习。让专家教初学者并获得反馈。创建假定没有先验知识的文档。使用同伴教学——最近学会的人会记住初学者的视角。
+
+how_can_this_be_misapplied:
+  oversimplification: |
+    过度简化，导致不准确或居高临下。
+  false_assumption: |
+    假设他人知道的比他们实际知道的少——这也是校准失败。
+  one_size_fits_all: |
+    并非所有听众都需要相同水平的解释；要根据听众进行调整。
+  avoiding_complexity: |
+    有些话题很复杂；知识诅咒并不意味着我们永远不应该在适当的时候使用技术语言。
+
+related_content:
+  - dunning_kruger_effect
+  - false_consensus_effect
+  - empathy_gap
+  - availability_heuristic

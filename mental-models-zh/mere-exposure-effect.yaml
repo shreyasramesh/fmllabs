@@ -1,0 +1,103 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 曝光效应
+# 心理模型 / 认知偏差 - 示例条目
+
+id: mere_exposure_effect
+name: 曝光效应
+
+quick_introduction: |
+  曝光效应是指仅仅因为熟悉而对事物产生偏好的倾向。反复接触——即使没有
+  强化——也能增加喜爱程度。我们倾向于喜欢我们所知道的。
+
+one_liner: 熟悉产生好感——我们喜欢我们之前见过的事物。
+
+try_this:
+  - 问：我喜欢这个是因为它好，还是因为它熟悉？
+  - 在评估选项时，要考虑暴露因素——新事物一开始处于劣势。
+  - 注意重复性是如何影响你的偏好的。
+
+ask_yourself:
+  - 我主要是因为以前见过某物而喜欢它吗？
+  - 如果暴露程度相同，我的选择会不同吗？
+
+in_more_detail: |
+  Robert Zajonc 的研究表明，反复接触刺激（面孔、单词、形状）
+  会增加对它们的积极情感——即使我们没有有意识地
+  意识到这种接触。熟悉产生好感，而不是轻蔑（在许多
+  情况下）。当我们不进行分析且接触是微妙时，这种效应会更强。
+
+  曝光效应会影响品牌偏好、人际吸引力
+  和审美判断。它解释了为什么我们喜欢熟悉的
+  音乐，为什么广告通过重复来起作用，以及为什么我们可能更喜欢
+  我们以前见过的人——即使没有互动。
+
+why_this_is_important: |
+  认识到曝光效应有助于你理解自己的
+  偏好，并抵制通过重复进行的操纵。它还
+  解释了为什么可见性和存在感对人际关系和
+  品牌很重要。熟悉是一种强大但通常是无意识的影响。
+
+when_to_use:
+  - 建立关系
+  - 决策
+  - 领导力
+  - 学习
+
+how_can_you_spot_it:
+  familiarity_preference: |
+    更喜欢以前见过的选项而不是新的选项。
+  repetition_influence: |
+    反复接触会增加喜爱度，而无需明确说服。
+  unconscious_influence: |
+    即使我们没有意识到接触，这种效应也会起作用。
+  brand_recognition: |
+    即使我们说不出原因，我们也更喜欢熟悉的品牌。
+
+examples:
+  advertising: |
+    反复接触一个品牌可以增加偏好——即使没有
+    说服性的信息。
+  music: |
+    我们以前听过的歌曲比新歌更容易受欢迎
+    初次聆听时。
+  people: |
+    我们倾向于喜欢反复见到的人（例如，同学、
+    同事），而不是陌生人——即使没有互动。
+  ideas: |
+    我们以前遇到过的想法比新想法感觉更舒适和
+    可信。
+
+real_world_implications: |
+  曝光效应塑造了消费行为、政治
+  偏好和社会吸引力。它被营销人员利用，并可能为熟悉的事物创造不公平的优势。它也
+  解释了为什么接触多样性很重要——熟悉
+  差异性可以减少偏见。
+
+professional_application:
+  networking_and_relationship_building: |
+    可见性很重要。出现、在场和被
+    看到会产生熟悉感，从而建立好感。不要
+    低估重复的低风险接触的价值。
+  collaborative_learning_initiative: |
+    反复向人们展示多样的观点和人物——
+    熟悉度可以减少偏见。但要注意，仅仅曝光
+    也会强化对现状的偏好。
+
+how_can_this_be_misapplied:
+  manipulation: |
+    故意制造重复接触以操纵
+    偏好，未经同意。
+  false_familiarity: |
+    假设熟悉等同于质量——有时新颖的
+    选项更好。
+  exclusion: |
+    如果只有某些人获得曝光，他们会获得不公平的
+    优势。考虑谁能获得可见性。
+  stagnation: |
+    过度依赖熟悉，从不尝试新事物。
+
+related_content:
+  - ben_franklin_effect
+  - availability_heuristic
+  - baader_meinhof_phenomenon
+  - halo_effect

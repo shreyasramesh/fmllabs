@@ -1,0 +1,90 @@
+id: circle_of_competence
+name: Círculo de Competencia
+
+quick_introduction: |
+  El círculo de competencia es un modelo mental que te insta a conocer los límites
+  de tu experiencia y a mantenerte dentro de ellos al tomar decisiones importantes. Warren Buffett
+  y Charlie Munger enfatizan la importancia de saber lo que no sabes.
+
+one_liner: Conoce los límites de tu experiencia y mantente dentro de ellos cuando importe.
+
+try_this:
+  - Dibuja dónde tienes experiencia genuina frente a dónde estás adivinando.
+  - Cuando estés fuera de tu círculo, busca consejo o delega.
+  - Sé honesto: ¿un verdadero experto estaría de acuerdo con tu juicio aquí?
+
+ask_yourself:
+  - ¿Estoy dentro de mi círculo de competencia o estoy adivinando?
+  - ¿Cuándo fue la última vez que admití "no sé" en este dominio?
+
+in_more_detail: |
+  Cada persona tiene áreas donde tiene experiencia genuina, donde puede evaluar
+  información, detectar errores y emitir juicios fiables. Fuera de ese círculo, son
+  propensos a los mismos sesgos y errores que cualquier otra persona. La clave es una
+  autoevaluación honesta: ¿dónde eres verdaderamente competente y dónde estás adivinando?
+
+  El círculo puede expandirse a través del aprendizaje deliberado, pero requiere humildad para
+  reconocer sus límites actuales. Operar fuera de tu círculo aumenta el riesgo de errores costosos, especialmente cuando las apuestas son altas.
+
+why_this_is_important: |
+  Mantenerse dentro de tu círculo de competencia reduce los errores costosos y mejora
+  la calidad de las decisiones. También te ayuda a saber cuándo buscar consejo, delegar o
+  abstenerte. El exceso de confianza fuera de tu círculo es una fuente importante de fracaso.
+
+when_to_use:
+  - toma_de_decisiones
+  - inversion
+  - movimientos_profesionales
+  - evaluacion_de_riesgos
+
+how_can_you_spot_it:
+  honest_boundary_assessment: |
+    ¿Puedes explicar los límites de tu conocimiento en un dominio? ¿Sabes lo que no sabes?
+  knowing_when_to_defer: |
+    Reconocer situaciones en las que deberías buscar la opinión de expertos en lugar de decidir solo.
+  consistent_track_record: |
+    Dentro de tu círculo, tus juicios tienden a ser validados con el tiempo; fuera de él, no lo son.
+  calibration: |
+    Tu confianza en un dominio coincide con tu desempeño real en ese dominio.
+
+examples:
+  investing: |
+    Buffett evita las acciones tecnológicas porque dice que están fuera de su círculo de
+    competencia; no puede evaluarlas de manera fiable.
+  career: |
+    Un especialista que se mantiene en su dominio frente a uno que asume un rol "desafiante" en un
+    área no relacionada.
+  hiring: |
+    Saber cuándo confiar en tu propio juicio frente a la intervención de especialistas para
+    roles técnicos.
+  advice_giving: |
+    Rechazar opinar sobre temas fuera de tu experiencia en lugar de adivinar.
+
+real_world_implications: |
+  El círculo de competencia es fundamental para la inversión en valor y el éxito profesional.
+  Ignorarlo conduce a un exceso de confianza, fracasos empresariales y malos consejos. Expandir
+  el círculo requiere un esfuerzo deliberado y retroalimentación honesta.
+
+professional_application:
+  networking_and_relationship_building: |
+    Establece relaciones con personas cuyos círculos de competencia complementan los tuyos.
+    Sabe cuándo presentar a otros en lugar de responder tú mismo.
+  collaborative_learning_initiative: |
+    Crea equipos con círculos superpuestos y complementarios. Anima a las personas a señalar
+    cuando están operando fuera de su competencia.
+
+how_can_this_be_misapplied:
+  excessive_risk_aversion: |
+    Nunca aventurarse fuera de tu círculo puede limitar el crecimiento y el aprendizaje.
+  false_modesty: |
+    Reclamar un círculo diminuto para evitar la rendición de cuentas o decisiones difíciles.
+  gatekeeping: |
+    Usar el "círculo de competencia" para desestimar a otros sin involucrar sus argumentos.
+  stagnation: |
+    Tratar el círculo como fijo en lugar de algo que puede expandirse con esfuerzo.
+
+related_content:
+  - dunning_kruger_effect
+  - dunning_kruger_effect
+  - bayes_theorem
+  - second_order_thinking

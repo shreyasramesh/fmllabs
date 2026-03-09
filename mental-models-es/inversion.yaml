@@ -1,0 +1,90 @@
+id: inversion
+name: Inversión
+
+quick_introduction: |
+  La inversión es una técnica de resolución de problemas que invierte una pregunta. En lugar de
+  preguntar "¿Cómo tendré éxito?", preguntas "¿Qué me haría fracasar?" y evitas esas cosas.
+  Saca a la luz riesgos y antipatrones que la previsión a menudo pasa por alto.
+
+one_liner: Invierte—pregunta qué te haría fracasar, luego evita esas cosas.
+
+try_this:
+  - Para cualquier objetivo, enumera las principales formas en que podrías fracasar y luego evítalas.
+  - Usa visualización negativa: ¿qué podría salir mal?
+  - Pregunta: ¿Qué haría una persona inteligente para arruinar esto?
+
+ask_yourself:
+  - ¿He pensado en lo que haría que esto fracasara?
+  - ¿Qué no estoy viendo al pensar solo en el futuro?
+
+in_more_detail: |
+  Popularizada por Charlie Munger y arraigada en la lógica matemática, la inversión explota
+  el hecho de que evitar el fracaso suele ser más fácil que buscar el éxito. Si puedes
+  identificar las principales formas en que algo sale mal, puedes eliminarlas sistemáticamente.
+
+  Según se informa, Carl Jacobi dijo: "Invierte, siempre invierte". Los estoicos usaron la visualización
+  negativa (imaginar la pérdida) para apreciar lo que tenían y prepararse para la adversidad.
+  La inversión no es pesimismo; es una forma estructurada de progresar eliminando
+  obstáculos.
+
+why_this_is_important: |
+  La inversión te ayuda a evitar errores catastróficos, a poner a prueba los planes y a encontrar
+  soluciones no obvias. Complementa la planificación futura asegurando que no
+  pases por alto modos de fallo críticos.
+
+when_to_use:
+  - resolución_de_problemas
+  - toma_de_decisiones
+  - evaluación_de_riesgos
+  - decisiones_profesionales
+
+how_can_you_spot_it:
+  premortem_thinking: |
+    Antes de un proyecto, pregunta "¿Por qué falló esto?", como si ya hubiera sucedido.
+  anti_goals: |
+    Definir lo que quieres evitar tan claramente como lo que quieres lograr.
+  reverse_engineering_failure: |
+    Estudiar casos fallidos para extraer lecciones en lugar de solo estudiar éxitos.
+  constraint_focus: |
+    Identificar restricciones y cuellos de botella antes de optimizar las ventajas.
+
+examples:
+  investing: |
+    En lugar de "¿Qué hará que esta acción suba?", pregunta "¿Qué me haría perder dinero?"
+    y evita esos escenarios.
+  career: |
+    "¿Qué arruinaría mi reputación?" conduce a una lista de comportamientos a evitar.
+  product_launch: |
+    "¿Por qué fallan la mayoría de los lanzamientos de productos?" saca a la luz riesgos a abordar antes del lanzamiento.
+  health: |
+    "¿Qué hábitos acortan la vida?" ofrece una lista de evitación más clara que "¿Qué me hace
+    estar sano?"
+
+real_world_implications: |
+  La inversión se utiliza en ingeniería (análisis de modos de fallo), inversión y estrategia.
+  Reduce el exceso de confianza y mejora la gestión de riesgos. La dependencia excesiva puede provocar
+  una cautela excesiva.
+
+professional_application:
+  networking_and_relationship_building: |
+    "¿Qué dañaría esta relación?" te ayuda a evitar comportamientos que rompen la confianza.
+  collaborative_learning_initiative: |
+    Realiza análisis premortem de los proyectos: "Esto falló. ¿Por qué?". Usa las respuestas para mejorar
+    la planificación y la ejecución.
+
+how_can_this_be_misapplied:
+  excessive_risk_aversion: |
+    Centrarse solo en evitar el fracaso puede paralizar la acción e impedir la toma de riesgos necesaria.
+  negativity_bias: |
+    La inversión puede amplificar el sesgo de negatividad si no se equilibra con la identificación de oportunidades futuras.
+  analysis_paralysis: |
+    Pasar tanto tiempo en los modos de fallo que nunca se ejecuta.
+  missing_upside: |
+    La inversión no te dice qué hacer, solo qué evitar. Aún necesitas
+    objetivos positivos.
+
+related_content:
+  - second_order_thinking
+  - survivorship_bias
+  - hindsight_bias
+  - loss_aversion_bias

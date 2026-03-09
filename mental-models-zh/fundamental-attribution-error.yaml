@@ -1,0 +1,87 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 基本归因错误
+# 心智模型 / 认知偏差 - 示例条目
+
+id: fundamental_attribution_error
+name: 基本归因错误
+
+quick_introduction: |
+  基本归因错误是指倾向于将他人的行为归因于其性格或个性，而将我们自己的行为归因于
+  情境因素。我们通过他人的行为来评判他们，通过自己的意图来评判自己。
+
+one_liner: 我们以他人的行为评判他们，以自己的意图评判自己。
+
+try_this:
+  - 当某人让你感到沮丧时，问问自己：可能是什么情境因素解释了这种情况？
+  - 对待他人时，请像对待自己一样慷慨。
+  - 注意你何时将他人的行为归因于性格，而非境遇。
+
+ask_yourself:
+  - 我是否会用解释他人行为的方式来解释自己的行为？
+  - 我可能忽略了他们的处境的哪些方面？
+
+in_more_detail: |
+  当我们在交通中被别人插队时，我们会想“真是个混蛋”。当我们插队时，我们会想“我不得不这样——我当时很赶时间”。我们用
+  境遇来解释自己的失败（“交通太糟糕了”）和别人的失败（“他们很懒”）。对于成功，情况则相反：我们为自己的成功归功于自己，
+  而将他人的成功归因于运气。
+
+  这种错误是“基本”的，因为它普遍存在且持久。它
+  破坏了同理心，加剧了冲突，并扭曲了绩效评估。
+
+why_this_is_important: |
+  认识到基本归因错误可以改善人际关系，
+  减少冲突，并带来更公平的判断。它鼓励我们在断定某人“是”某种人之前，先考虑其背景。
+
+when_to_use:
+  - 建立人际关系
+  - 冲突解决
+  - 领导力
+  - 决策
+
+how_can_you_spot_it:
+  dispositional_explanation_for_others: |
+    在解释他人行为时说：“他们就是那种人”。
+  situational_explanation_for_self: |
+    在解释自己的行为时说：“我别无选择”或“环境迫使我”。
+  character_vs_context: |
+    在情境可能解释行为时，却假定是性格使然。
+  asymmetric_standards: |
+    对他人的要求比对自己更严格。
+
+examples:
+  traffic: |
+    另一位司机的错误 = “坏司机”。我们的错误 = “无法避免的情况”。
+  workplace: |
+    同事错过截止日期 = “不负责任”。我们错过截止日期 =
+    “任务繁重，无人能做得更好”。
+  politics: |
+    对手的观点 = “他们愚蠢或邪恶”。我们的观点 = “对事实的理性反应”。
+  performance: |
+    他人的成功 = “幸运”。我们的成功 = “努力工作得来的”。
+
+real_world_implications: |
+  基本归因错误会加剧冲突，破坏团队合作，并扭曲招聘和绩效评估。纠正这种错误可以改善
+  组织文化和个人关系。
+
+professional_application:
+  networking_and_relationship_building: |
+    当某人让你失望时，在断定他们不可靠或难以相处之前，问问自己“可能是什么情境因素解释了这种情况？”
+  collaborative_learning_initiative: |
+    在反馈和评估中，鼓励“先考虑情境”的解读。
+    培训管理者在归因于性格之前考虑背景。
+
+how_can_this_be_misapplied:
+  excusing_all_behavior: |
+    将所有行为都归结为“情境”，而实际上有些行为确实反映了性格。
+  no_accountability: |
+    利用这种错误来逃避追究人们对他们确实做出的选择的责任。
+  self_deprecation: |
+    过度纠正，总是责怪自己，从不承认他人的责任。
+  ignoring_patterns: |
+    当某人在不同情境下反复行为不当时，性格可能具有相关性。
+
+related_content:
+  - hanlons_razor
+  - in_group_bias
+  - confirmation_bias
+  - halo_effect

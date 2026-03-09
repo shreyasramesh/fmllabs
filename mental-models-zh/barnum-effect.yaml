@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Barnum Effect
+# Mental Model / Cognitive Bias - Example Entry
+
+id: barnum_effect
+name: 巴纳姆效应
+
+quick_introduction: |
+  巴纳姆效应（或福勒效应）是指倾向于接受模糊、笼统的性格描述，并认为其具有独特的准确性。星座、算命先生和性格测试会使用适用于几乎所有人的陈述——但我们却认为它们是针对我们个人的。我们在笼统的描述中看到自己。
+
+one_liner: 模糊的陈述因为适用于几乎所有人，所以感觉很个人化。
+
+try_this:
+  - Ask: 这种描述是否适用于许多人？尝试对其他人进行测试。
+  - Seek specific, behavioral feedback instead of vague praise or criticism. 寻求具体的、行为方面的反馈，而不是笼统的表扬或批评。
+  - Notice when "personalized" insights feel too good to be discriminating. 注意当“个性化”的见解感觉好得不像能区分个体时。
+
+ask_yourself:
+  - Would this feedback feel accurate if given to a stranger? 如果将此反馈提供给陌生人，是否会感觉准确？
+  - Am I remembering the hits and forgetting the misses? 我是记住了吻合的部分，而忘记了不符的部分吗？
+
+in_more_detail: |
+  心理学家伯特兰·福勒（Bertram Forer）给学生们提供了相同的“个性化”反馈（例如，“你需要别人喜欢和钦佩你”），学生们认为这些反馈非常准确。这些陈述足够模糊，适用于任何人。据报道，P.T.巴纳姆说过“每分钟都有一个傻瓜诞生”—这个效应以他擅长用看似个性化的笼统陈述来吸引大众而得名。
+
+  这个效应之所以有效，是因为我们擅长在模糊的陈述中找到个人相关性。我们记住了吻合的部分，而忘记了不符的部分。这是冷读术和许多“性格”产品的基础。
+
+why_this_is_important: |
+  认识到巴纳姆效应有助于你评估性格评估、抵制操纵，并避免过度解读模糊的反馈。它解释了为什么星座感觉准确，以及为什么一些“个性化”的建议是笼统的。
+
+when_to_use:
+  - 决策
+  - 学习
+  - 风险评估
+  - 关系建立
+
+how_can_you_spot_it:
+  vague_accuracy: |
+    感觉个人化但可能适用于许多人的反馈。
+  selective_fit: |
+    我们关注符合的部分，而忽略不符合的部分。
+  cold_reading: |
+    某人通过实际上是笼统的陈述来“解读”你。
+  personality_test_enthusiasm: |
+    不加批判地接受评估结果，认为其具有独特的洞察力。
+
+examples:
+  horoscopes: |
+    “你有时会怀疑自己的决定”感觉很个人化，但适用于大多数人。
+  fortune_telling: |
+    我们将其解读为针对我们具体情况的笼统预测。
+  personality_tests: |
+    一些评估使用巴纳姆陈述，感觉准确但并不具有区分度。
+  feedback: |
+    我们将其解读为深度个性化的笼统绩效反馈。
+
+real_world_implications: |
+  巴纳姆效应在占星术、一些辅导和低质量评估中被利用。它可能导致对无效工具产生虚假的信心。它还解释了为什么我们容易受到奉承和模糊的正面反馈的影响。
+
+professional_application:
+  networking_and_relationship_building: |
+    在接收反馈时，问“这是否适用于许多人？”寻求具体的、行为方面的反馈，而不是笼统的表扬或批评。对感觉好得令人难以置信的“个性化”见解持怀疑态度。
+  collaborative_learning_initiative: |
+    在使用评估工具时，选择具有区分效度的经过验证的工具。避免依赖巴纳姆陈述的工具。培训人们识别模糊的反馈。
+
+how_can_this_be_misapplied:
+  dismissing_all_feedback: |
+    并非所有个性化反馈都是巴纳姆效应——有些确实是具体的。不要全盘否定所有模糊的反馈。
+  invalidating_experience: |
+    告诉某人他们的洞察体验“只是巴纳姆效应”，而实际上它可能对他们有价值。
+  overcorrection: |
+    因为一些个性化框架使用巴纳姆陈述，就否定所有个性化框架。
+  false_skepticism: |
+    认为某事物感觉准确就一定是巴纳姆效应——有时事物就是准确的。
+
+related_content:
+  - confirmation_bias
+  - halo_effect
+  - availability_heuristic
+  - narrative_fallacy

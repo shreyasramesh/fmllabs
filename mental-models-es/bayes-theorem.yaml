@@ -1,0 +1,92 @@
+id: bayes_theorem
+name: Teorema de Bayes
+
+quick_introduction: |
+  El teorema de Bayes describe cómo actualizar la probabilidad de una hipótesis
+  cuando se recibe nueva evidencia. Formaliza la idea de que las creencias deben
+  cambiar en proporción a cuánto las apoya la evidencia, no de forma absoluta,
+  sino de manera incremental.
+
+one_liner: Actualiza tus creencias en proporción a cuánto las apoya la evidencia.
+
+try_this:
+  - Empieza con tu creencia previa; pregunta cuán probable sería la evidencia si te equivocaras.
+  - Actualiza incrementalmente; no cambies de 0% a 100% por un solo dato.
+  - Considera hipótesis alternativas: ¿la evidencia también encajaría con ellas?
+
+ask_yourself:
+  - ¿Cuánto cambia realmente esta evidencia la probabilidad?
+  - ¿Estoy actualizando mis creencias o solo confirmando lo que ya pensaba?
+
+in_more_detail: |
+  El teorema establece que la probabilidad de una hipótesis dada una evidencia es igual a la
+  probabilidad previa multiplicada por la verosimilitud de la evidencia dada la hipótesis,
+  dividido por la probabilidad de la evidencia. En la práctica: comienza con tu creencia
+  previa, ve cuán consistente es la nueva evidencia con tu hipótesis frente a las alternativas,
+  y actualiza en consecuencia.
+
+  El pensamiento bayesiano contrarresta el sesgo de confirmación al requerir que consideres
+  cuán probable sería la evidencia si te equivocaras. Es la base del razonamiento probabilístico
+  y de la actualización científica.
+
+why_this_is_important: |
+  El pensamiento bayesiano mejora la toma de decisiones bajo incertidumbre, te ayuda a
+  evitar la sobreconfianza y proporciona un marco para aprender de la evidencia. Es esencial
+  para el diagnóstico, la predicción y cualquier dominio con incertidumbre.
+
+when_to_use:
+  - toma_de_decisiones
+  - resolucion_de_problemas
+  - evaluacion_de_riesgos
+  - aprendizaje
+
+how_can_you_spot_it:
+  prior_and_update: |
+    Comenzar con una creencia de referencia y ajustarla en función de nueva evidencia.
+  likelihood_ratio_thinking: |
+    Preguntar "¿Cuán probable es esta evidencia si tengo razón frente a si me equivoco?"
+  incremental_updating: |
+    Las creencias cambian gradualmente con la evidencia en lugar de hacerlo abruptamente.
+  base_rate_respect: |
+    Las probabilidades previas (tasas base) importan, no solo el último punto de datos.
+
+examples:
+  medical_diagnosis: |
+    Una prueba positiva para una enfermedad rara: la creencia previa (baja prevalencia) significa
+    que un resultado positivo a menudo es un falso positivo. Bayes actualiza la probabilidad.
+  forecasting: |
+    Actualizar predicciones a medida que llegan nuevos datos en lugar de ceñirse a las estimaciones iniciales.
+  hiring: |
+    Comenzar con tasas base para la adecuación al puesto, y luego actualizar basándose en el desempeño de la entrevista.
+  investing: |
+    Actualizar la probabilidad de que una empresa tenga éxito a medida que llega nueva información (ganancias, noticias).
+
+real_world_implications: |
+  El pensamiento bayesiano sustenta la IA moderna, el diagnóstico médico y la inferencia científica.
+  Corrige la negligencia de la tasa base y el sesgo de confirmación. Es una herramienta poderosa
+  para cualquier dominio con incertidumbre.
+
+professional_application:
+  networking_and_relationship_building: |
+    Actualiza tus creencias sobre las personas basándote en nueva evidencia en lugar de mantener
+    impresiones iniciales fijas. Considera las tasas base (por ejemplo, ¿cuán común es este comportamiento?)
+    al interpretar acciones.
+  collaborative_learning_initiative: |
+    Anima a los equipos a declarar explícitamente sus creencias previas antes de las discusiones, y luego
+    actualizar a medida que se presenta la evidencia. Reduce el anclaje y el sesgo de confirmación.
+
+how_can_this_be_misapplied:
+  overprecision: |
+    Asignar probabilidades exactas cuando la incertidumbre es alta.
+  prior_rigidity: |
+    Mantener creencias previas fuertes y no actualizar lo suficiente con nueva evidencia.
+  base_rate_tyranny: |
+    Ignorar evidencia fuerte porque las tasas base sugieren lo contrario; a veces la evidencia debería dominar.
+  false_sophistication: |
+    Usar lenguaje bayesiano para sonar riguroso sin hacer el razonamiento real.
+
+related_content:
+  - base_rate_fallacy
+  - confirmation_bias
+  - probabilistic_thinking
+  - map_is_not_the_territory

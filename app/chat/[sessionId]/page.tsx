@@ -1,0 +1,6235 @@
+"use client";
+
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { useAuth, useUser, UserButton } from "@clerk/nextjs";
+import Link from "next/link";
+import {
+  parseAssistantMessage,
+  parseRelevantContextBlock,
+  parseRelevantContextFromStreamStart,
+  extractRelevanceContext,
+  extractMentalModelIds,
+  type RelevantContextItem,
+  type RelevantContext,
+} from "@/lib/chat-utils";
+
+import { ChatMarkdown } from "@/components/ChatMarkdown";
+import {
+  MentalModelModal,
+  type MentalModel,
+} from "@/components/MentalModelModal";
+import {
+  MentionInput,
+  parseMentionsFromMessage,
+} from "@/components/MentionInput";
+import { UserMessageContent } from "@/components/UserMessageContent";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { useLanguage } from "@/components/LanguageProvider";
+import { useUserType } from "@/components/UserTypeProvider";
+import { LANGUAGES, isRtlLanguage, type LanguageCode } from "@/lib/languages";
+import { USER_TYPES } from "@/lib/user-types";
+import { AIGenerateIcon, GenerateRelevantMessageButton, GhostIcon, SparklesIcon, TrashIcon } from "@/components/SharedIcons";
+import { getModalTranslations } from "@/lib/mental-model-modal-translations";
+import { playSelectionChime } from "@/lib/selection-chime";
+import { stripMarkdown } from "@/lib/strip-markdown";
+import { TTSButton } from "@/components/TTSButton";
+import { VoiceInputButton } from "@/components/VoiceInputButton";
+import { FullVoiceMode } from "@/components/FullVoiceMode";
+import { useTtsSpeed } from "@/components/TtsSpeedProvider";
+import { TtsHighlightContext, type TtsHighlightState } from "@/components/TtsHighlightContext";
+import { TtsHighlightedText } from "@/components/TtsHighlightedText";
+
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+  selectedContexts?: {
+    mentalModels: RelevantContextItem[];
+    longTermMemories: RelevantContextItem[];
+    customConcepts: RelevantContextItem[];
+    conceptGroups: RelevantContextItem[];
+  };
+}
+
+function processMessagesWithContext(msgs: Message[]): Message[] {
+  return msgs.map((m) => {
+    if (m.role === "assistant" && m.content) {
+      const { contentWithoutBlock, relevantContext } =
+        parseRelevantContextBlock(m.content);
+      return {
+        ...m,
+        content: contentWithoutBlock,
+        selectedContexts: relevantContext ?? undefined,
+      };
+    }
+    return m;
+  });
+}
+
+interface Session {
+  _id: string;
+  title: string;
+  mentalModelTags?: string[];
+  isCollapsed?: boolean;
+  longTermMemoryId?: string;
+  updatedAt: string;
+}
+
+interface LongTermMemoryItem {
+  _id: string;
+  title: string;
+  summary: string;
+  enrichmentPrompt: string;
+  sourceSessionId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface CustomConceptItem {
+  _id: string;
+  title: string;
+  summary: string;
+  enrichmentPrompt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface ConceptGroupItem {
+  _id: string;
+  title: string;
+  conceptIds: string[];
+  isCustomGroup?: boolean;
+  concepts?: CustomConceptItem[];
+}
+
+function formatRelativeTime(iso: string): string {
+  const d = new Date(iso);
+  const now = new Date();
+  const diffMs = now.getTime() - d.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+  if (diffMins < 1) return "Just now";
+  if (diffMins < 60) return `${diffMins} min ago`;
+  if (diffHours < 24) return `${diffHours} hour${diffHours === 1 ? "" : "s"} ago`;
+  if (diffDays < 7) return `${diffDays} day${diffDays === 1 ? "" : "s"} ago`;
+  return d.toLocaleDateString();
+}
+
+function MessageBubble({
+  message,
+  messageIndex,
+  totalMessages,
+  isLoading,
+  onOptionSelect,
+  onRetry,
+  onGoBackInTime,
+  isLastAssistant,
+  isLastUserMessageAndLoading,
+  idToName,
+  ltmIdToTitle,
+  ccIdToTitle,
+  cgIdToTitle,
+  onMentalModelClick,
+  onLtmClick,
+  onCustomConceptClick,
+  onConceptGroupClick,
+  previewMap,
+  isRtl,
+  ttsHighlight,
+  onTtsProgress,
+  onTtsEnd,
+}: {
+  message: Message;
+  messageIndex: number;
+  totalMessages: number;
+  isLoading: boolean;
+  onOptionSelect: (text: string) => void;
+  onRetry?: () => void;
+  onGoBackInTime?: (index: number, message: Message) => void;
+  isLastAssistant: boolean;
+  isLastUserMessageAndLoading?: boolean;
+  idToName: Map<string, string>;
+  ltmIdToTitle: Map<string, string>;
+  ccIdToTitle: Map<string, string>;
+  cgIdToTitle: Map<string, string>;
+  onMentalModelClick: (id: string, sourceMessage?: string) => void;
+  onLtmClick: (id: string) => void;
+  onCustomConceptClick?: (id: string) => void;
+  onConceptGroupClick?: (id: string) => void;
+  previewMap?: Map<string, { oneLiner?: string; quickIntro?: string }>;
+  isRtl?: boolean;
+  ttsHighlight?: number;
+  onTtsProgress?: (messageIndex: number, charEnd: number) => void;
+  onTtsEnd?: () => void;
+}) {
+  const { text, options } =
+    message.role === "assistant"
+      ? parseAssistantMessage(message.content)
+      : { text: message.content, options: [] };
+  const isLastMsg = message.role === "assistant" && isLastAssistant;
+  const showOptions =
+    message.role === "assistant" &&
+    options.length > 0 &&
+    isLastMsg;
+
+  const ctx = message.role === "assistant" ? message.selectedContexts : undefined;
+  const ctxCount = ctx && ctx.mentalModels.length + ctx.longTermMemories.length + (ctx.customConcepts?.length ?? 0) + (ctx.conceptGroups?.length ?? 0);
+  const [ctxExpanded, setCtxExpanded] = useState(false);
+  const [ctxReasonPillKey, setCtxReasonPillKey] = useState<string | null>(null);
+  const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const didLongPressRef = useRef(false);
+
+  const ctxItems: { type: "mm" | "ltm" | "cc" | "cg"; id: string; title: string; reason: string }[] = ctx
+    ? [
+        ...ctx.mentalModels.map(({ id, reason, title }) => ({
+          type: "mm" as const,
+          id,
+          title: title ?? idToName.get(id) ?? id.replace(/_/g, " "),
+          reason,
+        })),
+        ...ctx.longTermMemories.map(({ id, reason, title }) => ({
+          type: "ltm" as const,
+          id,
+          title: title ?? ltmIdToTitle.get(id) ?? "Memory",
+          reason,
+        })),
+        ...(ctx.customConcepts ?? []).map(({ id, reason, title }) => ({
+          type: "cc" as const,
+          id,
+          title: title ?? ccIdToTitle.get(id) ?? "Concept",
+          reason,
+        })),
+        ...(ctx.conceptGroups ?? []).map(({ id, reason, title }) => ({
+          type: "cg" as const,
+          id,
+          title: title ?? cgIdToTitle.get(id) ?? "Domain",
+          reason,
+        })),
+      ]
+    : [];
+
+  const openContextFor = useCallback(
+    (type: "mm" | "ltm" | "cc" | "cg", id: string) => {
+      setCtxReasonPillKey(null);
+      if (type === "mm") onMentalModelClick(id, text);
+      else if (type === "ltm") onLtmClick(id);
+      else if (type === "cc") onCustomConceptClick?.(id);
+      else if (type === "cg") onConceptGroupClick?.(id);
+    },
+    [text, onMentalModelClick, onLtmClick, onCustomConceptClick, onConceptGroupClick]
+  );
+
+  const pillStyles = {
+    mm: "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 border-amber-200/60 dark:border-amber-700/50 hover:bg-amber-200/80 dark:hover:bg-amber-800/50 hover:border-amber-300 dark:hover:border-amber-600/60",
+    ltm: "bg-teal-100 dark:bg-teal-900/40 text-teal-800 dark:text-teal-200 border-teal-200/60 dark:border-teal-700/50 hover:bg-teal-200/80 dark:hover:bg-teal-800/50 hover:border-teal-300 dark:hover:border-teal-600/60",
+    cc: "bg-violet-100 dark:bg-violet-900/40 text-violet-800 dark:text-violet-200 border-violet-200/60 dark:border-violet-700/50 hover:bg-violet-200/80 dark:hover:bg-violet-800/50 hover:border-violet-300 dark:hover:border-violet-600/60",
+    cg: "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-200 border-emerald-200/60 dark:border-emerald-700/50 hover:bg-emerald-200/80 dark:hover:bg-emerald-800/50 hover:border-emerald-300 dark:hover:border-emerald-600/60",
+  };
+  const pillDotColors = {
+    mm: "bg-amber-500 dark:bg-amber-400",
+    ltm: "bg-teal-500 dark:bg-teal-400",
+    cc: "bg-violet-500 dark:bg-violet-400",
+    cg: "bg-emerald-500 dark:bg-emerald-400",
+  };
+
+  const canGoBack =
+    onGoBackInTime &&
+    messageIndex < totalMessages - 1 &&
+    !isLoading;
+
+  return (
+    <div
+      className={`group/msg flex flex-col animate-fade-in-up ${
+        message.role === "user" ? "items-end" : "items-start"
+      }`}
+    >
+      <div
+        className={`group/tts relative max-w-[85%] rounded-3xl px-4 py-3 pr-10 transition-shadow duration-200 ${
+          message.role === "user"
+            ? "bg-foreground text-background shadow-sm"
+            : "bg-white dark:bg-neutral-800/80 border border-neutral-200/60 dark:border-neutral-700/60 shadow-sm"
+        }`}
+        dir={isRtl ? "rtl" : undefined}
+      >
+        <div className="absolute top-2 right-2">
+          <TTSButton
+            text={
+              message.role === "assistant" && options.length > 0
+                ? `${text}\n\nFollow-up options: ${options.join(". ")}`
+                : text
+            }
+            showOnHover={true}
+            ariaLabel="Listen to message"
+            onTtsProgress={message.role === "assistant" ? (charEnd) => onTtsProgress?.(messageIndex, charEnd) : undefined}
+            onTtsEnd={message.role === "assistant" ? onTtsEnd : undefined}
+          />
+        </div>
+        {message.role === "user" ? (
+          <span className="text-sm md:text-base">
+            <UserMessageContent
+              content={text}
+              idToName={idToName}
+              ltmIdToTitle={ltmIdToTitle}
+              ccIdToTitle={ccIdToTitle}
+              cgIdToTitle={cgIdToTitle}
+              onMentalModelClick={(id) => onMentalModelClick(id, text)}
+              onLtmClick={onLtmClick}
+              onCustomConceptClick={onCustomConceptClick}
+              onConceptGroupClick={onConceptGroupClick}
+              previewMap={previewMap}
+            />
+          </span>
+        ) : (
+          <div className="text-sm md:text-base">
+            {text ? (
+              <>
+                {typeof ttsHighlight === "number" && message.role === "assistant" ? (
+                  <TtsHighlightedText
+                    text={(stripMarkdown(text).trim() + (options.length > 0 ? ` Follow-up options: ${options.join(". ")}` : "")).trim()}
+                    charEnd={ttsHighlight}
+                  />
+                ) : (
+                <ChatMarkdown
+                  content={text}
+                  idToName={idToName}
+                  ltmIdToTitle={ltmIdToTitle}
+                  ccIdToTitle={ccIdToTitle}
+                  cgIdToTitle={cgIdToTitle}
+                  onMentalModelClick={onMentalModelClick}
+                  onLtmClick={onLtmClick}
+                  onCustomConceptClick={onCustomConceptClick}
+                  onConceptGroupClick={onConceptGroupClick}
+                  previewMap={previewMap}
+                />
+                )}
+                {isLastMsg && isLoading && (
+                  <span
+                    className="inline-block w-0.5 h-4 ml-0.5 bg-foreground/80 animate-blink align-middle"
+                    aria-hidden
+                  />
+                )}
+                {isLastMsg && text === "Something went wrong." && onRetry && (
+                  <button
+                    type="button"
+                    onClick={onRetry}
+                    className="mt-2 inline-block px-3 py-1.5 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                  >
+                    Retry
+                  </button>
+                )}
+              </>
+            ) : (
+              <LoadingDots className="opacity-70" />
+            )}
+          </div>
+        )}
+      </div>
+      {canGoBack && (
+        <button
+          type="button"
+          onClick={() => onGoBackInTime?.(messageIndex, message)}
+          className="mt-1.5 opacity-100 md:opacity-0 md:group-hover/msg:opacity-100 transition-opacity text-xs text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 focus:opacity-100"
+        >
+          Go back to here
+        </button>
+      )}
+      {message.role === "assistant" && ctx && ctxCount !== undefined && (
+          <div className="mt-2 max-w-[85%] flex flex-col items-start">
+            {ctxExpanded ? (
+              <div
+                className="w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700/80 bg-gradient-to-br from-neutral-50/95 to-neutral-100/80 dark:from-neutral-800/95 dark:to-neutral-900/80 shadow-sm overflow-hidden"
+                onPointerDownCapture={(e) => {
+                  if (ctxReasonPillKey && !(e.target as HTMLElement).closest("[data-context-pill]")) {
+                    setCtxReasonPillKey(null);
+                  }
+                }}
+              >
+                <div className="px-3.5 py-2.5 flex items-center justify-between border-b border-neutral-200/60 dark:border-neutral-700/60">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                    Context used
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => { setCtxExpanded(false); setCtxReasonPillKey(null); }}
+                    className="text-xs font-medium text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+                  >
+                    Collapse
+                  </button>
+                </div>
+                <div className="p-3 flex flex-wrap gap-2">
+                  {ctxCount === 0 ? (
+                    <span className="text-xs text-neutral-500 dark:text-neutral-400 italic">
+                      No mental models or memories used
+                    </span>
+                  ) : (
+                    ctxItems.map((item) => {
+                      const key = `${item.type}-${item.id}`;
+                      const isShowingReason = ctxReasonPillKey === key;
+                      return (
+                        <div key={key} className="relative" data-context-pill>
+                          <button
+                            type="button"
+                            className={`inline-flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl text-xs font-medium border transition-all duration-200 shadow-sm shrink-0 ${pillStyles[item.type]}`}
+                            onPointerDown={(e) => {
+                              e.preventDefault();
+                              didLongPressRef.current = false;
+                              longPressTimerRef.current = setTimeout(() => {
+                                longPressTimerRef.current = null;
+                                didLongPressRef.current = true;
+                                openContextFor(item.type, item.id);
+                              }, 500);
+                            }}
+                            onPointerUp={() => {
+                              if (longPressTimerRef.current) {
+                                clearTimeout(longPressTimerRef.current);
+                                longPressTimerRef.current = null;
+                                if (!didLongPressRef.current) {
+                                  setCtxReasonPillKey((prev) => (prev === key ? null : key));
+                                }
+                              }
+                              didLongPressRef.current = false;
+                            }}
+                            onPointerLeave={() => {
+                              if (longPressTimerRef.current) {
+                                clearTimeout(longPressTimerRef.current);
+                                longPressTimerRef.current = null;
+                              }
+                              didLongPressRef.current = false;
+                            }}
+                            onContextMenu={(e) => e.preventDefault()}
+                            title={item.reason || (item.type === "mm" ? "Hold to open mental model" : item.type === "ltm" ? "Hold to open memory" : item.type === "cc" ? "Hold to open concept" : "Hold to open domain")}
+                          >
+                            <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${pillDotColors[item.type]}`} aria-hidden />
+                            <span>{item.title}</span>
+                          </button>
+                          {isShowingReason && (
+                            <div
+                              className="absolute left-0 right-0 top-full mt-1 z-10 py-2 px-2.5 rounded-lg text-[11px] text-neutral-600 dark:text-neutral-300 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 shadow-lg max-h-32 overflow-y-auto"
+                              role="tooltip"
+                            >
+                              <p className="font-medium text-neutral-500 dark:text-neutral-400 mb-0.5">Why it was used</p>
+                              <p className="break-words">{item.reason || "No reason provided"}</p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setCtxExpanded(true)}
+                className="inline-flex items-center gap-2 py-1.5 px-3 rounded-xl text-xs font-medium bg-gradient-to-r from-neutral-100 to-neutral-50 dark:from-neutral-800 dark:to-neutral-800/80 text-neutral-600 dark:text-neutral-400 border border-neutral-200/80 dark:border-neutral-700/80 hover:from-neutral-200 hover:to-neutral-100 dark:hover:from-neutral-700 dark:hover:to-neutral-700/80 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all duration-200 shadow-sm"
+              >
+                <span className="flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 dark:bg-amber-500" aria-hidden />
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400 dark:bg-teal-500" aria-hidden />
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400 dark:bg-violet-500" aria-hidden />
+                </span>
+                Context used ({ctxCount})
+              </button>
+            )}
+          </div>
+        )}
+      {showOptions && (
+        <div className="mt-2 grid grid-cols-2 gap-2 max-w-[85%]">
+          {options.map((opt, j) => (
+            <button
+              key={j}
+              onClick={() => {
+                playSelectionChime();
+                onOptionSelect(opt);
+              }}
+              className="px-3 py-2 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 text-sm transition-all duration-200 active:scale-[0.98] hover:border-neutral-400 dark:hover:border-neutral-500 text-left opacity-0 animate-fade-in-up"
+              style={{ animationDelay: `${j * 80}ms`, animationFillMode: "forwards" }}
+            >
+              <UserMessageContent
+                content={opt}
+                idToName={idToName}
+                ltmIdToTitle={ltmIdToTitle}
+                ccIdToTitle={ccIdToTitle}
+                cgIdToTitle={cgIdToTitle}
+                onMentalModelClick={(id) => onMentalModelClick(id, opt)}
+                onLtmClick={onLtmClick}
+                onCustomConceptClick={onCustomConceptClick}
+                onConceptGroupClick={onConceptGroupClick}
+                previewMap={previewMap}
+              />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function LanguageChangeBanner({ onDismiss }: { onDismiss: () => void }) {
+  const [isExiting, setIsExiting] = useState(false);
+  const exitDuration = 250;
+  const autoDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const dismiss = useCallback(() => {
+    if (isExiting) return;
+    if (autoDismissRef.current) {
+      clearTimeout(autoDismissRef.current);
+      autoDismissRef.current = null;
+    }
+    setIsExiting(true);
+    setTimeout(onDismiss, exitDuration);
+  }, [isExiting, onDismiss]);
+
+  useEffect(() => {
+    autoDismissRef.current = setTimeout(dismiss, 5000);
+    return () => {
+      if (autoDismissRef.current) clearTimeout(autoDismissRef.current);
+    };
+  }, [dismiss]);
+
+  return (
+    <div className="mx-4 mt-2 flex justify-center">
+      <div
+        className={`max-w-xl w-full px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-sm text-amber-900 dark:text-amber-100 flex items-center justify-between gap-3 ${
+          isExiting ? "animate-fade-out-up" : "animate-reveal-down"
+        }`}
+      >
+        <span>Start a new conversation to use your new language and voice style settings.</span>
+        <button
+          type="button"
+          onClick={dismiss}
+          className="shrink-0 p-1.5 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors"
+          aria-label="Dismiss"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function LoadingDots({
+  className = "",
+  "aria-label": ariaLabel,
+}: {
+  className?: string;
+  "aria-label"?: string;
+}) {
+  return (
+    <span
+      className={`inline-flex gap-0.5 ${className}`}
+      aria-label={ariaLabel}
+      aria-hidden={!ariaLabel}
+    >
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          className="inline-block w-1.5 h-1.5 rounded-full bg-current animate-bounce-dot"
+          style={{ animationDelay: `${i * 0.16}s` }}
+        />
+      ))}
+    </span>
+  );
+}
+
+function CopyButton({
+  text,
+  "aria-label": ariaLabel,
+}: {
+  text: string;
+  "aria-label"?: string;
+}) {
+  const [copied, setCopied] = useState(false);
+  const handleClick = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      /* ignore */
+    }
+  };
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      aria-label={ariaLabel}
+      className="shrink-0 p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+    >
+      {copied ? (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-neutral-600 dark:text-neutral-400">
+          <path d="M20 6L9 17l-5-5" />
+        </svg>
+      ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+          <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+          <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+        </svg>
+      )}
+    </button>
+  );
+}
+
+const EXAMPLE_PILLS = [
+  [
+    "Career change",
+    "New job offer",
+    "Asking for a raise",
+    "Quitting my job",
+    "Side project",
+    "Work-life balance",
+    "Toxic workplace",
+    "Switching industries",
+    "Sticking with a failing project",
+    "Negotiating salary",
+  ],
+  [
+    "Relationship decision",
+    "Moving to a new city",
+    "Buying a house",
+    "Big purchase",
+    "Retirement planning",
+    "Investing money",
+    "Conflict with someone",
+    "Taking a financial risk",
+    "Splitting costs fairly",
+    "Letting go of an investment",
+  ],
+  [
+    "Starting a business",
+    "Going back to school",
+    "Family planning",
+    "Health habit",
+    "Procrastination",
+    "Saying no to something",
+    "Sticking to a commitment",
+    "Doubting a past decision",
+    "Avoiding something I should face",
+    "Choosing between two good options",
+  ],
+];
+
+function RippleIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <circle cx="12" cy="12" r="3" />
+      <circle cx="12" cy="12" r="7" />
+      <circle cx="12" cy="12" r="11" />
+    </svg>
+  );
+}
+
+function MovingPills({ onSelect }: { onSelect: (text: string) => void }) {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [hoveredRow, setHoveredRow] = useState<number | null>(null);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mq.matches);
+    const handler = () => setPrefersReducedMotion(mq.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  return (
+    <div className="space-y-4 overflow-hidden">
+      {EXAMPLE_PILLS.map((row, rowIndex) => (
+        <div
+          key={rowIndex}
+          className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
+          onMouseEnter={() => setHoveredRow(rowIndex)}
+          onMouseLeave={() => setHoveredRow(null)}
+        >
+          <div
+            className={`flex gap-3 shrink-0 ${
+              prefersReducedMotion
+                ? ""
+                : rowIndex % 2 === 0
+                  ? "animate-marquee-left"
+                  : "animate-marquee-right"
+            } ${hoveredRow === rowIndex ? "marquee-paused" : ""}`}
+            style={{ width: "max-content" }}
+          >
+            {[...row, ...row].map((label, i) => (
+              <button
+                key={`${rowIndex}-${i}`}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  playSelectionChime();
+                  onSelect(label);
+                }}
+                className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-900 dark:text-neutral-100 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-all duration-200 active:scale-95 whitespace-nowrap"
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default function ChatPage() {
+  const params = useParams();
+  const router = useRouter();
+  const { userId } = useAuth();
+  const { user } = useUser();
+  const { language, setLanguage, showLanguageChangeBanner, dismissLanguageChangeBanner } = useLanguage();
+  const { userType, setUserType, showUserTypeChangeBanner, dismissUserTypeChangeBanner } = useUserType();
+  const languageRef = useRef(language);
+  languageRef.current = language;
+  const userTypeRef = useRef(userType);
+  userTypeRef.current = userType;
+  const isAnonymous = !userId;
+  const sessionId = params.sessionId as string;
+  const isNew = sessionId === "new";
+  const incognitoMode = sessionId === "incognito";
+
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [sessionLoading, setSessionLoading] = useState(!isNew && !incognitoMode);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(
+    isNew || incognitoMode ? null : sessionId
+  );
+  const [currentSession, setCurrentSession] = useState<Session | null>(null);
+  const [collapsedSummary, setCollapsedSummary] = useState<LongTermMemoryItem | null>(null);
+  const [longTermMemories, setLongTermMemories] = useState<LongTermMemoryItem[]>([]);
+  const [summarizeModal, setSummarizeModal] = useState<{
+    summary: string;
+    enrichmentPrompt: string;
+    longTermMemoryId: string;
+  } | null>(null);
+  const [summarizeLanguageModal, setSummarizeLanguageModal] = useState<{
+    selectedLanguage: LanguageCode;
+  } | null>(null);
+  const [summarizeLoading, setSummarizeLoading] = useState(false);
+  const [summarizeSuccess, setSummarizeSuccess] = useState(false);
+  const [voiceModeOpen, setVoiceModeOpen] = useState(false);
+  const { speed: ttsSpeed, setSpeed: setTtsSpeed } = useTtsSpeed();
+  const [ttsHighlight, setTtsHighlight] = useState<TtsHighlightState>(null);
+  const [conceptSavedToast, setConceptSavedToast] = useState(false);
+  const [restartLoading, setRestartLoading] = useState(false);
+  const [ltmDetailModal, setLtmDetailModal] = useState<LongTermMemoryItem | null>(null);
+  const [ltmDeleteConfirmModal, setLtmDeleteConfirmModal] = useState<LongTermMemoryItem | null>(null);
+  const [customConcepts, setCustomConcepts] = useState<CustomConceptItem[]>([]);
+  const [ccDetailModal, setCcDetailModal] = useState<CustomConceptItem | null>(null);
+  const [ccDeleteConfirmModal, setCcDeleteConfirmModal] = useState<CustomConceptItem | null>(null);
+  const [generateModal, setGenerateModal] = useState<{
+    type: "ltm" | "cc";
+    generatedText: string;
+    loading: boolean;
+  } | null>(null);
+  const [ccCreateModal, setCcCreateModal] = useState(false);
+  const [ccCreateInput, setCcCreateInput] = useState("");
+  const [ccCreateStep, setCcCreateStep] = useState<"input" | "preview">("input");
+  const [conceptGroups, setConceptGroups] = useState<ConceptGroupItem[]>([]);
+  const [savedTranscripts, setSavedTranscripts] = useState<{ _id: string; videoId: string; videoTitle?: string; channel?: string }[]>([]);
+  const [nuggets, setNuggets] = useState<{ _id: string; content: string; source?: string }[]>([]);
+  const [nuggetFormOpen, setNuggetFormOpen] = useState<"selection" | "panel" | null>(null);
+  const [nuggetFormPosition, setNuggetFormPosition] = useState<{ x: number; y: number } | null>(null);
+  const [nuggetCreateContent, setNuggetCreateContent] = useState("");
+  const [nuggetCreateSource, setNuggetCreateSource] = useState("");
+  const [nuggetCreateLoading, setNuggetCreateLoading] = useState(false);
+  const [nuggetSuggestSourceLoading, setNuggetSuggestSourceLoading] = useState(false);
+  const [nuggetImproveLoading, setNuggetImproveLoading] = useState(false);
+  const [selectedTextForNugget, setSelectedTextForNugget] = useState<string | null>(null);
+  const [selectionRect, setSelectionRect] = useState<{ left: number; bottom: number } | null>(null);
+  const [nuggetLearnId, setNuggetLearnId] = useState<string | null>(null);
+  const [nuggetLearnExplanation, setNuggetLearnExplanation] = useState<string | null>(null);
+  const [selectionLearnPopup, setSelectionLearnPopup] = useState<{ text: string; explanation: string | null; loading: boolean; x: number; y: number } | null>(null);
+  const [cgDetailModal, setCgDetailModal] = useState<ConceptGroupItem | null>(null);
+  const [cgCreateModal, setCgCreateModal] = useState(false);
+  const [cgCreateStep, setCgCreateStep] = useState<1 | 2 | 3 | 4>(1);
+  const [cgCreateDomain, setCgCreateDomain] = useState("");
+  const [cgCreateQuestions, setCgCreateQuestions] = useState<string[]>([]);
+  const [cgCreateAnswers, setCgCreateAnswers] = useState<Record<string, string>>({});
+  const [cgCreateConcepts, setCgCreateConcepts] = useState<{ title: string; summary: string; enrichmentPrompt: string }[]>([]);
+  const [cgCreateLoading, setCgCreateLoading] = useState(false);
+  const [cgCreateSuccess, setCgCreateSuccess] = useState(false);
+  const [cgDeleteConfirmModal, setCgDeleteConfirmModal] = useState<ConceptGroupItem | null>(null);
+  const [transcriptModalTranscript, setTranscriptModalTranscript] = useState<{
+    id: string;
+    videoId: string;
+    videoTitle?: string;
+    channel?: string;
+    transcriptText: string;
+  } | null>(null);
+  const [cgCustomCreateModal, setCgCustomCreateModal] = useState(false);
+  const [cgCustomCreateTitle, setCgCustomCreateTitle] = useState("");
+  const [cgCustomCreateSelectedIds, setCgCustomCreateSelectedIds] = useState<Set<string>>(new Set());
+  const [cgCustomCreateLoading, setCgCustomCreateLoading] = useState(false);
+  const [ccCreateDraft, setCcCreateDraft] = useState<{
+    title: string;
+    summary: string;
+    enrichmentPrompt: string;
+  } | null>(null);
+  const [ccCreateGroupSuggestions, setCcCreateGroupSuggestions] = useState<{
+    suggestedGroupIds: string[];
+    suggestedNewGroupNames: string[];
+  } | null>(null);
+  const [ccCreateSelectedGroupIds, setCcCreateSelectedGroupIds] = useState<Set<string>>(new Set());
+  const [ccCreateSelectedNewGroupNames, setCcCreateSelectedNewGroupNames] = useState<Set<string>>(new Set());
+  const [ccCreateLoading, setCcCreateLoading] = useState(false);
+  const [ccCreateSuccess, setCcCreateSuccess] = useState(false);
+  const [ccYoutubeModal, setCcYoutubeModal] = useState(false);
+  const [ccYoutubeUrl, setCcYoutubeUrl] = useState("");
+  const [ccYoutubeExtractPrompt, setCcYoutubeExtractPrompt] = useState("");
+  const [ccYoutubeTranscriptId, setCcYoutubeTranscriptId] = useState<string | null>(null);
+  const [ccYoutubeLoading, setCcYoutubeLoading] = useState(false);
+  const [ccYoutubeResult, setCcYoutubeResult] = useState<{
+    videoTitle: string | null;
+    channel: string | null;
+    groups: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
+  } | null>(null);
+  const [ccYoutubeError, setCcYoutubeError] = useState<string | null>(null);
+  const [ccAutoTagSuggestions, setCcAutoTagSuggestions] = useState<{
+    suggestedGroupIds: string[];
+    suggestedNewGroupNames: string[];
+  } | null>(null);
+  const [ccAutoTagLoading, setCcAutoTagLoading] = useState(false);
+  const [ccTranslating, setCcTranslating] = useState(false);
+  const [ccTranslatePopoverOpen, setCcTranslatePopoverOpen] = useState(false);
+  const [deleteSessionConfirmModal, setDeleteSessionConfirmModal] = useState<Session | null>(null);
+  const [goBackConfirmModal, setGoBackConfirmModal] = useState<{
+    index: number;
+    role: "user" | "assistant";
+    content: string;
+  } | null>(null);
+  const [goBackLoading, setGoBackLoading] = useState(false);
+  const [letterModalOpen, setLetterModalOpen] = useState(false);
+  const LETTER_SEEN_KEY = "fml-labs-letter-seen";
+  const ONBOARDING_COMPLETE_KEY = "fml-labs-onboarding-complete";
+  const [onboardingStep, setOnboardingStep] = useState<0 | 1 | 2 | 3 | null>(null);
+  const INCOGNITO_ENTER_ANIMATION_MS = 1400;
+  const [incognitoEntering, setIncognitoEntering] = useState(false);
+  useEffect(() => {
+    if (incognitoMode) {
+      setIncognitoEntering(true);
+      const t = setTimeout(() => setIncognitoEntering(false), INCOGNITO_ENTER_ANIMATION_MS);
+      return () => clearTimeout(t);
+    }
+  }, [incognitoMode]);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (incognitoMode) {
+      setOnboardingStep(null);
+      return;
+    }
+    if (localStorage.getItem(ONBOARDING_COMPLETE_KEY) === "true") {
+      setOnboardingStep(null);
+      return;
+    }
+    setOnboardingStep(1);
+  }, [incognitoMode]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesScrollRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const selectionBubblesRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
+  const inputExpandInputRef = useRef<HTMLDivElement>(null);
+  const [inputExpandModalOpen, setInputExpandModalOpen] = useState(false);
+  const justCreatedSessionRef = useRef<string | null>(null);
+  const anonymousActiveRef = useRef(false);
+  const ccAutoTagPopoverRef = useRef<HTMLDivElement>(null);
+  const ccTranslatePopoverRef = useRef<HTMLDivElement>(null);
+  const ccAutoTagSuggestionsRef = useRef(ccAutoTagSuggestions);
+  ccAutoTagSuggestionsRef.current = ccAutoTagSuggestions;
+  const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    setShowScrollToBottom(false);
+  }, []);
+
+  const checkSelection = useCallback(() => {
+    const sel = window.getSelection();
+    const text = sel?.toString()?.trim();
+    if (!text || text.length < 2) {
+      setSelectedTextForNugget(null);
+      setSelectionRect(null);
+      return;
+    }
+    const container = messagesContainerRef.current;
+    if (!container || !sel?.anchorNode || !container.contains(sel.anchorNode)) {
+      setSelectedTextForNugget(null);
+      setSelectionRect(null);
+      return;
+    }
+    try {
+      const rect = sel.getRangeAt(0).getBoundingClientRect();
+      setSelectionRect({ left: rect.left, bottom: rect.bottom });
+      setSelectedTextForNugget(text);
+    } catch {
+      setSelectionRect(null);
+      setSelectedTextForNugget(null);
+    }
+  }, []);
+
+  // selectionchange is more reliable on mobile than touchend; debounce to wait for selection to stabilize
+  useEffect(() => {
+    if (isAnonymous) return;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    const handleSelectionChange = () => {
+      const sel = window.getSelection();
+      const text = sel?.toString()?.trim();
+      if (!text) {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
+        }
+        setSelectedTextForNugget(null);
+        setSelectionRect(null);
+        return;
+      }
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        timeoutId = null;
+        checkSelection();
+      }, 300);
+    };
+    document.addEventListener("selectionchange", handleSelectionChange);
+    return () => {
+      document.removeEventListener("selectionchange", handleSelectionChange);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [isAnonymous, checkSelection]);
+
+  useEffect(() => {
+    if (isAnonymous && !isNew) {
+      router.replace("/chat/new");
+    }
+  }, [isAnonymous, isNew, router]);
+
+  useEffect(() => {
+    const el = messagesScrollRef.current;
+    if (!el) return;
+    const check = () => {
+      const { scrollTop, scrollHeight, clientHeight } = el;
+      const atBottom = scrollHeight - scrollTop - clientHeight < 80;
+      setShowScrollToBottom((prev) => (atBottom ? false : true));
+    };
+    el.addEventListener("scroll", check, { passive: true });
+    check(); // Initial check
+    return () => el.removeEventListener("scroll", check);
+  }, [messages, currentSession?.isCollapsed]);
+
+  useEffect(() => {
+    if (!ltmDetailModal) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLtmDetailModal(null);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [ltmDetailModal]);
+
+  useEffect(() => {
+    if (!letterModalOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLetterModalOpen(false);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [letterModalOpen]);
+
+  useEffect(() => {
+    if (!deleteSessionConfirmModal) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setDeleteSessionConfirmModal(null);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [deleteSessionConfirmModal]);
+
+  useEffect(() => {
+    if (goBackConfirmModal === null) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setGoBackConfirmModal(null);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [goBackConfirmModal]);
+
+  useEffect(() => {
+    if (!ccDetailModal) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (ccAutoTagSuggestionsRef.current) {
+          setCcAutoTagSuggestions(null);
+        } else if (ccTranslatePopoverOpen) {
+          setCcTranslatePopoverOpen(false);
+        } else {
+          setCcDetailModal(null);
+        }
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [ccDetailModal, ccTranslatePopoverOpen]);
+
+  useEffect(() => {
+    if (!ltmDetailModal && generateModal?.type === "ltm") setGenerateModal(null);
+  }, [ltmDetailModal, generateModal?.type]);
+
+  useEffect(() => {
+    if (!ccDetailModal && generateModal?.type === "cc") setGenerateModal(null);
+  }, [ccDetailModal, generateModal?.type]);
+
+  // Dismiss banner when user hasn't started chatting yet (no messages).
+  // This ensures we don't show the banner after they send their first message
+  // in a new conversation—the new language/voice already applies.
+  useEffect(() => {
+    if (messages.length === 0) {
+      dismissLanguageChangeBanner();
+      dismissUserTypeChangeBanner();
+    }
+  }, [
+    messages.length,
+    showLanguageChangeBanner,
+    showUserTypeChangeBanner,
+    dismissLanguageChangeBanner,
+    dismissUserTypeChangeBanner,
+  ]);
+
+  useEffect(() => {
+    if (!ccAutoTagSuggestions) return;
+    const handler = (e: MouseEvent) => {
+      const el = ccAutoTagPopoverRef.current;
+      if (el && !el.contains(e.target as Node)) setCcAutoTagSuggestions(null);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [ccAutoTagSuggestions]);
+
+  useEffect(() => {
+    if (!ccTranslatePopoverOpen) return;
+    const handler = (e: MouseEvent) => {
+      const el = ccTranslatePopoverRef.current;
+      if (el && !el.contains(e.target as Node)) setCcTranslatePopoverOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [ccTranslatePopoverOpen]);
+
+  useEffect(() => {
+    if (!cgDetailModal) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (ccDetailModal) {
+          setCcDetailModal(null);
+        } else {
+          setCgDetailModal(null);
+        }
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [cgDetailModal, ccDetailModal]);
+
+  useEffect(() => {
+    if (!cgCustomCreateModal) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (!cgCustomCreateLoading) {
+          setCgCustomCreateModal(false);
+          setCgCustomCreateTitle("");
+          setCgCustomCreateSelectedIds(new Set());
+        }
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [cgCustomCreateModal, cgCustomCreateLoading]);
+
+  const [savedConcepts, setSavedConcepts] = useState<
+    { modelId: string }[]
+  >([]);
+
+  const [sessionsLoaded, setSessionsLoaded] = useState(false);
+  const [conceptsLoaded, setConceptsLoaded] = useState(false);
+  const [ltmLoaded, setLtmLoaded] = useState(false);
+  const [ccLoaded, setCcLoaded] = useState(false);
+  const [cgLoaded, setCgLoaded] = useState(false);
+  const [mentalModelsLoaded, setMentalModelsLoaded] = useState(false);
+  const leftPanelReady = isAnonymous
+    ? mentalModelsLoaded
+    : sessionsLoaded && conceptsLoaded && ltmLoaded && ccLoaded && cgLoaded && mentalModelsLoaded;
+
+  const refetchSessions = useCallback(() => {
+    if (isAnonymous) {
+      setSessions([]);
+      setSessionsLoaded(true);
+      return;
+    }
+    fetch(`/api/sessions?t=${Date.now()}`, { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => setSessions(Array.isArray(data) ? data : []))
+      .catch(() => {})
+      .finally(() => setSessionsLoaded(true));
+  }, [isAnonymous]);
+
+  const refetchSavedConcepts = useCallback(() => {
+    if (isAnonymous) {
+      setSavedConcepts([]);
+      setConceptsLoaded(true);
+      return;
+    }
+    fetch("/api/me/concepts", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) =>
+        setSavedConcepts(Array.isArray(data) ? data : [])
+      )
+      .catch(() => setSavedConcepts([]))
+      .finally(() => setConceptsLoaded(true));
+  }, [isAnonymous]);
+
+  const removeConcept = useCallback(
+    async (modelId: string) => {
+      try {
+        const res = await fetch(`/api/me/concepts/${modelId}`, {
+          method: "DELETE",
+        });
+        if (res.ok) refetchSavedConcepts();
+      } catch {
+        /* ignore */
+      }
+    },
+    [refetchSavedConcepts]
+  );
+
+  const refetchLongTermMemories = useCallback(() => {
+    if (isAnonymous) {
+      setLongTermMemories([]);
+      setLtmLoaded(true);
+      return;
+    }
+    fetch("/api/me/long-term-memory", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => setLongTermMemories(Array.isArray(data) ? data : []))
+      .catch(() => setLongTermMemories([]))
+      .finally(() => setLtmLoaded(true));
+  }, [isAnonymous]);
+
+  const refetchCustomConcepts = useCallback(() => {
+    if (isAnonymous) {
+      setCustomConcepts([]);
+      setCcLoaded(true);
+      return;
+    }
+    fetch("/api/me/custom-concepts", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => setCustomConcepts(Array.isArray(data) ? data : []))
+      .catch(() => setCustomConcepts([]))
+      .finally(() => setCcLoaded(true));
+  }, [isAnonymous]);
+
+  const refetchConceptGroups = useCallback(() => {
+    if (isAnonymous) {
+      setConceptGroups([]);
+      setCgLoaded(true);
+      return;
+    }
+    fetch("/api/me/concept-groups", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => setConceptGroups(Array.isArray(data) ? data : []))
+      .catch(() => setConceptGroups([]))
+      .finally(() => setCgLoaded(true));
+  }, [isAnonymous]);
+
+  const refetchTranscripts = useCallback(() => {
+    if (isAnonymous) {
+      setSavedTranscripts([]);
+      return;
+    }
+    fetch("/api/me/transcripts", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => setSavedTranscripts(Array.isArray(data) ? data : []))
+      .catch(() => setSavedTranscripts([]));
+  }, [isAnonymous]);
+
+  const refetchNuggets = useCallback(() => {
+    if (isAnonymous) {
+      setNuggets([]);
+      return;
+    }
+    fetch("/api/me/nuggets", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => setNuggets(Array.isArray(data) ? data : []))
+      .catch(() => setNuggets([]));
+  }, [isAnonymous]);
+
+  const [mentalModelsIndex, setMentalModelsIndex] = useState<
+    Map<string, string>
+  >(new Map());
+
+  useEffect(() => {
+    refetchSessions();
+  }, [refetchSessions]);
+
+  // Letter modal: only show when user clicks "Crafted with Intention" (no longer auto-show for first-time; that's now in onboarding step 3)
+
+  useEffect(() => {
+    refetchSavedConcepts();
+  }, [refetchSavedConcepts]);
+
+  useEffect(() => {
+    refetchLongTermMemories();
+  }, [refetchLongTermMemories]);
+
+  useEffect(() => {
+    refetchCustomConcepts();
+  }, [refetchCustomConcepts]);
+
+  useEffect(() => {
+    refetchConceptGroups();
+  }, [refetchConceptGroups]);
+
+  useEffect(() => {
+    if (isAnonymous && !isNew) {
+      setSessionLoading(false);
+      return;
+    }
+    if (incognitoMode) {
+      setSessionLoading(false);
+      return;
+    }
+    if (!isNew && sessionId && sessionId !== "new" && sessionId !== "incognito" && leftPanelReady) {
+      // Skip fetch when we just created this session and streamed the response.
+      // Fetching would overwrite our streamed messages and cause a visible refresh.
+      if (justCreatedSessionRef.current === sessionId) {
+        return;
+      }
+      justCreatedSessionRef.current = null; // clear before fetching a different session
+      setSessionLoading(true);
+      fetch(`/api/sessions/${sessionId}`)
+        .then((r) => {
+          if (!r.ok) throw new Error("Not found");
+          return r.json();
+        })
+        .then(({ session, messages: msgs, longTermMemory }) => {
+          setCurrentSessionId(session._id);
+          setCurrentSession(session);
+          setMessages(processMessagesWithContext(msgs || []));
+          setCollapsedSummary(session.isCollapsed && longTermMemory ? longTermMemory : null);
+        })
+        .catch(() => {
+          router.push("/chat/new");
+        })
+        .finally(() => setSessionLoading(false));
+    } else if (isNew || isAnonymous || incognitoMode) {
+      setSessionLoading(false);
+      // Don't clear when we're streaming a response from a just-created session
+      // (e.g. user selected a phrase from the carousel). Clearing would wipe the UI.
+      // For anonymous users, we never set justCreatedSessionRef, so use anonymousActiveRef.
+      const hasActiveConversation =
+        justCreatedSessionRef.current || (isAnonymous && anonymousActiveRef.current);
+      if (!(isNew && hasActiveConversation)) {
+        setMessages([]);
+        setCurrentSessionId(null);
+        setCurrentSession(null);
+        setCollapsedSummary(null);
+        anonymousActiveRef.current = false;
+      }
+    }
+  }, [sessionId, isNew, isAnonymous, incognitoMode, router, leftPanelReady]);
+
+  const [lastFailedUserMessage, setLastFailedUserMessage] = useState<string | null>(null);
+  const [onboardingDismissed, setOnboardingDismissed] = useState(true);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setOnboardingDismissed(!!localStorage.getItem("and-then-what-onboarding-seen"));
+  }, []);
+
+  const dismissOnboarding = useCallback(() => {
+    try {
+      localStorage.setItem("and-then-what-onboarding-seen", "true");
+    } catch {
+      /* ignore */
+    }
+    setOnboardingDismissed(true);
+  }, []);
+
+  const sendMessage = useCallback(async (overrideText?: string, options?: { retry?: boolean; messagesOverride?: Message[] }) => {
+    const rawText = (overrideText ?? input).trim();
+    if (!rawText || isLoading) return;
+    playSelectionChime();
+
+    if (isAnonymous) anonymousActiveRef.current = true;
+
+    const {
+      cleanedMessage,
+      mentionedMentalModelIds,
+      mentionedLongTermMemoryIds,
+      mentionedCustomConceptIds,
+      mentionedConceptGroupIds,
+    } = parseMentionsFromMessage(rawText, {
+      idToName: mentalModelsIndex,
+      ltmIdToTitle: new Map(longTermMemories.map((ltm) => [ltm._id, ltm.title])),
+      ccIdToTitle: new Map(customConcepts.map((cc) => [cc._id, cc.title])),
+      cgIdToTitle: new Map(conceptGroups.map((cg) => [cg._id, cg.title])),
+    });
+    const messageToSend =
+      cleanedMessage ||
+      (mentionedMentalModelIds.length > 0 || mentionedLongTermMemoryIds.length > 0 || mentionedCustomConceptIds.length > 0 || mentionedConceptGroupIds.length > 0
+        ? "Please help me think through this."
+        : rawText);
+    const displayContent = cleanedMessage || messageToSend;
+
+    if (messages.length === 0 && sessions.length === 0) {
+      dismissOnboarding();
+    }
+    setInput("");
+    setIsLoading(true);
+    setLastFailedUserMessage(null);
+
+    const userMessage: Message = { role: "user", content: rawText };
+    const assistantMessage: Message = { role: "assistant", content: "" };
+    const baseMessages = options?.messagesOverride ?? messages;
+    setMessages((prev) =>
+      options?.retry ? [...prev.slice(0, -2), userMessage, assistantMessage] : options?.messagesOverride ? [...options.messagesOverride, userMessage, assistantMessage] : [...prev, userMessage, assistantMessage]
+    );
+
+    let sid = currentSessionId;
+    let didCreateSession = false;
+    if (!sid && !isAnonymous && !incognitoMode) {
+      const res = await fetch("/api/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: messageToSend.slice(0, 50) }),
+      });
+      const newSession = await res.json();
+      sid = newSession._id;
+      justCreatedSessionRef.current = sid;
+      didCreateSession = true;
+      setCurrentSessionId(sid);
+      setCurrentSession({ ...newSession, isCollapsed: false, updatedAt: new Date().toISOString() });
+      setSessions((prev) => [{ ...newSession, updatedAt: new Date().toISOString() }, ...prev]);
+      // Defer navigation until after chat completes - navigating mid-stream can unmount
+      // the component and abort the fetch before the LLM responds.
+    }
+
+    const chatBody: Record<string, unknown> = {
+      message: messageToSend,
+      rawMessage: rawText,
+      mentionedMentalModelIds,
+      mentionedLongTermMemoryIds,
+      mentionedCustomConceptIds,
+      mentionedConceptGroupIds,
+      language: languageRef.current,
+      userType: userTypeRef.current,
+    };
+    if (isAnonymous || incognitoMode) {
+      chatBody.messages = baseMessages.map((m) => ({ role: m.role, content: m.content }));
+      if (incognitoMode) chatBody.incognito = true;
+    } else {
+      chatBody.sessionId = sid ?? undefined;
+    }
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(chatBody),
+      });
+
+      if (!res.ok) throw new Error("Failed to send");
+      if (!res.body) throw new Error("No body");
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let accumulated = "";
+      let messageContent = "";
+      let contextBlockConsumed = false;
+      let overlayContext: RelevantContext | null = null;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        accumulated += decoder.decode(value, { stream: true });
+
+        if (!contextBlockConsumed) {
+          const parsed = parseRelevantContextFromStreamStart(accumulated);
+          if (parsed.relevantContext !== null) {
+            contextBlockConsumed = true;
+            overlayContext = parsed.relevantContext;
+            messageContent = parsed.contentWithoutBlock;
+            accumulated = parsed.contentWithoutBlock;
+          }
+        } else {
+          messageContent = accumulated;
+        }
+
+        setMessages((prev) => {
+          const next = [...prev];
+          const last = next[next.length - 1];
+          if (last?.role === "assistant") {
+            next[next.length - 1] = { ...last, content: contextBlockConsumed ? messageContent : "" };
+          }
+          return next;
+        });
+      }
+
+      const { contentWithoutBlock, relevantContext } = contextBlockConsumed
+        ? { contentWithoutBlock: messageContent, relevantContext: overlayContext ?? undefined }
+        : parseRelevantContextBlock(accumulated);
+          const resolvedContext =
+        relevantContext ??
+        (() => {
+          const extractedIds = extractMentalModelIds(contentWithoutBlock);
+          return {
+            mentalModels: extractedIds.map((id) => ({ id, reason: "" })),
+            longTermMemories: [] as RelevantContextItem[],
+            customConcepts: [] as RelevantContextItem[],
+            conceptGroups: [] as RelevantContextItem[],
+          };
+        })();
+      setMessages((prev) => {
+        const next = [...prev];
+        const lastAssistantIdx = next.findLastIndex(
+          (m) => m.role === "assistant"
+        );
+        if (lastAssistantIdx >= 0) {
+          next[lastAssistantIdx] = {
+            ...next[lastAssistantIdx],
+            content: contentWithoutBlock,
+            selectedContexts: {
+              mentalModels: resolvedContext.mentalModels,
+              longTermMemories: resolvedContext.longTermMemories,
+              customConcepts: resolvedContext.customConcepts ?? [],
+              conceptGroups: resolvedContext.conceptGroups ?? [],
+            },
+          };
+        }
+        return next;
+      });
+    } catch (err) {
+      setLastFailedUserMessage(rawText);
+      setMessages((prev) => {
+        const next = [...prev];
+        const last = next[next.length - 1];
+        if (last?.role === "assistant") {
+          next[next.length - 1] = {
+            ...last,
+            content: "Something went wrong.",
+          };
+        }
+        return next;
+      });
+    } finally {
+      // Don't navigate when creating a session from carousel - router.replace and
+      // history.replaceState were causing the page to reset to the empty state.
+      // We stay on /chat/new; the session appears in the sidebar for the user to click.
+      setIsLoading(false);
+      inputRef.current?.focus();
+      refetchSessions();
+    }
+  }, [input, isLoading, currentSessionId, router, refetchSessions, messages, messages.length, sessions.length, dismissOnboarding, mentalModelsIndex, longTermMemories, customConcepts, conceptGroups, isAnonymous]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (
+      (e.key === "Enter" && !e.shiftKey) ||
+      (e.metaKey && e.key === "Enter") ||
+      (e.ctrlKey && e.key === "Enter")
+    ) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  useEffect(() => {
+    if (inputExpandModalOpen) {
+      const t = setTimeout(() => inputExpandInputRef.current?.focus(), 50);
+      return () => clearTimeout(t);
+    }
+  }, [inputExpandModalOpen]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.shiftKey && (e.metaKey || e.ctrlKey) && (e.key === "|" || e.key === "\\")) {
+        e.preventDefault();
+        router.push("/chat/incognito");
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [router]);
+
+  const SIDEBAR_STORAGE_KEY = "and-then-what-sidebar-open";
+  const [sidebarOpen, setSidebarOpenState] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      setSidebarOpenState(sessionStorage.getItem(SIDEBAR_STORAGE_KEY) === "true");
+    } catch {
+      /* ignore */
+    }
+  }, []);
+  const setSidebarOpen = useCallback((open: boolean) => {
+    setSidebarOpenState(open);
+    try {
+      sessionStorage.setItem(SIDEBAR_STORAGE_KEY, String(open));
+    } catch {
+      /* ignore */
+    }
+  }, []);
+  const [libraryPanelOpen, setLibraryPanelOpen] = useState<"conversations" | "ltm" | "concepts" | "cc" | "cg" | "nuggets" | null>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [deleteAllDataModalOpen, setDeleteAllDataModalOpen] = useState(false);
+  const [deleteAllDataConfirmInput, setDeleteAllDataConfirmInput] = useState("");
+  const [deleteAllDataLoading, setDeleteAllDataLoading] = useState(false);
+  const [conversationsCollapsed, setConversationsCollapsed] = useState(false);
+  const [selectedMentalModel, setSelectedMentalModel] =
+    useState<MentalModel | null>(null);
+  const [overachieverMessage, setOverachieverMessage] = useState<string | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (!libraryPanelOpen && !selectedMentalModel) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (selectedMentalModel) setSelectedMentalModel(null);
+        else if (libraryPanelOpen) setLibraryPanelOpen(null);
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [libraryPanelOpen, selectedMentalModel]);
+
+  useEffect(() => {
+    if (!settingsOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSettingsOpen(false);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [settingsOpen]);
+
+  useEffect(() => {
+    if (libraryPanelOpen === "cg") refetchTranscripts();
+  }, [libraryPanelOpen, refetchTranscripts]);
+
+  useEffect(() => {
+    if (libraryPanelOpen === "nuggets") refetchNuggets();
+  }, [libraryPanelOpen, refetchNuggets]);
+
+  useEffect(() => {
+    const clearSelectionBubbles = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node;
+      if (selectionBubblesRef.current?.contains(target)) return;
+      if (selectedTextForNugget || selectionRect) {
+        setSelectedTextForNugget(null);
+        setSelectionRect(null);
+      }
+    };
+    document.addEventListener("mousedown", clearSelectionBubbles);
+    document.addEventListener("touchstart", clearSelectionBubbles, { passive: true });
+    return () => {
+      document.removeEventListener("mousedown", clearSelectionBubbles);
+      document.removeEventListener("touchstart", clearSelectionBubbles);
+    };
+  }, [selectedTextForNugget, selectionRect]);
+
+  const [teachMeLoading, setTeachMeLoading] = useState(false);
+
+  const handleTeachMeClick = useCallback(async () => {
+    setOverachieverMessage(null);
+    setTeachMeLoading(true);
+    try {
+      const res = await fetch(`/api/mental-models/random?language=${language}`);
+      const data = await res.json();
+      if (data.overachiever && data.message) {
+        setOverachieverMessage(data.message);
+      } else if (data.id) {
+        setRelevanceContext(null);
+        const img = new Image();
+        img.src = `/images/${data.id.replace(/_/g, "-")}.png`;
+        setSelectedMentalModel(data);
+      }
+    } catch {
+      setOverachieverMessage("Something went wrong. Try again in a moment!");
+    } finally {
+      setTeachMeLoading(false);
+    }
+  }, [language]);
+
+  const [sessionSearchQuery, setSessionSearchQuery] = useState("");
+  const [ccSearchQuery, setCcSearchQuery] = useState("");
+  const [ccGroupCollapsed, setCcGroupCollapsed] = useState<Set<string>>(new Set());
+  const [mentalModelsWithWhenToUse, setMentalModelsWithWhenToUse] = useState<{ id: string; name: string; when_to_use: string[] }[]>([]);
+  const [mmGroupCollapsed, setMmGroupCollapsed] = useState<Set<string>>(new Set());
+  const [mmFavorites, setMmFavorites] = useState<Set<string>>(new Set());
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = localStorage.getItem("and-then-what-mental-model-favorites");
+      const arr = raw ? (JSON.parse(raw) as string[]) : [];
+      setMmFavorites(new Set(Array.isArray(arr) ? arr : []));
+    } catch {
+      /* ignore */
+    }
+  }, []);
+  const toggleMmFavorite = useCallback((id: string) => {
+    setMmFavorites((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      try {
+        localStorage.setItem("and-then-what-mental-model-favorites", JSON.stringify([...next]));
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  }, []);
+  const [mmPreviewMap, setMmPreviewMap] = useState<Map<string, { oneLiner?: string; quickIntro?: string }>>(new Map());
+  const [mmSearchQuery, setMmSearchQuery] = useState("");
+  const filteredSessions = sessions.filter((s) =>
+    (s.title ?? "").toLowerCase().includes(sessionSearchQuery.toLowerCase())
+  );
+
+  const HIDDEN_TAGS_KEY = "chat-hidden-tags";
+  const [hiddenTagsSessions, setHiddenTagsSessions] = useState<Set<string>>(
+    () => new Set()
+  );
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(HIDDEN_TAGS_KEY);
+      const ids = raw ? JSON.parse(raw) : [];
+      if (Array.isArray(ids) && ids.length > 0) {
+        setHiddenTagsSessions(new Set(ids));
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
+  const toggleTagsHidden = useCallback((sessionId: string) => {
+    setHiddenTagsSessions((prev) => {
+      const next = new Set(prev);
+      if (next.has(sessionId)) next.delete(sessionId);
+      else next.add(sessionId);
+      try {
+        localStorage.setItem(HIDDEN_TAGS_KEY, JSON.stringify([...next]));
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
+    fetch(`/api/mental-models?language=${language}`)
+      .then((r) => r.json())
+      .then((list: { id: string; name: string }[]) => {
+        const map = new Map<string, string>();
+        list.forEach((m) => map.set(m.id, m.name));
+        setMentalModelsIndex(map);
+      })
+      .catch(() => {})
+      .finally(() => setMentalModelsLoaded(true));
+  }, [language]);
+
+  const [relevanceContext, setRelevanceContext] = useState<string | null>(null);
+  const [previewMap, setPreviewMap] = useState<
+    Map<string, { oneLiner?: string; quickIntro?: string }>
+  >(new Map());
+  const [conceptPreviewMap, setConceptPreviewMap] = useState<
+    Map<string, { oneLiner?: string; quickIntro?: string }>
+  >(new Map());
+
+  useEffect(() => {
+    const ids = savedConcepts.map((c) => c.modelId);
+    if (ids.length === 0) {
+      setConceptPreviewMap(new Map());
+      return;
+    }
+    fetch(`/api/mental-models/preview?ids=${ids.join(",")}&language=${language}`)
+      .then((r) => r.json())
+      .then((data: Record<string, { oneLiner?: string; quickIntro?: string }>) => {
+        const map = new Map<string, { oneLiner?: string; quickIntro?: string }>();
+        Object.entries(data).forEach(([k, v]) => map.set(k, v));
+        setConceptPreviewMap(map);
+      })
+      .catch(() => setConceptPreviewMap(new Map()));
+  }, [savedConcepts, language]);
+
+  useEffect(() => {
+    if (libraryPanelOpen !== "concepts") return;
+    fetch(`/api/mental-models/with-when-to-use?language=${language}`)
+      .then((r) => r.json())
+      .then((data: { id: string; name: string; when_to_use: string[] }[]) => {
+        setMentalModelsWithWhenToUse(Array.isArray(data) ? data : []);
+        const ids = (Array.isArray(data) ? data : []).map((m) => m.id);
+        if (ids.length === 0) return;
+        fetch(`/api/mental-models/preview?ids=${ids.join(",")}&language=${language}`)
+          .then((r2) => r2.json())
+          .then((previewData: Record<string, { oneLiner?: string; quickIntro?: string }>) => {
+            const map = new Map<string, { oneLiner?: string; quickIntro?: string }>();
+            Object.entries(previewData).forEach(([k, v]) => map.set(k, v));
+            setMmPreviewMap(map);
+          })
+          .catch(() => setMmPreviewMap(new Map()));
+      })
+      .catch(() => setMentalModelsWithWhenToUse([]));
+  }, [libraryPanelOpen, language]);
+
+  useEffect(() => {
+    const nameToId = new Map(
+      [...mentalModelsIndex.entries()].map(([id, name]) => [name, id])
+    );
+    const ids = [
+      ...new Set([
+        ...messages.flatMap((m) => {
+          if (m.role === "assistant") {
+            return extractMentalModelIds(m.content, nameToId);
+          }
+          const { mentionedMentalModelIds } = parseMentionsFromMessage(m.content, {
+            idToName: mentalModelsIndex,
+            ltmIdToTitle: new Map(longTermMemories.map((ltm) => [ltm._id, ltm.title])),
+            ccIdToTitle: new Map(customConcepts.map((cc) => [cc._id, cc.title])),
+            cgIdToTitle: new Map(conceptGroups.map((cg) => [cg._id, cg.title])),
+          });
+          return mentionedMentalModelIds;
+        }),
+        // Include IDs from current input for type-box hover tooltips
+        ...parseMentionsFromMessage(input, {
+          idToName: mentalModelsIndex,
+          ltmIdToTitle: new Map(longTermMemories.map((ltm) => [ltm._id, ltm.title])),
+          ccIdToTitle: new Map(customConcepts.map((cc) => [cc._id, cc.title])),
+          cgIdToTitle: new Map(conceptGroups.map((cg) => [cg._id, cg.title])),
+        }).mentionedMentalModelIds,
+      ]),
+    ];
+    if (ids.length === 0) {
+      setPreviewMap(new Map());
+      return;
+    }
+    fetch(`/api/mental-models/preview?ids=${ids.join(",")}&language=${language}`)
+      .then((r) => r.json())
+      .then((data: Record<string, { oneLiner?: string; quickIntro?: string }>) => {
+        const map = new Map<string, { oneLiner?: string; quickIntro?: string }>();
+        Object.entries(data).forEach(([k, v]) => map.set(k, v));
+        setPreviewMap(map);
+      })
+      .catch(() => {});
+  }, [messages, input, mentalModelsIndex, longTermMemories, customConcepts, conceptGroups, language]);
+
+  const handleMentalModelClick = useCallback(
+    (id: string, sourceMessage?: string) => {
+      const context =
+        sourceMessage != null ? extractRelevanceContext(sourceMessage, id) : null;
+      setRelevanceContext(context);
+      // Preload image so it appears instantly when modal opens
+      const img = new Image();
+      img.src = `/images/${id.replace(/_/g, "-")}.png`;
+      fetch(`/api/mental-models/${id}?language=${language}`)
+        .then((r) => {
+          if (!r.ok) throw new Error(`Mental model not found: ${r.status}`);
+          return r.json();
+        })
+        .then((model: MentalModel) => setSelectedMentalModel(model))
+        .catch((err) => {
+          console.error("Failed to load mental model:", id, err);
+        });
+    },
+    [language]
+  );
+
+  return (
+    <TtsHighlightContext.Provider value={{ ttsHighlight, setTtsHighlight }}>
+    <div className={`flex flex-col h-screen max-h-[100dvh] overflow-hidden bg-background border-2 transition-[border-color] duration-300 ease-in-out ${incognitoMode ? "border-violet-400/70 dark:border-violet-500/60" : "border-transparent"}`}>
+      <div className="flex flex-1 min-h-0 overflow-hidden">
+      {/* Sidebar - closable on mobile and desktop */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 w-72 bg-background border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col min-h-0 transition-transform duration-300 ease-out ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="h-14 px-4 flex items-center justify-between border-b border-neutral-200/80 dark:border-neutral-800 shrink-0">
+          <Link href="/" className="font-semibold text-lg text-foreground min-w-0">
+            fml labs
+          </Link>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden flex items-center gap-2 px-3 py-2 rounded-xl text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-sm font-medium shrink-0"
+            aria-label="Back to conversation"
+          >
+            Conversation
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </button>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="hidden lg:flex p-2 -mr-2 min-w-[44px] min-h-[44px] items-center justify-center rounded-xl transition-colors duration-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 text-neutral-500"
+            aria-label="Close sidebar"
+          >
+            ✕
+          </button>
+        </div>
+        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+        {!isAnonymous && (
+        <>
+        <div className="flex-1 min-h-0 flex flex-col overflow-hidden px-2 py-1.5">
+          {!incognitoMode && (
+            <Link
+              href="/chat/incognito"
+              onClick={() => setSidebarOpen(false)}
+              className="group flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors mb-2"
+            >
+              <GhostIcon className="w-4 h-4 shrink-0" />
+              Use incognito
+            </Link>
+          )}
+          {/* Primary nav - Claude.ai pill style, compact selector for center panel */}
+          <nav className="flex flex-col gap-1 shrink-0 mb-3 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30" aria-label="Select view">
+            {[
+              { id: "conversations" as const, label: "Conversations", icon: "chat", onClick: () => { playSelectionChime(); setLibraryPanelOpen("conversations"); setConversationsCollapsed(false); } },
+              { id: "nuggets" as const, label: "Nuggets", icon: "nuggets", onClick: () => { playSelectionChime(); setLibraryPanelOpen("nuggets"); } },
+              { id: "cc" as const, label: "Concepts", icon: "concepts", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cc"); } },
+              { id: "concepts" as const, label: "Mental Models", icon: "models", onClick: () => { playSelectionChime(); setLibraryPanelOpen("concepts"); } },
+              { id: "ltm" as const, label: "Long-Term Memory", icon: "memory", onClick: () => { playSelectionChime(); setLibraryPanelOpen("ltm"); } },
+              { id: "cg" as const, label: "Domains", icon: "domains", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cg"); } },
+            ].map(({ id, label, icon, onClick }) => {
+              const isActive = libraryPanelOpen === id;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={onClick}
+                  className={`flex items-center gap-2.5 w-full px-3 py-2 rounded-full text-left text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-[var(--section-bg)] dark:bg-neutral-700/60 text-foreground shadow-sm"
+                      : "text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100/80 dark:hover:bg-neutral-800/50"
+                  }`}
+                >
+                  {icon === "chat" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                  )}
+                  {icon === "nuggets" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                    </svg>
+                  )}
+                  {icon === "concepts" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                      <path d="M12 3v18" />
+                    </svg>
+                  )}
+                  {icon === "models" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
+                      <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
+                    </svg>
+                  )}
+                  {icon === "memory" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z" />
+                      <path d="M12 6v6l4 2" />
+                    </svg>
+                  )}
+                  {icon === "domains" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
+                      <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
+                      <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
+                    </svg>
+                  )}
+                  <span className="truncate">{label}</span>
+                </button>
+              );
+            })}
+          </nav>
+
+          <button
+            type="button"
+            onClick={() => setConversationsCollapsed(!conversationsCollapsed)}
+            className="flex items-center justify-between w-full px-3 py-1.5 mt-1 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors shrink-0"
+          >
+            Recents
+            <span className="text-[10px] transition-transform" aria-hidden>
+              {conversationsCollapsed ? "▶" : "▼"}
+            </span>
+          </button>
+          {!conversationsCollapsed && (
+            <>
+            <div className="relative mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+            <input
+              type="search"
+                placeholder="Search"
+              value={sessionSearchQuery}
+              onChange={(e) => setSessionSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900/50 text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 shadow-sm shrink-0"
+              aria-label="Search conversations"
+            />
+            </div>
+            <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-px">
+              {filteredSessions.length === 0 ? (
+                <p className="px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+                  {sessionSearchQuery ? "No conversations match" : "No conversations yet"}
+                </p>
+              ) : (
+              filteredSessions.map((s) => (
+                <div
+                  key={s._id}
+                  className={`group flex flex-col gap-0 rounded-xl transition-colors duration-200 ${
+                    currentSessionId === s._id
+                      ? "bg-neutral-100 dark:bg-neutral-800/60"
+                      : "hover:bg-neutral-50 dark:hover:bg-neutral-800/40"
+                  }`}
+                >
+                  <div className="flex items-center gap-1 min-w-0">
+                    <Link
+                      href={`/chat/${s._id}`}
+                      className={`flex-1 min-w-0 flex items-center gap-2 py-2.5 px-3 truncate text-sm ${
+                        currentSessionId === s._id ? "font-medium text-foreground" : "text-neutral-800 dark:text-neutral-200"
+                      }`}
+                    >
+                      <span className="flex-1 min-w-0">
+                        <span className="block truncate">{s.title || "New conversation"}</span>
+                        {s.updatedAt && (
+                          <span className="block text-xs text-neutral-500 dark:text-neutral-400 font-normal mt-0.5">
+                            {formatRelativeTime(s.updatedAt)}
+                          </span>
+                        )}
+                      </span>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-neutral-400 shrink-0 flex-shrink-0">
+                        <path d="M9 18l6-6-6-6" />
+                      </svg>
+                    </Link>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setDeleteSessionConfirmModal(s);
+                    }}
+                    className="p-1.5 rounded opacity-50 hover:opacity-100 group-hover:opacity-100 text-neutral-500 hover:text-red-600 dark:hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 active:scale-95 shrink-0"
+                    aria-label="Delete conversation"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-4 h-4"
+                    >
+                      <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
+                      <path d="M10 11v6M14 11v6" />
+                    </svg>
+                  </button>
+                  </div>
+                  {s.mentalModelTags && s.mentalModelTags.length > 0 &&
+                    !hiddenTagsSessions.has(s._id) && (
+                    <div className="flex flex-wrap items-center gap-1.5 px-3 pb-1">
+                      <div className="flex flex-wrap gap-1">
+                        {s.mentalModelTags.map((id) => (
+                          <button
+                            key={id}
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleMentalModelClick(id);
+                            }}
+                            className="inline-flex px-2 py-0.5 rounded-lg text-[9px] font-medium bg-neutral-200 dark:bg-neutral-600 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-500 transition-all duration-200 active:scale-95"
+                          >
+                            {mentalModelsIndex.get(id) ?? id.replace(/_/g, " ")}
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleTagsHidden(s._id);
+                        }}
+                        className="text-[9px] text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 underline-offset-2 hover:underline"
+                      >
+                        Hide tags
+                      </button>
+                    </div>
+                  )}
+                  {s.mentalModelTags && s.mentalModelTags.length > 0 &&
+                    hiddenTagsSessions.has(s._id) && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleTagsHidden(s._id);
+                      }}
+                      className="px-3 pb-1 text-left text-[9px] text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-400"
+                    >
+                      Show {s.mentalModelTags.length} tags
+                    </button>
+                  )}
+                </div>
+              ))
+              )}
+            </nav>
+            </>
+          )}
+        </div>
+        </>
+        )}
+        {isAnonymous && (
+          <div className="px-3 py-2 text-center">
+            <Link
+              href="/sign-in"
+              className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:underline"
+            >
+              Sign in to save your conversations
+            </Link>
+          </div>
+        )}
+        </div>
+        <div className="shrink-0 px-3 py-3 border-t border-neutral-200/80 dark:border-neutral-800">
+          <div className="flex items-center justify-between gap-2 mb-3">
+            {!isAnonymous && user ? (
+              <div className="flex items-center gap-2 min-w-0 rounded-full bg-neutral-100 dark:bg-neutral-800/80 px-2 py-1.5 pr-3 w-fit max-w-[calc(100%-52px)]">
+                <UserButton
+                  appearance={{
+                    elements: {
+                      rootBox: "shrink-0",
+                      avatarBox: "w-8 h-8 ring-0",
+                    },
+                  }}
+                />
+                <span className="text-sm font-medium text-foreground truncate">
+                  {user.firstName && user.lastName
+                    ? `${user.firstName} ${user.lastName}`
+                    : user.primaryEmailAddress?.emailAddress ?? "Account"}
+                </span>
+              </div>
+            ) : !isAnonymous ? (
+              <div className="flex items-center gap-2 min-w-0 rounded-full bg-neutral-100 dark:bg-neutral-800/80 px-2 py-1.5 pr-3 w-fit">
+                <UserButton
+                  appearance={{
+                    elements: {
+                      rootBox: "shrink-0",
+                      avatarBox: "w-8 h-8 ring-0",
+                    },
+                  }}
+                />
+              </div>
+            ) : (
+          <Link
+                href="/sign-in"
+                className="flex items-center gap-2 min-w-0 rounded-full bg-neutral-100 dark:bg-neutral-800/80 px-3 py-2 text-sm font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+          >
+                Sign in
+          </Link>
+            )}
+          <Link
+              href="/chat/new"
+              onClick={() => setSidebarOpen(false)}
+              className="flex-shrink-0 w-11 h-11 rounded-full bg-accent hover:bg-accent/90 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-200 active:scale-95"
+              aria-label="New conversation"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </Link>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setLetterModalOpen(true)}
+              className="font-developer text-sm text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
+            >
+              Crafted with Intention
+            </button>
+            <div className="flex items-center gap-2 text-[10px] text-neutral-500 dark:text-neutral-400">
+              <Link href="/terms-of-service" className="hover:text-foreground transition-colors">
+                Terms of Service
+              </Link>
+              <span className="text-neutral-400 dark:text-neutral-500" aria-hidden>·</span>
+              <Link href="/privacy-policy" className="hover:text-foreground transition-colors">
+            Privacy Policy
+          </Link>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Overlay when sidebar open on mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 z-30 lg:hidden animate-fade-in backdrop-blur-sm"
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden
+        />
+      )}
+
+      {/* Main chat area - add left margin when sidebar is open on desktop */}
+      <main className={`flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden transition-[margin] duration-300 ${sidebarOpen ? "lg:ml-72" : ""}`}>
+        <header className={`fixed inset-x-0 top-0 z-30 h-14 min-h-[44px] pt-[env(safe-area-inset-top)] px-3 sm:px-4 flex items-center justify-between gap-1 sm:gap-4 border-b shrink-0 md:relative md:inset-x-auto md:top-auto transition-[background-color,border-color,color] duration-300 ease-in-out relative ${incognitoMode && incognitoEntering ? "overflow-hidden" : "overflow-visible"} ${
+          incognitoMode && !incognitoEntering
+            ? "bg-neutral-900 dark:bg-neutral-100 border-neutral-700 dark:border-neutral-300 text-neutral-100 dark:text-neutral-900"
+            : incognitoMode && incognitoEntering
+              ? "bg-background border-neutral-200 dark:border-neutral-800"
+              : "bg-background border-neutral-200 dark:border-neutral-800"
+        }`}>
+          {incognitoMode && incognitoEntering && (
+            <div className="absolute inset-0 bg-neutral-900 dark:bg-neutral-100 z-0 animate-incognito-header-bg-in pointer-events-none" aria-hidden />
+          )}
+          <div className={`flex flex-1 items-center justify-between gap-1 sm:gap-4 min-w-0 relative z-10 ${incognitoMode && incognitoEntering ? "animate-incognito-header-content-in-light dark:animate-incognito-header-content-in-dark [&_*]:!text-inherit" : ""}`}>
+          <div className="flex items-center gap-1 sm:gap-4 min-w-0 overflow-hidden">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className={`p-1.5 sm:p-2 -ml-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 shrink-0 ${
+                !sidebarOpen ? "" : "lg:hidden"
+              } ${incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"}`}
+              aria-label="Open menu"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-5 h-5"
+              >
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            {!sidebarOpen ? (
+              <>
+                {incognitoMode ? (
+                  <div className={`group flex items-center gap-2 min-w-0 text-neutral-100 dark:text-neutral-900 ${incognitoEntering ? "animate-ghost-run" : ""}`}>
+                    <span className="shrink-0 w-6 h-6 flex items-center justify-center" aria-hidden>
+                      <GhostIcon className="w-5 h-5" />
+                    </span>
+                    <span className="font-medium truncate min-w-0">Incognito chat</span>
+                  </div>
+                ) : currentSession?.title ? (
+                  <span className="font-medium truncate min-w-0" title={currentSession.title}>
+                    {currentSession.title}
+                  </span>
+                ) : null}
+                <Link
+                  href={incognitoMode ? "/chat/incognito" : "/chat/new"}
+                  onClick={(e) => {
+                    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+                      setSidebarOpen(false);
+                    }
+                    if (sessionId === "new" || sessionId === "incognito") {
+                      e.preventDefault();
+                      anonymousActiveRef.current = false;
+                      setMessages([]);
+                      setCurrentSessionId(null);
+                      setCurrentSession(null);
+                      setCollapsedSummary(null);
+                      setInput("");
+                    }
+                  }}
+                  className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 shrink-0 ${
+                    incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                  }`}
+                  aria-label="New conversation"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-5 h-5"
+                  >
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                </Link>
+              </>
+            ) : (
+              <h1 className="font-medium truncate">
+                {currentSession?.title || (currentSessionId ? "Conversation" : "New conversation")}
+              </h1>
+            )}
+          </div>
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0 overflow-visible">
+            {!incognitoMode && (
+              <Link
+                href="/chat/incognito"
+                onClick={() => {
+                  if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+                }}
+                className="group p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-300 ease-in-out"
+                title="Use incognito (Shift+⌘+|)"
+                aria-label="Use incognito"
+              >
+                <GhostIcon className="w-5 h-5" />
+              </Link>
+            )}
+            <ThemeToggle inverted={incognitoMode} />
+            <button
+              type="button"
+              onClick={() => setSettingsOpen(true)}
+              className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out ${
+                incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:text-neutral-200 dark:hover:text-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              }`}
+              aria-label="Settings"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z" />
+                </svg>
+            </button>
+            {incognitoMode && (
+              <Link
+                href="/chat/new"
+                onClick={() => {
+                  if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+                  anonymousActiveRef.current = false;
+                  setMessages([]);
+                  setCurrentSessionId(null);
+                  setCurrentSession(null);
+                  setCollapsedSummary(null);
+                  setInput("");
+                }}
+                className="p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl text-neutral-100 dark:text-neutral-900 hover:text-neutral-200 dark:hover:text-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors duration-300 ease-in-out"
+                title="Exit incognito"
+                aria-label="Exit incognito"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </Link>
+            )}
+          </div>
+          </div>
+        </header>
+
+        {summarizeSuccess && (
+          <div className="mx-4 mt-2 px-4 py-3 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border-2 border-neutral-300 dark:border-neutral-600 text-sm font-medium text-neutral-700 dark:text-neutral-300 animate-celebrate flex items-center gap-2">
+            <span className="text-lg">✨</span>
+            Conversation summarized and saved to long-term memory.
+          </div>
+        )}
+
+        {conceptSavedToast && (
+          <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border-2 border-neutral-300 dark:border-neutral-600 text-sm font-medium text-neutral-800 dark:text-neutral-200 animate-celebrate flex items-center gap-2 shadow-lg">
+            <span className="text-lg">✨</span>
+            Added to Concept Gems!
+          </div>
+        )}
+
+        {ccCreateSuccess && (
+          <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border-2 border-neutral-300 dark:border-neutral-600 text-sm font-medium text-neutral-800 dark:text-neutral-200 animate-celebrate flex items-center gap-2 shadow-lg">
+            <span className="text-lg">✨</span>
+            Custom concept created!
+          </div>
+        )}
+
+        {overachieverMessage && (
+          <div className="mx-4 mt-2 px-4 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-sm text-neutral-800 dark:text-neutral-200 animate-fade-in">
+            {overachieverMessage}
+          </div>
+        )}
+
+        {(showLanguageChangeBanner || showUserTypeChangeBanner) &&
+          currentSessionId &&
+          messages.length > 0 &&
+          currentSessionId !== justCreatedSessionRef.current && (
+          <LanguageChangeBanner
+            onDismiss={() => {
+              dismissLanguageChangeBanner();
+              dismissUserTypeChangeBanner();
+            }}
+          />
+        )}
+
+        <div className={`flex-1 min-h-0 flex flex-col pt-14 md:pt-0 pb-36 md:pb-0 ${messages.length > 0 ? "overflow-y-auto scroll-smooth" : "overflow-hidden"}`}>
+          <div ref={messagesScrollRef} className={`flex-1 min-h-0 min-w-0 ${messages.length > 0 ? "overflow-y-auto" : "overflow-hidden flex flex-col"}`}>
+          {currentSession?.isCollapsed && collapsedSummary ? (
+            <div className="min-h-full flex items-center justify-center p-4">
+              <div className="w-full max-w-2xl">
+              <div className="group/tts rounded-3xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-800/50 shadow-sm p-6 space-y-4">
+                <h2 className="font-semibold text-lg">{collapsedSummary.title}</h2>
+                <div className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap">
+                  {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === `collapsed-summary-${collapsedSummary._id}` ? (
+                    <TtsHighlightedText text={`${collapsedSummary.title}\n\n${collapsedSummary.summary}`.trim()} charEnd={ttsHighlight.charEnd} />
+                  ) : (
+                    collapsedSummary.summary
+                  )}
+                </div>
+                <div className="flex flex-wrap items-center gap-2 pt-1">
+                  <TTSButton
+                    text={`${collapsedSummary.title}\n\n${collapsedSummary.summary}`}
+                    showOnHover={false}
+                    ariaLabel="Listen to summary"
+                    onTtsProgress={(charEnd) => setTtsHighlight({ textId: `collapsed-summary-${collapsedSummary._id}`, charEnd })}
+                    onTtsEnd={() => setTtsHighlight(null)}
+                  />
+                  <CopyButton
+                    text={`${collapsedSummary.title}\n\n${collapsedSummary.summary}`}
+                    aria-label="Copy summary"
+                  />
+                  {currentSessionId && (
+                    <button
+                      onClick={async () => {
+                        setRestartLoading(true);
+                        try {
+                          const res = await fetch(`/api/sessions/${currentSessionId}/restart`, {
+                            method: "POST",
+                          });
+                          if (res.ok) {
+                            const { session, messages: msgs } = await fetch(
+                              `/api/sessions/${currentSessionId}`
+                            ).then((r) => r.json());
+                            setCurrentSession(session);
+                            setMessages(processMessagesWithContext(msgs || []));
+                            setCollapsedSummary(null);
+                            refetchSessions();
+                          }
+                        } finally {
+                          setRestartLoading(false);
+                        }
+                      }}
+                      disabled={restartLoading}
+                      className="px-3 py-2 rounded-xl text-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors disabled:opacity-60"
+                    >
+                      {restartLoading ? "Restarting…" : "Restart conversation"}
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setLtmDeleteConfirmModal(collapsedSummary)}
+                    aria-label="Delete from long-term memory"
+                    className="p-2 rounded-xl text-red-600 dark:text-red-500 hover:text-red-700 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-5 h-5"
+                    >
+                      <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
+                      <path d="M10 11v6M14 11v6" />
+                    </svg>
+                  </button>
+                </div>
+                <p className="text-xs text-neutral-500 dark:text-neutral-500">
+                  This conversation has been summarized. Use &quot;Restart conversation&quot; above to see the full chat.
+                </p>
+              </div>
+              </div>
+            </div>
+          ) : sessionLoading && messages.length === 0 ? (
+            <div className="flex-1 flex items-center justify-center min-h-[200px] animate-fade-in">
+              <div className="flex flex-col items-center gap-4 text-neutral-500 dark:text-neutral-400">
+                <div className="w-8 h-8 border-2 border-foreground/20 border-t-foreground rounded-full animate-spin" />
+                <p className="text-sm flex items-center gap-1">
+                  Loading conversation
+                  <LoadingDots />
+                </p>
+              </div>
+            </div>
+          ) : onboardingStep !== null && messages.length === 0 ? (
+            /* First-time onboarding overlay - Claude.ai style */
+            <div className="flex-1 flex flex-col items-center justify-center px-6 py-8 max-w-xl mx-auto">
+              {onboardingStep === 1 && (
+                <div className="w-full text-center animate-fade-in-up space-y-8">
+                  <h1 className="text-2xl sm:text-3xl font-semibold text-foreground">Welcome to fml labs</h1>
+                  <p className="text-base text-neutral-600 dark:text-neutral-400">
+                    A coach that helps you think through the long-term consequences of your choices—with mental models that actually work.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setOnboardingStep(2)}
+                    className="w-full max-w-xs mx-auto px-6 py-3 rounded-2xl bg-foreground text-background font-medium text-base hover:opacity-90 transition-opacity"
+                  >
+                    Get started
+                  </button>
+                </div>
+              )}
+              {onboardingStep === 2 && (
+                <div className="w-full text-center animate-fade-in-up space-y-6">
+                  <h2 className="text-xl font-semibold text-foreground">Privacy & Terms</h2>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400 text-left">
+                    By using fml labs, you agree to our{" "}
+                    <Link href="/terms-of-service" className="text-foreground underline underline-offset-2 hover:no-underline" target="_blank" rel="noopener noreferrer">
+                      Terms of Service
+                    </Link>{" "}
+                    and{" "}
+                    <Link href="/privacy-policy" className="text-foreground underline underline-offset-2 hover:no-underline" target="_blank" rel="noopener noreferrer">
+                      Privacy Policy
+                    </Link>
+                    . Your conversations are processed to provide the service. We respect your data and privacy.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setOnboardingStep(3)}
+                    className="w-full max-w-xs mx-auto px-6 py-3 rounded-2xl bg-foreground text-background font-medium text-base hover:opacity-90 transition-opacity"
+                  >
+                    Acknowledge
+                  </button>
+                </div>
+              )}
+              {onboardingStep === 3 && (
+                <div className="w-full animate-fade-in-up space-y-6">
+                  <h2 className="text-xl font-semibold text-foreground text-center">A note from the developer</h2>
+                  <p className="text-base text-neutral-600 dark:text-neutral-400 text-center">
+                    Here&apos;s what fml labs is about:
+                  </p>
+                  <div className="space-y-4">
+                    <div className="flex gap-4 items-start">
+                      <div className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
+                          <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
+                          <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">Mental models</p>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Proven frameworks and biases to help you think through decisions.</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-4 items-start">
+                      <div className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
+                          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">Deep questioning</p>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Not surface-level advice—we dig into the long-term consequences.</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-4 items-start">
+                      <div className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
+                          <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z" />
+                          <path d="M12 6v6l4 2" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">Long-term thinking</p>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Focus on choices that matter for your future.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="pt-4 border-t border-neutral-200 dark:border-neutral-700 text-center">
+                    <p className="font-developer text-lg text-foreground shimmer-text-hover">Crafted with Intention</p>
+                    <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">San Francisco</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      try {
+                        localStorage.setItem(ONBOARDING_COMPLETE_KEY, "true");
+                      } catch {
+                        /* ignore */
+                      }
+                      setOnboardingStep(null);
+                    }}
+                    className="w-full max-w-xs mx-auto block px-6 py-3 rounded-2xl bg-foreground text-background font-medium text-base hover:opacity-90 transition-opacity"
+                  >
+                    Sounds good, let&apos;s begin
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+          <div
+            ref={messagesContainerRef}
+            className={`max-w-2xl mx-auto w-full min-w-0 px-4 py-6 no-touch-callout ${messages.length === 0 ? "flex-1 min-h-0 flex flex-col items-center justify-center" : "space-y-6"}`}
+            onMouseUp={() => {
+              if (isAnonymous || incognitoMode) return;
+              checkSelection();
+            }}
+            onTouchEnd={() => {
+              if (isAnonymous || incognitoMode) return;
+              // On mobile, selection may not be ready immediately; delay slightly
+              requestAnimationFrame(() => {
+                setTimeout(checkSelection, 50);
+              });
+            }}
+            onContextMenu={(e) => {
+              if (typeof window !== "undefined" && "ontouchstart" in window) e.preventDefault();
+            }}
+          >
+            {messages.length === 0 && (
+              <div className={`flex w-full min-w-0 max-w-2xl flex-col items-center justify-center text-center px-2 ${voiceModeOpen ? "space-y-2" : "space-y-8"}`}>
+                <div className="animate-fade-in-up w-full min-w-0">
+                  {incognitoMode ? (
+                    <div className="flex flex-col items-center gap-4 text-neutral-600 dark:text-neutral-400">
+                      <span className="group shrink-0 w-12 h-12 flex items-center justify-center" aria-hidden>
+                        <GhostIcon className="w-12 h-12" />
+                      </span>
+                      <p className="text-base sm:text-lg font-medium text-foreground">
+                        Let&apos;s chat incognito
+                      </p>
+                      <p className="text-sm max-w-md">
+                        Secure and private—nothing is saved. Your conversation won&apos;t appear in history.
+                      </p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-500">
+                        Unavailable: Summarize & collapse, nuggets, saving to concepts
+                      </p>
+                    </div>
+                  ) : (
+                    <p className={`w-full min-w-0 break-words text-neutral-500 dark:text-neutral-400 ${voiceModeOpen ? "text-sm mb-2" : "text-base sm:text-lg mb-6"}`}>
+                      Let&apos;s dig in—with mental models that actually work
+                    </p>
+                  )}
+                </div>
+                {!voiceModeOpen && (
+                <div className="w-full">
+                  <MovingPills
+                    onSelect={(text) => sendMessage(text)}
+                  />
+                </div>
+                )}
+              </div>
+            )}
+            {messages.map((m, i) => (
+              <MessageBubble
+                key={i}
+                message={m}
+                messageIndex={i}
+                totalMessages={messages.length}
+                isLoading={isLoading && i === messages.length - 1}
+                onOptionSelect={(text) => sendMessage(text)}
+                onGoBackInTime={
+                  isAnonymous
+                    ? (idx, msg) => {
+                        if (msg.role === "user") {
+                          sendMessage(msg.content, {
+                            messagesOverride: messages.slice(0, idx),
+                          });
+                        } else {
+                          setMessages((prev) => prev.slice(0, idx + 1));
+                        }
+                      }
+                    : currentSessionId
+                      ? (idx, msg) => setGoBackConfirmModal({ index: idx, role: msg.role, content: msg.content })
+                      : undefined
+                }
+                onRetry={
+                  lastFailedUserMessage && m.role === "assistant" && i === messages.length - 1
+                    ? () => sendMessage(lastFailedUserMessage, { retry: true })
+                    : undefined
+                }
+                isLastAssistant={
+                  m.role === "assistant" && i === messages.length - 1
+                }
+                isLastUserMessageAndLoading={
+                  m.role === "user" && isLoading && i === messages.length - 2
+                }
+                idToName={mentalModelsIndex}
+                ltmIdToTitle={new Map(longTermMemories.map((ltm) => [ltm._id, ltm.title]))}
+                ccIdToTitle={new Map(customConcepts.map((cc) => [cc._id, cc.title]))}
+                cgIdToTitle={new Map(conceptGroups.map((cg) => [cg._id, cg.title]))}
+                onMentalModelClick={handleMentalModelClick}
+                onLtmClick={(id) => {
+                  const ltm = longTermMemories.find((l) => l._id === id);
+                  if (ltm) setLtmDetailModal(ltm);
+                }}
+                onCustomConceptClick={(id) => {
+                  const cc = customConcepts.find((c) => c._id === id);
+                  if (cc) setCcDetailModal(cc);
+                }}
+                onConceptGroupClick={(id) => {
+                  const cg = conceptGroups.find((g) => g._id === id);
+                  if (cg) {
+                    fetch(`/api/me/concept-groups/${id}`)
+                      .then((r) => r.ok ? r.json() : Promise.reject())
+                      .then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] }))
+                      .catch(() => setCgDetailModal(cg));
+                  }
+                }}
+                previewMap={previewMap}
+                isRtl={isRtlLanguage(language)}
+                ttsHighlight={ttsHighlight && "messageIndex" in ttsHighlight && ttsHighlight.messageIndex === i ? ttsHighlight.charEnd : undefined}
+                onTtsProgress={(msgIdx, charEnd) => setTtsHighlight({ messageIndex: msgIdx, charEnd })}
+                onTtsEnd={() => setTtsHighlight(null)}
+              />
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+          )}
+          {selectedTextForNugget && selectionRect && !isAnonymous && !incognitoMode && !nuggetFormOpen && (
+            <div
+              ref={selectionBubblesRef}
+              className="fixed z-40 flex gap-1 animate-fade-in"
+              style={{ left: selectionRect.left, top: selectionRect.bottom + 4 }}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  const w = Math.min(360, typeof window !== "undefined" ? window.innerWidth - 32 : 360);
+                  let x = selectionRect.left;
+                  if (typeof window !== "undefined" && x + w > window.innerWidth - 16) x = window.innerWidth - w - 16;
+                  if (x < 8) x = 8;
+                  setNuggetCreateContent(selectedTextForNugget);
+                  setNuggetCreateSource("");
+                  setNuggetFormOpen("selection");
+                  setNuggetFormPosition({ x, y: selectionRect.bottom + 4 });
+                  setSelectedTextForNugget(null);
+                  setSelectionRect(null);
+                  window.getSelection()?.removeAllRanges?.();
+                }}
+                className="flex items-center justify-center w-9 h-9 rounded-full bg-foreground text-background shadow-lg hover:opacity-90 transition-opacity"
+                title="Save Nugget"
+                aria-label="Save Nugget"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  const text = selectedTextForNugget;
+                  const w = Math.min(360, typeof window !== "undefined" ? window.innerWidth - 32 : 360);
+                  let x = selectionRect.left;
+                  if (typeof window !== "undefined" && x + w > window.innerWidth - 16) x = window.innerWidth - w - 16;
+                  if (x < 8) x = 8;
+                  const y = selectionRect.bottom + 4;
+                  setSelectionLearnPopup({ text, explanation: null, loading: true, x, y });
+                  setSelectedTextForNugget(null);
+                  setSelectionRect(null);
+                  window.getSelection()?.removeAllRanges?.();
+                  try {
+                    const res = await fetch("/api/me/nuggets/learn", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: text }) });
+                    const data = await res.json();
+                    setSelectionLearnPopup((p) => p ? { ...p, explanation: data.explanation ?? "Failed to load.", loading: false } : null);
+                  } catch {
+                    setSelectionLearnPopup((p) => p ? { ...p, explanation: "Failed to load.", loading: false } : null);
+                  }
+                }}
+                className="flex items-center justify-center w-9 h-9 rounded-full bg-foreground text-background shadow-lg hover:opacity-90 transition-opacity"
+                title="Learn from This"
+                aria-label="Learn from This"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  <path d="M12 3v18" />
+                </svg>
+              </button>
+            </div>
+          )}
+          {selectionLearnPopup && (
+            <>
+              <div
+                className="fixed inset-0 z-[49] bg-black/20 animate-fade-in"
+                onClick={() => setSelectionLearnPopup(null)}
+                aria-hidden
+              />
+              <div
+                className="fixed z-50 w-[min(360px,calc(100vw-2rem))] animate-fade-in rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-xl p-3"
+                style={{ left: selectionLearnPopup.x, top: selectionLearnPopup.y }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Learn</span>
+                  <div className="flex items-center gap-1">
+                    {!selectionLearnPopup.loading && selectionLearnPopup.explanation && (
+                      <TTSButton
+                        text={selectionLearnPopup.explanation}
+                        showOnHover={false}
+                        ariaLabel="Listen to explanation"
+                        onTtsProgress={(charEnd) => setTtsHighlight({ textId: "selection-learn-popup", charEnd })}
+                        onTtsEnd={() => setTtsHighlight(null)}
+                      />
+                    )}
+                    <button type="button" onClick={() => { setSelectionLearnPopup(null); setTtsHighlight(null); }} className="p-1 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800">✕</button>
+                  </div>
+                </div>
+                {selectionLearnPopup.loading ? (
+                  <p className="text-sm text-neutral-500 dark:text-neutral-400">Loading...</p>
+                ) : (
+                  <p className="text-sm text-foreground whitespace-pre-wrap">
+                    {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === "selection-learn-popup" ? (
+                      <TtsHighlightedText text={selectionLearnPopup.explanation ?? ""} charEnd={ttsHighlight.charEnd} />
+                    ) : (
+                      selectionLearnPopup.explanation
+                    )}
+                  </p>
+                )}
+              </div>
+            </>
+          )}
+          </div>
+        </div>
+
+        {showScrollToBottom && !currentSession?.isCollapsed && messages.length > 0 && (
+          <button
+            type="button"
+            onClick={scrollToBottom}
+            aria-label="Scroll to bottom"
+            className={`fixed right-2 md:right-8 z-40 flex items-center justify-center w-12 h-12 rounded-full bg-foreground text-background shadow-lg hover:opacity-90 active:scale-95 transition-all duration-200 ${
+              currentSessionId && currentSession && messages.length >= 2
+                ? "bottom-[6rem] md:bottom-[7.5rem]" /* mobile: inside bottom bar to avoid covering text; desktop: above input */
+                : "bottom-[5.5rem] md:bottom-[5rem]" /* mobile: inside bottom bar; desktop: above input only */
+            }`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+              <path d="M12 5v14M19 12l-7 7-7-7" />
+            </svg>
+          </button>
+        )}
+
+        {/* Incognito disclaimer - shown when in incognito mode */}
+        {incognitoMode && (
+          <p className="text-center text-xs text-neutral-500 dark:text-neutral-400 px-4 py-2">
+            Incognito chats aren&apos;t saved to history.{" "}
+            <Link href="/privacy-policy" className="underline underline-offset-2 hover:text-neutral-700 dark:hover:text-neutral-300" target="_blank" rel="noopener noreferrer">
+              Learn more about how your data is used
+            </Link>
+          </p>
+        )}
+        {/* Bottom bar - fixed on mobile so it stays visible when scrolling. When voice mode, show orb in same section instead of input. Hidden only during first-time onboarding (no messages). On mobile, use gradient so scroll-to-bottom area is transparent and content shows through. */}
+        <div className={`fixed inset-x-0 bottom-0 z-30 flex flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-[linear-gradient(to_bottom,transparent_0%,transparent_4rem,var(--background)_5rem)] md:bg-background ${onboardingStep !== null && messages.length === 0 ? "hidden" : ""}`}>
+          {!isAnonymous && messages.length >= 2 && (!currentSession || !currentSession.isCollapsed) && (
+            <div className="flex justify-center px-4 pt-1.5 pb-0.5 sm:pt-2 sm:pb-1">
+              <button
+                onClick={() => !incognitoMode && setSummarizeLanguageModal({ selectedLanguage: language })}
+                disabled={incognitoMode}
+                title={incognitoMode ? "Not available in incognito" : undefined}
+                className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-neutral-500 dark:disabled:hover:text-neutral-400"
+              >
+                Summarize & collapse conversation
+              </button>
+            </div>
+          )}
+          <div className="flex flex-col items-center justify-center px-4 pt-2 pb-2 sm:pt-3 sm:pb-3 min-w-0 gap-1.5 sm:gap-2">
+            {voiceModeOpen ? (
+              <FullVoiceMode
+                embed
+                onClose={() => setVoiceModeOpen(false)}
+                onSendMessage={(text) => sendMessage(text)}
+                messages={messages}
+                isLoading={isLoading}
+                language={language}
+                onTtsProgress={(messageIndex, charEnd) => setTtsHighlight({ messageIndex, charEnd })}
+                onTtsEnd={() => setTtsHighlight(null)}
+                speed={ttsSpeed}
+              />
+            ) : (
+            <div className="min-w-0 max-w-2xl w-full flex items-stretch gap-2 min-h-[52px]">
+              <div className="relative flex-1 min-w-0">
+                <MentionInput
+                  inputRef={inputRef}
+                  value={input}
+                  onChange={setInput}
+                  onKeyDown={handleKeyDown}
+                  mentalModels={Array.from(mentalModelsIndex.entries()).map(([id, name]) => ({
+                    id,
+                    name,
+                  }))}
+                  longTermMemories={longTermMemories.map((ltm) => ({
+                    _id: ltm._id,
+                    title: ltm.title,
+                    enrichmentPrompt: ltm.enrichmentPrompt,
+                  }))}
+                  customConcepts={customConcepts.map((cc) => ({
+                    _id: cc._id,
+                    title: cc.title,
+                    enrichmentPrompt: cc.enrichmentPrompt,
+                  }))}
+                  conceptGroups={conceptGroups.map((cg) => ({
+                    _id: cg._id,
+                    title: cg.title,
+                  }))}
+                  placeholder="/ to search"
+                  placeholderMobile="/ to search"
+                  disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                  className="w-full h-[52px] max-h-[52px] py-3 pl-4 pr-10 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900/50 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 whitespace-nowrap overflow-x-auto overflow-y-hidden"
+                  onMentalModelClick={handleMentalModelClick}
+                  onLtmClick={(id) => {
+                    const ltm = longTermMemories.find((l) => l._id === id);
+                    if (ltm) setLtmDetailModal(ltm);
+                  }}
+                  onCustomConceptClick={(id) => {
+                    const cc = customConcepts.find((c) => c._id === id);
+                    if (cc) setCcDetailModal(cc);
+                  }}
+                  onConceptGroupClick={(id) => {
+                    const cg = conceptGroups.find((g) => g._id === id);
+                    if (cg) {
+                      fetch(`/api/me/concept-groups/${id}`)
+                        .then((r) => r.ok ? r.json() : Promise.reject())
+                        .then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] }))
+                        .catch(() => setCgDetailModal(cg));
+                    }
+                  }}
+                  previewMap={previewMap}
+                />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setInputExpandModalOpen(true);
+                  }}
+                  disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                  className="absolute top-2 right-2 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 disabled:opacity-50"
+                  aria-label="Expand input"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                    <path d="M15 3h6v6" />
+                    <path d="M9 21H3v-6" />
+                  </svg>
+                </button>
+              </div>
+              <VoiceInputButton
+                onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
+                onLongPress={() => setVoiceModeOpen(true)}
+                language={language}
+                disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                ariaLabel="Voice input"
+                className="!min-h-[52px] !min-w-[52px]"
+              />
+              <button
+                onClick={() => sendMessage()}
+                disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
+                className="flex items-center justify-center px-6 py-3 rounded-2xl bg-accent text-white font-medium transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 min-h-[52px] shrink-0"
+              >
+                {isLoading ? (
+                  <LoadingDots aria-label="Sending" />
+                ) : (
+                  "Send"
+                )}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
+      </div>
+
+      {/* Expanded typing box modal */}
+      {inputExpandModalOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm animate-fade-in"
+            onClick={() => setInputExpandModalOpen(false)}
+            aria-hidden
+          />
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+            aria-hidden
+          >
+            <div
+              role="dialog"
+              aria-modal
+              aria-label="Compose message"
+              className="pointer-events-auto w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-800 animate-fade-in-up"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200/80 dark:border-neutral-800 shrink-0">
+                <h2 className="text-lg font-semibold text-foreground">Compose message</h2>
+                <button
+                  type="button"
+                  onClick={() => setInputExpandModalOpen(false)}
+                  className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shrink-0 text-neutral-600 dark:text-neutral-400"
+                  aria-label="Close"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="flex-1 flex flex-col min-h-0 p-4 gap-3">
+                <MentionInput
+                  inputRef={inputExpandInputRef}
+                  value={input}
+                  onChange={setInput}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") {
+                      setInputExpandModalOpen(false);
+                      return;
+                    }
+                    if (
+                      (e.key === "Enter" && !e.shiftKey) ||
+                      (e.metaKey && e.key === "Enter") ||
+                      (e.ctrlKey && e.key === "Enter")
+                    ) {
+                      e.preventDefault();
+                      sendMessage();
+                      setInputExpandModalOpen(false);
+                    }
+                  }}
+                  mentalModels={Array.from(mentalModelsIndex.entries()).map(([id, name]) => ({
+                    id,
+                    name,
+                  }))}
+                  longTermMemories={longTermMemories.map((ltm) => ({
+                    _id: ltm._id,
+                    title: ltm.title,
+                    enrichmentPrompt: ltm.enrichmentPrompt,
+                  }))}
+                  customConcepts={customConcepts.map((cc) => ({
+                    _id: cc._id,
+                    title: cc.title,
+                    enrichmentPrompt: cc.enrichmentPrompt,
+                  }))}
+                  conceptGroups={conceptGroups.map((cg) => ({
+                    _id: cg._id,
+                    title: cg.title,
+                  }))}
+                  placeholder="/ to search"
+                  placeholderMobile="/ to search"
+                  disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                  className="w-full min-h-[200px] max-h-[50vh] py-4 px-4 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900/50 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 overflow-y-auto flex-1"
+                  onMentalModelClick={handleMentalModelClick}
+                  onLtmClick={(id) => {
+                    const ltm = longTermMemories.find((l) => l._id === id);
+                    if (ltm) setLtmDetailModal(ltm);
+                  }}
+                  onCustomConceptClick={(id) => {
+                    const cc = customConcepts.find((c) => c._id === id);
+                    if (cc) setCcDetailModal(cc);
+                  }}
+                  onConceptGroupClick={(id) => {
+                    const cg = conceptGroups.find((g) => g._id === id);
+                    if (cg) {
+                      fetch(`/api/me/concept-groups/${id}`)
+                        .then((r) => r.ok ? r.json() : Promise.reject())
+                        .then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] }))
+                        .catch(() => setCgDetailModal(cg));
+                    }
+                  }}
+                  previewMap={previewMap}
+                />
+                <div className="flex items-center gap-2 shrink-0">
+                  <VoiceInputButton
+                    onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
+                    onLongPress={() => {
+                      setInputExpandModalOpen(false);
+                      setVoiceModeOpen(true);
+                    }}
+                    language={language}
+                    disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                    ariaLabel="Voice input"
+                    className="!min-h-[44px] !min-w-[44px]"
+                  />
+                  <button
+                    onClick={() => {
+                      sendMessage();
+                      setInputExpandModalOpen(false);
+                    }}
+                    disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
+                    className="flex items-center justify-center px-6 py-3 rounded-2xl bg-accent text-white font-medium transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 min-h-[44px] shrink-0"
+                  >
+                    {isLoading ? (
+                      <LoadingDots aria-label="Sending" />
+                    ) : (
+                      "Send"
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Library - center modal (Claude-style), closable on all devices */}
+      {!isAnonymous && libraryPanelOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm animate-fade-in"
+            onClick={() => setLibraryPanelOpen(null)}
+            aria-hidden
+          />
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+            aria-hidden
+          >
+            <div
+              className="pointer-events-auto w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-800 animate-fade-in-up"
+            role="dialog"
+            aria-modal
+              aria-label={
+                libraryPanelOpen === "conversations" ? "Conversations" :
+                libraryPanelOpen === "concepts" ? "Mental Models" :
+                libraryPanelOpen === "ltm" ? "Long-Term Memory" :
+                libraryPanelOpen === "cc" ? "Concepts" :
+                libraryPanelOpen === "cg" ? "Domains" :
+                "Nuggets"
+              }
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200/80 dark:border-neutral-800 shrink-0">
+                <h2 className="text-lg font-semibold text-foreground">
+                  {libraryPanelOpen === "conversations" ? "Conversations" :
+                   libraryPanelOpen === "concepts" ? "Mental Models" :
+                   libraryPanelOpen === "ltm" ? "Long-Term Memory" :
+                   libraryPanelOpen === "cc" ? "Concepts" :
+                   libraryPanelOpen === "cg" ? "Domains" :
+                   "Nuggets"}
+                </h2>
+              <button
+                type="button"
+                onClick={() => setLibraryPanelOpen(null)}
+                  className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shrink-0 text-neutral-600 dark:text-neutral-400"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+              <div className="flex-1 overflow-y-auto p-4 min-h-0">
+              {libraryPanelOpen === "conversations" && (
+                <div className="space-y-4">
+                  <Link
+                    href="/chat/new"
+                    onClick={() => { setLibraryPanelOpen(null); setSidebarOpen(false); }}
+                    className="flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-foreground border border-neutral-200 dark:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                      <path d="M12 5v14M5 12h14" />
+                    </svg>
+                    New conversation
+                  </Link>
+                  <div className="relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none">
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="m21 21-4.3-4.3" />
+                    </svg>
+                    <input
+                      type="search"
+                      placeholder="Search conversations"
+                      value={sessionSearchQuery}
+                      onChange={(e) => setSessionSearchQuery(e.target.value)}
+                      className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900/50 text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600"
+                      aria-label="Search conversations"
+                    />
+                  </div>
+                  <nav className="space-y-px max-h-[60vh] overflow-y-auto">
+                    {filteredSessions.length === 0 ? (
+                      <p className="px-3 py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                        {sessionSearchQuery ? "No conversations match" : "No conversations yet"}
+                      </p>
+                    ) : (
+                      filteredSessions.map((s) => (
+                        <div
+                          key={s._id}
+                          className={`group flex flex-col gap-0 rounded-xl transition-colors duration-200 ${
+                            currentSessionId === s._id
+                              ? "bg-neutral-100 dark:bg-neutral-800/60"
+                              : "hover:bg-neutral-50 dark:hover:bg-neutral-800/40"
+                          }`}
+                        >
+                          <div className="flex items-center gap-1 min-w-0">
+                            <Link
+                              href={`/chat/${s._id}`}
+                              onClick={() => { setLibraryPanelOpen(null); setSidebarOpen(false); }}
+                              className={`flex-1 min-w-0 flex items-center gap-2 py-2.5 px-3 truncate text-sm ${
+                                currentSessionId === s._id ? "font-medium text-foreground" : "text-neutral-800 dark:text-neutral-200"
+                              }`}
+                            >
+                              <span className="flex-1 min-w-0">
+                                <span className="block truncate">{s.title || "New conversation"}</span>
+                                {s.updatedAt && (
+                                  <span className="block text-xs text-neutral-500 dark:text-neutral-400 font-normal mt-0.5">
+                                    {formatRelativeTime(s.updatedAt)}
+                                  </span>
+                                )}
+                              </span>
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-neutral-400 shrink-0 flex-shrink-0">
+                                <path d="M9 18l6-6-6-6" />
+                              </svg>
+                            </Link>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setLibraryPanelOpen(null);
+                                setDeleteSessionConfirmModal(s);
+                              }}
+                              className="p-1.5 rounded opacity-50 hover:opacity-100 group-hover:opacity-100 text-neutral-500 hover:text-red-600 dark:hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 active:scale-95 shrink-0"
+                              aria-label="Delete conversation"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
+                                <path d="M10 11v6M14 11v6" />
+                              </svg>
+                            </button>
+                          </div>
+                          {s.mentalModelTags && s.mentalModelTags.length > 0 && !hiddenTagsSessions.has(s._id) && (
+                            <div className="flex flex-wrap items-center gap-1.5 px-3 pb-1">
+                              <div className="flex flex-wrap gap-1">
+                                {s.mentalModelTags.map((id) => (
+                                  <button
+                                    key={id}
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      setLibraryPanelOpen(null);
+                                      handleMentalModelClick(id);
+                                    }}
+                                    className="inline-flex px-2 py-0.5 rounded-lg text-[9px] font-medium bg-neutral-200 dark:bg-neutral-600 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-500 transition-all duration-200 active:scale-95"
+                                  >
+                                    {mentalModelsIndex.get(id) ?? id.replace(/_/g, " ")}
+                                  </button>
+                                ))}
+                              </div>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  toggleTagsHidden(s._id);
+                                }}
+                                className="text-[9px] text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 underline-offset-2 hover:underline"
+                              >
+                                Hide tags
+                              </button>
+                            </div>
+                          )}
+                          {s.mentalModelTags && s.mentalModelTags.length > 0 && hiddenTagsSessions.has(s._id) && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                toggleTagsHidden(s._id);
+                              }}
+                              className="px-3 pb-1 text-left text-[9px] text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-400"
+                            >
+                              Show {s.mentalModelTags.length} tags
+                            </button>
+                          )}
+                        </div>
+                      ))
+                    )}
+                  </nav>
+                </div>
+              )}
+              {libraryPanelOpen === "concepts" && (
+                <div className="space-y-4">
+                  <h2 className="text-lg font-semibold text-foreground">Models</h2>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks and biases, grouped by when to use. Star to add to Favorites.</p>
+                  <button
+                    type="button"
+                    onClick={handleTeachMeClick}
+                    disabled={teachMeLoading}
+                    className="flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-foreground border border-neutral-200 dark:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors disabled:opacity-60"
+                    aria-label="Learn a new mental model"
+                  >
+                    {teachMeLoading ? (
+                      <LoadingDots aria-label="Loading" />
+                    ) : (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                          <path d="M12 3v18" />
+                        </svg>
+                        <span>Learn a New Mental Model</span>
+                      </>
+                    )}
+                  </button>
+                  <input type="search" placeholder="Search mental models..." value={mmSearchQuery} onChange={(e) => setMmSearchQuery(e.target.value)} className="w-full px-3 py-1.5 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground" aria-label="Search mental models" />
+                  {(() => {
+                    const formatWhenToUse = (tag: string) => tag.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+                    const q = mmSearchQuery.toLowerCase().trim();
+                    const filteredModels = q
+                      ? mentalModelsWithWhenToUse.filter((m) => {
+                          const nameMatch = m.name.toLowerCase().includes(q);
+                          const tagMatch = (m.when_to_use ?? []).some((t) => formatWhenToUse(t).toLowerCase().includes(q));
+                          const preview = mmPreviewMap.get(m.id);
+                          const oneLinerMatch = preview?.oneLiner?.toLowerCase().includes(q);
+                          const quickIntroMatch = preview?.quickIntro?.toLowerCase().includes(q);
+                          return nameMatch || tagMatch || oneLinerMatch || quickIntroMatch;
+                        })
+                      : mentalModelsWithWhenToUse;
+                    const byWhenToUse = new Map<string, { id: string; name: string }[]>();
+                    const uncategorized: { id: string; name: string }[] = [];
+                    for (const m of filteredModels) {
+                      if (m.when_to_use.length === 0) {
+                        uncategorized.push({ id: m.id, name: m.name });
+                      } else {
+                        for (const tag of m.when_to_use) {
+                          const existing = byWhenToUse.get(tag) ?? [];
+                          if (!existing.some((x) => x.id === m.id)) existing.push({ id: m.id, name: m.name });
+                          byWhenToUse.set(tag, existing);
+                        }
+                      }
+                    }
+                    const whenToUseOrder = [...byWhenToUse.keys()].sort((a, b) => formatWhenToUse(a).localeCompare(formatWhenToUse(b)));
+                    const toggleMmGroup = (key: string) => setMmGroupCollapsed((prev) => { const next = new Set(prev); if (next.has(key)) next.delete(key); else next.add(key); return next; });
+                    const favoriteModels = filteredModels.filter((m) => mmFavorites.has(m.id));
+                    const allGroupKeys = [...whenToUseOrder, ...(uncategorized.length > 0 ? ["uncategorized"] : []), "favorites"];
+                    const collapseAllMmGroups = () => setMmGroupCollapsed(new Set(allGroupKeys));
+                    const expandAllMmGroups = () => setMmGroupCollapsed(new Set());
+                    const renderMmCard = (id: string, name: string) => {
+                      const preview = mmPreviewMap.get(id);
+                      const backText = preview?.oneLiner ?? preview?.quickIntro ?? "Click to explore";
+                      const isFavorite = mmFavorites.has(id);
+                      return (
+                        <div key={id} className="group/tile aspect-square [perspective:1000px] relative">
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); e.preventDefault(); toggleMmFavorite(id); }}
+                            className="absolute top-1 right-1 z-20 p-1 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors touch-manipulation"
+                            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+                          >
+                            {isFavorite ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden>
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                              </svg>
+                            ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4 text-neutral-400 dark:text-neutral-500" aria-hidden>
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                              </svg>
+                            )}
+                          </button>
+                          <div
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => handleMentalModelClick(id)}
+                            onKeyDown={(e) => e.key === "Enter" && handleMentalModelClick(id)}
+                            className="relative h-full w-full transition-transform duration-300 [transform-style:preserve-3d] group-hover/tile:[transform:rotateY(180deg)] cursor-pointer"
+                          >
+                            <div className="absolute inset-0 w-full h-full rounded-xl bg-neutral-100 dark:bg-neutral-800 text-white p-3 flex items-center justify-center [backface-visibility:hidden] border border-neutral-200 dark:border-neutral-700 overflow-hidden pointer-events-none" style={{ backgroundImage: `url(/images/${id.replace(/_/g, "-")}.png)`, backgroundSize: "cover", backgroundPosition: "center" }} aria-hidden>
+                              <div className="absolute inset-0 bg-black/50" aria-hidden />
+                              <span className="relative z-10 text-xs font-medium capitalize tracking-wide text-center line-clamp-3 drop-shadow-sm">{name}</span>
+                            </div>
+                            <div className="absolute inset-0 w-full h-full rounded-xl bg-foreground text-background px-3 flex items-center justify-center overflow-hidden [backface-visibility:hidden] [transform:rotateY(180deg)] border border-foreground pointer-events-none" aria-hidden>
+                              <span className="text-xs text-background/90 text-center line-clamp-4 w-full leading-tight">{backText}</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    };
+                    if (mentalModelsWithWhenToUse.length === 0) {
+                      return <p className="text-xs text-neutral-500 dark:text-neutral-400">Loading mental models…</p>;
+                    }
+                    if (filteredModels.length === 0) {
+                      return <p className="text-xs text-neutral-500 dark:text-neutral-400">{q ? "No mental models match." : "No mental models."}</p>;
+                    }
+                    return (
+                      <div className="space-y-2">
+                        <div className="border-b border-neutral-200 dark:border-neutral-700 pb-2 mb-2">
+                          <div className="flex items-center justify-between mb-1.5">
+                            <p className="text-[10px] font-medium text-neutral-500 uppercase">Favorites</p>
+                            <button type="button" onClick={() => toggleMmGroup("favorites")} className="flex items-center gap-1 text-[10px] text-neutral-500">
+                              <span>{mmGroupCollapsed.has("favorites") ? "▶" : "▼"}</span>
+                            </button>
+                          </div>
+                          {!mmGroupCollapsed.has("favorites") && (
+                            favoriteModels.length > 0 ? (
+                              <div className="grid grid-cols-2 gap-2">
+                                {favoriteModels.map(({ id, name }) => renderMmCard(id, name))}
+                              </div>
+                            ) : (
+                              <p className="text-xs text-neutral-500 dark:text-neutral-400 py-2">
+                                You don&apos;t have any favorites yet. Add them by clicking the star button on the cards below.
+                              </p>
+                            )
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[10px] text-neutral-500">Categories</span>
+                          <button type="button" onClick={allGroupKeys.every((k) => mmGroupCollapsed.has(k)) ? expandAllMmGroups : collapseAllMmGroups} className="text-[10px] text-neutral-500 hover:text-foreground transition-colors">
+                            {allGroupKeys.every((k) => mmGroupCollapsed.has(k)) ? "Expand all" : "Collapse all"}
+                          </button>
+                        </div>
+                        {whenToUseOrder.map((tag, i) => {
+                          const models = byWhenToUse.get(tag) ?? [];
+                          const isCollapsed = mmGroupCollapsed.has(tag);
+                          return (
+                            <div key={tag} className={i === 0 ? "pt-0" : "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2"}>
+                              <button type="button" onClick={() => toggleMmGroup(tag)} className="flex items-center justify-between w-full text-left px-1 mb-1.5">
+                                <p className="text-[10px] font-medium text-neutral-500 uppercase">{formatWhenToUse(tag)}</p>
+                                <span className="text-[10px]">{isCollapsed ? "▶" : "▼"}</span>
+                              </button>
+                              {!isCollapsed && (
+                                <div className="grid grid-cols-2 gap-2">
+                                  {models.map(({ id, name }) => renderMmCard(id, name))}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                        {uncategorized.length > 0 && (
+                          <div className={whenToUseOrder.length === 0 ? "pt-0" : "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2"}>
+                            <button type="button" onClick={() => toggleMmGroup("uncategorized")} className="flex items-center justify-between w-full text-left px-1 mb-1.5">
+                              <p className="text-[10px] font-medium text-neutral-500 uppercase">Other</p>
+                              <span className="text-[10px]">{mmGroupCollapsed.has("uncategorized") ? "▶" : "▼"}</span>
+                            </button>
+                            {!mmGroupCollapsed.has("uncategorized") && (
+                              <div className="grid grid-cols-2 gap-2">
+                                {uncategorized.map(({ id, name }) => renderMmCard(id, name))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
+              {libraryPanelOpen === "ltm" && (
+                <div className="space-y-4">
+                  <h2 className="text-lg font-semibold text-foreground">Memory</h2>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Summaries of past conversations. Use when you want the agent to remember your context, preferences, and what you&apos;ve shared before.</p>
+                  {longTermMemories.length > 0 ? (
+                    <div className="space-y-2">
+                      {longTermMemories.map((ltm) => (
+                        <div
+                          key={ltm._id}
+                          className="flex items-start gap-3 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors relative"
+                        >
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              setLtmDeleteConfirmModal(ltm);
+                            }}
+                            className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
+                            aria-label={`Delete ${ltm.title}`}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                              <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
+                              <path d="M10 11v6M14 11v6" />
+                            </svg>
+                          </button>
+                          <div
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => setLtmDetailModal(ltm)}
+                            onKeyDown={(e) => e.key === "Enter" && setLtmDetailModal(ltm)}
+                            className="flex-1 min-w-0 cursor-pointer pr-8"
+                          >
+                            <span className="text-sm font-medium line-clamp-1">{ltm.title}</span>
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 line-clamp-2">{ltm.summary || ltm.enrichmentPrompt}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Summarize a conversation to add it here.</p>
+                  )}
+                </div>
+              )}
+              {libraryPanelOpen === "cc" && (
+                <div className="space-y-4">
+                  <h2 className="text-lg font-semibold text-foreground">Concepts</h2>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Ideas and contexts you define. Use when you want the agent to reference your own concepts, goals, or frameworks.</p>
+                  <div className="flex items-center justify-end gap-2">
+                    <div className="flex gap-1">
+                      <button type="button" onClick={() => setCgCustomCreateModal(true)} className="px-3 py-2 text-xs font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors">+ Group</button>
+                      <button type="button" onClick={() => { setCcCreateInput(""); setCcCreateStep("input"); setCcCreateDraft(null); setCcCreateModal(true); }} className="px-3 py-2 text-xs font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors">+ Add Concept</button>
+                    </div>
+                  </div>
+                  {customConcepts.length > 0 ? (
+                    <div className="space-y-3">
+                      <input type="search" placeholder="Search concepts..." value={ccSearchQuery} onChange={(e) => setCcSearchQuery(e.target.value)} className="w-full px-3 py-1.5 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground" aria-label="Search concepts" />
+                      {(() => {
+                        const q = ccSearchQuery.toLowerCase().trim();
+                        const filteredConcepts = q ? customConcepts.filter((cc) => cc.title.toLowerCase().includes(q) || cc.summary.toLowerCase().includes(q) || cc.enrichmentPrompt.toLowerCase().includes(q)) : customConcepts;
+                        const byGroupId = new Map<string, CustomConceptItem[]>();
+                        for (const g of conceptGroups) {
+                          const concepts = filteredConcepts.filter((cc) => (g.conceptIds ?? []).includes(cc._id));
+                          byGroupId.set(g._id, concepts);
+                        }
+                        const standalone = filteredConcepts.filter((cc) => !conceptGroups.some((g) => (g.conceptIds ?? []).includes(cc._id)));
+                        const toggleGroup = (key: string) => setCcGroupCollapsed((prev) => { const next = new Set(prev); if (next.has(key)) next.delete(key); else next.add(key); return next; });
+                        if (filteredConcepts.length === 0 && conceptGroups.length === 0) return <p className="text-xs text-neutral-500">{q ? "No concepts match" : "No concepts"}</p>;
+                        return (
+                          <>
+                            {conceptGroups.map((cg, i) => {
+                              const concepts = byGroupId.get(cg._id) ?? [];
+                              const isCollapsed = ccGroupCollapsed.has(cg._id);
+                              const isEmpty = (cg.conceptIds?.length ?? 0) === 0 || concepts.length === 0;
+                              return (
+                                <div key={cg._id} className={i === 0 ? "pt-0" : "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2"}>
+                                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                                    <button type="button" onClick={() => toggleGroup(cg._id)} className="flex items-center justify-between flex-1 min-w-0 text-left px-1">
+                                      <p className="text-[10px] font-medium text-neutral-500 uppercase truncate">{cg.title}</p>
+                                      <span className="text-[10px] shrink-0 ml-1">{isCollapsed ? "▶" : "▼"}</span>
+                                  </button>
+                                    {isEmpty && (
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setCgDeleteConfirmModal(cg);
+                                        }}
+                                        className="p-1.5 rounded-lg text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors shrink-0 -mr-1"
+                                        aria-label={`Delete ${cg.title}`}
+                                      >
+                                        <TrashIcon className="w-4 h-4" />
+                                      </button>
+                                    )}
+                                  </div>
+                                  {!isCollapsed && (
+                                    <div className="space-y-2">
+                                      {concepts.length === 0 ? (
+                                        <p className="text-xs text-neutral-500 dark:text-neutral-400 py-2">No concepts in this group yet.</p>
+                                      ) : concepts.map((cc) => (
+                                        <div key={cc._id} className="flex items-start gap-3 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors relative">
+                                          <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" /><path d="M10 11v6M14 11v6" /></svg>
+                                          </button>
+                                          <div role="button" tabIndex={0} onClick={() => setCcDetailModal(cc)} onKeyDown={(e) => e.key === "Enter" && setCcDetailModal(cc)} className="flex-1 min-w-0 cursor-pointer pr-8">
+                                            <span className="text-sm font-medium line-clamp-1">{cc.title}</span>
+                                            <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 line-clamp-2">{cc.summary || cc.enrichmentPrompt}</p>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                            {standalone.length > 0 && (
+                              <div className={conceptGroups.length === 0 ? "pt-0" : "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2"}>
+                                <button type="button" onClick={() => toggleGroup("Standalone")} className="flex items-center justify-between w-full text-left px-1 mb-1.5">
+                                  <p className="text-[10px] font-medium text-neutral-500 uppercase">Standalone</p>
+                                  <span className="text-[10px]">{ccGroupCollapsed.has("Standalone") ? "▶" : "▼"}</span>
+                                </button>
+                                {!ccGroupCollapsed.has("Standalone") && (
+                                  <div className="space-y-2">
+                                    {standalone.map((cc) => (
+                                      <div key={cc._id} className="flex items-start gap-3 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors relative">
+                                        <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
+                                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" /><path d="M10 11v6M14 11v6" /></svg>
+                                        </button>
+                                        <div role="button" tabIndex={0} onClick={() => setCcDetailModal(cc)} onKeyDown={(e) => e.key === "Enter" && setCcDetailModal(cc)} className="flex-1 min-w-0 cursor-pointer pr-8">
+                                          <span className="text-sm font-medium line-clamp-1">{cc.title}</span>
+                                          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 line-clamp-2">{cc.summary || cc.enrichmentPrompt}</p>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Create a custom concept to remember anything you want.</p>
+                  )}
+                </div>
+              )}
+              {libraryPanelOpen === "cg" && (
+                <div className="space-y-4">
+                  <h2 className="text-lg font-semibold text-foreground">Domains</h2>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Domain groups created via AI. Use when you want the agent to think in terms of a topic (e.g. finance, health) with related concepts.</p>
+                  <div className="flex items-center justify-end gap-1">
+                    <button type="button" onClick={() => { setCgCreateDomain(""); setCgCreateStep(1); setCgCreateQuestions([]); setCgCreateAnswers({}); setCgCreateConcepts([]); setCgCreateModal(true); }} className="px-3 py-2 text-xs font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors">+ Domain</button>
+                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeModal(true); }} className="px-3 py-2 text-xs font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors">+ Add From YouTube Transcript</button>
+                  </div>
+                  {conceptGroups.length > 0 ? (
+                    <div className="grid grid-cols-2 gap-2">
+                      {conceptGroups.map((cg) => {
+                        const isEmpty = (cg.conceptIds?.length ?? 0) === 0;
+                        const openGroup = () => fetch(`/api/me/concept-groups/${cg._id}`).then((r) => r.ok ? r.json() : Promise.reject()).then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] })).catch(() => setCgDetailModal(cg));
+                        return (
+                          <div
+                            key={cg._id}
+                            role="button"
+                            tabIndex={0}
+                            onClick={openGroup}
+                            onKeyDown={(e) => e.key === "Enter" && openGroup()}
+                            className="relative flex flex-col items-center justify-center gap-1 p-3 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 cursor-pointer transition-colors text-center"
+                          >
+                            {isEmpty && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                  setCgDeleteConfirmModal(cg);
+                                }}
+                                className="absolute top-2 right-2 z-10 p-1.5 rounded-lg text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                                aria-label={`Delete ${cg.title}`}
+                              >
+                                <TrashIcon className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                            <div className="relative w-10 h-10 shrink-0 flex items-center justify-center">
+                              <div className="absolute inset-0 rounded-lg bg-neutral-200 dark:bg-neutral-700" style={{ transform: "translate(0,0)" }} />
+                              <div className="absolute inset-0 rounded-lg bg-neutral-300 dark:bg-neutral-600" style={{ transform: "translate(3px,3px)" }} />
+                              <div className="absolute inset-0 rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center" style={{ transform: "translate(6px,6px)" }}>
+                                <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">{(cg.conceptIds?.length ?? 0) || "—"}</span>
+                              </div>
+                            </div>
+                            <p className="text-sm font-medium truncate w-full">{cg.title}</p>
+                            <p className="text-[10px] text-neutral-500 dark:text-neutral-400">{cg.conceptIds?.length ?? 0} concepts</p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Create domains via AI or groups by selecting existing concepts.</p>
+                  )}
+                  {savedTranscripts.length > 0 && (
+                    <div className="pt-4 border-t border-neutral-200 dark:border-neutral-700">
+                      <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-2">My Transcripts</p>
+                      <div className="space-y-2">
+                        {savedTranscripts.map((t) => (
+                          <div
+                            key={t._id}
+                            className="flex items-center justify-between gap-2 p-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/30"
+                          >
+                            <div
+                              className="min-w-0 flex-1 cursor-pointer"
+                              role="button"
+                              tabIndex={0}
+                              onClick={() =>
+                                fetch(`/api/me/transcripts/${t._id}`)
+                                  .then((r) => r.ok ? r.json() : Promise.reject())
+                                  .then((data) => setTranscriptModalTranscript({ id: t._id, videoId: data.videoId ?? t.videoId, videoTitle: data.videoTitle ?? t.videoTitle, channel: data.channel ?? t.channel, transcriptText: data.transcriptText ?? "" }))
+                                  .catch(() => {})
+                              }
+                              onKeyDown={(e) => e.key === "Enter" && (e.currentTarget as HTMLElement).click()}
+                            >
+                              <a
+                                href={`https://www.youtube.com/watch?v=${t.videoId}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-sm font-medium truncate block hover:underline text-foreground"
+                              >
+                                {t.videoTitle || t.videoId}
+                              </a>
+                              {t.channel && <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">{t.channel}</p>}
+                            </div>
+                            <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setCcYoutubeTranscriptId(t._id);
+                                  setCcYoutubeUrl("");
+                                  setCcYoutubeResult(null);
+                                  setCcYoutubeError(null);
+                                  setCcYoutubeModal(true);
+                                }}
+                                className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
+                              >
+                                Re-extract
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => fetch(`/api/me/transcripts/${t._id}`, { method: "DELETE" }).then(() => refetchTranscripts())}
+                                className="p-1.5 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                                aria-label={`Delete transcript ${t.videoTitle || t.videoId}`}
+                              >
+                                <TrashIcon className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                </div>
+              )}
+                </div>
+              )}
+              {libraryPanelOpen === "nuggets" && (
+                <div className="space-y-4">
+                  <h2 className="text-lg font-semibold text-foreground">Nuggets</h2>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Save impactful quotes, words, and snippets. Paste from clipboard or highlight text in conversations.</p>
+                  {nuggetFormOpen === "panel" ? (
+                    <div className="p-3 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/30 space-y-2">
+                      <div className="flex gap-1">
+                        <textarea value={nuggetCreateContent} onChange={(e) => setNuggetCreateContent(e.target.value)} placeholder="Paste or type your nugget..." rows={3} className="flex-1 px-2 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y" />
+                        <button type="button" onClick={async () => { if (!nuggetCreateContent.trim() || nuggetImproveLoading) return; setNuggetImproveLoading(true); try { const res = await fetch("/api/me/nuggets/improve", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent }) }); const data = await res.json(); if (data.improved) setNuggetCreateContent(data.improved); } catch { /* ignore */ } finally { setNuggetImproveLoading(false); } }} disabled={!nuggetCreateContent.trim() || nuggetImproveLoading} className="p-2 rounded-lg text-neutral-500 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 shrink-0" title="Improve with LLM" aria-label="Improve with LLM"><AIGenerateIcon className="w-4 h-4" /></button>
+                      </div>
+                      <div className="flex gap-1">
+                        <input type="text" value={nuggetCreateSource} onChange={(e) => setNuggetCreateSource(e.target.value)} placeholder="Source (optional)" className="flex-1 px-2 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20" />
+                        <button type="button" onClick={async () => { if (!nuggetCreateContent.trim() || nuggetSuggestSourceLoading) return; setNuggetSuggestSourceLoading(true); try { const res = await fetch("/api/me/nuggets/suggest-source", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent }) }); const data = await res.json(); if (data.source) setNuggetCreateSource(data.source); } catch { /* ignore */ } finally { setNuggetSuggestSourceLoading(false); } }} disabled={!nuggetCreateContent.trim() || nuggetSuggestSourceLoading} className="p-2 rounded-lg text-neutral-500 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 shrink-0" title="Suggest source" aria-label="Suggest source"><SparklesIcon className="w-4 h-4" /></button>
+                      </div>
+                      <div className="flex gap-2 justify-end">
+                        <button onClick={() => { setNuggetFormOpen(null); setNuggetCreateContent(""); setNuggetCreateSource(""); }} className="px-3 py-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg">Cancel</button>
+                        <button disabled={!nuggetCreateContent.trim() || nuggetCreateLoading} onClick={async () => { if (!nuggetCreateContent.trim() || nuggetCreateLoading) return; setNuggetCreateLoading(true); try { await fetch("/api/me/nuggets", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent.trim(), source: nuggetCreateSource.trim() || undefined }) }); refetchNuggets(); setNuggetFormOpen(null); setNuggetCreateContent(""); setNuggetCreateSource(""); } catch { /* ignore */ } finally { setNuggetCreateLoading(false); } }} className="px-3 py-1.5 text-xs font-medium bg-foreground text-background rounded-lg hover:opacity-90 disabled:opacity-50">{nuggetCreateLoading ? "Saving..." : "Save"}</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex justify-end">
+                      <button type="button" onClick={() => { setNuggetCreateContent(""); setNuggetCreateSource(""); setNuggetFormOpen("panel"); setNuggetFormPosition(null); }} className="px-3 py-2 text-xs font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors">+ Add Nugget</button>
+                    </div>
+                  )}
+                  {nuggets.length > 0 ? (
+                    <div className="space-y-2">
+                      {nuggets.map((n) => (
+                        <div key={n._id} className="p-3 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/30">
+                          <p className="text-sm text-foreground whitespace-pre-wrap">{n.content}</p>
+                          {n.source && <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-1">{n.source}</p>}
+                          {nuggetLearnId === n._id && nuggetLearnExplanation && (
+                            <div className="mt-2 p-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs text-foreground">
+                              {nuggetLearnExplanation}
+                            </div>
+                          )}
+                          <div className="flex gap-1 justify-end mt-2">
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (nuggetLearnId === n._id) { setNuggetLearnId(null); setNuggetLearnExplanation(null); return; }
+                                setNuggetLearnId(n._id);
+                                setNuggetLearnExplanation(null);
+                                try {
+                                  const res = await fetch("/api/me/nuggets/learn", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: n.content }) });
+                                  const data = await res.json();
+                                  if (data.explanation) setNuggetLearnExplanation(data.explanation);
+                                } catch { setNuggetLearnExplanation("Failed to load."); }
+                              }}
+                              className="px-2 py-1 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
+                            >
+                              {nuggetLearnId === n._id && !nuggetLearnExplanation ? "Loading..." : nuggetLearnId === n._id ? "Hide" : "Learn this Nugget"}
+                            </button>
+                            <button type="button" onClick={() => fetch(`/api/me/nuggets/${n._id}`, { method: "DELETE" }).then(() => refetchNuggets())} className="p-1.5 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors" aria-label="Delete nugget"><TrashIcon className="w-3.5 h-3.5" /></button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : nuggetFormOpen !== "panel" && (
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">No nuggets yet. Add one to get started.</p>
+                  )}
+                </div>
+              )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {nuggetFormOpen === "selection" && nuggetFormPosition && (
+        <>
+          <div
+            className="fixed inset-0 z-[49] bg-black/20 animate-fade-in"
+            onClick={() => { if (!nuggetCreateLoading) { setNuggetFormOpen(null); setNuggetFormPosition(null); setNuggetCreateContent(""); setNuggetCreateSource(""); } }}
+            aria-hidden
+          />
+          <div
+            className="fixed z-50 w-[min(360px,calc(100vw-2rem))] animate-fade-in rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-xl p-3"
+            style={{ left: nuggetFormPosition.x, top: nuggetFormPosition.y }}
+            onClick={(e) => e.stopPropagation()}
+          >
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Save nugget</span>
+            <button type="button" onClick={() => { setNuggetFormOpen(null); setNuggetFormPosition(null); setNuggetCreateContent(""); setNuggetCreateSource(""); }} className="p-1 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800">✕</button>
+          </div>
+          <div className="space-y-2">
+            <div className="flex gap-1">
+              <textarea value={nuggetCreateContent} onChange={(e) => setNuggetCreateContent(e.target.value)} placeholder="Paste or type..." rows={3} className="flex-1 px-2 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y" />
+              <button type="button" onClick={async () => { if (!nuggetCreateContent.trim() || nuggetImproveLoading) return; setNuggetImproveLoading(true); try { const res = await fetch("/api/me/nuggets/improve", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent }) }); const data = await res.json(); if (data.improved) setNuggetCreateContent(data.improved); } catch { /* ignore */ } finally { setNuggetImproveLoading(false); } }} disabled={!nuggetCreateContent.trim() || nuggetImproveLoading} className="p-2 rounded-lg text-neutral-500 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 shrink-0" title="Improve with LLM" aria-label="Improve with LLM"><AIGenerateIcon className="w-4 h-4" /></button>
+            </div>
+            <div className="flex gap-1">
+              <input type="text" value={nuggetCreateSource} onChange={(e) => setNuggetCreateSource(e.target.value)} placeholder="Source (optional)" className="flex-1 px-2 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20" />
+              <button type="button" onClick={async () => { if (!nuggetCreateContent.trim() || nuggetSuggestSourceLoading) return; setNuggetSuggestSourceLoading(true); try { const res = await fetch("/api/me/nuggets/suggest-source", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent }) }); const data = await res.json(); if (data.source) setNuggetCreateSource(data.source); } catch { /* ignore */ } finally { setNuggetSuggestSourceLoading(false); } }} disabled={!nuggetCreateContent.trim() || nuggetSuggestSourceLoading} className="p-2 rounded-lg text-neutral-500 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 shrink-0" title="Suggest source" aria-label="Suggest source"><SparklesIcon className="w-4 h-4" /></button>
+            </div>
+          </div>
+          <div className="flex gap-2 justify-end mt-2">
+            <button onClick={() => { setNuggetFormOpen(null); setNuggetFormPosition(null); setNuggetCreateContent(""); setNuggetCreateSource(""); }} className="px-3 py-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg">Cancel</button>
+            <button disabled={!nuggetCreateContent.trim() || nuggetCreateLoading} onClick={async () => { if (!nuggetCreateContent.trim() || nuggetCreateLoading) return; setNuggetCreateLoading(true); try { await fetch("/api/me/nuggets", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent.trim(), source: nuggetCreateSource.trim() || undefined }) }); refetchNuggets(); setNuggetFormOpen(null); setNuggetFormPosition(null); setNuggetCreateContent(""); setNuggetCreateSource(""); } catch { /* ignore */ } finally { setNuggetCreateLoading(false); } }} className="px-3 py-1.5 text-xs font-medium bg-foreground text-background rounded-lg hover:opacity-90 disabled:opacity-50">{nuggetCreateLoading ? "Saving..." : "Save"}</button>
+          </div>
+        </div>
+        </>
+      )}
+
+      {transcriptModalTranscript && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => setTranscriptModalTranscript(null)}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative p-4 pr-12 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <button
+                type="button"
+                onClick={() => setTranscriptModalTranscript(null)}
+                className="absolute top-4 right-4 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+              <h2 className="font-semibold text-lg truncate">{transcriptModalTranscript.videoTitle || "Transcript"}</h2>
+              {transcriptModalTranscript.channel && <p className="text-sm text-neutral-500 dark:text-neutral-400 truncate mt-0.5">{transcriptModalTranscript.channel}</p>}
+              <a
+                href={`https://www.youtube.com/watch?v=${transcriptModalTranscript.videoId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-blue-600 dark:text-blue-400 hover:underline mt-1 inline-block"
+              >
+                Open on YouTube
+              </a>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4">
+              <div className="max-w-[65ch] mx-auto text-[15px] leading-relaxed text-foreground">
+                {(() => {
+                  const t = transcriptModalTranscript.transcriptText.trim();
+                  if (!t) return null;
+                  const hasParagraphs = /\n\n|\n/.test(t);
+                  let paragraphs: string[];
+                  if (hasParagraphs) {
+                    paragraphs = t.split(/\n\n+/).map((p) => p.replace(/\n/g, " ").trim()).filter(Boolean);
+                  } else {
+                    const sentences = t.split(/(?<=[.!?])\s+/).filter((s) => s.trim());
+                    paragraphs = [];
+                    for (let i = 0; i < sentences.length; i += 3) {
+                      paragraphs.push(sentences.slice(i, i + 3).join(" "));
+                    }
+                    if (paragraphs.length === 0 && t) paragraphs = [t];
+                  }
+                  return paragraphs.map((p, i) => (
+                    <p key={i} className="mb-4 last:mb-0">
+                      {p.split(/\s*>>\s*/).filter(Boolean).map((segment, j) => (
+                        <span key={j}>
+                          {j > 0 && (
+                            <>
+                              <br />
+                              <span className="text-amber-500/90 dark:text-amber-400/80 font-medium select-none mr-1" aria-hidden>»</span>
+                            </>
+                          )}
+                          {segment}
+                        </span>
+                      ))}
+                    </p>
+                  ));
+                })()}
+              </div>
+            </div>
+            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+              <button
+                onClick={() => {
+                  setCcYoutubeTranscriptId(transcriptModalTranscript.id);
+                  setCcYoutubeUrl("");
+                  setCcYoutubeResult(null);
+                  setCcYoutubeError(null);
+                  setTranscriptModalTranscript(null);
+                  setCcYoutubeModal(true);
+                }}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                Re-extract
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  fetch(`/api/me/transcripts/${transcriptModalTranscript.id}`, { method: "DELETE" })
+                    .then(() => refetchTranscripts())
+                    .then(() => setTranscriptModalTranscript(null));
+                }}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {summarizeLanguageModal && currentSessionId && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => setSummarizeLanguageModal(null)}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-md w-full overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+              <h2 className="font-semibold text-lg">Summarize and Collapse</h2>
+              <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+                Which language should the summary be in?
+              </p>
+            </div>
+            <div className="p-4 space-y-4">
+              <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                Language
+              </label>
+              <select
+                value={summarizeLanguageModal.selectedLanguage}
+                onChange={(e) =>
+                  setSummarizeLanguageModal((prev) =>
+                    prev ? { ...prev, selectedLanguage: e.target.value as LanguageCode } : null
+                  )
+                }
+                className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+              >
+                {LANGUAGES.map(({ code, name }) => (
+                  <option key={code} value={code}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+              <button
+                onClick={() => setSummarizeLanguageModal(null)}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  setSummarizeLoading(true);
+                  try {
+                    const res = await fetch(`/api/sessions/${currentSessionId}/summarize`, {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        language: summarizeLanguageModal.selectedLanguage,
+                        collapse: false,
+                      }),
+                    });
+                    if (!res.ok) throw new Error("Failed");
+                    const data = await res.json();
+                    setSummarizeLanguageModal(null);
+                    setSummarizeModal({
+                      summary: data.summary,
+                      enrichmentPrompt: data.enrichmentPrompt,
+                      longTermMemoryId: data.longTermMemory._id,
+                    });
+                    setSummarizeSuccess(true);
+                    setTimeout(() => setSummarizeSuccess(false), 2000);
+                    refetchSessions();
+                    refetchLongTermMemories();
+                  } catch {
+                    setSummarizeLanguageModal(null);
+                  } finally {
+                    setSummarizeLoading(false);
+                  }
+                }}
+                disabled={summarizeLoading}
+                className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity border border-neutral-200 dark:border-neutral-600 disabled:opacity-60"
+              >
+                {summarizeLoading ? "Summarizing…" : "Summarize"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {summarizeModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => { setSummarizeModal(null); setTtsHighlight(null); }}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+              <h2 className="font-semibold text-lg">Summarize and Collapse</h2>
+              <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+                Edit the enrichment prompt below to customize what future conversations will remember.
+              </p>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <label className="text-sm font-medium text-neutral-900 dark:text-neutral-100 min-w-0">
+                    Summary
+                  </label>
+                  <div className="flex items-center gap-1">
+                    <TTSButton
+                      text={summarizeModal.summary}
+                      showOnHover={false}
+                      ariaLabel="Listen to summary"
+                      onTtsProgress={(charEnd) => setTtsHighlight({ textId: "summarize-modal-summary", charEnd })}
+                      onTtsEnd={() => setTtsHighlight(null)}
+                    />
+                  <CopyButton text={summarizeModal.summary} aria-label="Copy summary" />
+                </div>
+                </div>
+                <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50 p-3 text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap max-h-40 overflow-y-auto" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                  {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === "summarize-modal-summary" ? (
+                    <TtsHighlightedText text={summarizeModal.summary} charEnd={ttsHighlight.charEnd} />
+                  ) : (
+                    summarizeModal.summary
+                  )}
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <label className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                  Enrichment prompt (for AI coach context)
+                </label>
+                  <TTSButton
+                    text={summarizeModal.enrichmentPrompt}
+                    showOnHover={false}
+                    ariaLabel="Listen to enrichment prompt"
+                    onTtsProgress={(charEnd) => setTtsHighlight({ textId: "summarize-modal-enrichment", charEnd })}
+                    onTtsEnd={() => setTtsHighlight(null)}
+                  />
+                </div>
+                {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === "summarize-modal-enrichment" ? (
+                  <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50 p-3 text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                    <TtsHighlightedText text={summarizeModal.enrichmentPrompt} charEnd={ttsHighlight.charEnd} />
+                  </div>
+                ) : (
+                <textarea
+                  value={summarizeModal.enrichmentPrompt}
+                  onChange={(e) =>
+                    setSummarizeModal((prev) =>
+                      prev ? { ...prev, enrichmentPrompt: e.target.value } : null
+                    )
+                  }
+                  rows={4}
+                  dir={isRtlLanguage(language) ? "rtl" : undefined}
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                  placeholder="1 dense sentence, max ~25 words (e.g. User weighing job change; values work-life balance.)"
+                />
+                )}
+              </div>
+            </div>
+            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+              <button
+                onClick={async () => {
+                  try {
+                    await fetch(`/api/me/long-term-memory/${summarizeModal.longTermMemoryId}`, {
+                      method: "DELETE",
+                    });
+                  } finally {
+                    setSummarizeModal(null);
+                  }
+                }}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  try {
+                    const patchRes = await fetch(
+                      `/api/me/long-term-memory/${summarizeModal.longTermMemoryId}`,
+                      {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          enrichmentPrompt: summarizeModal.enrichmentPrompt,
+                        }),
+                      }
+                    );
+                    if (!patchRes.ok) return;
+                    const collapseRes = await fetch(`/api/sessions/${currentSessionId}`, {
+                      method: "PATCH",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        isCollapsed: true,
+                        longTermMemoryId: summarizeModal.longTermMemoryId,
+                      }),
+                    });
+                    if (collapseRes.ok) {
+                      const ltmRes = await fetch(`/api/me/long-term-memory/${summarizeModal.longTermMemoryId}`);
+                      const ltm = ltmRes.ok ? await ltmRes.json() : null;
+                      setCurrentSession((prev) =>
+                        prev ? { ...prev, isCollapsed: true, longTermMemoryId: summarizeModal.longTermMemoryId } : null
+                      );
+                      setCollapsedSummary(ltm);
+                      setMessages([]);
+                      setSummarizeSuccess(true);
+                      setTimeout(() => setSummarizeSuccess(false), 2000);
+                      refetchSessions();
+                      refetchLongTermMemories();
+                    }
+                  } finally {
+                    setSummarizeModal(null);
+                  }
+                }}
+                className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity border border-neutral-200 dark:border-neutral-600"
+              >
+                Save and Collapse
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {ltmDetailModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => { setLtmDetailModal(null); setTtsHighlight(null); }}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between">
+              <h2 className="font-semibold text-lg truncate pr-2">{ltmDetailModal.title}</h2>
+              <button
+                onClick={() => setLtmDetailModal(null)}
+                className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <label className="text-sm font-medium text-neutral-900 dark:text-neutral-100 min-w-0">
+                    Summary
+                  </label>
+                  <div className="flex items-center gap-1">
+                    <TTSButton
+                      text={`${ltmDetailModal.title}\n\n${ltmDetailModal.summary}`}
+                      showOnHover={false}
+                      ariaLabel="Listen to summary"
+                      onTtsProgress={(charEnd) => setTtsHighlight({ textId: `ltm-${ltmDetailModal._id}-summary`, charEnd })}
+                      onTtsEnd={() => setTtsHighlight(null)}
+                    />
+                  <CopyButton
+                    text={`${ltmDetailModal.title}\n\n${ltmDetailModal.summary}`}
+                    aria-label="Copy summary"
+                  />
+                </div>
+                </div>
+                <div className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                  {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === `ltm-${ltmDetailModal._id}-summary` ? (
+                    <TtsHighlightedText text={`${ltmDetailModal.title}\n\n${ltmDetailModal.summary}`.trim()} charEnd={ttsHighlight.charEnd} />
+                  ) : (
+                    ltmDetailModal.summary
+                  )}
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <label className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                  Enrichment prompt
+                </label>
+                  <TTSButton
+                    text={ltmDetailModal.enrichmentPrompt}
+                    showOnHover={false}
+                    ariaLabel="Listen to enrichment prompt"
+                    onTtsProgress={(charEnd) => setTtsHighlight({ textId: `ltm-${ltmDetailModal._id}-enrichment`, charEnd })}
+                    onTtsEnd={() => setTtsHighlight(null)}
+                  />
+                </div>
+                <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                  {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === `ltm-${ltmDetailModal._id}-enrichment` ? (
+                    <TtsHighlightedText text={ltmDetailModal.enrichmentPrompt} charEnd={ttsHighlight.charEnd} />
+                  ) : (
+                    ltmDetailModal.enrichmentPrompt
+                  )}
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 pt-2">
+                <GenerateRelevantMessageButton
+                  label="Generate Relevant Message"
+                  expandOnHover={false}
+                  aria-label="Generate Relevant Message"
+                  onClick={async () => {
+                    const suggestion = `${ltmDetailModal.title}\n\n${ltmDetailModal.summary}\n\nEnrichment: ${ltmDetailModal.enrichmentPrompt}`;
+                    setGenerateModal({ type: "ltm", generatedText: "", loading: true });
+                    try {
+                      const res = await fetch("/api/generate-relevant-prompt", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          suggestion,
+                          messages: messages.map((m) => ({ role: m.role, content: m.content })),
+                        }),
+                      });
+                      const data = await res.json();
+                      setGenerateModal((prev) =>
+                        prev ? { ...prev, generatedText: data.text ?? suggestion, loading: false } : null
+                      );
+                    } catch {
+                      setGenerateModal((prev) =>
+                        prev ? { ...prev, generatedText: suggestion, loading: false } : null
+                      );
+                    }
+                  }}
+                />
+                <Link
+                  href={`/chat/${ltmDetailModal.sourceSessionId}`}
+                  onClick={() => setLtmDetailModal(null)}
+                  className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
+                >
+                  View conversation →
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLtmDeleteConfirmModal(ltmDetailModal);
+                    setLtmDetailModal(null);
+                  }}
+                  className="px-4 py-2 rounded-full text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+                >
+                  Delete from long-term memory
+                </button>
+              </div>
+              {generateModal?.type === "ltm" && (
+                <div
+                  className="absolute inset-0 flex items-center justify-center p-4 bg-black/50 rounded-3xl z-10"
+                  onClick={() => setGenerateModal(null)}
+                >
+                  <div
+                    className="bg-background rounded-2xl shadow-xl max-w-md w-full p-5 border border-neutral-200 dark:border-neutral-700"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <h3 className="font-semibold text-base mb-3">Generated message</h3>
+                    {generateModal.loading ? (
+                      <div className="flex items-center justify-center py-8 gap-2 text-neutral-500 dark:text-neutral-400">
+                        <span className="inline-block w-4 h-4 border-2 border-foreground/20 border-t-foreground rounded-full animate-spin" />
+                        <span>Generating…</span>
+                      </div>
+                    ) : (
+                      <textarea
+                        value={generateModal.generatedText}
+                        onChange={(e) =>
+                          setGenerateModal((prev) =>
+                            prev ? { ...prev, generatedText: e.target.value } : null
+                          )
+                        }
+                        className="w-full min-h-[100px] px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-sm resize-y"
+                        placeholder="Generated message…"
+                      />
+                    )}
+                    <div className="flex gap-2 justify-end mt-4">
+                      <button
+                        onClick={() => setGenerateModal(null)}
+                        className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={() => {
+                          const text = generateModal.generatedText.trim();
+                          if (text) {
+                            sendMessage(text);
+                            setGenerateModal(null);
+                            setLtmDetailModal(null);
+                          }
+                        }}
+                        disabled={generateModal.loading || !generateModal.generatedText.trim()}
+                        className="px-4 py-2 rounded-xl text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Send
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {settingsOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm animate-fade-in"
+            onClick={() => setSettingsOpen(false)}
+            aria-hidden
+          />
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+            aria-hidden
+          >
+            <div
+              className="pointer-events-auto w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-800 animate-fade-in-up"
+              role="dialog"
+              aria-modal
+              aria-labelledby="settings-title"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200/80 dark:border-neutral-800 shrink-0">
+                <h2 id="settings-title" className="text-lg font-semibold text-foreground">Settings</h2>
+                <button
+                  type="button"
+                  onClick={() => setSettingsOpen(false)}
+                  className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shrink-0 text-neutral-600 dark:text-neutral-400"
+                  aria-label="Close"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-4 min-h-0 space-y-6">
+              <div>
+                <h3 className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Language</h3>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Language for conversations and responses</p>
+                <div className="flex flex-wrap gap-2">
+                  {LANGUAGES.map(({ code, name }) => (
+                    <button
+                      key={code}
+                      type="button"
+                      onClick={() => setLanguage(code as LanguageCode)}
+                      className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
+                        language === code
+                          ? "bg-foreground text-background"
+                          : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                      }`}
+                    >
+                      {name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Voice style</h3>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Tone and personality of the AI</p>
+                <div className="flex flex-wrap gap-2">
+                  {USER_TYPES.map(({ id, name, description }) => (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => setUserType(id)}
+                      title={description}
+                      className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
+                        userType === id
+                          ? "bg-foreground text-background"
+                          : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                      }`}
+                    >
+                      {name}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
+                  {USER_TYPES.find((t) => t.id === userType)?.description}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Voice playback speed</h3>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">How fast the AI reads responses aloud</p>
+                <div className="flex flex-wrap gap-2">
+                  {[0.5, 1, 1.5, 2].map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setTtsSpeed(s)}
+                      className={`px-4 py-2 rounded-xl text-sm font-medium tabular-nums transition-colors ${
+                        ttsSpeed === s
+                          ? "bg-foreground text-background"
+                          : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                      }`}
+                    >
+                      {s}×
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {!isAnonymous && (
+              <div className="pt-4 border-t border-neutral-200 dark:border-neutral-700">
+                <h3 className="text-sm font-medium text-red-600 dark:text-red-400 mb-3">Danger zone</h3>
+                <div className="rounded-xl border border-red-200/50 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/30 p-4">
+                  <h4 className="font-semibold text-neutral-900 dark:text-neutral-100">Delete all my data</h4>
+                  <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+                    Warning: Deleting all data is irreversible and will permanently remove your conversations, long-term memories, custom concepts, saved mental models, and nuggets.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSettingsOpen(false);
+                      setDeleteAllDataModalOpen(true);
+                      setDeleteAllDataConfirmInput("");
+                    }}
+                    className="mt-4 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+                  >
+                    <TrashIcon className="w-4 h-4 shrink-0" />
+                    Delete
+                  </button>
+                </div>
+              </div>
+            )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {deleteAllDataModalOpen && !isAnonymous && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => setDeleteAllDataModalOpen(false)}
+          aria-modal
+          role="dialog"
+          aria-labelledby="delete-all-data-title"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-md w-full overflow-hidden border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-6 py-3 bg-red-950/40 dark:bg-red-950/60 border-b border-red-900/30">
+              <h2 id="delete-all-data-title" className="text-sm font-medium text-red-500 dark:text-red-400">Danger zone</h2>
+            </div>
+            <div className="p-6">
+              <h3 className="font-semibold text-lg text-neutral-900 dark:text-neutral-100">Delete all my data</h3>
+              <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+                Warning: Deleting all data is irreversible and will permanently remove your conversations, long-term memories, custom concepts, saved mental models, and nuggets.
+              </p>
+              <p className="mt-4 text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                Type <span className="font-mono font-bold text-red-600 dark:text-red-400">&quot;delete everything&quot;</span> to confirm:
+              </p>
+            <input
+              type="text"
+              value={deleteAllDataConfirmInput}
+              onChange={(e) => setDeleteAllDataConfirmInput(e.target.value)}
+              placeholder="delete everything"
+              className="mt-2 w-full px-4 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20"
+              autoComplete="off"
+            />
+            <div className="mt-6 flex gap-2 justify-end">
+              <button
+                onClick={() => setDeleteAllDataModalOpen(false)}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  if (deleteAllDataConfirmInput.trim() !== "delete everything") return;
+                  setDeleteAllDataLoading(true);
+                  try {
+                    const res = await fetch("/api/me/delete-all-data", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ confirmPhrase: deleteAllDataConfirmInput.trim() }),
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (res.ok) {
+                      setDeleteAllDataModalOpen(false);
+                      setDeleteAllDataConfirmInput("");
+                      setSessions([]);
+                      setMessages([]);
+                      setCurrentSessionId(null);
+                      setCurrentSession(null);
+                      setCollapsedSummary(null);
+                      setLongTermMemories([]);
+                      setCustomConcepts([]);
+                      setConceptGroups([]);
+                      setSavedConcepts([]);
+                      router.push("/chat/new");
+                    } else {
+                      alert(data.error || "Failed to delete data");
+                    }
+                  } catch {
+                    alert("Failed to delete data");
+                  } finally {
+                    setDeleteAllDataLoading(false);
+                  }
+                }}
+                disabled={deleteAllDataConfirmInput.trim() !== "delete everything" || deleteAllDataLoading}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <TrashIcon className="w-4 h-4 shrink-0" />
+                {deleteAllDataLoading ? "Deleting…" : "Delete"}
+              </button>
+            </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {letterModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => setLetterModalOpen(false)}
+          aria-modal
+          role="dialog"
+          aria-labelledby="letter-title"
+        >
+          <div
+            className="relative bg-background rounded-3xl shadow-xl max-w-lg w-full p-8 border border-neutral-200 dark:border-neutral-700 max-h-[85vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setLetterModalOpen(false)}
+              className="absolute top-4 right-4 p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              aria-label="Close"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </button>
+            <h2 id="letter-title" className="font-developer text-3xl sm:text-4xl text-foreground text-center mb-6 pr-10">
+              a note from the developer
+            </h2>
+            <p className="text-lg sm:text-xl text-neutral-700 dark:text-neutral-300 leading-relaxed max-w-prose mx-auto">
+              fml labs is a coach that helps you think through the long-term consequences of your choices. It uses deep questioning and proven mental frameworks to help you make smarter decisions.
+            </p>
+            <div className="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-700 text-center">
+              <p className="font-developer text-lg text-foreground shimmer-text-hover">Crafted with Intention</p>
+              <p className="font-developer text-base text-neutral-600 dark:text-neutral-300 mt-1">San Francisco</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {deleteSessionConfirmModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => setDeleteSessionConfirmModal(null)}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-md w-full p-6 border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="font-semibold text-lg">Delete conversation?</h2>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+              &quot;{deleteSessionConfirmModal.title || "New conversation"}&quot; will be permanently deleted. This cannot be undone.
+            </p>
+            <div className="mt-6 flex gap-2 justify-end">
+              <button
+                onClick={() => setDeleteSessionConfirmModal(null)}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  const session = deleteSessionConfirmModal;
+                  setDeleteSessionConfirmModal(null);
+                  try {
+                    const res = await fetch(`/api/sessions/${session._id}`, {
+                      method: "DELETE",
+                    });
+                    if (res.ok) {
+                      setSessions((prev) => prev.filter((x) => x._id !== session._id));
+                      if (currentSessionId === session._id) {
+                        router.push("/chat/new");
+                      }
+                    }
+                  } catch {
+                    /* ignore */
+                  }
+                }}
+                className="px-4 py-2 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {goBackConfirmModal !== null && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => !goBackLoading && setGoBackConfirmModal(null)}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-md w-full p-6 border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="font-semibold text-lg">Go back in time?</h2>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+              {goBackConfirmModal.role === "user"
+                ? "Your message will be re-sent to get a fresh response."
+                : "The options from this response will be restored."}
+            </p>
+            <div className="mt-6 flex gap-2 justify-end">
+              <button
+                onClick={() => !goBackLoading && setGoBackConfirmModal(null)}
+                disabled={goBackLoading}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  const { index, role, content } = goBackConfirmModal;
+                  setGoBackLoading(true);
+                  try {
+                    const keepCount =
+                      role === "user" ? index : index + 1;
+                    const res = await fetch(
+                      `/api/sessions/${currentSessionId}/truncate-messages`,
+                      {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ keepCount }),
+                      }
+                    );
+                    if (res.ok) {
+                      setGoBackConfirmModal(null);
+                      if (role === "user") {
+                        setMessages((prev) => prev.slice(0, index));
+                        await sendMessage(content);
+                      } else {
+                        setMessages((prev) => prev.slice(0, index + 1));
+                      }
+                    }
+                  } catch {
+                    /* ignore */
+                  } finally {
+                    setGoBackLoading(false);
+                  }
+                }}
+                disabled={goBackLoading}
+                className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-60"
+              >
+                {goBackLoading ? "Going back…" : "Go back"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {ltmDeleteConfirmModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => setLtmDeleteConfirmModal(null)}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-md w-full p-6 border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="font-semibold text-lg">Delete from long-term memory?</h2>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+              Removing &quot;{ltmDeleteConfirmModal.title}&quot; will stop the agent from using this context in future conversations. <strong>This will impact agent accuracy</strong>—the agent will have less context about you and your past decisions.
+            </p>
+            <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-500">
+              Are you sure you want to delete?
+            </p>
+            <div className="mt-6 flex gap-2 justify-end">
+              <button
+                onClick={() => setLtmDeleteConfirmModal(null)}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  const ltm = ltmDeleteConfirmModal;
+                  const wasViewingThisSession = currentSession?.longTermMemoryId === ltm._id;
+                  const sessionIdToRefetch = wasViewingThisSession ? currentSessionId : null;
+                  setLtmDeleteConfirmModal(null);
+                  try {
+                    const res = await fetch(`/api/me/long-term-memory/${ltm._id}`, {
+                      method: "DELETE",
+                    });
+                    if (res.ok) {
+                      setLongTermMemories((prev) => prev.filter((x) => x._id !== ltm._id));
+                      refetchSessions();
+                      refetchLongTermMemories();
+                      if (wasViewingThisSession && sessionIdToRefetch) {
+                        setCollapsedSummary(null);
+                        fetch(`/api/sessions/${sessionIdToRefetch}`)
+                          .then((r) => r.json())
+                          .then(({ session, messages: msgs }) => {
+                            setCurrentSession(session);
+                            setMessages(processMessagesWithContext(msgs || []));
+                            setCollapsedSummary(null);
+                          })
+                          .catch(() => {});
+                      }
+                    }
+                  } catch {
+                    /* ignore */
+                  }
+                }}
+                className="px-4 py-2 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {ccCreateModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => {
+            if (!ccCreateLoading) {
+              setCcCreateModal(false);
+              setCcCreateStep("input");
+              setCcCreateDraft(null);
+              setCcCreateGroupSuggestions(null);
+              setCcCreateSelectedGroupIds(new Set());
+              setCcCreateSelectedNewGroupNames(new Set());
+            }
+          }}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {ccCreateStep === "input" ? (
+              <>
+                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                  <h2 className="font-semibold text-lg mb-2">Create Custom Concept</h2>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    What do you want to remember? The AI will generate a summary and enrichment prompt for you to review and edit.
+                  </p>
+                </div>
+                <div className="p-4 flex-1 overflow-y-auto">
+                  <textarea
+                    value={ccCreateInput}
+                    onChange={(e) => setCcCreateInput(e.target.value)}
+                    placeholder="e.g. I'm considering a career change to product management..."
+                    rows={4}
+                    className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                    disabled={ccCreateLoading}
+                  />
+                </div>
+                <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+                  <button
+                    onClick={() => {
+                      if (!ccCreateLoading) {
+                        setCcCreateModal(false);
+                        setCcCreateStep("input");
+                        setCcCreateDraft(null);
+                        setCcCreateGroupSuggestions(null);
+                        setCcCreateSelectedGroupIds(new Set());
+                        setCcCreateSelectedNewGroupNames(new Set());
+                      }
+                    }}
+                    className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={async () => {
+                      if (!ccCreateInput.trim() || ccCreateLoading) return;
+                      setCcCreateLoading(true);
+                      setCcCreateGroupSuggestions(null);
+                      setCcCreateSelectedGroupIds(new Set());
+                      setCcCreateSelectedNewGroupNames(new Set());
+                      try {
+                        const res = await fetch("/api/me/custom-concepts/generate", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ userInput: ccCreateInput.trim(), language }),
+                        });
+                        if (!res.ok) throw new Error("Generate failed");
+                          const data = await res.json();
+                        const draft = {
+                            title: data.title ?? "",
+                            summary: data.summary ?? "",
+                            enrichmentPrompt: data.enrichmentPrompt ?? "",
+                        };
+                        setCcCreateDraft(draft);
+                        const suggestRes = await fetch("/api/me/custom-concepts/suggest-groups", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            title: draft.title,
+                            summary: draft.summary,
+                            enrichmentPrompt: draft.enrichmentPrompt,
+                            groups: conceptGroups.map((g) => ({ id: g._id, title: g.title })),
+                          }),
+                        });
+                        if (suggestRes.ok) {
+                          const suggestData = await suggestRes.json();
+                          const ids = suggestData.suggestedGroupIds ?? [];
+                          const names = suggestData.suggestedNewGroupNames ?? [];
+                          setCcCreateGroupSuggestions({ suggestedGroupIds: ids, suggestedNewGroupNames: names });
+                          setCcCreateSelectedGroupIds(new Set(ids));
+                          setCcCreateSelectedNewGroupNames(new Set(names));
+                        }
+                        setCcCreateStep("preview");
+                      } catch {
+                        /* ignore */
+                      } finally {
+                        setCcCreateLoading(false);
+                      }
+                    }}
+                    disabled={!ccCreateInput.trim() || ccCreateLoading}
+                    className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                  >
+                    {ccCreateLoading ? "Generating…" : "Generate"}
+                  </button>
+                </div>
+              </>
+            ) : (
+              ccCreateDraft && (
+                <>
+                  <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                    <h2 className="font-semibold text-lg mb-2">Review and edit</h2>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                      Edit the generated concept below, then click Save to add it to your custom concepts.
+                    </p>
+                  </div>
+                  <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">
+                        Title
+                      </label>
+                      <input
+                        type="text"
+                        value={ccCreateDraft.title}
+                        onChange={(e) =>
+                          setCcCreateDraft((d) => (d ? { ...d, title: e.target.value } : null))
+                        }
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                        placeholder="Short title"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">
+                        Summary
+                      </label>
+                      <textarea
+                        value={ccCreateDraft.summary}
+                        onChange={(e) =>
+                          setCcCreateDraft((d) => (d ? { ...d, summary: e.target.value } : null))
+                        }
+                        rows={6}
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                        placeholder="2-4 paragraph summary"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">
+                        Enrichment prompt (for AI coach context)
+                      </label>
+                      <textarea
+                        value={ccCreateDraft.enrichmentPrompt}
+                        onChange={(e) =>
+                          setCcCreateDraft((d) =>
+                            d ? { ...d, enrichmentPrompt: e.target.value } : null
+                          )
+                        }
+                        rows={3}
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                        placeholder="Core idea + when it's relevant (25-40 words)"
+                      />
+                    </div>
+                    {ccCreateGroupSuggestions && (ccCreateGroupSuggestions.suggestedGroupIds.length > 0 || ccCreateGroupSuggestions.suggestedNewGroupNames.length > 0) && (
+                      <div>
+                        <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-2">
+                          Groups
+                        </label>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
+                          Select groups to add this concept to. All suggestions are pre-selected.
+                        </p>
+                        <div className="space-y-2">
+                          {ccCreateGroupSuggestions.suggestedGroupIds.length > 0 && (
+                            <div>
+                              <p className="text-[10px] font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1.5">Existing groups</p>
+                              <div className="flex flex-wrap gap-1.5">
+                                {ccCreateGroupSuggestions.suggestedGroupIds.map((gid) => {
+                                  const cg = conceptGroups.find((g) => g._id === gid);
+                                  if (!cg) return null;
+                                  const selected = ccCreateSelectedGroupIds.has(gid);
+                                  return (
+                                    <button
+                                      key={cg._id}
+                                      type="button"
+                                      onClick={() => {
+                                        setCcCreateSelectedGroupIds((prev) => {
+                                          const next = new Set(prev);
+                                          if (next.has(gid)) next.delete(gid);
+                                          else next.add(gid);
+                                          return next;
+                                        });
+                                      }}
+                                      className={`inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                        selected
+                                          ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-200 border border-emerald-200/60 dark:border-emerald-700/50 hover:bg-red-100 dark:hover:bg-red-900/40 hover:text-red-800 dark:hover:text-red-200 hover:border-red-200/60 dark:hover:border-red-700/50"
+                                          : "border border-neutral-200 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/60"
+                                      }`}
+                                    >
+                                      {cg.title}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+                          {ccCreateGroupSuggestions.suggestedNewGroupNames.length > 0 && (
+                            <div>
+                              <p className="text-[10px] font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1.5">Create new</p>
+                              <div className="flex flex-wrap gap-1.5">
+                                {ccCreateGroupSuggestions.suggestedNewGroupNames.map((name) => {
+                                  const selected = ccCreateSelectedNewGroupNames.has(name);
+                                  return (
+                                    <button
+                                      key={name}
+                                      type="button"
+                                      onClick={() => {
+                                        setCcCreateSelectedNewGroupNames((prev) => {
+                                          const next = new Set(prev);
+                                          if (next.has(name)) next.delete(name);
+                                          else next.add(name);
+                                          return next;
+                                        });
+                                      }}
+                                      className={`inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                        selected
+                                          ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-200 border border-dashed border-emerald-300 dark:border-emerald-700 hover:bg-red-100 dark:hover:bg-red-900/40 hover:text-red-800 dark:hover:text-red-200 hover:border-red-200/60 dark:hover:border-red-700/50"
+                                          : "border border-dashed border-neutral-300 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/60"
+                                      }`}
+                                    >
+                                      + {name}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+                    <button
+                      onClick={() => {
+                        if (!ccCreateLoading) {
+                          setCcCreateStep("input");
+                          setCcCreateDraft(null);
+                          setCcCreateGroupSuggestions(null);
+                          setCcCreateSelectedGroupIds(new Set());
+                          setCcCreateSelectedNewGroupNames(new Set());
+                        }
+                      }}
+                      className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
+                    >
+                      Back
+                    </button>
+                    <button
+                      onClick={async () => {
+                        if (
+                          !ccCreateDraft?.title.trim() ||
+                          !ccCreateDraft?.summary.trim() ||
+                          !ccCreateDraft?.enrichmentPrompt.trim() ||
+                          ccCreateLoading
+                        )
+                          return;
+                        setCcCreateLoading(true);
+                        try {
+                          const res = await fetch("/api/me/custom-concepts", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              title: ccCreateDraft.title.trim(),
+                              summary: ccCreateDraft.summary.trim(),
+                              enrichmentPrompt: ccCreateDraft.enrichmentPrompt.trim(),
+                            }),
+                          });
+                          if (!res.ok) throw new Error("Create failed");
+                          const created = await res.json();
+                          const newConceptId = created._id;
+                          for (const gid of ccCreateSelectedGroupIds) {
+                            const cg = conceptGroups.find((g) => g._id === gid);
+                            if (cg) {
+                              const currentIds = cg.conceptIds ?? [];
+                              try {
+                                await fetch(`/api/me/concept-groups/${cg._id}`, {
+                                  method: "PATCH",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ conceptIds: [...currentIds, newConceptId] }),
+                                });
+                              } catch {
+                                /* ignore */
+                              }
+                            }
+                          }
+                          for (const name of ccCreateSelectedNewGroupNames) {
+                            try {
+                              await fetch("/api/me/concept-groups", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ title: name, conceptIds: [newConceptId] }),
+                              });
+                            } catch {
+                              /* ignore */
+                            }
+                          }
+                          if (ccCreateSelectedGroupIds.size > 0 || ccCreateSelectedNewGroupNames.size > 0) {
+                            refetchConceptGroups();
+                          }
+                            setCcCreateModal(false);
+                            setCcCreateInput("");
+                            setCcCreateStep("input");
+                            setCcCreateDraft(null);
+                          setCcCreateGroupSuggestions(null);
+                          setCcCreateSelectedGroupIds(new Set());
+                          setCcCreateSelectedNewGroupNames(new Set());
+                            refetchCustomConcepts();
+                            setCcCreateSuccess(true);
+                            setTimeout(() => setCcCreateSuccess(false), 2000);
+                        } catch {
+                          /* ignore */
+                        } finally {
+                          setCcCreateLoading(false);
+                        }
+                      }}
+                      disabled={
+                        !ccCreateDraft?.title.trim() ||
+                        !ccCreateDraft?.summary.trim() ||
+                        !ccCreateDraft?.enrichmentPrompt.trim() ||
+                        ccCreateLoading
+                      }
+                      className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                    >
+                      {ccCreateLoading ? "Saving…" : "Save"}
+                    </button>
+                  </div>
+                </>
+              )
+            )}
+          </div>
+        </div>
+      )}
+
+      {ccYoutubeModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => !ccYoutubeLoading && (setCcYoutubeModal(false), setCcYoutubeUrl(""), setCcYoutubeExtractPrompt(""), setCcYoutubeTranscriptId(null), setCcYoutubeResult(null), setCcYoutubeError(null))}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-2xl w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {!ccYoutubeResult ? (
+              <>
+                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                  <h2 className="font-semibold text-lg mb-2">
+                    {ccYoutubeTranscriptId ? "Re-extract from saved transcript" : "Concepts from YouTube"}
+                  </h2>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {ccYoutubeTranscriptId
+                      ? "Use a different extraction focus and extract concepts again from your saved transcript."
+                      : "Paste a YouTube video URL. We'll fetch the transcript and extract clear concepts, auto-tagged into domains."}
+                  </p>
+                </div>
+                <div className="p-4 flex-1 space-y-3 overflow-y-auto">
+                  {ccYoutubeError && (
+                    <p className="text-sm text-red-600 dark:text-red-400">{ccYoutubeError}</p>
+                  )}
+                  {!ccYoutubeTranscriptId && (
+                  <input
+                    type="url"
+                    value={ccYoutubeUrl}
+                    onChange={(e) => setCcYoutubeUrl(e.target.value)}
+                    placeholder="https://www.youtube.com/watch?v=..."
+                    className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                    disabled={ccYoutubeLoading}
+                  />
+                  )}
+                  <div>
+                    <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                      What to extract (optional)
+                    </label>
+                    <textarea
+                      value={ccYoutubeExtractPrompt}
+                      onChange={(e) => setCcYoutubeExtractPrompt(e.target.value)}
+                      placeholder="e.g. Focus on productivity tips, career advice, or psychological insights..."
+                      rows={2}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y"
+                      disabled={ccYoutubeLoading}
+                    />
+                  </div>
+                </div>
+                <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+                  <button
+                    onClick={() => !ccYoutubeLoading && (setCcYoutubeModal(false), setCcYoutubeUrl(""), setCcYoutubeExtractPrompt(""), setCcYoutubeTranscriptId(null), setCcYoutubeResult(null), setCcYoutubeError(null))}
+                    className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={async () => {
+                      if ((!ccYoutubeUrl.trim() && !ccYoutubeTranscriptId) || ccYoutubeLoading) return;
+                      setCcYoutubeLoading(true);
+                      setCcYoutubeResult(null);
+                      setCcYoutubeError(null);
+                      try {
+                        const body: Record<string, unknown> = {
+                          language,
+                          extractPrompt: ccYoutubeExtractPrompt.trim() || undefined,
+                        };
+                        if (ccYoutubeTranscriptId) {
+                          body.transcriptId = ccYoutubeTranscriptId;
+                        } else {
+                          body.url = ccYoutubeUrl.trim();
+                        }
+                        const res = await fetch("/api/me/custom-concepts/from-youtube", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify(body),
+                        });
+                        const data = await res.json();
+                        if (res.ok && data.groups) {
+                          setCcYoutubeResult({
+                            videoTitle: data.videoTitle ?? null,
+                            channel: data.channel ?? null,
+                            groups: data.groups,
+                          });
+                          refetchTranscripts();
+                        } else {
+                          setCcYoutubeError(data.error ?? "Failed to extract concepts");
+                        }
+                      } catch {
+                        setCcYoutubeError("Failed to extract concepts");
+                      } finally {
+                        setCcYoutubeLoading(false);
+                      }
+                    }}
+                    disabled={(!ccYoutubeUrl.trim() && !ccYoutubeTranscriptId) || ccYoutubeLoading}
+                    className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                  >
+                    {ccYoutubeLoading ? "Extracting…" : "Extract concepts"}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                  <h2 className="font-semibold text-lg mb-1">Review concepts</h2>
+                  {ccYoutubeResult.videoTitle && (
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400 truncate" title={ccYoutubeResult.videoTitle}>
+                      {ccYoutubeResult.videoTitle}
+                      {ccYoutubeResult.channel && ` · ${ccYoutubeResult.channel}`}
+                    </p>
+                  )}
+                </div>
+                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  {ccYoutubeResult.groups.map((group, gi) => {
+                    if (group.concepts.length === 0) return null;
+                    return (
+                    <div key={gi} className="space-y-2">
+                      <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase">{group.domain}</p>
+                      {group.concepts.map((c, ci) => (
+                        <div key={ci} className="relative p-3 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background space-y-3">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const next = ccYoutubeResult.groups.map((g, i) =>
+                                i === gi
+                                  ? { ...g, concepts: g.concepts.filter((_, j) => j !== ci) }
+                                  : g
+                              );
+                              setCcYoutubeResult({ ...ccYoutubeResult, groups: next });
+                            }}
+                            className="absolute top-2 right-2 z-10 p-1.5 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                            aria-label={`Delete concept ${c.title || "concept"}`}
+                          >
+                            <TrashIcon className="w-3.5 h-3.5" />
+                          </button>
+                          <div>
+                            <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Title</label>
+                            <input
+                              type="text"
+                              value={c.title}
+                              onChange={(e) => {
+                                const next = ccYoutubeResult.groups.map((g, i) =>
+                                  i === gi
+                                    ? {
+                                        ...g,
+                                        concepts: g.concepts.map((con, j) =>
+                                          j === ci ? { ...con, title: e.target.value } : con
+                                        ),
+                                      }
+                                    : g
+                                );
+                                setCcYoutubeResult({ ...ccYoutubeResult, groups: next });
+                              }}
+                              className="w-full px-2 py-1 text-sm font-medium rounded border border-transparent hover:border-neutral-200 dark:hover:border-neutral-700 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                              placeholder="Short title"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Summary</label>
+                            <textarea
+                              value={c.summary}
+                              dir={isRtlLanguage(language) ? "rtl" : undefined}
+                              onChange={(e) => {
+                                const next = ccYoutubeResult.groups.map((g, i) =>
+                                  i === gi
+                                    ? {
+                                        ...g,
+                                        concepts: g.concepts.map((con, j) =>
+                                          j === ci ? { ...con, summary: e.target.value } : con
+                                        ),
+                                      }
+                                    : g
+                                );
+                                setCcYoutubeResult({ ...ccYoutubeResult, groups: next });
+                              }}
+                              rows={4}
+                              className="w-full px-2 py-1 text-sm rounded border border-transparent hover:border-neutral-200 dark:hover:border-neutral-700 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y"
+                              placeholder="2-4 paragraph narrative"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Enrichment prompt</label>
+                            <textarea
+                              value={c.enrichmentPrompt}
+                              dir={isRtlLanguage(language) ? "rtl" : undefined}
+                              onChange={(e) => {
+                                const next = ccYoutubeResult.groups.map((g, i) =>
+                                  i === gi
+                                    ? {
+                                        ...g,
+                                        concepts: g.concepts.map((con, j) =>
+                                          j === ci ? { ...con, enrichmentPrompt: e.target.value } : con
+                                        ),
+                                      }
+                                    : g
+                                );
+                                setCcYoutubeResult({ ...ccYoutubeResult, groups: next });
+                              }}
+                              rows={2}
+                              className="w-full px-2 py-1 text-sm rounded border border-transparent hover:border-neutral-200 dark:hover:border-neutral-700 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y"
+                              placeholder="Core idea + when it's relevant (25-40 words)"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                  })}
+                </div>
+                <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+                  <button
+                    onClick={() => setCcYoutubeResult(null)}
+                    className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={async () => {
+                      if (ccYoutubeLoading || !ccYoutubeResult) return;
+                      setCcYoutubeLoading(true);
+                      try {
+                        for (const group of ccYoutubeResult.groups) {
+                          const validConcepts = group.concepts.filter(
+                            (c) => c.title?.trim() && c.summary?.trim() && c.enrichmentPrompt?.trim()
+                          );
+                          if (validConcepts.length === 0) continue;
+                          await fetch("/api/me/concept-groups", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              domain: group.domain,
+                              concepts: validConcepts,
+                            }),
+                          });
+                        }
+                        setCcYoutubeModal(false);
+                        setCcYoutubeUrl("");
+                        setCcYoutubeTranscriptId(null);
+                        setCcYoutubeExtractPrompt("");
+                        setCcYoutubeResult(null);
+                        refetchCustomConcepts();
+                        refetchConceptGroups();
+                        refetchTranscripts();
+                        setCcCreateSuccess(true);
+                        setTimeout(() => setCcCreateSuccess(false), 2000);
+                      } catch {
+                        /* ignore */
+                      } finally {
+                        setCcYoutubeLoading(false);
+                      }
+                    }}
+                    disabled={ccYoutubeLoading}
+                    className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                  >
+                    {ccYoutubeLoading ? "Saving…" : "Save all"}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {ccDetailModal && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => {
+            setCcDetailModal(null);
+            setCcAutoTagSuggestions(null);
+            setCcTranslatePopoverOpen(false);
+            setTtsHighlight(null);
+          }}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between">
+              <h2 className="font-semibold text-lg truncate pr-2">{ccDetailModal.title}</h2>
+              <button
+                onClick={() => {
+                  setCcDetailModal(null);
+                  setCcAutoTagSuggestions(null);
+                  setCcTranslatePopoverOpen(false);
+                }}
+                className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <label className="text-sm font-medium text-neutral-900 dark:text-neutral-100 min-w-0">
+                    Summary
+                  </label>
+                  <div className="flex items-center gap-1">
+                    <TTSButton
+                      text={`${ccDetailModal.title}\n\n${ccDetailModal.summary}`}
+                      showOnHover={false}
+                      ariaLabel="Listen to summary"
+                      onTtsProgress={(charEnd) => setTtsHighlight({ textId: `cc-${ccDetailModal._id}-summary`, charEnd })}
+                      onTtsEnd={() => setTtsHighlight(null)}
+                    />
+                  <CopyButton
+                    text={`${ccDetailModal.title}\n\n${ccDetailModal.summary}`}
+                    aria-label="Copy summary"
+                  />
+                </div>
+                </div>
+                <div className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                  {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === `cc-${ccDetailModal._id}-summary` ? (
+                    <TtsHighlightedText text={`${ccDetailModal.title}\n\n${ccDetailModal.summary}`.trim()} charEnd={ttsHighlight.charEnd} />
+                  ) : (
+                    ccDetailModal.summary
+                  )}
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <label className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                  Enrichment prompt
+                </label>
+                  <TTSButton
+                    text={ccDetailModal.enrichmentPrompt}
+                    showOnHover={false}
+                    ariaLabel="Listen to enrichment prompt"
+                    onTtsProgress={(charEnd) => setTtsHighlight({ textId: `cc-${ccDetailModal._id}-enrichment`, charEnd })}
+                    onTtsEnd={() => setTtsHighlight(null)}
+                  />
+                </div>
+                <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                  {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === `cc-${ccDetailModal._id}-enrichment` ? (
+                    <TtsHighlightedText text={ccDetailModal.enrichmentPrompt} charEnd={ttsHighlight.charEnd} />
+                  ) : (
+                    ccDetailModal.enrichmentPrompt
+                  )}
+                </p>
+              </div>
+                <div>
+                <div className="flex items-center justify-between gap-2 mb-1.5">
+                  <label className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                    Groups
+                  </label>
+                  <div ref={ccAutoTagPopoverRef} className="relative">
+                    <button
+                      type="button"
+                      disabled={ccAutoTagLoading}
+                      onClick={async () => {
+                        if (ccAutoTagLoading) return;
+                        setCcAutoTagLoading(true);
+                        setCcAutoTagSuggestions(null);
+                        try {
+                          const res = await fetch("/api/me/custom-concepts/suggest-groups", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              title: ccDetailModal.title,
+                              summary: ccDetailModal.summary,
+                              enrichmentPrompt: ccDetailModal.enrichmentPrompt,
+                              groups: conceptGroups.map((g) => ({ id: g._id, title: g.title })),
+                            }),
+                          });
+                          if (res.ok) {
+                            const data = await res.json();
+                            setCcAutoTagSuggestions({
+                              suggestedGroupIds: data.suggestedGroupIds ?? [],
+                              suggestedNewGroupNames: data.suggestedNewGroupNames ?? [],
+                            });
+                          }
+                        } catch {
+                          setCcAutoTagSuggestions(null);
+                        } finally {
+                          setCcAutoTagLoading(false);
+                        }
+                      }}
+                      className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium border border-dashed border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-400 hover:border-emerald-400 dark:hover:border-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/20 transition-colors disabled:opacity-60"
+                    >
+                      <SparklesIcon className="h-3.5 w-3.5" />
+                      {ccAutoTagLoading ? "…" : getModalTranslations(language).autoTagGroups}
+                    </button>
+                    {ccAutoTagSuggestions && (
+                      <div className="absolute right-0 bottom-full mb-1.5 z-20 min-w-[220px] rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-xl py-2 overflow-hidden">
+                        {ccAutoTagSuggestions.suggestedGroupIds.length > 0 && (
+                          <div className="px-2.5 py-1.5">
+                            <p className="text-[10px] font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1.5">Add to existing</p>
+                            <div className="flex flex-wrap gap-1">
+                              {ccAutoTagSuggestions.suggestedGroupIds.map((gid) => {
+                                const cg = conceptGroups.find((g) => g._id === gid);
+                                if (!cg) return null;
+                      const isInGroup = (cg.conceptIds ?? []).includes(ccDetailModal._id);
+                                if (isInGroup) return null;
+                      return (
+                                  <button
+                          key={cg._id}
+                                    type="button"
+                                    onClick={async () => {
+                              const currentIds = cg.conceptIds ?? [];
+                                      const newIds = [...currentIds, ccDetailModal._id];
+                              setConceptGroups((prev) =>
+                                prev.map((g) =>
+                                  g._id === cg._id ? { ...g, conceptIds: newIds } : g
+                                )
+                              );
+                              try {
+                                        await fetch(`/api/me/concept-groups/${cg._id}`, {
+                                  method: "PATCH",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ conceptIds: newIds }),
+                                });
+                              } catch {
+                                        /* ignore */
+                                      }
+                                      setCcAutoTagSuggestions(null);
+                                    }}
+                                    className="inline-flex items-center px-2 py-1 rounded-lg text-xs font-medium border border-neutral-200 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-800/60 text-neutral-800 dark:text-neutral-200 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 hover:border-emerald-200 dark:hover:border-emerald-700 transition-colors"
+                                  >
+                                    + {cg.title}
+                                  </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+                        {ccAutoTagSuggestions.suggestedNewGroupNames.length > 0 && (
+                          <div className="px-2.5 py-1.5 border-t border-neutral-100 dark:border-neutral-800">
+                            <p className="text-[10px] font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1.5">Create new</p>
+                            <div className="flex flex-wrap gap-1">
+                              {ccAutoTagSuggestions.suggestedNewGroupNames.map((name) => (
+                <button
+                                  key={name}
+                  type="button"
+                  onClick={async () => {
+                    try {
+                                      const res = await fetch("/api/me/concept-groups", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                                          title: name,
+                                          conceptIds: [ccDetailModal._id],
+                        }),
+                      });
+                                      if (res.ok) {
+                      const data = await res.json();
+                                        setConceptGroups((prev) => [...prev, { ...data, conceptIds: [ccDetailModal._id] }]);
+                                        refetchConceptGroups();
+                                      }
+                    } catch {
+                                      /* ignore */
+                    }
+                                    setCcAutoTagSuggestions(null);
+                  }}
+                                  className="inline-flex items-center px-2 py-1 rounded-lg text-xs font-medium border border-dashed border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors"
+                >
+                                  + {name}
+                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {(ccAutoTagSuggestions.suggestedGroupIds.length === 0 && ccAutoTagSuggestions.suggestedNewGroupNames.length === 0) && (
+                          <p className="px-3 py-2 text-xs text-neutral-500">No suggestions</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
+                  Tag this concept into one or more groups.
+                </p>
+                <div className="flex flex-wrap gap-1.5 items-center">
+                  {conceptGroups.map((cg) => {
+                    const isInGroup = (cg.conceptIds ?? []).includes(ccDetailModal._id);
+                    return (
+                <button
+                        key={cg._id}
+                  type="button"
+                        onClick={async () => {
+                          const currentIds = cg.conceptIds ?? [];
+                          const newIds = isInGroup
+                            ? currentIds.filter((id) => id !== ccDetailModal._id)
+                            : [...currentIds, ccDetailModal._id];
+                          setConceptGroups((prev) =>
+                            prev.map((g) =>
+                              g._id === cg._id ? { ...g, conceptIds: newIds } : g
+                            )
+                          );
+                          try {
+                            const res = await fetch(`/api/me/concept-groups/${cg._id}`, {
+                              method: "PATCH",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ conceptIds: newIds }),
+                            });
+                            if (!res.ok) throw new Error("Failed");
+                          } catch {
+                            setConceptGroups((prev) =>
+                              prev.map((g) =>
+                                g._id === cg._id ? { ...g, conceptIds: currentIds } : g
+                              )
+                            );
+                          }
+                        }}
+                        className={`inline-flex items-center px-2 py-1 rounded-lg text-xs font-medium transition-colors ${
+                          isInGroup
+                            ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-200 border border-emerald-200/60 dark:border-emerald-700/50 hover:bg-red-100 dark:hover:bg-red-900/40 hover:text-red-800 dark:hover:text-red-200 hover:border-red-200/60 dark:hover:border-red-700/50"
+                            : "border border-neutral-200 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/60"
+                        }`}
+                      >
+                        {cg.title}
+                </button>
+                    );
+                  })}
+                </div>
+              </div>
+              {generateModal?.type === "cc" && (
+                <div
+                  className="absolute inset-0 flex items-center justify-center p-4 bg-black/50 rounded-3xl z-10"
+                  onClick={() => setGenerateModal(null)}
+                >
+                  <div
+                    className="bg-background rounded-2xl shadow-xl max-w-md w-full p-5 border border-neutral-200 dark:border-neutral-700"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <h3 className="font-semibold text-base mb-3">Generated message</h3>
+                    {generateModal.loading ? (
+                      <div className="flex items-center justify-center py-8 gap-2 text-neutral-500 dark:text-neutral-400">
+                        <span className="inline-block w-4 h-4 border-2 border-foreground/20 border-t-foreground rounded-full animate-spin" />
+                        <span>Generating…</span>
+                      </div>
+                    ) : (
+                      <textarea
+                        value={generateModal.generatedText}
+                        onChange={(e) =>
+                          setGenerateModal((prev) =>
+                            prev ? { ...prev, generatedText: e.target.value } : null
+                          )
+                        }
+                        className="w-full min-h-[100px] px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-sm resize-y"
+                        placeholder="Generated message…"
+                      />
+                    )}
+                    <div className="flex gap-2 justify-end mt-4">
+                      <button
+                        onClick={() => setGenerateModal(null)}
+                        className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={() => {
+                          const text = generateModal.generatedText.trim();
+                          if (text) {
+                            sendMessage(text);
+                            setGenerateModal(null);
+                            setCcDetailModal(null);
+                          }
+                        }}
+                        disabled={generateModal.loading || !generateModal.generatedText.trim()}
+                        className="px-4 py-2 rounded-xl text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Send
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex flex-nowrap items-center gap-2 min-w-0">
+              <GenerateRelevantMessageButton
+                label={getModalTranslations(language).generateRelevantMessage}
+                aria-label={getModalTranslations(language).generateRelevantMessage}
+                onClick={async () => {
+                  const suggestion = `${ccDetailModal.title}\n\n${ccDetailModal.summary}\n\nEnrichment: ${ccDetailModal.enrichmentPrompt}`;
+                  setGenerateModal({ type: "cc", generatedText: "", loading: true });
+                  try {
+                    const res = await fetch("/api/generate-relevant-prompt", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        suggestion,
+                        messages: messages.map((m) => ({ role: m.role, content: m.content })),
+                      }),
+                    });
+                    const data = await res.json();
+                    setGenerateModal((prev) =>
+                      prev ? { ...prev, generatedText: data.text ?? suggestion, loading: false } : null
+                    );
+                  } catch {
+                    setGenerateModal((prev) =>
+                      prev ? { ...prev, generatedText: suggestion, loading: false } : null
+                    );
+                  }
+                }}
+              />
+              <div ref={ccTranslatePopoverRef} className="relative">
+                <button
+                  type="button"
+                  onClick={() => setCcTranslatePopoverOpen((o) => !o)}
+                  disabled={ccTranslating}
+                  className="px-3 py-2 rounded-xl text-sm border border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-foreground/20 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors disabled:opacity-60"
+                >
+                  {getModalTranslations(language).translateTo}
+                </button>
+                {ccTranslatePopoverOpen && (
+                  <div className="absolute left-0 bottom-full mb-1.5 z-20 min-w-[180px] max-h-64 overflow-y-auto rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-xl py-2 animate-fade-in-up">
+                    {LANGUAGES.map(({ code, name }) => (
+                      <button
+                        key={code}
+                        type="button"
+                        onClick={async () => {
+                          setCcTranslatePopoverOpen(false);
+                          setCcTranslating(true);
+                          try {
+                            const res = await fetch("/api/me/custom-concepts/translate", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({
+                                conceptId: ccDetailModal._id,
+                                targetLanguage: code,
+                              }),
+                            });
+                            const data = res.ok ? await res.json() : null;
+                            if (data) {
+                              setCustomConcepts((prev) =>
+                                prev.map((c) =>
+                                  c._id === ccDetailModal._id
+                                    ? {
+                                        ...c,
+                                        title: data.title ?? c.title,
+                                        summary: data.summary ?? c.summary,
+                                        enrichmentPrompt: data.enrichmentPrompt ?? c.enrichmentPrompt,
+                                      }
+                                    : c
+                                )
+                              );
+                              setCcDetailModal((prev) =>
+                                prev
+                                  ? {
+                                      ...prev,
+                                      title: data.title ?? prev.title,
+                                      summary: data.summary ?? prev.summary,
+                                      enrichmentPrompt: data.enrichmentPrompt ?? prev.enrichmentPrompt,
+                                    }
+                                  : null
+                              );
+                            }
+                          } finally {
+                            setCcTranslating(false);
+                          }
+                        }}
+                        className="w-full px-3 py-2 text-left text-sm text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700/80 transition-colors"
+                      >
+                        {name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setCcDeleteConfirmModal(ccDetailModal);
+                  setCcDetailModal(null);
+                }}
+                className="shrink-0 px-4 py-2 rounded-full text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+                aria-label={getModalTranslations(language).deleteCustomConcept}
+              >
+                {getModalTranslations(language).deleteButton}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {ccDeleteConfirmModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => setCcDeleteConfirmModal(null)}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-md w-full p-6 border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="font-semibold text-lg">Delete custom concept?</h2>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+              Removing &quot;{ccDeleteConfirmModal.title}&quot; will stop the agent from using this context in future conversations.
+            </p>
+            <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-500">
+              Are you sure you want to delete?
+            </p>
+            <div className="mt-6 flex gap-2 justify-end">
+              <button
+                onClick={() => setCcDeleteConfirmModal(null)}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  const cc = ccDeleteConfirmModal;
+                  setCcDeleteConfirmModal(null);
+                  try {
+                    const res = await fetch(`/api/me/custom-concepts/${cc._id}`, {
+                      method: "DELETE",
+                    });
+                    if (res.ok) {
+                      setCustomConcepts((prev) => prev.filter((x) => x._id !== cc._id));
+                      refetchCustomConcepts();
+                    }
+                  } catch {
+                    /* ignore */
+                  }
+                }}
+                className="px-4 py-2 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {cgCreateSuccess && (
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border-2 border-neutral-300 dark:border-neutral-600 text-sm font-medium text-neutral-800 dark:text-neutral-200 animate-celebrate flex items-center gap-2 shadow-lg">
+          <span className="text-lg">✨</span>
+          Domain created!
+        </div>
+      )}
+
+      {cgCustomCreateModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => !cgCustomCreateLoading && (setCgCustomCreateModal(false), setCgCustomCreateTitle(""), setCgCustomCreateSelectedIds(new Set()))}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+              <h2 className="font-semibold text-lg mb-2">Create custom group</h2>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                Name your group and select concepts to include.
+              </p>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Group name</label>
+                <input
+                  type="text"
+                  value={cgCustomCreateTitle}
+                  onChange={(e) => setCgCustomCreateTitle(e.target.value)}
+                  placeholder="e.g. Finance basics"
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                  disabled={cgCustomCreateLoading}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-2">Select concepts</label>
+                {customConcepts.length > 0 ? (
+                  <div className="space-y-1.5 max-h-48 overflow-y-auto rounded-xl border border-neutral-200 dark:border-neutral-700 p-2">
+                    {customConcepts.map((cc) => (
+                      <label
+                        key={cc._id}
+                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800/50 cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={cgCustomCreateSelectedIds.has(cc._id)}
+                          onChange={(e) => {
+                            setCgCustomCreateSelectedIds((prev) => {
+                              const next = new Set(prev);
+                              if (e.target.checked) next.add(cc._id);
+                              else next.delete(cc._id);
+                              return next;
+                            });
+                          }}
+                          className="rounded border-neutral-300 dark:border-neutral-600"
+                        />
+                        <span className="text-sm truncate flex-1">{cc.title}</span>
+                      </label>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-neutral-500 dark:text-neutral-400">No concepts yet. Create concepts first in the Concepts panel.</p>
+                )}
+              </div>
+            </div>
+            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+              <button
+                onClick={() => !cgCustomCreateLoading && (setCgCustomCreateModal(false), setCgCustomCreateTitle(""), setCgCustomCreateSelectedIds(new Set()))}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  if (!cgCustomCreateTitle.trim() || cgCustomCreateLoading) return;
+                  setCgCustomCreateLoading(true);
+                  try {
+                    const res = await fetch("/api/me/concept-groups", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        title: cgCustomCreateTitle.trim(),
+                        conceptIds: Array.from(cgCustomCreateSelectedIds),
+                      }),
+                    });
+                    if (res.ok) {
+                      setCgCustomCreateModal(false);
+                      setCgCustomCreateTitle("");
+                      setCgCustomCreateSelectedIds(new Set());
+                      refetchConceptGroups();
+                      refetchCustomConcepts();
+                    }
+                  } catch {
+                    /* ignore */
+                  } finally {
+                    setCgCustomCreateLoading(false);
+                  }
+                }}
+                disabled={!cgCustomCreateTitle.trim() || cgCustomCreateLoading}
+                className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                {cgCustomCreateLoading ? "Creating…" : "Create group"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {cgCreateModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => !cgCreateLoading && (setCgCreateModal(false), setCgCreateStep(1), setCgCreateDomain(""), setCgCreateQuestions([]), setCgCreateAnswers({}), setCgCreateConcepts([]))}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {cgCreateStep === 1 && (
+              <>
+                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                  <h2 className="font-semibold text-lg mb-2">Create Domain</h2>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    What domain or goal? (e.g. Finance, Career, Health)
+                  </p>
+                </div>
+                <div className="p-4 flex-1 overflow-y-auto">
+                  <input
+                    type="text"
+                    value={cgCreateDomain}
+                    onChange={(e) => setCgCreateDomain(e.target.value)}
+                    placeholder="e.g. Finance"
+                    className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                    disabled={cgCreateLoading}
+                  />
+                </div>
+                <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+                  <button
+                    onClick={() => !cgCreateLoading && (setCgCreateModal(false), setCgCreateStep(1), setCgCreateDomain(""), setCgCreateQuestions([]), setCgCreateAnswers({}), setCgCreateConcepts([]))}
+                    className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={async () => {
+                      if (!cgCreateDomain.trim() || cgCreateLoading) return;
+                      setCgCreateLoading(true);
+                      try {
+                        const res = await fetch("/api/me/concept-groups/generate-questions", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ domain: cgCreateDomain.trim(), language }),
+                        });
+                        if (res.ok) {
+                          const data = await res.json();
+                          const questions = (data.questions ?? []) as string[];
+                          const suggestedAnswers = (data.suggestedAnswers ?? []) as string[];
+                          const initialAnswers: Record<string, string> = {};
+                          questions.forEach((q, i) => {
+                            initialAnswers[q] = (suggestedAnswers[i] ?? "").trim();
+                          });
+                          setCgCreateQuestions(questions);
+                          setCgCreateAnswers(initialAnswers);
+                          setCgCreateStep(2);
+                        }
+                      } catch {
+                        /* ignore */
+                      } finally {
+                        setCgCreateLoading(false);
+                      }
+                    }}
+                    disabled={!cgCreateDomain.trim() || cgCreateLoading}
+                    className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                  >
+                    {cgCreateLoading ? "Generating…" : "Next"}
+                  </button>
+                </div>
+              </>
+            )}
+            {cgCreateStep === 2 && cgCreateQuestions.length > 0 && (
+              <>
+                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                  <h2 className="font-semibold text-lg mb-2">Answer these questions</h2>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    Suggested answers are pre-filled. Edit or clear any to tailor your concepts for &quot;{cgCreateDomain}&quot;
+                  </p>
+                </div>
+                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  {cgCreateQuestions.map((q) => (
+                    <div key={q} className="flex gap-2 items-start">
+                      <div className="flex-1 min-w-0">
+                        <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">
+                          {q}
+                        </label>
+                        <textarea
+                          value={cgCreateAnswers[q] ?? ""}
+                          onChange={(e) =>
+                            setCgCreateAnswers((prev) => ({ ...prev, [q]: e.target.value }))
+                          }
+                          rows={2}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y min-h-[60px]"
+                          placeholder="Your answer..."
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setCgCreateAnswers((prev) => ({ ...prev, [q]: "" }))
+                        }
+                        className="mt-6 p-2 rounded-xl text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shrink-0"
+                        aria-label="Clear answer"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                          <path d="M18 6 6 18M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+                  <button
+                    onClick={() => setCgCreateStep(1)}
+                    className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={async () => {
+                      if (cgCreateLoading) return;
+                      const answers = cgCreateQuestions
+                        .filter((q) => (cgCreateAnswers[q] ?? "").trim())
+                        .map((q) => ({ question: q, answer: cgCreateAnswers[q]!.trim() }));
+                      if (answers.length === 0) return;
+                      setCgCreateLoading(true);
+                      try {
+                        const res = await fetch("/api/me/concept-groups/generate-concepts", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            domain: cgCreateDomain.trim(),
+                            answers,
+                            language,
+                          }),
+                        });
+                        if (res.ok) {
+                          const data = await res.json();
+                          setCgCreateConcepts(data.concepts ?? []);
+                          setCgCreateStep(3);
+                        }
+                      } catch {
+                        /* ignore */
+                      } finally {
+                        setCgCreateLoading(false);
+                      }
+                    }}
+                    disabled={cgCreateLoading}
+                    className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                  >
+                    {cgCreateLoading ? "Generating…" : "Generate concepts"}
+                  </button>
+                </div>
+              </>
+            )}
+            {cgCreateStep === 3 && cgCreateConcepts.length > 0 && (
+              <>
+                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                  <h2 className="font-semibold text-lg mb-2">Review and edit concepts</h2>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    Edit the generated concepts, then click Save to create your domain.
+                  </p>
+                </div>
+                <div className="flex-1 overflow-y-auto p-4 space-y-6">
+                  {cgCreateConcepts.map((c, i) => (
+                    <div key={i} className="space-y-3">
+                      <div className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">
+                        Concept {i + 1}
+                      </div>
+                      <input
+                        type="text"
+                        value={c.title}
+                        onChange={(e) =>
+                          setCgCreateConcepts((prev) => {
+                            const next = [...prev];
+                            next[i] = { ...next[i]!, title: e.target.value };
+                            return next;
+                          })
+                        }
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                        placeholder="Title"
+                      />
+                      <textarea
+                        value={c.summary}
+                        onChange={(e) =>
+                          setCgCreateConcepts((prev) => {
+                            const next = [...prev];
+                            next[i] = { ...next[i]!, summary: e.target.value };
+                            return next;
+                          })
+                        }
+                        rows={3}
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                        placeholder="Summary"
+                      />
+                      <input
+                        type="text"
+                        value={c.enrichmentPrompt}
+                        onChange={(e) =>
+                          setCgCreateConcepts((prev) => {
+                            const next = [...prev];
+                            next[i] = { ...next[i]!, enrichmentPrompt: e.target.value };
+                            return next;
+                          })
+                        }
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                        placeholder="Core idea + when it's relevant (25-40 words)"
+                      />
+                      {i < cgCreateConcepts.length - 1 && (
+                        <div className="border-t border-neutral-200 dark:border-neutral-700 pt-6" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+                  <button
+                    onClick={() => setCgCreateStep(2)}
+                    className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={async () => {
+                      const valid = cgCreateConcepts.filter(
+                        (c) => c.title.trim() && c.summary.trim() && c.enrichmentPrompt.trim()
+                      );
+                      if (valid.length === 0 || cgCreateLoading) return;
+                      setCgCreateLoading(true);
+                      try {
+                        const res = await fetch("/api/me/concept-groups", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            domain: cgCreateDomain.trim(),
+                            concepts: valid,
+                          }),
+                        });
+                        if (res.ok) {
+                          setCgCreateModal(false);
+                          setCgCreateStep(1);
+                          setCgCreateDomain("");
+                          setCgCreateQuestions([]);
+                          setCgCreateAnswers({});
+                          setCgCreateConcepts([]);
+                          refetchConceptGroups();
+                          refetchCustomConcepts();
+                          setCgCreateSuccess(true);
+                          setTimeout(() => setCgCreateSuccess(false), 2000);
+                        }
+                      } catch {
+                        /* ignore */
+                      } finally {
+                        setCgCreateLoading(false);
+                      }
+                    }}
+                    disabled={
+                      cgCreateConcepts.every(
+                        (c) => !c.title.trim() || !c.summary.trim() || !c.enrichmentPrompt.trim()
+                      ) || cgCreateLoading
+                    }
+                    className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                  >
+                    {cgCreateLoading ? "Saving…" : "Save domain"}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {cgDetailModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => setCgDetailModal(null)}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between">
+              <h2 className="font-semibold text-lg truncate pr-2">{cgDetailModal.title}</h2>
+              <button
+                onClick={() => setCgDetailModal(null)}
+                className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {(cgDetailModal.concepts ?? []).length > 0 ? (
+                <div className="space-y-2">
+                  {(cgDetailModal.concepts ?? []).map((cc) => (
+                    <div
+                      key={cc._id}
+                      className="flex items-center gap-3 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors relative"
+                    >
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          const updatedIds = (cgDetailModal.conceptIds ?? []).filter((id) => id !== cc._id);
+                          fetch(`/api/me/concept-groups/${cgDetailModal._id}`, {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ conceptIds: updatedIds }),
+                          }).then((r) => {
+                            if (r.ok) {
+                              setCgDetailModal((prev) =>
+                                prev
+                                  ? {
+                                      ...prev,
+                                      conceptIds: updatedIds,
+                                      concepts: (prev.concepts ?? []).filter((c) => c._id !== cc._id),
+                                    }
+                                  : null
+                              );
+                              refetchConceptGroups();
+                              refetchCustomConcepts();
+                            }
+                          });
+                        }}
+                        className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 bg-black/50 text-white hover:bg-red-600 transition-all duration-200 touch-manipulation"
+                        aria-label={`Remove ${cc.title} from ${cgDetailModal.isCustomGroup ? "group" : "domain"}`}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="w-3.5 h-3.5"
+                        >
+                          <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
+                          <path d="M10 11v6M14 11v6" />
+                        </svg>
+                      </button>
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => setCcDetailModal(cc)}
+                        onKeyDown={(e) =>
+                          e.key === "Enter" && setCcDetailModal(cc)
+                        }
+                        className="flex-1 min-w-0 cursor-pointer"
+                      >
+                        <span className="text-sm font-medium line-clamp-1">{cc.title}</span>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 line-clamp-1">
+                          {cc.enrichmentPrompt}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                  No concepts in this {cgDetailModal.isCustomGroup ? "group" : "domain"} yet.
+                </p>
+              )}
+              <div className="flex flex-wrap items-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCgDeleteConfirmModal(cgDetailModal);
+                    setCgDetailModal(null);
+                  }}
+                  className="px-4 py-2 rounded-full text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+                >
+                  Delete {cgDetailModal.isCustomGroup ? "group" : "domain"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {cgDeleteConfirmModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => setCgDeleteConfirmModal(null)}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-md w-full p-6 border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="font-semibold text-lg">Delete {cgDeleteConfirmModal.isCustomGroup ? "group" : "domain"}?</h2>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+              {cgDeleteConfirmModal.isCustomGroup
+                ? `Deleting "${cgDeleteConfirmModal.title}" will remove the group. Concepts will remain in your library.`
+                : `Deleting "${cgDeleteConfirmModal.title}" will remove the domain and all its concepts.`}
+            </p>
+            <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-500">
+              Are you sure you want to delete?
+            </p>
+            <div className="mt-6 flex gap-2 justify-end">
+              <button
+                onClick={() => setCgDeleteConfirmModal(null)}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  const cg = cgDeleteConfirmModal;
+                  setCgDeleteConfirmModal(null);
+                  try {
+                    const res = await fetch(`/api/me/concept-groups/${cg._id}`, {
+                      method: "DELETE",
+                    });
+                    if (res.ok) {
+                      setConceptGroups((prev) => prev.filter((x) => x._id !== cg._id));
+                      refetchConceptGroups();
+                      refetchCustomConcepts();
+                    }
+                  } catch {
+                    /* ignore */
+                  }
+                }}
+                className="px-4 py-2 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedMentalModel && (
+        <MentalModelModal
+          model={selectedMentalModel}
+          isRtl={isRtlLanguage(language)}
+          canSaveToConcepts={!isAnonymous && !incognitoMode}
+          isSavedInConcepts={savedConcepts.some((c) => c.modelId === selectedMentalModel.id)}
+          onClose={() => {
+            setSelectedMentalModel(null);
+            setRelevanceContext(null);
+          }}
+          messages={messages}
+          onSendMessage={(text) => {
+            setSelectedMentalModel(null);
+            sendMessage(text);
+          }}
+          sessionId={currentSessionId}
+          relevanceContext={relevanceContext}
+          onOpenRelated={(id) => {
+            setRelevanceContext(null);
+            const img = new Image();
+            img.src = `/images/${id.replace(/_/g, "-")}.png`;
+            fetch(`/api/mental-models/${id}?language=${language}`)
+              .then((r) => (r.ok ? r.json() : Promise.reject()))
+              .then((m: MentalModel) => setSelectedMentalModel(m))
+              .catch(() => {});
+          }}
+          onSavedToLibrary={() => {
+            refetchSavedConcepts();
+            setConceptSavedToast(true);
+            setTimeout(() => setConceptSavedToast(false), 3000);
+          }}
+          onTagAdded={(updatedSession) => {
+            if (updatedSession?.mentalModelTags) {
+              setSessions((prev) =>
+                prev.map((s) =>
+                  s._id === updatedSession._id
+                    ? { ...s, mentalModelTags: updatedSession.mentalModelTags }
+                    : s
+                )
+              );
+            } else {
+              refetchSessions();
+            }
+          }}
+        />
+      )}
+    </div>
+    </TtsHighlightContext.Provider>
+  );
+}

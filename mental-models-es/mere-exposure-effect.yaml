@@ -1,0 +1,100 @@
+id: mere_exposure_effect
+name: Efecto de la mera exposición
+
+quick_introduction: |
+  El efecto de la mera exposición es la tendencia a desarrollar una preferencia por las cosas
+  simplemente porque nos resultan familiares. La exposición repetida —incluso sin
+  refuerzo— aumenta la simpatía. Tendemos a preferir lo que conocemos.
+
+one_liner: La familiaridad genera simpatía—preferimos lo que hemos visto antes.
+
+try_this:
+  - Preguntar: ¿Me gusta esto porque es bueno, o porque es familiar?
+  - Al evaluar opciones, corrige por exposición: las cosas nuevas empiezan con desventaja.
+  - Observa cuándo la repetición influye en tu preferencia.
+
+ask_yourself:
+  - ¿Prefiero algo principalmente porque lo he visto antes?
+  - ¿Elegiría de manera diferente si la exposición fuera equitativa?
+
+in_more_detail: |
+  Robert Zajonc demostró que la exposición repetida a estímulos (caras, palabras, formas)
+  aumenta el afecto positivo hacia ellos, incluso cuando no somos conscientes
+  de la exposición. La familiaridad genera simpatía, no desprecio (en muchos
+  casos). El efecto es más fuerte cuando no estamos analizando y cuando la exposición
+  es sutil.
+
+  El efecto de la mera exposición afecta la preferencia de marca, la atracción interpersonal
+  y el juicio estético. Explica por qué preferimos la música familiar, por qué la publicidad funciona a través de la repetición y por qué podemos preferir
+  a personas que hemos visto antes, incluso sin interacción.
+
+why_this_is_important: |
+  Reconocer el efecto de la mera exposición te ayuda a comprender tus propias
+  preferencias y a resistir la manipulación a través de la repetición. También
+  explica por qué la visibilidad y la presencia importan para las relaciones y
+  las marcas. La familiaridad es una influencia poderosa pero a menudo inconsciente.
+
+when_to_use:
+  - construccion_de_relaciones
+  - toma_de_decisiones
+  - liderazgo
+  - aprendizaje
+
+how_can_you_spot_it:
+  familiarity_preference: |
+    Preferir opciones que hemos visto antes sobre las novedosas.
+  repetition_influence: |
+    La exposición repetida aumenta la simpatía sin persuasión explícita.
+  unconscious_influence: |
+    El efecto funciona incluso cuando no somos conscientes de la exposición.
+  brand_recognition: |
+    Se prefieren las marcas familiares incluso cuando no podemos articular por qué.
+
+examples:
+  advertising: |
+    La exposición repetida a una marca aumenta la preferencia, incluso sin
+    mensajes persuasivos.
+  music: |
+    Las canciones que hemos escuchado antes tienden a gustarnos más que las nuevas
+    al primer intento.
+  people: |
+    Tendemos a que nos gusten más las personas que hemos visto repetidamente (por ejemplo, compañeros de clase,
+    colegas) que los extraños, incluso sin interacción.
+  ideas: |
+    Las ideas que hemos encontrado antes nos resultan más cómodas y
+    creíbles que las novedosas.
+
+real_world_implications: |
+  El efecto de la mera exposición moldea el comportamiento del consumidor, las preferencias políticas
+  y la atracción social. Es explotado en el marketing y puede crear ventajas injustas para lo familiar. También
+  explica por qué la diversidad de exposición importa: la familiaridad con
+  la diferencia reduce los prejuicios.
+
+professional_application:
+  networking_and_relationship_building: |
+    La visibilidad importa. Aparecer, estar presente y ser
+    visto crea familiaridad que genera simpatía. No
+    subestimes el valor del contacto repetido de bajo riesgo.
+  collaborative_learning_initiative: |
+    Expón a las personas a diversas perspectivas y personas repetidamente:
+    la familiaridad puede reducir los prejuicios. Pero ten en cuenta que la mera exposición
+    también puede reforzar la preferencia por el status quo.
+
+how_can_this_be_misapplied:
+  manipulation: |
+    Crear deliberadamente exposición repetida para manipular
+    preferencias sin consentimiento.
+  false_familiarity: |
+    Asumir que la familiaridad equivale a calidad; a veces las
+    opciones novedosas son mejores.
+  exclusion: |
+    Si solo ciertas personas obtienen exposición, obtienen una ventaja injusta.
+    Considera quién tiene acceso a la visibilidad.
+  stagnation: |
+    Depender demasiado de la familiaridad y nunca probar cosas nuevas.
+
+related_content:
+  - ben_franklin_effect
+  - availability_heuristic
+  - baader_meinhof_phenomenon
+  - halo_effect

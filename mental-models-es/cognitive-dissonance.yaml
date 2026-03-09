@@ -1,0 +1,75 @@
+id: cognitive_dissonance
+name: Disonancia Cognitiva
+
+quick_introduction: |
+  La disonancia cognitiva es la incomodidad mental que sentimos al tener creencias contradictorias, o cuando nuestras acciones contradicen nuestras creencias. Estamos motivados a reducir esta incomodidad, a menudo cambiando nuestras creencias para que coincidan con nuestras acciones en lugar de cambiar nuestras acciones.
+
+one_liner: Cambiamos nuestras creencias para que coincidan con nuestras acciones con más frecuencia que al revés.
+
+try_this:
+  - Nota cuándo estás racionalizando para reducir la incomodidad en lugar de cambiar tu comportamiento.
+  - Pregunta: ¿Estoy ajustando mis creencias para justificar lo que hice?
+  - Considera si cambiar la acción sería más honesto que cambiar la creencia.
+
+ask_yourself:
+  - ¿Estoy reduciendo la disonancia racionalizando, o realmente cambiando?
+  - ¿Tendría esta creencia si ya no hubiera actuado de esta manera?
+
+in_more_detail: |
+  La teoría de Leon Festinger explica que buscamos la consistencia. Cuando actuamos en contra de nuestros valores (por ejemplo, mentir, malgastar dinero), experimentamos disonancia. Para reducirla, podríamos cambiar nuestra creencia ("En realidad no fue una mentira") o minimizar la acción ("No fue tan grave"). A menudo racionalizamos en lugar de reformar.
+
+  La disonancia cognitiva impulsa el efecto Ben Franklin (nos gustan las personas a las que hemos ayudado), explica por qué justificamos decisiones pasadas y subyace en muchas autoengaños. Es una fuerza poderosa en la formación y el cambio de creencias.
+
+why_this_is_important: |
+  Comprender la disonancia cognitiva te ayuda a reconocer tus propias racionalizaciones y a entender por qué las personas se resisten a cambiar de opinión. También explica por qué el compromiso y la consistencia son poderosos principios de persuasión.
+
+when_to_use:
+  - toma_de_decisiones
+  - construccion_de_relaciones
+  - liderazgo
+  - resolucion_de_conflictos
+
+how_can_you_spot_it:
+  post_decision_rationalization: |
+    Después de una elección, enfatizamos los aspectos positivos de nuestra elección y los negativos de las opciones rechazadas.
+  belief_action_alignment: |
+    Ajustamos las creencias para que coincidan con las acciones que ya hemos tomado.
+  discomfort_with_inconsistency: |
+    Malestar cuando notamos que nuestro comportamiento no coincide con nuestros valores declarados.
+  resistance_to_disconfirming_evidence: |
+    Desestimar o minimizar la información que entra en conflicto con nuestros compromisos.
+
+examples:
+  purchase_justification: |
+    Después de comprar un artículo caro, enfatizamos sus beneficios y minimizamos el costo.
+  relationship: |
+    Racionalizamos quedarnos en una mala relación centrándonos en lo bueno y minimizando lo malo.
+  career: |
+    Justificamos quedarnos en un trabajo que no nos gusta enfatizando las razones por las que "tenemos que" quedarnos.
+  beliefs: |
+    Cuando nuestras acciones contradicen nuestros valores, cambiamos nuestros valores ("En realidad no soy vegetariano, solo como carne a veces") en lugar de nuestras acciones.
+
+real_world_implications: |
+  La disonancia cognitiva moldea la formación de creencias, el comportamiento del consumidor y las actitudes políticas. Explica por qué las personas redoblan sus esfuerzos después de malas decisiones y por qué cambiar el comportamiento puede cambiar las creencias.
+
+professional_application:
+  networking_and_relationship_building: |
+    Los pequeños compromisos pueden llevar a otros mayores; las personas racionalizan sus acciones pasadas. Úsalo éticamente: comienza con peticiones pequeñas. Sé consciente cuando estás racionalizando tu propio comportamiento.
+  collaborative_learning_initiative: |
+    Al introducir cambios, obtén la aprobación temprana y compromisos pequeños; crean disonancia que motiva una adopción mayor. Evita forzar compromisos públicos que creen resentimiento.
+
+how_can_this_be_misapplied:
+  manipulation: |
+    Crear deliberadamente disonancia para presionar a las personas a cumplir.
+  dismissing_genuine_change: |
+    Asumir que todo cambio de creencia es racionalización cuando a veces las personas se actualizan genuinamente.
+  forced_consistency: |
+    Presionar a las personas a ser "consistentes" cuando sus puntos de vista han evolucionado legítimamente.
+  self_deception: |
+    Usar la teoría de la disonancia para justificar evitar verdades incómodas sobre nosotros mismos.
+
+related_content:
+  - ben_franklin_effect
+  - confirmation_bias
+  - sunk_cost_fallacy
+  - fundamental_attribution_error

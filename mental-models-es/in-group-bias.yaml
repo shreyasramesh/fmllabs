@@ -1,0 +1,75 @@
+id: in_group_bias
+name: Sesgo de endogrupo
+
+quick_introduction: |
+  El sesgo de endogrupo es la tendencia a favorecer a las personas que percibimos como pertenecientes a nuestro grupo sobre aquellas que percibimos como extrañas. Atribuimos cualidades positivas a los miembros del endogrupo y cualidades negativas a los miembros del exogrupo, a menudo basándonos en distinciones mínimas o arbitrarias.
+
+one_liner: Favorecemos a nuestro endogrupo y juzgamos a los exogrupos con más dureza, a menudo de forma arbitraria.
+
+try_this:
+  - Pregunta: ¿Juzgaría a esta persona de la misma manera si perteneciera a mi grupo?
+  - Busca activamente perspectivas del exogrupo al tomar decisiones.
+  - Observa cuándo los límites del grupo influyen en tu juicio.
+
+ask_yourself:
+  - ¿Estoy favoreciendo a alguien porque es "uno de los nuestros"?
+  - ¿Aplicaría los mismos estándares a un miembro del exogrupo?
+
+in_more_detail: |
+  Incluso cuando los grupos se asignan al azar (por ejemplo, por un lanzamiento de moneda), las personas desarrollan rápidamente una preferencia por su endogrupo. Confiamos más en los miembros del endogrupo, les asignamos recursos de forma más generosa y juzgamos sus acciones con más benevolencia. Los miembros del exogrupo reciben el trato opuesto.
+
+  El sesgo de endogrupo alimenta el tribalismo, la discriminación y el conflicto. Afecta a la contratación, la promoción, la colaboración y las políticas. Puede basarse en la raza, la nacionalidad, la empresa, el equipo o cualquier identidad compartida.
+
+why_this_is_important: |
+  Reconocer el sesgo de endogrupo te ayuda a tomar decisiones más justas, a construir equipos más inclusivos y a evitar el favoritismo. También explica por qué las iniciativas de diversidad enfrentan resistencia: la preferencia por el endogrupo es automática.
+
+when_to_use:
+  - liderazgo
+  - toma_de_decisiones
+  - construccion_de_relaciones
+  - resolucion_de_conflictos
+
+how_can_you_spot_it:
+  preferential_treatment: |
+    Dar el beneficio de la duda a "nosotros" pero no a "ellos".
+  resource_allocation: |
+    Asignar más a los miembros del endogrupo cuando los miembros del exogrupo tienen una necesidad igual o mayor.
+  attribution_asymmetry: |
+    Éxito del endogrupo = habilidad; éxito del exogrupo = suerte. Fracaso del endogrupo = circunstancia; fracaso del exogrupo = carácter.
+  minimal_group_effects: |
+    El favoritismo surge incluso con asignaciones de grupo arbitrarias.
+
+examples:
+  hiring: |
+    Preferir candidatos que fueron a tu misma universidad o comparten tu origen.
+  performance_reviews: |
+    Calificar a los miembros del endogrupo de forma más favorable que a los miembros del exogrupo con un rendimiento similar.
+  collaboration: |
+    Confiar e incluir a "nuestro equipo" mientras se excluye o duda de "su equipo".
+  politics: |
+    Desestimar los argumentos del exogrupo mientras se aceptan los argumentos del endogrupo sin críticas.
+
+real_world_implications: |
+  El sesgo de endogrupo perpetúa la desigualdad, socava la meritocracia y alimenta el conflicto. Afecta a la contratación, la promoción, la inversión y las políticas. Reducirlo requiere un esfuerzo deliberado, no se solucionará solo.
+
+professional_application:
+  networking_and_relationship_building: |
+    Incluye activamente a personas fuera de tu círculo inmediato. Busca perspectivas diversas. Cuestiona si estás favoreciendo a alguien porque es "como tú".
+  collaborative_learning_initiative: |
+    Utiliza procesos estructurados (revisiones ciegas, paneles diversos) para reducir el sesgo de endogrupo en la contratación y la evaluación. Crea proyectos intergrupales para construir una identidad compartida.
+
+how_can_this_be_misapplied:
+  forced_diversity: |
+    Implementar cuotas o políticas que generan resentimiento sin abordar el sesgo subyacente.
+  out_group_hostility: |
+    Tratar el sesgo de endogrupo como el único problema cuando también existe hostilidad hacia el exogrupo.
+  ignoring_legitimate_differences: |
+    No todas las diferencias grupales son sesgos; a veces los grupos tienen características diferentes. No asumas que todas las disparidades son discriminación.
+  reverse_discrimination: |
+    Sobrecampasar para favorecer a los exogrupos de maneras que son injustas para los miembros del endogrupo.
+
+related_content:
+  - fundamental_attribution_error
+  - halo_effect
+  - false_consensus_effect
+  - groupthink

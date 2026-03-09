@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 同理心鸿沟
+# 心智模型 / 认知偏差 - 示例条目
+
+id: empathy_gap
+name: 同理心鸿沟
+
+quick_introduction: |
+  当我们自身处于一种状态时，会难以理解和预测他人处于不同状态时的心理状态。当我们平静时，我们会低估愤怒或饥饿时的感受。当我们吃饱时，我们会低估饥饿时的食欲。
+
+one_liner: 我们低估了自己——以及他人——在不同状态下的感受。
+
+try_this:
+  - 平静的时候，为自己压力大时做决定；预先承诺。
+  - 不要评判你不在乎的那些状态下的人——饥饿、疲惫、害怕。
+  - 问问自己：我是否将当前状态投射到未来的自己或他人身上了？
+
+ask_yourself:
+  - 我是否低估了自己在不同状态下的感受？
+  - 如果我处于他们的状态，我是否能更好地理解这个人？
+
+in_more_detail: |
+  我们很难想象自己在不同情况下会有怎样的感受——以及他人处于我们当前不处于的状态时的感受。清醒的人低估了成瘾的吸引力。休息充足的人低估了睡眠不足的影响。我们将当前状态投射到他人和未来的自己身上。
+
+  同理心鸿沟影响我们为未来自己做出的决定（例如，在有动力时承诺锻炼）、我们为他人做出的决定以及我们理解不同状态下的人的能力。
+
+why_this_is_important: |
+  认识到同理心鸿沟可以改善对未来自己的决策、对他人的同理心以及对我们自身可变性的理解。它解释了为什么我们会做出无法兑现的承诺，以及为什么我们会误解处于困境中的他人。
+
+when_to_use:
+  - 决策制定
+  - 建立关系
+  - 领导力
+  - 冲突解决
+
+how_can_you_spot_it:
+  current_state_projection: |
+    假设他人和我们现在的感受一样，或者未来的我们和现在的感受一样。
+  underestimating_emotional_state: |
+    当我们不在对方的状态时，会想“有什么大不了的？”
+  commitment_failures: |
+    根据当前的动力做出选择，但在动力消失后却无法兑现。
+  misunderstanding_others: |
+    因为无法从当前状态想象别人的经历，而否定了他们的经历。
+
+examples:
+  hunger: |
+    吃饱时去超市购物——买的东西比饥饿时想要的要少。
+  addiction: |
+    非成瘾者低估了戒断的难度；正在康复中的成瘾者在戒断时可能会低估复发的诱惑。
+  conflict: |
+    平静的时候，我们会低估自己在冲突时的反应。
+  motivation: |
+    有动力时报名参加早上6点的课程——但在困倦时却不去。
+
+real_world_implications: |
+  同理心鸿沟影响着成瘾治疗、政策制定和人际理解。它解释了为什么我们会打破承诺，以及为什么我们常常无法理解他人的观点。它是同理心和良好决策的障碍。
+
+professional_application:
+  networking_and_relationship_building: |
+    当某人处于压力、愤怒或其他不同状态时，不要假设他们会像你一样思考。试着去想象他们的状态。在做出承诺时，考虑当动力消失时你会有怎样的感受。
+  collaborative_learning_initiative: |
+    在规划时，考虑团队在疲惫、压力大或沮丧时的感受。为这些状态进行设计，而不仅仅是为了有动力的规划状态。
+
+how_can_this_be_misapplied:
+  overattribution: |
+    将所有误解都归咎于“同理心鸿沟”，尽管有时人们确实持有不同的价值观。
+  excusing_behavior: |
+    “他们没办法——同理心鸿沟”当人们有责任管理自己的状态时。
+  false_relativism: |
+    假设我们永远无法理解他人，尽管我们可以通过努力和经验来改善。
+  self_excuse: |
+    利用同理心鸿沟来为自己未能兑现的承诺开脱。
+
+related_content:
+  - impact_bias
+  - hyperbolic_discounting
+  - fundamental_attribution_error
+  - availability_heuristic

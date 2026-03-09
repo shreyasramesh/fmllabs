@@ -1,0 +1,92 @@
+id: bounded_rationality
+name: Racionalidad Limitada
+
+quick_introduction: |
+  La racionalidad limitada es la idea de que la toma de decisiones humana está limitada por la información
+  disponible, la capacidad cognitiva y el tiempo. No optimizamos; "satisfacemos", es decir, elegimos
+  opciones que son lo suficientemente buenas en lugar de las mejores posibles.
+
+one_liner: Satisfacemos—elegimos lo suficientemente bueno, no lo óptimo.
+
+try_this:
+  - Simplifica las opciones cuando sea posible; demasiadas opciones abruman la racionalidad limitada.
+  - Establece criterios de "suficientemente bueno" con antelación para evitar búsquedas interminables.
+  - Date cuenta cuando estás optimizando más allá del punto de rendimientos decrecientes.
+
+ask_yourself:
+  - ¿Estoy tratando de encontrar la opción perfecta cuando lo suficientemente bueno sería suficiente?
+  - ¿Qué restricciones (tiempo, información, atención) están limitando mi decisión?
+
+in_more_detail: |
+  Herbert Simon introdujo el concepto para desafiar la suposición económica clásica
+  de actores racionales con información perfecta. En realidad, tenemos atención limitada,
+  memoria de trabajo y tiempo. Utilizamos heurísticas y atajos para tomar decisiones que
+  son "racionales" dadas nuestras limitaciones, aunque no sean óptimas en un sentido ideal.
+
+  La racionalidad limitada explica por qué no siempre elegimos la mejor opción, por qué
+  confiamos en reglas generales y por qué el contexto y el encuadre importan tanto. Es un modelo descriptivo
+  de cómo decidimos en realidad, no una prescripción de cómo deberíamos hacerlo.
+
+why_this_is_important: |
+  Comprender la racionalidad limitada te ayuda a diseñar mejores procesos, simplificar
+  las opciones para otros y establecer expectativas realistas sobre la calidad de las decisiones. También
+  explica por qué el comportamiento "irracional" es a menudo racional bajo ciertas restricciones.
+
+when_to_use:
+  - toma_de_decisiones
+  - resolucion_de_problemas
+  - liderazgo
+  - evaluacion_de_riesgos
+
+how_can_you_spot_it:
+  satisficing_behavior: |
+    Las personas eligen la primera opción aceptable en lugar de comparar exhaustivamente.
+  heuristic_reliance: |
+    Las decisiones se toman utilizando reglas generales en lugar de un análisis completo.
+  context_dependence: |
+    La misma persona toma decisiones diferentes dependiendo de cómo se presenten las opciones.
+  information_overload: |
+    Cuando hay demasiada información disponible, la calidad de la decisión puede disminuir.
+
+examples:
+  hiring: |
+    Un gerente contrata al primer candidato que cumple con el estándar en lugar de entrevistar
+    indefinidamente para encontrar al "mejor" candidato.
+  consumer_choice: |
+    Los compradores eligen entre las primeras opciones de un estante en lugar de comparar cada
+    producto de la tienda.
+  policy: |
+    Los votantes utilizan la afiliación partidista o algunas cuestiones clave como atajos en lugar de
+    analizar cada posición política.
+  daily_routines: |
+    Las personas siguen hábitos y valores predeterminados en lugar de re-optimizar cada decisión.
+
+real_world_implications: |
+  La racionalidad limitada da forma a los mercados, el diseño de políticas y el comportamiento organizacional.
+  Los "nudges" y la arquitectura de elección funcionan porque tienen en cuenta nuestras limitaciones. Ignorarla
+  conduce a sistemas excesivamente complejos que las personas no pueden utilizar eficazmente.
+
+professional_application:
+  networking_and_relationship_building: |
+    No esperes que los demás procesen complejas compensaciones en tiempo real. Simplifica las opciones
+    y proporciona valores predeterminados claros.
+  collaborative_learning_initiative: |
+    Diseña procesos que funcionen con la racionalidad limitada: reduce las opciones, proporciona
+    valores predeterminados y utiliza listas de verificación para decisiones complejas.
+
+how_can_this_be_misapplied:
+  overcomplicating_decisions: |
+    Diseñar procesos que asumen una capacidad cognitiva ilimitada, lo que lleva a
+    fatiga de decisión y malos resultados.
+  blaming_irrationality: |
+    Descartar las elecciones de los demás como irracionales sin considerar sus limitaciones.
+  exploitation: |
+    Abrumar deliberadamente a las personas con complejidad para dirigirlas hacia resultados deseados.
+  perfectionism: |
+    Esperar decisiones óptimas cuando satisfacer es a menudo el enfoque racional.
+
+related_content:
+  - default_effect
+  - framing_effect
+  - availability_heuristic
+  - cognitive_dissonance

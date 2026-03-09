@@ -1,0 +1,106 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Groupthink
+# Mental Model / Cognitive Bias - Example Entry
+
+id: groupthink
+name: Groupthink
+
+quick_introduction: |
+  Groupthink is the tendency for cohesive groups to prioritize consensus and
+  harmony over critical evaluation. Members suppress dissent, self-censor, and
+  conform to the perceived group view. The desire for unanimity overrides
+  the desire for the best decision.
+
+one_liner: Harmony over truth—groups prioritize consensus over critical evaluation.
+
+try_this:
+  - Assign a devil's advocate; make dissent expected and safe.
+  - Ask: What are we not saying? What would we say if we weren't in this group?
+  - Seek outside perspectives before finalizing group decisions.
+
+ask_yourself:
+  - Am I self-censoring to maintain harmony?
+  - Is our consensus genuine or the result of pressure to agree?
+
+in_more_detail: |
+  Irving Janis studied foreign policy fiascos (Bay of Pigs, Vietnam) and
+  identified patterns: illusion of invulnerability, collective
+  rationalization, pressure toward conformity, self-censorship, illusion
+  of unanimity, and mindguards who protect the group from dissenting
+  information. High cohesion, isolation, and stress increase groupthink.
+
+  Groupthink leads to poor decisions because alternatives aren't
+  seriously considered. Dissent is seen as disloyalty. The group
+  overestimates its correctness and underestimates risks.
+
+why_this_is_important: |
+  Recognizing groupthink helps you create conditions for better
+  decision-making: encourage dissent, bring in outside perspectives,
+  and avoid premature consensus. It's essential for avoiding
+  catastrophic group failures.
+
+when_to_use:
+  - leadership
+  - decision-making
+  - problem_solving
+  - conflict_resolution
+
+how_can_you_spot_it:
+  pressure_for_consensus: |
+    Dissent is discouraged or punished; agreement is rewarded.
+  illusion_of_unanimity: |
+    Silence is interpreted as agreement when it may be self-censorship.
+  collective_rationalization: |
+    The group dismisses warnings and reinforces its view.
+  mindguards: |
+    Members protect the group from information that would challenge
+    the consensus.
+
+examples:
+  bay_of_pigs: |
+    Kennedy's advisors suppressed doubts about the invasion plan;
+    the result was disaster.
+  corporate_decisions: |
+    A leadership team pushes ahead with a merger despite red flags
+    because no one wants to be the naysayer.
+  product_launches: |
+    A team ships a flawed product because everyone has invested
+    in the plan and no one raises concerns.
+  boards: |
+    Board members rubber-stamp management proposals to maintain
+    harmony.
+
+real_world_implications: |
+  Groupthink contributes to policy failures, corporate disasters,
+  and missed opportunities. It's especially dangerous in high-stakes,
+  high-stress situations. Preventing it requires deliberate
+  structural interventions.
+
+professional_application:
+  networking_and_relationship_building: |
+    Create psychological safety for dissent. Thank people who
+    raise concerns. Model disagreeing without being disagreeable.
+  collaborative_learning_initiative: |
+    Use devil's advocate, red teams, and "premortems." Require
+    that someone argue against the prevailing view. Bring in
+    outside perspectives. Leader speaks last to avoid anchoring.
+
+how_can_this_be_misapplied:
+  false_dissent: |
+    Creating "designated dissenters" who don't genuinely disagree—
+    the group sees through it.
+  excessive_conflict: |
+    Encouraging dissent to the point of destructive conflict
+    and paralysis.
+  dismissing_consensus: |
+    Assuming all consensus is groupthink—sometimes the group
+    is right.
+  individualism: |
+    Overcorrecting to the point where no collective decision
+    is possible.
+
+related_content:
+  - false_consensus_effect
+  - in_group_bias
+  - confirmation_bias
+  - bystander_effect

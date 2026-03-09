@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Parkinson's Law
+# Mental Model / Cognitive Bias - Example Entry
+
+id: parkinsons_law
+name: Parkinson's Law
+
+quick_introduction: |
+  Parkinson's Law states that "work expands so as to fill the time available for its
+  completion." Give a task a week, and it takes a week; give it a day, and it often
+  gets done in a day. The same applies to budgets, team size, and resources.
+
+one_liner: Work expands to fill the time available for its completion.
+
+try_this:
+  - Set tighter deadlines to force focus and prevent scope creep.
+  - Ask: What's the minimum time this could reasonably take?
+  - Notice when extra time or resources are being consumed without proportional value.
+
+ask_yourself:
+  - Am I filling the time, or is the work actually demanding it?
+  - Would a tighter deadline force better prioritization?
+
+in_more_detail: |
+  C. Northcote Parkinson observed that bureaucracies grow regardless of the amount
+  of work to be done. He also noted that tasks expand to fill available time—we
+  adjust our effort and pace to the deadline. Tight deadlines can force focus;
+  loose ones invite procrastination and scope creep.
+
+  The law has implications for project management, personal productivity, and
+  organizational design. It suggests that constraints can improve outcomes by
+  forcing prioritization.
+
+why_this_is_important: |
+  Understanding Parkinson's Law helps you set better deadlines, avoid over-resourcing
+  projects, and recognize when "more time" or "more people" won't help—and may
+  hurt. Constraints can be productive.
+
+when_to_use:
+  - decision-making
+  - leadership
+  - problem_solving
+  - career_moves
+
+how_can_you_spot_it:
+  deadline_driven_effort: |
+    Work accelerates as the deadline approaches; little progress when the deadline
+    is far away.
+  scope_expansion: |
+    Projects grow to fill available resources rather than staying focused.
+  bureaucratic_growth: |
+    Organizations add people and process even when workload doesn't increase.
+  budget_exhaustion: |
+    Budgets get spent fully regardless of whether the spending was necessary.
+
+examples:
+  student_deadlines: |
+    A paper due in a month gets written in the last 48 hours.
+  project_management: |
+    A project with a 6-month timeline takes 6 months; the same scope with a 3-month
+    deadline might also get done.
+  meetings: |
+    A 1-hour meeting fills the hour whether 30 minutes would suffice.
+  budgets: |
+    A department spends its full budget by year-end to justify the same budget
+    next year.
+
+real_world_implications: |
+  Parkinson's Law affects productivity, organizational bloat, and resource
+  allocation. It suggests that artificial constraints (shorter deadlines,
+  smaller teams) can improve focus and efficiency.
+
+professional_application:
+  networking_and_relationship_building: |
+    Set clear, tight deadlines for collaborative work to prevent scope creep and
+    maintain momentum.
+  collaborative_learning_initiative: |
+    Use time-boxing for meetings and projects. Experiment with shorter deadlines
+    to test if they improve focus without sacrificing quality.
+
+how_can_this_be_misapplied:
+  unrealistic_deadlines: |
+    Setting arbitrarily short deadlines that cause burnout or poor quality.
+  underresourcing: |
+    Assuming that less time or fewer people will always work—some tasks need
+    adequate resources.
+  blame_shifting: |
+    Attributing delays to "Parkinson's Law" when the work was genuinely complex.
+  ignoring_quality: |
+    Rushing to meet artificial constraints at the cost of sustainable outcomes.
+
+related_content:
+  - law_of_diminishing_returns
+  - pareto_principle
+  - zeigarnik_effect
+  - hyperbolic_discounting

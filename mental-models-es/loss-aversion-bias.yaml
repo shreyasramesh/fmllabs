@@ -1,0 +1,108 @@
+id: loss_aversion_bias
+name: Sesgo de aversión a la pérdida
+
+quick_introduction: |
+  La aversión a la pérdida es la tendencia a preferir evitar pérdidas antes que adquirir ganancias equivalentes.
+  Las personas sienten el dolor de perder aproximadamente el doble de intensamente de lo que sienten el placer de ganar.
+
+one_liner: Las pérdidas se sienten aproximadamente el doble de dolorosas de lo que se sienten bien las ganancias equivalentes.
+
+try_this:
+  - "Pregúntate: ¿Estoy sobrevalorando lo que perdería frente a lo que ganaría?"
+  - Replantear la elección como ganancias en lugar de pérdidas y ver si tu punto de vista cambia.
+  - Observa cuándo el miedo a perder está impulsando la decisión más que el beneficio real.
+
+ask_yourself:
+  - ¿Qué elegiría si empezara desde cero?
+  - ¿Me aferro a esto por lo que perdería, o porque el futuro es genuinamente mejor?
+
+in_more_detail: |
+  Desarrollada por Daniel Kahneman y Amos Tversky, la aversión a la pérdida describe cómo las pérdidas y las ganancias
+  se perciben de forma asimétrica. El impacto psicológico de perder $100 es típicamente mucho
+  mayor que la satisfacción de ganar $100. Este sesgo influye en las decisiones en
+  finanzas, negociaciones y elecciones cotidianas, lo que a menudo lleva a un comportamiento reacio al riesgo
+  cuando las pérdidas potenciales son evidentes.
+
+why_this_is_important: |
+  Comprender la aversión a la pérdida te ayuda a reconocer cuándo el miedo a la pérdida está impulsando las decisiones
+  más que el análisis racional. Explica por qué las personas se aferran a inversiones perdedoras, evitan
+  cambios necesarios y toman decisiones subóptimas en negociaciones y decisiones de carrera.
+
+when_to_use:
+  - toma_de_decisiones
+  - inversion
+  - movimientos_de_carrera
+  - evaluacion_de_riesgos
+
+how_can_you_spot_it:
+  emotional_reaction_to_losses: |
+    Observa cuándo la perspectiva de perder algo desencadena una ansiedad
+    o resistencia desproporcionada en comparación con el beneficio de una ganancia potencial.
+  reluctance_to_change: |
+    Duda en cambiar estrategias, dejar un trabajo o vender un activo, incluso cuando
+    el análisis objetivo sugiere que es la mejor opción.
+  framing_sensitivity: |
+    Las decisiones cambian drásticamente según si las opciones se presentan como ganancias
+    o pérdidas, incluso cuando los resultados son equivalentes.
+  overvaluing_what_you_have: |
+    El efecto dotación (endowment effect), que consiste en valorar más las cosas que posees simplemente porque
+    las posees, a menudo acompaña a la aversión a la pérdida.
+
+examples:
+  investing: |
+    Mantener una acción en declive para "evitar materializar la pérdida" mientras se pierden
+    mejores oportunidades de inversión en otros lugares.
+  career: |
+    Permanecer en un trabajo insatisfactorio porque irse se siente como perder seguridad,
+    incluso cuando la nueva oportunidad ofrece un mayor crecimiento.
+  negotiations: |
+    Rechazar una oferta justa porque se presenta como "renunciar" a algo,
+    en lugar de "ganar" un acuerdo.
+  product_design: |
+    Pruebas gratuitas que se convierten en pago: los usuarios experimentan la "pérdida" del servicio
+    cuando finaliza la prueba, lo que motiva la suscripción más de lo que motivaría "ganar"
+    un nuevo servicio.
+
+real_world_implications: |
+  La aversión a la pérdida moldea los mercados, las políticas y el comportamiento individual. Explica
+  por qué los seguros y las garantías se venden bien, por qué las personas evitan el cambio beneficioso
+  y por qué las noticias negativas tienen un impacto desproporcionado. Reconocerla puede mejorar
+  la calidad de las decisiones y reducir las decisiones impulsadas por el arrepentimiento.
+
+professional_application:
+  networking_and_relationship_building: |
+    Ten en cuenta que las personas pueden resistirse a terminar relaciones o
+    colaboraciones improductivas debido a la aversión a la pérdida: temen "perder" la conexión.
+    Presenta las nuevas oportunidades como ganancias en lugar de pérdidas para reducir la resistencia.
+  collaborative_learning_initiative: |
+    Al introducir nuevos procesos o herramientas, enfatiza lo que el equipo gana
+    en lugar de lo que está "renunciando". Las iniciativas de cambio con un marco de pérdidas
+    a menudo desencadenan una resistencia más fuerte.
+
+how_can_this_be_misapplied:
+  manipulation: |
+    Explotar la aversión a la pérdida para presionar decisiones, por ejemplo, "ofertas por tiempo limitado"
+    o el encuadre de "no te lo pierdas" que activa el miedo a la pérdida en lugar de
+    una evaluación genuina del valor.
+  misinterpreting_relationships: |
+    Asumir que la resistencia de alguien al cambio es puramente racional cuando puede
+    estar impulsada por la aversión a la pérdida. Atribuir erróneamente motivos puede dañar la confianza.
+  overcommitment: |
+    Falacia del costo hundido: continuar invirtiendo en un proyecto fallido porque
+    "ya hemos invertido tanto" en lugar de cortar las pérdidas.
+  missed_opportunities_for_conflict_resolution: |
+    Negarse a comprometerse porque cualquier concesión se siente como una pérdida,
+    incluso cuando la alternativa es un peor resultado para todos.
+  vulnerability_to_exploitation: |
+    Ser manipulado por otros que enmarcan las elecciones para activar la aversión a la pérdida,
+    como tácticas de venta que enfatizan lo que "perderás" si no actúas.
+  reinforcing_negative_perceptions: |
+    Centrarse excesivamente en los inconvenientes potenciales puede crear una perspectiva pesimista
+    que se vuelve autocumplida, perdiendo oportunidades de crecimiento.
+
+related_content:
+  - anchoring_bias
+  - endowment_effect
+  - sunk_cost_fallacy
+  - prospect_theory
+  - status_quo_bias

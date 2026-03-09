@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# O Mapa Não é o Território
+# Modelo Mental / Viés Cognitivo - Entrada de Exemplo
+
+id: map_is_not_the_territory
+name: O Mapa Não é o Território
+
+quick_introduction: |
+  "O mapa não é o território" significa que uma representação da realidade não é a realidade
+  em si. Modelos, teorias e descrições são simplificações úteis, mas eles
+  sempre deixam algo de fora. Confundir o mapa com o território leva a erros.
+
+one_liner: O mapa não é o território—todos os modelos estão errados; alguns são úteis.
+
+try_this:
+  - Quando um modelo não corresponde à realidade, atualize o mapa—não force a realidade a se encaixar.
+  - Pergunte: O que este modelo está deixando de fora? Quando ele pode falhar?
+  - Trate os modelos como ferramentas, não como verdade.
+
+ask_yourself:
+  - Estou confundindo meu modelo com a realidade?
+  - O território mudou desde a última vez que olhei?
+
+in_more_detail: |
+  Alfred Korzybski introduziu essa ideia na semântica geral. Um mapa de uma cidade é
+  útil para navegação, mas não é a cidade—ele omite detalhes, fica desatualizado e
+  nunca pode capturar tudo. O mesmo se aplica a modelos mentais, teorias científicas
+  e organogramas.
+
+  Todos os modelos estão errados; alguns são úteis. O perigo é tratar um modelo como se fosse
+  a verdade completa, especialmente quando o território mudou. Pensar bem
+  requer atualizar mapas quando a realidade não corresponde.
+
+why_this_is_important: |
+  Reconhecer que os mapas diferem do território evita excesso de confiança em modelos,
+  incentiva a atualização de crenças e reduz o risco de agir com base em informações desatualizadas ou
+  simplificadas demais.
+
+when_to_use:
+  - tomada_de_decisao
+  - resolucao_de_problemas
+  - aprendizado
+  - avaliacao_de_risco
+
+how_can_you_spot_it:
+  model_reality_confusion: |
+    Tratar um quadro ou teoria como se descrevesse completamente a realidade.
+  outdated_assumptions: |
+    Agir com base em informações ou modelos que não correspondem mais às condições atuais.
+  oversimplification: |
+    Ignorar nuances porque o "mapa" não as inclui.
+  map_worship: |
+    Defender um modelo quando evidências o contradizem, em vez de atualizá-lo.
+
+examples:
+  organizational_charts: |
+    Assumir que a estrutura de relatórios reflete como o trabalho é realmente feito.
+  financial_models: |
+    Tratar uma projeção de planilha como uma previsão em vez de um cenário.
+  stereotypes: |
+    Aplicar generalizações de nível de grupo a indivíduos.
+  strategy_docs: |
+    Executar um plano como escrito quando o mercado mudou.
+
+real_world_implications: |
+  A distinção mapa-território é fundamental para a ciência, engenharia e
+  filosofia. Ela sustenta a atualização bayesiana, a metodologia ágil e a humildade epistêmica. Ignorá-la
+  leva a um pensamento rígido e a estratégias fracassadas.
+
+professional_application:
+  networking_and_relationship_building: |
+    Seu modelo mental de uma pessoa pode estar desatualizado. Atualize-o através de interação direta
+    em vez de depender de impressões antigas.
+  collaborative_learning_initiative: |
+    Incentive as equipes a tratar planos e modelos como hipóteses a serem testadas e
+    revisadas, não como verdades fixas.
+
+how_can_this_be_misapplied:
+  radical_skepticism: |
+    Concluir que nenhum mapa é útil e todo o conhecimento é suspeito.
+  constant_revision: |
+    Atualizar com tanta frequência que nenhum entendimento estável emerge.
+  dismissing_models: |
+    Rejeitar simplificações úteis porque elas "não são o território".
+  relativism: |
+    Alegar que todos os mapas são igualmente válidos quando alguns claramente se encaixam melhor no território.
+
+related_content:
+  - narrative_fallacy
+  - confirmation_bias
+  - bayes_theorem
+  - illusion_of_control

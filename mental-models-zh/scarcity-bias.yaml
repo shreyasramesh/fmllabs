@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 稀缺性偏见
+# 心智模型 / 认知偏见 - 示例条目
+
+id: scarcity_bias
+name: 稀缺性偏见
+
+quick_introduction: |
+  稀缺性偏见是指当我们认为某物稀缺或有限时，会对其赋予更高的价值。“限时”、“仅剩3件”和“独家访问权”会触发紧迫感和欲望，常常压倒对是否真正需要或想要该物品的理性评估。
+
+one_liner: 稀缺性会放大感知价值——“有限”会触发紧迫感而非理性。
+
+try_this:
+  - 提问：如果不是稀缺的，我还会想要它吗？剥离紧迫感。
+  - 在对“限时”或“仅剩 X 件”的优惠采取行动之前，先停顿一下。
+  - 注意稀缺性是否比其真实价值更能驱动你的渴望。
+
+ask_yourself:
+  - 我是因为它稀缺而看重它，还是因为它确实需要我？
+  - 如果没有稀缺性这个框架，我会做这个决定吗？
+
+in_more_detail: |
+  稀缺性会放大感知价值。当某物稀有或即将消失时，我们更想要它——部分原因在于稀缺性可以暗示质量，部分原因在于损失厌恶让我们害怕错过。营销人员和谈判者利用稀缺性来制造紧迫感。这种偏见会导致冲动决策、过度消费和优先级排序不当。
+
+  稀缺性还会影响那些真正资源有限的人的认知带宽；贫困会减少处理其他决策的“心智带宽”。
+
+why_this_is_important: |
+  认识到稀缺性偏见有助于你抵制操纵策略，做出更深思熟虑的选择。它也解释了为什么我们会高估限量版产品，并在不需要的时候匆忙行动。
+
+when_to_use:
+  - 决策制定
+  - 谈判
+  - 投资
+  - 风险评估
+
+how_can_you_spot_it:
+  urgency_trigger: |
+    “限时”或“仅剩 X 件”会产生不成比例的渴望。
+  fear_of_missing_out: |
+    失去访问机会的可能性比内在价值更能驱动行动。
+  impulsive_purchases: |
+    因为某物稀缺而购买，而不是因为需要而购买。
+  artificial_scarcity: |
+    稀缺性是人为制造的（例如，虚假的倒计时），而不是真实的。
+
+examples:
+  sales: |
+    “仅剩 2 件库存”或“促销今晚结束”会促成原本不会发生的购买。
+  auctions: |
+    竞拍者在竞争性稀缺的情况下，为了获胜而支付了超出预期的价格。
+  exclusivity: |
+    “会员专享”或“仅限邀请”的访问权限会增加感知价值。
+  genuine_scarcity: |
+    当资源确实有限时，处于稀缺压力下的人们会做出更糟糕的决定（例如，穷人、时间紧迫的人）。
+
+real_world_implications: |
+  稀缺性偏见驱动着消费者行为、谈判结果和政策响应。它可以被合乎道德地使用（例如，合法的截止日期），也可以不道德地使用（例如，虚假的稀缺性）。理解它能提高决策质量。
+
+professional_application:
+  networking_and_relationship_building: |
+    当他人制造人为稀缺性时要谨慎（“我只招收少量客户”）。核实稀缺性是否真实。在建立关系时，你时间的真正稀缺性可以表明其价值——但过度使用会显得操纵。
+  collaborative_learning_initiative: |
+    在为倡议活动制造紧迫感时，要确保其合法性。虚假的截止日期一旦被发现，就会侵蚀信任。
+
+how_can_this_be_misapplied:
+  manipulation: |
+    故意制造虚假稀缺性，以迫使他人做出决定。
+  impulsive_decisions: |
+    在人为的紧迫感下做出重要选择，而更多时间本可以改善结果。
+  overvaluing_scarcity: |
+    认为稀缺的东西总是更好——有时稀缺性是随意的。
+  exploiting_vulnerability: |
+    对那些本已处于资源压力下的人使用稀缺性策略。
+
+related_content:
+  - loss_aversion_bias
+  - availability_heuristic
+  - endowment_effect
+  - framing_effect

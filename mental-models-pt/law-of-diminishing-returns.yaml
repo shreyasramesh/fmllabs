@@ -1,0 +1,81 @@
+id: law_of_diminishing_returns
+name: Lei dos Rendimentos Decrescentes
+
+quick_introduction: |
+  A lei dos rendimentos decrescentes afirma que, à medida que se adiciona mais de um insumo, mantendo outros constantes, a produção adicional de cada nova unidade de insumo eventualmente diminui. Mais nem sempre é melhor — há um ponto em que o esforço extra rende cada vez menos.
+
+one_liner: Mais insumo eventualmente rende menos produção — há um ponto ótimo.
+
+try_this:
+  - Pergunte: Já passei do ponto em que esforço adicional rende retornos significativos?
+  - Priorize os insumos de maior alavancagem; pare quando os retornos marginais caírem.
+  - Perceba quando você está investindo demais em algo que já deu retorno.
+
+ask_yourself:
+  - O que eu ganharia com mais uma unidade de esforço aqui?
+  - Estou otimizando além do ponto de rendimentos decrescentes?
+
+in_more_detail: |
+  Na economia, adicionar mais trabalhadores a uma quantidade fixa de terra eventualmente produz ganhos incrementais menores. Na produtividade pessoal, a primeira hora de estudo pode agregar mais valor do que a décima. O princípio se aplica a recursos, esforço, tempo e recursos. Há um ponto ótimo; além dele, os retornos marginais diminuem e podem até se tornar negativos.
+
+  Reconhecer os rendimentos decrescentes ajuda você a alocar recursos de forma eficiente e a evitar investir demais em áreas que já renderam a maior parte de seu valor.
+
+why_this_is_important: |
+  Entender os rendimentos decrescentes previne o investimento excessivo, orienta a priorização e ajuda você a saber quando parar. É essencial para a alocação de recursos e para evitar o perfeccionismo.
+
+when_to_use:
+  - tomada_de_decisao
+  - resolucao_de_problemas
+  - investimento
+  - movimentacoes_de_carreira
+
+how_can_you_spot_it:
+  incremental_gains_decreasing: |
+    Cada unidade adicional de esforço ou recurso produz menos saída do que a
+    unidade anterior.
+  perfectionism_trap: |
+    Buscar os últimos 10% de qualidade consome esforço desproporcional.
+  overinvestment: |
+    Continuar a adicionar recursos quando o retorno marginal é baixo ou negativo.
+  optimal_point_passed: |
+    Você passou do ponto em que mais insumo melhora os resultados.
+
+examples:
+  studying: |
+    As primeiras 2 horas de preparação para o exame agregam mais do que as horas 7–8; há um ponto de
+    rendimentos decrescentes.
+  product_features: |
+    Adicionar mais recursos a um aplicativo pode confundir os usuários; o 20º recurso agrega menos
+    valor do que o 5º.
+  hiring: |
+    Adicionar mais pessoas a um projeto pode atrasá-lo (Lei de Brooks) após um certo ponto.
+  marketing: |
+    Dobrar os gastos com publicidade não dobra os resultados; os retornos diminuem à medida que o mercado se satura.
+
+real_world_implications: |
+  A lei dos rendimentos decrescentes orienta a política econômica, a estratégia de negócios e a produtividade pessoal. Ignorá-la leva a desperdício de recursos e resultados subótimos. Ela apoia o princípio de Pareto e o foco.
+
+professional_application:
+  networking_and_relationship_building: |
+    Investir em alguns relacionamentos profundos pode render mais do que espalhar o esforço
+    diluído por muitos. Reconheça quando networking adicional tem retornos decrescentes.
+  collaborative_learning_initiative: |
+    Mais horas de treinamento nem sempre significam melhores resultados. Encontre a dose ótima
+    e evite sobrecarregar.
+
+how_can_this_be_misapplied:
+  premature_optimization: |
+    Parar cedo demais antes de atingir um nível razoável de qualidade.
+  undershooting: |
+    Usar rendimentos decrescentes como desculpa para esforço insuficiente.
+  misidentifying_the_curve: |
+    Assumir rendimentos decrescentes quando você está realmente em outra parte da curva
+    (por exemplo, fase exponencial inicial).
+  one_size_fits_all: |
+    Aplicar o mesmo "ponto ótimo" em diferentes contextos onde as curvas diferem.
+
+related_content:
+  - pareto_principle
+  - parkinsons_law
+  - sunk_cost_fallacy
+  - inversion

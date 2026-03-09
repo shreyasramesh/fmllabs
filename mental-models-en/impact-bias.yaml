@@ -1,0 +1,107 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Impact Bias
+# Mental Model / Cognitive Bias - Example Entry
+
+id: impact_bias
+name: Impact Bias
+
+quick_introduction: |
+  The impact bias is the tendency to overestimate the intensity and duration
+  of our emotional reactions to future events. We think good things will make
+  us happier than they do, and bad things will make us more miserable than
+  they do. We're bad at affective forecasting.
+
+one_liner: We overestimate how much events will affect our happiness—and for how long.
+
+try_this:
+  - Ask: How did I feel after similar past events? We adapt faster than we expect.
+  - Don't let anticipated impact drive decisions—we're bad at forecasting feelings.
+  - Notice when you're overestimating the lasting effect of a single outcome.
+
+ask_yourself:
+  - Am I overestimating how long I'll feel this way?
+  - What does past experience say about similar events?
+
+in_more_detail: |
+  Daniel Gilbert and Timothy Wilson research affective forecasting: we
+  overestimate how long we'll feel good after a win or bad after a loss.
+  We adapt faster than we expect. We also overestimate the impact of
+  single events—we think one outcome will define our happiness when
+  many factors contribute. We focus on the wrong things when predicting
+  our future feelings.
+
+  The impact bias affects major life decisions: we overestimate how much
+  a promotion, relationship, or purchase will change our happiness. We
+  also overestimate the lasting pain of losses.
+
+why_this_is_important: |
+  Recognizing the impact bias helps you make better decisions about what
+  will actually improve your life. It reduces overinvestment in outcomes
+  that won't matter as much as you think, and reduces fear of outcomes
+  that won't hurt as long as you expect.
+
+when_to_use:
+  - decision-making
+  - career_moves
+  - risk_assessment
+  - relationship_building
+
+how_can_you_spot_it:
+  overestimated_impact: |
+    "This will change everything" when similar past events had modest
+    lasting impact.
+  duration_overestimation: |
+    "I'll never get over this" when we typically adapt faster than
+    we expect.
+  focalism: |
+    Focusing on one event and ignoring other factors that affect
+    well-being.
+  adaptation_neglect: |
+    Forgetting that we adapt to both good and bad circumstances.
+
+examples:
+  career: |
+    "If I get this promotion, I'll be so much happier" when past
+    promotions had temporary impact.
+  purchases: |
+    "This car will make me happy" when the novelty wears off quickly.
+  loss: |
+    "I'll never recover from this rejection" when we typically
+    adapt within months.
+  events: |
+    Overestimating how much a wedding, vacation, or milestone will
+    affect long-term happiness.
+
+real_world_implications: |
+  The impact bias leads to poor decisions about money, career, and
+  relationships. We overpay for experiences we'll adapt to and
+  over-fear losses we'll recover from. It affects policy and
+  personal planning.
+
+professional_application:
+  networking_and_relationship_building: |
+    When making career or relationship decisions, consider how you
+    felt after similar past events. Did the impact last as long
+    as you expected? Use that to calibrate future predictions.
+  collaborative_learning_initiative: |
+    When teams face setbacks or wins, remind them of adaptation.
+    "We'll adapt faster than we think" can reduce both excessive
+    celebration and excessive despair.
+
+how_can_this_be_misapplied:
+  dismissing_all_impact: |
+    Some events do have lasting impact—trauma, major loss. Don't
+    dismiss all affective forecasting as biased.
+  cold_rationality: |
+    "It won't matter" when the experience in the moment does matter.
+  undervaluing_experiences: |
+    Avoiding positive experiences because "we'll adapt anyway."
+  invalidating_emotions: |
+    Telling people their feelings will pass when they need support
+    in the moment.
+
+related_content:
+  - negativity_bias
+  - empathy_gap
+  - rosy_retrospection
+  - availability_heuristic

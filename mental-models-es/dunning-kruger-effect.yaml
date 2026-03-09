@@ -1,0 +1,103 @@
+id: dunning_kruger_effect
+name: Efecto Dunning-Kruger
+
+quick_introduction: |
+  El efecto Dunning-Kruger describe un sesgo cognitivo donde las personas con
+  conocimiento o habilidad limitados en un dominio sobreestiman su competencia,
+  mientras que los expertos tienden a subestimarla. Cuanto menos sepas, más
+  confiado podrías estar.
+
+one_liner: Cuanto menos sepas, más confiado podrías estar.
+
+try_this:
+  - En dominios nuevos, asume que tienes exceso de confianza: busca retroalimentación y calibración.
+  - Cuando los expertos expresan dudas, tómalo en serio; pueden conocer los casos límite.
+  - Observa cuándo los novatos están más seguros que los expertos en un campo.
+
+ask_yourself:
+  - ¿Estoy en el "pico de la estupidez" o en el "valle de la humildad"?
+  - ¿Tengo la capacidad metacognitiva para evaluar mi propia competencia aquí?
+
+in_more_detail: |
+  La investigación de Dunning y Kruger mostró que los individuos incompetentes
+  carecen de la habilidad metacognitiva para reconocer su propia incompetencia.
+  Para evaluar tu desempeño, necesitas las mismas habilidades requeridas para
+  desempeñarte bien, por lo que los inexpertos están doblemente en desventaja:
+  se desempeñan mal y no lo saben.
+
+  A medida que aumenta la competencia, las personas a menudo experimentan un
+  "valle de la humildad" donde reconocen cuánto no saben. Los verdaderos expertos
+  pueden tener poca confianza porque son muy conscientes de los matices y los
+  casos límite.
+
+why_this_is_important: |
+  Reconocer el efecto Dunning-Kruger te ayuda a calibrar tu propia confianza,
+  evitar sobreestimar las opiniones de los novatos y apreciar la humildad de los
+  expertos. Es esencial para el aprendizaje, la contratación y la toma de decisiones.
+
+when_to_use:
+  - aprendizaje
+  - toma_de_decisiones
+  - liderazgo
+  - movimientos_profesionales
+
+how_can_you_spot_it:
+  novice_overconfidence: |
+    Alguien con poca experiencia expresa opiniones fuertes y sin cualificar.
+  expert_underconfidence: |
+    Las personas altamente cualificadas se reservan y expresan incertidumbre
+    más que las personas menos cualificadas.
+  inability_to_recognize_quality: |
+    Los de bajo rendimiento no pueden distinguir el trabajo bueno del malo en
+    su dominio.
+  confidence_competence_mismatch: |
+    La confianza y la habilidad real están inversamente correlacionadas entre
+    los principiantes.
+
+examples:
+  social_media: |
+    Personas con conocimiento superficial de un tema discuten con confianza con
+    expertos del dominio.
+  hiring: |
+    Los candidatos que se desempeñan mal en las entrevistas a veces califican
+    su propio desempeño de manera alta.
+  investing: |
+    Los nuevos inversores pueden tener exceso de confianza después de victorias
+    tempranas, sin reconocer la suerte.
+  workplace: |
+    Los empleados junior pueden sobreestimar su preparación para un ascenso,
+    mientras que los seniors dudan de sí mismos.
+
+real_world_implications: |
+  El efecto Dunning-Kruger afecta la educación, la contratación, la política y
+  el discurso público. Explica por qué las malas ideas se amplifican y por qué
+  los expertos pueden ser despedidos. La calibración importa para la toma de
+  decisiones individual y colectiva.
+
+professional_application:
+  networking_and_relationship_building: |
+    Cuando alguien tiene mucha confianza, considera si podría estar en la
+    zona Dunning-Kruger. Busca perspectivas diversas, incluidas las de aquellos
+    que expresan incertidumbre.
+  collaborative_learning_initiative: |
+    Crea culturas donde se valore admitir la incertidumbre. Fomenta ejercicios
+    de calibración y retroalimentación que ayuden a las personas a evaluar
+    con precisión su competencia.
+
+how_can_this_be_misapplied:
+  dismissing_all_confidence: |
+    Asumir que las personas seguras siempre se equivocan; a veces la confianza
+    está justificada.
+  false_modesty: |
+    Expertos que fingen saber menos de lo que saben para parecer humildes.
+  gatekeeping: |
+    Usar Dunning-Kruger para descartar a cualquiera que no esté de acuerdo con
+    los "expertos" sin participar en sus argumentos.
+  self_doubt_paralysis: |
+    Sobrecostos hasta el punto de nunca confiar en tu propio juicio.
+
+related_content:
+  - circle_of_competence
+  - circle_of_competence
+  - confirmation_bias
+  - curse_of_knowledge

@@ -1,0 +1,94 @@
+id: gamblers_fallacy
+name: Falácia do Jogador
+
+quick_introduction: |
+  A falácia do jogador é a crença equivocada de que eventos passados independentes
+  afetam os futuros. Após uma sequência de caras, achamos que a coroa está "a caminho" - mesmo
+  que cada lançamento seja independente. Vemos padrões na aleatoriedade e
+  esperamos uma "correção" ou "reversão" quando nenhuma é necessária.
+
+one_liner: Eventos independentes passados não afetam os futuros - a moeda não tem memória.
+
+try_this:
+  - Quando pensar "estou a merecer uma vitória", pergunte: Estes eventos são realmente independentes?
+  - Distinga a regressão à média (real) da falácia do jogador (falsa).
+  - Observe quando está a ver padrões na aleatoriedade.
+
+ask_yourself:
+  - Estou a assumir que os resultados passados afetam os futuros quando são independentes?
+  - Um estatístico concordaria com o meu raciocínio de "mereço uma mudança"?
+
+in_more_detail: |
+  Num lançamento de moeda justo, cada lançamento é independente. A probabilidade de caras
+  é sempre 50%, independentemente dos resultados passados. Mas sentimos que uma longa sequência
+  de um resultado torna o outro mais provável. Confundimos a lei dos grandes números
+  (ao longo de muitas tentativas, os resultados equilibram-se) com "correção" de curto prazo.
+  O casino não tem memória.
+
+  A falácia afeta jogos de azar, investimentos e a tomada de decisões quotidiana.
+  Assumimos que a "sorte" se equilibrará ou que estamos "a merecer" uma vitória.
+  Às vezes, temos razão - mas pelos motivos errados.
+
+why_this_is_important: |
+  Reconhecer a falácia do jogador previne erros dispendiosos em jogos de azar
+  e investimentos. Também o ajuda a evitar a superinterpretação de sequências curtas
+  e a esperar falsas reversões. Distingue a genuína regressão à média da falácia.
+
+when_to_use:
+  - tomada_de_decisao
+  - investimento
+  - avaliacao_de_risco
+  - resolucao_de_problemas
+
+how_can_you_spot_it:
+  due_for_a_change: |
+    "Tivemos tantas perdas - estamos a merecer uma vitória."
+  pattern_in_randomness: |
+    Ver padrões significativos em sequências aleatórias.
+  hot_hand_fallacy: |
+    Acreditar que uma sequência continuará (erro relacionado, mas oposto).
+  independence_ignorance: |
+    Tratar eventos independentes como se estivessem conectados.
+
+examples:
+  gambling: |
+    Após vários vermelhos na roleta, apostar no preto porque "o vermelho não pode continuar a sair".
+  investing: |
+    "O mercado tem estado em baixa - tem de subir."
+  hiring: |
+    "Contratámos vários candidatos maus - o próximo tem de ser bom."
+  sports: |
+    "Ele falhou tantos - está a merecer acertar no próximo lançamento."
+
+real_world_implications: |
+  A falácia do jogador causa perdas em jogos de azar e más decisões de investimento.
+  Também explica por que superinterpretamos padrões de curto prazo.
+  Distinguir isto da genuína regressão à média (onde há uma média real para regredir) é importante.
+
+professional_application:
+  networking_and_relationship_building: |
+    Não assuma que as dinâmicas passadas de relacionamento se "corrigirão" no
+    futuro - cada interação é um tanto independente. Mas aprenda com
+    padrões quando houver uma causa subjacente real.
+  collaborative_learning_initiative: |
+    Ao avaliar o desempenho, distinga a variação aleatória da
+    mudança sistemática. Sequências curtas podem ser ruído; não reaja exageradamente a
+    "sequências" nem espere falsas reversões.
+
+how_can_this_be_misapplied:
+  ignoring_regression: |
+    Às vezes, a regressão à média é real (por exemplo, desempenho de habilidade).
+    Não descarte toda a reversão como falácia do jogador.
+  false_independence: |
+    Assumir que os eventos são independentes quando não são (por exemplo, medições repetidas
+    da mesma coisa).
+  overcorrection: |
+    Nunca esperar reversão quando há uma média real para regredir.
+  dismissing_patterns: |
+    Alguns padrões são reais - nem toda a sequência é aleatória.
+
+related_content:
+  - regression_to_the_mean
+  - narrative_fallacy
+  - base_rate_fallacy
+  - illusion_of_control

@@ -1,0 +1,109 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Biais de saillance
+# Modèle mental / Biais cognitif - Exemple d'entrée
+
+id: salience_bias
+name: Biais de saillance
+
+quick_introduction: |
+  Le biais de saillance est la tendance à se concentrer sur les aspects les plus
+  prominents ou visibles d'une situation tout en négligeant des facteurs moins
+  évidents mais potentiellement importants. Ce qui ressort attire une attention et
+  un poids disproportionnés dans nos jugements.
+
+one_liner: Ce qui ressort attire une attention disproportionnée - le subtil est négligé.
+
+try_this:
+  - Demander : Qu'est-ce que je ne vois pas parce que ce n'est pas saillant ?
+  - Rechercher activement des facteurs moins évidents avant de prendre une décision.
+  - Noter quand un élément vif ou dramatique domine votre jugement.
+
+ask_yourself:
+  - Est-ce que je surévalue ce qui est prominent et sous-évalue ce qui est subtil ?
+  - Quels facteurs importants pourrais-je négliger ?
+
+in_more_detail: |
+  L'information saillante est vive, chargée émotionnellement ou rencontrée
+  récemment. Elle capte l'attention et influence les décisions plus qu'elle ne le
+  devrait. Nous surévaluons le conspicuous et sous-évaluons le subtil. Un
+  événement dramatique ou un exemple vif peut dominer notre pensée même s'il
+  n'est pas représentatif.
+
+  Le biais de saillance chevauche l'heuristique de disponibilité (ce qui nous
+  vient à l'esprit) et le biais de récence (ce qui s'est passé récemment). Il
+  affecte la perception du risque, l'embauche et la stratégie. Les problèmes les
+  plus visibles sont abordés ; les problèmes invisibles s'aggravent.
+
+why_this_is_important: |
+  Reconnaître le biais de saillance vous aide à regarder au-delà de l'évident et à
+  considérer des facteurs moins visibles. Cela améliore l'évaluation des risques,
+  le diagnostic des problèmes et la qualité des décisions. Les choses
+  importantes ne sont pas toujours saillantes.
+
+when_to_use:
+  - prise_de_decision
+  - resolution_de_problemes
+  - evaluation_des_risques
+  - leadership
+
+how_can_you_spot_it:
+  prominent_factor_dominance: |
+    L'aspect le plus remarquable dicte la décision.
+  overlooking_background: |
+    Les facteurs moins visibles sont ignorés malgré leur importance.
+  vividness_overweighting: |
+    L'information dramatique ou émotionnelle reçoit un poids
+    disproportionné.
+  visibility_bias: |
+    Ce que nous pouvons facilement voir ou mesurer reçoit plus d'attention que
+    ce que nous ne pouvons pas.
+
+examples:
+  risk: |
+    Un crash d'avion est saillant - nous surestimons le risque de voler. Les
+    accidents de voiture sont moins saillants globalement - nous sous-estimons
+    le risque de conduire.
+  hiring: |
+    Les compétences de présentation d'un candidat sont saillantes ; son
+    suivi peut être moins visible mais tout aussi important.
+  strategy: |
+    Les mouvements des concurrents sont saillants ; les évolutions graduelles
+    du marché sont moins perceptibles mais peuvent avoir plus d'importance.
+  problems: |
+    La plainte la plus forte est traitée tandis que les problèmes systémiques
+    passent inaperçus.
+
+real_world_implications: |
+  Le biais de saillance affecte ce qui retient l'attention, le financement et
+  l'action. Il peut conduire à traiter les symptômes plutôt que les causes et à
+  allouer des ressources de manière erronée. Rechercher délibérément des
+  informations non saillantes améliore les décisions.
+
+professional_application:
+  networking_and_relationship_building: |
+    Ne jugez pas les gens uniquement par leurs traits les plus visibles. Cherchez
+    des qualités moins évidentes : fiabilité, cohérence, la façon dont ils
+    traitent les personnes qui ne peuvent pas les aider.
+  collaborative_learning_initiative: |
+    Dans la résolution de problèmes, demandez explicitement "Qu'est-ce que nous ne voyons pas ?"
+    et "Qu'est-ce qui est moins évident mais important ?" Créez des processus qui font
+    remonter les problèmes non saillants.
+
+how_can_this_be_misapplied:
+  ignoring_salient_info: |
+    Parfois, ce qui est saillant est important. Ne rejetez pas tout ce qui est
+    évident.
+  false_sophistication: |
+    Supposer que les facteurs obscurs sont toujours plus importants que les
+    facteurs évidents.
+  analysis_paralysis: |
+    Rechercher tellement de facteurs non saillants que vous n'agissez jamais sur
+    les facteurs saillants.
+  contrarianism: |
+    Rejeter l'information saillante juste pour être différent.
+
+related_content:
+  - availability_heuristic
+  - anchoring_bias
+  - baader_meinhof_phenomenon
+  - confirmation_bias

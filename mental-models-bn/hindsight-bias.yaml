@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Hindsight Bias
+# Mental Model / Cognitive Bias - Example Entry
+
+id: hindsight_bias
+name: hindsight_bias
+
+quick_introduction: |
+  Hindsight bias (or the "I knew it all along" effect) is the tendency to believe,
+  after an event has occurred, that we would have predicted or expected it. We
+  reconstruct the past to make outcomes seem more inevitable than they were.
+
+one_liner: After the fact, we think we knew it all along.
+
+try_this:
+  - Before judging past decisions, ask: What did they know at the time?
+  - Record your predictions before outcomes—compare later.
+  - Notice when you're making the past seem more inevitable than it was.
+
+ask_yourself:
+  - Am I judging with information that wasn't available then?
+  - Did I actually predict this, or does it just feel obvious now?
+
+in_more_detail: |
+  Once we know the outcome, it feels obvious. We forget the uncertainty we felt
+  beforehand. This bias distorts learning—we think we "knew" something when we
+  didn't, so we don't update our models. It also leads to unfair blame: "They
+  should have seen it coming" when the future was genuinely uncertain.
+
+  Hindsight bias affects post-mortems, legal judgments, and historical analysis.
+  We judge past decisions with information that wasn't available at the time.
+
+why_this_is_important: |
+  Recognizing hindsight bias improves learning from outcomes, fairer evaluation
+  of decisions, and more accurate risk assessment. It prevents false confidence
+  in our predictive abilities.
+
+when_to_use:
+  - decision_making
+  - learning
+  - risk_assessment
+  - leadership
+
+how_can_you_spot_it:
+  inevitability_feeling: |
+    After an event, it feels like it "had to" happen.
+  reconstructed_certainty: |
+    We remember being more certain before the event than we actually were.
+  blame_for_failure: |
+    "They should have known" when the outcome was genuinely uncertain.
+  undervaluing_luck: |
+    Attributing outcomes to skill or foresight when luck played a role.
+
+examples:
+  investing: |
+    "I knew the market would crash" after it crashes—when you didn't act on that
+    "knowledge" beforehand.
+  project_failures: |
+    "We should have seen the risks" in a post-mortem when the risks were genuinely
+    ambiguous.
+  elections: |
+    After a surprise result, pundits explain why it was "obvious" in hindsight.
+  medical: |
+    "The signs were there" when diagnosing a rare condition after the fact.
+
+real_world_implications: |
+  Hindsight bias distorts legal liability, performance evaluation, and learning.
+  It makes us overconfident in our judgment and unfair to those who made
+  reasonable decisions with limited information.
+
+professional_application:
+  networking_and_relationship_building: |
+    When evaluating others' past decisions, consciously separate what was known
+    then from what you know now. Avoid "I told you so" when you didn't actually
+    predict the outcome.
+  collaborative_learning_initiative: |
+    In post-mortems, use "pre-mortem" or "decision journal" techniques to
+    capture uncertainty at the time of the decision. Compare actual uncertainty
+    to hindsight reconstruction.
+
+how_can_this_be_misapplied:
+  excusing_all_failures: |
+    Dismissing every failure as "unpredictable" when some were foreseeable.
+  no_accountability: |
+    Using hindsight bias to avoid holding people accountable for negligence.
+  false_uncertainty: |
+    Overcorrecting to believe we can never predict anything.
+  undermining_learning: |
+    Refusing to extract lessons because "hindsight is 20/20"—we can still learn
+    from outcomes.
+
+related_content:
+  - narrative_fallacy
+  - survivorship_bias
+  - overconfidence
+  - regression_to_the_mean

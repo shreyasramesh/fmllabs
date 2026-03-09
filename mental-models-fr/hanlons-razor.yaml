@@ -1,0 +1,97 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Rasoir de Hanlon
+# Modèle mental / Biais cognitif - Entrée exemple
+
+id: hanlons_razor
+name: Rasoir de Hanlon
+
+quick_introduction: |
+  Le Rasoir de Hanlon stipule : "N'attribuez jamais à la malice ce qui s'explique
+  adéquatement par la stupidité." En d'autres termes, ne supposez pas une mauvaise intention
+  lorsque l'incompétence, un oubli ou l'ignorance pourraient expliquer le comportement.
+
+one_liner: Ne supposez pas la malice quand l'incompétence ou un oubli peuvent l'expliquer.
+
+try_this:
+  - Quand quelqu'un vous frustre, demandez-vous : est-ce que cela pourrait s'expliquer par une erreur ou une ignorance ?
+  - Optez pour l'explication la plus simple avant de supposer une mauvaise intention.
+  - Remarquez quand vous sautez à la conclusion "ils voulaient me faire du mal".
+
+ask_yourself:
+  - Est-ce que j'attribue à la malice ce qui pourrait s'expliquer par la stupidité ?
+  - Voudrais-je le même bénéfice du doute à leur place ?
+
+in_more_detail: |
+  Le principe encourage à accorder le bénéfice du doute aux gens. Lorsque les actions de quelqu'un
+  vous blessent ou vous frustrent, l'hypothèse par défaut est souvent qu'ils voulaient vous faire du mal.
+  Le Rasoir de Hanlon suggère que nombre de ces actions découlent d'un manque de soin, d'un manque
+  d'information ou d'une mauvaise exécution – et non d'une mauvaise volonté.
+
+  Cela ne signifie pas que la malice n'existe jamais. Cela signifie que nous ne devrions pas sauter à la pire
+  interprétation lorsqu'une explication plus simple convient. Le rasoir réduit la paranoïa, améliore
+  les relations et nous aide à réagir de manière plus constructive aux problèmes.
+
+why_this_is_important: |
+  Appliquer le Rasoir de Hanlon réduit les conflits, préserve les relations et concentre
+  l'énergie sur la résolution des problèmes plutôt que sur l'attribution des fautes. Il vous protège également du
+  stress de supposer que tout le monde cherche à vous nuire.
+
+when_to_use:
+  - résolution_de_conflits
+  - leadership
+  - construction_de_relations
+  - prise_de_décision
+
+how_can_you_spot_it:
+  quick_assumption_of_malice: |
+    Vous interprétez immédiatement un résultat négatif comme un préjudice intentionnel.
+  personalizing_mistakes: |
+    Quand quelque chose tourne mal, vous supposez que cela vous était dirigé personnellement.
+  ignoring_alternative_explanations: |
+    Vous n'envisagez pas l'incompétence, la mauvaise communication ou un oubli comme des possibilités.
+  escalation_before_inquiry: |
+    Vous réagissez avec colère ou par représailles avant de demander ce qui s'est passé.
+
+examples:
+  email_tone: |
+    Supposer qu'un email concis est une attaque passive-agressive alors que l'expéditeur est peut-être simplement pressé
+    ou mauvais pour le ton.
+  missed_deadline: |
+    Interpréter la livraison tardive d'un collègue comme un sabotage alors qu'il a peut-être
+    manqué de capacité ou rencontré des obstacles.
+  policy_decisions: |
+    Supposer qu'une politique d'entreprise que vous n'aimez pas a été conçue pour nuire aux employés alors qu'elle pourrait
+    être une tentative maladroite de résoudre un autre problème.
+  traffic: |
+    Supposer qu'un autre conducteur vous a coupé la route intentionnellement alors qu'il ne vous avait peut-être pas vu.
+
+real_world_implications: |
+  Le Rasoir de Hanlon améliore la culture d'entreprise, réduit les litiges et rend la résolution des conflits
+  plus efficace. Une utilisation excessive peut favoriser la négligence ; une utilisation insuffisante crée
+  des conflits inutiles.
+
+professional_application:
+  networking_and_relationship_building: |
+    Quand quelqu'un vous déçoit, demandez des éclaircissements avant de supposer une mauvaise intention.
+    Préservez les relations en optant par défaut pour des interprétations bienveillantes.
+  collaborative_learning_initiative: |
+    Dans les équipes, créez une culture où les erreurs sont supposées être involontaires jusqu'à
+    preuve du contraire. Concentrez-vous sur les systèmes et les processus plutôt que sur le blâme.
+
+how_can_this_be_misapplied:
+  excusing_negligence: |
+    Rejeter l'incompétence ou la négligence répétée comme "pas de la malice" alors qu'elle mérite
+    une responsabilisation.
+  ignoring_genuine_malice: |
+    Appliquer le rasoir si rigidement que vous manquez de vrais acteurs malveillants ou des comportements toxiques.
+  avoiding_difficult_conversations: |
+    Utiliser le Rasoir de Hanlon comme excuse pour ne pas aborder les problèmes de performance.
+  gaslighting_victims: |
+    Dire à quelqu'un qui a été sincèrement lésé qu'il "suppose de la malice" alors que
+    la malice était présente.
+
+related_content:
+  - fundamental_attribution_error
+  - confirmation_bias
+  - in_group_bias
+  - cognitive_dissonance

@@ -1,0 +1,83 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Effet Pygmalion
+# Modèle Mental / Biais Cognitif - Entrée Exemple
+
+id: pygmalion_effect
+name: Effet Pygmalion
+
+quick_introduction: |
+  L'effet Pygmalion (ou effet Rosenthal) est le phénomène où des attentes plus
+  élevées entraînent une amélioration des performances. Lorsque les enseignants,
+  les managers ou d'autres attendent davantage de quelqu'un, cette personne a
+  tendance à mieux performer. Les attentes deviennent des prophéties qui se
+  réalisent d'elles-mêmes.
+
+one_liner: Des attentes plus élevées mènent à de meilleures performances - les attentes façonnent la réalité.
+
+try_this:
+  - Fixez des attentes élevées mais réalisables ; communiquez-les clairement.
+  - Remarquez quand des attentes faibles pourraient limiter les performances de quelqu'un.
+  - Demandez : Qu'est-ce que j'attends implicitement - et comment cela pourrait-il influencer les résultats ?
+
+ask_yourself:
+  - Mes attentes aident-elles ou limitent-elles cette personne ?
+  - Des attentes plus élevées changeraient-elles la façon dont je la traite - et ses résultats ?
+
+in_more_detail: |
+  Robert Rosenthal et Lenore Jacobson ont donné aux enseignants de fausses informations selon lesquelles certains élèves "écloreraient" académiquement. Ces élèves, sélectionnés au hasard, se sont effectivement améliorés plus que les autres. Les attentes des enseignants ont influencé leur comportement (plus d'attention, des retours plus chaleureux), ce qui a influencé les performances des élèves. Les attentes façonnent la réalité.
+
+  L'inverse - des attentes faibles conduisant à de moins bonnes performances - est parfois appelé l'effet Golem. Les deux montrent que nos croyances sur les autres peuvent influencer leurs résultats. Cela a des implications profondes pour le leadership, l'éducation et la parentalité.
+
+why_this_is_important: |
+  Comprendre l'effet Pygmalion vous aide à exploiter le pouvoir des attentes. Des attentes élevées, communiquées sincèrement, peuvent améliorer les performances. Des attentes faibles peuvent créer un échec auto-réalisateur. Vos croyances sur les autres comptent.
+
+when_to_use:
+  - leadership
+  - construction_de_relations
+  - apprentissage
+  - prise_de_decision
+
+how_can_you_spot_it:
+  expectation_performance_link: |
+    Ceux de qui nous attendons plus ont tendance à mieux performer.
+  differential_treatment: |
+    Nous traitons les gens différemment en fonction de nos attentes - souvent inconsciemment.
+  self_fulfilling_prophecy: |
+    Les croyances sur les capacités influencent le comportement qui façonne les capacités.
+  teacher_student_dynamics: |
+    Les attentes des éducateurs influencent les résultats des élèves par un traitement différentiel.
+
+examples:
+  education: |
+    Les enseignants qui s'attendent à ce que les élèves réussissent leur apportent plus de soutien ; ces élèves s'améliorent. Les enseignants qui s'attendent à l'échec peuvent involontairement le créer.
+  workplace: |
+    Les managers qui attendent de hautes performances de leurs subordonnés leur offrent plus d'opportunités et de retours ; les performances s'améliorent.
+  parenting: |
+    Les parents qui attendent de leurs enfants qu'ils soient responsables leur donnent plus de responsabilités ; ils sont à la hauteur.
+  stereotypes: |
+    La menace du stéréotype est l'inverse : des attentes négatives peuvent altérer les performances.
+
+real_world_implications: |
+  L'effet Pygmalion affecte l'éducation, la gestion et les relations. Il suggère que hausser les attentes - lorsqu'elles sont faites de manière solidaire - peut améliorer les résultats. Il avertit également que des attentes faibles peuvent être destructrices.
+
+professional_application:
+  networking_and_relationship_building: |
+    Ayez des attentes élevées envers les gens - et fournissez le soutien nécessaire pour les atteindre. Croyez en leur potentiel. Vos attentes influencent votre comportement, qui influence leurs résultats.
+  collaborative_learning_initiative: |
+    Créez des cultures d'attentes élevées avec un soutien élevé. Évitez de qualifier les gens de "mauvais performeurs" d'une manière qui se réalise d'elle-même. Investissez dans ceux dont vous attendez le succès.
+
+how_can_this_be_misapplied:
+  unrealistic_expectations: |
+    Fixer des attentes impossibles à atteindre sans soutien crée l'échec et la démoralisation.
+  blame_shifting: |
+    "Ils n'ont pas répondu aux attentes" alors que nous n'avons pas fourni le soutien ou les conditions de succès.
+  ignoring_constraints: |
+    Les attentes seules ne surmontent pas les barrières structurelles.
+  pressure_without_support: |
+    Des attentes élevées sans ressources ou soutien peuvent être nuisibles.
+
+related_content:
+  - hawthorne_effect
+  - halo_effect
+  - in_group_bias
+  - fundamental_attribution_error

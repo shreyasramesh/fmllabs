@@ -1,0 +1,98 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Second-Order Thinking
+# Mental Model / Cognitive Bias - Example Entry
+
+id: second_order_thinking
+name: Second-Order Thinking
+
+quick_introduction: |
+  Second-order thinking is the practice of considering the consequences of the
+  consequences of your actions. First-order thinking asks "what happens if I
+  do X?" Second-order thinking asks "and then what?" and "and then what after
+  that?" It surfaces unintended effects.
+
+one_liner: Ask "and then what?"—consider the consequences of the consequences.
+
+try_this:
+  - For any decision, ask "and then what?" at least twice.
+  - Consider how others will respond to your action—and then to that response.
+  - Notice when first-order effects reverse or complicate in the chain.
+
+ask_yourself:
+  - Have I thought through the second-order (and third-order) effects?
+  - What unintended consequences might I be missing?
+
+in_more_detail: |
+  Howard Marks popularized the concept in investing. First-order: "This will
+  go up." Second-order: "If it goes up, others will notice, more will buy,
+  it will go up more—until it becomes overvalued and crashes." The chain of
+  consequences often reverses or complicates the first-order effect.
+
+  Second-order thinking is harder—it requires more mental effort and
+  imagination. But it prevents many mistakes. Good strategists think several
+  steps ahead and consider how others will respond.
+
+why_this_is_important: |
+  Second-order thinking prevents unintended consequences and improves
+  decision quality. It's essential for strategy, policy, and any domain
+  where actions trigger reactions.
+
+when_to_use:
+  - decision-making
+  - problem_solving
+  - strategy
+  - risk_assessment
+
+how_can_you_spot_it:
+  consequence_chains: |
+    "If I do X, then Y will happen, then Z will happen..."
+  reaction_anticipation: |
+    Considering how others will respond to your action.
+  unintended_effects: |
+    Looking for side effects and feedback loops.
+  reversals: |
+    Second-order effects that contradict or reverse first-order effects.
+
+examples:
+  investing: |
+    "If everyone thinks this is a good investment, it's probably crowded—
+    the edge may be gone."
+  policy: |
+    "If we subsidize X, demand increases, prices rise—does the subsidy
+    actually help?"
+  negotiation: |
+    "If I push hard here, they'll retaliate there—what's the net effect?"
+  incentives: |
+    "If we reward this metric, people will game it—what will they actually
+    do?"
+
+real_world_implications: |
+  Second-order thinking is the hallmark of strategic thinking. It prevents
+  policy failures, unintended incentives, and naive optimism. It
+  distinguishes good from great decision-makers.
+
+professional_application:
+  networking_and_relationship_building: |
+    Before taking an action, ask "How will they respond? And how will I
+    respond to that?" Consider the relationship dynamics, not just the
+    immediate exchange.
+  collaborative_learning_initiative: |
+    In planning, run "and then what?" exercises. Map consequence chains.
+    Identify unintended effects before they surface.
+
+how_can_this_be_misapplied:
+  analysis_paralysis: |
+    Thinking so many steps ahead that you never act.
+  false_complexity: |
+    Assuming second-order effects always dominate when first-order
+    effects may be sufficient.
+  overconfidence: |
+    Believing you can predict long chains when uncertainty compounds.
+  pessimism: |
+    Always assuming the worst in the chain of consequences.
+
+related_content:
+  - inversion
+  - pareto_principle
+  - map_is_not_the_territory
+  - bayes_theorem

@@ -1,0 +1,92 @@
+id: occams_razor
+name: Navaja de Ockham
+
+quick_introduction: |
+  La Navaja de Ockham es el principio de que, entre hipótesis competidoras,
+  se debe preferir aquella con menos suposiciones. Las explicaciones más sencillas
+  son a menudo —aunque no siempre— correctas.
+
+one_liner: Prefiere la explicación más sencilla que se ajusta a la evidencia.
+
+try_this:
+  - Al comparar teorías, pregunta: ¿Cuál tiene menos suposiciones?
+  - No añadas complejidad sin evidencia que la demande.
+  - Nota cuándo prefieres una explicación elaborada a una simple.
+
+ask_yourself:
+  - ¿Estoy introduciendo complejidad innecesaria?
+  - ¿La evidencia requiere este nivel de explicación?
+
+in_more_detail: |
+  Nombrado en honor a Guillermo de Ockham, el principio no afirma que las explicaciones sencillas
+  sean siempre verdaderas. Sugiere que la complejidad innecesaria no debe introducirse
+  sin evidencia. Si dos teorías explican los mismos fenómenos, la más sencilla es
+  preferible hasta que la evidencia exija lo contrario.
+
+  La Navaja de Ockham es una heurística, no una ley. A veces la explicación correcta es
+  compleja. Pero protege contra el sobreajuste, el pensamiento conspirativo y la complicación innecesaria.
+  Favorece la parsimonia en la explicación.
+
+why_this_is_important: |
+  Aplicar la Navaja de Ockham mejora la resolución de problemas, reduce el sobreajuste en modelos,
+  y te ayuda a evitar teorías elaboradas pero sin fundamento. Es un valor por defecto útil
+  cuando la evidencia es ambigua.
+
+when_to_use:
+  - resolución_de_problemas
+  - toma_de_decisiones
+  - aprendizaje
+  - evaluación_de_riesgos
+
+how_can_you_spot_it:
+  unnecessary_complexity: |
+    Una explicación invoca muchas suposiciones cuando menos serían suficientes.
+  conspiracy_tendencies: |
+    Explicaciones complejas y con múltiples actores para eventos que tienen causas más simples.
+  overfitting: |
+    Un modelo o teoría que explica perfectamente los datos pasados pero falla con datos nuevos.
+  elegance_in_explanation: |
+    Las mejores explicaciones a menudo se sienten "obvias" en retrospectiva.
+
+examples:
+  debugging: |
+    Cuando ocurre un error, comprueba primero las causas más sencillas (ej. error tipográfico, configuración incorrecta)
+    antes de asumir problemas de arquitectura.
+  conspiracy_theories: |
+    "El gobierno orquestó X" requiere muchos actores ocultos; "unas pocas personas
+    cometieron errores" es más simple.
+  product_failure: |
+    Los usuarios no adoptan una función —la explicación más sencilla: no resuelve su
+    problema, no que estén confundidos por la interfaz de usuario.
+  medical_diagnosis: |
+    "Las cosas comunes son comunes" — considera diagnósticos frecuentes antes que raros.
+
+real_world_implications: |
+  La Navaja de Ockham guía la investigación científica, la ingeniería y el razonamiento cotidiano.
+  Reduce el esfuerzo desperdiciado en teorías erróneas y elaboradas. Mal aplicada, puede descartar
+  fenómenos genuinamente complejos.
+
+professional_application:
+  networking_and_relationship_building: |
+    Al interpretar el comportamiento de otros, prefiere explicaciones sencillas (están ocupados,
+    lo olvidaron) antes de asumir malicia o motivos complejos.
+  collaborative_learning_initiative: |
+    En sesiones de resolución de problemas, pregunta explícitamente "¿Cuál es la explicación más sencilla?"
+    antes de construir modelos complejos.
+
+how_can_this_be_misapplied:
+  oversimplification: |
+    Descartar explicaciones complejas válidas porque son "demasiado complicadas".
+  status_quo_bias: |
+    Usar la Navaja de Ockham para preferir explicaciones familiares sobre otras novedosas pero correctas.
+  scientific_rigidity: |
+    Rechazar teorías nuevas porque son más complejas, incluso cuando la evidencia las apoya.
+  missing_nuance: |
+    Algunos dominios (ej. comportamiento humano, ecosistemas) son inherentemente complejos;
+    la simplicidad puede ser engañosa.
+
+related_content:
+  - hanlons_razor
+  - fundamental_attribution_error
+  - narrative_fallacy
+  - base_rate_fallacy

@@ -1,0 +1,89 @@
+id: gamblers_fallacy
+name: Sophisme du parieur
+
+quick_introduction: |
+  Le sophisme du parieur est la croyance erronée que des événements indépendants passés
+  affectent les événements futurs. Après une série de piles, nous pensons que face est "dû"—même
+  si chaque lancer est indépendant. Nous voyons des motifs dans le hasard et
+  attendons une "correction" ou une "réversion" alors qu'aucune n'est nécessaire.
+
+one_liner: Les événements indépendants passés n'affectent pas les événements futurs—la pièce n'a pas de mémoire.
+
+try_this:
+  - Lorsque vous pensez "Je suis dû pour une victoire", demandez-vous : ces événements sont-ils réellement indépendants ?
+  - Distinguer la régression vers la moyenne (réelle) du sophisme du parieur (faux).
+  - Remarquez quand vous voyez des motifs dans le hasard.
+
+ask_yourself:
+  - Est-ce que je suppose que les résultats passés affectent les résultats futurs alors qu'ils sont indépendants ?
+  - Un statisticien serait-il d'accord avec mon raisonnement "dû pour un changement" ?
+
+in_more_detail: |
+  Dans un lancer de pièce équilibré, chaque lancer est indépendant. La probabilité de pile
+  est toujours de 50%, quelles que soient les issues passées. Mais nous avons le sentiment qu'une longue série
+  d'un résultat rend l'autre plus probable. Nous confondons la loi des grands nombres (sur de nombreux essais, les résultats s'équilibrent) avec une "correction" à court terme. Le casino n'a pas de mémoire.
+
+  Le sophisme affecte les jeux de hasard, l'investissement et la prise de décision quotidienne.
+  Nous supposons que la "chance" s'équilibrera ou que nous sommes "dûs" pour une victoire.
+  Parfois, nous avons raison—mais pour les mauvaises raisons.
+
+why_this_is_important: |
+  Reconnaître le sophisme du parieur évite des erreurs coûteuses dans les jeux de hasard
+  et l'investissement. Cela vous aide également à éviter de surinterpréter les courtes séries
+  et d'attendre une fausse réversion. Il distingue la véritable régression
+  vers la moyenne du sophisme.
+
+when_to_use:
+  - prise_de_decision
+  - investissement
+  - évaluation_du_risque
+  - résolution_de_problèmes
+
+how_can_you_spot_it:
+  due_for_a_change: |
+    "Nous avons eu tellement de pertes—nous sommes dus pour une victoire."
+  pattern_in_randomness: |
+    Voir des motifs significatifs dans des séquences aléatoires.
+  hot_hand_fallacy: |
+    Croire qu'une série va continuer (erreur liée mais opposée).
+  independence_ignorance: |
+    Traiter des événements indépendants comme s'ils étaient connectés.
+
+examples:
+  gambling: |
+    Après plusieurs rouges à la roulette, parier sur le noir parce que "le rouge ne peut pas continuer à sortir".
+  investing: |
+    "Le marché a baissé—il doit remonter."
+  hiring: |
+    "Nous avons embauché plusieurs mauvais candidats—le prochain sera forcément bon."
+  sports: |
+    "Il a manqué tellement de tirs—il est dû pour marquer le prochain."
+
+real_world_implications: |
+  Le sophisme du parieur entraîne des pertes aux jeux de hasard et de mauvaises décisions d'investissement.
+  Il explique aussi pourquoi nous surinterprétons les motifs à court terme.
+  Le distinguer de la véritable régression vers la moyenne (où il y a une vraie moyenne vers laquelle régresser) est important.
+
+professional_application:
+  networking_and_relationship_building: |
+    Ne supposez pas que les dynamiques relationnelles passées vont "se corriger" à l'avenir—chaque interaction est quelque peu indépendante. Mais apprenez des motifs lorsqu'il y a une véritable cause sous-jacente.
+  collaborative_learning_initiative: |
+    Lors de l'évaluation des performances, distinguez la variation aléatoire du
+    changement systématique. Les courtes séries peuvent être du bruit ; ne réagissez pas de manière excessive aux "séries" ou n'attendez pas de fausse réversion.
+
+how_can_this_be_misapplied:
+  ignoring_regression: |
+    Parfois, la régression vers la moyenne est réelle (par exemple, les performances de compétence).
+    Ne rejetez pas toute réversion comme étant le sophisme du parieur.
+  false_independence: |
+    Supposer que les événements sont indépendants alors qu'ils ne le sont pas (par exemple, des mesures répétées de la même chose).
+  overcorrection: |
+    Ne jamais attendre de réversion lorsqu'il y a une vraie moyenne vers laquelle régresser.
+  dismissing_patterns: |
+    Certains motifs sont réels—toutes les séquences ne sont pas aléatoires.
+
+related_content:
+  - regression_to_the_mean
+  - narrative_fallacy
+  - base_rate_fallacy
+  - illusion_of_control

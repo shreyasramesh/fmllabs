@@ -1,0 +1,107 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# The Ben Franklin Effect
+# Mental Model / Cognitive Bias - Example Entry
+
+id: ben_franklin_effect
+name: The Ben Franklin Effect
+
+quick_introduction: |
+  The Ben Franklin effect is the psychological phenomenon whereby people like someone more
+  after doing a favor for them. Contrary to the intuition that we do favors for people we
+  like, we often come to like people for whom we have done favors.
+
+one_liner: We come to like people we've done favors for—our attitudes follow our actions.
+
+try_this:
+  - If you want to improve a relationship, consider asking for a small favor.
+  - Notice when doing a favor shifts your feelings toward someone.
+  - Be aware that others may like you more after helping you.
+
+ask_yourself:
+  - Has doing a favor for someone changed how I feel about them?
+  - Am I rationalizing my effort by increasing my regard for them?
+
+in_more_detail: |
+  Benjamin Franklin famously described winning over a rival legislator by asking to borrow
+  a rare book from his library. After the man complied, Franklin returned it with a thank-you
+  note. The relationship improved markedly. The effect suggests that our attitudes follow
+  our actions: when we invest effort in helping someone, we rationalize that effort by
+  increasing our positive regard for them.
+
+  Cognitive dissonance theory explains this: when we do a favor for someone we dislike
+  or feel neutral toward, we experience tension between our action (helping) and our attitude
+  (dislike). Resolving that tension by liking them more is often easier than admitting
+  we acted against our preferences.
+
+why_this_is_important: |
+  Understanding the Ben Franklin effect helps you build relationships strategically and
+  recognize when your own feelings might be influenced by past favors. It also explains
+  why asking for small favors can be more effective than offering them when trying to
+  improve a relationship.
+
+when_to_use:
+  - relationship_building
+  - negotiation
+  - leadership
+  - conflict_resolution
+
+how_can_you_spot_it:
+  liking_after_helping: |
+    Notice when you feel warmer toward someone after you've done them a favor, even if
+    you previously felt neutral or negative.
+  others_requesting_small_favors: |
+    When someone repeatedly asks for small favors, they may be consciously or unconsciously
+    leveraging this effect to build rapport.
+  attitude_shift_post_investment: |
+    After investing time or effort in helping someone, observe whether your opinion of them
+    has shifted positively.
+  reciprocal_relationship_dynamics: |
+    Relationships where one person has done many favors may feel imbalanced in affection
+    despite seeming balanced in action.
+
+examples:
+  networking: |
+    Asking a colleague for feedback on a draft, which leads them to feel more invested
+    in your success and more positively disposed toward you.
+  sales: |
+    A salesperson asks a prospect for a small favor (e.g., a referral or introduction),
+    which increases the prospect's commitment and liking.
+  conflict_resolution: |
+    After a disagreement, asking the other party for help with something unrelated can
+    soften tensions and rebuild goodwill.
+  mentoring: |
+    When a senior person asks a junior person for input or help, the junior person often
+    feels more valued and connected.
+
+real_world_implications: |
+  The Ben Franklin effect influences hiring, sales, diplomacy, and everyday social
+  dynamics. It can be used ethically to build bridges or unethically to manipulate
+  affection. Recognizing it helps you understand why some relationships feel stronger
+  after asymmetric favor-giving.
+
+professional_application:
+  networking_and_relationship_building: |
+    When building relationships, consider asking for small, reasonable favors rather than
+    only offering them. The act of helping creates investment and positive regard.
+  collaborative_learning_initiative: |
+    In teams, having members help each other (e.g., peer review, cross-training) can
+    strengthen cohesion. Structure collaboration so everyone both gives and receives help.
+
+how_can_this_be_misapplied:
+  manipulation: |
+    Deliberately asking for favors solely to make someone like you, without genuine need,
+    can feel exploitative if discovered.
+  overreliance_on_favors: |
+    Assuming that favors alone will fix a broken relationship; some conflicts require
+    direct conversation and accountability.
+  asymmetric_exploitation: |
+    Repeatedly asking for favors without reciprocating can backfire and breed resentment.
+  misattributing_motives: |
+    Assuming someone's warmth is purely genuine when it may be partly a result of favors
+    they've done for you.
+
+related_content:
+  - cognitive_dissonance
+  - fundamental_attribution_error
+  - mere_exposure_effect
+  - halo_effect

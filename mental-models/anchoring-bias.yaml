@@ -1,0 +1,99 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Anchoring Bias
+# Mental Model / Cognitive Bias - Example Entry
+
+id: anchoring_bias
+name: Anchoring Bias
+
+quick_introduction: |
+  Anchoring bias is the tendency to rely too heavily on the first piece of information
+  encountered when making decisions. That initial "anchor" skews subsequent judgments,
+  even when it's irrelevant or arbitrary.
+
+one_liner: The first number you see shapes all the ones that follow.
+
+try_this:
+  - Before a negotiation, decide your target number and avoid being anchored by theirs.
+  - When estimating, generate your own number first before hearing others'.
+  - Ask: Would I think differently if I'd seen a different number first?
+
+ask_yourself:
+  - What number or idea did I encounter first—and is it skewing my judgment?
+  - Am I adjusting enough from the anchor, or still too close to it?
+
+in_more_detail: |
+  In a classic experiment, people asked to estimate the percentage of African nations
+  in the UN gave higher estimates if they had just seen a higher number (e.g., 65 vs. 10).
+  The anchor—even when random—influenced their answers. Anchoring affects negotiations,
+  pricing, hiring, and forecasting.
+
+  The first number we see becomes a reference point. We adjust away from it, but
+  usually insufficiently. Even when we know the anchor is arbitrary, it can still
+  influence us. Experts are not immune.
+
+why_this_is_important: |
+  Understanding anchoring helps you make better decisions, negotiate more effectively,
+  and avoid being manipulated. It also explains why the order and framing of
+  information matters so much.
+
+when_to_use:
+  - decision-making
+  - negotiation
+  - investing
+  - risk_assessment
+
+how_can_you_spot_it:
+  first_number_dominance: |
+    The first number in a negotiation or estimate disproportionately influences
+    the outcome.
+  insufficient_adjustment: |
+    When adjusting from an anchor, people typically don't adjust enough.
+  arbitrary_anchor_influence: |
+    Even obviously irrelevant numbers (e.g., last digits of a social security number)
+    can affect estimates.
+  order_effects: |
+    The sequence in which options are presented changes choices.
+
+examples:
+  salary_negotiation: |
+    The first number mentioned—whether by employer or candidate—often anchors the
+    final offer.
+  real_estate: |
+    Listing price anchors buyers' perceptions of value, even when it's deliberately
+    set high or low.
+  retail: |
+    "Was $99, now $49" uses the original price as an anchor to make the sale price
+    seem like a deal.
+  forecasting: |
+    Initial estimates in planning meetings anchor subsequent projections, even when
+    the first estimate was a guess.
+
+real_world_implications: |
+  Anchoring shapes markets, negotiations, and policy. It can be used ethically (e.g.,
+  setting reasonable expectations) or unethically (e.g., manipulative pricing).
+  Recognizing it improves decision quality.
+
+professional_application:
+  networking_and_relationship_building: |
+    In negotiations, consider making the first offer to set the anchor—or be aware
+    when the other party is doing so.
+  collaborative_learning_initiative: |
+    In meetings, be cautious about who speaks first on estimates; consider
+    collecting independent estimates before discussion.
+
+how_can_this_be_misapplied:
+  manipulation: |
+    Deliberately using extreme anchors to steer others toward desired outcomes.
+  overconfidence_in_anchors: |
+    Trusting your own first estimate too much without revisiting it.
+  ignoring_relevant_information: |
+    Letting an anchor override more relevant data.
+  exploitation: |
+    Sales tactics that use inflated "compare at" prices to make actual prices seem
+    reasonable.
+
+related_content:
+  - framing_effect
+  - loss_aversion_bias
+  - default_effect
+  - availability_heuristic

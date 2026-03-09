@@ -1,0 +1,94 @@
+id: ostrich_effect
+name: Efecto del avestruz
+
+quick_introduction: |
+  El efecto del avestruz es la tendencia a evitar la información financiera negativa, a
+  "enterrar la cabeza en la arena" como un avestruz. La gente evita mirar sus
+  carteras cuando los mercados bajan, retrasa la apertura de facturas e ignora señales de advertencia
+  que podrían ayudarles a actuar.
+
+one_liner: Evitar las malas noticias no cambia la realidad, solo retrasa tu respuesta.
+
+try_this:
+  - Programa revisiones periódicas para no poder evitar las cifras.
+  - Observa cuándo estás retrasando abrir algo o mirar algo.
+  - Pregúntate: ¿Qué estoy evitando y qué cambiaría si lo enfrentara?
+
+ask_yourself:
+  - ¿Estoy evitando información porque podría ser mala?
+  - ¿Una conciencia más temprana me ayudaría a actuar mejor?
+
+in_more_detail: |
+  El término se acuñó en finanzas conductuales para describir a los inversores que evitan
+  revisar sus inversiones durante las caídas del mercado. El comportamiento se extiende
+  más allá de las finanzas: evitar chequeos médicos, ignorar problemas en las relaciones y
+  retrasar conversaciones difíciles. Buscamos evitar la ansiedad de
+  las malas noticias, pero la evitación a menudo empeora los resultados al prevenir una acción oportuna.
+
+  El efecto está impulsado por la aversión a la pérdida y el deseo de evitar el malestar emocional.
+  Desafortunadamente, la ignorancia no cambia la realidad, solo retrasa nuestra respuesta.
+
+why_this_is_important: |
+  Reconocer el efecto del avestruz te ayuda a enfrentar la información difícil
+  de manera proactiva. Evitar las malas noticias rara vez mejora los resultados; por lo general,
+  los agrava. La conciencia oportuna permite tomar mejores decisiones.
+
+when_to_use:
+  - toma_de_decisiones
+  - inversion
+  - evaluacion_de_riesgos
+  - movimientos_profesionales
+
+how_can_you_spot_it:
+  avoiding_portfolio_checks: |
+    No mirar los estados de cuenta de inversiones cuando los mercados bajan.
+  delaying_difficult_information: |
+    Retrasar la apertura de facturas, resultados médicos o comentarios de desempeño.
+  information_avoidance: |
+    Evitar activamente fuentes que puedan contener malas noticias.
+  procrastination_on_unpleasant_tasks: |
+    Retrasar acciones que sacarían a la luz o abordarían problemas.
+
+examples:
+  investing: |
+    Un inversor deja de revisar su plan de jubilación (401(k)) durante un mercado bajista, perdiendo
+    oportunidades de reequilibrio.
+  health: |
+    Evitar una cita médica a pesar de los síntomas por miedo a malas noticias.
+  finances: |
+    No abrir estados de cuenta de tarjetas de crédito o alertas bancarias para evitar enfrentar deudas.
+  performance: |
+    Un gerente evita dar retroalimentación crítica hasta la revisión anual, cuando
+    una intervención anterior habría ayudado.
+
+real_world_implications: |
+  El efecto del avestruz conduce a peores resultados financieros, tratamiento médico retrasado
+  y problemas no resueltos en relaciones y trabajo. Agrava las pérdidas evitables. Los sistemas que hacen que la información sea difícil de ignorar pueden ayudar.
+
+professional_application:
+  networking_and_relationship_building: |
+    No evites las conversaciones difíciles. Aborda los problemas temprano en lugar de
+    esperar que se resuelvan solos. Crea revisiones periódicas que saquen a la luz
+    problemas antes de que escalen.
+  collaborative_learning_initiative: |
+    Crea bucles de retroalimentación que dificulten ignorar los problemas: paneles de control,
+    revisiones periódicas y normas que fomenten la divulgación temprana de malas noticias.
+
+how_can_this_be_misapplied:
+  information_overload: |
+    Forzar el monitoreo constante cuando cierta evitación de información es saludable
+    (por ejemplo, no revisar las acciones cada minuto).
+  anxiety_amplification: |
+    Crear tanto enfoque en problemas potenciales que aumente la ansiedad
+    sin mejorar los resultados.
+  blame_shifting: |
+    Atribuir toda la evitación al "efecto del avestruz" cuando cierta evitación es
+    racional (por ejemplo, ignorar el ruido).
+  micromanagement: |
+    Usar el concepto para justificar la vigilancia excesiva de otros.
+
+related_content:
+  - loss_aversion_bias
+  - negativity_bias
+  - availability_heuristic
+  - impact_bias

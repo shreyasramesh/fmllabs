@@ -1,0 +1,102 @@
+id: endowment_effect
+name: Efecto Dotación
+
+quick_introduction: |
+  El efecto dotación es la tendencia a valorar algo más simplemente
+  porque lo poseemos. Demandamos más por ceder un objeto de lo que pagaríamos
+  por adquirirlo. La propiedad crea un apego que distorsiona nuestra valoración.
+
+one_liner: Valoramos más lo que poseemos que lo que no—la propiedad crea apego.
+
+try_this:
+  - Ask: ¿Cuánto pagaría por adquirir esto si no fuera mío?
+  - Al vender, imagina que estás comprando: ¿pagarías tu precio de venta?
+  - Observa cuándo la propiedad está inflando tu valoración.
+
+ask_yourself:
+  - ¿Estoy sobrevalorando esto porque me pertenece?
+  - ¿Un comprador neutral estaría de acuerdo con mi precio?
+
+in_more_detail: |
+  En experimentos, las personas a las que se les dio una taza al azar demandan aproximadamente el doble para
+  venderla de lo que otros están dispuestos a pagar por comprarla. El mero hecho de la propiedad
+  aumenta el valor percibido. Esto está relacionado con la aversión a la pérdida: ceder
+  algo se siente como una pérdida, y somos aversos a las pérdidas. Pero el efecto va
+  más allá: incorporamos las cosas poseídas en nuestra identidad.
+
+  El efecto dotación afecta las negociaciones, el comportamiento del consumidor y
+  el cambio organizacional. Explica por qué las personas sobrevaloran sus hogares,
+  sus ideas y sus roles actuales. Crea fricción en las transacciones
+  y transiciones.
+
+why_this_is_important: |
+  Reconocer el efecto dotación te ayuda a negociar de manera más efectiva,
+  a tomar decisiones más claras sobre qué conservar o dejar ir, y a entender
+  por qué otros sobrevaloran lo que tienen. También explica la resistencia al
+  cambio.
+
+when_to_use:
+  - toma_de_decisiones
+  - negociacion
+  - inversion
+  - movimientos_profesionales
+
+how_can_you_spot_it:
+  ownership_premium: |
+    "No lo vendería por eso" cuando no pagarías eso por comprarlo.
+  attachment_to_possession: |
+    Valorar más las cosas una vez que las tenemos.
+  resistance_to_trading: |
+    Renuencia a comerciar o intercambiar incluso cuando sería racional.
+  overvaluation_of_own_ideas: |
+    Nuestras ideas, proyectos o roles se sienten más valiosos porque son nuestros.
+
+examples:
+  real_estate: |
+    Los propietarios a menudo sobrevaloran sus casas: las valoran más de lo
+    que lo hace el mercado.
+  negotiations: |
+    Los vendedores demandan más de lo que los compradores pagarán; la brecha refleja
+    el efecto dotación.
+  career: |
+    Sobrevalorar nuestro trabajo, empresa o rol actual al considerar
+    un cambio.
+  ideas: |
+    El sesgo de "no inventado aquí" y "mi idea": sobrevaloramos lo que hemos
+    creado o poseemos.
+
+real_world_implications: |
+  El efecto dotación crea fricción en el mercado, ralentiza los intercambios beneficiosos
+  y alimenta la resistencia al cambio. Afecta fusiones,
+  reorganizaciones y transiciones personales. Comprenderlo
+  mejora la negociación y la gestión del cambio.
+
+professional_application:
+  networking_and_relationship_building: |
+    Cuando alguien se resiste al cambio, considera que puede estar experimentando
+    el efecto dotación: valora más el statu quo porque lo "posee".
+    Enmarca el cambio en términos de lo que ganan, no solo de lo que ceden.
+  collaborative_learning_initiative: |
+    Al introducir nuevos procesos, reconoce que las personas están apegadas
+    a las formas actuales. Crea seguridad psicológica para "soltar" lo
+    antiguo antes de abrazar lo nuevo.
+
+how_can_this_be_misapplied:
+  dismissing_legitimate_attachment: |
+    Parte del apego es racional: valor sentimental, costos de cambio.
+    No toda resistencia es efecto dotación.
+  manipulation: |
+    Crear una falsa sensación de propiedad para extraer precios más altos (por ejemplo,
+    "pruébalo gratis" para activar la dotación).
+  undervaluing_continuity: |
+    Asumir que toda resistencia al cambio es irracional cuando la continuidad
+    tiene valor real.
+  cold_rationality: |
+    Descartar el apego emocional como "solo efecto dotación" cuando
+    refleja valores genuinos.
+
+related_content:
+  - loss_aversion_bias
+  - sunk_cost_fallacy
+  - anchoring_bias
+  - scarcity_bias

@@ -1,0 +1,104 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Framing Effect
+# Mental Model / Cognitive Bias - Example Entry
+
+id: framing_effect
+name: Framing Effect
+
+quick_introduction: |
+  The framing effect is the tendency for our decisions to change based on how
+  options are presented—even when the underlying facts are identical. "90%
+  survival" and "10% mortality" describe the same outcome but elicit different
+  choices. The frame shapes the decision.
+
+one_liner: The same facts, framed differently, lead to different decisions.
+
+try_this:
+  - Reframe options in multiple ways before deciding—gain frame and loss frame.
+  - Notice when your choice shifts based on how something is worded.
+  - Ask: What are the underlying facts, stripped of the frame?
+
+ask_yourself:
+  - Would I decide differently if this were framed as a gain vs. a loss?
+  - Am I reacting to the frame or to the actual outcome?
+
+in_more_detail: |
+  Kahneman and Tversky showed that people are risk-averse when options are
+  framed as gains and risk-seeking when framed as losses—even for the same
+  outcomes. Positive framing ("save 200 lives") vs. negative framing ("400
+  will die") changes preferences. Loss frames trigger stronger emotional
+  responses than equivalent gain frames.
+
+  The framing effect affects medical decisions, policy, marketing, and
+  negotiation. It's one of the most powerful and well-documented biases.
+  Awareness helps, but it's hard to fully overcome.
+
+why_this_is_important: |
+  Recognizing the framing effect helps you make more consistent decisions,
+  resist manipulation, and communicate more effectively. It also explains
+  why the same offer can be accepted or rejected depending on presentation.
+
+when_to_use:
+  - decision-making
+  - negotiation
+  - leadership
+  - risk_assessment
+
+how_can_you_spot_it:
+  gain_loss_asymmetry: |
+    Same outcome framed as gain vs. loss produces different choices.
+  presentation_dependence: |
+    Decisions shift when only the framing changes, not the substance.
+  default_influence: |
+    How options are ordered or labeled affects choices.
+  emotional_trigger: |
+    Certain frames trigger stronger emotional responses.
+
+examples:
+  medical: |
+    "90% survival" vs. "10% mortality" for the same procedure—
+    people choose differently based on the frame.
+  sales: |
+    "Save $50" vs. "Don't lose $50"—equivalent frames, different
+    psychological impact.
+  policy: |
+    "Tax relief" vs. "government spending"—same policy, different
+    political response.
+  negotiation: |
+    Presenting an offer as a "discount" vs. "avoiding a surcharge"
+    changes acceptance rates.
+
+real_world_implications: |
+  The framing effect is exploited in advertising, politics, and
+  negotiation. It affects medical decisions and policy support.
+  Reframing can improve decisions and communication. Being aware
+  helps but doesn't fully eliminate the effect.
+
+professional_application:
+  networking_and_relationship_building: |
+    When presenting options, consider multiple frames. Test how
+    different framings affect reception. When receiving information,
+    ask "How else could this be framed?"
+  collaborative_learning_initiative: |
+    In decision-making, explicitly reframe options to check for
+    framing effects. "If we framed this as a loss, would we decide
+    differently?" Use consistent framing for fairness.
+
+how_can_this_be_misapplied:
+  manipulation: |
+    Deliberately framing to steer people toward desired outcomes
+    without their awareness.
+  false_equivalence: |
+    Assuming all framings are equally valid when some obscure
+    important information.
+  overcorrection: |
+    Ignoring framing entirely and assuming it doesn't matter—
+    it does.
+  spin: |
+    Using framing to mislead rather than to clarify.
+
+related_content:
+  - loss_aversion_bias
+  - anchoring_bias
+  - default_effect
+  - availability_heuristic

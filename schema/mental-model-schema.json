@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://and-then-what/schemas/mental-model.json",
+  "title": "Mental Model / Cognitive Bias",
+  "description": "Schema for mental models and cognitive biases",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "quick_introduction",
+    "in_more_detail",
+    "why_this_is_important",
+    "when_to_use",
+    "how_can_you_spot_it",
+    "examples",
+    "real_world_implications",
+    "professional_application",
+    "how_can_this_be_misapplied",
+    "related_content"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier (e.g., loss_aversion_bias)",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable name of the mental model or cognitive bias"
+    },
+    "quick_introduction": {
+      "type": "string",
+      "description": "A brief introduction to the topic"
+    },
+    "in_more_detail": {
+      "type": "string",
+      "description": "A more detailed explanation of the concept"
+    },
+    "why_this_is_important": {
+      "type": "string",
+      "description": "Why understanding this concept matters"
+    },
+    "when_to_use": {
+      "type": "array",
+      "description": "Tags indicating when this concept applies (e.g., decision-making, investing, career moves, risk assessment)",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "how_can_you_spot_it": {
+      "type": "object",
+      "description": "Subsections describing how to recognize this bias or model in practice",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "examples": {
+      "type": "object",
+      "description": "Real-world examples; each key is an example name, value is the description",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "real_world_implications": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      ],
+      "description": "Impact in real-world contexts; can be a single string or subsections"
+    },
+    "professional_application": {
+      "type": "object",
+      "description": "How to apply this in professional settings",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "how_can_this_be_misapplied": {
+      "type": "object",
+      "description": "Ways this concept can be misused or lead to negative outcomes",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "related_content": {
+      "type": "array",
+      "description": "List of related mental models or cognitive biases (by id)",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "one_liner": {
+      "type": "string",
+      "description": "Memorable short phrase to recall the concept (e.g. 'Losses feel ~2x worse than gains')"
+    },
+    "try_this": {
+      "type": "array",
+      "description": "2-3 actionable prompts the user can try",
+      "items": { "type": "string" }
+    },
+    "ask_yourself": {
+      "type": "array",
+      "description": "Reflection questions to apply the concept",
+      "items": { "type": "string" }
+    }
+  }
+}

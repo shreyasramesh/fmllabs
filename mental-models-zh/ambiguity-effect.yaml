@@ -1,0 +1,75 @@
+id: ambiguity_effect
+name: 模糊效应
+
+quick_introduction: |
+  模糊效应是指当我们缺乏对结果概率的信息时，倾向于回避某些选项。我们宁愿选择已知的风险，也不愿选择未知的风险——即使未知的风险可能更好。不确定性本身就令人不快。
+
+one_liner: 我们宁愿选择已知的风险，也不愿选择未知的风险——即使未知的风险可能更好。
+
+try_this:
+  - 提问：我回避这个选项主要是因为不确定性，还是因为它确实有弊端？
+  - 量化你知道的信息；有时“模糊”的选项有更清晰的上行空间。
+  - 注意你何时仅仅因为感觉更安全而默认选择熟悉的事物。
+
+ask_yourself:
+  - 我是因为模糊性而拒绝某事物，还是因为它确实更糟？
+  - 我需要知道什么才能对不确定的选项感到满意？
+
+in_more_detail: |
+  在埃尔斯伯格悖论中，人们宁愿押注一个比例已知的骨灰罐，也不愿押注一个比例未知的骨灰罐，即使未知的骨灰罐可能提供更好的几率。我们不喜欢模糊性——我们宁愿有一个清晰的（即使是坏的）概率，也不愿有一个不清晰的概率。
+
+  这种效应影响着投资、职业选择和政策制定中的决策。当我们回避那些模糊但可能更优的选项时，它可能导致次优的选择。它也解释了为什么我们偏爱熟悉的品牌和已知的事物。
+
+why_this_is_important: |
+  认识到模糊效应有助于避免过度偏爱熟悉的事物和低估不确定的事物。当模糊性是可以管理的，它可能导致错失机会。它也解释了为什么透明度和清晰度能减轻焦虑。
+
+when_to_use:
+  - 决策制定
+  - 风险评估
+  - 投资
+  - 职业发展
+
+how_can_you_spot_it:
+  preference_for_known_risks: |
+    选择那些概率清晰（即使更糟）的选项，而不是模糊的选项。
+  avoidance_of_uncertainty: |
+    主要因为“我们了解不够”而拒绝选项。
+  familiarity_over_optimality: |
+    偏爱已知的，而不是可能更好的未知的。
+  information_seeking: |
+    愿意为减少模糊性的信息付费——即使这些信息并不改变决策。
+
+examples:
+  investing: |
+    偏好国内股票而非国际股票，因为“我们更了解它们”，尽管有分散风险的好处。
+  employment: |
+    留在已知的工作岗位，而不是接受一个有不确定上行空间的职位。
+  product_choice: |
+    选择一个熟悉的品牌，而不是一个质量不确定的新选项。
+  medical: |
+    偏好副作用已知的治疗方法，而不是结果不确定的方法，即使后者可能更好。
+
+real_world_implications: |
+  模糊效应影响着市场、职业选择和政策。可以通过提供更清晰的信息或重新构建决策来减轻这种效应。它也解释了为什么透明度和沟通能减轻焦虑。
+
+professional_application:
+  networking_and_relationship_building: |
+    减少关系中的模糊性：明确期望，明确沟通，减少不确定性。人们偏爱已知的情况。
+  collaborative_learning_initiative: |
+    在引入变革时，减少模糊性——提供关于将发生什么、何时发生以及为什么发生 的清晰信息。模糊性会增加阻力。
+
+how_can_this_be_misapplied:
+  manipulation: |
+    故意制造模糊性，以将人们引向偏好的选项。
+  false_clarity: |
+    在存在真实不确定性时提供虚假的确定性。
+  overconfidence: |
+    假定减少模糊性总能改善决策——有时模糊的选项确实更好。
+  analysis_paralysis: |
+    在一些模糊性不可避免的情况下，等待完美信息后再做决定。
+
+related_content:
+  - loss_aversion_bias
+  - availability_heuristic
+  - default_effect
+  - default_effect

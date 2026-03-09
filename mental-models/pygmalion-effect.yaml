@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Pygmalion Effect
+# Mental Model / Cognitive Bias - Example Entry
+
+id: pygmalion_effect
+name: Pygmalion Effect
+
+quick_introduction: |
+  The Pygmalion effect (or Rosenthal effect) is the phenomenon where higher
+  expectations lead to improved performance. When teachers, managers, or
+  others expect more from someone, that person tends to perform better.
+  Expectations become self-fulfilling prophecies.
+
+one_liner: Higher expectations lead to better performance—expectations shape reality.
+
+try_this:
+  - Set high but achievable expectations; communicate them clearly.
+  - Notice when low expectations might be limiting someone's performance.
+  - Ask: What am I implicitly expecting—and how might that influence outcomes?
+
+ask_yourself:
+  - Are my expectations helping or limiting this person?
+  - Would higher expectations change how I treat them—and their results?
+
+in_more_detail: |
+  Robert Rosenthal and Lenore Jacobson gave teachers false information that
+  certain students would "bloom" academically. Those students—randomly
+  selected—actually improved more than others. The teachers' expectations
+  influenced their behavior (more attention, warmer feedback), which
+  influenced student performance. Expectations shape reality.
+
+  The reverse—low expectations leading to worse performance—is sometimes
+  called the Golem effect. Both show that our beliefs about others can
+  influence their outcomes. This has profound implications for leadership,
+  education, and parenting.
+
+why_this_is_important: |
+  Understanding the Pygmalion effect helps you harness the power of
+  expectations. High expectations, communicated genuinely, can improve
+  performance. Low expectations can create self-fulfilling failure.
+  Your beliefs about others matter.
+
+when_to_use:
+  - leadership
+  - relationship_building
+  - learning
+  - decision-making
+
+how_can_you_spot_it:
+  expectation_performance_link: |
+    Those we expect more from tend to perform better.
+  differential_treatment: |
+    We treat people differently based on our expectations—often
+    unconsciously.
+  self_fulfilling_prophecy: |
+    Beliefs about capability influence the behavior that shapes
+    capability.
+  teacher_student_dynamics: |
+    Educator expectations influence student outcomes through
+    differential treatment.
+
+examples:
+  education: |
+    Teachers who expect students to succeed give more support;
+    those students improve. Teachers who expect failure may
+    inadvertently create it.
+  workplace: |
+    Managers who expect high performance from reports provide
+    more opportunities and feedback; performance improves.
+  parenting: |
+    Parents who expect their children to be responsible give
+    them more responsibility; they rise to it.
+  stereotypes: |
+    Stereotype threat is the reverse—negative expectations
+    can impair performance.
+
+real_world_implications: |
+  The Pygmalion effect affects education, management, and
+  relationships. It suggests that raising expectations—when
+  done supportively—can improve outcomes. It also warns that
+  low expectations can be destructive.
+
+professional_application:
+  networking_and_relationship_building: |
+    Set high expectations for people—and provide the support
+    to meet them. Believe in potential. Your expectations
+    influence your behavior, which influences their outcomes.
+  collaborative_learning_initiative: |
+    Create cultures of high expectations with high support.
+    Avoid labeling people as "low performers" in ways that
+    become self-fulfilling. Invest in those you expect to
+    succeed.
+
+how_can_this_be_misapplied:
+  unrealistic_expectations: |
+    Setting expectations that are impossible to meet without
+    support creates failure and demoralization.
+  blame_shifting: |
+    "They didn't meet expectations" when we didn't provide
+    the support or conditions for success.
+  ignoring_constraints: |
+    Expectations alone don't overcome structural barriers.
+  pressure_without_support: |
+    High expectations without resources or support can be
+    harmful.
+
+related_content:
+  - hawthorne_effect
+  - halo_effect
+  - in_group_bias
+  - fundamental_attribution_error

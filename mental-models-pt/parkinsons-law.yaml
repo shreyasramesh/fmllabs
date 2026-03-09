@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Lei de Parkinson
+# Modelo Mental / Viés Cognitivo - Exemplo de Entrada
+
+id: parkinsons_law
+name: Lei de Parkinson
+
+quick_introduction: |
+  A Lei de Parkinson afirma que "o trabalho se expande para preencher o tempo disponível para sua conclusão". Dê a uma tarefa uma semana, e ela levará uma semana; dê a ela um dia, e muitas vezes será concluída em um dia. O mesmo se aplica a orçamentos, tamanho de equipe e recursos.
+
+one_liner: O trabalho se expande para preencher o tempo disponível para sua conclusão.
+
+try_this:
+  - Defina prazos mais curtos para forçar o foco e evitar o aumento do escopo.
+  - Pergunte: Qual é o tempo mínimo razoável para isso?
+  - Observe quando tempo ou recursos extras estão sendo consumidos sem valor proporcional.
+
+ask_yourself:
+  - Estou preenchendo o tempo, ou o trabalho realmente exige isso?
+  - Um prazo mais curto forçaria uma melhor priorização?
+
+in_more_detail: |
+  C. Northcote Parkinson observou que as burocracias crescem independentemente da quantidade de trabalho a ser feito. Ele também notou que as tarefas se expandem para preencher o tempo disponível - ajustamos nosso esforço e ritmo ao prazo. Prazos apertados podem forçar o foco; prazos flexíveis convidam à procrastinação e ao aumento do escopo.
+
+  A lei tem implicações para gerenciamento de projetos, produtividade pessoal e design organizacional. Ela sugere que restrições podem melhorar os resultados, forçando a priorização.
+
+why_this_is_important: |
+  Compreender a Lei de Parkinson ajuda você a definir melhores prazos, evitar o excesso de recursos em projetos e reconhecer quando "mais tempo" ou "mais pessoas" não ajudarão - e podem prejudicar. Restrições podem ser produtivas.
+
+when_to_use:
+  - tomada_de_decisao
+  - lideranca
+  - resolucao_de_problemas
+  - movimentacoes_de_carreira
+
+how_can_you_spot_it:
+  deadline_driven_effort: |
+    O trabalho acelera à medida que o prazo se aproxima; pouco progresso quando o prazo está distante.
+  scope_expansion: |
+    Projetos crescem para preencher os recursos disponíveis em vez de permanecerem focados.
+  bureaucratic_growth: |
+    Organizações adicionam pessoas e processos mesmo quando a carga de trabalho não aumenta.
+  budget_exhaustion: |
+    Orçamentos são gastos integralmente, independentemente de terem sido necessários.
+
+examples:
+  student_deadlines: |
+    Um trabalho com prazo de um mês é escrito nas últimas 48 horas.
+  project_management: |
+    Um projeto com um cronograma de 6 meses leva 6 meses; o mesmo escopo com um prazo de 3 meses também pode ser concluído.
+  meetings: |
+    Uma reunião de 1 hora preenche a hora, mesmo que 30 minutos fossem suficientes.
+  budgets: |
+    Um departamento gasta todo o seu orçamento até o final do ano para justificar o mesmo orçamento no próximo ano.
+
+real_world_implications: |
+  A Lei de Parkinson afeta a produtividade, o inchaço organizacional e a alocação de recursos. Ela sugere que restrições artificiais (prazos mais curtos, equipes menores) podem melhorar o foco e a eficiência.
+
+professional_application:
+  networking_and_relationship_building: |
+    Defina prazos claros e curtos para o trabalho colaborativo para evitar o aumento do escopo e manter o ímpeto.
+  collaborative_learning_initiative: |
+    Use time-boxing para reuniões e projetos. Experimente prazos mais curtos para testar se eles melhoram o foco sem sacrificar a qualidade.
+
+how_can_this_be_misapplied:
+  unrealistic_deadlines: |
+    Definir prazos arbitrariamente curtos que causem esgotamento ou baixa qualidade.
+  underresourcing: |
+    Assumir que menos tempo ou menos pessoas sempre funcionarão - algumas tarefas precisam de recursos adequados.
+  blame_shifting: |
+    Atribuir atrasos à "Lei de Parkinson" quando o trabalho era genuinamente complexo.
+  ignoring_quality: |
+    Apressar-se para cumprir restrições artificiais à custa de resultados sustentáveis.
+
+related_content:
+  - law_of_diminishing_returns
+  - pareto_principle
+  - zeigarnik_effect
+  - hyperbolic_discounting

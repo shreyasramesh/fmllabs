@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Gambler's Fallacy
+# Mental Model / Cognitive Bias - Example Entry
+
+id: gamblers_fallacy
+name: Gambler's Fallacy
+
+quick_introduction: |
+  The gambler's fallacy is the mistaken belief that past independent events
+  affect future ones. After a run of heads, we think tails is "due"—even
+  though each flip is independent. We see patterns in randomness and
+  expect "correction" or "reversion" when none is required.
+
+one_liner: Past independent events don't affect future ones—the coin has no memory.
+
+try_this:
+  - When you think "I'm due for a win," ask: Are these events actually independent?
+  - Distinguish regression to the mean (real) from gambler's fallacy (false).
+  - Notice when you're seeing patterns in randomness.
+
+ask_yourself:
+  - Am I assuming past outcomes affect future ones when they're independent?
+  - Would a statistician agree with my "due for a change" reasoning?
+
+in_more_detail: |
+  In a fair coin flip, each flip is independent. The probability of heads
+  is always 50%, regardless of past outcomes. But we feel that a long run
+  of one outcome makes the other more likely. We confuse the law of large
+  numbers (over many trials, outcomes average out) with short-run
+  "correction." The casino has no memory.
+
+  The fallacy affects gambling, investing, and everyday decision-making.
+  We assume that "luck" will balance out or that we're "due" for a win.
+  Sometimes we're right—but for the wrong reasons.
+
+why_this_is_important: |
+  Recognizing the gambler's fallacy prevents costly mistakes in gambling
+  and investing. It also helps you avoid overinterpreting short runs
+  and expecting false reversion. It distinguishes genuine regression
+  to the mean from the fallacy.
+
+when_to_use:
+  - decision-making
+  - investing
+  - risk_assessment
+  - problem_solving
+
+how_can_you_spot_it:
+  due_for_a_change: |
+    "We've had so many losses—we're due for a win."
+  pattern_in_randomness: |
+    Seeing meaningful patterns in random sequences.
+  hot_hand_fallacy: |
+    Believing a streak will continue (related but opposite error).
+  independence_ignorance: |
+    Treating independent events as if they're connected.
+
+examples:
+  gambling: |
+    After several reds on roulette, betting on black because "red can't
+    keep coming."
+  investing: |
+    "The market has been down—it has to go up."
+  hiring: |
+    "We've hired several bad candidates—the next one is bound to be good."
+  sports: |
+    "He's missed so many—he's due to make the next shot."
+
+real_world_implications: |
+  The gambler's fallacy causes gambling losses and poor investment
+  decisions. It also explains why we overinterpret short-term patterns.
+  Distinguishing it from genuine regression to the mean (where there
+  is a real mean to regress to) is important.
+
+professional_application:
+  networking_and_relationship_building: |
+    Don't assume that past relationship dynamics will "correct" in the
+    future—each interaction is somewhat independent. But do learn from
+    patterns when there's a real underlying cause.
+  collaborative_learning_initiative: |
+    When evaluating performance, distinguish random variation from
+    systematic change. Short runs can be noise; don't overreact to
+    "streaks" or expect false reversion.
+
+how_can_this_be_misapplied:
+  ignoring_regression: |
+    Sometimes regression to the mean is real (e.g., skill performance).
+    Don't dismiss all reversion as gambler's fallacy.
+  false_independence: |
+    Assuming events are independent when they're not (e.g., repeated
+    measurements of the same thing).
+  overcorrection: |
+    Never expecting reversion when there is a real mean to regress to.
+  dismissing_patterns: |
+    Some patterns are real—not all sequence is random.
+
+related_content:
+  - regression_to_the_mean
+  - narrative_fallacy
+  - base_rate_fallacy
+  - illusion_of_control

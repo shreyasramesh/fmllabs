@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Princípio de Pareto
+# Modelo Mental / Viés Cognitivo - Entrada de Exemplo
+
+id: pareto_principle
+name: Princípio de Pareto
+
+quick_introduction: |
+  O Princípio de Pareto (ou regra 80/20) afirma que aproximadamente 80% dos efeitos vêm de
+  20% das causas. Uma pequena minoria de entradas muitas vezes produz a maioria das saídas —
+  em vendas, bugs, clientes, esforço, recursos e muito mais. Concentre-se nos poucos vitais.
+
+one_liner: 80% dos efeitos vêm de 20% das causas — concentre-se nos poucos vitais.
+
+try_this:
+  - Identifique os 20% de entradas que produzem 80% de resultados — dobre o investimento ali.
+  - Corte ou despriorize os 80% que produzem pouco.
+  - Pergunte: Quais poucas coisas, se eu as fizesse bem, importariam mais?
+
+ask_yourself:
+  - Estou espalhando o esforço igualmente quando poucas coisas importam mais?
+  - Qual é o meu 20% de alta alavancagem?
+
+in_more_detail: |
+  Vilfredo Pareto observou que 80% das terras da Itália eram de propriedade de 20% da
+  população. O princípio foi generalizado: 80% das vendas de 20% dos
+  clientes, 80% dos bugs de 20% do código, 80% dos resultados de 20% do esforço.
+  A proporção exata varia, mas o padrão — distribuição desigual — é comum.
+
+  O princípio sugere que identificar e focar nos 20% de alta alavancagem
+  pode melhorar dramaticamente os resultados. É uma heurística de priorização, não uma
+  lei física.
+
+why_this_is_important: |
+  Aplicar o Princípio de Pareto ajuda você a priorizar implacavelmente, evitar desperdiçar
+  esforço em atividades de baixo impacto e alcançar mais com menos. É fundamental
+  para a produtividade e estratégia.
+
+when_to_use:
+  - tomada_de_decisao
+  - resolucao_de_problemas
+  - lideranca
+  - mudancas_de_carreira
+
+how_can_you_spot_it:
+  uneven_distribution: |
+    Uma pequena fração de X responde por uma grande fração de Y.
+  high_leverage_activities: |
+    Algumas ações produzem a maior parte dos resultados.
+  low_value_tail: |
+    Muitas atividades contribuem pouco; cortá-las tem impacto mínimo.
+  vital_few_vs_trivial_many: |
+    A chave é identificar quais poucos importam mais.
+
+examples:
+  sales: |
+    20% dos clientes geram 80% da receita — foque em retê-los e desenvolvê-los.
+  software: |
+    20% dos recursos impulsionam 80% do uso — priorize-os.
+  productivity: |
+    Alguns hábitos ou rotinas produzem a maior parte do seu trabalho — dobre o investimento neles.
+  problems: |
+    20% dos bugs causam 80% das falhas — corrija-os primeiro.
+
+real_world_implications: |
+  O Princípio de Pareto orienta a alocação de recursos, a estratégia de produto e a
+  produtividade pessoal. Ignorá-lo leva a espalhar o esforço de forma muito fina.
+  Aplicá-lo em excesso pode causar negligência da "long tail" onde ela importa.
+
+professional_application:
+  networking_and_relationship_building: |
+    Identifique os relacionamentos que mais importam para seus objetivos. Invista
+    desproporcionalmente neles em vez de espalhar o esforço igualmente.
+  collaborative_learning_initiative: |
+    Ao melhorar o desempenho da equipe, encontre os 20% de intervenções que impulsionam
+    80% dos resultados. Foque o treinamento e as mudanças de processo ali.
+
+how_can_this_be_misapplied:
+  oversimplification: |
+    Assumir que 80/20 se aplica em todos os lugares; algumas distribuições são mais uniformes.
+  neglecting_the_tail: |
+    Ignorar os "muitos triviais" quando eles importam coletivamente (por exemplo, muitos clientes pequenos, casos de borda).
+  false_precision: |
+    Tratar 80/20 como literal em vez de uma heurística aproximada.
+  misidentifying_the_vital_few: |
+    Focar nos 20% errados devido a uma análise falha.
+
+related_content:
+  - law_of_diminishing_returns
+  - parkinsons_law
+  - inversion
+  - second_order_thinking

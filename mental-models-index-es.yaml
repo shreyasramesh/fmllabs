@@ -1,0 +1,447 @@
+# yaml-language-server: $schema=schema/mental-models-index-schema.json
+# Mental Models & Cognitive Biases Index (Spanish)
+
+mental_models:
+  - id: ambiguity_effect
+    name: Efecto de Ambigüedad
+    path: mental-models-es/ambiguity-effect.yaml
+    description: |
+      El efecto de ambigüedad es la tendencia a evitar opciones cuando carecemos de información
+      sobre las probabilidades de los resultados. Preferimos riesgos conocidos sobre riesgos desconocidos,
+      incluso cuando los riesgos desconocidos podrían ser mejores. La incertidumbre en sí misma se siente
+      aversiva.
+
+  - id: anchoring_bias
+    name: Sesgo de anclaje
+    path: mental-models-es/anchoring-bias.yaml
+    description: |
+      El sesgo de anclaje es la tendencia a depender demasiado de la primera información
+      que se encuentra al tomar decisiones. Ese "ancla" inicial sesga los juicios posteriores,
+      incluso cuando es irrelevante o arbitraria.
+
+  - id: availability_cascade
+    name: Cascada de disponibilidad
+    path: mental-models-es/availability-cascade.yaml
+    description: |
+      Una cascada de disponibilidad es un proceso de auto-refuerzo donde una idea gana
+      plausibilidad a través de la discusión pública repetida. Cuanto más se discute,
+      más "disponible" se vuelve, más gente la cree, y más se discute. Una creencia colectiva gana impulso independientemente de su
+      verdad subyacente.
+
+  - id: availability_heuristic
+    name: Heurística de disponibilidad
+    path: mental-models-es/availability-heuristic.yaml
+    description: |
+      La heurística de disponibilidad es la tendencia a juzgar la probabilidad de
+      los eventos por la facilidad con la que vienen a la mente ejemplos. Si podemos
+      recordar fácilmente instancias, asumimos que el evento es común. Ejemplos vívidos,
+      recientes o emocionales dominan nuestras estimaciones de probabilidad.
+
+  - id: baader_meinhof_phenomenon
+    name: El Fenómeno Baader-Meinhof
+    path: mental-models-es/baader-meinhof-phenomenon.yaml
+    description: |
+      El fenómeno Baader-Meinhof (también llamado ilusión de frecuencia) ocurre cuando aprendes
+      algo nuevo y de repente lo notas en todas partes. Parece una coincidencia,
+      pero a menudo es atención selectiva: tu cerebro está preparado para notar lo que ha encontrado recientemente.
+
+  - id: barnum_effect
+    name: Efecto Barnum
+    path: mental-models-es/barnum-effect.yaml
+    description: |
+      El efecto Barnum (o efecto Forer) es la tendencia a aceptar descripciones de personalidad vagas y generales como únicas y precisas. Los horóscopos, los adivinos y las pruebas de personalidad utilizan afirmaciones que se aplican a casi todo el mundo, pero creemos que son específicas de nosotros. Nos vemos en lo genérico.
+
+  - id: base_rate_fallacy
+    name: Falacia de la Tasa Base
+    path: mental-models-es/base-rate-fallacy.yaml
+    description: |
+      La falacia de la tasa base es la tendencia a ignorar información estadística general
+      (tasas base) a favor de información específica y vívida. Sobreevaluamos el
+      caso particular y subestimamos la probabilidad previa. Una sola historia convincente
+      puede anular lo que dicen los números.
+
+  - id: bayes_theorem
+    name: Teorema de Bayes
+    path: mental-models-es/bayes-theorem.yaml
+    description: |
+      El teorema de Bayes describe cómo actualizar la probabilidad de una hipótesis
+      cuando se recibe nueva evidencia. Formaliza la idea de que las creencias deben
+      cambiar en proporción a cuánto las apoya la evidencia, no de forma absoluta,
+      sino de manera incremental.
+
+  - id: ben_franklin_effect
+    name: El Efecto Ben Franklin
+    path: mental-models-es/ben-franklin-effect.yaml
+    description: |
+      El efecto Ben Franklin es el fenómeno psicológico por el cual las personas quieren más
+      a alguien después de haberle hecho un favor. Contrariamente a la intuición de que hacemos favores a personas que nos gustan, a menudo llegamos a querer a personas para las que hemos hecho favores.
+
+  - id: bounded_rationality
+    name: Racionalidad Limitada
+    path: mental-models-es/bounded-rationality.yaml
+    description: |
+      La racionalidad limitada es la idea de que la toma de decisiones humana está limitada por la información
+      disponible, la capacidad cognitiva y el tiempo. No optimizamos; "satisfacemos", es decir, elegimos
+      opciones que son lo suficientemente buenas en lugar de las mejores posibles.
+
+  - id: bystander_effect
+    name: Efecto Espectador
+    path: mental-models-es/bystander-effect.yaml
+    description: |
+      El efecto espectador es la tendencia de los individuos a ser menos propensos a
+      ofrecer ayuda cuando hay otras personas presentes. Cuantos más espectadores haya, menos
+      probable será que una persona actúe. La responsabilidad se difumina; asumimos
+      que alguien más ayudará.
+
+  - id: circle_of_competence
+    name: Círculo de Competencia
+    path: mental-models-es/circle-of-competence.yaml
+    description: |
+      El círculo de competencia es un modelo mental que te insta a conocer los límites
+      de tu experiencia y a mantenerte dentro de ellos al tomar decisiones importantes. Warren Buffett
+      y Charlie Munger enfatizan la importancia de saber lo que no sabes.
+
+  - id: cognitive_dissonance
+    name: Disonancia Cognitiva
+    path: mental-models-es/cognitive-dissonance.yaml
+    description: |
+      La disonancia cognitiva es la incomodidad mental que sentimos al tener creencias contradictorias, o cuando nuestras acciones contradicen nuestras creencias. Estamos motivados a reducir esta incomodidad, a menudo cambiando nuestras creencias para que coincidan con nuestras acciones en lugar de cambiar nuestras acciones.
+
+  - id: confirmation_bias
+    name: Sesgo de confirmación
+    path: mental-models-es/confirmation-bias.yaml
+    description: |
+      El sesgo de confirmación es la tendencia a buscar, interpretar y recordar
+      información de manera que confirme nuestras creencias existentes. Damos más
+      peso a la evidencia de apoyo y descartamos o ignoramos la evidencia que
+      contradice nuestras opiniones. Hacemos preguntas que confirman en lugar de
+      probar nuestras hipótesis.
+
+  - id: curse_of_knowledge
+    name: Maldición del conocimiento
+    path: mental-models-es/curse-of-knowledge.yaml
+    description: |
+      La maldición del conocimiento es la dificultad de imaginar cómo es no
+      saber algo una vez que lo sabes. Los expertos tienen dificultades para enseñar a los principiantes porque
+      no pueden recrear la perspectiva del principiante. Una vez que sabes, olvidas
+      cómo era no saber.
+
+  - id: default_effect
+    name: Efecto por Defecto
+    path: mental-models-es/default-effect.yaml
+    description: |
+      El efecto por defecto es la tendencia a elegir la opción preseleccionada cuando
+      se presentan opciones. Lo que sea que esté configurado como el valor predeterminado
+      tiene una gran ventaja: las personas a menudo se quedan con él, independientemente
+      de si es óptimo para ellas.
+
+  - id: dunning_kruger_effect
+    name: Efecto Dunning-Kruger
+    path: mental-models-es/dunning-kruger-effect.yaml
+    description: |
+      El efecto Dunning-Kruger describe un sesgo cognitivo donde las personas con
+      conocimiento o habilidad limitados en un dominio sobreestiman su competencia,
+      mientras que los expertos tienden a subestimarla. Cuanto menos sepas, más
+      confiado podrías estar.
+
+  - id: empathy_gap
+    name: Brecha de Empatía
+    path: mental-models-es/empathy-gap.yaml
+    description: |
+      La brecha de empatía es la dificultad para comprender y predecir los estados
+      mentales de los demás cuando nosotros mismos nos encontramos en un estado
+      diferente. Cuando estamos tranquilos, subestimamos cómo nos sentiremos
+      cuando estemos enfadados o hambrientos. Cuando estamos saciados, subestimamos
+      cuánto desearemos comida cuando tengamos hambre.
+
+  - id: endowment_effect
+    name: Efecto Dotación
+    path: mental-models-es/endowment-effect.yaml
+    description: |
+      El efecto dotación es la tendencia a valorar algo más simplemente
+      porque lo poseemos. Demandamos más por ceder un objeto de lo que pagaríamos
+      por adquirirlo. La propiedad crea un apego que distorsiona nuestra valoración.
+
+  - id: false_consensus_effect
+    name: El efecto del falso consenso
+    path: mental-models-es/false-consensus-effect.yaml
+    description: |
+      El efecto del falso consenso es la tendencia a sobreestimar cuánto están de acuerdo los demás con
+      nuestras creencias, actitudes y comportamientos. Asumimos que nuestras opiniones son más comunes de lo que son y nos cuesta imaginar que personas razonables puedan estar en desacuerdo.
+
+  - id: framing_effect
+    name: Efecto de Marco (Framing Effect)
+    path: mental-models-es/framing-effect.yaml
+    description: |
+      El efecto de marco es la tendencia a que nuestras decisiones cambien según cómo
+      se presenten las opciones, incluso cuando los hechos subyacentes son idénticos.
+      "90% de supervivencia" y "10% de mortalidad" describen el mismo resultado pero
+      generan diferentes elecciones. El marco moldea la decisión.
+
+  - id: fundamental_attribution_error
+    name: Error de Atribución Fundamental
+    path: mental-models-es/fundamental-attribution-error.yaml
+    description: |
+      El error de atribución fundamental es la tendencia a atribuir el comportamiento de otros a su carácter o personalidad, mientras que atribuimos nuestro propio comportamiento a factores situacionales. Juzgamos a los demás por sus acciones y a nosotros mismos por nuestras intenciones.
+
+  - id: gamblers_fallacy
+    name: Falacia del jugador
+    path: mental-models-es/gamblers-fallacy.yaml
+    description: |
+      La falacia del jugador es la creencia errónea de que eventos independientes pasados
+      afectan a los futuros. Después de una racha de caras, pensamos que las cruces "tocan"—incluso
+      aunque cada lanzamiento sea independiente. Vemos patrones en la aleatoriedad y
+      esperamos una "corrección" o "reversión" cuando no se requiere ninguna.
+
+  - id: groupthink
+    name: Pensamiento grupal
+    path: mental-models-es/groupthink.yaml
+    description: |
+      El pensamiento grupal es la tendencia de los grupos cohesivos a priorizar el consenso y la armonía sobre la evaluación crítica. Los miembros suprimen la disidencia, se autocensuran y se ajustan a la visión percibida del grupo. El deseo de unanimidad anula el deseo de la mejor decisión.
+
+  - id: halo_effect
+    name: Efecto Halo
+    path: mental-models-es/halo-effect.yaml
+    description: |
+      El efecto halo es la tendencia a dejar que un rasgo o impresión positiva
+      influya en nuestro juicio general de una persona. Si nos gusta la
+      apariencia de alguien, podemos asumir que es competente. Si admiramos una
+      habilidad, asumimos que es buena en todo. Un atributo positivo proyecta un
+      "halo" sobre el resto.
+
+  - id: hanlons_razor
+    name: Navaja de Hanlon
+    path: mental-models-es/hanlons-razor.yaml
+    description: |
+      La Navaja de Hanlon establece: "Nunca atribuyas a la malicia lo que puede ser explicado adecuadamente por estupidez." En otras palabras, no asumas mala intención cuando la incompetencia, la falta de atención o la ignorancia puedan explicar el comportamiento.
+
+  - id: hawthorne_effect
+    name: Efecto Hawthorne
+    path: mental-models-es/hawthorne-effect.yaml
+    description: |
+      El efecto Hawthorne es la tendencia de las personas a modificar su comportamiento
+      cuando saben que están siendo observadas o estudiadas. El acto de observación
+      en sí mismo puede producir el cambio — no necesariamente la intervención que
+      se está probando. Las personas responden a la atención que reciben.
+
+  - id: hindsight_bias
+    name: Sesgo de retrospectiva
+    path: mental-models-es/hindsight-bias.yaml
+    description: |
+      El sesgo de retrospectiva (o el efecto "ya lo sabía") es la tendencia a creer,
+      después de que un evento ha ocurrido, que lo habríamos predicho o esperado.
+      Reconstruimos el pasado para que los resultados parezcan más inevitables de lo que fueron.
+
+  - id: hyperbolic_discounting
+    name: Descuento hiperbólico
+    path: mental-models-es/hyperbolic-discounting.yaml
+    description: |
+      El descuento hiperbólico es la tendencia a preferir recompensas más pequeñas e inmediatas
+      en lugar de otras más grandes y futuras, y a descontar el futuro de forma más drástica de lo que predicen los modelos racionales. Sobrecargamos el presente y subestimamos el futuro de maneras inconsistentes.
+
+  - id: illusion_of_control
+    name: Ilusión de Control
+    path: mental-models-es/illusion-of-control.yaml
+    description: |
+      La ilusión de control es la tendencia a sobreestimar nuestra capacidad para
+      influir en los resultados. Creemos que tenemos más control del que realmente tenemos, sobre
+      eventos aleatorios, otras personas y sistemas complejos. Confundimos correlación
+      con causalidad y acción con impacto.
+
+  - id: impact_bias
+    name: Sesgo de impacto
+    path: mental-models-es/impact-bias.yaml
+    description: |
+      El sesgo de impacto es la tendencia a sobreestimar la intensidad y duración
+      de nuestras reacciones emocionales ante eventos futuros. Pensamos que las cosas buenas nos
+      harán más felices de lo que realmente lo hacen, y las cosas malas nos harán más miserables de lo
+      que realmente nos hacen. Somos malos en la predicción afectiva.
+
+  - id: in_group_bias
+    name: Sesgo de endogrupo
+    path: mental-models-es/in-group-bias.yaml
+    description: |
+      El sesgo de endogrupo es la tendencia a favorecer a las personas que percibimos como pertenecientes a nuestro grupo sobre aquellas que percibimos como extrañas. Atribuimos cualidades positivas a los miembros del endogrupo y cualidades negativas a los miembros del exogrupo, a menudo basándonos en distinciones mínimas o arbitrarias.
+
+  - id: inversion
+    name: Inversión
+    path: mental-models-es/inversion.yaml
+    description: |
+      La inversión es una técnica de resolución de problemas que invierte una pregunta. En lugar de
+      preguntar "¿Cómo tendré éxito?", preguntas "¿Qué me haría fracasar?" y evitas esas cosas.
+      Saca a la luz riesgos y antipatrones que la previsión a menudo pasa por alto.
+
+  - id: law_of_diminishing_returns
+    name: Ley de los rendimientos decrecientes
+    path: mental-models-es/law-of-diminishing-returns.yaml
+    description: |
+      La ley de los rendimientos decrecientes establece que a medida que se agrega más de un insumo mientras
+      se mantienen constantes los demás, la producción adicional de cada nueva unidad de insumo eventualmente
+      disminuye. Más no siempre es mejor; hay un punto en el que el esfuerzo adicional produce
+      cada vez menos.
+
+  - id: loss_aversion_bias
+    name: Sesgo de aversión a la pérdida
+    path: mental-models-es/loss-aversion-bias.yaml
+    description: |
+      La aversión a la pérdida es la tendencia a preferir evitar pérdidas antes que adquirir ganancias equivalentes.
+      Las personas sienten el dolor de perder aproximadamente el doble de intensamente de lo que sienten el placer de ganar.
+
+  - id: map_is_not_the_territory
+    name: El mapa no es el territorio
+    path: mental-models-es/map-is-not-the-territory.yaml
+    description: |
+      "El mapa no es el territorio" significa que una representación de la realidad no es la realidad
+      en sí misma. Los modelos, las teorías y las descripciones son simplificaciones útiles, pero
+      siempre dejan algo fuera. Confundir el mapa con el territorio lleva al error.
+
+  - id: mere_exposure_effect
+    name: Efecto de la mera exposición
+    path: mental-models-es/mere-exposure-effect.yaml
+    description: |
+      El efecto de la mera exposición es la tendencia a desarrollar una preferencia por las cosas
+      simplemente porque nos resultan familiares. La exposición repetida —incluso sin
+      refuerzo— aumenta la simpatía. Tendemos a preferir lo que conocemos.
+
+  - id: narrative_fallacy
+    name: Falacia narrativa
+    path: mental-models-es/narrative-fallacy.yaml
+    description: |
+      La falacia narrativa es la tendencia a construir historias a partir de eventos pasados
+      que hacen que parezcan más coherentes, predecibles y significativos de lo que realmente fueron.
+      Retroalimentamos explicaciones sobre la aleatoriedad. Convertimos el desorden
+      de la historia en una historia pulcra, y luego creemos que la historia era inevitable.
+
+  - id: negativity_bias
+    name: Sesgo de negatividad
+    path: mental-models-es/negativity-bias.yaml
+    description: |
+      El sesgo de negatividad es la tendencia a dar más peso a la información negativa que a la
+      positiva. Las malas noticias, las críticas y las amenazas capturan nuestra atención e
+      influyen en nuestras decisiones con más fuerza que los estímulos positivos equivalentes.
+
+  - id: occams_razor
+    name: Navaja de Ockham
+    path: mental-models-es/occams-razor.yaml
+    description: |
+      La Navaja de Ockham es el principio de que, entre hipótesis competidoras,
+      se debe preferir aquella con menos suposiciones. Las explicaciones más sencillas
+      son a menudo —aunque no siempre— correctas.
+
+  - id: ostrich_effect
+    name: Efecto del avestruz
+    path: mental-models-es/ostrich-effect.yaml
+    description: |
+      El efecto del avestruz es la tendencia a evitar la información financiera negativa, a
+      "enterrar la cabeza en la arena" como un avestruz. La gente evita mirar sus
+      carteras cuando los mercados bajan, retrasa la apertura de facturas e ignora señales de advertencia
+      que podrían ayudarles a actuar.
+
+  - id: pareto_principle
+    name: Principio de Pareto
+    path: mental-models-es/pareto-principle.yaml
+    description: |
+      El principio de Pareto (o regla del 80/20) establece que aproximadamente el 80% de los efectos provienen
+      del 20% de las causas. Una pequeña minoría de entradas a menudo produce la mayoría de los resultados—
+      en ventas, errores, clientes, esfuerzo, características y más. Enfócate en lo vitalmente importante.
+
+  - id: parkinsons_law
+    name: Ley de Parkinson
+    path: mental-models-es/parkinsons-law.yaml
+    description: |
+      La Ley de Parkinson establece que "el trabajo se expande hasta llenar el tiempo disponible para su
+      finalización". Dale una semana a una tarea, y te llevará una semana; dale un día, y a menudo se
+      realizará en un día. Lo mismo se aplica a los presupuestos, al tamaño del equipo y a los recursos.
+
+  - id: probabilistic_thinking
+    name: Pensamiento Probabilístico
+    path: mental-models-es/probabilistic-thinking.yaml
+    description: |
+      El pensamiento probabilístico es el hábito de razonar en términos de probabilidades en
+      lugar de certezas. En lugar de "¿esto sucederá?", preguntamos "¿qué tan probable es esto?"
+      Abraza la incertidumbre y la utiliza para tomar mejores decisiones.
+
+  - id: pygmalion_effect
+    name: Efecto Pigmalión
+    path: mental-models-es/pygmalion-effect.yaml
+    description: |
+      El efecto Pigmalión (o efecto Rosenthal) es el fenómeno por el cual las
+      expectativas más altas conducen a un mejor rendimiento. Cuando los
+      profesores, gerentes u otras personas esperan más de alguien, esa
+      persona tiende a rendir mejor. Las expectativas se convierten en
+      profecías autocumplidas.
+
+  - id: regression_to_the_mean
+    name: Regresión a la media
+    path: mental-models-es/regression-to-the-mean.yaml
+    description: |
+      La regresión a la media es el fenómeno estadístico por el cual los resultados extremos tienden
+      a ser seguidos por resultados más cercanos al promedio. Después de un resultado inusualmente bueno o malo,
+      el siguiente resultado probablemente será menos extremo, no por ninguna intervención causal, sino debido a la variación aleatoria.
+
+  - id: rosy_retrospection
+    name: Retrospección color de rosa
+    path: mental-models-es/rosy-retrospection.yaml
+    description: |
+      La retrospección color de rosa es la tendencia a recordar el pasado como mejor de lo que fue.
+      Recordamos las experiencias pasadas de forma más positiva con el tiempo, suavizando las dificultades
+      y amplificando lo bueno. "Los viejos buenos tiempos" a menudo no fueron tan buenos como los recordamos.
+
+  - id: scarcity_bias
+    name: Sesgo de escasez
+    path: mental-models-es/scarcity-bias.yaml
+    description: |
+      El sesgo de escasez es la tendencia a dar mayor valor a las cosas cuando parecen
+      escasas o limitadas. "Tiempo limitado", "solo quedan 3" y "acceso exclusivo" activan
+      la urgencia y el deseo, a menudo anulando la evaluación racional de si realmente
+      necesitamos o queremos la cosa.
+
+  - id: second_order_thinking
+    name: Pensamiento de segundo orden
+    path: mental-models-es/second-order-thinking.yaml
+    description: |
+      El pensamiento de segundo orden es la práctica de considerar las consecuencias de las
+      consecuencias de tus acciones. El pensamiento de primer orden pregunta "¿qué pasa si
+      hago X?" El pensamiento de segundo orden pregunta "¿y luego qué?" y "¿y luego qué después
+      de eso?" Revela efectos no intencionados.
+
+  - id: sesgo_de_salience
+    name: Sesgo de Salience
+    path: mental-models-es/salience-bias.yaml
+    description: |
+      El sesgo de salience es la tendencia a centrarse en los aspectos más prominentes o notables
+      de una situación, pasando por alto factores menos obvios pero potencialmente
+      importantes. Lo que destaca recibe atención y peso desproporcionados en nuestros juicios.
+
+  - id: sunk_cost_fallacy
+    name: Falacia del Costo Hundido
+    path: mental-models-es/sunk-cost-fallacy.yaml
+    description: |
+      La falacia del costo hundido es la tendencia a seguir invirtiendo en una decisión
+      debido a los recursos ya gastados, en lugar de basarse en los rendimientos futuros esperados.
+      "Hemos llegado hasta aquí" o "Ya he invertido tanto" lleva a seguir echando dinero bueno al malo.
+
+  - id: survivorship_bias
+    name: Sesgo de Supervivencia
+    path: mental-models-es/survivorship-bias.yaml
+    description: |
+      El sesgo de supervivencia es el error lógico de centrarse en las personas o cosas que
+      "sobrevivieron" a un proceso, pasando por alto a las que no lo hicieron. Vemos a los ganadores
+      y olvidamos a los perdedores, lo que lleva a conclusiones demasiado optimistas sobre el éxito
+      y el fracaso.
+
+  - id: zeigarnik_effect
+    name: Efecto Zeigarnik
+    path: mental-models-es/zeigarnik-effect.yaml
+    description: |
+      El efecto Zeigarnik es la tendencia a recordar mejor las tareas incompletas o interrumpidas
+      que las completadas. Las tareas incompletas crean una tensión psicológica
+      que las mantiene activas en nuestra mente. Nuestros cerebros se aferran a lo que está
+      incompleto.
+
+  - id: zero_sum_thinking
+    name: Pensamiento de suma cero
+    path: mental-models-es/zero-sum-thinking.yaml
+    description: |
+      El pensamiento de suma cero es la creencia de que la ganancia de una persona debe ser la pérdida de otra, que los recursos son fijos y que cualquier ventaja para ti significa una desventaja para mí.
+      En realidad, muchas situaciones son de suma positiva: ambas partes pueden ganar.

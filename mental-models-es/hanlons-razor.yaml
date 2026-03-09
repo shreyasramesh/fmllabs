@@ -1,0 +1,83 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Navaja de Hanlon
+# Modelo Mental / Sesgo Cognitivo - Entrada de Ejemplo
+
+id: hanlons_razor
+name: Navaja de Hanlon
+
+quick_introduction: |
+  La Navaja de Hanlon establece: "Nunca atribuyas a la malicia lo que puede ser explicado adecuadamente por estupidez." En otras palabras, no asumas mala intención cuando la incompetencia, la falta de atención o la ignorancia puedan explicar el comportamiento.
+
+one_liner: No asumas malicia cuando la incompetencia o la falta de atención puedan explicarlo.
+
+try_this:
+  - Cuando alguien te frustre, pregunta: ¿Podría esto explicarse por un error o ignorancia?
+  - Opta por la explicación más simple antes de asumir mala intención.
+  - Nota cuándo saltas a "quiso hacerme daño".
+
+ask_yourself:
+  - ¿Estoy atribuyendo a la malicia lo que podría explicarse por estupidez?
+  - ¿Quisiera yo el mismo beneficio de la duda en su lugar?
+
+in_more_detail: |
+  El principio fomenta dar el beneficio de la duda a las personas. Cuando las acciones de alguien te dañan o frustran, la suposición predeterminada a menudo es que querían hacerte daño. La Navaja de Hanlon sugiere que muchas de estas acciones provienen de descuido, falta de información o mala ejecución, no de mala voluntad.
+
+  Esto no significa que la malicia nunca exista. Significa que no debemos saltar a la peor interpretación cuando una más simple encaja. La navaja reduce la paranoia, mejora las relaciones y nos ayuda a responder de manera más constructiva a los problemas.
+
+why_this_is_important: |
+  Aplicar la Navaja de Hanlon reduce el conflicto, preserva las relaciones y enfoca la energía en resolver problemas en lugar de asignar culpas. También te protege del estrés de asumir que todos están en tu contra.
+
+when_to_use:
+  - resolución_de_conflictos
+  - liderazgo
+  - construcción_de_relaciones
+  - toma_de_decisiones
+
+how_can_you_spot_it:
+  quick_assumption_of_malice: |
+    Interpretas inmediatamente un resultado negativo como un daño intencional.
+  personalizing_mistakes: |
+    Cuando algo sale mal, asumes que fue dirigido a ti personalmente.
+  ignoring_alternative_explanations: |
+    No consideras la incompetencia, la mala comunicación o la falta de atención como posibilidades.
+  escalation_before_inquiry: |
+    Respondes con enojo o represalia antes de preguntar qué sucedió.
+
+examples:
+  email_tone: |
+    Asumir que un correo electrónico seco es pasivo-agresivo cuando el remitente puede estar simplemente apurado o ser malo con el tono.
+  missed_deadline: |
+    Interpretar la entrega tardía de un colega como sabotaje cuando puede haber
+    excedido sus compromisos o encontrado obstáculos.
+  policy_decisions: |
+    Asumir que una política de empresa que no te gusta fue diseñada para perjudicar a los empleados cuando puede ser un intento torpe de abordar un problema diferente.
+  traffic: |
+    Asumir que otro conductor te cortó el paso intencionalmente cuando puede que no te haya visto.
+
+real_world_implications: |
+  La Navaja de Hanlon mejora la cultura laboral, reduce los litigios y hace que la resolución de conflictos sea más efectiva. El uso excesivo puede permitir la negligencia; el uso insuficiente crea conflictos innecesarios.
+
+professional_application:
+  networking_and_relationship_building: |
+    Cuando alguien te decepciona, pide aclaración antes de asumir mala intención.
+    Preserva las relaciones optando por interpretaciones caritativas.
+  collaborative_learning_initiative: |
+    En los equipos, crea una cultura donde se asume que los errores son no intencionales hasta que se demuestre lo contrario. Enfócate en sistemas y procesos en lugar de culpas.
+
+how_can_this_be_misapplied:
+  excusing_negligence: |
+    Desestimar la incompetencia o el descuido repetidos como "no malicia" cuando merecen
+    rendición de cuentas.
+  ignoring_genuine_malice: |
+    Aplicar la navaja tan rígidamente que pasas por alto a actores maliciosos reales o comportamientos tóxicos.
+  avoiding_difficult_conversations: |
+    Usar la Navaja de Hanlon como excusa para no abordar problemas de rendimiento.
+  gaslighting_victims: |
+    Decirle a alguien que fue genuinamente agraviado que está "asumiendo malicia" cuando
+    la malicia estaba presente.
+
+related_content:
+  - fundamental_attribution_error
+  - confirmation_bias
+  - in_group_bias
+  - cognitive_dissonance

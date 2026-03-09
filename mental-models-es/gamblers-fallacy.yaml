@@ -1,0 +1,95 @@
+id: gamblers_fallacy
+name: Falacia del jugador
+
+quick_introduction: |
+  La falacia del jugador es la creencia errónea de que eventos independientes pasados
+  afectan a los futuros. Después de una racha de caras, pensamos que las cruces "tocan"—incluso
+  aunque cada lanzamiento sea independiente. Vemos patrones en la aleatoriedad y
+  esperamos una "corrección" o "reversión" cuando no se requiere ninguna.
+
+one_liner: Los eventos independientes pasados no afectan a los futuros—la moneda no tiene memoria.
+
+try_this:
+  - Cuando pienses "me toca ganar", pregunta: ¿Son estos eventos realmente independientes?
+  - Distingue la regresión a la media (real) de la falacia del jugador (falsa).
+  - Observa cuándo ves patrones en la aleatoriedad.
+
+ask_yourself:
+  - ¿Estoy asumiendo que los resultados pasados afectan a los futuros cuando son independientes?
+  - ¿Estaría de acuerdo un estadístico con mi razonamiento de "toca un cambio"?
+
+in_more_detail: |
+  En un lanzamiento de moneda justo, cada lanzamiento es independiente. La probabilidad de cara
+  es siempre del 50%, independientemente de los resultados pasados. Pero sentimos que una racha larga
+  de un resultado hace que el otro sea más probable. Confundimos la ley de los grandes números
+  (en muchas pruebas, los resultados se promedian) con la "corrección" a corto plazo.
+  El casino no tiene memoria.
+
+  La falacia afecta a los juegos de azar, la inversión y la toma de decisiones cotidianas.
+  Asumimos que la "suerte" se equilibrará o que nos "toca" ganar.
+  A veces tenemos razón, pero por las razones equivocadas.
+
+why_this_is_important: |
+  Reconocer la falacia del jugador previene errores costosos en los juegos de azar
+  y la inversión. También te ayuda a evitar sobreinterpretar rachas cortas
+  y esperar falsas reversiones. Distingue la regresión genuina a la media
+  de la falacia.
+
+when_to_use:
+  - toma_de_decisiones
+  - inversion
+  - evaluacion_de_riesgos
+  - resolucion_de_problemas
+
+how_can_you_spot_it:
+  due_for_a_change: |
+    "Hemos tenido tantas pérdidas—nos toca una victoria."
+  pattern_in_randomness: |
+    Ver patrones significativos en secuencias aleatorias.
+  hot_hand_fallacy: |
+    Creer que una racha continuará (error relacionado pero opuesto).
+  independence_ignorance: |
+    Tratar eventos independientes como si estuvieran conectados.
+
+examples:
+  gambling: |
+    Después de varios rojos en la ruleta, apostar a negro porque "el rojo no puede seguir saliendo".
+  investing: |
+    "El mercado ha estado a la baja—tiene que subir."
+  hiring: |
+    "Hemos contratado a varios candidatos malos—el próximo seguro que será bueno."
+  sports: |
+    "Ha fallado tantos—le toca meter el próximo tiro."
+
+real_world_implications: |
+  La falacia del jugador causa pérdidas en los juegos de azar y malas decisiones de inversión.
+  También explica por qué sobreinterpretamos patrones a corto plazo.
+  Distinguirla de la regresión genuina a la media (donde hay una media real a la que regresar) es importante.
+
+professional_application:
+  networking_and_relationship_building: |
+    No asumas que las dinámicas de relaciones pasadas se "corregirán" en el
+    futuro; cada interacción es algo independiente. Pero aprende de los
+    patrones cuando haya una causa subyacente real.
+  collaborative_learning_initiative: |
+    Al evaluar el rendimiento, distingue la variación aleatoria del
+    cambio sistemático. Las rachas cortas pueden ser ruido; no reacciones exageradamente a
+    las "rachas" ni esperes falsas reversiones.
+
+how_can_this_be_misapplied:
+  ignoring_regression: |
+    A veces la regresión a la media es real (por ejemplo, rendimiento de habilidades).
+    No desestimes toda reversión como falacia del jugador.
+  false_independence: |
+    Asumir que los eventos son independientes cuando no lo son (por ejemplo, mediciones repetidas
+    de lo mismo).
+  overcorrection: |
+    Nunca esperar una reversión cuando hay una media real a la que regresar.
+  dismissing_patterns: |
+    Algunos patrones son reales; no toda secuencia es aleatoria.
+
+related_content:
+  - regression_to_the_mean
+  - narrative_fallacy
+  - base_rate_fallacy
+  - illusion_of_control

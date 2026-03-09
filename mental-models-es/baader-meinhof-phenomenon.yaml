@@ -1,0 +1,98 @@
+id: baader_meinhof_phenomenon
+name: El Fenómeno Baader-Meinhof
+
+quick_introduction: |
+  El fenómeno Baader-Meinhof (también llamado ilusión de frecuencia) ocurre cuando aprendes
+  algo nuevo y de repente lo notas en todas partes. Parece una coincidencia,
+  pero a menudo es atención selectiva: tu cerebro está preparado para notar lo que ha encontrado recientemente.
+
+one_liner: Aprendes algo nuevo y de repente lo ves en todas partes; siempre estuvo ahí.
+
+try_this:
+  - Cuando algo te parezca "estar en todas partes" después de haberlo aprendido, comprueba la tasa base.
+  - Observa cuándo la recencia hace que algo parezca más significativo de lo que realmente es.
+  - Pregunta: ¿Estoy viendo una tendencia real o solo notando lo que mi cerebro está preparado para notar?
+
+ask_yourself:
+  - ¿Es esto realmente más común ahora, o simplemente lo estoy notando más?
+  - ¿Habría notado este patrón si no hubiera aprendido sobre él recientemente?
+
+in_more_detail: |
+  Después de escuchar sobre el grupo terrorista Baader-Meinhof, una persona podría ver referencias
+  a él en las noticias, en conversaciones y en artículos a los pocos días. El fenómeno tiene
+  dos componentes: atención selectiva (notas lo que buscas) y
+  sesgo de confirmación (recuerdas los aciertos y olvidas los fallos).
+
+  La ilusión es que la cosa se ha vuelto repentinamente más común. En realidad, siempre
+  estuvo presente; simplemente no estabas sintonizado con ella. Esto puede llevar a sobreestimar
+  la prevalencia o la importancia de la información recién aprendida.
+
+why_this_is_important: |
+  Reconocer el fenómeno Baader-Meinhof te ayuda a evitar sobreestimar cuán común
+  o significativo es algo basándote en la exposición reciente. También explica por qué las nuevas ideas,
+  productos o tendencias pueden parecer que están "en todas partes" después de que las notes por primera vez.
+
+when_to_use:
+  - toma_de_decisiones
+  - aprendizaje
+  - evaluacion_de_riesgos
+  - resolucion_de_problemas
+
+how_can_you_spot_it:
+  sudden_ubiquity: |
+    Aprendes una nueva palabra, concepto o producto y en pocos días sientes que lo ves
+    constantemente.
+  recency_bias: |
+    La información reciente parece más representativa de la realidad de lo que realmente es.
+  pattern_seeking: |
+    Tu cerebro conecta avistamientos no relacionados en una narrativa de "esto está en todas partes".
+  forgetting_the_misses: |
+    No rastreas la frecuencia con la que no ves algo, solo las veces que sí lo haces.
+
+examples:
+  vocabulary: |
+    Aprender la palabra "serendipia" y luego notarla en tres artículos diferentes
+    la misma semana.
+  car_purchase: |
+    Después de decidir comprar un modelo de coche específico, lo ves en cada calle, aunque
+    siempre estuvo ahí.
+  health_anxiety: |
+    Leer sobre un síntoma raro y luego notar sensaciones similares en ti mismo,
+    lo que lleva a una preocupación innecesaria.
+  trends: |
+    Descubrir una nueva aplicación o tendencia y sentir que de repente domina, cuando puede
+    tener una pequeña base de usuarios.
+
+real_world_implications: |
+  El fenómeno afecta cómo percibimos las tendencias, los riesgos y las oportunidades. Los especialistas en marketing
+  y los medios de comunicación pueden explotarlo creando exposición repetida. En la toma de decisiones, puede
+  llevar a dar más peso a la información reciente.
+
+professional_application:
+  networking_and_relationship_building: |
+    Cuando alguien menciona un tema repetidamente después de aprenderlo, reconoce que puede estar
+    experimentando la ilusión de frecuencia: el tema no es necesariamente más relevante, solo
+    más notorio para esa persona.
+  collaborative_learning_initiative: |
+    En la formación, refuerza que "verlo en todas partes" después de aprender algo nuevo
+    es normal; anima a comprobar las tasas base en lugar de confiar en la sensación
+    de ubicuidad.
+
+how_can_this_be_misapplied:
+  overestimating_prevalence: |
+    Asumir que algo es más común o importante de lo que es porque lo has notado
+    frecuentemente últimamente.
+  confirmation_bias_amplification: |
+    Usar la sensación de "verlo en todas partes" como evidencia de que una creencia es correcta.
+  decision_distortion: |
+    Tomar decisiones basadas en información recién aprendida que se siente desproporcionadamente
+    significativa.
+  vulnerability_to_manipulation: |
+    Los anunciantes y propagandistas utilizan la exposición repetida para crear la ilusión de
+    ubicuidad e importancia.
+
+related_content:
+  - sesgo_de_confirmacion
+  - heuristica_de_disponibilidad
+  - sesgo_de_salicencia
+  - heuristica_de_disponibilidad

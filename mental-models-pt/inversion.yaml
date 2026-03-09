@@ -1,0 +1,90 @@
+id: inversion
+name: Inversão
+
+quick_introduction: |
+  A inversão é uma técnica de resolução de problemas que vira uma questão de cabeça para baixo. Em vez de
+  perguntar "Como eu tenho sucesso?", pergunte "O que me faria falhar?" e evite essas coisas.
+  Ela expõe riscos e antipadrões que o pensamento prospectivo muitas vezes não percebe.
+
+one_liner: Inverta—pergunte o que te faria falhar, depois evite essas coisas.
+
+try_this:
+  - Para qualquer objetivo, liste as principais formas pelas quais você pode falhar — depois evite-as.
+  - Use visualização negativa: o que faria isso dar errado?
+  - Pergunte: O que uma pessoa inteligente faria para estragar isso?
+
+ask_yourself:
+  - Pensei no que faria isso falhar?
+  - O que não estou vendo ao pensar apenas para frente?
+
+in_more_detail: |
+  Popularizada por Charlie Munger e enraizada na lógica matemática, a inversão explora
+  o fato de que evitar o fracasso é muitas vezes mais fácil do que buscar o sucesso. Se você conseguir
+  identificar as principais formas pelas quais algo dá errado, você pode eliminá-las sistematicamente.
+
+  Carl Jacobi teria dito: "Inverta, sempre inverta." Os estoicos usavam a visualização
+  negativa — imaginar a perda — para apreciar o que tinham e se preparar para a adversidade.
+  A inversão não é pessimismo; é uma forma estruturada de progredir removendo
+  obstáculos.
+
+why_this_is_important: |
+  A inversão ajuda você a evitar erros catastróficos, testar planos e encontrar
+  soluções não óbvias. Ela complementa o planejamento prospectivo, garantindo que você não
+  negligencie modos de falha críticos.
+
+when_to_use:
+  - resolução_de_problemas
+  - tomada_de_decisão
+  - avaliação_de_riscos
+  - movimentos_de_carreira
+
+how_can_you_spot_it:
+  premortem_thinking: |
+    Antes de um projeto, pergunte "Por que isso falhou?", como se já tivesse falhado.
+  anti_goals: |
+    Definir o que você quer evitar tão claramente quanto o que você quer alcançar.
+  reverse_engineering_failure: |
+    Estudar casos falhos para extrair lições em vez de apenas estudar sucessos.
+  constraint_focus: |
+    Identificar restrições e gargalos antes de otimizar para o lado positivo.
+
+examples:
+  investing: |
+    Em vez de "O que fará esta ação subir?", pergunte "O que me faria perder dinheiro?"
+    e evite esses cenários.
+  career: |
+    "O que arruinaria minha reputação?" leva a uma lista de comportamentos a evitar.
+  product_launch: |
+    "Por que a maioria dos lançamentos de produtos falha?" expõe riscos a serem abordados antes do lançamento.
+  health: |
+    "Quais hábitos encurtam a vida?" dá uma lista de evitação mais clara do que "O que me
+    faz ser saudável?"
+
+real_world_implications: |
+  A inversão é usada em engenharia (análise de modos de falha), investimentos e estratégia.
+  Ela reduz a autoconfiança excessiva e melhora o gerenciamento de riscos. O uso excessivo pode levar à
+  cautela exagerada.
+
+professional_application:
+  networking_and_relationship_building: |
+    "O que prejudicaria este relacionamento?" ajuda você a evitar comportamentos que quebram a confiança.
+  collaborative_learning_initiative: |
+    Realize pré-mortems de projetos: "Isso falhou. Por quê?" Use as respostas para melhorar
+    o planejamento e a execução.
+
+how_can_this_be_misapplied:
+  excessive_risk_aversion: |
+    Focar apenas em evitar falhas pode paralisar a ação e impedir riscos necessários.
+  negativity_bias: |
+    A inversão pode amplificar o viés de negatividade se não for equilibrada com a identificação de oportunidades futuras.
+  analysis_paralysis: |
+    Passar tanto tempo nos modos de falha que você nunca executa.
+  missing_upside: |
+    A inversão não diz o que fazer — apenas o que evitar. Você ainda precisa de
+    objetivos positivos.
+
+related_content:
+  - second_order_thinking
+  - survivorship_bias
+  - hindsight_bias
+  - loss_aversion_bias

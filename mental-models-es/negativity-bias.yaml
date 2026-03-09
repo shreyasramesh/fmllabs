@@ -1,0 +1,93 @@
+id: negativity_bias
+name: Sesgo de negatividad
+
+quick_introduction: |
+  El sesgo de negatividad es la tendencia a dar más peso a la información negativa que a la
+  positiva. Las malas noticias, las críticas y las amenazas capturan nuestra atención e
+  influyen en nuestras decisiones con más fuerza que los estímulos positivos equivalentes.
+
+one_liner: Las malas noticias pesan más que las buenas; estamos diseñados para priorizar las amenazas.
+
+try_this:
+  - Busca y pondera activamente la evidencia positiva al evaluar.
+  - Observa cuándo una crítica está pesando más que muchos elogios.
+  - Pregunta: ¿Estoy dando a la información negativa más peso del que merece?
+
+ask_yourself:
+  - ¿Me estoy deteniendo en lo negativo y descartando lo positivo?
+  - ¿Me sentiría diferente si me enfocara en la evidencia positiva?
+
+in_more_detail: |
+  Evolutivamente, pasar por alto una amenaza podía ser fatal, mientras que pasar por alto una oportunidad
+  solía ser sobrevivible. Nuestros cerebros están programados para priorizar la información negativa.
+  Un solo comentario crítico puede anular muchos elogios. Los eventos negativos se recuerdan con más
+  vividez y durante más tiempo.
+
+  Este sesgo afecta las relaciones, la toma de decisiones y el bienestar. Nos detenemos en los
+  fracasos, anticipamos los peores escenarios y descartamos la evidencia positiva. Comprenderlo
+  nos ayuda a corregirlo.
+
+why_this_is_important: |
+  Reconocer el sesgo de negatividad te ayuda a equilibrar la retroalimentación, evitar reaccionar
+  excesivamente a las críticas y tomar decisiones más calibradas. También explica por qué las
+  malas noticias dominan y por qué a menudo nos sentimos peor de lo que las circunstancias
+  ameritan.
+
+when_to_use:
+  - toma_de_decisiones
+  - construccion_de_relaciones
+  - liderazgo
+  - evaluacion_de_riesgos
+
+how_can_you_spot_it:
+  disproportionate_impact_of_criticism: |
+    Un comentario negativo eclipsa a muchos positivos.
+  threat_prioritization: |
+    Las desventajas potenciales reciben más atención que las ventajas equivalentes.
+  vivid_negative_memories: |
+    Las experiencias negativas se recuerdan más fácilmente y con más emoción.
+  discounting_positive_evidence: |
+    Las buenas noticias se olvidan rápidamente o se descartan.
+
+examples:
+  performance_reviews: |
+    Un empleado se fija en un comentario crítico y descarta la evaluación positiva general.
+  news_consumption: |
+    Los titulares negativos dominan la atención y dan forma a la visión del mundo a pesar de las
+    tendencias positivas.
+  relationships: |
+    Una sola discusión pesa más que muchos buenos momentos.
+  investing: |
+    Las caídas del mercado desencadenan más pánico que euforia desencadenan las subidas equivalentes.
+
+real_world_implications: |
+  El sesgo de negatividad moldea los medios de comunicación, la política y la cultura organizacional.
+  Contribuye a la ansiedad, el conflicto y las decisiones subóptimas. Contrarrestarlo deliberadamente
+  puede mejorar el bienestar y el juicio.
+
+professional_application:
+  networking_and_relationship_building: |
+    Al dar retroalimentación, ten en cuenta que los comentarios negativos pesarán más;
+    equilíbralos y enfatiza el crecimiento. Al recibir retroalimentación, considera conscientemente
+    el panorama completo.
+  collaborative_learning_initiative: |
+    Crea culturas que contrarresten explícitamente el sesgo de negatividad: celebra los éxitos,
+    documenta los resultados positivos y equilibra los análisis post-mortem con "pre-mortem"
+    de lo que salió bien.
+
+how_can_this_be_misapplied:
+  toxic_positivity: |
+    Desestimar preocupaciones legítimas insistiendo en el "pensamiento positivo".
+  ignoring_real_threats: |
+    Sobrecotrar hasta el punto de subestimar riesgos genuinos.
+  feedback_suppression: |
+    Evitar críticas necesarias porque "la negatividad es mala".
+  invalidation: |
+    Decirle a alguien que sus sentimientos negativos son "solo el sesgo de negatividad"
+    cuando tienen una razón real para preocuparse.
+
+related_content:
+  - loss_aversion_bias
+  - availability_heuristic
+  - impact_bias
+  - confirmation_bias

@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 能力圈
+# 心智模型 / 认知偏差 - 示例条目
+
+id: circle_of_competence
+name: 能力圈
+
+quick_introduction: |
+  能力圈是一个心智模型，它敦促你了解自己专业知识的界限，并在做出重要决策时待在这些界限之内。沃伦·巴菲特和查理·芒格都强调要了解自己不知道什么。
+
+one_liner: 了解你专业知识的界限——并在关键时刻待在这些界限之内。
+
+try_this:
+  - 绘制出你真正拥有专业知识的领域与你只是猜测的领域。
+  - 当处于能力圈之外时，寻求建议或委托他人。
+  - 诚实地问自己：真正的专家会同意我在这里的判断吗？
+
+ask_yourself:
+  - 我是在能力圈内，还是在猜测？
+  - 我上一次在这个领域承认“我不知道”是什么时候？
+
+in_more_detail: |
+  每个人都有自己真正擅长的领域——在那里他们可以评估信息、发现错误并做出可靠的判断。超出这个圈子，他们容易犯和别人一样的偏见和错误。关键在于诚实的自我评估：你真正有能力的是什么，而你在猜测的是什么？
+
+  能力圈可以通过刻意学习来扩大，但这需要谦逊来认识到它当前的界限。在能力圈外运作会增加代价高昂的错误风险，尤其是在风险很高的情况下。
+
+why_this_is_important: |
+  待在能力圈内可以减少代价高昂的错误，提高决策质量。它还有助于你知道何时寻求建议、委托他人或避免参与。能力圈外的过度自信是失败的主要原因。
+
+when_to_use:
+  - 决策制定
+  - 投资
+  - 职业发展
+  - 风险评估
+
+how_can_you_spot_it:
+  honest_boundary_assessment: |
+    你能解释你在某个领域知识的局限性吗？你知道自己不知道什么吗？
+  knowing_when_to_defer: |
+    认识到何时应该寻求专家意见，而不是独自决定。
+  consistent_track_record: |
+    在你的能力圈内，你的判断往往会随着时间的推移得到验证；在圈外，则不会。
+  calibration: |
+    你在某个领域的信心与你在该领域的实际表现相匹配。
+
+examples:
+  investing: |
+    巴菲特避开科技股，因为他说这些股票超出了他的能力圈——他无法可靠地评估它们。
+  career: |
+    一位专家固守自己的领域，与一位接受一个不相关领域的“有挑战性的”职位的人形成对比。
+  hiring: |
+    知道何时依赖自己的判断，何时引入专家来担任技术职位。
+  advice_giving: |
+    拒绝对专业领域之外的话题发表意见，而不是猜测。
+
+real_world_implications: |
+  能力圈是价值投资和职业成功的核心。忽视它会导致过度自信、失败的尝试和糟糕的建议。扩大能力圈需要付出努力和诚实的反馈。
+
+professional_application:
+  networking_and_relationship_building: |
+    与那些能力圈能与你互补的人建立关系。知道何时引荐他人，而不是自己回答。
+  collaborative_learning_initiative: |
+    创建拥有重叠和互补能力圈的团队。鼓励人们在意识到自己超出能力范围时及时指出。
+
+how_can_this_be_misapplied:
+  excessive_risk_aversion: |
+    从不踏出能力圈会限制成长和学习。
+  false_modesty: |
+    声称有一个很小的能力圈来逃避责任或困难的决策。
+  gatekeeping: |
+    使用“能力圈”来在不参与对方论证的情况下驳回他人。
+  stagnation: |
+    将能力圈视为固定不变的，而不是可以随着努力而扩大的东西。
+
+related_content:
+  - dunning_kruger_effect
+  - dunning_kruger_effect
+  - bayes_theorem
+  - second_order_thinking

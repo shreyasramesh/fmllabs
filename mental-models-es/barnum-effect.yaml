@@ -1,0 +1,75 @@
+id: barnum_effect
+name: Efecto Barnum
+
+quick_introduction: |
+  El efecto Barnum (o efecto Forer) es la tendencia a aceptar descripciones de personalidad vagas y generales como únicas y precisas. Los horóscopos, los adivinos y las pruebas de personalidad utilizan afirmaciones que se aplican a casi todo el mundo, pero creemos que son específicas de nosotros. Nos vemos en lo genérico.
+
+one_liner: Las afirmaciones vagas se sienten personales porque se aplican a casi todo el mundo.
+
+try_this:
+  - Ask: ¿Podría esta descripción aplicarse a muchas personas? Pruébala con otra persona.
+  - Seek specific, behavioral feedback instead of vague praise or criticism.
+  - Notice when "personalized" insights feel too good to be discriminating.
+
+ask_yourself:
+  - ¿Se sentiría precisa esta retroalimentación si se le diera a un desconocido?
+  - ¿Estoy recordando los aciertos y olvidando los fallos?
+
+in_more_detail: |
+  El psicólogo Bertram Forer dio a los estudiantes una retroalimentación idéntica "personalizada" (por ejemplo, "Tienes la necesidad de que a los demás les gustes y te admiren") y ellos la calificaron de muy precisa. Las afirmaciones eran lo suficientemente vagas como para aplicarse a cualquiera. P.T. Barnum supuestamente dijo: "Nace un tonto cada minuto", el efecto lleva el nombre de su habilidad para atraer a las masas con generalidades aparentemente personalizadas.
+
+  El efecto funciona porque somos buenos encontrando relevancia personal en afirmaciones ambiguas. Recordamos los aciertos y olvidamos los fallos. Es la base de la lectura en frío y de muchos productos de "personalidad".
+
+why_this_is_important: |
+  Reconocer el efecto Barnum te ayuda a evaluar las evaluaciones de personalidad, resistir la manipulación y evitar la sobreinterpretación de la retroalimentación vaga. Explica por qué los horóscopos se sienten precisos y por qué algunos consejos "personalizados" son genéricos.
+
+when_to_use:
+  - toma_de_decisiones
+  - aprendizaje
+  - evaluacion_de_riesgos
+  - construccion_de_relaciones
+
+how_can_you_spot_it:
+  vague_accuracy: |
+    Retroalimentación que se siente personal pero que podría aplicarse a muchas personas.
+  selective_fit: |
+    Nos centramos en lo que encaja e ignoramos lo que no.
+  cold_reading: |
+    Alguien te "lee" con afirmaciones que en realidad son genéricas.
+  personality_test_enthusiasm: |
+    Aceptación acrítica de los resultados de las evaluaciones como única y perspicaz.
+
+examples:
+  horoscopes: |
+    "A veces dudas de tus decisiones" se siente personal pero se aplica a la mayoría de las personas.
+  fortune_telling: |
+    Predicciones vagas que interpretamos como específicas de nuestra situación.
+  personality_tests: |
+    Algunas evaluaciones utilizan afirmaciones de Barnum y se sienten precisas sin ser discriminatorias.
+  feedback: |
+    Retroalimentación de rendimiento genérica que interpretamos como profundamente personalizada.
+
+real_world_implications: |
+  El efecto Barnum se explota en la astrología, algunos coaching y evaluaciones de baja calidad. Puede crear una falsa confianza en herramientas inválidas. También explica por qué somos susceptibles a la adulación y a la retroalimentación positiva vaga.
+
+professional_application:
+  networking_and_relationship_building: |
+    Al recibir retroalimentación, pregunte "¿Podría aplicarse a muchas personas?". Busque retroalimentación específica y conductual en lugar de elogios o críticas vagas. Sea escéptico ante las ideas "personalizadas" que parecen demasiado buenas.
+  collaborative_learning_initiative: |
+    Al utilizar evaluaciones, elija herramientas validadas con validez discriminatoria. Evite instrumentos que dependan de afirmaciones de Barnum. Capacite a las personas para que reconozcan la retroalimentación vaga.
+
+how_can_this_be_misapplied:
+  dismissing_all_feedback: |
+    No toda la retroalimentación personalizada es de Barnum; alguna es genuinamente específica. No descarte todo lo vago.
+  invalidating_experience: |
+    Decirle a alguien que su experiencia de "insight" es "solo Barnum" cuando puede tener valor para él.
+  overcorrection: |
+    Rechazar todos los marcos de personalidad porque algunos utilizan afirmaciones de Barnum.
+  false_skepticism: |
+    Asumir que porque algo se siente preciso, debe ser de Barnum; a veces las cosas son precisas.
+
+related_content:
+  - confirmation_bias
+  - halo_effect
+  - availability_heuristic
+  - narrative_fallacy

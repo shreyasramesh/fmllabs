@@ -1,0 +1,98 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Scarcity Bias
+# Mental Model / Cognitive Bias - Example Entry
+
+id: scarcity_bias
+name: Scarcity Bias
+
+quick_introduction: |
+  Scarcity bias is the tendency to place higher value on things when they appear
+  scarce or limited. "Limited time," "only 3 left," and "exclusive access" trigger
+  urgency and desire, often overriding rational evaluation of whether we actually
+  need or want the thing.
+
+one_liner: Scarcity amplifies perceived value—"limited" triggers urgency over rationality.
+
+try_this:
+  - Ask: Would I want this if it weren't scarce? Strip away the urgency.
+  - Pause before acting on "limited time" or "only X left" offers.
+  - Notice when scarcity is driving your desire more than genuine value.
+
+ask_yourself:
+  - Am I valuing this because it's scarce, or because I actually need it?
+  - Would I make this decision without the scarcity framing?
+
+in_more_detail: |
+  Scarcity amplifies perceived value. When something is rare or disappearing, we
+  want it more—partly because scarcity can signal quality, and partly because
+  loss aversion makes us fear missing out. Marketers and negotiators use scarcity
+  to create urgency. The bias can lead to impulsive decisions, overspending, and
+  poor prioritization.
+
+  Scarcity also affects the cognitive bandwidth of those who are genuinely
+  resource-constrained; poverty can reduce "mental bandwidth" for other decisions.
+
+why_this_is_important: |
+  Recognizing scarcity bias helps you resist manipulative tactics and make more
+  deliberate choices. It also explains why we overvalue limited editions and
+  rush when we don't need to.
+
+when_to_use:
+  - decision-making
+  - negotiation
+  - investing
+  - risk_assessment
+
+how_can_you_spot_it:
+  urgency_trigger: |
+    "Limited time" or "only X left" creates disproportionate desire.
+  fear_of_missing_out: |
+    The possibility of losing access drives action more than the intrinsic value.
+  impulsive_purchases: |
+    Buying things because they're scarce rather than because you need them.
+  artificial_scarcity: |
+    Scarcity is manufactured (e.g., fake countdowns) rather than real.
+
+examples:
+  sales: |
+    "Only 2 left in stock" or "Sale ends tonight" triggers purchases that wouldn't
+    happen without the urgency.
+  auctions: |
+    Bidders get caught up in winning and pay more than they planned due to
+    competitive scarcity.
+  exclusivity: |
+    "Members-only" or "Invite-only" access increases perceived value.
+  genuine_scarcity: |
+    When resources are truly limited, people under scarcity stress make worse
+    decisions (e.g., the poor, the time-pressed).
+
+real_world_implications: |
+  Scarcity bias drives consumer behavior, negotiation outcomes, and policy
+  responses. It can be used ethically (e.g., legitimate deadlines) or unethically
+  (e.g., fake scarcity). Understanding it improves decision quality.
+
+professional_application:
+  networking_and_relationship_building: |
+    Be cautious when others create artificial scarcity ("I'm only taking a few
+    clients"). Verify whether scarcity is real. When building relationships,
+    genuine scarcity of your time can signal value—but overuse feels manipulative.
+  collaborative_learning_initiative: |
+    When creating urgency for initiatives, ensure it's legitimate. Fake deadlines
+    erode trust when discovered.
+
+how_can_this_be_misapplied:
+  manipulation: |
+    Deliberately creating false scarcity to pressure others into decisions.
+  impulsive_decisions: |
+    Making important choices under artificial urgency when more time would improve
+    outcomes.
+  overvaluing_scarcity: |
+    Assuming scarce things are always better—sometimes scarcity is arbitrary.
+  exploiting_vulnerability: |
+    Using scarcity tactics on people who are already under resource stress.
+
+related_content:
+  - loss_aversion_bias
+  - availability_heuristic
+  - endowment_effect
+  - framing_effect

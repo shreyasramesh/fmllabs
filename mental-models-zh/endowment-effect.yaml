@@ -1,0 +1,91 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 禀赋效应
+# 心智模型 / 认知偏差 - 示例条目
+
+id: endowment_effect
+name: 禀赋效应
+
+quick_introduction: |
+  禀赋效应是指人们仅仅因为拥有某物，就倾向于对其估值更高。
+  我们要求放弃一件物品的代价，比我们愿意为获得它而支付的代价更高。
+  拥有权会产生一种附件，扭曲我们的估值。
+
+one_liner: 我们拥有的东西比不拥有的更有价值——拥有会产生附件。
+
+try_this:
+  - Ask: 如果我不拥有它，我会愿意花多少钱来得到它？
+  - When selling, imagine you're buying—would you pay your asking price?
+  - Notice when ownership is inflating your valuation.
+
+ask_yourself:
+  - 我是因为拥有它而高估了它吗？
+  - 中立的买家会同意我的价格吗？
+
+in_more_detail: |
+  在实验中，随机得到一个杯子的人，要求卖出杯子的价格大约是其他人愿意购买的价格的两倍。
+  仅仅拥有这一事实就会增加感知价值。这与损失厌恶有关——放弃某物感觉就像一种损失，而我们厌恶损失。
+  但这种效应不止于此：我们将拥有的东西融入我们的身份认同。
+
+  禀赋效应会影响谈判、消费者行为和组织变革。
+  它解释了为什么人们会高估自己的房屋、想法和当前的角色。
+  它会在交易和过渡中造成摩擦。
+
+why_this_is_important: |
+  认识到禀赋效应有助于你更有效地进行谈判，
+  更清晰地决定保留或放弃什么，并理解为什么别人会高估他们所拥有的东西。
+  它也解释了对变革的抵制。
+
+when_to_use:
+  - 决策制定
+  - 谈判
+  - 投资
+  - 职业变动
+
+how_can_you_spot_it:
+  ownership_premium: |
+    “我不会以那个价格卖掉它”，但你又不愿意以那个价格买下它。
+  attachment_to_possession: |
+    拥有某物后，对其估值更高。
+  resistance_to_trading: |
+    即使在理性情况下，也对交易或交换感到不情愿。
+  overvaluation_of_own_ideas: |
+    我们的想法、项目或角色因为是我们的而感觉更有价值。
+
+examples:
+  real_estate: |
+    房主经常高估他们的房子——他们对房子的估值高于市场。
+  negotiations: |
+    卖家索要的价格高于买家愿意支付的价格；这种差距反映了禀赋效应。
+  career: |
+    在考虑变动时，高估我们目前的工作、公司或角色。
+  ideas: |
+    “非我发明”和“我的主意”的偏见——我们高估了自己创造或拥有的东西。
+
+real_world_implications: |
+  禀赋效应造成市场摩擦，减缓有益的交易，并助长对变革的抵制。
+  它影响合并、重组和个人过渡。理解它能改善谈判和变革管理。
+
+professional_application:
+  networking_and_relationship_building: |
+    当有人抵制变革时，要考虑他们可能正在经历禀赋效应——他们“拥有”现状，因此更看重现状。
+    将变革的框架从他们将失去什么，转变为他们将获得什么。
+  collaborative_learning_initiative: |
+    在引入新流程时，要承认人们会对现有方式产生依恋。
+    创造心理安全感，让他们在接受新事物之前能够“放手”旧事物。
+
+how_can_this_be_misapplied:
+  dismissing_legitimate_attachment: |
+    有些依恋是理性的——情感价值、转换成本。
+    并非所有抵制都是禀赋效应。
+  manipulation: |
+    制造虚假的拥有感来榨取更高的价格（例如，“免费试用”以触发禀赋效应）。
+  undervaluing_continuity: |
+    假设所有对变革的抵制都是非理性的，而持续性本身具有真正的价值。
+  cold_rationality: |
+    将情感依恋斥为“仅仅是禀赋效应”，而它可能反映了真实价值观。
+
+related_content:
+  - loss_aversion_bias
+  - sunk_cost_fallacy
+  - anchoring_bias
+  - scarcity_bias

@@ -1,0 +1,78 @@
+id: default_effect
+name: Effet par défaut
+
+quick_introduction: |
+  L'effet par défaut est la tendance à choisir l'option présélectionnée lorsqu'on
+  est présenté avec des choix. Ce qui est défini par défaut a un avantage considérable —
+  les gens s'y tiennent souvent, qu'elle soit optimale pour eux ou non.
+
+one_liner: Ce qui est défini par défaut a un avantage considérable — nous nous y tenons.
+
+try_this:
+  - Remarquez lorsque vous acceptez le défaut sans évaluer les alternatives.
+  - Lors de la conception de choix, définissez des défauts qui servent les meilleurs intérêts des utilisateurs.
+  - Demandez : Choisirais-je ceci s'il n'était pas présélectionné ?
+
+ask_yourself:
+  - Est-ce que je choisis le défaut par inertie, ou parce qu'il est le meilleur pour moi ?
+  - Qui a défini ce défaut, et qu'est-ce qu'ils pourraient y gagner ?
+
+in_more_detail: |
+  Les défauts fonctionnent en raison de l'inertie, de l'aversion à la perte (changer donne l'impression de perdre le défaut) et de l'approbation implicite (nous supposons que le défaut est recommandé).
+  Les taux de don d'organes varient considérablement selon les pays, en grande partie en fonction du fait que le défaut soit opt-in (avec consentement) ou opt-out (sans consentement). La participation aux plans d'épargne retraite bondit lorsque l'inscription est automatique.
+
+  Les défauts peuvent être utilisés pour le bien (encourager de meilleurs résultats) ou pour la manipulation (dissimuler des conditions défavorables dans des cases pré-cochées). Comprendre l'effet vous aide à concevoir de meilleurs systèmes et à résister aux défauts indésirables.
+
+why_this_is_important: |
+  Comprendre l'effet par défaut vous aide à concevoir une architecture de choix qui améliore les résultats, et cela vous aide à reconnaître quand vos choix sont façonnés par les défauts plutôt que par une préférence délibérée.
+
+when_to_use:
+  - prise_de_decision
+  - leadership
+  - resolution_de_problemes
+  - evaluation_des_risques
+
+how_can_you_spot_it:
+  inertia_toward_default: |
+    La plupart des gens s'en tiennent à ce qui est présélectionné.
+  implied_recommendation: |
+    Nous interprétons le défaut comme "ce qu'ils veulent que nous choisissions".
+  opt_in_vs_opt_out: |
+    Le cadrage modifie considérablement la participation (opt-in vs opt-out).
+  pre_checked_boxes: |
+    Les options présélectionnées ont un fort avantage dans les formulaires et les paramètres.
+
+examples:
+  organ_donation: |
+    Les pays où le défaut est opt-out ont des taux de don beaucoup plus élevés que les pays où le défaut est opt-in — le défaut est plus important que les attitudes.
+  retirement_savings: |
+    L'inscription automatique augmente considérablement la participation aux plans 401(k).
+  software_installers: |
+    Les options "recommandées" et les extensions pré-cochées façonnent ce que les utilisateurs installent.
+  subscriptions: |
+    Les essais gratuits qui se transforment automatiquement en abonnements payants capturent de nombreuses personnes qui ne choisiraient pas activement de s'abonner.
+
+real_world_implications: |
+  L'effet par défaut est l'un des leviers les plus puissants. Il façonne l'épargne, la santé, la vie privée et le comportement des consommateurs. Une architecture de choix éthique utilise les défauts pour améliorer les résultats ; les "dark patterns" les utilisent pour exploiter.
+
+professional_application:
+  networking_and_relationship_building: |
+    Lorsque vous concevez des processus pour les autres, choisissez des défauts qui servent leurs intérêts. Évitez les "dark patterns" qui utilisent les défauts pour extraire de la valeur.
+  collaborative_learning_initiative: |
+    Définissez des défauts pour les pratiques d'équipe (par exemple, par défaut de manière asynchrone, par défaut de documentation) qui correspondent au comportement souhaité. Faites du bon choix le choix facile.
+
+how_can_this_be_misapplied:
+  dark_patterns: |
+    Utiliser les défauts pour piéger les gens dans des choix défavorables (par exemple, frais cachés, abonnements indésirables).
+  paternalism: |
+    Imposer des défauts qui outrepassent la préférence réelle sans consentement.
+  manipulation: |
+    Dissimuler des conditions défavorables dans les défauts et compter sur l'inertie.
+  one_size_fits_all: |
+    Supposer que le même défaut convient à tout le monde alors que les préférences varient.
+
+related_content:
+  - anchoring_bias
+  - framing_effect
+  - loss_aversion_bias
+  - bounded_rationality

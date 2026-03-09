@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Inversion
+# Mental Model / Cognitive Bias - Example Entry
+
+id: inversion
+name: Inversion
+
+quick_introduction: |
+  Inversion is a problem-solving technique that flips a question on its head. Instead of
+  asking "How do I succeed?" you ask "What would make me fail?" and avoid those things.
+  It surfaces risks and anti-patterns that forward-thinking often misses.
+
+one_liner: Invert—ask what would make you fail, then avoid those things.
+
+try_this:
+  - For any goal, list the main ways you could fail—then avoid them.
+  - Use negative visualization: what would make this go wrong?
+  - Ask: What would a smart person do to mess this up?
+
+ask_yourself:
+  - Have I thought about what would make this fail?
+  - What am I not seeing by only thinking forward?
+
+in_more_detail: |
+  Popularized by Charlie Munger and rooted in mathematical logic, inversion exploits
+  the fact that avoiding failure is often easier than pursuing success. If you can
+  identify the main ways something goes wrong, you can systematically eliminate them.
+
+  Carl Jacobi reportedly said, "Invert, always invert." The Stoics used negative
+  visualization—imagining loss—to appreciate what they had and prepare for adversity.
+  Inversion is not pessimism; it's a structured way to make progress by removing
+  obstacles.
+
+why_this_is_important: |
+  Inversion helps you avoid catastrophic mistakes, stress-test plans, and find
+  non-obvious solutions. It complements forward planning by ensuring you don't
+  overlook critical failure modes.
+
+when_to_use:
+  - problem_solving
+  - decision-making
+  - risk_assessment
+  - career_moves
+
+how_can_you_spot_it:
+  premortem_thinking: |
+    Before a project, asking "Why did this fail?" as if it already has.
+  anti_goals: |
+    Defining what you want to avoid as clearly as what you want to achieve.
+  reverse_engineering_failure: |
+    Studying failed cases to extract lessons rather than only studying successes.
+  constraint_focus: |
+    Identifying constraints and bottlenecks before optimizing for upside.
+
+examples:
+  investing: |
+    Instead of "What will make this stock go up?" ask "What would make me lose money?"
+    and avoid those scenarios.
+  career: |
+    "What would ruin my reputation?" leads to a list of behaviors to avoid.
+  product_launch: |
+    "Why do most product launches fail?" surfaces risks to address before launch.
+  health: |
+    "What habits shorten lifespan?" gives a clearer avoidance list than "What makes
+    me healthy?"
+
+real_world_implications: |
+  Inversion is used in engineering (failure mode analysis), investing, and strategy.
+  It reduces overconfidence and improves risk management. Over-reliance can lead to
+  excessive caution.
+
+professional_application:
+  networking_and_relationship_building: |
+    "What would damage this relationship?" helps you avoid trust-breaking behaviors.
+  collaborative_learning_initiative: |
+    Run premortems on projects: "This failed. Why?" Use the answers to improve
+    planning and execution.
+
+how_can_this_be_misapplied:
+  excessive_risk_aversion: |
+    Focusing only on avoiding failure can paralyze action and prevent necessary
+    risk-taking.
+  negativity_bias: |
+    Inversion can amplify negativity bias if not balanced with forward-looking
+    opportunity identification.
+  analysis_paralysis: |
+    Spending so much time on failure modes that you never execute.
+  missing_upside: |
+    Inversion doesn't tell you what to do—only what to avoid. You still need
+    positive goals.
+
+related_content:
+  - second_order_thinking
+  - survivorship_bias
+  - hindsight_bias
+  - loss_aversion_bias

@@ -1,0 +1,75 @@
+id: groupthink
+name: Pensamiento grupal
+
+quick_introduction: |
+  El pensamiento grupal es la tendencia de los grupos cohesivos a priorizar el consenso y la armonía sobre la evaluación crítica. Los miembros suprimen la disidencia, se autocensuran y se ajustan a la visión percibida del grupo. El deseo de unanimidad anula el deseo de la mejor decisión.
+
+one_liner: Armonía por encima de la verdad—los grupos priorizan el consenso sobre la evaluación crítica.
+
+try_this:
+  - Asignar un abogado del diablo; hacer que la disidencia sea esperada y segura.
+  - Preguntar: ¿Qué no estamos diciendo? ¿Qué diríamos si no estuviéramos en este grupo?
+  - Buscar perspectivas externas antes de finalizar las decisiones grupales.
+
+ask_yourself:
+  - ¿Me estoy autocensurando para mantener la armonía?
+  - ¿Es nuestro consenso genuino o el resultado de la presión para estar de acuerdo?
+
+in_more_detail: |
+  Irving Janis estudió los desastres de política exterior (Bahía de Cochinos, Vietnam) e identificó patrones: ilusión de invulnerabilidad, racionalización colectiva, presión hacia la conformidad, autocensura, ilusión de unanimidad y "guardianes de la mente" que protegen al grupo de información disidente. La alta cohesión, el aislamiento y el estrés aumentan el pensamiento grupal.
+
+  El pensamiento grupal conduce a malas decisiones porque las alternativas no se consideran seriamente. La disidencia se considera deslealtad. El grupo sobreestima su corrección y subestima los riesgos.
+
+why_this_is_important: |
+  Reconocer el pensamiento grupal te ayuda a crear condiciones para una mejor toma de decisiones: fomenta la disidencia, aporta perspectivas externas y evita el consenso prematuro. Es esencial para evitar fallos grupales catastróficos.
+
+when_to_use:
+  - liderazgo
+  - toma_de_decisiones
+  - resolucion_de_problemas
+  - resolucion_de_conflictos
+
+how_can_you_spot_it:
+  pressure_for_consensus: |
+    Se desalienta o castiga la disidencia; se recompensa el acuerdo.
+  illusion_of_unanimity: |
+    El silencio se interpreta como acuerdo cuando puede ser autocensura.
+  collective_rationalization: |
+    El grupo descarta advertencias y refuerza su punto de vista.
+  mindguards: |
+    Los miembros protegen al grupo de información que desafiaría el consenso.
+
+examples:
+  bay_of_pigs: |
+    Los asesores de Kennedy suprimieron las dudas sobre el plan de invasión; el resultado fue un desastre.
+  corporate_decisions: |
+    Un equipo directivo avanza con una fusión a pesar de las señales de alarma porque nadie quiere ser el aguafiestas.
+  product_launches: |
+    Un equipo lanza un producto defectuoso porque todos han invertido en el plan y nadie plantea preocupaciones.
+  boards: |
+    Los miembros de la junta directiva aprueban a ciegas las propuestas de la dirección para mantener la armonía.
+
+real_world_implications: |
+  El pensamiento grupal contribuye a fracasos de políticas, desastres corporativos y oportunidades perdidas. Es especialmente peligroso en situaciones de alto riesgo y alto estrés. Prevenirlo requiere intervenciones estructurales deliberadas.
+
+professional_application:
+  networking_and_relationship_building: |
+    Crea seguridad psicológica para la disidencia. Agradece a las personas que plantean preocupaciones. Modela la discrepancia sin ser desagradable.
+  collaborative_learning_initiative: |
+    Utiliza al abogado del diablo, equipos rojos y "pre-mortems". Exige que alguien argumente en contra de la opinión predominante. Aporta perspectivas externas. El líder habla el último para evitar el anclaje.
+
+how_can_this_be_misapplied:
+  false_dissent: |
+    Crear "disidentes designados" que no discrepan genuinamente: el grupo lo percibe.
+  excessive_conflict: |
+    Fomentar la disidencia hasta el punto de conflicto destructivo y parálisis.
+  dismissing_consensus: |
+    Asumir que todo consenso es pensamiento grupal: a veces el grupo tiene razón.
+  individualism: |
+    Sobrecambiar hasta el punto en que no es posible ninguna decisión colectiva.
+
+related_content:
+  - efecto_de_consenso_falso
+  - sesgo_endogrupal
+  - sesgo_de_confirmacion
+  - efecto_espectador

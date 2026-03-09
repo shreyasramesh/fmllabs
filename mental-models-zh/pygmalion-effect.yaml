@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 皮格马利翁效应
+# 心智模型 / 认知偏误 - 示例条目
+
+id: pygmalion_effect
+name: 皮格马利翁效应
+
+quick_introduction: |
+  皮格马利翁效应（或称罗森塔尔效应）是指较高的期望会带来更好的表现。当老师、管理者或其他人在某人身上寄予厚望时，那个人往往会表现得更好。期望会变成自我实现的预言。
+
+one_liner: 更高的期望带来更好的表现——期望塑造现实。
+
+try_this:
+  - 设定高但可实现的目标；清晰地传达它们。
+  - 注意低期望可能如何限制某人的表现。
+  - 问：我隐约期望什么——它可能如何影响结果？
+
+ask_yourself:
+  - 我的期望是在帮助还是在限制这个人？
+  - 更高的期望会改变我对待他们的方式——以及他们的结果吗？
+
+in_more_detail: |
+  罗伯特·罗森塔尔和莱诺尔·雅各布森向老师们提供了错误信息，称某些学生在学业上会“蓬勃发展”。这些学生（随机挑选）实际上比其他学生进步得更多。老师们的期望影响了他们的行为（更多的关注、更热情的反馈），这反过来又影响了学生的表现。期望塑造现实。
+
+  反之——低期望导致更差的表现——有时被称为戈莱姆效应。两者都表明我们对他人的一些看法会影响他们的结果。这对领导力、教育和育儿有着深远的影响。
+
+why_this_is_important: |
+  理解皮格马利翁效应可以帮助你驾驭期望的力量。真诚传达的高期望可以提高表现。低期望会造成自我实现的失败。你对他人的看法很重要。
+
+when_to_use:
+  - 领导力
+  - 建立关系
+  - 学习
+  - 决策
+
+how_can_you_spot_it:
+  expectation_performance_link: |
+    我们期望更高的人往往表现更好。
+  differential_treatment: |
+    我们会根据我们的期望以不同的方式对待他人——通常是下意识的。
+  self_fulfilling_prophecy: |
+    对能力的信念会影响塑造能力的那些行为。
+  teacher_student_dynamics: |
+    教育者的期望通过区别对待影响学生的结果。
+
+examples:
+  education: |
+    期望学生成功的老师会给予更多支持；那些学生会进步。期望失败的老师可能会无意中造成失败。
+  workplace: |
+    期望下属有高表现的管理者会提供更多的机会和反馈；表现会提高。
+  parenting: |
+    期望孩子负责任的父母会赋予他们更多的责任；他们会承担起来。
+  stereotypes: |
+    刻板印象威胁是反面——负面期望会损害表现。
+
+real_world_implications: |
+  皮格马利翁效应影响着教育、管理和人际关系。它表明，提高期望——当以支持的方式进行时——可以改善结果。它也警告说，低期望可能具有破坏性。
+
+professional_application:
+  networking_and_relationship_building: |
+    对人们设定高期望——并提供支持以实现它们。相信潜力。你的期望影响你的行为，而你的行为又影响他们的结果。
+  collaborative_learning_initiative: |
+    创造高期望与高支持的文化。避免以会自我实现的标签称呼他人为“表现不佳者”。投资于你期望他们成功的人。
+
+how_can_this_be_misapplied:
+  unrealistic_expectations: |
+    设定在没有支持的情况下不可能达到的期望，会导致失败和士气低落。
+  blame_shifting: |
+    当我们没有提供支持或成功条件时，说“他们没有达到期望”。
+  ignoring_constraints: |
+    期望本身并不能克服结构性障碍。
+  pressure_without_support: |
+    没有资源或支持的高期望可能是有害的。
+
+related_content:
+  - hawthorne_effect
+  - halo_effect
+  - in_group_bias
+  - fundamental_attribution_error

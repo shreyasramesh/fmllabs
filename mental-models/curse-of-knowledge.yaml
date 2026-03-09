@@ -1,0 +1,104 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Curse of Knowledge
+# Mental Model / Cognitive Bias - Example Entry
+
+id: curse_of_knowledge
+name: Curse of Knowledge
+
+quick_introduction: |
+  The curse of knowledge is the difficulty of imagining what it's like not to
+  know something once you know it. Experts struggle to teach beginners because
+  they can't recreate the beginner's perspective. Once you know, you forget
+  what it was like not to know.
+
+one_liner: Once you know something, you forget what it was like not to know.
+
+try_this:
+  - When explaining, start from first principles—assume your audience knows nothing.
+  - Ask a beginner to explain back; their confusion reveals your blind spots.
+  - Notice when you're skipping steps or using jargon others might not know.
+
+ask_yourself:
+  - Am I assuming others have the same context I do?
+  - Would someone without my background understand this?
+
+in_more_detail: |
+  In a classic experiment, people who knew the answer to a puzzle tapped the
+  rhythm of a song and expected others to guess it—they overestimated how
+  obvious it was. The tappers couldn't "unhear" the song in their heads.
+  Knowledge is "sticky"; it's hard to simulate ignorance.
+
+  The curse affects teaching, communication, product design, and leadership.
+  We assume others have the same context we do. We use jargon. We skip
+  steps. We're surprised when people don't "get it."
+
+why_this_is_important: |
+  Recognizing the curse of knowledge improves teaching, communication, and
+  product design. It helps you meet people where they are rather than
+  where you are. It's essential for effective knowledge transfer.
+
+when_to_use:
+  - learning
+  - leadership
+  - problem_solving
+  - relationship_building
+
+how_can_you_spot_it:
+  obvious_to_you: |
+    "It's obvious" when it's only obvious because you know the answer.
+  jargon_use: |
+    Using terms the audience doesn't know without defining them.
+  skipped_steps: |
+    Assuming others will fill in what you've left out.
+  frustration_with_learners: |
+    "How can they not see it?" when they lack your context.
+
+examples:
+  teaching: |
+    A math professor skips steps that are "obvious" to them but
+    essential for students.
+  product_design: |
+    Designers create interfaces that make sense to them but confuse
+    new users.
+  onboarding: |
+    Experienced employees forget what new hires don't know and
+    provide inadequate training.
+  writing: |
+    Authors assume readers have the same background and miss
+    necessary context.
+
+real_world_implications: |
+  The curse of knowledge creates communication gaps, failed products,
+  and ineffective teaching. It's one reason experts can be poor
+  teachers. Overcoming it requires deliberate effort to adopt the
+  audience's perspective.
+
+professional_application:
+  networking_and_relationship_building: |
+    When explaining, start from the other person's level. Ask "What
+    do they already know?" Test your communication with someone
+    who doesn't have your background.
+  collaborative_learning_initiative: |
+    Use "explain like I'm five" exercises. Have experts teach
+    beginners and get feedback. Create documentation that assumes
+    no prior knowledge. Use peer teaching—people who recently
+    learned remember the beginner's perspective.
+
+how_can_this_be_misapplied:
+  oversimplification: |
+    Dumbing down to the point of inaccuracy or condescension.
+  false_assumption: |
+    Assuming others know less than they do—also a failure of
+    calibration.
+  one_size_fits_all: |
+    Not all audiences need the same level of explanation; tailor
+    to the audience.
+  avoiding_complexity: |
+    Some topics are complex; the curse of knowledge doesn't mean
+    we should never use technical language when appropriate.
+
+related_content:
+  - dunning_kruger_effect
+  - false_consensus_effect
+  - empathy_gap
+  - availability_heuristic

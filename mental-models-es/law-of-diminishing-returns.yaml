@@ -1,0 +1,98 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Ley de los rendimientos decrecientes
+# Modelo Mental / Sesgo Cognitivo - Entrada de ejemplo
+
+id: law_of_diminishing_returns
+name: Ley de los rendimientos decrecientes
+
+quick_introduction: |
+  La ley de los rendimientos decrecientes establece que a medida que se agrega más de un insumo mientras
+  se mantienen constantes los demás, la producción adicional de cada nueva unidad de insumo eventualmente
+  disminuye. Más no siempre es mejor; hay un punto en el que el esfuerzo adicional produce
+  cada vez menos.
+
+one_liner: Más insumo eventualmente produce menos producto; hay un punto óptimo.
+
+try_this:
+  - Pregunta: ¿He superado el punto en el que el esfuerzo adicional produce rendimientos significativos?
+  - Prioriza los insumos de mayor apalancamiento; detente cuando los rendimientos marginales disminuyan.
+  - Nota cuándo estás invirtiendo demasiado en algo que ya ha dado frutos.
+
+ask_yourself:
+  - ¿Qué ganaría con una unidad más de esfuerzo aquí?
+  - ¿Estoy optimizando más allá del punto de rendimientos decrecientes?
+
+in_more_detail: |
+  En economía, agregar más trabajadores a una cantidad fija de tierra eventualmente produce
+  ganancias incrementales más pequeñas. En la productividad personal, la primera hora de estudio puede
+  agregar más valor que la décima. El principio se aplica a los recursos, el esfuerzo, el tiempo
+  y las características. Hay un punto óptimo; más allá de él, los rendimientos marginales disminuyen y
+  pueden incluso volverse negativos.
+
+  Reconocer los rendimientos decrecientes te ayuda a asignar recursos de manera eficiente y
+  evitar invertir demasiado en áreas que ya han producido la mayor parte de su valor.
+
+why_this_is_important: |
+  Comprender los rendimientos decrecientes previene la sobreinversión, guía la priorización
+  y te ayuda a saber cuándo detenerte. Es esencial para la asignación de recursos y
+  evitar el perfeccionismo.
+
+when_to_use:
+  - toma_de_decisiones
+  - resolucion_de_problemas
+  - inversion
+  - movimientos_de_carrera
+
+how_can_you_spot_it:
+  incremental_gains_decreasing: |
+    Cada unidad adicional de esfuerzo o recurso produce menos producto que la
+    anterior.
+  perfectionism_trap: |
+    Esforzarse por el último 10% de calidad consume un esfuerzo desproporcionado.
+  overinvestment: |
+    Continuar agregando recursos cuando el rendimiento marginal es bajo o negativo.
+  optimal_point_passed: |
+    Has ido más allá del punto en el que más insumo mejora los resultados.
+
+examples:
+  studying: |
+    Las primeras 2 horas de preparación para el examen agregan más que las horas 7-8; hay un punto de
+    rendimientos decrecientes.
+  product_features: |
+    Agregar más características a una aplicación puede confundir a los usuarios; la característica 20 agrega menos
+    valor que la 5ª.
+  hiring: |
+    Agregar más personas a un proyecto puede ralentizarlo (Ley de Brooks) después de un punto.
+  marketing: |
+    Duplicar el gasto en publicidad no duplica los resultados; los rendimientos disminuyen a medida que saturas
+    el mercado.
+
+real_world_implications: |
+  La ley de los rendimientos decrecientes guía la política económica, la estrategia empresarial y
+  la productividad personal. Ignorarla conduce a recursos desperdiciados y resultados subóptimos.
+  Apoya el principio de Pareto y el enfoque.
+
+professional_application:
+  networking_and_relationship_building: |
+    Invertir en unas pocas relaciones profundas puede producir más que distribuir el esfuerzo
+    diluidamente entre muchas. Reconoce cuándo el networking adicional tiene rendimientos decrecientes.
+  collaborative_learning_initiative: |
+    Más horas de formación no siempre significan mejores resultados. Encuentra la dosis óptima
+    y evita la sobrecarga.
+
+how_can_this_be_misapplied:
+  premature_optimization: |
+    Detenerse demasiado pronto antes de alcanzar un nivel de calidad razonable.
+  undershooting: |
+    Usar los rendimientos decrecientes como excusa para un esfuerzo insuficiente.
+  misidentifying_the_curve: |
+    Asumir rendimientos decrecientes cuando en realidad estás en una parte diferente de la curva
+    (por ejemplo, la fase exponencial temprana).
+  one_size_fits_all: |
+    Aplicar el mismo "punto óptimo" en diferentes contextos donde las curvas difieren.
+
+related_content:
+  - pareto_principle
+  - parkinsons_law
+  - sunk_cost_fallacy
+  - inversion

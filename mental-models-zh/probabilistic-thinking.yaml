@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 概率性思维
+# 心智模型/认知偏差 - 示例条目
+
+id: probabilistic_thinking
+name: 概率性思维
+
+quick_introduction: |
+  概率性思维是一种以可能性而非确定性来推理的习惯。我们不问“这件事会发生吗？”，而是问“这件事发生的可能性有多大？”它拥抱不确定性，并利用不确定性来做出更好的决策。
+
+one_liner: 以可能性而非确定性来思考——拥抱不确定性。
+
+try_this:
+  - 将“这件事会发生吗？”替换为“这件事发生的可能性有多大？”
+  - 考虑多种情景，并为其分配大致的概率。
+  - 在获得新证据时更新你的信念。
+
+ask_yourself:
+  - 我是在用非此即彼的方式思考，而用概率会更准确吗？
+  - 可能的结果范围是什么？
+
+in_more_detail: |
+  现实世界中的大多数结果都是不确定的。概率性思维用渐进式的信念取代了非此即彼的“是/否”。它包括考虑多种情景，分配大致的概率，并在获得证据时进行更新。这是过度自信和黑白分明思维的对立面。
+
+  关键实践包括：在范围内思考，考虑基本比率，用证据更新信念，以及区分风险（已知概率）和不确定性（未知概率）。它能提高校准度和决策质量。
+
+why_this_is_important: |
+  概率性思维可以减少过度自信，提高预测能力，并在不确定性下做出更好的决策。它对于投资、战略以及任何未来不确定的领域都至关重要。
+
+when_to_use:
+  - 决策制定
+  - 风险评估
+  - 投资
+  - 问题解决
+
+how_can_you_spot_it:
+  likelihood_language: |
+    使用“可能”、“大概率”、“小概率”而不是“会”或“不会”。
+  scenario_thinking: |
+    考虑具有大致概率的多种可能未来。
+  calibration: |
+    预测随着时间的推移与实际结果频率相匹配。
+  uncertainty_acknowledgment: |
+    明确说明你不知道什么。
+
+examples:
+  forecasting: |
+    “我认为我们有 60% 的机会按时完成任务”而不是“我们会按时完成任务。”
+  investing: |
+    “这个有 30% 的机会翻倍，70% 的机会亏损 50%”而不是“这会暴涨。”
+  strategy: |
+    规划多种情景（最佳、基本、最坏情况），并分配大致的概率。
+  hiring: |
+    “根据面试，我认为他们成功的概率是 70%”而不是“他们是很棒的招聘人选。”
+
+real_world_implications: |
+  概率性思维能提高校准度，减少意外，并实现更好的风险管理。它是有效预测和不确定性下决策的核心。
+
+professional_application:
+  networking_and_relationship_building: |
+    在适当的时候使用概率性语言交流——“我相当有信心”而不是“我确定”。它通过表明认知上的谦逊来建立信任。
+  collaborative_learning_initiative: |
+    鼓励团队表达不确定性。使用预测市场或校准练习来提高概率判断能力。
+
+how_can_this_be_misapplied:
+  false_precision: |
+    分配精确的概率（例如 73%），而你无法如此精确。
+  analysis_paralysis: |
+    因为“我们无法确定”而从不采取行动。
+  hedging_overuse: |
+    过度修饰一切，使其变得毫无用处。
+  dismissing_intuition: |
+    过度纠正以至于忽略了强烈的直觉，而直觉可能携带有效信息。
+
+related_content:
+  - bayes_theorem
+  - base_rate_fallacy
+  - illusion_of_control
+  - narrative_fallacy

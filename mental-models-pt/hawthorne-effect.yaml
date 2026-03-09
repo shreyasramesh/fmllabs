@@ -1,0 +1,105 @@
+id: hawthorne_effect
+name: Efeito Hawthorne
+
+quick_introduction: |
+  O Efeito Hawthorne é a tendência das pessoas a modificar o seu comportamento
+  quando sabem que estão a ser observadas ou estudadas. O próprio ato de observação
+  pode produzir a mudança — não necessariamente a intervenção que está a ser
+  testada. As pessoas respondem à atenção que recebem.
+
+one_liner: Ser observado muda o comportamento — a própria atenção pode produzir o efeito.
+
+try_this:
+  - Ao avaliar uma intervenção, considere se a observação está a impulsionar os resultados.
+  - Reconheça que a atenção e o sentimento de valorização podem melhorar o desempenho.
+  - Tenha cautela ao atribuir mudanças a uma intervenção específica quando a observação mudou.
+
+ask_yourself:
+  - Esta melhoria vem da intervenção ou de ser observado?
+  - Os resultados persistiriam se parássemos de prestar atenção?
+
+in_more_detail: |
+  Na fábrica Hawthorne Works, os investigadores descobriram que a produtividade
+  melhorou quando alteraram a iluminação — e também quando a alteraram de volta.
+  A melhoria parecia vir da atenção e da observação, não da
+  intervenção específica. Análises posteriores sugeriram que o efeito pode
+  ter sido exagerado, mas o conceito continua útil: ser estudado
+  muda o comportamento.
+
+  O Efeito Hawthorne complica a investigação e a avaliação. Pode
+  inflacionar o impacto aparente das intervenções. Sugere também que
+  a atenção e o sentimento de valorização podem melhorar o desempenho — uma lição para
+  a gestão.
+
+why_this_is_important: |
+  Compreender o Efeito Hawthorne ajuda a interpretar os resultados da investigação,
+  a conceber melhores experiências e a reconhecer que a atenção
+  em si pode impulsionar a mudança. Na gestão, sugere que prestar
+  atenção às pessoas pode ser tão importante quanto a intervenção específica.
+
+when_to_use:
+  - liderança
+  - tomada_de_decisao
+  - aprendizagem
+  - resolucao_de_problemas
+
+how_can_you_spot_it:
+  observation_induced_change: |
+    O comportamento muda quando as pessoas sabem que estão a ser observadas ou estudadas.
+  attention_effect: |
+    O ato de prestar atenção produz melhoria, não apenas a
+    mudança específica.
+  placebo_analog: |
+    Tal como um placebo, o "tratamento" de ser estudado pode ter efeitos.
+  short_term_improvement: |
+    As melhorias podem desvanecer-se quando a observação termina.
+
+examples:
+  workplace_studies: |
+    A produtividade aumenta durante um estudo — é o novo processo ou
+    o facto de alguém estar a observar?
+  medical_trials: |
+    Os grupos placebo melhoram — em parte porque estão a receber atenção.
+  education: |
+    Os alunos têm um melhor desempenho quando os investigadores estão presentes — o
+    "efeito do observador".
+  management: |
+    As equipas melhoram quando a gestão presta atenção — é a nova
+    iniciativa ou a própria atenção?
+
+real_world_implications: |
+  O Efeito Hawthorne afeta a validade da investigação e a avaliação de programas.
+  Pode levar à superestimação dos efeitos da intervenção.
+  Também tem uma lição positiva: a atenção e o sentimento de ser estudado
+  podem motivar a melhoria — por isso, o cuidado e a visibilidade importam.
+
+professional_application:
+  networking_and_relationship_building: |
+    Prestar atenção às pessoas pode melhorar o seu desempenho —
+    o Efeito Hawthorne sugere que o sentimento de ser observado e
+    valorizado importa. Use isto positivamente: check-ins regulares,
+    visibilidade e reconhecimento.
+  collaborative_learning_initiative: |
+    Ao avaliar intervenções, utilize grupos de controlo e
+    considere se as melhorias se devem à intervenção
+    ou à atenção que ela traz. O Efeito Hawthorne pode
+    inflacionar o sucesso aparente.
+
+how_can_this_be_misapplied:
+  surveillance_justification: |
+    Usar o "Efeito Hawthorne" para justificar a monitorização constante —
+    a observação também pode reduzir a confiança e a motivação intrínseca.
+  dismissing_improvements: |
+    Assumir que toda a melhoria durante os estudos é Hawthorne —
+    às vezes as intervenções realmente funcionam.
+  overgeneralization: |
+    Os estudos originais de Hawthorne foram questionados;
+    o efeito pode ser menor ou diferente do que se pensava outrora.
+  manipulation: |
+    Criar "observação" falsa para manipular o comportamento.
+
+related_content:
+  - pygmalion_effect
+  - confirmation_bias
+  - salience_bias
+  - availability_heuristic

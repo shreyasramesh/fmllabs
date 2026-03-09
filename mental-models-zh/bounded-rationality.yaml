@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 认知局限
+# 心智模型 / 认知偏见 - 示例条目
+
+id: bounded_rationality
+name: 认知局限
+
+quick_introduction: |
+  认知局限是指人类的决策受到可用信息、认知能力和时间的限制。我们不是追求最优解；而是“满意解”—我们选择足够好的选项，而不是最好的选项。
+
+one_liner: 我们追求满意解——选择足够好的，而非最优的。
+
+try_this:
+  - 尽可能简化选择；过多的选项会压垮认知局限。
+  - 提前设定“足够好”的标准，以避免无休止的搜索。
+  - 注意你何时会为了追求边际效益递减而过度优化。
+
+ask_yourself:
+  - 我是否在寻找完美的选项，而实际上“足够好”就够了？
+  - 哪些限制（时间、信息、注意力）正在限制我的决策？
+
+in_more_detail: |
+  赫伯特·西蒙（Herbert Simon）引入这一概念，是为了挑战古典经济学中关于拥有完美信息的理性经济人假设。实际上，我们的注意力、工作记忆和时间都是有限的。我们使用启发式方法和捷径来做出“理性”的决策，考虑到我们的限制，即使这些决策在理想意义上不是最优的。
+
+  认知局限解释了我们为何不总是选择最佳选项，为何依赖经验法则，以及为何情境和表述如此重要。它是一个描述性的模型，说明我们实际上是如何决策的，而不是如何应该决策的处方。
+
+why_this_is_important: |
+  理解认知局限有助于你设计更好的流程，为他人简化选择，并为决策质量设定现实的期望。它也解释了为什么在限制条件下，“非理性”行为往往是理性的。
+
+when_to_use:
+  - 决策制定
+  - 问题解决
+  - 领导力
+  - 风险评估
+
+how_can_you_spot_it:
+  satisficing_behavior: |
+    人们选择第一个可接受的选项，而不是穷尽比较。
+  heuristic_reliance: |
+    决策是通过经验法则做出的，而不是通过全面分析。
+  context_dependence: |
+    同一个人会根据选项的呈现方式做出不同的选择。
+  information_overload: |
+    当可用信息过多时，决策质量可能会下降。
+
+examples:
+  hiring: |
+    一位经理录用了第一个达到标准的候选人，而不是无休止地面试来寻找“最佳”候选人。
+  consumer_choice: |
+    购物者从货架上的前几个选项中选择，而不是比较商店里的所有产品。
+  policy: |
+    选民使用党派归属或少数关键问题作为捷径，而不是分析所有政策立场。
+  daily_routines: |
+    人们遵循习惯和默认选项，而不是重新优化每一个决策。
+
+real_world_implications: |
+  认知局限塑造了市场、政策设计和组织行为。“助推”（Nudges）和选择架构（Choice Architecture）之所以有效，是因为它们考虑到了我们的局限性。忽视这一点会导致过于复杂的系统，导致人们无法有效使用。
+
+professional_application:
+  networking_and_relationship_building: |
+    不要期望他人能实时处理复杂的权衡。简化选择，并提供清晰的默认选项。
+  collaborative_learning_initiative: |
+    设计符合认知局限的流程：减少选择，提供默认选项，并为复杂决策使用清单。
+
+how_can_this_be_misapplied:
+  overcomplicating_decisions: |
+    设计假设认知能力无限的流程，导致决策疲劳和糟糕的结果。
+  blaming_irrationality: |
+    在不考虑其限制条件的情况下，将他人的选择斥为非理性。
+  exploitation: |
+    故意用复杂性压倒人们，以引导他们走向期望的结果。
+  perfectionism: |
+    期望做出最优决策，而实际上满意解往往是理性的方法。
+
+related_content:
+  - default_effect
+  - framing_effect
+  - availability_heuristic
+  - cognitive_dissonance

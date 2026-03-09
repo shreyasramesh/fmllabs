@@ -1,0 +1,112 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Narrative Fallacy
+# Mental Model / Cognitive Bias - Example Entry
+
+id: narrative_fallacy
+name: Narrative Fallacy
+
+quick_introduction: |
+  The narrative fallacy is the tendency to construct stories from past events
+  that make them seem more coherent, predictable, and meaningful than they
+  were. We retrofit explanations onto randomness. We turn the mess of
+  history into a tidy story—and then believe the story was inevitable.
+
+one_liner: We retrofit coherent stories onto randomness—and then believe they were inevitable.
+
+try_this:
+  - Ask: How much of this story is hindsight? What role did luck play?
+  - Be skeptical of tidy explanations—the past was messier than our stories.
+  - Notice when "makes sense" is doing the work of "was predictable."
+
+ask_yourself:
+  - Am I constructing a story that makes the past seem more inevitable than it was?
+  - Would I have predicted this before it happened?
+
+in_more_detail: |
+  Nassim Taleb popularized the term. We crave narrative—cause and effect,
+  heroes and villains, clear arcs. So we construct stories that connect
+  events in hindsight. The story feels true because it's coherent—but
+  coherence doesn't mean it's correct. We confuse "makes sense" with
+  "was predictable." We underestimate the role of luck and
+  randomness.
+
+  The narrative fallacy affects how we learn from history, evaluate
+  success, and make predictions. We overweight the explanatory power
+  of stories and underweight the role of chance.
+
+why_this_is_important: |
+  Recognizing the narrative fallacy helps you avoid overlearning from
+  the past and overestimating predictability. It encourages humility
+  about causation and prediction. Not everything that makes a good
+  story is true or generalizable.
+
+when_to_use:
+  - decision-making
+  - learning
+  - risk_assessment
+  - problem_solving
+
+how_can_you_spot_it:
+  hindsight_coherence: |
+    Past events are explained with a tidy story that wasn't
+    visible at the time.
+  cause_effect_overconfidence: |
+    We assign clear causes to outcomes that had many
+    contributing factors.
+  luck_minimization: |
+    Success and failure are explained by skill and strategy,
+    not luck.
+  story_over_evidence: |
+    A compelling narrative overrides statistical evidence.
+
+examples:
+  business_success: |
+    "They succeeded because of X" when many factors and luck
+    were involved—we pick the story that fits.
+  investing: |
+    Explaining market moves with narratives that feel
+    satisfying but may be post-hoc.
+  history: |
+    Historical events are told as inevitable progressions
+    when they were contingent on many factors.
+  career: |
+    "I got here because I did X" when luck and timing
+    played significant roles.
+
+real_world_implications: |
+  The narrative fallacy distorts learning, overconfidence
+  in prediction, and attribution of success and failure.
+  It makes the past seem more predictable than it was
+  and the future seem more predictable than it is.
+
+professional_application:
+  networking_and_relationship_building: |
+    When someone tells their success story, remember that
+    it's a narrative—coherent and compelling, but possibly
+    simplified. Luck and unseen factors may be underweighted.
+  collaborative_learning_initiative: |
+    In retrospectives, distinguish narrative from evidence.
+    Ask "What would we have said at the time?" Use
+    decision journals to capture uncertainty before
+    outcomes are known.
+
+how_can_this_be_misapplied:
+  dismissing_all_explanation: |
+    Some narratives are correct—not everything is
+    narrative fallacy. Causation exists.
+  excessive_skepticism: |
+    Refusing to learn from the past because "narrative
+    fallacy." We can still extract useful lessons.
+  false_randomness: |
+    Assuming everything is random when some outcomes
+    are meaningfully attributable.
+  undermining_storytelling: |
+    Stories have value for communication and meaning—
+    the fallacy is believing they're complete or
+    predictive, not that they exist.
+
+related_content:
+  - hindsight_bias
+  - survivorship_bias
+  - regression_to_the_mean
+  - map_is_not_the_territory

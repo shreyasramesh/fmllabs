@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Effet Dunning-Kruger
+# Modèle Mental / Biais Cognitif - Entrée Exemple
+
+id: dunning_kruger_effect
+name: Effet Dunning-Kruger
+
+quick_introduction: |
+  L'effet Dunning-Kruger décrit un biais cognitif où les personnes ayant des connaissances ou des compétences limitées dans un domaine surestiment leur compétence, tandis que les experts ont tendance à la sous-estimer. Moins on en sait, plus on peut être confiant.
+
+one_liner: Moins on en sait, plus on peut être confiant.
+
+try_this:
+  - Dans de nouveaux domaines, supposez que vous êtes trop confiant — recherchez des retours et une calibration.
+  - Lorsque les experts expriment des doutes, prenez-les au sérieux ; ils peuvent connaître les cas limites.
+  - Remarquez quand les novices sont plus certains que les experts dans un domaine.
+
+ask_yourself:
+  - Suis-je au "pic de la stupidité" ou dans la "vallée de l'humilité" ?
+  - Ai-je la capacité métacognitive d'évaluer ma propre compétence ici ?
+
+in_more_detail: |
+  Les recherches de Dunning et Kruger ont montré que les individus incompétents manquent de la capacité métacognitive pour reconnaître leur propre incompétence. Pour évaluer votre performance, vous avez besoin des mêmes compétences requises pour bien performer — ainsi, les non qualifiés sont doublement désavantagés : ils performent mal et ne le savent pas.
+
+  À mesure que la compétence augmente, les gens éprouvent souvent une "vallée de l'humilité" où ils reconnaissent combien ils ne savent pas. Les vrais experts peuvent manquer de confiance car ils sont très conscients des nuances et des cas limites.
+
+why_this_is_important: |
+  Reconnaître l'effet Dunning-Kruger vous aide à calibrer votre propre confiance, à éviter de surestimer les opinions des novices et à apprécier l'humilité des experts. C'est essentiel pour l'apprentissage, l'embauche et la prise de décision.
+
+when_to_use:
+  - apprentissage
+  - prise_de_decision
+  - leadership
+  - parcours_professionnel
+
+how_can_you_spot_it:
+  novice_overconfidence: |
+    Quelqu'un avec peu d'expérience exprime des opinions fortes et non qualifiées.
+  expert_underconfidence: |
+    Les personnes hautement qualifiées sont plus prudentes et expriment plus d'incertitude que les personnes moins qualifiées.
+  inability_to_recognize_quality: |
+    Les mauvaises performances ne peuvent pas distinguer le bon travail du mauvais travail dans leur domaine.
+  confidence_competence_mismatch: |
+    La confiance et la capacité réelle sont inversement corrélées chez les débutants.
+
+examples:
+  social_media: |
+    Les personnes ayant une connaissance superficielle d'un sujet argumentent avec confiance avec des experts du domaine.
+  hiring: |
+    Les candidats qui performent mal lors des entretiens évaluent parfois leur propre performance de manière élevée.
+  investing: |
+    Les nouveaux investisseurs peuvent être trop confiants après des gains précoces, sans reconnaître la chance.
+  workplace: |
+    Les employés juniors peuvent surestimer leur préparation à une promotion tandis que les seniors doutent d'eux-mêmes.
+
+real_world_implications: |
+  L'effet Dunning-Kruger affecte l'éducation, l'embauche, la politique et le discours public. Il explique pourquoi de mauvaises idées sont amplifiées et pourquoi les experts peuvent être ignorés. La calibration est importante pour la prise de décision individuelle et collective.
+
+professional_application:
+  networking_and_relationship_building: |
+    Quand quelqu'un est très confiant, considérez s'il pourrait être dans la zone Dunning-Kruger. Recherchez des perspectives diverses, y compris celles de ceux qui expriment de l'incertitude.
+  collaborative_learning_initiative: |
+    Créez des cultures où admettre l'incertitude est valorisé. Encouragez les exercices de calibration et les retours qui aident les gens à évaluer précisément leur compétence.
+
+how_can_this_be_misapplied:
+  dismissing_all_confidence: |
+    Supposez que les personnes confiantes ont toujours tort ; parfois la confiance est justifiée.
+  false_modesty: |
+    Des experts prétendant en savoir moins qu'ils ne le font pour paraître humbles.
+  gatekeeping: |
+    Utiliser Dunning-Kruger pour rejeter toute personne qui n'est pas d'accord avec les "experts" sans engager leurs arguments.
+  self_doubt_paralysis: |
+    Sur-corriger au point de ne jamais faire confiance à son propre jugement.
+
+related_content:
+  - circle_of_competence
+  - circle_of_competence
+  - confirmation_bias
+  - curse_of_knowledge

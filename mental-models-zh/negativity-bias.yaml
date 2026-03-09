@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 负面偏见
+# 心智模型 / 认知偏见 - 示例条目
+
+id: negativity_bias
+name: 负面偏见
+
+quick_introduction: |
+  负面偏见是指倾向于比积极信息赋予负面信息更大的权重。糟糕的消息、批评和威胁比同等的积极刺激更能吸引我们的注意力并影响我们的决策。
+
+one_liner: 坏消息比好消息分量更重——我们天生就会优先考虑威胁。
+
+try_this:
+  - 在评估时，积极主动地寻求并权衡积极的证据。
+  - 注意一项批评是如何压倒许多赞扬的。
+  - 问自己：我是否赋予了负面信息过多的权重？
+
+ask_yourself:
+  - 我是否沉溺于负面，而忽视了积极的一面？
+  - 如果我专注于好的证据，感觉会不同吗？
+
+in_more_detail: |
+  从进化的角度来看，错过一个威胁可能是致命的，而错过一个机会通常是可以存活的。我们的大脑天生就优先处理负面信息。一条批评性的评论就可以压倒许多赞扬。负面事件被记住得更生动，时间也更长。
+
+  这种偏见会影响人际关系、决策和福祉。我们会沉湎于失败，预料最坏的情况，并忽视积极的证据。理解它有助于我们纠正它。
+
+why_this_is_important: |
+  认识到负面偏见有助于您平衡反馈，避免对批评反应过度，并做出更准确的判断。它还解释了为什么坏消息占主导地位，以及为什么我们经常感觉比实际情况更糟。
+
+when_to_use:
+  - 决策制定
+  - 建立人际关系
+  - 领导力
+  - 风险评估
+
+how_can_you_spot_it:
+  disproportionate_impact_of_criticism: |
+    一条负面评论掩盖了许多正面评论。
+  threat_prioritization: |
+    潜在的缺点比同等的优点受到更多关注。
+  vivid_negative_memories: |
+    负面经历更容易被回忆起来，并且伴随着更强烈的情感。
+  discounting_positive_evidence: |
+    好消息很快就被遗忘或被解释掉了。
+
+examples:
+  performance_reviews: |
+    一名员工过分关注一条批评性的反馈，而忽视了整体的积极评价。
+  news_consumption: |
+    尽管有积极的趋势，负面新闻头条却吸引了大部分注意力，并塑造了世界观。
+  relationships: |
+    一次争吵比许多美好的时刻留下的印象更深刻。
+  investing: |
+    市场下跌引发的恐慌比同等程度的上涨引发的狂喜更强烈。
+
+real_world_implications: |
+  负面偏见塑造了媒体、政治和组织文化。它导致了焦虑、冲突和次优的决策。刻意纠正它能改善福祉和判断力。
+
+professional_application:
+  networking_and_relationship_building: |
+    在提供反馈时，请注意负面评论会产生更大的影响——平衡它们并强调成长。在接受反馈时，要有意识地考虑整体情况。
+  collaborative_learning_initiative: |
+    创造明确反击负面偏见的文化：庆祝成功，记录积极成果，并用“事前验尸”（pre-mortems）平衡复盘（post-mortems），以了解哪些方面做得对。
+
+how_can_this_be_misapplied:
+  toxic_positivity: |
+    坚持“积极思考”，从而忽视合理的担忧。
+  ignoring_real_threats: |
+    过度纠正，以至于低估了真正的风险。
+  feedback_suppression: |
+    避免必要的批评，因为“负面情绪是不好的”。
+  invalidation: |
+    告诉某人他们的负面感受“只是负面偏见”，即使他们有充分的理由感到担忧。
+
+related_content:
+  - loss_aversion_bias
+  - availability_heuristic
+  - impact_bias
+  - confirmation_bias

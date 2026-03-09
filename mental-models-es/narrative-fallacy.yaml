@@ -1,0 +1,108 @@
+id: narrative_fallacy
+name: Falacia narrativa
+
+quick_introduction: |
+  La falacia narrativa es la tendencia a construir historias a partir de eventos pasados
+  que hacen que parezcan más coherentes, predecibles y significativos de lo que realmente fueron.
+  Retroalimentamos explicaciones sobre la aleatoriedad. Convertimos el desorden
+  de la historia en una historia pulcra, y luego creemos que la historia era inevitable.
+
+one_liner: Retroalimentamos historias coherentes sobre la aleatoriedad, y luego creemos que eran inevitables.
+
+try_this:
+  - Pregunta: ¿Cuánto de esta historia es retrospectiva? ¿Qué papel jugó la suerte?
+  - Sé escéptico ante las explicaciones pulcras; el pasado fue más desordenado que nuestras historias.
+  - Observa cuándo "tiene sentido" está haciendo el trabajo de "era predecible".
+
+ask_yourself:
+  - ¿Estoy construyendo una historia que hace que el pasado parezca más inevitable de lo que fue?
+  - ¿Habría predicho esto antes de que sucediera?
+
+in_more_detail: |
+  Nassim Taleb popularizó el término. Ansiamos la narrativa: causa y efecto,
+  héroes y villanos, arcos claros. Así que construimos historias que conectan
+  eventos en retrospectiva. La historia se siente verdadera porque es coherente, pero
+  la coherencia no significa que sea correcta. Confundimos "tiene sentido" con
+  "era predecible". Subestimamos el papel de la suerte y
+  la aleatoriedad.
+
+  La falacia narrativa afecta cómo aprendemos de la historia, evaluamos
+  el éxito y hacemos predicciones. Sobredimensionamos el poder explicativo
+  de las historias y subestimamos el papel del azar.
+
+why_this_is_important: |
+  Reconocer la falacia narrativa te ayuda a evitar aprender demasiado del
+  pasado y sobreestimar la predictibilidad. Fomenta la humildad
+  sobre la causalidad y la predicción. No todo lo que hace una buena
+  historia es cierto o generalizable.
+
+when_to_use:
+  - toma_de_decisiones
+  - aprendizaje
+  - evaluacion_de_riesgos
+  - resolucion_de_problemas
+
+how_can_you_spot_it:
+  hindsight_coherence: |
+    Los eventos pasados se explican con una historia pulcra que no era
+    visible en ese momento.
+  cause_effect_overconfidence: |
+    Asignamos causas claras a resultados que tuvieron muchos
+    factores contribuyentes.
+  luck_minimization: |
+    El éxito y el fracaso se explican por habilidad y estrategia,
+    no por suerte.
+  story_over_evidence: |
+    Una narrativa convincente anula la evidencia estadística.
+
+examples:
+  business_success: |
+    "Tuvieron éxito debido a X" cuando muchos factores y suerte
+    estaban involucrados; elegimos la historia que encaja.
+  investing: |
+    Explicar los movimientos del mercado con narrativas que se sienten
+    satisfactorias pero que pueden ser post-hoc.
+  history: |
+    Los eventos históricos se cuentan como progresiones inevitables
+    cuando dependían de muchos factores.
+  career: |
+    "Llegué aquí porque hice X" cuando la suerte y el momento
+    jugaron roles significativos.
+
+real_world_implications: |
+  La falacia narrativa distorsiona el aprendizaje, la confianza excesiva
+  en la predicción y la atribución del éxito y el fracaso.
+  Hace que el pasado parezca más predecible de lo que fue
+  y el futuro parezca más predecible de lo que es.
+
+professional_application:
+  networking_and_relationship_building: |
+    Cuando alguien cuenta su historia de éxito, recuerda que
+    es una narrativa: coherente y convincente, pero posiblemente
+    simplificada. La suerte y los factores invisibles pueden estar subestimados.
+  collaborative_learning_initiative: |
+    En las retrospectivas, distingue la narrativa de la evidencia.
+    Pregunta "¿Qué habríamos dicho en ese momento?". Usa
+    diarios de decisiones para capturar la incertidumbre antes de que
+    se conozcan los resultados.
+
+how_can_this_be_misapplied:
+  dismissing_all_explanation: |
+    Algunas narrativas son correctas; no todo es
+    falacia narrativa. La causalidad existe.
+  excessive_skepticism: |
+    Negarse a aprender del pasado porque "falacia
+    narrativa". Todavía podemos extraer lecciones útiles.
+  false_randomness: |
+    Asumir que todo es aleatorio cuando algunos resultados
+    son atribuibles de manera significativa.
+  undermining_storytelling: |
+    Las historias tienen valor para la comunicación y el significado;
+    la falacia es creer que son completas o
+    predictivas, no que existen.
+
+related_content:
+  - hindsight_bias
+  - survivorship_bias
+  - regression_to_the_mean
+  - map_is_not_the_territory

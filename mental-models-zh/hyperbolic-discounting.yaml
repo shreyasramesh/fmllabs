@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Hyperbolic Discounting
+# Mental Model / Cognitive Bias - Example Entry
+
+id: hyperbolic_discounting
+name: 双曲贴现
+
+quick_introduction: |
+  双曲贴现是指倾向于偏好更小但更即时的回报，而非更大但更迟的回报——并且对未来的折现比理性模型预测的要陡峭。我们以不一致的方式过度重视现在，而低估未来。
+
+one_liner: 我们偏好即时的小回报胜过迟来的大回报——并且以不一致的方式折现未来。
+
+try_this:
+  - Pre-commit: make choices for your future self when you're in a calm state.
+    # 预设承诺：在你冷静的时候，为将来的自己做出选择。
+  - 'Reframe: "Would I want this in 10 minutes? In 10 months?" to reveal inconsistency.'
+    # 重新构想：“我十分钟后会想要这个吗？十个月后呢？” 以揭示不一致性。
+  - Use commitment devices to bind your future self to better choices.
+    # 使用承诺工具将未来的自己约束在更好的选择上。
+
+ask_yourself:
+  - Am I overweighting the present at the expense of my future self?
+    # 我是否牺牲了未来的自己而过度重视现在？
+  - Would I make this choice if the reward were delayed by a day? A year?
+    # 如果奖励推迟一天？一年？我会做这个选择吗？
+
+in_more_detail: |
+  我们可能宁愿今天得到50美元，也不愿一年后得到100美元，但同时又宁愿两年后得到100美元，也不愿一年后得到50美元——尽管这是不一致的。我们的折现率不是恒定的；它是双曲的。近期未来被大幅度折现；远期未来折现幅度较小。这解释了拖延、成瘾和储蓄不足。
+
+  当下偏见是一个相关概念：我们给予当下不成比例的权重。双曲贴现解释了为什么我们会做出不遵守的承诺，以及为什么长期规划如此困难。
+
+why_this_is_important: |
+  理解双曲贴现有助于你设计更好的激励措施，约束未来的自己，并避免短期陷阱。它解释了我们为什么会拖延，以及为什么我们在长期目标上挣扎。
+
+when_to_use:
+  - 决策
+  - 职业发展
+  - 投资
+  - 领导力
+
+how_can_you_spot_it:
+  present_preference: |
+    选择即时满足，而非延迟的、更大的回报。
+  inconsistent_time_preferences: |
+    随着时间的推移而逆转的偏好（例如，我们明天想节食，但今天却吃了）。
+  commitment_failures: |
+    做出我们不遵守的计划，当未来变成现在时。
+  procrastination: |
+    为了即时舒适而推迟重要任务。
+
+examples:
+  savings: |
+    选择现在就花掉，而不是为退休储蓄——未来感觉很抽象。
+  health: |
+    为了舒适而今天跳过锻炼，尽管知道我们会后悔——明天的后悔被折现了。
+  addiction: |
+    选择即时快感，而非长期健康。
+  deadlines: |
+    一直无所事事，直到截止日期临近——然后“现在”包括了截止日期，我们才开始行动。
+
+real_world_implications: |
+  双曲贴现影响储蓄、健康、教育和成瘾。它解释了许多自我控制的失败。承诺工具（例如，自动储蓄、问责制）可以通过限制未来的选择来提供帮助。
+
+professional_application:
+  networking_and_relationship_building: |
+    在要求未来承诺时，要建立问责制，使未来“变成现在”（例如，定期检查、设定截止日期）。不要假设人们会在没有结构的情况下兑现承诺。
+  collaborative_learning_initiative: |
+    使用承诺工具：公开承诺、预先设定截止日期，以及使长期目标感觉更紧迫的结构。将长项目分解为短里程碑。
+
+how_can_this_be_misapplied:
+  excessive_control: |
+    以“帮助”他们未来自己为名，过度限制人们的选择。
+  paternalism: |
+    假装我们知道什么对他们长远利益最好。
+  ignoring_present_needs: |
+    为了抽象的未来利益而忽视合理的当前需求。
+  one_size_fits_all: |
+    人们的折现率不同；并非所有人都需要相同的承诺工具。
+
+related_content:
+  - loss_aversion_bias
+  - empathy_gap
+  - zeigarnik_effect
+  - default_effect

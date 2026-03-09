@@ -1,0 +1,96 @@
+id: availability_heuristic
+name: Heurística de disponibilidad
+
+quick_introduction: |
+  La heurística de disponibilidad es la tendencia a juzgar la probabilidad de
+  los eventos por la facilidad con la que vienen a la mente ejemplos. Si podemos
+  recordar fácilmente instancias, asumimos que el evento es común. Ejemplos vívidos,
+  recientes o emocionales dominan nuestras estimaciones de probabilidad.
+
+one_liner: Lo que viene a la mente fácilmente se siente más probable, incluso cuando no lo es.
+
+try_this:
+  - Preguntar: ¿Cuál es la tasa base? ¿Estoy dando demasiado peso a ejemplos vívidos o recientes?
+  - Buscar datos cuando tu instinto diga "esto se siente común" o "esto se siente raro".
+  - Notar cuándo una historia dramática está impulsando tu evaluación de riesgo.
+
+ask_yourself:
+  - ¿Estoy juzgando la probabilidad por la facilidad de recuerdo en lugar de la frecuencia real?
+  - ¿Pensaría de manera diferente si no hubiera visto ese titular hace poco?
+
+in_more_detail: |
+  Usamos atajos mentales para estimar la frecuencia y la probabilidad. Un atajo es
+  la disponibilidad: ¿qué viene a la mente fácilmente? Los accidentes aéreos son vívidos y
+  ampliamente informados: sobreestimamos su probabilidad. Los accidentes automovilísticos son
+  comunes pero menos salientes: subestimamos. La recencia, la vividez y el
+  impacto emocional aumentan la disponibilidad.
+
+  La heurística es útil cuando la disponibilidad se correlaciona con la frecuencia real.
+  Pero los medios, la experiencia personal y la saliencia a menudo distorsionan la correlación.
+  Tememos riesgos raros pero vívidos e ignoramos los comunes pero mundanos.
+
+why_this_is_important: |
+  Reconocer la heurística de disponibilidad te ayuda a corregir las estimaciones de
+  probabilidad, evitar reaccionar exageradamente a noticias vívidas y tomar mejores
+  evaluaciones de riesgo. Explica muchos errores sistemáticos en el juicio.
+
+when_to_use:
+  - toma_de_decisiones
+  - evaluacion_de_riesgos
+  - inversion
+  - resolucion_de_problemas
+
+how_can_you_spot_it:
+  vividness_dominance: |
+    Ejemplos dramáticos o emocionales influyen desproporcionadamente en las estimaciones.
+  recency_effect: |
+    Los eventos recientes parecen tener más probabilidades de repetirse.
+  personal_experience_overweighting: |
+    "Conozco a alguien que..." moldea las estimaciones de probabilidad.
+  media_distortion: |
+    Lo que se informa a menudo no coincide con lo que es frecuente.
+
+examples:
+  risk_perception: |
+    Sobrestimar el riesgo de terrorismo (vívido, informado) y subestimar
+    el riesgo de enfermedades cardíacas (común, menos dramático).
+  investing: |
+    Eventos recientes del mercado (caída, auge) dominan las expectativas para el futuro.
+  hiring: |
+    Una historia vívida sobre una mala contratación de una escuela determinada afecta
+    la evaluación de todos los candidatos de esa escuela.
+  health: |
+    El diagnóstico de cáncer de un amigo hace que el cáncer parezca más probable de lo que sugieren las tasas base.
+
+real_world_implications: |
+  La heurística de disponibilidad afecta las compras de seguros, las prioridades políticas y
+  las decisiones personales. Es explotada por los medios y los especialistas en marketing. Corregir
+  para ella requiere buscar tasas base y cuestionar lo que "viene a la mente".
+
+professional_application:
+  networking_and_relationship_building: |
+    Ten en cuenta que una experiencia negativa vívida con una persona o grupo puede
+    distorsionar tu juicio. Busca tasas base y múltiples puntos de datos.
+  collaborative_learning_initiative: |
+    Al evaluar riesgos u oportunidades, pregunta explícitamente "¿Cuál es la tasa base?"
+    y "¿Estoy dando demasiado peso a ejemplos vívidos?". Usa datos para corregir
+    estimaciones impulsadas por la disponibilidad.
+
+how_can_this_be_misapplied:
+  dismissing_intuition: |
+    A veces la disponibilidad es informativa: la experiencia reciente puede indicar
+    un cambio. No asumas que todos los juicios impulsados por la disponibilidad son erróneos.
+  analysis_paralysis: |
+    Sobrecerrar hasta el punto de ignorar señales de advertencia legítimas de
+    experiencia vívida.
+  false_objectivity: |
+    Asumir que las tasas base son siempre correctas cuando pueden estar desactualizadas o
+    no ser aplicables.
+  manipulation: |
+    Hacer deliberadamente ciertos ejemplos vívidos para dirigir los juicios de otros.
+
+related_content:
+  - anchoring_bias
+  - salience_bias
+  - base_rate_fallacy
+  - baader_meinhof_phenomenon

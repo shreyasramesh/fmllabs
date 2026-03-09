@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# イングループバイアス
+# メンタルモデル / 認知バイアス - 例エントリ
+
+id: in_group_bias
+name: イングループバイアス
+
+quick_introduction: |
+  イングループバイアスとは、自分たちのグループに属していると認識している人々を、外部の人間と認識している人々よりもひいきする傾向のことです。最小限または任意の違いに基づいて、イングループのメンバーには肯定的な資質を、アウトグループのメンバーには否定的な資質を帰属させることがよくあります。
+
+one_liner: 私たちは自分たちのイングループをひいきし、アウトグループをより厳しく—しばしば任意に—判断します。
+
+try_this:
+  - Ask: もしこの人が自分のグループにいたら、同じように判断しただろうか？
+  - Actively seek out-group perspectives when making decisions. (意思決定の際には、アウトグループの視点を積極的に求めましょう。)
+  - Notice when group boundaries are shaping your judgment. (グループの境界線がどのように自分の判断を形成しているかに気づきましょう。)
+
+ask_yourself:
+  - Am I favoring someone because they're "one of us"? (「仲間」だからという理由で誰かをひいきしていませんか？)
+  - Would I apply the same standards to an out-group member? (アウトグループのメンバーに同じ基準を適用するだろうか？)
+
+in_more_detail: |
+  グループがランダムに割り当てられた（例：コイントスで）としても、人々はすぐに自分たちのイングループへの好みを形成します。イングループのメンバーをより信頼し、彼らにより寛大にリソースを配分し、彼らの行動をより寛大に判断します。アウトグループのメンバーは反対の扱いを受けます。
+
+  イングループバイアスは、部族主義、差別、紛争を助長します。採用、昇進、協力、政策に影響を与えます。人種、国籍、会社、チーム、または共有されたアイデンティティに基づいている可能性があります。
+
+why_this_is_important: |
+  イングループバイアスを認識することは、より公正な意思決定を行い、より包括的なチームを構築し、ひいきを避けるのに役立ちます。また、多様性への取り組みが抵抗に直面する理由—イングループの好みは自動的である—を説明します。
+
+when_to_use:
+  - リーダーシップ
+  - 意思決定
+  - 関係構築
+  - 紛争解決
+
+how_can_you_spot_it:
+  preferential_treatment: |
+    「私たち」には疑わしい利益を与えるが、「彼ら」には与えない。
+  resource_allocation: |
+    アウトグループのメンバーが同等またはそれ以上のニーズを持っている場合に、イングループのメンバーにより多くを割り当てる。
+  attribution_asymmetry: |
+    イングループの成功＝スキル；アウトグループの成功＝運。イングループの失敗＝状況；アウトグループの失敗＝人格。
+  minimal_group_effects: |
+    任意グループの割り当てでもひいきが生じる。
+
+examples:
+  hiring: |
+    母校出身者や自分の経歴を共有する候補者を優先する。
+  performance_reviews: |
+    同等のパフォーマンスを持つアウトグループのメンバーよりも、イングループのメンバーを有利に評価する。
+  collaboration: |
+    「自分たちのチーム」を信頼し、含める一方で、「彼らのチーム」を排除したり疑ったりする。
+  politics: |
+    イングループの議論は無批判に受け入れながら、アウトグループの議論を却下する。
+
+real_world_implications: |
+  イングループバイアスは不平等を永続させ、実力主義を損ない、紛争を煽ります。採用、昇進、投資、政策に影響を与えます。それを減らすには、意図的な努力が必要です—それは自然には解決しません。
+
+professional_application:
+  networking_and_relationship_building: |
+    自分の身近なサークル外の人々を積極的に含めましょう。多様な視点を求めましょう。あなたが「自分に似ている」という理由で誰かをひいきしていないか自問しましょう。
+  collaborative_learning_initiative: |
+    採用と評価におけるイングループバイアスを減らすために、構造化されたプロセス（匿名レビュー、多様なパネル）を使用しましょう。共有されたアイデンティティを構築するために、グループ間のプロジェクトを作成しましょう。
+
+how_can_this_be_misapplied:
+  forced_diversity: |
+    根本的なバイアスに対処せずに、反感を生むような割り当てやポリシーを実装すること。
+  out_group_hostility: |
+    アウトグループの敵意も存在するのに、イングループバイアスだけが問題であると見なすこと。
+  ignoring_legitimate_differences: |
+    すべてのグループの違いがバイアスであるわけではありません—時にはグループは異なる特性を持っています。すべての格差が差別であると仮定しないでください。
+  reverse_discrimination: |
+    イングループのメンバーにとって不公平な方法でアウトグループをひいきするために過剰に是正すること。
+
+related_content:
+  - fundamental_attribution_error
+  - halo_effect
+  - false_consensus_effect
+  - groupthink

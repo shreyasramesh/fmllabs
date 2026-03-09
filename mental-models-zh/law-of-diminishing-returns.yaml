@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Law of Diminishing Returns
+# Mental Model / Cognitive Bias - Example Entry
+
+id: law_of_diminishing_returns
+name: 边际收益递减法则
+
+quick_introduction: |
+  边际收益递减法则指出，当其他投入保持不变而增加一种投入时，每增加一个单位投入所产生的额外产出会逐渐减少。投入越多不一定越好——在某个点之后，额外的努力只会带来越来越少的回报。
+
+one_liner: 投入越多，产出最终越少——存在一个最佳点。
+
+try_this:
+  - Ask: 我是否已经过了额外努力产生有意义回报的那个点？
+  - 优先考虑最高杠杆的投入；在边际收益下降时停止。
+  - 注意你是否过度投资于已经有回报的事物。
+
+ask_yourself:
+  - 再投入一单位努力，我会获得什么？
+  - 我是否正在优化到边际收益递减的点之后？
+
+in_more_detail: |
+  在经济学中，在固定量的土地上增加更多工人，最终只会产生更小的增量收益。在个人效率方面，第一个小时的学习可能比第十个小时更有价值。这个原则适用于资源、努力、时间和功能。存在一个最佳点；超过这个点，边际收益就会下降，甚至可能变成负数。
+
+  认识到边际收益递减，有助于你有效地分配资源，并避免在已经产生大部分价值的领域过度投资。
+
+why_this_is_important: |
+  理解边际收益递减法则可以防止过度投资，指导优先排序，并帮助你知道何时停止。这对于资源分配和避免完美主义至关重要。
+
+when_to_use:
+  - 决策制定
+  - 问题解决
+  - 投资
+  - 职业发展
+
+how_can_you_spot_it:
+  incremental_gains_decreasing: |
+    每增加一个单位的努力或资源，产生的产出少于前一个单位。
+  perfectionism_trap: |
+    追求最后 10% 的质量需要不成比例的努力。
+  overinvestment: |
+    在边际收益较低或为负时继续增加资源。
+  optimal_point_passed: |
+    你已经超过了增加投入可以改善结果的点。
+
+examples:
+  studying: |
+    前 2 小时的考试准备比第 7-8 小时更有价值；存在一个边际收益递减的点。
+  product_features: |
+    为应用添加更多功能可能会让用户感到困惑；第 20 个功能比第 5 个功能带来的价值要少。
+  hiring: |
+    在某个点之后，向项目增加更多人手会减慢项目进度（布鲁克斯定律）。
+  marketing: |
+    广告支出翻倍不一定会使结果翻倍；随着市场饱和，回报会递减。
+
+real_world_implications: |
+  边际收益递减法则指导着经济政策、商业战略和个人生产力。忽视它会导致资源浪费和次优结果。它支持帕累托原则和聚焦。
+
+professional_application:
+  networking_and_relationship_building: |
+    投资于少数深入的关系可能比将精力分散给许多人更有价值。认识到额外的社交网络是否有边际收益递减。
+  collaborative_learning_initiative: |
+    更多的培训时间不一定意味着更好的结果。找到最佳剂量，避免过度培训。
+
+how_can_this_be_misapplied:
+  premature_optimization: |
+    在达到合理的质量水平之前过早停止。
+  undershooting: |
+    用边际收益递减作为努力不足的借口。
+  misidentifying_the_curve: |
+    当你实际上处于曲线的不同部分时（例如，早期指数增长阶段），却假设边际收益递减。
+  one_size_fits_all: |
+    在曲线不同的不同环境中，应用相同的“最佳点”。
+
+related_content:
+  - pareto_principle
+  - parkinsons_law
+  - sunk_cost_fallacy
+  - inversion

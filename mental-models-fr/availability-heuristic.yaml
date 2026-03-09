@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Heuristique de disponibilité
+# Modèle mental / Biais cognitif - Entrée d'exemple
+
+id: availability_heuristic
+name: Heuristique de disponibilité
+
+quick_introduction: |
+  L'heuristique de disponibilité est la tendance à juger la probabilité des événements
+  en fonction de la facilité avec laquelle des exemples nous viennent à l'esprit. Si nous pouvons facilement nous souvenir d'instances, nous
+  supposons que l'événement est courant. Les exemples vivants, récents ou émotionnels dominent
+  nos estimations de probabilité.
+
+one_liner: Ce qui nous vient facilement à l'esprit semble plus probable, même quand ce n'est pas le cas.
+
+try_this:
+  - Demandez : Quel est le taux de base ? Est-ce que je surévalue les exemples vivants ou récents ?
+  - Cherchez des données lorsque votre instinct vous dit "cela semble courant" ou "cela semble rare".
+  - Remarquez quand une seule histoire dramatique guide votre évaluation des risques.
+
+ask_yourself:
+  - Est-ce que je juge la probabilité par la facilité de rappel plutôt que par la fréquence réelle ?
+  - Penserais-je différemment si je n'avais pas vu ce titre juste avant ?
+
+in_more_detail: |
+  Nous utilisons des raccourcis mentaux pour estimer la fréquence et la probabilité. Un raccourci
+  est la disponibilité : ce qui nous vient facilement à l'esprit ? Les crashs d'avion sont vivants et
+  largement médiatisés — nous surestimons leur probabilité. Les accidents de voiture sont
+  courants mais moins saillants — nous sous-estimons. La récence, la vivacité et
+  l'impact émotionnel augmentent tous la disponibilité.
+
+  L'heuristique est utile lorsque la disponibilité est corrélée à la fréquence réelle.
+  Mais les médias, l'expérience personnelle et la saillance faussent souvent la corrélation.
+  Nous craignons les risques rares mais vivants et ignorons les risques courants mais banals.
+
+why_this_is_important: |
+  Reconnaître l'heuristique de disponibilité vous aide à corriger vos estimations de probabilité,
+  à éviter de réagir de manière excessive aux nouvelles vives, et à faire de meilleures évaluations des risques.
+  Elle explique de nombreuses erreurs systématiques de jugement.
+
+when_to_use:
+  - prise_de_decision
+  - evaluation_des_risques
+  - investissement
+  - resolution_de_problemes
+
+how_can_you_spot_it:
+  vividness_dominance: |
+    Les exemples dramatiques ou émotionnels influencent de manière disproportionnée les estimations.
+  recency_effect: |
+    Les événements récents semblent plus susceptibles de se reproduire.
+  personal_experience_overweighting: |
+    "Je connais quelqu'un qui..." façonne les estimations de probabilité.
+  media_distortion: |
+    Ce qui est rapporté ne correspond souvent pas à ce qui est fréquent.
+
+examples:
+  risk_perception: |
+    Surestimation du risque de terrorisme (vif, médiatisé) et sous-estimation
+    du risque de maladie cardiaque (courant, moins dramatique).
+  investing: |
+    Les événements récents du marché (krach, boom) dominent les attentes pour l'avenir.
+  hiring: |
+    Une histoire marquante sur un mauvais recrutement dans une école donnée affecte
+    l'évaluation de tous les candidats de cette école.
+  health: |
+    Le diagnostic de cancer d'un ami donne l'impression que le cancer est plus probable que ce que suggèrent les taux de base.
+
+real_world_implications: |
+  L'heuristique de disponibilité affecte les achats d'assurance, les priorités des politiques,
+  et les décisions personnelles. Elle est exploitée par les médias et les spécialistes du marketing. Corriger
+  pour elle nécessite de rechercher les taux de base et de remettre en question ce qui "vient à l'esprit".
+
+professional_application:
+  networking_and_relationship_building: |
+    Soyez conscient qu'une expérience négative marquante avec une personne ou un groupe peut
+    fausser votre jugement. Recherchez les taux de base et plusieurs points de données.
+  collaborative_learning_initiative: |
+    Lors de l'évaluation des risques ou des opportunités, demandez explicitement "Quel est le taux de base ?"
+    et "Est-ce que je surévalue les exemples vivants ?". Utilisez des données pour corriger
+    les estimations basées sur la disponibilité.
+
+how_can_this_be_misapplied:
+  dismissing_intuition: |
+    Parfois, la disponibilité est informative — l'expérience récente peut signaler un changement.
+    Ne supposez pas que tous les jugements basés sur la disponibilité sont erronés.
+  analysis_paralysis: |
+    Surestimer la correction au point d'ignorer les signes d'alerte légitimes d'une expérience
+    marquante.
+  false_objectivity: |
+    Supposer que les taux de base sont toujours corrects alors qu'ils peuvent être obsolètes ou
+    inapplicables.
+  manipulation: |
+    Rendre délibérément certains exemples marquants pour orienter les jugements des autres.
+
+related_content:
+  - anchoring_bias
+  - salience_bias
+  - base_rate_fallacy
+  - baader_meinhof_phenomenon

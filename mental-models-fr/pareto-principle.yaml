@@ -1,0 +1,91 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Principe de Pareto
+# Modèle Mental / Biais Cognitif - Exemple d'entrée
+
+id: pareto_principle
+name: Principe de Pareto
+
+quick_introduction: |
+  Le principe de Pareto (ou loi du 80/20) stipule qu'environ 80 % des effets proviennent
+  de 20 % des causes. Une petite minorité d'entrées produit souvent la majorité des sorties—
+  dans les ventes, les bugs, les clients, les efforts, les fonctionnalités, et plus encore. Concentrez-vous sur les éléments vitaux.
+
+one_liner: 80 % des effets proviennent de 20 % des causes — concentrez-vous sur les éléments vitaux.
+
+try_this:
+  - Identifiez les 20 % d'entrées qui produisent 80 % des résultats — intensifiez vos efforts dans ce domaine.
+  - Réduisez ou dépriorisez les 80 % qui produisent peu.
+  - Demandez : Quelles quelques choses, si je les faisais bien, auraient le plus d'importance ?
+
+ask_yourself:
+  - Est-ce que j'étends mes efforts de manière égale alors que quelques choses sont plus importantes ?
+  - Quel est mon 20 % à fort effet de levier ?
+
+in_more_detail: |
+  Vilfredo Pareto a observé que 80 % des terres italiennes appartenaient à 20 % de la
+  population. Le principe a été généralisé : 80 % des ventes proviennent de 20 % des
+  clients, 80 % des bugs proviennent de 20 % du code, 80 % des résultats proviennent de 20 % des efforts.
+  Le ratio exact varie, mais le schéma — la distribution inégale — est courant.
+
+  Le principe suggère qu'identifier et se concentrer sur les 20 % à fort effet de levier
+  peut améliorer considérablement les résultats. C'est une heuristique de priorisation, pas une loi physique.
+
+why_this_is_important: |
+  Appliquer le principe de Pareto vous aide à prioriser sans merci, à éviter de perdre du temps sur des activités à faible impact, et à accomplir plus avec moins. Il est fondamental
+  pour la productivité et la stratégie.
+
+when_to_use:
+  - prise_de_decision
+  - resolution_de_problemes
+  - leadership
+  - evolution_de_carriere
+
+how_can_you_spot_it:
+  uneven_distribution: |
+    Une petite fraction de X représente une grande fraction de Y.
+  high_leverage_activities: |
+    Quelques actions produisent la plupart des résultats.
+  low_value_tail: |
+    De nombreuses activités contribuent peu ; les réduire a un impact minimal.
+  vital_few_vs_trivial_many: |
+    La clé est d'identifier les quelques éléments qui comptent le plus.
+
+examples:
+  sales: |
+    20 % des clients génèrent 80 % du chiffre d'affaires — concentrez-vous sur leur fidélisation et leur croissance.
+  software: |
+    20 % des fonctionnalités sont à l'origine de 80 % de l'utilisation — priorisez celles-ci.
+  productivity: |
+    Quelques habitudes ou routines produisent la majeure partie de votre production — intensifiez vos efforts dans ce domaine.
+  problems: |
+    20 % des bugs sont responsables de 80 % des plantages — corrigez-les d'abord.
+
+real_world_implications: |
+  Le principe de Pareto guide l'allocation des ressources, la stratégie produit, et
+  la productivité personnelle. L'ignorer conduit à disperser les efforts de manière trop fine.
+  L'appliquer à l'excès peut entraîner la négligence de la "longue traîne" là où elle est importante.
+
+professional_application:
+  networking_and_relationship_building: |
+    Identifiez les relations qui comptent le plus pour vos objectifs. Investissez
+    de manière disproportionnée dans celles-ci plutôt que de répartir vos efforts équitablement.
+  collaborative_learning_initiative: |
+    Pour améliorer les performances d'une équipe, trouvez les 20 % d'interventions qui génèrent
+    80 % des résultats. Concentrez la formation et les changements de processus dans ce domaine.
+
+how_can_this_be_misapplied:
+  oversimplification: |
+    Supposer que le 80/20 s'applique partout ; certaines distributions sont plus équilibrées.
+  neglecting_the_tail: |
+    Ignorer la "masse négligeable" quand elle compte collectivement (par exemple, de nombreux petits
+    clients, des cas limites).
+  false_precision: |
+    Traiter le 80/20 comme une règle littérale plutôt qu'une heuristique approximative.
+  misidentifying_the_vital_few: |
+    Se concentrer sur les mauvais 20 % en raison d'une analyse erronée.
+
+related_content:
+  - law_of_diminishing_returns
+  - parkinsons_law
+  - inversion
+  - second_order_thinking

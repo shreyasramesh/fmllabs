@@ -1,0 +1,91 @@
+id: anchoring_bias
+name: Biais d'ancrage
+
+quick_introduction: |
+  Le biais d'ancrage est la tendance à trop se fier à la première information
+  rencontrée lors de la prise de décisions. Cette première "ancre" fausse les jugements
+  ultérieurs, même lorsqu'elle est non pertinente ou arbitraire.
+
+one_liner: Le premier chiffre que vous voyez façonne tous ceux qui suivent.
+
+try_this:
+  - Avant une négociation, déterminez votre chiffre cible et évitez d'être ancré par le leur.
+  - Lors d'une estimation, générez votre propre chiffre avant d'entendre celui des autres.
+  - Demandez : penserais-je différemment si j'avais vu un autre chiffre d'abord ?
+
+ask_yourself:
+  - Quel chiffre ou quelle idée ai-je rencontré en premier – et est-ce que cela fausse mon jugement ?
+  - Est-ce que j'ajuste suffisamment par rapport à l'ancre, ou suis-je encore trop proche d'elle ?
+
+in_more_detail: |
+  Dans une expérience classique, les personnes à qui l'on demandait d'estimer le pourcentage de nations africaines
+  aux Nations Unies donnaient des estimations plus élevées si elles avaient juste vu un nombre plus élevé (par exemple, 65 contre 10).
+  L'ancre – même lorsqu'elle était aléatoire – a influencé leurs réponses. L'ancrage affecte les négociations,
+  la fixation des prix, l'embauche et les prévisions.
+
+  Le premier chiffre que nous voyons devient un point de référence. Nous nous en éloignons, mais
+  généralement pas suffisamment. Même lorsque nous savons que l'ancre est arbitraire, elle peut toujours
+  nous influencer. Les experts ne sont pas à l'abri.
+
+why_this_is_important: |
+  Comprendre l'ancrage vous aide à prendre de meilleures décisions, à négocier plus efficacement
+  et à éviter d'être manipulé. Il explique également pourquoi l'ordre et le cadrage
+  des informations sont si importants.
+
+when_to_use:
+  - prise_de_decision
+  - negotiation
+  - investissement
+  - evaluation_des_risques
+
+how_can_you_spot_it:
+  first_number_dominance: |
+    Le premier chiffre dans une négociation ou une estimation influence de manière disproportionnée
+    le résultat.
+  insufficient_adjustment: |
+    Lors de l'ajustement à partir d'une ancre, les gens n'ajustent généralement pas assez.
+  arbitrary_anchor_influence: |
+    Même des chiffres manifestement non pertinents (par exemple, les derniers chiffres d'un numéro de sécurité sociale)
+    peuvent affecter les estimations.
+  order_effects: |
+    La séquence dans laquelle les options sont présentées modifie les choix.
+
+examples:
+  salary_negotiation: |
+    Le premier chiffre mentionné – que ce soit par l'employeur ou le candidat – ancre souvent l'offre finale.
+  real_estate: |
+    Le prix affiché ancre la perception de la valeur par les acheteurs, même lorsqu'il est délibérément
+    fixé haut ou bas.
+  retail: |
+    "Avant 99 $, maintenant 49 $" utilise le prix d'origine comme ancre pour faire paraître le prix de vente comme une bonne affaire.
+  forecasting: |
+    Les premières estimations dans les réunions de planification ancrent les projections ultérieures, même lorsque
+    la première estimation était une supposition.
+
+real_world_implications: |
+  L'ancrage façonne les marchés, les négociations et les politiques. Il peut être utilisé de manière éthique (par exemple,
+  en fixant des attentes raisonnables) ou non éthique (par exemple, fixation de prix manipulative).
+  Le reconnaître améliore la qualité des décisions.
+
+professional_application:
+  networking_and_relationship_building: |
+    Dans les négociations, envisagez de faire la première offre pour définir l'ancre – ou soyez conscient lorsque l'autre partie le fait.
+  collaborative_learning_initiative: |
+    Dans les réunions, soyez prudent quant à qui parle en premier sur les estimations ; envisagez
+    de collecter des estimations indépendantes avant la discussion.
+
+how_can_this_be_misapplied:
+  manipulation: |
+    Utiliser délibérément des ancres extrêmes pour orienter les autres vers les résultats souhaités.
+  overconfidence_in_anchors: |
+    Faire trop confiance à votre propre première estimation sans la réviser.
+  ignoring_relevant_information: |
+    Laisser une ancre supplanter des données plus pertinentes.
+  exploitation: |
+    Tactiques de vente qui utilisent des prix "comparer à" gonflés pour faire paraître les prix réels raisonnables.
+
+related_content:
+  - framing_effect
+  - loss_aversion_bias
+  - default_effect
+  - availability_heuristic

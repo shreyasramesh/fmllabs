@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Availability Heuristic
+# Mental Model / Cognitive Bias - Example Entry
+
+id: availability_heuristic
+name: 可得性启发式
+
+quick_introduction: |
+  可得性启发式是指我们倾向于根据事件的易于回想程度来判断其发生的可能性。如果我们能轻易回忆起某个事件的例子，我们就会认为该事件很常见。生动、近期或情绪化的例子会主导我们对概率的估计。
+
+one_liner: 容易想到的事情感觉更有可能发生——即使事实并非如此。
+
+try_this:
+  - 问：基础比率是多少？我是否过度重视了生动或近期的例子？
+  - 当你的直觉告诉你“这件事感觉很普遍”或“这件事感觉很罕见”时，去寻求数据。
+  - 注意当一个戏剧性的故事正在驱动你的风险评估时。
+
+ask_yourself:
+  - 我是根据回忆的容易程度而不是实际频率来判断可能性的吗？
+  - 如果我没有刚看到那个标题，我会考虑得不同吗？
+
+in_more_detail: |
+  我们使用心智捷径来估计频率和概率。一种捷径就是可得性：什么容易出现在脑海中？空难是生动且被大量报道的——我们高估了它们发生的可能性。车祸很常见但不太显眼——我们低估了。近期性、生动性和情感冲击都会增加可得性。
+
+  当可得性与实际频率相关时，这种启发式很有用。但是媒体、个人经历和显眼性常常会扭曲这种相关性。我们害怕罕见但生动的风险，而忽视了常见但平淡的风险。
+
+why_this_is_important: |
+  认识到可得性启发式有助于你修正概率估计，避免对生动的新闻反应过度，并做出更好的风险评估。它解释了许多判断中的系统性错误。
+
+when_to_use:
+  - 决策制定
+  - 风险评估
+  - 投资
+  - 问题解决
+
+how_can_you_spot_it:
+  vividness_dominance: |
+    戏剧性或情绪化的例子不成比例地影响估计。
+  recency_effect: |
+    近期事件感觉更有可能再次发生。
+  personal_experience_overweighting: |
+    “我认识某个人……”塑造了概率估计。
+  media_distortion: |
+    报道的内容往往与频率不符。
+
+examples:
+  risk_perception: |
+    高估恐怖主义风险（生动、报道多）而低估心脏病风险（常见、不那么戏剧化）。
+  investing: |
+    近期的市场事件（崩盘、繁荣）主导了对未来的预期。
+  hiring: |
+    一个关于某所学校糟糕的招聘经历的生动故事会影响对该校所有候选人的评估。
+  health: |
+    朋友的癌症诊断使癌症感觉比基础比率显示的更可能。
+
+real_world_implications: |
+  可得性启发式影响保险购买、政策优先级和个人决策。它会被媒体和营销人员利用。纠正这一点需要寻求基础比率并质疑“脑海中浮现”的内容。
+
+professional_application:
+  networking_and_relationship_building: |
+    请注意，对某人或群体的生动负面经历可能会扭曲你的判断。寻求基础比率和多个数据点。
+  collaborative_learning_initiative: |
+    在评估风险或机遇时，明确提问“基础比率是多少？”以及“我是否过度重视了生动的例子？”利用数据来纠正由可得性驱动的估计。
+
+how_can_this_be_misapplied:
+  dismissing_intuition: |
+    有时可得性是有启示性的——近期经验可以表明变化。不要认为所有由可得性驱动的判断都是错误的。
+  analysis_paralysis: |
+    过度纠正是指忽视生动经历带来的合法警告信号。
+  false_objectivity: |
+    假设基础比率总是正确的，即使它们可能已过时或不适用。
+  manipulation: |
+    故意使某些例子生动，以引导他人的判断。
+
+related_content:
+  - anchoring_bias
+  - salience_bias
+  - base_rate_fallacy
+  - baader_meinhof_phenomenon

@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 蔡格尼克效应
+# 心智模型 / 认知偏差 - 示例条目
+
+id: zeigarnik_effect
+name: 蔡格尼克效应
+
+quick_introduction: |
+  蔡格尼克效应是指我们倾向于记住未完成或中断的任务，而不是已完成的任务。未完成的任务会产生心理张力，使其在我们脑海中保持活跃。我们的大脑会抓住未完成的事情。
+
+one_liner: 未完成的任务会让我们念念不忘——我们的大脑会抓住未完成的事情。
+
+try_this:
+  - 通过完成来“释放”任务，减轻精神负担——完成它们或明确放弃它们。
+  - 将工作分解成可管理的块，以创建富有成效的未完成项。
+  - 注意你何时会反复思考未完成的事务——完成它们或决定放下它们。
+
+ask_yourself:
+  - 哪些未完成的任务在我脑海中造成了张力？
+  - 这个未完成项值得保留吗，还是我可以完成它？
+
+in_more_detail: |
+  布鲁玛·蔡格尼克（Bluma Zeigarnik）观察到，服务员比已付款的订单更能记住未付款的订单——一旦任务完成，它就会“从记忆中释放”。未完成的任务会创建一个需要完成的未完成项。这既能促进专注（我们想完成），也会引起焦虑（我们无法停止思考未完成的事情）。
+
+  该效应被用于营销（悬念、未完待续的故事）和生产力（将工作分解成块以创建多个“未完成项”）。它解释了为什么我们会反复思考未完成的事务，以及为什么待办事项清单会让人感到不知所措。
+
+why_this_is_important: |
+  理解蔡格尼克效应有助于你管理精神负担，设计引人入胜的体验，并策略性地使用中断。它解释了为什么我们无法停止思考未完成的工作——以及为什么这可以被利用或有害。
+
+when_to_use:
+  - problem_solving
+  - leadership
+  - learning
+  - decision_making
+
+how_can_you_spot_it:
+  rumination_on_incomplete: |
+    未完成的任务比已完成的任务更容易侵扰思绪。
+  better_recall_of_unfinished: |
+    我们比已完成的任务更能记住中断的任务。
+  tension_for_closure: |
+    未完成之事带来的不适感或完成欲。
+  serial_dramas: |
+    悬念和“未完待续”利用了该效应。
+
+examples:
+  productivity: |
+    开始一项任务会产生心理张力，促使完成——如果未完成项太多，则会引起焦虑。
+  marketing: |
+    “第 1 部分（共 3 部分）”或“未完待续”能让观众保持参与并持续关注。
+  meetings: |
+    会议在没有明确后续步骤的情况下结束，会让与会者留下未解决的张力。
+  learning: |
+    未解答的问题或不完整的解释会留在记忆中，并驱动进一步的探究。
+
+real_world_implications: |
+  蔡格尼克效应对生产力、参与度和精神负担都有影响。它可以被用来集中注意力，也可能导致不知所措。它解释了悬念的吸引力以及太多未完成任务的负担。
+
+professional_application:
+  networking_and_relationship_building: |
+    在谈话结束时明确下一步行动——或者故意留下未完成项，如果你希望对方跟进。未解决的线索会产生参与度。
+  collaborative_learning_initiative: |
+    在培训中使用蔡格尼克效应：在休息前提出问题或难题，以保持学习者的参与度。但要避免创建过多的未完成项，以免人们感到不知所措。
+
+how_can_this_be_misapplied:
+  overwhelm: |
+    创建过多的未完成项——太多未完成的任务——会导致焦虑和瘫痪。
+  manipulation: |
+    故意留下未解决的事项以制造依赖性或参与度。
+  false_urgency: |
+    利用该效应制造根本不存在的虚假紧迫感。
+  incomplete_work: |
+    开始许多事情以制造“张力”，但实际上并未完成——导致精力分散。
+
+related_content:
+  - parkinsons_law
+  - hyperbolic_discounting
+  - loss_aversion_bias
+  - scarcity_bias

@@ -1,0 +1,103 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Baader-Meinhof Phenomenon
+# Mental Model / Cognitive Bias - Example Entry
+
+id: baader_meinhof_phenomenon
+name: Baader-Meinhof Phenomenon
+
+quick_introduction: |
+  Baader-Meinhof phenomenon (also called frequency illusion) is when you learn
+  about something new and then suddenly notice it everywhere. It feels like a coincidence,
+  but it's often selective attention—your brain is primed to notice what it recently
+  encountered.
+
+one_liner: You learn something new and suddenly see it everywhere—it was always there.
+
+try_this:
+  - When something feels "everywhere" after you learned it, check the base rate.
+  - Notice when recency is making something feel more significant than it is.
+  - Ask: Am I seeing a real trend, or just noticing what I'm primed to notice?
+
+ask_yourself:
+  - Is this actually more common now, or am I just noticing it more?
+  - Would I have seen this pattern if I hadn't recently learned about it?
+
+in_more_detail: |
+  After hearing about the Baader-Meinhof terrorist group, a person might see references
+  to it in the news, in conversation, and in articles within days. The phenomenon has
+  two components: selective attention (you notice what you're looking for) and
+  confirmation bias (you remember the hits and forget the misses).
+
+  The illusion is that the thing has suddenly become more common. In reality, it was
+  always present; you simply weren't attuned to it. This can lead to overestimating
+  the prevalence or importance of recently learned information.
+
+why_this_is_important: |
+  Recognizing the Baader-Meinhof phenomenon helps you avoid overestimating how common
+  or significant something is based on recent exposure. It also explains why new ideas,
+  products, or trends can feel like they're "everywhere" after you first notice them.
+
+when_to_use:
+  - decision_making
+  - learning
+  - risk_assessment
+  - problem_solving
+
+how_can_you_spot_it:
+  sudden_ubiquity: |
+    You learn a new word, concept, or product and within days feel you're seeing it
+    constantly.
+  recency_bias: |
+    Recent information feels more representative of reality than it actually is.
+  pattern_seeking: |
+    Your brain connects unrelated sightings into a narrative of "this is everywhere."
+  forgetting_the_misses: |
+    You don't track how often you don't see the thing—only the times you do.
+
+examples:
+  vocabulary: |
+    Learning the word "serendipity" and then noticing it in three different articles
+    the same week.
+  car_purchase: |
+    After deciding to buy a certain car model, you see it on every street—though it
+    was always there.
+  health_anxiety: |
+    Reading about a rare symptom and then noticing similar sensations in yourself,
+    leading to unnecessary worry.
+  trends: |
+    Discovering a new app or trend and feeling it's suddenly dominating—when it may
+    have a small user base.
+
+real_world_implications: |
+  The phenomenon affects how we perceive trends, risks, and opportunities. Marketers
+  and media can exploit it by creating repeated exposure. In decision-making, it can
+  lead to overweighting recent information.
+
+professional_application:
+  networking_and_relationship_building: |
+    When someone mentions a topic repeatedly after learning it, recognize they may be
+    experiencing frequency illusion—the topic isn't necessarily more relevant, just
+    more salient to them.
+  collaborative_learning_initiative: |
+    In training, reinforce that "seeing it everywhere" after learning something new
+    is normal; encourage checking base rates rather than trusting the feeling of
+    ubiquity.
+
+how_can_this_be_misapplied:
+  overestimating_prevalence: |
+    Assuming something is more common or important than it is because you've noticed
+    it frequently lately.
+  confirmation_bias_amplification: |
+    Using the feeling of "seeing it everywhere" as evidence that a belief is correct.
+  decision_distortion: |
+    Making choices based on recently learned information that feels disproportionately
+    significant.
+  vulnerability_to_manipulation: |
+    Advertisers and propagandists use repeated exposure to create the illusion of
+    ubiquity and importance.
+
+related_content:
+  - confirmation_bias
+  - availability_heuristic
+  - salience_bias
+  - availability_heuristic

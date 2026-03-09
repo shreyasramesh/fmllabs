@@ -1,0 +1,108 @@
+id: narrative_fallacy
+name: Le sophisme narratif
+
+quick_introduction: |
+  Le sophisme narratif est la tendance à construire des histoires à partir d'événements passés
+  qui les rendent plus cohérentes, prévisibles et significatives qu'elles ne l'étaient réellement.
+  Nous rétrofictons des explications sur le hasard. Nous transformons le chaos de l'histoire
+  en une histoire ordonnée – et nous croyons ensuite que cette histoire était inévitable.
+
+one_liner: Nous rétrofictons des histoires cohérentes sur le hasard – et nous croyons ensuite qu'elles étaient inévitables.
+
+try_this:
+  - Demander : Quelle part de cette histoire est due au recul ? Quel rôle a joué la chance ?
+  - Être sceptique face aux explications ordonnées – le passé était plus chaotique que nos récits.
+  - Remarquer quand "ça a du sens" remplace "c'était prévisible".
+
+ask_yourself:
+  - Est-ce que je construis une histoire qui rend le passé plus inévitable qu'il ne l'était ?
+  - Aurais-je pu prédire cela avant que cela n'arrive ?
+
+in_more_detail: |
+  Nassim Taleb a popularisé le terme. Nous avons soif de récits – cause et effet,
+  héros et méchants, arcs narratifs clairs. Nous construisons donc des histoires qui relient
+  les événements a posteriori. L'histoire semble vraie parce qu'elle est cohérente – mais
+  la cohérence ne signifie pas qu'elle est correcte. Nous confondons "ça a du sens" et
+  "c'était prévisible". Nous sous-estimons le rôle de la chance et
+  du hasard.
+
+  Le sophisme narratif affecte notre façon d'apprendre de l'histoire, d'évaluer
+  le succès et de faire des prédictions. Nous surpondérons le pouvoir explicatif
+  des histoires et sous-pondérons le rôle du hasard.
+
+why_this_is_important: |
+  Reconnaître le sophisme narratif vous aide à éviter de trop apprendre du
+  passé et à surestimer la prévisibilité. Il encourage l'humilité
+  concernant la causalité et la prédiction. Tout ce qui fait une bonne
+  histoire n'est pas vrai ni généralisable.
+
+when_to_use:
+  - prise_de_decision
+  - apprentissage
+  - evaluation_des_risques
+  - resolution_de_problemes
+
+how_can_you_spot_it:
+  hindsight_coherence: |
+    Les événements passés sont expliqués par une histoire ordonnée qui n'était
+    pas visible à l'époque.
+  cause_effect_overconfidence: |
+    Nous attribuons des causes claires à des résultats qui avaient de nombreux
+    facteurs contributifs.
+  luck_minimization: |
+    Le succès et l'échec sont expliqués par l'habileté et la stratégie,
+    et non par la chance.
+  story_over_evidence: |
+    Un récit convaincant l'emporte sur les preuves statistiques.
+
+examples:
+  business_success: |
+    "Ils ont réussi à cause de X" alors que de nombreux facteurs et la chance
+    étaient impliqués – nous choisissons l'histoire qui convient.
+  investing: |
+    Expliquer les mouvements du marché avec des récits qui semblent
+    satisfaisants mais qui peuvent être post-hoc.
+  history: |
+    Les événements historiques sont racontés comme des progressions inévitables
+    alors qu'ils dépendaient de nombreux facteurs.
+  career: |
+    "Je suis arrivé là parce que j'ai fait X" alors que la chance et le timing
+    ont joué des rôles importants.
+
+real_world_implications: |
+  Le sophisme narratif déforme l'apprentissage, la confiance excessive dans la prédiction,
+  et l'attribution du succès et de l'échec.
+  Il rend le passé plus prévisible qu'il ne l'était
+  et l'avenir plus prévisible qu'il ne l'est.
+
+professional_application:
+  networking_and_relationship_building: |
+    Quand quelqu'un raconte son histoire de succès, rappelez-vous que
+    c'est un récit – cohérent et convaincant, mais peut-être
+    simplifié. La chance et les facteurs invisibles peuvent être sous-estimés.
+  collaborative_learning_initiative: |
+    Dans les rétrospectives, distinguez le récit des preuves.
+    Demandez "Qu'aurions-nous dit à l'époque ?" Utilisez
+    des journaux de décision pour capturer l'incertitude avant
+    que les résultats ne soient connus.
+
+how_can_this_be_misapplied:
+  dismissing_all_explanation: |
+    Certains récits sont corrects – tout n'est pas
+    sophisme narratif. La causalité existe.
+  excessive_skepticism: |
+    Refuser d'apprendre du passé parce que "sophisme
+    narratif". Nous pouvons encore en tirer des leçons utiles.
+  false_randomness: |
+    Supposer que tout est aléatoire alors que certains résultats
+    sont significativement attribuables.
+  undermining_storytelling: |
+    Les histoires ont de la valeur pour la communication et le sens –
+    le sophisme est de croire qu'elles sont complètes ou
+    prédictives, pas qu'elles existent.
+
+related_content:
+  - hindsight_bias
+  - survivorship_bias
+  - regression_to_the_mean
+  - map_is_not_the_territory

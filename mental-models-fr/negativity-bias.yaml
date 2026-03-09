@@ -1,0 +1,95 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Biais de négativité
+# Modèle Mental / Biais Cognitif - Entrée d'exemple
+
+id: negativity_bias
+name: Biais de négativité
+
+quick_introduction: |
+  Le biais de négativité est la tendance à accorder plus de poids à l'information négative qu'à l'information
+  positive. Les mauvaises nouvelles, les critiques et les menaces captent notre attention et
+  influencent nos décisions plus fortement que des stimuli positifs équivalents.
+
+one_liner: Les mauvaises nouvelles pèsent plus lourd que les bonnes nouvelles — nous sommes câblés pour prioriser les menaces.
+
+try_this:
+  - Cherchez et pesez activement les preuves positives lors de l'évaluation.
+  - Remarquez quand une critique pèse plus que de nombreux compliments.
+  - Demandez : Est-ce que j'accorde plus de poids à l'information négative qu'elle ne le mérite ?
+
+ask_yourself:
+  - Est-ce que je m'attarde sur le négatif et déprécie le positif ?
+  - Me sentirais-je différemment si je me concentrais sur les bonnes preuves ?
+
+in_more_detail: |
+  D'un point de vue évolutif, manquer une menace pouvait être fatal, tandis que manquer une opportunité
+  était généralement survivable. Nos cerveaux sont câblés pour prioriser l'information négative.
+  Un seul commentaire critique peut l'emporter sur de nombreux compliments. Les événements négatifs sont
+  mémorisés plus vivement et plus longtemps.
+
+  Ce biais affecte les relations, la prise de décision et le bien-être. Nous nous attardons sur
+  les échecs, anticipons le pire des cas et déprécions les preuves positives. Le comprendre
+  nous aide à le corriger.
+
+why_this_is_important: |
+  Reconnaître le biais de négativité vous aide à équilibrer les retours, à éviter de réagir de manière excessive aux
+  critiques et à prendre des décisions plus calibrées. Cela explique également pourquoi les mauvaises nouvelles
+  dominent et pourquoi nous nous sentons souvent plus mal que les circonstances ne le justifient.
+
+when_to_use:
+  - prise_de_decision
+  - construction_relationnelle
+  - leadership
+  - evaluation_des_risques
+
+how_can_you_spot_it:
+  disproportionate_impact_of_criticism: |
+    Un commentaire négatif éclipse de nombreux commentaires positifs.
+  threat_prioritization: |
+    Les inconvénients potentiels reçoivent plus d'attention que les avantages équivalents.
+  vivid_negative_memories: |
+    Les expériences négatives sont rappelées plus facilement et avec plus d'émotion.
+  discounting_positive_evidence: |
+    Les bonnes nouvelles sont rapidement oubliées ou expliquées.
+
+examples:
+  performance_reviews: |
+    Un employé s'attarde sur une seule critique et déprécie l'évaluation globale positive.
+  news_consumption: |
+    Les gros titres négatifs dominent l'attention et façonnent la vision du monde malgré les tendances positives.
+  relationships: |
+    Une seule dispute pèse plus lourd que de nombreux bons moments.
+  investing: |
+    Les baisses du marché déclenchent plus de panique que les hausses équivalentes ne déclenchent d'euphorie.
+
+real_world_implications: |
+  Le biais de négativité façonne les médias, la politique et la culture organisationnelle. Il
+  contribue à l'anxiété, aux conflits et à des décisions sous-optimales. Y remédier
+  délibérément peut améliorer le bien-être et le jugement.
+
+professional_application:
+  networking_and_relationship_building: |
+    Lors de la fourniture de retours, soyez conscient que les commentaires négatifs auront plus de poids —
+    équilibrez-les et mettez l'accent sur la croissance. Lors de la réception de retours, considérez consciemment
+    l'ensemble du tableau.
+  collaborative_learning_initiative: |
+    Créez des cultures qui contrent explicitement le biais de négativité : célébrez les victoires,
+    documentez les résultats positifs et équilibrez les rétrospectives avec des "pré-mortems" de
+    ce qui a bien fonctionné.
+
+how_can_this_be_misapplied:
+  toxic_positivity: |
+    Rejeter des préoccupations légitimes en insistant sur la "pensée positive".
+  ignoring_real_threats: |
+    Sur-corriger au point de sous-estimer les risques réels.
+  feedback_suppression: |
+    Éviter les critiques nécessaires parce que "la négativité est mauvaise".
+  invalidation: |
+    Dire à quelqu'un que ses sentiments négatifs sont "juste le biais de négativité"
+    alors qu'ils ont une cause réelle de préoccupation.
+
+related_content:
+  - loss_aversion_bias
+  - availability_heuristic
+  - impact_bias
+  - confirmation_bias

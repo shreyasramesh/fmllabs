@@ -1,0 +1,97 @@
+id: dissonance_cognitiva
+nome: Dissonância Cognitiva
+
+introducao_rapida: |
+  A dissonância cognitiva é o desconforto mental que sentimos ao ter crenças conflitantes
+  ou quando nossas ações contradizem nossas crenças. Somos motivados a
+  reduzir esse desconforto — muitas vezes mudando nossas crenças para corresponder às nossas ações
+  em vez de mudar nossas ações.
+
+uma_frase: Mudamos nossas crenças para corresponder às nossas ações com mais frequência do que o contrário.
+
+tente_isto:
+  - Perceba quando você está racionalizando para reduzir o desconforto em vez de mudar o comportamento.
+  - Pergunte: Estou ajustando minhas crenças para justificar o que fiz?
+  - Considere se mudar a ação seria mais honesto do que mudar a crença.
+
+pergunte_a_si_mesmo:
+  - Estou reduzindo a dissonância por racionalização ou por mudar de fato?
+  - Eu teria essa crença se já não tivesse agido dessa forma?
+
+em_mais_detalhes: |
+  A teoria de Leon Festinger explica que buscamos consistência. Quando agimos
+  contra nossos valores (por exemplo, mentir, desperdiçar dinheiro), experimentamos dissonância.
+  Para reduzi-la, podemos mudar nossa crença ("Não foi realmente uma mentira") ou
+  minimizar a ação ("Não foi tão ruim"). Frequentemente racionalizamos em vez de nos reformarmos.
+
+  A dissonância cognitiva impulsiona o efeito Ben Franklin (gostamos de pessoas que ajudamos), explica por que justificamos decisões passadas e sustenta muitas
+  autoilusões. É uma força poderosa na formação e mudança de crenças.
+
+por_que_isto_e_importante: |
+  Compreender a dissonância cognitiva ajuda você a reconhecer suas próprias
+  racionalizações e a entender por que as pessoas resistem a mudar de ideia.
+  Também explica por que o compromisso e a consistência são poderosos princípios de persuasão.
+
+quando_usar:
+  - tomada_de_decisao
+  - construcao_de_relacionamento
+  - lideranca
+  - resolucao_de_conflitos
+
+como_detectar:
+  racionalizacao_pos_decisao: |
+    Após uma escolha, enfatizamos os aspectos positivos de nossa escolha e os
+    negativos das opções rejeitadas.
+  alinhamento_crenca_acao: |
+    Ajustamos as crenças para corresponder às ações que já tomamos.
+  desconforto_com_inconsistencia: |
+    Desconforto ao perceber que nosso comportamento não corresponde aos nossos valores declarados.
+  resistencia_a_evidencias_desconfirmadoras: |
+    Descartar ou minimizar informações que entram em conflito com nossos compromissos.
+
+exemplos:
+  justificacao_de_compra: |
+    Após comprar um item caro, enfatizamos seus benefícios e minimizamos
+    o custo.
+  relacionamento: |
+    Racionalizamos permanecer em um relacionamento ruim focando no bom
+    e minimizando o ruim.
+  carreira: |
+    Justificamos permanecer em um emprego de que não gostamos enfatizando razões pelas quais "temos que"
+    ficar.
+  crencas: |
+    Quando nossas ações contradizem nossos valores, mudamos nossos valores ("Eu não
+    sou realmente vegetariano — apenas como carne às vezes") em vez de nossas ações.
+
+implicacoes_no_mundo_real: |
+  A dissonância cognitiva molda a formação de crenças, o comportamento do consumidor e
+  atitudes políticas. Explica por que as pessoas insistem após más
+  decisões e por que mudar de comportamento pode mudar crenças.
+
+aplicacao_profissional:
+  networking_e_construcao_de_relacionamentos: |
+    Pequenos compromissos podem levar a outros maiores — as pessoas racionalizam suas
+    ações passadas. Use isso eticamente: comece com pedidos pequenos. Esteja ciente
+    quando estiver racionalizando seu próprio comportamento.
+  iniciativa_de_aprendizagem_colaborativa: |
+    Ao introduzir mudanças, obtenha concordância inicial e pequenos compromissos — eles
+    criam dissonância que motiva uma adoção maior. Evite forçar
+    compromissos públicos que criam ressentimento.
+
+como_isto_pode_ser_mal_aplicado:
+  manipulacao: |
+    Criar deliberadamente dissonância para pressionar as pessoas à conformidade.
+  descartar_mudanca_genuina: |
+    Assumir que toda mudança de crença é racionalização quando as pessoas às vezes
+    atualizam genuinamente.
+  consistencia_forcada: |
+    Pressionar as pessoas a serem "consistentes" quando suas visões evoluíram legitimamente.
+  autoilusao: |
+    Usar a teoria da dissonância para justificar evitar verdades desconfortáveis sobre
+    nós mesmos.
+
+conteudo_relacionado:
+  - efeito_ben_franklin
+  - viés_de_confirmação
+  - falácia_do_custo_afundado
+  - erro_fundamental_de_atribuicao

@@ -1,0 +1,102 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Retrospecção Rosada
+# Modelo Mental / Viés Cognitivo - Entrada de Exemplo
+
+id: rosy_retrospection
+name: Retrospecção Rosada
+
+quick_introduction: |
+  A retrospecção rosada é a tendência de lembrar o passado como melhor do que realmente foi.
+  Relembramos experiências passadas de forma mais positiva ao longo do tempo, amenizando dificuldades
+  e amplificando os bons momentos. "Os bons velhos tempos" muitas vezes não foram tão bons quanto nos lembramos.
+
+one_liner: Lembramos o passado como melhor do que foi — "os bons velhos tempos" não foram tão bons assim.
+
+try_this:
+  - Ao comparar com o passado, pergunte: O que eu estava realmente sentindo naquela época?
+  - Mantenha um diário para comparar a memória com a realidade mais tarde.
+  - Observe quando a nostalgia está colorindo seu julgamento do presente.
+
+ask_yourself:
+  - Estou idealizando o passado?
+  - Eu teria sido feliz naquela época se pudesse viajar no tempo de volta?
+
+in_more_detail: |
+  Tendemos a lembrar os aspectos positivos de experiências passadas e a esquecer ou
+  minimizar os negativos. Férias, empregos e relacionamentos parecem melhores na
+  nostalgia do que foram no momento. Isso pode levar a comparações irreais — julgamos
+  o presente contra um passado idealizado.
+
+  A retrospecção rosada afeta a tomada de decisão quando repetimos escolhas passadas
+  esperando o mesmo resultado (lembrado). Também pode alimentar a nostalgia por
+  eras que foram objetivamente piores. É o oposto do viés de negatividade
+  na memória.
+
+why_this_is_important: |
+  Reconhecer a retrospecção rosada ajuda você a fazer comparações mais realistas
+  e a evitar repetir erros passados com base em memórias idealizadas. Também
+  explica por que, às vezes, ansiamos pelo passado, apesar do progresso atual.
+
+when_to_use:
+  - tomada_de_decisao
+  - mudancas_de_carreira
+  - construcao_de_relacionamentos
+  - aprendizado
+
+how_can_you_spot_it:
+  idealized_past: |
+    "As coisas eram melhores naquela época" quando medidas objetivas podem mostrar o contrário.
+  selective_positive_memory: |
+    Lembrar o bom e esquecer o mau de experiências passadas.
+  nostalgia_as_evidence: |
+    Usar memórias afetuosas como evidência de que escolhas passadas foram certas.
+  present_undervaluation: |
+    O presente parece pior do que é porque comparamos com um passado idealizado.
+
+examples:
+  career: |
+    "Meu antigo emprego era ótimo" quando você saiu por bons motivos — a memória amenizou
+    as frustrações.
+  relationships: |
+    "Éramos tão felizes" em um relacionamento passado — esquecendo os conflitos que
+    levaram ao seu fim.
+  childhood: |
+    "As crianças tinham uma vida melhor na minha época" quando muitas medidas objetivas (saúde,
+    segurança, oportunidade) melhoraram.
+  projects: |
+    "Aquele projeto correu bem" quando, na verdade, teve muitos atrasos — lembramos
+    o resultado, não o processo.
+
+real_world_implications: |
+  A retrospecção rosada afeta a satisfação com a vida, decisões de carreira e
+  escolhas impulsionadas pela nostalgia. Pode levar à repetição de erros passados ou
+  comparações irreais. Também explica o apelo da retórica de "de volta aos bons velhos tempos".
+
+professional_application:
+  networking_and_relationship_building: |
+    Ao considerar reconectar-se com ex-colegas ou retornar a funções passadas,
+    separe a nostalgia da realidade. Documente seus motivos para sair na época;
+    revise-os antes de retornar.
+  collaborative_learning_initiative: |
+    Em retrospectivas, use anotações ou dados contemporâneos em vez de memória para
+    avaliar o que realmente aconteceu. A memória ameniza as dificuldades.
+
+how_can_this_be_misapplied:
+  dismissing_nostalgia: |
+    Nem toda nostalgia é enganosa — às vezes, o passado era genuinamente melhor
+    em alguns aspectos.
+  invalidating_memories: |
+    Dizer às pessoas que suas memórias positivas estão "erradas" quando podem refletir
+    uma experiência subjetiva genuína.
+  overcorrection: |
+    Assumir que o passado foi sempre pior do que nos lembramos — às vezes foi
+    melhor.
+  present_bias: |
+    Usar a retrospecção rosada como desculpa para descartar preocupações legítimas
+    sobre o declínio atual.
+
+related_content:
+  - hindsight_bias
+  - negativity_bias
+  - availability_heuristic
+  - impact_bias

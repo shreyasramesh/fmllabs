@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Hanlon's Razor
+# Mental Model / Cognitive Bias - Example Entry
+
+id: hanlons_razor
+name: 汉隆剃刀
+
+quick_introduction: |
+  汉隆剃刀定律是：“永远不要因为愚蠢而归咎于恶意”。换句话说，当无能、疏忽或无知可以解释某种行为时，不要假定其存在不良意图。
+
+one_liner: 当无能或疏忽可以解释时，不要假定存在恶意。
+
+try_this:
+  - 当有人让你感到沮丧时，问问自己：这能否用错误或无知来解释？
+  - 在假定对方意图不轨之前，先考虑更简单的解释。
+  - 注意自己是否会轻易地得出“他们就是想伤害我”的结论。
+
+ask_yourself:
+  - 我是否将本可用愚蠢来解释的事情归咎于恶意？
+  - 如果我处在他们的位置，我是否也希望得到同样的宽容？
+
+in_more_detail: |
+  这个原则鼓励给予他人宽容。当某人的行为伤害或让你感到沮丧时，默认的假设往往是他们有意伤害你。汉隆剃刀定律表明，许多此类行为源于粗心、信息不足或执行不当——而非恶意。
+
+  这并不意味着恶意从未存在。这意味着，当一个简单的解释足以说明问题时，我们不应轻易做出最坏的猜测。这张“剃刀”可以减少偏执，改善人际关系，并帮助我们以更具建设性的方式应对问题。
+
+why_this_is_important: |
+  应用汉隆剃刀定律可以减少冲突，维护人际关系，并将精力集中在解决问题上，而不是指责。它还能防止你因为假设每个人都想害你而产生的压力。
+
+when_to_use:
+  - 冲突解决 (conflict_resolution)
+  - 领导力 (leadership)
+  - 关系建立 (relationship_building)
+  - 决策 (decision_making)
+
+how_can_you_spot_it:
+  quick_assumption_of_malice: |
+    你立即将负面结果解释为蓄意伤害。
+  personalizing_mistakes: |
+    当事情出错时，你认为这是针对你个人的。
+  ignoring_alternative_explanations: |
+    你不考虑无能、沟通不畅或疏忽的可能性。
+  escalation_before_inquiry: |
+    在询问发生了什么之前，你就表现出愤怒或报复。
+
+examples:
+  email_tone: |
+    假定一封简短的邮件是消极攻击的，而发件人可能只是很匆忙或不擅长表达语气。
+  missed_deadline: |
+    将同事的延期交付视为破坏行为，而他们可能过度承诺或遇到了障碍。
+  policy_decisions: |
+    假定一项你不喜欢的公司政策是为了伤害员工而设计的，而它可能只是解决其他问题的笨拙尝试。
+  traffic: |
+    假定另一个司机故意超车，而他们可能根本没看见你。
+
+real_world_implications: |
+  汉隆剃刀定律可以改善职场文化，减少诉讼，并使冲突解决更加有效。过度使用可能导致纵容疏忽；使用不足则会产生不必要的冲突。
+
+professional_application:
+  networking_and_relationship_building: |
+    当有人让你失望时，在假定恶意之前先寻求澄清。通过默认宽容的解释来维护人际关系。
+  collaborative_learning_initiative: |
+    在团队中，建立一种文化，即默认错误是无意的，直到被证明并非如此。关注系统和流程，而不是指责。
+
+how_can_this_be_misapplied:
+  excusing_negligence: |
+    将反复出现的无能或疏忽斥为“非恶意”，而实际上应予以追究。
+  ignoring_genuine_malice: |
+    过于僵化地应用此定律，以至于忽视了真正的坏人和有毒行为。
+  avoiding_difficult_conversations: |
+    利用汉隆剃刀定律作为逃避处理绩效问题的借口。
+  gaslighting_victims: |
+    告诉一个真正受到委屈的人，他们在“假设恶意”，而实际上恶意确实存在。
+
+related_content:
+  - fundamental_attribution_error
+  - confirmation_bias
+  - in_group_bias
+  - cognitive_dissonance

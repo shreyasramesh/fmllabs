@@ -1,0 +1,101 @@
+id: salience_bias
+name: انحياز البروز
+
+quick_introduction: |
+  انحياز البروز هو الميل إلى التركيز على الجوانب الأكثر بروزاً أو وضوحاً
+  للموقف مع تجاهل العوامل الأقل وضوحاً ولكنها قد تكون مهمة. ما يبرز يحصل
+  على اهتمام ووزن غير متناسبين في أحكامنا.
+
+one_liner: ما يبرز يحصل على اهتمام غير متناسب - ما هو دقيق يتم تجاهله.
+
+try_this:
+  - Ask: ما الذي لا أراه لأنه ليس بارزاً؟
+  - Actively look for less obvious factors before deciding. (ابحث بنشاط عن العوامل الأقل وضوحاً قبل اتخاذ القرار.)
+  - Notice when a vivid or dramatic element is dominating your judgment. (لاحظ متى يهيمن عنصر حيوي أو درامي على حكمك.)
+
+ask_yourself:
+  - Am I overweighting what's prominent and underweighting what's subtle? (هل أبالغ في تقدير ما هو بارز وأقلل من تقدير ما هو دقيق؟)
+  - What important factors might I be overlooking? (ما هي العوامل المهمة التي قد أتجاهلها؟)
+
+in_more_detail: |
+  المعلومات البارزة تكون حيوية، أو مشحونة عاطفياً، أو تم تلقيها مؤخراً.
+  إنها تلفت الانتباه وتؤثر على القرارات أكثر مما ينبغي. نبالغ في تقدير
+  ما هو واضح ونقلل من تقدير ما هو دقيق. حدث درامي أو مثال حيوي يمكن أن
+  يهيمن على تفكيرنا حتى لو لم يكن تمثيلياً.
+
+  يتداخل انحياز البروز مع الاستدلال بالتمثيل (ما يتبادر إلى الذهن)
+  وانحياز الحداثة (ما حدث مؤخراً). يؤثر على تصور المخاطر، والتوظيف،
+  والاستراتيجية. يتم معالجة المشاكل الأكثر وضوحاً؛ والمشاكل غير
+  المرئية تتفاقم.
+
+why_this_is_important: |
+  التعرف على انحياز البروز يساعدك على النظر إلى ما وراء الواضح
+  واعتبار العوامل الأقل وضوحاً. إنه يحسن تقييم المخاطر، وتشخيص
+  المشاكل، وجودة القرارات. الأشياء المهمة ليست دائماً بارزة.
+
+when_to_use:
+  - اتخاذ_القرارات
+  - حل_المشكلات
+  - تقييم_المخاطر
+  - القيادة
+
+how_can_you_spot_it:
+  prominent_factor_dominance: |
+    The most noticeable aspect drives the decision. (أبرز جانب يدفع القرار.)
+  overlooking_background: |
+    Less visible factors are ignored despite their importance. (يتم تجاهل العوامل الأقل وضوحاً على الرغم من أهميتها.)
+  vividness_overweighting: |
+    Dramatic or emotional information gets disproportionate weight. (تحصل المعلومات الدرامية أو العاطفية على وزن غير متناسب.)
+  visibility_bias: |
+    What we can easily see or measure gets more attention than
+    what we can't. (ما يمكننا رؤيته أو قياسه بسهولة يحصل على مزيد من الاهتمام مقارنة بما لا نستطيع.)
+
+examples:
+  risk: |
+    A plane crash is salient—we overestimate flying risk. Car
+    accidents are less salient in aggregate—we underestimate
+    driving risk. (حادث طائرة بارز - نبالغ في تقدير خطر الطيران. حوادث السيارات أقل بروزاً كمجموع - نقلل من تقدير خطر القيادة.)
+  hiring: |
+    A candidate's presentation skills are salient; their
+    follow-through may be less visible but equally important. (مهارات عرض المرشح بارزة؛ قد يكون تنفيذهم أقل وضوحاً ولكنه مهم بنفس القدر.)
+  strategy: |
+    Competitor moves are salient; gradual market shifts are
+    less noticeable but may matter more. (تحركات المنافسين بارزة؛ تحولات السوق التدريجية أقل وضوحاً ولكنها قد تكون أكثر أهمية.)
+  problems: |
+    The loudest complaint gets addressed while systemic issues
+    go unnoticed. (تتم معالجة الشكوى الأعلى صوتاً بينما تظل القضايا النظامية غير ملحوظة.)
+
+real_world_implications: |
+  Salience bias affects what gets attention, funding, and action.
+  It can lead to addressing symptoms rather than causes and
+  to misallocated resources. Deliberately seeking non-salient
+  information improves decisions. (يؤثر انحياز البروز على ما يحصل على الاهتمام، والتمويل، والإجراءات. يمكن أن يؤدي إلى معالجة الأعراض بدلاً من الأسباب وإلى تخصيص خاطئ للموارد. البحث المتعمد عن المعلومات غير البارزة يحسن القرارات.)
+
+professional_application:
+  networking_and_relationship_building: |
+    Don't judge people only by their most visible traits. Look
+    for less obvious qualities—reliability, consistency, how
+    they treat people who can't help them. (لا تحكم على الأشخاص فقط من خلال سماتهم الأكثر وضوحاً. ابحث عن صفات أقل وضوحاً - الموثوقية، الثبات، كيف يعاملون الأشخاص الذين لا يمكنهم مساعدتهم.)
+  collaborative_learning_initiative: |
+    In problem-solving, explicitly ask "What are we not seeing?"
+    and "What's less obvious but important?" Create processes
+    that surface non-salient issues. (في حل المشكلات، اسأل صراحة "ما الذي لا نراه؟" و "ما هو أقل وضوحاً ولكنه مهم؟" أنشئ عمليات تبرز القضايا غير البارزة.)
+
+how_can_this_be_misapplied:
+  ignoring_salient_info: |
+    Sometimes what's salient is important. Don't dismiss
+    everything obvious. (في بعض الأحيان، ما هو بارز مهم. لا تتجاهل كل ما هو واضح.)
+  false_sophistication: |
+    Assuming that obscure factors are always more important
+    than obvious ones. (افتراض أن العوامل الغامضة دائماً أكثر أهمية من العوامل الواضحة.)
+  analysis_paralysis: |
+    Looking for so many non-salient factors that you never
+    act on the salient ones. (البحث عن العديد من العوامل غير البارزة لدرجة أنك لا تتصرف أبداً بناءً على العوامل البارزة.)
+  contrarianism: |
+    Rejecting salient information just to be different. (رفض المعلومات البارزة لمجرد الاختلاف.)
+
+related_content:
+  - availability_heuristic
+  - anchoring_bias
+  - baader_meinhof_phenomenon
+  - confirmation_bias

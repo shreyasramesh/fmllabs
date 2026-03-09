@@ -1,0 +1,106 @@
+id: bystander_effect
+name: Effet du témoin
+
+quick_introduction: |
+  L'effet du témoin est la tendance des individus à être moins susceptibles
+  d'offrir de l'aide lorsque d'autres personnes sont présentes. Plus il y a de
+  témoins, moins il est probable qu'une personne agisse. La responsabilité est
+  diffusée ; nous supposons que quelqu'un d'autre aidera.
+
+one_liner: Plus il y a de personnes présentes, moins il est probable qu'une seule personne agisse.
+
+try_this:
+  - En cas d'urgence, attribuez la responsabilité directement : « Vous, appelez le 112 ».
+  - Ne supposez pas que quelqu'un d'autre aidera — agissez ou déléguez explicitement.
+  - Remarquez quand vous attendez que d'autres agissent en premier.
+
+ask_yourself:
+  - Est-ce que je diffuse la responsabilité parce que d'autres sont présents ?
+  - Agirais-je différemment si j'étais seul ?
+
+in_more_detail: |
+  Après le meurtre de Kitty Genovese (bien que l'histoire ait été en partie
+  mythologisée), les chercheurs ont découvert que la présence d'autres personnes
+  réduit l'aide. Nous cherchons des indices chez les autres — si personne n'agit,
+  nous interprétons cela comme « aucune action nécessaire ». Nous faisons
+  également l'expérience de la diffusion de la responsabilité : avec beaucoup de
+  personnes présentes, chacun se sent moins personnellement responsable.
+  L'ignorance pluraliste peut se produire : tout le monde pense que quelque chose
+  ne va pas, mais personne n'agit parce que personne d'autre n'agit.
+
+  L'effet est plus fort lorsque la situation est ambiguë et lorsque les témoins
+  ne se connaissent pas. Il peut être surmonté par une attribution directe de la
+  responsabilité (« Vous, appelez le 112 »).
+
+why_this_is_important: |
+  Comprendre l'effet du témoin vous aide à agir lorsque les autres ne le font pas,
+  et à concevoir des systèmes qui le surmontent. Si vous êtes en difficulté,
+  isolez une personne. Si vous êtes un témoin, n'attendez pas que les autres
+  agissent.
+
+when_to_use:
+  - leadership
+  - développement_relations
+  - résolution_conflits
+  - prise_de_décision
+
+how_can_you_spot_it:
+  diffusion_of_responsibility: |
+    « Quelqu'un d'autre le fera » quand beaucoup sont présents.
+  pluralistic_ignorance: |
+    Tout le monde pense que l'action est nécessaire mais personne n'agit car
+    personne d'autre n'agit.
+  social_proof_inaction: |
+    L'inaction des autres est interprétée comme « aucune action nécessaire ».
+  audience_inhibition: |
+    La peur de paraître ridicule ou de réagir de manière excessive empêche l'action.
+
+examples:
+  emergency: |
+    Une personne s'effondre ; avec de nombreux témoins, chacun est moins
+    susceptible d'appeler à l'aide.
+  workplace: |
+    Tout le monde voit un problème mais personne ne le soulève — chacun suppose
+    que quelqu'un d'autre le fera.
+  harassment: |
+    Les témoins de harcèlement n'interviennent pas, chacun pensant que les autres
+    agiront.
+  meetings: |
+    Une mauvaise idée n'est pas contestée car tout le monde suppose que quelqu'un
+    d'autre prendra la parole.
+
+real_world_implications: |
+  L'effet du témoin peut avoir des conséquences tragiques en cas d'urgence et
+  permet aux problèmes de persister dans les organisations. Le surmonter
+  nécessite une attribution directe de responsabilité et des normes qui encouragent
+  l'intervention.
+
+professional_application:
+  networking_and_relationship_building: |
+    Quand vous avez besoin d'aide, demandez à une personne spécifique. Quand vous
+    voyez quelque chose qui ne va pas, agissez — ne supposez pas que les autres le
+    feront. Créez des normes où prendre la parole est attendu et récompensé.
+  collaborative_learning_initiative: |
+    Formez les gens à reconnaître l'effet du témoin et à intervenir. Utilisez le
+    « si vous voyez quelque chose, dites quelque chose » et attribuez des rôles
+    explicites. Récompensez ceux qui parlent en premier.
+
+how_can_this_be_misapplied:
+  blaming_bystanders: |
+    Juger sévèrement les individus lorsque l'effet est une force situationnelle
+    puissante — concentrez-vous sur le changement de la situation.
+  false_assumption: |
+    Supposer que quelqu'un aidera toujours s'il y a assez de personnes présentes — le
+    contraire est souvent vrai.
+  overcorrection: |
+    Rendre tout le monde responsable de sorte que personne ne le soit — la diffusion
+    peut toujours se produire.
+  individualizing: |
+    Traiter l'effet du témoin comme un défaut de caractère plutôt que comme un
+    phénomène situationnel.
+
+related_content:
+  - groupthink
+  - in_group_bias
+  - availability_cascade
+  - fundamental_attribution_error

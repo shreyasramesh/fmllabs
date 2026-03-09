@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Regression to the Mean
+# Mental Model / Cognitive Bias - Example Entry
+
+id: regression_to_the_mean
+name: Regression to the Mean
+
+quick_introduction: |
+  Regression to the mean is the statistical phenomenon where extreme outcomes tend to
+  be followed by outcomes closer to the average. After an unusually good or bad
+  result, the next result will likely be less extreme—not because of any causal
+  intervention, but due to random variation.
+
+one_liner: Extreme outcomes tend to be followed by outcomes closer to average.
+
+try_this:
+  - Don't attribute "regression" to your intervention—it often would have happened anyway.
+  - After an extreme result, expect the next one to be less extreme.
+  - Ask: Is this change due to what I did, or just regression to the mean?
+
+ask_yourself:
+  - Am I crediting or blaming my intervention for what might be random variation?
+  - Would this have happened without my action?
+
+in_more_detail: |
+  If a student scores unusually high on one test, they'll likely score closer to
+  their average on the next—not because they "got lazy" but because the first score
+  was partly luck. The same applies to sports performance, stock returns, and
+  business metrics. We often attribute the "regression" to something we did (e.g.,
+  punishment or reward), when it would have happened anyway.
+
+  Daniel Kahneman describes how flight instructors mistakenly concluded that
+  praise worsened performance and criticism improved it—they were observing
+  regression to the mean after extreme performances.
+
+why_this_is_important: |
+  Understanding regression to the mean prevents misattributing causation. It
+  helps you avoid overreacting to outliers and making changes based on noise.
+  It's essential for evaluating interventions and performance.
+
+when_to_use:
+  - decision-making
+  - investing
+  - risk_assessment
+  - leadership
+
+how_can_you_spot_it:
+  extreme_followed_by_average: |
+    An unusually good or bad outcome is followed by one closer to the mean.
+  spurious_causation: |
+    Attributing the "recovery" or "decline" to an intervention when regression
+    would have occurred anyway.
+  overreaction_to_outliers: |
+    Making policy or personal changes based on a single extreme data point.
+  reward_punishment_confusion: |
+    Believing that punishment "worked" when improvement was just regression.
+
+examples:
+  sports: |
+    A player has a career game, then returns to average—fans may blame "complacency."
+  investing: |
+    A stock has a great year, then reverts—investors may attribute the decline
+    to bad management when it's partly reversion.
+  performance_reviews: |
+    An employee has a bad quarter, gets feedback, improves—the feedback may get
+    credit when regression would have occurred regardless.
+  medicine: |
+    A patient feels worse, takes a treatment, improves—the treatment may get
+    credit when some improvement was natural.
+
+real_world_implications: |
+  Regression to the mean affects how we evaluate teachers, doctors, fund managers,
+  and ourselves. It explains why "what goes up must come down" often holds
+  statistically. Misunderstanding it leads to wasted interventions and false
+  confidence in remedies.
+
+professional_application:
+  networking_and_relationship_building: |
+    Don't overinterpret a single bad interaction—it may be an outlier that will
+    regress to the mean of the relationship.
+  collaborative_learning_initiative: |
+    When evaluating interventions (training, process changes), use control groups
+    and multiple data points to distinguish effect from regression.
+
+how_can_this_be_misapplied:
+  dismissing_all_interventions: |
+    Assuming that any improvement after an intervention is "just regression"
+    when real effects exist.
+  underreacting: |
+    Ignoring genuine problems because "it'll regress to the mean."
+  statistical_illiteracy: |
+    Confusing regression with a force that "corrects" outcomes—it's just
+    probability.
+  overconfidence: |
+    Assuming the mean is stable when the underlying process may have changed.
+
+related_content:
+  - gamblers_fallacy
+  - hindsight_bias
+  - base_rate_fallacy
+  - narrative_fallacy

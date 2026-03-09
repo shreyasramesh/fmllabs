@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 地图并非疆域
+# 心智模型 / 认知偏误 - 示例条目
+
+id: map_is_not_the_territory
+name: 地图并非疆域
+
+quick_introduction: |
+  “地图并非疆域”的意思是，现实的表征本身并非现实。模型、理论和描述都是有用的简化，但它们总会遗漏一些东西。将地图误认为疆域会导致错误。
+
+one_liner: 地图并非疆域——所有模型都是错误的；有些模型是有用的。
+
+try_this:
+  - 当模型与现实不符时，更新地图——不要强迫现实去适应模型。
+  - 提问：这个模型遗漏了什么？它何时会失效？
+  - 将模型视为工具，而非真理。
+
+ask_yourself:
+  - 我是否将我的模型与现实混淆了？
+  - 自我上次查看以来，疆域是否发生了变化？
+
+in_more_detail: |
+  阿尔弗雷德·科日布斯基在他的总体语义学中引入了这一想法。城市地图对于导航很有用，但它不是城市——它省略了细节，会过时，而且永远无法捕捉一切。同样的概念也适用于心智模型、科学理论和组织结构图。
+
+  所有模型都是错误的；有些模型是有用的。危险在于将模型视为全部真理，尤其是在疆域已经改变的情况下。良好的思考需要根据现实不符的情况来更新地图。
+
+why_this_is_important: |
+  认识到地图与疆域不同，可以防止对模型过度自信，鼓励更新信念，并降低基于过时或过于简化的信息行事的风险。
+
+when_to_use:
+  - 决策
+  - 问题解决
+  - 学习
+  - 风险评估
+
+how_can_you_spot_it:
+  model_reality_confusion: |
+    将一个框架或理论视为完全描述了现实。
+  outdated_assumptions: |
+    基于不再符合当前条件的信息或模型行事。
+  oversimplification: |
+    因为“地图”没有包含而忽略细微差别。
+  map_worship: |
+    在证据与之相矛盾时，为模型辩护，而不是更新模型。
+
+examples:
+  organizational_charts: |
+    假设报告结构反映了工作实际是如何完成的。
+  financial_models: |
+    将电子表格预测视为预测，而不是一种情景。
+  stereotypes: |
+    将群体层面的概括应用于个人。
+  strategy_docs: |
+    在市场发生变化时，按照书面计划执行。
+
+real_world_implications: |
+  地图-疆域的区别是科学、工程和哲学的基本原理。它支撑着贝叶斯更新、敏捷方法论和认识论谦逊。忽视它会导致僵化的思维和失败的战略。
+
+professional_application:
+  networking_and_relationship_building: |
+    你对一个人的心智模型可能已经过时。通过直接互动来更新它，而不是依赖旧的印象。
+  collaborative_learning_initiative: |
+    鼓励团队将计划和模型视为需要测试和修改的假设，而不是固定的真理。
+
+how_can_this_be_misapplied:
+  radical_skepticism: |
+    得出结论，没有地图是有用的，所有知识都是可疑的。
+  constant_revision: |
+    过于频繁地更新，以至于没有形成稳定的理解。
+  dismissing_models: |
+    因为有用的简化“不是疆域”而拒绝它们。
+  relativism: |
+    声称所有地图都具有同等的有效性，尽管有些地图显然更符合疆域。
+
+related_content:
+  - narrative_fallacy
+  - confirmation_bias
+  - bayes_theorem
+  - illusion_of_control

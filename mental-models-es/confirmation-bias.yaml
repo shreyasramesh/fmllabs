@@ -1,0 +1,103 @@
+id: confirmation_bias
+name: Sesgo de confirmación
+
+quick_introduction: |
+  El sesgo de confirmación es la tendencia a buscar, interpretar y recordar
+  información de manera que confirme nuestras creencias existentes. Damos más
+  peso a la evidencia de apoyo y descartamos o ignoramos la evidencia que
+  contradice nuestras opiniones. Hacemos preguntas que confirman en lugar de
+  probar nuestras hipótesis.
+
+one_liner: Buscamos y recordamos lo que confirma nuestras creencias; descartamos lo que las contradice.
+
+try_this:
+  - Pregunta: ¿Qué me haría estar equivocado? Busca activamente evidencia que desacredite tu punto de vista.
+  - Observa cuándo le das más peso a la información de apoyo que a la contradictoria.
+  - Considera la opinión opuesta tan seriamente como la tuya.
+
+ask_yourself:
+  - ¿Estoy probando mi hipótesis o simplemente confirmándola?
+  - ¿Cuándo fue la última vez que cambié de opinión basándome en nueva evidencia?
+
+in_more_detail: |
+  No somos procesadores neutrales de información. Buscamos confirmación,
+  interpretamos la ambigüedad como apoyo y recordamos los aciertos más que los
+  errores. Nos rodeamos de personas y medios de comunicación afines.
+  Preguntamos "¿Por qué tengo razón?" en lugar de "¿Qué me haría estar equivocado?".
+  Esto nos hace tener demasiada confianza y lentos para actualizarnos.
+
+  El sesgo de confirmación es uno de los sesgos más generalizados y bien
+  documentados. Afecta a la ciencia, la política, las relaciones y los negocios.
+  Superarlo requiere un esfuerzo deliberado y procesos estructurados.
+
+why_this_is_important: |
+  Reconocer el sesgo de confirmación es esencial para una buena toma de
+  decisiones y aprendizaje. Te ayuda a buscar evidencia que desacredite,
+  considerar hipótesis alternativas y actualizar tus creencias cuando esté
+  justificado. Es la base del pensamiento científico.
+
+when_to_use:
+  - toma_de_decisiones
+  - aprendizaje
+  - resolución_de_problemas
+  - evaluación_de_riesgos
+
+how_can_you_spot_it:
+  seeking_support: |
+    Buscar evidencia que confirme en lugar de probar tu punto de vista.
+  asymmetric_interpretation: |
+    Interpretar evidencia ambigua como apoyo a tu posición.
+  discounting_disconfirming: |
+    Descartar o minimizar evidencia que contradice tus creencias.
+  selective_exposure: |
+    Consumir solo información de fuentes que concuerdan contigo.
+
+examples:
+  hiring: |
+    Formar una impresión positiva temprana y luego hacer preguntas que
+    confirmen que el candidato es genial.
+  investing: |
+    Después de comprar una acción, buscar noticias positivas y descartar
+    análisis negativos.
+  relationships: |
+    Interpretar las acciones de una pareja a través de un lente que
+    confirme tu visión sobre ella (buena o mala).
+  politics: |
+    Aceptar información de tu lado sin crítica y rechazar información
+    equivalente del otro lado.
+
+real_world_implications: |
+  El sesgo de confirmación perpetúa creencias falsas, alimenta la polarización
+  y causa errores costosos. Es el enemigo de la buena ciencia y de la buena
+  toma de decisiones. Superarlo requiere una búsqueda deliberada de
+  desconfirmación.
+
+professional_application:
+  networking_and_relationship_building: |
+    Al formarte opiniones sobre las personas, busca activamente evidencia
+    que desacredite tu punto de vista. Pregunta "¿Qué cambiaría mi opinión?"
+    y búscala.
+  collaborative_learning_initiative: |
+    Utiliza al abogado del diablo, equipos rojos y pre-mortem para exponer
+    perspectivas que desacrediten tus ideas. Recompensa a las personas que
+    desafían las visiones predominantes con buena evidencia.
+
+how_can_this_be_misapplied:
+  false_balance: |
+    Tratar todas las opiniones como igualmente válidas cuando la evidencia
+    apoya fuertemente un lado.
+  excessive_skepticism: |
+    Descartar toda la evidencia como "sesgo de confirmación" cuando
+    algunas creencias están bien fundamentadas.
+  contrarianism: |
+    Adoptar la opinión opuesta solo para evitar el sesgo de confirmación,
+    cuando la opinión original puede ser correcta.
+  analysis_paralysis: |
+    Nunca comprometerse con una opinión porque "podríamos estar
+    sesgados".
+
+related_content:
+  - false_consensus_effect
+  - availability_heuristic
+  - bayes_theorem
+  - dunning_kruger_effect

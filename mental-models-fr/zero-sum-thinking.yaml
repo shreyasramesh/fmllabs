@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Pensée à somme nulle
+# Modèle mental / Biais cognitif - Exemple d'entrée
+
+id: zero_sum_thinking
+name: Pensée à somme nulle
+
+quick_introduction: |
+  La pensée à somme nulle est la conviction que le gain d'une personne doit être la perte de l'autre, que les ressources sont fixes et que tout avantage pour vous signifie un désavantage pour moi.
+  En réalité, de nombreuses situations sont à somme positive : les deux parties peuvent gagner.
+
+one_liner: Votre gain n'a pas besoin d'être ma perte ; de nombreuses situations sont à somme positive.
+
+try_this:
+  - Demander : Pouvons-nous agrandir le gâteau ? Est-ce vraiment une somme nulle ?
+  - Rechercher la coopération avant de supposer la compétition.
+  - Remarquer quand vous traitez une situation comme fixe alors qu'elle ne l'est pas.
+
+ask_yourself:
+  - Est-ce que je suppose un gâteau fixe alors que nous pourrions l'agrandir ?
+  - La coopération créerait-elle plus de valeur que la compétition ?
+
+in_more_detail: |
+  Dans un jeu à somme nulle, le total est fixe : votre gain est ma perte. Dans les situations à somme positive, la coopération crée de la valeur. Le commerce, l'innovation et le développement de relations sont souvent à somme positive. La pensée à somme nulle conduit à une compétition inutile, à des occasions manquées de coopération et à une rivalité destructrice.
+
+  Ce biais est courant dans les négociations, la politique et les dynamiques organisationnelles.
+  Il suppose un gâteau fixe alors que le gâteau peut souvent être agrandi. Il peut devenir une prophétie auto-réalisatrice : si vous traitez les autres comme des adversaires, ils deviennent des adversaires.
+
+why_this_is_important: |
+  Reconnaître la pensée à somme nulle ouvre des opportunités de coopération et de création de valeur. Elle améliore la négociation, réduit les conflits et permet des résultats gagnant-gagnant. Nombre des meilleures opportunités sont à somme positive.
+
+when_to_use:
+  - négociation
+  - leadership
+  - développement_de_relations
+  - prise_de_décision
+
+how_can_you_spot_it:
+  fixed_pie_assumption: |
+    "S'ils gagnent, je perds" alors que la situation pourrait permettre à tous deux de gagner.
+  competitive_ framing: |
+    Cadrer automatiquement les situations comme nous contre eux.
+  envy_of_others_gains: |
+    Ressentir le succès des autres comme si cela diminuait le vôtre.
+  missed_cooperation: |
+    Ne pas voir les opportunités de collaboration qui bénéficieraient à tous.
+
+examples:
+  negotiation: |
+    Supposer qu'une meilleure transaction pour l'autre partie signifie une transaction pire pour vous, alors que des solutions créatives élargissent souvent la valeur pour les deux.
+  salary: |
+    "Si mon collègue obtient une augmentation, il y en a moins pour moi" alors que les budgets peuvent être flexibles ou les augmentations justifiées par la valeur créée.
+  politics: |
+    "Les gains de leur parti sont nos pertes" alors que de nombreux résultats politiques pourraient bénéficier à plusieurs groupes.
+  career: |
+    "Leur promotion signifie moins d'opportunités pour moi" alors que la croissance organisationnelle peut créer plus d'opportunités pour tout le monde.
+
+real_world_implications: |
+  La pensée à somme nulle alimente les conflits, limite la coopération et entraîne des occasions manquées. Elle est souvent erronée dans l'économie, les relations et l'innovation. Passer à une perspective à somme positive améliore les résultats.
+
+professional_application:
+  networking_and_relationship_building: |
+    Rechercher des moyens de créer de la valeur pour les autres : leur succès peut créer des opportunités pour vous. Construire des relations où les deux parties bénéficient.
+  collaborative_learning_initiative: |
+    Cadrer les objectifs d'équipe comme étant à somme positive : succès partagé, agrandir le gâteau.
+    Encourager la collaboration plutôt que la compétition interne.
+
+how_can_this_be_misapplied:
+  ignoring_real_zero_sum: |
+    Certaines situations sont à somme nulle (par exemple, une promotion unique, un budget fixe).
+    Prétendre le contraire peut être naïf.
+  naive_cooperation: |
+    Supposer que tout le monde coopérera alors que certains acteurs sont véritablement
+    adversaires.
+  undervaluing_competition: |
+    La compétition peut stimuler l'amélioration ; toute rivalité n'est pas destructrice.
+  exploitation: |
+    Utiliser un cadrage "à somme positive" pour extraire de la valeur des autres qui n'en bénéficient pas.
+
+related_content:
+  - fundamental_attribution_error
+  - in_group_bias
+  - scarcity_bias
+  - endowment_effect

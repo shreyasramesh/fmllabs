@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Sunk Cost Fallacy
+# Mental Model / Cognitive Bias - Example Entry
+
+id: sunk_cost_fallacy
+name: Sunk Cost Fallacy
+
+quick_introduction: |
+  The sunk cost fallacy is the tendency to continue investing in a decision because
+  of the resources already spent, rather than based on future expected returns.
+  "We've come this far" or "I've already invested so much" leads to throwing good
+  money after bad.
+
+one_liner: Past investment is gone—only future costs and benefits matter.
+
+try_this:
+  - Ask: If I were starting today, would I choose this path?
+  - Define "kill criteria" in advance—conditions under which you'll stop.
+  - Evaluate the marginal decision: what do I gain or lose from here forward?
+
+ask_yourself:
+  - Am I continuing because of future value, or to justify past investment?
+  - What would I advise a friend who was in my position from scratch?
+
+in_more_detail: |
+  Sunk costs are past costs that cannot be recovered. Rational decision-making
+  ignores them—only future costs and benefits matter. But we're emotionally
+  attached to our investments. We finish the meal we're not enjoying, stay in the
+  movie we dislike, and continue projects that no longer make sense. We want to
+  "not waste" what we've put in, but continuing often wastes more.
+
+  The fallacy is especially strong when we've invested time, effort, or identity,
+  not just money. Admitting we were wrong can feel costly, so we double down.
+
+why_this_is_important: |
+  Recognizing the sunk cost fallacy helps you cut losses, change direction when
+  warranted, and make decisions based on future value rather than past investment.
+  It's essential for projects, careers, and relationships.
+
+when_to_use:
+  - decision-making
+  - investing
+  - career_moves
+  - risk_assessment
+
+how_can_you_spot_it:
+  continuing_because_of_past_investment: |
+    "We can't stop now—we've already spent X" when future returns don't justify
+    continuing.
+  escalation_of_commitment: |
+    Investing more to justify or "salvage" prior investment.
+  identity_investment: |
+    Continuing because admitting failure would threaten self-image.
+  ignoring_marginal_analysis: |
+    Basing decisions on total cost rather than incremental cost and benefit.
+
+examples:
+  projects: |
+    Continuing a failing project because "we've already spent 6 months on it"
+    when cutting losses would be rational.
+  relationships: |
+    Staying in a relationship because "we've been together 5 years" rather than
+    evaluating the future.
+  careers: |
+    Remaining in a career you dislike because you've invested in the degree or
+    years of experience.
+  investments: |
+    Holding a losing stock to "get back to even" rather than reallocating to
+    better opportunities.
+
+real_world_implications: |
+  The sunk cost fallacy causes wasted resources, prolonged failures, and missed
+  opportunities. It affects individuals, organizations, and governments.
+  Overcoming it requires explicit decision frameworks.
+
+professional_application:
+  networking_and_relationship_building: |
+    Don't continue investing in relationships or collaborations that no longer
+    serve you just because of past investment. Evaluate forward-looking value.
+  collaborative_learning_initiative: |
+    Create "kill criteria" for projects—conditions under which you'll stop
+    regardless of past investment. Review projects periodically with a "from
+    zero" lens.
+
+how_can_this_be_misapplied:
+  quitting_too_early: |
+    Using "sunk cost" as an excuse to abandon things that need more time to pay off.
+  undervaluing_consistency: |
+    Some commitments (e.g., relationships, reputation) have value in continuity
+    that pure marginal analysis misses.
+  cold_rationality: |
+    Dismissing emotional attachment as irrational when it may reflect genuine
+    values.
+  analysis_paralysis: |
+    Overthinking whether to continue when the answer is clear.
+
+related_content:
+  - loss_aversion_bias
+  - endowment_effect
+  - confirmation_bias
+  - inversion

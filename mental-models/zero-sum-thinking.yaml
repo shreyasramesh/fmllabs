@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Zero-Sum Thinking
+# Mental Model / Cognitive Bias - Example Entry
+
+id: zero_sum_thinking
+name: Zero-Sum Thinking
+
+quick_introduction: |
+  Zero-sum thinking is the belief that one person's gain must be another's loss—
+  that resources are fixed and any advantage for you means disadvantage for me.
+  In reality, many situations are positive-sum: both parties can gain.
+
+one_liner: Your gain doesn't need to be my loss—many situations are positive-sum.
+
+try_this:
+  - Ask: Can we expand the pie? Is this actually zero-sum?
+  - Look for cooperation before assuming competition.
+  - Notice when you're treating a situation as fixed-pie when it isn't.
+
+ask_yourself:
+  - Am I assuming a fixed pie when we could expand it?
+  - Would cooperation create more value than competition?
+
+in_more_detail: |
+  In a zero-sum game, the total is fixed—your gain is my loss. In positive-sum
+  situations, cooperation creates value. Trade, innovation, and relationship
+  building are often positive-sum. Zero-sum thinking leads to unnecessary
+  competition, missed opportunities for cooperation, and destructive
+  rivalry.
+
+  The bias is common in negotiations, politics, and organizational dynamics.
+  It assumes a fixed pie when the pie can often be expanded. It can become
+  self-fulfilling: if you treat others as adversaries, they become adversaries.
+
+why_this_is_important: |
+  Recognizing zero-sum thinking opens opportunities for cooperation and
+  value creation. It improves negotiation, reduces conflict, and enables
+  win-win outcomes. Many of the best opportunities are positive-sum.
+
+when_to_use:
+  - negotiation
+  - leadership
+  - relationship_building
+  - decision-making
+
+how_can_you_spot_it:
+  fixed_pie_assumption: |
+    "If they win, I lose" when the situation might allow both to gain.
+  competitive_ framing: |
+    Automatically framing situations as us-vs-them.
+  envy_of_others_gains: |
+    Resenting others' success as if it diminishes yours.
+  missed_cooperation: |
+    Failing to see opportunities for collaboration that would benefit all.
+
+examples:
+  negotiation: |
+    Assuming that a better deal for the other party means a worse deal for
+    you—when creative solutions often expand value for both.
+  salary: |
+    "If my colleague gets a raise, there's less for me" when budgets can be
+    flexible or raises can be justified by value created.
+  politics: |
+    "Their party's gains are our losses" when many policy outcomes could
+    benefit multiple groups.
+  career: |
+    "Their promotion means less opportunity for me" when organizational growth
+    can create more opportunities for everyone.
+
+real_world_implications: |
+  Zero-sum thinking fuels conflict, limits cooperation, and causes missed
+  opportunities. It's often wrong in economics, relationships, and
+  innovation. Shifting to positive-sum framing improves outcomes.
+
+professional_application:
+  networking_and_relationship_building: |
+    Look for ways to create value for others—their success can create
+    opportunities for you. Build relationships where both parties benefit.
+  collaborative_learning_initiative: |
+    Frame team goals as positive-sum: shared success, growing the pie.
+    Encourage collaboration over internal competition.
+
+how_can_this_be_misapplied:
+  ignoring_real_zero_sum: |
+    Some situations are zero-sum (e.g., a single promotion, a fixed budget).
+    Pretending otherwise can be naive.
+  naive_cooperation: |
+    Assuming everyone will cooperate when some actors are genuinely
+    adversarial.
+  undervaluing_competition: |
+    Competition can drive improvement; not all rivalry is destructive.
+  exploitation: |
+    Using "positive-sum" framing to extract value from others who don't
+    benefit.
+
+related_content:
+  - fundamental_attribution_error
+  - in_group_bias
+  - scarcity_bias
+  - endowment_effect

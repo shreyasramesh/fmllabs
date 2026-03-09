@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Ilusão de Controle
+# Modelo Mental / Viés Cognitivo - Exemplo de Entrada
+
+id: illusion_of_control
+name: Ilusão de Controle
+
+quick_introduction: |
+  A ilusão de controle é a tendência de superestimar nossa capacidade de
+  influenciar resultados. Acreditamos ter mais controle do que realmente temos — sobre
+  eventos aleatórios, outras pessoas e sistemas complexos. Confundimos correlação
+  com causalidade e ação com impacto.
+
+one_liner: Superestimamos nossa capacidade de influenciar resultados — especialmente os aleatórios.
+
+try_this:
+  - Pergunte: O que aconteceria se eu não fizesse nada? Minha ação está realmente causando o resultado?
+  - Distinguir o que você pode controlar do que não pode.
+  - Perceber quando você está ligando supersticiosamente suas ações a resultados aleatórios.
+
+ask_yourself:
+  - Estou confundindo correlação com causalidade?
+  - O resultado seria diferente se eu não tivesse agido?
+
+in_more_detail: |
+  As pessoas se sentem mais confiantes em ganhar na loteria quando escolhem
+  seus próprios números — mesmo que isso não mude as chances. Jogamos dados
+  com mais força quando queremos números altos. Pensamos que nossos rituais ou comportamentos
+  influenciam resultados que são, na verdade, aleatórios ou determinados por fatores
+  além de nós. A ilusão é reconfortante; ela reduz a ansiedade. Mas pode
+  levar à excesso de confiança e a más decisões.
+
+  A ilusão é mais forte quando estamos envolvidos no processo, quando
+  temos sucesso inicial e quando a tarefa é familiar. Afeta
+  investimentos, gestão e a vida cotidiana.
+
+why_this_is_important: |
+  Reconhecer a ilusão de controle ajuda você a calibrar suas
+  expectativas, evitar o excesso de confiança e focar o esforço onde
+  realmente importa. Também explica por que persistimos em comportamentos supersticiosos
+  e superestimamos nossa influência.
+
+when_to_use:
+  - tomada_de_decisao
+  - avaliacao_de_risco
+  - investimentos
+  - lideranca
+
+how_can_you_spot_it:
+  overestimated_influence: |
+    Acreditar que nossas ações afetam resultados quando não o fazem.
+  ritual_superstition: |
+    Comportamentos que achamos que influenciam resultados (camisa da sorte,
+    rotina pré-jogo) quando não o fazem.
+  choice_illusion: |
+    Sentir que a escolha nos dá controle quando a escolha
+    não afeta o resultado.
+  action_bias: |
+    Preferir "fazer algo" em vez de "esperar", mesmo quando a ação
+    não ajuda.
+
+examples:
+  gambling: |
+    Escolher números da loteria parece mais controlável do que
+    seleção aleatória — as chances são as mesmas.
+  investing: |
+    Traders ativos superestimam sua capacidade de superar o
+    mercado; a maioria tem desempenho inferior após os custos.
+  management: |
+    Líderes superestimam seu impacto nos resultados organizacionais;
+    muitos fatores estão fora de seu controle.
+  sports: |
+    Torcedores acreditam que sua torcida afeta o jogo; jogadores
+    têm rituais de sorte.
+
+real_world_implications: |
+  A ilusão de controle afeta a tomada de risco, a persistência
+  em esforços fúteis e a atribuição de resultados. Pode
+  motivar a ação (às vezes útil), mas também levar a
+  esforços desperdiçados e excesso de confiança. A calibração melhora
+  a qualidade das decisões.
+
+professional_application:
+  networking_and_relationship_building: |
+    Reconhecer o que você pode e não pode controlar. Focar energia
+    em fatores influenciáveis. Não creditar resultados
+    que você não causou — ou culpar por aqueles que
+    você não pôde prevenir.
+  collaborative_learning_initiative: |
+    No planejamento, distinguir fatores controláveis de incontroláveis.
+    Evitar falsa confiança de vitórias precoces. Usar
+    pensamento probabilístico para calibrar expectativas.
+
+how_can_this_be_misapplied:
+  learned_helplessness: |
+    Corrigir excessivamente para acreditar que não temos controle quando temos
+    influência significativa.
+  dismissing_agency: |
+    "É tudo sorte" quando habilidade e esforço importam em
+    muitos domínios.
+  false_fatalism: |
+    Usar a ilusão de controle para justificar a inação.
+  one_size_fits_all: |
+    O controle varia por domínio; algumas situações são mais
+    controláveis do que outras.
+
+related_content:
+  - gamblers_fallacy
+  - narrative_fallacy
+  - hindsight_bias
+  - probabilistic_thinking

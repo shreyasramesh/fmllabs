@@ -1,0 +1,88 @@
+id: parkinsons_law
+name: Ley de Parkinson
+
+quick_introduction: |
+  La Ley de Parkinson establece que "el trabajo se expande hasta llenar el tiempo disponible para su
+  finalización". Dale una semana a una tarea, y te llevará una semana; dale un día, y a menudo se
+  realizará en un día. Lo mismo se aplica a los presupuestos, al tamaño del equipo y a los recursos.
+
+one_liner: El trabajo se expande para llenar el tiempo disponible para su finalización.
+
+try_this:
+  - Establece plazos más ajustados para forzar el enfoque y prevenir la ampliación del alcance.
+  - Pregunta: ¿Cuál es el tiempo mínimo que esto podría llevar razonablemente?
+  - Observa cuándo se consumen tiempo o recursos adicionales sin un valor proporcional.
+
+ask_yourself:
+  - ¿Estoy llenando el tiempo, o es el trabajo el que realmente lo exige?
+  - ¿Un plazo más ajustado forzaría una mejor priorización?
+
+in_more_detail: |
+  C. Northcote Parkinson observó que las burocracias crecen independientemente de la cantidad
+  de trabajo a realizar. También señaló que las tareas se expanden para llenar el tiempo disponible: ajustamos
+  nuestro esfuerzo y ritmo al plazo. Los plazos ajustados pueden forzar el enfoque; los laxos invitan a la procrastinación y a la ampliación del alcance.
+
+  La ley tiene implicaciones para la gestión de proyectos, la productividad personal y el diseño
+  organizacional. Sugiere que las restricciones pueden mejorar los resultados al forzar la priorización.
+
+why_this_is_important: |
+  Comprender la Ley de Parkinson te ayuda a establecer mejores plazos, evitar la sobreasignación de recursos
+  a los proyectos y reconocer cuándo "más tiempo" o "más personas" no ayudarán, y pueden perjudicar. Las restricciones pueden ser productivas.
+
+when_to_use:
+  - toma_de_decisiones
+  - liderazgo
+  - resolucion_de_problemas
+  - movimientos_profesionales
+
+how_can_you_spot_it:
+  deadline_driven_effort: |
+    El trabajo se acelera a medida que se acerca la fecha límite; poco progreso cuando la fecha límite
+    está lejana.
+  scope_expansion: |
+    Los proyectos crecen para consumir los recursos disponibles en lugar de mantenerse enfocados.
+  bureaucratic_growth: |
+    Las organizaciones añaden personas y procesos incluso cuando la carga de trabajo no aumenta.
+  budget_exhaustion: |
+    Los presupuestos se gastan íntegramente independientemente de si el gasto fue necesario.
+
+examples:
+  student_deadlines: |
+    Un trabajo con fecha de entrega en un mes se escribe en las últimas 48 horas.
+  project_management: |
+    Un proyecto con un cronograma de 6 meses tarda 6 meses; el mismo alcance con un plazo de 3 meses
+    también podría completarse.
+  meetings: |
+    Una reunión de 1 hora llena la hora, incluso si 30 minutos fueran suficientes.
+  budgets: |
+    Un departamento gasta su presupuesto completo a fin de año para justificar el mismo presupuesto
+    al año siguiente.
+
+real_world_implications: |
+  La Ley de Parkinson afecta la productividad, la hinchazón organizacional y la asignación de recursos.
+  Sugiere que las restricciones artificiales (plazos más cortos, equipos más pequeños) pueden mejorar el enfoque y la eficiencia.
+
+professional_application:
+  networking_and_relationship_building: |
+    Establece plazos claros y ajustados para el trabajo colaborativo para prevenir la ampliación del alcance y
+    mantener el impulso.
+  collaborative_learning_initiative: |
+    Utiliza la limitación de tiempo (time-boxing) para reuniones y proyectos. Experimenta con plazos más cortos
+    para probar si mejoran el enfoque sin sacrificar la calidad.
+
+how_can_this_be_misapplied:
+  unrealistic_deadlines: |
+    Establecer plazos arbitrariamente cortos que causen agotamiento o mala calidad.
+  underresourcing: |
+    Asumir que menos tiempo o menos personas siempre funcionarán; algunas tareas necesitan
+    recursos adecuados.
+  blame_shifting: |
+    Atribuir retrasos a la "Ley de Parkinson" cuando el trabajo era genuinamente complejo.
+  ignoring_quality: |
+    Apresurarse a cumplir restricciones artificiales a costa de resultados sostenibles.
+
+related_content:
+  - law_of_diminishing_returns
+  - pareto_principle
+  - zeigarnik_effect
+  - hyperbolic_discounting

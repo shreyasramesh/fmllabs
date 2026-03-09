@@ -1,0 +1,105 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# バーナム効果
+# メンタルモデル / 認知バイアス - 例エントリ
+
+id: barnum_effect
+name: バーナム効果
+
+quick_introduction: |
+  バーナム効果（またはフォアラー効果）とは、曖昧で一般的な性格記述を、
+  自分だけにあてはまる正確なものとして受け入れてしまう傾向のことです。
+  占いや占い師、性格診断テストは、ほとんどすべての人に当てはまるような
+  記述を使用しますが、私たちはそれが自分に固有のものであると信じてしまいます。
+  私たちは、ありきたりなものの中に自分自身を見出します。
+
+one_liner: 曖昧な記述は、ほとんどすべての人に当てはまるため、個人的に感じられます。
+
+try_this:
+  - Ask: この記述は多くの人に当てはまるだろうか？ 他の人で試してみよう。
+  - Seek specific, behavioral feedback instead of vague praise or criticism.
+  - Notice when "personalized" insights feel too good to be discriminating.
+
+ask_yourself:
+  - Would this feedback feel accurate if given to a stranger?
+  - Am I remembering the hits and forgetting the misses?
+
+in_more_detail: |
+  心理学者のバートラム・フォアラーは、学生に同一の「パーソナライズされた」
+  フィードバック（例：「あなたは他人に好かれ、賞賛されたいという欲求がある」）
+  を与え、学生たちはそれを非常に正確だと評価しました。
+  その記述は、誰にでも当てはまるほど曖昧でした。
+  P.T.バーナムは、「一分ごとに、騙されやすい人間が生まれる」と言ったと
+  伝えられています。この効果は、パーソナライズされているように見える
+  一般論で大衆に訴えかける彼のスキルにちなんで名付けられました。
+
+  この効果が機能するのは、曖昧な記述の中に個人的な関連性を見つけるのが
+  得意だからです。私たちは、当たったことを記憶し、外れたことを忘れます。
+  これは、コールドリーディングや多くの「性格」製品の基盤となっています。
+
+why_this_is_important: |
+  バーナム効果を認識することは、性格評価の精度を評価し、操作に抵抗し、
+  曖昧なフィードバックの過度な解釈を避けるのに役立ちます。
+  これは、星占いが正確に感じる理由や、「パーソナライズされた」アドバイスの
+  一部がなぜ一般的であるかを説明します。
+
+when_to_use:
+  - 意思決定
+  - 学習
+  - リスク評価
+  - 関係構築
+
+how_can_you_spot_it:
+  vague_accuracy: |
+    個人的に感じるが、多くの人に当てはまる可能性のあるフィードバック。
+  selective_fit: |
+    私たちは、適合するものに焦点を当て、適合しないものを無視します。
+  cold_reading: |
+    誰かが、実際には一般的である記述であなたを「読み取る」。
+  personality_test_enthusiasm: |
+    評価結果を、自分固有の洞察として無批判に受け入れること。
+
+examples:
+  horoscopes: |
+    「あなたは時々、自分の決断に疑いを抱く」は、個人的に感じるが、
+    ほとんどの人に当てはまる。
+  fortune_telling: |
+    私たちの状況に固有のものとして解釈する曖昧な予言。
+  personality_tests: |
+    一部の評価はバーナム記述を使用しており、差別化することなく正確だと感じられます。
+  feedback: |
+    深くパーソナライズされたものとして解釈する、一般的なパフォーマンスフィードバック。
+
+real_world_implications: |
+  バーナム効果は、占星術、一部のコーチング、質の低い評価で悪用されています。
+  これは、無効なツールに対する誤った自信を生み出す可能性があります。
+  また、私たちが、お世辞や曖昧な肯定的なフィードバックに弱い理由も説明します。
+
+professional_application:
+  networking_and_relationship_building: |
+    フィードバックを受ける際は、「これは多くの人に当てはまるだろうか？」と尋ねてください。
+    曖昧な賞賛や批判ではなく、具体的で行動に基づいたフィードバックを求めてください。
+    あまりにも良すぎる「パーソナライズされた」洞察には懐疑的になってください。
+  collaborative_learning_initiative: |
+    評価を使用する際は、差別的妥当性のある、検証済みのツールを選択してください。
+    バーナム記述に依存する測定器を避けてください。
+    曖昧なフィードバックを認識するように人々を訓練してください。
+
+how_can_this_be_misapplied:
+  dismissing_all_feedback: |
+    すべてのパーソナライズされたフィードバックがバーナムであるわけではありません。
+    本質的に具体的なものもあります。すべてを曖昧だと断定しないでください。
+  invalidating_experience: |
+    誰かの洞察の経験を、「バーナムにすぎない」と断じてしまうこと。
+    それが彼らにとって価値があるかもしれないのに。
+  overcorrection: |
+    一部の性格フレームワークがバーナム記述を使用しているという理由だけで、
+    すべての性格フレームワークを却下すること。
+  false_skepticism: |
+    正確だと感じるものだから、それはバーナムに違いないと仮定すること。
+    時には、物事は正確であることもあります。
+
+related_content:
+  - confirmation_bias
+  - halo_effect
+  - availability_heuristic
+  - narrative_fallacy

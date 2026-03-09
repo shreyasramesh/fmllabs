@@ -1,0 +1,89 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Falacia del Costo Hundido
+# Modelo Mental / Sesgo Cognitivo - Entrada de Ejemplo
+
+id: sunk_cost_fallacy
+name: Falacia del Costo Hundido
+
+quick_introduction: |
+  La falacia del costo hundido es la tendencia a seguir invirtiendo en una decisión
+  debido a los recursos ya gastados, en lugar de basarse en los rendimientos futuros esperados.
+  "Hemos llegado hasta aquí" o "Ya he invertido tanto" lleva a seguir echando dinero bueno al malo.
+
+one_liner: La inversión pasada se ha ido, solo importan los costos y beneficios futuros.
+
+try_this:
+  - Ask: Si empezara hoy, ¿elegiría este camino?
+  - Define "criterios de cancelación" de antemano: condiciones bajo las cuales te detendrás.
+  - Evalúa la decisión marginal: ¿qué gano o pierdo a partir de ahora?
+
+ask_yourself:
+  - ¿Continúo por el valor futuro o para justificar la inversión pasada?
+  - ¿Qué le aconsejaría a un amigo que estuviera en mi posición desde cero?
+
+in_more_detail: |
+  Los costos hundidos son costos pasados que no se pueden recuperar. La toma de decisiones racional los ignora; solo importan los costos y beneficios futuros. Pero nos apegamos emocionalmente a nuestras inversiones. Terminamos la comida que no disfrutamos, nos quedamos en la película que nos disgusta y continuamos proyectos que ya no tienen sentido. Queremos "no desperdiciar" lo que hemos invertido, pero continuar a menudo desperdicia más.
+
+  La falacia es especialmente fuerte cuando hemos invertido tiempo, esfuerzo o identidad, no solo dinero. Admitir que nos equivocamos puede sentirse costoso, así que redoblamos la apuesta.
+
+why_this_is_important: |
+  Reconocer la falacia del costo hundido te ayuda a cortar pérdidas, cambiar de dirección cuando sea necesario y tomar decisiones basadas en el valor futuro en lugar de la inversión pasada. Es esencial para proyectos, carreras y relaciones.
+
+when_to_use:
+  - toma_de_decisiones
+  - inversión
+  - movimientos_profesionales
+  - evaluación_de_riesgos
+
+how_can_you_spot_it:
+  continuing_because_of_past_investment: |
+    "No podemos parar ahora, ya hemos gastado X" cuando los rendimientos futuros no justifican
+    continuar.
+  escalation_of_commitment: |
+    Invertir más para justificar o "rescatar" la inversión previa.
+  identity_investment: |
+    Continuar porque admitir el fracaso amenazaría la autoimagen.
+  ignoring_marginal_analysis: |
+    Basar las decisiones en el costo total en lugar del costo y beneficio incremental.
+
+examples:
+  projects: |
+    Continuar un proyecto fallido porque "ya hemos invertido 6 meses en él"
+    cuando cortar pérdidas sería lo racional.
+  relationships: |
+    Permanecer en una relación porque "llevamos 5 años juntos" en lugar de
+    evaluar el futuro.
+  careers: |
+    Permanecer en una carrera que no te gusta porque invertiste en el título o
+    en años de experiencia.
+  investments: |
+    Mantener una acción perdedora para "recuperar lo invertido" en lugar de reasignar a
+    mejores oportunidades.
+
+real_world_implications: |
+  La falacia del costo hundido causa desperdicio de recursos, fracasos prolongados y oportunidades perdidas. Afecta a individuos, organizaciones y gobiernos.
+  Superarla requiere marcos de decisión explícitos.
+
+professional_application:
+  networking_and_relationship_building: |
+    No continúes invirtiendo en relaciones o colaboraciones que ya no te sirven solo por la inversión pasada. Evalúa el valor prospectivo.
+  collaborative_learning_initiative: |
+    Crea "criterios de cancelación" para los proyectos: condiciones bajo las cuales te detendrás
+    independientemente de la inversión pasada. Revisa los proyectos periódicamente con una perspectiva de "desde cero".
+
+how_can_this_be_misapplied:
+  quitting_too_early: |
+    Usar el "costo hundido" como excusa para abandonar cosas que necesitan más tiempo para dar frutos.
+  undervaluing_consistency: |
+    Algunos compromisos (p. ej., relaciones, reputación) tienen valor en la continuidad
+    que el análisis marginal puro no capta.
+  cold_rationality: |
+    Descartar el apego emocional como irracional cuando puede reflejar valores genuinos.
+  analysis_paralysis: |
+    Pensar demasiado si continuar cuando la respuesta es clara.
+
+related_content:
+  - loss_aversion_bias
+  - endowment_effect
+  - confirmation_bias
+  - inversion

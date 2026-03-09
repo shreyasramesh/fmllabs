@@ -1,0 +1,95 @@
+# Viés de Retrospectiva
+# Modelo Mental / Viés Cognitivo - Exemplo de Entrada
+
+id: hindsight_bias
+name: Viés de Retrospectiva
+
+quick_introduction: |
+  O viés de retrospectiva (ou o efeito "eu sabia o tempo todo") é a tendência de acreditar,
+  após a ocorrência de um evento, que teríamos previsto ou esperado por ele. Nós
+  reconstruímos o passado para que os resultados pareçam mais inevitáveis do que foram.
+
+one_liner: Depois do fato, achamos que sabíamos tudo o tempo todo.
+
+try_this:
+  - Antes de julgar decisões passadas, pergunte: O que eles sabiam na época?
+  - Registre suas previsões antes dos resultados — compare depois.
+  - Observe quando você está fazendo o passado parecer mais inevitável do que foi.
+
+ask_yourself:
+  - Estou julgando com informações que não estavam disponíveis na época?
+  - Eu realmente previ isso, ou apenas parece óbvio agora?
+
+in_more_detail: |
+  Uma vez que sabemos o resultado, ele parece óbvio. Esquecemos a incerteza que sentimos
+  antes. Esse viés distorce o aprendizado — achamos que "sabíamos" algo quando não sabíamos,
+  então não atualizamos nossos modelos. Também leva a culpas injustas: "Eles
+  deveriam ter previsto isso" quando o futuro era genuinamente incerto.
+
+  O viés de retrospectiva afeta análises pós-mortem, julgamentos legais e análises históricas.
+  Julgamos decisões passadas com informações que não estavam disponíveis na época.
+
+why_this_is_important: |
+  Reconhecer o viés de retrospectiva melhora o aprendizado com os resultados, a avaliação justa
+  das decisões e uma avaliação de risco mais precisa. Ele previne a falsa confiança
+  em nossas habilidades preditivas.
+
+when_to_use:
+  - tomada_de_decisao
+  - aprendizado
+  - avaliacao_de_risco
+  - lideranca
+
+how_can_you_spot_it:
+  inevitability_feeling: |
+    Após um evento, parece que ele "tinha que" acontecer.
+  reconstructed_certainty: |
+    Nós nos lembramos de estar mais certos antes do evento do que realmente estávamos.
+  blame_for_failure: |
+    "Eles deveriam ter sabido" quando o resultado era genuinamente incerto.
+  undervaluing_luck: |
+    Atribuir resultados à habilidade ou previsão quando a sorte desempenhou um papel.
+
+examples:
+  investing: |
+    "Eu sabia que o mercado iria quebrar" depois que ele quebra — quando você não agiu com base nesse
+    "conhecimento" antes.
+  project_failures: |
+    "Deveríamos ter visto os riscos" em uma análise pós-mortem quando os riscos eram genuinamente
+    ambíguos.
+  elections: |
+    Após um resultado surpreendente, especialistas explicam por que foi "óbvio" em retrospectiva.
+  medical: |
+    "Os sinais estavam lá" ao diagnosticar uma condição rara após o fato.
+
+real_world_implications: |
+  O viés de retrospectiva distorce a responsabilidade legal, a avaliação de desempenho e o aprendizado.
+  Ele nos torna excessivamente confiantes em nosso julgamento e injustos com aqueles que tomaram
+  decisões razoáveis com informações limitadas.
+
+professional_application:
+  networking_and_relationship_building: |
+    Ao avaliar decisões passadas de outras pessoas, separe conscientemente o que era conhecido
+    na época do que você sabe agora. Evite o "eu avisei" quando você não previu realmente
+    o resultado.
+  collaborative_learning_initiative: |
+    Em análises pós-mortem, use técnicas de "pré-mortem" ou "diário de decisões" para
+    capturar a incerteza no momento da decisão. Compare a incerteza real
+    com a reconstrução retrospectiva.
+
+how_can_this_be_misapplied:
+  excusing_all_failures: |
+    Descartar todas as falhas como "imprevisíveis" quando algumas eram previsíveis.
+  no_accountability: |
+    Usar o viés de retrospectiva para evitar responsabilizar as pessoas por negligência.
+  false_uncertainty: |
+    Corrigir em excesso para acreditar que nunca podemos prever nada.
+  undermining_learning: |
+    Recusar-se a extrair lições porque "a retrospectiva é 20/20" — ainda podemos aprender
+    com os resultados.
+
+related_content:
+  - narrative_fallacy
+  - survivorship_bias
+  - overconfidence
+  - regression_to_the_mean

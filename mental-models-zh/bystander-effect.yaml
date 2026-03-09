@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Bystander Effect
+# Mental Model / Cognitive Bias - Example Entry
+
+id: bystander_effect
+name: 旁观者效应
+
+quick_introduction: |
+  旁观者效应是指，在有他人在场的情况下，个体提供帮助的可能性降低。旁观者越多，任何一个人采取行动的可能性就越小。责任被分散了；我们假设其他人会提供帮助。
+
+one_liner: 在场的人越多，任何一个人采取行动的可能性就越小。
+
+try_this:
+  - 在紧急情况下，直接分配责任：“你，拨打911。”
+  - 不要假设别人会帮忙——立即行动或明确委托。
+  - 注意你是否在等待别人先采取行动。
+
+ask_yourself:
+  - 我是否因为有他人在场而分散了责任？
+  - 如果我一个人，我会采取不同的行动吗？
+
+in_more_detail: |
+  在凯蒂·吉诺维斯（Kitty Genovese）被谋杀之后（尽管故事在一定程度上被神化了），研究人员发现，他人在场会降低助人行为。我们观察他人的线索——如果没人行动，我们就认为“不需要采取行动”。我们还会经历责任分散：当很多人在场时，每个人感觉自己承担的个人责任更少。群体性无知（pluralistic ignorance）可能发生：每个人都认为有问题，但没有人采取行动，因为没有人采取行动。
+
+  当情况不明确以及旁观者彼此不认识时，这种效应最强。可以通过直接分配责任（“你，拨打911”）来克服。
+
+why_this_is_important: |
+  理解旁观者效应可以帮助你在他人不采取行动时采取行动，并设计克服它的系统。如果你遇到麻烦，要点名一个人。如果你是旁观者，不要等待别人采取行动。
+
+when_to_use:
+  - 领导力 (leadership)
+  - 关系建立 (relationship_building)
+  - 冲突解决 (conflict_resolution)
+  - 决策 (decision-making)
+
+how_can_you_spot_it:
+  diffusion_of_responsibility: |
+    当很多人在场时，会想“别人会做的”。
+  pluralistic_ignorance: |
+    每个人都认为需要采取行动，但因为没有人采取行动，所以没有人采取行动。
+  social_proof_inaction: |
+    他人的不作为被解释为“不需要采取行动”。
+  audience_inhibition: |
+    害怕看起来愚蠢或过度反应而阻碍行动。
+
+examples:
+  emergency: |
+    一个人突然倒地；在许多旁观者在场的情况下，每个人寻求帮助的可能性都降低了。
+  workplace: |
+    每个人都看到了问题，但没有人提出——每个人都认为别人会提出。
+  harassment: |
+    骚扰的目击者没有干预，每个人都认为别人会采取行动。
+  meetings: |
+    一个糟糕的想法没有受到挑战，因为每个人都认为别人会发言。
+
+real_world_implications: |
+  旁观者效应在紧急情况下可能导致悲剧性的后果，并允许问题在组织中持续存在。克服它需要直接分配责任以及鼓励干预的规范。
+
+professional_application:
+  networking_and_relationship_building: |
+    当你需要帮助时，向特定的人寻求。当你看到错误时，采取行动——不要假设别人会。创造一种期望并奖励敢于发声的规范。
+  collaborative_learning_initiative: |
+    培训人们识别旁观者效应并进行干预。使用“如果你看到问题，就说出来”并明确分配角色。奖励那些首先发声的人。
+
+how_can_this_be_misapplied:
+  blaming_bystanders: |
+    严厉评判个体，而旁观者效应是一种强大的情境力量——应专注于改变情境。
+  false_assumption: |
+    假设只要有足够多的人在场，总会有人提供帮助——事实往往相反。
+  overcorrection: |
+    让每个人都负责，结果导致没有人负责——责任分散仍然可能发生。
+  individualizing: |
+    将旁观者效应视为一种性格缺陷，而不是一种情境现象。
+
+related_content:
+  - groupthink
+  - in_group_bias
+  - availability_cascade
+  - fundamental_attribution_error

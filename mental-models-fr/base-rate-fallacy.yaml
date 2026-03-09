@@ -1,0 +1,98 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Erreur de taux de base
+# Modèle mental / Biais cognitif - Entrée exemple
+
+id: base_rate_fallacy
+name: Erreur de taux de base
+
+quick_introduction: |
+  L'erreur de taux de base est la tendance à ignorer les informations statistiques générales
+  (taux de base) au profit d'informations spécifiques et vivantes. Nous donnons trop d'importance au
+  cas particulier et sous-estimons la probabilité a priori. Une seule histoire convaincante
+  peut l'emporter sur ce que disent les chiffres.
+
+one_liner: Une histoire convaincante peut l'emporter sur ce que disent les chiffres.
+
+try_this:
+  - Avant de juger un cas, demandez : Quel est le taux de base pour ce type de situation ?
+  - Combinez les preuves spécifiques avec la probabilité a priori, n'ignorez aucune des deux.
+  - Remarquez quand un exemple vivant étouffe les statistiques.
+
+ask_yourself:
+  - Est-ce que je donne trop d'importance à ce cas spécifique et pas assez au taux de base ?
+  - Que diraient les chiffres si je mettais de côté l'histoire convaincante ?
+
+in_more_detail: |
+  Si une maladie affecte 1 % de la population et qu'un test est précis à 95 %, un
+  résultat positif signifie souvent que la personne n'a toujours probablement pas la
+  maladie, car le taux de base est très faible. Mais nous ignorons les taux de base et
+  nous nous concentrons sur "la personne a eu un résultat positif". Nous sommes influencés par le spécifique plutôt que par le statistique.
+
+  Cette erreur affecte le diagnostic médical, l'embauche, l'évaluation des risques et le jugement juridique. Nous devons combiner les taux de base avec les preuves spécifiques au cas en utilisant
+  le raisonnement bayésien, mais nous le faisons souvent pas.
+
+why_this_is_important: |
+  Corriger l'erreur de taux de base améliore le diagnostic, l'évaluation des risques
+  et la qualité des décisions. Cela nous empêche de réagir de manière excessive à des cas vivants et
+  de sous-estimer la réalité statistique.
+
+when_to_use:
+  - prise_de_decision
+  - evaluation_des_risques
+  - resolution_de_problemes
+  - investissement
+
+how_can_you_spot_it:
+  ignoring_prior_probabilities: |
+    Les taux de base ne sont pas intégrés dans les jugements.
+  vividness_over_statistics: |
+    Un seul cas ou une seule histoire domine sur les données agrégées.
+  diagnostic_overweighting: |
+    Surestimation des nouvelles preuves (par exemple, résultat de test) sans tenir compte du taux de base.
+  anecdote_override: |
+    "Je connais quelqu'un qui..." l'emporte sur les preuves statistiques.
+
+examples:
+  medical: |
+    Un test positif pour une maladie rare : le taux de base est faible, donc un résultat positif
+    est souvent un faux positif. Nous ignorons cela et supposons que la personne a la maladie.
+  hiring: |
+    Un candidat a un excellent entretien : nous ignorons les taux de base quant à la façon dont les
+    entretiens prédisent la performance.
+  risk: |
+    Un crash d'avion est marquant : nous surestimons le risque de vol et sous-estimons
+    le risque de conduite, en ignorant les taux de base.
+  startup_investing: |
+    Un fondateur fait une bonne présentation : nous ignorons que la plupart des startups échouent indépendamment de la qualité de la présentation.
+
+real_world_implications: |
+  L'erreur de taux de base affecte les décisions médicales, les jugements juridiques et
+  la stratégie d'entreprise. Elle contribue à une mauvaise allocation des ressources et à une
+  mauvaise évaluation des risques. La pensée bayésienne la corrige.
+
+professional_application:
+  networking_and_relationship_building: |
+    Lors de l'évaluation des personnes, tenez compte des taux de base : par exemple, quelle est la fréquence à laquelle ce
+    type de comportement se produit ? Ne laissez pas une interaction vivante l'emporter sur le
+    schéma général.
+  collaborative_learning_initiative: |
+    Lors de la prise de décisions, énoncez et tenez explicitement compte des taux de base avant
+    d'intégrer les preuves spécifiques au cas. Formez les équipes au raisonnement bayésien.
+
+how_can_this_be_misapplied:
+  base_rate_tyranny: |
+    Ignorer des preuves spécifiques solides lorsque les taux de base suggèrent le contraire ;
+    parfois, le cas individuel est l'exception.
+  stereotyping: |
+    Utiliser les taux de base pour porter des jugements injustes sur les individus.
+  false_precision: |
+    Appliquer les taux de base avec une fausse précision alors qu'il s'agit d'estimations approximatives.
+  dismissing_individuals: |
+    "Les statistiques disent X" alors que l'individu en face de vous ne correspond peut-être pas à la
+    distribution.
+
+related_content:
+  - bayes_theorem
+  - availability_heuristic
+  - narrative_fallacy
+  - survivorship_bias

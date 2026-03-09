@@ -1,0 +1,105 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Hyperbolic Discounting
+# Mental Model / Cognitive Bias - Example Entry
+
+id: hyperbolic_discounting
+name: Hyperbolic Discounting
+
+quick_introduction: |
+  Hyperbolic discounting is the tendency to prefer smaller, sooner rewards
+  over larger, later ones—and to discount the future more steeply than
+  rational models predict. We overweight the present and underweight the
+  future in inconsistent ways.
+
+one_liner: We prefer smaller sooner over larger later—and discount the future inconsistently.
+
+try_this:
+  - Pre-commit: make choices for your future self when you're in a calm state.
+  - 'Reframe: "Would I want this in 10 minutes? In 10 months?" to reveal inconsistency.'
+  - Use commitment devices to bind your future self to better choices.
+
+ask_yourself:
+  - Am I overweighting the present at the expense of my future self?
+  - Would I make this choice if the reward were delayed by a day? A year?
+
+in_more_detail: |
+  We might prefer $50 today over $100 in a year, but also prefer $100 in
+  two years over $50 in one year—even though that's inconsistent. Our
+  discount rate isn't constant; it's hyperbolic. The near future is
+  heavily discounted; the far future is discounted less steeply. This
+  explains procrastination, addiction, and undersaving.
+
+  Present bias is a related concept: we give the present moment
+  disproportionate weight. Hyperbolic discounting explains why we
+  make commitments we don't keep and why long-term planning is hard.
+
+why_this_is_important: |
+  Understanding hyperbolic discounting helps you design better
+  incentives, commit your future self, and avoid short-term traps.
+  It explains why we procrastinate and why we struggle with
+  long-term goals.
+
+when_to_use:
+  - decision-making
+  - career_moves
+  - investing
+  - leadership
+
+how_can_you_spot_it:
+  present_preference: |
+    Choosing immediate gratification over delayed, larger rewards.
+  inconsistent_time_preferences: |
+    Preferences that reverse as time passes (e.g., we want to diet
+    tomorrow but eat today).
+  commitment_failures: |
+    Making plans we don't follow when the future becomes the present.
+  procrastination: |
+    Delaying important tasks in favor of immediate comfort.
+
+examples:
+  savings: |
+    Choosing to spend now rather than save for retirement—the future
+    feels abstract.
+  health: |
+    Skipping exercise today for comfort, despite knowing we'll regret
+    it—tomorrow's regret is discounted.
+  addiction: |
+    Choosing the immediate high over long-term health.
+  deadlines: |
+    Doing nothing until the deadline looms—then the "present" includes
+    the deadline and we act.
+
+real_world_implications: |
+  Hyperbolic discounting affects savings, health, education, and
+  addiction. It explains many self-control failures. Commitment
+  devices (e.g., automatic savings, accountability) can help by
+  constraining future choices.
+
+professional_application:
+  networking_and_relationship_building: |
+    When asking for future commitments, create accountability that
+    makes the future "present" (e.g., check-ins, deadlines). Don't
+    assume people will follow through without structure.
+  collaborative_learning_initiative: |
+    Use commitment devices: public commitments, pre-commitment to
+    deadlines, and structures that make long-term goals feel more
+    immediate. Break long projects into shorter milestones.
+
+how_can_this_be_misapplied:
+  excessive_control: |
+    Over-constraining people's choices in the name of "helping"
+    their future selves.
+  paternalism: |
+    Assuming we know what's best for others' long-term interests.
+  ignoring_present_needs: |
+    Dismissing legitimate present needs in favor of abstract
+    future benefits.
+  one_size_fits_all: |
+    People differ in discount rates; not everyone needs the same
+    commitment devices.
+
+related_content:
+  - loss_aversion_bias
+  - empathy_gap
+  - zeigarnik_effect
+  - default_effect

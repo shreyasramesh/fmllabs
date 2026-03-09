@@ -1,0 +1,94 @@
+id: scarcity_bias
+name: Sesgo de escasez
+
+quick_introduction: |
+  El sesgo de escasez es la tendencia a dar mayor valor a las cosas cuando parecen
+  escasas o limitadas. "Tiempo limitado", "solo quedan 3" y "acceso exclusivo" activan
+  la urgencia y el deseo, a menudo anulando la evaluación racional de si realmente
+  necesitamos o queremos la cosa.
+
+one_liner: La escasez amplifica el valor percibido—lo limitado genera urgencia sobre la racionalidad.
+
+try_this:
+  - Preguntar: ¿Querría esto si no fuera escaso? Elimine la urgencia.
+  - Pausar antes de actuar ante ofertas de "tiempo limitado" o "solo quedan X".
+  - Notar cuándo la escasez impulsa su deseo más que el valor genuino.
+
+ask_yourself:
+  - ¿Estoy valorando esto porque es escaso, o porque realmente lo necesito?
+  - ¿Tomaría esta decisión sin el encuadre de escasez?
+
+in_more_detail: |
+  La escasez amplifica el valor percibido. Cuando algo es raro o desaparece, lo
+  queremos más, en parte porque la escasez puede indicar calidad y en parte porque
+  la aversión a la pérdida nos hace temer quedarnos fuera. Los especialistas en marketing y los negociadores usan la escasez
+  para crear urgencia. El sesgo puede llevar a decisiones impulsivas, gastos excesivos y
+  mala priorización.
+
+  La escasez también afecta la capacidad cognitiva de quienes tienen
+  recursos genuinamente limitados; la pobreza puede reducir la "capacidad mental" para otras decisiones.
+
+why_this_is_important: |
+  Reconocer el sesgo de escasez le ayuda a resistir tácticas manipuladoras y a tomar decisiones más
+  deliberadas. También explica por qué sobrevaloramos las ediciones limitadas y
+  nos apresuramos cuando no es necesario.
+
+when_to_use:
+  - toma_de_decisiones
+  - negociación
+  - inversión
+  - evaluación_de_riesgos
+
+how_can_you_spot_it:
+  urgency_trigger: |
+    "Tiempo limitado" o "solo quedan X" crea un deseo desproporcionado.
+  fear_of_missing_out: |
+    La posibilidad de perder el acceso impulsa la acción más que el valor intrínseco.
+  impulsive_purchases: |
+    Comprar cosas porque son escasas en lugar de porque las necesita.
+  artificial_scarcity: |
+    La escasez se fabrica (por ejemplo, cuenta atrás falsas) en lugar de ser real.
+
+examples:
+  sales: |
+    "Solo quedan 2 en stock" o "La oferta termina esta noche" impulsan compras que no
+    ocurrirían sin la urgencia.
+  auctions: |
+    Los postores se ven atrapados en la victoria y pagan más de lo planeado debido a
+    la escasez competitiva.
+  exclusivity: |
+    El acceso "solo para miembros" o "solo por invitación" aumenta el valor percibido.
+  genuine_scarcity: |
+    Cuando los recursos son verdaderamente limitados, las personas bajo estrés de escasez toman peores
+    decisiones (por ejemplo, los pobres, los que tienen poco tiempo).
+
+real_world_implications: |
+  El sesgo de escasez impulsa el comportamiento del consumidor, los resultados de las negociaciones y las respuestas políticas.
+  Puede usarse de manera ética (por ejemplo, plazos legítimos) o poco ética
+  (por ejemplo, escasez falsa). Comprenderlo mejora la calidad de las decisiones.
+
+professional_application:
+  networking_and_relationship_building: |
+    Sea cauteloso cuando otros creen escasez artificial ("Solo acepto unos pocos
+    clientes"). Verifique si la escasez es real. Al construir relaciones,
+    la escasez genuina de su tiempo puede indicar valor, pero el uso excesivo se siente manipulador.
+  collaborative_learning_initiative: |
+    Al crear urgencia para las iniciativas, asegúrese de que sea legítima. Las fechas límite falsas
+    erosionan la confianza cuando se descubren.
+
+how_can_this_be_misapplied:
+  manipulation: |
+    Crear deliberadamente falsa escasez para presionar a otros a tomar decisiones.
+  impulsive_decisions: |
+    Tomar decisiones importantes bajo urgencia artificial cuando más tiempo mejoraría
+    los resultados.
+  overvaluing_scarcity: |
+    Asumir que las cosas escasas son siempre mejores; a veces la escasez es arbitraria.
+  exploiting_vulnerability: |
+    Usar tácticas de escasez en personas que ya están bajo estrés de recursos.
+
+related_content:
+  - loss_aversion_bias
+  - availability_heuristic
+  - endowment_effect
+  - framing_effect

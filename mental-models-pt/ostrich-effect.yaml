@@ -1,0 +1,97 @@
+id: ostrich_effect
+name: Efeito Avestruz
+
+quick_introduction: |
+  O efeito avestruz é a tendência de evitar informações financeiras negativas—de
+  "enterrar a cabeça na areia" como uma avestruz. As pessoas evitam olhar para seus
+  portfólios quando os mercados estão em baixa, atrasam a abertura de contas e ignoram
+  sinais de alerta que poderiam ajudá-las a agir.
+
+one_liner: Evitar más notícias não muda a realidade—apenas adia sua resposta.
+
+try_this:
+  - Agende verificações regulares para que você não possa evitar os números.
+  - Observe quando você está atrasando a abertura de algo ou olhando para algo.
+  - Pergunte: O que estou evitando e o que mudaria se eu o enfrentasse?
+
+ask_yourself:
+  - Estou evitando informações porque elas podem ser ruins?
+  - Uma consciência mais cedo me ajudaria a agir melhor?
+
+in_more_detail: |
+  O termo foi cunhado em finanças comportamentais para descrever investidores que evitam
+  verificar seus investimentos durante quedas de mercado. O comportamento se estende
+  além das finanças: evitar check-ups médicos, ignorar problemas de relacionamento e
+  adiar conversas difíceis. Buscamos evitar a ansiedade de
+  más notícias, mas o evitamento muitas vezes piora os resultados ao impedir uma
+  ação oportuna.
+
+  O efeito é impulsionado pela aversão à perda e pelo desejo de evitar desconforto emocional.
+  Infelizmente, a ignorância não muda a realidade—apenas adia nossa resposta.
+
+why_this_is_important: |
+  Reconhecer o efeito avestruz ajuda você a confrontar informações difíceis
+  proativamente. Evitar más notícias raramente melhora os resultados; geralmente
+  os agrava. A consciência oportuna permite melhores decisões.
+
+when_to_use:
+  - tomada_de_decisao
+  - investimentos
+  - avaliacao_de_risco
+  - mudancas_de_carreira
+
+how_can_you_spot_it:
+  avoiding_portfolio_checks: |
+    Não olhar extratos de investimento quando os mercados estão em baixa.
+  delaying_difficult_information: |
+    Adiar a abertura de contas, resultados médicos ou feedback de desempenho.
+  information_avoidance: |
+    Evitar ativamente fontes que possam conter más notícias.
+  procrastination_on_unpleasant_tasks: |
+    Adiar ações que poderiam expor ou resolver problemas.
+
+examples:
+  investing: |
+    Um investidor para de verificar seu 401(k) durante um mercado em baixa, perdendo
+    oportunidades de rebalanceamento.
+  health: |
+    Evitar uma consulta médica apesar dos sintomas por medo de más notícias.
+  finances: |
+    Não abrir extratos de cartão de crédito ou alertas bancários para evitar encarar dívidas.
+  performance: |
+    Um gerente evita dar feedback crítico até a revisão anual, quando
+    uma intervenção anterior teria ajudado.
+
+real_world_implications: |
+  O efeito avestruz leva a piores resultados financeiros, tratamento médico atrasado
+  e problemas não resolvidos em relacionamentos e no trabalho. Ele
+  agrava perdas evitáveis. Sistemas que tornam a informação difícil de ignorar
+  podem ajudar.
+
+professional_application:
+  networking_and_relationship_building: |
+    Não evite conversas difíceis. Resolva problemas cedo em vez de
+    esperar que eles se resolvam. Crie verificações regulares que exponham
+    problemas antes que eles escalem.
+  collaborative_learning_initiative: |
+    Construa ciclos de feedback que tornem difícil ignorar problemas—dashboards,
+    revisões regulares e normas que incentivem a divulgação precoce de más notícias.
+
+how_can_this_be_misapplied:
+  information_overload: |
+    Forçar monitoramento constante quando alguma evitação de informação é saudável
+    (por exemplo, não verificar ações a cada minuto).
+  anxiety_amplification: |
+    Criar tanto foco em problemas potenciais que aumenta a ansiedade
+    sem melhorar os resultados.
+  blame_shifting: |
+    Atribuir toda a evitação ao "efeito avestruz" quando alguma evitação é
+    racional (por exemplo, ignorar ruído).
+  micromanagement: |
+    Usar o conceito para justificar vigilância excessiva de outros.
+
+related_content:
+  - loss_aversion_bias
+  - negativity_bias
+  - availability_heuristic
+  - impact_bias

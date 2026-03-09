@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 逆向思维
+# 心智模型 / 认知偏差 - 示例条目
+
+id: inversion
+name: 逆向思维
+
+quick_introduction: |
+  逆向思维是一种将问题颠倒过来的解决技巧。与其问“如何才能成功？”，不如问“什么会导致我失败？”，然后避免这些因素。
+  它能揭示向前思考往往会忽略的风险和反模式。
+
+one_liner: 逆向思维——问什么会导致你失败，然后避免它们。
+
+try_this:
+  - 对于任何目标，列出可能导致失败的主要方式——然后避免它们。
+  - 使用负面想象：什么会让这件事出问题？
+  - 问：一个聪明人会做什么来搞砸这件事？
+
+ask_yourself:
+  - 我是否考虑过什么会导致这件事失败？
+  - 只向前思考，我遗漏了什么？
+
+in_more_detail: |
+  由查理·芒格推广，并根植于数学逻辑，逆向思维利用了避免失败通常比追求成功更容易的事实。
+  如果你能识别出事物出错的主要方式，你就可以系统地消除它们。
+
+  卡尔·雅可比曾说过：“逆向思维，永远逆向思维。” 斯多葛学派使用负面想象——想象失去——来欣赏自己所拥有的并为逆境做准备。
+  逆向思维不是悲观主义；它是一种通过消除障碍来取得进展的结构化方法。
+
+why_this_is_important: |
+  逆向思维有助于你避免灾难性错误，压力测试计划，并找到非显而易见的解决方案。
+  它通过确保你不忽略关键的失败模式来补充前瞻性规划。
+
+when_to_use:
+  - problem_solving  # 解决问题
+  - decision_making  # 决策
+  - risk_assessment  # 风险评估
+  - career_moves     # 职业规划
+
+how_can_you_spot_it:
+  premortem_thinking: |
+    在项目开始前，假装项目已经失败，问“为什么会失败？”
+  anti_goals: |
+    清晰地定义你想避免的目标，就像定义你想实现的目标一样。
+  reverse_engineering_failure: |
+    研究失败的案例以吸取教训，而不是只研究成功的案例。
+  constraint_focus: |
+    在优化收益之前，识别限制和瓶颈。
+
+examples:
+  investing: |
+    与其问“什么会推高这只股票？”，不如问“什么会导致我亏钱？”并避免这些情况。
+  career: |
+    “什么会毁了我的名声？”会引出一份需要避免的行为清单。
+  product_launch: |
+    “为什么大多数产品发布都会失败？”在发布前揭示了需要解决的风险。
+  health: |
+    “什么习惯会缩短寿命？”比“什么让我健康？”更清晰地给出了需要避免的清单。
+
+real_world_implications: |
+  逆向思维被应用于工程（失效模式分析）、投资和战略。
+  它能减少过度自信，改善风险管理。过度依赖可能导致过度谨慎。
+
+professional_application:
+  networking_and_relationship_building: |
+    “什么会损害这段关系？”有助于你避免破坏信任的行为。
+  collaborative_learning_initiative: |
+    对项目进行事后剖析（premortem）：“这个项目失败了。为什么？”利用这些答案来改进规划和执行。
+
+how_can_this_be_misapplied:
+  excessive_risk_aversion: |
+    只关注避免失败会使行动瘫痪，并阻止必要的冒险。
+  negativity_bias: |
+    如果不能与前瞻性的机会识别相结合，逆向思维会加剧消极偏见。
+  analysis_paralysis: |
+    花费太多时间在失败模式上，导致你从未执行。
+  missing_upside: |
+    逆向思维只告诉你应该避免什么——而不是应该做什么。你仍然需要积极的目标。
+
+related_content:
+  - second_order_thinking
+  - survivorship_bias
+  - hindsight_bias
+  - loss_aversion_bias

@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Falácia da Taxa Base
+# Modelo Mental / Viés Cognitivo - Exemplo de Entrada
+
+id: base_rate_fallacy
+name: Falácia da Taxa Base
+
+quick_introduction: |
+  A falácia da taxa base é a tendência de ignorar informações estatísticas gerais
+  (taxas base) em favor de informações específicas e vívidas. Supervalorizamos o
+  caso particular e subvalorizamos a probabilidade prévia. Uma única história convincente
+  pode anular o que os números dizem.
+
+one_liner: Uma história convincente pode anular o que os números dizem.
+
+try_this:
+  - Antes de julgar um caso, pergunte: Qual é a taxa base para este tipo de situação?
+  - Combine a evidência específica com a probabilidade prévia — não ignore nenhuma.
+  - Perceba quando um exemplo vívido está abafando as estatísticas.
+
+ask_yourself:
+  - Estou supervalorizando este caso específico e subvalorizando a taxa base?
+  - O que os números diriam se eu deixasse de lado a história convincente?
+
+in_more_detail: |
+  Se uma doença afeta 1% da população e um teste tem 95% de precisão, um
+  resultado positivo muitas vezes significa que a pessoa ainda provavelmente não tem
+  a doença — porque a taxa base é muito baixa. Mas ignoramos as taxas base e
+  focamos em "a pessoa testou positivo". Somos influenciados pelo específico em detrimento do
+  estatístico.
+
+  A falácia afeta o diagnóstico médico, a contratação, a avaliação de risco e o julgamento legal.
+  Precisamos combinar taxas base com evidências específicas do caso usando
+  o raciocínio bayesiano — mas muitas vezes não o fazemos.
+
+why_this_is_important: |
+  Corrigir a falácia da taxa base melhora o diagnóstico, a avaliação de risco
+  e a qualidade das decisões. Impede-nos de reagir exageradamente a casos vívidos e
+  de reagir de menos à realidade estatística.
+
+when_to_use:
+  - tomada_de_decisao
+  - avaliacao_de_risco
+  - resolucao_de_problemas
+  - investimento
+
+how_can_you_spot_it:
+  ignoring_prior_probabilities: |
+    As taxas base não são incorporadas nos julgamentos.
+  vividness_over_statistics: |
+    Um único caso ou história domina sobre dados agregados.
+  diagnostic_overweighting: |
+    Supervalorização de novas evidências (por exemplo, resultado de teste) sem considerar a taxa base.
+  anecdote_override: |
+    "Conheço alguém que..." anula evidências estatísticas.
+
+examples:
+  medical: |
+    Um teste positivo para uma doença rara — a taxa base é baixa, então um positivo
+    é frequentemente um falso positivo. Ignoramos isso e assumimos que a pessoa tem a doença.
+  hiring: |
+    Um candidato tem uma ótima entrevista — ignoramos as taxas base de quão bem
+    entrevistas preveem o desempenho.
+  risk: |
+    Um acidente de avião é vívido — superestimamos o risco de voar e subestimamos
+    o risco de dirigir, ignorando as taxas base.
+  startup_investing: |
+    Um fundador faz uma boa apresentação — ignoramos que a maioria das startups falha, independentemente
+    da qualidade da apresentação.
+
+real_world_implications: |
+  A falácia da taxa base afeta decisões médicas, julgamentos legais e
+  estratégias de negócios. Contribui para a alocação incorreta de recursos e
+  avaliação de risco deficiente. O pensamento bayesiano corrige isso.
+
+professional_application:
+  networking_and_relationship_building: |
+    Ao avaliar pessoas, considere as taxas base: por exemplo, com que frequência este
+    tipo de comportamento ocorre? Não deixe que uma única interação vívida anule o
+    padrão mais amplo.
+  collaborative_learning_initiative: |
+    Ao tomar decisões, declare e considere explicitamente as taxas base antes de
+    incorporar evidências específicas do caso. Treine equipes em raciocínio bayesiano.
+
+how_can_this_be_misapplied:
+  base_rate_tyranny: |
+    Ignorar fortes evidências específicas do caso quando as taxas base sugerem o contrário —
+    às vezes, o caso individual é a exceção.
+  stereotyping: |
+    Usar taxas base para fazer julgamentos injustos sobre indivíduos.
+  false_precision: |
+    Aplicar taxas base com falsa precisão quando são estimativas aproximadas.
+  dismissing_individuals: |
+    "As estatísticas dizem X" quando o indivíduo à sua frente pode não se encaixar na
+    distribuição.
+
+related_content:
+  - bayes_theorem
+  - availability_heuristic
+  - narrative_fallacy
+  - survivorship_bias

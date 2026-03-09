@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 霍桑效应
+# 心理模型 / 认知偏差 - 示例条目
+
+id: hawthorne_effect
+name: 霍桑效应
+
+quick_introduction: |
+  霍桑效应是指人们在知道自己被观察或研究时，会改变自身行为的倾向。观察本身就能产生变化——不一定是所测试的干预措施。人们对他们得到的关注做出反应。
+
+one_liner: 被观察会改变行为——关注本身就会产生这种效果。
+
+try_this:
+  - 在评估干预措施时，考虑观察是否驱动了结果。
+  - 认识到关注和被重视可以提高绩效。
+  - 当观察改变时，要谨慎将变化归因于特定的干预措施。
+
+ask_yourself:
+  - 这种改进是来自干预措施还是来自被观察？
+  - 如果我们停止关注，结果会持续吗？
+
+in_more_detail: |
+  在霍桑工厂，研究人员发现，当他们改变照明时，生产力有所提高——当他们又改回来时，生产力也提高了。这种改进似乎来自于关注和观察，而不是具体的干预措施。后来的重新分析表明，这种效应可能被夸大了，但这个概念仍然有用：被研究会改变行为。
+
+  霍桑效应使研究和评估变得复杂。它可以夸大干预措施的表面影响。它还表明，关注和被重视可以提高绩效——这是对管理层的一个教训。
+
+why_this_is_important: |
+  理解霍桑效应有助于你解读研究结果，设计更好的实验，并认识到关注本身就能驱动改变。在管理方面，这表明对人们的关注可能与具体的干预措施一样重要。
+
+when_to_use:
+  - 领导力
+  - 决策
+  - 学习
+  - 解决问题
+
+how_can_you_spot_it:
+  observation_induced_change: |
+    当人们知道自己被注视或研究时，行为就会改变。
+  attention_effect: |
+    关注的行为会产生改进，而不仅仅是具体的改变。
+  placebo_analog: |
+    就像安慰剂一样，被研究的“治疗”也会产生效果。
+  short_term_improvement: |
+    当观察结束时，改进可能会消退。
+
+examples:
+  workplace_studies: |
+    在研究期间，生产力有所提高——是因为新流程还是因为有人在注视？
+  medical_trials: |
+    安慰剂组的改善——部分原因在于他们得到了关注。
+  education: |
+    当研究人员在场时，学生表现更好——“观察者效应”。
+  management: |
+    当管理层关注时，团队会改进——是因为新举措还是因为关注本身？
+
+real_world_implications: |
+  霍桑效应会影响研究的有效性和项目评估。它可能导致高估干预措施的效果。它还有一个积极的启示：关注和被研究的感觉可以激励改进——所以关心和可见度很重要。
+
+professional_application:
+  networking_and_relationship_building: |
+    关注人们可以提高他们的绩效——霍桑效应表明，被观察和被重视的感觉很重要。积极地利用这一点：定期检查、可见性和认可。
+  collaborative_learning_initiative: |
+    在评估干预措施时，使用对照组，并考虑改进是由于干预措施还是它带来的关注。霍桑效应会夸大表面的成功。
+
+how_can_this_be_misapplied:
+  surveillance_justification: |
+    用“霍桑效应”来证明持续监控的合理性——观察也会降低信任感和内在动力。
+  dismissing_improvements: |
+    假设研究期间的所有改进都是霍桑效应——有时干预措施确实有效。
+  overgeneralization: |
+    最初的霍桑研究受到了质疑；这种效应可能比以前认为的要小或不同。
+  manipulation: |
+    制造虚假的“观察”来操纵行为。
+
+related_content:
+  - pygmalion_effect
+  - confirmation_bias
+  - salience_bias
+  - availability_heuristic

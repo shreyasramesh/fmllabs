@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Círculo de Competência
+# Modelo Mental / Viés Cognitivo - Entrada de Exemplo
+
+id: circle_of_competence
+name: Círculo de Competência
+
+quick_introduction: |
+  O círculo de competência é um modelo mental que o exorta a conhecer os limites
+  de sua expertise e a permanecer dentro deles ao tomar decisões importantes. Warren Buffett
+  e Charlie Munger enfatizam o conhecimento do que você não sabe.
+
+one_liner: Conheça os limites da sua expertise — e permaneça dentro deles quando importar.
+
+try_this:
+  - Mapeie onde você tem expertise genuína vs. onde você está adivinhando.
+  - Quando estiver fora do seu círculo, procure aconselhamento ou delegue.
+  - Seja honesto: um verdadeiro especialista concordaria com seu julgamento aqui?
+
+ask_yourself:
+  - Estou dentro do meu círculo de competência ou estou adivinhando?
+  - Quando foi a última vez que admiti "Eu não sei" neste domínio?
+
+in_more_detail: |
+  Cada pessoa tem áreas onde possui expertise genuína — onde pode avaliar
+  informações, identificar erros e fazer julgamentos confiáveis. Fora desse círculo, elas
+  são propensas aos mesmos vieses e erros que qualquer outra pessoa. A chave é a autoavaliação honesta:
+  onde você é verdadeiramente competente e onde você está adivinhando?
+
+  O círculo pode se expandir através do aprendizado deliberado, mas requer humildade para
+  reconhecer seus limites atuais. Operar fora do seu círculo aumenta o risco de erros custosos,
+  especialmente quando os riscos são altos.
+
+why_this_is_important: |
+  Permanecer dentro do seu círculo de competência reduz erros custosos e melhora a qualidade
+  das decisões. Também o ajuda a saber quando procurar aconselhamento, delegar ou
+  abster-se. O excesso de confiança fora do seu círculo é uma fonte importante de fracasso.
+
+when_to_use:
+  - tomada_de_decisao
+  - investimento
+  - mudancas_de_carreira
+  - avaliacao_de_risco
+
+how_can_you_spot_it:
+  honest_boundary_assessment: |
+    Você consegue explicar os limites do seu conhecimento em um domínio? Você sabe o que
+    não sabe?
+  knowing_when_to_defer: |
+    Reconhecer situações em que você deve procurar a opinião de especialistas em vez de decidir sozinho.
+  consistent_track_record: |
+    Dentro do seu círculo, seus julgamentos tendem a ser validados ao longo do tempo; fora dele, não.
+  calibration: |
+    Sua confiança em um domínio corresponde ao seu desempenho real nesse domínio.
+
+examples:
+  investing: |
+    Buffett evita ações de tecnologia porque diz que elas estão fora do seu círculo de
+    competência — ele não consegue avaliá-las de forma confiável.
+  career: |
+    Um especialista que permanece em sua área vs. um que assume uma função "desafiadora" em uma
+    área não relacionada.
+  hiring: |
+    Saber quando confiar em seu próprio julgamento vs. trazer especialistas para
+    funções técnicas.
+  advice_giving: |
+    Recusar-se a opinar sobre tópicos fora de sua expertise em vez de adivinhar.
+
+real_world_implications: |
+  O círculo de competência é central para o investimento de valor e o sucesso profissional.
+  Ignorá-lo leva ao excesso de confiança, empreendimentos fracassados e maus conselhos. Expandir
+  o círculo requer esforço deliberado e feedback honesto.
+
+professional_application:
+  networking_and_relationship_building: |
+    Construa relacionamentos com pessoas cujos círculos de competência complementam os seus.
+    Saiba quando apresentar outras pessoas em vez de responder você mesmo.
+  collaborative_learning_initiative: |
+    Crie equipes com círculos que se sobrepõem e são complementares. Incentive as pessoas a sinalizarem quando
+    estiverem operando fora de sua competência.
+
+how_can_this_be_misapplied:
+  excessive_risk_aversion: |
+    Nunca sair do seu círculo pode limitar o crescimento e o aprendizado.
+  false_modesty: |
+    Reivindicar um círculo minúsculo para evitar responsabilidade ou decisões difíceis.
+  gatekeeping: |
+    Usar o "círculo de competência" para descartar os outros sem engajar seus argumentos.
+  stagnation: |
+    Tratar o círculo como fixo em vez de algo que pode se expandir com esforço.
+
+related_content:
+  - dunning_kruger_effect
+  - dunning_kruger_effect
+  - bayes_theorem
+  - second_order_thinking

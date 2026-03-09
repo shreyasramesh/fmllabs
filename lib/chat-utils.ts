@@ -1,0 +1,224 @@
+const RELEVANT_CONTEXT_MARKER = "---RELEVANT-CONTEXT---";
+const RELEVANT_CONTEXT_END_MARKER = "---END-CONTEXT---";
+
+/** Used by API to delimit the context block when sent at start of stream */
+export function getRelevantContextBlockDelimiters() {
+  return { start: RELEVANT_CONTEXT_MARKER, end: RELEVANT_CONTEXT_END_MARKER };
+}
+
+export interface RelevantContextItem {
+  id: string;
+  reason: string;
+  title?: string;
+}
+
+export interface RelevantContext {
+  mentalModels: RelevantContextItem[];
+  longTermMemories: RelevantContextItem[];
+  customConcepts: RelevantContextItem[];
+  conceptGroups: RelevantContextItem[];
+}
+
+function normalizeContextItems(raw: unknown): RelevantContextItem[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.flatMap((item): RelevantContextItem[] => {
+    if (typeof item === "string") return [{ id: item, reason: "" }];
+    if (item && typeof item === "object" && typeof (item as Record<string, unknown>).id === "string") {
+      const obj = item as Record<string, unknown>;
+      return [{
+        id: obj.id as string,
+        reason: typeof obj.reason === "string" ? obj.reason : "",
+        title: typeof obj.title === "string" ? obj.title : undefined,
+      }];
+    }
+    return [];
+  });
+}
+
+function tryParseRelevantContextJson(jsonStr: string): RelevantContext | null {
+  const cleaned = jsonStr
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```\s*$/i, "")
+    .trim();
+  try {
+    const parsed = JSON.parse(cleaned) as {
+      mentalModels?: unknown;
+      longTermMemories?: unknown;
+      customConcepts?: unknown;
+      conceptGroups?: unknown;
+    };
+    return {
+      mentalModels: normalizeContextItems(parsed.mentalModels),
+      longTermMemories: normalizeContextItems(parsed.longTermMemories),
+      customConcepts: normalizeContextItems(parsed.customConcepts ?? []),
+      conceptGroups: normalizeContextItems(parsed.conceptGroups ?? []),
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Parses and strips the RELEVANT-CONTEXT block from assistant content.
+ * Returns content without the block and the parsed relevant context, or null if not found/invalid.
+ * Handles JSON on same line, next line, or inside markdown code fences.
+ */
+export function parseRelevantContextBlock(content: string): {
+  contentWithoutBlock: string;
+  relevantContext: RelevantContext | null;
+} {
+  const idx = content.indexOf(RELEVANT_CONTEXT_MARKER);
+  if (idx === -1) {
+    return { contentWithoutBlock: content, relevantContext: null };
+  }
+  const afterMarker = content.slice(idx + RELEVANT_CONTEXT_MARKER.length).trim();
+  const contentWithoutBlock = content.slice(0, idx).trimEnd();
+
+  const candidates = [
+    afterMarker,
+    afterMarker.split("\n")[0]?.trim() ?? "",
+    afterMarker.replace(/^```(?:json)?\s*/i, "").split("```")[0]?.trim() ?? "",
+  ].filter((s) => s.length > 0);
+
+  for (const candidate of candidates) {
+    const result = tryParseRelevantContextJson(candidate);
+    if (result) {
+      return { contentWithoutBlock, relevantContext: result };
+    }
+  }
+  return { contentWithoutBlock, relevantContext: null };
+}
+
+/**
+ * When the stream sends RELEVANT-CONTEXT first (before LLM response), extract it.
+ * Returns { contentWithoutBlock, relevantContext } - contentWithoutBlock is the rest (LLM response).
+ */
+export function parseRelevantContextFromStreamStart(content: string): {
+  contentWithoutBlock: string;
+  relevantContext: RelevantContext | null;
+} {
+  const startIdx = content.indexOf(RELEVANT_CONTEXT_MARKER);
+  if (startIdx !== 0) {
+    return { contentWithoutBlock: content, relevantContext: null };
+  }
+  const afterStart = content.slice(RELEVANT_CONTEXT_MARKER.length).trimStart();
+  const endIdx = afterStart.indexOf(RELEVANT_CONTEXT_END_MARKER);
+  if (endIdx === -1) {
+    return { contentWithoutBlock: content, relevantContext: null };
+  }
+  const jsonStr = afterStart.slice(0, endIdx).trim();
+  const contentWithoutBlock = afterStart.slice(endIdx + RELEVANT_CONTEXT_END_MARKER.length).trimStart();
+  const result = tryParseRelevantContextJson(jsonStr);
+  return { contentWithoutBlock, relevantContext: result };
+}
+
+const OPTIONS_MARKER_REGEX = /-{2,3}\s*OPTIONS\s*-{2,3}/i;
+
+/**
+ * Parses an assistant message that may contain an OPTIONS block.
+ * Format: main text, then "---OPTIONS---" (or "-- OPTIONS ---" etc.), then 4 options.
+ * Options can be on separate lines or in one paragraph separated by ". ".
+ */
+export function parseAssistantMessage(content: string): {
+  text: string;
+  options: string[];
+} {
+  const match = content.match(OPTIONS_MARKER_REGEX);
+  if (!match || match.index === undefined) {
+    return { text: content.trim(), options: [] };
+  }
+
+  const idx = match.index;
+  const markerLen = match[0].length;
+  const text = content.slice(0, idx).trim();
+  const optionsSection = content.slice(idx + markerLen).trim();
+
+  let options = optionsSection
+    .split(/\r?\n/)
+    .map((line) =>
+      line
+        .replace(/^[-*]\s*/, "")
+        .replace(/^\d+\.\s*/, "")
+        .trim()
+    )
+    .filter((line) => line.length > 0)
+    .slice(0, 4);
+
+  if (options.length < 4 && optionsSection.includes(". ")) {
+    options = optionsSection
+      .split(/\.\s+/)
+      .map((s) => s.replace(/^[-*]\s*/, "").replace(/^\d+\.\s*/, "").trim())
+      .filter((s) => s.length > 0)
+      .slice(0, 4);
+  }
+
+  return { text, options };
+}
+
+/**
+ * Extract the sentence or paragraph containing [[model_id]] for contextual relevance.
+ * Strips the [[model_id]] markup and returns surrounding text.
+ */
+export function extractRelevanceContext(
+  content: string,
+  modelId: string
+): string | null {
+  if (!content?.includes(`[[${modelId}]]`)) return null;
+  const escaped = modelId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const pattern = new RegExp(
+    `[^.!?]*\\[\\[${escaped}\\]\\][^.!?]*[.!?]`,
+    "i"
+  );
+  const match = content.match(pattern);
+  if (match) {
+    return match[0]
+      .replace(/\[\[[a-z0-9_]+\]\]/g, (m) =>
+        m.slice(2, -2).replace(/_/g, " ")
+      )
+      .trim();
+  }
+  const paraMatch = content.match(
+    new RegExp(`[^\\n]*\\[\\[${escaped}\\]\\][^\\n]*`, "i")
+  );
+  if (paraMatch) {
+    return paraMatch[0]
+      .replace(/\[\[[a-z0-9_]+\]\]/g, (m) =>
+        m.slice(2, -2).replace(/_/g, " ")
+      )
+      .trim();
+  }
+  return null;
+}
+
+/** Extract unique mental model IDs from text ([[model_id]] or [[Display Name]] format). */
+export function extractMentalModelIds(
+  text: string,
+  nameToId?: Map<string, string>
+): string[] {
+  const ids: string[] = [];
+  // [[id]] format (lowercase, underscores)
+  for (const m of text.matchAll(/\[\[([a-z0-9_]+)\]\]/g)) {
+    ids.push(m[1]);
+  }
+  // [[Display Name]] format - resolve via nameToId when provided
+  if (nameToId && nameToId.size > 0) {
+    for (const m of text.matchAll(/\[\s*\[\s*([^\]]+?)\s*\]\s*\]/g)) {
+      const trimmed = m[1].trim();
+      if (!/^[a-z0-9_]+$/.test(trimmed)) {
+        const id = nameToId.get(trimmed);
+        if (id) ids.push(id);
+      }
+    }
+  }
+  return [...new Set(ids)];
+}
+
+/** Extract unique mental model IDs from all assistant messages. */
+export function extractMentalModelIdsFromMessages(
+  messages: { role: string; content: string }[]
+): string[] {
+  const ids = messages
+    .filter((m) => m.role === "assistant")
+    .flatMap((m) => extractMentalModelIds(m.content));
+  return [...new Set(ids)];
+}

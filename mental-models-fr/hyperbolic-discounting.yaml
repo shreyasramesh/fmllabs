@@ -1,0 +1,99 @@
+id: hyperbolic_discounting
+name: Escompte hyperbolique
+
+quick_introduction: |
+  L'escompte hyperbolique est la tendance à préférer des récompenses plus petites et plus immédiates
+  à des récompenses plus grandes et plus tardives — et à dévaluer l'avenir plus fortement que
+  les modèles rationnels ne le prédisent. Nous survalorisons le présent et sous-valorisons l'avenir de
+  manières incohérentes.
+
+one_liner: Nous préférons le petit et immédiat au grand et tardif — et dévaluons l'avenir de manière incohérente.
+
+try_this:
+  - Pré-engagement : prenez des décisions pour votre futur moi lorsque vous êtes dans un état calme.
+  - Recadrage : Le voudrais-je dans 10 minutes ? Dans 10 mois ? pour révéler l'incohérence.
+  - Utilisez des dispositifs d'engagement pour lier votre futur moi à de meilleurs choix.
+
+ask_yourself:
+  - Est-ce que je survalorise le présent au détriment de mon futur moi ?
+  - Prendrais-je ce choix si la récompense était retardée d'un jour ? D'un an ?
+
+in_more_detail: |
+  Nous pourrions préférer 50 € aujourd'hui à 100 € dans un an, mais aussi préférer 100 € dans
+  deux ans à 50 € dans un an — même si c'est incohérent. Notre taux d'actualisation n'est pas constant ;
+  il est hyperbolique. L'avenir proche est
+  fortement dévalorisé ; l'avenir lointain est dévalorisé moins fortement. Ceci
+  explique la procrastination, la dépendance et la sous-épargne.
+
+  Le biais du présent est un concept connexe : nous accordons au moment présent
+  un poids disproportionné. L'escompte hyperbolique explique pourquoi nous
+  prenons des engagements que nous ne tenons pas et pourquoi la planification à long terme est difficile.
+
+why_this_is_important: |
+  Comprendre l'escompte hyperbolique vous aide à concevoir de meilleurs
+  incitatifs, à engager votre futur moi et à éviter les pièges à court terme.
+  Il explique pourquoi nous procrastinons et pourquoi nous luttons avec
+  les objectifs à long terme.
+
+when_to_use:
+  - prise_de_decision
+  - décisions_de_carrière
+  - investissement
+  - leadership
+
+how_can_you_spot_it:
+  present_preference: |
+    Choisir la gratification immédiate plutôt que des récompenses retardées et plus importantes.
+  inconsistent_time_preferences: |
+    Des préférences qui s'inversent avec le temps (par exemple, nous voulons faire régime
+    demain mais manger aujourd'hui).
+  commitment_failures: |
+    Prendre des décisions que nous ne suivons pas lorsque l'avenir devient le présent.
+  procrastination: |
+    Reporter les tâches importantes au profit du confort immédiat.
+
+examples:
+  savings: |
+    Choisir de dépenser maintenant plutôt que d'épargner pour la retraite — l'avenir
+    semble abstrait.
+  health: |
+    Sauter l'exercice aujourd'hui pour le confort, tout en sachant que nous le regretterons
+    — le regret de demain est dévalué.
+  addiction: |
+    Choisir le plaisir immédiat plutôt que la santé à long terme.
+  deadlines: |
+    Ne rien faire jusqu'à ce que la date limite approche — alors le "présent" inclut
+    la date limite et nous agissons.
+
+real_world_implications: |
+  L'escompte hyperbolique affecte l'épargne, la santé, l'éducation et
+  la dépendance. Il explique de nombreux échecs de maîtrise de soi. Les dispositifs d'engagement
+  (par exemple, épargne automatique, responsabilisation) peuvent aider en
+  contraignant les choix futurs.
+
+professional_application:
+  networking_and_relationship_building: |
+    Lorsque vous demandez des engagements futurs, créez une responsabilité qui
+    rend l'avenir "présent" (par exemple, points de suivi, dates limites). Ne
+    supposez pas que les gens donneront suite sans structure.
+  collaborative_learning_initiative: |
+    Utilisez des dispositifs d'engagement : engagements publics, pré-engagement aux
+    dates limites et structures qui rendent les objectifs à long terme plus immédiats. Décomposez les longs projets en étapes plus courtes.
+
+how_can_this_be_misapplied:
+  excessive_control: |
+    Contraindre excessivement les choix des gens au nom de "l'aide"
+    apportée à leur futur moi.
+  paternalism: |
+    Supposer que nous savons ce qui est le mieux pour les intérêts à long terme des autres.
+  ignoring_present_needs: |
+    Ignorer les besoins présents légitimes au profit d'avantages futurs abstraits.
+  one_size_fits_all: |
+    Les gens diffèrent dans leurs taux d'actualisation ; tout le monde n'a pas besoin des mêmes
+    dispositifs d'engagement.
+
+related_content:
+  - loss_aversion_bias
+  - empathy_gap
+  - zeigarnik_effect
+  - default_effect

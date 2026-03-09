@@ -1,0 +1,96 @@
+id: ambiguity_effect
+name: Efecto de Ambigüedad
+
+quick_introduction: |
+  El efecto de ambigüedad es la tendencia a evitar opciones cuando carecemos de información
+  sobre las probabilidades de los resultados. Preferimos riesgos conocidos sobre riesgos desconocidos,
+  incluso cuando los riesgos desconocidos podrían ser mejores. La incertidumbre en sí misma se siente
+  aversiva.
+
+one_liner: Preferimos riesgos conocidos sobre riesgos desconocidos, incluso cuando lo desconocido podría ser mejor.
+
+try_this:
+  - Pregunta: ¿Estoy evitando esta opción principalmente por incertidumbre, o hay una desventaja real?
+  - Cuantifica lo que sí sabes; a veces la opción "ambigua" tiene un potencial de mejora más claro.
+  - Nota cuándo recurres a lo familiar solo porque se siente más seguro.
+
+ask_yourself:
+  - ¿Estoy rechazando algo porque es ambiguo, o porque es genuinamente peor?
+  - ¿Qué necesitaría saber para sentirme cómodo con la opción incierta?
+
+in_more_detail: |
+  En la paradoja de Ellsberg, las personas prefieren apostar por una urna con proporciones
+  conocidas de bolas sobre una urna con proporciones desconocidas, incluso cuando la urna desconocida
+  podría ofrecer mejores probabilidades. Desagradamos la ambigüedad: preferimos tener una probabilidad clara
+  (incluso si es mala) que una poco clara.
+
+  El efecto influye en las decisiones de inversión, elección de carrera y políticas.
+  Puede llevar a elecciones subóptimas cuando evitamos opciones que son ambiguas
+  pero potencialmente superiores. También explica por qué preferimos marcas familiares
+  y cantidades conocidas.
+
+why_this_is_important: |
+  Reconocer el efecto de ambigüedad te ayuda a evitar sobrevalorar lo familiar
+  y subvalorar lo incierto. Puede llevar a oportunidades perdidas cuando
+  la ambigüedad es manejable. También explica por qué la transparencia y la claridad
+  reducen la ansiedad.
+
+when_to_use:
+  - toma_de_decisiones
+  - evaluacion_de_riesgos
+  - inversion
+  - movimientos_de_carrera
+
+how_can_you_spot_it:
+  preference_for_known_risks: |
+    Elegir opciones con probabilidades claras (incluso si peores) sobre otras ambiguas.
+  avoidance_of_uncertainty: |
+    Rechazar opciones principalmente porque "no sabemos lo suficiente".
+  familiarity_over_optimality: |
+    Preferir lo conocido sobre lo desconocido potencialmente mejor.
+  information_seeking: |
+    Disposición a pagar por información que reduzca la ambigüedad, incluso cuando
+    no cambie la decisión.
+
+examples:
+  investing: |
+    Preferir acciones nacionales sobre internacionales porque "las entendemos
+    mejor" a pesar de los beneficios de diversificación.
+  employment: |
+    Permanecer en un trabajo conocido en lugar de aceptar un puesto con un potencial de mejora incierto.
+  product_choice: |
+    Elegir una marca familiar en lugar de una nueva opción con calidad incierta.
+  medical: |
+    Preferir un tratamiento con efectos secundarios conocidos sobre uno con resultados inciertos,
+    incluso cuando este último podría ser mejor.
+
+real_world_implications: |
+  El efecto de ambigüedad moldea mercados, elecciones de carrera y políticas. Puede ser
+  reducido proporcionando información más clara o reformulando las decisiones.
+  También explica por qué la transparencia y la comunicación reducen la ansiedad.
+
+professional_application:
+  networking_and_relationship_building: |
+    Reducir la ambigüedad en las relaciones: aclarar expectativas, comunicar
+    explícitamente y reducir la incertidumbre. Las personas prefieren situaciones conocidas.
+  collaborative_learning_initiative: |
+    Al introducir cambios, reducir la ambigüedad: proporcionar información clara sobre
+    lo que sucederá, cuándo y por qué. La ambigüedad aumenta la resistencia.
+
+how_can_this_be_misapplied:
+  manipulation: |
+    Crear deliberadamente ambigüedad para dirigir a las personas hacia opciones preferidas.
+  false_clarity: |
+    Proporcionar falsa certeza cuando existe incertidumbre genuina.
+  overconfidence: |
+    Asumir que reducir la ambigüedad siempre mejora las decisiones; a veces
+    la opción ambigua es genuinamente mejor.
+  analysis_paralysis: |
+    Esperar información perfecta antes de decidir cuando cierta ambigüedad
+    es inevitable.
+
+related_content:
+  - loss_aversion_bias
+  - availability_heuristic
+  - default_effect
+  - default_effect

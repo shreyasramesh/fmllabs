@@ -1,0 +1,103 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# In-Group Bias
+# Mental Model / Cognitive Bias - Example Entry
+
+id: in_group_bias
+name: In-Group Bias
+
+quick_introduction: |
+  In-group bias is the tendency to favor people we perceive as belonging to our
+  group over those we perceive as outsiders. We attribute positive qualities
+  to in-group members and negative qualities to out-group members, often
+  based on minimal or arbitrary distinctions.
+
+one_liner: We favor our in-group and judge out-groups more harshly—often arbitrarily.
+
+try_this:
+  - Ask: Would I judge this person the same if they were in my group?
+  - Actively seek out-group perspectives when making decisions.
+  - Notice when group boundaries are shaping your judgment.
+
+ask_yourself:
+  - Am I favoring someone because they're "one of us"?
+  - Would I apply the same standards to an out-group member?
+
+in_more_detail: |
+  Even when groups are assigned randomly (e.g., by coin flip), people quickly
+  develop preference for their in-group. We trust in-group members more, allocate
+  resources to them more generously, and judge their actions more charitably.
+  Out-group members receive the opposite treatment.
+
+  In-group bias fuels tribalism, discrimination, and conflict. It affects
+  hiring, promotion, collaboration, and policy. It can be based on race,
+  nationality, company, team, or any shared identity.
+
+why_this_is_important: |
+  Recognizing in-group bias helps you make fairer decisions, build more
+  inclusive teams, and avoid favoritism. It also explains why diversity
+  initiatives face resistance—in-group preference is automatic.
+
+when_to_use:
+  - leadership
+  - decision-making
+  - relationship_building
+  - conflict_resolution
+
+how_can_you_spot_it:
+  preferential_treatment: |
+    Giving the benefit of the doubt to "us" but not "them."
+  resource_allocation: |
+    Allocating more to in-group members when out-group members have equal
+    or greater need.
+  attribution_asymmetry: |
+    In-group success = skill; out-group success = luck. In-group failure =
+    circumstance; out-group failure = character.
+  minimal_group_effects: |
+    Favoritism emerges even with arbitrary group assignments.
+
+examples:
+  hiring: |
+    Preferring candidates who went to your alma mater or share your background.
+  performance_reviews: |
+    Rating in-group members more favorably than out-group members with
+    similar performance.
+  collaboration: |
+    Trusting and including "our team" while excluding or doubting "their team."
+  politics: |
+    Dismissing out-group arguments while accepting in-group arguments
+    uncritically.
+
+real_world_implications: |
+  In-group bias perpetuates inequality, undermines meritocracy, and fuels
+  conflict. It affects hiring, promotion, investment, and policy. Reducing
+  it requires deliberate effort—it won't fix itself.
+
+professional_application:
+  networking_and_relationship_building: |
+    Actively include people outside your immediate circle. Seek diverse
+    perspectives. Question whether you're favoring someone because they're
+    "like you."
+  collaborative_learning_initiative: |
+    Use structured processes (blinded reviews, diverse panels) to reduce
+    in-group bias in hiring and evaluation. Create cross-group projects
+    to build shared identity.
+
+how_can_this_be_misapplied:
+  forced_diversity: |
+    Implementing quotas or policies that create resentment without addressing
+    underlying bias.
+  out_group_hostility: |
+    Treating in-group bias as the only problem when out-group hostility
+    also exists.
+  ignoring_legitimate_differences: |
+    Not all group differences are bias—sometimes groups have different
+    characteristics. Don't assume all disparities are discrimination.
+  reverse_discrimination: |
+    Overcorrecting to favor out-groups in ways that are unfair to in-group
+    members.
+
+related_content:
+  - fundamental_attribution_error
+  - halo_effect
+  - false_consensus_effect
+  - groupthink

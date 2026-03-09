@@ -1,0 +1,102 @@
+id: mere_exposure_effect
+name: Efeito de Mera Exposição
+
+quick_introduction: |
+  O efeito de mera exposição é a tendência de desenvolver uma preferência por coisas
+  simplesmente porque estamos familiarizados com elas. Exposição repetida — mesmo sem
+  reforço — aumenta o apreço. Tendemos a preferir o que conhecemos.
+
+one_liner: Familiaridade gera apreço — preferimos o que já vimos antes.
+
+try_this:
+  - Pergunte: Eu gosto disso porque é bom, ou porque é familiar?
+  - Ao avaliar opções, corrija a exposição — coisas novas começam em desvantagem.
+  - Observe quando a repetição está influenciando sua preferência.
+
+ask_yourself:
+  - Estou preferindo algo principalmente porque já o vi antes?
+  - Eu escolheria de forma diferente se a exposição fosse igual?
+
+in_more_detail: |
+  Robert Zajonc demonstrou que a exposição repetida a estímulos (rostos, palavras, formas)
+  aumenta o afeto positivo em relação a eles — mesmo quando não estamos conscientemente
+  cientes da exposição. Familiaridade gera apreço, não desprezo (em muitos
+  casos). O efeito é mais forte quando não estamos analisando e quando a exposição
+  é sutil.
+
+  O efeito de mera exposição afeta a preferência por marcas, atração interpessoal
+  e julgamento estético. Explica por que preferimos música familiar,
+  por que a publicidade funciona através da repetição e por que podemos preferir
+  pessoas que já vimos antes — mesmo sem interação.
+
+why_this_is_important: |
+  Reconhecer o efeito de mera exposição ajuda você a entender suas próprias
+  preferências e a resistir à manipulação através da repetição. Ele também
+  explica por que visibilidade e presença importam para relacionamentos e
+  marcas. A familiaridade é uma influência poderosa, mas muitas vezes inconsciente.
+
+when_to_use:
+  - construcao_de_relacionamentos
+  - tomada_de_decisao
+  - lideranca
+  - aprendizado
+
+how_can_you_spot_it:
+  familiarity_preference: |
+    Preferir opções que vimos antes em detrimento de opções novas.
+  repetition_influence: |
+    Exposição repetida aumenta o apreço sem persuasão explícita.
+  unconscious_influence: |
+    O efeito funciona mesmo quando não estamos cientes da exposição.
+  brand_recognition: |
+    Marcas familiares são preferidas mesmo quando não conseguimos articular o porquê.
+
+examples:
+  advertising: |
+    Exposição repetida a uma marca aumenta a preferência — mesmo sem
+    mensagens persuasivas.
+  music: |
+    Canções que ouvimos antes tendem a ser mais apreciadas do que novas
+    na primeira audição.
+  people: |
+    Tendemos a gostar mais de pessoas que vimos repetidamente (por exemplo, colegas de classe,
+    colegas de trabalho) do que de estranhos — mesmo sem interação.
+  ideas: |
+    Ideias que encontramos antes parecem mais confortáveis e
+    críveis do que as novas.
+
+real_world_implications: |
+  O efeito de mera exposição molda o comportamento do consumidor,
+  preferências políticas e atração social. É explorado no marketing
+  e pode criar vantagens injustas para o familiar. Ele também
+  explica por que a diversidade de exposição é importante — familiaridade com
+  a diferença reduz o preconceito.
+
+professional_application:
+  networking_and_relationship_building: |
+    Visibilidade importa. Aparecer, estar presente e ser
+    visto cria familiaridade que constrói apreço. Não
+    subestime o valor do contato repetido de baixo risco.
+  collaborative_learning_initiative: |
+    Exponha pessoas a perspectivas e pessoas diversas repetidamente —
+    a familiaridade pode reduzir preconceitos. Mas esteja ciente de que a mera exposição
+    também pode reforçar a preferência pelo status quo.
+
+how_can_this_be_misapplied:
+  manipulation: |
+    Criar deliberadamente exposição repetida para manipular
+    preferências sem consentimento.
+  false_familiarity: |
+    Assumir que familiaridade equivale a qualidade — às vezes, opções novas
+    são melhores.
+  exclusion: |
+    Se apenas certas pessoas obtêm exposição, elas ganham vantagem injusta.
+    Considere quem tem acesso à visibilidade.
+  stagnation: |
+    Depender excessivamente da familiaridade e nunca experimentar coisas novas.
+
+related_content:
+  - ben_franklin_effect
+  - availability_heuristic
+  - baader_meinhof_phenomenon
+  - halo_effect

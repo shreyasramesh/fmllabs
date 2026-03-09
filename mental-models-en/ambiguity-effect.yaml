@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Ambiguity Effect
+# Mental Model / Cognitive Bias - Example Entry
+
+id: ambiguity_effect
+name: Ambiguity Effect
+
+quick_introduction: |
+  The ambiguity effect is the tendency to avoid options when we lack information
+  about the probabilities of outcomes. We prefer known risks over unknown
+  risks—even when the unknown risks might be better. Uncertainty itself feels
+  aversive.
+
+one_liner: We prefer known risks over unknown risks—even when the unknown might be better.
+
+try_this:
+  - Ask: Am I avoiding this option mainly because of uncertainty, or is there a real downside?
+  - Quantify what you do know; sometimes the "ambiguous" option has clearer upside.
+  - Notice when you default to the familiar just because it feels safer.
+
+ask_yourself:
+  - Am I rejecting something because it's ambiguous, or because it's genuinely worse?
+  - What would I need to know to feel comfortable with the uncertain option?
+
+in_more_detail: |
+  In Ellsberg's paradox, people prefer to bet on an urn with known proportions
+  of balls over an urn with unknown proportions, even when the unknown urn
+  might offer better odds. We dislike ambiguity—we'd rather have a clear
+  (even if bad) probability than an unclear one.
+
+  The effect influences decisions in investing, career choices, and policy.
+  It can lead to suboptimal choices when we avoid options that are ambiguous
+  but potentially superior. It also explains why we prefer familiar brands
+  and known quantities.
+
+why_this_is_important: |
+  Recognizing the ambiguity effect helps you avoid over-preferring the familiar
+  and under-preferring the uncertain. It can lead to missed opportunities when
+  ambiguity is manageable. It also explains why transparency and clarity
+  reduce anxiety.
+
+when_to_use:
+  - decision-making
+  - risk_assessment
+  - investing
+  - career_moves
+
+how_can_you_spot_it:
+  preference_for_known_risks: |
+    Choosing options with clear (even if worse) probabilities over ambiguous ones.
+  avoidance_of_uncertainty: |
+    Rejecting options primarily because "we don't know enough."
+  familiarity_over_optimality: |
+    Preferring the known over the potentially better unknown.
+  information_seeking: |
+    Willingness to pay for information that reduces ambiguity—even when it
+    doesn't change the decision.
+
+examples:
+  investing: |
+    Preferring domestic stocks over international because "we understand them
+    better" despite diversification benefits.
+  employment: |
+    Staying in a known job rather than taking a role with uncertain upside.
+  product_choice: |
+    Choosing a familiar brand over a new option with uncertain quality.
+  medical: |
+    Preferring a treatment with known side effects over one with uncertain
+    outcomes, even when the latter might be better.
+
+real_world_implications: |
+  The ambiguity effect shapes markets, career choices, and policy. It can be
+  reduced by providing clearer information or by reframing decisions. It
+  also explains why transparency and communication reduce anxiety.
+
+professional_application:
+  networking_and_relationship_building: |
+    Reduce ambiguity in relationships: clarify expectations, communicate
+    explicitly, and reduce uncertainty. People prefer known situations.
+  collaborative_learning_initiative: |
+    When introducing change, reduce ambiguity—provide clear information about
+    what will happen, when, and why. Ambiguity increases resistance.
+
+how_can_this_be_misapplied:
+  manipulation: |
+    Deliberately creating ambiguity to steer people toward preferred options.
+  false_clarity: |
+    Providing false certainty when genuine uncertainty exists.
+  overconfidence: |
+    Assuming that reducing ambiguity always improves decisions—sometimes
+    the ambiguous option is genuinely better.
+  analysis_paralysis: |
+    Waiting for perfect information before deciding when some ambiguity
+    is inevitable.
+
+related_content:
+  - loss_aversion_bias
+  - availability_heuristic
+  - default_effect
+  - default_effect

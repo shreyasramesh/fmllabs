@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Salience Bias
+# Mental Model / Cognitive Bias - Example Entry
+
+id: salience_bias
+name: Salience Bias
+
+quick_introduction: |
+  Salience bias is the tendency to focus on the most prominent or noticeable
+  aspects of a situation while overlooking less obvious but potentially
+  important factors. What stands out gets disproportionate attention and
+  weight in our judgments.
+
+one_liner: What stands out gets disproportionate attention—the subtle gets overlooked.
+
+try_this:
+  - Ask: What am I not seeing because it's not salient?
+  - Actively look for less obvious factors before deciding.
+  - Notice when a vivid or dramatic element is dominating your judgment.
+
+ask_yourself:
+  - Am I overweighting what's prominent and underweighting what's subtle?
+  - What important factors might I be overlooking?
+
+in_more_detail: |
+  Salient information is vivid, emotionally charged, or recently encountered.
+  It captures attention and influences decisions more than it should. We
+  overweight the conspicuous and underweight the subtle. A dramatic event
+  or vivid example can dominate our thinking even when it's not
+  representative.
+
+  Salience bias overlaps with availability heuristic (what comes to mind)
+  and recency bias (what happened recently). It affects risk perception,
+  hiring, and strategy. The most visible problems get addressed; the
+  invisible ones fester.
+
+why_this_is_important: |
+  Recognizing salience bias helps you look beyond what's obvious and
+  consider less visible factors. It improves risk assessment, problem
+  diagnosis, and decision quality. Important things aren't always
+  salient.
+
+when_to_use:
+  - decision-making
+  - problem_solving
+  - risk_assessment
+  - leadership
+
+how_can_you_spot_it:
+  prominent_factor_dominance: |
+    The most noticeable aspect drives the decision.
+  overlooking_background: |
+    Less visible factors are ignored despite their importance.
+  vividness_overweighting: |
+    Dramatic or emotional information gets disproportionate weight.
+  visibility_bias: |
+    What we can easily see or measure gets more attention than
+    what we can't.
+
+examples:
+  risk: |
+    A plane crash is salient—we overestimate flying risk. Car
+    accidents are less salient in aggregate—we underestimate
+    driving risk.
+  hiring: |
+    A candidate's presentation skills are salient; their
+    follow-through may be less visible but equally important.
+  strategy: |
+    Competitor moves are salient; gradual market shifts are
+    less noticeable but may matter more.
+  problems: |
+    The loudest complaint gets addressed while systemic issues
+    go unnoticed.
+
+real_world_implications: |
+  Salience bias affects what gets attention, funding, and action.
+  It can lead to addressing symptoms rather than causes and
+  to misallocated resources. Deliberately seeking non-salient
+  information improves decisions.
+
+professional_application:
+  networking_and_relationship_building: |
+    Don't judge people only by their most visible traits. Look
+    for less obvious qualities—reliability, consistency, how
+    they treat people who can't help them.
+  collaborative_learning_initiative: |
+    In problem-solving, explicitly ask "What are we not seeing?"
+    and "What's less obvious but important?" Create processes
+    that surface non-salient issues.
+
+how_can_this_be_misapplied:
+  ignoring_salient_info: |
+    Sometimes what's salient is important. Don't dismiss
+    everything obvious.
+  false_sophistication: |
+    Assuming that obscure factors are always more important
+    than obvious ones.
+  analysis_paralysis: |
+    Looking for so many non-salient factors that you never
+    act on the salient ones.
+  contrarianism: |
+    Rejecting salient information just to be different.
+
+related_content:
+  - availability_heuristic
+  - anchoring_bias
+  - baader_meinhof_phenomenon
+  - confirmation_bias

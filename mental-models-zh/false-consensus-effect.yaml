@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# The False Consensus Effect
+# Mental Model / Cognitive Bias - Example Entry
+
+id: false_consensus_effect
+name: 虚假共识效应
+
+quick_introduction: |
+  虚假共识效应是指我们倾向于高估他人对我们信念、态度和行为的认同程度。
+  我们假设自己的观点比实际更普遍，并且难以想象理性的人会持不同意见。
+
+one_liner: 我们高估了他人对我们的认同程度。
+
+try_this:
+  - 积极寻找持不同意见的人——不要假设存在共识。
+  - 在开始之前，与不认同你假设的人进行测试。
+  - 问：持不同意见的人会怎么说？认真对待。
+
+ask_yourself:
+  - 我是否假设别人和我一样思考？
+  - 我上次对别人不同的看法感到惊讶是什么时候？
+
+in_more_detail: |
+  当我们持有某种立场时，我们倾向于认为这是常态。我们用志同道合的人
+  包围自己，阅读支持性媒体，并将模糊的反馈解读为认同。这会创造一个回音
+  室，强化共识的错觉。
+
+  对于根深蒂固的信念以及当我们高度投入于某个立场时，这种效应会更强。
+  当他人持不同意见时，这可能会导致惊讶、谈判困难，以及当我们假设客户
+  的想法与我们一致时，导致糟糕的市场研究。
+
+why_this_is_important: |
+  认识到虚假共识效应有助于你为真正的分歧做好准备，进行更好的研究，
+  并更有效地沟通。这对于产品开发、谈判和领导力至关重要。
+
+when_to_use:
+  - 决策制定
+  - 谈判
+  - 领导力
+  - 解决问题
+
+how_can_you_spot_it:
+  surprise_at_disagreement: |
+    当有人不同意你认为是显而易见的事情时，你会感到非常震惊。
+  assuming_shared_values: |
+    在你进行核实之前，你表现得好像别人和你有着共同的优先事项。
+  underestimating_opposition: |
+    你预计提议会遇到的阻力比实际要小。
+  echo_chamber_detection: |
+    你的社交和信息环境很少挑战你的观点。
+
+examples:
+  product_development: |
+    一个团队假设用户想要功能 X，因为团队中的每个人都想要它——结果却发现
+    采用率很低。
+  politics: |
+    政治泡沫中的人们对与他们预期不符的选举结果感到惊讶。
+  negotiation: |
+    当你认为条款“合理”时，就假设对方会同意这些条款。
+  hiring: |
+    为了“文化契合”而招聘，可能意味着招聘那些同意你观点的人，从而加剧
+    虚假共识。
+
+real_world_implications: |
+  虚假共识效应加剧了政治两极分化、产品发布失败和谈判破裂。
+  它让我们对自己的预测过度自信，并对异议准备不足。
+
+professional_application:
+  networking_and_relationship_building: |
+    积极寻找持有不同观点的人。不要假设有共同的信念——提问并倾听。
+  collaborative_learning_initiative: |
+    在团队中，使用结构化的异议（例如，“事前验尸”、“扮演魔鬼代言人”）
+    来在分歧造成代价之前将其暴露出来。
+
+how_can_this_be_misapplied:
+  dismissing_dissent: |
+    假设持不同意见者不理性或信息不足，而不是考虑他们可能持有合理的
+    不同观点。
+  poor_research: |
+    因为“我们已经知道他们想要什么”而跳过客户研究。
+  overconfidence: |
+    基于他人会同意的假设而做出大胆的预测。
+  groupthink_amplification: |
+    不挑战虚假共识效应的团队可能会陷入集体思维的怪圈。
+
+related_content:
+  - confirmation_bias
+  - in_group_bias
+  - groupthink
+  - fundamental_attribution_error

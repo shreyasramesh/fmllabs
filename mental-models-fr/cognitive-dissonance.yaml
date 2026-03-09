@@ -1,0 +1,75 @@
+id: cognitive_dissonance
+name: Dissonance cognitive
+
+quick_introduction: |
+  La dissonance cognitive est l'inconfort mental que nous ressentons lorsque nous avons des croyances contradictoires, ou lorsque nos actions contredisent nos croyances. Nous sommes motivés à réduire cet inconfort, souvent en changeant nos croyances pour qu'elles correspondent à nos actions plutôt qu'en changeant nos actions.
+
+one_liner: Nous changeons nos croyances pour qu'elles correspondent à nos actions plus souvent que l'inverse.
+
+try_this:
+  - Remarquez lorsque vous rationalisez pour réduire l'inconfort au lieu de changer de comportement.
+  - Demandez-vous : Ajuste-je mes croyances pour justifier ce que j'ai fait ?
+  - Considérez si changer l'action serait plus honnête que de changer la croyance.
+
+ask_yourself:
+  - Est-ce que je réduis la dissonance par la rationalisation, ou par un réel changement ?
+  - Aurais-je cette croyance si je n'avais pas déjà agi de la sorte ?
+
+in_more_detail: |
+  La théorie de Leon Festinger explique que nous recherchons la cohérence. Lorsque nous agissons contre nos valeurs (par exemple, mentir, gaspiller de l'argent), nous éprouvons une dissonance. Pour la réduire, nous pouvons changer notre croyance (« Ce n'était pas vraiment un mensonge ») ou minimiser l'action (« Ce n'était pas si grave »). Nous rationalisons souvent plutôt que de nous réformer.
+
+  La dissonance cognitive motive l'effet Ben Franklin (nous aimons les gens que nous avons aidés), explique pourquoi nous justifions les décisions passées et sous-tend de nombreuses auto-tromperies. C'est une force puissante dans la formation et le changement des croyances.
+
+why_this_is_important: |
+  Comprendre la dissonance cognitive vous aide à reconnaître vos propres rationalisations et à comprendre pourquoi les gens résistent au changement d'avis. Cela explique également pourquoi l'engagement et la cohérence sont de puissants principes de persuasion.
+
+when_to_use:
+  - prise_de_decision
+  - creation_de_ liens
+  - leadership
+  - resolution_de_conflits
+
+how_can_you_spot_it:
+  post_decision_rationalization: |
+    Après un choix, nous mettons l'accent sur les aspects positifs de notre choix et sur les aspects négatifs des options rejetées.
+  belief_action_alignment: |
+    Nous ajustons nos croyances pour qu'elles correspondent aux actions que nous avons déjà entreprises.
+  discomfort_with_inconsistency: |
+    Un malaise lorsque nous remarquons que notre comportement ne correspond pas à nos valeurs déclarées.
+  resistance_to_disconfirming_evidence: |
+    Rejeter ou minimiser les informations qui entrent en conflit avec nos engagements.
+
+examples:
+  purchase_justification: |
+    Après avoir acheté un article coûteux, nous mettons en avant ses avantages et minimisons son coût.
+  relationship: |
+    Nous rationalisons le fait de rester dans une mauvaise relation en nous concentrant sur le positif et en minimisant le négatif.
+  career: |
+    Nous justifions le fait de rester dans un emploi que nous n'aimons pas en soulignant les raisons pour lesquelles nous "devons" y rester.
+  beliefs: |
+    Lorsque nos actions contredisent nos valeurs, nous changeons nos valeurs (« Je ne suis pas vraiment végétarien, je mange juste de la viande parfois ») plutôt que nos actions.
+
+real_world_implications: |
+  La dissonance cognitive façonne la formation des croyances, le comportement des consommateurs et les attitudes politiques. Elle explique pourquoi les gens insistent après de mauvaises décisions et pourquoi changer de comportement peut changer les croyances.
+
+professional_application:
+  networking_and_relationship_building: |
+    Les petits engagements peuvent mener à des engagements plus importants : les gens rationalisent leurs actions passées. Utilisez cela éthiquement : commencez par de petites demandes. Soyez conscient lorsque vous rationalisez votre propre comportement.
+  collaborative_learning_initiative: |
+    Lors de l'introduction d'un changement, obtenez une adhésion précoce et de petits engagements : ils créent une dissonance qui motive une adoption plus large. Évitez d'imposer des engagements publics qui créent du ressentiment.
+
+how_can_this_be_misapplied:
+  manipulation: |
+    Créer délibérément de la dissonance pour faire pression sur les gens afin d'obtenir leur conformité.
+  dismissing_genuine_change: |
+    Supposer que tout changement de croyance est une rationalisation alors que les gens mettent parfois à jour leurs croyances de manière authentique.
+  forced_consistency: |
+    Faire pression sur les gens pour qu'ils soient « cohérents » alors que leurs points de vue ont légitimement évolué.
+  self_deception: |
+    Utiliser la théorie de la dissonance pour justifier l'évitement de vérités inconfortables sur nous-mêmes.
+
+related_content:
+  - ben_franklin_effect
+  - confirmation_bias
+  - sunk_cost_fallacy
+  - fundamental_attribution_error

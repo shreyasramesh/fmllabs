@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Occam's Razor
+# Mental Model / Cognitive Bias - Example Entry
+
+id: occams_razor
+name: Occam's Razor
+
+quick_introduction: |
+  Occam's Razor (or Ockham's Razor) is the principle that among competing hypotheses,
+  the one with the fewest assumptions should be preferred. Simpler explanations are
+  often—though not always—correct.
+
+one_liner: Prefer the simplest explanation that fits the evidence.
+
+try_this:
+  - When comparing theories, ask: Which has fewer assumptions?
+  - Don't add complexity without evidence that demands it.
+  - Notice when you're preferring an elaborate explanation over a simple one.
+
+ask_yourself:
+  - Am I introducing unnecessary complexity?
+  - Does the evidence require this level of explanation?
+
+in_more_detail: |
+  Named after William of Ockham, the principle doesn't claim that simple explanations
+  are always true. It suggests that unnecessary complexity should not be introduced
+  without evidence. If two theories explain the same phenomena, the simpler one is
+  preferable until evidence demands otherwise.
+
+  Occam's Razor is a heuristic, not a law. Sometimes the correct explanation is
+  complex. But it guards against overfitting, conspiracy thinking, and unnecessary
+  complication. It favors parsimony in explanation.
+
+why_this_is_important: |
+  Applying Occam's Razor improves problem-solving, reduces overfitting in models,
+  and helps you avoid elaborate but unsupported theories. It's a useful default
+  when evidence is ambiguous.
+
+when_to_use:
+  - problem_solving
+  - decision-making
+  - learning
+  - risk_assessment
+
+how_can_you_spot_it:
+  unnecessary_complexity: |
+    An explanation invokes many assumptions when fewer would suffice.
+  conspiracy_tendencies: |
+    Complex, multi-actor explanations for events that have simpler causes.
+  overfitting: |
+    A model or theory that explains past data perfectly but fails on new data.
+  elegance_in_explanation: |
+    The best explanations often feel "obvious" in retrospect.
+
+examples:
+  debugging: |
+    When a bug occurs, check the simplest causes first (e.g., typo, wrong config)
+    before assuming architectural issues.
+  conspiracy_theories: |
+    "The government orchestrated X" requires many hidden actors; "a few people
+    made mistakes" is simpler.
+  product_failure: |
+    Users aren't adopting a feature—simplest explanation: it doesn't solve their
+    problem, not that they're confused by the UI.
+  medical_diagnosis: |
+    "Common things are common"—consider frequent diagnoses before rare ones.
+
+real_world_implications: |
+  Occam's Razor guides scientific inquiry, engineering, and everyday reasoning.
+  It reduces wasted effort on elaborate wrong theories. Misapplied, it can dismiss
+  genuinely complex phenomena.
+
+professional_application:
+  networking_and_relationship_building: |
+    When interpreting others' behavior, prefer simple explanations (they're busy,
+    they forgot) before assuming malice or complex motives.
+  collaborative_learning_initiative: |
+    In problem-solving sessions, explicitly ask "What's the simplest explanation?"
+    before building complex models.
+
+how_can_this_be_misapplied:
+  oversimplification: |
+    Dismissing valid complex explanations because they're "too complicated."
+  status_quo_bias: |
+    Using Occam's Razor to prefer familiar explanations over novel but correct ones.
+  scientific_rigidity: |
+    Rejecting new theories because they're more complex, even when evidence supports them.
+  missing_nuance: |
+    Some domains (e.g., human behavior, ecosystems) are inherently complex;
+    simplicity can be misleading.
+
+related_content:
+  - hanlons_razor
+  - fundamental_attribution_error
+  - narrative_fallacy
+  - base_rate_fallacy

@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# 零和思维
+# 心智模型 / 认知偏见 - 示例条目
+
+id: zero_sum_thinking
+name: 零和思维
+
+quick_introduction: |
+  零和思维是一种信念，认为一个人的收益必然是另一个人的损失——
+  资源是固定的，你得到的任何优势都意味着我处于劣势。
+  实际上，许多情况是正和的：双方都可以获益。
+
+one_liner: 你的收益不一定是我的损失——许多情况都是正和的。
+
+try_this:
+  - 问：我们能扩大蛋糕吗？这真的是零和的吗？
+  - 在假定竞争之前，先寻找合作的机会。
+  - 注意你何时将一个非固定状态的情况当作固定状态来对待。
+
+ask_yourself:
+  - 我是否在我们可以扩大蛋糕的情况下，假定蛋糕是固定的？
+  - 合作是否会比竞争创造更多价值？
+
+in_more_detail: |
+  在零和博弈中，总数是固定的——你的收益是我的损失。在正和
+  情境下，合作创造价值。贸易、创新和建立关系
+  通常是正和的。零和思维会导致不必要的
+  竞争、错失合作机会以及破坏性的
+  敌对。
+
+  这种偏见在谈判、政治和组织动态中很常见。
+  它假定蛋糕是固定的，而蛋糕往往是可以扩大的。它可能成为
+  自我实现的预言：如果你将他人视为对手，他们就会变成对手。
+
+why_this_is_important: |
+  认识到零和思维能为合作和
+  价值创造打开机会。它能改善谈判，减少冲突，并促成
+  双赢的结果。许多最佳机会都是正和的。
+
+when_to_use:
+  - 谈判
+  - 领导力
+  - 建立关系
+  - 决策
+
+how_can_you_spot_it:
+  fixed_pie_assumption: |
+    “如果他们赢了，我就输了”，而实际情况可能允许双方都获益。
+  competitive_ framing: |
+    自动将情境框定为“我们对他们”。
+  envy_of_others_gains: |
+    嫉妒他人的成功，仿佛它会让你自己的收益减少。
+  missed_cooperation: |
+    未能看到能使各方受益的合作机会。
+
+examples:
+  negotiation: |
+    假定对对方有利的交易意味着对你更不利——而创造性的解决方案通常会为双方扩大价值。
+  salary: |
+    “如果我的同事涨薪了，留给我的就少了”，而实际预算可能是灵活的，或者涨薪可以通过创造的价值来证明。
+  politics: |
+    “他们党派的收益就是我们的损失”，而许多政策结果可能同时惠及多个群体。
+  career: |
+    “他们的晋升意味着我的机会更少”，而组织增长可以为每个人创造更多机会。
+
+real_world_implications: |
+  零和思维助长冲突，限制合作，并导致错失机会。
+  在经济、人际关系和
+  创新方面，它常常是错误的。转向正和思维
+  可以改善结果。
+
+professional_application:
+  networking_and_relationship_building: |
+    寻找为他人创造价值的方式——他们的成功可以为你创造
+    机会。建立双方互利的合作关系。
+  collaborative_learning_initiative: |
+    将团队目标框定为正和目标：共享成功，扩大蛋糕。
+    鼓励合作而不是内部竞争。
+
+how_can_this_be_misapplied:
+  ignoring_real_zero_sum: |
+    有些情境确实是零和的（例如，单一的晋升，固定的预算）。
+    假装不是这样可能是天真的。
+  naive_cooperation: |
+    假定所有人都会合作，而一些行为者实际上是
+    敌对的。
+  undervaluing_competition: |
+    竞争可以促进改进；并非所有竞争都是破坏性的。
+  exploitation: |
+    利用“正和”的框架来剥削那些并不受益于此的人。
+
+related_content:
+  - fundamental_attribution_error
+  - in_group_bias
+  - scarcity_bias
+  - endowment_effect

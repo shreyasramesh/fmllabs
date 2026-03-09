@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# Baader-Meinhof现象
+# 心智模型/认知偏差 - 示例条目
+
+id: baader_meinhof_phenomenon
+name: Baader-Meinhof现象
+
+quick_introduction: |
+  Baader-Meinhof现象（也称为频率幻觉）是指当你了解到某件新事物后，突然发现它随处可见。这感觉像是一种巧合，但通常是选择性注意——你的大脑会优先注意到它最近接触到的事物。
+
+one_liner: 你了解到某件新事物，然后突然发现它无处不在——它其实一直都在。
+
+try_this:
+  - 当你了解到某件事后感觉它“无处不在”时，检查一下基础比率。
+  - 注意一下，是最近性让你觉得某事比实际更重要吗？
+  - 问问自己：我看到的是一个真实的趋势，还是我只是注意到我被优先提示去注意的东西？
+
+ask_yourself:
+  - 这件事现在真的更常见了吗，还是我只是更注意到了？
+  - 如果我最近没有了解它，我还会看到这种模式吗？
+
+in_more_detail: |
+  在听到Baader-Meinhof恐怖组织后，一个人可能会在几天之内在新闻、谈话和文章中看到对它的提及。这种现象有两个组成部分：选择性注意（你注意到你正在寻找的东西）和确认偏差（你记住成功的例子，忘记失败的例子）。
+
+  这种错觉是，某件事突然变得更常见了。实际上，它一直存在；你只是没有注意到它。这可能导致高估最近学到的信息的普遍性或重要性。
+
+why_this_is_important: |
+  认识到Baader-Meinhof现象有助于你避免基于最近的接触而高估某事的普遍性或重要性。它还解释了为什么新的想法、产品或趋势在你第一次注意到它们后，会感觉“无处不在”。
+
+when_to_use:
+  - 决策
+  - 学习
+  - 风险评估
+  - 问题解决
+
+how_can_you_spot_it:
+  sudden_ubiquity: |
+    你学到一个新单词、概念或产品，几天之内就感觉你到处都能看到它。
+  recency_bias: |
+    最近的信息比实际情况更能代表现实。
+  pattern_seeking: |
+    你的大脑将不相关的目击事件联系起来，形成一个“到处都是”的叙事。
+  forgetting_the_misses: |
+    你不会追踪你没有看到某事多少次——只关注你看到它的次数。
+
+examples:
+  vocabulary: |
+    学习了“serendipity”（机缘巧遇）这个词，然后在一周内发现了它在三篇不同的文章中出现。
+  car_purchase: |
+    决定购买某个车型后，你在每条街上都能看到它——尽管它一直都在那里。
+  health_anxiety: |
+    阅读了一个罕见的症状后，你开始注意到自己身上有类似的感受，导致不必要的担忧。
+  trends: |
+    发现了一个新的应用程序或趋势，并感觉它突然占据了主导地位——但它可能用户群很小。
+
+real_world_implications: |
+  这种现象会影响我们如何看待趋势、风险和机遇。营销人员和媒体可以通过重复接触来利用它。在决策中，它可能导致对近期信息的过度重视。
+
+professional_application:
+  networking_and_relationship_building: |
+    当某人在了解某个话题后反复提及它时，要认识到他们可能正在经历频率幻觉——这个话题不一定更相关，只是对他们来说更显眼。
+  collaborative_learning_initiative: |
+    在培训中，要强调学习新事物后“到处都能看到它”是正常的；鼓励检查基础比率，而不是相信普遍存在的感受。
+
+how_can_this_be_misapplied:
+  overestimating_prevalence: |
+    假设某件事比实际更普遍或更重要，因为你最近经常注意到它。
+  confirmation_bias_amplification: |
+    将“到处都能看到它”的感觉作为信念正确的证据。
+  decision_distortion: |
+    根据感觉上异常重要的近期信息做出选择。
+  vulnerability_to_manipulation: |
+    广告商和宣传者通过重复接触来制造普遍性和重要性的幻觉。
+
+related_content:
+  - confirmation_bias
+  - availability_heuristic
+  - salience_bias
+  - availability_heuristic

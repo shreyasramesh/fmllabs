@@ -1,0 +1,98 @@
+id: confirmation_bias
+name: Viés de Confirmação
+
+quick_introduction: |
+  O viés de confirmação é a tendência de buscar, interpretar e lembrar informações
+  de maneiras que confirmem nossas crenças existentes. Damos mais peso a evidências
+  que apoiam e desconsideramos ou descartamos evidências que contradizem nossas visões.
+  Fazemos perguntas que confirmam em vez de testar nossas hipóteses.
+
+one_liner: Buscamos e lembramos o que confirma nossas crenças; desconsideramos o que as contradiz.
+
+try_this:
+  - Pergunte: O que me provaria errado? Busque ativamente evidências que refutem.
+  - Observe quando você dá mais peso à informação que apoia do que à que contradiz.
+  - Considere a visão oposta com a mesma seriedade que a sua.
+
+ask_yourself:
+  - Estou testando minha hipótese ou apenas confirmando-a?
+  - Quando foi a última vez que mudei de ideia com base em novas evidências?
+
+in_more_detail: |
+  Não somos processadores neutros de informação. Buscamos confirmação, interpretamos
+  ambiguidades como apoio e lembramos mais acertos do que erros. Cercamo-nos de
+  pessoas e mídias com opiniões semelhantes. Perguntamos "Por que estou certo?"
+  em vez de "O que me provaria errado?". Isso nos torna excessivamente confiantes
+  e lentos para atualizar.
+
+  O viés de confirmação é um dos vieses mais disseminados e bem documentados.
+  Afeta a ciência, a política, os relacionamentos e os negócios. Superá-lo
+  requer esforço deliberado e processos estruturados.
+
+why_this_is_important: |
+  Reconhecer o viés de confirmação é essencial para uma boa tomada de decisão e
+  aprendizado. Ajuda você a buscar evidências que refutem, considerar hipóteses
+  alternativas e atualizar suas crenças quando necessário. É a base do pensamento
+  científico.
+
+when_to_use:
+  - tomada_de_decisao
+  - aprendizado
+  - resolucao_de_problemas
+  - avaliacao_de_risco
+
+how_can_you_spot_it:
+  seeking_support: |
+    Buscar evidências que confirmem em vez de testar sua visão.
+  asymmetric_interpretation: |
+    Interpretar evidências ambíguas como apoio à sua posição.
+  discounting_disconfirming: |
+    Descartar ou minimizar evidências que contradizem suas crenças.
+  selective_exposure: |
+    Consumir apenas informações de fontes que concordam com você.
+
+examples:
+  hiring: |
+    Formar uma impressão positiva inicial e, em seguida, fazer perguntas que
+    confirmem que o candidato é ótimo.
+  investing: |
+    Após comprar uma ação, buscar notícias positivas e descartar análises negativas.
+  relationships: |
+    Interpretar as ações de um parceiro através de uma lente que confirma sua
+    visão sobre ele (boa ou má).
+  politics: |
+    Aceitar informações do seu lado acriticamente e rejeitar
+    informações equivalentes do outro lado.
+
+real_world_implications: |
+  O viés de confirmação perpetua crenças falsas, alimenta a polarização e
+  causa erros custosos. É o inimigo da boa ciência e da boa
+  tomada de decisão. Superá-lo requer a busca deliberada por desconfirmação.
+
+professional_application:
+  networking_and_relationship_building: |
+    Ao formar opiniões sobre pessoas, busque ativamente evidências que refutem.
+    Pergunte "O que mudaria minha mente?" e procure por isso.
+  collaborative_learning_initiative: |
+    Use o "advogado do diabo", equipes vermelhas e pré-mortem para expor
+    perspectivas que refutam. Recompense pessoas que desafiam opiniões predominantes
+    com boas evidências.
+
+how_can_this_be_misapplied:
+  false_balance: |
+    Tratar todas as visões como igualmente válidas quando as evidências apoiam fortemente
+    um lado.
+  excessive_skepticism: |
+    Descartar toda evidência como "viés de confirmação" quando algumas crenças
+    são bem fundamentadas.
+  contrarianism: |
+    Adotar a visão oposta apenas para evitar o viés de confirmação — quando
+    a visão original pode estar correta.
+  analysis_paralysis: |
+    Nunca se comprometer com uma visão porque "podemos estar enviesados".
+
+related_content:
+  - false_consensus_effect
+  - availability_heuristic
+  - bayes_theorem
+  - dunning_kruger_effect

@@ -1,0 +1,95 @@
+# yaml-language-server: $schema=../schema/mental-model-schema.json
+# L'effet de faux consensus
+# Modèle Mental / Biais Cognitif - Entrée d'exemple
+
+id: false_consensus_effect
+name: L'effet de faux consensus
+
+quick_introduction: |
+  L'effet de faux consensus est la tendance à surestimer dans quelle mesure les autres sont d'accord avec
+  nos croyances, attitudes et comportements. Nous supposons que nos points de vue sont plus courants qu'ils ne le sont
+  réellement, et nous avons du mal à imaginer que des personnes raisonnables puissent être en désaccord.
+
+one_liner: Nous surestimons dans quelle mesure les autres sont d'accord avec nous.
+
+try_this:
+  - Recherchez activement les personnes qui ne sont pas d'accord – ne supposez pas le consensus.
+  - Avant de vous lancer, testez auprès de personnes qui ne partagent pas vos hypothèses.
+  - Demandez : Que dirait quelqu'un qui n'est pas d'accord ? Prenez-le au sérieux.
+
+ask_yourself:
+  - Est-ce que je suppose que les autres pensent comme moi ?
+  - Quand ai-je été surpris pour la dernière fois par le point de vue différent de quelqu'un ?
+
+in_more_detail: |
+  Lorsque nous adoptons une position, nous avons tendance à penser que c'est la norme. Nous nous entourons de
+  personnes partageant les mêmes idées, consommons des médias confirmants et interprétons les retours ambigus comme un
+  accord. Cela crée une chambre d'écho qui renforce l'illusion du consensus.
+
+  L'effet est plus fort pour les croyances profondément ancrées et lorsque nous sommes très investis dans notre
+  position. Cela peut entraîner des surprises lorsque d'autres ne sont pas d'accord, des difficultés dans les négociations
+  et de mauvaises études de marché lorsque nous supposons que les clients pensent comme nous.
+
+why_this_is_important: |
+  Reconnaître l'effet de faux consensus vous aide à vous préparer à un désaccord réel,
+  à mener de meilleures recherches et à communiquer plus efficacement. C'est essentiel pour
+  le développement de produits, la négociation et le leadership.
+
+when_to_use:
+  - prise_de_decision
+  - négociation
+  - leadership
+  - résolution_de_problèmes
+
+how_can_you_spot_it:
+  surprise_at_disagreement: |
+    Vous êtes sincèrement choqué lorsque quelqu'un n'est pas d'accord avec ce que vous considérez comme évident.
+  assuming_shared_values: |
+    Vous agissez comme si les autres partageaient vos priorités sans vérifier.
+  underestimating_opposition: |
+    Vous vous attendez à ce que les propositions rencontrent moins de résistance qu'elles ne le font.
+  echo_chamber_detection: |
+    Votre environnement social et informationnel remet rarement en question vos points de vue.
+
+examples:
+  product_development: |
+    Une équipe suppose que les utilisateurs veulent la fonctionnalité X parce que tout le monde dans l'équipe la veut – pour ensuite
+    constater une faible adoption.
+  politics: |
+    Les personnes dans une bulle politique sont surprises par les résultats d'élection qui ne correspondent pas
+    à leurs attentes.
+  negotiation: |
+    Supposer que l'autre partie acceptera les conditions parce qu'elles vous semblent "raisonnables".
+  hiring: |
+    Embaucher pour "l'adéquation culturelle" peut signifier embaucher des personnes qui sont d'accord avec vous, renforçant
+    le faux consensus.
+
+real_world_implications: |
+  L'effet de faux consensus contribue à la polarisation, aux lancements de produits ratés
+  et aux négociations rompues. Il nous rend trop confiants dans nos prédictions et
+  mal préparés à la dissidence.
+
+professional_application:
+  networking_and_relationship_building: |
+    Recherchez activement des personnes ayant des perspectives différentes. Ne supposez pas de croyances partagées –
+    demandez et écoutez.
+  collaborative_learning_initiative: |
+    Dans les équipes, utilisez la dissidence structurée (par exemple, les "prémortems", l'avocat du diable) pour faire émerger le
+    désaccord avant qu'il ne devienne coûteux.
+
+how_can_this_be_misapplied:
+  dismissing_dissent: |
+    Supposer que ceux qui ne sont pas d'accord sont déraisonnables ou mal informés plutôt que de considérer
+    qu'ils peuvent avoir des perspectives différentes et valables.
+  poor_research: |
+    Sauter la recherche client parce que "nous savons déjà ce qu'ils veulent".
+  overconfidence: |
+    Faire des paris audacieux sur la supposition que les autres seront d'accord.
+  groupthink_amplification: |
+    Les équipes qui ne remettent pas en question l'effet de faux consensus peuvent sombrer dans la pensée de groupe.
+
+related_content:
+  - confirmation_bias
+  - in_group_bias
+  - groupthink
+  - fundamental_attribution_error

@@ -1,0 +1,102 @@
+id: efeito_espectador
+name: Efeito Espectador
+
+quick_introduction: |
+  O efeito espectador é a tendência para que os indivíduos sejam menos propensos a
+  oferecer ajuda quando outras pessoas estão presentes. Quanto mais espectadores, menor
+  a probabilidade de qualquer uma pessoa agir. A responsabilidade é diluída; assumimos
+  que outra pessoa ajudará.
+
+one_liner: Quanto mais pessoas presentes, menor a probabilidade de qualquer uma delas agir.
+
+try_this:
+  - Em emergências, atribua responsabilidade diretamente: "Você, ligue para 190."
+  - Não presuma que outra pessoa ajudará — aja ou delegue explicitamente.
+  - Perceba quando você está esperando que os outros ajam primeiro.
+
+ask_yourself:
+  - Estou diluindo a responsabilidade porque outros estão presentes?
+  - Eu agiria de forma diferente se estivesse sozinho?
+
+in_more_detail: |
+  Após o assassinato de Kitty Genovese (embora a história tenha sido parcialmente mitificada),
+  pesquisadores descobriram que a presença de outros reduz a ajuda. Procuramos
+  os outros por pistas — se ninguém age, interpretamos isso como "nenhuma ação necessária."
+  Também experimentamos a difusão de responsabilidade: com muitas pessoas presentes,
+  cada um se sente pessoalmente menos responsável. A ignorância pluralista pode ocorrer:
+  todos acham que algo está errado, mas ninguém age porque ninguém mais está agindo.
+
+  O efeito é mais forte quando a situação é ambígua e quando
+  os espectadores não se conhecem. Pode ser superado pela atribuição direta
+  de responsabilidade ("Você, ligue para 190").
+
+why_this_is_important: |
+  Compreender o efeito espectador ajuda você a agir quando outros não o fazem, e a
+  projetar sistemas que o superem. Se você estiver em apuros, destaque
+  uma pessoa. Se você for um espectador, não espere que os outros ajam.
+
+when_to_use:
+  - liderança
+  - construção_de_relacionamentos
+  - resolução_de_conflitos
+  - tomada_de_decisão
+
+how_can_you_spot_it:
+  diffusion_of_responsibility: |
+    "Alguém mais fará isso" quando muitos estão presentes.
+  pluralistic_ignorance: |
+    Todos acham que a ação é necessária, mas ninguém age porque nenhum
+    outro está agindo.
+  social_proof_inaction: |
+    A inação dos outros é interpretada como "nenhuma ação necessária."
+  audience_inhibition: |
+    O medo de parecer tolo ou reagir exageradamente impede a ação.
+
+examples:
+  emergency: |
+    Uma pessoa desmaia; com muitos espectadores, cada um é menos provável
+    de chamar por ajuda.
+  workplace: |
+    Todos veem um problema, mas ninguém o levanta — cada um presume
+    que alguém mais o fará.
+  harassment: |
+    Testemunhas de assédio não intervêm, cada uma pensando
+    que os outros agirão.
+  meetings: |
+    Uma má ideia não é contestada porque todos presumem
+    que alguém mais falará.
+
+real_world_implications: |
+  O efeito espectador pode ter consequências trágicas em emergências
+  e permite que problemas persistam em organizações. Superá-lo
+  requer atribuição direta de responsabilidade e normas que incentivem
+  a intervenção.
+
+professional_application:
+  networking_and_relationship_building: |
+    Quando você precisar de ajuda, pergunte a uma pessoa específica. Quando você vir
+    algo errado, aja — não presuma que os outros o farão. Crie normas
+    onde falar é esperado e recompensado.
+  collaborative_learning_initiative: |
+    Treine as pessoas para reconhecer o efeito espectador e intervir.
+    Use "se você vir algo, diga algo" e atribua funções explícitas.
+    Recompense aqueles que falam primeiro.
+
+how_can_this_be_misapplied:
+  blaming_bystanders: |
+    Julgar os indivíduos duramente quando o efeito é uma força situacional poderosa — concentre-se em mudar a situação.
+  false_assumption: |
+    Presumir que alguém sempre ajudará se houver pessoas suficientes
+    presentes — o oposto é frequentemente verdadeiro.
+  overcorrection: |
+    Tornar todos responsáveis para que ninguém seja — a difusão
+    pode ainda ocorrer.
+  individualizing: |
+    Tratar o efeito espectador como uma falha de caráter, em vez de
+    um fenômeno situacional.
+
+related_content:
+  - groupthink
+  - in_group_bias
+  - availability_cascade
+  - fundamental_attribution_error

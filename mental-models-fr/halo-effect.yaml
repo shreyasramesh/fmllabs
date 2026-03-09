@@ -1,0 +1,98 @@
+id: halo_effect
+name: Effet de halo
+
+quick_introduction: |
+  L'effet de halo est la tendance à laisser un trait ou une impression positive
+  influencer notre jugement global d'une personne. Si nous aimons l'apparence de quelqu'un,
+  nous pouvons supposer qu'il est compétent. Si nous admirons une compétence,
+  nous supposons qu'il est bon en tout. Un attribut positif jette un
+  "halo" sur le reste.
+
+one_liner: Un trait positif jette un halo sur notre jugement entier d'une personne.
+
+try_this:
+  - Évaluez les traits indépendamment – ne laissez pas une force impliquer d'autres.
+  - Remarquez quand l'attractivité, le charisme ou un succès colore votre vision.
+  - Demandez : Jugerais-je cette personne de la même manière sans cet attribut positif unique ?
+
+ask_yourself:
+  - Est-ce que je généralise à partir d'un trait à toute la personne ?
+  - Verrais-je des faiblesses si je n'étais pas impressionné par une force ?
+
+in_more_detail: |
+  Edward Thorndike a observé que les officiers militaires qui notaient les soldats
+  haute sur un trait avaient tendance à les noter haute sur d'autres – même des
+  traits non liés. Nous généralisons du particulier au tout. L'attractivité,
+  le charisme ou le succès dans un domaine créent un halo qui déborde.
+
+  L'inverse – un trait négatif colorant tout – est parfois appelé
+  l'"effet de corne". Les deux sont des formes de généralisation injustifiée. L'
+  effet de halo affecte l'embauche, les évaluations de performance et les impressions quotidiennes.
+
+why_this_is_important: |
+  Reconnaître l'effet de halo vous aide à faire des évaluations plus précises et à
+  éviter de sur-généraliser. Il est essentiel pour l'embauche équitable, la gestion de la performance
+  et l'évaluation des relations. Une force n'implique pas toutes les forces.
+
+when_to_use:
+  - prise_de_decision
+  - leadership
+  - construction_relationnelle
+  - embauche
+
+how_can_you_spot_it:
+  trait_spillover: |
+    Un trait positif influence le jugement des traits non liés.
+  attractiveness_bias: |
+    Les personnes attirantes sont mieux notées en compétence, fiabilité, etc.
+  success_generalization: |
+    Le succès dans un domaine conduit à une compétence supposée dans d'autres.
+  first_impression_dominance: |
+    Une première impression positive colore toute l'évaluation ultérieure.
+
+examples:
+  hiring: |
+    Un candidat qui s'exprime bien et est sympathique est supposé être
+    techniquement fort – même lorsque les compétences ne sont pas liées.
+  performance_reviews: |
+    Un projet exceptionnel conduit à des notes élevées dans toutes les dimensions.
+  politics: |
+    Le charisme d'un politicien conduit à une compétence supposée en matière de politique.
+  branding: |
+    Le succès d'une entreprise dans un produit conduit à une qualité supposée
+    de tous les produits.
+
+real_world_implications: |
+  L'effet de halo déforme l'embauche, l'évaluation de la performance et les
+  décisions d'investissement. Il favorise les personnes attirantes, éloquentes et
+  déjà performantes. Le réduire nécessite une évaluation structurée
+  et une séparation des dimensions.
+
+professional_application:
+  networking_and_relationship_building: |
+    Évaluez les personnes selon des dimensions spécifiques plutôt que par une
+    impression globale. Soyez conscient lorsqu'un trait positif influence
+    votre jugement des autres. Cherchez des preuves de réfutation.
+  collaborative_learning_initiative: |
+    Utilisez des entretiens structurés et des évaluations qui notent les dimensions
+    indépendamment. Calibrez les notes entre les évaluateurs. Réduisez
+    la dépendance à l'égard du "ressenti" global.
+
+how_can_this_be_misapplied:
+  dismissing_all_positive_impressions: |
+    Toutes les impressions positives ne sont pas un effet de halo – parfois les gens sont
+    véritablement forts dans toutes les dimensions.
+  false_objectivity: |
+    Supposer que nous pouvons complètement éliminer l'effet de halo – il est
+    omniprésent et en partie automatique.
+  overcorrection: |
+    Aller à l'extrême opposé et supposer que les personnes attirantes ou
+    charismatiques sont moins compétentes.
+  stereotyping: |
+    Utiliser "l'effet de halo" pour rejeter des attributs positifs légitimes.
+
+related_content:
+  - fundamental_attribution_error
+  - in_group_bias
+  - confirmation_bias
+  - ben_franklin_effect
