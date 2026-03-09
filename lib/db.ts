@@ -125,6 +125,22 @@ interface NuggetDoc extends Omit<Nugget, "_id"> {
   _id: ObjectId;
 }
 
+export type BackgroundElement = "default" | "air" | "water" | "earth" | "fire";
+
+export interface UserSettings {
+  userId: string;
+  theme?: "light" | "dark";
+  language?: string;
+  userType?: string;
+  ttsSpeed?: number;
+  background?: BackgroundElement;
+  updatedAt: Date;
+}
+
+interface UserSettingsDoc extends UserSettings {
+  _id?: ObjectId;
+}
+
 export async function getSessions(userId: string): Promise<(Session & { _id: string })[]> {
   const database = await getDb();
   const sessions = await database
@@ -940,7 +956,49 @@ export async function deleteNugget(id: string, userId: string): Promise<boolean>
   return result.deletedCount > 0;
 }
 
-/** Delete all user data: sessions, messages, LTM, custom concepts, concept groups, saved concepts, transcripts, nuggets */
+export async function getUserSettings(userId: string): Promise<UserSettings | null> {
+  const database = await getDb();
+  const doc = await database
+    .collection<UserSettingsDoc>("user_settings")
+    .findOne({ userId });
+  if (!doc) return null;
+  return {
+    userId: doc.userId,
+    theme: doc.theme,
+    language: doc.language,
+    userType: doc.userType,
+    ttsSpeed: doc.ttsSpeed,
+    background: doc.background,
+    updatedAt: doc.updatedAt,
+  };
+}
+
+export async function upsertUserSettings(
+  userId: string,
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "background">>
+): Promise<UserSettings> {
+  const database = await getDb();
+  const now = new Date();
+  const result = await database.collection<UserSettingsDoc>("user_settings").findOneAndUpdate(
+    { userId },
+    { $set: { userId, ...updates, updatedAt: now } },
+    { upsert: true, returnDocument: "after" }
+  );
+  if (!result) {
+    return { userId, ...updates, updatedAt: now };
+  }
+  return {
+    userId: result.userId,
+    theme: result.theme,
+    language: result.language,
+    userType: result.userType,
+    ttsSpeed: result.ttsSpeed,
+    background: result.background,
+    updatedAt: result.updatedAt,
+  };
+}
+
+/** Delete all user data: sessions, messages, LTM, custom concepts, concept groups, saved concepts, transcripts, nuggets, settings */
 export async function deleteAllUserData(userId: string): Promise<void> {
   const database = await getDb();
   const sessions = await database
@@ -959,4 +1017,5 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   await database.collection<SavedConcept>("user_saved_concepts").deleteMany({ userId });
   await database.collection<SavedTranscriptDoc>("transcripts").deleteMany({ userId });
   await database.collection<NuggetDoc>("nuggets").deleteMany({ userId });
+  await database.collection<UserSettingsDoc>("user_settings").deleteMany({ userId });
 }

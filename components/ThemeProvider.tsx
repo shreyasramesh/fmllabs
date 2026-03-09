@@ -6,7 +6,9 @@ import {
   useEffect,
   useState,
   useCallback,
+  useRef,
 } from "react";
+import { useAuth } from "@clerk/nextjs";
 
 type Theme = "light" | "dark";
 
@@ -23,16 +25,38 @@ export function useTheme() {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const { userId } = useAuth();
   const [theme, setThemeState] = useState<Theme>("light");
   const [mounted, setMounted] = useState(false);
+  const fetchedRef = useRef(false);
 
   useEffect(() => {
     setMounted(true);
     const stored = localStorage.getItem("theme") as Theme | null;
-    const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initial: Theme = stored ?? (systemDark ? "dark" : "light");
+    const initial: Theme = stored ?? "light";
     setThemeState(initial);
   }, []);
+
+  useEffect(() => {
+    if (!mounted || !userId) return;
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
+    fetch("/api/me/settings")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.theme === "light" || data?.theme === "dark") {
+          setThemeState(data.theme);
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        fetchedRef.current = false;
+      });
+  }, [mounted, userId]);
+
+  useEffect(() => {
+    if (!userId) fetchedRef.current = false;
+  }, [userId]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -45,10 +69,33 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, [mounted, theme]);
 
-  const setTheme = useCallback((t: Theme) => setThemeState(t), []);
+  const setTheme = useCallback(
+    (t: Theme) => {
+      setThemeState(t);
+      if (userId) {
+        fetch("/api/me/settings", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ theme: t }),
+        }).catch(() => {});
+      }
+    },
+    [userId]
+  );
   const toggleTheme = useCallback(
-    () => setThemeState((prev) => (prev === "dark" ? "light" : "dark")),
-    []
+    () =>
+      setThemeState((prev) => {
+        const next = prev === "dark" ? "light" : "dark";
+        if (userId) {
+          fetch("/api/me/settings", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ theme: next }),
+          }).catch(() => {});
+        }
+        return next;
+      }),
+    [userId]
   );
 
   return (

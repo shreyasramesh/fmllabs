@@ -28,7 +28,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLanguage } from "@/components/LanguageProvider";
 import { useUserType } from "@/components/UserTypeProvider";
 import { LANGUAGES, isRtlLanguage, type LanguageCode } from "@/lib/languages";
-import { USER_TYPES } from "@/lib/user-types";
+import { USER_TYPES, type UserTypeId } from "@/lib/user-types";
 import { AIGenerateIcon, GenerateRelevantMessageButton, GhostIcon, SparklesIcon, TrashIcon } from "@/components/SharedIcons";
 import { getModalTranslations } from "@/lib/mental-model-modal-translations";
 import { playSelectionChime } from "@/lib/selection-chime";
@@ -37,8 +37,14 @@ import { TTSButton } from "@/components/TTSButton";
 import { VoiceInputButton } from "@/components/VoiceInputButton";
 import { FullVoiceMode } from "@/components/FullVoiceMode";
 import { useTtsSpeed } from "@/components/TtsSpeedProvider";
+import { useBackground } from "@/components/BackgroundProvider";
+import Image from "next/image";
+import { DefaultIcon } from "@/components/ElementIcons";
+import { Clock } from "@/components/Clock";
 import { TtsHighlightContext, type TtsHighlightState } from "@/components/TtsHighlightContext";
 import { TtsHighlightedText } from "@/components/TtsHighlightedText";
+import { FeedbackModal } from "@/components/FeedbackModal";
+import { FeatureTour } from "@/components/FeatureTour";
 
 interface Message {
   role: "user" | "assistant";
@@ -248,7 +254,7 @@ function MessageBubble({
         className={`group/tts relative max-w-[85%] rounded-3xl px-4 py-3 pr-10 transition-shadow duration-200 ${
           message.role === "user"
             ? "bg-foreground text-background shadow-sm"
-            : "bg-white dark:bg-neutral-800/80 border border-neutral-200/60 dark:border-neutral-700/60 shadow-sm"
+            : "bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground"
         }`}
         dir={isRtl ? "rtl" : undefined}
       >
@@ -338,7 +344,7 @@ function MessageBubble({
           <div className="mt-2 max-w-[85%] flex flex-col items-start">
             {ctxExpanded ? (
               <div
-                className="w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700/80 bg-gradient-to-br from-neutral-50/95 to-neutral-100/80 dark:from-neutral-800/95 dark:to-neutral-900/80 shadow-sm overflow-hidden"
+                className="w-full rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-gradient-to-br from-neutral-50/95 to-neutral-100/80 dark:from-neutral-800 dark:to-neutral-900 shadow-sm overflow-hidden text-foreground"
                 onPointerDownCapture={(e) => {
                   if (ctxReasonPillKey && !(e.target as HTMLElement).closest("[data-context-pill]")) {
                     setCtxReasonPillKey(null);
@@ -422,7 +428,7 @@ function MessageBubble({
               <button
                 type="button"
                 onClick={() => setCtxExpanded(true)}
-                className="inline-flex items-center gap-2 py-1.5 px-3 rounded-xl text-xs font-medium bg-gradient-to-r from-neutral-100 to-neutral-50 dark:from-neutral-800 dark:to-neutral-800/80 text-neutral-600 dark:text-neutral-400 border border-neutral-200/80 dark:border-neutral-700/80 hover:from-neutral-200 hover:to-neutral-100 dark:hover:from-neutral-700 dark:hover:to-neutral-700/80 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all duration-200 shadow-sm"
+                className="inline-flex items-center gap-2 py-1.5 px-3 rounded-xl text-xs font-medium bg-gradient-to-r from-neutral-100 to-neutral-50 dark:from-neutral-800 dark:to-neutral-800 text-neutral-600 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-600 hover:from-neutral-200 hover:to-neutral-100 dark:hover:from-neutral-700 dark:hover:to-neutral-700 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 shadow-sm"
               >
                 <span className="flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400 dark:bg-amber-500" aria-hidden />
@@ -714,6 +720,7 @@ export default function ChatPage() {
   const [summarizeSuccess, setSummarizeSuccess] = useState(false);
   const [voiceModeOpen, setVoiceModeOpen] = useState(false);
   const { speed: ttsSpeed, setSpeed: setTtsSpeed } = useTtsSpeed();
+  const { background, setBackground } = useBackground();
   const [ttsHighlight, setTtsHighlight] = useState<TtsHighlightState>(null);
   const [conceptSavedToast, setConceptSavedToast] = useState(false);
   const [restartLoading, setRestartLoading] = useState(false);
@@ -807,28 +814,76 @@ export default function ChatPage() {
   const [letterModalOpen, setLetterModalOpen] = useState(false);
   const LETTER_SEEN_KEY = "fml-labs-letter-seen";
   const ONBOARDING_COMPLETE_KEY = "fml-labs-onboarding-complete";
+  const FEATURE_TOUR_COMPLETE_KEY = "fml-labs-feature-tour-complete";
+  const FEATURE_TOUR_STEPS = [
+    { target: "[data-tour=menu-button]", title: "Open the menu", content: "Tap here to access conversations, nuggets, concepts, mental models, long-term memory, and domains.", ringClass: "ring-white dark:ring-neutral-300" },
+    { target: "[data-tour=sidebar-nav]", title: "Your library", content: "All your content in one place—let's explore each section.", ringClass: "ring-white dark:ring-neutral-300" },
+    { target: "[data-tour=tour-conversations]", title: "Conversations", content: "Your chat history. Start new conversations, pick up where you left off, or search through past chats.", panel: "conversations", ringClass: "ring-white dark:ring-neutral-300" },
+    { target: "[data-tour=tour-nuggets]", title: "Nuggets", content: "Save impactful quotes and snippets. Highlight text in conversations or paste from clipboard.", panel: "nuggets", ringClass: "ring-white dark:ring-neutral-300" },
+    { target: "[data-tour=tour-cc]", title: "Concepts", content: "Your custom frameworks and values. The AI uses them to personalize responses.", panel: "cc", ringClass: "ring-white dark:ring-neutral-300" },
+    { target: "[data-tour=tour-concepts]", title: "Mental Models", content: "Proven thinking frameworks and cognitive biases. Browse, search, and save your favorites.", panel: "concepts", ringClass: "ring-white dark:ring-neutral-300" },
+    { target: "[data-tour=input-area]", title: "Ask anything", content: "Type your question here. Use / to search mental models and concepts. The AI uses them to help you think through decisions.", ringClass: "ring-white dark:ring-neutral-300" },
+    { target: "[data-tour=settings-button]", title: "Customize", content: "Change language, voice style, playback speed, and more in settings.", ringClass: "ring-white dark:ring-neutral-300" },
+  ] as const;
   const [onboardingStep, setOnboardingStep] = useState<0 | 1 | 2 | 3 | null>(null);
-  const INCOGNITO_ENTER_ANIMATION_MS = 1400;
-  const [incognitoEntering, setIncognitoEntering] = useState(false);
-  useEffect(() => {
-    if (incognitoMode) {
-      setIncognitoEntering(true);
-      const t = setTimeout(() => setIncognitoEntering(false), INCOGNITO_ENTER_ANIMATION_MS);
-      return () => clearTimeout(t);
-    }
-  }, [incognitoMode]);
+  const [featureTourStep, setFeatureTourStep] = useState<number | null>(null);
+  const [signInFeatureHover, setSignInFeatureHover] = useState<number | null>(null);
+  const [sessionsLoaded, setSessionsLoaded] = useState(false);
+  const [conceptsLoaded, setConceptsLoaded] = useState(false);
+  const [ltmLoaded, setLtmLoaded] = useState(false);
+  const [ccLoaded, setCcLoaded] = useState(false);
+  const [cgLoaded, setCgLoaded] = useState(false);
+  const [mentalModelsLoaded, setMentalModelsLoaded] = useState(false);
+  const leftPanelReady = isAnonymous
+    ? mentalModelsLoaded
+    : sessionsLoaded && conceptsLoaded && ltmLoaded && ccLoaded && cgLoaded && mentalModelsLoaded;
+  const signInFeatures = [
+    { label: "Saved conversations", description: "Access your full chat history across devices. Pick up where you left off.", icon: "chat" },
+    { label: "Nuggets", description: "Save impactful quotes, words, and snippets. Paste from clipboard or highlight text in conversations.", icon: "nuggets" },
+    { label: "Custom concepts", description: "Define your own frameworks, values, or principles. The AI uses them to personalize responses.", icon: "concepts" },
+    { label: "Long-term memory", description: "The AI remembers key context from past conversations to give more relevant advice.", icon: "memory" },
+    { label: "Domains", description: "Group related concepts into domains (e.g. career, health). The AI draws from them when relevant.", icon: "domains" },
+    { label: "Incognito mode", description: "Chat privately without saving to history. Conversations stay off the record.", icon: "ghost" },
+  ];
+  const signInFeatureIconSvg = (name: string) => {
+    if (name === "chat") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>;
+    if (name === "nuggets") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>;
+    if (name === "concepts") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /><path d="M12 3v18" /></svg>;
+    if (name === "memory") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z" /><path d="M12 6v6l4 2" /></svg>;
+    if (name === "domains") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" /><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" /><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" /></svg>;
+    return <GhostIcon className="w-4 h-4 shrink-0" />;
+  };
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (incognitoMode) {
       setOnboardingStep(null);
       return;
     }
-    if (localStorage.getItem(ONBOARDING_COMPLETE_KEY) === "true") {
-      setOnboardingStep(null);
-      return;
+    // Skip welcome/onboarding - go directly to chat
+    try {
+      localStorage.setItem(ONBOARDING_COMPLETE_KEY, "true");
+    } catch {
+      /* ignore */
     }
-    setOnboardingStep(1);
+    setOnboardingStep(null);
   }, [incognitoMode]);
+
+  // Auto-show feature tour for first-time users or users with no data (after signing in)
+  useEffect(() => {
+    if (typeof window === "undefined" || isAnonymous || incognitoMode) return;
+    if (localStorage.getItem(ONBOARDING_COMPLETE_KEY) !== "true") return;
+    if (localStorage.getItem(FEATURE_TOUR_COMPLETE_KEY) === "true") return;
+    if (!leftPanelReady) return;
+    const hasNoData =
+      sessions.length === 0 &&
+      nuggets.length === 0 &&
+      customConcepts.length === 0 &&
+      longTermMemories.length === 0 &&
+      conceptGroups.length === 0;
+    if (!hasNoData) return;
+    const timer = setTimeout(() => setFeatureTourStep(0), 800);
+    return () => clearTimeout(timer);
+  }, [isAnonymous, incognitoMode, leftPanelReady, sessions.length, nuggets.length, customConcepts.length, longTermMemories.length, conceptGroups.length]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -841,6 +896,7 @@ export default function ChatPage() {
   const ccAutoTagPopoverRef = useRef<HTMLDivElement>(null);
   const ccTranslatePopoverRef = useRef<HTMLDivElement>(null);
   const ccAutoTagSuggestionsRef = useRef(ccAutoTagSuggestions);
+  const profileTriggerRef = useRef<HTMLDivElement>(null);
   ccAutoTagSuggestionsRef.current = ccAutoTagSuggestions;
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
 
@@ -1051,16 +1107,6 @@ export default function ChatPage() {
   const [savedConcepts, setSavedConcepts] = useState<
     { modelId: string }[]
   >([]);
-
-  const [sessionsLoaded, setSessionsLoaded] = useState(false);
-  const [conceptsLoaded, setConceptsLoaded] = useState(false);
-  const [ltmLoaded, setLtmLoaded] = useState(false);
-  const [ccLoaded, setCcLoaded] = useState(false);
-  const [cgLoaded, setCgLoaded] = useState(false);
-  const [mentalModelsLoaded, setMentalModelsLoaded] = useState(false);
-  const leftPanelReady = isAnonymous
-    ? mentalModelsLoaded
-    : sessionsLoaded && conceptsLoaded && ltmLoaded && ccLoaded && cgLoaded && mentalModelsLoaded;
 
   const refetchSessions = useCallback(() => {
     if (isAnonymous) {
@@ -1452,6 +1498,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if (isAnonymous) return;
       if (e.shiftKey && (e.metaKey || e.ctrlKey) && (e.key === "|" || e.key === "\\")) {
         e.preventDefault();
         router.push("/chat/incognito");
@@ -1459,14 +1506,15 @@ export default function ChatPage() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [router]);
+  }, [router, isAnonymous]);
 
   const SIDEBAR_STORAGE_KEY = "and-then-what-sidebar-open";
-  const [sidebarOpen, setSidebarOpenState] = useState(false);
+  const [sidebarOpen, setSidebarOpenState] = useState(true);
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
-      setSidebarOpenState(sessionStorage.getItem(SIDEBAR_STORAGE_KEY) === "true");
+      const stored = sessionStorage.getItem(SIDEBAR_STORAGE_KEY);
+      setSidebarOpenState(stored === null ? true : stored === "true");
     } catch {
       /* ignore */
     }
@@ -1481,6 +1529,7 @@ export default function ChatPage() {
   }, []);
   const [libraryPanelOpen, setLibraryPanelOpen] = useState<"conversations" | "ltm" | "concepts" | "cc" | "cg" | "nuggets" | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [deleteAllDataModalOpen, setDeleteAllDataModalOpen] = useState(false);
   const [deleteAllDataConfirmInput, setDeleteAllDataConfirmInput] = useState("");
   const [deleteAllDataLoading, setDeleteAllDataLoading] = useState(false);
@@ -1511,6 +1560,32 @@ export default function ChatPage() {
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
   }, [settingsOpen]);
+
+  useEffect(() => {
+    if (!feedbackModalOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setFeedbackModalOpen(false);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [feedbackModalOpen]);
+
+  // Random feedback prompt for logged-in users (3% chance, cooldown 7 days)
+  const FEEDBACK_PROMPT_KEY = "fml-labs-feedback-prompt-at";
+  const FEEDBACK_PROMPT_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
+  useEffect(() => {
+    if (typeof window === "undefined" || isAnonymous || !user) return;
+    const lastShown = localStorage.getItem(FEEDBACK_PROMPT_KEY);
+    const lastShownMs = lastShown ? parseInt(lastShown, 10) : 0;
+    if (Date.now() - lastShownMs < FEEDBACK_PROMPT_COOLDOWN_MS) return;
+    const timer = setTimeout(() => {
+      if (Math.random() < 0.03) {
+        setFeedbackModalOpen(true);
+        localStorage.setItem(FEEDBACK_PROMPT_KEY, String(Date.now()));
+      }
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [isAnonymous, user]);
 
   useEffect(() => {
     if (libraryPanelOpen === "cg") refetchTranscripts();
@@ -1549,8 +1624,8 @@ export default function ChatPage() {
         setOverachieverMessage(data.message);
       } else if (data.id) {
         setRelevanceContext(null);
-        const img = new Image();
-        img.src = `/images/${data.id.replace(/_/g, "-")}.png`;
+        const img = typeof window !== "undefined" ? new window.Image() : null;
+        if (img) img.src = `/images/${data.id.replace(/_/g, "-")}.png`;
         setSelectedMentalModel(data);
       }
     } catch {
@@ -1727,8 +1802,8 @@ export default function ChatPage() {
         sourceMessage != null ? extractRelevanceContext(sourceMessage, id) : null;
       setRelevanceContext(context);
       // Preload image so it appears instantly when modal opens
-      const img = new Image();
-      img.src = `/images/${id.replace(/_/g, "-")}.png`;
+      const img = typeof window !== "undefined" ? new window.Image() : null;
+      if (img) img.src = `/images/${id.replace(/_/g, "-")}.png`;
       fetch(`/api/mental-models/${id}?language=${language}`)
         .then((r) => {
           if (!r.ok) throw new Error(`Mental model not found: ${r.status}`);
@@ -1744,52 +1819,190 @@ export default function ChatPage() {
 
   return (
     <TtsHighlightContext.Provider value={{ ttsHighlight, setTtsHighlight }}>
-    <div className={`flex flex-col h-screen max-h-[100dvh] overflow-hidden bg-background border-2 transition-[border-color] duration-300 ease-in-out ${incognitoMode ? "border-violet-400/70 dark:border-violet-500/60" : "border-transparent"}`}>
-      <div className="flex flex-1 min-h-0 overflow-hidden">
-      {/* Sidebar - closable on mobile and desktop */}
-      <aside
-        className={`fixed inset-y-0 left-0 z-40 w-72 bg-background border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col min-h-0 transition-transform duration-300 ease-out ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+    <div className={`relative flex flex-col h-screen max-h-[100dvh] overflow-hidden chat-bg-area bg-background border-2 transition-[border-color,background] duration-300 ease-in-out ${incognitoMode ? "border-violet-400/70 dark:border-violet-500/60" : "border-transparent"}`}>
+      {/* Shared top bar - single border for alignment when sidebar open on desktop */}
+      <header
+        className={`h-14 min-h-[44px] pt-[env(safe-area-inset-top)] flex border-b shrink-0 ${
+          incognitoMode
+            ? "bg-neutral-900 dark:bg-neutral-100 border-neutral-700 dark:border-neutral-300 text-neutral-100 dark:text-neutral-900"
+            : "bg-background border-neutral-200 dark:border-neutral-800"
         }`}
       >
-        <div className="h-14 px-4 flex items-center justify-between border-b border-neutral-200/80 dark:border-neutral-800 shrink-0">
-          <Link href="/" className="font-semibold text-lg text-foreground min-w-0 truncate" title="figure my life (fml) labs">
-            figure my life (fml) labs
+        {/* Left: sidebar header (desktop only when sidebar open) */}
+        <div
+          className={`hidden shrink-0 lg:flex w-72 items-center justify-between px-4 border-r ${incognitoMode ? "border-neutral-700 dark:border-neutral-300" : "border-neutral-200 dark:border-neutral-800"} ${!sidebarOpen ? "lg:hidden" : ""}`}
+        >
+          <Link
+            href="/"
+            className={`font-semibold text-lg min-w-0 truncate ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
+            title="figure my life (fml)"
+          >
+            figure my life (fml)
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden flex items-center gap-2 px-3 py-2 rounded-xl text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-sm font-medium shrink-0"
-            aria-label="Back to conversation"
-          >
-            Conversation
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </button>
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="hidden lg:flex p-2 -mr-2 min-w-[44px] min-h-[44px] items-center justify-center rounded-xl transition-colors duration-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 text-neutral-500"
+            className={`p-2 -mr-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl border-2 border-transparent transition-colors duration-200 active:scale-95 ${
+              incognitoMode
+                ? "text-neutral-100/80 dark:text-neutral-900/80 hover:border-neutral-500 dark:hover:border-neutral-400 hover:text-neutral-100 dark:hover:text-neutral-900"
+                : "text-neutral-500 hover:border-neutral-400 dark:hover:border-neutral-500"
+            }`}
             aria-label="Close sidebar"
           >
             ✕
           </button>
         </div>
+        {/* Right: main header (always) */}
+        <div className="flex-1 min-w-0 flex items-center justify-between gap-1 sm:gap-4 px-3 sm:px-4">
+          <div className="flex items-center gap-1 sm:gap-4 min-w-0 overflow-hidden">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              data-tour="menu-button"
+              className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 shrink-0 ${
+                !sidebarOpen ? "" : "lg:hidden"
+              } ${incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"}`}
+              aria-label="Open menu"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            {!sidebarOpen ? (
+              <>
+                {incognitoMode ? (
+                  <div className="group flex items-center gap-2 min-w-0 text-neutral-100 dark:text-neutral-900">
+                    <span className="shrink-0 w-6 h-6 flex items-center justify-center" aria-hidden>
+                      <GhostIcon className="w-5 h-5" />
+                    </span>
+                    <span className="font-medium truncate min-w-0">Incognito chat</span>
+                  </div>
+                ) : currentSession?.title ? (
+                  <span className="font-medium truncate min-w-0" title={currentSession.title}>
+                    {currentSession.title}
+                  </span>
+                ) : null}
+                <Link
+                  href={incognitoMode ? "/chat/incognito" : "/chat/new"}
+                  onClick={(e) => {
+                    if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+                    if (sessionId === "new" || sessionId === "incognito") {
+                      e.preventDefault();
+                      anonymousActiveRef.current = false;
+                      setMessages([]);
+                      setCurrentSessionId(null);
+                      setCurrentSession(null);
+                      setCollapsedSummary(null);
+                      setInput("");
+                    }
+                  }}
+                  className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 shrink-0 ${
+                    incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                  }`}
+                  aria-label="New conversation"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                </Link>
+              </>
+            ) : (
+              <h1 className="font-medium truncate">
+                {currentSession?.title || (currentSessionId ? "Conversation" : "New conversation")}
+              </h1>
+            )}
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0 overflow-visible">
+            <Clock />
+            {!incognitoMode && !isAnonymous && (
+              <div className="relative group/incognito">
+                <Link
+                  href="/chat/incognito"
+                  onClick={() => {
+                    if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+                  }}
+                  className="block p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-300 ease-in-out"
+                  aria-label="Use incognito"
+                >
+                  <GhostIcon className="w-5 h-5" />
+                </Link>
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 text-xs font-medium text-white bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover/incognito:opacity-100 transition-opacity duration-200 z-50">
+                  Using Incognito mode
+                </span>
+              </div>
+            )}
+            <ThemeToggle inverted={incognitoMode} />
+            <button
+              type="button"
+              onClick={() => setSettingsOpen(true)}
+              data-tour="settings-button"
+              className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out ${
+                incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:text-neutral-200 dark:hover:text-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              }`}
+              aria-label="Settings"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z" />
+              </svg>
+            </button>
+            {incognitoMode && (
+              <Link
+                href="/chat/new"
+                onClick={() => {
+                  if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+                  anonymousActiveRef.current = false;
+                  setMessages([]);
+                  setCurrentSessionId(null);
+                  setCurrentSession(null);
+                  setCollapsedSummary(null);
+                  setInput("");
+                }}
+                className="p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl text-neutral-100 dark:text-neutral-900 hover:text-neutral-200 dark:hover:text-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors duration-300 ease-in-out"
+                title="Exit incognito"
+                aria-label="Exit incognito"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </Link>
+            )}
+          </div>
+        </div>
+      </header>
+
+      <div className="flex flex-1 min-h-0 overflow-hidden">
+      {/* Sidebar - fixed overlay on mobile; in-flow on desktop when open */}
+      <aside
+        className={`z-40 w-72 bg-background border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col min-h-0 transition-[transform,opacity] duration-300 ease-out
+          fixed inset-y-0 left-0 lg:static lg:inset-auto lg:translate-x-0
+          ${sidebarOpen ? "translate-x-0 opacity-100" : "-translate-x-full lg:translate-x-0 opacity-0 pointer-events-none"}
+          ${sidebarOpen ? "lg:flex" : "lg:hidden"}`}
+      >
+        {/* Mobile overlay: sidebar has its own header. Desktop: header is in shared top bar, no header here */}
+        <div className="h-14 min-h-[44px] pt-[env(safe-area-inset-top)] shrink-0 lg:hidden">
+          <div className="h-full px-4 flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800">
+            <Link href="/" className="font-semibold text-lg text-foreground min-w-0 truncate" title="figure my life (fml)">
+              figure my life (fml)
+            </Link>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="flex items-center gap-2 px-3 py-2 rounded-xl text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-sm font-medium shrink-0"
+              aria-label="Back to conversation"
+            >
+              Conversation
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
         {!isAnonymous && (
         <>
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden px-2 py-1.5">
-          {!incognitoMode && (
-            <Link
-              href="/chat/incognito"
-              onClick={() => setSidebarOpen(false)}
-              className="group flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors mb-2"
-            >
-              <GhostIcon className="w-4 h-4 shrink-0" />
-              Use incognito
-            </Link>
-          )}
           {/* Primary nav - Claude.ai pill style, compact selector for center panel */}
-          <nav className="flex flex-col gap-1 shrink-0 mb-3 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30" aria-label="Select view">
+          <nav className="flex flex-col gap-1 shrink-0 mb-3 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30" aria-label="Select view" data-tour="sidebar-nav">
             {[
               { id: "conversations" as const, label: "Conversations", icon: "chat", onClick: () => { playSelectionChime(); setLibraryPanelOpen("conversations"); setConversationsCollapsed(false); } },
               { id: "nuggets" as const, label: "Nuggets", icon: "nuggets", onClick: () => { playSelectionChime(); setLibraryPanelOpen("nuggets"); } },
@@ -1804,10 +2017,11 @@ export default function ChatPage() {
                   key={id}
                   type="button"
                   onClick={onClick}
-                  className={`flex items-center gap-2.5 w-full px-3 py-2 rounded-full text-left text-sm font-medium transition-colors ${
+                  data-tour={`tour-${id}`}
+                  className={`flex items-center gap-2.5 w-full px-3 py-2 rounded-full text-left text-sm font-medium transition-colors border-2 ${
                     isActive
-                      ? "bg-[var(--section-bg)] dark:bg-neutral-700/60 text-foreground shadow-sm"
-                      : "text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100/80 dark:hover:bg-neutral-800/50"
+                      ? "border-neutral-300 dark:border-neutral-400 bg-white dark:bg-neutral-700 text-foreground"
+                      : "border-transparent text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:border-neutral-400 dark:hover:border-neutral-500"
                   }`}
                 >
                   {icon === "chat" && (
@@ -1874,7 +2088,7 @@ export default function ChatPage() {
                 placeholder="Search"
               value={sessionSearchQuery}
               onChange={(e) => setSessionSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900/50 text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 shadow-sm shrink-0"
+                className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-foreground placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 shadow-sm shrink-0"
               aria-label="Search conversations"
             />
             </div>
@@ -1887,10 +2101,10 @@ export default function ChatPage() {
               filteredSessions.map((s) => (
                 <div
                   key={s._id}
-                  className={`group flex flex-col gap-0 rounded-xl transition-colors duration-200 ${
+                  className={`group flex flex-col gap-0 rounded-2xl border-2 transition-colors duration-200 ${
                     currentSessionId === s._id
-                      ? "bg-neutral-100 dark:bg-neutral-800/60"
-                      : "hover:bg-neutral-50 dark:hover:bg-neutral-800/40"
+                      ? "border-neutral-300 dark:border-neutral-600"
+                      : "border-transparent hover:border-neutral-400 dark:hover:border-neutral-500"
                   }`}
                 >
                   <div className="flex items-center gap-1 min-w-0">
@@ -1992,70 +2206,119 @@ export default function ChatPage() {
         </>
         )}
         {isAnonymous && (
-          <div className="px-3 py-2 text-center">
-            <Link
-              href="/sign-in"
-              className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:underline"
+          <div className="px-3 py-2 flex-1 min-h-0 flex flex-col gap-3 items-center">
+            <p className="text-base font-medium text-neutral-600 dark:text-neutral-400 text-center">
+              Sign in to unlock:
+            </p>
+            <ul className="space-y-1.5 w-full flex flex-col items-center">
+              {signInFeatures.map((item, i) => (
+                <li
+                  key={i}
+                  className="w-full max-w-[220px] flex flex-col gap-1.5 animate-slide-in-from-left opacity-0 [animation-fill-mode:forwards]"
+                  style={{ animationDelay: `${i * 80}ms` }}
+                >
+                  <button
+                    type="button"
+                    onMouseEnter={() => setSignInFeatureHover(i)}
+                    onMouseLeave={() => setSignInFeatureHover(null)}
+                    onClick={() => setSignInFeatureHover(signInFeatureHover === i ? null : i)}
+                    className="flex items-center gap-2.5 w-full px-3 py-2 rounded-2xl text-base text-left transition-colors border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 bg-background text-neutral-600 dark:text-neutral-400"
+                  >
+                    <span className="text-neutral-500 shrink-0">{signInFeatureIconSvg(item.icon)}</span>
+                    <span className="truncate">{item.label}</span>
+                  </button>
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                      signInFeatureHover === i ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                    }`}
+                  >
+                    <p
+                      className={`text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed px-2 -mt-0.5 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                        signInFeatureHover === i ? "translate-y-0" : "-translate-y-1"
+                      }`}
+                    >
+                      {item.description}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="w-full pt-3 border-t border-neutral-200/80 dark:border-neutral-800">
+              <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 text-center mb-2">Mental Models Library</p>
+              <button
+                type="button"
+                onClick={() => {
+                  playSelectionChime();
+                  setLibraryPanelOpen("concepts");
+                  setSidebarOpen(false);
+                }}
+                className="flex items-center justify-center gap-2 w-full max-w-[220px] mx-auto px-3 py-2 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-sm text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-all duration-200 whitespace-nowrap"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                  <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
+                  <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
+                </svg>
+                Browse Mental Models
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => setFeedbackModalOpen(true)}
+              className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors shrink-0 mt-3"
             >
-              Sign in to save your conversations
-            </Link>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              Send feedback
+            </button>
+            <div className="flex-1 min-h-[4rem] flex flex-col items-center justify-center">
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <Link
+                  href="/sign-in"
+                  className="px-4 py-2.5 rounded-xl text-base font-medium border-2 border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/sign-up"
+                  className="px-4 py-2.5 rounded-xl text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                >
+                  Create account
+                </Link>
+              </div>
+            </div>
           </div>
         )}
         </div>
-        <div className="shrink-0 px-3 py-3 border-t border-neutral-200/80 dark:border-neutral-800">
-          <div className="flex items-center justify-between gap-2 mb-3">
-            {!isAnonymous && user ? (
-              <div className="flex items-center gap-2 min-w-0 rounded-full bg-neutral-100 dark:bg-neutral-800/80 px-2 py-1.5 pr-3 w-fit max-w-[calc(100%-52px)]">
-                <UserButton
-                  appearance={{
-                    elements: {
-                      rootBox: "shrink-0",
-                      avatarBox: "w-8 h-8 ring-0",
-                    },
-                  }}
-                />
-                <span className="text-sm font-medium text-foreground truncate">
-                  {user.firstName && user.lastName
-                    ? `${user.firstName} ${user.lastName}`
-                    : user.primaryEmailAddress?.emailAddress ?? "Account"}
-                </span>
-              </div>
-            ) : !isAnonymous ? (
-              <div className="flex items-center gap-2 min-w-0 rounded-full bg-neutral-100 dark:bg-neutral-800/80 px-2 py-1.5 pr-3 w-fit">
-                <UserButton
-                  appearance={{
-                    elements: {
-                      rootBox: "shrink-0",
-                      avatarBox: "w-8 h-8 ring-0",
-                    },
-                  }}
-                />
-              </div>
-            ) : (
-          <Link
-                href="/sign-in"
-                className="flex items-center gap-2 min-w-0 rounded-full bg-neutral-100 dark:bg-neutral-800/80 px-3 py-2 text-sm font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
-          >
-                Sign in
-          </Link>
-            )}
-          </div>
+        <div className="shrink-0 px-3 pt-4 pb-3 mt-4">
           <div className="flex flex-col items-center gap-1">
+            {!isAnonymous && (
+            <button
+              type="button"
+              onClick={() => setFeedbackModalOpen(true)}
+              className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              Send feedback
+            </button>
+            )}
             <button
               type="button"
               onClick={() => setLetterModalOpen(true)}
-              className="font-developer text-sm text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
+              className="font-developer text-[1.2em] font-normal text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
             >
               Crafted with Intention
             </button>
-            <div className="flex items-center gap-2 text-[10px] text-neutral-500 dark:text-neutral-400">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] text-neutral-500 dark:text-neutral-400">
               <Link href="/terms-of-service" className="hover:text-foreground transition-colors">
                 Terms of Service
               </Link>
               <span className="text-neutral-400 dark:text-neutral-500" aria-hidden>·</span>
               <Link href="/privacy-policy" className="hover:text-foreground transition-colors">
-            Privacy Policy
-          </Link>
+                Privacy Policy
+              </Link>
             </div>
           </div>
         </div>
@@ -2064,156 +2327,14 @@ export default function ChatPage() {
       {/* Overlay when sidebar open on mobile */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/30 z-30 lg:hidden animate-fade-in backdrop-blur-sm"
+          className={`fixed inset-0 bg-black/30 z-30 lg:hidden animate-fade-in ${featureTourStep === null ? "backdrop-blur-sm" : ""}`}
           onClick={() => setSidebarOpen(false)}
           aria-hidden
         />
       )}
 
-      {/* Main chat area - add left margin when sidebar is open on desktop */}
-      <main className={`flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden transition-[margin] duration-300 ${sidebarOpen ? "lg:ml-72" : ""}`}>
-        <header className={`fixed inset-x-0 top-0 z-30 h-14 min-h-[44px] pt-[env(safe-area-inset-top)] px-3 sm:px-4 flex items-center justify-between gap-1 sm:gap-4 border-b shrink-0 md:relative md:inset-x-auto md:top-auto transition-[background-color,border-color,color] duration-300 ease-in-out relative ${incognitoMode && incognitoEntering ? "overflow-hidden" : "overflow-visible"} ${
-          incognitoMode && !incognitoEntering
-            ? "bg-neutral-900 dark:bg-neutral-100 border-neutral-700 dark:border-neutral-300 text-neutral-100 dark:text-neutral-900"
-            : incognitoMode && incognitoEntering
-              ? "bg-background border-neutral-200 dark:border-neutral-800"
-              : "bg-background border-neutral-200 dark:border-neutral-800"
-        }`}>
-          {incognitoMode && incognitoEntering && (
-            <div className="absolute inset-0 bg-neutral-900 dark:bg-neutral-100 z-0 animate-incognito-header-bg-in pointer-events-none" aria-hidden />
-          )}
-          <div className={`flex flex-1 items-center justify-between gap-1 sm:gap-4 min-w-0 relative z-10 ${incognitoMode && incognitoEntering ? "animate-incognito-header-content-in-light dark:animate-incognito-header-content-in-dark [&_*]:!text-inherit" : ""}`}>
-          <div className="flex items-center gap-1 sm:gap-4 min-w-0 overflow-hidden">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className={`p-1.5 sm:p-2 -ml-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 shrink-0 ${
-                !sidebarOpen ? "" : "lg:hidden"
-              } ${incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"}`}
-              aria-label="Open menu"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5"
-              >
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-            {!sidebarOpen ? (
-              <>
-                {incognitoMode ? (
-                  <div className={`group flex items-center gap-2 min-w-0 text-neutral-100 dark:text-neutral-900 ${incognitoEntering ? "animate-ghost-run" : ""}`}>
-                    <span className="shrink-0 w-6 h-6 flex items-center justify-center" aria-hidden>
-                      <GhostIcon className="w-5 h-5" />
-                    </span>
-                    <span className="font-medium truncate min-w-0">Incognito chat</span>
-                  </div>
-                ) : currentSession?.title ? (
-                  <span className="font-medium truncate min-w-0" title={currentSession.title}>
-                    {currentSession.title}
-                  </span>
-                ) : null}
-                <Link
-                  href={incognitoMode ? "/chat/incognito" : "/chat/new"}
-                  onClick={(e) => {
-                    if (typeof window !== "undefined" && window.innerWidth < 1024) {
-                      setSidebarOpen(false);
-                    }
-                    if (sessionId === "new" || sessionId === "incognito") {
-                      e.preventDefault();
-                      anonymousActiveRef.current = false;
-                      setMessages([]);
-                      setCurrentSessionId(null);
-                      setCurrentSession(null);
-                      setCollapsedSummary(null);
-                      setInput("");
-                    }
-                  }}
-                  className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 shrink-0 ${
-                    incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                  }`}
-                  aria-label="New conversation"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="w-5 h-5"
-                  >
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                  </svg>
-                </Link>
-              </>
-            ) : (
-              <h1 className="font-medium truncate">
-                {currentSession?.title || (currentSessionId ? "Conversation" : "New conversation")}
-              </h1>
-            )}
-          </div>
-          <div className="flex items-center gap-1 sm:gap-2 shrink-0 overflow-visible">
-            {!incognitoMode && (
-              <Link
-                href="/chat/incognito"
-                onClick={() => {
-                  if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
-                }}
-                className="group p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-300 ease-in-out"
-                title="Use incognito (Shift+⌘+|)"
-                aria-label="Use incognito"
-              >
-                <GhostIcon className="w-5 h-5" />
-              </Link>
-            )}
-            <ThemeToggle inverted={incognitoMode} />
-            <button
-              type="button"
-              onClick={() => setSettingsOpen(true)}
-              className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out ${
-                incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:text-neutral-200 dark:hover:text-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-              }`}
-              aria-label="Settings"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                  <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z" />
-                </svg>
-            </button>
-            {incognitoMode && (
-              <Link
-                href="/chat/new"
-                onClick={() => {
-                  if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
-                  anonymousActiveRef.current = false;
-                  setMessages([]);
-                  setCurrentSessionId(null);
-                  setCurrentSession(null);
-                  setCollapsedSummary(null);
-                  setInput("");
-                }}
-                className="p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl text-neutral-100 dark:text-neutral-900 hover:text-neutral-200 dark:hover:text-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors duration-300 ease-in-out"
-                title="Exit incognito"
-                aria-label="Exit incognito"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
-              </Link>
-            )}
-          </div>
-          </div>
-        </header>
-
+      {/* Main chat area */}
+      <main className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
         {summarizeSuccess && (
           <div className="mx-4 mt-2 px-4 py-3 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border-2 border-neutral-300 dark:border-neutral-600 text-sm font-medium text-neutral-700 dark:text-neutral-300 animate-celebrate flex items-center gap-2">
             <span className="text-lg">✨</span>
@@ -2253,12 +2374,12 @@ export default function ChatPage() {
           />
         )}
 
-        <div className={`flex-1 min-h-0 flex flex-col pt-14 md:pt-0 pb-36 md:pb-0 ${messages.length > 0 ? "overflow-y-auto scroll-smooth" : "overflow-hidden"}`}>
+        <div className={`flex-1 min-h-0 flex flex-col pb-36 md:pb-0 ${messages.length > 0 ? "overflow-y-auto scroll-smooth" : "overflow-hidden"}`}>
           <div ref={messagesScrollRef} className={`flex-1 min-h-0 min-w-0 ${messages.length > 0 ? "overflow-y-auto" : "overflow-hidden flex flex-col"}`}>
           {currentSession?.isCollapsed && collapsedSummary ? (
             <div className="min-h-full flex items-center justify-center p-4">
               <div className="w-full max-w-2xl">
-              <div className="group/tts rounded-3xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-800/50 shadow-sm p-6 space-y-4">
+              <div className="group/tts rounded-3xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-800 shadow-sm p-6 space-y-4 text-foreground">
                 <h2 className="font-semibold text-lg">{collapsedSummary.title}</h2>
                 <div className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap">
                   {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === `collapsed-summary-${collapsedSummary._id}` ? (
@@ -2428,7 +2549,7 @@ export default function ChatPage() {
                     </div>
                   </div>
                   <div className="pt-4 border-t border-neutral-200 dark:border-neutral-700 text-center">
-                    <p className="font-developer text-lg text-foreground shimmer-text-hover">Crafted with Intention</p>
+                    <p className="font-developer text-[1.2em] font-normal text-foreground shimmer-text-hover">Crafted with Intention</p>
                     <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">San Francisco</p>
                   </div>
                   <button
@@ -2440,6 +2561,7 @@ export default function ChatPage() {
                         /* ignore */
                       }
                       setOnboardingStep(null);
+                      if (!isAnonymous) setFeatureTourStep(0);
                     }}
                     className="w-full max-w-xs mx-auto block px-6 py-3 rounded-2xl bg-foreground text-background font-medium text-base hover:opacity-90 transition-opacity"
                   >
@@ -2486,9 +2608,33 @@ export default function ChatPage() {
                       </p>
                     </div>
                   ) : (
-                    <p className={`w-full min-w-0 break-words text-neutral-500 dark:text-neutral-400 ${voiceModeOpen ? "text-sm mb-2" : "text-base sm:text-lg mb-6"}`}>
-                      Let&apos;s dig in—with mental models that actually work
-                    </p>
+                    <>
+                      <p className={`w-full min-w-0 break-words text-neutral-500 dark:text-neutral-400 ${voiceModeOpen ? "text-sm mb-2" : "text-base sm:text-lg mb-6"}`}>
+                        Let&apos;s dig in—with mental models that actually work
+                      </p>
+                      {isAnonymous && !voiceModeOpen && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            playSelectionChime();
+                            setLibraryPanelOpen("concepts");
+                            setSidebarOpen(false);
+                          }}
+                          className="flex items-center gap-3 w-full max-w-sm mx-auto px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98] mb-6"
+                        >
+                          <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
+                              <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
+                              <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
+                            </svg>
+                          </span>
+                          <div className="min-w-0">
+                            <p className="font-medium text-foreground">Browse Mental Models</p>
+                            <p className="text-sm text-neutral-600 dark:text-neutral-400">Frameworks and biases for better decision-making</p>
+                          </div>
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
                 {!voiceModeOpen && (
@@ -2726,7 +2872,7 @@ export default function ChatPage() {
                 speed={ttsSpeed}
               />
             ) : (
-            <div className="min-w-0 max-w-2xl w-full flex items-stretch gap-2 min-h-[52px]">
+            <div className="min-w-0 max-w-2xl w-full flex items-stretch gap-2 min-h-[52px]" data-tour="input-area">
               <div className="relative flex-1 min-w-0">
                 <MentionInput
                   inputRef={inputRef}
@@ -2754,7 +2900,7 @@ export default function ChatPage() {
                   placeholder="/ to search"
                   placeholderMobile="/ to search"
                   disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
-                  className="w-full h-[52px] max-h-[52px] py-3 pl-4 pr-10 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900/50 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 whitespace-nowrap overflow-x-auto overflow-y-hidden"
+                  className="w-full h-[52px] max-h-[52px] py-3 pl-4 pr-10 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
                   onMentalModelClick={handleMentalModelClick}
                   onLtmClick={(id) => {
                     const ltm = longTermMemories.find((l) => l._id === id);
@@ -2889,7 +3035,7 @@ export default function ChatPage() {
                   placeholder="/ to search"
                   placeholderMobile="/ to search"
                   disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
-                  className="w-full min-h-[200px] max-h-[50vh] py-4 px-4 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900/50 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 overflow-y-auto flex-1"
+                  className="w-full min-h-[200px] max-h-[50vh] py-4 px-4 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground overflow-y-auto flex-1"
                   onMentalModelClick={handleMentalModelClick}
                   onLtmClick={(id) => {
                     const ltm = longTermMemories.find((l) => l._id === id);
@@ -2943,11 +3089,11 @@ export default function ChatPage() {
         </>
       )}
 
-      {/* Library - center modal (Claude-style), closable on all devices */}
-      {!isAnonymous && libraryPanelOpen && (
+      {/* Library - center modal (Claude-style), closable on all devices. Mental Models (concepts) available to anonymous users. */}
+      {libraryPanelOpen && (libraryPanelOpen === "concepts" || !isAnonymous) && (
         <>
           <div
-            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm animate-fade-in"
+            className={`fixed inset-0 z-40 bg-black/30 animate-fade-in ${featureTourStep === null ? "backdrop-blur-sm" : ""}`}
             onClick={() => setLibraryPanelOpen(null)}
             aria-hidden
           />
@@ -2957,6 +3103,7 @@ export default function ChatPage() {
           >
             <div
               className="pointer-events-auto w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-800 animate-fade-in-up"
+              data-tour="library-modal"
             role="dialog"
             aria-modal
               aria-label={
@@ -3010,7 +3157,7 @@ export default function ChatPage() {
                       placeholder="Search conversations"
                       value={sessionSearchQuery}
                       onChange={(e) => setSessionSearchQuery(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900/50 text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600"
+                      className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-foreground placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600"
                       aria-label="Search conversations"
                     />
                   </div>
@@ -3023,10 +3170,10 @@ export default function ChatPage() {
                       filteredSessions.map((s) => (
                         <div
                           key={s._id}
-                          className={`group flex flex-col gap-0 rounded-xl transition-colors duration-200 ${
+                          className={`group flex flex-col gap-0 rounded-2xl border-2 transition-colors duration-200 ${
                             currentSessionId === s._id
-                              ? "bg-neutral-100 dark:bg-neutral-800/60"
-                              : "hover:bg-neutral-50 dark:hover:bg-neutral-800/40"
+                              ? "border-neutral-300 dark:border-neutral-600"
+                              : "border-transparent hover:border-neutral-400 dark:hover:border-neutral-500"
                           }`}
                         >
                           <div className="flex items-center gap-1 min-w-0">
@@ -4164,101 +4311,240 @@ export default function ChatPage() {
                   ✕
                 </button>
               </div>
-              <div className="flex-1 overflow-y-auto p-4 min-h-0 space-y-6">
-              <div>
-                <h3 className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Language</h3>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Language for conversations and responses</p>
-                <div className="flex flex-wrap gap-2">
-                  {LANGUAGES.map(({ code, name }) => (
-                    <button
-                      key={code}
-                      type="button"
-                      onClick={() => setLanguage(code as LanguageCode)}
-                      className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
-                        language === code
-                          ? "bg-foreground text-background"
-                          : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                      }`}
+              <div className="flex-1 overflow-y-auto p-4 sm:p-5 min-h-0 space-y-6">
+                {!isAnonymous && user && (
+                  <section>
+                    <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3">Account</h3>
+                    <div
+                      ref={profileTriggerRef}
+                      role="button"
+                      tabIndex={0}
+                      aria-label="Account menu"
+                      className="inline-flex items-center gap-2.5 min-w-0 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 px-3 py-2 w-fit transition-colors cursor-pointer"
+                      onClick={(e) => {
+                        const trigger = (e.currentTarget as HTMLElement).querySelector("button");
+                        if (trigger && !trigger.contains(e.target as Node)) {
+                          trigger.click();
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          (e.currentTarget as HTMLElement).querySelector("button")?.click();
+                        }
+                      }}
                     >
-                      {name}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                      <UserButton
+                        appearance={{
+                          elements: {
+                            rootBox: "shrink-0",
+                            avatarBox: "w-8 h-8 ring-0",
+                          },
+                        }}
+                      />
+                      <span className="text-sm font-medium text-foreground truncate">
+                        {user.firstName && user.lastName
+                          ? `${user.firstName} ${user.lastName}`
+                          : user.primaryEmailAddress?.emailAddress ?? "Account"}
+                      </span>
+                    </div>
+                  </section>
+                )}
 
-              <div>
-                <h3 className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Voice style</h3>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Tone and personality of the AI</p>
-                <div className="flex flex-wrap gap-2">
-                  {USER_TYPES.map(({ id, name, description }) => (
-                    <button
-                      key={id}
-                      type="button"
-                      onClick={() => setUserType(id)}
-                      title={description}
-                      className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
-                        userType === id
-                          ? "bg-foreground text-background"
-                          : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                      }`}
-                    >
-                      {name}
-                    </button>
-                  ))}
-                </div>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
-                  {USER_TYPES.find((t) => t.id === userType)?.description}
-                </p>
-              </div>
+                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-800/80">
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Conversation</h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Language and tone for your conversations.</p>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-foreground mb-2">Language</label>
+                      <div className="flex flex-wrap gap-2">
+                        {LANGUAGES.map(({ code, name }) => (
+                          <button
+                            key={code}
+                            type="button"
+                            onClick={() => setLanguage(code)}
+                            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                              language === code
+                                ? "bg-foreground text-background"
+                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/60"
+                            }`}
+                          >
+                            {name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-foreground mb-2">Voice style</label>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
+                        {USER_TYPES.find((t) => t.id === userType)?.description}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {USER_TYPES.map(({ id, name }) => (
+                          <button
+                            key={id}
+                            type="button"
+                            onClick={() => setUserType(id)}
+                            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                              userType === id
+                                ? "bg-foreground text-background"
+                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/60"
+                            }`}
+                          >
+                            {name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </section>
 
-              <div>
-                <h3 className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Voice playback speed</h3>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">How fast the AI reads responses aloud</p>
-                <div className="flex flex-wrap gap-2">
-                  {[0.5, 1, 1.5, 2].map((s) => (
-                    <button
-                      key={s}
-                      type="button"
-                      onClick={() => setTtsSpeed(s)}
-                      className={`px-4 py-2 rounded-xl text-sm font-medium tabular-nums transition-colors ${
-                        ttsSpeed === s
-                          ? "bg-foreground text-background"
-                          : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                      }`}
-                    >
-                      {s}×
-                    </button>
-                  ))}
-                </div>
-              </div>
+                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-800/80">
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Audio</h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Speed for text-to-speech playback.</p>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Playback speed</label>
+                    <div className="flex flex-wrap gap-2">
+                      {[0.5, 1, 1.5, 2].map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => setTtsSpeed(s)}
+                          className={`px-4 py-2 rounded-full text-sm font-medium tabular-nums transition-colors ${
+                            ttsSpeed === s
+                              ? "bg-foreground text-background"
+                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/60"
+                          }`}
+                        >
+                          {s}×
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </section>
 
-              {!isAnonymous && (
-              <div className="pt-4 border-t border-neutral-200 dark:border-neutral-700">
-                <h3 className="text-sm font-medium text-red-600 dark:text-red-400 mb-3">Danger zone</h3>
-                <div className="rounded-xl border border-red-200/50 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/30 p-4">
-                  <h4 className="font-semibold text-neutral-900 dark:text-neutral-100">Delete all my data</h4>
-                  <p className="mt-2 text-sm text-red-600 dark:text-red-400">
-                    Warning: Deleting all data is irreversible and will permanently remove your conversations, long-term memories, custom concepts, saved mental models, and nuggets.
-                  </p>
+                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-800/80">
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Appearance</h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Choose a background for your chat.</p>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Background</label>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        { id: "default" as const, name: "Classic", image: null },
+                        { id: "air" as const, name: "Wind", image: "/images/wind.png" },
+                        { id: "water" as const, name: "Water", image: "/images/water.png" },
+                        { id: "earth" as const, name: "Earth", image: "/images/earth.png" },
+                        { id: "fire" as const, name: "Fire", image: "/images/fire.png" },
+                      ].map(({ id, name, image }) => (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => setBackground(id)}
+                          title={name}
+                          className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-colors border-2 ${
+                            background === id
+                              ? "border-foreground bg-neutral-100 dark:bg-neutral-800 text-foreground ring-2 ring-foreground/20"
+                              : "border-neutral-200/60 dark:border-neutral-700/60 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                          }`}
+                        >
+                          {image ? (
+                            <Image
+                              src={image}
+                              alt={name}
+                              width={18}
+                              height={18}
+                              className="w-[18px] h-[18px] shrink-0 object-contain"
+                            />
+                          ) : (
+                            <DefaultIcon className="w-[18px] h-[18px] shrink-0" />
+                          )}
+                          <span>{name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+
+                {!isAnonymous && (
+                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-800/80">
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Help</h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Get familiar with the app.</p>
                   <button
                     type="button"
                     onClick={() => {
                       setSettingsOpen(false);
-                      setDeleteAllDataModalOpen(true);
-                      setDeleteAllDataConfirmInput("");
+                      setFeatureTourStep(0);
                     }}
-                    className="mt-4 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border border-neutral-200 dark:border-neutral-700"
                   >
-                    <TrashIcon className="w-4 h-4 shrink-0" />
-                    Delete
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                      <path d="M12 17h.01" />
+                    </svg>
+                    Show feature tour
                   </button>
-                </div>
-              </div>
-            )}
+                  <p className="mt-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+                    Walk through the main features of the app.
+                  </p>
+                </section>
+                )}
+
+                {!isAnonymous && (
+                  <section className="pt-6 border-t border-neutral-200 dark:border-neutral-700">
+                    <h3 className="text-xs font-medium uppercase tracking-wider text-red-500 dark:text-red-400 mb-2">Danger zone</h3>
+                    <div className="rounded-xl border border-red-200/50 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/30 p-4">
+                      <h4 className="font-semibold text-neutral-900 dark:text-neutral-100 text-sm">Delete all my data</h4>
+                      <p className="mt-1.5 text-xs text-red-600 dark:text-red-400">
+                        Irreversible. Removes conversations, memories, concepts, mental models, and nuggets.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSettingsOpen(false);
+                          setDeleteAllDataModalOpen(true);
+                          setDeleteAllDataConfirmInput("");
+                        }}
+                        className="mt-3 flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+                      >
+                        <TrashIcon className="w-4 h-4 shrink-0" />
+                        Delete
+                      </button>
+                    </div>
+                  </section>
+                )}
               </div>
             </div>
           </div>
         </>
+      )}
+
+      {feedbackModalOpen && (
+        <FeedbackModal onClose={() => setFeedbackModalOpen(false)} />
+      )}
+
+      {featureTourStep !== null && (
+        <FeatureTour
+          steps={[...FEATURE_TOUR_STEPS]}
+          currentStep={featureTourStep}
+          onNext={() => setFeatureTourStep((s) => Math.min((s ?? 0) + 1, FEATURE_TOUR_STEPS.length - 1))}
+          onComplete={() => {
+            try {
+              localStorage.setItem(FEATURE_TOUR_COMPLETE_KEY, "true");
+            } catch {
+              /* ignore */
+            }
+            setFeatureTourStep(null);
+            setLibraryPanelOpen(null);
+            setSelectedMentalModel(null);
+            setSidebarOpen(false);
+          }}
+          onOpenSidebar={() => setSidebarOpen(true)}
+          onSelectPanel={(panel) => {
+            setLibraryPanelOpen(panel);
+            if (panel) setConversationsCollapsed(false);
+          }}
+        />
       )}
 
       {deleteAllDataModalOpen && !isAnonymous && (
@@ -4374,8 +4660,15 @@ export default function ChatPage() {
               fml labs is a coach that helps you think through the long-term consequences of your choices. It uses deep questioning and proven mental frameworks to help you make smarter decisions.
             </p>
             <div className="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-700 text-center">
-              <p className="font-developer text-lg text-foreground shimmer-text-hover">Crafted with Intention</p>
-              <p className="font-developer text-base text-neutral-600 dark:text-neutral-300 mt-1">San Francisco</p>
+              <p className="font-developer text-[1.44em] text-neutral-600 dark:text-neutral-300">San Francisco</p>
+              <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm">
+                <Link href="/about" className="text-neutral-500 dark:text-neutral-400 hover:text-foreground transition-colors">
+                  About the Creator
+                </Link>
+                <Link href="/mission" className="text-neutral-500 dark:text-neutral-400 hover:text-foreground transition-colors">
+                  Mission Statement
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -6192,8 +6485,8 @@ export default function ChatPage() {
           relevanceContext={relevanceContext}
           onOpenRelated={(id) => {
             setRelevanceContext(null);
-            const img = new Image();
-            img.src = `/images/${id.replace(/_/g, "-")}.png`;
+            const img = typeof window !== "undefined" ? new window.Image() : null;
+            if (img) img.src = `/images/${id.replace(/_/g, "-")}.png`;
             fetch(`/api/mental-models/${id}?language=${language}`)
               .then((r) => (r.ok ? r.json() : Promise.reject()))
               .then((m: MentalModel) => setSelectedMentalModel(m))

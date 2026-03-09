@@ -21,6 +21,19 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         accent: "var(--accent)",
+        neutral: {
+          50: "var(--neutral-50)",
+          100: "var(--neutral-100)",
+          200: "var(--neutral-200)",
+          300: "var(--neutral-300)",
+          400: "var(--neutral-400)",
+          500: "var(--neutral-500)",
+          600: "var(--neutral-600)",
+          700: "var(--neutral-700)",
+          800: "var(--neutral-800)",
+          900: "var(--neutral-900)",
+          950: "var(--neutral-950)",
+        },
         brand: {
           50: "#eef5f4",
           100: "#c5dcd9",
@@ -67,21 +80,26 @@ export default {
           "0%, 100%": { opacity: "0.25", transform: "scale(1)" },
           "50%": { opacity: "0.5", transform: "scale(1.03)" },
         },
-        "ghost-run": {
-          from: { transform: "translateX(100vw)" },
-          to: { transform: "translateX(0)" },
+        "slide-in-from-left": {
+          from: { opacity: "0", transform: "translateX(-16px)" },
+          to: { opacity: "1", transform: "translateX(0)" },
         },
-        "incognito-header-bg-in": {
-          from: { opacity: "0" },
-          to: { opacity: "1" },
+        "description-in": {
+          from: { opacity: "0", transform: "translateY(-4px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
         },
-        "incognito-header-content-in-light": {
-          from: { color: "rgb(23 23 23)" },
-          to: { color: "rgb(245 245 245)" },
+        "description-out": {
+          from: { opacity: "1", transform: "translateY(0)" },
+          to: { opacity: "0", transform: "translateY(-4px)" },
         },
-        "incognito-header-content-in-dark": {
-          from: { color: "rgb(250 250 250)" },
-          to: { color: "rgb(23 23 23)" },
+        "shooting-star": {
+          "0%": { opacity: "1", transform: "translate(0, 0) scaleX(1)" },
+          "70%": { opacity: "0.8", transform: "translate(-200px, 200px) scaleX(0.5)" },
+          "100%": { opacity: "0", transform: "translate(-250px, 250px) scaleX(0)" },
+        },
+        "tour-breathe": {
+          "0%, 100%": { opacity: "1", transform: "scale(1)" },
+          "50%": { opacity: "1", transform: "scale(1.04)" },
         },
       },
       animation: {
@@ -93,10 +111,11 @@ export default {
         "bounce-dot": "bounce-dot 1.4s ease-in-out infinite both",
         "voice-breathe": "voice-breathe 2s ease-in-out infinite",
         "voice-hold-hint": "voice-hold-hint 2.5s ease-in-out infinite",
-        "ghost-run": "ghost-run 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards",
-        "incognito-header-bg-in": "incognito-header-bg-in 1.4s ease-out forwards",
-        "incognito-header-content-in-light": "incognito-header-content-in-light 1.4s ease-out forwards",
-        "incognito-header-content-in-dark": "incognito-header-content-in-dark 1.4s ease-out forwards",
+        "slide-in-from-left": "slide-in-from-left 0.45s cubic-bezier(0.4,0,0.2,1) forwards",
+        "description-in": "description-in 0.2s ease-out forwards",
+        "description-out": "description-out 0.2s ease-out forwards",
+        "shooting-star": "shooting-star 1.2s ease-out forwards",
+        "tour-breathe": "tour-breathe 2s ease-in-out infinite",
       },
     },
   },

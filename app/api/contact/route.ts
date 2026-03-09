@@ -1,0 +1,68 @@
+import { currentUser } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+const TO_EMAIL = "shreyas.ramesh@gmail.com";
+const FROM_EMAIL = process.env.CONTACT_FROM_EMAIL ?? "fml labs <onboarding@resend.dev>";
+
+export async function POST(request: Request) {
+  try {
+    const user = await currentUser();
+    const body = await request.json();
+    const { message, email: bodyEmail, type } = body as { message?: string; email?: string; type?: string };
+
+    const trimmedMessage = typeof message === "string" ? message.trim() : "";
+    if (!trimmedMessage) {
+      return NextResponse.json({ error: "Message is required" }, { status: 400 });
+    }
+
+    let senderEmail: string;
+    if (user?.primaryEmailAddress?.emailAddress) {
+      senderEmail = user.primaryEmailAddress.emailAddress;
+    } else {
+      senderEmail = typeof bodyEmail === "string" ? bodyEmail.trim() : "";
+    }
+
+    if (!senderEmail) {
+      return NextResponse.json(
+        { error: "Sign in to use your account email, or provide your email in the form" },
+        { status: 400 }
+      );
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(senderEmail)) {
+      return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
+    }
+
+    if (!process.env.RESEND_API_KEY) {
+      console.error("RESEND_API_KEY is not configured");
+      return NextResponse.json({ error: "Contact form is not configured" }, { status: 503 });
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: [TO_EMAIL],
+      replyTo: [senderEmail],
+      subject: type === "feedback"
+      ? `fml labs feedback from ${senderEmail}`
+      : `fml labs contact from ${senderEmail}`,
+      html: `
+        <p><strong>From:</strong> ${senderEmail}</p>
+        <p><strong>Message:</strong></p>
+        <p>${trimmedMessage.replace(/\n/g, "<br>")}</p>
+      `,
+    });
+
+    if (error) {
+      console.error("Resend error:", error);
+      return NextResponse.json({ error: "Failed to send message" }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true, id: data?.id });
+  } catch (err) {
+    console.error("Contact API error:", err);
+    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+  }
+}

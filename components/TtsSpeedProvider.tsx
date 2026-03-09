@@ -6,7 +6,9 @@ import {
   useEffect,
   useState,
   useCallback,
+  useRef,
 } from "react";
+import { useAuth } from "@clerk/nextjs";
 
 const TTS_SPEED_STORAGE_KEY = "and-then-what-tts-speed";
 const MIN_SPEED = 0.5;
@@ -31,8 +33,10 @@ export function useTtsSpeed() {
 }
 
 export function TtsSpeedProvider({ children }: { children: React.ReactNode }) {
+  const { userId } = useAuth();
   const [speed, setSpeedState] = useState(DEFAULT_SPEED);
   const [mounted, setMounted] = useState(false);
+  const fetchedRef = useRef(false);
 
   useEffect(() => {
     setMounted(true);
@@ -48,6 +52,28 @@ export function TtsSpeedProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    if (!mounted || !userId) return;
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
+    fetch("/api/me/settings")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.ttsSpeed != null) {
+          const v = typeof data.ttsSpeed === "number" ? data.ttsSpeed : parseFloat(data.ttsSpeed);
+          if (!Number.isNaN(v)) setSpeedState(clampSpeed(v));
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        fetchedRef.current = false;
+      });
+  }, [mounted, userId]);
+
+  useEffect(() => {
+    if (!userId) fetchedRef.current = false;
+  }, [userId]);
+
+  useEffect(() => {
     if (!mounted) return;
     try {
       localStorage.setItem(TTS_SPEED_STORAGE_KEY, String(speed));
@@ -56,9 +82,20 @@ export function TtsSpeedProvider({ children }: { children: React.ReactNode }) {
     }
   }, [mounted, speed]);
 
-  const setSpeed = useCallback((v: number) => {
-    setSpeedState(clampSpeed(v));
-  }, []);
+  const setSpeed = useCallback(
+    (v: number) => {
+      const clamped = clampSpeed(v);
+      setSpeedState(clamped);
+      if (userId) {
+        fetch("/api/me/settings", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ttsSpeed: clamped }),
+        }).catch(() => {});
+      }
+    },
+    [userId]
+  );
 
   return (
     <TtsSpeedContext.Provider value={{ speed, setSpeed }}>

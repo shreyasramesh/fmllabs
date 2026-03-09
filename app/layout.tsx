@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { UserTypeProvider } from "@/components/UserTypeProvider";
 import { TtsSpeedProvider } from "@/components/TtsSpeedProvider";
+import { BackgroundProvider } from "@/components/BackgroundProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -58,7 +59,7 @@ export default function RootLayout({
           <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet" />
           <script
             dangerouslySetInnerHTML={{
-              __html: `(function(){var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.classList.toggle('dark',t==='dark');})();`,
+              __html: `(function(){var t=localStorage.getItem('theme')||'light';document.documentElement.classList.toggle('dark',t==='dark');var b=localStorage.getItem('fmllabs-background');if(b==='default'||b==='air'||b==='water'||b==='earth'||b==='fire')document.documentElement.setAttribute('data-background',b);else document.documentElement.setAttribute('data-background','default');})();`,
             }}
           />
         </head>
@@ -66,7 +67,9 @@ export default function RootLayout({
           <ThemeProvider>
             <LanguageProvider>
               <UserTypeProvider>
-                <TtsSpeedProvider>{children}</TtsSpeedProvider>
+                <TtsSpeedProvider>
+                  <BackgroundProvider>{children}</BackgroundProvider>
+                </TtsSpeedProvider>
               </UserTypeProvider>
             </LanguageProvider>
           </ThemeProvider>
