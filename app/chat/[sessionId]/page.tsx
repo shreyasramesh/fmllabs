@@ -1934,8 +1934,8 @@ export default function ChatPage() {
                 >
                   <GhostIcon className="w-5 h-5" />
                 </Link>
-                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 text-xs font-medium text-white bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover/incognito:opacity-100 transition-opacity duration-200 z-50">
-                  Using Incognito mode
+                <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 text-xs font-medium text-white bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover/incognito:opacity-100 transition-opacity duration-200 z-50">
+                  Use Incognito Mode
                 </span>
               </div>
             )}
@@ -2407,7 +2407,7 @@ export default function ChatPage() {
           />
         )}
 
-        <div className={`flex-1 min-h-0 flex flex-col pb-36 md:pb-0 ${messages.length > 0 ? "overflow-y-auto scroll-smooth" : "overflow-hidden"}`}>
+        <div className={`flex-1 min-h-0 flex flex-col pb-24 md:pb-0 ${messages.length > 0 ? "overflow-y-auto scroll-smooth" : "overflow-hidden"}`}>
           <div ref={messagesScrollRef} className={`flex-1 min-h-0 min-w-0 ${messages.length > 0 ? "overflow-y-auto" : "overflow-hidden flex flex-col"}`}>
           {currentSession?.isCollapsed && collapsedSummary ? (
             <div className="min-h-full flex items-center justify-center p-4">
@@ -2878,7 +2878,7 @@ export default function ChatPage() {
           </p>
         )}
         {/* Bottom bar - fixed on mobile so it stays visible when scrolling. When voice mode, show orb in same section instead of input. Hidden only during first-time onboarding (no messages). On mobile, use gradient so scroll-to-bottom area is transparent and content shows through. */}
-        <div className={`fixed inset-x-0 bottom-0 z-30 flex flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-[linear-gradient(to_bottom,transparent_0%,transparent_4rem,var(--background)_5rem)] md:bg-background ${onboardingStep !== null && messages.length === 0 ? "hidden" : ""}`}>
+        <div className={`fixed inset-x-0 bottom-0 z-30 flex flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background ${onboardingStep !== null && messages.length === 0 ? "hidden" : ""}`}>
           {!isAnonymous && messages.length >= 2 && (!currentSession || !currentSession.isCollapsed) && (
             <div className="flex justify-center px-4 pt-1.5 pb-0.5 sm:pt-2 sm:pb-1">
               <button
@@ -2905,7 +2905,7 @@ export default function ChatPage() {
                 speed={ttsSpeed}
               />
             ) : (
-            <div className="min-w-0 max-w-2xl w-full flex items-stretch gap-2 min-h-[52px]" data-tour="input-area">
+            <div className="min-w-0 max-w-2xl w-full flex items-stretch gap-1.5 sm:gap-2 min-h-[52px]" data-tour="input-area">
               <div className="relative flex-1 min-w-0">
                 <MentionInput
                   inputRef={inputRef}
@@ -2977,17 +2977,21 @@ export default function ChatPage() {
                 language={language}
                 disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                 ariaLabel="Voice input"
-                className="!min-h-[52px] !min-w-[52px]"
+                className="!min-h-[42px] !min-w-[42px] sm:!min-h-[52px] sm:!min-w-[52px]"
               />
               <button
                 onClick={() => sendMessage()}
                 disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
-                className="flex items-center justify-center px-6 py-3 rounded-2xl bg-accent text-white font-medium transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 min-h-[52px] shrink-0"
+                aria-label="Send message"
+                className="flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl bg-accent text-white text-sm sm:text-base font-medium transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 min-h-[42px] sm:min-h-[52px] shrink-0"
               >
                 {isLoading ? (
                   <LoadingDots aria-label="Sending" />
                 ) : (
-                  "Send"
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" aria-hidden>
+                    <path d="M20 6v5a4 4 0 0 1-4 4H4" />
+                    <path d="m9 10-5 5 5 5" />
+                  </svg>
                 )}
                 </button>
               </div>
@@ -3089,7 +3093,7 @@ export default function ChatPage() {
                   }}
                   previewMap={previewMap}
                 />
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                   <VoiceInputButton
                     onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
                     onLongPress={!isAnonymous ? () => {
@@ -3099,7 +3103,7 @@ export default function ChatPage() {
                     language={language}
                     disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                     ariaLabel="Voice input"
-                    className="!min-h-[44px] !min-w-[44px]"
+                    className="!min-h-[40px] !min-w-[40px] sm:!min-h-[44px] sm:!min-w-[44px]"
                   />
                   <button
                     onClick={() => {
@@ -3107,12 +3111,16 @@ export default function ChatPage() {
                       setInputExpandModalOpen(false);
                     }}
                     disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
-                    className="flex items-center justify-center px-6 py-3 rounded-2xl bg-accent text-white font-medium transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 min-h-[44px] shrink-0"
+                    aria-label="Send message"
+                    className="flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl bg-accent text-white text-sm sm:text-base font-medium transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 min-h-[40px] sm:min-h-[44px] shrink-0"
                   >
                     {isLoading ? (
                       <LoadingDots aria-label="Sending" />
                     ) : (
-                      "Send"
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" aria-hidden>
+                        <path d="M20 6v5a4 4 0 0 1-4 4H4" />
+                        <path d="m9 10-5 5 5 5" />
+                      </svg>
                     )}
                   </button>
                 </div>

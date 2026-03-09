@@ -65,7 +65,7 @@ export function GhostIcon({ className }: { className?: string }) {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className ?? "h-4 w-4"}
+      className={`${className ?? "h-4 w-4"} ghost-cheeky`}
       aria-hidden
     >
       <path d="M12 2a7 7 0 0 0-7 7v12l3-2.5 2 2.5 2-2.5 2 2.5 2-2.5 3 2.5V9a7 7 0 0 0-7-7z" />
@@ -74,14 +74,14 @@ export function GhostIcon({ className }: { className?: string }) {
         cy="10"
         r="1.5"
         fill="currentColor"
-        className="transition-transform duration-200 ease-out group-hover:translate-x-[2px] group-hover:translate-y-[1px]"
+        className="ghost-eye-left"
       />
       <circle
         cx="15"
         cy="10"
         r="1.5"
         fill="currentColor"
-        className="transition-transform duration-200 ease-out group-hover:translate-x-[2px] group-hover:translate-y-[1px]"
+        className="ghost-eye-right"
       />
     </svg>
   );
