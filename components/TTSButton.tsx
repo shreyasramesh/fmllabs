@@ -4,6 +4,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { stripMarkdown } from "@/lib/strip-markdown";
 import { playSelectionChime, playStopChime } from "@/lib/selection-chime";
 import { useTtsSpeed } from "@/components/TtsSpeedProvider";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export function TTSButton({
   text,
@@ -28,6 +29,7 @@ export function TTSButton({
   const [playing, setPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { speed } = useTtsSpeed();
+  const { language } = useLanguage();
   const onTtsProgressRef = useRef(onTtsProgress);
   const onTtsEndRef = useRef(onTtsEnd);
   onTtsProgressRef.current = onTtsProgress;
@@ -68,7 +70,7 @@ export function TTSButton({
         const res = await fetch("/api/tts-with-timestamps", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: textToSpeak, speed: apiSpeed }),
+          body: JSON.stringify({ text: textToSpeak, speed: apiSpeed, language }),
         });
         if (!res.ok) throw new Error("TTS failed");
         const data = await res.json();
@@ -110,7 +112,7 @@ export function TTSButton({
         const res = await fetch("/api/tts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: textToSpeak, speed: apiSpeed }),
+          body: JSON.stringify({ text: textToSpeak, speed: apiSpeed, language }),
         });
         if (!res.ok) throw new Error("TTS failed");
         const blob = await res.blob();
@@ -136,7 +138,7 @@ export function TTSButton({
     } finally {
       setLoading(false);
     }
-  }, [content, disabled, playing, speed, useTimestamps]);
+  }, [content, disabled, playing, speed, useTimestamps, language]);
 
   return (
     <button

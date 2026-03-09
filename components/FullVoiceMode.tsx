@@ -248,7 +248,7 @@ export function FullVoiceMode({
     fetch("/api/tts-with-timestamps", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: textToSpeak, speed: apiSpeed }),
+      body: JSON.stringify({ text: textToSpeak, speed: apiSpeed, language }),
     })
       .then((res) => {
         if (!res.ok) throw new Error("TTS failed");
@@ -351,7 +351,7 @@ export function FullVoiceMode({
             setTtsPlaying(false);
           });
       });
-  }, [messages, isLoading, ttsPlaying]);
+  }, [messages, isLoading, ttsPlaying, language, speed]);
 
   useEffect(() => {
     return () => {

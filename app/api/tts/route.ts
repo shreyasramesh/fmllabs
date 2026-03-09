@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { isValidLanguageCode, type LanguageCode } from "@/lib/languages";
+import { getVoiceIdForLanguage, getLanguageCodeForTts } from "@/lib/tts-voices";
 
-const ELEVENLABS_VOICE_ID = "EXAVITQu4vr4xnSDxMaL"; // Sarah - warm, engaging female
 const ELEVENLABS_MODEL = "eleven_flash_v2_5";
 const MAX_CHARS = 5000;
 
@@ -14,6 +15,7 @@ export async function POST(request: Request) {
     const body = await request.json().catch(() => ({}));
     const text = typeof body.text === "string" ? body.text.trim() : "";
     const speed = typeof body.speed === "number" ? Math.max(0.7, Math.min(1.2, body.speed)) : 1;
+    const language: LanguageCode = isValidLanguageCode(body.language) ? body.language : "en";
     if (!text) {
       return NextResponse.json({ error: "text is required" }, { status: 400 });
     }
@@ -24,8 +26,11 @@ export async function POST(request: Request) {
       );
     }
 
+    const voiceId = getVoiceIdForLanguage(language);
+    const languageCode = getLanguageCodeForTts(language);
+
     const res = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}?output_format=mp3_44100_64`,
+      `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_64`,
       {
         method: "POST",
         headers: {
@@ -35,6 +40,7 @@ export async function POST(request: Request) {
         body: JSON.stringify({
           text,
           model_id: ELEVENLABS_MODEL,
+          language_code: languageCode,
           voice_settings: { speed },
         }),
       }

@@ -2001,6 +2001,29 @@ export default function ChatPage() {
         {!isAnonymous && (
         <>
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden px-2 py-1.5">
+          {/* New conversation - always visible at top of sidebar */}
+          <Link
+            href={incognitoMode ? "/chat/incognito" : "/chat/new"}
+            onClick={(e) => {
+              if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+              if (sessionId === "new" || sessionId === "incognito") {
+                e.preventDefault();
+                anonymousActiveRef.current = false;
+                setMessages([]);
+                setCurrentSessionId(null);
+                setCurrentSession(null);
+                setCollapsedSummary(null);
+                setInput("");
+              }
+            }}
+            className="flex items-center justify-center gap-2 w-full mb-3 px-3 py-2.5 rounded-xl border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-sm font-medium text-foreground transition-colors shrink-0"
+            aria-label="New conversation"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            New conversation
+          </Link>
           {/* Primary nav - Claude.ai pill style, compact selector for center panel */}
           <nav className="flex flex-col gap-1 shrink-0 mb-3 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30" aria-label="Select view" data-tour="sidebar-nav">
             {[
@@ -3200,7 +3223,6 @@ export default function ChatPage() {
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                setLibraryPanelOpen(null);
                                 setDeleteSessionConfirmModal(s);
                               }}
                               className="p-1.5 rounded opacity-50 hover:opacity-100 group-hover:opacity-100 text-neutral-500 hover:text-red-600 dark:hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 active:scale-95 shrink-0"
