@@ -108,6 +108,8 @@ interface ConceptGroupItem {
   concepts?: CustomConceptItem[];
 }
 
+type WeatherFormat = "condition-temp" | "emoji-temp" | "temp-only";
+
 function formatRelativeTime(iso: string): string {
   const d = new Date(iso);
   const now = new Date();
@@ -411,7 +413,7 @@ function MessageBubble({
                           </button>
                           {isShowingReason && (
                             <div
-                              className="absolute left-0 right-0 top-full mt-1 z-10 py-2 px-2.5 rounded-lg text-[11px] text-neutral-600 dark:text-neutral-300 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 shadow-lg max-h-32 overflow-y-auto"
+                              className="absolute left-0 right-0 top-full mt-1 z-10 py-2 px-2.5 rounded-lg text-[11px] text-neutral-600 dark:text-neutral-300 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-600 shadow-lg max-h-32 overflow-y-auto"
                               role="tooltip"
                             >
                               <p className="font-medium text-neutral-500 dark:text-neutral-400 mb-0.5">Why it was used</p>
@@ -669,7 +671,7 @@ function MovingPills({ onSelect }: { onSelect: (text: string) => void }) {
                   playSelectionChime();
                   onSelect(label);
                 }}
-                className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-900 dark:text-neutral-100 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-all duration-200 active:scale-95 whitespace-nowrap"
+                className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-900 dark:text-neutral-100 border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-all duration-200 active:scale-95 whitespace-nowrap"
               >
                 {label}
               </button>
@@ -721,6 +723,8 @@ export default function ChatPage() {
   const [voiceModeOpen, setVoiceModeOpen] = useState(false);
   const { speed: ttsSpeed, setSpeed: setTtsSpeed } = useTtsSpeed();
   const { background, setBackground } = useBackground();
+  const [weatherFormat, setWeatherFormat] = useState<WeatherFormat>("condition-temp");
+  const [moonPhase, setMoonPhase] = useState<number | null>(null);
   const [ttsHighlight, setTtsHighlight] = useState<TtsHighlightState>(null);
   const [conceptSavedToast, setConceptSavedToast] = useState(false);
   const [restartLoading, setRestartLoading] = useState(false);
@@ -1552,10 +1556,67 @@ export default function ChatPage() {
     null
   );
   const [isSafari, setIsSafari] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
   useEffect(() => {
     if (typeof navigator === "undefined") return;
     setIsSafari(/safari/i.test(navigator.userAgent) && !/chrome|crios/i.test(navigator.userAgent));
   }, []);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 640px)");
+    const sync = () => setIsMobileViewport(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const stored = localStorage.getItem("fmllabs-weather-format");
+      if (stored === "condition-temp" || stored === "emoji-temp" || stored === "temp-only") {
+        setWeatherFormat(stored);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+    let cancelled = false;
+    fetch("/api/me/settings")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled) return;
+        if (data?.weatherFormat === "condition-temp" || data?.weatherFormat === "emoji-temp" || data?.weatherFormat === "temp-only") {
+          setWeatherFormat(data.weatherFormat);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
+
+  const updateWeatherFormat = useCallback(
+    (next: WeatherFormat) => {
+      setWeatherFormat(next);
+      try {
+        localStorage.setItem("fmllabs-weather-format", next);
+      } catch {
+        /* ignore */
+      }
+      if (userId) {
+        fetch("/api/me/settings", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ weatherFormat: next }),
+        }).catch(() => {});
+      }
+    },
+    [userId]
+  );
 
   useEffect(() => {
     if (!libraryPanelOpen && !selectedMentalModel) return;
@@ -1836,7 +1897,7 @@ export default function ChatPage() {
 
   return (
     <TtsHighlightContext.Provider value={{ ttsHighlight, setTtsHighlight }}>
-    <div className={`relative flex flex-col h-screen max-h-[100dvh] overflow-hidden chat-bg-area bg-background border-2 transition-[border-color,background] duration-300 ease-in-out ${incognitoMode ? "border-violet-400/70 dark:border-violet-500/60" : "border-transparent"}`}>
+    <div className={`relative flex flex-col h-[100dvh] min-h-[100dvh] overflow-hidden chat-bg-area bg-background border-2 transition-[border-color,background] duration-300 ease-in-out ${incognitoMode ? "border-violet-400/70 dark:border-violet-500/60" : "border-transparent"}`}>
       {/* Shared top bar - fixed on mobile so it stays visible when scrolling */}
       <header
         className={`h-14 min-h-[44px] pt-[env(safe-area-inset-top)] flex border-b shrink-0 fixed top-0 left-0 right-0 z-20 md:relative md:top-auto md:left-auto md:right-auto ${
@@ -1929,7 +1990,7 @@ export default function ChatPage() {
             )}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 shrink-0 overflow-visible">
-            <Clock />
+            <Clock weatherFormat={weatherFormat} onMoonPhaseChange={setMoonPhase} />
             {!incognitoMode && !isAnonymous && (
               <div className="relative group/incognito">
                 <Link
@@ -1947,7 +2008,7 @@ export default function ChatPage() {
                 </span>
               </div>
             )}
-            <ThemeToggle inverted={incognitoMode} />
+            <ThemeToggle inverted={incognitoMode} moonPhase={moonPhase} />
             <button
               type="button"
               onClick={() => setSettingsOpen(true)}
@@ -2429,7 +2490,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           {currentSession?.isCollapsed && collapsedSummary ? (
             <div className="min-h-full flex items-center justify-center p-4">
               <div className="w-full max-w-2xl">
-              <div className="group/tts rounded-3xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-800 shadow-sm p-6 space-y-4 text-foreground">
+              <div className="group/tts rounded-3xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm p-6 space-y-4 text-foreground">
                 <h2 className="font-semibold text-lg">{collapsedSummary.title}</h2>
                 <div className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap">
                   {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === `collapsed-summary-${collapsedSummary._id}` ? (
@@ -2950,7 +3011,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   placeholder="/ to search"
                   placeholderMobile="/ to search"
                   disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
-                  className="w-full h-[52px] max-h-[52px] py-3 pl-4 pr-10 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
+                  className="w-full h-[52px] max-h-[52px] py-3 pl-4 pr-4 sm:pr-10 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
                   onMentalModelClick={handleMentalModelClick}
                   onLtmClick={(id) => {
                     const ltm = longTermMemories.find((l) => l._id === id);
@@ -2971,6 +3032,19 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   }}
                   previewMap={previewMap}
                 />
+                {isMobileViewport && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setInputExpandModalOpen(true);
+                    }}
+                    disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                    className="absolute inset-0 z-10 sm:hidden rounded-2xl"
+                    aria-label="Open composer"
+                  />
+                )}
                 <button
                   type="button"
                   onClick={(e) => {
@@ -2979,7 +3053,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     setInputExpandModalOpen(true);
                   }}
                   disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
-                  className="absolute top-2 right-2 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 disabled:opacity-50"
+                  className="absolute top-2 right-2 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 disabled:opacity-50 hidden sm:block"
                   aria-label="Expand input"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
@@ -2994,13 +3068,13 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 language={language}
                 disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                 ariaLabel="Voice input"
-                className="!min-h-[42px] !min-w-[42px] sm:!min-h-[52px] sm:!min-w-[52px]"
+                className="!min-h-[48px] !min-w-[48px] sm:!min-h-[52px] sm:!min-w-[52px]"
               />
               <button
                 onClick={() => sendMessage()}
                 disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
                 aria-label="Send message"
-                className="flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl bg-accent text-white text-sm sm:text-base font-medium transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 min-h-[42px] sm:min-h-[52px] shrink-0"
+                className="flex items-center justify-center px-3.5 sm:px-6 py-2 sm:py-3 rounded-2xl bg-accent text-white text-sm sm:text-base font-medium transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 min-h-[48px] min-w-[48px] sm:min-h-[52px] shrink-0"
               >
                 {isLoading ? (
                   <LoadingDots aria-label="Sending" />
@@ -3053,6 +3127,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   inputRef={inputExpandInputRef}
                   value={input}
                   onChange={setInput}
+                  placeholderTopAligned
                   onKeyDown={(e) => {
                     if (e.key === "Escape") {
                       setInputExpandModalOpen(false);
@@ -3120,7 +3195,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     language={language}
                     disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                     ariaLabel="Voice input"
-                    className="!min-h-[40px] !min-w-[40px] sm:!min-h-[44px] sm:!min-w-[44px]"
+                    className="!min-h-[44px] !min-w-[44px] sm:!min-h-[48px] sm:!min-w-[48px]"
                   />
                   <button
                     onClick={() => {
@@ -3129,7 +3204,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     }}
                     disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
                     aria-label="Send message"
-                    className="flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl bg-accent text-white text-sm sm:text-base font-medium transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 min-h-[40px] sm:min-h-[44px] shrink-0"
+                    className="flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl bg-accent text-white text-sm sm:text-base font-medium transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 min-h-[44px] sm:min-h-[48px] shrink-0"
                   >
                     {isLoading ? (
                       <LoadingDots aria-label="Sending" />
@@ -4491,6 +4566,37 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           }`}
                         >
                           {s}×
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+
+                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-800/80">
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Time and weather</h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Choose how weather appears next to your local time in the header.</p>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Weather format</label>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        { id: "condition-temp" as const, label: "Condition + temp", preview: "Cloudy 22°C" },
+                        { id: "emoji-temp" as const, label: "Emoji + temp", preview: "☁️ 22°C" },
+                        { id: "temp-only" as const, label: "Temp only", preview: "22°C" },
+                      ].map(({ id, label, preview }) => (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => updateWeatherFormat(id)}
+                          className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors border ${
+                            weatherFormat === id
+                              ? "bg-foreground text-background border-foreground"
+                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-neutral-200/60 dark:border-neutral-700/60"
+                          }`}
+                        >
+                          {label}
+                          <span className={`ml-2 text-xs ${weatherFormat === id ? "text-background/80" : "text-neutral-500 dark:text-neutral-400"}`}>
+                            {preview}
+                          </span>
                         </button>
                       ))}
                     </div>

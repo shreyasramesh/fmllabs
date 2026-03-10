@@ -355,7 +355,7 @@ export function MentalModelModal({
 
           {currentStepKey === "idea" && (
             <div className="animate-fade-in-up space-y-6">
-              <div className="group/tts rounded-2xl bg-white dark:bg-neutral-800/80 p-5 border border-neutral-200 dark:border-neutral-700">
+              <div className="group/tts rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
                     The big idea
@@ -396,7 +396,7 @@ export function MentalModelModal({
 
           {currentStepKey === "concept" && (
             <div className="animate-fade-in-up space-y-6">
-              <div className="group/tts rounded-2xl bg-white dark:bg-neutral-800/80 p-5 border border-neutral-200 dark:border-neutral-700">
+              <div className="group/tts rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
                     Meet the concept
@@ -418,7 +418,7 @@ export function MentalModelModal({
                 </p>
               </div>
               {relevanceContext && (
-                <div className="group/tts rounded-2xl bg-white dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 p-4">
+                <div className="group/tts rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 p-4">
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <p className="text-xs font-medium text-neutral-800 dark:text-neutral-200">
                       Why this matters for your decision
@@ -460,7 +460,7 @@ export function MentalModelModal({
 
           {currentStepKey === "try" && (
             <div className="animate-fade-in-up space-y-6">
-              <div className="rounded-2xl bg-white dark:bg-neutral-800/80 p-5 border border-neutral-200 dark:border-neutral-700">
+              <div className="rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
                 <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
                   Try it
                 </p>
@@ -472,7 +472,7 @@ export function MentalModelModal({
                 {tryThisItems.map((prompt, i) => (
                   <li
                     key={i}
-                    className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 rounded-2xl bg-white dark:bg-neutral-800/80 px-4 py-3 border border-neutral-200 dark:border-neutral-700"
+                    className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 rounded-2xl bg-white dark:bg-neutral-900 px-4 py-3 border border-neutral-200 dark:border-neutral-700"
                   >
                     <div className="flex items-start gap-3 min-w-0 sm:min-w-0 sm:flex-1">
                       <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 text-xs font-bold">
@@ -485,58 +485,61 @@ export function MentalModelModal({
                           prompt
                         )}
                       </span>
-                      <TTSButton
-                        text={prompt}
-                        showOnHover={false}
-                        ariaLabel="Listen"
-                        className="shrink-0"
-                        onTtsProgress={tts ? (charEnd) => tts.setTtsHighlight({ textId: `mm-${model.id}-try-${i}`, charEnd }) : undefined}
-                        onTtsEnd={tts ? () => tts.setTtsHighlight(null) : undefined}
-                      />
-                    </div>
-                    {onSendMessage && (
-                      <GenerateRelevantMessageButton
-                        label="Generate Relevant Message"
-                        aria-label="Generate Relevant Message"
-                        className="shrink-0"
-                        onClick={async () => {
-                          setGenerateModal({
-                            suggestion: prompt,
-                            generatedText: "",
-                            loading: true,
-                          });
-                          try {
-                            const res = await fetch("/api/generate-relevant-prompt", {
-                              method: "POST",
-                              headers: { "Content-Type": "application/json" },
-                              body: JSON.stringify({
+                      <div className="flex items-center gap-1 shrink-0">
+                        <TTSButton
+                          text={prompt}
+                          showOnHover={false}
+                          ariaLabel="Listen"
+                          className="shrink-0"
+                          onTtsProgress={tts ? (charEnd) => tts.setTtsHighlight({ textId: `mm-${model.id}-try-${i}`, charEnd }) : undefined}
+                          onTtsEnd={tts ? () => tts.setTtsHighlight(null) : undefined}
+                        />
+                        {onSendMessage && (
+                          <GenerateRelevantMessageButton
+                            label="Generate Relevant Message"
+                            expandOnHover={false}
+                            aria-label="Generate Relevant Message"
+                            className="shrink-0"
+                            onClick={async () => {
+                              setGenerateModal({
                                 suggestion: prompt,
-                                messages: messages.map((m) => ({
-                                  role: m.role,
-                                  content: m.content,
-                                })),
-                              }),
-                            });
-                            const data = await res.json();
-                            setGenerateModal((prev) =>
-                              prev
-                                ? {
-                                    ...prev,
-                                    generatedText: data.text ?? prompt,
-                                    loading: false,
-                                  }
-                                : null
-                            );
-                          } catch {
-                            setGenerateModal((prev) =>
-                              prev
-                                ? { ...prev, generatedText: prompt, loading: false }
-                                : null
-                            );
-                          }
-                        }}
-                      />
-                    )}
+                                generatedText: "",
+                                loading: true,
+                              });
+                              try {
+                                const res = await fetch("/api/generate-relevant-prompt", {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({
+                                    suggestion: prompt,
+                                    messages: messages.map((m) => ({
+                                      role: m.role,
+                                      content: m.content,
+                                    })),
+                                  }),
+                                });
+                                const data = await res.json();
+                                setGenerateModal((prev) =>
+                                  prev
+                                    ? {
+                                        ...prev,
+                                        generatedText: data.text ?? prompt,
+                                        loading: false,
+                                      }
+                                    : null
+                                );
+                              } catch {
+                                setGenerateModal((prev) =>
+                                  prev
+                                    ? { ...prev, generatedText: prompt, loading: false }
+                                    : null
+                                );
+                              }
+                            }}
+                          />
+                        )}
+                      </div>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -560,7 +563,7 @@ export function MentalModelModal({
 
           {currentStepKey === "when" && (
             <div className="animate-fade-in-up space-y-6">
-              <div className="group/tts rounded-2xl bg-white dark:bg-neutral-800/80 p-5 border border-neutral-200 dark:border-neutral-700">
+              <div className="group/tts rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
                     When to use it
@@ -613,7 +616,7 @@ export function MentalModelModal({
 
           {currentStepKey === "ask" && (
             <div className="animate-fade-in-up space-y-6">
-              <div className="rounded-2xl bg-white dark:bg-neutral-800/80 p-5 border border-neutral-200 dark:border-neutral-700">
+              <div className="rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
                 <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
                   Ask yourself
                 </p>
@@ -625,7 +628,7 @@ export function MentalModelModal({
                 {askYourselfItems.map((q, i) => (
                   <li
                     key={i}
-                    className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 rounded-2xl bg-white dark:bg-neutral-800/80 px-4 py-3 border border-neutral-200 dark:border-neutral-700"
+                    className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 rounded-2xl bg-white dark:bg-neutral-900 px-4 py-3 border border-neutral-200 dark:border-neutral-700"
                   >
                     <div className="flex items-start gap-3 min-w-0 sm:flex-1">
                       <span className="text-neutral-500 mt-0.5 shrink-0">?</span>
@@ -636,58 +639,61 @@ export function MentalModelModal({
                           q
                         )}
                       </span>
-                      <TTSButton
-                        text={q}
-                        showOnHover={false}
-                        ariaLabel="Listen"
-                        className="shrink-0"
-                        onTtsProgress={tts ? (charEnd) => tts.setTtsHighlight({ textId: `mm-${model.id}-ask-${i}`, charEnd }) : undefined}
-                        onTtsEnd={tts ? () => tts.setTtsHighlight(null) : undefined}
-                      />
-                    </div>
-                    {onSendMessage && (
-                      <GenerateRelevantMessageButton
-                        label="Generate Relevant Message"
-                        aria-label="Generate Relevant Message"
-                        className="shrink-0"
-                        onClick={async () => {
-                          setGenerateModal({
-                            suggestion: q,
-                            generatedText: "",
-                            loading: true,
-                          });
-                          try {
-                            const res = await fetch("/api/generate-relevant-prompt", {
-                              method: "POST",
-                              headers: { "Content-Type": "application/json" },
-                              body: JSON.stringify({
+                      <div className="flex items-center gap-1 shrink-0">
+                        <TTSButton
+                          text={q}
+                          showOnHover={false}
+                          ariaLabel="Listen"
+                          className="shrink-0"
+                          onTtsProgress={tts ? (charEnd) => tts.setTtsHighlight({ textId: `mm-${model.id}-ask-${i}`, charEnd }) : undefined}
+                          onTtsEnd={tts ? () => tts.setTtsHighlight(null) : undefined}
+                        />
+                        {onSendMessage && (
+                          <GenerateRelevantMessageButton
+                            label="Generate Relevant Message"
+                            expandOnHover={false}
+                            aria-label="Generate Relevant Message"
+                            className="shrink-0"
+                            onClick={async () => {
+                              setGenerateModal({
                                 suggestion: q,
-                                messages: messages.map((m) => ({
-                                  role: m.role,
-                                  content: m.content,
-                                })),
-                              }),
-                            });
-                            const data = await res.json();
-                            setGenerateModal((prev) =>
-                              prev
-                                ? {
-                                    ...prev,
-                                    generatedText: data.text ?? q,
-                                    loading: false,
-                                  }
-                                : null
-                            );
-                          } catch {
-                            setGenerateModal((prev) =>
-                              prev
-                                ? { ...prev, generatedText: q, loading: false }
-                                : null
-                            );
-                          }
-                        }}
-                      />
-                    )}
+                                generatedText: "",
+                                loading: true,
+                              });
+                              try {
+                                const res = await fetch("/api/generate-relevant-prompt", {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({
+                                    suggestion: q,
+                                    messages: messages.map((m) => ({
+                                      role: m.role,
+                                      content: m.content,
+                                    })),
+                                  }),
+                                });
+                                const data = await res.json();
+                                setGenerateModal((prev) =>
+                                  prev
+                                    ? {
+                                        ...prev,
+                                        generatedText: data.text ?? q,
+                                        loading: false,
+                                      }
+                                    : null
+                                );
+                              } catch {
+                                setGenerateModal((prev) =>
+                                  prev
+                                    ? { ...prev, generatedText: q, loading: false }
+                                    : null
+                                );
+                              }
+                            }}
+                          />
+                        )}
+                      </div>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -711,7 +717,7 @@ export function MentalModelModal({
 
           {currentStepKey === "own" && (
             <div className="animate-fade-in-up space-y-6">
-              <div className="rounded-2xl bg-white dark:bg-neutral-800/80 p-5 border border-neutral-200 dark:border-neutral-700">
+              <div className="rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
                 <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
                   Own it
                 </p>
@@ -853,11 +859,11 @@ export function MentalModelModal({
 
           {currentStepKey === "dive" && (
             <div className="animate-fade-in-up space-y-6">
-              <div className="rounded-2xl bg-white dark:bg-neutral-800/80 p-5 border border-neutral-200 dark:border-neutral-700">
+              <div className="rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
                 <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-4">
                   Dive deeper
                 </p>
-                <div className="rounded-2xl bg-white dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 overflow-hidden min-w-0">
+                <div className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 overflow-hidden min-w-0">
                   <AccordionItem
                     label="In more detail"
                     content={model.in_more_detail}

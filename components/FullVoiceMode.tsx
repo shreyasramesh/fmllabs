@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { playSelectionChime, playStopChime } from "@/lib/selection-chime";
 import { parseAssistantMessage } from "@/lib/chat-utils";
 
 const AudioOrbVisual = dynamic(
@@ -189,8 +188,10 @@ export function FullVoiceMode({
     }
 
     // Start orb mic visualization only after recognition starts.
-    // On mobile we skip this stream to avoid microphone contention with speech recognition.
-    if (isMobileBrowser) return;
+    // On mobile, delay slightly so recognition can lock in first.
+    if (isMobileBrowser) {
+      await new Promise((resolve) => setTimeout(resolve, 120));
+    }
     const nodes = audioNodesRef.current;
     if (nodes) {
       try {
@@ -209,11 +210,9 @@ export function FullVoiceMode({
 
   const handleOrbClick = useCallback(() => {
     if (listening) {
-      playStopChime();
       stopListening();
     } else if (supported && !isLoading && !ttsPlaying) {
       // Start listening on tap - recognition.start() requires a user gesture
-      playSelectionChime();
       startListening();
     }
   }, [listening, supported, isLoading, ttsPlaying, stopListening, startListening]);

@@ -134,6 +134,7 @@ export interface UserSettings {
   userType?: string;
   ttsSpeed?: number;
   background?: BackgroundElement;
+  weatherFormat?: "condition-temp" | "emoji-temp" | "temp-only";
   updatedAt: Date;
 }
 
@@ -969,13 +970,14 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     userType: doc.userType,
     ttsSpeed: doc.ttsSpeed,
     background: doc.background,
+    weatherFormat: doc.weatherFormat,
     updatedAt: doc.updatedAt,
   };
 }
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "background">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "background" | "weatherFormat">>
 ): Promise<UserSettings> {
   const database = await getDb();
   const now = new Date();
@@ -994,6 +996,7 @@ export async function upsertUserSettings(
     userType: result.userType,
     ttsSpeed: result.ttsSpeed,
     background: result.background,
+    weatherFormat: result.weatherFormat,
     updatedAt: result.updatedAt,
   };
 }

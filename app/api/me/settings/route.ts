@@ -7,6 +7,7 @@ import { isValidUserTypeId } from "@/lib/user-types";
 const TTS_MIN = 0.5;
 const TTS_MAX = 2;
 const BACKGROUND_ELEMENTS = ["default", "air", "water", "earth", "fire"] as const;
+const WEATHER_FORMATS = ["condition-temp", "emoji-temp", "temp-only"] as const;
 
 function clampTtsSpeed(v: number): number {
   return Math.max(TTS_MIN, Math.min(TTS_MAX, v));
@@ -14,6 +15,10 @@ function clampTtsSpeed(v: number): number {
 
 function isValidBackground(b: unknown): b is "default" | "air" | "water" | "earth" | "fire" {
   return typeof b === "string" && BACKGROUND_ELEMENTS.includes(b as (typeof BACKGROUND_ELEMENTS)[number]);
+}
+
+function isValidWeatherFormat(v: unknown): v is "condition-temp" | "emoji-temp" | "temp-only" {
+  return typeof v === "string" && WEATHER_FORMATS.includes(v as (typeof WEATHER_FORMATS)[number]);
 }
 
 export async function GET() {
@@ -63,6 +68,11 @@ export async function PATCH(request: Request) {
     if (body.background !== undefined) {
       if (isValidBackground(body.background)) {
         updates.background = body.background;
+      }
+    }
+    if (body.weatherFormat !== undefined) {
+      if (isValidWeatherFormat(body.weatherFormat)) {
+        updates.weatherFormat = body.weatherFormat;
       }
     }
 

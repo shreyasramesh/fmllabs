@@ -5,6 +5,10 @@
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  /* Slightly smaller global typography scale (closer to Claude-like sizing) */
+  font-size: 15px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* Message entrance animation */
@@ -376,20 +380,47 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Mobile readability: larger base font on small screens */
+/* Keep line-height comfortable on mobile without increasing font size */
 @media (max-width: 768px) {
-  html {
-    font-size: 17px;
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
+  :root {
+    --mobile-unified-font-size: 0.75rem; /* Matches Tailwind text-xs ("No conversations yet") */
+    --mobile-unified-line-height: 1.1rem;
   }
+
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  a,
+  button,
+  label,
+  li,
+  input,
+  textarea,
+  select,
+  small,
+  strong,
+  em,
+  blockquote,
+  code,
+  pre {
+    font-size: var(--mobile-unified-font-size) !important;
+    line-height: var(--mobile-unified-line-height) !important;
+  }
+
+  .prose,
+  .prose * {
+    font-size: var(--mobile-unified-font-size) !important;
+    line-height: var(--mobile-unified-line-height) !important;
+  }
+
   body {
     line-height: 1.6;
-  }
-}
-@media (max-width: 480px) {
-  html {
-    font-size: 18px;
   }
 }
 

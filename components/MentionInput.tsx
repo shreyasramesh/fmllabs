@@ -407,6 +407,7 @@ export function MentionInput({
   onCustomConceptClick,
   onConceptGroupClick,
   previewMap,
+  placeholderTopAligned = false,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -427,6 +428,8 @@ export function MentionInput({
   onConceptGroupClick?: (id: string) => void;
   /** Mental model id -> { oneLiner, quickIntro } for hover tooltips */
   previewMap?: Map<string, { oneLiner?: string; quickIntro?: string }>;
+  /** Render placeholder at first text row instead of centered */
+  placeholderTopAligned?: boolean;
 }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [highlightIndex, setHighlightIndex] = useState(0);
@@ -879,7 +882,9 @@ export function MentionInput({
       />
       {isEmpty && (
         <span
-          className="pointer-events-none absolute left-4 right-4 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 select-none whitespace-nowrap overflow-hidden text-ellipsis"
+          className={`pointer-events-none absolute left-4 right-4 text-neutral-500 dark:text-neutral-400 select-none whitespace-nowrap overflow-hidden text-ellipsis ${
+            placeholderTopAligned ? "top-4" : "top-1/2 -translate-y-1/2"
+          }`}
           aria-hidden
         >
           {displayPlaceholder}
