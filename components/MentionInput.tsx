@@ -40,7 +40,7 @@ const MAX_RESULTS_PER_SECTION = 5;
 const MAX_RESULTS_SHOW_ALL = 100;
 
 const CHIP_CLASS =
-  "inline-flex items-baseline py-px px-1.5 rounded-lg text-sm font-medium bg-foreground text-background border-[0.5px] border-background/30 dark:border-neutral-600 mx-0.5 align-baseline cursor-pointer";
+  "inline-flex items-baseline py-px px-1.5 rounded-lg text-sm font-medium bg-foreground text-background border border-background mx-0.5 align-baseline cursor-pointer";
 
 /** Token format: [[id]] for mental models, [[memory:hexid]] for LTM, [[concept:hexid]] for custom concepts */
 const MM_TOKEN_REGEX = /\[\[(?!memory:|concept:)([a-z0-9_]+)\]\]/g;

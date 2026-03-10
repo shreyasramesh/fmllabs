@@ -3,12 +3,12 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { parseAssistantMessage } from "@/lib/chat-utils";
+import { resolveTtsReferenceText } from "@/lib/tts-reference-text";
 
 const AudioOrbVisual = dynamic(
   () => import("@/components/AudioOrbVisual").then((m) => m.AudioOrbVisual),
   { ssr: false }
 );
-import { stripMarkdown } from "@/lib/strip-markdown";
 import type { LanguageCode } from "@/lib/languages";
 
 const LANG_TO_SPEECH: Partial<Record<LanguageCode, string>> = {
@@ -52,6 +52,10 @@ export function FullVoiceMode({
   isLoading,
   language = "en",
   embed = false,
+  idToName = new Map(),
+  ltmIdToTitle = new Map(),
+  ccIdToTitle = new Map(),
+  cgIdToTitle = new Map(),
   onTtsProgress,
   onTtsEnd,
   speed = 1,
@@ -62,6 +66,10 @@ export function FullVoiceMode({
   isLoading: boolean;
   language?: LanguageCode;
   embed?: boolean;
+  idToName?: Map<string, string>;
+  ltmIdToTitle?: Map<string, string>;
+  ccIdToTitle?: Map<string, string>;
+  cgIdToTitle?: Map<string, string>;
   /** Called with (messageIndex, charEnd) during TTS playback for word highlighting. charEnd is the last character index spoken so far. */
   onTtsProgress?: (messageIndex: number, charEnd: number) => void;
   /** Called when TTS playback ends (to clear highlight) */
@@ -71,6 +79,7 @@ export function FullVoiceMode({
 }) {
   const [listening, setListening] = useState(false);
   const [ttsPlaying, setTtsPlaying] = useState(false);
+  const [ttsPaused, setTtsPaused] = useState(false);
   const [supported, setSupported] = useState(false);
   const [audioNodes, setAudioNodes] = useState<{
     input: GainNode;
@@ -80,6 +89,7 @@ export function FullVoiceMode({
   const lastTtsIndexRef = useRef(-1);
   const prevLoadingRef = useRef(isLoading);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioUrlRef = useRef<string | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const mediaStreamSourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const mediaElementSourceRef = useRef<MediaElementAudioSourceNode | null>(null);
@@ -88,6 +98,25 @@ export function FullVoiceMode({
   const onTtsEndRef = useRef(onTtsEnd);
   onTtsProgressRef.current = onTtsProgress;
   onTtsEndRef.current = onTtsEnd;
+
+  const resetTtsAudio = useCallback((clearHighlight: boolean) => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.ontimeupdate = null;
+      audioRef.current.onended = null;
+      audioRef.current.onerror = null;
+      audioRef.current = null;
+    }
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current);
+      audioUrlRef.current = null;
+    }
+    mediaElementSourceRef.current?.disconnect();
+    mediaElementSourceRef.current = null;
+    if (clearHighlight) onTtsEndRef.current?.();
+    setTtsPlaying(false);
+    setTtsPaused(false);
+  }, []);
 
   useEffect(() => {
     setSupported(!!getSpeechRecognition());
@@ -206,14 +235,66 @@ export function FullVoiceMode({
     }
   }, [language, isLoading, onSendMessage, stopListening]);
 
+  const handleTtsToggle = useCallback(async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (ttsPlaying) {
+      audio.pause();
+      setTtsPlaying(false);
+      setTtsPaused(true);
+      return;
+    }
+
+    if (ttsPaused) {
+      try {
+        await audio.play();
+        setTtsPlaying(true);
+        setTtsPaused(false);
+      } catch {
+        resetTtsAudio(true);
+      }
+    }
+  }, [ttsPaused, ttsPlaying, resetTtsAudio]);
+
+  const handleTtsRestart = useCallback(async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    try {
+      audio.pause();
+      audio.currentTime = 0;
+      onTtsProgressRef.current?.(-1);
+      await audio.play();
+      setTtsPlaying(true);
+      setTtsPaused(false);
+    } catch {
+      resetTtsAudio(true);
+    }
+  }, [resetTtsAudio]);
+
+  const handleSpeakNow = useCallback(async () => {
+    if (isLoading || !supported) return;
+
+    if (audioRef.current || ttsPlaying || ttsPaused) {
+      resetTtsAudio(true);
+    }
+
+    if (!listening) {
+      await startListening();
+    }
+  }, [isLoading, supported, ttsPlaying, ttsPaused, listening, resetTtsAudio, startListening]);
+
   const handleOrbClick = useCallback(() => {
     if (listening) {
       stopListening();
-    } else if (supported && !isLoading && !ttsPlaying) {
+    } else if (ttsPlaying || ttsPaused) {
+      void handleTtsToggle();
+    } else if (supported && !isLoading) {
       // Start listening on tap - recognition.start() requires a user gesture
       startListening();
     }
-  }, [listening, supported, isLoading, ttsPlaying, stopListening, startListening]);
+  }, [listening, ttsPaused, ttsPlaying, supported, isLoading, stopListening, handleTtsToggle, startListening]);
 
   // Note: recognition.start() requires a user gesture. We use tap-to-start via handleOrbClick
   // instead of auto-start, which would fail when the gesture from opening voice mode has expired.
@@ -222,18 +303,32 @@ export function FullVoiceMode({
   useEffect(() => {
     const wasLoading = prevLoadingRef.current;
     prevLoadingRef.current = isLoading;
-    if (!messages.length || isLoading || ttsPlaying) return;
+    if (!messages.length || isLoading || ttsPlaying || ttsPaused || audioRef.current) return;
     if (!wasLoading) return; // Only TTS when we transition from loading to done
     const lastIdx = messages.length - 1;
     const last = messages[lastIdx];
     if (last?.role !== "assistant" || lastIdx <= lastTtsIndexRef.current) return;
 
     const { text, options } = parseAssistantMessage(last.content);
+    const answerText = resolveTtsReferenceText(text, {
+      idToName,
+      ltmIdToTitle,
+      ccIdToTitle,
+      cgIdToTitle,
+    });
+    const optionTexts = options.map((option) =>
+      resolveTtsReferenceText(option, {
+        idToName,
+        ltmIdToTitle,
+        ccIdToTitle,
+        cgIdToTitle,
+      })
+    );
     const optionsSuffix =
-      options.length > 0
-        ? ` Follow-up options: ${options.join(". ")}`
+      optionTexts.length > 0
+        ? ` Follow-up options: ${optionTexts.join(". ")}`
         : "";
-    const plainText = (stripMarkdown(text).trim() + optionsSuffix).trim();
+    const plainText = (answerText + optionsSuffix).trim();
     if (!plainText) return;
 
     lastTtsIndexRef.current = lastIdx;
@@ -264,6 +359,7 @@ export function FullVoiceMode({
         const url = URL.createObjectURL(blob);
         const audio = new Audio(url);
         audio.playbackRate = playbackRate;
+        audioUrlRef.current = url;
         audioRef.current = audio;
 
         const nodes = audioNodesRef.current;
@@ -288,22 +384,13 @@ export function FullVoiceMode({
 
         audio.ontimeupdate = updateHighlight;
         audio.onended = () => {
-          mediaElementSourceRef.current?.disconnect();
-          mediaElementSourceRef.current = null;
-          URL.revokeObjectURL(url);
-          audioRef.current = null;
-          onTtsEndRef.current?.();
-          setTtsPlaying(false);
+          resetTtsAudio(true);
         };
         audio.onerror = () => {
-          mediaElementSourceRef.current?.disconnect();
-          mediaElementSourceRef.current = null;
-          URL.revokeObjectURL(url);
-          audioRef.current = null;
-          onTtsEndRef.current?.();
-          setTtsPlaying(false);
+          resetTtsAudio(true);
         };
         await audio.play();
+        setTtsPaused(false);
       })
       .catch(() => {
         fetch("/api/tts", {
@@ -319,6 +406,7 @@ export function FullVoiceMode({
             const url = URL.createObjectURL(blob);
             const audio = new Audio(url);
             audio.playbackRate = playbackRate;
+            audioUrlRef.current = url;
             audioRef.current = audio;
             const nodes = audioNodesRef.current;
             if (nodes) {
@@ -329,37 +417,59 @@ export function FullVoiceMode({
               mediaElementSourceRef.current = source;
             }
             audio.onended = () => {
-              mediaElementSourceRef.current?.disconnect();
-              mediaElementSourceRef.current = null;
-              URL.revokeObjectURL(url);
-              audioRef.current = null;
-              onTtsEndRef.current?.();
-              setTtsPlaying(false);
+              resetTtsAudio(true);
             };
             audio.onerror = () => {
-              URL.revokeObjectURL(url);
-              audioRef.current = null;
-              onTtsEndRef.current?.();
-              setTtsPlaying(false);
+              resetTtsAudio(true);
             };
             await audio.play();
+            setTtsPaused(false);
           })
           .catch(() => {
-            onTtsEndRef.current?.();
-            setTtsPlaying(false);
+            resetTtsAudio(true);
           });
       });
-  }, [messages, isLoading, ttsPlaying, language, speed]);
+  }, [messages, isLoading, ttsPlaying, ttsPaused, language, speed, idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle, resetTtsAudio]);
 
   useEffect(() => {
     return () => {
       stopListening();
-      audioRef.current?.pause();
+      resetTtsAudio(true);
     };
-  }, [stopListening]);
+  }, [stopListening, resetTtsAudio]);
 
   const isActive = listening || ttsPlaying || isLoading;
   const canTap = !isLoading;
+  const hasTtsControls = !!audioRef.current;
+
+  const ttsControlButtons = hasTtsControls ? (
+    <div className="flex items-center gap-2">
+      <button
+        type="button"
+        onClick={() => void handleTtsToggle()}
+        className="px-3 py-2 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors shrink-0"
+        aria-label={ttsPlaying ? "Pause audio" : "Resume audio"}
+      >
+        {ttsPlaying ? "Pause" : "Resume"}
+      </button>
+      <button
+        type="button"
+        onClick={() => void handleTtsRestart()}
+        className="px-3 py-2 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors shrink-0"
+        aria-label="Restart audio"
+      >
+        Restart
+      </button>
+      <button
+        type="button"
+        onClick={() => void handleSpeakNow()}
+        className="px-3 py-2 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors shrink-0"
+        aria-label="Tap to speak"
+      >
+        Speak
+      </button>
+    </div>
+  ) : null;
 
   const orbContent = embed ? (
     <div className="flex items-center justify-center gap-2 w-full min-h-[62px]">
@@ -390,11 +500,12 @@ export function FullVoiceMode({
               <div className="w-full h-full rounded-full bg-indigo-950" />
             )}
           </button>
-          {(listening || !isActive) && (
+          {(listening || (!isActive && !hasTtsControls)) && (
             <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate max-w-[120px] sm:max-w-[160px]">
               {listening ? "Tap to stop" : "Tap to speak"}
             </p>
           )}
+          {ttsControlButtons}
           <button
             type="button"
             onClick={onClose}
@@ -439,11 +550,12 @@ export function FullVoiceMode({
               <div className="w-full h-full rounded-full bg-indigo-950" />
             )}
           </button>
-          {(listening || !isActive) && (
+          {(listening || (!isActive && !hasTtsControls)) && (
             <p className="mt-6 text-sm text-neutral-500 dark:text-neutral-400 text-center max-w-xs">
               {listening ? "Tap orb to stop" : "Tap orb to speak"}
             </p>
           )}
+          {ttsControlButtons && <div className="mt-4">{ttsControlButtons}</div>}
           <button
             type="button"
             onClick={onClose}

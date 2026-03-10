@@ -3,7 +3,10 @@
 import { useState } from "react";
 
 const MENTION_CHIP_CLASS =
-  "inline-flex items-baseline py-px px-1.5 rounded-lg text-sm font-medium bg-foreground text-background border-[0.5px] border-background/30 dark:border-neutral-600 cursor-pointer hover:opacity-90 transition-opacity duration-150 active:scale-[0.98] align-baseline";
+  "inline-flex items-baseline py-px px-1.5 rounded-lg text-sm font-medium bg-foreground text-background border-[0.6px] border-background cursor-pointer hover:opacity-90 transition-opacity duration-150 active:scale-[0.98] align-baseline";
+const ASSISTANT_MENTION_CHIP_CLASS =
+  "inline-flex items-baseline py-px px-1.5 rounded-lg text-sm font-medium bg-background text-foreground border-[0.6px] border-foreground cursor-pointer hover:opacity-90 transition-opacity duration-150 active:scale-[0.98] align-baseline";
+const INLINE_MARKDOWN_REGEX = /(\*\*[^*]+\*\*|\*[^*]+\*)/g;
 
 type Segment =
   | { type: "text"; value: string }
@@ -225,6 +228,24 @@ function parseUserMessageContent(
   return expandedSegments;
 }
 
+function renderInlineMarkdownText(value: string, keyPrefix: string) {
+  const parts = value.split(INLINE_MARKDOWN_REGEX);
+
+  return parts.map((part, index) => {
+    if (!part) return null;
+
+    if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
+      return <strong key={`${keyPrefix}-${index}`}>{part.slice(2, -2)}</strong>;
+    }
+
+    if (part.startsWith("*") && part.endsWith("*") && part.length > 2) {
+      return <em key={`${keyPrefix}-${index}`}>{part.slice(1, -1)}</em>;
+    }
+
+    return <span key={`${keyPrefix}-${index}`}>{part}</span>;
+  });
+}
+
 export function UserMessageContent({
   content,
   idToName,
@@ -236,6 +257,7 @@ export function UserMessageContent({
   onCustomConceptClick,
   onConceptGroupClick,
   previewMap,
+  chipStyle = "user",
 }: {
   content: string;
   idToName: Map<string, string>;
@@ -247,18 +269,19 @@ export function UserMessageContent({
   onCustomConceptClick?: (id: string) => void;
   onConceptGroupClick?: (id: string) => void;
   previewMap?: Map<string, { oneLiner?: string; quickIntro?: string }>;
+  chipStyle?: "user" | "assistant";
 }) {
   const segments = parseUserMessageContent(content, idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle);
 
   if (segments.length === 0) {
-    return <span className="whitespace-pre-wrap">{content}</span>;
+    return <span className="whitespace-pre-wrap">{renderInlineMarkdownText(content, "plain")}</span>;
   }
 
   return (
     <span className="whitespace-pre-wrap">
       {segments.map((seg, i) => {
         if (seg.type === "text") {
-          return <span key={i}>{seg.value}</span>;
+          return <span key={i}>{renderInlineMarkdownText(seg.value, `text-${i}`)}</span>;
         }
         if (seg.type === "mental_model") {
           return (
@@ -267,6 +290,7 @@ export function UserMessageContent({
               label={seg.name}
               tooltip={previewMap?.get(seg.id)?.oneLiner ?? previewMap?.get(seg.id)?.quickIntro ?? null}
               onClick={() => onMentalModelClick(seg.id)}
+              chipStyle={chipStyle}
             />
           );
         }
@@ -277,6 +301,7 @@ export function UserMessageContent({
               label={seg.title}
               tooltip={null}
               onClick={() => onLtmClick(seg.id)}
+              chipStyle={chipStyle}
             />
           );
         }
@@ -287,6 +312,7 @@ export function UserMessageContent({
               label={seg.title}
               tooltip={null}
               onClick={() => onConceptGroupClick?.(seg.id)}
+              chipStyle={chipStyle}
             />
           );
         }
@@ -296,6 +322,7 @@ export function UserMessageContent({
             label={seg.title}
             tooltip={null}
             onClick={() => onCustomConceptClick?.(seg.id)}
+            chipStyle={chipStyle}
           />
         );
       })}
@@ -307,10 +334,12 @@ function MentionChip({
   label,
   tooltip,
   onClick,
+  chipStyle = "user",
 }: {
   label: string;
   tooltip: string | null;
   onClick: () => void;
+  chipStyle?: "user" | "assistant";
 }) {
   const [showTooltip, setShowTooltip] = useState(false);
   return (
@@ -332,7 +361,7 @@ function MentionChip({
       onMouseLeave={() => setShowTooltip(false)}
       onFocus={() => setShowTooltip(true)}
       onBlur={() => setShowTooltip(false)}
-      className={`relative ${MENTION_CHIP_CLASS}`}
+      className={`relative ${chipStyle === "assistant" ? ASSISTANT_MENTION_CHIP_CLASS : MENTION_CHIP_CLASS}`}
     >
       {label}
       {tooltip && showTooltip && (

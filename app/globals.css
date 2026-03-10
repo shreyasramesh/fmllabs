@@ -385,6 +385,8 @@ body {
   :root {
     --mobile-unified-font-size: 0.75rem; /* Matches Tailwind text-xs ("No conversations yet") */
     --mobile-unified-line-height: 1.1rem;
+    --mobile-bubble-font-size: calc(var(--mobile-unified-font-size) * 1.2);
+    --mobile-bubble-line-height: calc(var(--mobile-unified-line-height) * 1.2);
   }
 
   body,
@@ -421,6 +423,29 @@ body {
 
   body {
     line-height: 1.6;
+  }
+
+  .message-bubble-text,
+  .message-bubble-text * {
+    font-size: var(--mobile-bubble-font-size) !important;
+    line-height: var(--mobile-bubble-line-height) !important;
+  }
+
+  .message-bubble-option,
+  .message-bubble-option * {
+    font-size: var(--mobile-bubble-font-size) !important;
+    line-height: var(--mobile-bubble-line-height) !important;
+  }
+
+  /* Keep the developer note script text readable on phones. */
+  .letter-modal-script-title {
+    font-size: 1.8rem !important;
+    line-height: 1 !important;
+  }
+
+  .letter-modal-script-location {
+    font-size: 1.4rem !important;
+    line-height: 1 !important;
   }
 }
 

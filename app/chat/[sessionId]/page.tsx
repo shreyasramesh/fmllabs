@@ -33,6 +33,7 @@ import { AIGenerateIcon, GenerateRelevantMessageButton, GhostIcon, SparklesIcon,
 import { getModalTranslations } from "@/lib/mental-model-modal-translations";
 import { playSelectionChime } from "@/lib/selection-chime";
 import { stripMarkdown } from "@/lib/strip-markdown";
+import { resolveTtsReferenceText } from "@/lib/tts-reference-text";
 import { TTSButton } from "@/components/TTSButton";
 import { VoiceInputButton } from "@/components/VoiceInputButton";
 import { FullVoiceMode } from "@/components/FullVoiceMode";
@@ -109,6 +110,7 @@ interface ConceptGroupItem {
 }
 
 type WeatherFormat = "condition-temp" | "emoji-temp" | "temp-only";
+const LETTER_MODAL_TITLE = "a note from the developer";
 
 function formatRelativeTime(iso: string): string {
   const d = new Date(iso);
@@ -147,6 +149,7 @@ function MessageBubble({
   ttsHighlight,
   onTtsProgress,
   onTtsEnd,
+  showTtsButton = true,
 }: {
   message: Message;
   messageIndex: number;
@@ -170,6 +173,7 @@ function MessageBubble({
   ttsHighlight?: number;
   onTtsProgress?: (messageIndex: number, charEnd: number) => void;
   onTtsEnd?: () => void;
+  showTtsButton?: boolean;
 }) {
   const { text, options } =
     message.role === "assistant"
@@ -183,6 +187,46 @@ function MessageBubble({
 
   const ctx = message.role === "assistant" ? message.selectedContexts : undefined;
   const ctxCount = ctx && ctx.mentalModels.length + ctx.longTermMemories.length + (ctx.customConcepts?.length ?? 0) + (ctx.conceptGroups?.length ?? 0);
+  const assistantPlainText = message.role === "assistant"
+    ? resolveTtsReferenceText(text, { idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle })
+    : "";
+  const optionPlainTexts = message.role === "assistant"
+    ? options.map((option) =>
+        resolveTtsReferenceText(option, { idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle })
+      )
+    : [];
+  const assistantOptionsPrefix = optionPlainTexts.length > 0 ? " Follow-up options: " : "";
+  const assistantSpeechText = message.role === "assistant"
+    ? (assistantPlainText + assistantOptionsPrefix + optionPlainTexts.join(". ")).trim()
+    : text;
+  const isAssistantTtsActive =
+    message.role === "assistant" && typeof ttsHighlight === "number" && ttsHighlight >= 0;
+  const isSpeakingAssistantBody = isAssistantTtsActive && ttsHighlight < assistantPlainText.length;
+  const activeOptionHighlight = (() => {
+    if (!isAssistantTtsActive || optionPlainTexts.length === 0) return null;
+
+    let cursor = assistantPlainText.length + assistantOptionsPrefix.length;
+    for (let index = 0; index < optionPlainTexts.length; index++) {
+      const optionText = optionPlainTexts[index];
+      const optionStart = cursor;
+      const optionEnd = optionStart + optionText.length;
+      const optionRangeEnd = optionEnd + (index < optionPlainTexts.length - 1 ? 2 : 0);
+
+      if (ttsHighlight >= optionStart && ttsHighlight < optionRangeEnd) {
+        return {
+          index,
+          charEnd: Math.min(
+            Math.max(ttsHighlight - optionStart, 0),
+            Math.max(optionText.length - 1, 0)
+          ),
+        };
+      }
+
+      cursor = optionEnd + (index < optionPlainTexts.length - 1 ? 2 : 0);
+    }
+
+    return null;
+  })();
   const [ctxExpanded, setCtxExpanded] = useState(false);
   const [ctxReasonPillKey, setCtxReasonPillKey] = useState<string | null>(null);
   const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -253,28 +297,28 @@ function MessageBubble({
       }`}
     >
       <div
-        className={`group/tts relative max-w-[85%] rounded-3xl px-4 py-3 pr-10 transition-shadow duration-200 ${
+        className={`group/tts relative max-w-[85%] rounded-3xl px-4 py-3 pr-12 transition-shadow duration-200 ${
           message.role === "user"
             ? "bg-foreground text-background shadow-sm"
             : "bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground"
         }`}
         dir={isRtl ? "rtl" : undefined}
       >
-        <div className="absolute top-2 right-2">
-          <TTSButton
-            text={
-              message.role === "assistant" && options.length > 0
-                ? `${text}\n\nFollow-up options: ${options.join(". ")}`
-                : text
-            }
-            showOnHover={true}
-            ariaLabel="Listen to message"
-            onTtsProgress={message.role === "assistant" ? (charEnd) => onTtsProgress?.(messageIndex, charEnd) : undefined}
-            onTtsEnd={message.role === "assistant" ? onTtsEnd : undefined}
-          />
-        </div>
+        {showTtsButton && (
+          <div className="absolute top-2 right-2">
+            <TTSButton
+              text={message.role === "assistant" ? assistantSpeechText : text}
+              plainText={message.role === "assistant" ? assistantSpeechText : undefined}
+              showOnHover={false}
+              layout="vertical"
+              ariaLabel="Listen to message"
+              onTtsProgress={message.role === "assistant" ? (charEnd) => onTtsProgress?.(messageIndex, charEnd) : undefined}
+              onTtsEnd={message.role === "assistant" ? onTtsEnd : undefined}
+            />
+          </div>
+        )}
         {message.role === "user" ? (
-          <span className="text-sm md:text-base">
+          <span className="message-bubble-text text-sm md:text-base">
             <UserMessageContent
               content={text}
               idToName={idToName}
@@ -289,12 +333,12 @@ function MessageBubble({
             />
           </span>
         ) : (
-          <div className="text-sm md:text-base">
+          <div className="message-bubble-text text-sm md:text-base">
             {text ? (
               <>
-                {typeof ttsHighlight === "number" && message.role === "assistant" ? (
+                {isSpeakingAssistantBody ? (
                   <TtsHighlightedText
-                    text={(stripMarkdown(text).trim() + (options.length > 0 ? ` Follow-up options: ${options.join(". ")}` : "")).trim()}
+                    text={assistantPlainText}
                     charEnd={ttsHighlight}
                   />
                 ) : (
@@ -451,21 +495,29 @@ function MessageBubble({
                 playSelectionChime();
                 onOptionSelect(opt);
               }}
-              className="px-3 py-2 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 text-sm transition-all duration-200 active:scale-[0.98] hover:border-neutral-400 dark:hover:border-neutral-500 text-left opacity-0 animate-fade-in-up"
+              className="message-bubble-option px-3 py-2 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 text-sm transition-all duration-200 active:scale-[0.98] hover:border-neutral-400 dark:hover:border-neutral-500 text-left opacity-0 animate-fade-in-up"
               style={{ animationDelay: `${j * 80}ms`, animationFillMode: "forwards" }}
             >
-              <UserMessageContent
-                content={opt}
-                idToName={idToName}
-                ltmIdToTitle={ltmIdToTitle}
-                ccIdToTitle={ccIdToTitle}
-                cgIdToTitle={cgIdToTitle}
-                onMentalModelClick={(id) => onMentalModelClick(id, opt)}
-                onLtmClick={onLtmClick}
-                onCustomConceptClick={onCustomConceptClick}
-                onConceptGroupClick={onConceptGroupClick}
-                previewMap={previewMap}
-              />
+              {activeOptionHighlight?.index === j ? (
+                <TtsHighlightedText
+                  text={optionPlainTexts[j] ?? stripMarkdown(opt).trim()}
+                  charEnd={activeOptionHighlight.charEnd}
+                />
+              ) : (
+                <UserMessageContent
+                  content={opt}
+                  idToName={idToName}
+                  ltmIdToTitle={ltmIdToTitle}
+                  ccIdToTitle={ccIdToTitle}
+                  cgIdToTitle={cgIdToTitle}
+                chipStyle="assistant"
+                  onMentalModelClick={(id) => onMentalModelClick(id, opt)}
+                  onLtmClick={onLtmClick}
+                  onCustomConceptClick={onCustomConceptClick}
+                  onConceptGroupClick={onConceptGroupClick}
+                  previewMap={previewMap}
+                />
+              )}
             </button>
           ))}
         </div>
@@ -582,44 +634,502 @@ function CopyButton({
   );
 }
 
-const EXAMPLE_PILLS = [
-  [
-    "Career change",
-    "New job offer",
-    "Asking for a raise",
-    "Quitting my job",
-    "Side project",
-    "Work-life balance",
-    "Toxic workplace",
-    "Switching industries",
-    "Sticking with a failing project",
-    "Negotiating salary",
+const EXAMPLE_PILLS_BY_LANGUAGE: Record<LanguageCode, string[][]> = {
+  en: [
+    [
+      "Career change",
+      "New job offer",
+      "Asking for a raise",
+      "Quitting my job",
+      "Side project",
+      "Work-life balance",
+      "Toxic workplace",
+      "Switching industries",
+      "Sticking with a failing project",
+      "Negotiating salary",
+    ],
+    [
+      "Relationship decision",
+      "Moving to a new city",
+      "Buying a house",
+      "Big purchase",
+      "Retirement planning",
+      "Investing money",
+      "Conflict with someone",
+      "Taking a financial risk",
+      "Splitting costs fairly",
+      "Letting go of an investment",
+    ],
+    [
+      "Starting a business",
+      "Going back to school",
+      "Family planning",
+      "Health habit",
+      "Procrastination",
+      "Saying no to something",
+      "Sticking to a commitment",
+      "Doubting a past decision",
+      "Avoiding something I should face",
+      "Choosing between two good options",
+    ],
   ],
-  [
-    "Relationship decision",
-    "Moving to a new city",
-    "Buying a house",
-    "Big purchase",
-    "Retirement planning",
-    "Investing money",
-    "Conflict with someone",
-    "Taking a financial risk",
-    "Splitting costs fairly",
-    "Letting go of an investment",
+  hi: [
+    [
+      "कैरियर बदलना",
+      "नई नौकरी का ऑफर",
+      "वेतन बढ़ाने की बात करना",
+      "नौकरी छोड़ना",
+      "साइड प्रोजेक्ट",
+      "काम और जीवन में संतुलन",
+      "विषाक्त कार्यस्थल",
+      "इंडस्ट्री बदलना",
+      "असफल प्रोजेक्ट में बने रहना",
+      "वेतन पर बातचीत",
+    ],
+    [
+      "रिश्ते का फैसला",
+      "नए शहर में जाना",
+      "घर खरीदना",
+      "बड़ी खरीदारी",
+      "रिटायरमेंट की योजना",
+      "पैसा निवेश करना",
+      "किसी से टकराव",
+      "वित्तीय जोखिम लेना",
+      "खर्च बराबर बांटना",
+      "निवेश छोड़ देना",
+    ],
+    [
+      "व्यवसाय शुरू करना",
+      "फिर से पढ़ाई करना",
+      "परिवार की योजना",
+      "स्वास्थ्य की आदत",
+      "टालमटोल",
+      "किसी चीज़ को ना कहना",
+      "प्रतिबद्धता निभाना",
+      "पुराने फैसले पर संदेह",
+      "जिसका सामना करना चाहिए उससे बचना",
+      "दो अच्छे विकल्पों में चुनना",
+    ],
   ],
-  [
-    "Starting a business",
-    "Going back to school",
-    "Family planning",
-    "Health habit",
-    "Procrastination",
-    "Saying no to something",
-    "Sticking to a commitment",
-    "Doubting a past decision",
-    "Avoiding something I should face",
-    "Choosing between two good options",
+  ta: [
+    [
+      "தொழில் மாற்றம்",
+      "புதிய வேலை வாய்ப்பு",
+      "சம்பள உயர்வு கேட்பது",
+      "வேலையை விட்டு வெளியேறுவது",
+      "பக்க திட்டம்",
+      "வேலை-வாழ்க்கை சமநிலை",
+      "நச்சு பணியிடம்",
+      "துறை மாற்றம்",
+      "தோல்வியடைந்த திட்டத்தில் தொடருவது",
+      "சம்பள பேச்சுவார்த்தை",
+    ],
+    [
+      "உறவு முடிவு",
+      "புதிய நகரத்துக்கு மாற்றம்",
+      "வீடு வாங்குவது",
+      "பெரிய கொள்முதல்",
+      "ஓய்வு திட்டமிடல்",
+      "பணம் முதலீடு செய்வது",
+      "யாரோடோ மோதல்",
+      "நிதி ஆபத்து எடுப்பது",
+      "செலவை நியாயமாக பகிர்வு",
+      "ஒரு முதலீட்டை விடுவது",
+    ],
+    [
+      "வணிகம் தொடங்குவது",
+      "மீண்டும் படிப்பது",
+      "குடும்ப திட்டமிடல்",
+      "ஆரோக்கிய பழக்கம்",
+      "தாமதப்படுத்துதல்",
+      "ஒரு விஷயத்திற்கு இல்லை என்று சொல்வது",
+      "ஒரு உறுதியை காப்பது",
+      "கடந்த முடிவை சந்தேகிப்பது",
+      "எதிர்கொள்ள வேண்டியதை தவிர்ப்பது",
+      "இரண்டு நல்ல தேர்வுகளில் ஒன்றை தேர்வு செய்வது",
+    ],
   ],
-];
+  kn: [
+    [
+      "ವೃತ್ತಿ ಬದಲಾವಣೆ",
+      "ಹೊಸ ಉದ್ಯೋಗ ಆಫರ್",
+      "ವೇತನ ಹೆಚ್ಚಳ ಕೇಳುವುದು",
+      "ಉದ್ಯೋಗ ಬಿಟ್ಟುಹೋಗುವುದು",
+      "ಸೈಡ್ ಪ್ರಾಜೆಕ್ಟ್",
+      "ಕೆಲಸ-ಜೀವನ ಸಮತೋಲನ",
+      "ವಿಷಕಾರಿ ಕೆಲಸದ ಸ್ಥಳ",
+      "ಉದ್ಯಮ ಬದಲಾವಣೆ",
+      "ವಿಫಲವಾಗುತ್ತಿರುವ ಯೋಜನೆಯಲ್ಲಿ ಉಳಿಯುವುದು",
+      "ವೇತನ ಮಾತುಕತೆ",
+    ],
+    [
+      "ಸಂಬಂಧದ ನಿರ್ಧಾರ",
+      "ಹೊಸ ನಗರಕ್ಕೆ ಸ್ಥಳಾಂತರ",
+      "ಮನೆ ಖರೀದಿಸುವುದು",
+      "ದೊಡ್ಡ ಖರೀದಿ",
+      "ನಿವೃತ್ತಿ ಯೋಜನೆ",
+      "ಹಣ ಹೂಡಿಕೆ",
+      "ಯಾರೊಂದಿಗಾದರೂ ಸಂಘರ್ಷ",
+      "ಆರ್ಥಿಕ ಅಪಾಯ ತೆಗೆದುಕೊಳ್ಳುವುದು",
+      "ವೆಚ್ಚವನ್ನು ನ್ಯಾಯವಾಗಿ ಹಂಚಿಕೊಳ್ಳುವುದು",
+      "ಹೂಡಿಕೆಯಿಂದ ಹೊರಬರುವುದು",
+    ],
+    [
+      "ವ್ಯವಹಾರ ಆರಂಭಿಸುವುದು",
+      "ಮತ್ತೆ ಓದಲು ಹೋಗುವುದು",
+      "ಕುಟುಂಬ ಯೋಜನೆ",
+      "ಆರೋಗ್ಯದ ಅಭ್ಯಾಸ",
+      "ಮುಂದೂಡುವಿಕೆ",
+      "ಯಾವುದಕ್ಕಾದರೂ ಇಲ್ಲ ಎಂದು ಹೇಳುವುದು",
+      "ಬದ್ಧತೆಯನ್ನು ಉಳಿಸಿಕೊಳ್ಳುವುದು",
+      "ಹಿಂದಿನ ನಿರ್ಧಾರವನ್ನು ಸಂಶಯಿಸುವುದು",
+      "ಎದುರಿಸಬೇಕಾದುದನ್ನು ತಪ್ಪಿಸುವುದು",
+      "ಎರಡು ಉತ್ತಮ ಆಯ್ಕೆಗಳ ನಡುವೆ ಆರಿಸುವುದು",
+    ],
+  ],
+  ja: [
+    [
+      "転職",
+      "新しい仕事のオファー",
+      "昇給をお願いする",
+      "仕事を辞める",
+      "サイドプロジェクト",
+      "ワークライフバランス",
+      "有害な職場",
+      "業界を変える",
+      "失敗しそうなプロジェクトを続ける",
+      "給与交渉",
+    ],
+    [
+      "人間関係の決断",
+      "新しい街へ引っ越す",
+      "家を買う",
+      "大きな買い物",
+      "退職後の計画",
+      "お金を投資する",
+      "誰かとの対立",
+      "金銭的リスクを取る",
+      "費用を公平に分ける",
+      "投資を手放す",
+    ],
+    [
+      "起業する",
+      "学校に戻る",
+      "家族計画",
+      "健康習慣",
+      "先延ばし",
+      "何かを断る",
+      "約束を守る",
+      "過去の決断を疑う",
+      "向き合うべきことを避ける",
+      "2つの良い選択肢で迷う",
+    ],
+  ],
+  zh: [
+    [
+      "换工作",
+      "新的工作机会",
+      "争取加薪",
+      "辞职",
+      "副业项目",
+      "工作与生活平衡",
+      "有毒职场",
+      "转换行业",
+      "继续一个失败中的项目",
+      "薪资谈判",
+    ],
+    [
+      "关系中的决定",
+      "搬到新城市",
+      "买房",
+      "大额消费",
+      "退休规划",
+      "投资理财",
+      "与他人发生冲突",
+      "承担财务风险",
+      "公平分摊费用",
+      "放弃一项投资",
+    ],
+    [
+      "创业",
+      "重返校园",
+      "家庭规划",
+      "健康习惯",
+      "拖延症",
+      "对某件事说不",
+      "坚持承诺",
+      "怀疑过去的决定",
+      "逃避必须面对的事情",
+      "在两个好选择之间做决定",
+    ],
+  ],
+  es: [
+    [
+      "Cambio de carrera",
+      "Nueva oferta de trabajo",
+      "Pedir un aumento",
+      "Renunciar a mi trabajo",
+      "Proyecto paralelo",
+      "Equilibrio entre trabajo y vida",
+      "Lugar de trabajo tóxico",
+      "Cambiar de industria",
+      "Seguir en un proyecto fallido",
+      "Negociar salario",
+    ],
+    [
+      "Decisión de pareja",
+      "Mudarse a una nueva ciudad",
+      "Comprar una casa",
+      "Compra importante",
+      "Planificación de jubilación",
+      "Invertir dinero",
+      "Conflicto con alguien",
+      "Asumir un riesgo financiero",
+      "Repartir gastos de forma justa",
+      "Dejar una inversión",
+    ],
+    [
+      "Empezar un negocio",
+      "Volver a estudiar",
+      "Planificación familiar",
+      "Hábito de salud",
+      "Procrastinación",
+      "Decir que no a algo",
+      "Cumplir un compromiso",
+      "Dudar de una decisión pasada",
+      "Evitar algo que debo enfrentar",
+      "Elegir entre dos buenas opciones",
+    ],
+  ],
+  ar: [
+    [
+      "تغيير المسار المهني",
+      "عرض عمل جديد",
+      "طلب زيادة في الراتب",
+      "ترك الوظيفة",
+      "مشروع جانبي",
+      "التوازن بين العمل والحياة",
+      "بيئة عمل سامة",
+      "تغيير المجال",
+      "الاستمرار في مشروع فاشل",
+      "التفاوض على الراتب",
+    ],
+    [
+      "قرار في علاقة",
+      "الانتقال إلى مدينة جديدة",
+      "شراء منزل",
+      "شراء كبير",
+      "التخطيط للتقاعد",
+      "استثمار المال",
+      "خلاف مع شخص",
+      "تحمل مخاطرة مالية",
+      "تقسيم التكاليف بعدل",
+      "التخلي عن استثمار",
+    ],
+    [
+      "بدء مشروع تجاري",
+      "العودة إلى الدراسة",
+      "التخطيط للعائلة",
+      "عادة صحية",
+      "المماطلة",
+      "قول لا لشيء ما",
+      "الالتزام بوعد",
+      "الشك في قرار سابق",
+      "تجنب أمر يجب مواجهته",
+      "الاختيار بين خيارين جيدين",
+    ],
+  ],
+  fr: [
+    [
+      "Changer de carrière",
+      "Nouvelle offre d'emploi",
+      "Demander une augmentation",
+      "Quitter mon travail",
+      "Projet parallèle",
+      "Équilibre vie pro-vie perso",
+      "Environnement de travail toxique",
+      "Changer de secteur",
+      "Rester sur un projet en échec",
+      "Négocier son salaire",
+    ],
+    [
+      "Décision de couple",
+      "Déménager dans une nouvelle ville",
+      "Acheter une maison",
+      "Achat important",
+      "Préparer la retraite",
+      "Investir de l'argent",
+      "Conflit avec quelqu'un",
+      "Prendre un risque financier",
+      "Partager les coûts équitablement",
+      "Abandonner un investissement",
+    ],
+    [
+      "Lancer une entreprise",
+      "Reprendre des études",
+      "Planification familiale",
+      "Habitude de santé",
+      "Procrastination",
+      "Dire non à quelque chose",
+      "Tenir un engagement",
+      "Douter d'une décision passée",
+      "Éviter quelque chose à affronter",
+      "Choisir entre deux bonnes options",
+    ],
+  ],
+  bn: [
+    [
+      "ক্যারিয়ার পরিবর্তন",
+      "নতুন চাকরির অফার",
+      "বেতন বাড়ানোর কথা বলা",
+      "চাকরি ছেড়ে দেওয়া",
+      "সাইড প্রজেক্ট",
+      "কাজ-জীবনের ভারসাম্য",
+      "বিষাক্ত কর্মক্ষেত্র",
+      "ইন্ডাস্ট্রি বদলানো",
+      "ব্যর্থ প্রকল্পে লেগে থাকা",
+      "বেতন নিয়ে আলোচনা",
+    ],
+    [
+      "সম্পর্কের সিদ্ধান্ত",
+      "নতুন শহরে যাওয়া",
+      "বাড়ি কেনা",
+      "বড় কেনাকাটা",
+      "অবসর পরিকল্পনা",
+      "টাকা বিনিয়োগ করা",
+      "কারও সঙ্গে দ্বন্দ্ব",
+      "আর্থিক ঝুঁকি নেওয়া",
+      "খরচ ন্যায্যভাবে ভাগ করা",
+      "একটি বিনিয়োগ ছেড়ে দেওয়া",
+    ],
+    [
+      "ব্যবসা শুরু করা",
+      "আবার পড়াশোনা শুরু করা",
+      "পরিবার পরিকল্পনা",
+      "স্বাস্থ্যকর অভ্যাস",
+      "গড়িমসি",
+      "কিছুতে না বলা",
+      "অঙ্গীকারে অটল থাকা",
+      "পুরনো সিদ্ধান্ত নিয়ে সন্দেহ",
+      "যার মুখোমুখি হওয়া উচিত তা এড়িয়ে যাওয়া",
+      "দুটি ভালো বিকল্পের মধ্যে বেছে নেওয়া",
+    ],
+  ],
+  pt: [
+    [
+      "Mudança de carreira",
+      "Nova oferta de emprego",
+      "Pedir aumento",
+      "Sair do meu emprego",
+      "Projeto paralelo",
+      "Equilíbrio entre trabalho e vida",
+      "Ambiente de trabalho tóxico",
+      "Mudar de setor",
+      "Continuar em um projeto fracassado",
+      "Negociar salário",
+    ],
+    [
+      "Decisão de relacionamento",
+      "Mudar para uma nova cidade",
+      "Comprar uma casa",
+      "Grande compra",
+      "Planejamento de aposentadoria",
+      "Investir dinheiro",
+      "Conflito com alguém",
+      "Assumir um risco financeiro",
+      "Dividir custos de forma justa",
+      "Abrir mão de um investimento",
+    ],
+    [
+      "Começar um negócio",
+      "Voltar a estudar",
+      "Planejamento familiar",
+      "Hábito de saúde",
+      "Procrastinação",
+      "Dizer não a algo",
+      "Manter um compromisso",
+      "Duvidar de uma decisão passada",
+      "Evitar algo que eu deveria enfrentar",
+      "Escolher entre duas boas opções",
+    ],
+  ],
+  ru: [
+    [
+      "Смена карьеры",
+      "Новое предложение о работе",
+      "Попросить повышение",
+      "Уволиться с работы",
+      "Сторонний проект",
+      "Баланс работы и жизни",
+      "Токсичное рабочее место",
+      "Сменить отрасль",
+      "Оставаться в провальном проекте",
+      "Переговоры о зарплате",
+    ],
+    [
+      "Решение в отношениях",
+      "Переезд в новый город",
+      "Покупка дома",
+      "Крупная покупка",
+      "Планирование пенсии",
+      "Инвестирование денег",
+      "Конфликт с кем-то",
+      "Финансовый риск",
+      "Справедливо разделить расходы",
+      "Отказаться от инвестиции",
+    ],
+    [
+      "Начать бизнес",
+      "Вернуться к учебе",
+      "Планирование семьи",
+      "Здоровая привычка",
+      "Прокрастинация",
+      "Сказать чему-то нет",
+      "Сдержать обязательство",
+      "Сомневаться в прошлом решении",
+      "Избегать того, с чем нужно столкнуться",
+      "Выбирать между двумя хорошими вариантами",
+    ],
+  ],
+  ur: [
+    [
+      "کیریئر تبدیل کرنا",
+      "نئی ملازمت کی پیشکش",
+      "تنخواہ بڑھانے کی بات کرنا",
+      "ملازمت چھوڑنا",
+      "سائیڈ پروجیکٹ",
+      "کام اور زندگی کا توازن",
+      "زہریلا کام کا ماحول",
+      "انڈسٹری بدلنا",
+      "ناکام ہوتے منصوبے میں رہنا",
+      "تنخواہ پر بات چیت",
+    ],
+    [
+      "رشتے کا فیصلہ",
+      "نئے شہر میں منتقل ہونا",
+      "گھر خریدنا",
+      "بڑی خریداری",
+      "ریٹائرمنٹ کی منصوبہ بندی",
+      "پیسہ سرمایہ کاری کرنا",
+      "کسی سے تنازع",
+      "مالی خطرہ لینا",
+      "اخراجات منصفانہ بانٹنا",
+      "سرمایہ کاری چھوڑ دینا",
+    ],
+    [
+      "کاروبار شروع کرنا",
+      "دوبارہ پڑھائی شروع کرنا",
+      "خاندان کی منصوبہ بندی",
+      "صحت کی عادت",
+      "ٹال مٹول",
+      "کسی چیز کو نہ کہنا",
+      "عہد پر قائم رہنا",
+      "پرانے فیصلے پر شک کرنا",
+      "جس چیز کا سامنا کرنا چاہیے اس سے بچنا",
+      "دو اچھے انتخاب میں سے ایک چننا",
+    ],
+  ],
+};
 
 function RippleIcon({ className }: { className?: string }) {
   return (
@@ -631,9 +1141,10 @@ function RippleIcon({ className }: { className?: string }) {
   );
 }
 
-function MovingPills({ onSelect }: { onSelect: (text: string) => void }) {
+function MovingPills({ onSelect, language }: { onSelect: (text: string) => void; language: LanguageCode }) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
+  const examplePills = EXAMPLE_PILLS_BY_LANGUAGE[language] ?? EXAMPLE_PILLS_BY_LANGUAGE.en;
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setPrefersReducedMotion(mq.matches);
@@ -644,7 +1155,7 @@ function MovingPills({ onSelect }: { onSelect: (text: string) => void }) {
 
   return (
     <div className="space-y-4 overflow-hidden">
-      {EXAMPLE_PILLS.map((row, rowIndex) => (
+      {examplePills.map((row, rowIndex) => (
         <div
           key={rowIndex}
           className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
@@ -816,6 +1327,8 @@ export default function ChatPage() {
   } | null>(null);
   const [goBackLoading, setGoBackLoading] = useState(false);
   const [letterModalOpen, setLetterModalOpen] = useState(false);
+  const [visibleLetterModalTitleChars, setVisibleLetterModalTitleChars] = useState(0);
+  const [letterModalTitleAnimating, setLetterModalTitleAnimating] = useState(false);
   const LETTER_SEEN_KEY = "fml-labs-letter-seen";
   const ONBOARDING_COMPLETE_KEY = "fml-labs-onboarding-complete";
   const FEATURE_TOUR_COMPLETE_KEY = "fml-labs-feature-tour-complete";
@@ -997,6 +1510,36 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
+  }, [letterModalOpen]);
+
+  useEffect(() => {
+    if (!letterModalOpen) {
+      setVisibleLetterModalTitleChars(0);
+      setLetterModalTitleAnimating(false);
+      return;
+    }
+
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisibleLetterModalTitleChars(LETTER_MODAL_TITLE.length);
+      setLetterModalTitleAnimating(false);
+      return;
+    }
+
+    setVisibleLetterModalTitleChars(0);
+    setLetterModalTitleAnimating(true);
+
+    const timeouts = Array.from(LETTER_MODAL_TITLE).map((_, index) =>
+      window.setTimeout(() => {
+        setVisibleLetterModalTitleChars(index + 1);
+        if (index === LETTER_MODAL_TITLE.length - 1) {
+          setLetterModalTitleAnimating(false);
+        }
+      }, 120 + index * 65)
+    );
+
+    return () => {
+      timeouts.forEach((timeoutId) => window.clearTimeout(timeoutId));
+    };
   }, [letterModalOpen]);
 
   useEffect(() => {
@@ -1512,36 +2055,10 @@ export default function ChatPage() {
     return () => window.removeEventListener("keydown", handler);
   }, [router, isAnonymous]);
 
-  const SIDEBAR_STORAGE_KEY = "and-then-what-sidebar-open";
-  const [sidebarOpen, setSidebarOpenState] = useState(true);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (isAnonymous) {
-      setSidebarOpenState(true);
-      return;
-    }
-    try {
-      const stored = sessionStorage.getItem(SIDEBAR_STORAGE_KEY);
-      setSidebarOpenState(stored === null ? true : stored === "true");
-    } catch {
-      /* ignore */
-    }
-  }, [isAnonymous]);
+  const [sidebarOpen, setSidebarOpenState] = useState(false);
   const setSidebarOpen = useCallback((open: boolean) => {
     setSidebarOpenState(open);
-    try {
-      sessionStorage.setItem(SIDEBAR_STORAGE_KEY, String(open));
-    } catch {
-      /* ignore */
-    }
   }, []);
-
-  // For anonymous users: keep left panel open for 2 seconds, then animate closed
-  useEffect(() => {
-    if (!isAnonymous) return;
-    const t = setTimeout(() => setSidebarOpen(false), 2000);
-    return () => clearTimeout(t);
-  }, [isAnonymous, setSidebarOpen]);
 
   const [libraryPanelOpen, setLibraryPanelOpen] = useState<"conversations" | "ltm" | "concepts" | "cc" | "cg" | "nuggets" | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -2618,7 +3135,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               )}
               {onboardingStep === 3 && (
                 <div className="w-full animate-fade-in-up space-y-6">
-                  <h2 className="text-xl font-semibold text-foreground text-center">A note from the developer</h2>
+                  <h2 className="text-2xl md:text-xl font-semibold text-foreground text-center">A note from the developer</h2>
                   <p className="text-base text-neutral-600 dark:text-neutral-400 text-center">
                     Here&apos;s what fml labs is about:
                   </p>
@@ -2661,7 +3178,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   </div>
                   <div className="pt-4 border-t border-neutral-200 dark:border-neutral-700 text-center">
                     <p className="font-developer text-[1.2em] font-normal text-foreground shimmer-text-hover">Crafted with Intention</p>
-                    <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">San Francisco</p>
+                    <p className="text-base md:text-sm text-neutral-500 dark:text-neutral-400 mt-1">San Francisco</p>
                   </div>
                   <button
                     type="button"
@@ -2751,6 +3268,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 {!voiceModeOpen && (
                 <div className="w-full">
                   <MovingPills
+                    language={language}
                     onSelect={(text) => sendMessage(text)}
                   />
                 </div>
@@ -2818,6 +3336,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 ttsHighlight={ttsHighlight && "messageIndex" in ttsHighlight && ttsHighlight.messageIndex === i ? ttsHighlight.charEnd : undefined}
                 onTtsProgress={(msgIdx, charEnd) => setTtsHighlight({ messageIndex: msgIdx, charEnd })}
                 onTtsEnd={() => setTtsHighlight(null)}
+                showTtsButton={!voiceModeOpen}
               />
             ))}
             <div ref={messagesEndRef} />
@@ -2936,7 +3455,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             aria-label="Scroll to bottom"
             className={`fixed right-2 md:right-8 z-40 flex items-center justify-center w-12 h-12 rounded-full bg-foreground text-background shadow-lg hover:opacity-90 active:scale-95 transition-all duration-200 ${
               currentSessionId && currentSession && messages.length >= 2
-                ? "bottom-[6rem] md:bottom-[7.5rem]" /* mobile: inside bottom bar to avoid covering text; desktop: above input */
+                ? "bottom-[8.5rem] md:bottom-[7.5rem]" /* mobile: lifted above save-memory row; desktop: above input */
                 : "bottom-[5.5rem] md:bottom-[5rem]" /* mobile: inside bottom bar; desktop: above input only */
             }`}
           >
@@ -2958,15 +3477,25 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
         {/* Bottom bar - fixed on mobile so it stays visible when scrolling. When voice mode, show orb in same section instead of input. Hidden only during first-time onboarding (no messages). On mobile, use gradient so scroll-to-bottom area is transparent and content shows through. */}
         <div className={`fixed inset-x-0 bottom-0 z-30 flex flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background ${onboardingStep !== null && messages.length === 0 ? "hidden" : ""}`}>
           {!isAnonymous && messages.length >= 2 && (!currentSession || !currentSession.isCollapsed) && (
-            <div className="flex justify-center px-4 pt-1.5 pb-0.5 sm:pt-2 sm:pb-1">
-              <button
-                onClick={() => !incognitoMode && setSummarizeLanguageModal({ selectedLanguage: language })}
-                disabled={incognitoMode}
-                title={incognitoMode ? "Not available in incognito" : undefined}
-                className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-neutral-500 dark:disabled:hover:text-neutral-400"
-              >
-                Summarize & collapse conversation
-              </button>
+            <div className="px-4 pt-1 pb-0.5 sm:pt-1.5 sm:pb-1">
+              <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
+                <p className="min-w-0 flex-1 truncate text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
+                  Save a concise memory of this conversation for later.
+                </p>
+                <button
+                  onClick={() => {
+                    if (incognitoMode) return;
+                    playSelectionChime();
+                    setSummarizeLanguageModal({ selectedLanguage: language });
+                  }}
+                  disabled={incognitoMode}
+                  title={incognitoMode ? "Not available in incognito" : "Summarize this conversation and save it to long-term memory"}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 px-3 py-1.5 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-600 hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <SparklesIcon className="w-3.5 h-3.5" />
+                  <span>Save to memory</span>
+                </button>
+              </div>
             </div>
           )}
           <div className="flex flex-col items-center justify-center px-4 pt-2 pb-2 sm:pt-3 sm:pb-3 min-w-0 gap-1.5 sm:gap-2">
@@ -2978,6 +3507,10 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 messages={messages}
                 isLoading={isLoading}
                 language={language}
+                idToName={mentalModelsIndex}
+                ltmIdToTitle={new Map(longTermMemories.map((ltm) => [ltm._id, ltm.title]))}
+                ccIdToTitle={new Map(customConcepts.map((cc) => [cc._id, cc.title]))}
+                cgIdToTitle={new Map(conceptGroups.map((cg) => [cg._id, cg.title]))}
                 onTtsProgress={(messageIndex, charEnd) => setTtsHighlight({ messageIndex, charEnd })}
                 onTtsEnd={() => setTtsHighlight(null)}
                 speed={ttsSpeed}
@@ -3249,7 +3782,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               }
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200/80 dark:border-neutral-800 shrink-0">
+              <div className="flex items-center justify-between gap-2 px-4 py-3 border-b-[0.75px] border-neutral-200/80 dark:border-white/8 shrink-0">
                 <h2 className="text-lg font-semibold text-foreground">
                   {libraryPanelOpen === "conversations" ? "Conversations" :
                    libraryPanelOpen === "concepts" ? "Mental Models" :
@@ -4452,7 +4985,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       role="button"
                       tabIndex={0}
                       aria-label="Account menu"
-                      className="inline-flex items-center gap-2.5 min-w-0 rounded-xl border border-neutral-200 dark:border-neutral-700/30 hover:border-neutral-300 dark:hover:border-neutral-600/40 px-3 py-2 w-fit transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-2.5 min-w-0 rounded-xl border-[0.75px] border-neutral-200 dark:border-white/12 hover:border-neutral-300 dark:hover:border-white/18 px-3 py-2 w-fit transition-colors cursor-pointer"
                       onClick={(e) => {
                         const trigger = (e.currentTarget as HTMLElement).querySelector("button");
                         if (trigger && !trigger.contains(e.target as Node)) {
@@ -4500,7 +5033,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   )}
                 </section>
 
-                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-700/20">
+                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Conversation</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Language and tone for your conversations.</p>
                   <div className="space-y-4">
@@ -4515,7 +5048,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                               language === code
                                 ? "bg-foreground text-background"
-                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/25"
+                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.75px] border-neutral-200/60 dark:border-white/12"
                             }`}
                           >
                             {name}
@@ -4537,7 +5070,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                               userType === id
                                 ? "bg-foreground text-background"
-                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/25"
+                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.75px] border-neutral-200/60 dark:border-white/12"
                             }`}
                           >
                             {name}
@@ -4548,7 +5081,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   </div>
                 </section>
 
-                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-700/20">
+                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Audio</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Speed for text-to-speech playback.</p>
                   <div>
@@ -4562,7 +5095,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           className={`px-4 py-2 rounded-full text-sm font-medium tabular-nums transition-colors ${
                             ttsSpeed === s
                               ? "bg-foreground text-background"
-                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/25"
+                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.75px] border-neutral-200/60 dark:border-white/12"
                           }`}
                         >
                           {s}×
@@ -4572,7 +5105,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   </div>
                 </section>
 
-                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-700/20">
+                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Time and weather</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Choose how weather appears next to your local time in the header.</p>
                   <div>
@@ -4590,7 +5123,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors border ${
                             weatherFormat === id
                               ? "bg-foreground text-background border-foreground"
-                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-neutral-200/60 dark:border-neutral-700/25"
+                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.75px] border-neutral-200/60 dark:border-white/12"
                           }`}
                         >
                           {label}
@@ -4603,7 +5136,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   </div>
                 </section>
 
-                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-700/20">
+                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Appearance</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Choose a background for your chat.</p>
                   <div>
@@ -4621,10 +5154,10 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           type="button"
                           onClick={() => setBackground(id)}
                           title={name}
-                          className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-colors border-2 ${
+                          className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-colors border-[0.75px] ${
                             background === id
                               ? "border-foreground bg-neutral-100 dark:bg-neutral-800 text-foreground ring-2 ring-foreground/20"
-                              : "border-neutral-200/60 dark:border-neutral-700/25 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                              : "border-neutral-200/60 dark:border-white/12 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                           }`}
                         >
                           {image ? (
@@ -4655,7 +5188,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       setSettingsOpen(false);
                       setFeatureTourStep(0);
                     }}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border border-neutral-200 dark:border-neutral-700/30"
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border-[0.75px] border-neutral-200 dark:border-white/12"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                       <circle cx="12" cy="12" r="10" />
@@ -4852,14 +5385,24 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 className="rounded-full object-cover border border-neutral-200 dark:border-neutral-700/40 shadow-sm"
               />
             </div>
-            <h2 id="letter-title" className="font-developer text-[2.85rem] sm:text-4xl text-foreground text-center mb-6">
-              a note from the developer
+            <h2
+              id="letter-title"
+              aria-label={LETTER_MODAL_TITLE}
+              className="letter-modal-script-title font-developer text-[1.8rem] leading-none md:text-4xl text-foreground text-center mb-6 min-h-[1.2em]"
+            >
+              {LETTER_MODAL_TITLE.slice(0, visibleLetterModalTitleChars)}
+              {letterModalTitleAnimating && (
+                <span
+                  aria-hidden
+                  className="inline-block h-[0.8em] w-[0.08em] align-[-0.08em] ml-1 bg-current animate-pulse"
+                />
+              )}
             </h2>
             <p className="text-lg sm:text-xl text-neutral-700 dark:text-neutral-300 leading-relaxed max-w-prose mx-auto">
               FigureMyLife Labs is proud to introduce a new coach that helps you think through the long-term consequences of your choices. FML uses deep questioning and proven mental frameworks to help you make smarter decisions.
             </p>
             <div className="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-700 text-center">
-              <p className="font-developer text-[1.75rem] sm:text-[1.44em] text-neutral-600 dark:text-neutral-300">San Francisco</p>
+              <p className="letter-modal-script-location font-developer text-[1.4rem] leading-none md:text-[1.44em] text-neutral-600 dark:text-neutral-300">San Francisco</p>
               <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm">
                 <Link href="/about" className="text-neutral-500 dark:text-neutral-400 hover:text-foreground transition-colors">
                   About the Creator

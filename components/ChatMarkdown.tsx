@@ -49,7 +49,7 @@ function MentalModelLink({
       onMouseLeave={() => setShowTooltip(false)}
       onFocus={() => setShowTooltip(true)}
       onBlur={() => setShowTooltip(false)}
-      className="relative inline-flex items-baseline py-px px-1.5 rounded-lg text-sm font-medium bg-foreground text-background border-[0.5px] border-background/30 dark:border-neutral-600 cursor-pointer hover:opacity-90 transition-opacity duration-150 active:scale-[0.98] align-baseline"
+      className="relative inline-flex items-baseline py-px px-1.5 rounded-lg text-sm font-medium bg-background text-foreground border-[0.6px] border-foreground cursor-pointer hover:opacity-90 transition-opacity duration-150 active:scale-[0.98] align-baseline"
     >
       {children}
       {tooltip && showTooltip && (
@@ -88,7 +88,7 @@ function ReferenceLink({
           onClick();
         }
       }}
-      className="relative inline-flex items-baseline py-px px-1.5 rounded-lg text-sm font-medium bg-foreground text-background border-[0.5px] border-background/30 dark:border-neutral-600 cursor-pointer hover:opacity-90 transition-opacity duration-150 active:scale-[0.98] align-baseline"
+      className="relative inline-flex items-baseline py-px px-1.5 rounded-lg text-sm font-medium bg-background text-foreground border-[0.6px] border-foreground cursor-pointer hover:opacity-90 transition-opacity duration-150 active:scale-[0.98] align-baseline"
     >
       {children}
     </span>
