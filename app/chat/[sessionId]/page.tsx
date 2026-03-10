@@ -4852,7 +4852,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 className="rounded-full object-cover border border-neutral-200 dark:border-neutral-700/40 shadow-sm"
               />
             </div>
-            <h2 id="letter-title" className="font-developer text-3xl sm:text-4xl text-foreground text-center mb-6">
+            <h2 id="letter-title" className="font-developer text-[2.45rem] sm:text-4xl text-foreground text-center mb-6">
               a note from the developer
             </h2>
             <p className="text-lg sm:text-xl text-neutral-700 dark:text-neutral-300 leading-relaxed max-w-prose mx-auto">

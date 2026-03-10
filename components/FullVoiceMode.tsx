@@ -188,10 +188,8 @@ export function FullVoiceMode({
     }
 
     // Start orb mic visualization only after recognition starts.
-    // On mobile, delay slightly so recognition can lock in first.
-    if (isMobileBrowser) {
-      await new Promise((resolve) => setTimeout(resolve, 120));
-    }
+    // On mobile we skip this stream to avoid microphone contention with speech recognition.
+    if (isMobileBrowser) return;
     const nodes = audioNodesRef.current;
     if (nodes) {
       try {
