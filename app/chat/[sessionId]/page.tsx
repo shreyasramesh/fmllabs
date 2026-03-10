@@ -2397,13 +2397,13 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           </div>
         )}
         </div>
-        <div className="shrink-0 px-3 pt-4 pb-3 mt-4">
-          <div className="flex flex-col items-center gap-1">
+        <div className="shrink-0 px-3 pt-5 pb-4 mt-4">
+          <div className="flex flex-col items-center gap-2">
             {!isAnonymous && (
             <button
               type="button"
               onClick={() => setFeedbackModalOpen(true)}
-              className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
+              className="flex items-center gap-2 px-2.5 py-1 rounded-lg text-[15px] text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -2414,11 +2414,11 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             <button
               type="button"
               onClick={() => setLetterModalOpen(true)}
-              className="font-developer text-[1.2em] font-normal text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
+              className="font-developer text-[1.2em] leading-none font-normal text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
             >
               Crafted with Intention
             </button>
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] text-neutral-500 dark:text-neutral-400">
+            <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] text-neutral-500 dark:text-neutral-400">
               <Link href="/terms-of-service" className="hover:text-foreground transition-colors">
                 Terms of Service
               </Link>
@@ -3053,7 +3053,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     setInputExpandModalOpen(true);
                   }}
                   disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
-                  className="absolute top-2 right-2 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 disabled:opacity-50 hidden sm:block"
+                  className="hidden absolute top-2 right-2 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 disabled:opacity-50"
                   aria-label="Expand input"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
@@ -4833,11 +4833,30 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 <path d="m6 6 12 12" />
               </svg>
             </button>
-            <h2 id="letter-title" className="font-developer text-3xl sm:text-4xl text-foreground text-center mb-6 pr-10">
+            <div className="mb-5 flex items-center justify-center gap-3">
+              <Image
+                src="/icon.svg"
+                alt="FigureMyLife Labs logo"
+                width={72}
+                height={72}
+                className="rounded-full border border-neutral-200 dark:border-neutral-700/40 shadow-sm"
+              />
+              <span className="text-2xl text-neutral-400 dark:text-neutral-500" aria-hidden>
+                |
+              </span>
+              <Image
+                src="/images/profilephoto.png"
+                alt="Creator profile"
+                width={72}
+                height={72}
+                className="rounded-full object-cover border border-neutral-200 dark:border-neutral-700/40 shadow-sm"
+              />
+            </div>
+            <h2 id="letter-title" className="font-developer text-3xl sm:text-4xl text-foreground text-center mb-6">
               a note from the developer
             </h2>
             <p className="text-lg sm:text-xl text-neutral-700 dark:text-neutral-300 leading-relaxed max-w-prose mx-auto">
-              fml labs is a coach that helps you think through the long-term consequences of your choices. It uses deep questioning and proven mental frameworks to help you make smarter decisions.
+              FigureMyLife Labs is proud to introduce a new coach that helps you think through the long-term consequences of your choices. FML uses deep questioning and proven mental frameworks to help you make smarter decisions.
             </p>
             <div className="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-700 text-center">
               <p className="font-developer text-[1.44em] text-neutral-600 dark:text-neutral-300">San Francisco</p>
