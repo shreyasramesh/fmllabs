@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { LanguageProvider } from "@/components/LanguageProvider";
@@ -64,6 +65,12 @@ export default function RootLayout({
           />
         </head>
         <body className="antialiased min-h-screen bg-background">
+          <Script
+            src="https://datafa.st/js/script.js"
+            data-website-id="dfid_iRebNC9FUtKBFZ9BdJHom"
+            data-domain="fmllabs.ai"
+            strategy="afterInteractive"
+          />
           <ThemeProvider>
             <LanguageProvider>
               <UserTypeProvider>

@@ -1531,6 +1531,14 @@ export default function ChatPage() {
       /* ignore */
     }
   }, []);
+
+  // For anonymous users: keep left panel open for 2 seconds, then animate closed
+  useEffect(() => {
+    if (!isAnonymous) return;
+    const t = setTimeout(() => setSidebarOpen(false), 2000);
+    return () => clearTimeout(t);
+  }, [isAnonymous, setSidebarOpen]);
+
   const [libraryPanelOpen, setLibraryPanelOpen] = useState<"conversations" | "ltm" | "concepts" | "cc" | "cg" | "nuggets" | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
@@ -1844,9 +1852,9 @@ export default function ChatPage() {
           <Link
             href="/"
             className={`font-semibold text-lg min-w-0 truncate ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
-            title="figure my life (fml)"
+            title="figure my life"
           >
-            figure my life (fml)
+            figure my life
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -1994,8 +2002,8 @@ export default function ChatPage() {
         {/* Mobile overlay: sidebar has its own header. Desktop: header is in shared top bar, no header here */}
         <div className="h-14 min-h-[44px] pt-[env(safe-area-inset-top)] shrink-0 lg:hidden">
           <div className="h-full px-4 flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800">
-            <Link href="/" className="font-semibold text-lg text-foreground min-w-0 truncate" title="figure my life (fml)">
-              figure my life (fml)
+            <Link href="/" className="font-semibold text-lg text-foreground min-w-0 truncate" title="figure my life">
+              figure my life
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}
@@ -2892,7 +2900,7 @@ export default function ChatPage() {
             </div>
           )}
           <div className="flex flex-col items-center justify-center px-4 pt-2 pb-2 sm:pt-3 sm:pb-3 min-w-0 gap-1.5 sm:gap-2">
-            {voiceModeOpen && !isAnonymous ? (
+            {voiceModeOpen ? (
               <FullVoiceMode
                 embed
                 onClose={() => setVoiceModeOpen(false)}
@@ -2973,7 +2981,7 @@ export default function ChatPage() {
               </div>
               <VoiceInputButton
                 onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
-                onLongPress={!isAnonymous ? () => setVoiceModeOpen(true) : undefined}
+                onLongPress={() => setVoiceModeOpen(true)}
                 language={language}
                 disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                 ariaLabel="Voice input"
@@ -3096,10 +3104,10 @@ export default function ChatPage() {
                 <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                   <VoiceInputButton
                     onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
-                    onLongPress={!isAnonymous ? () => {
+                    onLongPress={() => {
                       setInputExpandModalOpen(false);
                       setVoiceModeOpen(true);
-                    } : undefined}
+                    }}
                     language={language}
                     disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                     ariaLabel="Voice input"
