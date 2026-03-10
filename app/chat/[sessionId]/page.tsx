@@ -1913,9 +1913,9 @@ export default function ChatPage() {
           <Link
             href="/"
             className={`font-semibold text-lg min-w-0 truncate ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
-            title="figure my life"
+            title="FigureMyLife Labs"
           >
-            figure my life
+            FigureMyLife Labs
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -2066,8 +2066,8 @@ export default function ChatPage() {
         {/* Mobile overlay: sidebar has its own header. Desktop: header is in shared top bar, no header here */}
         <div className="h-14 min-h-[44px] pt-[env(safe-area-inset-top)] shrink-0 lg:hidden">
           <div className="h-full px-4 flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800">
-            <Link href="/" className="font-semibold text-lg text-foreground min-w-0 truncate" title="figure my life">
-              figure my life
+            <Link href="/" className="font-semibold text-lg text-foreground min-w-0 truncate" title="FigureMyLife Labs">
+              FigureMyLife Labs
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}

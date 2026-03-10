@@ -9,7 +9,7 @@ import { BackgroundProvider } from "@/components/BackgroundProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "fml labs — Decision-Making Coach",
+  title: "FigureMyLife Labs",
   description:
     "Improve your decisions through deeper thinking. Surface mental models and cognitive biases.",
   manifest: "/manifest.json",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "fml labs",
+    title: "FigureMyLife Labs",
   },
 };
 
@@ -43,12 +43,12 @@ export default function RootLayout({
       localization={{
         signIn: {
           start: {
-            title: "Sign In - fml labs",
+            title: "Sign In - FigureMyLife Labs",
           },
         },
         signUp: {
           start: {
-            title: "Sign Up - fml labs",
+            title: "Sign Up - FigureMyLife Labs",
           },
         },
       }}
