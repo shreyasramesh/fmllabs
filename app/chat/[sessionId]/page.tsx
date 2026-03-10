@@ -2217,7 +2217,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   <div className="flex items-center gap-1 min-w-0">
                     <Link
                       href={`/chat/${s._id}`}
-                      className={`flex-1 min-w-0 flex items-center gap-2 py-2 px-3 truncate text-[13px] sm:text-[14px] ${
+                      className={`flex-1 min-w-0 flex items-center gap-2 py-2 px-3 truncate text-[15.6px] sm:text-[14px] ${
                       currentSessionId === s._id ? "font-medium text-foreground" : "text-neutral-800 dark:text-neutral-200"
                     }`}
                     >
@@ -3313,7 +3313,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             <Link
                               href={`/chat/${s._id}`}
                               onClick={() => { setLibraryPanelOpen(null); setSidebarOpen(false); }}
-                              className={`flex-1 min-w-0 flex items-center gap-2 py-2 px-3 truncate text-[13px] sm:text-[14px] ${
+                              className={`flex-1 min-w-0 flex items-center gap-2 py-2 px-3 truncate text-[15.6px] sm:text-[14px] ${
                                 currentSessionId === s._id ? "font-medium text-foreground" : "text-neutral-800 dark:text-neutral-200"
                               }`}
                             >
@@ -4852,14 +4852,14 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 className="rounded-full object-cover border border-neutral-200 dark:border-neutral-700/40 shadow-sm"
               />
             </div>
-            <h2 id="letter-title" className="font-developer text-[2.45rem] sm:text-4xl text-foreground text-center mb-6">
+            <h2 id="letter-title" className="font-developer text-[2.85rem] sm:text-4xl text-foreground text-center mb-6">
               a note from the developer
             </h2>
             <p className="text-lg sm:text-xl text-neutral-700 dark:text-neutral-300 leading-relaxed max-w-prose mx-auto">
               FigureMyLife Labs is proud to introduce a new coach that helps you think through the long-term consequences of your choices. FML uses deep questioning and proven mental frameworks to help you make smarter decisions.
             </p>
             <div className="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-700 text-center">
-              <p className="font-developer text-[1.44em] text-neutral-600 dark:text-neutral-300">San Francisco</p>
+              <p className="font-developer text-[1.75rem] sm:text-[1.44em] text-neutral-600 dark:text-neutral-300">San Francisco</p>
               <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm">
                 <Link href="/about" className="text-neutral-500 dark:text-neutral-400 hover:text-foreground transition-colors">
                   About the Creator
