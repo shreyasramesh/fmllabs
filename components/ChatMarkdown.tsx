@@ -193,7 +193,7 @@ export function ChatMarkdown({
   const processed = preprocessMentalModelLinks(withRefs, idToName);
 
   return (
-    <div className="prose prose-lg sm:prose-base prose-neutral dark:prose-invert max-w-prose leading-relaxed prose-p:my-3 prose-ul:my-2 prose-li:my-0.5">
+    <div className="prose prose-sm sm:prose-base prose-neutral dark:prose-invert max-w-prose leading-relaxed prose-p:my-3 prose-ul:my-2 prose-li:my-0.5">
       <ReactMarkdown
         components={{
           a: ({ href, children }) => {

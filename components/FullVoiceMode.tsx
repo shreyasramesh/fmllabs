@@ -157,11 +157,17 @@ export function FullVoiceMode({
     recognition.lang = LANG_TO_SPEECH[language] ?? "en-US";
     recognition.maxAlternatives = 1;
 
+    // On mobile Chrome, isFinal often never becomes true - send on onend as fallback
+    let lastTranscript = "";
+    let sentThisSession = false;
+
     recognition.onresult = (event: { results: ArrayLike<{ isFinal: boolean; length: number; [i: number]: { transcript: string } }> }) => {
       const results = event.results;
       const last = results[results.length - 1];
       const transcript = (last && last[0]?.transcript) ?? "";
+      if (transcript) lastTranscript = transcript;
       if (last.isFinal && transcript.trim()) {
+        sentThisSession = true;
         onSendMessage(transcript.trim());
         stopListening();
       }
@@ -178,6 +184,10 @@ export function FullVoiceMode({
       if (recognitionRef.current) {
         setListening(false);
         recognitionRef.current = null;
+      }
+      // Mobile fallback: isFinal may never be true, send last transcript when recognition ends
+      if (!sentThisSession && lastTranscript.trim()) {
+        onSendMessage(lastTranscript.trim());
       }
     };
 
@@ -357,9 +367,12 @@ export function FullVoiceMode({
         <>
           <button
             type="button"
-            onClick={handleOrbClick}
+            onPointerDown={(e) => {
+              e.preventDefault();
+              if (canTap) handleOrbClick();
+            }}
             disabled={!canTap}
-            className="relative flex items-center justify-center shrink-0 w-[62px] h-[62px] rounded-2xl overflow-hidden focus:outline-none focus:ring-2 focus:ring-foreground/30 disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border-0 p-0"
+            className="relative flex items-center justify-center shrink-0 w-[62px] h-[62px] rounded-2xl overflow-hidden focus:outline-none focus:ring-2 focus:ring-foreground/30 disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border-0 p-0 touch-manipulation"
             aria-label={listening ? "Stop listening" : "Voice active"}
           >
             {audioNodes ? (
@@ -399,9 +412,12 @@ export function FullVoiceMode({
         <>
           <button
             type="button"
-            onClick={handleOrbClick}
+            onPointerDown={(e) => {
+              e.preventDefault();
+              if (canTap) handleOrbClick();
+            }}
             disabled={!canTap}
-            className="relative flex items-center justify-center transition-all duration-500 ease-in-out focus:outline-none focus:ring-2 focus:ring-foreground/30 disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border-0 p-0"
+            className="relative flex items-center justify-center transition-all duration-500 ease-in-out focus:outline-none focus:ring-2 focus:ring-foreground/30 disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border-0 p-0 touch-manipulation"
             style={{
               width: isActive ? "clamp(192px, 36vw, 288px)" : "clamp(144px, 26.4vw, 216px)",
               height: isActive ? "clamp(192px, 36vw, 288px)" : "clamp(144px, 26.4vw, 216px)",

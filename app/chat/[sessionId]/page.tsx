@@ -441,7 +441,7 @@ function MessageBubble({
           </div>
         )}
       {showOptions && (
-        <div className="mt-2 grid grid-cols-2 gap-2 max-w-[85%]">
+        <div className="mt-2 flex flex-col gap-2 max-w-[85%]">
           {options.map((opt, j) => (
             <button
               key={j}
@@ -1837,9 +1837,9 @@ export default function ChatPage() {
   return (
     <TtsHighlightContext.Provider value={{ ttsHighlight, setTtsHighlight }}>
     <div className={`relative flex flex-col h-screen max-h-[100dvh] overflow-hidden chat-bg-area bg-background border-2 transition-[border-color,background] duration-300 ease-in-out ${incognitoMode ? "border-violet-400/70 dark:border-violet-500/60" : "border-transparent"}`}>
-      {/* Shared top bar - single border for alignment when sidebar open on desktop */}
+      {/* Shared top bar - fixed on mobile so it stays visible when scrolling */}
       <header
-        className={`h-14 min-h-[44px] pt-[env(safe-area-inset-top)] flex border-b shrink-0 ${
+        className={`h-14 min-h-[44px] pt-[env(safe-area-inset-top)] flex border-b shrink-0 fixed top-0 left-0 right-0 z-20 md:relative md:top-auto md:left-auto md:right-auto ${
           incognitoMode
             ? "bg-neutral-900 dark:bg-neutral-100 border-neutral-700 dark:border-neutral-300 text-neutral-100 dark:text-neutral-900"
             : "bg-background border-neutral-200 dark:border-neutral-800"
@@ -1987,6 +1987,9 @@ export default function ChatPage() {
           </div>
         </div>
       </header>
+
+      {/* Spacer for fixed header on mobile - prevents content from hiding under header */}
+      <div className="shrink-0 md:hidden" style={{ height: "calc(3.5rem + env(safe-area-inset-top))" }} aria-hidden />
 
       <div className="flex flex-1 min-h-0 overflow-hidden">
       {/* Sidebar - fixed overlay on mobile; in-flow on desktop when open. Fade in/out animation. */}
