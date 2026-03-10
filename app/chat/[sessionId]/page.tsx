@@ -4360,9 +4360,9 @@ export default function ChatPage() {
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto p-4 sm:p-5 min-h-0 space-y-6">
-                {!isAnonymous && user && (
-                  <section>
-                    <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3">Account</h3>
+                <section>
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3">Account</h3>
+                  {!isAnonymous && user ? (
                     <div
                       ref={profileTriggerRef}
                       role="button"
@@ -4396,8 +4396,25 @@ export default function ChatPage() {
                           : user.primaryEmailAddress?.emailAddress ?? "Account"}
                       </span>
                     </div>
-                  </section>
-                )}
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      <Link
+                        href="/sign-in"
+                        onClick={() => setSettingsOpen(false)}
+                        className="px-4 py-2.5 rounded-xl text-sm font-medium border-2 border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        href="/sign-up"
+                        onClick={() => setSettingsOpen(false)}
+                        className="px-4 py-2.5 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                      >
+                        Create account
+                      </Link>
+                    </div>
+                  )}
+                </section>
 
                 <section className="pt-6 border-t border-neutral-100 dark:border-neutral-800/80">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Conversation</h3>
