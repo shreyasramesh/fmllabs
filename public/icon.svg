@@ -1,23 +1,18 @@
-<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="512" height="512" rx="128" fill="#F5F2ED"/>
-  
-  <text 
-    x="50%" 
-    y="48%" 
-    text-anchor="middle" 
-    fill="#D97757" 
-    style="font-family: 'Inter', system-ui, -apple-system, sans-serif; font-weight: 800; font-size: 150px; letter-spacing: -4px;"
-  >
-    FML
-  </text>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Orange ghost icon">
+  <rect width="512" height="512" rx="120" fill="#F5F2ED" />
 
-  <path 
-    d="M180 340 C 220 390, 300 390, 340 330" 
-    stroke="#D97757" 
-    stroke-width="24" 
-    stroke-linecap="round" 
-    fill="none" 
+  <!-- Simple ghost body -->
+  <path
+    d="M256 96C190 96 136 150 136 216V360C136 370 144 376 152 376C160 376 166 370 172 362C178 354 184 352 190 360C196 368 202 376 212 376C222 376 228 368 234 360C240 352 248 352 256 360C264 368 272 376 282 376C292 376 298 368 304 360C310 352 318 352 324 360C330 368 336 376 346 376C356 376 364 368 370 360C376 352 382 352 388 360C394 368 400 376 408 376C416 376 424 370 424 360V216C424 150 370 96 304 96H256Z"
+    fill="#D97757"
   />
-  
-  <circle cx="360" cy="320" r="14" fill="#D97757" />
+
+  <!-- Eyes -->
+  <circle cx="220" cy="224" r="20" fill="#F5F2ED" />
+  <circle cx="292" cy="224" r="20" fill="#F5F2ED" />
+  <circle cx="220" cy="228" r="10" fill="#2C2C2C" />
+  <circle cx="292" cy="228" r="10" fill="#2C2C2C" />
+
+  <!-- Small mouth -->
+  <rect x="242" y="280" width="28" height="14" rx="7" fill="#F5F2ED" />
 </svg>

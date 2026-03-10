@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     "Improve your decisions through deeper thinking. Surface mental models and cognitive biases.",
   manifest: "/manifest.json",
   icons: {
-    icon: "/icons/icon-192.png",
+    icon: "/icon.svg",
     apple: "/icons/icon-192.png",
   },
   appleWebApp: {
