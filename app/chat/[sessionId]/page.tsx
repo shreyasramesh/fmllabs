@@ -353,7 +353,7 @@ function MessageBubble({
                   }
                 }}
               >
-                <div className="px-3.5 py-2.5 flex items-center justify-between border-b border-neutral-200/60 dark:border-neutral-700/60">
+                <div className="px-3.5 py-2.5 flex items-center justify-between border-b border-neutral-200/60 dark:border-white/10">
                   <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                     Context used
                   </span>
@@ -3108,10 +3108,10 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               role="dialog"
               aria-modal
               aria-label="Compose message"
-              className="pointer-events-auto w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-800 animate-fade-in-up"
+              className="pointer-events-auto w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-700/30 animate-fade-in-up"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200/80 dark:border-neutral-800 shrink-0">
+              <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200/80 dark:border-neutral-700/20 shrink-0">
                 <h2 className="text-lg font-semibold text-foreground">Compose message</h2>
                 <button
                   type="button"
@@ -4137,7 +4137,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   <CopyButton text={summarizeModal.summary} aria-label="Copy summary" />
                 </div>
                 </div>
-                <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50 p-3 text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap max-h-40 overflow-y-auto" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-3 text-sm text-neutral-700 dark:text-neutral-200 whitespace-pre-wrap max-h-40 overflow-y-auto" dir={isRtlLanguage(language) ? "rtl" : undefined}>
                   {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === "summarize-modal-summary" ? (
                     <TtsHighlightedText text={summarizeModal.summary} charEnd={ttsHighlight.charEnd} />
                   ) : (
@@ -4159,7 +4159,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   />
                 </div>
                 {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === "summarize-modal-enrichment" ? (
-                  <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50 p-3 text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                  <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-3 text-sm text-neutral-700 dark:text-neutral-200 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
                     <TtsHighlightedText text={summarizeModal.enrichmentPrompt} charEnd={ttsHighlight.charEnd} />
                   </div>
                 ) : (
@@ -4172,7 +4172,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   }
                   rows={4}
                   dir={isRtlLanguage(language) ? "rtl" : undefined}
-                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background dark:bg-neutral-900 text-sm text-foreground dark:text-neutral-100 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-foreground/20"
                   placeholder="1 dense sentence, max ~25 words (e.g. User weighing job change; values work-life balance.)"
                 />
                 )}
@@ -4452,7 +4452,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       role="button"
                       tabIndex={0}
                       aria-label="Account menu"
-                      className="inline-flex items-center gap-2.5 min-w-0 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 px-3 py-2 w-fit transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-2.5 min-w-0 rounded-xl border border-neutral-200 dark:border-neutral-700/30 hover:border-neutral-300 dark:hover:border-neutral-600/40 px-3 py-2 w-fit transition-colors cursor-pointer"
                       onClick={(e) => {
                         const trigger = (e.currentTarget as HTMLElement).querySelector("button");
                         if (trigger && !trigger.contains(e.target as Node)) {
@@ -4485,7 +4485,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       <Link
                         href="/sign-in"
                         onClick={() => setSettingsOpen(false)}
-                        className="px-4 py-2.5 rounded-xl text-sm font-medium border-2 border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
+                        className="px-4 py-2.5 rounded-xl text-sm font-medium border-2 border-neutral-300 dark:border-neutral-600/35 hover:border-neutral-400 dark:hover:border-neutral-500/45 text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
                       >
                         Sign In
                       </Link>
@@ -4500,7 +4500,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   )}
                 </section>
 
-                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-800/80">
+                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-700/20">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Conversation</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Language and tone for your conversations.</p>
                   <div className="space-y-4">
@@ -4515,7 +4515,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                               language === code
                                 ? "bg-foreground text-background"
-                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/60"
+                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/25"
                             }`}
                           >
                             {name}
@@ -4537,7 +4537,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                               userType === id
                                 ? "bg-foreground text-background"
-                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/60"
+                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/25"
                             }`}
                           >
                             {name}
@@ -4548,7 +4548,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   </div>
                 </section>
 
-                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-800/80">
+                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-700/20">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Audio</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Speed for text-to-speech playback.</p>
                   <div>
@@ -4562,7 +4562,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           className={`px-4 py-2 rounded-full text-sm font-medium tabular-nums transition-colors ${
                             ttsSpeed === s
                               ? "bg-foreground text-background"
-                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/60"
+                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700/25"
                           }`}
                         >
                           {s}×
@@ -4572,7 +4572,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   </div>
                 </section>
 
-                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-800/80">
+                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-700/20">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Time and weather</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Choose how weather appears next to your local time in the header.</p>
                   <div>
@@ -4590,7 +4590,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors border ${
                             weatherFormat === id
                               ? "bg-foreground text-background border-foreground"
-                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-neutral-200/60 dark:border-neutral-700/60"
+                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-neutral-200/60 dark:border-neutral-700/25"
                           }`}
                         >
                           {label}
@@ -4603,7 +4603,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   </div>
                 </section>
 
-                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-800/80">
+                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-700/20">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Appearance</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Choose a background for your chat.</p>
                   <div>
@@ -4624,7 +4624,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-colors border-2 ${
                             background === id
                               ? "border-foreground bg-neutral-100 dark:bg-neutral-800 text-foreground ring-2 ring-foreground/20"
-                              : "border-neutral-200/60 dark:border-neutral-700/60 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                              : "border-neutral-200/60 dark:border-neutral-700/25 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                           }`}
                         >
                           {image ? (
@@ -4646,7 +4646,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 </section>
 
                 {!isAnonymous && (
-                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-800/80">
+                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-700/20">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Help</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Get familiar with the app.</p>
                   <button
@@ -4655,7 +4655,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       setSettingsOpen(false);
                       setFeatureTourStep(0);
                     }}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border border-neutral-200 dark:border-neutral-700"
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border border-neutral-200 dark:border-neutral-700/30"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                       <circle cx="12" cy="12" r="10" />
@@ -4671,7 +4671,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 )}
 
                 {!isAnonymous && (
-                  <section className="pt-6 border-t border-neutral-200 dark:border-neutral-700">
+                  <section className="pt-6 border-t border-neutral-200 dark:border-neutral-700/30">
                     <h3 className="text-xs font-medium uppercase tracking-wider text-red-500 dark:text-red-400 mb-2">Danger zone</h3>
                     <div className="rounded-xl border border-red-200/50 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/30 p-4">
                       <h4 className="font-semibold text-neutral-900 dark:text-neutral-100 text-sm">Delete all my data</h4>
