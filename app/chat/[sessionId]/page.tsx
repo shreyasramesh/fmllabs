@@ -2036,7 +2036,7 @@ export default function ChatPage() {
                 setInput("");
               }
             }}
-            className="flex items-center justify-center gap-2 w-full mb-4 px-3 py-2 rounded-xl border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[14px] font-medium text-foreground transition-colors shrink-0"
+            className="flex items-center justify-center gap-2 w-full mb-4 px-3 py-2 rounded-xl border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0"
             aria-label="New conversation"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
@@ -2061,7 +2061,7 @@ export default function ChatPage() {
                   type="button"
                   onClick={onClick}
                   data-tour={`tour-${id}`}
-className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left text-[14px] font-medium transition-colors border-2 ${
+className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left text-[13px] sm:text-[14px] font-medium transition-colors border-2 ${
                       isActive
                         ? "border-neutral-300 dark:border-neutral-400 bg-white dark:bg-neutral-700 text-foreground"
                         : "border-transparent text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:border-neutral-400 dark:hover:border-neutral-500"
@@ -2131,7 +2131,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 placeholder="Search"
               value={sessionSearchQuery}
               onChange={(e) => setSessionSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 text-[14px] rounded-xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-foreground placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 shadow-sm shrink-0"
+                className="w-full pl-9 pr-3 py-2 text-[13px] sm:text-[14px] rounded-xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-foreground placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 shadow-sm shrink-0"
               aria-label="Search conversations"
             />
             </div>
@@ -2153,7 +2153,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   <div className="flex items-center gap-1 min-w-0">
                     <Link
                       href={`/chat/${s._id}`}
-                      className={`flex-1 min-w-0 flex items-center gap-2 py-2 px-3 truncate text-[14px] ${
+                      className={`flex-1 min-w-0 flex items-center gap-2 py-2 px-3 truncate text-[13px] sm:text-[14px] ${
                       currentSessionId === s._id ? "font-medium text-foreground" : "text-neutral-800 dark:text-neutral-200"
                     }`}
                     >
@@ -2250,7 +2250,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
         )}
         {isAnonymous && (
           <div className="px-3 py-2 flex-1 min-h-0 flex flex-col gap-3 items-center">
-            <p className="text-[14px] font-medium text-neutral-600 dark:text-neutral-400 text-center">
+            <p className="text-[13px] sm:text-[14px] font-medium text-neutral-600 dark:text-neutral-400 text-center">
               Sign in to unlock:
             </p>
             <ul className="space-y-1.5 w-full flex flex-col items-center">
@@ -2265,7 +2265,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     onMouseEnter={() => setSignInFeatureHover(i)}
                     onMouseLeave={() => setSignInFeatureHover(null)}
                     onClick={() => setSignInFeatureHover(signInFeatureHover === i ? null : i)}
-                    className="flex items-center gap-2.5 w-full px-3 py-2 rounded-2xl text-[14px] text-left transition-colors border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 bg-background text-neutral-600 dark:text-neutral-400"
+                    className="flex items-center gap-2.5 w-full px-3 py-2 rounded-2xl text-[13px] sm:text-[14px] text-left transition-colors border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 bg-background text-neutral-600 dark:text-neutral-400"
                   >
                     <span className="text-neutral-500 shrink-0">{signInFeatureIconSvg(item.icon)}</span>
                     <span className="truncate">{item.label}</span>
@@ -2295,7 +2295,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   setLibraryPanelOpen("concepts");
                   setSidebarOpen(false);
                 }}
-                className="flex items-center justify-center gap-2 w-full max-w-[220px] mx-auto px-3 py-2 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-[14px] text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-all duration-200 whitespace-nowrap"
+                className="flex items-center justify-center gap-2 w-full max-w-[220px] mx-auto px-3 py-2 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-[13px] sm:text-[14px] text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-all duration-200 whitespace-nowrap"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
                   <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
@@ -3229,7 +3229,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             <Link
                               href={`/chat/${s._id}`}
                               onClick={() => { setLibraryPanelOpen(null); setSidebarOpen(false); }}
-                              className={`flex-1 min-w-0 flex items-center gap-2 py-2 px-3 truncate text-[14px] ${
+                              className={`flex-1 min-w-0 flex items-center gap-2 py-2 px-3 truncate text-[13px] sm:text-[14px] ${
                                 currentSessionId === s._id ? "font-medium text-foreground" : "text-neutral-800 dark:text-neutral-200"
                               }`}
                             >

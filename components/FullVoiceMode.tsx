@@ -85,7 +85,6 @@ export function FullVoiceMode({
   const mediaStreamSourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const mediaElementSourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const audioNodesRef = useRef<{ input: GainNode; output: GainNode } | null>(null);
-  const autoStartAttemptedRef = useRef(false);
   const onTtsProgressRef = useRef(onTtsProgress);
   const onTtsEndRef = useRef(onTtsEnd);
   onTtsProgressRef.current = onTtsProgress;
@@ -195,30 +194,15 @@ export function FullVoiceMode({
     if (listening) {
       playStopChime();
       stopListening();
+    } else if (supported && !isLoading && !ttsPlaying) {
+      // Start listening on tap - recognition.start() requires a user gesture
+      playSelectionChime();
+      startListening();
     }
-  }, [listening, stopListening]);
+  }, [listening, supported, isLoading, ttsPlaying, stopListening, startListening]);
 
-  // Auto-start listening when LLM is not responding so user can just talk
-  useEffect(() => {
-    if (!supported || !audioNodes || isLoading || ttsPlaying || listening)
-      return;
-    if (autoStartAttemptedRef.current) return;
-    autoStartAttemptedRef.current = true;
-    startListening();
-  }, [supported, audioNodes, isLoading, ttsPlaying, listening, startListening]);
-
-  // Reset auto-start when TTS ends or loading ends so we can listen again
-  const prevTtsPlayingRef = useRef(false);
-  const prevLoadingForResetRef = useRef(false);
-  useEffect(() => {
-    const ttsJustEnded = prevTtsPlayingRef.current && !ttsPlaying;
-    const loadingJustEnded = prevLoadingForResetRef.current && !isLoading;
-    if (ttsJustEnded || loadingJustEnded) {
-      autoStartAttemptedRef.current = false;
-    }
-    prevTtsPlayingRef.current = ttsPlaying;
-    prevLoadingForResetRef.current = isLoading;
-  }, [ttsPlaying, isLoading]);
+  // Note: recognition.start() requires a user gesture. We use tap-to-start via handleOrbClick
+  // instead of auto-start, which would fail when the gesture from opening voice mode has expired.
 
   // TTS when assistant response completes (only when loading just finished)
   useEffect(() => {
