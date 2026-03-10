@@ -264,7 +264,7 @@ export function FullVoiceMode({
     try {
       audio.pause();
       audio.currentTime = 0;
-      onTtsProgressRef.current?.(-1);
+      onTtsProgressRef.current?.(lastTtsIndexRef.current, -1);
       await audio.play();
       setTtsPlaying(true);
       setTtsPaused(false);
