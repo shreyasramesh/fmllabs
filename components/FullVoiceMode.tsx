@@ -134,25 +134,13 @@ export function FullVoiceMode({
   const startListening = useCallback(async () => {
     const SpeechRecognitionAPI = getSpeechRecognition();
     if (!SpeechRecognitionAPI || isLoading) return;
-
-    // Connect microphone to input gain for orb visualization
-    const nodes = audioNodesRef.current;
-    if (nodes) {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaStreamRef.current = stream;
-        const ctx = nodes.input.context as AudioContext;
-        if (ctx.state === "suspended") await ctx.resume();
-        const source = ctx.createMediaStreamSource(stream);
-        source.connect(nodes.input);
-        mediaStreamSourceRef.current = source;
-      } catch {
-        /* mic access denied, orb will show silence */
-      }
-    }
+    const isMobileBrowser =
+      typeof navigator !== "undefined" &&
+      /android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent);
 
     const recognition = new SpeechRecognitionAPI();
-    recognition.continuous = true;
+    // Mobile Chrome is flaky with continuous mode; single-utterance is more reliable.
+    recognition.continuous = !isMobileBrowser;
     recognition.interimResults = true;
     recognition.lang = LANG_TO_SPEECH[language] ?? "en-US";
     recognition.maxAlternatives = 1;
@@ -197,6 +185,25 @@ export function FullVoiceMode({
       setListening(true);
     } catch (err) {
       console.warn("Failed to start speech recognition:", err);
+      return;
+    }
+
+    // Start orb mic visualization only after recognition starts.
+    // On mobile we skip this stream to avoid microphone contention with speech recognition.
+    if (isMobileBrowser) return;
+    const nodes = audioNodesRef.current;
+    if (nodes) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaStreamRef.current = stream;
+        const ctx = nodes.input.context as AudioContext;
+        if (ctx.state === "suspended") await ctx.resume();
+        const source = ctx.createMediaStreamSource(stream);
+        source.connect(nodes.input);
+        mediaStreamSourceRef.current = source;
+      } catch {
+        /* mic access denied, orb will show silence */
+      }
     }
   }, [language, isLoading, onSendMessage, stopListening]);
 

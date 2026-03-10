@@ -2418,7 +2418,13 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           />
         )}
 
-        <div className={`flex-1 min-h-0 flex flex-col pb-24 md:pb-0 ${messages.length > 0 ? "overflow-y-auto scroll-smooth" : "overflow-hidden"}`}>
+        <div
+          className={`flex-1 min-h-0 flex flex-col ${
+            messages.length > 0
+              ? "pb-24 md:pb-0 overflow-y-auto scroll-smooth"
+              : "pb-0 overflow-hidden"
+          }`}
+        >
           <div ref={messagesScrollRef} className={`flex-1 min-h-0 min-w-0 ${messages.length > 0 ? "overflow-y-auto" : "overflow-hidden flex flex-col"}`}>
           {currentSession?.isCollapsed && collapsedSummary ? (
             <div className="min-h-full flex items-center justify-center p-4">
