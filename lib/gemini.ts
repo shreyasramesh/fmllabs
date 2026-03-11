@@ -11,6 +11,21 @@ const genAI = new GoogleGenerativeAI(apiKey);
 
 const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
 
+function formatDevLogBlock(title: string, content: string): string {
+  const divider = "=".repeat(28);
+  return `\n${divider} ${title} ${divider}\n${content}\n${"=".repeat(
+    divider.length * 2 + title.length + 2
+  )}`;
+}
+
+function prettyJsonIfPossible(content: string): string {
+  try {
+    return JSON.stringify(JSON.parse(content), null, 2);
+  } catch {
+    return content;
+  }
+}
+
 export function getModel(systemInstruction?: string) {
   return genAI.getGenerativeModel({
     model: MODEL,
@@ -415,7 +430,7 @@ Return ONLY valid JSON. Do not include markdown formatting blocks (\`\`\`json) o
 {"mentalModels":[{"name":"Exact Name Here","reason":"short explanation phrase"}],"longTermMemories":[{"title":"Exact Title Here","reason":"short explanation phrase"}],"customConcepts":[{"title":"Exact Title Here","reason":"short explanation phrase"}],"conceptGroups":[{"title":"Exact Title Here","reason":"short explanation phrase"}]}`;
 
   if (process.env.NODE_ENV === "development") {
-    console.debug("[RelevantContext] LLM REQUEST:", prompt.replace(/\s+/g, " ").trim());
+    console.debug(formatDevLogBlock("[RelevantContext] LLM REQUEST", prompt));
   }
 
   const model = getModel();
@@ -423,7 +438,12 @@ Return ONLY valid JSON. Do not include markdown formatting blocks (\`\`\`json) o
   const text = result.response.text().trim();
 
   if (process.env.NODE_ENV === "development") {
-    console.debug("[RelevantContext] LLM RESPONSE:", text.replace(/\s+/g, " ").trim());
+    console.debug(
+      formatDevLogBlock(
+        "[RelevantContext] LLM RESPONSE",
+        prettyJsonIfPossible(text.trim())
+      )
+    );
   }
 
   const cleaned = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();

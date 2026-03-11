@@ -28,7 +28,14 @@ type SpeechRecognitionCtor = new () => {
   continuous: boolean;
   interimResults: boolean;
   maxAlternatives: number;
-  onresult: ((e: { results: ArrayLike<{ isFinal: boolean; length: number; [i: number]: { transcript: string } }> }) => void) | null;
+  onresult: ((e: {
+    resultIndex?: number;
+    results: ArrayLike<{
+      isFinal: boolean;
+      length: number;
+      [i: number]: { transcript: string };
+    }>;
+  }) => void) | null;
   onerror: ((e: { error: string }) => void) | null;
   onend: (() => void) | null;
 };
@@ -64,6 +71,7 @@ export function VoiceInputButton({
   const holdProgressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const holdStartRef = useRef<number>(0);
   const didLongPressRef = useRef(false);
+  const processedFinalIndicesRef = useRef<Set<number>>(new Set());
 
   useEffect(() => {
     setSupported(!!getSpeechRecognition());
@@ -91,13 +99,30 @@ export function VoiceInputButton({
     recognition.interimResults = true;
     recognition.lang = LANG_TO_SPEECH[language] ?? "en-US";
     recognition.maxAlternatives = 1;
+    processedFinalIndicesRef.current.clear();
 
-    recognition.onresult = (event: { results: ArrayLike<{ isFinal: boolean; length: number; [i: number]: { transcript: string } }> }) => {
+    recognition.onresult = (event: {
+      resultIndex?: number;
+      results: ArrayLike<{
+        isFinal: boolean;
+        length: number;
+        [i: number]: { transcript: string };
+      }>;
+    }) => {
       const results = event.results;
-      const last = results[results.length - 1];
-      const transcript = (last && last[0]?.transcript) ?? "";
-      if (last.isFinal && transcript.trim()) {
-        onTranscription(transcript.trim());
+      const startIndex =
+        typeof event.resultIndex === "number" && event.resultIndex >= 0
+          ? event.resultIndex
+          : 0;
+      for (let i = startIndex; i < results.length; i++) {
+        const result = results[i];
+        if (!result?.isFinal) continue;
+        if (processedFinalIndicesRef.current.has(i)) continue;
+        processedFinalIndicesRef.current.add(i);
+        const transcript = (result[0]?.transcript ?? "").trim();
+        if (transcript) {
+          onTranscription(transcript);
+        }
       }
     };
 
@@ -113,6 +138,7 @@ export function VoiceInputButton({
         setListening(false);
         recognitionRef.current = null;
       }
+      processedFinalIndicesRef.current.clear();
     };
 
     try {

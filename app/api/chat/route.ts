@@ -7,21 +7,27 @@ import {
   createSession,
   updateSession,
   getEnrichmentPromptsWithIds,
-  getLongTermMemoriesByIds,
   getCustomConceptEnrichmentPromptsWithIds,
-  getCustomConceptsByIds,
-  getConceptGroupsByIds,
   getConceptGroupEnrichmentWithIds,
 } from "@/lib/db";
 import {
   loadMentalModelsIndex,
   getIndexSummary,
-  buildAllOneLinersContext,
-  buildUserMentionContextForModels,
 } from "@/lib/mental-models";
-import { extractMentalModelIdsFromMessages, getRelevantContextBlockDelimiters } from "@/lib/chat-utils";
+import {
+  extractMentalModelIdsFromMessages,
+  getRelevantContextBlockDelimiters,
+  type RelevantContext,
+} from "@/lib/chat-utils";
 import { streamGenerateContent, generateTitle, predictRelevantContext } from "@/lib/gemini";
 import { getLanguageName, isValidLanguageCode, type LanguageCode } from "@/lib/languages";
+import {
+  buildCitedContextFromText,
+  diffCitationsAgainstPredicted,
+  hasCitationMismatches,
+  normalizeCitationAlignmentPolicy,
+  sanitizeDisallowedCitations,
+} from "@/lib/citation-alignment";
 import {
   getUserTypeStylePrompt,
   getUserTypeOptionsPrompt,
@@ -80,6 +86,26 @@ MENTAL MODELS INDEX:
 USER CONTEXT (Memories, Concepts, Groups):
 [Insert Context Here]
 `;
+
+function compactPromptText(value: string | undefined, maxLen = 220): string {
+  if (!value) return "";
+  return value
+    .replace(/\s+/g, " ")
+    .replace(/"/g, "'")
+    .trim()
+    .slice(0, maxLen);
+}
+
+function prettyJson(value: unknown): string {
+  return JSON.stringify(value, null, 2);
+}
+
+function formatDevLogBlock(title: string, content: string): string {
+  const divider = "=".repeat(28);
+  return `\n${divider} ${title} ${divider}\n${content}\n${"=".repeat(
+    divider.length * 2 + title.length + 2
+  )}`;
+}
 
 export async function POST(request: Request) {
   const { userId } = await auth();
@@ -153,12 +179,9 @@ export async function POST(request: Request) {
   }
 
   let messagesForModel: { role: "user" | "assistant"; content: string }[];
-  let enrichmentWithIds: { id: string; enrichmentPrompt: string; title?: string }[] = [];
   let ltmEnrichmentWithIds: { id: string; enrichmentPrompt: string; title?: string }[] = [];
   let ccEnrichmentWithIds: { id: string; enrichmentPrompt: string; title?: string }[] = [];
   let conceptGroupEnrichment: { id: string; title: string; enrichmentPrompts: string[] }[] = [];
-  let mentionedLtms: { title: string; summary: string }[] = [];
-  let mentionedCustomConcepts: { title: string; summary: string }[] = [];
 
   if (isAnonymous || incognito) {
     messagesForModel = [
@@ -182,29 +205,15 @@ export async function POST(request: Request) {
       sessionId = newSession._id;
     }
 
-    const mentionedGroupIdsToFetch =
-      mentionedConceptGroupIds.length > 0 ? mentionedConceptGroupIds : [];
     const [
       existingMessages,
-      enrichmentWithIdsRes,
+      ltmEnrichmentWithIdsRes,
       ccEnrichmentRes,
-      mentionedLtmsRes,
-      mentionedCustomConceptsRes,
-      mentionedGroupsRes,
       conceptGroupEnrichmentRes,
     ] = await Promise.all([
       getMessages(sessionId!),
       getEnrichmentPromptsWithIds(userId!),
       getCustomConceptEnrichmentPromptsWithIds(userId!),
-      mentionedLongTermMemoryIds.length > 0
-        ? getLongTermMemoriesByIds(mentionedLongTermMemoryIds, userId!)
-        : Promise.resolve([]),
-      mentionedCustomConceptIds.length > 0
-        ? getCustomConceptsByIds(mentionedCustomConceptIds, userId!)
-        : Promise.resolve([]),
-      mentionedGroupIdsToFetch.length > 0
-        ? getConceptGroupsByIds(mentionedGroupIdsToFetch, userId!)
-        : Promise.resolve([]),
       getConceptGroupEnrichmentWithIds(userId!),
     ]);
     conceptGroupEnrichment = conceptGroupEnrichmentRes;
@@ -216,59 +225,84 @@ export async function POST(request: Request) {
       })),
       { role: "user" as const, content: message },
     ];
-    enrichmentWithIds = [...enrichmentWithIdsRes, ...ccEnrichmentRes];
-    ltmEnrichmentWithIds = enrichmentWithIdsRes;
+    ltmEnrichmentWithIds = ltmEnrichmentWithIdsRes;
     ccEnrichmentWithIds = ccEnrichmentRes;
-    mentionedLtms = mentionedLtmsRes;
-    mentionedCustomConcepts = [...mentionedCustomConceptsRes];
-    if (mentionedGroupsRes.length > 0) {
-      const groupConceptIds = mentionedGroupsRes.flatMap((g) => g.conceptIds);
-      const groupConceptIdsSet = new Set(groupConceptIds);
-      const groupConceptIdsUnique = [...groupConceptIdsSet];
-      const groupConcepts =
-        groupConceptIdsUnique.length > 0
-          ? await getCustomConceptsByIds(groupConceptIdsUnique, userId!)
-          : [];
-      const mentionedCcIds = new Set(mentionedCustomConceptsRes.map((c) => c._id));
-      for (const c of groupConcepts) {
-        if (!mentionedCcIds.has(c._id)) {
-          mentionedCustomConcepts.push(c);
-          mentionedCcIds.add(c._id);
-        }
-      }
-    }
   }
 
   const index = loadMentalModelsIndex(language);
   const indexSummary = getIndexSummary(language);
-  const allOneLinersContext = buildAllOneLinersContext(language);
+  const mmIdToName = new Map(index.mental_models.map((m) => [m.id, m.name]));
+  const mmById = new Map(index.mental_models.map((m) => [m.id, m]));
+  const ltmById = new Map(ltmEnrichmentWithIds.map((e) => [e.id, e]));
+  const ccById = new Map(ccEnrichmentWithIds.map((e) => [e.id, e]));
+  const cgById = new Map(conceptGroupEnrichment.map((g) => [g.id, g]));
 
-  const sentMentalModels = index.mental_models.map((m) => m.id);
-  const sentLtms = [
-    ...enrichmentWithIds.map((e) => e.id),
-    ...mentionedLongTermMemoryIds,
-    ...mentionedCustomConceptIds,
-  ].filter((id, i, arr) => arr.indexOf(id) === i);
-  const sentConceptGroups = [...mentionedConceptGroupIds].filter(
-    (id, i, arr) => arr.indexOf(id) === i
-  );
-
-  const userMentionedModelContext =
+  const mentionedMmBlock =
     mentionedMentalModelIds.length > 0
-      ? buildUserMentionContextForModels(mentionedMentalModelIds, language)
+      ? `USER-MENTIONED MENTAL MODELS:\n${mentionedMentalModelIds
+          .map((id, index) => {
+            const mm = mmById.get(id);
+            if (!mm) return null;
+            const oneLiner = mm.description.split("\n")[0]?.trim() ?? mm.description;
+            return `- rank:${index + 1} | id:${id} | name:"${compactPromptText(mm.name, 80)}" | one_liner:"${compactPromptText(oneLiner)}"`;
+          })
+          .filter(Boolean)
+          .join("\n")}`
       : "";
-  const userMentionedLtmContext =
-    mentionedLtms.length > 0
-      ? `USER-MENTIONED LONG-TERM MEMORIES:\n${mentionedLtms.map((ltm) => `## ${ltm.title}\n${ltm.summary}`).join("\n---\n")}`
+  const mentionedLtmBlock =
+    mentionedLongTermMemoryIds.length > 0
+      ? `USER-MENTIONED LONG-TERM MEMORIES:\n${mentionedLongTermMemoryIds
+          .map((id, index) => {
+            const ltm = ltmById.get(id);
+            if (!ltm) return `- rank:${index + 1} | id:${id} | title:"Memory"`;
+            return `- rank:${index + 1} | id:${id} | title:"${compactPromptText(
+              ltm.title ?? "Memory",
+              80
+            )}" | enrichment:"${compactPromptText(ltm.enrichmentPrompt, 220)}"`;
+          })
+          .join("\n")}`
       : "";
-  const userMentionedCustomConceptContext =
-    mentionedCustomConcepts.length > 0
-      ? `USER-MENTIONED CUSTOM CONCEPTS:\n${mentionedCustomConcepts.map((cc) => `## ${cc.title}\n${cc.summary}`).join("\n---\n")}`
+  const mentionedCcBlock =
+    mentionedCustomConceptIds.length > 0
+      ? `USER-MENTIONED CUSTOM CONCEPTS:\n${mentionedCustomConceptIds
+          .map((id, index) => {
+            const cc = ccById.get(id);
+            if (!cc) return `- rank:${index + 1} | id:${id} | title:"Concept"`;
+            return `- rank:${index + 1} | id:${id} | title:"${compactPromptText(
+              cc.title ?? "Concept",
+              80
+            )}" | enrichment:"${compactPromptText(cc.enrichmentPrompt, 220)}"`;
+          })
+          .join("\n")}`
       : "";
-
+  const mentionedCgBlock =
+    mentionedConceptGroupIds.length > 0
+      ? `USER-MENTIONED CONCEPT GROUPS:\n${mentionedConceptGroupIds
+          .map((id, index) => {
+            const cg = cgById.get(id);
+            if (!cg) return `- rank:${index + 1} | id:${id} | title:"Domain"`;
+            const prompts = cg.enrichmentPrompts
+              .map((p) => compactPromptText(p, 100))
+              .filter(Boolean)
+              .join(" | ");
+            return `- rank:${index + 1} | id:${id} | title:"${compactPromptText(
+              cg.title,
+              80
+            )}" | concept_enrichment:"${prompts}"`;
+          })
+          .join("\n")}`
+      : "";
+  const userMentionSections = [
+    mentionedMmBlock,
+    mentionedLtmBlock,
+    mentionedCcBlock,
+    mentionedCgBlock,
+  ].filter((s) => s.trim().length > 0);
   const userMentionBlock =
-    userMentionedModelContext || userMentionedLtmContext || userMentionedCustomConceptContext
-      ? `USER-MENTIONED CONTEXT (the user explicitly referenced these):\n${userMentionedModelContext ? `\nMENTAL MODELS:\n${userMentionedModelContext}` : ""}${userMentionedLtmContext ? `\n\n${userMentionedLtmContext}` : ""}${userMentionedCustomConceptContext ? `\n\n${userMentionedCustomConceptContext}` : ""}\n\n`
+    userMentionSections.length > 0
+      ? `USER-MENTIONED CONTEXT (explicitly referenced by user):\n${userMentionSections.join(
+          "\n\n"
+        )}\n\n`
       : "";
 
   const conversationHistory = messagesForModel.slice(0, -1).map((m) => ({
@@ -299,35 +333,100 @@ export async function POST(request: Request) {
   const predLtmIds = new Set(predictedContext.longTermMemories.map((m) => m.id));
   const predCcIds = new Set(predictedContext.customConcepts.map((c) => c.id));
   const predCgIds = new Set(predictedContext.conceptGroups.map((g) => g.id));
+  const predMmIds = new Set(predictedContext.mentalModels.map((m) => m.id));
+  const predictedMmReasonById = new Map(
+    predictedContext.mentalModels.map((m) => [m.id, m.reason])
+  );
+  const predictedLtmReasonById = new Map(
+    predictedContext.longTermMemories.map((m) => [m.id, m.reason])
+  );
+  const predictedCcReasonById = new Map(
+    predictedContext.customConcepts.map((m) => [m.id, m.reason])
+  );
+  const predictedCgReasonById = new Map(
+    predictedContext.conceptGroups.map((m) => [m.id, m.reason])
+  );
 
-  const ltmToInclude = predLtmIds.size > 0
-    ? ltmEnrichmentWithIds.filter((e) => predLtmIds.has(e.id))
-    : ltmEnrichmentWithIds;
-  const ccToInclude = predCcIds.size > 0
-    ? ccEnrichmentWithIds.filter((e) => predCcIds.has(e.id))
-    : ccEnrichmentWithIds;
-  const cgToInclude = predCgIds.size > 0
-    ? conceptGroupEnrichment.filter((g) => predCgIds.has(g.id))
-    : conceptGroupEnrichment;
+  // Scope prompt context strictly to predicted relevant items.
+  const mmToInclude = index.mental_models.filter((m) => predMmIds.has(m.id));
+  const ltmToInclude = ltmEnrichmentWithIds.filter((e) => predLtmIds.has(e.id));
+  const ccToInclude = ccEnrichmentWithIds.filter((e) => predCcIds.has(e.id));
+  const cgToInclude = conceptGroupEnrichment.filter((g) => predCgIds.has(g.id));
+
+  const mmBlock =
+    mmToInclude.length > 0
+      ? `PREDICTED MENTAL MODELS (reference format: [[model_id]]):\n${mmToInclude
+          .map((m, index) => {
+            const oneLiner = m.description.split("\n")[0]?.trim() ?? m.description;
+            return `- rank:${index + 1} | id:${m.id} | name:"${compactPromptText(
+              m.name,
+              80
+            )}" | reason:"${compactPromptText(
+              predictedMmReasonById.get(m.id) ?? "predicted relevant",
+              80
+            )}" | one_liner:"${compactPromptText(oneLiner)}"`;
+          })
+          .join("\n")}\n\n`
+      : "";
 
   const ltmBlock =
     ltmToInclude.length > 0
-      ? `LONG-TERM MEMORIES (use [[memory:ID]] when referencing):\n${ltmToInclude.map((e) => `- [${e.id}]: ${e.enrichmentPrompt}`).join("\n")}\n\n`
+      ? `PREDICTED LONG-TERM MEMORIES (reference format: [[memory:ID]]):\n${ltmToInclude
+          .map(
+            (e, index) =>
+              `- rank:${index + 1} | id:${e.id} | title:"${compactPromptText(
+                e.title ?? "Memory",
+                80
+              )}" | reason:"${compactPromptText(
+                predictedLtmReasonById.get(e.id) ?? "predicted relevant",
+                80
+              )}" | enrichment:"${compactPromptText(e.enrichmentPrompt, 260)}"`
+          )
+          .join("\n")}\n\n`
       : "";
   const ccBlock =
     ccToInclude.length > 0
-      ? `CUSTOM CONCEPTS (use [[concept:ID]] when referencing):\n${ccToInclude.map((e) => `- [${e.id}]: ${e.enrichmentPrompt}`).join("\n")}\n\n`
+      ? `PREDICTED CUSTOM CONCEPTS (reference format: [[concept:ID]]):\n${ccToInclude
+          .map(
+            (e, index) =>
+              `- rank:${index + 1} | id:${e.id} | title:"${compactPromptText(
+                e.title ?? "Concept",
+                80
+              )}" | reason:"${compactPromptText(
+                predictedCcReasonById.get(e.id) ?? "predicted relevant",
+                80
+              )}" | enrichment:"${compactPromptText(e.enrichmentPrompt, 260)}"`
+          )
+          .join("\n")}\n\n`
       : "";
   const cgBlock =
     cgToInclude.length > 0
-      ? `CONCEPT GROUPS / DOMAINS (use [[group:ID]] when referencing):\n${cgToInclude.map((g) => `- [${g.id}] ${g.title}: ${g.enrichmentPrompts.join(" | ")}`).join("\n")}\n\n`
+      ? `PREDICTED CONCEPT GROUPS (reference format: [[group:ID]]):\n${cgToInclude
+          .map((g, index) => {
+            const prompts = g.enrichmentPrompts
+              .map((p) => compactPromptText(p, 120))
+              .filter(Boolean)
+              .join(" | ");
+            return `- rank:${index + 1} | id:${g.id} | title:"${compactPromptText(
+              g.title,
+              80
+            )}" | reason:"${compactPromptText(
+              predictedCgReasonById.get(g.id) ?? "predicted relevant",
+              80
+            )}" | concept_enrichment:"${prompts}"`;
+          })
+          .join("\n")}\n\n`
       : "";
-  const enrichmentBlock = ltmBlock + ccBlock + cgBlock;
-
-  const mentalModelsBlock =
-    allOneLinersContext.length > 0
-      ? `\n\nALL MENTAL MODELS (id | name | one-liner):\n${allOneLinersContext}`
-      : "";
+  const enrichmentSections = [mmBlock, ltmBlock, ccBlock, cgBlock].filter(
+    (s) => s.trim().length > 0
+  );
+  const enrichmentBlock =
+    enrichmentSections.length > 0
+      ? `AVAILABLE CONTEXT FOR THIS TURN (only predicted relevant items):\n${enrichmentSections.join(
+          ""
+        )}`
+      : "AVAILABLE CONTEXT FOR THIS TURN: (none predicted)";
+  const citationFormatGuide = `REFERENCE FORMAT GUIDE:\n- Mental model: [[model_id]]\n- Long-term memory: [[memory:ID]]\n- Custom concept: [[concept:ID]]\n- Concept group: [[group:ID]]`;
 
   const languageInstruction =
     language !== "en"
@@ -340,8 +439,13 @@ export async function POST(request: Request) {
       ? `\n\nCONVERSATION STYLE: ${userTypeStylePrompt}`
       : "";
 
-  const indexContent = (indexSummary + mentalModelsBlock).trim() || "(none)";
-  const contextContent = (userMentionBlock + enrichmentBlock).trim() || "(none)";
+  const indexContent = indexSummary.trim() || "(none)";
+  const contextContent = (
+    citationFormatGuide +
+    "\n\n" +
+    userMentionBlock +
+    enrichmentBlock
+  ).trim() || "(none)";
   const optionsStyleInstruction =
     getUserTypeOptionsPrompt(userType as UserTypeId) || "Natural, conversational first-person.";
   const fullSystemPrompt =
@@ -351,12 +455,25 @@ export async function POST(request: Request) {
     languageInstruction +
     conversationStyleInstruction;
 
-  const ltmIdToTitle = new Map(ltmEnrichmentWithIds.map((e) => [e.id, e.title ?? e.enrichmentPrompt?.slice(0, 40) ?? "Memory"]));
-  const ccIdToTitle = new Map(ccEnrichmentWithIds.map((e) => [e.id, e.title ?? e.enrichmentPrompt?.slice(0, 40) ?? "Concept"]));
+  const ltmIdToTitle = new Map(
+    ltmEnrichmentWithIds.map((e) => [
+      e.id,
+      e.title ?? e.enrichmentPrompt?.slice(0, 40) ?? "Memory",
+    ])
+  );
+  const ccIdToTitle = new Map(
+    ccEnrichmentWithIds.map((e) => [
+      e.id,
+      e.title ?? e.enrichmentPrompt?.slice(0, 40) ?? "Concept",
+    ])
+  );
   const cgIdToTitle = new Map(conceptGroupEnrichment.map((g) => [g.id, g.title]));
-  const relevantContextResult = {
+  const predictedContextResult: RelevantContext = {
     mentalModels: predictedContext.mentalModels,
-    longTermMemories: predictedContext.longTermMemories.map((m) => ({ ...m, title: ltmIdToTitle.get(m.id) ?? "Memory" })),
+    longTermMemories: predictedContext.longTermMemories.map((m) => ({
+      ...m,
+      title: ltmIdToTitle.get(m.id) ?? "Memory",
+    })),
     customConcepts: predictedContext.customConcepts.map((c) => ({
       ...c,
       title: ccIdToTitle.get(c.id) ?? cgIdToTitle.get(c.id) ?? "Concept",
@@ -366,13 +483,38 @@ export async function POST(request: Request) {
       title: cgIdToTitle.get(g.id) ?? ccIdToTitle.get(g.id) ?? "Domain",
     })),
   };
+  const contextEnvelopeForStream = {
+    predictedContext: predictedContextResult,
+  };
 
   const { start: ctxStart, end: ctxEnd } = getRelevantContextBlockDelimiters();
-  const contextBlockForStream = `${ctxStart}\n${JSON.stringify(relevantContextResult)}\n${ctxEnd}`;
+  const contextBlockForStream = `${ctxStart}\n${JSON.stringify(
+    contextEnvelopeForStream
+  )}\n${ctxEnd}`;
+
+  const citationAlignmentPolicy = normalizeCitationAlignmentPolicy(
+    process.env.CITATION_ALIGNMENT_POLICY
+  );
+
+  const predictedMentalModelIds = predictedContextResult.mentalModels.map(
+    (m) => m.id
+  );
+  const predictedLtmIds = predictedContextResult.longTermMemories.map((m) => m.id);
+  const predictedCustomConceptIds = predictedContextResult.customConcepts.map(
+    (c) => c.id
+  );
+  const predictedConceptGroupIds = predictedContextResult.conceptGroups.map(
+    (g) => g.id
+  );
 
   if (process.env.NODE_ENV === "development") {
-    const requestText = messagesForModel.map((m) => `${m.role}: ${m.content}`).join(" | ");
-    console.debug("[Chat] LLM REQUEST:", requestText.replace(/\s+/g, " ").trim());
+    const requestText = messagesForModel
+      .map(
+        (m, index) =>
+          `${index + 1}. ${m.role.toUpperCase()}\n${m.content.trim()}`
+      )
+      .join("\n\n");
+    console.debug(formatDevLogBlock("[Chat] LLM REQUEST", requestText));
   }
 
   try {
@@ -382,6 +524,12 @@ export async function POST(request: Request) {
 
     const encoder = new TextEncoder();
     let fullResponse = "";
+    let citedContextResult: RelevantContext = {
+      mentalModels: [],
+      longTermMemories: [],
+      customConcepts: [],
+      conceptGroups: [],
+    };
 
     const stream = new ReadableStream({
       async start(controller) {
@@ -395,9 +543,49 @@ export async function POST(request: Request) {
             controller.enqueue(encoder.encode(chunk));
           }
           if (process.env.NODE_ENV === "development") {
-            console.debug("[Chat] LLM RESPONSE:", fullResponse.replace(/\s+/g, " ").trim());
+            console.debug(
+              formatDevLogBlock("[Chat] LLM RESPONSE", fullResponse.trim())
+            );
           }
-          const contextBlock = `\n---RELEVANT-CONTEXT---\n${JSON.stringify(relevantContextResult)}`;
+          const citationLabels = {
+            mentalModelLabels: mmIdToName,
+            longTermMemoryLabels: ltmIdToTitle,
+            customConceptLabels: ccIdToTitle,
+            conceptGroupLabels: cgIdToTitle,
+          };
+          citedContextResult = buildCitedContextFromText(fullResponse, citationLabels);
+          const citationDiff = diffCitationsAgainstPredicted(
+            predictedContextResult,
+            citedContextResult
+          );
+          if (hasCitationMismatches(citationDiff)) {
+            if (citationAlignmentPolicy === "warn" || citationAlignmentPolicy === "enforce") {
+              console.warn(
+                formatDevLogBlock(
+                  "[CitationAlignment] MISMATCH",
+                  prettyJson(citationDiff)
+                )
+              );
+            }
+            if (citationAlignmentPolicy === "enforce") {
+              const sanitized = sanitizeDisallowedCitations(
+                fullResponse,
+                predictedContextResult,
+                citationLabels
+              );
+              if (sanitized !== fullResponse) {
+                fullResponse = sanitized;
+                citedContextResult = buildCitedContextFromText(fullResponse, citationLabels);
+              }
+            }
+          }
+          const contextEnvelopeForPersist = {
+            predictedContext: predictedContextResult,
+            citedContext: citedContextResult,
+          };
+          const contextBlock = `\n---RELEVANT-CONTEXT---\n${JSON.stringify(
+            contextEnvelopeForPersist
+          )}`;
           if (!isAnonymous && !incognito && sessionId && userId) {
             await appendMessage(sessionId, "assistant", fullResponse + contextBlock);
             const allMessages = [
@@ -426,9 +614,10 @@ export async function POST(request: Request) {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
         "Transfer-Encoding": "chunked",
-        "X-Context-Sent-Mental-Models": JSON.stringify(sentMentalModels),
-        "X-Context-Sent-LTMs": JSON.stringify(sentLtms),
-        "X-Context-Sent-Concept-Groups": JSON.stringify(sentConceptGroups),
+        "X-Context-Sent-Mental-Models": JSON.stringify(predictedMentalModelIds),
+        "X-Context-Sent-LTMs": JSON.stringify(predictedLtmIds),
+        "X-Context-Sent-Concept-Groups": JSON.stringify(predictedConceptGroupIds),
+        "X-Context-Sent-Custom-Concepts": JSON.stringify(predictedCustomConceptIds),
       },
     });
   } catch (err) {

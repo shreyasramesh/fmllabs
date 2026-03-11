@@ -19,6 +19,12 @@ export interface RelevantContext {
   conceptGroups: RelevantContextItem[];
 }
 
+export interface RelevantContextEnvelope {
+  predictedContext?: RelevantContext;
+  citedContext?: RelevantContext;
+  relevantContext?: RelevantContext;
+}
+
 function normalizeContextItems(raw: unknown): RelevantContextItem[] {
   if (!Array.isArray(raw)) return [];
   return raw.flatMap((item): RelevantContextItem[] => {
@@ -58,6 +64,81 @@ function tryParseRelevantContextJson(jsonStr: string): RelevantContext | null {
   }
 }
 
+function normalizeRelevantContext(raw: unknown): RelevantContext {
+  const obj =
+    raw && typeof raw === "object"
+      ? (raw as Record<string, unknown>)
+      : {};
+  return {
+    mentalModels: normalizeContextItems(obj.mentalModels),
+    longTermMemories: normalizeContextItems(obj.longTermMemories),
+    customConcepts: normalizeContextItems(obj.customConcepts ?? []),
+    conceptGroups: normalizeContextItems(obj.conceptGroups ?? []),
+  };
+}
+
+function isContextEnvelope(raw: unknown): raw is Record<string, unknown> {
+  if (!raw || typeof raw !== "object") return false;
+  const obj = raw as Record<string, unknown>;
+  return (
+    "predictedContext" in obj ||
+    "citedContext" in obj ||
+    "relevantContext" in obj
+  );
+}
+
+function isContextPresent(ctx: RelevantContext): boolean {
+  return (
+    ctx.mentalModels.length > 0 ||
+    ctx.longTermMemories.length > 0 ||
+    ctx.customConcepts.length > 0 ||
+    ctx.conceptGroups.length > 0
+  );
+}
+
+function tryParseRelevantContextPayload(jsonStr: string): {
+  relevantContext: RelevantContext | null;
+  contextEnvelope: RelevantContextEnvelope | null;
+} | null {
+  const cleaned = jsonStr
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```\s*$/i, "")
+    .trim();
+  try {
+    const parsed = JSON.parse(cleaned) as unknown;
+    if (isContextEnvelope(parsed)) {
+      const envelopeObj = parsed as Record<string, unknown>;
+      const predictedContext = "predictedContext" in envelopeObj
+        ? normalizeRelevantContext(envelopeObj.predictedContext)
+        : undefined;
+      const citedContext = "citedContext" in envelopeObj
+        ? normalizeRelevantContext(envelopeObj.citedContext)
+        : undefined;
+      const legacyRelevantContext = "relevantContext" in envelopeObj
+        ? normalizeRelevantContext(envelopeObj.relevantContext)
+        : undefined;
+      const resolved =
+        citedContext ??
+        predictedContext ??
+        legacyRelevantContext ??
+        null;
+      return {
+        relevantContext: resolved,
+        contextEnvelope: {
+          predictedContext,
+          citedContext,
+          relevantContext: legacyRelevantContext,
+        },
+      };
+    }
+    const legacy = tryParseRelevantContextJson(cleaned);
+    if (!legacy) return null;
+    return { relevantContext: legacy, contextEnvelope: { relevantContext: legacy } };
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Parses and strips the RELEVANT-CONTEXT block from assistant content.
  * Returns content without the block and the parsed relevant context, or null if not found/invalid.
@@ -66,6 +147,7 @@ function tryParseRelevantContextJson(jsonStr: string): RelevantContext | null {
 export function parseRelevantContextBlock(content: string): {
   contentWithoutBlock: string;
   relevantContext: RelevantContext | null;
+  contextEnvelope?: RelevantContextEnvelope | null;
 } {
   const idx = content.indexOf(RELEVANT_CONTEXT_MARKER);
   if (idx === -1) {
@@ -81,9 +163,13 @@ export function parseRelevantContextBlock(content: string): {
   ].filter((s) => s.length > 0);
 
   for (const candidate of candidates) {
-    const result = tryParseRelevantContextJson(candidate);
+    const result = tryParseRelevantContextPayload(candidate);
     if (result) {
-      return { contentWithoutBlock, relevantContext: result };
+      return {
+        contentWithoutBlock,
+        relevantContext: result.relevantContext,
+        contextEnvelope: result.contextEnvelope,
+      };
     }
   }
   return { contentWithoutBlock, relevantContext: null };
@@ -96,6 +182,7 @@ export function parseRelevantContextBlock(content: string): {
 export function parseRelevantContextFromStreamStart(content: string): {
   contentWithoutBlock: string;
   relevantContext: RelevantContext | null;
+  contextEnvelope?: RelevantContextEnvelope | null;
 } {
   const startIdx = content.indexOf(RELEVANT_CONTEXT_MARKER);
   if (startIdx !== 0) {
@@ -108,8 +195,21 @@ export function parseRelevantContextFromStreamStart(content: string): {
   }
   const jsonStr = afterStart.slice(0, endIdx).trim();
   const contentWithoutBlock = afterStart.slice(endIdx + RELEVANT_CONTEXT_END_MARKER.length).trimStart();
-  const result = tryParseRelevantContextJson(jsonStr);
-  return { contentWithoutBlock, relevantContext: result };
+  const result = tryParseRelevantContextPayload(jsonStr);
+  if (!result) {
+    return { contentWithoutBlock, relevantContext: null };
+  }
+  // For stream-start overlay, prefer predicted context when present.
+  const overlayContext =
+    result.contextEnvelope?.predictedContext &&
+    isContextPresent(result.contextEnvelope.predictedContext)
+      ? result.contextEnvelope.predictedContext
+      : result.relevantContext;
+  return {
+    contentWithoutBlock,
+    relevantContext: overlayContext,
+    contextEnvelope: result.contextEnvelope,
+  };
 }
 
 const OPTIONS_MARKER_REGEX = /-{2,3}\s*OPTIONS\s*-{2,3}/i;
