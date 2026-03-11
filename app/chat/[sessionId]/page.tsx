@@ -36,7 +36,6 @@ import { stripMarkdown } from "@/lib/strip-markdown";
 import { resolveTtsReferenceText } from "@/lib/tts-reference-text";
 import { TTSButton } from "@/components/TTSButton";
 import { VoiceInputButton } from "@/components/VoiceInputButton";
-import { FullVoiceMode } from "@/components/FullVoiceMode";
 import { useTtsSpeed } from "@/components/TtsSpeedProvider";
 import { useBackground } from "@/components/BackgroundProvider";
 import Image from "next/image";
@@ -199,8 +198,13 @@ function MessageBubble({
   const assistantSpeechText = message.role === "assistant"
     ? (assistantPlainText + assistantOptionsPrefix + optionPlainTexts.join(". ")).trim()
     : text;
+  const userPlainText = message.role === "user"
+    ? resolveTtsReferenceText(text, { idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle })
+    : "";
   const isAssistantTtsActive =
     message.role === "assistant" && typeof ttsHighlight === "number" && ttsHighlight >= 0;
+  const isUserTtsActive =
+    message.role === "user" && typeof ttsHighlight === "number" && ttsHighlight >= 0;
   const isSpeakingAssistantBody = isAssistantTtsActive && ttsHighlight < assistantPlainText.length;
   const activeOptionHighlight = (() => {
     if (!isAssistantTtsActive || optionPlainTexts.length === 0) return null;
@@ -308,29 +312,36 @@ function MessageBubble({
           <div className="absolute top-2 right-2">
             <TTSButton
               text={message.role === "assistant" ? assistantSpeechText : text}
-              plainText={message.role === "assistant" ? assistantSpeechText : undefined}
+              plainText={message.role === "assistant" ? assistantSpeechText : userPlainText}
               showOnHover={false}
               layout="vertical"
               ariaLabel="Listen to message"
-              onTtsProgress={message.role === "assistant" ? (charEnd) => onTtsProgress?.(messageIndex, charEnd) : undefined}
-              onTtsEnd={message.role === "assistant" ? onTtsEnd : undefined}
+              onTtsProgress={(charEnd) => onTtsProgress?.(messageIndex, charEnd)}
+              onTtsEnd={onTtsEnd}
             />
           </div>
         )}
         {message.role === "user" ? (
           <span className="message-bubble-text text-sm md:text-base">
-            <UserMessageContent
-              content={text}
-              idToName={idToName}
-              ltmIdToTitle={ltmIdToTitle}
-              ccIdToTitle={ccIdToTitle}
-              cgIdToTitle={cgIdToTitle}
-              onMentalModelClick={(id) => onMentalModelClick(id, text)}
-              onLtmClick={onLtmClick}
-              onCustomConceptClick={onCustomConceptClick}
-              onConceptGroupClick={onConceptGroupClick}
-              previewMap={previewMap}
-            />
+            {isUserTtsActive ? (
+              <TtsHighlightedText
+                text={userPlainText}
+                charEnd={ttsHighlight}
+              />
+            ) : (
+              <UserMessageContent
+                content={text}
+                idToName={idToName}
+                ltmIdToTitle={ltmIdToTitle}
+                ccIdToTitle={ccIdToTitle}
+                cgIdToTitle={cgIdToTitle}
+                onMentalModelClick={(id) => onMentalModelClick(id, text)}
+                onLtmClick={onLtmClick}
+                onCustomConceptClick={onCustomConceptClick}
+                onConceptGroupClick={onConceptGroupClick}
+                previewMap={previewMap}
+              />
+            )}
           </span>
         ) : (
           <div className="message-bubble-text text-sm md:text-base">
@@ -1231,7 +1242,6 @@ export default function ChatPage() {
   } | null>(null);
   const [summarizeLoading, setSummarizeLoading] = useState(false);
   const [summarizeSuccess, setSummarizeSuccess] = useState(false);
-  const [voiceModeOpen, setVoiceModeOpen] = useState(false);
   const { speed: ttsSpeed, setSpeed: setTtsSpeed } = useTtsSpeed();
   const { background, setBackground } = useBackground();
   const [weatherFormat, setWeatherFormat] = useState<WeatherFormat>("condition-temp");
@@ -2042,6 +2052,18 @@ export default function ChatPage() {
       return () => clearTimeout(t);
     }
   }, [inputExpandModalOpen]);
+
+  useEffect(() => {
+    const handleCopy = (e: ClipboardEvent) => {
+      const selection = window.getSelection();
+      const selectedText = selection?.toString() ?? "";
+      if (!selectedText || !e.clipboardData) return;
+      e.preventDefault();
+      e.clipboardData.setData("text/plain", selectedText);
+    };
+    document.addEventListener("copy", handleCopy);
+    return () => document.removeEventListener("copy", handleCopy);
+  }, []);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -3218,7 +3240,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             }}
           >
             {messages.length === 0 && (
-              <div className={`flex w-full min-w-0 max-w-2xl flex-col items-center justify-center text-center px-2 ${voiceModeOpen ? "space-y-2" : "space-y-8"}`}>
+              <div className="flex w-full min-w-0 max-w-2xl flex-col items-center justify-center text-center px-2 space-y-8">
                 <div className="animate-fade-in-up w-full min-w-0">
                   {incognitoMode ? (
                     <div className="flex flex-col items-center gap-4 text-neutral-600 dark:text-neutral-400">
@@ -3237,10 +3259,10 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     </div>
                   ) : (
                     <>
-                      <p className={`w-full min-w-0 break-words text-neutral-500 dark:text-neutral-400 ${voiceModeOpen ? "text-sm mb-2" : "text-base sm:text-lg mb-6"}`}>
+                      <p className="w-full min-w-0 break-words text-neutral-500 dark:text-neutral-400 text-base sm:text-lg mb-6">
                         Let&apos;s dig in—with mental models that actually work
                       </p>
-                      {isAnonymous && !voiceModeOpen && (
+                      {isAnonymous && (
                         <button
                           type="button"
                           onClick={() => {
@@ -3265,14 +3287,12 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     </>
                   )}
                 </div>
-                {!voiceModeOpen && (
                 <div className="w-full">
                   <MovingPills
                     language={language}
                     onSelect={(text) => sendMessage(text)}
                   />
                 </div>
-                )}
               </div>
             )}
             {messages.map((m, i) => (
@@ -3336,7 +3356,6 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 ttsHighlight={ttsHighlight && "messageIndex" in ttsHighlight && ttsHighlight.messageIndex === i ? ttsHighlight.charEnd : undefined}
                 onTtsProgress={(msgIdx, charEnd) => setTtsHighlight({ messageIndex: msgIdx, charEnd })}
                 onTtsEnd={() => setTtsHighlight(null)}
-                showTtsButton={!voiceModeOpen}
               />
             ))}
             <div ref={messagesEndRef} />
@@ -3499,23 +3518,6 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             </div>
           )}
           <div className="flex flex-col items-center justify-center px-4 pt-2 pb-2 sm:pt-3 sm:pb-3 min-w-0 gap-1.5 sm:gap-2">
-            {voiceModeOpen ? (
-              <FullVoiceMode
-                embed
-                onClose={() => setVoiceModeOpen(false)}
-                onSendMessage={(text) => sendMessage(text)}
-                messages={messages}
-                isLoading={isLoading}
-                language={language}
-                idToName={mentalModelsIndex}
-                ltmIdToTitle={new Map(longTermMemories.map((ltm) => [ltm._id, ltm.title]))}
-                ccIdToTitle={new Map(customConcepts.map((cc) => [cc._id, cc.title]))}
-                cgIdToTitle={new Map(conceptGroups.map((cg) => [cg._id, cg.title]))}
-                onTtsProgress={(messageIndex, charEnd) => setTtsHighlight({ messageIndex, charEnd })}
-                onTtsEnd={() => setTtsHighlight(null)}
-                speed={ttsSpeed}
-              />
-            ) : (
             <div className="min-w-0 max-w-2xl w-full flex items-stretch gap-1.5 sm:gap-2 min-h-[52px]" data-tour="input-area">
               <div className="relative flex-1 min-w-0">
                 <MentionInput
@@ -3597,7 +3599,6 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               </div>
               <VoiceInputButton
                 onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
-                onLongPress={() => setVoiceModeOpen(true)}
                 language={language}
                 disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                 ariaLabel="Voice input"
@@ -3619,7 +3620,6 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 )}
                 </button>
               </div>
-            )}
           </div>
         </div>
       </main>
@@ -3721,10 +3721,6 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                   <VoiceInputButton
                     onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
-                    onLongPress={() => {
-                      setInputExpandModalOpen(false);
-                      setVoiceModeOpen(true);
-                    }}
                     language={language}
                     disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                     ariaLabel="Voice input"

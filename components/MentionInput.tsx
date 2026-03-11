@@ -709,6 +709,7 @@ export function MentionInput({
 
   const syncFromValue = useCallback(() => {
     if (!ref.current) return;
+    const hadFocus = document.activeElement === ref.current;
     const html = renderValueToHtml(
       value,
       mentalModelsRef.current,
@@ -730,6 +731,7 @@ export function MentionInput({
         : null;
       const isAppend = prevValue !== undefined && value.length > prevValue.length && value.startsWith(prevValue);
       const caretOffset = stored ?? (isAppend ? expectedSerialized.length : getCaretOffset(ref.current));
+      const shouldRestoreSelection = hadFocus || stored !== null;
       lastCaretOnInputRef.current = null;
       ref.current.innerHTML = html || "";
       ref.current.setAttribute("data-value", value);
@@ -739,11 +741,13 @@ export function MentionInput({
             mapCaretPosition(caretOffset, currentSerialized, expectedSerialized),
             expectedSerialized.length
           );
-      requestAnimationFrame(() => {
-        if (!ref.current) return;
-        ref.current.focus();
-        setCaretToPosition(ref.current, newPosition);
-      });
+      if (shouldRestoreSelection) {
+        requestAnimationFrame(() => {
+          if (!ref.current) return;
+          ref.current.focus();
+          setCaretToPosition(ref.current, newPosition);
+        });
+      }
     }
   }, [value, ref, mentionState]);
 
