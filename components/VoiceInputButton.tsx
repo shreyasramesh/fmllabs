@@ -71,7 +71,7 @@ export function VoiceInputButton({
   const holdProgressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const holdStartRef = useRef<number>(0);
   const didLongPressRef = useRef(false);
-  const processedFinalIndicesRef = useRef<Set<number>>(new Set());
+  const lastFinalAggregateRef = useRef("");
 
   useEffect(() => {
     setSupported(!!getSpeechRecognition());
@@ -99,7 +99,7 @@ export function VoiceInputButton({
     recognition.interimResults = true;
     recognition.lang = LANG_TO_SPEECH[language] ?? "en-US";
     recognition.maxAlternatives = 1;
-    processedFinalIndicesRef.current.clear();
+    lastFinalAggregateRef.current = "";
 
     recognition.onresult = (event: {
       resultIndex?: number;
@@ -110,19 +110,42 @@ export function VoiceInputButton({
       }>;
     }) => {
       const results = event.results;
-      const startIndex =
-        typeof event.resultIndex === "number" && event.resultIndex >= 0
-          ? event.resultIndex
-          : 0;
-      for (let i = startIndex; i < results.length; i++) {
+      // Mobile engines may repeatedly emit cumulative finals. Emit only the new delta.
+      let finalAggregate = "";
+      for (let i = 0; i < results.length; i++) {
         const result = results[i];
         if (!result?.isFinal) continue;
-        if (processedFinalIndicesRef.current.has(i)) continue;
-        processedFinalIndicesRef.current.add(i);
-        const transcript = (result[0]?.transcript ?? "").trim();
-        if (transcript) {
-          onTranscription(transcript);
+        finalAggregate += (result[0]?.transcript ?? "") + " ";
+      }
+      finalAggregate = finalAggregate.trim();
+      if (!finalAggregate) return;
+
+      const prev = lastFinalAggregateRef.current.trim();
+      let delta = "";
+      if (!prev) {
+        delta = finalAggregate;
+      } else if (finalAggregate.startsWith(prev)) {
+        delta = finalAggregate.slice(prev.length).trim();
+      } else {
+        // If engine rewrites earlier words, avoid replaying full history.
+        const prevWords = prev.split(/\s+/);
+        const nextWords = finalAggregate.split(/\s+/);
+        let overlap = 0;
+        const maxOverlap = Math.min(prevWords.length, nextWords.length);
+        for (let len = maxOverlap; len > 0; len--) {
+          const prevTail = prevWords.slice(prevWords.length - len).join(" ");
+          const nextHead = nextWords.slice(0, len).join(" ");
+          if (prevTail === nextHead) {
+            overlap = len;
+            break;
+          }
         }
+        delta = nextWords.slice(overlap).join(" ").trim();
+      }
+
+      lastFinalAggregateRef.current = finalAggregate;
+      if (delta) {
+        onTranscription(delta);
       }
     };
 
@@ -138,7 +161,7 @@ export function VoiceInputButton({
         setListening(false);
         recognitionRef.current = null;
       }
-      processedFinalIndicesRef.current.clear();
+      lastFinalAggregateRef.current = "";
     };
 
     try {
