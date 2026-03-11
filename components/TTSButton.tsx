@@ -32,7 +32,7 @@ export function TTSButton({
   const [paused, setPaused] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioUrlRef = useRef<string | null>(null);
-  const { speed } = useTtsSpeed();
+  const { speed, clonedVoiceId } = useTtsSpeed();
   const { language } = useLanguage();
   const onTtsProgressRef = useRef(onTtsProgress);
   const onTtsEndRef = useRef(onTtsEnd);
@@ -97,7 +97,7 @@ export function TTSButton({
         const res = await fetch("/api/tts-with-timestamps", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: textToSpeak, speed: apiSpeed, language }),
+          body: JSON.stringify({ text: textToSpeak, speed: apiSpeed, language, voice_id: clonedVoiceId ?? undefined }),
         });
         if (!res.ok) throw new Error("TTS failed");
         const data = await res.json();
@@ -135,7 +135,7 @@ export function TTSButton({
         const res = await fetch("/api/tts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: textToSpeak, speed: apiSpeed, language }),
+          body: JSON.stringify({ text: textToSpeak, speed: apiSpeed, language, voice_id: clonedVoiceId ?? undefined }),
         });
         if (!res.ok) throw new Error("TTS failed");
         const blob = await res.blob();
@@ -159,7 +159,7 @@ export function TTSButton({
     } finally {
       setLoading(false);
     }
-  }, [content, disabled, paused, playing, speed, useTimestamps, language, resetAudio]);
+  }, [content, disabled, paused, playing, speed, useTimestamps, language, clonedVoiceId, resetAudio]);
 
   const handleRestart = useCallback(async () => {
     const audio = audioRef.current;

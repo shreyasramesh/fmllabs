@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { getUserSettings } from "@/lib/db";
 import { isValidLanguageCode, type LanguageCode } from "@/lib/languages";
 import { getVoiceIdForLanguage, getLanguageCodeForTts } from "@/lib/tts-voices";
 
@@ -16,6 +18,7 @@ export async function POST(request: Request) {
     const text = typeof body.text === "string" ? body.text.trim() : "";
     const speed = typeof body.speed === "number" ? Math.max(0.7, Math.min(1.2, body.speed)) : 1;
     const language: LanguageCode = isValidLanguageCode(body.language) ? body.language : "en";
+    const requestedVoiceId = typeof body.voice_id === "string" ? body.voice_id.trim() : undefined;
     if (!text) {
       return NextResponse.json({ error: "text is required" }, { status: 400 });
     }
@@ -26,7 +29,16 @@ export async function POST(request: Request) {
       );
     }
 
-    const voiceId = getVoiceIdForLanguage(language);
+    let voiceId = getVoiceIdForLanguage(language);
+    if (requestedVoiceId) {
+      const { userId } = await auth();
+      if (userId) {
+        const settings = await getUserSettings(userId);
+        if (settings?.clonedVoiceId === requestedVoiceId) {
+          voiceId = requestedVoiceId;
+        }
+      }
+    }
     const languageCode = getLanguageCodeForTts(language);
 
     const res = await fetch(

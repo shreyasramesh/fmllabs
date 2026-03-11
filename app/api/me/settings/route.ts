@@ -75,6 +75,12 @@ export async function PATCH(request: Request) {
         updates.weatherFormat = body.weatherFormat;
       }
     }
+    if (body.clonedVoiceId !== undefined) {
+      updates.clonedVoiceId = typeof body.clonedVoiceId === "string" ? body.clonedVoiceId || undefined : undefined;
+    }
+    if (body.clonedVoiceName !== undefined) {
+      updates.clonedVoiceName = typeof body.clonedVoiceName === "string" ? body.clonedVoiceName || undefined : undefined;
+    }
 
     if (Object.keys(updates).length === 0) {
       const current = await getUserSettings(userId);

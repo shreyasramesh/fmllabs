@@ -24,6 +24,9 @@ function clampSpeed(v: number): number {
 const TtsSpeedContext = createContext<{
   speed: number;
   setSpeed: (speed: number) => void;
+  clonedVoiceId: string | null;
+  clonedVoiceName: string | null;
+  refreshSettings: () => void;
 } | null>(null);
 
 export function useTtsSpeed() {
@@ -35,8 +38,28 @@ export function useTtsSpeed() {
 export function TtsSpeedProvider({ children }: { children: React.ReactNode }) {
   const { userId } = useAuth();
   const [speed, setSpeedState] = useState(DEFAULT_SPEED);
+  const [clonedVoiceId, setClonedVoiceId] = useState<string | null>(null);
+  const [clonedVoiceName, setClonedVoiceName] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const fetchedRef = useRef(false);
+
+  const fetchSettings = useCallback(() => {
+    if (!userId) return;
+    fetch("/api/me/settings")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.ttsSpeed != null) {
+          const v = typeof data.ttsSpeed === "number" ? data.ttsSpeed : parseFloat(data.ttsSpeed);
+          if (!Number.isNaN(v)) setSpeedState(clampSpeed(v));
+        }
+        setClonedVoiceId(data?.clonedVoiceId ?? null);
+        setClonedVoiceName(data?.clonedVoiceName ?? null);
+      })
+      .catch(() => {})
+      .finally(() => {
+        fetchedRef.current = false;
+      });
+  }, [userId]);
 
   useEffect(() => {
     setMounted(true);
@@ -55,22 +78,15 @@ export function TtsSpeedProvider({ children }: { children: React.ReactNode }) {
     if (!mounted || !userId) return;
     if (fetchedRef.current) return;
     fetchedRef.current = true;
-    fetch("/api/me/settings")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data?.ttsSpeed != null) {
-          const v = typeof data.ttsSpeed === "number" ? data.ttsSpeed : parseFloat(data.ttsSpeed);
-          if (!Number.isNaN(v)) setSpeedState(clampSpeed(v));
-        }
-      })
-      .catch(() => {})
-      .finally(() => {
-        fetchedRef.current = false;
-      });
-  }, [mounted, userId]);
+    fetchSettings();
+  }, [mounted, userId, fetchSettings]);
 
   useEffect(() => {
-    if (!userId) fetchedRef.current = false;
+    if (!userId) {
+      fetchedRef.current = false;
+      setClonedVoiceId(null);
+      setClonedVoiceName(null);
+    }
   }, [userId]);
 
   useEffect(() => {
@@ -97,8 +113,20 @@ export function TtsSpeedProvider({ children }: { children: React.ReactNode }) {
     [userId]
   );
 
+  const refreshSettings = useCallback(() => {
+    fetchSettings();
+  }, [fetchSettings]);
+
   return (
-    <TtsSpeedContext.Provider value={{ speed, setSpeed }}>
+    <TtsSpeedContext.Provider
+      value={{
+        speed,
+        setSpeed,
+        clonedVoiceId,
+        clonedVoiceName,
+        refreshSettings,
+      }}
+    >
       {children}
     </TtsSpeedContext.Provider>
   );

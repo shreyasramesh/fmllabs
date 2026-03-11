@@ -133,6 +133,9 @@ export interface UserSettings {
   language?: string;
   userType?: string;
   ttsSpeed?: number;
+  /** ElevenLabs Instant Voice Clone ID; when set, TTS uses this voice. Audio clips are never stored—only this ID. */
+  clonedVoiceId?: string;
+  clonedVoiceName?: string;
   background?: BackgroundElement;
   weatherFormat?: "condition-temp" | "emoji-temp" | "temp-only";
   updatedAt: Date;
@@ -969,6 +972,8 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     language: doc.language,
     userType: doc.userType,
     ttsSpeed: doc.ttsSpeed,
+    clonedVoiceId: doc.clonedVoiceId,
+    clonedVoiceName: doc.clonedVoiceName,
     background: doc.background,
     weatherFormat: doc.weatherFormat,
     updatedAt: doc.updatedAt,
@@ -977,7 +982,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "background" | "weatherFormat">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "background" | "weatherFormat">>
 ): Promise<UserSettings> {
   const database = await getDb();
   const now = new Date();
@@ -995,6 +1000,8 @@ export async function upsertUserSettings(
     language: result.language,
     userType: result.userType,
     ttsSpeed: result.ttsSpeed,
+    clonedVoiceId: result.clonedVoiceId,
+    clonedVoiceName: result.clonedVoiceName,
     background: result.background,
     weatherFormat: result.weatherFormat,
     updatedAt: result.updatedAt,

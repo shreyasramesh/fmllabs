@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { parseAssistantMessage } from "@/lib/chat-utils";
+import { useTtsSpeed } from "@/components/TtsSpeedProvider";
 import { resolveTtsReferenceText } from "@/lib/tts-reference-text";
 
 const AudioOrbVisual = dynamic(
@@ -77,6 +78,7 @@ export function FullVoiceMode({
   /** Playback speed 0.7–1.2 (ElevenLabs) */
   speed?: number;
 }) {
+  const { clonedVoiceId } = useTtsSpeed();
   const [listening, setListening] = useState(false);
   const [ttsPlaying, setTtsPlaying] = useState(false);
   const [ttsPaused, setTtsPaused] = useState(false);
@@ -341,7 +343,7 @@ export function FullVoiceMode({
     fetch("/api/tts-with-timestamps", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: textToSpeak, speed: apiSpeed, language }),
+      body: JSON.stringify({ text: textToSpeak, speed: apiSpeed, language, voice_id: clonedVoiceId ?? undefined }),
     })
       .then((res) => {
         if (!res.ok) throw new Error("TTS failed");
@@ -396,7 +398,7 @@ export function FullVoiceMode({
         fetch("/api/tts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: textToSpeak, speed: apiSpeed }),
+          body: JSON.stringify({ text: textToSpeak, speed: apiSpeed, language, voice_id: clonedVoiceId ?? undefined }),
         })
           .then((res) => {
             if (!res.ok) throw new Error("TTS failed");
@@ -429,7 +431,7 @@ export function FullVoiceMode({
             resetTtsAudio(true);
           });
       });
-  }, [messages, isLoading, ttsPlaying, ttsPaused, language, speed, idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle, resetTtsAudio]);
+  }, [messages, isLoading, ttsPlaying, ttsPaused, language, speed, clonedVoiceId, idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle, resetTtsAudio]);
 
   useEffect(() => {
     return () => {

@@ -1242,7 +1242,14 @@ export default function ChatPage() {
   } | null>(null);
   const [summarizeLoading, setSummarizeLoading] = useState(false);
   const [summarizeSuccess, setSummarizeSuccess] = useState(false);
-  const { speed: ttsSpeed, setSpeed: setTtsSpeed } = useTtsSpeed();
+  const { speed: ttsSpeed, setSpeed: setTtsSpeed, clonedVoiceId, clonedVoiceName, refreshSettings } = useTtsSpeed();
+  const [voiceCloneLoading, setVoiceCloneLoading] = useState(false);
+  const [voiceCloneError, setVoiceCloneError] = useState<string | null>(null);
+  const [voiceCloneRecording, setVoiceCloneRecording] = useState(false);
+  const [voiceCloneRecordedBlob, setVoiceCloneRecordedBlob] = useState<Blob | null>(null);
+  const voiceCloneMediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const voiceCloneChunksRef = useRef<Blob[]>([]);
+  const voiceCloneClosingRef = useRef(false);
   const { background, setBackground } = useBackground();
   const [weatherFormat, setWeatherFormat] = useState<WeatherFormat>("condition-temp");
   const [moonPhase, setMoonPhase] = useState<number | null>(null);
@@ -2177,6 +2184,19 @@ export default function ChatPage() {
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
   }, [settingsOpen]);
+
+  useEffect(() => {
+    if (!settingsOpen) {
+      if (voiceCloneRecording) {
+        voiceCloneClosingRef.current = true;
+        voiceCloneMediaRecorderRef.current?.stop();
+        setVoiceCloneRecording(false);
+      }
+      setVoiceCloneRecordedBlob(null);
+    } else {
+      voiceCloneClosingRef.current = false;
+    }
+  }, [settingsOpen, voiceCloneRecording]);
 
   useEffect(() => {
     if (!feedbackModalOpen) return;
@@ -5099,6 +5119,183 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       ))}
                     </div>
                   </div>
+                  {!isAnonymous && (
+                    <div className="mt-5">
+                      <label className="block text-sm font-medium text-foreground mb-2">Voice cloning</label>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">
+                        Use your own voice for text-to-speech. Record a clip or upload 1–6 files (MP3, WAV, WebM, or OGG).
+                      </p>
+                      {clonedVoiceId ? (
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm font-medium text-foreground">
+                            {clonedVoiceName ?? "My voice"}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              setVoiceCloneError(null);
+                              try {
+                                const r = await fetch("/api/me/voices/clone", { method: "DELETE" });
+                                if (!r.ok) throw new Error("Failed to remove");
+                                refreshSettings();
+                              } catch {
+                                setVoiceCloneError("Failed to remove voice");
+                              }
+                            }}
+                            className="px-3 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-foreground transition-colors"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ) : (
+                        <form
+                          className="space-y-3"
+                          onSubmit={async (e) => {
+                            e.preventDefault();
+                            setVoiceCloneError(null);
+                            const form = e.currentTarget;
+                            const nameInput = form.querySelector<HTMLInputElement>('[name="voice-name"]');
+                            const fileInput = form.querySelector<HTMLInputElement>('[name="voice-files"]');
+                            const name = nameInput?.value?.trim();
+                            const files = fileInput?.files;
+                            const hasRecorded = !!voiceCloneRecordedBlob;
+                            const hasUploaded = !!files?.length;
+                            if (!name || (!hasRecorded && !hasUploaded)) {
+                              setVoiceCloneError("Enter a name and record or upload at least one audio clip.");
+                              return;
+                            }
+                            setVoiceCloneLoading(true);
+                            try {
+                              const fd = new FormData();
+                              fd.append("name", name);
+                              if (voiceCloneRecordedBlob) {
+                                const ext = voiceCloneRecordedBlob.type.includes("webm") ? "webm" : "ogg";
+                                fd.append("files", new File([voiceCloneRecordedBlob], `recording.${ext}`, { type: voiceCloneRecordedBlob.type }));
+                              }
+                              if (files) {
+                                for (let i = 0; i < files.length; i++) {
+                                  fd.append("files", files[i]);
+                                }
+                              }
+                              const r = await fetch("/api/me/voices/clone", {
+                                method: "POST",
+                                body: fd,
+                              });
+                              const data = await r.json().catch(() => ({}));
+                              if (!r.ok) {
+                                throw new Error(data?.error ?? "Voice cloning failed");
+                              }
+                              refreshSettings();
+                              form.reset();
+                              if (fileInput) fileInput.value = "";
+                              setVoiceCloneRecordedBlob(null);
+                            } catch (err) {
+                              setVoiceCloneError(err instanceof Error ? err.message : "Voice cloning failed");
+                            } finally {
+                              setVoiceCloneLoading(false);
+                            }
+                          }}
+                        >
+                          <input
+                            type="text"
+                            name="voice-name"
+                            placeholder="Voice name"
+                            maxLength={64}
+                            className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-white/12 bg-white dark:bg-neutral-900 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/10"
+                          />
+                          <div className="flex flex-wrap gap-2 items-center">
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (voiceCloneRecording) {
+                                  voiceCloneMediaRecorderRef.current?.stop();
+                                  setVoiceCloneRecording(false);
+                                  return;
+                                }
+                                setVoiceCloneError(null);
+                                try {
+                                  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                                  const recorder = new MediaRecorder(stream);
+                                  voiceCloneChunksRef.current = [];
+                                  recorder.ondataavailable = (e) => {
+                                    if (e.data.size > 0) voiceCloneChunksRef.current.push(e.data);
+                                  };
+                                  recorder.onstop = () => {
+                                    stream.getTracks().forEach((t) => t.stop());
+                                    if (!voiceCloneClosingRef.current) {
+                                      const blob = new Blob(voiceCloneChunksRef.current, { type: recorder.mimeType || "audio/webm" });
+                                      setVoiceCloneRecordedBlob(blob);
+                                    }
+                                    voiceCloneClosingRef.current = false;
+                                  };
+                                  recorder.start();
+                                  voiceCloneMediaRecorderRef.current = recorder;
+                                  setVoiceCloneRecording(true);
+                                } catch (err) {
+                                  setVoiceCloneError("Microphone access denied or unavailable.");
+                                }
+                              }}
+                              className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
+                                voiceCloneRecording
+                                  ? "bg-red-500 text-white hover:bg-red-600"
+                                  : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.75px] border-neutral-200/60 dark:border-white/12"
+                              }`}
+                            >
+                              {voiceCloneRecording ? (
+                                <>
+                                  <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
+                                  </span>
+                                  Stop recording
+                                </>
+                              ) : (
+                                <>
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                                    <path d="M8.25 4.5a3.75 3.75 0 117.5 0v8.25a3.75 3.75 0 11-7.5 0V4.5z" />
+                                    <path d="M6 10.5a.75.75 0 01.75.75v1.5a5.25 5.25 0 1010.5 0v-1.5a.75.75 0 011.5 0v1.5a6.751 6.751 0 01-6 6.709v2.291h3a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5h3v-2.291a6.751 6.751 0 01-6-6.709v-1.5A.75.75 0 016 10.5z" />
+                                  </svg>
+                                  Record clip
+                                </>
+                              )}
+                            </button>
+                            {voiceCloneRecordedBlob && (
+                              <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                                Recorded ({Math.round(voiceCloneRecordedBlob.size / 1024)} KB)
+                              </span>
+                            )}
+                            {voiceCloneRecordedBlob && (
+                              <button
+                                type="button"
+                                onClick={() => setVoiceCloneRecordedBlob(null)}
+                                className="text-xs text-neutral-500 hover:text-foreground"
+                              >
+                                Clear
+                              </button>
+                            )}
+                          </div>
+                          <p className="text-xs text-neutral-500 dark:text-neutral-400">or upload files:</p>
+                          <input
+                            type="file"
+                            name="voice-files"
+                            accept=".mp3,.wav,.webm,.ogg,audio/mpeg,audio/wav,audio/webm,audio/ogg"
+                            multiple
+                            className="w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:bg-neutral-100 dark:file:bg-neutral-800 file:text-foreground"
+                          />
+                          {voiceCloneError && (
+                            <p className="text-xs text-red-600 dark:text-red-400">{voiceCloneError}</p>
+                          )}
+                          <button
+                            type="submit"
+                            disabled={voiceCloneLoading}
+                            className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
+                          >
+                            {voiceCloneLoading ? "Creating…" : "Create voice clone"}
+                          </button>
+                        </form>
+                      )}
+                    </div>
+                  )}
                 </section>
 
                 <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
