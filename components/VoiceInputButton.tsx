@@ -2,51 +2,190 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { playSelectionChime, playStopChime } from "@/lib/selection-chime";
+import { getLanguageCodeForTts } from "@/lib/tts-voices";
 import type { LanguageCode } from "@/lib/languages";
 
-// Map app language codes to Web Speech API BCP 47 tags
-const LANG_TO_SPEECH: Partial<Record<LanguageCode, string>> = {
-  en: "en-US",
-  es: "es-ES",
-  fr: "fr-FR",
-  ja: "ja-JP",
-  zh: "zh-CN",
-  ar: "ar-SA",
-  hi: "hi-IN",
-  ta: "ta-IN",
-  kn: "kn-IN",
-  bn: "bn-IN",
-  pt: "pt-BR",
-  ru: "ru-RU",
-  ur: "ur-PK",
-};
+const ELEVENLABS_WS_URL = "wss://api.elevenlabs.io/v1/speech-to-text/realtime";
+const SCRIBE_MODEL = "scribe_v2_realtime";
+const LONG_PRESS_MS = 1000;
 
-type SpeechRecognitionCtor = new () => {
-  start: () => void;
-  stop: () => void;
-  lang: string;
-  continuous: boolean;
-  interimResults: boolean;
-  maxAlternatives: number;
-  onresult: ((e: {
-    resultIndex?: number;
-    results: ArrayLike<{
-      isFinal: boolean;
-      length: number;
-      [i: number]: { transcript: string };
-    }>;
-  }) => void) | null;
-  onerror: ((e: { error: string }) => void) | null;
-  onend: (() => void) | null;
-};
-
-function getSpeechRecognition(): SpeechRecognitionCtor | null {
-  if (typeof window === "undefined") return null;
-  const w = window as unknown as { SpeechRecognition?: SpeechRecognitionCtor; webkitSpeechRecognition?: SpeechRecognitionCtor };
-  return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
+/** Map AudioContext sample rate to ElevenLabs audio_format. */
+function getAudioFormat(sampleRate: number): string {
+  if (sampleRate <= 8000) return "pcm_8000";
+  if (sampleRate <= 16000) return "pcm_16000";
+  if (sampleRate <= 22050) return "pcm_22050";
+  if (sampleRate <= 24000) return "pcm_24000";
+  if (sampleRate <= 44100) return "pcm_44100";
+  return "pcm_48000";
 }
 
-const LONG_PRESS_MS = 1000;
+/** Convert Float32 samples to Int16 PCM (little-endian). */
+function float32ToPcm16(float32: Float32Array): Uint8Array {
+  const int16 = new Int16Array(float32.length);
+  for (let i = 0; i < float32.length; i++) {
+    const s = Math.max(-1, Math.min(1, float32[i]));
+    int16[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
+  }
+  return new Uint8Array(int16.buffer);
+}
+
+/** Encode binary to base64. */
+function uint8ArrayToBase64(bytes: Uint8Array): string {
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+type Cleanup = () => void;
+
+async function startElevenLabsStt(
+  language: LanguageCode,
+  onTranscription: (text: string) => void,
+  onError: (err: string) => void
+): Promise<Cleanup> {
+  const tokenRes = await fetch("/api/elevenlabs/stt-token", { method: "POST" });
+  if (!tokenRes.ok) {
+    const data = await tokenRes.json().catch(() => ({}));
+    throw new Error(data?.error ?? "Failed to get STT token");
+  }
+  const { token } = (await tokenRes.json()) as { token: string };
+  if (!token) throw new Error("Invalid token response");
+
+  const langCode = getLanguageCodeForTts(language);
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  const ctx = new AudioContext();
+  const source = ctx.createMediaStreamSource(stream);
+
+  const sampleRate = ctx.sampleRate;
+  const audioFormat = getAudioFormat(sampleRate);
+  const targetRate =
+    audioFormat === "pcm_44100" ? 44100 : audioFormat === "pcm_48000" ? 48000 : 16000;
+
+  const params = new URLSearchParams({
+    token,
+    language_code: langCode,
+    model_id: SCRIBE_MODEL,
+    commit_strategy: "vad",
+    audio_format: audioFormat,
+  });
+
+  const ws = new WebSocket(`${ELEVENLABS_WS_URL}?${params}`);
+
+  const cleanupFns: (() => void)[] = [];
+  let cleaned = false;
+  const cleanup = () => {
+    if (cleaned) return;
+    cleaned = true;
+    cleanupFns.forEach((fn) => fn());
+    ws.close();
+    stream.getTracks().forEach((t) => t.stop());
+    ctx.close();
+  };
+
+  ws.onerror = () => {
+    onError("WebSocket error");
+    cleanup();
+  };
+  ws.onclose = () => cleanup();
+
+  ws.onmessage = (event) => {
+    try {
+      const msg = JSON.parse(event.data as string) as {
+        message_type?: string;
+        text?: string;
+        error?: string;
+      };
+      const mt = msg.message_type;
+      if (mt === "committed_transcript" && typeof msg.text === "string" && msg.text.trim()) {
+        onTranscription(msg.text.trim());
+      }
+      if (mt === "committed_transcript_with_timestamps" && typeof msg.text === "string" && msg.text.trim()) {
+        onTranscription(msg.text.trim());
+      }
+      if (mt === "error" || mt === "auth_error" || mt === "quota_exceeded" || mt === "rate_limited") {
+        onError(msg.error ?? "Transcription error");
+        cleanup();
+      }
+    } catch {
+      /* ignore parse errors */
+    }
+  };
+
+  const downsample = sampleRate > targetRate ? Math.round(sampleRate / targetRate) : 1;
+
+  let buffer: number[] = [];
+  const chunkSamples = Math.floor((targetRate * 40) / 1000); // ~40ms chunks
+
+  const sendChunk = (samples: Float32Array) => {
+    let toConvert = samples;
+    if (downsample > 1) {
+      const down: number[] = [];
+      for (let i = 0; i < samples.length; i += downsample) {
+        down.push(samples[i] ?? 0);
+      }
+      toConvert = new Float32Array(down);
+    }
+    buffer.push(...Array.from(toConvert));
+    while (buffer.length >= chunkSamples) {
+      const chunk = new Float32Array(buffer.splice(0, chunkSamples));
+      const pcm = float32ToPcm16(chunk);
+      const b64 = uint8ArrayToBase64(pcm);
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(
+          JSON.stringify({
+            message_type: "input_audio_chunk",
+            audio_base_64: b64,
+            commit: false,
+            sample_rate: targetRate,
+          })
+        );
+      }
+    }
+  };
+
+  const waitForOpen = (): Promise<void> =>
+    new Promise((resolve, reject) => {
+      if (ws.readyState === WebSocket.OPEN) return resolve();
+      ws.onopen = () => resolve();
+      ws.onerror = () => reject(new Error("WebSocket failed to open"));
+    });
+
+  await waitForOpen();
+
+  try {
+    if (typeof ctx.audioWorklet?.addModule === "function") {
+      await ctx.audioWorklet.addModule("/audio-worklet-pcm.js");
+      const workletNode = new AudioWorkletNode(ctx, "pcm-processor");
+      workletNode.port.onmessage = (e: MessageEvent<{ samples: Float32Array }>) => {
+        if (e.data?.samples) sendChunk(e.data.samples);
+      };
+      source.connect(workletNode);
+      cleanupFns.push(() => workletNode.disconnect());
+    } else {
+      const processor = ctx.createScriptProcessor(4096, 1, 1);
+      processor.onaudioprocess = (e) => {
+        const input = e.inputBuffer.getChannelData(0);
+        sendChunk(input);
+      };
+      const gain = ctx.createGain();
+      gain.gain.value = 0;
+      source.connect(processor);
+      processor.connect(gain);
+      gain.connect(ctx.destination);
+      cleanupFns.push(() => {
+        processor.disconnect();
+        source.disconnect();
+      });
+    }
+  } catch (err) {
+    cleanup();
+    throw err;
+  }
+
+  return cleanup;
+}
 
 export function VoiceInputButton({
   onTranscription,
@@ -66,112 +205,46 @@ export function VoiceInputButton({
   const [listening, setListening] = useState(false);
   const [supported, setSupported] = useState(false);
   const [holdProgress, setHoldProgress] = useState(0);
-  const recognitionRef = useRef<{ stop: () => void } | null>(null);
+  const cleanupRef = useRef<Cleanup | null>(null);
   const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const holdProgressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const holdStartRef = useRef<number>(0);
   const didLongPressRef = useRef(false);
-  const lastFinalAggregateRef = useRef("");
 
   useEffect(() => {
-    setSupported(!!getSpeechRecognition());
+    setSupported(
+      typeof window !== "undefined" &&
+        !!navigator.mediaDevices?.getUserMedia &&
+        !!window.WebSocket
+    );
   }, []);
 
   const stopListening = useCallback(() => {
-    const rec = recognitionRef.current;
-    if (rec) {
-      try {
-        rec.stop();
-      } catch {
-        /* already stopped */
-      }
-      recognitionRef.current = null;
+    const fn = cleanupRef.current;
+    if (fn) {
+      fn();
+      cleanupRef.current = null;
     }
     setListening(false);
   }, []);
 
-  const startListening = useCallback(() => {
-    const SpeechRecognitionAPI = getSpeechRecognition();
-    if (!SpeechRecognitionAPI || disabled) return;
-
-    const recognition = new SpeechRecognitionAPI();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.lang = LANG_TO_SPEECH[language] ?? "en-US";
-    recognition.maxAlternatives = 1;
-    lastFinalAggregateRef.current = "";
-
-    recognition.onresult = (event: {
-      resultIndex?: number;
-      results: ArrayLike<{
-        isFinal: boolean;
-        length: number;
-        [i: number]: { transcript: string };
-      }>;
-    }) => {
-      const results = event.results;
-      // Mobile engines may repeatedly emit cumulative finals. Emit only the new delta.
-      let finalAggregate = "";
-      for (let i = 0; i < results.length; i++) {
-        const result = results[i];
-        if (!result?.isFinal) continue;
-        finalAggregate += (result[0]?.transcript ?? "") + " ";
-      }
-      finalAggregate = finalAggregate.trim();
-      if (!finalAggregate) return;
-
-      const prev = lastFinalAggregateRef.current.trim();
-      let delta = "";
-      if (!prev) {
-        delta = finalAggregate;
-      } else if (finalAggregate.startsWith(prev)) {
-        delta = finalAggregate.slice(prev.length).trim();
-      } else {
-        // If engine rewrites earlier words, avoid replaying full history.
-        const prevWords = prev.split(/\s+/);
-        const nextWords = finalAggregate.split(/\s+/);
-        let overlap = 0;
-        const maxOverlap = Math.min(prevWords.length, nextWords.length);
-        for (let len = maxOverlap; len > 0; len--) {
-          const prevTail = prevWords.slice(prevWords.length - len).join(" ");
-          const nextHead = nextWords.slice(0, len).join(" ");
-          if (prevTail === nextHead) {
-            overlap = len;
-            break;
-          }
-        }
-        delta = nextWords.slice(overlap).join(" ").trim();
-      }
-
-      lastFinalAggregateRef.current = finalAggregate;
-      if (delta) {
-        onTranscription(delta);
-      }
-    };
-
-    recognition.onerror = (event: { error: string }) => {
-      if (event.error !== "aborted" && event.error !== "no-speech") {
-        console.warn("Speech recognition error:", event.error);
-      }
-      stopListening();
-    };
-
-    recognition.onend = () => {
-      if (recognitionRef.current) {
-        setListening(false);
-        recognitionRef.current = null;
-      }
-      lastFinalAggregateRef.current = "";
-    };
-
+  const startListening = useCallback(async () => {
+    if (disabled || !supported) return;
     try {
-      recognition.start();
-      recognitionRef.current = recognition;
+      const cleanup = await startElevenLabsStt(
+        language,
+        onTranscription,
+        (err) => {
+          console.warn("ElevenLabs STT:", err);
+          stopListening();
+        }
+      );
+      cleanupRef.current = cleanup;
       setListening(true);
     } catch (err) {
       console.warn("Failed to start speech recognition:", err);
     }
-  }, [language, disabled, onTranscription, stopListening]);
+  }, [language, disabled, supported, onTranscription, stopListening]);
 
   const clearHoldProgress = useCallback(() => {
     if (holdProgressIntervalRef.current) {
@@ -258,14 +331,12 @@ export function VoiceInputButton({
       aria-label={ariaLabel}
       className={`relative flex items-center justify-center min-w-[52px] min-h-[52px] rounded-2xl text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 select-none touch-manipulation no-touch-callout [-webkit-tap-highlight-color:transparent] ${className}`}
     >
-      {/* Idle hint: subtle pulse when onLongPress available and not listening */}
       {onLongPress && !listening && !disabled && holdProgress === 0 && (
         <span
           className="absolute inset-0 rounded-2xl border-2 border-current pointer-events-none animate-voice-hold-hint"
           aria-hidden
         />
       )}
-      {/* Hold progress ring */}
       {holdProgress > 0 && holdProgress < 100 && (
         <svg
           className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none"
