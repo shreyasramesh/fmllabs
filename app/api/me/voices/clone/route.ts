@@ -1,14 +1,16 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { upsertUserSettings } from "@/lib/db";
+import { getUserSettings, upsertUserSettings } from "@/lib/db";
+import { isValidLanguageCode } from "@/lib/languages";
 
 /**
  * Voice cloning: audio files are streamed to ElevenLabs and never persisted.
- * We only store the returned voice_id (and display name) in user settings.
+ * We only store returned voice metadata (id, name, language) in user settings.
  */
 const MAX_FILE_SIZE_MB = 25;
 const MAX_FILES = 6;
 const ALLOWED_EXT = [".mp3", ".wav", ".webm", ".ogg"];
+const ALL_LANGUAGES = "all";
 
 export async function POST(request: Request) {
   const { userId } = await auth();
@@ -24,8 +26,16 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const name = formData.get("name");
+    const rawLanguage = formData.get("language");
+    const language =
+      typeof rawLanguage === "string" && rawLanguage.trim()
+        ? rawLanguage.trim().toLowerCase()
+        : ALL_LANGUAGES;
     if (typeof name !== "string" || !name.trim()) {
       return NextResponse.json({ error: "name is required" }, { status: 400 });
+    }
+    if (language !== ALL_LANGUAGES && !isValidLanguageCode(language)) {
+      return NextResponse.json({ error: "valid language is required" }, { status: 400 });
     }
 
     const files: File[] = [];
@@ -92,14 +102,19 @@ export async function POST(request: Request) {
       );
     }
 
-    await upsertUserSettings(userId, {
-      clonedVoiceId: voiceId,
-      clonedVoiceName: name.trim(),
-    });
+    const existing = await getUserSettings(userId);
+    const currentVoices = Array.isArray(existing?.clonedVoices) ? existing.clonedVoices : [];
+    // Keep all user-created clones; dedupe exact same voice id entries.
+    const nextVoices = [
+      ...currentVoices.filter((v) => !(v.voiceId === voiceId && v.language === language)),
+      { voiceId, name: name.trim(), language },
+    ];
+    await upsertUserSettings(userId, { clonedVoices: nextVoices });
 
     return NextResponse.json({
       voice_id: voiceId,
       name: name.trim(),
+      language,
       requires_verification: !!data.requires_verification,
     });
   } catch (err) {
@@ -112,17 +127,32 @@ export async function POST(request: Request) {
 }
 
 /** Remove cloned voice from user settings (voice remains in ElevenLabs). */
-export async function DELETE() {
+export async function DELETE(request: Request) {
   const { userId } = await auth();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    await upsertUserSettings(userId, {
-      clonedVoiceId: undefined,
-      clonedVoiceName: undefined,
-    });
+    const url = new URL(request.url);
+    const voiceId = url.searchParams.get("voiceId");
+    const languageParam = url.searchParams.get("language");
+    const language = languageParam?.toLowerCase();
+    const existing = await getUserSettings(userId);
+    const currentVoices = Array.isArray(existing?.clonedVoices) ? existing.clonedVoices : [];
+
+    let nextVoices = currentVoices;
+    if (voiceId && language) {
+      nextVoices = currentVoices.filter((v) => !(v.voiceId === voiceId && v.language === language));
+    } else if (voiceId) {
+      nextVoices = currentVoices.filter((v) => v.voiceId !== voiceId);
+    } else if (language && (language === ALL_LANGUAGES || isValidLanguageCode(language))) {
+      nextVoices = currentVoices.filter((v) => v.language !== language);
+    } else {
+      nextVoices = [];
+    }
+
+    await upsertUserSettings(userId, { clonedVoices: nextVoices });
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("Remove clone error:", err);

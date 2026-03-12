@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { playSelectionChime, playStopChime } from "@/lib/selection-chime";
 import { getLanguageCodeForTts } from "@/lib/tts-voices";
 import type { LanguageCode } from "@/lib/languages";
@@ -8,6 +9,11 @@ import type { LanguageCode } from "@/lib/languages";
 const ELEVENLABS_WS_URL = "wss://api.elevenlabs.io/v1/speech-to-text/realtime";
 const SCRIBE_MODEL = "scribe_v2_realtime";
 const LONG_PRESS_MS = 1000;
+const AUTO_STOP_MS = 60_000;
+const AudioOrbVisual = dynamic(
+  () => import("@/components/AudioOrbVisual").then((m) => m.AudioOrbVisual),
+  { ssr: false }
+);
 
 /** Map AudioContext sample rate to ElevenLabs audio_format. */
 function getAudioFormat(sampleRate: number): string {
@@ -38,13 +44,19 @@ function uint8ArrayToBase64(bytes: Uint8Array): string {
   return btoa(binary);
 }
 
-type Cleanup = () => void;
+type SttSession = {
+  cleanup: () => void;
+  requestCommit: () => Promise<void>;
+};
 
 async function startElevenLabsStt(
   language: LanguageCode,
-  onTranscription: (text: string) => void,
-  onError: (err: string) => void
-): Promise<Cleanup> {
+  onCommittedTranscript: (text: string) => void,
+  onError: (err: string) => void,
+  onAudioLevel?: (level: number) => void,
+  onPartialTranscript?: (text: string) => void,
+  onOrbNodesChange?: (nodes: { input: GainNode; output: GainNode } | null) => void
+): Promise<SttSession> {
   const tokenRes = await fetch("/api/elevenlabs/stt-token", { method: "POST" });
   if (!tokenRes.ok) {
     const data = await tokenRes.json().catch(() => ({}));
@@ -57,6 +69,9 @@ async function startElevenLabsStt(
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   const ctx = new AudioContext();
   const source = ctx.createMediaStreamSource(stream);
+  const orbInput = ctx.createGain();
+  source.connect(orbInput);
+  onOrbNodesChange?.({ input: orbInput, output: orbInput });
 
   const sampleRate = ctx.sampleRate;
   const audioFormat = getAudioFormat(sampleRate);
@@ -72,12 +87,14 @@ async function startElevenLabsStt(
   });
 
   const ws = new WebSocket(`${ELEVENLABS_WS_URL}?${params}`);
+  let resolveCommitWait: (() => void) | null = null;
 
   const cleanupFns: (() => void)[] = [];
   let cleaned = false;
   const cleanup = () => {
     if (cleaned) return;
     cleaned = true;
+    onOrbNodesChange?.(null);
     cleanupFns.forEach((fn) => fn());
     ws.close();
     stream.getTracks().forEach((t) => t.stop());
@@ -86,9 +103,19 @@ async function startElevenLabsStt(
 
   ws.onerror = () => {
     onError("WebSocket error");
+    if (resolveCommitWait) {
+      resolveCommitWait();
+      resolveCommitWait = null;
+    }
     cleanup();
   };
-  ws.onclose = () => cleanup();
+  ws.onclose = () => {
+    if (resolveCommitWait) {
+      resolveCommitWait();
+      resolveCommitWait = null;
+    }
+    cleanup();
+  };
 
   ws.onmessage = (event) => {
     try {
@@ -99,10 +126,21 @@ async function startElevenLabsStt(
       };
       const mt = msg.message_type;
       if (mt === "committed_transcript" && typeof msg.text === "string" && msg.text.trim()) {
-        onTranscription(msg.text.trim());
+        onCommittedTranscript(msg.text.trim());
+        if (resolveCommitWait) {
+          resolveCommitWait();
+          resolveCommitWait = null;
+        }
       }
       if (mt === "committed_transcript_with_timestamps" && typeof msg.text === "string" && msg.text.trim()) {
-        onTranscription(msg.text.trim());
+        onCommittedTranscript(msg.text.trim());
+        if (resolveCommitWait) {
+          resolveCommitWait();
+          resolveCommitWait = null;
+        }
+      }
+      if (mt === "partial_transcript" && typeof msg.text === "string") {
+        onPartialTranscript?.(msg.text.trim());
       }
       if (mt === "error" || mt === "auth_error" || mt === "quota_exceeded" || mt === "rate_limited") {
         onError(msg.error ?? "Transcription error");
@@ -118,6 +156,21 @@ async function startElevenLabsStt(
   let buffer: number[] = [];
   const chunkSamples = Math.floor((targetRate * 40) / 1000); // ~40ms chunks
 
+  const sendAudioPayload = (samples: Float32Array, commit: boolean) => {
+    const pcm = float32ToPcm16(samples);
+    const b64 = uint8ArrayToBase64(pcm);
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          message_type: "input_audio_chunk",
+          audio_base_64: b64,
+          commit,
+          sample_rate: targetRate,
+        })
+      );
+    }
+  };
+
   const sendChunk = (samples: Float32Array) => {
     let toConvert = samples;
     if (downsample > 1) {
@@ -127,22 +180,50 @@ async function startElevenLabsStt(
       }
       toConvert = new Float32Array(down);
     }
+    if (toConvert.length > 0 && onAudioLevel) {
+      let sum = 0;
+      for (let i = 0; i < toConvert.length; i++) {
+        const v = toConvert[i] ?? 0;
+        sum += v * v;
+      }
+      const rms = Math.sqrt(sum / toConvert.length);
+      // Normalize and clamp to 0-1 for UI meter.
+      onAudioLevel(Math.max(0, Math.min(1, rms * 12)));
+    }
     buffer.push(...Array.from(toConvert));
     while (buffer.length >= chunkSamples) {
       const chunk = new Float32Array(buffer.splice(0, chunkSamples));
-      const pcm = float32ToPcm16(chunk);
-      const b64 = uint8ArrayToBase64(pcm);
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
-          JSON.stringify({
-            message_type: "input_audio_chunk",
-            audio_base_64: b64,
-            commit: false,
-            sample_rate: targetRate,
-          })
-        );
-      }
+      sendAudioPayload(chunk, false);
     }
+  };
+
+  const requestCommit = async () => {
+    if (ws.readyState !== WebSocket.OPEN) return;
+    // Flush any trailing audio and explicitly request a commit
+    // so the final utterance isn't cut when the user taps finish.
+    if (buffer.length > 0) {
+      const finalChunk = new Float32Array(buffer.splice(0, buffer.length));
+      sendAudioPayload(finalChunk, true);
+    } else {
+      const silence = new Float32Array(Math.max(160, Math.floor(targetRate * 0.01)));
+      sendAudioPayload(silence, true);
+    }
+    // Wait for a committed transcript event after commit request, or timeout.
+    await new Promise<void>((resolve) => {
+      let done = false;
+      const timeout = setTimeout(() => {
+        if (done) return;
+        done = true;
+        resolveCommitWait = null;
+        resolve();
+      }, 700);
+      resolveCommitWait = () => {
+        if (done) return;
+        done = true;
+        clearTimeout(timeout);
+        resolve();
+      };
+    });
   };
 
   const waitForOpen = (): Promise<void> =>
@@ -184,7 +265,7 @@ async function startElevenLabsStt(
     throw err;
   }
 
-  return cleanup;
+  return { cleanup, requestCommit };
 }
 
 export function VoiceInputButton({
@@ -205,7 +286,12 @@ export function VoiceInputButton({
   const [listening, setListening] = useState(false);
   const [supported, setSupported] = useState(false);
   const [holdProgress, setHoldProgress] = useState(0);
-  const cleanupRef = useRef<Cleanup | null>(null);
+  const [audioLevel, setAudioLevel] = useState(0);
+  const [orbNodes, setOrbNodes] = useState<{ input: GainNode; output: GainNode } | null>(null);
+  const cleanupRef = useRef<SttSession | null>(null);
+  const pendingTranscriptRef = useRef<string[]>([]);
+  const partialTranscriptRef = useRef("");
+  const autoStopTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const holdProgressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const holdStartRef = useRef<number>(0);
@@ -220,31 +306,77 @@ export function VoiceInputButton({
   }, []);
 
   const stopListening = useCallback(() => {
-    const fn = cleanupRef.current;
-    if (fn) {
-      fn();
+    if (autoStopTimerRef.current) {
+      clearTimeout(autoStopTimerRef.current);
+      autoStopTimerRef.current = null;
+    }
+    const session = cleanupRef.current;
+    if (session) {
+      session.cleanup();
       cleanupRef.current = null;
     }
     setListening(false);
+    setAudioLevel(0);
+    setOrbNodes(null);
   }, []);
 
   const startListening = useCallback(async () => {
     if (disabled || !supported) return;
+    pendingTranscriptRef.current = [];
+    partialTranscriptRef.current = "";
+    setAudioLevel(0);
     try {
-      const cleanup = await startElevenLabsStt(
+      const session = await startElevenLabsStt(
         language,
-        onTranscription,
+        (text) => {
+          pendingTranscriptRef.current.push(text);
+          partialTranscriptRef.current = "";
+        },
         (err) => {
           console.warn("ElevenLabs STT:", err);
           stopListening();
-        }
+        },
+        (level) => {
+          setAudioLevel((prev) => Math.max(level, prev * 0.9));
+        },
+        (partialText) => {
+          partialTranscriptRef.current = partialText;
+        },
+        (nodes) => setOrbNodes(nodes)
       );
-      cleanupRef.current = cleanup;
+      cleanupRef.current = session;
       setListening(true);
     } catch (err) {
       console.warn("Failed to start speech recognition:", err);
     }
-  }, [language, disabled, supported, onTranscription, stopListening]);
+  }, [language, disabled, supported, stopListening]);
+
+  const cancelListening = useCallback(() => {
+    pendingTranscriptRef.current = [];
+    partialTranscriptRef.current = "";
+    playStopChime();
+    stopListening();
+  }, [stopListening]);
+
+  const finishAndPaste = useCallback(async () => {
+    const session = cleanupRef.current;
+    if (session) {
+      try {
+        await session.requestCommit();
+      } catch {
+        /* best effort */
+      }
+    }
+    const text = [...pendingTranscriptRef.current, partialTranscriptRef.current]
+      .join(" ")
+      .replace(/\s+/g, " ")
+      .trim();
+    pendingTranscriptRef.current = [];
+    partialTranscriptRef.current = "";
+    playStopChime();
+    stopListening();
+    if (text) onTranscription(text);
+  }, [onTranscription, stopListening]);
 
   const clearHoldProgress = useCallback(() => {
     if (holdProgressIntervalRef.current) {
@@ -299,24 +431,104 @@ export function VoiceInputButton({
       didLongPressRef.current = false;
       return;
     }
-    if (listening) {
-      playStopChime();
-      stopListening();
-    } else {
+    if (!listening) {
       playSelectionChime();
       startListening();
     }
-  }, [listening, startListening, stopListening]);
+  }, [listening, startListening]);
+
+  useEffect(() => {
+    if (!listening) return;
+    const levelInterval = setInterval(() => {
+      setAudioLevel((v) => Math.max(0, v * 0.95));
+    }, 80);
+    return () => clearInterval(levelInterval);
+  }, [listening]);
+
+  useEffect(() => {
+    if (!listening) return;
+    if (autoStopTimerRef.current) clearTimeout(autoStopTimerRef.current);
+    autoStopTimerRef.current = setTimeout(() => {
+      void finishAndPaste();
+    }, AUTO_STOP_MS);
+    return () => {
+      if (autoStopTimerRef.current) {
+        clearTimeout(autoStopTimerRef.current);
+        autoStopTimerRef.current = null;
+      }
+    };
+  }, [listening, finishAndPaste]);
 
   useEffect(() => {
     return () => {
       stopListening();
+      pendingTranscriptRef.current = [];
+      partialTranscriptRef.current = "";
+      if (autoStopTimerRef.current) {
+        clearTimeout(autoStopTimerRef.current);
+        autoStopTimerRef.current = null;
+      }
       if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
       if (holdProgressIntervalRef.current) clearInterval(holdProgressIntervalRef.current);
     };
   }, [stopListening]);
 
   if (!supported) return null;
+
+  if (listening) {
+    return (
+      <div
+        className={`relative flex items-center gap-2 rounded-2xl px-2 py-1.5 min-h-[52px] bg-neutral-100/95 dark:bg-neutral-800/95 border border-neutral-300 dark:border-neutral-600 shrink-0 ${className}`}
+        aria-label="Voice capture controls"
+      >
+        <div className="relative group/cancel">
+          <button
+            type="button"
+            onClick={cancelListening}
+            aria-label="Cancel voice capture"
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+          <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[11px] font-medium bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 opacity-0 group-hover/cancel:opacity-100 group-focus-within/cancel:opacity-100 transition-opacity">
+            Cancel
+          </span>
+        </div>
+
+        <div className="relative flex items-center justify-center w-12 h-12" aria-hidden>
+          {orbNodes ? (
+            <AudioOrbVisual
+              inputNode={orbNodes.input}
+              outputNode={orbNodes.output}
+              transparentBackground
+              disablePostprocessing
+            />
+          ) : (
+            <span
+              className="absolute w-3 h-3 rounded-full bg-white/30 blur-[1px] transition-transform duration-75"
+              style={{ transform: `scale(${1 + audioLevel * 1.8})`, opacity: 0.25 + audioLevel * 0.45 }}
+            />
+          )}
+        </div>
+
+        <div className="relative group/finish">
+          <button
+            type="button"
+            onClick={() => void finishAndPaste()}
+            aria-label="Finish and paste"
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-red-500 hover:bg-red-600 transition-colors"
+          >
+            <span className="w-3 h-3 bg-white rounded-[2px]" aria-hidden />
+          </button>
+          <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[11px] font-medium bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 opacity-0 group-hover/finish:opacity-100 group-focus-within/finish:opacity-100 transition-opacity">
+            Finish and Paste
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <button
@@ -329,9 +541,9 @@ export function VoiceInputButton({
       onContextMenu={(e) => e.preventDefault()}
       disabled={disabled}
       aria-label={ariaLabel}
-      className={`relative flex items-center justify-center min-w-[52px] min-h-[52px] rounded-2xl text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 select-none touch-manipulation no-touch-callout [-webkit-tap-highlight-color:transparent] ${className}`}
+      className={`relative flex items-center justify-center min-w-[52px] min-h-[52px] rounded-2xl border border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 select-none touch-manipulation no-touch-callout [-webkit-tap-highlight-color:transparent] ${className}`}
     >
-      {onLongPress && !listening && !disabled && holdProgress === 0 && (
+      {onLongPress && !disabled && holdProgress === 0 && (
         <span
           className="absolute inset-0 rounded-2xl border-2 border-current pointer-events-none animate-voice-hold-hint"
           aria-hidden
@@ -366,12 +578,7 @@ export function VoiceInputButton({
           />
         </svg>
       )}
-      {listening ? (
-        <span className="relative flex h-6 w-6">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-          <span className="relative inline-flex rounded-full h-6 w-6 bg-red-500" />
-        </span>
-      ) : holdProgress > 0 && holdProgress < 100 ? (
+      {holdProgress > 0 && holdProgress < 100 ? (
         <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin relative z-10" aria-hidden />
       ) : (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 relative z-10">

@@ -6,6 +6,7 @@ import { getVoiceIdForLanguage, getLanguageCodeForTts } from "@/lib/tts-voices";
 
 const ELEVENLABS_MODEL = "eleven_flash_v2_5";
 const MAX_CHARS = 5000;
+const ALL_LANGUAGES = "all";
 
 export async function POST(request: Request) {
   const apiKey = process.env.ELEVENLABS_API_KEY;
@@ -18,7 +19,6 @@ export async function POST(request: Request) {
     const text = typeof body.text === "string" ? body.text.trim() : "";
     const speed = typeof body.speed === "number" ? Math.max(0.7, Math.min(1.2, body.speed)) : 1;
     const language: LanguageCode = isValidLanguageCode(body.language) ? body.language : "en";
-    const requestedVoiceId = typeof body.voice_id === "string" ? body.voice_id.trim() : undefined;
     if (!text) {
       return NextResponse.json({ error: "text is required" }, { status: 400 });
     }
@@ -30,13 +30,16 @@ export async function POST(request: Request) {
     }
 
     let voiceId = getVoiceIdForLanguage(language);
-    if (requestedVoiceId) {
-      const { userId } = await auth();
-      if (userId) {
-        const settings = await getUserSettings(userId);
-        if (settings?.clonedVoiceId === requestedVoiceId) {
-          voiceId = requestedVoiceId;
-        }
+    const { userId } = await auth();
+    if (userId) {
+      const settings = await getUserSettings(userId);
+      const userVoices = settings?.clonedVoices ?? [];
+      const latestForLanguage = userVoices.filter((v) => v.language === language).at(-1);
+      const latestForAll = userVoices.filter((v) => v.language === ALL_LANGUAGES).at(-1);
+      if (latestForLanguage?.voiceId) {
+        voiceId = latestForLanguage.voiceId;
+      } else if (latestForAll?.voiceId) {
+        voiceId = latestForAll.voiceId;
       }
     }
     const languageCode = getLanguageCodeForTts(language);

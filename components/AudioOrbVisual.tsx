@@ -19,12 +19,18 @@ export function AudioOrbVisual({
   inputNode,
   outputNode,
   breathingMode = false,
+  transparentBackground = false,
+  disablePostprocessing = false,
   className = "",
 }: {
   inputNode: GainNode;
   outputNode: GainNode;
   /** When true, orb breathes/moves gently without reacting to audio (e.g. while LLM is thinking) */
   breathingMode?: boolean;
+  /** When true, renderer background is transparent. */
+  transparentBackground?: boolean;
+  /** Disable bloom/composer passes (useful for tiny transparent embeds). */
+  disablePostprocessing?: boolean;
   className?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -37,8 +43,11 @@ export function AudioOrbVisual({
     const outputAnalyser = breathingMode ? null : new AudioAnalyser(outputNode);
 
     const scene = new THREE.Scene();
-    // Always use dark background so orb looks consistent in both light and dark mode
-    scene.background = new THREE.Color("#0a0a0a");
+    const sceneBgColor = new THREE.Color("#0a0a0a");
+    if (!transparentBackground) {
+      // Default dark background for full-canvas orb experiences.
+      scene.background = sceneBgColor;
+    }
 
     const camera = new THREE.PerspectiveCamera(
       75,
@@ -59,7 +68,11 @@ export function AudioOrbVisual({
       antialias: false,
       alpha: true,
     });
-    renderer.setClearColor(scene.background, 1);
+    if (transparentBackground) {
+      renderer.setClearColor(0x000000, 0);
+    } else {
+      renderer.setClearColor(sceneBgColor, 1);
+    }
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio / 1);
 
@@ -98,18 +111,24 @@ export function AudioOrbVisual({
       sphere.visible = true;
     });
 
-    const renderPass = new RenderPass(scene, camera);
-    const bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(container.clientWidth, container.clientHeight),
-      5,
-      0.5,
-      0
-    );
-    const fxaaPass = new ShaderPass(FXAAShader);
+    // Transparent embeds should avoid postprocessing to prevent dark backdrops.
+    const usePostprocessing = !transparentBackground && !disablePostprocessing;
+    const renderPass = usePostprocessing ? new RenderPass(scene, camera) : null;
+    const bloomPass = usePostprocessing
+      ? new UnrealBloomPass(
+          new THREE.Vector2(container.clientWidth, container.clientHeight),
+          5,
+          0.5,
+          0
+        )
+      : null;
+    const fxaaPass = usePostprocessing ? new ShaderPass(FXAAShader) : null;
 
-    const composer = new EffectComposer(renderer);
-    composer.addPass(renderPass);
-    composer.addPass(bloomPass);
+    const composer = usePostprocessing ? new EffectComposer(renderer) : null;
+    if (composer && renderPass && bloomPass) {
+      composer.addPass(renderPass);
+      composer.addPass(bloomPass);
+    }
 
     let prevTime = performance.now();
     const rotation = new THREE.Vector3(0, 0, 0);
@@ -122,12 +141,14 @@ export function AudioOrbVisual({
       camera.updateProjectionMatrix();
       const dPR = renderer.getPixelRatio();
       renderer.setSize(w, h);
-      composer.setSize(w, h);
-      bloomPass.resolution.set(w, h);
-      fxaaPass.material.uniforms["resolution"].value.set(
-        1 / (w * dPR),
-        1 / (h * dPR)
-      );
+      if (composer) composer.setSize(w, h);
+      if (bloomPass) bloomPass.resolution.set(w, h);
+      if (fxaaPass) {
+        fxaaPass.material.uniforms["resolution"].value.set(
+          1 / (w * dPR),
+          1 / (h * dPR)
+        );
+      }
     }
 
     const resizeObserver = new ResizeObserver(onResize);
@@ -212,7 +233,11 @@ export function AudioOrbVisual({
         }
       }
 
-      composer.render();
+      if (composer) {
+        composer.render();
+      } else {
+        renderer.render(scene, camera);
+      }
     }
     animate();
 
@@ -222,7 +247,7 @@ export function AudioOrbVisual({
       renderer.dispose();
       if (container.contains(canvas)) container.removeChild(canvas);
     };
-  }, [inputNode, outputNode, breathingMode]);
+  }, [inputNode, outputNode, breathingMode, transparentBackground, disablePostprocessing]);
 
   return (
     <div

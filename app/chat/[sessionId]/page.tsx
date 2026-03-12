@@ -1242,11 +1242,12 @@ export default function ChatPage() {
   } | null>(null);
   const [summarizeLoading, setSummarizeLoading] = useState(false);
   const [summarizeSuccess, setSummarizeSuccess] = useState(false);
-  const { speed: ttsSpeed, setSpeed: setTtsSpeed, clonedVoiceId, clonedVoiceName, refreshSettings } = useTtsSpeed();
+  const { speed: ttsSpeed, setSpeed: setTtsSpeed, clonedVoices, refreshSettings } = useTtsSpeed();
   const [voiceCloneLoading, setVoiceCloneLoading] = useState(false);
   const [voiceCloneError, setVoiceCloneError] = useState<string | null>(null);
   const [voiceCloneRecording, setVoiceCloneRecording] = useState(false);
   const [voiceCloneRecordedBlob, setVoiceCloneRecordedBlob] = useState<Blob | null>(null);
+  const [voiceCloneLanguage, setVoiceCloneLanguage] = useState<LanguageCode | "all">("all");
   const voiceCloneMediaRecorderRef = useRef<MediaRecorder | null>(null);
   const voiceCloneChunksRef = useRef<Blob[]>([]);
   const voiceCloneClosingRef = useRef(false);
@@ -2276,8 +2277,8 @@ export default function ChatPage() {
   const [ccSearchQuery, setCcSearchQuery] = useState("");
   const [ccGroupCollapsed, setCcGroupCollapsed] = useState<Set<string>>(new Set());
   const [mentalModelsWithWhenToUse, setMentalModelsWithWhenToUse] = useState<{ id: string; name: string; when_to_use: string[] }[]>([]);
-  const [mmGroupCollapsed, setMmGroupCollapsed] = useState<Set<string>>(new Set());
   const [mmFavorites, setMmFavorites] = useState<Set<string>>(new Set());
+  const [selectedMmCategory, setSelectedMmCategory] = useState("decision-making");
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
@@ -2303,6 +2304,19 @@ export default function ChatPage() {
   }, []);
   const [mmPreviewMap, setMmPreviewMap] = useState<Map<string, { oneLiner?: string; quickIntro?: string }>>(new Map());
   const [mmSearchQuery, setMmSearchQuery] = useState("");
+  const formatMmCategory = useCallback(
+    (tag: string) => tag.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+    []
+  );
+  const normalizeMmCategory = useCallback(
+    (value: string) => value.trim().toLowerCase().replace(/[_\s]+/g, "-"),
+    []
+  );
+  useEffect(() => {
+    if (libraryPanelOpen === "concepts") {
+      setSelectedMmCategory("decision-making");
+    }
+  }, [libraryPanelOpen]);
   const filteredSessions = sessions.filter((s) =>
     (s.title ?? "").toLowerCase().includes(sessionSearchQuery.toLowerCase())
   );
@@ -3784,7 +3798,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             aria-hidden
           >
             <div
-              className="pointer-events-auto w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-800 animate-fade-in-up"
+              className="pointer-events-auto w-full max-w-[min(94vw,1200px)] max-h-[90vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-800 animate-fade-in-up"
               data-tour="library-modal"
             role="dialog"
             aria-modal
@@ -3970,18 +3984,20 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   </button>
                   <input type="search" placeholder="Search mental models..." value={mmSearchQuery} onChange={(e) => setMmSearchQuery(e.target.value)} className="w-full px-3 py-1.5 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground" aria-label="Search mental models" />
                   {(() => {
-                    const formatWhenToUse = (tag: string) => tag.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
                     const q = mmSearchQuery.toLowerCase().trim();
                     const filteredModels = q
                       ? mentalModelsWithWhenToUse.filter((m) => {
                           const nameMatch = m.name.toLowerCase().includes(q);
-                          const tagMatch = (m.when_to_use ?? []).some((t) => formatWhenToUse(t).toLowerCase().includes(q));
+                          const tagMatch = (m.when_to_use ?? []).some((t) =>
+                            formatMmCategory(t).toLowerCase().includes(q)
+                          );
                           const preview = mmPreviewMap.get(m.id);
                           const oneLinerMatch = preview?.oneLiner?.toLowerCase().includes(q);
                           const quickIntroMatch = preview?.quickIntro?.toLowerCase().includes(q);
                           return nameMatch || tagMatch || oneLinerMatch || quickIntroMatch;
                         })
                       : mentalModelsWithWhenToUse;
+
                     const byWhenToUse = new Map<string, { id: string; name: string }[]>();
                     const uncategorized: { id: string; name: string }[] = [];
                     for (const m of filteredModels) {
@@ -3995,12 +4011,33 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                         }
                       }
                     }
-                    const whenToUseOrder = [...byWhenToUse.keys()].sort((a, b) => formatWhenToUse(a).localeCompare(formatWhenToUse(b)));
-                    const toggleMmGroup = (key: string) => setMmGroupCollapsed((prev) => { const next = new Set(prev); if (next.has(key)) next.delete(key); else next.add(key); return next; });
-                    const favoriteModels = filteredModels.filter((m) => mmFavorites.has(m.id));
-                    const allGroupKeys = [...whenToUseOrder, ...(uncategorized.length > 0 ? ["uncategorized"] : []), "favorites"];
-                    const collapseAllMmGroups = () => setMmGroupCollapsed(new Set(allGroupKeys));
-                    const expandAllMmGroups = () => setMmGroupCollapsed(new Set());
+
+                    const whenToUseOrder = [...byWhenToUse.keys()].sort((a, b) =>
+                      formatMmCategory(a).localeCompare(formatMmCategory(b))
+                    );
+                    const categoryItems: { key: string; label: string; models: { id: string; name: string }[] }[] =
+                      whenToUseOrder.map((tag) => ({
+                        key: tag,
+                        label: formatMmCategory(tag),
+                        models: byWhenToUse.get(tag) ?? [],
+                      }));
+                    if (uncategorized.length > 0) {
+                      categoryItems.push({
+                        key: "uncategorized",
+                        label: "Other",
+                        models: uncategorized,
+                      });
+                    }
+
+                    const decisionCategory = categoryItems.find(
+                      (c) => normalizeMmCategory(c.label) === "decision-making"
+                    );
+                    const activeCategoryKey = categoryItems.some((c) => c.key === selectedMmCategory)
+                      ? selectedMmCategory
+                      : (decisionCategory?.key ?? categoryItems[0]?.key ?? "");
+                    const activeCategory = categoryItems.find((c) => c.key === activeCategoryKey);
+                    const activeModels = activeCategory?.models ?? [];
+
                     const renderMmCard = (id: string, name: string) => {
                       const preview = mmPreviewMap.get(id);
                       const backText = preview?.oneLiner ?? preview?.quickIntro ?? "Click to explore";
@@ -4031,7 +4068,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             className="relative h-full w-full transition-transform duration-300 [transform-style:preserve-3d] group-hover/tile:[transform:rotateY(180deg)] cursor-pointer"
                           >
                             <div className={`absolute inset-0 w-full h-full rounded-xl bg-neutral-100 dark:bg-neutral-800 text-white p-3 flex items-center justify-center [backface-visibility:hidden] border border-neutral-200 dark:border-neutral-700 overflow-hidden pointer-events-none transition-opacity duration-300 ${isSafari ? "group-hover/tile:opacity-0" : ""}`} style={{ backgroundImage: `url(/images/${id.replace(/_/g, "-")}.png)`, backgroundSize: "cover", backgroundPosition: "center" }} aria-hidden>
-                              <div className="absolute inset-0 bg-black/50" aria-hidden />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" aria-hidden />
                               <span className="relative z-10 text-xs font-medium capitalize tracking-wide text-center line-clamp-3 drop-shadow-sm">{name}</span>
                             </div>
                             <div className="absolute inset-0 w-full h-full rounded-xl bg-foreground text-background px-3 flex items-center justify-center overflow-hidden [backface-visibility:hidden] [transform:rotateY(180deg)] border border-foreground pointer-events-none" aria-hidden>
@@ -4048,61 +4085,37 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       return <p className="text-xs text-neutral-500 dark:text-neutral-400">{q ? "No mental models match." : "No mental models."}</p>;
                     }
                     return (
-                      <div className="space-y-2">
-                        <div className="border-b border-neutral-200 dark:border-neutral-700 pb-2 mb-2">
-                          <div className="flex items-center justify-between mb-1.5">
-                            <p className="text-[10px] font-medium text-neutral-500 uppercase">Favorites</p>
-                            <button type="button" onClick={() => toggleMmGroup("favorites")} className="flex items-center gap-1 text-[10px] text-neutral-500">
-                              <span>{mmGroupCollapsed.has("favorites") ? "▶" : "▼"}</span>
+                      <div className="space-y-3">
+                        <div className="flex flex-wrap gap-2">
+                          {categoryItems.map((cat) => (
+                            <button
+                              key={cat.key}
+                              type="button"
+                              onClick={() => setSelectedMmCategory(cat.key)}
+                              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                                activeCategoryKey === cat.key
+                                  ? "bg-foreground text-background border-foreground"
+                                  : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                              }`}
+                            >
+                              {cat.label}
                             </button>
-                          </div>
-                          {!mmGroupCollapsed.has("favorites") && (
-                            favoriteModels.length > 0 ? (
-                              <div className="grid grid-cols-2 gap-2">
-                                {favoriteModels.map(({ id, name }) => renderMmCard(id, name))}
-                              </div>
-                            ) : (
-                              <p className="text-xs text-neutral-500 dark:text-neutral-400 py-2">
-                                You don&apos;t have any favorites yet. Add them by clicking the star button on the cards below.
-                              </p>
-                            )
-                          )}
+                          ))}
                         </div>
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-[10px] text-neutral-500">Categories</span>
-                          <button type="button" onClick={allGroupKeys.every((k) => mmGroupCollapsed.has(k)) ? expandAllMmGroups : collapseAllMmGroups} className="text-[10px] text-neutral-500 hover:text-foreground transition-colors">
-                            {allGroupKeys.every((k) => mmGroupCollapsed.has(k)) ? "Expand all" : "Collapse all"}
-                          </button>
+                        <div className="flex items-center justify-between">
+                          <p className="text-[11px] font-medium text-neutral-500 uppercase tracking-wide">
+                            {activeCategory?.label ?? "Category"}
+                          </p>
+                          <span className="text-[11px] text-neutral-500">{activeModels.length} models</span>
                         </div>
-                        {whenToUseOrder.map((tag, i) => {
-                          const models = byWhenToUse.get(tag) ?? [];
-                          const isCollapsed = mmGroupCollapsed.has(tag);
-                          return (
-                            <div key={tag} className={i === 0 ? "pt-0" : "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2"}>
-                              <button type="button" onClick={() => toggleMmGroup(tag)} className="flex items-center justify-between w-full text-left px-1 mb-1.5">
-                                <p className="text-[10px] font-medium text-neutral-500 uppercase">{formatWhenToUse(tag)}</p>
-                                <span className="text-[10px]">{isCollapsed ? "▶" : "▼"}</span>
-                              </button>
-                              {!isCollapsed && (
-                                <div className="grid grid-cols-2 gap-2">
-                                  {models.map(({ id, name }) => renderMmCard(id, name))}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                        {uncategorized.length > 0 && (
-                          <div className={whenToUseOrder.length === 0 ? "pt-0" : "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2"}>
-                            <button type="button" onClick={() => toggleMmGroup("uncategorized")} className="flex items-center justify-between w-full text-left px-1 mb-1.5">
-                              <p className="text-[10px] font-medium text-neutral-500 uppercase">Other</p>
-                              <span className="text-[10px]">{mmGroupCollapsed.has("uncategorized") ? "▶" : "▼"}</span>
-                            </button>
-                            {!mmGroupCollapsed.has("uncategorized") && (
-                              <div className="grid grid-cols-2 gap-2">
-                                {uncategorized.map(({ id, name }) => renderMmCard(id, name))}
-                              </div>
-                            )}
+                        {activeModels.length > 0 ? (
+                          <div className="grid grid-cols-2 gap-2">
+                            {activeModels.map(({ id, name }) => renderMmCard(id, name))}
                           </div>
+                        ) : (
+                          <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                            No models in this category.
+                          </p>
                         )}
                       </div>
                     );
@@ -5121,81 +5134,106 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   </div>
                   {!isAnonymous && (
                     <div className="mt-5">
-                      <label className="block text-sm font-medium text-foreground mb-2">Voice cloning</label>
+                      <label className="block text-sm font-medium text-foreground mb-2">Personalized Reflection Voice</label>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">
-                        Use your own voice for text-to-speech. Record a clip or upload 1–6 files (MP3, WAV, WebM, or OGG).
+                        Hear deeper reflections and second-order insights in your own voice. This can improve retention and make structured self-review feel more natural. Record a clip or upload 1-6 files (MP3, WAV, WebM, or OGG).
                       </p>
-                      {clonedVoiceId ? (
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm font-medium text-foreground">
-                            {clonedVoiceName ?? "My voice"}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={async () => {
-                              setVoiceCloneError(null);
-                              try {
-                                const r = await fetch("/api/me/voices/clone", { method: "DELETE" });
-                                if (!r.ok) throw new Error("Failed to remove");
-                                refreshSettings();
-                              } catch {
-                                setVoiceCloneError("Failed to remove voice");
-                              }
-                            }}
-                            className="px-3 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-foreground transition-colors"
-                          >
-                            Remove
-                          </button>
+                      {clonedVoices.length > 0 && (
+                        <div className="mb-3 space-y-2">
+                          <p className="text-xs text-neutral-500 dark:text-neutral-400">Language voice assignments</p>
+                          {(() => {
+                            const latestForLanguage = clonedVoices
+                              .filter((v) => v.language === language)
+                              .at(-1);
+                            const latestForAll = clonedVoices
+                              .filter((v) => v.language === "all")
+                              .at(-1);
+                            const activeVoice = latestForLanguage ?? latestForAll ?? null;
+                            return (
+                          <div className="space-y-1.5">
+                            {clonedVoices.map((v) => (
+                              <div key={`${v.voiceId}:${v.language}`} className="flex items-center justify-between gap-2 rounded-xl border border-neutral-200/70 dark:border-white/12 bg-neutral-50 dark:bg-neutral-900 px-3 py-2">
+                                <div className="min-w-0">
+                                  <p className="text-sm font-medium text-foreground truncate">{v.name}</p>
+                                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                                    {v.language === "all"
+                                      ? "All languages"
+                                      : (LANGUAGES.find((l) => l.code === v.language)?.name ?? v.language)}
+                                  </p>
+                                </div>
+                                <div className="flex items-center gap-2 shrink-0">
+                                  {activeVoice &&
+                                    v.voiceId === activeVoice.voiceId &&
+                                    v.language === activeVoice.language && (
+                                      <span className="px-2 py-1 rounded-lg text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+                                        Active for this language
+                                      </span>
+                                    )}
+                                  <button
+                                    type="button"
+                                    onClick={async () => {
+                                      setVoiceCloneError(null);
+                                      try {
+                                        const r = await fetch(`/api/me/voices/clone?voiceId=${encodeURIComponent(v.voiceId)}&language=${encodeURIComponent(v.language)}`, { method: "DELETE" });
+                                        if (!r.ok) throw new Error("Failed to remove");
+                                        refreshSettings();
+                                      } catch {
+                                        setVoiceCloneError("Failed to remove voice assignment");
+                                      }
+                                    }}
+                                    className="px-2 py-1 rounded-lg text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-foreground transition-colors"
+                                  >
+                                    Remove
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                            );
+                          })()}
                         </div>
-                      ) : (
-                        <form
-                          className="space-y-3"
-                          onSubmit={async (e) => {
-                            e.preventDefault();
-                            setVoiceCloneError(null);
-                            const form = e.currentTarget;
-                            const nameInput = form.querySelector<HTMLInputElement>('[name="voice-name"]');
-                            const fileInput = form.querySelector<HTMLInputElement>('[name="voice-files"]');
-                            const name = nameInput?.value?.trim();
-                            const files = fileInput?.files;
-                            const hasRecorded = !!voiceCloneRecordedBlob;
-                            const hasUploaded = !!files?.length;
-                            if (!name || (!hasRecorded && !hasUploaded)) {
-                              setVoiceCloneError("Enter a name and record or upload at least one audio clip.");
-                              return;
+                      )}
+                      <form
+                        className="space-y-3"
+                        onSubmit={async (e) => {
+                          e.preventDefault();
+                          setVoiceCloneError(null);
+                          const form = e.currentTarget;
+                          const nameInput = form.querySelector<HTMLInputElement>('[name="voice-name"]');
+                          const name = nameInput?.value?.trim();
+                          const hasRecorded = !!voiceCloneRecordedBlob;
+                          if (!name || !hasRecorded) {
+                            setVoiceCloneError("Enter a name and record at least one audio clip.");
+                            return;
+                          }
+                          setVoiceCloneLoading(true);
+                          try {
+                            const fd = new FormData();
+                            fd.append("name", name);
+                            fd.append("language", voiceCloneLanguage);
+                            if (voiceCloneRecordedBlob) {
+                              const ext = voiceCloneRecordedBlob.type.includes("webm") ? "webm" : "ogg";
+                              fd.append("files", new File([voiceCloneRecordedBlob], `recording.${ext}`, { type: voiceCloneRecordedBlob.type }));
                             }
-                            setVoiceCloneLoading(true);
-                            try {
-                              const fd = new FormData();
-                              fd.append("name", name);
-                              if (voiceCloneRecordedBlob) {
-                                const ext = voiceCloneRecordedBlob.type.includes("webm") ? "webm" : "ogg";
-                                fd.append("files", new File([voiceCloneRecordedBlob], `recording.${ext}`, { type: voiceCloneRecordedBlob.type }));
-                              }
-                              if (files) {
-                                for (let i = 0; i < files.length; i++) {
-                                  fd.append("files", files[i]);
-                                }
-                              }
-                              const r = await fetch("/api/me/voices/clone", {
-                                method: "POST",
-                                body: fd,
-                              });
-                              const data = await r.json().catch(() => ({}));
-                              if (!r.ok) {
-                                throw new Error(data?.error ?? "Voice cloning failed");
-                              }
-                              refreshSettings();
-                              form.reset();
-                              if (fileInput) fileInput.value = "";
-                              setVoiceCloneRecordedBlob(null);
-                            } catch (err) {
-                              setVoiceCloneError(err instanceof Error ? err.message : "Voice cloning failed");
-                            } finally {
-                              setVoiceCloneLoading(false);
+                            const r = await fetch("/api/me/voices/clone", {
+                              method: "POST",
+                              body: fd,
+                            });
+                            const data = await r.json().catch(() => ({}));
+                            if (!r.ok) {
+                              throw new Error(data?.error ?? "Voice cloning failed");
                             }
-                          }}
-                        >
+                            refreshSettings();
+                            form.reset();
+                            setVoiceCloneRecordedBlob(null);
+                          } catch (err) {
+                            setVoiceCloneError(err instanceof Error ? err.message : "Voice cloning failed");
+                          } finally {
+                            setVoiceCloneLoading(false);
+                          }
+                        }}
+                      >
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           <input
                             type="text"
                             name="voice-name"
@@ -5203,97 +5241,101 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             maxLength={64}
                             className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-white/12 bg-white dark:bg-neutral-900 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/10"
                           />
-                          <div className="flex flex-wrap gap-2 items-center">
+                          <select
+                            value={voiceCloneLanguage}
+                            onChange={(e) => setVoiceCloneLanguage(e.target.value as LanguageCode | "all")}
+                            className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-white/12 bg-white dark:bg-neutral-900 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/10"
+                          >
+                            <option value="all">All languages</option>
+                            {LANGUAGES.map(({ code, name }) => (
+                              <option key={code} value={code}>
+                                {name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex flex-wrap gap-2 items-center">
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              if (voiceCloneRecording) {
+                                voiceCloneMediaRecorderRef.current?.stop();
+                                setVoiceCloneRecording(false);
+                                return;
+                              }
+                              setVoiceCloneError(null);
+                              try {
+                                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                                const recorder = new MediaRecorder(stream);
+                                voiceCloneChunksRef.current = [];
+                                recorder.ondataavailable = (e) => {
+                                  if (e.data.size > 0) voiceCloneChunksRef.current.push(e.data);
+                                };
+                                recorder.onstop = () => {
+                                  stream.getTracks().forEach((t) => t.stop());
+                                  if (!voiceCloneClosingRef.current) {
+                                    const blob = new Blob(voiceCloneChunksRef.current, { type: recorder.mimeType || "audio/webm" });
+                                    setVoiceCloneRecordedBlob(blob);
+                                  }
+                                  voiceCloneClosingRef.current = false;
+                                };
+                                recorder.start();
+                                voiceCloneMediaRecorderRef.current = recorder;
+                                setVoiceCloneRecording(true);
+                              } catch {
+                                setVoiceCloneError("Microphone access denied or unavailable.");
+                              }
+                            }}
+                            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
+                              voiceCloneRecording
+                                ? "bg-red-500 text-white hover:bg-red-600"
+                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.75px] border-neutral-200/60 dark:border-white/12"
+                            }`}
+                          >
+                            {voiceCloneRecording ? (
+                              <>
+                                <span className="relative flex h-2 w-2">
+                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
+                                </span>
+                                Stop recording
+                              </>
+                            ) : (
+                              <>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                                  <path d="M8.25 4.5a3.75 3.75 0 117.5 0v8.25a3.75 3.75 0 11-7.5 0V4.5z" />
+                                  <path d="M6 10.5a.75.75 0 01.75.75v1.5a5.25 5.25 0 1010.5 0v-1.5a.75.75 0 011.5 0v1.5a6.751 6.751 0 01-6 6.709v2.291h3a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5h3v-2.291a6.751 6.751 0 01-6-6.709v-1.5A.75.75 0 016 10.5z" />
+                                </svg>
+                                Record clip
+                              </>
+                            )}
+                          </button>
+                          {voiceCloneRecordedBlob && (
+                            <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                              Recorded ({Math.round(voiceCloneRecordedBlob.size / 1024)} KB)
+                            </span>
+                          )}
+                          {voiceCloneRecordedBlob && (
                             <button
                               type="button"
-                              onClick={async () => {
-                                if (voiceCloneRecording) {
-                                  voiceCloneMediaRecorderRef.current?.stop();
-                                  setVoiceCloneRecording(false);
-                                  return;
-                                }
-                                setVoiceCloneError(null);
-                                try {
-                                  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                                  const recorder = new MediaRecorder(stream);
-                                  voiceCloneChunksRef.current = [];
-                                  recorder.ondataavailable = (e) => {
-                                    if (e.data.size > 0) voiceCloneChunksRef.current.push(e.data);
-                                  };
-                                  recorder.onstop = () => {
-                                    stream.getTracks().forEach((t) => t.stop());
-                                    if (!voiceCloneClosingRef.current) {
-                                      const blob = new Blob(voiceCloneChunksRef.current, { type: recorder.mimeType || "audio/webm" });
-                                      setVoiceCloneRecordedBlob(blob);
-                                    }
-                                    voiceCloneClosingRef.current = false;
-                                  };
-                                  recorder.start();
-                                  voiceCloneMediaRecorderRef.current = recorder;
-                                  setVoiceCloneRecording(true);
-                                } catch (err) {
-                                  setVoiceCloneError("Microphone access denied or unavailable.");
-                                }
-                              }}
-                              className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
-                                voiceCloneRecording
-                                  ? "bg-red-500 text-white hover:bg-red-600"
-                                  : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.75px] border-neutral-200/60 dark:border-white/12"
-                              }`}
+                              onClick={() => setVoiceCloneRecordedBlob(null)}
+                              className="text-xs text-neutral-500 hover:text-foreground"
                             >
-                              {voiceCloneRecording ? (
-                                <>
-                                  <span className="relative flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
-                                  </span>
-                                  Stop recording
-                                </>
-                              ) : (
-                                <>
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                                    <path d="M8.25 4.5a3.75 3.75 0 117.5 0v8.25a3.75 3.75 0 11-7.5 0V4.5z" />
-                                    <path d="M6 10.5a.75.75 0 01.75.75v1.5a5.25 5.25 0 1010.5 0v-1.5a.75.75 0 011.5 0v1.5a6.751 6.751 0 01-6 6.709v2.291h3a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5h3v-2.291a6.751 6.751 0 01-6-6.709v-1.5A.75.75 0 016 10.5z" />
-                                  </svg>
-                                  Record clip
-                                </>
-                              )}
+                              Clear
                             </button>
-                            {voiceCloneRecordedBlob && (
-                              <span className="text-xs text-neutral-500 dark:text-neutral-400">
-                                Recorded ({Math.round(voiceCloneRecordedBlob.size / 1024)} KB)
-                              </span>
-                            )}
-                            {voiceCloneRecordedBlob && (
-                              <button
-                                type="button"
-                                onClick={() => setVoiceCloneRecordedBlob(null)}
-                                className="text-xs text-neutral-500 hover:text-foreground"
-                              >
-                                Clear
-                              </button>
-                            )}
-                          </div>
-                          <p className="text-xs text-neutral-500 dark:text-neutral-400">or upload files:</p>
-                          <input
-                            type="file"
-                            name="voice-files"
-                            accept=".mp3,.wav,.webm,.ogg,audio/mpeg,audio/wav,audio/webm,audio/ogg"
-                            multiple
-                            className="w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:bg-neutral-100 dark:file:bg-neutral-800 file:text-foreground"
-                          />
-                          {voiceCloneError && (
-                            <p className="text-xs text-red-600 dark:text-red-400">{voiceCloneError}</p>
                           )}
-                          <button
-                            type="submit"
-                            disabled={voiceCloneLoading}
-                            className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
-                          >
-                            {voiceCloneLoading ? "Creating…" : "Create voice clone"}
-                          </button>
-                        </form>
-                      )}
+                        </div>
+                        {voiceCloneError && (
+                          <p className="text-xs text-red-600 dark:text-red-400">{voiceCloneError}</p>
+                        )}
+                        <button
+                          type="submit"
+                          disabled={voiceCloneLoading}
+                          className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
+                        >
+                          {voiceCloneLoading ? "Generating…" : "Generate Personalized Voice"}
+                        </button>
+                      </form>
                     </div>
                   )}
                 </section>
@@ -5892,6 +5934,15 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   >
                     {ccCreateLoading ? "Generating…" : "Generate"}
                   </button>
+                  <VoiceInputButton
+                    onTranscription={(text) =>
+                      setCcCreateInput((prev) => (prev ? `${prev} ${text}` : text))
+                    }
+                    language={language}
+                    disabled={ccCreateLoading}
+                    ariaLabel="Dictate custom concept"
+                    className="!min-h-[44px] !min-w-[44px]"
+                  />
                 </div>
               </>
             ) : (

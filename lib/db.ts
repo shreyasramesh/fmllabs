@@ -126,6 +126,11 @@ interface NuggetDoc extends Omit<Nugget, "_id"> {
 }
 
 export type BackgroundElement = "default" | "air" | "water" | "earth" | "fire";
+export interface ClonedVoiceSetting {
+  voiceId: string;
+  name: string;
+  language: string;
+}
 
 export interface UserSettings {
   userId: string;
@@ -136,6 +141,8 @@ export interface UserSettings {
   /** ElevenLabs Instant Voice Clone ID; when set, TTS uses this voice. Audio clips are never stored—only this ID. */
   clonedVoiceId?: string;
   clonedVoiceName?: string;
+  /** Preferred cloned voices tagged by app language code. */
+  clonedVoices?: ClonedVoiceSetting[];
   background?: BackgroundElement;
   weatherFormat?: "condition-temp" | "emoji-temp" | "temp-only";
   updatedAt: Date;
@@ -974,6 +981,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     ttsSpeed: doc.ttsSpeed,
     clonedVoiceId: doc.clonedVoiceId,
     clonedVoiceName: doc.clonedVoiceName,
+    clonedVoices: doc.clonedVoices,
     background: doc.background,
     weatherFormat: doc.weatherFormat,
     updatedAt: doc.updatedAt,
@@ -982,7 +990,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "background" | "weatherFormat">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat">>
 ): Promise<UserSettings> {
   const database = await getDb();
   const now = new Date();
@@ -1002,6 +1010,7 @@ export async function upsertUserSettings(
     ttsSpeed: result.ttsSpeed,
     clonedVoiceId: result.clonedVoiceId,
     clonedVoiceName: result.clonedVoiceName,
+    clonedVoices: result.clonedVoices,
     background: result.background,
     weatherFormat: result.weatherFormat,
     updatedAt: result.updatedAt,
