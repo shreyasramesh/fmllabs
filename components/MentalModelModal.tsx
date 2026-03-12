@@ -233,7 +233,7 @@ export function MentalModelModal({
 
   const tryThisItems = getTryThis(model);
   const steps = [
-    "image",
+    ...(model.id.startsWith("custom_") ? [] : (["image"] as const)),
     "idea",
     "concept",
     ...(tryThisItems.length > 0 ? (["try"] as const) : []),
@@ -339,7 +339,7 @@ export function MentalModelModal({
             <div className="animate-fade-in-up flex flex-col items-center justify-center min-h-[min(350px,50vh)]">
               <div className="rounded-2xl overflow-hidden border border-neutral-200 dark:border-neutral-700 w-full max-w-md aspect-[4/3] bg-neutral-100 dark:bg-neutral-800">
                 <img
-                  src={`/images/${model.id.startsWith("custom_") ? "elements-avatar" : model.id.replace(/_/g, "-")}.png`}
+                  src={`/images/${model.id.replace(/_/g, "-")}.png`}
                   alt={model.name}
                   className="w-full h-full object-cover"
                 />

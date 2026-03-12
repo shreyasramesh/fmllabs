@@ -2315,7 +2315,7 @@ export default function ChatPage() {
       } else if (data.id) {
         setRelevanceContext(null);
         const img = typeof window !== "undefined" ? new window.Image() : null;
-        if (img) img.src = `/images/${data.id.startsWith("custom_") ? "elements-avatar" : data.id.replace(/_/g, "-")}.png`;
+        if (img && !data.id.startsWith("custom_")) img.src = `/images/${data.id.replace(/_/g, "-")}.png`;
         setSelectedMentalModel(data);
       }
     } catch {
@@ -2513,7 +2513,7 @@ export default function ChatPage() {
       setRelevanceContext(context);
       // Preload image so it appears instantly when modal opens
       const img = typeof window !== "undefined" ? new window.Image() : null;
-      if (img) img.src = `/images/${id.startsWith("custom_") ? "elements-avatar" : id.replace(/_/g, "-")}.png`;
+      if (img && !id.startsWith("custom_")) img.src = `/images/${id.replace(/_/g, "-")}.png`;
       fetch(`/api/mental-models/${id}?language=${language}`)
         .then((r) => {
           if (!r.ok) throw new Error(`Mental model not found: ${r.status}`);
@@ -4146,8 +4146,8 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             onKeyDown={(e) => e.key === "Enter" && handleMentalModelClick(id)}
                             className="relative h-full w-full transition-transform duration-300 [transform-style:preserve-3d] group-hover/tile:[transform:rotateY(180deg)] cursor-pointer"
                           >
-                            <div className={`absolute inset-0 w-full h-full rounded-xl bg-neutral-100 dark:bg-neutral-800 text-white p-3 flex items-center justify-center [backface-visibility:hidden] border border-neutral-200 dark:border-neutral-700 overflow-hidden pointer-events-none transition-opacity duration-300 ${isSafari ? "group-hover/tile:opacity-0" : ""}`} style={{ backgroundImage: `url(/images/${id.startsWith("custom_") ? "elements-avatar" : id.replace(/_/g, "-")}.png)`, backgroundSize: "cover", backgroundPosition: "center" }} aria-hidden>
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" aria-hidden />
+                            <div className={`absolute inset-0 w-full h-full rounded-xl bg-neutral-100 dark:bg-neutral-800 p-3 flex items-center justify-center [backface-visibility:hidden] border border-neutral-200 dark:border-neutral-700 overflow-hidden pointer-events-none transition-opacity duration-300 ${isSafari ? "group-hover/tile:opacity-0" : ""} ${id.startsWith("custom_") ? "text-neutral-800 dark:text-neutral-200" : "text-white"}`} style={id.startsWith("custom_") ? {} : { backgroundImage: `url(/images/${id.replace(/_/g, "-")}.png)`, backgroundSize: "cover", backgroundPosition: "center" }} aria-hidden>
+                              {!id.startsWith("custom_") && <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" aria-hidden />}
                               <span className="relative z-10 text-xs font-medium capitalize tracking-wide text-center line-clamp-3 drop-shadow-sm">{name}</span>
                             </div>
                             <div className="absolute inset-0 w-full h-full rounded-xl bg-foreground text-background px-3 flex items-center justify-center overflow-hidden [backface-visibility:hidden] [transform:rotateY(180deg)] border border-foreground pointer-events-none" aria-hidden>
@@ -7781,7 +7781,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           onOpenRelated={(id) => {
             setRelevanceContext(null);
             const img = typeof window !== "undefined" ? new window.Image() : null;
-            if (img) img.src = `/images/${id.startsWith("custom_") ? "elements-avatar" : id.replace(/_/g, "-")}.png`;
+            if (img && !id.startsWith("custom_")) img.src = `/images/${id.replace(/_/g, "-")}.png`;
             fetch(`/api/mental-models/${id}?language=${language}`)
               .then((r) => (r.ok ? r.json() : Promise.reject()))
               .then((m: MentalModel) => setSelectedMentalModel(m))
