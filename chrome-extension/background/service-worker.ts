@@ -12,7 +12,7 @@ async function getClerkClient() {
       publishableKey,
       background: true,
       syncHost: API_BASE,
-    });
+    } as never);
   }
   return clerkClient;
 }
@@ -80,7 +80,7 @@ function openChatSidePanelNow(windowId?: number) {
   if (typeof windowId === "number") {
     return chrome.sidePanel.open({ windowId });
   }
-  return chrome.sidePanel.open({});
+  return Promise.resolve();
 }
 
 async function runContentActionInBackground(
@@ -183,9 +183,10 @@ chrome.runtime.onMessage.addListener(
             message.action === "model"
           ) {
             try {
+              const text = message.text || "";
               await runContentActionInBackground(
                 message.action as "nugget" | "concept" | "model",
-                message.text,
+                text,
                 message.url
               );
               sendResponse({ ok: true });
