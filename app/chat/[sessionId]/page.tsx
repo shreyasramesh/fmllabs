@@ -5236,7 +5236,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   <Link
                     href="/extension"
                     onClick={() => setSettingsOpen(false)}
-                    className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-[#f2b37d] bg-[#f59e42] text-[#fff8ef] text-sm font-semibold shadow-sm hover:bg-[#ec8f2e] transition-colors"
+                    className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-[#f2b37d] bg-transparent text-[#c96b25] dark:text-[#f2b37d] text-sm font-semibold hover:bg-[#fff1df] dark:hover:bg-[#3a2415] transition-colors"
                   >
                     <ChromeIcon className="w-[18px] h-[18px]" />
                     Install Extension

@@ -34,6 +34,14 @@ type PendingContentAction = {
   url?: string;
 };
 
+type ConfirmDialogState = {
+  title: string;
+  message: string;
+  confirmLabel: string;
+  tone?: "default" | "danger";
+  onConfirm: () => Promise<void>;
+};
+
 function normalizeAssistantContent(raw: string): string {
   const withoutStreamContext = stripContextBlock(raw);
   const marker = "\n---RELEVANT-CONTEXT---";
@@ -45,6 +53,22 @@ function normalizeAssistantContent(raw: string): string {
 }
 
 const OPTIONS_MARKER_REGEX = /-{2,3}\s*OPTIONS\s*-{2,3}/i;
+
+function parseAssistantOptions(content: string): string[] {
+  const match = content.match(OPTIONS_MARKER_REGEX);
+  if (!match || match.index === undefined) return [];
+  return content
+    .slice(match.index + match[0].length)
+    .split(/\r?\n/)
+    .map((line) =>
+      line
+        .replace(/^[-*]\s*/, "")
+        .replace(/^\d+\.\s*/, "")
+        .trim()
+    )
+    .filter((line) => line.length > 0 && !/^-{3,}$/.test(line))
+    .slice(0, 6);
+}
 
 function formatOptionsBlock(content: string): string {
   const match = content.match(OPTIONS_MARKER_REGEX);
@@ -95,7 +119,23 @@ function SidepanelContent() {
   const [deletingSessionId, setDeletingSessionId] = useState<string | null>(null);
   const [theme, setTheme] = useState<ThemeMode>(resolveInitialTheme);
   const [contentActionNotice, setContentActionNotice] = useState<string | null>(null);
+  const [uiNotice, setUiNotice] = useState<{ type: "error" | "success"; text: string } | null>(null);
+  const [confirmDialog, setConfirmDialog] = useState<ConfirmDialogState | null>(null);
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const contentActionInFlightKey = useRef<string | null>(null);
+  const uiNoticeTimerRef = useRef<number | null>(null);
+
+  const showNotice = useCallback((text: string, type: "error" | "success" = "error") => {
+    if (uiNoticeTimerRef.current) {
+      window.clearTimeout(uiNoticeTimerRef.current);
+      uiNoticeTimerRef.current = null;
+    }
+    setUiNotice({ type, text });
+    uiNoticeTimerRef.current = window.setTimeout(() => {
+      setUiNotice(null);
+      uiNoticeTimerRef.current = null;
+    }, 2600);
+  }, []);
 
   const fetchNuggets = useCallback(async () => {
     try {
@@ -438,6 +478,14 @@ function SidepanelContent() {
     return () => chrome.storage.onChanged.removeListener(onStorageChange);
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (uiNoticeTimerRef.current) {
+        window.clearTimeout(uiNoticeTimerRef.current);
+      }
+    };
+  }, []);
+
   const setThemeAndPersist = (next: ThemeMode) => {
     setTheme(next);
     document.documentElement.setAttribute("data-theme", next);
@@ -459,7 +507,7 @@ function SidepanelContent() {
       setNuggetSource("");
       fetchNuggets();
     } catch (e) {
-      alert((e as Error).message);
+      showNotice((e as Error).message, "error");
     } finally {
       setNuggetLoading(false);
     }
@@ -491,46 +539,59 @@ function SidepanelContent() {
       fetchConcepts();
       setTimeout(() => setConceptSaved(false), 2000);
     } catch (e) {
-      alert((e as Error).message);
+      showNotice((e as Error).message, "error");
     } finally {
       setConceptLoading(false);
     }
   };
 
   const deleteNuggetById = async (id: string) => {
-    if (!id || deletingNuggetId) return;
-    const shouldDelete = window.confirm("Delete this nugget?");
-    if (!shouldDelete) return;
     setDeletingNuggetId(id);
     try {
       await apiFetch(`/me/nuggets/${id}`, { method: "DELETE" });
       fetchNuggets();
     } catch (e) {
-      alert((e as Error).message);
+      showNotice((e as Error).message, "error");
     } finally {
       setDeletingNuggetId(null);
     }
   };
 
+  const requestDeleteNuggetById = (id: string) => {
+    if (!id || deletingNuggetId) return;
+    setConfirmDialog({
+      title: "Delete nugget?",
+      message: "This nugget will be permanently removed.",
+      confirmLabel: "Delete",
+      tone: "danger",
+      onConfirm: () => deleteNuggetById(id),
+    });
+  };
+
   const deleteConceptById = async (id: string) => {
-    if (!id || deletingConceptId) return;
-    const shouldDelete = window.confirm("Delete this concept?");
-    if (!shouldDelete) return;
     setDeletingConceptId(id);
     try {
       await apiFetch(`/me/custom-concepts/${id}`, { method: "DELETE" });
       await Promise.all([fetchConcepts(), fetchConceptGroups()]);
     } catch (e) {
-      alert((e as Error).message);
+      showNotice((e as Error).message, "error");
     } finally {
       setDeletingConceptId(null);
     }
   };
 
+  const requestDeleteConceptById = (id: string) => {
+    if (!id || deletingConceptId) return;
+    setConfirmDialog({
+      title: "Delete concept?",
+      message: "This concept will be permanently removed.",
+      confirmLabel: "Delete",
+      tone: "danger",
+      onConfirm: () => deleteConceptById(id),
+    });
+  };
+
   const deleteSessionById = async (id: string) => {
-    if (!id || deletingSessionId) return;
-    const shouldDelete = window.confirm("Delete this conversation?");
-    if (!shouldDelete) return;
     setDeletingSessionId(id);
     try {
       await apiFetch(`/sessions/${id}`, { method: "DELETE" });
@@ -540,16 +601,32 @@ function SidepanelContent() {
       }
       fetchSessions();
     } catch (e) {
-      alert((e as Error).message);
+      showNotice((e as Error).message, "error");
     } finally {
       setDeletingSessionId(null);
     }
   };
 
-  const sendChatMessage = async () => {
-    if (!chatInput.trim() || chatLoading) return;
-    const text = chatInput.trim();
-    setChatInput("");
+  const requestDeleteSessionById = (id: string) => {
+    if (!id || deletingSessionId) return;
+    setConfirmDialog({
+      title: "Delete conversation?",
+      message: "This conversation will be permanently removed.",
+      confirmLabel: "Delete",
+      tone: "danger",
+      onConfirm: () => deleteSessionById(id),
+    });
+  };
+
+  const sendChatMessage = async (overrideText?: string) => {
+    if (chatLoading) return;
+    const text = (overrideText ?? chatInput).trim();
+    if (!text) return;
+    if (overrideText) {
+      setChatInput("");
+    } else {
+      setChatInput("");
+    }
     setMessages((prev) => [...prev, { role: "user", content: text }]);
     setChatLoading(true);
 
@@ -566,7 +643,7 @@ function SidepanelContent() {
       } catch {
         setChatLoading(false);
         setMessages((prev) => prev.slice(0, -1));
-        alert("Failed to create session");
+        showNotice("Failed to create session", "error");
         return;
       }
     }
@@ -656,12 +733,14 @@ function SidepanelContent() {
             </button>
           </div>
         </div>
-        <p>Sign in to use the side panel.</p>
-        <SignIn
-          fallbackRedirectUrl={sidepanelUrl}
-          signUpFallbackRedirectUrl={sidepanelUrl}
-          signUpUrl={sidepanelUrl}
-        />
+        <div className="card">
+          <p className="meta auth-note">Sign in to use the side panel.</p>
+          <SignIn
+            fallbackRedirectUrl={sidepanelUrl}
+            signUpFallbackRedirectUrl={sidepanelUrl}
+            signUpUrl={sidepanelUrl}
+          />
+        </div>
       </div>
     );
   }
@@ -685,11 +764,20 @@ function SidepanelContent() {
           </button>
         </div>
       </div>
-      <p style={{ fontSize: 12, color: "var(--muted)" }}>
+      <p className="meta">
         Hi, {user?.firstName || user?.emailAddresses[0]?.emailAddress || "there"}!
       </p>
+      {uiNotice && (
+        <p className={`notice ${uiNotice.type === "error" ? "error" : "success"}`}>
+          {uiNotice.text}
+        </p>
+      )}
       {contentActionNotice && (
-        <p style={{ fontSize: 12, color: "var(--muted)", marginTop: -4 }}>
+        <p
+          className={`notice ${
+            contentActionNotice.toLowerCase().includes("failed") ? "error" : "success"
+          }`}
+        >
           {contentActionNotice}
         </p>
       )}
@@ -719,48 +807,50 @@ function SidepanelContent() {
         <>
           <div className="card">
             <h2>Add Nugget</h2>
-            <textarea
-              placeholder="Paste or type your nugget..."
-              value={nuggetContent}
-              onChange={(e) => setNuggetContent(e.target.value)}
-              rows={3}
-            />
-            <input
-              type="text"
-              placeholder="Source (optional)"
-              value={nuggetSource}
-              onChange={(e) => setNuggetSource(e.target.value)}
-            />
-            <button
-              className="primary"
-              onClick={saveNugget}
-              disabled={!nuggetContent.trim() || nuggetLoading}
-            >
-              {nuggetLoading ? "Saving…" : "Save"}
-            </button>
+            <div className="form-stack">
+              <textarea
+                placeholder="Paste or type your nugget..."
+                value={nuggetContent}
+                onChange={(e) => setNuggetContent(e.target.value)}
+                rows={3}
+              />
+              <input
+                type="text"
+                placeholder="Source (optional)"
+                value={nuggetSource}
+                onChange={(e) => setNuggetSource(e.target.value)}
+              />
+              <button
+                className="primary"
+                onClick={saveNugget}
+                disabled={!nuggetContent.trim() || nuggetLoading}
+              >
+                {nuggetLoading ? "Saving…" : "Save"}
+              </button>
+            </div>
           </div>
           <div>
-            <h2>Your Nuggets</h2>
+            <h2 className="section-title">Your Nuggets</h2>
             {nuggets.length === 0 ? (
-              <p style={{ fontSize: 13, color: "var(--muted)" }}>No nuggets yet.</p>
+              <p className="meta">No nuggets yet.</p>
             ) : (
               nuggets.map((n) => (
                 <div key={n._id} className="card">
-                  <div className="topbar" style={{ marginBottom: 6 }}>
-                    <p style={{ margin: 0, fontWeight: 600 }}>Nugget</p>
+                  <div className="item-header">
+                    <p className="item-title">Nugget</p>
                     <button
-                      onClick={() => deleteNuggetById(n._id)}
+                        onClick={() => requestDeleteNuggetById(n._id)}
                       disabled={deletingNuggetId === n._id}
                       title="Delete nugget"
                       aria-label="Delete nugget"
-                      style={{ padding: "2px 8px", fontSize: 12 }}
+                      className="btn-sm"
                     >
                       {deletingNuggetId === n._id ? "…" : "Delete"}
                     </button>
                   </div>
-                  <p style={{ margin: 0 }}>{n.content}</p>
+                  <p className="item-body">{n.content}</p>
                   {n.source && (
-                    <p style={{ fontSize: 12, color: "var(--muted)", margin: "4px 0 0" }}>
+                    <p className="item-subtle">
                       {n.source}
                     </p>
                   )}
@@ -775,53 +865,43 @@ function SidepanelContent() {
         <>
           {youtubeExtractNotice && (
             <p
-              style={{
-                fontSize: 13,
-                fontWeight: 700,
-                color: "var(--text)",
-                marginTop: 0,
-                marginBottom: 6,
-              }}
+              className={`notice ${
+                youtubeExtractNotice.toLowerCase().includes("failed") ? "error" : ""
+              }`}
             >
               {youtubeExtractNotice}
             </p>
           )}
           {youtubeExtractLoading && (
-            <p
-              style={{
-                fontSize: 13,
-                fontWeight: 600,
-                color: "var(--text)",
-                marginTop: 0,
-                marginBottom: 10,
-              }}
-            >
+            <p className="meta">
               This can take up to ~30 seconds depending on transcript length.
             </p>
           )}
           <div className="card">
             <h2>Save as Concept</h2>
-            <p style={{ fontSize: 13, color: "var(--muted)" }}>
+            <p className="meta">
               Paste text from any webpage. We'll generate a concept and save it.
             </p>
-            <textarea
-              placeholder="Paste text here..."
-              value={conceptContent}
-              onChange={(e) => setConceptContent(e.target.value)}
-              rows={4}
-            />
-            <button
-              className="primary"
-              onClick={saveConcept}
-              disabled={!conceptContent.trim() || conceptLoading}
-            >
-              {conceptLoading ? "Generating…" : conceptSaved ? "Saved!" : "Generate & Save"}
-            </button>
+            <div className="form-stack">
+              <textarea
+                placeholder="Paste text here..."
+                value={conceptContent}
+                onChange={(e) => setConceptContent(e.target.value)}
+                rows={4}
+              />
+              <button
+                className="primary"
+                onClick={saveConcept}
+                disabled={!conceptContent.trim() || conceptLoading}
+              >
+                {conceptLoading ? "Generating…" : conceptSaved ? "Saved!" : "Generate & Save"}
+              </button>
+            </div>
           </div>
-          <div style={{ marginTop: 12 }}>
-            <h2>Saved Concepts</h2>
+          <div className="section">
+            <h2 className="section-title">Saved Concepts</h2>
             {concepts.length === 0 ? (
-              <p style={{ fontSize: 13, color: "var(--muted)" }}>No concepts yet.</p>
+              <p className="meta">No concepts yet.</p>
             ) : (
               concepts.map((concept) => {
                 const groupTitles = conceptGroups
@@ -831,19 +911,19 @@ function SidepanelContent() {
 
                 return (
                   <div key={concept._id} className="card">
-                    <div className="topbar" style={{ marginBottom: 6 }}>
-                      <p style={{ margin: 0, fontWeight: 600 }}>{concept.title}</p>
+                    <div className="item-header">
+                      <p className="item-title">{concept.title}</p>
                       <button
-                        onClick={() => deleteConceptById(concept._id)}
+                        onClick={() => requestDeleteConceptById(concept._id)}
                         disabled={deletingConceptId === concept._id}
                         title="Delete concept"
                         aria-label="Delete concept"
-                        style={{ padding: "2px 8px", fontSize: 12 }}
+                        className="btn-sm"
                       >
                         {deletingConceptId === concept._id ? "…" : "Delete"}
                       </button>
                     </div>
-                    <p style={{ fontSize: 13, margin: "6px 0 0" }}>{concept.summary}</p>
+                    <p className="item-body">{concept.summary}</p>
                     <div className="chips-row">
                       {groupTitles.length === 0 ? (
                         <span className="chip">Ungrouped</span>
@@ -866,41 +946,59 @@ function SidepanelContent() {
       {tab === "chat" && (
         <>
           <div className="card">
-            <div className="topbar" style={{ marginBottom: 12 }}>
-              <h2 style={{ margin: 0 }}>Ask the Agent</h2>
+            <div className="item-header">
+              <p className="item-title">Ask the Agent</p>
               <button onClick={startNewChat}>New Chat</button>
             </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 8,
-                maxHeight: 300,
-                overflowY: "auto",
-              }}
-            >
+            <div className="chat-stream">
               {messages.length === 0 && (
-                <p style={{ margin: 0, fontSize: 12, color: "var(--muted)" }}>
+                <p className="meta">
                   {sessionId
                     ? "No messages in this conversation yet."
                     : "Start a new chat or select a conversation."}
                 </p>
               )}
-              {messages.map((m, i) => (
-                <div
-                  key={i}
-                  className={`chat-message ${m.role}`}
-                  style={{ whiteSpace: "pre-wrap" }}
-                >
-                  {m.role === "assistant" ? (
-                    <div className="assistant-markdown">
-                      <ReactMarkdown>{m.content}</ReactMarkdown>
-                    </div>
-                  ) : (
-                    m.content
-                  )}
-                </div>
-              ))}
+              {messages.map((m, i) => {
+                const assistantOptions =
+                  m.role === "assistant" ? parseAssistantOptions(m.content) : [];
+                const isAssistantTyping = m.role === "assistant" && !m.content.trim() && chatLoading;
+                return (
+                  <div key={i} className={`chat-message ${m.role}`}>
+                    {m.role === "assistant" ? (
+                      isAssistantTyping ? (
+                        <div className="typing-dots" aria-label="Assistant is typing">
+                          <span />
+                          <span />
+                          <span />
+                        </div>
+                      ) : (
+                        <>
+                          <div className="assistant-markdown">
+                            <ReactMarkdown>{m.content}</ReactMarkdown>
+                          </div>
+                          {assistantOptions.length > 0 && (
+                            <div className="option-chips">
+                              {assistantOptions.map((option) => (
+                                <button
+                                  key={`${i}-${option}`}
+                                  type="button"
+                                  className="option-chip"
+                                  disabled={chatLoading}
+                                  onClick={() => sendChatMessage(option)}
+                                >
+                                  {option}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      )
+                    ) : (
+                      m.content
+                    )}
+                  </div>
+                );
+              })}
             </div>
             <div className="chat-input-row">
               <input
@@ -911,61 +1009,39 @@ function SidepanelContent() {
               />
               <button
                 className="primary"
-                onClick={sendChatMessage}
+                onClick={() => sendChatMessage()}
                 disabled={!chatInput.trim() || chatLoading}
               >
                 {chatLoading ? "…" : "Send"}
               </button>
             </div>
           </div>
-          <div style={{ marginTop: 8 }}>
-            <h2>Conversations</h2>
+          <div className="section">
+            <h2 className="section-title">Conversations</h2>
             {sessions.length === 0 ? (
-              <p style={{ margin: 0, fontSize: 12, color: "var(--muted)" }}>
+              <p className="meta">
                 No previous conversations yet.
               </p>
             ) : (
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <div className="list-stack">
                 {sessions.map((s, idx) => (
-                  <div
-                    key={s._id}
-                    className="card"
-                    style={{
-                      margin: 0,
-                      padding: 8,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      gap: 8,
-                    }}
-                  >
+                  <div key={s._id} className="card conversation-row">
                     <button
                       onClick={() => {
                         setSessionId(s._id);
                         fetchSessionMessages(s._id);
                       }}
-                      style={{
-                        flex: 1,
-                        textAlign: "left",
-                        padding: "6px 10px",
-                        borderRadius: 10,
-                        fontSize: 12,
-                        border: "1px solid var(--border)",
-                        background:
-                          sessionId === s._id ? "var(--primary)" : "var(--surface)",
-                        color:
-                          sessionId === s._id ? "var(--primary-text)" : "var(--text)",
-                      }}
+                      className={`conversation-select ${sessionId === s._id ? "active" : ""}`}
                       title={s.title || s._id}
                     >
                       {s.title?.trim() || `Chat ${idx + 1}`}
                     </button>
                     <button
-                      onClick={() => deleteSessionById(s._id)}
+                      onClick={() => requestDeleteSessionById(s._id)}
                       disabled={deletingSessionId === s._id}
                       title="Delete conversation"
                       aria-label="Delete conversation"
-                      style={{ padding: "4px 8px", fontSize: 12 }}
+                      className="btn-sm"
                     >
                       {deletingSessionId === s._id ? "…" : "Delete"}
                     </button>
@@ -975,6 +1051,39 @@ function SidepanelContent() {
             )}
           </div>
         </>
+      )}
+      {confirmDialog && (
+        <div className="overlay" onClick={() => !confirmLoading && setConfirmDialog(null)}>
+          <div className="confirm-modal card" onClick={(e) => e.stopPropagation()}>
+            <p className="item-title">{confirmDialog.title}</p>
+            <p className="meta">{confirmDialog.message}</p>
+            <div className="confirm-actions">
+              <button
+                type="button"
+                onClick={() => setConfirmDialog(null)}
+                disabled={confirmLoading}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className={confirmDialog.tone === "danger" ? "primary danger" : "primary"}
+                disabled={confirmLoading}
+                onClick={async () => {
+                  setConfirmLoading(true);
+                  try {
+                    await confirmDialog.onConfirm();
+                    setConfirmDialog(null);
+                  } finally {
+                    setConfirmLoading(false);
+                  }
+                }}
+              >
+                {confirmLoading ? "…" : confirmDialog.confirmLabel}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

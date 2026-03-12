@@ -2,6 +2,50 @@ let floatingBar: HTMLDivElement | null = null;
 let lastSelection = "";
 let youtubeButtonInitialized = false;
 let isInteractingWithFloatingBar = false;
+type ThemeMode = "light" | "dark";
+let currentTheme: ThemeMode =
+  window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+
+function syncThemeFromStorage() {
+  chrome.storage.local.get("fmlTheme", (data) => {
+    const stored = data.fmlTheme as ThemeMode | undefined;
+    if (stored === "light" || stored === "dark") {
+      currentTheme = stored;
+    }
+  });
+}
+
+syncThemeFromStorage();
+chrome.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName !== "local" || !changes.fmlTheme?.newValue) return;
+  const next = changes.fmlTheme.newValue as ThemeMode;
+  if (next === "light" || next === "dark") {
+    currentTheme = next;
+  }
+});
+
+function getFloatingPalette(theme: ThemeMode) {
+  if (theme === "light") {
+    return {
+      barBg: "#ffffff",
+      barFg: "#111827",
+      barBorder: "1px solid rgba(17,24,39,0.14)",
+      barShadow: "0 6px 18px rgba(17,24,39,0.16)",
+      buttonBg: "rgba(17,24,39,0.08)",
+      buttonHoverBg: "rgba(17,24,39,0.14)",
+      buttonFg: "#111827",
+    };
+  }
+  return {
+    barBg: "#1a1a1a",
+    barFg: "#ffffff",
+    barBorder: "1px solid rgba(255,255,255,0.16)",
+    barShadow: "0 6px 18px rgba(0,0,0,0.28)",
+    buttonBg: "rgba(255,255,255,0.15)",
+    buttonHoverBg: "rgba(255,255,255,0.25)",
+    buttonFg: "#ffffff",
+  };
+}
 
 function getSelectionText(): string {
   const sel = window.getSelection();
@@ -178,6 +222,7 @@ function ensureYouTubeActionButton() {
 function showFloatingBar(x: number, y: number, text: string) {
   hideFloatingBar();
   lastSelection = text;
+  const palette = getFloatingPalette(currentTheme);
 
   const bar = document.createElement("div");
   bar.id = "fml-floating-bar";
@@ -217,12 +262,13 @@ function showFloatingBar(x: number, y: number, text: string) {
     display: "flex",
     gap: "8px",
     padding: "6px",
-    background: "#1a1a1a",
-    color: "#fff",
+    background: palette.barBg,
+    color: palette.barFg,
+    border: palette.barBorder,
     borderRadius: "8px",
     fontSize: "12px",
     fontFamily: "system-ui, sans-serif",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+    boxShadow: palette.barShadow,
   });
 
   bar.querySelectorAll("button").forEach((btn) => {
@@ -235,15 +281,15 @@ function showFloatingBar(x: number, y: number, text: string) {
       justifyContent: "center",
       border: "none",
       borderRadius: "6px",
-      background: "rgba(255,255,255,0.15)",
-      color: "#fff",
+      background: palette.buttonBg,
+      color: palette.buttonFg,
       cursor: "pointer",
     });
     btn.addEventListener("mouseenter", () => {
-      btn.style.background = "rgba(255,255,255,0.25)";
+      btn.style.background = palette.buttonHoverBg;
     });
     btn.addEventListener("mouseleave", () => {
-      btn.style.background = "rgba(255,255,255,0.15)";
+      btn.style.background = palette.buttonBg;
     });
   });
 
@@ -281,7 +327,7 @@ function showFloatingBar(x: number, y: number, text: string) {
         if (button && button.dataset.prevHtml) {
           button.innerHTML = button.dataset.prevHtml;
           delete button.dataset.prevHtml;
-          button.style.background = "rgba(255,255,255,0.15)";
+          button.style.background = palette.buttonBg;
         }
         buttons.forEach((btn) => {
           btn.disabled = false;

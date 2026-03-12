@@ -72,12 +72,14 @@ function PopupContent() {
             </button>
           </div>
         </div>
-        <p>Sign in to save nuggets, concepts, and chat with the agent.</p>
-        <SignIn
-          fallbackRedirectUrl={popupUrl}
-          signUpFallbackRedirectUrl={popupUrl}
-          signUpUrl={popupUrl}
-        />
+        <div className="panel">
+          <p className="meta">Sign in to save nuggets, concepts, and chat with the agent.</p>
+          <SignIn
+            fallbackRedirectUrl={popupUrl}
+            signUpFallbackRedirectUrl={popupUrl}
+            signUpUrl={popupUrl}
+          />
+        </div>
       </div>
     );
   }
@@ -101,13 +103,15 @@ function PopupContent() {
           </button>
         </div>
       </div>
-      <p>Hi, {user?.firstName || user?.emailAddresses[0]?.emailAddress || "there"}!</p>
-      <button className="primary" onClick={openSidePanel}>
-        Open Side Panel
-      </button>
-      <p className="mt" style={{ fontSize: 12, color: "var(--muted)" }}>
-        Select text on any page to save nuggets or concepts.
-      </p>
+      <div className="panel">
+        <p className="meta">Hi, {user?.firstName || user?.emailAddresses[0]?.emailAddress || "there"}!</p>
+        <button className="primary mt" onClick={openSidePanel}>
+          Open Side Panel
+        </button>
+        <p className="meta mt">
+          Select text on any page to save nuggets or concepts.
+        </p>
+      </div>
     </div>
   );
 }
