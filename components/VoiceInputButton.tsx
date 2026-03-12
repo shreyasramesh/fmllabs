@@ -285,6 +285,7 @@ export function VoiceInputButton({
 }) {
   const [listening, setListening] = useState(false);
   const [supported, setSupported] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [holdProgress, setHoldProgress] = useState(0);
   const [audioLevel, setAudioLevel] = useState(0);
   const [orbNodes, setOrbNodes] = useState<{ input: GainNode; output: GainNode } | null>(null);
@@ -303,6 +304,15 @@ export function VoiceInputButton({
         !!navigator.mediaDevices?.getUserMedia &&
         !!window.WebSocket
     );
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 640px)");
+    const sync = () => setIsMobile(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
   }, []);
 
   const stopListening = useCallback(() => {
@@ -497,8 +507,15 @@ export function VoiceInputButton({
           </span>
         </div>
 
-        <div className="relative flex items-center justify-center w-12 h-12" aria-hidden>
-          {orbNodes ? (
+        <div
+          className={`relative flex items-center justify-center ${isMobile ? "min-w-[5.5rem]" : "w-12 h-12"}`}
+          aria-hidden
+        >
+          {isMobile ? (
+            <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
+              All ears…
+            </span>
+          ) : orbNodes ? (
             <AudioOrbVisual
               inputNode={orbNodes.input}
               outputNode={orbNodes.output}
