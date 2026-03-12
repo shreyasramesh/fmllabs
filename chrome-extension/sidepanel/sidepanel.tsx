@@ -42,6 +42,35 @@ type ConfirmDialogState = {
   onConfirm: () => Promise<void>;
 };
 
+function humanizeReferenceToken(token: string): string {
+  const strippedIdPrefix = token.replace(/^id:/i, "").trim();
+  const humanized = strippedIdPrefix
+    .trim()
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const compact = humanized.replace(/\s+/g, "");
+  const hasOnlySimpleChars = /^[a-z0-9_-]+$/i.test(compact);
+  const looksLongId = compact.length >= 12;
+  const vowelCount = (compact.match(/[aeiou]/gi) || []).length;
+  const vowelRatio = compact.length > 0 ? vowelCount / compact.length : 0;
+  const digitCount = (compact.match(/\d/g) || []).length;
+  const digitRatio = compact.length > 0 ? digitCount / compact.length : 0;
+  const looksOpaque =
+    hasOnlySimpleChars &&
+    looksLongId &&
+    (vowelRatio < 0.2 || digitRatio > 0.35);
+  if (looksOpaque) return "referenced item";
+  return humanized;
+}
+
+function formatReferenceItems(content: string): string {
+  return content.replace(/\[\[([^[\]]+)\]\]/g, (_full, token: string) => {
+    const label = humanizeReferenceToken(token) || token;
+    return `**${label}**`;
+  });
+}
+
 function normalizeAssistantContent(raw: string): string {
   const withoutStreamContext = stripContextBlock(raw);
   const marker = "\n---RELEVANT-CONTEXT---";
@@ -49,25 +78,64 @@ function normalizeAssistantContent(raw: string): string {
   const cleaned = markerIdx >= 0
     ? withoutStreamContext.slice(0, markerIdx).trimEnd()
     : withoutStreamContext;
-  return formatOptionsBlock(cleaned);
+  return formatReferenceItems(formatOptionsBlock(cleaned));
 }
 
 const OPTIONS_MARKER_REGEX = /-{2,3}\s*OPTIONS\s*-{2,3}/i;
 
-function parseAssistantOptions(content: string): string[] {
-  const match = content.match(OPTIONS_MARKER_REGEX);
-  if (!match || match.index === undefined) return [];
-  return content
-    .slice(match.index + match[0].length)
-    .split(/\r?\n/)
-    .map((line) =>
-      line
-        .replace(/^[-*]\s*/, "")
-        .replace(/^\d+\.\s*/, "")
-        .trim()
-    )
-    .filter((line) => line.length > 0 && !/^-{3,}$/.test(line))
-    .slice(0, 6);
+function normalizeOptionText(line: string): string {
+  const stripped = line
+    .replace(/^[-*]\s*/, "")
+    .replace(/^\d+\.\s*/, "")
+    .replace(/\[\[([^[\]]+)\]\]/g, (_full, token: string) => humanizeReferenceToken(token))
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/\*(.*?)\*/g, "$1")
+    .trim();
+  const bracketed = stripped.match(/^\[(.*)\]$/);
+  return bracketed ? bracketed[1].trim() : stripped;
+}
+
+function extractAssistantRenderPayload(content: string): { text: string; options: string[] } {
+  const markerMatch = content.match(OPTIONS_MARKER_REGEX);
+  if (markerMatch && markerMatch.index !== undefined) {
+    const text = content.slice(0, markerMatch.index).trimEnd();
+    const options = content
+      .slice(markerMatch.index + markerMatch[0].length)
+      .split(/\r?\n/)
+      .map(normalizeOptionText)
+      .filter((line) => line.length > 0 && !/^-{3,}$/.test(line))
+      .slice(0, 6);
+    return { text, options };
+  }
+
+  const optionsHeader = /\*\*Options\*\*/i;
+  const headerMatch = content.match(optionsHeader);
+  if (!headerMatch || headerMatch.index === undefined) {
+    return { text: content, options: [] };
+  }
+
+  const beforeHeader = content.slice(0, headerMatch.index).trimEnd();
+  const afterHeader = content.slice(headerMatch.index + headerMatch[0].length).trimStart();
+  const lines = afterHeader.split(/\r?\n/);
+  const options: string[] = [];
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    if (/^[-*]\s+/.test(trimmed) || /^\d+\.\s+/.test(trimmed)) {
+      const option = normalizeOptionText(trimmed);
+      if (option) options.push(option);
+      if (options.length >= 6) break;
+      continue;
+    }
+    break;
+  }
+
+  if (options.length === 0) {
+    return { text: content, options: [] };
+  }
+
+  return { text: beforeHeader, options };
 }
 
 function formatOptionsBlock(content: string): string {
@@ -107,6 +175,7 @@ function SidepanelContent() {
   const [conceptSaved, setConceptSaved] = useState(false);
   const [concepts, setConcepts] = useState<CustomConcept[]>([]);
   const [conceptGroups, setConceptGroups] = useState<ConceptGroup[]>([]);
+  const [selectedConceptGroupFilter, setSelectedConceptGroupFilter] = useState<string>("__ALL__");
   const [deletingConceptId, setDeletingConceptId] = useState<string | null>(null);
   const [youtubeExtractLoading, setYoutubeExtractLoading] = useState(false);
   const [youtubeExtractNotice, setYoutubeExtractNotice] = useState<string | null>(null);
@@ -343,10 +412,19 @@ function SidepanelContent() {
   }, [isSignedIn, tab, fetchConceptGroups, fetchConcepts]);
 
   useEffect(() => {
-    if (isSignedIn && tab === "chat" && sessionId) {
+    if (selectedConceptGroupFilter === "__ALL__" || selectedConceptGroupFilter === "__UNGROUPED__") {
+      return;
+    }
+    const exists = conceptGroups.some((g) => g._id === selectedConceptGroupFilter);
+    if (!exists) setSelectedConceptGroupFilter("__ALL__");
+  }, [conceptGroups, selectedConceptGroupFilter]);
+
+  useEffect(() => {
+    // Avoid clobbering optimistic user/assistant rows while a send is in-flight.
+    if (isSignedIn && tab === "chat" && sessionId && !chatLoading) {
       fetchSessionMessages(sessionId);
     }
-  }, [isSignedIn, tab, sessionId, fetchSessionMessages]);
+  }, [isSignedIn, tab, sessionId, chatLoading, fetchSessionMessages]);
 
   useEffect(() => {
     if (!isSignedIn || tab !== "chat" || !sessionId) return;
@@ -717,7 +795,7 @@ function SidepanelContent() {
     return (
       <div className="flex">
         <div className="topbar">
-          <h1>FML Labs</h1>
+          <h1>FigureMyLife Labs</h1>
           <div className="theme-switch" role="tablist" aria-label="Theme">
             <button
               className={theme === "light" ? "active" : ""}
@@ -748,7 +826,7 @@ function SidepanelContent() {
   return (
     <div className="flex">
       <div className="topbar">
-        <h1>FML Labs</h1>
+        <h1>FigureMyLife Labs</h1>
         <div className="theme-switch" role="tablist" aria-label="Theme">
           <button
             className={theme === "light" ? "active" : ""}
@@ -900,12 +978,72 @@ function SidepanelContent() {
           </div>
           <div className="section">
             <h2 className="section-title">Saved Concepts</h2>
-            {concepts.length === 0 ? (
+            {(() => {
+              const conceptsWithGroups = concepts.map((concept) => {
+                const groups = conceptGroups.filter(
+                  (group) =>
+                    Array.isArray(group.conceptIds) &&
+                    group.conceptIds.includes(concept._id)
+                );
+                return { concept, groups };
+              });
+
+              const hasUngrouped = conceptsWithGroups.some(({ groups }) => groups.length === 0);
+              const filteredConcepts =
+                selectedConceptGroupFilter === "__ALL__"
+                  ? conceptsWithGroups
+                  : selectedConceptGroupFilter === "__UNGROUPED__"
+                    ? conceptsWithGroups.filter(({ groups }) => groups.length === 0)
+                    : conceptsWithGroups.filter(({ groups }) =>
+                        groups.some((g) => g._id === selectedConceptGroupFilter)
+                      );
+
+              return (
+                <>
+                  {concepts.length > 0 && (
+                    <div className="filter-pills">
+                      <button
+                        type="button"
+                        className={`filter-pill ${
+                          selectedConceptGroupFilter === "__ALL__" ? "active" : ""
+                        }`}
+                        onClick={() => setSelectedConceptGroupFilter("__ALL__")}
+                      >
+                        All
+                      </button>
+                      {conceptGroups.map((group) => (
+                        <button
+                          key={`filter-${group._id}`}
+                          type="button"
+                          className={`filter-pill ${
+                            selectedConceptGroupFilter === group._id ? "active" : ""
+                          }`}
+                          onClick={() => setSelectedConceptGroupFilter(group._id)}
+                        >
+                          {group.title}
+                        </button>
+                      ))}
+                      {hasUngrouped && (
+                        <button
+                          type="button"
+                          className={`filter-pill ${
+                            selectedConceptGroupFilter === "__UNGROUPED__" ? "active" : ""
+                          }`}
+                          onClick={() => setSelectedConceptGroupFilter("__UNGROUPED__")}
+                        >
+                          Ungrouped
+                        </button>
+                      )}
+                    </div>
+                  )}
+                  {concepts.length === 0 ? (
               <p className="meta">No concepts yet.</p>
             ) : (
-              concepts.map((concept) => {
-                const groupTitles = conceptGroups
-                  .filter((group) => Array.isArray(group.conceptIds) && group.conceptIds.includes(concept._id))
+              filteredConcepts.length === 0 ? (
+                <p className="meta">No concepts in this group yet.</p>
+              ) : (
+              filteredConcepts.map(({ concept, groups }) => {
+                const groupTitles = groups
                   .map((group) => group.title)
                   .filter((title) => typeof title === "string" && title.trim().length > 0);
 
@@ -938,7 +1076,10 @@ function SidepanelContent() {
                   </div>
                 );
               })
-            )}
+            ))}
+                </>
+              );
+            })()}
           </div>
         </>
       )}
@@ -959,8 +1100,11 @@ function SidepanelContent() {
                 </p>
               )}
               {messages.map((m, i) => {
-                const assistantOptions =
-                  m.role === "assistant" ? parseAssistantOptions(m.content) : [];
+                const assistantPayload =
+                  m.role === "assistant"
+                    ? extractAssistantRenderPayload(m.content)
+                    : { text: m.content, options: [] };
+                const assistantOptions = assistantPayload.options;
                 const isAssistantTyping = m.role === "assistant" && !m.content.trim() && chatLoading;
                 return (
                   <div key={i} className={`chat-message ${m.role}`}>
@@ -974,7 +1118,7 @@ function SidepanelContent() {
                       ) : (
                         <>
                           <div className="assistant-markdown">
-                            <ReactMarkdown>{m.content}</ReactMarkdown>
+                            <ReactMarkdown>{assistantPayload.text}</ReactMarkdown>
                           </div>
                           {assistantOptions.length > 0 && (
                             <div className="option-chips">

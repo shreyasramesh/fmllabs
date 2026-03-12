@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "FML Labs",
+  "name": "FigureMyLife Labs",
   "version": "1.0.0",
   "description": "Save nuggets, concepts, and ask the agent from any webpage",
   "permissions": ["storage", "sidePanel", "cookies"],
@@ -14,7 +14,7 @@
     "<all_urls>"
   ],
   "action": {
-    "default_title": "FML Labs"
+    "default_title": "FigureMyLife Labs"
   },
   "side_panel": {
     "default_path": "sidepanel.html"

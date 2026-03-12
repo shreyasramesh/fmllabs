@@ -56,7 +56,7 @@ function PopupContent() {
     return (
       <div className="flex">
         <div className="topbar">
-          <h1>FML Labs</h1>
+          <h1>FigureMyLife Labs</h1>
           <div className="theme-switch" role="tablist" aria-label="Theme">
             <button
               className={theme === "light" ? "active" : ""}
@@ -87,7 +87,7 @@ function PopupContent() {
   return (
     <div className="flex">
       <div className="topbar">
-        <h1>FML Labs</h1>
+        <h1>FigureMyLife Labs</h1>
         <div className="theme-switch" role="tablist" aria-label="Theme">
           <button
             className={theme === "light" ? "active" : ""}

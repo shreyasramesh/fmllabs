@@ -1,4 +1,4 @@
-# FML Labs Chrome Extension
+# FigureMyLife Labs Chrome Extension
 
 Save nuggets, concepts, and chat with the agent from any webpage.
 
