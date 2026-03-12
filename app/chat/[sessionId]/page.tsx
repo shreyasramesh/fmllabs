@@ -110,6 +110,48 @@ interface ConceptGroupItem {
 
 type WeatherFormat = "condition-temp" | "emoji-temp" | "temp-only";
 const LETTER_MODAL_TITLE = "a note from the developer";
+type ExportDataSection =
+  | "settings"
+  | "sessions"
+  | "messages"
+  | "long_term_memory"
+  | "custom_concepts"
+  | "concept_groups"
+  | "nuggets"
+  | "transcripts"
+  | "saved_mental_models";
+
+const EXPORT_DATA_SECTION_OPTIONS: Array<{
+  key: ExportDataSection;
+  label: string;
+  description: string;
+}> = [
+  { key: "settings", label: "Settings", description: "Theme, language, voice, and app preferences." },
+  { key: "sessions", label: "Sessions", description: "Conversation list and metadata." },
+  { key: "messages", label: "Messages", description: "Full chat history for your sessions." },
+  { key: "long_term_memory", label: "Long-term memory", description: "Saved memory summaries and prompts." },
+  { key: "custom_concepts", label: "Custom concepts", description: "Your created concepts and enrichments." },
+  { key: "concept_groups", label: "Concept groups", description: "Groups and linked concept IDs." },
+  { key: "nuggets", label: "Nuggets", description: "Saved insights and source notes." },
+  { key: "transcripts", label: "Saved transcripts", description: "Video transcript captures." },
+  {
+    key: "saved_mental_models",
+    label: "Saved mental models",
+    description: "Limited export: name, quick introduction, and one-liner only.",
+  },
+];
+
+const DEFAULT_EXPORT_SELECTIONS: Record<ExportDataSection, boolean> = {
+  settings: true,
+  sessions: true,
+  messages: true,
+  long_term_memory: true,
+  custom_concepts: true,
+  concept_groups: true,
+  nuggets: true,
+  transcripts: true,
+  saved_mental_models: true,
+};
 
 function formatRelativeTime(iso: string): string {
   const d = new Date(iso);
@@ -1248,6 +1290,12 @@ export default function ChatPage() {
   const [voiceCloneRecording, setVoiceCloneRecording] = useState(false);
   const [voiceCloneRecordedBlob, setVoiceCloneRecordedBlob] = useState<Blob | null>(null);
   const [voiceCloneLanguage, setVoiceCloneLanguage] = useState<LanguageCode | "all">("all");
+  const [exportSelections, setExportSelections] = useState<Record<ExportDataSection, boolean>>(
+    DEFAULT_EXPORT_SELECTIONS
+  );
+  const [exportSectionOpen, setExportSectionOpen] = useState(false);
+  const [exportMarkdownLoading, setExportMarkdownLoading] = useState(false);
+  const [exportMarkdownError, setExportMarkdownError] = useState<string | null>(null);
   const voiceCloneMediaRecorderRef = useRef<MediaRecorder | null>(null);
   const voiceCloneChunksRef = useRef<Blob[]>([]);
   const voiceCloneClosingRef = useRef(false);
@@ -2104,6 +2152,10 @@ export default function ChatPage() {
   );
   const [isSafari, setIsSafari] = useState(false);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
+  const selectedExportSections = EXPORT_DATA_SECTION_OPTIONS
+    .filter(({ key }) => exportSelections[key])
+    .map(({ key }) => key);
+  const allExportSectionsSelected = selectedExportSections.length === EXPORT_DATA_SECTION_OPTIONS.length;
   useEffect(() => {
     if (typeof navigator === "undefined") return;
     setIsSafari(/safari/i.test(navigator.userAgent) && !/chrome|crios/i.test(navigator.userAgent));
@@ -5436,6 +5488,127 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     Walk through the main features of the app.
                   </p>
                 </section>
+                )}
+
+                {!isAnonymous && (
+                  <section className="pt-6 border-t border-neutral-100 dark:border-neutral-700/20">
+                    <button
+                      type="button"
+                      onClick={() => setExportSectionOpen((prev) => !prev)}
+                      aria-expanded={exportSectionOpen}
+                      aria-controls="settings-data-export-panel"
+                      className="w-full flex items-center justify-between gap-3 rounded-xl border border-neutral-200/70 dark:border-white/12 bg-neutral-50 dark:bg-neutral-900 px-3 py-2.5 hover:bg-neutral-100 dark:hover:bg-neutral-800/80 transition-colors"
+                    >
+                      <span className="min-w-0 text-left">
+                        <span className="block text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Data export</span>
+                        <span className="block text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+                          Export your selected data as a Markdown file for LLM context or archiving.
+                        </span>
+                      </span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={`w-4 h-4 shrink-0 text-neutral-500 dark:text-neutral-400 transition-transform ${exportSectionOpen ? "rotate-180" : ""}`}
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
+                    {exportSectionOpen && (
+                      <div id="settings-data-export-panel" className="mt-2 rounded-xl border border-neutral-200/70 dark:border-white/12 bg-neutral-50 dark:bg-neutral-900 p-3">
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setExportMarkdownError(null);
+                              setExportSelections((prev) =>
+                                Object.fromEntries(
+                                  Object.keys(prev).map((key) => [key, !allExportSectionsSelected])
+                                ) as Record<ExportDataSection, boolean>
+                              );
+                            }}
+                            className="px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-200 dark:border-white/12 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                          >
+                            {allExportSectionsSelected ? "Deselect all" : "Select all"}
+                          </button>
+                          <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                            {selectedExportSections.length} selected
+                          </span>
+                        </div>
+                        <div className="space-y-2">
+                          {EXPORT_DATA_SECTION_OPTIONS.map(({ key, label, description }) => (
+                            <label
+                              key={key}
+                              className="flex items-start gap-2.5 rounded-lg px-2 py-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800/70 cursor-pointer"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={exportSelections[key]}
+                                onChange={(e) => {
+                                  setExportMarkdownError(null);
+                                  const checked = e.target.checked;
+                                  setExportSelections((prev) => ({ ...prev, [key]: checked }));
+                                }}
+                                className="mt-0.5 rounded border-neutral-300 dark:border-neutral-600 text-foreground focus:ring-foreground/30"
+                              />
+                              <span className="min-w-0">
+                                <span className="block text-sm font-medium text-foreground">{label}</span>
+                                <span className="block text-xs text-neutral-500 dark:text-neutral-400">{description}</span>
+                              </span>
+                            </label>
+                          ))}
+                        </div>
+                        {exportMarkdownError && (
+                          <p className="mt-3 text-xs text-red-600 dark:text-red-400">{exportMarkdownError}</p>
+                        )}
+                        <button
+                          type="button"
+                          disabled={exportMarkdownLoading || selectedExportSections.length === 0}
+                          onClick={async () => {
+                            if (selectedExportSections.length === 0) {
+                              setExportMarkdownError("Select at least one section to export.");
+                              return;
+                            }
+                            setExportMarkdownLoading(true);
+                            setExportMarkdownError(null);
+                            try {
+                              const res = await fetch("/api/me/export-markdown", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ sections: selectedExportSections }),
+                              });
+                              if (!res.ok) {
+                                const data = await res.json().catch(() => ({}));
+                                throw new Error(data?.error ?? "Export failed");
+                              }
+                              const blob = await res.blob();
+                              const url = URL.createObjectURL(blob);
+                              const cd = res.headers.get("content-disposition") ?? "";
+                              const filename = cd.match(/filename="([^"]+)"/)?.[1] ?? "fml-export.md";
+                              const a = document.createElement("a");
+                              a.href = url;
+                              a.download = filename;
+                              document.body.appendChild(a);
+                              a.click();
+                              a.remove();
+                              URL.revokeObjectURL(url);
+                            } catch (err) {
+                              setExportMarkdownError(err instanceof Error ? err.message : "Export failed");
+                            } finally {
+                              setExportMarkdownLoading(false);
+                            }
+                          }}
+                          className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {exportMarkdownLoading ? "Generating export…" : "Export data to markdown for LLMs"}
+                        </button>
+                      </div>
+                    )}
+                  </section>
                 )}
 
                 {!isAnonymous && (
