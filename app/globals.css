@@ -380,6 +380,29 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Light theme: ensure modal action buttons (including close icon buttons) have a visible border. */
+:root:not(.dark) [role="dialog"] button {
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-color: var(--neutral-300) !important;
+}
+
+:root:not(.dark) [role="dialog"] button[data-no-modal-border="true"] {
+  border-width: 0 !important;
+  border-style: none !important;
+}
+
+/* All themes: keep modal close buttons visibly bordered. */
+[role="dialog"] button[aria-label="Close"] {
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-color: var(--neutral-300) !important;
+}
+
+:root.dark [role="dialog"] button[aria-label="Close"] {
+  border-color: var(--neutral-600) !important;
+}
+
 /* Keep line-height comfortable on mobile without increasing font size */
 @media (max-width: 768px) {
   :root {

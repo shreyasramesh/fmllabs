@@ -45,6 +45,7 @@ import { TtsHighlightContext, type TtsHighlightState } from "@/components/TtsHig
 import { TtsHighlightedText } from "@/components/TtsHighlightedText";
 import { FeedbackModal } from "@/components/FeedbackModal";
 import { FeatureTour } from "@/components/FeatureTour";
+import { ChromeIcon } from "@/components/ChromeIcon";
 
 interface Message {
   role: "user" | "assistant";
@@ -1410,7 +1411,7 @@ export default function ChatPage() {
   ] as const;
   const [onboardingStep, setOnboardingStep] = useState<0 | 1 | 2 | 3 | null>(null);
   const [featureTourStep, setFeatureTourStep] = useState<number | null>(null);
-  const [signInFeatureHover, setSignInFeatureHover] = useState<number | null>(null);
+  const [signInFeaturesModalOpen, setSignInFeaturesModalOpen] = useState(false);
   const [sessionsLoaded, setSessionsLoaded] = useState(false);
   const [conceptsLoaded, setConceptsLoaded] = useState(false);
   const [ltmLoaded, setLtmLoaded] = useState(false);
@@ -1424,16 +1425,22 @@ export default function ChatPage() {
     { label: "Saved conversations", description: "Access your full chat history across devices. Pick up where you left off.", icon: "chat" },
     { label: "Nuggets", description: "Save impactful quotes, words, and snippets. Paste from clipboard or highlight text in conversations.", icon: "nuggets" },
     { label: "Custom concepts", description: "Define your own frameworks, values, or principles. The AI uses them to personalize responses.", icon: "concepts" },
+    { label: "Mental models library", description: "Explore proven mental models and cognitive biases to improve thinking and decisions.", icon: "mental-models" },
     { label: "Long-term memory", description: "The AI remembers key context from past conversations to give more relevant advice.", icon: "memory" },
     { label: "Domains", description: "Group related concepts into domains (e.g. career, health). The AI draws from them when relevant.", icon: "domains" },
+    { label: "Voice (speech to text + text to speech)", description: "Use your voice to ask questions and listen to AI responses with natural playback.", icon: "voice" },
+    { label: "Summarize and collapse", description: "Collapse long chats into compact summaries and keep key insights easy to revisit.", icon: "summary" },
     { label: "Incognito mode", description: "Chat privately without saving to history. Conversations stay off the record.", icon: "ghost" },
   ];
   const signInFeatureIconSvg = (name: string) => {
     if (name === "chat") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>;
     if (name === "nuggets") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>;
     if (name === "concepts") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /><path d="M12 3v18" /></svg>;
+    if (name === "mental-models") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M12 3v3" /><path d="M7.5 5.5 9.5 8" /><path d="m16.5 5.5-2 2.5" /><path d="M4 13a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" /></svg>;
     if (name === "memory") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z" /><path d="M12 6v6l4 2" /></svg>;
     if (name === "domains") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" /><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" /><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" /></svg>;
+    if (name === "voice") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z" /><path d="M19 11v1a7 7 0 0 1-14 0v-1" /><path d="M12 19v3" /></svg>;
+    if (name === "summary") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M4 5h16" /><path d="M4 10h16" /><path d="M4 15h10" /><path d="M4 20h7" /></svg>;
     return <GhostIcon className="w-4 h-4 shrink-0" />;
   };
   useEffect(() => {
@@ -2328,6 +2335,7 @@ export default function ChatPage() {
   const [sessionSearchQuery, setSessionSearchQuery] = useState("");
   const [ccSearchQuery, setCcSearchQuery] = useState("");
   const [ccGroupCollapsed, setCcGroupCollapsed] = useState<Set<string>>(new Set());
+  const [ccSelectedGroupKeys, setCcSelectedGroupKeys] = useState<Set<string>>(new Set());
   const [mentalModelsWithWhenToUse, setMentalModelsWithWhenToUse] = useState<{ id: string; name: string; when_to_use: string[] }[]>([]);
   const [mmFavorites, setMmFavorites] = useState<Set<string>>(new Set());
   const [selectedMmCategory, setSelectedMmCategory] = useState("decision-making");
@@ -2827,11 +2835,11 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 placeholder="Search"
               value={sessionSearchQuery}
               onChange={(e) => setSessionSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 text-[13px] sm:text-[14px] rounded-xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-foreground placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 shadow-sm shrink-0"
+                className="w-full pl-9 pr-3 py-1.5 text-[13px] rounded-lg border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-foreground placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 shrink-0"
               aria-label="Search conversations"
             />
             </div>
-            <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-0.5">
+            <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-0">
               {filteredSessions.length === 0 ? (
                 <p className="px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400">
                   {sessionSearchQuery ? "No conversations match" : "No conversations yet"}
@@ -2840,23 +2848,23 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               filteredSessions.map((s) => (
                 <div
                   key={s._id}
-                  className={`group flex flex-col gap-0 rounded-2xl border-2 transition-colors duration-200 ${
+                  className={`group flex flex-col gap-0 rounded-xl border transition-colors duration-200 ${
                     currentSessionId === s._id
                       ? "border-neutral-300 dark:border-neutral-600"
-                      : "border-transparent hover:border-neutral-400 dark:hover:border-neutral-500"
+                      : "border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-500"
                   }`}
                 >
                   <div className="flex items-center gap-1 min-w-0">
                     <Link
                       href={`/chat/${s._id}`}
-                      className={`flex-1 min-w-0 flex items-center gap-2 py-2 px-3 truncate text-[15.6px] sm:text-[14px] ${
+                      className={`flex-1 min-w-0 flex items-center gap-2 py-1.5 px-2.5 truncate text-[13px] ${
                       currentSessionId === s._id ? "font-medium text-foreground" : "text-neutral-800 dark:text-neutral-200"
                     }`}
                     >
                       <span className="flex-1 min-w-0">
                         <span className="block truncate">{s.title || "New conversation"}</span>
                         {s.updatedAt && (
-                          <span className="block text-xs text-neutral-500 dark:text-neutral-400 font-normal mt-0.5">
+                          <span className="block text-[11px] text-neutral-500 dark:text-neutral-400 font-normal mt-0.5">
                             {formatRelativeTime(s.updatedAt)}
                           </span>
                         )}
@@ -2871,7 +2879,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       e.stopPropagation();
                       setDeleteSessionConfirmModal(s);
                     }}
-                    className="p-1.5 rounded opacity-50 hover:opacity-100 group-hover:opacity-100 text-neutral-500 hover:text-red-600 dark:hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 active:scale-95 shrink-0"
+                    className="p-1 rounded opacity-50 hover:opacity-100 group-hover:opacity-100 text-neutral-500 hover:text-red-600 dark:hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 active:scale-95 shrink-0"
                     aria-label="Delete conversation"
                   >
                     <svg
@@ -2945,60 +2953,37 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
         </>
         )}
         {isAnonymous && (
-          <div className="px-3 py-2 flex-1 min-h-0 flex flex-col gap-3 items-center">
-            <p className="text-[13px] sm:text-[14px] font-medium text-neutral-600 dark:text-neutral-400 text-center">
-              Sign in to unlock:
+          <div className="px-3 py-2 flex-1 min-h-0 flex flex-col gap-2 items-center">
+            <p className="w-full max-w-[220px] flex items-center gap-1.5 text-[13px] sm:text-[14px] font-medium text-neutral-600 dark:text-neutral-400 text-left">
+              <SparklesIcon className="w-3.5 h-3.5 shrink-0" />
+              <span>Sign in to unlock:</span>
             </p>
-            <ul className="space-y-1.5 w-full flex flex-col items-center">
+            <ul className="space-y-1 w-full flex flex-col items-center">
               {signInFeatures.map((item, i) => (
                 <li
                   key={i}
-                  className="w-full max-w-[220px] flex flex-col gap-1.5 animate-slide-in-from-left opacity-0 [animation-fill-mode:forwards]"
+                  className="w-full max-w-[220px] animate-slide-in-from-left opacity-0 [animation-fill-mode:forwards]"
                   style={{ animationDelay: `${i * 80}ms` }}
                 >
                   <button
                     type="button"
-                    onMouseEnter={() => setSignInFeatureHover(i)}
-                    onMouseLeave={() => setSignInFeatureHover(null)}
-                    onClick={() => setSignInFeatureHover(signInFeatureHover === i ? null : i)}
-                    className="flex items-center gap-2.5 w-full px-3 py-2 rounded-2xl text-[13px] sm:text-[14px] text-left transition-colors border border-transparent hover:border-neutral-300 dark:hover:border-neutral-600 bg-background text-neutral-600 dark:text-neutral-400"
+                    onClick={() => setSignInFeaturesModalOpen(true)}
+                    className="flex items-center gap-2 w-full px-2.5 py-1.5 rounded-xl text-[12px] sm:text-[13px] text-left border border-transparent bg-background text-neutral-600 dark:text-neutral-400"
                   >
                     <span className="text-neutral-500 shrink-0">{signInFeatureIconSvg(item.icon)}</span>
                     <span className="truncate">{item.label}</span>
                   </button>
-                  <div
-                    className={`overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-                      signInFeatureHover === i ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
-                    }`}
-                  >
-                    <p
-                      className={`text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed px-2 -mt-0.5 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-                        signInFeatureHover === i ? "translate-y-0" : "-translate-y-1"
-                      }`}
-                    >
-                      {item.description}
-                    </p>
-                  </div>
                 </li>
               ))}
             </ul>
             <div className="w-full pt-3 border-t border-neutral-200/80 dark:border-neutral-800">
-              <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 text-center mb-2">Mental Models Library</p>
-              <button
-                type="button"
-                onClick={() => {
-                  playSelectionChime();
-                  setLibraryPanelOpen("concepts");
-                  setSidebarOpen(false);
-                }}
-                className="flex items-center justify-center gap-2 w-full max-w-[220px] mx-auto px-3 py-2 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-[13px] sm:text-[14px] text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-all duration-200 whitespace-nowrap"
+              <Link
+                href="/extension"
+                className="flex items-center justify-center gap-2 w-full max-w-[220px] mx-auto px-3 py-2 rounded-2xl border border-[#f2b37d] bg-transparent text-[#c96b25] dark:text-[#f2b37d] hover:bg-[#fff1df] dark:hover:bg-[#3a2415] text-[13px] sm:text-[14px] font-medium transition-colors whitespace-nowrap"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                  <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
-                  <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
-                </svg>
-                Browse Mental Models
-              </button>
+                <ChromeIcon className="w-4 h-4 shrink-0" />
+                Install Extension
+              </Link>
             </div>
             <button
               type="button"
@@ -3356,26 +3341,28 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                         Let&apos;s dig in—with mental models that actually work
                       </p>
                       {isAnonymous && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            playSelectionChime();
-                            setLibraryPanelOpen("concepts");
-                            setSidebarOpen(false);
-                          }}
-                          className="flex items-center gap-3 w-full max-w-sm mx-auto px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98] mb-6"
-                        >
-                          <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
-                              <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
-                              <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
-                            </svg>
-                          </span>
-                          <div className="min-w-0">
-                            <p className="font-medium text-foreground">Browse Mental Models</p>
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400">Frameworks and biases for better decision-making</p>
-                          </div>
-                        </button>
+                        <div className="space-y-3 mb-6 w-full">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              playSelectionChime();
+                              setLibraryPanelOpen("concepts");
+                              setSidebarOpen(false);
+                            }}
+                            className="flex items-center gap-3 w-full max-w-sm mx-auto px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+                          >
+                            <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
+                                <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
+                                <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
+                              </svg>
+                            </span>
+                            <div className="min-w-0">
+                              <p className="font-medium text-foreground">Browse Mental Models</p>
+                              <p className="text-sm text-neutral-600 dark:text-neutral-400">Frameworks and biases for better decision-making</p>
+                            </div>
+                          </button>
+                        </div>
                       )}
                     </>
                   )}
@@ -3701,15 +3688,12 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 onClick={() => sendMessage()}
                 disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
                 aria-label="Send message"
-                className="flex items-center justify-center px-3.5 sm:px-6 py-2 sm:py-3 rounded-2xl bg-accent text-white text-sm sm:text-base font-medium transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 min-h-[48px] min-w-[48px] sm:min-h-[52px] shrink-0"
+                className="flex items-center justify-center w-[48px] h-[48px] sm:w-[52px] sm:h-[52px] rounded-2xl bg-accent text-white text-[11px] sm:text-xs font-semibold transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
               >
                 {isLoading ? (
                   <LoadingDots aria-label="Sending" />
                 ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" aria-hidden>
-                    <path d="M20 6v5a4 4 0 0 1-4 4H4" />
-                    <path d="m9 10-5 5 5 5" />
-                  </svg>
+                  "Send"
                 )}
                 </button>
               </div>
@@ -3826,15 +3810,12 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     }}
                     disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
                     aria-label="Send message"
-                    className="flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl bg-accent text-white text-sm sm:text-base font-medium transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 min-h-[44px] sm:min-h-[48px] shrink-0"
+                    className="flex items-center justify-center w-[44px] h-[44px] sm:w-[48px] sm:h-[48px] rounded-2xl bg-accent text-white text-[11px] sm:text-xs font-semibold transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
                   >
                     {isLoading ? (
                       <LoadingDots aria-label="Sending" />
                     ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" aria-hidden>
-                        <path d="M20 6v5a4 4 0 0 1-4 4H4" />
-                        <path d="m9 10-5 5 5 5" />
-                      </svg>
+                      "Send"
                     )}
                   </button>
                 </div>
@@ -3932,7 +3913,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           className={`group flex flex-col gap-0 rounded-2xl border-2 transition-colors duration-200 ${
                             currentSessionId === s._id
                               ? "border-neutral-300 dark:border-neutral-600"
-                              : "border-transparent hover:border-neutral-400 dark:hover:border-neutral-500"
+                              : "border-neutral-200 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500"
                           }`}
                         >
                           <div className="flex items-center gap-1 min-w-0">
@@ -4037,7 +4018,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           setMmCreateGenerated(null);
                           setMmCreateError(null);
                         }}
-                        className="shrink-0 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors"
+                        className="shrink-0 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors"
                       >
                         + Create
                       </button>
@@ -4175,7 +4156,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                               key={cat.key}
                               type="button"
                               onClick={() => setSelectedMmCategory(cat.key)}
-                              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                              className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
                                 activeCategoryKey === cat.key
                                   ? "bg-foreground text-background border-foreground"
                                   : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
@@ -4364,8 +4345,8 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Ideas and contexts you define. Use when you want the agent to reference your own concepts, goals, or frameworks.</p>
                   <div className="flex items-center justify-end gap-2">
                     <div className="flex gap-1">
-                      <button type="button" onClick={() => setCgCustomCreateModal(true)} className="px-3 py-2 text-xs font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors">+ Group</button>
-                      <button type="button" onClick={() => { setCcCreateInput(""); setCcCreateStep("input"); setCcCreateDraft(null); setCcCreateModal(true); }} className="px-3 py-2 text-xs font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors">+ Add Concept</button>
+                      <button type="button" onClick={() => setCgCustomCreateModal(true)} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Group</button>
+                      <button type="button" onClick={() => { setCcCreateInput(""); setCcCreateStep("input"); setCcCreateDraft(null); setCcCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Add Concept</button>
                     </div>
                   </div>
                   {customConcepts.length > 0 ? (
@@ -4381,18 +4362,71 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                         }
                         const standalone = filteredConcepts.filter((cc) => !conceptGroups.some((g) => (g.conceptIds ?? []).includes(cc._id)));
                         const toggleGroup = (key: string) => setCcGroupCollapsed((prev) => { const next = new Set(prev); if (next.has(key)) next.delete(key); else next.add(key); return next; });
+                        const hasGroupFilter = ccSelectedGroupKeys.size > 0;
+                        const isGroupVisible = (key: string) => !hasGroupFilter || ccSelectedGroupKeys.has(key);
+                        const toggleGroupFilter = (key: string) => {
+                          setCcSelectedGroupKeys((prev) => {
+                            const next = new Set(prev);
+                            if (next.has(key)) next.delete(key);
+                            else next.add(key);
+                            return next;
+                          });
+                        };
                         if (filteredConcepts.length === 0 && conceptGroups.length === 0) return <p className="text-xs text-neutral-500">{q ? "No concepts match" : "No concepts"}</p>;
                         return (
                           <>
-                            {conceptGroups.map((cg, i) => {
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                type="button"
+                                onClick={() => setCcSelectedGroupKeys(new Set())}
+                                className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
+                                  !hasGroupFilter
+                                    ? "bg-foreground text-background border-foreground"
+                                    : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                }`}
+                              >
+                                All
+                              </button>
+                              {conceptGroups.map((cg) => {
+                                const selected = ccSelectedGroupKeys.has(cg._id);
+                                return (
+                                  <button
+                                    key={`chip-${cg._id}`}
+                                    type="button"
+                                    onClick={() => toggleGroupFilter(cg._id)}
+                                    className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
+                                      selected
+                                        ? "bg-foreground text-background border-foreground"
+                                        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                    }`}
+                                  >
+                                    {cg.title}
+                                  </button>
+                                );
+                              })}
+                              {standalone.length > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={() => toggleGroupFilter("Standalone")}
+                                  className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
+                                    ccSelectedGroupKeys.has("Standalone")
+                                      ? "bg-foreground text-background border-foreground"
+                                      : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                  }`}
+                                >
+                                  Standalone
+                                </button>
+                              )}
+                            </div>
+                            {conceptGroups.filter((cg) => isGroupVisible(cg._id)).map((cg, i) => {
                               const concepts = byGroupId.get(cg._id) ?? [];
                               const isCollapsed = ccGroupCollapsed.has(cg._id);
                               const isEmpty = (cg.conceptIds?.length ?? 0) === 0 || concepts.length === 0;
                               return (
                                 <div key={cg._id} className={i === 0 ? "pt-0" : "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2"}>
                                   <div className="flex items-center justify-between gap-2 mb-1.5">
-                                    <button type="button" onClick={() => toggleGroup(cg._id)} className="flex items-center justify-between flex-1 min-w-0 text-left px-1">
-                                      <p className="text-[10px] font-medium text-neutral-500 uppercase truncate">{cg.title}</p>
+                                    <button type="button" data-no-modal-border="true" onClick={() => toggleGroup(cg._id)} className="flex items-center justify-between flex-1 min-w-0 text-left px-1">
+                                      <p className="text-[10px] font-medium text-neutral-500 uppercase tracking-wide truncate">{cg.title}</p>
                                       <span className="text-[10px] shrink-0 ml-1">{isCollapsed ? "▶" : "▼"}</span>
                                   </button>
                                     {isEmpty && (
@@ -4414,7 +4448,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                                       {concepts.length === 0 ? (
                                         <p className="text-xs text-neutral-500 dark:text-neutral-400 py-2">No concepts in this group yet.</p>
                                       ) : concepts.map((cc) => (
-                                        <div key={cc._id} className="flex items-start gap-3 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors relative">
+                                        <div key={cc._id} className="flex items-start gap-3 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors relative">
                                           <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" /><path d="M10 11v6M14 11v6" /></svg>
                                           </button>
@@ -4429,16 +4463,16 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                                 </div>
                               );
                             })}
-                            {standalone.length > 0 && (
+                            {standalone.length > 0 && isGroupVisible("Standalone") && (
                               <div className={conceptGroups.length === 0 ? "pt-0" : "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2"}>
-                                <button type="button" onClick={() => toggleGroup("Standalone")} className="flex items-center justify-between w-full text-left px-1 mb-1.5">
-                                  <p className="text-[10px] font-medium text-neutral-500 uppercase">Standalone</p>
+                                <button type="button" data-no-modal-border="true" onClick={() => toggleGroup("Standalone")} className="flex items-center justify-between w-full text-left px-1 mb-1.5">
+                                  <p className="text-[10px] font-medium text-neutral-500 uppercase tracking-wide">Standalone</p>
                                   <span className="text-[10px]">{ccGroupCollapsed.has("Standalone") ? "▶" : "▼"}</span>
                                 </button>
                                 {!ccGroupCollapsed.has("Standalone") && (
                                   <div className="space-y-2">
                                     {standalone.map((cc) => (
-                                      <div key={cc._id} className="flex items-start gap-3 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors relative">
+                                      <div key={cc._id} className="flex items-start gap-3 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors relative">
                                         <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
                                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" /><path d="M10 11v6M14 11v6" /></svg>
                                         </button>
@@ -4466,8 +4500,8 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   <h2 className="text-lg font-semibold text-foreground">Domains</h2>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Domain groups created via AI. Use when you want the agent to think in terms of a topic (e.g. finance, health) with related concepts.</p>
                   <div className="flex items-center justify-end gap-1">
-                    <button type="button" onClick={() => { setCgCreateDomain(""); setCgCreateStep(1); setCgCreateQuestions([]); setCgCreateAnswers({}); setCgCreateConcepts([]); setCgCreateModal(true); }} className="px-3 py-2 text-xs font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors">+ Domain</button>
-                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeModal(true); }} className="px-3 py-2 text-xs font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors">+ Add From YouTube Transcript</button>
+                    <button type="button" onClick={() => { setCgCreateDomain(""); setCgCreateStep(1); setCgCreateQuestions([]); setCgCreateAnswers({}); setCgCreateConcepts([]); setCgCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Domain</button>
+                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Add From YouTube Transcript</button>
                   </div>
                   {conceptGroups.length > 0 ? (
                     <div className="grid grid-cols-2 gap-2">
@@ -4577,10 +4611,9 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               )}
               {libraryPanelOpen === "nuggets" && (
                 <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-foreground">Nuggets</h2>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Save impactful quotes, words, and snippets. Paste from clipboard or highlight text in conversations.</p>
                   {nuggetFormOpen === "panel" ? (
-                    <div className="p-3 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/30 space-y-2">
+                    <div className="space-y-2">
                       <div className="flex gap-1">
                         <textarea value={nuggetCreateContent} onChange={(e) => setNuggetCreateContent(e.target.value)} placeholder="Paste or type your nugget..." rows={3} className="flex-1 px-2 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y" />
                         <button type="button" onClick={async () => { if (!nuggetCreateContent.trim() || nuggetImproveLoading) return; setNuggetImproveLoading(true); try { const res = await fetch("/api/me/nuggets/improve", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent }) }); const data = await res.json(); if (data.improved) setNuggetCreateContent(data.improved); } catch { /* ignore */ } finally { setNuggetImproveLoading(false); } }} disabled={!nuggetCreateContent.trim() || nuggetImproveLoading} className="p-2 rounded-lg text-neutral-500 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 shrink-0" title="Improve with LLM" aria-label="Improve with LLM"><AIGenerateIcon className="w-4 h-4" /></button>
@@ -4596,17 +4629,17 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     </div>
                   ) : (
                     <div className="flex justify-end">
-                      <button type="button" onClick={() => { setNuggetCreateContent(""); setNuggetCreateSource(""); setNuggetFormOpen("panel"); setNuggetFormPosition(null); }} className="px-3 py-2 text-xs font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors">+ Add Nugget</button>
+                      <button type="button" onClick={() => { setNuggetCreateContent(""); setNuggetCreateSource(""); setNuggetFormOpen("panel"); setNuggetFormPosition(null); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Add Nugget</button>
                     </div>
                   )}
                   {nuggets.length > 0 ? (
                     <div className="space-y-2">
                       {nuggets.map((n) => (
-                        <div key={n._id} className="p-3 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/30">
+                        <div key={n._id} className="p-3 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors">
                           <p className="text-sm text-foreground whitespace-pre-wrap">{n.content}</p>
                           {n.source && <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-1">{n.source}</p>}
                           {nuggetLearnId === n._id && nuggetLearnExplanation && (
-                            <div className="mt-2 p-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs text-foreground">
+                            <div className="mt-2 p-2 rounded-lg bg-neutral-100 dark:bg-neutral-800/70 text-xs text-foreground">
                               {nuggetLearnExplanation}
                             </div>
                           )}
@@ -5199,6 +5232,18 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               </div>
               <div className="flex-1 overflow-y-auto p-4 sm:p-5 min-h-0 space-y-6">
                 <section>
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3">Extension</h3>
+                  <Link
+                    href="/extension"
+                    onClick={() => setSettingsOpen(false)}
+                    className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-[#f2b37d] bg-[#f59e42] text-[#fff8ef] text-sm font-semibold shadow-sm hover:bg-[#ec8f2e] transition-colors"
+                  >
+                    <ChromeIcon className="w-[18px] h-[18px]" />
+                    Install Extension
+                  </Link>
+                </section>
+
+                <section>
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3">Account</h3>
                   {!isAnonymous && user ? (
                     <div
@@ -5782,6 +5827,60 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
 
       {feedbackModalOpen && (
         <FeedbackModal onClose={() => setFeedbackModalOpen(false)} />
+      )}
+
+      {signInFeaturesModalOpen && isAnonymous && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => setSignInFeaturesModalOpen(false)}
+          aria-modal
+          role="dialog"
+          aria-labelledby="sign-in-features-title"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-md w-full p-6 border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h2 id="sign-in-features-title" className="text-lg font-semibold text-foreground">
+                  Features unlocked with sign in
+                </h2>
+                <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+                  Everything below becomes available once you sign in.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSignInFeaturesModalOpen(false)}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label="Close"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="mt-4 max-h-[55vh] overflow-y-auto space-y-2 pr-1">
+              {signInFeatures.map((item) => (
+                <div
+                  key={`feature-modal-${item.label}`}
+                  className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-3"
+                >
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                    <span className="text-neutral-500 shrink-0">{signInFeatureIconSvg(item.icon)}</span>
+                    <span>{item.label}</span>
+                  </div>
+                  <p className="mt-1.5 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       )}
 
       {featureTourStep !== null && (
@@ -7258,28 +7357,33 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               <div>
                 <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-2">Select concepts</label>
                 {customConcepts.length > 0 ? (
-                  <div className="space-y-1.5 max-h-48 overflow-y-auto rounded-xl border border-neutral-200 dark:border-neutral-700 p-2">
+                  <div className="max-h-48 overflow-y-auto rounded-xl border border-neutral-200 dark:border-neutral-700 p-2">
+                    <div className="flex flex-wrap gap-2">
                     {customConcepts.map((cc) => (
-                      <label
+                      <button
+                        type="button"
                         key={cc._id}
-                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800/50 cursor-pointer"
+                        onClick={() => {
+                          if (cgCustomCreateLoading) return;
+                          setCgCustomCreateSelectedIds((prev) => {
+                            const next = new Set(prev);
+                            if (next.has(cc._id)) next.delete(cc._id);
+                            else next.add(cc._id);
+                            return next;
+                          });
+                        }}
+                        disabled={cgCustomCreateLoading}
+                        className={`px-3 py-1.5 rounded-full text-sm font-medium border-[0.75px] transition-colors ${
+                          cgCustomCreateSelectedIds.has(cc._id)
+                            ? "bg-foreground text-background border-foreground"
+                            : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                        } disabled:opacity-60`}
+                        title={cc.title}
                       >
-                        <input
-                          type="checkbox"
-                          checked={cgCustomCreateSelectedIds.has(cc._id)}
-                          onChange={(e) => {
-                            setCgCustomCreateSelectedIds((prev) => {
-                              const next = new Set(prev);
-                              if (e.target.checked) next.add(cc._id);
-                              else next.delete(cc._id);
-                              return next;
-                            });
-                          }}
-                          className="rounded border-neutral-300 dark:border-neutral-600"
-                        />
-                        <span className="text-sm truncate flex-1">{cc.title}</span>
-                      </label>
+                        {cc.title}
+                      </button>
                     ))}
+                    </div>
                   </div>
                 ) : (
                   <p className="text-sm text-neutral-500 dark:text-neutral-400">No concepts yet. Create concepts first in the Concepts panel.</p>
