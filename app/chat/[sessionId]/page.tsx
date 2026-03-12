@@ -351,17 +351,17 @@ function MessageBubble({
         dir={isRtl ? "rtl" : undefined}
       >
         {showTtsButton && (
-          <div className="absolute top-2 right-2">
-            <TTSButton
+        <div className="absolute top-2 right-2">
+          <TTSButton
               text={message.role === "assistant" ? assistantSpeechText : text}
               plainText={message.role === "assistant" ? assistantSpeechText : userPlainText}
               showOnHover={false}
               layout="vertical"
-              ariaLabel="Listen to message"
+            ariaLabel="Listen to message"
               onTtsProgress={(charEnd) => onTtsProgress?.(messageIndex, charEnd)}
               onTtsEnd={onTtsEnd}
-            />
-          </div>
+          />
+        </div>
         )}
         {message.role === "user" ? (
           <span className="message-bubble-text text-sm md:text-base">
@@ -371,18 +371,18 @@ function MessageBubble({
                 charEnd={ttsHighlight}
               />
             ) : (
-              <UserMessageContent
-                content={text}
-                idToName={idToName}
-                ltmIdToTitle={ltmIdToTitle}
-                ccIdToTitle={ccIdToTitle}
-                cgIdToTitle={cgIdToTitle}
-                onMentalModelClick={(id) => onMentalModelClick(id, text)}
-                onLtmClick={onLtmClick}
-                onCustomConceptClick={onCustomConceptClick}
-                onConceptGroupClick={onConceptGroupClick}
-                previewMap={previewMap}
-              />
+            <UserMessageContent
+              content={text}
+              idToName={idToName}
+              ltmIdToTitle={ltmIdToTitle}
+              ccIdToTitle={ccIdToTitle}
+              cgIdToTitle={cgIdToTitle}
+              onMentalModelClick={(id) => onMentalModelClick(id, text)}
+              onLtmClick={onLtmClick}
+              onCustomConceptClick={onCustomConceptClick}
+              onConceptGroupClick={onConceptGroupClick}
+              previewMap={previewMap}
+            />
             )}
           </span>
         ) : (
@@ -557,19 +557,19 @@ function MessageBubble({
                   charEnd={activeOptionHighlight.charEnd}
                 />
               ) : (
-                <UserMessageContent
-                  content={opt}
-                  idToName={idToName}
-                  ltmIdToTitle={ltmIdToTitle}
-                  ccIdToTitle={ccIdToTitle}
-                  cgIdToTitle={cgIdToTitle}
+              <UserMessageContent
+                content={opt}
+                idToName={idToName}
+                ltmIdToTitle={ltmIdToTitle}
+                ccIdToTitle={ccIdToTitle}
+                cgIdToTitle={cgIdToTitle}
                 chipStyle="assistant"
-                  onMentalModelClick={(id) => onMentalModelClick(id, opt)}
-                  onLtmClick={onLtmClick}
-                  onCustomConceptClick={onCustomConceptClick}
-                  onConceptGroupClick={onConceptGroupClick}
-                  previewMap={previewMap}
-                />
+                onMentalModelClick={(id) => onMentalModelClick(id, opt)}
+                onLtmClick={onLtmClick}
+                onCustomConceptClick={onCustomConceptClick}
+                onConceptGroupClick={onConceptGroupClick}
+                previewMap={previewMap}
+              />
               )}
             </button>
           ))}
@@ -689,42 +689,42 @@ function CopyButton({
 
 const EXAMPLE_PILLS_BY_LANGUAGE: Record<LanguageCode, string[][]> = {
   en: [
-    [
-      "Career change",
-      "New job offer",
-      "Asking for a raise",
-      "Quitting my job",
-      "Side project",
-      "Work-life balance",
-      "Toxic workplace",
-      "Switching industries",
-      "Sticking with a failing project",
-      "Negotiating salary",
-    ],
-    [
-      "Relationship decision",
-      "Moving to a new city",
-      "Buying a house",
-      "Big purchase",
-      "Retirement planning",
-      "Investing money",
-      "Conflict with someone",
-      "Taking a financial risk",
-      "Splitting costs fairly",
-      "Letting go of an investment",
-    ],
-    [
-      "Starting a business",
-      "Going back to school",
-      "Family planning",
-      "Health habit",
-      "Procrastination",
-      "Saying no to something",
-      "Sticking to a commitment",
-      "Doubting a past decision",
-      "Avoiding something I should face",
-      "Choosing between two good options",
-    ],
+  [
+    "Career change",
+    "New job offer",
+    "Asking for a raise",
+    "Quitting my job",
+    "Side project",
+    "Work-life balance",
+    "Toxic workplace",
+    "Switching industries",
+    "Sticking with a failing project",
+    "Negotiating salary",
+  ],
+  [
+    "Relationship decision",
+    "Moving to a new city",
+    "Buying a house",
+    "Big purchase",
+    "Retirement planning",
+    "Investing money",
+    "Conflict with someone",
+    "Taking a financial risk",
+    "Splitting costs fairly",
+    "Letting go of an investment",
+  ],
+  [
+    "Starting a business",
+    "Going back to school",
+    "Family planning",
+    "Health habit",
+    "Procrastination",
+    "Saying no to something",
+    "Sticking to a commitment",
+    "Doubting a past decision",
+    "Avoiding something I should face",
+    "Choosing between two good options",
+  ],
   ],
   hi: [
     [
@@ -3594,19 +3594,19 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 <p className="min-w-0 flex-1 truncate text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
                   Save a concise memory of this conversation for later.
                 </p>
-                <button
+              <button
                   onClick={() => {
                     if (incognitoMode) return;
                     playSelectionChime();
                     setSummarizeLanguageModal({ selectedLanguage: language });
                   }}
-                  disabled={incognitoMode}
+                disabled={incognitoMode}
                   title={incognitoMode ? "Not available in incognito" : "Summarize this conversation and save it to long-term memory"}
                   className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 px-3 py-1.5 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-600 hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
+              >
                   <SparklesIcon className="w-3.5 h-3.5" />
                   <span>Save to memory</span>
-                </button>
+              </button>
               </div>
             </div>
           )}
@@ -3857,7 +3857,11 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             aria-hidden
           >
             <div
-              className="pointer-events-auto w-full max-w-[min(94vw,1200px)] max-h-[90vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-800 animate-fade-in-up"
+              className={`pointer-events-auto w-full max-h-[90vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-800 animate-fade-in-up ${
+                libraryPanelOpen === "concepts"
+                  ? "max-w-[min(94vw,1200px)]"
+                  : "max-w-[min(94vw,608px)]"
+              }`}
               data-tour="library-modal"
             role="dialog"
             aria-modal
@@ -4021,8 +4025,8 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 <div className="space-y-4">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <h2 className="text-lg font-semibold text-foreground">Models</h2>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks and biases, grouped by when to use. Star to add to Favorites.</p>
+                  <h2 className="text-lg font-semibold text-foreground">Models</h2>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks and biases, grouped by when to use. Star to add to Favorites.</p>
                     </div>
                     {!isAnonymous && (
                       <button
@@ -4180,7 +4184,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                               {cat.label}
                             </button>
                           ))}
-                        </div>
+                          </div>
                         <div className="flex items-center justify-between">
                           <p className="text-[11px] font-medium text-neutral-500 uppercase tracking-wide">
                             {activeCategory?.label ?? "Category"}
@@ -4188,18 +4192,18 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           <span className="text-[11px] text-neutral-500">{activeModels.length} models</span>
                         </div>
                         {activeModels.length > 0 ? (
-                          <div className="grid grid-cols-2 gap-2">
+                              <div className="grid grid-cols-2 gap-2">
                             {activeModels.map(({ id, name }) => renderMmCard(id, name))}
-                          </div>
-                        ) : (
+                              </div>
+                            ) : (
                           <p className="text-xs text-neutral-500 dark:text-neutral-400">
                             No models in this category.
-                          </p>
-                        )}
-                      </div>
+                              </p>
+                          )}
+                        </div>
                     );
                   })()}
-                </div>
+                        </div>
               )}
               {mmCreateModalOpen && !isAnonymous && (
                 <div
@@ -4232,7 +4236,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             className="px-3 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors"
                           >
                             Cancel
-                          </button>
+                              </button>
                           <button
                             type="button"
                             disabled={mmCreateLoading || !mmCreateInput.trim()}
@@ -4258,14 +4262,14 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           >
                             {mmCreateLoading ? "Generating…" : "Generate"}
                           </button>
-                        </div>
+                                </div>
                       </>
                     ) : (
                       <>
                         <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-3 bg-neutral-50 dark:bg-neutral-900 max-h-48 overflow-y-auto">
                           <p className="text-sm font-medium text-foreground">{String(mmCreateGenerated?.name ?? "")}</p>
                           <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 line-clamp-3">{String(mmCreateGenerated?.quick_introduction ?? "")}</p>
-                        </div>
+                            </div>
                         {mmCreateError && <p className="text-xs text-red-600 dark:text-red-400">{mmCreateError}</p>}
                         <div className="flex gap-2 justify-end">
                           <button
@@ -4274,7 +4278,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             className="px-3 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors"
                           >
                             Back
-                          </button>
+                            </button>
                           <button
                             type="button"
                             disabled={mmCreateSaveLoading}
@@ -4304,10 +4308,10 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           >
                             {mmCreateSaveLoading ? "Saving…" : "Save"}
                           </button>
-                        </div>
+                              </div>
                       </>
-                    )}
-                  </div>
+                            )}
+                          </div>
                 </div>
               )}
               {libraryPanelOpen === "ltm" && (
@@ -5744,7 +5748,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                         </button>
                       </div>
                     )}
-                  </section>
+                </section>
                 )}
 
                 {!isAnonymous && (

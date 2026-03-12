@@ -1,0 +1,110 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --muted: #666666;
+  --surface: #ffffff;
+  --surface-hover: #f5f5f5;
+  --border: #e5e5e5;
+  --primary: #1a1a1a;
+  --primary-hover: #333333;
+  --primary-text: #ffffff;
+}
+
+:root[data-theme="dark"] {
+  --bg: #101214;
+  --text: #f3f4f6;
+  --muted: #9ca3af;
+  --surface: #171a1d;
+  --surface-hover: #23272b;
+  --border: #2b3138;
+  --primary: #f3f4f6;
+  --primary-hover: #d1d5db;
+  --primary-text: #111827;
+}
+
+body {
+  width: 320px;
+  min-height: 200px;
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+}
+
+#root {
+  padding: 16px;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+button {
+  cursor: pointer;
+  font: inherit;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+button:hover {
+  background: var(--surface-hover);
+}
+
+button.primary {
+  background: var(--primary);
+  color: var(--primary-text);
+  border-color: var(--primary);
+}
+
+button.primary:hover {
+  background: var(--primary-hover);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.theme-switch {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px;
+  gap: 2px;
+  background: var(--surface);
+}
+
+.theme-switch button {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 999px;
+  font-size: 12px;
+  background: transparent;
+}
+
+.theme-switch button.active {
+  background: var(--primary);
+  color: var(--primary-text);
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mt {
+  margin-top: 12px;
+}

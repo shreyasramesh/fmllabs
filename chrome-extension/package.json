@@ -1,0 +1,23 @@
+{
+  "name": "fmllabs-extension",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "npx vite build",
+    "dev": "vite build --watch"
+  },
+  "dependencies": {
+    "@clerk/chrome-extension": "^2.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-markdown": "^10.1.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.260",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "typescript": "^5.0.0",
+    "vite": "^5.0.0"
+  }
+}
