@@ -2315,7 +2315,7 @@ export default function ChatPage() {
       } else if (data.id) {
         setRelevanceContext(null);
         const img = typeof window !== "undefined" ? new window.Image() : null;
-        if (img) img.src = `/images/${data.id.replace(/_/g, "-")}.png`;
+        if (img) img.src = `/images/${data.id.startsWith("custom_") ? "elements-avatar" : data.id.replace(/_/g, "-")}.png`;
         setSelectedMentalModel(data);
       }
     } catch {
@@ -2356,6 +2356,13 @@ export default function ChatPage() {
   }, []);
   const [mmPreviewMap, setMmPreviewMap] = useState<Map<string, { oneLiner?: string; quickIntro?: string }>>(new Map());
   const [mmSearchQuery, setMmSearchQuery] = useState("");
+  const [mmCreateModalOpen, setMmCreateModalOpen] = useState(false);
+  const [mmCreateInput, setMmCreateInput] = useState("");
+  const [mmCreateLoading, setMmCreateLoading] = useState(false);
+  const [mmCreateSaveLoading, setMmCreateSaveLoading] = useState(false);
+  const [mmCreateGenerated, setMmCreateGenerated] = useState<Record<string, unknown> | null>(null);
+  const [mmCreateError, setMmCreateError] = useState<string | null>(null);
+  const [mentalModelsRefreshKey, setMentalModelsRefreshKey] = useState(0);
   const formatMmCategory = useCallback(
     (tag: string) => tag.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
     []
@@ -2412,7 +2419,7 @@ export default function ChatPage() {
       })
       .catch(() => {})
       .finally(() => setMentalModelsLoaded(true));
-  }, [language]);
+  }, [language, mentalModelsRefreshKey]);
 
   const [relevanceContext, setRelevanceContext] = useState<string | null>(null);
   const [previewMap, setPreviewMap] = useState<
@@ -2456,7 +2463,7 @@ export default function ChatPage() {
           .catch(() => setMmPreviewMap(new Map()));
       })
       .catch(() => setMentalModelsWithWhenToUse([]));
-  }, [libraryPanelOpen, language]);
+  }, [libraryPanelOpen, language, mentalModelsRefreshKey]);
 
   useEffect(() => {
     const nameToId = new Map(
@@ -2506,7 +2513,7 @@ export default function ChatPage() {
       setRelevanceContext(context);
       // Preload image so it appears instantly when modal opens
       const img = typeof window !== "undefined" ? new window.Image() : null;
-      if (img) img.src = `/images/${id.replace(/_/g, "-")}.png`;
+      if (img) img.src = `/images/${id.startsWith("custom_") ? "elements-avatar" : id.replace(/_/g, "-")}.png`;
       fetch(`/api/mental-models/${id}?language=${language}`)
         .then((r) => {
           if (!r.ok) throw new Error(`Mental model not found: ${r.status}`);
@@ -4012,8 +4019,26 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               )}
               {libraryPanelOpen === "concepts" && (
                 <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-foreground">Models</h2>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks and biases, grouped by when to use. Star to add to Favorites.</p>
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <h2 className="text-lg font-semibold text-foreground">Models</h2>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks and biases, grouped by when to use. Star to add to Favorites.</p>
+                    </div>
+                    {!isAnonymous && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMmCreateModalOpen(true);
+                          setMmCreateInput("");
+                          setMmCreateGenerated(null);
+                          setMmCreateError(null);
+                        }}
+                        className="shrink-0 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors"
+                      >
+                        + Create
+                      </button>
+                    )}
+                  </div>
                   <button
                     type="button"
                     onClick={handleTeachMeClick}
@@ -4064,9 +4089,11 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       }
                     }
 
-                    const whenToUseOrder = [...byWhenToUse.keys()].sort((a, b) =>
-                      formatMmCategory(a).localeCompare(formatMmCategory(b))
-                    );
+                    const whenToUseOrder = [...byWhenToUse.keys()].sort((a, b) => {
+                      if (a === "custom") return -1;
+                      if (b === "custom") return 1;
+                      return formatMmCategory(a).localeCompare(formatMmCategory(b));
+                    });
                     const categoryItems: { key: string; label: string; models: { id: string; name: string }[] }[] =
                       whenToUseOrder.map((tag) => ({
                         key: tag,
@@ -4119,7 +4146,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             onKeyDown={(e) => e.key === "Enter" && handleMentalModelClick(id)}
                             className="relative h-full w-full transition-transform duration-300 [transform-style:preserve-3d] group-hover/tile:[transform:rotateY(180deg)] cursor-pointer"
                           >
-                            <div className={`absolute inset-0 w-full h-full rounded-xl bg-neutral-100 dark:bg-neutral-800 text-white p-3 flex items-center justify-center [backface-visibility:hidden] border border-neutral-200 dark:border-neutral-700 overflow-hidden pointer-events-none transition-opacity duration-300 ${isSafari ? "group-hover/tile:opacity-0" : ""}`} style={{ backgroundImage: `url(/images/${id.replace(/_/g, "-")}.png)`, backgroundSize: "cover", backgroundPosition: "center" }} aria-hidden>
+                            <div className={`absolute inset-0 w-full h-full rounded-xl bg-neutral-100 dark:bg-neutral-800 text-white p-3 flex items-center justify-center [backface-visibility:hidden] border border-neutral-200 dark:border-neutral-700 overflow-hidden pointer-events-none transition-opacity duration-300 ${isSafari ? "group-hover/tile:opacity-0" : ""}`} style={{ backgroundImage: `url(/images/${id.startsWith("custom_") ? "elements-avatar" : id.replace(/_/g, "-")}.png)`, backgroundSize: "cover", backgroundPosition: "center" }} aria-hidden>
                               <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" aria-hidden />
                               <span className="relative z-10 text-xs font-medium capitalize tracking-wide text-center line-clamp-3 drop-shadow-sm">{name}</span>
                             </div>
@@ -4172,6 +4199,115 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       </div>
                     );
                   })()}
+                </div>
+              )}
+              {mmCreateModalOpen && !isAnonymous && (
+                <div
+                  className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40"
+                  onClick={(e) => e.target === e.currentTarget && setMmCreateModalOpen(false)}
+                  role="dialog"
+                  aria-modal
+                  aria-labelledby="mm-create-title"
+                >
+                  <div
+                    className="w-full max-w-md bg-background rounded-2xl shadow-xl border border-neutral-200 dark:border-neutral-700 p-4 space-y-4"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <h3 id="mm-create-title" className="text-base font-semibold text-foreground">Create mental model</h3>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Describe the mental model or cognitive bias you want. The AI will generate the full structure.</p>
+                    {!mmCreateGenerated ? (
+                      <>
+                        <textarea
+                          value={mmCreateInput}
+                          onChange={(e) => { setMmCreateInput(e.target.value); setMmCreateError(null); }}
+                          placeholder="e.g. A mental model about sunk cost fallacy in personal projects"
+                          rows={3}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-sm resize-y"
+                        />
+                        {mmCreateError && <p className="text-xs text-red-600 dark:text-red-400">{mmCreateError}</p>}
+                        <div className="flex gap-2 justify-end">
+                          <button
+                            type="button"
+                            onClick={() => setMmCreateModalOpen(false)}
+                            className="px-3 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="button"
+                            disabled={mmCreateLoading || !mmCreateInput.trim()}
+                            onClick={async () => {
+                              setMmCreateError(null);
+                              setMmCreateLoading(true);
+                              try {
+                                const r = await fetch("/api/me/mental-models/generate", {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ userInput: mmCreateInput.trim(), language }),
+                                });
+                                const data = await r.json().catch(() => ({}));
+                                if (!r.ok) throw new Error(data?.error ?? "Generation failed");
+                                setMmCreateGenerated(data);
+                              } catch (err) {
+                                setMmCreateError(err instanceof Error ? err.message : "Generation failed");
+                              } finally {
+                                setMmCreateLoading(false);
+                              }
+                            }}
+                            className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-xl hover:opacity-90 disabled:opacity-50"
+                          >
+                            {mmCreateLoading ? "Generating…" : "Generate"}
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-3 bg-neutral-50 dark:bg-neutral-900 max-h-48 overflow-y-auto">
+                          <p className="text-sm font-medium text-foreground">{String(mmCreateGenerated?.name ?? "")}</p>
+                          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 line-clamp-3">{String(mmCreateGenerated?.quick_introduction ?? "")}</p>
+                        </div>
+                        {mmCreateError && <p className="text-xs text-red-600 dark:text-red-400">{mmCreateError}</p>}
+                        <div className="flex gap-2 justify-end">
+                          <button
+                            type="button"
+                            onClick={() => { setMmCreateGenerated(null); setMmCreateError(null); }}
+                            className="px-3 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors"
+                          >
+                            Back
+                          </button>
+                          <button
+                            type="button"
+                            disabled={mmCreateSaveLoading}
+                            onClick={async () => {
+                              setMmCreateError(null);
+                              setMmCreateSaveLoading(true);
+                              try {
+                                const r = await fetch("/api/me/mental-models", {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ model: mmCreateGenerated }),
+                                });
+                                const data = await r.json().catch(() => ({}));
+                                if (!r.ok) throw new Error(data?.error ?? "Save failed");
+                                setMmCreateModalOpen(false);
+                                setMmCreateGenerated(null);
+                                setMmCreateInput("");
+                                setMentalModelsRefreshKey((k) => k + 1);
+                                setSelectedMmCategory("custom");
+                              } catch (err) {
+                                setMmCreateError(err instanceof Error ? err.message : "Save failed");
+                              } finally {
+                                setMmCreateSaveLoading(false);
+                              }
+                            }}
+                            className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-xl hover:opacity-90 disabled:opacity-50"
+                          >
+                            {mmCreateSaveLoading ? "Saving…" : "Save"}
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
               )}
               {libraryPanelOpen === "ltm" && (
@@ -6040,7 +6176,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     disabled={ccCreateLoading}
                   />
                 </div>
-                <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+                <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex flex-wrap gap-2 justify-end items-center">
                   <button
                     onClick={() => {
                       if (!ccCreateLoading) {
@@ -7645,7 +7781,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           onOpenRelated={(id) => {
             setRelevanceContext(null);
             const img = typeof window !== "undefined" ? new window.Image() : null;
-            if (img) img.src = `/images/${id.replace(/_/g, "-")}.png`;
+            if (img) img.src = `/images/${id.startsWith("custom_") ? "elements-avatar" : id.replace(/_/g, "-")}.png`;
             fetch(`/api/mental-models/${id}?language=${language}`)
               .then((r) => (r.ok ? r.json() : Promise.reject()))
               .then((m: MentalModel) => setSelectedMentalModel(m))

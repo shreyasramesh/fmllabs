@@ -9,6 +9,7 @@ import {
   getEnrichmentPromptsWithIds,
   getCustomConceptEnrichmentPromptsWithIds,
   getConceptGroupEnrichmentWithIds,
+  getUserMentalModels,
 } from "@/lib/db";
 import {
   loadMentalModelsIndex,
@@ -182,6 +183,7 @@ export async function POST(request: Request) {
   let ltmEnrichmentWithIds: { id: string; enrichmentPrompt: string; title?: string }[] = [];
   let ccEnrichmentWithIds: { id: string; enrichmentPrompt: string; title?: string }[] = [];
   let conceptGroupEnrichment: { id: string; title: string; enrichmentPrompts: string[] }[] = [];
+  let userMentalModels: Awaited<ReturnType<typeof getUserMentalModels>> = [];
 
   if (isAnonymous || incognito) {
     messagesForModel = [
@@ -210,13 +212,16 @@ export async function POST(request: Request) {
       ltmEnrichmentWithIdsRes,
       ccEnrichmentRes,
       conceptGroupEnrichmentRes,
+      userMentalModelsRes,
     ] = await Promise.all([
       getMessages(sessionId!),
       getEnrichmentPromptsWithIds(userId!),
       getCustomConceptEnrichmentPromptsWithIds(userId!),
       getConceptGroupEnrichmentWithIds(userId!),
+      getUserMentalModels(userId!),
     ]);
     conceptGroupEnrichment = conceptGroupEnrichmentRes;
+    userMentalModels = userMentalModelsRes;
 
     messagesForModel = [
       ...existingMessages.map((m) => ({
@@ -230,9 +235,19 @@ export async function POST(request: Request) {
   }
 
   const index = loadMentalModelsIndex(language);
-  const indexSummary = getIndexSummary(language);
+  let indexSummary = getIndexSummary(language);
   const mmIdToName = new Map(index.mental_models.map((m) => [m.id, m.name]));
   const mmById = new Map(index.mental_models.map((m) => [m.id, m]));
+  for (const m of userMentalModels) {
+    mmIdToName.set(m.id, m.name);
+    mmById.set(m.id, {
+      id: m.id,
+      name: m.name,
+      path: "",
+      description: m.one_liner?.trim() || m.quick_introduction,
+    } as (typeof index.mental_models)[0]);
+    indexSummary += `\n- ${m.id}: ${m.name} — ${m.one_liner?.trim() || m.quick_introduction}`;
+  }
   const ltmById = new Map(ltmEnrichmentWithIds.map((e) => [e.id, e]));
   const ccById = new Map(ccEnrichmentWithIds.map((e) => [e.id, e]));
   const cgById = new Map(conceptGroupEnrichment.map((g) => [g.id, g]));
@@ -309,14 +324,22 @@ export async function POST(request: Request) {
     role: m.role,
     content: m.content,
   }));
-  const predictedContext = await predictRelevantContext(
-    message,
-    conversationHistory,
-    index.mental_models.map((m) => ({
+  const mentalModelCandidates = [
+    ...index.mental_models.map((m) => ({
       id: m.id,
       name: m.name,
       oneLiner: m.description.split("\n")[0]?.trim() ?? m.description,
     })),
+    ...userMentalModels.map((m) => ({
+      id: m.id,
+      name: m.name,
+      oneLiner: m.one_liner?.trim() || m.quick_introduction.split(/[.!?]/)[0]?.trim() || m.quick_introduction,
+    })),
+  ];
+  const predictedContext = await predictRelevantContext(
+    message,
+    conversationHistory,
+    mentalModelCandidates,
     ltmEnrichmentWithIds,
     ccEnrichmentWithIds,
     conceptGroupEnrichment
@@ -348,7 +371,16 @@ export async function POST(request: Request) {
   );
 
   // Scope prompt context strictly to predicted relevant items.
-  const mmToInclude = index.mental_models.filter((m) => predMmIds.has(m.id));
+  const mmToInclude = [
+    ...index.mental_models.filter((m) => predMmIds.has(m.id)),
+    ...userMentalModels
+      .filter((m) => predMmIds.has(m.id))
+      .map((m) => ({
+        id: m.id,
+        name: m.name,
+        description: m.one_liner?.trim() || m.quick_introduction,
+      })),
+  ];
   const ltmToInclude = ltmEnrichmentWithIds.filter((e) => predLtmIds.has(e.id));
   const ccToInclude = ccEnrichmentWithIds.filter((e) => predCcIds.has(e.id));
   const cgToInclude = conceptGroupEnrichment.filter((g) => predCgIds.has(g.id));

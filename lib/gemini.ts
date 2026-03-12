@@ -129,6 +129,97 @@ ${userInput}`
   };
 }
 
+/** Generated mental model (id will be assigned server-side as custom_<hex>). */
+export interface GeneratedMentalModel {
+  name: string;
+  quick_introduction: string;
+  in_more_detail: string;
+  why_this_is_important: string;
+  when_to_use: string[];
+  how_can_you_spot_it: Record<string, string>;
+  examples: Record<string, string>;
+  real_world_implications: string | Record<string, string>;
+  professional_application: Record<string, string>;
+  how_can_this_be_misapplied: Record<string, string>;
+  related_content: string[];
+  one_liner?: string;
+  try_this?: string[];
+  ask_yourself?: string[];
+}
+
+export async function generateMentalModelFromUserInput(
+  userInput: string,
+  languageName?: string
+): Promise<GeneratedMentalModel> {
+  const languageInstruction =
+    languageName && languageName !== "English"
+      ? ` Write all content in ${languageName}.`
+      : "";
+  const model = getModel();
+  const result = await model.generateContent(
+    `You are creating a mental model or cognitive bias from the user's description. Return a JSON object matching the mental model schema. Include "custom" in when_to_use so it appears in the Custom category. Use snake_case for object keys (e.g. how_can_you_spot_it, professional_application).
+
+Required keys:
+- name: Human-readable name
+- quick_introduction: Brief intro (2-4 sentences)
+- in_more_detail: Deeper explanation (2-3 paragraphs)
+- why_this_is_important: Why it matters
+- when_to_use: Array including "custom" plus relevant tags (e.g. ["custom", "decision-making", "risk_assessment"])
+- how_can_you_spot_it: Object with 2-4 keys, each value a short paragraph
+- examples: Object with 2-4 keys (e.g. investing, career), each value a short paragraph
+- real_world_implications: String or object with subsections
+- professional_application: Object with 2-3 keys, each value a short paragraph
+- how_can_this_be_misapplied: Object with 2-3 keys, each value a short paragraph
+- related_content: Array of related mental model ids (can be empty [])
+
+Optional keys:
+- one_liner: Memorable short phrase
+- try_this: Array of 2-3 actionable prompts
+- ask_yourself: Array of reflection questions
+${languageInstruction}
+
+Return ONLY valid JSON, no markdown or extra text.
+
+User description:
+${userInput}`
+  );
+  const text = result.response.text().trim();
+  const cleaned = text.replace(/^```json\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  const parsed = JSON.parse(cleaned) as Record<string, unknown>;
+  const ensureArray = (v: unknown): string[] =>
+    Array.isArray(v) ? v.map((x) => String(x ?? "")).filter(Boolean) : [];
+  const ensureString = (v: unknown): string => (typeof v === "string" ? v : "") || "";
+  const ensureRecord = (v: unknown): Record<string, string> => {
+    if (v && typeof v === "object" && !Array.isArray(v)) {
+      return Object.fromEntries(
+        Object.entries(v).map(([k, val]) => [k, typeof val === "string" ? val : String(val ?? "")])
+      );
+    }
+    return {};
+  };
+  const whenToUse = ensureArray(parsed.when_to_use);
+  if (!whenToUse.includes("custom")) whenToUse.unshift("custom");
+  return {
+    name: ensureString(parsed.name) || "Custom mental model",
+    quick_introduction: ensureString(parsed.quick_introduction),
+    in_more_detail: ensureString(parsed.in_more_detail),
+    why_this_is_important: ensureString(parsed.why_this_is_important),
+    when_to_use: whenToUse,
+    how_can_you_spot_it: ensureRecord(parsed.how_can_you_spot_it),
+    examples: ensureRecord(parsed.examples),
+    real_world_implications:
+      typeof parsed.real_world_implications === "string"
+        ? parsed.real_world_implications
+        : ensureRecord(parsed.real_world_implications),
+    professional_application: ensureRecord(parsed.professional_application),
+    how_can_this_be_misapplied: ensureRecord(parsed.how_can_this_be_misapplied),
+    related_content: ensureArray(parsed.related_content),
+    one_liner: typeof parsed.one_liner === "string" ? parsed.one_liner : undefined,
+    try_this: Array.isArray(parsed.try_this) ? parsed.try_this.map(String) : undefined,
+    ask_yourself: Array.isArray(parsed.ask_yourself) ? parsed.ask_yourself.map(String) : undefined,
+  };
+}
+
 export async function generateDomainQuestions(
   domain: string,
   languageName?: string

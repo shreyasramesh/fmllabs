@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import {
   loadMentalModelContent,
   getOneLiner,
-  getTryThis,
 } from "@/lib/mental-models";
+import { getUserMentalModelById } from "@/lib/db";
 import { isValidLanguageCode } from "@/lib/languages";
 
 export async function GET(request: Request) {
@@ -21,17 +22,29 @@ export async function GET(request: Request) {
   }
   const language = searchParams.get("language");
   const lang = language && isValidLanguageCode(language) ? language : undefined;
-  const result: Record<
-    string,
-    { oneLiner: string; quickIntro: string }
-  > = {};
+  const { userId } = await auth();
+  const result: Record<string, { oneLiner: string; quickIntro: string }> = {};
   for (const id of ids) {
-    const model = loadMentalModelContent(id, lang);
-    if (model) {
-      result[id] = {
-        oneLiner: getOneLiner(model),
-        quickIntro: model.quick_introduction.slice(0, 120) + (model.quick_introduction.length > 120 ? "…" : ""),
-      };
+    if (id.startsWith("custom_") && userId) {
+      const userModel = await getUserMentalModelById(userId, id);
+      if (userModel) {
+        result[id] = {
+          oneLiner: getOneLiner(userModel),
+          quickIntro:
+            userModel.quick_introduction.slice(0, 120) +
+            (userModel.quick_introduction.length > 120 ? "…" : ""),
+        };
+      }
+    } else {
+      const model = loadMentalModelContent(id, lang);
+      if (model) {
+        result[id] = {
+          oneLiner: getOneLiner(model),
+          quickIntro:
+            model.quick_introduction.slice(0, 120) +
+            (model.quick_introduction.length > 120 ? "…" : ""),
+        };
+      }
     }
   }
   return NextResponse.json(result);

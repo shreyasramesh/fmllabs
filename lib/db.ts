@@ -152,6 +152,33 @@ interface UserSettingsDoc extends UserSettings {
   _id?: ObjectId;
 }
 
+/** User-created mental models; same schema as MentalModel, stored per user. */
+export interface UserMentalModel {
+  _id?: string;
+  userId: string;
+  id: string;
+  name: string;
+  quick_introduction: string;
+  in_more_detail: string;
+  why_this_is_important: string;
+  when_to_use: string[];
+  how_can_you_spot_it: Record<string, string>;
+  examples: Record<string, string>;
+  real_world_implications: string | Record<string, string>;
+  professional_application: Record<string, string>;
+  how_can_this_be_misapplied: Record<string, string>;
+  related_content: string[];
+  one_liner?: string;
+  try_this?: string[];
+  ask_yourself?: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface UserMentalModelDoc extends Omit<UserMentalModel, "_id"> {
+  _id: ObjectId;
+}
+
 export async function getSessions(userId: string): Promise<(Session & { _id: string })[]> {
   const database = await getDb();
   const sessions = await database
@@ -390,6 +417,84 @@ export async function removeSavedConcept(
   const result = await database
     .collection<SavedConcept>("user_saved_concepts")
     .deleteOne({ userId, modelId });
+  return result.deletedCount > 0;
+}
+
+export async function getUserMentalModels(userId: string): Promise<UserMentalModel[]> {
+  const database = await getDb();
+  const docs = await database
+    .collection<UserMentalModelDoc>("user_mental_models")
+    .find({ userId })
+    .sort({ updatedAt: -1 })
+    .toArray();
+  return docs.map((d) => ({
+    ...d,
+    _id: d._id.toString(),
+  })) as UserMentalModel[];
+}
+
+export async function getUserMentalModelById(
+  userId: string,
+  id: string
+): Promise<UserMentalModel | null> {
+  const database = await getDb();
+  const doc = await database
+    .collection<UserMentalModelDoc>("user_mental_models")
+    .findOne({ userId, id });
+  if (!doc) return null;
+  return { ...doc, _id: doc._id.toString() } as UserMentalModel;
+}
+
+export async function createUserMentalModel(
+  userId: string,
+  model: Omit<UserMentalModel, "userId" | "createdAt" | "updatedAt" | "_id">
+): Promise<UserMentalModel> {
+  const database = await getDb();
+  const now = new Date();
+  const doc: Omit<UserMentalModelDoc, "_id"> = {
+    userId,
+    id: model.id,
+    name: model.name,
+    quick_introduction: model.quick_introduction,
+    in_more_detail: model.in_more_detail,
+    why_this_is_important: model.why_this_is_important,
+    when_to_use: model.when_to_use,
+    how_can_you_spot_it: model.how_can_you_spot_it,
+    examples: model.examples,
+    real_world_implications: model.real_world_implications,
+    professional_application: model.professional_application,
+    how_can_this_be_misapplied: model.how_can_this_be_misapplied,
+    related_content: model.related_content,
+    one_liner: model.one_liner,
+    try_this: model.try_this,
+    ask_yourself: model.ask_yourself,
+    createdAt: now,
+    updatedAt: now,
+  };
+  const result = await database.collection("user_mental_models").insertOne(doc);
+  return { ...doc, _id: result.insertedId.toString() } as UserMentalModel;
+}
+
+export async function updateUserMentalModel(
+  userId: string,
+  id: string,
+  updates: Partial<Omit<UserMentalModel, "userId" | "id" | "createdAt" | "_id">>
+): Promise<boolean> {
+  const database = await getDb();
+  const result = await database
+    .collection<UserMentalModelDoc>("user_mental_models")
+    .updateOne(
+      { userId, id },
+      { $set: { ...updates, updatedAt: new Date() } }
+    );
+  return result.modifiedCount > 0;
+}
+
+export async function deleteUserMentalModel(userId: string, id: string): Promise<boolean> {
+  const database = await getDb();
+  const result = await database
+    .collection<UserMentalModelDoc>("user_mental_models")
+    .deleteOne({ userId, id });
   return result.deletedCount > 0;
 }
 
@@ -1036,5 +1141,6 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   await database.collection<SavedConcept>("user_saved_concepts").deleteMany({ userId });
   await database.collection<SavedTranscriptDoc>("transcripts").deleteMany({ userId });
   await database.collection<NuggetDoc>("nuggets").deleteMany({ userId });
+  await database.collection<UserMentalModelDoc>("user_mental_models").deleteMany({ userId });
   await database.collection<UserSettingsDoc>("user_settings").deleteMany({ userId });
 }

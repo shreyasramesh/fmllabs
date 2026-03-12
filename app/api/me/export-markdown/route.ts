@@ -215,13 +215,30 @@ export async function POST(request: Request) {
 
     if (sections.includes("saved_mental_models")) {
       const saved = await db.collection("user_saved_concepts").find({ userId }).sort({ savedAt: -1 }).toArray();
+      const userModels = await db.collection("user_mental_models").find({ userId }).sort({ updatedAt: -1 }).toArray();
       const fromSessions = sessions
         .flatMap((s) => (Array.isArray(s.mentalModelTags) ? s.mentalModelTags : []))
         .map((id) => ({ modelId: id, source: "session_tag" }));
       const savedRefs = saved.map((s) => ({ modelId: s.modelId as string, source: "saved_concept" }));
       const allRefs = [...savedRefs, ...fromSessions];
       const uniqueIds = [...new Set(allRefs.map((r) => r.modelId).filter(Boolean))];
-      const modelRows = uniqueIds.map((id) => {
+      const userModelIds = new Set(userModels.map((m) => m.id));
+      const allIds = [...new Set([...uniqueIds, ...userModelIds])];
+      const modelRows = allIds.map((id) => {
+        const userModel = userModels.find((m) => m.id === id);
+        if (userModel) {
+          const first = userModel.quick_introduction.split(/[.!?]/)[0]?.trim();
+          const oneLiner =
+            userModel.one_liner?.trim() ||
+            (first ? `${first}.` : userModel.quick_introduction.slice(0, 80));
+          return {
+            id,
+            name: userModel.name,
+            quickIntroduction: userModel.quick_introduction,
+            oneLiner,
+            sources: "user_created",
+          };
+        }
         const model = loadMentalModelContent(id, "en");
         return {
           id,

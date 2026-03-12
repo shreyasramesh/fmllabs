@@ -488,31 +488,31 @@ export function VoiceInputButton({
   if (listening) {
     return (
       <div
-        className={`relative flex items-center gap-2 rounded-2xl px-2 py-1.5 min-h-[52px] bg-neutral-100/95 dark:bg-neutral-800/95 border border-neutral-300 dark:border-neutral-600 shrink-0 ${className}`}
+        className={`relative flex items-center gap-1 rounded-xl px-1.5 py-1 min-h-[44px] bg-neutral-100/95 dark:bg-neutral-800/95 border border-neutral-300 dark:border-neutral-600 shrink-0 min-w-0 max-w-full ${className}`}
         aria-label="Voice capture controls"
       >
-        <div className="relative group/cancel">
+        <div className="relative group/cancel shrink-0">
           <button
             type="button"
             onClick={cancelListening}
             aria-label="Cancel voice capture"
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
           </button>
-          <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[11px] font-medium bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 opacity-0 group-hover/cancel:opacity-100 group-focus-within/cancel:opacity-100 transition-opacity">
+          <span className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[11px] font-medium bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 opacity-0 group-hover/cancel:opacity-100 group-focus-within/cancel:opacity-100 transition-opacity">
             Cancel
           </span>
         </div>
 
         <div
-          className={`relative flex items-center justify-center ${isMobile ? "min-w-[5.5rem]" : "w-12 h-12"}`}
+          className={`relative flex items-center justify-center shrink-0 ${isMobile ? "min-w-[4rem]" : "w-10 h-10"}`}
           aria-hidden
         >
           {isMobile ? (
-            <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
+            <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
               All ears…
             </span>
           ) : orbNodes ? (
@@ -530,14 +530,14 @@ export function VoiceInputButton({
           )}
         </div>
 
-        <div className="relative group/finish">
+        <div className="relative group/finish shrink-0">
           <button
             type="button"
             onClick={() => void finishAndPaste()}
             aria-label="Finish and paste"
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-red-500 hover:bg-red-600 transition-colors"
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-white bg-red-500 hover:bg-red-600 transition-colors"
           >
-            <span className="w-3 h-3 bg-white rounded-[2px]" aria-hidden />
+            <span className="w-2.5 h-2.5 bg-white rounded-[2px]" aria-hidden />
           </button>
           <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[11px] font-medium bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 opacity-0 group-hover/finish:opacity-100 group-focus-within/finish:opacity-100 transition-opacity">
             Finish and Paste
