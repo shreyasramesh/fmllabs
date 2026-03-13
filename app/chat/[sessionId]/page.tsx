@@ -3546,7 +3546,11 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   }
                 }}
                 onPerspectiveCardClick={({ name, prompt }) =>
-                  setDrawnPerspectiveCard({ card: { name, prompt }, deckName: "From conversation" })
+                  setDrawnPerspectiveCard({
+                    card: { id: "from_conversation", name, prompt },
+                    deckId: "from_conversation",
+                    deckName: "From conversation",
+                  })
                 }
                 previewMap={previewMap}
                 isRtl={isRtlLanguage(language)}
