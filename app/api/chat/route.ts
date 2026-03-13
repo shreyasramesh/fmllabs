@@ -148,6 +148,7 @@ export async function POST(request: Request) {
   let mentionedCustomConceptIds: string[] = [];
   let mentionedConceptGroupIds: string[] = [];
   let bodyMessages: { role: string; content: string }[] = [];
+  let prependMessages: { role: string; content: string }[] = [];
   let activeCardPrompt: string | undefined;
   let activeCardName: string | undefined;
 
@@ -195,6 +196,17 @@ export async function POST(request: Request) {
           typeof (m as { role: unknown; content: unknown }).content === "string"
       );
     }
+    if (Array.isArray(body.prependMessages)) {
+      prependMessages = body.prependMessages.filter(
+        (m: unknown) =>
+          m &&
+          typeof m === "object" &&
+          "role" in m &&
+          "content" in m &&
+          typeof (m as { role: unknown; content: unknown }).role === "string" &&
+          typeof (m as { role: unknown; content: unknown }).content === "string"
+      );
+    }
     if (typeof body.activeCardPrompt === "string" && body.activeCardPrompt.trim()) {
       activeCardPrompt = body.activeCardPrompt.trim();
       activeCardName = typeof body.activeCardName === "string" && body.activeCardName.trim()
@@ -219,13 +231,21 @@ export async function POST(request: Request) {
   let userMentalModels: Awaited<ReturnType<typeof getUserMentalModels>> = [];
 
   if (isAnonymous || incognito) {
+    const history = bodyMessages
+      .filter((m) => m.role === "user" || m.role === "assistant")
+      .map((m) => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      }));
+    const prepended = prependMessages
+      .filter((m) => m.role === "user" || m.role === "assistant")
+      .map((m) => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      }));
     messagesForModel = [
-      ...bodyMessages
-        .filter((m) => m.role === "user" || m.role === "assistant")
-        .map((m) => ({
-          role: m.role as "user" | "assistant",
-          content: m.content,
-        })),
+      ...prepended,
+      ...history,
       { role: "user" as const, content: message },
     ];
   } else {
@@ -256,7 +276,19 @@ export async function POST(request: Request) {
     conceptGroupEnrichment = conceptGroupEnrichmentRes;
     userMentalModels = userMentalModelsRes;
 
+    const prepended = prependMessages
+      .filter((m) => m.role === "user" || m.role === "assistant")
+      .map((m) => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      }));
+    if (prepended.length > 0 && sessionId) {
+      for (const m of prepended) {
+        await appendMessage(sessionId, m.role as "user" | "assistant", m.content);
+      }
+    }
     messagesForModel = [
+      ...prepended,
       ...existingMessages.map((m) => ({
         role: m.role as "user" | "assistant",
         content: m.content,

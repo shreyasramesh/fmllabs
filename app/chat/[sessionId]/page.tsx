@@ -1933,6 +1933,10 @@ export default function ChatPage() {
 
   const [lastFailedUserMessage, setLastFailedUserMessage] = useState<string | null>(null);
   const [onboardingDismissed, setOnboardingDismissed] = useState(true);
+  const [pendingCardContext, setPendingCardContext] = useState<{
+    prompt: string;
+    name: string;
+  } | null>(null);
   useEffect(() => {
     if (typeof window === "undefined") return;
     setOnboardingDismissed(!!localStorage.getItem("and-then-what-onboarding-seen"));
@@ -1953,6 +1957,9 @@ export default function ChatPage() {
     playSelectionChime();
 
     if (isAnonymous) anonymousActiveRef.current = true;
+
+    const cardCtx = pendingCardContext ?? (options?.activeCardPrompt && options?.activeCardName ? { prompt: options.activeCardPrompt, name: options.activeCardName } : null);
+    if (cardCtx) setPendingCardContext(null);
 
     const {
       cleanedMessage,
@@ -1983,7 +1990,7 @@ export default function ChatPage() {
     const userMessage: Message = {
       role: "user",
       content: rawText,
-      ...(options?.activeCardPrompt &&
+      ...(!cardCtx && options?.activeCardPrompt &&
         options?.activeCardName && {
           perspectiveCard: {
             name: options.activeCardName,
@@ -2026,7 +2033,13 @@ export default function ChatPage() {
       language: languageRef.current,
       userType: userTypeRef.current,
     };
-    if (options?.activeCardPrompt) {
+    if (cardCtx) {
+      chatBody.activeCardPrompt = cardCtx.prompt;
+      chatBody.activeCardName = cardCtx.name;
+      if (!isAnonymous && !incognitoMode) {
+        chatBody.prependMessages = [{ role: "assistant", content: `Let me invite you to look through this lens:\n\n${cardCtx.prompt}\n\nWhat comes to mind?` }];
+      }
+    } else if (options?.activeCardPrompt) {
       chatBody.activeCardPrompt = options.activeCardPrompt;
       if (options?.activeCardName) chatBody.activeCardName = options.activeCardName;
     }
@@ -2137,7 +2150,7 @@ export default function ChatPage() {
       inputRef.current?.focus();
       refetchSessions();
     }
-  }, [input, isLoading, currentSessionId, router, refetchSessions, messages, messages.length, sessions.length, dismissOnboarding, mentalModelsIndex, longTermMemories, customConcepts, conceptGroups, isAnonymous]);
+  }, [input, isLoading, currentSessionId, router, refetchSessions, messages, messages.length, sessions.length, dismissOnboarding, mentalModelsIndex, longTermMemories, customConcepts, conceptGroups, isAnonymous, incognitoMode, pendingCardContext]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (
@@ -8263,11 +8276,13 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               <button
                 onClick={() => {
                   playSelectionChime();
-                  sendMessage("I'd like to explore this perspective.", {
-                    activeCardPrompt: drawnPerspectiveCard.card.prompt,
-                    activeCardName: drawnPerspectiveCard.card.name,
-                  });
+                  const prompt = drawnPerspectiveCard.card.prompt;
+                  const name = drawnPerspectiveCard.card.name;
+                  const assistantContent = `Let me invite you to look through this lens:\n\n${prompt}\n\nWhat comes to mind?`;
+                  setMessages((prev) => [...prev, { role: "assistant", content: assistantContent }]);
+                  setPendingCardContext({ prompt, name });
                   setDrawnPerspectiveCard(null);
+                  inputRef.current?.focus();
                 }}
                 className="flex-1 px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
               >
