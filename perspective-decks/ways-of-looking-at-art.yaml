@@ -1,6 +1,5 @@
 # yaml-language-server: $schema=../schema/perspective-deck-schema.json
 # Ways of Looking at Art
-# 50 cards to shift your perspective (sample cards)
 
 id: ways_of_looking_at_art
 name: Ways of Looking at Art
@@ -10,79 +9,119 @@ description: |
 domain: art
 
 cards:
-  - id: introductions
-    name: Introductions
+  - id: souvenir
+    name: Souvenir
     prompt: |
-      Introduce an artwork to a friend as if it were an acquaintance at a party.
-      How would you describe it in a way that will capture their interest?
-      What captures yours?
+      Pick something out from the artwork and hide it in the next piece you look at.
+      How would you fit it into the new composition?
     follow_ups:
-      - What would you emphasize first?
-      - What would you leave out?
+      - What would you choose to carry over?
+      - What would it gain or lose in the new context?
+      - Where would it fit—or resist fitting—in the new work?
 
-  - id: light
-    name: Light
+  - id: throw_a_party
+    name: Throw a party
     prompt: |
-      Look for the source of light. Where is it coming from? What is in shadow?
-      Focus on what the artist wants us to see and what is hidden in the shadows.
+      Invite all the artists in the room. What would they be wearing?
+      What would they think about?
     follow_ups:
-      - What does the light reveal?
-      - What might the shadows be concealing?
+      - Who would gravitate toward whom?
+      - What would they argue about?
+      - What would surprise them in each other's work?
 
-  - id: emotion
-    name: Emotion
+  - id: time_out
+    name: Time out
     prompt: |
-      What emotion does this work evoke in you? Name it. Then ask: is that
-      emotion in the work itself, or are you bringing it? Where does the
-      feeling live—in the subject, the colors, the composition, or you?
+      Step outside. Focus on light, sounds, and sensations. Be present with your
+      surroundings. The experience of looking at art is as much about the spaces
+      in between as the artworks themselves.
     follow_ups:
-      - Would someone else feel differently?
-      - What in the work triggers this feeling?
+      - What do you notice when you stop focusing on the art?
+      - How does the room shape what you see?
+      - What would you miss if you rushed through?
 
-  - id: time
-    name: Time
+  - id: plan_a_trip
+    name: Plan a trip
     prompt: |
-      Consider the moment the artist chose to capture. What happened just before?
-      What happens next? Is this a pause, a climax, or an aftermath? How does
-      time move—or stop—in this image?
+      What you see today might be the first step on a much bigger journey. When
+      you leave the gallery or space, decide which artwork you want to see next
+      and plan a whole trip around it.
     follow_ups:
-      - What story does this moment imply?
-      - Why this moment and not another?
+      - Where would that journey take you?
+      - What would you need to see along the way?
+      - Why this work—what makes it worth traveling for?
 
-  - id: scale
-    name: Scale
+  - id: in_black_and_white
+    name: In black and white
     prompt: |
-      Imagine this work at a different size—tiny as a postage stamp, or vast
-      as a building. How would that change your experience? What does the
-      actual scale tell you about the artist's intent?
+      Focus on the play of lights and darks—you can even take a photo in black and
+      white to help. Where are the tones darkest? How does this suggest depth or
+      not? How does this aid your understanding of the composition?
     follow_ups:
-      - What would you lose or gain at a different scale?
-      - How does your body relate to this size?
+      - What disappears when you remove color?
+      - What becomes clearer?
+      - Where does your eye go first in the grayscale version?
 
-  - id: material
-    name: Material
+  - id: give_it_a_voice
+    name: Give it a voice
     prompt: |
-      Focus on the physical stuff—paint, stone, pixels, fabric. How was it made?
-      What traces of the maker's hand remain? What would it feel like to touch?
+      What sounds would this artwork make? How might you hear the colours, the
+      shapes and the forms?
     follow_ups:
-      - What does the material add to the meaning?
-      - What would change if it were made of something else?
+      - Is it loud or quiet? Sharp or soft?
+      - What instrument or texture would capture it?
+      - What would silence sound like in this work?
 
-  - id: outsider
-    name: Outsider
+  - id: find_the_middle_ground
+    name: Find the middle ground
     prompt: |
-      Imagine you're from another culture or time. What would confuse you?
-      What would you recognize? What assumptions does this work make about
-      its viewer?
+      How far away is the artwork from you? How big is it in relation to your
+      size? How heavy? How much space does it take up? Could you fit it in a house?
     follow_ups:
-      - What would need explaining?
-      - What transcends context?
+      - What would change if you could hold it in your hand?
+      - What if it were the size of a room?
+      - How does scale shape your relationship to it?
 
-  - id: silence
-    name: Silence
+  - id: from_the_edges
+    name: From the edges
     prompt: |
-      Look without naming. Don't label, categorize, or interpret. Just look.
-      What do you notice when you stop trying to say what it is?
+      Where does the artwork end and the "real world" begin? Can you try using
+      your hands as a viewfinder to redefine the edges of the artwork for
+      yourself? Is there a discernible edge?
     follow_ups:
-      - What persists when words fall away?
-      - What did you miss when you were naming?
+      - What happens when you change the frame?
+      - What gets included or excluded?
+      - Where does the work want to spill beyond its boundaries?
+
+  - id: transmogrify_it
+    name: Transmogrify it
+    prompt: |
+      What if you could change the artwork to another genre? A photograph into an
+      action painting or an installation into a landscape? How would you do it?
+      Would it still retain its character even in translation?
+    follow_ups:
+      - What is essential to the work—what must survive the change?
+      - What would be gained or lost in the translation?
+      - Which genre would reveal something new about it?
+
+  - id: the_hand_of_the_artist
+    name: The Hand of the Artist
+    prompt: |
+      Hunt for evidence of the artist's brushstrokes, chisel marks, fingerprints,
+      even hairs. Imagine making those marks yourself—what position would you need
+      to get into? What tools would you use?
+    follow_ups:
+      - What does the mark reveal about the maker's body?
+      - Where is the gesture fast or slow, sure or hesitant?
+      - What would it feel like to make that mark?
+
+  - id: tell_the_story
+    name: Tell the story
+    prompt: |
+      The history of art is rich with narrative, and today there is an exciting
+      dialogue between art, literature, and film. Is there a story in the
+      artwork? How do you tell it?
+    follow_ups:
+      - What happens before or after this moment?
+      - Who is the narrator? Whose voice is missing?
+      - Would it work as a film, a novel, or a poem?
