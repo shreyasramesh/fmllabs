@@ -1862,6 +1862,17 @@ export default function ChatPage() {
       .catch(() => setNuggets([]));
   }, [isAnonymous]);
 
+  const refetchSavedPerspectiveCards = useCallback(() => {
+    if (isAnonymous) {
+      setSavedPerspectiveCards([]);
+      return;
+    }
+    fetch("/api/me/perspective-cards", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => setSavedPerspectiveCards(Array.isArray(data) ? data : []))
+      .catch(() => setSavedPerspectiveCards([]));
+  }, [isAnonymous]);
+
   const [mentalModelsIndex, setMentalModelsIndex] = useState<
     Map<string, string>
   >(new Map());
@@ -2254,7 +2265,13 @@ export default function ChatPage() {
     card: { id: string; name: string; prompt: string; follow_ups?: string[] };
     deckId: string;
     deckName: string;
+    savedId?: string;
   } | null>(null);
+  const [savedPerspectiveCards, setSavedPerspectiveCards] = useState<{ _id: string; name: string; prompt: string; follow_ups: string[]; sourceDeckName?: string }[]>([]);
+  const [saveCardLoading, setSaveCardLoading] = useState(false);
+  const [generateTopicInput, setGenerateTopicInput] = useState("");
+  const [generateCardLoading, setGenerateCardLoading] = useState(false);
+  const [generateCardError, setGenerateCardError] = useState<string | null>(null);
   const [overachieverMessage, setOverachieverMessage] = useState<string | null>(
     null
   );
@@ -2410,8 +2427,9 @@ export default function ChatPage() {
           setPerspectiveDecks(Array.isArray(list) ? list : []);
         })
         .catch(() => setPerspectiveDecks([]));
+      refetchSavedPerspectiveCards();
     }
-  }, [waysOfLookingAtModalOpen]);
+  }, [waysOfLookingAtModalOpen, refetchSavedPerspectiveCards]);
 
   const urbanJungleCityToDeckId: Record<string, string> = {
     ny: "urban_jungle_new_york",
@@ -4801,17 +4819,17 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                                     )}
                                   </div>
                                   {!isCollapsed && (
-                                    <div className="space-y-2">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                       {concepts.length === 0 ? (
                                         <p className="text-xs text-neutral-500 dark:text-neutral-400 py-2">No concepts in this group yet.</p>
                                       ) : concepts.map((cc) => (
-                                        <div key={cc._id} className="flex items-start gap-3 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors relative">
+                                        <div key={cc._id} className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]">
                                           <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" /><path d="M10 11v6M14 11v6" /></svg>
                                           </button>
                                           <div role="button" tabIndex={0} onClick={() => setCcDetailModal(cc)} onKeyDown={(e) => e.key === "Enter" && setCcDetailModal(cc)} className="flex-1 min-w-0 cursor-pointer pr-8">
-                                            <span className="text-sm font-medium line-clamp-1">{cc.title}</span>
-                                            <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 line-clamp-2">{cc.summary || cc.enrichmentPrompt}</p>
+                                            <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{cc.title}</span>
+                                            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{cc.summary || cc.enrichmentPrompt}</p>
                                           </div>
                                         </div>
                                       ))}
@@ -4827,15 +4845,15 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                                   <span className="text-[10px]">{ccGroupCollapsed.has("Standalone") ? "▶" : "▼"}</span>
                                 </button>
                                 {!ccGroupCollapsed.has("Standalone") && (
-                                  <div className="space-y-2">
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     {standalone.map((cc) => (
-                                      <div key={cc._id} className="flex items-start gap-3 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors relative">
+                                      <div key={cc._id} className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]">
                                         <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
                                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" /><path d="M10 11v6M14 11v6" /></svg>
                                         </button>
                                         <div role="button" tabIndex={0} onClick={() => setCcDetailModal(cc)} onKeyDown={(e) => e.key === "Enter" && setCcDetailModal(cc)} className="flex-1 min-w-0 cursor-pointer pr-8">
-                                          <span className="text-sm font-medium line-clamp-1">{cc.title}</span>
-                                          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 line-clamp-2">{cc.summary || cc.enrichmentPrompt}</p>
+                                          <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{cc.title}</span>
+                                          <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{cc.summary || cc.enrichmentPrompt}</p>
                                         </div>
                                       </div>
                                     ))}
@@ -8345,6 +8363,150 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             <div className="flex-1 overflow-y-auto p-4">
               {!waysOfLookingAtCategory ? (
                 <div className="space-y-4">
+                  {!isAnonymous && savedPerspectiveCards.length > 0 && (
+                    <div>
+                      <p className="text-sm font-medium text-foreground mb-2">My saved cards</p>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        {savedPerspectiveCards.slice(0, 6).map((saved) => (
+                          <div
+                            key={saved._id}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => {
+                              playSelectionChime();
+                              setDrawnPerspectiveCard({
+                                card: {
+                                  id: saved._id,
+                                  name: saved.name,
+                                  prompt: saved.prompt,
+                                  follow_ups: saved.follow_ups ?? [],
+                                },
+                                deckId: "",
+                                deckName: saved.sourceDeckName ?? "Saved",
+                                savedId: saved._id,
+                              });
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key !== "Enter" && e.key !== " ") return;
+                              e.preventDefault();
+                              playSelectionChime();
+                              setDrawnPerspectiveCard({
+                                card: {
+                                  id: saved._id,
+                                  name: saved.name,
+                                  prompt: saved.prompt,
+                                  follow_ups: saved.follow_ups ?? [],
+                                },
+                                deckId: "",
+                                deckName: saved.sourceDeckName ?? "Saved",
+                                savedId: saved._id,
+                              });
+                            }}
+                            className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-500"
+                          >
+                            <div className="w-full flex flex-col items-start text-left flex-1 min-w-0 pr-8">
+                              <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                                {saved.name}
+                              </span>
+                              <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">
+                                {saved.prompt}
+                              </p>
+                              <p className="mt-auto pt-2 text-[11px] text-neutral-500 dark:text-neutral-400">
+                                Tap to open
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                playSelectionChime();
+                                try {
+                                  const res = await fetch(`/api/me/perspective-cards/${saved._id}`, { method: "DELETE" });
+                                  if (res.ok) refetchSavedPerspectiveCards();
+                                } catch {
+                                  /* ignore */
+                                }
+                              }}
+                              className="absolute top-2 right-2 p-1.5 rounded-lg opacity-60 hover:opacity-100 hover:bg-red-100 dark:hover:bg-red-900/30 text-neutral-500 hover:text-red-600 dark:hover:text-red-400 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-500 focus-visible:ring-offset-1"
+                              aria-label="Delete saved card"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                                <path d="M3 6h18" />
+                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                                <line x1="10" x2="10" y1="11" y2="17" />
+                                <line x1="14" x2="14" y1="11" y2="17" />
+                              </svg>
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      {savedPerspectiveCards.length > 6 && (
+                        <p className="text-xs text-neutral-500 mt-1">
+                          +{savedPerspectiveCards.length - 6} more saved
+                        </p>
+                      )}
+                    </div>
+                  )}
+                  <div className="p-4 rounded-2xl border border-dashed border-neutral-300 dark:border-neutral-600 bg-neutral-50/50 dark:bg-neutral-800/30">
+                    <p className="text-sm font-medium text-foreground mb-2">Generate a card from a topic</p>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">
+                      Enter any topic and the AI will create a perspective card with a prompt and follow-ups. You can then start a conversation with it.
+                    </p>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={generateTopicInput}
+                        onChange={(e) => { setGenerateTopicInput(e.target.value); setGenerateCardError(null); }}
+                        placeholder="e.g. morning routines, difficult conversations, a favorite place"
+                        className="flex-1 px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
+                        disabled={generateCardLoading}
+                      />
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          const topic = generateTopicInput.trim();
+                          if (!topic || generateCardLoading) return;
+                          playSelectionChime();
+                          setGenerateCardLoading(true);
+                          setGenerateCardError(null);
+                          try {
+                            const res = await fetch("/api/perspective-decks/generate", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ topic, language }),
+                            });
+                            const data = await res.json();
+                            if (!res.ok) throw new Error(data.error ?? "Failed to generate");
+                            const card = data.card;
+                            if (!card?.name || !card?.prompt) throw new Error("Invalid response");
+                            setDrawnPerspectiveCard({
+                              card: {
+                                id: "generated",
+                                name: card.name,
+                                prompt: card.prompt,
+                                follow_ups: card.follow_ups ?? [],
+                              },
+                              deckId: "",
+                              deckName: "Generated",
+                            });
+                            setGenerateTopicInput("");
+                          } catch (err) {
+                            setGenerateCardError(err instanceof Error ? err.message : "Failed to generate card");
+                          } finally {
+                            setGenerateCardLoading(false);
+                          }
+                        }}
+                        disabled={generateCardLoading || !generateTopicInput.trim()}
+                        className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                      >
+                        {generateCardLoading ? "Generating…" : "Generate"}
+                      </button>
+                    </div>
+                    {generateCardError && (
+                      <p className="text-xs text-red-600 dark:text-red-400 mt-2">{generateCardError}</p>
+                    )}
+                  </div>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
                     {waysOfLookingAtDrawMode ? "Choose a domain" : "Choose a category to browse perspective cards."}
                   </p>
@@ -8383,7 +8545,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                               setWaysOfLookingAtHuman(null);
                               setWaysOfLookingAtDigital(null);
                             }}
-                            className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left group"
+                            className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
                           >
                             <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
                               {domainDisplayName[domain] ?? domain.replace(/_/g, " ")}
@@ -8447,7 +8609,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           }
                           setWaysOfLookingAtCity(city.id);
                         }}
-                        className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left group"
+                        className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
                       >
                         <span className="text-base font-medium text-foreground group-hover:text-foreground">
                           {city.name}
@@ -8499,7 +8661,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           }
                           setWaysOfLookingAtCuisine(cuisine.id);
                         }}
-                        className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left group"
+                        className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
                       >
                         <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
                           {cuisine.name}
@@ -8551,7 +8713,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           }
                           setWaysOfLookingAtMicrocosm(sub.id);
                         }}
-                        className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left group"
+                        className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
                       >
                         <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
                           {sub.name}
@@ -8603,7 +8765,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           }
                           setWaysOfLookingAtHuman(sub.id);
                         }}
-                        className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left group"
+                        className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
                       >
                         <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
                           {sub.name}
@@ -8655,7 +8817,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           }
                           setWaysOfLookingAtDigital(sub.id);
                         }}
-                        className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left group"
+                        className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
                       >
                         <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
                           {sub.name}
@@ -8697,13 +8859,16 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                                 deckName: deck?.name ?? "Prompt Games",
                               });
                             }}
-                            className="flex flex-col p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left min-h-[100px]"
+                            className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px] cursor-pointer"
                           >
                             <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                               {card.name}
                             </span>
                             <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">
                               {card.prompt}
+                            </p>
+                            <p className="mt-auto pt-2 text-[11px] text-neutral-500 dark:text-neutral-400">
+                              Tap to open
                             </p>
                           </button>
                         );
@@ -8783,52 +8948,129 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               )}
             </div>
             <div className="p-4 border-t border-neutral-200 dark:border-neutral-700">
-              <button
-                onClick={() => {
-                  playSelectionChime();
-                  const prompt = drawnPerspectiveCard.card.prompt;
-                  const name = drawnPerspectiveCard.card.name;
-                  const assistantContent = `Let me invite you to look through this lens:\n\n${prompt}\n\nWhat comes to mind?`;
-                  const initialMessage = {
-                    role: "assistant" as const,
-                    content: assistantContent,
-                    perspectiveCard: { name, prompt },
-                  };
-                  setDrawnPerspectiveCard(null);
-                  setWaysOfLookingAtModalOpen(false);
-                  setWaysOfLookingAtDrawMode(false);
-                  setWaysOfLookingAtCategory(null);
-                  setWaysOfLookingAtCity(null);
-                  setWaysOfLookingAtCuisine(null);
-                  setWaysOfLookingAtMicrocosm(null);
-                  if (typeof window !== "undefined" && window.innerWidth < 1024) {
-                    setLibraryPanelOpen(null);
-                    setSidebarOpen(false);
-                  }
-                  if (sessionId !== "new" && sessionId !== "incognito") {
-                    try {
-                      sessionStorage.setItem(PERSPECTIVE_CARD_START_KEY, JSON.stringify({
-                        assistantContent,
-                        prompt,
-                        name,
-                      }));
-                    } catch {
-                      /* ignore */
+              <div className="flex flex-row gap-2 items-center">
+                <button
+                  onClick={() => {
+                    playSelectionChime();
+                    const prompt = drawnPerspectiveCard.card.prompt;
+                    const name = drawnPerspectiveCard.card.name;
+                    const assistantContent = `Let me invite you to look through this lens:\n\n${prompt}\n\nWhat comes to mind?`;
+                    const initialMessage = {
+                      role: "assistant" as const,
+                      content: assistantContent,
+                      perspectiveCard: { name, prompt },
+                    };
+                    setDrawnPerspectiveCard(null);
+                    setWaysOfLookingAtModalOpen(false);
+                    setWaysOfLookingAtDrawMode(false);
+                    setWaysOfLookingAtCategory(null);
+                    setWaysOfLookingAtCity(null);
+                    setWaysOfLookingAtCuisine(null);
+                    setWaysOfLookingAtMicrocosm(null);
+                    setWaysOfLookingAtHuman(null);
+                    setWaysOfLookingAtDigital(null);
+                    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+                      setLibraryPanelOpen(null);
+                      setSidebarOpen(false);
                     }
-                    router.push("/chat/new");
-                  } else {
-                    setMessages([initialMessage]);
-                    setPendingCardContext({ prompt, name });
-                    setCurrentSessionId(null);
-                    setCurrentSession(null);
-                    setCollapsedSummary(null);
-                    inputRef.current?.focus();
-                  }
-                }}
-                className="w-full px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
-              >
-                Start conversation
-              </button>
+                    if (sessionId !== "new" && sessionId !== "incognito") {
+                      try {
+                        sessionStorage.setItem(PERSPECTIVE_CARD_START_KEY, JSON.stringify({
+                          assistantContent,
+                          prompt,
+                          name,
+                        }));
+                      } catch {
+                        /* ignore */
+                      }
+                      router.push("/chat/new");
+                    } else {
+                      setMessages([initialMessage]);
+                      setPendingCardContext({ prompt, name });
+                      setCurrentSessionId(null);
+                      setCurrentSession(null);
+                      setCollapsedSummary(null);
+                      inputRef.current?.focus();
+                    }
+                  }}
+                  className="flex-1 min-w-0 px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                >
+                  Start conversation
+                </button>
+                {!isAnonymous && (
+                  drawnPerspectiveCard.savedId ? (
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (saveCardLoading) return;
+                        playSelectionChime();
+                        setSaveCardLoading(true);
+                        try {
+                          const res = await fetch(`/api/me/perspective-cards/${drawnPerspectiveCard.savedId}`, { method: "DELETE" });
+                          if (res.ok) {
+                            setDrawnPerspectiveCard((prev) => prev ? { ...prev, savedId: undefined } : null);
+                            refetchSavedPerspectiveCards();
+                          }
+                        } catch {
+                          /* ignore */
+                        } finally {
+                          setSaveCardLoading(false);
+                        }
+                      }}
+                      disabled={saveCardLoading}
+                      className="p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-neutral-500 hover:text-red-600 dark:hover:text-red-400 shrink-0"
+                      aria-label="Remove from saved"
+                    >
+                      {saveCardLoading ? (
+                        <span className="text-xs">…</span>
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                          <path d="M3 6h18" />
+                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                          <line x1="10" x2="10" y1="11" y2="17" />
+                          <line x1="14" x2="14" y1="11" y2="17" />
+                        </svg>
+                      )}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (saveCardLoading) return;
+                        playSelectionChime();
+                        setSaveCardLoading(true);
+                        try {
+                          const res = await fetch("/api/me/perspective-cards", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              name: drawnPerspectiveCard.card.name,
+                              prompt: drawnPerspectiveCard.card.prompt,
+                              follow_ups: drawnPerspectiveCard.card.follow_ups ?? [],
+                              sourceDeckId: drawnPerspectiveCard.deckId || undefined,
+                              sourceDeckName: drawnPerspectiveCard.deckName !== "Generated" ? drawnPerspectiveCard.deckName : undefined,
+                            }),
+                          });
+                          const data = await res.json();
+                          if (res.ok && data._id) {
+                            setDrawnPerspectiveCard((prev) => prev ? { ...prev, savedId: data._id } : null);
+                            refetchSavedPerspectiveCards();
+                          }
+                        } catch {
+                          /* ignore */
+                        } finally {
+                          setSaveCardLoading(false);
+                        }
+                      }}
+                      disabled={saveCardLoading}
+                      className="px-4 py-2 rounded-xl text-sm font-medium border border-neutral-200 dark:border-neutral-600 bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                    >
+                      {saveCardLoading ? "Saving…" : "Save Card"}
+                    </button>
+                  )
+                )}
+              </div>
             </div>
           </div>
         </div>

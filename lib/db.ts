@@ -112,6 +112,22 @@ interface SavedTranscriptDoc extends Omit<SavedTranscript, "_id"> {
   _id: ObjectId;
 }
 
+export interface SavedPerspectiveCard {
+  _id?: string;
+  userId: string;
+  name: string;
+  prompt: string;
+  follow_ups: string[];
+  sourceDeckId?: string;
+  sourceDeckName?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface SavedPerspectiveCardDoc extends Omit<SavedPerspectiveCard, "_id"> {
+  _id: ObjectId;
+}
+
 export interface Nugget {
   _id?: string;
   userId: string;
@@ -751,6 +767,56 @@ export async function deleteCustomConcept(id: string, userId: string): Promise<b
   return result.deletedCount > 0;
 }
 
+export async function getSavedPerspectiveCards(
+  userId: string
+): Promise<(SavedPerspectiveCard & { _id: string })[]> {
+  const database = await getDb();
+  const docs = await database
+    .collection<SavedPerspectiveCardDoc>("saved_perspective_cards")
+    .find({ userId })
+    .sort({ updatedAt: -1 })
+    .toArray();
+  return docs.map((d) => ({ ...d, _id: d._id.toString() })) as (SavedPerspectiveCard & { _id: string })[];
+}
+
+export async function createSavedPerspectiveCard(
+  userId: string,
+  name: string,
+  prompt: string,
+  follow_ups: string[],
+  sourceDeckId?: string,
+  sourceDeckName?: string
+): Promise<SavedPerspectiveCard & { _id: string }> {
+  const database = await getDb();
+  const now = new Date();
+  const doc: Omit<SavedPerspectiveCard, "_id"> = {
+    userId,
+    name,
+    prompt,
+    follow_ups,
+    sourceDeckId,
+    sourceDeckName,
+    createdAt: now,
+    updatedAt: now,
+  };
+  const result = await database.collection("saved_perspective_cards").insertOne(doc);
+  return { ...doc, _id: result.insertedId.toString() } as SavedPerspectiveCard & { _id: string };
+}
+
+export async function deleteSavedPerspectiveCard(id: string, userId: string): Promise<boolean> {
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return false;
+  }
+  const result = await database
+    .collection<SavedPerspectiveCardDoc>("saved_perspective_cards")
+    .deleteOne({ _id: oid, userId });
+  return result.deletedCount > 0;
+}
+
 export async function getConceptGroups(
   userId: string
 ): Promise<(ConceptGroup & { _id: string })[]> {
@@ -1143,4 +1209,5 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   await database.collection<NuggetDoc>("nuggets").deleteMany({ userId });
   await database.collection<UserMentalModelDoc>("user_mental_models").deleteMany({ userId });
   await database.collection<UserSettingsDoc>("user_settings").deleteMany({ userId });
+  await database.collection<SavedPerspectiveCardDoc>("saved_perspective_cards").deleteMany({ userId });
 }

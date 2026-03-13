@@ -220,6 +220,49 @@ ${userInput}`
   };
 }
 
+/** Generated perspective card from a user topic. */
+export interface GeneratedPerspectiveCard {
+  name: string;
+  prompt: string;
+  follow_ups: string[];
+}
+
+export async function generatePerspectiveCardFromTopic(
+  topic: string,
+  languageName?: string
+): Promise<GeneratedPerspectiveCard> {
+  const languageInstruction =
+    languageName && languageName !== "English"
+      ? ` Write the name, prompt, and follow_ups in ${languageName}.`
+      : "";
+  const model = getModel();
+  const result = await model.generateContent(
+    `You are creating a perspective card—a lens designed to shift how someone looks at something. Perspective cards invite the user to see differently, ask unexpected questions, or notice what they might have missed. They are used in "Prompt Games" to spark reflective conversations.
+
+Given the user's topic, create ONE perspective card that would help them explore it through a fresh lens. The card should invite curiosity and discovery, not lecture or summarize.
+
+Return a JSON object with exactly three keys:
+- "name": A short, evocative title (2-4 words). Examples: "Souvenir", "In black and white", "Give it a voice", "From the edges"
+- "prompt": 2-4 sentences that invite the user to look at their topic through a specific lens. Use second person ("you"). Be concrete and actionable. The prompt should open up discovery, not close it down.
+- "follow_ups": An array of 3-5 follow-up questions that deepen the exploration. Each should be a complete question. Examples: "What would you choose to carry over?", "What disappears when you remove color?", "Where does your eye go first?"
+${languageInstruction}
+
+Return ONLY valid JSON, no markdown or extra text.
+
+User's topic:
+${topic}`
+  );
+  const text = result.response.text().trim();
+  const cleaned = text.replace(/^```json\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  const parsed = JSON.parse(cleaned) as { name?: string; prompt?: string; follow_ups?: string[] };
+  const followUps = Array.isArray(parsed.follow_ups) ? parsed.follow_ups.filter((q): q is string => typeof q === "string") : [];
+  return {
+    name: typeof parsed.name === "string" ? parsed.name : "New lens",
+    prompt: typeof parsed.prompt === "string" ? parsed.prompt : "",
+    follow_ups: followUps.length > 0 ? followUps : ["What comes to mind?", "What would you notice?", "How does this shift your view?"],
+  };
+}
+
 export async function generateDomainQuestions(
   domain: string,
   languageName?: string
