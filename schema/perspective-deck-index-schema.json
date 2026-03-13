@@ -6,6 +6,11 @@
   "type": "object",
   "required": ["decks"],
   "properties": {
+    "domains": {
+      "type": "object",
+      "description": "Domain-level descriptions keyed by domain id",
+      "additionalProperties": { "type": "string" }
+    },
     "decks": {
       "type": "array",
       "description": "Index entries for each deck",

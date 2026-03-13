@@ -1,0 +1,497 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinary Lab — Italian
+
+id: culinary_lab_italian
+name: Culinary Lab — Italian
+description: 50 cards to shift how you experience Italian food—from the chemistry
+  of olive oil and acid to the social choreography of the table and the
+  archaeology of each ingredient.
+domain: culinary_lab
+cards:
+  - id: it_tomato_transformation
+    name: Tomato Transformation
+    prompt: |
+      A raw tomato becomes something else with heat and time. Trace that arc.
+      What happens to acidity? To structure? The tomato holds a journey.
+    follow_ups:
+      - How does the sauce change the palate?
+      - What would be lost without the transformation?
+      - What's the relationship between raw and cooked?
+  - id: it_bread_arrival
+    name: Bread Arrival
+    prompt: |
+      Bread arrives before the meal—sometimes warm, sometimes with oil. Notice
+      the order of things. The bread is an opening. Who decides when to eat?
+    follow_ups:
+      - What would the meal be without the bread?
+      - How does the bread set the pace?
+      - What's the relationship between bread and anticipation?
+  - id: it_pasta_shape
+    name: Pasta Shape
+    prompt: |
+      Each pasta shape carries sauce differently—ridges, hollows, curves. Choose
+      one dish and ask: why this shape for this sauce? The form is a decision.
+    follow_ups:
+      - What would change with a different shape?
+      - How does shape affect the bite?
+      - What's the relationship between form and function?
+  - id: it_basil_fragrance
+    name: Basil Fragrance
+    prompt: |
+      Basil hits the nose before the mouth. Close your eyes and find the herb.
+      Where does it live in the dish? The aroma is a map.
+    follow_ups:
+      - What would the dish be without the smell?
+      - How does fragrance prepare the palate?
+      - What's the relationship between aroma and taste?
+  - id: it_olive_oil_pool
+    name: Olive Oil Pool
+    prompt: |
+      Olive oil pools on the surface or glazes the plate. Watch how it moves.
+      The oil carries flavor and fat. What does it bind?
+    follow_ups:
+      - What would the dish be without the oil?
+      - How does oil change the mouthfeel?
+      - What's the relationship between oil and heat?
+  - id: it_parmesan_shatter
+    name: Parmesan Shatter
+    prompt: |
+      Freshly grated Parmigiano has a crystalline crunch. Listen for it. The
+      cheese is texture as much as taste. How does it punctuate the bite?
+    follow_ups:
+      - What would the dish be without the crunch?
+      - How does the cheese complete the palate?
+      - What's the relationship between cheese and salt?
+  - id: it_espresso_ritual
+    name: Espresso Ritual
+    prompt: |
+      Espresso arrives at the end—small cup, no milk. The ritual marks closure.
+      Who drinks it standing? Who sits? The espresso is a punctuation.
+    follow_ups:
+      - What would the meal be without the espresso?
+      - How does the ritual shape time?
+      - What's the relationship between coffee and ending?
+  - id: it_antipasti_sequence
+    name: Antipasti Sequence
+    prompt: |
+      Antipasti come first—small plates, shared or not. Notice the sequence.
+      What's the logic of the order? The beginning sets the tone.
+    follow_ups:
+      - What would change if the order reversed?
+      - How does sequence create appetite?
+      - What's the relationship between first and last?
+  - id: it_wine_pour
+    name: Wine Pour
+    prompt: |
+      Wine is poured—who pours? How much? The pour is social choreography. Watch
+      the gestures. What do they say?
+    follow_ups:
+      - What would the table be without the wine?
+      - How does the pour create ceremony?
+      - What's the relationship between pour and pace?
+  - id: it_risotto_stir
+    name: Risotto Stir
+    prompt: |
+      Risotto demands constant stirring. The starch releases slowly. Consider
+      the labor in the bowl. What would happen without the stir?
+    follow_ups:
+      - What would the rice be without the creaminess?
+      - How does stirring change texture?
+      - What's the relationship between labor and result?
+  - id: it_porcini_earth
+    name: Porcini Earth
+    prompt: |
+      Porcini taste of forest floor—umami, earth, decay. Trace the mushroom
+      back. Where did it grow? Under what trees?
+    follow_ups:
+      - What would the dish be without the earthiness?
+      - How does origin shape flavor?
+      - What's the relationship between mushroom and forest?
+  - id: it_plate_negative_space
+    name: Plate Negative Space
+    prompt: |
+      Italian plating often leaves space—the plate is not filled. Consider the
+      emptiness. What does it frame? What does it allow?
+    follow_ups:
+      - What would the dish look like fully covered?
+      - How does negative space focus the eye?
+      - What's the relationship between empty and full?
+  - id: it_garlic_sizzle
+    name: Garlic Sizzle
+    prompt: |
+      Garlic hits hot oil—the sizzle is chemistry. Listen. Smell. The moment
+      is fleeting. What would burn? What would be lost?
+    follow_ups:
+      - What would the dish be without the sizzle?
+      - How does timing shape the flavor?
+      - What's the relationship between heat and aroma?
+  - id: it_crust_bubbles
+    name: Crust Bubbles
+    prompt: |
+      Focaccia or pizza crust develops bubbles in the oven. Each bubble is a
+      pocket of steam. Consider the architecture of the crumb.
+    follow_ups:
+      - What would the bread be without the bubbles?
+      - How does the crumb hold oil and salt?
+      - What's the relationship between air and structure?
+  - id: it_prosciutto_slice
+    name: Prosciutto Slice
+    prompt: |
+      Prosciutto is sliced thin—almost translucent. The knife matters. Consider
+      the craft. What would a thick slice do?
+    follow_ups:
+      - What would the charcuterie be without the thinness?
+      - How does thickness affect melt?
+      - What's the relationship between slice and savor?
+  - id: it_balsamic_drop
+    name: Balsamic Drop
+    prompt: |
+      Aged balsamic is dispensed in drops—expensive, precious. Watch the
+      viscosity. The drop is concentration. What does it add?
+    follow_ups:
+      - What would the dish be without the acid?
+      - How does the drop cut through fat?
+      - What's the relationship between sweet and sour?
+  - id: it_gnocchi_pillow
+    name: Gnocchi Pillow
+    prompt: |
+      Gnocchi should be light—pillows, not stones. Feel the texture. The
+      potato and flour ratio is delicate. What makes it work?
+    follow_ups:
+      - What would the gnocchi be if too heavy?
+      - How does texture define the dish?
+      - What's the relationship between potato and flour?
+  - id: it_salt_block
+    name: Salt Block
+    prompt: |
+      Some Italian kitchens use salt blocks for grilling. Consider the mineral.
+      Where did the salt come from? What does it impart?
+    follow_ups:
+      - What would the meat be without the salt?
+      - How does the block change the cook?
+      - What's the relationship between salt and flame?
+  - id: it_cacio_e_pepe
+    name: Cacio e Pepe
+    prompt: |
+      Cacio e pepe is cheese, pepper, pasta water. Three ingredients. The
+      emulsion is the trick. What holds it together? What breaks it?
+    follow_ups:
+      - What would the dish be without the emulsion?
+      - How does pasta water bind?
+      - What's the relationship between simplicity and technique?
+  - id: it_cannoli_crunch
+    name: Cannoli Crunch
+    prompt: |
+      Cannoli shell shatters; filling is smooth. The contrast is deliberate.
+      Consider the architecture of the bite.
+    follow_ups:
+      - What would the dessert be without the contrast?
+      - How does texture create pleasure?
+      - What's the relationship between shell and filling?
+  - id: it_risotto_clock
+    name: Risotto Clock
+    prompt: |
+      Risotto has a window—al dente, then gone. The cook is racing time.
+      Consider the precision. What would five more minutes do?
+    follow_ups:
+      - What would the rice be if overcooked?
+      - How does timing define the dish?
+      - What's the relationship between clock and craft?
+  - id: it_truffle_shave
+    name: Truffle Shave
+    prompt: |
+      Truffle is shaved at the table—the ritual, the aroma. The truffle is
+      fleeting. Where did it come from? What animal found it?
+    follow_ups:
+      - What would the dish be without the ceremony?
+      - How does the shave distribute flavor?
+      - What's the relationship between ritual and rarity?
+  - id: it_spaghetti_twist
+    name: Spaghetti Twist
+    prompt: |
+      Italians twirl spaghetti with a fork—no spoon. The twist is cultural.
+      Watch the motion. What does it achieve?
+    follow_ups:
+      - What would the bite be without the twist?
+      - How does the gesture shape the meal?
+      - What's the relationship between utensil and tradition?
+  - id: it_caprese_layers
+    name: Caprese Layers
+    prompt: |
+      Caprese stacks tomato, mozzarella, basil. The layers are simple. Consider
+      the color—red, white, green. The plate is a flag.
+    follow_ups:
+      - What would the dish be without the order?
+      - How do the layers create harmony?
+      - What's the relationship between color and taste?
+  - id: it_polenta_set
+    name: Polenta Set
+    prompt: |
+      Polenta sets as it cools—soft to firm. Consider the temperature. What
+      would it be hot? Cool? The texture is a function of time.
+    follow_ups:
+      - What would the polenta be if never cooled?
+      - How does setting change the dish?
+      - What's the relationship between heat and structure?
+  - id: it_amaro_finish
+    name: Amaro Finish
+    prompt: |
+      Amaro ends the meal—bitter, digestive. The bitterness is intentional.
+      What does it do to the palate? To the body?
+    follow_ups:
+      - What would the meal be without the amaro?
+      - How does bitter reset the tongue?
+      - What's the relationship between bitter and closure?
+  - id: it_lardo_spread
+    name: Lardo Spread
+    prompt: |
+      Lardo is cured pork fat—spread on bread, melting. Consider the fat. Where
+      did it come from? What does it carry?
+    follow_ups:
+      - What would the bread be without the lardo?
+      - How does fat carry flavor?
+      - What's the relationship between fat and preservation?
+  - id: it_sardine_silver
+    name: Sardine Silver
+    prompt: |
+      Fresh sardines gleam—silver skin, whole. The fish is small, oily. Consider
+      the scale. What would a larger fish change?
+    follow_ups:
+      - What would the dish be without the oil?
+      - How does size affect the cook?
+      - What's the relationship between small and intense?
+  - id: it_burrata_break
+    name: Burrata Break
+    prompt: |
+      Burrata must be broken—the exterior gives way to cream. The moment is
+      theatrical. Consider the contrast. Outer shell, inner liquid.
+    follow_ups:
+      - What would the cheese be without the break?
+      - How does the rupture create surprise?
+      - What's the relationship between structure and flow?
+  - id: it_osso_buco_marrow
+    name: Osso Buco Marrow
+    prompt: |
+      Osso buco centers on the marrow—the bone holds treasure. The marrow is
+      unctuous, rich. Consider the extraction. Who gets the marrow?
+    follow_ups:
+      - What would the dish be without the bone?
+      - How does the marrow complete the braise?
+      - What's the relationship between bone and flavor?
+  - id: it_limoncello_shot
+    name: Limoncello Shot
+    prompt: |
+      Limoncello arrives in a chilled glass—yellow, sweet, strong. The shot
+      is a punctuation. Where do the lemons come from? What do they carry?
+    follow_ups:
+      - What would the meal be without the limoncello?
+      - How does the shot mark the end?
+      - What's the relationship between lemon and place?
+  - id: it_sfogliatella_layers
+    name: Sfogliatella Layers
+    prompt: |
+      Sfogliatella has hundreds of paper-thin layers—folded, crisp. Consider
+      the labor. Each layer is a decision. What would fewer layers do?
+    follow_ups:
+      - What would the pastry be without the layers?
+      - How does the structure create texture?
+      - What's the relationship between craft and crunch?
+  - id: it_saltimbocca_name
+    name: Saltimbocca Name
+    prompt: |
+      Saltimbocca means "jumps in the mouth." The name promises. Does the dish
+      deliver? Consider the gap between name and experience.
+    follow_ups:
+      - What would the dish be without the name?
+      - How does naming shape expectation?
+      - What's the relationship between word and taste?
+  - id: it_artichoke_prep
+    name: Artichoke Prep
+    prompt: |
+      Artichokes demand prep—choke removed, thorns trimmed. Consider the waste.
+      What's discarded? What's treasured? The vegetable is architecture.
+    follow_ups:
+      - What would the artichoke be un-prepped?
+      - How does prep change the cook?
+      - What's the relationship between effort and reward?
+  - id: it_grappa_clear
+    name: Grappa Clear
+    prompt: |
+      Grappa is clear—distilled from pomace. The spirit carries the ghost of
+      the grape. Consider the transformation. What's left behind?
+    follow_ups:
+      - What would the meal be without the grappa?
+      - How does distillation concentrate?
+      - What's the relationship between grape and spirit?
+  - id: it_panzanella_soft
+    name: Panzanella Soft
+    prompt: |
+      Panzanella uses stale bread—softened by tomato juice, vinegar. The bread
+      is resurrected. Consider the transformation. What would fresh bread do?
+    follow_ups:
+      - What would the salad be without the bread?
+      - How does soaking change texture?
+      - What's the relationship between stale and revived?
+  - id: it_capers_brine
+    name: Capers Brine
+    prompt: |
+      Capers are buds—pickled, salty. They punctuate. Consider the brine. Where
+      did the salt come from? What does the pickle preserve?
+    follow_ups:
+      - What would the dish be without the capers?
+      - How does brine change the bud?
+      - What's the relationship between preservation and flavor?
+  - id: it_ravioli_seam
+    name: Ravioli Seam
+    prompt: |
+      Ravioli have a seam—where the pasta is pinched. The seam can burst. Consider
+      the craftsmanship. What holds the filling?
+    follow_ups:
+      - What would the ravioli be without the seam?
+      - How does the seal protect the filling?
+      - What's the relationship between structure and surprise?
+  - id: it_negroni_orange
+    name: Negroni Orange
+    prompt: |
+      A Negroni is served with orange—slice or peel. The citrus floats. Consider
+      the garnish. What does it add? When do you taste it?
+    follow_ups:
+      - What would the drink be without the orange?
+      - How does the garnish complete the balance?
+      - What's the relationship between bitter and citrus?
+  - id: it_focaccia_dimples
+    name: Focaccia Dimples
+    prompt: |
+      Focaccia has dimples—thumb-printed, oil-filled. The dimples hold pool and
+      salt. Consider the surface. What would a flat top do?
+    follow_ups:
+      - What would the bread be without the dimples?
+      - How do the pools create flavor?
+      - What's the relationship between surface and seasoning?
+  - id: it_arancini_crust
+    name: Arancini Crust
+    prompt: |
+      Arancini are fried rice balls—crisp outside, molten inside. The crust
+      contains explosion. Consider the contrast. What would happen without the
+      fry?
+    follow_ups:
+      - What would the ball be without the crust?
+      - How does frying create containment?
+      - What's the relationship between surface and interior?
+  - id: it_pecorino_age
+    name: Pecorino Age
+    prompt: |
+      Pecorino varies by age—fresco, stagionato. The age changes texture, bite,
+      flavor. Consider the timeline. What would older cheese do?
+    follow_ups:
+      - What would the cheese be at different ages?
+      - How does aging concentrate?
+      - What's the relationship between time and taste?
+  - id: it_crostini_support
+    name: Crostini Support
+    prompt: |
+      Crostini are vessels—toast holds topping. The support matters. Too thick
+      and it overwhelms. Too thin and it breaks. Consider the balance.
+    follow_ups:
+      - What would the topping be without the bread?
+      - How does the support shape the bite?
+      - What's the relationship between base and build?
+  - id: it_ciabatta_holes
+    name: Ciabatta Holes
+    prompt: |
+      Ciabatta has irregular holes—big, random. The holes catch sauce. Consider
+      the crumb. What would a tight crumb do?
+    follow_ups:
+      - What would the bread be without the holes?
+      - How do the holes create texture?
+      - What's the relationship between structure and soak?
+  - id: it_zabaglione_foam
+    name: Zabaglione Foam
+    prompt: |
+      Zabaglione is egg and sugar whipped over heat—airy, warm. The foam is
+      delicate. Consider the transformation. What would happen if overwhiped?
+    follow_ups:
+      - What would the dessert be without the foam?
+      - How does the whip incorporate air?
+      - What's the relationship between heat and structure?
+  - id: it_salt_crust_fish
+    name: Salt Crust Fish
+    prompt: |
+      Fish baked in salt crust—the salt forms a shell. The fish steams inside.
+      Consider the vessel. What does the salt impart?
+    follow_ups:
+      - What would the fish be without the crust?
+      - How does the salt contain moisture?
+      - What's the relationship between shell and flesh?
+  - id: it_panna_cotta_wobble
+    name: Panna Cotta Wobble
+    prompt: |
+      Panna cotta should wobble—barely set. The wobble is the point. Consider
+      the gel. What would a firmer set do?
+    follow_ups:
+      - What would the dessert be without the wobble?
+      - How does the texture create pleasure?
+      - What's the relationship between set and silk?
+  - id: it_sopressata_marbling
+    name: Sopressata Marbling
+    prompt: |
+      Sopressata has fat marbling—white in red. The fat carries flavor. Consider
+      the distribution. What would lean meat do?
+    follow_ups:
+      - What would the salami be without the fat?
+      - How does marbling affect the slice?
+      - What's the relationship between fat and cure?
+  - id: it_affogato_melt
+    name: Affogato Melt
+    prompt: |
+      Affogato is gelato drowned in espresso—hot meets cold. Watch the melt.
+      The transformation is immediate. Consider the timing.
+    follow_ups:
+      - What would the dessert be without the melt?
+      - How does temperature create contrast?
+      - What's the relationship between hot and cold?
+  - id: it_breadcrumb_gold
+    name: Breadcrumb Gold
+    prompt: |
+      Italian cooking uses breadcrumbs—toasted, golden, for crunch. Consider the
+      repurposing. Stale bread becomes texture. What would the dish lack?
+    follow_ups:
+      - What would the dish be without the crumbs?
+      - How does the toast add crunch?
+      - What's the relationship between stale and useful?
+  - id: it_radicchio_bitter
+    name: Radicchio Bitter
+    prompt: |
+      Radicchio is intentionally bitter—grilled or raw. The bitterness is a
+      choice. Consider the palate. What does bitter do amid richness?
+    follow_ups:
+      - What would the dish be without the bitter?
+      - How does bitterness cut fat?
+      - What's the relationship between bitter and balance?
+  - id: it_cacciucco_bowl
+    name: Cacciucco Bowl
+    prompt: |
+      Cacciucco is fish stew—many species, one pot. The bowl holds the sea.
+      Consider the variety. What does each fish contribute?
+    follow_ups:
+      - What would the stew be with one fish?
+      - How does variety create depth?
+      - What's the relationship between many and one?
+  - id: it_panna_trace
+    name: Panna Trace
+    prompt: |
+      Cream leaves a trail—on the plate, in the sauce. Consider the viscosity.
+      The cream carries and coats. What would the dish be without it?
+    follow_ups:
+      - What would the sauce be without the cream?
+      - How does cream change mouthfeel?
+      - What's the relationship between fat and silk?
+  - id: it_orecchiette_cup
+    name: Orecchiette Cup
+    prompt: |
+      Orecchiette means "little ears"—they cup sauce. The shape is functional.
+      Consider the design. What would a flat pasta do?
+    follow_ups:
+      - What would the dish be without the cup?
+      - How does the shape hold sauce?
+      - What's the relationship between form and sauce?

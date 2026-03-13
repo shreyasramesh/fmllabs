@@ -1,0 +1,507 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinary Lab — Chinese
+
+id: culinary_lab_chinese
+name: Culinary Lab — Chinese
+description: 50 cards to shift how you experience Chinese food—from the chemistry
+  of wok hei and the archaeology of soy to the choreography of the round table
+  and the narrative of the banquet.
+domain: culinary_lab
+cards:
+  - id: chn_wok_hei
+    name: Wok Hei
+    prompt: |
+      Wok hei—the breath of the wok—is the elusive smoke that comes from
+      extreme heat and speed. It's not quite smokiness; it's transformation.
+      Can you catch it? What would the stir-fry be without it?
+    follow_ups:
+      - How does hei shape the dish?
+      - What creates it? What destroys it?
+      - What's the relationship between heat and haste?
+  - id: chn_round_table
+    name: Round Table
+    prompt: |
+      The Chinese banquet table is round—the lazy susan at the center. Food
+      spins. Everyone reaches. The table is choreography. Who turns? Who waits?
+      What are the unspoken rules?
+    follow_ups:
+      - What would a rectangular table mean?
+      - How does the round shape the meal?
+      - What's the relationship between center and edge?
+  - id: chn_soy_archeology
+    name: Soy Archaeology
+    prompt: |
+      Soy sauce—fermented, aged, regional. Light, dark, mushroom, double-black.
+      It came from somewhere. It took time. Trace the bottle. What journey did
+      it make? What would industrial soy sacrifice?
+    follow_ups:
+      - How does origin shape the pour?
+      - What would the dish be without soy?
+      - What's the relationship between ferment and umami?
+  - id: chn_chopstick_grip
+    name: Chopstick Grip
+    prompt: |
+      Chopsticks extend the hand. Rice, slippery noodles, dumplings—each
+      demands different technique. Notice your grip. What does the utensil
+      require? What does it allow?
+    follow_ups:
+      - What would a fork change?
+      - How does the stick shape the bite?
+      - What's the relationship between tool and pace?
+  - id: chn_dumpling_seam
+    name: Dumpling Seam
+    prompt: |
+      Dumpling pleats—the fold, the seal. Jiaozi, shumai, xiaolongbao—each has
+      its form. The seam holds or releases. Study one. What would a burst
+      mean? What does the pleat protect?
+    follow_ups:
+      - How does the fold shape the fill?
+      - What would an open dumpling lose?
+      - What's the relationship between seal and soup?
+  - id: chn_tea_pour
+    name: Tea Pour
+    prompt: |
+      Chinese tea—poured, refilled, shared. The pot circulates. Empty cups are
+      filled before asking. The pour is service and care. Notice the rhythm.
+      What would the meal be without the tea?
+    follow_ups:
+      - How does the tea shape the pace?
+      - What does the pour communicate?
+      - What's the relationship between cup and table?
+  - id: chn_bone_plate
+    name: Bone Plate
+    prompt: |
+      A small plate for bones—discarded shells, chicken bones, shrimp peel.
+      The plate collects what's inedible. It's part of the setting. What does
+      the bone plate allow? What would happen without it?
+    follow_ups:
+      - How does the plate shape the meal?
+      - What would the table look like without it?
+      - What's the relationship between discard and dignity?
+  - id: chn_soup_spoon
+    name: Soup Spoon
+    prompt: |
+      The Chinese soup spoon—wide, shallow, ceramic. It holds broth and solid.
+      The spoon fits the mouth differently. Notice the sip. What does the
+      shape enable?
+    follow_ups:
+      - What would a round spoon change?
+      - How does the spoon shape the sip?
+      - What's the relationship between form and function?
+  - id: chn_steam_basket
+    name: Steam Basket
+    prompt: |
+      Dim sum arrives in bamboo baskets—stacked, layered. The steam rises.
+      The basket holds the shape. Consider the bamboo. What would metal do
+      differently? What does bamboo add?
+    follow_ups:
+      - How does the basket shape the dumpling?
+      - What would a plate lose?
+      - What's the relationship between bamboo and steam?
+  - id: chn_maillard_wok
+    name: Maillard Wok
+    prompt: |
+      The wok reaches temperatures home stoves cannot. The sear is instant.
+      Proteins brown in seconds. Consider the chemistry. What would a lower
+      heat sacrifice? What does the wok demand?
+    follow_ups:
+      - How does heat shape the flavor?
+      - What would electric do differently?
+      - What's the relationship between flame and crust?
+  - id: chn_glutinous_texture
+    name: Glutinous Texture
+    prompt: |
+      Glutinous rice—sticky, chewy—has a different chemistry. It's used for
+      zongzi, lo mai gai, desserts. Notice the texture. How does it differ from
+      long-grain? What does stickiness enable?
+    follow_ups:
+      - What would regular rice do?
+      - How does texture shape the dish?
+      - What's the relationship between stick and wrap?
+  - id: chn_century_egg
+    name: Century Egg
+    prompt: |
+      Century egg—preserved, transformed. The yolk is dark, the white translucent.
+      The chemistry is ancient. Consider the preservation. What does time do?
+      What would freshness mean?
+    follow_ups:
+      - How does preservation shape flavor?
+      - What would the egg be fresh?
+      - What's the relationship between time and transformation?
+  - id: chn_oyster_sauce
+    name: Oyster Sauce
+    prompt: |
+      Oyster sauce—umami, thick, Cantonese. It's reduction and extraction.
+      The oyster gives its essence. Trace the flavor. What would the stir-fry
+      be without it?
+    follow_ups:
+      - How does the sauce shape the dish?
+      - What's the relationship between oyster and vegetable?
+      - What would soy do instead?
+  - id: chn_ordering_ritual
+    name: Ordering Ritual
+    prompt: |
+      Ordering at a Chinese restaurant—the host chooses, or the table negotiates.
+      Balance: meat, vegetable, soup, rice. The order is a composition. Notice
+      who decides. What are the rules?
+    follow_ups:
+      - How does ordering shape the meal?
+      - What would everyone order for themselves?
+      - What's the relationship between choice and collective?
+  - id: chn_crispy_skin
+    name: Crispy Skin
+    prompt: |
+      Peking duck skin—crisp, glazed. Or Cantonese roast pork crackling. The
+      skin is deliberate. Heat, air, sugar. Consider the architecture. What
+      would soggy skin mean?
+    follow_ups:
+      - How does crispness shape the bite?
+      - What creates the crackle?
+      - What's the relationship between skin and meat?
+  - id: chn_noodle_slip
+    name: Noodle Slip
+    prompt: |
+      Chinese noodles—wheat, rice, hand-pulled—vary in texture. Some slip;
+      some chew. The drag of the noodle against chopsticks. Notice the
+      resistance. What does the slip add?
+    follow_ups:
+      - How does texture shape the eat?
+      - What would a mushy noodle lose?
+      - What's the relationship between slip and satisfaction?
+  - id: chn_bok_choy_wilt
+    name: Bok Choy Wilt
+    prompt: |
+      Bok choy in the wok—seconds. It wilts but keeps structure. The green
+      softens. Consider the transformation. What would raw mean? What would
+      overcooked lose?
+    follow_ups:
+      - How does the wilt shape the vegetable?
+      - What's the relationship between heat and green?
+      - When is it done?
+  - id: chn_five_spice
+    name: Five Spice
+    prompt: |
+      Five-spice powder—star anise, clove, cinnamon, Sichuan pepper, fennel.
+      It's a blend with history. Each spice has a route. Trace one. What
+      journey did it make?
+    follow_ups:
+      - What would the dish be without it?
+      - How does the blend create identity?
+      - What's the relationship between spice and preservation?
+  - id: chn_banquet_progression
+    name: Banquet Progression
+    prompt: |
+      A Chinese banquet has arc—cold dishes first, then hot, soup, rice, dessert.
+      The progression is narrative. Notice the rhythm. What would a different
+      order do?
+    follow_ups:
+      - How does sequence shape the meal?
+      - What's the relationship between first and last?
+      - When does the story peak?
+  - id: chn_white_rice_center
+    name: White Rice Center
+    prompt: |
+      White rice—plain, steamed—anchors the meal. It's the canvas. Rich dishes
+      need rice to balance. Notice when you reach for it. What would the meal
+      be without the plain?
+    follow_ups:
+      - How does rice shape the palate?
+      - What would fried rice do?
+      - What's the relationship between neutral and flavor?
+  - id: chn_szechuan_numb
+    name: Sichuan Numb
+    prompt: |
+      Sichuan peppercorn—ma la—numbing, tingling. It's not heat; it's sensation.
+      The mouth buzzes. Consider the sensation. What would the dish be without
+      the numbing?
+    follow_ups:
+      - How does ma la shape the experience?
+      - What's the relationship between numbing and heat?
+      - Why pair them?
+  - id: chn_dark_soy
+    name: Dark Soy
+    prompt: |
+      Dark soy—thicker, sweeter, for color. It stains the rice, glazes the
+      meat. It's not for salt; it's for hue. Consider the visual. What does
+      the dark add?
+    follow_ups:
+      - What would light soy do?
+      - How does color shape expectation?
+      - What's the relationship between dark and caramel?
+  - id: chn_hot_plate
+    name: Hot Plate
+    prompt: |
+      Sizzling plates—beef, squid—arrive hissing. The iron plate keeps cooking.
+      The sound is theatre. What would the dish be without the sizzle? How
+      does the hot plate extend the cook?
+    follow_ups:
+      - How does the sizzle shape the experience?
+      - What would a cold plate mean?
+      - What's the relationship between sound and heat?
+  - id: chn_congee_soft
+    name: Congee Soft
+    prompt: |
+      Congee—rice porridge—is soft, comforting. Long-cooked rice breaks down.
+      The texture is surrender. Consider the transformation. What would al dente
+      mean here?
+    follow_ups:
+      - How does softness shape the dish?
+      - What would thick congee do?
+      - What's the relationship between water and rice?
+  - id: chn_glass_noodle
+    name: Glass Noodle
+    prompt: |
+      Glass noodles—mung bean starch—are transparent, slippery. They absorb
+      flavor. Notice the texture. What would wheat noodles do? How does
+      transparency matter?
+    follow_ups:
+      - How does the noodle shape the dish?
+      - What's the relationship between clear and absorb?
+      - Why glass?
+  - id: chn_xlb_burst
+    name: XLB Burst
+    prompt: |
+      Xiaolongbao—soup dumpling—holds broth inside. The first bite can burn or
+      burst. The technique: nip, sip, eat. Consider the risk. What would a
+      cold xlb mean?
+    follow_ups:
+      - How does the soup shape the experience?
+      - What would you lose without the burst?
+      - What's the relationship between temperature and danger?
+  - id: chn_tea_smell
+    name: Tea Smell
+    prompt: |
+      Oolong, jasmine, pu-erh—each tea has a different nose. Smell before sip.
+      The aroma is half the experience. What does the smell promise? What does
+      it deliver?
+    follow_ups:
+      - How does smell shape the sip?
+      - What would the tea be without aroma?
+      - What's the relationship between steep and scent?
+  - id: chn_crab_crack
+    name: Crab Crack
+    prompt: |
+      Crab at a Chinese banquet—crackers provided. The crack is sound and labor.
+      The meat is extracted. Consider the choreography. What would pre-cracked
+      mean?
+    follow_ups:
+      - How does the crack shape the meal?
+      - What would you lose without the work?
+      - What's the relationship between effort and reward?
+  - id: chn_turn_table
+    name: Turn Table
+    prompt: |
+      The lazy susan—who turns it? When? The dish you want might be across the
+      table. The turn is etiquette. Notice the dance. What are the rules?
+      When do you wait?
+    follow_ups:
+      - How does the turn shape the meal?
+      - What would fixed dishes mean?
+      - What's the relationship between turn and share?
+  - id: chn_ginger_slice
+    name: Ginger Slice
+    prompt: |
+      Ginger with seafood—slim slices, sometimes fried. It cuts fishy. The
+      ginger is both garnish and function. Consider its role. What would the
+      fish be without it?
+    follow_ups:
+      - How does ginger shape the palate?
+      - What's the relationship between slice and scent?
+      - Why ginger with seafood?
+  - id: chn_hoisin_dip
+    name: Hoisin Dip
+    prompt: |
+      Hoisin with Peking duck—the dip is ritual. The pancake, the duck, the
+      scallion, the sauce. Each element has place. Consider the composition.
+      What would one missing do?
+    follow_ups:
+      - How does the dip shape the bite?
+      - What would another sauce do?
+      - What's the relationship between sweet and duck?
+  - id: chn_leaf_wrap
+    name: Leaf Wrap
+    prompt: |
+      lettuce wrap—minced meat, herbs, sauce, wrapped in a leaf. The leaf is
+      vessel and texture. The wrap is handwork. Consider the architecture.
+      What would a tortilla do?
+    follow_ups:
+      - How does the leaf shape the bite?
+      - What would a plate do?
+      - What's the relationship between wrap and hand?
+  - id: chn_fish_whole
+    name: Fish Whole
+    prompt: |
+      Whole fish—steamed, head and tail on. The fish is presented complete.
+      The head has meaning. Consider the presentation. What would a fillet
+      sacrifice?
+    follow_ups:
+      - How does the whole shape the dish?
+      - What does the head mean?
+      - What's the relationship between whole and respect?
+  - id: chn_scallion_oil
+    name: Scallion Oil
+    prompt: |
+      Scallion oil—sizzling oil over minced scallion and ginger. It's a
+      dressing, a finish. The oil carries the aromatics. Notice when it's
+      applied. What does the sizzle add?
+    follow_ups:
+      - What would the dish be without it?
+      - How does the oil shape the finish?
+      - What's the relationship between oil and aroma?
+  - id: chn_black_vinegar
+    name: Black Vinegar
+    prompt: |
+      Chinkiang vinegar—dark, complex, slightly sweet. It cuts richness. A few
+      drops change the dumpling. Consider the acid. What would rice vinegar
+      do? What does the dark add?
+    follow_ups:
+      - How does the vinegar shape the bite?
+      - What would the dumpling be without it?
+      - What's the relationship between vinegar and balance?
+  - id: chn_sticky_rice
+    name: Sticky Rice
+    prompt: |
+      Sticky rice in lotus leaf—lo mai gai. The leaf imparts flavor. The rice
+      is wrapped, steamed. Unwrap it. Notice the scent. What would foil do?
+    follow_ups:
+      - How does the leaf shape the rice?
+      - What's the relationship between wrap and steam?
+      - What would unwrapped mean?
+  - id: chn_mooncake_mold
+    name: Mooncake Mold
+    prompt: |
+      Mooncakes—stamped with characters, patterns. The mold is history. The
+      design means something. Consider the imprint. What would a plain cake
+      lose?
+    follow_ups:
+      - How does the mold shape the cake?
+      - What does the pattern mean?
+      - What's the relationship between imprint and tradition?
+  - id: chn_egg_tart
+    name: Egg Tart
+    prompt: |
+      Egg tart—Portuguese influence, Hong Kong refinement. The custard, the
+      pastry. Consider the texture. Flaky, silky. What would a different
+      crust do?
+    follow_ups:
+      - How does the tart shape the meal's end?
+      - What's the relationship between custard and crisp?
+      - Why egg tart to close?
+  - id: chn_hand_pull
+    name: Hand Pull
+    prompt: |
+      Hand-pulled noodles—the cook stretches, folds, pulls. The strands multiply.
+      It's performance. Watch it. What would machine noodles sacrifice?
+    follow_ups:
+      - How does the pull shape the noodle?
+      - What's the relationship between hand and texture?
+      - What would uniform noodles mean?
+  - id: chn_bird_nest
+    name: Bird Nest
+    prompt: |
+      Bird's nest—not the swallow's nest of soup, but taro nest, or crispy
+      noodle nest holding stir-fry. The nest is architecture. Consider the
+      form. What does the nest add?
+    follow_ups:
+      - How does the nest shape the dish?
+      - What would a plate do?
+      - What's the relationship between vessel and content?
+  - id: chn_red_envelope
+    name: Red Envelope
+    prompt: |
+      At banquets, red envelopes may accompany gifts—money for the kitchen, for
+      the hosts. The envelope is ritual. Consider the exchange. What does the
+      red mean?
+    follow_ups:
+      - How does the envelope shape the occasion?
+      - What would no envelope mean?
+      - What's the relationship between gift and face?
+  - id: chn_toasting_ritual
+    name: Toasting Ritual
+    prompt: |
+      Gan bei—bottoms up—or casual sips. The toast structures the banquet.
+      Who toasts whom? When? The ritual is social. Notice the choreography.
+      What would the meal be without toasts?
+    follow_ups:
+      - How does toasting shape the meal?
+      - What's the relationship between toast and hierarchy?
+      - When do you drink?
+  - id: chn_preserved_veg
+    name: Preserved Vegetable
+    prompt: |
+      Preserved mustard, pickled radish, fermented cabbage—these add depth.
+      They're ancient preservation. Consider the transformation. What would
+      fresh vegetable do?
+    follow_ups:
+      - How does preservation shape the dish?
+      - What's the relationship between pickle and umami?
+      - Why preserved?
+  - id: chn_sweet_sour
+    name: Sweet Sour
+    prompt: |
+      Sweet and sour—the balance is deliberate. Sugar, vinegar, sometimes
+      ketchup. The sauce is bold. Consider the combination. What would one
+      without the other mean?
+    follow_ups:
+      - How does the balance shape the dish?
+      - What's the relationship between sweet and sour?
+      - Why this pairing?
+  - id: chn_wonton_soup
+    name: Wonton Soup
+    prompt: |
+      Wonton in clear broth—the soup is simple. The wonton floats. The broth
+      is clean. Consider the contrast with fried wonton. What does the soup
+      add?
+    follow_ups:
+      - How does the broth shape the wonton?
+      - What would fried mean?
+      - What's the relationship between clear and rich?
+  - id: chn_cold_dish_start
+    name: Cold Dish Start
+    prompt: |
+      Cold dishes open the meal—drunken chicken, jellyfish, pickles. They wake
+      the palate. The contrast with what follows. Consider the opening. What
+      would a hot start do?
+    follow_ups:
+      - How does the cold shape the meal?
+      - What's the relationship between first and next?
+      - Why cold first?
+  - id: chn_fried_rice_wok
+    name: Fried Rice Wok
+    prompt: |
+      Fried rice needs a wok—high heat, quick toss. Day-old rice, ideally.
+      The grains separate. Consider the technique. What would a skillet
+      sacrifice?
+    follow_ups:
+      - How does the wok shape the rice?
+      - What would fresh rice do?
+      - What's the relationship between heat and separation?
+  - id: chn_lychee_dessert
+    name: Lychee Dessert
+    prompt: |
+      Lychee for dessert—fresh, canned, in syrup. The fruit closes the meal.
+      Sweet, perfumed. Consider the ending. What would another fruit do?
+    follow_ups:
+      - How does lychee shape the close?
+      - What's the relationship between fruit and finale?
+      - Why lychee?
+  - id: chn_fortune_cookie
+    name: Fortune Cookie
+    prompt: |
+      Fortune cookie—American-Chinese invention. The cookie is theater. Crack
+      it. Read the fortune. The cookie is not authentic, but it's ritual.
+      Consider its place.
+    follow_ups:
+      - What would the meal end like without it?
+      - How does the fortune shape the close?
+      - What's the relationship between cookie and expectation?
+  - id: chn_century_egg
+    name: Century Egg
+    prompt: |
+      Century egg—preserved in ash, clay, lime. The yolk turns gray-green,
+      the white darkens to jelly. It's transformation over weeks. Consider the
+      archaeology. What would fresh egg be? What does preservation add?
+    follow_ups:
+      - How does the preservation shape the texture?
+      - What would the dish be without the egg?
+      - What's the relationship between time and transformation?

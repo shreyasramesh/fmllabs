@@ -1,0 +1,481 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinary Lab — Indian
+
+id: culinary_lab_indian
+name: Culinary Lab — Indian
+description: 50 cards to shift how you experience Indian food—from the chemistry
+  of spices and heat to the archaeology of ingredients and the choreography of
+  the shared table.
+domain: culinary_lab
+cards:
+  - id: ind_tadka_crackle
+    name: The Tadka Crackle
+    prompt: |
+      Tadka—tempering—is the opening note. Hot oil meets mustard seed, cumin,
+      curry leaf. Listen. The crackle is chemistry in real time. What changes
+      when you hear it before you taste it?
+    follow_ups:
+      - How does the sound shape anticipation?
+      - What would the dish lose without the crackle?
+      - What's the relationship between sound and flavor?
+  - id: ind_spice_route
+    name: Spice Route
+    prompt: |
+      Cardamom came from Kerala. Saffron from Kashmir. Black pepper once worth
+      its weight in gold. Trace one spice on your plate back to its origin.
+      What journey did it make to reach you?
+    follow_ups:
+      - How does knowing the route change the bite?
+      - What other spices traveled the same path?
+      - What's the relationship between trade and taste?
+  - id: ind_thali_geometry
+    name: Thali Geometry
+    prompt: |
+      A thali is a canvas—bowls arranged in a circle, each with a role. Study
+      the composition. Where does the eye land first? What's the negative space?
+    follow_ups:
+      - What would happen if one bowl were missing?
+      - How does the arrangement shape the meal?
+      - What's the relationship between geometry and ritual?
+  - id: ind_hand_as_tool
+    name: Hand as Tool
+    prompt: |
+      Roti torn, mixed with sabzi, folded into the mouth. The hand is utensil
+      and sensor. Notice the choreography. What does touch add that fork and
+      knife cannot?
+    follow_ups:
+      - How does eating with hands change pace?
+      - What would be lost with silverware?
+      - What's the relationship between touch and temperature?
+  - id: ind_heat_layers
+    name: Heat Layers
+    prompt: |
+      Indian heat is layered—chili’s burn, black pepper’s warmth, ginger’s
+      fire. Take one bite and map where each heat lands. Tongue, throat, belly.
+      How do they build?
+    follow_ups:
+      - What would the dish be with only one heat?
+      - How does layering create complexity?
+      - What's the relationship between heat and time?
+  - id: ind_yogurt_intervention
+    name: Yogurt Intervention
+    prompt: |
+      Raita, dahi, lassi—yogurt cools, cuts, balances. Notice the moment you
+      add it. Acid meets fat, cool meets heat. The intervention is chemical.
+      What does it interrupt?
+    follow_ups:
+      - What would the meal be without yogurt?
+      - How does the contrast create relief?
+      - What's the relationship between intervention and balance?
+  - id: ind_betel_after
+    name: Betel After
+    prompt: |
+      Paan—betel leaf—ends the meal in some traditions. It's not dessert. It's
+      closure. The palate shifts again. What does the ending say about the whole?
+    follow_ups:
+      - How does paan mark transition?
+      - What would the meal lack without it?
+      - What's the relationship between ending and memory?
+  - id: ind_street_chaos
+    name: Street Chaos
+    prompt: |
+      A chaat wallah works at speed—bhel, papdi, chutneys layered in seconds.
+      Watch the performance. The stall is theatre. What's the script? Who's
+      the audience?
+    follow_ups:
+      - What would the dish be without the performance?
+      - How does speed shape the experience?
+      - What's the relationship between chaos and craft?
+  - id: ind_tandoor_breathe
+    name: Tandoor Breathe
+    prompt: |
+      A tandoor breathes—flames, smoke, clay. Naan slapped to the wall, pulled
+      when blistered. Stand near one. The heat, the smell. What's the
+      relationship between fire and flavor?
+    follow_ups:
+      - What would naan be without the tandoor?
+      - How does clay shape the cook?
+      - What's the relationship between breath and bread?
+  - id: ind_turmeric_stain
+    name: Turmeric Stain
+    prompt: |
+      Turmeric stains—fingers, cloth, plastic. The color persists. Notice what
+      it marks. The stain is archaeology. Where has this meal traveled before
+      it reached you?
+    follow_ups:
+      - What would the dish be without the color?
+      - How does the stain mark labor?
+      - What's the relationship between pigment and preservation?
+  - id: ind_rice_architecture
+    name: Rice Architecture
+    prompt: |
+      Biryani is built—rice layer, meat layer, saffron, fried onion. The
+      structure holds. Unearth it. How does the architecture affect each bite?
+    follow_ups:
+      - What would happen if the layers mixed too soon?
+      - How does structure create surprise?
+      - What's the relationship between building and eating?
+  - id: ind_chutney_spectrum
+    name: Chutney Spectrum
+    prompt: |
+      Mint, tamarind, coconut, tomato—chutneys array like a palette. Each
+      changes the bite. Taste one dish with three chutneys. How does the
+      same base become three different stories?
+    follow_ups:
+      - What would the meal be with only one chutney?
+      - How does choice shape agency?
+      - What's the relationship between spectrum and preference?
+  - id: ind_steam_rising
+    name: Steam Rising
+    prompt: |
+      Idli, dosa, puri—steam rises when the lid lifts. Watch it. The steam
+      carries aroma before taste. What arrives first? Nose or mouth?
+    follow_ups:
+      - How does steam shape anticipation?
+      - What would be lost without the lift?
+      - What's the relationship between vapor and flavor?
+  - id: ind_silver_versus_steel
+    name: Silver Versus Steel
+    prompt: |
+      Some tables use steel thalis, some silver, some banana leaf. Notice the
+      vessel. How does the surface beneath the food change the experience?
+      Weight, sound, tradition.
+    follow_ups:
+      - What would the meal feel like on different surfaces?
+      - How does vessel shape ceremony?
+      - What's the relationship between material and meaning?
+  - id: ind_cumin_fragrance
+    name: Cumin Fragrance
+    prompt: |
+      Roasted cumin seeds release fragrance before flavor. Smell a dish before
+      you taste it. Cumin travels through the room. How does aroma prepare
+      the palate?
+    follow_ups:
+      - What would the dish be without the smell?
+      - How does fragrance mark the cook's presence?
+      - What's the relationship between nose and memory?
+  - id: ind_shared_central
+    name: Shared Central
+    prompt: |
+      Dishes sit in the center. Everyone reaches. There's no "your plate"
+      in the same way. Observe the choreography of reaching, passing, taking.
+      What are the unspoken rules?
+    follow_ups:
+      - What would the meal be with individual portions?
+      - How does sharing create connection?
+      - What's the relationship between central and communal?
+  - id: ind_ghee_gloss
+    name: Ghee Gloss
+    prompt: |
+      Ghee pools, shines, coats. It's fat as flavor and as finish. Notice where
+      it gathers on the plate. How does that gloss change texture and temperature?
+    follow_ups:
+      - What would the dish be with oil instead?
+      - How does ghee carry other flavors?
+      - What's the relationship between gloss and richness?
+  - id: ind_papad_crunch
+    name: Papad Crunch
+    prompt: |
+      Papad—crisp, thin, crackling. It's texture as punctuation. Break one.
+      Listen. The crunch is the meal's rhythm section. What would the silence
+      sound like without it?
+    follow_ups:
+      - How does crunch create contrast?
+      - What would the meal lack without papad?
+      - What's the relationship between sound and satisfaction?
+  - id: ind_sambar_depth
+    name: Sambar Depth
+    prompt: |
+      Sambar is layered—lentil, tamarind, vegetables, spice. It's been
+      simmering. Taste for the layers. How many can you separate? What's
+      the archaeology of that bowl?
+    follow_ups:
+      - What would sambar be with fewer layers?
+      - How does time build depth?
+      - What's the relationship between simmer and story?
+  - id: ind_pickle_punch
+    name: Pickle Punch
+    prompt: |
+      Achar—pickle—is the plot twist. One tiny bite shifts everything. Sweet,
+      sour, hot, fermented. Notice when it enters. What does it disrupt?
+    follow_ups:
+      - What would the meal be without pickle?
+      - How does the punch create surprise?
+      - What's the relationship between twist and memory?
+  - id: ind_bay_leaf_hunt
+    name: Bay Leaf Hunt
+    prompt: |
+      Bay leaves hide in pulao, biryani, curries. Find one. You don't eat it—
+      it's archaeology. It traveled from Kerala or Kashmir. What did it add
+      before it was removed?
+    follow_ups:
+      - How does the inedible shape the edible?
+      - What would the dish be without the leaf?
+      - What's the relationship between hidden and present?
+  - id: ind_dosa_edge
+    name: Dosa Edge
+    prompt: |
+      A dosa has an edge—crispy, lace-like, golden. The center is soft. The
+      contrast is architectural. Where do you bite first? How does the edge
+      frame the whole?
+    follow_ups:
+      - What would dosa be if uniformly crisp?
+      - How does edge create interest?
+      - What's the relationship between boundary and center?
+  - id: ind_saffron_thread
+    name: Saffron Thread
+    prompt: |
+      Saffron—a few threads—colors and perfumes a whole dish. Trace one thread.
+      Where did it come from? Kashmir, Iran, Spain? The most expensive spice.
+      What does scarcity add?
+    follow_ups:
+      - How does saffron shape luxury?
+      - What would the dish be with turmeric instead?
+      - What's the relationship between thread and territory?
+  - id: ind_chaat_texture
+    name: Chaat Texture
+    prompt: |
+      Chaat layers texture—crispy, soft, crunchy, creamy—in one bite. Deconstruct
+      it. How many textures? How do they work together? The bite is a
+      collaboration.
+    follow_ups:
+      - What would chaat be with one texture?
+      - How does layering create play?
+      - What's the relationship between texture and delight?
+  - id: ind_mustard_seed_pop
+    name: Mustard Seed Pop
+    prompt: |
+      Mustard seeds pop in oil—Bengali, South Indian tempering. The pop is
+      chemical. Seeds release compounds. Smell it. What changes when heat
+      activates them?
+    follow_ups:
+      - How does the pop mark the cook's timing?
+      - What would the dish be without it?
+      - What's the relationship between pop and potency?
+  - id: ind_dal_surface
+    name: Dal Surface
+    prompt: |
+      Dal has a surface—sometimes skin, sometimes tadka floating. Don't stir
+      yet. Look at it. What does the surface reveal about what's below?
+    follow_ups:
+      - How does the surface invite or resist?
+      - What would happen if you never stirred?
+      - What's the relationship between surface and depth?
+  - id: ind_banana_leaf_plate
+    name: Banana Leaf Plate
+    prompt: |
+      A banana leaf is a plate—organic, disposable, traditional. The leaf has
+      texture, smell. Food sits on it differently. How does the leaf change
+      the meal?
+    follow_ups:
+      - What would the meal be on ceramic?
+      - How does the leaf shape the ritual?
+      - What's the relationship between leaf and place?
+  - id: ind_fenugreek_haunt
+    name: Fenugreek Haunt
+    prompt: |
+      Fenugreek—methi—has a scent that lingers. Bitter, maple-adjacent. It
+      haunts the kitchen, the clothes. Notice where it sticks. What does
+      persistence add?
+    follow_ups:
+      - How does fenugreek mark territory?
+      - What would the dish be without its persistence?
+      - What's the relationship between haunt and memory?
+  - id: ind_pani_puri_moment
+    name: Pani Puri Moment
+    prompt: |
+      Pani puri is a single-bite story—crisp shell, potato, chickpea, tamarind
+      water. It must be eaten whole, immediately. The moment is unrepeatable.
+      What makes it urgent?
+    follow_ups:
+      - What would happen if you waited?
+      - How does urgency create pleasure?
+      - What's the relationship between moment and memory?
+  - id: ind_serving_order
+    name: Serving Order
+    prompt: |
+      In some settings, there's an order—elders first, certain dishes before
+      others. Observe. Who serves? Who waits? The choreography encodes respect.
+      What are the rules?
+    follow_ups:
+      - What would the meal be without the order?
+      - How does sequence create meaning?
+      - What's the relationship between order and hierarchy?
+  - id: ind_cardamom_pod
+    name: Cardamom Pod
+    prompt: |
+      A whole cardamom pod hides in pulao or chai. You might bite it, might
+      push it aside. The pod is archaeology—Green from Kerala, black from
+      the hills. What did it contribute?
+    follow_ups:
+      - How does the whole pod differ from ground?
+      - What would the dish be without it?
+      - What's the relationship between pod and place?
+  - id: ind_kitchen_sounds
+    name: Kitchen Sounds
+    prompt: |
+      An Indian kitchen has a soundscape—grinding, frying, pressure cooker
+      hiss. Close your eyes in one. Map the sounds. What's constant? What's
+      the rhythm?
+    follow_ups:
+      - What would the meal be without those sounds?
+      - How does sound shape anticipation?
+      - What's the relationship between kitchen and table?
+  - id: ind_second_helping
+    name: Second Helping
+    prompt: |
+      "Have some more" is ritual. The insistence, the refusal, the eventual
+      acceptance. Watch the dance. What does the second helping mean beyond
+      hunger?
+    follow_ups:
+      - What would the meal be without the offer?
+      - How does insistence encode care?
+      - What's the relationship between more and enough?
+  - id: ind_coriander_finish
+    name: Coriander Finish
+    prompt: |
+      Fresh coriander—cilantro—tops many dishes. It's the last thing added.
+      The finish. Notice how the green changes what came before. Bright,
+      herbal, divisive.
+    follow_ups:
+      - What would the dish be without the herb?
+      - How does the finish frame the whole?
+      - What's the relationship between last and first?
+  - id: ind_lassi_cut
+    name: Lassi Cut
+    prompt: |
+      Lassi cuts through spice—cool, tangy, thick. It's relief. Notice the
+      moment you drink it. What does it interrupt? What does it reset?
+    follow_ups:
+      - What would the meal be without lassi?
+      - How does the cut extend endurance?
+      - What's the relationship between relief and rhythm?
+  - id: ind_roti_stretch
+    name: Roti Stretch
+    prompt: |
+      Roti is stretched by hand—round, thin, blistered on flame. Watch it
+      being made. The stretch is skill. What would the bread be without
+      that motion?
+    follow_ups:
+      - How does the stretch affect texture?
+      - What would machine-made roti lose?
+      - What's the relationship between motion and result?
+  - id: ind_jaljeera_pause
+    name: Jaljeera Pause
+    prompt: |
+      Jaljeera—cumin, mint, tamarind—is a digestive, a pause. It often arrives
+      mid-meal or after. Notice the shift. What does the pause allow?
+    follow_ups:
+      - What would the meal be without the pause?
+      - How does jaljeera mark transition?
+      - What's the relationship between pause and digestion?
+  - id: ind_color_conversation
+    name: Color Conversation
+    prompt: |
+      Indian plates speak in color—yellow dal, green sabzi, white rice, red
+      chutney. Study the palette. What's the conversation? What would clash?
+      What harmonizes?
+    follow_ups:
+      - How does color shape appetite?
+      - What would the plate be in monochrome?
+      - What's the relationship between palette and region?
+  - id: ind_clove_buried
+    name: Clove Buried
+    prompt: |
+      Cloves hide in biryani, garam masala, chai. They're pungent, warm.
+      Find one. You might bite it. The clove is a relic of the spice trade.
+      What territories does it connect?
+    follow_ups:
+      - How does the whole clove differ from ground?
+      - What would the dish be without cloves?
+      - What's the relationship between clove and colonialism?
+  - id: ind_family_style
+    name: Family Style
+    prompt: |
+      Food arrives in bowls for the table. Everyone eats from them. The
+      meal is a shared project. Observe who takes what, who waits, who
+      serves. What's the economy of the table?
+    follow_ups:
+      - What would the meal be with individual plates?
+      - How does sharing encode values?
+      - What's the relationship between style and family?
+  - id: ind_asafoetida_whiff
+    name: Asafoetida Whiff
+    prompt: |
+      Hing—asafoetida—smells fierce raw, magical cooked. A pinch transforms
+      dal, sabzi. It's the secret. Notice when you catch it. What does
+      the whiff add?
+    follow_ups:
+      - How does hing mark the cook's hand?
+      - What would the dish be without it?
+      - What's the relationship between whiff and transformation?
+  - id: ind_gulab_jamun_weight
+    name: Gulab Jamun Weight
+    prompt: |
+      Gulab jamun is dense—fried milk solid, soaked in syrup. Feel its
+      weight on the tongue. Sweet, heavy, final. How does the dessert
+      close the meal?
+    follow_ups:
+      - What would the meal end like without it?
+      - How does weight create closure?
+      - What's the relationship between dessert and fullness?
+  - id: ind_temple_prasad
+    name: Temple Prasad
+    prompt: |
+      Prasad—blessed food—is given at temples. It might be simple: laddu,
+      rice. But it carries another meaning. Eat it with that awareness.
+      What changes when food is gifted?
+    follow_ups:
+      - How does prasad differ from restaurant food?
+      - What does the blessing add?
+      - What's the relationship between gift and devotion?
+  - id: ind_bone_suck
+    name: Bone Suck
+    prompt: |
+      Some Indian dishes—nihari, paya—invite sucking the bone. It's not
+      polite elsewhere. Here it's expected. The marrow, the connective
+      tissue. What does the suck extract?
+    follow_ups:
+      - How does the act cross propriety?
+      - What would the dish lose without the bone?
+      - What's the relationship between suck and surrender?
+  - id: ind_pressure_cooker_song
+    name: Pressure Cooker Song
+    prompt: |
+      The pressure cooker whistles—one, two, three. It's the soundtrack of
+      dal and rice. That sound means done. What would the kitchen be without
+      it? How does the song shape time?
+    follow_ups:
+      - How does the whistle mark doneness?
+      - What would we lose with an instant pot?
+      - What's the relationship between sound and safety?
+  - id: ind_curry_leaf_sizzle
+    name: Curry Leaf Sizzle
+    prompt: |
+      Curry leaves hit hot oil—South Indian tempering. They crackle, release
+      aroma. You don't eat them; they're for flavor. But they're present.
+      What does their presence add?
+    follow_ups:
+      - What would the dish be without curry leaves?
+      - How does the inedible carry flavor?
+      - What's the relationship between leaf and memory?
+  - id: ind_mint_chutney_bright
+    name: Mint Chutney Bright
+    prompt: |
+      Mint chutney is fresh—blitz of herb, green chili, lime. It cuts through
+      richness, brightens the plate. Notice the color against the rest of the
+      thali. What does green do to the composition?
+    follow_ups:
+      - What would the meal be without the chutney?
+      - How does freshness interrupt the narrative?
+      - What's the relationship between bright and balance?
+  - id: ind_wedding_feast
+    name: Wedding Feast
+    prompt: |
+      Indian wedding food is scale—hundreds, thousands fed. The buffet, the
+      variety, the excess. Notice the choreography. How does the scale change
+      the meal? What's the relationship between celebration and consumption?
+    follow_ups:
+      - What would the wedding be without the feast?
+      - How does abundance encode hospitality?
+      - What's the relationship between feast and status?

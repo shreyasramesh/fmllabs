@@ -19,6 +19,7 @@ export interface PerspectiveDeckIndexEntry {
 }
 
 export interface PerspectiveDeckIndex {
+  domains?: Record<string, string>;
   decks: PerspectiveDeckIndexEntry[];
 }
 

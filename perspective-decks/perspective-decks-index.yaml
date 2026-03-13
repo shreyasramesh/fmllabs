@@ -2,6 +2,15 @@
 # Perspective Decks Index
 # Paths and descriptions for each deck
 
+domains:
+  urban_jungle: |
+    Instead of just walking through a city, you look at it as a living organism.
+    Cards focus on the scars of old buildings, the choreography of traffic,
+    and the secret lives of alleyways.
+  culinary_lab: |
+    Shifting from tasty to transformative. Explore the chemistry of a bite,
+    the history of an ingredient, and the soundtrack of a restaurant.
+
 decks:
   - id: ways_of_looking_at_art
     name: Ways of Looking at Art
@@ -51,3 +60,47 @@ decks:
       50 cards to shift how you see Bangalore—from scale and light to layers of
       history and the rhythms of street life.
     domain: urban_jungle
+
+  - id: culinary_lab_indian
+    name: Culinary Lab — Indian
+    path: perspective-decks/culinary-lab/culinary-lab-indian.yaml
+    description: |
+      50 cards to shift how you experience Indian food—from the chemistry of
+      spices and heat to the archaeology of ingredients and the choreography of
+      the shared table.
+    domain: culinary_lab
+
+  - id: culinary_lab_italian
+    name: Culinary Lab — Italian
+    path: perspective-decks/culinary-lab/culinary-lab-italian.yaml
+    description: |
+      50 cards to shift how you experience Italian food—from the chemistry of
+      olive oil and acid to the social choreography of the table and the
+      archaeology of each ingredient.
+    domain: culinary_lab
+
+  - id: culinary_lab_pizza
+    name: Culinary Lab — Pizza
+    path: perspective-decks/culinary-lab/culinary-lab-pizza.yaml
+    description: |
+      50 cards to shift how you experience pizza—from the chemistry of dough
+      and fire to the theatre of the slice and the archaeology of toppings.
+    domain: culinary_lab
+
+  - id: culinary_lab_chinese
+    name: Culinary Lab — Chinese
+    path: perspective-decks/culinary-lab/culinary-lab-chinese.yaml
+    description: |
+      50 cards to shift how you experience Chinese food—from the chemistry of
+      wok hei and the archaeology of soy to the choreography of the round table
+      and the narrative of the banquet.
+    domain: culinary_lab
+
+  - id: culinary_lab_sushi
+    name: Culinary Lab — Sushi
+    path: perspective-decks/culinary-lab/culinary-lab-sushi.yaml
+    description: |
+      50 cards to shift how you experience sushi—from the chemistry of rice
+      and fish to the choreography of the counter and the archaeology of each
+      neta's origin.
+    domain: culinary_lab

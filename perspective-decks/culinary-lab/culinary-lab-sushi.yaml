@@ -1,0 +1,493 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinary Lab — Sushi
+
+id: culinary_lab_sushi
+name: Culinary Lab — Sushi
+description: 50 cards to shift how you experience sushi—from the chemistry of
+  rice and fish to the choreography of the counter and the archaeology of
+  each neta's origin.
+domain: culinary_lab
+cards:
+  - id: sush_rice_temp
+    name: Rice Temperature
+    prompt: |
+      Sushi rice is warm—body temperature, roughly. Not cold. The warmth
+      carries the vinegar. Feel it. What would cold rice do? How does
+      temperature shape the bite?
+    follow_ups:
+      - What would room-temp sacrifice?
+      - How does warmth carry flavor?
+      - What's the relationship between temp and texture?
+  - id: sush_shari_balance
+    name: Shari Balance
+    prompt: |
+      Shari—the rice—is half the sushi. The balance of vinegar, salt, sugar is
+      precise. Taste the rice alone. What does it bring? What would bland
+      rice mean?
+    follow_ups:
+      - How does the rice shape the neta?
+      - What would too much vinegar do?
+      - What's the relationship between shari and neta?
+  - id: sush_counter_ritual
+    name: Counter Ritual
+    prompt: |
+      Omakase at the counter—you face the chef. The sushi arrives piece by
+      piece. The counter is a stage. Notice the choreography. What's the
+      rhythm? Who sets the pace?
+    follow_ups:
+      - What would a table change?
+      - How does the counter shape the meal?
+      - What's the relationship between chef and guest?
+  - id: sush_net_origin
+    name: Neta Origin
+    prompt: |
+      Each neta—the topping—came from somewhere. Toyosu. Tsukiji. A boat. A
+      ranch. Ask. Trace the fish. What journey did it make? What would
+      frozen-from-warehouse mean?
+    follow_ups:
+      - How does origin shape the piece?
+      - What would another source do?
+      - What's the relationship between place and quality?
+  - id: sush_wasabi_hidden
+    name: Wasabi Hidden
+    prompt: |
+      Real wasabi—grated root—is rare. Most is horseradish and dye. But when
+      it's real, it's different. Sharp, green, fleeting. Notice the heat.
+      What would the fake add? Subtract?
+    follow_ups:
+      - How does wasabi shape the bite?
+      - What would no wasabi mean?
+      - What's the relationship between heat and fish?
+  - id: sush_finger_over_chopstick
+    name: Finger Over Chopstick
+    prompt: |
+      Nigiri is traditionally eaten with fingers—not chopsticks. The fingers
+      feel the temperature, the texture. Try it. What does the finger add
+      that the chopstick cannot?
+    follow_ups:
+      - How does the hand shape the experience?
+      - What would chopsticks do?
+      - What's the relationship between touch and taste?
+  - id: sush_piece_by_piece
+    name: Piece by Piece
+    prompt: |
+      Sushi arrives one piece at a time—or two. The pace is deliberate. You
+      eat; you wait. Consider the rhythm. What would a platter of ten at
+      once sacrifice?
+    follow_ups:
+      - How does the pace shape the meal?
+      - What would speed do?
+      - What's the relationship between piece and attention?
+  - id: sush_gari_palate
+    name: Gari Palate
+    prompt: |
+      Gari—pickled ginger—cleanses between pieces. It's not garnish; it's
+      reset. Notice when you eat it. What would consecutive pieces without
+      gari do to the palate?
+    follow_ups:
+      - How does gari shape the progression?
+      - What would no gari mean?
+      - What's the relationship between reset and taste?
+  - id: sush_soy_minimal
+    name: Soy Minimal
+    prompt: |
+      Soy—a light dip, fish-side down. Not rice. The rice would absorb too
+      much. The chef may have already brushed soy. Notice. What would
+      drenching do?
+    follow_ups:
+      - How does soy shape the piece?
+      - What would no soy mean?
+      - What's the relationship between dip and balance?
+  - id: sush_knife_matters
+    name: Knife Matters
+    prompt: |
+      The sushi knife—single-bevel, sharp. The cut affects texture. Against
+      the grain or with it. The angle. Consider what the blade does. What
+      would a dull knife sacrifice?
+    follow_ups:
+      - How does the cut shape the fish?
+      - What would a different angle do?
+      - What's the relationship between blade and mouthfeel?
+  - id: sush_otoro_fat
+    name: Otoro Fat
+    prompt: |
+      Otoro—the fattiest tuna—melts. The fat is the point. Consider the
+      marbling. What would lean akami do? How does fat shape the experience?
+    follow_ups:
+      - What would the piece be without the fat?
+      - How does marbling create luxury?
+      - What's the relationship between fat and melt?
+  - id: sush_unagi_glaze
+    name: Unagi Glaze
+    prompt: |
+      Unagi—eel—is brushed with sweet sauce, sometimes grilled again. The
+      glaze is lacquer. Consider the sheen. What would unglazed eel mean?
+    follow_ups:
+      - How does the glaze shape the piece?
+      - What's the relationship between sweet and eel?
+      - Why glaze?
+  - id: sush_nori crisp
+    name: Nori Crisp
+    prompt: |
+      Nori for maki—toasted, crisp, or soft? Different chefs choose
+      differently. The nori affects the bite. Consider the texture. What
+      would soggy nori do?
+    follow_ups:
+      - How does nori shape the roll?
+      - What would a different toast mean?
+      - What's the relationship between crisp and fresh?
+  - id: sush_silence_counter
+    name: Silence at Counter
+    prompt: |
+      Some sushi counters are quiet—concentration, respect. Others are
+      lively. Notice the soundscape. What does silence add? What does
+      conversation add?
+    follow_ups:
+      - How does sound shape the meal?
+      - What would loud music do?
+      - What's the relationship between quiet and focus?
+  - id: sush_tamago_sweet
+    name: Tamago Sweet
+    prompt: |
+      Tamago—the egg custard—often ends the meal. It's sweet, layered. The
+      chef's skill is visible. Consider the closer. What would raw fish
+      as the last piece mean?
+    follow_ups:
+      - How does tamago shape the ending?
+      - What's the relationship between sweet and close?
+      - Why egg last?
+  - id: sush_tuna_spectrum
+    name: Tuna Spectrum
+    prompt: |
+      Akami, chutoro, otoro—lean to fat. The spectrum is deliberate. Taste
+      them in order if you can. How does the progression work? What does
+      each offer?
+    follow_ups:
+      - How does fat shape the spectrum?
+      - What would one grade alone mean?
+      - What's the relationship between lean and rich?
+  - id: sush_ume_shiso
+    name: Ume Shiso
+    prompt: |
+      Ume—pickled plum—and shiso in some rolls. Tart, herbaceous. They cut
+      richness. Notice when they appear. What would the roll be without them?
+    follow_ups:
+      - How does ume shape the bite?
+      - What's the relationship between tart and fish?
+      - Why shiso?
+  - id: sush_gunkan_hold
+    name: Gunkan Hold
+    prompt: |
+      Gunkan—battleship—holds loose toppings. Roe, sea urchin. The nori
+      collar contains. Consider the form. What would a flat piece do?
+    follow_ups:
+      - How does the form shape the topping?
+      - What would a different vessel mean?
+      - What's the relationship between hold and spill?
+  - id: sush_uni_risk
+    name: Uni Risk
+    prompt: |
+      Uni—sea urchin—is polarizing. Sweet, briny, texture. It can be perfect
+      or off. Consider the risk. What would safe salmon mean? What does
+      the risk add?
+    follow_ups:
+      - How does uni shape the experience?
+      - What would you lose without the risk?
+      - What's the relationship between polarizing and memorable?
+  - id: sush_chef_choice
+    name: Chef's Choice
+    prompt: |
+      Omakase—chef's choice. You surrender control. The chef reads the day,
+      the fish, you. Consider the trust. What would choosing yourself change?
+    follow_ups:
+      - How does surrender shape the meal?
+      - What would a menu order mean?
+      - What's the relationship between trust and experience?
+  - id: sush_sake_pair
+    name: Sake Pair
+    prompt: |
+      Sake with sushi—cold, warm, aged. The pairing is considered. Notice
+      when you sip. Does it clear? Enhance? Consider the drink's role.
+    follow_ups:
+      - How does sake shape the piece?
+      - What would wine do?
+      - What's the relationship between rice and rice wine?
+  - id: sush_ikura_pop
+    name: Ikura Pop
+    prompt: |
+      Ikura—salmon roe—pops. The burst is texture and brine. Consider the
+      sensation. What would cooked roe do? How does the pop shape the bite?
+    follow_ups:
+      - What would the piece be without the pop?
+      - How does texture create pleasure?
+      - What's the relationship between pop and salt?
+  - id: sush_hirame_chew
+    name: Hirame Chew
+    prompt: |
+      Hirame—flounder—has a different chew than tuna. It's lean, delicate.
+      Notice the texture. What would fatty fish do? How does chew vary?
+    follow_ups:
+      - How does texture shape the piece?
+      - What's the relationship between lean and delicate?
+      - Why order hirame?
+  - id: sush_amaebi_head
+    name: Amaebi Head
+    prompt: |
+      Amaebi—sweet shrimp—sometimes served with the head fried. The head is
+      crispy, umami. Consider the use of the whole. What would headless
+      shrimp sacrifice?
+    follow_ups:
+      - How does the head shape the dish?
+      - What's the relationship between whole and respect?
+      - Why fry the head?
+  - id: sush_mirin_gloss
+    name: Mirin Gloss
+    prompt: |
+      Some pieces are brushed with nikiri—soy, mirin, sake. The gloss is
+      finish. The chef has sauced it. Consider whether to add more soy.
+      What would over-dipping do?
+    follow_ups:
+      - How does the brush shape the piece?
+      - What would no brush mean?
+      - What's the relationship between chef's hand and yours?
+  - id: sush_anago_soft
+    name: Anago Soft
+    prompt: |
+      Anago—saltwater eel—is softer than unagi. Different species, different
+      preparation. Notice the texture. What would unagi's firmness do?
+    follow_ups:
+      - How does the soft shape the piece?
+      - What's the relationship between anago and unagi?
+      - Why both eels?
+  - id: sush_saba_silver
+    name: Saba Silver
+    prompt: |
+      Saba—mackerel—is often cured. The silver skin, the oily flesh. It's
+      strong. Consider the preservation. What would raw mackerel mean?
+    follow_ups:
+      - How does curing shape the fish?
+      - What's the relationship between oil and cure?
+      - Why cure saba?
+  - id: sush_ginger_between
+    name: Ginger Between
+    prompt: |
+      Gari between pieces—the reset. But when? After each? After several?
+      The rhythm is yours. Notice your pattern. What would no reset do?
+    follow_ups:
+      - How does timing shape the gari?
+      - What's the relationship between piece and piece?
+      - When do you need reset?
+  - id: sush_maki_cut
+    name: Maki Cut
+    prompt: |
+      Maki—rolls—are cut into pieces. Six or eight. The cut affects the
+      cross-section. Consider the spiral. What would a different cut do?
+    follow_ups:
+      - How does the cut shape the bite?
+      - What would fewer pieces mean?
+      - What's the relationship between slice and whole?
+  - id: sush_tobiko_crunch
+    name: Tobiko Crunch
+    prompt: |
+      Tobiko—flying fish roe—adds crunch and color. It's a topping, a garnish.
+      Notice when it appears. What would the roll be without it?
+    follow_ups:
+      - How does tobiko shape the bite?
+      - What's the relationship between crunch and color?
+      - Why flying fish?
+  - id: sush_sashimi_contrast
+    name: Sashimi Contrast
+    prompt: |
+      Sashimi—sans rice—lets the fish stand alone. The purity is different.
+      Compare sashimi to nigiri. What does the rice add? What does its
+      absence reveal?
+    follow_ups:
+      - How does the rice shape nigiri?
+      - What would all sashimi mean?
+      - What's the relationship between fish and rice?
+  - id: sush_tea_rinse
+    name: Tea Rinse
+    prompt: |
+      Green tea at the sushi bar—refilled, shared. It cleanses. The tea is
+      part of the rhythm. Consider its role. What would water do? What would
+      no drink mean?
+    follow_ups:
+      - How does tea shape the meal?
+      - What's the relationship between tea and reset?
+      - Why green tea?
+  - id: sush_bengara_tuna
+    name: Bengara Tuna
+    prompt: |
+      Bengara—lean tuna, often from the back—is darker. The flavor is
+      different from akami. Consider the cut. What part of the fish? What
+      does location do?
+    follow_ups:
+      - How does the cut shape the flavor?
+      - What's the relationship between location and taste?
+      - Why this cut?
+  - id: sush_kohada_cure
+    name: Kohada Cure
+    prompt: |
+      Kohada—gizzard shad—is cured, sometimes vinegared. It's a test of the
+      chef. The silver skin, the balance. Consider the skill. What would
+      uncured do?
+    follow_ups:
+      - How does the cure shape the fish?
+      - What's the relationship between vinegar and silver skin?
+      - Why is it a test?
+  - id: sush_engawa_fin
+    name: Engawa Fin
+    prompt: |
+      Engawa—the fin muscle of flounder—is prized. It has a distinct texture.
+      Consider the part. What would regular hirame do? How does the fin
+      differ?
+    follow_ups:
+      - How does the cut shape the piece?
+      - What's the relationship between fin and muscle?
+      - Why is it prized?
+  - id: sush_first_piece
+    name: First Piece
+    prompt: |
+      The first piece sets the tone. Often something mild—perhaps hirame or
+      tai. The chef is calibrating. Consider the opening. What would otoro
+      first mean?
+    follow_ups:
+      - How does the first shape the meal?
+      - What's the relationship between first and progression?
+      - Why mild first?
+  - id: sush_kampachi_fat
+    name: Kampachi Fat
+    prompt: |
+      Kampachi—young yellowtail—has a subtle fat. It's between lean and
+      rich. Notice the middle ground. What would buri do? What would
+      leaner fish do?
+    follow_ups:
+      - How does the fat shape the piece?
+      - What's the relationship between age and fat?
+      - Why kampachi?
+  - id: sush_nodoguro_char
+    name: Nodoguro Char
+    prompt: |
+      Nodoguro—black throat perch—is often lightly seared. The skin, the fat.
+      The char adds. Consider the application of heat. What would raw do?
+    follow_ups:
+      - How does the sear shape the fish?
+      - What's the relationship between char and fat?
+      - Why sear this one?
+  - id: sush_choji_plate
+    name: Choji Plate
+    prompt: |
+      The plate—or the wood, or the stone—holds the piece. The presentation
+      is minimal. Consider the vessel. What would a busy plate do? What
+      does minimal allow?
+    follow_ups:
+      - How does the plate shape the piece?
+      - What's the relationship between vessel and focus?
+      - Why minimal?
+  - id: sush_tea_cup
+    name: Tea Cup
+    prompt: |
+      The tea cup at the counter—no handle, sometimes rough. You hold it
+      with both hands. Consider the vessel. What would a mug do? What does
+      the cup add?
+    follow_ups:
+      - How does the cup shape the sip?
+      - What's the relationship between vessel and ritual?
+      - Why no handle?
+  - id: sush_silver_slide
+    name: Silver Slide
+    prompt: |
+      The piece should slide off the plate—or be lifted clean. The rice holds
+      but releases. Consider the construction. What would falling-apart rice
+      mean?
+    follow_ups:
+      - How does the structure shape the eat?
+      - What would mushy rice do?
+      - What's the relationship between integrity and bite?
+  - id: sush_kinmedai_skin
+    name: Kinmedai Skin
+    prompt: |
+      Kinmedai—golden eye snapper—often with the skin, lightly torched. The
+      skin adds texture, fat. Consider the torching. What would raw skin do?
+    follow_ups:
+      - How does the skin shape the piece?
+      - What's the relationship between torch and fat?
+      - Why torch?
+  - id: sush_botan_ebi
+    name: Botan Ebi
+    prompt: |
+      Botan ebi—spot prawn—is sweet, often raw. The tail sometimes comes
+      fried. Consider the whole. What would cooked shrimp do?
+    follow_ups:
+      - How does the preparation shape the piece?
+      - What's the relationship between raw and sweet?
+      - Why spot prawn?
+  - id: sush_namida_heat
+    name: Namida Heat
+    prompt: |
+      Real wasabi brings a tear—namida. The heat rises, passes. It's
+      different from chili. Consider the sensation. What would horseradish
+      do differently?
+    follow_ups:
+      - How does the heat shape the bite?
+      - What's the relationship between wasabi and tear?
+      - Why does it make you cry?
+  - id: sush_omakase_end
+    name: Omakase End
+    prompt: |
+      The meal ends—tamago, maybe miso, perhaps a fruit. The arc is complete.
+      Consider the close. What would another piece do? When do you know you're
+      done?
+    follow_ups:
+      - How does the end shape the memory?
+      - What's the relationship between close and satisfaction?
+      - Why end with egg or soup?
+  - id: sush_counter_wait
+    name: Counter Wait
+    prompt: |
+      Between pieces, you wait. The chef prepares. The pause is part of the
+      rhythm. Notice the anticipation. What would instant service sacrifice?
+    follow_ups:
+      - How does the wait shape the piece?
+      - What's the relationship between pause and attention?
+      - Why not pre-plate?
+  - id: sush_tsukiji_legacy
+    name: Tsukiji Legacy
+    prompt: |
+      Tsukiji is gone; Toyosu took its place. But the fish still flows through
+      Tokyo. Consider the market. What would sushi be without the auction?
+      Without the distribution?
+    follow_ups:
+      - How does the market shape the fish?
+      - What's the relationship between auction and quality?
+      - What did Tsukiji mean?
+  - id: sush_edomae_spirit
+    name: Edomae Spirit
+    prompt: |
+      Edomae—Edo-style—sushi from Tokyo's tradition. Preserved, cured, aged
+      to work without refrigeration. Consider the history. What would
+      always-fresh mean?
+    follow_ups:
+      - How does history shape the technique?
+      - What's the relationship between preservation and flavor?
+      - Why Edomae?
+  - id: sush_gari_reset
+    name: Gari Reset
+    prompt: |
+      Gari—pickled ginger—cleanses between pieces. The pale pink slices reset
+      the palate. Notice when you reach for it. What would the meal be without
+      the reset? How does the ginger shape the progression?
+    follow_ups:
+      - What would no gari mean?
+      - How does the reset shape the next piece?
+      - What's the relationship between pause and continuity?
+  - id: sush_otoro_melt
+    name: Otoro Melt
+    prompt: |
+      Otoro—fattiest tuna—nearly dissolves on the tongue. The fat is the
+      point. Consider the texture. What would lean tuna do? How does the
+      melt mark the peak of the meal?
+    follow_ups:
+      - What would akami do differently?
+      - How does the fat shape the experience?
+      - What's the relationship between melt and luxury?

@@ -1,0 +1,477 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinary Lab — Pizza
+
+id: culinary_lab_pizza
+name: Culinary Lab — Pizza
+description: 50 cards to shift how you experience pizza—from the chemistry of
+  dough and fire to the theatre of the slice and the archaeology of toppings.
+domain: culinary_lab
+cards:
+  - id: piz_dough_stretch
+    name: Dough Stretch
+    prompt: |
+      Watch dough being stretched—hand-tossed, or pressed. The gluten network
+      stretches, traps air. The shape is chosen. What would a square slice
+      mean differently than a triangle?
+    follow_ups:
+      - How does the stretch define the experience?
+      - What would the pizza be without the stretch?
+      - What's the relationship between hand and shape?
+  - id: piz_oven_breath
+    name: Oven Breath
+    prompt: |
+      A pizza oven breathes—wood fire, or gas, or electric. The dome holds heat.
+      The floor transfers it. Stand near one. What does the oven demand of the
+      cook? Of the dough?
+    follow_ups:
+      - What would pizza be without the oven?
+      - How does heat shape the crust?
+      - What's the relationship between breath and blister?
+  - id: piz_sauce_spiral
+    name: Sauce Spiral
+    prompt: |
+      Sauce is often applied in a spiral—not spread edge to edge. Study the
+      pattern. What's covered? What's exposed? The spiral is composition.
+    follow_ups:
+      - What would the pizza look like fully sauced?
+      - How does the spiral affect each bite?
+      - What's the relationship between pattern and taste?
+  - id: piz_cheese_melt
+    name: Cheese Melt
+    prompt: |
+      Cheese melts at different rates. Mozzarella stretches; aged cheese oils.
+      Watch the melt. The chemistry of fat and protein, heat and time. When is
+      it done?
+    follow_ups:
+      - What would the slice be without the stretch?
+      - How does melt shape the bite?
+      - What's the relationship between melt and memory?
+  - id: piz_crust_char
+    name: Crust Char
+    prompt: |
+      Leoparding—the char spots on the crust—marks wood-fired pizza. Each spot
+      is a moment of contact with extreme heat. Consider the flavor those spots
+      add. What would a pale crust mean?
+    follow_ups:
+      - How does char change the experience?
+      - What would the pizza be without it?
+      - What's the relationship between char and craft?
+  - id: piz_slice_fold
+    name: Slice Fold
+    prompt: |
+      New York style: fold the slice. The fold is structural—it holds the
+      toppings, channels the grease. The fold is choreography. What does it
+      enable?
+    follow_ups:
+      - What would eating be without the fold?
+      - How does the fold shape the bite?
+      - What's the relationship between fold and place?
+  - id: piz_pepperoni_cup
+    name: Pepperoni Cup
+    prompt: |
+      Good pepperoni cups—the edges crisp, the center pools oil. It's a
+      transformation of shape and texture. Notice when it happens. What created
+      the cup?
+    follow_ups:
+      - What would pepperoni be without the cup?
+      - How does the cup hold flavor?
+      - What's the relationship between fat and form?
+  - id: piz_basil_finish
+    name: Basil Finish
+    prompt: |
+      Basil on pizza is often added after the bake—fresh, bright. It's a
+      finish, not a base. Notice the contrast. What does fresh add to cooked?
+    follow_ups:
+      - What would the pizza be without the basil?
+      - How does timing shape the herb?
+      - What's the relationship between raw and cooked?
+  - id: piz_margherita_minimal
+    name: Margherita Minimal
+    prompt: |
+      Margherita is three things: dough, tomato, cheese. Each must carry.
+      There's nowhere to hide. Consider the discipline. What does minimalism
+      demand?
+    follow_ups:
+      - What would one wrong note do?
+      - How does simplicity focus the palate?
+      - What's the relationship between few and many?
+  - id: piz_pool_table
+    name: Pool Table
+    prompt: |
+      Some pizzerias have the long communal table—strangers sharing space.
+      The pizza arrives. The table is a stage. Who eats alongside you? What's
+      the unspoken contract?
+    follow_ups:
+      - What would the meal be in a booth?
+      - How does the table shape encounter?
+      - What's the relationship between shared and private?
+  - id: piz_box_flip
+    name: Box Flip
+    prompt: |
+      The pizza box—cardboard, sometimes with the plastic tripod in the center.
+      It's designed to vent, to stack. The box is infrastructure. What would
+      takeout be without it?
+    follow_ups:
+      - How does the box shape the journey home?
+      - What happens when the box is opened?
+      - What's the relationship between box and ritual?
+  - id: piz_dough_ferment
+    name: Dough Ferment
+    prompt: |
+      Pizza dough ferments—hours or days. The yeast creates bubbles, flavor.
+      Old dough has tang. Consider the time in each bite. What would a
+      quick-rise dough sacrifice?
+    follow_ups:
+      - How does ferment shape the crust?
+      - What's the relationship between time and taste?
+      - What would same-day dough mean?
+  - id: piz_cornicione
+    name: Cornicione
+    prompt: |
+      The cornicione—the edge, the crust—is often the best part. Airy, blistered,
+      maybe a bit chewy. Some leave it; some eat it first. What's your
+      relationship to the edge?
+    follow_ups:
+      - What would the pizza be without the cornicione?
+      - How does the edge frame the center?
+      - What's the relationship between crust and center?
+  - id: piz_olive_oil_drizzle
+    name: Olive Oil Drizzle
+    prompt: |
+      Olive oil drizzled after the bake—on the crust, or the whole pie. It
+      glistens. The oil carries flavor, adds richness. Notice when it's
+      applied. What does the drizzle add?
+    follow_ups:
+      - What would the pizza be without it?
+      - How does oil change the bite?
+      - What's the relationship between fat and finish?
+  - id: piz_anchovy_salt
+    name: Anchovy Salt
+    prompt: |
+      Anchovies on pizza—salty, umami, divisive. They dissolve into the
+      sauce, or sit atop. The anchovy is archaeology: Mediterranean, preserved,
+      ancient. What journey did it make?
+    follow_ups:
+      - What would the slice be without anchovy?
+      - How does salt shape the other flavors?
+      - What's the relationship between preserved and fresh?
+  - id: piz_sound_crunch
+    name: Sound Crunch
+    prompt: |
+      The first bite of a well-made crust—the crunch, the give. Close your
+      eyes. The sound is part of the experience. What would the pizza be if
+      it were silent?
+    follow_ups:
+      - How does sound shape satisfaction?
+      - What does a soggy crust sound like?
+      - What's the relationship between crunch and quality?
+  - id: piz_second_slice
+    name: Second Slice
+    prompt: |
+      The second slice is different from the first—you know the pizza now. The
+      palate has adjusted. Notice the shift. Does the second slice taste the
+      same? Better? Different?
+    follow_ups:
+      - How does repetition change perception?
+      - What would a single-slice meal lack?
+      - What's the relationship between first and second?
+  - id: piz_neapolitan_rules
+    name: Neapolitan Rules
+    prompt: |
+      True Neapolitan pizza has rules—size, ingredients, method. The VPN
+      stamp, the cert. Rules create identity. What do the rules protect? What
+      do they exclude?
+    follow_ups:
+      - What would pizza be without the rules?
+      - How does certification shape expectation?
+      - What's the relationship between rule and craft?
+  - id: piz_detroit_edges
+    name: Detroit Edges
+    prompt: |
+      Detroit style—rectangular, cheese to the edge, crispy fried crust where
+      it meets the pan. The edges are deliberate. Consider the architecture.
+      What does the shape say?
+    follow_ups:
+      - What would the pizza be without the edges?
+      - How does shape create identity?
+      - What's the relationship between pan and crust?
+  - id: piz_garlic_knot
+    name: Garlic Knot
+    prompt: |
+      Garlic knots—dough twists, buttered, garlicked. They often arrive first.
+      They're not pizza, but they're of the same world. What's the relationship
+      between knot and pie?
+    follow_ups:
+      - What would the meal be without the knots?
+      - How does the knot set the tone?
+      - What's the relationship between side and main?
+  - id: piz_red_pepper_flake
+    name: Red Pepper Flake
+    prompt: |
+      The shaker of red pepper flakes—often on the table. You choose the heat.
+      The flake is democracy. Everyone seasons their own. What does that
+      choice mean?
+    follow_ups:
+      - What would the table be without the shaker?
+      - How does self-seasoning shape the meal?
+      - What's the relationship between choice and taste?
+  - id: piz_sicilian_slab
+    name: Sicilian Slab
+    prompt: |
+      Sicilian—thick, rectangular, sometimes upside-down (sauce on top). The
+      slab has heft. The architecture is different. What does thickness add?
+      What does it sacrifice?
+    follow_ups:
+      - What would thin crust do differently?
+      - How does thickness shape the bite?
+      - What's the relationship between slab and slice?
+  - id: piz_wood_stack
+    name: Wood Stack
+    prompt: |
+      Wood-fired pizzerias stack logs. Oak, sometimes. The wood is fuel and
+      flavor. The stack is preparation. Consider what burns. What does the
+      wood add that gas cannot?
+    follow_ups:
+      - What would the pizza be without wood?
+      - How does fuel shape the crust?
+      - What's the relationship between fire and smoke?
+  - id: piz_topping_balance
+    name: Topping Balance
+    prompt: |
+      Toppings can overwhelm—too many, and the pizza becomes a casserole. The
+      balance is delicate. Study a loaded pie. Where does it cross the line?
+      What would you remove?
+    follow_ups:
+      - How does restraint shape the pizza?
+      - What's the relationship between more and less?
+      - When does choice become chaos?
+  - id: piz_cold_leftover
+    name: Cold Leftover
+    prompt: |
+      Cold pizza for breakfast—some swear by it. The flavors have settled.
+      The texture has changed. Consider the next-day pie. What does time add?
+      What does it take?
+    follow_ups:
+      - How does cold change the experience?
+      - What would reheating do?
+      - What's the relationship between fresh and leftover?
+  - id: piz_sauce_sweet
+    name: Sauce Sweet
+    prompt: |
+      Tomato sauce can be sweet or bright, depending on the tomato, the cook.
+      Taste the sauce alone if you can. Where does the sweetness come from?
+      What would acid do?
+    follow_ups:
+      - How does sauce set the tone?
+      - What's the relationship between sweet and acid?
+      - What would raw tomato mean?
+  - id: piz_roman_taglio
+    name: Roman Taglio
+    prompt: |
+      Pizza al taglio—sold by the cut, by weight. You point, they slice.
+      The rectangle, the price per kilo. The transaction is different. What
+      does buying by weight mean?
+    follow_ups:
+      - How does taglio shape the experience?
+      - What would a whole pie mean here?
+      - What's the relationship between cut and choice?
+  - id: piz_hot_honey
+    name: Hot Honey
+    prompt: |
+      Hot honey on pizza—new tradition, now everywhere. Sweet, spicy, viscous.
+      It's a finish. Notice when it's added. What does the honey do to the
+      cheese?
+    follow_ups:
+      - What would the slice be without it?
+      - How does sweet-spicy shape the bite?
+      - What's the relationship between trend and tradition?
+  - id: piz_pecorino_grate
+    name: Pecorino Grate
+    prompt: |
+      Pecorino grated over pizza—salty, sharp. It's a layer. The cheese on top
+      is different from the cheese that melted. Consider the hierarchy. What
+      does the grate add?
+    follow_ups:
+      - What would the pizza be without pecorino?
+      - How does the second cheese shape the dish?
+      - What's the relationship between melt and grate?
+  - id: piz_paddle_slide
+    name: Paddle Slide
+    prompt: |
+      The peel, the paddle—wood or metal. The dough is slid onto it, then into
+      the oven. The motion is practiced. Watch it. What would go wrong without
+      the skill?
+    follow_ups:
+      - How does the paddle enable the bake?
+      - What's the relationship between tool and result?
+      - What would a dropped pizza mean?
+  - id: piz_sourdough_crust
+    name: Sourdough Crust
+    prompt: |
+      Sourdough pizza crust—long ferment, tang. The crust has personality.
+      It's not neutral. Consider what the sourdough adds. What would commercial
+      yeast do differently?
+    follow_ups:
+      - How does sourdough shape the bite?
+      - What's the relationship between ferment and flavor?
+      - What would a blander crust mean?
+  - id: piz_white_pie
+    name: White Pie
+    prompt: |
+      White pizza—no tomato. Olive oil, cheese, maybe garlic. The absence of
+      red changes everything. The palate expects tomato. What does the white
+      pie offer instead?
+    follow_ups:
+      - What would the pie be with tomato?
+      - How does absence shape expectation?
+      - What's the relationship between red and white?
+  - id: piz_bar_setting
+    name: Bar Setting
+    prompt: |
+      Pizza at the bar—you eat where you order. The bar is a stage. You watch
+      the oven, the slices. The setting is casual, immediate. What does eating
+      at the bar add?
+    follow_ups:
+      - What would a table change?
+      - How does proximity shape the experience?
+      - What's the relationship between bar and kitchen?
+  - id: piz_truffle_trend
+    name: Truffle Trend
+    prompt: |
+      Truffle on pizza—oil or shavings—has become a shorthand for luxury. The
+      aroma dominates. Consider the trend. What does truffle add? What does
+      it mask?
+    follow_ups:
+      - What would the pizza be without truffle?
+      - How does luxury shape the bite?
+      - What's the relationship between trend and taste?
+  - id: piz_ricotta_dollop
+    name: Ricotta Dollop
+    prompt: |
+      Ricotta dolloped on pizza—cool, creamy, contrasting. It doesn't melt
+      like mozzarella. It sits. Notice the temperature difference. What does
+      the dollop add?
+    follow_ups:
+      - What would the slice be without ricotta?
+      - How does cool shape hot?
+      - What's the relationship between dollop and melt?
+  - id: piz_slice_count
+    name: Slice Count
+    prompt: |
+      How many slices? The number is often eight—or six for a smaller pie.
+      The count determines portion, sharing. Consider the math. What would
+      four slices mean? Twelve?
+    follow_ups:
+      - How does slice count shape the meal?
+      - What's the relationship between cut and share?
+      - When does the count matter?
+  - id: piz_oven_window
+    name: Oven Window
+    prompt: |
+      The oven has a window—or not. Watching the pizza bake is theatre. The
+      cheese bubbles. The crust rises. What would the experience be without
+      the view?
+    follow_ups:
+      - How does watching shape anticipation?
+      - What's the relationship between visible and hidden?
+      - What do you learn from the window?
+  - id: piz_ranch_dip
+    name: Ranch Dip
+    prompt: |
+      Ranch with pizza—American tradition, often with crust. The dip is
+      optional, contentious. Consider the addition. What does ranch add? What
+      does it override?
+    follow_ups:
+      - What would the crust be without ranch?
+      - How does the dip shape the bite?
+      - What's the relationship between purist and practical?
+  - id: piz_capers_brine
+    name: Capers Brine
+    prompt: |
+      Capers on pizza—briny, sharp. They cut through richness. The caper
+      traveled—Mediterranean, pickled. Notice when they appear. What does the
+      brine add?
+    follow_ups:
+      - What would the slice be without capers?
+      - How does brine shape the palate?
+      - What's the relationship between pickle and fresh?
+  - id: piz_calzone_seam
+    name: Calzone Seam
+    prompt: |
+      Calzone—pizza folded, sealed. The seam holds the filling. The form is
+      different. You cut it open. Steam escapes. What does the fold add? What
+      does it hide?
+    follow_ups:
+      - What would the calzone be unfolded?
+      - How does the seam create surprise?
+      - What's the relationship between open and closed?
+  - id: piz_mushroom_water
+    name: Mushroom Water
+    prompt: |
+      Mushrooms on pizza release water as they cook. A good cook knows to
+      pre-cook or use dry varieties. Wet mushrooms make soggy pizza. Consider
+      the chemistry. What does moisture do?
+    follow_ups:
+      - How does mushroom prep shape the slice?
+      - What's the relationship between wet and crisp?
+      - What would raw mushroom do?
+  - id: piz_grease_absorb
+    name: Grease Absorb
+    prompt: |
+      A napkin on the slice—some blot the grease. The grease is fat from
+      cheese, pepperoni. To blot or not? Consider the choice. What does the
+      grease contribute? What does blotting remove?
+    follow_ups:
+      - How does grease shape the experience?
+      - What would a dry slice mean?
+      - What's the relationship between fat and flavor?
+  - id: piz_oven_spring
+    name: Oven Spring
+    prompt: |
+      Oven spring—the dough puffs in the high heat. The yeast works fast. The
+      structure sets. Consider the moment. What would happen without enough
+      heat? Without the right flour?
+    follow_ups:
+      - How does the spring create the crumb?
+      - What's the relationship between heat and rise?
+      - What would a flat crust mean?
+  - id: piz_roma_tomato
+    name: Roma Tomato
+    prompt: |
+      San Marzano, or Roma—the tomatoes matter. They're from a place. Campania.
+      The DOP, the terroir. Trace the tomato. What journey did it make to your
+      slice?
+    follow_ups:
+      - What would another tomato do?
+      - How does origin shape the sauce?
+      - What's the relationship between place and taste?
+  - id: piz_pizza_napoli
+    name: Pizza Napoli
+    prompt: |
+      Naples invented it. The city and the food are bound. To eat pizza in
+      Naples is to eat it at the source. Consider the archaeology. What would
+      the same pizza mean elsewhere?
+    follow_ups:
+      - How does place shape the experience?
+      - What would translation lose?
+      - What's the relationship between origin and authenticity?
+  - id: piz_wine_pair
+    name: Wine Pair
+    prompt: |
+      Pizza and wine—beer is common, but wine works. Red, often. The acid in
+      the wine meets the acid in the tomato. Consider the pairing. What does
+      the wine add to the slice?
+    follow_ups:
+      - What would beer do differently?
+      - How does the drink shape the meal?
+      - What's the relationship between glass and plate?
+  - id: piz_pizza_party
+    name: Pizza Party
+    prompt: |
+      Pizza for a crowd—birthdays, game night, office lunch. The pizza is
+      social. The boxes stack. Everyone grabs a slice. Consider the choreography.
+      How does the crowd change the meal?
+    follow_ups:
+      - What would a solo pizza mean?
+      - How does sharing shape the experience?
+      - What's the relationship between pizza and gathering?

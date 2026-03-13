@@ -2236,6 +2236,7 @@ export default function ChatPage() {
   const [waysOfLookingAtDrawMode, setWaysOfLookingAtDrawMode] = useState(false);
   const [waysOfLookingAtCategory, setWaysOfLookingAtCategory] = useState<string | null>(null);
   const [waysOfLookingAtCity, setWaysOfLookingAtCity] = useState<string | null>(null);
+  const [waysOfLookingAtCuisine, setWaysOfLookingAtCuisine] = useState<string | null>(null);
   const [waysOfLookingAtCards, setWaysOfLookingAtCards] = useState<{ id: string; name: string; prompt: string; follow_ups?: string[] }[] | null>(null);
   const [waysOfLookingAtCardsLoading, setWaysOfLookingAtCardsLoading] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -2327,7 +2328,8 @@ export default function ChatPage() {
       if (e.key === "Escape") {
         if (drawnPerspectiveCard) setDrawnPerspectiveCard(null);
         else if (waysOfLookingAtModalOpen) {
-          if (waysOfLookingAtCity) setWaysOfLookingAtCity(null);
+          if (waysOfLookingAtCuisine) setWaysOfLookingAtCuisine(null);
+          else if (waysOfLookingAtCity) setWaysOfLookingAtCity(null);
           else if (waysOfLookingAtCategory) setWaysOfLookingAtCategory(null);
           else { setWaysOfLookingAtModalOpen(false); setWaysOfLookingAtDrawMode(false); }
         } else if (selectedMentalModel) setSelectedMentalModel(null);
@@ -2336,7 +2338,7 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, waysOfLookingAtCategory, waysOfLookingAtCity]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine]);
 
   useEffect(() => {
     if (!settingsOpen) return;
@@ -2413,8 +2415,25 @@ export default function ChatPage() {
     blr: "urban_jungle_bangalore",
   };
 
+  const culinaryLabCuisineToDeckId: Record<string, string> = {
+    indian: "culinary_lab_indian",
+    italian: "culinary_lab_italian",
+    pizza: "culinary_lab_pizza",
+    chinese: "culinary_lab_chinese",
+    sushi: "culinary_lab_sushi",
+  };
+
+  const culinaryLabCuisineToName: Record<string, string> = {
+    indian: "Indian",
+    italian: "Italian",
+    pizza: "Pizza",
+    chinese: "Chinese",
+    sushi: "Sushi",
+  };
+
   const domainDisplayName: Record<string, string> = {
     urban_jungle: "Urban Jungle",
+    culinary_lab: "Culinary Lab",
     art: "Ways of Looking at Art",
   };
 
@@ -2423,6 +2442,7 @@ export default function ChatPage() {
     setWaysOfLookingAtDrawMode(false);
     setWaysOfLookingAtCategory(null);
     setWaysOfLookingAtCity(null);
+    setWaysOfLookingAtCuisine(null);
     setDrawnPerspectiveCard(null);
     setSelectedMentalModel(null);
     setLetterModalOpen(false);
@@ -2444,14 +2464,21 @@ export default function ChatPage() {
       return;
     }
     const isUrbanJungle = waysOfLookingAtCategory === "urban_jungle";
+    const isCulinaryLab = waysOfLookingAtCategory === "culinary_lab";
     if (isUrbanJungle && !waysOfLookingAtCity) {
+      setWaysOfLookingAtCards(null);
+      return;
+    }
+    if (isCulinaryLab && !waysOfLookingAtCuisine) {
       setWaysOfLookingAtCards(null);
       return;
     }
     setWaysOfLookingAtCardsLoading(true);
     const deckId = isUrbanJungle && waysOfLookingAtCity
       ? urbanJungleCityToDeckId[waysOfLookingAtCity]
-      : null;
+      : isCulinaryLab && waysOfLookingAtCuisine
+        ? culinaryLabCuisineToDeckId[waysOfLookingAtCuisine]
+        : null;
     if (deckId) {
       fetch(`/api/perspective-decks/${deckId}`)
         .then((r) => r.json())
@@ -2474,7 +2501,7 @@ export default function ChatPage() {
         .catch(() => setWaysOfLookingAtCards([]))
         .finally(() => setWaysOfLookingAtCardsLoading(false));
     }
-  }, [waysOfLookingAtCategory, waysOfLookingAtCity]);
+  }, [waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine]);
 
   useEffect(() => {
     const clearSelectionBubbles = (e: MouseEvent | TouchEvent) => {
@@ -3003,7 +3030,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           <div className="mt-2 pt-2 border-t-[0.5px] border-neutral-200/60 dark:border-neutral-600/60">
             <button
               type="button"
-              onClick={() => { playSelectionChime(); setWaysOfLookingAtModalOpen(true); setWaysOfLookingAtDrawMode(false); setWaysOfLookingAtCategory(null); setWaysOfLookingAtCity(null); }}
+              onClick={() => { playSelectionChime(); setWaysOfLookingAtModalOpen(true); setWaysOfLookingAtDrawMode(false); setWaysOfLookingAtCategory(null); setWaysOfLookingAtCity(null); setWaysOfLookingAtCuisine(null); }}
               className="flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left text-[13px] sm:text-[14px] font-medium transition-colors border-2 border-transparent text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:border-neutral-400 dark:hover:border-neutral-500"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
@@ -3561,6 +3588,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             setWaysOfLookingAtDrawMode(true);
                             setWaysOfLookingAtCategory(null);
                             setWaysOfLookingAtCity(null);
+                            setWaysOfLookingAtCuisine(null);
                           }}
                           className="flex items-center gap-3 w-full max-w-sm mx-auto px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
                         >
@@ -8168,7 +8196,8 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
           onClick={() => {
-            if (waysOfLookingAtCity) setWaysOfLookingAtCity(null);
+            if (waysOfLookingAtCuisine) setWaysOfLookingAtCuisine(null);
+            else if (waysOfLookingAtCity) setWaysOfLookingAtCity(null);
             else if (waysOfLookingAtCategory) setWaysOfLookingAtCategory(null);
             else { setWaysOfLookingAtModalOpen(false); setWaysOfLookingAtDrawMode(false); }
           }}
@@ -8182,15 +8211,16 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <div className="flex items-center gap-2">
-                {(waysOfLookingAtCategory || waysOfLookingAtCity) && (
+                {(waysOfLookingAtCategory || waysOfLookingAtCity || waysOfLookingAtCuisine) && (
                   <button
                     type="button"
                     onClick={() => {
-                      if (waysOfLookingAtCity) setWaysOfLookingAtCity(null);
+                      if (waysOfLookingAtCuisine) setWaysOfLookingAtCuisine(null);
+                      else if (waysOfLookingAtCity) setWaysOfLookingAtCity(null);
                       else setWaysOfLookingAtCategory(null);
                     }}
                     className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 transition-colors"
-                    aria-label={waysOfLookingAtCity ? "Back to cities" : "Back to categories"}
+                    aria-label={waysOfLookingAtCuisine ? "Back to cuisines" : waysOfLookingAtCity ? "Back to cities" : "Back to categories"}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                       <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -8202,9 +8232,11 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     ? "Draw a perspective card"
                     : waysOfLookingAtCity
                       ? `${domainDisplayName[waysOfLookingAtCategory ?? ""] ?? "Urban Jungle"} — ${waysOfLookingAtCity === "ny" ? "New York" : waysOfLookingAtCity === "sf" ? "San Francisco" : waysOfLookingAtCity === "london" ? "London" : waysOfLookingAtCity === "paris" ? "Paris" : "Bangalore"}`
-                      : waysOfLookingAtCategory
-                        ? domainDisplayName[waysOfLookingAtCategory] ?? perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ?? "Prompt Games"
-                        : "Prompt Games"}
+                      : waysOfLookingAtCuisine
+                        ? `Culinary Lab — ${culinaryLabCuisineToName[waysOfLookingAtCuisine] ?? waysOfLookingAtCuisine}`
+                        : waysOfLookingAtCategory
+                          ? domainDisplayName[waysOfLookingAtCategory] ?? perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ?? "Prompt Games"
+                          : "Prompt Games"}
                 </h2>
               </div>
               <button
@@ -8252,6 +8284,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                               }
                               setWaysOfLookingAtCategory(domain);
                               setWaysOfLookingAtCity(null);
+                              setWaysOfLookingAtCuisine(null);
                             }}
                             className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left group"
                           >
@@ -8261,7 +8294,9 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2">
                               {domain === "urban_jungle"
                                 ? "250 cards across New York, San Francisco, London, Paris, and Bangalore—from scale and light to layers of history."
-                                : deck.description}
+                                : domain === "culinary_lab"
+                                  ? "250 cards across Indian, Italian, Pizza, Chinese, and Sushi—from the chemistry of a bite to the archaeology of ingredients."
+                                  : deck.description}
                             </p>
                           </button>
                         );
@@ -8321,6 +8356,58 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     ))}
                   </div>
                 </div>
+              ) : waysOfLookingAtCategory === "culinary_lab" && !waysOfLookingAtCuisine ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {waysOfLookingAtDrawMode ? "Choose a cuisine" : "Choose a cuisine to browse its 50 perspective cards."}
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      { id: "indian", name: "Indian" },
+                      { id: "italian", name: "Italian" },
+                      { id: "pizza", name: "Pizza" },
+                      { id: "chinese", name: "Chinese" },
+                      { id: "sushi", name: "Sushi" },
+                    ].map((cuisine) => (
+                      <button
+                        key={cuisine.id}
+                        type="button"
+                        onClick={async () => {
+                          playSelectionChime();
+                          if (waysOfLookingAtDrawMode) {
+                            try {
+                              const deckId = culinaryLabCuisineToDeckId[cuisine.id];
+                              if (deckId) {
+                                const res = await fetch(`/api/perspective-decks/${deckId}/random`);
+                                const data = await res.json();
+                                if (data.card && data.deckId) {
+                                  const deck = perspectiveDecks.find((d) => d.id === deckId);
+                                  setDrawnPerspectiveCard({
+                                    card: data.card,
+                                    deckId: data.deckId,
+                                    deckName: deck?.name ?? `Culinary Lab — ${cuisine.name}`,
+                                  });
+                                  setWaysOfLookingAtModalOpen(false);
+                                  setWaysOfLookingAtDrawMode(false);
+                                }
+                              }
+                            } catch { /* ignore */ }
+                            return;
+                          }
+                          setWaysOfLookingAtCuisine(cuisine.id);
+                        }}
+                        className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left group"
+                      >
+                        <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
+                          {cuisine.name}
+                        </span>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          50 perspective cards for food and eating
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               ) : (
                 <div className="space-y-4">
                   {waysOfLookingAtCardsLoading ? (
@@ -8330,7 +8417,9 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       {waysOfLookingAtCards.map((card) => {
                         const deck = waysOfLookingAtCity
                           ? perspectiveDecks.find((d) => d.id === urbanJungleCityToDeckId[waysOfLookingAtCity])
-                          : perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory);
+                          : waysOfLookingAtCuisine
+                            ? perspectiveDecks.find((d) => d.id === culinaryLabCuisineToDeckId[waysOfLookingAtCuisine])
+                            : perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory);
                         return (
                           <button
                             key={card.id}
@@ -8445,6 +8534,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   setWaysOfLookingAtDrawMode(false);
                   setWaysOfLookingAtCategory(null);
                   setWaysOfLookingAtCity(null);
+                  setWaysOfLookingAtCuisine(null);
                   if (typeof window !== "undefined" && window.innerWidth < 1024) {
                     setLibraryPanelOpen(null);
                     setSidebarOpen(false);
