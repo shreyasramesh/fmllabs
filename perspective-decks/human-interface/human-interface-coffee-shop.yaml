@@ -1,0 +1,550 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# The Human Interface — Coffee Shop
+
+id: human_interface_coffee_shop
+name: The Human Interface — Coffee Shop
+description: 50 cards to shift how you see the coffee shop—from queue
+  choreography and laptop territories to the third place, invisible scripts,
+  and coffee as ritual.
+domain: human_interface
+cards:
+  - id: hi_cs_queue_choreography
+    name: Queue Choreography
+    prompt: |
+      Watch the line at the counter. Bodies arrange themselves—forward lean,
+      phone check, subtle shuffle. The queue has rhythm. Who holds the space?
+      What unspoken rules govern who stands where?
+    follow_ups:
+      - How does the queue shape anticipation?
+      - What would happen if everyone ignored the order?
+      - What's the relationship between waiting and belonging?
+  - id: hi_cs_laptop_territory
+    name: Laptop Territory
+    prompt: |
+      A laptop open on a table claims space. The cup beside it, the bag on the
+      chair. Observe the boundaries. How much real estate does one person
+      occupy? What signals "taken"?
+    follow_ups:
+      - How does the laptop extend the body?
+      - What would the space be without devices?
+      - What's the relationship between territory and duration?
+  - id: hi_cs_third_place
+    name: Third Place
+    prompt: |
+      Not home, not work—the coffee shop is a third place. People come to be
+      alone together. Notice who stays. Who leaves quickly? The space holds
+      a different social contract.
+    follow_ups:
+      - What would the city be without third places?
+      - How does the coffee shop differ from a library?
+      - What's the relationship between place and identity?
+  - id: hi_cs_invisible_script
+    name: Invisible Script
+    prompt: |
+      Order, pay, wait, receive, find a seat. The script is invisible until
+      someone breaks it. Watch a first-timer. What do they not know? The
+      script encodes belonging.
+    follow_ups:
+      - How does the script exclude?
+      - What would happen if the script were written down?
+      - What's the relationship between script and fluency?
+  - id: hi_cs_coffee_ritual
+    name: Coffee as Ritual
+    prompt: |
+      The drink is secondary. The ritual is primary—the walk, the order, the
+      first sip. Notice your own motions. What would you lose if the coffee
+      arrived at your door?
+    follow_ups:
+      - How does ritual mark transition?
+      - What would the day be without the coffee stop?
+      - What's the relationship between ritual and readiness?
+  - id: hi_cs_counter_handoff
+    name: Counter Handoff
+    prompt: |
+      The barista calls a name. A hand reaches. The handoff is a moment of
+      contact between stranger and stranger. Watch the exchange. What passes
+      besides the cup?
+    follow_ups:
+      - How does the handoff create connection?
+      - What would change with a robot barista?
+      - What's the relationship between handoff and trust?
+  - id: hi_cs_power_outlet_hunt
+    name: Power Outlet Hunt
+    prompt: |
+      Eyes scan walls, floor, under tables. The hunt for an outlet is
+      territorial. Who got there first? The outlet determines where you sit.
+      Geography follows electricity.
+    follow_ups:
+      - How does outlet placement shape the room?
+      - What would the space be with wireless power?
+      - What's the relationship between plug and permanence?
+  - id: hi_cs_solo_table
+    name: Solo Table
+    prompt: |
+      One person at a table for four. The empty chairs are a buffer. Observe
+      the arrangement. Is it defense? Preference? The solo table holds space
+      against the crowd.
+    follow_ups:
+      - How does the solo table signal intent?
+      - What would happen if someone asked to share?
+      - What's the relationship between solitude and visibility?
+  - id: hi_cs_milk_pour
+    name: Milk Pour
+    prompt: |
+      The barista pours milk into espresso—latte art or not. The pour is
+      craft. Watch the motion. What does the customer receive beyond the
+      drink? The pour is performance.
+    follow_ups:
+      - How does the pour shape expectation?
+      - What would the drink be without the craft?
+      - What's the relationship between pour and price?
+  - id: hi_cs_name_on_cup
+    name: Name on Cup
+    prompt: |
+      A name—real, fake, misspelled—on a cup. It personalizes the transaction.
+      The name travels from mouth to hand to counter. What does the name
+      do for the exchange?
+    follow_ups:
+      - How does the name create recognition?
+      - What would the order be without the name?
+      - What's the relationship between name and anonymity?
+  - id: hi_cs_window_seat
+    name: Window Seat
+    prompt: |
+      The window seat is prime. You face the street; your back is protected.
+      Observe who chooses it. The window frames the world outside while you
+      stay inside. What does the view provide?
+    follow_ups:
+      - How does the window seat shape the experience?
+      - What would the space be without windows?
+      - What's the relationship between inside and outside?
+  - id: hi_cs_linger_versus_grab
+    name: Linger Versus Grab
+    prompt: |
+      Some take their cup and leave. Others settle in for hours. The same
+      space holds both. Notice the split. What determines who stays? The
+      coffee shop accommodates different speeds.
+    follow_ups:
+      - How does lingering affect the business?
+      - What would the space be if everyone left quickly?
+      - What's the relationship between speed and belonging?
+  - id: hi_cs_regular_recognition
+    name: Regular Recognition
+    prompt: |
+      "The usual?" The barista knows. The regular is known. Watch the
+      exchange. What changes when you're recognized? The usual is a shortcut—
+      and a claim to place.
+    follow_ups:
+      - How does recognition create loyalty?
+      - What would the regular lose without it?
+      - What's the relationship between usual and identity?
+  - id: hi_cs_soundscape
+    name: Soundscape
+    prompt: |
+      Steam, grind, chatter, music. The coffee shop has a soundscape. Close
+      your eyes. Map the layers. What's constant? What's the rhythm? The
+      soundscape shapes the mood.
+    follow_ups:
+      - How does the soundscape affect concentration?
+      - What would the space be in silence?
+      - What's the relationship between sound and productivity?
+  - id: hi_cs_shared_table
+    name: Shared Table
+    prompt: |
+      Strangers sit at the same long table. No one speaks. The shared table
+      is proximity without connection. Observe the boundaries. How close is
+      too close? The table holds a delicate balance.
+    follow_ups:
+      - How does the shared table differ from a solo table?
+      - What would happen if someone started a conversation?
+      - What's the relationship between proximity and privacy?
+  - id: hi_cs_tip_jar
+    name: Tip Jar
+    prompt: |
+      Coins and bills accumulate. The tip jar is visible, passive. Who tips?
+      Who doesn't? The jar sits at the boundary of transaction and gift.
+      What does the tip mean?
+    follow_ups:
+      - How does the tip jar shape the exchange?
+      - What would the counter be without it?
+      - What's the relationship between tip and gratitude?
+  - id: hi_cs_cup_sleeve
+    name: Cup Sleeve
+    prompt: |
+      The sleeve protects the hand from heat. It's disposable, branded.
+      Notice how people hold the cup with it. The sleeve is a small
+      interface between body and drink.
+    follow_ups:
+      - How does the sleeve change the grip?
+      - What would the experience be without it?
+      - What's the relationship between sleeve and branding?
+  - id: hi_cs_morning_rush
+    name: Morning Rush
+    prompt: |
+      Before work, the line stretches. The morning rush has its own tempo.
+      Watch the pace. Everyone is going somewhere else. The coffee shop is
+      a waystation. What does the rush extract?
+    follow_ups:
+      - How does the rush shape the staff?
+      - What would the morning be without the stop?
+      - What's the relationship between rush and ritual?
+  - id: hi_cs_afternoon_slow
+    name: Afternoon Slow
+    prompt: |
+      Mid-afternoon, the crowd thins. Those who remain are different—students,
+      freelancers, the unhurried. The pace shifts. Notice the change. The
+      afternoon holds a different kind of customer.
+    follow_ups:
+      - How does the afternoon differ from the morning?
+      - What would the space be without the slow period?
+      - What's the relationship between time and occupancy?
+  - id: hi_cs_wifi_password
+    name: WiFi Password
+    prompt: |
+      The password is on the wall, the receipt, the chalkboard. You must
+      ask or look. The WiFi is the price of admission for some. Observe who
+      connects. Who doesn't need to?
+    follow_ups:
+      - How does WiFi shape who stays?
+      - What would the space be without it?
+      - What's the relationship between connection and consumption?
+  - id: hi_cs_crossword_solver
+    name: Crossword Solver
+    prompt: |
+      Someone works a crossword, newspaper or phone. The activity is solo but
+      visible. The crossword marks time. It says "I'm staying." What does the
+      activity signal to others?
+    follow_ups:
+      - How does the crossword create a bubble?
+      - What would the solver do without it?
+      - What's the relationship between activity and occupancy?
+  - id: hi_cs_meeting_here
+    name: Meeting Here
+    prompt: |
+      Two people meet—interview, catch-up, first date. The coffee shop is
+      neutral ground. Observe the setup. Who chose the spot? The table
+      becomes a stage for the encounter.
+    follow_ups:
+      - How does the coffee shop enable the meeting?
+      - What would the meeting be in an office?
+      - What's the relationship between place and encounter?
+  - id: hi_cs_bathroom_key
+    name: Bathroom Key
+    prompt: |
+      The bathroom key is chained to a block, a paddle, a giant spoon. You
+      must ask. The key is a small test of belonging. Who has the right to
+      use the bathroom?
+    follow_ups:
+      - How does the key control access?
+      - What would the space be with open bathrooms?
+      - What's the relationship between key and trust?
+  - id: hi_cs_pastry_case
+    name: Pastry Case
+    prompt: |
+      Croissants, muffins, cookies behind glass. The case is temptation and
+      display. Notice what sells. What sits too long? The case is a
+      negotiation between desire and delay.
+    follow_ups:
+      - How does the case shape the order?
+      - What would the counter be without it?
+      - What's the relationship between display and desire?
+  - id: hi_cs_phone_glance
+    name: Phone Glance
+    prompt: |
+      Everyone glances at their phone. The glance is a break, a check, a
+      retreat. Observe the rhythm. How often? How long? The phone is a
+      portal out of the room.
+    follow_ups:
+      - How does the phone shape presence?
+      - What would the space be without phones?
+      - What's the relationship between glance and attention?
+  - id: hi_cs_steam_rise
+    name: Steam Rise
+    prompt: |
+      Steam rises from a fresh cup. The heat carries aroma. The steam is
+      ephemeral—gone in minutes. Notice it. What does the steam add to the
+      moment before the first sip?
+    follow_ups:
+      - How does steam shape anticipation?
+      - What would the drink be without it?
+      - What's the relationship between vapor and ritual?
+  - id: hi_cs_bag_on_chair
+    name: Bag on Chair
+    prompt: |
+      A bag occupies the chair beside the sitter. It saves the seat, extends
+      territory. The bag is a placeholder. Observe the message: "This space
+      is taken." What would happen if someone asked to sit?
+    follow_ups:
+      - How does the bag claim space?
+      - What would the room be without bag-saving?
+      - What's the relationship between object and territory?
+  - id: hi_cs_espresso_shot
+    name: Espresso Shot
+    prompt: |
+      A single shot—quick, intense. The espresso drinker often stands. The
+      shot is a punctuation mark in the day. Watch the ritual. In, done, out.
+      What does the shot accomplish?
+    follow_ups:
+      - How does the shot differ from a latte?
+      - What would the coffee shop be without espresso?
+      - What's the relationship between shot and speed?
+  - id: hi_cs_cold_brew_tap
+    name: Cold Brew Tap
+    prompt: |
+      Cold brew from a tap—like beer. The dispense is different. No steam,
+      no wait. The cold brew customer wants something else. Notice the
+      choice. What does cold brew signal?
+    follow_ups:
+      - How does cold brew change the experience?
+      - What would the menu be without it?
+      - What's the relationship between temperature and identity?
+  - id: hi_cs_chalkboard_menu
+    name: Chalkboard Menu
+    prompt: |
+      The menu is handwritten—chalk on board. It changes. The handwriting
+      is personality. Notice what's listed, what's not. The chalkboard says
+      "we make decisions here."
+    follow_ups:
+      - How does the chalkboard shape the brand?
+      - What would the wall be with a printed menu?
+      - What's the relationship between hand and authenticity?
+  - id: hi_cs_leaving_cup
+    name: Leaving Cup
+    prompt: |
+      The cup left on the table—empty, abandoned. Some bus their own; some
+      don't. The left cup is a small test of consideration. Who clears?
+      Who leaves? The cup marks the end of the stay.
+    follow_ups:
+      - How does bussing shape the space?
+      - What would the cafe be if everyone left cups?
+      - What's the relationship between leaving and belonging?
+  - id: hi_cs_headphones_bubble
+    name: Headphones Bubble
+    prompt: |
+      Headphones create a bubble. The wearer is present but unavailable.
+      The bubble says "don't interrupt." Observe the boundary. How does the
+      bubble shape the social field?
+    follow_ups:
+      - How do headphones enable focus?
+      - What would the space be without them?
+      - What's the relationship between bubble and productivity?
+  - id: hi_cs_corner_booth
+    name: Corner Booth
+    prompt: |
+      The corner booth is coveted—back to the wall, view of the room. It's
+      defensible. Observe who claims it. The corner holds a different
+      psychology than the center.
+    follow_ups:
+      - How does the corner shape the experience?
+      - What would the room be without corners?
+      - What's the relationship between position and security?
+  - id: hi_cs_sugar_station
+    name: Sugar Station
+    prompt: |
+      Sugar, napkins, lids, straws—the station is self-service. People
+      customize here. The station is a pause between counter and seat.
+      Observe the choices. What do people add?
+    follow_ups:
+      - How does the station extend the transaction?
+      - What would the counter be without it?
+      - What's the relationship between customization and control?
+  - id: hi_cs_barista_banter
+    name: Barista Banter
+    prompt: |
+      The barista chats with a regular. The banter is performance and
+      connection. Others listen or don't. The banter creates atmosphere.
+      What does it add to the room?
+    follow_ups:
+      - How does banter shape the culture?
+      - What would the counter be without it?
+      - What's the relationship between banter and belonging?
+  - id: hi_cs_takeaway_stack
+    name: Takeaway Stack
+    prompt: |
+      Cups stack at the pickup area—names called, cups claimed. The stack
+      is a temporary archive of orders. Watch the flow. Who waits? Who
+      grabs and goes? The stack is order emerging from chaos.
+    follow_ups:
+      - How does the stack manage the rush?
+      - What would the counter be without it?
+      - What's the relationship between stack and sequence?
+  - id: hi_cs_plant_by_window
+    name: Plant by Window
+    prompt: |
+      A plant sits by the window—pothos, succulent. It's decor and life.
+      The plant doesn't belong to anyone. It softens the space. What does
+      the plant add to the room?
+    follow_ups:
+      - How does the plant shape the atmosphere?
+      - What would the window be without it?
+      - What's the relationship between plant and care?
+  - id: hi_cs_closing_time
+    name: Closing Time
+    prompt: |
+      "We're closing in fifteen." The announcement shifts the room. Chairs
+      scrape, laptops close. The coffee shop has a boundary. Observe the
+      exodus. What does closing time extract?
+    follow_ups:
+      - How does closing shape the stay?
+      - What would the space be without a closing?
+      - What's the relationship between boundary and belonging?
+  - id: hi_cs_oat_milk_request
+    name: Oat Milk Request
+    prompt: |
+      "Oat milk, please." The request is identity and preference. The
+      alternative milk has become a marker. Notice who asks. What does the
+      choice signal about the drinker?
+    follow_ups:
+      - How does the milk choice shape the order?
+      - What would the menu be without alternatives?
+      - What's the relationship between choice and identity?
+  - id: hi_cs_receipt_glance
+    name: Receipt Glance
+    prompt: |
+      The receipt is handed over—often unrequested. Some take it, some
+      decline. The receipt is proof and record. Observe the exchange. What
+      does the receipt do for the transaction?
+    follow_ups:
+      - How does the receipt extend the transaction?
+      - What would the counter be without it?
+      - What's the relationship between receipt and memory?
+  - id: hi_cs_door_hold
+    name: Door Hold
+    prompt: |
+      Someone holds the door for the person behind. The hold is a small
+      courtesy. It creates a moment of connection. Observe when it happens.
+      What does the hold require?
+    follow_ups:
+      - How does the door hold shape the entrance?
+      - What would the threshold be without it?
+      - What's the relationship between hold and civility?
+  - id: hi_cs_study_group
+    name: Study Group
+    prompt: |
+      Students spread notes, laptops, books. The table becomes a workspace.
+      The study group has its own rhythm—discussion, silence, laughter.
+      Observe the collaboration. What does the coffee shop provide?
+    follow_ups:
+      - How does the coffee shop enable the group?
+      - What would the study be in a library?
+      - What's the relationship between place and collaboration?
+  - id: hi_cs_grind_sound
+    name: Grind Sound
+    prompt: |
+      The grinder screams. The sound is industrial, momentary. It marks
+      the making of a drink. The sound cuts through conversation. What does
+      the grind add to the soundscape?
+    follow_ups:
+      - How does the grind shape anticipation?
+      - What would the cafe be without it?
+      - What's the relationship between sound and craft?
+  - id: hi_cs_cup_stack_bus
+    name: Cup Stack Bus
+    prompt: |
+      The bus tub fills with cups, lids, napkins. Someone will clear it.
+      The stack is the aftermath of many stays. Observe the accumulation.
+      What does the stack reveal about the day?
+    follow_ups:
+      - How does the bus tub manage waste?
+      - What would the counter be without it?
+      - What's the relationship between stack and labor?
+  - id: hi_cs_first_sip
+    name: First Sip
+    prompt: |
+      The first sip—temperature, flavor, moment. Watch someone take it. The
+      face may change. The first sip is the payoff of the wait. What does
+      it deliver?
+    follow_ups:
+      - How does the first sip shape the rest?
+      - What would the ritual be without it?
+      - What's the relationship between sip and satisfaction?
+  - id: hi_cs_neutral_ground
+    name: Neutral Ground
+    prompt: |
+      The coffee shop is no one's territory. You can meet a stranger here,
+      work alone, end a relationship. The neutrality is the point. What
+      does neutral ground enable?
+    follow_ups:
+      - How does neutrality shape the encounter?
+      - What would the city be without neutral ground?
+      - What's the relationship between neutrality and safety?
+  - id: hi_cs_loyalty_card
+    name: Loyalty Card
+    prompt: |
+      Buy ten, get one free. The card tracks visits. It rewards return. The
+      loyalty card is a contract—implicit. Observe who uses it. What does
+      the card create between customer and shop?
+    follow_ups:
+      - How does the card shape behavior?
+      - What would the transaction be without it?
+      - What's the relationship between punch and belonging?
+  - id: hi_cs_outlet_tethered
+    name: Outlet Tethered
+    prompt: |
+      Someone sits where the outlet is. The cord runs from wall to laptop.
+      The tether limits movement. The outlet determines the seat. Observe
+      the constraint. What does the tether demand?
+    follow_ups:
+      - How does the outlet shape the stay?
+      - What would the space be with wireless charging?
+      - What's the relationship between tether and duration?
+  - id: hi_cs_eye_contact_avoid
+    name: Eye Contact Avoid
+    prompt: |
+      Strangers in a coffee shop avoid eye contact. The avoidance is polite.
+      To look is to risk connection. Observe the dance. Who breaks the rule?
+      What happens when eyes meet?
+    follow_ups:
+      - How does avoidance shape the social field?
+      - What would the space be with more contact?
+      - What's the relationship between gaze and privacy?
+  - id: hi_cs_rainy_day_crowd
+    name: Rainy Day Crowd
+    prompt: |
+      Rain drives people inside. The coffee shop fills. Wet coats, umbrellas
+      by the door. The rain creates a different crowd. Observe the shift.
+      What does the weather do to the space?
+    follow_ups:
+      - How does rain shape occupancy?
+      - What would the day be without the refuge?
+      - What's the relationship between weather and shelter?
+  - id: hi_cs_saved_seat
+    name: Saved Seat
+    prompt: |
+      "I'm saving this for someone." The claim holds the seat against the
+      crowd. The saved seat is a promise. Observe the tension. How long can
+      a seat be saved? What are the limits?
+    follow_ups:
+      - How does saving shape the room?
+      - What would happen if no one honored it?
+      - What's the relationship between claim and trust?
+  - id: hi_cs_quiet_conversation
+    name: Quiet Conversation
+    prompt: |
+      Two people lean in. The conversation is private but the posture is
+      visible. The lean creates a bubble. Observe the intimacy. What does
+      the coffee shop allow that other places don't?
+    follow_ups:
+      - How does the space enable the conversation?
+      - What would the talk be in a restaurant?
+      - What's the relationship between place and disclosure?
+  - id: hi_cs_roaming_table
+    name: Roaming Table
+    prompt: |
+      Someone can't find a seat. They roam with their cup. The roaming is
+      provisional. They'll take the first opening. Observe the search. What
+      does the roam reveal about the space?
+    follow_ups:
+      - How does roaming shape the experience?
+      - What would the cafe be with more seats?
+      - What's the relationship between search and belonging?
+  - id: hi_cs_coffee_aroma
+    name: Coffee Aroma
+    prompt: |
+      The smell hits you at the door. Roasted, ground, brewed. The aroma
+      is the first contact. It primes the experience. What does the smell
+      do before you order?
+    follow_ups:
+      - How does aroma shape desire?
+      - What would the entrance be without it?
+      - What's the relationship between smell and memory?

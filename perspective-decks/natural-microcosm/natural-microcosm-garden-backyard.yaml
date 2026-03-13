@@ -1,0 +1,477 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natural Microcosm — Garden & Backyard
+
+id: natural_microcosm_garden_backyard
+name: Natural Microcosm — Garden & Backyard
+description: 50 cards to shift how you see the domestic wild—from pollinators
+  and soil to weeds versus crops and the choreography of cultivated nature.
+domain: natural_microcosm
+cards:
+  - id: nmg_bee_landing
+    name: Bee Landing
+    prompt: |
+      Watch a bee land on a flower. The approach, the touch, the hover. The
+      bee is both predator and pollinator. What does the flower gain? What
+      does it risk?
+    follow_ups:
+      - How does the landing shape the next visit?
+      - What would the garden be without bees?
+      - What's the relationship between flower and bee?
+  - id: nmg_soil_crumble
+    name: Soil Crumble
+    prompt: |
+      Pick up a handful of soil. Feel the texture—the crumble, the grains.
+      That soil holds history, death, rebirth. What lived here before?
+      What will grow from it?
+    follow_ups:
+      - How does the soil shape what grows?
+      - What would sterile soil mean?
+      - What's the relationship between crumble and life?
+  - id: nmg_weed_edge
+    name: Weed at the Edge
+    prompt: |
+      A weed grows where the lawn meets the bed. It wasn't planted. It was
+      invited—or it invited itself. Consider the boundary. Who draws the line
+      between weed and flower?
+    follow_ups:
+      - What would the garden be without weeds?
+      - How does the edge create tension?
+      - What's the relationship between weed and intent?
+  - id: nmg_compost_steam
+    name: Compost Steam
+    prompt: |
+      Turn a compost heap. Steam rises—decomposition in progress. The heat is
+      microbial work. What was kitchen scrap becomes soil. Trace the
+      transformation.
+    follow_ups:
+      - What would the garden lose without compost?
+      - How does heat mark the process?
+      - What's the relationship between waste and fertility?
+  - id: nmg_seed_dormancy
+    name: Seed Dormancy
+    prompt: |
+      A seed in the soil can wait years—decades. It's alive but paused. What
+      wakes it? Light, water, fire, disturbance. Consider the patience of a
+      seed.
+    follow_ups:
+      - What would germination lose without dormancy?
+      - How does waiting shape survival?
+      - What's the relationship between pause and emergence?
+  - id: nmg_bird_bath
+    name: Bird Bath
+    prompt: |
+      A bird bath is an invitation. Watch who comes—sparrows, robins, maybe a
+      jay. The bath creates encounter. What would the yard be without this
+      small body of water?
+    follow_ups:
+      - How does the bath shape who visits?
+      - What's the choreography of arrival?
+      - What's the relationship between water and bird?
+  - id: nmg_tomato_truss
+    name: Tomato Truss
+    prompt: |
+      A tomato truss holds green fruit, then red. Study the architecture. The
+      stem, the branches, the weight. The plant is engineering. What holds it up?
+    follow_ups:
+      - What would the plant be without the truss?
+      - How does structure shape harvest?
+      - What's the relationship between form and fruit?
+  - id: nmg_aphid_column
+    name: Aphid Column
+    prompt: |
+      Aphids cluster on a stem—sucking, multiplying. They're both pest and
+      prey. Ladybugs will come. Notice the ecology. What's the relationship
+      between outbreak and balance?
+    follow_ups:
+      - What would the plant be without aphids?
+      - How does the cluster attract predators?
+      - What's the relationship between pest and ecosystem?
+  - id: nmg_hose_spray
+    name: Hose Spray
+    prompt: |
+      Water from a hose hits the soil. Watch it pool, soak, run. The spray is
+      artificial rain. How does it differ from the real thing? What does the
+      plant receive?
+    follow_ups:
+      - What would the garden be without the hose?
+      - How does irrigation shape growth?
+      - What's the relationship between spray and rain?
+  - id: nmg_lawn_mow
+    name: Lawn Mow
+    prompt: |
+      A lawn is managed wildness—cut to height, kept green. The mow interrupts
+      growth. Consider what the lawn would become if left alone. What are we
+      holding back?
+    follow_ups:
+      - What would the yard be without mowing?
+      - How does the cut shape identity?
+      - What's the relationship between lawn and control?
+  - id: nmg_pot_bound
+    name: Pot Bound
+    prompt: |
+      A plant in a pot—roots circling, seeking. The pot is a boundary. What
+      would the plant do with unbounded soil? The pot is both prison and
+      protection. Consider the trade.
+    follow_ups:
+      - What would the plant be without the pot?
+      - How does containment shape growth?
+      - What's the relationship between root and wall?
+  - id: nmg_mulch_layer
+    name: Mulch Layer
+    prompt: |
+      Mulch covers the soil—wood chips, straw, leaves. It holds moisture,
+      suppresses weeds, eventually becomes soil. The layer is temporary.
+      What does it do while it lasts?
+    follow_ups:
+      - What would the bed be without mulch?
+      - How does the layer create microclimate?
+      - What's the relationship between cover and soil?
+  - id: nmg_hummingbird_hover
+    name: Hummingbird Hover
+    prompt: |
+      A hummingbird hovers at a flower—wings invisible with speed. The hover
+      is costly. The nectar must be worth it. Consider the economy of the
+      visit.
+    follow_ups:
+      - What would the flower be without the hummingbird?
+      - How does hover shape the relationship?
+      - What's the relationship between cost and reward?
+  - id: nmg_fence_creep
+    name: Fence Creep
+    prompt: |
+      Ivy or morning glory creeps along a fence. The plant doesn't know the
+      fence is human-made. It climbs anyway. Consider the encounter between
+      growth and structure.
+    follow_ups:
+      - What would the plant climb without the fence?
+      - How does the fence shape the vine?
+      - What's the relationship between climb and support?
+  - id: nmg_worm_cast
+    name: Worm Cast
+    prompt: |
+      Worm casts—small piles of soil—dot the lawn. The worm has passed,
+      leaving fertility. The cast is archaeology. What did the worm process?
+      What did it leave behind?
+    follow_ups:
+      - What would the soil be without worms?
+      - How does the cast mark the worm's work?
+      - What's the relationship between cast and aeration?
+  - id: nmg_squirrel_cache
+    name: Squirrel Cache
+    prompt: |
+      A squirrel buries a nut—then forgets. The nut may sprout. The squirrel
+      is accidental gardener. Consider the relationship between memory and
+      dispersal. What grows from forgetfulness?
+    follow_ups:
+      - What would the oak be without the squirrel?
+      - How does caching shape forest spread?
+      - What's the relationship between bury and sprout?
+  - id: nmg_dew_morning
+    name: Dew Morning
+    prompt: |
+      Morning dew beads on leaves. Each drop holds light. The dew is
+      condensation—water from air. It will evaporate by midday. Consider the
+      brief gift. What does the plant receive?
+    follow_ups:
+      - What would the leaf be without the dew?
+      - How does the bead shape the morning?
+      - What's the relationship between condensation and leaf?
+  - id: nmg_prune_scar
+    name: Prune Scar
+    prompt: |
+      A pruning scar marks where a branch was cut. The tree has healed—or tried.
+      The scar is history. What was removed? Why? What does the tree remember?
+    follow_ups:
+      - What would the tree be without the prune?
+      - How does the cut shape growth?
+      - What's the relationship between wound and form?
+  - id: nmg_sunflower_turn
+    name: Sunflower Turn
+    prompt: |
+      A young sunflower turns with the sun—east at dawn, west at dusk. The
+      movement is heliotropism. The plant tracks light. Consider the
+      choreography. What would fixed facing mean?
+    follow_ups:
+      - What would the sunflower be without the turn?
+      - How does tracking shape growth?
+      - What's the relationship between movement and light?
+  - id: nmg_slug_trail
+    name: Slime Trail
+    prompt: |
+      A slug leaves a trail—silver, sticky. The trail marks passage. It
+      also protects the slug's foot. Consider the trail as both record and
+      adaptation. What does it enable?
+    follow_ups:
+      - What would the slug be without the trail?
+      - How does the slime shape movement?
+      - What's the relationship between trail and predator?
+  - id: nmg_birdhouse_hole
+    name: Birdhouse Hole
+    prompt: |
+      A birdhouse has a hole—a specific diameter. It excludes some birds,
+      invites others. The hole is a filter. Who was it designed for? Who has
+      claimed it?
+    follow_ups:
+      - What would the yard be without the birdhouse?
+      - How does the hole shape who nests?
+      - What's the relationship between hole and tenant?
+  - id: nmg_root_hair
+    name: Root Hair
+    prompt: |
+      Root hairs are invisible from above—tiny extensions that absorb water
+      and nutrients. The plant's interface with soil. Consider what happens
+      beneath. What would the plant lose without them?
+    follow_ups:
+      - How does the hair shape absorption?
+      - What's the relationship between hair and soil?
+      - What would you see if you could see them?
+  - id: nmg_frost_leaf
+    name: Frost on Leaf
+    prompt: |
+      Frost patterns on a leaf—crystalline, delicate. The frost is water
+      frozen from air. It will melt with the sun. Consider the temporary
+      art. What does the leaf experience?
+    follow_ups:
+      - What would the morning be without frost?
+      - How does frost shape the leaf's day?
+      - What's the relationship between crystal and cell?
+  - id: nmg_companion_plant
+    name: Companion Plant
+    prompt: |
+      Basil beside tomatoes. Marigolds beside squash. Companion planting is
+      strategic adjacency. Some plants repel; some attract. Consider the
+      social life of the bed.
+    follow_ups:
+      - What would the tomato be without the basil?
+      - How does adjacency shape the garden?
+      - What's the relationship between neighbor and pest?
+  - id: nmg_fallen_apple
+    name: Fallen Apple
+    prompt: |
+      An apple falls—unpicked, overripe. It will rot, feed wasps, maybe grow
+      a seedling. The fall is both waste and beginning. Consider the arc from
+      branch to soil.
+    follow_ups:
+      - What would the ground be without the fall?
+      - How does rot shape what comes next?
+      - What's the relationship between drop and dispersal?
+  - id: nmg_spider_web_corner
+    name: Spider Web in Corner
+    prompt: |
+      A spider web spans a corner of the shed. Dew catches on the silk. The
+      web is both trap and home. Consider the spider's economy. What does it
+      invest? What does it harvest?
+    follow_ups:
+      - What would the corner be without the web?
+      - How does the web shape the spider's day?
+      - What's the relationship between silk and prey?
+  - id: nmg_seed_packet
+    name: Seed Packet
+    prompt: |
+      A seed packet—photo on the front, instructions on the back. The packet
+      is a promise. What will emerge from those tiny dots? Consider the
+      relationship between image and reality.
+    follow_ups:
+      - What would the garden be without the packet?
+      - How does the packet shape expectation?
+      - What's the relationship between promise and plant?
+  - id: nmg_rain_barrel
+    name: Rain Barrel
+    prompt: |
+      A rain barrel catches runoff from the roof. The water is free, soft,
+      unchlorinated. The barrel is infrastructure. Consider what flows from
+      sky to barrel to root.
+    follow_ups:
+      - What would the garden be without the barrel?
+      - How does captured rain differ from tap?
+      - What's the relationship between roof and root?
+  - id: nmg_garden_glove
+    name: Garden Glove
+    prompt: |
+      A glove left in the bed—fingers stiff, soil-stained. The glove is a
+      prosthetic. It extends the hand, protects it. Consider the boundary
+      between human and soil. What does the glove allow?
+    follow_ups:
+      - What would the gardener feel without the glove?
+      - How does the glove shape the relationship?
+      - What's the relationship between hand and earth?
+  - id: nmg_caterpillar_chew
+    name: Caterpillar Chew
+    prompt: |
+      A caterpillar eats a leaf—edge by edge. The chew is audible. The
+      caterpillar is transforming leaf into butterfly. Consider the cost to
+      the plant. What does it gain from hosting?
+    follow_ups:
+      - What would the leaf be without the chew?
+      - How does the caterpillar shape the plant?
+      - What's the relationship between eat and become?
+  - id: nmg_fertilizer_burn
+    name: Fertilizer Edge
+    prompt: |
+      Too much fertilizer burns—tips brown, roots crisp. The garden is
+      chemistry. More is not always better. Consider the edge between feed
+      and poison. Where is the line?
+    follow_ups:
+      - What would the plant be with less?
+      - How does excess shape the leaf?
+      - What's the relationship between dose and damage?
+  - id: nmg_shade_cloth
+    name: Shade Cloth
+    prompt: |
+      Shade cloth stretches over seedlings. It diffuses light, cuts heat. The
+      cloth is mediation—between sun and plant. Consider what the cloth adds.
+      What does it subtract?
+    follow_ups:
+      - What would the seedling be without the cloth?
+      - How does shade shape early growth?
+      - What's the relationship between filter and light?
+  - id: nmg_morning_glory_dawn
+    name: Morning Glory at Dawn
+    prompt: |
+      Morning glories open at dawn, close by afternoon. The flower has a
+      schedule. Consider the rhythm. What would the garden be if it stayed
+      open all day?
+    follow_ups:
+      - How does timing shape pollination?
+      - What's the relationship between open and pollinator?
+      - Why dawn?
+  - id: nmg_garden_path
+    name: Garden Path
+    prompt: |
+      A path through the garden—stepping stones or mulch. The path is where
+      we walk. The rest is where we don't. Consider the line. What does
+      the path protect? What does it exclude?
+    follow_ups:
+      - What would the garden be without the path?
+      - How does the path shape movement?
+      - What's the relationship between step and soil?
+  - id: nmg_cross_pollination
+    name: Cross-Pollination
+    prompt: |
+      Bees carry pollen from one plant to another. The offspring will be
+      hybrids—not identical to either parent. Consider the mix. What does
+      crossing create? What does it risk?
+    follow_ups:
+      - What would the variety be without crossing?
+      - How does the bee shape the gene?
+      - What's the relationship between carry and combine?
+  - id: nmg_herb_scent
+    name: Herb Scent
+    prompt: |
+      Brush against rosemary or mint. The scent rises—volatile oils released.
+      The scent is defense and invitation. Consider the dual role. What
+      repels? What attracts?
+    follow_ups:
+      - What would the herb be without the scent?
+      - How does the oil shape the encounter?
+      - What's the relationship between touch and release?
+  - id: nmg_watering_can_pour
+    name: Watering Can Pour
+    prompt: |
+      Water from a can—gentler than a hose. The pour is deliberate. Consider
+      the ritual. What does the can allow that the hose does not? What's the
+      relationship between pour and plant?
+    follow_ups:
+      - What would the seedling prefer?
+      - How does the pour shape the soil?
+      - What's the relationship between ritual and growth?
+  - id: nmg_bird_seed_spill
+    name: Bird Seed Spill
+    prompt: |
+      Seed spills from a feeder—sunflower, millet. It lands on the ground.
+      Sparrows scratch. Squirrels raid. The spill creates a stage. Consider
+      who benefits. Who was it meant for?
+    follow_ups:
+      - What would the ground be without the spill?
+      - How does the spill shape the flock?
+      - What's the relationship between drop and diner?
+  - id: nmg_cutting_propagate
+    name: Cutting Propagate
+    prompt: |
+      A cutting—a stem in water or soil—roots. No seed. The plant clones
+      itself. Consider the shortcut. What does propagation bypass? What does
+      it preserve?
+    follow_ups:
+      - What would the garden be without cuttings?
+      - How does cloning shape diversity?
+      - What's the relationship between cut and continuation?
+  - id: nmg_leaf_miner_tunnel
+    name: Leaf Miner Tunnel
+    prompt: |
+      A leaf miner's trail—winding, pale, beneath the surface. The larva
+      eats between the layers. The leaf survives, scarred. Consider the
+      invasion. What does the leaf lose? What does it keep?
+    follow_ups:
+      - What would the leaf be without the tunnel?
+      - How does the miner shape the leaf?
+      - What's the relationship between tunnel and tissue?
+  - id: nmg_greenhouse_condensation
+    name: Greenhouse Condensation
+    prompt: |
+      Condensation beads on a greenhouse pane. The air inside is humid—plants
+      exhale. The pane is a boundary. Consider the microclimate. What holds
+      the warmth? What holds the moisture?
+    follow_ups:
+      - What would the greenhouse be without the pane?
+      - How does condensation shape the interior?
+      - What's the relationship between glass and growth?
+  - id: nmg_terrace_level
+    name: Terrace Level
+    prompt: |
+      A terraced bed steps down a slope. Each level holds soil, holds water.
+      The terrace is erosion control and stage. Consider the architecture.
+      What would the slope be without it?
+    follow_ups:
+      - How does the level shape what grows?
+      - What's the relationship between step and stability?
+      - Why terrace?
+  - id: nmg_native_vs_exotic
+    name: Native vs Exotic
+    prompt: |
+      Some plants are native—they belong. Others are exotic—introduced.
+      Consider the bed. Which is which? Does it matter? What does native
+      offer that exotic does not?
+    follow_ups:
+      - What would the garden be with only natives?
+      - How does origin shape ecology?
+      - What's the relationship between belong and thrive?
+  - id: nmg_garden_dusk
+    name: Garden at Dusk
+    prompt: |
+      The garden at dusk—light fades, moths emerge. The day shift ends; the
+      night shift begins. Consider the transition. Who wakes? Who sleeps?
+      What does the garden become?
+    follow_ups:
+      - What would the garden be without dusk?
+      - How does the shift shape the ecosystem?
+      - What's the relationship between day and night?
+  - id: nmg_stake_tie
+    name: Stake and Tie
+    prompt: |
+      A plant tied to a stake—bean, tomato. The stake corrects. Without it,
+      the plant would sprawl. Consider the support. What does the tie enable?
+      What does it constrain?
+    follow_ups:
+      - What would the plant be without the stake?
+      - How does the tie shape the form?
+      - What's the relationship between support and growth?
+  - id: nmg_first_frost
+    name: First Frost
+    prompt: |
+      The first frost—tender plants blacken. The garden shifts. Some things
+      end; others persist. Consider the threshold. What does frost select?
+      What does it spare?
+    follow_ups:
+      - What would the garden be without frost?
+      - How does the first frost shape the season?
+      - What's the relationship between cold and closure?
+  - id: nmg_garden_reflection
+    name: Garden Reflection
+    prompt: |
+      Look at the garden. It reflects choices—what was planted, what was
+      weeded, what was left alone. The garden is a mirror. What does it show
+      about the gardener?
+    follow_ups:
+      - What would the garden say without words?
+      - How do choices shape the whole?
+      - What's the relationship between gardener and grown?

@@ -1,0 +1,529 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# The Human Interface — Retail
+
+id: human_interface_retail
+name: The Human Interface — Retail
+description: 50 cards to shift how you see the retail space—from aisles and
+  browsing choreography to fitting rooms and the dance of purchase.
+domain: human_interface
+cards:
+  - id: hi_rt_aisle_flow
+    name: Aisle Flow
+    prompt: |
+      The aisle channels movement. Carts go one way; bodies navigate. Observe
+      the flow. Who yields? Who blocks? The aisle has physics. What rules
+      govern the dance?
+    follow_ups:
+      - How does the aisle shape the browse?
+      - What would the store be without aisles?
+      - What's the relationship between flow and design?
+  - id: hi_rt_browsing_choreography
+    name: Browsing Choreography
+    prompt: |
+      Fingers touch fabric. Eyes scan shelves. The browse has a rhythm—pause,
+      consider, move on. Observe the choreography. What does the body do when
+      it's not buying?
+    follow_ups:
+      - How does browsing shape the experience?
+      - What would the store be without browsing?
+      - What's the relationship between browse and desire?
+  - id: hi_rt_fitting_room
+    name: Fitting Room
+    prompt: |
+      The curtain closes. The fitting room is a threshold—public to private.
+      Inside, you try on a possible self. Observe the return. What does the
+      face say? The fitting room is a stage for decision.
+    follow_ups:
+      - How does the fitting room shape the purchase?
+      - What would the store be without it?
+      - What's the relationship between fitting and identity?
+  - id: hi_rt_dance_of_purchase
+    name: Dance of Purchase
+    prompt: |
+      Approach, select, carry, pay. The purchase has steps. Observe the
+      sequence. Where do people hesitate? The dance is choreographed by
+      the store. What does it extract?
+    follow_ups:
+      - How does the dance shape the outcome?
+      - What would the store be without the sequence?
+      - What's the relationship between dance and desire?
+  - id: hi_rt_cart_territory
+    name: Cart Territory
+    prompt: |
+      The cart extends the body. It holds choices, blocks passage. Observe
+      the cart's path. The cart is a mobile territory. What does it claim?
+    follow_ups:
+      - How does the cart shape movement?
+      - What would the store be without carts?
+      - What's the relationship between cart and accumulation?
+  - id: hi_rt_endcap_display
+    name: Endcap Display
+    prompt: |
+      The end of the aisle holds a display—impulse, sale, seasonal. The
+      endcap catches the eye. Observe who stops. The endcap is a trap.
+      What does it do?
+    follow_ups:
+      - How does the endcap shape the browse?
+      - What would the aisle be without it?
+      - What's the relationship between display and impulse?
+  - id: hi_rt_checkout_line
+    name: Checkout Line
+    prompt: |
+      The line forms. Candy, magazines, last chances. The checkout is a
+      final test. Observe the wait. What do people do? The line is a
+      threshold between browse and exit.
+    follow_ups:
+      - How does the line shape the purchase?
+      - What would the store be without the wait?
+      - What's the relationship between line and impulse?
+  - id: hi_rt_shelf_height
+    name: Shelf Height
+    prompt: |
+      Eye level sells. The shelf height is design. Observe what's where.
+      What's at the bottom? What's at the top? The height encodes value.
+      What does it assume about the body?
+    follow_ups:
+      - How does shelf height shape the browse?
+      - What would the store be with uniform height?
+      - What's the relationship between height and access?
+  - id: hi_rt_price_tag
+    name: Price Tag
+    prompt: |
+      The tag says the price. Sometimes hidden, sometimes prominent. Observe
+      the placement. The tag is information and barrier. What does the tag
+      do to the moment of touch?
+    follow_ups:
+      - How does the tag shape the decision?
+      - What would the item be without the tag?
+      - What's the relationship between tag and value?
+  - id: hi_rt_store_entrance
+    name: Store Entrance
+    prompt: |
+      The door opens. You enter. The entrance is a threshold. Observe what
+      you see first. The entrance sets the tone. What does the store want
+      you to feel?
+    follow_ups:
+      - How does the entrance shape the visit?
+      - What would the store be without design?
+      - What's the relationship between entrance and expectation?
+  - id: hi_rt_sales_associate
+    name: Sales Associate
+    prompt: |
+      "Can I help you find something?" The offer is scripted. Observe the
+      exchange. Accept or decline? The associate is a guide and a pressure.
+      What does the offer do?
+    follow_ups:
+      - How does the associate shape the browse?
+      - What would the store be without them?
+      - What's the relationship between offer and obligation?
+  - id: hi_rt_basket_versus_cart
+    name: Basket Versus Cart
+    prompt: |
+      Basket for a few items. Cart for more. The choice predicts the
+      purchase. Observe who takes what. The basket limits; the cart
+      invites. What does the choice enable?
+    follow_ups:
+      - How does the basket shape the visit?
+      - What would the store be with only carts?
+      - What's the relationship between vessel and accumulation?
+  - id: hi_rt_return_counter
+    name: Return Counter
+    prompt: |
+      The return line is different. People carry bags, receipts, regret.
+      The return is a reversal. Observe the exchange. What does the return
+      cost—emotionally, socially? The return counter is a site of undoing.
+    follow_ups:
+      - How does the return shape the relationship?
+      - What would the store be without returns?
+      - What's the relationship between return and trust?
+  - id: hi_rt_dressing_room_limit
+    name: Dressing Room Limit
+    prompt: |
+      "Six items maximum." The limit controls the try-on. Observe the
+      negotiation. What happens when you have seven? The limit shapes
+      the fitting room experience. What does it assume?
+    follow_ups:
+      - How does the limit shape the try-on?
+      - What would the fitting room be without it?
+      - What's the relationship between limit and theft?
+  - id: hi_rt_impulse_buy
+    name: Impulse Buy
+    prompt: |
+      The item wasn't on the list. It caught the eye. The impulse buy is
+      a moment of surrender. Observe when it happens. What triggered it?
+      The impulse is design meeting desire.
+    follow_ups:
+      - How does the impulse shape the purchase?
+      - What would the store be without impulse?
+      - What's the relationship between impulse and regret?
+  - id: hi_rt_store_music
+    name: Store Music
+    prompt: |
+      Music plays—slow, familiar, designed. The music shapes mood and pace.
+      Observe the tempo. Fast store, slow music? The music is invisible
+      design. What does it do to the body?
+    follow_ups:
+      - How does the music shape the visit?
+      - What would the store be in silence?
+      - What's the relationship between music and duration?
+  - id: hi_rt_mannequin
+    name: Mannequin
+    prompt: |
+      The mannequin wears the clothes. It's an ideal body, a suggestion.
+      Observe how people look at it. The mannequin is a mirror and a
+      fantasy. What does it promise?
+    follow_ups:
+      - How does the mannequin shape the browse?
+      - What would the store be without it?
+      - What's the relationship between mannequin and desire?
+  - id: hi_rt_sample_station
+    name: Sample Station
+    prompt: |
+      Taste this. Try this. The sample invites touch. The station creates
+      a pause. Observe who stops. The sample is a small gift. What does
+      it extract?
+    follow_ups:
+      - How does the sample shape the purchase?
+      - What would the store be without samples?
+      - What's the relationship between sample and obligation?
+  - id: hi_rt_sale_rack
+    name: Sale Rack
+    prompt: |
+      The sale rack is chaos—discounted, rumpled. People dig. The sale rack
+      is a different kind of browse. Observe the behavior. What does the
+      discount do to the touch?
+    follow_ups:
+      - How does the sale rack shape the visit?
+      - What would the store be without it?
+      - What's the relationship between sale and value?
+  - id: hi_rt_mirror_encounter
+    name: Mirror Encounter
+    prompt: |
+      You see yourself in the store mirror. The encounter is inevitable.
+      Observe the gaze. What do you check? The mirror is a test. The store
+      provides the mirror. What does it want?
+    follow_ups:
+      - How does the mirror shape the try-on?
+      - What would the fitting room be without it?
+      - What's the relationship between mirror and self?
+  - id: hi_rt_cashier_small_talk
+    name: Cashier Small Talk
+    prompt: |
+      "Find everything okay?" The cashier asks. The small talk is scripted.
+      Observe the exchange. What does the question do? The cashier is the
+      last human contact. What does the talk create?
+    follow_ups:
+      - How does the small talk shape the exit?
+      - What would the checkout be without it?
+      - What's the relationship between talk and transaction?
+  - id: hi_rt_store_layout
+    name: Store Layout
+    prompt: |
+      The path is designed. Staples in the back. Impulse at the front. The
+      layout choreographs the visit. Observe your route. What did the
+      designer want you to pass?
+    follow_ups:
+      - How does the layout shape the browse?
+      - What would the store be with random layout?
+      - What's the relationship between layout and exposure?
+  - id: hi_rt_touch_decide
+    name: Touch Decide
+    prompt: |
+      Fingers touch the fabric, the surface. The touch decides. Observe the
+      moment. What does the hand learn that the eye can't? The touch is
+      a threshold. What does it require?
+    follow_ups:
+      - How does touch shape the decision?
+      - What would the store be without touch?
+      - What's the relationship between touch and commitment?
+  - id: hi_rt_receipt_handoff
+    name: Receipt Handoff
+    prompt: |
+      The receipt is offered—in the bag or separate. Some take it; some
+      decline. The receipt is proof and record. Observe the exchange. What
+      does the receipt do for the transaction?
+    follow_ups:
+      - How does the receipt shape the exit?
+      - What would the checkout be without it?
+      - What's the relationship between receipt and closure?
+  - id: hi_rt_store_exit
+    name: Store Exit
+    prompt: |
+      The door opens. You leave with a bag—or empty-handed. The exit is a
+      threshold. Observe the feeling. What does the exit extract? The exit
+      is the end of the dance. What remains?
+    follow_ups:
+      - How does the exit shape the visit?
+      - What would the store be without the door?
+      - What's the relationship between exit and satisfaction?
+  - id: hi_rt_loyalty_card_ask
+    name: Loyalty Card Ask
+    prompt: |
+      "Do you have our rewards card?" The ask is routine. Observe the
+      response. Yes, no, sign up. The loyalty card extends the relationship.
+      What does the ask create?
+    follow_ups:
+      - How does the loyalty card shape the transaction?
+      - What would the checkout be without it?
+      - What's the relationship between card and data?
+  - id: hi_rt_abandoned_cart
+    name: Abandoned Cart
+    prompt: |
+      A cart sits in the aisle—full, unattended. The cart is abandoned.
+      Observe the contents. What did they consider? The abandonment is a
+      moment of no. What does it reveal?
+    follow_ups:
+      - How does the abandoned cart shape the store?
+      - What would the store learn from it?
+      - What's the relationship between abandon and desire?
+  - id: hi_rt_fitting_room_opinion
+    name: Fitting Room Opinion
+    prompt: |
+      "How does it look?" Someone asks from outside the curtain. The opinion
+      is sought. The fitting room becomes social. Observe the exchange.
+      What does the opinion do?
+    follow_ups:
+      - How does the opinion shape the decision?
+      - What would the try-on be alone?
+      - What's the relationship between opinion and purchase?
+  - id: hi_rt_store_scent
+    name: Store Scent
+    prompt: |
+      The store has a smell—perfume, leather, clean. The scent is designed.
+      It enters before you notice. Observe when you smell it. What does
+      the scent do to the body?
+    follow_ups:
+      - How does the scent shape the visit?
+      - What would the store be without it?
+      - What's the relationship between scent and memory?
+  - id: hi_rt_compare_prices
+    name: Compare Prices
+    prompt: |
+      Phone out. Scanning. The price check is research. Observe the moment.
+      What does the phone reveal? The comparison happens in the aisle. What
+      does it do to the decision?
+    follow_ups:
+      - How does the comparison shape the purchase?
+      - What would the store be without phones?
+      - What's the relationship between compare and power?
+  - id: hi_rt_window_display
+    name: Window Display
+    prompt: |
+      The window faces the street. Mannequins, props, a story. The display
+      stops the walk. Observe what catches the eye. The window is an
+      invitation. What does it promise?
+    follow_ups:
+      - How does the window shape the entrance?
+      - What would the store be without it?
+      - What's the relationship between display and desire?
+  - id: hi_rt_size_search
+    name: Size Search
+    prompt: |
+      Fingers flip through hangers. Looking for the size. The search has
+      a rhythm. Observe the frustration or relief. The size is a gate.
+      What does the search require?
+    follow_ups:
+      - How does the size search shape the browse?
+      - What would the store be with all sizes visible?
+      - What's the relationship between size and body?
+  - id: hi_rt_payment_choice
+    name: Payment Choice
+    prompt: |
+      Card, cash, phone. The payment choice is moment of the transaction.
+      Observe the method. The choice is habit and identity. What does the
+      payment method communicate?
+    follow_ups:
+      - How does the payment shape the checkout?
+      - What would the store be with one method?
+      - What's the relationship between payment and speed?
+  - id: hi_rt_store_regular
+    name: Store Regular
+    prompt: |
+      The regular knows the layout. They move with purpose. The associate
+      nods. Observe the regular. What do they know that the newcomer
+      doesn't? The regular has a relationship with the space.
+    follow_ups:
+      - How does the regular shape the store?
+      - What would the store be without regulars?
+      - What's the relationship between regular and loyalty?
+  - id: hi_rt_bag_handoff
+    name: Bag Handoff
+    prompt: |
+      The bag is handed over—full, branded. The handoff completes the
+      transaction. Observe the exchange. What does the bag do for the
+      exit? The bag is proof and burden.
+    follow_ups:
+      - How does the bag shape the exit?
+      - What would the purchase be without it?
+      - What's the relationship between bag and identity?
+  - id: hi_rt_fitting_room_overflow
+    name: Fitting Room Overflow
+    prompt: |
+      Too many items. The associate takes the overflow. "I'll hold these."
+      The overflow is trust. Observe the exchange. What does the associate
+      hold? The overflow extends the try-on. What does it enable?
+    follow_ups:
+      - How does the overflow shape the fitting?
+      - What would the fitting room be without it?
+      - What's the relationship between overflow and trust?
+  - id: hi_rt_store_lighting
+    name: Store Lighting
+    prompt: |
+      The light is designed—flattering, bright, warm. The lighting shapes
+      how things look. Observe the mirror in that light. What does the
+      lighting do to the face, the fabric?
+    follow_ups:
+      - How does the lighting shape the purchase?
+      - What would the store be in harsh light?
+      - What's the relationship between light and truth?
+  - id: hi_rt_aisle_block
+    name: Aisle Block
+    prompt: |
+      Someone stands in the aisle. You need to pass. The block is
+      oblivious or deliberate. Observe the negotiation. "Excuse me." The
+      block is a small friction. What does it require?
+    follow_ups:
+      - How does the block shape the flow?
+      - What would the store be with wider aisles?
+      - What's the relationship between block and civility?
+  - id: hi_rt_clearance_section
+    name: Clearance Section
+    prompt: |
+      The clearance section is the back, the corner. Last season, last
+      chance. The section has different energy. Observe the browse. What
+      does the discount do to the touch, the consideration?
+    follow_ups:
+      - How does the clearance shape the visit?
+      - What would the store be without it?
+      - What's the relationship between clearance and value?
+  - id: hi_rt_store_map
+    name: Store Map
+    prompt: |
+      "Where's the X?" The map or the associate answers. The store has
+      geography. Observe the disorientation. What does the map provide?
+      The map is orientation. What does it assume?
+    follow_ups:
+      - How does the map shape the visit?
+      - What would the store be without it?
+      - What's the relationship between map and fluency?
+  - id: hi_rt_try_on_stack
+    name: Try-On Stack
+    prompt: |
+      The associate returns the try-ons. They're folded, hung. The stack
+      goes back to the floor. Observe the labor. Who touched these? The
+      try-on stack is the aftermath of many maybes.
+    follow_ups:
+      - How does the stack shape the floor?
+      - What would the fitting room be without it?
+      - What's the relationship between stack and labor?
+  - id: hi_rt_store_hours
+    name: Store Hours
+    prompt: |
+      The sign says when the store opens, when it closes. The hours are
+      a boundary. Observe the crowd before opening. The hours structure
+      access. What do they assume about the customer?
+    follow_ups:
+      - How do the hours shape the visit?
+      - What would the store be with 24-hour access?
+      - What's the relationship between hours and availability?
+  - id: hi_rt_shopping_list
+    name: Shopping List
+    prompt: |
+      Phone or paper. The list guides the visit. Observe who has one. The
+      list is intention. It resists impulse—or doesn't. What does the
+      list do for the browse?
+    follow_ups:
+      - How does the list shape the purchase?
+      - What would the visit be without it?
+      - What's the relationship between list and control?
+  - id: hi_rt_store_emptiness
+    name: Store Emptiness
+    prompt: |
+      Off-hours, slow day. The store is empty. The emptiness changes the
+      feel. Observe the space. What does the emptiness reveal? The empty
+      store is a different kind of stage.
+    follow_ups:
+      - How does the emptiness shape the browse?
+      - What would the store be if always empty?
+      - What's the relationship between empty and comfort?
+  - id: hi_rt_fitting_room_curtain
+    name: Fitting Room Curtain
+    prompt: |
+      The curtain closes. Privacy is partial—gaps, sounds. The curtain is
+      a threshold. Observe the boundary. What does the curtain protect?
+      What does it fail to protect?
+    follow_ups:
+      - How does the curtain shape the try-on?
+      - What would the fitting room be with a door?
+      - What's the relationship between curtain and privacy?
+  - id: hi_rt_store_aroma
+    name: Store Aroma
+    prompt: |
+      Bakery, coffee, perfume—the store has a scent. The aroma is the first
+      contact. It primes the visit. Observe when you notice it. What does
+      the aroma do before you buy?
+    follow_ups:
+      - How does the aroma shape the visit?
+      - What would the store be without it?
+      - What's the relationship between aroma and desire?
+  - id: hi_rt_purchase_regret
+    name: Purchase Regret
+    prompt: |
+      The bag in hand. The doubt creeps in. The regret may come later. Observe
+      the face leaving the store. What does the purchase mean? The regret
+      is the shadow of the dance. What creates it?
+    follow_ups:
+      - How does regret shape the next visit?
+      - What would the purchase be without regret?
+      - What's the relationship between regret and desire?
+  - id: hi_rt_store_thank_you
+    name: Store Thank You
+    prompt: |
+      "Thank you for shopping with us." The phrase closes the transaction.
+      It's scripted. Observe the exchange. What does the thank you do? The
+      phrase is a small ritual. What does it create?
+    follow_ups:
+      - How does the thank you shape the exit?
+      - What would the checkout be without it?
+      - What's the relationship between thank you and closure?
+  - id: hi_rt_store_entrance_sensor
+    name: Entrance Sensor
+    prompt: |
+      The door opens automatically. The sensor detects your approach. The
+      entrance is choreographed. Observe the threshold. What does the
+      automatic door do to the arrival? The sensor creates a seamless
+      transition.
+    follow_ups:
+      - How does the sensor shape the entrance?
+      - What would the store be with a manual door?
+      - What's the relationship between sensor and welcome?
+  - id: hi_rt_price_match
+    name: Price Match
+    prompt: |
+      "We'll match competitor prices." The offer is a promise. Observe when
+      someone uses it. The price match is a negotiation. What does it
+      require of the customer? The match creates trust—or suspicion.
+    follow_ups:
+      - How does the price match shape the purchase?
+      - What would the store be without it?
+      - What's the relationship between match and loyalty?
+  - id: hi_rt_fitting_room_number
+    name: Fitting Room Number
+    prompt: |
+      "How many?" The associate asks. The number limits the try-on. Observe
+      the negotiation. What happens when you have more? The number is a
+      control. What does it assume about the customer?
+    follow_ups:
+      - How does the number shape the fitting?
+      - What would the fitting room be without limits?
+      - What's the relationship between number and trust?
+  - id: hi_rt_gift_receipt
+    name: Gift Receipt
+    prompt: |
+      "Would you like a gift receipt?" The offer separates the price from
+      the gift. The gift receipt enables return without revealing cost.
+      Observe the choice. What does the gift receipt protect?
+    follow_ups:
+      - How does the gift receipt shape the purchase?
+      - What would the gift be without it?
+      - What's the relationship between receipt and discretion?

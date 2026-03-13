@@ -10,6 +10,19 @@ domains:
   culinary_lab: |
     Shifting from tasty to transformative. Explore the chemistry of a bite,
     the history of an ingredient, and the soundtrack of a restaurant.
+  natural_microcosm: |
+    Perfect for a park or a backyard. This lens focuses on the invisible
+    engineering of a leaf, the slow-motion life of a rock, or the territorial
+    dramas of insects.
+  human_interface: |
+    The everyday spaces where humans meet—coffee shops, transit hubs,
+    workplaces, retail, public parks. Cards focus on queue choreography,
+    territorial claims, invisible scripts, and the anthropology of shared space.
+  digital_ghost: |
+    The invisible layer of digital experience—buttons and controls, loading
+    states, errors, data storage, onboarding. Cards focus on intent behind
+    interfaces, physicality of data, hidden labor behind smooth UI, and when
+    software breaks character.
 
 decks:
   - id: ways_of_looking_at_art
@@ -104,3 +117,130 @@ decks:
       and fish to the choreography of the counter and the archaeology of each
       neta's origin.
     domain: culinary_lab
+
+  - id: natural_microcosm_forest_floor
+    name: Natural Microcosm — Forest Floor
+    path: perspective-decks/natural-microcosm/natural-microcosm-forest-floor.yaml
+    description: |
+      50 cards to shift how you see the forest floor—from decomposition and
+      mycelium to leaf litter architecture and the invisible life beneath the
+      canopy.
+    domain: natural_microcosm
+
+  - id: natural_microcosm_garden_backyard
+    name: Natural Microcosm — Garden & Backyard
+    path: perspective-decks/natural-microcosm/natural-microcosm-garden-backyard.yaml
+    description: |
+      50 cards to shift how you see the domestic wild—from pollinators and
+      soil to weeds versus crops and the choreography of cultivated nature.
+    domain: natural_microcosm
+
+  - id: natural_microcosm_rocks_stones
+    name: Natural Microcosm — Rocks & Stones
+    path: perspective-decks/natural-microcosm/natural-microcosm-rocks-stones.yaml
+    description: |
+      50 cards to shift how you see rocks and stones—from geological time and
+      lichen to weathering, erosion, and the slow-motion life of mineral.
+    domain: natural_microcosm
+
+  - id: natural_microcosm_pond_puddle
+    name: Natural Microcosm — Pond & Puddle
+    path: perspective-decks/natural-microcosm/natural-microcosm-pond-puddle.yaml
+    description: |
+      50 cards to shift how you see water at small scale—from surface tension
+      and reflections to aquatic insects, tadpoles, and the life in temporary
+      pools.
+    domain: natural_microcosm
+
+  - id: natural_microcosm_insect_territories
+    name: Natural Microcosm — Insect Territories
+    path: perspective-decks/natural-microcosm/natural-microcosm-insect-territories.yaml
+    description: |
+      50 cards to shift how you see insect life—from ant trails and bee
+      traffic to spider webs, territorial dramas, and the choreography of
+      colonies.
+    domain: natural_microcosm
+
+  - id: human_interface_coffee_shop
+    name: The Human Interface — Coffee Shop
+    path: perspective-decks/human-interface/human-interface-coffee-shop.yaml
+    description: |
+      50 cards to shift how you see the coffee shop—from queue choreography
+      and laptop territories to the third place, invisible scripts, and coffee
+      as ritual.
+    domain: human_interface
+
+  - id: human_interface_transit_hub
+    name: The Human Interface — Transit Hub
+    path: perspective-decks/human-interface/human-interface-transit-hub.yaml
+    description: |
+      50 cards to shift how you see the transit hub—from platforms and
+      waiting to arrival/departure flow and the choreography of strangers
+      in transit.
+    domain: human_interface
+
+  - id: human_interface_workplace
+    name: The Human Interface — Workplace
+    path: perspective-decks/human-interface/human-interface-workplace.yaml
+    description: |
+      50 cards to shift how you see the workplace—from desk territories and
+      meeting rooms to the water cooler and visible versus invisible hierarchy.
+    domain: human_interface
+
+  - id: human_interface_retail
+    name: The Human Interface — Retail
+    path: perspective-decks/human-interface/human-interface-retail.yaml
+    description: |
+      50 cards to shift how you see the retail space—from aisles and browsing
+      choreography to fitting rooms and the dance of purchase.
+    domain: human_interface
+
+  - id: human_interface_public_space
+    name: The Human Interface — Public Space
+    path: perspective-decks/human-interface/human-interface-public-space.yaml
+    description: |
+      50 cards to shift how you see the public space—from benches and pathways
+      to strangers' choreography and objects as talismans.
+    domain: human_interface
+
+  - id: digital_ghost_buttons_controls
+    name: Digital Ghost — Buttons & Controls
+    path: perspective-decks/digital-ghost/digital-ghost-buttons-controls.yaml
+    description: |
+      50 cards to shift how you see buttons and controls—from the intent behind
+      a click to affordance, what a tap implies, and the hidden labor behind
+      every interface element.
+    domain: digital_ghost
+
+  - id: digital_ghost_loading_states
+    name: Digital Ghost — Loading States
+    path: perspective-decks/digital-ghost/digital-ghost-loading-states.yaml
+    description: |
+      50 cards to shift how you see loading—from spinners and skeletons to
+      latency, the wait, and what happens in the gap between action and response.
+    domain: digital_ghost
+
+  - id: digital_ghost_error_edge
+    name: Digital Ghost — Error & Edge
+    path: perspective-decks/digital-ghost/digital-ghost-error-edge.yaml
+    description: |
+      50 cards to shift how you see errors—when the machine breaks character,
+      error messages, and the moments when software reveals its seams and
+      limitations.
+    domain: digital_ghost
+
+  - id: digital_ghost_data_storage
+    name: Digital Ghost — Data & Storage
+    path: perspective-decks/digital-ghost/digital-ghost-data-storage.yaml
+    description: |
+      50 cards to shift how you see data storage—where data lives, the
+      physicality of data, its weight, and the hidden geography of the digital.
+    domain: digital_ghost
+
+  - id: digital_ghost_onboarding_flow
+    name: Digital Ghost — Onboarding & Flow
+    path: perspective-decks/digital-ghost/digital-ghost-onboarding-flow.yaml
+    description: |
+      50 cards to shift how you see onboarding—the first-run experience, empty
+      states, first impressions, and the choreography of introduction.
+    domain: digital_ghost

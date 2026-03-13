@@ -1,0 +1,543 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natural Microcosm — Rocks & Stones
+
+id: natural_microcosm_rocks_stones
+name: Natural Microcosm — Rocks & Stones
+description: 50 cards to shift how you see rocks and stones—from geological time
+  and lichen to weathering, erosion, and the slow-motion life of mineral.
+domain: natural_microcosm
+cards:
+  - id: nmr_lichen_map
+    name: Lichen Map
+    prompt: |
+      Lichen grows on rock—slow, patient. Orange, grey, green. It's not one
+      organism but two: fungus and alga. Consider the partnership. What does
+      the rock offer? What does lichen give back?
+    follow_ups:
+      - What would the rock look like without lichen?
+      - How does lichen mark time?
+      - What's the relationship between lichen and weathering?
+  - id: nmr_pebble_smooth
+    name: Pebble Smooth
+    prompt: |
+      A river pebble is smooth—water and sand have worn it. Hold one. How many
+      years did it take? The smoothness is a record of journey. What would a
+      sharp edge mean?
+    follow_ups:
+      - How does smoothness reveal history?
+      - What would the pebble be without water?
+      - What's the relationship between shape and flow?
+  - id: nmr_crack_frost
+    name: Frost Crack
+    prompt: |
+      Water freezes in a crack, expands. The rock splits. It's slow violence.
+      Find a rock with a fissure. Consider the cycles of freeze and thaw
+      that made it.
+    follow_ups:
+      - What would the rock be without the crack?
+      - How does frost shape the landscape?
+      - What's the relationship between water and fracture?
+  - id: nmr_stone_warmth
+    name: Stone Warmth
+    prompt: |
+      A sun-warmed rock holds heat. Sit on one at dusk. The stone releases what
+      it absorbed. Consider the exchange. What would the rock be without the
+      sun?
+    follow_ups:
+      - How does the stone create microclimate?
+      - What creatures use that warmth?
+      - What's the relationship between rock and heat?
+  - id: nmr_moss_crust
+    name: Moss Crust
+    prompt: |
+      Moss grows on stone—a thin crust. It holds moisture, traps dust. The
+      rock becomes a substrate. When does rock become soil? Where's the line?
+    follow_ups:
+      - What would the stone be without the moss?
+      - How does the crust accelerate change?
+      - What's the relationship between mineral and organic?
+  - id: nmr_vein_quartz
+    name: Vein Quartz
+    prompt: |
+      A quartz vein cuts through rock—a seam of different mineral. It marks a
+      fracture, a filling. Trace the line. What forces made it? What does the
+      vein reveal?
+    follow_ups:
+      - What would the rock be without the vein?
+      - How does the vein mark deep time?
+      - What's the relationship between fracture and beauty?
+  - id: nmr_puddle_reflect
+    name: Puddle in Stone
+    prompt: |
+      A depression in rock holds water after rain. It's a tiny pool—a cup. What
+      reflects in it? What evaporates? The stone has made a vessel.
+    follow_ups:
+      - What would the rock be without the depression?
+      - How does the pool create habitat?
+      - What's the relationship between hollow and time?
+  - id: nmr_sand_grain
+    name: Sand Grain
+    prompt: |
+      Sand is rock broken small. Hold a handful. Each grain was once part of
+      something larger. Consider the scale. How many grains in a mountain?
+    follow_ups:
+      - What would the beach be without the grains?
+      - How does grain size tell a story?
+      - What's the relationship between whole and fragment?
+  - id: nmr_stone_circle
+    name: Stone Circle
+    prompt: |
+      Rocks arranged by hand or by glacier—a circle, a cairn, a wall. Someone
+      or something placed them. Consider the intention. What does the
+      arrangement mean?
+    follow_ups:
+      - What would the space be without the stones?
+      - How does arrangement create meaning?
+      - What's the relationship between rock and ritual?
+  - id: nmr_erosion_edge
+    name: Erosion Edge
+    prompt: |
+      Wind and water carve rock. Find an edge—a cliff, a boulder. The shape
+      is the product of removal. What was there before? What will remain?
+    follow_ups:
+      - What would the landscape be without erosion?
+      - How does the edge mark time?
+      - What's the relationship between loss and form?
+  - id: nmr_color_streak
+    name: Color Streak
+    prompt: |
+      Rock isn't uniform—iron stains red, manganese black, copper green.
+      Trace a streak. The color is chemistry. What does it reveal about the
+      rock's history?
+    follow_ups:
+      - What would the rock be without the color?
+      - How does mineralogy shape the palette?
+      - What's the relationship between element and hue?
+  - id: nmr_scratch_glacier
+    name: Glacier Scratch
+    prompt: |
+      Glacial striations—scratches on bedrock—mark where ice dragged rocks
+      across stone. The lines are parallel. Consider the force. What moved?
+      What held still?
+    follow_ups:
+      - What would the rock show without the scratches?
+      - How does the scratch mark direction?
+      - What's the relationship between ice and stone?
+  - id: nmr_cobble_pattern
+    name: Cobble Pattern
+    prompt: |
+      A beach or riverbed of cobbles—similar size, varied shape. The water
+      has sorted them. Consider the pattern. What does the sorting tell you?
+    follow_ups:
+      - What would the beach be without the sorting?
+      - How does flow shape the pattern?
+      - What's the relationship between size and transport?
+  - id: nmr_cavern_drip
+    name: Cavern Drip
+    prompt: |
+      Stalactites form drop by drop—mineral deposits from seeping water. The
+      growth is imperceptible. Consider the timescale. What would a speeded-up
+      film show?
+    follow_ups:
+      - What would the cavern be without the drip?
+      - How does the drip record climate?
+      - What's the relationship between water and stone?
+  - id: nmr_boulder_shadow
+    name: Boulder Shadow
+    prompt: |
+      A large boulder casts shadow. The ground beneath it is different—cooler,
+      wetter, less sun. The boulder creates a microclimate. Who lives in the
+      shadow?
+    follow_ups:
+      - What would the slope be without the boulder?
+      - How does the shadow shape life?
+      - What's the relationship between rock and refuge?
+  - id: nmr_fossil_impression
+    name: Fossil Impression
+    prompt: |
+      A fossil is life turned to stone—or an impression left in sediment.
+      Find one if you can. The rock holds memory. What creature left this?
+      When?
+    follow_ups:
+      - What would the rock be without the fossil?
+      - How does the impression preserve?
+      - What's the relationship between life and mineral?
+  - id: nmr_grit_texture
+    name: Grit Texture
+    prompt: |
+      Run your hand over rock. Sandstone feels different from granite, slate
+      from basalt. The texture is mineral, grain, structure. What does touch
+      tell you?
+    follow_ups:
+      - What would the rock be without its texture?
+      - How does texture reveal origin?
+      - What's the relationship between feel and composition?
+  - id: nmr_talus_slope
+    name: Talus Slope
+    prompt: |
+      A talus slope—broken rock at the base of a cliff. Gravity and weather
+      bring it down. The slope is a pile of aftermath. How long did it take
+      to accumulate?
+    follow_ups:
+      - What would the cliff base be without the talus?
+      - How does the slope mark erosion?
+      - What's the relationship between fall and pile?
+  - id: nmr_soil_horizon
+    name: Soil Horizon
+    prompt: |
+      Dig carefully. Soil has layers—organic on top, mineral below, sometimes
+      distinct bands. The horizon is history. What created each layer?
+    follow_ups:
+      - What would the ground be without the horizons?
+      - How does the horizon record time?
+      - What's the relationship between rock and soil?
+  - id: nmr_drystone_wall
+    name: Drystone Wall
+    prompt: |
+      A drystone wall—rocks fitted without mortar. The wall holds by gravity
+      and fit. Consider the craft. How does each stone support the next?
+    follow_ups:
+      - What would the field be without the wall?
+      - How does the wall mark territory?
+      - What's the relationship between rock and boundary?
+  - id: nmr_tide_pool_rock
+    name: Tide Pool Rock
+    prompt: |
+      Rocks in a tide pool are wetted, dried, wetted again. Creatures cling.
+      The rock is habitat. Consider the rhythm of the tide. What does the rock
+      experience?
+    follow_ups:
+      - What would the pool be without the rock?
+      - How does the rock create surface?
+      - What's the relationship between rock and tide?
+  - id: nmr_crystal_face
+    name: Crystal Face
+    prompt: |
+      Some rocks show crystal faces—cleaved planes, geometric form. The
+      crystal grew in a cavity, in slow order. Consider the geometry. What
+      forces shaped it?
+    follow_ups:
+      - What would the rock be without the crystal?
+      - How does the face reveal structure?
+      - What's the relationship between order and mineral?
+  - id: nmr_dust_coating
+    name: Dust Coating
+    prompt: |
+      Rock collects dust—pollen, soot, mineral. Over time it darkens. The
+      coating is accumulation. What would the rock look like if washed? How
+      does the coating change it?
+    follow_ups:
+      - What would the rock be without the coating?
+      - How does dust mark the environment?
+      - What's the relationship between surface and accumulation?
+  - id: nmr_river_sculpt
+    name: River Sculpt
+    prompt: |
+      A river sculpts its bed—potholes, pools, riffles. The rock is shaped
+      by water and sediment. Find a stretch. Read the sculpting. What does the
+      form reveal?
+    follow_ups:
+      - What would the riverbed be without the sculpting?
+      - How does flow shape the rock?
+      - What's the relationship between water and form?
+  - id: nmr_shard_edge
+    name: Shard Edge
+    prompt: |
+      A flint shard, a piece of chert—sharp, worked or natural. Someone might
+      have used it. The edge is functional. Consider the fracture. How was it
+      made?
+    follow_ups:
+      - What would the shard be without the edge?
+      - How does fracture create utility?
+      - What's the relationship between break and tool?
+  - id: nmr_gravel_path
+    name: Gravel Path
+    prompt: |
+      A gravel path—crushed rock underfoot. The crunch, the give. The path
+      is human choice. Why this surface? What does the gravel do that soil
+      wouldn't?
+    follow_ups:
+      - What would the path be without the gravel?
+      - How does the path shape movement?
+      - What's the relationship between rock and walk?
+  - id: nmr_bedrock_exposure
+    name: Bedrock Exposure
+    prompt: |
+      Where soil has been stripped—erosion, construction—bedrock appears. The
+      foundation is visible. Consider what usually hides. What does the
+      exposure reveal?
+    follow_ups:
+      - What would the landscape be without the exposure?
+      - How does bedrock shape the surface?
+      - What's the relationship between hidden and revealed?
+  - id: nmr_wind_polish
+    name: Wind Polish
+    prompt: |
+      Desert rocks are wind-polished—smooth, faceted. Sand blasts the surface.
+      The polish is abrasive. Consider the wind. How long did it take?
+    follow_ups:
+      - What would the rock be without the polish?
+      - How does wind shape stone?
+      - What's the relationship between particle and surface?
+  - id: nmr_hot_cold_crack
+    name: Heat-Cold Crack
+    prompt: |
+      Rock expands in heat, contracts in cold. Repeated cycles cause stress,
+      microfractures. Find a crack. Consider the temperature swings that
+      made it.
+    follow_ups:
+      - What would the rock be without the crack?
+      - How does thermal cycling shape the landscape?
+      - What's the relationship between temperature and fracture?
+  - id: nmr_constellation_stone
+    name: Constellation Stone
+    prompt: |
+      A rock with flecks—mica, feldspar—that catch the light. The surface
+      shimmers. Consider the mineralogy. What created the sparkle?
+    follow_ups:
+      - What would the rock be without the flecks?
+      - How does light reveal structure?
+      - What's the relationship between mineral and reflection?
+  - id: nmr_stepping_stone
+    name: Stepping Stone
+    prompt: |
+      Rocks placed in a stream or mud—stepping stones. The placement is
+      deliberate. Consider the path. What does each step require? What does
+      the stone enable?
+    follow_ups:
+      - What would the crossing be without the stones?
+      - How does the stone create access?
+      - What's the relationship between rock and passage?
+  - id: nmr_moss_island
+    name: Moss Island
+    prompt: |
+      A rock in a stream—moss grows on top. The rock is an island. Water flows
+      around. Consider the isolation. What reaches the moss? What doesn't?
+    follow_ups:
+      - What would the stream be without the island?
+      - How does the rock create refuge?
+      - What's the relationship between rock and flow?
+  - id: nmr_weight_sunken
+    name: Weight Sunken
+    prompt: |
+      A heavy rock sinks into soil over time. The depression forms around it.
+      Consider the gravity. What does the sinking do to the ground? To the
+      rock?
+    follow_ups:
+      - What would the ground be without the rock?
+      - How does weight shape the surface?
+      - What's the relationship between mass and depression?
+  - id: nmr_layer_sediment
+    name: Sediment Layer
+    prompt: |
+      Sedimentary rock shows layers—bedding planes. Each layer was once mud,
+      sand, shells. The rock is compressed time. Consider a single layer.
+      What was it before?
+    follow_ups:
+      - What would the rock be without the layers?
+      - How does the layer record environment?
+      - What's the relationship between sediment and stone?
+  - id: nmr_sunrise_heat
+    name: Sunrise Heat
+    prompt: |
+      A flat rock faces east. At sunrise it warms first. Consider the
+      orientation. What does the angle to the sun determine? Who benefits from
+      the early warmth?
+    follow_ups:
+      - What would the rock be without the orientation?
+      - How does aspect shape temperature?
+      - What's the relationship between angle and heat?
+  - id: nmr_rain_rinse
+    name: Rain Rinse
+    prompt: |
+      Rain hits rock, runs off. The water carries what it dissolves, what it
+      suspends. The rinse is continuous. What does the rock lose? What does the
+      water gain?
+    follow_ups:
+      - What would the rock be without the rain?
+      - How does runoff shape the rock?
+      - What's the relationship between water and dissolution?
+  - id: nmr_ice_wedge
+    name: Ice Wedge
+    prompt: |
+      Water freezes in a crack, widens it. Ice wedging breaks rocks apart.
+      Find evidence if you can. Consider the force. What will the crack become?
+    follow_ups:
+      - What would the rock be without the ice?
+      - How does the wedge propagate?
+      - What's the relationship between freeze and fracture?
+  - id: nmr_resting_place
+    name: Resting Place
+    prompt: |
+      A flat rock—a seat, a table, a stage. We use rocks to rest, to work, to
+      mark. Consider the rock you might sit on. What has it supported? What
+      will it hold?
+    follow_ups:
+      - What would the space be without the rock?
+      - How does the rock invite use?
+      - What's the relationship between mineral and human?
+  - id: nmr_boundary_marker
+    name: Boundary Marker
+    prompt: |
+      Rocks mark boundaries—property lines, graves, trails. The placement is
+      deliberate. Consider a boundary stone. What does it separate? What does
+      it connect?
+    follow_ups:
+      - What would the boundary be without the stone?
+      - How does the rock encode meaning?
+      - What's the relationship between marker and territory?
+  - id: nmr_exfoliation_sheet
+    name: Exfoliation Sheet
+    prompt: |
+      Some rocks exfoliate—layers peel like an onion. Pressure release, thermal
+      cycling. Find an exfoliating boulder. Consider the curve. What forces
+      made it?
+    follow_ups:
+      - What would the rock be without the sheets?
+      - How does exfoliation shape the surface?
+      - What's the relationship between pressure and peel?
+  - id: nmr_compass_orientation
+    name: Compass Orientation
+    prompt: |
+      Rocks can align—by glacier, by river, by human hand. The orientation
+      tells a story. Find aligned stones. What do they point to? What do they
+      resist?
+    follow_ups:
+      - What would the alignment mean?
+      - How does orientation record force?
+      - What's the relationship between direction and stone?
+  - id: nmr_echo_sound
+    name: Echo Stone
+    prompt: |
+      A rock face reflects sound. Clap. Listen for the echo. The rock returns
+      what you send. Consider the surface. What does it reflect? What does it
+      absorb?
+    follow_ups:
+      - What would the space be without the echo?
+      - How does the surface shape sound?
+      - What's the relationship between rock and voice?
+  - id: nmr_anchor_hold
+    name: Anchor Hold
+    prompt: |
+      A rock anchors—a tree root wraps it, a cable ties to it. The rock holds.
+      Consider the grip. What does the rock resist? What does it enable?
+    follow_ups:
+      - What would the anchor be without the rock?
+      - How does the rock create stability?
+      - What's the relationship between hold and mass?
+  - id: nmr_patina_age
+    name: Patina of Age
+    prompt: |
+      Old rock develops patina—weathering rind, oxidation, soiling. The
+      surface changes. The patina is time made visible. What would the rock
+      look like when new?
+    follow_ups:
+      - What would the rock be without the patina?
+      - How does the patina protect or weaken?
+      - What's the relationship between surface and age?
+  - id: nmr_slow_narrative
+    name: Slow Narrative
+    prompt: |
+      A rock tells a slow story—formation, transport, weathering. The timeline
+      is geological. Sit with a rock. Consider its past. What will its future
+      be?
+    follow_ups:
+      - What would we lose if we couldn't read the story?
+      - How does the rock connect to deep time?
+      - What's the relationship between rock and memory?
+  - id: nmr_cairn_stack
+    name: Cairn Stack
+    prompt: |
+      A cairn—stones stacked by hand. Each stone balances. The stack is
+      deliberate, temporary. Who built it? What does it mark?
+    follow_ups:
+      - What would the place be without the cairn?
+      - How does the stack create meaning?
+      - What's the relationship between human and stone?
+  - id: nmr_shadow_cast
+    name: Shadow Cast
+    prompt: |
+      A rock casts a shadow. The shadow moves with the sun. Sit with it for an
+      hour. Consider the clock of stone and light.
+    follow_ups:
+      - What would the rock be without the shadow?
+      - How does the shadow create habitat?
+      - What's the relationship between rock and time?
+  - id: nmr_scree_slope
+    name: Scree Slope
+    prompt: |
+      Scree—loose rock at the base of a cliff. Each piece fell. The slope is
+      accumulation. Walk it. Feel the instability. What holds it? What
+      will release?
+    follow_ups:
+      - What would the slope be without the fall?
+      - How does the scree shape the valley?
+      - What's the relationship between cliff and floor?
+  - id: nmr_fossil_imprint
+    name: Fossil Imprint
+    prompt: |
+      A fossil in rock—shell, leaf, bone. The imprint is a record. The
+      organism is gone; the stone holds its shape. Consider the preservation.
+    follow_ups:
+      - What would we know without the fossil?
+      - How does the imprint bridge time?
+      - What's the relationship between life and mineral?
+  - id: nmr_dry_stone_wall
+    name: Dry Stone Wall
+    prompt: |
+      A dry stone wall—no mortar. Each stone holds the next by fit and
+      friction. The wall is collaboration. Trace the joints. What would
+      one loose stone do?
+    follow_ups:
+      - What would the boundary be without the wall?
+      - How does the fit create strength?
+      - What's the relationship between stone and structure?
+  - id: nmr_cobble_rest
+    name: Cobble Rest
+    prompt: |
+      Cobbles rest where water left them—a river bar, a beach. The arrangement
+      is not random. Size, shape, position tell of flow. What would a flood
+      rearrange?
+    follow_ups:
+      - How does the rest mark the last event?
+      - What would the stones reveal about water?
+      - What's the relationship between rest and turbulence?
+  - id: nmr_moon_dust
+    name: Moon Dust
+    prompt: |
+      Rock becomes dust—wind, water, roots. The finest particles travel.
+      Consider the journey of a single grain. Where might it end?
+    follow_ups:
+      - What would the landscape be without dust?
+      - How does dust create new soil?
+      - What's the relationship between rock and air?
+  - id: nmr_touch_stone
+    name: Touch Stone
+    prompt: |
+      Touch a rock. Cold, warm, rough, smooth. The rock doesn't respond—or
+      does it? Heat transfers. Moisture shifts. Consider the exchange at the
+      boundary.
+    follow_ups:
+      - What would the rock feel at a different time?
+      - How does touch change the rock?
+      - What's the relationship between hand and stone?
+  - id: nmr_shadow_noon
+    name: Shadow at Noon
+    prompt: |
+      At noon, a rock's shadow is minimal. At dawn and dusk, it stretches.
+      The shadow is the rock's reach. Consider how the sun changes what the
+      rock offers to the world.
+    follow_ups:
+      - What would the rock offer without shadow?
+      - How does the shadow create habitat?
+      - What's the relationship between rock and light?
+  - id: nmr_stone_circle
+    name: Stone Circle
+    prompt: |
+      Stones arranged in a circle—by human hand or by glacier. The circle
+      frames space. What's inside? What's outside? Consider the geometry of
+      boundary.
+    follow_ups:
+      - What would the space mean without the circle?
+      - How does the arrangement create meaning?
+      - What's the relationship between form and ritual?

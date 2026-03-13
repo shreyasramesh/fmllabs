@@ -2237,6 +2237,9 @@ export default function ChatPage() {
   const [waysOfLookingAtCategory, setWaysOfLookingAtCategory] = useState<string | null>(null);
   const [waysOfLookingAtCity, setWaysOfLookingAtCity] = useState<string | null>(null);
   const [waysOfLookingAtCuisine, setWaysOfLookingAtCuisine] = useState<string | null>(null);
+  const [waysOfLookingAtMicrocosm, setWaysOfLookingAtMicrocosm] = useState<string | null>(null);
+  const [waysOfLookingAtHuman, setWaysOfLookingAtHuman] = useState<string | null>(null);
+  const [waysOfLookingAtDigital, setWaysOfLookingAtDigital] = useState<string | null>(null);
   const [waysOfLookingAtCards, setWaysOfLookingAtCards] = useState<{ id: string; name: string; prompt: string; follow_ups?: string[] }[] | null>(null);
   const [waysOfLookingAtCardsLoading, setWaysOfLookingAtCardsLoading] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -2328,7 +2331,10 @@ export default function ChatPage() {
       if (e.key === "Escape") {
         if (drawnPerspectiveCard) setDrawnPerspectiveCard(null);
         else if (waysOfLookingAtModalOpen) {
-          if (waysOfLookingAtCuisine) setWaysOfLookingAtCuisine(null);
+          if (waysOfLookingAtDigital) setWaysOfLookingAtDigital(null);
+          else if (waysOfLookingAtHuman) setWaysOfLookingAtHuman(null);
+          else if (waysOfLookingAtMicrocosm) setWaysOfLookingAtMicrocosm(null);
+          else if (waysOfLookingAtCuisine) setWaysOfLookingAtCuisine(null);
           else if (waysOfLookingAtCity) setWaysOfLookingAtCity(null);
           else if (waysOfLookingAtCategory) setWaysOfLookingAtCategory(null);
           else { setWaysOfLookingAtModalOpen(false); setWaysOfLookingAtDrawMode(false); }
@@ -2338,7 +2344,7 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital]);
 
   useEffect(() => {
     if (!settingsOpen) return;
@@ -2431,9 +2437,60 @@ export default function ChatPage() {
     sushi: "Sushi",
   };
 
+  const naturalMicrocosmSubToDeckId: Record<string, string> = {
+    forest_floor: "natural_microcosm_forest_floor",
+    garden_backyard: "natural_microcosm_garden_backyard",
+    rocks_stones: "natural_microcosm_rocks_stones",
+    pond_puddle: "natural_microcosm_pond_puddle",
+    insect_territories: "natural_microcosm_insect_territories",
+  };
+
+  const naturalMicrocosmSubToName: Record<string, string> = {
+    forest_floor: "Forest Floor",
+    garden_backyard: "Garden & Backyard",
+    rocks_stones: "Rocks & Stones",
+    pond_puddle: "Pond & Puddle",
+    insect_territories: "Insect Territories",
+  };
+
+  const humanInterfaceSubToDeckId: Record<string, string> = {
+    coffee_shop: "human_interface_coffee_shop",
+    transit_hub: "human_interface_transit_hub",
+    workplace: "human_interface_workplace",
+    retail: "human_interface_retail",
+    public_space: "human_interface_public_space",
+  };
+
+  const humanInterfaceSubToName: Record<string, string> = {
+    coffee_shop: "Coffee Shop",
+    transit_hub: "Transit Hub",
+    workplace: "Workplace",
+    retail: "Retail",
+    public_space: "Public Space",
+  };
+
+  const digitalGhostSubToDeckId: Record<string, string> = {
+    buttons_controls: "digital_ghost_buttons_controls",
+    loading_states: "digital_ghost_loading_states",
+    error_edge: "digital_ghost_error_edge",
+    data_storage: "digital_ghost_data_storage",
+    onboarding_flow: "digital_ghost_onboarding_flow",
+  };
+
+  const digitalGhostSubToName: Record<string, string> = {
+    buttons_controls: "Buttons & Controls",
+    loading_states: "Loading States",
+    error_edge: "Error & Edge",
+    data_storage: "Data & Storage",
+    onboarding_flow: "Onboarding & Flow",
+  };
+
   const domainDisplayName: Record<string, string> = {
     urban_jungle: "Urban Jungle",
     culinary_lab: "Culinary Lab",
+    natural_microcosm: "Natural Microcosm",
+    human_interface: "The Human Interface",
+    digital_ghost: "Digital Ghost",
     art: "Ways of Looking at Art",
   };
 
@@ -2443,6 +2500,9 @@ export default function ChatPage() {
     setWaysOfLookingAtCategory(null);
     setWaysOfLookingAtCity(null);
     setWaysOfLookingAtCuisine(null);
+    setWaysOfLookingAtMicrocosm(null);
+    setWaysOfLookingAtHuman(null);
+    setWaysOfLookingAtDigital(null);
     setDrawnPerspectiveCard(null);
     setSelectedMentalModel(null);
     setLetterModalOpen(false);
@@ -2473,12 +2533,33 @@ export default function ChatPage() {
       setWaysOfLookingAtCards(null);
       return;
     }
+    const isNaturalMicrocosm = waysOfLookingAtCategory === "natural_microcosm";
+    if (isNaturalMicrocosm && !waysOfLookingAtMicrocosm) {
+      setWaysOfLookingAtCards(null);
+      return;
+    }
+    const isHumanInterface = waysOfLookingAtCategory === "human_interface";
+    if (isHumanInterface && !waysOfLookingAtHuman) {
+      setWaysOfLookingAtCards(null);
+      return;
+    }
+    const isDigitalGhost = waysOfLookingAtCategory === "digital_ghost";
+    if (isDigitalGhost && !waysOfLookingAtDigital) {
+      setWaysOfLookingAtCards(null);
+      return;
+    }
     setWaysOfLookingAtCardsLoading(true);
     const deckId = isUrbanJungle && waysOfLookingAtCity
       ? urbanJungleCityToDeckId[waysOfLookingAtCity]
       : isCulinaryLab && waysOfLookingAtCuisine
         ? culinaryLabCuisineToDeckId[waysOfLookingAtCuisine]
-        : null;
+        : isNaturalMicrocosm && waysOfLookingAtMicrocosm
+          ? naturalMicrocosmSubToDeckId[waysOfLookingAtMicrocosm]
+          : isHumanInterface && waysOfLookingAtHuman
+            ? humanInterfaceSubToDeckId[waysOfLookingAtHuman]
+            : isDigitalGhost && waysOfLookingAtDigital
+              ? digitalGhostSubToDeckId[waysOfLookingAtDigital]
+              : null;
     if (deckId) {
       fetch(`/api/perspective-decks/${deckId}`)
         .then((r) => r.json())
@@ -2501,7 +2582,7 @@ export default function ChatPage() {
         .catch(() => setWaysOfLookingAtCards([]))
         .finally(() => setWaysOfLookingAtCardsLoading(false));
     }
-  }, [waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine]);
+  }, [waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital]);
 
   useEffect(() => {
     const clearSelectionBubbles = (e: MouseEvent | TouchEvent) => {
@@ -3030,7 +3111,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           <div className="mt-2 pt-2 border-t-[0.5px] border-neutral-200/60 dark:border-neutral-600/60">
             <button
               type="button"
-              onClick={() => { playSelectionChime(); setWaysOfLookingAtModalOpen(true); setWaysOfLookingAtDrawMode(false); setWaysOfLookingAtCategory(null); setWaysOfLookingAtCity(null); setWaysOfLookingAtCuisine(null); }}
+              onClick={() => { playSelectionChime(); setWaysOfLookingAtModalOpen(true); setWaysOfLookingAtDrawMode(false); setWaysOfLookingAtCategory(null); setWaysOfLookingAtCity(null); setWaysOfLookingAtCuisine(null); setWaysOfLookingAtMicrocosm(null); }}
               className="flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left text-[13px] sm:text-[14px] font-medium transition-colors border-2 border-transparent text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:border-neutral-400 dark:hover:border-neutral-500"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
@@ -3589,6 +3670,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             setWaysOfLookingAtCategory(null);
                             setWaysOfLookingAtCity(null);
                             setWaysOfLookingAtCuisine(null);
+                            setWaysOfLookingAtMicrocosm(null);
                           }}
                           className="flex items-center gap-3 w-full max-w-sm mx-auto px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
                         >
@@ -8196,7 +8278,10 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
           onClick={() => {
-            if (waysOfLookingAtCuisine) setWaysOfLookingAtCuisine(null);
+            if (waysOfLookingAtDigital) setWaysOfLookingAtDigital(null);
+            else if (waysOfLookingAtHuman) setWaysOfLookingAtHuman(null);
+            else if (waysOfLookingAtMicrocosm) setWaysOfLookingAtMicrocosm(null);
+            else if (waysOfLookingAtCuisine) setWaysOfLookingAtCuisine(null);
             else if (waysOfLookingAtCity) setWaysOfLookingAtCity(null);
             else if (waysOfLookingAtCategory) setWaysOfLookingAtCategory(null);
             else { setWaysOfLookingAtModalOpen(false); setWaysOfLookingAtDrawMode(false); }
@@ -8211,16 +8296,19 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <div className="flex items-center gap-2">
-                {(waysOfLookingAtCategory || waysOfLookingAtCity || waysOfLookingAtCuisine) && (
+                {(waysOfLookingAtCategory || waysOfLookingAtCity || waysOfLookingAtCuisine || waysOfLookingAtMicrocosm || waysOfLookingAtHuman || waysOfLookingAtDigital) && (
                   <button
                     type="button"
                     onClick={() => {
-                      if (waysOfLookingAtCuisine) setWaysOfLookingAtCuisine(null);
+                      if (waysOfLookingAtDigital) setWaysOfLookingAtDigital(null);
+                      else if (waysOfLookingAtHuman) setWaysOfLookingAtHuman(null);
+                      else if (waysOfLookingAtMicrocosm) setWaysOfLookingAtMicrocosm(null);
+                      else if (waysOfLookingAtCuisine) setWaysOfLookingAtCuisine(null);
                       else if (waysOfLookingAtCity) setWaysOfLookingAtCity(null);
                       else setWaysOfLookingAtCategory(null);
                     }}
                     className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 transition-colors"
-                    aria-label={waysOfLookingAtCuisine ? "Back to cuisines" : waysOfLookingAtCity ? "Back to cities" : "Back to categories"}
+                    aria-label={waysOfLookingAtDigital || waysOfLookingAtHuman ? "Back to subdomains" : waysOfLookingAtMicrocosm ? "Back to subdomains" : waysOfLookingAtCuisine ? "Back to cuisines" : waysOfLookingAtCity ? "Back to cities" : "Back to categories"}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                       <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -8234,9 +8322,15 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       ? `${domainDisplayName[waysOfLookingAtCategory ?? ""] ?? "Urban Jungle"} — ${waysOfLookingAtCity === "ny" ? "New York" : waysOfLookingAtCity === "sf" ? "San Francisco" : waysOfLookingAtCity === "london" ? "London" : waysOfLookingAtCity === "paris" ? "Paris" : "Bangalore"}`
                       : waysOfLookingAtCuisine
                         ? `Culinary Lab — ${culinaryLabCuisineToName[waysOfLookingAtCuisine] ?? waysOfLookingAtCuisine}`
-                        : waysOfLookingAtCategory
-                          ? domainDisplayName[waysOfLookingAtCategory] ?? perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ?? "Prompt Games"
-                          : "Prompt Games"}
+                        : waysOfLookingAtMicrocosm
+                          ? `Natural Microcosm — ${naturalMicrocosmSubToName[waysOfLookingAtMicrocosm] ?? waysOfLookingAtMicrocosm}`
+                          : waysOfLookingAtHuman
+                            ? `The Human Interface — ${humanInterfaceSubToName[waysOfLookingAtHuman] ?? waysOfLookingAtHuman}`
+                            : waysOfLookingAtDigital
+                              ? `Digital Ghost — ${digitalGhostSubToName[waysOfLookingAtDigital] ?? waysOfLookingAtDigital}`
+                              : waysOfLookingAtCategory
+                                ? domainDisplayName[waysOfLookingAtCategory] ?? perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ?? "Prompt Games"
+                                : "Prompt Games"}
                 </h2>
               </div>
               <button
@@ -8285,6 +8379,9 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                               setWaysOfLookingAtCategory(domain);
                               setWaysOfLookingAtCity(null);
                               setWaysOfLookingAtCuisine(null);
+                              setWaysOfLookingAtMicrocosm(null);
+                              setWaysOfLookingAtHuman(null);
+                              setWaysOfLookingAtDigital(null);
                             }}
                             className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left group"
                           >
@@ -8296,7 +8393,13 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                                 ? "250 cards across New York, San Francisco, London, Paris, and Bangalore—from scale and light to layers of history."
                                 : domain === "culinary_lab"
                                   ? "250 cards across Indian, Italian, Pizza, Chinese, and Sushi—from the chemistry of a bite to the archaeology of ingredients."
-                                  : deck.description}
+                                  : domain === "natural_microcosm"
+                                    ? "250 cards across Forest Floor, Garden, Rocks, Pond, and Insect Territories—from the invisible engineering of a leaf to the territorial dramas of insects."
+                                    : domain === "human_interface"
+                                      ? "250 cards across Coffee Shop, Transit Hub, Workplace, Retail, and Public Space—from queue choreography to invisible scripts and the anthropology of shared space."
+                                      : domain === "digital_ghost"
+                                        ? "250 cards across Buttons, Loading, Error, Data, and Onboarding—from the intent behind a click to the physicality of data and when software breaks character."
+                                        : deck.description}
                             </p>
                           </button>
                         );
@@ -8408,6 +8511,162 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     ))}
                   </div>
                 </div>
+              ) : waysOfLookingAtCategory === "natural_microcosm" && !waysOfLookingAtMicrocosm ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {waysOfLookingAtDrawMode ? "Choose a subdomain" : "Choose a subdomain to browse its 50 perspective cards."}
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      { id: "forest_floor", name: "Forest Floor" },
+                      { id: "garden_backyard", name: "Garden & Backyard" },
+                      { id: "rocks_stones", name: "Rocks & Stones" },
+                      { id: "pond_puddle", name: "Pond & Puddle" },
+                      { id: "insect_territories", name: "Insect Territories" },
+                    ].map((sub) => (
+                      <button
+                        key={sub.id}
+                        type="button"
+                        onClick={async () => {
+                          playSelectionChime();
+                          if (waysOfLookingAtDrawMode) {
+                            try {
+                              const deckId = naturalMicrocosmSubToDeckId[sub.id];
+                              if (deckId) {
+                                const res = await fetch(`/api/perspective-decks/${deckId}/random`);
+                                const data = await res.json();
+                                if (data.card && data.deckId) {
+                                  const deck = perspectiveDecks.find((d) => d.id === deckId);
+                                  setDrawnPerspectiveCard({
+                                    card: data.card,
+                                    deckId: data.deckId,
+                                    deckName: deck?.name ?? `Natural Microcosm — ${sub.name}`,
+                                  });
+                                  setWaysOfLookingAtModalOpen(false);
+                                  setWaysOfLookingAtDrawMode(false);
+                                }
+                              }
+                            } catch { /* ignore */ }
+                            return;
+                          }
+                          setWaysOfLookingAtMicrocosm(sub.id);
+                        }}
+                        className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left group"
+                      >
+                        <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
+                          {sub.name}
+                        </span>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          50 perspective cards for ecology and the outdoors
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : waysOfLookingAtCategory === "human_interface" && !waysOfLookingAtHuman ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {waysOfLookingAtDrawMode ? "Choose a subdomain" : "Choose a subdomain to browse its 50 perspective cards."}
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      { id: "coffee_shop", name: "Coffee Shop" },
+                      { id: "transit_hub", name: "Transit Hub" },
+                      { id: "workplace", name: "Workplace" },
+                      { id: "retail", name: "Retail" },
+                      { id: "public_space", name: "Public Space" },
+                    ].map((sub) => (
+                      <button
+                        key={sub.id}
+                        type="button"
+                        onClick={async () => {
+                          playSelectionChime();
+                          if (waysOfLookingAtDrawMode) {
+                            try {
+                              const deckId = humanInterfaceSubToDeckId[sub.id];
+                              if (deckId) {
+                                const res = await fetch(`/api/perspective-decks/${deckId}/random`);
+                                const data = await res.json();
+                                if (data.card && data.deckId) {
+                                  const deck = perspectiveDecks.find((d) => d.id === deckId);
+                                  setDrawnPerspectiveCard({
+                                    card: data.card,
+                                    deckId: data.deckId,
+                                    deckName: deck?.name ?? `The Human Interface — ${sub.name}`,
+                                  });
+                                  setWaysOfLookingAtModalOpen(false);
+                                  setWaysOfLookingAtDrawMode(false);
+                                }
+                              }
+                            } catch { /* ignore */ }
+                            return;
+                          }
+                          setWaysOfLookingAtHuman(sub.id);
+                        }}
+                        className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left group"
+                      >
+                        <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
+                          {sub.name}
+                        </span>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          50 perspective cards for social observation and anthropology
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : waysOfLookingAtCategory === "digital_ghost" && !waysOfLookingAtDigital ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {waysOfLookingAtDrawMode ? "Choose a subdomain" : "Choose a subdomain to browse its 50 perspective cards."}
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      { id: "buttons_controls", name: "Buttons & Controls" },
+                      { id: "loading_states", name: "Loading States" },
+                      { id: "error_edge", name: "Error & Edge" },
+                      { id: "data_storage", name: "Data & Storage" },
+                      { id: "onboarding_flow", name: "Onboarding & Flow" },
+                    ].map((sub) => (
+                      <button
+                        key={sub.id}
+                        type="button"
+                        onClick={async () => {
+                          playSelectionChime();
+                          if (waysOfLookingAtDrawMode) {
+                            try {
+                              const deckId = digitalGhostSubToDeckId[sub.id];
+                              if (deckId) {
+                                const res = await fetch(`/api/perspective-decks/${deckId}/random`);
+                                const data = await res.json();
+                                if (data.card && data.deckId) {
+                                  const deck = perspectiveDecks.find((d) => d.id === deckId);
+                                  setDrawnPerspectiveCard({
+                                    card: data.card,
+                                    deckId: data.deckId,
+                                    deckName: deck?.name ?? `Digital Ghost — ${sub.name}`,
+                                  });
+                                  setWaysOfLookingAtModalOpen(false);
+                                  setWaysOfLookingAtDrawMode(false);
+                                }
+                              }
+                            } catch { /* ignore */ }
+                            return;
+                          }
+                          setWaysOfLookingAtDigital(sub.id);
+                        }}
+                        className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left group"
+                      >
+                        <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
+                          {sub.name}
+                        </span>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          50 perspective cards for technology and software
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               ) : (
                 <div className="space-y-4">
                   {waysOfLookingAtCardsLoading ? (
@@ -8419,7 +8678,13 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           ? perspectiveDecks.find((d) => d.id === urbanJungleCityToDeckId[waysOfLookingAtCity])
                           : waysOfLookingAtCuisine
                             ? perspectiveDecks.find((d) => d.id === culinaryLabCuisineToDeckId[waysOfLookingAtCuisine])
-                            : perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory);
+                            : waysOfLookingAtMicrocosm
+                              ? perspectiveDecks.find((d) => d.id === naturalMicrocosmSubToDeckId[waysOfLookingAtMicrocosm])
+                              : waysOfLookingAtHuman
+                                ? perspectiveDecks.find((d) => d.id === humanInterfaceSubToDeckId[waysOfLookingAtHuman])
+                                : waysOfLookingAtDigital
+                                  ? perspectiveDecks.find((d) => d.id === digitalGhostSubToDeckId[waysOfLookingAtDigital])
+                                  : perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory);
                         return (
                           <button
                             key={card.id}
@@ -8535,6 +8800,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   setWaysOfLookingAtCategory(null);
                   setWaysOfLookingAtCity(null);
                   setWaysOfLookingAtCuisine(null);
+                  setWaysOfLookingAtMicrocosm(null);
                   if (typeof window !== "undefined" && window.innerWidth < 1024) {
                     setLibraryPanelOpen(null);
                     setSidebarOpen(false);

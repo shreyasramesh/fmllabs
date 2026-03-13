@@ -1,0 +1,518 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# The Human Interface — Transit Hub
+
+id: human_interface_transit_hub
+name: The Human Interface — Transit Hub
+description: 50 cards to shift how you see the transit hub—from platforms and
+  waiting to arrival/departure flow and the choreography of strangers in transit.
+domain: human_interface
+cards:
+  - id: hi_th_platform_edge
+    name: Platform Edge
+    prompt: |
+      The platform edge is a threshold. Yellow line, gap, track. People stand
+      at different distances. Some lean forward; others hang back. Observe
+      the distribution. What does the edge mean?
+    follow_ups:
+      - How does the edge shape anticipation?
+      - What would the platform be without the line?
+      - What's the relationship between edge and risk?
+  - id: hi_th_waiting_posture
+    name: Waiting Posture
+    prompt: |
+      Bodies arrange themselves while waiting—weight on one foot, phone in
+      hand, bag between feet. The posture encodes duration. Who looks
+      patient? Who looks restless? The wait has a body language.
+    follow_ups:
+      - How does posture reveal expectation?
+      - What would the platform be without waiting?
+      - What's the relationship between posture and time?
+  - id: hi_th_arrival_flow
+    name: Arrival Flow
+    prompt: |
+      The train doors open. People pour out—against the current of those
+      boarding. The flow has physics. Observe the collision, the sidestep,
+      the merge. What rules govern the exchange?
+    follow_ups:
+      - How does the flow shape the platform?
+      - What would happen if everyone rushed?
+      - What's the relationship between flow and efficiency?
+  - id: hi_th_strangers_transit
+    name: Strangers in Transit
+    prompt: |
+      You share a car with people you'll never see again. Proximity without
+      connection. Observe the compact. What do strangers owe each other?
+      The transit car is a temporary society.
+    follow_ups:
+      - How does transit create temporary community?
+      - What would the car be with conversation?
+      - What's the relationship between stranger and civility?
+  - id: hi_th_departure_board
+    name: Departure Board
+    prompt: |
+      Times, platforms, delays—the board is the source of truth. Eyes lift to
+      it. The board dictates movement. Watch the collective gaze. What does
+      the board do to the crowd?
+    follow_ups:
+      - How does the board shape behavior?
+      - What would the hub be without it?
+      - What's the relationship between display and trust?
+  - id: hi_th_escalator_stand
+    name: Escalator Stand
+    prompt: |
+      Stand right, walk left—or the reverse, depending on the city. The
+      escalator has rules. Observe who follows them. The escalator is a
+      moving queue. What does the rule enable?
+    follow_ups:
+      - How does the escalator rule shape flow?
+      - What would happen if everyone stood?
+      - What's the relationship between rule and efficiency?
+  - id: hi_th_ticket_gate
+    name: Ticket Gate
+    prompt: |
+      The gate reads the card, beeps, opens. The gate is a checkpoint. It
+      separates paid from unpaid. Observe the rhythm. Who fumbles? Who
+      glides through? The gate is a test.
+    follow_ups:
+      - How does the gate shape the journey?
+      - What would the hub be without gates?
+      - What's the relationship between gate and belonging?
+  - id: hi_th_luggage_drag
+    name: Luggage Drag
+    prompt: |
+      Wheels on tile. The suitcase follows. The drag marks the path of
+      travelers. Luggage extends the body. Observe the burden. What does
+      the luggage say about the journey?
+    follow_ups:
+      - How does luggage shape movement?
+      - What would the hub be without bags?
+      - What's the relationship between burden and destination?
+  - id: hi_th_bench_occupation
+    name: Bench Occupation
+    prompt: |
+      Benches line the platform. Some sit; some stand beside. The bench
+      is a scarce resource. Observe who claims it. How long do they stay?
+      The bench is a small territory.
+    follow_ups:
+      - How does the bench shape the wait?
+      - What would the platform be without benches?
+      - What's the relationship between seat and duration?
+  - id: hi_th_announcement_voice
+    name: Announcement Voice
+    prompt: |
+      "The next train..." The voice is automated or human. It cuts through
+      the noise. The announcement creates shared knowledge. Observe who
+      listens. Who has already checked their phone?
+    follow_ups:
+      - How does the announcement shape the crowd?
+      - What would the hub be without it?
+      - What's the relationship between voice and authority?
+  - id: hi_th_door_positioning
+    name: Door Positioning
+    prompt: |
+      Regulars know where the doors will open. They position themselves.
+      Newcomers guess. The positioning is strategy. Observe the clustering.
+      What does position determine?
+    follow_ups:
+      - How does positioning shape the boarding?
+      - What would the platform be if doors were random?
+      - What's the relationship between position and advantage?
+  - id: hi_th_handrail_grip
+    name: Handrail Grip
+    prompt: |
+      Inside the car, hands find the rail. The grip is security. Observe
+      who holds, who doesn't need to. The handrail is a shared object.
+      What does the grip reveal?
+    follow_ups:
+      - How does the handrail shape stability?
+      - What would the car be without it?
+      - What's the relationship between grip and trust?
+  - id: hi_th_window_reflection
+    name: Window Reflection
+    prompt: |
+      The window shows the tunnel, the platform, and your own face. The
+      reflection is unavoidable. People look at themselves or avoid it.
+      Observe the relationship between reflection and gaze.
+    follow_ups:
+      - How does the reflection shape self-awareness?
+      - What would the ride be without the window?
+      - What's the relationship between reflection and privacy?
+  - id: hi_th_seat_offer
+    name: Seat Offer
+    prompt: |
+      Someone offers a seat to an elder, a parent with a child. The offer
+      is a small moral act. Observe when it happens. Who offers? Who
+      accepts? The seat is a gift.
+    follow_ups:
+      - How does the offer shape the car?
+      - What would the ride be without such offers?
+      - What's the relationship between offer and care?
+  - id: hi_th_delay_sigh
+    name: Delay Sigh
+    prompt: |
+      "Delayed." The collective sigh. The delay is shared fate. Strangers
+      exchange glances. The delay creates a moment of solidarity. Observe
+      the shift. What does the delay do to the crowd?
+    follow_ups:
+      - How does the delay shape the wait?
+      - What would the hub be without delays?
+      - What's the relationship between delay and frustration?
+  - id: hi_th_backpack_turn
+    name: Backpack Turn
+    prompt: |
+      On a crowded car, someone turns their backpack to the front. The turn
+      is consideration. It creates space. Observe who does it. The backpack
+      turn is a small social contract.
+    follow_ups:
+      - How does the turn shape proximity?
+      - What would the car be without it?
+      - What's the relationship between turn and awareness?
+  - id: hi_th_exit_anticipation
+    name: Exit Anticipation
+    prompt: |
+      As the stop approaches, people gather by the door. The anticipation
+      is visible. Bodies shift. The door will open. Observe the preparation.
+      What does the anticipation require?
+    follow_ups:
+      - How does anticipation shape the exit?
+      - What would the stop be without preparation?
+      - What's the relationship between anticipation and flow?
+  - id: hi_th_transfer_corridor
+    name: Transfer Corridor
+    prompt: |
+      The corridor connects lines. People walk with purpose. The transfer
+      is a transition—between systems, between waits. Observe the pace.
+      The corridor has its own rhythm.
+    follow_ups:
+      - How does the corridor shape the journey?
+      - What would the hub be without transfers?
+      - What's the relationship between corridor and connection?
+  - id: hi_th_phone_glow
+    name: Phone Glow
+    prompt: |
+      In the dim car, faces glow from phones. The glow is individual. Each
+      person has their own light. Observe the distribution. The phone
+      creates private space in public.
+    follow_ups:
+      - How does the phone shape the ride?
+      - What would the car be without phones?
+      - What's the relationship between glow and isolation?
+  - id: hi_th_stroller_navigation
+    name: Stroller Navigation
+    prompt: |
+      A parent pushes a stroller through the crowd. The navigation is
+      delicate. People make way. The stroller changes the flow. Observe
+      the accommodation. What does the stroller demand?
+    follow_ups:
+      - How does the stroller shape the crowd?
+      - What would the hub be without strollers?
+      - What's the relationship between stroller and care?
+  - id: hi_th_vendor_station
+    name: Vendor Station
+    prompt: |
+      A kiosk sells coffee, snacks, newspapers. The vendor serves people
+      in motion. The transaction is quick. Observe the exchange. The vendor
+      is an island in the flow.
+    follow_ups:
+      - How does the vendor shape the hub?
+      - What would the hub be without vendors?
+      - What's the relationship between vendor and wait?
+  - id: hi_th_track_gap
+    name: Track Gap
+    prompt: |
+      Mind the gap. The space between platform and car is a hazard. People
+      step over it. The gap varies. Observe the caution. What does the gap
+      require of the body?
+    follow_ups:
+      - How does the gap shape boarding?
+      - What would the platform be without it?
+      - What's the relationship between gap and attention?
+  - id: hi_th_schedule_check
+    name: Schedule Check
+    prompt: |
+      Fingers tap the phone. The app says when. The schedule check is
+      constant. It reduces uncertainty. Observe the rhythm. How often do
+      people check?
+    follow_ups:
+      - How does the schedule shape the wait?
+      - What would the hub be without apps?
+      - What's the relationship between check and control?
+  - id: hi_th_crowd_density
+    name: Crowd Density
+    prompt: |
+      Rush hour packs the platform. Bodies compress. The density has limits.
+      Observe the boundary. When does it become unbearable? The crowd has
+      physics.
+    follow_ups:
+      - How does density shape the experience?
+      - What would the hub be at low density?
+      - What's the relationship between density and tolerance?
+  - id: hi_th_sleeping_commuter
+    name: Sleeping Commuter
+    prompt: |
+      Someone sleeps—head against the window, against a stranger's shoulder.
+      The sleep is trust or exhaustion. Observe the vulnerability. What does
+      the sleep require of the car?
+    follow_ups:
+      - How does the sleeper shape the space?
+      - What would the ride be without sleepers?
+      - What's the relationship between sleep and safety?
+  - id: hi_th_map_consultation
+    name: Map Consultation
+    prompt: |
+      A visitor stares at the map on the wall. The map is a lifeline. Others
+      flow past. The consultation takes time. Observe the pause. What does
+      the map provide?
+    follow_ups:
+      - How does the map shape the journey?
+      - What would the hub be without maps?
+      - What's the relationship between map and confidence?
+  - id: hi_th_platform_change
+    name: Platform Change
+    prompt: |
+      "Platform change." The crowd moves. The change is disruption. People
+      hurry. Observe the scramble. What does the change extract from the
+      crowd?
+    follow_ups:
+      - How does the change shape the flow?
+      - What would the hub be without changes?
+      - What's the relationship between change and stress?
+  - id: hi_th_briefcase_clutch
+    name: Briefcase Clutch
+    prompt: |
+      The briefcase is held close—between feet, on lap. It contains something
+      valuable. The clutch is protective. Observe the grip. What does the
+      briefcase mean to the holder?
+    follow_ups:
+      - How does the briefcase shape the ride?
+      - What would the car be without briefcases?
+      - What's the relationship between clutch and identity?
+  - id: hi_th_door_hold
+    name: Door Hold
+    prompt: |
+      Someone holds the door for the person behind. The train is about to
+      leave. The hold is risk and courtesy. Observe the exchange. What does
+      the hold cost?
+    follow_ups:
+      - How does the hold shape the boarding?
+      - What would the platform be without it?
+      - What's the relationship between hold and civility?
+  - id: hi_th_standing_balance
+    name: Standing Balance
+    prompt: |
+      The train moves. Standing passengers shift weight. The balance is
+      dynamic. No one holds the rail. Observe the micro-adjustments. The
+      body learns the motion.
+    follow_ups:
+      - How does balance shape the ride?
+      - What would the car be with more seats?
+      - What's the relationship between balance and habit?
+  - id: hi_th_conversation_overhear
+    name: Conversation Overhear
+    prompt: |
+      Two people talk. You hear fragments. The conversation is private but
+      public. Observe the boundary. What do strangers learn about each
+      other in transit?
+    follow_ups:
+      - How does overhearing shape the ride?
+      - What would the car be without conversation?
+      - What's the relationship between overhear and intimacy?
+  - id: hi_th_ticket_inspection
+    name: Ticket Inspection
+    prompt: |
+      The inspector moves through the car. "Tickets, please." The inspection
+      is random or systematic. Observe the response. Who is ready? Who
+      fumbles? The inspection is a test of legitimacy.
+    follow_ups:
+      - How does the inspection shape the ride?
+      - What would the system be without it?
+      - What's the relationship between inspection and trust?
+  - id: hi_th_station_name_glance
+    name: Station Name Glance
+    prompt: |
+      The name flashes past—on the wall, on the sign. Regulars know. Newcomers
+      watch. The glance orients. Observe who looks. What does the name do?
+    follow_ups:
+      - How does the name shape orientation?
+      - What would the ride be without signs?
+      - What's the relationship between name and place?
+  - id: hi_th_benchmark_regular
+    name: Benchmark Regular
+    prompt: |
+      The regular knows the rhythm. They arrive just in time. No waiting.
+      The regular has internalized the schedule. Observe the confidence.
+      What does the regular know?
+    follow_ups:
+      - How does the regular shape the hub?
+      - What would the hub be without regulars?
+      - What's the relationship between regular and fluency?
+  - id: hi_th_lost_look
+    name: Lost Look
+    prompt: |
+      Someone looks lost—head turning, pace uncertain. The look is visible.
+      Observe the body language. Who helps? Who ignores? The lost look is a
+      signal. What does it invite?
+    follow_ups:
+      - How does the lost look shape the hub?
+      - What would the hub be without the lost?
+      - What's the relationship between lost and help?
+  - id: hi_th_earbud_insert
+    name: Earbud Insert
+    prompt: |
+      Earbuds go in. The world recedes. The insert is a boundary. The
+      wearer is present but absent. Observe the shift. What does the
+      earbud create?
+    follow_ups:
+      - How do earbuds shape the ride?
+      - What would the car be without them?
+      - What's the relationship between earbud and privacy?
+  - id: hi_th_rush_hour_pack
+    name: Rush Hour Pack
+    prompt: |
+      The car is full. Bodies touch. The pack is unavoidable. Observe the
+      tolerance. How do people manage the proximity? The pack has its own
+      etiquette.
+    follow_ups:
+      - How does the pack shape the ride?
+      - What would rush hour be without packing?
+      - What's the relationship between pack and endurance?
+  - id: hi_th_destination_ask
+    name: Destination Ask
+    prompt: |
+      "Is this the train to X?" A stranger asks. Another answers. The ask
+      creates a moment of connection. Observe the exchange. What does the
+      ask require?
+    follow_ups:
+      - How does the ask shape the car?
+      - What would the ride be without such asks?
+      - What's the relationship between ask and trust?
+  - id: hi_th_platform_choice
+    name: Platform Choice
+    prompt: |
+      Two platforms, same destination. One is closer; one is less crowded.
+      The choice is strategy. Observe who goes where. What determines the
+      choice?
+    follow_ups:
+      - How does the choice shape the crowd?
+      - What would the hub be with one platform?
+      - What's the relationship between choice and outcome?
+  - id: hi_th_wipe_down_seat
+    name: Wipe Down Seat
+    prompt: |
+      Someone wipes the seat before sitting. The wipe is precaution. Observe
+      the gesture. What does the wipe assume about the space? The wipe is
+      a small act of boundary.
+    follow_ups:
+      - How does the wipe shape the sit?
+      - What would the car be without such gestures?
+      - What's the relationship between wipe and cleanliness?
+  - id: hi_th_standing_offer
+    name: Standing Offer
+    prompt: |
+      "Would you like to sit?" The offer is made to a stranger. Sometimes
+      accepted, sometimes declined. Observe the exchange. What does the
+      offer mean?
+    follow_ups:
+      - How does the offer shape the car?
+      - What would the ride be without offers?
+      - What's the relationship between offer and care?
+  - id: hi_th_exit_block
+    name: Exit Block
+    prompt: |
+      Someone stands in the doorway. Others need to pass. The block is
+      oblivious or deliberate. Observe the negotiation. How do people get
+      by? The block is a small conflict.
+    follow_ups:
+      - How does the block shape the exit?
+      - What would the car be without blockers?
+      - What's the relationship between block and awareness?
+  - id: hi_th_train_rumble
+    name: Train Rumble
+    prompt: |
+      The train rumbles—tracks, wheels, motion. The rumble is constant. It
+      becomes background. Observe when you notice it. What does the rumble
+      do to the body?
+    follow_ups:
+      - How does the rumble shape the ride?
+      - What would the car be in silence?
+      - What's the relationship between rumble and rhythm?
+  - id: hi_th_connection_run
+    name: Connection Run
+    prompt: |
+      Someone runs—late for a connection. The run cuts through the crowd.
+      People scatter. Observe the disruption. What does the run extract
+      from the flow?
+    follow_ups:
+      - How does the run shape the hub?
+      - What would the hub be without runners?
+      - What's the relationship between run and urgency?
+  - id: hi_th_seat_saving
+    name: Seat Saving
+    prompt: |
+      A bag on the seat. "Someone's sitting there." The save holds the seat
+      for an absent companion. Observe the claim. How long can a seat be
+      saved? What are the limits?
+    follow_ups:
+      - How does saving shape the car?
+      - What would the ride be without saving?
+      - What's the relationship between save and entitlement?
+  - id: hi_th_arrival_relief
+    name: Arrival Relief
+    prompt: |
+      The train reaches the terminal. The relief is visible. Shoulders drop.
+      People gather their things. The journey is over. Observe the shift.
+      What does arrival provide?
+    follow_ups:
+      - How does arrival shape the exit?
+      - What would the journey be without arrival?
+      - What's the relationship between relief and completion?
+  - id: hi_th_wayfinding_sign
+    name: Wayfinding Sign
+    prompt: |
+      Arrows point. "To trains." "To exits." The signs guide the flow. Observe
+      who follows them. Who ignores? The sign is a suggestion. What does it
+      assume?
+    follow_ups:
+      - How do signs shape the flow?
+      - What would the hub be without them?
+      - What's the relationship between sign and trust?
+  - id: hi_th_waiting_room
+    name: Waiting Room
+    prompt: |
+      Chairs face each other or the board. The waiting room holds people
+      between journeys. Observe the arrangement. Who sits? Who paces? The
+      waiting room is a pause.
+    follow_ups:
+      - How does the waiting room shape the wait?
+      - What would the hub be without it?
+      - What's the relationship between room and duration?
+  - id: hi_th_stranger_proximity
+    name: Stranger Proximity
+    prompt: |
+      A stranger stands close—necessary in a crowd. The proximity is
+      impersonal but intimate. Observe the tolerance. What does the body
+      allow? The proximity is a contract.
+    follow_ups:
+      - How does proximity shape the ride?
+      - What would the car be with more space?
+      - What's the relationship between proximity and civility?
+  - id: hi_th_last_train
+    name: Last Train
+    prompt: |
+      The last train. The crowd is different—later, looser. The last train
+      has its own energy. Observe the shift. What does "last" do to the
+      crowd?
+    follow_ups:
+      - How does the last train shape the hub?
+      - What would the night be without it?
+      - What's the relationship between last and urgency?
+  - id: hi_th_transit_tribe
+    name: Transit Tribe
+    prompt: |
+      The same people, the same line, the same time. You recognize faces.
+      You never speak. The transit tribe is a silent community. Observe the
+      recognition. What does the tribe provide?
+    follow_ups:
+      - How does the tribe shape the commute?
+      - What would the ride be without familiar faces?
+      - What's the relationship between tribe and belonging?

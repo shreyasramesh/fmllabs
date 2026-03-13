@@ -1,0 +1,516 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natural Microcosm — Insect Territories
+
+id: natural_microcosm_insect_territories
+name: Natural Microcosm — Insect Territories
+description: 50 cards to shift how you see insect life—from ant trails and bee
+  traffic to spider webs, territorial dramas, and the choreography of colonies.
+domain: natural_microcosm
+cards:
+  - id: nmi_ant_trail
+    name: Ant Trail
+    prompt: |
+      Ants form trails—pheromone paths between nest and food. Watch the flow.
+      Two lanes: outbound and return. The trail is a decision made by many.
+      What would break the trail?
+    follow_ups:
+      - How does the trail reinforce itself?
+      - What would the colony be without trails?
+      - What's the relationship between trail and colony?
+  - id: nmi_bee_traffic
+    name: Bee Traffic
+    prompt: |
+      A hive entrance—bees stream in and out. The traffic has rhythm. Some
+      carry pollen; some don't. Consider the choreography. Who decides the
+      pattern?
+    follow_ups:
+      - What would the hive be without the traffic?
+      - How does the entrance shape flow?
+      - What's the relationship between bee and colony?
+  - id: nmi_spider_web
+    name: Spider Web
+    prompt: |
+      A spider web is territory and trap. The spider waits at the edge.
+      Vibrations carry information. Consider the architecture. What does the
+      web catch? What does it exclude?
+    follow_ups:
+      - What would the spider be without the web?
+      - How does the web extend the spider's senses?
+      - What's the relationship between silk and survival?
+  - id: nmi_dragonfly_claim
+    name: Dragonfly Claim
+    prompt: |
+      A dragonfly patrols a stretch of pond—back and forth. It's territorial.
+      Rivals are chased. Mates are courted. Consider the stake. What's being
+      defended?
+    follow_ups:
+      - What would the dragonfly do without territory?
+      - How does the patrol communicate ownership?
+      - What's the relationship between space and reproduction?
+  - id: nmi_caterpillar_munch
+    name: Caterpillar Munch
+    prompt: |
+      A caterpillar eats—leaf edge recedes. The eating is constant. The
+      caterpillar is a conversion machine. Consider the rate. What would the
+      plant be without herbivores?
+    follow_ups:
+      - How does the caterpillar shape the leaf?
+      - What would the butterfly be without the eating?
+      - What's the relationship between consumption and growth?
+  - id: nmi_beetle_battle
+    name: Beetle Battle
+    prompt: |
+      Two beetles meet—maybe stag beetles, maybe dung beetles. They grapple.
+      The fight is ritual. Consider the stakes. What's being won? What's
+      being lost?
+    follow_ups:
+      - What would the loser do?
+      - How does the battle resolve?
+      - What's the relationship between combat and mating?
+  - id: nmi_firefly_flash
+    name: Firefly Flash
+    prompt: |
+      Fireflies flash—each species has a code. The pattern is courtship. Consider
+      the signal. What would the wrong flash mean? How do they find each
+      other in the dark?
+    follow_ups:
+      - How does the flash encode species?
+      - What would the meadow be without fireflies?
+      - What's the relationship between light and mate?
+  - id: nmi_aphid_farm
+    name: Aphid Farm
+    prompt: |
+      Ants tend aphids—they stroke them, they protect them. The aphids exude
+      honeydew. The ants harvest it. Consider the partnership. Who benefits?
+      Who is exploited?
+    follow_ups:
+      - What would the aphids be without ants?
+      - How does the farming shape both species?
+      - What's the relationship between tend and extract?
+  - id: nmi_cicada_shell
+    name: Cicada Shell
+    prompt: |
+      A cicada shell clings to bark—the nymph emerged. The shell is empty,
+      perfect. Consider the molt. What did the insect leave behind? What did
+      it gain?
+    follow_ups:
+      - What would the cicada be without the molt?
+      - How does the shell mark the transition?
+      - What's the relationship between shed and growth?
+  - id: nmi_leaf_miner
+    name: Leaf Miner
+    prompt: |
+      A trail inside a leaf—a leaf miner's path. The larva eats between
+      layers. The leaf holds the record. Consider the tunnel. What would the
+      leaf look like from inside?
+    follow_ups:
+      - What would the leaf be without the miner?
+      - How does the mine protect the larva?
+      - What's the relationship between inside and outside?
+  - id: nmi_wasp_nest
+    name: Wasp Nest
+    prompt: |
+      A paper wasp nest—hexagonal cells, chewed wood. The nest is architecture
+      and fortress. Consider the colony. Who builds? Who defends? Who reproduces?
+    follow_ups:
+      - What would the wasps be without the nest?
+      - How does the nest shape social structure?
+      - What's the relationship between paper and colony?
+  - id: nmi_grasshopper_leap
+    name: Grasshopper Leap
+    prompt: |
+      A grasshopper leaps—legs extend, it's gone. The leap is escape or
+      approach. Consider the trigger. What did the grasshopper see? What
+      did it hear?
+    follow_ups:
+      - What would the grasshopper be without the leap?
+      - How does the leap avoid predation?
+      - What's the relationship between leg and flight?
+  - id: nmi_mantis_still
+    name: Mantis Still
+    prompt: |
+      A mantis waits—motionless. It's a hunter. Prey approaches. The strike
+      is sudden. Consider the patience. What does the stillness cost? What
+      does it enable?
+    follow_ups:
+      - What would the mantis be without the wait?
+      - How does the stillness deceive?
+      - What's the relationship between patience and capture?
+  - id: nmi_bumblebee_buzz
+    name: Bumblebee Buzz
+    prompt: |
+      A bumblebee buzzes—it vibrates. Some flowers require buzz pollination.
+      The bee shakes the pollen loose. Consider the partnership. What would
+      the flower be without the buzz?
+    follow_ups:
+      - How does the buzz release pollen?
+      - What would the bee be without buzz pollination?
+      - What's the relationship between vibration and fertilization?
+  - id: nmi_butterfly_territory
+    name: Butterfly Territory
+    prompt: |
+      A butterfly perches on a high point—hilltopping. It waits for mates.
+      Rivals are chased. Consider the strategy. Why this spot? What makes it
+      valuable?
+    follow_ups:
+      - What would the butterfly do without the perch?
+      - How does hilltopping shape mating?
+      - What's the relationship between place and encounter?
+  - id: nmi_earwig_pincer
+    name: Earwig Pincer
+    prompt: |
+      Earwigs have pincers—cerci. They're for defense, for folding wings, for
+      handling prey. Consider the tool. What would the earwig be without the
+      pincer?
+    follow_ups:
+      - How does the pincer shape behavior?
+      - What would defense look like without it?
+      - What's the relationship between form and function?
+  - id: nmi_katydid_call
+    name: Katydid Call
+    prompt: |
+      A katydid calls—stridulation, legs on wings. The call is species-specific.
+      It's courtship, territory. Consider the sound. What would the night be
+      without it?
+    follow_ups:
+      - How does the call attract mates?
+      - What would the katydid risk by calling?
+      - What's the relationship between sound and predation?
+  - id: nmi_ladybug_cluster
+    name: Ladybug Cluster
+    prompt: |
+      Ladybugs cluster in winter—dozens, hundreds. They aggregate for warmth,
+      for shelter. Consider the gathering. What triggers it? What disperses it?
+    follow_ups:
+      - What would the ladybugs be without the cluster?
+      - How does the cluster create microclimate?
+      - What's the relationship between many and survival?
+  - id: nmi_ant_carry
+    name: Ant Carry
+    prompt: |
+      An ant carries another—dead or injured. It's aid. The colony cares for
+      its own. Consider the behavior. What would the injured ant do alone?
+      What does the carrier gain?
+    follow_ups:
+      - How does the carry serve the colony?
+      - What would the colony be without cooperation?
+      - What's the relationship between individual and collective?
+  - id: nmi_mosquito_hover
+    name: Mosquito Hover
+    prompt: |
+      A mosquito hovers—testing, probing. It's seeking a host. The hover is
+      assessment. Consider the moment before the bite. What does the mosquito
+      detect? What decides?
+    follow_ups:
+      - What would the mosquito do without the hover?
+      - How does the hover minimize detection?
+      - What's the relationship between probe and feed?
+  - id: nmi_weevil_curl
+    name: Weevil Curl
+    prompt: |
+      A leaf curls—a weevil or gall midge made it. The leaf folds around the
+      larva. Consider the manipulation. The plant is persuaded. What would
+      the leaf do without the insect?
+    follow_ups:
+      - How does the curl protect the larva?
+      - What would the plant be without the curl?
+      - What's the relationship between insect and plant form?
+  - id: nmi_honeybee_waggle
+    name: Honeybee Waggle
+    prompt: |
+      A honeybee waggles—it's a dance. The dance encodes distance and direction
+      to flowers. Other bees watch. Consider the message. What would the
+      colony be without the waggle?
+    follow_ups:
+      - How does the dance transfer information?
+      - What would foraging look like without it?
+      - What's the relationship between dance and discovery?
+  - id: nmi_gnat_cloud
+    name: Gnat Cloud
+    prompt: |
+      Gnats swarm—a cloud of tiny insects. The swarm is mating. Males gather;
+      females enter and choose. Consider the aggregation. What would the
+      gnat do alone?
+    follow_ups:
+      - How does the swarm enable mating?
+      - What would the gnats be without the cloud?
+      - What's the relationship between many and encounter?
+  - id: nmi_spider_wrap
+    name: Spider Wrap
+    prompt: |
+      A spider wraps prey—silk around the struggling insect. The wrap immobilizes.
+      The spider injects enzyme. Consider the process. What would the spider
+      do without the wrap?
+    follow_ups:
+      - How does the wrap subdue prey?
+      - What would the spider risk without it?
+      - What's the relationship between silk and digestion?
+  - id: nmi_ant_war
+    name: Ant War
+    prompt: |
+      Two ant colonies meet—conflict. Workers grapple, bite. The border is
+      contested. Consider the battle. What's at stake? How is the boundary
+      decided?
+    follow_ups:
+      - What would the colonies be without the war?
+      - How does the war resolve?
+      - What's the relationship between territory and resource?
+  - id: nmi_moth_flutter
+    name: Moth Flutter
+    prompt: |
+      A moth flutters at a light—drawn, confused. The light disrupts
+      navigation. Consider the trap. What would the moth do in darkness?
+      Why does light disorient?
+    follow_ups:
+      - What would the moth be without the light?
+      - How does the moth use moonlight normally?
+      - What's the relationship between light and direction?
+  - id: nmi_stick_insect_still
+    name: Stick Insect Still
+    prompt: |
+      A stick insect is motionless—it looks like a twig. Predators pass.
+      Consider the deception. What would the insect be without the disguise?
+      How long can it hold the pose?
+    follow_ups:
+      - How does the stillness protect?
+      - What would the insect risk by moving?
+      - What's the relationship between form and survival?
+  - id: nmi_leafcutter_carry
+    name: Leafcutter Carry
+    prompt: |
+      A leafcutter ant carries a leaf fragment—many times its size. The leaf
+      goes to the nest. It becomes substrate for fungus. Consider the
+      harvest. What would the colony be without the leaves?
+    follow_ups:
+      - How does the fungus use the leaf?
+      - What would the ant eat without the fungus?
+      - What's the relationship between harvest and cultivation?
+  - id: nmi_housefly_clean
+    name: Housefly Clean
+    prompt: |
+      A housefly cleans itself—rubs legs, strokes wings. The grooming removes
+      particles, maintains sensors. Consider the ritual. What would the fly
+      be without cleaning?
+    follow_ups:
+      - How does grooming maintain function?
+      - What would happen if the fly couldn't clean?
+      - What's the relationship between clean and sense?
+  - id: nmi_termite_mound
+    name: Termite Mound
+    prompt: |
+      A termite mound rises—clay, saliva, chewed wood. It's a city. Inside,
+      tunnels, chambers, fungus gardens. Consider the architecture. What
+      would the colony be without the mound?
+    follow_ups:
+      - How does the mound regulate climate?
+      - What would the termites do without the structure?
+      - What's the relationship between mound and colony?
+  - id: nmi_cricket_chirp
+    name: Cricket Chirp
+    prompt: |
+      A cricket chirps—wings together. The chirp is courtship. Females choose
+      by sound. Consider the call. What would the cricket do without the
+      chirp? What listens besides females?
+    follow_ups:
+      - How does the chirp encode fitness?
+      - What would the meadow be without the sound?
+      - What's the relationship between call and predation?
+  - id: nmi_damselfly_tandem
+    name: Damselfly Tandem
+    prompt: |
+      Damselflies mate in tandem—male clasps female behind the head. She
+      curves to receive sperm. The pair may fly together. Consider the
+      coupling. What would mating be without the clasp?
+    follow_ups:
+      - How does the tandem protect the male's investment?
+      - What would the pair do without the link?
+      - What's the relationship between clasp and fertilization?
+  - id: nmi_roach_scatter
+    name: Roach Scatter
+    prompt: |
+      Turn on a light—roaches scatter. They seek crevices. The scatter is
+      escape. Consider the response. What would the roach do in permanent
+      light? Why darkness?
+    follow_ups:
+      - How does the scatter reduce predation?
+      - What would the roach be without the reflex?
+      - What's the relationship between light and hiding?
+  - id: nmi_hopper_nymph
+    name: Hopper Nymph
+    prompt: |
+      A young grasshopper—nymph. It has no wings yet. It hops. Consider the
+      stage. What will the nymph become? What does it lack now?
+    follow_ups:
+      - What would the grasshopper be without the nymph stage?
+      - How does the nymph avoid predators?
+      - What's the relationship between molt and wing?
+  - id: nmi_sweat_bee
+    name: Sweat Bee
+    prompt: |
+      A sweat bee lands on your skin—seeking salt. Sweat is a resource.
+      Consider the encounter. What would the bee do without sweat? Why does
+      it need the salt?
+    follow_ups:
+      - How does the bee use the salt?
+      - What would the bee risk by landing?
+      - What's the relationship between human and bee?
+  - id: nmi_army_ant_column
+    name: Army Ant Column
+    prompt: |
+      Army ants march—a column of thousands. They flow. Prey is overwhelmed.
+      Consider the swarm. What would the ants be without the column? How do
+      they coordinate?
+    follow_ups:
+      - How does the column enable predation?
+      - What would the forest be without army ants?
+      - What's the relationship between many and power?
+  - id: nmi_water_strider_leg
+    name: Water Strider Leg
+    prompt: |
+      A water strider's legs—long, hydrophobic. They spread weight. The
+      surface holds. Consider the adaptation. What would the strider be
+      without the leg design?
+    follow_ups:
+      - How does the leg shape distribute force?
+      - What would the strider do on land?
+      - What's the relationship between form and surface?
+  - id: nmi_aphid_wing
+    name: Aphid Wing
+    prompt: |
+      Some aphids have wings—when crowded or when the host declines. They
+      disperse. Consider the switch. What triggers wing development? What
+      does the wing cost?
+    follow_ups:
+      - How does crowding induce wings?
+      - What would the aphid be without the option?
+      - What's the relationship between wing and dispersal?
+  - id: nmi_scale_armor
+    name: Scale Armor
+    prompt: |
+      Scale insects look like bumps—they're armored. They don't move much.
+      They tap the plant, feed. Consider the strategy. What would the scale
+      be without the armor?
+    follow_ups:
+      - How does the armor protect?
+      - What would the plant be without the scale?
+      - What's the relationship between stillness and defense?
+  - id: nmi_caddisfly_case
+    name: Caddisfly Case
+    prompt: |
+      A caddisfly larva builds a case—sticks, sand, pebbles. It carries the
+      case. The case is camouflage and armor. Consider the construction.
+      What would the larva be without it?
+    follow_ups:
+      - How does the case protect?
+      - What would the larva use if materials changed?
+      - What's the relationship between build and survival?
+  - id: nmi_leafhopper_flash
+    name: Leafhopper Flash
+    prompt: |
+      A leafhopper jumps—sudden. It's gone. The jump is escape. The legs store
+      energy, release. Consider the mechanism. What would the leafhopper be
+      without the jump?
+    follow_ups:
+      - How does the jump avoid capture?
+      - What would the leaf be without the leafhopper?
+      - What's the relationship between jump and predation?
+  - id: nmi_bombardier_blast
+    name: Bombardier Blast
+    prompt: |
+      A bombardier beetle sprays—hot, noxious. It's defense. The spray is
+      chemistry: two chambers, reaction at exit. Consider the weapon. What
+      would the beetle do without it?
+    follow_ups:
+      - How does the spray deter predators?
+      - What would the beetle risk by spraying?
+      - What's the relationship between chemistry and defense?
+  - id: nmi_silverfish_slip
+    name: Silverfish Slip
+    prompt: |
+      A silverfish slips into a crack—fast. It's flat. It fits. Consider the
+      form. What would the silverfish be without the flatness? Why the
+      urgency?
+    follow_ups:
+      - How does the flatness enable escape?
+      - What would the silverfish do in the open?
+      - What's the relationship between form and refuge?
+  - id: nmi_ant_queen
+    name: Ant Queen
+    prompt: |
+      An ant colony has a queen—or several. She lays eggs. Workers tend her.
+      Consider the center. What would the colony be without the queen? How
+      does the colony replace her?
+    follow_ups:
+      - How does the queen shape the colony?
+      - What would workers do without her?
+      - What's the relationship between queen and colony?
+  - id: nmi_owlfly_larva
+    name: Owlfly Larva
+    prompt: |
+      An owlfly larva lies in wait—in sand, in debris. It ambushes. Jaws
+      strike. Consider the hunter. What would the larva be without the ambush?
+      What does it become?
+    follow_ups:
+      - How does the ambush enable feeding?
+      - What would the owlfly be without the larval stage?
+      - What's the relationship between wait and capture?
+  - id: nmi_thrips_scatter
+    name: Thrips Scatter
+    prompt: |
+      Thrips are tiny—barely visible. They cluster on flowers, on leaves.
+      They pierce and suck. Consider the scale. What would the plant be
+      without thrips? What would we notice?
+    follow_ups:
+      - How do thrips shape the plant?
+      - What would the ecosystem be without them?
+      - What's the relationship between small and impact?
+  - id: nmi_sting_threat
+    name: Sting Threat
+    prompt: |
+      A wasp raises its abdomen—sting ready. It's a threat. The posture
+      communicates. Consider the display. What would the wasp do if ignored?
+      What does the posture cost?
+    follow_ups:
+      - How does the threat deter?
+      - What would the wasp risk by stinging?
+      - What's the relationship between display and defense?
+  - id: nmi_velvet_ant
+    name: Velvet Ant
+    prompt: |
+      A velvet ant crawls—it's a wingless wasp. It's tough. Predators learn to
+      avoid it. The sting is fierce. Consider the strategy. What would the
+      velvet ant be without the sting?
+    follow_ups:
+      - How does the sting protect?
+      - What would the velvet ant do on the surface?
+      - What's the relationship between sting and boldness?
+  - id: nmi_ambush_predator
+    name: Ambush Predator
+    prompt: |
+      An ambush bug waits on a flower—yellow, disguised. Prey arrives. The
+      bug strikes. Consider the patience. What would the bug do without the
+      flower? Why this perch?
+    follow_ups:
+      - How does the flower attract prey?
+      - What would the bug be without the ambush?
+      - What's the relationship between place and capture?
+  - id: nmi_nectar_flow
+    name: Nectar Flow
+    prompt: |
+      Flowers produce nectar—bees, butterflies, beetles drink. The flow
+      varies. Consider the economy. What would the flower be without the
+      nectar? What would the insect do?
+    follow_ups:
+      - How does nectar shape visitation?
+      - What would pollination be without the reward?
+      - What's the relationship between flow and service?
+  - id: nmi_territory_mark
+    name: Territory Mark
+    prompt: |
+      Some insects mark territory—pheromones, visual display. The mark says
+      "mine." Consider the claim. What would the space be without the mark?
+      How do rivals read it?
+    follow_ups:
+      - How does the mark deter intruders?
+      - What would the insect do without the territory?
+      - What's the relationship between mark and space?

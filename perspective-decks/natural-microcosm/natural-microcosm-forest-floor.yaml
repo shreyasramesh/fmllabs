@@ -1,0 +1,475 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natural Microcosm — Forest Floor
+
+id: natural_microcosm_forest_floor
+name: Natural Microcosm — Forest Floor
+description: 50 cards to shift how you see the forest floor—from decomposition
+  and mycelium to leaf litter architecture and the invisible life beneath the
+  canopy.
+domain: natural_microcosm
+cards:
+  - id: nmf_leaf_vein
+    name: Leaf Vein
+    prompt: |
+      Pick up a fallen leaf. Trace the veins. They carried water, nutrients,
+      sugars. The architecture is invisible until you look. What did the vein
+      network sustain when the leaf was alive?
+    follow_ups:
+      - How does the pattern differ between species?
+      - What would the leaf be without the veins?
+      - What's the relationship between vein and edge?
+  - id: nmf_leaf_litter_layer
+    name: Leaf Litter Layer
+    prompt: |
+      The forest floor is layers—fresh fall on top, last year beneath, older
+      still below. Kneel. Peel back a layer. What's the gradient? How does
+      time stack?
+    follow_ups:
+      - What would the forest be without the litter?
+      - How does the layer create habitat?
+      - What's the relationship between layer and decay?
+  - id: nmf_mushroom_fruiting
+    name: Mushroom Fruiting
+    prompt: |
+      A mushroom is only the fruiting body. The organism—the mycelium—spreads
+      underground, through soil, through wood. Consider what you see as a
+      signal. What's the rest of the story?
+    follow_ups:
+      - What would the forest be without fungi?
+      - How does the fruiting body relate to the network?
+      - What's the relationship between mushroom and decay?
+  - id: nmf_log_sponge
+    name: Log Sponge
+    prompt: |
+      A fallen log absorbs water, holds it. Press your hand to one after rain.
+      The log is a reservoir. Who drinks from it? What lives inside?
+    follow_ups:
+      - What would the forest be without nurse logs?
+      - How does the log create microclimate?
+      - What's the relationship between wood and water?
+  - id: nmf_moss_cushion
+    name: Moss Cushion
+    prompt: |
+      Moss holds water like a sponge. Touch it. The cushion is architecture—
+      tiny plants packed together. What lives in the spaces between?
+    follow_ups:
+      - What would the floor be without moss?
+      - How does the cushion create humidity?
+      - What's the relationship between moss and seedling?
+  - id: nmf_fern_unfurl
+    name: Fern Unfurl
+    prompt: |
+      Fern fronds unfurl in a spiral—fiddleheads. The motion is slow. Watch
+      one over days if you can. How does the unfurl shape the leaf?
+    follow_ups:
+      - What would the fern be without the spiral?
+      - How does unfurling protect the frond?
+      - What's the relationship between curl and growth?
+  - id: nmf_root_tangle
+    name: Root Tangle
+    prompt: |
+      Roots tangle beneath the surface. Find where a tree has fallen and
+      lifted its root ball. The tangle is a map of search. What were the roots
+      reaching for?
+    follow_ups:
+      - What would the tree be without the tangle?
+      - How do roots share space underground?
+      - What's the relationship between root and fungus?
+  - id: nmf_slug_trail
+    name: Slug Trail
+    prompt: |
+      A slug trail gleams on a leaf—mucus, path, signature. The trail marks
+      where the slug went. What does the trail tell predators? Prey?
+    follow_ups:
+      - What would the slug lose without the trail?
+      - How does mucus enable movement?
+      - What's the relationship between trail and territory?
+  - id: nmf_lichen_patch
+    name: Lichen Patch
+    prompt: |
+      Lichen grows on bark, rock, soil—slow, composite. Fungus and alga
+      together. Find a patch. How long has it been there? What does its presence
+      indicate?
+    follow_ups:
+      - What would the bark be without the lichen?
+      - How does lichen mark time?
+      - What's the relationship between lichen and air quality?
+  - id: nmf_saprophyte
+    name: Saprophyte
+    prompt: |
+      Saprophytes feed on dead matter—fungi, bacteria, insects. They are the
+      recyclers. Find evidence of decay. Who is eating? What is being
+      transformed?
+    follow_ups:
+      - What would the forest be without decomposers?
+      - How does decay feed new growth?
+      - What's the relationship between death and soil?
+  - id: nmf_seedling_emergence
+    name: Seedling Emergence
+    prompt: |
+      A seedling pushes through litter. The cotyledons first, then true leaves.
+      Notice the force. What did it take to break through? What will block it?
+    follow_ups:
+      - What would the forest be without seedlings?
+      - How does emergence depend on the litter?
+      - What's the relationship between seedling and light?
+  - id: nmf_anthill_mound
+    name: Anthill Mound
+    prompt: |
+      An ant mound rises from the forest floor—excavated soil, organized.
+      Watch the traffic. Where do they go? What do they carry?
+    follow_ups:
+      - What would the floor be without the mound?
+      - How does the mound shape drainage?
+      - What's the relationship between mound and colony?
+  - id: nmf_spider_silk
+    name: Spider Silk
+    prompt: |
+      Spider silk spans gaps—between leaves, twigs. Dew catches it. The web is
+      invisible until the light hits it. Trace one strand. What does it connect?
+    follow_ups:
+      - What would the gap be without the silk?
+      - How does the web structure space?
+      - What's the relationship between silk and prey?
+  - id: nmf_bark_flake
+    name: Bark Flake
+    prompt: |
+      Bark flakes from a trunk—texture, pattern, age. Each flake tells a
+      season. Who lives under the bark? What does the flake reveal?
+    follow_ups:
+      - What would the tree be without the bark?
+      - How does bark protect and insulate?
+      - What's the relationship between flake and renewal?
+  - id: nmf_acorn_fall
+    name: Acorn Fall
+    prompt: |
+      An acorn falls. It's heavy for its size. It will root or be eaten.
+      Consider the odds. What determines which path?
+    follow_ups:
+      - What would the forest be without the acorn?
+      - How does the fall distribute seed?
+      - What's the relationship between acorn and oak?
+  - id: nmf_fallen_branch
+    name: Fallen Branch
+    prompt: |
+      A branch lies on the floor—broken, perhaps by wind. It's a bridge now.
+      What crosses it? What grows on it?
+    follow_ups:
+      - What would the floor be without fallen wood?
+      - How does the branch create edge habitat?
+      - What's the relationship between branch and nutrient?
+  - id: nmf_humus_smell
+    name: Humus Smell
+    prompt: |
+      Bend close to the forest floor. The smell—earth, decay, life. That smell
+      is chemistry. What creates it? What would the forest be without it?
+    follow_ups:
+      - How does the smell mark health?
+      - What would sterile soil smell like?
+      - What's the relationship between smell and fertility?
+  - id: nmf_snail_shell
+    name: Snail Shell
+    prompt: |
+      An empty snail shell rests in the litter. Spiral, calcium, left behind.
+      Who might have eaten the snail? What will use the shell?
+    follow_ups:
+      - What would the floor be without shells?
+      - How does the shell recycle nutrients?
+      - What's the relationship between shell and calcium?
+  - id: nmf_fungal_network
+    name: Fungal Network
+    prompt: |
+      Mycelium connects trees—a Wood Wide Web. You can't see it, but it's
+      there. Nutrients flow. Information flows. Consider the forest as a
+      network.
+    follow_ups:
+      - What would the forest be without the network?
+      - How does the network redistribute resources?
+      - What's the relationship between fungus and tree?
+  - id: nmf_fern_spore
+    name: Fern Spore
+    prompt: |
+      Ferns reproduce by spores—tiny, countless. Look at the underside of a
+      frond. The sori hold them. What would it take to trace one spore's
+      journey?
+    follow_ups:
+      - What would the fern be without spores?
+      - How does the spore disperse?
+      - What's the relationship between spore and gametophyte?
+  - id: nmf_earthworm_cast
+    name: Earthworm Cast
+    prompt: |
+      Earthworm castings pile at tunnel entrances—processed soil, rich.
+      The worm has eaten and excreted. The cast is gift to the surface.
+    follow_ups:
+      - What would the soil be without worms?
+      - How does the cast improve structure?
+      - What's the relationship between worm and aeration?
+  - id: nmf_dappled_light
+    name: Dappled Light
+    prompt: |
+      Light falls through the canopy in patches—dappled, moving. The forest
+      floor receives less than the open. How does that shape what grows?
+    follow_ups:
+      - What would the floor be in full sun?
+      - How does dappling create microhabitats?
+      - What's the relationship between light and seedling?
+  - id: nmf_bracket_fungus
+    name: Bracket Fungus
+    prompt: |
+      A bracket fungus grows from a trunk—shelf, polypore. It's digesting the
+      tree from within. The tree may stand for years while it happens. Consider
+      the slow consumption.
+    follow_ups:
+      - What would the tree be without the fungus?
+      - How does the bracket disperse spores?
+      - What's the relationship between parasite and host?
+  - id: nmf_needle_mat
+    name: Needle Mat
+    prompt: |
+      Conifer needles pile beneath the tree—sour, slow to decompose. The mat
+      changes the soil. What grows in it? What avoids it?
+    follow_ups:
+      - What would the floor be without the mat?
+      - How does the needle mat affect pH?
+      - What's the relationship between mat and fire?
+  - id: nmf_salamander_under
+    name: Salamander Under
+    prompt: |
+      Salamanders live under logs, stones, litter. Lift something carefully—
+      replace it. The moisture, the darkness. Why does the salamander need it?
+    follow_ups:
+      - What would the forest be without salamanders?
+      - How does the salamander shape the invertebrate community?
+      - What's the relationship between moisture and amphibian?
+  - id: nmf_rot_hole
+    name: Rot Hole
+    prompt: |
+      A hole in a log—rot, perhaps, or an animal. The hole is a cavity. What
+      nests there? What hides there?
+    follow_ups:
+      - What would the log be without the hole?
+      - How does the cavity create habitat?
+      - What's the relationship between rot and shelter?
+  - id: nmf_springtail_jump
+    name: Springtail Jump
+    prompt: |
+      Springtails—tiny, numerous—jump when disturbed. They're in the litter,
+      the soil. They process fungi, decay. Notice how many you can't see.
+    follow_ups:
+      - What would the floor be without springtails?
+      - How does the spring enable escape?
+      - What's the relationship between springtail and decomposition?
+  - id: nmf_bark_beetle_gallery
+    name: Bark Beetle Gallery
+    prompt: |
+      Bark beetle galleries etch the wood beneath the bark—channels, patterns.
+      The beetle carved them. The tree responded. What's the story?
+    follow_ups:
+      - What would the tree be without the beetle?
+      - How does the gallery shape the tree's fate?
+      - What's the relationship between beetle and fungus?
+  - id: nmf_dew_on_litter
+    name: Dew on Litter
+    prompt: |
+      Morning dew beads on leaves, needles, twigs. The litter holds moisture.
+      Who drinks at dawn? How does the dew extend the wet season?
+    follow_ups:
+      - What would the floor be without dew?
+      - How does dew create a water source?
+      - What's the relationship between dew and evaporation?
+  - id: nmf_windfall_gap
+    name: Windfall Gap
+    prompt: |
+      A tree fell—wind, age, disease. The gap lets light in. The floor
+      changes. What grows in the gap that couldn't before?
+    follow_ups:
+      - What would the forest be without gaps?
+      - How does the gap reset succession?
+      - What's the relationship between gap and diversity?
+  - id: nmf_mycorrhizal_tip
+    name: Mycorrhizal Tip
+    prompt: |
+      Tree roots meet fungal hyphae—mycorrhiza. The fungus extends the root's
+      reach. The tree feeds the fungus. Find a root tip. Imagine the
+      partnership beneath.
+    follow_ups:
+      - What would the tree be without mycorrhiza?
+      - How does the partnership extend the root system?
+      - What's the relationship between fungus and phosphorus?
+  - id: nmf_squirrel_cache
+    name: Squirrel Cache
+    prompt: |
+      A squirrel buried a nut—forgotten, perhaps. It may sprout. The cache is
+      dispersal. How many trees began as forgotten seed?
+    follow_ups:
+      - What would the forest be without cachers?
+      - How does caching extend seed range?
+      - What's the relationship between forgetfulness and forest?
+  - id: nmf_carpet_moss
+    name: Carpet Moss
+    prompt: |
+      Moss carpets the ground in places—soft, green, holding water. Walk on
+      it. Feel the give. The carpet is centuries of growth, layer on layer.
+    follow_ups:
+      - What would the floor be without the carpet?
+      - How does the carpet retain moisture?
+      - What's the relationship between moss and bog?
+  - id: nmf_burrow_entrance
+    name: Burrow Entrance
+    prompt: |
+      A burrow opens in the soil—mouse, vole, chipmunk. The entrance is a
+      threshold. What goes in? What comes out? The burrow extends underground.
+    follow_ups:
+      - What would the floor be without burrows?
+      - How does the burrow aerate soil?
+      - What's the relationship between burrow and predator?
+  - id: nmf_twig_lattice
+    name: Twig Lattice
+    prompt: |
+      Twigs collect—wind, animal, gravity. They form a lattice over the litter.
+      The lattice holds leaves, catches seed. It's incidental architecture.
+    follow_ups:
+      - What would the floor be without the lattice?
+      - How does the lattice slow erosion?
+      - What's the relationship between twig and microhabitat?
+  - id: nmf_rot_softness
+    name: Rot Softness
+    prompt: |
+      Rotten wood gives under your fingers—spongy, crumbling. The transition
+      from structure to soil. How long did it take? What's left?
+    follow_ups:
+      - What would the forest be without rot?
+      - How does softness enable colonization?
+      - What's the relationship between rot and humus?
+  - id: nmf_frost_needle
+    name: Frost Needle
+    prompt: |
+      Frost needles lift from soil—ice crystals, delicate. They form on cold
+      still nights. By noon they're gone. Consider the ephemeral structure.
+    follow_ups:
+      - What would the soil experience without frost?
+      - How does frost heave affect roots?
+      - What's the relationship between frost and seedling?
+  - id: nmf_millipede_curl
+    name: Millipede Curl
+    prompt: |
+      A millipede curls when disturbed—defense. It feeds on decay. Watch one
+      move through the litter. How does the body navigate the tangle?
+    follow_ups:
+      - What would the floor be without millipedes?
+      - How does the curl protect?
+      - What's the relationship between millipede and calcium?
+  - id: nmf_pinecone_open
+    name: Pinecone Open
+    prompt: |
+      A pinecone opens when dry—scales spread, seeds released. The cone is a
+      mechanism. Heat can trigger it too. Consider the timing.
+    follow_ups:
+      - What would the tree be without the cone?
+      - How does moisture control the mechanism?
+      - What's the relationship between fire and release?
+  - id: nmf_hole_in_leaf
+    name: Hole in Leaf
+    prompt: |
+      A leaf has holes—insect, slug, fungus. The damage tells a story. Who ate?
+      When? The remaining leaf still photosynthesizes. What's the threshold?
+    follow_ups:
+      - What would the leaf be without the holes?
+      - How does herbivory shape the plant?
+      - What's the relationship between damage and defense?
+  - id: nmf_root_hair
+    name: Root Hair
+    prompt: |
+      Root hairs—microscopic—increase surface area for uptake. You can't see
+      them, but they're there. A seedling's roots are exploring. What are they
+      finding?
+    follow_ups:
+      - What would the root be without the hairs?
+      - How do root hairs absorb water?
+      - What's the relationship between hair and nutrient?
+  - id: nmf_forest_silence
+    name: Forest Silence
+    prompt: |
+      Stand still on the forest floor. The silence is not empty—it's full of
+      small sounds. Rustle, drip, creak. What do you hear when you stop?
+    follow_ups:
+      - What would the forest be without the small sounds?
+      - How does silence reveal presence?
+      - What's the relationship between listening and noticing?
+  - id: nmf_shade_adaptation
+    name: Shade Adaptation
+    prompt: |
+      Plants on the forest floor are adapted to shade—larger leaves, different
+      chlorophyll. Compare a sun leaf to a shade leaf. What's the trade-off?
+    follow_ups:
+      - What would the plant be in full sun?
+      - How does shade shape the leaf?
+      - What's the relationship between light and investment?
+  - id: nmf_nutrient_cycle
+    name: Nutrient Cycle
+    prompt: |
+      Everything on the forest floor is cycling—carbon, nitrogen, phosphorus.
+      A leaf falls. It's consumed. It becomes soil. It feeds a tree. Trace one
+      loop.
+    follow_ups:
+      - What would the forest be without the cycle?
+      - How does decomposition complete the loop?
+      - What's the relationship between death and growth?
+  - id: nmf_footprint_compression
+    name: Footprint Compression
+    prompt: |
+      Your footprint compresses the litter. The soil beneath holds the shape.
+      How many footsteps does it take to change the floor? Who else has walked
+      here?
+    follow_ups:
+      - What would the floor be without traffic?
+      - How does compression affect drainage?
+      - What's the relationship between path and compaction?
+  - id: nmf_seasonal_signal
+    name: Seasonal Signal
+    prompt: |
+      The forest floor signals the season—new growth in spring, senescence in
+      fall. What's on the ground right now? What does it tell you?
+    follow_ups:
+      - What would the floor be in another season?
+      - How does the signal synchronize life?
+      - What's the relationship between litter and calendar?
+  - id: nmf_stump_succession
+    name: Stump Succession
+    prompt: |
+      A cut stump sprouts fungi, seedlings, moss. It's a stage in succession.
+      What came before? What will replace it? The stump is both end and
+      beginning.
+    follow_ups:
+      - What would the clearing be without the stump?
+      - How does the stump create opportunity?
+      - What's the relationship between death and new growth?
+  - id: nmf_forest_breath
+    name: Forest Breath
+    prompt: |
+      The forest floor breathes—oxygen in, carbon out, or the reverse at night.
+      The soil is alive. Stand still. Can you feel the exchange?
+    follow_ups:
+      - What would the air be without the floor?
+      - How does the breath shape the canopy?
+      - What's the relationship between soil and atmosphere?
+  - id: nmf_leaf_miner_trail
+    name: Leaf Miner Trail
+    prompt: |
+      A leaf miner—an insect larva—eats between the layers. The trail is a
+      white line, a meandering path. Trace it. What did the miner seek?
+    follow_ups:
+      - What would the leaf be without the trail?
+      - How does the miner navigate without seeing?
+      - What's the relationship between inside and outside?
+  - id: nmf_decomposer_shift
+    name: Decomposer Shift
+    prompt: |
+      As material decays, different decomposers take over—first bacteria and
+      fungi, later beetles and earthworms. Find material at different stages.
+      Who's working now?
+    follow_ups:
+      - What would decomposition be without succession?
+      - How does the shift shape the pace?
+      - What's the relationship between stage and consumer?

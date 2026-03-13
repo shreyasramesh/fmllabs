@@ -1,0 +1,493 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natural Microcosm — Pond & Puddle
+
+id: natural_microcosm_pond_puddle
+name: Natural Microcosm — Pond & Puddle
+description: 50 cards to shift how you see water at small scale—from surface
+  tension and reflections to aquatic insects, tadpoles, and the life in
+  temporary pools.
+domain: natural_microcosm
+cards:
+  - id: nmp_surface_tension
+    name: Surface Tension
+    prompt: |
+      A water strider walks on water. The surface holds—molecules cling. Drop a
+      pin gently. It floats. Consider the invisible film. What would break it?
+    follow_ups:
+      - How does surface tension shape who can live here?
+      - What would the pond be without it?
+      - What's the relationship between surface and boundary?
+  - id: nmp_skater_ripple
+    name: Skater Ripple
+    prompt: |
+      A water strider's legs dimple the surface. Each step creates a ripple.
+      Watch the pattern. The strider reads the surface like a map. What does
+      it sense?
+    follow_ups:
+      - How does the ripple carry information?
+      - What would the strider do without the surface?
+      - What's the relationship between ripple and prey?
+  - id: nmp_reflection_sky
+    name: Reflection of Sky
+    prompt: |
+      A puddle reflects the sky—or a branch, or you. The reflection inverts.
+      The still water is a mirror. What does the reflection add? What does it
+      conceal?
+    follow_ups:
+      - What would the puddle be without reflection?
+      - How does stillness shape what we see?
+      - What's the relationship between surface and image?
+  - id: nmp_tadpole_tail
+    name: Tadpole Tail
+    prompt: |
+      A tadpole swims—tail propels it. The tail will be reabsorbed. The animal
+      is transforming. Consider the in-between. What does the tail enable now?
+    follow_ups:
+      - What would the tadpole be without the tail?
+      - How does metamorphosis rewrite the body?
+      - What's the relationship between form and function?
+  - id: nmp_dragonfly_egg
+    name: Dragonfly Egg
+    prompt: |
+      Dragonflies lay eggs in water—or in stems below the surface. The nymph
+      lives underwater for years before emerging. Consider the split life.
+      What connects water and air?
+    follow_ups:
+      - What would the dragonfly be without the aquatic stage?
+      - How does the nymph shape the pond?
+      - What's the relationship between nymph and adult?
+  - id: nmp_algae_bloom
+    name: Algae Bloom
+    prompt: |
+      Green scum on the water—algae. It's a bloom, a pulse. Too much nutrient,
+      too much sun. The pond responds. What triggers it? What follows?
+    follow_ups:
+      - What would the pond be without algae?
+      - How does the bloom affect oxygen?
+      - What's the relationship between nutrient and growth?
+  - id: nmp_reed_stem
+    name: Reed Stem
+    prompt: |
+      Reeds and rushes rise from the edge. They're hollow—air channels run
+      through. The stem connects water and air. Who uses the reed as ladder?
+    follow_ups:
+      - What would the edge be without reeds?
+      - How does the hollow enable survival?
+      - What's the relationship between stem and habitat?
+  - id: nmp_pond_skin
+    name: Pond Skin
+    prompt: |
+      The pond has a skin—where water meets air. Dust lands on it. Oil spreads.
+      The skin is delicate. Touch it. What does the skin separate?
+    follow_ups:
+      - What would the pond be without the skin?
+      - How does the skin affect gas exchange?
+      - What's the relationship between surface and depth?
+  - id: nmp_temporary_pool
+    name: Temporary Pool
+    prompt: |
+      A puddle after rain—it will dry. Yet life has adapted. Fairy shrimp,
+      tadpole shrimp, eggs that wait. Consider the urgency. What must happen
+      before the water goes?
+    follow_ups:
+      - What would the pool be if it were permanent?
+      - How does temporariness shape strategy?
+      - What's the relationship between time and adaptation?
+  - id: nmp_whirligig_gyre
+    name: Whirligig Gyre
+    prompt: |
+      Whirligig beetles spin on the surface. They see above and below—split
+      eyes. They're predators and prey. Consider the double vision. What does
+      it enable?
+    follow_ups:
+      - What would the beetle be without split vision?
+      - How does the gyre confuse predators?
+      - What's the relationship between spin and survival?
+  - id: nmp_diving_spider
+    name: Diving Spider
+    prompt: |
+      A diving spider carries an air bubble—a diving bell. It breathes
+      underwater. The bubble is a lung. Consider the invention. What would
+      the spider do without it?
+    follow_ups:
+      - How does the bubble enable hunting?
+      - What would happen if the bubble burst?
+      - What's the relationship between air and water?
+  - id: nmp_pond_scum
+    name: Pond Scum
+    prompt: |
+      Scum forms at the edge—pollen, dust, algae, insects. It's a boundary
+      layer. What collects there? Who feeds on it? The scum is a filter.
+    follow_ups:
+      - What would the pond be without the scum?
+      - How does the edge concentrate life?
+      - What's the relationship between boundary and accumulation?
+  - id: nmp_ice_surface
+    name: Ice Surface
+    prompt: |
+      In winter, the pond freezes. The ice holds. Beneath it, life continues—
+      slower, colder. Consider the barrier. What does the ice protect? What
+      does it block?
+    follow_ups:
+      - What would the pond be without ice?
+      - How does freezing affect oxygen?
+      - What's the relationship between ice and survival?
+  - id: nmp_minnow_school
+    name: Minnow School
+    prompt: |
+      Minnows school—they move as one. The school is defense, efficiency.
+      Watch the sync. What coordinates them? What would a lone minnow risk?
+    follow_ups:
+      - What would the pond be without the school?
+      - How does schooling reduce predation?
+      - What's the relationship between individual and group?
+  - id: nmp_lily_pad
+    name: Lily Pad
+    prompt: |
+      A lily pad floats. Its underside is different from its top—hairs, color.
+      The pad is a platform. What lands on it? What lives beneath?
+    follow_ups:
+      - What would the pond be without lily pads?
+      - How does the pad shape light below?
+      - What's the relationship between pad and shade?
+  - id: nmp_ripple_spread
+    name: Ripple Spread
+    prompt: |
+      A stone drops. Ripples spread. They intersect, interfere. The pattern
+      carries energy. Consider the decay. How far do the ripples travel?
+    follow_ups:
+      - What would the surface be without ripples?
+      - How does the ripple mark the impact?
+      - What's the relationship between disturbance and propagation?
+  - id: nmp_mosquito_wiggle
+    name: Mosquito Wiggle
+    prompt: |
+      Mosquito larvae hang from the surface—wigglers. They breathe through a
+      siphon. The wiggle is movement, feeding. Consider the larva's world.
+      What does it eat?
+    follow_ups:
+      - What would the pond be without mosquitoes?
+      - How does the wiggle avoid predators?
+      - What's the relationship between larva and adult?
+  - id: nmp_leaf_boat
+    name: Leaf Boat
+    prompt: |
+      A leaf floats—fallen, drifting. It's a raft for some, food for others.
+      The leaf will sink, decay. Trace its journey. What will it become?
+    follow_ups:
+      - What would the surface be without floating debris?
+      - How does the leaf create microhabitat?
+      - What's the relationship between float and sink?
+  - id: nmp_backswimmer_top
+    name: Backswimmer Top
+    prompt: |
+      A backswimmer swims upside down—belly to sky. It rows with its legs.
+      It breathes at the surface, then dives. Consider the inversion. Why
+      upside down?
+    follow_ups:
+      - What would the backswimmer be right-side up?
+      - How does the posture aid hunting?
+      - What's the relationship between orientation and prey?
+  - id: nmp_snail_trail
+    name: Snail Trail
+    prompt: |
+      A pond snail glides. It leaves a trail—mucus, movement. The trail marks
+      where it's been. Other snails may follow. Consider the path. What does
+      the trail communicate?
+    follow_ups:
+      - What would the snail be without the trail?
+      - How does mucus enable movement?
+      - What's the relationship between trail and following?
+  - id: nmp_dew_drop
+    name: Dew Drop
+    prompt: |
+      Dew forms on a blade above the water—beads, reflects. It's condensation.
+      The drop holds. Then it falls. Consider the droplet. What does it
+      magnify?
+    follow_ups:
+      - What would the blade be without dew?
+      - How does the droplet bend light?
+      - What's the relationship between drop and surface?
+  - id: nmp_spring_constant
+    name: Spring Constant
+    prompt: |
+      A spring feeds the pond—or the pond seeps. The water level is balance.
+      Consider the input and output. What sustains the pool? What would dry it?
+    follow_ups:
+      - What would the pond be without the spring?
+      - How does the source shape the water?
+      - What's the relationship between input and life?
+  - id: nmp_edge_ecotone
+    name: Edge Ecotone
+    prompt: |
+      The pond edge is an ecotone—transition. Wet meets dry. Plants adapt.
+      Animals cross. The edge is diversity. What thrives in the in-between?
+    follow_ups:
+      - What would the pond be without the edge?
+      - How does the ecotone create opportunity?
+      - What's the relationship between boundary and diversity?
+  - id: nmp_frog_eye
+    name: Frog Eye
+    prompt: |
+      A frog sits at the edge. Its eyes bulge—it sees above and ahead. The
+      frog is still. Then the tongue shoots. Consider the patience. What does
+      it wait for?
+    follow_ups:
+      - What would the frog be without the bulging eyes?
+      - How does stillness enable the strike?
+      - What's the relationship between wait and catch?
+  - id: nmp_oxygen_bubble
+    name: Oxygen Bubble
+    prompt: |
+      Plants in the pond produce oxygen—bubbles rise. On a sunny day, the
+      water breathes. Consider the exchange. What would the pond be without
+      photosynthesis?
+    follow_ups:
+      - How does oxygen shape who can live here?
+      - What happens when oxygen runs low?
+      - What's the relationship between light and breath?
+  - id: nmp_detritus_floor
+    name: Detritus Floor
+    prompt: |
+      The pond bottom is detritus—fallen leaves, dead insects, sediment. It's
+      a layer of decay. What lives in it? What feeds on it? The floor is a
+      larder.
+    follow_ups:
+      - What would the pond be without detritus?
+      - How does the floor fuel the water column?
+      - What's the relationship between bottom and top?
+  - id: nmp_rain_ring
+    name: Rain Ring
+    prompt: |
+      Rain hits the surface. Each drop makes a ring—a crown, then a crater.
+      The rain textures the water. Consider the pattern. What would a still
+      surface mean?
+    follow_ups:
+      - How does rain oxygenate the water?
+      - What do the rings disrupt?
+      - What's the relationship between rain and surface?
+  - id: nmp_duckweed_carpet
+    name: Duckweed Carpet
+    prompt: |
+      Duckweed carpets the surface—tiny floating plants. They multiply fast.
+      The carpet shades what's below. Consider the coverage. What would full
+      sun mean?
+    follow_ups:
+      - What would the pond be without duckweed?
+      - How does the carpet affect temperature?
+      - What's the relationship between cover and life below?
+  - id: nmp_phantom_midgie
+    name: Phantom Midge
+    prompt: |
+      Phantom midge larvae are transparent—ghostly. They hang in the water.
+      You see through them. Consider invisibility. What does transparency
+      protect?
+    follow_ups:
+      - What would the larva be if it were opaque?
+      - How does transparency aid predation?
+      - What's the relationship between see-through and survival?
+  - id: nmp_skimmer_skip
+    name: Skimmer Skip
+    prompt: |
+      A stone skipped across the surface—one, two, three. Each bounce
+      transfers energy. The skimmer eventually sinks. Consider the limit.
+      What determines the number of skips?
+    follow_ups:
+      - What would the stone do without the spin?
+      - How does angle shape the skip?
+      - What's the relationship between throw and bounce?
+  - id: nmp_pollinator_drink
+    name: Pollinator Drink
+    prompt: |
+      A bee drinks at the edge. Butterflies gather at a mud puddle. The
+      water is a resource. Consider who comes. What do they need from the
+      water?
+    follow_ups:
+      - What would the pollinators do without the puddle?
+      - How does the edge enable drinking?
+      - What's the relationship between water and mineral?
+  - id: nmp_evaporation_skin
+    name: Evaporation Skin
+    prompt: |
+      The pond loses water to evaporation. In summer, the level drops. The
+      shore expands. Consider the retreat. What gets exposed? Who gets
+      stranded?
+    follow_ups:
+      - What would the pond be without evaporation?
+      - How does the drop concentrate life?
+      - What's the relationship between loss and concentration?
+  - id: nmp_hydra_stalk
+    name: Hydra Stalk
+    prompt: |
+      A hydra—tiny, tentacled—anchors to a stem. It stings prey, draws it in.
+      The hydra can regenerate. Consider the simplicity. What body plan does
+      it use?
+    follow_ups:
+      - What would the pond be without hydras?
+      - How does regeneration aid survival?
+      - What's the relationship between simplicity and resilience?
+  - id: nmp_boatman_row
+    name: Boatman Row
+    prompt: |
+      A water boatman rows—oarlike legs. It's often upside down, clinging to
+      the surface. It feeds on algae. Consider the oars. What do they propel?
+    follow_ups:
+      - What would the boatman be without the oars?
+      - How does the row differ from the backswimmer?
+      - What's the relationship between leg and movement?
+  - id: nmp_caddisfly_case
+    name: Caddisfly Case
+    prompt: |
+      A caddisfly larva builds a case—sticks, stones, shells. It glues them
+      with silk. The case is armor and camouflage. Consider the construction.
+      What does the larva choose?
+    follow_ups:
+      - What would the larva be without the case?
+      - How does the case vary by habitat?
+      - What's the relationship between material and protection?
+  - id: nmp_damselfly_emergence
+    name: Damselfly Emergence
+    prompt: |
+      A damselfly emerges—nymph climbs a stem, splits its skin, adult pulls
+      free. The wings unfold. The moment is vulnerable. Consider the
+      transformation. What could go wrong?
+    follow_ups:
+      - What would the adult be without the climb?
+      - How does the emergence shape timing?
+      - What's the relationship between nymph and adult?
+  - id: nmp_floating_feather
+    name: Floating Feather
+    prompt: |
+      A feather floats—discarded by a bird. It rides the surface. Water
+      beads on it. Consider the feather. What kept the bird dry? What does
+      the feather do now?
+    follow_ups:
+      - What would the surface be without floating objects?
+      - How does the feather trap air?
+      - What's the relationship between structure and float?
+  - id: nmp_moon_jelly
+    name: Moon Jelly
+    prompt: |
+      In some ponds, jellyfish—moon jellies. They pulse. They're mostly water.
+      Consider the body. What does the jelly capture? What does it avoid?
+    follow_ups:
+      - What would the pond be without jellies?
+      - How does the pulse create movement?
+      - What's the relationship between water and body?
+  - id: nmp_seep_source
+    name: Seep Source
+    prompt: |
+      Water seeps from the bank—a spring, slow flow. The seep feeds the pond.
+      Or the pond leaks. Consider the boundary. What crosses? What holds?
+    follow_ups:
+      - What would the pond be without the seep?
+      - How does the seep shape chemistry?
+      - What's the relationship between source and pool?
+  - id: nmp_wind_wave
+    name: Wind Wave
+    prompt: |
+      Wind pushes the surface. Small waves form. They break at the edge.
+      Consider the fetch—the distance wind travels over water. What shapes
+      the wave?
+    follow_ups:
+      - What would the surface be without wind?
+      - How do waves affect oxygen?
+      - What's the relationship between wind and mixing?
+  - id: nmp_rotifer_wheel
+    name: Rotifer Wheel
+    prompt: |
+      Rotifers are microscopic—they have a wheel of cilia. It spins, draws in
+      food. The rotifer is an engine. Consider the scale. What else is in
+      this water?
+    follow_ups:
+      - What would the pond be without rotifers?
+      - How does the wheel create flow?
+      - What's the relationship between cilia and feeding?
+  - id: nmp_temperature_layer
+    name: Temperature Layer
+    prompt: |
+      Ponds can stratify—warm on top, cold below. The layers don't mix easily.
+      Consider the boundary. What lives where? What happens when the pond
+      turns over?
+    follow_ups:
+      - What would the pond be without stratification?
+      - How does temperature shape oxygen?
+      - What's the relationship between layer and life?
+  - id: nmp_predator_shadow
+    name: Predator Shadow
+    prompt: |
+      A fish's shadow passes. Prey freeze, scatter. The shadow is a signal.
+      Consider the response. What would constant shadow mean? What would no
+      shadow mean?
+    follow_ups:
+      - How does the shadow trigger escape?
+      - What cues besides shadow matter?
+      - What's the relationship between shadow and survival?
+  - id: nmp_surface_film
+    name: Surface Film
+    prompt: |
+      A thin film on the water—pollen, bacteria, organic matter. It can support
+      weight. Some insects walk on it. Consider the film. What would break it?
+    follow_ups:
+      - What would the surface be without the film?
+      - How does the film affect gas exchange?
+      - What's the relationship between film and boundary?
+  - id: nmp_dry_wait
+    name: Dry Wait
+    prompt: |
+      The puddle will dry. Some organisms have desiccation-resistant eggs.
+      They wait. The next rain may be months away. Consider the bet. What
+      must align for success?
+    follow_ups:
+      - What would the pool be without the wait?
+      - How does dormancy span the dry?
+      - What's the relationship between egg and rain?
+  - id: nmp_shoreline_wrack
+    name: Shoreline Wrack
+    prompt: |
+      Debris collects at the shoreline—leaves, sticks, dead insects. The
+      wrack is a line. It marks the high water. Consider the accumulation.
+      Who feeds here?
+    follow_ups:
+      - What would the edge be without the wrack?
+      - How does the wrack create habitat?
+      - What's the relationship between line and level?
+  - id: nmp_duckweed_carpet
+    name: Duckweed Carpet
+    prompt: |
+      Duckweed carpets still water—tiny green discs. It spreads fast. The
+      surface becomes solid. Consider the invasion. What does the carpet
+      block? What does it enable?
+    follow_ups:
+      - What would the pond be without duckweed?
+      - How does the carpet affect light and oxygen?
+      - What's the relationship between cover and life below?
+  - id: nmp_rain_ring
+    name: Rain Ring
+    prompt: |
+      A raindrop hits the surface. A ring expands, fades. In a shower, the
+      surface becomes texture—rings overlapping. Consider the pattern. What
+      does the rain do to the pond?
+    follow_ups:
+      - What would the surface be without rain?
+      - How does rain mix the water?
+      - What's the relationship between drop and ring?
+  - id: nmp_minnow_school
+    name: Minnow School
+    prompt: |
+      Minnows school—dozens move as one. The school is a strategy. Predators
+      confuse. Consider the coordination. How do they decide? What would
+      solitude cost?
+    follow_ups:
+      - What would the pond be without schooling?
+      - How does the school respond to threat?
+      - What's the relationship between many and one?
+  - id: nmp_ice_edge
+    name: Ice Edge
+    prompt: |
+      In winter, ice grows from the edge. The boundary advances. Beneath, life
+      persists—colder, slower. Consider the edge. What survives under the ice?
+    follow_ups:
+      - What would the pond be without ice?
+      - How does ice protect or threaten?
+      - What's the relationship between freeze and oxygen?

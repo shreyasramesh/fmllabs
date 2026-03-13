@@ -1,0 +1,568 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# The Human Interface — Public Space
+
+id: human_interface_public_space
+name: The Human Interface — Public Space
+description: 50 cards to shift how you see the public space—from benches and
+  pathways to strangers' choreography and objects as talismans.
+domain: human_interface
+cards:
+  - id: hi_ps_bench_occupation
+    name: Bench Occupation
+    prompt: |
+      A bench is claimed—by a body, a bag, a posture. The bench is a scarce
+      resource. Observe who sits, who stands, who passes. The bench holds
+      different meanings for different people. What does it provide?
+    follow_ups:
+      - How does the bench shape the space?
+      - What would the park be without benches?
+      - What's the relationship between bench and rest?
+  - id: hi_ps_pathway_flow
+    name: Pathway Flow
+    prompt: |
+      The path channels movement. People walk—alone, in pairs, in groups. The
+      flow has direction. Observe the collision. Who yields? The pathway is
+      a shared corridor. What rules govern it?
+    follow_ups:
+      - How does the pathway shape the walk?
+      - What would the space be without paths?
+      - What's the relationship between path and destination?
+  - id: hi_ps_strangers_choreography
+    name: Strangers' Choreography
+    prompt: |
+      Unrelated bodies move through shared space. The choreography is
+      unspoken—sidestep, pause, merge. Observe the dance. No one speaks.
+      The choreography is pure body. What does it require?
+    follow_ups:
+      - How does the choreography shape the space?
+      - What would happen if everyone stopped?
+      - What's the relationship between choreography and civility?
+  - id: hi_ps_object_talisman
+    name: Object as Talisman
+    prompt: |
+      A book on a bench. A bag on a chair. The object holds a place. It says
+      "I'm here" or "I'll return." The object is a talisman. Observe the
+      claim. What does it protect?
+    follow_ups:
+      - How does the talisman shape the space?
+      - What would the space be without such claims?
+      - What's the relationship between object and presence?
+  - id: hi_ps_bench_armrest
+    name: Bench Armrest
+    prompt: |
+      Some benches have armrests. They divide the seat. They prevent lying.
+      The armrest is design with intent. Observe who uses it. What does the
+      armrest exclude?
+    follow_ups:
+      - How does the armrest shape the bench?
+      - What would the bench be without it?
+      - What's the relationship between armrest and control?
+  - id: hi_ps_pathway_intersection
+    name: Pathway Intersection
+    prompt: |
+      Paths cross. Bodies converge. The intersection is a collision point.
+      Observe the merge. What happens when flows meet? The intersection
+      requires negotiation. What does it extract?
+    follow_ups:
+      - How does the intersection shape the flow?
+      - What would the space be without intersections?
+      - What's the relationship between intersection and attention?
+  - id: hi_ps_eye_contact_avoid
+    name: Eye Contact Avoid
+    prompt: |
+      Strangers avoid eye contact. The avoid is polite. To look is to risk
+      connection. Observe the gaze. The avoid is a contract. What does it
+      enable? What does it cost?
+    follow_ups:
+      - How does the avoid shape the space?
+      - What would the space be with more contact?
+      - What's the relationship between gaze and privacy?
+  - id: hi_ps_bench_share
+    name: Bench Share
+    prompt: |
+      Two strangers share a bench. Space between them. The share is
+      proximity without connection. Observe the boundary. How close is
+      too close? The share is a delicate balance.
+    follow_ups:
+      - How does the share shape the bench?
+      - What would the bench be with one person?
+      - What's the relationship between share and tolerance?
+  - id: hi_ps_pathway_width
+    name: Pathway Width
+    prompt: |
+      The path is wide or narrow. The width affects the flow. Two people
+      can pass or not. Observe the width. What does it assume about the
+      crowd? The width is design. What does it enable?
+    follow_ups:
+      - How does the width shape the walk?
+      - What would the path be if wider?
+      - What's the relationship between width and comfort?
+  - id: hi_ps_bench_sun
+    name: Bench in Sun
+    prompt: |
+      The bench faces the sun. Or the shade. The position matters. Observe
+      who chooses which. The sun is a resource. What does it provide? The
+      bench in sun is coveted.
+    follow_ups:
+      - How does the sun shape the bench?
+      - What would the space be without sun?
+      - What's the relationship between sun and rest?
+  - id: hi_ps_stranger_proximity
+    name: Stranger Proximity
+    prompt: |
+      A stranger stands close—in a queue, on a bus. The proximity is
+      impersonal but intimate. Observe the tolerance. What does the body
+      allow? The proximity is a contract. What are its terms?
+    follow_ups:
+      - How does proximity shape the space?
+      - What would the space be with more room?
+      - What's the relationship between proximity and civility?
+  - id: hi_ps_object_left
+    name: Object Left
+    prompt: |
+      A jacket on a bench. A bag under a tree. The object left marks
+      territory. Observe the claim. How long can it hold? The object left
+      is a test. What does it require of others?
+    follow_ups:
+      - How does the object shape the space?
+      - What would the space be without such claims?
+      - What's the relationship between object and trust?
+  - id: hi_ps_pathway_obstacle
+    name: Pathway Obstacle
+    prompt: |
+      Something blocks the path—construction, a crowd, a performer. The
+      obstacle diverts the flow. Observe the detour. What does the obstacle
+      require? The pathway is never pure. What interrupts it?
+    follow_ups:
+      - How does the obstacle shape the flow?
+      - What would the path be without obstacles?
+      - What's the relationship between obstacle and adaptation?
+  - id: hi_ps_bench_alone
+    name: Bench Alone
+    prompt: |
+      One person on a bench. The alone is visible. The bench holds
+      solitude. Observe the posture. What does the alone bench provide?
+      The bench alone is a choice. What does it enable?
+    follow_ups:
+      - How does the alone shape the bench?
+      - What would the space be without benches?
+      - What's the relationship between alone and rest?
+  - id: hi_ps_nod_acknowledge
+    name: Nod Acknowledge
+    prompt: |
+      A slight nod. A brief smile. The acknowledge is minimal. It says "I
+      see you" without engagement. Observe when it happens. The nod is a
+      small civility. What does it create?
+    follow_ups:
+      - How does the nod shape the space?
+      - What would the space be without it?
+      - What's the relationship between nod and safety?
+  - id: hi_ps_pathway_edge
+    name: Pathway Edge
+    prompt: |
+      The path has edges—grass, curb, barrier. The edge defines the path.
+      Observe who stays on the path. Who crosses? The edge is a boundary.
+      What does it contain?
+    follow_ups:
+      - How does the edge shape the walk?
+      - What would the path be without edges?
+      - What's the relationship between edge and freedom?
+  - id: hi_ps_bench_claim
+    name: Bench Claim
+    prompt: |
+      The bench is taken—by spread, by posture, by bag. The claim says "this
+      is mine." Observe the claim. How is it made? The claim is territory.
+      What does it protect?
+    follow_ups:
+      - How does the claim shape the bench?
+      - What would the space be without claims?
+      - What's the relationship between claim and comfort?
+  - id: hi_ps_stranger_help
+    name: Stranger Help
+    prompt: |
+      "Need a hand?" A stranger offers. The help is unexpected. Observe the
+      exchange. Accept or decline? The stranger help is a gift. What does
+      it require?
+    follow_ups:
+      - How does the help shape the space?
+      - What would the space be without such offers?
+      - What's the relationship between help and trust?
+  - id: hi_ps_object_temporary
+    name: Object Temporary
+    prompt: |
+      A cup, a newspaper, a hat. The object marks a place. It's temporary.
+      The owner will return. Observe the claim. What does the temporary
+      object require of others? The object is a placeholder.
+    follow_ups:
+      - How does the temporary object shape the space?
+      - What would the space be without it?
+      - What's the relationship between temporary and trust?
+  - id: hi_ps_pathway_rhythm
+    name: Pathway Rhythm
+    prompt: |
+      Feet on pavement. The rhythm is individual—fast, slow, uneven. The
+      pathway holds many rhythms. Observe the sync and the clash. What does
+      the rhythm reveal?
+    follow_ups:
+      - How does the rhythm shape the walk?
+      - What would the path be in silence?
+      - What's the relationship between rhythm and destination?
+  - id: hi_ps_bench_face
+    name: Bench Face
+    prompt: |
+      The bench faces a direction—the view, the sun, the crowd. The face
+      shapes the experience. Observe who chooses which bench. The face is
+      design. What does it assume?
+    follow_ups:
+      - How does the face shape the bench?
+      - What would the bench be without direction?
+      - What's the relationship between face and view?
+  - id: hi_ps_sidewalk_dance
+    name: Sidewalk Dance
+    prompt: |
+      Two people approach. The dance—who moves? The sidewalk dance is
+      universal. Observe the sidestep. The dance is unspoken. What does
+      it require?
+    follow_ups:
+      - How does the dance shape the walk?
+      - What would the sidewalk be without it?
+      - What's the relationship between dance and civility?
+  - id: hi_ps_object_abandoned
+    name: Object Abandoned
+    prompt: |
+      A glove on the ground. A scarf on a bench. The object is abandoned.
+      Observe it. Who left it? Who will take it? The abandoned object is
+      a small mystery. What does it reveal?
+    follow_ups:
+      - How does the abandoned object shape the space?
+      - What would the space be without such objects?
+      - What's the relationship between abandoned and loss?
+  - id: hi_ps_pathway_surface
+    name: Pathway Surface
+    prompt: |
+      Pavement, gravel, grass. The surface affects the walk. Observe the
+      choice. What does the surface require of the body? The surface is
+      design. What does it enable?
+    follow_ups:
+      - How does the surface shape the walk?
+      - What would the path be with different surface?
+      - What's the relationship between surface and access?
+  - id: hi_ps_bench_weather
+    name: Bench and Weather
+    prompt: |
+      Rain, sun, wind. The weather shapes the bench. Who sits in rain?
+      Who seeks shade? The bench is exposed. Observe the relationship
+      between bench and weather. What does the weather do?
+    follow_ups:
+      - How does the weather shape the bench?
+      - What would the bench be with shelter?
+      - What's the relationship between weather and use?
+  - id: hi_ps_stranger_glance
+    name: Stranger Glance
+    prompt: |
+      A brief look. The glance is assessment. Safe? Threat? The glance is
+      automatic. Observe your own glances. What does the glance do? The
+      glance is a survival tool. What does it extract?
+    follow_ups:
+      - How does the glance shape the space?
+      - What would the space be without glances?
+      - What's the relationship between glance and safety?
+  - id: hi_ps_pathway_crowd
+    name: Pathway Crowd
+    prompt: |
+      The path is packed. Bodies compress. The crowd has its own flow.
+      Observe the movement. The crowd is a collective. What does it require
+      of the individual?
+    follow_ups:
+      - How does the crowd shape the path?
+      - What would the path be empty?
+      - What's the relationship between crowd and flow?
+  - id: hi_ps_bench_curve
+    name: Bench Curve
+    prompt: |
+      Some benches curve. They face each other or the center. The curve
+      shapes the social. Observe the arrangement. What does the curve
+      enable? The curve is design. What does it want?
+    follow_ups:
+      - How does the curve shape the bench?
+      - What would the bench be if straight?
+      - What's the relationship between curve and connection?
+  - id: hi_ps_object_traded
+    name: Object Traded
+    prompt: |
+      A handoff. A purchase. A gift. The object moves between strangers.
+      Observe the exchange. What passes besides the object? The trade is
+      a moment of connection. What does it create?
+    follow_ups:
+      - How does the trade shape the space?
+      - What would the space be without such trades?
+      - What's the relationship between trade and trust?
+  - id: hi_ps_pathway_light
+    name: Pathway Light
+    prompt: |
+      Day, night, streetlamp. The light shapes the path. Observe the
+      difference. Who walks at night? The light is safety and atmosphere.
+      What does it provide?
+    follow_ups:
+      - How does the light shape the path?
+      - What would the path be in darkness?
+      - What's the relationship between light and safety?
+  - id: hi_ps_bench_armrest_gap
+    name: Bench Armrest Gap
+    prompt: |
+      The armrest divides. One person per section. The gap prevents
+      sharing. Observe the design. What does the gap exclude? The armrest
+      gap is hostile architecture. What does it assume?
+    follow_ups:
+      - How does the gap shape the bench?
+      - What would the bench be without armrests?
+      - What's the relationship between gap and exclusion?
+  - id: hi_ps_stranger_smile
+    name: Stranger Smile
+    prompt: |
+      A smile from a stranger. Unexpected. The smile is a gift. Observe the
+      response. What does the smile do? The smile is a small breach of the
+      contract. What does it create?
+    follow_ups:
+      - How does the smile shape the space?
+      - What would the space be with more smiles?
+      - What's the relationship between smile and connection?
+  - id: hi_ps_object_touch
+    name: Object Touch
+    prompt: |
+      A hand on a railing. A foot on a step. The touch connects body and
+      space. The object is shared. Observe the touch. What does the touch
+      do? The object is a point of contact. What does it carry?
+    follow_ups:
+      - How does the touch shape the space?
+      - What would the space be without touch?
+      - What's the relationship between touch and presence?
+  - id: hi_ps_pathway_choice
+    name: Pathway Choice
+    prompt: |
+      The path forks. Left or right? The choice is small. Observe the
+      decision. What determines it? The pathway choice is a moment of
+      agency. What does it reveal?
+    follow_ups:
+      - How does the choice shape the walk?
+      - What would the path be without forks?
+      - What's the relationship between choice and destination?
+  - id: hi_ps_bench_empty
+    name: Bench Empty
+    prompt: |
+      The bench is empty. Available. Why? Observe the empty bench. Location?
+      Time? Weather? The empty bench is an invitation. What does it offer?
+    follow_ups:
+      - How does the empty bench shape the space?
+      - What would the space be without empty benches?
+      - What's the relationship between empty and opportunity?
+  - id: hi_ps_stranger_queue
+    name: Stranger Queue
+    prompt: |
+      A line forms. Strangers wait together. The queue is order. Observe the
+      patience. The queue creates temporary community. What does the queue
+      require? What does it provide?
+    follow_ups:
+      - How does the queue shape the space?
+      - What would the space be without queues?
+      - What's the relationship between queue and fairness?
+  - id: hi_ps_object_talisman_trust
+    name: Talisman Trust
+    prompt: |
+      You leave your bag. You trust the space. The talisman is a test. Observe
+      the trust. What does it assume? The talisman trust is a gamble. What
+      does it enable?
+    follow_ups:
+      - How does the trust shape the space?
+      - What would the space be without such trust?
+      - What's the relationship between trust and vulnerability?
+  - id: hi_ps_pathway_end
+    name: Pathway End
+    prompt: |
+      The path ends. A destination, a wall, a gate. The end is a threshold.
+      Observe the arrival. What does the end provide? The pathway end is
+      closure. What does it mean?
+    follow_ups:
+      - How does the end shape the walk?
+      - What would the path be without an end?
+      - What's the relationship between end and completion?
+  - id: hi_ps_bench_duo
+    name: Bench Duo
+    prompt: |
+      Two people share a bench. Friends, lovers, strangers. The duo has
+      dynamics. Observe the distance. The conversation or silence. The
+      bench duo is a small social unit. What does it create?
+    follow_ups:
+      - How does the duo shape the bench?
+      - What would the bench be with one person?
+      - What's the relationship between duo and connection?
+  - id: hi_ps_stranger_danger
+    name: Stranger Danger
+    prompt: |
+      The body assesses. Safe? The assessment is automatic. Observe the
+      signals. What triggers caution? The stranger danger is a survival
+      reflex. What does it protect? What does it cost?
+    follow_ups:
+      - How does the assessment shape the space?
+      - What would the space be without it?
+      - What's the relationship between danger and openness?
+  - id: hi_ps_object_marker
+    name: Object as Marker
+    prompt: |
+      A stone on a bench. A ribbon on a tree. The object marks something.
+      Memory, claim, ritual. Observe the marker. What does it mean? The
+      marker is a message. What does it say?
+    follow_ups:
+      - How does the marker shape the space?
+      - What would the space be without markers?
+      - What's the relationship between marker and meaning?
+  - id: hi_ps_pathway_grade
+    name: Pathway Grade
+    prompt: |
+      The path slopes. Up or down. The grade affects the body. Observe the
+      effort. The grade is design. What does it assume about the walker?
+      The grade is a barrier for some.
+    follow_ups:
+      - How does the grade shape the walk?
+      - What would the path be if flat?
+      - What's the relationship between grade and access?
+  - id: hi_ps_bench_public
+    name: Bench Public
+    prompt: |
+      The bench is public. Anyone can sit. The public is the point. Observe
+      who uses it. The public bench is a commons. What does it require?
+      What does it provide?
+    follow_ups:
+      - How does the public shape the bench?
+      - What would the space be without public benches?
+      - What's the relationship between public and belonging?
+  - id: hi_ps_stranger_parallel
+    name: Stranger Parallel
+    prompt: |
+      You walk beside a stranger. Same direction, same pace. The parallel
+      is accidental. Observe the dynamic. Do you sync? Diverge? The
+      parallel is a temporary companionship. What does it create?
+    follow_ups:
+      - How does the parallel shape the walk?
+      - What would the path be without such parallels?
+      - What's the relationship between parallel and solitude?
+  - id: hi_ps_object_shared
+    name: Object Shared
+    prompt: |
+      A water fountain. A handrail. The object is shared. Many hands touch
+      it. Observe the shared object. What does the sharing require? The
+      shared object is a point of contact. What does it carry?
+    follow_ups:
+      - How does the shared object shape the space?
+      - What would the space be without such objects?
+      - What's the relationship between shared and trust?
+  - id: hi_ps_pathway_loop
+    name: Pathway Loop
+    prompt: |
+      The path circles back. A loop. No destination. The loop is for
+      walking itself. Observe the walkers. What does the loop provide?
+      The loop is a different kind of path. What does it enable?
+    follow_ups:
+      - How does the loop shape the walk?
+      - What would the space be without loops?
+      - What's the relationship between loop and reflection?
+  - id: hi_ps_bench_legacy
+    name: Bench Legacy
+    prompt: |
+      "In memory of." The bench has a plaque. Someone loved this place.
+      The legacy bench carries a story. Observe it. What does the plaque
+      add? The legacy bench is a gift. What does it create?
+    follow_ups:
+      - How does the legacy shape the bench?
+      - What would the bench be without the plaque?
+      - What's the relationship between legacy and place?
+  - id: hi_ps_stranger_ask
+    name: Stranger Ask
+    prompt: |
+      "Do you have the time?" "Which way to X?" The ask creates a moment of
+      connection. Observe the exchange. What does the ask require? The
+      stranger ask is a small breach. What does it enable?
+    follow_ups:
+      - How does the ask shape the space?
+      - What would the space be without such asks?
+      - What's the relationship between ask and help?
+  - id: hi_ps_object_talisman_return
+    name: Talisman Return
+    prompt: |
+      You return. The talisman is still there. Your bag, your book. The
+      return confirms the trust. Observe the relief. What does the return
+      mean? The talisman return is a small victory. What does it create?
+    follow_ups:
+      - How does the return shape the space?
+      - What would the space be without such returns?
+      - What's the relationship between return and trust?
+  - id: hi_ps_pathway_beginning
+    name: Pathway Beginning
+    prompt: |
+      The path starts. A threshold. You step onto it. Observe the moment.
+      What does the beginning mean? The pathway beginning is a commitment.
+      What does it require?
+    follow_ups:
+      - How does the beginning shape the walk?
+      - What would the space be without paths?
+      - What's the relationship between beginning and intention?
+  - id: hi_ps_bench_community
+    name: Bench Community
+    prompt: |
+      Regulars know the bench. The same people, the same time. The bench
+      community is informal. Observe the recognition. What does the
+      community provide? The bench community is a small social world.
+    follow_ups:
+      - How does the community shape the bench?
+      - What would the bench be without regulars?
+      - What's the relationship between community and place?
+  - id: hi_ps_stranger_chorus
+    name: Stranger Chorus
+    prompt: |
+      Many bodies, one space. The stranger chorus is the sound of the
+      crowd—footsteps, voices, rustle. Observe the chorus. What does it
+      create? The chorus is the sound of the public. What does it mean?
+    follow_ups:
+      - How does the chorus shape the space?
+      - What would the space be in silence?
+      - What's the relationship between chorus and belonging?
+  - id: hi_ps_object_talisman_loss
+    name: Talisman Loss
+    prompt: |
+      The talisman is gone. Stolen, moved, mistaken. The loss is a breach.
+      Observe the response. What does the loss mean? The talisman loss is
+      a small trauma. What does it reveal?
+    follow_ups:
+      - How does the loss shape the space?
+      - What would the space be without such losses?
+      - What's the relationship between loss and trust?
+  - id: hi_ps_pathway_shared
+    name: Pathway Shared
+    prompt: |
+      The path is shared—walkers, cyclists, strollers. The shared use
+      requires negotiation. Observe the rules. Who yields? The shared
+      pathway is a commons. What does it require?
+    follow_ups:
+      - How does the shared use shape the path?
+      - What would the path be with one use?
+      - What's the relationship between shared and conflict?
+  - id: hi_ps_bench_rest
+    name: Bench Rest
+    prompt: |
+      Someone rests. Eyes closed, breathing slow. The rest is visible. The
+      bench provides. Observe the rest. What does the bench enable? The
+      bench rest is a gift of the public space. What does it mean?
+    follow_ups:
+      - How does the rest shape the bench?
+      - What would the space be without benches?
+      - What's the relationship between rest and dignity?
+  - id: hi_ps_stranger_chorus_silence
+    name: Stranger Chorus Silence
+    prompt: |
+      The crowd pauses. A moment of silence. The stranger chorus falls quiet.
+      Observe the shift. What does the silence create? The shared silence
+      is rare. What does it mean?
+    follow_ups:
+      - How does the silence shape the space?
+      - What would the space be without such moments?
+      - What's the relationship between silence and collective?

@@ -1,0 +1,509 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Digital Ghost — Onboarding & Flow
+
+id: digital_ghost_onboarding_flow
+name: Digital Ghost — Onboarding & Flow
+description: 50 cards to shift how you see onboarding—the first-run experience,
+  empty states, first impressions, and the choreography of introduction.
+domain: digital_ghost
+cards:
+  - id: dg_of_01
+    name: The First Run
+    prompt: |
+      The first run. You've just installed. The app is new, unconfigured.
+      The interface has one chance to make an impression. Notice that moment.
+      What does the first run assume about you? What does it want?
+    follow_ups:
+      - How does the first run shape the relationship?
+      - What would the app be without onboarding?
+      - What's the relationship between first and lasting?
+  - id: dg_of_02
+    name: The Empty State
+    prompt: |
+      No data yet. The list is empty. The screen shows a placeholder—an
+      illustration, a message, a call to action. The empty state is an
+      invitation. What does it invite? What does it assume you'll do?
+    follow_ups:
+      - How does the empty state shape the first action?
+      - What would the interface be without it?
+      - What's the relationship between empty and possible?
+  - id: dg_of_03
+    name: The Welcome Screen
+    prompt: |
+      "Welcome." The word implies arrival, inclusion. But welcome screens
+      often block—you must click through to enter. The welcome is also a
+      gate. What does the welcome screen do to the threshold?
+    follow_ups:
+      - How does the welcome shape first impression?
+      - What would the app be without it?
+      - What's the relationship between welcome and barrier?
+  - id: dg_of_04
+    name: The Tutorial
+    prompt: |
+      Step one. Step two. The tutorial guides—highlights, arrows, tooltips.
+      It assumes you need teaching. It assumes a right way. What does the
+      tutorial assume about your prior knowledge?
+    follow_ups:
+      - How does the tutorial shape the learning path?
+      - What would the app be without it?
+      - What's the relationship between tutorial and agency?
+  - id: dg_of_05
+    name: The Skip Button
+    prompt: |
+      "Skip." The tutorial offers an exit. Not everyone wants to be taught.
+      The skip button is a concession to the impatient, the expert. What
+      does the skip assume about who uses the app?
+    follow_ups:
+      - How does the skip shape the onboarding flow?
+      - What would the tutorial be without it?
+      - What's the relationship between skip and respect?
+  - id: dg_of_06
+    name: The Progress Dots
+    prompt: |
+      Three dots. You're on step two. The dots show how much remains. The
+      progress indicator shapes expectation—almost done, or just begun.
+      What does the progress assume about your tolerance?
+    follow_ups:
+      - How do the dots shape the experience?
+      - What would the flow be without them?
+      - What's the relationship between progress and patience?
+  - id: dg_of_07
+    name: The Permission Request
+    prompt: |
+      "Allow access to contacts?" "Enable notifications?" The first run often
+      asks for permission. The timing is strategic—ask early, when trust is
+      forming. What does the permission request assume about the relationship?
+    follow_ups:
+      - How does the timing shape the response?
+      - What would the app be with delayed requests?
+      - What's the relationship between permission and trust?
+  - id: dg_of_08
+    name: The Account Creation
+    prompt: |
+      Sign up. Create account. The first run might require identity—email,
+      password, name. The account is a commitment. What does account
+      creation do to the threshold? To the sense of investment?
+    follow_ups:
+      - How does account creation shape the relationship?
+      - What would the app be without it?
+      - What's the relationship between account and commitment?
+  - id: dg_of_09
+    name: The Personalization
+    prompt: |
+      "What are you interested in?" "Choose your topics." The onboarding
+      asks for preferences. It's building a profile. The personalization
+      is also data collection. What does the question assume? What does it gather?
+    follow_ups:
+      - How does personalization shape the experience?
+      - What would the app be without it?
+      - What's the relationship between preference and profile?
+  - id: dg_of_10
+    name: The First Impression
+    prompt: |
+      First impressions stick. The first screen, the first interaction—they
+      set the tone. Designers know this. What does the first impression
+      encode about the product? About the relationship it wants?
+    follow_ups:
+      - How does the first impression shape the lasting one?
+      - What would the app be with a different opening?
+      - What's the relationship between first and lasting?
+  - id: dg_of_11
+    name: The Empty Dashboard
+    prompt: |
+      A dashboard with no data. Empty charts, blank widgets. The structure
+      is there, waiting. The empty dashboard is a promise—fill it, and it
+      will work. What does the empty dashboard assume about your future use?
+    follow_ups:
+      - How does the empty dashboard shape the first actions?
+      - What would the interface be without it?
+      - What's the relationship between structure and content?
+  - id: dg_of_12
+    name: The Sample Data
+    prompt: |
+      Some apps pre-populate—sample projects, demo content. You see what
+      it could look like. The sample is both example and placeholder. What
+      does the sample assume about your ability to imagine?
+    follow_ups:
+      - How does the sample shape the experience?
+      - What would the app be without it?
+      - What's the relationship between sample and template?
+  - id: dg_of_13
+    name: The Onboarding Checklist
+    prompt: |
+      "Complete your profile." "Add your first project." The checklist
+      guides—tasks to complete, boxes to check. The checklist creates a
+      sense of progress. What does the checklist assume about motivation?
+    follow_ups:
+      - How does the checklist shape the flow?
+      - What would the app be without it?
+      - What's the relationship between checklist and completion?
+  - id: dg_of_14
+    name: The Tooltip
+    prompt: |
+      A small popover. "Click here to start." The tooltip appears once,
+      then never again. It's a moment of guidance. What does the tooltip
+      assume about attention? About memory?
+    follow_ups:
+      - How does the tooltip shape the first interaction?
+      - What would the interface be without it?
+      - What's the relationship between tooltip and teaching?
+  - id: dg_of_15
+    name: The Guided Tour
+    prompt: |
+      A spotlight highlights a feature. "This is where you..." The guided
+      tour walks you through. It's a performance—the interface introduces
+      itself. What does the tour assume about your need for introduction?
+    follow_ups:
+      - How does the tour shape the relationship?
+      - What would the app be without it?
+      - What's the relationship between tour and discovery?
+  - id: dg_of_16
+    name: The Default State
+    prompt: |
+      Before you customize, there are defaults—settings, layout, theme. The
+      defaults are someone's choice. They shape the experience before you
+      shape it. What do the defaults assume about you?
+    follow_ups:
+      - How do defaults shape the first experience?
+      - What would the app be with different defaults?
+      - What's the relationship between default and norm?
+  - id: dg_of_17
+    name: The First Action
+    prompt: |
+      What's the first thing the interface wants you to do? Add a contact?
+      Create a project? The first action is a nudge. It sets the path. What
+      does the first action reveal about the product's priorities?
+    follow_ups:
+      - How does the first action shape the flow?
+      - What would the app be with a different nudge?
+      - What's the relationship between first action and habit?
+  - id: dg_of_18
+    name: The Empty Search
+    prompt: |
+      You search. No results. The empty search is a kind of empty state—
+      the interface has nothing to show. What does the empty search say?
+      "Try again"? "Add something"? What does it invite?
+    follow_ups:
+      - How does the empty search shape the experience?
+      - What would the interface be without a message?
+      - What's the relationship between empty and possible?
+  - id: dg_of_19
+    name: The Onboarding Length
+    prompt: |
+      How long is onboarding? Three screens? Ten? The length is a bet—on
+      your patience, on the value of the product. What does the length
+      assume about the relationship?
+    follow_ups:
+      - How does length shape the experience?
+      - What would the app be with different length?
+      - What's the relationship between length and commitment?
+  - id: dg_of_20
+    name: The Value Proposition
+    prompt: |
+      "Get more done." "Stay connected." The onboarding states the value.
+      It's selling—even if the product is free. What does the value
+      proposition assume about your needs?
+    follow_ups:
+      - How does the value prop shape the first impression?
+      - What would the app be without it?
+      - What's the relationship between value and promise?
+  - id: dg_of_21
+    name: The Social Proof
+    prompt: |
+      "Join 10 million users." "Trusted by top companies." The onboarding
+      might include social proof. It's building confidence. What does the
+      social proof assume about your need for validation?
+    follow_ups:
+      - How does social proof shape the experience?
+      - What would the app be without it?
+      - What's the relationship between proof and trust?
+  - id: dg_of_22
+    name: The Empty Inbox
+    prompt: |
+      Zero messages. The inbox is empty—clean, uncluttered. The empty inbox
+      is an achievement for some, a void for others. What does the empty
+      inbox mean? What does the interface say about it?
+    follow_ups:
+      - How does the empty inbox shape the experience?
+      - What would the interface be with different framing?
+      - What's the relationship between empty and achievement?
+  - id: dg_of_23
+    name: The Feature Discovery
+    prompt: |
+      Hidden features. Power user shortcuts. The interface doesn't show
+      everything at once. Discovery is gradual. What does the pacing of
+      discovery assume about learning? About retention?
+    follow_ups:
+      - How does discovery shape the experience?
+      - What would the app be with everything visible?
+      - What's the relationship between discovery and mastery?
+  - id: dg_of_24
+    name: The Onboarding Exit
+    prompt: |
+      You finish. Or you skip. The onboarding ends. You're in the app.
+      What does the transition feel like? Is there a moment of arrival?
+      Or does it just end?
+    follow_ups:
+      - How does the exit shape the experience?
+      - What would the app be with a different transition?
+      - What's the relationship between exit and entry?
+  - id: dg_of_25
+    name: The Empty State Illustration
+    prompt: |
+      A drawing. A character. Empty states often have illustrations—friendly,
+      whimsical. The illustration softens the void. What does the
+      illustration say about the product's personality?
+    follow_ups:
+      - How does the illustration shape the empty state?
+      - What would the interface be without it?
+      - What's the relationship between illustration and tone?
+  - id: dg_of_26
+    name: The Onboarding Gamification
+    prompt: |
+      Points. Badges. "Complete your profile for 10 points." Onboarding
+      might be gamified. It's trying to motivate. What does gamification
+      assume about your motivation? About what drives you?
+    follow_ups:
+      - How does gamification shape the experience?
+      - What would the app be without it?
+      - What's the relationship between game and task?
+  - id: dg_of_27
+    name: The Contextual Onboarding
+    prompt: |
+      Some onboarding is contextual—tips appear when you reach a feature.
+      Just-in-time teaching. What does contextual onboarding assume about
+      memory? About the right moment?
+    follow_ups:
+      - How does contextual onboarding shape the experience?
+      - What would the app be with upfront only?
+      - What's the relationship between context and learning?
+  - id: dg_of_28
+    name: The Empty Calendar
+    prompt: |
+      No events. The calendar is blank. The empty calendar might feel like
+      possibility or loneliness. What does the interface say? What does
+      it invite?
+    follow_ups:
+      - How does the empty calendar shape the experience?
+      - What would the interface be with different framing?
+      - What's the relationship between empty and time?
+  - id: dg_of_29
+    name: The Onboarding Interruption
+    prompt: |
+      Onboarding can interrupt—it takes you away from the task. The
+      interruption is a cost. What does the interruption assume about the
+      value of the teaching? About your time?
+    follow_ups:
+      - How does the interruption shape the experience?
+      - What would the app be with non-blocking onboarding?
+      - What's the relationship between interrupt and value?
+  - id: dg_of_30
+    name: The First Session
+    prompt: |
+      The first session. You're new. The system might treat you differently—
+      more guidance, more explanation. The first session is special. What
+      does the first session assume about the second?
+    follow_ups:
+      - How does the first session shape the relationship?
+      - What would the app be without special treatment?
+      - What's the relationship between first and returning?
+  - id: dg_of_31
+    name: The Empty Feed
+    prompt: |
+      No posts. No updates. The feed is empty. Social apps dread the empty
+      feed—it's the moment before connection. What does the empty feed
+      invite? What does it assume you'll do?
+    follow_ups:
+      - How does the empty feed shape the first actions?
+      - What would the interface be without it?
+      - What's the relationship between empty and connection?
+  - id: dg_of_32
+    name: The Onboarding Tone
+    prompt: |
+      Friendly? Professional? Playful? The onboarding has a tone. It's a
+      voice. What does the tone assume about the relationship? About who
+      you are?
+    follow_ups:
+      - How does the tone shape the first impression?
+      - What would the app be with a different tone?
+      - What's the relationship between tone and brand?
+  - id: dg_of_33
+    name: The Required Fields
+    prompt: |
+      Some onboarding requires—you can't proceed without completing. The
+      required fields are gates. What does the requirement assume about
+      the value of the data? About your willingness to give it?
+    follow_ups:
+      - How do required fields shape the flow?
+      - What would the app be with optional only?
+      - What's the relationship between required and commitment?
+  - id: dg_of_34
+    name: The Empty Workspace
+    prompt: |
+      A blank canvas. A new project. The workspace is empty—ready for
+      creation. The empty workspace is potential. What does it assume
+      about your next move?
+    follow_ups:
+      - How does the empty workspace shape the first action?
+      - What would the interface be without it?
+      - What's the relationship between empty and creation?
+  - id: dg_of_35
+    name: The Onboarding Return
+    prompt: |
+      Some apps let you return to onboarding—"View tutorial again." The
+      return is an admission that you might forget. What does the return
+      assume about memory? About the need for repetition?
+    follow_ups:
+      - How does the return option shape the experience?
+      - What would the app be without it?
+      - What's the relationship between return and mastery?
+  - id: dg_of_36
+    name: The First-Time User
+    prompt: |
+      The interface might detect first-time users—different experience,
+      more hand-holding. The system treats you as new. What does the
+      first-time detection assume about the returning user?
+    follow_ups:
+      - How does the detection shape the experience?
+      - What would the app be without it?
+      - What's the relationship between new and returning?
+  - id: dg_of_37
+    name: The Empty State CTA
+    prompt: |
+      "Add your first item." "Get started." The empty state has a call to
+      action. It's directing you. What does the CTA assume about your
+      next step? About your motivation?
+    follow_ups:
+      - How does the CTA shape the first action?
+      - What would the interface be without it?
+      - What's the relationship between CTA and nudge?
+  - id: dg_of_38
+    name: The Onboarding Completion
+    prompt: |
+      "You're all set!" "Let's get started." The completion moment. The
+      onboarding celebrates—or just ends. What does the completion
+      moment do to the sense of readiness?
+    follow_ups:
+      - How does the completion shape the transition?
+      - What would the app be without it?
+      - What's the relationship between completion and confidence?
+  - id: dg_of_39
+    name: The Empty List
+    prompt: |
+      No items. The list is empty. Lists are for collecting—tasks, contacts,
+      items. The empty list is the moment before collection. What does the
+      empty list invite?
+    follow_ups:
+      - How does the empty list shape the first action?
+      - What would the interface be without it?
+      - What's the relationship between empty and collection?
+  - id: dg_of_40
+    name: The Onboarding A/B Test
+    prompt: |
+      Designers test onboarding—different flows, different lengths. You
+      might get a variant. The onboarding is an experiment. What does the
+      test assume about the relationship? About optimization?
+    follow_ups:
+      - How does the test shape the experience?
+      - What would the app be without testing?
+      - What's the relationship between test and user?
+  - id: dg_of_41
+    name: The Empty State Message
+    prompt: |
+      "No projects yet." "Your inbox is empty." The message names the
+      state. It might comfort or nudge. The message is a choice. What
+      does the message assume about how you feel?
+    follow_ups:
+      - How does the message shape the experience?
+      - What would the interface be with different words?
+      - What's the relationship between message and feeling?
+  - id: dg_of_42
+    name: The Onboarding Friction
+    prompt: |
+      Friction—the effort required. Some onboarding is frictionless; some
+      demands work. The friction is a filter. What does the friction level
+      assume about the user? About the product's value?
+    follow_ups:
+      - How does friction shape the flow?
+      - What would the app be with different friction?
+      - What's the relationship between friction and commitment?
+  - id: dg_of_43
+    name: The First Login
+    prompt: |
+      You've signed up. Now you log in. The first login is a return—but
+      you've never really been. What does the first login assume about
+      the relationship? About continuity?
+    follow_ups:
+      - How does the first login shape the experience?
+      - What would the app be without the distinction?
+      - What's the relationship between first login and identity?
+  - id: dg_of_44
+    name: The Empty State Design
+    prompt: |
+      Empty states are designed—someone chose the illustration, the copy,
+      the CTA. The design encodes values. What does the empty state design
+      reveal about the product?
+    follow_ups:
+      - How does the design shape the experience?
+      - What would the interface be with different design?
+      - What's the relationship between design and invitation?
+  - id: dg_of_45
+    name: The Onboarding Dismissal
+    prompt: |
+      You can dismiss—close the tutorial, skip the tour. The dismissal is
+      an option. But dismissal might mean missing something. What does
+      the option to dismiss assume about your judgment?
+    follow_ups:
+      - How does the dismissal option shape the flow?
+      - What would the app be without it?
+      - What's the relationship between dismiss and respect?
+  - id: dg_of_46
+    name: The Empty State Emotion
+    prompt: |
+      Empty states can evoke emotion—loneliness, possibility, calm. The
+      design tries to shape how you feel. What does the empty state want
+      you to feel?
+    follow_ups:
+      - How does the emotion shape the experience?
+      - What would the interface be with different emotion?
+      - What's the relationship between empty and feeling?
+  - id: dg_of_47
+    name: The Onboarding Memory
+    prompt: |
+      The system remembers—you've completed onboarding. It won't show again.
+      The memory is a kind of progress. What does the memory assume about
+      the value of the first run?
+    follow_ups:
+      - How does the memory shape the experience?
+      - What would the app be without it?
+      - What's the relationship between memory and progress?
+  - id: dg_of_48
+    name: The First Impression as Contract
+    prompt: |
+      The first impression sets expectations. The product promises—through
+      tone, through design. The first impression is a kind of contract.
+      What does the contract promise? What does it owe?
+    follow_ups:
+      - How does the contract shape the relationship?
+      - What would the app be without the promise?
+      - What's the relationship between impression and expectation?
+  - id: dg_of_49
+    name: The Empty State as Threshold
+    prompt: |
+      The empty state is a threshold—between not using and using. Between
+      possibility and action. The threshold is delicate. What does the
+      threshold require to cross?
+    follow_ups:
+      - How does the threshold shape the experience?
+      - What would make the threshold easier?
+      - What's the relationship between threshold and commitment?
+  - id: dg_of_50
+    name: The Onboarding as Introduction
+    prompt: |
+      Onboarding is an introduction—the product meeting you for the first
+      time. Like a handshake. What would it mean for onboarding to be truly
+      introductory—curious about you, not just teaching you? What would that require?
+    follow_ups:
+      - How could onboarding be more reciprocal?
+      - What would the product sacrifice?
+      - What's the relationship between introduction and relationship?

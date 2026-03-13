@@ -1,0 +1,511 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Digital Ghost — Buttons & Controls
+
+id: digital_ghost_buttons_controls
+name: Digital Ghost — Buttons & Controls
+description: 50 cards to shift how you see buttons and controls—from the intent
+  behind a click to affordance, what a tap implies, and the hidden labor behind
+  every interface element.
+domain: digital_ghost
+cards:
+  - id: dg_bc_01
+    name: The Promise of the Button
+    prompt: |
+      A button is a promise. Before you click, it holds intent—someone designed
+      what should happen. Trace that intent. What did they assume you wanted?
+      What did they hide from you?
+    follow_ups:
+      - How does the label shape expectation?
+      - What would the button be if it told the truth?
+      - What's the relationship between promise and trust?
+  - id: dg_bc_02
+    name: Affordance as Suggestion
+    prompt: |
+      A raised surface suggests push. A handle suggests pull. Digital affordance
+      is suggestion without substance—there's nothing to grip. Notice how the
+      interface implies physicality. What does it borrow from the world?
+    follow_ups:
+      - What would the control lose without affordance?
+      - How does suggestion create muscle memory?
+      - What's the relationship between implied and actual?
+  - id: dg_bc_03
+    name: The Click as Contract
+    prompt: |
+      You click. Something happens. Or doesn't. The click is a contract—you
+      offer attention, the system offers response. When the response is delayed
+      or absent, the contract breaks. Notice that moment.
+    follow_ups:
+      - How does latency change the contract?
+      - What would the interface be without the click?
+      - What's the relationship between action and obligation?
+  - id: dg_bc_04
+    name: Grayed Out
+    prompt: |
+      A disabled button is grayed out—visible but untouchable. It's a ghost of
+      possibility. What does it mean to show you something you cannot have?
+      Who decided you couldn't have it?
+    follow_ups:
+      - How does gray encode permission?
+      - What would the interface be if it hid the option?
+      - What's the relationship between visible and available?
+  - id: dg_bc_05
+    name: The Hover State
+    prompt: |
+      Hover changes the cursor, the color, the shadow. It's a preview of
+      commitment—you're almost there. Notice the micro-moment between hover
+      and click. What does that pause contain?
+    follow_ups:
+      - How does hover shape hesitation?
+      - What would the interface lose without it?
+      - What's the relationship between preview and action?
+  - id: dg_bc_06
+    name: Toggle as Decision
+    prompt: |
+      A toggle is binary—on or off. But the state it controls might be complex.
+      One switch, many consequences. What does the toggle hide? What does it
+      simplify into a flick?
+    follow_ups:
+      - How does the toggle flatten nuance?
+      - What would the interface be with a slider?
+      - What's the relationship between binary and control?
+  - id: dg_bc_07
+    name: The Submit Button
+    prompt: |
+      Submit. Send. Post. The final button carries weight—it's the point of no
+      return. Notice the language. Submit implies subordination. Send implies
+      release. What does the word encode?
+    follow_ups:
+      - How does the label shape the act?
+      - What would happen with different words?
+      - What's the relationship between naming and power?
+  - id: dg_bc_08
+    name: Invisible Buttons
+    prompt: |
+      Some buttons have no border—they're just text or an icon. You learn they're
+      clickable by accident or convention. The interface hides its controls.
+      What does invisibility afford? What does it cost?
+    follow_ups:
+      - How does discovery shape expertise?
+      - What would the interface be if everything were visible?
+      - What's the relationship between hidden and elegant?
+  - id: dg_bc_09
+    name: The Back Button
+    prompt: |
+      Back implies return—to a previous state, a prior screen. But digital
+      back is not physical back. The path might branch. What are you actually
+      returning to? Who defines "before"?
+    follow_ups:
+      - How does back differ from undo?
+      - What would the interface be without back?
+      - What's the relationship between navigation and memory?
+  - id: dg_bc_10
+    name: Confirmation Dialog
+    prompt: |
+      "Are you sure?" A second chance. The system doubts your first click.
+      Notice the asymmetry—you must confirm, but the system never asks your
+      permission to run. What does the dialog protect? What does it interrupt?
+    follow_ups:
+      - How does confirmation shape trust?
+      - What would the flow be without it?
+      - What's the relationship between doubt and safety?
+  - id: dg_bc_11
+    name: The Placeholder Button
+    prompt: |
+      Some buttons do nothing—they're placeholders for future features, gray
+      ghosts of possibility. They teach you what could exist. What does it
+      mean to show you a button that leads nowhere?
+    follow_ups:
+      - How does the placeholder shape expectation?
+      - What would the interface be without it?
+      - What's the relationship between promise and absence?
+  - id: dg_bc_12
+    name: Icon Without Label
+    prompt: |
+      A trash icon. A heart. A share arrow. Icons compress meaning into shape.
+      But meaning is cultural—not everyone reads them the same. Notice when
+      you hesitate. What does the icon assume?
+    follow_ups:
+      - How does the icon rely on convention?
+      - What would the interface be with labels?
+      - What's the relationship between symbol and clarity?
+  - id: dg_bc_13
+    name: The Primary Action
+    prompt: |
+      One button is primary—colored, prominent. The others recede. The design
+      tells you what to do. Notice the hierarchy. Who benefits from your
+      default choice? What path does the primary button pave?
+    follow_ups:
+      - How does prominence shape behavior?
+      - What would the interface be with equal weight?
+      - What's the relationship between hierarchy and nudging?
+  - id: dg_bc_14
+    name: Long Press
+    prompt: |
+      Some actions hide behind time—press and hold. The interface has layers.
+      The quick tap does one thing; the long press does another. What does
+      duration encode? Who gets to discover the second layer?
+    follow_ups:
+      - How does the long press create expertise?
+      - What would the interface be if everything were visible?
+      - What's the relationship between time and revelation?
+  - id: dg_bc_15
+    name: The Cancel Button
+    prompt: |
+      Cancel is the escape hatch—the way out. But sometimes cancel doesn't
+      cancel. Sometimes it saves. Sometimes it's a trap. Notice when you
+      hesitate on cancel. What does the word promise?
+    follow_ups:
+      - How does cancel differ from close?
+      - What would the interface be without it?
+      - What's the relationship between exit and safety?
+  - id: dg_bc_16
+    name: Swipe as Gesture
+    prompt: |
+      Swipe left to delete. Swipe right to archive. The gesture is physical—
+      your finger moves through space. But the result is digital. What does
+      the swipe borrow from the world? What does it invent?
+    follow_ups:
+      - How does the gesture create muscle memory?
+      - What would the interface be with buttons only?
+      - What's the relationship between motion and meaning?
+  - id: dg_bc_17
+    name: The Dropdown Arrow
+    prompt: |
+      A small arrow suggests more—click to expand. The interface compresses
+      options into a single line. What's hidden? What does the compression
+      cost? Who decides what fits in the visible space?
+    follow_ups:
+      - How does the dropdown shape choice?
+      - What would the interface be if everything were expanded?
+      - What's the relationship between compression and overwhelm?
+  - id: dg_bc_18
+    name: Double-Click
+    prompt: |
+      One click selects. Two clicks opens. The same surface, different
+      meanings. The interface encodes time into action. What does the double-
+      click assume about your intent? What does it prevent?
+    follow_ups:
+      - How does the double-click create ambiguity?
+      - What would the interface be with single-click?
+      - What's the relationship between rhythm and action?
+  - id: dg_bc_19
+    name: The Checkbox
+    prompt: |
+      A checkbox is a tiny contract—checked or unchecked. But the consequence
+      might be vast. One check, a thousand emails. Notice the disproportion.
+      What does the checkbox hide?
+    follow_ups:
+      - How does the checkbox flatten consequence?
+      - What would the interface be with a different control?
+      - What's the relationship between small and significant?
+  - id: dg_bc_20
+    name: Keyboard Shortcut
+    prompt: |
+      Ctrl+S. Cmd+Z. Shortcuts are for the initiated—hidden power for those
+      who know. The interface has two layers: the visible and the accelerated.
+      What does the shortcut assume about its user?
+    follow_ups:
+      - How does the shortcut create hierarchy?
+      - What would the interface be without shortcuts?
+      - What's the relationship between hidden and powerful?
+  - id: dg_bc_21
+    name: The Loading Button
+    prompt: |
+      You click. The button changes—spinner, disabled, "Processing..." The
+      button holds your action while the system works. You wait. Notice the
+      moment the button becomes a placeholder for patience.
+    follow_ups:
+      - How does the loading state shape expectation?
+      - What would the interface be without feedback?
+      - What's the relationship between click and response?
+  - id: dg_bc_22
+    name: Radio Buttons
+    prompt: |
+      Radio buttons—one of many, mutually exclusive. The metaphor is physical:
+      car radios, one station at a time. But the digital version has no dial.
+      What does the metaphor carry? What does it leave behind?
+    follow_ups:
+      - How do radio buttons shape choice architecture?
+      - What would the interface be with checkboxes?
+      - What's the relationship between exclusion and clarity?
+  - id: dg_bc_23
+    name: The Floating Action Button
+    prompt: |
+      A circle floats in the corner—always visible, always accessible. It
+      suggests the primary action of the screen. But it floats above content,
+      sometimes obscuring. What does prominence cost? Who decides what floats?
+    follow_ups:
+      - How does the FAB shape the screen hierarchy?
+      - What would the interface be without it?
+      - What's the relationship between constant and primary?
+  - id: dg_bc_24
+    name: Right-Click
+    prompt: |
+      The right-click reveals a hidden menu—contextual options the primary
+      click doesn't offer. The interface has a shadow layer. What does the
+      right-click assume about your hand? Your knowledge?
+    follow_ups:
+      - How does the right-click create power users?
+      - What would the interface be without it?
+      - What's the relationship between primary and secondary?
+  - id: dg_bc_25
+    name: The Slider
+    prompt: |
+      A slider suggests continuum—not on/off but degrees. Volume, brightness,
+      opacity. You drag through space. But the underlying value might be
+      discrete. What does the slider smooth? What does it hide?
+    follow_ups:
+      - How does the slider shape perception of range?
+      - What would the interface be with a number input?
+      - What's the relationship between continuous and discrete?
+  - id: dg_bc_26
+    name: Breadcrumb Clicks
+    prompt: |
+      Home > Settings > Privacy. Each segment is clickable. You can jump back
+      without retracing. The path is both history and map. What does the
+      breadcrumb assume about your journey? Your memory?
+    follow_ups:
+      - How does the breadcrumb shape navigation?
+      - What would the interface be without it?
+      - What's the relationship between path and possibility?
+  - id: dg_bc_27
+    name: The Undo Button
+    prompt: |
+      Undo offers reversal—a second chance, a retreat. But undo has limits.
+      Some actions can't be undone. Notice when you trust undo. When you
+      don't. What does reversibility assume about error?
+    follow_ups:
+      - How does undo shape risk-taking?
+      - What would the interface be without it?
+      - What's the relationship between reversal and safety?
+  - id: dg_bc_28
+    name: Touch Target
+    prompt: |
+      A button might look small, but its touch target is larger—invisible
+      padding for clumsy fingers. The visible and the interactive don't match.
+      What does the mismatch afford? What does it obscure?
+    follow_ups:
+      - How does touch target shape usability?
+      - What would the interface be if they matched?
+      - What's the relationship between visible and actual?
+  - id: dg_bc_29
+    name: The Search Button
+    prompt: |
+      A magnifying glass. A search bar. The button implies finding—something
+      is lost, and you will recover it. But search is also surveillance. What
+      does the search button promise? What does it enable?
+    follow_ups:
+      - How does search shape expectation?
+      - What would the interface be without it?
+      - What's the relationship between find and track?
+  - id: dg_bc_30
+    name: Drag Handle
+    prompt: |
+      A grip icon suggests you can drag—reorder, move, rearrange. The handle
+      is affordance for manipulation. But not everything with a handle can
+      be dragged. Notice when the suggestion lies.
+    follow_ups:
+      - How does the handle shape expectation?
+      - What would the interface be without it?
+      - What's the relationship between suggestion and capability?
+  - id: dg_bc_31
+    name: The Accept All
+    prompt: |
+      "Accept All" cookies. One button, many permissions. The design favors
+      the single click—the path of least resistance. What does "all" include?
+      Who benefits from your acceptance?
+    follow_ups:
+      - How does the button shape consent?
+      - What would the interface be with granular choice?
+      - What's the relationship between convenience and agency?
+  - id: dg_bc_32
+    name: Pinch to Zoom
+    prompt: |
+      Two fingers, pinch. The gesture maps to scale—as if you're stretching
+      the screen. But the screen doesn't stretch. The pixels rearrange. What
+      does the metaphor borrow? What does it invent?
+    follow_ups:
+      - How does the gesture create intuition?
+      - What would the interface be with buttons?
+      - What's the relationship between gesture and metaphor?
+  - id: dg_bc_33
+    name: The Refresh Button
+    prompt: |
+      A circular arrow. Refresh. Reload. The button implies the current state
+      is stale—you can get something newer. But refresh is also surrender.
+      You're asking the system to tell you what's true.
+    follow_ups:
+      - How does refresh shape trust in content?
+      - What would the interface be without it?
+      - What's the relationship between new and true?
+  - id: dg_bc_34
+    name: Tab Order
+    prompt: |
+      Tab moves focus—from field to field, button to button. The order is
+      designed, not random. Someone decided the sequence. Notice the path
+      your tab key traces. What does the order prioritize?
+    follow_ups:
+      - How does tab order shape flow?
+      - What would the interface be with random order?
+      - What's the relationship between sequence and intention?
+  - id: dg_bc_35
+    name: The Share Button
+    prompt: |
+      Share. The button implies giving—you will send this to someone. But
+      share also means expose. The same action, different framings. What does
+      the share button promise? What does it enable?
+    follow_ups:
+      - How does the label shape the act?
+      - What would the interface be with "Send"?
+      - What's the relationship between share and expose?
+  - id: dg_bc_36
+    name: Scroll as Control
+    prompt: |
+      Scrolling isn't a button—it's continuous input. But it controls what
+      you see. Scroll speed, scroll position, infinite scroll. The interface
+      responds to your movement. What does scrolling assume about attention?
+    follow_ups:
+      - How does scroll shape consumption?
+      - What would the interface be with pagination only?
+      - What's the relationship between flow and control?
+  - id: dg_bc_37
+    name: The Close Button
+    prompt: |
+      X. Close. The button ends something—a window, a modal, a session. But
+      close might not mean gone. The thing might persist in memory, in tabs.
+      What does close actually do?
+    follow_ups:
+      - How does close differ from cancel?
+      - What would the interface be without it?
+      - What's the relationship between visible and present?
+  - id: dg_bc_38
+    name: The Copy Button
+    prompt: |
+      Copy. Duplicate. The button implies reproduction—you will make another.
+      But copy in digital space is perfect, instant, infinite. What does
+      the copy button assume about scarcity? About ownership?
+    follow_ups:
+      - How does copy shape our relationship to content?
+      - What would the interface be without it?
+      - What's the relationship between copy and original?
+  - id: dg_bc_39
+    name: The Menu Button
+    prompt: |
+      Three lines. A hamburger. The menu hides complexity—click to reveal.
+      The interface compresses navigation into a single icon. What's in the
+      menu? Who decided what fits? What gets left out?
+    follow_ups:
+      - How does the menu shape discovery?
+      - What would the interface be with everything visible?
+      - What's the relationship between hidden and organized?
+  - id: dg_bc_40
+    name: The Like Button
+    prompt: |
+      A heart. A thumbs up. Like. One click, one sentiment. The button
+      compresses feeling into binary. What does the like assume about
+      emotion? What does it flatten? What does it enable?
+    follow_ups:
+      - How does the like shape social interaction?
+      - What would the interface be without it?
+      - What's the relationship between click and feeling?
+  - id: dg_bc_41
+    name: The Save Button
+    prompt: |
+      Save. The button implies preservation—your work will persist. But save
+      might mean "to our servers." It might mean "until we decide otherwise."
+      What does save actually promise?
+    follow_ups:
+      - How does save shape trust?
+      - What would the interface be with auto-save only?
+      - What's the relationship between save and ownership?
+  - id: dg_bc_42
+    name: The Add Button
+    prompt: |
+      Plus. Add. New. The button implies creation—you will make something.
+      But add to what? Where does the new thing go? Who decides the default?
+      Notice what the add button assumes.
+    follow_ups:
+      - How does add shape the act of creation?
+      - What would the interface be without it?
+      - What's the relationship between new and context?
+  - id: dg_bc_43
+    name: The Delete Button
+    prompt: |
+      Trash. Delete. Remove. The button implies erasure. But delete might mean
+      "hide" or "archive" or "mark for deletion." The word and the action
+      might not align. What does delete actually do?
+    follow_ups:
+      - How does delete shape our relationship to content?
+      - What would the interface be with "Remove"?
+      - What's the relationship between delete and gone?
+  - id: dg_bc_44
+    name: The Filter Button
+    prompt: |
+      Filter. The button implies refinement—you will narrow what you see. But
+      filter also means exclude. Someone built the filter options. What's
+      included? What's missing? What does the filter assume you want?
+    follow_ups:
+      - How does filter shape what we see?
+      - What would the interface be without it?
+      - What's the relationship between filter and frame?
+  - id: dg_bc_45
+    name: The Sort Button
+    prompt: |
+      Sort. Order. Arrange. The button implies control over sequence. But the
+      sort options are limited—date, name, relevance. Who chose those? What
+      orderings are impossible? What does sort assume about value?
+    follow_ups:
+      - How does sort shape perception?
+      - What would the interface be with custom order?
+      - What's the relationship between order and meaning?
+  - id: dg_bc_46
+    name: The Notification Bell
+    prompt: |
+      A bell. A badge with a number. The icon implies attention—something
+      wants yours. The interface is asking you to look. What does the
+      notification assume about your time? Your attention?
+    follow_ups:
+      - How does the bell shape behavior?
+      - What would the interface be without it?
+      - What's the relationship between notification and obligation?
+  - id: dg_bc_47
+    name: The Settings Gear
+    prompt: |
+      A gear. Settings. Configuration. The icon implies control—you can
+      change how things work. But settings are often buried, complex, opaque.
+      What does the gear promise? What does it deliver?
+    follow_ups:
+      - How does settings shape agency?
+      - What would the interface be without it?
+      - What's the relationship between configuration and power?
+  - id: dg_bc_48
+    name: The Play Button
+    prompt: |
+      A triangle. Play. The icon is universal—start, begin, go. But play
+      implies performance, spectacle. The same icon starts a song or a
+      video. What does play assume about the content? About you?
+    follow_ups:
+      - How does play shape expectation?
+      - What would the interface be with "Start"?
+      - What's the relationship between play and consumption?
+  - id: dg_bc_49
+    name: The Pause Button
+    prompt: |
+      Two lines. Pause. The icon implies suspension—things will resume. But
+      pause is not stop. The system is still running, waiting. What does
+      pause actually do? What continues in the background?
+    follow_ups:
+      - How does pause shape our relationship to time?
+      - What would the interface be without it?
+      - What's the relationship between pause and presence?
+  - id: dg_bc_50
+    name: The Power Button
+    prompt: |
+      A circle with a line. Power. The icon implies control over the machine—
+      you can turn it on or off. But in software, power might mean "log out"
+      or "shut down" or "restart." The metaphor blurs. What does power mean
+      when there's no plug to pull?
+    follow_ups:
+      - How does the power icon shape expectation?
+      - What would the interface be without it?
+      - What's the relationship between power and agency?

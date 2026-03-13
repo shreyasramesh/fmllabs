@@ -1,0 +1,509 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# The Human Interface — Workplace
+
+id: human_interface_workplace
+name: The Human Interface — Workplace
+description: 50 cards to shift how you see the workplace—from desk territories
+  and meeting rooms to the water cooler and visible versus invisible hierarchy.
+domain: human_interface
+cards:
+  - id: hi_wp_desk_territory
+    name: Desk Territory
+    prompt: |
+      A desk is claimed—photos, plants, mugs. The territory extends beyond
+      the surface. Observe the boundaries. What marks "mine"? The desk is
+      a small kingdom. How is it defended?
+    follow_ups:
+      - How does the desk shape identity?
+      - What would the workplace be without personalization?
+      - What's the relationship between territory and belonging?
+  - id: hi_wp_meeting_room
+    name: Meeting Room
+    prompt: |
+      The room has a table, chairs, a screen. The door closes. The meeting
+      room is a stage for performance. Observe who speaks, who doesn't. The
+      room holds hierarchy. What does the space enable?
+    follow_ups:
+      - How does the room shape the meeting?
+      - What would the workplace be without meeting rooms?
+      - What's the relationship between room and power?
+  - id: hi_wp_water_cooler
+    name: Water Cooler
+    prompt: |
+      The water cooler is a crossroads. People meet there by accident. The
+      encounter is informal. Observe the conversations. What gets said at the
+      cooler that wouldn't be said in a meeting?
+    follow_ups:
+      - How does the cooler shape culture?
+      - What would the workplace be without it?
+      - What's the relationship between cooler and connection?
+  - id: hi_wp_visible_hierarchy
+    name: Visible Hierarchy
+    prompt: |
+      Corner offices, window seats, cubicles. The space encodes rank. Observe
+      the distribution. Who gets what? The hierarchy is built into the
+      architecture. What does it communicate?
+    follow_ups:
+      - How does the hierarchy shape behavior?
+      - What would the workplace be without it?
+      - What's the relationship between space and status?
+  - id: hi_wp_invisible_hierarchy
+    name: Invisible Hierarchy
+    prompt: |
+      Some people are listened to; others are interrupted. The hierarchy
+      isn't on the org chart. Observe the meetings. Who defers? Who
+      dominates? The invisible hierarchy shapes outcomes.
+    follow_ups:
+      - How does the invisible hierarchy emerge?
+      - What would the workplace be if it were visible?
+      - What's the relationship between invisible and power?
+  - id: hi_wp_cubicle_wall
+    name: Cubicle Wall
+    prompt: |
+      The wall is low—you can see over it. Privacy is partial. The cubicle
+      is a compromise. Observe the sightlines. What can you hear? What can
+      you see? The wall creates an illusion of boundary.
+    follow_ups:
+      - How does the cubicle shape focus?
+      - What would the workplace be with full walls?
+      - What's the relationship between wall and privacy?
+  - id: hi_wp_corner_office
+    name: Corner Office
+    prompt: |
+      The corner office has two windows. It's the prize. Observe who occupies
+      it. The corner office is visible from the floor. It's a symbol. What
+      does the corner communicate?
+    follow_ups:
+      - How does the corner office shape aspiration?
+      - What would the floor be without it?
+      - What's the relationship between corner and authority?
+  - id: hi_wp_open_plan
+    name: Open Plan
+    prompt: |
+      No walls. Desks in rows or pods. The open plan promises collaboration.
+      Observe the reality. Who wears headphones? The open plan creates
+      proximity. What does it cost?
+    follow_ups:
+      - How does the open plan shape interaction?
+      - What would the workplace be with walls?
+      - What's the relationship between open and focus?
+  - id: hi_wp_calendar_invite
+    name: Calendar Invite
+    prompt: |
+      The invite appears. Accept, decline, tentative. The calendar structures
+      the day. Observe the blocks. Who controls whose time? The calendar
+      is a map of power.
+    follow_ups:
+      - How does the calendar shape the day?
+      - What would the workplace be without it?
+      - What's the relationship between invite and obligation?
+  - id: hi_wp_knock_before_enter
+    name: Knock Before Enter
+    prompt: |
+      Some doors are closed. The knock is a request. Observe who knocks and
+      who walks in. The knock encodes respect. What does the closed door
+      protect?
+    follow_ups:
+      - How does the knock shape the encounter?
+      - What would the workplace be with open doors?
+      - What's the relationship between knock and boundary?
+  - id: hi_wp_headphones_signal
+    name: Headphones Signal
+    prompt: |
+      Headphones on means "do not disturb." The signal is universal. Observe
+      who respects it. The headphones create a bubble. What does the bubble
+      enable?
+    follow_ups:
+      - How do headphones shape the floor?
+      - What would the workplace be without them?
+      - What's the relationship between headphones and focus?
+  - id: hi_wp_lunch_room
+    name: Lunch Room
+    prompt: |
+      The lunch room has tables, microwave, fridge. People eat alone or
+      together. Observe the clusters. Who sits with whom? The lunch room
+      reveals alliances. What does the arrangement say?
+    follow_ups:
+      - How does the lunch room shape culture?
+      - What would the workplace be without it?
+      - What's the relationship between lunch and connection?
+  - id: hi_wp_slack_ping
+    name: Slack Ping
+    prompt: |
+      The ping arrives. Instant, asynchronous. The ping can interrupt or
+      wait. Observe the norms. Who responds immediately? The ping creates
+      a new rhythm of communication. What does it replace?
+    follow_ups:
+      - How does the ping shape the day?
+      - What would the workplace be without it?
+      - What's the relationship between ping and urgency?
+  - id: hi_wp_whiteboard_claim
+    name: Whiteboard Claim
+    prompt: |
+      The whiteboard holds ideas—diagrams, lists. Someone wrote them. The
+      board is a shared surface. Observe who writes, who erases. The board
+      is territory. What does it hold?
+    follow_ups:
+      - How does the whiteboard shape collaboration?
+      - What would the meeting be without it?
+      - What's the relationship between board and thought?
+  - id: hi_wp_elevator_encounter
+    name: Elevator Encounter
+    prompt: |
+      You share the elevator with a colleague. Thirty seconds. The encounter
+      is awkward or easy. Observe the small talk. What gets said? The
+      elevator compresses time. What does it require?
+    follow_ups:
+      - How does the elevator shape the encounter?
+      - What would the building be without elevators?
+      - What's the relationship between elevator and civility?
+  - id: hi_wp_cc_email
+    name: CC Email
+    prompt: |
+      You're cc'd. You're not the main recipient. The cc includes you in
+      the loop. Observe who gets cc'd. The cc is a signal of relevance—
+      or politics. What does the cc do?
+    follow_ups:
+      - How does the cc shape communication?
+      - What would the workplace be without cc?
+      - What's the relationship between cc and visibility?
+  - id: hi_wp_standing_desk
+    name: Standing Desk
+    prompt: |
+      The desk rises. The worker stands. The standing desk is a choice—health,
+      preference, performance. Observe who has one. What does the standing
+      desk signal?
+    follow_ups:
+      - How does the standing desk shape the body?
+      - What would the workplace be without it?
+      - What's the relationship between standing and productivity?
+  - id: hi_wp_conference_call
+    name: Conference Call
+    prompt: |
+      Voices from elsewhere. The call connects distributed people. Observe
+      who speaks, who mutes. The call is a partial presence. What does the
+      call enable—and what does it lose?
+    follow_ups:
+      - How does the call shape the meeting?
+      - What would the workplace be without it?
+      - What's the relationship between call and presence?
+  - id: hi_wp_office_plant
+    name: Office Plant
+    prompt: |
+      A plant on the desk—pothos, succulent. It's decoration and care. The
+      plant doesn't belong to the company. Observe who has one. What does
+      the plant add to the space?
+    follow_ups:
+      - How does the plant shape the desk?
+      - What would the workplace be without plants?
+      - What's the relationship between plant and identity?
+  - id: hi_wp_after_hours
+    name: After Hours
+    prompt: |
+      The office after most have left. The lights are dim. The after-hours
+      worker is visible—dedicated or struggling. Observe the scene. What does
+      the empty office enable? What does it cost?
+    follow_ups:
+      - How does after hours shape the culture?
+      - What would the workplace be without it?
+      - What's the relationship between hours and expectation?
+  - id: hi_wp_nameplate
+    name: Nameplate
+    prompt: |
+      A name on the desk, on the door. The nameplate claims the space. Observe
+      who has one. The nameplate is identity and territory. What does it
+      communicate to passersby?
+    follow_ups:
+      - How does the nameplate shape the space?
+      - What would the workplace be without it?
+      - What's the relationship between nameplate and presence?
+  - id: hi_wp_meeting_overrun
+    name: Meeting Overrun
+    prompt: |
+      The meeting was supposed to end. It doesn't. The overrun is common.
+      Observe the dynamic. Who has the next meeting? Who can stay? The
+      overrun is a power move. What does it extract?
+    follow_ups:
+      - How does the overrun shape the day?
+      - What would the workplace be with strict endings?
+      - What's the relationship between overrun and respect?
+  - id: hi_wp_quick_question
+    name: Quick Question
+    prompt: |
+      "Got a quick question?" The ask interrupts. The "quick" is a promise.
+      Observe the exchange. How quick is it? The quick question is a
+      negotiation of time. What does it cost?
+    follow_ups:
+      - How does the quick question shape the flow?
+      - What would the workplace be without interruptions?
+      - What's the relationship between quick and respect?
+  - id: hi_wp_bathroom_encounter
+    name: Bathroom Encounter
+    prompt: |
+      You see a colleague in the bathroom. The encounter is ambiguous. Eye
+      contact or not? The bathroom is a liminal space. Observe the norms.
+      What does the encounter require?
+    follow_ups:
+      - How does the bathroom shape the workplace?
+      - What would the workplace be without shared bathrooms?
+      - What's the relationship between bathroom and privacy?
+  - id: hi_wp_commute_talk
+    name: Commute Talk
+    prompt: |
+      "How was the commute?" The question opens small talk. The commute is
+      shared experience. Observe the exchange. What does the commute talk
+      do for the relationship?
+    follow_ups:
+      - How does commute talk shape the day?
+      - What would the workplace be without it?
+      - What's the relationship between commute and connection?
+  - id: hi_wp_parking_spot
+    name: Parking Spot
+    prompt: |
+      Reserved spots, first-come spots. The parking encodes hierarchy. Observe
+      who parks where. The spot is a small privilege. What does it
+      communicate?
+    follow_ups:
+      - How does parking shape the workplace?
+      - What would the lot be without reserved spots?
+      - What's the relationship between spot and status?
+  - id: hi_wp_birthday_cake
+    name: Birthday Cake
+    prompt: |
+      A cake appears. It's someone's birthday. The team gathers. The cake
+      is ritual. Observe the gathering. What does the birthday moment do
+      for the group?
+    follow_ups:
+      - How does the birthday shape culture?
+      - What would the workplace be without it?
+      - What's the relationship between cake and belonging?
+  - id: hi_wp_forwarded_email
+    name: Forwarded Email
+    prompt: |
+      An email is forwarded. "FYI" or "Thought you should see this." The
+      forward extends the conversation. Observe who gets forwarded. The
+      forward is a signal. What does it mean?
+    follow_ups:
+      - How does the forward shape communication?
+      - What would the workplace be without it?
+      - What's the relationship between forward and trust?
+  - id: hi_wp_break_room
+    name: Break Room
+    prompt: |
+      Coffee, snacks, sometimes a couch. The break room is a pause. People
+      go there to step away. Observe who uses it. The break room is a
+      refuge. What does it provide?
+    follow_ups:
+      - How does the break room shape the day?
+      - What would the workplace be without it?
+      - What's the relationship between break and productivity?
+  - id: hi_wp_office_supply
+    name: Office Supply
+    prompt: |
+      Pens, paper, staplers—the supply closet holds the tools. Someone
+      manages it. Observe who takes what. The supply is a small commons.
+      What are the rules?
+    follow_ups:
+      - How does the supply shape the workplace?
+      - What would the workplace be without it?
+      - What's the relationship between supply and entitlement?
+  - id: hi_wp_remote_camera
+    name: Remote Camera
+    prompt: |
+      The camera is on or off. The remote worker chooses. The choice is
+      visible. Observe the norms. Who keeps it on? The camera is a window.
+      What does it reveal?
+    follow_ups:
+      - How does the camera shape the call?
+      - What would the meeting be without it?
+      - What's the relationship between camera and presence?
+  - id: hi_wp_side_conversation
+    name: Side Conversation
+    prompt: |
+      Two people talk while others work. The side conversation is private
+      but visible. Observe the dynamic. Is it disruptive? The side
+      conversation is a small rebellion. What does it create?
+    follow_ups:
+      - How does the side conversation shape the floor?
+      - What would the workplace be without it?
+      - What's the relationship between side and exclusion?
+  - id: hi_wp_clean_desk
+    name: Clean Desk
+    prompt: |
+      Some desks are pristine—nothing personal. The clean desk is policy or
+      preference. Observe the contrast. What does the clean desk communicate?
+      Sterility? Discipline? Detachment?
+    follow_ups:
+      - How does the clean desk shape the worker?
+      - What would the workplace be with messy desks?
+      - What's the relationship between clean and identity?
+  - id: hi_wp_meeting_no_show
+    name: Meeting No-Show
+    prompt: |
+      The meeting was scheduled. Someone doesn't show. The no-show is a
+      message. Observe the response. Does anyone mention it? The no-show
+      is a small power move. What does it communicate?
+    follow_ups:
+      - How does the no-show shape the meeting?
+      - What would the workplace be without no-shows?
+      - What's the relationship between no-show and respect?
+  - id: hi_wp_cubicle_visit
+    name: Cubicle Visit
+    prompt: |
+      Someone walks over. They stand at the edge of the cubicle. The visit
+      is a choice—they could have messaged. Observe the dynamic. What does
+      the visit enable that a message doesn't?
+    follow_ups:
+      - How does the visit shape the interaction?
+      - What would the workplace be without visits?
+      - What's the relationship between visit and interruption?
+  - id: hi_wp_shared_printer
+    name: Shared Printer
+    prompt: |
+      The printer is shared. Documents pile up. Someone must collect. The
+      printer is a crossroads. Observe the encounters. What happens when
+      two people reach for the same output?
+    follow_ups:
+      - How does the printer shape the floor?
+      - What would the workplace be without it?
+      - What's the relationship between printer and patience?
+  - id: hi_wp_office_temperature
+    name: Office Temperature
+    prompt: |
+      "It's too cold." "It's too hot." The temperature is contested. Someone
+      controls the thermostat. Observe the complaints. The temperature is a
+      small site of power. Who wins?
+    follow_ups:
+      - How does temperature shape the workplace?
+      - What would the workplace be with individual control?
+      - What's the relationship between temperature and comfort?
+  - id: hi_wp_handshake
+    name: Handshake
+    prompt: |
+      The handshake—first meeting, deal closed. The handshake is ritual. Observe
+      the grip, the duration. The handshake encodes formality. What does it
+      communicate?
+    follow_ups:
+      - How does the handshake shape the encounter?
+      - What would the workplace be without it?
+      - What's the relationship between handshake and trust?
+  - id: hi_wp_cc_removal
+    name: CC Removal
+    prompt: |
+      "Reply all" or "Reply"? The choice matters. Removing someone from the
+      thread is a signal. Observe the dynamics. Who gets dropped? The cc
+      removal is a small exclusion. What does it mean?
+    follow_ups:
+      - How does the removal shape the conversation?
+      - What would the workplace be without reply options?
+      - What's the relationship between removal and power?
+  - id: hi_wp_office_tour
+    name: Office Tour
+    prompt: |
+      A new hire gets a tour. "This is the kitchen. This is where we have
+      meetings." The tour orients. Observe the guide. What does the tour
+      communicate about the culture?
+    follow_ups:
+      - How does the tour shape the newcomer?
+      - What would onboarding be without it?
+      - What's the relationship between tour and belonging?
+  - id: hi_wp_meeting_room_book
+    name: Meeting Room Book
+    prompt: |
+      The room is booked. Or double-booked. The calendar is the arbiter.
+      Observe the conflict. Who yields? The booking is a claim on space and
+      time. What does it require?
+    follow_ups:
+      - How does the booking shape the day?
+      - What would the workplace be without booking?
+      - What's the relationship between book and priority?
+  - id: hi_wp_goodbye_ritual
+    name: Goodbye Ritual
+    prompt: |
+      End of day. "Heading out." "See you tomorrow." The goodbye is ritual.
+      Observe the exchanges. Who says goodbye to whom? The ritual marks the
+      boundary between work and not-work.
+    follow_ups:
+      - How does the goodbye shape the day?
+      - What would the workplace be without it?
+      - What's the relationship between goodbye and closure?
+  - id: hi_wp_promotion_announce
+    name: Promotion Announce
+    prompt: |
+      "We're pleased to announce..." The promotion is public. The announce
+      creates a moment. Observe the response. Congratulations, silence,
+      side glances. What does the announce do to the room?
+    follow_ups:
+      - How does the announce shape the culture?
+      - What would the workplace be without public promotions?
+      - What's the relationship between announce and hierarchy?
+  - id: hi_wp_desk_move
+    name: Desk Move
+    prompt: |
+      Someone moves desks. The move is promotion, reorganization, or choice.
+      Observe the process. What do they take? What do they leave? The move
+      is a transition. What does it mean?
+    follow_ups:
+      - How does the move shape the worker?
+      - What would the workplace be without moves?
+      - What's the relationship between move and identity?
+  - id: hi_wp_office_gossip
+    name: Office Gossip
+    prompt: |
+      Information travels—who's leaving, who's frustrated. The gossip is
+      informal. Observe where it happens. The water cooler, the hallway.
+      What does the gossip do for the group?
+    follow_ups:
+      - How does gossip shape the culture?
+      - What would the workplace be without it?
+      - What's the relationship between gossip and belonging?
+  - id: hi_wp_meeting_agenda
+    name: Meeting Agenda
+    prompt: |
+      The agenda structures the meeting. Or it doesn't—the meeting drifts.
+      Observe the dynamic. Who follows the agenda? Who doesn't? The agenda
+      is a contract. What does it enable?
+    follow_ups:
+      - How does the agenda shape the meeting?
+      - What would the meeting be without it?
+      - What's the relationship between agenda and power?
+  - id: hi_wp_office_food
+    name: Office Food
+    prompt: |
+      Donuts, fruit, leftovers from a client meeting. The food appears.
+      People gather. Observe the sharing. The office food is a small gift.
+      What does it create?
+    follow_ups:
+      - How does the food shape the workplace?
+      - What would the workplace be without it?
+      - What's the relationship between food and community?
+  - id: hi_wp_last_day
+    name: Last Day
+    prompt: |
+      Someone's last day. Goodbyes, maybe a card, maybe cake. The last day
+      is a ritual of departure. Observe the mood. What does the last day
+      do for the leaver and those who stay?
+    follow_ups:
+      - How does the last day shape the culture?
+      - What would the workplace be without the ritual?
+      - What's the relationship between last day and closure?
+  - id: hi_wp_office_hours
+    name: Office Hours
+    prompt: |
+      "I have office hours Tuesday 2-4." The block is open. People can drop
+      in. Observe who comes. The office hours are an invitation. What do
+      they enable?
+    follow_ups:
+      - How do office hours shape access?
+      - What would the workplace be without them?
+      - What's the relationship between hours and availability?
+  - id: hi_wp_workspace_claim
+    name: Workspace Claim
+    prompt: |
+      A jacket on the chair. A bag under the desk. The claim says "I'm here"
+      or "I'll be back." Observe the signals. How long can a claim hold?
+      The workspace is temporarily owned. What are the rules?
+    follow_ups:
+      - How does the claim shape the floor?
+      - What would the workplace be without claims?
+      - What's the relationship between claim and presence?
