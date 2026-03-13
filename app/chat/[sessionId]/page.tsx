@@ -2206,7 +2206,9 @@ export default function ChatPage() {
 
   const [libraryPanelOpen, setLibraryPanelOpen] = useState<"conversations" | "ltm" | "concepts" | "cc" | "cg" | "nuggets" | "decks" | null>(null);
   const [waysOfLookingAtModalOpen, setWaysOfLookingAtModalOpen] = useState(false);
+  const [waysOfLookingAtDrawMode, setWaysOfLookingAtDrawMode] = useState(false);
   const [waysOfLookingAtCategory, setWaysOfLookingAtCategory] = useState<string | null>(null);
+  const [waysOfLookingAtCity, setWaysOfLookingAtCity] = useState<string | null>(null);
   const [waysOfLookingAtCards, setWaysOfLookingAtCards] = useState<{ id: string; name: string; prompt: string; follow_ups?: string[] }[] | null>(null);
   const [waysOfLookingAtCardsLoading, setWaysOfLookingAtCardsLoading] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -2298,15 +2300,16 @@ export default function ChatPage() {
       if (e.key === "Escape") {
         if (drawnPerspectiveCard) setDrawnPerspectiveCard(null);
         else if (waysOfLookingAtModalOpen) {
-          if (waysOfLookingAtCategory) setWaysOfLookingAtCategory(null);
-          else setWaysOfLookingAtModalOpen(false);
+          if (waysOfLookingAtCity) setWaysOfLookingAtCity(null);
+          else if (waysOfLookingAtCategory) setWaysOfLookingAtCategory(null);
+          else { setWaysOfLookingAtModalOpen(false); setWaysOfLookingAtDrawMode(false); }
         } else if (selectedMentalModel) setSelectedMentalModel(null);
         else if (libraryPanelOpen) setLibraryPanelOpen(null);
       }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, waysOfLookingAtCategory]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, waysOfLookingAtCategory, waysOfLookingAtCity]);
 
   useEffect(() => {
     if (!settingsOpen) return;
@@ -2380,6 +2383,11 @@ export default function ChatPage() {
       setWaysOfLookingAtCards(null);
       return;
     }
+    const isUrbanJungle = waysOfLookingAtCategory === "urban_jungle";
+    if (isUrbanJungle && !waysOfLookingAtCity) {
+      setWaysOfLookingAtCards(null);
+      return;
+    }
     setWaysOfLookingAtCardsLoading(true);
     fetch("/api/perspective-decks")
       .then((r) => r.json())
@@ -2391,11 +2399,16 @@ export default function ChatPage() {
         }
         const res = await fetch(`/api/perspective-decks/${deck.id}`);
         const data = await res.json();
-        setWaysOfLookingAtCards(Array.isArray(data?.cards) ? data.cards : []);
+        let cards = Array.isArray(data?.cards) ? data.cards : [];
+        if (isUrbanJungle && waysOfLookingAtCity) {
+          const prefix = waysOfLookingAtCity === "ny" ? "ny_" : waysOfLookingAtCity === "sf" ? "sf_" : waysOfLookingAtCity === "london" ? "london_" : waysOfLookingAtCity === "paris" ? "paris_" : "blr_";
+          cards = cards.filter((c: { id: string }) => c.id.startsWith(prefix));
+        }
+        setWaysOfLookingAtCards(cards);
       })
       .catch(() => setWaysOfLookingAtCards([]))
       .finally(() => setWaysOfLookingAtCardsLoading(false));
-  }, [waysOfLookingAtCategory]);
+  }, [waysOfLookingAtCategory, waysOfLookingAtCity]);
 
   useEffect(() => {
     const clearSelectionBubbles = (e: MouseEvent | TouchEvent) => {
@@ -2416,8 +2429,6 @@ export default function ChatPage() {
 
   const [teachMeLoading, setTeachMeLoading] = useState(false);
   const [perspectiveDecks, setPerspectiveDecks] = useState<{ id: string; name: string; description: string; domain: string }[]>([]);
-  const [drawCardLoading, setDrawCardLoading] = useState(false);
-
   const handleTeachMeClick = useCallback(async () => {
     setOverachieverMessage(null);
     setTeachMeLoading(true);
@@ -2923,7 +2934,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           <div className="mt-2 pt-2 border-t border-neutral-200/80 dark:border-neutral-700/80">
             <button
               type="button"
-              onClick={() => { playSelectionChime(); setWaysOfLookingAtModalOpen(true); setWaysOfLookingAtCategory(null); }}
+              onClick={() => { playSelectionChime(); setWaysOfLookingAtModalOpen(true); setWaysOfLookingAtDrawMode(false); setWaysOfLookingAtCategory(null); setWaysOfLookingAtCity(null); }}
               className="flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left text-[13px] sm:text-[14px] font-medium text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800/50 transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
@@ -3465,32 +3476,14 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       <div className="space-y-3 mb-6 w-full">
                         <button
                           type="button"
-                          onClick={async () => {
+                          onClick={() => {
                             playSelectionChime();
-                            setDrawCardLoading(true);
-                            try {
-                              const decksRes = await fetch("/api/perspective-decks");
-                              const decks = await decksRes.json();
-                              const deck = Array.isArray(decks) && decks.length > 0 ? decks[0] : null;
-                              if (deck?.id) {
-                                const cardRes = await fetch(`/api/perspective-decks/${deck.id}/random`);
-                                const data = await cardRes.json();
-                                if (data.card && data.deckId) {
-                                  setDrawnPerspectiveCard({
-                                    card: data.card,
-                                    deckId: data.deckId,
-                                    deckName: deck.name,
-                                  });
-                                }
-                              }
-                            } catch {
-                              /* ignore */
-                            } finally {
-                              setDrawCardLoading(false);
-                            }
+                            setWaysOfLookingAtModalOpen(true);
+                            setWaysOfLookingAtDrawMode(true);
+                            setWaysOfLookingAtCategory(null);
+                            setWaysOfLookingAtCity(null);
                           }}
-                          disabled={drawCardLoading}
-                          className="flex items-center gap-3 w-full max-w-sm mx-auto px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98] disabled:opacity-60"
+                          className="flex items-center gap-3 w-full max-w-sm mx-auto px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
                         >
                           <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
@@ -8089,8 +8082,9 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
           onClick={() => {
-            if (waysOfLookingAtCategory) setWaysOfLookingAtCategory(null);
-            else setWaysOfLookingAtModalOpen(false);
+            if (waysOfLookingAtCity) setWaysOfLookingAtCity(null);
+            else if (waysOfLookingAtCategory) setWaysOfLookingAtCategory(null);
+            else { setWaysOfLookingAtModalOpen(false); setWaysOfLookingAtDrawMode(false); }
           }}
           role="dialog"
           aria-modal="true"
@@ -8102,12 +8096,15 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <div className="flex items-center gap-2">
-                {waysOfLookingAtCategory && (
+                {(waysOfLookingAtCategory || waysOfLookingAtCity) && (
                   <button
                     type="button"
-                    onClick={() => setWaysOfLookingAtCategory(null)}
+                    onClick={() => {
+                      if (waysOfLookingAtCity) setWaysOfLookingAtCity(null);
+                      else setWaysOfLookingAtCategory(null);
+                    }}
                     className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 transition-colors"
-                    aria-label="Back to categories"
+                    aria-label={waysOfLookingAtCity ? "Back to cities" : "Back to categories"}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                       <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -8115,12 +8112,18 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   </button>
                 )}
                 <h2 className="text-lg font-semibold text-foreground">
-                  {waysOfLookingAtCategory ? perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ?? "Prompt Games" : "Prompt Games"}
+                  {waysOfLookingAtDrawMode && !waysOfLookingAtCategory
+                    ? "Draw a perspective card"
+                    : waysOfLookingAtCity
+                      ? `${perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ?? "Urban Jungle"} — ${waysOfLookingAtCity === "ny" ? "New York" : waysOfLookingAtCity === "sf" ? "San Francisco" : waysOfLookingAtCity === "london" ? "London" : waysOfLookingAtCity === "paris" ? "Paris" : "Bangalore"}`
+                      : waysOfLookingAtCategory
+                        ? perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ?? "Prompt Games"
+                        : "Prompt Games"}
                 </h2>
               </div>
               <button
                 type="button"
-                onClick={() => setWaysOfLookingAtModalOpen(false)}
+                onClick={() => { setWaysOfLookingAtModalOpen(false); setWaysOfLookingAtDrawMode(false); }}
                 className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-600 dark:text-neutral-400"
                 aria-label="Close"
               >
@@ -8131,7 +8134,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               {!waysOfLookingAtCategory ? (
                 <div className="space-y-4">
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Choose a category to browse perspective cards.
+                    {waysOfLookingAtDrawMode ? "Choose a domain" : "Choose a category to browse perspective cards."}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {perspectiveDecks.length === 0 ? (
@@ -8144,14 +8147,30 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           <button
                             key={domain}
                             type="button"
-                            onClick={() => {
+                            onClick={async () => {
                               playSelectionChime();
+                              if (waysOfLookingAtDrawMode && domain === "art") {
+                                try {
+                                  const deck = perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === domain);
+                                  if (deck?.id) {
+                                    const res = await fetch(`/api/perspective-decks/${deck.id}/random`);
+                                    const data = await res.json();
+                                    if (data.card && data.deckId) {
+                                      setDrawnPerspectiveCard({ card: data.card, deckId: data.deckId, deckName: deck.name });
+                                      setWaysOfLookingAtModalOpen(false);
+                                      setWaysOfLookingAtDrawMode(false);
+                                    }
+                                  }
+                                } catch { /* ignore */ }
+                                return;
+                              }
                               setWaysOfLookingAtCategory(domain);
+                              setWaysOfLookingAtCity(null);
                             }}
                             className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-amber-50 dark:hover:bg-amber-950/30 hover:border-amber-200 dark:hover:border-amber-800/50 transition-all text-left group"
                           >
                             <span className="text-base font-medium text-foreground capitalize group-hover:text-amber-800 dark:group-hover:text-amber-200">
-                              {domain}
+                              {domain.replace(/_/g, " ")}
                             </span>
                             <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2">
                               {deck.description}
@@ -8160,6 +8179,61 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                         );
                       })
                     )}
+                  </div>
+                </div>
+              ) : waysOfLookingAtCategory === "urban_jungle" && !waysOfLookingAtCity ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {waysOfLookingAtDrawMode ? "Choose a subdomain (city)" : "Choose a city to browse its 50 perspective cards."}
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      { id: "ny", name: "New York" },
+                      { id: "sf", name: "San Francisco" },
+                      { id: "london", name: "London" },
+                      { id: "paris", name: "Paris" },
+                      { id: "blr", name: "Bangalore" },
+                    ].map((city) => (
+                      <button
+                        key={city.id}
+                        type="button"
+                        onClick={async () => {
+                          playSelectionChime();
+                          if (waysOfLookingAtDrawMode) {
+                            try {
+                              const deck = perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === "urban_jungle");
+                              if (deck?.id) {
+                                const res = await fetch(`/api/perspective-decks/${deck.id}`);
+                                const data = await res.json();
+                                const prefix = city.id === "ny" ? "ny_" : city.id === "sf" ? "sf_" : city.id === "london" ? "london_" : city.id === "paris" ? "paris_" : "blr_";
+                                const cards = Array.isArray(data?.cards) ? data.cards.filter((c: { id: string }) => c.id.startsWith(prefix)) : [];
+                                if (cards.length > 0) {
+                                  const card = cards[Math.floor(Math.random() * cards.length)];
+                                  const cityName = city.name;
+                                  setDrawnPerspectiveCard({
+                                    card,
+                                    deckId: deck.id,
+                                    deckName: `${deck.name} — ${cityName}`,
+                                  });
+                                  setWaysOfLookingAtModalOpen(false);
+                                  setWaysOfLookingAtDrawMode(false);
+                                }
+                              }
+                            } catch { /* ignore */ }
+                            return;
+                          }
+                          setWaysOfLookingAtCity(city.id);
+                        }}
+                        className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-amber-50 dark:hover:bg-amber-950/30 hover:border-amber-200 dark:hover:border-amber-800/50 transition-all text-left group"
+                      >
+                        <span className="text-base font-medium text-foreground group-hover:text-amber-800 dark:group-hover:text-amber-200">
+                          {city.name}
+                        </span>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          50 perspective cards for city and architecture
+                        </p>
+                      </button>
+                    ))}
                   </div>
                 </div>
               ) : (
@@ -8176,10 +8250,11 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             type="button"
                             onClick={() => {
                               playSelectionChime();
+                              const cityName = waysOfLookingAtCity === "ny" ? "New York" : waysOfLookingAtCity === "sf" ? "San Francisco" : waysOfLookingAtCity === "london" ? "London" : waysOfLookingAtCity === "paris" ? "Paris" : waysOfLookingAtCity === "blr" ? "Bangalore" : null;
                               setDrawnPerspectiveCard({
                                 card,
                                 deckId: deck?.id ?? "",
-                                deckName: deck?.name ?? "Prompt Games",
+                                deckName: cityName ? `${deck?.name ?? "Urban Jungle"} — ${cityName}` : deck?.name ?? "Prompt Games",
                               });
                             }}
                             className="flex flex-col p-4 rounded-xl border border-amber-200/60 dark:border-amber-800/40 bg-amber-50/50 dark:bg-amber-950/20 hover:bg-amber-100/70 dark:hover:bg-amber-900/30 hover:border-amber-300 dark:hover:border-amber-700/50 transition-all text-left min-h-[100px]"

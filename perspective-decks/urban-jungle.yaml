@@ -1,0 +1,2527 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Urban Jungle: City & Architecture
+# 50 perspective cards each for New York, San Francisco, London, Paris, Bangalore
+
+id: urban_jungle
+name: Urban Jungle
+description: |
+  250 cards to shift how you see cities and architecture. Fifty lenses each for
+  New York, San Francisco, London, Paris, and Bangalore—from scale and light to
+  layers of history and the rhythms of street life.
+domain: urban_jungle
+
+cards:
+  # === NEW YORK (50 cards) ===
+  - id: ny_vertical_city
+    name: Vertical City
+    prompt: |
+      Look up. New York is built on the vertical—towers competing for sky.
+      Trace one building from sidewalk to crown. How does height change what
+      you notice? Where does your eye rest?
+    follow_ups:
+      - What would the street look like from the top?
+      - How does scale distort at different heights?
+      - What gets hidden when you only look up?
+
+  - id: ny_grid_navigation
+    name: Grid Navigation
+    prompt: |
+      Manhattan's grid is relentless. Walk a block and notice how the numbering
+      system shapes movement, orientation, and surprise. What happens when you
+      break the grid?
+    follow_ups:
+      - Where does the grid feel oppressive? Where liberating?
+      - What would the city feel like without it?
+      - How do diagonal streets change the rhythm?
+
+  - id: ny_subway_soundscape
+    name: Subway Soundscape
+    prompt: |
+      Close your eyes in a station. The rumble, the brakes, the announcements,
+      the busker. Map the soundscape. What does New York sound like when you
+      can't see it?
+    follow_ups:
+      - Which sounds are constant? Which accidental?
+      - What would silence mean here?
+      - How does sound mark time underground?
+
+  - id: ny_fire_escape
+    name: Fire Escape
+    prompt: |
+      Fire escapes are the city's exoskeleton—functional, rhythmic, personal.
+      Find a block where they repeat. What do they reveal about the buildings
+      behind them? Who might sit there at night?
+    follow_ups:
+      - What would you see from one?
+      - How do they change the street's character?
+      - What would the block lose without them?
+
+  - id: ny_street_number
+    name: Street Number
+    prompt: |
+      Pick a number—a building number, a floor, a bus route. Follow it through
+      the city. What pattern emerges? What does that number mean here?
+    follow_ups:
+      - Where does the number lead you?
+      - What would a different number reveal?
+      - How do numbers order urban experience?
+
+  - id: ny_steam_rising
+    name: Steam Rising
+    prompt: |
+      Manhole steam is New York's breath. Find where it rises and watch how it
+      moves, disperses, catches light. What's underneath? What does the city
+      exhale?
+    follow_ups:
+      - What would you find below the grate?
+      - How does weather change the steam?
+      - What other hidden systems vent here?
+
+  - id: ny_storefront_typography
+    name: Storefront Typography
+    prompt: |
+      Read the signs. Bodegas, delis, laundromats—each has a visual language.
+      Collect five typefaces from one block. What do they say about who lives here?
+    follow_ups:
+      - Which signs feel old? Which new?
+      - What would the block sound like if signs could speak?
+      - How does typography mark change?
+
+  - id: ny_waterfront_edge
+    name: Waterfront Edge
+    prompt: |
+      Go to the water. The city turns its back on the river, the harbor, the
+      bay. Stand where land meets water. What's built for the view? What's built
+      to ignore it?
+    follow_ups:
+      - Who gets to see the water?
+      - How has the edge been claimed?
+      - What would the city be if it faced the water?
+
+  - id: ny_parks_as_rooms
+    name: Parks as Rooms
+    prompt: |
+      Central Park, Prospect Park, a pocket plaza—each is a room in the city.
+      Enter one and notice its walls, its ceiling, its furniture. How is nature
+      designed here?
+    follow_ups:
+      - What's the room's purpose?
+      - Who designed the sightlines?
+      - What would happen if the walls came down?
+
+  - id: ny_delivery_rhythm
+    name: Delivery Rhythm
+    prompt: |
+      Watch the deliveries—trucks, handcarts, bikes. Trace one package's path
+      from truck to door. How does commerce move through the street? What's the
+      rhythm of arrival?
+    follow_ups:
+      - What would the block look like without deliveries?
+      - How do different goods move differently?
+      - Who is invisible in this flow?
+
+  - id: ny_brownstone_steps
+    name: Brownstone Steps
+    prompt: |
+      Brownstone stoops are stages. Sit on one and watch the street. Who
+      pauses? Who passes? What would you say from here?
+    follow_ups:
+      - What's the view from the top step?
+      - How do steps create territory?
+      - What would the block lose without them?
+
+  - id: ny_bridge_as_threshold
+    name: Bridge as Threshold
+    prompt: |
+      Cross a bridge on foot. Feel the transition—one borough to another. The
+      bridge is neither here nor there. What changes when you reach the other side?
+    follow_ups:
+      - What do you leave behind?
+      - How does the bridge shape the journey?
+      - What would the city be without bridges?
+
+  - id: ny_awning_shade
+    name: Awning Shade
+    prompt: |
+      Awnings create micro-climates. Stand under one. Notice the shift in light,
+      sound, temperature. How do small structures change the street?
+    follow_ups:
+      - What would the block feel like without awnings?
+      - How do they mark ownership?
+      - What other small shelters exist here?
+
+  - id: ny_graffiti_layer
+    name: Graffiti Layer
+    prompt: |
+      Look at the walls. Tags, murals, wheatpaste—each is a layer of time and
+      claim. Read the palimpsest. Who has marked this surface?
+    follow_ups:
+      - What's the oldest mark you can find?
+      - How do layers tell a story?
+      - What would the wall say if it could speak?
+
+  - id: ny_rooftop_skyline
+    name: Rooftop Skyline
+    prompt: |
+      Imagine the view from a rooftop. Water tanks, antennas, neighboring
+      roofs. The city from above is a different city. What would you see?
+    follow_ups:
+      - How does height change what matters?
+      - What's hidden from the street?
+      - Who has access to this view?
+
+  - id: ny_crosswalk_wait
+    name: Crosswalk Wait
+    prompt: |
+      Wait at a crosswalk. Don't cross when the light changes. Wait for the
+      next cycle. What do you notice in the pause? Who else waits?
+    follow_ups:
+      - How does waiting change perception?
+      - What rhythms govern the intersection?
+      - What would happen if you never crossed?
+
+  - id: ny_diner_booth
+    name: Diner Booth
+    prompt: |
+      Sit in a diner booth by the window. The street becomes a film. Watch the
+      passersby, the traffic, the light. What story is playing?
+    follow_ups:
+      - Who are the main characters?
+      - How does the frame change what you see?
+      - What would you miss without the window?
+
+  - id: ny_scaffolding_skin
+    name: Scaffolding Skin
+    prompt: |
+      Scaffolding wraps buildings like bandages. Walk under it. Notice the
+      sound, the light, the temporary ceiling. What's being repaired? What's
+      being hidden?
+    follow_ups:
+      - How long has it been there?
+      - What would the building say without it?
+      - What's the relationship between repair and concealment?
+
+  - id: ny_newsstand_archive
+    name: Newsstand Archive
+    prompt: |
+      A newsstand is a slice of attention—magazines, papers, candy. What's on
+      display? Who stops? What would this corner be without it?
+    follow_ups:
+      - What's the bestseller?
+      - How does the stand shape the block?
+      - What would you put here?
+
+  - id: ny_construction_site
+    name: Construction Site
+    prompt: |
+      Watch a construction site. Cranes, barriers, workers. The city is always
+      becoming. What's being built? What's being replaced?
+    follow_ups:
+      - Who will use this when it's done?
+      - What was here before?
+      - How does construction change the neighborhood?
+
+  - id: ny_light_well
+    name: Light Well
+    prompt: |
+      Look for light wells—the narrow gaps between buildings where light falls
+      down. Who gets that light? What grows there?
+    follow_ups:
+      - What would it be like to live in that shaft?
+      - How does light define value?
+      - What's hidden in the shadows?
+
+  - id: ny_bodega_cat
+    name: Bodega Cat
+    prompt: |
+      Find a bodega with a cat. The cat is both inside and outside the rules.
+      What else in the city operates that way?
+    follow_ups:
+      - What does the cat see?
+      - How do informal rules shape space?
+      - What would the store be without the cat?
+
+  - id: ny_sidewalk_crack
+    name: Sidewalk Crack
+    prompt: |
+      Look down. Follow a crack in the sidewalk. Where does it go? What grows
+      in it? The city is full of such fractures.
+    follow_ups:
+      - What would the sidewalk say about time?
+      - How do small breaks matter?
+      - What's pushing through?
+
+  - id: ny_air_conditioner
+    name: Air Conditioner
+    prompt: |
+      Count the air conditioners on one building. They're parasites, prosthetics,
+      necessities. How do they change the facade? What do they drip?
+    follow_ups:
+      - What would the building look like without them?
+      - How does climate shape architecture?
+      - Who decides where they go?
+
+  - id: ny_express_local
+    name: Express / Local
+    prompt: |
+      Ride the subway. Notice the difference between express and local. Speed
+      changes what you see. Skip stops and feel the city compress.
+    follow_ups:
+      - What do you miss when you don't stop?
+      - How does speed shape experience?
+      - What would the city be if everything were local?
+
+  - id: ny_water_tower
+    name: Water Tower
+    prompt: |
+      Water towers crown older buildings. They're wooden, barrel-shaped,
+      ubiquitous. Find five. What do they say about the skyline?
+    follow_ups:
+      - Why are they still here?
+      - What would the roof look like without one?
+      - How do they mark age?
+
+  - id: ny_awning_stripes
+    name: Awning Stripes
+    prompt: |
+      Striped awnings are a New York vernacular. Find a block where they
+      repeat. How do stripes create identity? What would solid colors do?
+    follow_ups:
+      - Why stripes and not solids?
+      - How do awnings unify a block?
+      - What's the history of this pattern?
+
+  - id: ny_curb_cut
+    name: Curb Cut
+    prompt: |
+      Notice the curb cuts—the ramps at corners. They're for wheelchairs, carts,
+      strollers. How do they change the street? Who do they include?
+    follow_ups:
+      - What would the block be without them?
+      - How does access shape design?
+      - What other invisible accommodations exist?
+
+  - id: ny_street_tree
+    name: Street Tree
+    prompt: |
+      Pick one street tree. How much space does it have? What's in its pit?
+      Who waters it? The tree is a guest. How is it treated?
+    follow_ups:
+      - What would the block be without trees?
+      - How do trees mark care?
+      - What grows in the tree's shadow?
+
+  - id: ny_loading_zone
+    name: Loading Zone
+    prompt: |
+      Loading zones are temporary territories. Watch one for ten minutes. Who
+      uses it? How long do they stay? What's the rhythm of occupation?
+    follow_ups:
+      - What would happen without loading zones?
+      - How do rules get bent?
+      - What's the relationship between parking and commerce?
+
+  - id: ny_vent_grille
+    name: Vent Grille
+    prompt: |
+      Sidewalk grilles vent the subway. Stand on one. Feel the updraft. Listen.
+      The city breathes through these openings.
+    follow_ups:
+      - What rises from below?
+      - How does the grille connect worlds?
+      - What would the sidewalk be without it?
+
+  - id: ny_basement_stairs
+    name: Basement Stairs
+    prompt: |
+      Find stairs leading down—to a basement, a subway, a speakeasy. The city
+      has many levels. What's below the sidewalk?
+    follow_ups:
+      - Who goes down?
+      - How does descent change the light?
+      - What would you find at the bottom?
+
+  - id: ny_clock_tower
+    name: Clock Tower
+    prompt: |
+      Find a public clock. Is it accurate? Who set it? Clocks order the city.
+      What happens when they disagree?
+    follow_ups:
+      - What would the block be without the clock?
+      - How does time get synchronized?
+      - What's the relationship between clock time and body time?
+
+  - id: ny_newsstand_magazine
+    name: Newsstand Magazine
+    prompt: |
+      At a newsstand, pick a magazine cover. Who is it for? What does it assume
+      about the reader? The stand is a mirror of desire.
+    follow_ups:
+      - What would a stranger learn from this display?
+      - How do covers compete for attention?
+      - What's not on the stand?
+
+  - id: ny_awning_rain
+    name: Awning Rain
+    prompt: |
+      Stand under an awning in the rain. Watch the water channel off the edges.
+      The awning creates a dry island. Who shares it with you?
+    follow_ups:
+      - What would the block feel like without shelter?
+      - How does rain change the street?
+      - What other shelters exist?
+
+  - id: ny_fire_hydrant
+    name: Fire Hydrant
+    prompt: |
+      A fire hydrant is a plug into the city's circulatory system. Find one.
+      What color is it? Who might open it? What flows through?
+    follow_ups:
+      - What would the block do in a fire without it?
+      - How do hydrants mark territory?
+      - What's the relationship between hydrant and hose?
+
+  - id: ny_stoop_sale
+    name: Stoop Sale
+    prompt: |
+      Imagine a stoop sale on these steps. What would be for sale? Who would
+      stop? The stoop is a stage for exchange.
+    follow_ups:
+      - What would you put out?
+      - How does the stoop enable encounter?
+      - What would the block learn from a sale?
+
+  - id: ny_rooftop_garden
+    name: Rooftop Garden
+    prompt: |
+      Imagine a rooftop garden above you. What would grow there? Who tends it?
+      The city has a secret green layer.
+    follow_ups:
+      - What would you plant?
+      - How does elevation change gardening?
+      - What would the skyline look like if all roofs were green?
+
+  - id: ny_subway_map
+    name: Subway Map
+    prompt: |
+      Look at a subway map. It's a diagram, not geography. What's distorted?
+      What's omitted? The map shapes how we think about the city.
+    follow_ups:
+      - What would a truthful map look like?
+      - How does the map create neighborhoods?
+      - What's the relationship between map and territory?
+
+  - id: ny_brick_pattern
+    name: Brick Pattern
+    prompt: |
+      Study a brick wall. The pattern—running bond, Flemish bond—holds the
+      wall up. Trace the pattern. What would happen if one brick were missing?
+    follow_ups:
+      - How does the pattern distribute weight?
+      - What would the wall say about its maker?
+      - How does brick age?
+
+  - id: ny_awning_strip
+    name: Awning Strip
+    prompt: |
+      Walk a block and count the awnings. What colors? What conditions? The
+      awning is a small architecture. How does it vary?
+    follow_ups:
+      - What would the block look like without awnings?
+      - How do awnings create identity?
+      - What's the relationship between awning and business?
+
+  - id: ny_manhole_cover
+    name: Manhole Cover
+    prompt: |
+      Read a manhole cover. The city's name, the department, the date. These
+      discs are doors to another city. What's beneath?
+    follow_ups:
+      - Who goes down there?
+      - How does the cover mark territory?
+      - What would the street be without these doors?
+
+  - id: ny_bus_shelter
+    name: Bus Shelter
+    prompt: |
+      Wait in a bus shelter. Notice who else waits. The shelter is a shared
+      room. What's the etiquette? What's the view?
+    follow_ups:
+      - What would waiting be like without the shelter?
+      - How does the shelter shape community?
+      - What would you change about it?
+
+  - id: ny_street_lamp
+    name: Street Lamp
+    prompt: |
+      Stand under a street lamp at dusk. Watch the light take over from the sun.
+      The lamp creates a pool of visibility. What's in the pool? What's outside?
+    follow_ups:
+      - How does artificial light change the street?
+      - What would the block be like without lamps?
+      - How do lamps mark time?
+
+  - id: ny_plaza_seat
+    name: Plaza Seat
+    prompt: |
+      Sit on a plaza bench. Who else sits? Who passes? The plaza is a pause in
+      the flow. What makes people stop?
+    follow_ups:
+      - What would the plaza be without seats?
+      - How does seating shape encounter?
+      - What would you add?
+
+  - id: ny_awning_fabric
+    name: Awning Fabric
+    prompt: |
+      Touch an awning if you can. Fabric, vinyl, stripes. The awning is a
+      membrane between inside and outside. How does it feel?
+    follow_ups:
+      - What would the block feel like without fabric?
+      - How does material matter?
+      - What's the relationship between awning and weather?
+
+  - id: ny_newsstand_daily
+    name: Newsstand Daily
+    prompt: |
+      A newsstand changes through the day—morning papers, midday magazines,
+      evening snacks. Visit at different times. What's the rhythm?
+    follow_ups:
+      - What would the corner be without the newsstand?
+      - How does the stand mark time?
+      - What's the relationship between stand and block?
+
+  - id: ny_sidewalk_chalk
+    name: Sidewalk Chalk
+    prompt: |
+      Kids draw on sidewalks. Find chalk art. What's the drawing? The chalk is
+      temporary. Rain will erase it. How does temporariness matter?
+    follow_ups:
+      - What would the sidewalk be without the chalk?
+      - How does the chalk create gift?
+      - What's the relationship between chalk and street?
+
+  - id: ny_rooftop_ac
+    name: Rooftop AC
+    prompt: |
+      Rooftop AC units hum in summer. Listen. The roof is a mechanical forest.
+      How does the sound shape the block?
+    follow_ups:
+      - What would the roof be without the units?
+      - How does the AC create comfort?
+      - What's the relationship between unit and building?
+
+  - id: ny_street_musician
+    name: Street Musician
+    prompt: |
+      A street musician plays in a passage. Stop and listen. The music creates a
+      bubble. What's inside the bubble? What's outside?
+    follow_ups:
+      - What would the passage be without the musician?
+      - How does the music create pause?
+      - What's the relationship between musician and street?
+
+  # === SAN FRANCISCO (50 cards) ===
+  - id: sf_hill_grade
+    name: Hill Grade
+    prompt: |
+      San Francisco is built on inclines. Feel the slope under your feet. How
+      does the grade change what you notice? Where does the city tilt?
+    follow_ups:
+      - What would the street look like if it were flat?
+      - How do hills shape neighborhoods?
+      - What's the steepest block you've climbed?
+
+  - id: sf_fog_layer
+    name: Fog Layer
+    prompt: |
+      The fog rolls in. Watch it move—over the bridge, down the hills. The fog
+      is a character. How does it change the light? The sound?
+    follow_ups:
+      - What would the city be without fog?
+      - How does fog mark time?
+      - Where does the fog stop?
+
+  - id: sf_cable_car_track
+    name: Cable Car Track
+    prompt: |
+      Follow a cable car track. The slot in the pavement, the hum of the cable.
+      The cable car is a relic that still works. What does it carry?
+    follow_ups:
+      - What would the hill be without the track?
+      - How does the cable car shape tourism?
+      - What's the relationship between track and street?
+
+  - id: sf_victorian_detail
+    name: Victorian Detail
+    prompt: |
+      San Francisco Victorians are ornate—gingerbread, bay windows, color.
+      Find one and read its details. What story does the ornament tell?
+    follow_ups:
+      - What would the house be without the details?
+      - How does color change the street?
+      - What's the relationship between Victorian and modern?
+
+  - id: sf_painted_lady
+    name: Painted Lady
+    prompt: |
+      The Painted Ladies are famous, but every Victorian has a palette. Collect
+      five color combinations from one block. What do the colors say?
+    follow_ups:
+      - Why these colors?
+      - How does paint preserve or transform?
+      - What would the block look like in grayscale?
+
+  - id: sf_bay_window
+    name: Bay Window
+    prompt: |
+      Bay windows bulge into the street. They're for light, for view, for
+      display. Stand in front of one. What would you see from inside?
+    follow_ups:
+      - How does the bay change the room?
+      - What would the facade be without it?
+      - How do bay windows create relationship to the street?
+
+  - id: sf_stairway_street
+    name: Stairway Street
+    prompt: |
+      San Francisco has stairways that are streets—steps instead of pavement.
+      Climb one. How does the stairway change the neighborhood?
+    follow_ups:
+      - Who uses these stairs?
+      - What would the hill be without them?
+      - How do stairs create community?
+
+  - id: sf_mission_mural
+    name: Mission Mural
+    prompt: |
+      The Mission is a gallery of murals. Find one and read it. What's the
+      story? Who painted it? Who is it for?
+    follow_ups:
+      - What would the wall say without the mural?
+      - How do murals claim space?
+      - What's the relationship between mural and neighborhood?
+
+  - id: sf_earthquake_retrofit
+    name: Earthquake Retrofit
+    prompt: |
+      Look for earthquake retrofits—bolts, braces, foundations. The city
+      remembers 1906 and 1989. How does fear shape the built environment?
+    follow_ups:
+      - What would the building be without the retrofit?
+      - How does seismic design show?
+      - What's the relationship between retrofit and trust?
+
+  - id: sf_dolores_palm
+    name: Dolores Palm
+    prompt: |
+      Palm trees line Dolores Street. They're not native, but they're iconic.
+      What do they say about the city's relationship to elsewhere?
+    follow_ups:
+      - What would the street be without palms?
+      - How do palms mark identity?
+      - What's the relationship between palm and place?
+
+  - id: sf_twin_peaks_view
+    name: Twin Peaks View
+    prompt: |
+      Imagine the view from Twin Peaks. The city spreads below—grid, water,
+      bridges. How does elevation change what matters?
+    follow_ups:
+      - What would you see from up there?
+      - How does the view shape the city's image?
+      - What's hidden from the peak?
+
+  - id: sf_ferry_building
+    name: Ferry Building
+    prompt: |
+      The Ferry Building faces the bay. It's a threshold—land and water, city
+      and commute. Stand at its entrance. What flows through?
+    follow_ups:
+      - What would the waterfront be without it?
+      - How does the building mark transition?
+      - What's the relationship between ferry and city?
+
+  - id: sf_chinatown_gate
+    name: Chinatown Gate
+    prompt: |
+      The Dragon Gate marks Chinatown. Pass through it. What changes? The gate
+      is both real and symbolic. How does it work?
+    follow_ups:
+      - What would Chinatown be without the gate?
+      - How does the gate create identity?
+      - What's the relationship between gate and neighborhood?
+
+  - id: sf_hydrant_color
+    name: Hydrant Color
+    prompt: |
+      San Francisco hydrants are different colors—blue, green, red. The color
+      indicates water flow. Find three colors. What does each mean?
+    follow_ups:
+      - What would the block do in a fire?
+      - How does color encode information?
+      - What's the relationship between hydrant and system?
+
+  - id: sf_parklet
+    name: Parklet
+    prompt: |
+      Parklets reclaim parking for people. Sit in one. What's the furniture?
+      Who uses it? How does the parklet change the block?
+    follow_ups:
+      - What would the space be without the parklet?
+      - How does the parklet create encounter?
+      - What would you add?
+
+  - id: sf_sf_street_sign
+    name: SF Street Sign
+    prompt: |
+      San Francisco street signs have a particular style. Notice the font, the
+      mount, the placement. How does the sign shape wayfinding?
+    follow_ups:
+      - What would the block be without the sign?
+      - How does typography matter?
+      - What's the relationship between sign and identity?
+
+  - id: sf_castro_rainbow
+    name: Castro Rainbow
+    prompt: |
+      The Castro flies rainbow flags. Walk the street and count the flags. How
+      does the flag claim space? What does it mean here?
+    follow_ups:
+      - What would the neighborhood be without the flags?
+      - How does the flag create community?
+      - What's the relationship between symbol and place?
+
+  - id: sf_haight_vintage
+    name: Haight Vintage
+    prompt: |
+      The Haight is a museum of the 1960s. Find a building that hasn't changed.
+      What's preserved? What's performance?
+    follow_ups:
+      - What would the street be without the vintage?
+      - How does history shape commerce?
+      - What's the relationship between past and present?
+
+  - id: sf_sutro_tower
+    name: Sutro Tower
+    prompt: |
+      Sutro Tower is visible from everywhere. Use it as a compass. How does the
+      tower orient you? What would the skyline be without it?
+    follow_ups:
+      - What does the tower broadcast?
+      - How does the tower shape identity?
+      - What's the relationship between tower and view?
+
+  - id: sf_bart_underground
+    name: BART Underground
+    prompt: |
+      Ride BART under the bay. You're in a tube under water. Feel the pressure,
+      the darkness, the emergence. How does the tunnel change the journey?
+    follow_ups:
+      - What would the commute be without the tunnel?
+      - How does the bay separate?
+      - What's the relationship between tunnel and region?
+
+  - id: sf_taquería_line
+    name: Taquería Line
+    prompt: |
+      Join a taquería line at midnight. The line is a ritual. Who's in it? What
+      are they ordering? The line is community.
+    follow_ups:
+      - What would the block be without the taquería?
+      - How does the line create encounter?
+      - What's the relationship between food and place?
+
+  - id: sf_dolores_sun
+    name: Dolores Sun
+    prompt: |
+      Dolores Park faces west. On a sunny day, it's a beach. Watch the crowd.
+      How does the sun shape the park? Who gets the best spots?
+    follow_ups:
+      - What would the park be without the sun?
+      - How does aspect matter?
+      - What's the relationship between park and weather?
+
+  - id: sf_mission_door
+    name: Mission Door
+    prompt: |
+      Mission doors are often ornate—carved, painted, unique. Find five doors on
+      one block. What do they say about the buildings behind them?
+    follow_ups:
+      - What would the block be without the doors?
+      - How does the door create identity?
+      - What's the relationship between door and threshold?
+
+  - id: sf_coit_tower
+    name: Coit Tower
+    prompt: |
+      Coit Tower crowns Telegraph Hill. It's a monument, a viewpoint, a landmark.
+      How does the tower shape the hill? What would the hill be without it?
+    follow_ups:
+      - What does the tower commemorate?
+      - How does the tower orient the city?
+      - What's the relationship between tower and neighborhood?
+
+  - id: sf_lombard_curve
+    name: Lombard Curve
+    prompt: |
+      Lombard Street curves down the hill. It's famous for its switchbacks. Walk
+      it. How does the curve change the descent? What would a straight street do?
+    follow_ups:
+      - What would the hill be without the curve?
+      - How does the curve shape experience?
+      - What's the relationship between curve and safety?
+
+  - id: sf_alcatraz_silhouette
+    name: Alcatraz Silhouette
+    prompt: |
+      From the waterfront, Alcatraz is a silhouette. The island is always there,
+      always distant. What does it mean to the city?
+    follow_ups:
+      - What would the bay be without the island?
+      - How does the island shape the view?
+      - What's the relationship between prison and city?
+
+  - id: sf_ghost_sign
+    name: Ghost Sign
+    prompt: |
+      Ghost signs—faded advertisements on brick—mark the past. Find one. What
+      did it advertise? Who would have seen it?
+    follow_ups:
+      - What would the wall say without the sign?
+      - How does the ghost sign preserve history?
+      - What's the relationship between sign and commerce?
+
+  - id: sf_sf_sidewalk
+    name: SF Sidewalk
+    prompt: |
+      San Francisco sidewalks are often cracked, tilted, tree-rooted. Walk a
+      block and notice the texture. How does the sidewalk age?
+    follow_ups:
+      - What would the block be without the sidewalk?
+      - How does the sidewalk shape movement?
+      - What's the relationship between sidewalk and tree?
+
+  - id: sf_golden_gate_fog
+    name: Golden Gate Fog
+    prompt: |
+      The Golden Gate Bridge disappears in fog. Watch it vanish and reappear.
+      The fog is a curtain. What's behind it?
+    follow_ups:
+      - What would the bridge be without the fog?
+      - How does the fog shape the view?
+      - What's the relationship between fog and bridge?
+
+  - id: sf_mission_dolores
+    name: Mission Dolores
+    prompt: |
+      Mission Dolores is the oldest building in the city. Stand in front of it.
+      What has it seen? How does it mark time?
+    follow_ups:
+      - What would the neighborhood be without the mission?
+      - How does the mission shape identity?
+      - What's the relationship between mission and city?
+
+  - id: sf_painted_steps
+    name: Painted Steps
+    prompt: |
+      The 16th Avenue Tiled Steps are a mosaic. Climb them. Each step is
+      different. How does the art change the climb?
+    follow_ups:
+      - What would the steps be without the tiles?
+      - How does the mosaic create community?
+      - What's the relationship between art and ascent?
+
+  - id: sf_sf_street_tree
+    name: SF Street Tree
+    prompt: |
+      San Francisco street trees are often palms, magnolias, or ficus. Find one
+      and identify it. How does the tree shape the block?
+    follow_ups:
+      - What would the block be without the tree?
+      - How does the tree create habitat?
+      - What's the relationship between tree and sidewalk?
+
+  - id: sf_sf_bay_window
+    name: SF Bay Window
+    prompt: |
+      Bay windows are San Francisco vernacular. They bulge into the street,
+      catching light. How does the bay window change the room?
+    follow_ups:
+      - What would the facade be without the bay?
+      - How does the bay create relationship to the street?
+      - What's the relationship between bay and view?
+
+  - id: sf_sf_hill
+    name: SF Hill
+    prompt: |
+      Pick a hill and climb it. Feel the burn. At the top, look back. How does
+      the climb change what you see?
+    follow_ups:
+      - What would the city be without the hills?
+      - How do hills shape neighborhoods?
+      - What's the relationship between hill and view?
+
+  - id: sf_sf_fog
+    name: SF Fog
+    prompt: |
+      The fog has a name—Karl. It's a local celebrity. When Karl rolls in, how
+      does the city change? What gets hidden? What gets revealed?
+    follow_ups:
+      - What would the city be without Karl?
+      - How does the fog shape identity?
+      - What's the relationship between fog and light?
+
+  - id: sf_sf_cable
+    name: SF Cable
+    prompt: |
+      The cable car runs on a cable under the street. You can't see it, but you
+      hear it. How does the hidden cable shape the visible city?
+    follow_ups:
+      - What would the hill be without the cable?
+      - How does the cable create connection?
+      - What's the relationship between cable and street?
+
+  - id: sf_sf_victorian
+    name: SF Victorian
+    prompt: |
+      Victorians come in pairs—two houses, one lot. Find a pair. How do they
+      relate? What would one be without the other?
+    follow_ups:
+      - What would the block be without the pair?
+      - How does the pair create rhythm?
+      - What's the relationship between pair and lot?
+
+  - id: sf_sf_mission
+    name: SF Mission
+    prompt: |
+      The Mission district is named for Mission Dolores. Walk the street and
+      feel the layers—Spanish, Mexican, Irish, Central American. What's the
+      palimpsest?
+    follow_ups:
+      - What would the neighborhood be without the layers?
+      - How does the mission shape identity?
+      - What's the relationship between mission and migration?
+
+  - id: sf_sf_bridge
+    name: SF Bridge
+    prompt: |
+      The Bay Bridge is less famous than the Golden Gate but more used. Cross it
+      or view it. How does the bridge connect? What does it carry?
+    follow_ups:
+      - What would the bay be without the bridge?
+      - How does the bridge shape the region?
+      - What's the relationship between bridge and commute?
+
+  - id: sf_sf_parks
+    name: SF Parks
+    prompt: |
+      San Francisco has many small parks—pocket parks, triangle parks. Find one.
+      Who uses it? What's its character?
+    follow_ups:
+      - What would the neighborhood be without the park?
+      - How does the park create respite?
+      - What's the relationship between park and block?
+
+  - id: sf_sf_stairs
+    name: SF Stairs
+    prompt: |
+      San Francisco has more than 600 public stairways. Find one you've never
+      climbed. What's at the top? What's at the bottom?
+    follow_ups:
+      - What would the hill be without the stairs?
+      - How do stairs create shortcuts?
+      - What's the relationship between stairs and neighborhood?
+
+  - id: sf_sf_mural
+    name: SF Mural
+    prompt: |
+      The Mission has more murals per capita than anywhere in the US. Find one
+      that tells a story. What's the narrative? Who is it for?
+    follow_ups:
+      - What would the wall be without the mural?
+      - How does the mural claim space?
+      - What's the relationship between mural and community?
+
+  - id: sf_sf_water
+    name: SF Water
+    prompt: |
+      San Francisco is surrounded by water—bay, ocean, strait. Go to the edge.
+      What does the water mean to the city? How does it shape the edge?
+    follow_ups:
+      - What would the city be without the water?
+      - How does the water shape identity?
+      - What's the relationship between water and city?
+
+  - id: sf_sf_sunset
+    name: SF Sunset
+    prompt: |
+      San Francisco sunsets are famous. Watch one from a hill. The light
+      changes the city. What would the view be without the sunset?
+    follow_ups:
+      - How does the sunset shape the evening?
+      - What's the relationship between sunset and view?
+      - What would you miss without the light?
+
+  - id: sf_sf_wind
+    name: SF Wind
+    prompt: |
+      San Francisco wind is constant in some neighborhoods. Feel it. How does
+      the wind shape the street? What would the block be without it?
+    follow_ups:
+      - How does the wind create microclimate?
+      - What's the relationship between wind and building?
+      - What would you plant in this wind?
+
+  - id: sf_sf_earthquake
+    name: SF Earthquake
+    prompt: |
+      San Francisco sits on faults. The ground can move. How does that knowledge
+      shape the built environment? What would you notice in a tremor?
+    follow_ups:
+      - How does seismic risk shape design?
+      - What's the relationship between fault and city?
+      - What would you do if the ground shook?
+
+  - id: sf_sf_tech_bus
+    name: Tech Bus
+    prompt: |
+      Tech buses shuttle workers to Silicon Valley. Watch one stop. The bus is
+      a symbol. What does it carry? What does it exclude?
+    follow_ups:
+      - What would the street be without the bus?
+      - How does the bus shape the neighborhood?
+      - What's the relationship between bus and city?
+
+  - id: sf_sf_painted_lady
+    name: Painted Lady
+    prompt: |
+      Painted Ladies are Victorian houses in pastel colors. Find a row. How do
+      the colors create identity? What would the street be in grey?
+    follow_ups:
+      - How do the colors shape the block?
+      - What's the relationship between color and preservation?
+      - What would you paint your house?
+
+  - id: sf_sf_twin_peaks
+    name: Twin Peaks
+    prompt: |
+      Twin Peaks are two hills in the center of the city. Climb one. The view
+      is 360 degrees. How does the peak orient you?
+    follow_ups:
+      - What would the city be without the peaks?
+      - How do the peaks create landmark?
+      - What's the relationship between peak and neighborhood?
+
+  - id: sf_sf_ferry_plaza
+    name: Ferry Plaza
+    prompt: |
+      The Ferry Building plaza hosts a farmers market. Walk through. What's for
+      sale? Who comes? The plaza is a threshold between city and bay.
+    follow_ups:
+      - What would the waterfront be without the plaza?
+      - How does the market create community?
+      - What's the relationship between plaza and ferry?
+
+  # === LONDON (50 cards) ===
+  - id: london_layer
+    name: London Layer
+    prompt: |
+      London is built in layers—Roman, medieval, Victorian, modern. Find a spot
+      where eras collide. What's the oldest thing you can see? The newest?
+    follow_ups:
+      - What would the street be without the layers?
+      - How does history show in the built form?
+      - What's the relationship between layer and identity?
+
+  - id: london_pub_threshold
+    name: Pub Threshold
+    prompt: |
+      A London pub has a threshold—the step up, the door, the bar. Stand at the
+      threshold. What's inside? What's outside? The pub is a room in the city.
+    follow_ups:
+      - What would the block be without the pub?
+      - How does the threshold create transition?
+      - What's the relationship between pub and street?
+
+  - id: london_blue_plaque
+    name: Blue Plaque
+    prompt: |
+      Blue plaques mark where someone famous lived. Find one. Who lived here?
+      What did they do? The plaque makes history visible.
+    follow_ups:
+      - What would the building be without the plaque?
+      - How does the plaque shape memory?
+      - What's the relationship between plaque and place?
+
+  - id: london_underground
+    name: Underground
+    prompt: |
+      The Tube is a city beneath the city. Descend. Notice the tiles, the
+      maps, the escalators. How does the underground shape the above?
+    follow_ups:
+      - What would London be without the Tube?
+      - How does the underground create connection?
+      - What's the relationship between tube and surface?
+
+  - id: london_thames_edge
+    name: Thames Edge
+    prompt: |
+      The Thames runs through London. Go to the embankment. The river is a
+      seam. What's on either side? How does the river divide and connect?
+    follow_ups:
+      - What would London be without the Thames?
+      - How does the river shape the city?
+      - What's the relationship between river and edge?
+
+  - id: london_georgian_row
+    name: Georgian Row
+    prompt: |
+      Georgian terraces repeat—door, window, door, window. Walk a row. The
+      repetition creates rhythm. What breaks it? What holds it together?
+    follow_ups:
+      - What would the street be without the row?
+      - How does repetition create identity?
+      - What's the relationship between row and individual?
+
+  - id: london_mews
+    name: Mews
+    prompt: |
+      Mews were stables, now they're homes. Find one. The narrow lane, the
+      cobbles, the converted coach houses. How does the past persist?
+    follow_ups:
+      - What would the mews be without the history?
+      - How does the mews create privacy?
+      - What's the relationship between mews and main street?
+
+  - id: london_phone_box
+    name: Phone Box
+    prompt: |
+      Red phone boxes are icons. Find one. Is it still a phone? A defibrillator?
+      A library? How do icons get repurposed?
+    follow_ups:
+      - What would the street be without the box?
+      - How does the box mark Britishness?
+      - What's the relationship between box and function?
+
+  - id: london_postbox
+    name: Postbox
+    prompt: |
+      Red postboxes are everywhere. Find one. Notice the royal cypher. The
+      postbox is a node in a network. What flows through it?
+    follow_ups:
+      - What would the street be without the postbox?
+      - How does the postbox mark territory?
+      - What's the relationship between postbox and letter?
+
+  - id: london_pavement
+    name: Pavement
+    prompt: |
+      British "pavement" is American "sidewalk." The word shapes how we think.
+      Walk the pavement. What's the relationship between pavement and road?
+    follow_ups:
+      - What would the street be without the pavement?
+      - How does the pavement create safety?
+      - What's the relationship between pavement and pedestrian?
+
+  - id: london_brick
+    name: London Brick
+    prompt: |
+      London brick is often yellow or red—London stock. Find a brick wall and
+      study the color, the texture, the bond. How does brick age?
+    follow_ups:
+      - What would the building be without the brick?
+      - How does brick create identity?
+      - What's the relationship between brick and place?
+
+  - id: london_weather
+    name: London Weather
+    prompt: |
+      London weather is changeable. Stand in one spot for twenty minutes. Watch
+      the sky. How does weather shape the city's mood?
+    follow_ups:
+      - What would London be without the rain?
+      - How does weather shape architecture?
+      - What's the relationship between weather and street life?
+
+  - id: london_queue
+    name: Queue
+    prompt: |
+      Brits queue. Find a queue—bus, shop, attraction. Observe the etiquette.
+      The queue is a form of order. How does it work?
+    follow_ups:
+      - What would the space be without the queue?
+      - How does the queue create fairness?
+      - What's the relationship between queue and culture?
+
+  - id: london_roundabout
+    name: Roundabout
+    prompt: |
+      London has many roundabouts—traffic circles. Watch one. How does traffic
+      flow? What's the logic? The roundabout is a node.
+    follow_ups:
+      - What would the intersection be without the roundabout?
+      - How does the roundabout shape flow?
+      - What's the relationship between roundabout and junction?
+
+  - id: london_parks_room
+    name: Parks Room
+    prompt: |
+      London parks are rooms—Hyde Park, Regent's Park, the squares. Enter one.
+      Notice the boundaries, the paths, the furniture. How is nature designed?
+    follow_ups:
+      - What would London be without the parks?
+      - How does the park create respite?
+      - What's the relationship between park and city?
+
+  - id: london_square
+    name: London Square
+    prompt: |
+      London squares are often private—gated, keyed. Find one. What's inside?
+      Who has access? The square is a pocket of exclusivity.
+    follow_ups:
+      - What would the neighborhood be without the square?
+      - How does the square create community?
+      - What's the relationship between square and street?
+
+  - id: london_terrace
+    name: Terrace
+    prompt: |
+      A terrace is a row of houses. Walk one. Notice the uniformity and the
+      variation. How does the terrace create identity?
+    follow_ups:
+      - What would the street be without the terrace?
+      - How does the terrace create rhythm?
+      - What's the relationship between terrace and individual?
+
+  - id: london_corner_shop
+    name: Corner Shop
+    prompt: |
+      The corner shop is a London institution. Enter one. What's for sale? Who
+      runs it? The shop is a node in the neighborhood.
+    follow_ups:
+      - What would the block be without the shop?
+      - How does the shop create encounter?
+      - What's the relationship between shop and community?
+
+  - id: london_bus_route
+    name: Bus Route
+    prompt: |
+      London buses have numbers and destinations. Take a bus you've never taken.
+      Where does it go? How does the route shape the city?
+    follow_ups:
+      - What would the journey be without the bus?
+      - How does the route create connection?
+      - What's the relationship between bus and neighborhood?
+
+  - id: london_clock
+    name: London Clock
+    prompt: |
+      Big Ben, the clock at the station, the clock on the church. London is full
+      of public clocks. Find one. What time does it tell? Is it right?
+    follow_ups:
+      - What would the space be without the clock?
+      - How does the clock shape time?
+      - What's the relationship between clock and place?
+
+  - id: london_bridge
+    name: London Bridge
+    prompt: |
+      London has many bridges—Tower Bridge, Millennium Bridge, Waterloo. Cross
+      one on foot. Feel the transition. What changes?
+    follow_ups:
+      - What would the river be without the bridge?
+      - How does the bridge connect?
+      - What's the relationship between bridge and river?
+
+  - id: london_street_market
+    name: Street Market
+    prompt: |
+      London has street markets—Borough, Camden, Portobello. Walk one. What's
+      for sale? Who's selling? The market is a temporary city.
+    follow_ups:
+      - What would the street be without the market?
+      - How does the market create encounter?
+      - What's the relationship between market and neighborhood?
+
+  - id: london_ghost_sign
+    name: London Ghost Sign
+    prompt: |
+      Faded signs on brick—ghost signs—mark the past. Find one. What did it
+      advertise? Who would have seen it?
+    follow_ups:
+      - What would the wall be without the sign?
+      - How does the ghost sign preserve history?
+      - What's the relationship between sign and commerce?
+
+  - id: london_bollard
+    name: Bollard
+    prompt: |
+      Bollards mark boundaries—pedestrian zones, no parking. Find a row of
+      bollards. What are they protecting? What are they excluding?
+    follow_ups:
+      - What would the space be without the bollards?
+      - How do bollards shape flow?
+      - What's the relationship between bollard and boundary?
+
+  - id: london_door_number
+    name: Door Number
+    prompt: |
+      London addresses can be odd—odds on one side, evens on the other. Follow
+      the numbers. How does numbering shape the street?
+    follow_ups:
+      - What would wayfinding be without numbers?
+      - How does numbering create order?
+      - What's the relationship between number and place?
+
+  - id: london_basement
+    name: London Basement
+    prompt: |
+      London houses often have basements—sometimes below street level. Notice
+      the steps down, the area in front. What's below the sidewalk?
+    follow_ups:
+      - What would the house be without the basement?
+      - How does the basement create space?
+      - What's the relationship between basement and street?
+
+  - id: london_roof_line
+    name: Roof Line
+    prompt: |
+      London roof lines are varied—slate, tile, flat. Look up. Trace the
+      skyline. How does the roof shape the street?
+    follow_ups:
+      - What would the street be without the roofs?
+      - How does the roof line create identity?
+      - What's the relationship between roof and sky?
+
+  - id: london_cobble
+    name: Cobble
+    prompt: |
+      Cobblestones persist in some streets. Walk on them. Feel the texture.
+      How does the surface shape the street?
+    follow_ups:
+      - What would the street be without the cobbles?
+      - How do cobbles mark history?
+      - What's the relationship between cobble and modernity?
+
+  - id: london_lamp_post
+    name: Lamp Post
+    prompt: |
+      London lamp posts have a particular style—Victorian, modern. Find one.
+      How does the lamp shape the street at night?
+    follow_ups:
+      - What would the street be without the lamp?
+      - How does the lamp create safety?
+      - What's the relationship between lamp and darkness?
+
+  - id: london_bus_stop
+    name: Bus Stop
+    prompt: |
+      London bus stops have shelters, timetables, numbers. Wait at one. Who else
+      waits? What's the etiquette?
+    follow_ups:
+      - What would the street be without the stop?
+      - How does the stop create community?
+      - What's the relationship between stop and journey?
+
+  - id: london_pub_sign
+    name: Pub Sign
+    prompt: |
+      Pub signs hang over the street—The Crown, The Red Lion. Find one. What's
+      the image? What's the story? The sign is a landmark.
+    follow_ups:
+      - What would the street be without the sign?
+      - How does the sign create identity?
+      - What's the relationship between sign and pub?
+
+  - id: london_church_spire
+    name: Church Spire
+    prompt: |
+      Church spires punctuate the London skyline. Find one. How does the spire
+      orient you? What would the view be without it?
+    follow_ups:
+      - What would the skyline be without the spire?
+      - How does the spire create landmark?
+      - What's the relationship between spire and neighborhood?
+
+  - id: london_canal
+    name: London Canal
+    prompt: |
+      London has canals—Regent's Canal, Grand Union. Walk the towpath. The
+      canal is a seam. What's on either side?
+    follow_ups:
+      - What would the city be without the canal?
+      - How does the canal create connection?
+      - What's the relationship between canal and industry?
+
+  - id: london_garden_square
+    name: Garden Square
+    prompt: |
+      London garden squares are often locked. Peek through the gate. What's
+      inside? Who has the key? The garden is a hidden room.
+    follow_ups:
+      - What would the square be without the garden?
+      - How does the garden create exclusivity?
+      - What's the relationship between garden and square?
+
+  - id: london_taxi
+    name: London Taxi
+    prompt: |
+      Black cabs are icons. Watch one stop, pick up, drive off. How does the
+      taxi shape the street? What would the city be without it?
+    follow_ups:
+      - What would the street be without the taxi?
+      - How does the taxi create mobility?
+      - What's the relationship between taxi and knowledge?
+
+  - id: london_underground_tile
+    name: Underground Tile
+    prompt: |
+      Tube stations have distinctive tiles—Baker Street's Sherlock, the
+      Victoria line's blue. Find a station with character. What do the tiles say?
+    follow_ups:
+      - What would the station be without the tiles?
+      - How do tiles create identity?
+      - What's the relationship between tile and place?
+
+  - id: london_bench
+    name: London Bench
+    prompt: |
+      London has many benches—in parks, on streets, by bus stops. Sit on one.
+      Who else sits? What's the view?
+    follow_ups:
+      - What would the space be without the bench?
+      - How does the bench create respite?
+      - What's the relationship between bench and street?
+
+  - id: london_drain
+    name: London Drain
+    prompt: |
+      Look down. Find a drain—a gutter, a grate. Where does the water go? The
+      drain is a portal to the city's hidden systems.
+    follow_ups:
+      - What would the street be without the drain?
+      - How does the drain manage water?
+      - What's the relationship between drain and system?
+
+  - id: london_shop_front
+    name: Shop Front
+    prompt: |
+      London shop fronts are often small—narrow, deep. Look in the window. What's
+      displayed? How does the front shape the street?
+    follow_ups:
+      - What would the street be without the shop front?
+      - How does the front create identity?
+      - What's the relationship between front and commerce?
+
+  - id: london_paving
+    name: London Paving
+    prompt: |
+      London paving varies—flagstones, tarmac, brick. Walk a block and notice
+      the changes. How does the surface shape the street?
+    follow_ups:
+      - What would the street be without the paving?
+      - How does paving mark territory?
+      - What's the relationship between paving and pedestrian?
+
+  - id: london_balcony
+    name: London Balcony
+    prompt: |
+      London balconies are often small—Juliet balconies, tiny terraces. Find
+      one. What would you grow there? Who would use it?
+    follow_ups:
+      - What would the building be without the balcony?
+      - How does the balcony create outdoor space?
+      - What's the relationship between balcony and flat?
+
+  - id: london_chimney
+    name: London Chimney
+    prompt: |
+      London chimneys punctuate the roof line. Count them on one building. How
+      many fires once burned? The chimney is a relic.
+    follow_ups:
+      - What would the roof be without the chimney?
+      - How does the chimney mark history?
+      - What's the relationship between chimney and heat?
+
+  - id: london_bike_stand
+    name: Bike Stand
+    prompt: |
+      London has bike stands, Santander cycles, delivery bikes. Find a cluster.
+      How do bikes shape the street? What would the block be without them?
+    follow_ups:
+      - What would the street be without the bikes?
+      - How do bikes create mobility?
+      - What's the relationship between bike and city?
+
+  - id: london_tree_pit
+    name: Tree Pit
+    prompt: |
+      London street trees grow in pits—often small, often struggling. Find one.
+      What's in the pit? How is the tree doing?
+    follow_ups:
+      - What would the street be without the tree?
+      - How does the pit shape the tree's life?
+      - What's the relationship between pit and sidewalk?
+
+  - id: london_rain
+    name: London Rain
+    prompt: |
+      London rain is frequent. Stand under a shelter and watch. How does the
+      rain change the street? What would the city be without it?
+    follow_ups:
+      - How does rain shape the mood?
+      - What's the relationship between rain and umbrella?
+      - What would you notice in the dry?
+
+  - id: london_cab_rank
+    name: Cab Rank
+    prompt: |
+      Black cabs queue at ranks. Watch the flow. The rank is a node. How does
+      the cab shape the street? What would the junction be without it?
+    follow_ups:
+      - How does the rank create order?
+      - What's the relationship between cab and knowledge?
+      - What would you ask a cabbie?
+
+  - id: london_pub_window
+    name: Pub Window
+    prompt: |
+      Pub windows are often leaded, often small. Look through one. What's the
+      view? The window frames the street. How does the frame matter?
+    follow_ups:
+      - What would the pub be without the window?
+      - How does the window create relationship?
+      - What's the relationship between window and street?
+
+  - id: london_mews_cobble
+    name: Mews Cobble
+    prompt: |
+      Mews lanes are often cobbled. Walk one. Feel the texture. The cobble
+      marks history. What would the mews be in tarmac?
+    follow_ups:
+      - How does the cobble shape the lane?
+      - What's the relationship between cobble and horse?
+      - What would you hear on cobbles?
+
+  - id: london_underground_escalator
+    name: Underground Escalator
+    prompt: |
+      Tube escalators are long—Angel's is one of the longest. Ride one. Feel the
+      descent. How does the escalator shape the journey?
+    follow_ups:
+      - What would the station be without the escalator?
+      - How does the escalator create flow?
+      - What's the relationship between escalator and depth?
+
+  - id: london_thames_path
+    name: Thames Path
+    prompt: |
+      The Thames Path runs along the river. Walk a stretch. The path creates a
+      corridor. What's on either side? How does the path shape the journey?
+    follow_ups:
+      - What would the river be without the path?
+      - How does the path create access?
+      - What's the relationship between path and river?
+
+  # === PARIS (50 cards) ===
+  - id: paris_balcony_flower
+    name: Balcony Flower
+    prompt: |
+      Paris balconies bloom with flowers—geraniums, petunias. Find a building
+      where every balcony has a pot. How does the flower change the facade?
+    follow_ups:
+      - What would the street be without the flowers?
+      - How do flowers create identity?
+      - What's the relationship between flower and resident?
+
+  - id: paris_haussmann_line
+    name: Haussmann Line
+    prompt: |
+      Haussmann boulevards cut through old Paris. Walk one. The line is
+      relentless—buildings aligned, heights uniform. How does the boulevard shape movement?
+    follow_ups:
+      - What would Paris be without Haussmann?
+      - How does the boulevard create vista?
+      - What's the relationship between line and power?
+
+  - id: paris_cafe_terrace
+    name: Café Terrace
+    prompt: |
+      Paris café terraces face the street. Sit at one. You're both inside and
+      outside. The terrace is a threshold. What do you see?
+    follow_ups:
+      - What would the street be without the terrace?
+      - How does the terrace create encounter?
+      - What's the relationship between terrace and street?
+
+  - id: paris_metro_entrance
+    name: Métro Entrance
+    prompt: |
+      Art Nouveau métro entrances are icons. Find one. The ironwork, the
+      lettering—the entrance is a portal. What does it promise?
+    follow_ups:
+      - What would the street be without the entrance?
+      - How does the entrance create identity?
+      - What's the relationship between entrance and underground?
+
+  - id: paris_shutter
+    name: Paris Shutter
+    prompt: |
+      Paris shutters—volets—close at night. They're green, grey, blue. Find a
+      street where shutters are closed. What's behind them?
+    follow_ups:
+      - What would the facade be without the shutters?
+      - How do shutters create privacy?
+      - What's the relationship between shutter and light?
+
+  - id: paris_cobble
+    name: Paris Cobble
+    prompt: |
+      Paris cobblestones—pavés—persist. Walk on them. Feel the texture. The
+      cobble is a relic of another Paris. How does it shape the street?
+    follow_ups:
+      - What would the street be without the cobbles?
+      - How do cobbles mark history?
+      - What's the relationship between cobble and revolution?
+
+  - id: paris_seine_edge
+    name: Seine Edge
+    prompt: |
+      The Seine runs through Paris. Go to the quay. The river is a seam. What's
+      on either side? How does the river divide and connect?
+    follow_ups:
+      - What would Paris be without the Seine?
+      - How does the river shape the city?
+      - What's the relationship between river and edge?
+
+  - id: paris_roof_zinc
+    name: Roof Zinc
+    prompt: |
+      Paris roofs are often zinc—grey, sloping, with dormers. Look up. The roof
+      line is distinctive. How does it shape the skyline?
+    follow_ups:
+      - What would the skyline be without the zinc?
+      - How does zinc create identity?
+      - What's the relationship between roof and attic?
+
+  - id: paris_door_height
+    name: Door Height
+    prompt: |
+      Paris doors are often tall—double height. Find one. What would pass
+      through? The door is a threshold of scale.
+    follow_ups:
+      - What would the building be without the tall door?
+      - How does height create grandeur?
+      - What's the relationship between door and building?
+
+  - id: paris_boulangerie_smell
+    name: Boulangerie Smell
+    prompt: |
+      A boulangerie smells of bread. Follow the smell. The bakery is a node.
+      What does the smell say about the block?
+    follow_ups:
+      - What would the street be without the smell?
+      - How does smell create identity?
+      - What's the relationship between smell and commerce?
+
+  - id: paris_place
+    name: Paris Place
+    prompt: |
+      Paris has places—squares, circles, nodes. Find one. Notice the
+      geometry. How does the place shape the streets that feed it?
+    follow_ups:
+      - What would the neighborhood be without the place?
+      - How does the place create focus?
+      - What's the relationship between place and flow?
+
+  - id: paris_balcony_iron
+    name: Balcony Iron
+    prompt: |
+      Paris balcony railings are often ornate—wrought iron, curves, flourishes.
+      Find one. How does the iron shape the facade?
+    follow_ups:
+      - What would the building be without the iron?
+      - How does the iron create identity?
+      - What's the relationship between iron and craft?
+
+  - id: paris_plane_tree
+    name: Plane Tree
+    prompt: |
+      Paris plane trees line the boulevards. Their bark peels. Find one. How
+      does the tree shape the street? What would the boulevard be without it?
+    follow_ups:
+      - What would the street be without the plane?
+      - How does the plane create shade?
+      - What's the relationship between tree and boulevard?
+
+  - id: paris_metro_tile
+    name: Métro Tile
+    prompt: |
+      Paris métro stations have white tiles. The tunnel is a tube of light. Ride
+      a line. How does the tile shape the journey?
+    follow_ups:
+      - What would the station be without the tiles?
+      - How do tiles create cleanliness?
+      - What's the relationship between tile and underground?
+
+  - id: paris_clock
+    name: Paris Clock
+    prompt: |
+      Paris has many public clocks—on churches, stations, buildings. Find one.
+      What time does it tell? Is it right?
+    follow_ups:
+      - What would the space be without the clock?
+      - How does the clock shape time?
+      - What's the relationship between clock and place?
+
+  - id: paris_newsstand
+    name: Paris Newsstand
+    prompt: |
+      Paris kiosques sell papers, magazines, metro tickets. Find one. What's on
+      display? Who stops? The kiosque is a node.
+    follow_ups:
+      - What would the street be without the kiosque?
+      - How does the kiosque create encounter?
+      - What's the relationship between kiosque and street?
+
+  - id: paris_bench
+    name: Paris Bench
+    prompt: |
+      Paris has green benches in parks and along the Seine. Sit on one. Who else
+      sits? What's the view?
+    follow_ups:
+      - What would the space be without the bench?
+      - How does the bench create respite?
+      - What's the relationship between bench and river?
+
+  - id: paris_boulangerie_queue
+    name: Boulangerie Queue
+    prompt: |
+      Join a boulangerie queue at morning rush. The queue is a ritual. What are
+      people buying? What's the etiquette?
+    follow_ups:
+      - What would the street be without the queue?
+      - How does the queue create community?
+      - What's the relationship between queue and bread?
+
+  - id: paris_manhole
+    name: Paris Manhole
+    prompt: |
+      Paris manhole covers often say "Paris" or "Eau." Find one. The cover is a
+      door to the city's veins. What's beneath?
+    follow_ups:
+      - What would the street be without the cover?
+      - How does the cover mark the system?
+      - What's the relationship between cover and underground?
+
+  - id: paris_shadow
+    name: Paris Shadow
+    prompt: |
+      Paris light creates sharp shadows. Find a corner where shadow and sun
+      meet. How does the shadow shape the street?
+    follow_ups:
+      - What would the street be without the shadow?
+      - How does shadow create contrast?
+      - What's the relationship between shadow and building?
+
+  - id: paris_courtyard
+    name: Paris Courtyard
+    prompt: |
+      Paris buildings often hide courtyards—cours—behind gates. Peek through.
+      What's inside? The courtyard is a secret room.
+    follow_ups:
+      - What would the building be without the courtyard?
+      - How does the courtyard create privacy?
+      - What's the relationship between courtyard and street?
+
+  - id: paris_bike_lane
+    name: Paris Bike Lane
+    prompt: |
+      Paris has expanded bike lanes—pistes cyclables. Find one. How does the
+      lane shape the street? Who uses it?
+    follow_ups:
+      - What would the street be without the lane?
+      - How does the lane create mobility?
+      - What's the relationship between lane and car?
+
+  - id: paris_fountain
+    name: Paris Fountain
+    prompt: |
+      Paris has fountains—Wallace fountains, monumental fountains. Find one.
+      What does it offer? Who uses it?
+    follow_ups:
+      - What would the place be without the fountain?
+      - How does the fountain create gift?
+      - What's the relationship between fountain and public?
+
+  - id: paris_awning
+    name: Paris Awning
+    prompt: |
+      Paris café awnings create shade. Find a street where awnings repeat. How
+      do they shape the sidewalk?
+    follow_ups:
+      - What would the street be without the awnings?
+      - How do awnings create territory?
+      - What's the relationship between awning and terrace?
+
+  - id: paris_lamp_post
+    name: Paris Lamp Post
+    prompt: |
+      Paris lamp posts have a particular style—often ornate, often green. Find
+      one. How does the lamp shape the street at night?
+    follow_ups:
+      - What would the street be without the lamp?
+      - How does the lamp create safety?
+      - What's the relationship between lamp and darkness?
+
+  - id: paris_door_knocker
+    name: Door Knocker
+    prompt: |
+      Paris doors often have knockers—lion heads, hands, rings. Find one. What
+      would it sound like? The knocker is a threshold object.
+    follow_ups:
+      - What would the door be without the knocker?
+      - How does the knocker create sound?
+      - What's the relationship between knocker and entrance?
+
+  - id: paris_shop_sign
+    name: Paris Shop Sign
+    prompt: |
+      Paris shop signs are often hand-painted—boulangerie, boucherie, fromagerie.
+      Find one. What does the sign say about the shop?
+    follow_ups:
+      - What would the street be without the sign?
+      - How does the sign create identity?
+      - What's the relationship between sign and craft?
+
+  - id: paris_parking
+    name: Paris Parking
+    prompt: |
+      Paris parking is creative—cars on sidewalks, angled, squeezed. Watch
+      someone park. How does the car fit? What's the relationship between car and city?
+    follow_ups:
+      - What would the street be without the cars?
+      - How does parking shape the street?
+      - What's the relationship between parking and space?
+
+  - id: paris_drain
+    name: Paris Drain
+    prompt: |
+      Paris gutters run along the curb. After rain, they flow. Find one. Where
+      does the water go? The drain is a seam.
+    follow_ups:
+      - What would the street be without the drain?
+      - How does the drain manage water?
+      - What's the relationship between drain and system?
+
+  - id: paris_chimney
+    name: Paris Chimney
+    prompt: |
+      Paris chimneys punctuate the roof line. Count them on one building. The
+      chimney is a relic of heat. What burned here?
+    follow_ups:
+      - What would the roof be without the chimney?
+      - How does the chimney mark history?
+      - What's the relationship between chimney and fire?
+
+  - id: paris_metro_map
+    name: Métro Map
+    prompt: |
+      The Paris métro map is a diagram. It distorts geography. What's
+      emphasized? What's omitted? How does the map shape the city?
+    follow_ups:
+      - What would wayfinding be without the map?
+      - How does the map create connection?
+      - What's the relationship between map and territory?
+
+  - id: paris_bridge
+    name: Paris Bridge
+    prompt: |
+      Paris has many bridges over the Seine. Cross one on foot. Feel the
+      transition. What changes? The bridge is a threshold.
+    follow_ups:
+      - What would the river be without the bridge?
+      - How does the bridge connect?
+      - What's the relationship between bridge and river?
+
+  - id: paris_graffiti
+    name: Paris Graffiti
+    prompt: |
+      Paris has graffiti—tags, stencils, murals. Find a wall with layers. What's
+      the palimpsest? Who has marked this surface?
+    follow_ups:
+      - What would the wall be without the graffiti?
+      - How does graffiti claim space?
+      - What's the relationship between graffiti and city?
+
+  - id: paris_tree_guard
+    name: Tree Guard
+    prompt: |
+      Paris street trees often have guards—metal grilles around the base. Find
+      one. What's the guard protecting? What's it excluding?
+    follow_ups:
+      - What would the tree be without the guard?
+      - How does the guard shape the pit?
+      - What's the relationship between guard and tree?
+
+  - id: paris_bus_stop
+    name: Paris Bus Stop
+    prompt: |
+      Paris bus stops have shelters, timetables, digital displays. Wait at one.
+      Who else waits? What's the etiquette?
+    follow_ups:
+      - What would the street be without the stop?
+      - How does the stop create community?
+      - What's the relationship between stop and journey?
+
+  - id: paris_terrace_table
+    name: Terrace Table
+    prompt: |
+      A café terrace table faces the street. Sit at one. The table is a stage.
+      What do you watch? What watches you?
+    follow_ups:
+      - What would the terrace be without the table?
+      - How does the table create encounter?
+      - What's the relationship between table and street?
+
+  - id: paris_roof_dormer
+    name: Roof Dormer
+    prompt: |
+      Paris roof dormers—mansard windows—punctuate the skyline. Find a building
+      with many. What would the view be from inside?
+    follow_ups:
+      - What would the roof be without the dormers?
+      - How do dormers create light?
+      - What's the relationship between dormer and attic?
+
+  - id: paris_parking_metre
+    name: Parking Métre
+    prompt: |
+      Paris parking metres are often grey boxes. Find one. How does it shape
+      the curb? Who pays? Who doesn't?
+    follow_ups:
+      - What would the street be without the metre?
+      - How does the metre manage space?
+      - What's the relationship between metre and car?
+
+  - id: paris_doorway
+    name: Paris Doorway
+    prompt: |
+      A Paris doorway is often tall, often ornate. Stand in front of one. What
+      would it be like to pass through? The doorway is a threshold.
+    follow_ups:
+      - What would the building be without the doorway?
+      - How does the doorway create grandeur?
+      - What's the relationship between doorway and interior?
+
+  - id: paris_metro_stair
+    name: Métro Stair
+    prompt: |
+      Métro stairs descend into the earth. Count the steps. Feel the
+      transition. What's above? What's below?
+    follow_ups:
+      - What would the station be without the stairs?
+      - How do stairs create descent?
+      - What's the relationship between stair and underground?
+
+  - id: paris_bench_view
+    name: Bench View
+    prompt: |
+      Sit on a bench with a view—of the Seine, a square, a street. What's the
+      frame? What's the focus? The bench is a vantage point.
+    follow_ups:
+      - What would the view be without the bench?
+      - How does the bench create pause?
+      - What's the relationship between bench and view?
+
+  - id: paris_shutter_open
+    name: Shutter Open
+    prompt: |
+      Paris shutters open in the morning. Find a street where they're opening.
+      What's the ritual? What does the opening reveal?
+    follow_ups:
+      - What would the street be without the shutters?
+      - How does the shutter create rhythm?
+      - What's the relationship between shutter and day?
+
+  - id: paris_cobble_pattern
+    name: Cobble Pattern
+    prompt: |
+      Paris cobbles are laid in patterns—sometimes herringbone, sometimes
+      radial. Find a pattern. How does it shape the street?
+    follow_ups:
+      - What would the street be without the pattern?
+      - How does the pattern create texture?
+      - What's the relationship between pattern and craft?
+
+  - id: paris_plane_bark
+    name: Plane Bark
+    prompt: |
+      Paris plane tree bark peels in patches. Touch one. The bark is a texture.
+      How does the tree age? What would the street be without it?
+    follow_ups:
+      - What would the boulevard be without the plane?
+      - How does the bark create identity?
+      - What's the relationship between bark and tree?
+
+  - id: paris_fountain_drink
+    name: Fountain Drink
+    prompt: |
+      Wallace fountains offer free water. Find one. Who drinks? Who doesn't?
+      The fountain is a gift. What does it mean?
+    follow_ups:
+      - What would the place be without the fountain?
+      - How does the fountain create public good?
+      - What's the relationship between fountain and thirst?
+
+  - id: paris_metro_sound
+    name: Métro Sound
+    prompt: |
+      Close your eyes in the métro. The rumble, the brakes, the announcements.
+      Map the soundscape. What does Paris sound like underground?
+    follow_ups:
+      - What would the journey be without the sound?
+      - How does sound shape the experience?
+      - What's the relationship between sound and space?
+
+  - id: paris_balcony_dry
+    name: Balcony Dry
+    prompt: |
+      Paris balconies are often used for drying—laundry, plants. Find one with
+      laundry. What does the drying say about the resident?
+    follow_ups:
+      - What would the facade be without the laundry?
+      - How does drying create domesticity?
+      - What's the relationship between balcony and home?
+
+  - id: paris_bike_velib
+    name: Bike Vélib
+    prompt: |
+      Vélib' stations dot Paris. Find one. How many bikes? How many docks? The
+      system is a layer. How does it work?
+    follow_ups:
+      - What would the street be without the station?
+      - How does Vélib' create mobility?
+      - What's the relationship between station and bike?
+
+  - id: paris_door_bell
+    name: Door Bell
+    prompt: |
+      Paris apartment buildings have multiple doorbells—one per apartment. Find a
+      panel. How many names? How is the building organized?
+    follow_ups:
+      - What would the entrance be without the bells?
+      - How do bells create address?
+      - What's the relationship between bell and apartment?
+
+  - id: paris_roof_terrace
+    name: Roof Terrace
+    prompt: |
+      Imagine a Paris roof terrace. What would you see? Who has access? The
+      terrace is a secret level. What would you grow there?
+    follow_ups:
+      - What would the roof be without the terrace?
+      - How does the terrace create view?
+      - What's the relationship between terrace and sky?
+
+  # === BANGALORE (50 cards) ===
+  - id: blr_gate_colony
+    name: Gate Colony
+    prompt: |
+      Bangalore's gated colonies have walls, guards, gates. Stand at a gate.
+      What's inside? Who enters? The gate marks a boundary. What does it protect?
+    follow_ups:
+      - What would the street be without the gate?
+      - How does the gate create security?
+      - What's the relationship between gate and colony?
+
+  - id: blr_tree_canopy
+    name: Tree Canopy
+    prompt: |
+      Bangalore was once a garden city. Old trees still canopy some streets.
+      Walk under one. How does the canopy change the light? The sound?
+    follow_ups:
+      - What would the street be without the tree?
+      - How does the canopy create microclimate?
+      - What's the relationship between tree and city?
+
+  - id: blr_tech_park
+    name: Tech Park
+    prompt: |
+      Tech parks are campuses—glass, lawn, shuttle buses. Find one. How does
+      the park separate from the city? What's the relationship between inside and outside?
+    follow_ups:
+      - What would the area be without the park?
+      - How does the park create identity?
+      - What's the relationship between park and street?
+
+  - id: blr_auto_rickshaw
+    name: Auto Rickshaw
+    prompt: |
+      Auto rickshaws weave through traffic. Watch one negotiate a junction. How
+      does the auto fit where cars cannot? What's the logic of the weave?
+    follow_ups:
+      - What would the street be without the auto?
+      - How does the auto create mobility?
+      - What's the relationship between auto and traffic?
+
+  - id: blr_chai_stall
+    name: Chai Stall
+    prompt: |
+      Chai stalls are nodes—small, temporary, essential. Find one. Who gathers?
+      What's the rhythm? The stall is a social machine.
+    follow_ups:
+      - What would the corner be without the stall?
+      - How does the stall create encounter?
+      - What's the relationship between stall and street?
+
+  - id: blr_billboard
+    name: Bangalore Billboard
+    prompt: |
+      Bangalore billboards advertise tech, real estate, education. Find one.
+      What's being sold? Who is the audience? The billboard is a mirror of aspiration.
+    follow_ups:
+      - What would the street be without the billboard?
+      - How does the billboard shape desire?
+      - What's the relationship between billboard and city?
+
+  - id: blr_compound_wall
+    name: Compound Wall
+    prompt: |
+      Compound walls separate private from public. Find a wall. What's behind
+      it? How high is it? The wall creates a boundary. What does it exclude?
+    follow_ups:
+      - What would the street be without the wall?
+      - How does the wall create privacy?
+      - What's the relationship between wall and compound?
+
+  - id: blr_signal_wait
+    name: Signal Wait
+    prompt: |
+      Wait at a traffic signal. Watch the vendors—flowers, toys, books. The
+      signal creates a pause. What happens in the pause?
+    follow_ups:
+      - What would the junction be without the signal?
+      - How does the signal create economy?
+      - What's the relationship between signal and street?
+
+  - id: blr_rain_drain
+    name: Rain Drain
+    prompt: |
+      Bangalore monsoon overwhelms drains. After rain, watch the water. Where
+      does it go? Where does it pool? The drain is a limit.
+    follow_ups:
+      - What would the street be without the drain?
+      - How does the drain manage water?
+      - What's the relationship between drain and monsoon?
+
+  - id: blr_sarjapur_road
+    name: Sarjapur Road
+    prompt: |
+      Sarjapur Road connects old Bangalore to the tech corridor. Drive or walk
+      a stretch. What changes? Where does the city shift?
+    follow_ups:
+      - What would the corridor be without the road?
+      - How does the road create connection?
+      - What's the relationship between road and growth?
+
+  - id: blr_parks_maidans
+    name: Parks & Maidans
+    prompt: |
+      Bangalore has parks and maidans—Cubbon Park, Lalbagh, neighborhood
+      grounds. Enter one. Who uses it? What's the rhythm?
+    follow_ups:
+      - What would the city be without the park?
+      - How does the park create respite?
+      - What's the relationship between park and neighborhood?
+
+  - id: blr_temple_street
+    name: Temple Street
+    prompt: |
+      Temples punctuate Bangalore streets. Find one. Notice the offerings, the
+      bells, the crowd. How does the temple shape the block?
+    follow_ups:
+      - What would the street be without the temple?
+      - How does the temple create community?
+      - What's the relationship between temple and street?
+
+  - id: blr_silk_board
+    name: Silk Board
+    prompt: |
+      Silk Board junction is infamous. Stand at the edge. Watch the traffic.
+      How does the junction work? What's the logic of the chaos?
+    follow_ups:
+      - What would the corridor be without the junction?
+      - How does the junction create bottleneck?
+      - What's the relationship between junction and commute?
+
+  - id: blr_metro_elevated
+    name: Metro Elevated
+    prompt: |
+      Bangalore Metro runs elevated through parts of the city. Ride it or stand
+      under it. How does the elevated line change the street below?
+    follow_ups:
+      - What would the street be without the metro?
+      - How does the metro create connection?
+      - What's the relationship between elevated and ground?
+
+  - id: blr_apartment_tower
+    name: Apartment Tower
+    prompt: |
+      Apartment towers rise across Bangalore. Find one. How many floors? Who
+      lives there? The tower is vertical density. What does it replace?
+    follow_ups:
+      - What would the skyline be without the tower?
+      - How does the tower create housing?
+      - What's the relationship between tower and ground?
+
+  - id: blr_roadside_vendor
+    name: Roadside Vendor
+    prompt: |
+      Roadside vendors sell fruit, snacks, phone chargers. Find one. What's the
+      display? Who stops? The vendor is informal economy.
+    follow_ups:
+      - What would the street be without the vendor?
+      - How does the vendor create livelihood?
+      - What's the relationship between vendor and street?
+
+  - id: blr_borewell
+    name: Borewell
+    prompt: |
+      Bangalore depends on borewells. Look for the pipes, the tanks, the
+      pumps. Water is extracted from below. What's the relationship between city and aquifer?
+    follow_ups:
+      - What would the building be without the borewell?
+      - How does the borewell create supply?
+      - What's the relationship between borewell and scarcity?
+
+  - id: blr_garbage_heap
+    name: Garbage Heap
+    prompt: |
+      Garbage heaps appear at corners, by walls. Notice one. What's in it? Who
+      picks through it? The heap is a limit of the system.
+    follow_ups:
+      - What would the street be without the heap?
+      - How does the heap mark failure?
+      - What's the relationship between heap and city?
+
+  - id: blr_marquee_wedding
+    name: Marquee Wedding
+    prompt: |
+      Wedding marquees block streets. Find one. The marquee is a temporary
+      territory. What's the relationship between celebration and street?
+    follow_ups:
+      - What would the street be without the marquee?
+      - How does the marquee create claim?
+      - What's the relationship between wedding and public?
+
+  - id: blr_old_bungalow
+    name: Old Bungalow
+    prompt: |
+      Old Bangalore bungalows persist among towers. Find one. The bungalow has
+      a compound, trees, space. What will replace it?
+    follow_ups:
+      - What would the street be without the bungalow?
+      - How does the bungalow mark history?
+      - What's the relationship between bungalow and tower?
+
+  - id: blr_coffee_house
+    name: Coffee House
+    prompt: |
+      Indian Coffee House is an institution. Sit in one. The coffee house is
+      a room of conversation. What's the rhythm? Who comes?
+    follow_ups:
+      - What would the street be without the coffee house?
+      - How does the coffee house create community?
+      - What's the relationship between coffee house and city?
+
+  - id: blr_phone_booth
+    name: Phone Booth
+    prompt: |
+      Public phone booths still exist. Find one. Is it working? Who uses it?
+      The booth is a relic. What has replaced it?
+    follow_ups:
+      - What would the street be without the booth?
+      - How does the booth mark change?
+      - What's the relationship between booth and mobile?
+
+  - id: blr_bus_stop
+    name: Bangalore Bus Stop
+    prompt: |
+      Bangalore bus stops are often a pole and a crowd. Wait at one. Who
+      waits? What's the etiquette? The stop is minimal infrastructure.
+    follow_ups:
+      - What would the street be without the stop?
+      - How does the stop create connection?
+      - What's the relationship between stop and bus?
+
+  - id: blr_power_line
+    name: Power Line
+    prompt: |
+      Bangalore power lines are a tangle—cables, transformers, loops. Trace
+      one line. Where does it go? The grid is visible. What does it power?
+    follow_ups:
+      - What would the street be without the lines?
+      - How does the grid create supply?
+      - What's the relationship between line and outage?
+
+  - id: blr_speed_breaker
+    name: Speed Breaker
+    prompt: |
+      Speed breakers—sleeping policemen—dot Bangalore roads. Feel one. Why is it
+      here? What does it slow? The breaker is a local intervention.
+    follow_ups:
+      - What would the road be without the breaker?
+      - How does the breaker create safety?
+      - What's the relationship between breaker and speed?
+
+  - id: blr_compound_tree
+    name: Compound Tree
+    prompt: |
+      Compound trees overhang walls. Find one. The tree is both inside and
+      outside. What does it shade? Who owns it?
+    follow_ups:
+      - What would the street be without the tree?
+      - How does the tree create gift?
+      - What's the relationship between tree and compound?
+
+  - id: blr_shop_shutter
+    name: Shop Shutter
+    prompt: |
+      Bangalore shop shutters roll down at night. Find a closed shutter. What's
+      behind it? The shutter is a daily cycle. What does it protect?
+    follow_ups:
+      - What would the street be without the shutter?
+      - How does the shutter create security?
+      - What's the relationship between shutter and commerce?
+
+  - id: blr_water_tanker
+    name: Water Tanker
+    prompt: |
+      Water tankers supply neighborhoods. Watch one deliver. The tanker is
+      mobile infrastructure. What's the relationship between tanker and tap?
+    follow_ups:
+      - What would the neighborhood be without the tanker?
+      - How does the tanker create supply?
+      - What's the relationship between tanker and scarcity?
+
+  - id: blr_metro_station
+    name: Metro Station
+    prompt: |
+      Bangalore Metro stations are new—clean, branded. Enter one. How does the
+      station differ from the street? What's the transition?
+    follow_ups:
+      - What would the corridor be without the station?
+      - How does the station create connection?
+      - What's the relationship between station and city?
+
+  - id: blr_rickshaw_stand
+    name: Rickshaw Stand
+    prompt: |
+      Rickshaw stands cluster at junctions. Find one. The drivers wait. The
+      stand is a node. What's the economy?
+    follow_ups:
+      - What would the junction be without the stand?
+      - How does the stand create mobility?
+      - What's the relationship between stand and driver?
+
+  - id: blr_pavement_sleep
+    name: Pavement Sleep
+    prompt: |
+      Pavement sleepers are part of the city. Notice with care. Where do they
+      sleep? What's the relationship between street and shelter?
+    follow_ups:
+      - What would the street be without the sleepers?
+      - How does the pavement become home?
+      - What's the relationship between sleep and city?
+
+  - id: blr_gate_security
+    name: Gate Security
+    prompt: |
+      Colony gates have security—guards, barriers, registers. Watch the flow.
+      Who enters? Who is stopped? The gate is a filter.
+    follow_ups:
+      - What would the colony be without the gate?
+      - How does the gate create security?
+      - What's the relationship between gate and trust?
+
+  - id: blr_street_dog
+    name: Street Dog
+    prompt: |
+      Street dogs are part of Bangalore. Notice one. Where does it sleep? What
+      does it eat? The dog is both wild and domestic.
+    follow_ups:
+      - What would the street be without the dog?
+      - How does the dog create relationship?
+      - What's the relationship between dog and city?
+
+  - id: blr_hoarding
+    name: Hoarding
+    prompt: |
+      Hoardings—large billboards—dominate junctions. Find one. What's
+      advertised? The hoarding is a scale of aspiration. What does it promise?
+    follow_ups:
+      - What would the junction be without the hoarding?
+      - How does the hoarding shape desire?
+      - What's the relationship between hoarding and city?
+
+  - id: blr_rain_tree
+    name: Rain Tree
+    prompt: |
+      Rain trees—Samanea saman—canopy some Bangalore streets. Find one. The
+      tree is a legacy. How does it shape the block?
+    follow_ups:
+      - What would the street be without the rain tree?
+      - How does the tree create microclimate?
+      - What's the relationship between tree and garden city?
+
+  - id: blr_corner_shop
+    name: Bangalore Corner Shop
+    prompt: |
+      Corner shops—kirana stores—sell everything. Enter one. What's the
+      inventory? Who runs it? The shop is a neighborhood node.
+    follow_ups:
+      - What would the block be without the shop?
+      - How does the shop create encounter?
+      - What's the relationship between shop and community?
+
+  - id: blr_flyover
+    name: Flyover
+    prompt: |
+      Bangalore flyovers leap over junctions. Stand under one. The flyover
+      creates shadow, noise, a new layer. What's above? What's below?
+    follow_ups:
+      - What would the junction be without the flyover?
+      - How does the flyover create flow?
+      - What's the relationship between flyover and ground?
+
+  - id: blr_water_tap
+    name: Public Water Tap
+    prompt: |
+      Public water taps still exist. Find one. Who uses it? The tap is a
+      commons. What's the relationship between tap and access?
+    follow_ups:
+      - What would the street be without the tap?
+      - How does the tap create gift?
+      - What's the relationship between tap and scarcity?
+
+  - id: blr_construction_crane
+    name: Construction Crane
+    prompt: |
+      Construction cranes punctuate the skyline. Find one. What's being built?
+      The crane is a sign of growth. What will replace what?
+    follow_ups:
+      - What would the skyline be without the crane?
+      - How does the crane mark change?
+      - What's the relationship between crane and city?
+
+  - id: blr_parking_lot
+    name: Parking Lot
+    prompt: |
+      Parking lots are temporary—empty land until development. Find one. What
+      was here before? What will come? The lot is a pause.
+    follow_ups:
+      - What would the block be without the lot?
+      - How does the lot create interim use?
+      - What's the relationship between lot and development?
+
+  - id: blr_street_food
+    name: Street Food
+    prompt: |
+      Street food vendors set up at dusk. Find one. What's cooking? Who eats?
+      The vendor is informal infrastructure. What's the economy?
+    follow_ups:
+      - What would the street be without the vendor?
+      - How does the vendor create livelihood?
+      - What's the relationship between vendor and street?
+
+  - id: blr_compound_garden
+    name: Compound Garden
+    prompt: |
+      Compound gardens are private—visible through gates. Peek through. What
+      grows? The garden is a pocket of green. What would the street be without it?
+    follow_ups:
+      - What would the compound be without the garden?
+      - How does the garden create respite?
+      - What's the relationship between garden and city?
+
+  - id: blr_bus_crowd
+    name: Bus Crowd
+    prompt: |
+      Bangalore buses pack at rush hour. Watch a bus stop. The crowd boards in
+      a surge. How does the crowd create order? What's the etiquette?
+    follow_ups:
+      - What would the stop be without the crowd?
+      - How does the crowd create pressure?
+      - What's the relationship between crowd and bus?
+
+  - id: blr_metro_pillar
+    name: Metro Pillar
+    prompt: |
+      Metro pillars support the elevated line. Stand under one. The pillar
+      creates a column of space. What's the relationship between pillar and street?
+    follow_ups:
+      - What would the street be without the pillar?
+      - How does the pillar create structure?
+      - What's the relationship between pillar and metro?
+
+  - id: blr_temple_bell
+    name: Temple Bell
+    prompt: |
+      Temple bells mark prayer times. Listen. The bell creates a rhythm. How
+      does the bell shape the neighborhood? What would the street be without it?
+    follow_ups:
+      - What would the temple be without the bell?
+      - How does the bell create time?
+      - What's the relationship between bell and community?
+
+  - id: blr_road_widening
+    name: Road Widening
+    prompt: |
+      Road widening cuts through neighborhoods. Find a stretch. What was
+      removed? What remains? The widening is a scar. What does it serve?
+    follow_ups:
+      - What would the road be without the widening?
+      - How does the widening create flow?
+      - What's the relationship between widening and displacement?
+
+  - id: blr_apartment_balcony
+    name: Apartment Balcony
+    prompt: |
+      Apartment balconies face the street. Find a building. What's on the
+      balconies? Plants? Laundry? The balcony is a threshold. What would you see from one?
+    follow_ups:
+      - What would the building be without the balcony?
+      - How does the balcony create relationship to street?
+      - What's the relationship between balcony and apartment?
+
+  - id: blr_night_light
+    name: Night Light
+    prompt: |
+      Bangalore at night—street lamps, shop lights, apartment windows. Walk a
+      block. How does the light shape the street? What's lit? What's dark?
+    follow_ups:
+      - What would the street be without the light?
+      - How does the light create safety?
+      - What's the relationship between light and night?
+
+  - id: blr_morning_walk
+    name: Morning Walk
+    prompt: |
+      Morning walkers fill parks and streets. Join or watch. The morning walk
+      is a ritual. What's the route? Who walks?
+    follow_ups:
+      - What would the morning be without the walkers?
+      - How does the walk create community?
+      - What's the relationship between walk and health?
+
+  - id: blr_garden_city
+    name: Garden City
+    prompt: |
+      Bangalore was the garden city. Remnants persist—Lalbagh, Cubbon Park,
+      old trees. Find a remnant. What would the city be if the garden had won?
+    follow_ups:
+      - What would Bangalore be without the gardens?
+      - How does the garden create identity?
+      - What's the relationship between garden and city?

@@ -11,3 +11,12 @@ decks:
       different lens—from light and shadow to introductions and emotion—to
       deepen how you see and engage with artworks.
     domain: art
+
+  - id: urban_jungle
+    name: Urban Jungle
+    path: perspective-decks/urban-jungle.yaml
+    description: |
+      250 cards to shift how you see cities and architecture. Fifty lenses each
+      for New York, San Francisco, London, Paris, and Bangalore—from scale and
+      light to layers of history and the rhythms of street life.
+    domain: urban_jungle
