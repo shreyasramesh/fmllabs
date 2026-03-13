@@ -8,8 +8,20 @@
   "properties": {
     "domains": {
       "type": "object",
-      "description": "Domain-level descriptions keyed by domain id",
-      "additionalProperties": { "type": "string" }
+      "description": "Domain-level config keyed by domain id. Value is display name + description.",
+      "additionalProperties": {
+        "oneOf": [
+          { "type": "string" },
+          {
+            "type": "object",
+            "required": ["name", "description"],
+            "properties": {
+              "name": { "type": "string", "description": "Display name for the domain" },
+              "description": { "type": "string", "description": "Domain description" }
+            }
+          }
+        ]
+      }
     },
     "decks": {
       "type": "array",
@@ -37,6 +49,14 @@
           "domain": {
             "type": "string",
             "description": "Domain tag (e.g., art, decisions)"
+          },
+          "subdomain_id": {
+            "type": "string",
+            "description": "Optional subdomain id for domains with multiple decks (e.g. ny, indian)"
+          },
+          "subdomain_name": {
+            "type": "string",
+            "description": "Display name for the subdomain (e.g. New York, Indian)"
           }
         }
       }

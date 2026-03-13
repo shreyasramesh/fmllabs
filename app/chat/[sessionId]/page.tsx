@@ -718,6 +718,24 @@ function CopyButton({
   );
 }
 
+type CarouselPillType = "starter" | "prompt";
+
+type CarouselStarterPill = {
+  label: string;
+  type: "starter";
+};
+
+type CarouselPromptPill = {
+  label: string;
+  type: "prompt";
+  cardName: string;
+  cardPrompt: string;
+  domain: string;
+  subdomain: string;
+};
+
+type CarouselPill = CarouselStarterPill | CarouselPromptPill;
+
 const EXAMPLE_PILLS_BY_LANGUAGE: Record<LanguageCode, string[][]> = {
   en: [
   [
@@ -1225,10 +1243,136 @@ function RippleIcon({ className }: { className?: string }) {
   );
 }
 
-function MovingPills({ onSelect, language }: { onSelect: (text: string) => void; language: LanguageCode }) {
+function ChatBubbleIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+
+const PROMPT_LENSES_BY_LANGUAGE: Partial<
+  Record<LanguageCode, { name: string; prompt: string; domain: string; subdomain: string }[]>
+> = {
+  en: [
+    {
+      name: "Souvenir",
+      prompt:
+        "Pick something out from what you are looking at and hide it in the next thing you examine. What changes when you carry this detail forward?",
+      domain: "Art",
+      subdomain: "Ways of Looking at Art",
+    },
+    {
+      name: "Vertical City",
+      prompt:
+        "Look up. New York is built on the vertical—towers competing for sky. Trace one building from sidewalk to crown. How does height change what you notice?",
+      domain: "Urban Jungle",
+      subdomain: "New York",
+    },
+    {
+      name: "The Tadka Crackle",
+      prompt:
+        "Tadka—tempering—is chemistry in real time. Hot oil meets spice and sound arrives before taste. What changes when you hear the dish before you eat it?",
+      domain: "Culinary Lab",
+      subdomain: "Indian",
+    },
+    {
+      name: "Leaf Vein",
+      prompt:
+        "Pick up a fallen leaf and trace the veins. The architecture is invisible until you look closely. What did this network sustain when the leaf was alive?",
+      domain: "Natural Microcosm",
+      subdomain: "Forest Floor",
+    },
+    {
+      name: "Queue Choreography",
+      prompt:
+        "Watch the line at a counter—forward lean, phone check, subtle shuffle. The queue has rhythm. What unspoken rules decide who stands where?",
+      domain: "The Human Interface",
+      subdomain: "Coffee Shop",
+    },
+    {
+      name: "The Promise of the Button",
+      prompt:
+        "A button is a promise. Before you click, it holds intent—someone decided what should happen next. What did they assume you wanted?",
+      domain: "Digital Ghost",
+      subdomain: "Buttons & Controls",
+    },
+    {
+      name: "In black and white",
+      prompt:
+        "Remove color and focus only on light and dark. Where is the strongest contrast, and how does that change what feels important?",
+      domain: "Art",
+      subdomain: "Ways of Looking at Art",
+    },
+    {
+      name: "Subway Soundscape",
+      prompt:
+        "Close your eyes in a station. The rumble, brakes, announcements, buskers. What does the city sound like when you cannot see it?",
+      domain: "Urban Jungle",
+      subdomain: "New York",
+    },
+    {
+      name: "Thali Geometry",
+      prompt:
+        "A thali is a composition of bowls, space, and sequence. Where does your eye land first, and what changes if one part is removed?",
+      domain: "Culinary Lab",
+      subdomain: "Indian",
+    },
+    {
+      name: "Mushroom Fruiting",
+      prompt:
+        "A mushroom is only the fruiting body. The organism spreads underground as mycelium. If this visible part is only a signal, what is the hidden system?",
+      domain: "Natural Microcosm",
+      subdomain: "Forest Floor",
+    },
+    {
+      name: "Invisible Script",
+      prompt:
+        "Order, pay, wait, receive, sit. The script is invisible until someone breaks it. What does this routine reveal about belonging?",
+      domain: "The Human Interface",
+      subdomain: "Coffee Shop",
+    },
+    {
+      name: "The Click as Contract",
+      prompt:
+        "You click; the system responds—or doesn’t. The click is a contract between attention and feedback. What happens when that contract fails?",
+      domain: "Digital Ghost",
+      subdomain: "Buttons & Controls",
+    },
+  ],
+};
+
+function MovingPills({
+  onSelectStarter,
+  onSelectPrompt,
+  language,
+}: {
+  onSelectStarter: (text: string) => void;
+  onSelectPrompt: (card: { name: string; prompt: string }) => void;
+  language: LanguageCode;
+}) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
-  const examplePills = EXAMPLE_PILLS_BY_LANGUAGE[language] ?? EXAMPLE_PILLS_BY_LANGUAGE.en;
+  const starterRows = EXAMPLE_PILLS_BY_LANGUAGE[language] ?? EXAMPLE_PILLS_BY_LANGUAGE.en;
+  const promptRows = (PROMPT_LENSES_BY_LANGUAGE[language] ?? PROMPT_LENSES_BY_LANGUAGE.en ?? [])
+    .reduce<{ name: string; prompt: string; domain: string; subdomain: string }[][]>((acc, card, idx) => {
+      const rowIndex = idx % 3;
+      if (!acc[rowIndex]) acc[rowIndex] = [];
+      acc[rowIndex].push(card);
+      return acc;
+    }, [[], [], []]);
+  const mixedRows: CarouselPill[][] = starterRows.map((row, rowIndex) => {
+    const starters: CarouselStarterPill[] = row.map((label) => ({ label, type: "starter" }));
+    const prompts: CarouselPromptPill[] = (promptRows[rowIndex] ?? []).map((card) => ({
+      label: `${card.subdomain} · ${card.name}`,
+      type: "prompt",
+      cardName: card.name,
+      cardPrompt: card.prompt,
+      domain: card.domain,
+      subdomain: card.subdomain,
+    }));
+    return [...starters, ...prompts];
+  });
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setPrefersReducedMotion(mq.matches);
@@ -1239,7 +1383,7 @@ function MovingPills({ onSelect, language }: { onSelect: (text: string) => void;
 
   return (
     <div className="space-y-4 overflow-hidden">
-      {examplePills.map((row, rowIndex) => (
+      {mixedRows.map((row, rowIndex) => (
         <div
           key={rowIndex}
           className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
@@ -1256,7 +1400,7 @@ function MovingPills({ onSelect, language }: { onSelect: (text: string) => void;
             } ${hoveredRow === rowIndex ? "marquee-paused" : ""}`}
             style={{ width: "max-content" }}
           >
-            {[...row, ...row].map((label, i) => (
+            {[...row, ...row].map((pill, i) => (
               <button
                 key={`${rowIndex}-${i}`}
                 type="button"
@@ -1264,11 +1408,26 @@ function MovingPills({ onSelect, language }: { onSelect: (text: string) => void;
                   e.preventDefault();
                   e.stopPropagation();
                   playSelectionChime();
-                  onSelect(label);
+                  if (pill.type === "prompt") {
+                    onSelectPrompt({ name: pill.cardName, prompt: pill.cardPrompt });
+                  } else {
+                    onSelectStarter(pill.label);
+                  }
                 }}
-                className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-900 dark:text-neutral-100 border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-all duration-200 active:scale-95 whitespace-nowrap"
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 active:scale-95 whitespace-nowrap ${
+                  pill.type === "prompt"
+                    ? "bg-[#eef7ff] dark:bg-[#1f2937] text-[#0f3d66] dark:text-[#bfdbfe] border-[#bcdcff] dark:border-[#334155] hover:bg-[#ddefff] dark:hover:bg-[#263244]"
+                    : "bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-900 dark:text-neutral-100 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-300 dark:hover:bg-neutral-600"
+                }`}
+                aria-label={`${pill.type === "prompt" ? "Prompt lens" : "Conversation starter"}: ${pill.label}`}
+                title={pill.type === "prompt" ? "Prompt lens" : "Conversation starter"}
               >
-                {label}
+                {pill.type === "prompt" ? (
+                  <RippleIcon className="w-3.5 h-3.5 shrink-0" />
+                ) : (
+                  <ChatBubbleIcon className="w-3.5 h-3.5 shrink-0" />
+                )}
+                {pill.label}
               </button>
             ))}
           </div>
@@ -1980,6 +2139,54 @@ export default function ChatPage() {
     prompt: string;
     name: string;
   } | null>(null);
+
+  const startConversationFromPerspectiveCard = useCallback(
+    ({ name, prompt }: { name: string; prompt: string }) => {
+      const assistantContent = `Let me invite you to look through this lens:\n\n${prompt}\n\nWhat comes to mind?`;
+      const initialMessage = {
+        role: "assistant" as const,
+        content: assistantContent,
+        perspectiveCard: { name, prompt },
+      };
+      setDrawnPerspectiveCard(null);
+      setWaysOfLookingAtModalOpen(false);
+      setWaysOfLookingAtDrawMode(false);
+      setWaysOfLookingAtCategory(null);
+      setWaysOfLookingAtCity(null);
+      setWaysOfLookingAtCuisine(null);
+      setWaysOfLookingAtMicrocosm(null);
+      setWaysOfLookingAtHuman(null);
+      setWaysOfLookingAtDigital(null);
+      if (typeof window !== "undefined" && window.innerWidth < 1024) {
+        setLibraryPanelOpen(null);
+        setSidebarOpen(false);
+      }
+      if (sessionId !== "new" && sessionId !== "incognito") {
+        try {
+          sessionStorage.setItem(
+            PERSPECTIVE_CARD_START_KEY,
+            JSON.stringify({
+              assistantContent,
+              prompt,
+              name,
+            })
+          );
+        } catch {
+          /* ignore */
+        }
+        router.push("/chat/new");
+      } else {
+        setMessages([initialMessage]);
+        setPendingCardContext({ prompt, name });
+        setCurrentSessionId(null);
+        setCurrentSession(null);
+        setCollapsedSummary(null);
+        inputRef.current?.focus();
+      }
+    },
+    [router, sessionId]
+  );
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     setOnboardingDismissed(!!localStorage.getItem("and-then-what-onboarding-seen"));
@@ -2419,98 +2626,64 @@ export default function ChatPage() {
     if (libraryPanelOpen === "nuggets") refetchNuggets();
   }, [libraryPanelOpen, refetchNuggets]);
 
+  type PerspectiveDecksConfig = {
+    decks: { id: string; name: string; description: string; domain: string }[];
+    domains: Record<string, { name: string; description: string }>;
+    subdomainsByDomain: Record<string, { id: string; name: string; deck_id: string }[]>;
+  };
+  const [perspectiveDecksConfig, setPerspectiveDecksConfig] = useState<PerspectiveDecksConfig | null>(null);
+
   useEffect(() => {
     if (waysOfLookingAtModalOpen) {
       fetch("/api/perspective-decks")
         .then((r) => r.json())
-        .then((list: { id: string; name: string; description: string; domain: string }[]) => {
-          setPerspectiveDecks(Array.isArray(list) ? list : []);
+        .then((data: PerspectiveDecksConfig) => {
+          if (data?.decks && data?.domains && data?.subdomainsByDomain) {
+            setPerspectiveDecksConfig(data);
+          } else {
+            setPerspectiveDecksConfig({ decks: [], domains: {}, subdomainsByDomain: {} });
+          }
         })
-        .catch(() => setPerspectiveDecks([]));
+        .catch(() => setPerspectiveDecksConfig(null));
       refetchSavedPerspectiveCards();
     }
   }, [waysOfLookingAtModalOpen, refetchSavedPerspectiveCards]);
 
-  const urbanJungleCityToDeckId: Record<string, string> = {
-    ny: "urban_jungle_new_york",
-    sf: "urban_jungle_san_francisco",
-    london: "urban_jungle_london",
-    paris: "urban_jungle_paris",
-    blr: "urban_jungle_bangalore",
-  };
-
-  const culinaryLabCuisineToDeckId: Record<string, string> = {
-    indian: "culinary_lab_indian",
-    italian: "culinary_lab_italian",
-    pizza: "culinary_lab_pizza",
-    chinese: "culinary_lab_chinese",
-    sushi: "culinary_lab_sushi",
-  };
-
-  const culinaryLabCuisineToName: Record<string, string> = {
-    indian: "Indian",
-    italian: "Italian",
-    pizza: "Pizza",
-    chinese: "Chinese",
-    sushi: "Sushi",
-  };
-
-  const naturalMicrocosmSubToDeckId: Record<string, string> = {
-    forest_floor: "natural_microcosm_forest_floor",
-    garden_backyard: "natural_microcosm_garden_backyard",
-    rocks_stones: "natural_microcosm_rocks_stones",
-    pond_puddle: "natural_microcosm_pond_puddle",
-    insect_territories: "natural_microcosm_insect_territories",
-  };
-
-  const naturalMicrocosmSubToName: Record<string, string> = {
-    forest_floor: "Forest Floor",
-    garden_backyard: "Garden & Backyard",
-    rocks_stones: "Rocks & Stones",
-    pond_puddle: "Pond & Puddle",
-    insect_territories: "Insect Territories",
-  };
-
-  const humanInterfaceSubToDeckId: Record<string, string> = {
-    coffee_shop: "human_interface_coffee_shop",
-    transit_hub: "human_interface_transit_hub",
-    workplace: "human_interface_workplace",
-    retail: "human_interface_retail",
-    public_space: "human_interface_public_space",
-  };
-
-  const humanInterfaceSubToName: Record<string, string> = {
-    coffee_shop: "Coffee Shop",
-    transit_hub: "Transit Hub",
-    workplace: "Workplace",
-    retail: "Retail",
-    public_space: "Public Space",
-  };
-
-  const digitalGhostSubToDeckId: Record<string, string> = {
-    buttons_controls: "digital_ghost_buttons_controls",
-    loading_states: "digital_ghost_loading_states",
-    error_edge: "digital_ghost_error_edge",
-    data_storage: "digital_ghost_data_storage",
-    onboarding_flow: "digital_ghost_onboarding_flow",
-  };
-
-  const digitalGhostSubToName: Record<string, string> = {
-    buttons_controls: "Buttons & Controls",
-    loading_states: "Loading States",
-    error_edge: "Error & Edge",
-    data_storage: "Data & Storage",
-    onboarding_flow: "Onboarding & Flow",
-  };
-
-  const domainDisplayName: Record<string, string> = {
-    urban_jungle: "Urban Jungle",
-    culinary_lab: "Culinary Lab",
-    natural_microcosm: "Natural Microcosm",
-    human_interface: "The Human Interface",
-    digital_ghost: "Digital Ghost",
-    art: "Ways of Looking at Art",
-  };
+  const perspectiveDecks = perspectiveDecksConfig?.decks ?? [];
+  const domainDisplayName = Object.fromEntries(
+    Object.entries(perspectiveDecksConfig?.domains ?? {}).map(([id, d]) => [id, d.name])
+  );
+  const subdomainsByDomain = perspectiveDecksConfig?.subdomainsByDomain ?? {};
+  const urbanJungleCityToDeckId = Object.fromEntries(
+    (subdomainsByDomain["urban_jungle"] ?? []).map((s) => [s.id, s.deck_id])
+  );
+  const urbanJungleCityToName = Object.fromEntries(
+    (subdomainsByDomain["urban_jungle"] ?? []).map((s) => [s.id, s.name])
+  );
+  const culinaryLabCuisineToDeckId = Object.fromEntries(
+    (subdomainsByDomain["culinary_lab"] ?? []).map((s) => [s.id, s.deck_id])
+  );
+  const culinaryLabCuisineToName = Object.fromEntries(
+    (subdomainsByDomain["culinary_lab"] ?? []).map((s) => [s.id, s.name])
+  );
+  const naturalMicrocosmSubToDeckId = Object.fromEntries(
+    (subdomainsByDomain["natural_microcosm"] ?? []).map((s) => [s.id, s.deck_id])
+  );
+  const naturalMicrocosmSubToName = Object.fromEntries(
+    (subdomainsByDomain["natural_microcosm"] ?? []).map((s) => [s.id, s.name])
+  );
+  const humanInterfaceSubToDeckId = Object.fromEntries(
+    (subdomainsByDomain["human_interface"] ?? []).map((s) => [s.id, s.deck_id])
+  );
+  const humanInterfaceSubToName = Object.fromEntries(
+    (subdomainsByDomain["human_interface"] ?? []).map((s) => [s.id, s.name])
+  );
+  const digitalGhostSubToDeckId = Object.fromEntries(
+    (subdomainsByDomain["digital_ghost"] ?? []).map((s) => [s.id, s.deck_id])
+  );
+  const digitalGhostSubToName = Object.fromEntries(
+    (subdomainsByDomain["digital_ghost"] ?? []).map((s) => [s.id, s.name])
+  );
 
   const closeAllModalsExceptLeftPanel = useCallback(() => {
     setWaysOfLookingAtModalOpen(false);
@@ -2587,7 +2760,8 @@ export default function ChatPage() {
     } else {
       fetch("/api/perspective-decks")
         .then((r) => r.json())
-        .then(async (list: { id: string; name: string; description: string; domain: string }[]) => {
+        .then(async (apiData: { decks?: { id: string; name: string; description: string; domain: string }[] }) => {
+          const list = apiData?.decks ?? [];
           const deck = Array.isArray(list) ? list.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory) : null;
           if (!deck?.id) {
             setWaysOfLookingAtCards([]);
@@ -2600,7 +2774,7 @@ export default function ChatPage() {
         .catch(() => setWaysOfLookingAtCards([]))
         .finally(() => setWaysOfLookingAtCardsLoading(false));
     }
-  }, [waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital]);
+  }, [waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, perspectiveDecksConfig]);
 
   useEffect(() => {
     const clearSelectionBubbles = (e: MouseEvent | TouchEvent) => {
@@ -2620,7 +2794,6 @@ export default function ChatPage() {
   }, [selectedTextForNugget, selectionRect]);
 
   const [teachMeLoading, setTeachMeLoading] = useState(false);
-  const [perspectiveDecks, setPerspectiveDecks] = useState<{ id: string; name: string; description: string; domain: string }[]>([]);
   const handleTeachMeClick = useCallback(async () => {
     setOverachieverMessage(null);
     setTeachMeLoading(true);
@@ -3183,7 +3356,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               filteredSessions.map((s) => (
                 <div
                   key={s._id}
-                  className={`group flex flex-col gap-0 rounded-xl border transition-colors duration-200 ${
+                  className={`group flex flex-col gap-0 rounded-2xl border bg-white dark:bg-neutral-900 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 ${
                     currentSessionId === s._id
                       ? "border-neutral-300 dark:border-neutral-600"
                       : "border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-500"
@@ -3731,7 +3904,8 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 <div className="w-full">
                   <MovingPills
                     language={language}
-                    onSelect={(text) => sendMessage(text)}
+                    onSelectStarter={(text) => sendMessage(text)}
+                    onSelectPrompt={(card) => startConversationFromPerspectiveCard(card)}
                   />
                 </div>
               </div>
@@ -4269,7 +4443,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       aria-label="Search conversations"
                     />
                   </div>
-                  <nav className="space-y-px max-h-[60vh] overflow-y-auto">
+                  <nav className="max-h-[60vh] overflow-y-auto">
                     {filteredSessions.length === 0 ? (
                       <div className="px-3 py-4 space-y-1">
                         <p className="text-sm text-neutral-500 dark:text-neutral-400">
@@ -4282,13 +4456,14 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                         )}
                       </div>
                     ) : (
-                      filteredSessions.map((s) => (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {filteredSessions.map((s) => (
                         <div
                           key={s._id}
-                          className={`group flex flex-col gap-0 rounded-2xl border-2 transition-colors duration-200 ${
+                          className={`group flex flex-col gap-0 rounded-2xl border bg-white dark:bg-neutral-900 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 ${
                             currentSessionId === s._id
                               ? "border-neutral-300 dark:border-neutral-600"
-                              : "border-neutral-200 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500"
+                              : "border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-500"
                           }`}
                         >
                           <div className="flex items-center gap-1 min-w-0">
@@ -4372,7 +4547,8 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             </button>
                           )}
                         </div>
-                      ))
+                      ))}
+                      </div>
                     )}
                   </nav>
                 </div>
@@ -4479,14 +4655,15 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
 
                     const renderMmCard = (id: string, name: string) => {
                       const preview = mmPreviewMap.get(id);
-                      const backText = preview?.oneLiner ?? preview?.quickIntro ?? "Click to explore";
+                      const description = preview?.oneLiner ?? preview?.quickIntro ?? "Tap to explore";
                       const isFavorite = mmFavorites.has(id);
+                      const hasImage = !id.startsWith("custom_");
                       return (
-                        <div key={id} className="group/tile aspect-square [perspective:1000px] relative">
+                        <div key={id} className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]">
                           <button
                             type="button"
                             onClick={(e) => { e.stopPropagation(); e.preventDefault(); toggleMmFavorite(id); }}
-                            className="absolute top-1 right-1 z-20 p-1 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors touch-manipulation"
+                            className="absolute top-2 right-2 z-10 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors touch-manipulation"
                             aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
                           >
                             {isFavorite ? (
@@ -4503,16 +4680,36 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             role="button"
                             tabIndex={0}
                             onClick={() => handleMentalModelClick(id)}
-                            onKeyDown={(e) => e.key === "Enter" && handleMentalModelClick(id)}
-                            className="relative h-full w-full transition-transform duration-300 [transform-style:preserve-3d] group-hover/tile:[transform:rotateY(180deg)] cursor-pointer"
+                            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleMentalModelClick(id); } }}
+                            className="flex flex-col items-start gap-2 flex-1 min-w-0 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-500 focus-visible:ring-offset-2 rounded-xl -m-1 p-1"
                           >
-                            <div className={`absolute inset-0 w-full h-full rounded-xl bg-neutral-100 dark:bg-neutral-800 p-3 flex items-center justify-center [backface-visibility:hidden] border border-neutral-200 dark:border-neutral-700 overflow-hidden pointer-events-none transition-opacity duration-300 ${isSafari ? "group-hover/tile:opacity-0" : ""} ${id.startsWith("custom_") ? "text-neutral-800 dark:text-neutral-200" : "text-white"}`} style={id.startsWith("custom_") ? {} : { backgroundImage: `url(/images/${id.replace(/_/g, "-")}.png)`, backgroundSize: "cover", backgroundPosition: "center" }} aria-hidden>
-                              {!id.startsWith("custom_") && <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" aria-hidden />}
-                              <span className="relative z-10 text-xs font-medium capitalize tracking-wide text-center line-clamp-3 drop-shadow-sm">{name}</span>
+                            <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 h-28">
+                              {hasImage ? (
+                                <img
+                                  src={`/images/${id.replace(/_/g, "-")}.png`}
+                                  alt=""
+                                  className="w-full h-full object-cover"
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-neutral-500 dark:text-neutral-400">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                                    <path d="M12 3v18" />
+                                  </svg>
+                                </div>
+                              )}
                             </div>
-                            <div className="absolute inset-0 w-full h-full rounded-xl bg-foreground text-background px-3 flex items-center justify-center overflow-hidden [backface-visibility:hidden] [transform:rotateY(180deg)] border border-foreground pointer-events-none" aria-hidden>
-                              <span className="text-xs text-background/90 text-center line-clamp-4 w-full leading-tight">{backText}</span>
-                            </div>
+                            <span className="text-base font-medium text-foreground group-hover:text-foreground line-clamp-2 pr-8">
+                              {name}
+                            </span>
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2 flex-1 min-h-0">
+                              {description}
+                            </p>
+                            <p className="text-[11px] text-neutral-400 dark:text-neutral-500 mt-auto pt-1">
+                              Tap to open
+                            </p>
                           </div>
                         </div>
                       );
@@ -4548,7 +4745,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           <span className="text-[11px] text-neutral-500">{activeModels.length} models</span>
                         </div>
                         {activeModels.length > 0 ? (
-                              <div className="grid grid-cols-2 gap-2">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             {activeModels.map(({ id, name }) => renderMmCard(id, name))}
                               </div>
                             ) : (
@@ -4675,11 +4872,11 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   <h2 className="text-lg font-semibold text-foreground">Memory</h2>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Summaries of past conversations. Use when you want the agent to remember your context, preferences, and what you&apos;ve shared before.</p>
                   {longTermMemories.length > 0 ? (
-                    <div className="space-y-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {longTermMemories.map((ltm) => (
                         <div
                           key={ltm._id}
-                          className="flex items-start gap-3 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors relative"
+                          className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]"
                         >
                           <button
                             type="button"
@@ -4703,8 +4900,8 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             onKeyDown={(e) => e.key === "Enter" && setLtmDetailModal(ltm)}
                             className="flex-1 min-w-0 cursor-pointer pr-8"
                           >
-                            <span className="text-sm font-medium line-clamp-1">{ltm.title}</span>
-                            <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 line-clamp-2">{ltm.summary || ltm.enrichmentPrompt}</p>
+                            <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{ltm.title}</span>
+                            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{ltm.summary || ltm.enrichmentPrompt}</p>
                           </div>
                         </div>
                       ))}
@@ -5008,9 +5205,9 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     </div>
                   )}
                   {nuggets.length > 0 ? (
-                    <div className="space-y-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {nuggets.map((n) => (
-                        <div key={n._id} className="p-3 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors">
+                        <div key={n._id} className="group relative p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200">
                           <p className="text-sm text-foreground whitespace-pre-wrap">{n.content}</p>
                           {n.source && <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-1">{n.source}</p>}
                           {nuggetLearnId === n._id && nuggetLearnExplanation && (
@@ -8337,7 +8534,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   {waysOfLookingAtDrawMode && !waysOfLookingAtCategory
                     ? "Draw a perspective card"
                     : waysOfLookingAtCity
-                      ? `${domainDisplayName[waysOfLookingAtCategory ?? ""] ?? "Urban Jungle"} — ${waysOfLookingAtCity === "ny" ? "New York" : waysOfLookingAtCity === "sf" ? "San Francisco" : waysOfLookingAtCity === "london" ? "London" : waysOfLookingAtCity === "paris" ? "Paris" : "Bangalore"}`
+                      ? `${domainDisplayName[waysOfLookingAtCategory ?? ""] ?? "Urban Jungle"} — ${urbanJungleCityToName[waysOfLookingAtCity] ?? waysOfLookingAtCity}`
                       : waysOfLookingAtCuisine
                         ? `Culinary Lab — ${culinaryLabCuisineToName[waysOfLookingAtCuisine] ?? waysOfLookingAtCuisine}`
                         : waysOfLookingAtMicrocosm
@@ -8523,7 +8720,9 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             type="button"
                             onClick={async () => {
                               playSelectionChime();
-                              if (waysOfLookingAtDrawMode && domain === "art") {
+                              const subdomains = subdomainsByDomain[domain];
+                              const isDirectDrawDomain = !subdomains || subdomains.length === 0;
+                              if (waysOfLookingAtDrawMode && isDirectDrawDomain) {
                                 try {
                                   const deck = perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === domain);
                                   if (deck?.id) {
@@ -8547,21 +8746,19 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             }}
                             className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
                           >
+                            <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
+                              <img
+                                src={`/images/perspective-decks/domains/${domain}.png`}
+                                alt={`${domainDisplayName[domain] ?? domain.replace(/_/g, " ")} cover art`}
+                                className="w-full h-28 object-cover"
+                                loading="lazy"
+                              />
+                            </div>
                             <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
                               {domainDisplayName[domain] ?? domain.replace(/_/g, " ")}
                             </span>
                             <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2">
-                              {domain === "urban_jungle"
-                                ? "250 cards across New York, San Francisco, London, Paris, and Bangalore—from scale and light to layers of history."
-                                : domain === "culinary_lab"
-                                  ? "250 cards across Indian, Italian, Pizza, Chinese, and Sushi—from the chemistry of a bite to the archaeology of ingredients."
-                                  : domain === "natural_microcosm"
-                                    ? "250 cards across Forest Floor, Garden, Rocks, Pond, and Insect Territories—from the invisible engineering of a leaf to the territorial dramas of insects."
-                                    : domain === "human_interface"
-                                      ? "250 cards across Coffee Shop, Transit Hub, Workplace, Retail, and Public Space—from queue choreography to invisible scripts and the anthropology of shared space."
-                                      : domain === "digital_ghost"
-                                        ? "250 cards across Buttons, Loading, Error, Data, and Onboarding—from the intent behind a click to the physicality of data and when software breaks character."
-                                        : deck.description}
+                              {perspectiveDecksConfig?.domains?.[domain]?.description?.trim() ?? deck.description}
                             </p>
                           </button>
                         );
@@ -8575,13 +8772,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     {waysOfLookingAtDrawMode ? "Choose a subdomain (city)" : "Choose a city to browse its 50 perspective cards."}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {[
-                      { id: "ny", name: "New York" },
-                      { id: "sf", name: "San Francisco" },
-                      { id: "london", name: "London" },
-                      { id: "paris", name: "Paris" },
-                      { id: "blr", name: "Bangalore" },
-                    ].map((city) => (
+                    {(subdomainsByDomain["urban_jungle"] ?? []).map((city) => (
                       <button
                         key={city.id}
                         type="button"
@@ -8589,7 +8780,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           playSelectionChime();
                           if (waysOfLookingAtDrawMode) {
                             try {
-                              const deckId = urbanJungleCityToDeckId[city.id];
+                              const deckId = city.deck_id;
                               if (deckId) {
                                 const res = await fetch(`/api/perspective-decks/${deckId}/random`);
                                 const data = await res.json();
@@ -8598,7 +8789,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                                   setDrawnPerspectiveCard({
                                     card: data.card,
                                     deckId: data.deckId,
-                                    deckName: deck?.name ?? `Urban Jungle — ${city.name}`,
+                                    deckName: deck?.name ?? `${domainDisplayName["urban_jungle"] ?? "Urban Jungle"} — ${city.name}`,
                                   });
                                   setWaysOfLookingAtModalOpen(false);
                                   setWaysOfLookingAtDrawMode(false);
@@ -8611,6 +8802,20 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                         }}
                         className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
                       >
+                        <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
+                          <img
+                            src={`/images/perspective-decks/subdomains/urban_jungle_${city.id}.png`}
+                            alt={`${city.name} cover art`}
+                            className="w-full h-28 object-cover"
+                            loading="lazy"
+                            onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
+                          />
+                          <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+                              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            </svg>
+                          </div>
+                        </div>
                         <span className="text-base font-medium text-foreground group-hover:text-foreground">
                           {city.name}
                         </span>
@@ -8627,13 +8832,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     {waysOfLookingAtDrawMode ? "Choose a cuisine" : "Choose a cuisine to browse its 50 perspective cards."}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {[
-                      { id: "indian", name: "Indian" },
-                      { id: "italian", name: "Italian" },
-                      { id: "pizza", name: "Pizza" },
-                      { id: "chinese", name: "Chinese" },
-                      { id: "sushi", name: "Sushi" },
-                    ].map((cuisine) => (
+                    {(subdomainsByDomain["culinary_lab"] ?? []).map((cuisine) => (
                       <button
                         key={cuisine.id}
                         type="button"
@@ -8641,7 +8840,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           playSelectionChime();
                           if (waysOfLookingAtDrawMode) {
                             try {
-                              const deckId = culinaryLabCuisineToDeckId[cuisine.id];
+                              const deckId = cuisine.deck_id;
                               if (deckId) {
                                 const res = await fetch(`/api/perspective-decks/${deckId}/random`);
                                 const data = await res.json();
@@ -8650,7 +8849,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                                   setDrawnPerspectiveCard({
                                     card: data.card,
                                     deckId: data.deckId,
-                                    deckName: deck?.name ?? `Culinary Lab — ${cuisine.name}`,
+                                    deckName: deck?.name ?? `${domainDisplayName["culinary_lab"] ?? "Culinary Lab"} — ${cuisine.name}`,
                                   });
                                   setWaysOfLookingAtModalOpen(false);
                                   setWaysOfLookingAtDrawMode(false);
@@ -8663,6 +8862,20 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                         }}
                         className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
                       >
+                        <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
+                          <img
+                            src={`/images/perspective-decks/subdomains/culinary_lab_${cuisine.id}.png`}
+                            alt={`${cuisine.name} cover art`}
+                            className="w-full h-28 object-cover"
+                            loading="lazy"
+                            onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
+                          />
+                          <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                            </svg>
+                          </div>
+                        </div>
                         <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
                           {cuisine.name}
                         </span>
@@ -8679,13 +8892,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     {waysOfLookingAtDrawMode ? "Choose a subdomain" : "Choose a subdomain to browse its 50 perspective cards."}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {[
-                      { id: "forest_floor", name: "Forest Floor" },
-                      { id: "garden_backyard", name: "Garden & Backyard" },
-                      { id: "rocks_stones", name: "Rocks & Stones" },
-                      { id: "pond_puddle", name: "Pond & Puddle" },
-                      { id: "insect_territories", name: "Insect Territories" },
-                    ].map((sub) => (
+                    {(subdomainsByDomain["natural_microcosm"] ?? []).map((sub) => (
                       <button
                         key={sub.id}
                         type="button"
@@ -8693,7 +8900,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           playSelectionChime();
                           if (waysOfLookingAtDrawMode) {
                             try {
-                              const deckId = naturalMicrocosmSubToDeckId[sub.id];
+                              const deckId = sub.deck_id;
                               if (deckId) {
                                 const res = await fetch(`/api/perspective-decks/${deckId}/random`);
                                 const data = await res.json();
@@ -8702,7 +8909,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                                   setDrawnPerspectiveCard({
                                     card: data.card,
                                     deckId: data.deckId,
-                                    deckName: deck?.name ?? `Natural Microcosm — ${sub.name}`,
+                                    deckName: deck?.name ?? `${domainDisplayName["natural_microcosm"] ?? "Natural Microcosm"} — ${sub.name}`,
                                   });
                                   setWaysOfLookingAtModalOpen(false);
                                   setWaysOfLookingAtDrawMode(false);
@@ -8715,6 +8922,20 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                         }}
                         className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
                       >
+                        <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
+                          <img
+                            src={`/images/perspective-decks/subdomains/natural_microcosm_${sub.id}.png`}
+                            alt={`${sub.name} cover art`}
+                            className="w-full h-28 object-cover"
+                            loading="lazy"
+                            onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
+                          />
+                          <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                            </svg>
+                          </div>
+                        </div>
                         <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
                           {sub.name}
                         </span>
@@ -8731,13 +8952,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     {waysOfLookingAtDrawMode ? "Choose a subdomain" : "Choose a subdomain to browse its 50 perspective cards."}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {[
-                      { id: "coffee_shop", name: "Coffee Shop" },
-                      { id: "transit_hub", name: "Transit Hub" },
-                      { id: "workplace", name: "Workplace" },
-                      { id: "retail", name: "Retail" },
-                      { id: "public_space", name: "Public Space" },
-                    ].map((sub) => (
+                    {(subdomainsByDomain["human_interface"] ?? []).map((sub) => (
                       <button
                         key={sub.id}
                         type="button"
@@ -8745,7 +8960,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           playSelectionChime();
                           if (waysOfLookingAtDrawMode) {
                             try {
-                              const deckId = humanInterfaceSubToDeckId[sub.id];
+                              const deckId = sub.deck_id;
                               if (deckId) {
                                 const res = await fetch(`/api/perspective-decks/${deckId}/random`);
                                 const data = await res.json();
@@ -8754,7 +8969,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                                   setDrawnPerspectiveCard({
                                     card: data.card,
                                     deckId: data.deckId,
-                                    deckName: deck?.name ?? `The Human Interface — ${sub.name}`,
+                                    deckName: deck?.name ?? `${domainDisplayName["human_interface"] ?? "The Human Interface"} — ${sub.name}`,
                                   });
                                   setWaysOfLookingAtModalOpen(false);
                                   setWaysOfLookingAtDrawMode(false);
@@ -8767,6 +8982,23 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                         }}
                         className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
                       >
+                        <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
+                          <img
+                            src={`/images/perspective-decks/subdomains/human_interface_${sub.id}.png`}
+                            alt={`${sub.name} cover art`}
+                            className="w-full h-28 object-cover"
+                            loading="lazy"
+                            onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
+                          />
+                          <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+                              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                              <circle cx="9" cy="7" r="4" />
+                              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                          </div>
+                        </div>
                         <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
                           {sub.name}
                         </span>
@@ -8783,13 +9015,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     {waysOfLookingAtDrawMode ? "Choose a subdomain" : "Choose a subdomain to browse its 50 perspective cards."}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {[
-                      { id: "buttons_controls", name: "Buttons & Controls" },
-                      { id: "loading_states", name: "Loading States" },
-                      { id: "error_edge", name: "Error & Edge" },
-                      { id: "data_storage", name: "Data & Storage" },
-                      { id: "onboarding_flow", name: "Onboarding & Flow" },
-                    ].map((sub) => (
+                    {(subdomainsByDomain["digital_ghost"] ?? []).map((sub) => (
                       <button
                         key={sub.id}
                         type="button"
@@ -8797,7 +9023,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           playSelectionChime();
                           if (waysOfLookingAtDrawMode) {
                             try {
-                              const deckId = digitalGhostSubToDeckId[sub.id];
+                              const deckId = sub.deck_id;
                               if (deckId) {
                                 const res = await fetch(`/api/perspective-decks/${deckId}/random`);
                                 const data = await res.json();
@@ -8806,7 +9032,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                                   setDrawnPerspectiveCard({
                                     card: data.card,
                                     deckId: data.deckId,
-                                    deckName: deck?.name ?? `Digital Ghost — ${sub.name}`,
+                                    deckName: deck?.name ?? `${domainDisplayName["digital_ghost"] ?? "Digital Ghost"} — ${sub.name}`,
                                   });
                                   setWaysOfLookingAtModalOpen(false);
                                   setWaysOfLookingAtDrawMode(false);
@@ -8819,6 +9045,22 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                         }}
                         className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
                       >
+                        <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
+                          <img
+                            src={`/images/perspective-decks/subdomains/digital_ghost_${sub.id}.png`}
+                            alt={`${sub.name} cover art`}
+                            className="w-full h-28 object-cover"
+                            loading="lazy"
+                            onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
+                          />
+                          <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+                              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                              <line x1="8" y1="21" x2="16" y2="21" />
+                              <line x1="12" y1="17" x2="12" y2="21" />
+                            </svg>
+                          </div>
+                        </div>
                         <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
                           {sub.name}
                         </span>
@@ -8952,46 +9194,10 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 <button
                   onClick={() => {
                     playSelectionChime();
-                    const prompt = drawnPerspectiveCard.card.prompt;
-                    const name = drawnPerspectiveCard.card.name;
-                    const assistantContent = `Let me invite you to look through this lens:\n\n${prompt}\n\nWhat comes to mind?`;
-                    const initialMessage = {
-                      role: "assistant" as const,
-                      content: assistantContent,
-                      perspectiveCard: { name, prompt },
-                    };
-                    setDrawnPerspectiveCard(null);
-                    setWaysOfLookingAtModalOpen(false);
-                    setWaysOfLookingAtDrawMode(false);
-                    setWaysOfLookingAtCategory(null);
-                    setWaysOfLookingAtCity(null);
-                    setWaysOfLookingAtCuisine(null);
-                    setWaysOfLookingAtMicrocosm(null);
-                    setWaysOfLookingAtHuman(null);
-                    setWaysOfLookingAtDigital(null);
-                    if (typeof window !== "undefined" && window.innerWidth < 1024) {
-                      setLibraryPanelOpen(null);
-                      setSidebarOpen(false);
-                    }
-                    if (sessionId !== "new" && sessionId !== "incognito") {
-                      try {
-                        sessionStorage.setItem(PERSPECTIVE_CARD_START_KEY, JSON.stringify({
-                          assistantContent,
-                          prompt,
-                          name,
-                        }));
-                      } catch {
-                        /* ignore */
-                      }
-                      router.push("/chat/new");
-                    } else {
-                      setMessages([initialMessage]);
-                      setPendingCardContext({ prompt, name });
-                      setCurrentSessionId(null);
-                      setCurrentSession(null);
-                      setCollapsedSummary(null);
-                      inputRef.current?.focus();
-                    }
+                    startConversationFromPerspectiveCard({
+                      name: drawnPerspectiveCard.card.name,
+                      prompt: drawnPerspectiveCard.card.prompt,
+                    });
                   }}
                   className="flex-1 min-w-0 px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
                 >

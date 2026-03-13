@@ -3,26 +3,47 @@
 # Paths and descriptions for each deck
 
 domains:
-  urban_jungle: |
-    Instead of just walking through a city, you look at it as a living organism.
-    Cards focus on the scars of old buildings, the choreography of traffic,
-    and the secret lives of alleyways.
-  culinary_lab: |
-    Shifting from tasty to transformative. Explore the chemistry of a bite,
-    the history of an ingredient, and the soundtrack of a restaurant.
-  natural_microcosm: |
-    Perfect for a park or a backyard. This lens focuses on the invisible
-    engineering of a leaf, the slow-motion life of a rock, or the territorial
-    dramas of insects.
-  human_interface: |
-    The everyday spaces where humans meet—coffee shops, transit hubs,
-    workplaces, retail, public parks. Cards focus on queue choreography,
-    territorial claims, invisible scripts, and the anthropology of shared space.
-  digital_ghost: |
-    The invisible layer of digital experience—buttons and controls, loading
-    states, errors, data storage, onboarding. Cards focus on intent behind
-    interfaces, physicality of data, hidden labor behind smooth UI, and when
-    software breaks character.
+  art:
+    name: Ways of Looking at Art
+    description: |
+      Cards to shift your perspective when viewing art. Each offers a different
+      lens—from light and shadow to introductions and emotion—to deepen how you
+      see and engage with artworks.
+  urban_jungle:
+    name: Urban Jungle
+    description: |
+      Instead of just walking through a city, you look at it as a living organism.
+      Cards focus on the scars of old buildings, the choreography of traffic,
+      and the secret lives of alleyways.
+  culinary_lab:
+    name: Culinary Lab
+    description: |
+      Shifting from tasty to transformative. Explore the chemistry of a bite,
+      the history of an ingredient, and the soundtrack of a restaurant.
+  natural_microcosm:
+    name: Natural Microcosm
+    description: |
+      Perfect for a park or a backyard. This lens focuses on the invisible
+      engineering of a leaf, the slow-motion life of a rock, or the territorial
+      dramas of insects.
+  human_interface:
+    name: The Human Interface
+    description: |
+      The everyday spaces where humans meet—coffee shops, transit hubs,
+      workplaces, retail, public parks. Cards focus on queue choreography,
+      territorial claims, invisible scripts, and the anthropology of shared space.
+  digital_ghost:
+    name: Digital Ghost
+    description: |
+      The invisible layer of digital experience—buttons and controls, loading
+      states, errors, data storage, onboarding. Cards focus on intent behind
+      interfaces, physicality of data, hidden labor behind smooth UI, and when
+      software breaks character.
+  california_superbloom:
+    name: California Superbloom
+    description: |
+      The ephemeral burst of wildflowers after winter rain. Cards focus on color,
+      scale, pollinators, geology, weather, and the fleeting spectacle of the bloom.
 
 decks:
   - id: ways_of_looking_at_art
@@ -34,6 +55,16 @@ decks:
       deepen how you see and engage with artworks.
     domain: art
 
+  - id: ways_of_looking_at_california_superbloom
+    name: Ways of Looking at the California Superbloom
+    path: perspective-decks/ways-of-looking-at-california-superbloom.yaml
+    description: |
+      20 cards to shift your perspective when experiencing the California
+      superbloom. Each card offers a different lens—from pollinators and
+      geology to light, scent, and impermanence—to deepen how you see
+      wildflowers and the ephemeral burst of color.
+    domain: california_superbloom
+
   - id: urban_jungle_new_york
     name: Urban Jungle — New York
     path: perspective-decks/urban-jungle/urban-jungle-new-york.yaml
@@ -41,6 +72,8 @@ decks:
       50 cards to shift how you see New York—from scale and light to layers of
       history and the rhythms of street life.
     domain: urban_jungle
+    subdomain_id: ny
+    subdomain_name: New York
 
   - id: urban_jungle_san_francisco
     name: Urban Jungle — San Francisco
@@ -49,6 +82,8 @@ decks:
       50 cards to shift how you see San Francisco—from scale and light to
       layers of history and the rhythms of street life.
     domain: urban_jungle
+    subdomain_id: sf
+    subdomain_name: San Francisco
 
   - id: urban_jungle_london
     name: Urban Jungle — London
@@ -57,6 +92,8 @@ decks:
       50 cards to shift how you see London—from scale and light to layers of
       history and the rhythms of street life.
     domain: urban_jungle
+    subdomain_id: london
+    subdomain_name: London
 
   - id: urban_jungle_paris
     name: Urban Jungle — Paris
@@ -65,6 +102,8 @@ decks:
       50 cards to shift how you see Paris—from scale and light to layers of
       history and the rhythms of street life.
     domain: urban_jungle
+    subdomain_id: paris
+    subdomain_name: Paris
 
   - id: urban_jungle_bangalore
     name: Urban Jungle — Bangalore
@@ -73,6 +112,8 @@ decks:
       50 cards to shift how you see Bangalore—from scale and light to layers of
       history and the rhythms of street life.
     domain: urban_jungle
+    subdomain_id: blr
+    subdomain_name: Bangalore
 
   - id: culinary_lab_indian
     name: Culinary Lab — Indian
@@ -82,6 +123,8 @@ decks:
       spices and heat to the archaeology of ingredients and the choreography of
       the shared table.
     domain: culinary_lab
+    subdomain_id: indian
+    subdomain_name: Indian
 
   - id: culinary_lab_italian
     name: Culinary Lab — Italian
@@ -91,6 +134,8 @@ decks:
       olive oil and acid to the social choreography of the table and the
       archaeology of each ingredient.
     domain: culinary_lab
+    subdomain_id: italian
+    subdomain_name: Italian
 
   - id: culinary_lab_pizza
     name: Culinary Lab — Pizza
@@ -99,6 +144,8 @@ decks:
       50 cards to shift how you experience pizza—from the chemistry of dough
       and fire to the theatre of the slice and the archaeology of toppings.
     domain: culinary_lab
+    subdomain_id: pizza
+    subdomain_name: Pizza
 
   - id: culinary_lab_chinese
     name: Culinary Lab — Chinese
@@ -108,6 +155,8 @@ decks:
       wok hei and the archaeology of soy to the choreography of the round table
       and the narrative of the banquet.
     domain: culinary_lab
+    subdomain_id: chinese
+    subdomain_name: Chinese
 
   - id: culinary_lab_sushi
     name: Culinary Lab — Sushi
@@ -117,6 +166,8 @@ decks:
       and fish to the choreography of the counter and the archaeology of each
       neta's origin.
     domain: culinary_lab
+    subdomain_id: sushi
+    subdomain_name: Sushi
 
   - id: natural_microcosm_forest_floor
     name: Natural Microcosm — Forest Floor
@@ -126,6 +177,8 @@ decks:
       mycelium to leaf litter architecture and the invisible life beneath the
       canopy.
     domain: natural_microcosm
+    subdomain_id: forest_floor
+    subdomain_name: Forest Floor
 
   - id: natural_microcosm_garden_backyard
     name: Natural Microcosm — Garden & Backyard
@@ -134,6 +187,8 @@ decks:
       50 cards to shift how you see the domestic wild—from pollinators and
       soil to weeds versus crops and the choreography of cultivated nature.
     domain: natural_microcosm
+    subdomain_id: garden_backyard
+    subdomain_name: Garden & Backyard
 
   - id: natural_microcosm_rocks_stones
     name: Natural Microcosm — Rocks & Stones
@@ -142,6 +197,8 @@ decks:
       50 cards to shift how you see rocks and stones—from geological time and
       lichen to weathering, erosion, and the slow-motion life of mineral.
     domain: natural_microcosm
+    subdomain_id: rocks_stones
+    subdomain_name: Rocks & Stones
 
   - id: natural_microcosm_pond_puddle
     name: Natural Microcosm — Pond & Puddle
@@ -151,6 +208,8 @@ decks:
       and reflections to aquatic insects, tadpoles, and the life in temporary
       pools.
     domain: natural_microcosm
+    subdomain_id: pond_puddle
+    subdomain_name: Pond & Puddle
 
   - id: natural_microcosm_insect_territories
     name: Natural Microcosm — Insect Territories
@@ -160,6 +219,8 @@ decks:
       traffic to spider webs, territorial dramas, and the choreography of
       colonies.
     domain: natural_microcosm
+    subdomain_id: insect_territories
+    subdomain_name: Insect Territories
 
   - id: human_interface_coffee_shop
     name: The Human Interface — Coffee Shop
@@ -169,6 +230,8 @@ decks:
       and laptop territories to the third place, invisible scripts, and coffee
       as ritual.
     domain: human_interface
+    subdomain_id: coffee_shop
+    subdomain_name: Coffee Shop
 
   - id: human_interface_transit_hub
     name: The Human Interface — Transit Hub
@@ -178,6 +241,8 @@ decks:
       waiting to arrival/departure flow and the choreography of strangers
       in transit.
     domain: human_interface
+    subdomain_id: transit_hub
+    subdomain_name: Transit Hub
 
   - id: human_interface_workplace
     name: The Human Interface — Workplace
@@ -186,6 +251,8 @@ decks:
       50 cards to shift how you see the workplace—from desk territories and
       meeting rooms to the water cooler and visible versus invisible hierarchy.
     domain: human_interface
+    subdomain_id: workplace
+    subdomain_name: Workplace
 
   - id: human_interface_retail
     name: The Human Interface — Retail
@@ -194,6 +261,8 @@ decks:
       50 cards to shift how you see the retail space—from aisles and browsing
       choreography to fitting rooms and the dance of purchase.
     domain: human_interface
+    subdomain_id: retail
+    subdomain_name: Retail
 
   - id: human_interface_public_space
     name: The Human Interface — Public Space
@@ -202,6 +271,8 @@ decks:
       50 cards to shift how you see the public space—from benches and pathways
       to strangers' choreography and objects as talismans.
     domain: human_interface
+    subdomain_id: public_space
+    subdomain_name: Public Space
 
   - id: digital_ghost_buttons_controls
     name: Digital Ghost — Buttons & Controls
@@ -211,6 +282,8 @@ decks:
       a click to affordance, what a tap implies, and the hidden labor behind
       every interface element.
     domain: digital_ghost
+    subdomain_id: buttons_controls
+    subdomain_name: Buttons & Controls
 
   - id: digital_ghost_loading_states
     name: Digital Ghost — Loading States
@@ -219,6 +292,8 @@ decks:
       50 cards to shift how you see loading—from spinners and skeletons to
       latency, the wait, and what happens in the gap between action and response.
     domain: digital_ghost
+    subdomain_id: loading_states
+    subdomain_name: Loading States
 
   - id: digital_ghost_error_edge
     name: Digital Ghost — Error & Edge
@@ -228,6 +303,8 @@ decks:
       error messages, and the moments when software reveals its seams and
       limitations.
     domain: digital_ghost
+    subdomain_id: error_edge
+    subdomain_name: Error & Edge
 
   - id: digital_ghost_data_storage
     name: Digital Ghost — Data & Storage
@@ -236,6 +313,8 @@ decks:
       50 cards to shift how you see data storage—where data lives, the
       physicality of data, its weight, and the hidden geography of the digital.
     domain: digital_ghost
+    subdomain_id: data_storage
+    subdomain_name: Data & Storage
 
   - id: digital_ghost_onboarding_flow
     name: Digital Ghost — Onboarding & Flow
@@ -244,3 +323,5 @@ decks:
       50 cards to shift how you see onboarding—the first-run experience, empty
       states, first impressions, and the choreography of introduction.
     domain: digital_ghost
+    subdomain_id: onboarding_flow
+    subdomain_name: Onboarding & Flow

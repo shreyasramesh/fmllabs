@@ -1,0 +1,231 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Ways of Looking at the California Superbloom
+
+id: ways_of_looking_at_california_superbloom
+name: Ways of Looking at the California Superbloom
+description: |
+  Cards to shift your perspective when experiencing the California superbloom.
+  Each offers a different lens to deepen how you see wildflowers, hillsides, and
+  the ephemeral burst of color after winter rain.
+domain: california_superbloom
+
+cards:
+  - id: the_rain_that_made_it
+    name: The Rain That Made It
+    prompt: |
+      Before the flowers, there was rain. Imagine the storms that filled the
+      soil, the seeds waiting underground. What conditions had to align for this
+      bloom to happen? Trace the superbloom backward to its origins.
+    follow_ups:
+      - What would have been different with more—or less—rain?
+      - How many years of dormancy might lie behind a single hillside?
+      - What does it mean that this moment was never guaranteed?
+
+  - id: one_species_at_a_time
+    name: One Species at a Time
+    prompt: |
+      Pick a single flower species and follow it. Orange poppies, purple lupine,
+      yellow goldfields—ignore everything else for a moment. How does focusing
+      on one change what you see?
+    follow_ups:
+      - Where does this species dominate—and where does it yield?
+      - What would the hillside look like if only this one bloomed?
+      - How does it hold its own among the others?
+
+  - id: pollinators_view
+    name: Pollinator's View
+    prompt: |
+      Imagine you are a bee, a butterfly, or a hummingbird. What would draw you
+      in? Which flowers would you visit first? What does the landscape look like
+      from a few inches above the petals?
+    follow_ups:
+      - What patterns would guide your path?
+      - Which flowers would you skip—and why?
+      - How does scale change the experience?
+
+  - id: ground_level
+    name: Ground Level
+    prompt: |
+      Get down low. Lie on your belly or kneel. See the superbloom from the
+      perspective of the soil—stems rising, petals arching over you, the sky
+      a distant strip above.
+    follow_ups:
+      - What do you notice that you missed from standing height?
+      - How does the ground feel beneath you?
+      - What would a beetle see from here?
+
+  - id: time_lapse
+    name: Time-Lapse
+    prompt: |
+      The superbloom is a moment in a longer story. Imagine the hillside in
+      fast-forward: green shoots, first buds, peak color, then fading. How long
+      does the spectacle last? What comes before and after?
+    follow_ups:
+      - When would you have chosen to visit if you could only go once?
+      - What is already gone by the time you arrive?
+      - What will remain when the color fades?
+
+  - id: the_chemistry_of_color
+    name: The Chemistry of Color
+    prompt: |
+      Focus on the pigments. Orange, purple, yellow, blue—what makes each hue?
+      How do they interact? Where do colors clash, and where do they harmonize?
+      Treat the hillside as a palette.
+    follow_ups:
+      - What color would you add—or subtract?
+      - How does light change the colors through the day?
+      - What would it look like in black and white?
+
+  - id: negative_space
+    name: Negative Space
+    prompt: |
+      Look at what isn't flowers. The sky, the bare patches of soil, the gaps
+      between blooms. How does the empty space shape what you see? Feel the
+      significance of what is not there.
+    follow_ups:
+      - Where does the emptiness concentrate?
+      - What would fill those gaps—and should it?
+      - How does the negative space hold the composition together?
+
+  - id: the_path_through
+    name: The Path Through
+    prompt: |
+      Notice the trails—human, animal, or wind-blown. Where do people walk?
+      Where does the landscape resist passage? Trace a path through the bloom
+      and ask what it would cost to follow it.
+    follow_ups:
+      - What would you protect by not walking there?
+      - Where does the path want to take you?
+      - What would you miss by staying on the trail?
+
+  - id: geology_beneath
+    name: Geology Beneath
+    prompt: |
+      The flowers rest on millions of years. What rock lies under the soil?
+      What shaped these hills? Let the superbloom connect you to the deep time
+      beneath your feet.
+    follow_ups:
+      - How does the geology influence what grows here?
+      - What would this place have looked like before the hills formed?
+      - What will remain when the flowers are gone?
+
+  - id: scent_and_sound
+    name: Scent and Sound
+    prompt: |
+      Close your eyes. What do you smell? Pollen, dust, sage, damp earth? What
+      do you hear? Bees, wind, footsteps, silence? Let the non-visual senses
+      lead for a moment.
+    follow_ups:
+      - What sound would you add to capture the experience?
+      - How does the scent change as you move?
+      - What would you miss if you only looked?
+
+  - id: light_and_shadow
+    name: Light and Shadow
+    prompt: |
+      Watch how light moves across the hillside. Morning, midday, evening—how
+      does the angle of the sun change the flowers? Where do shadows fall?
+      What is revealed and what is hidden?
+    follow_ups:
+      - When does the light feel most alive?
+      - What would you see at dawn that you'd miss at noon?
+      - How do shadows shape the landscape?
+
+  - id: seed_to_flower
+    name: Seed to Flower
+    prompt: |
+      Trace a single plant from seed to bloom. How did it get here? Wind, animal,
+      water? How long did it wait? What will it become when the petals fall?
+      Follow one life through its cycle.
+    follow_ups:
+      - What would the seed have witnessed underground?
+      - What will the plant leave behind?
+      - How many generations are represented in this hillside?
+
+  - id: micro_vs_macro
+    name: Micro vs. Macro
+    prompt: |
+      Zoom in on a single petal, a dewdrop, a grain of pollen. Then pull back
+      to the whole hillside, the valley, the state. How does scale change what
+      the superbloom means?
+    follow_ups:
+      - What is invisible at one scale and obvious at another?
+      - Where does your attention naturally rest?
+      - How does the macro view change the micro—and vice versa?
+
+  - id: weathers_hand
+    name: Weather's Hand
+    prompt: |
+      The superbloom is weather's collaboration. Rain, sun, wind, temperature—
+      each has a role. Imagine the weather as a co-creator. What did it decide?
+      What did it withhold?
+    follow_ups:
+      - What would a different winter have produced?
+      - How does today's weather shape your experience?
+      - What would the flowers say about the weather if they could?
+
+  - id: human_witness
+    name: Human Witness
+    prompt: |
+      You are not the first to see this. Who else has stood here? Ranchers,
+      Indigenous peoples, photographers, travelers. How does your presence
+      change the place? What does it mean to witness?
+    follow_ups:
+      - What would they have seen that you don't?
+      - What will you carry away?
+      - How does witnessing differ from owning or taking?
+
+  - id: the_next_year
+    name: The Next Year
+    prompt: |
+      This bloom will not repeat exactly. Next year may be drought, or fire, or
+      a different mix of species. Imagine returning in a year. What would you
+      hope to find? What would you be prepared to lose?
+    follow_ups:
+      - What makes this moment irreplaceable?
+      - What would you tell your future self?
+      - How does impermanence deepen the experience?
+
+  - id: texture_and_touch
+    name: Texture and Touch
+    prompt: |
+      What would it feel like to run your hand through the flowers? Soft petals,
+      brittle stems, sticky pollen, rough leaves. Imagine the textures without
+      touching—or, where allowed, touch gently and notice.
+    follow_ups:
+      - Which texture surprises you most?
+      - What would you avoid touching—and why?
+      - How does texture add to what color alone cannot convey?
+
+  - id: before_and_after
+    name: Before and After
+    prompt: |
+      Picture this hillside in the dry season—brown, dormant, seemingly dead.
+      Now hold both images: the before and the after. What does the contrast
+      reveal about resilience, patience, and transformation?
+    follow_ups:
+      - What would someone who only saw the dry season miss?
+      - How does the memory of dormancy enrich the bloom?
+      - What other "before and after" moments does this evoke?
+
+  - id: make_it_a_mixtape
+    name: Make It a Mixtape
+    prompt: |
+      What music would accompany this landscape? Build a playlist for the
+      superbloom. What tempo, what mood, what instruments? Let the flowers
+      suggest the soundtrack.
+    follow_ups:
+      - What's the opening track?
+      - What quality links the music to the flowers—rhythm, color, feeling?
+      - How would the playlist change at different times of day?
+
+  - id: take_one_thing_home
+    name: Take One Thing Home
+    prompt: |
+      You cannot take the flowers—they belong here. But you can take a memory,
+      a sensation, a question. What one thing will you carry away? How will you
+      hold onto it without picking a single bloom?
+    follow_ups:
+      - What would you show someone who couldn't come?
+      - How will you describe it later?
+      - What would you leave behind on purpose?

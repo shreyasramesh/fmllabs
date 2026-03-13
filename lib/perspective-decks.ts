@@ -16,11 +16,29 @@ export interface PerspectiveDeckIndexEntry {
   path: string;
   description: string;
   domain: string;
+  subdomain_id?: string;
+  subdomain_name?: string;
 }
 
+export type DomainConfig = string | { name: string; description: string };
+
 export interface PerspectiveDeckIndex {
-  domains?: Record<string, string>;
+  domains?: Record<string, DomainConfig>;
   decks: PerspectiveDeckIndexEntry[];
+}
+
+export function getDomainDisplayName(domains: PerspectiveDeckIndex["domains"] | undefined, domainId: string): string {
+  const config = domains?.[domainId];
+  if (!config) return domainId.replace(/_/g, " ");
+  if (typeof config === "string") return domainId.replace(/_/g, " ");
+  return config.name;
+}
+
+export function getDomainDescription(domains: PerspectiveDeckIndex["domains"] | undefined, domainId: string): string {
+  const config = domains?.[domainId];
+  if (!config) return "";
+  if (typeof config === "string") return config;
+  return config.description;
 }
 
 export interface PerspectiveDeck {
