@@ -650,8 +650,20 @@ export async function POST(request: Request) {
     (g) => g.id
   );
 
+  // Gemini requires the first message to be from the user. If we have prepended
+  // assistant messages, inject them into the system prompt and strip from history.
+  let messagesForGemini = messagesForModel;
+  let systemPromptForGemini = fullSystemPrompt;
+  while (messagesForGemini[0]?.role === "assistant") {
+    const m = messagesForGemini[0];
+    systemPromptForGemini =
+      `You have just said the following to the user:\n\n${m.content}\n\nThe user is now responding. Continue the conversation naturally.\n\n` +
+      systemPromptForGemini;
+    messagesForGemini = messagesForGemini.slice(1);
+  }
+
   if (process.env.NODE_ENV === "development") {
-    const requestText = messagesForModel
+    const requestText = messagesForGemini
       .map(
         (m, index) =>
           `${index + 1}. ${m.role.toUpperCase()}\n${m.content.trim()}`
@@ -679,8 +691,8 @@ export async function POST(request: Request) {
         try {
           controller.enqueue(encoder.encode(contextBlockForStream));
           for await (const chunk of streamGenerateContent(
-            fullSystemPrompt,
-            messagesForModel
+            systemPromptForGemini,
+            messagesForGemini
           )) {
             fullResponse += chunk;
             controller.enqueue(encoder.encode(chunk));
