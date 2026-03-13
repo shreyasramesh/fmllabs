@@ -1,0 +1,467 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Urban Jungle — Paris
+
+id: urban_jungle_paris
+name: Urban Jungle — Paris
+description: 50 cards to shift how you see Paris—from scale and light to layers
+  of history and the rhythms of street life.
+domain: urban_jungle
+cards:
+  - id: paris_balcony_flower
+    name: Balcony Flower
+    prompt: |
+      Paris balconies bloom with flowers—geraniums, petunias. Find a building
+      where every balcony has a pot. How does the flower change the facade?
+    follow_ups:
+      - What would the street be without the flowers?
+      - How do flowers create identity?
+      - What's the relationship between flower and resident?
+  - id: paris_haussmann_line
+    name: Haussmann Line
+    prompt: >
+      Haussmann boulevards cut through old Paris. Walk one. The line is
+
+      relentless—buildings aligned, heights uniform. How does the boulevard
+      shape movement?
+    follow_ups:
+      - What would Paris be without Haussmann?
+      - How does the boulevard create vista?
+      - What's the relationship between line and power?
+  - id: paris_cafe_terrace
+    name: Café Terrace
+    prompt: |
+      Paris café terraces face the street. Sit at one. You're both inside and
+      outside. The terrace is a threshold. What do you see?
+    follow_ups:
+      - What would the street be without the terrace?
+      - How does the terrace create encounter?
+      - What's the relationship between terrace and street?
+  - id: paris_metro_entrance
+    name: Métro Entrance
+    prompt: |
+      Art Nouveau métro entrances are icons. Find one. The ironwork, the
+      lettering—the entrance is a portal. What does it promise?
+    follow_ups:
+      - What would the street be without the entrance?
+      - How does the entrance create identity?
+      - What's the relationship between entrance and underground?
+  - id: paris_shutter
+    name: Paris Shutter
+    prompt: |
+      Paris shutters—volets—close at night. They're green, grey, blue. Find a
+      street where shutters are closed. What's behind them?
+    follow_ups:
+      - What would the facade be without the shutters?
+      - How do shutters create privacy?
+      - What's the relationship between shutter and light?
+  - id: paris_cobble
+    name: Paris Cobble
+    prompt: |
+      Paris cobblestones—pavés—persist. Walk on them. Feel the texture. The
+      cobble is a relic of another Paris. How does it shape the street?
+    follow_ups:
+      - What would the street be without the cobbles?
+      - How do cobbles mark history?
+      - What's the relationship between cobble and revolution?
+  - id: paris_seine_edge
+    name: Seine Edge
+    prompt: |
+      The Seine runs through Paris. Go to the quay. The river is a seam. What's
+      on either side? How does the river divide and connect?
+    follow_ups:
+      - What would Paris be without the Seine?
+      - How does the river shape the city?
+      - What's the relationship between river and edge?
+  - id: paris_roof_zinc
+    name: Roof Zinc
+    prompt: |
+      Paris roofs are often zinc—grey, sloping, with dormers. Look up. The roof
+      line is distinctive. How does it shape the skyline?
+    follow_ups:
+      - What would the skyline be without the zinc?
+      - How does zinc create identity?
+      - What's the relationship between roof and attic?
+  - id: paris_door_height
+    name: Door Height
+    prompt: |
+      Paris doors are often tall—double height. Find one. What would pass
+      through? The door is a threshold of scale.
+    follow_ups:
+      - What would the building be without the tall door?
+      - How does height create grandeur?
+      - What's the relationship between door and building?
+  - id: paris_boulangerie_smell
+    name: Boulangerie Smell
+    prompt: |
+      A boulangerie smells of bread. Follow the smell. The bakery is a node.
+      What does the smell say about the block?
+    follow_ups:
+      - What would the street be without the smell?
+      - How does smell create identity?
+      - What's the relationship between smell and commerce?
+  - id: paris_place
+    name: Paris Place
+    prompt: |
+      Paris has places—squares, circles, nodes. Find one. Notice the
+      geometry. How does the place shape the streets that feed it?
+    follow_ups:
+      - What would the neighborhood be without the place?
+      - How does the place create focus?
+      - What's the relationship between place and flow?
+  - id: paris_balcony_iron
+    name: Balcony Iron
+    prompt: |
+      Paris balcony railings are often ornate—wrought iron, curves, flourishes.
+      Find one. How does the iron shape the facade?
+    follow_ups:
+      - What would the building be without the iron?
+      - How does the iron create identity?
+      - What's the relationship between iron and craft?
+  - id: paris_plane_tree
+    name: Plane Tree
+    prompt: |
+      Paris plane trees line the boulevards. Their bark peels. Find one. How
+      does the tree shape the street? What would the boulevard be without it?
+    follow_ups:
+      - What would the street be without the plane?
+      - How does the plane create shade?
+      - What's the relationship between tree and boulevard?
+  - id: paris_metro_tile
+    name: Métro Tile
+    prompt: |
+      Paris métro stations have white tiles. The tunnel is a tube of light. Ride
+      a line. How does the tile shape the journey?
+    follow_ups:
+      - What would the station be without the tiles?
+      - How do tiles create cleanliness?
+      - What's the relationship between tile and underground?
+  - id: paris_clock
+    name: Paris Clock
+    prompt: |
+      Paris has many public clocks—on churches, stations, buildings. Find one.
+      What time does it tell? Is it right?
+    follow_ups:
+      - What would the space be without the clock?
+      - How does the clock shape time?
+      - What's the relationship between clock and place?
+  - id: paris_newsstand
+    name: Paris Newsstand
+    prompt: |
+      Paris kiosques sell papers, magazines, metro tickets. Find one. What's on
+      display? Who stops? The kiosque is a node.
+    follow_ups:
+      - What would the street be without the kiosque?
+      - How does the kiosque create encounter?
+      - What's the relationship between kiosque and street?
+  - id: paris_bench
+    name: Paris Bench
+    prompt: |
+      Paris has green benches in parks and along the Seine. Sit on one. Who else
+      sits? What's the view?
+    follow_ups:
+      - What would the space be without the bench?
+      - How does the bench create respite?
+      - What's the relationship between bench and river?
+  - id: paris_boulangerie_queue
+    name: Boulangerie Queue
+    prompt: |
+      Join a boulangerie queue at morning rush. The queue is a ritual. What are
+      people buying? What's the etiquette?
+    follow_ups:
+      - What would the street be without the queue?
+      - How does the queue create community?
+      - What's the relationship between queue and bread?
+  - id: paris_manhole
+    name: Paris Manhole
+    prompt: |
+      Paris manhole covers often say "Paris" or "Eau." Find one. The cover is a
+      door to the city's veins. What's beneath?
+    follow_ups:
+      - What would the street be without the cover?
+      - How does the cover mark the system?
+      - What's the relationship between cover and underground?
+  - id: paris_shadow
+    name: Paris Shadow
+    prompt: |
+      Paris light creates sharp shadows. Find a corner where shadow and sun
+      meet. How does the shadow shape the street?
+    follow_ups:
+      - What would the street be without the shadow?
+      - How does shadow create contrast?
+      - What's the relationship between shadow and building?
+  - id: paris_courtyard
+    name: Paris Courtyard
+    prompt: |
+      Paris buildings often hide courtyards—cours—behind gates. Peek through.
+      What's inside? The courtyard is a secret room.
+    follow_ups:
+      - What would the building be without the courtyard?
+      - How does the courtyard create privacy?
+      - What's the relationship between courtyard and street?
+  - id: paris_bike_lane
+    name: Paris Bike Lane
+    prompt: |
+      Paris has expanded bike lanes—pistes cyclables. Find one. How does the
+      lane shape the street? Who uses it?
+    follow_ups:
+      - What would the street be without the lane?
+      - How does the lane create mobility?
+      - What's the relationship between lane and car?
+  - id: paris_fountain
+    name: Paris Fountain
+    prompt: |
+      Paris has fountains—Wallace fountains, monumental fountains. Find one.
+      What does it offer? Who uses it?
+    follow_ups:
+      - What would the place be without the fountain?
+      - How does the fountain create gift?
+      - What's the relationship between fountain and public?
+  - id: paris_awning
+    name: Paris Awning
+    prompt: |
+      Paris café awnings create shade. Find a street where awnings repeat. How
+      do they shape the sidewalk?
+    follow_ups:
+      - What would the street be without the awnings?
+      - How do awnings create territory?
+      - What's the relationship between awning and terrace?
+  - id: paris_lamp_post
+    name: Paris Lamp Post
+    prompt: |
+      Paris lamp posts have a particular style—often ornate, often green. Find
+      one. How does the lamp shape the street at night?
+    follow_ups:
+      - What would the street be without the lamp?
+      - How does the lamp create safety?
+      - What's the relationship between lamp and darkness?
+  - id: paris_door_knocker
+    name: Door Knocker
+    prompt: |
+      Paris doors often have knockers—lion heads, hands, rings. Find one. What
+      would it sound like? The knocker is a threshold object.
+    follow_ups:
+      - What would the door be without the knocker?
+      - How does the knocker create sound?
+      - What's the relationship between knocker and entrance?
+  - id: paris_shop_sign
+    name: Paris Shop Sign
+    prompt: >
+      Paris shop signs are often hand-painted—boulangerie, boucherie,
+      fromagerie.
+
+      Find one. What does the sign say about the shop?
+    follow_ups:
+      - What would the street be without the sign?
+      - How does the sign create identity?
+      - What's the relationship between sign and craft?
+  - id: paris_parking
+    name: Paris Parking
+    prompt: >
+      Paris parking is creative—cars on sidewalks, angled, squeezed. Watch
+
+      someone park. How does the car fit? What's the relationship between car
+      and city?
+    follow_ups:
+      - What would the street be without the cars?
+      - How does parking shape the street?
+      - What's the relationship between parking and space?
+  - id: paris_drain
+    name: Paris Drain
+    prompt: |
+      Paris gutters run along the curb. After rain, they flow. Find one. Where
+      does the water go? The drain is a seam.
+    follow_ups:
+      - What would the street be without the drain?
+      - How does the drain manage water?
+      - What's the relationship between drain and system?
+  - id: paris_chimney
+    name: Paris Chimney
+    prompt: |
+      Paris chimneys punctuate the roof line. Count them on one building. The
+      chimney is a relic of heat. What burned here?
+    follow_ups:
+      - What would the roof be without the chimney?
+      - How does the chimney mark history?
+      - What's the relationship between chimney and fire?
+  - id: paris_metro_map
+    name: Métro Map
+    prompt: |
+      The Paris métro map is a diagram. It distorts geography. What's
+      emphasized? What's omitted? How does the map shape the city?
+    follow_ups:
+      - What would wayfinding be without the map?
+      - How does the map create connection?
+      - What's the relationship between map and territory?
+  - id: paris_bridge
+    name: Paris Bridge
+    prompt: |
+      Paris has many bridges over the Seine. Cross one on foot. Feel the
+      transition. What changes? The bridge is a threshold.
+    follow_ups:
+      - What would the river be without the bridge?
+      - How does the bridge connect?
+      - What's the relationship between bridge and river?
+  - id: paris_graffiti
+    name: Paris Graffiti
+    prompt: |
+      Paris has graffiti—tags, stencils, murals. Find a wall with layers. What's
+      the palimpsest? Who has marked this surface?
+    follow_ups:
+      - What would the wall be without the graffiti?
+      - How does graffiti claim space?
+      - What's the relationship between graffiti and city?
+  - id: paris_tree_guard
+    name: Tree Guard
+    prompt: |
+      Paris street trees often have guards—metal grilles around the base. Find
+      one. What's the guard protecting? What's it excluding?
+    follow_ups:
+      - What would the tree be without the guard?
+      - How does the guard shape the pit?
+      - What's the relationship between guard and tree?
+  - id: paris_bus_stop
+    name: Paris Bus Stop
+    prompt: |
+      Paris bus stops have shelters, timetables, digital displays. Wait at one.
+      Who else waits? What's the etiquette?
+    follow_ups:
+      - What would the street be without the stop?
+      - How does the stop create community?
+      - What's the relationship between stop and journey?
+  - id: paris_terrace_table
+    name: Terrace Table
+    prompt: |
+      A café terrace table faces the street. Sit at one. The table is a stage.
+      What do you watch? What watches you?
+    follow_ups:
+      - What would the terrace be without the table?
+      - How does the table create encounter?
+      - What's the relationship between table and street?
+  - id: paris_roof_dormer
+    name: Roof Dormer
+    prompt: |
+      Paris roof dormers—mansard windows—punctuate the skyline. Find a building
+      with many. What would the view be from inside?
+    follow_ups:
+      - What would the roof be without the dormers?
+      - How do dormers create light?
+      - What's the relationship between dormer and attic?
+  - id: paris_parking_metre
+    name: Parking Métre
+    prompt: |
+      Paris parking metres are often grey boxes. Find one. How does it shape
+      the curb? Who pays? Who doesn't?
+    follow_ups:
+      - What would the street be without the metre?
+      - How does the metre manage space?
+      - What's the relationship between metre and car?
+  - id: paris_doorway
+    name: Paris Doorway
+    prompt: |
+      A Paris doorway is often tall, often ornate. Stand in front of one. What
+      would it be like to pass through? The doorway is a threshold.
+    follow_ups:
+      - What would the building be without the doorway?
+      - How does the doorway create grandeur?
+      - What's the relationship between doorway and interior?
+  - id: paris_metro_stair
+    name: Métro Stair
+    prompt: |
+      Métro stairs descend into the earth. Count the steps. Feel the
+      transition. What's above? What's below?
+    follow_ups:
+      - What would the station be without the stairs?
+      - How do stairs create descent?
+      - What's the relationship between stair and underground?
+  - id: paris_bench_view
+    name: Bench View
+    prompt: |
+      Sit on a bench with a view—of the Seine, a square, a street. What's the
+      frame? What's the focus? The bench is a vantage point.
+    follow_ups:
+      - What would the view be without the bench?
+      - How does the bench create pause?
+      - What's the relationship between bench and view?
+  - id: paris_shutter_open
+    name: Shutter Open
+    prompt: |
+      Paris shutters open in the morning. Find a street where they're opening.
+      What's the ritual? What does the opening reveal?
+    follow_ups:
+      - What would the street be without the shutters?
+      - How does the shutter create rhythm?
+      - What's the relationship between shutter and day?
+  - id: paris_cobble_pattern
+    name: Cobble Pattern
+    prompt: |
+      Paris cobbles are laid in patterns—sometimes herringbone, sometimes
+      radial. Find a pattern. How does it shape the street?
+    follow_ups:
+      - What would the street be without the pattern?
+      - How does the pattern create texture?
+      - What's the relationship between pattern and craft?
+  - id: paris_plane_bark
+    name: Plane Bark
+    prompt: |
+      Paris plane tree bark peels in patches. Touch one. The bark is a texture.
+      How does the tree age? What would the street be without it?
+    follow_ups:
+      - What would the boulevard be without the plane?
+      - How does the bark create identity?
+      - What's the relationship between bark and tree?
+  - id: paris_fountain_drink
+    name: Fountain Drink
+    prompt: |
+      Wallace fountains offer free water. Find one. Who drinks? Who doesn't?
+      The fountain is a gift. What does it mean?
+    follow_ups:
+      - What would the place be without the fountain?
+      - How does the fountain create public good?
+      - What's the relationship between fountain and thirst?
+  - id: paris_metro_sound
+    name: Métro Sound
+    prompt: |
+      Close your eyes in the métro. The rumble, the brakes, the announcements.
+      Map the soundscape. What does Paris sound like underground?
+    follow_ups:
+      - What would the journey be without the sound?
+      - How does sound shape the experience?
+      - What's the relationship between sound and space?
+  - id: paris_balcony_dry
+    name: Balcony Dry
+    prompt: |
+      Paris balconies are often used for drying—laundry, plants. Find one with
+      laundry. What does the drying say about the resident?
+    follow_ups:
+      - What would the facade be without the laundry?
+      - How does drying create domesticity?
+      - What's the relationship between balcony and home?
+  - id: paris_bike_velib
+    name: Bike Vélib
+    prompt: |
+      Vélib' stations dot Paris. Find one. How many bikes? How many docks? The
+      system is a layer. How does it work?
+    follow_ups:
+      - What would the street be without the station?
+      - How does Vélib' create mobility?
+      - What's the relationship between station and bike?
+  - id: paris_door_bell
+    name: Door Bell
+    prompt: >
+      Paris apartment buildings have multiple doorbells—one per apartment. Find
+      a
+
+      panel. How many names? How is the building organized?
+    follow_ups:
+      - What would the entrance be without the bells?
+      - How do bells create address?
+      - What's the relationship between bell and apartment?
+  - id: paris_roof_terrace
+    name: Roof Terrace
+    prompt: |
+      Imagine a Paris roof terrace. What would you see? Who has access? The
+      terrace is a secret level. What would you grow there?
+    follow_ups:
+      - What would the roof be without the terrace?
+      - How does the terrace create view?
+      - What's the relationship between terrace and sky?

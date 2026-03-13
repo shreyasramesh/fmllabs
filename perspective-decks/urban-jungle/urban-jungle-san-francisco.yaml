@@ -1,0 +1,464 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Urban Jungle — San Francisco
+
+id: urban_jungle_san_francisco
+name: Urban Jungle — San Francisco
+description: 50 cards to shift how you see San Francisco—from scale and light to
+  layers of history and the rhythms of street life.
+domain: urban_jungle
+cards:
+  - id: sf_hill_grade
+    name: Hill Grade
+    prompt: |
+      San Francisco is built on inclines. Feel the slope under your feet. How
+      does the grade change what you notice? Where does the city tilt?
+    follow_ups:
+      - What would the street look like if it were flat?
+      - How do hills shape neighborhoods?
+      - What's the steepest block you've climbed?
+  - id: sf_fog_layer
+    name: Fog Layer
+    prompt: |
+      The fog rolls in. Watch it move—over the bridge, down the hills. The fog
+      is a character. How does it change the light? The sound?
+    follow_ups:
+      - What would the city be without fog?
+      - How does fog mark time?
+      - Where does the fog stop?
+  - id: sf_cable_car_track
+    name: Cable Car Track
+    prompt: |
+      Follow a cable car track. The slot in the pavement, the hum of the cable.
+      The cable car is a relic that still works. What does it carry?
+    follow_ups:
+      - What would the hill be without the track?
+      - How does the cable car shape tourism?
+      - What's the relationship between track and street?
+  - id: sf_victorian_detail
+    name: Victorian Detail
+    prompt: |
+      San Francisco Victorians are ornate—gingerbread, bay windows, color.
+      Find one and read its details. What story does the ornament tell?
+    follow_ups:
+      - What would the house be without the details?
+      - How does color change the street?
+      - What's the relationship between Victorian and modern?
+  - id: sf_painted_lady
+    name: Painted Lady
+    prompt: |
+      The Painted Ladies are famous, but every Victorian has a palette. Collect
+      five color combinations from one block. What do the colors say?
+    follow_ups:
+      - Why these colors?
+      - How does paint preserve or transform?
+      - What would the block look like in grayscale?
+  - id: sf_bay_window
+    name: Bay Window
+    prompt: |
+      Bay windows bulge into the street. They're for light, for view, for
+      display. Stand in front of one. What would you see from inside?
+    follow_ups:
+      - How does the bay change the room?
+      - What would the facade be without it?
+      - How do bay windows create relationship to the street?
+  - id: sf_stairway_street
+    name: Stairway Street
+    prompt: |
+      San Francisco has stairways that are streets—steps instead of pavement.
+      Climb one. How does the stairway change the neighborhood?
+    follow_ups:
+      - Who uses these stairs?
+      - What would the hill be without them?
+      - How do stairs create community?
+  - id: sf_mission_mural
+    name: Mission Mural
+    prompt: |
+      The Mission is a gallery of murals. Find one and read it. What's the
+      story? Who painted it? Who is it for?
+    follow_ups:
+      - What would the wall say without the mural?
+      - How do murals claim space?
+      - What's the relationship between mural and neighborhood?
+  - id: sf_earthquake_retrofit
+    name: Earthquake Retrofit
+    prompt: |
+      Look for earthquake retrofits—bolts, braces, foundations. The city
+      remembers 1906 and 1989. How does fear shape the built environment?
+    follow_ups:
+      - What would the building be without the retrofit?
+      - How does seismic design show?
+      - What's the relationship between retrofit and trust?
+  - id: sf_dolores_palm
+    name: Dolores Palm
+    prompt: |
+      Palm trees line Dolores Street. They're not native, but they're iconic.
+      What do they say about the city's relationship to elsewhere?
+    follow_ups:
+      - What would the street be without palms?
+      - How do palms mark identity?
+      - What's the relationship between palm and place?
+  - id: sf_twin_peaks_view
+    name: Twin Peaks View
+    prompt: |
+      Imagine the view from Twin Peaks. The city spreads below—grid, water,
+      bridges. How does elevation change what matters?
+    follow_ups:
+      - What would you see from up there?
+      - How does the view shape the city's image?
+      - What's hidden from the peak?
+  - id: sf_ferry_building
+    name: Ferry Building
+    prompt: |
+      The Ferry Building faces the bay. It's a threshold—land and water, city
+      and commute. Stand at its entrance. What flows through?
+    follow_ups:
+      - What would the waterfront be without it?
+      - How does the building mark transition?
+      - What's the relationship between ferry and city?
+  - id: sf_chinatown_gate
+    name: Chinatown Gate
+    prompt: |
+      The Dragon Gate marks Chinatown. Pass through it. What changes? The gate
+      is both real and symbolic. How does it work?
+    follow_ups:
+      - What would Chinatown be without the gate?
+      - How does the gate create identity?
+      - What's the relationship between gate and neighborhood?
+  - id: sf_hydrant_color
+    name: Hydrant Color
+    prompt: |
+      San Francisco hydrants are different colors—blue, green, red. The color
+      indicates water flow. Find three colors. What does each mean?
+    follow_ups:
+      - What would the block do in a fire?
+      - How does color encode information?
+      - What's the relationship between hydrant and system?
+  - id: sf_parklet
+    name: Parklet
+    prompt: |
+      Parklets reclaim parking for people. Sit in one. What's the furniture?
+      Who uses it? How does the parklet change the block?
+    follow_ups:
+      - What would the space be without the parklet?
+      - How does the parklet create encounter?
+      - What would you add?
+  - id: sf_sf_street_sign
+    name: SF Street Sign
+    prompt: |
+      San Francisco street signs have a particular style. Notice the font, the
+      mount, the placement. How does the sign shape wayfinding?
+    follow_ups:
+      - What would the block be without the sign?
+      - How does typography matter?
+      - What's the relationship between sign and identity?
+  - id: sf_castro_rainbow
+    name: Castro Rainbow
+    prompt: |
+      The Castro flies rainbow flags. Walk the street and count the flags. How
+      does the flag claim space? What does it mean here?
+    follow_ups:
+      - What would the neighborhood be without the flags?
+      - How does the flag create community?
+      - What's the relationship between symbol and place?
+  - id: sf_haight_vintage
+    name: Haight Vintage
+    prompt: |
+      The Haight is a museum of the 1960s. Find a building that hasn't changed.
+      What's preserved? What's performance?
+    follow_ups:
+      - What would the street be without the vintage?
+      - How does history shape commerce?
+      - What's the relationship between past and present?
+  - id: sf_sutro_tower
+    name: Sutro Tower
+    prompt: |
+      Sutro Tower is visible from everywhere. Use it as a compass. How does the
+      tower orient you? What would the skyline be without it?
+    follow_ups:
+      - What does the tower broadcast?
+      - How does the tower shape identity?
+      - What's the relationship between tower and view?
+  - id: sf_bart_underground
+    name: BART Underground
+    prompt: |
+      Ride BART under the bay. You're in a tube under water. Feel the pressure,
+      the darkness, the emergence. How does the tunnel change the journey?
+    follow_ups:
+      - What would the commute be without the tunnel?
+      - How does the bay separate?
+      - What's the relationship between tunnel and region?
+  - id: sf_taquería_line
+    name: Taquería Line
+    prompt: |
+      Join a taquería line at midnight. The line is a ritual. Who's in it? What
+      are they ordering? The line is community.
+    follow_ups:
+      - What would the block be without the taquería?
+      - How does the line create encounter?
+      - What's the relationship between food and place?
+  - id: sf_dolores_sun
+    name: Dolores Sun
+    prompt: |
+      Dolores Park faces west. On a sunny day, it's a beach. Watch the crowd.
+      How does the sun shape the park? Who gets the best spots?
+    follow_ups:
+      - What would the park be without the sun?
+      - How does aspect matter?
+      - What's the relationship between park and weather?
+  - id: sf_mission_door
+    name: Mission Door
+    prompt: |
+      Mission doors are often ornate—carved, painted, unique. Find five doors on
+      one block. What do they say about the buildings behind them?
+    follow_ups:
+      - What would the block be without the doors?
+      - How does the door create identity?
+      - What's the relationship between door and threshold?
+  - id: sf_coit_tower
+    name: Coit Tower
+    prompt: >
+      Coit Tower crowns Telegraph Hill. It's a monument, a viewpoint, a
+      landmark.
+
+      How does the tower shape the hill? What would the hill be without it?
+    follow_ups:
+      - What does the tower commemorate?
+      - How does the tower orient the city?
+      - What's the relationship between tower and neighborhood?
+  - id: sf_lombard_curve
+    name: Lombard Curve
+    prompt: >
+      Lombard Street curves down the hill. It's famous for its switchbacks. Walk
+
+      it. How does the curve change the descent? What would a straight street
+      do?
+    follow_ups:
+      - What would the hill be without the curve?
+      - How does the curve shape experience?
+      - What's the relationship between curve and safety?
+  - id: sf_alcatraz_silhouette
+    name: Alcatraz Silhouette
+    prompt: |
+      From the waterfront, Alcatraz is a silhouette. The island is always there,
+      always distant. What does it mean to the city?
+    follow_ups:
+      - What would the bay be without the island?
+      - How does the island shape the view?
+      - What's the relationship between prison and city?
+  - id: sf_ghost_sign
+    name: Ghost Sign
+    prompt: |
+      Ghost signs—faded advertisements on brick—mark the past. Find one. What
+      did it advertise? Who would have seen it?
+    follow_ups:
+      - What would the wall say without the sign?
+      - How does the ghost sign preserve history?
+      - What's the relationship between sign and commerce?
+  - id: sf_sf_sidewalk
+    name: SF Sidewalk
+    prompt: |
+      San Francisco sidewalks are often cracked, tilted, tree-rooted. Walk a
+      block and notice the texture. How does the sidewalk age?
+    follow_ups:
+      - What would the block be without the sidewalk?
+      - How does the sidewalk shape movement?
+      - What's the relationship between sidewalk and tree?
+  - id: sf_golden_gate_fog
+    name: Golden Gate Fog
+    prompt: |
+      The Golden Gate Bridge disappears in fog. Watch it vanish and reappear.
+      The fog is a curtain. What's behind it?
+    follow_ups:
+      - What would the bridge be without the fog?
+      - How does the fog shape the view?
+      - What's the relationship between fog and bridge?
+  - id: sf_mission_dolores
+    name: Mission Dolores
+    prompt: |
+      Mission Dolores is the oldest building in the city. Stand in front of it.
+      What has it seen? How does it mark time?
+    follow_ups:
+      - What would the neighborhood be without the mission?
+      - How does the mission shape identity?
+      - What's the relationship between mission and city?
+  - id: sf_painted_steps
+    name: Painted Steps
+    prompt: |
+      The 16th Avenue Tiled Steps are a mosaic. Climb them. Each step is
+      different. How does the art change the climb?
+    follow_ups:
+      - What would the steps be without the tiles?
+      - How does the mosaic create community?
+      - What's the relationship between art and ascent?
+  - id: sf_sf_street_tree
+    name: SF Street Tree
+    prompt: |
+      San Francisco street trees are often palms, magnolias, or ficus. Find one
+      and identify it. How does the tree shape the block?
+    follow_ups:
+      - What would the block be without the tree?
+      - How does the tree create habitat?
+      - What's the relationship between tree and sidewalk?
+  - id: sf_sf_bay_window
+    name: SF Bay Window
+    prompt: |
+      Bay windows are San Francisco vernacular. They bulge into the street,
+      catching light. How does the bay window change the room?
+    follow_ups:
+      - What would the facade be without the bay?
+      - How does the bay create relationship to the street?
+      - What's the relationship between bay and view?
+  - id: sf_sf_hill
+    name: SF Hill
+    prompt: |
+      Pick a hill and climb it. Feel the burn. At the top, look back. How does
+      the climb change what you see?
+    follow_ups:
+      - What would the city be without the hills?
+      - How do hills shape neighborhoods?
+      - What's the relationship between hill and view?
+  - id: sf_sf_fog
+    name: SF Fog
+    prompt: |
+      The fog has a name—Karl. It's a local celebrity. When Karl rolls in, how
+      does the city change? What gets hidden? What gets revealed?
+    follow_ups:
+      - What would the city be without Karl?
+      - How does the fog shape identity?
+      - What's the relationship between fog and light?
+  - id: sf_sf_cable
+    name: SF Cable
+    prompt: |
+      The cable car runs on a cable under the street. You can't see it, but you
+      hear it. How does the hidden cable shape the visible city?
+    follow_ups:
+      - What would the hill be without the cable?
+      - How does the cable create connection?
+      - What's the relationship between cable and street?
+  - id: sf_sf_victorian
+    name: SF Victorian
+    prompt: |
+      Victorians come in pairs—two houses, one lot. Find a pair. How do they
+      relate? What would one be without the other?
+    follow_ups:
+      - What would the block be without the pair?
+      - How does the pair create rhythm?
+      - What's the relationship between pair and lot?
+  - id: sf_sf_mission
+    name: SF Mission
+    prompt: |
+      The Mission district is named for Mission Dolores. Walk the street and
+      feel the layers—Spanish, Mexican, Irish, Central American. What's the
+      palimpsest?
+    follow_ups:
+      - What would the neighborhood be without the layers?
+      - How does the mission shape identity?
+      - What's the relationship between mission and migration?
+  - id: sf_sf_bridge
+    name: SF Bridge
+    prompt: |
+      The Bay Bridge is less famous than the Golden Gate but more used. Cross it
+      or view it. How does the bridge connect? What does it carry?
+    follow_ups:
+      - What would the bay be without the bridge?
+      - How does the bridge shape the region?
+      - What's the relationship between bridge and commute?
+  - id: sf_sf_parks
+    name: SF Parks
+    prompt: |
+      San Francisco has many small parks—pocket parks, triangle parks. Find one.
+      Who uses it? What's its character?
+    follow_ups:
+      - What would the neighborhood be without the park?
+      - How does the park create respite?
+      - What's the relationship between park and block?
+  - id: sf_sf_stairs
+    name: SF Stairs
+    prompt: |
+      San Francisco has more than 600 public stairways. Find one you've never
+      climbed. What's at the top? What's at the bottom?
+    follow_ups:
+      - What would the hill be without the stairs?
+      - How do stairs create shortcuts?
+      - What's the relationship between stairs and neighborhood?
+  - id: sf_sf_mural
+    name: SF Mural
+    prompt: |
+      The Mission has more murals per capita than anywhere in the US. Find one
+      that tells a story. What's the narrative? Who is it for?
+    follow_ups:
+      - What would the wall be without the mural?
+      - How does the mural claim space?
+      - What's the relationship between mural and community?
+  - id: sf_sf_water
+    name: SF Water
+    prompt: |
+      San Francisco is surrounded by water—bay, ocean, strait. Go to the edge.
+      What does the water mean to the city? How does it shape the edge?
+    follow_ups:
+      - What would the city be without the water?
+      - How does the water shape identity?
+      - What's the relationship between water and city?
+  - id: sf_sf_sunset
+    name: SF Sunset
+    prompt: |
+      San Francisco sunsets are famous. Watch one from a hill. The light
+      changes the city. What would the view be without the sunset?
+    follow_ups:
+      - How does the sunset shape the evening?
+      - What's the relationship between sunset and view?
+      - What would you miss without the light?
+  - id: sf_sf_wind
+    name: SF Wind
+    prompt: |
+      San Francisco wind is constant in some neighborhoods. Feel it. How does
+      the wind shape the street? What would the block be without it?
+    follow_ups:
+      - How does the wind create microclimate?
+      - What's the relationship between wind and building?
+      - What would you plant in this wind?
+  - id: sf_sf_earthquake
+    name: SF Earthquake
+    prompt: |
+      San Francisco sits on faults. The ground can move. How does that knowledge
+      shape the built environment? What would you notice in a tremor?
+    follow_ups:
+      - How does seismic risk shape design?
+      - What's the relationship between fault and city?
+      - What would you do if the ground shook?
+  - id: sf_sf_tech_bus
+    name: Tech Bus
+    prompt: |
+      Tech buses shuttle workers to Silicon Valley. Watch one stop. The bus is
+      a symbol. What does it carry? What does it exclude?
+    follow_ups:
+      - What would the street be without the bus?
+      - How does the bus shape the neighborhood?
+      - What's the relationship between bus and city?
+  - id: sf_sf_painted_lady
+    name: Painted Lady
+    prompt: |
+      Painted Ladies are Victorian houses in pastel colors. Find a row. How do
+      the colors create identity? What would the street be in grey?
+    follow_ups:
+      - How do the colors shape the block?
+      - What's the relationship between color and preservation?
+      - What would you paint your house?
+  - id: sf_sf_twin_peaks
+    name: Twin Peaks
+    prompt: |
+      Twin Peaks are two hills in the center of the city. Climb one. The view
+      is 360 degrees. How does the peak orient you?
+    follow_ups:
+      - What would the city be without the peaks?
+      - How do the peaks create landmark?
+      - What's the relationship between peak and neighborhood?
+  - id: sf_sf_ferry_plaza
+    name: Ferry Plaza
+    prompt: |
+      The Ferry Building plaza hosts a farmers market. Walk through. What's for
+      sale? Who comes? The plaza is a threshold between city and bay.
+    follow_ups:
+      - What would the waterfront be without the plaza?
+      - How does the market create community?
+      - What's the relationship between plaza and ferry?

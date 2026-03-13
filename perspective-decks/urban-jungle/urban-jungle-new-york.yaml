@@ -1,0 +1,474 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Urban Jungle — New York
+
+id: urban_jungle_new_york
+name: Urban Jungle — New York
+description: 50 cards to shift how you see New York—from scale and light to
+  layers of history and the rhythms of street life.
+domain: urban_jungle
+cards:
+  - id: ny_vertical_city
+    name: Vertical City
+    prompt: |
+      Look up. New York is built on the vertical—towers competing for sky.
+      Trace one building from sidewalk to crown. How does height change what
+      you notice? Where does your eye rest?
+    follow_ups:
+      - What would the street look like from the top?
+      - How does scale distort at different heights?
+      - What gets hidden when you only look up?
+  - id: ny_grid_navigation
+    name: Grid Navigation
+    prompt: |
+      Manhattan's grid is relentless. Walk a block and notice how the numbering
+      system shapes movement, orientation, and surprise. What happens when you
+      break the grid?
+    follow_ups:
+      - Where does the grid feel oppressive? Where liberating?
+      - What would the city feel like without it?
+      - How do diagonal streets change the rhythm?
+  - id: ny_subway_soundscape
+    name: Subway Soundscape
+    prompt: |
+      Close your eyes in a station. The rumble, the brakes, the announcements,
+      the busker. Map the soundscape. What does New York sound like when you
+      can't see it?
+    follow_ups:
+      - Which sounds are constant? Which accidental?
+      - What would silence mean here?
+      - How does sound mark time underground?
+  - id: ny_fire_escape
+    name: Fire Escape
+    prompt: |
+      Fire escapes are the city's exoskeleton—functional, rhythmic, personal.
+      Find a block where they repeat. What do they reveal about the buildings
+      behind them? Who might sit there at night?
+    follow_ups:
+      - What would you see from one?
+      - How do they change the street's character?
+      - What would the block lose without them?
+  - id: ny_street_number
+    name: Street Number
+    prompt: |
+      Pick a number—a building number, a floor, a bus route. Follow it through
+      the city. What pattern emerges? What does that number mean here?
+    follow_ups:
+      - Where does the number lead you?
+      - What would a different number reveal?
+      - How do numbers order urban experience?
+  - id: ny_steam_rising
+    name: Steam Rising
+    prompt: |
+      Manhole steam is New York's breath. Find where it rises and watch how it
+      moves, disperses, catches light. What's underneath? What does the city
+      exhale?
+    follow_ups:
+      - What would you find below the grate?
+      - How does weather change the steam?
+      - What other hidden systems vent here?
+  - id: ny_storefront_typography
+    name: Storefront Typography
+    prompt: >
+      Read the signs. Bodegas, delis, laundromats—each has a visual language.
+
+      Collect five typefaces from one block. What do they say about who lives
+      here?
+    follow_ups:
+      - Which signs feel old? Which new?
+      - What would the block sound like if signs could speak?
+      - How does typography mark change?
+  - id: ny_waterfront_edge
+    name: Waterfront Edge
+    prompt: |
+      Go to the water. The city turns its back on the river, the harbor, the
+      bay. Stand where land meets water. What's built for the view? What's built
+      to ignore it?
+    follow_ups:
+      - Who gets to see the water?
+      - How has the edge been claimed?
+      - What would the city be if it faced the water?
+  - id: ny_parks_as_rooms
+    name: Parks as Rooms
+    prompt: |
+      Central Park, Prospect Park, a pocket plaza—each is a room in the city.
+      Enter one and notice its walls, its ceiling, its furniture. How is nature
+      designed here?
+    follow_ups:
+      - What's the room's purpose?
+      - Who designed the sightlines?
+      - What would happen if the walls came down?
+  - id: ny_delivery_rhythm
+    name: Delivery Rhythm
+    prompt: |
+      Watch the deliveries—trucks, handcarts, bikes. Trace one package's path
+      from truck to door. How does commerce move through the street? What's the
+      rhythm of arrival?
+    follow_ups:
+      - What would the block look like without deliveries?
+      - How do different goods move differently?
+      - Who is invisible in this flow?
+  - id: ny_brownstone_steps
+    name: Brownstone Steps
+    prompt: |
+      Brownstone stoops are stages. Sit on one and watch the street. Who
+      pauses? Who passes? What would you say from here?
+    follow_ups:
+      - What's the view from the top step?
+      - How do steps create territory?
+      - What would the block lose without them?
+  - id: ny_bridge_as_threshold
+    name: Bridge as Threshold
+    prompt: >
+      Cross a bridge on foot. Feel the transition—one borough to another. The
+
+      bridge is neither here nor there. What changes when you reach the other
+      side?
+    follow_ups:
+      - What do you leave behind?
+      - How does the bridge shape the journey?
+      - What would the city be without bridges?
+  - id: ny_awning_shade
+    name: Awning Shade
+    prompt: |
+      Awnings create micro-climates. Stand under one. Notice the shift in light,
+      sound, temperature. How do small structures change the street?
+    follow_ups:
+      - What would the block feel like without awnings?
+      - How do they mark ownership?
+      - What other small shelters exist here?
+  - id: ny_graffiti_layer
+    name: Graffiti Layer
+    prompt: |
+      Look at the walls. Tags, murals, wheatpaste—each is a layer of time and
+      claim. Read the palimpsest. Who has marked this surface?
+    follow_ups:
+      - What's the oldest mark you can find?
+      - How do layers tell a story?
+      - What would the wall say if it could speak?
+  - id: ny_rooftop_skyline
+    name: Rooftop Skyline
+    prompt: |
+      Imagine the view from a rooftop. Water tanks, antennas, neighboring
+      roofs. The city from above is a different city. What would you see?
+    follow_ups:
+      - How does height change what matters?
+      - What's hidden from the street?
+      - Who has access to this view?
+  - id: ny_crosswalk_wait
+    name: Crosswalk Wait
+    prompt: |
+      Wait at a crosswalk. Don't cross when the light changes. Wait for the
+      next cycle. What do you notice in the pause? Who else waits?
+    follow_ups:
+      - How does waiting change perception?
+      - What rhythms govern the intersection?
+      - What would happen if you never crossed?
+  - id: ny_diner_booth
+    name: Diner Booth
+    prompt: |
+      Sit in a diner booth by the window. The street becomes a film. Watch the
+      passersby, the traffic, the light. What story is playing?
+    follow_ups:
+      - Who are the main characters?
+      - How does the frame change what you see?
+      - What would you miss without the window?
+  - id: ny_scaffolding_skin
+    name: Scaffolding Skin
+    prompt: |
+      Scaffolding wraps buildings like bandages. Walk under it. Notice the
+      sound, the light, the temporary ceiling. What's being repaired? What's
+      being hidden?
+    follow_ups:
+      - How long has it been there?
+      - What would the building say without it?
+      - What's the relationship between repair and concealment?
+  - id: ny_newsstand_archive
+    name: Newsstand Archive
+    prompt: |
+      A newsstand is a slice of attention—magazines, papers, candy. What's on
+      display? Who stops? What would this corner be without it?
+    follow_ups:
+      - What's the bestseller?
+      - How does the stand shape the block?
+      - What would you put here?
+  - id: ny_construction_site
+    name: Construction Site
+    prompt: |
+      Watch a construction site. Cranes, barriers, workers. The city is always
+      becoming. What's being built? What's being replaced?
+    follow_ups:
+      - Who will use this when it's done?
+      - What was here before?
+      - How does construction change the neighborhood?
+  - id: ny_light_well
+    name: Light Well
+    prompt: |
+      Look for light wells—the narrow gaps between buildings where light falls
+      down. Who gets that light? What grows there?
+    follow_ups:
+      - What would it be like to live in that shaft?
+      - How does light define value?
+      - What's hidden in the shadows?
+  - id: ny_bodega_cat
+    name: Bodega Cat
+    prompt: |
+      Find a bodega with a cat. The cat is both inside and outside the rules.
+      What else in the city operates that way?
+    follow_ups:
+      - What does the cat see?
+      - How do informal rules shape space?
+      - What would the store be without the cat?
+  - id: ny_sidewalk_crack
+    name: Sidewalk Crack
+    prompt: |
+      Look down. Follow a crack in the sidewalk. Where does it go? What grows
+      in it? The city is full of such fractures.
+    follow_ups:
+      - What would the sidewalk say about time?
+      - How do small breaks matter?
+      - What's pushing through?
+  - id: ny_air_conditioner
+    name: Air Conditioner
+    prompt: >
+      Count the air conditioners on one building. They're parasites,
+      prosthetics,
+
+      necessities. How do they change the facade? What do they drip?
+    follow_ups:
+      - What would the building look like without them?
+      - How does climate shape architecture?
+      - Who decides where they go?
+  - id: ny_express_local
+    name: Express / Local
+    prompt: |
+      Ride the subway. Notice the difference between express and local. Speed
+      changes what you see. Skip stops and feel the city compress.
+    follow_ups:
+      - What do you miss when you don't stop?
+      - How does speed shape experience?
+      - What would the city be if everything were local?
+  - id: ny_water_tower
+    name: Water Tower
+    prompt: |
+      Water towers crown older buildings. They're wooden, barrel-shaped,
+      ubiquitous. Find five. What do they say about the skyline?
+    follow_ups:
+      - Why are they still here?
+      - What would the roof look like without one?
+      - How do they mark age?
+  - id: ny_awning_stripes
+    name: Awning Stripes
+    prompt: |
+      Striped awnings are a New York vernacular. Find a block where they
+      repeat. How do stripes create identity? What would solid colors do?
+    follow_ups:
+      - Why stripes and not solids?
+      - How do awnings unify a block?
+      - What's the history of this pattern?
+  - id: ny_curb_cut
+    name: Curb Cut
+    prompt: |
+      Notice the curb cuts—the ramps at corners. They're for wheelchairs, carts,
+      strollers. How do they change the street? Who do they include?
+    follow_ups:
+      - What would the block be without them?
+      - How does access shape design?
+      - What other invisible accommodations exist?
+  - id: ny_street_tree
+    name: Street Tree
+    prompt: |
+      Pick one street tree. How much space does it have? What's in its pit?
+      Who waters it? The tree is a guest. How is it treated?
+    follow_ups:
+      - What would the block be without trees?
+      - How do trees mark care?
+      - What grows in the tree's shadow?
+  - id: ny_loading_zone
+    name: Loading Zone
+    prompt: |
+      Loading zones are temporary territories. Watch one for ten minutes. Who
+      uses it? How long do they stay? What's the rhythm of occupation?
+    follow_ups:
+      - What would happen without loading zones?
+      - How do rules get bent?
+      - What's the relationship between parking and commerce?
+  - id: ny_vent_grille
+    name: Vent Grille
+    prompt: |
+      Sidewalk grilles vent the subway. Stand on one. Feel the updraft. Listen.
+      The city breathes through these openings.
+    follow_ups:
+      - What rises from below?
+      - How does the grille connect worlds?
+      - What would the sidewalk be without it?
+  - id: ny_basement_stairs
+    name: Basement Stairs
+    prompt: |
+      Find stairs leading down—to a basement, a subway, a speakeasy. The city
+      has many levels. What's below the sidewalk?
+    follow_ups:
+      - Who goes down?
+      - How does descent change the light?
+      - What would you find at the bottom?
+  - id: ny_clock_tower
+    name: Clock Tower
+    prompt: |
+      Find a public clock. Is it accurate? Who set it? Clocks order the city.
+      What happens when they disagree?
+    follow_ups:
+      - What would the block be without the clock?
+      - How does time get synchronized?
+      - What's the relationship between clock time and body time?
+  - id: ny_newsstand_magazine
+    name: Newsstand Magazine
+    prompt: |
+      At a newsstand, pick a magazine cover. Who is it for? What does it assume
+      about the reader? The stand is a mirror of desire.
+    follow_ups:
+      - What would a stranger learn from this display?
+      - How do covers compete for attention?
+      - What's not on the stand?
+  - id: ny_awning_rain
+    name: Awning Rain
+    prompt: |
+      Stand under an awning in the rain. Watch the water channel off the edges.
+      The awning creates a dry island. Who shares it with you?
+    follow_ups:
+      - What would the block feel like without shelter?
+      - How does rain change the street?
+      - What other shelters exist?
+  - id: ny_fire_hydrant
+    name: Fire Hydrant
+    prompt: |
+      A fire hydrant is a plug into the city's circulatory system. Find one.
+      What color is it? Who might open it? What flows through?
+    follow_ups:
+      - What would the block do in a fire without it?
+      - How do hydrants mark territory?
+      - What's the relationship between hydrant and hose?
+  - id: ny_stoop_sale
+    name: Stoop Sale
+    prompt: |
+      Imagine a stoop sale on these steps. What would be for sale? Who would
+      stop? The stoop is a stage for exchange.
+    follow_ups:
+      - What would you put out?
+      - How does the stoop enable encounter?
+      - What would the block learn from a sale?
+  - id: ny_rooftop_garden
+    name: Rooftop Garden
+    prompt: |
+      Imagine a rooftop garden above you. What would grow there? Who tends it?
+      The city has a secret green layer.
+    follow_ups:
+      - What would you plant?
+      - How does elevation change gardening?
+      - What would the skyline look like if all roofs were green?
+  - id: ny_subway_map
+    name: Subway Map
+    prompt: |
+      Look at a subway map. It's a diagram, not geography. What's distorted?
+      What's omitted? The map shapes how we think about the city.
+    follow_ups:
+      - What would a truthful map look like?
+      - How does the map create neighborhoods?
+      - What's the relationship between map and territory?
+  - id: ny_brick_pattern
+    name: Brick Pattern
+    prompt: |
+      Study a brick wall. The pattern—running bond, Flemish bond—holds the
+      wall up. Trace the pattern. What would happen if one brick were missing?
+    follow_ups:
+      - How does the pattern distribute weight?
+      - What would the wall say about its maker?
+      - How does brick age?
+  - id: ny_awning_strip
+    name: Awning Strip
+    prompt: |
+      Walk a block and count the awnings. What colors? What conditions? The
+      awning is a small architecture. How does it vary?
+    follow_ups:
+      - What would the block look like without awnings?
+      - How do awnings create identity?
+      - What's the relationship between awning and business?
+  - id: ny_manhole_cover
+    name: Manhole Cover
+    prompt: |
+      Read a manhole cover. The city's name, the department, the date. These
+      discs are doors to another city. What's beneath?
+    follow_ups:
+      - Who goes down there?
+      - How does the cover mark territory?
+      - What would the street be without these doors?
+  - id: ny_bus_shelter
+    name: Bus Shelter
+    prompt: |
+      Wait in a bus shelter. Notice who else waits. The shelter is a shared
+      room. What's the etiquette? What's the view?
+    follow_ups:
+      - What would waiting be like without the shelter?
+      - How does the shelter shape community?
+      - What would you change about it?
+  - id: ny_street_lamp
+    name: Street Lamp
+    prompt: |
+      Stand under a street lamp at dusk. Watch the light take over from the sun.
+      The lamp creates a pool of visibility. What's in the pool? What's outside?
+    follow_ups:
+      - How does artificial light change the street?
+      - What would the block be like without lamps?
+      - How do lamps mark time?
+  - id: ny_plaza_seat
+    name: Plaza Seat
+    prompt: |
+      Sit on a plaza bench. Who else sits? Who passes? The plaza is a pause in
+      the flow. What makes people stop?
+    follow_ups:
+      - What would the plaza be without seats?
+      - How does seating shape encounter?
+      - What would you add?
+  - id: ny_awning_fabric
+    name: Awning Fabric
+    prompt: |
+      Touch an awning if you can. Fabric, vinyl, stripes. The awning is a
+      membrane between inside and outside. How does it feel?
+    follow_ups:
+      - What would the block feel like without fabric?
+      - How does material matter?
+      - What's the relationship between awning and weather?
+  - id: ny_newsstand_daily
+    name: Newsstand Daily
+    prompt: |
+      A newsstand changes through the day—morning papers, midday magazines,
+      evening snacks. Visit at different times. What's the rhythm?
+    follow_ups:
+      - What would the corner be without the newsstand?
+      - How does the stand mark time?
+      - What's the relationship between stand and block?
+  - id: ny_sidewalk_chalk
+    name: Sidewalk Chalk
+    prompt: |
+      Kids draw on sidewalks. Find chalk art. What's the drawing? The chalk is
+      temporary. Rain will erase it. How does temporariness matter?
+    follow_ups:
+      - What would the sidewalk be without the chalk?
+      - How does the chalk create gift?
+      - What's the relationship between chalk and street?
+  - id: ny_rooftop_ac
+    name: Rooftop AC
+    prompt: |
+      Rooftop AC units hum in summer. Listen. The roof is a mechanical forest.
+      How does the sound shape the block?
+    follow_ups:
+      - What would the roof be without the units?
+      - How does the AC create comfort?
+      - What's the relationship between unit and building?
+  - id: ny_street_musician
+    name: Street Musician
+    prompt: |
+      A street musician plays in a passage. Stop and listen. The music creates a
+      bubble. What's inside the bubble? What's outside?
+    follow_ups:
+      - What would the passage be without the musician?
+      - How does the music create pause?
+      - What's the relationship between musician and street?

@@ -1,0 +1,473 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Urban Jungle — Bangalore
+
+id: urban_jungle_bangalore
+name: Urban Jungle — Bangalore
+description: 50 cards to shift how you see Bangalore—from scale and light to
+  layers of history and the rhythms of street life.
+domain: urban_jungle
+cards:
+  - id: blr_gate_colony
+    name: Gate Colony
+    prompt: >
+      Bangalore's gated colonies have walls, guards, gates. Stand at a gate.
+
+      What's inside? Who enters? The gate marks a boundary. What does it
+      protect?
+    follow_ups:
+      - What would the street be without the gate?
+      - How does the gate create security?
+      - What's the relationship between gate and colony?
+  - id: blr_tree_canopy
+    name: Tree Canopy
+    prompt: |
+      Bangalore was once a garden city. Old trees still canopy some streets.
+      Walk under one. How does the canopy change the light? The sound?
+    follow_ups:
+      - What would the street be without the tree?
+      - How does the canopy create microclimate?
+      - What's the relationship between tree and city?
+  - id: blr_tech_park
+    name: Tech Park
+    prompt: >
+      Tech parks are campuses—glass, lawn, shuttle buses. Find one. How does
+
+      the park separate from the city? What's the relationship between inside
+      and outside?
+    follow_ups:
+      - What would the area be without the park?
+      - How does the park create identity?
+      - What's the relationship between park and street?
+  - id: blr_auto_rickshaw
+    name: Auto Rickshaw
+    prompt: |
+      Auto rickshaws weave through traffic. Watch one negotiate a junction. How
+      does the auto fit where cars cannot? What's the logic of the weave?
+    follow_ups:
+      - What would the street be without the auto?
+      - How does the auto create mobility?
+      - What's the relationship between auto and traffic?
+  - id: blr_chai_stall
+    name: Chai Stall
+    prompt: |
+      Chai stalls are nodes—small, temporary, essential. Find one. Who gathers?
+      What's the rhythm? The stall is a social machine.
+    follow_ups:
+      - What would the corner be without the stall?
+      - How does the stall create encounter?
+      - What's the relationship between stall and street?
+  - id: blr_billboard
+    name: Bangalore Billboard
+    prompt: >
+      Bangalore billboards advertise tech, real estate, education. Find one.
+
+      What's being sold? Who is the audience? The billboard is a mirror of
+      aspiration.
+    follow_ups:
+      - What would the street be without the billboard?
+      - How does the billboard shape desire?
+      - What's the relationship between billboard and city?
+  - id: blr_compound_wall
+    name: Compound Wall
+    prompt: |
+      Compound walls separate private from public. Find a wall. What's behind
+      it? How high is it? The wall creates a boundary. What does it exclude?
+    follow_ups:
+      - What would the street be without the wall?
+      - How does the wall create privacy?
+      - What's the relationship between wall and compound?
+  - id: blr_signal_wait
+    name: Signal Wait
+    prompt: |
+      Wait at a traffic signal. Watch the vendors—flowers, toys, books. The
+      signal creates a pause. What happens in the pause?
+    follow_ups:
+      - What would the junction be without the signal?
+      - How does the signal create economy?
+      - What's the relationship between signal and street?
+  - id: blr_rain_drain
+    name: Rain Drain
+    prompt: |
+      Bangalore monsoon overwhelms drains. After rain, watch the water. Where
+      does it go? Where does it pool? The drain is a limit.
+    follow_ups:
+      - What would the street be without the drain?
+      - How does the drain manage water?
+      - What's the relationship between drain and monsoon?
+  - id: blr_sarjapur_road
+    name: Sarjapur Road
+    prompt: |
+      Sarjapur Road connects old Bangalore to the tech corridor. Drive or walk
+      a stretch. What changes? Where does the city shift?
+    follow_ups:
+      - What would the corridor be without the road?
+      - How does the road create connection?
+      - What's the relationship between road and growth?
+  - id: blr_parks_maidans
+    name: Parks & Maidans
+    prompt: |
+      Bangalore has parks and maidans—Cubbon Park, Lalbagh, neighborhood
+      grounds. Enter one. Who uses it? What's the rhythm?
+    follow_ups:
+      - What would the city be without the park?
+      - How does the park create respite?
+      - What's the relationship between park and neighborhood?
+  - id: blr_temple_street
+    name: Temple Street
+    prompt: |
+      Temples punctuate Bangalore streets. Find one. Notice the offerings, the
+      bells, the crowd. How does the temple shape the block?
+    follow_ups:
+      - What would the street be without the temple?
+      - How does the temple create community?
+      - What's the relationship between temple and street?
+  - id: blr_silk_board
+    name: Silk Board
+    prompt: |
+      Silk Board junction is infamous. Stand at the edge. Watch the traffic.
+      How does the junction work? What's the logic of the chaos?
+    follow_ups:
+      - What would the corridor be without the junction?
+      - How does the junction create bottleneck?
+      - What's the relationship between junction and commute?
+  - id: blr_metro_elevated
+    name: Metro Elevated
+    prompt: |
+      Bangalore Metro runs elevated through parts of the city. Ride it or stand
+      under it. How does the elevated line change the street below?
+    follow_ups:
+      - What would the street be without the metro?
+      - How does the metro create connection?
+      - What's the relationship between elevated and ground?
+  - id: blr_apartment_tower
+    name: Apartment Tower
+    prompt: |
+      Apartment towers rise across Bangalore. Find one. How many floors? Who
+      lives there? The tower is vertical density. What does it replace?
+    follow_ups:
+      - What would the skyline be without the tower?
+      - How does the tower create housing?
+      - What's the relationship between tower and ground?
+  - id: blr_roadside_vendor
+    name: Roadside Vendor
+    prompt: |
+      Roadside vendors sell fruit, snacks, phone chargers. Find one. What's the
+      display? Who stops? The vendor is informal economy.
+    follow_ups:
+      - What would the street be without the vendor?
+      - How does the vendor create livelihood?
+      - What's the relationship between vendor and street?
+  - id: blr_borewell
+    name: Borewell
+    prompt: >
+      Bangalore depends on borewells. Look for the pipes, the tanks, the
+
+      pumps. Water is extracted from below. What's the relationship between city
+      and aquifer?
+    follow_ups:
+      - What would the building be without the borewell?
+      - How does the borewell create supply?
+      - What's the relationship between borewell and scarcity?
+  - id: blr_garbage_heap
+    name: Garbage Heap
+    prompt: |
+      Garbage heaps appear at corners, by walls. Notice one. What's in it? Who
+      picks through it? The heap is a limit of the system.
+    follow_ups:
+      - What would the street be without the heap?
+      - How does the heap mark failure?
+      - What's the relationship between heap and city?
+  - id: blr_marquee_wedding
+    name: Marquee Wedding
+    prompt: |
+      Wedding marquees block streets. Find one. The marquee is a temporary
+      territory. What's the relationship between celebration and street?
+    follow_ups:
+      - What would the street be without the marquee?
+      - How does the marquee create claim?
+      - What's the relationship between wedding and public?
+  - id: blr_old_bungalow
+    name: Old Bungalow
+    prompt: |
+      Old Bangalore bungalows persist among towers. Find one. The bungalow has
+      a compound, trees, space. What will replace it?
+    follow_ups:
+      - What would the street be without the bungalow?
+      - How does the bungalow mark history?
+      - What's the relationship between bungalow and tower?
+  - id: blr_coffee_house
+    name: Coffee House
+    prompt: |
+      Indian Coffee House is an institution. Sit in one. The coffee house is
+      a room of conversation. What's the rhythm? Who comes?
+    follow_ups:
+      - What would the street be without the coffee house?
+      - How does the coffee house create community?
+      - What's the relationship between coffee house and city?
+  - id: blr_phone_booth
+    name: Phone Booth
+    prompt: |
+      Public phone booths still exist. Find one. Is it working? Who uses it?
+      The booth is a relic. What has replaced it?
+    follow_ups:
+      - What would the street be without the booth?
+      - How does the booth mark change?
+      - What's the relationship between booth and mobile?
+  - id: blr_bus_stop
+    name: Bangalore Bus Stop
+    prompt: |
+      Bangalore bus stops are often a pole and a crowd. Wait at one. Who
+      waits? What's the etiquette? The stop is minimal infrastructure.
+    follow_ups:
+      - What would the street be without the stop?
+      - How does the stop create connection?
+      - What's the relationship between stop and bus?
+  - id: blr_power_line
+    name: Power Line
+    prompt: |
+      Bangalore power lines are a tangle—cables, transformers, loops. Trace
+      one line. Where does it go? The grid is visible. What does it power?
+    follow_ups:
+      - What would the street be without the lines?
+      - How does the grid create supply?
+      - What's the relationship between line and outage?
+  - id: blr_speed_breaker
+    name: Speed Breaker
+    prompt: |
+      Speed breakers—sleeping policemen—dot Bangalore roads. Feel one. Why is it
+      here? What does it slow? The breaker is a local intervention.
+    follow_ups:
+      - What would the road be without the breaker?
+      - How does the breaker create safety?
+      - What's the relationship between breaker and speed?
+  - id: blr_compound_tree
+    name: Compound Tree
+    prompt: |
+      Compound trees overhang walls. Find one. The tree is both inside and
+      outside. What does it shade? Who owns it?
+    follow_ups:
+      - What would the street be without the tree?
+      - How does the tree create gift?
+      - What's the relationship between tree and compound?
+  - id: blr_shop_shutter
+    name: Shop Shutter
+    prompt: |
+      Bangalore shop shutters roll down at night. Find a closed shutter. What's
+      behind it? The shutter is a daily cycle. What does it protect?
+    follow_ups:
+      - What would the street be without the shutter?
+      - How does the shutter create security?
+      - What's the relationship between shutter and commerce?
+  - id: blr_water_tanker
+    name: Water Tanker
+    prompt: |
+      Water tankers supply neighborhoods. Watch one deliver. The tanker is
+      mobile infrastructure. What's the relationship between tanker and tap?
+    follow_ups:
+      - What would the neighborhood be without the tanker?
+      - How does the tanker create supply?
+      - What's the relationship between tanker and scarcity?
+  - id: blr_metro_station
+    name: Metro Station
+    prompt: |
+      Bangalore Metro stations are new—clean, branded. Enter one. How does the
+      station differ from the street? What's the transition?
+    follow_ups:
+      - What would the corridor be without the station?
+      - How does the station create connection?
+      - What's the relationship between station and city?
+  - id: blr_rickshaw_stand
+    name: Rickshaw Stand
+    prompt: |
+      Rickshaw stands cluster at junctions. Find one. The drivers wait. The
+      stand is a node. What's the economy?
+    follow_ups:
+      - What would the junction be without the stand?
+      - How does the stand create mobility?
+      - What's the relationship between stand and driver?
+  - id: blr_pavement_sleep
+    name: Pavement Sleep
+    prompt: |
+      Pavement sleepers are part of the city. Notice with care. Where do they
+      sleep? What's the relationship between street and shelter?
+    follow_ups:
+      - What would the street be without the sleepers?
+      - How does the pavement become home?
+      - What's the relationship between sleep and city?
+  - id: blr_gate_security
+    name: Gate Security
+    prompt: |
+      Colony gates have security—guards, barriers, registers. Watch the flow.
+      Who enters? Who is stopped? The gate is a filter.
+    follow_ups:
+      - What would the colony be without the gate?
+      - How does the gate create security?
+      - What's the relationship between gate and trust?
+  - id: blr_street_dog
+    name: Street Dog
+    prompt: |
+      Street dogs are part of Bangalore. Notice one. Where does it sleep? What
+      does it eat? The dog is both wild and domestic.
+    follow_ups:
+      - What would the street be without the dog?
+      - How does the dog create relationship?
+      - What's the relationship between dog and city?
+  - id: blr_hoarding
+    name: Hoarding
+    prompt: |
+      Hoardings—large billboards—dominate junctions. Find one. What's
+      advertised? The hoarding is a scale of aspiration. What does it promise?
+    follow_ups:
+      - What would the junction be without the hoarding?
+      - How does the hoarding shape desire?
+      - What's the relationship between hoarding and city?
+  - id: blr_rain_tree
+    name: Rain Tree
+    prompt: |
+      Rain trees—Samanea saman—canopy some Bangalore streets. Find one. The
+      tree is a legacy. How does it shape the block?
+    follow_ups:
+      - What would the street be without the rain tree?
+      - How does the tree create microclimate?
+      - What's the relationship between tree and garden city?
+  - id: blr_corner_shop
+    name: Bangalore Corner Shop
+    prompt: |
+      Corner shops—kirana stores—sell everything. Enter one. What's the
+      inventory? Who runs it? The shop is a neighborhood node.
+    follow_ups:
+      - What would the block be without the shop?
+      - How does the shop create encounter?
+      - What's the relationship between shop and community?
+  - id: blr_flyover
+    name: Flyover
+    prompt: |
+      Bangalore flyovers leap over junctions. Stand under one. The flyover
+      creates shadow, noise, a new layer. What's above? What's below?
+    follow_ups:
+      - What would the junction be without the flyover?
+      - How does the flyover create flow?
+      - What's the relationship between flyover and ground?
+  - id: blr_water_tap
+    name: Public Water Tap
+    prompt: |
+      Public water taps still exist. Find one. Who uses it? The tap is a
+      commons. What's the relationship between tap and access?
+    follow_ups:
+      - What would the street be without the tap?
+      - How does the tap create gift?
+      - What's the relationship between tap and scarcity?
+  - id: blr_construction_crane
+    name: Construction Crane
+    prompt: |
+      Construction cranes punctuate the skyline. Find one. What's being built?
+      The crane is a sign of growth. What will replace what?
+    follow_ups:
+      - What would the skyline be without the crane?
+      - How does the crane mark change?
+      - What's the relationship between crane and city?
+  - id: blr_parking_lot
+    name: Parking Lot
+    prompt: |
+      Parking lots are temporary—empty land until development. Find one. What
+      was here before? What will come? The lot is a pause.
+    follow_ups:
+      - What would the block be without the lot?
+      - How does the lot create interim use?
+      - What's the relationship between lot and development?
+  - id: blr_street_food
+    name: Street Food
+    prompt: |
+      Street food vendors set up at dusk. Find one. What's cooking? Who eats?
+      The vendor is informal infrastructure. What's the economy?
+    follow_ups:
+      - What would the street be without the vendor?
+      - How does the vendor create livelihood?
+      - What's the relationship between vendor and street?
+  - id: blr_compound_garden
+    name: Compound Garden
+    prompt: >
+      Compound gardens are private—visible through gates. Peek through. What
+
+      grows? The garden is a pocket of green. What would the street be without
+      it?
+    follow_ups:
+      - What would the compound be without the garden?
+      - How does the garden create respite?
+      - What's the relationship between garden and city?
+  - id: blr_bus_crowd
+    name: Bus Crowd
+    prompt: |
+      Bangalore buses pack at rush hour. Watch a bus stop. The crowd boards in
+      a surge. How does the crowd create order? What's the etiquette?
+    follow_ups:
+      - What would the stop be without the crowd?
+      - How does the crowd create pressure?
+      - What's the relationship between crowd and bus?
+  - id: blr_metro_pillar
+    name: Metro Pillar
+    prompt: >
+      Metro pillars support the elevated line. Stand under one. The pillar
+
+      creates a column of space. What's the relationship between pillar and
+      street?
+    follow_ups:
+      - What would the street be without the pillar?
+      - How does the pillar create structure?
+      - What's the relationship between pillar and metro?
+  - id: blr_temple_bell
+    name: Temple Bell
+    prompt: |
+      Temple bells mark prayer times. Listen. The bell creates a rhythm. How
+      does the bell shape the neighborhood? What would the street be without it?
+    follow_ups:
+      - What would the temple be without the bell?
+      - How does the bell create time?
+      - What's the relationship between bell and community?
+  - id: blr_road_widening
+    name: Road Widening
+    prompt: |
+      Road widening cuts through neighborhoods. Find a stretch. What was
+      removed? What remains? The widening is a scar. What does it serve?
+    follow_ups:
+      - What would the road be without the widening?
+      - How does the widening create flow?
+      - What's the relationship between widening and displacement?
+  - id: blr_apartment_balcony
+    name: Apartment Balcony
+    prompt: >
+      Apartment balconies face the street. Find a building. What's on the
+
+      balconies? Plants? Laundry? The balcony is a threshold. What would you see
+      from one?
+    follow_ups:
+      - What would the building be without the balcony?
+      - How does the balcony create relationship to street?
+      - What's the relationship between balcony and apartment?
+  - id: blr_night_light
+    name: Night Light
+    prompt: |
+      Bangalore at night—street lamps, shop lights, apartment windows. Walk a
+      block. How does the light shape the street? What's lit? What's dark?
+    follow_ups:
+      - What would the street be without the light?
+      - How does the light create safety?
+      - What's the relationship between light and night?
+  - id: blr_morning_walk
+    name: Morning Walk
+    prompt: |
+      Morning walkers fill parks and streets. Join or watch. The morning walk
+      is a ritual. What's the route? Who walks?
+    follow_ups:
+      - What would the morning be without the walkers?
+      - How does the walk create community?
+      - What's the relationship between walk and health?
+  - id: blr_garden_city
+    name: Garden City
+    prompt: |
+      Bangalore was the garden city. Remnants persist—Lalbagh, Cubbon Park,
+      old trees. Find a remnant. What would the city be if the garden had won?
+    follow_ups:
+      - What would Bangalore be without the gardens?
+      - How does the garden create identity?
+      - What's the relationship between garden and city?

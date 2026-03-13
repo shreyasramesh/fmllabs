@@ -1,0 +1,463 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Urban Jungle — London
+
+id: urban_jungle_london
+name: Urban Jungle — London
+description: 50 cards to shift how you see London—from scale and light to layers
+  of history and the rhythms of street life.
+domain: urban_jungle
+cards:
+  - id: london_layer
+    name: London Layer
+    prompt: |
+      London is built in layers—Roman, medieval, Victorian, modern. Find a spot
+      where eras collide. What's the oldest thing you can see? The newest?
+    follow_ups:
+      - What would the street be without the layers?
+      - How does history show in the built form?
+      - What's the relationship between layer and identity?
+  - id: london_pub_threshold
+    name: Pub Threshold
+    prompt: |
+      A London pub has a threshold—the step up, the door, the bar. Stand at the
+      threshold. What's inside? What's outside? The pub is a room in the city.
+    follow_ups:
+      - What would the block be without the pub?
+      - How does the threshold create transition?
+      - What's the relationship between pub and street?
+  - id: london_blue_plaque
+    name: Blue Plaque
+    prompt: |
+      Blue plaques mark where someone famous lived. Find one. Who lived here?
+      What did they do? The plaque makes history visible.
+    follow_ups:
+      - What would the building be without the plaque?
+      - How does the plaque shape memory?
+      - What's the relationship between plaque and place?
+  - id: london_underground
+    name: Underground
+    prompt: |
+      The Tube is a city beneath the city. Descend. Notice the tiles, the
+      maps, the escalators. How does the underground shape the above?
+    follow_ups:
+      - What would London be without the Tube?
+      - How does the underground create connection?
+      - What's the relationship between tube and surface?
+  - id: london_thames_edge
+    name: Thames Edge
+    prompt: |
+      The Thames runs through London. Go to the embankment. The river is a
+      seam. What's on either side? How does the river divide and connect?
+    follow_ups:
+      - What would London be without the Thames?
+      - How does the river shape the city?
+      - What's the relationship between river and edge?
+  - id: london_georgian_row
+    name: Georgian Row
+    prompt: |
+      Georgian terraces repeat—door, window, door, window. Walk a row. The
+      repetition creates rhythm. What breaks it? What holds it together?
+    follow_ups:
+      - What would the street be without the row?
+      - How does repetition create identity?
+      - What's the relationship between row and individual?
+  - id: london_mews
+    name: Mews
+    prompt: |
+      Mews were stables, now they're homes. Find one. The narrow lane, the
+      cobbles, the converted coach houses. How does the past persist?
+    follow_ups:
+      - What would the mews be without the history?
+      - How does the mews create privacy?
+      - What's the relationship between mews and main street?
+  - id: london_phone_box
+    name: Phone Box
+    prompt: |
+      Red phone boxes are icons. Find one. Is it still a phone? A defibrillator?
+      A library? How do icons get repurposed?
+    follow_ups:
+      - What would the street be without the box?
+      - How does the box mark Britishness?
+      - What's the relationship between box and function?
+  - id: london_postbox
+    name: Postbox
+    prompt: |
+      Red postboxes are everywhere. Find one. Notice the royal cypher. The
+      postbox is a node in a network. What flows through it?
+    follow_ups:
+      - What would the street be without the postbox?
+      - How does the postbox mark territory?
+      - What's the relationship between postbox and letter?
+  - id: london_pavement
+    name: Pavement
+    prompt: |
+      British "pavement" is American "sidewalk." The word shapes how we think.
+      Walk the pavement. What's the relationship between pavement and road?
+    follow_ups:
+      - What would the street be without the pavement?
+      - How does the pavement create safety?
+      - What's the relationship between pavement and pedestrian?
+  - id: london_brick
+    name: London Brick
+    prompt: |
+      London brick is often yellow or red—London stock. Find a brick wall and
+      study the color, the texture, the bond. How does brick age?
+    follow_ups:
+      - What would the building be without the brick?
+      - How does brick create identity?
+      - What's the relationship between brick and place?
+  - id: london_weather
+    name: London Weather
+    prompt: |
+      London weather is changeable. Stand in one spot for twenty minutes. Watch
+      the sky. How does weather shape the city's mood?
+    follow_ups:
+      - What would London be without the rain?
+      - How does weather shape architecture?
+      - What's the relationship between weather and street life?
+  - id: london_queue
+    name: Queue
+    prompt: |
+      Brits queue. Find a queue—bus, shop, attraction. Observe the etiquette.
+      The queue is a form of order. How does it work?
+    follow_ups:
+      - What would the space be without the queue?
+      - How does the queue create fairness?
+      - What's the relationship between queue and culture?
+  - id: london_roundabout
+    name: Roundabout
+    prompt: |
+      London has many roundabouts—traffic circles. Watch one. How does traffic
+      flow? What's the logic? The roundabout is a node.
+    follow_ups:
+      - What would the intersection be without the roundabout?
+      - How does the roundabout shape flow?
+      - What's the relationship between roundabout and junction?
+  - id: london_parks_room
+    name: Parks Room
+    prompt: |
+      London parks are rooms—Hyde Park, Regent's Park, the squares. Enter one.
+      Notice the boundaries, the paths, the furniture. How is nature designed?
+    follow_ups:
+      - What would London be without the parks?
+      - How does the park create respite?
+      - What's the relationship between park and city?
+  - id: london_square
+    name: London Square
+    prompt: |
+      London squares are often private—gated, keyed. Find one. What's inside?
+      Who has access? The square is a pocket of exclusivity.
+    follow_ups:
+      - What would the neighborhood be without the square?
+      - How does the square create community?
+      - What's the relationship between square and street?
+  - id: london_terrace
+    name: Terrace
+    prompt: |
+      A terrace is a row of houses. Walk one. Notice the uniformity and the
+      variation. How does the terrace create identity?
+    follow_ups:
+      - What would the street be without the terrace?
+      - How does the terrace create rhythm?
+      - What's the relationship between terrace and individual?
+  - id: london_corner_shop
+    name: Corner Shop
+    prompt: |
+      The corner shop is a London institution. Enter one. What's for sale? Who
+      runs it? The shop is a node in the neighborhood.
+    follow_ups:
+      - What would the block be without the shop?
+      - How does the shop create encounter?
+      - What's the relationship between shop and community?
+  - id: london_bus_route
+    name: Bus Route
+    prompt: |
+      London buses have numbers and destinations. Take a bus you've never taken.
+      Where does it go? How does the route shape the city?
+    follow_ups:
+      - What would the journey be without the bus?
+      - How does the route create connection?
+      - What's the relationship between bus and neighborhood?
+  - id: london_clock
+    name: London Clock
+    prompt: |
+      Big Ben, the clock at the station, the clock on the church. London is full
+      of public clocks. Find one. What time does it tell? Is it right?
+    follow_ups:
+      - What would the space be without the clock?
+      - How does the clock shape time?
+      - What's the relationship between clock and place?
+  - id: london_bridge
+    name: London Bridge
+    prompt: |
+      London has many bridges—Tower Bridge, Millennium Bridge, Waterloo. Cross
+      one on foot. Feel the transition. What changes?
+    follow_ups:
+      - What would the river be without the bridge?
+      - How does the bridge connect?
+      - What's the relationship between bridge and river?
+  - id: london_street_market
+    name: Street Market
+    prompt: |
+      London has street markets—Borough, Camden, Portobello. Walk one. What's
+      for sale? Who's selling? The market is a temporary city.
+    follow_ups:
+      - What would the street be without the market?
+      - How does the market create encounter?
+      - What's the relationship between market and neighborhood?
+  - id: london_ghost_sign
+    name: London Ghost Sign
+    prompt: |
+      Faded signs on brick—ghost signs—mark the past. Find one. What did it
+      advertise? Who would have seen it?
+    follow_ups:
+      - What would the wall be without the sign?
+      - How does the ghost sign preserve history?
+      - What's the relationship between sign and commerce?
+  - id: london_bollard
+    name: Bollard
+    prompt: |
+      Bollards mark boundaries—pedestrian zones, no parking. Find a row of
+      bollards. What are they protecting? What are they excluding?
+    follow_ups:
+      - What would the space be without the bollards?
+      - How do bollards shape flow?
+      - What's the relationship between bollard and boundary?
+  - id: london_door_number
+    name: Door Number
+    prompt: |
+      London addresses can be odd—odds on one side, evens on the other. Follow
+      the numbers. How does numbering shape the street?
+    follow_ups:
+      - What would wayfinding be without numbers?
+      - How does numbering create order?
+      - What's the relationship between number and place?
+  - id: london_basement
+    name: London Basement
+    prompt: |
+      London houses often have basements—sometimes below street level. Notice
+      the steps down, the area in front. What's below the sidewalk?
+    follow_ups:
+      - What would the house be without the basement?
+      - How does the basement create space?
+      - What's the relationship between basement and street?
+  - id: london_roof_line
+    name: Roof Line
+    prompt: |
+      London roof lines are varied—slate, tile, flat. Look up. Trace the
+      skyline. How does the roof shape the street?
+    follow_ups:
+      - What would the street be without the roofs?
+      - How does the roof line create identity?
+      - What's the relationship between roof and sky?
+  - id: london_cobble
+    name: Cobble
+    prompt: |
+      Cobblestones persist in some streets. Walk on them. Feel the texture.
+      How does the surface shape the street?
+    follow_ups:
+      - What would the street be without the cobbles?
+      - How do cobbles mark history?
+      - What's the relationship between cobble and modernity?
+  - id: london_lamp_post
+    name: Lamp Post
+    prompt: |
+      London lamp posts have a particular style—Victorian, modern. Find one.
+      How does the lamp shape the street at night?
+    follow_ups:
+      - What would the street be without the lamp?
+      - How does the lamp create safety?
+      - What's the relationship between lamp and darkness?
+  - id: london_bus_stop
+    name: Bus Stop
+    prompt: |
+      London bus stops have shelters, timetables, numbers. Wait at one. Who else
+      waits? What's the etiquette?
+    follow_ups:
+      - What would the street be without the stop?
+      - How does the stop create community?
+      - What's the relationship between stop and journey?
+  - id: london_pub_sign
+    name: Pub Sign
+    prompt: |
+      Pub signs hang over the street—The Crown, The Red Lion. Find one. What's
+      the image? What's the story? The sign is a landmark.
+    follow_ups:
+      - What would the street be without the sign?
+      - How does the sign create identity?
+      - What's the relationship between sign and pub?
+  - id: london_church_spire
+    name: Church Spire
+    prompt: |
+      Church spires punctuate the London skyline. Find one. How does the spire
+      orient you? What would the view be without it?
+    follow_ups:
+      - What would the skyline be without the spire?
+      - How does the spire create landmark?
+      - What's the relationship between spire and neighborhood?
+  - id: london_canal
+    name: London Canal
+    prompt: |
+      London has canals—Regent's Canal, Grand Union. Walk the towpath. The
+      canal is a seam. What's on either side?
+    follow_ups:
+      - What would the city be without the canal?
+      - How does the canal create connection?
+      - What's the relationship between canal and industry?
+  - id: london_garden_square
+    name: Garden Square
+    prompt: |
+      London garden squares are often locked. Peek through the gate. What's
+      inside? Who has the key? The garden is a hidden room.
+    follow_ups:
+      - What would the square be without the garden?
+      - How does the garden create exclusivity?
+      - What's the relationship between garden and square?
+  - id: london_taxi
+    name: London Taxi
+    prompt: |
+      Black cabs are icons. Watch one stop, pick up, drive off. How does the
+      taxi shape the street? What would the city be without it?
+    follow_ups:
+      - What would the street be without the taxi?
+      - How does the taxi create mobility?
+      - What's the relationship between taxi and knowledge?
+  - id: london_underground_tile
+    name: Underground Tile
+    prompt: >
+      Tube stations have distinctive tiles—Baker Street's Sherlock, the
+
+      Victoria line's blue. Find a station with character. What do the tiles
+      say?
+    follow_ups:
+      - What would the station be without the tiles?
+      - How do tiles create identity?
+      - What's the relationship between tile and place?
+  - id: london_bench
+    name: London Bench
+    prompt: |
+      London has many benches—in parks, on streets, by bus stops. Sit on one.
+      Who else sits? What's the view?
+    follow_ups:
+      - What would the space be without the bench?
+      - How does the bench create respite?
+      - What's the relationship between bench and street?
+  - id: london_drain
+    name: London Drain
+    prompt: |
+      Look down. Find a drain—a gutter, a grate. Where does the water go? The
+      drain is a portal to the city's hidden systems.
+    follow_ups:
+      - What would the street be without the drain?
+      - How does the drain manage water?
+      - What's the relationship between drain and system?
+  - id: london_shop_front
+    name: Shop Front
+    prompt: >
+      London shop fronts are often small—narrow, deep. Look in the window.
+      What's
+
+      displayed? How does the front shape the street?
+    follow_ups:
+      - What would the street be without the shop front?
+      - How does the front create identity?
+      - What's the relationship between front and commerce?
+  - id: london_paving
+    name: London Paving
+    prompt: |
+      London paving varies—flagstones, tarmac, brick. Walk a block and notice
+      the changes. How does the surface shape the street?
+    follow_ups:
+      - What would the street be without the paving?
+      - How does paving mark territory?
+      - What's the relationship between paving and pedestrian?
+  - id: london_balcony
+    name: London Balcony
+    prompt: |
+      London balconies are often small—Juliet balconies, tiny terraces. Find
+      one. What would you grow there? Who would use it?
+    follow_ups:
+      - What would the building be without the balcony?
+      - How does the balcony create outdoor space?
+      - What's the relationship between balcony and flat?
+  - id: london_chimney
+    name: London Chimney
+    prompt: |
+      London chimneys punctuate the roof line. Count them on one building. How
+      many fires once burned? The chimney is a relic.
+    follow_ups:
+      - What would the roof be without the chimney?
+      - How does the chimney mark history?
+      - What's the relationship between chimney and heat?
+  - id: london_bike_stand
+    name: Bike Stand
+    prompt: |
+      London has bike stands, Santander cycles, delivery bikes. Find a cluster.
+      How do bikes shape the street? What would the block be without them?
+    follow_ups:
+      - What would the street be without the bikes?
+      - How do bikes create mobility?
+      - What's the relationship between bike and city?
+  - id: london_tree_pit
+    name: Tree Pit
+    prompt: |
+      London street trees grow in pits—often small, often struggling. Find one.
+      What's in the pit? How is the tree doing?
+    follow_ups:
+      - What would the street be without the tree?
+      - How does the pit shape the tree's life?
+      - What's the relationship between pit and sidewalk?
+  - id: london_rain
+    name: London Rain
+    prompt: |
+      London rain is frequent. Stand under a shelter and watch. How does the
+      rain change the street? What would the city be without it?
+    follow_ups:
+      - How does rain shape the mood?
+      - What's the relationship between rain and umbrella?
+      - What would you notice in the dry?
+  - id: london_cab_rank
+    name: Cab Rank
+    prompt: |
+      Black cabs queue at ranks. Watch the flow. The rank is a node. How does
+      the cab shape the street? What would the junction be without it?
+    follow_ups:
+      - How does the rank create order?
+      - What's the relationship between cab and knowledge?
+      - What would you ask a cabbie?
+  - id: london_pub_window
+    name: Pub Window
+    prompt: |
+      Pub windows are often leaded, often small. Look through one. What's the
+      view? The window frames the street. How does the frame matter?
+    follow_ups:
+      - What would the pub be without the window?
+      - How does the window create relationship?
+      - What's the relationship between window and street?
+  - id: london_mews_cobble
+    name: Mews Cobble
+    prompt: |
+      Mews lanes are often cobbled. Walk one. Feel the texture. The cobble
+      marks history. What would the mews be in tarmac?
+    follow_ups:
+      - How does the cobble shape the lane?
+      - What's the relationship between cobble and horse?
+      - What would you hear on cobbles?
+  - id: london_underground_escalator
+    name: Underground Escalator
+    prompt: |
+      Tube escalators are long—Angel's is one of the longest. Ride one. Feel the
+      descent. How does the escalator shape the journey?
+    follow_ups:
+      - What would the station be without the escalator?
+      - How does the escalator create flow?
+      - What's the relationship between escalator and depth?
+  - id: london_thames_path
+    name: Thames Path
+    prompt: |
+      The Thames Path runs along the river. Walk a stretch. The path creates a
+      corridor. What's on either side? How does the path shape the journey?
+    follow_ups:
+      - What would the river be without the path?
+      - How does the path create access?
+      - What's the relationship between path and river?

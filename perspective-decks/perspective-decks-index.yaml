@@ -12,11 +12,42 @@ decks:
       deepen how you see and engage with artworks.
     domain: art
 
-  - id: urban_jungle
-    name: Urban Jungle
-    path: perspective-decks/urban-jungle.yaml
+  - id: urban_jungle_new_york
+    name: Urban Jungle — New York
+    path: perspective-decks/urban-jungle/urban-jungle-new-york.yaml
     description: |
-      250 cards to shift how you see cities and architecture. Fifty lenses each
-      for New York, San Francisco, London, Paris, and Bangalore—from scale and
-      light to layers of history and the rhythms of street life.
+      50 cards to shift how you see New York—from scale and light to layers of
+      history and the rhythms of street life.
+    domain: urban_jungle
+
+  - id: urban_jungle_san_francisco
+    name: Urban Jungle — San Francisco
+    path: perspective-decks/urban-jungle/urban-jungle-san-francisco.yaml
+    description: |
+      50 cards to shift how you see San Francisco—from scale and light to
+      layers of history and the rhythms of street life.
+    domain: urban_jungle
+
+  - id: urban_jungle_london
+    name: Urban Jungle — London
+    path: perspective-decks/urban-jungle/urban-jungle-london.yaml
+    description: |
+      50 cards to shift how you see London—from scale and light to layers of
+      history and the rhythms of street life.
+    domain: urban_jungle
+
+  - id: urban_jungle_paris
+    name: Urban Jungle — Paris
+    path: perspective-decks/urban-jungle/urban-jungle-paris.yaml
+    description: |
+      50 cards to shift how you see Paris—from scale and light to layers of
+      history and the rhythms of street life.
+    domain: urban_jungle
+
+  - id: urban_jungle_bangalore
+    name: Urban Jungle — Bangalore
+    path: perspective-decks/urban-jungle/urban-jungle-bangalore.yaml
+    description: |
+      50 cards to shift how you see Bangalore—from scale and light to layers of
+      history and the rhythms of street life.
     domain: urban_jungle

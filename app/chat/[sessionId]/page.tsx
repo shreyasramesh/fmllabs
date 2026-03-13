@@ -1427,6 +1427,7 @@ export default function ChatPage() {
   const [visibleLetterModalTitleChars, setVisibleLetterModalTitleChars] = useState(0);
   const [letterModalTitleAnimating, setLetterModalTitleAnimating] = useState(false);
   const LETTER_SEEN_KEY = "fml-labs-letter-seen";
+  const PERSPECTIVE_CARD_START_KEY = "fml-perspective-card-start";
   const ONBOARDING_COMPLETE_KEY = "fml-labs-onboarding-complete";
   const FEATURE_TOUR_COMPLETE_KEY = "fml-labs-feature-tour-complete";
   const FEATURE_TOUR_STEPS = [
@@ -1921,6 +1922,32 @@ export default function ChatPage() {
         .finally(() => setSessionLoading(false));
     } else if (isNew || isAnonymous || incognitoMode) {
       setSessionLoading(false);
+      // Check for perspective card "Start conversation" — opens in new conversation
+      if (typeof window !== "undefined" && isNew && !incognitoMode) {
+        try {
+          const stored = sessionStorage.getItem(PERSPECTIVE_CARD_START_KEY);
+          if (stored) {
+            sessionStorage.removeItem(PERSPECTIVE_CARD_START_KEY);
+            const { assistantContent, prompt, name } = JSON.parse(stored) as {
+              assistantContent: string;
+              prompt: string;
+              name: string;
+            };
+            setMessages([{
+              role: "assistant",
+              content: assistantContent,
+              perspectiveCard: { name, prompt },
+            }]);
+            setPendingCardContext({ prompt, name });
+            setCurrentSessionId(null);
+            setCurrentSession(null);
+            setCollapsedSummary(null);
+            return;
+          }
+        } catch {
+          /* ignore */
+        }
+      }
       // Don't clear when we're streaming a response from a just-created session
       // (e.g. user selected a phrase from the carousel). Clearing would wipe the UI.
       // For anonymous users, we never set justCreatedSessionRef, so use anonymousActiveRef.
@@ -2378,6 +2405,39 @@ export default function ChatPage() {
     }
   }, [waysOfLookingAtModalOpen]);
 
+  const urbanJungleCityToDeckId: Record<string, string> = {
+    ny: "urban_jungle_new_york",
+    sf: "urban_jungle_san_francisco",
+    london: "urban_jungle_london",
+    paris: "urban_jungle_paris",
+    blr: "urban_jungle_bangalore",
+  };
+
+  const domainDisplayName: Record<string, string> = {
+    urban_jungle: "Urban Jungle",
+    art: "Ways of Looking at Art",
+  };
+
+  const closeAllModalsExceptLeftPanel = useCallback(() => {
+    setWaysOfLookingAtModalOpen(false);
+    setWaysOfLookingAtDrawMode(false);
+    setWaysOfLookingAtCategory(null);
+    setWaysOfLookingAtCity(null);
+    setDrawnPerspectiveCard(null);
+    setSelectedMentalModel(null);
+    setLetterModalOpen(false);
+    setSignInFeaturesModalOpen(false);
+    setInputExpandModalOpen(false);
+    setFeedbackModalOpen(false);
+    setDeleteAllDataModalOpen(false);
+    setMmCreateModalOpen(false);
+    setDeleteSessionConfirmModal(null);
+    setLtmDeleteConfirmModal(null);
+    setCcDeleteConfirmModal(null);
+    setCgDeleteConfirmModal(null);
+    setGoBackConfirmModal(null);
+  }, []);
+
   useEffect(() => {
     if (!waysOfLookingAtCategory) {
       setWaysOfLookingAtCards(null);
@@ -2389,25 +2449,31 @@ export default function ChatPage() {
       return;
     }
     setWaysOfLookingAtCardsLoading(true);
-    fetch("/api/perspective-decks")
-      .then((r) => r.json())
-      .then(async (list: { id: string; name: string; description: string; domain: string }[]) => {
-        const deck = Array.isArray(list) ? list.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory) : null;
-        if (!deck?.id) {
-          setWaysOfLookingAtCards([]);
-          return;
-        }
-        const res = await fetch(`/api/perspective-decks/${deck.id}`);
-        const data = await res.json();
-        let cards = Array.isArray(data?.cards) ? data.cards : [];
-        if (isUrbanJungle && waysOfLookingAtCity) {
-          const prefix = waysOfLookingAtCity === "ny" ? "ny_" : waysOfLookingAtCity === "sf" ? "sf_" : waysOfLookingAtCity === "london" ? "london_" : waysOfLookingAtCity === "paris" ? "paris_" : "blr_";
-          cards = cards.filter((c: { id: string }) => c.id.startsWith(prefix));
-        }
-        setWaysOfLookingAtCards(cards);
-      })
-      .catch(() => setWaysOfLookingAtCards([]))
-      .finally(() => setWaysOfLookingAtCardsLoading(false));
+    const deckId = isUrbanJungle && waysOfLookingAtCity
+      ? urbanJungleCityToDeckId[waysOfLookingAtCity]
+      : null;
+    if (deckId) {
+      fetch(`/api/perspective-decks/${deckId}`)
+        .then((r) => r.json())
+        .then((data) => setWaysOfLookingAtCards(Array.isArray(data?.cards) ? data.cards : []))
+        .catch(() => setWaysOfLookingAtCards([]))
+        .finally(() => setWaysOfLookingAtCardsLoading(false));
+    } else {
+      fetch("/api/perspective-decks")
+        .then((r) => r.json())
+        .then(async (list: { id: string; name: string; description: string; domain: string }[]) => {
+          const deck = Array.isArray(list) ? list.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory) : null;
+          if (!deck?.id) {
+            setWaysOfLookingAtCards([]);
+            return;
+          }
+          const res = await fetch(`/api/perspective-decks/${deck.id}`);
+          const data = await res.json();
+          setWaysOfLookingAtCards(Array.isArray(data?.cards) ? data.cards : []);
+        })
+        .catch(() => setWaysOfLookingAtCards([]))
+        .finally(() => setWaysOfLookingAtCardsLoading(false));
+    }
   }, [waysOfLookingAtCategory, waysOfLookingAtCity]);
 
   useEffect(() => {
@@ -2719,6 +2785,7 @@ export default function ChatPage() {
                 <Link
                   href={incognitoMode ? "/chat/incognito" : "/chat/new"}
                   onClick={(e) => {
+                    closeAllModalsExceptLeftPanel();
                     if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
                     if (sessionId === "new" || sessionId === "incognito") {
                       e.preventDefault();
@@ -2785,6 +2852,7 @@ export default function ChatPage() {
               <Link
                 href="/chat/new"
                 onClick={() => {
+                  closeAllModalsExceptLeftPanel();
                   if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
                   anonymousActiveRef.current = false;
                   setMessages([]);
@@ -2847,6 +2915,7 @@ export default function ChatPage() {
           <Link
             href={incognitoMode ? "/chat/incognito" : "/chat/new"}
             onClick={(e) => {
+              closeAllModalsExceptLeftPanel();
               if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
               if (sessionId === "new" || sessionId === "incognito") {
                 e.preventDefault();
@@ -2931,11 +3000,11 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             })}
           </nav>
 
-          <div className="mt-2 pt-2 border-t border-neutral-200/80 dark:border-neutral-700/80">
+          <div className="mt-2 pt-2 border-t-[0.5px] border-neutral-200/60 dark:border-neutral-600/60">
             <button
               type="button"
               onClick={() => { playSelectionChime(); setWaysOfLookingAtModalOpen(true); setWaysOfLookingAtDrawMode(false); setWaysOfLookingAtCategory(null); setWaysOfLookingAtCity(null); }}
-              className="flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left text-[13px] sm:text-[14px] font-medium text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800/50 transition-colors"
+              className="flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left text-[13px] sm:text-[14px] font-medium transition-colors border-2 border-transparent text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:border-neutral-400 dark:hover:border-neutral-500"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
                 <rect width="18" height="14" x="3" y="3" rx="2" />
@@ -2974,9 +3043,16 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             </div>
             <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-0">
               {filteredSessions.length === 0 ? (
-                <p className="px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400">
-                  {sessionSearchQuery ? "No conversations match" : "No conversations yet"}
-                </p>
+                <div className="px-3 py-1.5 space-y-0.5">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    {sessionSearchQuery ? "No conversations match" : "No conversations yet"}
+                  </p>
+                  {!sessionSearchQuery && (
+                    <p className="text-[11px] text-neutral-400 dark:text-neutral-500">
+                      Ready to have a conversation whenever you say something
+                    </p>
+                  )}
+                </div>
               ) : (
               filteredSessions.map((s) => (
                 <div
@@ -3470,8 +3546,11 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     </div>
                   ) : (
                     <>
-                      <p className="w-full min-w-0 break-words text-neutral-500 dark:text-neutral-400 text-base sm:text-lg mb-6">
+                      <p className="w-full min-w-0 break-words text-neutral-500 dark:text-neutral-400 text-base sm:text-lg">
                         Let&apos;s dig in—with mental models that actually work
+                      </p>
+                      <p className="w-full min-w-0 break-words text-neutral-400 dark:text-neutral-500 text-sm mt-2 mb-6">
+                        Ready to have a conversation whenever you say something
                       </p>
                       <div className="space-y-3 mb-6 w-full">
                         <button
@@ -4040,7 +4119,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 <div className="space-y-4">
                   <Link
                     href="/chat/new"
-                    onClick={() => { setLibraryPanelOpen(null); setSidebarOpen(false); }}
+                    onClick={() => { closeAllModalsExceptLeftPanel(); if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false); }}
                     className="flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-foreground border border-neutral-200 dark:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
@@ -4064,9 +4143,16 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   </div>
                   <nav className="space-y-px max-h-[60vh] overflow-y-auto">
                     {filteredSessions.length === 0 ? (
-                      <p className="px-3 py-4 text-sm text-neutral-500 dark:text-neutral-400">
-                        {sessionSearchQuery ? "No conversations match" : "No conversations yet"}
-                      </p>
+                      <div className="px-3 py-4 space-y-1">
+                        <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                          {sessionSearchQuery ? "No conversations match" : "No conversations yet"}
+                        </p>
+                        {!sessionSearchQuery && (
+                          <p className="text-xs text-neutral-400 dark:text-neutral-500">
+                            Ready to have a conversation whenever you say something
+                          </p>
+                        )}
+                      </div>
                     ) : (
                       filteredSessions.map((s) => (
                         <div
@@ -8115,9 +8201,9 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   {waysOfLookingAtDrawMode && !waysOfLookingAtCategory
                     ? "Draw a perspective card"
                     : waysOfLookingAtCity
-                      ? `${perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ?? "Urban Jungle"} — ${waysOfLookingAtCity === "ny" ? "New York" : waysOfLookingAtCity === "sf" ? "San Francisco" : waysOfLookingAtCity === "london" ? "London" : waysOfLookingAtCity === "paris" ? "Paris" : "Bangalore"}`
+                      ? `${domainDisplayName[waysOfLookingAtCategory ?? ""] ?? "Urban Jungle"} — ${waysOfLookingAtCity === "ny" ? "New York" : waysOfLookingAtCity === "sf" ? "San Francisco" : waysOfLookingAtCity === "london" ? "London" : waysOfLookingAtCity === "paris" ? "Paris" : "Bangalore"}`
                       : waysOfLookingAtCategory
-                        ? perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ?? "Prompt Games"
+                        ? domainDisplayName[waysOfLookingAtCategory] ?? perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ?? "Prompt Games"
                         : "Prompt Games"}
                 </h2>
               </div>
@@ -8167,13 +8253,15 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                               setWaysOfLookingAtCategory(domain);
                               setWaysOfLookingAtCity(null);
                             }}
-                            className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-amber-50 dark:hover:bg-amber-950/30 hover:border-amber-200 dark:hover:border-amber-800/50 transition-all text-left group"
+                            className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left group"
                           >
-                            <span className="text-base font-medium text-foreground capitalize group-hover:text-amber-800 dark:group-hover:text-amber-200">
-                              {domain.replace(/_/g, " ")}
+                            <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
+                              {domainDisplayName[domain] ?? domain.replace(/_/g, " ")}
                             </span>
                             <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2">
-                              {deck.description}
+                              {domain === "urban_jungle"
+                                ? "250 cards across New York, San Francisco, London, Paris, and Bangalore—from scale and light to layers of history."
+                                : deck.description}
                             </p>
                           </button>
                         );
@@ -8201,19 +8289,16 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           playSelectionChime();
                           if (waysOfLookingAtDrawMode) {
                             try {
-                              const deck = perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === "urban_jungle");
-                              if (deck?.id) {
-                                const res = await fetch(`/api/perspective-decks/${deck.id}`);
+                              const deckId = urbanJungleCityToDeckId[city.id];
+                              if (deckId) {
+                                const res = await fetch(`/api/perspective-decks/${deckId}/random`);
                                 const data = await res.json();
-                                const prefix = city.id === "ny" ? "ny_" : city.id === "sf" ? "sf_" : city.id === "london" ? "london_" : city.id === "paris" ? "paris_" : "blr_";
-                                const cards = Array.isArray(data?.cards) ? data.cards.filter((c: { id: string }) => c.id.startsWith(prefix)) : [];
-                                if (cards.length > 0) {
-                                  const card = cards[Math.floor(Math.random() * cards.length)];
-                                  const cityName = city.name;
+                                if (data.card && data.deckId) {
+                                  const deck = perspectiveDecks.find((d) => d.id === deckId);
                                   setDrawnPerspectiveCard({
-                                    card,
-                                    deckId: deck.id,
-                                    deckName: `${deck.name} — ${cityName}`,
+                                    card: data.card,
+                                    deckId: data.deckId,
+                                    deckName: deck?.name ?? `Urban Jungle — ${city.name}`,
                                   });
                                   setWaysOfLookingAtModalOpen(false);
                                   setWaysOfLookingAtDrawMode(false);
@@ -8224,9 +8309,9 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           }
                           setWaysOfLookingAtCity(city.id);
                         }}
-                        className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-amber-50 dark:hover:bg-amber-950/30 hover:border-amber-200 dark:hover:border-amber-800/50 transition-all text-left group"
+                        className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left group"
                       >
-                        <span className="text-base font-medium text-foreground group-hover:text-amber-800 dark:group-hover:text-amber-200">
+                        <span className="text-base font-medium text-foreground group-hover:text-foreground">
                           {city.name}
                         </span>
                         <p className="text-xs text-neutral-500 dark:text-neutral-400">
@@ -8243,21 +8328,22 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   ) : waysOfLookingAtCards && waysOfLookingAtCards.length > 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                       {waysOfLookingAtCards.map((card) => {
-                        const deck = perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory);
+                        const deck = waysOfLookingAtCity
+                          ? perspectiveDecks.find((d) => d.id === urbanJungleCityToDeckId[waysOfLookingAtCity])
+                          : perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory);
                         return (
                           <button
                             key={card.id}
                             type="button"
                             onClick={() => {
                               playSelectionChime();
-                              const cityName = waysOfLookingAtCity === "ny" ? "New York" : waysOfLookingAtCity === "sf" ? "San Francisco" : waysOfLookingAtCity === "london" ? "London" : waysOfLookingAtCity === "paris" ? "Paris" : waysOfLookingAtCity === "blr" ? "Bangalore" : null;
                               setDrawnPerspectiveCard({
                                 card,
                                 deckId: deck?.id ?? "",
-                                deckName: cityName ? `${deck?.name ?? "Urban Jungle"} — ${cityName}` : deck?.name ?? "Prompt Games",
+                                deckName: deck?.name ?? "Prompt Games",
                               });
                             }}
-                            className="flex flex-col p-4 rounded-xl border border-amber-200/60 dark:border-amber-800/40 bg-amber-50/50 dark:bg-amber-950/20 hover:bg-amber-100/70 dark:hover:bg-amber-900/30 hover:border-amber-300 dark:hover:border-amber-700/50 transition-all text-left min-h-[100px]"
+                            className="flex flex-col p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left min-h-[100px]"
                           >
                             <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                               {card.name}
@@ -8349,14 +8435,39 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   const prompt = drawnPerspectiveCard.card.prompt;
                   const name = drawnPerspectiveCard.card.name;
                   const assistantContent = `Let me invite you to look through this lens:\n\n${prompt}\n\nWhat comes to mind?`;
-                  setMessages((prev) => [...prev, {
-                    role: "assistant",
+                  const initialMessage = {
+                    role: "assistant" as const,
                     content: assistantContent,
                     perspectiveCard: { name, prompt },
-                  }]);
-                  setPendingCardContext({ prompt, name });
+                  };
                   setDrawnPerspectiveCard(null);
-                  inputRef.current?.focus();
+                  setWaysOfLookingAtModalOpen(false);
+                  setWaysOfLookingAtDrawMode(false);
+                  setWaysOfLookingAtCategory(null);
+                  setWaysOfLookingAtCity(null);
+                  if (typeof window !== "undefined" && window.innerWidth < 1024) {
+                    setLibraryPanelOpen(null);
+                    setSidebarOpen(false);
+                  }
+                  if (sessionId !== "new" && sessionId !== "incognito") {
+                    try {
+                      sessionStorage.setItem(PERSPECTIVE_CARD_START_KEY, JSON.stringify({
+                        assistantContent,
+                        prompt,
+                        name,
+                      }));
+                    } catch {
+                      /* ignore */
+                    }
+                    router.push("/chat/new");
+                  } else {
+                    setMessages([initialMessage]);
+                    setPendingCardContext({ prompt, name });
+                    setCurrentSessionId(null);
+                    setCurrentSession(null);
+                    setCollapsedSummary(null);
+                    inputRef.current?.focus();
+                  }
                 }}
                 className="w-full px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
               >
