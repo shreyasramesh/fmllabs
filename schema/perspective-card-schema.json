@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fmllabs/schemas/perspective-card.json",
+  "title": "Perspective Card",
+  "description": "A single prompt that shifts how the user looks at something",
+  "type": "object",
+  "required": ["id", "name", "prompt"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier (snake_case)",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Display title (e.g., Introductions, Light)"
+    },
+    "prompt": {
+      "type": "string",
+      "description": "The instruction—2–4 sentences that shift perspective"
+    },
+    "follow_ups": {
+      "type": "array",
+      "description": "Optional follow-up questions to deepen reflection",
+      "items": { "type": "string" }
+    },
+    "domain": {
+      "type": "string",
+      "description": "Optional tag for filtering (e.g., art, decisions)"
+    }
+  }
+}

@@ -88,6 +88,31 @@ USER CONTEXT (Memories, Concepts, Groups):
 [Insert Context Here]
 `;
 
+const PERSPECTIVE_CARD_SYSTEM_PROMPT = `You are a guide helping the user dive deeper and gain new perspectives. They have chosen a perspective card—a lens designed to shift how they look at something (art, a situation, an idea). Your job is to help them *learn something new* and *see differently*.
+
+## Your Role
+- **Deepen, don't summarize:** Use the card as a lens to open up discovery. Ask questions that help the user notice what they might have missed, connect dots, or reframe what they're looking at.
+- **Guide toward insight:** Gently steer the conversation so the user arrives at a fresh perspective or realization—not just surface-level engagement.
+- **Be curious and warm:** Conversational, supportive, never lecturing. Reflect back what they share and probe in directions that unlock new understanding.
+- **Meet them where they are:** If they name something specific (an artwork, a decision, a memory), use the card to explore it. If they're unsure, offer a concrete way to start—e.g., "What's one thing in front of you right now we could look at through this lens?"
+- **Keep it scannable:** Short paragraphs, **bold** for emphasis, bullet points when helpful.
+
+## Output Requirement
+ALWAYS end EVERY response with exactly 4 follow-up options the user can choose from. Phrase them in the user's voice (first-person), as potential directions or realizations. Format:
+
+---OPTIONS---
+[Option 1]
+[Option 2]
+[Option 3]
+[Option 4]
+`;
+
+const PERSPECTIVE_CARD_CONTEXT_ADDITION = `ACTIVE PERSPECTIVE CARD: The user wants to explore through this lens. Use it to help them dive deeper and gain new perspectives. Do not repeat the prompt verbatim—weave it into questions and reflections that lead to discovery.
+
+"[Insert Card Prompt Here]"
+
+`;
+
 function compactPromptText(value: string | undefined, maxLen = 220): string {
   if (!value) return "";
   return value
@@ -123,6 +148,8 @@ export async function POST(request: Request) {
   let mentionedCustomConceptIds: string[] = [];
   let mentionedConceptGroupIds: string[] = [];
   let bodyMessages: { role: string; content: string }[] = [];
+  let activeCardPrompt: string | undefined;
+  let activeCardName: string | undefined;
 
   try {
     const body = await request.json();
@@ -167,6 +194,12 @@ export async function POST(request: Request) {
           typeof (m as { role: unknown; content: unknown }).role === "string" &&
           typeof (m as { role: unknown; content: unknown }).content === "string"
       );
+    }
+    if (typeof body.activeCardPrompt === "string" && body.activeCardPrompt.trim()) {
+      activeCardPrompt = body.activeCardPrompt.trim();
+      activeCardName = typeof body.activeCardName === "string" && body.activeCardName.trim()
+        ? body.activeCardName.trim()
+        : "Perspective card";
     }
 
     if (!message || typeof message !== "string") {
@@ -234,9 +267,44 @@ export async function POST(request: Request) {
     ccEnrichmentWithIds = ccEnrichmentRes;
   }
 
+  const isLightweight =
+    !!activeCardPrompt && messagesForModel.length <= 1;
+
+  let fullSystemPrompt: string;
+  let contextBlockForStream: string;
+  let predictedContextResult: RelevantContext;
+  let mmIdToName = new Map<string, string>();
+  let ltmIdToTitle = new Map<string, string>();
+  let ccIdToTitle = new Map<string, string>();
+  let cgIdToTitle = new Map<string, string>();
+
+  if (isLightweight) {
+    const langInstr =
+      language !== "en"
+        ? `\n\nLANGUAGE: Respond in ${getLanguageName(language as LanguageCode)}.`
+        : "";
+    fullSystemPrompt =
+      PERSPECTIVE_CARD_SYSTEM_PROMPT +
+      "\n\nPERSPECTIVE CARD PROMPT:\n" +
+      activeCardPrompt! +
+      langInstr;
+    predictedContextResult = {
+      mentalModels: [],
+      longTermMemories: [],
+      customConcepts: [],
+      conceptGroups: [],
+      perspectiveCards: activeCardName && activeCardPrompt
+        ? [{ id: "active", title: activeCardName, reason: "Applied perspective", prompt: activeCardPrompt }]
+        : [],
+    };
+    const { start: ctxStart, end: ctxEnd } = getRelevantContextBlockDelimiters();
+    contextBlockForStream = `${ctxStart}\n${JSON.stringify({
+      predictedContext: predictedContextResult,
+    })}\n${ctxEnd}`;
+  } else {
   const index = loadMentalModelsIndex(language);
   let indexSummary = getIndexSummary(language);
-  const mmIdToName = new Map(index.mental_models.map((m) => [m.id, m.name]));
+  mmIdToName = new Map(index.mental_models.map((m) => [m.id, m.name]));
   const mmById = new Map(index.mental_models.map((m) => [m.id, m]));
   for (const m of userMentalModels) {
     mmIdToName.set(m.id, m.name);
@@ -472,7 +540,14 @@ export async function POST(request: Request) {
       : "";
 
   const indexContent = indexSummary.trim() || "(none)";
+  const cardContextBlock = activeCardPrompt
+    ? PERSPECTIVE_CARD_CONTEXT_ADDITION.replace(
+        "[Insert Card Prompt Here]",
+        activeCardPrompt
+      )
+    : "";
   const contextContent = (
+    cardContextBlock +
     citationFormatGuide +
     "\n\n" +
     userMentionBlock +
@@ -480,27 +555,27 @@ export async function POST(request: Request) {
   ).trim() || "(none)";
   const optionsStyleInstruction =
     getUserTypeOptionsPrompt(userType as UserTypeId) || "Natural, conversational first-person.";
-  const fullSystemPrompt =
+  fullSystemPrompt =
     SYSTEM_PROMPT.replace("[Insert Index Here]", indexContent)
       .replace("[Insert Context Here]", contextContent)
       .replace("[Options Style Instruction]", optionsStyleInstruction) +
     languageInstruction +
     conversationStyleInstruction;
 
-  const ltmIdToTitle = new Map(
+  ltmIdToTitle = new Map(
     ltmEnrichmentWithIds.map((e) => [
       e.id,
       e.title ?? e.enrichmentPrompt?.slice(0, 40) ?? "Memory",
     ])
   );
-  const ccIdToTitle = new Map(
+  ccIdToTitle = new Map(
     ccEnrichmentWithIds.map((e) => [
       e.id,
       e.title ?? e.enrichmentPrompt?.slice(0, 40) ?? "Concept",
     ])
   );
-  const cgIdToTitle = new Map(conceptGroupEnrichment.map((g) => [g.id, g.title]));
-  const predictedContextResult: RelevantContext = {
+  cgIdToTitle = new Map(conceptGroupEnrichment.map((g) => [g.id, g.title]));
+  predictedContextResult = {
     mentalModels: predictedContext.mentalModels,
     longTermMemories: predictedContext.longTermMemories.map((m) => ({
       ...m,
@@ -514,15 +589,19 @@ export async function POST(request: Request) {
       ...g,
       title: cgIdToTitle.get(g.id) ?? ccIdToTitle.get(g.id) ?? "Domain",
     })),
+    perspectiveCards: activeCardName && activeCardPrompt
+      ? [{ id: "active", title: activeCardName, reason: "Applied perspective", prompt: activeCardPrompt }]
+      : [],
   };
   const contextEnvelopeForStream = {
     predictedContext: predictedContextResult,
   };
 
   const { start: ctxStart, end: ctxEnd } = getRelevantContextBlockDelimiters();
-  const contextBlockForStream = `${ctxStart}\n${JSON.stringify(
+  contextBlockForStream = `${ctxStart}\n${JSON.stringify(
     contextEnvelopeForStream
   )}\n${ctxEnd}`;
+  }
 
   const citationAlignmentPolicy = normalizeCitationAlignmentPolicy(
     process.env.CITATION_ALIGNMENT_POLICY

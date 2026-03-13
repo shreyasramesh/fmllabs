@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Ways of Looking at Art
+# 50 cards to shift your perspective (sample cards)
+
+id: ways_of_looking_at_art
+name: Ways of Looking at Art
+description: |
+  Cards to shift your perspective when viewing art. Each offers a different lens
+  to deepen how you see and engage with artworks.
+domain: art
+
+cards:
+  - id: introductions
+    name: Introductions
+    prompt: |
+      Introduce an artwork to a friend as if it were an acquaintance at a party.
+      How would you describe it in a way that will capture their interest?
+      What captures yours?
+    follow_ups:
+      - What would you emphasize first?
+      - What would you leave out?
+
+  - id: light
+    name: Light
+    prompt: |
+      Look for the source of light. Where is it coming from? What is in shadow?
+      Focus on what the artist wants us to see and what is hidden in the shadows.
+    follow_ups:
+      - What does the light reveal?
+      - What might the shadows be concealing?
+
+  - id: emotion
+    name: Emotion
+    prompt: |
+      What emotion does this work evoke in you? Name it. Then ask: is that
+      emotion in the work itself, or are you bringing it? Where does the
+      feeling live—in the subject, the colors, the composition, or you?
+    follow_ups:
+      - Would someone else feel differently?
+      - What in the work triggers this feeling?
+
+  - id: time
+    name: Time
+    prompt: |
+      Consider the moment the artist chose to capture. What happened just before?
+      What happens next? Is this a pause, a climax, or an aftermath? How does
+      time move—or stop—in this image?
+    follow_ups:
+      - What story does this moment imply?
+      - Why this moment and not another?
+
+  - id: scale
+    name: Scale
+    prompt: |
+      Imagine this work at a different size—tiny as a postage stamp, or vast
+      as a building. How would that change your experience? What does the
+      actual scale tell you about the artist's intent?
+    follow_ups:
+      - What would you lose or gain at a different scale?
+      - How does your body relate to this size?
+
+  - id: material
+    name: Material
+    prompt: |
+      Focus on the physical stuff—paint, stone, pixels, fabric. How was it made?
+      What traces of the maker's hand remain? What would it feel like to touch?
+    follow_ups:
+      - What does the material add to the meaning?
+      - What would change if it were made of something else?
+
+  - id: outsider
+    name: Outsider
+    prompt: |
+      Imagine you're from another culture or time. What would confuse you?
+      What would you recognize? What assumptions does this work make about
+      its viewer?
+    follow_ups:
+      - What would need explaining?
+      - What transcends context?
+
+  - id: silence
+    name: Silence
+    prompt: |
+      Look without naming. Don't label, categorize, or interpret. Just look.
+      What do you notice when you stop trying to say what it is?
+    follow_ups:
+      - What persists when words fall away?
+      - What did you miss when you were naming?

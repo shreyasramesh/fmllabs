@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fmllabs/schemas/perspective-deck.json",
+  "title": "Perspective Deck",
+  "description": "A curated collection of perspective cards for a domain",
+  "type": "object",
+  "required": ["id", "name", "description", "domain", "cards"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier (snake_case)",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name of the deck"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of the deck and its purpose"
+    },
+    "domain": {
+      "type": "string",
+      "description": "Domain tag (e.g., art, decisions, writing)"
+    },
+    "cards": {
+      "type": "array",
+      "description": "Cards in this deck",
+      "items": { "$ref": "./perspective-card-schema.json" }
+    }
+  }
+}

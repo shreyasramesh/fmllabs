@@ -5,6 +5,7 @@
   "scripts": {
     "typecheck": "npx tsc -p tsconfig.json --noEmit",
     "build": "npm run typecheck && npx vite build",
+    "build:store": "npm run typecheck && CHROME_STORE_BUILD=true npx vite build",
     "dev": "vite build --watch"
   },
   "dependencies": {

@@ -26,6 +26,9 @@ const envLocal = loadEnvLocal();
 
 const API_BASE =
   env.API_BASE || envLocal.API_BASE || process.env.API_BASE || "https://fmllabs.ai";
+const isStoreBuild =
+  (env.CHROME_STORE_BUILD || envLocal.CHROME_STORE_BUILD || process.env.CHROME_STORE_BUILD || "")
+    .toLowerCase() === "true";
 const CLERK_PUBLISHABLE_KEY =
   env.CLERK_PUBLISHABLE_KEY ||
   env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
@@ -56,6 +59,14 @@ export default defineConfig({
         const manifest = JSON.parse(
           fs.readFileSync(path.resolve(__dirname, "manifest.json"), "utf8")
         );
+        if (isStoreBuild) {
+          // Strip local dev hosts for Chrome Web Store submissions.
+          manifest.host_permissions = (manifest.host_permissions || []).filter(
+            (host: string) =>
+              host !== "http://localhost:3000/*" &&
+              host !== "http://127.0.0.1:3000/*"
+          );
+        }
         manifest.action.default_popup = "popup/popup.html";
         manifest.side_panel.default_path = "sidepanel/sidepanel.html";
         fs.writeFileSync(

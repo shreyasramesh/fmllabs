@@ -55,7 +55,9 @@ interface Message {
     longTermMemories: RelevantContextItem[];
     customConcepts: RelevantContextItem[];
     conceptGroups: RelevantContextItem[];
+    perspectiveCards?: RelevantContextItem[];
   };
+  perspectiveCard?: { name: string; prompt: string };
 }
 
 function processMessagesWithContext(msgs: Message[]): Message[] {
@@ -186,6 +188,7 @@ function MessageBubble({
   onLtmClick,
   onCustomConceptClick,
   onConceptGroupClick,
+  onPerspectiveCardClick,
   previewMap,
   isRtl,
   ttsHighlight,
@@ -210,6 +213,7 @@ function MessageBubble({
   onLtmClick: (id: string) => void;
   onCustomConceptClick?: (id: string) => void;
   onConceptGroupClick?: (id: string) => void;
+  onPerspectiveCardClick?: (card: { name: string; prompt: string }) => void;
   previewMap?: Map<string, { oneLiner?: string; quickIntro?: string }>;
   isRtl?: boolean;
   ttsHighlight?: number;
@@ -228,7 +232,7 @@ function MessageBubble({
     isLastMsg;
 
   const ctx = message.role === "assistant" ? message.selectedContexts : undefined;
-  const ctxCount = ctx && ctx.mentalModels.length + ctx.longTermMemories.length + (ctx.customConcepts?.length ?? 0) + (ctx.conceptGroups?.length ?? 0);
+  const ctxCount = ctx && ctx.mentalModels.length + ctx.longTermMemories.length + (ctx.customConcepts?.length ?? 0) + (ctx.conceptGroups?.length ?? 0) + (ctx.perspectiveCards?.length ?? 0);
   const assistantPlainText = message.role === "assistant"
     ? resolveTtsReferenceText(text, { idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle })
     : "";
@@ -279,7 +283,7 @@ function MessageBubble({
   const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const didLongPressRef = useRef(false);
 
-  const ctxItems: { type: "mm" | "ltm" | "cc" | "cg"; id: string; title: string; reason: string }[] = ctx
+  const ctxItems: { type: "mm" | "ltm" | "cc" | "cg" | "card"; id: string; title: string; reason: string; prompt?: string }[] = ctx
     ? [
         ...ctx.mentalModels.map(({ id, reason, title }) => ({
           type: "mm" as const,
@@ -305,18 +309,29 @@ function MessageBubble({
           title: title ?? cgIdToTitle.get(id) ?? "Domain",
           reason,
         })),
+        ...(ctx.perspectiveCards ?? []).map(({ id, reason, title, prompt }) => ({
+          type: "card" as const,
+          id,
+          title: title ?? "Perspective card",
+          reason,
+          prompt,
+        })),
       ]
     : [];
 
   const openContextFor = useCallback(
-    (type: "mm" | "ltm" | "cc" | "cg", id: string) => {
+    (type: "mm" | "ltm" | "cc" | "cg" | "card", id: string, cardPrompt?: string) => {
       setCtxReasonPillKey(null);
       if (type === "mm") onMentalModelClick(id, text);
       else if (type === "ltm") onLtmClick(id);
       else if (type === "cc") onCustomConceptClick?.(id);
       else if (type === "cg") onConceptGroupClick?.(id);
+      else if (type === "card" && onPerspectiveCardClick && cardPrompt) {
+        const item = ctxItems.find((i) => i.type === "card" && i.id === id);
+        if (item?.title) onPerspectiveCardClick({ name: item.title, prompt: cardPrompt });
+      }
     },
-    [text, onMentalModelClick, onLtmClick, onCustomConceptClick, onConceptGroupClick]
+    [text, ctxItems, onMentalModelClick, onLtmClick, onCustomConceptClick, onConceptGroupClick, onPerspectiveCardClick]
   );
 
   const pillStyles = {
@@ -324,12 +339,14 @@ function MessageBubble({
     ltm: "bg-teal-100 dark:bg-teal-900/40 text-teal-800 dark:text-teal-200 border-teal-200/60 dark:border-teal-700/50 hover:bg-teal-200/80 dark:hover:bg-teal-800/50 hover:border-teal-300 dark:hover:border-teal-600/60",
     cc: "bg-violet-100 dark:bg-violet-900/40 text-violet-800 dark:text-violet-200 border-violet-200/60 dark:border-violet-700/50 hover:bg-violet-200/80 dark:hover:bg-violet-800/50 hover:border-violet-300 dark:hover:border-violet-600/60",
     cg: "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-200 border-emerald-200/60 dark:border-emerald-700/50 hover:bg-emerald-200/80 dark:hover:bg-emerald-800/50 hover:border-emerald-300 dark:hover:border-emerald-600/60",
+    card: "bg-rose-100 dark:bg-rose-900/40 text-rose-800 dark:text-rose-200 border-rose-200/60 dark:border-rose-700/50 hover:bg-rose-200/80 dark:hover:bg-rose-800/50 hover:border-rose-300 dark:hover:border-rose-600/60",
   };
   const pillDotColors = {
     mm: "bg-amber-500 dark:bg-amber-400",
     ltm: "bg-teal-500 dark:bg-teal-400",
     cc: "bg-violet-500 dark:bg-violet-400",
     cg: "bg-emerald-500 dark:bg-emerald-400",
+    card: "bg-rose-500 dark:bg-rose-400",
   };
 
   const canGoBack =
@@ -365,27 +382,35 @@ function MessageBubble({
         </div>
         )}
         {message.role === "user" ? (
-          <span className="message-bubble-text text-sm md:text-base">
-            {isUserTtsActive ? (
-              <TtsHighlightedText
-                text={userPlainText}
-                charEnd={ttsHighlight}
+          <div className="flex flex-col gap-2">
+            <span className="message-bubble-text text-sm md:text-base">
+              {isUserTtsActive ? (
+                <TtsHighlightedText
+                  text={userPlainText}
+                  charEnd={ttsHighlight}
+                />
+              ) : (
+              <UserMessageContent
+                content={text}
+                idToName={idToName}
+                ltmIdToTitle={ltmIdToTitle}
+                ccIdToTitle={ccIdToTitle}
+                cgIdToTitle={cgIdToTitle}
+                onMentalModelClick={(id) => onMentalModelClick(id, text)}
+                onLtmClick={onLtmClick}
+                onCustomConceptClick={onCustomConceptClick}
+                onConceptGroupClick={onConceptGroupClick}
+                previewMap={previewMap}
               />
-            ) : (
-            <UserMessageContent
-              content={text}
-              idToName={idToName}
-              ltmIdToTitle={ltmIdToTitle}
-              ccIdToTitle={ccIdToTitle}
-              cgIdToTitle={cgIdToTitle}
-              onMentalModelClick={(id) => onMentalModelClick(id, text)}
-              onLtmClick={onLtmClick}
-              onCustomConceptClick={onCustomConceptClick}
-              onConceptGroupClick={onConceptGroupClick}
-              previewMap={previewMap}
-            />
+              )}
+            </span>
+            {message.perspectiveCard && (
+              <div className="mt-1 pt-2 border-t border-white/20 rounded-b-xl">
+                <p className="text-xs font-medium opacity-90 uppercase tracking-wider">{message.perspectiveCard.name}</p>
+                <p className="text-sm opacity-95 mt-0.5 leading-relaxed">{message.perspectiveCard.prompt}</p>
+              </div>
             )}
-          </span>
+          </div>
         ) : (
           <div className="message-bubble-text text-sm md:text-base">
             {text ? (
@@ -444,7 +469,7 @@ function MessageBubble({
           <div className="mt-2 max-w-[85%] flex flex-col items-start">
             {ctxExpanded ? (
               <div
-                className="w-full rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-gradient-to-br from-neutral-50/95 to-neutral-100/80 dark:from-neutral-800 dark:to-neutral-900 shadow-sm overflow-hidden text-foreground"
+                className="w-full rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-gradient-to-br from-neutral-50/95 to-neutral-100/80 dark:from-neutral-800 dark:to-neutral-900 shadow-sm overflow-visible text-foreground"
                 onPointerDownCapture={(e) => {
                   if (ctxReasonPillKey && !(e.target as HTMLElement).closest("[data-context-pill]")) {
                     setCtxReasonPillKey(null);
@@ -483,7 +508,7 @@ function MessageBubble({
                               longPressTimerRef.current = setTimeout(() => {
                                 longPressTimerRef.current = null;
                                 didLongPressRef.current = true;
-                                openContextFor(item.type, item.id);
+                                openContextFor(item.type, item.id, item.type === "card" ? item.prompt : undefined);
                               }, 500);
                             }}
                             onPointerUp={() => {
@@ -504,7 +529,7 @@ function MessageBubble({
                               didLongPressRef.current = false;
                             }}
                             onContextMenu={(e) => e.preventDefault()}
-                            title={item.reason || (item.type === "mm" ? "Hold to open mental model" : item.type === "ltm" ? "Hold to open memory" : item.type === "cc" ? "Hold to open concept" : "Hold to open domain")}
+                            title={item.reason || (item.type === "mm" ? "Hold to open mental model" : item.type === "ltm" ? "Hold to open memory" : item.type === "cc" ? "Hold to open concept" : item.type === "cg" ? "Hold to open domain" : "Applied perspective")}
                           >
                             <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${pillDotColors[item.type]}`} aria-hidden />
                             <span>{item.title}</span>
@@ -1922,7 +1947,7 @@ export default function ChatPage() {
     setOnboardingDismissed(true);
   }, []);
 
-  const sendMessage = useCallback(async (overrideText?: string, options?: { retry?: boolean; messagesOverride?: Message[] }) => {
+  const sendMessage = useCallback(async (overrideText?: string, options?: { retry?: boolean; messagesOverride?: Message[]; activeCardPrompt?: string; activeCardName?: string }) => {
     const rawText = (overrideText ?? input).trim();
     if (!rawText || isLoading) return;
     playSelectionChime();
@@ -1955,7 +1980,17 @@ export default function ChatPage() {
     setIsLoading(true);
     setLastFailedUserMessage(null);
 
-    const userMessage: Message = { role: "user", content: rawText };
+    const userMessage: Message = {
+      role: "user",
+      content: rawText,
+      ...(options?.activeCardPrompt &&
+        options?.activeCardName && {
+          perspectiveCard: {
+            name: options.activeCardName,
+            prompt: options.activeCardPrompt,
+          },
+        }),
+    };
     const assistantMessage: Message = { role: "assistant", content: "" };
     const baseMessages = options?.messagesOverride ?? messages;
     setMessages((prev) =>
@@ -1991,6 +2026,10 @@ export default function ChatPage() {
       language: languageRef.current,
       userType: userTypeRef.current,
     };
+    if (options?.activeCardPrompt) {
+      chatBody.activeCardPrompt = options.activeCardPrompt;
+      if (options?.activeCardName) chatBody.activeCardName = options.activeCardName;
+    }
     if (isAnonymous || incognitoMode) {
       chatBody.messages = baseMessages.map((m) => ({ role: m.role, content: m.content }));
       if (incognitoMode) chatBody.incognito = true;
@@ -2054,6 +2093,7 @@ export default function ChatPage() {
             longTermMemories: [] as RelevantContextItem[],
             customConcepts: [] as RelevantContextItem[],
             conceptGroups: [] as RelevantContextItem[],
+            perspectiveCards: [] as RelevantContextItem[],
           };
         })();
       setMessages((prev) => {
@@ -2070,6 +2110,7 @@ export default function ChatPage() {
               longTermMemories: resolvedContext.longTermMemories,
               customConcepts: resolvedContext.customConcepts ?? [],
               conceptGroups: resolvedContext.conceptGroups ?? [],
+              perspectiveCards: resolvedContext.perspectiveCards ?? [],
             },
           };
         }
@@ -2145,7 +2186,7 @@ export default function ChatPage() {
     setSidebarOpenState(open);
   }, []);
 
-  const [libraryPanelOpen, setLibraryPanelOpen] = useState<"conversations" | "ltm" | "concepts" | "cc" | "cg" | "nuggets" | null>(null);
+  const [libraryPanelOpen, setLibraryPanelOpen] = useState<"conversations" | "ltm" | "concepts" | "cc" | "cg" | "nuggets" | "decks" | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [deleteAllDataModalOpen, setDeleteAllDataModalOpen] = useState(false);
@@ -2154,6 +2195,11 @@ export default function ChatPage() {
   const [conversationsCollapsed, setConversationsCollapsed] = useState(false);
   const [selectedMentalModel, setSelectedMentalModel] =
     useState<MentalModel | null>(null);
+  const [drawnPerspectiveCard, setDrawnPerspectiveCard] = useState<{
+    card: { id: string; name: string; prompt: string; follow_ups?: string[] };
+    deckId: string;
+    deckName: string;
+  } | null>(null);
   const [overachieverMessage, setOverachieverMessage] = useState<string | null>(
     null
   );
@@ -2225,16 +2271,17 @@ export default function ChatPage() {
   );
 
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (selectedMentalModel) setSelectedMentalModel(null);
+        if (drawnPerspectiveCard) setDrawnPerspectiveCard(null);
+        else if (selectedMentalModel) setSelectedMentalModel(null);
         else if (libraryPanelOpen) setLibraryPanelOpen(null);
       }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard]);
 
   useEffect(() => {
     if (!settingsOpen) return;
@@ -2293,6 +2340,19 @@ export default function ChatPage() {
   }, [libraryPanelOpen, refetchNuggets]);
 
   useEffect(() => {
+    if (libraryPanelOpen === "decks") {
+      fetch("/api/perspective-decks")
+        .then((r) => r.json())
+        .then((list: { id: string; name: string; description: string; domain: string }[]) => {
+          setPerspectiveDecks(Array.isArray(list) ? list : []);
+        })
+        .catch(() => setPerspectiveDecks([]));
+    } else {
+      setViewingDeck(null);
+    }
+  }, [libraryPanelOpen]);
+
+  useEffect(() => {
     const clearSelectionBubbles = (e: MouseEvent | TouchEvent) => {
       const target = e.target as Node;
       if (selectionBubblesRef.current?.contains(target)) return;
@@ -2310,6 +2370,13 @@ export default function ChatPage() {
   }, [selectedTextForNugget, selectionRect]);
 
   const [teachMeLoading, setTeachMeLoading] = useState(false);
+  const [perspectiveDecks, setPerspectiveDecks] = useState<{ id: string; name: string; description: string; domain: string }[]>([]);
+  const [drawCardLoading, setDrawCardLoading] = useState(false);
+  const [viewingDeck, setViewingDeck] = useState<{
+    id: string;
+    name: string;
+    cards: { id: string; name: string; prompt: string; follow_ups?: string[] }[];
+  } | null>(null);
 
   const handleTeachMeClick = useCallback(async () => {
     setOverachieverMessage(null);
@@ -2755,6 +2822,7 @@ export default function ChatPage() {
               { id: "nuggets" as const, label: "Nuggets", icon: "nuggets", onClick: () => { playSelectionChime(); setLibraryPanelOpen("nuggets"); } },
               { id: "cc" as const, label: "Concepts", icon: "concepts", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cc"); } },
               { id: "concepts" as const, label: "Mental Models", icon: "models", onClick: () => { playSelectionChime(); setLibraryPanelOpen("concepts"); } },
+              { id: "decks" as const, label: "Ways of Looking At", icon: "decks", onClick: () => { playSelectionChime(); setLibraryPanelOpen("decks"); } },
               { id: "ltm" as const, label: "Long-Term Memory", icon: "memory", onClick: () => { playSelectionChime(); setLibraryPanelOpen("ltm"); } },
               { id: "cg" as const, label: "Domains", icon: "domains", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cg"); } },
             ].map(({ id, label, icon, onClick }) => {
@@ -2805,6 +2873,13 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
                       <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
                       <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
+                    </svg>
+                  )}
+                  {icon === "decks" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <rect width="18" height="14" x="3" y="3" rx="2" />
+                      <path d="M3 9h18" />
+                      <path d="M3 15h18" />
                     </svg>
                   )}
                   <span className="truncate">{label}</span>
@@ -3340,30 +3415,69 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       <p className="w-full min-w-0 break-words text-neutral-500 dark:text-neutral-400 text-base sm:text-lg mb-6">
                         Let&apos;s dig in—with mental models that actually work
                       </p>
-                      {isAnonymous && (
-                        <div className="space-y-3 mb-6 w-full">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              playSelectionChime();
-                              setLibraryPanelOpen("concepts");
-                              setSidebarOpen(false);
-                            }}
-                            className="flex items-center gap-3 w-full max-w-sm mx-auto px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
-                          >
-                            <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
-                                <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
-                                <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
-                              </svg>
-                            </span>
-                            <div className="min-w-0">
-                              <p className="font-medium text-foreground">Browse Mental Models</p>
-                              <p className="text-sm text-neutral-600 dark:text-neutral-400">Frameworks and biases for better decision-making</p>
-                            </div>
-                          </button>
-                        </div>
-                      )}
+                      <div className="space-y-3 mb-6 w-full">
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            playSelectionChime();
+                            setDrawCardLoading(true);
+                            try {
+                              const decksRes = await fetch("/api/perspective-decks");
+                              const decks = await decksRes.json();
+                              const deck = Array.isArray(decks) && decks.length > 0 ? decks[0] : null;
+                              if (deck?.id) {
+                                const cardRes = await fetch(`/api/perspective-decks/${deck.id}/random`);
+                                const data = await cardRes.json();
+                                if (data.card && data.deckId) {
+                                  setDrawnPerspectiveCard({
+                                    card: data.card,
+                                    deckId: data.deckId,
+                                    deckName: deck.name,
+                                  });
+                                }
+                              }
+                            } catch {
+                              /* ignore */
+                            } finally {
+                              setDrawCardLoading(false);
+                            }
+                          }}
+                          disabled={drawCardLoading}
+                          className="flex items-center gap-3 w-full max-w-sm mx-auto px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98] disabled:opacity-60"
+                        >
+                          <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
+                              <rect width="18" height="14" x="3" y="3" rx="2" />
+                              <path d="M3 9h18" />
+                              <path d="M3 15h18" />
+                            </svg>
+                          </span>
+                          <div className="min-w-0">
+                            <p className="font-medium text-foreground">Draw a perspective card</p>
+                            <p className="text-sm text-neutral-600 dark:text-neutral-400">Shift how you look at something—art, decisions, or any topic</p>
+                          </div>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            playSelectionChime();
+                            setLibraryPanelOpen("concepts");
+                            setSidebarOpen(false);
+                          }}
+                          className="flex items-center gap-3 w-full max-w-sm mx-auto px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+                        >
+                          <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
+                              <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
+                              <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
+                            </svg>
+                          </span>
+                          <div className="min-w-0">
+                            <p className="font-medium text-foreground">Browse Mental Models</p>
+                            <p className="text-sm text-neutral-600 dark:text-neutral-400">Frameworks and biases for better decision-making</p>
+                          </div>
+                        </button>
+                      </div>
                     </>
                   )}
                 </div>
@@ -3431,6 +3545,9 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       .catch(() => setCgDetailModal(cg));
                   }
                 }}
+                onPerspectiveCardClick={({ name, prompt }) =>
+                  setDrawnPerspectiveCard({ card: { name, prompt }, deckName: "From conversation" })
+                }
                 previewMap={previewMap}
                 isRtl={isRtlLanguage(language)}
                 ttsHighlight={ttsHighlight && "messageIndex" in ttsHighlight && ttsHighlight.messageIndex === i ? ttsHighlight.charEnd : undefined}
@@ -3826,7 +3943,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
       )}
 
       {/* Library - center modal (Claude-style), closable on all devices. Mental Models (concepts) available to anonymous users. */}
-      {libraryPanelOpen && (libraryPanelOpen === "concepts" || !isAnonymous) && (
+      {libraryPanelOpen && (libraryPanelOpen === "concepts" || libraryPanelOpen === "decks" || !isAnonymous) && (
         <>
           <div
             className={`fixed inset-0 z-40 bg-black/30 animate-fade-in ${featureTourStep === null ? "backdrop-blur-sm" : ""}`}
@@ -3839,8 +3956,8 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           >
             <div
               className={`pointer-events-auto w-full max-h-[90vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-800 animate-fade-in-up ${
-                libraryPanelOpen === "concepts"
-                  ? "max-w-[min(94vw,1200px)]"
+                libraryPanelOpen === "concepts" || libraryPanelOpen === "decks"
+                  ? "max-w-[var(--modal-library-concepts-decks-max-w)]"
                   : "max-w-[min(94vw,608px)]"
               }`}
               data-tour="library-modal"
@@ -3849,6 +3966,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               aria-label={
                 libraryPanelOpen === "conversations" ? "Conversations" :
                 libraryPanelOpen === "concepts" ? "Mental Models" :
+                libraryPanelOpen === "decks" ? "Ways of Looking At" :
                 libraryPanelOpen === "ltm" ? "Long-Term Memory" :
                 libraryPanelOpen === "cc" ? "Concepts" :
                 libraryPanelOpen === "cg" ? "Domains" :
@@ -3860,6 +3978,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 <h2 className="text-lg font-semibold text-foreground">
                   {libraryPanelOpen === "conversations" ? "Conversations" :
                    libraryPanelOpen === "concepts" ? "Mental Models" :
+                   libraryPanelOpen === "decks" ? "Ways of Looking At" :
                    libraryPanelOpen === "ltm" ? "Long-Term Memory" :
                    libraryPanelOpen === "cc" ? "Concepts" :
                    libraryPanelOpen === "cg" ? "Domains" :
@@ -4293,6 +4412,172 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       </>
                             )}
                           </div>
+                </div>
+              )}
+              {libraryPanelOpen === "decks" && (
+                <div className="space-y-6">
+                  {viewingDeck ? (
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setViewingDeck(null)}
+                          className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 transition-colors"
+                          aria-label="Back to decks"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                            <path d="M19 12H5M12 19l-7-7 7-7" />
+                          </svg>
+                        </button>
+                        <h3 className="font-medium text-foreground">{viewingDeck.name}</h3>
+                      </div>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        Click a card to use it in conversation.
+                      </p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {viewingDeck.cards.map((card) => (
+                          <div key={card.id} className="group/tile aspect-square [perspective:1000px] relative">
+                            <div
+                              role="button"
+                              tabIndex={0}
+                              onClick={() => {
+                                playSelectionChime();
+                                setDrawnPerspectiveCard({
+                                  card,
+                                  deckId: viewingDeck.id,
+                                  deckName: viewingDeck.name,
+                                });
+                                setViewingDeck(null);
+                                setLibraryPanelOpen(null);
+                                setSidebarOpen(false);
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  playSelectionChime();
+                                  setDrawnPerspectiveCard({
+                                    card,
+                                    deckId: viewingDeck.id,
+                                    deckName: viewingDeck.name,
+                                  });
+                                  setViewingDeck(null);
+                                  setLibraryPanelOpen(null);
+                                  setSidebarOpen(false);
+                                }
+                              }}
+                              className="relative h-full w-full transition-transform duration-300 [transform-style:preserve-3d] group-hover/tile:[transform:rotateY(180deg)] cursor-pointer"
+                            >
+                              <div className="absolute inset-0 w-full h-full rounded-xl bg-rose-50 dark:bg-rose-950/40 p-3 flex items-center justify-center [backface-visibility:hidden] border border-rose-200/60 dark:border-rose-800/50 overflow-hidden pointer-events-none transition-opacity duration-300" aria-hidden>
+                                <span className="text-xs font-medium text-rose-900 dark:text-rose-200 capitalize tracking-wide text-center line-clamp-3">{card.name}</span>
+                              </div>
+                              <div className="absolute inset-0 w-full h-full rounded-xl bg-foreground text-background px-3 flex items-center justify-center overflow-hidden [backface-visibility:hidden] [transform:rotateY(180deg)] border border-foreground pointer-events-none" aria-hidden>
+                                <span className="text-xs text-background/90 text-center line-clamp-4 w-full leading-tight">{card.prompt}</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        Draw a card to shift your perspective, or view all cards in a deck.
+                      </p>
+                      {perspectiveDecks.length === 0 ? (
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">Loading decks…</p>
+                      ) : (
+                        <div className="space-y-6">
+                          {(() => {
+                            const byDomain = perspectiveDecks.reduce(
+                              (acc, deck) => {
+                                const domain = deck.domain || "other";
+                                if (!acc[domain]) acc[domain] = [];
+                                acc[domain].push(deck);
+                                return acc;
+                              },
+                              {} as Record<string, typeof perspectiveDecks>
+                            );
+                            const domainOrder = ["art", "decisions", "writing", "other"];
+                            const sortedDomains = [
+                              ...domainOrder.filter((d) => byDomain[d]?.length),
+                              ...Object.keys(byDomain).filter((d) => !domainOrder.includes(d)),
+                            ];
+                            return sortedDomains.map((domain) => (
+                              <div key={domain} className="space-y-3">
+                                <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider capitalize">
+                                  {domain}
+                                </h3>
+                                <div className="space-y-3">
+                                  {(byDomain[domain] ?? []).map((deck) => (
+                                    <div
+                                      key={deck.id}
+                                      className="p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors"
+                                    >
+                                      <div className="flex items-start justify-between gap-3">
+                                        <div className="min-w-0">
+                                          <h4 className="font-medium text-foreground">{deck.name}</h4>
+                                          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 line-clamp-2">{deck.description}</p>
+                                        </div>
+                                        <div className="flex gap-2 shrink-0">
+                                          <button
+                                            type="button"
+                                            onClick={async () => {
+                                              try {
+                                                const res = await fetch(`/api/perspective-decks/${deck.id}`);
+                                                const data = await res.json();
+                                                if (data?.cards?.length) {
+                                                  setViewingDeck({
+                                                    id: deck.id,
+                                                    name: deck.name,
+                                                    cards: data.cards,
+                                                  });
+                                                }
+                                              } catch {
+                                                /* ignore */
+                                              }
+                                            }}
+                                            className="px-3 py-2 rounded-xl text-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+                                          >
+                                            View cards
+                                          </button>
+                                          <button
+                                            type="button"
+                                            disabled={drawCardLoading}
+                                            onClick={async () => {
+                                              setDrawCardLoading(true);
+                                              try {
+                                                const res = await fetch(`/api/perspective-decks/${deck.id}/random`);
+                                                const data = await res.json();
+                                                if (data.card && data.deckId) {
+                                                  setDrawnPerspectiveCard({
+                                                    card: data.card,
+                                                    deckId: data.deckId,
+                                                    deckName: deck.name,
+                                                  });
+                                                  setLibraryPanelOpen(null);
+                                                  setSidebarOpen(false);
+                                                }
+                                              } catch {
+                                                /* ignore */
+                                              } finally {
+                                                setDrawCardLoading(false);
+                                              }
+                                            }}
+                                            className="px-4 py-2 rounded-xl text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors disabled:opacity-50"
+                                          >
+                                            {drawCardLoading ? "Drawing…" : "Draw card"}
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ));
+                          })()}
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
               )}
               {libraryPanelOpen === "ltm" && (
@@ -7914,6 +8199,79 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             }
           }}
         />
+      )}
+
+      {drawnPerspectiveCard && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => setDrawnPerspectiveCard(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="perspective-card-title"
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[var(--modal-perspective-card-max-w)] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between">
+              <div>
+                <h2 id="perspective-card-title" className="font-semibold text-lg text-foreground">
+                  {drawnPerspectiveCard.card.name}
+                </h2>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+                  from {drawnPerspectiveCard.deckName}
+                </p>
+              </div>
+              <button
+                onClick={() => setDrawnPerspectiveCard(null)}
+                className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-4 space-y-4">
+              <p className="text-neutral-700 dark:text-neutral-300 text-base leading-relaxed">
+                {drawnPerspectiveCard.card.prompt}
+              </p>
+              {drawnPerspectiveCard.card.follow_ups && drawnPerspectiveCard.card.follow_ups.length > 0 && (
+                <div>
+                  <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2">
+                    Follow-up questions
+                  </p>
+                  <ul className="space-y-1">
+                    {drawnPerspectiveCard.card.follow_ups.map((q, i) => (
+                      <li key={i} className="text-sm text-neutral-600 dark:text-neutral-400">
+                        • {q}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2">
+              <button
+                onClick={() => setDrawnPerspectiveCard(null)}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => {
+                  playSelectionChime();
+                  sendMessage("I'd like to explore this perspective.", {
+                    activeCardPrompt: drawnPerspectiveCard.card.prompt,
+                    activeCardName: drawnPerspectiveCard.card.name,
+                  });
+                  setDrawnPerspectiveCard(null);
+                }}
+                className="flex-1 px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+              >
+                Use in conversation
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
     </TtsHighlightContext.Provider>

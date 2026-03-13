@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fmllabs/schemas/perspective-deck-index.json",
+  "title": "Perspective Deck Index",
+  "description": "Index of perspective decks with paths and descriptions",
+  "type": "object",
+  "required": ["decks"],
+  "properties": {
+    "decks": {
+      "type": "array",
+      "description": "Index entries for each deck",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "path", "description", "domain"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier (snake_case)"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name"
+          },
+          "path": {
+            "type": "string",
+            "description": "Path to the deck YAML file"
+          },
+          "description": {
+            "type": "string",
+            "description": "Brief description of the deck"
+          },
+          "domain": {
+            "type": "string",
+            "description": "Domain tag (e.g., art, decisions)"
+          }
+        }
+      }
+    }
+  }
+}

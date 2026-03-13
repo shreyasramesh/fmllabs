@@ -293,7 +293,7 @@ export function MentalModelModal({
       aria-labelledby="modal-title"
     >
       <div
-        className="relative rounded-3xl shadow-xl w-full max-w-lg sm:max-w-[min(90vw,900px)] max-h-[85vh] sm:max-h-[90vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700"
+        className="relative rounded-3xl shadow-xl w-full max-w-lg sm:max-w-[var(--modal-mental-model-max-w)] max-h-[85vh] sm:max-h-[90vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative shrink-0 p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between">

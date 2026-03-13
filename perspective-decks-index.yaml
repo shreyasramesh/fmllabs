@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=schema/perspective-deck-index-schema.json
+# Perspective Decks Index
+# Paths and descriptions for each deck
+
+decks:
+  - id: ways_of_looking_at_art
+    name: Ways of Looking at Art
+    path: perspective-decks/ways-of-looking-at-art.yaml
+    description: |
+      50 cards to shift your perspective when viewing art. Each card offers a
+      different lens—from light and shadow to introductions and emotion—to
+      deepen how you see and engage with artworks.
+    domain: art

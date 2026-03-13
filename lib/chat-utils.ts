@@ -10,6 +10,7 @@ export interface RelevantContextItem {
   id: string;
   reason: string;
   title?: string;
+  prompt?: string;
 }
 
 export interface RelevantContext {
@@ -17,6 +18,7 @@ export interface RelevantContext {
   longTermMemories: RelevantContextItem[];
   customConcepts: RelevantContextItem[];
   conceptGroups: RelevantContextItem[];
+  perspectiveCards?: RelevantContextItem[];
 }
 
 export interface RelevantContextEnvelope {
@@ -35,6 +37,7 @@ function normalizeContextItems(raw: unknown): RelevantContextItem[] {
         id: obj.id as string,
         reason: typeof obj.reason === "string" ? obj.reason : "",
         title: typeof obj.title === "string" ? obj.title : undefined,
+        prompt: typeof obj.prompt === "string" ? obj.prompt : undefined,
       }];
     }
     return [];
@@ -52,12 +55,14 @@ function tryParseRelevantContextJson(jsonStr: string): RelevantContext | null {
       longTermMemories?: unknown;
       customConcepts?: unknown;
       conceptGroups?: unknown;
+      perspectiveCards?: unknown;
     };
     return {
       mentalModels: normalizeContextItems(parsed.mentalModels),
       longTermMemories: normalizeContextItems(parsed.longTermMemories),
       customConcepts: normalizeContextItems(parsed.customConcepts ?? []),
       conceptGroups: normalizeContextItems(parsed.conceptGroups ?? []),
+      perspectiveCards: normalizeContextItems(parsed.perspectiveCards ?? []),
     };
   } catch {
     return null;
@@ -74,6 +79,7 @@ function normalizeRelevantContext(raw: unknown): RelevantContext {
     longTermMemories: normalizeContextItems(obj.longTermMemories),
     customConcepts: normalizeContextItems(obj.customConcepts ?? []),
     conceptGroups: normalizeContextItems(obj.conceptGroups ?? []),
+    perspectiveCards: normalizeContextItems(obj.perspectiveCards ?? []),
   };
 }
 
@@ -92,7 +98,8 @@ function isContextPresent(ctx: RelevantContext): boolean {
     ctx.mentalModels.length > 0 ||
     ctx.longTermMemories.length > 0 ||
     ctx.customConcepts.length > 0 ||
-    ctx.conceptGroups.length > 0
+    ctx.conceptGroups.length > 0 ||
+    (ctx.perspectiveCards?.length ?? 0) > 0
   );
 }
 
@@ -233,21 +240,25 @@ export function parseAssistantMessage(content: string): {
   const text = content.slice(0, idx).trim();
   const optionsSection = content.slice(idx + markerLen).trim();
 
+  function normalizeOption(line: string): string {
+    const stripped = line
+      .replace(/^[-*]\s*/, "")
+      .replace(/^\d+\.\s*/, "")
+      .trim();
+    const bracketed = stripped.match(/^\[(.*)\]$/);
+    return bracketed ? bracketed[1].trim() : stripped;
+  }
+
   let options = optionsSection
     .split(/\r?\n/)
-    .map((line) =>
-      line
-        .replace(/^[-*]\s*/, "")
-        .replace(/^\d+\.\s*/, "")
-        .trim()
-    )
+    .map(normalizeOption)
     .filter((line) => line.length > 0)
     .slice(0, 4);
 
   if (options.length < 4 && optionsSection.includes(". ")) {
     options = optionsSection
       .split(/\.\s+/)
-      .map((s) => s.replace(/^[-*]\s*/, "").replace(/^\d+\.\s*/, "").trim())
+      .map(normalizeOption)
       .filter((s) => s.length > 0)
       .slice(0, 4);
   }

@@ -328,6 +328,10 @@ html {
 :root {
   --background: #FBF8F4;
   --foreground: #1a1a1a;
+  /* Modal widths: 30% narrower on desktop */
+  --modal-mental-model-max-w: min(90vw, 630px);
+  --modal-perspective-card-max-w: 358px;
+  --modal-library-concepts-decks-max-w: min(94vw, 840px);
   --muted: #6b6b6b;
   --border-light: #e8e4df;
   --section-bg: #f5f2ed;
