@@ -8,6 +8,12 @@ const mentalModelsInclude = [
   "./mental-models-*/**/*.yaml",
 ];
 
+/** Include perspective deck YAML files in Vercel serverless bundle */
+const perspectiveDecksInclude = [
+  "./perspective-decks-index.yaml",
+  "./perspective-decks/**/*.yaml",
+];
+
 const nextConfig = {
   experimental: {
     outputFileTracingIncludes: {
@@ -16,6 +22,9 @@ const nextConfig = {
       "/api/mental-models/[id]": mentalModelsInclude,
       "/api/mental-models/with-when-to-use": mentalModelsInclude,
       "/api/mental-models/random": mentalModelsInclude,
+      "/api/perspective-decks": perspectiveDecksInclude,
+      "/api/perspective-decks/[deckId]": perspectiveDecksInclude,
+      "/api/perspective-decks/[deckId]/random": perspectiveDecksInclude,
     },
   },
 };
