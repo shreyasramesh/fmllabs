@@ -33,7 +33,7 @@ export interface PerspectiveDeck {
 const indexCache = new Map<string, PerspectiveDeckIndex>();
 
 function getIndexPath(): string {
-  return path.join(process.cwd(), "perspective-decks-index.yaml");
+  return path.join(process.cwd(), "perspective-decks", "perspective-decks-index.yaml");
 }
 
 export function loadPerspectiveDecksIndex(): PerspectiveDeckIndex {

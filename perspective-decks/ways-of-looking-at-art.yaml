@@ -125,3 +125,422 @@ cards:
       - What happens before or after this moment?
       - Who is the narrator? Whose voice is missing?
       - Would it work as a film, a novel, or a poem?
+
+  - id: shadowboxing
+    name: Shadowboxing
+    prompt: |
+      Move around. Get up really close. Get as far away as possible. Switch sides.
+      Go high. Go low. Try different angles. Don't stay in the same place long.
+      Relish the changes the artwork performs as you move around it.
+    follow_ups:
+      - What shifts when you change your position?
+      - Which angle surprised you?
+      - How does your body's movement change what you see?
+
+  - id: six_degrees_of_francis_bacon
+    name: Six degrees of Francis Bacon
+    prompt: |
+      Artists influence other artists. Themes and ideas evolve over generations
+      and across borders. Connect the artwork to another in the gallery using as
+      few links as possible.
+    follow_ups:
+      - What is the shortest path you can find?
+      - What kind of link is strongest—technique, subject, mood, or idea?
+      - What would the artist think of the connection?
+
+  - id: headlines
+    name: Headlines
+    prompt: |
+      Imagine the day the artwork was made and find or invent a newspaper
+      headline for that day. Compare it with the front pages today.
+    follow_ups:
+      - What would have been above the fold?
+      - What has changed—and what hasn't?
+      - How does the headline reframe the work?
+
+  - id: speed_date
+    name: Speed date
+    prompt: |
+      Spend just 10 seconds with each artwork. Do this until you've seen them all
+      or until you run out of steam, then go back to your favorites and linger.
+      How do you see them now? Which do you find yourself drawn back to?
+    follow_ups:
+      - What did the quick pass reveal that lingering might have missed?
+      - Why did you return to those particular works?
+      - How did the second look differ from the first?
+
+  - id: make_connections
+    name: Make Connections
+    prompt: |
+      On the way home, search for something that reminds you of the artwork, or
+      part of it—a shape or color, perhaps a word, even a sensation.
+    follow_ups:
+      - What did you find?
+      - How did the echo change how you see the original?
+      - What would you show the artist if you could?
+
+  - id: dinner_party
+    name: Dinner Party
+    prompt: |
+      Match an artwork to a taste. What food or drink does it remind you of?
+      Assemble a banquet.
+    follow_ups:
+      - What would the menu look like?
+      - Who would sit where?
+      - What would the first bite taste like?
+
+  - id: head_off_piste
+    name: Head off-piste
+    prompt: |
+      Ask a gallery attendant to point out their favorite work, or head away from
+      the cards and see what you can find.
+    follow_ups:
+      - What did you discover off the beaten path?
+      - How does their favorite differ from yours?
+      - What would you recommend to someone else?
+
+  - id: make_it_a_mixtape
+    name: Make it a mixtape
+    prompt: |
+      Does the artwork bring to your mind a particular song or piece of music?
+      Art and music overlap in different ways and often share a similar language.
+      What qualities do they have in common? Make a playlist for each gallery
+      visit or for an individual artist.
+    follow_ups:
+      - What's the opening track?
+      - What quality links the work to the music—rhythm, mood, texture?
+      - How would the playlist change if you revisited in a year?
+
+  - id: read_in_context
+    name: Read in Context
+    prompt: |
+      Where is the artwork? How do its surroundings affect how it is received?
+      Is it on a billboard, outside a gallery, in the middle of a lake? Listen in
+      on the conversation between the work and its surroundings.
+    follow_ups:
+      - What would change if it were somewhere else?
+      - What is the room or space saying back?
+      - Who is the audience here—and who is missing?
+
+  - id: understand_it_less
+    name: Understand it less
+    prompt: |
+      Embrace your curiosity. Ask yourself what is strange or novel about your
+      experience of the artwork? How could you make it even more odd? Let go of
+      what the artwork is "supposed to mean" by trying to understand it a little less!
+    follow_ups:
+      - What would you need to unlearn to see it freshly?
+      - What question has no answer—and why does that matter?
+      - What would "getting it wrong" look like?
+
+  - id: chaos_or_control
+    name: Chaos or control?
+    prompt: |
+      Does it seem random, or is there a plan? Chance, accident, and serendipity
+      all play a role—sometimes a significant one—in the production of an
+      artwork. Try to find what has been allowed to occur naturally and what has
+      been controlled.
+    follow_ups:
+      - Where does the artist hold the reins—and where do they let go?
+      - What might have been an accident that became essential?
+      - How would the work change with more chaos—or more control?
+
+  - id: palimpsest
+    name: Palimpsest
+    prompt: |
+      Look for layers! What is concealed and what is revealed? How thick is the
+      work? Was the surface built up over time?
+    follow_ups:
+      - What lies beneath the surface?
+      - What would you find if you could peel it back?
+      - How does time show itself in the layers?
+
+  - id: pattern_recognition
+    name: Pattern recognition
+    prompt: |
+      Look out for repeating elements. Is there a pattern? Are there repeated
+      motifs? Do certain forms echo each other?
+    follow_ups:
+      - What breaks the pattern—and why?
+      - Where does the repetition lead your eye?
+      - What would happen if you traced one motif through the whole work?
+
+  - id: through_another_pair_of_eyes
+    name: Through Another Pair of Eyes
+    prompt: |
+      Bring to mind a character from a novel, a film, a play, or a historical
+      figure. Imagine having a conversation with them about the artwork. Would
+      you agree with their opinion of it?
+    follow_ups:
+      - What would they notice that you missed?
+      - Where would you disagree—and why?
+      - What question would they ask you about it?
+
+  - id: thermostat
+    name: Thermostat
+    prompt: |
+      What temperature is a color? Look for the coolest colors in the artwork,
+      then pinpoint the warmer hues. How many ecosystems can you find in a single
+      artwork?
+    follow_ups:
+      - Where do hot and cold meet—and what happens there?
+      - What climate does the work evoke?
+      - How would it feel if you stepped into its temperature?
+
+  - id: negative_space
+    name: Negative Space
+    prompt: |
+      The gaps between individual elements in an artwork are just as significant
+      as the elements themselves. Like a jigsaw puzzle, pay attention to the
+      pieces that are missing. The negative space: how does it frame what is
+      there? Feel its significance.
+    follow_ups:
+      - What shape does the emptiness take?
+      - What would fill the gaps—and should it?
+      - How does the negative space hold the composition together?
+
+  - id: make_yourself_at_home
+    name: Make yourself at home
+    prompt: |
+      Imagine crawling into the artwork. Where would you hide? What can you see?
+      How does it feel?
+    follow_ups:
+      - What would you hear from inside?
+      - Where would you feel safest—or most exposed?
+      - What would you take with you if you could stay?
+
+  - id: homage
+    name: Homage
+    prompt: |
+      Make a shrine or a mini exhibition for your favourite artist. Start with a
+      postcard from the shop, or find objects and images that reference and add
+      depth and colour to their work.
+    follow_ups:
+      - What would sit at the centre of your shrine?
+      - What object would surprise them?
+      - How does the act of curating change how you see their work?
+
+  - id: warm_up
+    name: Warm-up
+    prompt: |
+      Awaken your body to prime your senses. Run, jump, stretch, clap your hands,
+      wiggle your toes. Pay attention to any physical sensations in your body
+      when looking at the artwork.
+    follow_ups:
+      - Where in your body do you feel the work?
+      - How does movement change what you see?
+      - What sensation lingers after you look away?
+
+  - id: make_it_anew
+    name: Make it anew
+    prompt: |
+      At home, recreate an artwork using only what you have to hand. Write it
+      down, draw it out, build it with matches. The easier and simpler your
+      method, the better. See what sticks in your mind, what you notice in your
+      rendition.
+    follow_ups:
+      - What did you remember without trying?
+      - What did your version get wrong—and why does that matter?
+      - What would you add if you had one more minute?
+
+  - id: origin_story
+    name: Origin Story
+    prompt: |
+      Can you remember the first artwork you ever saw? Where were you? How old
+      were you? Try to remember the room you were in, the light and the sounds,
+      the feeling of looking at it. Is there anything you can connect to the
+      artwork you see now?
+    follow_ups:
+      - What has stayed the same in how you look at art?
+      - What would that younger self make of this work?
+      - What thread runs from then to now?
+
+  - id: words_and_images
+    name: Words and Images
+    prompt: |
+      Without looking at the artwork, read the description, close your eyes and
+      try to picture it. Then open them. Does it match your version?
+    follow_ups:
+      - What did the words leave out?
+      - What did you add that wasn't there?
+      - How does your mental image change how you see the real one?
+
+  - id: keep_a_notebook
+    name: Keep a notebook
+    prompt: |
+      Make a log of dates, artworks, and your response to them. Look back at your
+      notes and seek out new artworks.
+    follow_ups:
+      - What pattern emerges when you read your notes?
+      - What would you tell your past self?
+      - Where does the notebook want to take you next?
+
+  - id: write_a_postcard
+    name: Write a postcard
+    prompt: |
+      Write a postcard to an artwork you particularly connect with. What would
+      you say? How might it reply?
+    follow_ups:
+      - What would you need to say that you couldn't say out loud?
+      - What would its handwriting look like?
+      - What would you keep—and what would you never send?
+
+  - id: here_today_gone
+    name: Here today, gone...?
+    prompt: |
+      Not every artwork survives the test of time, nor is that the intention of
+      every artist. A happening or performance might exist for an evening, maybe
+      minutes or just seconds! Perhaps you are looking at the documentation of a
+      fleeting, temporary artwork. How long will it last?
+    follow_ups:
+      - What would be lost if it vanished tomorrow?
+      - What survives in memory, photograph, or story?
+      - Does its impermanence change how you look at it?
+
+  - id: wrap_it_up
+    name: Wrap it up
+    prompt: |
+      What if you could wrap the artwork up? Would you still be able to tell what
+      it was? Could a different artwork fit the same package?
+    follow_ups:
+      - What shape would the package take?
+      - What would the wrapping paper look like?
+      - What is essential—and what could be swapped?
+
+  - id: trace_a_path
+    name: Trace a path
+    prompt: |
+      What do you look at when you encounter an artwork? Where does your eye
+      travel next? Where does your gaze come to rest? Plot the points and
+      connect the dots.
+    follow_ups:
+      - Where do you keep returning?
+      - What did you skip over—and why?
+      - How does your path compare to someone else's?
+
+  - id: superficial
+    name: Superficial
+    prompt: |
+      What is the surface like? Does it absorb light or reflect it? Is it smooth
+      or perforated? Is it layered, refined, or rough? Don't be afraid to be shallow!
+    follow_ups:
+      - What would it feel like to touch?
+      - What does the surface reveal—or hide?
+      - What happens when you stay on the surface?
+
+  - id: studio_visit
+    name: Studio visit
+    prompt: |
+      There are as many artist studios as there are artists. Imagine the space
+      where the artwork was created: a warehouse in Brooklyn, an atelier in Paris,
+      the kitchen table in a busy family home—or perhaps somewhere less likely altogether.
+    follow_ups:
+      - What would you hear in that space?
+      - What time of day was it made?
+      - How does the imagined place change how you see the work?
+
+  - id: switch_channels
+    name: Switch channels
+    prompt: |
+      Look at the people instead of the art. How do they behave toward the work?
+      What are they looking at? Can you guess what they are feeling?
+    follow_ups:
+      - Who lingers—and who rushes past?
+      - What would they say if you asked?
+      - How does watching others change what you notice?
+
+  - id: light
+    name: Light
+    prompt: |
+      Look for the source of light. Where is it coming from? What is in the
+      shadow? Focus on what the artist wants us to see and what is hidden in the
+      shadows.
+    follow_ups:
+      - What does the light reveal?
+      - What might the shadows be concealing?
+      - How would the work change in a different light?
+
+  - id: introductions
+    name: Introductions
+    prompt: |
+      Introduce an artwork to a friend as if it were an acquaintance at a party.
+      How would you describe it in a way that will capture their interest? What
+      captures yours?
+    follow_ups:
+      - What would you emphasize first?
+      - What would you leave out?
+      - What hook would make them want to meet it?
+
+  - id: tipping_point
+    name: Tipping Point
+    prompt: |
+      Where is the artwork's centre? Is it off balance? Look for the tipping point.
+    follow_ups:
+      - What would tip it over?
+      - What holds it in place?
+      - How does the imbalance create tension—or release?
+
+  - id: homing
+    name: Homing
+    prompt: |
+      Keep going back. Return to a favourite artwork on different days or at
+      different times of the day—first thing in winter, last thing on a summer
+      evening. Keep a record of how you feel; your feelings change at each visit.
+    follow_ups:
+      - What has stayed the same across visits?
+      - When did it surprise you most?
+      - What would you tell your past self about it?
+
+  - id: one_and_only
+    name: One and only
+    prompt: |
+      To avoid becoming overwhelmed, pick just one artwork to see, or at most a
+      handful. Take a deep dive and spend as long as possible with each one. How
+      many of these cards can you use in front of a single artwork?
+    follow_ups:
+      - What did you notice on the second pass?
+      - Which cards revealed something new?
+      - When did you know it was time to move on?
+
+  - id: press_pause
+    name: Press pause
+    prompt: |
+      Slow right down. Begin looking by closing your eyes, relax and concentrate
+      on your breathing, open your eyes slowly, refocus, and give the artwork
+      time to unfold in front of you.
+    follow_ups:
+      - What appeared when you slowed down?
+      - What did you notice first when you opened your eyes?
+      - How does your breath change how you see?
+
+  - id: material
+    name: Material
+    prompt: |
+      What is the artwork made of? What if it were made of something else? The
+      more incongruous, the better. Would it change the way you feel about it?
+    follow_ups:
+      - What would be the most surprising substitute?
+      - What does the material add to the meaning?
+      - What would survive the swap—and what would be lost?
+
+  - id: patch_of_sky
+    name: How many colours in a patch of sky?
+    prompt: |
+      Zoom in on an area of the artwork. How many colours can you see there?
+      Outside the museum, look up and try to count as many colours as you can see
+      in a patch of sky.
+    follow_ups:
+      - What did you miss when you were looking at the whole?
+      - How does the sky compare to the artwork?
+      - What colour surprised you most?
+
+  - id: greening
+    name: Greening
+    prompt: |
+      What sort of plant would the artwork be? Would it be a mid-summer peach
+      tree, heavy with fruit, or more like a delicate fern? What conditions does
+      it need to grow?
+    follow_ups:
+      - Where would it thrive—and where would it wither?
+      - What would it need to bloom?
+      - How does the botanical metaphor change how you see it?

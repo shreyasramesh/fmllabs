@@ -2205,6 +2205,10 @@ export default function ChatPage() {
   }, []);
 
   const [libraryPanelOpen, setLibraryPanelOpen] = useState<"conversations" | "ltm" | "concepts" | "cc" | "cg" | "nuggets" | "decks" | null>(null);
+  const [waysOfLookingAtModalOpen, setWaysOfLookingAtModalOpen] = useState(false);
+  const [waysOfLookingAtCategory, setWaysOfLookingAtCategory] = useState<string | null>(null);
+  const [waysOfLookingAtCards, setWaysOfLookingAtCards] = useState<{ id: string; name: string; prompt: string; follow_ups?: string[] }[] | null>(null);
+  const [waysOfLookingAtCardsLoading, setWaysOfLookingAtCardsLoading] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [deleteAllDataModalOpen, setDeleteAllDataModalOpen] = useState(false);
@@ -2289,17 +2293,20 @@ export default function ChatPage() {
   );
 
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (drawnPerspectiveCard) setDrawnPerspectiveCard(null);
-        else if (selectedMentalModel) setSelectedMentalModel(null);
+        else if (waysOfLookingAtModalOpen) {
+          if (waysOfLookingAtCategory) setWaysOfLookingAtCategory(null);
+          else setWaysOfLookingAtModalOpen(false);
+        } else if (selectedMentalModel) setSelectedMentalModel(null);
         else if (libraryPanelOpen) setLibraryPanelOpen(null);
       }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, waysOfLookingAtCategory]);
 
   useEffect(() => {
     if (!settingsOpen) return;
@@ -2358,17 +2365,37 @@ export default function ChatPage() {
   }, [libraryPanelOpen, refetchNuggets]);
 
   useEffect(() => {
-    if (libraryPanelOpen === "decks") {
+    if (waysOfLookingAtModalOpen) {
       fetch("/api/perspective-decks")
         .then((r) => r.json())
         .then((list: { id: string; name: string; description: string; domain: string }[]) => {
           setPerspectiveDecks(Array.isArray(list) ? list : []);
         })
         .catch(() => setPerspectiveDecks([]));
-    } else {
-      setViewingDeck(null);
     }
-  }, [libraryPanelOpen]);
+  }, [waysOfLookingAtModalOpen]);
+
+  useEffect(() => {
+    if (!waysOfLookingAtCategory) {
+      setWaysOfLookingAtCards(null);
+      return;
+    }
+    setWaysOfLookingAtCardsLoading(true);
+    fetch("/api/perspective-decks")
+      .then((r) => r.json())
+      .then(async (list: { id: string; name: string; description: string; domain: string }[]) => {
+        const deck = Array.isArray(list) ? list.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory) : null;
+        if (!deck?.id) {
+          setWaysOfLookingAtCards([]);
+          return;
+        }
+        const res = await fetch(`/api/perspective-decks/${deck.id}`);
+        const data = await res.json();
+        setWaysOfLookingAtCards(Array.isArray(data?.cards) ? data.cards : []);
+      })
+      .catch(() => setWaysOfLookingAtCards([]))
+      .finally(() => setWaysOfLookingAtCardsLoading(false));
+  }, [waysOfLookingAtCategory]);
 
   useEffect(() => {
     const clearSelectionBubbles = (e: MouseEvent | TouchEvent) => {
@@ -2390,11 +2417,6 @@ export default function ChatPage() {
   const [teachMeLoading, setTeachMeLoading] = useState(false);
   const [perspectiveDecks, setPerspectiveDecks] = useState<{ id: string; name: string; description: string; domain: string }[]>([]);
   const [drawCardLoading, setDrawCardLoading] = useState(false);
-  const [viewingDeck, setViewingDeck] = useState<{
-    id: string;
-    name: string;
-    cards: { id: string; name: string; prompt: string; follow_ups?: string[] }[];
-  } | null>(null);
 
   const handleTeachMeClick = useCallback(async () => {
     setOverachieverMessage(null);
@@ -2840,7 +2862,6 @@ export default function ChatPage() {
               { id: "nuggets" as const, label: "Nuggets", icon: "nuggets", onClick: () => { playSelectionChime(); setLibraryPanelOpen("nuggets"); } },
               { id: "cc" as const, label: "Concepts", icon: "concepts", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cc"); } },
               { id: "concepts" as const, label: "Mental Models", icon: "models", onClick: () => { playSelectionChime(); setLibraryPanelOpen("concepts"); } },
-              { id: "decks" as const, label: "Ways of Looking At", icon: "decks", onClick: () => { playSelectionChime(); setLibraryPanelOpen("decks"); } },
               { id: "ltm" as const, label: "Long-Term Memory", icon: "memory", onClick: () => { playSelectionChime(); setLibraryPanelOpen("ltm"); } },
               { id: "cg" as const, label: "Domains", icon: "domains", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cg"); } },
             ].map(({ id, label, icon, onClick }) => {
@@ -2893,18 +2914,26 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
                     </svg>
                   )}
-                  {icon === "decks" && (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                      <rect width="18" height="14" x="3" y="3" rx="2" />
-                      <path d="M3 9h18" />
-                      <path d="M3 15h18" />
-                    </svg>
-                  )}
                   <span className="truncate">{label}</span>
                 </button>
               );
             })}
           </nav>
+
+          <div className="mt-2 pt-2 border-t border-neutral-200/80 dark:border-neutral-700/80">
+            <button
+              type="button"
+              onClick={() => { playSelectionChime(); setWaysOfLookingAtModalOpen(true); setWaysOfLookingAtCategory(null); }}
+              className="flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left text-[13px] sm:text-[14px] font-medium text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800/50 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                <rect width="18" height="14" x="3" y="3" rx="2" />
+                <path d="M3 9h18" />
+                <path d="M3 15h18" />
+              </svg>
+              <span className="truncate shimmer-text-colorful">Prompt Games</span>
+            </button>
+          </div>
 
           <button
             type="button"
@@ -3965,7 +3994,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
       )}
 
       {/* Library - center modal (Claude-style), closable on all devices. Mental Models (concepts) available to anonymous users. */}
-      {libraryPanelOpen && (libraryPanelOpen === "concepts" || libraryPanelOpen === "decks" || !isAnonymous) && (
+      {libraryPanelOpen && (libraryPanelOpen === "concepts" || !isAnonymous) && (
         <>
           <div
             className={`fixed inset-0 z-40 bg-black/30 animate-fade-in ${featureTourStep === null ? "backdrop-blur-sm" : ""}`}
@@ -3978,7 +4007,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           >
             <div
               className={`pointer-events-auto w-full max-h-[90vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-800 animate-fade-in-up ${
-                libraryPanelOpen === "concepts" || libraryPanelOpen === "decks"
+                libraryPanelOpen === "concepts"
                   ? "max-w-[var(--modal-library-concepts-decks-max-w)]"
                   : "max-w-[min(94vw,608px)]"
               }`}
@@ -3988,7 +4017,6 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               aria-label={
                 libraryPanelOpen === "conversations" ? "Conversations" :
                 libraryPanelOpen === "concepts" ? "Mental Models" :
-                libraryPanelOpen === "decks" ? "Ways of Looking At" :
                 libraryPanelOpen === "ltm" ? "Long-Term Memory" :
                 libraryPanelOpen === "cc" ? "Concepts" :
                 libraryPanelOpen === "cg" ? "Domains" :
@@ -4000,7 +4028,6 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 <h2 className="text-lg font-semibold text-foreground">
                   {libraryPanelOpen === "conversations" ? "Conversations" :
                    libraryPanelOpen === "concepts" ? "Mental Models" :
-                   libraryPanelOpen === "decks" ? "Ways of Looking At" :
                    libraryPanelOpen === "ltm" ? "Long-Term Memory" :
                    libraryPanelOpen === "cc" ? "Concepts" :
                    libraryPanelOpen === "cg" ? "Domains" :
@@ -4434,172 +4461,6 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       </>
                             )}
                           </div>
-                </div>
-              )}
-              {libraryPanelOpen === "decks" && (
-                <div className="space-y-6">
-                  {viewingDeck ? (
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setViewingDeck(null)}
-                          className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 transition-colors"
-                          aria-label="Back to decks"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                            <path d="M19 12H5M12 19l-7-7 7-7" />
-                          </svg>
-                        </button>
-                        <h3 className="font-medium text-foreground">{viewingDeck.name}</h3>
-                      </div>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                        Click a card to use it in conversation.
-                      </p>
-                      <div className="grid grid-cols-2 gap-2">
-                        {viewingDeck.cards.map((card) => (
-                          <div key={card.id} className="group/tile aspect-square [perspective:1000px] relative">
-                            <div
-                              role="button"
-                              tabIndex={0}
-                              onClick={() => {
-                                playSelectionChime();
-                                setDrawnPerspectiveCard({
-                                  card,
-                                  deckId: viewingDeck.id,
-                                  deckName: viewingDeck.name,
-                                });
-                                setViewingDeck(null);
-                                setLibraryPanelOpen(null);
-                                setSidebarOpen(false);
-                              }}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  playSelectionChime();
-                                  setDrawnPerspectiveCard({
-                                    card,
-                                    deckId: viewingDeck.id,
-                                    deckName: viewingDeck.name,
-                                  });
-                                  setViewingDeck(null);
-                                  setLibraryPanelOpen(null);
-                                  setSidebarOpen(false);
-                                }
-                              }}
-                              className="relative h-full w-full transition-transform duration-300 [transform-style:preserve-3d] group-hover/tile:[transform:rotateY(180deg)] cursor-pointer"
-                            >
-                              <div className="absolute inset-0 w-full h-full rounded-xl bg-rose-50 dark:bg-rose-950/40 p-3 flex items-center justify-center [backface-visibility:hidden] border border-rose-200/60 dark:border-rose-800/50 overflow-hidden pointer-events-none transition-opacity duration-300" aria-hidden>
-                                <span className="text-xs font-medium text-rose-900 dark:text-rose-200 capitalize tracking-wide text-center line-clamp-3">{card.name}</span>
-                              </div>
-                              <div className="absolute inset-0 w-full h-full rounded-xl bg-foreground text-background px-3 flex items-center justify-center overflow-hidden [backface-visibility:hidden] [transform:rotateY(180deg)] border border-foreground pointer-events-none" aria-hidden>
-                                <span className="text-xs text-background/90 text-center line-clamp-4 w-full leading-tight">{card.prompt}</span>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                        Draw a card to shift your perspective, or view all cards in a deck.
-                      </p>
-                      {perspectiveDecks.length === 0 ? (
-                        <p className="text-xs text-neutral-500 dark:text-neutral-400">Loading decks…</p>
-                      ) : (
-                        <div className="space-y-6">
-                          {(() => {
-                            const byDomain = perspectiveDecks.reduce(
-                              (acc, deck) => {
-                                const domain = deck.domain || "other";
-                                if (!acc[domain]) acc[domain] = [];
-                                acc[domain].push(deck);
-                                return acc;
-                              },
-                              {} as Record<string, typeof perspectiveDecks>
-                            );
-                            const domainOrder = ["art", "decisions", "writing", "other"];
-                            const sortedDomains = [
-                              ...domainOrder.filter((d) => byDomain[d]?.length),
-                              ...Object.keys(byDomain).filter((d) => !domainOrder.includes(d)),
-                            ];
-                            return sortedDomains.map((domain) => (
-                              <div key={domain} className="space-y-3">
-                                <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider capitalize">
-                                  {domain}
-                                </h3>
-                                <div className="space-y-3">
-                                  {(byDomain[domain] ?? []).map((deck) => (
-                                    <div
-                                      key={deck.id}
-                                      className="p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors"
-                                    >
-                                      <div className="flex items-start justify-between gap-3">
-                                        <div className="min-w-0">
-                                          <h4 className="font-medium text-foreground">{deck.name}</h4>
-                                          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 line-clamp-2">{deck.description}</p>
-                                        </div>
-                                        <div className="flex gap-2 shrink-0">
-                                          <button
-                                            type="button"
-                                            onClick={async () => {
-                                              try {
-                                                const res = await fetch(`/api/perspective-decks/${deck.id}`);
-                                                const data = await res.json();
-                                                if (data?.cards?.length) {
-                                                  setViewingDeck({
-                                                    id: deck.id,
-                                                    name: deck.name,
-                                                    cards: data.cards,
-                                                  });
-                                                }
-                                              } catch {
-                                                /* ignore */
-                                              }
-                                            }}
-                                            className="px-3 py-2 rounded-xl text-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
-                                          >
-                                            View cards
-                                          </button>
-                                          <button
-                                            type="button"
-                                            disabled={drawCardLoading}
-                                            onClick={async () => {
-                                              setDrawCardLoading(true);
-                                              try {
-                                                const res = await fetch(`/api/perspective-decks/${deck.id}/random`);
-                                                const data = await res.json();
-                                                if (data.card && data.deckId) {
-                                                  setDrawnPerspectiveCard({
-                                                    card: data.card,
-                                                    deckId: data.deckId,
-                                                    deckName: deck.name,
-                                                  });
-                                                  setLibraryPanelOpen(null);
-                                                  setSidebarOpen(false);
-                                                }
-                                              } catch {
-                                                /* ignore */
-                                              } finally {
-                                                setDrawCardLoading(false);
-                                              }
-                                            }}
-                                            className="px-4 py-2 rounded-xl text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors disabled:opacity-50"
-                                          >
-                                            {drawCardLoading ? "Drawing…" : "Draw card"}
-                                          </button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            ));
-                          })()}
-                        </div>
-                      )}
-                    </>
-                  )}
                 </div>
               )}
               {libraryPanelOpen === "ltm" && (
@@ -8223,10 +8084,130 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
         />
       )}
 
+      {/* Prompt Games - dedicated modal with category selection and gallery-style browsing */}
+      {waysOfLookingAtModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => {
+            if (waysOfLookingAtCategory) setWaysOfLookingAtCategory(null);
+            else setWaysOfLookingAtModalOpen(false);
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Prompt Games"
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,720px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <div className="flex items-center gap-2">
+                {waysOfLookingAtCategory && (
+                  <button
+                    type="button"
+                    onClick={() => setWaysOfLookingAtCategory(null)}
+                    className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 transition-colors"
+                    aria-label="Back to categories"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                      <path d="M19 12H5M12 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                )}
+                <h2 className="text-lg font-semibold text-foreground">
+                  {waysOfLookingAtCategory ? perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ?? "Prompt Games" : "Prompt Games"}
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setWaysOfLookingAtModalOpen(false)}
+                className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-600 dark:text-neutral-400"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4">
+              {!waysOfLookingAtCategory ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    Choose a category to browse perspective cards.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {perspectiveDecks.length === 0 ? (
+                      <p className="text-sm text-neutral-500 col-span-2">Loading categories…</p>
+                    ) : (
+                      [...new Set(perspectiveDecks.map((d) => (d.domain || "other").toLowerCase()))].map((domain) => {
+                        const deck = perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === domain);
+                        if (!deck) return null;
+                        return (
+                          <button
+                            key={domain}
+                            type="button"
+                            onClick={() => {
+                              playSelectionChime();
+                              setWaysOfLookingAtCategory(domain);
+                            }}
+                            className="flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-amber-50 dark:hover:bg-amber-950/30 hover:border-amber-200 dark:hover:border-amber-800/50 transition-all text-left group"
+                          >
+                            <span className="text-base font-medium text-foreground capitalize group-hover:text-amber-800 dark:group-hover:text-amber-200">
+                              {domain}
+                            </span>
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2">
+                              {deck.description}
+                            </p>
+                          </button>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {waysOfLookingAtCardsLoading ? (
+                    <p className="text-sm text-neutral-500">Loading cards…</p>
+                  ) : waysOfLookingAtCards && waysOfLookingAtCards.length > 0 ? (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                      {waysOfLookingAtCards.map((card) => {
+                        const deck = perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory);
+                        return (
+                          <button
+                            key={card.id}
+                            type="button"
+                            onClick={() => {
+                              playSelectionChime();
+                              setDrawnPerspectiveCard({
+                                card,
+                                deckId: deck?.id ?? "",
+                                deckName: deck?.name ?? "Prompt Games",
+                              });
+                            }}
+                            className="flex flex-col p-4 rounded-xl border border-amber-200/60 dark:border-amber-800/40 bg-amber-50/50 dark:bg-amber-950/20 hover:bg-amber-100/70 dark:hover:bg-amber-900/30 hover:border-amber-300 dark:hover:border-amber-700/50 transition-all text-left min-h-[100px]"
+                          >
+                            <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                              {card.name}
+                            </span>
+                            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">
+                              {card.prompt}
+                            </p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-neutral-500">No cards in this category.</p>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {drawnPerspectiveCard && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => setDrawnPerspectiveCard(null)}
+          onClick={() => { setDrawnPerspectiveCard(null); setTtsHighlight(null); }}
           role="dialog"
           aria-modal="true"
           aria-labelledby="perspective-card-title"
@@ -8245,7 +8226,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 </p>
               </div>
               <button
-                onClick={() => setDrawnPerspectiveCard(null)}
+                onClick={() => { setDrawnPerspectiveCard(null); setTtsHighlight(null); }}
                 className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                 aria-label="Close"
               >
@@ -8253,12 +8234,27 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               </button>
             </div>
             <div className="p-4 space-y-4">
-              <p className="text-neutral-700 dark:text-neutral-300 text-base leading-relaxed">
-                {drawnPerspectiveCard.card.prompt}
-              </p>
+              <div className="group/tts flex items-start gap-3">
+                <p className="flex-1 min-w-0 text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                  {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === "perspective-card-prompt" ? (
+                    <TtsHighlightedText text={drawnPerspectiveCard.card.prompt} charEnd={ttsHighlight.charEnd} />
+                  ) : (
+                    drawnPerspectiveCard.card.prompt
+                  )}
+                </p>
+                <TTSButton
+                  text={drawnPerspectiveCard.card.prompt}
+                  showOnHover={false}
+                  layout="vertical"
+                  ariaLabel="Listen to prompt"
+                  className="shrink-0"
+                  onTtsProgress={(charEnd) => setTtsHighlight({ textId: "perspective-card-prompt", charEnd })}
+                  onTtsEnd={() => setTtsHighlight(null)}
+                />
+              </div>
               {drawnPerspectiveCard.card.follow_ups && drawnPerspectiveCard.card.follow_ups.length > 0 && (
                 <div>
-                  <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2">
+                  <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100 mb-2">
                     Follow-up questions
                   </p>
                   <ul className="space-y-1">
@@ -8271,13 +8267,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 </div>
               )}
             </div>
-            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2">
-              <button
-                onClick={() => setDrawnPerspectiveCard(null)}
-                className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-              >
-                Close
-              </button>
+            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700">
               <button
                 onClick={() => {
                   playSelectionChime();
@@ -8293,9 +8283,9 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   setDrawnPerspectiveCard(null);
                   inputRef.current?.focus();
                 }}
-                className="flex-1 px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                className="w-full px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
               >
-                Use in conversation
+                Start conversation
               </button>
             </div>
           </div>

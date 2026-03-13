@@ -206,6 +206,46 @@ html {
   animation: shimmer-sweep 2.5s ease-in-out infinite;
 }
 
+/* Colorful shimmer for perspective cards - warm gradient sweep */
+@keyframes shimmer-colorful {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.shimmer-text-colorful {
+  background: linear-gradient(
+    90deg,
+    #b45309 0%,
+    #c2410c 20%,
+    #be123c 40%,
+    #a21caf 60%,
+    #7c3aed 80%,
+    #b45309 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-colorful 3s ease-in-out infinite;
+}
+.dark .shimmer-text-colorful {
+  background: linear-gradient(
+    90deg,
+    #fbbf24 0%,
+    #fb923c 20%,
+    #f472b6 40%,
+    #c084fc 60%,
+    #a78bfa 80%,
+    #fbbf24 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-colorful 3s ease-in-out infinite;
+}
+
 @keyframes ghost-eye-left-look {
   0%,
   100% {

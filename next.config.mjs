@@ -1,18 +1,10 @@
 import withPWA from "next-pwa";
 
 /** Include mental model YAML files in Vercel serverless bundle (not traced by default) */
-const mentalModelsInclude = [
-  "./mental-models-index.yaml",
-  "./mental-models-index-*.yaml",
-  "./mental-models/**/*.yaml",
-  "./mental-models-*/**/*.yaml",
-];
+const mentalModelsInclude = ["./mental-models/*.yaml"];
 
 /** Include perspective deck YAML files in Vercel serverless bundle */
-const perspectiveDecksInclude = [
-  "./perspective-decks-index.yaml",
-  "./perspective-decks/**/*.yaml",
-];
+const perspectiveDecksInclude = ["./perspective-decks/**/*.yaml"];
 
 const nextConfig = {
   experimental: {

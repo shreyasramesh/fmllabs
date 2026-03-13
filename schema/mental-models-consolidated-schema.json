@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fmllabs/schemas/mental-models-consolidated.json",
+  "title": "Mental Models (Consolidated by Language)",
+  "description": "All mental models for a language in one file",
+  "type": "object",
+  "required": ["mental_models"],
+  "properties": {
+    "mental_models": {
+      "type": "array",
+      "description": "All mental models for this language",
+      "items": {
+        "$ref": "./mental-model-schema.json"
+      }
+    }
+  }
+}

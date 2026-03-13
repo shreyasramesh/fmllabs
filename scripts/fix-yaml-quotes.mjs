@@ -8,7 +8,7 @@ import fs from "fs";
 import path from "path";
 
 const root = process.cwd();
-const dirs = ["mental-models-ar", "mental-models-bn", "mental-models-es", "mental-models-fr", "mental-models-ja", "mental-models-kn", "mental-models-pt", "mental-models-ru", "mental-models-ta", "mental-models-ur", "mental-models-zh", "mental-models-en", "mental-models"];
+const dirs = ["mental-models", "perspective-decks"];
 
 let fixed = 0;
 for (const dir of dirs) {

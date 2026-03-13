@@ -1,46 +1,34 @@
-# Mental Models & Cognitive Biases Schema
+# Schema Directory
 
-This directory contains the schema for mental models and cognitive biases content.
+JSON Schemas for validating YAML content (mental models, perspective decks). YAML files include `yaml-language-server` schema directives for inline validation in editors that support it (e.g., VS Code with the YAML extension).
 
 ## Schema Files
 
 | File | Purpose |
 |------|---------|
-| `mental-model-schema.json` | JSON Schema for a single mental model or cognitive bias entry |
-| `mental-models-index-schema.json` | JSON Schema for the index (path + description per mental model) |
+| **Mental models** | |
+| `mental-model-schema.json` | Single mental model or cognitive bias entry |
+| `mental-models-consolidated-schema.json` | One-file-per-language format (array of models) |
+| **Perspective decks** | |
+| `perspective-deck-schema.json` | Single deck (id, name, description, cards) |
+| `perspective-deck-index-schema.json` | Index of decks (paths, descriptions) |
+| `perspective-card-schema.json` | Single card within a deck (referenced by deck schema) |
 
-## Structure Overview
+## Mental Models
 
-Each mental model or cognitive bias entry has the following sections:
+Each mental model has: `id`, `name`, `quick_introduction`, `in_more_detail`, `why_this_is_important`, `when_to_use`, `how_can_you_spot_it`, `examples`, `real_world_implications`, `professional_application`, `how_can_this_be_misapplied`, `related_content`.
 
-| Section | Type | Description |
-|---------|------|-------------|
-| `id` | string | Unique identifier (snake_case) |
-| `name` | string | Human-readable name |
-| `quick_introduction` | string | Brief introduction to the topic |
-| `in_more_detail` | string | Deeper explanation |
-| `why_this_is_important` | string | Why understanding this matters |
-| `when_to_use` | string[] | Tags: decision-making, investing, career_moves, risk_assessment, etc. |
-| `how_can_you_spot_it` | object | Subsections with string values |
-| `examples` | object | Example name → description mapping |
-| `real_world_implications` | string or object | Impact in real-world contexts |
-| `professional_application` | object | Subsections (e.g., networking_and_relationship_building) |
-| `how_can_this_be_misapplied` | object | Subsections: manipulation, misinterpreting_relationships, overcommitment, etc. |
-| `related_content` | string[] | List of related topic IDs |
+**Content**: `mental-models/*.yaml` — one file per language containing all models.
 
-## Validation
-
-The YAML files include `yaml-language-server` schema directives for inline validation in editors that support it (e.g., VS Code with the YAML extension).
-
-Validate from the command line using a tool like `ajv`:
-
+**Validation**:
 ```bash
-# With ajv-cli (install: npm i -g ajv-cli)
-ajv validate -s schema/mental-model-schema.json -d mental-models/loss-aversion-bias.yaml
-ajv validate -s schema/mental-models-index-schema.json -d mental-models-index.yaml
+node scripts/validate-yaml.mjs en
 ```
 
-## Content Organization
+## Perspective Decks
 
-- **Index**: `mental-models-index.yaml` at project root lists all mental models with their path and quick introduction (description)
-- **Per-topic files**: Individual files in `mental-models/` (e.g., `mental-models/loss-aversion-bias.yaml`) contain full content
+- **Index**: `perspective-deck-index-schema.json` — lists decks with path, description, domain
+- **Deck**: `perspective-deck-schema.json` — deck metadata + `cards` array
+- **Card**: `perspective-card-schema.json` — id, name, prompt, optional follow_ups, domain
+
+**Content**: `perspective-decks/*.yaml` — index and deck files together.

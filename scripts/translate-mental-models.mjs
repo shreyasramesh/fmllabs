@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 /**
- * Translates all mental models from English to each supported language.
+ * Translates mental models from English to each supported language.
  * Uses Gemini API. Run: node scripts/translate-mental-models.mjs
  * Requires GEMINI_API_KEY in .env.local
+ *
+ * Source: mental-models-en.yaml (single consolidated file)
+ * Output: mental-models-{lang}.yaml (one file per language)
  */
 import "./load-env.mjs";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import yaml from "yaml";
@@ -72,82 +75,20 @@ ${content}`;
   }
 }
 
-function buildIndexForLang(langCode) {
-  const dir = join(root, `mental-models-${langCode}`);
-  const files = readdirSync(dir).filter((f) => f.endsWith(".yaml"));
-  const entries = [];
-
-  for (const file of files) {
-    const content = readFileSync(join(dir, file), "utf-8");
-    let id, name, desc;
-
-    try {
-      const parsed = yaml.parse(content);
-      if (parsed?.id) {
-        id = parsed.id;
-        name = parsed.name ?? parsed.id.replace(/_/g, " ");
-        desc = parsed.quick_introduction?.trim() ?? "";
-      }
-    } catch {
-      /* Fallback: extract via regex when YAML parse fails (e.g. colons in one_liner, quoted strings) */
-      const idMatch = content.match(/^id:\s*([a-z0-9_]+)/m);
-      const nameMatch = content.match(/^name:\s*(.+)$/m);
-      const quickMatch = content.match(/^quick_introduction:\s*\|\s*\n([\s\S]*?)(?=\n[a-z_][a-z0-9_]*:)/m);
-      if (idMatch) {
-        id = idMatch[1].trim();
-        name = nameMatch ? nameMatch[1].trim() : id.replace(/_/g, " ");
-        desc = quickMatch ? quickMatch[1].split("\n").map((l) => l.replace(/^\s+/, "")).join("\n").trim() : "";
-      }
-    }
-
-    if (id) {
-      entries.push({ id, name: name ?? id.replace(/_/g, " "), path: `mental-models-${langCode}/${file}`, description: desc ?? "" });
-    }
+async function main() {
+  const sourcePath = join(root, "mental-models", "mental-models-en.yaml");
+  if (!existsSync(sourcePath)) {
+    console.error("Source not found: mental-models/mental-models-en.yaml");
+    process.exit(1);
   }
 
-  const sorted = entries.sort((a, b) => a.id.localeCompare(b.id));
-  const yamlContent = `# yaml-language-server: $schema=schema/mental-models-index-schema.json
-# Mental Models & Cognitive Biases Index (${LANGUAGES.find((l) => l.code === langCode)?.name ?? langCode})
-
-mental_models:
-${sorted
-  .map((e) => {
-    const descLines = (e.description || "").split("\n").map((s) => "      " + s);
-    return `  - id: ${e.id}
-    name: ${e.name}
-    path: ${e.path}
-    description: |
-${descLines.join("\n")}`;
-  })
-  .join("\n\n")}
-`;
-  writeFileSync(join(root, `mental-models-index-${langCode}.yaml`), yamlContent, "utf-8");
-}
-
-async function main() {
-  const sourceDir = join(root, "mental-models-en");
-  const files = readdirSync(sourceDir).filter((f) => f.endsWith(".yaml"));
-
-  buildIndexForLang("en");
-  console.log("Built mental-models-index-en.yaml");
+  const sourceContent = readFileSync(sourcePath, "utf-8");
+  const source = yaml.parse(sourceContent);
+  const models = source?.mental_models ?? [];
 
   const langArg = process.argv.find((a) => a.startsWith("--lang="));
   const onlyLang = langArg ? langArg.split("=")[1] : null;
   const skipExisting = process.argv.includes("--skip-existing");
-  const indexOnly = process.argv.includes("--index-only");
-
-  if (indexOnly) {
-    const langsToBuild = onlyLang ? [onlyLang] : LANGUAGES.map((l) => l.code);
-    for (const code of langsToBuild) {
-      const dir = join(root, `mental-models-${code}`);
-      if (existsSync(dir)) {
-        buildIndexForLang(code);
-        console.log(`Built mental-models-index-${code}.yaml`);
-      }
-    }
-    console.log("Done.");
-    return;
-  }
 
   const targetLangs = LANGUAGES.filter((l) => l.code !== "en").filter(
     (l) => !onlyLang || l.code === onlyLang
@@ -159,33 +100,41 @@ async function main() {
   }
 
   for (const lang of targetLangs) {
-    const outDir = join(root, `mental-models-${lang.code}`);
-    if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true });
+    const outPath = join(root, "mental-models", `mental-models-${lang.code}.yaml`);
+    if (skipExisting && existsSync(outPath)) {
+      console.log(`✓ ${lang.name}: mental-models/mental-models-${lang.code}.yaml (skipped, exists)`);
+      continue;
+    }
     console.log(`\n--- ${lang.name} (${lang.code}) ---`);
 
-    for (const file of files) {
-      const srcPath = join(sourceDir, file);
-      const outPath = join(outDir, file);
-      if (skipExisting && existsSync(outPath)) {
-        console.log(`  ✓ ${file} (skipped, exists)`);
-        continue;
-      }
-      const content = readFileSync(srcPath, "utf-8");
-
+    const translatedModels = [];
+    for (let i = 0; i < models.length; i++) {
+      const modelData = models[i];
+      const singleModelYaml = yaml.stringify(modelData, { lineWidth: 0 });
       try {
-        const translated = await translateYaml(content, lang.code);
+        const translated = await translateYaml(singleModelYaml, lang.code);
         const cleaned = translated.replace(/^```yaml\s*/i, "").replace(/\s*```\s*$/i, "").trim();
-        writeFileSync(outPath, cleaned + "\n", "utf-8");
-        console.log(`  ✓ ${file}`);
+        const parsed = yaml.parse(cleaned);
+        if (parsed?.id) translatedModels.push(parsed);
+        else translatedModels.push(modelData);
+        console.log(`  ✓ ${modelData.id}`);
       } catch (err) {
-        console.error(`  ✗ ${file}:`, err.message);
+        console.error(`  ✗ ${modelData.id}:`, err.message);
+        translatedModels.push(modelData);
       }
-
       await new Promise((r) => setTimeout(r, 500));
     }
 
-    buildIndexForLang(lang.code);
-    console.log(`  Built mental-models-index-${lang.code}.yaml`);
+    translatedModels.sort((a, b) => (a.id || "").localeCompare(b.id || ""));
+    mkdirSync(join(root, "mental-models"), { recursive: true });
+    const header = `# yaml-language-server: $schema=../schema/mental-models-consolidated-schema.json
+# Mental Models & Cognitive Biases (${lang.name})
+# Translated from mental-models-en.yaml
+
+`;
+    const yamlContent = header + yaml.stringify({ mental_models: translatedModels }, { lineWidth: 0 });
+    writeFileSync(outPath, yamlContent, "utf-8");
+    console.log(`  → mental-models/mental-models-${lang.code}.yaml (${translatedModels.length} models)`);
   }
 
   console.log("\nDone.");

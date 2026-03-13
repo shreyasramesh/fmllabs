@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://and-then-what/schemas/mental-model.json",
+  "$id": "https://fmllabs/schemas/mental-model.json",
   "title": "Mental Model / Cognitive Bias",
   "description": "Schema for mental models and cognitive biases",
   "type": "object",

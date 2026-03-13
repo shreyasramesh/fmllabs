@@ -6,7 +6,7 @@ import { isValidLanguageCode } from "@/lib/languages";
 export interface MentalModelIndexEntry {
   id: string;
   name: string;
-  path: string;
+  path?: string; // Legacy; unused when loading from consolidated files
   description: string;
 }
 
@@ -52,39 +52,55 @@ export function getTryThis(model: MentalModel): string[] {
 }
 
 const indexCache = new Map<string, MentalModelIndex>();
+const modelsCache = new Map<string, MentalModel[]>();
 
-function getIndexPath(language?: string | null): string {
+const MENTAL_MODELS_DIR = "mental-models";
+
+function getConsolidatedPath(language?: string | null): string | null {
+  const base = path.join(process.cwd(), MENTAL_MODELS_DIR);
   if (language && isValidLanguageCode(language)) {
-    const langPath = path.join(process.cwd(), `mental-models-index-${language}.yaml`);
+    const langPath = path.join(base, `mental-models-${language}.yaml`);
     if (fs.existsSync(langPath)) return langPath;
   }
-  const defaultPath = path.join(process.cwd(), "mental-models-index.yaml");
+  const defaultPath = path.join(base, "mental-models.yaml");
   if (fs.existsSync(defaultPath)) return defaultPath;
-  const enPath = path.join(process.cwd(), "mental-models-index-en.yaml");
-  return fs.existsSync(enPath) ? enPath : defaultPath;
+  const enPath = path.join(base, "mental-models-en.yaml");
+  return fs.existsSync(enPath) ? enPath : null;
+}
+
+function loadConsolidatedModels(language?: string | null): MentalModel[] {
+  const langKey = language && isValidLanguageCode(language) ? language : "default";
+  const cached = modelsCache.get(langKey);
+  if (cached) return cached;
+  const filePath = getConsolidatedPath(language);
+  if (!filePath) return [];
+  const content = fs.readFileSync(filePath, "utf-8");
+  const parsed = yaml.parse(content) as { mental_models?: MentalModel[] };
+  const models = parsed?.mental_models ?? [];
+  modelsCache.set(langKey, models);
+  return models;
 }
 
 export function loadMentalModelsIndex(language?: string | null): MentalModelIndex {
   const langKey = language && isValidLanguageCode(language) ? language : "default";
   const cached = indexCache.get(langKey);
   if (cached) return cached;
-  const indexPath = getIndexPath(language);
-  const content = fs.readFileSync(indexPath, "utf-8");
-  const parsed = yaml.parse(content) as MentalModelIndex;
-  indexCache.set(langKey, parsed);
-  return parsed;
+  const models = loadConsolidatedModels(language);
+  const index: MentalModelIndex = {
+    mental_models: models.map((m) => ({
+      id: m.id,
+      name: m.name,
+      path: "", // No longer used; content is in consolidated file
+      description: typeof m.quick_introduction === "string" ? m.quick_introduction : "",
+    })),
+  };
+  indexCache.set(langKey, index);
+  return index;
 }
 
 export function loadMentalModelContent(id: string, language?: string | null): MentalModel | null {
-  const index = loadMentalModelsIndex(language);
-  const entry = index.mental_models.find((m) => m.id === id);
-  if (!entry) return null;
-
-  const filePath = path.join(process.cwd(), entry.path);
-  if (!fs.existsSync(filePath)) return null;
-
-  const content = fs.readFileSync(filePath, "utf-8");
-  return yaml.parse(content) as MentalModel;
+  const models = loadConsolidatedModels(language);
+  return models.find((m) => m.id === id) ?? null;
 }
 
 export interface MentalModelWithWhenToUse {
