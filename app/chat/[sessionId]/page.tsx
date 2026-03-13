@@ -413,6 +413,11 @@ function MessageBubble({
           </div>
         ) : (
           <div className="message-bubble-text text-sm md:text-base">
+            {message.perspectiveCard && (
+              <p className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
+                {message.perspectiveCard.name}
+              </p>
+            )}
             {text ? (
               <>
                 {isSpeakingAssistantBody ? (
@@ -8279,7 +8284,11 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   const prompt = drawnPerspectiveCard.card.prompt;
                   const name = drawnPerspectiveCard.card.name;
                   const assistantContent = `Let me invite you to look through this lens:\n\n${prompt}\n\nWhat comes to mind?`;
-                  setMessages((prev) => [...prev, { role: "assistant", content: assistantContent }]);
+                  setMessages((prev) => [...prev, {
+                    role: "assistant",
+                    content: assistantContent,
+                    perspectiveCard: { name, prompt },
+                  }]);
                   setPendingCardContext({ prompt, name });
                   setDrawnPerspectiveCard(null);
                   inputRef.current?.focus();
