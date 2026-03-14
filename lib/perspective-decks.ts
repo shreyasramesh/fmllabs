@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import yaml from "yaml";
+import { isValidLanguageCode } from "@/lib/languages";
 
 export interface PerspectiveCard {
   id: string;
@@ -51,31 +52,46 @@ export interface PerspectiveDeck {
 
 const indexCache = new Map<string, PerspectiveDeckIndex>();
 
-function getIndexPath(): string {
-  return path.join(process.cwd(), "perspective-decks", "perspective-decks-index.yaml");
+function getIndexPath(language?: string | null): string {
+  const base = path.join(process.cwd(), "perspective-decks", "perspective-decks-index.yaml");
+  if (!language || !isValidLanguageCode(language) || language === "en") {
+    return base;
+  }
+  const langPath = path.join(process.cwd(), "perspective-decks", `perspective-decks-index-${language}.yaml`);
+  return fs.existsSync(langPath) ? langPath : base;
 }
 
-export function loadPerspectiveDecksIndex(): PerspectiveDeckIndex {
-  const cached = indexCache.get("default");
+export function loadPerspectiveDecksIndex(language?: string | null): PerspectiveDeckIndex {
+  const cacheKey = language && isValidLanguageCode(language) && language !== "en" ? language : "default";
+  const cached = indexCache.get(cacheKey);
   if (cached) return cached;
-  const indexPath = getIndexPath();
+  const indexPath = getIndexPath(language);
   if (!fs.existsSync(indexPath)) {
-    indexCache.set("default", { decks: [] });
+    indexCache.set(cacheKey, { decks: [] });
     return { decks: [] };
   }
   const content = fs.readFileSync(indexPath, "utf-8");
   const parsed = yaml.parse(content) as PerspectiveDeckIndex;
   const result = parsed?.decks ? parsed : { decks: [] };
-  indexCache.set("default", result);
+  indexCache.set(cacheKey, result);
   return result;
 }
 
-export function loadPerspectiveDeck(deckId: string): PerspectiveDeck | null {
-  const index = loadPerspectiveDecksIndex();
+function getDeckFilePath(entryPath: string, language?: string | null): string {
+  const base = path.join(process.cwd(), entryPath);
+  if (!language || !isValidLanguageCode(language) || language === "en") {
+    return base;
+  }
+  const langPath = base.replace(/\.yaml$/i, `-${language}.yaml`);
+  return fs.existsSync(langPath) ? langPath : base;
+}
+
+export function loadPerspectiveDeck(deckId: string, language?: string | null): PerspectiveDeck | null {
+  const index = loadPerspectiveDecksIndex(language);
   const entry = index.decks.find((d) => d.id === deckId);
   if (!entry) return null;
 
-  const filePath = path.join(process.cwd(), entry.path);
+  const filePath = getDeckFilePath(entry.path, language);
   if (!fs.existsSync(filePath)) return null;
 
   const content = fs.readFileSync(filePath, "utf-8");
@@ -95,8 +111,8 @@ export function loadPerspectiveDeck(deckId: string): PerspectiveDeck | null {
   };
 }
 
-export function getRandomCardFromDeck(deckId: string): PerspectiveCard | null {
-  const deck = loadPerspectiveDeck(deckId);
+export function getRandomCardFromDeck(deckId: string, language?: string | null): PerspectiveCard | null {
+  const deck = loadPerspectiveDeck(deckId, language);
   if (!deck || deck.cards.length === 0) return null;
   const idx = Math.floor(Math.random() * deck.cards.length);
   return deck.cards[idx] ?? null;
@@ -104,9 +120,10 @@ export function getRandomCardFromDeck(deckId: string): PerspectiveCard | null {
 
 export function getCardFromDeck(
   deckId: string,
-  cardId: string
+  cardId: string,
+  language?: string | null
 ): PerspectiveCard | null {
-  const deck = loadPerspectiveDeck(deckId);
+  const deck = loadPerspectiveDeck(deckId, language);
   if (!deck) return null;
   return deck.cards.find((c) => c.id === cardId) ?? null;
 }

@@ -4,10 +4,14 @@ import {
   getDomainDisplayName,
   getDomainDescription,
 } from "@/lib/perspective-decks";
+import { isValidLanguageCode } from "@/lib/languages";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const index = loadPerspectiveDecksIndex();
+    const { searchParams } = new URL(request.url);
+    const language = searchParams.get("language");
+    const lang = language && isValidLanguageCode(language) ? language : undefined;
+    const index = loadPerspectiveDecksIndex(lang);
     const decks = index.decks.map((d) => ({
       id: d.id,
       name: d.name,

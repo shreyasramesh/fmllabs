@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "tsx --test \"lib/**/*.test.ts\"",
-    "generate-icons": "node scripts/generate-pwa-icons.mjs"
+    "generate-icons": "node scripts/generate-pwa-icons.mjs",
+    "translate-perspective-decks": "node scripts/translate-perspective-decks.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.0.0",

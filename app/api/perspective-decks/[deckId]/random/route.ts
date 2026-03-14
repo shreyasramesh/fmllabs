@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server";
 import { getRandomCardFromDeck } from "@/lib/perspective-decks";
+import { isValidLanguageCode } from "@/lib/languages";
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ deckId: string }> }
 ) {
   try {
     const { deckId } = await params;
-    const card = getRandomCardFromDeck(deckId);
+    const { searchParams } = new URL(request.url);
+    const language = searchParams.get("language");
+    const lang = language && isValidLanguageCode(language) ? language : undefined;
+    const card = getRandomCardFromDeck(deckId, lang);
     if (!card) {
       return NextResponse.json(
         { error: "Deck not found or has no cards" },

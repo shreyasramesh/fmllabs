@@ -2635,7 +2635,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (waysOfLookingAtModalOpen) {
-      fetch("/api/perspective-decks")
+      fetch(`/api/perspective-decks?language=${language}`)
         .then((r) => r.json())
         .then((data: PerspectiveDecksConfig) => {
           if (data?.decks && data?.domains && data?.subdomainsByDomain) {
@@ -2647,7 +2647,7 @@ export default function ChatPage() {
         .catch(() => setPerspectiveDecksConfig(null));
       refetchSavedPerspectiveCards();
     }
-  }, [waysOfLookingAtModalOpen, refetchSavedPerspectiveCards]);
+  }, [waysOfLookingAtModalOpen, refetchSavedPerspectiveCards, language]);
 
   const perspectiveDecks = perspectiveDecksConfig?.decks ?? [];
   const domainDisplayName = Object.fromEntries(
@@ -2752,13 +2752,13 @@ export default function ChatPage() {
               ? digitalGhostSubToDeckId[waysOfLookingAtDigital]
               : null;
     if (deckId) {
-      fetch(`/api/perspective-decks/${deckId}`)
+      fetch(`/api/perspective-decks/${deckId}?language=${language}`)
         .then((r) => r.json())
         .then((data) => setWaysOfLookingAtCards(Array.isArray(data?.cards) ? data.cards : []))
         .catch(() => setWaysOfLookingAtCards([]))
         .finally(() => setWaysOfLookingAtCardsLoading(false));
     } else {
-      fetch("/api/perspective-decks")
+      fetch(`/api/perspective-decks?language=${language}`)
         .then((r) => r.json())
         .then(async (apiData: { decks?: { id: string; name: string; description: string; domain: string }[] }) => {
           const list = apiData?.decks ?? [];
@@ -2767,14 +2767,14 @@ export default function ChatPage() {
             setWaysOfLookingAtCards([]);
             return;
           }
-          const res = await fetch(`/api/perspective-decks/${deck.id}`);
+          const res = await fetch(`/api/perspective-decks/${deck.id}?language=${language}`);
           const data = await res.json();
           setWaysOfLookingAtCards(Array.isArray(data?.cards) ? data.cards : []);
         })
         .catch(() => setWaysOfLookingAtCards([]))
         .finally(() => setWaysOfLookingAtCardsLoading(false));
     }
-  }, [waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, perspectiveDecksConfig]);
+  }, [waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, perspectiveDecksConfig, language]);
 
   useEffect(() => {
     const clearSelectionBubbles = (e: MouseEvent | TouchEvent) => {
@@ -8726,7 +8726,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                                 try {
                                   const deck = perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === domain);
                                   if (deck?.id) {
-                                    const res = await fetch(`/api/perspective-decks/${deck.id}/random`);
+                                    const res = await fetch(`/api/perspective-decks/${deck.id}/random?language=${language}`);
                                     const data = await res.json();
                                     if (data.card && data.deckId) {
                                       setDrawnPerspectiveCard({ card: data.card, deckId: data.deckId, deckName: deck.name });
@@ -8782,7 +8782,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             try {
                               const deckId = city.deck_id;
                               if (deckId) {
-                                const res = await fetch(`/api/perspective-decks/${deckId}/random`);
+                                const res = await fetch(`/api/perspective-decks/${deckId}/random?language=${language}`);
                                 const data = await res.json();
                                 if (data.card && data.deckId) {
                                   const deck = perspectiveDecks.find((d) => d.id === deckId);
@@ -8842,7 +8842,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             try {
                               const deckId = cuisine.deck_id;
                               if (deckId) {
-                                const res = await fetch(`/api/perspective-decks/${deckId}/random`);
+                                const res = await fetch(`/api/perspective-decks/${deckId}/random?language=${language}`);
                                 const data = await res.json();
                                 if (data.card && data.deckId) {
                                   const deck = perspectiveDecks.find((d) => d.id === deckId);
@@ -8902,7 +8902,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             try {
                               const deckId = sub.deck_id;
                               if (deckId) {
-                                const res = await fetch(`/api/perspective-decks/${deckId}/random`);
+                                const res = await fetch(`/api/perspective-decks/${deckId}/random?language=${language}`);
                                 const data = await res.json();
                                 if (data.card && data.deckId) {
                                   const deck = perspectiveDecks.find((d) => d.id === deckId);
@@ -8962,7 +8962,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             try {
                               const deckId = sub.deck_id;
                               if (deckId) {
-                                const res = await fetch(`/api/perspective-decks/${deckId}/random`);
+                                const res = await fetch(`/api/perspective-decks/${deckId}/random?language=${language}`);
                                 const data = await res.json();
                                 if (data.card && data.deckId) {
                                   const deck = perspectiveDecks.find((d) => d.id === deckId);
@@ -9025,7 +9025,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             try {
                               const deckId = sub.deck_id;
                               if (deckId) {
-                                const res = await fetch(`/api/perspective-decks/${deckId}/random`);
+                                const res = await fetch(`/api/perspective-decks/${deckId}/random?language=${language}`);
                                 const data = await res.json();
                                 if (data.card && data.deckId) {
                                   const deck = perspectiveDecks.find((d) => d.id === deckId);
