@@ -85,7 +85,6 @@ mental_models:
       - loss_aversion_bias
       - availability_heuristic
       - default_effect
-      - default_effect
   - id: anchoring_bias
     name: Biais d'ancrage
     quick_introduction: |
@@ -424,7 +423,6 @@ mental_models:
       - confirmation_bias
       - availability_heuristic
       - salience_bias
-      - availability_heuristic
   - id: base_rate_fallacy
     name: Erreur de taux de base
     quick_introduction: |
@@ -505,7 +503,6 @@ mental_models:
       - bayes_theorem
       - availability_heuristic
       - narrative_fallacy
-      - survivorship_bias
   - id: bayes_theorem
     name: Théorème de Bayes
     quick_introduction: |
@@ -710,10 +707,10 @@ mental_models:
       false_equivalence: |
         Traiter les stratégies des survivants et des non-survivants comme également informatives alors que le contexte diffère.
     related_content:
-      - biais_rétrospectif
-      - sophisme_narratif
-      - sophisme_du_taux_de_base
-      - regression_vers_la_moyenne
+      - cognitive_dissonance
+      - fundamental_attribution_error
+      - mere_exposure_effect
+      - halo_effect
   - id: bounded_rationality
     name: Rationalité limitée
     quick_introduction: |
@@ -953,7 +950,6 @@ mental_models:
       stagnation: |
         Traiter le cercle comme fixe plutôt que comme quelque chose qui peut s'étendre avec des efforts.
     related_content:
-      - dunning_kruger_effect
       - dunning_kruger_effect
       - bayes_theorem
       - second_order_thinking
@@ -1309,7 +1305,6 @@ mental_models:
         Sur-corriger au point de ne jamais faire confiance à son propre jugement.
     related_content:
       - circle_of_competence
-      - circle_of_competence
       - confirmation_bias
       - curse_of_knowledge
   - id: effet_barnum
@@ -1374,6 +1369,87 @@ mental_models:
       - effet_de_halo
       - heuristique_de_disponibilité
       - sophisme_narratif
+    quick_introduction: |
+      The empathy gap is the difficulty of understanding and predicting the mental
+      states of others when we're in a different state ourselves. When we're
+      calm, we underestimate how we'll feel when angry or hungry. When we're
+      full, we underestimate how much we'll want food when hungry.
+    in_more_detail: |
+      We have trouble imagining how we'll feel in different circumstances—and
+      how others feel when they're in states we're not currently in. A sober
+      person underestimates the pull of addiction. A well-rested person
+      underestimates the impact of sleep deprivation. We project our current
+      state onto others and onto our future selves.
+
+      The empathy gap affects decisions we make for our future selves (e.g.,
+      committing to exercise when we're motivated), decisions we make for
+      others, and our ability to understand people in different states.
+    why_this_is_important: |
+      Recognizing the empathy gap improves decision-making for future you,
+      empathy for others, and understanding of our own variability. It
+      explains why we make commitments we can't keep and why we misunderstand
+      others in distress.
+    when_to_use:
+      - decision-making
+      - relationship_building
+      - leadership
+      - conflict_resolution
+    how_can_you_spot_it:
+      current_state_projection: |
+        Assuming others feel as we do now, or that future we will feel as we
+        do now.
+      underestimating_emotional_state: |
+        "What's the big deal?" when we're not in the state they're in.
+      commitment_failures: |
+        Making choices based on current motivation that we won't follow through
+        on when motivation fades.
+      misunderstanding_others: |
+        Dismissing others' experiences because we can't imagine them from our
+        current state.
+    examples:
+      hunger: |
+        Grocery shopping when full—we buy less than we'll want when hungry.
+      addiction: |
+        Non-addicts underestimate the difficulty of quitting; addicts in
+        recovery may underestimate the pull when they're using.
+      conflict: |
+        When calm, we underestimate how we'll react in the moment of
+        confrontation.
+      motivation: |
+        Signing up for a 6am class when we're motivated—and not going when
+        we're sleepy.
+    professional_application:
+      networking_and_relationship_building: |
+        When someone is stressed, angry, or in a different state, don't
+        assume they'll reason as you would. Try to imagine their state.
+        When making commitments, consider how you'll feel when motivation
+        fades.
+      collaborative_learning_initiative: |
+        When planning, consider how the team will feel when tired, under
+        pressure, or frustrated. Design for those states, not just the
+        motivated planning state.
+    how_can_this_be_misapplied:
+      overattribution: |
+        Dismissing all misunderstanding as "empathy gap" when sometimes
+        people genuinely have different values.
+      excusing_behavior: |
+        "They couldn't help it—empathy gap" when people are responsible
+        for managing their states.
+      false_relativism: |
+        Assuming we can never understand others when we can improve with
+        effort and experience.
+      self_excuse: |
+        Using the empathy gap to justify our own failures of follow-through.
+    real_world_implications: |
+      The empathy gap affects addiction treatment, policy, and interpersonal
+      understanding. It explains why we make commitments we break and why we
+      often fail to understand others' perspectives. It's a barrier to
+      empathy and good decision-making.
+    related_content:
+      - impact_bias
+      - hyperbolic_discounting
+      - fundamental_attribution_error
+      - availability_heuristic
   - id: empathy_gap
     name: Écart d'empathie
     quick_introduction: |
@@ -2253,8 +2329,6 @@ mental_models:
         des résultats.
     related_content:
       - narrative_fallacy
-      - survivorship_bias
-      - overconfidence
       - regression_to_the_mean
   - id: hyperbolic_discounting
     name: Escompte hyperbolique
@@ -2499,10 +2573,10 @@ mental_models:
       invalidating_emotions: |
         Dire aux gens que leurs sentiments passeront alors qu'ils ont besoin de soutien dans l'instant présent.
     related_content:
-      - biais_de_negativite
-      - ecart_d_empathie
-      - retro_vision_rose
-      - heuristique_de_disponibilite
+      - negativity_bias
+      - empathy_gap
+      - rosy_retrospection
+      - availability_heuristic
   - id: in_group_bias
     name: Biais de groupe
     quick_introduction: |
@@ -2639,7 +2713,6 @@ mental_models:
         d'objectifs positifs.
     related_content:
       - second_order_thinking
-      - survivorship_bias
       - hindsight_bias
       - loss_aversion_bias
   - id: law_of_diminishing_returns
@@ -2797,8 +2870,6 @@ mental_models:
       - anchoring_bias
       - endowment_effect
       - sunk_cost_fallacy
-      - prospect_theory
-      - status_quo_bias
   - id: map_is_not_the_territory
     name: La carte n'est pas le territoire
     quick_introduction: |
@@ -3055,7 +3126,6 @@ mental_models:
         prédictives, pas qu'elles existent.
     related_content:
       - hindsight_bias
-      - survivorship_bias
       - regression_to_the_mean
       - map_is_not_the_territory
   - id: negativity_bias

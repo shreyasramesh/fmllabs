@@ -1,0 +1,243 @@
+# yaml-language-server: $schema=../schema/perspective-deck-index-schema.json
+# Perspective Decks Index (Bengali)
+
+domains:
+  art:
+    name: শিল্পের দিকে তাকানোর উপায়
+    description: |
+      শিল্পকর্ম দেখার সময় আপনার দৃষ্টিভঙ্গি বদলানোর জন্য কার্ড। প্রতিটি একটি ভিন্ন
+      দৃষ্টিকোণ প্রদান করে—আলো ও ছায়া থেকে শুরু করে পরিচয় এবং আবেগ—শিল্পকর্মকে
+      আপনি কীভাবে দেখেন এবং সেগুলির সাথে কীভাবে সংযুক্ত হন তা গভীর করার জন্য।
+  urban_jungle:
+    name: শহুরে জঙ্গল
+    description: |
+      শুধু শহরের মধ্যে দিয়ে হেঁটে যাওয়ার পরিবর্তে, আপনি এটিকে একটি জীবন্ত সত্তা হিসেবে দেখেন।
+      কার্ডগুলি পুরানো ভবনগুলির ক্ষত, ট্র্যাফিকের কোরিওগ্রাফি,
+      এবং গলিপথের গোপন জীবনের উপর আলোকপাত করে।
+  culinary_lab:
+    name: রন্ধনশালা
+    description: |
+      সুস্বাদু থেকে রূপান্তরমূলক। একটি কামড়ের রসায়ন,
+      একটি উপাদানের ইতিহাস, এবং একটি রেস্তোরাঁর সাউন্ডট্র্যাক অন্বেষণ করুন।
+  natural_microcosm:
+    name: প্রাকৃতিক ক্ষুদ্র বিশ্ব
+    description: |
+      একটি পার্ক বা একটি উঠোনের জন্য উপযুক্ত। এই লেন্সটি একটি পাতার অদৃশ্য
+      প্রকৌশল, একটি পাথরের ধীরগতির জীবন, বা পোকামাকড়ের আঞ্চলিক নাটকগুলির উপর আলোকপাত করে।
+  human_interface:
+    name: মানব ইন্টারফেস
+    description: |
+      দৈনন্দিন স্থান যেখানে মানুষেরা মিলিত হয়—কফি শপ, ট্রানজিট হাব,
+      কর্মক্ষেত্র, খুচরা দোকান, পাবলিক পার্ক। কার্ডগুলি সারিতে দাঁড়ানোর কোরিওগ্রাফি,
+      এলাকার দখল, অদৃশ্য স্ক্রিপ্ট, এবং ভাগ করা স্থানের নৃতত্ত্বের উপর আলোকপাত করে।
+  california_superbloom:
+    name: ক্যালিফোর্নিয়া সুপারব্লুম
+    description: |
+      শীতের বৃষ্টির পর বন্যফুলের ক্ষণস্থায়ী বিস্ফোরণ। কার্ডগুলি রঙ,
+      স্কেল, পরাগায়নকারী, ভূতত্ত্ব, আবহাওয়া, এবং ফুলের ক্ষণস্থায়ী দৃশ্যের উপর আলোকপাত করে।
+decks:
+  - id: ways_of_looking_at_art
+    name: শিল্পের দিকে তাকানোর উপায়
+    path: perspective-decks/ways-of-looking-at-art.yaml
+    description: |
+      শিল্পকর্ম দেখার সময় আপনার দৃষ্টিভঙ্গি বদলানোর জন্য ৫০টি কার্ড। প্রতিটি কার্ড একটি
+      ভিন্ন দৃষ্টিকোণ প্রদান করে—আলো ও ছায়া থেকে শুরু করে পরিচয় এবং আবেগ—শিল্পকর্মকে
+      আপনি কীভাবে দেখেন এবং সেগুলির সাথে কীভাবে সংযুক্ত হন তা গভীর করার জন্য।
+    domain: art
+  - id: ways_of_looking_at_california_superbloom
+    name: ক্যালিফোর্নিয়া সুপারব্লুম দেখার উপায়
+    path: perspective-decks/ways-of-looking-at-california-superbloom.yaml
+    description: |
+      ক্যালিফোর্নিয়ার সুপারব্লুম অনুভব করার সময় আপনার দৃষ্টিভঙ্গি বদলানোর জন্য ২০টি কার্ড। প্রতিটি কার্ড একটি
+      ভিন্ন দৃষ্টিকোণ প্রদান করে—পরাগায়নকারী এবং
+      ভূতত্ত্ব থেকে আলো, গন্ধ, এবং ক্ষণস্থায়ীতা—আপনি
+      বন্যফুল এবং রঙের ক্ষণস্থায়ী বিস্ফোরণকে কীভাবে দেখেন তা গভীর করার জন্য।
+    domain: california_superbloom
+  - id: urban_jungle_new_york
+    name: শহুরে জঙ্গল — নিউ ইয়র্ক
+    path: perspective-decks/urban-jungle/urban-jungle-new-york.yaml
+    description: |
+      নিউ ইয়র্ককে আপনি কীভাবে দেখেন তা বদলানোর জন্য ৫০টি কার্ড—স্কেল এবং আলো থেকে
+      ইতিহাসের স্তর এবং রাস্তার জীবনের ছন্দ পর্যন্ত।
+    domain: urban_jungle
+    subdomain_id: ny
+    subdomain_name: New York
+  - id: urban_jungle_san_francisco
+    name: শহুরে জঙ্গল — সান ফ্রান্সিসকো
+    path: perspective-decks/urban-jungle/urban-jungle-san-francisco.yaml
+    description: |
+      সান ফ্রান্সিসকোকে আপনি কীভাবে দেখেন তা বদলানোর জন্য ৫০টি কার্ড—স্কেল এবং আলো থেকে
+      ইতিহাসের স্তর এবং রাস্তার জীবনের ছন্দ পর্যন্ত।
+    domain: urban_jungle
+    subdomain_id: sf
+    subdomain_name: San Francisco
+  - id: urban_jungle_london
+    name: শহুরে জঙ্গল — লন্ডন
+    path: perspective-decks/urban-jungle/urban-jungle-london.yaml
+    description: |
+      লন্ডনকে আপনি কীভাবে দেখেন তা বদলানোর জন্য ৫০টি কার্ড—স্কেল এবং আলো থেকে
+      ইতিহাসের স্তর এবং রাস্তার জীবনের ছন্দ পর্যন্ত।
+    domain: urban_jungle
+    subdomain_id: london
+    subdomain_name: London
+  - id: urban_jungle_paris
+    name: শহুরে জঙ্গল — প্যারিস
+    path: perspective-decks/urban-jungle/urban-jungle-paris.yaml
+    description: |
+      প্যারিসকে আপনি কীভাবে দেখেন তা বদলানোর জন্য ৫০টি কার্ড—স্কেল এবং আলো থেকে
+      ইতিহাসের স্তর এবং রাস্তার জীবনের ছন্দ পর্যন্ত।
+    domain: urban_jungle
+    subdomain_id: paris
+    subdomain_name: Paris
+  - id: urban_jungle_bangalore
+    name: শহুরে জঙ্গল — ব্যাঙ্গালোর
+    path: perspective-decks/urban-jungle/urban-jungle-bangalore.yaml
+    description: |
+      ব্যাঙ্গালোরকে আপনি কীভাবে দেখেন তা বদলানোর জন্য ৫০টি কার্ড—স্কেল এবং আলো থেকে
+      ইতিহাসের স্তর এবং রাস্তার জীবনের ছন্দ পর্যন্ত।
+    domain: urban_jungle
+    subdomain_id: blr
+    subdomain_name: Bangalore
+  - id: culinary_lab_indian
+    name: রন্ধনশালা — ভারতীয়
+    path: perspective-decks/culinary-lab/culinary-lab-indian.yaml
+    description: |
+      ভারতীয় খাবার আপনি কীভাবে অনুভব করেন তা বদলানোর জন্য ৫০টি কার্ড—
+      মশলা এবং তাপের রসায়ন থেকে শুরু করে উপাদানের প্রত্নতত্ত্ব এবং
+      ভাগ করা টেবিলের কোরিওগ্রাফি পর্যন্ত।
+    domain: culinary_lab
+    subdomain_id: indian
+    subdomain_name: Indian
+  - id: culinary_lab_italian
+    name: রন্ধনশালা — ইতালীয়
+    path: perspective-decks/culinary-lab/culinary-lab-italian.yaml
+    description: |
+      ইতালীয় খাবার আপনি কীভাবে অনুভব করেন তা বদলানোর জন্য ৫০টি কার্ড—
+      জলপাই তেল এবং অ্যাসিডের রসায়ন থেকে শুরু করে টেবিলের সামাজিক কোরিওগ্রাফি এবং
+      প্রতিটি উপাদানের প্রত্নতত্ত্ব পর্যন্ত।
+    domain: culinary_lab
+    subdomain_id: italian
+    subdomain_name: Italian
+  - id: culinary_lab_pizza
+    name: রন্ধনশালা — পিৎজা
+    path: perspective-decks/culinary-lab/culinary-lab-pizza.yaml
+    description: |
+      পিৎজা আপনি কীভাবে অনুভব করেন তা বদলানোর জন্য ৫০টি কার্ড—
+      ময়দা এবং আগুনের রসায়ন থেকে শুরু করে স্লাইসের থিয়েটার এবং টপিংসের প্রত্নতত্ত্ব পর্যন্ত।
+    domain: culinary_lab
+    subdomain_id: pizza
+    subdomain_name: Pizza
+  - id: culinary_lab_chinese
+    name: রন্ধনশালা — চাইনিজ
+    path: perspective-decks/culinary-lab/culinary-lab-chinese.yaml
+    description: |
+      চাইনিজ খাবার আপনি কীভাবে অনুভব করেন তা বদলানোর জন্য ৫০টি কার্ড—
+      ওক হেই-এর রসায়ন এবং সয়ার প্রত্নতত্ত্ব থেকে শুরু করে গোল টেবিলের কোরিওগ্রাফি
+      এবং ভোজের আখ্যান পর্যন্ত।
+    domain: culinary_lab
+    subdomain_id: chinese
+    subdomain_name: Chinese
+  - id: culinary_lab_sushi
+    name: রন্ধনশালা — সুশি
+    path: perspective-decks/culinary-lab/culinary-lab-sushi.yaml
+    description: |
+      সুশি আপনি কীভাবে অনুভব করেন তা বদলানোর জন্য ৫০টি কার্ড—
+      ভাত এবং মাছের রসায়ন থেকে শুরু করে কাউন্টারের কোরিওগ্রাফি এবং প্রতিটি
+      নেতার উৎসের প্রত্নতত্ত্ব পর্যন্ত।
+    domain: culinary_lab
+    subdomain_id: sushi
+    subdomain_name: Sushi
+  - id: natural_microcosm_forest_floor
+    name: প্রাকৃতিক ক্ষুদ্র বিশ্ব — বনভূমি
+    path: perspective-decks/natural-microcosm/natural-microcosm-forest-floor.yaml
+    description: |
+      বনভূমির মেঝে আপনি কীভাবে দেখেন তা বদলানোর জন্য ৫০টি কার্ড—
+      পচন এবং মাইসেলিয়াম থেকে শুরু করে লিটার আর্কিটেকচার এবং ক্যানোপির নীচে অদৃশ্য জীবন পর্যন্ত।
+    domain: natural_microcosm
+    subdomain_id: forest_floor
+    subdomain_name: Forest Floor
+  - id: natural_microcosm_garden_backyard
+    name: প্রাকৃতিক ক্ষুদ্র বিশ্ব — বাগান ও উঠোন
+    path: perspective-decks/natural-microcosm/natural-microcosm-garden-backyard.yaml
+    description: |
+      গৃহস্থালির বন্য প্রকৃতি আপনি কীভাবে দেখেন তা বদলানোর জন্য ৫০টি কার্ড—
+      পরাগায়নকারী এবং মাটি থেকে আগাছা বনাম ফসল এবং চাষ করা প্রকৃতির কোরিওগ্রাফি পর্যন্ত।
+    domain: natural_microcosm
+    subdomain_id: garden_backyard
+    subdomain_name: Garden & Backyard
+  - id: natural_microcosm_rocks_stones
+    name: প্রাকৃতিক ক্ষুদ্র বিশ্ব — শিলা ও পাথর
+    path: perspective-decks/natural-microcosm/natural-microcosm-rocks-stones.yaml
+    description: |
+      শিলা ও পাথর আপনি কীভাবে দেখেন তা বদলানোর জন্য ৫০টি কার্ড—
+      ভূতাত্ত্বিক সময় এবং লাইকেন থেকে শুরু করে ক্ষয়, ভূমিক্ষয়, এবং খনিজ পদার্থের ধীরগতির জীবন পর্যন্ত।
+    domain: natural_microcosm
+    subdomain_id: rocks_stones
+    subdomain_name: Rocks & Stones
+  - id: natural_microcosm_pond_puddle
+    name: প্রাকৃতিক ক্ষুদ্র বিশ্ব — পুকুর ও ডোবা
+    path: perspective-decks/natural-microcosm/natural-microcosm-pond-puddle.yaml
+    description: |
+      ছোট আকারের জল আপনি কীভাবে দেখেন তা বদলানোর জন্য ৫০টি কার্ড—
+      পৃষ্ঠটান এবং প্রতিফলন থেকে শুরু করে জলজ পোকা, ব্যাঙাচি, এবং অস্থায়ী
+      জলাশয়ের জীবন পর্যন্ত।
+    domain: natural_microcosm
+    subdomain_id: pond_puddle
+    subdomain_name: Pond & Puddle
+  - id: natural_microcosm_insect_territories
+    name: প্রাকৃতিক ক্ষুদ্র বিশ্ব — পোকামাকড়ের এলাকা
+    path: perspective-decks/natural-microcosm/natural-microcosm-insect-territories.yaml
+    description: |
+      পোকামাকড়ের জীবন আপনি কীভাবে দেখেন তা বদলানোর জন্য ৫০টি কার্ড—
+      পিঁপড়ের পথ এবং মৌমাছির ট্র্যাফিক থেকে শুরু করে মাকড়সার জাল, আঞ্চলিক নাটক, এবং
+      কলোনির কোরিওগ্রাফি পর্যন্ত।
+    domain: natural_microcosm
+    subdomain_id: insect_territories
+    subdomain_name: Insect Territories
+  - id: human_interface_coffee_shop
+    name: মানব ইন্টারফেস — কফি শপ
+    path: perspective-decks/human-interface/human-interface-coffee-shop.yaml
+    description: |
+      কফি শপ আপনি কীভাবে দেখেন তা বদলানোর জন্য ৫০টি কার্ড—
+      সারিতে দাঁড়ানোর কোরিওগ্রাফি এবং ল্যাপটপের অঞ্চল থেকে শুরু করে তৃতীয় স্থান, অদৃশ্য স্ক্রিপ্ট, এবং
+      অনুষ্ঠান হিসেবে কফি পর্যন্ত।
+    domain: human_interface
+    subdomain_id: coffee_shop
+    subdomain_name: Coffee Shop
+  - id: human_interface_transit_hub
+    name: মানব ইন্টারফেস — ট্রানজিট হাব
+    path: perspective-decks/human-interface/human-interface-transit-hub.yaml
+    description: |
+      ট্রানজিট হাব আপনি কীভাবে দেখেন তা বদলানোর জন্য ৫০টি কার্ড—
+      প্ল্যাটফর্ম এবং অপেক্ষার সময় থেকে শুরু করে আগমন/প্রস্থানের প্রবাহ এবং
+      ট্রানজিটে অপরিচিতদের কোরিওগ্রাফি পর্যন্ত।
+    domain: human_interface
+    subdomain_id: transit_hub
+    subdomain_name: Transit Hub
+  - id: human_interface_workplace
+    name: মানব ইন্টারফেস — কর্মক্ষেত্র
+    path: perspective-decks/human-interface/human-interface-workplace.yaml
+    description: |
+      কর্মক্ষেত্র আপনি কীভাবে দেখেন তা বদলানোর জন্য ৫০টি কার্ড—
+      ডেস্কের অঞ্চল এবং মিটিং রুম থেকে শুরু করে ওয়াটার কুলার এবং দৃশ্যমান বনাম অদৃশ্য পদমর্যাদা পর্যন্ত।
+    domain: human_interface
+    subdomain_id: workplace
+    subdomain_name: Workplace
+  - id: human_interface_retail
+    name: মানব ইন্টারফেস — খুচরা দোকান
+    path: perspective-decks/human-interface/human-interface-retail.yaml
+    description: |
+      খুচরা স্থান আপনি কীভাবে দেখেন তা বদলানোর জন্য ৫০টি কার্ড—
+      আইল এবং ব্রাউজিং কোরিওগ্রাফি থেকে শুরু করে ফিটিং রুম এবং কেনার নৃত্য পর্যন্ত।
+    domain: human_interface
+    subdomain_id: retail
+    subdomain_name: Retail
+  - id: human_interface_public_space
+    name: মানব ইন্টারফেস — পাবলিক স্পেস
+    path: perspective-decks/human-interface/human-interface-public-space.yaml
+    description: |
+      পাবলিক স্পেস আপনি কীভাবে দেখেন তা বদলানোর জন্য ৫০টি কার্ড—
+      বেঞ্চ এবং পথ থেকে শুরু করে অপরিচিতদের কোরিওগ্রাফি এবং তাবিজ হিসেবে বস্তু পর্যন্ত।
+    domain: human_interface
+    subdomain_id: public_space
+    subdomain_name: Public Space

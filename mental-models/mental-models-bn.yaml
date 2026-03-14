@@ -87,7 +87,6 @@ mental_models:
       - loss_aversion_bias
       - availability_heuristic
       - default_effect
-      - default_effect
   - id: anchoring_bias
     name: অ্যাঙ্করিং বায়াস (Anchoring Bias)
     quick_introduction: |
@@ -383,7 +382,6 @@ mental_models:
       - confirmation_bias
       - availability_heuristic
       - salience_bias
-      - availability_heuristic
   - id: barnum_effect
     name: বার্নাম প্রভাব
     quick_introduction: |
@@ -840,7 +838,6 @@ mental_models:
         পরিধিকে স্থির হিসাবে বিবেচনা করা যা প্রচেষ্টার সাথে প্রসারিত হতে পারে তার পরিবর্তে।
     related_content:
       - dunning_kruger_effect
-      - dunning_kruger_effect
       - bayes_theorem
       - second_order_thinking
   - id: cognitive_dissonance
@@ -1178,7 +1175,6 @@ mental_models:
       self_doubt_paralysis: |
         নিজের বিচারকে কখনও বিশ্বাস না করার পর্যায়ে অতিরিক্ত সংশোধন করা।
     related_content:
-      - circle_of_competence
       - circle_of_competence
       - confirmation_bias
       - curse_of_knowledge
@@ -1903,7 +1899,6 @@ mental_models:
     related_content:
       - narrative_fallacy
       - survivorship_bias
-      - overconfidence
       - regression_to_the_mean
   - id: hyperbolic_discounting
     name: হাইপারবোলিক ডিসকাউন্টিং
@@ -2343,8 +2338,6 @@ mental_models:
       - anchoring_bias
       - endowment_effect
       - sunk_cost_fallacy
-      - prospect_theory
-      - status_quo_bias
   - id: map_is_not_the_territory
     name: মানচিত্র আসলে অঞ্চল নয়
     quick_introduction: |

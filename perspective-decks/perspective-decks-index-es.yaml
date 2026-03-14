@@ -1,0 +1,254 @@
+# yaml-language-server: $schema=../schema/perspective-deck-index-schema.json
+# Perspective Decks Index (Spanish)
+
+domains:
+  art:
+    name: Maneras de Ver el Arte
+    description: |
+      Tarjetas para cambiar tu perspectiva al ver arte. Cada una ofrece una lente
+      diferente —desde la luz y la sombra hasta presentaciones y emoción— para
+      profundizar cómo ves e interactúas con las obras de arte.
+  urban_jungle:
+    name: Selva Urbana
+    description: |
+      En lugar de simplemente caminar por una ciudad, la miras como un organismo
+      vivo. Las tarjetas se centran en las cicatrices de los edificios antiguos,
+      la coreografía del tráfico y las vidas secretas de los callejones.
+  culinary_lab:
+    name: Laboratorio Culinario
+    description: |
+      Pasando de lo sabroso a lo transformador. Explora la química de un bocado,
+      la historia de un ingrediente y la banda sonora de un restaurante.
+  natural_microcosm:
+    name: Microcosmos Natural
+    description: |
+      Perfecto para un parque o un patio trasero. Esta lente se centra en la
+      ingeniería invisible de una hoja, la vida a cámara lenta de una roca o los
+      dramas territoriales de los insectos.
+  human_interface:
+    name: La Interfaz Humana
+    description: |
+      Los espacios cotidianos donde se encuentran los humanos — cafeterías,
+      centros de transporte, lugares de trabajo, comercios, parques públicos.
+      Las tarjetas se centran en la coreografía de las colas, las reclamaciones
+      territoriales, los guiones invisibles y la antropología del espacio
+      compartido.
+  california_superbloom:
+    name: Superfloración de California
+    description: |
+      La efímera explosión de flores silvestres después de la lluvia de invierno.
+      Las tarjetas se centran en el color, la escala, los polinizadores, la
+      geología, el clima y el efímero espectáculo de la floración.
+decks:
+  - id: ways_of_looking_at_art
+    name: Maneras de Ver el Arte
+    path: perspective-decks/ways-of-looking-at-art.yaml
+    description: |
+      50 tarjetas para cambiar tu perspectiva al ver arte. Cada tarjeta ofrece
+      una lente diferente —desde la luz y la sombra hasta presentaciones y
+      emoción— para profundizar cómo ves e interactúas con las obras de arte.
+    domain: art
+  - id: ways_of_looking_at_california_superbloom
+    name: Maneras de Ver la Superfloración de California
+    path: perspective-decks/ways-of-looking-at-california-superbloom.yaml
+    description: |
+      20 tarjetas para cambiar tu perspectiva al experimentar la superfloración
+      de California. Cada tarjeta ofrece una lente diferente —desde polinizadores
+      y geología hasta luz, aroma e impermanencia— para profundizar cómo ves las
+      flores silvestres y la efímera explosión de color.
+    domain: california_superbloom
+  - id: urban_jungle_new_york
+    name: Selva Urbana — Nueva York
+    path: perspective-decks/urban-jungle/urban-jungle-new-york.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de ver Nueva York — desde la escala y
+      la luz hasta las capas de historia y los ritmos de la vida callejera.
+    domain: urban_jungle
+    subdomain_id: ny
+    subdomain_name: Nueva York
+  - id: urban_jungle_san_francisco
+    name: Selva Urbana — San Francisco
+    path: perspective-decks/urban-jungle/urban-jungle-san-francisco.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de ver San Francisco — desde la escala
+      y la luz hasta las capas de historia y los ritmos de la vida callejera.
+    domain: urban_jungle
+    subdomain_id: sf
+    subdomain_name: San Francisco
+  - id: urban_jungle_london
+    name: Selva Urbana — Londres
+    path: perspective-decks/urban-jungle/urban-jungle-london.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de ver Londres — desde la escala y la
+      luz hasta las capas de historia y los ritmos de la vida callejera.
+    domain: urban_jungle
+    subdomain_id: london
+    subdomain_name: Londres
+  - id: urban_jungle_paris
+    name: Selva Urbana — París
+    path: perspective-decks/urban-jungle/urban-jungle-paris.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de ver París — desde la escala y la
+      luz hasta las capas de historia y los ritmos de la vida callejera.
+    domain: urban_jungle
+    subdomain_id: paris
+    subdomain_name: París
+  - id: urban_jungle_bangalore
+    name: Selva Urbana — Bangalore
+    path: perspective-decks/urban-jungle/urban-jungle-bangalore.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de ver Bangalore — desde la escala y
+      la luz hasta las capas de historia y los ritmos de la vida callejera.
+    domain: urban_jungle
+    subdomain_id: blr
+    subdomain_name: Bangalore
+  - id: culinary_lab_indian
+    name: Laboratorio Culinario — Indio
+    path: perspective-decks/culinary-lab/culinary-lab-indian.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de experimentar la comida india —
+      desde la química de las especias y el picante hasta la arqueología de los
+      ingredientes y la coreografía de la mesa compartida.
+    domain: culinary_lab
+    subdomain_id: indian
+    subdomain_name: Indio
+  - id: culinary_lab_italian
+    name: Laboratorio Culinario — Italiano
+    path: perspective-decks/culinary-lab/culinary-lab-italian.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de experimentar la comida italiana —
+      desde la química del aceite de oliva y la acidez hasta la coreografía
+      social de la mesa y la arqueología de cada ingrediente.
+    domain: culinary_lab
+    subdomain_id: italian
+    subdomain_name: Italiano
+  - id: culinary_lab_pizza
+    name: Laboratorio Culinario — Pizza
+    path: perspective-decks/culinary-lab/culinary-lab-pizza.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de experimentar la pizza — desde la
+      química de la masa y el fuego hasta el teatro de la porción y la
+      arqueología de los ingredientes.
+    domain: culinary_lab
+    subdomain_id: pizza
+    subdomain_name: Pizza
+  - id: culinary_lab_chinese
+    name: Laboratorio Culinario — Chino
+    path: perspective-decks/culinary-lab/culinary-lab-chinese.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de experimentar la comida china —
+      desde la química del wok hei y la arqueología de la soja hasta la
+      coreografía de la mesa redonda y la narrativa del banquete.
+    domain: culinary_lab
+    subdomain_id: chinese
+    subdomain_name: Chino
+  - id: culinary_lab_sushi
+    name: Laboratorio Culinario — Sushi
+    path: perspective-decks/culinary-lab/culinary-lab-sushi.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de experimentar el sushi — desde la
+      química del arroz y el pescado hasta la coreografía del mostrador y la
+      arqueología del origen de cada neta.
+    domain: culinary_lab
+    subdomain_id: sushi
+    subdomain_name: Sushi
+  - id: natural_microcosm_forest_floor
+    name: Microcosmos Natural — Suelo del Bosque
+    path: perspective-decks/natural-microcosm/natural-microcosm-forest-floor.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de ver el suelo del bosque — desde la
+      descomposición y el micelio hasta la arquitectura de la hojarasca y la
+      vida invisible bajo el dosel.
+    domain: natural_microcosm
+    subdomain_id: forest_floor
+    subdomain_name: Suelo del Bosque
+  - id: natural_microcosm_garden_backyard
+    name: Microcosmos Natural — Jardín y Patio Trasero
+    path: perspective-decks/natural-microcosm/natural-microcosm-garden-backyard.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de ver la naturaleza doméstica — desde
+      polinizadores y tierra hasta malas hierbas versus cultivos y la
+      coreografía de la naturaleza cultivada.
+    domain: natural_microcosm
+    subdomain_id: garden_backyard
+    subdomain_name: Jardín y Patio Trasero
+  - id: natural_microcosm_rocks_stones
+    name: Microcosmos Natural — Rocas y Piedras
+    path: perspective-decks/natural-microcosm/natural-microcosm-rocks-stones.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de ver rocas y piedras — desde el
+      tiempo geológico y los líquenes hasta la meteorización, la erosión y la
+      vida a cámara lenta del mineral.
+    domain: natural_microcosm
+    subdomain_id: rocks_stones
+    subdomain_name: Rocas y Piedras
+  - id: natural_microcosm_pond_puddle
+    name: Microcosmos Natural — Estanque y Charco
+    path: perspective-decks/natural-microcosm/natural-microcosm-pond-puddle.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de ver el agua a pequeña escala — desde
+      la tensión superficial y los reflejos hasta insectos acuáticos, renacuajos
+      y la vida en charcos temporales.
+    domain: natural_microcosm
+    subdomain_id: pond_puddle
+    subdomain_name: Estanque y Charco
+  - id: natural_microcosm_insect_territories
+    name: Microcosmos Natural — Territorios de Insectos
+    path: perspective-decks/natural-microcosm/natural-microcosm-insect-territories.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de ver la vida de los insectos — desde
+      senderos de hormigas y tráfico de abejas hasta telarañas, dramas
+      territoriales y la coreografía de las colonias.
+    domain: natural_microcosm
+    subdomain_id: insect_territories
+    subdomain_name: Territorios de Insectos
+  - id: human_interface_coffee_shop
+    name: La Interfaz Humana — Cafetería
+    path: perspective-decks/human-interface/human-interface-coffee-shop.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de ver la cafetería — desde la
+      coreografía de las colas y los territorios de portátiles hasta el tercer
+      espacio, los guiones invisibles y el café como ritual.
+    domain: human_interface
+    subdomain_id: coffee_shop
+    subdomain_name: Cafetería
+  - id: human_interface_transit_hub
+    name: La Interfaz Humana — Centro de Transporte
+    path: perspective-decks/human-interface/human-interface-transit-hub.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de ver el centro de transporte — desde
+      andenes y esperas hasta el flujo de llegadas/salidas y la coreografía de
+      desconocidos en tránsito.
+    domain: human_interface
+    subdomain_id: transit_hub
+    subdomain_name: Centro de Transporte
+  - id: human_interface_workplace
+    name: La Interfaz Humana — Lugar de Trabajo
+    path: perspective-decks/human-interface/human-interface-workplace.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de ver el lugar de trabajo — desde
+      territorios de escritorios y salas de reuniones hasta la fuente de agua y
+      la jerarquía visible versus invisible.
+    domain: human_interface
+    subdomain_id: workplace
+    subdomain_name: Lugar de Trabajo
+  - id: human_interface_retail
+    name: La Interfaz Humana — Comercio
+    path: perspective-decks/human-interface/human-interface-retail.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de ver el espacio comercial — desde
+      pasillos y coreografía de navegación hasta probadores y la danza de la
+      compra.
+    domain: human_interface
+    subdomain_id: retail
+    subdomain_name: Comercio
+  - id: human_interface_public_space
+    name: La Interfaz Humana — Espacio Público
+    path: perspective-decks/human-interface/human-interface-public-space.yaml
+    description: |
+      50 tarjetas para cambiar tu forma de ver el espacio público — desde
+      bancos y caminos hasta la coreografía de desconocidos y objetos como
+      talismanes.
+    domain: human_interface
+    subdomain_id: public_space
+    subdomain_name: Espacio Público

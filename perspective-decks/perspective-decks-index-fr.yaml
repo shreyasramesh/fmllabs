@@ -1,0 +1,201 @@
+# yaml-language-server: $schema=../schema/perspective-deck-index-schema.json
+# Perspective Decks Index (French)
+
+domains:
+  art:
+    name: Manières de regarder l'art
+    description: |
+      Des cartes pour changer votre perspective lorsque vous regardez de l'art. Chacune offre une lentille différente — de la lumière et de l'ombre aux introductions et à l'émotion — pour approfondir votre façon de voir et d'interagir avec les œuvres d'art.
+  urban_jungle:
+    name: Jungle Urbaine
+    description: |
+      Au lieu de simplement marcher dans une ville, vous la regardez comme un organisme vivant. Les cartes se concentrent sur les cicatrices des vieux bâtiments, la chorégraphie de la circulation et les vies secrètes des ruelles.
+  culinary_lab:
+    name: Laboratoire Culinaire
+    description: |
+      Passer du savoureux au transformateur. Explorez la chimie d'une bouchée, l'histoire d'un ingrédient et la bande-son d'un restaurant.
+  natural_microcosm:
+    name: Microcosme Naturel
+    description: |
+      Parfait pour un parc ou un jardin. Cette lentille se concentre sur l'ingénierie invisible d'une feuille, la vie au ralenti d'une roche ou les drames territoriaux des insectes.
+  human_interface:
+    name: L'Interface Humaine
+    description: |
+      Les espaces quotidiens où les humains se rencontrent — cafés, centres de transport, lieux de travail, commerces, parcs publics. Les cartes se concentrent sur la chorégraphie des files d'attente, les revendications territoriales, les scripts invisibles et l'anthropologie de l'espace partagé.
+  california_superbloom:
+    name: Superfloraison Californienne
+    description: |
+      L'explosion éphémère de fleurs sauvages après la pluie d'hiver. Les cartes se concentrent sur la couleur, l'échelle, les pollinisateurs, la géologie, la météo et le spectacle fugace de la floraison.
+decks:
+  - id: ways_of_looking_at_art
+    name: Manières de regarder l'art
+    path: perspective-decks/ways-of-looking-at-art.yaml
+    description: |
+      50 cartes pour changer votre perspective lorsque vous regardez de l'art. Chaque carte offre une lentille différente — de la lumière et de l'ombre aux introductions et à l'émotion — pour approfondir votre façon de voir et d'interagir avec les œuvres d'art.
+    domain: art
+  - id: ways_of_looking_at_california_superbloom
+    name: Manières de regarder la Superfloraison Californienne
+    path: perspective-decks/ways-of-looking-at-california-superbloom.yaml
+    description: |
+      20 cartes pour changer votre perspective lorsque vous découvrez la superfloraison californienne. Chaque carte offre une lentille différente — des pollinisateurs et de la géologie à la lumière, au parfum et à l'impermanence — pour approfondir votre façon de voir les fleurs sauvages et l'explosion de couleurs éphémère.
+    domain: california_superbloom
+  - id: urban_jungle_new_york
+    name: Jungle Urbaine — New York
+    path: perspective-decks/urban-jungle/urban-jungle-new-york.yaml
+    description: |
+      50 cartes pour changer votre façon de voir New York — de l'échelle et de la lumière aux couches d'histoire et aux rythmes de la vie de rue.
+    domain: urban_jungle
+    subdomain_id: ny
+    subdomain_name: New York
+  - id: urban_jungle_san_francisco
+    name: Jungle Urbaine — San Francisco
+    path: perspective-decks/urban-jungle/urban-jungle-san-francisco.yaml
+    description: |
+      50 cartes pour changer votre façon de voir San Francisco — de l'échelle et de la lumière aux couches d'histoire et aux rythmes de la vie de rue.
+    domain: urban_jungle
+    subdomain_id: sf
+    subdomain_name: San Francisco
+  - id: urban_jungle_london
+    name: Jungle Urbaine — Londres
+    path: perspective-decks/urban-jungle/urban-jungle-london.yaml
+    description: |
+      50 cartes pour changer votre façon de voir Londres — de l'échelle et de la lumière aux couches d'histoire et aux rythmes de la vie de rue.
+    domain: urban_jungle
+    subdomain_id: london
+    subdomain_name: London
+  - id: urban_jungle_paris
+    name: Jungle Urbaine — Paris
+    path: perspective-decks/urban-jungle/urban-jungle-paris.yaml
+    description: |
+      50 cartes pour changer votre façon de voir Paris — de l'échelle et de la lumière aux couches d'histoire et aux rythmes de la vie de rue.
+    domain: urban_jungle
+    subdomain_id: paris
+    subdomain_name: Paris
+  - id: urban_jungle_bangalore
+    name: Jungle Urbaine — Bangalore
+    path: perspective-decks/urban-jungle/urban-jungle-bangalore.yaml
+    description: |
+      50 cartes pour changer votre façon de voir Bangalore — de l'échelle et de la lumière aux couches d'histoire et aux rythmes de la vie de rue.
+    domain: urban_jungle
+    subdomain_id: blr
+    subdomain_name: Bangalore
+  - id: culinary_lab_indian
+    name: Laboratoire Culinaire — Indien
+    path: perspective-decks/culinary-lab/culinary-lab-indian.yaml
+    description: |
+      50 cartes pour changer votre façon de découvrir la cuisine indienne — de la chimie des épices et du piquant à l'archéologie des ingrédients et à la chorégraphie de la table partagée.
+    domain: culinary_lab
+    subdomain_id: indian
+    subdomain_name: Indian
+  - id: culinary_lab_italian
+    name: Laboratoire Culinaire — Italien
+    path: perspective-decks/culinary-lab/culinary-lab-italian.yaml
+    description: |
+      50 cartes pour changer votre façon de découvrir la cuisine italienne — de la chimie de l'huile d'olive et de l'acidité à la chorégraphie sociale de la table et à l'archéologie de chaque ingrédient.
+    domain: culinary_lab
+    subdomain_id: italian
+    subdomain_name: Italian
+  - id: culinary_lab_pizza
+    name: Laboratoire Culinaire — Pizza
+    path: perspective-decks/culinary-lab/culinary-lab-pizza.yaml
+    description: |
+      50 cartes pour changer votre façon de découvrir la pizza — de la chimie de la pâte et du feu au théâtre de la tranche et à l'archéologie des garnitures.
+    domain: culinary_lab
+    subdomain_id: pizza
+    subdomain_name: Pizza
+  - id: culinary_lab_chinese
+    name: Laboratoire Culinaire — Chinois
+    path: perspective-decks/culinary-lab/culinary-lab-chinese.yaml
+    description: |
+      50 cartes pour changer votre façon de découvrir la cuisine chinoise — de la chimie du wok hei et de l'archéologie du soja à la chorégraphie de la table ronde et au récit du banquet.
+    domain: culinary_lab
+    subdomain_id: chinese
+    subdomain_name: Chinese
+  - id: culinary_lab_sushi
+    name: Laboratoire Culinaire — Sushi
+    path: perspective-decks/culinary-lab/culinary-lab-sushi.yaml
+    description: |
+      50 cartes pour changer votre façon de découvrir les sushis — de la chimie du riz et du poisson à la chorégraphie du comptoir et à l'archéologie de l'origine de chaque neta.
+    domain: culinary_lab
+    subdomain_id: sushi
+    subdomain_name: Sushi
+  - id: natural_microcosm_forest_floor
+    name: Microcosme Naturel — Sol de Forêt
+    path: perspective-decks/natural-microcosm/natural-microcosm-forest-floor.yaml
+    description: |
+      50 cartes pour changer votre façon de voir le sol de forêt — de la décomposition et du mycélium à l'architecture de la litière et à la vie invisible sous la canopée.
+    domain: natural_microcosm
+    subdomain_id: forest_floor
+    subdomain_name: Sol de Forêt
+  - id: natural_microcosm_garden_backyard
+    name: Microcosme Naturel — Jardin & Cour
+    path: perspective-decks/natural-microcosm/natural-microcosm-garden-backyard.yaml
+    description: |
+      50 cartes pour changer votre façon de voir la nature sauvage domestique — des pollinisateurs et du sol aux mauvaises herbes versus cultures et à la chorégraphie de la nature cultivée.
+    domain: natural_microcosm
+    subdomain_id: garden_backyard
+    subdomain_name: Jardin & Cour
+  - id: natural_microcosm_rocks_stones
+    name: Microcosme Naturel — Roches & Pierres
+    path: perspective-decks/natural-microcosm/natural-microcosm-rocks-stones.yaml
+    description: |
+      50 cartes pour changer votre façon de voir les roches et les pierres — du temps géologique et du lichen à l'altération, à l'érosion et à la vie au ralenti du minéral.
+    domain: natural_microcosm
+    subdomain_id: rocks_stones
+    subdomain_name: Roches & Pierres
+  - id: natural_microcosm_pond_puddle
+    name: Microcosme Naturel — Étang & Flaque
+    path: perspective-decks/natural-microcosm/natural-microcosm-pond-puddle.yaml
+    description: |
+      50 cartes pour changer votre façon de voir l'eau à petite échelle — de la tension superficielle et des reflets aux insectes aquatiques, aux têtards et à la vie dans les mares temporaires.
+    domain: natural_microcosm
+    subdomain_id: pond_puddle
+    subdomain_name: Étang & Flaque
+  - id: natural_microcosm_insect_territories
+    name: Microcosme Naturel — Territoires d'Insectes
+    path: perspective-decks/natural-microcosm/natural-microcosm-insect-territories.yaml
+    description: |
+      50 cartes pour changer votre façon de voir la vie des insectes — des sentiers de fourmis et du trafic d'abeilles aux toiles d'araignées, aux drames territoriaux et à la chorégraphie des colonies.
+    domain: natural_microcosm
+    subdomain_id: insect_territories
+    subdomain_name: Territoires d'Insectes
+  - id: human_interface_coffee_shop
+    name: L'Interface Humaine — Café
+    path: perspective-decks/human-interface/human-interface-coffee-shop.yaml
+    description: |
+      50 cartes pour changer votre façon de voir le café — de la chorégraphie des files d'attente et des territoires d'ordinateurs portables au tiers lieu, aux scripts invisibles et au café comme rituel.
+    domain: human_interface
+    subdomain_id: coffee_shop
+    subdomain_name: Café
+  - id: human_interface_transit_hub
+    name: L'Interface Humaine — Pôle de Transport
+    path: perspective-decks/human-interface/human-interface-transit-hub.yaml
+    description: |
+      50 cartes pour changer votre façon de voir le pôle de transport — des quais et de l'attente au flux d'arrivées/départs et à la chorégraphie des étrangers en transit.
+    domain: human_interface
+    subdomain_id: transit_hub
+    subdomain_name: Pôle de Transport
+  - id: human_interface_workplace
+    name: L'Interface Humaine — Lieu de Travail
+    path: perspective-decks/human-interface/human-interface-workplace.yaml
+    description: |
+      50 cartes pour changer votre façon de voir le lieu de travail — des territoires de bureau et des salles de réunion à la fontaine à eau et à la hiérarchie visible versus invisible.
+    domain: human_interface
+    subdomain_id: workplace
+    subdomain_name: Lieu de Travail
+  - id: human_interface_retail
+    name: L'Interface Humaine — Commerce de Détail
+    path: perspective-decks/human-interface/human-interface-retail.yaml
+    description: |
+      50 cartes pour changer votre façon de voir l'espace de vente au détail — des allées et de la chorégraphie du shopping aux cabines d'essayage et à la danse de l'achat.
+    domain: human_interface
+    subdomain_id: retail
+    subdomain_name: Commerce de Détail
+  - id: human_interface_public_space
+    name: L'Interface Humaine — Espace Public
+    path: perspective-decks/human-interface/human-interface-public-space.yaml
+    description: |
+      50 cartes pour changer votre façon de voir l'espace public — des bancs et des chemins à la chorégraphie des inconnus et aux objets comme talismans.
+    domain: human_interface
+    subdomain_id: public_space
+    subdomain_name: Espace Public

@@ -85,7 +85,6 @@ mental_models:
       - loss_aversion_bias
       - availability_heuristic
       - default_effect
-      - default_effect
   - id: anchoring_bias
     name: Sesgo de anclaje
     quick_introduction: |
@@ -333,7 +332,6 @@ mental_models:
         Hacer deliberadamente ciertos ejemplos vívidos para dirigir los juicios de otros.
     related_content:
       - anchoring_bias
-      - salience_bias
       - base_rate_fallacy
       - baader_meinhof_phenomenon
   - id: baader_meinhof_phenomenon
@@ -417,10 +415,8 @@ mental_models:
         Los anunciantes y propagandistas utilizan la exposición repetida para crear la ilusión de
         ubicuidad e importancia.
     related_content:
-      - sesgo_de_confirmacion
-      - heuristica_de_disponibilidad
-      - sesgo_de_salicencia
-      - heuristica_de_disponibilidad
+      - confirmation_bias
+      - availability_heuristic
   - id: barnum_effect
     name: Efecto Barnum
     quick_introduction: |
@@ -564,6 +560,10 @@ mental_models:
       - availability_heuristic
       - narrative_fallacy
       - survivorship_bias
+    why_this_is_important: |
+      Correcting for the base rate fallacy improves diagnosis, risk assessment,
+      and decision quality. It prevents us from overreacting to vivid cases and
+      underreacting to statistical reality.
   - id: bayes_theorem
     name: Teorema de Bayes
     quick_introduction: |
@@ -702,10 +702,10 @@ mental_models:
       misattributing_motives: |
         Asumir que la calidez de alguien es puramente genuina cuando puede ser en parte el resultado de favores que te ha hecho.
     related_content:
-      - disonancia_cognitiva
-      - error_fundamental_de_atribucion
-      - efecto_de_mera_exposicion
-      - efecto_halo
+      - cognitive_dissonance
+      - fundamental_attribution_error
+      - mere_exposure_effect
+      - halo_effect
   - id: bounded_rationality
     name: Racionalidad Limitada
     quick_introduction: |
@@ -948,7 +948,6 @@ mental_models:
       stagnation: |
         Tratar el círculo como fijo en lugar de algo que puede expandirse con esfuerzo.
     related_content:
-      - dunning_kruger_effect
       - dunning_kruger_effect
       - bayes_theorem
       - second_order_thinking
@@ -1356,7 +1355,6 @@ mental_models:
       self_doubt_paralysis: |
         Sobrecostos hasta el punto de nunca confiar en tu propio juicio.
     related_content:
-      - circle_of_competence
       - circle_of_competence
       - confirmation_bias
       - curse_of_knowledge
@@ -1915,10 +1913,10 @@ mental_models:
       individualism: |
         Sobrecambiar hasta el punto en que no es posible ninguna decisión colectiva.
     related_content:
-      - efecto_de_consenso_falso
-      - sesgo_endogrupal
-      - sesgo_de_confirmacion
-      - efecto_espectador
+      - false_consensus_effect
+      - in_group_bias
+      - confirmation_bias
+      - bystander_effect
   - id: halo_effect
     name: Efecto Halo
     quick_introduction: |
@@ -2141,7 +2139,6 @@ mental_models:
     related_content:
       - pygmalion_effect
       - confirmation_bias
-      - salience_bias
       - availability_heuristic
   - id: hindsight_bias
     name: Sesgo de retrospectiva
@@ -2219,7 +2216,6 @@ mental_models:
     related_content:
       - narrative_fallacy
       - survivorship_bias
-      - overconfidence
       - regression_to_the_mean
   - id: hyperbolic_discounting
     name: Descuento hiperbólico
@@ -2792,8 +2788,6 @@ mental_models:
       - anchoring_bias
       - endowment_effect
       - sunk_cost_fallacy
-      - prospect_theory
-      - status_quo_bias
   - id: map_is_not_the_territory
     name: El mapa no es el territorio
     quick_introduction: |

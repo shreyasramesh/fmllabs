@@ -1319,6 +1319,30 @@ function ChatBubbleIcon({ className }: { className?: string }) {
   );
 }
 
+const PERSPECTIVE_CARD_PHRASES: Record<
+  LanguageCode,
+  { intro: string; outro: string }
+> = {
+  en: { intro: "Let me invite you to look through this lens:", outro: "What comes to mind?" },
+  hi: { intro: "मैं आपको इस लेंस के माध्यम से देखने के लिए आमंत्रित करता हूं:", outro: "आपके मन में क्या आता है?" },
+  ta: { intro: "இந்த வில்லை வழியாக பார்க்க உங்களை அழைக்கிறேன்:", outro: "உங்கள் மனதில் என்ன வருகிறது?" },
+  kn: { intro: "ಈ ಲೆನ್ಸ್ ಮೂಲಕ ನೋಡಲು ನಿಮ್ಮನ್ನು ಆಹ್ವಾನಿಸುತ್ತೇನೆ:", outro: "ನಿಮ್ಮ ಮನಸ್ಸಿಗೆ ಏನು ಬರುತ್ತದೆ?" },
+  ja: { intro: "このレンズを通して見るようにお誘いします:", outro: "何が思い浮かびますか？" },
+  zh: { intro: "让我邀请您通过这个视角来看:", outro: "您想到了什么？" },
+  es: { intro: "Déjame invitarte a mirar a través de esta lente:", outro: "¿Qué te viene a la mente?" },
+  ar: { intro: "دعني أدعوك للنظر من خلال هذه العدسة:", outro: "ما الذي يخطر ببالك؟" },
+  fr: { intro: "Laissez-moi vous inviter à regarder à travers cette lentille:", outro: "Qu'est-ce qui vous vient à l'esprit ?" },
+  bn: { intro: "আমি আপনাকে এই লেন্স দিয়ে দেখতে আমন্ত্রণ জানাচ্ছি:", outro: "আপনার মনে কী আসে?" },
+  pt: { intro: "Deixe-me convidá-lo a olhar através desta lente:", outro: "O que vem à sua mente?" },
+  ru: { intro: "Позвольте пригласить вас посмотреть через эту призму:", outro: "Что приходит вам на ум?" },
+  ur: { intro: "مجھے آپ کو اس لینس کے ذریعے دیکھنے کی دعوت دینے دیں:", outro: "آپ کے ذہن میں کیا آتا ہے؟" },
+};
+
+function buildPerspectiveCardMessage(language: LanguageCode, prompt: string): string {
+  const { intro, outro } = PERSPECTIVE_CARD_PHRASES[language] ?? PERSPECTIVE_CARD_PHRASES.en;
+  return `${intro}\n\n${prompt}\n\n${outro}`;
+}
+
 const PROMPT_LENSES_BY_LANGUAGE: Partial<
   Record<LanguageCode, { name: string; prompt: string; domain: string; subdomain: string }[]>
 > = {
@@ -1421,14 +1445,42 @@ function MovingPills({
 }) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
+  const [carouselCards, setCarouselCards] = useState<
+    { name: string; prompt: string; domain: string; subdomain: string }[] | null
+  >(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/perspective-decks/carousel?language=${language}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((data: { cards?: { name: string; prompt: string; domain: string; subdomain: string }[] }) => {
+        if (!cancelled && Array.isArray(data?.cards) && data.cards.length > 0) {
+          setCarouselCards(data.cards);
+        } else if (!cancelled) {
+          setCarouselCards([]);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setCarouselCards([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [language]);
+
   const starterRows = EXAMPLE_PILLS_BY_LANGUAGE[language] ?? EXAMPLE_PILLS_BY_LANGUAGE.en;
-  const promptRows = (PROMPT_LENSES_BY_LANGUAGE[language] ?? PROMPT_LENSES_BY_LANGUAGE.en ?? [])
-    .reduce<{ name: string; prompt: string; domain: string; subdomain: string }[][]>((acc, card, idx) => {
-      const rowIndex = idx % 3;
-      if (!acc[rowIndex]) acc[rowIndex] = [];
-      acc[rowIndex].push(card);
-      return acc;
-    }, [[], [], []]);
+  const promptCards =
+    carouselCards && carouselCards.length > 0
+      ? carouselCards
+      : (PROMPT_LENSES_BY_LANGUAGE.en ?? []);
+  const promptRows = promptCards.reduce<
+    { name: string; prompt: string; domain: string; subdomain: string }[][]
+  >((acc, card, idx) => {
+    const rowIndex = idx % 3;
+    if (!acc[rowIndex]) acc[rowIndex] = [];
+    acc[rowIndex].push(card);
+    return acc;
+  }, [[], [], []]);
   const mixedRows: CarouselPill[][] = starterRows.map((row, rowIndex) => {
     const starters: CarouselStarterPill[] = row.map((label) => ({ label, type: "starter" }));
     const prompts: CarouselPromptPill[] = (promptRows[rowIndex] ?? []).map((card) => ({
@@ -2183,7 +2235,7 @@ export default function ChatPage() {
           const prompt = params.get("pcPrompt");
           const name = params.get("pcName");
           if (prompt && name) {
-            const assistantContent = `Let me invite you to look through this lens:\n\n${prompt}\n\nWhat comes to mind?`;
+            const assistantContent = buildPerspectiveCardMessage(language, prompt);
             setMessages([{
               role: "assistant",
               content: assistantContent,
@@ -2212,7 +2264,7 @@ export default function ChatPage() {
         anonymousActiveRef.current = false;
       }
     }
-  }, [sessionId, isNew, isAnonymous, incognitoMode, router, leftPanelReady]);
+  }, [sessionId, isNew, isAnonymous, incognitoMode, router, leftPanelReady, language]);
 
   const [lastFailedUserMessage, setLastFailedUserMessage] = useState<string | null>(null);
   const [onboardingDismissed, setOnboardingDismissed] = useState(true);
@@ -2223,7 +2275,7 @@ export default function ChatPage() {
 
   const startConversationFromPerspectiveCard = useCallback(
     ({ name, prompt }: { name: string; prompt: string }) => {
-      const assistantContent = `Let me invite you to look through this lens:\n\n${prompt}\n\nWhat comes to mind?`;
+      const assistantContent = buildPerspectiveCardMessage(language, prompt);
       const initialMessage = {
         role: "assistant" as const,
         content: assistantContent,
@@ -2266,7 +2318,7 @@ export default function ChatPage() {
         inputRef.current?.focus();
       }
     },
-    [router, sessionId]
+    [router, sessionId, language]
   );
 
   useEffect(() => {
@@ -2370,7 +2422,7 @@ export default function ChatPage() {
       chatBody.activeCardPrompt = cardCtx.prompt;
       chatBody.activeCardName = cardCtx.name;
       if (!isAnonymous && !incognitoMode) {
-        chatBody.prependMessages = [{ role: "assistant", content: `Let me invite you to look through this lens:\n\n${cardCtx.prompt}\n\nWhat comes to mind?` }];
+        chatBody.prependMessages = [{ role: "assistant", content: buildPerspectiveCardMessage(languageRef.current, cardCtx.prompt) }];
       }
     } else if (options?.activeCardPrompt) {
       chatBody.activeCardPrompt = options.activeCardPrompt;
@@ -8956,13 +9008,13 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     : waysOfLookingAtCity
                       ? `${domainDisplayName[waysOfLookingAtCategory ?? ""] ?? "Urban Jungle"} — ${urbanJungleCityToName[waysOfLookingAtCity] ?? waysOfLookingAtCity}`
                       : waysOfLookingAtCuisine
-                        ? `Culinary Lab — ${culinaryLabCuisineToName[waysOfLookingAtCuisine] ?? waysOfLookingAtCuisine}`
+                        ? `${domainDisplayName["culinary_lab"] ?? "Culinary Lab"} — ${culinaryLabCuisineToName[waysOfLookingAtCuisine] ?? waysOfLookingAtCuisine}`
                         : waysOfLookingAtMicrocosm
-                          ? `Natural Microcosm — ${naturalMicrocosmSubToName[waysOfLookingAtMicrocosm] ?? waysOfLookingAtMicrocosm}`
+                          ? `${domainDisplayName["natural_microcosm"] ?? "Natural Microcosm"} — ${naturalMicrocosmSubToName[waysOfLookingAtMicrocosm] ?? waysOfLookingAtMicrocosm}`
                           : waysOfLookingAtHuman
-                            ? `The Human Interface — ${humanInterfaceSubToName[waysOfLookingAtHuman] ?? waysOfLookingAtHuman}`
+                            ? `${domainDisplayName["human_interface"] ?? "The Human Interface"} — ${humanInterfaceSubToName[waysOfLookingAtHuman] ?? waysOfLookingAtHuman}`
                             : waysOfLookingAtDigital
-                              ? `Digital Ghost — ${digitalGhostSubToName[waysOfLookingAtDigital] ?? waysOfLookingAtDigital}`
+                              ? `${domainDisplayName["digital_ghost"] ?? "Digital Ghost"} — ${digitalGhostSubToName[waysOfLookingAtDigital] ?? waysOfLookingAtDigital}`
                               : waysOfLookingAtCategory
                                 ? domainDisplayName[waysOfLookingAtCategory] ?? perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ?? "Prompt Games"
                                 : "Prompt Games"}

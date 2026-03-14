@@ -64,7 +64,9 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for step-by-step instructions.
 
 Use this workflow whenever you add or update translated perspective decks.
 
-### Translate decks
+### Translate decks and index
+
+The script translates both the index (`perspective-decks-index-<lang>.yaml`) and all deck files. The index contains domain names, subdomain names, and deck descriptions—these appear in the carousel chips and UI.
 
 Translate all non-English languages:
 
@@ -82,6 +84,18 @@ Skip files that already exist:
 
 ```bash
 npm run translate-perspective-decks -- --skip-existing
+```
+
+Translate only the index (domain/subdomain names):
+
+```bash
+npm run translate-perspective-decks -- --index-only --lang=ta
+```
+
+Skip index translation (e.g. if index already exists):
+
+```bash
+npm run translate-perspective-decks -- --skip-index
 ```
 
 ### Verify YAML integrity (all languages)
@@ -133,6 +147,22 @@ Skip files that already exist:
 npm run translate-mental-models -- --skip-existing
 ```
 
+### Fix structural issues (optional)
+
+If verification reports missing fields, invalid IDs, or broken `related_content` references, run the automated fixer:
+
+```bash
+npm run fix-mental-models
+```
+
+Fix one language only:
+
+```bash
+npm run fix-mental-models -- --lang=es
+```
+
+The fixer normalizes IDs, backfills missing required fields from English, and cleans `related_content` to reference only existing models. Re-run `verify-mental-models` after fixing.
+
 ### Verify mental model YAML integrity
 
 Run validation for all consolidated language files:
@@ -167,8 +197,9 @@ This checks each `mental-models/mental-models-<lang>.yaml` file for:
    - `npm run translate-mental-models -- --lang=<new-code>`
 3. Validate:
    - `npm run verify-mental-models -- --lang=<new-code>`
-4. Fix any issues reported by the verifier.
-5. Re-run until validation passes with no issues.
+4. If verification fails, run the fixer:
+   - `npm run fix-mental-models -- --lang=<new-code>`
+5. Re-run verification until it passes with no issues.
 
 ### If you still have per-model folders
 

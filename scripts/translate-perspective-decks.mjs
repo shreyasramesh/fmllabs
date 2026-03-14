@@ -106,6 +106,39 @@ function getDeckPaths() {
   return decks.map((d) => d.path).filter(Boolean);
 }
 
+async function translateIndexYaml(content, targetLang, retries = 3) {
+  const lang = LANGUAGES.find((l) => l.code === targetLang);
+  const langName = lang?.name ?? targetLang;
+
+  const prompt = `You are a professional translator. Translate the following YAML perspective decks index into ${langName}.
+
+RULES:
+1. Translate: domains.*.name, domains.*.description (for each domain).
+2. Translate: decks[].name, decks[].description, decks[].subdomain_name (for each deck).
+3. Keep the YAML structure EXACTLY the same. Do not change keys, indentation, or structure.
+4. Keep these UNCHANGED: id, path, domain, subdomain_id (these are identifiers).
+5. Preserve markdown formatting and line breaks in descriptions.
+6. Return ONLY the translated YAML, no explanations or markdown code blocks.
+
+YAML to translate:
+${content}`;
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const res = await model.generateContent(prompt);
+      return res.response.text().trim();
+    } catch (err) {
+      if (attempt < retries && (err.message?.includes("503") || err.message?.includes("429"))) {
+        const delay = attempt * 2000;
+        console.log(`    Retry ${attempt}/${retries} in ${delay}ms...`);
+        await new Promise((r) => setTimeout(r, delay));
+      } else {
+        throw err;
+      }
+    }
+  }
+}
+
 async function main() {
   const deckPaths = getDeckPaths();
   if (deckPaths.length === 0) {
@@ -116,6 +149,8 @@ async function main() {
   const langArg = process.argv.find((a) => a.startsWith("--lang="));
   const onlyLang = langArg ? langArg.split("=")[1] : null;
   const skipExisting = process.argv.includes("--skip-existing");
+  const skipIndex = process.argv.includes("--skip-index");
+  const indexOnly = process.argv.includes("--index-only");
 
   const targetLangs = LANGUAGES.filter((l) => l.code !== "en").filter(
     (l) => !onlyLang || l.code === onlyLang
@@ -128,6 +163,37 @@ async function main() {
 
   for (const lang of targetLangs) {
     console.log(`\n--- ${lang.name} (${lang.code}) ---`);
+
+    const indexPath = join(root, "perspective-decks", "perspective-decks-index.yaml");
+    const indexOutPath = join(root, "perspective-decks", `perspective-decks-index-${lang.code}.yaml`);
+
+    if (!skipIndex) {
+      if (skipExisting && existsSync(indexOutPath)) {
+        console.log(`  ✓ perspective-decks-index (skipped, exists)`);
+      } else {
+        try {
+          const indexContent = readFileSync(indexPath, "utf-8");
+          const translated = await translateIndexYaml(indexContent, lang.code, 3);
+          let cleaned = translated.replace(/^```yaml\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+          const parsed = yaml.parse(cleaned);
+          if (parsed?.decks?.length) {
+            const header = `# yaml-language-server: $schema=../schema/perspective-deck-index-schema.json
+# Perspective Decks Index (${lang.name})
+
+`;
+            writeFileSync(indexOutPath, header + yaml.stringify(parsed, { lineWidth: 0 }), "utf-8");
+            console.log(`  ✓ perspective-decks-index-${lang.code}.yaml`);
+          } else {
+            console.error(`  ✗ perspective-decks-index: invalid translation`);
+          }
+        } catch (err) {
+          console.error(`  ✗ perspective-decks-index:`, err.message);
+        }
+        await new Promise((r) => setTimeout(r, 500));
+      }
+    }
+
+    if (indexOnly) continue;
 
     for (const deckPath of deckPaths) {
       const sourcePath = join(root, deckPath);

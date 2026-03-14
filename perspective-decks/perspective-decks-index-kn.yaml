@@ -1,0 +1,242 @@
+# yaml-language-server: $schema=../schema/perspective-deck-index-schema.json
+# Perspective Decks Index (Kannada)
+
+domains:
+  art:
+    name: ಕಲೆಯ ದೃಷ್ಟಿಕೋನಗಳು
+    description: |
+      ಕಲೆಯನ್ನು ನೋಡುವಾಗ ನಿಮ್ಮ ದೃಷ್ಟಿಕೋನವನ್ನು ಬದಲಾಯಿಸಲು ಕಾರ್ಡ್‌ಗಳು. ಪ್ರತಿಯೊಂದೂ ವಿಭಿನ್ನ
+      ಒಂದು ಲೆನ್ಸ್ ಅನ್ನು ನೀಡುತ್ತದೆ - ಬೆಳಕು ಮತ್ತು ನೆರಳುಗಳಿಂದ ಪರಿಚಯಗಳು ಮತ್ತು ಭಾವನೆಗಳವರೆಗೆ - ನೀವು
+      ಕಲಾಕೃತಿಗಳನ್ನು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಮತ್ತು ತೊಡಗಿಸಿಕೊಳ್ಳುತ್ತೀರಿ ಎಂಬುದನ್ನು ಆಳವಾಗಿಸಲು.
+  urban_jungle:
+    name: ನಗರ ಕಾಡು
+    description: |
+      ಒಂದು ನಗರದ ಮೂಲಕ ಕೇವಲ ನಡೆಯುವ ಬದಲು, ನೀವು ಅದನ್ನು ಒಂದು ಜೀವಂತ ವಸ್ತುವಿನಂತೆ ನೋಡುತ್ತೀರಿ.
+      ಕಾರ್ಡ್‌ಗಳು ಹಳೆಯ ಕಟ್ಟಡಗಳ ಗಾಯಗಳು, ಸಂಚಾರದ ನೃತ್ಯ,
+      ಮತ್ತು ಅಲ್ಲೆಗಳ ರಹಸ್ಯ ಜೀವನದ ಮೇಲೆ ಕೇಂದ್ರೀಕರಿಸುತ್ತವೆ.
+  culinary_lab:
+    name: ಪಾಕಶಾಸ್ತ್ರ ಪ್ರಯೋಗಾಲಯ
+    description: |
+      ರುಚಿಕರದಿಂದ ಪರಿವರ್ತನೆಗೆ ಬದಲಾಗುತ್ತಿದೆ. ಒಂದು ತುತ್ತಿನ ರಸಾಯನಶಾಸ್ತ್ರ,
+      ಒಂದು ವಸ್ತುವಿನ ಇತಿಹಾಸ, ಮತ್ತು ಒಂದು ರೆಸ್ಟೋರೆಂಟ್‌ನ ಹಿನ್ನೆಲೆ ಸಂಗೀತವನ್ನು ಅನ್ವೇಷಿಸಿ.
+  natural_microcosm:
+    name: ನೈಸರ್ಗಿಕ ಸೂಕ್ಷ್ಮ ವಿಶ್ವ
+    description: |
+      ಉದ್ಯಾನವನ ಅಥವಾ ಹಿತ್ತಲಿನ ಮನೆಗೆ ಸೂಕ್ತವಾಗಿದೆ. ಈ ಲೆನ್ಸ್ ಕಾಣದ
+      ಎಲೆಯ ರಚನೆ, ಕಲ್ಲಿನ ನಿಧಾನಗತಿಯ ಜೀವನ, ಅಥವಾ ಕೀಟಗಳ ಪ್ರಾದೇಶಿಕ
+      ನಾಟಕಗಳ ಮೇಲೆ ಕೇಂದ್ರೀಕರಿಸುತ್ತದೆ.
+  human_interface:
+    name: ಮಾನವ ಸಂವಹನ
+    description: |
+      ಮನುಷ್ಯರು ಭೇಟಿಯಾಗುವ ದಿನನಿತ್ಯದ ಸ್ಥಳಗಳು — ಕಾಫಿ ಅಂಗಡಿಗಳು, ಸಾರಿಗೆ ಕೇಂದ್ರಗಳು,
+      ಕೆಲಸದ ಸ್ಥಳಗಳು, ಚಿಲ್ಲರೆ ವ್ಯಾಪಾರ, ಸಾರ್ವಜನಿಕ ಉದ್ಯಾನವನಗಳು. ಕಾರ್ಡ್‌ಗಳು ಸರದಿಯ ನೃತ್ಯ,
+      ಪ್ರಾದೇಶಿಕ ಹಕ್ಕುಗಳು, ಅಗೋಚರ ಲಿಪಿಗಳು, ಮತ್ತು ಹಂಚಿಕೆಯ ಸ್ಥಳದ ಮಾನವಶಾಸ್ತ್ರದ ಮೇಲೆ ಕೇಂದ್ರೀಕರಿಸುತ್ತವೆ.
+  california_superbloom:
+    name: ಕ್ಯಾಲಿಫೋರ್ನಿಯಾ ಸೂಪರ್‌ಬ್ಲೂಮ್
+    description: |
+      ಚಳಿಗಾಲದ ಮಳೆಯ ನಂತರ ಕಾಡು ಹೂವುಗಳ ಕ್ಷಣಿಕ ಸ್ಫೋಟ. ಕಾರ್ಡ್‌ಗಳು ಬಣ್ಣ,
+      ಪ್ರಮಾಣ, ಪರಾಗಸ್ಪರ್ಶಕಗಳು, ಭೂವಿಜ್ಞಾನ, ಹವಾಮಾನ, ಮತ್ತು ಹೂವಿನ ಕ್ಷಣಿಕ ನೋಟದ ಮೇಲೆ ಕೇಂದ್ರೀಕರಿಸುತ್ತವೆ.
+decks:
+  - id: ways_of_looking_at_art
+    name: ಕಲೆಯ ದೃಷ್ಟಿಕೋನಗಳು
+    path: perspective-decks/ways-of-looking-at-art.yaml
+    description: |
+      ಕಲೆಯನ್ನು ನೋಡುವಾಗ ನಿಮ್ಮ ದೃಷ್ಟಿಕೋನವನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು. ಪ್ರತಿ ಕಾರ್ಡ್ ನೀಡುತ್ತದೆ
+      ಒಂದು ವಿಭಿನ್ನ ಲೆನ್ಸ್ — ಬೆಳಕು ಮತ್ತು ನೆರಳುಗಳಿಂದ ಪರಿಚಯಗಳು ಮತ್ತು ಭಾವನೆಗಳವರೆಗೆ —
+      ನೀವು ಕಲಾಕೃತಿಗಳನ್ನು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಮತ್ತು ತೊಡಗಿಸಿಕೊಳ್ಳುತ್ತೀರಿ ಎಂಬುದನ್ನು ಆಳವಾಗಿಸಲು.
+    domain: art
+  - id: ways_of_looking_at_california_superbloom
+    name: ಕ್ಯಾಲಿಫೋರ್ನಿಯಾ ಸೂಪರ್‌ಬ್ಲೂಮ್ ನೋಡುವ ದೃಷ್ಟಿಕೋನಗಳು
+    path: perspective-decks/ways-of-looking-at-california-superbloom.yaml
+    description: |
+      ಕ್ಯಾಲಿಫೋರ್ನಿಯಾ ಸೂಪರ್‌ಬ್ಲೂಮ್ ಅನ್ನು ಅನುಭವಿಸುವಾಗ ನಿಮ್ಮ ದೃಷ್ಟಿಕೋನವನ್ನು ಬದಲಾಯಿಸಲು 20 ಕಾರ್ಡ್‌ಗಳು. ಪ್ರತಿ ಕಾರ್ಡ್ ನೀಡುತ್ತದೆ
+      ಒಂದು ವಿಭಿನ್ನ ಲೆನ್ಸ್ — ಪರಾಗಸ್ಪರ್ಶಕಗಳು ಮತ್ತು
+      ಭೂವಿಜ್ಞಾನದಿಂದ ಬೆಳಕು, ಪರಿಮಳ, ಮತ್ತು ಅನಿತ್ಯತೆಯವರೆಗೆ — ನೀವು
+      ಕಾಡು ಹೂವುಗಳು ಮತ್ತು ಬಣ್ಣದ ಕ್ಷಣಿಕ ಸ್ಫೋಟವನ್ನು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಆಳವಾಗಿಸಲು.
+    domain: california_superbloom
+  - id: urban_jungle_new_york
+    name: ನಗರ ಕಾಡು — ನ್ಯೂಯಾರ್ಕ್
+    path: perspective-decks/urban-jungle/urban-jungle-new-york.yaml
+    description: |
+      ನ್ಯೂಯಾರ್ಕ್ ಅನ್ನು ನೀವು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಪ್ರಮಾಣ ಮತ್ತು ಬೆಳಕಿನಿಂದ
+      ಇತಿಹಾಸದ ಪದರಗಳು ಮತ್ತು ಬೀದಿ ಜೀವನದ ಲಯಗಳವರೆಗೆ.
+    domain: urban_jungle
+    subdomain_id: ny
+    subdomain_name: ನ್ಯೂಯಾರ್ಕ್
+  - id: urban_jungle_san_francisco
+    name: ನಗರ ಕಾಡು — ಸ್ಯಾನ್ ಫ್ರಾನ್ಸಿಸ್ಕೋ
+    path: perspective-decks/urban-jungle/urban-jungle-san-francisco.yaml
+    description: |
+      ಸ್ಯಾನ್ ಫ್ರಾನ್ಸಿಸ್ಕೋವನ್ನು ನೀವು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಪ್ರಮಾಣ ಮತ್ತು ಬೆಳಕಿನಿಂದ
+      ಇತಿಹಾಸದ ಪದರಗಳು ಮತ್ತು ಬೀದಿ ಜೀವನದ ಲಯಗಳವರೆಗೆ.
+    domain: urban_jungle
+    subdomain_id: sf
+    subdomain_name: ಸ್ಯಾನ್ ಫ್ರಾನ್ಸಿಸ್ಕೋ
+  - id: urban_jungle_london
+    name: ನಗರ ಕಾಡು — ಲಂಡನ್
+    path: perspective-decks/urban-jungle/urban-jungle-london.yaml
+    description: |
+      ಲಂಡನ್ ಅನ್ನು ನೀವು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಪ್ರಮಾಣ ಮತ್ತು ಬೆಳಕಿನಿಂದ
+      ಇತಿಹಾಸದ ಪದರಗಳು ಮತ್ತು ಬೀದಿ ಜೀವನದ ಲಯಗಳವರೆಗೆ.
+    domain: urban_jungle
+    subdomain_id: london
+    subdomain_name: ಲಂಡನ್
+  - id: urban_jungle_paris
+    name: ನಗರ ಕಾಡು — ಪ್ಯಾರಿಸ್
+    path: perspective-decks/urban-jungle/urban-jungle-paris.yaml
+    description: |
+      ಪ್ಯಾರಿಸ್ ಅನ್ನು ನೀವು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಪ್ರಮಾಣ ಮತ್ತು ಬೆಳಕಿನಿಂದ
+      ಇತಿಹಾಸದ ಪದರಗಳು ಮತ್ತು ಬೀದಿ ಜೀವನದ ಲಯಗಳವರೆಗೆ.
+    domain: urban_jungle
+    subdomain_id: paris
+    subdomain_name: ಪ್ಯಾರಿಸ್
+  - id: urban_jungle_bangalore
+    name: ನಗರ ಕಾಡು — ಬೆಂಗಳೂರು
+    path: perspective-decks/urban-jungle/urban-jungle-bangalore.yaml
+    description: |
+      ಬೆಂಗಳೂರು ಅನ್ನು ನೀವು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಪ್ರಮಾಣ ಮತ್ತು ಬೆಳಕಿನಿಂದ
+      ಇತಿಹಾಸದ ಪದರಗಳು ಮತ್ತು ಬೀದಿ ಜೀವನದ ಲಯಗಳವರೆಗೆ.
+    domain: urban_jungle
+    subdomain_id: blr
+    subdomain_name: ಬೆಂಗಳೂರು
+  - id: culinary_lab_indian
+    name: ಪಾಕಶಾಸ್ತ್ರ ಪ್ರಯೋಗಾಲಯ — ಭಾರತೀಯ
+    path: perspective-decks/culinary-lab/culinary-lab-indian.yaml
+    description: |
+      ಭಾರತೀಯ ಆಹಾರವನ್ನು ನೀವು ಹೇಗೆ ಅನುಭವಿಸುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಮಸಾಲೆಗಳು ಮತ್ತು ಖಾರದ ರಸಾಯನಶಾಸ್ತ್ರದಿಂದ
+      ವಸ್ತುಗಳ ಪುರಾತತ್ತ್ವ ಶಾಸ್ತ್ರ ಮತ್ತು ಹಂಚಿಕೆಯ ಮೇಜಿನ ನೃತ್ಯದವರೆಗೆ.
+    domain: culinary_lab
+    subdomain_id: indian
+    subdomain_name: ಭಾರತೀಯ
+  - id: culinary_lab_italian
+    name: ಪಾಕಶಾಸ್ತ್ರ ಪ್ರಯೋಗಾಲಯ — ಇಟಾಲಿಯನ್
+    path: perspective-decks/culinary-lab/culinary-lab-italian.yaml
+    description: |
+      ಇಟಾಲಿಯನ್ ಆಹಾರವನ್ನು ನೀವು ಹೇಗೆ ಅನುಭವಿಸುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಆಲಿವ್ ಎಣ್ಣೆ ಮತ್ತು ಆಮ್ಲದ ರಸಾಯನಶಾಸ್ತ್ರದಿಂದ
+      ಮೇಜಿನ ಸಾಮಾಜಿಕ ನೃತ್ಯ ಮತ್ತು ಪ್ರತಿ ವಸ್ತುವಿನ ಪುರಾತತ್ತ್ವ ಶಾಸ್ತ್ರದವರೆಗೆ.
+    domain: culinary_lab
+    subdomain_id: italian
+    subdomain_name: ಇಟಾಲಿಯನ್
+  - id: culinary_lab_pizza
+    name: ಪಾಕಶಾಸ್ತ್ರ ಪ್ರಯೋಗಾಲಯ — ಪಿಜ್ಜಾ
+    path: perspective-decks/culinary-lab/culinary-lab-pizza.yaml
+    description: |
+      ಪಿಜ್ಜಾವನ್ನು ನೀವು ಹೇಗೆ ಅನುಭವಿಸುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಹಿಟ್ಟು
+      ಮತ್ತು ಬೆಂಕಿಯ ರಸಾಯನಶಾಸ್ತ್ರದಿಂದ ತುಂಡಿನ ರಂಗಭೂಮಿ ಮತ್ತು ಟಾಪಿಂಗ್‌ಗಳ ಪುರಾತತ್ತ್ವ ಶಾಸ್ತ್ರದವರೆಗೆ.
+    domain: culinary_lab
+    subdomain_id: pizza
+    subdomain_name: ಪಿಜ್ಜಾ
+  - id: culinary_lab_chinese
+    name: ಪಾಕಶಾಸ್ತ್ರ ಪ್ರಯೋಗಾಲಯ — ಚೈನೀಸ್
+    path: perspective-decks/culinary-lab/culinary-lab-chinese.yaml
+    description: |
+      ಚೈನೀಸ್ ಆಹಾರವನ್ನು ನೀವು ಹೇಗೆ ಅನುಭವಿಸುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ವೋಕ್ ಹೇಯ ರಸಾಯನಶಾಸ್ತ್ರ ಮತ್ತು
+      ಸೋಯಾದ ಪುರಾತತ್ತ್ವ ಶಾಸ್ತ್ರದಿಂದ ದುಂಡು ಮೇಜಿನ ನೃತ್ಯ ಮತ್ತು
+      ಬ್ಯಾಂಕ್ವೆಟ್‌ನ ಕಥೆಯವರೆಗೆ.
+    domain: culinary_lab
+    subdomain_id: chinese
+    subdomain_name: ಚೈನೀಸ್
+  - id: culinary_lab_sushi
+    name: ಪಾಕಶಾಸ್ತ್ರ ಪ್ರಯೋಗಾಲಯ — ಸುಶಿ
+    path: perspective-decks/culinary-lab/culinary-lab-sushi.yaml
+    description: |
+      ಸುಶಿಯನ್ನು ನೀವು ಹೇಗೆ ಅನುಭವಿಸುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಅಕ್ಕಿ
+      ಮತ್ತು ಮೀನಿನ ರಸಾಯನಶಾಸ್ತ್ರದಿಂದ ಕೌಂಟರ್‌ನ ನೃತ್ಯ ಮತ್ತು
+      ಪ್ರತಿ 'ನೆಟಾ' (ಅಕ್ಕಿ ಮೇಲೆ ಇರುವ ಮೀನು) ನ ಮೂಲದ ಪುರಾತತ್ತ್ವ ಶಾಸ್ತ್ರದವರೆಗೆ.
+    domain: culinary_lab
+    subdomain_id: sushi
+    subdomain_name: ಸುಶಿ
+  - id: natural_microcosm_forest_floor
+    name: ನೈಸರ್ಗಿಕ ಸೂಕ್ಷ್ಮ ವಿಶ್ವ — ಅರಣ್ಯದ ನೆಲ
+    path: perspective-decks/natural-microcosm/natural-microcosm-forest-floor.yaml
+    description: |
+      ಅರಣ್ಯದ ನೆಲವನ್ನು ನೀವು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಕೊಳೆತ ಮತ್ತು
+      ಮೈಸೆಲಿಯಮ್‌ನಿಂದ ಎಲೆಗೊ potent ರಚನೆ ಮತ್ತು ಪರದೆಯ ಕೆಳಗಿನ ಅಗೋಚರ ಜೀವನದವರೆಗೆ.
+    domain: natural_microcosm
+    subdomain_id: forest_floor
+    subdomain_name: ಅರಣ್ಯದ ನೆಲ
+  - id: natural_microcosm_garden_backyard
+    name: ನೈಸರ್ಗಿಕ ಸೂಕ್ಷ್ಮ ವಿಶ್ವ — ಉದ್ಯಾನ ಮತ್ತು ಹಿತ್ತಲಿನ ಮನೆ
+    path: perspective-decks/natural-microcosm/natural-microcosm-garden-backyard.yaml
+    description: |
+      ದೇಶೀಯ ಕಾಡುಗಳನ್ನು ನೀವು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಪರಾಗಸ್ಪರ್ಶಕಗಳು ಮತ್ತು
+      ಮಣ್ಣಿನಿಂದ ಕಳೆಗಳು ಮತ್ತು ಬೆಳೆಗಳು ಮತ್ತು ಕೃಷಿ ಮಾಡಿದ ಪ್ರಕೃತಿಯ ನೃತ್ಯದವರೆಗೆ.
+    domain: natural_microcosm
+    subdomain_id: garden_backyard
+    subdomain_name: ಉದ್ಯಾನ ಮತ್ತು ಹಿತ್ತಲಿನ ಮನೆ
+  - id: natural_microcosm_rocks_stones
+    name: ನೈಸರ್ಗಿಕ ಸೂಕ್ಷ್ಮ ವಿಶ್ವ — ಬಂಡೆಗಳು ಮತ್ತು ಕಲ್ಲುಗಳು
+    path: perspective-decks/natural-microcosm/natural-microcosm-rocks-stones.yaml
+    description: |
+      ಬಂಡೆಗಳು ಮತ್ತು ಕಲ್ಲುಗಳನ್ನು ನೀವು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಭೂವೈಜ್ಞಾನಿಕ ಸಮಯ ಮತ್ತು
+      ಶೈವಲದಿಂದ ಹವಾಮಾನ, ಸವೆತ, ಮತ್ತು ಖನಿಜದ ನಿಧಾನಗತಿಯ ಜೀವನದವರೆಗೆ.
+    domain: natural_microcosm
+    subdomain_id: rocks_stones
+    subdomain_name: ಬಂಡೆಗಳು ಮತ್ತು ಕಲ್ಲುಗಳು
+  - id: natural_microcosm_pond_puddle
+    name: ನೈಸರ್ಗಿಕ ಸೂಕ್ಷ್ಮ ವಿಶ್ವ — ಹೊಂಡ ಮತ್ತು ಕೆಸರು
+    path: perspective-decks/natural-microcosm/natural-microcosm-pond-puddle.yaml
+    description: |
+      ನೀರು ಸಣ್ಣ ಪ್ರಮಾಣದಲ್ಲಿ ನೀವು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಮೇಲ್ಮೈ ಸೆಳೆತ
+      ಮತ್ತು ಪ್ರತಿಫಲನಗಳಿಂದ ಜಲಚರ ಕೀಟಗಳು, ಕಪ್ಪೆಗಳು, ಮತ್ತು ತಾತ್ಕಾಲಿಕ
+      ಕೆರೆಗಳ ಜೀವನದವರೆಗೆ.
+    domain: natural_microcosm
+    subdomain_id: pond_puddle
+    subdomain_name: ಹೊಂಡ ಮತ್ತು ಕೆಸರು
+  - id: natural_microcosm_insect_territories
+    name: ನೈಸರ್ಗಿಕ ಸೂಕ್ಷ್ಮ ವಿಶ್ವ — ಕೀಟಗಳ ಪ್ರಾಂತ್ಯಗಳು
+    path: perspective-decks/natural-microcosm/natural-microcosm-insect-territories.yaml
+    description: |
+      ಕೀಟ ಜೀವನವನ್ನು ನೀವು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಇರುವೆ ದಾರಿಗಳು ಮತ್ತು ಜೇನು
+      ಸಂಚಾರದಿಂದ ಜೇಡರ ಬಲೆಗಳು, ಪ್ರಾದೇಶಿಕ ನಾಟಕಗಳು, ಮತ್ತು
+      ಸಮುದಾಯಗಳ ನೃತ್ಯದವರೆಗೆ.
+    domain: natural_microcosm
+    subdomain_id: insect_territories
+    subdomain_name: ಕೀಟಗಳ ಪ್ರಾಂತ್ಯಗಳು
+  - id: human_interface_coffee_shop
+    name: ಮಾನವ ಸಂವಹನ — ಕಾಫಿ ಅಂಗಡಿ
+    path: perspective-decks/human-interface/human-interface-coffee-shop.yaml
+    description: |
+      ಕಾಫಿ ಅಂಗಡಿಯನ್ನು ನೀವು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಸರದಿ ನೃತ್ಯ
+      ಮತ್ತು ಲ್ಯಾಪ್ಟಾಪ್ ಪ್ರಾಂತ್ಯಗಳಿಂದ ಮೂರನೇ ಸ್ಥಳ, ಅಗೋಚರ ಲಿಪಿಗಳು, ಮತ್ತು ಕಾಫಿ
+      ಆಚರಣೆಯವರೆಗೆ.
+    domain: human_interface
+    subdomain_id: coffee_shop
+    subdomain_name: ಕಾಫಿ ಅಂಗಡಿ
+  - id: human_interface_transit_hub
+    name: ಮಾನವ ಸಂವಹನ — ಸಾರಿಗೆ ಕೇಂದ್ರ
+    path: perspective-decks/human-interface/human-interface-transit-hub.yaml
+    description: |
+      ಸಾರಿಗೆ ಕೇಂದ್ರವನ್ನು ನೀವು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಪ್ಲಾಟ್‌ಫಾರ್ಮ್‌ಗಳು ಮತ್ತು
+      ಕಾಯುವಿಕೆಯಿಂದ ಆಗಮನ/ನಿರ್ಗಮನ ಹರಿವು ಮತ್ತು ಅಪರಿಚಿತರ ನೃತ್ಯದವರೆಗೆ
+      ಸಂಚಾರದಲ್ಲಿ.
+    domain: human_interface
+    subdomain_id: transit_hub
+    subdomain_name: ಸಾರಿಗೆ ಕೇಂದ್ರ
+  - id: human_interface_workplace
+    name: ಮಾನವ ಸಂವಹನ — ಕೆಲಸದ ಸ್ಥಳ
+    path: perspective-decks/human-interface/human-interface-workplace.yaml
+    description: |
+      ಕೆಲಸದ ಸ್ಥಳವನ್ನು ನೀವು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಡೆಸ್ಕ್ ಪ್ರಾಂತ್ಯಗಳು ಮತ್ತು
+      ಸಭೆ ಕೊಠಡಿಗಳಿಂದ ವಾಟರ್ ಕೂಲರ್ ಮತ್ತು ಗೋಚರ ಹಾಗೂ ಅಗೋಚರ ಶ್ರೇಣಿವರೆಗೆ.
+    domain: human_interface
+    subdomain_id: workplace
+    subdomain_name: ಕೆಲಸದ ಸ್ಥಳ
+  - id: human_interface_retail
+    name: ಮಾನವ ಸಂವಹನ — ಚಿಲ್ಲರೆ ವ್ಯಾಪಾರ
+    path: perspective-decks/human-interface/human-interface-retail.yaml
+    description: |
+      ಚಿಲ್ಲರೆ ಜಾಗವನ್ನು ನೀವು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಕಾರಿಡಾರ್‌ಗಳು ಮತ್ತು ಬ್ರೌಸಿಂಗ್
+      ನೃತ್ಯದಿಂದ ಫಿಟ್ಟಿಂಗ್ ರೂಮ್‌ಗಳು ಮತ್ತು ಖರೀದಿಯ ನೃತ್ಯದವರೆಗೆ.
+    domain: human_interface
+    subdomain_id: retail
+    subdomain_name: ಚಿಲ್ಲರೆ ವ್ಯಾಪಾರ
+  - id: human_interface_public_space
+    name: ಮಾನವ ಸಂವಹನ — ಸಾರ್ವಜನಿಕ ಸ್ಥಳ
+    path: perspective-decks/human-interface/human-interface-public-space.yaml
+    description: |
+      ಸಾರ್ವಜನಿಕ ಸ್ಥಳವನ್ನು ನೀವು ಹೇಗೆ ನೋಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಲು 50 ಕಾರ್ಡ್‌ಗಳು — ಬೆಂಚುಗಳು ಮತ್ತು ಮಾರ್ಗಗಳಿಂದ
+      ಅಪರಿಚಿತರ ನೃತ್ಯ ಮತ್ತು ತಾಲಿಪದ ವಸ್ತುಗಳವರೆಗೆ.
+    domain: human_interface
+    subdomain_id: public_space
+    subdomain_name: ಸಾರ್ವಜನಿಕ ಸ್ಥಳ

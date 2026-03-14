@@ -1,0 +1,208 @@
+# yaml-language-server: $schema=../schema/perspective-deck-index-schema.json
+# Perspective Decks Index (Mandarin Chinese)
+
+domains:
+  art:
+    name: 观赏艺术的方式
+    description: |
+      用于转变您在观看艺术时的视角的卡片。每张卡片提供一个不同的视角——
+      从光影到介绍和情感——以加深您如何看待和欣赏艺术作品。
+  urban_jungle:
+    name: 都市丛林
+    description: |
+      您不再仅仅是走过城市，而是将其视为一个生命有机体。卡片关注旧建筑的
+      伤痕、交通的编排以及小巷里的秘密生活。
+  culinary_lab:
+    name: 烹饪实验室
+    description: |
+      从美味到革新。探索一咬的化学反应、食材的历史以及餐厅的背景音乐。
+  natural_microcosm:
+    name: 自然微观世界
+    description: |
+      非常适合公园或后院。这个视角关注一片叶子的无形工程、一块石头
+      的慢动作生命，或昆虫的领地争夺战。
+  human_interface:
+    name: 人类界面
+    description: |
+      人类相遇的日常空间——咖啡馆、交通枢纽、工作场所、零售店、公园。
+      卡片关注排队编排、领地宣示、无形脚本以及共享空间的人类学。
+  california_superbloom:
+    name: 加州超级花期
+    description: |
+      冬季降雨后短暂的野花爆发。卡片关注色彩、规模、传粉者、地质、天气
+      以及花期转瞬即逝的奇观。
+decks:
+  - id: ways_of_looking_at_art
+    name: 观赏艺术的方式
+    path: perspective-decks/ways-of-looking-at-art.yaml
+    description: |
+      50 张卡片，用于转变您在观看艺术时的视角。每张卡片提供一个不同的视角——
+      从光影到介绍和情感——以加深您如何看待和欣赏艺术作品。
+    domain: art
+  - id: ways_of_looking_at_california_superbloom
+    name: 观赏加州超级花期的方式
+    path: perspective-decks/ways-of-looking-at-california-superbloom.yaml
+    description: |
+      20 张卡片，用于转变您在体验加州超级花期时的视角。每张卡片提供一个不同的视角——
+      从传粉者和地质到光线、气味和短暂性——以加深您如何看待野花和转瞬即逝的色彩爆发。
+    domain: california_superbloom
+  - id: urban_jungle_new_york
+    name: 都市丛林 — 纽约
+    path: perspective-decks/urban-jungle/urban-jungle-new-york.yaml
+    description: |
+      50 张卡片，用于转变您看待纽约的方式——从规模和光线到历史层次和街头生活的节奏。
+    domain: urban_jungle
+    subdomain_id: ny
+    subdomain_name: New York
+  - id: urban_jungle_san_francisco
+    name: 都市丛林 — 旧金山
+    path: perspective-decks/urban-jungle/urban-jungle-san-francisco.yaml
+    description: |
+      50 张卡片，用于转变您看待旧金山的方式——从规模和光线到历史层次和街头生活的节奏。
+    domain: urban_jungle
+    subdomain_id: sf
+    subdomain_name: San Francisco
+  - id: urban_jungle_london
+    name: 都市丛林 — 伦敦
+    path: perspective-decks/urban-jungle/urban-jungle-london.yaml
+    description: |
+      50 张卡片，用于转变您看待伦敦的方式——从规模和光线到历史层次和街头生活的节奏。
+    domain: urban_jungle
+    subdomain_id: london
+    subdomain_name: London
+  - id: urban_jungle_paris
+    name: 都市丛林 — 巴黎
+    path: perspective-decks/urban-jungle/urban-jungle-paris.yaml
+    description: |
+      50 张卡片，用于转变您看待巴黎的方式——从规模和光线到历史层次和街头生活的节奏。
+    domain: urban_jungle
+    subdomain_id: paris
+    subdomain_name: Paris
+  - id: urban_jungle_bangalore
+    name: 都市丛林 — 班加罗尔
+    path: perspective-decks/urban-jungle/urban-jungle-bangalore.yaml
+    description: |
+      50 张卡片，用于转变您看待班加罗尔的方式——从规模和光线到历史层次和街头生活的节奏。
+    domain: urban_jungle
+    subdomain_id: blr
+    subdomain_name: Bangalore
+  - id: culinary_lab_indian
+    name: 烹饪实验室 — 印度
+    path: perspective-decks/culinary-lab/culinary-lab-indian.yaml
+    description: |
+      50 张卡片，用于转变您体验印度美食的方式——从香料和辣度的化学反应到食材的考古学和共享餐桌的编排。
+    domain: culinary_lab
+    subdomain_id: indian
+    subdomain_name: Indian
+  - id: culinary_lab_italian
+    name: 烹饪实验室 — 意大利
+    path: perspective-decks/culinary-lab/culinary-lab-italian.yaml
+    description: |
+      50 张卡片，用于转变您体验意大利美食的方式——从橄榄油和酸度的化学反应到餐桌的社交编排以及每种食材的考古学。
+    domain: culinary_lab
+    subdomain_id: italian
+    subdomain_name: Italian
+  - id: culinary_lab_pizza
+    name: 烹饪实验室 — 披萨
+    path: perspective-decks/culinary-lab/culinary-lab-pizza.yaml
+    description: |
+      50 张卡片，用于转变您体验披萨的方式——从面团和火的化学反应到切片的戏剧以及配料的考古学。
+    domain: culinary_lab
+    subdomain_id: pizza
+    subdomain_name: Pizza
+  - id: culinary_lab_chinese
+    name: 烹饪实验室 — 中餐
+    path: perspective-decks/culinary-lab/culinary-lab-chinese.yaml
+    description: |
+      50 张卡片，用于转变您体验中餐的方式——从锅气和酱油的考古学到圆桌的编排以及宴会的叙事。
+    domain: culinary_lab
+    subdomain_id: chinese
+    subdomain_name: Chinese
+  - id: culinary_lab_sushi
+    name: 烹饪实验室 — 寿司
+    path: perspective-decks/culinary-lab/culinary-lab-sushi.yaml
+    description: |
+      50 张卡片，用于转变您体验寿司的方式——从米饭和鱼的化学反应到吧台的编排以及每种配料起源的考古学。
+    domain: culinary_lab
+    subdomain_id: sushi
+    subdomain_name: Sushi
+  - id: natural_microcosm_forest_floor
+    name: 自然微观世界 — 森林地面
+    path: perspective-decks/natural-microcosm/natural-microcosm-forest-floor.yaml
+    description: |
+      50 张卡片，用于转变您看待森林地面的方式——从分解和菌丝体到落叶的建筑以及树冠下的无形生命。
+    domain: natural_microcosm
+    subdomain_id: forest_floor
+    subdomain_name: Forest Floor
+  - id: natural_microcosm_garden_backyard
+    name: 自然微观世界 — 花园与后院
+    path: perspective-decks/natural-microcosm/natural-microcosm-garden-backyard.yaml
+    description: |
+      50 张卡片，用于转变您看待家宅野生环境的方式——从传粉者和土壤到杂草与作物以及栽培自然的编排。
+    domain: natural_microcosm
+    subdomain_id: garden_backyard
+    subdomain_name: Garden & Backyard
+  - id: natural_microcosm_rocks_stones
+    name: 自然微观世界 — 岩石与石头
+    path: perspective-decks/natural-microcosm/natural-microcosm-rocks-stones.yaml
+    description: |
+      50 张卡片，用于转变您看待岩石和石头的方式——从地质时间、地衣到风化、侵蚀以及矿物的慢动作生命。
+    domain: natural_microcosm
+    subdomain_id: rocks_stones
+    subdomain_name: Rocks & Stones
+  - id: natural_microcosm_pond_puddle
+    name: 自然微观世界 — 池塘与水洼
+    path: perspective-decks/natural-microcosm/natural-microcosm-pond-puddle.yaml
+    description: |
+      50 张卡片，用于转变您看待小尺度水景的方式——从表面张力和倒影到水生昆虫、蝌蚪以及临时水池中的生命。
+    domain: natural_microcosm
+    subdomain_id: pond_puddle
+    subdomain_name: Pond & Puddle
+  - id: natural_microcosm_insect_territories
+    name: 自然微观世界 — 昆虫领地
+    path: perspective-decks/natural-microcosm/natural-microcosm-insect-territories.yaml
+    description: |
+      50 张卡片，用于转变您看待昆虫生活的方式——从蚂蚁路径和蜜蜂交通到蜘蛛网、领地争夺战以及群落的编排。
+    domain: natural_microcosm
+    subdomain_id: insect_territories
+    subdomain_name: Insect Territories
+  - id: human_interface_coffee_shop
+    name: 人类界面 — 咖啡馆
+    path: perspective-decks/human-interface/human-interface-coffee-shop.yaml
+    description: |
+      50 张卡片，用于转变您看待咖啡馆的方式——从排队编排、笔记本电脑领地到第三空间、无形脚本以及咖啡作为仪式。
+    domain: human_interface
+    subdomain_id: coffee_shop
+    subdomain_name: Coffee Shop
+  - id: human_interface_transit_hub
+    name: 人类界面 — 交通枢纽
+    path: perspective-decks/human-interface/human-interface-transit-hub.yaml
+    description: |
+      50 张卡片，用于转变您看待交通枢纽的方式——从站台和等待到进出流以及交通中的陌生人编排。
+    domain: human_interface
+    subdomain_id: transit_hub
+    subdomain_name: Transit Hub
+  - id: human_interface_workplace
+    name: 人类界面 — 工作场所
+    path: perspective-decks/human-interface/human-interface-workplace.yaml
+    description: |
+      50 张卡片，用于转变您看待工作场所的方式——从办公桌领地和会议室到茶水间以及可见与不可见的层级。
+    domain: human_interface
+    subdomain_id: workplace
+    subdomain_name: Workplace
+  - id: human_interface_retail
+    name: 人类界面 — 零售空间
+    path: perspective-decks/human-interface/human-interface-retail.yaml
+    description: |
+      50 张卡片，用于转变您看待零售空间的方式——从过道和浏览编排到试衣间和购买的过程。
+    domain: human_interface
+    subdomain_id: retail
+    subdomain_name: Retail
+  - id: human_interface_public_space
+    name: 人类界面 — 公共空间
+    path: perspective-decks/human-interface/human-interface-public-space.yaml
+    description: |
+      50 张卡片，用于转变您看待公共空间的方式——从长椅和步道到陌生人的编排以及将物品视为护身符。
+    domain: human_interface
+    subdomain_id: public_space
+    subdomain_name: Public Space

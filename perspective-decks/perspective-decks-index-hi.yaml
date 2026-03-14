@@ -1,0 +1,241 @@
+# yaml-language-server: $schema=../schema/perspective-deck-index-schema.json
+# Perspective Decks Index (Hindi)
+
+domains:
+  art:
+    name: कला को देखने के तरीके
+    description: |
+      कला को देखते समय अपने दृष्टिकोण को बदलने के लिए कार्ड। प्रत्येक एक अलग
+      लेंस प्रदान करता है—प्रकाश और छाया से लेकर परिचय और भावना तक—आप कलाकृतियों को
+      कैसे देखते हैं और उनसे जुड़ते हैं, इसे गहरा करने के लिए।
+  urban_jungle:
+    name: शहरी जंगल
+    description: |
+      शहर में सिर्फ चलने के बजाय, आप इसे एक जीवित जीव के रूप में देखते हैं।
+      कार्ड पुराने भवनों के निशान, यातायात की कोरियोग्राफी,
+      और गली-कूचों के गुप्त जीवन पर केंद्रित होते हैं।
+  culinary_lab:
+    name: पाकशाला
+    description: |
+      स्वादिष्ट से परिवर्तनकारी की ओर बढ़ना। एक बाइट की रसायन शास्त्र,
+      एक सामग्री का इतिहास, और एक रेस्तरां का साउंडट्रैक।
+  natural_microcosm:
+    name: प्राकृतिक सूक्ष्म जगत
+    description: |
+      एक पार्क या पिछवाड़े के लिए एकदम सही। यह लेंस एक पत्ती की अदृश्य
+      इंजीनियरिंग, एक चट्टान के धीमी गति वाले जीवन, या कीड़ों के क्षेत्रीय
+      नाटकीय दृश्यों पर केंद्रित है।
+  human_interface:
+    name: मानव इंटरफ़ेस
+    description: |
+      रोजमर्रा के स्थान जहाँ मनुष्य मिलते हैं—कॉफी की दुकानें, ट्रांज़िट हब,
+      कार्यस्थल, खुदरा, सार्वजनिक पार्क। कार्ड कतार कोरियोग्राफी,
+      क्षेत्रीय दावे, अदृश्य स्क्रिप्ट, और साझा स्थान के मानव विज्ञान पर केंद्रित होते हैं।
+  california_superbloom:
+    name: कैलिफ़ोर्निया सुपरब्लूम
+    description: |
+      सर्दियों की बारिश के बाद जंगली फूलों का क्षणिक विस्फोट। कार्ड रंग,
+      पैमाना, परागणक, भूविज्ञान, मौसम, और खिलने के क्षणभंगुर तमाशे पर केंद्रित होते हैं।
+decks:
+  - id: ways_of_looking_at_art
+    name: कला को देखने के तरीके
+    path: perspective-decks/ways-of-looking-at-art.yaml
+    description: |
+      कला को देखते समय अपने दृष्टिकोण को बदलने के लिए 50 कार्ड। प्रत्येक कार्ड एक
+      अलग लेंस प्रदान करता है—प्रकाश और छाया से लेकर परिचय और भावना तक—आप कलाकृतियों को
+      कैसे देखते हैं और उनसे जुड़ते हैं, इसे गहरा करने के लिए।
+    domain: art
+  - id: ways_of_looking_at_california_superbloom
+    name: कैलिफ़ोर्निया सुपरब्लूम को देखने के तरीके
+    path: perspective-decks/ways-of-looking-at-california-superbloom.yaml
+    description: |
+      कैलिफ़ोर्निया सुपरब्लूम का अनुभव करते समय अपने दृष्टिकोण को बदलने के लिए 20 कार्ड।
+      प्रत्येक कार्ड एक अलग लेंस प्रदान करता है—परागणक और भूविज्ञान से लेकर प्रकाश,
+      सुगंध और क्षणभंगुरता तक—आप जंगली फूलों और रंग के क्षणिक विस्फोट को कैसे
+      देखते हैं, इसे गहरा करने के लिए।
+    domain: california_superbloom
+  - id: urban_jungle_new_york
+    name: शहरी जंगल — न्यूयॉर्क
+    path: perspective-decks/urban-jungle/urban-jungle-new-york.yaml
+    description: |
+      न्यूयॉर्क को देखने के तरीके को बदलने के लिए 50 कार्ड—पैमाने और प्रकाश से लेकर
+      इतिहास की परतों और सड़क जीवन की लय तक।
+    domain: urban_jungle
+    subdomain_id: ny
+    subdomain_name: न्यूयॉर्क
+  - id: urban_jungle_san_francisco
+    name: शहरी जंगल — सैन फ़्रांसिस्को
+    path: perspective-decks/urban-jungle/urban-jungle-san-francisco.yaml
+    description: |
+      सैन फ़्रांसिस्को को देखने के तरीके को बदलने के लिए 50 कार्ड—पैमाने और प्रकाश से
+      लेकर इतिहास की परतों और सड़क जीवन की लय तक।
+    domain: urban_jungle
+    subdomain_id: sf
+    subdomain_name: सैन फ़्रांसिस्को
+  - id: urban_jungle_london
+    name: शहरी जंगल — लंदन
+    path: perspective-decks/urban-jungle/urban-jungle-london.yaml
+    description: |
+      लंदन को देखने के तरीके को बदलने के लिए 50 कार्ड—पैमाने और प्रकाश से लेकर
+      इतिहास की परतों और सड़क जीवन की लय तक।
+    domain: urban_jungle
+    subdomain_id: london
+    subdomain_name: लंदन
+  - id: urban_jungle_paris
+    name: शहरी जंगल — पेरिस
+    path: perspective-decks/urban-jungle/urban-jungle-paris.yaml
+    description: |
+      पेरिस को देखने के तरीके को बदलने के लिए 50 कार्ड—पैमाने और प्रकाश से लेकर
+      इतिहास की परतों और सड़क जीवन की लय तक।
+    domain: urban_jungle
+    subdomain_id: paris
+    subdomain_name: पेरिस
+  - id: urban_jungle_bangalore
+    name: शहरी जंगल — बेंगलुरु
+    path: perspective-decks/urban-jungle/urban-jungle-bangalore.yaml
+    description: |
+      बेंगलुरु को देखने के तरीके को बदलने के लिए 50 कार्ड—पैमाने और प्रकाश से लेकर
+      इतिहास की परतों और सड़क जीवन की लय तक।
+    domain: urban_jungle
+    subdomain_id: blr
+    subdomain_name: बेंगलुरु
+  - id: culinary_lab_indian
+    name: पाकशाला — भारतीय
+    path: perspective-decks/culinary-lab/culinary-lab-indian.yaml
+    description: |
+      भारतीय भोजन के अनुभव को बदलने के लिए 50 कार्ड—मसालों की रसायन शास्त्र और
+      गर्मी से लेकर सामग्री के पुरातत्व और साझा मेज की कोरियोग्राफी तक।
+    domain: culinary_lab
+    subdomain_id: indian
+    subdomain_name: भारतीय
+  - id: culinary_lab_italian
+    name: पाकशाला — इतालवी
+    path: perspective-decks/culinary-lab/culinary-lab-italian.yaml
+    description: |
+      इतालवी भोजन के अनुभव को बदलने के लिए 50 कार्ड—जैतून का तेल और एसिड की
+      रसायन शास्त्र से लेकर मेज की सामाजिक कोरियोग्राफी और प्रत्येक सामग्री के
+      पुरातत्व तक।
+    domain: culinary_lab
+    subdomain_id: italian
+    subdomain_name: इतालवी
+  - id: culinary_lab_pizza
+    name: पाकशाला — पिज़्ज़ा
+    path: perspective-decks/culinary-lab/culinary-lab-pizza.yaml
+    description: |
+      पिज़्ज़ा के अनुभव को बदलने के लिए 50 कार्ड—आटे और आग की रसायन शास्त्र से
+      लेकर स्लाइस के थिएटर और टॉपिंग के पुरातत्व तक।
+    domain: culinary_lab
+    subdomain_id: pizza
+    subdomain_name: पिज़्ज़ा
+  - id: culinary_lab_chinese
+    name: पाकशाला — चीनी
+    path: perspective-decks/culinary-lab/culinary-lab-chinese.yaml
+    description: |
+      चीनी भोजन के अनुभव को बदलने के लिए 50 कार्ड—वोक हेई की रसायन शास्त्र और
+      सोया के पुरातत्व से लेकर गोल मेज की कोरियोग्राफी और दावत के आख्यान तक।
+    domain: culinary_lab
+    subdomain_id: chinese
+    subdomain_name: चीनी
+  - id: culinary_lab_sushi
+    name: पाकशाला — सुशी
+    path: perspective-decks/culinary-lab/culinary-lab-sushi.yaml
+    description: |
+      सुशी के अनुभव को बदलने के लिए 50 कार्ड—चावल और मछली की रसायन शास्त्र से
+      लेकर काउंटर की कोरियोग्राफी और प्रत्येक नेटा की उत्पत्ति के पुरातत्व तक।
+    domain: culinary_lab
+    subdomain_id: sushi
+    subdomain_name: सुशी
+  - id: natural_microcosm_forest_floor
+    name: प्राकृतिक सूक्ष्म जगत — वन तल
+    path: perspective-decks/natural-microcosm/natural-microcosm-forest-floor.yaml
+    description: |
+      वन तल को देखने के तरीके को बदलने के लिए 50 कार्ड—अपघटन और माइसेलियम से
+      लेकर पत्ती कूड़े की वास्तुकला और छतरियों के नीचे के अदृश्य जीवन तक।
+    domain: natural_microcosm
+    subdomain_id: forest_floor
+    subdomain_name: वन तल
+  - id: natural_microcosm_garden_backyard
+    name: प्राकृतिक सूक्ष्म जगत — बगीचा और पिछवाड़ा
+    path: perspective-decks/natural-microcosm/natural-microcosm-garden-backyard.yaml
+    description: |
+      घरेलू जंगली को देखने के तरीके को बदलने के लिए 50 कार्ड—परागणक और मिट्टी
+      से लेकर खरपतवार बनाम फसलें और खेती की प्रकृति की कोरियोग्राफी तक।
+    domain: natural_microcosm
+    subdomain_id: garden_backyard
+    subdomain_name: बगीचा और पिछवाड़ा
+  - id: natural_microcosm_rocks_stones
+    name: प्राकृतिक सूक्ष्म जगत — चट्टानें और पत्थर
+    path: perspective-decks/natural-microcosm/natural-microcosm-rocks-stones.yaml
+    description: |
+      चट्टानों और पत्थरों को देखने के तरीके को बदलने के लिए 50 कार्ड—भूवैज्ञानिक
+      समय और लाइकेन से लेकर अपक्षय, कटाव और खनिज के धीमी गति वाले जीवन तक।
+    domain: natural_microcosm
+    subdomain_id: rocks_stones
+    subdomain_name: चट्टानें और पत्थर
+  - id: natural_microcosm_pond_puddle
+    name: प्राकृतिक सूक्ष्म जगत — तालाब और पोखर
+    path: perspective-decks/natural-microcosm/natural-microcosm-pond-puddle.yaml
+    description: |
+      छोटे पैमाने पर पानी को देखने के तरीके को बदलने के लिए 50 कार्ड—सतह तनाव
+      और प्रतिबिंबों से लेकर जलीय कीड़ों, मेंढकों के बच्चों और अस्थायी पूलों में
+      जीवन तक।
+    domain: natural_microcosm
+    subdomain_id: pond_puddle
+    subdomain_name: तालाब और पोखर
+  - id: natural_microcosm_insect_territories
+    name: प्राकृतिक सूक्ष्म जगत — कीट क्षेत्र
+    path: perspective-decks/natural-microcosm/natural-microcosm-insect-territories.yaml
+    description: |
+      कीट जीवन को देखने के तरीके को बदलने के लिए 50 कार्ड—चींटी की पगडंडियों
+      और मधुमक्खी यातायात से लेकर मकड़ी के जाले, क्षेत्रीय नाटक, और कॉलोनियों
+      की कोरियोग्राफी तक।
+    domain: natural_microcosm
+    subdomain_id: insect_territories
+    subdomain_name: कीट क्षेत्र
+  - id: human_interface_coffee_shop
+    name: मानव इंटरफ़ेस — कॉफी शॉप
+    path: perspective-decks/human-interface/human-interface-coffee-shop.yaml
+    description: |
+      कॉफी शॉप को देखने के तरीके को बदलने के लिए 50 कार्ड—कतार कोरियोग्राफी
+      और लैपटॉप क्षेत्रों से लेकर तीसरे स्थान, अदृश्य स्क्रिप्ट, और अनुष्ठान
+      के रूप में कॉफी तक।
+    domain: human_interface
+    subdomain_id: coffee_shop
+    subdomain_name: कॉफी शॉप
+  - id: human_interface_transit_hub
+    name: मानव इंटरफ़ेस — ट्रांज़िट हब
+    path: perspective-decks/human-interface/human-interface-transit-hub.yaml
+    description: |
+      ट्रांज़िट हब को देखने के तरीके को बदलने के लिए 50 कार्ड—प्लेटफ़ॉर्म और
+      प्रतीक्षा से लेकर आगमन/प्रस्थान प्रवाह और ट्रांज़िट में अजनबियों की
+      कोरियोग्राफी तक।
+    domain: human_interface
+    subdomain_id: transit_hub
+    subdomain_name: ट्रांज़िट हब
+  - id: human_interface_workplace
+    name: मानव इंटरफ़ेस — कार्यस्थल
+    path: perspective-decks/human-interface/human-interface-workplace.yaml
+    description: |
+      कार्यस्थल को देखने के तरीके को बदलने के लिए 50 कार्ड—डेस्क क्षेत्रों और
+      बैठक कक्षों से लेकर वॉटर कूलर और दृश्य बनाम अदृश्य पदानुक्रम तक।
+    domain: human_interface
+    subdomain_id: workplace
+    subdomain_name: कार्यस्थल
+  - id: human_interface_retail
+    name: मानव इंटरफ़ेस — खुदरा
+    path: perspective-decks/human-interface/human-interface-retail.yaml
+    description: |
+      खुदरा स्थान को देखने के तरीके को बदलने के लिए 50 कार्ड—गलियारों और
+      ब्राउज़िंग कोरियोग्राफी से लेकर फिटिंग रूम और खरीद के नृत्य तक।
+    domain: human_interface
+    subdomain_id: retail
+    subdomain_name: खुदरा
+  - id: human_interface_public_space
+    name: मानव इंटरफ़ेस — सार्वजनिक स्थान
+    path: perspective-decks/human-interface/human-interface-public-space.yaml
+    description: |
+      सार्वजनिक स्थान को देखने के तरीके को बदलने के लिए 50 कार्ड—बेंच और रास्तों
+      से लेकर अजनबियों की कोरियोग्राफी और तावीज़ के रूप में वस्तुओं तक।
+    domain: human_interface
+    subdomain_id: public_space
+    subdomain_name: सार्वजनिक स्थान

@@ -58,7 +58,10 @@ function main() {
       continue;
     }
 
-    if (relPath.endsWith("perspective-decks-index.yaml")) {
+    const isIndex =
+      relPath.endsWith("perspective-decks-index.yaml") ||
+      /perspective-decks-index-[a-z]{2}\.yaml$/.test(relPath.replace(/\\/g, "/"));
+    if (isIndex) {
       if (!Array.isArray(doc?.decks) || doc.decks.length === 0) {
         issues.push({
           file: relPath,

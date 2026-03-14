@@ -64,7 +64,6 @@ mental_models:
       - loss_aversion_bias
       - availability_heuristic
       - default_effect
-      - default_effect
   - id: anchoring_bias
     name: 锚定效应
     quick_introduction: |
@@ -314,7 +313,6 @@ mental_models:
       - confirmation_bias
       - availability_heuristic
       - salience_bias
-      - availability_heuristic
   - id: barnum_effect
     name: 巴纳姆效应
     quick_introduction: |
@@ -746,7 +744,6 @@ mental_models:
         将能力圈视为固定不变的，而不是可以随着努力而扩大的东西。
     related_content:
       - dunning_kruger_effect
-      - dunning_kruger_effect
       - bayes_theorem
       - second_order_thinking
   - id: cognitive_dissonance
@@ -1066,7 +1063,6 @@ mental_models:
       self_doubt_paralysis: |
         過度矯正，以至於從不相信自己的判斷。
     related_content:
-      - circle_of_competence
       - circle_of_competence
       - confirmation_bias
       - curse_of_knowledge
@@ -1820,7 +1816,6 @@ mental_models:
     related_content:
       - narrative_fallacy
       - survivorship_bias
-      - overconfidence
       - regression_to_the_mean
   - id: hyperbolic_discounting
     name: 双曲贴现
@@ -2300,8 +2295,6 @@ mental_models:
       - anchoring_bias
       - endowment_effect
       - sunk_cost_fallacy
-      - prospect_theory
-      - status_quo_bias
   - id: map_is_not_the_territory
     name: 地图并非疆域
     quick_introduction: |

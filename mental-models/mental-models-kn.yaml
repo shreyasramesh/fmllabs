@@ -73,7 +73,6 @@ mental_models:
       - loss_aversion_bias
       - availability_heuristic
       - default_effect
-      - default_effect
   - id: anchoring_bias
     name: ಆಂಕರಿಂಗ್ ಬಯಾಸ್
     quick_introduction: |
@@ -400,7 +399,6 @@ mental_models:
       - confirmation_bias
       - availability_heuristic
       - salience_bias
-      - availability_heuristic
   - id: barnum_effect
     name: ಬಾರ್ನಮ್ ಪರಿಣಾಮ
     quick_introduction: |
@@ -910,7 +908,6 @@ mental_models:
         ಪರಿಗಣಿಸದಿರುವುದು.
     related_content:
       - dunning_kruger_effect
-      - dunning_kruger_effect
       - bayes_theorem
       - second_order_thinking
   - id: cognitive_dissonance
@@ -1246,7 +1243,6 @@ mental_models:
       self_doubt_paralysis: |
         ನಿಮ್ಮ ಸ್ವಂತ ತೀರ್ಪನ್ನು ಎಂದಿಗೂ ನಂಬದಷ್ಟು ಮಟ್ಟಿಗೆ ಅತಿಯಾಗಿ ಸರಿಪಡಿಸುವುದು.
     related_content:
-      - circle_of_competence
       - circle_of_competence
       - confirmation_bias
       - curse_of_knowledge
@@ -2030,7 +2026,6 @@ mental_models:
     related_content:
       - narrative_fallacy
       - survivorship_bias
-      - overconfidence
       - regression_to_the_mean
   - id: hyperbolic_discounting
     name: ಹೈಪರ್ಬೋಲಿಕ್ ರಿಯಾಯಿತಿ
@@ -2508,8 +2503,6 @@ mental_models:
       - anchoring_bias
       - endowment_effect
       - sunk_cost_fallacy
-      - prospect_theory
-      - status_quo_bias
   - id: map_is_not_the_territory
     name: ನಕ್ಷೆ ಭೂಪ್ರದೇಶವಲ್ಲ
     quick_introduction: |
@@ -3447,6 +3440,22 @@ mental_models:
       - anchoring_bias
       - baader_meinhof_phenomenon
       - confirmation_bias
+    quick_introduction: |
+      Salience bias is the tendency to focus on the most prominent or noticeable
+      aspects of a situation while overlooking less obvious but potentially
+      important factors. What stands out gets disproportionate attention and
+      weight in our judgments.
+    in_more_detail: |
+      Salient information is vivid, emotionally charged, or recently encountered.
+      It captures attention and influences decisions more than it should. We
+      overweight the conspicuous and underweight the subtle. A dramatic event
+      or vivid example can dominate our thinking even when it's not
+      representative.
+
+      Salience bias overlaps with availability heuristic (what comes to mind)
+      and recency bias (what happened recently). It affects risk perception,
+      hiring, and strategy. The most visible problems get addressed; the
+      invisible ones fester.
   - id: scarcity_bias
     name: ಕೊರತೆಯ ಪಕ್ಷಪಾತ (Scarcity Bias)
     quick_introduction: |

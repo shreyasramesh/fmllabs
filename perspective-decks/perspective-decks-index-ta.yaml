@@ -1,0 +1,245 @@
+# yaml-language-server: $schema=../schema/perspective-deck-index-schema.json
+# Perspective Decks Index (Tamil)
+
+domains:
+  art:
+    name: கலையை நோக்கும் வழிகள்
+    description: |
+      கலையைக் காணும்போது உங்கள் கண்ணோட்டத்தை மாற்ற உதவும் அட்டைகள். ஒவ்வொன்றும்
+      வெவ்வேறு கோணத்தை வழங்குகிறது - ஒளி மற்றும் நிழல் முதல் அறிமுகங்கள் மற்றும் உணர்ச்சி வரை - நீங்கள்
+      கலைப்படைப்புகளை எவ்வாறு பார்க்கிறீர்கள் மற்றும் தொடர்பு கொள்கிறீர்கள் என்பதை ஆழப்படுத்த.
+  urban_jungle:
+    name: நகர்ப்புறக் காடு
+    description: |
+      நகரத்தில் சாதாரணமாக நடப்பதற்குப் பதிலாக, அதை ஒரு உயிருள்ள உயிரினமாகப் பாருங்கள்.
+      பழைய கட்டிடங்களின் வடுக்கள், போக்குவரத்தின் நடனம்,
+      மற்றும் சந்துகளின் இரகசிய வாழ்க்கையில் அட்டைகள் கவனம் செலுத்துகின்றன.
+  culinary_lab:
+    name: சமையல் ஆய்வகம்
+    description: |
+      சுவையானது என்பதிலிருந்து உருமாற்றத்திற்கு மாறுதல். ஒரு கடியின் வேதியியல்,
+      ஒரு மூலப்பொருளின் வரலாறு, மற்றும் ஒரு உணவகத்தின் ஒலிப்பதிவு ஆகியவற்றை ஆராயுங்கள்.
+  natural_microcosm:
+    name: இயற்கை நுண் உலகம்
+    description: |
+      ஒரு பூங்கா அல்லது பின்புற தோட்டத்திற்கு ஏற்றது. இந்தக் கண்ணோட்டம் ஒரு இலையின் கண்ணுக்குத் தெரியாத
+      பொறியியலில், ஒரு கல்லின் மெதுவான வாழ்க்கை, அல்லது பூச்சிகளின் பிரதேச நாடகங்களில் கவனம் செலுத்துகிறது.
+  human_interface:
+    name: மனித இடைமுகம்
+    description: |
+      மனிதர்கள் சந்திக்கும் அன்றாட இடங்கள் - காபி கடைகள், போக்குவரத்து மையங்கள்,
+      பணி இடங்கள், சில்லறை விற்பனை, பொது பூங்காக்கள். வரிசை நடனம்,
+      பிரதேச உரிமைகோரல்கள், கண்ணுக்குத் தெரியாத ஸ்கிரிப்டுகள், மற்றும் பகிரப்பட்ட இடத்தின் மானுடவியல் ஆகியவற்றில் அட்டைகள் கவனம் செலுத்துகின்றன.
+  california_superbloom:
+    name: கலிபோர்னியா சூப்பர்ப்ளூம்
+    description: |
+      குளிர்கால மழைக்குப் பிறகு ஏற்படும் மலர்களின் தற்காலிக வெடிப்பு. வண்ணங்கள்,
+      அளவு, மகரந்தச் சேர்க்கையாளர்கள், புவியியல், வானிலை, மற்றும் மலரின் தற்காலிகக் காட்சி ஆகியவற்றில் அட்டைகள் கவனம் செலுத்துகின்றன.
+decks:
+  - id: ways_of_looking_at_art
+    name: கலையை நோக்கும் வழிகள்
+    path: perspective-decks/ways-of-looking-at-art.yaml
+    description: |
+      கலையைக் காணும்போது உங்கள் கண்ணோட்டத்தை மாற்ற உதவும் 50 அட்டைகள். ஒவ்வொரு அட்டையும்
+      வெவ்வேறு கோணத்தை வழங்குகிறது - ஒளி மற்றும் நிழல் முதல் அறிமுகங்கள் மற்றும் உணர்ச்சி வரை - நீங்கள்
+      கலைப்படைப்புகளை எவ்வாறு பார்க்கிறீர்கள் மற்றும் தொடர்பு கொள்கிறீர்கள் என்பதை ஆழப்படுத்த.
+    domain: art
+  - id: ways_of_looking_at_california_superbloom
+    name: கலிபோர்னியா சூப்பர்ப்ளூம் நோக்கும் வழிகள்
+    path: perspective-decks/ways-of-looking-at-california-superbloom.yaml
+    description: |
+      கலிபோர்னியா சூப்பர்ப்ளூம் அனுபவிக்கும்போது உங்கள் கண்ணோட்டத்தை மாற்ற உதவும் 20 அட்டைகள். ஒவ்வொரு அட்டையும்
+      வெவ்வேறு கோணத்தை வழங்குகிறது - மகரந்தச் சேர்க்கையாளர்கள் மற்றும்
+      புவியியல் முதல் ஒளி, வாசனை, மற்றும் நிலையாமை வரை - நீங்கள்
+      காட்டு மலர்கள் மற்றும் வண்ணங்களின் தற்காலிக வெடிப்பை எவ்வாறு பார்க்கிறீர்கள் என்பதை ஆழப்படுத்த.
+    domain: california_superbloom
+  - id: urban_jungle_new_york
+    name: நகர்ப்புறக் காடு — நியூயார்க்
+    path: perspective-decks/urban-jungle/urban-jungle-new-york.yaml
+    description: |
+      நியூயார்க்கை நீங்கள் பார்க்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - அளவு மற்றும் ஒளி முதல்
+      வரலாற்றின் அடுக்குகள் மற்றும் தெரு வாழ்க்கையின் தாளங்கள் வரை.
+    domain: urban_jungle
+    subdomain_id: ny
+    subdomain_name: நியூயார்க்
+  - id: urban_jungle_san_francisco
+    name: நகர்ப்புறக் காடு — சான் பிரான்சிஸ்கோ
+    path: perspective-decks/urban-jungle/urban-jungle-san-francisco.yaml
+    description: |
+      சான் பிரான்சிஸ்கோவை நீங்கள் பார்க்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - அளவு மற்றும் ஒளி முதல்
+      வரலாற்றின் அடுக்குகள் மற்றும் தெரு வாழ்க்கையின் தாளங்கள் வரை.
+    domain: urban_jungle
+    subdomain_id: sf
+    subdomain_name: சான் பிரான்சிஸ்கோ
+  - id: urban_jungle_london
+    name: நகர்ப்புறக் காடு — லண்டன்
+    path: perspective-decks/urban-jungle/urban-jungle-london.yaml
+    description: |
+      லண்டனை நீங்கள் பார்க்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - அளவு மற்றும் ஒளி முதல்
+      வரலாற்றின் அடுக்குகள் மற்றும் தெரு வாழ்க்கையின் தாளங்கள் வரை.
+    domain: urban_jungle
+    subdomain_id: london
+    subdomain_name: லண்டன்
+  - id: urban_jungle_paris
+    name: நகர்ப்புறக் காடு — பாரிஸ்
+    path: perspective-decks/urban-jungle/urban-jungle-paris.yaml
+    description: |
+      பாரிஸை நீங்கள் பார்க்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - அளவு மற்றும் ஒளி முதல்
+      வரலாற்றின் அடுக்குகள் மற்றும் தெரு வாழ்க்கையின் தாளங்கள் வரை.
+    domain: urban_jungle
+    subdomain_id: paris
+    subdomain_name: பாரிஸ்
+  - id: urban_jungle_bangalore
+    name: நகர்ப்புறக் காடு — பெங்களூர்
+    path: perspective-decks/urban-jungle/urban-jungle-bangalore.yaml
+    description: |
+      பெங்களூரை நீங்கள் பார்க்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - அளவு மற்றும் ஒளி முதல்
+      வரலாற்றின் அடுக்குகள் மற்றும் தெரு வாழ்க்கையின் தாளங்கள் வரை.
+    domain: urban_jungle
+    subdomain_id: blr
+    subdomain_name: பெங்களூர்
+  - id: culinary_lab_indian
+    name: சமையல் ஆய்வகம் — இந்திய
+    path: perspective-decks/culinary-lab/culinary-lab-indian.yaml
+    description: |
+      இந்திய உணவை நீங்கள் அனுபவிக்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - மசாலாப் பொருட்களின் வேதியியல்
+      மற்றும் வெப்பம் முதல் மூலப்பொருட்களின் தொல்பொருள் மற்றும் நடனம் வரை
+      பகிரப்பட்ட மேசையின்.
+    domain: culinary_lab
+    subdomain_id: indian
+    subdomain_name: இந்திய
+  - id: culinary_lab_italian
+    name: சமையல் ஆய்வகம் — இத்தாலிய
+    path: perspective-decks/culinary-lab/culinary-lab-italian.yaml
+    description: |
+      இத்தாலிய உணவை நீங்கள் அனுபவிக்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - ஆலிவ் எண்ணெயின் வேதியியல்
+      மற்றும் அமிலம் முதல் மேசையின் சமூக நடனம் மற்றும்
+      ஒவ்வொரு மூலப்பொருளின் தொல்பொருள் வரை.
+    domain: culinary_lab
+    subdomain_id: italian
+    subdomain_name: இத்தாலிய
+  - id: culinary_lab_pizza
+    name: சமையல் ஆய்வகம் — பீட்சா
+    path: perspective-decks/culinary-lab/culinary-lab-pizza.yaml
+    description: |
+      பீட்சாவை நீங்கள் அனுபவிக்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - மாவு மற்றும் நெருப்பின் வேதியியல்
+      முதல் துண்டின் அரங்கேற்றம் மற்றும் டாப்பிங்ஸின் தொல்பொருள் வரை.
+    domain: culinary_lab
+    subdomain_id: pizza
+    subdomain_name: பீட்சா
+  - id: culinary_lab_chinese
+    name: சமையல் ஆய்வகம் — சீன
+    path: perspective-decks/culinary-lab/culinary-lab-chinese.yaml
+    description: |
+      சீன உணவை நீங்கள் அனுபவிக்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - வோக் ஹெயின் வேதியியல்
+      மற்றும் சோயா தொல்பொருள் முதல் வட்ட மேசையின் நடனம்
+      மற்றும் விருந்தின் கதை வரை.
+    domain: culinary_lab
+    subdomain_id: chinese
+    subdomain_name: சீன
+  - id: culinary_lab_sushi
+    name: சமையல் ஆய்வகம் — சுஷி
+    path: perspective-decks/culinary-lab/culinary-lab-sushi.yaml
+    description: |
+      சுஷியை நீங்கள் அனுபவிக்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - அரிசி மற்றும் மீனின் வேதியியல்
+      முதல் கவுண்டரின் நடனம் மற்றும் ஒவ்வொரு
+      நேட்டாவின் தோற்றம் வரை.
+    domain: culinary_lab
+    subdomain_id: sushi
+    subdomain_name: சுஷி
+  - id: natural_microcosm_forest_floor
+    name: இயற்கை நுண் உலகம் — வனத் தரை
+    path: perspective-decks/natural-microcosm/natural-microcosm-forest-floor.yaml
+    description: |
+      வனத் தரையை நீங்கள் பார்க்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - சிதைவு மற்றும்
+      பூஞ்சை வலை முதல் இலை குப்பைகளின் கட்டிடக்கலை மற்றும் மறைவில் உள்ள வாழ்க்கை வரை
+      வனத்தின் உச்சியில்.
+    domain: natural_microcosm
+    subdomain_id: forest_floor
+    subdomain_name: வனத் தரை
+  - id: natural_microcosm_garden_backyard
+    name: இயற்கை நுண் உலகம் — தோட்டம் & பின்புறத் தோட்டம்
+    path: perspective-decks/natural-microcosm/natural-microcosm-garden-backyard.yaml
+    description: |
+      வீட்டு வனப்பகுதியை நீங்கள் பார்க்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - மகரந்தச் சேர்க்கையாளர்கள் மற்றும்
+      மண்ணிலிருந்து களைகள் எதிராக பயிர்கள் மற்றும் நடனம் வரை
+      வளர்க்கப்பட்ட இயற்கையின்.
+    domain: natural_microcosm
+    subdomain_id: garden_backyard
+    subdomain_name: தோட்டம் & பின்புறத் தோட்டம்
+  - id: natural_microcosm_rocks_stones
+    name: இயற்கை நுண் உலகம் — பாறைகள் & கற்கள்
+    path: perspective-decks/natural-microcosm/natural-microcosm-rocks-stones.yaml
+    description: |
+      பாறைகள் மற்றும் கற்களை நீங்கள் பார்க்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - புவியியல் நேரம் மற்றும்
+      பாசி முதல் வானிலை, அரிப்பு, மற்றும் கனிமத்தின் மெதுவான வாழ்க்கை வரை.
+    domain: natural_microcosm
+    subdomain_id: rocks_stones
+    subdomain_name: பாறைகள் & கற்கள்
+  - id: natural_microcosm_pond_puddle
+    name: இயற்கை நுண் உலகம் — குளம் & குட்டை
+    path: perspective-decks/natural-microcosm/natural-microcosm-pond-puddle.yaml
+    description: |
+      சிறிய அளவில் தண்ணீரை நீங்கள் பார்க்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - மேற்பரப்பு இழுவிசை
+      மற்றும் பிரதிபலிப்புகள் முதல் நீர்வாழ் பூச்சிகள், தலைப்பிரட்டைகள், மற்றும் தற்காலிக
+      குளங்களில் உள்ள வாழ்க்கை வரை.
+    domain: natural_microcosm
+    subdomain_id: pond_puddle
+    subdomain_name: குளம் & குட்டை
+  - id: natural_microcosm_insect_territories
+    name: இயற்கை நுண் உலகம் — பூச்சி பிரதேசங்கள்
+    path: perspective-decks/natural-microcosm/natural-microcosm-insect-territories.yaml
+    description: |
+      பூச்சி வாழ்க்கையை நீங்கள் பார்க்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - எறும்பு தடங்கள் மற்றும் தேனீ
+      போக்குவரத்து முதல் சிலந்தி வலைகள், பிரதேசம் சார்ந்த நாடகங்கள், மற்றும் நடனம் வரை
+      காலனிகளின்.
+    domain: natural_microcosm
+    subdomain_id: insect_territories
+    subdomain_name: பூச்சி பிரதேசங்கள்
+  - id: human_interface_coffee_shop
+    name: மனித இடைமுகம் — காபி கடை
+    path: perspective-decks/human-interface/human-interface-coffee-shop.yaml
+    description: |
+      காபி கடையை நீங்கள் பார்க்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - வரிசை நடனம்
+      மற்றும் மடிக்கணினி பிரதேசங்கள் முதல் மூன்றாம் இடம், கண்ணுக்குத் தெரியாத ஸ்கிரிப்டுகள், மற்றும் காபி
+      சடங்கு போல.
+    domain: human_interface
+    subdomain_id: coffee_shop
+    subdomain_name: காபி கடை
+  - id: human_interface_transit_hub
+    name: மனித இடைமுகம் — போக்குவரத்து மையம்
+    path: perspective-decks/human-interface/human-interface-transit-hub.yaml
+    description: |
+      போக்குவரத்து மையத்தை நீங்கள் பார்க்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - பிளாட்பார்ம்கள் மற்றும்
+      காத்திருப்பு முதல் வருகை/புறப்பாடு ஓட்டம் மற்றும் அந்நியர்களின் நடனம் வரை
+      போக்குவரத்தில்.
+    domain: human_interface
+    subdomain_id: transit_hub
+    subdomain_name: போக்குவரத்து மையம்
+  - id: human_interface_workplace
+    name: மனித இடைமுகம் — பணி இடம்
+    path: perspective-decks/human-interface/human-interface-workplace.yaml
+    description: |
+      பணி இடத்தை நீங்கள் பார்க்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - மேசை பிரதேசங்கள் மற்றும்
+      கூட்ட அறைகள் முதல் தண்ணீர் குளிர்விப்பான் மற்றும் தெரியும் எதிராக கண்ணுக்குத் தெரியாத படிநிலை வரை.
+    domain: human_interface
+    subdomain_id: workplace
+    subdomain_name: பணி இடம்
+  - id: human_interface_retail
+    name: மனித இடைமுகம் — சில்லறை விற்பனை
+    path: perspective-decks/human-interface/human-interface-retail.yaml
+    description: |
+      சில்லறை விற்பனை இடத்தை நீங்கள் பார்க்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - நடைபாதைகள் மற்றும் உலாவல்
+      நடனம் முதல் பொருத்தும் அறைகள் மற்றும் வாங்கும் நடனம் வரை.
+    domain: human_interface
+    subdomain_id: retail
+    subdomain_name: சில்லறை விற்பனை
+  - id: human_interface_public_space
+    name: மனித இடைமுகம் — பொது இடம்
+    path: perspective-decks/human-interface/human-interface-public-space.yaml
+    description: |
+      பொது இடத்தை நீங்கள் பார்க்கும் முறையை மாற்ற உதவும் 50 அட்டைகள் - பெஞ்சுகள் மற்றும் பாதைகள்
+      அந்நியர்களின் நடனம் மற்றும் தாயத்துகள் போன்ற பொருள்கள் வரை.
+    domain: human_interface
+    subdomain_id: public_space
+    subdomain_name: பொது இடம்

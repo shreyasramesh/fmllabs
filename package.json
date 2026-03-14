@@ -11,6 +11,7 @@
     "generate-icons": "node scripts/generate-pwa-icons.mjs",
     "translate-mental-models": "node scripts/translate-mental-models.mjs",
     "verify-mental-models": "node scripts/verify-mental-models.mjs",
+    "fix-mental-models": "node scripts/fix-mental-models-yaml.mjs",
     "translate-perspective-decks": "node scripts/translate-perspective-decks.mjs",
     "verify-perspective-decks": "node scripts/verify-perspective-decks.mjs"
   },

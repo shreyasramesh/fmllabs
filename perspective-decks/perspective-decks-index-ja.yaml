@@ -1,0 +1,234 @@
+# yaml-language-server: $schema=../schema/perspective-deck-index-schema.json
+# Perspective Decks Index (Japanese)
+
+domains:
+  art:
+    name: アートの見方
+    description: |
+      アート鑑賞の視点を変えるカード集。光と影、導入、感情など、
+      さまざまなレンズを通して、作品をより深く見たり、関わったりするための
+      視点を提供します。
+  urban_jungle:
+    name: 都市のジャングル
+    description: |
+      街をただ歩くだけでなく、生きた有機体として捉え直します。
+      古い建物の傷跡、交通の振付、路地の秘密の生活に焦点を当てたカードです。
+  culinary_lab:
+    name: 食のラボ
+    description: |
+      美味しいものから変革的なものへと視点をシフトさせます。
+      一口の化学、食材の歴史、レストランのサウンドトラックを探求します。
+  natural_microcosm:
+    name: 自然の縮図
+    description: |
+      公園や裏庭に最適です。葉の目に見えない工学、岩の遅い動き、
+      昆虫の縄張り争いに焦点を当てたレンズです。
+  human_interface:
+    name: ヒューマン・インターフェース
+    description: |
+      人間が出会う日常空間――カフェ、交通ハブ、職場、小売店、公共公園。
+      行列の振付、縄張り主張、見えないスクリプト、共有空間の文化人類学に
+      焦点を当てたカードです。
+  california_superbloom:
+    name: カリフォルニアのスーパーブルーム
+    description: |
+      冬の雨の後に見られる、野花の一時的な大発生。
+      色、規模、受粉者、地質、天気、そして儚い開花のスペクタクルに
+      焦点を当てたカードです。
+decks:
+  - id: ways_of_looking_at_art
+    name: アートの見方
+    path: perspective-decks/ways-of-looking-at-art.yaml
+    description: |
+      アート鑑賞の視点を変える50枚のカード。各カードは、光と影、導入、感情など、
+      さまざまなレンズを通して、作品をより深く見たり、関わったりするための
+      視点を提供します。
+    domain: art
+  - id: ways_of_looking_at_california_superbloom
+    name: カリフォルニアのスーパーブルームの見方
+    path: perspective-decks/ways-of-looking-at-california-superbloom.yaml
+    description: |
+      カリフォルニアのスーパーブルームを体験する際の視点を変える20枚のカード。
+      各カードは、受粉者や地質から、光、香り、儚さまで、さまざまなレンズを通して、
+      野花や儚い色の爆発をより深く見つめるための視点を提供します。
+    domain: california_superbloom
+  - id: urban_jungle_new_york
+    name: 都市のジャングル — ニューヨーク
+    path: perspective-decks/urban-jungle/urban-jungle-new-york.yaml
+    description: |
+      ニューヨークのスケールや光、歴史の層、街の生活のリズムなど、
+      街の見方を変える50枚のカードです。
+    domain: urban_jungle
+    subdomain_id: ny
+    subdomain_name: New York
+  - id: urban_jungle_san_francisco
+    name: 都市のジャングル — サンフランシスコ
+    path: perspective-decks/urban-jungle/urban-jungle-san-francisco.yaml
+    description: |
+      サンフランシスコのスケールや光、歴史の層、街の生活のリズムなど、
+      街の見方を変える50枚のカードです。
+    domain: urban_jungle
+    subdomain_id: sf
+    subdomain_name: San Francisco
+  - id: urban_jungle_london
+    name: 都市のジャングル — ロンドン
+    path: perspective-decks/urban-jungle/urban-jungle-london.yaml
+    description: |
+      ロンドンのスケールや光、歴史の層、街の生活のリズムなど、
+      街の見方を変える50枚のカードです。
+    domain: urban_jungle
+    subdomain_id: london
+    subdomain_name: London
+  - id: urban_jungle_paris
+    name: 都市のジャングル — パリ
+    path: perspective-decks/urban-jungle/urban-jungle-paris.yaml
+    description: |
+      パリのスケールや光、歴史の層、街の生活のリズムなど、
+      街の見方を変える50枚のカードです。
+    domain: urban_jungle
+    subdomain_id: paris
+    subdomain_name: Paris
+  - id: urban_jungle_bangalore
+    name: 都市のジャングル — バンガロール
+    path: perspective-decks/urban-jungle/urban-jungle-bangalore.yaml
+    description: |
+      バンガロールのスケールや光、歴史の層、街の生活のリズムなど、
+      街の見方を変える50枚のカードです。
+    domain: urban_jungle
+    subdomain_id: blr
+    subdomain_name: Bangalore
+  - id: culinary_lab_indian
+    name: 食のラボ — インド料理
+    path: perspective-decks/culinary-lab/culinary-lab-indian.yaml
+    description: |
+      スパイスと辛味の化学、食材の考古学、共食の振付など、
+      インド料理の体験の見方を変える50枚のカードです。
+    domain: culinary_lab
+    subdomain_id: indian
+    subdomain_name: Indian
+  - id: culinary_lab_italian
+    name: 食のラボ — イタリア料理
+    path: perspective-decks/culinary-lab/culinary-lab-italian.yaml
+    description: |
+      オリーブオイルと酸味の化学、食卓の社会的振付、各食材の考古学など、
+      イタリア料理の体験の見方を変える50枚のカードです。
+    domain: culinary_lab
+    subdomain_id: italian
+    subdomain_name: Italian
+  - id: culinary_lab_pizza
+    name: 食のラボ — ピザ
+    path: perspective-decks/culinary-lab/culinary-lab-pizza.yaml
+    description: |
+      生地と火の化学、一切れの演劇性、トッピングの考古学など、
+      ピザの体験の見方を変える50枚のカードです。
+    domain: culinary_lab
+    subdomain_id: pizza
+    subdomain_name: Pizza
+  - id: culinary_lab_chinese
+    name: 食のラボ — 中華料理
+    path: perspective-decks/culinary-lab/culinary-lab-chinese.yaml
+    description: |
+      鍋の気、醤油の考古学、円卓の振付、宴の物語など、
+      中華料理の体験の見方を変える50枚のカードです。
+    domain: culinary_lab
+    subdomain_id: chinese
+    subdomain_name: Chinese
+  - id: culinary_lab_sushi
+    name: 食のラボ — 寿司
+    path: perspective-decks/culinary-lab/culinary-lab-sushi.yaml
+    description: |
+      米と魚の化学、カウンターの振付、各ネタの起源の考古学など、
+      寿司の体験の見方を変える50枚のカードです。
+    domain: culinary_lab
+    subdomain_id: sushi
+    subdomain_name: Sushi
+  - id: natural_microcosm_forest_floor
+    name: 自然の縮図 — 森の地面
+    path: perspective-decks/natural-microcosm/natural-microcosm-forest-floor.yaml
+    description: |
+      分解と菌糸、落ち葉の建築、林冠の下の目に見えない生命など、
+      森の地面の見方を変える50枚のカードです。
+    domain: natural_microcosm
+    subdomain_id: forest_floor
+    subdomain_name: Forest Floor
+  - id: natural_microcosm_garden_backyard
+    name: 自然の縮図 — 庭と裏庭
+    path: perspective-decks/natural-microcosm/natural-microcosm-garden-backyard.yaml
+    description: |
+      受粉者と土壌、雑草と作物、耕作された自然の振付など、
+      家庭的な野性の見方を変える50枚のカードです。
+    domain: natural_microcosm
+    subdomain_id: garden_backyard
+    subdomain_name: Garden & Backyard
+  - id: natural_microcosm_rocks_stones
+    name: 自然の縮図 — 岩と石
+    path: perspective-decks/natural-microcosm/natural-microcosm-rocks-stones.yaml
+    description: |
+      地質学的な時間と地衣類、風化、浸食、鉱物の遅い動きなど、
+      岩や石の見方を変える50枚のカードです。
+    domain: natural_microcosm
+    subdomain_id: rocks_stones
+    subdomain_name: Rocks & Stones
+  - id: natural_microcosm_pond_puddle
+    name: 自然の縮図 — 池と水たまり
+    path: perspective-decks/natural-microcosm/natural-microcosm-pond-puddle.yaml
+    description: |
+      表面張力と反射、水生昆虫、オタマジャクシ、一時的な水たまりの生命など、
+      小規模な水の И見方を変える50枚のカードです。
+    domain: natural_microcosm
+    subdomain_id: pond_puddle
+    subdomain_name: Pond & Puddle
+  - id: natural_microcosm_insect_territories
+    name: 自然の縮図 — 昆虫の縄張り
+    path: perspective-decks/natural-microcosm/natural-microcosm-insect-territories.yaml
+    description: |
+      アリの巣、ミツバチの交通、クモの巣、縄張り争い、コロニーの振付など、
+      昆虫の生活の見方を変える50枚のカードです。
+    domain: natural_microcosm
+    subdomain_id: insect_territories
+    subdomain_name: Insect Territories
+  - id: human_interface_coffee_shop
+    name: ヒューマン・インターフェース — カフェ
+    path: perspective-decks/human-interface/human-interface-coffee-shop.yaml
+    description: |
+      行列の振付、ラップトップの縄張り、サードプレイス、見えないスクリプト、
+      儀式としてのコーヒーなど、カフェの見方を変える50枚のカードです。
+    domain: human_interface
+    subdomain_id: coffee_shop
+    subdomain_name: Coffee Shop
+  - id: human_interface_transit_hub
+    name: ヒューマン・インターフェース — 交通ハブ
+    path: perspective-decks/human-interface/human-interface-transit-hub.yaml
+    description: |
+      プラットフォームや待ち時間、到着・出発の流れ、移動中の見知らぬ人々の
+      振付など、交通ハブの見方を変える50枚のカードです。
+    domain: human_interface
+    subdomain_id: transit_hub
+    subdomain_name: Transit Hub
+  - id: human_interface_workplace
+    name: ヒューマン・インターフェース — 職場
+    path: perspective-decks/human-interface/human-interface-workplace.yaml
+    description: |
+      デスクの縄張り、会議室、給湯室、可視的・不可視的階層など、
+      職場の見方を変える50枚のカードです。
+    domain: human_interface
+    subdomain_id: workplace
+    subdomain_name: Workplace
+  - id: human_interface_retail
+    name: ヒューマン・インターフェース — 小売店
+    path: perspective-decks/human-interface/human-interface-retail.yaml
+    description: |
+      通路と閲覧の振付、試着室、購入のダンスなど、
+      小売空間の見方を変える50枚のカードです。
+    domain: human_interface
+    subdomain_id: retail
+    subdomain_name: Retail
+  - id: human_interface_public_space
+    name: ヒューマン・インターフェース — 公共空間
+    path: perspective-decks/human-interface/human-interface-public-space.yaml
+    description: |
+      ベンチと通路、見知らぬ人々の振付、お守りとしてのオブジェクトなど、
+      公共空間の見方を変える50枚のカードです。
+    domain: human_interface
+    subdomain_id: public_space
+    subdomain_name: Public Space
