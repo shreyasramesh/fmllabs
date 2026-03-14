@@ -1,0 +1,469 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Laboratório Culinário — Sushi (Portuguese)
+
+id: culinary_lab_sushi
+name: Laboratório Culinário — Sushi
+description: 50 cartas para mudar a sua experiência com sushi — da química do arroz e do peixe à coreografia do balcão e à arqueologia da origem de cada neta.
+domain: culinary_lab
+cards:
+  - id: sush_rice_temp
+    name: Temperatura do Arroz
+    prompt: |
+      O arroz de sushi é morno — temperatura corporal, aproximadamente. Não frio. O calor
+      transporta o vinagre. Sinta-o. O que o arroz frio faria? Como a temperatura molda a mordida?
+    follow_ups:
+      - O que a temperatura ambiente sacrificaria?
+      - Como o calor transporta o sabor?
+      - Qual a relação entre temperatura e textura?
+  - id: sush_shari_balance
+    name: Equilíbrio do Shari
+    prompt: |
+      Shari — o arroz — é metade do sushi. O equilíbrio de vinagre, sal, açúcar é
+      preciso. Prove o arroz sozinho. O que ele traz? O que arroz sem graça significaria?
+    follow_ups:
+      - Como o arroz molda o neta?
+      - O que um excesso de vinagre faria?
+      - Qual a relação entre shari e neta?
+  - id: sush_counter_ritual
+    name: Ritual do Balcão
+    prompt: |
+      Omakase no balcão — você de frente para o chef. O sushi chega peça por
+      peça. O balcão é um palco. Observe a coreografia. Qual o ritmo? Quem define o compasso?
+    follow_ups:
+      - O que uma mesa mudaria?
+      - Como o balcão molda a refeição?
+      - Qual a relação entre chef e convidado?
+  - id: sush_net_origin
+    name: Origem do Neta
+    prompt: |
+      Cada neta — a cobertura — veio de algum lugar. Toyosu. Tsukiji. Um barco. Um
+      rancho. Pergunte. Rastreie o peixe. Que jornada ele fez? O que congelado de armazém significaria?
+    follow_ups:
+      - Como a origem molda a peça?
+      - O que outra fonte faria?
+      - Qual a relação entre lugar e qualidade?
+  - id: sush_wasabi_hidden
+    name: Wasabi Escondido
+    prompt: |
+      Wasabi real — raiz ralada — é raro. A maioria é raiz-forte e corante. Mas quando
+      é real, é diferente. Picante, verde, fugaz. Note a ardência. O que o falso adicionaria? Subtrairia?
+    follow_ups:
+      - Como o wasabi molda a mordida?
+      - O que a ausência de wasabi significaria?
+      - Qual a relação entre ardência e peixe?
+  - id: sush_finger_over_chopstick
+    name: Dedo Sobre o Hashi
+    prompt: |
+      Nigiri é tradicionalmente comido com os dedos — não com hashi. Os dedos
+      sentem a temperatura, a textura. Tente. O que o dedo adiciona
+      que o hashi não pode?
+    follow_ups:
+      - Como a mão molda a experiência?
+      - O que os hashis fariam?
+      - Qual a relação entre toque e sabor?
+  - id: sush_piece_by_piece
+    name: Peça por Peça
+    prompt: |
+      O sushi chega uma peça por vez — ou duas. O ritmo é deliberado. Você
+      come; você espera. Considere o ritmo. O que uma travessa de dez de uma vez sacrificaria?
+    follow_ups:
+      - Como o ritmo molda a refeição?
+      - O que a velocidade faria?
+      - Qual a relação entre peça e atenção?
+  - id: sush_gari_palate
+    name: Gengibre Gari no Paladar
+    prompt: |
+      Gari — gengibre em conserva — limpa entre as peças. Não é enfeite; é
+      reinício. Note quando você o come. O que peças consecutivas sem
+      gari fariam ao paladar?
+    follow_ups:
+      - Como o gari molda a progressão?
+      - O que a ausência de gari significaria?
+      - Qual a relação entre reinício e sabor?
+  - id: sush_soy_minimal
+    name: Molho de Soja Mínimo
+    prompt: |
+      Molho de soja — um leve mergulho, o lado do peixe para baixo. Não o arroz.
+      O arroz absorveria demais. O chef pode já ter pincelado molho de soja. Note. O que encharcar faria?
+    follow_ups:
+      - Como o molho de soja molda a peça?
+      - O que a ausência de molho de soja significaria?
+      - Qual a relação entre mergulho e equilíbrio?
+  - id: sush_knife_matters
+    name: A Faca Importa
+    prompt: |
+      A faca de sushi — fio único, afiada. O corte afeta a textura. Contra o grão ou com ele.
+      O ângulo. Considere o que a lâmina faz. O que uma faca cega sacrificaria?
+    follow_ups:
+      - Como o corte molda o peixe?
+      - O que um ângulo diferente faria?
+      - Qual a relação entre lâmina e sensação na boca?
+  - id: sush_otoro_fat
+    name: Gordura do Otoro
+    prompt: |
+      Otoro — o atum mais gordo — derrete. A gordura é o ponto. Considere a
+      marmoreização. O que akami magro faria? Como a gordura molda a experiência?
+    follow_ups:
+      - O que seria da peça sem a gordura?
+      - Como a marmoreização cria luxo?
+      - Qual a relação entre gordura e derretimento?
+  - id: sush_unagi_glaze
+    name: Glacê de Unagi
+    prompt: |
+      Unagi — enguia — é pincelado com molho doce, às vezes grelhado novamente. O
+      glacê é laca. Considere o brilho. O que enguia sem glacê significaria?
+    follow_ups:
+      - Como o glacê molda a peça?
+      - Qual a relação entre doce e enguia?
+      - Por que glacê?
+  - id: sush_nori crisp
+    name: Crocância da Nori
+    prompt: |
+      Nori para maki — tostada, crocante ou macia? Chefs diferentes escolhem
+      diferentemente. A nori afeta a mordida. Considere a textura. O que nori mole faria?
+    follow_ups:
+      - Como a nori molda o rolo?
+      - O que uma torra diferente faria?
+      - Qual a relação entre crocante e fresco?
+  - id: sush_silence_counter
+    name: Silêncio no Balcão
+    prompt: |
+      Alguns balcões de sushi são silenciosos — concentração, respeito. Outros são
+      animados. Observe a paisagem sonora. O que o silêncio adiciona? O que a conversa adiciona?
+    follow_ups:
+      - Como o som molda a refeição?
+      - O que música alta faria?
+      - Qual a relação entre silêncio e foco?
+  - id: sush_tamago_sweet
+    name: Doçura do Tamago
+    prompt: |
+      Tamago — o pudim de ovo — muitas vezes encerra a refeição. É doce, em camadas.
+      A habilidade do chef é visível. Considere o fechamento. O que peixe cru como última peça significaria?
+    follow_ups:
+      - Como o tamago molda o final?
+      - Qual a relação entre doce e final?
+      - Por que ovo por último?
+  - id: sush_tuna_spectrum
+    name: Espectro do Atum
+    prompt: |
+      Akami, chutoro, otoro — magro a gordo. O espectro é deliberado. Prove-os
+      em ordem, se puder. Como a progressão funciona? O que cada um oferece?
+    follow_ups:
+      - Como a gordura molda o espectro?
+      - O que uma única graduação significaria?
+      - Qual a relação entre magro e rico?
+  - id: sush_ume_shiso
+    name: Ume Shiso
+    prompt: |
+      Ume — ameixa em conserva — e shiso em alguns rolos. Ácido, herbáceo. Eles cortam
+      a riqueza. Note quando aparecem. O que seria o rolo sem eles?
+    follow_ups:
+      - Como o ume molda a mordida?
+      - Qual a relação entre ácido e peixe?
+      - Por que shiso?
+  - id: sush_gunkan_hold
+    name: Suporte do Gunkan
+    prompt: |
+      Gunkan — navio de guerra — segura coberturas soltas. Ovas, ouriço-do-mar. A nori
+      que envolve contém. Considere a forma. O que uma peça plana faria?
+    follow_ups:
+      - Como a forma molda a cobertura?
+      - O que um recipiente diferente significaria?
+      - Qual a relação entre suporte e derramamento?
+  - id: sush_uni_risk
+    name: Risco do Uni
+    prompt: |
+      Uni — ouriço-do-mar — é polarizador. Doce, salgado, textura. Pode ser perfeito
+      ou estragado. Considere o risco. O que salmão seguro significaria? O que o risco adiciona?
+    follow_ups:
+      - Como o uni molda a experiência?
+      - O que você perderia sem o risco?
+      - Qual a relação entre polarizador e memorável?
+  - id: sush_chef_choice
+    name: Escolha do Chef
+    prompt: |
+      Omakase — escolha do chef. Você entrega o controle. O chef lê o dia,
+      o peixe, você. Considere a confiança. O que escolher por si mesmo mudaria?
+    follow_ups:
+      - Como a entrega molda a refeição?
+      - O que pedir de um cardápio significaria?
+      - Qual a relação entre confiança e experiência?
+  - id: sush_sake_pair
+    name: Harmonização com Saquê
+    prompt: |
+      Saquê com sushi — frio, morno, envelhecido. A harmonização é considerada. Note
+      quando você bebe. Limpa? Melhora? Considere o papel da bebida.
+    follow_ups:
+      - Como o saquê molda a peça?
+      - O que o vinho faria?
+      - Qual a relação entre arroz e vinho de arroz?
+  - id: sush_ikura_pop
+    name: Estouro da Ikura
+    prompt: |
+      Ikura — ovas de salmão — estouram. O estouro é textura e salmoura. Considere a
+      sensação. O que ovas cozidas fariam? Como o estouro molda a mordida?
+    follow_ups:
+      - O que seria da peça sem o estouro?
+      - Como a textura cria prazer?
+      - Qual a relação entre estouro e sal?
+  - id: sush_hirame_chew
+    name: Mastigabilidade do Hirame
+    prompt: |
+      Hirame — linguado — tem uma mastigabilidade diferente do atum. É magro, delicado.
+      Note a textura. O que peixe gordo faria? Como a mastigabilidade varia?
+    follow_ups:
+      - Como a textura molda a peça?
+      - Qual a relação entre magro e delicado?
+      - Por que pedir hirame?
+  - id: sush_amaebi_head
+    name: Cabeça do Amaebi
+    prompt: |
+      Amaebi — camarão doce — às vezes servido com a cabeça frita. A cabeça é
+      crocante, umami. Considere o uso do todo. O que camarão sem cabeça sacrificaria?
+    follow_ups:
+      - Como a cabeça molda o prato?
+      - Qual a relação entre todo e respeito?
+      - Por que fritar a cabeça?
+  - id: sush_mirin_gloss
+    name: Brilho do Mirin
+    prompt: |
+      Algumas peças são pinceladas com nikiri — molho de soja, mirin, saquê. O brilho é
+      o acabamento. O chef o temperou. Considere adicionar mais molho de soja.
+      O que mergulhar demais faria?
+    follow_ups:
+      - Como o pincel molda a peça?
+      - O que a ausência de pincel faria?
+      - Qual a relação entre a mão do chef e a sua?
+  - id: sush_anago_soft
+    name: Maciez do Anago
+    prompt: |
+      Anago — enguia de água salgada — é mais macia que a unagi. Espécies diferentes,
+      preparo diferente. Note a textura. O que a firmeza da unagi faria?
+    follow_ups:
+      - Como a maciez molda a peça?
+      - Qual a relação entre anago e unagi?
+      - Por que ambas as enguias?
+  - id: sush_saba_silver
+    name: Prata da Saba
+    prompt: |
+      Saba — cavala — é frequentemente curada. A pele prateada, a carne oleosa. É
+      forte. Considere a preservação. O que cavala crua significaria?
+    follow_ups:
+      - Como a cura molda o peixe?
+      - Qual a relação entre óleo e cura?
+      - Por que curar saba?
+  - id: sush_ginger_between
+    name: Gengibre Entre
+    prompt: |
+      Gari entre as peças — o reinício. Mas quando? Após cada uma? Após várias?
+      O ritmo é seu. Note seu padrão. O que a ausência de reinício faria?
+    follow_ups:
+      - Como o tempo molda o gari?
+      - Qual a relação entre peça e peça?
+      - Quando você precisa de reinício?
+  - id: sush_maki_cut
+    name: Corte do Maki
+    prompt: |
+      Maki — rolos — são cortados em pedaços. Seis ou oito. O corte afeta a
+      seção transversal. Considere a espiral. O que um corte diferente faria?
+    follow_ups:
+      - Como o corte molda a mordida?
+      - O que menos peças significaria?
+      - Qual a relação entre fatia e todo?
+  - id: sush_tobiko_crunch
+    name: Crocância do Tobiko
+    prompt: |
+      Tobiko — ovas de peixe voador — adiciona crocância e cor. É uma cobertura, um enfeite.
+      Note quando aparece. O que seria o rolo sem ele?
+    follow_ups:
+      - Como o tobiko molda a mordida?
+      - Qual a relação entre crocância e cor?
+      - Por que peixe voador?
+  - id: sush_sashimi_contrast
+    name: Contraste do Sashimi
+    prompt: |
+      Sashimi — sem arroz — deixa o peixe falar por si. A pureza é diferente.
+      Compare sashimi com nigiri. O que o arroz adiciona? O que sua
+      ausência revela?
+    follow_ups:
+      - Como o arroz molda o nigiri?
+      - O que todo sashimi significaria?
+      - Qual a relação entre peixe e arroz?
+  - id: sush_tea_rinse
+    name: Enxágue com Chá
+    prompt: |
+      Chá verde no balcão de sushi — reabastecido, compartilhado. Limpa. O chá é
+      parte do ritmo. Considere seu papel. O que a água faria? O que a ausência de bebida faria?
+    follow_ups:
+      - Como o chá molda a refeição?
+      - Qual a relação entre chá e reinício?
+      - Por que chá verde?
+  - id: sush_bengara_tuna
+    name: Atum Bengara
+    prompt: |
+      Bengara — atum magro, frequentemente da parte traseira — é mais escuro. O sabor é
+      diferente do akami. Considere o corte. Que parte do peixe? O que a localização faz?
+    follow_ups:
+      - Como o corte molda o sabor?
+      - Qual a relação entre localização e sabor?
+      - Por que este corte?
+  - id: sush_kohada_cure
+    name: Cura da Kohada
+    prompt: |
+      Kohada — sardinha — é curada, às vezes avinagrada. É um teste para o
+      chef. A pele prateada, o equilíbrio. Considere a habilidade. O que sem cura faria?
+    follow_ups:
+      - Como a cura molda o peixe?
+      - Qual a relação entre vinagre e pele prateada?
+      - Por que é um teste?
+  - id: sush_engawa_fin
+    name: Barbatana Engawa
+    prompt: |
+      Engawa — o músculo da barbatana do linguado — é apreciado. Tem uma textura distinta.
+      Considere a parte. O que hirame comum faria? Como a barbatana
+      diferente?
+    follow_ups:
+      - Como o corte molda a peça?
+      - Qual a relação entre barbatana e músculo?
+      - Por que é apreciado?
+  - id: sush_first_piece
+    name: Primeira Peça
+    prompt: |
+      A primeira peça define o tom. Frequentemente algo suave — talvez hirame ou
+      tai. O chef está calibrando. Considere a abertura. O que otoro primeiro significaria?
+    follow_ups:
+      - Como o primeiro molda a refeição?
+      - Qual a relação entre o primeiro e a progressão?
+      - Por que suave primeiro?
+  - id: sush_kampachi_fat
+    name: Gordura do Kampachi
+    prompt: |
+      Kampachi — jovem olho-de-boi — tem uma gordura sutil. Está entre magro e
+      rico. Note o meio-termo. O que buri faria? O que
+      peixe mais magro faria?
+    follow_ups:
+      - Como a gordura molda a peça?
+      - Qual a relação entre idade e gordura?
+      - Por que kampachi?
+  - id: sush_nodoguro_char
+    name: Queimado do Nodoguro
+    prompt: |
+      Nodoguro — perch de garganta preta — é frequentemente levemente selado. A pele, a gordura.
+      A queimadura adiciona. Considere a aplicação de calor. O que cru faria?
+    follow_ups:
+      - Como o selado molda o peixe?
+      - Qual a relação entre queimado e gordura?
+      - Por que selar este?
+  - id: sush_choji_plate
+    name: Prato Choji
+    prompt: |
+      O prato — ou a madeira, ou a pedra — segura a peça. A apresentação
+      é minimalista. Considere o recipiente. O que um prato cheio faria? O que
+      o minimalismo permite?
+    follow_ups:
+      - Como o prato molda a peça?
+      - Qual a relação entre recipiente e foco?
+      - Por que minimalista?
+  - id: sush_tea_cup
+    name: Xícara de Chá
+    prompt: |
+      A xícara de chá no balcão — sem alça, às vezes áspera. Você a segura
+      com as duas mãos. Considere o recipiente. O que uma caneca faria? O que a xícara adiciona?
+    follow_ups:
+      - Como a xícara molda o gole?
+      - Qual a relação entre recipiente e ritual?
+      - Por que sem alça?
+  - id: sush_silver_slide
+    name: Deslize de Prata
+    prompt: |
+      A peça deve deslizar do prato — ou ser levantada limpa. O arroz segura
+      mas libera. Considere a construção. O que arroz desmoronando significaria?
+    follow_ups:
+      - Como a estrutura molda a mordida?
+      - O que arroz papa faria?
+      - Qual a relação entre integridade e mordida?
+  - id: sush_kinmedai_skin
+    name: Pele do Kinmedai
+    prompt: |
+      Kinmedai — pargo de olho dourado — frequentemente com a pele, levemente maçaricado. A
+      pele adiciona textura, gordura. Considere o maçarico. O que pele crua faria?
+    follow_ups:
+      - Como a pele molda a peça?
+      - Qual a relação entre maçarico e gordura?
+      - Por que maçaricar?
+  - id: sush_botan_ebi
+    name: Botan Ebi
+    prompt: |
+      Botan ebi — camarão pintado — é doce, frequentemente cru. A cauda às vezes vem
+      frita. Considere o todo. O que camarão cozido faria?
+    follow_ups:
+      - Como o preparo molda a peça?
+      - Qual a relação entre cru e doce?
+      - Por que camarão pintado?
+  - id: sush_namida_heat
+    name: Ardência Namida
+    prompt: |
+      Wasabi real traz uma lágrima — namida. A ardência sobe, passa. É
+      diferente de pimenta. Considere a sensação. O que raiz-forte faria diferente?
+    follow_ups:
+      - Como a ardência molda a mordida?
+      - Qual a relação entre wasabi e lágrima?
+      - Por que faz chorar?
+  - id: sush_omakase_end
+    name: Fim do Omakase
+    prompt: |
+      A refeição termina — tamago, talvez missô, talvez uma fruta. O arco está completo.
+      Considere o fechamento. O que outra peça faria? Quando você sabe que acabou?
+    follow_ups:
+      - Como o final molda a memória?
+      - Qual a relação entre o final e a satisfação?
+      - Por que terminar com ovo ou sopa?
+  - id: sush_counter_wait
+    name: Espera no Balcão
+    prompt: |
+      Entre as peças, você espera. O chef prepara. A pausa faz parte do
+      ritmo. Note a antecipação. O que serviço instantâneo sacrificaria?
+    follow_ups:
+      - Como a espera molda a peça?
+      - Qual a relação entre pausa e atenção?
+      - Por que não pré-pratos?
+  - id: sush_tsukiji_legacy
+    name: Legado de Tsukiji
+    prompt: |
+      Tsukiji se foi; Toyosu tomou seu lugar. Mas o peixe ainda flui por
+      Tóquio. Considere o mercado. O que seria do sushi sem o leilão?
+      Sem a distribuição?
+    follow_ups:
+      - Como o mercado molda o peixe?
+      - Qual a relação entre leilão e qualidade?
+      - O que Tsukiji significava?
+  - id: sush_edomae_spirit
+    name: Espírito Edomae
+    prompt: |
+      Edomae — estilo Edo — sushi da tradição de Tóquio. Conservado, curado, envelhecido
+      para funcionar sem refrigeração. Considere a história. O que
+      sempre fresco significaria?
+    follow_ups:
+      - Como a história molda a técnica?
+      - Qual a relação entre preservação e sabor?
+      - Por que Edomae?
+  - id: sush_gari_reset
+    name: Reinício do Gari
+    prompt: |
+      Gari — gengibre em conserva — limpa entre as peças. As fatias rosa pálido reiniciam
+      o paladar. Note quando você o pega. O que seria a refeição sem
+      o reinício? Como o gengibre molda a progressão?
+    follow_ups:
+      - O que a ausência de gari significaria?
+      - Como o reinício molda a próxima peça?
+      - Qual a relação entre pausa e continuidade?
+  - id: sush_otoro_melt
+    name: Derretimento do Otoro
+    prompt: |
+      Otoro — o atum mais gordo — quase se dissolve na língua. A gordura é o
+      ponto. Considere a textura. O que atum magro faria? Como o
+      derretimento marca o pico da refeição?
+    follow_ups:
+      - O que akami faria de diferente?
+      - Como a gordura molda a experiência?
+      - Qual a relação entre derretimento e luxo?

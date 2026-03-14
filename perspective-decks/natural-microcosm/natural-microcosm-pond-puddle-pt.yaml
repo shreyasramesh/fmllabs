@@ -1,0 +1,408 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosmo Natural — Tanque e Poça (Portuguese)
+
+id: natural_microcosm_pond_puddle
+name: Microcosmo Natural — Tanque e Poça
+description: 50 cartas para mudar a forma como você vê a água em pequena escala — desde a tensão superficial e reflexos até insetos aquáticos, girinos e a vida em poças temporárias.
+domain: natural_microcosm
+cards:
+  - id: nmp_surface_tension
+    name: Tensão Superficial
+    prompt: |
+      Um gerrídeo caminha sobre a água. A superfície se sustenta — as moléculas se agarram. Derrube um alfinete gentilmente. Ele flutua. Considere o filme invisível. O que o quebraria?
+    follow_ups:
+      - Como a tensão superficial molda quem pode viver aqui?
+      - O que seria o tanque sem ela?
+      - Qual a relação entre superfície e limite?
+  - id: nmp_skater_ripple
+    name: Onda do Gerrídeo
+    prompt: |
+      As pernas de um gerrídeo afundam a superfície. Cada passo cria uma onda. Observe o padrão. O gerrídeo lê a superfície como um mapa. O que ele sente?
+    follow_ups:
+      - Como a onda carrega informação?
+      - O que o gerrídeo faria sem a superfície?
+      - Qual a relação entre onda e presa?
+  - id: nmp_reflection_sky
+    name: Reflexo do Céu
+    prompt: |
+      Uma poça reflete o céu — ou um galho, ou você. O reflexo inverte. A água parada é um espelho. O que o reflexo adiciona? O que ele esconde?
+    follow_ups:
+      - O que seria a poça sem reflexo?
+      - Como a quietude molda o que vemos?
+      - Qual a relação entre superfície e imagem?
+  - id: nmp_tadpole_tail
+    name: Cauda de Girino
+    prompt: |
+      Um girino nada — a cauda o impulsiona. A cauda será reabsorvida. O animal está se transformando. Considere o entremeio. O que a cauda possibilita agora?
+    follow_ups:
+      - O que seria o girino sem a cauda?
+      - Como a metamorfose reescreve o corpo?
+      - Qual a relação entre forma e função?
+  - id: nmp_dragonfly_egg
+    name: Ovo de Libélula
+    prompt: |
+      Libélulas botam ovos na água — ou em caules submersos. A ninfa vive debaixo d'água por anos antes de emergir. Considere a vida dividida. O que conecta água e ar?
+    follow_ups:
+      - O que seria a libélula sem o estágio aquático?
+      - Como a ninfa molda o tanque?
+      - Qual a relação entre ninfa e adulta?
+  - id: nmp_algae_bloom
+    name: Floração de Algas
+    prompt: |
+      Lodo verde na água — algas. É uma floração, um pulso. Excesso de nutrientes, excesso de sol. O tanque responde. O que a desencadeia? O que se segue?
+    follow_ups:
+      - O que seria o tanque sem algas?
+      - Como a floração afeta o oxigênio?
+      - Qual a relação entre nutriente e crescimento?
+  - id: nmp_reed_stem
+    name: Caule de Juncos
+    prompt: |
+      Juncos e caniços sobem da borda. São ocos — canais de ar correm por dentro. O caule conecta água e ar. Quem usa o junco como escada?
+    follow_ups:
+      - O que seria a borda sem juncos?
+      - Como o oco possibilita a sobrevivência?
+      - Qual a relação entre caule e habitat?
+  - id: nmp_pond_skin
+    name: Pele do Tanque
+    prompt: |
+      O tanque tem uma pele — onde a água encontra o ar. Poeira pousa nela. Óleo se espalha. A pele é delicada. Toque-a. O que a pele separa?
+    follow_ups:
+      - O que seria o tanque sem a pele?
+      - Como a pele afeta a troca gasosa?
+      - Qual a relação entre superfície e profundidade?
+  - id: nmp_temporary_pool
+    name: Poça Temporária
+    prompt: |
+      Uma poça após a chuva — ela vai secar. Ainda assim, a vida se adaptou. Camarões de contos de fadas, triops, ovos que esperam. Considere a urgência. O que deve acontecer antes que a água vá embora?
+    follow_ups:
+      - O que seria a poça se fosse permanente?
+      - Como a temporalidade molda a estratégia?
+      - Qual a relação entre tempo e adaptação?
+  - id: nmp_whirligig_gyre
+    name: Giro do Whirligig
+    prompt: |
+      Besouros whirligig giram na superfície. Eles veem acima e abaixo — olhos divididos. São predadores e presas. Considere a visão dupla. O que ela possibilita?
+    follow_ups:
+      - O que seria o besouro sem visão dividida?
+      - Como o giro confunde os predadores?
+      - Qual a relação entre giro e sobrevivência?
+  - id: nmp_diving_spider
+    name: Aranha Mergulhadora
+    prompt: |
+      Uma aranha mergulhadora carrega uma bolha de ar — um sino de mergulho. Ela respira debaixo d'água. A bolha é um pulmão. Considere a invenção. O que a aranha faria sem ela?
+    follow_ups:
+      - Como a bolha possibilita a caça?
+      - O que aconteceria se a bolha estourasse?
+      - Qual a relação entre ar e água?
+  - id: nmp_pond_scum
+    name: Lodo do Tanque
+    prompt: |
+      Lodo se forma na borda — pólen, poeira, algas, insetos. É uma camada limite. O que se acumula lá? Quem se alimenta disso? O lodo é um filtro.
+    follow_ups:
+      - O que seria o tanque sem o lodo?
+      - Como a borda concentra a vida?
+      - Qual a relação entre limite e acúmulo?
+  - id: nmp_ice_surface
+    name: Superfície de Gelo
+    prompt: |
+      No inverno, o tanque congela. O gelo se sustenta. Abaixo dele, a vida continua — mais lenta, mais fria. Considere a barreira. O que o gelo protege? O que ele bloqueia?
+    follow_ups:
+      - O que seria o tanque sem gelo?
+      - Como o congelamento afeta o oxigênio?
+      - Qual a relação entre gelo e sobrevivência?
+  - id: nmp_minnow_school
+    name: Cardume de Minnows
+    prompt: |
+      Minnows nadam em cardume — movem-se como um só. O cardume é defesa, eficiência. Observe a sincronia. O que os coordena? Qual o risco de um minnow solitário?
+    follow_ups:
+      - O que seria o tanque sem o cardume?
+      - Como o nado em cardume reduz a predação?
+      - Qual a relação entre indivíduo e grupo?
+  - id: nmp_lily_pad
+    name: Folha de Ninféia
+    prompt: |
+      Uma folha de ninféia flutua. Sua parte inferior é diferente da superior — pelos, cor. A folha é uma plataforma. O que pousa nela? O que vive por baixo?
+    follow_ups:
+      - O que seria o tanque sem folhas de ninféia?
+      - Como a folha molda a luz abaixo?
+      - Qual a relação entre folha e sombra?
+  - id: nmp_ripple_spread
+    name: Propagação da Onda
+    prompt: |
+      Uma pedra cai. Ondas se espalham. Elas se intersectam, interferem. O padrão carrega energia. Considere a decadência. Até onde as ondas viajam?
+    follow_ups:
+      - O que seria a superfície sem ondas?
+      - Como a onda marca o impacto?
+      - Qual a relação entre perturbação e propagação?
+  - id: nmp_mosquito_wiggle
+    name: Mexer do Mosquito
+    prompt: |
+      Larvas de mosquito pendem da superfície — wigglers. Elas respiram por um sifão. O mexer é movimento, alimentação. Considere o mundo da larva. O que ela come?
+    follow_ups:
+      - O que seria o tanque sem mosquitos?
+      - Como o mexer evita predadores?
+      - Qual a relação entre larva e adulta?
+  - id: nmp_leaf_boat
+    name: Barco de Folha
+    prompt: |
+      Uma folha flutua — caída, à deriva. É uma jangada para alguns, comida para outros. A folha vai afundar, decair. Trace sua jornada. Em que ela se tornará?
+    follow_ups:
+      - O que seria a superfície sem detritos flutuantes?
+      - Como a folha cria microhabitat?
+      - Qual a relação entre flutuar e afundar?
+  - id: nmp_backswimmer_top
+    name: Costas do Nadador (em cima)
+    prompt: |
+      Um nadador de costas nada de cabeça para baixo — barriga para o céu. Ele rema com as pernas. Ele respira na superfície, então mergulha. Considere a inversão. Por que de cabeça para baixo?
+    follow_ups:
+      - O que seria o nadador de costas de cabeça para cima?
+      - Como a postura ajuda na caça?
+      - Qual a relação entre orientação e presa?
+  - id: nmp_snail_trail
+    name: Rastro de Caracol
+    prompt: |
+      Um caracol de tanque desliza. Ele deixa um rastro — muco, movimento. O rastro marca onde esteve. Outros caracóis podem seguir. Considere o caminho. O que o rastro comunica?
+    follow_ups:
+      - O que seria o caracol sem o rastro?
+      - Como o muco possibilita o movimento?
+      - Qual a relação entre rastro e seguir?
+  - id: nmp_dew_drop
+    name: Gota de Orvalho
+    prompt: |
+      Orvalho se forma em uma lâmina acima da água — gotas, reflete. É condensação. A gota se segura. Então cai. Considere a gota. O que ela magnifica?
+    follow_ups:
+      - O que seria a lâmina sem orvalho?
+      - Como a gota curva a luz?
+      - Qual a relação entre gota e superfície?
+  - id: nmp_spring_constant
+    name: Constante de Mola
+    prompt: |
+      Uma mola alimenta o tanque — ou o tanque infiltra. O nível da água é equilíbrio. Considere a entrada e a saída. O que sustenta a poça? O que a secaria?
+    follow_ups:
+      - O que seria o tanque sem a mola?
+      - Como a fonte molda a água?
+      - Qual a relação entre entrada e vida?
+  - id: nmp_edge_ecotone
+    name: Ecotono da Borda
+    prompt: |
+      A borda do tanque é um ecotono — transição. Molhado encontra seco. Plantas se adaptam. Animais cruzam. A borda é diversidade. O que prospera no entremeio?
+    follow_ups:
+      - O que seria o tanque sem a borda?
+      - Como o ecotono cria oportunidade?
+      - Qual a relação entre limite e diversidade?
+  - id: nmp_frog_eye
+    name: Olho de Sapo
+    prompt: |
+      Um sapo senta na borda. Seus olhos saltam — ele vê acima e à frente. O sapo está imóvel. Então a língua dispara. Considere a paciência. Pelo que ele espera?
+    follow_ups:
+      - O que seria o sapo sem os olhos saltados?
+      - Como a imobilidade possibilita o bote?
+      - Qual a relação entre esperar e pegar?
+  - id: nmp_oxygen_bubble
+    name: Bolha de Oxigênio
+    prompt: |
+      Plantas no tanque produzem oxigênio — bolhas sobem. Em um dia ensolarado, a água respira. Considere a troca. O que seria o tanque sem fotossíntese?
+    follow_ups:
+      - Como o oxigênio molda quem pode viver aqui?
+      - O que acontece quando o oxigênio fica baixo?
+      - Qual a relação entre luz e respiração?
+  - id: nmp_detritus_floor
+    name: Chão de Detritos
+    prompt: |
+      O fundo do tanque é detritos — folhas caídas, insetos mortos, sedimento. É uma camada de decomposição. O que vive nela? Quem se alimenta dela? O chão é um despensa.
+    follow_ups:
+      - O que seria o tanque sem detritos?
+      - Como o chão alimenta a coluna d'água?
+      - Qual a relação entre fundo e topo?
+  - id: nmp_rain_ring
+    name: Anel de Chuva
+    prompt: |
+      Chuva atinge a superfície. Cada gota faz um anel — uma coroa, depois uma cratera. A chuva texturiza a água. Considere o padrão. O que uma superfície parada significaria?
+    follow_ups:
+      - Como a chuva oxigena a água?
+      - O que os anéis perturbam?
+      - Qual a relação entre chuva e superfície?
+  - id: nmp_duckweed_carpet
+    name: Tapete de Lentilha D'água
+    prompt: |
+      Lentilhas d'água cobrem a superfície — pequenas plantas flutuantes. Elas se multiplicam rapidamente. O tapete sombreia o que está abaixo. Considere a cobertura. O que o sol pleno significaria?
+    follow_ups:
+      - O que seria o tanque sem lentilha d'água?
+      - Como o tapete afeta a temperatura?
+      - Qual a relação entre cobertura e vida abaixo?
+  - id: nmp_phantom_midgie
+    name: Mosquito Fantasma
+    prompt: |
+      Larvas de mosquito fantasma são transparentes — fantasmagóricas. Elas pendem na água. Você vê através delas. Considere a invisibilidade. O que a transparência protege?
+    follow_ups:
+      - O que seria a larva se fosse opaca?
+      - Como a transparência ajuda na predação?
+      - Qual a relação entre transparente e sobrevivência?
+  - id: nmp_skimmer_skip
+    name: Salto do Arremessador
+    prompt: |
+      Uma pedra arremessada sobre a superfície — uma, duas, três. Cada quique transfere energia. O arremessador eventualmente afunda. Considere o limite. O que determina o número de quiques?
+    follow_ups:
+      - O que faria a pedra sem o giro?
+      - Como o ângulo molda o salto?
+      - Qual a relação entre arremesso e quique?
+  - id: nmp_pollinator_drink
+    name: Bebida do Polinizador
+    prompt: |
+      Uma abelha bebe na borda. Borboletas se reúnem em uma poça de lama. A água é um recurso. Considere quem vem. O que eles precisam da água?
+    follow_ups:
+      - O que fariam os polinizadores sem a poça?
+      - Como a borda possibilita a bebida?
+      - Qual a relação entre água e mineral?
+  - id: nmp_evaporation_skin
+    name: Pele de Evaporação
+    prompt: |
+      O tanque perde água por evaporação. No verão, o nível baixa. A margem se expande. Considere o recuo. O que fica exposto? Quem fica encalhado?
+    follow_ups:
+      - O que seria o tanque sem evaporação?
+      - Como a queda concentra a vida?
+      - Qual a relação entre perda e concentração?
+  - id: nmp_hydra_stalk
+    name: Talo de Hidra
+    prompt: |
+      Uma hidra — minúscula, tentaculada — se ancora a um caule. Ela pica presas, as atrai. A hidra pode regenerar. Considere a simplicidade. Que plano corporal ela usa?
+    follow_ups:
+      - O que seria o tanque sem hidras?
+      - Como a regeneração ajuda na sobrevivência?
+      - Qual a relação entre simplicidade e resiliência?
+  - id: nmp_boatman_row
+    name: Remo do Barqueiro
+    prompt: |
+      Um barqueiro aquático rema — pernas como remos. Ele está frequentemente de cabeça para baixo, agarrado à superfície. Ele se alimenta de algas. Considere os remos. O que eles impulsionam?
+    follow_ups:
+      - O que seria o barqueiro sem os remos?
+      - Como o remo difere do nadador de costas?
+      - Qual a relação entre perna e movimento?
+  - id: nmp_caddisfly_case
+    name: Estojo de Tricóptero
+    prompt: |
+      Uma larva de tricóptero constrói um estojo — gravetos, pedras, conchas. Ela cola com seda. O estojo é armadura e camuflagem. Considere a construção. O que a larva escolhe?
+    follow_ups:
+      - O que seria a larva sem o estojo?
+      - Como o estojo varia por habitat?
+      - Qual a relação entre material e proteção?
+  - id: nmp_damselfly_emergence
+    name: Emergência de Libélula
+    prompt: |
+      Uma libélula emerge — a ninfa sobe em um caule, racha sua pele, a adulta se liberta. As asas se desdobram. O momento é vulnerável. Considere a transformação. O que poderia dar errado?
+    follow_ups:
+      - O que seria a adulta sem a escalada?
+      - Como a emergência molda o tempo?
+      - Qual a relação entre ninfa e adulta?
+  - id: nmp_floating_feather
+    name: Pena Flutuante
+    prompt: |
+      Uma pena flutua — descartada por um pássaro. Ela navega na superfície. A água escorrega nela. Considere a pena. O que manteve o pássaro seco? O que a pena faz agora?
+    follow_ups:
+      - O que seria a superfície sem objetos flutuantes?
+      - Como a pena retém ar?
+      - Qual a relação entre estrutura e flutuação?
+  - id: nmp_moon_jelly
+    name: Água-viva Lua
+    prompt: |
+      Em alguns tanques, águas-vivas — águas-vivas lua. Elas pulsam. São majoritariamente água. Considere o corpo. O que a gelatina captura? O que ela evita?
+    follow_ups:
+      - O que seria o tanque sem águas-vivas?
+      - Como o pulso cria movimento?
+      - Qual a relação entre água e corpo?
+  - id: nmp_seep_source
+    name: Fonte de Infiltração
+    prompt: |
+      Água se infiltra da margem — uma nascente, fluxo lento. A infiltração alimenta o tanque. Ou o tanque vaza. Considere a fronteira. O que cruza? O que se segura?
+    follow_ups:
+      - O que seria o tanque sem a infiltração?
+      - Como a infiltração molda a química?
+      - Qual a relação entre fonte e poça?
+  - id: nmp_wind_wave
+    name: Onda do Vento
+    prompt: |
+      O vento empurra a superfície. Ondas pequenas se formam. Elas quebram na borda. Considere o "fetch" — a distância que o vento viaja sobre a água. O que molda a onda?
+    follow_ups:
+      - O que seria a superfície sem vento?
+      - Como as ondas afetam o oxigênio?
+      - Qual a relação entre vento e mistura?
+  - id: nmp_rotifer_wheel
+    name: Roda de Rotífero
+    prompt: |
+      Rotíferos são microscópicos — eles têm uma roda de cílios. Ela gira, atrai comida. O rotífero é um motor. Considere a escala. O que mais há nesta água?
+    follow_ups:
+      - O que seria o tanque sem rotíferos?
+      - Como a roda cria fluxo?
+      - Qual a relação entre cílios e alimentação?
+  - id: nmp_temperature_layer
+    name: Camada de Temperatura
+    prompt: |
+      Tanques podem estratificar — quente em cima, frio embaixo. As camadas não se misturam facilmente. Considere a fronteira. O que vive onde? O que acontece quando o tanque "vira"?
+    follow_ups:
+      - O que seria o tanque sem estratificação?
+      - Como a temperatura molda o oxigênio?
+      - Qual a relação entre camada e vida?
+  - id: nmp_predator_shadow
+    name: Sombra do Predador
+    prompt: |
+      A sombra de um peixe passa. Presas congelam, se dispersam. A sombra é um sinal. Considere a resposta. O que uma sombra constante significaria? O que nenhuma sombra significaria?
+    follow_ups:
+      - Como a sombra desencadeia a fuga?
+      - Que outros sinais além da sombra importam?
+      - Qual a relação entre sombra e sobrevivência?
+  - id: nmp_surface_film
+    name: Filme Superficial
+    prompt: |
+      Um filme fino na água — pólen, bactérias, matéria orgânica. Ele pode suportar peso. Alguns insetos andam sobre ele. Considere o filme. O que o quebraria?
+    follow_ups:
+      - O que seria a superfície sem o filme?
+      - Como o filme afeta a troca gasosa?
+      - Qual a relação entre filme e limite?
+  - id: nmp_dry_wait
+    name: Espera Seca
+    prompt: |
+      A poça vai secar. Alguns organismos têm ovos resistentes à desidratação. Eles esperam. A próxima chuva pode estar a meses de distância. Considere a aposta. O que deve se alinhar para o sucesso?
+    follow_ups:
+      - O que seria a poça sem a espera?
+      - Como a dormência atravessa a seca?
+      - Qual a relação entre ovo e chuva?
+  - id: nmp_shoreline_wrack
+    name: Detritos da Margem
+    prompt: |
+      Detritos se acumulam na linha d'água — folhas, gravetos, insetos mortos. Os detritos formam uma linha. Marcam o nível máximo da água. Considere o acúmulo. Quem se alimenta aqui?
+    follow_ups:
+      - O que seria a borda sem os detritos?
+      - Como os detritos criam habitat?
+      - Qual a relação entre linha e nível?
+  - id: nmp_duckweed_carpet
+    name: Tapete de Lentilha D'água
+    prompt: |
+      Lentilhas d'água cobrem a água parada — pequenos discos verdes. Elas se espalham rapidamente. A superfície se torna sólida. Considere a invasão. O que o tapete bloqueia? O que ele possibilita?
+    follow_ups:
+      - O que seria o tanque sem lentilha d'água?
+      - Como o tapete afeta a luz e o oxigênio?
+      - Qual a relação entre cobertura e vida abaixo?
+  - id: nmp_rain_ring
+    name: Anel de Chuva
+    prompt: |
+      Uma gota de chuva atinge a superfície. Um anel se expande, desaparece. Em uma chuva, a superfície se torna texturizada — anéis se sobrepondo. Considere o padrão. O que a chuva faz com o tanque?
+    follow_ups:
+      - O que seria a superfície sem chuva?
+      - Como a chuva mistura a água?
+      - Qual a relação entre gota e anel?
+  - id: nmp_minnow_school
+    name: Cardume de Minnows
+    prompt: |
+      Minnows nadam em cardume — dezenas se movem como um só. O cardume é uma estratégia. Confunde predadores. Considere a coordenação. Como eles decidem? Quanto custaria a solidão?
+    follow_ups:
+      - O que seria o tanque sem natação em cardume?
+      - Como o cardume responde à ameaça?
+      - Qual a relação entre muitos e um?
+  - id: nmp_ice_edge
+    name: Borda de Gelo
+    prompt: |
+      No inverno, o gelo cresce a partir da borda. A fronteira avança. Por baixo, a vida persiste — mais fria, mais lenta. Considere a borda. O que sobrevive sob o gelo?
+    follow_ups:
+      - O que seria o tanque sem gelo?
+      - Como o gelo protege ou ameaça?
+      - Qual a relação entre congelamento e oxigênio?

@@ -219,6 +219,75 @@ export function parseRelevantContextFromStreamStart(content: string): {
   };
 }
 
+const JOURNAL_CHECKPOINT_MARKER = "---JOURNAL-CHECKPOINT---";
+const JOURNAL_CHECKPOINT_END_MARKER = "---END-JOURNAL-CHECKPOINT---";
+
+/** Used by API and client to delimit the journal checkpoint block */
+export function getJournalCheckpointBlockDelimiters() {
+  return { start: JOURNAL_CHECKPOINT_MARKER, end: JOURNAL_CHECKPOINT_END_MARKER };
+}
+
+export interface JournalCheckpoint {
+  prompt: string;
+  options: string[];
+}
+
+function tryParseJournalCheckpointJson(jsonStr: string): JournalCheckpoint | null {
+  const cleaned = jsonStr
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```\s*$/i, "")
+    .trim();
+  try {
+    const parsed = JSON.parse(cleaned) as { prompt?: unknown; options?: unknown };
+    const prompt = typeof parsed.prompt === "string" ? parsed.prompt.trim() : "";
+    const options = Array.isArray(parsed.options)
+      ? parsed.options.filter((o): o is string => typeof o === "string").slice(0, 8)
+      : [];
+    if (!prompt) return null;
+    return { prompt, options };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Parses and strips the JOURNAL-CHECKPOINT block from assistant content.
+ * Returns content without the block and the parsed journal checkpoint, or null if not found/invalid.
+ */
+export function parseJournalCheckpointBlock(content: string): {
+  contentWithoutBlock: string;
+  journalCheckpoint: JournalCheckpoint | null;
+} {
+  const idx = content.indexOf(JOURNAL_CHECKPOINT_MARKER);
+  if (idx === -1) {
+    return { contentWithoutBlock: content, journalCheckpoint: null };
+  }
+  const afterMarker = content.slice(idx + JOURNAL_CHECKPOINT_MARKER.length).trimStart();
+  const endIdx = afterMarker.indexOf(JOURNAL_CHECKPOINT_END_MARKER);
+  if (endIdx === -1) {
+    return { contentWithoutBlock: content, journalCheckpoint: null };
+  }
+  const jsonStr = afterMarker.slice(0, endIdx).trim();
+  const contentAfterBlock = afterMarker.slice(endIdx + JOURNAL_CHECKPOINT_END_MARKER.length).trimStart();
+  const contentWithoutBlock = (content.slice(0, idx).trimEnd() + "\n\n" + contentAfterBlock).trim();
+  const journalCheckpoint = tryParseJournalCheckpointJson(jsonStr);
+  return {
+    contentWithoutBlock,
+    journalCheckpoint,
+  };
+}
+
+/**
+ * When the stream contains a JOURNAL-CHECKPOINT block, extract it.
+ * Returns { contentWithoutBlock, journalCheckpoint }.
+ */
+export function parseJournalCheckpointFromStream(content: string): {
+  contentWithoutBlock: string;
+  journalCheckpoint: JournalCheckpoint | null;
+} {
+  return parseJournalCheckpointBlock(content);
+}
+
 const OPTIONS_MARKER_REGEX = /-{2,3}\s*OPTIONS\s*-{2,3}/i;
 
 /**

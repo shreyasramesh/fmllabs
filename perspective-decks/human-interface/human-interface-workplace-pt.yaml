@@ -1,0 +1,499 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# A Interface Humana — Ambiente de Trabalho (Portuguese)
+
+id: human_interface_workplace
+name: A Interface Humana — Ambiente de Trabalho
+description: 50 cartas para mudar a sua perspetiva sobre o ambiente de trabalho — desde territórios de secretária e salas de reunião até ao bebedouro e hierarquia visível versus invisível.
+domain: human_interface
+cards:
+  - id: hi_wp_desk_territory
+    name: Território da Secretária
+    prompt: |
+      Uma secretária é reivindicada — fotos, plantas, canecas. O território estende-se para além
+      da superfície. Observe as fronteiras. O que marca "meu"? A secretária é
+      um pequeno reino. Como é defendida?
+    follow_ups:
+      - Como a secretária molda a identidade?
+      - Como seria o ambiente de trabalho sem personalização?
+      - Qual a relação entre território e pertença?
+  - id: hi_wp_meeting_room
+    name: Sala de Reunião
+    prompt: |
+      A sala tem uma mesa, cadeiras, um ecrã. A porta fecha-se. A sala de reunião
+      é um palco para performance. Observe quem fala, quem não fala. A
+      sala contém hierarquia. O que o espaço possibilita?
+    follow_ups:
+      - Como a sala molda a reunião?
+      - Como seria o ambiente de trabalho sem salas de reunião?
+      - Qual a relação entre sala e poder?
+  - id: hi_wp_water_cooler
+    name: Bebedouro
+    prompt: |
+      O bebedouro é um cruzamento. As pessoas encontram-se lá por acaso. O
+      encontro é informal. Observe as conversas. O que se diz no
+      bebedouro que não seria dito numa reunião?
+    follow_ups:
+      - Como o bebedouro molda a cultura?
+      - Como seria o ambiente de trabalho sem ele?
+      - Qual a relação entre bebedouro e conexão?
+  - id: hi_wp_visible_hierarchy
+    name: Hierarquia Visível
+    prompt: |
+      Escritórios de canto, lugares junto à janela, cubículos. O espaço codifica o posto. Observe
+      a distribuição. Quem obtém o quê? A hierarquia está embutida na
+      arquitetura. O que comunica?
+    follow_ups:
+      - Como a hierarquia molda o comportamento?
+      - Como seria o ambiente de trabalho sem ela?
+      - Qual a relação entre espaço e estatuto?
+  - id: hi_wp_invisible_hierarchy
+    name: Hierarquia Invisível
+    prompt: |
+      Algumas pessoas são ouvidas; outras são interrompidas. A hierarquia
+      não está no organograma. Observe as reuniões. Quem cede? Quem
+      domina? A hierarquia invisível molda os resultados.
+    follow_ups:
+      - Como a hierarquia invisível emerge?
+      - Como seria o ambiente de trabalho se fosse visível?
+      - Qual a relação entre o invisível e o poder?
+  - id: hi_wp_cubicle_wall
+    name: Parede do Cubículo
+    prompt: |
+      A parede é baixa — pode-se ver por cima dela. A privacidade é parcial. O cubículo
+      é um compromisso. Observe as linhas de visão. O que se pode ouvir? O que se pode ver? A parede cria uma ilusão de limite.
+    follow_ups:
+      - Como o cubículo molda o foco?
+      - Como seria o ambiente de trabalho com paredes completas?
+      - Qual a relação entre parede e privacidade?
+  - id: hi_wp_corner_office
+    name: Escritório de Canto
+    prompt: |
+      O escritório de canto tem duas janelas. É o prémio. Observe quem o ocupa. O escritório de canto é visível do andar. É um símbolo. O que o canto comunica?
+    follow_ups:
+      - Como o escritório de canto molda a aspiração?
+      - Como seria o andar sem ele?
+      - Qual a relação entre canto e autoridade?
+  - id: hi_wp_open_plan
+    name: Plano Aberto
+    prompt: |
+      Sem paredes. Secretárias em filas ou grupos. O plano aberto promete colaboração.
+      Observe a realidade. Quem usa auscultadores? O plano aberto cria
+      proximidade. Qual o custo?
+    follow_ups:
+      - Como o plano aberto molda a interação?
+      - Como seria o ambiente de trabalho com paredes?
+      - Qual a relação entre o aberto e o foco?
+  - id: hi_wp_calendar_invite
+    name: Convite de Calendário
+    prompt: |
+      O convite aparece. Aceitar, recusar, provisório. O calendário estrutura
+      o dia. Observe os blocos. Quem controla o tempo de quem? O calendário
+      é um mapa de poder.
+    follow_ups:
+      - Como o calendário molda o dia?
+      - Como seria o ambiente de trabalho sem ele?
+      - Qual a relação entre convite e obrigação?
+  - id: hi_wp_knock_before_enter
+    name: Bater Antes de Entrar
+    prompt: |
+      Algumas portas estão fechadas. Bater é um pedido. Observe quem bate e
+      quem entra. Bater codifica respeito. O que a porta fechada protege?
+    follow_ups:
+      - Como bater molda o encontro?
+      - Como seria o ambiente de trabalho com portas abertas?
+      - Qual a relação entre bater e limite?
+  - id: hi_wp_headphones_signal
+    name: Sinal de Auscultadores
+    prompt: |
+      Auscultadores ligados significam "não incomodar". O sinal é universal. Observe
+      quem o respeita. Os auscultadores criam uma bolha. O que a bolha possibilita?
+    follow_ups:
+      - Como os auscultadores moldam o andar?
+      - Como seria o ambiente de trabalho sem eles?
+      - Qual a relação entre auscultadores e foco?
+  - id: hi_wp_lunch_room
+    name: Sala de Almoço
+    prompt: |
+      A sala de almoço tem mesas, micro-ondas, frigorífico. As pessoas comem sozinhas ou
+      juntas. Observe os grupos. Quem se senta com quem? A sala de almoço
+      revela alianças. O que a disposição diz?
+    follow_ups:
+      - Como a sala de almoço molda a cultura?
+      - Como seria o ambiente de trabalho sem ela?
+      - Qual a relação entre almoço e conexão?
+  - id: hi_wp_slack_ping
+    name: Ping do Slack
+    prompt: |
+      O ping chega. Instantâneo, assíncrono. O ping pode interromper ou
+      esperar. Observe as normas. Quem responde imediatamente? O ping cria
+      um novo ritmo de comunicação. O que substitui?
+    follow_ups:
+      - Como o ping molda o dia?
+      - Como seria o ambiente de trabalho sem ele?
+      - Qual a relação entre ping e urgência?
+  - id: hi_wp_whiteboard_claim
+    name: Reivindicação do Quadro Branco
+    prompt: |
+      O quadro branco contém ideias — diagramas, listas. Alguém as escreveu. O
+      quadro é uma superfície partilhada. Observe quem escreve, quem apaga. O quadro
+      é território. O que contém?
+    follow_ups:
+      - Como o quadro branco molda a colaboração?
+      - Como seria a reunião sem ele?
+      - Qual a relação entre quadro e pensamento?
+  - id: hi_wp_elevator_encounter
+    name: Encontro no Elevador
+    prompt: |
+      Partilha o elevador com um colega. Trinta segundos. O encontro
+      é embaraçoso ou fácil. Observe o bate-papo. O que se diz? O
+      elevador comprime o tempo. O que exige?
+    follow_ups:
+      - Como o elevador molda o encontro?
+      - Como seria o edifício sem elevadores?
+      - Qual a relação entre elevador e civilidade?
+  - id: hi_wp_cc_email
+    name: E-mail CC
+    prompt: |
+      Está em cópia. Não é o destinatário principal. O CC inclui-o no
+      assunto. Observe quem recebe CC. O CC é um sinal de relevância —
+      ou política. O que faz o CC?
+    follow_ups:
+      - Como o CC molda a comunicação?
+      - Como seria o ambiente de trabalho sem CC?
+      - Qual a relação entre CC e visibilidade?
+  - id: hi_wp_standing_desk
+    name: Secretária de Pé
+    prompt: |
+      A secretária sobe. O trabalhador fica de pé. A secretária de pé é uma escolha — saúde,
+      preferência, performance. Observe quem tem uma. O que a secretária de pé sinaliza?
+    follow_ups:
+      - Como a secretária de pé molda o corpo?
+      - Como seria o ambiente de trabalho sem ela?
+      - Qual a relação entre estar de pé e produtividade?
+  - id: hi_wp_conference_call
+    name: Chamada em Conferência
+    prompt: |
+      Vozes de outros locais. A chamada conecta pessoas distribuídas. Observe
+      quem fala, quem silencia. A chamada é uma presença parcial. O que a
+      chamada possibilita — e o que perde?
+    follow_ups:
+      - Como a chamada molda a reunião?
+      - Como seria o ambiente de trabalho sem ela?
+      - Qual a relação entre chamada e presença?
+  - id: hi_wp_office_plant
+    name: Planta de Escritório
+    prompt: |
+      Uma planta na secretária — jiboia, suculenta. É decoração e cuidado. A
+      planta não pertence à empresa. Observe quem tem uma. O que a
+      planta adiciona ao espaço?
+    follow_ups:
+      - Como a planta molda a secretária?
+      - Como seria o ambiente de trabalho sem plantas?
+      - Qual a relação entre planta e identidade?
+  - id: hi_wp_after_hours
+    name: Fora de Horário
+    prompt: |
+      O escritório depois da maioria ter saído. As luzes estão fracas. O
+      trabalhador fora de horário é visível — dedicado ou a lutar. Observe a cena. O que o
+      escritório vazio possibilita? Qual o custo?
+    follow_ups:
+      - Como o fora de horário molda a cultura?
+      - Como seria o ambiente de trabalho sem ele?
+      - Qual a relação entre horário e expectativa?
+  - id: hi_wp_nameplate
+    name: Placa de Nome
+    prompt: |
+      Um nome na secretária, na porta. A placa de nome reivindica o espaço. Observe
+      quem tem uma. A placa de nome é identidade e território. O que
+      comunica aos que passam?
+    follow_ups:
+      - Como a placa de nome molda o espaço?
+      - Como seria o ambiente de trabalho sem ela?
+      - Qual a relação entre placa de nome e presença?
+  - id: hi_wp_meeting_overrun
+    name: Reunião Excedida
+    prompt: |
+      A reunião devia ter terminado. Não termina. O excesso é comum.
+      Observe a dinâmica. Quem tem a próxima reunião? Quem pode ficar? O
+      excesso é um movimento de poder. O que extrai?
+    follow_ups:
+      - Como o excesso molda o dia?
+      - Como seria o ambiente de trabalho com fins rigorosos?
+      - Qual a relação entre excesso e respeito?
+  - id: hi_wp_quick_question
+    name: Pergunta Rápida
+    prompt: |
+      "Tens uma pergunta rápida?" O pedido interrompe. O "rápida" é uma promessa.
+      Observe a troca. Quão rápida é? A pergunta rápida é uma
+      negociação de tempo. Qual o custo?
+    follow_ups:
+      - Como a pergunta rápida molda o fluxo?
+      - Como seria o ambiente de trabalho sem interrupções?
+      - Qual a relação entre rápido e respeito?
+  - id: hi_wp_bathroom_encounter
+    name: Encontro na Casa de Banho
+    prompt: |
+      Vê um colega na casa de banho. O encontro é ambíguo. Contacto visual ou não? A casa de banho é um espaço liminar. Observe as normas.
+      O que o encontro exige?
+    follow_ups:
+      - Como a casa de banho molda o ambiente de trabalho?
+      - Como seria o ambiente de trabalho sem casas de banho partilhadas?
+      - Qual a relação entre casa de banho e privacidade?
+  - id: hi_wp_commute_talk
+    name: Conversa sobre o Trajeto
+    prompt: |
+      "Como foi o trajeto?" A pergunta abre o bate-papo. O trajeto é
+      experiência partilhada. Observe a troca. O que a conversa sobre o trajeto
+      faz pela relação?
+    follow_ups:
+      - Como a conversa sobre o trajeto molda o dia?
+      - Como seria o ambiente de trabalho sem ela?
+      - Qual a relação entre trajeto e conexão?
+  - id: hi_wp_parking_spot
+    name: Vaga de Estacionamento
+    prompt: |
+      Vagas reservadas, vagas por ordem de chegada. O estacionamento codifica a hierarquia. Observe
+      quem estaciona onde. A vaga é um pequeno privilégio. O que
+      comunica?
+    follow_ups:
+      - Como o estacionamento molda o ambiente de trabalho?
+      - Como seria o parque sem vagas reservadas?
+      - Qual a relação entre vaga e estatuto?
+  - id: hi_wp_birthday_cake
+    name: Bolo de Aniversário
+    prompt: |
+      Aparece um bolo. É o aniversário de alguém. A equipa reúne-se. O bolo
+      é ritual. Observe a reunião. O que o momento de aniversário faz
+      pelo grupo?
+    follow_ups:
+      - Como o aniversário molda a cultura?
+      - Como seria o ambiente de trabalho sem ele?
+      - Qual a relação entre bolo e pertença?
+  - id: hi_wp_forwarded_email
+    name: E-mail Encaminhado
+    prompt: |
+      Um e-mail é encaminhado. "Para informação" ou "Pensei que deveria ver isto". O
+      encaminhamento estende a conversa. Observe quem recebe o encaminhamento. O
+      encaminhamento é um sinal. O que significa?
+    follow_ups:
+      - Como o encaminhamento molda a comunicação?
+      - Como seria o ambiente de trabalho sem ele?
+      - Qual a relação entre encaminhamento e confiança?
+  - id: hi_wp_break_room
+    name: Sala de Pausa
+    prompt: |
+      Café, snacks, por vezes um sofá. A sala de pausa é uma pausa. As pessoas
+      vão lá para se afastar. Observe quem a usa. A sala de pausa é um
+      refúgio. O que proporciona?
+    follow_ups:
+      - Como a sala de pausa molda o dia?
+      - Como seria o ambiente de trabalho sem ela?
+      - Qual a relação entre pausa e produtividade?
+  - id: hi_wp_office_supply
+    name: Material de Escritório
+    prompt: |
+      Canetas, papel, agrafadores — o armário de material contém as ferramentas. Alguém
+      o gere. Observe quem leva o quê. O material é um pequeno bem comum.
+      Quais são as regras?
+    follow_ups:
+      - Como o material molda o ambiente de trabalho?
+      - Como seria o ambiente de trabalho sem ele?
+      - Qual a relação entre material e direito?
+  - id: hi_wp_remote_camera
+    name: Câmara Remota
+    prompt: |
+      A câmara está ligada ou desligada. O trabalhador remoto escolhe. A escolha é
+      visível. Observe as normas. Quem a mantém ligada? A câmara é uma janela.
+      O que revela?
+    follow_ups:
+      - Como a câmara molda a chamada?
+      - Como seria a reunião sem ela?
+      - Qual a relação entre câmara e presença?
+  - id: hi_wp_side_conversation
+    name: Conversa Paralela
+    prompt: |
+      Duas pessoas falam enquanto outras trabalham. A conversa paralela é privada
+      mas visível. Observe a dinâmica. É perturbadora? A conversa paralela
+      é uma pequena rebelião. O que cria?
+    follow_ups:
+      - Como a conversa paralela molda o andar?
+      - Como seria o ambiente de trabalho sem ela?
+      - Qual a relação entre o paralelo e a exclusão?
+  - id: hi_wp_clean_desk
+    name: Secretária Limpa
+    prompt: |
+      Algumas secretárias estão imaculadas — nada de pessoal. A secretária limpa é política ou
+      preferência. Observe o contraste. O que comunica a secretária limpa?
+      Esterilidade? Disciplina? Distanciamento?
+    follow_ups:
+      - Como a secretária limpa molda o trabalhador?
+      - Como seria o ambiente de trabalho com secretárias desarrumadas?
+      - Qual a relação entre limpo e identidade?
+  - id: hi_wp_meeting_no_show
+    name: Não Comparecimento em Reunião
+    prompt: |
+      A reunião foi agendada. Alguém não comparece. O não comparecimento é uma
+      mensagem. Observe a resposta. Alguém menciona? O não comparecimento
+      é um pequeno movimento de poder. O que comunica?
+    follow_ups:
+      - Como o não comparecimento molda a reunião?
+      - Como seria o ambiente de trabalho sem não comparecimentos?
+      - Qual a relação entre não comparecimento e respeito?
+  - id: hi_wp_cubicle_visit
+    name: Visita ao Cubículo
+    prompt: |
+      Alguém caminha até lá. Fica na borda do cubículo. A visita
+      é uma escolha — poderiam ter enviado uma mensagem. Observe a dinâmica. O que a
+      visita possibilita que uma mensagem não consegue?
+    follow_ups:
+      - Como a visita molda a interação?
+      - Como seria o ambiente de trabalho sem visitas?
+      - Qual a relação entre visita e interrupção?
+  - id: hi_wp_shared_printer
+    name: Impressora Partilhada
+    prompt: |
+      A impressora é partilhada. Os documentos acumulam-se. Alguém tem de recolher. A
+      impressora é um cruzamento. Observe os encontros. O que acontece quando
+      duas pessoas vão buscar a mesma saída?
+    follow_ups:
+      - Como a impressora molda o andar?
+      - Como seria o ambiente de trabalho sem ela?
+      - Qual a relação entre impressora e paciência?
+  - id: hi_wp_office_temperature
+    name: Temperatura do Escritório
+    prompt: |
+      "Está muito frio." "Está muito quente." A temperatura é contestada. Alguém
+      controla o termóstato. Observe as queixas. A temperatura é um
+      pequeno palco de poder. Quem ganha?
+    follow_ups:
+      - Como a temperatura molda o ambiente de trabalho?
+      - Como seria o ambiente de trabalho com controlo individual?
+      - Qual a relação entre temperatura e conforto?
+  - id: hi_wp_handshake
+    name: Aperto de Mão
+    prompt: |
+      O aperto de mão — primeiro encontro, negócio fechado. O aperto de mão é ritual. Observe
+      a aderência, a duração. O aperto de mão codifica formalidade. O que
+      comunica?
+    follow_ups:
+      - Como o aperto de mão molda o encontro?
+      - Como seria o ambiente de trabalho sem ele?
+      - Qual a relação entre aperto de mão e confiança?
+  - id: hi_wp_cc_removal
+    name: Remoção de CC
+    prompt: |
+      "Responder a todos" ou "Responder"? A escolha importa. Remover alguém do
+      assunto é um sinal. Observe as dinâmicas. Quem é removido? A remoção de CC
+      é uma pequena exclusão. O que significa?
+    follow_ups:
+      - Como a remoção molda a conversa?
+      - Como seria o ambiente de trabalho sem opções de resposta?
+      - Qual a relação entre remoção e poder?
+  - id: hi_wp_office_tour
+    name: Tour do Escritório
+    prompt: |
+      Um novo contratado faz um tour. "Esta é a cozinha. É aqui que fazemos reuniões."
+      O tour orienta. Observe o guia. O que o tour comunica
+      sobre a cultura?
+    follow_ups:
+      - Como o tour molda o recém-chegado?
+      - Como seria o acolhimento sem ele?
+      - Qual a relação entre tour e pertença?
+  - id: hi_wp_meeting_room_book
+    name: Reserva de Sala de Reunião
+    prompt: |
+      A sala está reservada. Ou reservada em duplicado. O calendário é o árbitro.
+      Observe o conflito. Quem cede? A reserva é uma reivindicação de espaço e
+      tempo. O que exige?
+    follow_ups:
+      - Como a reserva molda o dia?
+      - Como seria o ambiente de trabalho sem reservas?
+      - Qual a relação entre reserva e prioridade?
+  - id: hi_wp_goodbye_ritual
+    name: Ritual de Despedida
+    prompt: |
+      Fim do dia. "Estou a sair." "Até amanhã." A despedida é ritual.
+      Observe as trocas. Quem se despede de quem? O ritual marca o
+      limite entre trabalho e não trabalho.
+    follow_ups:
+      - Como a despedida molda o dia?
+      - Como seria o ambiente de trabalho sem ela?
+      - Qual a relação entre despedida e encerramento?
+  - id: hi_wp_promotion_announce
+    name: Anúncio de Promoção
+    prompt: |
+      "Temos o prazer de anunciar..." A promoção é pública. O anúncio
+      cria um momento. Observe a resposta. Parabéns, silêncio,
+      olhares de lado. O que o anúncio faz à sala?
+    follow_ups:
+      - Como o anúncio molda a cultura?
+      - Como seria o ambiente de trabalho sem promoções públicas?
+      - Qual a relação entre anúncio e hierarquia?
+  - id: hi_wp_desk_move
+    name: Mudança de Secretária
+    prompt: |
+      Alguém muda de secretária. A mudança é promoção, reorganização ou escolha.
+      Observe o processo. O que levam? O que deixam? A mudança
+      é uma transição. O que significa?
+    follow_ups:
+      - Como a mudança molda o trabalhador?
+      - Como seria o ambiente de trabalho sem mudanças?
+      - Qual a relação entre mudança e identidade?
+  - id: hi_wp_office_gossip
+    name: Fofoca do Escritório
+    prompt: |
+      A informação viaja — quem está a sair, quem está frustrado. A fofoca é
+      informal. Observe onde acontece. O bebedouro, o corredor.
+      O que a fofoca faz pelo grupo?
+    follow_ups:
+      - Como a fofoca molda a cultura?
+      - Como seria o ambiente de trabalho sem ela?
+      - Qual a relação entre fofoca e pertença?
+  - id: hi_wp_meeting_agenda
+    name: Agenda da Reunião
+    prompt: |
+      A agenda estrutura a reunião. Ou não — a reunião vagueia.
+      Observe a dinâmica. Quem segue a agenda? Quem não segue? A agenda
+      é um contrato. O que possibilita?
+    follow_ups:
+      - Como a agenda molda a reunião?
+      - Como seria a reunião sem ela?
+      - Qual a relação entre agenda e poder?
+  - id: hi_wp_office_food
+    name: Comida do Escritório
+    prompt: |
+      Donuts, fruta, sobras de uma reunião com clientes. A comida aparece.
+      As pessoas reúnem-se. Observe a partilha. A comida do escritório é um pequeno presente.
+      O que cria?
+    follow_ups:
+      - Como a comida molda o ambiente de trabalho?
+      - Como seria o ambiente de trabalho sem ela?
+      - Qual a relação entre comida e comunidade?
+  - id: hi_wp_last_day
+    name: Último Dia
+    prompt: |
+      O último dia de alguém. Despedidas, talvez um cartão, talvez um bolo. O último dia
+      é um ritual de partida. Observe o estado de espírito. O que o último dia faz
+      para o que sai e para os que ficam?
+    follow_ups:
+      - Como o último dia molda a cultura?
+      - Como seria o ambiente de trabalho sem o ritual?
+      - Qual a relação entre último dia e encerramento?
+  - id: hi_wp_office_hours
+    name: Horário de Escritório
+    prompt: |
+      "Tenho horário de escritório terça-feira das 14h às 16h." O bloco está aberto. As pessoas podem aparecer. Observe quem vem. O horário de escritório é um convite. O que possibilita?
+    follow_ups:
+      - Como o horário de escritório molda o acesso?
+      - Como seria o ambiente de trabalho sem ele?
+      - Qual a relação entre horário e disponibilidade?
+  - id: hi_wp_workspace_claim
+    name: Reivindicação do Espaço de Trabalho
+    prompt: |
+      Uma jaqueta na cadeira. Uma mala debaixo da secretária. A reivindicação diz "Estou aqui"
+      ou "Volto já". Observe os sinais. Quanto tempo uma reivindicação pode durar?
+      O espaço de trabalho é temporariamente possuído. Quais são as regras?
+    follow_ups:
+      - Como a reivindicação molda o andar?
+      - Como seria o ambiente de trabalho sem reivindicações?
+      - Qual a relação entre reivindicação e presença?

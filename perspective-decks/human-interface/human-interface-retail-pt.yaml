@@ -1,0 +1,424 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# A Interface Humana — Varejo (Portuguese)
+
+id: human_interface_retail
+name: A Interface Humana — Varejo
+description: 50 cartas para mudar a forma como você vê o espaço de varejo — desde corredores e a coreografia de navegação até provadores e a dança da compra.
+domain: human_interface
+cards:
+  - id: hi_rt_aisle_flow
+    name: Fluxo do Corredor
+    prompt: |
+      O corredor canaliza o movimento. Carrinhos vão para um lado; pessoas navegam. Observe o fluxo. Quem cede? Quem bloqueia? O corredor tem física. Quais regras governam a dança?
+    follow_ups:
+      - Como o corredor molda a exploração?
+      - Como seria a loja sem corredores?
+      - Qual a relação entre fluxo e design?
+  - id: hi_rt_browsing_choreography
+    name: Coreografia de Navegação
+    prompt: |
+      Dedos tocam o tecido. Olhos escaneiam as prateleiras. A exploração tem um ritmo — pausa, consideração, seguir em frente. Observe a coreografia. O que o corpo faz quando não está comprando?
+    follow_ups:
+      - Como a exploração molda a experiência?
+      - Como seria a loja sem a exploração?
+      - Qual a relação entre exploração e desejo?
+  - id: hi_rt_fitting_room
+    name: Provador
+    prompt: |
+      A cortina fecha. O provador é um limiar — do público ao privado. Lá dentro, você experimenta um eu possível. Observe o retorno. O que o rosto diz? O provador é um palco para a decisão.
+    follow_ups:
+      - Como o provador molda a compra?
+      - Como seria a loja sem ele?
+      - Qual a relação entre experimentar e identidade?
+  - id: hi_rt_dance_of_purchase
+    name: Dança da Compra
+    prompt: |
+      Aproximar, selecionar, carregar, pagar. A compra tem passos. Observe a sequência. Onde as pessoas hesitam? A dança é coreografada pela loja. O que ela extrai?
+    follow_ups:
+      - Como a dança molda o resultado?
+      - Como seria a loja sem a sequência?
+      - Qual a relação entre dança e desejo?
+  - id: hi_rt_cart_territory
+    name: Território do Carrinho
+    prompt: |
+      O carrinho estende o corpo. Ele carrega escolhas, bloqueia a passagem. Observe o caminho do carrinho. O carrinho é um território móvel. O que ele reivindica?
+    follow_ups:
+      - Como o carrinho molda o movimento?
+      - Como seria a loja sem carrinhos?
+      - Qual a relação entre carrinho e acúmulo?
+  - id: hi_rt_endcap_display
+    name: Display de Cabeceira de Corredor
+    prompt: |
+      O fim do corredor abriga um display — impulso, promoção, sazonal. A cabeceira de corredor chama a atenção. Observe quem para. A cabeceira de corredor é uma armadilha. O que ela faz?
+    follow_ups:
+      - Como a cabeceira de corredor molda a exploração?
+      - Como seria o corredor sem ela?
+      - Qual a relação entre display e impulso?
+  - id: hi_rt_checkout_line
+    name: Fila do Caixa
+    prompt: |
+      A fila se forma. Doces, revistas, últimas chances. O caixa é um teste final. Observe a espera. O que as pessoas fazem? A fila é um limiar entre a exploração e a saída.
+    follow_ups:
+      - Como a fila molda a compra?
+      - Como seria a loja sem a espera?
+      - Qual a relação entre fila e impulso?
+  - id: hi_rt_shelf_height
+    name: Altura da Prateleira
+    prompt: |
+      Altura dos olhos vende. A altura da prateleira é design. Observe o que está onde. O que está embaixo? O que está em cima? A altura codifica valor. O que ela assume sobre o corpo?
+    follow_ups:
+      - Como a altura da prateleira molda a exploração?
+      - Como seria a loja com altura uniforme?
+      - Qual a relação entre altura e acesso?
+  - id: hi_rt_price_tag
+    name: Etiqueta de Preço
+    prompt: |
+      A etiqueta indica o preço. Às vezes escondida, às vezes proeminente. Observe a colocação. A etiqueta é informação e barreira. O que a etiqueta faz ao momento do toque?
+    follow_ups:
+      - Como a etiqueta molda a decisão?
+      - O que seria o item sem a etiqueta?
+      - Qual a relação entre etiqueta e valor?
+  - id: hi_rt_store_entrance
+    name: Entrada da Loja
+    prompt: |
+      A porta se abre. Você entra. A entrada é um limiar. Observe o que você vê primeiro. A entrada define o tom. O que a loja quer que você sinta?
+    follow_ups:
+      - Como a entrada molda a visita?
+      - Como seria a loja sem design?
+      - Qual a relação entre entrada e expectativa?
+  - id: hi_rt_sales_associate
+    name: Vendedor
+    prompt: |
+      "Posso ajudar a encontrar algo?" A oferta é roteirizada. Observe a troca. Aceitar ou recusar? O vendedor é um guia e uma pressão. O que a oferta faz?
+    follow_ups:
+      - Como o vendedor molda a exploração?
+      - Como seria a loja sem eles?
+      - Qual a relação entre oferta e obrigação?
+  - id: hi_rt_basket_versus_cart
+    name: Cesta Versus Carrinho
+    prompt: |
+      Cesta para poucos itens. Carrinho para mais. A escolha prevê a compra. Observe quem pega o quê. A cesta limita; o carrinho convida. O que a escolha permite?
+    follow_ups:
+      - Como a cesta molda a visita?
+      - Como seria a loja com apenas carrinhos?
+      - Qual a relação entre recipiente e acúmulo?
+  - id: hi_rt_return_counter
+    name: Balcão de Devolução
+    prompt: |
+      A fila de devolução é diferente. Pessoas carregam sacolas, recibos, arrependimento. A devolução é uma reversão. Observe a troca. O que a devolução custa — emocionalmente, socialmente? O balcão de devolução é um local de desfazimento.
+    follow_ups:
+      - Como a devolução molda o relacionamento?
+      - Como seria a loja sem devoluções?
+      - Qual a relação entre devolução e confiança?
+  - id: hi_rt_dressing_room_limit
+    name: Limite do Provador
+    prompt: |
+      "Seis itens no máximo." O limite controla a experimentação. Observe a negociação. O que acontece quando você tem sete? O limite molda a experiência do provador. O que ele assume?
+    follow_ups:
+      - Como o limite molda a experimentação?
+      - Como seria o provador sem ele?
+      - Qual a relação entre limite e roubo?
+  - id: hi_rt_impulse_buy
+    name: Compra por Impulso
+    prompt: |
+      O item não estava na lista. Chamou a atenção. A compra por impulso é um momento de rendição. Observe quando acontece. O que a desencadeou? O impulso é o design encontrando o desejo.
+    follow_ups:
+      - Como o impulso molda a compra?
+      - Como seria a loja sem impulso?
+      - Qual a relação entre impulso e arrependimento?
+  - id: hi_rt_store_music
+    name: Música da Loja
+    prompt: |
+      Música toca — lenta, familiar, planejada. A música molda o humor e o ritmo. Observe o tempo. Loja agitada, música lenta? A música é um design invisível. O que ela faz com o corpo?
+    follow_ups:
+      - Como a música molda a visita?
+      - Como seria a loja em silêncio?
+      - Qual a relação entre música e duração?
+  - id: hi_rt_mannequin
+    name: Manequim
+    prompt: |
+      O manequim veste as roupas. É um corpo ideal, uma sugestão. Observe como as pessoas o olham. O manequim é um espelho e uma fantasia. O que ele promete?
+    follow_ups:
+      - Como o manequim molda a exploração?
+      - Como seria a loja sem ele?
+      - Qual a relação entre manequim e desejo?
+  - id: hi_rt_sample_station
+    name: Estação de Amostra
+    prompt: |
+      Prove isto. Experimente isto. A amostra convida ao toque. A estação cria uma pausa. Observe quem para. A amostra é um pequeno presente. O que ela extrai?
+    follow_ups:
+      - Como a amostra molda a compra?
+      - Como seria a loja sem amostras?
+      - Qual a relação entre amostra e obrigação?
+  - id: hi_rt_sale_rack
+    name: Arara de Promoção
+    prompt: |
+      A arara de promoção é caos — com desconto, amassada. Pessoas reviram. A arara de promoção é um tipo diferente de exploração. Observe o comportamento. O que o desconto faz ao toque?
+    follow_ups:
+      - Como a arara de promoção molda a visita?
+      - Como seria a loja sem ela?
+      - Qual a relação entre promoção e valor?
+  - id: hi_rt_mirror_encounter
+    name: Encontro com o Espelho
+    prompt: |
+      Você se vê no espelho da loja. O encontro é inevitável. Observe o olhar. O que você verifica? O espelho é um teste. A loja fornece o espelho. O que ela quer?
+    follow_ups:
+      - Como o espelho molda a experimentação?
+      - Como seria o provador sem ele?
+      - Qual a relação entre espelho e eu?
+  - id: hi_rt_cashier_small_talk
+    name: Conversa Fiada no Caixa
+    prompt: |
+      "Encontrou tudo bem?" Pergunta o caixa. A conversa fiada é roteirizada. Observe a troca. O que a pergunta faz? O caixa é o último contato humano. O que a conversa cria?
+    follow_ups:
+      - Como a conversa fiada molda a saída?
+      - Como seria o caixa sem ela?
+      - Qual a relação entre conversa e transação?
+  - id: hi_rt_store_layout
+    name: Layout da Loja
+    prompt: |
+      O caminho é planejado. Essenciais no fundo. Impulso na frente. O layout coreografa a visita. Observe seu percurso. O que o designer queria que você passasse?
+    follow_ups:
+      - Como o layout molda a exploração?
+      - Como seria a loja com layout aleatório?
+      - Qual a relação entre layout e exposição?
+  - id: hi_rt_touch_decide
+    name: Tocar para Decidir
+    prompt: |
+      Dedos tocam o tecido, a superfície. O toque decide. Observe o momento. O que a mão aprende que o olho não pode? O toque é um limiar. O que ele exige?
+    follow_ups:
+      - Como o toque molda a decisão?
+      - Como seria a loja sem o toque?
+      - Qual a relação entre toque e comprometimento?
+  - id: hi_rt_receipt_handoff
+    name: Entrega do Recibo
+    prompt: |
+      O recibo é oferecido — na sacola ou separado. Alguns pegam; outros recusam. O recibo é prova e registro. Observe a troca. O que o recibo faz pela transação?
+    follow_ups:
+      - Como o recibo molda a saída?
+      - Como seria o caixa sem ele?
+      - Qual a relação entre recibo e encerramento?
+  - id: hi_rt_store_exit
+    name: Saída da Loja
+    prompt: |
+      A porta se abre. Você sai com uma sacola — ou de mãos vazias. A saída é um limiar. Observe o sentimento. O que a saída extrai? A saída é o fim da dança. O que resta?
+    follow_ups:
+      - Como a saída molda a visita?
+      - Como seria a loja sem a porta?
+      - Qual a relação entre saída e satisfação?
+  - id: hi_rt_loyalty_card_ask
+    name: Pergunta sobre Cartão Fidelidade
+    prompt: |
+      "Você tem nosso cartão de recompensas?" A pergunta é rotineira. Observe a resposta. Sim, não, cadastrar. O cartão fidelidade estende o relacionamento. O que a pergunta cria?
+    follow_ups:
+      - Como o cartão fidelidade molda a transação?
+      - Como seria o caixa sem ele?
+      - Qual a relação entre cartão e dados?
+  - id: hi_rt_abandoned_cart
+    name: Carrinho Abandonado
+    prompt: |
+      Um carrinho fica no corredor — cheio, desacompanhado. O carrinho é abandonado. Observe o conteúdo. O que eles consideraram? O abandono é um momento de não. O que ele revela?
+    follow_ups:
+      - Como o carrinho abandonado molda a loja?
+      - O que a loja aprenderia com ele?
+      - Qual a relação entre abandono e desejo?
+  - id: hi_rt_fitting_room_opinion
+    name: Opinião no Provador
+    prompt: |
+      "Como ficou?" Alguém pergunta de fora da cortina. A opinião é solicitada. O provador se torna social. Observe a troca. O que a opinião faz?
+    follow_ups:
+      - Como a opinião molda a decisão?
+      - Como seria a experimentação sozinha?
+      - Qual a relação entre opinião e compra?
+  - id: hi_rt_store_scent
+    name: Aroma da Loja
+    prompt: |
+      A loja tem um cheiro — perfume, couro, limpeza. O aroma é planejado. Ele entra antes de você notar. Observe quando você o sente. O que o aroma faz com o corpo?
+    follow_ups:
+      - Como o aroma molda a visita?
+      - Como seria a loja sem ele?
+      - Qual a relação entre aroma e memória?
+  - id: hi_rt_compare_prices
+    name: Comparar Preços
+    prompt: |
+      Celular na mão. Escaneando. A verificação de preço é pesquisa. Observe o momento. O que o celular revela? A comparação acontece no corredor. O que ela faz com a decisão?
+    follow_ups:
+      - Como a comparação molda a compra?
+      - Como seria a loja sem celulares?
+      - Qual a relação entre comparar e poder?
+  - id: hi_rt_window_display
+    name: Vitrine
+    prompt: |
+      A vitrine dá para a rua. Manequins, adereços, uma história. O display para a caminhada. Observe o que chama a atenção. A vitrine é um convite. O que ela promete?
+    follow_ups:
+      - Como a vitrine molda a entrada?
+      - Como seria a loja sem ela?
+      - Qual a relação entre display e desejo?
+  - id: hi_rt_size_search
+    name: Busca por Tamanho
+    prompt: |
+      Dedos folheiam cabides. Procurando o tamanho. A busca tem um ritmo. Observe a frustração ou o alívio. O tamanho é um portão. O que a busca exige?
+    follow_ups:
+      - Como a busca por tamanho molda a exploração?
+      - Como seria a loja com todos os tamanhos visíveis?
+      - Qual a relação entre tamanho e corpo?
+  - id: hi_rt_payment_choice
+    name: Escolha de Pagamento
+    prompt: |
+      Cartão, dinheiro, celular. A escolha de pagamento é o momento da transação. Observe o método. A escolha é hábito e identidade. O que o método de pagamento comunica?
+    follow_ups:
+      - Como o pagamento molda o caixa?
+      - Como seria a loja com um único método?
+      - Qual a relação entre pagamento e velocidade?
+  - id: hi_rt_store_regular
+    name: Freguês da Loja
+    prompt: |
+      O freguês conhece o layout. Ele se move com propósito. O vendedor acena. Observe o freguês. O que ele sabe que o novato não sabe? O freguês tem um relacionamento com o espaço.
+    follow_ups:
+      - Como o freguês molda a loja?
+      - Como seria a loja sem fregueses?
+      - Qual a relação entre freguês e fidelidade?
+  - id: hi_rt_bag_handoff
+    name: Entrega da Sacola
+    prompt: |
+      A sacola é entregue — cheia, com marca. A entrega completa a transação. Observe a troca. O que a sacola faz para a saída? A sacola é prova e fardo.
+    follow_ups:
+      - Como a sacola molda a saída?
+      - Como seria a compra sem ela?
+      - Qual a relação entre sacola e identidade?
+  - id: hi_rt_fitting_room_overflow
+    name: Excesso de Itens no Provador
+    prompt: |
+      Itens demais. O vendedor pega o excesso. "Seguro estes aqui." O excesso é confiança. Observe a troca. O que o vendedor segura? O excesso estende a experimentação. O que ele permite?
+    follow_ups:
+      - Como o excesso molda o provador?
+      - Como seria o provador sem ele?
+      - Qual a relação entre excesso e confiança?
+  - id: hi_rt_store_lighting
+    name: Iluminação da Loja
+    prompt: |
+      A luz é planejada — lisonjeira, brilhante, quente. A iluminação molda como as coisas parecem. Observe o espelho nessa luz. O que a iluminação faz com o rosto, com o tecido?
+    follow_ups:
+      - Como a iluminação molda a compra?
+      - Como seria a loja sob luz forte?
+      - Qual a relação entre luz e verdade?
+  - id: hi_rt_aisle_block
+    name: Bloqueio no Corredor
+    prompt: |
+      Alguém está parado no corredor. Você precisa passar. O bloqueio é inconsciente ou deliberado. Observe a negociação. "Com licença." O bloqueio é um pequeno atrito. O que ele exige?
+    follow_ups:
+      - Como o bloqueio molda o fluxo?
+      - Como seria a loja com corredores mais largos?
+      - Qual a relação entre bloqueio e civilidade?
+  - id: hi_rt_clearance_section
+    name: Seção de Liquidação
+    prompt: |
+      A seção de liquidação é no fundo, no canto. Última estação, última chance. A seção tem uma energia diferente. Observe a exploração. O que o desconto faz ao toque, à consideração?
+    follow_ups:
+      - Como a liquidação molda a visita?
+      - Como seria a loja sem ela?
+      - Qual a relação entre liquidação e valor?
+  - id: hi_rt_store_map
+    name: Mapa da Loja
+    prompt: |
+      "Onde fica o X?" O mapa ou o vendedor responde. A loja tem geografia. Observe a desorientação. O que o mapa fornece? O mapa é orientação. O que ele assume?
+    follow_ups:
+      - Como o mapa molda a visita?
+      - Como seria a loja sem ele?
+      - Qual a relação entre mapa e fluidez?
+  - id: hi_rt_try_on_stack
+    name: Pilha de Provadores
+    prompt: |
+      O vendedor devolve os itens experimentados. Eles são dobrados, pendurados. A pilha volta para o chão. Observe o trabalho. Quem tocou nisso? A pilha de provadores é o rescaldo de muitos talvez.
+    follow_ups:
+      - Como a pilha molda o chão?
+      - Como seria o provador sem ela?
+      - Qual a relação entre pilha e trabalho?
+  - id: hi_rt_store_hours
+    name: Horário da Loja
+    prompt: |
+      A placa indica quando a loja abre, quando fecha. O horário é um limite. Observe a multidão antes da abertura. O horário estrutura o acesso. O que ele assume sobre o cliente?
+    follow_ups:
+      - Como o horário molda a visita?
+      - Como seria a loja com acesso 24 horas?
+      - Qual a relação entre horário e disponibilidade?
+  - id: hi_rt_shopping_list
+    name: Lista de Compras
+    prompt: |
+      Celular ou papel. A lista guia a visita. Observe quem tem uma. A lista é intenção. Ela resiste ao impulso — ou não. O que a lista faz para a exploração?
+    follow_ups:
+      - Como a lista molda a compra?
+      - Como seria a visita sem ela?
+      - Qual a relação entre lista e controle?
+  - id: hi_rt_store_emptiness
+    name: Vazio da Loja
+    prompt: |
+      Fora do horário de pico, dia calmo. A loja está vazia. O vazio muda a sensação. Observe o espaço. O que o vazio revela? A loja vazia é um palco diferente.
+    follow_ups:
+      - Como o vazio molda a exploração?
+      - Como seria a loja se estivesse sempre vazia?
+      - Qual a relação entre vazio e conforto?
+  - id: hi_rt_fitting_room_curtain
+    name: Cortina do Provador
+    prompt: |
+      A cortina fecha. A privacidade é parcial — frestas, sons. A cortina é um limiar. Observe a fronteira. O que a cortina protege? O que ela falha em proteger?
+    follow_ups:
+      - Como a cortina molda a experimentação?
+      - Como seria o provador com uma porta?
+      - Qual a relação entre cortina e privacidade?
+  - id: hi_rt_store_aroma
+    name: Aroma da Loja
+    prompt: |
+      Padaria, café, perfume — a loja tem um cheiro. O aroma é o primeiro contato. Ele prepara a visita. Observe quando você o percebe. O que o aroma faz antes de você comprar?
+    follow_ups:
+      - Como o aroma molda a visita?
+      - Como seria a loja sem ele?
+      - Qual a relação entre aroma e desejo?
+  - id: hi_rt_purchase_regret
+    name: Arrependimento da Compra
+    prompt: |
+      A sacola na mão. A dúvida surge. O arrependimento pode vir depois. Observe o rosto saindo da loja. O que a compra significa? O arrependimento é a sombra da dança. O que o cria?
+    follow_ups:
+      - Como o arrependimento molda a próxima visita?
+      - Como seria a compra sem arrependimento?
+      - Qual a relação entre arrependimento e desejo?
+  - id: hi_rt_store_thank_you
+    name: Agradecimento da Loja
+    prompt: |
+      "Obrigado por comprar conosco." A frase fecha a transação. É roteirizada. Observe a troca. O que o agradecimento faz? A frase é um pequeno ritual. O que ela cria?
+    follow_ups:
+      - Como o agradecimento molda a saída?
+      - Como seria o caixa sem ele?
+      - Qual a relação entre agradecimento e encerramento?
+  - id: hi_rt_store_entrance_sensor
+    name: Sensor da Entrada da Loja
+    prompt: |
+      A porta se abre automaticamente. O sensor detecta sua aproximação. A entrada é coreografada. Observe o limiar. O que a porta automática faz com a chegada? O sensor cria uma transição suave.
+    follow_ups:
+      - Como o sensor molda a entrada?
+      - Como seria a loja com uma porta manual?
+      - Qual a relação entre sensor e boas-vindas?
+  - id: hi_rt_price_match
+    name: Igualdade de Preço
+    prompt: |
+      "Igualamos preços de concorrentes." A oferta é uma promessa. Observe quando alguém a utiliza. A igualdade de preço é uma negociação. O que ela exige do cliente? A igualdade cria confiança — ou suspeita.
+    follow_ups:
+      - Como a igualdade de preço molda a compra?
+      - Como seria a loja sem ela?
+      - Qual a relação entre igualdade e fidelidade?
+  - id: hi_rt_fitting_room_number
+    name: Número do Provador
+    prompt: |
+      "Quantos?" Pergunta o vendedor. O número limita a experimentação. Observe a negociação. O que acontece quando você tem mais? O número é um controle. O que ele assume sobre o cliente?
+    follow_ups:
+      - Como o número molda o provador?
+      - Como seria o provador sem limites?
+      - Qual a relação entre número e confiança?
+  - id: hi_rt_gift_receipt
+    name: Recibo de Presente
+    prompt: |
+      "Gostaria de um recibo de presente?" A oferta separa o preço do presente. O recibo de presente permite a devolução sem revelar o custo. Observe a escolha. O que o recibo de presente protege?
+    follow_ups:
+      - Como o recibo de presente molda a compra?
+      - O que seria o presente sem ele?
+      - Qual a relação entre recibo e discrição?

@@ -162,6 +162,38 @@ html {
   animation: shimmer-subtle 2.5s ease-in-out infinite;
 }
 
+/* Button shimmer - subtle gradient sweep across */
+@keyframes button-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.shimmer-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 45%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.15) 55%,
+    transparent 100%
+  );
+  animation: button-shimmer 2.5s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.dark .shimmer-button::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 45%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.06) 55%,
+    transparent 100%
+  );
+}
+
 /* Shimmer sweep for Generate button text - light streak moves across */
 @keyframes shimmer-sweep {
   0% { background-position: 200% 0; }
@@ -336,6 +368,24 @@ html {
 }
 .animate-celebrate {
   animation: celebrate-scale 0.4s ease-out forwards;
+}
+
+/* Convert to Deep Conversation - subtle transition on conversation section */
+@keyframes convert-to-deep {
+  0% { background-color: transparent; }
+  15% { background-color: rgba(99, 102, 241, 0.06); }
+  100% { background-color: transparent; }
+}
+@keyframes convert-to-deep-dark {
+  0% { background-color: transparent; }
+  15% { background-color: rgba(129, 140, 248, 0.08); }
+  100% { background-color: transparent; }
+}
+.animate-convert-to-deep {
+  animation: convert-to-deep 2s ease-out forwards;
+}
+.dark .animate-convert-to-deep {
+  animation: convert-to-deep-dark 2s ease-out forwards;
 }
 
 @keyframes marquee-left {

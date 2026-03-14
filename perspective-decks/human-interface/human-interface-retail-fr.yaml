@@ -1,0 +1,424 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# L'Interface Humaine — Le Commerce de Détail (French)
+
+id: human_interface_retail
+name: L'Interface Humaine — Le Commerce de Détail
+description: 50 cartes pour changer votre perspective sur l'espace de vente au détail—des allées et de la chorégraphie du parcours client aux cabines d'essayage et à la danse de l'achat.
+domain: human_interface
+cards:
+  - id: hi_rt_aisle_flow
+    name: Flux de l'Allée
+    prompt: |
+      L'allée canalise le mouvement. Les chariots vont dans un sens ; les corps naviguent. Observez le flux. Qui cède ? Qui bloque ? L'allée a sa physique. Quelles règles régissent cette danse ?
+    follow_ups:
+      - Comment l'allée façonne-t-elle le parcours client ?
+      - Que serait le magasin sans allées ?
+      - Quelle est la relation entre le flux et la conception ?
+  - id: hi_rt_browsing_choreography
+    name: Chorégraphie du Parcours Client
+    prompt: |
+      Les doigts touchent le tissu. Les yeux balayent les étagères. Le parcours client a un rythme : pause, réflexion, passage à autre chose. Observez la chorégraphie. Que fait le corps lorsqu'il n'achète pas ?
+    follow_ups:
+      - Comment le parcours client façonne-t-il l'expérience ?
+      - Que serait le magasin sans parcours client ?
+      - Quelle est la relation entre le parcours client et le désir ?
+  - id: hi_rt_fitting_room
+    name: Cabine d'Essayage
+    prompt: |
+      Le rideau se ferme. La cabine d'essayage est un seuil : du public au privé. À l'intérieur, vous essayez un moi possible. Observez le retour. Que dit le visage ? La cabine d'essayage est une scène de décision.
+    follow_ups:
+      - Comment la cabine d'essayage façonne-t-elle l'achat ?
+      - Que serait le magasin sans elle ?
+      - Quelle est la relation entre l'essayage et l'identité ?
+  - id: hi_rt_dance_of_purchase
+    name: Danse de l'Achat
+    prompt: |
+      Approcher, choisir, porter, payer. L'achat a ses étapes. Observez la séquence. Où les gens hésitent-ils ? La danse est chorégraphiée par le magasin. Qu'en extrait-il ?
+    follow_ups:
+      - Comment la danse façonne-t-elle le résultat ?
+      - Que serait le magasin sans cette séquence ?
+      - Quelle est la relation entre la danse et le désir ?
+  - id: hi_rt_cart_territory
+    name: Territoire du Chariot
+    prompt: |
+      Le chariot prolonge le corps. Il contient les choix, bloque le passage. Observez le chemin du chariot. Le chariot est un territoire mobile. Qu'occupe-t-il ?
+    follow_ups:
+      - Comment le chariot façonne-t-il le mouvement ?
+      - Que serait le magasin sans chariots ?
+      - Quelle est la relation entre le chariot et l'accumulation ?
+  - id: hi_rt_endcap_display
+    name: Présentoir de Bout d'Allée
+    prompt: |
+      Le bout de l'allée présente un présentoir : une promotion, une vente, une offre saisonnière. Le présentoir attire l'œil. Observez qui s'arrête. Le présentoir est un piège. Que fait-il ?
+    follow_ups:
+      - Comment le présentoir façonne-t-il le parcours client ?
+      - Que serait l'allée sans lui ?
+      - Quelle est la relation entre le présentoir et l'impulsion ?
+  - id: hi_rt_checkout_line
+    name: File d'Attente à la Caisse
+    prompt: |
+      La file d'attente se forme. Bonbons, magazines, dernières chances. La caisse est un test final. Observez l'attente. Que font les gens ? La file est un seuil entre le parcours client et la sortie.
+    follow_ups:
+      - Comment la file façonne-t-elle l'achat ?
+      - Que serait le magasin sans l'attente ?
+      - Quelle est la relation entre la file et l'impulsion ?
+  - id: hi_rt_shelf_height
+    name: Hauteur de l'Étagère
+    prompt: |
+      La hauteur des yeux vend. La hauteur de l'étagère est une conception. Observez ce qui est où. Qu'y a-t-il en bas ? Qu'y a-t-il en haut ? La hauteur code la valeur. Que présume-t-elle du corps ?
+    follow_ups:
+      - Comment la hauteur de l'étagère façonne-t-elle le parcours client ?
+      - Que serait le magasin avec une hauteur uniforme ?
+      - Quelle est la relation entre la hauteur et l'accès ?
+  - id: hi_rt_price_tag
+    name: Étiquette de Prix
+    prompt: |
+      L'étiquette indique le prix. Parfois cachée, parfois proéminente. Observez le placement. L'étiquette est une information et une barrière. Que fait l'étiquette au moment du toucher ?
+    follow_ups:
+      - Comment l'étiquette façonne-t-elle la décision ?
+      - Que serait l'article sans l'étiquette ?
+      - Quelle est la relation entre l'étiquette et la valeur ?
+  - id: hi_rt_store_entrance
+    name: Entrée du Magasin
+    prompt: |
+      La porte s'ouvre. Vous entrez. L'entrée est un seuil. Observez ce que vous voyez en premier. L'entrée donne le ton. Que veut que vous ressentiez le magasin ?
+    follow_ups:
+      - Comment l'entrée façonne-t-elle la visite ?
+      - Que serait le magasin sans conception ?
+      - Quelle est la relation entre l'entrée et l'attente ?
+  - id: hi_rt_sales_associate
+    name: Vendeur/Vendeuse
+    prompt: |
+      « Puis-je vous aider à trouver quelque chose ? » L'offre est scriptée. Observez l'échange. Acceptez-vous ou refusez-vous ? Le vendeur est un guide et une pression. Que fait l'offre ?
+    follow_ups:
+      - Comment le vendeur façonne-t-il le parcours client ?
+      - Que serait le magasin sans eux ?
+      - Quelle est la relation entre l'offre et l'obligation ?
+  - id: hi_rt_basket_versus_cart
+    name: Panier vs Chariot
+    prompt: |
+      Panier pour quelques articles. Chariot pour plus. Le choix prédit l'achat. Observez qui prend quoi. Le panier limite ; le chariot invite. Qu'autorise ce choix ?
+    follow_ups:
+      - Comment le panier façonne-t-il la visite ?
+      - Que serait le magasin avec seulement des chariots ?
+      - Quelle est la relation entre le contenant et l'accumulation ?
+  - id: hi_rt_return_counter
+    name: Comptoir des Retours
+    prompt: |
+      La file des retours est différente. Les gens apportent des sacs, des reçus, des regrets. Le retour est une inversion. Observez l'échange. Que coûte le retour — émotionnellement, socialement ? Le comptoir des retours est un lieu d'annulation.
+    follow_ups:
+      - Comment le retour façonne-t-il la relation ?
+      - Que serait le magasin sans retours ?
+      - Quelle est la relation entre le retour et la confiance ?
+  - id: hi_rt_dressing_room_limit
+    name: Limite de Cabine d'Essayage
+    prompt: |
+      « Six articles maximum. » La limite contrôle l'essayage. Observez la négociation. Que se passe-t-il lorsque vous en avez sept ? La limite façonne l'expérience en cabine d'essayage. Que présume-t-elle ?
+    follow_ups:
+      - Comment la limite façonne-t-elle l'essayage ?
+      - Que serait la cabine d'essayage sans elle ?
+      - Quelle est la relation entre la limite et le vol ?
+  - id: hi_rt_impulse_buy
+    name: Achat Impulsif
+    prompt: |
+      L'article n'était pas sur la liste. Il a attiré le regard. L'achat impulsif est un moment de lâcher-prise. Observez quand cela se produit. Qu'est-ce qui l'a déclenché ? L'impulsion est la rencontre du design et du désir.
+    follow_ups:
+      - Comment l'impulsion façonne-t-elle l'achat ?
+      - Que serait le magasin sans impulsion ?
+      - Quelle est la relation entre l'impulsion et le regret ?
+  - id: hi_rt_store_music
+    name: Musique du Magasin
+    prompt: |
+      La musique joue : lente, familière, conçue. La musique façonne l'humeur et le rythme. Observez le tempo. Magasin rapide, musique lente ? La musique est un design invisible. Que fait-elle au corps ?
+    follow_ups:
+      - Comment la musique façonne-t-elle la visite ?
+      - Que serait le magasin en silence ?
+      - Quelle est la relation entre la musique et la durée ?
+  - id: hi_rt_mannequin
+    name: Mannequin
+    prompt: |
+      Le mannequin porte les vêtements. C'est un corps idéal, une suggestion. Observez comment les gens le regardent. Le mannequin est un miroir et un fantasme. Que promet-il ?
+    follow_ups:
+      - Comment le mannequin façonne-t-il le parcours client ?
+      - Que serait le magasin sans lui ?
+      - Quelle est la relation entre le mannequin et le désir ?
+  - id: hi_rt_sample_station
+    name: Station d'Échantillons
+    prompt: |
+      Goûtez ceci. Essayez ceci. L'échantillon invite au toucher. La station crée une pause. Observez qui s'arrête. L'échantillon est un petit cadeau. Qu'exige-t-il ?
+    follow_ups:
+      - Comment l'échantillon façonne-t-il l'achat ?
+      - Que serait le magasin sans échantillons ?
+      - Quelle est la relation entre l'échantillon et l'obligation ?
+  - id: hi_rt_sale_rack
+    name: Étagère de Soldes
+    prompt: |
+      L'étagère de soldes est un chaos : remisée, froissée. Les gens cherchent. L'étagère de soldes est un type de parcours client différent. Observez le comportement. Que fait la réduction au toucher ?
+    follow_ups:
+      - Comment l'étagère de soldes façonne-t-elle la visite ?
+      - Que serait le magasin sans elle ?
+      - Quelle est la relation entre la promotion et la valeur ?
+  - id: hi_rt_mirror_encounter
+    name: Rencontre avec le Miroir
+    prompt: |
+      Vous vous voyez dans le miroir du magasin. La rencontre est inévitable. Observez le regard. Que vérifiez-vous ? Le miroir est un test. Le magasin fournit le miroir. Que veut-il ?
+    follow_ups:
+      - Comment le miroir façonne-t-il l'essayage ?
+      - Que serait la cabine d'essayage sans elle ?
+      - Quelle est la relation entre le miroir et le soi ?
+  - id: hi_rt_cashier_small_talk
+    name: Petite Conversation avec le Caissier
+    prompt: |
+      « Vous avez trouvé tout ce qu'il vous fallait ? » demande le caissier. La conversation est scriptée. Observez l'échange. Que fait la question ? Le caissier est le dernier contact humain. Que crée cette conversation ?
+    follow_ups:
+      - Comment la conversation façonne-t-elle la sortie ?
+      - Que serait la caisse sans elle ?
+      - Quelle est la relation entre la conversation et la transaction ?
+  - id: hi_rt_store_layout
+    name: Agencement du Magasin
+    prompt: |
+      Le chemin est conçu. Les articles essentiels à l'arrière. L'impulsion à l'avant. L'agencement chorégraphie la visite. Observez votre itinéraire. Que le concepteur voulait-il que vous passiez ?
+    follow_ups:
+      - Comment l'agencement façonne-t-il le parcours client ?
+      - Que serait le magasin avec un agencement aléatoire ?
+      - Quelle est la relation entre l'agencement et l'exposition ?
+  - id: hi_rt_touch_decide
+    name: Toucher pour Décider
+    prompt: |
+      Les doigts touchent le tissu, la surface. Le toucher décide. Observez le moment. Que la main apprend-elle que l'œil ne peut pas ? Le toucher est un seuil. Qu'exige-t-il ?
+    follow_ups:
+      - Comment le toucher façonne-t-il la décision ?
+      - Que serait le magasin sans toucher ?
+      - Quelle est la relation entre le toucher et l'engagement ?
+  - id: hi_rt_receipt_handoff
+    name: Remise du Reçu
+    prompt: |
+      Le reçu est proposé : dans le sac ou séparément. Certains le prennent ; d'autres le refusent. Le reçu est une preuve et un enregistrement. Observez l'échange. Que fait le reçu pour la transaction ?
+    follow_ups:
+      - Comment le reçu façonne-t-il la sortie ?
+      - Que serait la caisse sans lui ?
+      - Quelle est la relation entre le reçu et la clôture ?
+  - id: hi_rt_store_exit
+    name: Sortie du Magasin
+    prompt: |
+      La porte s'ouvre. Vous partez avec un sac — ou les mains vides. La sortie est un seuil. Observez le sentiment. Qu'extrait la sortie ? La sortie est la fin de la danse. Qu'est-ce qui reste ?
+    follow_ups:
+      - Comment la sortie façonne-t-elle la visite ?
+      - Que serait le magasin sans la porte ?
+      - Quelle est la relation entre la sortie et la satisfaction ?
+  - id: hi_rt_loyalty_card_ask
+    name: Question sur la Carte de Fidélité
+    prompt: |
+      « Avez-vous notre carte de fidélité ? » La question est routinière. Observez la réponse. Oui, non, inscription. La carte de fidélité prolonge la relation. Que crée cette question ?
+    follow_ups:
+      - Comment la carte de fidélité façonne-t-elle la transaction ?
+      - Que serait la caisse sans elle ?
+      - Quelle est la relation entre la carte et les données ?
+  - id: hi_rt_abandoned_cart
+    name: Chariot Abandonné
+    prompt: |
+      Un chariot reste dans l'allée — plein, sans surveillance. Le chariot est abandonné. Observez le contenu. Qu'ont-ils considéré ? L'abandon est un moment de non. Que révèle-t-il ?
+    follow_ups:
+      - Comment le chariot abandonné façonne-t-il le magasin ?
+      - Qu'apprendrait le magasin de cela ?
+      - Quelle est la relation entre l'abandon et le désir ?
+  - id: hi_rt_fitting_room_opinion
+    name: Avis en Cabine d'Essayage
+    prompt: |
+      « Comment ça va ? » demande quelqu'un depuis l'extérieur du rideau. L'avis est sollicité. La cabine d'essayage devient sociale. Observez l'échange. Que fait cet avis ?
+    follow_ups:
+      - Comment l'avis façonne-t-il la décision ?
+      - Que serait l'essayage en solitaire ?
+      - Quelle est la relation entre l'avis et l'achat ?
+  - id: hi_rt_store_scent
+    name: Parfum du Magasin
+    prompt: |
+      Le magasin a une odeur : parfum, cuir, propreté. Le parfum est conçu. Il entre avant que vous ne le remarquiez. Observez quand vous le sentez. Que fait le parfum au corps ?
+    follow_ups:
+      - Comment le parfum façonne-t-il la visite ?
+      - Que serait le magasin sans lui ?
+      - Quelle est la relation entre le parfum et la mémoire ?
+  - id: hi_rt_compare_prices
+    name: Comparaison des Prix
+    prompt: |
+      Téléphone sorti. Scan. La vérification du prix est une recherche. Observez le moment. Que révèle le téléphone ? La comparaison se fait dans l'allée. Que fait-elle à la décision ?
+    follow_ups:
+      - Comment la comparaison façonne-t-elle l'achat ?
+      - Que serait le magasin sans téléphones ?
+      - Quelle est la relation entre la comparaison et le pouvoir ?
+  - id: hi_rt_window_display
+    name: Vitrine
+    prompt: |
+      La fenêtre donne sur la rue. Mannequins, accessoires, une histoire. La vitrine arrête la marche. Observez ce qui attire le regard. La vitrine est une invitation. Que promet-elle ?
+    follow_ups:
+      - Comment la vitrine façonne-t-elle l'entrée ?
+      - Que serait le magasin sans elle ?
+      - Quelle est la relation entre la vitrine et le désir ?
+  - id: hi_rt_size_search
+    name: Recherche de Taille
+    prompt: |
+      Les doigts feuillettent les cintres. À la recherche de la taille. La recherche a un rythme. Observez la frustration ou le soulagement. La taille est une porte. Qu'exige la recherche ?
+    follow_ups:
+      - Comment la recherche de taille façonne-t-elle le parcours client ?
+      - Que serait le magasin avec toutes les tailles visibles ?
+      - Quelle est la relation entre la taille et le corps ?
+  - id: hi_rt_payment_choice
+    name: Choix du Paiement
+    prompt: |
+      Carte, espèces, téléphone. Le choix du paiement est le moment de la transaction. Observez la méthode. Le choix est une habitude et une identité. Que communique le mode de paiement ?
+    follow_ups:
+      - Comment le paiement façonne-t-il la caisse ?
+      - Que serait le magasin avec une seule méthode ?
+      - Quelle est la relation entre le paiement et la rapidité ?
+  - id: hi_rt_store_regular
+    name: Habitué du Magasin
+    prompt: |
+      L'habitué connaît l'agencement. Il se déplace avec intention. Le vendeur hoche la tête. Observez l'habitué. Que sait-il que le nouveau venu ne sait pas ? L'habitué a une relation avec l'espace.
+    follow_ups:
+      - Comment l'habitué façonne-t-il le magasin ?
+      - Que serait le magasin sans ses habitués ?
+      - Quelle est la relation entre l'habitué et la fidélité ?
+  - id: hi_rt_bag_handoff
+    name: Remise du Sac
+    prompt: |
+      Le sac est remis — plein, marqué. La remise complète la transaction. Observez l'échange. Que fait le sac pour la sortie ? Le sac est une preuve et un fardeau.
+    follow_ups:
+      - Comment le sac façonne-t-il la sortie ?
+      - Que serait l'achat sans lui ?
+      - Quelle est la relation entre le sac et l'identité ?
+  - id: hi_rt_fitting_room_overflow
+    name: Dépassement de Cabine d'Essayage
+    prompt: |
+      Trop d'articles. Le vendeur prend le surplus. « Je garde ça pour vous. » Le surplus est une confiance. Observez l'échange. Que tient le vendeur ? Le surplus prolonge l'essayage. Qu'autorise-t-il ?
+    follow_ups:
+      - Comment le surplus façonne-t-il l'essayage ?
+      - Que serait la cabine d'essayage sans lui ?
+      - Quelle est la relation entre le surplus et la confiance ?
+  - id: hi_rt_store_lighting
+    name: Éclairage du Magasin
+    prompt: |
+      La lumière est conçue : flatteuse, vive, chaleureuse. L'éclairage façonne l'apparence des choses. Observez le miroir sous cette lumière. Que font l'éclairage au visage, au tissu ?
+    follow_ups:
+      - Comment l'éclairage façonne-t-il l'achat ?
+      - Que serait le magasin sous une lumière crue ?
+      - Quelle est la relation entre la lumière et la vérité ?
+  - id: hi_rt_aisle_block
+    name: Blocage d'Allée
+    prompt: |
+      Quelqu'un se tient dans l'allée. Vous devez passer. Le blocage est inconscient ou délibéré. Observez la négociation. « Excusez-moi. » Le blocage est une petite friction. Qu'exige-t-il ?
+    follow_ups:
+      - Comment le blocage façonne-t-il le flux ?
+      - Que serait le magasin avec des allées plus larges ?
+      - Quelle est la relation entre le blocage et la civilité ?
+  - id: hi_rt_clearance_section
+    name: Section de Dégagement
+    prompt: |
+      La section de dégagement est à l'arrière, dans le coin. Dernière saison, dernière chance. La section a une énergie différente. Observez le parcours client. Que fait la réduction au toucher, à la réflexion ?
+    follow_ups:
+      - Comment la section de dégagement façonne-t-elle la visite ?
+      - Que serait le magasin sans elle ?
+      - Quelle est la relation entre le dégagement et la valeur ?
+  - id: hi_rt_store_map
+    name: Plan du Magasin
+    prompt: |
+      « Où est X ? » Le plan ou le vendeur répond. Le magasin a sa géographie. Observez la désorientation. Que fournit le plan ? Le plan est une orientation. Que présume-t-il ?
+    follow_ups:
+      - Comment le plan façonne-t-il la visite ?
+      - Que serait le magasin sans lui ?
+      - Quelle est la relation entre le plan et la fluidité ?
+  - id: hi_rt_try_on_stack
+    name: Pile d'Essayages
+    prompt: |
+      Le vendeur rend les articles essayés. Ils sont pliés, accrochés. La pile retourne au sol. Observez le travail. Qui a touché ces articles ? La pile d'essayages est l'après de nombreux "peut-être".
+    follow_ups:
+      - Comment la pile façonne-t-elle le sol ?
+      - Que serait la cabine d'essayage sans elle ?
+      - Quelle est la relation entre la pile et le travail ?
+  - id: hi_rt_store_hours
+    name: Horaires du Magasin
+    prompt: |
+      L'enseigne indique quand le magasin ouvre, quand il ferme. Les horaires sont une limite. Observez la foule avant l'ouverture. Les horaires structurent l'accès. Que présument-ils du client ?
+    follow_ups:
+      - Comment les horaires façonnent-ils la visite ?
+      - Que serait le magasin avec un accès 24h/24 ?
+      - Quelle est la relation entre les horaires et la disponibilité ?
+  - id: hi_rt_shopping_list
+    name: Liste de Courses
+    prompt: |
+      Téléphone ou papier. La liste guide la visite. Observez qui en a une. La liste est une intention. Elle résiste à l'impulsion — ou pas. Que fait la liste pour le parcours client ?
+    follow_ups:
+      - Comment la liste façonne-t-elle l'achat ?
+      - Que serait la visite sans elle ?
+      - Quelle est la relation entre la liste et le contrôle ?
+  - id: hi_rt_store_emptiness
+    name: Vide du Magasin
+    prompt: |
+      Hors heures de pointe, jour calme. Le magasin est vide. Le vide change le ressenti. Observez l'espace. Que révèle le vide ? Le magasin vide est une scène d'un autre genre.
+    follow_ups:
+      - Comment le vide façonne-t-il le parcours client ?
+      - Que serait le magasin s'il était toujours vide ?
+      - Quelle est la relation entre le vide et le confort ?
+  - id: hi_rt_fitting_room_curtain
+    name: Rideau de Cabine d'Essayage
+    prompt: |
+      Le rideau se ferme. L'intimité est partielle — fentes, bruits. Le rideau est un seuil. Observez la limite. Que protège le rideau ? Que ne protège-t-il pas ?
+    follow_ups:
+      - Comment le rideau façonne-t-il l'essayage ?
+      - Que serait la cabine d'essayage avec une porte ?
+      - Quelle est la relation entre le rideau et l'intimité ?
+  - id: hi_rt_store_aroma
+    name: Arôme du Magasin
+    prompt: |
+      Boulangerie, café, parfum — le magasin a une odeur. L'arôme est le premier contact. Il prépare la visite. Observez quand vous le remarquez. Que fait l'arôme avant l'achat ?
+    follow_ups:
+      - Comment l'arôme façonne-t-il la visite ?
+      - Que serait le magasin sans lui ?
+      - Quelle est la relation entre l'arôme et le désir ?
+  - id: hi_rt_purchase_regret
+    name: Regret d'Achat
+    prompt: |
+      Le sac à la main. Le doute s'installe. Le regret peut venir plus tard. Observez le visage en quittant le magasin. Que signifie l'achat ? Le regret est l'ombre de la danse. Qu'est-ce qui le crée ?
+    follow_ups:
+      - Comment le regret façonne-t-il la prochaine visite ?
+      - Que serait l'achat sans regret ?
+      - Quelle est la relation entre le regret et le désir ?
+  - id: hi_rt_store_thank_you
+    name: Remerciements du Magasin
+    prompt: |
+      « Merci de vos achats. » La phrase clôt la transaction. Elle est scriptée. Observez l'échange. Que fait ce remerciement ? La phrase est un petit rituel. Que crée-t-elle ?
+    follow_ups:
+      - Comment le remerciement façonne-t-il la sortie ?
+      - Que serait la caisse sans lui ?
+      - Quelle est la relation entre le remerciement et la clôture ?
+  - id: hi_rt_store_entrance_sensor
+    name: Capteur d'Entrée du Magasin
+    prompt: |
+      La porte s'ouvre automatiquement. Le capteur détecte votre approche. L'entrée est chorégraphiée. Observez le seuil. Que fait la porte automatique à l'arrivée ? Le capteur crée une transition fluide.
+    follow_ups:
+      - Comment le capteur façonne-t-il l'entrée ?
+      - Que serait le magasin avec une porte manuelle ?
+      - Quelle est la relation entre le capteur et l'accueil ?
+  - id: hi_rt_price_match
+    name: Concordance de Prix
+    prompt: |
+      « Nous égalons les prix des concurrents. » L'offre est une promesse. Observez quand quelqu'un l'utilise. La concordance de prix est une négociation. Qu'exige-t-elle du client ? La concordance crée la confiance — ou la suspicion.
+    follow_ups:
+      - Comment la concordance de prix façonne-t-elle l'achat ?
+      - Que serait le magasin sans elle ?
+      - Quelle est la relation entre la concordance et la fidélité ?
+  - id: hi_rt_fitting_room_number
+    name: Nombre en Cabine d'Essayage
+    prompt: |
+      « Combien ? » demande le vendeur. Le nombre limite l'essayage. Observez la négociation. Que se passe-t-il lorsque vous en avez plus ? Le nombre est un contrôle. Que présume-t-il du client ?
+    follow_ups:
+      - Comment le nombre façonne-t-il l'essayage ?
+      - Que serait la cabine d'essayage sans limites ?
+      - Quelle est la relation entre le nombre et la confiance ?
+  - id: hi_rt_gift_receipt
+    name: Reçu Cadeau
+    prompt: |
+      « Souhaitez-vous un reçu cadeau ? » L'offre sépare le prix du cadeau. Le reçu cadeau permet le retour sans révéler le coût. Observez le choix. Que protège le reçu cadeau ?
+    follow_ups:
+      - Comment le reçu cadeau façonne-t-il l'achat ?
+      - Que serait le cadeau sans lui ?
+      - Quelle est la relation entre le reçu et la discrétion ?

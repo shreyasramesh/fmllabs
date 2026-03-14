@@ -32,13 +32,6 @@ domains:
       The everyday spaces where humans meet—coffee shops, transit hubs,
       workplaces, retail, public parks. Cards focus on queue choreography,
       territorial claims, invisible scripts, and the anthropology of shared space.
-  digital_ghost:
-    name: Digital Ghost
-    description: |
-      The invisible layer of digital experience—buttons and controls, loading
-      states, errors, data storage, onboarding. Cards focus on intent behind
-      interfaces, physicality of data, hidden labor behind smooth UI, and when
-      software breaks character.
   california_superbloom:
     name: California Superbloom
     description: |
@@ -273,55 +266,3 @@ decks:
     domain: human_interface
     subdomain_id: public_space
     subdomain_name: Public Space
-
-  - id: digital_ghost_buttons_controls
-    name: Digital Ghost — Buttons & Controls
-    path: perspective-decks/digital-ghost/digital-ghost-buttons-controls.yaml
-    description: |
-      50 cards to shift how you see buttons and controls—from the intent behind
-      a click to affordance, what a tap implies, and the hidden labor behind
-      every interface element.
-    domain: digital_ghost
-    subdomain_id: buttons_controls
-    subdomain_name: Buttons & Controls
-
-  - id: digital_ghost_loading_states
-    name: Digital Ghost — Loading States
-    path: perspective-decks/digital-ghost/digital-ghost-loading-states.yaml
-    description: |
-      50 cards to shift how you see loading—from spinners and skeletons to
-      latency, the wait, and what happens in the gap between action and response.
-    domain: digital_ghost
-    subdomain_id: loading_states
-    subdomain_name: Loading States
-
-  - id: digital_ghost_error_edge
-    name: Digital Ghost — Error & Edge
-    path: perspective-decks/digital-ghost/digital-ghost-error-edge.yaml
-    description: |
-      50 cards to shift how you see errors—when the machine breaks character,
-      error messages, and the moments when software reveals its seams and
-      limitations.
-    domain: digital_ghost
-    subdomain_id: error_edge
-    subdomain_name: Error & Edge
-
-  - id: digital_ghost_data_storage
-    name: Digital Ghost — Data & Storage
-    path: perspective-decks/digital-ghost/digital-ghost-data-storage.yaml
-    description: |
-      50 cards to shift how you see data storage—where data lives, the
-      physicality of data, its weight, and the hidden geography of the digital.
-    domain: digital_ghost
-    subdomain_id: data_storage
-    subdomain_name: Data & Storage
-
-  - id: digital_ghost_onboarding_flow
-    name: Digital Ghost — Onboarding & Flow
-    path: perspective-decks/digital-ghost/digital-ghost-onboarding-flow.yaml
-    description: |
-      50 cards to shift how you see onboarding—the first-run experience, empty
-      states, first impressions, and the choreography of introduction.
-    domain: digital_ghost
-    subdomain_id: onboarding_flow
-    subdomain_name: Onboarding & Flow

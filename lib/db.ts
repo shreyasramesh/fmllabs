@@ -30,6 +30,11 @@ export interface Session {
   mentalModelTags?: string[];
   isCollapsed?: boolean;
   longTermMemoryId?: string;
+  /** When true, perspective-card conversations use full system context (mental models, memories, etc.) */
+  convertedToDeepConversation?: boolean;
+  /** Stored when conversation started with a perspective card */
+  perspectiveCardPrompt?: string;
+  perspectiveCardName?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,6 +44,8 @@ export interface Message {
   sessionId: string;
   role: "user" | "assistant";
   content: string;
+  /** When set, this user message was created from a journal checkpoint; used for display and LTM */
+  journalCheckpoint?: string;
   createdAt: Date;
 }
 
@@ -49,6 +56,9 @@ interface SessionDoc {
   mentalModelTags?: string[];
   isCollapsed?: boolean;
   longTermMemoryId?: string;
+  convertedToDeepConversation?: boolean;
+  perspectiveCardPrompt?: string;
+  perspectiveCardName?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -60,6 +70,8 @@ export interface LongTermMemory {
   title: string;
   summary: string;
   enrichmentPrompt: string;
+  /** Chain-of-thought reasoning steps shown as chips in summary modals */
+  chainOfThought?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -74,6 +86,8 @@ export interface CustomConcept {
   title: string;
   summary: string;
   enrichmentPrompt: string;
+  /** When set, concept was extracted from a YouTube transcript */
+  sourceVideoTitle?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -97,6 +111,17 @@ interface ConceptGroupDoc extends Omit<ConceptGroup, "_id"> {
   _id: ObjectId;
 }
 
+export type ExtractedConcept = {
+  title: string;
+  summary: string;
+  enrichmentPrompt: string;
+};
+
+export type ExtractedConceptGroup = {
+  domain: string;
+  concepts: ExtractedConcept[];
+};
+
 export interface SavedTranscript {
   _id?: string;
   userId: string;
@@ -104,6 +129,7 @@ export interface SavedTranscript {
   videoTitle?: string;
   channel?: string;
   transcriptText: string;
+  extractedConcepts?: ExtractedConceptGroup[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -289,7 +315,8 @@ export async function truncateMessagesAfter(
 export async function appendMessage(
   sessionId: string,
   role: "user" | "assistant",
-  content: string
+  content: string,
+  options?: { journalCheckpoint?: string }
 ): Promise<void> {
   const database = await getDb();
   let id: ObjectId;
@@ -298,12 +325,14 @@ export async function appendMessage(
   } catch {
     throw new Error("Invalid session ID");
   }
-  await database.collection<Message>("messages").insertOne({
+  const doc: Message = {
     sessionId,
     role,
     content,
+    ...(options?.journalCheckpoint ? { journalCheckpoint: options.journalCheckpoint } : {}),
     createdAt: new Date(),
-  });
+  };
+  await database.collection<Message>("messages").insertOne(doc);
   await database.collection<SessionDoc>("sessions").updateOne(
     { _id: id },
     { $set: { updatedAt: new Date() } }
@@ -318,6 +347,9 @@ export async function updateSession(
     mentalModelTags?: string[];
     isCollapsed?: boolean;
     longTermMemoryId?: string;
+    convertedToDeepConversation?: boolean;
+    perspectiveCardPrompt?: string;
+    perspectiveCardName?: string;
   }
 ): Promise<boolean> {
   const database = await getDb();
@@ -583,7 +615,8 @@ export async function createLongTermMemory(
   sourceSessionId: string,
   title: string,
   summary: string,
-  enrichmentPrompt: string
+  enrichmentPrompt: string,
+  chainOfThought?: string[]
 ): Promise<LongTermMemory & { _id: string }> {
   const database = await getDb();
   const now = new Date();
@@ -593,6 +626,7 @@ export async function createLongTermMemory(
     title,
     summary,
     enrichmentPrompt,
+    ...(chainOfThought?.length ? { chainOfThought } : {}),
     createdAt: now,
     updatedAt: now,
   };
@@ -603,7 +637,7 @@ export async function createLongTermMemory(
 export async function updateLongTermMemory(
   id: string,
   userId: string,
-  updates: { title?: string; summary?: string; enrichmentPrompt?: string }
+  updates: { title?: string; summary?: string; enrichmentPrompt?: string; chainOfThought?: string[] }
 ): Promise<boolean> {
   const database = await getDb();
   let oid: ObjectId;
@@ -716,7 +750,8 @@ export async function createCustomConcept(
   userId: string,
   title: string,
   summary: string,
-  enrichmentPrompt: string
+  enrichmentPrompt: string,
+  sourceVideoTitle?: string
 ): Promise<CustomConcept & { _id: string }> {
   const database = await getDb();
   const now = new Date();
@@ -725,6 +760,7 @@ export async function createCustomConcept(
     title,
     summary,
     enrichmentPrompt,
+    ...(sourceVideoTitle != null && sourceVideoTitle !== "" && { sourceVideoTitle }),
     createdAt: now,
     updatedAt: now,
   };
@@ -735,7 +771,12 @@ export async function createCustomConcept(
 export async function updateCustomConcept(
   id: string,
   userId: string,
-  updates: { title?: string; summary?: string; enrichmentPrompt?: string }
+  updates: {
+    title?: string;
+    summary?: string;
+    enrichmentPrompt?: string;
+    sourceVideoTitle?: string;
+  }
 ): Promise<boolean> {
   const database = await getDb();
   let oid: ObjectId;
@@ -1091,6 +1132,27 @@ export async function deleteSavedTranscript(id: string, userId: string): Promise
     .collection<SavedTranscriptDoc>("transcripts")
     .deleteOne({ _id: oid, userId });
   return result.deletedCount > 0;
+}
+
+export async function updateTranscriptExtractedConcepts(
+  id: string,
+  userId: string,
+  groups: ExtractedConceptGroup[]
+): Promise<boolean> {
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return false;
+  }
+  const result = await database
+    .collection<SavedTranscriptDoc>("transcripts")
+    .updateOne(
+      { _id: oid, userId },
+      { $set: { extractedConcepts: groups, updatedAt: new Date() } }
+    );
+  return result.modifiedCount > 0;
 }
 
 export async function getNuggets(userId: string): Promise<(Nugget & { _id: string })[]> {

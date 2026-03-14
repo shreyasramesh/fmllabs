@@ -1,0 +1,466 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosmo Natural — Chão da Floresta (Portuguese)
+
+id: natural_microcosm_forest_floor
+name: Microcosmo Natural — Chão da Floresta
+description: 50 cartas para mudar a forma como você vê o chão da floresta — da decomposição e micélio à arquitetura da serrapilheira e à vida invisível sob o dosel.
+domain: natural_microcosm
+cards:
+  - id: nmf_leaf_vein
+    name: Nervura da Folha
+    prompt: |
+      Pegue uma folha caída. Trace as nervuras. Elas transportavam água, nutrientes,
+      açúcares. A arquitetura é invisível até que você olhe. O que a rede de nervuras
+      sustentou quando a folha estava viva?
+    follow_ups:
+      - Como o padrão difere entre as espécies?
+      - O que seria da folha sem as nervuras?
+      - Qual a relação entre a nervura e a borda?
+  - id: nmf_leaf_litter_layer
+    name: Camada de Serrapilheira
+    prompt: |
+      O chão da floresta é feito de camadas — queda fresca por cima, do ano passado por baixo,
+      mais antiga ainda abaixo. Ajoelhe-se. Descasque uma camada. Qual o gradiente? Como o tempo se empilha?
+    follow_ups:
+      - O que seria da floresta sem a serrapilheira?
+      - Como a camada cria habitat?
+      - Qual a relação entre a camada e a decomposição?
+  - id: nmf_mushroom_fruiting
+    name: Frutificação do Cogumelo
+    prompt: |
+      Um cogumelo é apenas o corpo de frutificação. O organismo — o micélio — espalha-se
+      subterraneamente, através do solo, através da madeira. Considere o que você vê como um
+      sinal. Qual é o resto da história?
+    follow_ups:
+      - O que seria da floresta sem os fungos?
+      - Como o corpo de frutificação se relaciona com a rede?
+      - Qual a relação entre o cogumelo e a decomposição?
+  - id: nmf_log_sponge
+    name: Tronco Esponja
+    prompt: |
+      Um tronco caído absorve água, retém-na. Pressione a mão contra um após a chuva.
+      O tronco é um reservatório. Quem bebe dele? O que vive dentro?
+    follow_ups:
+      - O que seria da floresta sem os troncos nutrizes?
+      - Como o tronco cria microclima?
+      - Qual a relação entre a madeira e a água?
+  - id: nmf_moss_cushion
+    name: Almofada de Musgo
+    prompt: |
+      O musgo retém água como uma esponja. Toque nele. A almofada é arquitetura —
+      pequenas plantas juntas. O que vive nos espaços entre elas?
+    follow_ups:
+      - O que seria do chão sem o musgo?
+      - Como a almofada cria umidade?
+      - Qual a relação entre o musgo e a plântula?
+  - id: nmf_fern_unfurl
+    name: Desfraldar da Samambaia
+    prompt: |
+      As frondes das samambaias se desdobram em espiral — fetos jovens. O movimento é lento.
+      Observe um ao longo de dias, se puder. Como o desdobramento molda a folha?
+    follow_ups:
+      - O que seria da samambaia sem a espiral?
+      - Como o desdobramento protege a fronde?
+      - Qual a relação entre a curva e o crescimento?
+  - id: nmf_root_tangle
+    name: Emaranhado de Raízes
+    prompt: |
+      Raízes se emaranham sob a superfície. Encontre onde uma árvore caiu e
+      levantou seu torrão. O emaranhado é um mapa de busca. O que as raízes estavam
+      buscando?
+    follow_ups:
+      - O que seria da árvore sem o emaranhado?
+      - Como as raízes compartilham espaço subterrâneo?
+      - Qual a relação entre a raiz e o fungo?
+  - id: nmf_slug_trail
+    name: Rastro de Lesma
+    prompt: |
+      Um rastro de lesma brilha em uma folha — muco, caminho, assinatura. O rastro marca
+      onde a lesma foi. O que o rastro diz aos predadores? À presa?
+    follow_ups:
+      - O que a lesma perderia sem o rastro?
+      - Como o muco permite o movimento?
+      - Qual a relação entre o rastro e o território?
+  - id: nmf_lichen_patch
+    name: Mancha de Líquen
+    prompt: |
+      Líquen cresce na casca, rocha, solo — lento, composto. Fungo e alga
+      juntos. Encontre uma mancha. Há quanto tempo está lá? O que sua presença
+      indica?
+    follow_ups:
+      - O que seria da casca sem o líquen?
+      - Como o líquen marca o tempo?
+      - Qual a relação entre o líquen e a qualidade do ar?
+  - id: nmf_saprophyte
+    name: Saprófita
+    prompt: |
+      Saprófitas se alimentam de matéria morta — fungos, bactérias, insetos. São os
+      recicladores. Encontre evidências de decomposição. Quem está comendo? O que está sendo
+      transformado?
+    follow_ups:
+      - O que seria da floresta sem os decompositores?
+      - Como a decomposição nutre o novo crescimento?
+      - Qual a relação entre a morte e o solo?
+  - id: nmf_seedling_emergence
+    name: Emergência da Plântula
+    prompt: |
+      Uma plântula emerge através da serrapilheira. Os cotilédones primeiro, depois as folhas verdadeiras.
+      Note a força. O que foi preciso para romper? O que a bloqueará?
+    follow_ups:
+      - O que seria da floresta sem as plântulas?
+      - Como a emergência depende da serrapilheira?
+      - Qual a relação entre a plântula e a luz?
+  - id: nmf_anthill_mound
+    name: Formigueiro Elevado
+    prompt: |
+      Um formigueiro se eleva do chão da floresta — solo escavado, organizado.
+      Observe o tráfego. Para onde eles vão? O que carregam?
+    follow_ups:
+      - O que seria do chão sem o formigueiro?
+      - Como o formigueiro molda a drenagem?
+      - Qual a relação entre o formigueiro e a colônia?
+  - id: nmf_spider_silk
+    name: Teia de Aranha
+    prompt: |
+      Fios de teia de aranha atravessam vãos — entre folhas, galhos. O orvalho a prende. A teia
+      é invisível até que a luz a atinja. Trace um fio. O que ele conecta?
+    follow_ups:
+      - O que seria do vão sem a teia?
+      - Como a teia estrutura o espaço?
+      - Qual a relação entre a teia e a presa?
+  - id: nmf_bark_flake
+    name: Lasca de Casca
+    prompt: |
+      Casca se desprende de um tronco — textura, padrão, idade. Cada lasca conta uma
+      estação. Quem vive sob a casca? O que a lasca revela?
+    follow_ups:
+      - O que seria da árvore sem a casca?
+      - Como a casca protege e isola?
+      - Qual a relação entre a lasca e a renovação?
+  - id: nmf_acorn_fall
+    name: Queda de Bolota
+    prompt: |
+      Uma bolota cai. É pesada para o seu tamanho. Ela criará raiz ou será comida.
+      Considere as chances. O que determina qual caminho?
+    follow_ups:
+      - O que seria da floresta sem a bolota?
+      - Como a queda distribui a semente?
+      - Qual a relação entre a bolota e o carvalho?
+  - id: nmf_fallen_branch
+    name: Galho Caído
+    prompt: |
+      Um galho jaz no chão — quebrado, talvez pelo vento. Agora é uma ponte.
+      O que a cruza? O que cresce sobre ela?
+    follow_ups:
+      - O que seria do chão sem madeira caída?
+      - Como o galho cria habitat de borda?
+      - Qual a relação entre o galho e o nutriente?
+  - id: nmf_humus_smell
+    name: Cheiro de Húmus
+    prompt: |
+      Aproxime-se do chão da floresta. O cheiro — terra, decomposição, vida. Esse cheiro
+      é química. O que o cria? O que seria da floresta sem ele?
+    follow_ups:
+      - Como o cheiro marca a saúde?
+      - Como o solo estéril cheiraria?
+      - Qual a relação entre o cheiro e a fertilidade?
+  - id: nmf_snail_shell
+    name: Concha de Caracol
+    prompt: |
+      Uma concha de caracol vazia repousa na serrapilheira. Espiral, cálcio, deixada para trás.
+      Quem pode ter comido o caracol? O que usará a concha?
+    follow_ups:
+      - O que seria do chão sem as conchas?
+      - Como a concha recicla nutrientes?
+      - Qual a relação entre a concha e o cálcio?
+  - id: nmf_fungal_network
+    name: Rede Fúngica
+    prompt: |
+      O micélio conecta árvores — uma Rede de Madeira (Wood Wide Web). Você não pode vê-lo, mas ele
+      está lá. Nutrientes fluem. Informação flui. Considere a floresta como uma
+      rede.
+    follow_ups:
+      - O que seria da floresta sem a rede?
+      - Como a rede redistribui recursos?
+      - Qual a relação entre o fungo e a árvore?
+  - id: nmf_fern_spore
+    name: Esporo de Samambaia
+    prompt: |
+      Samambaias se reproduzem por esporos — minúsculos, incontáveis. Olhe a face inferior de uma
+      fronde. Os soros os contêm. O que seria preciso para traçar a jornada de um esporo?
+    follow_ups:
+      - O que seria da samambaia sem esporos?
+      - Como o esporo se dispersa?
+      - Qual a relação entre o esporo e o gametófito?
+  - id: nmf_earthworm_cast
+    name: Excremento de Minhoca
+    prompt: |
+      Excrementos de minhoca se acumulam nas entradas dos túneis — solo processado, rico.
+      A minhoca comeu e excretou. O excremento é um presente para a superfície.
+    follow_ups:
+      - O que seria do solo sem minhocas?
+      - Como o excremento melhora a estrutura?
+      - Qual a relação entre a minhoca e a aeração?
+  - id: nmf_dappled_light
+    name: Luz Salpicada
+    prompt: |
+      A luz cai através do dossel em manchas — salpicada, em movimento. O chão da floresta
+      recebe menos que o espaço aberto. Como isso molda o que cresce?
+    follow_ups:
+      - O que seria do chão sob sol pleno?
+      - Como a luz salpicada cria micro-habitats?
+      - Qual a relação entre a luz e a plântula?
+  - id: nmf_bracket_fungus
+    name: Fungo de Prateleira
+    prompt: |
+      Um fungo de prateleira cresce em um tronco — prateleira, poliporo. Ele está digerindo a
+      árvore por dentro. A árvore pode ficar de pé por anos enquanto isso acontece. Considere
+      a lenta consumação.
+    follow_ups:
+      - O que seria da árvore sem o fungo?
+      - Como o fungo de prateleira dispersa esporos?
+      - Qual a relação entre parasita e hospedeiro?
+  - id: nmf_needle_mat
+    name: Tapete de Agulhas
+    prompt: |
+      Agulhas de coníferas se acumulam sob a árvore — ácidas, lentas para decompor. O tapete
+      muda o solo. O que cresce nele? O que o evita?
+    follow_ups:
+      - O que seria do chão sem o tapete?
+      - Como o tapete de agulhas afeta o pH?
+      - Qual a relação entre o tapete e o fogo?
+  - id: nmf_salamander_under
+    name: Salamandra por Baixo
+    prompt: |
+      Salamandras vivem sob troncos, pedras, serrapilheira. Levante algo com cuidado —
+      reponha-o. A umidade, a escuridão. Por que a salamandra precisa disso?
+    follow_ups:
+      - O que seria da floresta sem salamandras?
+      - Como a salamandra molda a comunidade de invertebrados?
+      - Qual a relação entre umidade e anfíbio?
+  - id: nmf_rot_hole
+    name: Buraco de Podridão
+    prompt: |
+      Um buraco em um tronco — podridão, talvez, ou um animal. O buraco é uma cavidade. O que
+      faz ninho lá? O que se esconde lá?
+    follow_ups:
+      - O que seria do tronco sem o buraco?
+      - Como a cavidade cria habitat?
+      - Qual a relação entre podridão e abrigo?
+  - id: nmf_springtail_jump
+    name: Salto de Colêmbola
+    prompt: |
+      Colêmbolas — minúsculas, numerosas — pulam quando perturbadas. Elas estão na serrapilheira,
+      no solo. Elas processam fungos, decomposição. Note quantas você não consegue ver.
+    follow_ups:
+      - O que seria do chão sem colêmbolas?
+      - Como o salto permite a fuga?
+      - Qual a relação entre a colêmbola e a decomposição?
+  - id: nmf_bark_beetle_gallery
+    name: Galeria de Besouro da Casca
+    prompt: |
+      Galerias de besouro da casca marcam a madeira sob a casca — canais, padrões.
+      O besouro as esculpiu. A árvore respondeu. Qual é a história?
+    follow_ups:
+      - O que seria da árvore sem o besouro?
+      - Como a galeria molda o destino da árvore?
+      - Qual a relação entre o besouro e o fungo?
+  - id: nmf_dew_on_litter
+    name: Orvalho na Serrapilheira
+    prompt: |
+      O orvalho matinal se acumula em folhas, agulhas, galhos. A serrapilheira retém umidade.
+      Quem bebe ao amanhecer? Como o orvalho estende a estação úmida?
+    follow_ups:
+      - O que seria do chão sem o orvalho?
+      - Como o orvalho cria uma fonte de água?
+      - Qual a relação entre o orvalho e a evaporação?
+  - id: nmf_windfall_gap
+    name: Clareira de Vento
+    prompt: |
+      Uma árvore caiu — vento, idade, doença. A clareira deixa entrar luz. O chão
+      muda. O que cresce na clareira que não podia antes?
+    follow_ups:
+      - O que seria da floresta sem clareiras?
+      - Como a clareira reinicia a sucessão?
+      - Qual a relação entre clareira e diversidade?
+  - id: nmf_mycorrhizal_tip
+    name: Ponta Micorrízica
+    prompt: |
+      Raízes de árvores encontram hifas fúngicas — micorrizas. O fungo estende o alcance da raiz.
+      A árvore alimenta o fungo. Encontre uma ponta de raiz. Imagine a parceria subterrânea.
+    follow_ups:
+      - O que seria da árvore sem micorrizas?
+      - Como a parceria estende o sistema radicular?
+      - Qual a relação entre o fungo e o fósforo?
+  - id: nmf_squirrel_cache
+    name: Esconderijo de Esquilo
+    prompt: |
+      Um esquilo enterrou uma noz — esquecida, talvez. Ela pode brotar. O esconderijo é
+      dispersão. Quantas árvores começaram como sementes esquecidas?
+    follow_ups:
+      - O que seria da floresta sem os guardadores?
+      - Como os esconderijos estendem o alcance das sementes?
+      - Qual a relação entre o esquecimento e a floresta?
+  - id: nmf_carpet_moss
+    name: Musgo Tapete
+    prompt: |
+      Musgo cobre o chão em alguns lugares — macio, verde, retendo água. Ande sobre ele.
+      Sinta a maleabilidade. O tapete é séculos de crescimento, camada sobre camada.
+    follow_ups:
+      - O que seria do chão sem o tapete?
+      - Como o tapete retém umidade?
+      - Qual a relação entre o musgo e o pântano?
+  - id: nmf_burrow_entrance
+    name: Entrada de Toca
+    prompt: |
+      Uma toca se abre no solo — de rato, arganaz, esquilo. A entrada é um
+      limiar. O que entra? O que sai? A toca se estende subterraneamente.
+    follow_ups:
+      - O que seria do chão sem tocas?
+      - Como a toca areja o solo?
+      - Qual a relação entre a toca e o predador?
+  - id: nmf_twig_lattice
+    name: Treliça de Galhos
+    prompt: |
+      Galhos se acumulam — vento, animal, gravidade. Eles formam uma treliça sobre a serrapilheira.
+      A treliça retém folhas, captura sementes. É arquitetura incidental.
+    follow_ups:
+      - O que seria do chão sem a treliça?
+      - Como a treliça retarda a erosão?
+      - Qual a relação entre o galho e o microhabitat?
+  - id: nmf_rot_softness
+    name: Maciez da Podridão
+    prompt: |
+      Madeira podre cede sob seus dedos — esponjosa, desmoronando. A transição
+      de estrutura para solo. Quanto tempo levou? O que resta?
+    follow_ups:
+      - O que seria da floresta sem podridão?
+      - Como a maciez permite a colonização?
+      - Qual a relação entre podridão e húmus?
+  - id: nmf_frost_needle
+    name: Agulha de Geada
+    prompt: |
+      Agulhas de geada se levantam do solo — cristais de gelo, delicados. Eles se formam em noites frias e calmas.
+      Ao meio-dia, eles se foram. Considere a estrutura efêmera.
+    follow_ups:
+      - O que o solo experimentaria sem geada?
+      - Como o levantamento por geada afeta as raízes?
+      - Qual a relação entre geada e plântula?
+  - id: nmf_millipede_curl
+    name: Enrolamento de Piolho-de-milho
+    prompt: |
+      Um piolho-de-milho se enrola quando perturbado — defesa. Ele se alimenta de decomposição. Observe um
+      mover-se pela serrapilheira. Como o corpo navega no emaranhado?
+    follow_ups:
+      - O que seria do chão sem piolhos-de-milho?
+      - Como o enrolamento protege?
+      - Qual a relação entre o piolho-de-milho e o cálcio?
+  - id: nmf_pinecone_open
+    name: Pinha Aberta
+    prompt: |
+      Uma pinha se abre quando seca — escamas se espalham, sementes são liberadas. A pinha é um
+      mecanismo. Calor também pode desencadeá-lo. Considere o tempo.
+    follow_ups:
+      - O que seria da árvore sem a pinha?
+      - Como a umidade controla o mecanismo?
+      - Qual a relação entre fogo e liberação?
+  - id: nmf_hole_in_leaf
+    name: Buraco na Folha
+    prompt: |
+      Uma folha tem buracos — inseto, lesma, fungo. O dano conta uma história. Quem comeu?
+      Quando? A folha restante ainda fotossintetiza. Qual é o limite?
+    follow_ups:
+      - O que seria da folha sem os buracos?
+      - Como a herbivoria molda a planta?
+      - Qual a relação entre dano e defesa?
+  - id: nmf_root_hair
+    name: Pelo Radicular
+    prompt: |
+      Pelos radiculares — microscópicos — aumentam a área de superfície para absorção. Você não pode vê-los,
+      mas eles estão lá. As raízes de uma plântula estão explorando. O que elas estão encontrando?
+    follow_ups:
+      - O que seria da raiz sem os pelos?
+      - Como os pelos radiculares absorvem água?
+      - Qual a relação entre o pelo e o nutriente?
+  - id: nmf_forest_silence
+    name: Silêncio da Floresta
+    prompt: |
+      Fique parado no chão da floresta. O silêncio não está vazio — está cheio de
+      pequenos sons. Sussurro, pingar, ranger. O que você ouve quando para?
+    follow_ups:
+      - O que seria da floresta sem os pequenos sons?
+      - Como o silêncio revela presença?
+      - Qual a relação entre ouvir e notar?
+  - id: nmf_shade_adaptation
+    name: Adaptação à Sombra
+    prompt: |
+      Plantas no chão da floresta são adaptadas à sombra — folhas maiores, clorofila diferente. Compare uma folha de sol com uma folha de sombra. Qual é a troca?
+    follow_ups:
+      - O que seria da planta sob sol pleno?
+      - Como a sombra molda a folha?
+      - Qual a relação entre luz e investimento?
+  - id: nmf_nutrient_cycle
+    name: Ciclo de Nutrientes
+    prompt: |
+      Tudo no chão da floresta está em ciclo — carbono, nitrogênio, fósforo.
+      Uma folha cai. É consumida. Torna-se solo. Nutre uma árvore. Trace um laço.
+    follow_ups:
+      - O que seria da floresta sem o ciclo?
+      - Como a decomposição completa o laço?
+      - Qual a relação entre morte e crescimento?
+  - id: nmf_footprint_compression
+    name: Compressão da Pegada
+    prompt: |
+      Sua pegada comprime a serrapilheira. O solo abaixo guarda a forma.
+      Quantas pegadas são necessárias para mudar o chão? Quem mais caminhou aqui?
+    follow_ups:
+      - O que seria do chão sem tráfego?
+      - Como a compressão afeta a drenagem?
+      - Qual a relação entre caminho e compactação?
+  - id: nmf_seasonal_signal
+    name: Sinal Sazonal
+    prompt: |
+      O chão da floresta sinaliza a estação — novo crescimento na primavera, senescência no outono.
+      O que há no chão agora? O que ele lhe diz?
+    follow_ups:
+      - O que seria do chão em outra estação?
+      - Como o sinal sincroniza a vida?
+      - Qual a relação entre a serrapilheira e o calendário?
+  - id: nmf_stump_succession
+    name: Sucessão do Toco
+    prompt: |
+      Um toco cortado brota fungos, plântulas, musgo. É uma etapa na sucessão.
+      O que veio antes? O que o substituirá? O toco é tanto fim quanto
+      começo.
+    follow_ups:
+      - O que seria da clareira sem o toco?
+      - Como o toco cria oportunidade?
+      - Qual a relação entre morte e novo crescimento?
+  - id: nmf_forest_breath
+    name: Respiração da Floresta
+    prompt: |
+      O chão da floresta respira — oxigênio entra, carbono sai, ou o inverso à noite.
+      O solo está vivo. Fique parado. Você consegue sentir a troca?
+    follow_ups:
+      - O que seria do ar sem o chão?
+      - Como a respiração molda o dossel?
+      - Qual a relação entre solo e atmosfera?
+  - id: nmf_leaf_miner_trail
+    name: Rastro de Ladrão de Folhas
+    prompt: |
+      Um ladrão de folhas — uma larva de inseto — come entre as camadas. O rastro é uma
+      linha branca, um caminho sinuoso. Trace-o. O que o ladrão procurava?
+    follow_ups:
+      - O que seria da folha sem o rastro?
+      - Como o ladrão navega sem ver?
+      - Qual a relação entre o interior e o exterior?
+  - id: nmf_decomposer_shift
+    name: Mudança de Decompositores
+    prompt: |
+      À medida que o material se decompõe, diferentes decompositores assumem o controle — primeiro bactérias e
+      fungos, depois besouros e minhocas. Encontre material em diferentes estágios.
+      Quem está trabalhando agora?
+    follow_ups:
+      - O que seria da decomposição sem sucessão?
+      - Como a mudança molda o ritmo?
+      - Qual a relação entre estágio e consumidor?

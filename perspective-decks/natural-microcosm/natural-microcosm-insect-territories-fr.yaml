@@ -1,0 +1,523 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosme Naturel — Territoires d'Insectes (French)
+
+id: natural_microcosm_insect_territories
+name: Microcosme Naturel — Territoires d'Insectes
+description: 50 cartes pour changer votre regard sur la vie des insectes — des chemins de fourmis et du trafic des abeilles aux toiles d'araignées, aux drames territoriaux et à la chorégraphie des colonies.
+domain: natural_microcosm
+cards:
+  - id: nmi_ant_trail
+    name: Chemin de Fourmis
+    prompt: |
+      Les fourmis forment des pistes — des chemins de phéromones entre le
+      nid et la nourriture. Observez le flux. Deux voies : sortie et retour. La
+      piste est une décision prise par beaucoup. Qu'est-ce qui briserait la
+      piste ?
+    follow_ups:
+      - Comment la piste se renforce-t-elle ?
+      - Que serait la colonie sans pistes ?
+      - Quelle est la relation entre la piste et la colonie ?
+  - id: nmi_bee_traffic
+    name: Trafic d'Abeilles
+    prompt: |
+      Une entrée de ruche — les abeilles entrent et sortent. Le trafic a un
+      rythme. Certaines transportent du pollen ; d'autres non. Considérez la
+      chorégraphie. Qui décide du schéma ?
+    follow_ups:
+      - Que serait la ruche sans le trafic ?
+      - Comment l'entrée façonne-t-elle le flux ?
+      - Quelle est la relation entre l'abeille et la colonie ?
+  - id: nmi_spider_web
+    name: Toile d'Araignée
+    prompt: |
+      Une toile d'araignée est territoire et piège. L'araignée attend sur le
+      bord. Les vibrations transportent l'information. Considérez l'architecture.
+      Qu'attrape la toile ? Qu'exclut-elle ?
+    follow_ups:
+      - Que serait l'araignée sans la toile ?
+      - Comment la toile étend-elle les sens de l'araignée ?
+      - Quelle est la relation entre la soie et la survie ?
+  - id: nmi_dragonfly_claim
+    name: Revendication de Libellule
+    prompt: |
+      Une libellule patrouille un tronçon d'étang — d'avant en arrière. Elle
+      est territoriale. Les rivaux sont chassés. Les partenaires sont courtisés.
+      Considérez l'enjeu. Qu'est-ce qui est défendu ?
+    follow_ups:
+      - Que ferait la libellule sans territoire ?
+      - Comment la patrouille communique-t-elle la propriété ?
+      - Quelle est la relation entre l'espace et la reproduction ?
+  - id: nmi_caterpillar_munch
+    name: Mastication de Chenille
+    prompt: |
+      Une chenille mange — le bord de la feuille recule. La mastication est
+      constante. La chenille est une machine de conversion. Considérez le taux.
+      Que serait la plante sans les herbivores ?
+    follow_ups:
+      - Comment la chenille façonne-t-elle la feuille ?
+      - Que serait le papillon sans la mastication ?
+      - Quelle est la relation entre la consommation et la croissance ?
+  - id: nmi_beetle_battle
+    name: Combat de Scarabées
+    prompt: |
+      Deux scarabées se rencontrent — peut-être des scarabées cerfs-volants,
+      peut-être des bousiers. Ils s'agrippent. Le combat est rituel. Considérez
+      les enjeux. Qu'est-ce qui est gagné ? Qu'est-ce qui est perdu ?
+    follow_ups:
+      - Que ferait le perdant ?
+      - Comment le combat se résout-il ?
+      - Quelle est la relation entre le combat et l'accouplement ?
+  - id: nmi_firefly_flash
+    name: Flash de Lucciole
+    prompt: |
+      Les lucioles clignotent — chaque espèce a un code. Le schéma est une
+      cour. Considérez le signal. Que signifierait un mauvais flash ? Comment
+      se trouvent-elles dans l'obscurité ?
+    follow_ups:
+      - Comment le flash encode-t-il l'espèce ?
+      - Que serait la prairie sans lucioles ?
+      - Quelle est la relation entre la lumière et le partenaire ?
+  - id: nmi_aphid_farm
+    name: Ferme de Pucerons
+    prompt: |
+      Les fourmis s'occupent des pucerons — elles les caressent, les
+      protègent. Les pucerons exudent du miellat. Les fourmis le récoltent.
+      Considérez le partenariat. Qui en profite ? Qui est exploité ?
+    follow_ups:
+      - Que seraient les pucerons sans les fourmis ?
+      - Comment l'élevage façonne-t-il les deux espèces ?
+      - Quelle est la relation entre s'occuper et extraire ?
+  - id: nmi_cicada_shell
+    name: Exuvie de Cigale
+    prompt: |
+      Une exuvie de cigale s'accroche à l'écorce — la nymphe a émergé.
+      L'exuvie est vide, parfaite. Considérez la mue. Qu'a laissé derrière
+      l'insecte ? Qu'a-t-il gagné ?
+    follow_ups:
+      - Que serait la cigale sans la mue ?
+      - Comment l'exuvie marque-t-elle la transition ?
+      - Quelle est la relation entre se débarrasser et croître ?
+  - id: nmi_leaf_miner
+    name: Foreur de Feuilles
+    prompt: |
+      Une piste à l'intérieur d'une feuille — le chemin d'un foreur de feuilles.
+      La larve mange entre les couches. La feuille conserve la trace.
+      Considérez le tunnel. À quoi ressemblerait la feuille de l'intérieur ?
+    follow_ups:
+      - Que serait la feuille sans le foreur ?
+      - Comment la mine protège-t-elle la larve ?
+      - Quelle est la relation entre l'intérieur et l'extérieur ?
+  - id: nmi_wasp_nest
+    name: Nid de Guêpes
+    prompt: |
+      Un nid de guêpes papier — alvéoles hexagonales, bois mâché. Le nid est
+      architecture et forteresse. Considérez la colonie. Qui construit ? Qui
+      défend ? Qui se reproduit ?
+    follow_ups:
+      - Que seraient les guêpes sans le nid ?
+      - Comment le nid façonne-t-il la structure sociale ?
+      - Quelle est la relation entre le papier et la colonie ?
+  - id: nmi_grasshopper_leap
+    name: Saut de Sauterelle
+    prompt: |
+      Une sauterelle saute — les pattes s'étendent, elle disparaît. Le saut est
+      fuite ou approche. Considérez le déclencheur. Qu'a vu la sauterelle ?
+      Qu'a-t-elle entendu ?
+    follow_ups:
+      - Que serait la sauterelle sans le saut ?
+      - Comment le saut évite-t-il la prédation ?
+      - Quelle est la relation entre la patte et le vol ?
+  - id: nmi_mantis_still
+    name: Immobilité de Mante
+    prompt: |
+      Une mante attend — immobile. C'est une chasseuse. La proie approche.
+      La frappe est soudaine. Considérez la patience. Quel est le coût de
+      l'immobilité ? Qu'autorise-t-elle ?
+    follow_ups:
+      - Que serait la mante sans l'attente ?
+      - Comment l'immobilité trompe-t-elle ?
+      - Quelle est la relation entre la patience et la capture ?
+  - id: nmi_bumblebee_buzz
+    name: Bourdonnement de Bourdon
+    prompt: |
+      Un bourdon bourdonne — il vibre. Certaines fleurs nécessitent la
+      pollinisation vibratile. L'abeille secoue le pollen. Considérez le
+      partenariat. Que serait la fleur sans le bourdonnement ?
+    follow_ups:
+      - Comment le bourdonnement libère-t-il le pollen ?
+      - Que serait l'abeille sans la pollinisation vibratile ?
+      - Quelle est la relation entre la vibration et la fécondation ?
+  - id: nmi_butterfly_territory
+    name: Territoire de Papillon
+    prompt: |
+      Un papillon se perche sur un point élevé — "hilltopping". Il attend les
+      partenaires. Les rivaux sont chassés. Considérez la stratégie. Pourquoi
+      cet endroit ? Qu'est-ce qui le rend précieux ?
+    follow_ups:
+      - Que ferait le papillon sans son perchoir ?
+      - Comment le "hilltopping" façonne-t-il l'accouplement ?
+      - Quelle est la relation entre l'endroit et la rencontre ?
+  - id: nmi_earwig_pincer
+    name: Pince de Perce-oreille
+    prompt: |
+      Les perce-oreilles ont des pinces — des cerques. Elles servent à la
+      défense, au pliage des ailes, à la manipulation des proies. Considérez
+      l'outil. Que serait le perce-oreille sans la pince ?
+    follow_ups:
+      - Comment la pince façonne-t-elle le comportement ?
+      - À quoi ressemblerait la défense sans elle ?
+      - Quelle est la relation entre la forme et la fonction ?
+  - id: nmi_katydid_call
+    name: Appel de Sauterelle verte
+    prompt: |
+      Une sauterelle verte appelle — stridulation, pattes sur les ailes. L'appel
+      est spécifique à l'espèce. C'est la cour, le territoire. Considérez le
+      son. Que serait la nuit sans lui ?
+    follow_ups:
+      - Comment l'appel attire-t-il les partenaires ?
+      - Que risquerait la sauterelle verte en appelant ?
+      - Quelle est la relation entre le son et la prédation ?
+  - id: nmi_ladybug_cluster
+    name: Regroupement de Coccinelles
+    prompt: |
+      Les coccinelles se regroupent en hiver — des dizaines, des centaines.
+      Elles s'agrègent pour la chaleur, pour l'abri. Considérez le rassemblement.
+      Qu'est-ce qui le déclenche ? Qu'est-ce qui le disperse ?
+    follow_ups:
+      - Que seraient les coccinelles sans le regroupement ?
+      - Comment le regroupement crée-t-il un microclimat ?
+      - Quelle est la relation entre le nombre et la survie ?
+  - id: nmi_ant_carry
+    name: Port de Fourmis
+    prompt: |
+      Une fourmi en porte une autre — morte ou blessée. C'est une aide. La
+      colonie s'occupe des siens. Considérez le comportement. Que ferait la
+      fourmi blessée seule ? Qu'y gagne le porteur ?
+    follow_ups:
+      - Comment le port sert-il la colonie ?
+      - Que serait la colonie sans coopération ?
+      - Quelle est la relation entre l'individu et le collectif ?
+  - id: nmi_mosquito_hover
+    name: Vol Stationnaire de Moustique
+    prompt: |
+      Un moustique plane — il teste, il sonde. Il cherche un hôte. Le vol
+      stationnaire est une évaluation. Considérez le moment avant la piqûre.
+      Que détecte le moustique ? Qu'est-ce qui décide ?
+    follow_ups:
+      - Que ferait le moustique sans son vol stationnaire ?
+      - Comment le vol stationnaire minimise-t-il la détection ?
+      - Quelle est la relation entre la sonde et le repas ?
+  - id: nmi_weevil_curl
+    name: Enroulement de Charançon
+    prompt: |
+      Une feuille s'enroule — un charançon ou une cécidomyie l'a fait. La
+      feuille se replie autour de la larve. Considérez la manipulation. La
+      plante est persuadée. Que ferait la feuille sans l'insecte ?
+    follow_ups:
+      - Comment l'enroulement protège-t-il la larve ?
+      - Que serait la plante sans l'enroulement ?
+      - Quelle est la relation entre la forme de l'insecte et celle de la plante ?
+  - id: nmi_honeybee_waggle
+    name: Danse Frétillante d'Abeille Mellifère
+    prompt: |
+      Une abeille mellifère frétille — c'est une danse. La danse encode la
+      distance et la direction des fleurs. D'autres abeilles observent.
+      Considérez le message. Que serait la colonie sans la danse frétillante ?
+    follow_ups:
+      - Comment la danse transfère-t-elle l'information ?
+      - À quoi ressemblerait la recherche de nourriture sans elle ?
+      - Quelle est la relation entre la danse et la découverte ?
+  - id: nmi_gnat_cloud
+    name: Nuage de Moucherons
+    prompt: |
+      Les moucherons volent en nuage — un nuage de minuscules insectes. Le vol
+      en nuage est un accouplement. Les mâles se rassemblent ; les femelles
+      entrent et choisissent. Considérez l'agrégation. Que ferait le moucheron
+      seul ?
+    follow_ups:
+      - Comment le vol en nuage permet-il l'accouplement ?
+      - Que seraient les moucherons sans le nuage ?
+      - Quelle est la relation entre le nombre et la rencontre ?
+  - id: nmi_spider_wrap
+    name: Enveloppement d'Araignée
+    prompt: |
+      Une araignée enveloppe sa proie — de la soie autour de l'insecte qui se
+      bat. L'enveloppement immobilise. L'araignée injecte une enzyme.
+      Considérez le processus. Que ferait l'araignée sans l'enveloppement ?
+    follow_ups:
+      - Comment l'enveloppement soumet-il la proie ?
+      - Que risquerait l'araignée sans cela ?
+      - Quelle est la relation entre la soie et la digestion ?
+  - id: nmi_ant_war
+    name: Guerre de Fourmis
+    prompt: |
+      Deux colonies de fourmis se rencontrent — conflit. Les ouvrières
+      s'agrippent, mordent. La frontière est contestée. Considérez la bataille.
+      Qu'est-ce qui est en jeu ? Comment la frontière est-elle décidée ?
+    follow_ups:
+      - Que seraient les colonies sans la guerre ?
+      - Comment la guerre se résout-elle ?
+      - Quelle est la relation entre territoire et ressource ?
+  - id: nmi_moth_flutter
+    name: Papillon de Nuit Flottant
+    prompt: |
+      Un papillon de nuit flotte près d'une lumière — attiré, désorienté. La
+      lumière perturbe la navigation. Considérez le piège. Que ferait le
+      papillon de nuit dans l'obscurité ? Pourquoi la lumière désoriente-t-elle
+      ?
+    follow_ups:
+      - Que serait le papillon de nuit sans la lumière ?
+      - Comment le papillon de nuit utilise-t-il la lumière de la lune normalement ?
+      - Quelle est la relation entre la lumière et la direction ?
+  - id: nmi_stick_insect_still
+    name: Immobilité d'Insecte-Bâton
+    prompt: |
+      Un insecte-bâton est immobile — il ressemble à une brindille. Les
+      prédateurs passent. Considérez la tromperie. Que serait l'insecte sans
+      le déguisement ? Combien de temps peut-il tenir la pose ?
+    follow_ups:
+      - Comment l'immobilité protège-t-elle ?
+      - Que risquerait l'insecte en bougeant ?
+      - Quelle est la relation entre la forme et la survie ?
+  - id: nmi_leafcutter_carry
+    name: Port de Feuilles par Fourmi Coupeuse
+    prompt: |
+      Une fourmi coupeuse de feuilles porte un fragment de feuille — plusieurs
+      fois sa taille. La feuille va au nid. Elle sert de substrat pour le
+      champignon. Considérez la récolte. Que serait la colonie sans les
+      feuilles ?
+    follow_ups:
+      - Comment le champignon utilise-t-il la feuille ?
+      - Que mangerait la fourmi sans le champignon ?
+      - Quelle est la relation entre la récolte et la culture ?
+  - id: nmi_housefly_clean
+    name: Nettoyage de Mouche Domestique
+    prompt: |
+      Une mouche domestique se nettoie — elle frotte ses pattes, caresse ses
+      ailes. Le toilettage retire les particules, maintient les capteurs.
+      Considérez le rituel. Que serait la mouche sans le nettoyage ?
+    follow_ups:
+      - Comment le toilettage maintient-il la fonction ?
+      - Que se passerait-il si la mouche ne pouvait pas se nettoyer ?
+      - Quelle est la relation entre le propre et le sens ?
+  - id: nmi_termite_mound
+    name: Termitière
+    prompt: |
+      Une termitière s'élève — argile, salive, bois mâché. C'est une ville. À
+      l'intérieur, des tunnels, des chambres, des jardins de champignons.
+      Considérez l'architecture. Que serait la colonie sans la termitière ?
+    follow_ups:
+      - Comment la termitière régule-t-elle le climat ?
+      - Que feraient les termites sans la structure ?
+      - Quelle est la relation entre la termitière et la colonie ?
+  - id: nmi_cricket_chirp
+    name: Grillon Craquant
+    prompt: |
+      Un grillon craque — ailes ensemble. Le craquement est une cour. Les
+      femelles choisissent par le son. Considérez l'appel. Que ferait le
+      grillon sans le craquement ? Qui écoute à part les femelles ?
+    follow_ups:
+      - Comment le craquement encode-t-il la forme physique ?
+      - Que serait la prairie sans le son ?
+      - Quelle est la relation entre l'appel et la prédation ?
+  - id: nmi_damselfly_tandem
+    name: Tandem de Demoiselle
+    prompt: |
+      Les demoiselles s'accouplent en tandem — le mâle agrippe la femelle par
+      derrière la tête. Elle se courbe pour recevoir le sperme. La paire peut
+      voler ensemble. Considérez l'accouplement. Que serait l'accouplement
+      sans l'agrippement ?
+    follow_ups:
+      - Comment le tandem protège-t-il l'investissement du mâle ?
+      - Que feraient les partenaires sans le lien ?
+      - Quelle est la relation entre l'agrippement et la fécondation ?
+  - id: nmi_roach_scatter
+    name: Dispersion de Cafard
+    prompt: |
+      Allumez une lumière — les cafards se dispersent. Ils cherchent des
+      fissures. La dispersion est une fuite. Considérez la réponse. Que ferait
+      le cafard dans une lumière permanente ? Pourquoi l'obscurité ?
+    follow_ups:
+      - Comment la dispersion réduit-elle la prédation ?
+      - Que serait le cafard sans le réflexe ?
+      - Quelle est la relation entre la lumière et la cachette ?
+  - id: nmi_hopper_nymph
+    name: Nymphe de Sauterelle
+    prompt: |
+      Une jeune sauterelle — nymphe. Elle n'a pas encore d'ailes. Elle saute.
+      Considérez le stade. Que deviendra la nymphe ? Qu'est-ce qui lui manque
+      maintenant ?
+    follow_ups:
+      - Que serait la sauterelle sans le stade nymphal ?
+      - Comment la nymphe évite-t-elle les prédateurs ?
+      - Quelle est la relation entre la mue et l'aile ?
+  - id: nmi_sweat_bee
+    name: Abeille de Sueur
+    prompt: |
+      Une abeille de sueur se pose sur votre peau — elle cherche du sel. La
+      sueur est une ressource. Considérez la rencontre. Que ferait l'abeille
+      sans la sueur ? Pourquoi a-t-elle besoin du sel ?
+    follow_ups:
+      - Comment l'abeille utilise-t-elle le sel ?
+      - Que risquerait l'abeille en se posant ?
+      - Quelle est la relation entre l'humain et l'abeille ?
+  - id: nmi_army_ant_column
+    name: Colonne de Fourmis légionnaires
+    prompt: |
+      Les fourmis légionnaires marchent — une colonne de milliers. Elles
+      fluides. La proie est submergée. Considérez l'essaim. Que seraient les
+      fourmis sans la colonne ? Comment se coordonnent-elles ?
+    follow_ups:
+      - Comment la colonne permet-elle la prédation ?
+      - Que serait la forêt sans les fourmis légionnaires ?
+      - Quelle est la relation entre le nombre et la puissance ?
+  - id: nmi_water_strider_leg
+    name: Patte de Gerris
+    prompt: |
+      Les pattes d'un gerris — longues, hydrophobes. Elles répartissent le poids.
+      La surface les supporte. Considérez l'adaptation. Que serait le gerris
+      sans la conception de ses pattes ?
+    follow_ups:
+      - Comment la forme de la patte distribue-t-elle la force ?
+      - Que ferait le gerris sur la terre ?
+      - Quelle est la relation entre la forme et la surface ?
+  - id: nmi_aphid_wing
+    name: Aile de Puceron
+    prompt: |
+      Certains pucerons ont des ailes — lorsqu'ils sont nombreux ou lorsque
+      l'hôte décline. Ils se dispersent. Considérez le changement. Qu'est-ce
+      qui déclenche le développement des ailes ? Quel est le coût de l'aile ?
+    follow_ups:
+      - Comment la foule induit-elle les ailes ?
+      - Que serait le puceron sans l'option ?
+      - Quelle est la relation entre l'aile et la dispersion ?
+  - id: nmi_scale_armor
+    name: Armure d'Insecte Cochenille
+    prompt: |
+      Les insectes cochenilles ressemblent à des bosses — ils sont blindés.
+      Ils ne bougent pas beaucoup. Ils piquent la plante, se nourrissent.
+      Considérez la stratégie. Que serait la cochenille sans l'armure ?
+    follow_ups:
+      - Comment l'armure protège-t-elle ?
+      - Que serait la plante sans la cochenille ?
+      - Quelle est la relation entre l'immobilité et la défense ?
+  - id: nmi_caddisfly_case
+    name: Étui de Trichoptère
+    prompt: |
+      Une larve de trichoptère construit un étui — brindilles, sable, petits
+      cailloux. Elle porte l'étui. L'étui est camouflage et armure. Considérez
+      la construction. Que serait la larve sans lui ?
+    follow_ups:
+      - Comment l'étui protège-t-il ?
+      - Qu'utiliserait la larve si les matériaux changeaient ?
+      - Quelle est la relation entre la construction et la survie ?
+  - id: nmi_leafhopper_flash
+    name: Éclair de Cigale-cigarre
+    prompt: |
+      Une cigale-cigarre saute — soudainement. Elle disparaît. Le saut est une
+      fuite. Les pattes stockent de l'énergie, la libèrent. Considérez le
+      mécanisme. Que serait la cigale-cigarre sans le saut ?
+    follow_ups:
+      - Comment le saut évite-t-il la capture ?
+      - Que serait la feuille sans la cigale-cigarre ?
+      - Quelle est la relation entre le saut et la prédation ?
+  - id: nmi_bombardier_blast
+    name: Explosion de Bombardiers
+    prompt: |
+      Un scarabée bombardier pulvérise — chaud, nauséabond. C'est une défense.
+      La pulvérisation est une chimie : deux chambres, réaction à la sortie.
+      Considérez l'arme. Que ferait le scarabée sans elle ?
+    follow_ups:
+      - Comment la pulvérisation dissuade-t-elle les prédateurs ?
+      - Que risquerait le scarabée en pulvérisant ?
+      - Quelle est la relation entre la chimie et la défense ?
+  - id: nmi_silverfish_slip
+    name: Glissement de Lépisme
+    prompt: |
+      Un lépisme glisse dans une fissure — rapide. Il est plat. Il rentre.
+      Considérez la forme. Que serait le lépisme sans sa platitude ? Pourquoi
+      l'urgence ?
+    follow_ups:
+      - Comment la platitude permet-elle l'évasion ?
+      - Que ferait le lépisme à découvert ?
+      - Quelle est la relation entre la forme et le refuge ?
+  - id: nmi_ant_queen
+    name: Reine des Fourmis
+    prompt: |
+      Une colonie de fourmis a une reine — ou plusieurs. Elle pond des œufs.
+      Les ouvrières s'occupent d'elle. Considérez le centre. Que serait la
+      colonie sans la reine ? Comment la colonie la remplace-t-elle ?
+    follow_ups:
+      - Comment la reine façonne-t-elle la colonie ?
+      - Que feraient les ouvrières sans elle ?
+      - Quelle est la relation entre la reine et la colonie ?
+  - id: nmi_owlfly_larva
+    name: Larve de Libellule-hibou
+    prompt: |
+      Une larve de libellule-hibou attend — dans le sable, dans les débris. Elle
+      embusque. Les mâchoires frappent. Considérez le chasseur. Que serait la
+      larve sans l'embuscade ? Que devient-elle ?
+    follow_ups:
+      - Comment l'embuscade permet-elle de se nourrir ?
+      - Que serait la libellule-hibou sans le stade larvaire ?
+      - Quelle est la relation entre l'attente et la capture ?
+  - id: nmi_thrips_scatter
+    name: Dispersion de Thrips
+    prompt: |
+      Les thrips sont minuscules — à peine visibles. Ils se rassemblent sur les
+      fleurs, sur les feuilles. Ils percent et aspirent. Considérez l'échelle.
+      Que serait la plante sans les thrips ? Que remarquerions-nous ?
+    follow_ups:
+      - Comment les thrips façonnent-ils la plante ?
+      - Que serait l'écosystème sans eux ?
+      - Quelle est la relation entre la petitesse et l'impact ?
+  - id: nmi_sting_threat
+    name: Menace de Dard
+    prompt: |
+      Une guêpe relève son abdomen — dard prêt. C'est une menace. La posture
+      communique. Considérez l'affichage. Que ferait la guêpe si elle était
+      ignorée ? Quel est le coût de la posture ?
+    follow_ups:
+      - Comment la menace dissuade-t-elle ?
+      - Que risquerait la guêpe en piquant ?
+      - Quelle est la relation entre l'affichage et la défense ?
+  - id: nmi_velvet_ant
+    name: Fourmi Velours
+    prompt: |
+      Une fourmi velours rampe — c'est une guêpe sans ailes. Elle est résistante.
+      Les prédateurs apprennent à l'éviter. Le dard est féroce. Considérez la
+      stratégie. Que serait la fourmi velours sans le dard ?
+    follow_ups:
+      - Comment le dard protège-t-il ?
+      - Que ferait la fourmi velours à la surface ?
+      - Quelle est la relation entre le dard et l'audace ?
+  - id: nmi_ambush_predator
+    name: Prédateur à l'Affût
+    prompt: |
+      Une punaise à l'affût attend sur une fleur — jaune, déguisée. La proie
+      arrive. La punaise frappe. Considérez la patience. Que ferait la punaise
+      sans la fleur ? Pourquoi ce perchoir ?
+    follow_ups:
+      - Comment la fleur attire-t-elle les proies ?
+      - Que serait la punaise sans l'embuscade ?
+      - Quelle est la relation entre l'endroit et la capture ?
+  - id: nmi_nectar_flow
+    name: Flux de Nectar
+    prompt: |
+      Les fleurs produisent du nectar — les abeilles, les papillons, les
+      scarabées boivent. Le flux varie. Considérez l'économie. Que serait la
+      fleur sans le nectar ? Que ferait l'insecte ?
+    follow_ups:
+      - Comment le nectar façonne-t-il les visites ?
+      - Que serait la pollinisation sans la récompense ?
+      - Quelle est la relation entre le flux et le service ?
+  - id: nmi_territory_mark
+    name: Marque de Territoire
+    prompt: |
+      Certains insectes marquent leur territoire — phéromones, affichage visuel.
+      La marque dit "mien". Considérez la revendication. Que serait l'espace
+      sans la marque ? Comment les rivaux la lisent-ils ?
+    follow_ups:
+      - Comment la marque dissuade-t-elle les intrus ?
+      - Que ferait l'insecte sans territoire ?
+      - Quelle est la relation entre la marque et l'espace ?

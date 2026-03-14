@@ -1,0 +1,457 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Selva Urbana — Bangalore (Portuguese)
+
+id: urban_jungle_bangalore
+name: Selva Urbana — Bangalore
+description: 50 cartas para mudar a sua perspetiva sobre Bangalore — da escala e luz a camadas de história e aos ritmos da vida de rua.
+domain: urban_jungle
+cards:
+  - id: blr_gate_colony
+    name: Entrada da Colónia
+    prompt: |
+      As colónias muradas de Bangalore têm muros, guardas, portões. Fique num portão.
+      O que há lá dentro? Quem entra? O portão marca um limite. O que protege?
+    follow_ups:
+      - O que seria da rua sem o portão?
+      - Como o portão cria segurança?
+      - Qual a relação entre portão e colónia?
+  - id: blr_tree_canopy
+    name: Copa de Árvores
+    prompt: |
+      Bangalore foi outrora uma cidade jardim. Árvores antigas ainda cobrem algumas ruas.
+      Caminhe debaixo de uma. Como a copa muda a luz? O som?
+    follow_ups:
+      - O que seria da rua sem a árvore?
+      - Como a copa cria microclima?
+      - Qual a relação entre árvore e cidade?
+  - id: blr_tech_park
+    name: Parque Tecnológico
+    prompt: |
+      Os parques tecnológicos são campus — vidro, relva, autocarros shuttle. Encontre um. Como
+      o parque se separa da cidade? Qual a relação entre o interior e o exterior?
+    follow_ups:
+      - O que seria da área sem o parque?
+      - Como o parque cria identidade?
+      - Qual a relação entre o parque e a rua?
+  - id: blr_auto_rickshaw
+    name: Auto Rickshaw
+    prompt: |
+      Os auto rickshaws tecem-se pelo trânsito. Observe um a negociar uma junção. Como
+      o auto se encaixa onde os carros não conseguem? Qual a lógica do entrelaçar?
+    follow_ups:
+      - O que seria da rua sem o auto?
+      - Como o auto cria mobilidade?
+      - Qual a relação entre auto e trânsito?
+  - id: blr_chai_stall
+    name: Barraca de Chai
+    prompt: |
+      As barracas de chai são nós — pequenas, temporárias, essenciais. Encontre uma. Quem se reúne?
+      Qual o ritmo? A barraca é uma máquina social.
+    follow_ups:
+      - O que seria da esquina sem a barraca?
+      - Como a barraca cria encontro?
+      - Qual a relação entre a barraca e a rua?
+  - id: blr_billboard
+    name: Outdoor de Bangalore
+    prompt: |
+      Os outdoors de Bangalore anunciam tecnologia, imobiliário, educação. Encontre um.
+      O que está a ser vendido? Quem é o público? O outdoor é um espelho de aspiração.
+    follow_ups:
+      - O que seria da rua sem o outdoor?
+      - Como o outdoor molda o desejo?
+      - Qual a relação entre o outdoor e a cidade?
+  - id: blr_compound_wall
+    name: Muro de Vedação
+    prompt: |
+      Os muros de vedação separam o privado do público. Encontre um muro. O que há atrás dele?
+      Quão alto é? O muro cria uma fronteira. O que exclui?
+    follow_ups:
+      - O que seria da rua sem o muro?
+      - Como o muro cria privacidade?
+      - Qual a relação entre o muro e o composto?
+  - id: blr_signal_wait
+    name: Espera no Sinal
+    prompt: |
+      Espere num semáforo. Observe os vendedores — flores, brinquedos, livros.
+      O sinal cria uma pausa. O que acontece na pausa?
+    follow_ups:
+      - O que seria da junção sem o sinal?
+      - Como o sinal cria economia?
+      - Qual a relação entre o sinal e a rua?
+  - id: blr_rain_drain
+    name: Dreno de Chuva
+    prompt: |
+      O monção de Bangalore sobrecarrega os drenos. Depois da chuva, observe a água. Para onde
+      vai? Onde se acumula? O dreno é um limite.
+    follow_ups:
+      - O que seria da rua sem o dreno?
+      - Como o dreno gere a água?
+      - Qual a relação entre o dreno e o monção?
+  - id: blr_sarjapur_road
+    name: Estrada Sarjapur
+    prompt: |
+      A Estrada Sarjapur liga a antiga Bangalore ao corredor tecnológico. Conduza ou caminhe
+      por um trecho. O que muda? Onde a cidade se desloca?
+    follow_ups:
+      - O que seria do corredor sem a estrada?
+      - Como a estrada cria ligação?
+      - Qual a relação entre a estrada e o crescimento?
+  - id: blr_parks_maidans
+    name: Parques e Maidans
+    prompt: |
+      Bangalore tem parques e maidans — Parque Cubbon, Lalbagh, campos de bairro.
+      Entre num. Quem o usa? Qual o ritmo?
+    follow_ups:
+      - O que seria da cidade sem o parque?
+      - Como o parque cria refúgio?
+      - Qual a relação entre o parque e o bairro?
+  - id: blr_temple_street
+    name: Rua do Templo
+    prompt: |
+      Templos pontuam as ruas de Bangalore. Encontre um. Observe as oferendas, os
+      sinos, a multidão. Como o templo molda o quarteirão?
+    follow_ups:
+      - O que seria da rua sem o templo?
+      - Como o templo cria comunidade?
+      - Qual a relação entre o templo e a rua?
+  - id: blr_silk_board
+    name: Junta de Seda
+    prompt: |
+      A junção da Junta de Seda é infame. Fique na borda. Observe o trânsito.
+      Como funciona a junção? Qual a lógica do caos?
+    follow_ups:
+      - O que seria do corredor sem a junção?
+      - Como a junção cria gargalo?
+      - Qual a relação entre a junção e o trajeto?
+  - id: blr_metro_elevated
+    name: Metro Elevado
+    prompt: |
+      O Metro de Bangalore corre elevado por partes da cidade. Ande nele ou fique debaixo dele.
+      Como a linha elevada muda a rua por baixo?
+    follow_ups:
+      - O que seria da rua sem o metro?
+      - Como o metro cria ligação?
+      - Qual a relação entre o elevado e o solo?
+  - id: blr_apartment_tower
+    name: Torre de Apartamentos
+    prompt: |
+      Torres de apartamentos erguem-se por Bangalore. Encontre uma. Quantos andares? Quem
+      vive lá? A torre é densidade vertical. O que substitui?
+    follow_ups:
+      - O que seria do horizonte sem a torre?
+      - Como a torre cria habitação?
+      - Qual a relação entre a torre e o solo?
+  - id: blr_roadside_vendor
+    name: Vendedor de Beira de Estrada
+    prompt: |
+      Vendedores de beira de estrada vendem fruta, lanches, carregadores de telemóvel. Encontre um. Qual
+      é a exposição? Quem para? O vendedor é economia informal.
+    follow_ups:
+      - O que seria da rua sem o vendedor?
+      - Como o vendedor cria sustento?
+      - Qual a relação entre o vendedor e a rua?
+  - id: blr_borewell
+    name: Poço Artesiano
+    prompt: |
+      Bangalore depende de poços artesianos. Procure os canos, os tanques, as
+      bombas. A água é extraída de baixo. Qual a relação entre a cidade e o aquífero?
+    follow_ups:
+      - O que seria do edifício sem o poço artesiano?
+      - Como o poço artesiano cria abastecimento?
+      - Qual a relação entre o poço artesiano e a escassez?
+  - id: blr_garbage_heap
+    name: Monte de Lixo
+    prompt: |
+      Montes de lixo aparecem nas esquinas, junto a muros. Repare num. O que há nele? Quem
+      revira? O monte é um limite do sistema.
+    follow_ups:
+      - O que seria da rua sem o monte?
+      - Como o monte marca o fracasso?
+      - Qual a relação entre o monte e a cidade?
+  - id: blr_marquee_wedding
+    name: Casamento em Tendá
+    prompt: |
+      As tendas de casamento bloqueiam ruas. Encontre uma. A tenda é um território temporário.
+      Qual a relação entre celebração e rua?
+    follow_ups:
+      - O que seria da rua sem a tenda?
+      - Como a tenda cria posse?
+      - Qual a relação entre casamento e público?
+  - id: blr_old_bungalow
+    name: Antigo Bungalow
+    prompt: |
+      Antigos bungalows de Bangalore persistem entre torres. Encontre um. O bungalow tem
+      um quintal, árvores, espaço. O que o substituirá?
+    follow_ups:
+      - O que seria da rua sem o bungalow?
+      - Como o bungalow marca a história?
+      - Qual a relação entre o bungalow e a torre?
+  - id: blr_coffee_house
+    name: Casa de Café
+    prompt: |
+      O Indian Coffee House é uma instituição. Sente-se numa. A casa de café é
+      uma sala de conversação. Qual o ritmo? Quem vem?
+    follow_ups:
+      - O que seria da rua sem a casa de café?
+      - Como a casa de café cria comunidade?
+      - Qual a relação entre a casa de café e a cidade?
+  - id: blr_phone_booth
+    name: Cabine Telefónica
+    prompt: |
+      Cabines telefónicas públicas ainda existem. Encontre uma. Está a funcionar? Quem a usa?
+      A cabine é uma relíquia. O que a substituiu?
+    follow_ups:
+      - O que seria da rua sem a cabine?
+      - Como a cabine marca a mudança?
+      - Qual a relação entre a cabine e o móvel?
+  - id: blr_bus_stop
+    name: Paragem de Autocarro de Bangalore
+    prompt: |
+      As paragens de autocarro de Bangalore são muitas vezes um poste e uma multidão. Espere numa. Quem
+      espera? Qual a etiqueta? A paragem é infraestrutura mínima.
+    follow_ups:
+      - O que seria da rua sem a paragem?
+      - Como a paragem cria ligação?
+      - Qual a relação entre a paragem e o autocarro?
+  - id: blr_power_line
+    name: Linha de Eletricidade
+    prompt: |
+      As linhas de eletricidade de Bangalore são um emaranhado — cabos, transformadores, laços. Trace
+      uma linha. Para onde vai? A rede é visível. O que alimenta?
+    follow_ups:
+      - O que seria da rua sem as linhas?
+      - Como a rede cria abastecimento?
+      - Qual a relação entre a linha e a falha de energia?
+  - id: blr_speed_breaker
+    name: Travão de Velocidade
+    prompt: |
+      Travões de velocidade — polícia deitada — pontuam as estradas de Bangalore. Sinta um. Porquê está
+      aqui? O que abranda? O travão é uma intervenção local.
+    follow_ups:
+      - O que seria da estrada sem o travão?
+      - Como o travão cria segurança?
+      - Qual a relação entre o travão e a velocidade?
+  - id: blr_compound_tree
+    name: Árvore do Quintal
+    prompt: |
+      As árvores do quintal projetam-se sobre os muros. Encontre uma. A árvore está dentro e
+      fora. O que sombreia? Quem é o dono?
+    follow_ups:
+      - O que seria da rua sem a árvore?
+      - Como a árvore cria presente?
+      - Qual a relação entre a árvore e o quintal?
+  - id: blr_shop_shutter
+    name: Porta de Loja
+    prompt: |
+      As portas de loja de Bangalore descem à noite. Encontre uma porta fechada. O que há por trás dela?
+      A porta é um ciclo diário. O que protege?
+    follow_ups:
+      - O que seria da rua sem a porta?
+      - Como a porta cria segurança?
+      - Qual a relação entre a porta e o comércio?
+  - id: blr_water_tanker
+    name: Cisterna de Água
+    prompt: |
+      Cisternas de água abastecem bairros. Observe uma a entregar. A cisterna é
+      infraestrutura móvel. Qual a relação entre a cisterna e a torneira?
+    follow_ups:
+      - O que seria do bairro sem a cisterna?
+      - Como a cisterna cria abastecimento?
+      - Qual a relação entre a cisterna e a escassez?
+  - id: blr_metro_station
+    name: Estação de Metro
+    prompt: |
+      As estações de metro de Bangalore são novas — limpas, com marca. Entre numa. Como a
+      estação difere da rua? Qual a transição?
+    follow_ups:
+      - O que seria do corredor sem a estação?
+      - Como a estação cria ligação?
+      - Qual a relação entre a estação e a cidade?
+  - id: blr_rickshaw_stand
+    name: Ponto de Rickshaw
+    prompt: |
+      Os pontos de rickshaw agrupam-se nas junções. Encontre um. Os motoristas esperam. O
+      ponto é um nó. Qual a economia?
+    follow_ups:
+      - O que seria da junção sem o ponto?
+      - Como o ponto cria mobilidade?
+      - Qual a relação entre o ponto e o motorista?
+  - id: blr_pavement_sleep
+    name: Dormir na Calçada
+    prompt: |
+      Os que dormem na calçada fazem parte da cidade. Observe com atenção. Onde dormem?
+      Qual a relação entre a rua e o abrigo?
+    follow_ups:
+      - O que seria da rua sem os que dormem?
+      - Como a calçada se torna um lar?
+      - Qual a relação entre o sono e a cidade?
+  - id: blr_gate_security
+    name: Segurança do Portão
+    prompt: |
+      Os portões das colónias têm segurança — guardas, barreiras, registos. Observe o fluxo.
+      Quem entra? Quem é parado? O portão é um filtro.
+    follow_ups:
+      - O que seria da colónia sem o portão?
+      - Como o portão cria segurança?
+      - Qual a relação entre o portão e a confiança?
+  - id: blr_street_dog
+    name: Cão de Rua
+    prompt: |
+      Os cães de rua fazem parte de Bangalore. Observe um. Onde dorme? O que
+      come? O cão é simultaneamente selvagem e doméstico.
+    follow_ups:
+      - O que seria da rua sem o cão?
+      - Como o cão cria relação?
+      - Qual a relação entre o cão e a cidade?
+  - id: blr_hoarding
+    name: Faixa Publicitária
+    prompt: |
+      Faixas publicitárias — outdoors grandes — dominam as junções. Encontre uma. O que
+      é anunciado? A faixa é uma escala de aspiração. O que promete?
+    follow_ups:
+      - O que seria da junção sem a faixa?
+      - Como a faixa molda o desejo?
+      - Qual a relação entre a faixa e a cidade?
+  - id: blr_rain_tree
+    name: Árvore da Chuva
+    prompt: |
+      As árvores da chuva — Samanea saman — cobrem algumas ruas de Bangalore. Encontre uma. A
+      árvore é um legado. Como molda o quarteirão?
+    follow_ups:
+      - O que seria da rua sem a árvore da chuva?
+      - Como a árvore cria microclima?
+      - Qual a relação entre a árvore e a cidade jardim?
+  - id: blr_corner_shop
+    name: Loja de Esquina de Bangalore
+    prompt: |
+      As lojas de esquina — lojas kirana — vendem tudo. Entre numa. Qual é o
+      inventário? Quem a gere? A loja é um nó de bairro.
+    follow_ups:
+      - O que seria do quarteirão sem a loja?
+      - Como a loja cria encontro?
+      - Qual a relação entre a loja e a comunidade?
+  - id: blr_flyover
+    name: Viaduto
+    prompt: |
+      Os viadutos de Bangalore saltam por cima das junções. Fique debaixo de um. O viaduto
+      cria sombra, ruído, uma nova camada. O que há acima? O que há abaixo?
+    follow_ups:
+      - O que seria da junção sem o viaduto?
+      - Como o viaduto cria fluxo?
+      - Qual a relação entre o viaduto e o solo?
+  - id: blr_water_tap
+    name: Torneira Pública de Água
+    prompt: |
+      Torneiras públicas de água ainda existem. Encontre uma. Quem a usa? A torneira é um
+      bem comum. Qual a relação entre a torneira e o acesso?
+    follow_ups:
+      - O que seria da rua sem a torneira?
+      - Como a torneira cria presente?
+      - Qual a relação entre a torneira e a escassez?
+  - id: blr_construction_crane
+    name: Grua de Construção
+    prompt: |
+      Gruas de construção pontuam o horizonte. Encontre uma. O que está a ser construído?
+      A grua é um sinal de crescimento. O que substituirá o quê?
+    follow_ups:
+      - O que seria do horizonte sem a grua?
+      - Como a grua marca a mudança?
+      - Qual a relação entre a grua e a cidade?
+  - id: blr_parking_lot
+    name: Parque de Estacionamento
+    prompt: |
+      Os parques de estacionamento são temporários — terra vazia até ao desenvolvimento. Encontre um. O que
+      estava aqui antes? O que virá? O lote é uma pausa.
+    follow_ups:
+      - O que seria do quarteirão sem o lote?
+      - Como o lote cria uso intermédio?
+      - Qual a relação entre o lote e o desenvolvimento?
+  - id: blr_street_food
+    name: Comida de Rua
+    prompt: |
+      Vendedores de comida de rua montam-se ao anoitecer. Encontre um. O que está a cozinhar? Quem come?
+      O vendedor é infraestrutura informal. Qual a economia?
+    follow_ups:
+      - O que seria da rua sem o vendedor?
+      - Como o vendedor cria sustento?
+      - Qual a relação entre o vendedor e a rua?
+  - id: blr_compound_garden
+    name: Jardim do Quintal
+    prompt: |
+      Os jardins do quintal são privados — visíveis através de portões. Espreite. O que cresce? O jardim é um bolso de verde. O que seria da rua sem ele?
+    follow_ups:
+      - O que seria do quintal sem o jardim?
+      - Como o jardim cria refúgio?
+      - Qual a relação entre o jardim e a cidade?
+  - id: blr_bus_crowd
+    name: Multidão no Autocarro
+    prompt: |
+      Os autocarros de Bangalore apinham-se na hora de ponta. Observe uma paragem de autocarro. A multidão embarca
+      numa maré. Como a multidão cria ordem? Qual a etiqueta?
+    follow_ups:
+      - O que seria da paragem sem a multidão?
+      - Como a multidão cria pressão?
+      - Qual a relação entre a multidão e o autocarro?
+  - id: blr_metro_pillar
+    name: Pilar do Metro
+    prompt: |
+      Os pilares do metro suportam a linha elevada. Fique debaixo de um. O pilar
+      cria uma coluna de espaço. Qual a relação entre o pilar e a rua?
+    follow_ups:
+      - O que seria da rua sem o pilar?
+      - Como o pilar cria estrutura?
+      - Qual a relação entre o pilar e o metro?
+  - id: blr_temple_bell
+    name: Sino do Templo
+    prompt: |
+      Os sinos dos templos marcam as horas de oração. Ouça. O sino cria um ritmo. Como
+      o sino molda o bairro? O que seria da rua sem ele?
+    follow_ups:
+      - O que seria do templo sem o sino?
+      - Como o sino cria tempo?
+      - Qual a relação entre o sino e a comunidade?
+  - id: blr_road_widening
+    name: Alargamento da Estrada
+    prompt: |
+      O alargamento das estradas corta bairros. Encontre um trecho. O que foi
+      removido? O que resta? O alargamento é uma cicatriz. O que serve?
+    follow_ups:
+      - O que seria da estrada sem o alargamento?
+      - Como o alargamento cria fluxo?
+      - Qual a relação entre o alargamento e o deslocamento?
+  - id: blr_apartment_balcony
+    name: Varanda de Apartamento
+    prompt: |
+      As varandas dos apartamentos viram-se para a rua. Encontre um edifício. O que está nas
+      varandas? Plantas? Roupa? A varanda é um limiar. O que veria de uma?
+    follow_ups:
+      - O que seria do edifício sem a varanda?
+      - Como a varanda cria relação com a rua?
+      - Qual a relação entre a varanda e o apartamento?
+  - id: blr_night_light
+    name: Luz Noturna
+    prompt: |
+      Bangalore à noite — candeeiros de rua, luzes de lojas, janelas de apartamentos. Caminhe por
+      um quarteirão. Como a luz molda a rua? O que está iluminado? O que está escuro?
+    follow_ups:
+      - O que seria da rua sem a luz?
+      - Como a luz cria segurança?
+      - Qual a relação entre a luz e a noite?
+  - id: blr_morning_walk
+    name: Caminhada Matinal
+    prompt: |
+      Os caminhantes matinais enchem parques e ruas. Junte-se ou observe. A caminhada matinal
+      é um ritual. Qual a rota? Quem caminha?
+    follow_ups:
+      - O que seria da manhã sem os caminhantes?
+      - Como a caminhada cria comunidade?
+      - Qual a relação entre a caminhada e a saúde?
+  - id: blr_garden_city
+    name: Cidade Jardim
+    prompt: |
+      Bangalore foi a cidade jardim. Restos persistem — Lalbagh, Parque Cubbon,
+      árvores antigas. Encontre um resto. O que seria da cidade se o jardim tivesse vencido?
+    follow_ups:
+      - O que seria de Bangalore sem os jardins?
+      - Como o jardim cria identidade?
+      - Qual a relação entre o jardim e a cidade?

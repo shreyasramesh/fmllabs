@@ -1,0 +1,506 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosmos Natural — Territorios de Insectos (Spanish)
+
+id: natural_microcosm_insect_territories
+name: Microcosmos Natural — Territorios de Insectos
+description: 50 cartas para cambiar tu forma de ver la vida de los insectos, desde senderos de hormigas y tráfico de abejas hasta telarañas, dramas territoriales y la coreografía de las colonias.
+domain: natural_microcosm
+cards:
+  - id: nmi_ant_trail
+    name: Sendero de Hormigas
+    prompt: |
+      Las hormigas forman senderos — caminos de feromonas entre el nido y la comida. Observa el flujo.
+      Dos carriles: de ida y de vuelta. El sendero es una decisión tomada por muchas.
+      ¿Qué rompería el sendero?
+    follow_ups:
+      - ¿Cómo se refuerza el sendero?
+      - ¿Qué sería la colonia sin senderos?
+      - ¿Cuál es la relación entre el sendero y la colonia?
+  - id: nmi_bee_traffic
+    name: Tráfico de Abejas
+    prompt: |
+      La entrada de una colmena — las abejas entran y salen en un flujo. El tráfico tiene ritmo. Algunas
+      llevan polen; otras no. Considera la coreografía. ¿Quién decide el
+      patrón?
+    follow_ups:
+      - ¿Qué sería la colmena sin el tráfico?
+      - ¿Cómo da forma la entrada al flujo?
+      - ¿Cuál es la relación entre la abeja y la colonia?
+  - id: nmi_spider_web
+    name: Telaraña
+    prompt: |
+      Una telaraña es territorio y trampa. La araña espera en el borde.
+      Las vibraciones transmiten información. Considera la arquitectura. ¿Qué atrapa la telaraña? ¿Qué excluye?
+    follow_ups:
+      - ¿Qué sería la araña sin la telaraña?
+      - ¿Cómo extiende la telaraña los sentidos de la araña?
+      - ¿Cuál es la relación entre la seda y la supervivencia?
+  - id: nmi_dragonfly_claim
+    name: Reclamo de Libélula
+    prompt: |
+      Una libélula patrulla un tramo de estanque — de un lado a otro. Es territorial.
+      Se persigue a los rivales. Se corteja a las parejas. Considera lo que está en juego. ¿Qué se defiende?
+    follow_ups:
+      - ¿Qué haría la libélula sin territorio?
+      - ¿Cómo comunica la patrulla la propiedad?
+      - ¿Cuál es la relación entre el espacio y la reproducción?
+  - id: nmi_caterpillar_munch
+    name: Oruga Muerde
+    prompt: |
+      Una oruga come — el borde de la hoja retrocede. El comer es constante. La
+      oruga es una máquina de conversión. Considera la tasa. ¿Qué sería la
+      planta sin los herbívoros?
+    follow_ups:
+      - ¿Cómo da forma la oruga a la hoja?
+      - ¿Qué sería la mariposa sin el comer?
+      - ¿Cuál es la relación entre el consumo y el crecimiento?
+  - id: nmi_beetle_battle
+    name: Batalla de Escarabajos
+    prompt: |
+      Dos escarabajos se encuentran — tal vez ciervos volantes, tal vez escarabajos peloteros. Se agarran.
+      La pelea es ritual. Considera lo que está en juego. ¿Qué se gana? ¿Qué
+      se pierde?
+    follow_ups:
+      - ¿Qué haría el perdedor?
+      - ¿Cómo se resuelve la batalla?
+      - ¿Cuál es la relación entre el combate y el apareamiento?
+  - id: nmi_firefly_flash
+    name: Destello de Luciérnaga
+    prompt: |
+      Las luciérnagas destellan — cada especie tiene un código. El patrón es cortejo. Considera
+      la señal. ¿Qué significaría un destello equivocado? ¿Cómo se encuentran en la oscuridad?
+    follow_ups:
+      - ¿Cómo codifica el destello la especie?
+      - ¿Qué sería el prado sin luciérnagas?
+      - ¿Cuál es la relación entre la luz y la pareja?
+  - id: nmi_aphid_farm
+    name: Granja de Pulgones
+    prompt: |
+      Las hormigas cuidan pulgones — los acarician, los protegen. Los pulgones exudan
+      melaza. Las hormigas la cosechan. Considera la asociación. ¿Quién se beneficia?
+      ¿Quién es explotado?
+    follow_ups:
+      - ¿Qué serían los pulgones sin las hormigas?
+      - ¿Cómo da forma la crianza a ambas especies?
+      - ¿Cuál es la relación entre cuidar y extraer?
+  - id: nmi_cicada_shell
+    name: Caparazón de Cigarra
+    prompt: |
+      Un caparazón de cigarra se adhiere a la corteza — la ninfa emergió. El caparazón está vacío,
+      perfecto. Considera la muda. ¿Qué dejó atrás el insecto? ¿Qué
+      ganó?
+    follow_ups:
+      - ¿Qué sería la cigarra sin la muda?
+      - ¿Cómo marca el caparazón la transición?
+      - ¿Cuál es la relación entre el despojo y el crecimiento?
+  - id: nmi_leaf_miner
+    name: Minador de Hojas
+    prompt: |
+      Un rastro dentro de una hoja — el camino de un minador de hojas. La larva come entre
+      las capas. La hoja guarda el registro. Considera el túnel. ¿Cómo se vería
+      la hoja desde dentro?
+    follow_ups:
+      - ¿Qué sería la hoja sin el minador?
+      - ¿Cómo protege la mina a la larva?
+      - ¿Cuál es la relación entre el interior y el exterior?
+  - id: nmi_wasp_nest
+    name: Nido de Avispa
+    prompt: |
+      Un nido de avispa papelera — celdas hexagonales, madera masticada. El nido es arquitectura
+      y fortaleza. Considera la colonia. ¿Quién construye? ¿Quién defiende? ¿Quién se reproduce?
+    follow_ups:
+      - ¿Qué serían las avispas sin el nido?
+      - ¿Cómo da forma el nido a la estructura social?
+      - ¿Cuál es la relación entre el papel y la colonia?
+  - id: nmi_grasshopper_leap
+    name: Salto de Saltamontes
+    prompt: |
+      Un saltamontes salta — las patas se extienden, desaparece. El salto es escape o
+      acercamiento. Considera el desencadenante. ¿Qué vio el saltamontes? ¿Qué
+      oyó?
+    follow_ups:
+      - ¿Qué sería el saltamontes sin el salto?
+      - ¿Cómo evita el salto la depredación?
+      - ¿Cuál es la relación entre la pata y el vuelo?
+  - id: nmi_mantis_still
+    name: Mantiis Inmóvil
+    prompt: |
+      Una mantis espera — inmóvil. Es una cazadora. La presa se acerca. El ataque
+      es súbito. Considera la paciencia. ¿Qué cuesta la quietud? ¿Qué
+      permite?
+    follow_ups:
+      - ¿Qué sería la mantis sin la espera?
+      - ¿Cómo engaña la quietud?
+      - ¿Cuál es la relación entre la paciencia y la captura?
+  - id: nmi_bumblebee_buzz
+    name: Zumbido de Abejorro
+    prompt: |
+      Un abejorro zumba — vibra. Algunas flores requieren polinización por zumbido.
+      La abeja sacude el polen. Considera la asociación. ¿Qué sería
+      la flor sin el zumbido?
+    follow_ups:
+      - ¿Cómo libera el zumbido el polen?
+      - ¿Qué sería la abeja sin la polinización por zumbido?
+      - ¿Cuál es la relación entre la vibración y la fertilización?
+  - id: nmi_butterfly_territory
+    name: Territorio de Mariposa
+    prompt: |
+      Una mariposa se posa en un punto elevado — "hilltopping". Espera parejas.
+      Se persigue a los rivales. Considera la estrategia. ¿Por qué este lugar? ¿Qué lo hace valioso?
+    follow_ups:
+      - ¿Qué haría la mariposa sin la percha?
+      - ¿Cómo da forma el "hilltopping" al apareamiento?
+      - ¿Cuál es la relación entre el lugar y el encuentro?
+  - id: nmi_earwig_pincer
+    name: Pinza de Gorgojo
+    prompt: |
+      Los gorgojos tienen pinzas — cercos. Son para defensa, para doblar alas, para
+      manejar presas. Considera la herramienta. ¿Qué sería el gorgojo sin la
+      pinza?
+    follow_ups:
+      - ¿Cómo da forma la pinza al comportamiento?
+      - ¿Cómo sería la defensa sin ella?
+      - ¿Cuál es la relación entre forma y función?
+  - id: nmi_katydid_call
+    name: Llamada de Katydid
+    prompt: |
+      Un katydid llama — estridulación, patas sobre alas. La llamada es específica de la especie.
+      Es cortejo, territorio. Considera el sonido. ¿Qué sería la noche sin
+      él?
+    follow_ups:
+      - ¿Cómo atrae la llamada a las parejas?
+      - ¿Qué arriesgaría el katydid al llamar?
+      - ¿Cuál es la relación entre el sonido y la depredación?
+  - id: nmi_ladybug_cluster
+    name: Grupo de Mariquitas
+    prompt: |
+      Las mariquitas se agrupan en invierno — docenas, cientos. Se agregan para darse calor,
+      para refugiarse. Considera la reunión. ¿Qué la desencadena? ¿Qué la dispersa?
+    follow_ups:
+      - ¿Qué serían las mariquitas sin el grupo?
+      - ¿Cómo crea el grupo un microclima?
+      - ¿Cuál es la relación entre muchos y la supervivencia?
+  - id: nmi_ant_carry
+    name: Hormiga Lleva
+    prompt: |
+      Una hormiga lleva a otra — muerta o herida. Es ayuda. La colonia cuida de
+      los suyos. Considera el comportamiento. ¿Qué haría la hormiga herida sola?
+      ¿Qué gana la que lleva?
+    follow_ups:
+      - ¿Cómo sirve el transporte a la colonia?
+      - ¿Qué sería la colonia sin cooperación?
+      - ¿Cuál es la relación entre el individuo y el colectivo?
+  - id: nmi_mosquito_hover
+    name: Mosquito Flota
+    prompt: |
+      Un mosquito flota — probando, hurgando. Busca un huésped. El aleteo es
+      evaluación. Considera el momento antes de la picadura. ¿Qué detecta el mosquito? ¿Qué decide?
+    follow_ups:
+      - ¿Qué haría el mosquito sin flotar?
+      - ¿Cómo minimiza el aleteo la detección?
+      - ¿Cuál es la relación entre la sonda y la alimentación?
+  - id: nmi_weevil_curl
+    name: Rizada del Gorgojo
+    prompt: |
+      Una hoja se riza — un gorgojo o una mosca de la agalla la hizo. La hoja se dobla alrededor de la
+      larva. Considera la manipulación. La planta es persuadida. ¿Qué haría
+      la hoja sin el insecto?
+    follow_ups:
+      - ¿Cómo protege la espiral a la larva?
+      - ¿Qué sería la planta sin la espiral?
+      - ¿Cuál es la relación entre el insecto y la forma de la planta?
+  - id: nmi_honeybee_waggle
+    name: Zarandeo de Abeja Melífera
+    prompt: |
+      Una abeja melífera se zarandea — es una danza. La danza codifica la distancia y la dirección
+      de las flores. Otras abejas observan. Considera el mensaje. ¿Qué sería
+      la colonia sin el zarandeo?
+    follow_ups:
+      - ¿Cómo transfiere la danza información?
+      - ¿Cómo sería la recolección sin ella?
+      - ¿Cuál es la relación entre la danza y el descubrimiento?
+  - id: nmi_gnat_cloud
+    name: Nube de Mosquitos
+    prompt: |
+      Los mosquitos se agrupan — una nube de insectos diminutos. El enjambre es apareamiento. Los machos se juntan;
+      las hembras entran y eligen. Considera la agregación. ¿Qué haría el
+      mosquito solo?
+    follow_ups:
+      - ¿Cómo permite el enjambre el apareamiento?
+      - ¿Qué serían los mosquitos sin la nube?
+      - ¿Cuál es la relación entre muchos y el encuentro?
+  - id: nmi_spider_wrap
+    name: Envoltura de Araña
+    prompt: |
+      Una araña envuelve a su presa — seda alrededor del insecto que lucha. La envoltura inmoviliza.
+      La araña inyecta enzimas. Considera el proceso. ¿Qué haría la araña
+      sin la envoltura?
+    follow_ups:
+      - ¿Cómo somete la envoltura a la presa?
+      - ¿Qué arriesgaría la araña sin ella?
+      - ¿Cuál es la relación entre la seda y la digestión?
+  - id: nmi_ant_war
+    name: Guerra de Hormigas
+    prompt: |
+      Dos colonias de hormigas se encuentran — conflicto. Las obreras luchan, muerden. La frontera es
+      disputada. Considera la batalla. ¿Qué está en juego? ¿Cómo se decide el límite?
+    follow_ups:
+      - ¿Qué serían las colonias sin la guerra?
+      - ¿Cómo se resuelve la guerra?
+      - ¿Cuál es la relación entre territorio y recurso?
+  - id: nmi_moth_flutter
+    name: Aleteo de Polilla
+    prompt: |
+      Una polilla revolotea en una luz — atraída, confundida. La luz interrumpe
+      la navegación. Considera la trampa. ¿Qué haría la polilla en la oscuridad?
+      ¿Por qué desorienta la luz?
+    follow_ups:
+      - ¿Qué sería la polilla sin la luz?
+      - ¿Cómo usa la polilla la luz de la luna normalmente?
+      - ¿Cuál es la relación entre la luz y la dirección?
+  - id: nmi_stick_insect_still
+    name: Insecto Palo Inmóvil
+    prompt: |
+      Un insecto palo está inmóvil — parece una ramita. Los depredadores pasan.
+      Considera el engaño. ¿Qué sería el insecto sin el disfraz?
+      ¿Cuánto tiempo puede mantener la pose?
+    follow_ups:
+      - ¿Cómo protege la quietud?
+      - ¿Qué arriesgaría el insecto al moverse?
+      - ¿Cuál es la relación entre la forma y la supervivencia?
+  - id: nmi_leafcutter_carry
+    name: Cortadora de Hojas Lleva
+    prompt: |
+      Una hormiga cortadora de hojas lleva un fragmento de hoja — muchas veces su tamaño. La hoja
+      va al nido. Se convierte en sustrato para el hongo. Considera la
+      cosecha. ¿Qué sería la colonia sin las hojas?
+    follow_ups:
+      - ¿Cómo usa el hongo la hoja?
+      - ¿Qué comería la hormiga sin el hongo?
+      - ¿Cuál es la relación entre la cosecha y el cultivo?
+  - id: nmi_housefly_clean
+    name: Mosca Doméstica Limpia
+    prompt: |
+      Una mosca doméstica se limpia — se frota las patas, se acaricia las alas. El aseo elimina
+      partículas, mantiene los sensores. Considera el ritual. ¿Qué sería la mosca
+      sin limpiarse?
+    follow_ups:
+      - ¿Cómo mantiene el aseo la función?
+      - ¿Qué pasaría si la mosca no pudiera limpiarse?
+      - ¿Cuál es la relación entre limpio y sentido?
+  - id: nmi_termite_mound
+    name: Termitero
+    prompt: |
+      Un termitero se eleva — arcilla, saliva, madera masticada. Es una ciudad. Dentro,
+      túneles, cámaras, jardines de hongos. Considera la arquitectura. ¿Qué
+      sería la colonia sin el termitero?
+    follow_ups:
+      - ¿Cómo regula el termitero el clima?
+      - ¿Qué harían las termitas sin la estructura?
+      - ¿Cuál es la relación entre el termitero y la colonia?
+  - id: nmi_cricket_chirp
+    name: Gorjeo de Grillo
+    prompt: |
+      Un grillo gorjea — alas juntas. El gorjeo es cortejo. Las hembras eligen
+      por sonido. Considera la llamada. ¿Qué haría el grillo sin el
+      gorjeo? ¿Quién escucha además de las hembras?
+    follow_ups:
+      - ¿Cómo codifica el gorjeo la aptitud física?
+      - ¿Qué sería el prado sin el sonido?
+      - ¿Cuál es la relación entre la llamada y la depredación?
+  - id: nmi_damselfly_tandem
+    name: Dama Azul en Tándem
+    prompt: |
+      Las damas azules se aparean en tándem — el macho sujeta a la hembra detrás de la cabeza. Ella
+      se curva para recibir el esperma. La pareja puede volar junta. Considera el
+      acoplamiento. ¿Qué sería el apareamiento sin el abrazo?
+    follow_ups:
+      - ¿Cómo protege el tándem la inversión del macho?
+      - ¿Qué haría la pareja sin el enlace?
+      - ¿Cuál es la relación entre el abrazo y la fertilización?
+  - id: nmi_roach_scatter
+    name: Cucaracha se Dispersa
+    prompt: |
+      Enciende una luz — las cucarachas se dispersan. Buscan grietas. La dispersión es
+      escape. Considera la respuesta. ¿Qué haría la cucaracha con luz permanente? ¿Por qué oscuridad?
+    follow_ups:
+      - ¿Cómo reduce la dispersión la depredación?
+      - ¿Qué sería la cucaracha sin el reflejo?
+      - ¿Cuál es la relación entre la luz y el escondite?
+  - id: nmi_hopper_nymph
+    name: Ninfa de Saltamontes
+    prompt: |
+      Un saltamontes joven — ninfa. Aún no tiene alas. Salta. Considera la
+      etapa. ¿En qué se convertirá la ninfa? ¿Qué le falta ahora?
+    follow_ups:
+      - ¿Qué sería el saltamontes sin la etapa de ninfa?
+      - ¿Cómo evita la ninfa a los depredadores?
+      - ¿Cuál es la relación entre la muda y el ala?
+  - id: nmi_sweat_bee
+    name: Abeja de Sudor
+    prompt: |
+      Una abeja de sudor aterriza en tu piel — buscando sal. El sudor es un recurso.
+      Considera el encuentro. ¿Qué haría la abeja sin sudor? ¿Por qué necesita la sal?
+    follow_ups:
+      - ¿Cómo usa la abeja la sal?
+      - ¿Qué arriesgaría la abeja al aterrizar?
+      - ¿Cuál es la relación entre el humano y la abeja?
+  - id: nmi_army_ant_column
+    name: Columna de Hormigas Legionarias
+    prompt: |
+      Las hormigas legionarias marchan — una columna de miles. Fluyen. La presa es abrumada.
+      Considera el enjambre. ¿Qué serían las hormigas sin la columna? ¿Cómo
+      se coordinan?
+    follow_ups:
+      - ¿Cómo permite la columna la depredación?
+      - ¿Qué sería el bosque sin las hormigas legionarias?
+      - ¿Cuál es la relación entre muchos y poder?
+  - id: nmi_water_strider_leg
+    name: Pata de Gerrero de Agua
+    prompt: |
+      Las patas de un guerrero de agua — largas, hidrófobas. Distribuyen el peso.
+      La superficie lo soporta. Considera la adaptación. ¿Qué sería el guerrero
+      sin el diseño de la pata?
+    follow_ups:
+      - ¿Cómo distribuye la forma de la pata la fuerza?
+      - ¿Qué haría el guerrero en tierra?
+      - ¿Cuál es la relación entre la forma y la superficie?
+  - id: nmi_aphid_wing
+    name: Ala de Pulgón
+    prompt: |
+      Algunos pulgones tienen alas — cuando hay mucha densidad o cuando el huésped declina. Se
+      dispersan. Considera el cambio. ¿Qué desencadena el desarrollo de las alas? ¿Qué
+      cuesta el ala?
+    follow_ups:
+      - ¿Cómo induce la densidad la aparición de alas?
+      - ¿Qué sería el pulgón sin la opción?
+      - ¿Cuál es la relación entre el ala y la dispersión?
+  - id: nmi_scale_armor
+    name: Armadura de Cochinilla
+    prompt: |
+      Las cochinillas parecen bultos — están blindadas. No se mueven mucho.
+      Pinchan la planta, se alimentan. Considera la estrategia. ¿Qué sería la cochinilla
+      sin la armadura?
+    follow_ups:
+      - ¿Cómo protege la armadura?
+      - ¿Qué sería la planta sin la cochinilla?
+      - ¿Cuál es la relación entre la quietud y la defensa?
+  - id: nmi_caddisfly_case
+    name: Estuche de Tricóptero
+    prompt: |
+      Una larva de tricóptero construye un estuche — palitos, arena, guijarros. Transporta el
+      estuche. El estuche es camuflaje y armadura. Considera la construcción.
+      ¿Qué sería la larva sin él?
+    follow_ups:
+      - ¿Cómo protege el estuche?
+      - ¿Qué usaría la larva si los materiales cambiaran?
+      - ¿Cuál es la relación entre construir y sobrevivir?
+  - id: nmi_leafhopper_flash
+    name: Destello de Cicadélido
+    prompt: |
+      Un cicadélido salta — repentinamente. Desaparece. El salto es escape. Las patas almacenan
+      energía, la liberan. Considera el mecanismo. ¿Qué sería el cicadélido sin el salto?
+    follow_ups:
+      - ¿Cómo evita el salto la captura?
+      - ¿Qué sería la hoja sin el cicadélido?
+      - ¿Cuál es la relación entre el salto y la depredación?
+  - id: nmi_bombardier_blast
+    name: Explosión de Escarabajo Bombardero
+    prompt: |
+      Un escarabajo bombardero rocía — caliente, nocivo. Es defensa. El spray es
+      química: dos cámaras, reacción en la salida. Considera el arma. ¿Qué haría
+      el escarabajo sin ella?
+    follow_ups:
+      - ¿Cómo disuade el spray a los depredadores?
+      - ¿Qué arriesgaría el escarabajo al rociar?
+      - ¿Cuál es la relación entre la química y la defensa?
+  - id: nmi_silverfish_slip
+    name: Pez de Plata se Escabulle
+    prompt: |
+      Un pez de plata se escurre por una grieta — rápido. Es plano. Encaja. Considera la
+      forma. ¿Qué sería el pez de plata sin la planitud? ¿Por qué la
+      urgencia?
+    follow_ups:
+      - ¿Cómo permite la planitud escapar?
+      - ¿Qué haría el pez de plata al descubierto?
+      - ¿Cuál es la relación entre la forma y el refugio?
+  - id: nmi_ant_queen
+    name: Reina Hormiga
+    prompt: |
+      Una colonia de hormigas tiene una reina — o varias. Pone huevos. Las obreras la cuidan.
+      Considera el centro. ¿Qué sería la colonia sin la reina? ¿Cómo
+      la reemplaza la colonia?
+    follow_ups:
+      - ¿Cómo da forma la reina a la colonia?
+      - ¿Qué harían las obreras sin ella?
+      - ¿Cuál es la relación entre la reina y la colonia?
+  - id: nmi_owlfly_larva
+    name: Larva de Moscardón
+    prompt: |
+      Una larva de moscardón espera acechando — en arena, en escombros. Embosca. Las mandíbulas
+      atacan. Considera al cazador. ¿Qué sería la larva sin la emboscada?
+      ¿En qué se convierte?
+    follow_ups:
+      - ¿Cómo permite la emboscada alimentarse?
+      - ¿Qué sería el moscardón sin la etapa larval?
+      - ¿Cuál es la relación entre la espera y la captura?
+  - id: nmi_thrips_scatter
+    name: Trips se Dispersan
+    prompt: |
+      Los trips son diminutos — apenas visibles. Se agrupan en flores, en hojas.
+      Perforan y chupan. Considera la escala. ¿Qué sería la planta
+      sin trips? ¿Qué notaríamos?
+    follow_ups:
+      - ¿Cómo dan forma los trips a la planta?
+      - ¿Qué sería el ecosistema sin ellos?
+      - ¿Cuál es la relación entre lo pequeño y el impacto?
+  - id: nmi_sting_threat
+    name: Amenaza de Aguijón
+    prompt: |
+      Una avispa levanta el abdomen — aguijón listo. Es una amenaza. La postura
+      comunica. Considera la exhibición. ¿Qué haría la avispa si la ignoraran?
+      ¿Qué cuesta la postura?
+    follow_ups:
+      - ¿Cómo disuade la amenaza?
+      - ¿Qué arriesgaría la avispa al picar?
+      - ¿Cuál es la relación entre la exhibición y la defensa?
+  - id: nmi_velvet_ant
+    name: Hormiga Terciopelo
+    prompt: |
+      Una hormiga terciopelo se arrastra — es una avispa sin alas. Es resistente. Los depredadores aprenden a
+      evitarla. El aguijón es feroz. Considera la estrategia. ¿Qué sería la
+      hormiga terciopelo sin el aguijón?
+    follow_ups:
+      - ¿Cómo protege el aguijón?
+      - ¿Qué haría la hormiga terciopelo en la superficie?
+      - ¿Cuál es la relación entre el aguijón y la audacia?
+  - id: nmi_ambush_predator
+    name: Depredador de Emboscada
+    prompt: |
+      Un insecto depredador espera en una flor — amarillo, disfrazado. Llega la presa. El
+      insecto ataca. Considera la paciencia. ¿Qué haría el insecto sin la
+      flor? ¿Por qué esta percha?
+    follow_ups:
+      - ¿Cómo atrae la flor a las presas?
+      - ¿Qué sería el insecto sin la emboscada?
+      - ¿Cuál es la relación entre el lugar y la captura?
+  - id: nmi_nectar_flow
+    name: Flujo de Néctar
+    prompt: |
+      Las flores producen néctar — abejas, mariposas, escarabajos beben. El flujo
+      varía. Considera la economía. ¿Qué sería la flor sin el
+      néctar? ¿Qué haría el insecto?
+    follow_ups:
+      - ¿Cómo da forma el néctar a las visitas?
+      - ¿Qué sería la polinización sin la recompensa?
+      - ¿Cuál es la relación entre el flujo y el servicio?
+  - id: nmi_territory_mark
+    name: Marca de Territorio
+    prompt: |
+      Algunos insectos marcan territorio — feromonas, exhibición visual. La marca dice
+      "mío". Considera el reclamo. ¿Qué sería el espacio sin la marca?
+      ¿Cómo lo leen los rivales?
+    follow_ups:
+      - ¿Cómo disuade la marca a los intrusos?
+      - ¿Qué haría el insecto sin el territorio?
+      - ¿Cuál es la relación entre la marca y el espacio?

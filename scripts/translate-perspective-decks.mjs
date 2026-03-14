@@ -79,6 +79,22 @@ ${content}`;
   }
 }
 
+function normalizeTranslatedYaml(text) {
+  let cleaned = text.replace(/^```yaml\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+
+  // Ensure list marker spacing: "-item" => "- item"
+  cleaned = cleaned.replace(/\n(\s+)-([^\s-])/g, "\n$1- $2");
+
+  // Fix malformed items like: - "phrase" continues here
+  // YAML treats this as quoted scalar + unexpected extra scalar.
+  cleaned = cleaned.replace(
+    /^(\s*-\s*)"([^"\n]+)"(\s+\S.*)$/gm,
+    (_m, prefix, quoted, suffix) => `${prefix}${quoted}${suffix}`
+  );
+
+  return cleaned;
+}
+
 function getDeckPaths() {
   const indexPath = join(root, "perspective-decks", "perspective-decks-index.yaml");
   if (!existsSync(indexPath)) {
@@ -133,8 +149,7 @@ async function main() {
         let parsed = null;
         for (let attempt = 1; attempt <= 2; attempt++) {
           const translated = await translateDeckYaml(content, lang.code, 3);
-          let cleaned = translated.replace(/^```yaml\s*/i, "").replace(/\s*```\s*$/i, "").trim();
-          cleaned = cleaned.replace(/\n(\s+)-([^\s-])/g, "\n$1- $2");
+          const cleaned = normalizeTranslatedYaml(translated);
           try {
             parsed = yaml.parse(cleaned);
             if (parsed?.cards?.length) break;

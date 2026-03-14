@@ -1,0 +1,506 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# La Interfaz Humana — Centro de Tránsito (Spanish)
+
+id: human_interface_transit_hub
+name: La Interfaz Humana — Centro de Tránsito
+description: 50 tarjetas para cambiar tu forma de ver el centro de tránsito, desde andenes y esperas hasta el flujo de llegadas/salidas y la coreografía de extraños en tránsito.
+domain: human_interface
+cards:
+  - id: hi_th_platform_edge
+    name: Borde del Andén
+    prompt: |
+      El borde del andén es un umbral. Línea amarilla, hueco, vía. La gente se
+      sitúa a diferentes distancias. Algunos se inclinan hacia adelante; otros retroceden.
+      Observa la distribución. ¿Qué significa el borde?
+    follow_ups:
+      - ¿Cómo moldea el borde la anticipación?
+      - ¿Cómo sería el andén sin la línea?
+      - ¿Cuál es la relación entre el borde y el riesgo?
+  - id: hi_th_waiting_posture
+    name: Postura al Esperar
+    prompt: |
+      Los cuerpos se organizan mientras esperan: peso en un pie, teléfono en
+      la mano, bolso entre los pies. La postura codifica la duración. ¿Quién parece
+      paciente? ¿Quién parece inquieto? La espera tiene un lenguaje corporal.
+    follow_ups:
+      - ¿Cómo revela la postura la expectativa?
+      - ¿Cómo sería el andén sin la espera?
+      - ¿Cuál es la relación entre la postura y el tiempo?
+  - id: hi_th_arrival_flow
+    name: Flujo de Llegada
+    prompt: |
+      Las puertas del tren se abren. La gente sale a borbotones, contra la
+      corriente de quienes abordan. El flujo tiene física. Observa la colisión,
+      el rodeo, la fusión. ¿Qué reglas rigen el intercambio?
+    follow_ups:
+      - ¿Cómo moldea el flujo el andén?
+      - ¿Qué pasaría si todos se apresuraran?
+      - ¿Cuál es la relación entre el flujo y la eficiencia?
+  - id: hi_th_strangers_transit
+    name: Extraños en Tránsito
+    prompt: |
+      Compartes vagón con personas que nunca volverás a ver. Proximidad sin
+      conexión. Observa el compacto. ¿Qué se deben los unos a los otros los extraños?
+      El vagón de tránsito es una sociedad temporal.
+    follow_ups:
+      - ¿Cómo crea el tránsito una comunidad temporal?
+      - ¿Cómo sería el vagón con conversación?
+      - ¿Cuál es la relación entre el extraño y la civilidad?
+  - id: hi_th_departure_board
+    name: Panel de Salidas
+    prompt: |
+      Horarios, andenes, retrasos: el panel es la fuente de verdad. Los ojos se
+      dirigen a él. El panel dicta el movimiento. Observa la mirada colectiva.
+      ¿Qué le hace el panel a la multitud?
+    follow_ups:
+      - ¿Cómo moldea el panel el comportamiento?
+      - ¿Cómo sería el centro de tránsito sin él?
+      - ¿Cuál es la relación entre la exhibición y la confianza?
+  - id: hi_th_escalator_stand
+    name: Escalera Mecánica de Pie
+    prompt: |
+      A la derecha para pararse, a la izquierda para caminar, o al revés, según
+      la ciudad. La escalera mecánica tiene reglas. Observa quién las sigue. La
+      escalera mecánica es una cola en movimiento. ¿Qué permite la regla?
+    follow_ups:
+      - ¿Cómo moldea la regla de la escalera mecánica el flujo?
+      - ¿Qué pasaría si todos se quedaran parados?
+      - ¿Cuál es la relación entre la regla y la eficiencia?
+  - id: hi_th_ticket_gate
+    name: Torniquete
+    prompt: |
+      El torniquete lee la tarjeta, suena y se abre. El torniquete es un punto de
+      control. Separa a los que han pagado de los que no. Observa el ritmo. ¿Quién
+      duda? ¿Quién pasa con fluidez? El torniquete es una prueba.
+    follow_ups:
+      - ¿Cómo moldea el torniquete el viaje?
+      - ¿Cómo sería el centro de tránsito sin torniquetes?
+      - ¿Cuál es la relación entre el torniquete y la pertenencia?
+  - id: hi_th_luggage_drag
+    name: Arrastre de Equipaje
+    prompt: |
+      Ruedas sobre baldosas. La maleta sigue. El arrastre marca el camino de los
+      viajeros. El equipaje extiende el cuerpo. Observa la carga. ¿Qué dice el equipaje
+      sobre el viaje?
+    follow_ups:
+      - ¿Cómo moldea el equipaje el movimiento?
+      - ¿Cómo sería el centro de tránsito sin equipaje?
+      - ¿Cuál es la relación entre la carga y el destino?
+  - id: hi_th_bench_occupation
+    name: Ocupación del Banco
+    prompt: |
+      Los bancos bordean el andén. Algunos se sientan; otros se paran al lado. El
+      banco es un recurso escaso. Observa quién lo reclama. ¿Cuánto tiempo se quedan?
+      El banco es un pequeño territorio.
+    follow_ups:
+      - ¿Cómo moldea el banco la espera?
+      - ¿Cómo sería el andén sin bancos?
+      - ¿Cuál es la relación entre el asiento y la duración?
+  - id: hi_th_announcement_voice
+    name: Voz del Anuncio
+    prompt: |
+      "El próximo tren..." La voz es automática o humana. Rompe el ruido. El anuncio
+      crea conocimiento compartido. Observa quién escucha. ¿Quién ya ha mirado su teléfono?
+    follow_ups:
+      - ¿Cómo moldea el anuncio a la multitud?
+      - ¿Cómo sería el centro de tránsito sin él?
+      - ¿Cuál es la relación entre la voz y la autoridad?
+  - id: hi_th_door_positioning
+    name: Posicionamiento de la Puerta
+    prompt: |
+      Los habituales saben dónde se abrirán las puertas. Se posicionan. Los
+      recién llegados adivinan. El posicionamiento es estrategia. Observa la
+      aglomeración. ¿Qué determina la posición?
+    follow_ups:
+      - ¿Cómo moldea el posicionamiento el abordaje?
+      - ¿Cómo sería el andén si las puertas fueran aleatorias?
+      - ¿Cuál es la relación entre la posición y la ventaja?
+  - id: hi_th_handrail_grip
+    name: Agarre de la Barra
+    prompt: |
+      Dentro del vagón, las manos buscan la barra. El agarre es seguridad. Observa
+      quién se sujeta, quién no lo necesita. La barra es un objeto compartido.
+      ¿Qué revela el agarre?
+    follow_ups:
+      - ¿Cómo moldea la barra la estabilidad?
+      - ¿Cómo sería el vagón sin ella?
+      - ¿Cuál es la relación entre el agarre y la confianza?
+  - id: hi_th_window_reflection
+    name: Reflejo en la Ventana
+    prompt: |
+      La ventana muestra el túnel, el andén y tu propio rostro. El reflejo es
+      inevitable. La gente se mira a sí misma o lo evita. Observa la relación entre
+      el reflejo y la mirada.
+    follow_ups:
+      - ¿Cómo moldea el reflejo la autoconciencia?
+      - ¿Cómo sería el viaje sin la ventana?
+      - ¿Cuál es la relación entre el reflejo y la privacidad?
+  - id: hi_th_seat_offer
+    name: Oferta de Asiento
+    prompt: |
+      Alguien ofrece un asiento a un anciano, a un padre con un niño. La oferta
+      es un pequeño acto moral. Observa cuándo ocurre. ¿Quién ofrece? ¿Quién acepta?
+      El asiento es un regalo.
+    follow_ups:
+      - ¿Cómo moldea la oferta el vagón?
+      - ¿Cómo sería el viaje sin tales ofertas?
+      - ¿Cuál es la relación entre la oferta y el cuidado?
+  - id: hi_th_delay_sigh
+    name: Suspiro de Retraso
+    prompt: |
+      "Retrasado". El suspiro colectivo. El retraso es un destino compartido. Los
+      extraños intercambian miradas. El retraso crea un momento de solidaridad. Observa
+      el cambio. ¿Qué le hace el retraso a la multitud?
+    follow_ups:
+      - ¿Cómo moldea el retraso la espera?
+      - ¿Cómo sería el centro de tránsito sin retrasos?
+      - ¿Cuál es la relación entre el retraso y la frustración?
+  - id: hi_th_backpack_turn
+    name: Giro de Mochila
+    prompt: |
+      En un vagón abarrotado, alguien gira su mochila hacia el frente. El giro es
+      consideración. Crea espacio. Observa quién lo hace. El giro de mochila es un
+      pequeño contrato social.
+    follow_ups:
+      - ¿Cómo moldea el giro la proximidad?
+      - ¿Cómo sería el vagón sin él?
+      - ¿Cuál es la relación entre el giro y la conciencia?
+  - id: hi_th_exit_anticipation
+    name: Anticipación de Salida
+    prompt: |
+      A medida que se acerca la parada, la gente se congrega junto a la puerta. La
+      anticipación es visible. Los cuerpos se mueven. La puerta se abrirá. Observa la
+      preparación. ¿Qué requiere la anticipación?
+    follow_ups:
+      - ¿Cómo moldea la anticipación la salida?
+      - ¿Cómo sería la parada sin preparación?
+      - ¿Cuál es la relación entre la anticipación y el flujo?
+  - id: hi_th_transfer_corridor
+    name: Pasillo de Transbordo
+    prompt: |
+      El pasillo conecta las líneas. La gente camina con propósito. El transbordo es
+      una transición entre sistemas, entre esperas. Observa el ritmo. El pasillo tiene
+      su propio ritmo.
+    follow_ups:
+      - ¿Cómo moldea el pasillo el viaje?
+      - ¿Cómo sería el centro de tránsito sin transbordos?
+      - ¿Cuál es la relación entre el pasillo y la conexión?
+  - id: hi_th_phone_glow
+    name: Brillo del Teléfono
+    prompt: |
+      En el vagón con poca luz, los rostros brillan por los teléfonos. El brillo es
+      individual. Cada persona tiene su propia luz. Observa la distribución. El teléfono
+      crea un espacio privado en público.
+    follow_ups:
+      - ¿Cómo moldea el teléfono el viaje?
+      - ¿Cómo sería el vagón sin teléfonos?
+      - ¿Cuál es la relación entre el brillo y el aislamiento?
+  - id: hi_th_stroller_navigation
+    name: Navegación con Cochecito
+    prompt: |
+      Un padre empuja un cochecito entre la multitud. La navegación es delicada. La
+      gente se aparta. El cochecito cambia el flujo. Observa la adaptación. ¿Qué exige
+      el cochecito?
+    follow_ups:
+      - ¿Cómo moldea el cochecito a la multitud?
+      - ¿Cómo sería el centro de tránsito sin cochecitos?
+      - ¿Cuál es la relación entre el cochecito y el cuidado?
+  - id: hi_th_vendor_station
+    name: Puesto del Vendedor
+    prompt: |
+      Un quiosco vende café, aperitivos, periódicos. El vendedor atiende a gente en
+      movimiento. La transacción es rápida. Observa el intercambio. El vendedor es una
+      isla en el flujo.
+    follow_ups:
+      - ¿Cómo moldea el vendedor el centro de tránsito?
+      - ¿Cómo sería el centro de tránsito sin vendedores?
+      - ¿Cuál es la relación entre el vendedor y la espera?
+  - id: hi_th_track_gap
+    name: Hueco de la Vía
+    prompt: |
+      Cuidado con el hueco. El espacio entre el andén y el vagón es un peligro. La
+      gente lo cruza. El hueco varía. Observa la precaución. ¿Qué exige el hueco del
+      cuerpo?
+    follow_ups:
+      - ¿Cómo moldea el hueco el abordaje?
+      - ¿Cómo sería el andén sin él?
+      - ¿Cuál es la relación entre el hueco y la atención?
+  - id: hi_th_schedule_check
+    name: Consulta de Horario
+    prompt: |
+      Los dedos tocan el teléfono. La aplicación dice cuándo. La consulta de horario es
+      constante. Reduce la incertidumbre. Observa el ritmo. ¿Con qué frecuencia consultan
+      las personas?
+    follow_ups:
+      - ¿Cómo moldea el horario la espera?
+      - ¿Cómo sería el centro de tránsito sin aplicaciones?
+      - ¿Cuál es la relación entre la consulta y el control?
+  - id: hi_th_crowd_density
+    name: Densidad de la Multitud
+    prompt: |
+      La hora punta llena el andén. Los cuerpos se comprimen. La densidad tiene
+      límites. Observa el límite. ¿Cuándo se vuelve insoportable? La multitud tiene
+      física.
+    follow_ups:
+      - ¿Cómo moldea la densidad la experiencia?
+      - ¿Cómo sería el centro de tránsito con poca densidad?
+      - ¿Cuál es la relación entre la densidad y la tolerancia?
+  - id: hi_th_sleeping_commuter
+    name: Viajero Dormido
+    prompt: |
+      Alguien duerme: la cabeza contra la ventana, contra el hombro de un extraño. El
+      sueño es confianza o agotamiento. Observa la vulnerabilidad. ¿Qué exige el sueño
+      del vagón?
+    follow_ups:
+      - ¿Cómo moldea el durmiente el espacio?
+      - ¿Cómo sería el viaje sin durmientes?
+      - ¿Cuál es la relación entre el sueño y la seguridad?
+  - id: hi_th_map_consultation
+    name: Consulta de Mapa
+    prompt: |
+      Un visitante mira el mapa de la pared. El mapa es un salvavidas. Otros pasan
+      fluyendo. La consulta lleva tiempo. Observa la pausa. ¿Qué proporciona el mapa?
+    follow_ups:
+      - ¿Cómo moldea el mapa el viaje?
+      - ¿Cómo sería el centro de tránsito sin mapas?
+      - ¿Cuál es la relación entre el mapa y la confianza?
+  - id: hi_th_platform_change
+    name: Cambio de Andén
+    prompt: |
+      "Cambio de andén". La multitud se mueve. El cambio es una disrupción. La gente
+      se apresura. Observa la estampida. ¿Qué extrae el cambio de la multitud?
+    follow_ups:
+      - ¿Cómo moldea el cambio el flujo?
+      - ¿Cómo sería el centro de tránsito sin cambios?
+      - ¿Cuál es la relación entre el cambio y el estrés?
+  - id: hi_th_briefcase_clutch
+    name: Agarre de Maletín
+    prompt: |
+      El maletín se sujeta cerca: entre los pies, en el regazo. Contiene algo valioso.
+      El agarre es protector. Observa la sujeción. ¿Qué significa el maletín para el
+      portador?
+    follow_ups:
+      - ¿Cómo moldea el maletín el viaje?
+      - ¿Cómo sería el vagón sin maletines?
+      - ¿Cuál es la relación entre el agarre y la identidad?
+  - id: hi_th_door_hold
+    name: Retención de Puerta
+    prompt: |
+      Alguien retiene la puerta para la persona que viene detrás. El tren está a
+      punto de salir. La retención es riesgo y cortesía. Observa el intercambio. ¿Qué
+      cuesta la retención?
+    follow_ups:
+      - ¿Cómo moldea la retención el abordaje?
+      - ¿Cómo sería el andén sin ella?
+      - ¿Cuál es la relación entre la retención y la civilidad?
+  - id: hi_th_standing_balance
+    name: Equilibrio de Pie
+    prompt: |
+      El tren se mueve. Los pasajeros de pie cambian de peso. El equilibrio es
+      dinámico. Nadie se sujeta a la barra. Observa los microajustes. El cuerpo aprende
+      el movimiento.
+    follow_ups:
+      - ¿Cómo moldea el equilibrio el viaje?
+      - ¿Cómo sería el vagón con más asientos?
+      - ¿Cuál es la relación entre el equilibrio y el hábito?
+  - id: hi_th_conversation_overhear
+    name: Conversación Escuchada
+    prompt: |
+      Dos personas hablan. Escuchas fragmentos. La conversación es privada pero
+      pública. Observa el límite. ¿Qué aprenden los extraños unos de otros en tránsito?
+    follow_ups:
+      - ¿Cómo moldea la escucha accidental el viaje?
+      - ¿Cómo sería el vagón sin conversación?
+      - ¿Cuál es la relación entre escuchar a hurtadillas y la intimidad?
+  - id: hi_th_ticket_inspection
+    name: Inspección de Billetes
+    prompt: |
+      El inspector se mueve por el vagón. "Billetes, por favor." La inspección es
+      aleatoria o sistemática. Observa la respuesta. ¿Quién está listo? ¿Quién duda?
+      La inspección es una prueba de legitimidad.
+    follow_ups:
+      - ¿Cómo moldea la inspección el viaje?
+      - ¿Cómo sería el sistema sin ella?
+      - ¿Cuál es la relación entre la inspección y la confianza?
+  - id: hi_th_station_name_glance
+    name: Mirada al Nombre de la Estación
+    prompt: |
+      El nombre pasa fugazmente, en la pared, en el letrero. Los habituales lo saben.
+      Los recién llegados observan. La mirada orienta. Observa quién mira. ¿Qué hace
+      el nombre?
+    follow_ups:
+      - ¿Cómo moldea el nombre la orientación?
+      - ¿Cómo sería el viaje sin letreros?
+      - ¿Cuál es la relación entre el nombre y el lugar?
+  - id: hi_th_benchmark_regular
+    name: Habitual de Referencia
+    prompt: |
+      El habitual conoce el ritmo. Llega justo a tiempo. Sin espera. El habitual ha
+      internalizado el horario. Observa la confianza. ¿Qué sabe el habitual?
+    follow_ups:
+      - ¿Cómo moldea el habitual el centro de tránsito?
+      - ¿Cómo sería el centro de tránsito sin habituales?
+      - ¿Cuál es la relación entre el habitual y la fluidez?
+  - id: hi_th_lost_look
+    name: Mirada Perdida
+    prompt: |
+      Alguien parece perdido: girando la cabeza, paso incierto. La mirada es visible.
+      Observa el lenguaje corporal. ¿Quién ayuda? ¿Quién ignora? La mirada perdida es
+      una señal. ¿Qué invita?
+    follow_ups:
+      - ¿Cómo moldea la mirada perdida el centro de tránsito?
+      - ¿Cómo sería el centro de tránsito sin los perdidos?
+      - ¿Cuál es la relación entre estar perdido y la ayuda?
+  - id: hi_th_earbud_insert
+    name: Inserción de Auriculares
+    prompt: |
+      Se colocan los auriculares. El mundo se desvanece. La inserción es un límite.
+      El usuario está presente pero ausente. Observa el cambio. ¿Qué crea el auricular?
+    follow_ups:
+      - ¿Cómo moldean los auriculares el viaje?
+      - ¿Cómo sería el vagón sin ellos?
+      - ¿Cuál es la relación entre el auricular y la privacidad?
+  - id: hi_th_rush_hour_pack
+    name: Multitud de Hora Punta
+    prompt: |
+      El vagón está lleno. Los cuerpos se tocan. La multitud es inevitable. Observa la
+      tolerancia. ¿Cómo manejan la proximidad las personas? La multitud tiene su propia
+      etiqueta.
+    follow_ups:
+      - ¿Cómo moldea la multitud el viaje?
+      - ¿Cómo sería la hora punta sin aglomeración?
+      - ¿Cuál es la relación entre la multitud y la resistencia?
+  - id: hi_th_destination_ask
+    name: Pregunta de Destino
+    prompt: |
+      "¿Este es el tren a X?" Pregunta un extraño. Otro responde. La pregunta crea un
+      momento de conexión. Observa el intercambio. ¿Qué requiere la pregunta?
+    follow_ups:
+      - ¿Cómo moldea la pregunta el vagón?
+      - ¿Cómo sería el viaje sin tales preguntas?
+      - ¿Cuál es la relación entre la pregunta y la confianza?
+  - id: hi_th_platform_choice
+    name: Elección de Andén
+    prompt: |
+      Dos andenes, mismo destino. Uno está más cerca; el otro está menos concurrido.
+      La elección es estrategia. Observa quién va a dónde. ¿Qué determina la elección?
+    follow_ups:
+      - ¿Cómo moldea la elección a la multitud?
+      - ¿Cómo sería el centro de tránsito con un solo andén?
+      - ¿Cuál es la relación entre la elección y el resultado?
+  - id: hi_th_wipe_down_seat
+    name: Limpiar el Asiento
+    prompt: |
+      Alguien limpia el asiento antes de sentarse. La limpieza es precaución. Observa
+      el gesto. ¿Qué asume la limpieza sobre el espacio? La limpieza es un pequeño acto
+      de límite.
+    follow_ups:
+      - ¿Cómo moldea la limpieza el acto de sentarse?
+      - ¿Cómo sería el vagón sin tales gestos?
+      - ¿Cuál es la relación entre la limpieza y la higiene?
+  - id: hi_th_standing_offer
+    name: Oferta de Asiento de Pie
+    prompt: |
+      "¿Quieres sentarte?" La oferta se hace a un extraño. A veces se acepta, a veces
+      se rechaza. Observa el intercambio. ¿Qué significa la oferta?
+    follow_ups:
+      - ¿Cómo moldea la oferta el vagón?
+      - ¿Cómo sería el viaje sin ofertas?
+      - ¿Cuál es la relación entre la oferta y el cuidado?
+  - id: hi_th_exit_block
+    name: Bloqueo de Salida
+    prompt: |
+      Alguien está parado en la puerta. Otros necesitan pasar. El bloqueo es por
+      descuido o deliberado. Observa la negociación. ¿Cómo pasan las personas? El bloqueo
+      es un pequeño conflicto.
+    follow_ups:
+      - ¿Cómo moldea el bloqueo la salida?
+      - ¿Cómo sería el vagón sin bloqueadores?
+      - ¿Cuál es la relación entre el bloqueo y la conciencia?
+  - id: hi_th_train_rumble
+    name: Estruendo del Tren
+    prompt: |
+      El tren retumba: vías, ruedas, movimiento. El estruendo es constante. Se
+      convierte en fondo. Observa cuándo lo notas. ¿Qué le hace el estruendo al cuerpo?
+    follow_ups:
+      - ¿Cómo moldea el estruendo el viaje?
+      - ¿Cómo sería el vagón en silencio?
+      - ¿Cuál es la relación entre el estruendo y el ritmo?
+  - id: hi_th_connection_run
+    name: Carrera de Conexión
+    prompt: |
+      Alguien corre, tarde para una conexión. La carrera atraviesa la multitud. La
+      gente se dispersa. Observa la disrupción. ¿Qué extrae la carrera del flujo?
+    follow_ups:
+      - ¿Cómo moldea la carrera el centro de tránsito?
+      - ¿Cómo sería el centro de tránsito sin corredores?
+      - ¿Cuál es la relación entre la carrera y la urgencia?
+  - id: hi_th_seat_saving
+    name: Reserva de Asiento
+    prompt: |
+      Una bolsa en el asiento. "Alguien está sentado aquí". La reserva guarda el asiento
+      para un compañero ausente. Observa la reclamación. ¿Cuánto tiempo se puede reservar
+      un asiento? ¿Cuáles son los límites?
+    follow_ups:
+      - ¿Cómo moldea la reserva el vagón?
+      - ¿Cómo sería el viaje sin reservas?
+      - ¿Cuál es la relación entre la reserva y el derecho?
+  - id: hi_th_arrival_relief
+    name: Alivio de Llegada
+    prompt: |
+      El tren llega a la terminal. El alivio es visible. Los hombros se relajan. La
+      gente recoge sus cosas. El viaje ha terminado. Observa el cambio. ¿Qué proporciona
+      la llegada?
+    follow_ups:
+      - ¿Cómo moldea la llegada la salida?
+      - ¿Cómo sería el viaje sin llegada?
+      - ¿Cuál es la relación entre el alivio y la finalización?
+  - id: hi_th_wayfinding_sign
+    name: Señal de Orientación
+    prompt: |
+      Las flechas apuntan. "A los trenes". "A las salidas". Los letreros guían el
+      flujo. Observa quién los sigue. ¿Quién los ignora? El letrero es una sugerencia.
+      ¿Qué asume?
+    follow_ups:
+      - ¿Cómo moldean los letreros el flujo?
+      - ¿Cómo sería el centro de tránsito sin ellos?
+      - ¿Cuál es la relación entre el letrero y la confianza?
+  - id: hi_th_waiting_room
+    name: Sala de Espera
+    prompt: |
+      Las sillas se miran entre sí o al panel. La sala de espera acoge a la gente
+      entre viajes. Observa la disposición. ¿Quién se sienta? ¿Quién pasea? La sala de
+      espera es una pausa.
+    follow_ups:
+      - ¿Cómo moldea la sala de espera la espera?
+      - ¿Cómo sería el centro de tránsito sin ella?
+      - ¿Cuál es la relación entre la sala y la duración?
+  - id: hi_th_stranger_proximity
+    name: Proximidad de Extraños
+    prompt: |
+      Un extraño está cerca, necesario en una multitud. La proximidad es impersonal
+      pero íntima. Observa la tolerancia. ¿Qué permite el cuerpo? La proximidad es un
+      contrato.
+    follow_ups:
+      - ¿Cómo moldea la proximidad el viaje?
+      - ¿Cómo sería el vagón con más espacio?
+      - ¿Cuál es la relación entre la proximidad y la civilidad?
+  - id: hi_th_last_train
+    name: Último Tren
+    prompt: |
+      El último tren. La multitud es diferente: más tarde, más relajada. El último
+      tren tiene su propia energía. Observa el cambio. ¿Qué hace "último" a la multitud?
+    follow_ups:
+      - ¿Cómo moldea el último tren el centro de tránsito?
+      - ¿Cómo sería la noche sin él?
+      - ¿Cuál es la relación entre el último y la urgencia?
+  - id: hi_th_transit_tribe
+    name: Tribu de Tránsito
+    prompt: |
+      Las mismas personas, la misma línea, la misma hora. Reconoces caras. Nunca hablas.
+      La tribu de tránsito es una comunidad silenciosa. Observa el reconocimiento. ¿Qué
+      proporciona la tribu?
+    follow_ups:
+      - ¿Cómo moldea la tribu el trayecto?
+      - ¿Cómo sería el viaje sin caras conocidas?
+      - ¿Cuál es la relación entre la tribu y la pertenencia?

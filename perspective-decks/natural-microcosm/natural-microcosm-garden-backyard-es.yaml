@@ -1,0 +1,475 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosmos Natural — Jardín y Patio Trasero (Spanish)
+
+id: natural_microcosm_garden_backyard
+name: Microcosmos Natural — Jardín y Patio Trasero
+description: 50 cartas para cambiar tu forma de ver la naturaleza doméstica — desde polinizadores y el suelo hasta malas hierbas frente a cultivos y la coreografía de la naturaleza cultivada.
+domain: natural_microcosm
+cards:
+  - id: nmg_bee_landing
+    name: Aterrizaje de Abeja
+    prompt: |
+      Observa una abeja aterrizar en una flor. El acercamiento, el tacto, el aleteo. La
+      abeja es tanto depredadora como polinizadora. ¿Qué gana la flor? ¿Qué
+      riesga?
+    follow_ups:
+      - ¿Cómo moldea el aterrizaje la próxima visita?
+      - ¿Cómo sería el jardín sin abejas?
+      - ¿Cuál es la relación entre la flor y la abeja?
+  - id: nmg_soil_crumble
+    name: Desmoronamiento del Suelo
+    prompt: |
+      Coge un puñado de tierra. Siente la textura — el desmoronamiento, los granos.
+      Ese suelo guarda historia, muerte, renacimiento. ¿Qué vivió aquí antes?
+      ¿Qué crecerá de él?
+    follow_ups:
+      - ¿Cómo moldea el suelo lo que crece?
+      - ¿Qué significaría un suelo estéril?
+      - ¿Cuál es la relación entre el desmoronamiento y la vida?
+  - id: nmg_weed_edge
+    name: Mal Hierba en el Borde
+    prompt: |
+      Una mala hierba crece donde el césped se encuentra con el parterre. No fue plantada. Fue
+      invitada — o se invitó a sí misma. Considera el límite. ¿Quién traza la línea
+      entre mala hierba y flor?
+    follow_ups:
+      - ¿Cómo sería el jardín sin malas hierbas?
+      - ¿Cómo crea el borde tensión?
+      - ¿Cuál es la relación entre la mala hierba y la intención?
+  - id: nmg_compost_steam
+    name: Vapor de Compost
+    prompt: |
+      Remueve un montón de compost. Sube vapor — descomposición en progreso. El calor es
+      trabajo microbiano. Lo que fue desecho de cocina se convierte en tierra. Traza la
+      transformación.
+    follow_ups:
+      - ¿Qué perdería el jardín sin compost?
+      - ¿Cómo marca el calor el proceso?
+      - ¿Cuál es la relación entre el desperdicio y la fertilidad?
+  - id: nmg_seed_dormancy
+    name: Latencia de Semilla
+    prompt: |
+      Una semilla en el suelo puede esperar años — décadas. Está viva pero en pausa. ¿Qué
+      la despierta? Luz, agua, fuego, perturbación. Considera la paciencia de una
+      semilla.
+    follow_ups:
+      - ¿Qué perdería la germinación sin la latencia?
+      - ¿Cómo moldea la espera la supervivencia?
+      - ¿Cuál es la relación entre la pausa y el surgimiento?
+  - id: nmg_bird_bath
+    name: Bebedero para Pájaros
+    prompt: |
+      Un bebedero para pájaros es una invitación. Observa quién viene — gorriones, petirrojos, quizás una
+      urraca. El baño crea un encuentro. ¿Cómo sería el patio sin este
+      pequeño cuerpo de agua?
+    follow_ups:
+      - ¿Cómo moldea el baño quién visita?
+      - ¿Cuál es la coreografía de la llegada?
+      - ¿Cuál es la relación entre el agua y el pájaro?
+  - id: nmg_tomato_truss
+    name: Racimo de Tomate
+    prompt: |
+      Un racimo de tomate sostiene frutos verdes, luego rojos. Estudia la arquitectura. El
+      tallo, las ramas, el peso. La planta es ingeniería. ¿Qué la sostiene?
+    follow_ups:
+      - ¿Cómo sería la planta sin el racimo?
+      - ¿Cómo moldea la estructura la cosecha?
+      - ¿Cuál es la relación entre la forma y el fruto?
+  - id: nmg_aphid_column
+    name: Columna de Pulgones
+    prompt: |
+      Los pulgones se agrupan en un tallo — chupando, multiplicándose. Son plaga y
+      presa. Vendrán las mariquitas. Observa la ecología. ¿Cuál es la relación
+      entre el brote y el equilibrio?
+    follow_ups:
+      - ¿Cómo sería la planta sin pulgones?
+      - ¿Cómo atrae el cúmulo a los depredadores?
+      - ¿Cuál es la relación entre la plaga y el ecosistema?
+  - id: nmg_hose_spray
+    name: Rociado de Manguera
+    prompt: |
+      El agua de una manguera golpea el suelo. Observa cómo se acumula, se empapa, corre. El rociado es
+      lluvia artificial. ¿En qué se diferencia de la real? ¿Qué recibe la
+      planta?
+    follow_ups:
+      - ¿Cómo sería el jardín sin la manguera?
+      - ¿Cómo moldea el riego el crecimiento?
+      - ¿Cuál es la relación entre el rociado y la lluvia?
+  - id: nmg_lawn_mow
+    name: Corte de Césped
+    prompt: |
+      Un césped es naturaleza gestionada — cortado a la altura, mantenido verde. El corte interrumpe
+      el crecimiento. Considera en qué se convertiría el césped si se dejara solo. ¿Qué estamos
+      contreniendo?
+    follow_ups:
+      - ¿Cómo sería el patio sin el corte de césped?
+      - ¿Cómo moldea el corte la identidad?
+      - ¿Cuál es la relación entre el césped y el control?
+  - id: nmg_pot_bound
+    name: Raíces Enredadas en Maceta
+    prompt: |
+      Una planta en una maceta — raíces dando vueltas, buscando. La maceta es un límite. ¿Qué
+      haría la planta con tierra sin límites? La maceta es tanto prisión como
+      protección. Considera el intercambio.
+    follow_ups:
+      - ¿Cómo sería la planta sin la maceta?
+      - ¿Cómo moldea el confinamiento el crecimiento?
+      - ¿Cuál es la relación entre la raíz y la pared?
+  - id: nmg_mulch_layer
+    name: Capa de Mulch
+    prompt: |
+      El mulch cubre el suelo — astillas de madera, paja, hojas. Retiene la humedad,
+      suprime malas hierbas, eventualmente se convierte en tierra. La capa es temporal.
+      ¿Qué hace mientras dura?
+    follow_ups:
+      - ¿Cómo sería el parterre sin mulch?
+      - ¿Cómo crea la capa un microclima?
+      - ¿Cuál es la relación entre la cobertura y el suelo?
+  - id: nmg_hummingbird_hover
+    name: Aleteo de Colibrí
+    prompt: |
+      Un colibrí aletea ante una flor — alas invisibles por la velocidad. El aleteo
+      es costoso. El néctar debe valer la pena. Considera la economía de la
+      visita.
+    follow_ups:
+      - ¿Cómo sería la flor sin el colibrí?
+      - ¿Cómo moldea el aleteo la relación?
+      - ¿Cuál es la relación entre el coste y la recompensa?
+  - id: nmg_fence_creep
+    name: Trepadora en la Valla
+    prompt: |
+      Hiedra o campanillas trepan por una valla. La planta no sabe que la valla es hecha por el hombre.
+      Trepa de todos modos. Considera el encuentro entre
+      el crecimiento y la estructura.
+    follow_ups:
+      - ¿Qué treparía la planta sin la valla?
+      - ¿Cómo moldea la valla a la enredadera?
+      - ¿Cuál es la relación entre trepar y el soporte?
+  - id: nmg_worm_cast
+    name: Excremento de Lombriz
+    prompt: |
+      Excrementos de lombriz — pequeños montículos de tierra — salpican el césped. La lombriz ha pasado,
+      dejando fertilidad. El excremento es arqueología. ¿Qué procesó la lombriz?
+      ¿Qué dejó atrás?
+    follow_ups:
+      - ¿Cómo sería el suelo sin lombrices?
+      - ¿Cómo marca el excremento el trabajo de la lombriz?
+      - ¿Cuál es la relación entre el excremento y la aireación?
+  - id: nmg_squirrel_cache
+    name: Escondite de Ardilla
+    prompt: |
+      Una ardilla entierra una nuez — y luego la olvida. La nuez puede germinar. La ardilla
+      es jardinera accidental. Considera la relación entre la memoria y
+      la dispersión. ¿Qué crece del olvido?
+    follow_ups:
+      - ¿Cómo sería el roble sin la ardilla?
+      - ¿Cómo moldea el escondite la extensión del bosque?
+      - ¿Cuál es la relación entre enterrar y germinar?
+  - id: nmg_dew_morning
+    name: Rocío Matutino
+    prompt: |
+      El rocío matutino se acumula en las hojas. Cada gota contiene luz. El rocío es
+      condensación — agua del aire. Se evaporará al mediodía. Considera el
+      regalo efímero. ¿Qué recibe la planta?
+    follow_ups:
+      - ¿Cómo sería la mañana sin rocío?
+      - ¿Cómo moldea el rocío la mañana?
+      - ¿Cuál es la relación entre la condensación y la hoja?
+  - id: nmg_prune_scar
+    name: Cicatriz de Poda
+    prompt: |
+      Una cicatriz de poda marca dónde se cortó una rama. El árbol ha sanado — o lo ha intentado.
+      La cicatriz es historia. ¿Qué se eliminó? ¿Por qué? ¿Qué recuerda el árbol?
+    follow_ups:
+      - ¿Cómo sería el árbol sin la poda?
+      - ¿Cómo moldea el corte el crecimiento?
+      - ¿Cuál es la relación entre la herida y la forma?
+  - id: nmg_sunflower_turn
+    name: Giro del Girasol
+    prompt: |
+      Un girasol joven gira con el sol — al este al amanecer, al oeste al atardecer. El
+      movimiento es heliotropismo. La planta sigue la luz. Considera la
+      coreografía. ¿Qué significaría una orientación fija?
+    follow_ups:
+      - ¿Cómo sería el girasol sin el giro?
+      - ¿Cómo moldea el seguimiento el crecimiento?
+      - ¿Cuál es la relación entre el movimiento y la luz?
+  - id: nmg_slug_trail
+    name: Rastro de Babosa
+    prompt: |
+      Una babosa deja un rastro — plateado, pegajoso. El rastro marca el paso. También
+      protege el pie de la babosa. Considera el rastro como registro y
+      adaptación. ¿Qué permite?
+    follow_ups:
+      - ¿Cómo sería la babosa sin el rastro?
+      - ¿Cómo moldea el moco el movimiento?
+      - ¿Cuál es la relación entre el rastro y el depredador?
+  - id: nmg_birdhouse_hole
+    name: Agujero de Casa de Pájaros
+    prompt: |
+      Una casa de pájaros tiene un agujero — un diámetro específico. Excluye a algunos pájaros,
+      invita a otros. El agujero es un filtro. ¿Para quién fue diseñado? ¿Quién lo
+      ha reclamado?
+    follow_ups:
+      - ¿Cómo sería el patio sin la casa de pájaros?
+      - ¿Cómo moldea el agujero quién anida?
+      - ¿Cuál es la relación entre el agujero y el inquilino?
+  - id: nmg_root_hair
+    name: Pelos Radiculares
+    prompt: |
+      Los pelos radiculares son invisibles desde arriba — diminutas extensiones que absorben agua
+      y nutrientes. La interfaz de la planta con el suelo. Considera qué sucede
+      debajo. ¿Qué perdería la planta sin ellos?
+    follow_ups:
+      - ¿Cómo moldea el pelo la absorción?
+      - ¿Cuál es la relación entre el pelo y el suelo?
+      - ¿Qué verías si pudieras verlos?
+  - id: nmg_frost_leaf
+    name: Escarcha en la Hoja
+    prompt: |
+      Patrones de escarcha en una hoja — cristalinos, delicados. La escarcha es agua
+      congelada del aire. Se derretirá con el sol. Considera el arte temporal.
+      ¿Qué experimenta la hoja?
+    follow_ups:
+      - ¿Cómo sería la mañana sin escarcha?
+      - ¿Cómo moldea la escarcha el día de la hoja?
+      - ¿Cuál es la relación entre el cristal y la célula?
+  - id: nmg_companion_plant
+    name: Planta Compañera
+    prompt: |
+      Albahaca junto a tomates. Caléndulas junto a calabazas. El cultivo asociado es
+      adyacencia estratégica. Algunas plantas repelen; otras atraen. Considera la
+      vida social del parterre.
+    follow_ups:
+      - ¿Cómo sería el tomate sin la albahaca?
+      - ¿Cómo moldea la adyacencia el jardín?
+      - ¿Cuál es la relación entre el vecino y la plaga?
+  - id: nmg_fallen_apple
+    name: Manzana Caída
+    prompt: |
+      Una manzana cae — sin recoger, pasada de maduro. Se pudrirá, alimentará avispas, quizás creará
+      una plántula. La caída es tanto desperdicio como principio. Considera el arco desde
+      la rama al suelo.
+    follow_ups:
+      - ¿Cómo sería el suelo sin la caída?
+      - ¿Cómo moldea la podredumbre lo que viene después?
+      - ¿Cuál es la relación entre la caída y la dispersión?
+  - id: nmg_spider_web_corner
+    name: Telaraña en la Esquina
+    prompt: |
+      Una telaraña se extiende en una esquina del cobertizo. El rocío se atrapa en la seda. La
+      telaraña es trampa y hogar. Considera la economía de la araña. ¿Qué invierte?
+      ¿Qué cosecha?
+    follow_ups:
+      - ¿Cómo sería la esquina sin la telaraña?
+      - ¿Cómo moldea la telaraña el día de la araña?
+      - ¿Cuál es la relación entre la seda y la presa?
+  - id: nmg_seed_packet
+    name: Paquete de Semillas
+    prompt: |
+      Un paquete de semillas — foto en el frente, instrucciones en el reverso. El paquete
+      es una promesa. ¿Qué emergerá de esos pequeños puntos? Considera la
+      relación entre imagen y realidad.
+    follow_ups:
+      - ¿Cómo sería el jardín sin el paquete?
+      - ¿Cómo moldea el paquete la expectativa?
+      - ¿Cuál es la relación entre la promesa y la planta?
+  - id: nmg_rain_barrel
+    name: Barril de Lluvia
+    prompt: |
+      Un barril de lluvia recoge el agua de escorrentía del tejado. El agua es gratis, suave,
+      sin cloro. El barril es infraestructura. Considera lo que fluye del
+      cielo al barril a la raíz.
+    follow_ups:
+      - ¿Cómo sería el jardín sin el barril?
+      - ¿En qué se diferencia el agua de lluvia capturada del grifo?
+      - ¿Cuál es la relación entre el tejado y la raíz?
+  - id: nmg_garden_glove
+    name: Guante de Jardinería
+    prompt: |
+      Un guante dejado en el parterre — dedos rígidos, manchados de tierra. El guante es una
+      prótesis. Extiende la mano, la protege. Considera el límite
+      entre humano y suelo. ¿Qué permite el guante?
+    follow_ups:
+      - ¿Qué sentiría el jardinero sin el guante?
+      - ¿Cómo moldea el guante la relación?
+      - ¿Cuál es la relación entre la mano y la tierra?
+  - id: nmg_caterpillar_chew
+    name: Masticación de Oruga
+    prompt: |
+      Una oruga se come una hoja — borde por borde. La masticación es audible. La
+      oruga está transformando la hoja en mariposa. Considera el coste para
+      la planta. ¿Qué gana al albergarla?
+    follow_ups:
+      - ¿Cómo sería la hoja sin la masticación?
+      - ¿Cómo moldea la oruga la planta?
+      - ¿Cuál es la relación entre comer y convertirse?
+  - id: nmg_fertilizer_burn
+    name: Quemadura por Fertilizante
+    prompt: |
+      Demasiado fertilizante quema — puntas marrones, raíces crujientes. El jardín es
+      química. Más no siempre es mejor. Considera el límite entre alimentar
+      y envenenar. ¿Dónde está la línea?
+    follow_ups:
+      - ¿Cómo sería la planta con menos?
+      - ¿Cómo moldea el exceso la hoja?
+      - ¿Cuál es la relación entre la dosis y el daño?
+  - id: nmg_shade_cloth
+    name: Malla de Sombra
+    prompt: |
+      La malla de sombra se extiende sobre las plántulas. Difunde la luz, reduce el calor. La
+      malla es mediación — entre el sol y la planta. Considera qué añade la malla.
+      ¿Qué resta?
+    follow_ups:
+      - ¿Cómo sería la plántula sin la malla?
+      - ¿Cómo moldea la sombra el crecimiento temprano?
+      - ¿Cuál es la relación entre el filtro y la luz?
+  - id: nmg_morning_glory_dawn
+    name: Campanilla Matutina al Amanecer
+    prompt: |
+      Las campanillas matutinas se abren al amanecer, se cierran por la tarde. La flor tiene un
+      horario. Considera el ritmo. ¿Cómo sería el jardín si permaneciera
+      abierto todo el día?
+    follow_ups:
+      - ¿Cómo moldea el tiempo la polinización?
+      - ¿Cuál es la relación entre abrirse y el polinizador?
+      - ¿Por qué al amanecer?
+  - id: nmg_garden_path
+    name: Camino del Jardín
+    prompt: |
+      Un camino a través del jardín — losas o mulch. El camino es por donde caminamos.
+      El resto es donde no. Considera la línea. ¿Qué protege el
+      camino? ¿Qué excluye?
+    follow_ups:
+      - ¿Cómo sería el jardín sin el camino?
+      - ¿Cómo moldea el camino el movimiento?
+      - ¿Cuál es la relación entre el paso y el suelo?
+  - id: nmg_cross_pollination
+    name: Polinización Cruzada
+    prompt: |
+      Las abejas transportan polen de una planta a otra. La descendencia será
+      híbrida — no idéntica a ninguno de los padres. Considera la mezcla. ¿Qué crea
+      el cruce? ¿Qué arriesga?
+    follow_ups:
+      - ¿Cómo sería la variedad sin el cruce?
+      - ¿Cómo moldea la abeja el gen?
+      - ¿Cuál es la relación entre transportar y combinar?
+  - id: nmg_herb_scent
+    name: Aroma de Hierba
+    prompt: |
+      Roza el romero o la menta. El aroma se eleva — aceites volátiles liberados.
+      El aroma es defensa e invitación. Considera el doble papel. ¿Qué
+      repele? ¿Qué atrae?
+    follow_ups:
+      - ¿Cómo sería la hierba sin el aroma?
+      - ¿Cómo moldea el aceite el encuentro?
+      - ¿Cuál es la relación entre el tacto y la liberación?
+  - id: nmg_watering_can_pour
+    name: Vertido de Regadera
+    prompt: |
+      Agua de una regadera — más suave que una manguera. El vertido es deliberado. Considera
+      el ritual. ¿Qué permite la regadera que no permite la manguera? ¿Cuál es la
+      relación entre el vertido y la planta?
+    follow_ups:
+      - ¿Qué preferiría la plántula?
+      - ¿Cómo moldea el vertido el suelo?
+      - ¿Cuál es la relación entre el ritual y el crecimiento?
+  - id: nmg_bird_seed_spill
+    name: Derrame de Semillas para Pájaros
+    prompt: |
+      Las semillas se derraman de un comedero — girasol, mijo. Caen al suelo.
+      Los gorriones picotean. Las ardillas saquean. El derrame crea un escenario. Considera
+      quién se beneficia. ¿Para quién estaba destinado?
+    follow_ups:
+      - ¿Cómo sería el suelo sin el derrame?
+      - ¿Cómo moldea el derrame la bandada?
+      - ¿Cuál es la relación entre el derrame y el comensal?
+  - id: nmg_cutting_propagate
+    name: Esqueje para Propagar
+    prompt: |
+      Un esqueje — un tallo en agua o tierra — echa raíces. Sin semilla. La planta se clona
+      a sí misma. Considera el atajo. ¿Qué evita la propagación? ¿Qué
+      preserva?
+    follow_ups:
+      - ¿Cómo sería el jardín sin esquejes?
+      - ¿Cómo moldea la clonación la diversidad?
+      - ¿Cuál es la relación entre el corte y la continuación?
+  - id: nmg_leaf_miner_tunnel
+    name: Túnel de Minador de Hojas
+    prompt: |
+      El rastro de un minador de hojas — serpenteante, pálido, bajo la superficie. La larva
+      come entre las capas. La hoja sobrevive, marcada. Considera la
+      invasión. ¿Qué pierde la hoja? ¿Qué conserva?
+    follow_ups:
+      - ¿Cómo sería la hoja sin el túnel?
+      - ¿Cómo moldea el minador la hoja?
+      - ¿Cuál es la relación entre el túnel y el tejido?
+  - id: nmg_greenhouse_condensation
+    name: Condensación en Invernadero
+    prompt: |
+      La condensación se acumula en el cristal de un invernadero. El aire interior está húmedo — las plantas
+      exhalan. El cristal es un límite. Considera el microclima. ¿Qué retiene
+      el calor? ¿Qué retiene la humedad?
+    follow_ups:
+      - ¿Cómo sería el invernadero sin el cristal?
+      - ¿Cómo moldea la condensación el interior?
+      - ¿Cuál es la relación entre el vidrio y el crecimiento?
+  - id: nmg_terrace_level
+    name: Nivel de Terraza
+    prompt: |
+      Un parterre en terrazas desciende por una pendiente. Cada nivel contiene tierra, contiene agua.
+      La terraza es control de erosión y escenario. Considera la arquitectura.
+      ¿Cómo sería la pendiente sin ella?
+    follow_ups:
+      - ¿Cómo moldea el nivel lo que crece?
+      - ¿Cuál es la relación entre el escalón y la estabilidad?
+      - ¿Por qué en terraza?
+  - id: nmg_native_vs_exotic
+    name: Nativo vs. Exótico
+    prompt: |
+      Algunas plantas son nativas — pertenecen. Otras son exóticas — introducidas.
+      Considera el parterre. ¿Cuál es cuál? ¿Importa? ¿Qué ofrece lo nativo
+      que no ofrece lo exótico?
+    follow_ups:
+      - ¿Cómo sería el jardín solo con nativos?
+      - ¿Cómo moldea el origen la ecología?
+      - ¿Cuál es la relación entre pertenecer y prosperar?
+  - id: nmg_garden_dusk
+    name: Jardín al Anochecer
+    prompt: |
+      El jardín al anochecer — la luz se desvanece, las polillas emergen. El turno del día termina; el
+      turno de la noche comienza. Considera la transición. ¿Quién despierta? ¿Quién duerme?
+      ¿En qué se convierte el jardín?
+    follow_ups:
+      - ¿Cómo sería el jardín sin el anochecer?
+      - ¿Cómo moldea el cambio el ecosistema?
+      - ¿Cuál es la relación entre el día y la noche?
+  - id: nmg_stake_tie
+    name: Estaca y Amarre
+    prompt: |
+      Una planta atada a una estaca — judía, tomate. La estaca corrige. Sin ella,
+      la planta se extendería. Considera el soporte. ¿Qué permite el amarre?
+      ¿Qué restringe?
+    follow_ups:
+      - ¿Cómo sería la planta sin la estaca?
+      - ¿Cómo moldea el amarre la forma?
+      - ¿Cuál es la relación entre el soporte y el crecimiento?
+  - id: nmg_first_frost
+    name: Primera Helada
+    prompt: |
+      La primera helada — plantas tiernas se ennegrecen. El jardín cambia. Algunas cosas
+      terminan; otras persisten. Considera el umbral. ¿Qué selecciona la helada?
+      ¿A qué perdona?
+    follow_ups:
+      - ¿Cómo sería el jardín sin heladas?
+      - ¿Cómo moldea la primera helada la temporada?
+      - ¿Cuál es la relación entre el frío y el cierre?
+  - id: nmg_garden_reflection
+    name: Reflejo del Jardín
+    prompt: |
+      Mira el jardín. Refleja decisiones — qué se plantó, qué se desyerbó, qué se dejó estar.
+      El jardín es un espejo. ¿Qué muestra sobre el jardinero?
+    follow_ups:
+      - ¿Qué diría el jardín sin palabras?
+      - ¿Cómo moldean las decisiones el conjunto?
+      - ¿Cuál es la relación entre jardinero y crecimiento?

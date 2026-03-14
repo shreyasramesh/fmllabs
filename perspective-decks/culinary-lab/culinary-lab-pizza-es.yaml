@@ -1,0 +1,384 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Laboratorio Culinario — Pizza (Spanish)
+
+id: culinary_lab_pizza
+name: Laboratorio Culinario — Pizza
+description: 50 cartas para cambiar tu forma de experimentar la pizza, desde la química de la masa y el fuego hasta el teatro del corte y la arqueología de los ingredientes.
+domain: culinary_lab
+cards:
+  - id: piz_dough_stretch
+    name: Estirado de la Masa
+    prompt: |
+      Observa cómo se estira la masa, ya sea lanzada a mano o presionada. La red de gluten se estira y atrapa aire. Se elige la forma. ¿Qué significaría una porción cuadrada de manera diferente a una triangular?
+    follow_ups:
+      - ¿Cómo define el estirado la experiencia?
+      - ¿Qué sería la pizza sin el estirado?
+      - ¿Cuál es la relación entre la mano y la forma?
+  - id: piz_oven_breath
+    name: Aliento del Horno
+    prompt: |
+      Un horno de pizza respira: fuego de leña, gas o eléctrico. La cúpula retiene el calor. El suelo lo transfiere. Acércate a uno. ¿Qué exige el horno del cocinero? ¿De la masa?
+    follow_ups:
+      - ¿Qué sería la pizza sin el horno?
+      - ¿Cómo moldea el calor la corteza?
+      - ¿Cuál es la relación entre el aliento y las burbujas?
+  - id: piz_sauce_spiral
+    name: Espiral de Salsa
+    prompt: |
+      La salsa a menudo se aplica en espiral, no extendida de borde a borde. Estudia el patrón. ¿Qué se cubre? ¿Qué queda expuesto? La espiral es composición.
+    follow_ups:
+      - ¿Cómo se vería la pizza con salsa completa?
+      - ¿Cómo afecta la espiral a cada bocado?
+      - ¿Cuál es la relación entre el patrón y el sabor?
+  - id: piz_cheese_melt
+    name: Queso Fundido
+    prompt: |
+      El queso se funde a diferentes ritmos. La mozzarella se estira; los quesos curados sueltan grasa. Observa la fundición. La química de la grasa y la proteína, el calor y el tiempo. ¿Cuándo está listo?
+    follow_ups:
+      - ¿Qué sería la porción sin el estiramiento?
+      - ¿Cómo moldea la fundición el bocado?
+      - ¿Cuál es la relación entre la fundición y la memoria?
+  - id: piz_crust_char
+    name: Carbonización de la Corteza
+    prompt: |
+      Leopardo — las manchas de carbonización en la corteza — marcan la pizza al horno de leña. Cada mancha es un momento de contacto con calor extremo. Considera el sabor que aportan esas manchas. ¿Qué significaría una corteza pálida?
+    follow_ups:
+      - ¿Cómo cambia la carbonización la experiencia?
+      - ¿Qué sería la pizza sin ella?
+      - ¿Cuál es la relación entre la carbonización y la artesanía?
+  - id: piz_slice_fold
+    name: Doblado de la Porción
+    prompt: |
+      Estilo Nueva York: dobla la porción. El doblez es estructural, sujeta los ingredientes, canaliza la grasa. El doblez es coreografía. ¿Qué permite?
+    follow_ups:
+      - ¿Qué sería comer sin el doblez?
+      - ¿Cómo moldea el doblez el bocado?
+      - ¿Cuál es la relación entre el doblez y el lugar?
+  - id: piz_pepperoni_cup
+    name: Copa de Pepperoni
+    prompt: |
+      Buen pepperoni en forma de copa: los bordes crujientes, el centro acumula grasa. Es una transformación de forma y textura. Observa cuándo sucede. ¿Qué creó la copa?
+    follow_ups:
+      - ¿Qué sería el pepperoni sin la copa?
+      - ¿Cómo retiene la copa el sabor?
+      - ¿Cuál es la relación entre la grasa y la forma?
+  - id: piz_basil_finish
+    name: Toque de Albahaca
+    prompt: |
+      La albahaca en la pizza a menudo se añade después de hornear, fresca y vibrante. Es un acabado, no una base. Observa el contraste. ¿Qué aporta lo fresco a lo cocido?
+    follow_ups:
+      - ¿Qué sería la pizza sin la albahaca?
+      - ¿Cómo moldea el tiempo la hierba?
+      - ¿Cuál es la relación entre lo crudo y lo cocido?
+  - id: piz_margherita_minimal
+    name: Margherita Minimalista
+    prompt: |
+      La Margherita son tres cosas: masa, tomate, queso. Cada una debe destacar. No hay dónde esconderse. Considera la disciplina. ¿Qué exige el minimalismo?
+    follow_ups:
+      - ¿Qué haría una nota equivocada?
+      - ¿Cómo enfoca la simplicidad el paladar?
+      - ¿Cuál es la relación entre pocos y muchos?
+  - id: piz_pool_table
+    name: Mesa de Billar
+    prompt: |
+      Algunas pizzerías tienen la mesa larga comunal — extraños compartiendo espacio. La pizza llega. La mesa es un escenario. ¿Quién come a tu lado? ¿Cuál es el contrato tácito?
+    follow_ups:
+      - ¿Qué sería la comida en un reservado?
+      - ¿Cómo moldea la mesa el encuentro?
+      - ¿Cuál es la relación entre lo compartido y lo privado?
+  - id: piz_box_flip
+    name: Giro de la Caja
+    prompt: |
+      La caja de pizza — cartón, a veces con el trípode de plástico en el centro. Está diseñada para ventilar, para apilar. La caja es infraestructura. ¿Qué sería la comida para llevar sin ella?
+    follow_ups:
+      - ¿Cómo moldea la caja el viaje a casa?
+      - ¿Qué sucede al abrir la caja?
+      - ¿Cuál es la relación entre la caja y el ritual?
+  - id: piz_dough_ferment
+    name: Fermentación de la Masa
+    prompt: |
+      La masa de pizza fermenta — horas o días. La levadura crea burbujas, sabor. La masa vieja tiene acidez. Considera el tiempo en cada bocado. ¿Qué sacrificaría una masa de levado rápido?
+    follow_ups:
+      - ¿Cómo moldea la fermentación la corteza?
+      - ¿Cuál es la relación entre el tiempo y el sabor?
+      - ¿Qué significaría una masa del mismo día?
+  - id: piz_cornicione
+    name: Cornicione
+    prompt: |
+      El cornicione — el borde, la corteza — es a menudo la mejor parte. Aireado, burbujeante, quizás un poco masticable. Algunos lo dejan; otros lo comen primero. ¿Cuál es tu relación con el borde?
+    follow_ups:
+      - ¿Qué sería la pizza sin el cornicione?
+      - ¿Cómo enmarca el borde el centro?
+      - ¿Cuál es la relación entre la corteza y el centro?
+  - id: piz_olive_oil_drizzle
+    name: Chorro de Aceite de Oliva
+    prompt: |
+      Aceite de oliva rociado después de hornear — sobre la corteza, o sobre toda la pizza. Brilla. El aceite transporta sabor, añade riqueza. Observa cuándo se aplica. ¿Qué añade el chorro?
+    follow_ups:
+      - ¿Qué sería la pizza sin él?
+      - ¿Cómo cambia el aceite el bocado?
+      - ¿Cuál es la relación entre la grasa y el acabado?
+  - id: piz_anchovy_salt
+    name: Sal de Anchoa
+    prompt: |
+      Anchoas en la pizza — saladas, umami, divisivas. Se disuelven en la salsa, o se quedan encima. La anchoa es arqueología: mediterránea, conservada, antigua. ¿Qué viaje hizo?
+    follow_ups:
+      - ¿Qué sería la porción sin anchoa?
+      - ¿Cómo moldea la sal los otros sabores?
+      - ¿Cuál es la relación entre lo conservado y lo fresco?
+  - id: piz_sound_crunch
+    name: Sonido Crujiente
+    prompt: |
+      El primer bocado de una corteza bien hecha — el crujido, la resistencia. Cierra los ojos. El sonido es parte de la experiencia. ¿Qué sería la pizza si fuera silenciosa?
+    follow_ups:
+      - ¿Cómo moldea el sonido la satisfacción?
+      - ¿Cómo suena una corteza blanda?
+      - ¿Cuál es la relación entre el crujido y la calidad?
+  - id: piz_second_slice
+    name: Segunda Porción
+    prompt: |
+      La segunda porción es diferente de la primera — ahora conoces la pizza. El paladar se ha ajustado. Observa el cambio. ¿La segunda porción sabe igual? ¿Mejor? ¿Diferente?
+    follow_ups:
+      - ¿Cómo cambia la repetición la percepción?
+      - ¿Qué carecería una comida de una sola porción?
+      - ¿Cuál es la relación entre la primera y la segunda?
+  - id: piz_neapolitan_rules
+    name: Reglas Napolitanas
+    prompt: |
+      La auténtica pizza napolitana tiene reglas — tamaño, ingredientes, método. El sello VPN, la certificación. Las reglas crean identidad. ¿Qué protegen las reglas? ¿Qué excluyen?
+    follow_ups:
+      - ¿Qué sería la pizza sin las reglas?
+      - ¿Cómo moldea la certificación la expectativa?
+      - ¿Cuál es la relación entre la regla y la artesanía?
+  - id: piz_detroit_edges
+    name: Bordes de Detroit
+    prompt: |
+      Estilo Detroit — rectangular, queso hasta el borde, corteza frita crujiente donde toca la sartén. Los bordes son deliberados. Considera la arquitectura. ¿Qué dice la forma?
+    follow_ups:
+      - ¿Qué sería la pizza sin los bordes?
+      - ¿Cómo crea la forma la identidad?
+      - ¿Cuál es la relación entre la sartén y la corteza?
+  - id: piz_garlic_knot
+    name: Nudo de Ajo
+    prompt: |
+      Nudos de ajo — espirales de masa, untadas en mantequilla, con ajo. A menudo llegan primero. No son pizza, pero son del mismo mundo. ¿Cuál es la relación entre el nudo y la pizza?
+    follow_ups:
+      - ¿Qué sería la comida sin los nudos?
+      - ¿Cómo marca el nudo el tono?
+      - ¿Cuál es la relación entre el acompañamiento y el plato principal?
+  - id: piz_red_pepper_flake
+    name: Copos de Chile Rojo
+    prompt: |
+      El salero de copos de chile rojo — a menudo sobre la mesa. Tú eliges el picante. El copo es democracia. Cada uno sazona el suyo. ¿Qué significa esa elección?
+    follow_ups:
+      - ¿Qué sería la mesa sin el salero?
+      - ¿Cómo moldea el auto-sazonado la comida?
+      - ¿Cuál es la relación entre la elección y el sabor?
+  - id: piz_sicilian_slab
+    name: Losa Siciliana
+    prompt: |
+      Siciliana — gruesa, rectangular, a veces invertida (salsa encima). La losa tiene peso. La arquitectura es diferente. ¿Qué añade el grosor? ¿Qué sacrifica?
+    follow_ups:
+      - ¿Qué haría la corteza fina de manera diferente?
+      - ¿Cómo moldea el grosor el bocado?
+      - ¿Cuál es la relación entre la losa y la porción?
+  - id: piz_wood_stack
+    name: Pila de Leña
+    prompt: |
+      Las pizzerías al horno de leña apilan troncos. De roble, a veces. La leña es combustible y sabor. La pila es preparación. Considera qué se quema. ¿Qué añade la leña que el gas no puede?
+    follow_ups:
+      - ¿Qué sería la pizza sin leña?
+      - ¿Cómo moldea el combustible la corteza?
+      - ¿Cuál es la relación entre el fuego y el humo?
+  - id: piz_topping_balance
+    name: Equilibrio de Ingredientes
+    prompt: |
+      Los ingredientes pueden abrumar — demasiados, y la pizza se convierte en un guiso. El equilibrio es delicado. Estudia una pizza cargada. ¿Dónde cruza la línea? ¿Qué quitarías?
+    follow_ups:
+      - ¿Cómo moldea la moderación la pizza?
+      - ¿Cuál es la relación entre más y menos?
+      - ¿Cuándo se convierte la elección en caos?
+  - id: piz_cold_leftover
+    name: Sobra Fría
+    prompt: |
+      Pizza fría para desayunar — algunos lo juran. Los sabores se han asentado. La textura ha cambiado. Considera la pizza del día siguiente. ¿Qué añade el tiempo? ¿Qué quita?
+    follow_ups:
+      - ¿Cómo cambia lo frío la experiencia?
+      - ¿Qué haría recalentar?
+      - ¿Cuál es la relación entre lo fresco y lo sobrante?
+  - id: piz_sauce_sweet
+    name: Salsa Dulce
+    prompt: |
+      La salsa de tomate puede ser dulce o ácida, dependiendo del tomate, del cocinero. Prueba la salsa sola si puedes. ¿De dónde viene la dulzura? ¿Qué haría la acidez?
+    follow_ups:
+      - ¿Cómo marca la salsa el tono?
+      - ¿Cuál es la relación entre dulce y ácido?
+      - ¿Qué significaría tomate crudo?
+  - id: piz_roman_taglio
+    name: Taglio Romano
+    prompt: |
+      Pizza al taglio — vendida por corte, por peso. Señalas, ellos cortan. El rectángulo, el precio por kilo. La transacción es diferente. ¿Qué significa comprar por peso?
+    follow_ups:
+      - ¿Cómo moldea el taglio la experiencia?
+      - ¿Qué significaría una pizza entera aquí?
+      - ¿Cuál es la relación entre el corte y la elección?
+  - id: piz_hot_honey
+    name: Miel Picante
+    prompt: |
+      Miel picante en la pizza — nueva tradición, ahora en todas partes. Dulce, picante, viscosa. Es un acabado. Observa cuándo se añade. ¿Qué hace la miel al queso?
+    follow_ups:
+      - ¿Qué sería la porción sin ella?
+      - ¿Cómo moldea el dulce-picante el bocado?
+      - ¿Cuál es la relación entre tendencia y tradición?
+  - id: piz_pecorino_grate
+    name: Rallado de Pecorino
+    prompt: |
+      Pecorino rallado sobre la pizza — salado, fuerte. Es una capa. El queso de encima es diferente del queso que se fundió. Considera la jerarquía. ¿Qué añade el rallado?
+    follow_ups:
+      - ¿Qué sería la pizza sin pecorino?
+      - ¿Cómo moldea el segundo queso el plato?
+      - ¿Cuál es la relación entre la fundición y el rallado?
+  - id: piz_paddle_slide
+    name: Deslizamiento de Paleta
+    prompt: |
+      La pala — de madera o metal. La masa se desliza sobre ella, luego al horno. El movimiento es practicado. Obsérvalo. ¿Qué saldría mal sin la habilidad?
+    follow_ups:
+      - ¿Cómo permite la pala el horneado?
+      - ¿Cuál es la relación entre herramienta y resultado?
+      - ¿Qué significaría una pizza caída?
+  - id: piz_sourdough_crust
+    name: Corteza de Masa Madre
+    prompt: |
+      Corteza de pizza de masa madre — fermentación larga, acidez. La corteza tiene personalidad. No es neutra. Considera qué añade la masa madre. ¿Qué haría la levadura comercial de diferente?
+    follow_ups:
+      - ¿Cómo moldea la masa madre el bocado?
+      - ¿Cuál es la relación entre fermentación y sabor?
+      - ¿Qué significaría una corteza más insípida?
+  - id: piz_white_pie
+    name: Pizza Blanca
+    prompt: |
+      Pizza blanca — sin tomate. Aceite de oliva, queso, quizás ajo. La ausencia de rojo lo cambia todo. El paladar espera tomate. ¿Qué ofrece la pizza blanca en su lugar?
+    follow_ups:
+      - ¿Qué sería la pizza con tomate?
+      - ¿Cómo moldea la ausencia la expectativa?
+      - ¿Cuál es la relación entre rojo y blanco?
+  - id: piz_bar_setting
+    name: Ambiente de Barra
+    prompt: |
+      Pizza en la barra — comes donde pides. La barra es un escenario. Observas el horno, las porciones. El ambiente es informal, inmediato. ¿Qué añade comer en la barra?
+    follow_ups:
+      - ¿Qué cambiaría una mesa?
+      - ¿Cómo moldea la proximidad la experiencia?
+      - ¿Cuál es la relación entre la barra y la cocina?
+  - id: piz_truffle_trend
+    name: Tendencia de Trufa
+    prompt: |
+      La trufa en la pizza — aceite o virutas — se ha convertido en un símbolo de lujo. El aroma domina. Considera la tendencia. ¿Qué añade la trufa? ¿Qué enmascara?
+    follow_ups:
+      - ¿Qué sería la pizza sin trufa?
+      - ¿Cómo moldea el lujo el bocado?
+      - ¿Cuál es la relación entre tendencia y sabor?
+  - id: piz_ricotta_dollop
+    name: Bolita de Ricotta
+    prompt: |
+      Ricotta en bolitas sobre la pizza — fría, cremosa, contrastante. No se derrite como la mozzarella. Se queda encima. Observa la diferencia de temperatura. ¿Qué añade la bolita?
+    follow_ups:
+      - ¿Qué sería la porción sin ricotta?
+      - ¿Cómo moldea lo frío lo caliente?
+      - ¿Cuál es la relación entre la bolita y la fundición?
+  - id: piz_slice_count
+    name: Número de Porciones
+    prompt: |
+      ¿Cuántas porciones? El número suele ser ocho — o seis para una pizza más pequeña. El número determina la porción, el compartir. Considera las matemáticas. ¿Qué significarían cuatro porciones? ¿Doce?
+    follow_ups:
+      - ¿Cómo moldea el número de porciones la comida?
+      - ¿Cuál es la relación entre el corte y el compartir?
+      - ¿Cuándo importa el número?
+  - id: piz_oven_window
+    name: Ventana del Horno
+    prompt: |
+      El horno tiene una ventana — o no. Ver la pizza hornear es teatro. El queso burbujea. La corteza sube. ¿Qué sería la experiencia sin la vista?
+    follow_ups:
+      - ¿Cómo moldea la observación la anticipación?
+      - ¿Cuál es la relación entre lo visible y lo oculto?
+      - ¿Qué aprendes de la ventana?
+  - id: piz_ranch_dip
+    name: Salsa Ranch
+    prompt: |
+      Ranch con pizza — tradición americana, a menudo con la corteza. La salsa es opcional, controvertida. Considera la adición. ¿Qué añade el ranch? ¿Qué anula?
+    follow_ups:
+      - ¿Qué sería la corteza sin ranch?
+      - ¿Cómo moldea la salsa el bocado?
+      - ¿Cuál es la relación entre el purista y el práctico?
+  - id: piz_capers_brine
+    name: Salmuera de Alcaparras
+    prompt: |
+      Alcaparras en la pizza — salobres, ácidas. Cortan la riqueza. La alcaparra viajó — mediterránea, encurtida. Observa cuándo aparecen. ¿Qué añade la salmuera?
+    follow_ups:
+      - ¿Qué sería la porción sin alcaparras?
+      - ¿Cómo moldea la salmuera el paladar?
+      - ¿Cuál es la relación entre lo encurtido y lo fresco?
+  - id: piz_calzone_seam
+    name: Costura del Calzone
+    prompt: |
+      Calzone — pizza doblada, sellada. La costura contiene el relleno. La forma es diferente. Lo cortas para abrirlo. Escapa el vapor. ¿Qué añade el doblez? ¿Qué esconde?
+    follow_ups:
+      - ¿Qué sería el calzone desdoblado?
+      - ¿Cómo crea la costura la sorpresa?
+      - ¿Cuál es la relación entre lo abierto y lo cerrado?
+  - id: piz_mushroom_water
+    name: Agua de Champiñones
+    prompt: |
+      Los champiñones en la pizza liberan agua al cocinarse. Un buen cocinero sabe pre-cocinarlos o usar variedades secas. Los champiñones húmedos hacen la pizza blanda. Considera la química. ¿Qué hace la humedad?
+    follow_ups:
+      - ¿Cómo moldea la preparación de champiñones la porción?
+      - ¿Cuál es la relación entre lo húmedo y lo crujiente?
+      - ¿Qué harían los champiñones crudos?
+  - id: piz_grease_absorb
+    name: Absorción de Grasa
+    prompt: |
+      Una servilleta sobre la porción — algunos secan la grasa. La grasa es de los quesos, del pepperoni. ¿Secar o no? Considera la elección. ¿Qué contribuye la grasa? ¿Qué elimina el secado?
+    follow_ups:
+      - ¿Cómo moldea la grasa la experiencia?
+      - ¿Qué significaría una porción seca?
+      - ¿Cuál es la relación entre grasa y sabor?
+  - id: piz_oven_spring
+    name: Expansión en Horno
+    prompt: |
+      Expansión en horno — la masa se infla con el calor alto. La levadura trabaja rápido. La estructura se fija. Considera el momento. ¿Qué sucedería sin suficiente calor? ¿Sin la harina correcta?
+    follow_ups:
+      - ¿Cómo crea la expansión la miga?
+      - ¿Cuál es la relación entre el calor y el levado?
+      - ¿Qué significaría una corteza plana?
+  - id: piz_roma_tomato
+    name: Tomate Roma
+    prompt: |
+      San Marzano o Roma — los tomates importan. Son de un lugar. Campania. La DOP, el terroir. Rastrea el tomate. ¿Qué viaje hizo hasta tu porción?
+    follow_ups:
+      - ¿Qué haría otro tomate?
+      - ¿Cómo moldea el origen la salsa?
+      - ¿Cuál es la relación entre el lugar y el sabor?
+  - id: piz_pizza_napoli
+    name: Pizza Nápoles
+    prompt: |
+      Nápoles la inventó. La ciudad y la comida están ligadas. Comer pizza en Nápoles es comerla en la fuente. Considera la arqueología. ¿Qué significaría la misma pizza en otro lugar?
+    follow_ups:
+      - ¿Cómo moldea el lugar la experiencia?
+      - ¿Qué perdería la traducción?
+      - ¿Cuál es la relación entre origen y autenticidad?
+  - id: piz_wine_pair
+    name: Maridaje de Vino
+    prompt: |
+      Pizza y vino — la cerveza es común, pero el vino funciona. Tinto, a menudo. La acidez del vino se encuentra con la acidez del tomate. Considera el maridaje. ¿Qué añade el vino a la porción?
+    follow_ups:
+      - ¿Qué haría la cerveza de diferente?
+      - ¿Cómo moldea la bebida la comida?
+      - ¿Cuál es la relación entre la copa y el plato?
+  - id: piz_pizza_party
+    name: Fiesta de Pizza
+    prompt: |
+      Pizza para una multitud — cumpleaños, noche de juegos, almuerzo de oficina. La pizza es social. Las cajas se apilan. Todos cogen una porción. Considera la coreografía. ¿Cómo cambia la multitud la comida?
+    follow_ups:
+      - ¿Qué significaría una pizza en solitario?
+      - ¿Cómo moldea el compartir la experiencia?
+      - ¿Cuál es la relación entre la pizza y la reunión?

@@ -59,3 +59,127 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for step-by-step instructions.
 2. Create MongoDB Atlas cluster and get connection string
 3. In Vercel: Import repo → Add env vars → Deploy
 4. Configure Clerk with production URLs
+
+## Perspective Deck Translation Workflow
+
+Use this workflow whenever you add or update translated perspective decks.
+
+### Translate decks
+
+Translate all non-English languages:
+
+```bash
+npm run translate-perspective-decks
+```
+
+Translate one language only:
+
+```bash
+npm run translate-perspective-decks -- --lang=bn
+```
+
+Skip files that already exist:
+
+```bash
+npm run translate-perspective-decks -- --skip-existing
+```
+
+### Verify YAML integrity (all languages)
+
+Run:
+
+```bash
+npm run verify-perspective-decks
+```
+
+This checks every `perspective-decks/**/*.yaml` file for:
+- YAML parse validity
+- Required deck fields (`id`, `name`, `domain`, non-empty `cards`)
+- Required card fields (`id`, `name`, `prompt`, non-empty `follow_ups`)
+- `follow_ups` entries are non-empty strings
+- `perspective-decks-index.yaml` has a non-empty `decks` array
+
+### Adding a new language
+
+1. Add the language to `LANGUAGES` in `scripts/translate-perspective-decks.mjs` (code + display name).
+2. Generate translations:
+   - `npm run translate-perspective-decks -- --lang=<new-code>`
+3. Run verification:
+   - `npm run verify-perspective-decks`
+4. Fix any reported YAML issues (most common: malformed list items or unquoted `:` in follow-up text).
+5. Re-run verification until it reports no issues.
+
+## Mental Models Translation Workflow
+
+Use this workflow whenever you add or update translated mental models.
+
+### Translate mental models
+
+Translate all non-English consolidated files:
+
+```bash
+npm run translate-mental-models
+```
+
+Translate one language only:
+
+```bash
+npm run translate-mental-models -- --lang=es
+```
+
+Skip files that already exist:
+
+```bash
+npm run translate-mental-models -- --skip-existing
+```
+
+### Verify mental model YAML integrity
+
+Run validation for all consolidated language files:
+
+```bash
+npm run verify-mental-models
+```
+
+Validate one language file only:
+
+```bash
+npm run verify-mental-models -- --lang=es
+```
+
+This checks each `mental-models/mental-models-<lang>.yaml` file for:
+- YAML parse validity
+- Presence of `mental_models` array
+- Required fields per model:
+  - `id`, `name`, `quick_introduction`, `in_more_detail`, `why_this_is_important`
+  - `when_to_use`, `how_can_you_spot_it`, `examples`
+  - `real_world_implications`, `professional_application`, `how_can_this_be_misapplied`
+  - `related_content`
+- Field type checks (arrays/objects/strings as expected)
+- ID format (`snake_case` style, `[a-z0-9_]+`)
+- Duplicate IDs within a file
+- `related_content` IDs reference models that exist in the same file
+
+### Adding a new mental-model language
+
+1. Add the language to `LANGUAGES` in `scripts/translate-mental-models.mjs` (code + display name).
+2. Generate translation:
+   - `npm run translate-mental-models -- --lang=<new-code>`
+3. Validate:
+   - `npm run verify-mental-models -- --lang=<new-code>`
+4. Fix any issues reported by the verifier.
+5. Re-run until validation passes with no issues.
+
+### If you still have per-model folders
+
+If your source is still split by model (`mental-models-<lang>/...`), consolidate first:
+
+```bash
+node scripts/consolidate-mental-models.mjs --lang=<code>
+```
+
+Then run:
+
+```bash
+npm run verify-mental-models -- --lang=<code>
+```

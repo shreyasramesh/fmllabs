@@ -1,0 +1,512 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosme Naturel — Roches et Pierres (French)
+
+id: natural_microcosm_rocks_stones
+name: Microcosme Naturel — Roches et Pierres
+description: 50 cartes pour changer votre regard sur les roches et les pierres — du temps géologique et du lichen à l'altération, à l'érosion et à la vie au ralenti du minéral.
+domain: natural_microcosm
+cards:
+  - id: nmr_lichen_map
+    name: Carte de Lichen
+    prompt: |
+      Le lichen pousse sur la roche — lent, patient. Orange, gris, vert. Ce n'est pas un seul
+      organisme mais deux : un champignon et une algue. Considérez le partenariat. Qu'offre la
+      roche ? Qu'apporte le lichen en retour ?
+    follow_ups:
+      - À quoi ressemblerait la roche sans lichen ?
+      - Comment le lichen marque-t-il le temps ?
+      - Quelle est la relation entre le lichen et l'altération ?
+  - id: nmr_pebble_smooth
+    name: Galet Lisse
+    prompt: |
+      Un galet de rivière est lisse — l'eau et le sable l'ont usé. Tenez-en un. Combien d'années
+      a-t-il fallu ? La douceur est le témoignage d'un voyage. Que signifierait un bord
+      tranchant ?
+    follow_ups:
+      - Comment la douceur révèle-t-elle l'histoire ?
+      - Que serait le galet sans l'eau ?
+      - Quelle est la relation entre la forme et le flux ?
+  - id: nmr_crack_frost
+    name: Fissure de Givre
+    prompt: |
+      L'eau gèle dans une fissure, elle se dilate. La roche se fend. C'est une violence lente.
+      Trouvez une roche avec une fissure. Considérez les cycles de gel et de dégel
+      qui l'ont formée.
+    follow_ups:
+      - Que serait la roche sans la fissure ?
+      - Comment le gel façonne-t-il le paysage ?
+      - Quelle est la relation entre l'eau et la fracture ?
+  - id: nmr_stone_warmth
+    name: Chaleur de la Pierre
+    prompt: |
+      Une roche réchauffée par le soleil conserve la chaleur. Asseyez-vous sur une au crépuscule. La pierre rend ce qu'elle a absorbé. Considérez l'échange. Que serait la roche sans le
+      soleil ?
+    follow_ups:
+      - Comment la pierre crée-t-elle un microclimat ?
+      - Quelles créatures utilisent cette chaleur ?
+      - Quelle est la relation entre la roche et la chaleur ?
+  - id: nmr_moss_crust
+    name: Croûte de Mousse
+    prompt: |
+      La mousse pousse sur la pierre — une fine croûte. Elle retient l'humidité, piège la poussière. La
+      roche devient un substrat. Quand la roche devient-elle sol ? Où est la limite ?
+    follow_ups:
+      - Que serait la pierre sans la mousse ?
+      - Comment la croûte accélère-t-elle le changement ?
+      - Quelle est la relation entre le minéral et l'organique ?
+  - id: nmr_vein_quartz
+    name: Veine de Quartz
+    prompt: |
+      Une veine de quartz traverse la roche — une ligne de minéral différent. Elle marque une
+      fracture, un remplissage. Suivez la ligne. Quelles forces l'ont formée ? Que révèle la
+      veine ?
+    follow_ups:
+      - Que serait la roche sans la veine ?
+      - Comment la veine marque-t-elle le temps profond ?
+      - Quelle est la relation entre la fracture et la beauté ?
+  - id: nmr_puddle_reflect
+    name: Flaque dans la Pierre
+    prompt: |
+      Une dépression dans la roche retient l'eau après la pluie. C'est une petite mare — une coupe. Qu'y a-t-il de réfléchi ? Qu'est-ce qui s'évapore ? La pierre a fait un récipient.
+    follow_ups:
+      - Que serait la roche sans la dépression ?
+      - Comment la flaque crée-t-elle un habitat ?
+      - Quelle est la relation entre le creux et le temps ?
+  - id: nmr_sand_grain
+    name: Grain de Sable
+    prompt: |
+      Le sable est de la roche brisée en petits morceaux. Tenez une poignée. Chaque grain faisait autrefois partie de quelque chose de plus grand. Considérez l'échelle. Combien de grains dans une montagne ?
+    follow_ups:
+      - Que serait la plage sans les grains ?
+      - Comment la taille des grains raconte-t-elle une histoire ?
+      - Quelle est la relation entre le tout et le fragment ?
+  - id: nmr_stone_circle
+    name: Cercle de Pierres
+    prompt: |
+      Des roches disposées à la main ou par le glacier — un cercle, un cairn, un mur. Quelqu'un
+      ou quelque chose les a placées. Considérez l'intention. Que signifie l'arrangement ?
+    follow_ups:
+      - Que serait l'espace sans les pierres ?
+      - Comment l'arrangement crée-t-il du sens ?
+      - Quelle est la relation entre la roche et le rituel ?
+  - id: nmr_erosion_edge
+    name: Bord d'Érosion
+    prompt: |
+      Le vent et l'eau sculptent la roche. Trouvez un bord — une falaise, un rocher. La forme
+      est le résultat de la suppression. Qu'y avait-il avant ? Que restera-t-il ?
+    follow_ups:
+      - Que serait le paysage sans l'érosion ?
+      - Comment le bord marque-t-il le temps ?
+      - Quelle est la relation entre la perte et la forme ?
+  - id: nmr_color_streak
+    name: Traînée de Couleur
+    prompt: |
+      La roche n'est pas uniforme — le fer tache en rouge, le manganèse en noir, le cuivre en vert.
+      Suivez une traînée. La couleur est de la chimie. Que révèle-t-elle de l'histoire de la
+      roche ?
+    follow_ups:
+      - Que serait la roche sans la couleur ?
+      - Comment la minéralogie façonne-t-elle la palette ?
+      - Quelle est la relation entre l'élément et la teinte ?
+  - id: nmr_scratch_glacier
+    name: Griffe de Glacier
+    prompt: |
+      Des stries glaciaires — des rayures sur le socle rocheux — marquent où la glace a traîné des roches
+      sur la pierre. Les lignes sont parallèles. Considérez la force. Qu'est-ce qui a bougé ?
+      Qu'est-ce qui est resté immobile ?
+    follow_ups:
+      - Que montrerait la roche sans les rayures ?
+      - Comment la rayure marque-t-elle la direction ?
+      - Quelle est la relation entre la glace et la pierre ?
+  - id: nmr_cobble_pattern
+    name: Motif de Galets
+    prompt: |
+      Une plage ou un lit de rivière de galets — taille similaire, forme variée. L'eau les a
+      triés. Considérez le motif. Que vous dit le tri ?
+    follow_ups:
+      - Que serait la plage sans le tri ?
+      - Comment le flux façonne-t-il le motif ?
+      - Quelle est la relation entre la taille et le transport ?
+  - id: nmr_cavern_drip
+    name: Goutte de Grotte
+    prompt: |
+      Les stalactites se forment goutte à goutte — dépôts minéraux de l'eau suintante. La
+      croissance est imperceptible. Considérez l'échelle de temps. Que montrerait un film accéléré ?
+    follow_ups:
+      - Que serait la grotte sans la goutte ?
+      - Comment la goutte enregistre-t-elle le climat ?
+      - Quelle est la relation entre l'eau et la pierre ?
+  - id: nmr_boulder_shadow
+    name: Ombre du Rocher
+    prompt: |
+      Un gros rocher projette une ombre. Le sol en dessous est différent — plus frais, plus humide, moins de soleil. Le rocher crée un microclimat. Qui vit dans l'ombre ?
+    follow_ups:
+      - Que serait la pente sans le rocher ?
+      - Comment l'ombre façonne-t-elle la vie ?
+      - Quelle est la relation entre la roche et le refuge ?
+  - id: nmr_fossil_impression
+    name: Impression Fossile
+    prompt: |
+      Un fossile est une vie transformée en pierre — ou une empreinte laissée dans le sédiment.
+      Trouvez-en un si vous le pouvez. La roche garde la mémoire. Quelle créature a laissé ceci ?
+      Quand ?
+    follow_ups:
+      - Que serait la roche sans le fossile ?
+      - Comment l'impression préserve-t-elle ?
+      - Quelle est la relation entre la vie et le minéral ?
+  - id: nmr_grit_texture
+    name: Texture Granuleuse
+    prompt: |
+      Passez votre main sur la roche. Le grès a une texture différente du granit, l'ardoise
+      du basalte. La texture est minérale, grain, structure. Que vous dit le toucher ?
+    follow_ups:
+      - Que serait la roche sans sa texture ?
+      - Comment la texture révèle-t-elle l'origine ?
+      - Quelle est la relation entre le toucher et la composition ?
+  - id: nmr_talus_slope
+    name: Pente de Talus
+    prompt: |
+      Un talus — roches brisées au pied d'une falaise. La gravité et les intempéries les font descendre. La pente est un tas d'après. Combien de temps a-t-il fallu pour qu'il s'accumule ?
+    follow_ups:
+      - Que serait le pied de la falaise sans le talus ?
+      - Comment la pente marque-t-elle l'érosion ?
+      - Quelle est la relation entre la chute et le tas ?
+  - id: nmr_soil_horizon
+    name: Horizon de Sol
+    prompt: |
+      Creusez prudemment. Le sol a des couches — organique dessus, minéral en dessous, parfois
+      des bandes distinctes. L'horizon est une histoire. Qu'est-ce qui a créé chaque couche ?
+    follow_ups:
+      - Que serait le sol sans les horizons ?
+      - Comment l'horizon enregistre-t-il le temps ?
+      - Quelle est la relation entre la roche et le sol ?
+  - id: nmr_drystone_wall
+    name: Mur de Pierre Sèche
+    prompt: |
+      Un mur de pierre sèche — pierres ajustées sans mortier. Le mur tient par gravité
+      et par ajustement. Considérez l'artisanat. Comment chaque pierre soutient-elle la suivante ?
+    follow_ups:
+      - Que serait le champ sans le mur ?
+      - Comment le mur marque-t-il le territoire ?
+      - Quelle est la relation entre la roche et la limite ?
+  - id: nmr_tide_pool_rock
+    name: Roche de Flache de Marée
+    prompt: |
+      Les roches dans une flaque de marée sont mouillées, séchées, remouillées. Des créatures s'y accrochent.
+      La roche est un habitat. Considérez le rythme de la marée. Qu'expérimente la roche ?
+    follow_ups:
+      - Que serait la flaque sans la roche ?
+      - Comment la roche crée-t-elle une surface ?
+      - Quelle est la relation entre la roche et la marée ?
+  - id: nmr_crystal_face
+    name: Face Cristalline
+    prompt: |
+      Certaines roches présentent des faces cristallines — plans de clivage, forme géométrique. Le
+      cristal a poussé dans une cavité, lentement. Considérez la géométrie. Quelles forces l'ont
+      façonné ?
+    follow_ups:
+      - Que serait la roche sans le cristal ?
+      - Comment la face révèle-t-elle la structure ?
+      - Quelle est la relation entre l'ordre et le minéral ?
+  - id: nmr_dust_coating
+    name: Couche de Poussière
+    prompt: |
+      La roche accumule la poussière — pollen, suie, minéral. Avec le temps, elle s'obscurcit. La
+      couche est une accumulation. À quoi ressemblerait la roche si elle était lavée ? Comment
+      la couche la modifie-t-elle ?
+    follow_ups:
+      - Que serait la roche sans la couche ?
+      - Comment la poussière marque-t-elle l'environnement ?
+      - Quelle est la relation entre la surface et l'accumulation ?
+  - id: nmr_river_sculpt
+    name: Sculpture Fluviale
+    prompt: |
+      Une rivière sculpte son lit — marmites de géant, bassins, rapides. La roche est façonnée
+      par l'eau et les sédiments. Trouvez un tronçon. Lisez la sculpture. Que révèle la
+      forme ?
+    follow_ups:
+      - Que serait le lit de la rivière sans la sculpture ?
+      - Comment le flux façonne-t-il la roche ?
+      - Quelle est la relation entre l'eau et la forme ?
+  - id: nmr_shard_edge
+    name: Tranche d'Éclat
+    prompt: |
+      Un éclat de silex, un morceau de chert — tranchant, travaillé ou naturel. Quelqu'un aurait pu l'utiliser. L'arête est fonctionnelle. Considérez la fracture. Comment a-t-elle été faite ?
+    follow_ups:
+      - Que serait l'éclat sans sa tranche ?
+      - Comment la fracture crée-t-elle de l'utilité ?
+      - Quelle est la relation entre la cassure et l'outil ?
+  - id: nmr_gravel_path
+    name: Chemin de Gravier
+    prompt: |
+      Un chemin de gravier — roche concassée sous le pied. Le craquement, le tassement. Le chemin
+      est un choix humain. Pourquoi cette surface ? Que fait le gravier que la terre ne ferait pas ?
+    follow_ups:
+      - Que serait le chemin sans le gravier ?
+      - Comment le chemin façonne-t-il le mouvement ?
+      - Quelle est la relation entre la roche et la marche ?
+  - id: nmr_bedrock_exposure
+    name: Affleurement de Socle Rocheux
+    prompt: |
+      Là où le sol a été arraché — érosion, construction — le socle rocheux apparaît. Les fondations sont visibles. Considérez ce qui cache habituellement. Que révèle l'affleurement ?
+    follow_ups:
+      - Que serait le paysage sans l'affleurement ?
+      - Comment le socle rocheux façonne-t-il la surface ?
+      - Quelle est la relation entre le caché et le révélé ?
+  - id: nmr_wind_polish
+    name: Poli par le Vent
+    prompt: |
+      Les roches désertiques sont polies par le vent — lisses, facettées. Le sable sablage la surface.
+      Le poli est abrasif. Considérez le vent. Combien de temps cela a-t-il pris ?
+    follow_ups:
+      - Que serait la roche sans le poli ?
+      - Comment le vent façonne-t-il la pierre ?
+      - Quelle est la relation entre la particule et la surface ?
+  - id: nmr_hot_cold_crack
+    name: Fissure Chaud-Froid
+    prompt: |
+      La roche se dilate à la chaleur, se contracte au froid. Les cycles répétés provoquent des contraintes, des microfissures. Trouvez une fissure. Considérez les variations de température qui l'ont
+      créée.
+    follow_ups:
+      - Que serait la roche sans la fissure ?
+      - Comment le cycle thermique façonne-t-il le paysage ?
+      - Quelle est la relation entre la température et la fracture ?
+  - id: nmr_constellation_stone
+    name: Pierre Constellation
+    prompt: |
+      Une roche avec des paillettes — mica, feldspath — qui attrapent la lumière. La surface
+      scintille. Considérez la minéralogie. Qu'est-ce qui a créé l'étincelle ?
+    follow_ups:
+      - Que serait la roche sans les paillettes ?
+      - Comment la lumière révèle-t-elle la structure ?
+      - Quelle est la relation entre le minéral et la réflexion ?
+  - id: nmr_stepping_stone
+    name: Pierre de Gué
+    prompt: |
+      Des roches placées dans un ruisseau ou de la boue — pierres de gué. Le placement est
+      délibéré. Considérez le chemin. Que demande chaque pas ? Qu'offre la pierre ?
+    follow_ups:
+      - Que serait la traversée sans les pierres ?
+      - Comment la pierre crée-t-elle l'accès ?
+      - Quelle est la relation entre la roche et le passage ?
+  - id: nmr_moss_island
+    name: Île de Mousse
+    prompt: |
+      Une roche dans un ruisseau — la mousse pousse dessus. La roche est une île. L'eau coule
+      autour. Considérez l'isolement. Qu'atteint la mousse ? Qu'est-ce qui ne l'atteint pas ?
+    follow_ups:
+      - Que serait le ruisseau sans l'île ?
+      - Comment la roche crée-t-elle un refuge ?
+      - Quelle est la relation entre la roche et le courant ?
+  - id: nmr_weight_sunken
+    name: Poids Enfoncé
+    prompt: |
+      Une roche lourde s'enfonce dans le sol avec le temps. La dépression se forme autour d'elle.
+      Considérez la gravité. Que fait l'enfoncement au sol ? À la roche ?
+    follow_ups:
+      - Que serait le sol sans la roche ?
+      - Comment le poids façonne-t-il la surface ?
+      - Quelle est la relation entre la masse et la dépression ?
+  - id: nmr_layer_sediment
+    name: Couche de Sédiment
+    prompt: |
+      La roche sédimentaire montre des couches — plans de stratification. Chaque couche était autrefois de la boue,
+      du sable, des coquillages. La roche est du temps compressé. Considérez une seule couche.
+      Qu'était-elle avant ?
+    follow_ups:
+      - Que serait la roche sans les couches ?
+      - Comment la couche enregistre-t-elle l'environnement ?
+      - Quelle est la relation entre le sédiment et la pierre ?
+  - id: nmr_sunrise_heat
+    name: Chaleur du Lever du Soleil
+    prompt: |
+      Une roche plate fait face à l'est. Au lever du soleil, elle se réchauffe en premier. Considérez
+      l'orientation. Qu'est-ce que l'angle par rapport au soleil détermine ? Qui bénéficie de
+      la chaleur précoce ?
+    follow_ups:
+      - Que serait la roche sans l'orientation ?
+      - Comment l'aspect façonne-t-il la température ?
+      - Quelle est la relation entre l'angle et la chaleur ?
+  - id: nmr_rain_rinse
+    name: Rinçage par la Pluie
+    prompt: |
+      La pluie frappe la roche, ruisselle. L'eau emporte ce qu'elle dissout, ce qu'elle suspend. Le rinçage est continu. Que perd la roche ? Qu'est-ce que l'eau gagne ?
+    follow_ups:
+      - Que serait la roche sans la pluie ?
+      - Comment le ruissellement façonne-t-il la roche ?
+      - Quelle est la relation entre l'eau et la dissolution ?
+  - id: nmr_ice_wedge
+    name: Coin de Glace
+    prompt: |
+      L'eau gèle dans une fissure, l'élargit. Le coin de glace brise les roches.
+      Trouvez des preuves si vous le pouvez. Considérez la force. Que deviendra la fissure ?
+    follow_ups:
+      - Que serait la roche sans la glace ?
+      - Comment le coin se propage-t-il ?
+      - Quelle est la relation entre le gel et la fracture ?
+  - id: nmr_resting_place
+    name: Lieu de Repos
+    prompt: |
+      Une roche plate — un siège, une table, une scène. Nous utilisons les roches pour nous reposer, travailler, marquer. Considérez la roche sur laquelle vous pourriez vous asseoir. Qu'a-t-elle supporté ? Que
+      tiendra-t-elle ?
+    follow_ups:
+      - Que serait l'espace sans la roche ?
+      - Comment la roche invite-t-elle à l'utilisation ?
+      - Quelle est la relation entre le minéral et l'humain ?
+  - id: nmr_boundary_marker
+    name: Marqueur de Limite
+    prompt: |
+      Les roches marquent les limites — limites de propriété, tombes, sentiers. Le placement est
+      délibéré. Considérez une pierre de borne. Qu'est-ce qu'elle sépare ? Qu'est-ce qu'elle
+      connecte ?
+    follow_ups:
+      - Que serait la limite sans la pierre ?
+      - Comment la roche encode-t-elle du sens ?
+      - Quelle est la relation entre le marqueur et le territoire ?
+  - id: nmr_exfoliation_sheet
+    name: Écaille d'Exfoliation
+    prompt: |
+      Certaines roches s'exfolient — des couches se décollent comme un oignon. Libération de pression, cycles thermiques. Trouvez un rocher en voie d'exfoliation. Considérez la courbe. Quelles forces l'ont
+      créée ?
+    follow_ups:
+      - Que serait la roche sans les écailles ?
+      - Comment l'exfoliation façonne-t-elle la surface ?
+      - Quelle est la relation entre la pression et le décollement ?
+  - id: nmr_compass_orientation
+    name: Orientation de la Boussole
+    prompt: |
+      Les roches peuvent s'aligner — par le glacier, par la rivière, par la main humaine. L'orientation
+      raconte une histoire. Trouvez des pierres alignées. Vers quoi pointent-elles ? À quoi résistent-elles ?
+    follow_ups:
+      - Que signifierait l'alignement ?
+      - Comment l'orientation enregistre-t-elle la force ?
+      - Quelle est la relation entre la direction et la pierre ?
+  - id: nmr_echo_sound
+    name: Pierre à Écho
+    prompt: |
+      Une paroi rocheuse réfléchit le son. Tapez dans vos mains. Écoutez l'écho. La roche renvoie ce que vous envoyez. Considérez la surface. Qu'est-ce qu'elle réfléchit ? Qu'est-ce qu'elle
+      absorbe ?
+    follow_ups:
+      - Que serait l'espace sans l'écho ?
+      - Comment la surface façonne-t-elle le son ?
+      - Quelle est la relation entre la roche et la voix ?
+  - id: nmr_anchor_hold
+    name: Ancrage
+    prompt: |
+      Une roche ancre — une racine d'arbre s'y enroule, un câble y est attaché. La roche tient.
+      Considérez la prise. Qu'est-ce que la roche résiste ? Qu'est-ce qu'elle permet ?
+    follow_ups:
+      - Que serait l'ancre sans la roche ?
+      - Comment la roche crée-t-elle de la stabilité ?
+      - Quelle est la relation entre la tenue et la masse ?
+  - id: nmr_patina_age
+    name: Patine de l'Âge
+    prompt: |
+      La vieille roche développe une patine — croûte d'altération, oxydation, salissure. La
+      surface change. La patine est le temps rendu visible. À quoi ressemblerait la roche
+      quand elle était neuve ?
+    follow_ups:
+      - Que serait la roche sans la patine ?
+      - Comment la patine protège-t-elle ou affaiblit-elle ?
+      - Quelle est la relation entre la surface et l'âge ?
+  - id: nmr_slow_narrative
+    name: Récit Lent
+    prompt: |
+      Une roche raconte une histoire lente — formation, transport, altération. La chronologie
+      est géologique. Asseyez-vous avec une roche. Considérez son passé. Quel sera son futur ?
+    follow_ups:
+      - Que perdrions-nous si nous ne pouvions pas lire l'histoire ?
+      - Comment la roche se connecte-t-elle au temps profond ?
+      - Quelle est la relation entre la roche et la mémoire ?
+  - id: nmr_cairn_stack
+    name: Empilement de Cairn
+    prompt: |
+      Un cairn — pierres empilées à la main. Chaque pierre est en équilibre. L'empilement est
+      délibéré, temporaire. Qui l'a construit ? Qu'est-ce qu'il marque ?
+    follow_ups:
+      - Que serait l'endroit sans le cairn ?
+      - Comment l'empilement crée-t-il du sens ?
+      - Quelle est la relation entre l'humain et la pierre ?
+  - id: nmr_shadow_cast
+    name: Ombre Projetée
+    prompt: |
+      Une roche projette une ombre. L'ombre se déplace avec le soleil. Asseyez-vous avec elle pendant une heure. Considérez l'horloge de pierre et de lumière.
+    follow_ups:
+      - Que serait la roche sans l'ombre ?
+      - Comment l'ombre crée-t-elle un habitat ?
+      - Quelle est la relation entre la roche et le temps ?
+  - id: nmr_scree_slope
+    name: Pente d'Éboulis
+    prompt: |
+      Éboulis — roches meubles au pied d'une falaise. Chaque morceau est tombé. La pente est
+      une accumulation. Marchez dessus. Sentez l'instabilité. Qu'est-ce qui la retient ? Qu'est-ce
+      qui va la libérer ?
+    follow_ups:
+      - Que serait la pente sans la chute ?
+      - Comment les éboulis façonnent-ils la vallée ?
+      - Quelle est la relation entre la falaise et le sol ?
+  - id: nmr_fossil_imprint
+    name: Empreinte Fossile
+    prompt: |
+      Un fossile dans la roche — coquillage, feuille, os. L'empreinte est un témoignage. L'organisme
+      a disparu ; la pierre garde sa forme. Considérez la préservation.
+    follow_ups:
+      - Que saurions-nous sans le fossile ?
+      - Comment l'empreinte fait-elle le pont entre les temps ?
+      - Quelle est la relation entre la vie et le minéral ?
+  - id: nmr_dry_stone_wall
+    name: Mur de Pierre Sèche
+    prompt: |
+      Un mur de pierre sèche — pas de mortier. Chaque pierre soutient la suivante par ajustement et
+      friction. Le mur est une collaboration. Suivez les joints. Que ferait une seule pierre lâche ?
+    follow_ups:
+      - Que serait la limite sans le mur ?
+      - Comment l'ajustement crée-t-il de la solidité ?
+      - Quelle est la relation entre la pierre et la structure ?
+  - id: nmr_cobble_rest
+    name: Repos des Galets
+    prompt: |
+      Les galets reposent là où l'eau les a laissés — une barre fluviale, une plage. L'arrangement
+      n'est pas aléatoire. La taille, la forme, la position racontent le flux. Que réarrangerait une crue ?
+    follow_ups:
+      - Comment le repos marque-t-il le dernier événement ?
+      - Que révéleraient les pierres sur l'eau ?
+      - Quelle est la relation entre le repos et la turbulence ?
+  - id: nmr_moon_dust
+    name: Poussière Lunaire
+    prompt: |
+      La roche se transforme en poussière — vent, eau, racines. Les particules les plus fines voyagent.
+      Considérez le voyage d'un seul grain. Où pourrait-il aboutir ?
+    follow_ups:
+      - Que serait le paysage sans poussière ?
+      - Comment la poussière crée-t-elle de nouveau sol ?
+      - Quelle est la relation entre la roche et l'air ?
+  - id: nmr_touch_stone
+    name: Toucher la Pierre
+    prompt: |
+      Touchez une roche. Froide, chaude, rugueuse, lisse. La roche ne répond pas — ou
+      répond-elle ? La chaleur se transfère. L'humidité se déplace. Considérez l'échange à la
+      frontière.
+    follow_ups:
+      - Comment la roche se sentirait-elle à un autre moment ?
+      - Comment le toucher change-t-il la roche ?
+      - Quelle est la relation entre la main et la pierre ?
+  - id: nmr_shadow_noon
+    name: Ombre à Midi
+    prompt: |
+      À midi, l'ombre d'une roche est minimale. À l'aube et au crépuscule, elle s'étire.
+      L'ombre est la portée de la roche. Considérez comment le soleil change ce que la roche
+      offre au monde.
+    follow_ups:
+      - Que la roche offrirait-elle sans ombre ?
+      - Comment l'ombre crée-t-elle un habitat ?
+      - Quelle est la relation entre la roche et la lumière ?
+  - id: nmr_stone_circle
+    name: Cercle de Pierres
+    prompt: |
+      Des pierres arrangées en cercle — par la main humaine ou par le glacier. Le cercle
+      encadre l'espace. Qu'y a-t-il à l'intérieur ? Qu'y a-t-il à l'extérieur ? Considérez la géométrie de la limite.
+    follow_ups:
+      - Que signifierait l'espace sans le cercle ?
+      - Comment l'arrangement crée-t-il du sens ?
+      - Quelle est la relation entre la forme et le rituel ?

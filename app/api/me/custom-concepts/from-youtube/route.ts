@@ -5,6 +5,7 @@ import { getLanguageName, isValidLanguageCode } from "@/lib/languages";
 import {
   getSavedTranscript,
   saveTranscript,
+  updateTranscriptExtractedConcepts,
 } from "@/lib/db";
 
 function extractVideoId(urlOrId: string): string | null {
@@ -40,6 +41,7 @@ export async function POST(request: Request) {
     let videoId: string;
     let videoTitle: string | null = null;
     let channel: string | null = null;
+    let savedTranscriptId: string | null = transcriptId;
 
     if (transcriptId) {
       const saved = await getSavedTranscript(transcriptId, userId);
@@ -111,7 +113,8 @@ export async function POST(request: Request) {
       videoTitle = transcriptData.title ?? null;
       channel = transcriptData.channel ?? null;
 
-      await saveTranscript(userId, videoId, transcriptText, videoTitle ?? undefined, channel ?? undefined);
+      const saved = await saveTranscript(userId, videoId, transcriptText, videoTitle ?? undefined, channel ?? undefined);
+      savedTranscriptId = saved._id;
     }
 
     const { groups } = await generateConceptsFromTranscript(
@@ -121,6 +124,10 @@ export async function POST(request: Request) {
       languageName,
       extractPrompt || undefined
     );
+
+    if (savedTranscriptId) {
+      await updateTranscriptExtractedConcepts(savedTranscriptId, userId, groups);
+    }
 
     return NextResponse.json({
       videoId,

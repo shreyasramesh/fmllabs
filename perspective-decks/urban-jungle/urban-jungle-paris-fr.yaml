@@ -1,0 +1,413 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Jungle Urbaine — Paris (French)
+
+id: urban_jungle_paris
+name: Jungle Urbaine — Paris
+description: 50 cartes pour changer votre regard sur Paris—de l'échelle et de la lumière aux couches d'histoire et aux rythmes de la vie de rue.
+domain: urban_jungle
+cards:
+  - id: paris_balcony_flower
+    name: Fleur de Balcon
+    prompt: |
+      Les balcons parisiens fleurissent de géraniums, de pétunias. Trouvez un immeuble où chaque balcon a une potée. Comment la fleur change-t-elle la façade ?
+    follow_ups:
+      - Que serait la rue sans les fleurs ?
+      - Comment les fleurs créent-elles une identité ?
+      - Quelle est la relation entre la fleur et l'habitant ?
+  - id: paris_haussmann_line
+    name: Ligne Haussmannienne
+    prompt: |
+      Les grands boulevards haussmanniens percent le vieux Paris. Parcourez-en un. La ligne est
+      implacable—immeubles alignés, hauteurs uniformes. Comment le boulevard façonne-t-il le mouvement ?
+    follow_ups:
+      - Que serait Paris sans Haussmann ?
+      - Comment le boulevard crée-t-il une perspective ?
+      - Quelle est la relation entre la ligne et le pouvoir ?
+  - id: paris_cafe_terrace
+    name: Terrasse de Café
+    prompt: |
+      Les terrasses de café parisiennes font face à la rue. Asseyez-vous à l'une d'elles. Vous êtes à la fois dedans et dehors. La terrasse est un seuil. Que voyez-vous ?
+    follow_ups:
+      - Que serait la rue sans la terrasse ?
+      - Comment la terrasse crée-t-elle la rencontre ?
+      - Quelle est la relation entre la terrasse et la rue ?
+  - id: paris_metro_entrance
+    name: Entrée de Métro
+    prompt: |
+      Les entrées de métro Art Nouveau sont des icônes. Trouvez-en une. La ferronnerie, la typographie—l'entrée est un portail. Que promet-elle ?
+    follow_ups:
+      - Que serait la rue sans l'entrée ?
+      - Comment l'entrée crée-t-elle une identité ?
+      - Quelle est la relation entre l'entrée et le souterrain ?
+  - id: paris_shutter
+    name: Volet Parisien
+    prompt: |
+      Les volets parisiens se ferment la nuit. Ils sont verts, gris, bleus. Trouvez une rue où les volets sont fermés. Qu'y a-t-il derrière ?
+    follow_ups:
+      - Que serait la façade sans les volets ?
+      - Comment les volets créent-ils de l'intimité ?
+      - Quelle est la relation entre le volet et la lumière ?
+  - id: paris_cobble
+    name: Pavé Parisien
+    prompt: |
+      Les pavés parisiens persistent. Marchez dessus. Sentez la texture. Le pavé est une relique d'un autre Paris. Comment façonne-t-il la rue ?
+    follow_ups:
+      - Que serait la rue sans les pavés ?
+      - Comment les pavés marquent-ils l'histoire ?
+      - Quelle est la relation entre le pavé et la révolution ?
+  - id: paris_seine_edge
+    name: Bord de Seine
+    prompt: |
+      La Seine traverse Paris. Allez sur les quais. La rivière est une couture. Qu'y a-t-il de chaque côté ? Comment la rivière divise-t-elle et relie-t-elle ?
+    follow_ups:
+      - Que serait Paris sans la Seine ?
+      - Comment la rivière façonne-t-elle la ville ?
+      - Quelle est la relation entre la rivière et le bord ?
+  - id: paris_roof_zinc
+    name: Toiture en Zinc
+    prompt: |
+      Les toits parisiens sont souvent en zinc—gris, pentus, avec des lucarnes. Regardez en l'air. La ligne du toit est distinctive. Comment façonne-t-elle la silhouette urbaine ?
+    follow_ups:
+      - Que serait la silhouette urbaine sans le zinc ?
+      - Comment le zinc crée-t-il une identité ?
+      - Quelle est la relation entre le toit et le grenier ?
+  - id: paris_door_height
+    name: Hauteur de Porte
+    prompt: |
+      Les portes parisiennes sont souvent hautes—double hauteur. Trouvez-en une. Que passerait-elle ? La porte est un seuil d'échelle.
+    follow_ups:
+      - Que serait le bâtiment sans la haute porte ?
+      - Comment la hauteur crée-t-elle de la grandeur ?
+      - Quelle est la relation entre la porte et le bâtiment ?
+  - id: paris_boulangerie_smell
+    name: Odeur de Boulangerie
+    prompt: |
+      Une boulangerie sent le pain. Suivez l'odeur. La boulangerie est un nœud. Que dit l'odeur du pâté de maisons ?
+    follow_ups:
+      - Que serait la rue sans l'odeur ?
+      - Comment l'odeur crée-t-elle une identité ?
+      - Quelle est la relation entre l'odeur et le commerce ?
+  - id: paris_place
+    name: Place Parisienne
+    prompt: |
+      Paris a des places—carrées, rondes, des nœuds. Trouvez-en une. Remarquez la géométrie. Comment la place façonne-t-elle les rues qui y mènent ?
+    follow_ups:
+      - Que serait le quartier sans la place ?
+      - Comment la place crée-t-elle un point focal ?
+      - Quelle est la relation entre la place et le flux ?
+  - id: paris_balcony_iron
+    name: Fer de Balcon
+    prompt: |
+      Les garde-corps des balcons parisiens sont souvent ouvragés—fer forgé, courbes, volutes. Trouvez-en un. Comment le fer façonne-t-il la façade ?
+    follow_ups:
+      - Que serait le bâtiment sans le fer ?
+      - Comment le fer crée-t-il une identité ?
+      - Quelle est la relation entre le fer et l'artisanat ?
+  - id: paris_plane_tree
+    name: Platane Parisien
+    prompt: |
+      Les platanes parisiens bordent les boulevards. Leur écorce se détache. Trouvez-en un. Comment l'arbre façonne-t-il la rue ? Que serait le boulevard sans lui ?
+    follow_ups:
+      - Que serait la rue sans le platane ?
+      - Comment le platane crée-t-il de l'ombre ?
+      - Quelle est la relation entre l'arbre et le boulevard ?
+  - id: paris_metro_tile
+    name: Carreau de Métro
+    prompt: |
+      Les stations de métro parisiennes ont des carreaux blancs. Le tunnel est un tube de lumière. Prenez une ligne. Comment le carreau façonne-t-il le voyage ?
+    follow_ups:
+      - Que serait la station sans les carreaux ?
+      - Comment les carreaux créent-ils de la propreté ?
+      - Quelle est la relation entre le carreau et le souterrain ?
+  - id: paris_clock
+    name: Horloge Parisienne
+    prompt: |
+      Paris a de nombreuses horloges publiques—sur les églises, les gares, les bâtiments. Trouvez-en une. Quelle heure indique-t-elle ? Est-elle juste ?
+    follow_ups:
+      - Que serait l'espace sans l'horloge ?
+      - Comment l'horloge façonne-t-elle le temps ?
+      - Quelle est la relation entre l'horloge et le lieu ?
+  - id: paris_newsstand
+    name: Kiosque Parisien
+    prompt: |
+      Les kiosques parisiens vendent journaux, magazines, tickets de métro. Trouvez-en un. Qu'y a-t-il en exposition ? Qui s'arrête ? Le kiosque est un nœud.
+    follow_ups:
+      - Que serait la rue sans le kiosque ?
+      - Comment le kiosque crée-t-il la rencontre ?
+      - Quelle est la relation entre le kiosque et la rue ?
+  - id: paris_bench
+    name: Banc Parisien
+    prompt: |
+      Paris a des bancs verts dans les parcs et le long de la Seine. Asseyez-vous sur l'un d'eux. Qui d'autre s'assoit ? Quelle est la vue ?
+    follow_ups:
+      - Que serait l'espace sans le banc ?
+      - Comment le banc crée-t-il du répit ?
+      - Quelle est la relation entre le banc et la rivière ?
+  - id: paris_boulangerie_queue
+    name: Queue de Boulangerie
+    prompt: |
+      Rejoignez une file d'attente à la boulangerie aux heures de pointe le matin. La queue est un rituel. Qu'achètent les gens ? Quelle est l'étiquette ?
+    follow_ups:
+      - Que serait la rue sans la queue ?
+      - Comment la queue crée-t-elle une communauté ?
+      - Quelle est la relation entre la queue et le pain ?
+  - id: paris_manhole
+    name: Bouche d'Égout Parisienne
+    prompt: |
+      Les bouches d'égout parisiennes portent souvent "Paris" ou "Eau". Trouvez-en une. Le couvercle est une porte vers les veines de la ville. Qu'y a-t-il en dessous ?
+    follow_ups:
+      - Que serait la rue sans le couvercle ?
+      - Comment le couvercle marque-t-il le système ?
+      - Quelle est la relation entre le couvercle et le souterrain ?
+  - id: paris_shadow
+    name: Ombre Parisienne
+    prompt: |
+      La lumière parisienne crée des ombres nettes. Trouvez un coin où l'ombre et le soleil se rencontrent. Comment l'ombre façonne-t-elle la rue ?
+    follow_ups:
+      - Que serait la rue sans l'ombre ?
+      - Comment l'ombre crée-t-elle du contraste ?
+      - Quelle est la relation entre l'ombre et le bâtiment ?
+  - id: paris_courtyard
+    name: Cour Parisienne
+    prompt: |
+      Les immeubles parisiens cachent souvent des cours derrière des portes cochères. Jetez un œil. Qu'y a-t-il à l'intérieur ? La cour est une pièce secrète.
+    follow_ups:
+      - Que serait le bâtiment sans la cour ?
+      - Comment la cour crée-t-elle de l'intimité ?
+      - Quelle est la relation entre la cour et la rue ?
+  - id: paris_bike_lane
+    name: Piste Cyclable Parisienne
+    prompt: |
+      Paris a développé des pistes cyclables. Trouvez-en une. Comment la piste façonne-t-elle la rue ? Qui l'utilise ?
+    follow_ups:
+      - Que serait la rue sans la piste ?
+      - Comment la piste crée-t-elle de la mobilité ?
+      - Quelle est la relation entre la piste et la voiture ?
+  - id: paris_fountain
+    name: Fontaine Parisienne
+    prompt: |
+      Paris a des fontaines—fontaines Wallace, fontaines monumentales. Trouvez-en une. Que propose-t-elle ? Qui l'utilise ?
+    follow_ups:
+      - Que serait l'endroit sans la fontaine ?
+      - Comment la fontaine crée-t-elle un don ?
+      - Quelle est la relation entre la fontaine et le public ?
+  - id: paris_awning
+    name: Auvent Parisien
+    prompt: |
+      Les auvents des cafés parisiens créent de l'ombre. Trouvez une rue où les auvents se répètent. Comment façonnent-ils le trottoir ?
+    follow_ups:
+      - Que serait la rue sans les auvents ?
+      - Comment les auvents créent-ils un territoire ?
+      - Quelle est la relation entre l'auvent et la terrasse ?
+  - id: paris_lamp_post
+    name: Lampadaire Parisien
+    prompt: |
+      Les lampadaires parisiens ont un style particulier—souvent ornés, souvent verts. Trouvez-en un. Comment la lampe façonne-t-elle la rue la nuit ?
+    follow_ups:
+      - Que serait la rue sans la lampe ?
+      - Comment la lampe crée-t-elle de la sécurité ?
+      - Quelle est la relation entre la lampe et l'obscurité ?
+  - id: paris_door_knocker
+    name: Batte de Porte
+    prompt: |
+      Les portes parisiennes ont souvent des battes—têtes de lion, mains, anneaux. Trouvez-en une. Quel son ferait-elle ? La batte est un objet de seuil.
+    follow_ups:
+      - Que serait la porte sans la batte ?
+      - Comment la batte crée-t-elle du son ?
+      - Quelle est la relation entre la batte et l'entrée ?
+  - id: paris_shop_sign
+    name: Enseigne Parisienne
+    prompt: |
+      Les enseignes de magasins parisiens sont souvent peintes à la main—boulangerie, boucherie,
+      fromagerie.
+      Trouvez-en une. Que dit l'enseigne sur le magasin ?
+    follow_ups:
+      - Que serait la rue sans l'enseigne ?
+      - Comment l'enseigne crée-t-elle une identité ?
+      - Quelle est la relation entre l'enseigne et l'artisanat ?
+  - id: paris_parking
+    name: Stationnement Parisien
+    prompt: |
+      Le stationnement parisien est créatif—voitures sur les trottoirs, en biais, garées de justesse. Observez
+      quelqu'un se garer. Comment la voiture rentre-t-elle ? Quelle est la relation entre la voiture et la ville ?
+    follow_ups:
+      - Que serait la rue sans les voitures ?
+      - Comment le stationnement façonne-t-il la rue ?
+      - Quelle est la relation entre le stationnement et l'espace ?
+  - id: paris_drain
+    name: Drain Parisien
+    prompt: |
+      Les caniveaux parisiens longent le trottoir. Après la pluie, ils coulent. Trouvez-en un. Où va l'eau ? Le drain est une couture.
+    follow_ups:
+      - Que serait la rue sans le drain ?
+      - Comment le drain gère-t-il l'eau ?
+      - Quelle est la relation entre le drain et le système ?
+  - id: paris_chimney
+    name: Cheminée Parisienne
+    prompt: |
+      Les cheminées parisiennes ponctuent la ligne du toit. Comptez-les sur un bâtiment. La cheminée est une relique de chaleur. Qu'y brûlait-il ?
+    follow_ups:
+      - Que serait le toit sans la cheminée ?
+      - Comment la cheminée marque-t-elle l'histoire ?
+      - Quelle est la relation entre la cheminée et le feu ?
+  - id: paris_metro_map
+    name: Plan du Métro
+    prompt: |
+      Le plan du métro parisien est un diagramme. Il déforme la géographie. Qu'est-ce qui est mis en avant ? Qu'est-ce qui est omis ? Comment le plan façonne-t-il la ville ?
+    follow_ups:
+      - Que serait l'orientation sans le plan ?
+      - Comment le plan crée-t-il du lien ?
+      - Quelle est la relation entre le plan et le territoire ?
+  - id: paris_bridge
+    name: Pont Parisien
+    prompt: |
+      Paris a de nombreux ponts sur la Seine. Traversez-en un à pied. Sentez la transition. Qu'est-ce qui change ? Le pont est un seuil.
+    follow_ups:
+      - Que serait la rivière sans le pont ?
+      - Comment le pont relie-t-il ?
+      - Quelle est la relation entre le pont et la rivière ?
+  - id: paris_graffiti
+    name: Graffiti Parisien
+    prompt: |
+      Paris a du graffiti—tags, pochoirs, fresques. Trouvez un mur avec des couches. Qu'est-ce que le palimpseste ? Qui a marqué cette surface ?
+    follow_ups:
+      - Que serait le mur sans le graffiti ?
+      - Comment le graffiti revendique-t-il l'espace ?
+      - Quelle est la relation entre le graffiti et la ville ?
+  - id: paris_tree_guard
+    name: Grille d'Arbre
+    prompt: |
+      Les arbres des rues parisiennes ont souvent des grilles—des grilles métalliques autour de la base. Trouvez-en une. Qu'est-ce que la grille protège ? Qu'exclut-elle ?
+    follow_ups:
+      - Que serait l'arbre sans la grille ?
+      - Comment la grille façonne-t-elle la fosse ?
+      - Quelle est la relation entre la grille et l'arbre ?
+  - id: paris_bus_stop
+    name: Arrêt de Bus Parisien
+    prompt: |
+      Les arrêts de bus parisiens ont des abris, des horaires, des écrans numériques. Attendez à l'un d'eux. Qui d'autre attend ? Quelle est l'étiquette ?
+    follow_ups:
+      - Que serait la rue sans l'arrêt ?
+      - Comment l'arrêt crée-t-il une communauté ?
+      - Quelle est la relation entre l'arrêt et le voyage ?
+  - id: paris_terrace_table
+    name: Table de Terrasse
+    prompt: |
+      Une table de terrasse de café fait face à la rue. Asseyez-vous à l'une d'elles. La table est une scène. Que regardez-vous ? Qui vous regarde ?
+    follow_ups:
+      - Que serait la terrasse sans la table ?
+      - Comment la table crée-t-elle la rencontre ?
+      - Quelle est la relation entre la table et la rue ?
+  - id: paris_roof_dormer
+    name: Lucarne de Toit Parisienne
+    prompt: |
+      Les lucarnes des toits parisiens—fenêtres mansardées—ponctuent la silhouette urbaine. Trouvez un bâtiment avec beaucoup. Quelle serait la vue de l'intérieur ?
+    follow_ups:
+      - Que serait le toit sans les lucarnes ?
+      - Comment les lucarnes créent-elles de la lumière ?
+      - Quelle est la relation entre la lucarne et le grenier ?
+  - id: paris_parking_metre
+    name: Horodateur Parisien
+    prompt: |
+      Les horodateurs parisiens sont souvent des boîtes grises. Trouvez-en un. Comment façonne-t-il le trottoir ? Qui paie ? Qui ne paie pas ?
+    follow_ups:
+      - Que serait la rue sans l'horodateur ?
+      - Comment l'horodateur gère-t-il l'espace ?
+      - Quelle est la relation entre l'horodateur et la voiture ?
+  - id: paris_doorway
+    name: Porche Parisien
+    prompt: |
+      Un porche parisien est souvent grand, souvent orné. Tenez-vous devant l'un d'eux. Comment serait-il de passer ? Le porche est un seuil.
+    follow_ups:
+      - Que serait le bâtiment sans le porche ?
+      - Comment le porche crée-t-il de la grandeur ?
+      - Quelle est la relation entre le porche et l'intérieur ?
+  - id: paris_metro_stair
+    name: Escalier de Métro
+    prompt: |
+      Les escaliers de métro descendent dans la terre. Comptez les marches. Sentez la transition. Qu'y a-t-il au-dessus ? Qu'y a-t-il en dessous ?
+    follow_ups:
+      - Que serait la station sans les escaliers ?
+      - Comment les escaliers créent-ils la descente ?
+      - Quelle est la relation entre l'escalier et le souterrain ?
+  - id: paris_bench_view
+    name: Vue de Banc
+    prompt: |
+      Asseyez-vous sur un banc avec une vue—sur la Seine, une place, une rue. Quel est le cadre ? Quel est le focus ? Le banc est un point de vue.
+    follow_ups:
+      - Que serait la vue sans le banc ?
+      - Comment le banc crée-t-il une pause ?
+      - Quelle est la relation entre le banc et la vue ?
+  - id: paris_shutter_open
+    name: Volet Ouvert
+    prompt: |
+      Les volets parisiens s'ouvrent le matin. Trouvez une rue où ils s'ouvrent. Quel est le rituel ? Que révèle l'ouverture ?
+    follow_ups:
+      - Que serait la rue sans les volets ?
+      - Comment le volet crée-t-il un rythme ?
+      - Quelle est la relation entre le volet et le jour ?
+  - id: paris_cobble_pattern
+    name: Motif de Pavé
+    prompt: |
+      Les pavés parisiens sont posés en motifs—parfois en chevrons, parfois rayonnants. Trouvez un motif. Comment façonne-t-il la rue ?
+    follow_ups:
+      - Que serait la rue sans le motif ?
+      - Comment le motif crée-t-il de la texture ?
+      - Quelle est la relation entre le motif et l'artisanat ?
+  - id: paris_plane_bark
+    name: Écorce de Platane
+    prompt: |
+      L'écorce des platanes parisiens se détache par plaques. Touchez-en une. L'écorce est une texture. Comment l'arbre vieillit-il ? Que serait la rue sans lui ?
+    follow_ups:
+      - Que serait le boulevard sans le platane ?
+      - Comment l'écorce crée-t-elle une identité ?
+      - Quelle est la relation entre l'écorce et l'arbre ?
+  - id: paris_fountain_drink
+    name: Boisson de Fontaine
+    prompt: |
+      Les fontaines Wallace offrent de l'eau gratuite. Trouvez-en une. Qui boit ? Qui ne boit pas ? La fontaine est un don. Qu'est-ce que cela signifie ?
+    follow_ups:
+      - Que serait l'endroit sans la fontaine ?
+      - Comment la fontaine crée-t-elle un bien public ?
+      - Quelle est la relation entre la fontaine et la soif ?
+  - id: paris_metro_sound
+    name: Son du Métro
+    prompt: |
+      Fermez les yeux dans le métro. Le grondement, les freins, les annonces. Cartographiez le paysage sonore. À quoi ressemble Paris sous terre ?
+    follow_ups:
+      - Que serait le voyage sans le son ?
+      - Comment le son façonne-t-il l'expérience ?
+      - Quelle est la relation entre le son et l'espace ?
+  - id: paris_balcony_dry
+    name: Séchage de Balcon
+    prompt: |
+      Les balcons parisiens servent souvent au séchage—de linge, de plantes. Trouvez-en un avec du linge. Que dit ce séchage sur l'habitant ?
+    follow_ups:
+      - Que serait la façade sans le linge ?
+      - Comment le séchage crée-t-il de la domesticité ?
+      - Quelle est la relation entre le balcon et la maison ?
+  - id: paris_bike_velib
+    name: Vélib' Parisien
+    prompt: |
+      Les stations Vélib' parsèment Paris. Trouvez-en une. Combien de vélos ? Combien de bornes ? Le système est une couche. Comment fonctionne-t-il ?
+    follow_ups:
+      - Que serait la rue sans la station ?
+      - Comment Vélib' crée-t-il de la mobilité ?
+      - Quelle est la relation entre la station et le vélo ?
+  - id: paris_door_bell
+    name: Sonnette de Porte
+    prompt: |
+      Les immeubles d'habitation parisiens ont plusieurs sonnettes—une par appartement. Trouvez un
+      panneau. Combien de noms ? Comment l'immeuble est-il organisé ?
+    follow_ups:
+      - Que serait l'entrée sans les sonnettes ?
+      - Comment les sonnettes créent-elles une adresse ?
+      - Quelle est la relation entre la sonnette et l'appartement ?
+  - id: paris_roof_terrace
+    name: Terrasse sur Toit
+    prompt: |
+      Imaginez une terrasse sur le toit de Paris. Que verriez-vous ? Qui y a accès ? La terrasse est un niveau secret. Qu'y cultiveriez-vous ?
+    follow_ups:
+      - Que serait le toit sans la terrasse ?
+      - Comment la terrasse crée-t-elle une vue ?
+      - Quelle est la relation entre la terrasse et le ciel ?

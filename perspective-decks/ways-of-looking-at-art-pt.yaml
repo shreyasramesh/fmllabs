@@ -1,0 +1,502 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Maneiras de Olhar para Arte (Portuguese)
+
+id: ways_of_looking_at_art
+name: Maneiras de Olhar para Arte
+description: |
+  Cartas para mudar a sua perspectiva ao ver arte. Cada uma oferece uma lente
+  diferente para aprofundar como você vê e interage com as obras de arte.
+domain: art
+cards:
+  - id: souvenir
+    name: Lembrança
+    prompt: |
+      Escolha algo da obra de arte e esconda-o na próxima peça que você olhar.
+      Como você o encaixaria na nova composição?
+    follow_ups:
+      - O que você escolheria levar?
+      - O que ganharia ou perderia no novo contexto?
+      - Onde se encaixaria—ou resistiria a se encaixar—na nova obra?
+  - id: throw_a_party
+    name: Dê uma festa
+    prompt: |
+      Convide todos os artistas na sala. O que eles estariam vestindo?
+      No que estariam pensando?
+    follow_ups:
+      - Quem se aproximaria de quem?
+      - Sobre o que eles discutiram?
+      - O que os surpreenderia nas obras uns dos outros?
+  - id: time_out
+    name: Pausa
+    prompt: |
+      Saia. Concentre-se na luz, nos sons e nas sensações. Esteja presente com o
+      seu entorno. A experiência de olhar para a arte é tanto sobre os espaços
+      intermediários quanto sobre as obras em si.
+    follow_ups:
+      - O que você percebe quando para de se concentrar na arte?
+      - Como o ambiente molda o que você vê?
+      - O que você perderia se passasse apressado?
+  - id: plan_a_trip
+    name: Planeje uma viagem
+    prompt: |
+      O que você vê hoje pode ser o primeiro passo em uma jornada muito maior. Ao
+      sair da galeria ou do espaço, decida qual obra de arte você quer ver a
+      seguir e planeje uma viagem inteira em torno dela.
+    follow_ups:
+      - Para onde essa jornada o levaria?
+      - O que você precisaria ver ao longo do caminho?
+      - Por que esta obra—o que a torna digna de uma viagem?
+  - id: in_black_and_white
+    name: Em preto e branco
+    prompt: |
+      Concentre-se no jogo de luzes e sombras—você pode até tirar uma foto em
+      preto e branco para ajudar. Onde os tons são mais escuros? Como isso sugere
+      profundidade ou não? Como isso ajuda a entender a composição?
+    follow_ups:
+      - O que desaparece quando você remove a cor?
+      - O que fica mais claro?
+      - Para onde seu olhar vai primeiro na versão em escala de cinza?
+  - id: give_it_a_voice
+    name: Dê voz a ela
+    prompt: |
+      Que sons esta obra de arte faria? Como você poderia ouvir as cores, as
+      formas e as figuras?
+    follow_ups:
+      - É alto ou baixo? Agudo ou suave?
+      - Que instrumento ou textura a capturaria?
+      - Como seria o som do silêncio nesta obra?
+  - id: find_the_middle_ground
+    name: Encontre o ponto médio
+    prompt: |
+      A que distância a obra de arte está de você? Quão grande ela é em relação
+      ao seu tamanho? Quão pesada? Quanto espaço ela ocupa? Você caberia ela em uma
+      casa?
+    follow_ups:
+      - O que mudaria se você pudesse segurá-la na mão?
+      - E se fosse do tamanho de uma sala?
+      - Como a escala molda sua relação com ela?
+  - id: from_the_edges
+    name: Pelas bordas
+    prompt: |
+      Onde a obra de arte termina e o "mundo real" começa? Você pode tentar usar
+      suas mãos como um visor para redefinir as bordas da obra para si mesmo?
+      Existe uma borda discernível?
+    follow_ups:
+      - O que acontece quando você muda a moldura?
+      - O que é incluído ou excluído?
+      - Onde a obra quer transbordar para além de suas fronteiras?
+  - id: transmogrify_it
+    name: Transmogrifique-a
+    prompt: |
+      E se você pudesse mudar a obra de arte para outro gênero? Uma fotografia em
+      uma pintura de ação ou uma instalação em uma paisagem? Como você faria
+      isso? Ela ainda manteria seu caráter mesmo na tradução?
+    follow_ups:
+      - O que é essencial na obra—o que deve sobreviver à mudança?
+      - O que seria ganho ou perdido na tradução?
+      - Que gênero revelaria algo novo sobre ela?
+  - id: the_hand_of_the_artist
+    name: A Mão do Artista
+    prompt: |
+      Procure evidências das pinceladas do artista, marcas de cinzel, impressões
+      digitais, até mesmo cabelos. Imagine fazer essas marcas você mesmo—em que
+      posição você precisaria se colocar? Que ferramentas você usaria?
+    follow_ups:
+      - O que a marca revela sobre o corpo do criador?
+      - Onde o gesto é rápido ou lento, seguro ou hesitante?
+      - Como seria fazer essa marca?
+  - id: tell_the_story
+    name: Conte a história
+    prompt: |
+      A história da arte é rica em narrativas, e hoje existe um diálogo excitante
+      entre arte, literatura e cinema. Há uma história na obra de arte? Como você
+      a conta?
+    follow_ups:
+      - O que acontece antes ou depois deste momento?
+      - Quem é o narrador? A voz de quem está faltando?
+      - Funcionaria como um filme, um romance ou um poema?
+  - id: shadowboxing
+    name: Sombra
+    prompt: |
+      Movimente-se. Chegue bem perto. Afaste-se o máximo possível. Mude de lado.
+      Vá para cima. Vá para baixo. Tente ângulos diferentes. Não fique no mesmo
+      lugar por muito tempo. Saboreie as mudanças que a obra de arte executa
+      enquanto você se move ao redor dela.
+    follow_ups:
+      - O que muda quando você muda de posição?
+      - Que ângulo o surpreendeu?
+      - Como o movimento do seu corpo muda o que você vê?
+  - id: six_degrees_of_francis_bacon
+    name: Seis graus de Francis Bacon
+    prompt: |
+      Artistas influenciam outros artistas. Temas e ideias evoluem ao longo de
+      gerações e através das fronteiras. Conecte a obra de arte a outra na
+      galeria usando o menor número de elos possível.
+    follow_ups:
+      - Qual é o caminho mais curto que você consegue encontrar?
+      - Que tipo de elo é mais forte—técnica, assunto, humor ou ideia?
+      - O que o artista pensaria da conexão?
+  - id: headlines
+    name: Manchetes
+    prompt: |
+      Imagine o dia em que a obra de arte foi feita e encontre ou invente uma
+      manchete de jornal para esse dia. Compare-a com as primeiras páginas de
+      hoje.
+    follow_ups:
+      - O que estaria acima da dobra?
+      - O que mudou—e o que não mudou?
+      - Como a manchete reformula a obra?
+  - id: speed_date
+    name: Speed date
+    prompt: |
+      Passe apenas 10 segundos com cada obra de arte. Faça isso até ter visto
+      todas ou até ficar sem fôlego, depois volte às suas favoritas e demore-se.
+      Como você as vê agora? Quais você se sente atraído a revisitar?
+    follow_ups:
+      - O que a passagem rápida revelou que a demora poderia ter perdido?
+      - Por que você voltou a essas obras em particular?
+      - Como o segundo olhar diferiu do primeiro?
+  - id: make_connections
+    name: Faça conexões
+    prompt: |
+      No caminho para casa, procure algo que te lembre da obra de arte, ou parte
+      dela—uma forma ou cor, talvez uma palavra, até uma sensação.
+    follow_ups:
+      - O que você encontrou?
+      - Como o eco mudou a forma como você vê o original?
+      - O que você mostraria ao artista se pudesse?
+  - id: dinner_party
+    name: Jantar
+    prompt: |
+      Combine uma obra de arte com um sabor. De que comida ou bebida ela te
+      lembra? Monte um banquete.
+    follow_ups:
+      - Como seria o menu?
+      - Quem sentaria onde?
+      - Como seria a primeira mordida?
+  - id: head_off_piste
+    name: Saia da rota
+    prompt: |
+      Peça a um atendente da galeria para indicar sua obra favorita, ou afaste-se
+      das cartas e veja o que você consegue encontrar.
+    follow_ups:
+      - O que você descobriu fora do caminho batido?
+      - Como a obra favorita dele difere da sua?
+      - O que você recomendaria a outra pessoa?
+  - id: make_it_an_mixtape
+    name: Faça uma mixtape
+    prompt: |
+      A obra de arte te traz à mente uma música ou peça musical em particular? Arte
+      e música se sobrepõem de maneiras diferentes e frequentemente compartilham
+      uma linguagem semelhante. Que qualidades elas têm em comum? Crie uma
+      playlist para cada visita à galeria ou para um artista individual.
+    follow_ups:
+      - Qual é a faixa de abertura?
+      - Que qualidade liga a obra à música—ritmo, humor, textura?
+      - Como a playlist mudaria se você a revisse em um ano?
+  - id: read_in_context
+    name: Leia em contexto
+    prompt: |
+      Onde está a obra de arte? Como seus arredores afetam como ela é recebida?
+      Ela está em um outdoor, fora de uma galeria, no meio de um lago? Ouça a
+      conversa entre a obra e seus arredores.
+    follow_ups:
+      - O que mudaria se estivesse em outro lugar?
+      - O que o ambiente ou espaço está dizendo de volta?
+      - Quem é o público aqui—e quem está faltando?
+  - id: understand_it_less
+    name: Entenda menos
+    prompt: |
+      Abrace sua curiosidade. Pergunte-se o que é estranho ou novo em sua
+      experiência da obra de arte? Como você poderia torná-la ainda mais
+      estranha? Desapegue-se do que a obra de arte "deveria significar" tentando
+      entendê-la um pouco menos!
+    follow_ups:
+      - O que você precisaria desaprender para vê-la de forma renovada?
+      - Que pergunta não tem resposta—e por que isso importa?
+      - Como seria "entender errado"?
+  - id: chaos_or_control
+    name: Caos ou controle?
+    prompt: |
+      Parece aleatório ou há um plano? Acaso, acidente e serendipidade desempenham
+      um papel—às vezes um significativo—na produção de uma obra de arte. Tente
+      encontrar o que foi permitido ocorrer naturalmente e o que foi controlado.
+    follow_ups:
+      - Onde o artista segura as rédeas—e onde ele as solta?
+      - O que poderia ter sido um acidente que se tornou essencial?
+      - Como a obra mudaria com mais caos—ou mais controle?
+  - id: palimpsest
+    name: Palimpsesto
+    prompt: |
+      Procure camadas! O que está oculto e o que é revelado? Quão espessa é a
+      obra? A superfície foi construída ao longo do tempo?
+    follow_ups:
+      - O que está sob a superfície?
+      - O que você encontraria se pudesse descascá-la?
+      - Como o tempo se mostra nas camadas?
+  - id: pattern_recognition
+    name: Reconhecimento de padrões
+    prompt: |
+      Procure por elementos repetidos. Existe um padrão? Existem motivos repetidos?
+      Certos formas se ecoam?
+    follow_ups:
+      - O que quebra o padrão—e por quê?
+      - Para onde a repetição leva seu olhar?
+      - O que aconteceria se você traçasse um motivo por toda a obra?
+  - id: through_another_pair_of_eyes
+    name: Através de outros olhos
+    prompt: |
+      Traga à mente um personagem de um romance, filme, peça ou figura histórica.
+      Imagine ter uma conversa com eles sobre a obra de arte. Você concordaria com
+      a opinião deles sobre ela?
+    follow_ups:
+      - O que eles notariam que você perdeu?
+      - Onde vocês discordariam—e por quê?
+      - Que pergunta eles fariam a você sobre ela?
+  - id: thermostat
+    name: Termostato
+    prompt: |
+      Qual a temperatura de uma cor? Procure as cores mais frias na obra de arte,
+      depois identifique os tons mais quentes. Quantos ecossistemas você consegue
+      encontrar em uma única obra de arte?
+    follow_ups:
+      - Onde o quente e o frio se encontram—e o que acontece lá?
+      - Que clima a obra evoca?
+      - Como seria se você entrasse em sua temperatura?
+  - id: negative_space
+    name: Espaço negativo
+    prompt: |
+      Os espaços entre os elementos individuais em uma obra de arte são tão
+      significativos quanto os próprios elementos. Como um quebra-cabeça, preste
+      atenção às peças que estão faltando. O espaço negativo: como ele emoldura
+      o que está lá? Sinta sua importância.
+    follow_ups:
+      - Que forma o vazio assume?
+      - O que preencheria as lacunas—e deveria?
+      - Como o espaço negativo segura a composição junta?
+  - id: make_yourself_at_home
+    name: Sinta-se em casa
+    prompt: |
+      Imagine rastejar para dentro da obra de arte. Onde você se esconderia? O que
+      você pode ver? Como se sente?
+    follow_ups:
+      - O que você ouviria de dentro?
+      - Onde você se sentiria mais seguro—ou mais exposto?
+      - O que você levaria consigo se pudesse ficar?
+  - id: homage
+    name: Homenagem
+    prompt: |
+      Faça um santuário ou uma mini exposição para seu artista favorito. Comece
+      com um cartão postal da loja, ou encontre objetos e imagens que referenciem
+      e adicionem profundidade e cor ao trabalho deles.
+    follow_ups:
+      - O que ficaria no centro do seu santuário?
+      - Qual objeto os surpreenderia?
+      - Como o ato de curar muda a forma como você vê o trabalho deles?
+  - id: warm_up
+    name: Aquecimento
+    prompt: |
+      Desperte seu corpo para preparar seus sentidos. Corra, pule, alongue-se,
+      bata palmas, mexa os dedos dos pés. Preste atenção a quaisquer sensações
+      físicas em seu corpo ao olhar para a obra de arte.
+    follow_ups:
+      - Onde em seu corpo você sente a obra?
+      - Como o movimento muda o que você vê?
+      - Que sensação perdura depois que você desvia o olhar?
+  - id: make_it_anew
+    name: Refaça
+    prompt: |
+      Em casa, recrie uma obra de arte usando apenas o que você tem à mão.
+      Escreva, desenhe, construa com fósforos. Quanto mais fácil e simples seu
+      método, melhor. Veja o que fica em sua mente, o que você percebe em sua
+      rendição.
+    follow_ups:
+      - O que você lembrou sem tentar?
+      - O que sua versão errou—e por que isso importa?
+      - O que você adicionaria se tivesse mais um minuto?
+  - id: origin_story
+    name: História de origem
+    prompt: |
+      Você consegue se lembrar da primeira obra de arte que você já viu? Onde
+      você estava? Qual era sua idade? Tente lembrar do cômodo em que você estava,
+      da luz e dos sons, da sensação de olhar para ela. Há algo que você possa
+      conectar à obra de arte que você vê agora?
+    follow_ups:
+      - O que permaneceu o mesmo em como você olha para a arte?
+      - O que aquele "eu" mais jovem faria desta obra?
+      - Que fio corre de então até agora?
+  - id: words_and_images
+    name: Palavras e imagens
+    prompt: |
+      Sem olhar para a obra de arte, leia a descrição, feche os olhos e tente
+      imaginá-la. Depois, abra-os. Corresponde à sua versão?
+    follow_ups:
+      - O que as palavras deixaram de fora?
+      - O que você adicionou que não estava lá?
+      - Como sua imagem mental muda a forma como você vê a real?
+  - id: keep_a_notebook
+    name: Mantenha um caderno
+    prompt: |
+      Faça um registro de datas, obras de arte e sua resposta a elas. Releia suas
+      anotações e procure por novas obras de arte.
+    follow_ups:
+      - Que padrão surge ao ler suas anotações?
+      - O que você diria ao seu "eu" passado?
+      - Para onde o caderno quer te levar a seguir?
+  - id: write_a_postcard
+    name: Escreva um cartão postal
+    prompt: |
+      Escreva um cartão postal para uma obra de arte com a qual você se conecta
+      particularmente. O que você diria? Como ela poderia responder?
+    follow_ups:
+      - O que você precisaria dizer que não conseguiria dizer em voz alta?
+      - Como seria a caligrafia dela?
+      - O que você guardaria—e o que você nunca enviaria?
+  - id: here_today_gone
+    name: Aqui hoje, ido...?
+    prompt: |
+      Nem toda obra de arte sobrevive ao teste do tempo, nem essa é a intenção de
+      todo artista. Um happening ou uma performance pode existir por uma noite,
+      talvez minutos ou apenas segundos! Talvez você esteja olhando para a
+      documentação de uma obra de arte fugaz e temporária. Quanto tempo ela vai
+      durar?
+    follow_ups:
+      - O que seria perdido se ela desaparecesse amanhã?
+      - O que sobrevive na memória, fotografia ou história?
+      - Sua impermanência muda a forma como você a vê?
+  - id: wrap_it_up
+    name: Embale
+    prompt: |
+      E se você pudesse embrulhar a obra de arte? Você ainda seria capaz de dizer
+      o que era? Uma obra de arte diferente caberia no mesmo pacote?
+    follow_ups:
+      - Que forma o pacote tomaria?
+      - Como seria o papel de presente?
+      - O que é essencial—e o que poderia ser trocado?
+  - id: trace_a_path
+    name: Trace um caminho
+    prompt: |
+      O que você olha ao encontrar uma obra de arte? Para onde seu olhar viaja a
+      seguir? Onde seu olhar repousa? Trace os pontos e conecte os pontos.
+    follow_ups:
+      - Para onde você continua retornando?
+      - O que você ignorou—e por quê?
+      - Como seu caminho se compara ao de outra pessoa?
+  - id: superficial
+    name: Superficial
+    prompt: |
+      Como é a superfície? Ela absorve luz ou a reflete? É lisa ou perfurada? É em
+      camadas, refinada ou áspera? Não tenha medo de ser superficial!
+    follow_ups:
+      - Como seria tocá-la?
+      - O que a superfície revela—ou esconde?
+      - O que acontece quando você fica na superfície?
+  - id: studio_visit
+    name: Visita ao ateliê
+    prompt: |
+      Existem tantos ateliês de artistas quanto artistas. Imagine o espaço onde a
+      obra de arte foi criada: um armazém no Brooklyn, um ateliê em Paris, a mesa
+      da cozinha em uma casa familiar agitada—ou talvez em um lugar menos provável.
+    follow_ups:
+      - O que você ouviria naquele espaço?
+      - Que hora do dia foi feita?
+      - Como o lugar imaginado muda a forma como você vê a obra?
+  - id: switch_channels
+    name: Mude de canal
+    prompt: |
+      Olhe para as pessoas em vez da arte. Como elas se comportam em relação à
+      obra? No que elas estão olhando? Você consegue adivinhar o que elas estão
+      sentindo?
+    follow_ups:
+      - Quem demora—e quem passa correndo?
+      - O que elas diriam se você perguntasse?
+      - Como observar os outros muda o que você percebe?
+  - id: light
+    name: Luz
+    prompt: |
+      Procure a fonte de luz. De onde ela vem? O que está na sombra? Concentre-se
+      no que o artista quer que vejamos e no que está escondido nas sombras.
+    follow_ups:
+      - O que a luz revela?
+      - O que as sombras podem estar escondendo?
+      - Como a obra mudaria sob uma luz diferente?
+  - id: introductions
+    name: Apresentações
+    prompt: |
+      Apresente uma obra de arte a um amigo como se fosse um conhecido em uma
+      festa. Como você a descreveria de uma forma que prendesse o interesse dele?
+      O que prende o seu?
+    follow_ups:
+      - O que você enfatizaria primeiro?
+      - O que você deixaria de fora?
+      - Que gancho faria com que ele quisesse conhecê-la?
+  - id: tipping_point
+    name: Ponto de virada
+    prompt: |
+      Onde está o centro da obra de arte? Está desequilibrada? Procure o ponto de
+      virada.
+    follow_ups:
+      - O que a faria virar?
+      - O que a mantém no lugar?
+      - Como o desequilíbrio cria tensão—ou alívio?
+  - id: homing
+    name: De volta para casa
+    prompt: |
+      Continue voltando. Retorne a uma obra de arte favorita em dias diferentes ou
+      em horários diferentes do dia—logo cedo no inverno, no final da tarde de
+      verão. Mantenha um registro de como você se sente; seus sentimentos mudam a
+      cada visita.
+    follow_ups:
+      - O que permaneceu o mesmo entre as visitas?
+      - Quando ela o surpreendeu mais?
+      - O que você diria ao seu "eu" passado sobre isso?
+  - id: one_and_only
+    name: Um e único
+    prompt: |
+      Para evitar ficar sobrecarregado, escolha apenas uma obra de arte para ver,
+      ou no máximo um punhado. Mergulhe fundo e passe o máximo de tempo possível
+      com cada uma. Quantas dessas cartas você pode usar em frente a uma única
+      obra de arte?
+    follow_ups:
+      - O que você notou na segunda passada?
+      - Quais cartas revelaram algo novo?
+      - Quando você soube que era hora de seguir em frente?
+  - id: press_pause
+    name: Pressione pausa
+    prompt: |
+      Desacelere completamente. Comece olhando fechando os olhos, relaxe e
+      concentre-se na sua respiração, abra os olhos lentamente, refoque e dê tempo
+      para a obra de arte se desdobrar à sua frente.
+    follow_ups:
+      - O que apareceu quando você desacelerou?
+      - O que você notou primeiro ao abrir os olhos?
+      - Como sua respiração muda a forma como você vê?
+  - id: material
+    name: Material
+    prompt: |
+      Do que a obra de arte é feita? E se fosse feita de outra coisa? Quanto mais
+      incongruente, melhor. Mudaria a forma como você se sente sobre ela?
+    follow_ups:
+      - Qual seria o substituto mais surpreendente?
+      - O que o material adiciona ao significado?
+      - O que sobreviveria à troca—e o que seria perdido?
+  - id: patch_of_sky
+    name: Quantas cores em um pedaço de céu?
+    prompt: |
+      Aproxime-se de uma área da obra de arte. Quantas cores você consegue ver
+      ali? Fora do museu, olhe para cima e tente contar quantas cores você pode
+      ver em um pedaço de céu.
+    follow_ups:
+      - O que você perdeu quando estava olhando para o todo?
+      - Como o céu se compara à obra de arte?
+      - Que cor o surpreendeu mais?
+  - id: greening
+    name: Verdejante
+    prompt: |
+      Que tipo de planta seria a obra de arte? Seria uma pessegueira de verão,
+      carregada de frutas, ou mais como uma samambaia delicada? Que condições
+      ela precisa para crescer?
+    follow_ups:
+      - Onde ela prosperaria—e onde murcharia?
+      - O que ela precisaria para florescer?
+      - Como a metáfora botânica muda a forma como você a vê?

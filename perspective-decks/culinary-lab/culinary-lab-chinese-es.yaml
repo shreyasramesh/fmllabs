@@ -1,0 +1,487 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinary Lab — Chino (Spanish)
+
+id: culinary_lab_chinese
+name: Culinary Lab — Chino
+description: 50 cartas para cambiar cómo experimentas la comida china—desde la química del wok hei y la arqueología de la soja hasta la coreografía de la mesa redonda y la narrativa del banquete.
+domain: culinary_lab
+cards:
+  - id: chn_wok_hei
+    name: Wok Hei
+    prompt: |
+      Wok hei—el aliento del wok—es el humo esquivo que proviene del
+      calor y la velocidad extremos. No es exactamente ahumado; es transformación.
+      ¿Puedes capturarlo? ¿Qué sería del salteado sin él?
+    follow_ups:
+      - ¿Cómo da forma el hei al plato?
+      - ¿Qué lo crea? ¿Qué lo destruye?
+      - ¿Cuál es la relación entre el calor y la prisa?
+  - id: chn_round_table
+    name: Mesa Redonda
+    prompt: |
+      La mesa del banquete chino es redonda—el tocadiscos en el centro. La comida
+      gira. Todos alcanzan. La mesa es coreografía. ¿Quién gira? ¿Quién espera?
+      ¿Cuáles son las reglas no dichas?
+    follow_ups:
+      - ¿Qué significaría una mesa rectangular?
+      - ¿Cómo da forma la redondez a la comida?
+      - ¿Cuál es la relación entre el centro y el borde?
+  - id: chn_soy_archeology
+    name: Arqueología de la Soja
+    prompt: |
+      Salsa de soja—fermentada, añejada, regional. Clara, oscura, de champiñones, doble-negra.
+      Vino de algún lugar. Tomó tiempo. Rastrea la botella. ¿Qué viaje hizo? ¿Qué sacrificaría la soja industrial?
+    follow_ups:
+      - ¿Cómo da forma el origen al vertido?
+      - ¿Qué sería del plato sin soja?
+      - ¿Cuál es la relación entre la fermentación y el umami?
+  - id: chn_chopstick_grip
+    name: Agarre de Palillos
+    prompt: |
+      Los palillos extienden la mano. Arroz, fideos resbaladizos, dumplings—cada uno
+      requiere una técnica diferente. Nota tu agarre. ¿Qué exige el utensilio? ¿Qué permite?
+    follow_ups:
+      - ¿Qué cambiaría un tenedor?
+      - ¿Cómo da forma el palillo al bocado?
+      - ¿Cuál es la relación entre la herramienta y el ritmo?
+  - id: chn_dumpling_seam
+    name: Costura del Dumpling
+    prompt: |
+      Los pliegues del dumpling—el doblez, el sello. Jiaozi, shumai, xiaolongbao—cada uno tiene
+      su forma. La costura contiene o libera. Estudia uno. ¿Qué significaría una explosión? ¿Qué protege el pliegue?
+    follow_ups:
+      - ¿Cómo da forma el pliegue al relleno?
+      - ¿Qué perdería un dumpling abierto?
+      - ¿Cuál es la relación entre el sello y la sopa?
+  - id: chn_tea_pour
+    name: Vertido de Té
+    prompt: |
+      Té chino—servido, rellenado, compartido. La tetera circula. Las tazas vacías se
+      rellenan antes de pedirlas. El vertido es servicio y cuidado. Nota el ritmo.
+      ¿Qué sería de la comida sin el té?
+    follow_ups:
+      - ¿Cómo da forma el té al ritmo?
+      - ¿Qué comunica el vertido?
+      - ¿Cuál es la relación entre la taza y la mesa?
+  - id: chn_bone_plate
+    name: Plato de Huesos
+    prompt: |
+      Un plato pequeño para huesos—cáscaras desechadas, huesos de pollo, cáscaras de camarones.
+      El plato recoge lo no comestible. Es parte del servicio. ¿Qué permite el
+      plato de huesos? ¿Qué pasaría sin él?
+    follow_ups:
+      - ¿Cómo da forma el plato a la comida?
+      - ¿Cómo se vería la mesa sin él?
+      - ¿Cuál es la relación entre el descarte y la dignidad?
+  - id: chn_soup_spoon
+    name: Cuchara de Sopa
+    prompt: |
+      La cuchara de sopa china—ancha, poco profunda, de cerámica. Sostiene caldo y sólidos.
+      La cuchara se adapta de manera diferente a la boca. Nota el sorbo. ¿Qué posibilita la
+      forma?
+    follow_ups:
+      - ¿Qué cambiaría una cuchara redonda?
+      - ¿Cómo da forma la cuchara al sorbo?
+      - ¿Cuál es la relación entre forma y función?
+  - id: chn_steam_basket
+    name: Cesta de Vapor
+    prompt: |
+      El dim sum llega en cestas de bambú—apiladas, superpuestas. El vapor sube.
+      La cesta mantiene la forma. Considera el bambú. ¿Qué haría el metal de manera diferente? ¿Qué añade el bambú?
+    follow_ups:
+      - ¿Cómo da forma la cesta al dumpling?
+      - ¿Qué perdería un plato?
+      - ¿Cuál es la relación entre el bambú y el vapor?
+  - id: chn_maillard_wok
+    name: Maillard en el Wok
+    prompt: |
+      El wok alcanza temperaturas que las estufas caseras no pueden. El sellado es instantáneo.
+      Las proteínas se doran en segundos. Considera la química. ¿Qué sacrificaría un calor más bajo? ¿Qué exige el wok?
+    follow_ups:
+      - ¿Cómo da forma el calor al sabor?
+      - ¿Qué haría la electricidad de manera diferente?
+      - ¿Cuál es la relación entre la llama y la costra?
+  - id: chn_glutinous_texture
+    name: Textura Glutinosa
+    prompt: |
+      El arroz glutinoso—pegajoso, masticable—tiene una química diferente. Se usa para
+      zongzi, lo mai gai, postres. Nota la textura. ¿Cómo difiere del grano largo? ¿Qué permite la pegajosidad?
+    follow_ups:
+      - ¿Qué haría el arroz normal?
+      - ¿Cómo da forma la textura al plato?
+      - ¿Cuál es la relación entre la pegajosidad y el envoltorio?
+  - id: chn_century_egg
+    name: Huevo Centenario
+    prompt: |
+      Huevo centenario—conservado, transformado. La yema es oscura, la clara translúcida.
+      La química es antigua. Considera la conservación. ¿Qué hace el tiempo?
+      ¿Qué significaría la frescura?
+    follow_ups:
+      - ¿Cómo da forma la conservación al sabor?
+      - ¿Qué sería del huevo fresco?
+      - ¿Cuál es la relación entre el tiempo y la transformación?
+  - id: chn_oyster_sauce
+    name: Salsa de Ostras
+    prompt: |
+      Salsa de ostras—umami, espesa, cantonesa. Es reducción y extracción.
+      La ostra da su esencia. Rastrea el sabor. ¿Qué sería del salteado sin ella?
+    follow_ups:
+      - ¿Cómo da forma la salsa al plato?
+      - ¿Cuál es la relación entre la ostra y la verdura?
+      - ¿Qué haría la soja en su lugar?
+  - id: chn_ordering_ritual
+    name: Ritual al Pedir
+    prompt: |
+      Pedir en un restaurante chino—el anfitrión elige, o la mesa negocia.
+      Equilibrio: carne, verdura, sopa, arroz. El pedido es una composición. Nota
+      quién decide. ¿Cuáles son las reglas?
+    follow_ups:
+      - ¿Cómo da forma el pedido a la comida?
+      - ¿Qué pediría cada uno por sí mismo?
+      - ¿Cuál es la relación entre la elección y el colectivo?
+  - id: chn_crispy_skin
+    name: Piel Crujiente
+    prompt: |
+      Piel de pato pekinés—crujiente, glaseada. O el crujido del cerdo asado cantonés. La
+      piel es deliberada. Calor, aire, azúcar. Considera la arquitectura. ¿Qué
+      significaría una piel blanda?
+    follow_ups:
+      - ¿Cómo da forma la crocantez al bocado?
+      - ¿Qué crea el crujido?
+      - ¿Cuál es la relación entre la piel y la carne?
+  - id: chn_noodle_slip
+    name: Deslizamiento del Fideo
+    prompt: |
+      Los fideos chinos—de trigo, de arroz, estirados a mano—varían en textura. Algunos se deslizan;
+      otros se mastican. La resistencia del fideo contra los palillos. Nota la
+      fricción. ¿Qué añade el deslizamiento?
+    follow_ups:
+      - ¿Cómo da forma la textura al comer?
+      - ¿Qué perdería un fideo pastoso?
+      - ¿Cuál es la relación entre el deslizamiento y la satisfacción?
+  - id: chn_bok_choy_wilt
+    name: Marchitamiento de la Bok Choy
+    prompt: |
+      Bok choy en el wok—segundos. Se marchita pero mantiene la estructura. El verde
+      se ablanda. Considera la transformación. ¿Qué significaría crudo? ¿Qué perdería al estar demasiado cocido?
+    follow_ups:
+      - ¿Cómo da forma el marchitamiento a la verdura?
+      - ¿Cuál es la relación entre el calor y el verde?
+      - ¿Cuándo está listo?
+  - id: chn_five_spice
+    name: Cinco Especias
+    prompt: |
+      Polvo de cinco especias—anís estrellado, clavo, canela, pimienta de Sichuan, hinojo.
+      Es una mezcla con historia. Cada especia tiene una ruta. Rastrea una. ¿Qué
+      viaje hizo?
+    follow_ups:
+      - ¿Qué sería del plato sin ella?
+      - ¿Cómo crea la mezcla la identidad?
+      - ¿Cuál es la relación entre la especia y la conservación?
+  - id: chn_banquet_progression
+    name: Progresión del Banquete
+    prompt: |
+      Un banquete chino tiene un arco—primero los platos fríos, luego los calientes, sopa, arroz, postre.
+      La progresión es narrativa. Nota el ritmo. ¿Qué haría un orden diferente?
+    follow_ups:
+      - ¿Cómo da forma la secuencia a la comida?
+      - ¿Cuál es la relación entre el primero y el último?
+      - ¿Cuándo alcanza su punto álgido la historia?
+  - id: chn_white_rice_center
+    name: Arroz Blanco en el Centro
+    prompt: |
+      Arroz blanco—sencillo, cocido al vapor—ancla la comida. Es el lienzo. Los platos ricos
+      necesitan arroz para equilibrar. Nota cuándo lo alcanzas. ¿Qué sería de la comida sin lo sencillo?
+    follow_ups:
+      - ¿Cómo da forma el arroz al paladar?
+      - ¿Qué haría el arroz frito?
+      - ¿Cuál es la relación entre lo neutro y el sabor?
+  - id: chn_szechuan_numb
+    name: Adormecimiento de Sichuan
+    prompt: |
+      Pimienta de Sichuan—ma la—adormecedora, hormigueante. No es picante; es sensación.
+      La boca vibra. Considera la sensación. ¿Qué sería del plato sin
+      el adormecimiento?
+    follow_ups:
+      - ¿Cómo da forma el ma la a la experiencia?
+      - ¿Cuál es la relación entre el adormecimiento y el picante?
+      - ¿Por qué combinarlos?
+  - id: chn_dark_soy
+    name: Soja Oscura
+    prompt: |
+      Salsa de soja oscura—más espesa, más dulce, para dar color. Tiñe el arroz, glasea la
+      carne. No es para la sal; es para el tono. Considera lo visual. ¿Qué añade lo oscuro?
+    follow_ups:
+      - ¿Qué haría la salsa de soja clara?
+      - ¿Cómo da forma el color a la expectativa?
+      - ¿Cuál es la relación entre lo oscuro y el caramelo?
+  - id: chn_hot_plate
+    name: Plato Caliente
+    prompt: |
+      Platos chispeantes—carne, calamar—llegan silbando. El plato de hierro sigue cocinando.
+      El sonido es teatro. ¿Qué sería del plato sin el chisporroteo? ¿Cómo
+      extiende la cocción el plato caliente?
+    follow_ups:
+      - ¿Cómo da forma el chisporroteo a la experiencia?
+      - ¿Qué significaría un plato frío?
+      - ¿Cuál es la relación entre el sonido y el calor?
+  - id: chn_congee_soft
+    name: Congee Suave
+    prompt: |
+      Congee—gachas de arroz—es suave, reconfortante. El arroz cocido largo se descompone.
+      La textura es rendición. Considera la transformación. ¿Qué significaría al dente
+      aquí?
+    follow_ups:
+      - ¿Cómo da forma la suavidad al plato?
+      - ¿Qué haría un congee espeso?
+      - ¿Cuál es la relación entre el agua y el arroz?
+  - id: chn_glass_noodle
+    name: Fideo de Cristal
+    prompt: |
+      Fideos de cristal—almidón de frijol mungo—son transparentes, resbaladizos. Absorben
+      el sabor. Nota la textura. ¿Qué harían los fideos de trigo? ¿Importa
+      la transparencia?
+    follow_ups:
+      - ¿Cómo da forma el fideo al plato?
+      - ¿Cuál es la relación entre lo claro y la absorción?
+      - ¿Por qué de cristal?
+  - id: chn_xlb_burst
+    name: Explosión del XLB
+    prompt: |
+      Xiaolongbao—dumpling de sopa—contiene caldo dentro. El primer bocado puede quemar o
+      explotar. La técnica: pellizcar, sorber, comer. Considera el riesgo. ¿Qué significaría un
+      xlb frío?
+    follow_ups:
+      - ¿Cómo da forma la sopa a la experiencia?
+      - ¿Qué perderías sin la explosión?
+      - ¿Cuál es la relación entre la temperatura y el peligro?
+  - id: chn_tea_smell
+    name: Olor del Té
+    prompt: |
+      Oolong, jazmín, pu-erh—cada té tiene una nariz diferente. Huele antes de sorber.
+      El aroma es la mitad de la experiencia. ¿Qué promete el olor? ¿Qué
+      entrega?
+    follow_ups:
+      - ¿Cómo da forma el olor al sorbo?
+      - ¿Qué sería del té sin aroma?
+      - ¿Cuál es la relación entre la infusión y el aroma?
+  - id: chn_crab_crack
+    name: Cráquer de Cangrejo
+    prompt: |
+      Cangrejo en un banquete chino—se proporcionan cráqueres. El crujido es sonido y labor.
+      La carne se extrae. Considera la coreografía. ¿Qué significaría pre-roto?
+    follow_ups:
+      - ¿Cómo da forma el crujido a la comida?
+      - ¿Qué perderías sin el trabajo?
+      - ¿Cuál es la relación entre el esfuerzo y la recompensa?
+  - id: chn_turn_table
+    name: Plato Giratorio
+    prompt: |
+      El tocadiscos—¿quién lo gira? ¿Cuándo? El plato que deseas podría estar al otro lado de la
+      mesa. El giro es etiqueta. Nota el baile. ¿Cuáles son las reglas?
+      ¿Cuándo esperas?
+    follow_ups:
+      - ¿Cómo da forma el giro a la comida?
+      - ¿Qué significarían los platos fijos?
+      - ¿Cuál es la relación entre el giro y el compartir?
+  - id: chn_ginger_slice
+    name: Rodaja de Jengibre
+    prompt: |
+      Jengibre con marisco—rodajas finas, a veces fritas. Corta el sabor a pescado. El
+      jengibre es a la vez adorno y función. Considera su papel. ¿Qué sería del
+      pescado sin él?
+    follow_ups:
+      - ¿Cómo da forma el jengibre al paladar?
+      - ¿Cuál es la relación entre la rodaja y el aroma?
+      - ¿Por qué jengibre con marisco?
+  - id: chn_hoisin_dip
+    name: Salsa Hoisin para Mojar
+    prompt: |
+      Hoisin con pato pekinés—el mojar es ritual. La tortita, el pato, la
+      cebolla verde, la salsa. Cada elemento tiene su lugar. Considera la composición.
+      ¿Qué haría uno que falte?
+    follow_ups:
+      - ¿Cómo da forma el mojar al bocado?
+      - ¿Qué haría otra salsa?
+      - ¿Cuál es la relación entre lo dulce y el pato?
+  - id: chn_leaf_wrap
+    name: Envuelto en Hoja
+    prompt: |
+      Envuelto en lechuga—carne picada, hierbas, salsa, envuelto en una hoja. La hoja es
+      recipiente y textura. El envoltorio es trabajo manual. Considera la arquitectura.
+      ¿Qué haría una tortilla?
+    follow_ups:
+      - ¿Cómo da forma la hoja al bocado?
+      - ¿Qué haría un plato?
+      - ¿Cuál es la relación entre el envoltorio y la mano?
+  - id: chn_fish_whole
+    name: Pescado Entero
+    prompt: |
+      Pescado entero—al vapor, con cabeza y cola. El pescado se presenta completo.
+      La cabeza tiene significado. Considera la presentación. ¿Qué sacrificaría un filete?
+    follow_ups:
+      - ¿Cómo da forma lo entero al plato?
+      - ¿Qué significa la cabeza?
+      - ¿Cuál es la relación entre lo entero y el respeto?
+  - id: chn_scallion_oil
+    name: Aceite de Cebolleta
+    prompt: |
+      Aceite de cebolleta—aceite chispeante sobre cebolleta y jengibre picados. Es un
+      aderezo, un acabado. El aceite transporta los aromáticos. Nota cuándo se
+      aplica. ¿Qué añade el chisporroteo?
+    follow_ups:
+      - ¿Qué sería del plato sin él?
+      - ¿Cómo da forma el aceite al acabado?
+      - ¿Cuál es la relación entre el aceite y el aroma?
+  - id: chn_black_vinegar
+    name: Vinagre Negro
+    prompt: |
+      Vinagre Chinkiang—oscuro, complejo, ligeramente dulce. Corta la riqueza. Unas pocas
+      gotas cambian el dumpling. Considera la acidez. ¿Qué haría el vinagre de arroz? ¿Qué añade lo oscuro?
+    follow_ups:
+      - ¿Cómo da forma el vinagre al bocado?
+      - ¿Qué sería del dumpling sin él?
+      - ¿Cuál es la relación entre el vinagre y el equilibrio?
+  - id: chn_sticky_rice
+    name: Arroz Pegajoso
+    prompt: |
+      Arroz pegajoso en hoja de loto—lo mai gai. La hoja imparte sabor. El arroz
+      se envuelve, se cuece al vapor. Desenvuélvelo. Nota el aroma. ¿Qué haría el papel de aluminio?
+    follow_ups:
+      - ¿Cómo da forma la hoja al arroz?
+      - ¿Cuál es la relación entre el envoltorio y el vapor?
+      - ¿Qué significaría sin envoltorio?
+  - id: chn_mooncake_mold
+    name: Molde de Pastel de Luna
+    prompt: |
+      Pasteles de luna—estampados con caracteres, patrones. El molde es historia. El
+      diseño tiene un significado. Considera la huella. ¿Qué perdería un pastel sencillo?
+    follow_ups:
+      - ¿Cómo da forma el molde al pastel?
+      - ¿Qué significa el patrón?
+      - ¿Cuál es la relación entre la huella y la tradición?
+  - id: chn_egg_tart
+    name: Pastel de Huevo
+    prompt: |
+      Pastel de huevo—influencia portuguesa, refinamiento de Hong Kong. La crema, la
+      masa. Considera la textura. Hojaldrada, sedosa. ¿Qué haría una masa diferente?
+    follow_ups:
+      - ¿Cómo da forma el pastel al final de la comida?
+      - ¿Cuál es la relación entre la crema y el crujiente?
+      - ¿Por qué pastel de huevo para cerrar?
+  - id: chn_hand_pull
+    name: Estirado a Mano
+    prompt: |
+      Fideos estirados a mano—el cocinero estira, dobla, tira. Los hilos se multiplican.
+      Es un espectáculo. Míralo. ¿Qué sacrificarían los fideos a máquina?
+    follow_ups:
+      - ¿Cómo da forma el estirado al fideo?
+      - ¿Cuál es la relación entre la mano y la textura?
+      - ¿Qué significarían los fideos uniformes?
+  - id: chn_bird_nest
+    name: Nido de Pájaro
+    prompt: |
+      Nido de pájaro—no el nido de golondrina de sopa, sino un nido de taro, o un nido de fideos crujientes
+      que sostiene un salteado. El nido es arquitectura. Considera la
+      forma. ¿Qué añade el nido?
+    follow_ups:
+      - ¿Cómo da forma el nido al plato?
+      - ¿Qué haría un plato?
+      - ¿Cuál es la relación entre el recipiente y el contenido?
+  - id: chn_red_envelope
+    name: Sobre Rojo
+    prompt: |
+      En los banquetes, los sobres rojos pueden acompañar regalos—dinero para la cocina, para
+      los anfitriones. El sobre es ritual. Considera el intercambio. ¿Qué significa el
+      rojo?
+    follow_ups:
+      - ¿Cómo da forma el sobre a la ocasión?
+      - ¿Qué significaría no tener sobre?
+      - ¿Cuál es la relación entre el regalo y la cara?
+  - id: chn_toasting_ritual
+    name: Ritual de Brindis
+    prompt: |
+      Gan bei—abajo—o sorbos casuales. El brindis estructura el banquete.
+      ¿Quién brinda a quién? ¿Cuándo? El ritual es social. Nota la coreografía.
+      ¿Qué sería de la comida sin brindis?
+    follow_ups:
+      - ¿Cómo da forma el brindis a la comida?
+      - ¿Cuál es la relación entre el brindis y la jerarquía?
+      - ¿Cuándo se bebe?
+  - id: chn_preserved_veg
+    name: Verdura Conservada
+    prompt: |
+      Mostaza conservada, rábano encurtido, col fermentada—estos añaden profundidad.
+      Son conservas antiguas. Considera la transformación. ¿Qué haría
+      la verdura fresca?
+    follow_ups:
+      - ¿Cómo da forma la conservación al plato?
+      - ¿Cuál es la relación entre el encurtido y el umami?
+      - ¿Por qué conservado?
+  - id: chn_sweet_sour
+    name: Dulce y Ácido
+    prompt: |
+      Dulce y ácido—el equilibrio es deliberado. Azúcar, vinagre, a veces
+      kétchup. La salsa es audaz. Considera la combinación. ¿Qué significaría uno
+      sin el otro?
+    follow_ups:
+      - ¿Cómo da forma el equilibrio al plato?
+      - ¿Cuál es la relación entre lo dulce y lo ácido?
+      - ¿Por qué esta combinación?
+  - id: chn_wonton_soup
+    name: Sopa de Wonton
+    prompt: |
+      Wonton en caldo claro—la sopa es sencilla. El wonton flota. El caldo
+      es limpio. Considera el contraste con el wonton frito. ¿Qué añade la sopa?
+    follow_ups:
+      - ¿Cómo da forma el caldo al wonton?
+      - ¿Qué significaría frito?
+      - ¿Cuál es la relación entre lo claro y lo rico?
+  - id: chn_cold_dish_start
+    name: Inicio con Plato Frío
+    prompt: |
+      Los platos fríos abren la comida—pollo borracho, medusas, encurtidos. Despiertan
+      el paladar. El contraste con lo que sigue. Considera la apertura. ¿Qué
+      haría un inicio caliente?
+    follow_ups:
+      - ¿Cómo da forma lo frío a la comida?
+      - ¿Cuál es la relación entre lo primero y lo siguiente?
+      - ¿Por qué frío primero?
+  - id: chn_fried_rice_wok
+    name: Arroz Frito en Wok
+    prompt: |
+      El arroz frito necesita un wok—calor alto, salteado rápido. Arroz de un día, idealmente.
+      Los granos se separan. Considera la técnica. ¿Qué sacrificaría una sartén?
+    follow_ups:
+      - ¿Cómo da forma el wok al arroz?
+      - ¿Qué haría el arroz fresco?
+      - ¿Cuál es la relación entre el calor y la separación?
+  - id: chn_lychee_dessert
+    name: Postre de Lichi
+    prompt: |
+      Lichi de postre—fresco, en lata, en almíbar. La fruta cierra la comida.
+      Dulce, perfumada. Considera el final. ¿Qué haría otra fruta?
+    follow_ups:
+      - ¿Cómo da forma el lichi al cierre?
+      - ¿Cuál es la relación entre la fruta y el final?
+      - ¿Por qué lichi?
+  - id: chn_fortune_cookie
+    name: Galleta de la Fortuna
+    prompt: |
+      Galleta de la fortuna—invención chino-americana. La galleta es teatro. Rómpela.
+      Lee la fortuna. La galleta no es auténtica, pero es ritual.
+      Considera su lugar.
+    follow_ups:
+      - ¿Cómo terminaría la comida sin ella?
+      - ¿Cómo da forma la fortuna al cierre?
+      - ¿Cuál es la relación entre la galleta y la expectativa?
+  - id: chn_century_egg
+    name: Huevo Centenario
+    prompt: |
+      Huevo centenario—conservado en ceniza, arcilla, cal. La yema se vuelve verde grisácea,
+      la clara se oscurece hasta convertirse en gelatina. Es transformación durante semanas. Considera la
+      arqueología. ¿Qué sería un huevo fresco? ¿Qué añade la conservación?
+    follow_ups:
+      - ¿Cómo da forma la conservación a la textura?
+      - ¿Qué sería del plato sin el huevo?
+      - ¿Cuál es la relación entre el tiempo y la transformación?

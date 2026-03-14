@@ -1,0 +1,500 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# La Interfaz Humana — El Lugar de Trabajo (Spanish)
+
+id: human_interface_workplace
+name: La Interfaz Humana — El Lugar de Trabajo
+description: 50 tarjetas para cambiar tu forma de ver el lugar de trabajo, desde los territorios de los escritorios y las salas de reuniones hasta la máquina de agua y la jerarquía visible versus invisible.
+domain: human_interface
+cards:
+  - id: hi_wp_desk_territory
+    name: Territorio del Escritorio
+    prompt: |
+      Se reclama un escritorio: fotos, plantas, tazas. El territorio se extiende más allá
+      de la superficie. Observa los límites. ¿Qué marca lo "mío"? El escritorio es
+      un pequeño reino. ¿Cómo se defiende?
+    follow_ups:
+      - ¿Cómo moldea el escritorio la identidad?
+      - ¿Cómo sería el lugar de trabajo sin personalización?
+      - ¿Cuál es la relación entre territorio y pertenencia?
+  - id: hi_wp_meeting_room
+    name: Sala de Reuniones
+    prompt: |
+      La sala tiene una mesa, sillas, una pantalla. La puerta se cierra. La sala de
+      reuniones es un escenario para la actuación. Observa quién habla, quién no. La
+      sala alberga jerarquía. ¿Qué permite el espacio?
+    follow_ups:
+      - ¿Cómo moldea la sala la reunión?
+      - ¿Cómo sería el lugar de trabajo sin salas de reuniones?
+      - ¿Cuál es la relación entre la sala y el poder?
+  - id: hi_wp_water_cooler
+    name: Máquina de Agua
+    prompt: |
+      La máquina de agua es una encrucijada. La gente se encuentra allí por accidente. El
+      encuentro es informal. Observa las conversaciones. ¿Qué se dice en la máquina de agua
+      que no se diría en una reunión?
+    follow_ups:
+      - ¿Cómo moldea la máquina de agua la cultura?
+      - ¿Cómo sería el lugar de trabajo sin ella?
+      - ¿Cuál es la relación entre la máquina de agua y la conexión?
+  - id: hi_wp_visible_hierarchy
+    name: Jerarquía Visible
+    prompt: |
+      Oficinas de esquina, asientos junto a la ventana, cubículos. El espacio codifica el rango. Observa
+      la distribución. ¿Quién obtiene qué? La jerarquía está integrada en la
+      arquitectura. ¿Qué comunica?
+    follow_ups:
+      - ¿Cómo moldea la jerarquía el comportamiento?
+      - ¿Cómo sería el lugar de trabajo sin ella?
+      - ¿Cuál es la relación entre el espacio y el estatus?
+  - id: hi_wp_invisible_hierarchy
+    name: Jerarquía Invisible
+    prompt: |
+      Algunas personas son escuchadas; otras son interrumpidas. La jerarquía
+      no está en el organigrama. Observa las reuniones. ¿Quién se somete? ¿Quién
+      domina? La jerarquía invisible moldea los resultados.
+    follow_ups:
+      - ¿Cómo emerge la jerarquía invisible?
+      - ¿Cómo sería el lugar de trabajo si fuera visible?
+      - ¿Cuál es la relación entre lo invisible y el poder?
+  - id: hi_wp_cubicle_wall
+    name: Muro del Cubículo
+    prompt: |
+      El muro es bajo, se puede ver por encima. La privacidad es parcial. El cubículo
+      es un compromiso. Observa las líneas de visión. ¿Qué puedes oír? ¿Qué puedes
+      ver? El muro crea una ilusión de límite.
+    follow_ups:
+      - ¿Cómo moldea el cubículo el enfoque?
+      - ¿Cómo sería el lugar de trabajo con muros completos?
+      - ¿Cuál es la relación entre el muro y la privacidad?
+  - id: hi_wp_corner_office
+    name: Oficina de Esquina
+    prompt: |
+      La oficina de esquina tiene dos ventanas. Es el premio. Observa quién la ocupa. La
+      oficina de esquina es visible desde el piso. Es un símbolo. ¿Qué comunica la
+      esquina?
+    follow_ups:
+      - ¿Cómo moldea la oficina de esquina la aspiración?
+      - ¿Cómo sería el piso sin ella?
+      - ¿Cuál es la relación entre la esquina y la autoridad?
+  - id: hi_wp_open_plan
+    name: Plano Abierto
+    prompt: |
+      Sin muros. Escritorios en filas o grupos. El plano abierto promete colaboración.
+      Observa la realidad. ¿Quién lleva auriculares? El plano abierto crea
+      proximidad. ¿A qué coste?
+    follow_ups:
+      - ¿Cómo moldea el plano abierto la interacción?
+      - ¿Cómo sería el lugar de trabajo con muros?
+      - ¿Cuál es la relación entre lo abierto y el enfoque?
+  - id: hi_wp_calendar_invite
+    name: Invitación de Calendario
+    prompt: |
+      Aparece la invitación. Aceptar, rechazar, tentativo. El calendario estructura
+      el día. Observa los bloques. ¿Quién controla el tiempo de quién? El calendario
+      es un mapa de poder.
+    follow_ups:
+      - ¿Cómo moldea el calendario el día?
+      - ¿Cómo sería el lugar de trabajo sin él?
+      - ¿Cuál es la relación entre la invitación y la obligación?
+  - id: hi_wp_knock_before_enter
+    name: Llamar Antes de Entrar
+    prompt: |
+      Algunas puertas están cerradas. La llamada es una petición. Observa quién llama y
+      quién entra. La llamada codifica el respeto. ¿Qué protege la puerta cerrada?
+    follow_ups:
+      - ¿Cómo moldea la llamada el encuentro?
+      - ¿Cómo sería el lugar de trabajo con puertas abiertas?
+      - ¿Cuál es la relación entre la llamada y el límite?
+  - id: hi_wp_headphones_signal
+    name: Señal de Auriculares
+    prompt: |
+      Los auriculares puestos significan "no molestar". La señal es universal. Observa
+      quién la respeta. Los auriculares crean una burbuja. ¿Qué permite la burbuja?
+    follow_ups:
+      - ¿Cómo moldean los auriculares el piso?
+      - ¿Cómo sería el lugar de trabajo sin ellos?
+      - ¿Cuál es la relación entre los auriculares y el enfoque?
+  - id: hi_wp_lunch_room
+    name: Comedor
+    prompt: |
+      El comedor tiene mesas, microondas, nevera. La gente come sola o
+      junta. Observa los grupos. ¿Quién se sienta con quién? El comedor
+      revela alianzas. ¿Qué dice la disposición?
+    follow_ups:
+      - ¿Cómo moldea el comedor la cultura?
+      - ¿Cómo sería el lugar de trabajo sin él?
+      - ¿Cuál es la relación entre el comedor y la conexión?
+  - id: hi_wp_slack_ping
+    name: Ping de Slack
+    prompt: |
+      Llega el ping. Instantáneo, asíncrono. El ping puede interrumpir o
+      esperar. Observa las normas. ¿Quién responde inmediatamente? El ping crea
+      un nuevo ritmo de comunicación. ¿Qué reemplaza?
+    follow_ups:
+      - ¿Cómo moldea el ping el día?
+      - ¿Cómo sería el lugar de trabajo sin él?
+      - ¿Cuál es la relación entre el ping y la urgencia?
+  - id: hi_wp_whiteboard_claim
+    name: Reclamación de Pizarra
+    prompt: |
+      La pizarra contiene ideas: diagramas, listas. Alguien las escribió. La
+      pizarra es una superficie compartida. Observa quién escribe, quién borra. La
+      pizarra es territorio. ¿Qué contiene?
+    follow_ups:
+      - ¿Cómo moldea la pizarra la colaboración?
+      - ¿Cómo sería la reunión sin ella?
+      - ¿Cuál es la relación entre la pizarra y el pensamiento?
+  - id: hi_wp_elevator_encounter
+    name: Encuentro en el Ascensor
+    prompt: |
+      Compartes el ascensor con un colega. Treinta segundos. El encuentro es incómodo o fácil.
+      Observa la charla trivial. ¿Qué se dice? El
+      ascensor comprime el tiempo. ¿Qué requiere?
+    follow_ups:
+      - ¿Cómo moldea el ascensor el encuentro?
+      - ¿Cómo sería el edificio sin ascensores?
+      - ¿Cuál es la relación entre el ascensor y la cortesía?
+  - id: hi_wp_cc_email
+    name: CC en Correo Electrónico
+    prompt: |
+      Estás en copia. No eres el destinatario principal. El CC te incluye en el
+      bucle. Observa quién está en copia. El CC es una señal de relevancia,
+      o de política. ¿Qué hace el CC?
+    follow_ups:
+      - ¿Cómo moldea el CC la comunicación?
+      - ¿Cómo sería el lugar de trabajo sin CC?
+      - ¿Cuál es la relación entre el CC y la visibilidad?
+  - id: hi_wp_standing_desk
+    name: Escritorio de Pie
+    prompt: |
+      El escritorio se eleva. El trabajador está de pie. El escritorio de pie es una elección: salud,
+      preferencia, rendimiento. Observa quién tiene uno. ¿Qué señala el escritorio de pie?
+    follow_ups:
+      - ¿Cómo moldea el escritorio de pie el cuerpo?
+      - ¿Cómo sería el lugar de trabajo sin él?
+      - ¿Cuál es la relación entre estar de pie y la productividad?
+  - id: hi_wp_conference_call
+    name: Llamada de Conferencia
+    prompt: |
+      Voces de otros lugares. La llamada conecta a personas distribuidas. Observa
+      quién habla, quién silencia. La llamada es una presencia parcial. ¿Qué permite la
+      llamada, y qué pierde?
+    follow_ups:
+      - ¿Cómo moldea la llamada la reunión?
+      - ¿Cómo sería el lugar de trabajo sin ella?
+      - ¿Cuál es la relación entre la llamada y la presencia?
+  - id: hi_wp_office_plant
+    name: Planta de Oficina
+    prompt: |
+      Una planta en el escritorio: poto, suculenta. Es decoración y cuidado. La
+      planta no pertenece a la empresa. Observa quién tiene una. ¿Qué añade la
+      planta al espacio?
+    follow_ups:
+      - ¿Cómo moldea la planta el escritorio?
+      - ¿Cómo sería el lugar de trabajo sin plantas?
+      - ¿Cuál es la relación entre la planta y la identidad?
+  - id: hi_wp_after_hours
+    name: Horas Extra
+    prompt: |
+      La oficina después de que la mayoría se ha ido. Las luces están tenues. El trabajador
+      en horas extra es visible: dedicado o luchando. Observa la escena. ¿Qué permite la
+      oficina vacía? ¿A qué coste?
+    follow_ups:
+      - ¿Cómo moldean las horas extra la cultura?
+      - ¿Cómo sería el lugar de trabajo sin ellas?
+      - ¿Cuál es la relación entre las horas y la expectativa?
+  - id: hi_wp_nameplate
+    name: Placa de Nombre
+    prompt: |
+      Un nombre en el escritorio, en la puerta. La placa de nombre reclama el espacio. Observa
+      quién tiene una. La placa de nombre es identidad y territorio. ¿Qué comunica
+      a los transeúntes?
+    follow_ups:
+      - ¿Cómo moldea la placa de nombre el espacio?
+      - ¿Cómo sería el lugar de trabajo sin ella?
+      - ¿Cuál es la relación entre la placa de nombre y la presencia?
+  - id: hi_wp_meeting_overrun
+    name: Reunión Extendida
+    prompt: |
+      Se suponía que la reunión debía terminar. No lo hace. La extensión es común.
+      Observa la dinámica. ¿Quién tiene la próxima reunión? ¿Quién puede quedarse? La
+      extensión es un movimiento de poder. ¿Qué extrae?
+    follow_ups:
+      - ¿Cómo moldea la extensión el día?
+      - ¿Cómo sería el lugar de trabajo con finales estrictos?
+      - ¿Cuál es la relación entre la extensión y el respeto?
+  - id: hi_wp_quick_question
+    name: Pregunta Rápida
+    prompt: |
+      "¿Tienes una pregunta rápida?" La pregunta interrumpe. Lo "rápido" es una promesa.
+      Observa el intercambio. ¿Qué tan rápido es? La pregunta rápida es una
+      negociación de tiempo. ¿Qué coste tiene?
+    follow_ups:
+      - ¿Cómo moldea la pregunta rápida el flujo?
+      - ¿Cómo sería el lugar de trabajo sin interrupciones?
+      - ¿Cuál es la relación entre lo rápido y el respeto?
+  - id: hi_wp_bathroom_encounter
+    name: Encuentro en el Baño
+    prompt: |
+      Ves a un colega en el baño. El encuentro es ambiguo. ¿Contacto visual o no? El
+      baño es un espacio liminal. Observa las normas. ¿Qué requiere el encuentro?
+    follow_ups:
+      - ¿Cómo moldea el baño el lugar de trabajo?
+      - ¿Cómo sería el lugar de trabajo sin baños compartidos?
+      - ¿Cuál es la relación entre el baño y la privacidad?
+  - id: hi_wp_commute_talk
+    name: Charla sobre el Trayecto
+    prompt: |
+      "¿Cómo estuvo el trayecto?" La pregunta abre una charla trivial. El trayecto es una
+      experiencia compartida. Observa el intercambio. ¿Qué hace la charla sobre el trayecto
+      por la relación?
+    follow_ups:
+      - ¿Cómo moldea la charla sobre el trayecto el día?
+      - ¿Cómo sería el lugar de trabajo sin ella?
+      - ¿Cuál es la relación entre el trayecto y la conexión?
+  - id: hi_wp_parking_spot
+    name: Plaza de Aparcamiento
+    prompt: |
+      Plazas reservadas, plazas por orden de llegada. El aparcamiento codifica la jerarquía. Observa
+      quién aparca dónde. La plaza es un pequeño privilegio. ¿Qué comunica?
+    follow_ups:
+      - ¿Cómo moldea el aparcamiento el lugar de trabajo?
+      - ¿Cómo sería el aparcamiento sin plazas reservadas?
+      - ¿Cuál es la relación entre la plaza y el estatus?
+  - id: hi_wp_birthday_cake
+    name: Pastel de Cumpleaños
+    prompt: |
+      Aparece un pastel. Es el cumpleaños de alguien. El equipo se reúne. El pastel
+      es un ritual. Observa la reunión. ¿Qué hace el momento del cumpleaños
+      por el grupo?
+    follow_ups:
+      - ¿Cómo moldea el cumpleaños la cultura?
+      - ¿Cómo sería el lugar de trabajo sin él?
+      - ¿Cuál es la relación entre el pastel y la pertenencia?
+  - id: hi_wp_forwarded_email
+    name: Correo Electrónico Reenviado
+    prompt: |
+      Se reenvía un correo electrónico. "Para tu información" o "Pensé que deberías verlo". El
+      reenvío amplía la conversación. Observa a quién se reenvía. El
+      reenvío es una señal. ¿Qué significa?
+    follow_ups:
+      - ¿Cómo moldea el reenvío la comunicación?
+      - ¿Cómo sería el lugar de trabajo sin él?
+      - ¿Cuál es la relación entre el reenvío y la confianza?
+  - id: hi_wp_break_room
+    name: Sala de Descanso
+    prompt: |
+      Café, aperitivos, a veces un sofá. La sala de descanso es una pausa. La gente
+      va allí para desconectar. Observa quién la usa. La sala de descanso es un
+      refugio. ¿Qué proporciona?
+    follow_ups:
+      - ¿Cómo moldea la sala de descanso el día?
+      - ¿Cómo sería el lugar de trabajo sin ella?
+      - ¿Cuál es la relación entre el descanso y la productividad?
+  - id: hi_wp_office_supply
+    name: Suministro de Oficina
+    prompt: |
+      Bolígrafos, papel, grapadoras: el almacén de suministros tiene las herramientas. Alguien
+      lo gestiona. Observa quién toma qué. El suministro es un pequeño bien común.
+      ¿Cuáles son las reglas?
+    follow_ups:
+      - ¿Cómo moldea el suministro el lugar de trabajo?
+      - ¿Cómo sería el lugar de trabajo sin él?
+      - ¿Cuál es la relación entre el suministro y el derecho?
+  - id: hi_wp_remote_camera
+    name: Cámara Remota
+    prompt: |
+      La cámara está encendida o apagada. El trabajador remoto elige. La elección es
+      visible. Observa las normas. ¿Quién la mantiene encendida? La cámara es una ventana.
+      ¿Qué revela?
+    follow_ups:
+      - ¿Cómo moldea la cámara la llamada?
+      - ¿Cómo sería la reunión sin ella?
+      - ¿Cuál es la relación entre la cámara y la presencia?
+  - id: hi_wp_side_conversation
+    name: Conversación Paralela
+    prompt: |
+      Dos personas hablan mientras otros trabajan. La conversación paralela es privada
+      pero visible. Observa la dinámica. ¿Es disruptiva? La conversación
+      paralela es una pequeña rebelión. ¿Qué crea?
+    follow_ups:
+      - ¿Cómo moldea la conversación paralela el piso?
+      - ¿Cómo sería el lugar de trabajo sin ella?
+      - ¿Cuál es la relación entre lo paralelo y la exclusión?
+  - id: hi_wp_clean_desk
+    name: Escritorio Limpio
+    prompt: |
+      Algunos escritorios están inmaculados, sin nada personal. El escritorio limpio es política o
+      preferencia. Observa el contraste. ¿Qué comunica el escritorio limpio?
+      ¿Esterilidad? ¿Disciplina? ¿Desapego?
+    follow_ups:
+      - ¿Cómo moldea el escritorio limpio al trabajador?
+      - ¿Cómo sería el lugar de trabajo con escritorios desordenados?
+      - ¿Cuál es la relación entre lo limpio y la identidad?
+  - id: hi_wp_meeting_no_show
+    name: No Asistencia a Reunión
+    prompt: |
+      La reunión estaba programada. Alguien no asiste. La no asistencia es un
+      mensaje. Observa la respuesta. ¿Alguien lo menciona? La no asistencia
+      es un pequeño movimiento de poder. ¿Qué comunica?
+    follow_ups:
+      - ¿Cómo moldea la no asistencia la reunión?
+      - ¿Cómo sería el lugar de trabajo sin ausencias?
+      - ¿Cuál es la relación entre la no asistencia y el respeto?
+  - id: hi_wp_cubicle_visit
+    name: Visita al Cubículo
+    prompt: |
+      Alguien se acerca. Se para al borde del cubículo. La visita es una elección: podrían haber enviado un mensaje.
+      Observa la dinámica. ¿Qué permite la visita que no permite un mensaje?
+    follow_ups:
+      - ¿Cómo moldea la visita la interacción?
+      - ¿Cómo sería el lugar de trabajo sin visitas?
+      - ¿Cuál es la relación entre la visita y la interrupción?
+  - id: hi_wp_shared_printer
+    name: Impresora Compartida
+    prompt: |
+      La impresora es compartida. Los documentos se acumulan. Alguien debe recogerlos. La
+      impresora es una encrucijada. Observa los encuentros. ¿Qué sucede cuando
+      dos personas alcanzan la misma salida?
+    follow_ups:
+      - ¿Cómo moldea la impresora el piso?
+      - ¿Cómo sería el lugar de trabajo sin ella?
+      - ¿Cuál es la relación entre la impresora y la paciencia?
+  - id: hi_wp_office_temperature
+    name: Temperatura de la Oficina
+    prompt: |
+      "Hace demasiado frío". "Hace demasiado calor". La temperatura es disputada. Alguien
+      controla el termostato. Observa las quejas. La temperatura es un
+      pequeño foco de poder. ¿Quién gana?
+    follow_ups:
+      - ¿Cómo moldea la temperatura el lugar de trabajo?
+      - ¿Cómo sería el lugar de trabajo con control individual?
+      - ¿Cuál es la relación entre la temperatura y la comodidad?
+  - id: hi_wp_handshake
+    name: Apretón de Manos
+    prompt: |
+      El apretón de manos: primer encuentro, trato cerrado. El apretón de manos es un ritual. Observa
+      el agarre, la duración. El apretón de manos codifica la formalidad. ¿Qué comunica?
+    follow_ups:
+      - ¿Cómo moldea el apretón de manos el encuentro?
+      - ¿Cómo sería el lugar de trabajo sin él?
+      - ¿Cuál es la relación entre el apretón de manos y la confianza?
+  - id: hi_wp_cc_removal
+    name: Eliminación de CC
+    prompt: |
+      "Responder a todos" o "Responder"? La elección importa. Eliminar a alguien del
+      hilo es una señal. Observa las dinámicas. ¿Quién es eliminado? La eliminación del
+      CC es una pequeña exclusión. ¿Qué significa?
+    follow_ups:
+      - ¿Cómo moldea la eliminación la conversación?
+      - ¿Cómo sería el lugar de trabajo sin opciones de respuesta?
+      - ¿Cuál es la relación entre la eliminación y el poder?
+  - id: hi_wp_office_tour
+    name: Recorrido por la Oficina
+    prompt: |
+      A un nuevo empleado se le da un recorrido. "Esta es la cocina. Aquí es donde tenemos
+      reuniones". El recorrido orienta. Observa al guía. ¿Qué comunica el recorrido
+      sobre la cultura?
+    follow_ups:
+      - ¿Cómo moldea el recorrido al recién llegado?
+      - ¿Cómo sería la incorporación sin él?
+      - ¿Cuál es la relación entre el recorrido y la pertenencia?
+  - id: hi_wp_meeting_room_book
+    name: Reserva de Sala de Reuniones
+    prompt: |
+      La sala está reservada. O doblemente reservada. El calendario es el árbitro.
+      Observa el conflicto. ¿Quién cede? La reserva es una reclamación de espacio y
+      tiempo. ¿Qué requiere?
+    follow_ups:
+      - ¿Cómo moldea la reserva el día?
+      - ¿Cómo sería el lugar de trabajo sin reservas?
+      - ¿Cuál es la relación entre la reserva y la prioridad?
+  - id: hi_wp_goodbye_ritual
+    name: Ritual de Despedida
+    prompt: |
+      Fin del día. "Me voy". "Hasta mañana". La despedida es un ritual.
+      Observa los intercambios. ¿Quién se despide de quién? El ritual marca el
+      límite entre el trabajo y el no trabajo.
+    follow_ups:
+      - ¿Cómo moldea la despedida el día?
+      - ¿Cómo sería el lugar de trabajo sin ella?
+      - ¿Cuál es la relación entre la despedida y el cierre?
+  - id: hi_wp_promotion_announce
+    name: Anuncio de Promoción
+    prompt: |
+      "Nos complace anunciar..." La promoción es pública. El anuncio
+      crea un momento. Observa la respuesta. Felicitaciones, silencio,
+      miradas de soslayo. ¿Qué hace el anuncio en la sala?
+    follow_ups:
+      - ¿Cómo moldea el anuncio la cultura?
+      - ¿Cómo sería el lugar de trabajo sin promociones públicas?
+      - ¿Cuál es la relación entre el anuncio y la jerarquía?
+  - id: hi_wp_desk_move
+    name: Cambio de Escritorio
+    prompt: |
+      Alguien cambia de escritorio. El cambio es promoción, reorganización o elección.
+      Observa el proceso. ¿Qué se llevan? ¿Qué dejan? El cambio
+      es una transición. ¿Qué significa?
+    follow_ups:
+      - ¿Cómo moldea el cambio al trabajador?
+      - ¿Cómo sería el lugar de trabajo sin cambios?
+      - ¿Cuál es la relación entre el cambio y la identidad?
+  - id: hi_wp_office_gossip
+    name: Chismes de Oficina
+    prompt: |
+      La información viaja: quién se va, quién está frustrado. El chisme es
+      informal. Observa dónde ocurre. La máquina de agua, el pasillo.
+      ¿Qué hace el chisme por el grupo?
+    follow_ups:
+      - ¿Cómo moldea el chisme la cultura?
+      - ¿Cómo sería el lugar de trabajo sin él?
+      - ¿Cuál es la relación entre el chisme y la pertenencia?
+  - id: hi_wp_meeting_agenda
+    name: Agenda de Reunión
+    prompt: |
+      La agenda estructura la reunión. O no lo hace, la reunión divaga.
+      Observa la dinámica. ¿Quién sigue la agenda? ¿Quién no? La agenda
+      es un contrato. ¿Qué permite?
+    follow_ups:
+      - ¿Cómo moldea la agenda la reunión?
+      - ¿Cómo sería la reunión sin ella?
+      - ¿Cuál es la relación entre la agenda y el poder?
+  - id: hi_wp_office_food
+    name: Comida de Oficina
+    prompt: |
+      Donas, fruta, sobras de una reunión con un cliente. La comida aparece.
+      La gente se reúne. Observa el compartir. La comida de oficina es un pequeño regalo.
+      ¿Qué crea?
+    follow_ups:
+      - ¿Cómo moldea la comida el lugar de trabajo?
+      - ¿Cómo sería el lugar de trabajo sin ella?
+      - ¿Cuál es la relación entre la comida y la comunidad?
+  - id: hi_wp_last_day
+    name: Último Día
+    prompt: |
+      El último día de alguien. Despedidas, quizás una tarjeta, quizás pastel. El último día
+      es un ritual de partida. Observa el estado de ánimo. ¿Qué hace el último día
+      por quien se va y por los que se quedan?
+    follow_ups:
+      - ¿Cómo moldea el último día la cultura?
+      - ¿Cómo sería el lugar de trabajo sin el ritual?
+      - ¿Cuál es la relación entre el último día y el cierre?
+  - id: hi_wp_office_hours
+    name: Horario de Oficina
+    prompt: |
+      "Tengo horario de oficina los martes de 2 a 4". El bloque está abierto. La gente puede
+      entrar. Observa quién viene. El horario de oficina es una invitación. ¿Qué permite?
+    follow_ups:
+      - ¿Cómo moldea el horario de oficina el acceso?
+      - ¿Cómo sería el lugar de trabajo sin él?
+      - ¿Cuál es la relación entre el horario y la disponibilidad?
+  - id: hi_wp_workspace_claim
+    name: Reclamación de Espacio de Trabajo
+    prompt: |
+      Una chaqueta en la silla. Una bolsa debajo del escritorio. La reclamación dice "Estoy aquí"
+      o "Vuelvo enseguida". Observa las señales. ¿Cuánto tiempo puede mantener una reclamación?
+      El espacio de trabajo es propiedad temporal. ¿Cuáles son las reglas?
+    follow_ups:
+      - ¿Cómo moldea la reclamación el piso?
+      - ¿Cómo sería el lugar de trabajo sin reclamaciones?
+      - ¿Cuál es la relación entre la reclamación y la presencia?

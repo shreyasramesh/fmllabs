@@ -1,0 +1,458 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Selva Urbana — París (Spanish)
+
+id: urban_jungle_paris
+name: Selva Urbana — París
+description: 50 cartas para cambiar tu forma de ver París—desde la escala y la luz hasta las capas de historia y los ritmos de la vida callejera.
+domain: urban_jungle
+cards:
+  - id: paris_balcony_flower
+    name: Flor de Balcón
+    prompt: |
+      Los balcones parisinos florecen con geranios, petunias. Encuentra un edificio
+      donde cada balcón tenga una maceta. ¿Cómo cambia la flor la fachada?
+    follow_ups:
+      - ¿Qué sería de la calle sin las flores?
+      - ¿Cómo crean identidad las flores?
+      - ¿Cuál es la relación entre la flor y el residente?
+  - id: paris_haussmann_line
+    name: Línea Haussmann
+    prompt: |
+      Los bulevares de Haussmann atraviesan el viejo París. Camina por uno. La línea es
+      implacable—edificios alineados, alturas uniformes. ¿Cómo moldea el bulevar el movimiento?
+    follow_ups:
+      - ¿Qué sería de París sin Haussmann?
+      - ¿Cómo crea la vista el bulevar?
+      - ¿Cuál es la relación entre la línea y el poder?
+  - id: paris_cafe_terrace
+    name: Terraza de Café
+    prompt: |
+      Las terrazas de los cafés parisinos dan a la calle. Siéntate en una. Estás a la vez dentro y
+      fuera. La terraza es un umbral. ¿Qué ves?
+    follow_ups:
+      - ¿Qué sería de la calle sin la terraza?
+      - ¿Cómo crea el encuentro la terraza?
+      - ¿Cuál es la relación entre la terraza y la calle?
+  - id: paris_metro_entrance
+    name: Entrada de Metro
+    prompt: |
+      Las entradas del metro Art Nouveau son íconos. Encuentra una. La forja, la
+      tipografía—la entrada es un portal. ¿Qué promete?
+    follow_ups:
+      - ¿Qué sería de la calle sin la entrada?
+      - ¿Cómo crea identidad la entrada?
+      - ¿Cuál es la relación entre la entrada y el subsuelo?
+  - id: paris_shutter
+    name: Persiana Parisina
+    prompt: |
+      Las persianas parisinas—volets—se cierran por la noche. Son verdes, grises, azules. Encuentra una
+      calle donde las persianas estén cerradas. ¿Qué hay detrás de ellas?
+    follow_ups:
+      - ¿Qué sería de la fachada sin las persianas?
+      - ¿Cómo crean privacidad las persianas?
+      - ¿Cuál es la relación entre la persiana y la luz?
+  - id: paris_cobble
+    name: Adoquín Parisino
+    prompt: |
+      Los adoquines parisinos—pavés—persisten. Camina sobre ellos. Siente la textura. El
+      adoquín es una reliquia de otro París. ¿Cómo moldea la calle?
+    follow_ups:
+      - ¿Qué sería de la calle sin los adoquines?
+      - ¿Cómo marcan la historia los adoquines?
+      - ¿Cuál es la relación entre el adoquín y la revolución?
+  - id: paris_seine_edge
+    name: Orilla del Sena
+    prompt: |
+      El Sena atraviesa París. Acércate al muelle. El río es una costura. ¿Qué hay
+      a cada lado? ¿Cómo divide y conecta el río?
+    follow_ups:
+      - ¿Qué sería de París sin el Sena?
+      - ¿Cómo moldea el río la ciudad?
+      - ¿Cuál es la relación entre el río y la orilla?
+  - id: paris_roof_zinc
+    name: Zinc del Tejado
+    prompt: |
+      Los tejados parisinos suelen ser de zinc—grises, inclinados, con buhardillas. Mira hacia arriba. La línea
+      del tejado es distintiva. ¿Cómo moldea el horizonte?
+    follow_ups:
+      - ¿Qué sería del horizonte sin el zinc?
+      - ¿Cómo crea identidad el zinc?
+      - ¿Cuál es la relación entre el tejado y el ático?
+  - id: paris_door_height
+    name: Altura de Puerta
+    prompt: |
+      Las puertas parisinas suelen ser altas—doble altura. Encuentra una. ¿Qué pasaría por ella?
+      La puerta es un umbral de escala.
+    follow_ups:
+      - ¿Qué sería del edificio sin la puerta alta?
+      - ¿Cómo crea la grandeza la altura?
+      - ¿Cuál es la relación entre la puerta y el edificio?
+  - id: paris_boulangerie_smell
+    name: Olor a Panadería
+    prompt: |
+      Una panadería huele a pan. Sigue el olor. La panadería es un nodo.
+      ¿Qué dice el olor sobre la manzana?
+    follow_ups:
+      - ¿Qué sería de la calle sin el olor?
+      - ¿Cómo crea identidad el olor?
+      - ¿Cuál es la relación entre el olor y el comercio?
+  - id: paris_place
+    name: Plaza Parisina
+    prompt: |
+      París tiene plazas—cuadrados, círculos, nodos. Encuentra una. Observa la
+      geometría. ¿Cómo moldea la plaza las calles que la alimentan?
+    follow_ups:
+      - ¿Qué sería del barrio sin la plaza?
+      - ¿Cómo crea el enfoque la plaza?
+      - ¿Cuál es la relación entre la plaza y el flujo?
+  - id: paris_balcony_iron
+    name: Hierro de Balcón
+    prompt: |
+      Las barandillas de los balcones parisinos suelen ser ornamentadas—hierro forjado, curvas, florituras.
+      Encuentra una. ¿Cómo moldea el hierro la fachada?
+    follow_ups:
+      - ¿Qué sería del edificio sin el hierro?
+      - ¿Cómo crea identidad el hierro?
+      - ¿Cuál es la relación entre el hierro y la artesanía?
+  - id: paris_plane_tree
+    name: Plátano de Sombra
+    prompt: |
+      Los plátanos de sombra parisinos bordean los bulevares. Su corteza se desprende. Encuentra uno. ¿Cómo
+      moldea el árbol la calle? ¿Qué sería del bulevar sin él?
+    follow_ups:
+      - ¿Qué sería de la calle sin el plátano?
+      - ¿Cómo crea sombra el plátano?
+      - ¿Cuál es la relación entre el árbol y el bulevar?
+  - id: paris_metro_tile
+    name: Baldosa de Metro
+    prompt: |
+      Las estaciones de metro parisinas tienen baldosas blancas. El túnel es un tubo de luz. Viaja en
+      una línea. ¿Cómo moldea la baldosa el trayecto?
+    follow_ups:
+      - ¿Qué sería de la estación sin las baldosas?
+      - ¿Cómo crean limpieza las baldosas?
+      - ¿Cuál es la relación entre la baldosa y el subsuelo?
+  - id: paris_clock
+    name: Reloj Parisino
+    prompt: |
+      París tiene muchos relojes públicos—en iglesias, estaciones, edificios. Encuentra uno.
+      ¿Qué hora marca? ¿Va bien?
+    follow_ups:
+      - ¿Qué sería del espacio sin el reloj?
+      - ¿Cómo moldea el tiempo el reloj?
+      - ¿Cuál es la relación entre el reloj y el lugar?
+  - id: paris_newsstand
+    name: Quiosco Parisino
+    prompt: |
+      Los quioscos parisinos venden periódicos, revistas, billetes de metro. Encuentra uno. ¿Qué se exhibe?
+      ¿Quién se detiene? El quiosco es un nodo.
+    follow_ups:
+      - ¿Qué sería de la calle sin el quiosco?
+      - ¿Cómo crea el encuentro el quiosco?
+      - ¿Cuál es la relación entre el quiosco y la calle?
+  - id: paris_bench
+    name: Banco Parisino
+    prompt: |
+      París tiene bancos verdes en parques y a lo largo del Sena. Siéntate en uno. ¿Quién más se sienta?
+      ¿Cuál es la vista?
+    follow_ups:
+      - ¿Qué sería del espacio sin el banco?
+      - ¿Cómo crea el banco un respiro?
+      - ¿Cuál es la relación entre el banco y el río?
+  - id: paris_boulangerie_queue
+    name: Cola de Panadería
+    prompt: |
+      Únete a una cola de panadería en la hora punta de la mañana. La cola es un ritual. ¿Qué están comprando
+      las personas? ¿Cuál es la etiqueta?
+    follow_ups:
+      - ¿Qué sería de la calle sin la cola?
+      - ¿Cómo crea la cola comunidad?
+      - ¿Cuál es la relación entre la cola y el pan?
+  - id: paris_manhole
+    name: Tapa de Alcantarilla Parisina
+    prompt: |
+      Las tapas de alcantarilla parisinas a menudo dicen "Paris" o "Eau". Encuentra una. La tapa es
+      una puerta a las venas de la ciudad. ¿Qué hay debajo?
+    follow_ups:
+      - ¿Qué sería de la calle sin la tapa?
+      - ¿Cómo marca el sistema la tapa?
+      - ¿Cuál es la relación entre la tapa y el subsuelo?
+  - id: paris_shadow
+    name: Sombra Parisina
+    prompt: |
+      La luz parisina crea sombras nítidas. Encuentra una esquina donde se encuentren la sombra y el sol.
+      ¿Cómo moldea la sombra la calle?
+    follow_ups:
+      - ¿Qué sería de la calle sin la sombra?
+      - ¿Cómo crea contraste la sombra?
+      - ¿Cuál es la relación entre la sombra y el edificio?
+  - id: paris_courtyard
+    name: Patio Parisino
+    prompt: |
+      Los edificios parisinos a menudo esconden patios—cours—detrás de puertas. Echa un vistazo.
+      ¿Qué hay dentro? El patio es una habitación secreta.
+    follow_ups:
+      - ¿Qué sería del edificio sin el patio?
+      - ¿Cómo crea privacidad el patio?
+      - ¿Cuál es la relación entre el patio y la calle?
+  - id: paris_bike_lane
+    name: Carril Bici Parisino
+    prompt: |
+      París ha ampliado los carriles bici—pistes cyclables. Encuentra uno. ¿Cómo moldea
+      el carril la calle? ¿Quién lo usa?
+    follow_ups:
+      - ¿Qué sería de la calle sin el carril?
+      - ¿Cómo crea movilidad el carril?
+      - ¿Cuál es la relación entre el carril y el coche?
+  - id: paris_fountain
+    name: Fuente Parisina
+    prompt: |
+      París tiene fuentes—fuentes Wallace, fuentes monumentales. Encuentra una.
+      ¿Qué ofrece? ¿Quién la usa?
+    follow_ups:
+      - ¿Qué sería del lugar sin la fuente?
+      - ¿Cómo crea un regalo la fuente?
+      - ¿Cuál es la relación entre la fuente y lo público?
+  - id: paris_awning
+    name: Toldo Parisino
+    prompt: |
+      Los toldos de los cafés parisinos crean sombra. Encuentra una calle donde los toldos se repitan. ¿Cómo
+      moldean la acera?
+    follow_ups:
+      - ¿Qué sería de la calle sin los toldos?
+      - ¿Cómo crean territorio los toldos?
+      - ¿Cuál es la relación entre el toldo y la terraza?
+  - id: paris_lamp_post
+    name: Farola Parisina
+    prompt: |
+      Las farolas parisinas tienen un estilo particular—a menudo ornamentadas, a menudo verdes. Encuentra
+      una. ¿Cómo moldea la farola la calle por la noche?
+    follow_ups:
+      - ¿Qué sería de la calle sin la farola?
+      - ¿Cómo crea seguridad la farola?
+      - ¿Cuál es la relación entre la farola y la oscuridad?
+  - id: paris_door_knocker
+    name: Aldaba de Puerta
+    prompt: |
+      Las puertas parisinas a menudo tienen aldabas—cabezas de león, manos, anillos. Encuentra una. ¿Qué
+      sonido haría? La aldaba es un objeto de umbral.
+    follow_ups:
+      - ¿Qué sería de la puerta sin la aldaba?
+      - ¿Cómo crea sonido la aldaba?
+      - ¿Cuál es la relación entre la aldaba y la entrada?
+  - id: paris_shop_sign
+    name: Rótulo de Tienda Parisino
+    prompt: |
+      Los rótulos de las tiendas parisinas suelen estar pintados a mano—panadería, carnicería, quesería.
+      Encuentra uno. ¿Qué dice el rótulo sobre la tienda?
+    follow_ups:
+      - ¿Qué sería de la calle sin el rótulo?
+      - ¿Cómo crea identidad el rótulo?
+      - ¿Cuál es la relación entre el rótulo y la artesanía?
+  - id: paris_parking
+    name: Aparcamiento Parisino
+    prompt: |
+      El aparcamiento parisino es creativo—coches en aceras, en ángulo, apretados. Observa
+      a alguien aparcar. ¿Cómo encaja el coche? ¿Cuál es la relación entre el coche y la ciudad?
+    follow_ups:
+      - ¿Qué sería de la calle sin los coches?
+      - ¿Cómo moldea el aparcamiento la calle?
+      - ¿Cuál es la relación entre el aparcamiento y el espacio?
+  - id: paris_drain
+    name: Desagüe Parisino
+    prompt: |
+      Las cunetas parisinas corren a lo largo del bordillo. Después de llover, fluyen. Encuentra una. ¿A dónde
+      va el agua? El desagüe es una costura.
+    follow_ups:
+      - ¿Qué sería de la calle sin el desagüe?
+      - ¿Cómo gestiona el agua el desagüe?
+      - ¿Cuál es la relación entre el desagüe y el sistema?
+  - id: paris_chimney
+    name: Chimenea Parisina
+    prompt: |
+      Las chimeneas parisinas puntúan la línea del tejado. Cuenta las de un edificio. La
+      chimenea es una reliquia de calor. ¿Qué se quemó aquí?
+    follow_ups:
+      - ¿Qué sería del tejado sin la chimenea?
+      - ¿Cómo marca la historia la chimenea?
+      - ¿Cuál es la relación entre la chimenea y el fuego?
+  - id: paris_metro_map
+    name: Mapa de Metro
+    prompt: |
+      El mapa del metro parisino es un diagrama. Distorsiona la geografía. ¿Qué se
+      enfatiza? ¿Qué se omite? ¿Cómo moldea el mapa la ciudad?
+    follow_ups:
+      - ¿Qué sería de la orientación sin el mapa?
+      - ¿Cómo crea conexión el mapa?
+      - ¿Cuál es la relación entre el mapa y el territorio?
+  - id: paris_bridge
+    name: Puente Parisino
+    prompt: |
+      París tiene muchos puentes sobre el Sena. Cruza uno a pie. Siente la
+      transición. ¿Qué cambia? El puente es un umbral.
+    follow_ups:
+      - ¿Qué sería del río sin el puente?
+      - ¿Cómo conecta el puente?
+      - ¿Cuál es la relación entre el puente y el río?
+  - id: paris_graffiti
+    name: Graffiti Parisino
+    prompt: |
+      París tiene grafitis—tags, plantillas, murales. Encuentra una pared con capas. ¿Qué es el palimpsesto?
+      ¿Quién ha marcado esta superficie?
+    follow_ups:
+      - ¿Qué sería de la pared sin el graffiti?
+      - ¿Cómo reclama el graffiti el espacio?
+      - ¿Cuál es la relación entre el graffiti y la ciudad?
+  - id: paris_tree_guard
+    name: Protector de Árbol
+    prompt: |
+      Los árboles parisinos de la calle a menudo tienen protectores—rejillas metálicas alrededor de la base. Encuentra
+      uno. ¿Qué protege el protector? ¿Qué excluye?
+    follow_ups:
+      - ¿Qué sería del árbol sin el protector?
+      - ¿Cómo moldea el protector el alcorque?
+      - ¿Cuál es la relación entre el protector y el árbol?
+  - id: paris_bus_stop
+    name: Parada de Autobús Parisina
+    prompt: |
+      Las paradas de autobús parisinas tienen marquesinas, horarios, pantallas digitales. Espera en una.
+      ¿Quién más espera? ¿Cuál es la etiqueta?
+    follow_ups:
+      - ¿Qué sería de la calle sin la parada?
+      - ¿Cómo crea comunidad la parada?
+      - ¿Cuál es la relación entre la parada y el viaje?
+  - id: paris_terrace_table
+    name: Mesa de Terraza
+    prompt: |
+      Una mesa de terraza de café da a la calle. Siéntate en una. La mesa es un escenario.
+      ¿Qué miras? ¿Qué te mira a ti?
+    follow_ups:
+      - ¿Qué sería de la terraza sin la mesa?
+      - ¿Cómo crea el encuentro la mesa?
+      - ¿Cuál es la relación entre la mesa y la calle?
+  - id: paris_roof_dormer
+    name: Buhardilla de Tejado
+    prompt: |
+      Las buhardillas de los tejados parisinos—ventanas abuhardilladas—puntúan el horizonte. Encuentra un edificio
+      con muchas. ¿Cuál sería la vista desde dentro?
+    follow_ups:
+      - ¿Qué sería del tejado sin las buhardillas?
+      - ¿Cómo crean luz las buhardillas?
+      - ¿Cuál es la relación entre la buhardilla y el ático?
+  - id: paris_parking_metre
+    name: Parquímetro Parisino
+    prompt: |
+      Los parquímetros parisinos son a menudo cajas grises. Encuentra uno. ¿Cómo moldea
+      el bordillo? ¿Quién paga? ¿Quién no?
+    follow_ups:
+      - ¿Qué sería de la calle sin el parquímetro?
+      - ¿Cómo gestiona el espacio el parquímetro?
+      - ¿Cuál es la relación entre el parquímetro y el coche?
+  - id: paris_doorway
+    name: Portal Parisino
+    prompt: |
+      Un portal parisino es a menudo alto, a menudo ornamentado. Párate delante de uno. ¿Cómo sería pasar?
+      El portal es un umbral.
+    follow_ups:
+      - ¿Qué sería del edificio sin el portal?
+      - ¿Cómo crea la grandeza el portal?
+      - ¿Cuál es la relación entre el portal y el interior?
+  - id: paris_metro_stair
+    name: Escalera de Metro
+    prompt: |
+      Las escaleras del metro descienden a la tierra. Cuenta los escalones. Siente la
+      transición. ¿Qué hay arriba? ¿Qué hay abajo?
+    follow_ups:
+      - ¿Qué sería de la estación sin las escaleras?
+      - ¿Cómo crea el descenso la escalera?
+      - ¿Cuál es la relación entre la escalera y el subsuelo?
+  - id: paris_bench_view
+    name: Vista desde el Banco
+    prompt: |
+      Siéntate en un banco con vistas—del Sena, una plaza, una calle. ¿Cuál es el
+      marco? ¿Cuál es el enfoque? El banco es un punto de observación.
+    follow_ups:
+      - ¿Qué sería de la vista sin el banco?
+      - ¿Cómo crea el banco una pausa?
+      - ¿Cuál es la relación entre el banco y la vista?
+  - id: paris_shutter_open
+    name: Persiana Abierta
+    prompt: |
+      Las persianas parisinas se abren por la mañana. Encuentra una calle donde se estén abriendo.
+      ¿Cuál es el ritual? ¿Qué revela la apertura?
+    follow_ups:
+      - ¿Qué sería de la calle sin las persianas?
+      - ¿Cómo crea el ritmo la persiana?
+      - ¿Cuál es la relación entre la persiana y el día?
+  - id: paris_cobble_pattern
+    name: Patrón de Adoquín
+    prompt: |
+      Los adoquines parisinos se colocan en patrones—a veces espina de pez, a veces
+      radiales. Encuentra un patrón. ¿Cómo moldea la calle?
+    follow_ups:
+      - ¿Qué sería de la calle sin el patrón?
+      - ¿Cómo crea textura el patrón?
+      - ¿Cuál es la relación entre el patrón y la artesanía?
+  - id: paris_plane_bark
+    name: Corteza de Plátano
+    prompt: |
+      La corteza de los plátanos de sombra parisinos se desprende en parches. Tócala. La corteza es una textura.
+      ¿Cómo envejece el árbol? ¿Qué sería de la calle sin él?
+    follow_ups:
+      - ¿Qué sería del bulevar sin el plátano?
+      - ¿Cómo crea identidad la corteza?
+      - ¿Cuál es la relación entre la corteza y el árbol?
+  - id: paris_fountain_drink
+    name: Bebida de Fuente
+    prompt: |
+      Las fuentes Wallace ofrecen agua gratuita. Encuentra una. ¿Quién bebe? ¿Quién no?
+      La fuente es un regalo. ¿Qué significa?
+    follow_ups:
+      - ¿Qué sería del lugar sin la fuente?
+      - ¿Cómo crea un bien público la fuente?
+      - ¿Cuál es la relación entre la fuente y la sed?
+  - id: paris_metro_sound
+    name: Sonido de Metro
+    prompt: |
+      Cierra los ojos en el metro. El traqueteo, los frenos, los anuncios.
+      Mapea el paisaje sonoro. ¿Cómo suena París bajo tierra?
+    follow_ups:
+      - ¿Qué sería del viaje sin el sonido?
+      - ¿Cómo moldea el sonido la experiencia?
+      - ¿Cuál es la relación entre el sonido y el espacio?
+  - id: paris_balcony_dry
+    name: Secado de Balcón
+    prompt: |
+      Los balcones parisinos se usan a menudo para secar—ropa, plantas. Encuentra uno con
+      ropa tendida. ¿Qué dice el secado sobre el residente?
+    follow_ups:
+      - ¿Qué sería de la fachada sin la ropa tendida?
+      - ¿Cómo crea domesticidad el secado?
+      - ¿Cuál es la relación entre el balcón y el hogar?
+  - id: paris_bike_velib
+    name: Bicicleta Vélib
+    prompt: |
+      Las estaciones Vélib' salpican París. Encuentra una. ¿Cuántas bicicletas? ¿Cuántos anclajes? El
+      sistema es una capa. ¿Cómo funciona?
+    follow_ups:
+      - ¿Qué sería de la calle sin la estación?
+      - ¿Cómo crea movilidad Vélib'?
+      - ¿Cuál es la relación entre la estación y la bicicleta?
+  - id: paris_door_bell
+    name: Timbre de Puerta
+    prompt: |
+      Los edificios de apartamentos parisinos tienen múltiples timbres—uno por apartamento. Encuentra un
+      panel. ¿Cuántos nombres? ¿Cómo está organizado el edificio?
+    follow_ups:
+      - ¿Qué sería de la entrada sin los timbres?
+      - ¿Cómo crean dirección los timbres?
+      - ¿Cuál es la relación entre el timbre y el apartamento?
+  - id: paris_roof_terrace
+    name: Terraza de Tejado
+    prompt: |
+      Imagina una terraza de tejado parisina. ¿Qué verías? ¿Quién tendría acceso? La
+      terraza es un nivel secreto. ¿Qué cultivarías allí?
+    follow_ups:
+      - ¿Qué sería del tejado sin la terraza?
+      - ¿Cómo crea la vista la terraza?
+      - ¿Cuál es la relación entre la terraza y el cielo?

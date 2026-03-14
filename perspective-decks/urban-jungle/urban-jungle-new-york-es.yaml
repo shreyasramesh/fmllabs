@@ -1,0 +1,458 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Jungla Urbana — Nueva York (Spanish)
+
+id: urban_jungle_new_york
+name: Jungla Urbana — Nueva York
+description: 50 tarjetas para cambiar tu forma de ver Nueva York, desde la escala y la luz hasta las capas de historia y los ritmos de la vida callejera.
+domain: urban_jungle
+cards:
+  - id: ny_vertical_city
+    name: Ciudad Vertical
+    prompt: |
+      Mira hacia arriba. Nueva York se construye en vertical, torres compitiendo por el cielo.
+      Sigue un edificio desde la acera hasta su cima. ¿Cómo cambia la altura lo que notas? ¿Dónde descansa tu mirada?
+    follow_ups:
+      - ¿Cómo se vería la calle desde arriba?
+      - ¿Cómo distorsiona la escala a diferentes alturas?
+      - ¿Qué se oculta cuando solo miras hacia arriba?
+  - id: ny_grid_navigation
+    name: Navegación por la Cuadrícula
+    prompt: |
+      La cuadrícula de Manhattan es implacable. Camina una manzana y nota cómo el sistema de numeración
+      moldea el movimiento, la orientación y la sorpresa. ¿Qué sucede cuando rompes la cuadrícula?
+    follow_ups:
+      - ¿Dónde se siente opresiva la cuadrícula? ¿Dónde liberadora?
+      - ¿Cómo se sentiría la ciudad sin ella?
+      - ¿Cómo cambian las calles diagonales el ritmo?
+  - id: ny_subway_soundscape
+    name: Paisaje Sonoro del Metro
+    prompt: |
+      Cierra los ojos en una estación. El estruendo, los frenos, los anuncios,
+      el músico callejero. Mapea el paisaje sonoro. ¿A qué suena Nueva York cuando no puedes verlo?
+    follow_ups:
+      - ¿Qué sonidos son constantes? ¿Cuáles accidentales?
+      - ¿Qué significaría el silencio aquí?
+      - ¿Cómo marca el sonido el tiempo bajo tierra?
+  - id: ny_fire_escape
+    name: Escalera de Incendios
+    prompt: |
+      Las escaleras de incendios son el exoesqueleto de la ciudad: funcionales, rítmicas, personales.
+      Encuentra una manzana donde se repitan. ¿Qué revelan sobre los edificios detrás de ellas? ¿Quién podría sentarse allí por la noche?
+    follow_ups:
+      - ¿Qué verías desde una?
+      - ¿Cómo cambian el carácter de la calle?
+      - ¿Qué perdería la manzana sin ellas?
+  - id: ny_street_number
+    name: Número de Calle
+    prompt: |
+      Elige un número: un número de edificio, un piso, una ruta de autobús. Síguelo por la ciudad.
+      ¿Qué patrón emerge? ¿Qué significa ese número aquí?
+    follow_ups:
+      - ¿A dónde te lleva el número?
+      - ¿Qué revelaría un número diferente?
+      - ¿Cómo ordenan los números la experiencia urbana?
+  - id: ny_steam_rising
+    name: Vapor Ascendente
+    prompt: |
+      El vapor de las alcantarillas es el aliento de Nueva York. Busca dónde emerge y observa cómo
+      se mueve, se dispersa, atrapa la luz. ¿Qué hay debajo? ¿Qué exhala la ciudad?
+    follow_ups:
+      - ¿Qué encontrarías bajo la rejilla?
+      - ¿Cómo cambia el clima el vapor?
+      - ¿Qué otros sistemas ocultos ventilan aquí?
+  - id: ny_storefront_typography
+    name: Tipografía de Escaparates
+    prompt: |
+      Lee los letreros. Bodegas, tiendas de delicatessen, lavanderías: cada una tiene un lenguaje visual.
+      Recoge cinco tipografías de una manzana. ¿Qué dicen sobre quién vive aquí?
+    follow_ups:
+      - ¿Qué letreros se sienten antiguos? ¿Cuáles modernos?
+      - ¿A qué sonaría la manzana si los letreros pudieran hablar?
+      - ¿Cómo marca la tipografía el cambio?
+  - id: ny_waterfront_edge
+    name: Borde Costero
+    prompt: |
+      Ve al agua. La ciudad da la espalda al río, al puerto, a la bahía. Párate donde la tierra se encuentra con el agua.
+      ¿Qué está construido para la vista? ¿Qué está construido para ignorarla?
+    follow_ups:
+      - ¿Quién tiene acceso a la vista del agua?
+      - ¿Cómo se ha reclamado el borde?
+      - ¿Qué sería la ciudad si mirara al agua?
+  - id: ny_parks_as_rooms
+    name: Parques como Habitaciones
+    prompt: |
+      Central Park, Prospect Park, una plaza pequeña: cada uno es una habitación en la ciudad.
+      Entra en una y nota sus paredes, su techo, sus muebles. ¿Cómo se diseña la naturaleza aquí?
+    follow_ups:
+      - ¿Cuál es el propósito de la habitación?
+      - ¿Quién diseñó las líneas de visión?
+      - ¿Qué sucedería si las paredes cayeran?
+  - id: ny_delivery_rhythm
+    name: Ritmo de Entrega
+    prompt: |
+      Observa las entregas: camiones, carretas, bicicletas. Sigue el camino de un paquete desde el camión hasta la puerta.
+      ¿Cómo se mueve el comercio por la calle? ¿Cuál es el ritmo de llegada?
+    follow_ups:
+      - ¿Cómo se vería la manzana sin entregas?
+      - ¿Cómo se mueven los diferentes productos?
+      - ¿Quién es invisible en este flujo?
+  - id: ny_brownstone_steps
+    name: Escalones de Arenisca Roja
+    prompt: |
+      Los escalones de las casas de arenisca roja son escenarios. Siéntate en uno y observa la calle.
+      ¿Quién se detiene? ¿Quién pasa? ¿Qué dirías desde aquí?
+    follow_ups:
+      - ¿Cuál es la vista desde el escalón superior?
+      - ¿Cómo crean los escalones territorio?
+      - ¿Qué perdería la manzana sin ellos?
+  - id: ny_bridge_as_threshold
+    name: Puente como Umbral
+    prompt: |
+      Cruza un puente a pie. Siente la transición, de un distrito a otro.
+      El puente no está ni aquí ni allá. ¿Qué cambia cuando llegas al otro lado?
+    follow_ups:
+      - ¿Qué dejas atrás?
+      - ¿Cómo moldea el puente el viaje?
+      - ¿Qué sería la ciudad sin puentes?
+  - id: ny_awning_shade
+    name: Sombra del Toldo
+    prompt: |
+      Los toldos crean microclimas. Párate debajo de uno. Nota el cambio de luz, sonido, temperatura.
+      ¿Cómo cambian las estructuras pequeñas la calle?
+    follow_ups:
+      - ¿Cómo se sentiría la manzana sin toldos?
+      - ¿Cómo marcan la propiedad?
+      - ¿Qué otros refugios pequeños existen aquí?
+  - id: ny_graffiti_layer
+    name: Capa de Graffiti
+    prompt: |
+      Mira las paredes. Etiquetas, murales, wheatpaste: cada uno es una capa de tiempo y reclamación.
+      Lee el palimpsesto. ¿Quién ha marcado esta superficie?
+    follow_ups:
+      - ¿Cuál es la marca más antigua que puedes encontrar?
+      - ¿Cómo cuentan las capas una historia?
+      - ¿Qué diría la pared si pudiera hablar?
+  - id: ny_rooftop_skyline
+    name: Horizonte de Tejados
+    prompt: |
+      Imagina la vista desde un tejado. Tanques de agua, antenas, tejados vecinos.
+      La ciudad desde arriba es una ciudad diferente. ¿Qué verías?
+    follow_ups:
+      - ¿Cómo cambia la altura lo que importa?
+      - ¿Qué se esconde de la calle?
+      - ¿Quién tiene acceso a esta vista?
+  - id: ny_crosswalk_wait
+    name: Espera en el Cruce Peatonal
+    prompt: |
+      Espera en un cruce peatonal. No cruces cuando cambie la luz. Espera el siguiente ciclo.
+      ¿Qué notas en la pausa? ¿Quién más espera?
+    follow_ups:
+      - ¿Cómo cambia la espera la percepción?
+      - ¿Qué ritmos rigen la intersección?
+      - ¿Qué sucedería si nunca cruzaras?
+  - id: ny_diner_booth
+    name: Cabina de Diner
+    prompt: |
+      Siéntate en la cabina de un diner junto a la ventana. La calle se convierte en una película.
+      Observa a los transeúntes, el tráfico, la luz. ¿Qué historia se está reproduciendo?
+    follow_ups:
+      - ¿Quiénes son los personajes principales?
+      - ¿Cómo cambia el encuadre lo que ves?
+      - ¿Qué te perderías sin la ventana?
+  - id: ny_scaffolding_skin
+    name: Piel de Andamio
+    prompt: |
+      Los andamios envuelven los edificios como vendajes. Camina debajo. Nota el
+      sonido, la luz, el techo temporal. ¿Qué se está reparando? ¿Qué se está ocultando?
+    follow_ups:
+      - ¿Cuánto tiempo ha estado ahí?
+      - ¿Qué diría el edificio sin él?
+      - ¿Cuál es la relación entre reparación y ocultación?
+  - id: ny_newsstand_archive
+    name: Archivo del Quiosco
+    prompt: |
+      Un quiosco es una porción de atención: revistas, periódicos, dulces. ¿Qué se exhibe?
+      ¿Quién se detiene? ¿Qué sería esta esquina sin él?
+    follow_ups:
+      - ¿Cuál es el más vendido?
+      - ¿Cómo moldea el quiosco la manzana?
+      - ¿Qué pondrías aquí?
+  - id: ny_construction_site
+    name: Obra en Construcción
+    prompt: |
+      Observa una obra en construcción. Grúas, barreras, trabajadores. La ciudad siempre está
+      en proceso de construcción. ¿Qué se está construyendo? ¿Qué se está reemplazando?
+    follow_ups:
+      - ¿Quién usará esto cuando esté terminado?
+      - ¿Qué había aquí antes?
+      - ¿Cómo cambia la construcción el vecindario?
+  - id: ny_light_well
+    name: Patio de Luces
+    prompt: |
+      Busca patios de luces, los estrechos huecos entre edificios donde cae la luz.
+      ¿Quién recibe esa luz? ¿Qué crece allí?
+    follow_ups:
+      - ¿Cómo sería vivir en ese pozo?
+      - ¿Cómo define la luz el valor?
+      - ¿Qué se oculta en las sombras?
+  - id: ny_bodega_cat
+    name: Gato de Bodega
+    prompt: |
+      Encuentra una bodega con un gato. El gato está dentro y fuera de las reglas.
+      ¿Qué más en la ciudad opera de esa manera?
+    follow_ups:
+      - ¿Qué ve el gato?
+      - ¿Cómo moldean las reglas informales el espacio?
+      - ¿Qué sería la tienda sin el gato?
+  - id: ny_sidewalk_crack
+    name: Grieta en la Acera
+    prompt: |
+      Mira hacia abajo. Sigue una grieta en la acera. ¿A dónde va? ¿Qué crece en ella?
+      La ciudad está llena de tales fracturas.
+    follow_ups:
+      - ¿Qué diría la acera sobre el tiempo?
+      - ¿Cómo importan las pequeñas roturas?
+      - ¿Qué está abriéndose paso?
+  - id: ny_air_conditioner
+    name: Aire Acondicionado
+    prompt: |
+      Cuenta los aires acondicionados en un edificio. Son parásitos, prótesis,
+      necesidades. ¿Cómo cambian la fachada? ¿Qué gotean?
+    follow_ups:
+      - ¿Cómo se vería el edificio sin ellos?
+      - ¿Cómo moldea el clima la arquitectura?
+      - ¿Quién decide dónde van?
+  - id: ny_express_local
+    name: Expreso / Local
+    prompt: |
+      Viaja en metro. Nota la diferencia entre expreso y local. La velocidad cambia lo que ves.
+      Salta paradas y siente cómo se comprime la ciudad.
+    follow_ups:
+      - ¿Qué te pierdes cuando no paras?
+      - ¿Cómo moldea la velocidad la experiencia?
+      - ¿Qué sería la ciudad si todo fuera local?
+  - id: ny_water_tower
+    name: Torre de Agua
+    prompt: |
+      Las torres de agua coronan edificios antiguos. Son de madera, con forma de barril,
+      omnipresentes. Encuentra cinco. ¿Qué dicen del horizonte?
+    follow_ups:
+      - ¿Por qué siguen aquí?
+      - ¿Cómo se vería el tejado sin una?
+      - ¿Cómo marcan la edad?
+  - id: ny_awning_stripes
+    name: Rayas de Toldo
+    prompt: |
+      Los toldos a rayas son un lenguaje de Nueva York. Encuentra una manzana donde se repitan.
+      ¿Cómo crean las rayas identidad? ¿Qué harían los colores sólidos?
+    follow_ups:
+      - ¿Por qué rayas y no sólidos?
+      - ¿Cómo unifican los toldos una manzana?
+      - ¿Cuál es la historia de este patrón?
+  - id: ny_curb_cut
+    name: Rampa en la Acera
+    prompt: |
+      Observa las rampas en las esquinas. Son para sillas de ruedas, carritos,
+      cochecitos. ¿Cómo cambian la calle? ¿A quiénes incluyen?
+    follow_ups:
+      - ¿Qué sería la manzana sin ellas?
+      - ¿Cómo moldea el acceso el diseño?
+      - ¿Qué otras adaptaciones invisibles existen?
+  - id: ny_street_tree
+    name: Árbol Callejero
+    prompt: |
+      Elige un árbol callejero. ¿Cuánto espacio tiene? ¿Qué hay en su alcorque?
+      ¿Quién lo riega? El árbol es un invitado. ¿Cómo se le trata?
+    follow_ups:
+      - ¿Qué sería la manzana sin árboles?
+      - ¿Cómo marcan los árboles el cuidado?
+      - ¿Qué crece a la sombra del árbol?
+  - id: ny_loading_zone
+    name: Zona de Carga
+    prompt: |
+      Las zonas de carga son territorios temporales. Observa una durante diez minutos. ¿Quién la usa?
+      ¿Cuánto tiempo se quedan? ¿Cuál es el ritmo de ocupación?
+    follow_ups:
+      - ¿Qué sucedería sin zonas de carga?
+      - ¿Cómo se doblan las reglas?
+      - ¿Cuál es la relación entre estacionamiento y comercio?
+  - id: ny_vent_grille
+    name: Rejilla de Ventilación
+    prompt: |
+      Las rejillas de la acera ventilan el metro. Párate sobre una. Siente la corriente ascendente. Escucha.
+      La ciudad respira a través de estas aberturas.
+    follow_ups:
+      - ¿Qué surge de abajo?
+      - ¿Cómo conecta la rejilla mundos?
+      - ¿Qué sería la acera sin ella?
+  - id: ny_basement_stairs
+    name: Escaleras del Sótano
+    prompt: |
+      Busca escaleras que bajen: a un sótano, al metro, a un speakeasy. La ciudad tiene muchos niveles.
+      ¿Qué hay debajo de la acera?
+    follow_ups:
+      - ¿Quién baja?
+      - ¿Cómo cambia el descenso la luz?
+      - ¿Qué encontrarías al final?
+  - id: ny_clock_tower
+    name: Torre del Reloj
+    prompt: |
+      Encuentra un reloj público. ¿Es preciso? ¿Quién lo puso en hora? Los relojes ordenan la ciudad.
+      ¿Qué sucede cuando no coinciden?
+    follow_ups:
+      - ¿Qué sería la manzana sin el reloj?
+      - ¿Cómo se sincroniza el tiempo?
+      - ¿Cuál es la relación entre la hora del reloj y la hora del cuerpo?
+  - id: ny_newsstand_magazine
+    name: Revista del Quiosco
+    prompt: |
+      En un quiosco, elige la portada de una revista. ¿Para quién es? ¿Qué asume sobre el lector?
+      El quiosco es un espejo del deseo.
+    follow_ups:
+      - ¿Qué aprendería un extraño de esta exhibición?
+      - ¿Cómo compiten las portadas por la atención?
+      - ¿Qué no está en el quiosco?
+  - id: ny_awning_rain
+    name: Lluvia bajo el Toldo
+    prompt: |
+      Párate bajo un toldo en la lluvia. Observa cómo el agua se canaliza por los bordes.
+      El toldo crea una isla seca. ¿Quién la comparte contigo?
+    follow_ups:
+      - ¿Cómo se sentiría la manzana sin refugio?
+      - ¿Cómo cambia la lluvia la calle?
+      - ¿Qué otros refugios existen?
+  - id: ny_fire_hydrant
+    name: Hidrante de Incendios
+    prompt: |
+      Un hidrante de incendios es un enchufe del sistema circulatorio de la ciudad. Encuentra uno.
+      ¿De qué color es? ¿Quién podría abrirlo? ¿Qué fluye?
+    follow_ups:
+      - ¿Qué haría la manzana en un incendio sin él?
+      - ¿Cómo marcan los hidrantes el territorio?
+      - ¿Cuál es la relación entre el hidrante y la manguera?
+  - id: ny_stoop_sale
+    name: Venta en el Escalón
+    prompt: |
+      Imagina una venta en el escalón de estos pasos. ¿Qué se vendería? ¿Quién se detendría?
+      El escalón es un escenario para el intercambio.
+    follow_ups:
+      - ¿Qué pondrías a la venta?
+      - ¿Cómo facilita el escalón el encuentro?
+      - ¿Qué aprendería la manzana de una venta?
+  - id: ny_rooftop_garden
+    name: Jardín en el Tejado
+    prompt: |
+      Imagina un jardín en el tejado encima de ti. ¿Qué crecería allí? ¿Quién lo cuida?
+      La ciudad tiene una capa verde secreta.
+    follow_ups:
+      - ¿Qué plantarías?
+      - ¿Cómo cambia la altitud la jardinería?
+      - ¿Cómo se vería el horizonte si todos los tejados fueran verdes?
+  - id: ny_subway_map
+    name: Mapa del Metro
+    prompt: |
+      Mira un mapa del metro. Es un diagrama, no geografía. ¿Qué está distorsionado?
+      ¿Qué se omite? El mapa moldea cómo pensamos sobre la ciudad.
+    follow_ups:
+      - ¿Cómo sería un mapa veraz?
+      - ¿Cómo crea el mapa los barrios?
+      - ¿Cuál es la relación entre mapa y territorio?
+  - id: ny_brick_pattern
+    name: Patrón de Ladrillos
+    prompt: |
+      Estudia un muro de ladrillos. El patrón —soga, flamenco— sostiene el muro.
+      Sigue el patrón. ¿Qué sucedería si faltara un ladrillo?
+    follow_ups:
+      - ¿Cómo distribuye el patrón el peso?
+      - ¿Qué diría el muro sobre su constructor?
+      - ¿Cómo envejece el ladrillo?
+  - id: ny_awning_strip
+    name: Franja de Toldo
+    prompt: |
+      Camina una manzana y cuenta los toldos. ¿De qué colores? ¿En qué condiciones?
+      El toldo es una pequeña arquitectura. ¿Cómo varía?
+    follow_ups:
+      - ¿Cómo se vería la manzana sin toldos?
+      - ¿Cómo crean identidad los toldos?
+      - ¿Cuál es la relación entre el toldo y el negocio?
+  - id: ny_manhole_cover
+    name: Tapa de Alcantarilla
+    prompt: |
+      Lee una tapa de alcantarilla. El nombre de la ciudad, el departamento, la fecha.
+      Estos discos son puertas a otra ciudad. ¿Qué hay debajo?
+    follow_ups:
+      - ¿Quién baja allí?
+      - ¿Cómo marca territorio la tapa?
+      - ¿Qué sería la calle sin estas puertas?
+  - id: ny_bus_shelter
+    name: Parada de Autobús
+    prompt: |
+      Espera en una parada de autobús. Observa quién más espera. El refugio es una habitación compartida.
+      ¿Cuál es la etiqueta? ¿Cuál es la vista?
+    follow_ups:
+      - ¿Cómo sería esperar sin el refugio?
+      - ¿Cómo moldea el refugio la comunidad?
+      - ¿Qué cambiarías de él?
+  - id: ny_street_lamp
+    name: Lámpara Callejera
+    prompt: |
+      Párate bajo una lámpara callejera al anochecer. Observa cómo la luz le quita el lugar al sol.
+      La lámpara crea un charco de visibilidad. ¿Qué hay en el charco? ¿Qué está fuera?
+    follow_ups:
+      - ¿Cómo cambia la luz artificial la calle?
+      - ¿Cómo sería la manzana sin lámparas?
+      - ¿Cómo marcan las lámparas el tiempo?
+  - id: ny_plaza_seat
+    name: Asiento de Plaza
+    prompt: |
+      Siéntate en un banco de plaza. ¿Quién más se sienta? ¿Quién pasa? La plaza es una pausa en el flujo.
+      ¿Qué hace que la gente se detenga?
+    follow_ups:
+      - ¿Qué sería la plaza sin asientos?
+      - ¿Cómo moldea el asiento el encuentro?
+      - ¿Qué añadirías?
+  - id: ny_awning_fabric
+    name: Tela de Toldo
+    prompt: |
+      Toca un toldo si puedes. Tela, vinilo, rayas. El toldo es una
+      membrana entre el interior y el exterior. ¿Cómo se siente?
+    follow_ups:
+      - ¿Cómo se sentiría la manzana sin tela?
+      - ¿Cómo importa el material?
+      - ¿Cuál es la relación entre el toldo y el clima?
+  - id: ny_newsstand_daily
+    name: Diario del Quiosco
+    prompt: |
+      Un quiosco cambia a lo largo del día: periódicos de la mañana, revistas del mediodía,
+      snacks de la tarde. Visita en diferentes momentos. ¿Cuál es el ritmo?
+    follow_ups:
+      - ¿Qué sería la esquina sin el quiosco?
+      - ¿Cómo marca el tiempo el quiosco?
+      - ¿Cuál es la relación entre el quiosco y la manzana?
+  - id: ny_sidewalk_chalk
+    name: Tiza en la Acera
+    prompt: |
+      Los niños dibujan en las aceras. Encuentra arte de tiza. ¿Qué es el dibujo? La tiza es
+      temporal. La lluvia la borrará. ¿Cómo importa la temporalidad?
+    follow_ups:
+      - ¿Qué sería la acera sin la tiza?
+      - ¿Cómo crea la tiza un regalo?
+      - ¿Cuál es la relación entre la tiza y la calle?
+  - id: ny_rooftop_ac
+    name: Aire Acondicionado en el Tejado
+    prompt: |
+      Las unidades de aire acondicionado en los tejados zumban en verano. Escucha.
+      El tejado es un bosque mecánico. ¿Cómo moldea el sonido la manzana?
+    follow_ups:
+      - ¿Qué sería el tejado sin las unidades?
+      - ¿Cómo crea el AC comodidad?
+      - ¿Cuál es la relación entre la unidad y el edificio?
+  - id: ny_street_musician
+    name: Músico Callejero
+    prompt: |
+      Un músico callejero toca en un pasaje. Detente y escucha. La música crea una burbuja.
+      ¿Qué hay dentro de la burbuja? ¿Qué está fuera?
+    follow_ups:
+      - ¿Qué sería el pasaje sin el músico?
+      - ¿Cómo crea la música una pausa?
+      - ¿Cuál es la relación entre el músico y la calle?

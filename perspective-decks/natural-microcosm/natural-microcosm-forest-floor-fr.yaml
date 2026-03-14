@@ -1,0 +1,447 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosme Naturel — Litière Forestière (French)
+
+id: natural_microcosm_forest_floor
+name: Microcosme Naturel — Litière Forestière
+description: 50 cartes pour changer votre regard sur la litière forestière — de la décomposition et du mycélium à l'architecture des feuilles mortes et à la vie invisible sous la canopée.
+domain: natural_microcosm
+cards:
+  - id: nmf_leaf_vein
+    name: Nervure de Feuille
+    prompt: |
+      Prenez une feuille tombée. Suivez ses nervures. Elles transportaient l'eau, les nutriments,
+      les sucres. L'architecture est invisible jusqu'à ce que vous regardiez. Qu'est-ce que le réseau de nervures soutenait lorsque la feuille était vivante ?
+    follow_ups:
+      - Comment le motif diffère-t-il selon les espèces ?
+      - Que serait la feuille sans ses nervures ?
+      - Quelle est la relation entre la nervure et le bord ?
+  - id: nmf_leaf_litter_layer
+    name: Couche de Litière de Feuilles
+    prompt: |
+      La litière forestière est faite de couches — la chute fraîche au-dessus, celle de l'année dernière en dessous, plus ancienne encore plus bas. Mettez-vous à genoux. Retirez une couche. Quel est le gradient ? Comment le temps s'empile-t-il ?
+    follow_ups:
+      - Que serait la forêt sans la litière ?
+      - Comment la couche crée-t-elle un habitat ?
+      - Quelle est la relation entre la couche et la décomposition ?
+  - id: nmf_mushroom_fruiting
+    name: Carpophore de Champignon
+    prompt: |
+      Un champignon n'est que le corps fructifère. L'organisme — le mycélium — s'étend sous terre, à travers le sol, à travers le bois. Considérez ce que vous voyez comme un signal. Quelle est le reste de l'histoire ?
+    follow_ups:
+      - Que serait la forêt sans les champignons ?
+      - Comment le corps fructifère se rapporte-t-il au réseau ?
+      - Quelle est la relation entre le champignon et la décomposition ?
+  - id: nmf_log_sponge
+    name: Éponge de Bûche
+    prompt: |
+      Une bûche tombée absorbe l'eau, la retient. Appuyez votre main dessus après la pluie.
+      La bûche est un réservoir. Qui en boit ? Qui y vit ?
+    follow_ups:
+      - Que serait la forêt sans les bûches nourricières ?
+      - Comment la bûche crée-t-elle un microclimat ?
+      - Quelle est la relation entre le bois et l'eau ?
+  - id: nmf_moss_cushion
+    name: Coussin de Mousse
+    prompt: |
+      La mousse retient l'eau comme une éponge. Touchez-la. Le coussin est une architecture —
+      de minuscules plantes tassées ensemble. Qui vit dans les espaces intermédiaires ?
+    follow_ups:
+      - Que serait le sol sans la mousse ?
+      - Comment le coussin crée-t-il de l'humidité ?
+      - Quelle est la relation entre la mousse et les semis ?
+  - id: nmf_fern_unfurl
+    name: Déploiement de Fougère
+    prompt: |
+      Les frondes de fougère se déploient en spirale — crosses. Le mouvement est lent. Observez-en une sur plusieurs jours si possible. Comment le déploiement façonne-t-il la feuille ?
+    follow_ups:
+      - Que serait la fougère sans la spirale ?
+      - Comment le déploiement protège-t-il la fronde ?
+      - Quelle est la relation entre la courbe et la croissance ?
+  - id: nmf_root_tangle
+    name: Enchevêtrement de Racines
+    prompt: |
+      Les racines s'enchevêtrent sous la surface. Trouvez où un arbre est tombé et a soulevé sa motte. L'enchevêtrement est une carte de recherche. Qu'est-ce que les racines cherchaient ?
+    follow_ups:
+      - Que serait l'arbre sans l'enchevêtrement ?
+      - Comment les racines partagent-elles l'espace souterrain ?
+      - Quelle est la relation entre la racine et le champignon ?
+  - id: nmf_slug_trail
+    name: Trace de Limace
+    prompt: |
+      Une trace de limace luit sur une feuille — mucus, chemin, signature. La trace indique où la limace est allée. Que dit la trace aux prédateurs ? Aux proies ?
+    follow_ups:
+      - Que perdrait la limace sans sa trace ?
+      - Comment le mucus permet-il le mouvement ?
+      - Quelle est la relation entre la trace et le territoire ?
+  - id: nmf_lichen_patch
+    name: Tache de Lichen
+    prompt: |
+      Le lichen pousse sur l'écorce, la roche, le sol — lent, composite. Champignon et algue
+      ensemble. Trouvez une tache. Depuis combien de temps est-elle là ? Sa présence indique-t-elle quoi ?
+    follow_ups:
+      - Que serait l'écorce sans le lichen ?
+      - Comment le lichen marque-t-il le temps ?
+      - Quelle est la relation entre le lichen et la qualité de l'air ?
+  - id: nmf_saprophyte
+    name: Saprophyte
+    prompt: |
+      Les saprophytes se nourrissent de matière morte — champignons, bactéries, insectes. Ce sont les recycleurs. Trouvez des preuves de décomposition. Qui mange ? Qu'est-ce qui est transformé ?
+    follow_ups:
+      - Que serait la forêt sans les décomposeurs ?
+      - Comment la décomposition nourrit-elle la nouvelle croissance ?
+      - Quelle est la relation entre la mort et le sol ?
+  - id: nmf_seedling_emergence
+    name: Émergence de Semis
+    prompt: |
+      Un semis perce la litière. Les cotylédons d'abord, puis les vraies feuilles.
+      Remarquez la force. Qu'a-t-il fallu pour percer ? Qu'est-ce qui le bloquera ?
+    follow_ups:
+      - Que serait la forêt sans les semis ?
+      - Comment l'émergence dépend-elle de la litière ?
+      - Quelle est la relation entre le semis et la lumière ?
+  - id: nmf_anthill_mound
+    name: Termitière
+    prompt: |
+      Une termitière s'élève du sol forestier — terre excavée, organisée.
+      Observez le trafic. Où vont-ils ? Qu'emportent-ils ?
+    follow_ups:
+      - Que serait le sol sans la termitière ?
+      - Comment la termitière modèle-t-elle le drainage ?
+      - Quelle est la relation entre la termitière et la colonie ?
+  - id: nmf_spider_silk
+    name: Toile d'Araignée
+    prompt: |
+      La soie d'araignée traverse les espaces — entre les feuilles, les brindilles. La rosée l'attrape. La toile est invisible jusqu'à ce que la lumière la frappe. Suivez un fil. Qu'est-ce qu'il connecte ?
+    follow_ups:
+      - Que serait l'espace sans la soie ?
+      - Comment la toile structure-t-elle l'espace ?
+      - Quelle est la relation entre la soie et la proie ?
+  - id: nmf_bark_flake
+    name: Éclat d'Écorce
+    prompt: |
+      L'écorce se détache d'un tronc — texture, motif, âge. Chaque éclat raconte une
+      saison. Qui vit sous l'écorce ? Que révèle l'éclat ?
+    follow_ups:
+      - Que serait l'arbre sans son écorce ?
+      - Comment l'écorce protège-t-elle et isole-t-elle ?
+      - Quelle est la relation entre l'éclat et le renouveau ?
+  - id: nmf_acorn_fall
+    name: Chute de Gland
+    prompt: |
+      Un gland tombe. Il est lourd pour sa taille. Il s'enracinera ou sera mangé.
+      Considérez les chances. Qu'est-ce qui détermine le chemin ?
+    follow_ups:
+      - Que serait la forêt sans le gland ?
+      - Comment la chute distribue-t-elle la graine ?
+      - Quelle est la relation entre le gland et le chêne ?
+  - id: nmf_fallen_branch
+    name: Branche Tombée
+    prompt: |
+      Une branche repose sur le sol — cassée, peut-être par le vent. C'est maintenant un pont.
+      Qu'est-ce qui le traverse ? Qu'est-ce qui pousse dessus ?
+    follow_ups:
+      - Que serait le sol sans le bois mort ?
+      - Comment la branche crée-t-elle un habitat de bordure ?
+      - Quelle est la relation entre la branche et les nutriments ?
+  - id: nmf_humus_smell
+    name: Odeur d'Humus
+    prompt: |
+      Penché près du sol forestier. L'odeur — terre, décomposition, vie. Cette odeur
+      est de la chimie. Qu'est-ce qui la crée ? Que serait la forêt sans elle ?
+    follow_ups:
+      - Comment l'odeur marque-t-elle la santé ?
+      - Quelle serait l'odeur d'un sol stérile ?
+      - Quelle est la relation entre l'odeur et la fertilité ?
+  - id: nmf_snail_shell
+    name: Coquille d'Escargot
+    prompt: |
+      Une coquille d'escargot vide repose dans la litière. Spirale, calcium, laissée derrière.
+      Qui a pu manger l'escargot ? Qu'est-ce qui utilisera la coquille ?
+    follow_ups:
+      - Que serait le sol sans les coquilles ?
+      - Comment la coquille recycle-t-elle les nutriments ?
+      - Quelle est la relation entre la coquille et le calcium ?
+  - id: nmf_fungal_network
+    name: Réseau Fongique
+    prompt: |
+      Le mycélium connecte les arbres — un Wood Wide Web. On ne le voit pas, mais il est
+      là. Les nutriments circulent. L'information circule. Considérez la forêt comme un
+      réseau.
+    follow_ups:
+      - Que serait la forêt sans le réseau ?
+      - Comment le réseau redistribue-t-il les ressources ?
+      - Quelle est la relation entre le champignon et l'arbre ?
+  - id: nmf_fern_spore
+    name: Spore de Fougère
+    prompt: |
+      Les fougères se reproduisent par spores — minuscules, innombrables. Regardez le dessous d'une
+      fronde. Les sores les contiennent. Que faudrait-il pour suivre le parcours d'une spore ?
+    follow_ups:
+      - Que serait la fougère sans ses spores ?
+      - Comment la spore se disperse-t-elle ?
+      - Quelle est la relation entre la spore et le gamétophyte ?
+  - id: nmf_earthworm_cast
+    name: Crottes de Ver de Terre
+    prompt: |
+      Des crottes de ver de terre s'amoncellent aux entrées des tunnels — sol traité, riche.
+      Le ver a mangé et excrété. La crotte est un cadeau à la surface.
+    follow_ups:
+      - Que serait le sol sans les vers ?
+      - Comment la crotte améliore-t-elle la structure ?
+      - Quelle est la relation entre le ver et l'aération ?
+  - id: nmf_dappled_light
+    name: Lumière Mouchetée
+    prompt: |
+      La lumière tombe à travers la canopée en taches — mouchetée, mouvante. Le sol forestier
+      reçoit moins que l'espace ouvert. Comment cela façonne-t-il ce qui pousse ?
+    follow_ups:
+      - Que serait le sol en plein soleil ?
+      - Comment le mouchetage crée-t-il des microhabitats ?
+      - Quelle est la relation entre la lumière et le semis ?
+  - id: nmf_bracket_fungus
+    name: Champignon en Console
+    prompt: |
+      Un champignon en console pousse sur un tronc — étagère, polypore. Il digère l'arbre
+      de l'intérieur. L'arbre peut rester debout pendant des années pendant que cela se produit. Considérez la lente consommation.
+    follow_ups:
+      - Que serait l'arbre sans le champignon ?
+      - Comment la console disperse-t-elle les spores ?
+      - Quelle est la relation entre le parasite et l'hôte ?
+  - id: nmf_needle_mat
+    name: Tapis d'Aiguilles
+    prompt: |
+      Les aiguilles de conifères s'empilent sous l'arbre — acides, lentes à se décomposer. Le tapis
+      change le sol. Qu'est-ce qui y pousse ? Qu'est-ce qui l'évite ?
+    follow_ups:
+      - Que serait le sol sans le tapis ?
+      - Comment le tapis d'aiguilles affecte-t-il le pH ?
+      - Quelle est la relation entre le tapis et le feu ?
+  - id: nmf_salamander_under
+    name: Salamandre Cachée
+    prompt: |
+      Les salamandres vivent sous les bûches, les pierres, la litière. Soulevez quelque chose avec précaution —
+      remettez-le. L'humidité, l'obscurité. Pourquoi la salamandre en a-t-elle besoin ?
+    follow_ups:
+      - Que serait la forêt sans les salamandres ?
+      - Comment la salamandre façonne-t-elle la communauté des invertébrés ?
+      - Quelle est la relation entre l'humidité et l'amphibien ?
+  - id: nmf_rot_hole
+    name: Trou de Pourriture
+    prompt: |
+      Un trou dans une bûche — pourriture, peut-être, ou un animal. Le trou est une cavité. Qu'est-ce qui y niche ? Qu'est-ce qui s'y cache ?
+    follow_ups:
+      - Que serait la bûche sans le trou ?
+      - Comment la cavité crée-t-elle un habitat ?
+      - Quelle est la relation entre la pourriture et l'abri ?
+  - id: nmf_springtail_jump
+    name: Saut de Collembole
+    prompt: |
+      Les collemboles — minuscules, nombreux — sautent lorsqu'ils sont dérangés. Ils sont dans la litière,
+      le sol. Ils traitent les champignons, la décomposition. Remarquez combien vous ne pouvez pas voir.
+    follow_ups:
+      - Que serait le sol sans les collemboles ?
+      - Comment le saut permet-il l'évasion ?
+      - Quelle est la relation entre le collembole et la décomposition ?
+  - id: nmf_bark_beetle_gallery
+    name: Galerie de Scolyte
+    prompt: |
+      Les galeries de scolyte gravent le bois sous l'écorce — canaux, motifs.
+      Le scolyte les a sculptés. L'arbre a répondu. Quelle est l'histoire ?
+    follow_ups:
+      - Que serait l'arbre sans le scolyte ?
+      - Comment la galerie façonne-t-elle le destin de l'arbre ?
+      - Quelle est la relation entre le scolyte et le champignon ?
+  - id: nmf_dew_on_litter
+    name: Rosée sur la Litière
+    prompt: |
+      La rosée du matin perle sur les feuilles, les aiguilles, les brindilles. La litière retient l'humidité.
+      Qui boit à l'aube ? Comment la rosée prolonge-t-elle la saison humide ?
+    follow_ups:
+      - Que serait le sol sans la rosée ?
+      - Comment la rosée crée-t-elle une source d'eau ?
+      - Quelle est la relation entre la rosée et l'évaporation ?
+  - id: nmf_windfall_gap
+    name: Clairière de Chablis
+    prompt: |
+      Un arbre est tombé — vent, âge, maladie. La clairière laisse entrer la lumière. Le sol
+      change. Qu'est-ce qui pousse dans la clairière avant, ce qui ne pouvait pas ?
+    follow_ups:
+      - Que serait la forêt sans les clairières ?
+      - Comment la clairière réinitialise-t-elle la succession ?
+      - Quelle est la relation entre la clairière et la diversité ?
+  - id: nmf_mycorrhizal_tip
+    name: Pointe Mycorhizienne
+    prompt: |
+      Les racines des arbres rencontrent les hyphes fongiques — mycorhizes. Le champignon étend la portée de la racine. L'arbre nourrit le champignon. Trouvez une pointe de racine. Imaginez le partenariat en dessous.
+    follow_ups:
+      - Que serait l'arbre sans les mycorhizes ?
+      - Comment le partenariat étend-il le système racinaire ?
+      - Quelle est la relation entre le champignon et le phosphore ?
+  - id: nmf_squirrel_cache
+    name: Cache d'Écureuil
+    prompt: |
+      Un écureuil a enterré une noix — oubliée, peut-être. Elle peut germer. La cache est une
+      dispersion. Combien d'arbres ont commencé comme des graines oubliées ?
+    follow_ups:
+      - Que serait la forêt sans les cacheurs ?
+      - Comment la mise en cache étend-elle la portée des graines ?
+      - Quelle est la relation entre l'oubli et la forêt ?
+  - id: nmf_carpet_moss
+    name: Mousse Tapis
+    prompt: |
+      La mousse tapisse le sol par endroits — douce, verte, retenant l'eau. Marchez dessus.
+      Sentez le mou. Le tapis est des siècles de croissance, couche après couche.
+    follow_ups:
+      - Que serait le sol sans le tapis ?
+      - Comment le tapis retient-il l'humidité ?
+      - Quelle est la relation entre la mousse et le marais ?
+  - id: nmf_burrow_entrance
+    name: Entrée de Terrier
+    prompt: |
+      Un terrier s'ouvre dans le sol — souris, campagnol, tamia. L'entrée est un
+      seuil. Qu'est-ce qui entre ? Qu'est-ce qui sort ? Le terrier s'étend sous terre.
+    follow_ups:
+      - Que serait le sol sans les terriers ?
+      - Comment le terrier aère-t-il le sol ?
+      - Quelle est la relation entre le terrier et le prédateur ?
+  - id: nmf_twig_lattice
+    name: Treillis de Brindilles
+    prompt: |
+      Les brindilles s'accumulent — vent, animaux, gravité. Elles forment un treillis sur la litière.
+      Le treillis retient les feuilles, attrape les graines. C'est une architecture fortuite.
+    follow_ups:
+      - Que serait le sol sans le treillis ?
+      - Comment le treillis ralentit-il l'érosion ?
+      - Quelle est la relation entre la brindille et le microhabitat ?
+  - id: nmf_rot_softness
+    name: Mollesse de Pourriture
+    prompt: |
+      Le bois pourri cède sous vos doigts — spongieux, friable. La transition
+      de la structure au sol. Combien de temps cela a-t-il pris ? Qu'est-ce qui reste ?
+    follow_ups:
+      - Que serait la forêt sans la pourriture ?
+      - Comment la mollesse permet-elle la colonisation ?
+      - Quelle est la relation entre la pourriture et l'humus ?
+  - id: nmf_frost_needle
+    name: Aiguille de Givre
+    prompt: |
+      Des aiguilles de givre se soulèvent du sol — cristaux de glace, délicats. Elles se forment par nuits froides et calmes. À midi, elles ont disparu. Considérez la structure éphémère.
+    follow_ups:
+      - Que ferait le sol sans le gel ?
+      - Comment le gel soulève-t-il les racines ?
+      - Quelle est la relation entre le gel et le semis ?
+  - id: nmf_millipede_curl
+    name: Enroulement de Mille-Pattes
+    prompt: |
+      Un mille-pattes s'enroule lorsqu'il est dérangé — défense. Il se nourrit de décomposition. Observez-en un
+      se déplacer dans la litière. Comment le corps navigue-t-il dans l'enchevêtrement ?
+    follow_ups:
+      - Que serait le sol sans les mille-pattes ?
+      - Comment l'enroulement protège-t-il ?
+      - Quelle est la relation entre le mille-pattes et le calcium ?
+  - id: nmf_pinecone_open
+    name: Pomme de Pin Ouverte
+    prompt: |
+      Une pomme de pin s'ouvre lorsqu'elle est sèche — écailles écartées, graines libérées. Le cône est un
+      mécanisme. La chaleur peut aussi le déclencher. Considérez le moment.
+    follow_ups:
+      - Que serait l'arbre sans le cône ?
+      - Comment l'humidité contrôle-t-elle le mécanisme ?
+      - Quelle est la relation entre le feu et la libération ?
+  - id: nmf_hole_in_leaf
+    name: Trou dans une Feuille
+    prompt: |
+      Une feuille a des trous — insecte, limace, champignon. Les dégâts racontent une histoire. Qui a mangé ?
+      Quand ? La feuille restante photosynthétise toujours. Quel est le seuil ?
+    follow_ups:
+      - Que serait la feuille sans les trous ?
+      - Comment l'herbivorie façonne-t-elle la plante ?
+      - Quelle est la relation entre les dégâts et la défense ?
+  - id: nmf_root_hair
+    name: Poil Racinaire
+    prompt: |
+      Les poils racinaires — microscopiques — augmentent la surface pour l'absorption. On ne peut pas les voir, mais ils sont là. Les racines d'un jeune plant explorent. Que trouvent-elles ?
+    follow_ups:
+      - Que serait la racine sans les poils ?
+      - Comment les poils racinaires absorbent-ils l'eau ?
+      - Quelle est la relation entre le poil et le nutriment ?
+  - id: nmf_forest_silence
+    name: Silence de la Forêt
+    prompt: |
+      Restez immobile sur le sol de la forêt. Le silence n'est pas vide — il est plein de
+      petits sons. Bruissement, goutte, craquement. Qu'entendez-vous lorsque vous vous arrêtez ?
+    follow_ups:
+      - Que serait la forêt sans les petits sons ?
+      - Comment le silence révèle-t-il la présence ?
+      - Quelle est la relation entre l'écoute et la perception ?
+  - id: nmf_shade_adaptation
+    name: Adaptation à l'Ombre
+    prompt: |
+      Les plantes du sol forestier sont adaptées à l'ombre — feuilles plus grandes, chlorophylle différente. Comparez une feuille de soleil à une feuille d'ombre. Quel est le compromis ?
+    follow_ups:
+      - Que serait la plante en plein soleil ?
+      - Comment l'ombre façonne-t-elle la feuille ?
+      - Quelle est la relation entre la lumière et l'investissement ?
+  - id: nmf_nutrient_cycle
+    name: Cycle des Nutriments
+    prompt: |
+      Tout sur le sol forestier est en cycle — carbone, azote, phosphore.
+      Une feuille tombe. Elle est consommée. Elle devient sol. Elle nourrit un arbre. Suivez une boucle.
+    follow_ups:
+      - Que serait la forêt sans le cycle ?
+      - Comment la décomposition complète la boucle ?
+      - Quelle est la relation entre la mort et la croissance ?
+  - id: nmf_footprint_compression
+    name: Compression de l'Empreinte
+    prompt: |
+      Votre empreinte comprime la litière. Le sol en dessous garde la forme.
+      Combien de pas faut-il pour changer le sol ? Qui d'autre a marché ici ?
+    follow_ups:
+      - Que serait le sol sans le passage ?
+      - Comment la compression affecte-t-elle le drainage ?
+      - Quelle est la relation entre le chemin et la compaction ?
+  - id: nmf_seasonal_signal
+    name: Signal Saisonnier
+    prompt: |
+      Le sol forestier signale la saison — nouvelle croissance au printemps, sénescence à l'automne. Qu'y a-t-il au sol en ce moment ? Qu'est-ce que cela vous dit ?
+    follow_ups:
+      - Que serait le sol dans une autre saison ?
+      - Comment le signal synchronise-t-il la vie ?
+      - Quelle est la relation entre la litière et le calendrier ?
+  - id: nmf_stump_succession
+    name: Succession sur Souche
+    prompt: |
+      Une souche coupée germe des champignons, des semis, de la mousse. C'est une étape de la succession.
+      Qu'est-ce qui est venu avant ? Qu'est-ce qui la remplacera ? La souche est à la fois une fin et un
+      début.
+    follow_ups:
+      - Que serait la clairière sans la souche ?
+      - Comment la souche crée-t-elle une opportunité ?
+      - Quelle est la relation entre la mort et la nouvelle croissance ?
+  - id: nmf_forest_breath
+    name: Souffle de la Forêt
+    prompt: |
+      Le sol forestier respire — oxygène entrant, carbone sortant, ou l'inverse la nuit.
+      Le sol est vivant. Restez immobile. Pouvez-vous sentir l'échange ?
+    follow_ups:
+      - Que serait l'air sans le sol ?
+      - Comment le souffle façonne-t-il la canopée ?
+      - Quelle est la relation entre le sol et l'atmosphère ?
+  - id: nmf_leaf_miner_trail
+    name: Trace de Mineuse de Feuille
+    prompt: |
+      Une mineuse de feuille — une larve d'insecte — mange entre les couches. La trace est une
+      ligne blanche, un chemin sinueux. Suivez-la. Qu'est-ce que la mineuse cherchait ?
+    follow_ups:
+      - Que serait la feuille sans la trace ?
+      - Comment la mineuse navigue-t-elle sans voir ?
+      - Quelle est la relation entre l'intérieur et l'extérieur ?
+  - id: nmf_decomposer_shift
+    name: Changement des Décomposeurs
+    prompt: |
+      À mesure que la matière se décompose, différents décomposeurs prennent le relais — d'abord les bactéries et les champignons, puis les coléoptères et les vers de terre. Trouvez de la matière à différents stades.
+      Qui travaille maintenant ?
+    follow_ups:
+      - Que serait la décomposition sans la succession ?
+      - Comment le changement façonne-t-il le rythme ?
+      - Quelle est la relation entre le stade et le consommateur ?

@@ -69,6 +69,7 @@ export async function PATCH(
     const mentalModelTag = body.mentalModelTag as string | undefined;
     const isCollapsed = body.isCollapsed as boolean | undefined;
     const longTermMemoryId = body.longTermMemoryId as string | undefined;
+    const convertedToDeepConversation = body.convertedToDeepConversation as boolean | undefined;
     if (mentalModelTag && typeof mentalModelTag === "string") {
       const added = await addMentalModelTag(id, userId, mentalModelTag);
       if (!added) {
@@ -85,7 +86,15 @@ export async function PATCH(
       const session = await getSession(id, userId);
       return NextResponse.json(session);
     }
-    return NextResponse.json({ error: "mentalModelTag or (isCollapsed, longTermMemoryId) required" }, { status: 400 });
+    if (typeof convertedToDeepConversation === "boolean") {
+      const updated = await updateSession(id, userId, { convertedToDeepConversation });
+      if (!updated) {
+        return NextResponse.json({ error: "Session not found" }, { status: 404 });
+      }
+      const session = await getSession(id, userId);
+      return NextResponse.json(session);
+    }
+    return NextResponse.json({ error: "mentalModelTag, (isCollapsed, longTermMemoryId), or convertedToDeepConversation required" }, { status: 400 });
   } catch (err) {
     console.error("Failed to add mental model tag:", err);
     return NextResponse.json(

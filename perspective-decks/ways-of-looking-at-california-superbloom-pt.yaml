@@ -1,0 +1,208 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Maneiras de Olhar o Superbloom da Califórnia (Portuguese)
+
+id: ways_of_looking_at_california_superbloom
+name: Maneiras de Olhar o Superbloom da Califórnia
+description: |
+  Cartas para mudar sua perspectiva ao vivenciar o superbloom da Califórnia.
+  Cada uma oferece uma lente diferente para aprofundar como você vê as flores silvestres, as encostas e
+  o surto efêmero de cor após a chuva de inverno.
+domain: california_superbloom
+cards:
+  - id: the_rain_that_made_it
+    name: A Chuva Que o Fez Acontecer
+    prompt: |
+      Antes das flores, houve chuva. Imagine as tempestades que encheram o
+      solo, as sementes esperando no subsolo. Que condições tiveram que se alinhar para que esta
+      florada acontecesse? Trace o superbloom de volta às suas origens.
+    follow_ups:
+      - O que teria sido diferente com mais — ou menos — chuva?
+      - Quantos anos de dormência podem estar por trás de uma única encosta?
+      - O que significa que este momento nunca foi garantido?
+  - id: one_species_at_a_time
+    name: Uma Espécie Por Vez
+    prompt: |
+      Escolha uma única espécie de flor e siga-a. Papoulas laranjas, tremoços roxos,
+      camomilas amarelas — ignore todo o resto por um momento. Como focar em uma muda o que você vê?
+    follow_ups:
+      - Onde essa espécie domina — e onde ela cede?
+      - Como seria a encosta se apenas esta florescesse?
+      - Como ela se mantém entre as outras?
+  - id: pollinators_view
+    name: Visão do Polinizador
+    prompt: |
+      Imagine que você é uma abelha, uma borboleta ou um beija-flor. O que o atrairia?
+      Quais flores você visitaria primeiro? Como é a paisagem de alguns centímetros acima das pétalas?
+    follow_ups:
+      - Quais padrões guiariam seu caminho?
+      - Quais flores você pularia — e por quê?
+      - Como a escala muda a experiência?
+  - id: ground_level
+    name: Nível do Chão
+    prompt: |
+      Aproxime-se. Deite-se de bruços ou ajoelhe-se. Veja o superbloom da
+      perspectiva do solo — caules subindo, pétalas arqueando sobre você, o céu
+      uma faixa distante acima.
+    follow_ups:
+      - O que você percebe que perdeu da altura em pé?
+      - Como o chão se sente sob você?
+      - O que um besouro veria daqui?
+  - id: time_lapse
+    name: Time-Lapse
+    prompt: |
+      O superbloom é um momento em uma história mais longa. Imagine a encosta em
+      acelerado: brotos verdes, primeiros botões, pico de cor, depois desbotando. Quanto tempo
+      dura o espetáculo? O que vem antes e depois?
+    follow_ups:
+      - Quando você teria escolhido visitar se pudesse ir apenas uma vez?
+      - O que já se foi quando você chega?
+      - O que restará quando a cor desbotar?
+  - id: the_chemistry_of_color
+    name: A Química da Cor
+    prompt: |
+      Concentre-se nos pigmentos. Laranja, roxo, amarelo, azul — o que faz cada tom?
+      Como eles interagem? Onde as cores entram em conflito e onde elas harmonizam?
+      Trate a encosta como uma paleta.
+    follow_ups:
+      - Que cor você adicionaria — ou subtrairia?
+      - Como a luz muda as cores ao longo do dia?
+      - Como seria em preto e branco?
+  - id: negative_space
+    name: Espaço Negativo
+    prompt: |
+      Olhe para o que não são flores. O céu, as manchas nuas de solo, as lacunas
+      entre as flores. Como o espaço vazio molda o que você vê? Sinta
+      a importância do que não está lá.
+    follow_ups:
+      - Onde o vazio se concentra?
+      - O que preencheria essas lacunas — e deveria?
+      - Como o espaço negativo sustenta a composição?
+  - id: the_path_through
+    name: O Caminho Através
+    prompt: |
+      Note as trilhas — humanas, animais ou sopradas pelo vento. Por onde as pessoas andam?
+      Onde a paisagem resiste à passagem? Trace um caminho através da floração
+      e pergunte quanto custaria segui-lo.
+    follow_ups:
+      - O que você protegeria ao não caminhar ali?
+      - Para onde o caminho quer te levar?
+      - O que você perderia ao permanecer na trilha?
+  - id: geology_beneath
+    name: Geologia Por Baixo
+    prompt: |
+      As flores repousam em milhões de anos. Que rocha está sob o solo?
+      O que moldou essas colinas? Deixe o superbloom conectá-lo ao tempo profundo
+      sob seus pés.
+    follow_ups:
+      - Como a geologia influencia o que cresce aqui?
+      - Como teria sido este lugar antes da formação das colinas?
+      - O que restará quando as flores se forem?
+  - id: scent_and_sound
+    name: Cheiro e Som
+    prompt: |
+      Feche os olhos. O que você cheira? Pólen, poeira, sálvia, terra úmida? O que
+      você ouve? Abelhas, vento, passos, silêncio? Deixe os sentidos não visuais
+      liderarem por um momento.
+    follow_ups:
+      - Que som você adicionaria para capturar a experiência?
+      - Como o cheiro muda conforme você se move?
+      - O que você perderia se apenas olhasse?
+  - id: light_and_shadow
+    name: Luz e Sombra
+    prompt: |
+      Observe como a luz se move pela encosta. Manhã, meio-dia, noite — como
+      o ângulo do sol muda as flores? Onde caem as sombras?
+      O que é revelado e o que é escondido?
+    follow_ups:
+      - Quando a luz parece mais viva?
+      - O que você veria ao amanhecer que perderia ao meio-dia?
+      - Como as sombras moldam a paisagem?
+  - id: seed_to_flower
+    name: Da Semente à Flor
+    prompt: |
+      Trace uma única planta da semente à floração. Como ela chegou aqui? Vento, animal,
+      água? Quanto tempo esperou? Em que ela se tornará quando as pétalas caírem?
+      Siga uma vida através de seu ciclo.
+    follow_ups:
+      - O que a semente teria testemunhado sob o solo?
+      - O que a planta deixará para trás?
+      - Quantas gerações são representadas nesta encosta?
+  - id: micro_vs_macro
+    name: Micro vs. Macro
+    prompt: |
+      Dê zoom em uma única pétala, uma gota de orvalho, um grão de pólen. Depois,
+      afaste-se para toda a encosta, o vale, o estado. Como a escala muda o
+      que o superbloom significa?
+    follow_ups:
+      - O que é invisível em uma escala e óbvio em outra?
+      - Onde sua atenção naturalmente repousa?
+      - Como a visão macro muda a micro — e vice-versa?
+  - id: weathers_hand
+    name: A Mão do Clima
+    prompt: |
+      O superbloom é a colaboração do clima. Chuva, sol, vento, temperatura —
+      cada um tem um papel. Imagine o clima como um co-criador. O que ele decidiu?
+      O que ele reteve?
+    follow_ups:
+      - O que um inverno diferente teria produzido?
+      - Como o clima de hoje molda sua experiência?
+      - O que as flores diriam sobre o clima se pudessem?
+  - id: human_witness
+    name: Testemunha Humana
+    prompt: |
+      Você não é o primeiro a ver isso. Quem mais esteve aqui? Fazendeiros,
+      povos indígenas, fotógrafos, viajantes. Como sua presença
+      muda o lugar? O que significa testemunhar?
+    follow_ups:
+      - O que eles teriam visto que você não vê?
+      - O que você levará consigo?
+      - Como testemunhar difere de possuir ou tirar?
+  - id: the_next_year
+    name: O Próximo Ano
+    prompt: |
+      Esta floração não se repetirá exatamente. No próximo ano pode haver seca, ou fogo, ou
+      uma mistura diferente de espécies. Imagine retornar em um ano. O que você
+      esperaria encontrar? Do que estaria preparado para perder?
+    follow_ups:
+      - O que torna este momento insubstituível?
+      - O que você diria ao seu eu futuro?
+      - Como a impermanência aprofunda a experiência?
+  - id: texture_and_touch
+    name: Textura e Toque
+    prompt: |
+      Como seria passar a mão pelas flores? Pétalas macias, caules quebradiços, pólen pegajoso, folhas ásperas. Imagine as texturas sem
+      tocar — ou, onde permitido, toque gentilmente e observe.
+    follow_ups:
+      - Qual textura te surpreende mais?
+      - O que você evitaria tocar — e por quê?
+      - Como a textura acrescenta ao que a cor sozinha não pode transmitir?
+  - id: before_and_after
+    name: Antes e Depois
+    prompt: |
+      Imagine esta encosta na estação seca — marrom, dormente, aparentemente morta.
+      Agora, segure ambas as imagens: o antes e o depois. O que o contraste
+      revela sobre resiliência, paciência e transformação?
+    follow_ups:
+      - O que alguém que só viu a estação seca perderia?
+      - Como a memória da dormência enriquece a floração?
+      - Que outros momentos de "antes e depois" isso evoca?
+  - id: make_it_a_mixtape
+    name: Faça Uma Mixtape
+    prompt: |
+      Que música acompanharia esta paisagem? Crie uma playlist para o
+      superbloom. Que tempo, que humor, que instrumentos? Deixe as flores
+      sugerirem a trilha sonora.
+    follow_ups:
+      - Qual é a faixa de abertura?
+      - Que qualidade liga a música às flores — ritmo, cor, sentimento?
+      - Como a playlist mudaria em diferentes horas do dia?
+  - id: take_one_thing_home
+    name: Leve Uma Coisa Para Casa
+    prompt: |
+      Você não pode levar as flores — elas pertencem aqui. Mas você pode levar uma memória,
+      uma sensação, uma pergunta. Que uma coisa você levará? Como você
+      a manterá sem colher uma única flor?
+    follow_ups:
+      - O que você mostraria a alguém que não pôde vir?
+      - Como você descreverá isso mais tarde?
+      - O que você deixaria para trás de propósito?

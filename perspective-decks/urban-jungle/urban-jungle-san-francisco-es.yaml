@@ -1,0 +1,410 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Jungla Urbana — San Francisco (Spanish)
+
+id: urban_jungle_san_francisco
+name: Jungla Urbana — San Francisco
+description: 50 tarjetas para cambiar tu forma de ver San Francisco, desde la escala y la luz hasta las capas de historia y los ritmos de la vida callejera.
+domain: urban_jungle
+cards:
+  - id: sf_hill_grade
+    name: Pendiente de la Colina
+    prompt: |
+      San Francisco está construida sobre pendientes. Siente la inclinación bajo tus pies. ¿Cómo cambia la pendiente lo que notas? ¿Dónde se inclina la ciudad?
+    follow_ups:
+      - ¿Cómo se vería la calle si fuera plana?
+      - ¿Cómo moldean las colinas los barrios?
+      - ¿Cuál es la manzana más empinada que has subido?
+  - id: sf_fog_layer
+    name: Capa de Niebla
+    prompt: |
+      La niebla se acerca. Mírala moverse, sobre el puente, cuesta abajo por las colinas. La niebla es un personaje. ¿Cómo cambia la luz? ¿El sonido?
+    follow_ups:
+      - ¿Cómo sería la ciudad sin niebla?
+      - ¿Cómo marca la niebla el tiempo?
+      - ¿Dónde se detiene la niebla?
+  - id: sf_cable_car_track
+    name: Vía del Tranvía
+    prompt: |
+      Sigue una vía de tranvía. La ranura en el pavimento, el zumbido del cable. El tranvía es una reliquia que aún funciona. ¿Qué transporta?
+    follow_ups:
+      - ¿Cómo sería la colina sin la vía?
+      - ¿Cómo moldea el tranvía el turismo?
+      - ¿Cuál es la relación entre la vía y la calle?
+  - id: sf_victorian_detail
+    name: Detalle Victoriano
+    prompt: |
+      Las victorianas de San Francisco son ornamentadas: encajes, ventanales, color. Encuentra una y lee sus detalles. ¿Qué historia cuenta el ornamento?
+    follow_ups:
+      - ¿Cómo sería la casa sin los detalles?
+      - ¿Cómo cambia el color la calle?
+      - ¿Cuál es la relación entre lo victoriano y lo moderno?
+  - id: sf_painted_lady
+    name: Dama Pintada
+    prompt: |
+      Las Painted Ladies son famosas, pero cada victoriana tiene una paleta. Colecciona cinco combinaciones de colores de una manzana. ¿Qué dicen los colores?
+    follow_ups:
+      - ¿Por qué estos colores?
+      - ¿Cómo preserva o transforma la pintura?
+      - ¿Cómo se vería la manzana en escala de grises?
+  - id: sf_bay_window
+    name: Ventanal Abuhardillado
+    prompt: |
+      Los ventanales abuhardillados sobresalen hacia la calle. Son para la luz, para la vista, para exhibir. Ponte delante de uno. ¿Qué verías desde dentro?
+    follow_ups:
+      - ¿Cómo cambia el ventanal la habitación?
+      - ¿Cómo sería la fachada sin él?
+      - ¿Cómo crean los ventanales una relación con la calle?
+  - id: sf_stairway_street
+    name: Calle Escalera
+    prompt: |
+      San Francisco tiene escaleras que son calles: escalones en lugar de pavimento. Sube una. ¿Cómo cambia la escalera el barrio?
+    follow_ups:
+      - ¿Quién usa estas escaleras?
+      - ¿Cómo sería la colina sin ellas?
+      - ¿Cómo crean las escaleras comunidad?
+  - id: sf_mission_mural
+    name: Mural de la Misión
+    prompt: |
+      La Misión es una galería de murales. Encuentra uno y léelo. ¿Cuál es la historia? ¿Quién lo pintó? ¿Para quién es?
+    follow_ups:
+      - ¿Qué diría el muro sin el mural?
+      - ¿Cómo reclaman espacio los murales?
+      - ¿Cuál es la relación entre el mural y el barrio?
+  - id: sf_earthquake_retrofit
+    name: Refuerzo Antisisísmico
+    prompt: |
+      Busca refuerzos antisisísmicos: pernos, refuerzos, cimientos. La ciudad recuerda 1906 y 1989. ¿Cómo moldea el miedo el entorno construido?
+    follow_ups:
+      - ¿Cómo sería el edificio sin el refuerzo?
+      - ¿Cómo se muestra el diseño sísmico?
+      - ¿Cuál es la relación entre el refuerzo y la confianza?
+  - id: sf_dolores_palm
+    name: Palmera de Dolores
+    prompt: |
+      Las palmeras bordean la calle Dolores. No son nativas, pero son icónicas. ¿Qué dicen sobre la relación de la ciudad con el exterior?
+    follow_ups:
+      - ¿Cómo sería la calle sin palmeras?
+      - ¿Cómo marcan identidad las palmeras?
+      - ¿Cuál es la relación entre la palmera y el lugar?
+  - id: sf_twin_peaks_view
+    name: Vista de Twin Peaks
+    prompt: |
+      Imagina la vista desde Twin Peaks. La ciudad se extiende abajo: rejilla, agua, puentes. ¿Cómo cambia la elevación lo que importa?
+    follow_ups:
+      - ¿Qué verías desde allí arriba?
+      - ¿Cómo moldea la vista la imagen de la ciudad?
+      - ¿Qué se esconde desde la cima?
+  - id: sf_ferry_building
+    name: Edificio del Ferry
+    prompt: |
+      El Edificio del Ferry mira hacia la bahía. Es un umbral: tierra y agua, ciudad y viaje. Párate en su entrada. ¿Qué fluye a través de él?
+    follow_ups:
+      - ¿Cómo sería el paseo marítimo sin él?
+      - ¿Cómo marca el edificio la transición?
+      - ¿Cuál es la relación entre el ferry y la ciudad?
+  - id: sf_chinatown_gate
+    name: Puerta de Chinatown
+    prompt: |
+      La Puerta del Dragón marca Chinatown. Pasa por ella. ¿Qué cambia? La puerta es a la vez real y simbólica. ¿Cómo funciona?
+    follow_ups:
+      - ¿Cómo sería Chinatown sin la puerta?
+      - ¿Cómo crea identidad la puerta?
+      - ¿Cuál es la relación entre la puerta y el barrio?
+  - id: sf_hydrant_color
+    name: Color del Hidrante
+    prompt: |
+      Los hidrantes de San Francisco son de diferentes colores: azul, verde, rojo. El color indica el flujo de agua. Encuentra tres colores. ¿Qué significa cada uno?
+    follow_ups:
+      - ¿Qué haría la manzana en caso de incendio?
+      - ¿Cómo codifica información el color?
+      - ¿Cuál es la relación entre el hidrante y el sistema?
+  - id: sf_parklet
+    name: Parklet
+    prompt: |
+      Los parklets recuperan el estacionamiento para las personas. Siéntate en uno. ¿Cuál es el mobiliario? ¿Quién lo usa? ¿Cómo cambia el parklet la manzana?
+    follow_ups:
+      - ¿Cómo sería el espacio sin el parklet?
+      - ¿Cómo crea el parklet encuentros?
+      - ¿Qué añadirías?
+  - id: sf_sf_street_sign
+    name: Señal de Calle de SF
+    prompt: |
+      Las señales de las calles de San Francisco tienen un estilo particular. Observa la fuente, el montaje, la colocación. ¿Cómo moldea la señal la orientación?
+    follow_ups:
+      - ¿Cómo sería la manzana sin la señal?
+      - ¿Importa la tipografía?
+      - ¿Cuál es la relación entre la señal y la identidad?
+  - id: sf_castro_rainbow
+    name: Arcoíris de Castro
+    prompt: |
+      Castro ondea banderas arcoíris. Camina por la calle y cuenta las banderas. ¿Cómo reclama espacio la bandera? ¿Qué significa aquí?
+    follow_ups:
+      - ¿Cómo sería el barrio sin las banderas?
+      - ¿Cómo crea comunidad la bandera?
+      - ¿Cuál es la relación entre el símbolo y el lugar?
+  - id: sf_haight_vintage
+    name: Vintage de Haight
+    prompt: |
+      Haight es un museo de los años 60. Encuentra un edificio que no haya cambiado. ¿Qué se preserva? ¿Qué es actuación?
+    follow_ups:
+      - ¿Cómo sería la calle sin lo vintage?
+      - ¿Cómo moldea la historia el comercio?
+      - ¿Cuál es la relación entre el pasado y el presente?
+  - id: sf_sutro_tower
+    name: Torre Sutro
+    prompt: |
+      La Torre Sutro es visible desde todas partes. Úsala como brújula. ¿Cómo te orienta la torre? ¿Cómo sería el horizonte sin ella?
+    follow_ups:
+      - ¿Qué transmite la torre?
+      - ¿Cómo moldea la torre la identidad?
+      - ¿Cuál es la relación entre la torre y la vista?
+  - id: sf_bart_underground
+    name: BART Subterráneo
+    prompt: |
+      Viaja en BART bajo la bahía. Estás en un túnel bajo el agua. Siente la presión, la oscuridad, la emergencia. ¿Cómo cambia el túnel el viaje?
+    follow_ups:
+      - ¿Cómo sería el viaje diario sin el túnel?
+      - ¿Cómo separa la bahía?
+      - ¿Cuál es la relación entre el túnel y la región?
+  - id: sf_taqueria_line
+    name: Fila de Taquería
+    prompt: |
+      Únete a una fila de taquería a medianoche. La fila es un ritual. ¿Quién está en ella? ¿Qué están pidiendo? La fila es comunidad.
+    follow_ups:
+      - ¿Cómo sería la manzana sin la taquería?
+      - ¿Cómo crea la fila encuentros?
+      - ¿Cuál es la relación entre la comida y el lugar?
+  - id: sf_dolores_sun
+    name: Sol de Dolores
+    prompt: |
+      El Parque Dolores mira al oeste. En un día soleado, es una playa. Observa la multitud. ¿Cómo moldea el sol el parque? ¿Quién obtiene los mejores lugares?
+    follow_ups:
+      - ¿Cómo sería el parque sin el sol?
+      - ¿Importa la orientación?
+      - ¿Cuál es la relación entre el parque y el clima?
+  - id: sf_mission_door
+    name: Puerta de la Misión
+    prompt: |
+      Las puertas de la Misión a menudo son ornamentadas: talladas, pintadas, únicas. Encuentra cinco puertas en una manzana. ¿Qué dicen sobre los edificios detrás de ellas?
+    follow_ups:
+      - ¿Cómo sería la manzana sin las puertas?
+      - ¿Cómo crea identidad la puerta?
+      - ¿Cuál es la relación entre la puerta y el umbral?
+  - id: sf_coit_tower
+    name: Torre Coit
+    prompt: |
+      La Torre Coit corona Telegraph Hill. Es un monumento, un mirador, un hito.
+      ¿Cómo moldea la torre la colina? ¿Cómo sería la colina sin ella?
+    follow_ups:
+      - ¿Qué conmemora la torre?
+      - ¿Cómo orienta la torre la ciudad?
+      - ¿Cuál es la relación entre la torre y el barrio?
+  - id: sf_lombard_curve
+    name: Curva de Lombard
+    prompt: |
+      La calle Lombard se curva cuesta abajo. Es famosa por sus curvas cerradas.
+      Camínala. ¿Cómo cambia la curva el descenso? ¿Qué haría una calle recta?
+    follow_ups:
+      - ¿Cómo sería la colina sin la curva?
+      - ¿Cómo moldea la curva la experiencia?
+      - ¿Cuál es la relación entre la curva y la seguridad?
+  - id: sf_alcatraz_silhouette
+    name: Silueta de Alcatraz
+    prompt: |
+      Desde la orilla, Alcatraz es una silueta. La isla está siempre ahí, siempre distante. ¿Qué significa para la ciudad?
+    follow_ups:
+      - ¿Cómo sería la bahía sin la isla?
+      - ¿Cómo moldea la isla la vista?
+      - ¿Cuál es la relación entre la prisión y la ciudad?
+  - id: sf_ghost_sign
+    name: Letrero Fantasma
+    prompt: |
+      Los letreros fantasma, anuncios descoloridos en ladrillo, marcan el pasado. Encuentra uno. ¿Qué anunciaba? ¿Quién lo habría visto?
+    follow_ups:
+      - ¿Qué diría el muro sin el letrero?
+      - ¿Cómo preserva el letrero fantasma la historia?
+      - ¿Cuál es la relación entre el letrero y el comercio?
+  - id: sf_sf_sidewalk
+    name: Acera de SF
+    prompt: |
+      Las aceras de San Francisco a menudo están agrietadas, inclinadas, con raíces de árboles. Camina una manzana y nota la textura. ¿Cómo envejece la acera?
+    follow_ups:
+      - ¿Cómo sería la manzana sin la acera?
+      - ¿Cómo moldea la acera el movimiento?
+      - ¿Cuál es la relación entre la acera y el árbol?
+  - id: sf_golden_gate_fog
+    name: Niebla del Golden Gate
+    prompt: |
+      El puente Golden Gate desaparece en la niebla. Míralo desaparecer y reaparecer. La niebla es una cortina. ¿Qué hay detrás de ella?
+    follow_ups:
+      - ¿Cómo sería el puente sin la niebla?
+      - ¿Cómo moldea la niebla la vista?
+      - ¿Cuál es la relación entre la niebla y el puente?
+  - id: sf_mission_dolores
+    name: Misión Dolores
+    prompt: |
+      La Misión Dolores es el edificio más antiguo de la ciudad. Ponte delante de él. ¿Qué ha visto? ¿Cómo marca el tiempo?
+    follow_ups:
+      - ¿Cómo sería el barrio sin la misión?
+      - ¿Cómo moldea la misión la identidad?
+      - ¿Cuál es la relación entre la misión y la ciudad?
+  - id: sf_painted_steps
+    name: Escaleras Pintadas
+    prompt: |
+      Las Escaleras de Azulejos de la Avenida 16 son un mosaico. Súbelas. Cada escalón es diferente. ¿Cómo cambia el arte el ascenso?
+    follow_ups:
+      - ¿Cómo serían las escaleras sin los azulejos?
+      - ¿Cómo crea comunidad el mosaico?
+      - ¿Cuál es la relación entre el arte y el ascenso?
+  - id: sf_sf_street_tree
+    name: Árbol de Calle de SF
+    prompt: |
+      Los árboles de las calles de San Francisco son a menudo palmeras, magnolias o ficus. Encuentra uno y identifícalo. ¿Cómo moldea el árbol la manzana?
+    follow_ups:
+      - ¿Cómo sería la manzana sin el árbol?
+      - ¿Cómo crea el árbol hábitat?
+      - ¿Cuál es la relación entre el árbol y la acera?
+  - id: sf_sf_bay_window
+    name: Ventanal Abuhardillado de SF
+    prompt: |
+      Los ventanales abuhardillados son una vernacular de San Francisco. Sobresalen hacia la calle, atrapando la luz. ¿Cómo cambia el ventanal la habitación?
+    follow_ups:
+      - ¿Cómo sería la fachada sin el ventanal?
+      - ¿Cómo crea el ventanal una relación con la calle?
+      - ¿Cuál es la relación entre el ventanal y la vista?
+  - id: sf_sf_hill
+    name: Colina de SF
+    prompt: |
+      Elige una colina y súbela. Siente el esfuerzo. En la cima, mira hacia atrás. ¿Cómo cambia la subida lo que ves?
+    follow_ups:
+      - ¿Cómo sería la ciudad sin las colinas?
+      - ¿Cómo moldean las colinas los barrios?
+      - ¿Cuál es la relación entre la colina y la vista?
+  - id: sf_sf_fog
+    name: Niebla de SF
+    prompt: |
+      La niebla tiene nombre: Karl. Es una celebridad local. Cuando Karl se acerca, ¿cómo cambia la ciudad? ¿Qué se oculta? ¿Qué se revela?
+    follow_ups:
+      - ¿Cómo sería la ciudad sin Karl?
+      - ¿Cómo moldea la niebla la identidad?
+      - ¿Cuál es la relación entre la niebla y la luz?
+  - id: sf_sf_cable
+    name: Cable de SF
+    prompt: |
+      El tranvía funciona con un cable bajo la calle. No puedes verlo, pero lo oyes. ¿Cómo moldea el cable oculto la ciudad visible?
+    follow_ups:
+      - ¿Cómo sería la colina sin el cable?
+      - ¿Cómo crea conexión el cable?
+      - ¿Cuál es la relación entre el cable y la calle?
+  - id: sf_sf_victorian
+    name: Victoriana de SF
+    prompt: |
+      Las victorianas vienen en pares: dos casas, un lote. Encuentra un par. ¿Cómo se relacionan? ¿Qué sería una sin la otra?
+    follow_ups:
+      - ¿Cómo sería la manzana sin el par?
+      - ¿Cómo crea el par ritmo?
+      - ¿Cuál es la relación entre el par y el lote?
+  - id: sf_sf_mission
+    name: Misión de SF
+    prompt: |
+      El distrito de la Misión lleva el nombre de Misión Dolores. Camina por la calle y siente las capas: española, mexicana, irlandesa, centroamericana. ¿Cuál es el palimpsesto?
+    follow_ups:
+      - ¿Cómo serían los barrios sin las capas?
+      - ¿Cómo moldea la misión la identidad?
+      - ¿Cuál es la relación entre la misión y la migración?
+  - id: sf_sf_bridge
+    name: Puente de SF
+    prompt: |
+      El Puente de la Bahía es menos famoso que el Golden Gate pero más utilizado. Cruza o míralo. ¿Cómo conecta el puente? ¿Qué transporta?
+    follow_ups:
+      - ¿Cómo sería la bahía sin el puente?
+      - ¿Cómo moldea el puente la región?
+      - ¿Cuál es la relación entre el puente y el viaje diario?
+  - id: sf_sf_parks
+    name: Parques de SF
+    prompt: |
+      San Francisco tiene muchos parques pequeños: parques de bolsillo, parques triangulares. Encuentra uno. ¿Quién lo usa? ¿Cuál es su carácter?
+    follow_ups:
+      - ¿Cómo sería el barrio sin el parque?
+      - ¿Cómo crea el parque un respiro?
+      - ¿Cuál es la relación entre el parque y la manzana?
+  - id: sf_sf_stairs
+    name: Escaleras de SF
+    prompt: |
+      San Francisco tiene más de 600 escaleras públicas. Encuentra una que nunca hayas subido. ¿Qué hay en la cima? ¿Qué hay en la base?
+    follow_ups:
+      - ¿Cómo sería la colina sin las escaleras?
+      - ¿Cómo crean las escaleras atajos?
+      - ¿Cuál es la relación entre las escaleras y el barrio?
+  - id: sf_sf_mural
+    name: Mural de SF
+    prompt: |
+      La Misión tiene más murales per cápita que cualquier otro lugar de EE. UU. Encuentra uno que cuente una historia. ¿Cuál es la narrativa? ¿Para quién es?
+    follow_ups:
+      - ¿Cómo sería el muro sin el mural?
+      - ¿Cómo reclama espacio el mural?
+      - ¿Cuál es la relación entre el mural y la comunidad?
+  - id: sf_sf_water
+    name: Agua de SF
+    prompt: |
+      San Francisco está rodeada de agua: bahía, océano, estrecho. Ve al borde. ¿Qué significa el agua para la ciudad? ¿Cómo moldea el borde?
+    follow_ups:
+      - ¿Cómo sería la ciudad sin el agua?
+      - ¿Cómo moldea el agua la identidad?
+      - ¿Cuál es la relación entre el agua y la ciudad?
+  - id: sf_sf_sunset
+    name: Atardecer de SF
+    prompt: |
+      Los atardeceres de San Francisco son famosos. Observa uno desde una colina. La luz cambia la ciudad. ¿Cómo sería la vista sin el atardecer?
+    follow_ups:
+      - ¿Cómo moldea el atardecer la tarde?
+      - ¿Cuál es la relación entre el atardecer y la vista?
+      - ¿Qué te perderías sin la luz?
+  - id: sf_sf_wind
+    name: Viento de SF
+    prompt: |
+      El viento de San Francisco es constante en algunos barrios. Siéntelo. ¿Cómo moldea el viento la calle? ¿Cómo sería la manzana sin él?
+    follow_ups:
+      - ¿Cómo crea el viento microclimas?
+      - ¿Cuál es la relación entre el viento y el edificio?
+      - ¿Qué plantarías con este viento?
+  - id: sf_sf_earthquake
+    name: Terremoto de SF
+    prompt: |
+      San Francisco se asienta sobre fallas. El suelo puede moverse. ¿Cómo moldea ese conocimiento el entorno construido? ¿Qué notarías en un temblor?
+    follow_ups:
+      - ¿Cómo moldea el riesgo sísmico el diseño?
+      - ¿Cuál es la relación entre la falla y la ciudad?
+      - ¿Qué harías si el suelo temblara?
+  - id: sf_sf_tech_bus
+    name: Autobús Tecnológico de SF
+    prompt: |
+      Los autobuses tecnológicos transportan trabajadores al Silicon Valley. Observa uno detenerse. El autobús es un símbolo. ¿Qué transporta? ¿Qué excluye?
+    follow_ups:
+      - ¿Cómo sería la calle sin el autobús?
+      - ¿Cómo moldea el autobús el barrio?
+      - ¿Cuál es la relación entre el autobús y la ciudad?
+  - id: sf_sf_painted_lady
+    name: Dama Pintada de SF
+    prompt: |
+      Las Painted Ladies son casas victorianas en colores pastel. Encuentra una fila. ¿Cómo crean identidad los colores? ¿Cómo sería la calle en gris?
+    follow_ups:
+      - ¿Cómo moldean los colores la manzana?
+      - ¿Cuál es la relación entre el color y la preservación?
+      - ¿Qué pintarías en tu casa?
+  - id: sf_sf_twin_peaks
+    name: Twin Peaks de SF
+    prompt: |
+      Twin Peaks son dos colinas en el centro de la ciudad. Sube una. La vista es de 360 grados. ¿Cómo te orienta la cima?
+    follow_ups:
+      - ¿Cómo sería la ciudad sin las cimas?
+      - ¿Cómo crean las cimas un hito?
+      - ¿Cuál es la relación entre la cima y el barrio?
+  - id: sf_sf_ferry_plaza
+    name: Plaza del Ferry de SF
+    prompt: |
+      La plaza del Edificio del Ferry alberga un mercado de agricultores. Camina por ella. ¿Qué se vende? ¿Quién viene? La plaza es un umbral entre la ciudad y la bahía.
+    follow_ups:
+      - ¿Cómo sería el paseo marítimo sin la plaza?
+      - ¿Cómo crea comunidad el mercado?
+      - ¿Cuál es la relación entre la plaza y el ferry?

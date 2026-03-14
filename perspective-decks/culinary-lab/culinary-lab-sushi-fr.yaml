@@ -1,0 +1,408 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Laboratoire Culinaire — Sushi (French)
+
+id: culinary_lab_sushi
+name: Laboratoire Culinaire — Sushi
+description: 50 cartes pour transformer votre expérience du sushi, de la chimie du riz et du poisson à la chorégraphie du comptoir et à l'archéologie de l'origine de chaque neta.
+domain: culinary_lab
+cards:
+  - id: sush_rice_temp
+    name: Température du Riz
+    prompt: |
+      Le riz à sushi est chaud — température corporelle, environ. Pas froid. La chaleur transporte le vinaigre. Ressentez-le. Que ferait le riz froid ? Comment la température façonne-t-elle la bouchée ?
+    follow_ups:
+      - Que sacifierait le riz à température ambiante ?
+      - Comment la chaleur transporte-t-elle la saveur ?
+      - Quelle est la relation entre la température et la texture ?
+  - id: sush_shari_balance
+    name: Équilibre du Shari
+    prompt: |
+      Le shari — le riz — représente la moitié du sushi. L'équilibre du vinaigre, du sel, du sucre est précis. Goûtez le riz seul. Qu'apporte-t-il ? Que signifierait un riz sans saveur ?
+    follow_ups:
+      - Comment le riz façonne-t-il le neta ?
+      - Que ferait un excès de vinaigre ?
+      - Quelle est la relation entre le shari et le neta ?
+  - id: sush_counter_ritual
+    name: Rituel du Comptoir
+    prompt: |
+      Omakase au comptoir — vous faites face au chef. Les sushis arrivent pièce par pièce. Le comptoir est une scène. Remarquez la chorégraphie. Quel est le rythme ? Qui donne le tempo ?
+    follow_ups:
+      - Que changerait une table ?
+      - Comment le comptoir façonne-t-il le repas ?
+      - Quelle est la relation entre le chef et le client ?
+  - id: sush_net_origin
+    name: Origine du Neta
+    prompt: |
+      Chaque neta — la garniture — vient de quelque part. Toyosu. Tsukiji. Un bateau. Un ranch. Demandez. Remontez la piste du poisson. Quel voyage a-t-il fait ? Que signifierait congelé d'entrepôt ?
+    follow_ups:
+      - Comment l'origine façonne-t-elle la pièce ?
+      - Que ferait une autre source ?
+      - Quelle est la relation entre le lieu et la qualité ?
+  - id: sush_wasabi_hidden
+    name: Wasabi Caché
+    prompt: |
+      Le vrai wasabi — racine râpée — est rare. La plupart est du raifort et du colorant. Mais quand il est vrai, il est différent. Piquant, vert, éphémère. Remarquez la chaleur. Qu'ajouterait le faux ? Soustrairait-il ?
+    follow_ups:
+      - Comment le wasabi façonne-t-il la bouchée ?
+      - Que signifierait l'absence de wasabi ?
+      - Quelle est la relation entre la chaleur et le poisson ?
+  - id: sush_finger_over_chopstick
+    name: Doigt plutôt que Baguette
+    prompt: |
+      Les nigiris sont traditionnellement mangés avec les doigts — pas avec des baguettes. Les doigts sentent la température, la texture. Essayez. Qu'ajoute le doigt que la baguette ne peut pas ?
+    follow_ups:
+      - Comment la main façonne-t-elle l'expérience ?
+      - Que feraient les baguettes ?
+      - Quelle est la relation entre le toucher et le goût ?
+  - id: sush_piece_by_piece
+    name: Pièce par Pièce
+    prompt: |
+      Les sushis arrivent une pièce à la fois — ou deux. Le rythme est délibéré. Vous mangez ; vous attendez. Considérez le rythme. Que sacrifierait une assiette de dix à la fois ?
+    follow_ups:
+      - Comment le rythme façonne-t-il le repas ?
+      - Que ferait la vitesse ?
+      - Quelle est la relation entre la pièce et l'attention ?
+  - id: sush_gari_palate
+    name: Gari et Palais
+    prompt: |
+      Le gari — gingembre mariné — nettoie entre les pièces. Ce n'est pas une garniture ; c'est une réinitialisation. Remarquez quand vous le mangez. Que feraient des pièces consécutives sans gari sur le palais ?
+    follow_ups:
+      - Comment le gari façonne-t-il la progression ?
+      - Que signifierait l'absence de gari ?
+      - Quelle est la relation entre la réinitialisation et le goût ?
+  - id: sush_soy_minimal
+    name: Sauce Soja Minimale
+    prompt: |
+      La sauce soja — un léger trempage, côté poisson vers le bas. Pas le riz. Le riz absorberait trop. Le chef a peut-être déjà badigeonné de sauce. Remarquez. Que ferait un trempage excessif ?
+    follow_ups:
+      - Comment la sauce soja façonne-t-elle la pièce ?
+      - Que signifierait l'absence de sauce soja ?
+      - Quelle est la relation entre le trempage et l'équilibre ?
+  - id: sush_knife_matters
+    name: Le Couteau Compte
+    prompt: |
+      Le couteau à sushi — biseau simple, tranchant. La coupe affecte la texture. Contre le fil ou avec. L'angle. Considérez ce que fait la lame. Que sacrifierait un couteau émoussé ?
+    follow_ups:
+      - Comment la coupe façonne-t-elle le poisson ?
+      - Que ferait un angle différent ?
+      - Quelle est la relation entre la lame et la sensation en bouche ?
+  - id: sush_otoro_fat
+    name: Gras de l'Otoro
+    prompt: |
+      L'otoro — le thon le plus gras — fond. Le gras est le point essentiel. Considérez le persillage. Que ferait un akami maigre ? Comment le gras façonne-t-il l'expérience ?
+    follow_ups:
+      - Que serait la pièce sans le gras ?
+      - Comment le persillage crée-t-il le luxe ?
+      - Quelle est la relation entre le gras et la fonte ?
+  - id: sush_unagi_glaze
+    name: Glaçage de l'Unagi
+    prompt: |
+      L'unagi — l'anguille — est badigeonné d'une sauce sucrée, parfois grillé à nouveau. Le glaçage est une laque. Considérez le brillant. Que signifierait une anguille sans glaçage ?
+    follow_ups:
+      - Comment le glaçage façonne-t-il la pièce ?
+      - Quelle est la relation entre le sucré et l'anguille ?
+      - Pourquoi glacer ?
+  - id: sush_nori crisp
+    name: Croustillant du Nori
+    prompt: |
+      Le nori pour les makis — grillé, croustillant, ou mou ? Différents chefs choisissent différemment. Le nori affecte la bouchée. Considérez la texture. Que ferait un nori détrempé ?
+    follow_ups:
+      - Comment le nori façonne-t-il le rouleau ?
+      - Que signifierait un grillé différent ?
+      - Quelle est la relation entre le croustillant et la fraîcheur ?
+  - id: sush_silence_counter
+    name: Silence au Comptoir
+    prompt: |
+      Certains comptoirs à sushi sont calmes — concentration, respect. D'autres sont animés. Remarquez le paysage sonore. Qu'ajoute le silence ? Qu'ajoute la conversation ?
+    follow_ups:
+      - Comment le son façonne-t-il le repas ?
+      - Que ferait une musique forte ?
+      - Quelle est la relation entre le calme et la concentration ?
+  - id: sush_tamago_sweet
+    name: Sucré du Tamago
+    prompt: |
+      Le tamago — l'omelette soufflée — termine souvent le repas. C'est sucré, superposé. L'habileté du chef est visible. Considérez la conclusion. Que signifierait du poisson cru comme dernière pièce ?
+    follow_ups:
+      - Comment le tamago façonne-t-il la fin ?
+      - Quelle est la relation entre le sucré et la conclusion ?
+      - Pourquoi l'œuf en dernier ?
+  - id: sush_tuna_spectrum
+    name: Spectre du Thon
+    prompt: |
+      Akami, chutoro, otoro — maigre à gras. Le spectre est délibéré. Goûtez-les dans l'ordre si vous le pouvez. Comment fonctionne la progression ? Qu'offre chacune ?
+    follow_ups:
+      - Comment le gras façonne-t-il le spectre ?
+      - Que signifierait un seul grade ?
+      - Quelle est la relation entre le maigre et le riche ?
+  - id: sush_ume_shiso
+    name: Ume Shiso
+    prompt: |
+      L'ume — prune marinée — et le shiso dans certains rouleaux. Acide, herbacé. Ils coupent la richesse. Remarquez quand ils apparaissent. Que serait le rouleau sans eux ?
+    follow_ups:
+      - Comment l'ume façonne-t-il la bouchée ?
+      - Quelle est la relation entre l'acide et le poisson ?
+      - Pourquoi le shiso ?
+  - id: sush_gunkan_hold
+    name: Tenue du Gunkan
+    prompt: |
+      Le gunkan — navire de guerre — contient des garnitures éparses. Œufs de poisson, oursin. Le collier de nori contient. Considérez la forme. Que ferait une pièce plate ?
+    follow_ups:
+      - Comment la forme façonne-t-elle la garniture ?
+      - Que signifierait un récipient différent ?
+      - Quelle est la relation entre la tenue et le déversement ?
+  - id: sush_uni_risk
+    name: Risque de l'Uni
+    prompt: |
+      L'uni — l'oursin — est polarisant. Sucré, salé, texture. Il peut être parfait ou mauvais. Considérez le risque. Que signifierait du saumon sûr ? Qu'ajoute le risque ?
+    follow_ups:
+      - Comment l'uni façonne-t-il l'expérience ?
+      - Que perdriez-vous sans le risque ?
+      - Quelle est la relation entre le polarisant et le mémorable ?
+  - id: sush_chef_choice
+    name: Choix du Chef
+    prompt: |
+      Omakase — choix du chef. Vous surrender le contrôle. Le chef lit le jour, le poisson, vous. Considérez la confiance. Que changerait le fait de choisir vous-même ?
+    follow_ups:
+      - Comment la reddition façonne-t-elle le repas ?
+      - Que signifierait commander à partir d'un menu ?
+      - Quelle est la relation entre la confiance et l'expérience ?
+  - id: sush_sake_pair
+    name: Accords Saké
+    prompt: |
+      Saké avec sushi — froid, chaud, vieilli. L'accord est réfléchi. Remarquez quand vous sirotez. Cela nettoie-t-il ? Améliore-t-il ? Considérez le rôle de la boisson.
+    follow_ups:
+      - Comment le saké façonne-t-il la pièce ?
+      - Que ferait le vin ?
+      - Quelle est la relation entre le riz et le saké ?
+  - id: sush_ikura_pop
+    name: Pop de l'Ikura
+    prompt: |
+      L'ikura — œufs de saumon — éclatent. L'éclatement est texture et salinité. Considérez la sensation. Que feraient les œufs cuits ? Comment le pop façonne-t-il la bouchée ?
+    follow_ups:
+      - Que serait la pièce sans le pop ?
+      - Comment la texture crée-t-elle le plaisir ?
+      - Quelle est la relation entre le pop et le sel ?
+  - id: sush_hirame_chew
+    name: Mastication de l'Hirame
+    prompt: |
+      L'hirame — le flétan — a une mastication différente du thon. Il est maigre, délicat. Remarquez la texture. Que ferait un poisson gras ? Comment la mastication varie-t-elle ?
+    follow_ups:
+      - Comment la texture façonne-t-elle la pièce ?
+      - Quelle est la relation entre le maigre et le délicat ?
+      - Pourquoi commander de l'hirame ?
+  - id: sush_amaebi_head
+    name: Tête de l'Amaebi
+    prompt: |
+      L'amaebi — crevette douce — parfois servie avec la tête frite. La tête est croustillante, umami. Considérez l'utilisation du tout. Que sacrifierait une crevette sans tête ?
+    follow_ups:
+      - Comment la tête façonne-t-elle le plat ?
+      - Quelle est la relation entre le tout et le respect ?
+      - Pourquoi frire la tête ?
+  - id: sush_mirin_gloss
+    name: Brillant du Mirin
+    prompt: |
+      Certaines pièces sont badigeonnées de nikiri — sauce soja, mirin, saké. Le brillant est une finition. Le chef l'a déjà saucé. Considérez si vous devez ajouter plus de sauce soja. Que ferait un trempage excessif ?
+    follow_ups:
+      - Comment le pinceau façonne-t-il la pièce ?
+      - Que signifierait l'absence de pinceau ?
+      - Quelle est la relation entre la main du chef et la vôtre ?
+  - id: sush_anago_soft
+    name: Douceur de l'Anago
+    prompt: |
+      L'anago — anguille d'eau salée — est plus tendre que l'unagi. Espèces différentes, préparation différente. Remarquez la texture. Que ferait la fermeté de l'unagi ?
+    follow_ups:
+      - Comment la douceur façonne-t-elle la pièce ?
+      - Quelle est la relation entre l'anago et l'unagi ?
+      - Pourquoi les deux anguilles ?
+  - id: sush_saba_silver
+    name: Argenté du Saba
+    prompt: |
+      Le saba — maquereau — est souvent mariné. La peau argentée, la chair grasse. Il est fort. Considérez la conservation. Que signifierait du maquereau cru ?
+    follow_ups:
+      - Comment la marinade façonne-t-elle le poisson ?
+      - Quelle est la relation entre le gras et la marinade ?
+      - Pourquoi mariner le saba ?
+  - id: sush_ginger_between
+    name: Gingembre entre les Pièces
+    prompt: |
+      Gari entre les pièces — la réinitialisation. Mais quand ? Après chaque pièce ? Après plusieurs ? Le rythme est le vôtre. Remarquez votre schéma. Que ferait l'absence de réinitialisation ?
+    follow_ups:
+      - Comment le timing façonne-t-il le gari ?
+      - Quelle est la relation entre une pièce et la suivante ?
+      - Quand avez-vous besoin d'une réinitialisation ?
+  - id: sush_maki_cut
+    name: Coupe du Maki
+    prompt: |
+      Les makis — rouleaux — sont coupés en morceaux. Six ou huit. La coupe affecte la section transversale. Considérez la spirale. Que ferait une coupe différente ?
+    follow_ups:
+      - Comment la coupe façonne-t-elle la bouchée ?
+      - Que signifieraient moins de morceaux ?
+      - Quelle est la relation entre la tranche et le tout ?
+  - id: sush_tobiko_crunch
+    name: Croquant du Tobiko
+    prompt: |
+      Le tobiko — œufs de poisson volant — ajoute du croquant et de la couleur. C'est une garniture, une décoration. Remarquez quand il apparaît. Que serait le rouleau sans lui ?
+    follow_ups:
+      - Comment le tobiko façonne-t-il la bouchée ?
+      - Quelle est la relation entre le croquant et la couleur ?
+      - Pourquoi le poisson volant ?
+  - id: sush_sashimi_contrast
+    name: Contraste du Sashimi
+    prompt: |
+      Le sashimi — sans riz — laisse le poisson parler de lui-même. La pureté est différente. Comparez le sashimi au nigiri. Qu'ajoute le riz ? Qu'est-ce que son absence révèle ?
+    follow_ups:
+      - Comment le riz façonne-t-il le nigiri ?
+      - Que signifierait tout sashimi ?
+      - Quelle est la relation entre le poisson et le riz ?
+  - id: sush_tea_rinse
+    name: Rinçage au Thé
+    prompt: |
+      Thé vert au bar à sushi — rempli, partagé. Il nettoie. Le thé fait partie du rythme. Considérez son rôle. Que ferait de l'eau ? Que signifierait l'absence de boisson ?
+    follow_ups:
+      - Comment le thé façonne-t-il le repas ?
+      - Quelle est la relation entre le thé et la réinitialisation ?
+      - Pourquoi le thé vert ?
+  - id: sush_bengara_tuna
+    name: Thon Bengara
+    prompt: |
+      Le bengara — thon maigre, souvent de l'arrière — est plus sombre. La saveur est différente de l'akami. Considérez la coupe. Quelle partie du poisson ? Que fait la localisation ?
+    follow_ups:
+      - Comment la coupe façonne-t-elle la saveur ?
+      - Quelle est la relation entre la localisation et le goût ?
+      - Pourquoi cette coupe ?
+  - id: sush_kohada_cure
+    name: Marinade du Kohada
+    prompt: |
+      Le kohada — gizzard shad — est mariné, parfois vinaigré. C'est un test pour le chef. La peau argentée, l'équilibre. Considérez l'habileté. Que ferait du poisson non mariné ?
+    follow_ups:
+      - Comment la marinade façonne-t-elle le poisson ?
+      - Quelle est la relation entre le vinaigre et la peau argentée ?
+      - Pourquoi est-ce un test ?
+  - id: sush_engawa_fin
+    name: Aileron de l'Engawa
+    prompt: |
+      L'engawa — le muscle de l'aileron du flétan — est prisé. Il a une texture distincte. Considérez la partie. Que ferait du flétan ordinaire ? Comment l'aileron diffère-t-il ?
+    follow_ups:
+      - Comment la coupe façonne-t-elle la pièce ?
+      - Quelle est la relation entre l'aileron et le muscle ?
+      - Pourquoi est-il prisé ?
+  - id: sush_first_piece
+    name: Première Pièce
+    prompt: |
+      La première pièce donne le ton. Souvent quelque chose de doux — peut-être du flétan ou du tai. Le chef calibre. Considérez l'ouverture. Que signifierait un otoro en premier ?
+    follow_ups:
+      - Comment la première pièce façonne-t-elle le repas ?
+      - Quelle est la relation entre la première pièce et la progression ?
+      - Pourquoi une première pièce douce ?
+  - id: sush_kampachi_fat
+    name: Gras du Kampachi
+    prompt: |
+      Le kampachi — jeune sériole — a un gras subtil. Il se situe entre le maigre et le riche. Remarquez le juste milieu. Que ferait du buri ? Que feraient des poissons plus maigres ?
+    follow_ups:
+      - Comment le gras façonne-t-il la pièce ?
+      - Quelle est la relation entre l'âge et le gras ?
+      - Pourquoi le kampachi ?
+  - id: sush_nodoguro_char
+    name: Saisie du Nodoguro
+    prompt: |
+      Le nodoguro — perche à gorge noire — est souvent légèrement saisi. La peau, le gras. La saisie ajoute. Considérez l'application de la chaleur. Que ferait du cru ?
+    follow_ups:
+      - Comment la saisie façonne-t-elle le poisson ?
+      - Quelle est la relation entre la saisie et le gras ?
+      - Pourquoi saisir celui-ci ?
+  - id: sush_choji_plate
+    name: Assiette Choji
+    prompt: |
+      L'assiette — ou le bois, ou la pierre — contient la pièce. La présentation est minimale. Considérez le récipient. Que ferait une assiette chargée ? Que permet le minimalisme ?
+    follow_ups:
+      - Comment l'assiette façonne-t-elle la pièce ?
+      - Quelle est la relation entre le récipient et la concentration ?
+      - Pourquoi le minimal ?
+  - id: sush_tea_cup
+    name: Tasse à Thé
+    prompt: |
+      La tasse à thé au comptoir — sans anse, parfois rugueuse. Vous la tenez à deux mains. Considérez le récipient. Que ferait une tasse ? Qu'ajoute la tasse ?
+    follow_ups:
+      - Comment la tasse façonne-t-elle la gorgée ?
+      - Quelle est la relation entre le récipient et le rituel ?
+      - Pourquoi pas d'anse ?
+  - id: sush_silver_slide
+    name: Glissement Argenté
+    prompt: |
+      La pièce devrait glisser de l'assiette — ou être soulevée proprement. Le riz tient mais se détache. Considérez la construction. Que signifierait un riz qui se défait ?
+    follow_ups:
+      - Comment la structure façonne-t-elle la dégustation ?
+      - Que ferait un riz pâteux ?
+      - Quelle est la relation entre l'intégrité et la bouchée ?
+  - id: sush_kinmedai_skin
+    name: Peau du Kinmedai
+    prompt: |
+      Le kinmedai — vivaneau à œil d'or — souvent avec la peau, légèrement torchée. La peau ajoute texture, gras. Considérez le chalumeau. Que ferait la peau crue ?
+    follow_ups:
+      - Comment la peau façonne-t-elle la pièce ?
+      - Quelle est la relation entre le chalumeau et le gras ?
+      - Pourquoi torcher ?
+  - id: sush_botan_ebi
+    name: Botan Ebi
+    prompt: |
+      Le botan ebi — crevette tachetée — est sucré, souvent cru. La queue parfois frite. Considérez le tout. Que ferait une crevette cuite ?
+    follow_ups:
+      - Comment la préparation façonne-t-elle la pièce ?
+      - Quelle est la relation entre le cru et le sucré ?
+      - Pourquoi crevette tachetée ?
+  - id: sush_namida_heat
+    name: Chaleur de la Namida
+    prompt: |
+      Le vrai wasabi fait pleurer — namida. La chaleur monte, passe. C'est différent du piment. Considérez la sensation. Que ferait le raifort différemment ?
+    follow_ups:
+      - Comment la chaleur façonne-t-elle la bouchée ?
+      - Quelle est la relation entre le wasabi et la larme ?
+      - Pourquoi fait-il pleurer ?
+  - id: sush_omakase_end
+    name: Fin de l'Omakase
+    prompt: |
+      Le repas se termine — tamago, peut-être miso, peut-être un fruit. L'arc est complet. Considérez la conclusion. Que ferait une autre pièce ? Quand savez-vous que vous avez fini ?
+    follow_ups:
+      - Comment la fin façonne-t-elle la mémoire ?
+      - Quelle est la relation entre la conclusion et la satisfaction ?
+      - Pourquoi finir avec de l'œuf ou de la soupe ?
+  - id: sush_counter_wait
+    name: Attente au Comptoir
+    prompt: |
+      Entre les pièces, vous attendez. Le chef prépare. La pause fait partie du rythme. Remarquez l'anticipation. Que sacrifierait un service instantané ?
+    follow_ups:
+      - Comment l'attente façonne-t-elle la pièce ?
+      - Quelle est la relation entre la pause et l'attention ?
+      - Pourquoi ne pas pré-dresser ?
+  - id: sush_tsukiji_legacy
+    name: Héritage de Tsukiji
+    prompt: |
+      Tsukiji a disparu ; Toyosu a pris sa place. Mais le poisson circule toujours à Tokyo. Considérez le marché. Que serait le sushi sans la criée ? Sans la distribution ?
+    follow_ups:
+      - Comment le marché façonne-t-il le poisson ?
+      - Quelle est la relation entre la criée et la qualité ?
+      - Que signifiait Tsukiji ?
+  - id: sush_edomae_spirit
+    name: Esprit Edomae
+    prompt: |
+      Edomae — style Edo — sushi de la tradition de Tokyo. Conservé, mariné, vieilli pour être consommé sans réfrigération. Considérez l'histoire. Que signifierait "toujours frais" ?
+    follow_ups:
+      - Comment l'histoire façonne-t-elle la technique ?
+      - Quelle est la relation entre la conservation et la saveur ?
+      - Pourquoi Edomae ?
+  - id: sush_gari_reset
+    name: Réinitialisation Gari
+    prompt: |
+      Le gari — gingembre mariné — nettoie entre les pièces. Les fines tranches rose pâle réinitialisent le palais. Remarquez quand vous y tendez la main. Que serait le repas sans la réinitialisation ? Comment le gingembre façonne-t-il la progression ?
+    follow_ups:
+      - Que signifierait l'absence de gari ?
+      - Comment la réinitialisation façonne-t-elle la pièce suivante ?
+      - Quelle est la relation entre la pause et la continuité ?
+  - id: sush_otoro_melt
+    name: Fonte de l'Otoro
+    prompt: |
+      L'otoro — le thon le plus gras — se dissout presque sur la langue. Le gras est le point essentiel. Considérez la texture. Que ferait le thon maigre ? Comment la fonte marque-t-elle le summum du repas ?
+    follow_ups:
+      - Que ferait l'akami différemment ?
+      - Comment le gras façonne-t-il l'expérience ?
+      - Quelle est la relation entre la fonte et le luxe ?

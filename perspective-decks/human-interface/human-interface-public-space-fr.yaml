@@ -1,0 +1,563 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# L'interface humaine — Espace public (French)
+
+id: human_interface_public_space
+name: L'interface humaine — Espace public
+description: 50 cartes pour changer votre regard sur l'espace public—des bancs et allées à la chorégraphie des inconnus et aux objets comme talismans.
+domain: human_interface
+cards:
+  - id: hi_ps_bench_occupation
+    name: Occupation du banc
+    prompt: |
+      Un banc est occupé — par un corps, un sac, une posture. Le banc est une ressource
+      limitée. Observez qui s'assoit, qui reste debout, qui passe. Le banc a des
+      significations différentes pour différentes personnes. Que fournit-il ?
+    follow_ups:
+      - Comment le banc façonne-t-il l'espace ?
+      - Que serait le parc sans bancs ?
+      - Quelle est la relation entre le banc et le repos ?
+  - id: hi_ps_pathway_flow
+    name: Flux de l'allée
+    prompt: |
+      Le chemin canalise le mouvement. Les gens marchent — seuls, en couple, en groupe. Le
+      flux a une direction. Observez la collision. Qui cède ? L'allée est
+      un corridor partagé. Quelles règles la régissent ?
+    follow_ups:
+      - Comment l'allée façonne-t-elle la marche ?
+      - Que serait l'espace sans allées ?
+      - Quelle est la relation entre le chemin et la destination ?
+  - id: hi_ps_strangers_choreography
+    name: Chorégraphie des inconnus
+    prompt: |
+      Des corps sans lien se déplacent dans un espace partagé. La chorégraphie est
+      tacite — contourner, s'arrêter, se fondre. Observez la danse. Personne ne parle.
+      La chorégraphie est purement corporelle. Qu'exige-t-elle ?
+    follow_ups:
+      - Comment la chorégraphie façonne-t-elle l'espace ?
+      - Que se passerait-il si tout le monde s'arrêtait ?
+      - Quelle est la relation entre la chorégraphie et la civilité ?
+  - id: hi_ps_object_talisman
+    name: Objet comme talisman
+    prompt: |
+      Un livre sur un banc. Un sac sur une chaise. L'objet occupe une place. Il dit
+      "Je suis là" ou "Je reviens". L'objet est un talisman. Observez l'occupation.
+      Que protège-t-il ?
+    follow_ups:
+      - Comment le talisman façonne-t-il l'espace ?
+      - Que serait l'espace sans de telles occupations ?
+      - Quelle est la relation entre l'objet et la présence ?
+  - id: hi_ps_bench_armrest
+    name: Accoudoir de banc
+    prompt: |
+      Certains bancs ont des accoudoirs. Ils divisent le siège. Ils empêchent de s'allonger.
+      L'accoudoir est une conception intentionnelle. Observez qui l'utilise. Qu'exclut
+      l'accoudoir ?
+    follow_ups:
+      - Comment l'accoudoir façonne-t-il le banc ?
+      - Que serait le banc sans lui ?
+      - Quelle est la relation entre l'accoudoir et le contrôle ?
+  - id: hi_ps_pathway_intersection
+    name: Intersection d'allées
+    prompt: |
+      Les allées se croisent. Les corps convergent. L'intersection est un point de collision.
+      Observez la fusion. Que se passe-t-il lorsque les flux se rencontrent ? L'intersection
+      demande une négociation. Qu'exige-t-elle ?
+    follow_ups:
+      - Comment l'intersection façonne-t-elle le flux ?
+      - Que serait l'espace sans intersections ?
+      - Quelle est la relation entre l'intersection et l'attention ?
+  - id: hi_ps_eye_contact_avoid
+    name: Évitement du contact visuel
+    prompt: |
+      Les inconnus évitent le contact visuel. L'évitement est poli. Regarder, c'est risquer
+      la connexion. Observez le regard. L'évitement est un contrat. Qu'autorise-t-il ?
+      Quel est son coût ?
+    follow_ups:
+      - Comment l'évitement façonne-t-il l'espace ?
+      - Que serait l'espace avec plus de contacts ?
+      - Quelle est la relation entre le regard et l'intimité ?
+  - id: hi_ps_bench_share
+    name: Partage de banc
+    prompt: |
+      Deux inconnus partagent un banc. De l'espace entre eux. Le partage est
+      proximité sans connexion. Observez la limite. À quelle distance est-on trop
+      proche ? Le partage est un équilibre délicat.
+    follow_ups:
+      - Comment le partage façonne-t-il le banc ?
+      - Que serait le banc avec une seule personne ?
+      - Quelle est la relation entre le partage et la tolérance ?
+  - id: hi_ps_pathway_width
+    name: Largeur de l'allée
+    prompt: |
+      L'allée est large ou étroite. La largeur affecte le flux. Deux personnes
+      peuvent passer ou non. Observez la largeur. Que présume-t-elle de la
+      foule ? La largeur est une conception. Que permet-elle ?
+    follow_ups:
+      - Comment la largeur façonne-t-elle la marche ?
+      - Que serait l'allée si elle était plus large ?
+      - Quelle est la relation entre la largeur et le confort ?
+  - id: hi_ps_bench_sun
+    name: Banc au soleil
+    prompt: |
+      Le banc est orienté vers le soleil. Ou vers l'ombre. La position est importante. Observez
+      qui choisit quoi. Le soleil est une ressource. Que fournit-il ? Le
+      banc au soleil est convoité.
+    follow_ups:
+      - Comment le soleil façonne-t-il le banc ?
+      - Que serait l'espace sans soleil ?
+      - Quelle est la relation entre le soleil et le repos ?
+  - id: hi_ps_stranger_proximity
+    name: Proximité de l'inconnu
+    prompt: |
+      Un inconnu se tient près — dans une file, dans un bus. La proximité est
+      impersonnelle mais intime. Observez la tolérance. Que permet le corps ?
+      La proximité est un contrat. Quelles sont ses conditions ?
+    follow_ups:
+      - Comment la proximité façonne-t-elle l'espace ?
+      - Que serait l'espace avec plus de place ?
+      - Quelle est la relation entre la proximité et la civilité ?
+  - id: hi_ps_object_left
+    name: Objet laissé
+    prompt: |
+      Une veste sur un banc. Un sac sous un arbre. L'objet laissé marque
+      le territoire. Observez l'occupation. Combien de temps peut-elle durer ? L'objet laissé
+      est un test. Qu'exige-t-il des autres ?
+    follow_ups:
+      - Comment l'objet façonne-t-il l'espace ?
+      - Que serait l'espace sans de telles occupations ?
+      - Quelle est la relation entre l'objet et la confiance ?
+  - id: hi_ps_pathway_obstacle
+    name: Obstacle sur l'allée
+    prompt: |
+      Quelque chose bloque le chemin — travaux, foule, artiste. L'obstacle détourne
+      le flux. Observez le détour. Qu'exige l'obstacle ? L'allée n'est jamais pure.
+      Qu'est-ce qui l'interrompt ?
+    follow_ups:
+      - Comment l'obstacle façonne-t-il le flux ?
+      - Que serait le chemin sans obstacles ?
+      - Quelle est la relation entre l'obstacle et l'adaptation ?
+  - id: hi_ps_bench_alone
+    name: Banc seul
+    prompt: |
+      Une personne sur un banc. La solitude est visible. Le banc abrite
+      la solitude. Observez la posture. Que fournit le banc seul ?
+      Le banc seul est un choix. Que permet-il ?
+    follow_ups:
+      - Comment la solitude façonne-t-elle le banc ?
+      - Que serait l'espace sans bancs ?
+      - Quelle est la relation entre la solitude et le repos ?
+  - id: hi_ps_nod_acknowledge
+    name: Hochement de tête — Accusé de réception
+    prompt: |
+      Un léger hochement de tête. Un bref sourire. L'accusé de réception est minimal. Il dit "Je
+      te vois" sans engagement. Observez quand cela se produit. Le hochement est une
+      petite civilité. Que crée-t-il ?
+    follow_ups:
+      - Comment le hochement façonne-t-il l'espace ?
+      - Que serait l'espace sans cela ?
+      - Quelle est la relation entre le hochement et la sécurité ?
+  - id: hi_ps_pathway_edge
+    name: Bordure de l'allée
+    prompt: |
+      L'allée a des bords — herbe, trottoir, barrière. Le bord définit l'allée.
+      Observez qui reste sur le chemin. Qui le traverse ? Le bord est une limite.
+      Que contient-il ?
+    follow_ups:
+      - Comment le bord façonne-t-il la marche ?
+      - Que serait l'allée sans bords ?
+      - Quelle est la relation entre le bord et la liberté ?
+  - id: hi_ps_bench_claim
+    name: Emprise sur le banc
+    prompt: |
+      Le banc est pris — par étalement, par posture, par sac. L'emprise dit "ceci
+      est à moi". Observez l'emprise. Comment est-elle faite ? L'emprise est un territoire.
+      Que protège-t-elle ?
+    follow_ups:
+      - Comment l'emprise façonne-t-elle le banc ?
+      - Que serait l'espace sans emprises ?
+      - Quelle est la relation entre l'emprise et le confort ?
+  - id: hi_ps_stranger_help
+    name: Aide de l'inconnu
+    prompt: |
+      "Besoin d'un coup de main ?" Un inconnu propose. L'aide est inattendue. Observez
+      l'échange. Accepter ou refuser ? L'aide de l'inconnu est un don. Qu'exige-t-elle ?
+    follow_ups:
+      - Comment l'aide façonne-t-elle l'espace ?
+      - Que serait l'espace sans de telles propositions ?
+      - Quelle est la relation entre l'aide et la confiance ?
+  - id: hi_ps_object_temporary
+    name: Objet temporaire
+    prompt: |
+      Une tasse, un journal, un chapeau. L'objet marque un endroit. Il est temporaire.
+      Le propriétaire reviendra. Observez l'occupation. Qu'exige l'objet temporaire
+      des autres ? L'objet est un substitut.
+    follow_ups:
+      - Comment l'objet temporaire façonne-t-il l'espace ?
+      - Que serait l'espace sans lui ?
+      - Quelle est la relation entre le temporaire et la confiance ?
+  - id: hi_ps_pathway_rhythm
+    name: Rythme de l'allée
+    prompt: |
+      Pieds sur le trottoir. Le rythme est individuel — rapide, lent, inégal. L'allée
+      accueille de nombreux rythmes. Observez la synchronisation et le conflit. Que
+      révèle le rythme ?
+    follow_ups:
+      - Comment le rythme façonne-t-il la marche ?
+      - Que serait l'allée dans le silence ?
+      - Quelle est la relation entre le rythme et la destination ?
+  - id: hi_ps_bench_face
+    name: Orientation du banc
+    prompt: |
+      Le banc est orienté dans une direction — la vue, le soleil, la foule. L'orientation
+      façonne l'expérience. Observez qui choisit quel banc. L'orientation est une conception.
+      Que présume-t-elle ?
+    follow_ups:
+      - Comment l'orientation façonne-t-elle le banc ?
+      - Que serait le banc sans direction ?
+      - Quelle est la relation entre l'orientation et la vue ?
+  - id: hi_ps_sidewalk_dance
+    name: Danse du trottoir
+    prompt: |
+      Deux personnes s'approchent. La danse — qui bouge ? La danse du trottoir est
+      universelle. Observez le pas de côté. La danse est tacite. Qu'exige-t-elle ?
+    follow_ups:
+      - Comment la danse façonne-t-elle la marche ?
+      - Que serait le trottoir sans elle ?
+      - Quelle est la relation entre la danse et la civilité ?
+  - id: hi_ps_object_abandoned
+    name: Objet abandonné
+    prompt: |
+      Un gant par terre. Une écharpe sur un banc. L'objet est abandonné.
+      Observez-le. Qui l'a laissé ? Qui le prendra ? L'objet abandonné est
+      un petit mystère. Que révèle-t-il ?
+    follow_ups:
+      - Comment l'objet abandonné façonne-t-il l'espace ?
+      - Que serait l'espace sans de tels objets ?
+      - Quelle est la relation entre l'abandonné et la perte ?
+  - id: hi_ps_pathway_surface
+    name: Surface de l'allée
+    prompt: |
+      Pavé, gravier, herbe. La surface affecte la marche. Observez le
+      choix. Que demande la surface au corps ? La surface est une conception. Que permet-elle ?
+    follow_ups:
+      - Comment la surface façonne-t-elle la marche ?
+      - Que serait l'allée avec une surface différente ?
+      - Quelle est la relation entre la surface et l'accès ?
+  - id: hi_ps_bench_weather
+    name: Banc et météo
+    prompt: |
+      Pluie, soleil, vent. La météo façonne le banc. Qui s'assoit sous la pluie ?
+      Qui cherche l'ombre ? Le banc est exposé. Observez la relation
+      entre le banc et la météo. Que fait la météo ?
+    follow_ups:
+      - Comment la météo façonne-t-elle le banc ?
+      - Que serait le banc avec un abri ?
+      - Quelle est la relation entre la météo et l'usage ?
+  - id: hi_ps_stranger_glance
+    name: Regard de l'inconnu
+    prompt: |
+      Un bref regard. Le regard est une évaluation. Sûr ? Dangereux ? Le regard est
+      automatique. Observez vos propres regards. Que fait le regard ? Le
+      regard est un outil de survie. Qu'exige-t-il ?
+    follow_ups:
+      - Comment le regard façonne-t-il l'espace ?
+      - Que serait l'espace sans regards ?
+      - Quelle est la relation entre le regard et la sécurité ?
+  - id: hi_ps_pathway_crowd
+    name: Foule sur l'allée
+    prompt: |
+      L'allée est bondée. Les corps se compriment. La foule a son propre flux.
+      Observez le mouvement. La foule est un collectif. Qu'exige-t-elle
+      de l'individu ?
+    follow_ups:
+      - Comment la foule façonne-t-elle l'allée ?
+      - Que serait l'allée vide ?
+      - Quelle est la relation entre la foule et le flux ?
+  - id: hi_ps_bench_curve
+    name: Courbure du banc
+    prompt: |
+      Certains bancs sont courbés. Ils se font face ou regardent vers le centre. La courbure
+      façonne le social. Observez l'arrangement. Que permet la courbure ? La courbure est une conception.
+      Que veut-elle ?
+    follow_ups:
+      - Comment la courbure façonne-t-elle le banc ?
+      - Que serait le banc s'il était droit ?
+      - Quelle est la relation entre la courbure et la connexion ?
+  - id: hi_ps_object_traded
+    name: Objet échangé
+    prompt: |
+      Une remise. Un achat. Un cadeau. L'objet passe entre inconnus.
+      Observez l'échange. Qu'y a-t-il au-delà de l'objet ? L'échange est
+      un moment de connexion. Que crée-t-il ?
+    follow_ups:
+      - Comment l'échange façonne-t-il l'espace ?
+      - Que serait l'espace sans de tels échanges ?
+      - Quelle est la relation entre l'échange et la confiance ?
+  - id: hi_ps_pathway_light
+    name: Lumière de l'allée
+    prompt: |
+      Jour, nuit, lampadaire. La lumière façonne l'allée. Observez la
+      différence. Qui marche la nuit ? La lumière est sécurité et atmosphère.
+      Que fournit-elle ?
+    follow_ups:
+      - Comment la lumière façonne-t-elle l'allée ?
+      - Que serait l'allée dans l'obscurité ?
+      - Quelle est la relation entre la lumière et la sécurité ?
+  - id: hi_ps_bench_armrest_gap
+    name: Espace entre accoudoirs de banc
+    prompt: |
+      L'accoudoir divise. Une personne par section. L'espace empêche le
+      partage. Observez la conception. Qu'exclut l'espace ? L'espace entre accoudoirs est
+      une architecture hostile. Que présume-t-elle ?
+    follow_ups:
+      - Comment l'espace façonne-t-il le banc ?
+      - Que serait le banc sans accoudoirs ?
+      - Quelle est la relation entre l'espace et l'exclusion ?
+  - id: hi_ps_stranger_smile
+    name: Sourire de l'inconnu
+    prompt: |
+      Un sourire d'un inconnu. Inattendu. Le sourire est un don. Observez la
+      réponse. Que fait le sourire ? Le sourire est une petite rupture du
+      contrat. Que crée-t-il ?
+    follow_ups:
+      - Comment le sourire façonne-t-il l'espace ?
+      - Que serait l'espace avec plus de sourires ?
+      - Quelle est la relation entre le sourire et la connexion ?
+  - id: hi_ps_object_touch
+    name: Contact de l'objet
+    prompt: |
+      Une main sur une rampe. Un pied sur une marche. Le contact connecte corps et
+      espace. L'objet est partagé. Observez le contact. Que fait le contact ?
+      L'objet est un point de contact. Que transporte-t-il ?
+    follow_ups:
+      - Comment le contact façonne-t-il l'espace ?
+      - Que serait l'espace sans contact ?
+      - Quelle est la relation entre le contact et la présence ?
+  - id: hi_ps_pathway_choice
+    name: Choix de l'allée
+    prompt: |
+      L'allée se divise. À gauche ou à droite ? Le choix est petit. Observez la
+      décision. Qu'est-ce qui la détermine ? Le choix de l'allée est un moment d'agence.
+      Que révèle-t-il ?
+    follow_ups:
+      - Comment le choix façonne-t-il la marche ?
+      - Que serait l'allée sans bifurcations ?
+      - Quelle est la relation entre le choix et la destination ?
+  - id: hi_ps_bench_empty
+    name: Banc vide
+    prompt: |
+      Le banc est vide. Disponible. Pourquoi ? Observez le banc vide. Emplacement ?
+      Heure ? Météo ? Le banc vide est une invitation. Que propose-t-il ?
+    follow_ups:
+      - Comment le banc vide façonne-t-il l'espace ?
+      - Que serait l'espace sans bancs vides ?
+      - Quelle est la relation entre le vide et l'opportunité ?
+  - id: hi_ps_stranger_queue
+    name: File d'inconnus
+    prompt: |
+      Une file se forme. Des inconnus attendent ensemble. La file est de l'ordre. Observez
+      la patience. La file crée une communauté temporaire. Qu'exige la file ?
+      Que fournit-elle ?
+    follow_ups:
+      - Comment la file façonne-t-elle l'espace ?
+      - Que serait l'espace sans files d'attente ?
+      - Quelle est la relation entre la file et l'équité ?
+  - id: hi_ps_object_talisman_trust
+    name: Confiance du talisman
+    prompt: |
+      Vous laissez votre sac. Vous faites confiance à l'espace. Le talisman est un test. Observez
+      la confiance. Que présume-t-elle ? La confiance du talisman est un pari. Que permet-elle ?
+    follow_ups:
+      - Comment la confiance façonne-t-elle l'espace ?
+      - Que serait l'espace sans cette confiance ?
+      - Quelle est la relation entre la confiance et la vulnérabilité ?
+  - id: hi_ps_pathway_end
+    name: Fin de l'allée
+    prompt: |
+      Le chemin se termine. Une destination, un mur, une porte. La fin est un seuil.
+      Observez l'arrivée. Que fournit la fin ? La fin de l'allée est une clôture.
+      Que signifie-t-elle ?
+    follow_ups:
+      - Comment la fin façonne-t-elle la marche ?
+      - Que serait le chemin sans fin ?
+      - Quelle est la relation entre la fin et l'accomplissement ?
+  - id: hi_ps_bench_duo
+    name: Duo sur banc
+    prompt: |
+      Deux personnes partagent un banc. Amis, amoureux, inconnus. Le duo a des
+      dynamiques. Observez la distance. La conversation ou le silence. Le
+      duo sur banc est une petite unité sociale. Que crée-t-il ?
+    follow_ups:
+      - Comment le duo façonne-t-il le banc ?
+      - Que serait le banc avec une seule personne ?
+      - Quelle est la relation entre le duo et la connexion ?
+  - id: hi_ps_stranger_danger
+    name: Danger de l'inconnu
+    prompt: |
+      Le corps évalue. Sûr ? L'évaluation est automatique. Observez les
+      signaux. Qu'est-ce qui déclenche la prudence ? Le danger de l'inconnu est un réflexe de
+      survie. Que protège-t-il ? Quel est son coût ?
+    follow_ups:
+      - Comment l'évaluation façonne-t-elle l'espace ?
+      - Que serait l'espace sans elle ?
+      - Quelle est la relation entre le danger et l'ouverture ?
+  - id: hi_ps_object_marker
+    name: Objet comme marqueur
+    prompt: |
+      Une pierre sur un banc. Un ruban sur un arbre. L'objet marque quelque chose.
+      Souvenir, occupation, rituel. Observez le marqueur. Que signifie-t-il ? Le
+      marqueur est un message. Que dit-il ?
+    follow_ups:
+      - Comment le marqueur façonne-t-il l'espace ?
+      - Que serait l'espace sans marqueurs ?
+      - Quelle est la relation entre le marqueur et le sens ?
+  - id: hi_ps_pathway_grade
+    name: Pente de l'allée
+    prompt: |
+      L'allée monte ou descend. La pente affecte le corps. Observez l'effort. La pente
+      est une conception. Que présume-t-elle du marcheur ? La pente est une barrière
+      pour certains.
+    follow_ups:
+      - Comment la pente façonne-t-elle la marche ?
+      - Que serait l'allée si elle était plate ?
+      - Quelle est la relation entre la pente et l'accès ?
+  - id: hi_ps_bench_public
+    name: Banc public
+    prompt: |
+      Le banc est public. N'importe qui peut s'asseoir. Le public est le but. Observez
+      qui l'utilise. Le banc public est un bien commun. Qu'exige-t-il ?
+      Que fournit-il ?
+    follow_ups:
+      - Comment le public façonne-t-il le banc ?
+      - Que serait l'espace sans bancs publics ?
+      - Quelle est la relation entre le public et l'appartenance ?
+  - id: hi_ps_stranger_parallel
+    name: Parallèle avec l'inconnu
+    prompt: |
+      Vous marchez à côté d'un inconnu. Même direction, même allure. La parallèle
+      est accidentelle. Observez la dynamique. Synchronisez-vous ? Divergez-vous ? La
+      parallèle est une compagnie temporaire. Que crée-t-elle ?
+    follow_ups:
+      - Comment la parallèle façonne-t-elle la marche ?
+      - Que serait le chemin sans de telles parallèles ?
+      - Quelle est la relation entre la parallèle et la solitude ?
+  - id: hi_ps_object_shared
+    name: Objet partagé
+    prompt: |
+      Une fontaine à eau. Une main courante. L'objet est partagé. De nombreuses mains le touchent.
+      Observez l'objet partagé. Que demande le partage ? L'objet partagé est un point de contact.
+      Que transporte-t-il ?
+    follow_ups:
+      - Comment l'objet partagé façonne-t-il l'espace ?
+      - Que serait l'espace sans de tels objets ?
+      - Quelle est la relation entre le partagé et la confiance ?
+  - id: hi_ps_pathway_loop
+    name: Boucle d'allée
+    prompt: |
+      Le chemin revient sur ses pas. Une boucle. Pas de destination. La boucle est faite
+      pour la marche elle-même. Observez les marcheurs. Que fournit la boucle ?
+      La boucle est un type de chemin différent. Que permet-elle ?
+    follow_ups:
+      - Comment la boucle façonne-t-elle la marche ?
+      - Que serait l'espace sans boucles ?
+      - Quelle est la relation entre la boucle et la réflexion ?
+  - id: hi_ps_bench_legacy
+    name: Banc commémoratif
+    prompt: |
+      "À la mémoire de." Le banc a une plaque. Quelqu'un aimait cet endroit.
+      Le banc commémoratif porte une histoire. Observez-le. Qu'ajoute la plaque ?
+      Le banc commémoratif est un don. Que crée-t-il ?
+    follow_ups:
+      - Comment l'héritage façonne-t-il le banc ?
+      - Que serait le banc sans la plaque ?
+      - Quelle est la relation entre l'héritage et le lieu ?
+  - id: hi_ps_stranger_ask
+    name: Demande à un inconnu
+    prompt: |
+      "Avez-vous l'heure ?" "Où est X ?" La demande crée un moment de connexion.
+      Observez l'échange. Qu'exige la demande ? La demande à un inconnu est une petite rupture.
+      Que permet-elle ?
+    follow_ups:
+      - Comment la demande façonne-t-elle l'espace ?
+      - Que serait l'espace sans de telles demandes ?
+      - Quelle est la relation entre la demande et l'aide ?
+  - id: hi_ps_object_talisman_return
+    name: Retour du talisman
+    prompt: |
+      Vous revenez. Le talisman est toujours là. Votre sac, votre livre. Le
+      retour confirme la confiance. Observez le soulagement. Que signifie le retour ?
+      Le retour du talisman est une petite victoire. Que crée-t-il ?
+    follow_ups:
+      - Comment le retour façonne-t-il l'espace ?
+      - Que serait l'espace sans de tels retours ?
+      - Quelle est la relation entre le retour et la confiance ?
+  - id: hi_ps_pathway_beginning
+    name: Début de l'allée
+    prompt: |
+      Le chemin commence. Un seuil. Vous y mettez le pied. Observez le moment.
+      Que signifie le début ? Le début de l'allée est un engagement.
+      Qu'exige-t-il ?
+    follow_ups:
+      - Comment le début façonne-t-il la marche ?
+      - Que serait l'espace sans chemins ?
+      - Quelle est la relation entre le début et l'intention ?
+  - id: hi_ps_bench_community
+    name: Communauté de banc
+    prompt: |
+      Les habitués connaissent le banc. Les mêmes personnes, à la même heure. La communauté
+      de banc est informelle. Observez la reconnaissance. Que fournit la
+      communauté ? La communauté de banc est un petit monde social.
+    follow_ups:
+      - Comment la communauté façonne-t-elle le banc ?
+      - Que serait le banc sans habitués ?
+      - Quelle est la relation entre la communauté et le lieu ?
+  - id: hi_ps_stranger_chorus
+    name: Chœur d'inconnus
+    prompt: |
+      Plusieurs corps, un espace. Le chœur d'inconnus est le son de la
+      foule — pas, voix, bruissement. Observez le chœur. Que crée-t-il ?
+      Le chœur est le son du public. Que signifie-t-il ?
+    follow_ups:
+      - Comment le chœur façonne-t-il l'espace ?
+      - Que serait l'espace dans le silence ?
+      - Quelle est la relation entre le chœur et l'appartenance ?
+  - id: hi_ps_object_talisman_loss
+    name: Perte du talisman
+    prompt: |
+      Le talisman a disparu. Volé, déplacé, confondu. La perte est une rupture.
+      Observez la réaction. Que signifie la perte ? La perte du talisman est un petit traumatisme.
+      Que révèle-t-elle ?
+    follow_ups:
+      - Comment la perte façonne-t-elle l'espace ?
+      - Que serait l'espace sans de telles pertes ?
+      - Quelle est la relation entre la perte et la confiance ?
+  - id: hi_ps_pathway_shared
+    name: Allée partagée
+    prompt: |
+      L'allée est partagée — marcheurs, cyclistes, poussettes. L'usage partagé
+      demande une négociation. Observez les règles. Qui cède ? L'allée
+      partagée est un bien commun. Qu'exige-t-elle ?
+    follow_ups:
+      - Comment l'usage partagé façonne-t-il l'allée ?
+      - Que serait l'allée avec un seul usage ?
+      - Quelle est la relation entre le partagé et le conflit ?
+  - id: hi_ps_bench_rest
+    name: Repos sur banc
+    prompt: |
+      Quelqu'un se repose. Yeux fermés, respiration lente. Le repos est visible. Le
+      banc fournit. Observez le repos. Que permet le banc ? Le
+      repos sur banc est un don de l'espace public. Que signifie-t-il ?
+    follow_ups:
+      - Comment le repos façonne-t-il le banc ?
+      - Que serait l'espace sans bancs ?
+      - Quelle est la relation entre le repos et la dignité ?
+  - id: hi_ps_stranger_chorus_silence
+    name: Silence du chœur d'inconnus
+    prompt: |
+      La foule s'arrête. Un moment de silence. Le chœur d'inconnus se tait.
+      Observez le changement. Que crée le silence ? Le silence partagé est rare.
+      Que signifie-t-il ?
+    follow_ups:
+      - Comment le silence façonne-t-il l'espace ?
+      - Que serait l'espace sans de tels moments ?
+      - Quelle est la relation entre le silence et le collectif ?

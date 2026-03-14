@@ -1,0 +1,460 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosme Naturel — Étang & Flaque (French)
+
+id: natural_microcosm_pond_puddle
+name: Microcosme Naturel — Étang & Flaque
+description: 50 cartes pour changer votre regard sur l'eau à petite échelle — de la tension superficielle et des reflets aux insectes aquatiques, têtards, et la vie dans les mares temporaires.
+domain: natural_microcosm
+cards:
+  - id: nmp_surface_tension
+    name: Tension Superficielle
+    prompt: |
+      Un patineur d'eau marche sur l'eau. La surface tient — les molécules s'attachent.
+      Laissez tomber une aiguille doucement. Elle flotte. Considérez le film invisible.
+      Qu'est-ce qui le briserait ?
+    follow_ups:
+      - Comment la tension superficielle détermine qui peut vivre ici ?
+      - Que serait l'étang sans elle ?
+      - Quelle est la relation entre la surface et la frontière ?
+  - id: nmp_skater_ripple
+    name: Ride du Patineur
+    prompt: |
+      Les pattes d'un patineur d'eau créent une fossette à la surface. Chaque pas crée une ride.
+      Observez le motif. Le patineur lit la surface comme une carte. Que ressent-il ?
+    follow_ups:
+      - Comment la ride transporte-t-elle l'information ?
+      - Que ferait le patineur sans la surface ?
+      - Quelle est la relation entre la ride et la proie ?
+  - id: nmp_reflection_sky
+    name: Reflet du Ciel
+    prompt: |
+      Une flaque reflète le ciel — ou une branche, ou vous. Le reflet inverse.
+      L'eau calme est un miroir. Qu'ajoute le reflet ? Que cache-t-il ?
+    follow_ups:
+      - Que serait la flaque sans le reflet ?
+      - Comment le calme façonne-t-il ce que nous voyons ?
+      - Quelle est la relation entre la surface et l'image ?
+  - id: nmp_tadpole_tail
+    name: Queue du Têtard
+    prompt: |
+      Un têtard nage — la queue le propulse. La queue sera réabsorbée. L'animal se transforme.
+      Considérez l'entre-deux. Que permet la queue maintenant ?
+    follow_ups:
+      - Que serait le têtard sans sa queue ?
+      - Comment la métamorphose réécrit-elle le corps ?
+      - Quelle est la relation entre la forme et la fonction ?
+  - id: nmp_dragonfly_egg
+    name: Œuf de Libellule
+    prompt: |
+      Les libellules pondent leurs œufs dans l'eau — ou dans les tiges sous la surface.
+      La nymphe vit sous l'eau pendant des années avant d'émerger. Considérez la vie partagée.
+      Qu'est-ce qui relie l'eau et l'air ?
+    follow_ups:
+      - Que serait la libellule sans le stade aquatique ?
+      - Comment la nymphe façonne-t-elle l'étang ?
+      - Quelle est la relation entre la nymphe et l'adulte ?
+  - id: nmp_algae_bloom
+    name: Fleur d'Algues
+    prompt: |
+      Une écume verte sur l'eau — des algues. C'est une floraison, un pouls. Trop de nutriments, trop de soleil.
+      L'étang répond. Qu'est-ce qui la déclenche ? Que suit-il ?
+    follow_ups:
+      - Que serait l'étang sans les algues ?
+      - Comment la floraison affecte-t-elle l'oxygène ?
+      - Quelle est la relation entre le nutriment et la croissance ?
+  - id: nmp_reed_stem
+    name: Tige de Roseau
+    prompt: |
+      Les roseaux et les joncs s'élèvent du bord. Ils sont creux — des canaux d'air les traversent.
+      La tige relie l'eau et l'air. Qui utilise le roseau comme échelle ?
+    follow_ups:
+      - Que serait le bord sans les roseaux ?
+      - Comment le creux permet-il la survie ?
+      - Quelle est la relation entre la tige et l'habitat ?
+  - id: nmp_pond_skin
+    name: Peau d'Étang
+    prompt: |
+      L'étang a une peau — où l'eau rencontre l'air. La poussière y tombe. L'huile s'étale.
+      La peau est délicate. Touchez-la. Qu'est-ce que la peau sépare ?
+    follow_ups:
+      - Que serait l'étang sans sa peau ?
+      - Comment la peau affecte-t-elle l'échange gazeux ?
+      - Quelle est la relation entre la surface et la profondeur ?
+  - id: nmp_temporary_pool
+    name: Mare Temporaire
+    prompt: |
+      Une flaque après la pluie — elle va sécher. Pourtant, la vie s'est adaptée. Crevettes féeriques,
+      crevettes têtards, œufs qui attendent. Considérez l'urgence. Que faut-il faire avant que l'eau ne disparaisse ?
+    follow_ups:
+      - Que serait la mare si elle était permanente ?
+      - Comment la temporarité façonne-t-elle la stratégie ?
+      - Quelle est la relation entre le temps et l'adaptation ?
+  - id: nmp_whirligig_gyre
+    name: Gyre de Girin
+    prompt: |
+      Les girins tournent à la surface. Ils voient au-dessus et au-dessous — yeux divisés.
+      Ils sont prédateurs et proies. Considérez la double vision. Que permet-elle ?
+    follow_ups:
+      - Que serait le girin sans la vision divisée ?
+      - Comment le gyre désoriente-t-il les prédateurs ?
+      - Quelle est la relation entre la rotation et la survie ?
+  - id: nmp_diving_spider
+    name: Araignée Plongeuse
+    prompt: |
+      Une araignée plongeuse transporte une bulle d'air — une cloche de plongée. Elle respire sous l'eau.
+      La bulle est un poumon. Considérez l'invention. Que ferait l'araignée sans elle ?
+    follow_ups:
+      - Comment la bulle permet-elle la chasse ?
+      - Que se passerait-il si la bulle éclatait ?
+      - Quelle est la relation entre l'air et l'eau ?
+  - id: nmp_pond_scum
+    name: Écume d'Étang
+    prompt: |
+      L'écume se forme au bord — pollen, poussière, algues, insectes. C'est une couche limite.
+      Qu'est-ce qui s'y collecte ? Qui s'en nourrit ? L'écume est un filtre.
+    follow_ups:
+      - Que serait l'étang sans l'écume ?
+      - Comment le bord concentre-t-il la vie ?
+      - Quelle est la relation entre la frontière et l'accumulation ?
+  - id: nmp_ice_surface
+    name: Surface Glacée
+    prompt: |
+      En hiver, l'étang gèle. La glace tient. En dessous, la vie continue — plus lente, plus froide.
+      Considérez la barrière. Que protège la glace ? Que bloque-t-elle ?
+    follow_ups:
+      - Que serait l'étang sans la glace ?
+      - Comment le gel affecte-t-il l'oxygène ?
+      - Quelle est la relation entre la glace et la survie ?
+  - id: nmp_minnow_school
+    name: Banc de Petits Poissons
+    prompt: |
+      Les petits poissons sont en banc — ils bougent comme un seul. Le banc est défense, efficacité.
+      Observez la synchronisation. Qu'est-ce qui les coordonne ? Quel risque courrait un petit poisson seul ?
+    follow_ups:
+      - Que serait l'étang sans le banc ?
+      - Comment le banc réduit-il la prédation ?
+      - Quelle est la relation entre l'individu et le groupe ?
+  - id: nmp_lily_pad
+    name: Nénuphar
+    prompt: |
+      Un nénuphar flotte. Son dessous est différent de son dessus — poils, couleur.
+      La feuille est une plateforme. Qu'est-ce qui y atterrit ? Qu'est-ce qui vit en dessous ?
+    follow_ups:
+      - Que serait l'étang sans les nénuphars ?
+      - Comment la feuille façonne-t-elle la lumière en dessous ?
+      - Quelle est la relation entre la feuille et l'ombre ?
+  - id: nmp_ripple_spread
+    name: Propagation de la Ride
+    prompt: |
+      Une pierre tombe. Les rides s'étendent. Elles s'intersectent, interfèrent. Le motif transporte de l'énergie.
+      Considérez la dégradation. Jusqu'où voyagent les rides ?
+    follow_ups:
+      - Que serait la surface sans les rides ?
+      - Comment la ride marque-t-elle l'impact ?
+      - Quelle est la relation entre la perturbation et la propagation ?
+  - id: nmp_mosquito_wiggle
+    name: Mouvement de Moustique
+    prompt: |
+      Les larves de moustiques pendent à la surface — des "wigglers". Elles respirent par un siphon.
+      Le mouvement est déplacement, alimentation. Considérez le monde de la larve. Que mange-t-elle ?
+    follow_ups:
+      - Que serait l'étang sans les moustiques ?
+      - Comment le mouvement évite-t-il les prédateurs ?
+      - Quelle est la relation entre la larve et l'adulte ?
+  - id: nmp_leaf_boat
+    name: Bateau Feuille
+    prompt: |
+      Une feuille flotte — tombée, dérivant. C'est un radeau pour certains, de la nourriture pour d'autres.
+      La feuille coulera, se décomposera. Suivez son voyage. Que deviendra-t-elle ?
+    follow_ups:
+      - Que serait la surface sans les débris flottants ?
+      - Comment la feuille crée-t-elle un microhabitat ?
+      - Quelle est la relation entre le flottement et le naufrage ?
+  - id: nmp_backswimmer_top
+    name: Dos d'Argent en Surface
+    prompt: |
+      Un dos d'argent nage à l'envers — le ventre vers le ciel. Il rame avec ses pattes.
+      Il respire à la surface, puis plonge. Considérez l'inversion. Pourquoi à l'envers ?
+    follow_ups:
+      - Que serait le dos d'argent à l'endroit ?
+      - Comment la posture aide-t-elle à la chasse ?
+      - Quelle est la relation entre l'orientation et la proie ?
+  - id: nmp_snail_trail
+    name: Traces d'Escargot
+    prompt: |
+      Un escargot d'étang glisse. Il laisse une trace — mucus, mouvement. La trace indique où il est passé.
+      D'autres escargots peuvent suivre. Considérez le chemin. Que communique la trace ?
+    follow_ups:
+      - Que serait l'escargot sans la trace ?
+      - Comment le mucus permet-il le mouvement ?
+      - Quelle est la relation entre la trace et le suivi ?
+  - id: nmp_dew_drop
+    name: Goutte de Rosée
+    prompt: |
+      La rosée se forme sur une lame au-dessus de l'eau — perles, reflets. C'est de la condensation.
+      La goutte tient. Puis elle tombe. Considérez la gouttelette. Que magnifie-t-elle ?
+    follow_ups:
+      - Que serait la lame sans la rosée ?
+      - Comment la gouttelette dévie-t-elle la lumière ?
+      - Quelle est la relation entre la goutte et la surface ?
+  - id: nmp_spring_constant
+    name: Constante de Ressort
+    prompt: |
+      Une source alimente l'étang — ou l'étang suinte. Le niveau de l'eau est un équilibre.
+      Considérez l'apport et le retrait. Qu'est-ce qui maintient la mare ? Qu'est-ce qui la dessécherait ?
+    follow_ups:
+      - Que serait l'étang sans la source ?
+      - Comment la source façonne-t-elle l'eau ?
+      - Quelle est la relation entre l'apport et la vie ?
+  - id: nmp_edge_ecotone
+    name: Écotone de Bordure
+    prompt: |
+      Le bord de l'étang est un écotone — transition. L'humide rencontre le sec. Les plantes s'adaptent.
+      Les animaux traversent. La bordure est diversité. Qu'est-ce qui prospère dans l'entre-deux ?
+    follow_ups:
+      - Que serait l'étang sans sa bordure ?
+      - Comment l'écotone crée-t-il des opportunités ?
+      - Quelle est la relation entre la frontière et la diversité ?
+  - id: nmp_frog_eye
+    name: Œil de Grenouille
+    prompt: |
+      Une grenouille est assise au bord. Ses yeux bombent — elle voit au-dessus et devant. La grenouille est immobile.
+      Puis la langue jaillit. Considérez la patience. Qu'attend-elle ?
+    follow_ups:
+      - Que serait la grenouille sans ses yeux bombés ?
+      - Comment l'immobilité permet-elle la frappe ?
+      - Quelle est la relation entre l'attente et la capture ?
+  - id: nmp_oxygen_bubble
+    name: Bulle d'Oxygène
+    prompt: |
+      Les plantes de l'étang produisent de l'oxygène — des bulles montent. Par une journée ensoleillée, l'eau respire.
+      Considérez l'échange. Que serait l'étang sans la photosynthèse ?
+    follow_ups:
+      - Comment l'oxygène détermine-t-il qui peut vivre ici ?
+      - Que se passe-t-il quand l'oxygène vient à manquer ?
+      - Quelle est la relation entre la lumière et la respiration ?
+  - id: nmp_detritus_floor
+    name: Fond de Détritus
+    prompt: |
+      Le fond de l'étang est un amas de détritus — feuilles mortes, insectes morts, sédiments. C'est une couche de décomposition.
+      Qui vit dedans ? Qui s'en nourrit ? Le fond est une réserve.
+    follow_ups:
+      - Que serait l'étang sans les détritus ?
+      - Comment le fond alimente-t-il la colonne d'eau ?
+      - Quelle est la relation entre le bas et le haut ?
+  - id: nmp_rain_ring
+    name: Anneau de Pluie
+    prompt: |
+      La pluie frappe la surface. Chaque goutte crée un anneau — une couronne, puis un cratère.
+      La pluie texture l'eau. Considérez le motif. Que signifierait une surface calme ?
+    follow_ups:
+      - Comment la pluie oxygène-t-elle l'eau ?
+      - Que perturbent les anneaux ?
+      - Quelle est la relation entre la pluie et la surface ?
+  - id: nmp_duckweed_carpet
+    name: Tapis de Lentilles d'Eau
+    prompt: |
+      Les lentilles d'eau forment un tapis à la surface — minuscules plantes flottantes. Elles se multiplient rapidement.
+      Le tapis fait de l'ombre à ce qui est en dessous. Considérez la couverture. Que signifierait le plein soleil ?
+    follow_ups:
+      - Que serait l'étang sans les lentilles d'eau ?
+      - Comment le tapis affecte-t-il la température ?
+      - Quelle est la relation entre la couverture et la vie en dessous ?
+  - id: nmp_phantom_midgie
+    name: Larve de Midge Fantôme
+    prompt: |
+      Les larves de midge fantôme sont transparentes — spectrales. Elles pendent dans l'eau. On voit à travers elles.
+      Considérez l'invisibilité. Que protège la transparence ?
+    follow_ups:
+      - Que serait la larve si elle était opaque ?
+      - Comment la transparence aide-t-elle à la prédation ?
+      - Quelle est la relation entre la transparence et la survie ?
+  - id: nmp_skimmer_skip
+    name: Saut du Lanceur de Cailloux
+    prompt: |
+      Une pierre lancée sur la surface — un, deux, trois. Chaque rebond transfère de l'énergie.
+      Le lanceur finit par couler. Considérez la limite. Qu'est-ce qui détermine le nombre de rebonds ?
+    follow_ups:
+      - Que ferait la pierre sans la rotation ?
+      - Comment l'angle façonne-t-il le saut ?
+      - Quelle est la relation entre le lancer et le rebond ?
+  - id: nmp_pollinator_drink
+    name: Boisson du Pollinisateur
+    prompt: |
+      Une abeille boit au bord. Des papillons se rassemblent dans une flaque de boue. L'eau est une ressource.
+      Considérez qui vient. De quoi ont-ils besoin de l'eau ?
+    follow_ups:
+      - Que feraient les pollinisateurs sans la flaque ?
+      - Comment le bord permet-il la boisson ?
+      - Quelle est la relation entre l'eau et le minéral ?
+  - id: nmp_evaporation_skin
+    name: Peau d'Évaporation
+    prompt: |
+      L'étang perd de l'eau par évaporation. En été, le niveau baisse. Le rivage s'étend.
+      Considérez le retrait. Qu'est-ce qui est exposé ? Qui est abandonné ?
+    follow_ups:
+      - Que serait l'étang sans évaporation ?
+      - Comment la baisse concentre-t-elle la vie ?
+      - Quelle est la relation entre la perte et la concentration ?
+  - id: nmp_hydra_stalk
+    name: Tige d'Hydre
+    prompt: |
+      Une hydre — minuscule, tentaculaire — s'ancre à une tige. Elle pique les proies, les ramène.
+      L'hydre peut se régénérer. Considérez la simplicité. Quel plan corporel utilise-t-elle ?
+    follow_ups:
+      - Que serait l'étang sans les hydres ?
+      - Comment la régénération aide-t-elle à la survie ?
+      - Quelle est la relation entre la simplicité et la résilience ?
+  - id: nmp_boatman_row
+    name: Rame de Notonectidé
+    prompt: |
+      Un notonectidé rame — pattes semblables à des rames. Il est souvent à l'envers, agrippé à la surface.
+      Il se nourrit d'algues. Considérez les rames. Qu'est-ce qu'elles propulsent ?
+    follow_ups:
+      - Que serait le notonectidé sans ses rames ?
+      - En quoi la rame diffère-t-elle de celle du dos d'argent ?
+      - Quelle est la relation entre la patte et le mouvement ?
+  - id: nmp_caddisfly_case
+    name: Étui de Phrygane
+    prompt: |
+      Une larve de phrygane construit un étui — brindilles, pierres, coquillages. Elle les colle avec de la soie.
+      L'étui est armure et camouflage. Considérez la construction. Qu'est-ce que la larve choisit ?
+    follow_ups:
+      - Que serait la larve sans son étui ?
+      - Comment l'étui varie-t-il selon l'habitat ?
+      - Quelle est la relation entre le matériau et la protection ?
+  - id: nmp_damselfly_emergence
+    name: Émergence de Demoiselle
+    prompt: |
+      Une demoiselle émerge — la nymphe grimpe une tige, fend sa peau, l'adulte se libère. Les ailes se déploient.
+      Le moment est vulnérable. Considérez la transformation. Que pourrait-il mal tourner ?
+    follow_ups:
+      - Que serait l'adulte sans la montée ?
+      - Comment l'émergence façonne-t-elle le calendrier ?
+      - Quelle est la relation entre la nymphe et l'adulte ?
+  - id: nmp_floating_feather
+    name: Plume Flottante
+    prompt: |
+      Une plume flotte — délaissée par un oiseau. Elle navigue à la surface. L'eau perle dessus.
+      Considérez la plume. Qu'est-ce qui a gardé l'oiseau au sec ? Que fait la plume maintenant ?
+    follow_ups:
+      - Que serait la surface sans les objets flottants ?
+      - Comment la plume piège-t-elle l'air ?
+      - Quelle est la relation entre la structure et le flottement ?
+  - id: nmp_moon_jelly
+    name: Méduse Lunaire
+    prompt: |
+      Dans certains étangs, des méduses — méduses lunaires. Elles pulsent. Elles sont majoritairement de l'eau.
+      Considérez le corps. Qu'est-ce que la gelée capture ? Qu'est-ce qu'elle évite ?
+    follow_ups:
+      - Que serait l'étang sans les méduses ?
+      - Comment la pulsation crée-t-elle le mouvement ?
+      - Quelle est la relation entre l'eau et le corps ?
+  - id: nmp_seep_source
+    name: Source Suintante
+    prompt: |
+      L'eau suinte de la rive — une source, un flux lent. Le suint alimente l'étang. Ou l'étang fuit.
+      Considérez la frontière. Qu'est-ce qui traverse ? Qu'est-ce qui retient ?
+    follow_ups:
+      - Que serait l'étang sans le suintement ?
+      - Comment le suintement façonne-t-il la chimie ?
+      - Quelle est la relation entre la source et la mare ?
+  - id: nmp_wind_wave
+    name: Vague de Vent
+    prompt: |
+      Le vent pousse la surface. De petites vagues se forment. Elles se brisent au bord.
+      Considérez le fetch — la distance parcourue par le vent sur l'eau. Qu'est-ce qui façonne la vague ?
+    follow_ups:
+      - Que serait la surface sans le vent ?
+      - Comment les vagues affectent-elles l'oxygène ?
+      - Quelle est la relation entre le vent et le mélange ?
+  - id: nmp_rotifer_wheel
+    name: Roue de Rotifère
+    prompt: |
+      Les rotifères sont microscopiques — ils ont une roue de cils. Elle tourne, attire la nourriture.
+      Le rotifère est un moteur. Considérez l'échelle. Qu'y a-t-il d'autre dans cette eau ?
+    follow_ups:
+      - Que serait l'étang sans les rotifères ?
+      - Comment la roue crée-t-elle le flux ?
+      - Quelle est la relation entre les cils et l'alimentation ?
+  - id: nmp_temperature_layer
+    name: Couche de Température
+    prompt: |
+      Les étangs peuvent se stratifier — chaud en haut, froid en bas. Les couches ne se mélangent pas facilement.
+      Considérez la frontière. Qui vit où ? Que se passe-t-il quand l'étang se retourne ?
+    follow_ups:
+      - Que serait l'étang sans stratification ?
+      - Comment la température façonne-t-elle l'oxygène ?
+      - Quelle est la relation entre la couche et la vie ?
+  - id: nmp_predator_shadow
+    name: Ombre du Prédateur
+    prompt: |
+      L'ombre d'un poisson passe. Les proies se figent, se dispersent. L'ombre est un signal.
+      Considérez la réponse. Que signifierait une ombre constante ? Que signifierait pas d'ombre ?
+    follow_ups:
+      - Comment l'ombre déclenche-t-elle la fuite ?
+      - Quels signaux autres que l'ombre importent ?
+      - Quelle est la relation entre l'ombre et la survie ?
+  - id: nmp_surface_film
+    name: Film de Surface
+    prompt: |
+      Un fin film sur l'eau — pollen, bactéries, matière organique. Il peut supporter du poids.
+      Certains insectes y marchent. Considérez le film. Qu'est-ce qui le briserait ?
+    follow_ups:
+      - Que serait la surface sans le film ?
+      - Comment le film affecte-t-il l'échange gazeux ?
+      - Quelle est la relation entre le film et la frontière ?
+  - id: nmp_dry_wait
+    name: Attente Sèche
+    prompt: |
+      La flaque va sécher. Certains organismes ont des œufs résistants à la déshydratation. Ils attendent.
+      La prochaine pluie peut être dans des mois. Considérez le pari. Que faut-il aligner pour réussir ?
+    follow_ups:
+      - Que serait la mare sans l'attente ?
+      - Comment la dormance franchit-elle la période sèche ?
+      - Quelle est la relation entre l'œuf et la pluie ?
+  - id: nmp_shoreline_wrack
+    name: Débris de Ligne de Rivage
+    prompt: |
+      Des débris s'accumulent sur la ligne de rivage — feuilles, brindilles, insectes morts. Le tas marque la ligne. Il indique la haute eau.
+      Considérez l'accumulation. Qui se nourrit ici ?
+    follow_ups:
+      - Que serait le bord sans les débris ?
+      - Comment le tas crée-t-il un habitat ?
+      - Quelle est la relation entre la ligne et le niveau ?
+  - id: nmp_duckweed_carpet
+    name: Tapis de Lentilles d'Eau
+    prompt: |
+      Les lentilles d'eau forment un tapis sur l'eau calme — disques verts minuscules. Elles se propagent vite.
+      La surface devient solide. Considérez l'invasion. Qu'est-ce que le tapis bloque ? Qu'est-ce qu'il permet ?
+    follow_ups:
+      - Que serait l'étang sans les lentilles d'eau ?
+      - Comment le tapis affecte-t-il la lumière et l'oxygène ?
+      - Quelle est la relation entre la couverture et la vie en dessous ?
+  - id: nmp_rain_ring
+    name: Anneau de Pluie
+    prompt: |
+      Une goutte de pluie frappe la surface. Un anneau s'étend, s'estompe. Sous une averse, la surface devient texturée — anneaux qui se chevauchent.
+      Considérez le motif. Que fait la pluie à l'étang ?
+    follow_ups:
+      - Que serait la surface sans la pluie ?
+      - Comment la pluie mélange-t-elle l'eau ?
+      - Quelle est la relation entre la goutte et l'anneau ?
+  - id: nmp_minnow_school
+    name: Banc de Petits Poissons
+    prompt: |
+      Les petits poissons sont en banc — des dizaines bougent comme un seul. Le banc est une stratégie. Les prédateurs sont désorientés.
+      Considérez la coordination. Comment décident-ils ? Quel serait le coût de la solitude ?
+    follow_ups:
+      - Que serait l'étang sans le banc ?
+      - Comment le banc réagit-il à la menace ?
+      - Quelle est la relation entre le multiple et le un ?
+  - id: nmp_ice_edge
+    name: Bordure de Glace
+    prompt: |
+      En hiver, la glace se forme à partir du bord. La frontière avance. En dessous, la vie persiste — plus froide, plus lente.
+      Considérez le bord. Qu'est-ce qui survit sous la glace ?
+    follow_ups:
+      - Que serait l'étang sans la glace ?
+      - Comment la glace protège-t-elle ou menace-t-elle ?
+      - Quelle est la relation entre le gel et l'oxygène ?

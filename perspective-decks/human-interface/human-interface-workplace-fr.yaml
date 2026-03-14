@@ -1,0 +1,497 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# L'Interface Humaine — Lieu de Travail (French)
+
+id: human_interface_workplace
+name: L'Interface Humaine — Lieu de Travail
+description: 50 cartes pour changer votre perception du lieu de travail — des territoires de bureau et salles de réunion à la fontaine à eau et la hiérarchie visible versus invisible.
+domain: human_interface
+cards:
+  - id: hi_wp_desk_territory
+    name: Territoire de Bureau
+    prompt: |
+      Un bureau est revendiqué — photos, plantes, tasses. Le territoire s'étend au-delà
+      de la surface. Observez les limites. Qu'est-ce qui marque "mon" ? Le bureau est
+      un petit royaume. Comment est-il défendu ?
+    follow_ups:
+      - Comment le bureau façonne-t-il l'identité ?
+      - Que serait le lieu de travail sans personnalisation ?
+      - Quelle est la relation entre territoire et appartenance ?
+  - id: hi_wp_meeting_room
+    name: Salle de Réunion
+    prompt: |
+      La pièce a une table, des chaises, un écran. La porte se ferme. La salle de réunion
+      est une scène de performance. Observez qui parle, qui ne parle pas. La
+      pièce contient la hiérarchie. Qu'est-ce que l'espace permet ?
+    follow_ups:
+      - Comment la pièce façonne-t-elle la réunion ?
+      - Que serait le lieu de travail sans salles de réunion ?
+      - Quelle est la relation entre la pièce et le pouvoir ?
+  - id: hi_wp_water_cooler
+    name: Fontaine à Eau
+    prompt: |
+      La fontaine à eau est un carrefour. Les gens s'y rencontrent par hasard. La
+      rencontre est informelle. Observez les conversations. Qu'est-ce qui est dit à la
+      fontaine qui ne serait pas dit en réunion ?
+    follow_ups:
+      - Comment la fontaine façonne-t-elle la culture ?
+      - Que serait le lieu de travail sans elle ?
+      - Quelle est la relation entre la fontaine et la connexion ?
+  - id: hi_wp_visible_hierarchy
+    name: Hiérarchie Visible
+    prompt: |
+      Bureaux d'angle, places près de la fenêtre, cubicules. L'espace encode le rang. Observez
+      la distribution. Qui obtient quoi ? La hiérarchie est intégrée dans l'
+      architecture. Qu'est-ce que cela communique ?
+    follow_ups:
+      - Comment la hiérarchie façonne-t-elle le comportement ?
+      - Que serait le lieu de travail sans elle ?
+      - Quelle est la relation entre l'espace et le statut ?
+  - id: hi_wp_invisible_hierarchy
+    name: Hiérarchie Invisible
+    prompt: |
+      Certaines personnes sont écoutées ; d'autres sont interrompues. La hiérarchie
+      n'est pas sur l'organigramme. Observez les réunions. Qui s'incline ? Qui
+      domine ? La hiérarchie invisible façonne les résultats.
+    follow_ups:
+      - Comment la hiérarchie invisible émerge-t-elle ?
+      - Que serait le lieu de travail si elle était visible ?
+      - Quelle est la relation entre l'invisible et le pouvoir ?
+  - id: hi_wp_cubicle_wall
+    name: Mur de Cubicule
+    prompt: |
+      Le mur est bas — on peut le voir par-dessus. L'intimité est partielle. Le cubicule
+      est un compromis. Observez les lignes de mire. Qu'est-ce que vous pouvez entendre ? Qu'est-ce que vous pouvez voir ? Le mur crée une illusion de frontière.
+    follow_ups:
+      - Comment le cubicule façonne-t-il la concentration ?
+      - Que serait le lieu de travail avec des murs complets ?
+      - Quelle est la relation entre le mur et l'intimité ?
+  - id: hi_wp_corner_office
+    name: Bureau d'Angle
+    prompt: |
+      Le bureau d'angle a deux fenêtres. C'est le prix. Observez qui l'occupe. Le bureau d'angle
+      est visible depuis l'étage. C'est un symbole. Qu'est-ce que le coin communique ?
+    follow_ups:
+      - Comment le bureau d'angle façonne-t-il l'aspiration ?
+      - Que serait l'étage sans lui ?
+      - Quelle est la relation entre le coin et l'autorité ?
+  - id: hi_wp_open_plan
+    name: Espace Ouvert
+    prompt: |
+      Pas de murs. Bureaux en rangées ou en îlots. L'espace ouvert promet la collaboration.
+      Observez la réalité. Qui porte des écouteurs ? L'espace ouvert crée
+      la proximité. Quel en est le coût ?
+    follow_ups:
+      - Comment l'espace ouvert façonne-t-il l'interaction ?
+      - Que serait le lieu de travail avec des murs ?
+      - Quelle est la relation entre l'ouverture et la concentration ?
+  - id: hi_wp_calendar_invite
+    name: Invitation Calendrier
+    prompt: |
+      L'invitation apparaît. Accepter, refuser, provisoire. Le calendrier structure
+      la journée. Observez les blocs. Qui contrôle le temps de qui ? Le calendrier
+      est une carte du pouvoir.
+    follow_ups:
+      - Comment le calendrier façonne-t-il la journée ?
+      - Que serait le lieu de travail sans lui ?
+      - Quelle est la relation entre l'invitation et l'obligation ?
+  - id: hi_wp_knock_before_enter
+    name: Frapper Avant d'Entrer
+    prompt: |
+      Certaines portes sont fermées. Frapper est une demande. Observez qui frappe et
+      qui entre. Frapper encode le respect. Qu'est-ce que la porte fermée
+      protège ?
+    follow_ups:
+      - Comment frapper façonne-t-il la rencontre ?
+      - Que serait le lieu de travail avec des portes ouvertes ?
+      - Quelle est la relation entre frapper et la limite ?
+  - id: hi_wp_headphones_signal
+    name: Signal Casque
+    prompt: |
+      Le casque est mis signifie "ne pas déranger". Le signal est universel. Observez
+      qui le respecte. Le casque crée une bulle. Qu'est-ce que la bulle
+      permet ?
+    follow_ups:
+      - Comment le casque façonne-t-il l'étage ?
+      - Que serait le lieu de travail sans lui ?
+      - Quelle est la relation entre le casque et la concentration ?
+  - id: hi_wp_lunch_room
+    name: Réfectoire
+    prompt: |
+      Le réfectoire a des tables, un micro-ondes, un réfrigérateur. Les gens mangent seuls ou
+      ensemble. Observez les groupes. Qui s'assied avec qui ? Le réfectoire
+      révèle les alliances. Que dit l'arrangement ?
+    follow_ups:
+      - Comment le réfectoire façonne-t-il la culture ?
+      - Que serait le lieu de travail sans lui ?
+      - Quelle est la relation entre le déjeuner et la connexion ?
+  - id: hi_wp_slack_ping
+    name: Ping Slack
+    prompt: |
+      Le ping arrive. Instantané, asynchrone. Le ping peut interrompre ou
+      attendre. Observez les normes. Qui répond immédiatement ? Le ping crée
+      un nouveau rythme de communication. Qu'est-ce qu'il remplace ?
+    follow_ups:
+      - Comment le ping façonne-t-il la journée ?
+      - Que serait le lieu de travail sans lui ?
+      - Quelle est la relation entre le ping et l'urgence ?
+  - id: hi_wp_whiteboard_claim
+    name: Revendication Tableau Blanc
+    prompt: |
+      Le tableau blanc contient des idées — diagrammes, listes. Quelqu'un les a écrites. Le
+      tableau est une surface partagée. Observez qui écrit, qui efface. Le tableau
+      est un territoire. Qu'est-ce qu'il contient ?
+    follow_ups:
+      - Comment le tableau blanc façonne-t-il la collaboration ?
+      - Que serait la réunion sans lui ?
+      - Quelle est la relation entre le tableau et la pensée ?
+  - id: hi_wp_elevator_encounter
+    name: Rencontre Ascenseur
+    prompt: |
+      Vous partagez l'ascenseur avec un collègue. Trente secondes. La rencontre
+      est gênante ou facile. Observez le bavardage. Qu'est-ce qui est dit ? L'
+      ascenseur comprime le temps. Qu'est-ce qu'il exige ?
+    follow_ups:
+      - Comment l'ascenseur façonne-t-il la rencontre ?
+      - Que serait le bâtiment sans ascenseurs ?
+      - Quelle est la relation entre l'ascenseur et la civilité ?
+  - id: hi_wp_cc_email
+    name: CC Email
+    prompt: |
+      Vous êtes en copie carbone. Vous n'êtes pas le destinataire principal. La copie carbone
+      vous inclut dans la boucle. Observez qui est en copie. La copie carbone
+      est un signal de pertinence —
+      ou de politique. Que fait la copie carbone ?
+    follow_ups:
+      - Comment la copie carbone façonne-t-elle la communication ?
+      - Que serait le lieu de travail sans copie carbone ?
+      - Quelle est la relation entre la copie carbone et la visibilité ?
+  - id: hi_wp_standing_desk
+    name: Bureau Debout
+    prompt: |
+      Le bureau se lève. Le travailleur se tient debout. Le bureau debout est un choix — santé,
+      préférence, performance. Observez qui en a un. Qu'est-ce que le bureau debout
+      signale ?
+    follow_ups:
+      - Comment le bureau debout façonne-t-il le corps ?
+      - Que serait le lieu de travail sans lui ?
+      - Quelle est la relation entre la station debout et la productivité ?
+  - id: hi_wp_conference_call
+    name: Appel Conférence
+    prompt: |
+      Des voix d'ailleurs. L'appel connecte des personnes distribuées. Observez
+      qui parle, qui met en sourdine. L'appel est une présence partielle. Qu'est-ce que l'appel
+      permet — et qu'est-ce qu'il perd ?
+    follow_ups:
+      - Comment l'appel façonne-t-il la réunion ?
+      - Que serait le lieu de travail sans lui ?
+      - Quelle est la relation entre l'appel et la présence ?
+  - id: hi_wp_office_plant
+    name: Plante de Bureau
+    prompt: |
+      Une plante sur le bureau — pothos, succulente. C'est décoration et entretien. La
+      plante n'appartient pas à l'entreprise. Observez qui en a une. Qu'est-ce que
+      la plante ajoute à l'espace ?
+    follow_ups:
+      - Comment la plante façonne-t-elle le bureau ?
+      - Que serait le lieu de travail sans plantes ?
+      - Quelle est la relation entre la plante et l'identité ?
+  - id: hi_wp_after_hours
+    name: Après les Heures
+    prompt: |
+      Le bureau après que la plupart soient partis. Les lumières sont tamisées. Le travailleur
+      après les heures est visible — dévoué ou en difficulté. Observez la scène. Qu'est-ce que
+      le bureau vide permet ? Quel en est le coût ?
+    follow_ups:
+      - Comment les heures supplémentaires façonnent-elles la culture ?
+      - Que serait le lieu de travail sans elles ?
+      - Quelle est la relation entre les heures et l'attente ?
+  - id: hi_wp_nameplate
+    name: Plaque Nominative
+    prompt: |
+      Un nom sur le bureau, sur la porte. La plaque nominative revendique l'espace. Observez
+      qui en a une. La plaque nominative est identité et territoire. Qu'est-ce qu'elle
+      communique aux passants ?
+    follow_ups:
+      - Comment la plaque nominative façonne-t-elle l'espace ?
+      - Que serait le lieu de travail sans elle ?
+      - Quelle est la relation entre la plaque nominative et la présence ?
+  - id: hi_wp_meeting_overrun
+    name: Réunion Dépassée
+    prompt: |
+      La réunion devait se terminer. Elle ne se termine pas. Le dépassement est courant.
+      Observez la dynamique. Qui a la prochaine réunion ? Qui peut rester ? Le
+      dépassement est un coup de pouvoir. Qu'est-ce qu'il extrait ?
+    follow_ups:
+      - Comment le dépassement façonne-t-il la journée ?
+      - Que serait le lieu de travail avec des fins strictes ?
+      - Quelle est la relation entre le dépassement et le respect ?
+  - id: hi_wp_quick_question
+    name: Question Rapide
+    prompt: |
+      "Une question rapide ?" La demande interrompt. Le "rapide" est une promesse.
+      Observez l'échange. À quelle vitesse est-il ? La question rapide est une
+      négociation de temps. Quel en est le coût ?
+    follow_ups:
+      - Comment la question rapide façonne-t-elle le flux ?
+      - Que serait le lieu de travail sans interruptions ?
+      - Quelle est la relation entre le rapide et le respect ?
+  - id: hi_wp_bathroom_encounter
+    name: Rencontre Salle de Bain
+    prompt: |
+      Vous croisez un collègue dans la salle de bain. La rencontre est ambiguë. Contact visuel ou pas ? La salle de bain est un espace liminal. Observez les normes.
+      Qu'est-ce que la rencontre exige ?
+    follow_ups:
+      - Comment la salle de bain façonne-t-elle le lieu de travail ?
+      - Que serait le lieu de travail sans salles de bain communes ?
+      - Quelle est la relation entre la salle de bain et l'intimité ?
+  - id: hi_wp_commute_talk
+    name: Bavardage Trajet
+    prompt: |
+      "Comment était le trajet ?" La question ouvre le bavardage. Le trajet est une expérience partagée. Observez l'échange. Que fait le bavardage sur le trajet pour la relation ?
+    follow_ups:
+      - Comment le bavardage trajet façonne-t-il la journée ?
+      - Que serait le lieu de travail sans lui ?
+      - Quelle est la relation entre le trajet et la connexion ?
+  - id: hi_wp_parking_spot
+    name: Place de Parking
+    prompt: |
+      Places réservées, places premier arrivé. Le parking encode la hiérarchie. Observez
+      qui se gare où. La place est un petit privilège. Qu'est-ce qu'elle
+      communique ?
+    follow_ups:
+      - Comment le parking façonne-t-il le lieu de travail ?
+      - Que serait le parking sans places réservées ?
+      - Quelle est la relation entre la place et le statut ?
+  - id: hi_wp_birthday_cake
+    name: Gâteau d'Anniversaire
+    prompt: |
+      Un gâteau apparaît. C'est l'anniversaire de quelqu'un. L'équipe se réunit. Le gâteau
+      est un rituel. Observez le rassemblement. Que fait le moment d'anniversaire pour le groupe ?
+    follow_ups:
+      - Comment l'anniversaire façonne-t-il la culture ?
+      - Que serait le lieu de travail sans lui ?
+      - Quelle est la relation entre le gâteau et l'appartenance ?
+  - id: hi_wp_forwarded_email
+    name: Email Transféré
+    prompt: |
+      Un e-mail est transféré. "Pour information" ou "Je pense que vous devriez voir ça". Le
+      transfert prolonge la conversation. Observez qui est transféré. Le
+      transfert est un signal. Que signifie-t-il ?
+    follow_ups:
+      - Comment le transfert façonne-t-il la communication ?
+      - Que serait le lieu de travail sans lui ?
+      - Quelle est la relation entre le transfert et la confiance ?
+  - id: hi_wp_break_room
+    name: Salle de Pause
+    prompt: |
+      Café, snacks, parfois un canapé. La salle de pause est une pause. Les gens y vont
+      pour s'éloigner. Observez qui l'utilise. La salle de pause est un
+      refuge. Que fournit-elle ?
+    follow_ups:
+      - Comment la salle de pause façonne-t-elle la journée ?
+      - Que serait le lieu de travail sans elle ?
+      - Quelle est la relation entre la pause et la productivité ?
+  - id: hi_wp_office_supply
+    name: Fourniture de Bureau
+    prompt: |
+      Stylos, papier, agrafeuses — le placard à fournitures contient les outils. Quelqu'un
+      le gère. Observez qui prend quoi. La fourniture est un petit bien commun.
+      Quelles sont les règles ?
+    follow_ups:
+      - Comment la fourniture façonne-t-elle le lieu de travail ?
+      - Que serait le lieu de travail sans elle ?
+      - Quelle est la relation entre la fourniture et le droit ?
+  - id: hi_wp_remote_camera
+    name: Caméra à Distance
+    prompt: |
+      La caméra est allumée ou éteinte. Le travailleur à distance choisit. Le choix est
+      visible. Observez les normes. Qui la laisse allumée ? La caméra est une fenêtre.
+      Que révèle-t-elle ?
+    follow_ups:
+      - Comment la caméra façonne-t-elle l'appel ?
+      - Que serait la réunion sans elle ?
+      - Quelle est la relation entre la caméra et la présence ?
+  - id: hi_wp_side_conversation
+    name: Conversation Privée
+    prompt: |
+      Deux personnes parlent pendant que d'autres travaillent. La conversation privée est secrète
+      mais visible. Observez la dynamique. Est-ce perturbateur ? La conversation
+      privée est une petite rébellion. Que crée-t-elle ?
+    follow_ups:
+      - Comment la conversation privée façonne-t-elle l'étage ?
+      - Que serait le lieu de travail sans elle ?
+      - Quelle est la relation entre le privé et l'exclusion ?
+  - id: hi_wp_clean_desk
+    name: Bureau Propre
+    prompt: |
+      Certains bureaux sont immaculés — rien de personnel. Le bureau propre est une politique ou une préférence. Observez le contraste. Qu'est-ce que le bureau propre communique ?
+      Stérilité ? Discipline ? Détachement ?
+    follow_ups:
+      - Comment le bureau propre façonne-t-il le travailleur ?
+      - Que serait le lieu de travail avec des bureaux en désordre ?
+      - Quelle est la relation entre le propre et l'identité ?
+  - id: hi_wp_meeting_no_show
+    name: Absentéisme Réunion
+    prompt: |
+      La réunion était prévue. Quelqu'un n'est pas venu. L'absence est un
+      message. Observez la réponse. Est-ce que quelqu'un le mentionne ? L'absence est un petit coup de pouvoir. Qu'est-ce qu'elle communique ?
+    follow_ups:
+      - Comment l'absentéisme façonne-t-il la réunion ?
+      - Que serait le lieu de travail sans absentéisme ?
+      - Quelle est la relation entre l'absentéisme et le respect ?
+  - id: hi_wp_cubicle_visit
+    name: Visite Cubicule
+    prompt: |
+      Quelqu'un s'approche. Ils se tiennent au bord du cubicule. La visite est un choix — ils auraient pu envoyer un message. Observez la dynamique. Qu'est-ce que
+      la visite permet qu'un message ne permet pas ?
+    follow_ups:
+      - Comment la visite façonne-t-elle l'interaction ?
+      - Que serait le lieu de travail sans visites ?
+      - Quelle est la relation entre la visite et l'interruption ?
+  - id: hi_wp_shared_printer
+    name: Imprimante Partagée
+    prompt: |
+      L'imprimante est partagée. Les documents s'accumulent. Quelqu'un doit ramasser. L'imprimante
+      est un carrefour. Observez les rencontres. Que se passe-t-il lorsque
+      deux personnes cherchent le même document ?
+    follow_ups:
+      - Comment l'imprimante façonne-t-elle l'étage ?
+      - Que serait le lieu de travail sans elle ?
+      - Quelle est la relation entre l'imprimante et la patience ?
+  - id: hi_wp_office_temperature
+    name: Température du Bureau
+    prompt: |
+      "Il fait trop froid." "Il fait trop chaud." La température est contestée. Quelqu'un
+      contrôle le thermostat. Observez les plaintes. La température est un petit
+      lieu de pouvoir. Qui gagne ?
+    follow_ups:
+      - Comment la température façonne-t-elle le lieu de travail ?
+      - Que serait le lieu de travail avec un contrôle individuel ?
+      - Quelle est la relation entre la température et le confort ?
+  - id: hi_wp_handshake
+    name: Poignée de Main
+    prompt: |
+      La poignée de main — première rencontre, accord conclu. La poignée de main est un rituel. Observez
+      la prise, la durée. La poignée de main encode la formalité. Qu'est-ce qu'elle
+      communique ?
+    follow_ups:
+      - Comment la poignée de main façonne-t-elle la rencontre ?
+      - Que serait le lieu de travail sans elle ?
+      - Quelle est la relation entre la poignée de main et la confiance ?
+  - id: hi_wp_cc_removal
+    name: Suppression CC
+    prompt: |
+      "Répondre à tous" ou "Répondre" ? Le choix compte. Supprimer quelqu'un du
+      fil est un signal. Observez les dynamiques. Qui est retiré ? La suppression du cc
+      est une petite exclusion. Que signifie-t-elle ?
+    follow_ups:
+      - Comment la suppression façonne-t-elle la conversation ?
+      - Que serait le lieu de travail sans options de réponse ?
+      - Quelle est la relation entre la suppression et le pouvoir ?
+  - id: hi_wp_office_tour
+    name: Visite des Locaux
+    prompt: |
+      Un nouvel employé reçoit une visite. "C'est la cuisine. C'est là que nous avons des réunions."
+      La visite oriente. Observez le guide. Qu'est-ce que la visite communique
+      sur la culture ?
+    follow_ups:
+      - Comment la visite façonne-t-elle le nouveau venu ?
+      - Que serait l'intégration sans elle ?
+      - Quelle est la relation entre la visite et l'appartenance ?
+  - id: hi_wp_meeting_room_book
+    name: Réservation Salle de Réunion
+    prompt: |
+      La salle est réservée. Ou double réservée. Le calendrier est l'arbitre.
+      Observez le conflit. Qui cède ? La réservation est une revendication d'espace et
+      de temps. Qu'est-ce qu'elle exige ?
+    follow_ups:
+      - Comment la réservation façonne-t-elle la journée ?
+      - Que serait le lieu de travail sans réservation ?
+      - Quelle est la relation entre la réservation et la priorité ?
+  - id: hi_wp_goodbye_ritual
+    name: Rituel d'Au Revoir
+    prompt: |
+      Fin de journée. "Je pars." "À demain." L'au revoir est un rituel.
+      Observez les échanges. Qui dit au revoir à qui ? Le rituel marque la
+      frontière entre le travail et le non-travail.
+    follow_ups:
+      - Comment l'au revoir façonne-t-il la journée ?
+      - Que serait le lieu de travail sans lui ?
+      - Quelle est la relation entre l'au revoir et la clôture ?
+  - id: hi_wp_promotion_announce
+    name: Annonce Promotion
+    prompt: |
+      "Nous avons le plaisir d'annoncer..." La promotion est publique. L'annonce
+      crée un moment. Observez la réponse. Félicitations, silence,
+      regards furtifs. Que fait l'annonce dans la pièce ?
+    follow_ups:
+      - Comment l'annonce façonne-t-elle la culture ?
+      - Que serait le lieu de travail sans promotions publiques ?
+      - Quelle est la relation entre l'annonce et la hiérarchie ?
+  - id: hi_wp_desk_move
+    name: Déménagement Bureau
+    prompt: |
+      Quelqu'un déménage de bureau. Le déménagement est une promotion, une réorganisation, ou un choix.
+      Observez le processus. Qu'emportent-ils ? Que laissent-ils ? Le déménagement
+      est une transition. Que signifie-t-il ?
+    follow_ups:
+      - Comment le déménagement façonne-t-il le travailleur ?
+      - Que serait le lieu de travail sans déménagements ?
+      - Quelle est la relation entre le déménagement et l'identité ?
+  - id: hi_wp_office_gossip
+    name: Rumeurs de Bureau
+    prompt: |
+      L'information circule — qui part, qui est frustré. La rumeur est
+      informelle. Observez où elle se produit. La fontaine à eau, le couloir.
+      Que fait la rumeur pour le groupe ?
+    follow_ups:
+      - Comment la rumeur façonne-t-elle la culture ?
+      - Que serait le lieu de travail sans elle ?
+      - Quelle est la relation entre la rumeur et l'appartenance ?
+  - id: hi_wp_meeting_agenda
+    name: Ordre du Jour Réunion
+    prompt: |
+      L'ordre du jour structure la réunion. Ou pas — la réunion dérive.
+      Observez la dynamique. Qui suit l'ordre du jour ? Qui ne le suit pas ? L'ordre du jour
+      est un contrat. Que permet-il ?
+    follow_ups:
+      - Comment l'ordre du jour façonne-t-il la réunion ?
+      - Que serait la réunion sans lui ?
+      - Quelle est la relation entre l'ordre du jour et le pouvoir ?
+  - id: hi_wp_office_food
+    name: Nourriture de Bureau
+    prompt: |
+      Beignets, fruits, restes d'une réunion client. La nourriture apparaît.
+      Les gens se rassemblent. Observez le partage. La nourriture de bureau est un petit cadeau.
+      Que crée-t-elle ?
+    follow_ups:
+      - Comment la nourriture façonne-t-elle le lieu de travail ?
+      - Que serait le lieu de travail sans elle ?
+      - Quelle est la relation entre la nourriture et la communauté ?
+  - id: hi_wp_last_day
+    name: Dernier Jour
+    prompt: |
+      Le dernier jour de quelqu'un. Au revoir, peut-être une carte, peut-être un gâteau. Le dernier jour
+      est un rituel de départ. Observez l'ambiance. Que fait le dernier jour pour celui qui part et pour ceux qui restent ?
+    follow_ups:
+      - Comment le dernier jour façonne-t-il la culture ?
+      - Que serait le lieu de travail sans ce rituel ?
+      - Quelle est la relation entre le dernier jour et la clôture ?
+  - id: hi_wp_office_hours
+    name: Heures de Bureau
+    prompt: |
+      "J'ai des heures de bureau le mardi de 14h à 16h." Le bloc est ouvert. Les gens peuvent passer. Observez qui vient. Les heures de bureau sont une invitation. Que permettent-elles ?
+    follow_ups:
+      - Comment les heures de bureau façonnent-elles l'accès ?
+      - Que serait le lieu de travail sans elles ?
+      - Quelle est la relation entre les heures et la disponibilité ?
+  - id: hi_wp_workspace_claim
+    name: Revendication Espace de Travail
+    prompt: |
+      Une veste sur la chaise. Un sac sous le bureau. La revendication dit "Je suis là"
+      ou "Je reviens". Observez les signaux. Combien de temps une revendication peut-elle tenir ?
+      L'espace de travail est temporairement possédé. Quelles sont les règles ?
+    follow_ups:
+      - Comment la revendication façonne-t-elle l'étage ?
+      - Que serait le lieu de travail sans revendications ?
+      - Quelle est la relation entre la revendication et la présence ?

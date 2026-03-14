@@ -1,0 +1,491 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# L'Interface Humaine — Pôle de Transport (French)
+
+id: human_interface_transit_hub
+name: L'Interface Humaine — Pôle de Transport
+description: 50 cartes pour changer votre perception du pôle de transport — des quais et de l'attente au flux d'arrivée/départ et à la chorégraphie des inconnus en transit.
+domain: human_interface
+cards:
+  - id: hi_th_platform_edge
+    name: Bord du Quai
+    prompt: |
+      Le bord du quai est un seuil. Ligne jaune, espace, voie. Les gens se tiennent
+      à différentes distances. Certains se penchent en avant ; d'autres restent en retrait. Observez
+      la répartition. Que signifie ce bord ?
+    follow_ups:
+      - Comment le bord façonne-t-il l'anticipation ?
+      - À quoi ressemblerait le quai sans la ligne ?
+      - Quelle est la relation entre le bord et le risque ?
+  - id: hi_th_waiting_posture
+    name: Posture d'Attente
+    prompt: |
+      Les corps s'organisent en attendant — poids sur un pied, téléphone à la main, sac entre les pieds. La posture encode la durée. Qui a l'air patient ? Qui a l'air impatient ? L'attente a un langage corporel.
+    follow_ups:
+      - Comment la posture révèle-t-elle l'attente ?
+      - À quoi ressemblerait le quai sans l'attente ?
+      - Quelle est la relation entre la posture et le temps ?
+  - id: hi_th_arrival_flow
+    name: Flux d'Arrivée
+    prompt: |
+      Les portes du train s'ouvrent. Les gens en sortent — à contre-courant de ceux qui montent. Le flux a une physique. Observez la collision, le décalage,
+      la fusion. Quelles règles régissent l'échange ?
+    follow_ups:
+      - Comment le flux façonne-t-il le quai ?
+      - Que se passerait-il si tout le monde se précipitait ?
+      - Quelle est la relation entre le flux et l'efficacité ?
+  - id: hi_th_strangers_transit
+    name: Inconnus en Transit
+    prompt: |
+      Vous partagez une voiture avec des gens que vous ne reverrez jamais. Proximité sans
+      connexion. Observez le compacité. Que se doivent les inconnus ?
+      La voiture de transit est une société temporaire.
+    follow_ups:
+      - Comment le transit crée-t-il une communauté temporaire ?
+      - À quoi ressemblerait la voiture avec des conversations ?
+      - Quelle est la relation entre l'inconnu et la civilité ?
+  - id: hi_th_departure_board
+    name: Tableau des Départs
+    prompt: |
+      Horaires, quais, retards — le tableau est la source de vérité. Les regards s'y lèvent.
+      Le tableau dicte le mouvement. Observez le regard collectif. Que fait le tableau à la foule ?
+    follow_ups:
+      - Comment le tableau façonne-t-il le comportement ?
+      - À quoi ressemblerait le pôle sans lui ?
+      - Quelle est la relation entre l'affichage et la confiance ?
+  - id: hi_th_escalator_stand
+    name: Escalier Mécanique — Position
+    prompt: |
+      Restez à droite, marchez à gauche — ou l'inverse, selon la ville. L'escalier mécanique a des règles. Observez qui les suit. L'escalier mécanique est une file d'attente mobile. Qu'est-ce que la règle permet ?
+    follow_ups:
+      - Comment la règle de l'escalier façonne-t-elle le flux ?
+      - Que se passerait-il si tout le monde restait immobile ?
+      - Quelle est la relation entre la règle et l'efficacité ?
+  - id: hi_th_ticket_gate
+    name: Portillon de Billets
+    prompt: |
+      Le portillon lit la carte, bipe, s'ouvre. Le portillon est un point de contrôle. Il
+      sépare les payants des non-payants. Observez le rythme. Qui tâtonne ? Qui passe sans effort ? Le portillon est un test.
+    follow_ups:
+      - Comment le portillon façonne-t-il le voyage ?
+      - À quoi ressemblerait le pôle sans portillons ?
+      - Quelle est la relation entre le portillon et l'appartenance ?
+  - id: hi_th_luggage_drag
+    name: Traîne de Bagages
+    prompt: |
+      Roues sur le carrelage. La valise suit. La traîne marque le chemin des voyageurs.
+      Les bagages prolongent le corps. Observez le fardeau. Que dit le bagage du voyage ?
+    follow_ups:
+      - Comment les bagages façonnent-ils le mouvement ?
+      - À quoi ressemblerait le pôle sans bagages ?
+      - Quelle est la relation entre le fardeau et la destination ?
+  - id: hi_th_bench_occupation
+    name: Occupation du Banc
+    prompt: |
+      Des bancs bordent le quai. Certains s'assoient ; d'autres se tiennent à côté. Le banc
+      est une ressource rare. Observez qui s'en empare. Combien de temps restent-ils ?
+      Le banc est un petit territoire.
+    follow_ups:
+      - Comment le banc façonne-t-il l'attente ?
+      - À quoi ressemblerait le quai sans bancs ?
+      - Quelle est la relation entre le siège et la durée ?
+  - id: hi_th_announcement_voice
+    name: Voix d'Annonce
+    prompt: |
+      "Le prochain train..." La voix est automatisée ou humaine. Elle transperce le bruit.
+      L'annonce crée une connaissance partagée. Observez qui écoute. Qui a déjà vérifié son téléphone ?
+    follow_ups:
+      - Comment l'annonce façonne-t-elle la foule ?
+      - À quoi ressemblerait le pôle sans elle ?
+      - Quelle est la relation entre la voix et l'autorité ?
+  - id: hi_th_door_positioning
+    name: Positionnement des Portes
+    prompt: |
+      Les habitués savent où les portes vont s'ouvrir. Ils se positionnent.
+      Les nouveaux devinent. Le positionnement est une stratégie. Observez le regroupement.
+      Que détermine la position ?
+    follow_ups:
+      - Comment le positionnement façonne-t-il la montée ?
+      - À quoi ressemblerait le quai si les portes étaient aléatoires ?
+      - Quelle est la relation entre la position et l'avantage ?
+  - id: hi_th_handrail_grip
+    name: Prise de la Barre d'Appui
+    prompt: |
+      À l'intérieur de la voiture, les mains trouvent la barre. La prise est une sécurité.
+      Observez qui tient, qui n'en a pas besoin. La barre d'appui est un objet partagé.
+      Que révèle la prise ?
+    follow_ups:
+      - Comment la barre d'appui façonne-t-elle la stabilité ?
+      - À quoi ressemblerait la voiture sans elle ?
+      - Quelle est la relation entre la prise et la confiance ?
+  - id: hi_th_window_reflection
+    name: Reflet dans la Fenêtre
+    prompt: |
+      La fenêtre montre le tunnel, le quai, et votre propre visage. Le reflet est inévitable.
+      Les gens se regardent ou l'évitent. Observez la relation entre le reflet et le regard.
+    follow_ups:
+      - Comment le reflet façonne-t-il la conscience de soi ?
+      - À quoi ressemblerait le trajet sans la fenêtre ?
+      - Quelle est la relation entre le reflet et la vie privée ?
+  - id: hi_th_seat_offer
+    name: Offre de Siège
+    prompt: |
+      Quelqu'un offre un siège à une personne âgée, un parent avec un enfant. L'offre
+      est un petit acte moral. Observez quand cela se produit. Qui offre ? Qui accepte ? Le siège est un cadeau.
+    follow_ups:
+      - Comment l'offre façonne-t-elle la voiture ?
+      - À quoi ressemblerait le trajet sans de telles offres ?
+      - Quelle est la relation entre l'offre et la sollicitude ?
+  - id: hi_th_delay_sigh
+    name: Soupir de Retard
+    prompt: |
+      "Retardé." Le soupir collectif. Le retard est un destin partagé. Les inconnus
+      échangent des regards. Le retard crée un moment de solidarité. Observez le changement. Que fait le retard à la foule ?
+    follow_ups:
+      - Comment le retard façonne-t-il l'attente ?
+      - À quoi ressemblerait le pôle sans retards ?
+      - Quelle est la relation entre le retard et la frustration ?
+  - id: hi_th_backpack_turn
+    name: Rotation du Sac à Dos
+    prompt: |
+      Dans une voiture bondée, quelqu'un tourne son sac à dos vers l'avant. La rotation
+      est une considération. Elle crée de l'espace. Observez qui le fait. La rotation du sac à dos est un petit contrat social.
+    follow_ups:
+      - Comment la rotation façonne-t-elle la proximité ?
+      - À quoi ressemblerait la voiture sans cela ?
+      - Quelle est la relation entre la rotation et la conscience ?
+  - id: hi_th_exit_anticipation
+    name: Anticipation de Sortie
+    prompt: |
+      À l'approche de l'arrêt, les gens se rassemblent près de la porte. L'anticipation
+      est visible. Les corps bougent. La porte va s'ouvrir. Observez la préparation.
+      Qu'est-ce que l'anticipation requiert ?
+    follow_ups:
+      - Comment l'anticipation façonne-t-elle la sortie ?
+      - À quoi ressemblerait l'arrêt sans préparation ?
+      - Quelle est la relation entre l'anticipation et le flux ?
+  - id: hi_th_transfer_corridor
+    name: Couloir de Correspondance
+    prompt: |
+      Le couloir relie les lignes. Les gens marchent avec détermination. Le transfert
+      est une transition — entre systèmes, entre attentes. Observez le rythme.
+      Le couloir a son propre rythme.
+    follow_ups:
+      - Comment le couloir façonne-t-il le voyage ?
+      - À quoi ressemblerait le pôle sans correspondances ?
+      - Quelle est la relation entre le couloir et la connexion ?
+  - id: hi_th_phone_glow
+    name: Lumière du Téléphone
+    prompt: |
+      Dans la voiture faiblement éclairée, les visages s'illuminent sous l'effet des téléphones. La lumière est individuelle. Chaque
+      personne a sa propre lumière. Observez la répartition. Le téléphone
+      crée un espace privé dans le public.
+    follow_ups:
+      - Comment le téléphone façonne-t-il le trajet ?
+      - À quoi ressemblerait la voiture sans téléphones ?
+      - Quelle est la relation entre la lumière et l'isolement ?
+  - id: hi_th_stroller_navigation
+    name: Navigation avec Poussette
+    prompt: |
+      Un parent pousse une poussette dans la foule. La navigation est
+      délicate. Les gens s'écartent. La poussette modifie le flux. Observez
+      l'accommodation. Que demande la poussette ?
+    follow_ups:
+      - Comment la poussette façonne-t-elle la foule ?
+      - À quoi ressemblerait le pôle sans poussettes ?
+      - Quelle est la relation entre la poussette et la sollicitude ?
+  - id: hi_th_vendor_station
+    name: Stand de Vendeur
+    prompt: |
+      Un kiosque vend du café, des snacks, des journaux. Le vendeur sert des gens
+      en mouvement. La transaction est rapide. Observez l'échange. Le vendeur
+      est une île dans le flux.
+    follow_ups:
+      - Comment le vendeur façonne-t-il le pôle ?
+      - À quoi ressemblerait le pôle sans vendeurs ?
+      - Quelle est la relation entre le vendeur et l'attente ?
+  - id: hi_th_track_gap
+    name: Écart de Voie
+    prompt: |
+      Attention à l'écart. L'espace entre le quai et la voiture est un danger. Les gens
+      enjambent. L'écart varie. Observez la prudence. Que requiert l'écart du corps ?
+    follow_ups:
+      - Comment l'écart façonne-t-il la montée ?
+      - À quoi ressemblerait le quai sans lui ?
+      - Quelle est la relation entre l'écart et l'attention ?
+  - id: hi_th_schedule_check
+    name: Consultation de l'Horaire
+    prompt: |
+      Les doigts tapent sur le téléphone. L'application indique quand. La consultation de l'horaire est
+      constante. Elle réduit l'incertitude. Observez le rythme. À quelle fréquence les
+      gens consultent-ils ?
+    follow_ups:
+      - Comment l'horaire façonne-t-il l'attente ?
+      - À quoi ressemblerait le pôle sans applications ?
+      - Quelle est la relation entre la consultation et le contrôle ?
+  - id: hi_th_crowd_density
+    name: Densité de la Foule
+    prompt: |
+      L'heure de pointe remplit le quai. Les corps se compriment. La densité a des limites.
+      Observez la frontière. Quand devient-elle insupportable ? La foule a
+      une physique.
+    follow_ups:
+      - Comment la densité façonne-t-elle l'expérience ?
+      - À quoi ressemblerait le pôle à faible densité ?
+      - Quelle est la relation entre la densité et la tolérance ?
+  - id: hi_th_sleeping_commuter
+    name: Voyageur Endormi
+    prompt: |
+      Quelqu'un dort — la tête contre la fenêtre, contre l'épaule d'un inconnu.
+      Le sommeil est confiance ou épuisement. Observez la vulnérabilité. Que requiert le sommeil de la voiture ?
+    follow_ups:
+      - Comment le dormeur façonne-t-il l'espace ?
+      - À quoi ressemblerait le trajet sans dormeurs ?
+      - Quelle est la relation entre le sommeil et la sécurité ?
+  - id: hi_th_map_consultation
+    name: Consultation de la Carte
+    prompt: |
+      Un visiteur regarde la carte au mur. La carte est une bouée de sauvetage. D'autres
+      passent. La consultation prend du temps. Observez la pause. Que fournit la carte ?
+    follow_ups:
+      - Comment la carte façonne-t-elle le voyage ?
+      - À quoi ressemblerait le pôle sans cartes ?
+      - Quelle est la relation entre la carte et la confiance ?
+  - id: hi_th_platform_change
+    name: Changement de Quai
+    prompt: |
+      "Changement de quai." La foule bouge. Le changement est une perturbation. Les gens
+      se dépêchent. Observez la bousculade. Que demande le changement à la foule ?
+    follow_ups:
+      - Comment le changement façonne-t-il le flux ?
+      - À quoi ressemblerait le pôle sans changements ?
+      - Quelle est la relation entre le changement et le stress ?
+  - id: hi_th_briefcase_clutch
+    name: Serrage de la Mallette
+    prompt: |
+      La mallette est tenue près — entre les pieds, sur les genoux. Elle contient quelque chose
+      de précieux. Le serrage est protecteur. Observez la prise. Que signifie la mallette pour le détenteur ?
+    follow_ups:
+      - Comment la mallette façonne-t-elle le trajet ?
+      - À quoi ressemblerait la voiture sans mallettes ?
+      - Quelle est la relation entre le serrage et l'identité ?
+  - id: hi_th_door_hold
+    name: Tenue de Porte
+    prompt: |
+      Quelqu'un tient la porte pour la personne derrière. Le train est sur le point de partir.
+      La tenue est un risque et une courtoisie. Observez l'échange. Que coûte la tenue ?
+    follow_ups:
+      - Comment la tenue façonne-t-elle la montée ?
+      - À quoi ressemblerait le quai sans cela ?
+      - Quelle est la relation entre la tenue et la civilité ?
+  - id: hi_th_standing_balance
+    name: Équilibre Debout
+    prompt: |
+      Le train bouge. Les passagers debout déplacent leur poids. L'équilibre est
+      dynamique. Personne ne tient la barre. Observez les micro-ajustements. Le
+      corps apprend le mouvement.
+    follow_ups:
+      - Comment l'équilibre façonne-t-il le trajet ?
+      - À quoi ressemblerait la voiture avec plus de sièges ?
+      - Quelle est la relation entre l'équilibre et l'habitude ?
+  - id: hi_th_conversation_overhear
+    name: Conversation Entendue
+    prompt: |
+      Deux personnes parlent. Vous entendez des fragments. La conversation est privée mais
+      publique. Observez la frontière. Qu'apprennent les inconnus les uns des autres en transit ?
+    follow_ups:
+      - Comment l'écoute furtive façonne-t-elle le trajet ?
+      - À quoi ressemblerait la voiture sans conversation ?
+      - Quelle est la relation entre l'écoute furtive et l'intimité ?
+  - id: hi_th_ticket_inspection
+    name: Contrôle de Billet
+    prompt: |
+      L'inspecteur se déplace dans la voiture. "Billets, s'il vous plaît." Le contrôle est
+      aléatoire ou systématique. Observez la réponse. Qui est prêt ? Qui
+      tâtonne ? Le contrôle est un test de légitimité.
+    follow_ups:
+      - Comment le contrôle façonne-t-il le trajet ?
+      - À quoi ressemblerait le système sans lui ?
+      - Quelle est la relation entre le contrôle et la confiance ?
+  - id: hi_th_station_name_glance
+    name: Regard sur le Nom de la Gare
+    prompt: |
+      Le nom passe en un éclair — sur le mur, sur le panneau. Les habitués savent. Les nouveaux
+      regardent. Le regard oriente. Observez qui regarde. Que fait le nom ?
+    follow_ups:
+      - Comment le nom façonne-t-il l'orientation ?
+      - À quoi ressemblerait le trajet sans panneaux ?
+      - Quelle est la relation entre le nom et le lieu ?
+  - id: hi_th_benchmark_regular
+    name: Habitué Repère
+    prompt: |
+      L'habitué connaît le rythme. Il arrive juste à temps. Pas d'attente.
+      L'habitué a intériorisé l'horaire. Observez la confiance.
+      Que sait l'habitué ?
+    follow_ups:
+      - Comment l'habitué façonne-t-il le pôle ?
+      - À quoi ressemblerait le pôle sans habitués ?
+      - Quelle est la relation entre l'habitué et la fluidité ?
+  - id: hi_th_lost_look
+    name: Regard Perdu
+    prompt: |
+      Quelqu'un a l'air perdu — tête qui tourne, pas incertain. Le regard est visible.
+      Observez le langage corporel. Qui aide ? Qui ignore ? Le regard perdu est un
+      signal. Qu'invite-t-il ?
+    follow_ups:
+      - Comment le regard perdu façonne-t-il le pôle ?
+      - À quoi ressemblerait le pôle sans les perdus ?
+      - Quelle est la relation entre la perte et l'aide ?
+  - id: hi_th_earbud_insert
+    name: Insertion d'Écouteurs
+    prompt: |
+      Les écouteurs se mettent en place. Le monde s'éloigne. L'insertion est une frontière.
+      Le porteur est présent mais absent. Observez le changement. Que crée l'écouteur ?
+    follow_ups:
+      - Comment les écouteurs façonnent-ils le trajet ?
+      - À quoi ressemblerait la voiture sans eux ?
+      - Quelle est la relation entre l'écouteur et la vie privée ?
+  - id: hi_th_rush_hour_pack
+    name: Foule de l'Heure de Pointe
+    prompt: |
+      La voiture est pleine. Les corps se touchent. La foule est inévitable. Observez
+      la tolérance. Comment les gens gèrent-ils la proximité ? La foule a sa propre
+      étiquette.
+    follow_ups:
+      - Comment la foule façonne-t-elle le trajet ?
+      - À quoi ressemblerait l'heure de pointe sans la foule ?
+      - Quelle est la relation entre la foule et l'endurance ?
+  - id: hi_th_destination_ask
+    name: Question de Destination
+    prompt: |
+      "Est-ce le train pour X ?" Demande un inconnu. Un autre répond. La question crée un moment de connexion. Observez l'échange. Que requiert la question ?
+    follow_ups:
+      - Comment la question façonne-t-elle la voiture ?
+      - À quoi ressemblerait le trajet sans telles questions ?
+      - Quelle est la relation entre la question et la confiance ?
+  - id: hi_th_platform_choice
+    name: Choix de Quai
+    prompt: |
+      Deux quais, même destination. L'un est plus proche ; l'autre est moins fréquenté.
+      Le choix est une stratégie. Observez qui va où. Qu'est-ce qui détermine le
+      choix ?
+    follow_ups:
+      - Comment le choix façonne-t-il la foule ?
+      - À quoi ressemblerait le pôle avec un seul quai ?
+      - Quelle est la relation entre le choix et le résultat ?
+  - id: hi_th_wipe_down_seat
+    name: Essuyage de Siège
+    prompt: |
+      Quelqu'un essuie le siège avant de s'asseoir. L'essuyage est une précaution. Observez
+      le geste. Que suppose l'essuyage sur l'espace ? L'essuyage est
+      un petit acte de délimitation.
+    follow_ups:
+      - Comment l'essuyage façonne-t-il l'assise ?
+      - À quoi ressemblerait la voiture sans de tels gestes ?
+      - Quelle est la relation entre l'essuyage et la propreté ?
+  - id: hi_th_standing_offer
+    name: Offre de Siège (Debout)
+    prompt: |
+      "Voulez-vous vous asseoir ?" L'offre est faite à un inconnu. Parfois
+      acceptée, parfois refusée. Observez l'échange. Que signifie l'offre ?
+    follow_ups:
+      - Comment l'offre façonne-t-elle la voiture ?
+      - À quoi ressemblerait le trajet sans offres ?
+      - Quelle est la relation entre l'offre et la sollicitude ?
+  - id: hi_th_exit_block
+    name: Blocage de Sortie
+    prompt: |
+      Quelqu'un se tient dans l'embrasure de la porte. D'autres doivent passer. Le blocage est
+      inconscient ou délibéré. Observez la négociation. Comment les gens passent-ils ?
+      Le blocage est un petit conflit.
+    follow_ups:
+      - Comment le blocage façonne-t-il la sortie ?
+      - À quoi ressemblerait la voiture sans bloqueurs ?
+      - Quelle est la relation entre le blocage et la conscience ?
+  - id: hi_th_train_rumble
+    name: Ronflement du Train
+    prompt: |
+      Le train ronfle — rails, roues, mouvement. Le ronflement est constant. Il
+      devient un bruit de fond. Observez quand vous le remarquez. Que fait le ronflement au corps ?
+    follow_ups:
+      - Comment le ronflement façonne-t-il le trajet ?
+      - À quoi ressemblerait la voiture dans le silence ?
+      - Quelle est la relation entre le ronflement et le rythme ?
+  - id: hi_th_connection_run
+    name: Course de Correspondance
+    prompt: |
+      Quelqu'un court — en retard pour une correspondance. La course traverse la foule.
+      Les gens s'écartent. Observez la perturbation. Que prend la course au
+      flux ?
+    follow_ups:
+      - Comment la course façonne-t-elle le pôle ?
+      - À quoi ressemblerait le pôle sans coureurs ?
+      - Quelle est la relation entre la course et l'urgence ?
+  - id: hi_th_seat_saving
+    name: Réservation de Siège
+    prompt: |
+      Un sac sur le siège. "Quelqu'un est assis là." La réservation garde le siège
+      pour un compagnon absent. Observez la revendication. Combien de temps un siège peut-il être
+      réservé ? Quelles sont les limites ?
+    follow_ups:
+      - Comment la réservation façonne-t-elle la voiture ?
+      - À quoi ressemblerait le trajet sans réservations ?
+      - Quelle est la relation entre la réservation et le droit ?
+  - id: hi_th_arrival_relief
+    name: Soulagement à l'Arrivée
+    prompt: |
+      Le train atteint le terminus. Le soulagement est visible. Les épaules se détendent.
+      Les gens ramassent leurs affaires. Le voyage est terminé. Observez le changement.
+      Que procure l'arrivée ?
+    follow_ups:
+      - Comment l'arrivée façonne-t-elle la sortie ?
+      - À quoi ressemblerait le voyage sans arrivée ?
+      - Quelle est la relation entre le soulagement et l'achèvement ?
+  - id: hi_th_wayfinding_sign
+    name: Panneau d'Orientation
+    prompt: |
+      Des flèches indiquent. "Vers les trains." "Vers les sorties." Les panneaux guident le flux. Observez
+      qui les suit. Qui les ignore ? Le panneau est une suggestion. Que suppose-t-il ?
+    follow_ups:
+      - Comment les panneaux façonnent-ils le flux ?
+      - À quoi ressemblerait le pôle sans eux ?
+      - Quelle est la relation entre le panneau et la confiance ?
+  - id: hi_th_waiting_room
+    name: Salle d'Attente
+    prompt: |
+      Les chaises se font face ou font face au tableau. La salle d'attente accueille les gens
+      entre les voyages. Observez l'agencement. Qui s'assied ? Qui fait les cent pas ? La
+      salle d'attente est une pause.
+    follow_ups:
+      - Comment la salle d'attente façonne-t-elle l'attente ?
+      - À quoi ressemblerait le pôle sans elle ?
+      - Quelle est la relation entre la salle et la durée ?
+  - id: hi_th_stranger_proximity
+    name: Proximité des Inconnus
+    prompt: |
+      Un inconnu se tient près — nécessaire dans une foule. La proximité est
+      impersonnelle mais intime. Observez la tolérance. Que permet le corps ?
+      La proximité est un contrat.
+    follow_ups:
+      - Comment la proximité façonne-t-elle le trajet ?
+      - À quoi ressemblerait la voiture avec plus d'espace ?
+      - Quelle est la relation entre la proximité et la civilité ?
+  - id: hi_th_last_train
+    name: Dernier Train
+    prompt: |
+      Le dernier train. La foule est différente — plus tardive, plus détendue. Le dernier train
+      a sa propre énergie. Observez le changement. Que fait le mot "dernier" à la
+      foule ?
+    follow_ups:
+      - Comment le dernier train façonne-t-il le pôle ?
+      - À quoi ressemblerait la nuit sans lui ?
+      - Quelle est la relation entre le dernier et l'urgence ?
+  - id: hi_th_transit_tribe
+    name: Tribu de Transit
+    prompt: |
+      Les mêmes personnes, la même ligne, le même horaire. Vous reconnaissez des visages.
+      Vous ne parlez jamais. La tribu de transit est une communauté silencieuse. Observez
+      la reconnaissance. Que fournit la tribu ?
+    follow_ups:
+      - Comment la tribu façonne-t-elle le trajet ?
+      - À quoi ressemblerait le trajet sans visages familiers ?
+      - Quelle est la relation entre la tribu et l'appartenance ?

@@ -1,0 +1,408 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinary Lab — Chinois (French)
+
+id: culinary_lab_chinese
+name: Culinary Lab — Chinois
+description: 50 cartes pour changer votre expérience de la cuisine chinoise – de la chimie du wok hei à l'archéologie du soja, en passant par la chorégraphie de la table ronde et la narration du banquet.
+domain: culinary_lab
+cards:
+  - id: chn_wok_hei
+    name: Wok Hei
+    prompt: |
+      Le wok hei – le souffle du wok – est la fumée insaisissable qui provient d'une chaleur et d'une vitesse extrêmes. Ce n'est pas tout à fait un goût fumé ; c'est une transformation. Arrivez-vous à le capter ? Que serait le sauté sans lui ?
+    follow_ups:
+      - Comment le hei façonne-t-il le plat ?
+      - Qu'est-ce qui le crée ? Qu'est-ce qui le détruit ?
+      - Quelle est la relation entre la chaleur et la hâte ?
+  - id: chn_round_table
+    name: Table Ronde
+    prompt: |
+      La table de banquet chinoise est ronde – la paresseuse tourne au centre. La nourriture tourne. Tout le monde tend la main. La table est une chorégraphie. Qui tourne ? Qui attend ? Quelles sont les règles tacites ?
+    follow_ups:
+      - Que signifierait une table rectangulaire ?
+      - Comment la forme ronde façonne-t-elle le repas ?
+      - Quelle est la relation entre le centre et le bord ?
+  - id: chn_soy_archeology
+    name: Archéologie du Soja
+    prompt: |
+      Sauce soja – fermentée, vieillie, régionale. Claire, foncée, champignon, double noire. Elle vient de quelque part. Cela a pris du temps. Tracez la bouteille. Quel voyage a-t-elle fait ? Qu'est-ce que le soja industriel sacrifierait ?
+    follow_ups:
+      - Comment l'origine façonne-t-elle le versement ?
+      - Que serait le plat sans sauce soja ?
+      - Quelle est la relation entre la fermentation et l'umami ?
+  - id: chn_chopstick_grip
+    name: Prise des Baguettes
+    prompt: |
+      Les baguettes prolongent la main. Riz, nouilles glissantes, raviolis – chacun demande une technique différente. Remarquez votre prise. Qu'exige l'ustensile ? Que permet-il ?
+    follow_ups:
+      - Que changerait une fourchette ?
+      - Comment la baguette façonne-t-elle la bouchée ?
+      - Quelle est la relation entre l'outil et le rythme ?
+  - id: chn_dumpling_seam
+    name: Couture du Ravioli
+    prompt: |
+      Les plis des raviolis – le pli, le sceau. Jiaozi, shumai, xiaolongbao – chacun a sa forme. La couture tient ou lâche. Étudiez-en un. Que signifierait une explosion ? Qu'est-ce que le pli protège ?
+    follow_ups:
+      - Comment le pli façonne-t-il la farce ?
+      - Que perdrait un ravioli ouvert ?
+      - Quelle est la relation entre le sceau et la soupe ?
+  - id: chn_tea_pour
+    name: Service du Thé
+    prompt: |
+      Thé chinois – versé, resservi, partagé. La théière circule. Les tasses vides sont remplies avant qu'on ne demande. Le service est attention et soin. Remarquez le rythme. Que serait le repas sans le thé ?
+    follow_ups:
+      - Comment le thé façonne-t-il le rythme ?
+      - Qu'est-ce que le service communique ?
+      - Quelle est la relation entre la tasse et la table ?
+  - id: chn_bone_plate
+    name: Assiette à Os
+    prompt: |
+      Une petite assiette pour les os – coquilles jetées, arêtes de poulet, écrevisses. L'assiette collecte ce qui n'est pas comestible. Elle fait partie du couvert. Que permet l'assiette à os ? Que se passerait-il sans elle ?
+    follow_ups:
+      - Comment l'assiette façonne-t-elle le repas ?
+      - À quoi ressemblerait la table sans elle ?
+      - Quelle est la relation entre le rejet et la dignité ?
+  - id: chn_soup_spoon
+    name: Cuillère à Soupe
+    prompt: |
+      La cuillère à soupe chinoise – large, peu profonde, en céramique. Elle contient le bouillon et les solides. La cuillère s'adapte différemment à la bouche. Remarquez la gorgée. Qu'est-ce que la forme permet ?
+    follow_ups:
+      - Que changerait une cuillère ronde ?
+      - Comment la cuillère façonne-t-elle la gorgée ?
+      - Quelle est la relation entre la forme et la fonction ?
+  - id: chn_steam_basket
+    name: Panier Vapeur
+    prompt: |
+      Le dim sum arrive dans des paniers en bambou – empilés, superposés. La vapeur monte. Le panier maintient la forme. Considérez le bambou. Que ferait le métal différemment ? Qu'ajoute le bambou ?
+    follow_ups:
+      - Comment le panier façonne-t-il le ravioli ?
+      - Que perdrait une assiette ?
+      - Quelle est la relation entre le bambou et la vapeur ?
+  - id: chn_maillard_wok
+    name: Maillard au Wok
+    prompt: |
+      Le wok atteint des températures que les cuisinières domestiques ne peuvent pas égaler. La caramélisation est instantanée. Les protéines brunissent en quelques secondes. Considérez la chimie. Qu'est-ce qu'une chaleur plus basse sacrifierait ? Qu'exige le wok ?
+    follow_ups:
+      - Comment la chaleur façonne-t-elle la saveur ?
+      - Que ferait l'électrique différemment ?
+      - Quelle est la relation entre la flamme et la croûte ?
+  - id: chn_glutinous_texture
+    name: Texture Glutineuse
+    prompt: |
+      Le riz gluant – collant, moelleux – a une chimie différente. Il est utilisé pour les zongzi, le lo mai gai, les desserts. Remarquez la texture. En quoi diffère-t-il du riz à longs grains ? Que permet le côté collant ?
+    follow_ups:
+      - Que ferait le riz ordinaire ?
+      - Comment la texture façonne-t-elle le plat ?
+      - Quelle est la relation entre le collant et l'emballage ?
+  - id: chn_century_egg
+    name: Œuf Centenaire
+    prompt: |
+      Œuf centenaire – conservé, transformé. Le jaune est sombre, le blanc translucide. La chimie est ancienne. Considérez la conservation. Que fait le temps ? Que signifierait la fraîcheur ?
+    follow_ups:
+      - Comment la conservation façonne-t-elle la saveur ?
+      - Que serait l'œuf s'il était frais ?
+      - Quelle est la relation entre le temps et la transformation ?
+  - id: chn_oyster_sauce
+    name: Sauce Huître
+    prompt: |
+      Sauce huître – umami, épaisse, cantonaise. C'est réduction et extraction. L'huître donne son essence. Tracez la saveur. Que serait le sauté sans elle ?
+    follow_ups:
+      - Comment la sauce façonne-t-elle le plat ?
+      - Quelle est la relation entre l'huître et le légume ?
+      - Que ferait la sauce soja à la place ?
+  - id: chn_ordering_ritual
+    name: Rituel de Commande
+    prompt: |
+      Commander dans un restaurant chinois – l'hôte choisit, ou la table négocie. Équilibre : viande, légume, soupe, riz. La commande est une composition. Remarquez qui décide. Quelles sont les règles ?
+    follow_ups:
+      - Comment la commande façonne-t-elle le repas ?
+      - Que commanderait chacun pour soi ?
+      - Quelle est la relation entre le choix et le collectif ?
+  - id: chn_crispy_skin
+    name: Peau Croustillante
+    prompt: |
+      Peau de canard laqué – croustillante, laquée. Ou la couenne du porc laqué cantonais. La peau est délibérée. Chaleur, air, sucre. Considérez l'architecture. Que signifierait une peau molle ?
+    follow_ups:
+      - Comment le croustillant façonne-t-il la bouchée ?
+      - Qu'est-ce qui crée le craquement ?
+      - Quelle est la relation entre la peau et la chair ?
+  - id: chn_noodle_slip
+    name: Glisse de la Nouille
+    prompt: |
+      Nouilles chinoises – blé, riz, tirées à la main – varient en texture. Certaines glissent ; d'autres sont mâchues. La résistance de la nouille contre les baguettes. Remarquez la friction. Qu'ajoute la glisse ?
+    follow_ups:
+      - Comment la texture façonne-t-elle la dégustation ?
+      - Que perdrait une nouille pâteuse ?
+      - Quelle est la relation entre la glisse et la satisfaction ?
+  - id: chn_bok_choy_wilt
+    name: Flétrissement du Bok Choy
+    prompt: |
+      Bok choy dans le wok – quelques secondes. Il flétrit mais conserve sa structure. Le vert s'adoucit. Considérez la transformation. Que signifierait cru ? Que perdrait un plat trop cuit ?
+    follow_ups:
+      - Comment le flétrissement façonne-t-il le légume ?
+      - Quelle est la relation entre la chaleur et le vert ?
+      - Quand est-il prêt ?
+  - id: chn_five_spice
+    name: Cinq Épices
+    prompt: |
+      Poudre cinq épices – anis étoilé, clou de girofle, cannelle, poivre du Sichuan, fenouil. C'est un mélange avec une histoire. Chaque épice a une route. Suivez-en une. Quel voyage a-t-elle fait ?
+    follow_ups:
+      - Que serait le plat sans lui ?
+      - Comment le mélange crée-t-il une identité ?
+      - Quelle est la relation entre l'épice et la conservation ?
+  - id: chn_banquet_progression
+    name: Progression du Banquet
+    prompt: |
+      Un banquet chinois a un arc – plats froids d'abord, puis chauds, soupe, riz, dessert. La progression est narrative. Remarquez le rythme. Que ferait un ordre différent ?
+    follow_ups:
+      - Comment la séquence façonne-t-elle le repas ?
+      - Quelle est la relation entre le premier et le dernier ?
+      - Quand le récit atteint-il son apogée ?
+  - id: chn_white_rice_center
+    name: Riz Blanc au Centre
+    prompt: |
+      Riz blanc – nature, cuit à la vapeur – ancre le repas. C'est la toile. Les plats riches ont besoin de riz pour équilibrer. Remarquez quand vous y revenez. Que serait le repas sans le nature ?
+    follow_ups:
+      - Comment le riz façonne-t-il le palais ?
+      - Que ferait le riz frit ?
+      - Quelle est la relation entre le neutre et la saveur ?
+  - id: chn_szechuan_numb
+    name: Engourdissement du Sichuan
+    prompt: |
+      Poivre du Sichuan – ma la – engourdissant, picotant. Ce n'est pas du piquant ; c'est une sensation. La bouche bourdonne. Considérez la sensation. Que serait le plat sans l'engourdissement ?
+    follow_ups:
+      - Comment le ma la façonne-t-il l'expérience ?
+      - Quelle est la relation entre l'engourdissement et le piquant ?
+      - Pourquoi les associer ?
+  - id: chn_dark_soy
+    name: Sauce Soja Foncée
+    prompt: |
+      Sauce soja foncée – plus épaisse, plus sucrée, pour la couleur. Elle tache le riz, laque la viande. Ce n'est pas pour le sel ; c'est pour la teinte. Considérez le visuel. Qu'ajoute le foncé ?
+    follow_ups:
+      - Que ferait la sauce soja claire ?
+      - Comment la couleur façonne-t-elle l'attente ?
+      - Quelle est la relation entre le foncé et le caramel ?
+  - id: chn_hot_plate
+    name: Plaque Chaude
+    prompt: |
+      Assiettes crépitantes – bœuf, calamar – arrivent en sifflant. La plaque de fer continue la cuisson. Le son est un spectacle. Que serait le plat sans le crépitement ? Comment la plaque chaude prolonge-t-elle la cuisson ?
+    follow_ups:
+      - Comment le crépitement façonne-t-il l'expérience ?
+      - Que signifierait une assiette froide ?
+      - Quelle est la relation entre le son et la chaleur ?
+  - id: chn_congee_soft
+    name: Congee Doux
+    prompt: |
+      Congee – porridge de riz – est doux, réconfortant. Le riz cuit longtemps se décompose. La texture est abandon. Considérez la transformation. Que signifierait al dente ici ?
+    follow_ups:
+      - Comment la douceur façonne-t-elle le plat ?
+      - Que ferait un congee épais ?
+      - Quelle est la relation entre l'eau et le riz ?
+  - id: chn_glass_noodle
+    name: Nouilles de Verre
+    prompt: |
+      Nouilles de verre – fécule de haricot mungo – sont transparentes, glissantes. Elles absorbent la saveur. Remarquez la texture. Que feraient les nouilles de blé ? L'importance de la transparence ?
+    follow_ups:
+      - Comment la nouille façonne-t-elle le plat ?
+      - Quelle est la relation entre le transparent et l'absorption ?
+      - Pourquoi "de verre" ?
+  - id: chn_xlb_burst
+    name: Explosion du Xiaolongbao
+    prompt: |
+      Xiaolongbao – ravioli à soupe – contient du bouillon à l'intérieur. La première bouchée peut brûler ou éclater. La technique : pincer, siroter, manger. Considérez le risque. Que signifierait un xlb froid ?
+    follow_ups:
+      - Comment la soupe façonne-t-elle l'expérience ?
+      - Que perdriez-vous sans l'explosion ?
+      - Quelle est la relation entre la température et le danger ?
+  - id: chn_tea_smell
+    name: Odeur du Thé
+    prompt: |
+      Oolong, jasmin, pu-erh – chaque thé a un nez différent. Sentez avant de siroter. L'arôme est la moitié de l'expérience. Que promet l'odeur ? Que livre-t-elle ?
+    follow_ups:
+      - Comment l'odeur façonne-t-elle la gorgée ?
+      - Que serait le thé sans arôme ?
+      - Quelle est la relation entre l'infusion et le parfum ?
+  - id: chn_crab_crack
+    name: Craquement du Crabe
+    prompt: |
+      Crabe lors d'un banquet chinois – pinces fournies. Le craquement est son et labeur. La chair est extraite. Considérez la chorégraphie. Que signifierait un crabe pré-décortiqué ?
+    follow_ups:
+      - Comment le craquement façonne-t-il le repas ?
+      - Que perdriez-vous sans l'effort ?
+      - Quelle est la relation entre l'effort et la récompense ?
+  - id: chn_turn_table
+    name: Tourner la Table
+    prompt: |
+      La paresseuse – qui la tourne ? Quand ? Le plat que vous voulez peut être de l'autre côté de la table. Le tour est une étiquette. Remarquez la danse. Quelles sont les règles ? Quand attendez-vous ?
+    follow_ups:
+      - Comment le tour façonne-t-il le repas ?
+      - Que signifieraient des plats fixes ?
+      - Quelle est la relation entre le tour et le partage ?
+  - id: chn_ginger_slice
+    name: Tranche de Gingembre
+    prompt: |
+      Gingembre avec les fruits de mer – fines tranches, parfois frites. Il coupe le goût de poisson. Le gingembre est à la fois garniture et fonction. Considérez son rôle. Que serait le poisson sans lui ?
+    follow_ups:
+      - Comment le gingembre façonne-t-il le palais ?
+      - Quelle est la relation entre la tranche et le parfum ?
+      - Pourquoi du gingembre avec les fruits de mer ?
+  - id: chn_hoisin_dip
+    name: Trempette Hoisin
+    prompt: |
+      Hoisin avec le canard laqué – la trempette est un rituel. La crêpe, le canard, la ciboule, la sauce. Chaque élément a sa place. Considérez la composition. Que ferait un élément manquant ?
+    follow_ups:
+      - Comment la trempette façonne-t-elle la bouchée ?
+      - Que ferait une autre sauce ?
+      - Quelle est la relation entre le sucré et le canard ?
+  - id: chn_leaf_wrap
+    name: Rouleau de Feuille
+    prompt: |
+      Rouleau de laitue – viande hachée, herbes, sauce, enveloppés dans une feuille. La feuille est un réceptacle et une texture. Le rouleau est un travail manuel. Considérez l'architecture. Que ferait une tortilla ?
+    follow_ups:
+      - Comment la feuille façonne-t-elle la bouchée ?
+      - Que ferait une assiette ?
+      - Quelle est la relation entre le rouleau et la main ?
+  - id: chn_fish_whole
+    name: Poisson Entier
+    prompt: |
+      Poisson entier – cuit à la vapeur, tête et queue incluses. Le poisson est présenté complet. La tête a une signification. Considérez la présentation. Que sacrifierait un filet ?
+    follow_ups:
+      - Comment le tout façonne-t-il le plat ?
+      - Que signifie la tête ?
+      - Quelle est la relation entre le tout et le respect ?
+  - id: chn_scallion_oil
+    name: Huile de Ciboule
+    prompt: |
+      Huile de ciboule – huile frémissante sur de la ciboule et du gingembre hachés. C'est une vinaigrette, une finition. L'huile transporte les aromates. Remarquez quand elle est appliquée. Qu'ajoute le frémissement ?
+    follow_ups:
+      - Que serait le plat sans elle ?
+      - Comment l'huile façonne-t-elle la finition ?
+      - Quelle est la relation entre l'huile et l'arôme ?
+  - id: chn_black_vinegar
+    name: Vinaigre Noir
+    prompt: |
+      Vinaigre Chinkiang – noir, complexe, légèrement sucré. Il coupe la richesse. Quelques gouttes changent le ravioli. Considérez l'acide. Que ferait le vinaigre de riz ? Qu'ajoute le noir ?
+    follow_ups:
+      - Comment le vinaigre façonne-t-il la bouchée ?
+      - Que serait le ravioli sans lui ?
+      - Quelle est la relation entre le vinaigre et l'équilibre ?
+  - id: chn_sticky_rice
+    name: Riz Collant
+    prompt: |
+      Riz collant dans une feuille de lotus – lo mai gai. La feuille donne de la saveur. Le riz est enveloppé, cuit à la vapeur. Déballez-le. Remarquez le parfum. Que ferait le papier d'aluminium ?
+    follow_ups:
+      - Comment la feuille façonne-t-elle le riz ?
+      - Quelle est la relation entre l'emballage et la vapeur ?
+      - Que signifierait non emballé ?
+  - id: chn_mooncake_mold
+    name: Moule à Gâteau de Lune
+    prompt: |
+      Gâteaux de lune – estampillés de caractères, de motifs. Le moule est histoire. Le dessin a un sens. Considérez l'empreinte. Que perdrait un gâteau nature ?
+    follow_ups:
+      - Comment le moule façonne-t-il le gâteau ?
+      - Que signifie le motif ?
+      - Quelle est la relation entre l'empreinte et la tradition ?
+  - id: chn_egg_tart
+    name: Tarte aux Œufs
+    prompt: |
+      Tarte aux œufs – influence portugaise, raffinement hongkongais. La crème, la pâte. Considérez la texture. Feuilletée, soyeuse. Que ferait une autre croûte ?
+    follow_ups:
+      - Comment la tarte façonne-t-elle la fin du repas ?
+      - Quelle est la relation entre la crème et le croustillant ?
+      - Pourquoi une tarte aux œufs pour clore ?
+  - id: chn_hand_pull
+    name: Tiré à la Main
+    prompt: |
+      Nouilles tirées à la main – le cuisinier étire, plie, tire. Les brins se multiplient. C'est une performance. Regardez-la. Que sacrifieraient les nouilles industrielles ?
+    follow_ups:
+      - Comment le tirage façonne-t-il la nouille ?
+      - Quelle est la relation entre la main et la texture ?
+      - Que signifieraient des nouilles uniformes ?
+  - id: chn_bird_nest
+    name: Nid d'Oiseau
+    prompt: |
+      Nid d'oiseau – pas le nid d'hirondelle de soupe, mais un nid de taro, ou un nid de nouilles croustillantes tenant un sauté. Le nid est une architecture. Considérez la forme. Qu'ajoute le nid ?
+    follow_ups:
+      - Comment le nid façonne-t-il le plat ?
+      - Que ferait une assiette ?
+      - Quelle est la relation entre le contenant et le contenu ?
+  - id: chn_red_envelope
+    name: Enveloppe Rouge
+    prompt: |
+      Lors des banquets, des enveloppes rouges peuvent accompagner des cadeaux – argent pour la cuisine, pour les hôtes. L'enveloppe est un rituel. Considérez l'échange. Que signifie le rouge ?
+    follow_ups:
+      - Comment l'enveloppe façonne-t-elle l'occasion ?
+      - Que signifierait l'absence d'enveloppe ?
+      - Quelle est la relation entre le cadeau et la face ?
+  - id: chn_toasting_ritual
+    name: Rituel des Toastes
+    prompt: |
+      Gan bei – cul sec – ou gorgées décontractées. Le toast structure le banquet. Qui trinque à qui ? Quand ? Le rituel est social. Remarquez la chorégraphie. Que serait le repas sans les toasts ?
+    follow_ups:
+      - Comment les toasts façonnent-ils le repas ?
+      - Quelle est la relation entre le toast et la hiérarchie ?
+      - Quand buvez-vous ?
+  - id: chn_preserved_veg
+    name: Légume Conservé
+    prompt: |
+      Moutarde conservée, radis mariné, chou fermenté – ils ajoutent de la profondeur. Ce sont d'anciennes conserves. Considérez la transformation. Que ferait le légume frais ?
+    follow_ups:
+      - Comment la conservation façonne-t-elle le plat ?
+      - Quelle est la relation entre le pickle et l'umami ?
+      - Pourquoi conservé ?
+  - id: chn_sweet_sour
+    name: Sucré-Salé
+    prompt: |
+      Sucré et acide – l'équilibre est délibéré. Sucre, vinaigre, parfois ketchup. La sauce est audacieuse. Considérez la combinaison. Que signifierait l'un sans l'autre ?
+    follow_ups:
+      - Comment l'équilibre façonne-t-il le plat ?
+      - Quelle est la relation entre le sucré et l'acide ?
+      - Pourquoi ce mariage ?
+  - id: chn_wonton_soup
+    name: Soupe Wonton
+    prompt: |
+      Wonton dans un bouillon clair – la soupe est simple. Le wonton flotte. Le bouillon est pur. Considérez le contraste avec le wonton frit. Qu'ajoute le bouillon ?
+    follow_ups:
+      - Comment le bouillon façonne-t-il le wonton ?
+      - Que signifierait frit ?
+      - Quelle est la relation entre le clair et le riche ?
+  - id: chn_cold_dish_start
+    name: Entrée Froide
+    prompt: |
+      Les plats froids ouvrent le repas – poulet saoul, méduse, cornichons. Ils réveillent le palais. Le contraste avec ce qui suit. Considérez l'ouverture. Que ferait un début chaud ?
+    follow_ups:
+      - Comment le froid façonne-t-il le repas ?
+      - Quelle est la relation entre le premier et le suivant ?
+      - Pourquoi commencer par le froid ?
+  - id: chn_fried_rice_wok
+    name: Riz Frit au Wok
+    prompt: |
+      Le riz frit nécessite un wok – chaleur élevée, agitation rapide. Riz de la veille, idéalement. Les grains se séparent. Considérez la technique. Que sacrifierait une poêle ?
+    follow_ups:
+      - Comment le wok façonne-t-il le riz ?
+      - Que ferait le riz frais ?
+      - Quelle est la relation entre la chaleur et la séparation ?
+  - id: chn_lychee_dessert
+    name: Dessert Litchi
+    prompt: |
+      Litchi en dessert – frais, en conserve, au sirop. Le fruit ferme le repas. Sucré, parfumé. Considérez la fin. Que ferait un autre fruit ?
+    follow_ups:
+      - Comment le litchi façonne-t-il la conclusion ?
+      - Quelle est la relation entre le fruit et le finale ?
+      - Pourquoi le litchi ?
+  - id: chn_fortune_cookie
+    name: Biscuit de Fortune
+    prompt: |
+      Biscuit de fortune – invention sino-américaine. Le biscuit est du théâtre. Cassez-le. Lisez la fortune. Le biscuit n'est pas authentique, mais c'est un rituel. Considérez sa place.
+    follow_ups:
+      - Comment se terminerait le repas sans lui ?
+      - Comment la fortune façonne-t-elle la conclusion ?
+      - Quelle est la relation entre le biscuit et l'attente ?
+  - id: chn_century_egg
+    name: Œuf Centenaire
+    prompt: |
+      Œuf centenaire – conservé dans la cendre, l'argile, la chaux. Le jaune devient vert-gris, le blanc s'assombrit en gelée. C'est une transformation sur des semaines. Considérez l'archéologie. Que serait un œuf frais ? Qu'ajoute la conservation ?
+    follow_ups:
+      - Comment la conservation façonne-t-elle la texture ?
+      - Que serait le plat sans l'œuf ?
+      - Quelle est la relation entre le temps et la transformation ?

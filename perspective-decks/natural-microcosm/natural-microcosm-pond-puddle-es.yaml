@@ -1,0 +1,408 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosmos Natural — Estanque y Charco (Spanish)
+
+id: natural_microcosm_pond_puddle
+name: Microcosmos Natural — Estanque y Charco
+description: 50 cartas para cambiar tu perspectiva sobre el agua a pequeña escala, desde la tensión superficial y los reflejos hasta insectos acuáticos, renacuajos y la vida en charcos temporales.
+domain: natural_microcosm
+cards:
+  - id: nmp_surface_tension
+    name: Tensión Superficial
+    prompt: |
+      Un patinador de agua camina sobre el agua. La superficie aguanta — las moléculas se aferran. Deja caer un alfiler suavemente. Flota. Considera la película invisible. ¿Qué la rompería?
+    follow_ups:
+      - ¿Cómo moldea la tensión superficial quién puede vivir aquí?
+      - ¿Qué sería el estanque sin ella?
+      - ¿Cuál es la relación entre la superficie y el límite?
+  - id: nmp_skater_ripple
+    name: Onda del Patinador
+    prompt: |
+      Las patas de un patinador de agua hunden la superficie. Cada paso crea una onda. Observa el patrón. El patinador lee la superficie como un mapa. ¿Qué siente?
+    follow_ups:
+      - ¿Cómo transporta la onda información?
+      - ¿Qué haría el patinador sin la superficie?
+      - ¿Cuál es la relación entre la onda y la presa?
+  - id: nmp_reflection_sky
+    name: Reflejo del Cielo
+    prompt: |
+      Un charco refleja el cielo — o una rama, o a ti. El reflejo invierte. El agua quieta es un espejo. ¿Qué añade el reflejo? ¿Qué oculta?
+    follow_ups:
+      - ¿Qué sería el charco sin reflejo?
+      - ¿Cómo moldea la quietud lo que vemos?
+      - ¿Cuál es la relación entre la superficie y la imagen?
+  - id: nmp_tadpole_tail
+    name: Cola de Renacuajo
+    prompt: |
+      Un renacuajo nada — la cola lo impulsa. La cola será reabsorbida. El animal se está transformando. Considera el entremedio. ¿Qué permite la cola ahora?
+    follow_ups:
+      - ¿Qué sería el renacuajo sin la cola?
+      - ¿Cómo reescribe la metamorfosis el cuerpo?
+      - ¿Cuál es la relación entre forma y función?
+  - id: nmp_dragonfly_egg
+    name: Huevo de Libélula
+    prompt: |
+      Las libélulas ponen huevos en el agua — o en tallos bajo la superficie. La ninfa vive bajo el agua durante años antes de emerger. Considera la vida dividida. ¿Qué conecta el agua y el aire?
+    follow_ups:
+      - ¿Qué sería la libélula sin la etapa acuática?
+      - ¿Cómo moldea la ninfa el estanque?
+      - ¿Cuál es la relación entre la ninfa y el adulto?
+  - id: nmp_algae_bloom
+    name: Floración de Algas
+    prompt: |
+      Verdín en el agua — algas. Es una floración, un pulso. Demasiado nutriente, demasiado sol. El estanque responde. ¿Qué lo desencadena? ¿Qué sigue?
+    follow_ups:
+      - ¿Qué sería el estanque sin algas?
+      - ¿Cómo afecta la floración al oxígeno?
+      - ¿Cuál es la relación entre nutriente y crecimiento?
+  - id: nmp_reed_stem
+    name: Tallo de Juncia
+    prompt: |
+      Juncos y cañas se alzan desde el borde. Son huecos — canales de aire corren por dentro. El tallo conecta agua y aire. ¿Quién usa el junco como escalera?
+    follow_ups:
+      - ¿Qué sería el borde sin juncos?
+      - ¿Cómo permite lo hueco la supervivencia?
+      - ¿Cuál es la relación entre el tallo y el hábitat?
+  - id: nmp_pond_skin
+    name: Piel del Estanque
+    prompt: |
+      El estanque tiene una piel — donde el agua se encuentra con el aire. El polvo cae sobre ella. El aceite se esparce. La piel es delicada. Tócala. ¿Qué separa la piel?
+    follow_ups:
+      - ¿Qué sería el estanque sin la piel?
+      - ¿Cómo afecta la piel al intercambio de gases?
+      - ¿Cuál es la relación entre la superficie y la profundidad?
+  - id: nmp_temporary_pool
+    name: Charco Temporal
+    prompt: |
+      Un charco después de la lluvia — se secará. Sin embargo, la vida se ha adaptado. Camarones de hada, camarones de renacuajo, huevos que esperan. Considera la urgencia. ¿Qué debe suceder antes de que el agua se vaya?
+    follow_ups:
+      - ¿Qué sería el charco si fuera permanente?
+      - ¿Cómo moldea la temporalidad la estrategia?
+      - ¿Cuál es la relación entre tiempo y adaptación?
+  - id: nmp_whirligig_gyre
+    name: Giro del Escrepa
+    prompt: |
+      Los esgrepa giran en la superficie. Ven arriba y abajo — ojos divididos. Son depredadores y presas. Considera la doble visión. ¿Qué permite?
+    follow_ups:
+      - ¿Qué sería el esgrepa sin visión dividida?
+      - ¿Cómo confunde el giro a los depredadores?
+      - ¿Cuál es la relación entre el giro y la supervivencia?
+  - id: nmp_diving_spider
+    name: Araña Buceadora
+    prompt: |
+      Una araña buceadora lleva una burbuja de aire — una campana de buceo. Respira bajo el agua. La burbuja es un pulmón. Considera la invención. ¿Qué haría la araña sin ella?
+    follow_ups:
+      - ¿Cómo permite la burbuja la caza?
+      - ¿Qué pasaría si la burbuja estallara?
+      - ¿Cuál es la relación entre el aire y el agua?
+  - id: nmp_pond_scum
+    name: Lodo del Estanque
+    prompt: |
+      Se forma lodo en el borde — polen, polvo, algas, insectos. Es una capa límite. ¿Qué se acumula allí? ¿Quién se alimenta de ello? El lodo es un filtro.
+    follow_ups:
+      - ¿Qué sería el estanque sin el lodo?
+      - ¿Cómo concentra el borde la vida?
+      - ¿Cuál es la relación entre el límite y la acumulación?
+  - id: nmp_ice_surface
+    name: Superficie Helada
+    prompt: |
+      En invierno, el estanque se congela. El hielo aguanta. Debajo, la vida continúa — más lenta, más fría. Considera la barrera. ¿Qué protege el hielo? ¿Qué bloquea?
+    follow_ups:
+      - ¿Qué sería el estanque sin hielo?
+      - ¿Cómo afecta la congelación al oxígeno?
+      - ¿Cuál es la relación entre el hielo y la supervivencia?
+  - id: nmp_minnow_school
+    name: Cardumen de Piscardos
+    prompt: |
+      Los piscardos van en cardumen — se mueven como uno. El cardumen es defensa, eficiencia. Observa la sincronía. ¿Qué los coordina? ¿Qué riesgo correría un pisco solitario?
+    follow_ups:
+      - ¿Qué sería el estanque sin el cardumen?
+      - ¿Cómo reduce el cardumen la depredación?
+      - ¿Cuál es la relación entre el individuo y el grupo?
+  - id: nmp_lily_pad
+    name: Nenúfar
+    prompt: |
+      Un nenúfar flota. Su parte inferior es diferente de su parte superior — pelos, color. El nenúfar es una plataforma. ¿Qué aterriza en él? ¿Qué vive debajo?
+    follow_ups:
+      - ¿Qué sería el estanque sin nenúfares?
+      - ¿Cómo moldea el nenúfar la luz de abajo?
+      - ¿Cuál es la relación entre el nenúfar y la sombra?
+  - id: nmp_ripple_spread
+    name: Propagación de la Onda
+    prompt: |
+      Cae una piedra. Las ondas se extienden. Se cruzan, interfieren. El patrón transporta energía. Considera la decadencia. ¿Hasta dónde viajan las ondas?
+    follow_ups:
+      - ¿Qué sería la superficie sin ondas?
+      - ¿Cómo marca la onda el impacto?
+      - ¿Cuál es la relación entre la perturbación y la propagación?
+  - id: nmp_mosquito_wiggle
+    name: Vibración del Mosquito
+    prompt: |
+      Las larvas de mosquito cuelgan de la superficie — son "wigglers". Respiran a través de un sifón. La vibración es movimiento, alimentación. Considera el mundo de la larva. ¿Qué come?
+    follow_ups:
+      - ¿Qué sería el estanque sin mosquitos?
+      - ¿Cómo evita la vibración a los depredadores?
+      - ¿Cuál es la relación entre la larva y el adulto?
+  - id: nmp_leaf_boat
+    name: Barco de Hoja
+    prompt: |
+      Una hoja flota — caída, a la deriva. Es una balsa para algunos, comida para otros. La hoja se hundirá, se descompondrá. Rastrea su viaje. ¿En qué se convertirá?
+    follow_ups:
+      - ¿Qué sería la superficie sin desechos flotantes?
+      - ¿Cómo crea la hoja un microhábitat?
+      - ¿Cuál es la relación entre flotar y hundirse?
+  - id: nmp_backswimmer_top
+    name: Bocado de Espalda (Vista Superior)
+    prompt: |
+      Un bocado de espalda nada boca abajo — vientre hacia el cielo. Rema con sus patas. Respira en la superficie y luego bucea. Considera la inversión. ¿Por qué boca abajo?
+    follow_ups:
+      - ¿Qué sería el bocado de espalda si estuviera boca arriba?
+      - ¿Cómo ayuda la postura a la caza?
+      - ¿Cuál es la relación entre la orientación y la presa?
+  - id: nmp_snail_trail
+    name: Rastro de Caracol
+    prompt: |
+      Un caracol de estanque se desliza. Deja un rastro — moco, movimiento. El rastro marca por dónde ha pasado. Otros caracoles pueden seguirlo. Considera el camino. ¿Qué comunica el rastro?
+    follow_ups:
+      - ¿Qué sería el caracol sin el rastro?
+      - ¿Cómo permite el moco el movimiento?
+      - ¿Cuál es la relación entre el rastro y el seguimiento?
+  - id: nmp_dew_drop
+    name: Gota de Rocío
+    prompt: |
+      El rocío se forma en una brizna sobre el agua — gotas, refleja. Es condensación. La gota aguanta. Luego cae. Considera la gota. ¿Qué magnifica?
+    follow_ups:
+      - ¿Qué sería la brizna sin rocío?
+      - ¿Cómo curva la gota la luz?
+      - ¿Cuál es la relación entre la gota y la superficie?
+  - id: nmp_spring_constant
+    name: Constante de Manantial
+    prompt: |
+      Un manantial alimenta el estanque — o el estanque se filtra. El nivel del agua es equilibrio. Considera la entrada y la salida. ¿Qué sostiene el charco? ¿Qué lo secaría?
+    follow_ups:
+      - ¿Qué sería el estanque sin el manantial?
+      - ¿Cómo moldea la fuente el agua?
+      - ¿Cuál es la relación entre la entrada y la vida?
+  - id: nmp_edge_ecotone
+    name: Ecotono del Borde
+    prompt: |
+      El borde del estanque es un ecotono — transición. Húmedo se encuentra con seco. Las plantas se adaptan. Los animales cruzan. El borde es diversidad. ¿Qué prospera en el intermedio?
+    follow_ups:
+      - ¿Qué sería el estanque sin el borde?
+      - ¿Cómo crea el ecotono oportunidades?
+      - ¿Cuál es la relación entre el límite y la diversidad?
+  - id: nmp_frog_eye
+    name: Ojo de Rana
+    prompt: |
+      Una rana se sienta en el borde. Sus ojos se abultan — ve arriba y adelante. La rana está quieta. Luego, la lengua dispara. Considera la paciencia. ¿Qué espera?
+    follow_ups:
+      - ¿Qué sería la rana sin los ojos abultados?
+      - ¿Cómo permite la quietud el ataque?
+      - ¿Cuál es la relación entre esperar y atrapar?
+  - id: nmp_oxygen_bubble
+    name: Burbuja de Oxígeno
+    prompt: |
+      Las plantas en el estanque producen oxígeno — burbujas suben. En un día soleado, el agua respira. Considera el intercambio. ¿Qué sería el estanque sin fotosíntesis?
+    follow_ups:
+      - ¿Cómo moldea el oxígeno quién puede vivir aquí?
+      - ¿Qué sucede cuando el oxígeno escasea?
+      - ¿Cuál es la relación entre la luz y la respiración?
+  - id: nmp_detritus_floor
+    name: Fondo de Detritus
+    prompt: |
+      El fondo del estanque es detritus — hojas caídas, insectos muertos, sedimento. Es una capa de descomposición. ¿Qué vive en él? ¿Quién se alimenta de él? El fondo es una despensa.
+    follow_ups:
+      - ¿Qué sería el estanque sin detritus?
+      - ¿Cómo nutre el fondo la columna de agua?
+      - ¿Cuál es la relación entre el fondo y la superficie?
+  - id: nmp_rain_ring
+    name: Anillo de Lluvia
+    prompt: |
+      La lluvia golpea la superficie. Cada gota forma un anillo — una corona, luego un cráter. La lluvia texturiza el agua. Considera el patrón. ¿Qué significaría una superficie quieta?
+    follow_ups:
+      - ¿Cómo oxigena la lluvia el agua?
+      - ¿Qué perturban los anillos?
+      - ¿Cuál es la relación entre la lluvia y la superficie?
+  - id: nmp_duckweed_carpet
+    name: Alfombra de Lechuga de Agua
+    prompt: |
+      La lechuga de agua alfombra la superficie — pequeñas plantas flotantes. Se multiplican rápido. La alfombra da sombra a lo de abajo. Considera la cobertura. ¿Qué significaría pleno sol?
+    follow_ups:
+      - ¿Qué sería el estanque sin lechuga de agua?
+      - ¿Cómo afecta la alfombra a la temperatura?
+      - ¿Cuál es la relación entre la cobertura y la vida debajo?
+  - id: nmp_phantom_midgie
+    name: Mosquito Fantasma
+    prompt: |
+      Las larvas de mosquito fantasma son transparentes — fantasmales. Cuelgan en el agua. Ves a través de ellas. Considera la invisibilidad. ¿Qué protege la transparencia?
+    follow_ups:
+      - ¿Qué sería la larva si fuera opaca?
+      - ¿Cómo ayuda la transparencia a la depredación?
+      - ¿Cuál es la relación entre ser transparente y la supervivencia?
+  - id: nmp_skimmer_skip
+    name: Salto del Lanzador
+    prompt: |
+      Una piedra salta sobre la superficie — una, dos, tres. Cada rebote transfiere energía. El lanzador eventualmente se hunde. Considera el límite. ¿Qué determina el número de saltos?
+    follow_ups:
+      - ¿Qué haría la piedra sin el giro?
+      - ¿Cómo moldea el ángulo el salto?
+      - ¿Cuál es la relación entre el lanzamiento y el rebote?
+  - id: nmp_pollinator_drink
+    name: Bebida del Polinizador
+    prompt: |
+      Una abeja bebe en el borde. Las mariposas se congregan en un charco de lodo. El agua es un recurso. Considera quién viene. ¿Qué necesitan del agua?
+    follow_ups:
+      - ¿Qué harían los polinizadores sin el charco?
+      - ¿Cómo permite el borde beber?
+      - ¿Cuál es la relación entre el agua y el mineral?
+  - id: nmp_evaporation_skin
+    name: Piel de Evaporación
+    prompt: |
+      El estanque pierde agua por evaporación. En verano, el nivel baja. La orilla se expande. Considera la retirada. ¿Qué queda expuesto? ¿Quién queda varado?
+    follow_ups:
+      - ¿Qué sería el estanque sin evaporación?
+      - ¿Cómo concentra la bajada la vida?
+      - ¿Cuál es la relación entre la pérdida y la concentración?
+  - id: nmp_hydra_stalk
+    name: Tallo de Hidra
+    prompt: |
+      Una hidra — diminuta, con tentáculos — se ancla a un tallo. Pica presas, las acerca. La hidra puede regenerarse. Considera la simplicidad. ¿Qué plan corporal utiliza?
+    follow_ups:
+      - ¿Qué sería el estanque sin hidras?
+      - ¿Cómo ayuda la regeneración a la supervivencia?
+      - ¿Cuál es la relación entre simplicidad y resiliencia?
+  - id: nmp_boatman_row
+    name: Remo de Barcquero
+    prompt: |
+      Un barquero de agua rema — patas como remos. A menudo está boca abajo, aferrado a la superficie. Se alimenta de algas. Considera los remos. ¿Qué propulsan?
+    follow_ups:
+      - ¿Qué sería el barquero sin los remos?
+      - ¿En qué se diferencia el remo del bocado de espalda?
+      - ¿Cuál es la relación entre la pata y el movimiento?
+  - id: nmp_caddisfly_case
+    name: Estuche de Tricóptero
+    prompt: |
+      La larva de tricóptero construye un estuche — ramitas, piedras, conchas. Lo pega con seda. El estuche es armadura y camuflaje. Considera la construcción. ¿Qué elige la larva?
+    follow_ups:
+      - ¿Qué sería la larva sin el estuche?
+      - ¿Cómo varía el estuche según el hábitat?
+      - ¿Cuál es la relación entre el material y la protección?
+  - id: nmp_damselfly_emergence
+    name: Emergencia de Damisela
+    prompt: |
+      Una damisela emerge — la ninfa trepa un tallo, rompe su piel, el adulto se libera. Las alas se despliegan. El momento es vulnerable. Considera la transformación. ¿Qué podría salir mal?
+    follow_ups:
+      - ¿Qué sería el adulto sin la escalada?
+      - ¿Cómo moldea la emergencia el momento?
+      - ¿Cuál es la relación entre la ninfa y el adulto?
+  - id: nmp_floating_feather
+    name: Pluma Flotante
+    prompt: |
+      Una pluma flota — descartada por un ave. Cabalga sobre la superficie. El agua se agrupa en ella. Considera la pluma. ¿Qué mantuvo al ave seca? ¿Qué hace la pluma ahora?
+    follow_ups:
+      - ¿Qué sería la superficie sin objetos flotantes?
+      - ¿Cómo atrapa la pluma el aire?
+      - ¿Cuál es la relación entre la estructura y el flotar?
+  - id: nmp_moon_jelly
+    name: Medusa de Luna
+    prompt: |
+      En algunos estanques, medusas — medusas de luna. Pulsa. Son mayormente agua. Considera el cuerpo. ¿Qué captura la jalea? ¿Qué evita?
+    follow_ups:
+      - ¿Qué sería el estanque sin medusas?
+      - ¿Cómo crea el pulso movimiento?
+      - ¿Cuál es la relación entre el agua y el cuerpo?
+  - id: nmp_seep_source
+    name: Fuente de Filtración
+    prompt: |
+      El agua se filtra de la orilla — un manantial, flujo lento. La filtración alimenta el estanque. O el estanque gotea. Considera el límite. ¿Qué cruza? ¿Qué se mantiene?
+    follow_ups:
+      - ¿Qué sería el estanque sin la filtración?
+      - ¿Cómo moldea la filtración la química?
+      - ¿Cuál es la relación entre la fuente y el estanque?
+  - id: nmp_wind_wave
+    name: Ola del Viento
+    prompt: |
+      El viento empuja la superficie. Se forman pequeñas olas. Rompen en el borde. Considera el fetch — la distancia que el viento viaja sobre el agua. ¿Qué moldea la ola?
+    follow_ups:
+      - ¿Qué sería la superficie sin viento?
+      - ¿Cómo afectan las olas al oxígeno?
+      - ¿Cuál es la relación entre el viento y la mezcla?
+  - id: nmp_rotifer_wheel
+    name: Rueda de Rotífero
+    prompt: |
+      Los rotíferos son microscópicos — tienen una rueda de cilios. Gira, atrae comida. El rotífero es un motor. Considera la escala. ¿Qué más hay en esta agua?
+    follow_ups:
+      - ¿Qué sería el estanque sin rotíferos?
+      - ¿Cómo crea la rueda flujo?
+      - ¿Cuál es la relación entre los cilios y la alimentación?
+  - id: nmp_temperature_layer
+    name: Capa de Temperatura
+    prompt: |
+      Los estanques pueden estratificarse — cálido arriba, frío abajo. Las capas no se mezclan fácilmente. Considera el límite. ¿Quién vive dónde? ¿Qué sucede cuando el estanque se voltea?
+    follow_ups:
+      - ¿Qué sería el estanque sin estratificación?
+      - ¿Cómo moldea la temperatura el oxígeno?
+      - ¿Cuál es la relación entre la capa y la vida?
+  - id: nmp_predator_shadow
+    name: Sombra del Depredador
+    prompt: |
+      Pasa la sombra de un pez. La presa se congela, se dispersa. La sombra es una señal. Considera la respuesta. ¿Qué significaría una sombra constante? ¿Qué significaría ninguna sombra?
+    follow_ups:
+      - ¿Cómo desencadena la sombra el escape?
+      - ¿Qué otras señales además de la sombra importan?
+      - ¿Cuál es la relación entre la sombra y la supervivencia?
+  - id: nmp_surface_film
+    name: Película Superficial
+    prompt: |
+      Una fina película sobre el agua — polen, bacterias, materia orgánica. Puede soportar peso. Algunos insectos caminan sobre ella. Considera la película. ¿Qué la rompería?
+    follow_ups:
+      - ¿Qué sería la superficie sin la película?
+      - ¿Cómo afecta la película al intercambio de gases?
+      - ¿Cuál es la relación entre la película y el límite?
+  - id: nmp_dry_wait
+    name: Espera Seca
+    prompt: |
+      El charco se secará. Algunos organismos tienen huevos resistentes a la desecación. Esperan. La próxima lluvia puede estar a meses de distancia. Considera la apuesta. ¿Qué debe alinearse para el éxito?
+    follow_ups:
+      - ¿Qué sería el charco sin la espera?
+      - ¿Cómo abarca la latencia la sequía?
+      - ¿Cuál es la relación entre el huevo y la lluvia?
+  - id: nmp_shoreline_wrack
+    name: Detrito de Orilla
+    prompt: |
+      Los escombros se acumulan en la orilla — hojas, ramitas, insectos muertos. El detrito es una línea. Marca la marea alta. Considera la acumulación. ¿Quién se alimenta aquí?
+    follow_ups:
+      - ¿Qué sería el borde sin el detrito?
+      - ¿Cómo crea el detrito hábitat?
+      - ¿Cuál es la relación entre la línea y el nivel?
+  - id: nmp_duckweed_carpet
+    name: Alfombra de Lechuga de Agua
+    prompt: |
+      La lechuga de agua alfombra el agua quieta — pequeños discos verdes. Se extiende rápido. La superficie se vuelve sólida. Considera la invasión. ¿Qué bloquea la alfombra? ¿Qué permite?
+    follow_ups:
+      - ¿Qué sería el estanque sin lechuga de agua?
+      - ¿Cómo afecta la alfombra a la luz y al oxígeno?
+      - ¿Cuál es la relación entre la cobertura y la vida debajo?
+  - id: nmp_rain_ring
+    name: Anillo de Lluvia
+    prompt: |
+      Una gota de lluvia golpea la superficie. Un anillo se expande, se desvanece. En una lluvia, la superficie se vuelve textura — anillos superpuestos. Considera el patrón. ¿Qué le hace la lluvia al estanque?
+    follow_ups:
+      - ¿Qué sería la superficie sin lluvia?
+      - ¿Cómo mezcla la lluvia el agua?
+      - ¿Cuál es la relación entre la gota y el anillo?
+  - id: nmp_minnow_school
+    name: Cardumen de Piscardos
+    prompt: |
+      Los piscardos van en cardumen — docenas se mueven como uno. El cardumen es una estrategia. Los depredadores se confunden. Considera la coordinación. ¿Cómo deciden? ¿Qué costaría la soledad?
+    follow_ups:
+      - ¿Qué sería el estanque sin cardúmenes?
+      - ¿Cómo responde el cardumen a la amenaza?
+      - ¿Cuál es la relación entre muchos y uno?
+  - id: nmp_ice_edge
+    name: Borde Helado
+    prompt: |
+      En invierno, el hielo crece desde el borde. El límite avanza. Debajo, la vida persiste — más fría, más lenta. Considera el borde. ¿Qué sobrevive bajo el hielo?
+    follow_ups:
+      - ¿Qué sería el estanque sin hielo?
+      - ¿Cómo protege o amenaza el hielo?
+      - ¿Cuál es la relación entre la congelación y el oxígeno?

@@ -59,11 +59,18 @@ export async function PATCH(
     const enrichmentPrompt = body.enrichmentPrompt as string | undefined;
     const title = body.title as string | undefined;
     const summary = body.summary as string | undefined;
-    const updates: { enrichmentPrompt?: string; title?: string; summary?: string } =
+    const sourceVideoTitle = body.sourceVideoTitle as string | undefined;
+    const updates: {
+      enrichmentPrompt?: string;
+      title?: string;
+      summary?: string;
+      sourceVideoTitle?: string;
+    } =
       {};
     if (typeof enrichmentPrompt === "string") updates.enrichmentPrompt = enrichmentPrompt;
     if (typeof title === "string") updates.title = title;
     if (typeof summary === "string") updates.summary = summary;
+    if (typeof sourceVideoTitle === "string") updates.sourceVideoTitle = sourceVideoTitle;
     if (Object.keys(updates).length === 0) {
       return NextResponse.json({ error: "No valid updates" }, { status: 400 });
     }

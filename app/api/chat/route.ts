@@ -63,6 +63,20 @@ const SYSTEM_PROMPT = `You are a decision-making coach—a wise friend or a clea
     - Custom concepts: [[concept:ID]]
     - Concept groups: [[group:ID]]
 
+## Optional: Journal Checkpoint
+When the conversation reaches a reflective moment—the user lands on a conclusion, expresses a realization, or identifies a concrete next step—you MAY include a journal checkpoint. This is OPTIONAL; omit it if the moment does not warrant it. Include at most 2 journal checkpoints per conversation total; if you have already included 2, do not add another. **Only include a journal checkpoint in your final or concluding response**—never in intermediate responses during an ongoing back-and-forth.
+
+If you include it, place it AFTER your main text and BEFORE ---OPTIONS---. Format exactly:
+
+---JOURNAL-CHECKPOINT---
+{"prompt": "Today I realized _____", "options": ["option 1", "option 2", "option 3", "option 4"]}
+---END-JOURNAL-CHECKPOINT---
+
+- **prompt:** One or more fill-in-the-blank sentences (use _____ for each blank). First-person, reflective. You may use multiple blanks, e.g. "Today I realized _____ and I want to _____".
+- **options:** 3–6 short phrases the user can select for each blank. First-person.
+
+Example prompts: "Today I realized _____", "What I want to remember is _____", "I realized _____ and tomorrow I will _____".
+
 ## Output Requirement: Follow-up Options
 ALWAYS end EVERY response with exactly 4 follow-up options the user can choose from. 
 
@@ -95,7 +109,18 @@ const PERSPECTIVE_CARD_SYSTEM_PROMPT = `You are a guide helping the user dive de
 - **Guide toward insight:** Gently steer the conversation so the user arrives at a fresh perspective or realization—not just surface-level engagement.
 - **Be curious and warm:** Conversational, supportive, never lecturing. Reflect back what they share and probe in directions that unlock new understanding.
 - **Meet them where they are:** If they name something specific (an artwork, a decision, a memory), use the card to explore it. If they're unsure, offer a concrete way to start—e.g., "What's one thing in front of you right now we could look at through this lens?"
+- **When they ask for knowledge, give it:** If the user explicitly asks for information, explanation, or guidance—e.g., "tell me more about X," "explain Y," "help me understand," "guide me with better knowledge"—provide that knowledge directly. The perspective card is a lens to explore with, not a constraint. Share what you know when they ask for it, then you can weave the card back in to deepen their understanding.
 - **Keep it scannable:** Short paragraphs, **bold** for emphasis, bullet points when helpful.
+
+## Optional: Journal Checkpoint
+When the user reaches a reflective moment or fresh perspective, you MAY include a journal checkpoint. Include at most 2 per conversation total. **Only include it in your final or concluding response**—never in intermediate responses. Place it AFTER your main text and BEFORE ---OPTIONS---. Format exactly:
+
+---JOURNAL-CHECKPOINT---
+{"prompt": "Through this lens I noticed _____", "options": ["option 1", "option 2", "option 3", "option 4"]}
+---END-JOURNAL-CHECKPOINT---
+
+- **prompt:** One or more fill-in-the-blanks (use _____ for each). First-person, reflective. May have multiple blanks.
+- **options:** 3–6 short phrases per blank. First-person.
 
 ## Output Requirement
 ALWAYS end EVERY response with exactly 4 follow-up options the user can choose from. Phrase them in the user's voice (first-person), as potential directions or realizations. Format:
@@ -108,6 +133,8 @@ ALWAYS end EVERY response with exactly 4 follow-up options the user can choose f
 `;
 
 const PERSPECTIVE_CARD_CONTEXT_ADDITION = `ACTIVE PERSPECTIVE CARD: The user wants to explore through this lens. Use it to help them dive deeper and gain new perspectives. Do not repeat the prompt verbatim—weave it into questions and reflections that lead to discovery.
+
+When the user explicitly asks for knowledge, explanation, or guidance (e.g., "tell me more about X," "explain Y," "help me understand," "guide me with better knowledge"), provide that information directly. The card is a lens, not a constraint—share what you know when they ask, then use the lens to deepen their understanding.
 
 "[Insert Card Prompt Here]"
 
@@ -151,6 +178,7 @@ export async function POST(request: Request) {
   let prependMessages: { role: string; content: string }[] = [];
   let activeCardPrompt: string | undefined;
   let activeCardName: string | undefined;
+  let journalCheckpoint: string | undefined;
 
   try {
     const body = await request.json();
@@ -213,6 +241,9 @@ export async function POST(request: Request) {
         ? body.activeCardName.trim()
         : "Perspective card";
     }
+    if (typeof body.journalCheckpoint === "string" && body.journalCheckpoint.trim()) {
+      journalCheckpoint = body.journalCheckpoint.trim();
+    }
 
     if (!message || typeof message !== "string") {
       return NextResponse.json(
@@ -260,6 +291,16 @@ export async function POST(request: Request) {
       sessionId = newSession._id;
     }
 
+    if (activeCardPrompt && sessionId) {
+      await updateSession(sessionId, userId!, {
+        perspectiveCardPrompt: activeCardPrompt,
+        perspectiveCardName: activeCardName ?? "Perspective card",
+      });
+    } else if (!activeCardPrompt && session?.perspectiveCardPrompt) {
+      activeCardPrompt = session.perspectiveCardPrompt;
+      activeCardName = session.perspectiveCardName ?? "Perspective card";
+    }
+
     const [
       existingMessages,
       ltmEnrichmentWithIdsRes,
@@ -299,8 +340,11 @@ export async function POST(request: Request) {
     ccEnrichmentWithIds = ccEnrichmentRes;
   }
 
+  const convertedToDeep = !isAnonymous && !incognito && sessionId
+    ? (await getSession(sessionId, userId!))?.convertedToDeepConversation
+    : false;
   const isLightweight =
-    !!activeCardPrompt && messagesForModel.length <= 1;
+    !!activeCardPrompt && !convertedToDeep;
 
   let fullSystemPrompt: string;
   let contextBlockForStream: string;
@@ -315,10 +359,10 @@ export async function POST(request: Request) {
       language !== "en"
         ? `\n\nLANGUAGE: Respond in ${getLanguageName(language as LanguageCode)}.`
         : "";
+    const cardInPrepend = messagesForModel[0]?.role === "assistant";
     fullSystemPrompt =
       PERSPECTIVE_CARD_SYSTEM_PROMPT +
-      "\n\nPERSPECTIVE CARD PROMPT:\n" +
-      activeCardPrompt! +
+      (cardInPrepend ? "" : "\n\nPERSPECTIVE CARD PROMPT:\n" + activeCardPrompt!) +
       langInstr;
     predictedContextResult = {
       mentalModels: [],
@@ -663,6 +707,9 @@ export async function POST(request: Request) {
   }
 
   if (process.env.NODE_ENV === "development") {
+    const modeLabel = isLightweight ? "lightweight (PERSPECTIVE_CARD_SYSTEM_PROMPT only)" : "full (SYSTEM_PROMPT + context)";
+    console.debug(formatDevLogBlock("[Chat] MODE", modeLabel));
+    console.debug(formatDevLogBlock("[Chat] LLM SYSTEM PROMPT", systemPromptForGemini));
     const requestText = messagesForGemini
       .map(
         (m, index) =>
@@ -674,7 +721,7 @@ export async function POST(request: Request) {
 
   try {
     if (!isAnonymous && !incognito && sessionId) {
-      await appendMessage(sessionId, "user", rawMessage ?? message);
+      await appendMessage(sessionId, "user", rawMessage ?? message, journalCheckpoint ? { journalCheckpoint } : undefined);
     }
 
     const encoder = new TextEncoder();

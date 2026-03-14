@@ -1,0 +1,566 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# La Interfaz Humana — Espacio Público (Spanish)
+
+id: human_interface_public_space
+name: La Interfaz Humana — Espacio Público
+description: 50 cartas para cambiar tu perspectiva del espacio público, desde bancos y senderos hasta la coreografía de extraños y objetos como talismanes.
+domain: human_interface
+cards:
+  - id: hi_ps_bench_occupation
+    name: Ocupación de Banco
+    prompt: |
+      Un banco está ocupado —por un cuerpo, una bolsa, una postura. El banco es un recurso
+      escaso. Observa quién se sienta, quién se queda de pie, quién pasa. El banco tiene
+      significados diferentes para personas diferentes. ¿Qué proporciona?
+    follow_ups:
+      - ¿Cómo moldea el banco el espacio?
+      - ¿Qué sería el parque sin bancos?
+      - ¿Cuál es la relación entre el banco y el descanso?
+  - id: hi_ps_pathway_flow
+    name: Flujo del Sendero
+    prompt: |
+      El sendero canaliza el movimiento. Las personas caminan —solas, en parejas, en grupos. El
+      flujo tiene dirección. Observa la colisión. ¿Quién cede? El sendero es
+      un corredor compartido. ¿Qué reglas lo rigen?
+    follow_ups:
+      - ¿Cómo moldea el sendero la caminata?
+      - ¿Qué sería el espacio sin senderos?
+      - ¿Cuál es la relación entre el sendero y el destino?
+  - id: hi_ps_strangers_choreography
+    name: Coreografía de Extraños
+    prompt: |
+      Cuerpos no relacionados se mueven a través de un espacio compartido. La coreografía es
+      no hablada —un paso a un lado, una pausa, una fusión. Observa la danza. Nadie habla.
+      La coreografía es puro cuerpo. ¿Qué requiere?
+    follow_ups:
+      - ¿Cómo moldea la coreografía el espacio?
+      - ¿Qué pasaría si todos se detuvieran?
+      - ¿Cuál es la relación entre la coreografía y la civilidad?
+  - id: hi_ps_object_talisman
+    name: Objeto como Talismán
+    prompt: |
+      Un libro en un banco. Una bolsa en una silla. El objeto ocupa un lugar. Dice
+      "Estoy aquí" o "Volveré". El objeto es un talismán. Observa la
+      ocupación. ¿Qué protege?
+    follow_ups:
+      - ¿Cómo moldea el talismán el espacio?
+      - ¿Qué sería el espacio sin tales ocupaciones?
+      - ¿Cuál es la relación entre el objeto y la presencia?
+  - id: hi_ps_bench_armrest
+    name: Reposabrazos del Banco
+    prompt: |
+      Algunos bancos tienen reposabrazos. Dividen el asiento. Previenen tumbarse.
+      El reposabrazos es un diseño con intención. Observa quién lo usa. ¿Qué excluye el
+      reposabrazos?
+    follow_ups:
+      - ¿Cómo moldea el reposabrazos el banco?
+      - ¿Qué sería el banco sin él?
+      - ¿Cuál es la relación entre el reposabrazos y el control?
+  - id: hi_ps_pathway_intersection
+    name: Intersección de Senderos
+    prompt: |
+      Los senderos se cruzan. Los cuerpos convergen. La intersección es un punto de colisión.
+      Observa la fusión. ¿Qué sucede cuando se encuentran los flujos? La intersección
+      requiere negociación. ¿Qué extrae?
+    follow_ups:
+      - ¿Cómo moldea la intersección el flujo?
+      - ¿Qué sería el espacio sin intersecciones?
+      - ¿Cuál es la relación entre la intersección y la atención?
+  - id: hi_ps_eye_contact_avoid
+    name: Evitar el Contacto Visual
+    prompt: |
+      Los extraños evitan el contacto visual. La evitación es educada. Mirar es arriesgarse a
+      la conexión. Observa la mirada. La evitación es un contrato. ¿Qué permite? ¿Qué
+      cuesta?
+    follow_ups:
+      - ¿Cómo moldea la evitación el espacio?
+      - ¿Qué sería el espacio con más contacto?
+      - ¿Cuál es la relación entre la mirada y la privacidad?
+  - id: hi_ps_bench_share
+    name: Compartir Banco
+    prompt: |
+      Dos extraños comparten un banco. Espacio entre ellos. El compartir es
+      proximidad sin conexión. Observa el límite. ¿Cuán cerca es
+      demasiado cerca? El compartir es un equilibrio delicado.
+    follow_ups:
+      - ¿Cómo moldea el compartir el banco?
+      - ¿Qué sería el banco con una sola persona?
+      - ¿Cuál es la relación entre compartir y tolerancia?
+  - id: hi_ps_pathway_width
+    name: Ancho del Sendero
+    prompt: |
+      El sendero es ancho o estrecho. El ancho afecta el flujo. Dos personas
+      pueden pasar o no. Observa el ancho. ¿Qué asume sobre la
+      multitud? El ancho es diseño. ¿Qué permite?
+    follow_ups:
+      - ¿Cómo moldea el ancho la caminata?
+      - ¿Qué sería el sendero si fuera más ancho?
+      - ¿Cuál es la relación entre el ancho y la comodidad?
+  - id: hi_ps_bench_sun
+    name: Banco al Sol
+    prompt: |
+      El banco está orientado al sol. O a la sombra. La posición importa. Observa
+      quién elige cuál. El sol es un recurso. ¿Qué proporciona? El
+      banco al sol es codiciado.
+    follow_ups:
+      - ¿Cómo moldea el sol el banco?
+      - ¿Qué sería el espacio sin sol?
+      - ¿Cuál es la relación entre el sol y el descanso?
+  - id: hi_ps_stranger_proximity
+    name: Proximidad de Extraños
+    prompt: |
+      Un extraño se acerca —en una fila, en un autobús. La proximidad es
+      impersonal pero íntima. Observa la tolerancia. ¿Qué permite el cuerpo?
+      La proximidad es un contrato. ¿Cuáles son sus términos?
+    follow_ups:
+      - ¿Cómo moldea la proximidad el espacio?
+      - ¿Qué sería el espacio con más espacio?
+      - ¿Cuál es la relación entre la proximidad y la civilidad?
+  - id: hi_ps_object_left
+    name: Objeto Dejado
+    prompt: |
+      Una chaqueta en un banco. Una bolsa debajo de un árbol. El objeto dejado marca
+      territorio. Observa la ocupación. ¿Por cuánto tiempo puede retener? El objeto dejado
+      es una prueba. ¿Qué requiere de los demás?
+    follow_ups:
+      - ¿Cómo moldea el objeto el espacio?
+      - ¿Qué sería el espacio sin tales ocupaciones?
+      - ¿Cuál es la relación entre el objeto y la confianza?
+  - id: hi_ps_pathway_obstacle
+    name: Obstáculo en el Sendero
+    prompt: |
+      Algo bloquea el sendero —obras, una multitud, un artista. El
+      obstáculo desvía el flujo. Observa el desvío. ¿Qué requiere el obstáculo?
+      El sendero nunca es puro. ¿Qué lo interrumpe?
+    follow_ups:
+      - ¿Cómo moldea el obstáculo el flujo?
+      - ¿Qué sería el sendero sin obstáculos?
+      - ¿Cuál es la relación entre el obstáculo y la adaptación?
+  - id: hi_ps_bench_alone
+    name: Banco Solo
+    prompt: |
+      Una persona en un banco. El estar solo es visible. El banco alberga
+      la soledad. Observa la postura. ¿Qué proporciona el banco solo?
+      El banco solo es una elección. ¿Qué permite?
+    follow_ups:
+      - ¿Cómo moldea la soledad el banco?
+      - ¿Qué sería el espacio sin bancos?
+      - ¿Cuál es la relación entre la soledad y el descanso?
+  - id: hi_ps_nod_acknowledge
+    name: Asentimiento de Reconocimiento
+    prompt: |
+      Un ligero asentimiento. Una breve sonrisa. El reconocimiento es mínimo. Dice "Te
+      veo" sin compromiso. Observa cuándo ocurre. El asentimiento es una pequeña civilidad. ¿Qué crea?
+    follow_ups:
+      - ¿Cómo moldea el asentimiento el espacio?
+      - ¿Qué sería el espacio sin él?
+      - ¿Cuál es la relación entre el asentimiento y la seguridad?
+  - id: hi_ps_pathway_edge
+    name: Borde del Sendero
+    prompt: |
+      El sendero tiene bordes —césped, bordillo, barrera. El borde define el sendero.
+      Observa quién permanece en el sendero. ¿Quién lo cruza? El borde es un límite.
+      ¿Qué contiene?
+    follow_ups:
+      - ¿Cómo moldea el borde la caminata?
+      - ¿Qué sería el sendero sin bordes?
+      - ¿Cuál es la relación entre el borde y la libertad?
+  - id: hi_ps_bench_claim
+    name: Ocupación de Banco
+    prompt: |
+      El banco está tomado —por la extensión, por la postura, por la bolsa. La ocupación dice "esto
+      es mío". Observa la ocupación. ¿Cómo se hace? La ocupación es territorio.
+      ¿Qué protege?
+    follow_ups:
+      - ¿Cómo moldea la ocupación el banco?
+      - ¿Qué sería el espacio sin ocupaciones?
+      - ¿Cuál es la relación entre la ocupación y la comodidad?
+  - id: hi_ps_stranger_help
+    name: Ayuda de un Extraño
+    prompt: |
+      "¿Necesitas una mano?" Un extraño se ofrece. La ayuda es inesperada. Observa el
+      intercambio. ¿Aceptar o declinar? La ayuda de un extraño es un regalo. ¿Qué
+      requiere?
+    follow_ups:
+      - ¿Cómo moldea la ayuda el espacio?
+      - ¿Qué sería el espacio sin tales ofrecimientos?
+      - ¿Cuál es la relación entre la ayuda y la confianza?
+  - id: hi_ps_object_temporary
+    name: Objeto Temporal
+    prompt: |
+      Una taza, un periódico, un sombrero. El objeto marca un lugar. Es temporal.
+      El dueño volverá. Observa la ocupación. ¿Qué requiere el objeto temporal
+      de los demás? El objeto es un marcador de posición.
+    follow_ups:
+      - ¿Cómo moldea el objeto temporal el espacio?
+      - ¿Qué sería el espacio sin él?
+      - ¿Cuál es la relación entre lo temporal y la confianza?
+  - id: hi_ps_pathway_rhythm
+    name: Ritmo del Sendero
+    prompt: |
+      Pies sobre el pavimento. El ritmo es individual —rápido, lento, irregular. El
+      sendero alberga muchos ritmos. Observa la sincronización y el choque. ¿Qué revela el
+      ritmo?
+    follow_ups:
+      - ¿Cómo moldea el ritmo la caminata?
+      - ¿Qué sería el sendero en silencio?
+      - ¿Cuál es la relación entre el ritmo y el destino?
+  - id: hi_ps_bench_face
+    name: Banco Orientado
+    prompt: |
+      El banco está orientado en una dirección —la vista, el sol, la multitud. La orientación
+      moldea la experiencia. Observa quién elige qué banco. La orientación es
+      diseño. ¿Qué asume?
+    follow_ups:
+      - ¿Cómo moldea la orientación el banco?
+      - ¿Qué sería el banco sin dirección?
+      - ¿Cuál es la relación entre la orientación y la vista?
+  - id: hi_ps_sidewalk_dance
+    name: Danza de Acera
+    prompt: |
+      Dos personas se acercan. La danza —¿quién se mueve? La danza de acera es
+      universal. Observa el paso a un lado. La danza es no hablada. ¿Qué
+      requiere?
+    follow_ups:
+      - ¿Cómo moldea la danza la caminata?
+      - ¿Qué sería la acera sin ella?
+      - ¿Cuál es la relación entre la danza y la civilidad?
+  - id: hi_ps_object_abandoned
+    name: Objeto Abandonado
+    prompt: |
+      Un guante en el suelo. Una bufanda en un banco. El objeto está abandonado.
+      Obsérvalo. ¿Quién lo dejó? ¿Quién lo recogerá? El objeto abandonado es
+      un pequeño misterio. ¿Qué revela?
+    follow_ups:
+      - ¿Cómo moldea el objeto abandonado el espacio?
+      - ¿Qué sería el espacio sin tales objetos?
+      - ¿Cuál es la relación entre lo abandonado y la pérdida?
+  - id: hi_ps_pathway_surface
+    name: Superficie del Sendero
+    prompt: |
+      Pavimento, grava, hierba. La superficie afecta la caminata. Observa la
+      elección. ¿Qué requiere la superficie del cuerpo? La superficie es
+      diseño. ¿Qué permite?
+    follow_ups:
+      - ¿Cómo moldea la superficie la caminata?
+      - ¿Qué sería el sendero con una superficie diferente?
+      - ¿Cuál es la relación entre la superficie y el acceso?
+  - id: hi_ps_bench_weather
+    name: Banco y Clima
+    prompt: |
+      Lluvia, sol, viento. El clima moldea el banco. ¿Quién se sienta bajo la lluvia?
+      ¿Quién busca sombra? El banco está expuesto. Observa la relación
+      entre el banco y el clima. ¿Qué hace el clima?
+    follow_ups:
+      - ¿Cómo moldea el clima el banco?
+      - ¿Qué sería el banco con refugio?
+      - ¿Cuál es la relación entre el clima y el uso?
+  - id: hi_ps_stranger_glance
+    name: Mirada de Extraño
+    prompt: |
+      Una mirada breve. La mirada es evaluación. ¿Seguro? ¿Amenaza? La mirada es
+      automática. Observa tus propias miradas. ¿Qué hace la mirada? La
+      mirada es una herramienta de supervivencia. ¿Qué extrae?
+    follow_ups:
+      - ¿Cómo moldea la mirada el espacio?
+      - ¿Qué sería el espacio sin miradas?
+      - ¿Cuál es la relación entre la mirada y la seguridad?
+  - id: hi_ps_pathway_crowd
+    name: Multitud en el Sendero
+    prompt: |
+      El sendero está abarrotado. Los cuerpos se comprimen. La multitud tiene su propio flujo.
+      Observa el movimiento. La multitud es un colectivo. ¿Qué requiere
+      del individuo?
+    follow_ups:
+      - ¿Cómo moldea la multitud el sendero?
+      - ¿Qué sería el sendero vacío?
+      - ¿Cuál es la relación entre la multitud y el flujo?
+  - id: hi_ps_bench_curve
+    name: Curva del Banco
+    prompt: |
+      Algunos bancos se curvan. Se miran entre sí o al centro. La curva
+      moldea lo social. Observa la disposición. ¿Qué permite la curva?
+      La curva es diseño. ¿Qué desea?
+    follow_ups:
+      - ¿Cómo moldea la curva el banco?
+      - ¿Qué sería el banco si fuera recto?
+      - ¿Cuál es la relación entre la curva y la conexión?
+  - id: hi_ps_object_traded
+    name: Objeto Intercambiado
+    prompt: |
+      Un traspaso. Una compra. Un regalo. El objeto pasa entre extraños.
+      Observa el intercambio. ¿Qué pasa además del objeto? El intercambio es
+      un momento de conexión. ¿Qué crea?
+    follow_ups:
+      - ¿Cómo moldea el intercambio el espacio?
+      - ¿Qué sería el espacio sin tales intercambios?
+      - ¿Cuál es la relación entre el intercambio y la confianza?
+  - id: hi_ps_pathway_light
+    name: Luz en el Sendero
+    prompt: |
+      Día, noche, farola. La luz moldea el sendero. Observa la
+      diferencia. ¿Quién camina de noche? La luz es seguridad y atmósfera.
+      ¿Qué proporciona?
+    follow_ups:
+      - ¿Cómo moldea la luz el sendero?
+      - ¿Qué sería el sendero en la oscuridad?
+      - ¿Cuál es la relación entre la luz y la seguridad?
+  - id: hi_ps_bench_armrest_gap
+    name: Brecha del Reposabrazos del Banco
+    prompt: |
+      El reposabrazos divide. Una persona por sección. La brecha impide
+      compartir. Observa el diseño. ¿Qué excluye la brecha? El reposabrazos
+      es arquitectura hostil. ¿Qué asume?
+    follow_ups:
+      - ¿Cómo moldea la brecha el banco?
+      - ¿Qué sería el banco sin reposabrazos?
+      - ¿Cuál es la relación entre la brecha y la exclusión?
+  - id: hi_ps_stranger_smile
+    name: Sonrisa de Extraño
+    prompt: |
+      Una sonrisa de un extraño. Inesperada. La sonrisa es un regalo. Observa la
+      respuesta. ¿Qué hace la sonrisa? La sonrisa es una pequeña ruptura del
+      contrato. ¿Qué crea?
+    follow_ups:
+      - ¿Cómo moldea la sonrisa el espacio?
+      - ¿Qué sería el espacio con más sonrisas?
+      - ¿Cuál es la relación entre la sonrisa y la conexión?
+  - id: hi_ps_object_touch
+    name: Objeto Tocado
+    prompt: |
+      Una mano en una barandilla. Un pie en un escalón. El tacto conecta cuerpo y
+      espacio. El objeto se comparte. Observa el tacto. ¿Qué hace el tacto?
+      El objeto es un punto de contacto. ¿Qué transporta?
+    follow_ups:
+      - ¿Cómo moldea el tacto el espacio?
+      - ¿Qué sería el espacio sin tacto?
+      - ¿Cuál es la relación entre el tacto y la presencia?
+  - id: hi_ps_pathway_choice
+    name: Elección en el Sendero
+    prompt: |
+      El sendero se bifurca. ¿Izquierda o derecha? La elección es pequeña. Observa la
+      decisión. ¿Qué la determina? La elección del sendero es un momento de
+      agencia. ¿Qué revela?
+    follow_ups:
+      - ¿Cómo moldea la elección la caminata?
+      - ¿Qué sería el sendero sin bifurcaciones?
+      - ¿Cuál es la relación entre la elección y el destino?
+  - id: hi_ps_bench_empty
+    name: Banco Vacío
+    prompt: |
+      El banco está vacío. Disponible. ¿Por qué? Observa el banco vacío. ¿Ubicación?
+      ¿Hora? ¿Clima? El banco vacío es una invitación. ¿Qué ofrece?
+    follow_ups:
+      - ¿Cómo moldea el banco vacío el espacio?
+      - ¿Qué sería el espacio sin bancos vacíos?
+      - ¿Cuál es la relación entre lo vacío y la oportunidad?
+  - id: hi_ps_stranger_queue
+    name: Fila de Extraños
+    prompt: |
+      Se forma una fila. Los extraños esperan juntos. La fila es orden. Observa la
+      paciencia. La fila crea una comunidad temporal. ¿Qué requiere la fila? ¿Qué
+      proporciona?
+    follow_ups:
+      - ¿Cómo moldea la fila el espacio?
+      - ¿Qué sería el espacio sin filas?
+      - ¿Cuál es la relación entre la fila y la equidad?
+  - id: hi_ps_object_talisman_trust
+    name: Confianza del Talismán
+    prompt: |
+      Dejas tu bolsa. Confías en el espacio. El talismán es una prueba. Observa
+      la confianza. ¿Qué asume? La confianza del talismán es una apuesta. ¿Qué
+      permite?
+    follow_ups:
+      - ¿Cómo moldea la confianza el espacio?
+      - ¿Qué sería el espacio sin tal confianza?
+      - ¿Cuál es la relación entre la confianza y la vulnerabilidad?
+  - id: hi_ps_pathway_end
+    name: Fin del Sendero
+    prompt: |
+      El sendero termina. Un destino, un muro, una puerta. El fin es un umbral.
+      Observa la llegada. ¿Qué proporciona el fin? El fin del sendero es
+      cierre. ¿Qué significa?
+    follow_ups:
+      - ¿Cómo moldea el fin la caminata?
+      - ¿Qué sería el sendero sin fin?
+      - ¿Cuál es la relación entre el fin y la conclusión?
+  - id: hi_ps_bench_duo
+    name: Dúo en Banco
+    prompt: |
+      Dos personas comparten un banco. Amigos, amantes, extraños. El dúo tiene
+      dinámicas. Observa la distancia. La conversación o el silencio. El
+      dúo en banco es una pequeña unidad social. ¿Qué crea?
+    follow_ups:
+      - ¿Cómo moldea el dúo el banco?
+      - ¿Qué sería el banco con una sola persona?
+      - ¿Cuál es la relación entre el dúo y la conexión?
+  - id: hi_ps_stranger_danger
+    name: Peligro de Extraño
+    prompt: |
+      El cuerpo evalúa. ¿Seguro? La evaluación es automática. Observa las
+      señales. ¿Qué desencadena la precaución? El peligro de extraño es un
+      reflejo de supervivencia. ¿Qué protege? ¿Qué cuesta?
+    follow_ups:
+      - ¿Cómo moldea la evaluación el espacio?
+      - ¿Qué sería el espacio sin ella?
+      - ¿Cuál es la relación entre el peligro y la apertura?
+  - id: hi_ps_object_marker
+    name: Objeto como Marcador
+    prompt: |
+      Una piedra en un banco. Una cinta en un árbol. El objeto marca algo.
+      Memoria, ocupación, ritual. Observa el marcador. ¿Qué significa? El
+      marcador es un mensaje. ¿Qué dice?
+    follow_ups:
+      - ¿Cómo moldea el marcador el espacio?
+      - ¿Qué sería el espacio sin marcadores?
+      - ¿Cuál es la relación entre el marcador y el significado?
+  - id: hi_ps_pathway_grade
+    name: Pendiente del Sendero
+    prompt: |
+      El sendero se inclina. Arriba o abajo. La pendiente afecta al cuerpo. Observa el
+      esfuerzo. La pendiente es diseño. ¿Qué asume sobre el caminante?
+      La pendiente es una barrera para algunos.
+    follow_ups:
+      - ¿Cómo moldea la pendiente la caminata?
+      - ¿Qué sería el sendero si fuera plano?
+      - ¿Cuál es la relación entre la pendiente y el acceso?
+  - id: hi_ps_bench_public
+    name: Banco Público
+    prompt: |
+      El banco es público. Cualquiera puede sentarse. Lo público es el punto. Observa
+      quién lo usa. El banco público es un bien común. ¿Qué requiere?
+      ¿Qué proporciona?
+    follow_ups:
+      - ¿Cómo moldea lo público el banco?
+      - ¿Qué sería el espacio sin bancos públicos?
+      - ¿Cuál es la relación entre lo público y la pertenencia?
+  - id: hi_ps_stranger_parallel
+    name: Paralelo de Extraño
+    prompt: |
+      Caminas al lado de un extraño. Misma dirección, mismo paso. El paralelo
+      es accidental. Observa la dinámica. ¿Se sincronizan? ¿Divergen? El
+      paralelo es una compañía temporal. ¿Qué crea?
+    follow_ups:
+      - ¿Cómo moldea el paralelo la caminata?
+      - ¿Qué sería el sendero sin tales paralelos?
+      - ¿Cuál es la relación entre el paralelo y la soledad?
+  - id: hi_ps_object_shared
+    name: Objeto Compartido
+    prompt: |
+      Una fuente de agua. Una barandilla. El objeto se comparte. Muchas manos lo tocan.
+      Observa el objeto compartido. ¿Qué requiere el compartir? El
+      objeto compartido es un punto de contacto. ¿Qué transporta?
+    follow_ups:
+      - ¿Cómo moldea el objeto compartido el espacio?
+      - ¿Qué sería el espacio sin tales objetos?
+      - ¿Cuál es la relación entre lo compartido y la confianza?
+  - id: hi_ps_pathway_loop
+    name: Bucle del Sendero
+    prompt: |
+      El sendero da la vuelta. Un bucle. Sin destino. El bucle es para
+      caminar en sí mismo. Observa a los caminantes. ¿Qué proporciona el bucle?
+      El bucle es un tipo diferente de sendero. ¿Qué permite?
+    follow_ups:
+      - ¿Cómo moldea el bucle la caminata?
+      - ¿Qué sería el espacio sin bucles?
+      - ¿Cuál es la relación entre el bucle y la reflexión?
+  - id: hi_ps_bench_legacy
+    name: Banco Legado
+    prompt: |
+      "En memoria de." El banco tiene una placa. Alguien amaba este lugar.
+      El banco legado lleva una historia. Obsérvalo. ¿Qué añade la placa?
+      El banco legado es un regalo. ¿Qué crea?
+    follow_ups:
+      - ¿Cómo moldea el legado el banco?
+      - ¿Qué sería el banco sin la placa?
+      - ¿Cuál es la relación entre el legado y el lugar?
+  - id: hi_ps_stranger_ask
+    name: Pregunta a un Extraño
+    prompt: |
+      "¿Tienes hora?" "¿Dónde está X?" La pregunta crea un momento de
+      conexión. Observa el intercambio. ¿Qué requiere la pregunta? La
+      pregunta a un extraño es una pequeña ruptura. ¿Qué permite?
+    follow_ups:
+      - ¿Cómo moldea la pregunta el espacio?
+      - ¿Qué sería el espacio sin tales preguntas?
+      - ¿Cuál es la relación entre la pregunta y la ayuda?
+  - id: hi_ps_object_talisman_return
+    name: Regreso del Talismán
+    prompt: |
+      Regresas. El talismán todavía está allí. Tu bolsa, tu libro. El
+      regreso confirma la confianza. Observa el alivio. ¿Qué significa el
+      regreso? El regreso del talismán es una pequeña victoria. ¿Qué crea?
+    follow_ups:
+      - ¿Cómo moldea el regreso el espacio?
+      - ¿Qué sería el espacio sin tales regresos?
+      - ¿Cuál es la relación entre el regreso y la confianza?
+  - id: hi_ps_pathway_beginning
+    name: Inicio del Sendero
+    prompt: |
+      El sendero comienza. Un umbral. Pisas sobre él. Observa el momento.
+      ¿Qué significa el inicio? El inicio del sendero es un compromiso.
+      ¿Qué requiere?
+    follow_ups:
+      - ¿Cómo moldea el inicio la caminata?
+      - ¿Qué sería el espacio sin senderos?
+      - ¿Cuál es la relación entre el inicio y la intención?
+  - id: hi_ps_bench_community
+    name: Comunidad en Banco
+    prompt: |
+      Los habituales conocen el banco. Las mismas personas, la misma hora. La comunidad del
+      banco es informal. Observa el reconocimiento. ¿Qué proporciona la
+      comunidad? La comunidad del banco es un pequeño mundo social.
+    follow_ups:
+      - ¿Cómo moldea la comunidad el banco?
+      - ¿Qué sería el banco sin habituales?
+      - ¿Cuál es la relación entre la comunidad y el lugar?
+  - id: hi_ps_stranger_chorus
+    name: Coro de Extraños
+    prompt: |
+      Muchos cuerpos, un espacio. El coro de extraños es el sonido de la
+      multitud —pasos, voces, susurros. Observa el coro. ¿Qué crea?
+      El coro es el sonido de lo público. ¿Qué significa?
+    follow_ups:
+      - ¿Cómo moldea el coro el espacio?
+      - ¿Qué sería el espacio en silencio?
+      - ¿Cuál es la relación entre el coro y la pertenencia?
+  - id: hi_ps_object_talisman_loss
+    name: Pérdida del Talismán
+    prompt: |
+      El talismán se ha ido. Robado, movido, confundido. La pérdida es una ruptura.
+      Observa la respuesta. ¿Qué significa la pérdida? La pérdida del talismán es
+      un pequeño trauma. ¿Qué revela?
+    follow_ups:
+      - ¿Cómo moldea la pérdida el espacio?
+      - ¿Qué sería el espacio sin tales pérdidas?
+      - ¿Cuál es la relación entre la pérdida y la confianza?
+  - id: hi_ps_pathway_shared
+    name: Sendero Compartido
+    prompt: |
+      El sendero se comparte —caminantes, ciclistas, cochecitos. El uso compartido
+      requiere negociación. Observa las reglas. ¿Quién cede? El
+      sendero compartido es un bien común. ¿Qué requiere?
+    follow_ups:
+      - ¿Cómo moldea el uso compartido el sendero?
+      - ¿Qué sería el sendero con un solo uso?
+      - ¿Cuál es la relación entre lo compartido y el conflicto?
+  - id: hi_ps_bench_rest
+    name: Descanso en Banco
+    prompt: |
+      Alguien descansa. Ojos cerrados, respiración lenta. El descanso es visible. El
+      banco proporciona. Observa el descanso. ¿Qué permite el banco? El
+      descanso en banco es un regalo del espacio público. ¿Qué significa?
+    follow_ups:
+      - ¿Cómo moldea el descanso el banco?
+      - ¿Qué sería el espacio sin bancos?
+      - ¿Cuál es la relación entre el descanso y la dignidad?
+  - id: hi_ps_stranger_chorus_silence
+    name: Silencio del Coro de Extraños
+    prompt: |
+      La multitud se detiene. Un momento de silencio. El coro de extraños se calla.
+      Observa el cambio. ¿Qué crea el silencio? El silencio compartido es raro.
+      ¿Qué significa?
+    follow_ups:
+      - ¿Cómo moldea el silencio el espacio?
+      - ¿Qué sería el espacio sin tales momentos?
+      - ¿Cuál es la relación entre el silencio y lo colectivo?

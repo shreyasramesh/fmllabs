@@ -9,7 +9,10 @@
     "lint": "next lint",
     "test": "tsx --test \"lib/**/*.test.ts\"",
     "generate-icons": "node scripts/generate-pwa-icons.mjs",
-    "translate-perspective-decks": "node scripts/translate-perspective-decks.mjs"
+    "translate-mental-models": "node scripts/translate-mental-models.mjs",
+    "verify-mental-models": "node scripts/verify-mental-models.mjs",
+    "translate-perspective-decks": "node scripts/translate-perspective-decks.mjs",
+    "verify-perspective-decks": "node scripts/verify-perspective-decks.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.0.0",

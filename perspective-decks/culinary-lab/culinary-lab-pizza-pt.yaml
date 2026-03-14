@@ -1,0 +1,472 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinary Lab — Pizza (Portuguese)
+
+id: culinary_lab_pizza
+name: Culinary Lab — Pizza
+description: 50 cards para mudar a forma como você experimenta a pizza — da química da massa e do fogo ao teatro da fatia e à arqueologia das coberturas.
+domain: culinary_lab
+cards:
+  - id: piz_dough_stretch
+    name: Esticar a Massa
+    prompt: |
+      Observe a massa a ser esticada — lançada à mão ou prensada. A rede de glúten
+      estica, aprisiona o ar. A forma é escolhida. O que uma fatia quadrada significaria
+      diferentemente de um triângulo?
+    follow_ups:
+      - Como o esticar define a experiência?
+      - O que seria a pizza sem o esticar?
+      - Qual a relação entre a mão e a forma?
+  - id: piz_oven_breath
+    name: Sopro do Forno
+    prompt: |
+      Um forno de pizza sopra — fogo de lenha, ou gás, ou elétrico. A cúpula retém o calor.
+      O piso o transfere. Fique perto de um. O que o forno exige do cozinheiro? Da massa?
+    follow_ups:
+      - O que seria a pizza sem o forno?
+      - Como o calor molda a crosta?
+      - Qual a relação entre o sopro e a bolha?
+  - id: piz_sauce_spiral
+    name: Espiral de Molho
+    prompt: |
+      O molho é frequentemente aplicado em espiral — não espalhado de ponta a ponta. Estude o
+      padrão. O que está coberto? O que está exposto? A espiral é composição.
+    follow_ups:
+      - Como seria a pizza com molho completo?
+      - Como a espiral afeta cada mordida?
+      - Qual a relação entre padrão e sabor?
+  - id: piz_cheese_melt
+    name: Queijo Derretido
+    prompt: |
+      O queijo derrete em taxas diferentes. A mussarela estica; queijos curados liberam gordura.
+      Observe o derretimento. A química da gordura e da proteína, calor e tempo. Quando está
+      pronto?
+    follow_ups:
+      - O que seria a fatia sem o derretimento?
+      - Como o derretimento molda a mordida?
+      - Qual a relação entre o derretimento e a memória?
+  - id: piz_crust_char
+    name: Queimado na Crosta
+    prompt: |
+      Leopardo — as manchas de queimado na crosta — marcam a pizza feita em forno a lenha. Cada mancha
+      é um momento de contato com calor extremo. Considere o sabor que essas manchas
+      adicionam. O que uma crosta pálida significaria?
+    follow_ups:
+      - Como o queimado muda a experiência?
+      - O que seria a pizza sem ele?
+      - Qual a relação entre o queimado e o artesanato?
+  - id: piz_slice_fold
+    name: Dobra da Fatia
+    prompt: |
+      Estilo Nova York: dobre a fatia. A dobra é estrutural — segura os
+      ingredientes, canaliza a gordura. A dobra é coreografia. O que ela possibilita?
+    follow_ups:
+      - O que seria comer sem a dobra?
+      - Como a dobra molda a mordida?
+      - Qual a relação entre dobra e lugar?
+  - id: piz_pepperoni_cup
+    name: Copo de Pepperoni
+    prompt: |
+      Bom pepperoni em copo — as bordas crocantes, o centro acumula óleo. É uma
+      transformação de forma e textura. Note quando acontece. O que criou o copo?
+    follow_ups:
+      - O que seria o pepperoni sem o copo?
+      - Como o copo retém o sabor?
+      - Qual a relação entre gordura e forma?
+  - id: piz_basil_finish
+    name: Toque de Manjericão
+    prompt: |
+      Manjericão na pizza é frequentemente adicionado após o cozimento — fresco, vibrante. É um
+      acabamento, não uma base. Note o contraste. O que o fresco adiciona ao cozido?
+    follow_ups:
+      - O que seria a pizza sem o manjericão?
+      - Como o tempo molda a erva?
+      - Qual a relação entre cru e cozido?
+  - id: piz_margherita_minimal
+    name: Margherita Minimalista
+    prompt: |
+      Margherita são três coisas: massa, tomate, queijo. Cada um deve carregar.
+      Não há onde se esconder. Considere a disciplina. O que o minimalismo
+      exige?
+    follow_ups:
+      - O que uma nota errada faria?
+      - Como a simplicidade foca o paladar?
+      - Qual a relação entre poucos e muitos?
+  - id: piz_pool_table
+    name: Mesa de Sinuca
+    prompt: |
+      Algumas pizzarias têm a longa mesa comunitária — estranhos compartilhando espaço.
+      A pizza chega. A mesa é um palco. Quem come ao seu lado? Qual é o
+      contrato tácito?
+    follow_ups:
+      - O que seria a refeição em uma cabine?
+      - Como a mesa molda o encontro?
+      - Qual a relação entre o compartilhado e o privado?
+  - id: piz_box_flip
+    name: Virada da Caixa
+    prompt: |
+      A caixa de pizza — papelão, às vezes com o tripé de plástico no centro.
+      É projetada para ventilar, para empilhar. A caixa é infraestrutura. O que seria
+      o "takeaway" sem ela?
+    follow_ups:
+      - Como a caixa molda a viagem para casa?
+      - O que acontece quando a caixa é aberta?
+      - Qual a relação entre caixa e ritual?
+  - id: piz_dough_ferment
+    name: Fermentação da Massa
+    prompt: |
+      A massa de pizza fermenta — horas ou dias. O fermento cria bolhas, sabor.
+      Massa velha tem acidez. Considere o tempo em cada mordida. O que uma
+      massa de crescimento rápido sacrificaria?
+    follow_ups:
+      - Como a fermentação molda a crosta?
+      - Qual a relação entre tempo e sabor?
+      - O que significaria massa do mesmo dia?
+  - id: piz_cornicione
+    name: Cornicione
+    prompt: |
+      O cornicione — a borda, a crosta — é frequentemente a melhor parte. Aerado, com bolhas,
+      talvez um pouco mastigável. Alguns o deixam; outros o comem primeiro. Qual é a sua
+      relação com a borda?
+    follow_ups:
+      - O que seria a pizza sem o cornicione?
+      - Como a borda emoldura o centro?
+      - Qual a relação entre crosta e centro?
+  - id: piz_olive_oil_drizzle
+    name: Rego de Azeite
+    prompt: |
+      Azeite regado após o cozimento — na crosta, ou na pizza inteira. Ele
+      brilha. O azeite carrega sabor, adiciona riqueza. Note quando é
+      aplicado. O que o rego adiciona?
+    follow_ups:
+      - O que seria a pizza sem ele?
+      - Como o azeite muda a mordida?
+      - Qual a relação entre gordura e acabamento?
+  - id: piz_anchovy_salt
+    name: Sal de Anchova
+    prompt: |
+      Anchovas na pizza — salgadas, umami, divisivas. Elas se dissolvem no
+      molho, ou ficam por cima. A anchova é arqueologia: mediterrânea, preservada,
+      antiga. Que jornada ela fez?
+    follow_ups:
+      - O que seria a fatia sem anchova?
+      - Como o sal molda os outros sabores?
+      - Qual a relação entre o preservado e o fresco?
+  - id: piz_sound_crunch
+    name: Som Crocante
+    prompt: |
+      A primeira mordida de uma crosta bem feita — o crocante, o ceder. Feche os olhos.
+      O som faz parte da experiência. O que seria da pizza se
+      fosse silenciosa?
+    follow_ups:
+      - Como o som molda a satisfação?
+      - Como soa uma crosta mole?
+      - Qual a relação entre crocância e qualidade?
+  - id: piz_second_slice
+    name: Segunda Fatia
+    prompt: |
+      A segunda fatia é diferente da primeira — você conhece a pizza agora. O
+      paladar se ajustou. Note a mudança. A segunda fatia tem o mesmo gosto? Melhor? Diferente?
+    follow_ups:
+      - Como a repetição muda a percepção?
+      - O que faltaria em uma refeição de uma fatia só?
+      - Qual a relação entre a primeira e a segunda?
+  - id: piz_neapolitan_rules
+    name: Regras Napolitanas
+    prompt: |
+      A verdadeira pizza napolitana tem regras — tamanho, ingredientes, método.
+      O selo VPN, a certificação. Regras criam identidade. O que as regras protegem? O que
+      elas excluem?
+    follow_ups:
+      - O que seria a pizza sem as regras?
+      - Como a certificação molda a expectativa?
+      - Qual a relação entre regra e artesanato?
+  - id: piz_detroit_edges
+    name: Bordas de Detroit
+    prompt: |
+      Estilo Detroit — retangular, queijo até a borda, crosta frita crocante onde
+      encontra a forma. As bordas são deliberadas. Considere a arquitetura.
+      O que a forma diz?
+    follow_ups:
+      - O que seria a pizza sem as bordas?
+      - Como a forma cria identidade?
+      - Qual a relação entre a forma e a crosta?
+  - id: piz_garlic_knot
+    name: Nó de Alho
+    prompt: |
+      Nós de alho — massa torcida, amanteigada, com alho. Geralmente chegam primeiro.
+      Não são pizza, mas são do mesmo mundo. Qual a relação
+      entre o nó e a pizza?
+    follow_ups:
+      - O que seria a refeição sem os nós?
+      - Como o nó define o tom?
+      - Qual a relação entre o acompanhamento e o principal?
+  - id: piz_red_pepper_flake
+    name: Flocos de Pimenta Vermelha
+    prompt: |
+      O saleiro de flocos de pimenta vermelha — geralmente na mesa. Você escolhe o ardor.
+      O floco é democracia. Cada um tempera o seu. O que essa
+      escolha significa?
+    follow_ups:
+      - O que seria da mesa sem o saleiro?
+      - Como o tempero individual molda a refeição?
+      - Qual a relação entre escolha e sabor?
+  - id: piz_sicilian_slab
+    name: Fôrma Siciliana
+    prompt: |
+      Siciliana — grossa, retangular, às vezes invertida (molho por cima). A
+      fôrma tem peso. A arquitetura é diferente. O que a espessura adiciona?
+      O que ela sacrifica?
+    follow_ups:
+      - O que a massa fina faria de diferente?
+      - Como a espessura molda a mordida?
+      - Qual a relação entre fôrma e fatia?
+  - id: piz_wood_stack
+    name: Pilha de Lenha
+    prompt: |
+      Pizzarias a lenha empilham toras. Carvalho, às vezes. A lenha é combustível e
+      sabor. A pilha é preparação. Considere o que queima. O que a
+      lenha adiciona que o gás não pode?
+    follow_ups:
+      - O que seria da pizza sem lenha?
+      - Como o combustível molda a crosta?
+      - Qual a relação entre fogo e fumaça?
+  - id: piz_topping_balance
+    name: Equilíbrio de Coberturas
+    prompt: |
+      Coberturas podem sobrecarregar — muitas, e a pizza vira uma caçarola. O
+      equilíbrio é delicado. Estude uma pizza carregada. Onde ela cruza a linha?
+      O que você removeria?
+    follow_ups:
+      - Como a contenção molda a pizza?
+      - Qual a relação entre mais e menos?
+      - Quando a escolha se torna caos?
+  - id: piz_cold_leftover
+    name: Sobra Fria
+    prompt: |
+      Pizza fria no café da manhã — alguns juram por isso. Os sabores se assentaram.
+      A textura mudou. Considere a pizza do dia seguinte. O que o tempo adiciona?
+      O que ele tira?
+    follow_ups:
+      - Como o frio muda a experiência?
+      - O que o reaquecimento faria?
+      - Qual a relação entre o fresco e a sobra?
+  - id: piz_sauce_sweet
+    name: Doçura do Molho
+    prompt: |
+      O molho de tomate pode ser doce ou vibrante, dependendo do tomate, do cozinheiro.
+      Prove o molho sozinho, se puder. De onde vem a doçura?
+      O que a acidez faria?
+    follow_ups:
+      - Como o molho define o tom?
+      - Qual a relação entre doce e ácido?
+      - O que significaria tomate cru?
+  - id: piz_roman_taglio
+    name: Taglio Romano
+    prompt: |
+      Pizza al taglio — vendida por pedaço, por peso. Você aponta, eles cortam.
+      O retângulo, o preço por quilo. A transação é diferente. O que
+      comprar por peso significa?
+    follow_ups:
+      - Como o taglio molda a experiência?
+      - O que significaria uma pizza inteira aqui?
+      - Qual a relação entre corte e escolha?
+  - id: piz_hot_honey
+    name: Mel Picante
+    prompt: |
+      Mel picante na pizza — nova tradição, agora em todo lugar. Doce, picante, viscoso.
+      É um acabamento. Note quando é adicionado. O que o mel faz com o
+      queijo?
+    follow_ups:
+      - O que seria da fatia sem ele?
+      - Como o agridoce molda a mordida?
+      - Qual a relação entre tendência e tradição?
+  - id: piz_pecorino_grate
+    name: Ralado de Pecorino
+    prompt: |
+      Pecorino ralado sobre a pizza — salgado, picante. É uma camada. O queijo por cima
+      é diferente do queijo que derreteu. Considere a hierarquia. O que
+      o ralado adiciona?
+    follow_ups:
+      - O que seria da pizza sem pecorino?
+      - Como o segundo queijo molda o prato?
+      - Qual a relação entre derretimento e ralado?
+  - id: piz_paddle_slide
+    name: Deslize da Pá
+    prompt: |
+      A pá, o utensílio — de madeira ou metal. A massa é deslizada sobre ela, depois para o
+      forno. O movimento é praticado. Observe-o. O que daria errado sem
+      a habilidade?
+    follow_ups:
+      - Como a pá possibilita o cozimento?
+      - Qual a relação entre ferramenta e resultado?
+      - O que significaria uma pizza que cai?
+  - id: piz_sourdough_crust
+    name: Crosta de Fermento Natural
+    prompt: |
+      Crosta de pizza de fermento natural — longa fermentação, acidez. A crosta tem personalidade.
+      Não é neutra. Considere o que o fermento natural adiciona. O que o
+      fermento comercial faria de diferente?
+    follow_ups:
+      - Como o fermento natural molda a mordida?
+      - Qual a relação entre fermentação e sabor?
+      - O que significaria uma crosta mais sem graça?
+  - id: piz_white_pie
+    name: Pizza Branca
+    prompt: |
+      Pizza branca — sem tomate. Azeite, queijo, talvez alho. A ausência do
+      vermelho muda tudo. O paladar espera tomate. O que a pizza branca
+      oferece em vez disso?
+    follow_ups:
+      - O que seria da pizza com tomate?
+      - Como a ausência molda a expectativa?
+      - Qual a relação entre vermelho e branco?
+  - id: piz_bar_setting
+    name: Ambiente de Bar
+    prompt: |
+      Pizza no bar — você come onde pede. O bar é um palco. Você observa
+      o forno, as fatias. O ambiente é casual, imediato. O que comer
+      no bar adiciona?
+    follow_ups:
+      - O que mudaria em uma mesa?
+      - Como a proximidade molda a experiência?
+      - Qual a relação entre bar e cozinha?
+  - id: piz_truffle_trend
+    name: Tendência de Trufa
+    prompt: |
+      Trufa na pizza — azeite ou raspas — tornou-se um atalho para o luxo. O
+      aroma domina. Considere a tendência. O que a trufa adiciona? O que
+      ela mascara?
+    follow_ups:
+      - O que seria da pizza sem trufa?
+      - Como o luxo molda a mordida?
+      - Qual a relação entre tendência e sabor?
+  - id: piz_ricotta_dollop
+    name: Colherada de Ricota
+    prompt: |
+      Ricota em colheradas na pizza — fria, cremosa, contrastante. Não derrete
+      como mussarela. Ela repousa. Note a diferença de temperatura. O que a
+      colherada adiciona?
+    follow_ups:
+      - O que seria da fatia sem ricota?
+      - Como o frio molda o quente?
+      - Qual a relação entre colherada e derretimento?
+  - id: piz_slice_count
+    name: Contagem de Fatias
+    prompt: |
+      Quantas fatias? O número é frequentemente oito — ou seis para uma pizza menor.
+      A contagem determina a porção, o compartilhamento. Considere a matemática. O que
+      quatro fatias significariam? Doze?
+    follow_ups:
+      - Como a contagem de fatias molda a refeição?
+      - Qual a relação entre corte e compartilhamento?
+      - Quando a contagem importa?
+  - id: piz_oven_window
+    name: Janela do Forno
+    prompt: |
+      O forno tem uma janela — ou não. Observar a pizza assar é teatro. O
+      queijo borbulha. A crosta cresce. Como seria a experiência sem
+      a vista?
+    follow_ups:
+      - Como a observação molda a antecipação?
+      - Qual a relação entre o visível e o escondido?
+      - O que você aprende pela janela?
+  - id: piz_ranch_dip
+    name: Molho Ranch
+    prompt: |
+      Ranch com pizza — tradição americana, frequentemente com a crosta. O molho é
+      opcional, controverso. Considere a adição. O que o ranch adiciona? O que
+      ele anula?
+    follow_ups:
+      - O que seria da crosta sem ranch?
+      - Como o molho molda a mordida?
+      - Qual a relação entre purista e prático?
+  - id: piz_capers_brine
+    name: Salmoura de Alcaparras
+    prompt: |
+      Alcaparras na pizza — salgadas, picantes. Elas cortam a riqueza. A alcaparra
+      viajou — mediterrânea, em conserva. Note quando elas aparecem. O que a
+      salmoura adiciona?
+    follow_ups:
+      - O que seria da fatia sem alcaparras?
+      - Como a salmoura molda o paladar?
+      - Qual a relação entre o em conserva e o fresco?
+  - id: piz_calzone_seam
+    name: Costura do Calzone
+    prompt: |
+      Calzone — pizza dobrada, selada. A costura segura o recheio. A forma é
+      diferente. Você a corta. O vapor escapa. O que a dobra adiciona? O que
+      ela esconde?
+    follow_ups:
+      - O que seria o calzone desdobrado?
+      - Como a costura cria surpresa?
+      - Qual a relação entre aberto e fechado?
+  - id: piz_mushroom_water
+    name: Água de Cogumelo
+    prompt: |
+      Cogumelos na pizza liberam água enquanto cozinham. Um bom cozinheiro sabe pré-cozinhar
+      ou usar variedades secas. Cogumelos úmidos fazem pizza encharcada. Considere
+      a química. O que a umidade faz?
+    follow_ups:
+      - Como a preparação do cogumelo molda a fatia?
+      - Qual a relação entre úmido e crocante?
+      - O que cogumelo cru faria?
+  - id: piz_grease_absorb
+    name: Absorver Gordura
+    prompt: |
+      Um guardanapo na fatia — alguns enxugam a gordura. A gordura é gordura do
+      queijo, do pepperoni. Enxugar ou não? Considere a escolha. O que a
+      gordura contribui? O que o enxugar remove?
+    follow_ups:
+      - Como a gordura molda a experiência?
+      - O que significaria uma fatia seca?
+      - Qual a relação entre gordura e sabor?
+  - id: piz_oven_spring
+    name: Crescimento do Forno
+    prompt: |
+      Crescimento do forno — a massa incha no calor alto. O fermento funciona rápido. A
+      estrutura se define. Considere o momento. O que aconteceria sem calor suficiente? Sem
+      a farinha certa?
+    follow_ups:
+      - Como o crescimento cria a miolo?
+      - Qual a relação entre calor e crescimento?
+      - O que significaria uma crosta plana?
+  - id: piz_roma_tomato
+    name: Tomate Roma
+    prompt: |
+      San Marzano, ou Roma — os tomates importam. Eles são de um lugar. Campânia.
+      O DOP, o terroir. Trace o tomate. Que jornada ele fez para chegar à sua
+      fatia?
+    follow_ups:
+      - O que outro tomate faria?
+      - Como a origem molda o molho?
+      - Qual a relação entre lugar e sabor?
+  - id: piz_pizza_napoli
+    name: Pizza Nápoles
+    prompt: |
+      Nápoles a inventou. A cidade e a comida estão ligadas. Comer pizza em
+      Nápoles é comê-la na fonte. Considere a arqueologia. O que a
+      mesma pizza significaria em outro lugar?
+    follow_ups:
+      - Como o lugar molda a experiência?
+      - O que a tradução perderia?
+      - Qual a relação entre origem e autenticidade?
+  - id: piz_wine_pair
+    name: Harmonização de Vinho
+    prompt: |
+      Pizza e vinho — cerveja é comum, mas vinho funciona. Tinto, frequentemente. A acidez
+      do vinho encontra a acidez do tomate. Considere a harmonização. O que o
+      vinho adiciona à fatia?
+    follow_ups:
+      - O que a cerveja faria de diferente?
+      - Como a bebida molda a refeição?
+      - Qual a relação entre copo e prato?
+  - id: piz_pizza_party
+    name: Festa de Pizza
+    prompt: |
+      Pizza para uma multidão — aniversários, noite de jogos, almoço no escritório. A pizza é
+      social. As caixas se empilham. Todos pegam uma fatia. Considere a coreografia.
+      Como a multidão muda a refeição?
+    follow_ups:
+      - O que significaria uma pizza individual?
+      - Como o compartilhamento molda a experiência?
+      - Qual a relação entre pizza e encontro?

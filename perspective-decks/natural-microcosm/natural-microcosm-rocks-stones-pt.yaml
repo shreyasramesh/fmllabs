@@ -1,0 +1,530 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosmo Natural — Rochas e Pedras (Portuguese)
+
+id: natural_microcosm_rocks_stones
+name: Microcosmo Natural — Rochas e Pedras
+description: 50 cartas para mudar a sua perspetiva sobre rochas e pedras — do tempo geológico e líquenes à intempérie, erosão e à vida em câmara lenta dos minerais.
+domain: natural_microcosm
+cards:
+  - id: nmr_lichen_map
+    name: Mapa de Líquen
+    prompt: |
+      Líquenes crescem em rocha — lentos, pacientes. Laranja, cinza, verde. Não é um
+      organismo, mas dois: fungo e alga. Considere a parceria. O que a rocha oferece?
+      O que o líquen devolve?
+    follow_ups:
+      - Como seria a rocha sem líquenes?
+      - Como os líquenes marcam o tempo?
+      - Qual a relação entre líquenes e intempérie?
+  - id: nmr_pebble_smooth
+    name: Seixo Liso
+    prompt: |
+      Um seixo de rio é liso — a água e a areia o desgastaram. Segure um. Quantos
+      anos levou? A lisura é um registo de uma jornada. O que significaria uma
+      borda afiada?
+    follow_ups:
+      - Como a lisura revela a história?
+      - O que seria o seixo sem a água?
+      - Qual a relação entre forma e fluxo?
+  - id: nmr_crack_frost
+    name: Fenda de Gelo
+    prompt: |
+      A água congela numa fenda, expande. A rocha racha. É violência lenta.
+      Encontre uma rocha com uma fissura. Considere os ciclos de congelamento e degelo
+      que a criaram.
+    follow_ups:
+      - O que seria a rocha sem a fenda?
+      - Como o gelo molda a paisagem?
+      - Qual a relação entre água e fratura?
+  - id: nmr_stone_warmth
+    name: Calor da Pedra
+    prompt: |
+      Uma rocha aquecida pelo sol retém calor. Sente-se numa ao anoitecer. A pedra liberta o que
+      absorveu. Considere a troca. O que seria a rocha sem o
+      sol?
+    follow_ups:
+      - Como a pedra cria microclima?
+      - Que criaturas usam esse calor?
+      - Qual a relação entre rocha e calor?
+  - id: nmr_moss_crust
+    name: Crosta de Musgo
+    prompt: |
+      Musgo cresce em pedra — uma fina crosta. Retém humidade, acumula poeira. A
+      rocha torna-se um substrato. Quando a rocha se torna solo? Onde está a linha?
+    follow_ups:
+      - O que seria a pedra sem o musgo?
+      - Como a crosta acelera a mudança?
+      - Qual a relação entre mineral e orgânico?
+  - id: nmr_vein_quartz
+    name: Veia de Quartzo
+    prompt: |
+      Uma veia de quartzo corta a rocha — uma linha de mineral diferente. Marca uma
+      fratura, um preenchimento. Siga a linha. Que forças a criaram? O que a
+      veia revela?
+    follow_ups:
+      - O que seria a rocha sem a veia?
+      - Como a veia marca o tempo profundo?
+      - Qual a relação entre fratura e beleza?
+  - id: nmr_puddle_reflect
+    name: Poça na Pedra
+    prompt: |
+      Uma depressão na rocha retém água após a chuva. É uma pequena piscina — uma taça. O que
+      reflete nela? O que evapora? A pedra fez um receptáculo.
+    follow_ups:
+      - O que seria a rocha sem a depressão?
+      - Como a poça cria habitat?
+      - Qual a relação entre oco e tempo?
+  - id: nmr_sand_grain
+    name: Grão de Areia
+    prompt: |
+      Areia é rocha partida em pequenos pedaços. Segure um punhado. Cada grão foi um dia parte de
+      algo maior. Considere a escala. Quantos grãos numa montanha?
+    follow_ups:
+      - O que seria a praia sem os grãos?
+      - Como o tamanho do grão conta uma história?
+      - Qual a relação entre o todo e o fragmento?
+  - id: nmr_stone_circle
+    name: Círculo de Pedras
+    prompt: |
+      Pedras dispostas à mão ou por glaciar — um círculo, um monte de pedras, um muro. Alguém
+      ou algo as colocou. Considere a intenção. O que significa o arranjo?
+    follow_ups:
+      - O que seria o espaço sem as pedras?
+      - Como o arranjo cria significado?
+      - Qual a relação entre rocha e ritual?
+  - id: nmr_erosion_edge
+    name: Borda de Erosão
+    prompt: |
+      Vento e água esculpem rocha. Encontre uma borda — uma falésia, um rochedo. A forma
+      é o produto da remoção. O que havia antes? O que permanecerá?
+    follow_ups:
+      - O que seria a paisagem sem erosão?
+      - Como a borda marca o tempo?
+      - Qual a relação entre perda e forma?
+  - id: nmr_color_streak
+    name: Risca de Cor
+    prompt: |
+      A rocha não é uniforme — o ferro mancha de vermelho, o manganês de preto, o cobre de verde.
+      Siga uma risca. A cor é química. O que revela sobre a história da rocha?
+    follow_ups:
+      - O que seria a rocha sem a cor?
+      - Como a mineralogia molda a paleta?
+      - Qual a relação entre elemento e tonalidade?
+  - id: nmr_scratch_glacier
+    name: Arranhão de Glaciar
+    prompt: |
+      Estrias glaciares — arranhões no leito rochoso — marcam onde o gelo arrastou rochas
+      sobre pedra. As linhas são paralelas. Considere a força. O que se moveu?
+      O que ficou parado?
+    follow_ups:
+      - O que a rocha mostraria sem os arranhões?
+      - Como o arranhão marca a direção?
+      - Qual a relação entre gelo e pedra?
+  - id: nmr_cobble_pattern
+    name: Padrão de Seixos Rolados
+    prompt: |
+      Uma praia ou leito de rio de seixos rolados — tamanho semelhante, forma variada. A água
+      os classificou. Considere o padrão. O que a classificação lhe diz?
+    follow_ups:
+      - O que seria a praia sem a classificação?
+      - Como o fluxo molda o padrão?
+      - Qual a relação entre tamanho e transporte?
+  - id: nmr_cavern_drip
+    name: Gotejamento na Caverna
+    prompt: |
+      Estalactites formam-se gota a gota — depósitos minerais de água a infiltrar. O
+      crescimento é impercetível. Considere a escala temporal. O que um filme acelerado
+      mostraria?
+    follow_ups:
+      - O que seria a caverna sem o gotejamento?
+      - Como o gotejamento regista o clima?
+      - Qual a relação entre água e pedra?
+  - id: nmr_boulder_shadow
+    name: Sombra de Pedregulho
+    prompt: |
+      Um grande pedregulho lança sombra. O solo por baixo é diferente — mais fresco,
+      mais húmido, menos sol. O pedregulho cria um microclima. Quem vive na
+      sombra?
+    follow_ups:
+      - O que seria a encosta sem o pedregulho?
+      - Como a sombra molda a vida?
+      - Qual a relação entre rocha e refúgio?
+  - id: nmr_fossil_impression
+    name: Impressão Fóssil
+    prompt: |
+      Um fóssil é vida transformada em pedra — ou uma impressão deixada em sedimento.
+      Encontre um, se puder. A rocha guarda memória. Que criatura deixou isto?
+      Quando?
+    follow_ups:
+      - O que seria a rocha sem o fóssil?
+      - Como a impressão preserva?
+      - Qual a relação entre vida e mineral?
+  - id: nmr_grit_texture
+    name: Textura Granulada
+    prompt: |
+      Passe a mão sobre a rocha. Arenito tem uma sensação diferente de granito, ardósia
+      de basalto. A textura é mineral, grão, estrutura. O que o toque lhe diz?
+    follow_ups:
+      - O que seria a rocha sem a sua textura?
+      - Como a textura revela a origem?
+      - Qual a relação entre sensação e composição?
+  - id: nmr_talus_slope
+    name: Encosta de Pedras Soltas
+    prompt: |
+      Uma encosta de pedras soltas — rocha partida na base de uma falésia. Gravidade e intempérie
+      a trazem para baixo. A encosta é uma pilha de rescaldo. Quanto tempo levou
+      para acumular?
+    follow_ups:
+      - O que seria a base da falésia sem as pedras soltas?
+      - Como a encosta marca a erosão?
+      - Qual a relação entre queda e pilha?
+  - id: nmr_soil_horizon
+    name: Horizonte do Solo
+    prompt: |
+      Cave cuidadosamente. O solo tem camadas — orgânico em cima, mineral em baixo, por vezes
+      faixas distintas. O horizonte é história. O que criou cada camada?
+    follow_ups:
+      - O que seria o chão sem os horizontes?
+      - Como o horizonte regista o tempo?
+      - Qual a relação entre rocha e solo?
+  - id: nmr_drystone_wall
+    name: Muro de Pedra Seca
+    prompt: |
+      Um muro de pedra seca — pedras encaixadas sem argamassa. O muro aguenta por gravidade
+      e encaixe. Considere o ofício. Como cada pedra suporta a próxima?
+    follow_ups:
+      - O que seria o campo sem o muro?
+      - Como o muro marca território?
+      - Qual a relação entre rocha e fronteira?
+  - id: nmr_tide_pool_rock
+    name: Rocha da Poça de Maré
+    prompt: |
+      Rochas numa poça de maré são molhadas, secas, molhadas novamente. Criaturas agarram-se.
+      A rocha é habitat. Considere o ritmo da maré. O que a rocha experiencia?
+    follow_ups:
+      - O que seria a poça sem a rocha?
+      - Como a rocha cria superfície?
+      - Qual a relação entre rocha e maré?
+  - id: nmr_crystal_face
+    name: Face Cristalina
+    prompt: |
+      Algumas rochas mostram faces cristalinas — planos de clivagem, forma geométrica. O
+      cristal cresceu numa cavidade, em ordem lenta. Considere a geometria. Que
+      forças a moldaram?
+    follow_ups:
+      - O que seria a rocha sem o cristal?
+      - Como a face revela a estrutura?
+      - Qual a relação entre ordem e mineral?
+  - id: nmr_dust_coating
+    name: Camada de Poeira
+    prompt: |
+      A rocha acumula poeira — pólen, fuligem, mineral. Com o tempo escurece. A
+      camada é acumulação. Como seria a rocha se lavada? Como a camada a altera?
+    follow_ups:
+      - O que seria a rocha sem a camada?
+      - Como a poeira marca o ambiente?
+      - Qual a relação entre superfície e acumulação?
+  - id: nmr_river_sculpt
+    name: Escultura do Rio
+    prompt: |
+      Um rio esculpe o seu leito — marmitas, poços, corredeiras. A rocha é moldada
+      pela água e pelo sedimento. Encontre um trecho. Leia a escultura. O que a
+      forma revela?
+    follow_ups:
+      - O que seria o leito do rio sem a escultura?
+      - Como o fluxo molda a rocha?
+      - Qual a relação entre água e forma?
+  - id: nmr_shard_edge
+    name: Borda de Estilha
+    prompt: |
+      Um estilha de sílex, um pedaço de chert — afiado, trabalhado ou natural. Alguém pode
+      tê-lo usado. A borda é funcional. Considere a fratura. Como foi feito?
+    follow_ups:
+      - O que seria o estilha sem a borda?
+      - Como a fratura cria utilidade?
+      - Qual a relação entre quebra e ferramenta?
+  - id: nmr_gravel_path
+    name: Caminho de Cascalho
+    prompt: |
+      Um caminho de cascalho — rocha triturada sob os pés. O estalar, a cedência. O caminho
+      é escolha humana. Porquê esta superfície? O que faz o cascalho que o solo
+      não faria?
+    follow_ups:
+      - O que seria o caminho sem o cascalho?
+      - Como o caminho molda o movimento?
+      - Qual a relação entre rocha e caminhada?
+  - id: nmr_bedrock_exposure
+    name: Exposição de Rocha Mãe
+    prompt: |
+      Onde o solo foi removido — erosão, construção — aparece a rocha mãe. A
+      fundação está visível. Considere o que normalmente se esconde. O que a
+      exposição revela?
+    follow_ups:
+      - O que seria a paisagem sem a exposição?
+      - Como a rocha mãe molda a superfície?
+      - Qual a relação entre o escondido e o revelado?
+  - id: nmr_wind_polish
+    name: Polimento do Vento
+    prompt: |
+      Rochas do deserto são polidas pelo vento — lisas, facetadas. A areia jatea a superfície.
+      O polimento é abrasivo. Considere o vento. Quanto tempo levou?
+    follow_ups:
+      - O que seria a rocha sem o polimento?
+      - Como o vento molda a pedra?
+      - Qual a relação entre partícula e superfície?
+  - id: nmr_hot_cold_crack
+    name: Fenda Calor-Frio
+    prompt: |
+      A rocha expande no calor, contrai no frio. Ciclos repetidos causam stress,
+      microfraturas. Encontre uma fenda. Considere as oscilações de temperatura
+      que a criaram.
+    follow_ups:
+      - O que seria a rocha sem a fenda?
+      - Como o ciclo térmico molda a paisagem?
+      - Qual a relação entre temperatura e fratura?
+  - id: nmr_constellation_stone
+    name: Pedra Constelação
+    prompt: |
+      Uma rocha com manchas — mica, feldspato — que captam a luz. A superfície
+      cintila. Considere a mineralogia. O que criou o brilho?
+    follow_ups:
+      - O que seria a rocha sem as manchas?
+      - Como a luz revela a estrutura?
+      - Qual a relação entre mineral e reflexão?
+  - id: nmr_stepping_stone
+    name: Pedra de Passagem
+    prompt: |
+      Pedras colocadas num riacho ou lama — pedras de passagem. A colocação é
+      deliberada. Considere o caminho. O que cada passo exige? O que a
+      pedra possibilita?
+    follow_ups:
+      - O que seria a travessia sem as pedras?
+      - Como a pedra cria acesso?
+      - Qual a relação entre rocha e passagem?
+  - id: nmr_moss_island
+    name: Ilha de Musgo
+    prompt: |
+      Uma rocha num riacho — musgo cresce no topo. A rocha é uma ilha. A água flui
+      ao redor. Considere o isolamento. O que chega ao musgo? O que não chega?
+    follow_ups:
+      - O que seria o riacho sem a ilha?
+      - Como a rocha cria refúgio?
+      - Qual a relação entre rocha e fluxo?
+  - id: nmr_weight_sunken
+    name: Peso Afundado
+    prompt: |
+      Uma rocha pesada afunda-se no solo com o tempo. A depressão forma-se ao seu redor.
+      Considere a gravidade. O que o afundamento faz ao solo? À rocha?
+    follow_ups:
+      - O que seria o solo sem a rocha?
+      - Como o peso molda a superfície?
+      - Qual a relação entre massa e depressão?
+  - id: nmr_layer_sediment
+    name: Camada de Sedimento
+    prompt: |
+      Rocha sedimentar mostra camadas — planos de estratificação. Cada camada foi outrora lama,
+      areia, conchas. A rocha é tempo comprimido. Considere uma única camada.
+      O que era antes?
+    follow_ups:
+      - O que seria a rocha sem as camadas?
+      - Como a camada regista o ambiente?
+      - Qual a relação entre sedimento e pedra?
+  - id: nmr_sunrise_heat
+    name: Calor do Nascer do Sol
+    prompt: |
+      Uma rocha plana virada a leste. Ao nascer do sol aquece primeiro. Considere a
+      orientação. O que o ângulo em relação ao sol determina? Quem beneficia do
+      calor inicial?
+    follow_ups:
+      - O que seria a rocha sem a orientação?
+      - Como a exposição molda a temperatura?
+      - Qual a relação entre ângulo e calor?
+  - id: nmr_rain_rinse
+    name: Enxaguamento da Chuva
+    prompt: |
+      A chuva atinge a rocha, escorre. A água transporta o que dissolve, o que suspende.
+      O enxaguamento é contínuo. O que a rocha perde? O que a água ganha?
+    follow_ups:
+      - O que seria a rocha sem a chuva?
+      - Como o escoamento molda a rocha?
+      - Qual a relação entre água e dissolução?
+  - id: nmr_ice_wedge
+    name: Cunha de Gelo
+    prompt: |
+      A água congela numa fenda, alarga-a. O cunhamento de gelo parte as rochas.
+      Encontre evidências, se puder. Considere a força. O que a fenda se tornará?
+    follow_ups:
+      - O que seria a rocha sem o gelo?
+      - Como a cunha se propaga?
+      - Qual a relação entre congelamento e fratura?
+  - id: nmr_resting_place
+    name: Lugar de Descanso
+    prompt: |
+      Uma rocha plana — um assento, uma mesa, um palco. Usamos pedras para descansar, para trabalhar, para marcar.
+      Considere a rocha onde pode sentar-se. O que ela suportou? O que
+      ela suportará?
+    follow_ups:
+      - O que seria o espaço sem a rocha?
+      - Como a rocha convida ao uso?
+      - Qual a relação entre mineral e humano?
+  - id: nmr_boundary_marker
+    name: Marco de Fronteira
+    prompt: |
+      Rochas marcam fronteiras — limites de propriedade, túmulos, trilhos. A colocação é
+      deliberada. Considere uma pedra de fronteira. O que ela separa? O que
+      ela conecta?
+    follow_ups:
+      - O que seria a fronteira sem a pedra?
+      - Como a rocha codifica significado?
+      - Qual a relação entre marcador e território?
+  - id: nmr_exfoliation_sheet
+    name: Lâmina de Esfoliação
+    prompt: |
+      Algumas rochas esfoliam — camadas descascam como uma cebola. Libertação de pressão, ciclo
+      térmico. Encontre um pedregulho esfoliante. Considere a curva. Que forças
+      a criaram?
+    follow_ups:
+      - O que seria a rocha sem as lâminas?
+      - Como a esfoliação molda a superfície?
+      - Qual a relação entre pressão e descamação?
+  - id: nmr_compass_orientation
+    name: Orientação da Bússola
+    prompt: |
+      Rochas podem alinhar-se — por glaciar, por rio, por mão humana. A orientação
+      conta uma história. Encontre pedras alinhadas. Para onde apontam? A que
+      resistem?
+    follow_ups:
+      - O que significaria o alinhamento?
+      - Como a orientação regista a força?
+      - Qual a relação entre direção e pedra?
+  - id: nmr_echo_sound
+    name: Pedra do Eco
+    prompt: |
+      Uma face rochosa reflete o som. Bata palmas. Ouça o eco. A rocha devolve o que
+      você envia. Considere a superfície. O que ela reflete? O que ela
+      absorve?
+    follow_ups:
+      - O que seria o espaço sem o eco?
+      - Como a superfície molda o som?
+      - Qual a relação entre rocha e voz?
+  - id: nmr_anchor_hold
+    name: Ancoragem Firme
+    prompt: |
+      Uma rocha ancora — uma raiz de árvore envolve-a, um cabo amarra-se a ela. A rocha segura.
+      Considere a aderência. O que a rocha resiste? O que ela possibilita?
+    follow_ups:
+      - O que seria a âncora sem a rocha?
+      - Como a rocha cria estabilidade?
+      - Qual a relação entre fixação e massa?
+  - id: nmr_patina_age
+    name: Pátina da Idade
+    prompt: |
+      Rocha antiga desenvolve pátina — crosta de intempérie, oxidação, sujidade. A
+      superfície muda. A pátina é tempo tornado visível. Como seria a rocha
+      quando nova?
+    follow_ups:
+      - O que seria a rocha sem a pátina?
+      - Como a pátina protege ou enfraquece?
+      - Qual a relação entre superfície e idade?
+  - id: nmr_slow_narrative
+    name: Narrativa Lenta
+    prompt: |
+      Uma rocha conta uma história lenta — formação, transporte, intempérie. A linha do tempo
+      é geológica. Sente-se com uma rocha. Considere o seu passado. Qual será o seu futuro?
+    follow_ups:
+      - O que perderíamos se não pudéssemos ler a história?
+      - Como a rocha se conecta ao tempo profundo?
+      - Qual a relação entre rocha e memória?
+  - id: nmr_cairn_stack
+    name: Pilha de Cairn
+    prompt: |
+      Um cairn — pedras empilhadas à mão. Cada pedra equilibra-se. A pilha é
+      deliberada, temporária. Quem a construiu? O que ela marca?
+    follow_ups:
+      - O que seria o lugar sem o cairn?
+      - Como a pilha cria significado?
+      - Qual a relação entre humano e pedra?
+  - id: nmr_shadow_cast
+    name: Sombra Projetada
+    prompt: |
+      Uma rocha projeta uma sombra. A sombra move-se com o sol. Sente-se com ela por uma hora.
+      Considere o relógio de pedra e luz.
+    follow_ups:
+      - O que seria a rocha sem a sombra?
+      - Como a sombra cria habitat?
+      - Qual a relação entre rocha e tempo?
+  - id: nmr_scree_slope
+    name: Encosta de Pedras Soltas
+    prompt: |
+      Pedras soltas — rocha solta na base de uma falésia. Cada peça caiu. A encosta é
+      acumulação. Caminhe nela. Sinta a instabilidade. O que a segura? O que
+      se libertará?
+    follow_ups:
+      - O que seria a encosta sem a queda?
+      - Como as pedras soltas moldam o vale?
+      - Qual a relação entre falésia e chão?
+  - id: nmr_fossil_imprint
+    name: Impressão Fóssil
+    prompt: |
+      Um fóssil na rocha — concha, folha, osso. A impressão é um registo. O
+      organismo desapareceu; a pedra guarda a sua forma. Considere a preservação.
+    follow_ups:
+      - O que saberíamos sem o fóssil?
+      - Como a impressão faz a ponte entre o tempo?
+      - Qual a relação entre vida e mineral?
+  - id: nmr_dry_stone_wall
+    name: Muro de Pedra Seca
+    prompt: |
+      Um muro de pedra seca — sem argamassa. Cada pedra sustenta a outra por encaixe e
+      atrito. O muro é colaboração. Siga as juntas. O que faria uma única pedra solta?
+    follow_ups:
+      - O que seria a fronteira sem o muro?
+      - Como o encaixe cria força?
+      - Qual a relação entre pedra e estrutura?
+  - id: nmr_cobble_rest
+    name: Repouso de Seixos Rolados
+    prompt: |
+      Seixos rolados repousam onde a água os deixou — um banco de rio, uma praia. O arranjo
+      não é aleatório. Tamanho, forma, posição contam do fluxo. O que uma inundação
+      rearranjaria?
+    follow_ups:
+      - Como o repouso marca o último evento?
+      - O que os seixos revelariam sobre a água?
+      - Qual a relação entre repouso e turbulência?
+  - id: nmr_moon_dust
+    name: Poeira Lunar
+    prompt: |
+      Rocha transforma-se em pó — vento, água, raízes. As partículas mais finas viajam.
+      Considere a jornada de um único grão. Onde poderá terminar?
+    follow_ups:
+      - O que seria a paisagem sem poeira?
+      - Como a poeira cria novo solo?
+      - Qual a relação entre rocha e ar?
+  - id: nmr_touch_stone
+    name: Tocar na Pedra
+    prompt: |
+      Toque numa rocha. Fria, quente, áspera, lisa. A rocha não responde — ou
+      responde? O calor transfere-se. A humidade muda. Considere a troca na fronteira.
+    follow_ups:
+      - Como seria a rocha num tempo diferente?
+      - Como o toque muda a rocha?
+      - Qual a relação entre mão e pedra?
+  - id: nmr_shadow_noon
+    name: Sombra ao Meio-dia
+    prompt: |
+      Ao meio-dia, a sombra de uma rocha é mínima. Ao amanhecer e ao entardecer, estende-se.
+      A sombra é o alcance da rocha. Considere como o sol muda o que a rocha oferece ao mundo.
+    follow_ups:
+      - O que a rocha ofereceria sem sombra?
+      - Como a sombra cria habitat?
+      - Qual a relação entre rocha e luz?
+  - id: nmr_stone_circle
+    name: Círculo de Pedras
+    prompt: |
+      Pedras dispostas em círculo — por mão humana ou por glaciar. O círculo
+      enquadra o espaço. O que está dentro? O que está fora? Considere a geometria da
+      fronteira.
+    follow_ups:
+      - O que significaria o espaço sem o círculo?
+      - Como o arranjo cria significado?
+      - Qual a relação entre forma e ritual?

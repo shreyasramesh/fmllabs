@@ -38,6 +38,14 @@ export async function POST(
       );
     }
 
+    const messagesForSummary = messages.map((m) => {
+      const base = { role: m.role, content: m.content };
+      if (m.role === "user" && "journalCheckpoint" in m && m.journalCheckpoint) {
+        return { role: m.role, content: `[Journal checkpoint: ${m.journalCheckpoint}]\n\n${m.content}` };
+      }
+      return base;
+    });
+
     const body = await request.json().catch(() => ({}));
     const userEnrichmentPrompt = body.enrichmentPrompt as string | undefined;
     const collapse = body.collapse !== false;
@@ -46,8 +54,8 @@ export async function POST(
       : "en";
     const languageName = getLanguageName(languageCode);
 
-    const { summary, enrichmentPrompt: generatedEnrichment } =
-      await generateSummaryAndEnrichment(messages, languageName);
+    const { summary, enrichmentPrompt: generatedEnrichment, chainOfThought } =
+      await generateSummaryAndEnrichment(messagesForSummary, languageName);
     const enrichmentPrompt =
       typeof userEnrichmentPrompt === "string" && userEnrichmentPrompt.trim()
         ? userEnrichmentPrompt.trim()
@@ -69,6 +77,7 @@ export async function POST(
             title,
             summary,
             enrichmentPrompt,
+            chainOfThought,
           });
           longTermMemoryId = existingLtmId;
         } else {
@@ -77,7 +86,8 @@ export async function POST(
             sessionId,
             title,
             summary,
-            enrichmentPrompt
+            enrichmentPrompt,
+            chainOfThought
           );
           longTermMemoryId = created._id;
         }
@@ -87,7 +97,8 @@ export async function POST(
           sessionId,
           title,
           summary,
-          enrichmentPrompt
+          enrichmentPrompt,
+          chainOfThought
         );
         longTermMemoryId = created._id;
       }
@@ -101,7 +112,8 @@ export async function POST(
         sessionId,
         title,
         summary,
-        enrichmentPrompt
+        enrichmentPrompt,
+        chainOfThought
       );
       longTermMemoryId = created._id;
     }
@@ -111,6 +123,7 @@ export async function POST(
       longTermMemory: ltm,
       summary,
       enrichmentPrompt,
+      chainOfThought,
     });
   } catch (err) {
     console.error("Summarize error:", err);

@@ -63,19 +63,20 @@ export async function* streamGenerateContent(
 export async function generateSummaryAndEnrichment(
   messages: { role: string; content: string }[],
   languageName?: string
-): Promise<{ summary: string; enrichmentPrompt: string }> {
+): Promise<{ summary: string; enrichmentPrompt: string; chainOfThought: string[] }> {
   const conversation = messages
     .map((m) => `${m.role}: ${m.content}`)
     .join("\n\n");
 
   const languageInstruction =
     languageName && languageName !== "English"
-      ? ` Write the summary and enrichmentPrompt in ${languageName}.`
+      ? ` Write the summary, enrichmentPrompt, and chainOfThought in ${languageName}.`
       : "";
 
   const model = getModel();
   const result = await model.generateContent(
-    `You are summarizing a conversation for long-term memory. Return a JSON object with exactly two keys:
+    `You are summarizing a conversation for long-term memory. Return a JSON object with exactly three keys:
+- "chainOfThought": An array of 4-6 reasoning steps. Each step is MAX 3 WORDS. Use plain, everyday language—no jargon, no "query" or abstract terms. Each chip must be instantly understandable at a glance: the user sees it and immediately grasps the reasoning. Prefer concrete phrases: "Considering breakup" not "Break up query"; "Worried about future" not "Future path"; "Feels stuck" not "Stuck state". Capture the user's actual situation and emotions in simple words.
 - "summary": A 2-4 paragraph narrative summary of the conversation. Capture key topics, decisions, and context.
 - "enrichmentPrompt": An extremely compact, dense 1-sentence context (max 25 words). Capture only the most critical facts: key decisions, preferences, or user context. No filler. Example: "User weighing job change; values work-life balance; hesitant about relocation."
 ${languageInstruction}
@@ -87,10 +88,68 @@ ${conversation}`
   );
   const text = result.response.text().trim();
   const cleaned = text.replace(/^```json\s*/i, "").replace(/\s*```\s*$/i, "").trim();
-  const parsed = JSON.parse(cleaned) as { summary?: string; enrichmentPrompt?: string };
+  const parsed = JSON.parse(cleaned) as {
+    summary?: string;
+    enrichmentPrompt?: string;
+    chainOfThought?: string[];
+  };
+  const chainOfThought = Array.isArray(parsed.chainOfThought)
+    ? parsed.chainOfThought.filter((s): s is string => typeof s === "string")
+    : [];
   return {
     summary: parsed.summary ?? "",
     enrichmentPrompt: parsed.enrichmentPrompt ?? "",
+    chainOfThought,
+  };
+}
+
+export async function generateJournalCheckpointSuggestion(
+  messages: { role: string; content: string }[],
+  languageName?: string
+): Promise<{ prompt: string; options: string[] }> {
+  const conversation = messages
+    .slice(-16)
+    .map((m) => `${m.role}: ${m.content}`)
+    .join("\n\n");
+
+  const languageInstruction =
+    languageName && languageName !== "English"
+      ? `Write prompt and options in ${languageName}.`
+      : "";
+
+  const model = getModel();
+  const result = await model.generateContent(
+    `You create a reflective journal checkpoint for a user conversation.
+
+Return ONLY valid JSON with exactly:
+- "prompt": 1-2 short first-person reflective sentence templates with one or more blanks written as _____. The prompt must be incomplete until blanks are filled.
+- "options": 4-6 short phrase options for filling blanks. Keep them personal, emotionally aware, and grounded in what the user actually shared.
+
+Rules:
+- This is NOT a next-turn assistant reply.
+- Do not reuse assistant action/options text.
+- Infer what the user would genuinely want to remember from the conversation so far.
+- Prefer phrase-like options (3-10 words), not full long sentences.
+- Keep wording natural and concise.
+- NEVER return a fully-complete statement as prompt; always include at least one blank.
+- The user should clearly understand they are completing a journal sentence.
+${languageInstruction}
+
+Conversation:
+${conversation}`
+  );
+  const text = result.response.text().trim();
+  const cleaned = text.replace(/^```json\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  const parsed = JSON.parse(cleaned) as { prompt?: string; options?: unknown };
+  const options = Array.isArray(parsed.options)
+    ? parsed.options
+        .map((opt) => (typeof opt === "string" ? opt.trim() : ""))
+        .filter((opt) => opt.length > 0)
+        .slice(0, 6)
+    : [];
+  return {
+    prompt: (parsed.prompt ?? "I want to remember _____").trim(),
+    options,
   };
 }
 

@@ -1,0 +1,505 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinary Lab — Chinês (Portuguese)
+
+id: culinary_lab_chinese
+name: Culinary Lab — Chinês
+description: 50 cartas para mudar a sua experiência com a comida chinesa — da química do wok hei e da arqueologia da soja à coreografia da mesa redonda e à narrativa do banquete.
+domain: culinary_lab
+cards:
+  - id: chn_wok_hei
+    name: Wok Hei
+    prompt: |
+      Wok hei — o sopro do wok — é a fumaça elusiva que vem do
+      calor e velocidade extremos. Não é bem defumado; é transformação.
+      Consegue capturá-lo? Como seria o salteado sem ele?
+    follow_ups:
+      - Como o hei molda o prato?
+      - O que o cria? O que o destrói?
+      - Qual a relação entre calor e pressa?
+  - id: chn_round_table
+    name: Mesa Redonda
+    prompt: |
+      A mesa do banquete chinês é redonda — com um prato giratório no centro. A comida
+      gira. Todos alcançam. A mesa é coreografia. Quem gira? Quem espera?
+      Quais são as regras não ditas?
+    follow_ups:
+      - O que significaria uma mesa retangular?
+      - Como a forma redonda molda a refeição?
+      - Qual a relação entre o centro e a borda?
+  - id: chn_soy_archeology
+    name: Arqueologia da Soja
+    prompt: |
+      Molho de soja — fermentado, envelhecido, regional. Claro, escuro, de cogumelo, duplo-preto.
+      Veio de algum lugar. Levou tempo. Rastreie a garrafa. Que jornada ela fez?
+      O que a soja industrial sacrificaria?
+    follow_ups:
+      - Como a origem molda o molho?
+      - Como seria o prato sem soja?
+      - Qual a relação entre fermentação e umami?
+  - id: chn_chopstick_grip
+    name: Pegada do Hashi
+    prompt: |
+      Os hashis estendem a mão. Arroz, macarrão escorregadio, dumplings — cada um
+      exige técnica diferente. Observe sua pegada. O que o utensílio
+      exige? O que ele permite?
+    follow_ups:
+      - O que um garfo mudaria?
+      - Como o pau molda a garfada?
+      - Qual a relação entre ferramenta e ritmo?
+  - id: chn_dumpling_seam
+    name: Costura do Dumpling
+    prompt: |
+      Dobras do dumpling — a dobra, o selo. Jiaozi, shumai, xiaolongbao — cada um tem
+      sua forma. A costura segura ou solta. Estude um. O que uma explosão
+      significaria? O que a dobra protege?
+    follow_ups:
+      - Como a dobra molda o recheio?
+      - O que um dumpling aberto perderia?
+      - Qual a relação entre selo e sopa?
+  - id: chn_tea_pour
+    name: Servir o Chá
+    prompt: |
+      Chá chinês — servido, reabastecido, compartilhado. A chaleira circula. Xícaras vazias
+      são preenchidas antes de pedir. O servir é serviço e cuidado. Observe o ritmo.
+      Como seria a refeição sem o chá?
+    follow_ups:
+      - Como o chá molda o ritmo?
+      - O que o servir comunica?
+      - Qual a relação entre xícara e mesa?
+  - id: chn_bone_plate
+    name: Prato de Ossos
+    prompt: |
+      Um pequeno prato para ossos — cascas descartadas, ossos de frango, cascas de camarão.
+      O prato recolhe o que não é comestível. Faz parte do serviço. O que
+      o prato de ossos permite? O que aconteceria sem ele?
+    follow_ups:
+      - Como o prato molda a refeição?
+      - Como a mesa ficaria sem ele?
+      - Qual a relação entre descarte e dignidade?
+  - id: chn_soup_spoon
+    name: Colher de Sopa
+    prompt: |
+      A colher de sopa chinesa — larga, rasa, de cerâmica. Segura caldo e sólidos.
+      A colher encaixa na boca de forma diferente. Observe a garfada. O que a
+      forma possibilita?
+    follow_ups:
+      - O que uma colher redonda mudaria?
+      - Como a colher molda a garfada?
+      - Qual a relação entre forma e função?
+  - id: chn_steam_basket
+    name: Cesta de Vapor
+    prompt: |
+      Dim sum chega em cestas de bambu — empilhadas, em camadas. O vapor sobe.
+      A cesta mantém a forma. Considere o bambu. O que o metal faria diferente?
+      O que o bambu adiciona?
+    follow_ups:
+      - Como a cesta molda o dumpling?
+      - O que um prato perderia?
+      - Qual a relação entre bambu e vapor?
+  - id: chn_maillard_wok
+    name: Wok Maillard
+    prompt: |
+      O wok atinge temperaturas que fogões domésticos não conseguem. O selamento é instantâneo.
+      Proteínas douram em segundos. Considere a química. O que um calor mais baixo
+      sacrificaria? O que o wok exige?
+    follow_ups:
+      - Como o calor molda o sabor?
+      - O que um fogão elétrico faria de diferente?
+      - Qual a relação entre chama e crosta?
+  - id: chn_glutinous_texture
+    name: Textura Glutinosa
+    prompt: |
+      Arroz glutinoso — pegajoso, mastigável — tem uma química diferente. É usado para
+      zongzi, lo mai gai, sobremesas. Observe a textura. Como difere do
+      arroz de grão longo? O que a pegajosidade possibilita?
+    follow_ups:
+      - O que o arroz comum faria?
+      - Como a textura molda o prato?
+      - Qual a relação entre pegajoso e embrulhar?
+  - id: chn_century_egg
+    name: Ovo de Cem Anos
+    prompt: |
+      Ovo de cem anos — preservado, transformado. A gema é escura, a clara translúcida.
+      A química é antiga. Considere a preservação. O que o tempo faz?
+      O que a frescura significaria?
+    follow_ups:
+      - Como a preservação molda o sabor?
+      - Como seria o ovo fresco?
+      - Qual a relação entre tempo e transformação?
+  - id: chn_oyster_sauce
+    name: Molho de Ostra
+    prompt: |
+      Molho de ostra — umami, espesso, cantonês. É redução e extração.
+      A ostra dá sua essência. Rastreie o sabor. Como seria o salteado
+      sem ele?
+    follow_ups:
+      - Como o molho molda o prato?
+      - Qual a relação entre ostra e vegetal?
+      - O que o molho de soja faria em vez disso?
+  - id: chn_ordering_ritual
+    name: Ritual de Pedido
+    prompt: |
+      Pedir em um restaurante chinês — o anfitrião escolhe, ou a mesa negocia.
+      Equilíbrio: carne, vegetal, sopa, arroz. O pedido é uma composição. Observe
+      quem decide. Quais são as regras?
+    follow_ups:
+      - Como o pedido molda a refeição?
+      - O que cada um pediria para si?
+      - Qual a relação entre escolha e coletivo?
+  - id: chn_crispy_skin
+    name: Pele Crocante
+    prompt: |
+      Pele de pato à Pequim — crocante, glaceada. Ou crackling de porco assado cantonês. A
+      pele é proposital. Calor, ar, açúcar. Considere a arquitetura. O que
+      a pele mole significaria?
+    follow_ups:
+      - Como a crocância molda a mordida?
+      - O que cria o estalo?
+      - Qual a relação entre pele e carne?
+  - id: chn_noodle_slip
+    name: Deslize do Macarrão
+    prompt: |
+      Macarrão chinês — de trigo, arroz, puxado à mão — varia em textura. Alguns deslizam;
+      outros mastigam. O arrasto do macarrão contra os hashis. Observe a
+      resistência. O que o deslize adiciona?
+    follow_ups:
+      - Como a textura molda a forma de comer?
+      - O que um macarrão mole perderia?
+      - Qual a relação entre deslize e satisfação?
+  - id: chn_bok_choy_wilt
+    name: Murchar do Bok Choy
+    prompt: |
+      Bok choy no wok — segundos. Murcha, mas mantém a estrutura. O verde
+      amolece. Considere a transformação. O que o cru significaria? O que
+      o excesso de cozimento perderia?
+    follow_ups:
+      - Como o murchar molda o vegetal?
+      - Qual a relação entre calor e verde?
+      - Quando está pronto?
+  - id: chn_five_spice
+    name: Cinco Especiarias
+    prompt: |
+      Pó de cinco especiarias — anis estrelado, cravo, canela, pimenta de Sichuan, erva-doce.
+      É uma mistura com história. Cada especiaria tem uma rota. Rastreie uma. Que
+      jornada ela fez?
+    follow_ups:
+      - Como seria o prato sem ele?
+      - Como a mistura cria identidade?
+      - Qual a relação entre especiaria e preservação?
+  - id: chn_banquet_progression
+    name: Progressão do Banquete
+    prompt: |
+      Um banquete chinês tem um arco — pratos frios primeiro, depois quentes, sopa, arroz, sobremesa.
+      A progressão é narrativa. Observe o ritmo. O que uma ordem diferente
+      faria?
+    follow_ups:
+      - Como a sequência molda a refeição?
+      - Qual a relação entre o primeiro e o último?
+      - Quando a história atinge o pico?
+  - id: chn_white_rice_center
+    name: Arroz Branco no Centro
+    prompt: |
+      Arroz branco — simples, cozido no vapor — ancora a refeição. É a tela em branco. Pratos ricos
+      precisam de arroz para equilibrar. Observe quando você o pega. Como seria a refeição
+      sem o simples?
+    follow_ups:
+      - Como o arroz molda o paladar?
+      - O que o arroz frito faria?
+      - Qual a relação entre neutro e sabor?
+  - id: chn_szechuan_numb
+    name: Dormência Sichuan
+    prompt: |
+      Pimenta de Sichuan — ma la — entorpece, formiga. Não é ardência; é sensação.
+      A boca zune. Considere a sensação. Como seria o prato sem
+      a dormência?
+    follow_ups:
+      - Como o ma la molda a experiência?
+      - Qual a relação entre dormência e ardor?
+      - Por que combiná-los?
+  - id: chn_dark_soy
+    name: Molho de Soja Escuro
+    prompt: |
+      Molho de soja escuro — mais espesso, mais doce, para cor. Escurece o arroz, glaceia
+      a carne. Não é para sal; é para cor. Considere o visual. O que o
+      escuro adiciona?
+    follow_ups:
+      - O que o molho de soja claro faria?
+      - Como a cor molda a expectativa?
+      - Qual a relação entre escuro e caramelo?
+  - id: chn_hot_plate
+    name: Chapa Quente
+    prompt: |
+      Chapas chiando — carne, lula — chegam sibilando. A chapa de ferro continua cozinhando.
+      O som é teatro. Como seria o prato sem o chiado? Como a chapa quente
+      prolonga o cozimento?
+    follow_ups:
+      - Como o chiado molda a experiência?
+      - O que uma chapa fria significaria?
+      - Qual a relação entre som e calor?
+  - id: chn_congee_soft
+    name: Congee Mole
+    prompt: |
+      Congee — mingau de arroz — é mole, reconfortante. Arroz cozido por muito tempo se desfaz.
+      A textura é entrega. Considere a transformação. O que "al dente"
+      significaria aqui?
+    follow_ups:
+      - Como a moleza molda o prato?
+      - O que um congee grosso faria?
+      - Qual a relação entre água e arroz?
+  - id: chn_glass_noodle
+    name: Macarrão de Vidro
+    prompt: |
+      Macarrão de vidro — amido de feijão mungo — é transparente, escorregadio. Absorve
+      o sabor. Observe a textura. O que macarrão de trigo faria? Como a
+      transparência importa?
+    follow_ups:
+      - Como o macarrão molda o prato?
+      - Qual a relação entre transparente e absorver?
+      - Por que de vidro?
+  - id: chn_xlb_burst
+    name: Explosão XLB
+    prompt: |
+      Xiaolongbao — dumpling de sopa — contém caldo dentro. A primeira mordida pode queimar ou
+      explodir. A técnica: morder, sorver, comer. Considere o risco. O que um
+      xlb frio significaria?
+    follow_ups:
+      - Como a sopa molda a experiência?
+      - O que você perderia sem a explosão?
+      - Qual a relação entre temperatura e perigo?
+  - id: chn_tea_smell
+    name: Aroma do Chá
+    prompt: |
+      Oolong, jasmim, pu-erh — cada chá tem um nariz diferente. Cheire antes de beber.
+      O aroma é metade da experiência. O que o cheiro promete? O que
+      entrega?
+    follow_ups:
+      - Como o cheiro molda a bebida?
+      - Como seria o chá sem aroma?
+      - Qual a relação entre infusão e aroma?
+  - id: chn_crab_crack
+    name: Quebrar o Caranguejo
+    prompt: |
+      Caranguejo em um banquete chinês — quebra-nozes fornecidos. A quebra é som e esforço.
+      A carne é extraída. Considere a coreografia. O que um caranguejo pré-quebrado
+      significaria?
+    follow_ups:
+      - Como a quebra molda a refeição?
+      - O que você perderia sem o esforço?
+      - Qual a relação entre esforço e recompensa?
+  - id: chn_turn_table
+    name: Girar a Mesa
+    prompt: |
+      O prato giratório — quem o gira? Quando? O prato que você quer pode estar do outro lado da
+      mesa. Girar é etiqueta. Observe a dança. Quais são as regras?
+      Quando você espera?
+    follow_ups:
+      - Como o girar molda a refeição?
+      - O que pratos fixos significariam?
+      - Qual a relação entre girar e compartilhar?
+  - id: chn_ginger_slice
+    name: Fatia de Gengibre
+    prompt: |
+      Gengibre com frutos do mar — fatias finas, às vezes fritas. Corta o gosto de peixe.
+      O gengibre é tanto guarnição quanto função. Considere seu papel. Como seria o
+      peixe sem ele?
+    follow_ups:
+      - Como o gengibre molda o paladar?
+      - Qual a relação entre fatia e aroma?
+      - Por que gengibre com frutos do mar?
+  - id: chn_hoisin_dip
+    name: Molho Hoisin
+    prompt: |
+      Hoisin com pato à Pequim — o molho é ritual. A panqueca, o pato, a cebolinha, o molho.
+      Cada elemento tem seu lugar. Considere a composição. O que um faltando faria?
+    follow_ups:
+      - Como o molho molda a mordida?
+      - O que outro molho faria?
+      - Qual a relação entre doce e pato?
+  - id: chn_leaf_wrap
+    name: Embrulho em Folha
+    prompt: |
+      Wrap de alface — carne moída, ervas, molho, embrulhado em uma folha. A folha é
+      recipiente e textura. O embrulho é trabalho manual. Considere a arquitetura.
+      O que uma tortilha faria?
+    follow_ups:
+      - Como a folha molda a mordida?
+      - O que um prato faria?
+      - Qual a relação entre embrulho e mão?
+  - id: chn_fish_whole
+    name: Peixe Inteiro
+    prompt: |
+      Peixe inteiro — cozido no vapor, com cabeça e rabo. O peixe é apresentado completo.
+      A cabeça tem significado. Considere a apresentação. O que um filé
+      sacrificaria?
+    follow_ups:
+      - Como o inteiro molda o prato?
+      - O que a cabeça significa?
+      - Qual a relação entre inteiro e respeito?
+  - id: chn_scallion_oil
+    name: Óleo de Cebolinha
+    prompt: |
+      Óleo de cebolinha — óleo sibilando sobre cebolinha e gengibre picados. É um
+      molho, um acabamento. O óleo carrega os aromáticos. Observe quando é
+      aplicado. O que o chiado adiciona?
+    follow_ups:
+      - Como seria o prato sem ele?
+      - Como o óleo molda o acabamento?
+      - Qual a relação entre óleo e aroma?
+  - id: chn_black_vinegar
+    name: Vinagre Preto
+    prompt: |
+      Vinagre Chinkiang — escuro, complexo, levemente adocicado. Corta a gordura. Algumas
+      gotas mudam o dumpling. Considere a acidez. O que o vinagre de arroz
+      faria? O que o escuro adiciona?
+    follow_ups:
+      - Como o vinagre molda a mordida?
+      - Como seria o dumpling sem ele?
+      - Qual a relação entre vinagre e equilíbrio?
+  - id: chn_sticky_rice
+    name: Arroz Pegajoso
+    prompt: |
+      Arroz pegajoso em folha de lótus — lo mai gai. A folha transmite sabor. O arroz
+      é embrulhado, cozido no vapor. Desembrulhe-o. Observe o aroma. O que a
+      folha de alumínio faria?
+    follow_ups:
+      - Como a folha molda o arroz?
+      - Qual a relação entre embrulho e vapor?
+      - O que um embrulho aberto significaria?
+  - id: chn_mooncake_mold
+    name: Molde de Bolo Lunar
+    prompt: |
+      Bolos lunares — estampados com caracteres, padrões. O molde é história. O
+      design tem um significado. Considere a impressão. O que um bolo simples
+      perderia?
+    follow_ups:
+      - Como o molde molda o bolo?
+      - O que o padrão significa?
+      - Qual a relação entre impressão e tradição?
+  - id: chn_egg_tart
+    name: Tartelete de Ovo
+    prompt: |
+      Tartelete de ovo — influência portuguesa, refinamento de Hong Kong. O creme, a
+      massa. Considere a textura. Crocante, sedosa. O que uma massa diferente
+      faria?
+    follow_ups:
+      - Como a tartelete molda o fim da refeição?
+      - Qual a relação entre creme e crocância?
+      - Por que tartelete de ovo para fechar?
+  - id: chn_hand_pull
+    name: Puxado à Mão
+    prompt: |
+      Macarrão puxado à mão — o cozinheiro estica, dobra, puxa. Os fios se multiplicam.
+      É performance. Observe. O que macarrão de máquina sacrificaria?
+    follow_ups:
+      - Como o puxar molda o macarrão?
+      - Qual a relação entre mão e textura?
+      - O que macarrão uniforme significaria?
+  - id: chn_bird_nest
+    name: Ninho de Pássaro
+    prompt: |
+      Ninho de pássaro — não o ninho de andorinha de sopa, mas um ninho de inhame, ou ninho de macarrão crocante
+      segurando um salteado. O ninho é arquitetura. Considere a
+      forma. O que o ninho adiciona?
+    follow_ups:
+      - Como o ninho molda o prato?
+      - O que um prato faria?
+      - Qual a relação entre recipiente e conteúdo?
+  - id: chn_red_envelope
+    name: Envelope Vermelho
+    prompt: |
+      Em banquetes, envelopes vermelhos podem acompanhar presentes — dinheiro para a cozinha, para
+      os anfitriões. O envelope é ritual. Considere a troca. O que o
+      vermelho significa?
+    follow_ups:
+      - Como o envelope molda a ocasião?
+      - O que a ausência de envelope significaria?
+      - Qual a relação entre presente e "cara"?
+  - id: chn_toasting_ritual
+    name: Ritual de Brinde
+    prompt: |
+      Gan bei — um brinde — ou goles casuais. O brinde estrutura o banquete.
+      Quem brinda a quem? Quando? O ritual é social. Observe a coreografia.
+      Como seria a refeição sem brindes?
+    follow_ups:
+      - Como o brinde molda a refeição?
+      - Qual a relação entre brinde e hierarquia?
+      - Quando você bebe?
+  - id: chn_preserved_veg
+    name: Vegetal Conservado
+    prompt: |
+      Mostarda conservada, rabanete em conserva, repolho fermentado — estes adicionam profundidade.
+      São preservação antiga. Considere a transformação. O que vegetal
+      fresco faria?
+    follow_ups:
+      - Como a preservação molda o prato?
+      - Qual a relação entre picles e umami?
+      - Por que conservado?
+  - id: chn_sweet_sour
+    name: Doce e Azedo
+    prompt: |
+      Doce e azedo — o equilíbrio é deliberado. Açúcar, vinagre, às vezes
+      ketchup. O molho é ousado. Considere a combinação. O que um sem o outro
+      significaria?
+    follow_ups:
+      - Como o equilíbrio molda o prato?
+      - Qual a relação entre doce e azedo?
+      - Por que essa combinação?
+  - id: chn_wonton_soup
+    name: Sopa de Wonton
+    prompt: |
+      Wonton em caldo claro — a sopa é simples. O wonton flutua. O caldo
+      é limpo. Considere o contraste com wonton frito. O que a sopa
+      adiciona?
+    follow_ups:
+      - Como o caldo molda o wonton?
+      - O que frito significaria?
+      - Qual a relação entre claro e rico?
+  - id: chn_cold_dish_start
+    name: Começo com Pratos Frios
+    prompt: |
+      Pratos frios abrem a refeição — frango embriagado, água-viva, picles. Eles despertam
+      o paladar. O contraste com o que vem a seguir. Considere a abertura. O que
+      um começo quente faria?
+    follow_ups:
+      - Como o frio molda a refeição?
+      - Qual a relação entre o primeiro e o próximo?
+      - Por que frio primeiro?
+  - id: chn_fried_rice_wok
+    name: Arroz Frito no Wok
+    prompt: |
+      Arroz frito precisa de um wok — calor alto, salteado rápido. Arroz do dia anterior, idealmente.
+      Os grãos se separam. Considere a técnica. O que uma frigideira
+      sacrificaria?
+    follow_ups:
+      - Como o wok molda o arroz?
+      - O que arroz fresco faria?
+      - Qual a relação entre calor e separação?
+  - id: chn_lychee_dessert
+    name: Sobremesa de Lichia
+    prompt: |
+      Lichia para sobremesa — fresca, em lata, em calda. A fruta encerra a refeição.
+      Doce, perfumada. Considere o final. O que outra fruta faria?
+    follow_ups:
+      - Como a lichia molda o encerramento?
+      - Qual a relação entre fruta e final?
+      - Por que lichia?
+  - id: chn_fortune_cookie
+    name: Biscoito da Sorte
+    prompt: |
+      Biscoito da sorte — invenção sino-americana. O biscoito é teatro. Quebre-o.
+      Leia a sorte. O biscoito não é autêntico, mas é ritual.
+      Considere seu lugar.
+    follow_ups:
+      - Como terminaria a refeição sem ele?
+      - Como a sorte molda o encerramento?
+      - Qual a relação entre biscoito e expectativa?
+  - id: chn_century_egg
+    name: Ovo de Cem Anos
+    prompt: |
+      Ovo de cem anos — preservado em cinzas, argila, cal. A gema fica verde-acinzentada,
+      a clara escurece até virar gelatina. É transformação ao longo de semanas. Considere a
+      arqueologia. Como seria um ovo fresco? O que a preservação adiciona?
+    follow_ups:
+      - Como a preservação molda a textura?
+      - Como seria o prato sem o ovo?
+      - Qual a relação entre tempo e transformação?

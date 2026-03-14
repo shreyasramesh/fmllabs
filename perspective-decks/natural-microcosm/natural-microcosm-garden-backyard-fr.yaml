@@ -1,0 +1,465 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosme Naturel — Jardin & Cour (French)
+
+id: natural_microcosm_garden_backyard
+name: Microcosme Naturel — Jardin & Cour
+description: 50 cartes pour changer votre regard sur la nature domestique, des pollinisateurs et du sol aux mauvaises herbes versus cultures et à la chorégraphie de la nature cultivée.
+domain: natural_microcosm
+cards:
+  - id: nmg_bee_landing
+    name: Atterrissage d'abeille
+    prompt: |
+      Observez une abeille atterrir sur une fleur. L'approche, le contact, le vol stationnaire.
+      L'abeille est à la fois prédateur et pollinisateur. Qu'y gagne la fleur ? Qu'y risque-t-elle ?
+    follow_ups:
+      - Comment l'atterrissage façonne-t-il la prochaine visite ?
+      - Que serait le jardin sans abeilles ?
+      - Quelle est la relation entre la fleur et l'abeille ?
+  - id: nmg_soil_crumble
+    name: Terre émiettée
+    prompt: |
+      Prenez une poignée de terre. Sentez sa texture — son émiettement, ses grains.
+      Cette terre contient une histoire, la mort, la renaissance. Qu'a vécu ici avant ?
+      Qu'en poussera-t-il ?
+    follow_ups:
+      - Comment la terre façonne-t-elle ce qui pousse ?
+      - Que signifierait une terre stérile ?
+      - Quelle est la relation entre l'émiettement et la vie ?
+  - id: nmg_weed_edge
+    name: Mauvaise herbe à la bordure
+    prompt: |
+      Une mauvaise herbe pousse là où la pelouse rencontre le parterre. Elle n'a pas été plantée.
+      Elle a été invitée — ou s'est invitée elle-même. Considérez la frontière. Qui trace la ligne
+      entre mauvaise herbe et fleur ?
+    follow_ups:
+      - Que serait le jardin sans mauvaises herbes ?
+      - Comment la bordure crée-t-elle de la tension ?
+      - Quelle est la relation entre la mauvaise herbe et l'intention ?
+  - id: nmg_compost_steam
+    name: Vapeur de compost
+    prompt: |
+      Retournez un tas de compost. La vapeur s'élève — la décomposition est en cours. La chaleur
+      est le travail microbien. Ce qui était un déchet de cuisine devient terre. Suivez la
+      transformation.
+    follow_ups:
+      - Que perdrait le jardin sans compost ?
+      - Comment la chaleur marque-t-elle le processus ?
+      - Quelle est la relation entre le déchet et la fertilité ?
+  - id: nmg_seed_dormancy
+    name: Dormance de la graine
+    prompt: |
+      Une graine dans le sol peut attendre des années — des décennies. Elle est vivante mais en pause.
+      Qu'est-ce qui la réveille ? Lumière, eau, feu, perturbation. Considérez la patience d'une
+      graine.
+    follow_ups:
+      - Que perdrait la germination sans dormance ?
+      - Comment l'attente façonne-t-elle la survie ?
+      - Quelle est la relation entre la pause et l'émergence ?
+  - id: nmg_bird_bath
+    name: Bain d'oiseaux
+    prompt: |
+      Un bain d'oiseaux est une invitation. Observez qui vient — moineaux, merles, peut-être un geai.
+      Le bain crée une rencontre. Que serait la cour sans ce petit point d'eau ?
+    follow_ups:
+      - Comment le bain façonne-t-il les visiteurs ?
+      - Quelle est la chorégraphie de l'arrivée ?
+      - Quelle est la relation entre l'eau et l'oiseau ?
+  - id: nmg_tomato_truss
+    name: Grappe de tomate
+    prompt: |
+      Une grappe de tomates porte des fruits verts, puis rouges. Étudiez l'architecture.
+      La tige, les branches, le poids. La plante est une ingénieure. Qu'est-ce qui la soutient ?
+    follow_ups:
+      - Que serait la plante sans la grappe ?
+      - Comment la structure façonne-t-elle la récolte ?
+      - Quelle est la relation entre la forme et le fruit ?
+  - id: nmg_aphid_column
+    name: Colonne de pucerons
+    prompt: |
+      Les pucerons s'agglutinent sur une tige — ils sucent, se multiplient. Ils sont à la fois nuisibles et proies.
+      Les coccinelles viendront. Remarquez l'écologie. Quelle est la relation entre l'infestation et l'équilibre ?
+    follow_ups:
+      - Que serait la plante sans pucerons ?
+      - Comment l'agglomérat attire-t-il les prédateurs ?
+      - Quelle est la relation entre le nuisible et l'écosystème ?
+  - id: nmg_hose_spray
+    name: Jet du tuyau
+    prompt: |
+      L'eau d'un tuyau frappe le sol. Regardez-la s'accumuler, s'infiltrer, couler. Le jet est
+      une pluie artificielle. En quoi diffère-t-elle de la vraie ? Que reçoit la plante ?
+    follow_ups:
+      - Que serait le jardin sans le tuyau ?
+      - Comment l'irrigation façonne-t-elle la croissance ?
+      - Quelle est la relation entre le jet et la pluie ?
+  - id: nmg_lawn_mow
+    name: Tonte de pelouse
+    prompt: |
+      Une pelouse est une nature gérée — coupée à la bonne hauteur, gardée verte. La tonte interrompt
+      la croissance. Considérez ce que deviendrait la pelouse si elle était laissée à elle-même. Qu'empêchons-nous ?
+    follow_ups:
+      - Que serait la cour sans tonte ?
+      - Comment la coupe façonne-t-elle l'identité ?
+      - Quelle est la relation entre la pelouse et le contrôle ?
+  - id: nmg_pot_bound
+    name: Enracinement en pot
+    prompt: |
+      Une plante en pot — les racines s'enroulent, cherchant. Le pot est une limite. Que
+      ferait la plante avec un sol sans limites ? Le pot est à la fois prison et
+      protection. Considérez le compromis.
+    follow_ups:
+      - Que serait la plante sans le pot ?
+      - Comment le confinement façonne-t-il la croissance ?
+      - Quelle est la relation entre la racine et le mur ?
+  - id: nmg_mulch_layer
+    name: Couche de paillis
+    prompt: |
+      Le paillis recouvre le sol — copeaux de bois, paille, feuilles. Il retient l'humidité,
+      supprime les mauvaises herbes, devient finalement sol. La couche est temporaire.
+      Que fait-elle pendant qu'elle dure ?
+    follow_ups:
+      - Que serait le parterre sans paillis ?
+      - Comment la couche crée-t-elle un microclimat ?
+      - Quelle est la relation entre la couverture et le sol ?
+  - id: nmg_hummingbird_hover
+    name: Vol stationnaire du colibri
+    prompt: |
+      Un colibri fait du vol stationnaire devant une fleur — les ailes invisibles de par leur vitesse.
+      Le vol stationnaire a un coût. Le nectar doit en valoir la peine. Considérez l'économie de la
+      visite.
+    follow_ups:
+      - Que serait la fleur sans le colibri ?
+      - Comment le vol stationnaire façonne-t-il la relation ?
+      - Quelle est la relation entre le coût et la récompense ?
+  - id: nmg_fence_creep
+    name: Lierre le long de la clôture
+    prompt: |
+      Le lierre ou la volubilis grimpe le long d'une clôture. La plante ne sait pas que la clôture est faite par l'homme.
+      Elle grimpe quand même. Considérez la rencontre entre la croissance et la structure.
+    follow_ups:
+      - Sur quoi la plante grimperait-elle sans la clôture ?
+      - Comment la clôture façonne-t-elle la vigne ?
+      - Quelle est la relation entre grimper et soutenir ?
+  - id: nmg_worm_cast
+    name: Excrément de ver
+    prompt: |
+      Des excréments de ver — de petits tas de terre — parsèment la pelouse. Le ver est passé,
+      laissant de la fertilité. L'excrément est une archéologie. Qu'a traité le ver ?
+      Qu'a-t-il laissé derrière lui ?
+    follow_ups:
+      - Que serait le sol sans vers ?
+      - Comment l'excrément marque-t-il le travail du ver ?
+      - Quelle est la relation entre l'excrément et l'aération ?
+  - id: nmg_squirrel_cache
+    name: Cache d'écureuil
+    prompt: |
+      Un écureuil enterre une noix — puis l'oublie. La noix peut germer. L'écureuil est un jardinier
+      accidentel. Considérez la relation entre la mémoire et la dispersion. Qu'est-ce qui pousse de l'oubli ?
+    follow_ups:
+      - Que serait le chêne sans l'écureuil ?
+      - Comment la mise en cache façonne-t-elle la propagation de la forêt ?
+      - Quelle est la relation entre enterrer et germer ?
+  - id: nmg_dew_morning
+    name: Rosée matinale
+    prompt: |
+      La rosée matinale perle sur les feuilles. Chaque goutte retient la lumière. La rosée est
+      de la condensation — de l'eau de l'air. Elle s'évaporera à midi. Considérez le
+      cadeau éphémère. Que reçoit la plante ?
+    follow_ups:
+      - Que serait la feuille sans la rosée ?
+      - Comment la perle façonne-t-elle la matinée ?
+      - Quelle est la relation entre la condensation et la feuille ?
+  - id: nmg_prune_scar
+    name: Cicatrice de taille
+    prompt: |
+      Une cicatrice de taille marque l'endroit où une branche a été coupée. L'arbre a guéri — ou a essayé.
+      La cicatrice est une histoire. Qu'a-t-on retiré ? Pourquoi ? De quoi l'arbre se souvient-il ?
+    follow_ups:
+      - Que serait l'arbre sans la taille ?
+      - Comment la coupe façonne-t-elle la croissance ?
+      - Quelle est la relation entre la blessure et la forme ?
+  - id: nmg_sunflower_turn
+    name: Tournesol qui tourne
+    prompt: |
+      Un jeune tournesol tourne avec le soleil — à l'est à l'aube, à l'ouest au crépuscule. Le
+      mouvement est l'héliotropisme. La plante suit la lumière. Considérez la
+      chorégraphie. Que signifierait une orientation fixe ?
+    follow_ups:
+      - Que serait le tournesol sans le mouvement ?
+      - Comment le suivi façonne-t-il la croissance ?
+      - Quelle est la relation entre le mouvement et la lumière ?
+  - id: nmg_slug_trail
+    name: Trace de limace
+    prompt: |
+      Une limace laisse une trace — argentée, collante. La trace marque le passage. Elle
+      protège aussi le pied de la limace. Considérez la trace comme un enregistrement et une
+      adaptation. Que permet-elle ?
+    follow_ups:
+      - Que serait la limace sans la trace ?
+      - Comment la bave façonne-t-elle le mouvement ?
+      - Quelle est la relation entre la trace et le prédateur ?
+  - id: nmg_birdhouse_hole
+    name: Trou de nichoir
+    prompt: |
+      Un nichoir a un trou — d'un diamètre spécifique. Il exclut certains oiseaux,
+      en invite d'autres. Le trou est un filtre. Pour qui a-t-il été conçu ? Qui s'en est emparé ?
+    follow_ups:
+      - Que serait la cour sans le nichoir ?
+      - Comment le trou façonne-t-il les occupants ?
+      - Quelle est la relation entre le trou et le locataire ?
+  - id: nmg_root_hair
+    name: Poil absorbant racinaire
+    prompt: |
+      Les poils absorbants sont invisibles d'en haut — de minuscules extensions qui absorbent l'eau
+      et les nutriments. L'interface de la plante avec le sol. Considérez ce qui se passe
+      en dessous. Que perdrait la plante sans eux ?
+    follow_ups:
+      - Comment le poil façonne-t-il l'absorption ?
+      - Quelle est la relation entre le poil et le sol ?
+      - Que verriez-vous si vous pouviez les voir ?
+  - id: nmg_frost_leaf
+    name: Givre sur une feuille
+    prompt: |
+      Des motifs de givre sur une feuille — cristallins, délicats. Le givre est de l'eau
+      gelée de l'air. Il fondra au soleil. Considérez l'art temporaire. Qu'expérimente la feuille ?
+    follow_ups:
+      - Que serait la matinée sans le givre ?
+      - Comment le givre façonne-t-il la journée de la feuille ?
+      - Quelle est la relation entre le cristal et la cellule ?
+  - id: nmg_companion_plant
+    name: Plante compagne
+    prompt: |
+      Basilic à côté des tomates. Soucis à côté des courges. La plantation compagne est une
+      adjacence stratégique. Certaines plantes repoussent ; d'autres attirent. Considérez la
+      vie sociale du parterre.
+    follow_ups:
+      - Que serait la tomate sans le basilic ?
+      - Comment l'adjacence façonne-t-elle le jardin ?
+      - Quelle est la relation entre le voisin et le nuisible ?
+  - id: nmg_fallen_apple
+    name: Pomme tombée
+    prompt: |
+      Une pomme tombe — non cueillie, trop mûre. Elle pourrira, nourrira les guêpes, peut-être fera-t-elle pousser
+      un jeune arbre. La chute est à la fois déchet et commencement. Considérez l'arc de la
+      branche au sol.
+    follow_ups:
+      - Que serait le sol sans la chute ?
+      - Comment la pourriture façonne-t-elle la suite ?
+      - Quelle est la relation entre la chute et la dispersion ?
+  - id: nmg_spider_web_corner
+    name: Toile d'araignée dans un coin
+    prompt: |
+      Une toile d'araignée s'étend dans un coin de l'abri de jardin. La rosée s'accroche à la soie.
+      La toile est à la fois un piège et une maison. Considérez l'économie de l'araignée. Qu'investit-elle ?
+      Qu'est-ce qu'elle récolte ?
+    follow_ups:
+      - Que serait le coin sans la toile ?
+      - Comment la toile façonne-t-elle la journée de l'araignée ?
+      - Quelle est la relation entre la soie et la proie ?
+  - id: nmg_seed_packet
+    name: Sachet de graines
+    prompt: |
+      Un sachet de graines — photo devant, instructions derrière. Le sachet est une promesse.
+      Que sortira-t-il de ces minuscules points ? Considérez la
+      relation entre l'image et la réalité.
+    follow_ups:
+      - Que serait le jardin sans le sachet ?
+      - Comment le sachet façonne-t-il l'attente ?
+      - Quelle est la relation entre la promesse et la plante ?
+  - id: nmg_rain_barrel
+    name: Baril de pluie
+    prompt: |
+      Un baril de pluie récupère les eaux de ruissellement du toit. L'eau est gratuite, douce,
+      non chlorée. Le baril est une infrastructure. Considérez ce qui coule du
+      ciel au baril à la racine.
+    follow_ups:
+      - Que serait le jardin sans le baril ?
+      - En quoi la pluie captée diffère-t-elle de celle du robinet ?
+      - Quelle est la relation entre le toit et la racine ?
+  - id: nmg_garden_glove
+    name: Gant de jardinage
+    prompt: |
+      Un gant laissé dans le parterre — doigts rigides, tachés de terre. Le gant est une
+      prothèse. Il étend la main, la protège. Considérez la frontière
+      entre l'humain et le sol. Que permet le gant ?
+    follow_ups:
+      - Que sentirait le jardinier sans le gant ?
+      - Comment le gant façonne-t-il la relation ?
+      - Quelle est la relation entre la main et la terre ?
+  - id: nmg_caterpillar_chew
+    name: Mastication de chenille
+    prompt: |
+      Une chenille mange une feuille — bord par bord. La mastication est audible. La
+      chenille transforme la feuille en papillon. Considérez le coût pour
+      la plante. Qu'y gagne-t-elle en hébergeant ?
+    follow_ups:
+      - Que serait la feuille sans la mastication ?
+      - Comment la chenille façonne-t-elle la plante ?
+      - Quelle est la relation entre manger et devenir ?
+  - id: nmg_fertilizer_burn
+    name: Brûlure d'engrais
+    prompt: |
+      Trop d'engrais brûle — les pointes brunissent, les racines se dessèchent. Le jardin est
+      une chimie. Plus n'est pas toujours mieux. Considérez la frontière entre nourrir
+      et empoisonner. Où est la ligne ?
+    follow_ups:
+      - Que serait la plante avec moins ?
+      - Comment l'excès façonne-t-il la feuille ?
+      - Quelle est la relation entre la dose et les dégâts ?
+  - id: nmg_shade_cloth
+    name: Toile d'ombrage
+    prompt: |
+      Une toile d'ombrage s'étend au-dessus des semis. Elle diffuse la lumière, réduit la chaleur.
+      La toile est une médiation — entre le soleil et la plante. Considérez ce que la toile ajoute.
+      Que soustrait-elle ?
+    follow_ups:
+      - Que serait le semis sans la toile ?
+      - Comment l'ombre façonne-t-elle la croissance précoce ?
+      - Quelle est la relation entre le filtre et la lumière ?
+  - id: nmg_morning_glory_dawn
+    name: Gloire du matin à l'aube
+    prompt: |
+      Les gloires du matin s'ouvrent à l'aube, se ferment dans l'après-midi. La fleur a un
+      calendrier. Considérez le rythme. Que deviendrait le jardin s'il restait ouvert toute la journée ?
+    follow_ups:
+      - Comment le timing façonne-t-il la pollinisation ?
+      - Quelle est la relation entre ouverture et pollinisateur ?
+      - Pourquoi l'aube ?
+  - id: nmg_garden_path
+    name: Chemin de jardin
+    prompt: |
+      Un chemin à travers le jardin — pas japonais ou paillis. Le chemin est là où
+      nous marchons. Le reste est là où nous ne marchons pas. Considérez la ligne. Qu'est-ce que
+      le chemin protège ? Qu'exclut-il ?
+    follow_ups:
+      - Que serait le jardin sans le chemin ?
+      - Comment le chemin façonne-t-il le mouvement ?
+      - Quelle est la relation entre le pas et le sol ?
+  - id: nmg_cross_pollination
+    name: Pollinisation croisée
+    prompt: |
+      Les abeilles transportent le pollen d'une plante à une autre. La descendance sera
+      des hybrides — pas identiques à l'un ou l'autre parent. Considérez le mélange. Que
+      crée la croisée ? Qu'y risque-t-on ?
+    follow_ups:
+      - Que serait la variété sans la croisée ?
+      - Comment l'abeille façonne-t-elle le gène ?
+      - Quelle est la relation entre transporter et combiner ?
+  - id: nmg_herb_scent
+    name: Parfum d'herbe
+    prompt: |
+      Frottez-vous contre du romarin ou de la menthe. Le parfum s'élève — huiles volatiles libérées.
+      Le parfum est défense et invitation. Considérez le double rôle. Qu'est-ce qui
+      repousse ? Qu'est-ce qui attire ?
+    follow_ups:
+      - Que serait l'herbe sans le parfum ?
+      - Comment l'huile façonne-t-elle la rencontre ?
+      - Quelle est la relation entre le toucher et la libération ?
+  - id: nmg_watering_can_pour
+    name: Verse d'arrosoir
+    prompt: |
+      L'eau d'un arrosoir — plus douce qu'un tuyau. Le versement est délibéré. Considérez
+      le rituel. Que permet l'arrosoir que le tuyau ne permet pas ? Quelle est la
+      relation entre le versement et la plante ?
+    follow_ups:
+      - Que préférerait le semis ?
+      - Comment le versement façonne-t-il le sol ?
+      - Quelle est la relation entre le rituel et la croissance ?
+  - id: nmg_bird_seed_spill
+    name: Graines d'oiseaux renversées
+    prompt: |
+      Des graines tombent d'un distributeur — tournesol, millet. Elles atterrissent sur le sol.
+      Les moineaux grattent. Les écureuils pillent. Le déversement crée une scène. Considérez
+      qui en profite. Pour qui était-ce destiné ?
+    follow_ups:
+      - Que serait le sol sans le déversement ?
+      - Comment le déversement façonne-t-il le groupe ?
+      - Quelle est la relation entre la goutte et le convive ?
+  - id: nmg_cutting_propagate
+    name: Bouture à propager
+    prompt: |
+      Une bouture — une tige dans l'eau ou le sol — prend racine. Pas de graine. La plante se clone
+      elle-même. Considérez le raccourci. Qu'évite la propagation ? Qu'est-ce qu'elle préserve ?
+    follow_ups:
+      - Que serait le jardin sans les boutures ?
+      - Comment le clonage façonne-t-il la diversité ?
+      - Quelle est la relation entre la coupe et la continuation ?
+  - id: nmg_leaf_miner_tunnel
+    name: Tunnel de mineuse de feuille
+    prompt: |
+      La trace d'une mineuse de feuille — sinueuse, pâle, sous la surface. La larve
+      mange entre les couches. La feuille survit, marquée. Considérez l'
+      invasion. Que perd la feuille ? Que garde-t-elle ?
+    follow_ups:
+      - Que serait la feuille sans le tunnel ?
+      - Comment la mineuse façonne-t-elle la feuille ?
+      - Quelle est la relation entre le tunnel et le tissu ?
+  - id: nmg_greenhouse_condensation
+    name: Condensation de serre
+    prompt: |
+      La condensation perle sur une vitre de serre. L'air intérieur est humide — les plantes
+      exhalent. La vitre est une frontière. Considérez le microclimat. Qu'est-ce qui retient
+      la chaleur ? Qu'est-ce qui retient l'humidité ?
+    follow_ups:
+      - Que serait la serre sans la vitre ?
+      - Comment la condensation façonne-t-elle l'intérieur ?
+      - Quelle est la relation entre le verre et la croissance ?
+  - id: nmg_terrace_level
+    name: Niveau de terrasse
+    prompt: |
+      Un parterre en terrasse descend une pente. Chaque niveau retient la terre, retient l'eau.
+      La terrasse est un contrôle de l'érosion et une scène. Considérez l'architecture.
+      Que serait la pente sans elle ?
+    follow_ups:
+      - Comment le niveau façonne-t-il ce qui pousse ?
+      - Quelle est la relation entre le pas et la stabilité ?
+      - Pourquoi terrasser ?
+  - id: nmg_native_vs_exotic
+    name: Natif vs Exotique
+    prompt: |
+      Certaines plantes sont indigènes — elles appartiennent. D'autres sont exotiques — introduites.
+      Considérez le parterre. Lesquelles sont lesquelles ? Est-ce que ça a de l'importance ? Qu'offre le natif
+      que l'exotique n'offre pas ?
+    follow_ups:
+      - Que serait le jardin avec uniquement des indigènes ?
+      - Comment l'origine façonne-t-elle l'écologie ?
+      - Quelle est la relation entre appartenir et prospérer ?
+  - id: nmg_garden_dusk
+    name: Jardin au crépuscule
+    prompt: |
+      Le jardin au crépuscule — la lumière s'estompe, les papillons de nuit émergent. Le changement de jour se termine ; le changement de nuit commence.
+      Considérez la transition. Qui se réveille ? Qui dort ?
+      Que devient le jardin ?
+    follow_ups:
+      - Que serait le jardin sans le crépuscule ?
+      - Comment le changement façonne-t-il l'écosystème ?
+      - Quelle est la relation entre le jour et la nuit ?
+  - id: nmg_stake_tie
+    name: Piquet et lien
+    prompt: |
+      Une plante attachée à un piquet — haricot, tomate. Le piquet redresse. Sans lui,
+      la plante s'étalerait. Considérez le support. Que permet le lien ?
+      Qu'est-ce qu'il contraint ?
+    follow_ups:
+      - Que serait la plante sans le piquet ?
+      - Comment le lien façonne-t-il la forme ?
+      - Quelle est la relation entre le support et la croissance ?
+  - id: nmg_first_frost
+    name: Premier gel
+    prompt: |
+      Le premier gel — les plantes fragiles noircissent. Le jardin change. Certaines choses
+      se terminent ; d'autres persistent. Considérez le seuil. Qu'est-ce que le gel sélectionne ?
+      Qu'est-ce qu'il épargne ?
+    follow_ups:
+      - Que serait le jardin sans le gel ?
+      - Comment le premier gel façonne-t-il la saison ?
+      - Quelle est la relation entre le froid et la fermeture ?
+  - id: nmg_garden_reflection
+    name: Réflexion du jardin
+    prompt: |
+      Regardez le jardin. Il reflète des choix — ce qui a été planté, ce qui a été
+      arraché, ce qui a été laissé tranquille. Le jardin est un miroir. Que révèle-t-il
+      sur le jardinier ?
+    follow_ups:
+      - Que dirait le jardin sans mots ?
+      - Comment les choix façonnent-ils l'ensemble ?
+      - Quelle est la relation entre le jardinier et ce qui a poussé ?

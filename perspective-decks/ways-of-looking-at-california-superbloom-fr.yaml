@@ -1,0 +1,207 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Façons de voir la super floraison californienne (French)
+
+id: ways_of_looking_at_california_superbloom
+name: Façons de voir la super floraison californienne
+description: |
+  Cartes pour changer votre perspective lors de l'expérience de la super floraison californienne.
+  Chacune offre une lentille différente pour approfondir la façon dont vous voyez les fleurs sauvages, les collines et
+  l'explosion éphémère de couleur après la pluie d'hiver.
+domain: california_superbloom
+cards:
+  - id: the_rain_that_made_it
+    name: La pluie qui l'a rendue possible
+    prompt: |
+      Avant les fleurs, il y a eu la pluie. Imaginez les tempêtes qui ont rempli le
+      sol, les graines attendant sous terre. Quelles conditions ont dû s'aligner pour que cette
+      floraison ait lieu ? Remontez la super floraison jusqu'à ses origines.
+    follow_ups:
+      - Qu'est-ce qui aurait été différent avec plus – ou moins – de pluie ?
+      - Combien d'années de dormance peuvent se cacher derrière une seule colline ?
+      - Qu'est-ce que cela signifie que ce moment n'a jamais été garanti ?
+  - id: one_species_at_a_time
+    name: Une espèce à la fois
+    prompt: |
+      Choisissez une seule espèce de fleur et suivez-la. Coquelicots orange, lupins violets,
+      goldfields jaunes – ignorez tout le reste pendant un instant. Comment le fait de se concentrer
+      sur une seule change-t-il ce que vous voyez ?
+    follow_ups:
+      - Où cette espèce domine-t-elle – et où cède-t-elle ?
+      - À quoi ressemblerait la colline si seule celle-ci fleurissait ?
+      - Comment se maintient-elle parmi les autres ?
+  - id: pollinators_view
+    name: Vue des pollinisateurs
+    prompt: |
+      Imaginez que vous êtes une abeille, un papillon ou un colibri. Qu'est-ce qui vous attirerait ?
+      Quelles fleurs visiteriez-vous en premier ? À quoi ressemble le paysage vu à quelques centimètres
+      au-dessus des pétales ?
+    follow_ups:
+      - Quels motifs guideraient votre chemin ?
+      - Quelles fleurs ignoreriez-vous – et pourquoi ?
+      - Comment l'échelle change-t-elle l'expérience ?
+  - id: ground_level
+    name: Au niveau du sol
+    prompt: |
+      Descendez. Allongez-vous sur le ventre ou agenouillez-vous. Voyez la super floraison
+      du point de vue du sol – les tiges qui montent, les pétales qui s'arquent au-dessus de vous, le ciel
+      une bande lointaine au-dessus.
+    follow_ups:
+      - Qu'observez-vous que vous avez manqué à hauteur d'homme ?
+      - Comment le sol se sent-il sous vous ?
+      - Que verrait un scarabée d'ici ?
+  - id: time_lapse
+    name: Accéléré
+    prompt: |
+      La super floraison est un instant dans une histoire plus longue. Imaginez la colline en
+      accéléré : pousses vertes, premiers bourgeons, pic de couleur, puis fanaison. Combien de temps
+      dure le spectacle ? Que se passe-t-il avant et après ?
+    follow_ups:
+      - Quand auriez-vous choisi de visiter si vous ne pouviez venir qu'une seule fois ?
+      - Qu'est-ce qui est déjà parti lorsque vous arrivez ?
+      - Que restera-t-il lorsque la couleur s'estompera ?
+  - id: the_chemistry_of_color
+    name: La chimie de la couleur
+    prompt: |
+      Concentrez-vous sur les pigments. Orange, violet, jaune, bleu – qu'est-ce qui crée chaque teinte ?
+      Comment interagissent-ils ? Où les couleurs s'entrechoquent-elles, et où s'harmonisent-elles ?
+      Considérez la colline comme une palette.
+    follow_ups:
+      - Quelle couleur ajouteriez-vous – ou enlèveriez-vous ?
+      - Comment la lumière change-t-elle les couleurs au cours de la journée ?
+      - À quoi ressemblerait-elle en noir et blanc ?
+  - id: negative_space
+    name: L'espace négatif
+    prompt: |
+      Regardez ce qui n'est pas des fleurs. Le ciel, les parcelles de terre nue, les espaces
+      entre les floraisons. Comment l'espace vide façonne-t-il ce que vous voyez ? Ressentez
+      l'importance de ce qui n'est pas là.
+    follow_ups:
+      - Où le vide se concentre-t-il ?
+      - Qu'est-ce qui remplirait ces vides – et devrait-il le faire ?
+      - Comment l'espace négatif maintient-il la composition ?
+  - id: the_path_through
+    name: Le chemin à travers
+    prompt: |
+      Remarquez les sentiers – humains, animaux ou balayés par le vent. Où les gens marchent-ils ?
+      Où le paysage résiste-t-il au passage ? Tracez un chemin à travers la floraison
+      et demandez-vous quel serait le coût pour le suivre.
+    follow_ups:
+      - Que protégeriez-vous en n'y marchant pas ?
+      - Où le chemin veut-il vous emmener ?
+      - Que manqueriez-vous en restant sur le sentier ?
+  - id: geology_beneath
+    name: La géologie sous-jacente
+    prompt: |
+      Les fleurs reposent sur des millions d'années. Quelle roche se trouve sous le sol ?
+      Qu'est-ce qui a façonné ces collines ? Laissez la super floraison vous connecter au temps profond
+      sous vos pieds.
+    follow_ups:
+      - Comment la géologie influence-t-elle ce qui pousse ici ?
+      - À quoi cet endroit aurait-il ressemblé avant la formation des collines ?
+      - Que restera-t-il quand les fleurs auront disparu ?
+  - id: scent_and_sound
+    name: Parfum et son
+    prompt: |
+      Fermez les yeux. Que sentez-vous ? Pollen, poussière, sauge, terre humide ? Qu'entendez-vous ?
+      Bourdonnements d'abeilles, vent, pas, silence ? Laissez les sens non visuels guider pendant un moment.
+    follow_ups:
+      - Quel son ajouteriez-vous pour capturer l'expérience ?
+      - Comment le parfum change-t-il lorsque vous vous déplacez ?
+      - Que manqueriez-vous si vous ne faisiez que regarder ?
+  - id: light_and_shadow
+    name: Lumière et ombre
+    prompt: |
+      Observez comment la lumière se déplace sur la colline. Matin, midi, soir – comment
+      l'angle du soleil change-t-il les fleurs ? Où tombent les ombres ?
+      Qu'est-ce qui est révélé et qu'est-ce qui est caché ?
+    follow_ups:
+      - Quand la lumière semble-t-elle la plus vivante ?
+      - Que verriez-vous à l'aube que vous manqueriez à midi ?
+      - Comment les ombres façonnent-elles le paysage ?
+  - id: seed_to_flower
+    name: De la graine à la fleur
+    prompt: |
+      Suivez une seule plante de la graine à la floraison. Comment est-elle arrivée ici ? Par le vent,
+      les animaux, l'eau ? Combien de temps a-t-elle attendu ? Que deviendra-t-elle quand les pétales tomberont ?
+      Suivez une vie à travers son cycle.
+    follow_ups:
+      - Qu'aurait vu la graine sous terre ?
+      - Que laissera la plante derrière elle ?
+      - Combien de générations sont représentées sur cette colline ?
+  - id: micro_vs_macro
+    name: Micro contre macro
+    prompt: |
+      Zoomez sur un pétale, une goutte de rosée, un grain de pollen. Puis reculez pour voir toute la colline,
+      la vallée, l'État. Comment l'échelle change-t-elle la signification de la super floraison ?
+    follow_ups:
+      - Qu'est-ce qui est invisible à une échelle et évident à une autre ?
+      - Où votre attention se pose-t-elle naturellement ?
+      - Comment la vue macro change-t-elle la micro – et vice versa ?
+  - id: weathers_hand
+    name: La main de la météo
+    prompt: |
+      La super floraison est une collaboration de la météo. Pluie, soleil, vent, température –
+      chacun a un rôle. Imaginez la météo comme une co-créatrice. Qu'a-t-elle décidé ?
+      Qu'a-t-elle retenu ?
+    follow_ups:
+      - Qu'aurait produit un hiver différent ?
+      - Comment la météo d'aujourd'hui façonne-t-elle votre expérience ?
+      - Que diraient les fleurs de la météo si elles le pouvaient ?
+  - id: human_witness
+    name: Témoin humain
+    prompt: |
+      Vous n'êtes pas le premier à voir cela. Qui d'autre s'est tenu ici ? Éleveurs,
+      peuples autochtones, photographes, voyageurs. Comment votre présence
+      change-t-elle le lieu ? Que signifie être témoin ?
+    follow_ups:
+      - Que verraient-ils que vous ne voyez pas ?
+      - Qu'emporterez-vous ?
+      - En quoi le fait d'être témoin diffère-t-il de posséder ou de prendre ?
+  - id: the_next_year
+    name: L'année suivante
+    prompt: |
+      Cette floraison ne se répétera pas exactement. L'année prochaine, il pourrait y avoir la sécheresse,
+      un incendie, ou un mélange différent d'espèces. Imaginez revenir dans un an. Qu'espéreriez-vous
+      trouver ? De quoi seriez-vous prêt à vous séparer ?
+    follow_ups:
+      - Qu'est-ce qui rend ce moment irremplaçable ?
+      - Que diriez-vous à votre futur moi ?
+      - Comment l'impermanence approfondit-elle l'expérience ?
+  - id: texture_and_touch
+    name: Texture et toucher
+    prompt: |
+      Comment serait-ce de passer la main dans les fleurs ? Pétales doux, tiges cassantes, pollen collant,
+      feuilles rugueuses. Imaginez les textures sans toucher – ou, là où c'est permis, touchez doucement et remarquez.
+    follow_ups:
+      - Quelle texture vous surprend le plus ?
+      - Que voudriez-vous éviter de toucher – et pourquoi ?
+      - Comment la texture ajoute-t-elle à ce que la couleur seule ne peut transmettre ?
+  - id: before_and_after
+    name: Avant et après
+    prompt: |
+      Imaginez cette colline en saison sèche – brune, dormante, apparemment morte.
+      Maintenant, tenez les deux images : l'avant et l'après. Que révèle le contraste
+      sur la résilience, la patience et la transformation ?
+    follow_ups:
+      - Que manquerait quelqu'un qui n'aurait vu que la saison sèche ?
+      - Comment le souvenir de la dormance enrichit-il la floraison ?
+      - Quels autres moments "avant et après" cela évoque-t-il ?
+  - id: make_it_a_mixtape
+    name: En faire une compilation
+    prompt: |
+      Quelle musique accompagnerait ce paysage ? Créez une playlist pour la
+      super floraison. Quel tempo, quelle ambiance, quels instruments ? Laissez les fleurs
+      suggérer la bande sonore.
+    follow_ups:
+      - Quel est le morceau d'ouverture ?
+      - Quelle qualité relie la musique aux fleurs – rythme, couleur, sensation ?
+      - Comment la playlist changerait-elle à différents moments de la journée ?
+  - id: take_one_thing_home
+    name: Emporter une chose
+    prompt: |
+      Vous ne pouvez pas emporter les fleurs – elles appartiennent à cet endroit. Mais vous pouvez emporter un souvenir,
+      une sensation, une question. Quelle chose emporterez-vous ? Comment la conserverez-vous sans cueillir une seule fleur ?
+    follow_ups:
+      - Que montreriez-vous à quelqu'un qui ne pourrait pas venir ?
+      - Comment la décrirez-vous plus tard ?
+      - Que laisseriez-vous derrière vous intentionnellement ?

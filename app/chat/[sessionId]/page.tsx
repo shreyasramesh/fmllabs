@@ -1,17 +1,20 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useAuth, useUser, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import {
   parseAssistantMessage,
   parseRelevantContextBlock,
   parseRelevantContextFromStreamStart,
+  parseJournalCheckpointBlock,
+  parseJournalCheckpointFromStream,
   extractRelevanceContext,
   extractMentalModelIds,
   type RelevantContextItem,
   type RelevantContext,
+  type JournalCheckpoint,
 } from "@/lib/chat-utils";
 
 import { ChatMarkdown } from "@/components/ChatMarkdown";
@@ -58,16 +61,21 @@ interface Message {
     perspectiveCards?: RelevantContextItem[];
   };
   perspectiveCard?: { name: string; prompt: string };
+  journalCheckpoint?: string;
 }
 
 function processMessagesWithContext(msgs: Message[]): Message[] {
   return msgs.map((m) => {
     if (m.role === "assistant" && m.content) {
-      const { contentWithoutBlock, relevantContext } =
-        parseRelevantContextBlock(m.content);
+      let content = m.content;
+      const { contentWithoutBlock: afterCtx, relevantContext } =
+        parseRelevantContextBlock(content);
+      content = afterCtx;
+      const { contentWithoutBlock: afterJournal } =
+        parseJournalCheckpointBlock(content);
       return {
         ...m,
-        content: contentWithoutBlock,
+        content: afterJournal,
         selectedContexts: relevantContext ?? undefined,
       };
     }
@@ -81,6 +89,9 @@ interface Session {
   mentalModelTags?: string[];
   isCollapsed?: boolean;
   longTermMemoryId?: string;
+  convertedToDeepConversation?: boolean;
+  perspectiveCardPrompt?: string;
+  perspectiveCardName?: string;
   updatedAt: string;
 }
 
@@ -89,6 +100,7 @@ interface LongTermMemoryItem {
   title: string;
   summary: string;
   enrichmentPrompt: string;
+  chainOfThought?: string[];
   sourceSessionId: string;
   createdAt: string;
   updatedAt: string;
@@ -101,6 +113,8 @@ interface CustomConceptItem {
   enrichmentPrompt: string;
   createdAt: string;
   updatedAt: string;
+  /** When set, concept was extracted from a YouTube transcript; shows source video in modal */
+  sourceVideoTitle?: string;
 }
 
 interface ConceptGroupItem {
@@ -195,6 +209,10 @@ function MessageBubble({
   onTtsProgress,
   onTtsEnd,
   showTtsButton = true,
+  showConvertToDeep = false,
+  onConvertToDeep,
+  onManualJournalCheckpoint,
+  manualJournalLoading = false,
 }: {
   message: Message;
   messageIndex: number;
@@ -220,6 +238,10 @@ function MessageBubble({
   onTtsProgress?: (messageIndex: number, charEnd: number) => void;
   onTtsEnd?: () => void;
   showTtsButton?: boolean;
+  showConvertToDeep?: boolean;
+  onConvertToDeep?: () => void;
+  onManualJournalCheckpoint?: () => void;
+  manualJournalLoading?: boolean;
 }) {
   const { text, options } =
     message.role === "assistant"
@@ -356,10 +378,15 @@ function MessageBubble({
 
   return (
     <div
-      className={`group/msg flex flex-col animate-fade-in-up ${
+      className={`group/msg flex flex-col animate-fade-in-up gap-1.5 ${
         message.role === "user" ? "items-end" : "items-start"
       }`}
     >
+      {message.role === "user" && message.journalCheckpoint && (
+        <div className="max-w-[85%] rounded-2xl px-3 py-2 text-xs font-medium bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800/60">
+          Journal Checkpoint: {message.journalCheckpoint}
+        </div>
+      )}
       <div
         className={`group/tts relative max-w-[85%] rounded-3xl px-4 py-3 pr-12 transition-shadow duration-200 ${
           message.role === "user"
@@ -481,17 +508,29 @@ function MessageBubble({
                   }
                 }}
               >
-                <div className="px-3.5 py-2.5 flex items-center justify-between border-b border-neutral-200/60 dark:border-white/10">
+                <div className="px-3.5 py-2.5 flex items-center justify-between gap-2 border-b border-neutral-200/60 dark:border-white/10">
                   <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                     Context used
                   </span>
-                  <button
-                    type="button"
-                    onClick={() => { setCtxExpanded(false); setCtxReasonPillKey(null); }}
-                    className="text-xs font-medium text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
-                  >
-                    Collapse
-                  </button>
+                  <div className="flex items-center gap-2">
+                    {showConvertToDeep && onConvertToDeep && (
+                      <button
+                        type="button"
+                        onClick={onConvertToDeep}
+                        className="relative overflow-hidden shimmer-button py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm"
+                        title="Use full context (mental models, memories) for this conversation"
+                      >
+                        <span className="relative z-10">Convert to: Deep Conversation</span>
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => { setCtxExpanded(false); setCtxReasonPillKey(null); }}
+                      className="text-xs font-medium text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+                    >
+                      Collapse
+                    </button>
+                  </div>
                 </div>
                 <div className="p-3 flex flex-wrap gap-2">
                   {ctxCount === 0 ? (
@@ -555,18 +594,47 @@ function MessageBubble({
                 </div>
               </div>
             ) : (
-              <button
-                type="button"
-                onClick={() => setCtxExpanded(true)}
-                className="inline-flex items-center gap-2 py-1.5 px-3 rounded-xl text-xs font-medium bg-gradient-to-r from-neutral-100 to-neutral-50 dark:from-neutral-800 dark:to-neutral-800 text-neutral-600 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-600 hover:from-neutral-200 hover:to-neutral-100 dark:hover:from-neutral-700 dark:hover:to-neutral-700 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 shadow-sm"
-              >
-                <span className="flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 dark:bg-amber-500" aria-hidden />
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400 dark:bg-teal-500" aria-hidden />
-                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400 dark:bg-violet-500" aria-hidden />
-                </span>
-                Context used ({ctxCount})
-              </button>
+              <div className="inline-flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setCtxExpanded(true)}
+                  className="inline-flex items-center gap-2 py-1.5 px-3 rounded-xl text-xs font-medium bg-gradient-to-r from-neutral-100 to-neutral-50 dark:from-neutral-800 dark:to-neutral-800 text-neutral-600 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-600 hover:from-neutral-200 hover:to-neutral-100 dark:hover:from-neutral-700 dark:hover:to-neutral-700 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 shadow-sm"
+                >
+                  <span className="flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 dark:bg-amber-500" aria-hidden />
+                    <span className="w-1.5 h-1.5 rounded-full bg-teal-400 dark:bg-teal-500" aria-hidden />
+                    <span className="w-1.5 h-1.5 rounded-full bg-violet-400 dark:bg-violet-500" aria-hidden />
+                  </span>
+                  Context used ({ctxCount})
+                </button>
+                {onManualJournalCheckpoint && isLastAssistant && (
+                  <button
+                    type="button"
+                    onClick={onManualJournalCheckpoint}
+                    disabled={manualJournalLoading}
+                    className="inline-flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm disabled:opacity-70 disabled:cursor-wait"
+                    title="Add a journal checkpoint"
+                  >
+                    {manualJournalLoading && (
+                      <svg className="w-3 h-3 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden>
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.25" strokeWidth="2" />
+                        <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                      </svg>
+                    )}
+                    Journal
+                  </button>
+                )}
+                {showConvertToDeep && onConvertToDeep && (
+                  <button
+                    type="button"
+                    onClick={onConvertToDeep}
+                    className="relative overflow-hidden shimmer-button py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm"
+                    title="Use full context (mental models, memories) for this conversation"
+                  >
+                    <span className="relative z-10">Convert to: Deep Conversation</span>
+                  </button>
+                )}
+              </div>
             )}
           </div>
         )}
@@ -1467,6 +1535,7 @@ export default function ChatPage() {
   const [summarizeModal, setSummarizeModal] = useState<{
     summary: string;
     enrichmentPrompt: string;
+    chainOfThought?: string[];
     longTermMemoryId: string;
   } | null>(null);
   const [summarizeLanguageModal, setSummarizeLanguageModal] = useState<{
@@ -1494,6 +1563,7 @@ export default function ChatPage() {
   const [moonPhase, setMoonPhase] = useState<number | null>(null);
   const [ttsHighlight, setTtsHighlight] = useState<TtsHighlightState>(null);
   const [conceptSavedToast, setConceptSavedToast] = useState(false);
+  const [convertToDeepSuccess, setConvertToDeepSuccess] = useState(false);
   const [restartLoading, setRestartLoading] = useState(false);
   const [ltmDetailModal, setLtmDetailModal] = useState<LongTermMemoryItem | null>(null);
   const [ltmDeleteConfirmModal, setLtmDeleteConfirmModal] = useState<LongTermMemoryItem | null>(null);
@@ -1509,7 +1579,16 @@ export default function ChatPage() {
   const [ccCreateInput, setCcCreateInput] = useState("");
   const [ccCreateStep, setCcCreateStep] = useState<"input" | "preview">("input");
   const [conceptGroups, setConceptGroups] = useState<ConceptGroupItem[]>([]);
-  const [savedTranscripts, setSavedTranscripts] = useState<{ _id: string; videoId: string; videoTitle?: string; channel?: string }[]>([]);
+  const [savedTranscripts, setSavedTranscripts] = useState<{
+    _id: string;
+    videoId: string;
+    videoTitle?: string;
+    channel?: string;
+    extractedConcepts?: {
+      domain: string;
+      concepts: { title: string; summary: string; enrichmentPrompt: string }[];
+    }[];
+  }[]>([]);
   const [nuggets, setNuggets] = useState<{ _id: string; content: string; source?: string }[]>([]);
   const [nuggetFormOpen, setNuggetFormOpen] = useState<"selection" | "panel" | null>(null);
   const [nuggetFormPosition, setNuggetFormPosition] = useState<{ x: number; y: number } | null>(null);
@@ -1518,11 +1597,8 @@ export default function ChatPage() {
   const [nuggetCreateLoading, setNuggetCreateLoading] = useState(false);
   const [nuggetSuggestSourceLoading, setNuggetSuggestSourceLoading] = useState(false);
   const [nuggetImproveLoading, setNuggetImproveLoading] = useState(false);
-  const [selectedTextForNugget, setSelectedTextForNugget] = useState<string | null>(null);
-  const [selectionRect, setSelectionRect] = useState<{ left: number; bottom: number } | null>(null);
   const [nuggetLearnId, setNuggetLearnId] = useState<string | null>(null);
   const [nuggetLearnExplanation, setNuggetLearnExplanation] = useState<string | null>(null);
-  const [selectionLearnPopup, setSelectionLearnPopup] = useState<{ text: string; explanation: string | null; loading: boolean; x: number; y: number } | null>(null);
   const [cgDetailModal, setCgDetailModal] = useState<ConceptGroupItem | null>(null);
   const [cgCreateModal, setCgCreateModal] = useState(false);
   const [cgCreateStep, setCgCreateStep] = useState<1 | 2 | 3 | 4>(1);
@@ -1539,7 +1615,10 @@ export default function ChatPage() {
     videoTitle?: string;
     channel?: string;
     transcriptText: string;
+    extractedConcepts?: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
   } | null>(null);
+  const [transcriptExtractedConceptOpen, setTranscriptExtractedConceptOpen] = useState<{ gi: number; ci: number } | null>(null);
+  const [transcriptExtractedConceptsSectionOpen, setTranscriptExtractedConceptsSectionOpen] = useState(true);
   const [cgCustomCreateModal, setCgCustomCreateModal] = useState(false);
   const [cgCustomCreateTitle, setCgCustomCreateTitle] = useState("");
   const [cgCustomCreateSelectedIds, setCgCustomCreateSelectedIds] = useState<Set<string>>(new Set());
@@ -1667,7 +1746,6 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const selectionBubblesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
   const inputExpandInputRef = useRef<HTMLDivElement>(null);
   const [inputExpandModalOpen, setInputExpandModalOpen] = useState(false);
@@ -1685,58 +1763,7 @@ export default function ChatPage() {
     setShowScrollToBottom(false);
   }, []);
 
-  const checkSelection = useCallback(() => {
-    const sel = window.getSelection();
-    const text = sel?.toString()?.trim();
-    if (!text || text.length < 2) {
-      setSelectedTextForNugget(null);
-      setSelectionRect(null);
-      return;
-    }
-    const container = messagesContainerRef.current;
-    if (!container || !sel?.anchorNode || !container.contains(sel.anchorNode)) {
-      setSelectedTextForNugget(null);
-      setSelectionRect(null);
-      return;
-    }
-    try {
-      const rect = sel.getRangeAt(0).getBoundingClientRect();
-      setSelectionRect({ left: rect.left, bottom: rect.bottom });
-      setSelectedTextForNugget(text);
-    } catch {
-      setSelectionRect(null);
-      setSelectedTextForNugget(null);
-    }
-  }, []);
-
-  // selectionchange is more reliable on mobile than touchend; debounce to wait for selection to stabilize
-  useEffect(() => {
-    if (isAnonymous) return;
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-    const handleSelectionChange = () => {
-      const sel = window.getSelection();
-      const text = sel?.toString()?.trim();
-      if (!text) {
-        if (timeoutId) {
-          clearTimeout(timeoutId);
-          timeoutId = null;
-        }
-        setSelectedTextForNugget(null);
-        setSelectionRect(null);
-        return;
-      }
-      if (timeoutId) clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        timeoutId = null;
-        checkSelection();
-      }, 300);
-    };
-    document.addEventListener("selectionchange", handleSelectionChange);
-    return () => {
-      document.removeEventListener("selectionchange", handleSelectionChange);
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, [isAnonymous, checkSelection]);
+  // Selection-based actions (Save Nugget, Learn) only shown via context menu on right-click, not on selection
 
   useEffect(() => {
     if (isAnonymous && !isNew) {
@@ -1832,6 +1859,7 @@ export default function ChatPage() {
         } else if (ccTranslatePopoverOpen) {
           setCcTranslatePopoverOpen(false);
         } else {
+          if (ccDetailModal._id.startsWith("extracted-")) setTranscriptExtractedConceptOpen(null);
           setCcDetailModal(null);
         }
       }
@@ -1889,6 +1917,7 @@ export default function ChatPage() {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (ccDetailModal) {
+          if (ccDetailModal._id.startsWith("extracted-")) setTranscriptExtractedConceptOpen(null);
           setCcDetailModal(null);
         } else {
           setCgDetailModal(null);
@@ -1985,6 +2014,40 @@ export default function ChatPage() {
       .catch(() => setCustomConcepts([]))
       .finally(() => setCcLoaded(true));
   }, [isAnonymous]);
+
+  const openConceptDetail = useCallback((cc: CustomConceptItem) => {
+    if (cc._id.startsWith("extracted-")) {
+      setCcDetailModal(cc);
+      return;
+    }
+    fetch(`/api/me/custom-concepts/${cc._id}`, { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then(async (full: CustomConceptItem) => {
+        let resolved: CustomConceptItem = { ...full, _id: full._id ?? cc._id };
+        if (!resolved.sourceVideoTitle) {
+          const match = savedTranscripts.find((t) =>
+            (t.extractedConcepts ?? []).some((g) =>
+              g.concepts.some(
+                (c) =>
+                  c.title?.trim().toLowerCase() === resolved.title?.trim().toLowerCase() &&
+                  c.enrichmentPrompt?.trim().toLowerCase() === resolved.enrichmentPrompt?.trim().toLowerCase()
+              )
+            )
+          );
+          const inferred = match?.videoTitle?.trim();
+          if (inferred) {
+            resolved = { ...resolved, sourceVideoTitle: inferred };
+            fetch(`/api/me/custom-concepts/${resolved._id}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ sourceVideoTitle: inferred }),
+            }).catch(() => {});
+          }
+        }
+        setCcDetailModal(resolved);
+      })
+      .catch(() => setCcDetailModal(cc));
+  }, [savedTranscripts]);
 
   const refetchConceptGroups = useCallback(() => {
     if (isAnonymous) {
@@ -2114,6 +2177,24 @@ export default function ChatPage() {
             setCollapsedSummary(null);
             return;
           }
+          // Fallback when sessionStorage handoff is unavailable:
+          // read card data from URL params and hydrate the new conversation.
+          const params = new URLSearchParams(window.location.search);
+          const prompt = params.get("pcPrompt");
+          const name = params.get("pcName");
+          if (prompt && name) {
+            const assistantContent = `Let me invite you to look through this lens:\n\n${prompt}\n\nWhat comes to mind?`;
+            setMessages([{
+              role: "assistant",
+              content: assistantContent,
+              perspectiveCard: { name, prompt },
+            }]);
+            setPendingCardContext({ prompt, name });
+            setCurrentSessionId(null);
+            setCurrentSession(null);
+            setCollapsedSummary(null);
+            return;
+          }
         } catch {
           /* ignore */
         }
@@ -2162,6 +2243,7 @@ export default function ChatPage() {
         setSidebarOpen(false);
       }
       if (sessionId !== "new" && sessionId !== "incognito") {
+        const nextUrl = `/chat/new?pcName=${encodeURIComponent(name)}&pcPrompt=${encodeURIComponent(prompt)}`;
         try {
           sessionStorage.setItem(
             PERSPECTIVE_CARD_START_KEY,
@@ -2174,7 +2256,7 @@ export default function ChatPage() {
         } catch {
           /* ignore */
         }
-        router.push("/chat/new");
+        router.push(nextUrl);
       } else {
         setMessages([initialMessage]);
         setPendingCardContext({ prompt, name });
@@ -2201,7 +2283,7 @@ export default function ChatPage() {
     setOnboardingDismissed(true);
   }, []);
 
-  const sendMessage = useCallback(async (overrideText?: string, options?: { retry?: boolean; messagesOverride?: Message[]; activeCardPrompt?: string; activeCardName?: string }) => {
+  const sendMessage = useCallback(async (overrideText?: string, options?: { retry?: boolean; messagesOverride?: Message[]; activeCardPrompt?: string; activeCardName?: string; journalCheckpoint?: string }) => {
     const rawText = (overrideText ?? input).trim();
     if (!rawText || isLoading) return;
     playSelectionChime();
@@ -2240,6 +2322,7 @@ export default function ChatPage() {
     const userMessage: Message = {
       role: "user",
       content: rawText,
+      ...(options?.journalCheckpoint && { journalCheckpoint: options.journalCheckpoint }),
       ...(!cardCtx && options?.activeCardPrompt &&
         options?.activeCardName && {
           perspectiveCard: {
@@ -2293,6 +2376,9 @@ export default function ChatPage() {
       chatBody.activeCardPrompt = options.activeCardPrompt;
       if (options?.activeCardName) chatBody.activeCardName = options.activeCardName;
     }
+    if (options?.journalCheckpoint) {
+      chatBody.journalCheckpoint = options.journalCheckpoint;
+    }
     if (isAnonymous || incognitoMode) {
       chatBody.messages = baseMessages.map((m) => ({ role: m.role, content: m.content }));
       if (incognitoMode) chatBody.incognito = true;
@@ -2344,10 +2430,13 @@ export default function ChatPage() {
         });
       }
 
-      const { contentWithoutBlock, relevantContext } = contextBlockConsumed
+      const { contentWithoutBlock: afterCtx, relevantContext } = contextBlockConsumed
         ? { contentWithoutBlock: messageContent, relevantContext: overlayContext ?? undefined }
         : parseRelevantContextBlock(accumulated);
-          const resolvedContext =
+      const { contentWithoutBlock: contentWithoutJournal, journalCheckpoint } =
+        parseJournalCheckpointBlock(afterCtx);
+      const contentWithoutBlock = contentWithoutJournal;
+      const resolvedContext =
         relevantContext ??
         (() => {
           const extractedIds = extractMentalModelIds(contentWithoutBlock);
@@ -2379,6 +2468,14 @@ export default function ChatPage() {
         }
         return next;
       });
+      const journalCheckpointCount = baseMessages.filter((m) => m.journalCheckpoint).length;
+      if (journalCheckpoint && !isAnonymous && !incognitoMode && journalCheckpointCount < 2) {
+        setJournalCheckpointModal({
+          prompt: journalCheckpoint.prompt,
+          options: journalCheckpoint.options,
+          assistantMessageIndex: messages.length + 1, // user at messages.length, assistant at +1
+        });
+      }
     } catch (err) {
       setLastFailedUserMessage(rawText);
       setMessages((prev) => {
@@ -2482,12 +2579,95 @@ export default function ChatPage() {
   const [overachieverMessage, setOverachieverMessage] = useState<string | null>(
     null
   );
+  const [journalCheckpointModal, setJournalCheckpointModal] = useState<{
+    prompt: string;
+    options: string[];
+    assistantMessageIndex: number;
+  } | null>(null);
+  const [journalCheckpointLoading, setJournalCheckpointLoading] = useState(false);
+  const [journalCheckpointBlanks, setJournalCheckpointBlanks] = useState<string[]>([]);
+  const [journalCheckpointCustomByIndex, setJournalCheckpointCustomByIndex] = useState<Record<number, string>>({});
+  const [journalCheckpointPopoverIndex, setJournalCheckpointPopoverIndex] = useState<number | null>(null);
   const [isSafari, setIsSafari] = useState(false);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
   const selectedExportSections = EXPORT_DATA_SECTION_OPTIONS
     .filter(({ key }) => exportSelections[key])
     .map(({ key }) => key);
   const allExportSectionsSelected = selectedExportSections.length === EXPORT_DATA_SECTION_OPTIONS.length;
+  const openManualJournalCheckpoint = useCallback(
+    async (assistantContent: string, assistantMessageIndex: number) => {
+      playSelectionChime();
+      if (!currentSessionId || isAnonymous || incognitoMode || journalCheckpointLoading) return;
+
+      const fallback = (() => {
+        const parsed = parseAssistantMessage(assistantContent);
+        const assistantText = stripMarkdown(parsed.text).replace(/\s+/g, " ").trim();
+        const firstSentence = assistantText
+          .split(/[.!?]+/)
+          .map((s) => s.trim())
+          .find((s) => s.length > 0)
+          ?.slice(0, 90);
+        return {
+          prompt: firstSentence
+            ? `Reflecting on "${firstSentence}", I want to remember _____`
+            : "Reflecting on this conversation, I want to remember _____",
+          options: [
+            "what matters most to me",
+            "the next step I will take",
+            "the feeling underneath this",
+            "the insight I do not want to lose",
+          ],
+        };
+      })();
+      const ensurePromptHasBlank = (rawPrompt: string) => {
+        const trimmed = rawPrompt.trim();
+        if (!trimmed) return fallback.prompt;
+        // If model returns a fully-complete sentence without blanks, fall back to a clear
+        // fill-in template so user intent is obvious.
+        return /_{2,}/.test(trimmed) ? trimmed : fallback.prompt;
+      };
+
+      setJournalCheckpointLoading(true);
+      try {
+        const res = await fetch(`/api/sessions/${currentSessionId}/journal-checkpoint`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ language }),
+        });
+        if (!res.ok) {
+          setJournalCheckpointModal({
+            prompt: ensurePromptHasBlank(fallback.prompt),
+            options: fallback.options,
+            assistantMessageIndex,
+          });
+          return;
+        }
+        const data = (await res.json()) as { prompt?: string; options?: string[] };
+        const prompt =
+          typeof data.prompt === "string" && data.prompt.trim()
+            ? ensurePromptHasBlank(data.prompt)
+            : ensurePromptHasBlank(fallback.prompt);
+        const options = Array.isArray(data.options)
+          ? data.options.filter((opt): opt is string => typeof opt === "string" && opt.trim().length > 0).slice(0, 6)
+          : fallback.options;
+        setJournalCheckpointModal({
+          prompt,
+          options: options.length > 0 ? options : fallback.options,
+          assistantMessageIndex,
+        });
+      } catch {
+        setJournalCheckpointModal({
+          prompt: ensurePromptHasBlank(fallback.prompt),
+          options: fallback.options,
+          assistantMessageIndex,
+        });
+      } finally {
+        setJournalCheckpointLoading(false);
+      }
+    },
+    [currentSessionId, isAnonymous, incognitoMode, journalCheckpointLoading, language]
+  );
+
   useEffect(() => {
     if (typeof navigator === "undefined") return;
     setIsSafari(/safari/i.test(navigator.userAgent) && !/chrome|crios/i.test(navigator.userAgent));
@@ -2550,10 +2730,11 @@ export default function ChatPage() {
   );
 
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !journalCheckpointModal) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (drawnPerspectiveCard) setDrawnPerspectiveCard(null);
+        if (journalCheckpointModal) setJournalCheckpointModal(null);
+        else if (drawnPerspectiveCard) setDrawnPerspectiveCard(null);
         else if (waysOfLookingAtModalOpen) {
           if (waysOfLookingAtDigital) setWaysOfLookingAtDigital(null);
           else if (waysOfLookingAtHuman) setWaysOfLookingAtHuman(null);
@@ -2568,7 +2749,24 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, journalCheckpointModal, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital]);
+
+  // Reset journal checkpoint modal state when modal opens
+  useEffect(() => {
+    if (journalCheckpointModal) {
+      const blankCount = (journalCheckpointModal.prompt.match(/_{2,}/g) || []).length;
+      setJournalCheckpointBlanks(Array(blankCount).fill(""));
+      setJournalCheckpointCustomByIndex({});
+      setJournalCheckpointPopoverIndex(null);
+    }
+  }, [journalCheckpointModal]);
+
+  // On mobile: blur input when perspective card modal opens so keyboard doesn't steal focus
+  useEffect(() => {
+    if (drawnPerspectiveCard && typeof document !== "undefined") {
+      (document.activeElement as HTMLElement)?.blur();
+    }
+  }, [drawnPerspectiveCard]);
 
   useEffect(() => {
     if (!settingsOpen) return;
@@ -2775,23 +2973,6 @@ export default function ChatPage() {
         .finally(() => setWaysOfLookingAtCardsLoading(false));
     }
   }, [waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, perspectiveDecksConfig, language]);
-
-  useEffect(() => {
-    const clearSelectionBubbles = (e: MouseEvent | TouchEvent) => {
-      const target = e.target as Node;
-      if (selectionBubblesRef.current?.contains(target)) return;
-      if (selectedTextForNugget || selectionRect) {
-        setSelectedTextForNugget(null);
-        setSelectionRect(null);
-      }
-    };
-    document.addEventListener("mousedown", clearSelectionBubbles);
-    document.addEventListener("touchstart", clearSelectionBubbles, { passive: true });
-    return () => {
-      document.removeEventListener("mousedown", clearSelectionBubbles);
-      document.removeEventListener("touchstart", clearSelectionBubbles);
-    };
-  }, [selectedTextForNugget, selectionRect]);
 
   const [teachMeLoading, setTeachMeLoading] = useState(false);
   const handleTeachMeClick = useCallback(async () => {
@@ -3572,6 +3753,13 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           </div>
         )}
 
+        {convertToDeepSuccess && (
+          <div className="mx-4 mt-2 px-4 py-3 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border-2 border-neutral-300 dark:border-neutral-600 text-sm font-medium text-neutral-700 dark:text-neutral-300 animate-celebrate flex items-center gap-2">
+            <span className="text-lg">🧠</span>
+            Now using full context (mental models, memories).
+          </div>
+        )}
+
         {conceptSavedToast && (
           <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border-2 border-neutral-300 dark:border-neutral-600 text-sm font-medium text-neutral-800 dark:text-neutral-200 animate-celebrate flex items-center gap-2 shadow-lg">
             <span className="text-lg">✨</span>
@@ -3605,11 +3793,11 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
         )}
 
         <div
-          className={`flex-1 min-h-0 flex flex-col ${
+          className={`flex-1 min-h-0 flex flex-col transition-all duration-500 ${
             messages.length > 0
               ? "pb-24 md:pb-0 overflow-y-auto scroll-smooth"
               : "pb-0 overflow-hidden"
-          }`}
+          } ${convertToDeepSuccess ? "animate-convert-to-deep" : ""}`}
         >
           <div ref={messagesScrollRef} className={`flex-1 min-h-0 min-w-0 ${messages.length > 0 ? "overflow-y-auto" : "overflow-hidden flex flex-col"}`}>
           {currentSession?.isCollapsed && collapsedSummary ? (
@@ -3617,6 +3805,25 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               <div className="w-full max-w-2xl">
               <div className="group/tts rounded-3xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm p-6 space-y-4 text-foreground">
                 <h2 className="font-semibold text-lg">{collapsedSummary.title}</h2>
+                {collapsedSummary.chainOfThought && collapsedSummary.chainOfThought.length > 0 && (
+                  <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 p-3">
+                    <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2.5">
+                      Chain-of-thought
+                    </p>
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-2" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                      {collapsedSummary.chainOfThought.map((step, i) => (
+                        <React.Fragment key={i}>
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600 shadow-sm whitespace-nowrap">
+                            {step}
+                          </span>
+                          {i < collapsedSummary.chainOfThought!.length - 1 && (
+                            <span className="text-neutral-400 dark:text-neutral-500 shrink-0 text-[10px] font-medium" aria-hidden>→</span>
+                          )}
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <div className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap">
                   {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === `collapsed-summary-${collapsedSummary._id}` ? (
                     <TtsHighlightedText text={`${collapsedSummary.title}\n\n${collapsedSummary.summary}`.trim()} charEnd={ttsHighlight.charEnd} />
@@ -3810,20 +4017,6 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           <div
             ref={messagesContainerRef}
             className={`max-w-2xl mx-auto w-full min-w-0 px-4 py-6 no-touch-callout ${messages.length === 0 ? "flex-1 min-h-0 flex flex-col items-center justify-center" : "space-y-6"}`}
-            onMouseUp={() => {
-              if (isAnonymous || incognitoMode) return;
-              checkSelection();
-            }}
-            onTouchEnd={() => {
-              if (isAnonymous || incognitoMode) return;
-              // On mobile, selection may not be ready immediately; delay slightly
-              requestAnimationFrame(() => {
-                setTimeout(checkSelection, 50);
-              });
-            }}
-            onContextMenu={(e) => {
-              if (typeof window !== "undefined" && "ontouchstart" in window) e.preventDefault();
-            }}
           >
             {messages.length === 0 && (
               <div className="flex w-full min-w-0 max-w-2xl flex-col items-center justify-center text-center px-2 space-y-8">
@@ -3955,7 +4148,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 }}
                 onCustomConceptClick={(id) => {
                   const cc = customConcepts.find((c) => c._id === id);
-                  if (cc) setCcDetailModal(cc);
+                  if (cc) openConceptDetail(cc);
                 }}
                 onConceptGroupClick={(id) => {
                   const cg = conceptGroups.find((g) => g._id === id);
@@ -3978,113 +4171,45 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 ttsHighlight={ttsHighlight && "messageIndex" in ttsHighlight && ttsHighlight.messageIndex === i ? ttsHighlight.charEnd : undefined}
                 onTtsProgress={(msgIdx, charEnd) => setTtsHighlight({ messageIndex: msgIdx, charEnd })}
                 onTtsEnd={() => setTtsHighlight(null)}
+                showConvertToDeep={
+                  !isAnonymous &&
+                  !!currentSessionId &&
+                  !!(messages[0]?.perspectiveCard || currentSession?.perspectiveCardPrompt) &&
+                  !currentSession?.convertedToDeepConversation &&
+                  (!currentSession || !currentSession.isCollapsed)
+                }
+                onConvertToDeep={
+                  currentSessionId
+                    ? async () => {
+                        playSelectionChime();
+                        try {
+                          const res = await fetch(`/api/sessions/${currentSessionId}`, {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ convertedToDeepConversation: true }),
+                          });
+                          if (res.ok) {
+                            const session = await res.json();
+                            setCurrentSession(session);
+                            setConvertToDeepSuccess(true);
+                            setTimeout(() => setConvertToDeepSuccess(false), 2500);
+                          }
+                        } catch {
+                          /* ignore */
+                        }
+                      }
+                    : undefined
+                }
+                onManualJournalCheckpoint={
+                  !isAnonymous && !incognitoMode && m.role === "assistant" && i === messages.length - 1
+                    ? () => openManualJournalCheckpoint(m.content, i)
+                    : undefined
+                }
+                manualJournalLoading={journalCheckpointLoading && m.role === "assistant" && i === messages.length - 1}
               />
             ))}
             <div ref={messagesEndRef} />
           </div>
-          )}
-          {selectedTextForNugget && selectionRect && !isAnonymous && !incognitoMode && !nuggetFormOpen && (
-            <div
-              ref={selectionBubblesRef}
-              className="fixed z-40 flex gap-1 animate-fade-in"
-              style={{ left: selectionRect.left, top: selectionRect.bottom + 4 }}
-            >
-              <button
-                type="button"
-                onClick={() => {
-                  const w = Math.min(360, typeof window !== "undefined" ? window.innerWidth - 32 : 360);
-                  let x = selectionRect.left;
-                  if (typeof window !== "undefined" && x + w > window.innerWidth - 16) x = window.innerWidth - w - 16;
-                  if (x < 8) x = 8;
-                  setNuggetCreateContent(selectedTextForNugget);
-                  setNuggetCreateSource("");
-                  setNuggetFormOpen("selection");
-                  setNuggetFormPosition({ x, y: selectionRect.bottom + 4 });
-                  setSelectedTextForNugget(null);
-                  setSelectionRect(null);
-                  window.getSelection()?.removeAllRanges?.();
-                }}
-                className="flex items-center justify-center w-9 h-9 rounded-full bg-foreground text-background shadow-lg hover:opacity-90 transition-opacity"
-                title="Save Nugget"
-                aria-label="Save Nugget"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                onClick={async () => {
-                  const text = selectedTextForNugget;
-                  const w = Math.min(360, typeof window !== "undefined" ? window.innerWidth - 32 : 360);
-                  let x = selectionRect.left;
-                  if (typeof window !== "undefined" && x + w > window.innerWidth - 16) x = window.innerWidth - w - 16;
-                  if (x < 8) x = 8;
-                  const y = selectionRect.bottom + 4;
-                  setSelectionLearnPopup({ text, explanation: null, loading: true, x, y });
-                  setSelectedTextForNugget(null);
-                  setSelectionRect(null);
-                  window.getSelection()?.removeAllRanges?.();
-                  try {
-                    const res = await fetch("/api/me/nuggets/learn", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: text }) });
-                    const data = await res.json();
-                    setSelectionLearnPopup((p) => p ? { ...p, explanation: data.explanation ?? "Failed to load.", loading: false } : null);
-                  } catch {
-                    setSelectionLearnPopup((p) => p ? { ...p, explanation: "Failed to load.", loading: false } : null);
-                  }
-                }}
-                className="flex items-center justify-center w-9 h-9 rounded-full bg-foreground text-background shadow-lg hover:opacity-90 transition-opacity"
-                title="Learn from This"
-                aria-label="Learn from This"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                  <path d="M12 3v18" />
-                </svg>
-              </button>
-            </div>
-          )}
-          {selectionLearnPopup && (
-            <>
-              <div
-                className="fixed inset-0 z-[49] bg-black/20 animate-fade-in"
-                onClick={() => setSelectionLearnPopup(null)}
-                aria-hidden
-              />
-              <div
-                className="fixed z-50 w-[min(360px,calc(100vw-2rem))] animate-fade-in rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-xl p-3"
-                style={{ left: selectionLearnPopup.x, top: selectionLearnPopup.y }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Learn</span>
-                  <div className="flex items-center gap-1">
-                    {!selectionLearnPopup.loading && selectionLearnPopup.explanation && (
-                      <TTSButton
-                        text={selectionLearnPopup.explanation}
-                        showOnHover={false}
-                        ariaLabel="Listen to explanation"
-                        onTtsProgress={(charEnd) => setTtsHighlight({ textId: "selection-learn-popup", charEnd })}
-                        onTtsEnd={() => setTtsHighlight(null)}
-                      />
-                    )}
-                    <button type="button" onClick={() => { setSelectionLearnPopup(null); setTtsHighlight(null); }} className="p-1 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800">✕</button>
-                  </div>
-                </div>
-                {selectionLearnPopup.loading ? (
-                  <p className="text-sm text-neutral-500 dark:text-neutral-400">Loading...</p>
-                ) : (
-                  <p className="text-sm text-foreground whitespace-pre-wrap">
-                    {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === "selection-learn-popup" ? (
-                      <TtsHighlightedText text={selectionLearnPopup.explanation ?? ""} charEnd={ttsHighlight.charEnd} />
-                    ) : (
-                      selectionLearnPopup.explanation
-                    )}
-                  </p>
-                )}
-              </div>
-            </>
           )}
           </div>
         </div>
@@ -4176,7 +4301,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   }}
                   onCustomConceptClick={(id) => {
                     const cc = customConcepts.find((c) => c._id === id);
-                    if (cc) setCcDetailModal(cc);
+                    if (cc) openConceptDetail(cc);
                   }}
                   onConceptGroupClick={(id) => {
                     const cg = conceptGroups.find((g) => g._id === id);
@@ -4189,7 +4314,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   }}
                   previewMap={previewMap}
                 />
-                {isMobileViewport && (
+                {isMobileViewport && !drawnPerspectiveCard && (
                   <button
                     type="button"
                     onClick={(e) => {
@@ -4324,7 +4449,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   }}
                   onCustomConceptClick={(id) => {
                     const cc = customConcepts.find((c) => c._id === id);
-                    if (cc) setCcDetailModal(cc);
+                    if (cc) openConceptDetail(cc);
                   }}
                   onConceptGroupClick={(id) => {
                     const cg = conceptGroups.find((g) => g._id === id);
@@ -5024,7 +5149,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                                           <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" /><path d="M10 11v6M14 11v6" /></svg>
                                           </button>
-                                          <div role="button" tabIndex={0} onClick={() => setCcDetailModal(cc)} onKeyDown={(e) => e.key === "Enter" && setCcDetailModal(cc)} className="flex-1 min-w-0 cursor-pointer pr-8">
+                                          <div role="button" tabIndex={0} onClick={() => openConceptDetail(cc)} onKeyDown={(e) => e.key === "Enter" && openConceptDetail(cc)} className="flex-1 min-w-0 cursor-pointer pr-8">
                                             <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{cc.title}</span>
                                             <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{cc.summary || cc.enrichmentPrompt}</p>
                                           </div>
@@ -5048,7 +5173,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                                         <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
                                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" /><path d="M10 11v6M14 11v6" /></svg>
                                         </button>
-                                        <div role="button" tabIndex={0} onClick={() => setCcDetailModal(cc)} onKeyDown={(e) => e.key === "Enter" && setCcDetailModal(cc)} className="flex-1 min-w-0 cursor-pointer pr-8">
+                                        <div role="button" tabIndex={0} onClick={() => openConceptDetail(cc)} onKeyDown={(e) => e.key === "Enter" && openConceptDetail(cc)} className="flex-1 min-w-0 cursor-pointer pr-8">
                                           <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{cc.title}</span>
                                           <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{cc.summary || cc.enrichmentPrompt}</p>
                                         </div>
@@ -5087,7 +5212,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             tabIndex={0}
                             onClick={openGroup}
                             onKeyDown={(e) => e.key === "Enter" && openGroup()}
-                            className="relative flex flex-col items-center justify-center gap-1 p-3 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 cursor-pointer transition-colors text-center"
+                            className="relative flex flex-col items-center justify-center gap-1 p-3 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 cursor-pointer transition-colors text-center"
                           >
                             {isEmpty && (
                               <button
@@ -5135,7 +5260,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                               onClick={() =>
                                 fetch(`/api/me/transcripts/${t._id}`)
                                   .then((r) => r.ok ? r.json() : Promise.reject())
-                                  .then((data) => setTranscriptModalTranscript({ id: t._id, videoId: data.videoId ?? t.videoId, videoTitle: data.videoTitle ?? t.videoTitle, channel: data.channel ?? t.channel, transcriptText: data.transcriptText ?? "" }))
+                                  .then((data) => setTranscriptModalTranscript({ id: t._id, videoId: data.videoId ?? t.videoId, videoTitle: data.videoTitle ?? t.videoTitle, channel: data.channel ?? t.channel, transcriptText: data.transcriptText ?? "", extractedConcepts: data.extractedConcepts }))
                                   .catch(() => {})
                               }
                               onKeyDown={(e) => e.key === "Enter" && (e.currentTarget as HTMLElement).click()}
@@ -5282,10 +5407,202 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
         </>
       )}
 
+      {journalCheckpointModal && (() => {
+        const { prompt, options } = journalCheckpointModal;
+        const segments = prompt.split(/(_{2,})/);
+        const blankCount = (prompt.match(/_{2,}/g) || []).length;
+        const getFillForBlank = (i: number) => {
+          const v = journalCheckpointBlanks[i] ?? "";
+          return v === "__custom__" ? (journalCheckpointCustomByIndex[i] ?? "").trim() : v;
+        };
+        const isReady = blankCount === 0 || Array.from({ length: blankCount }, (_, i) => getFillForBlank(i)).every((f) => f.length > 0);
+        const buildFullText = () => {
+          let blankIdx = 0;
+          return segments.map((s) => (/_{2,}/.test(s) ? getFillForBlank(blankIdx++) || "…" : s)).join("").trim();
+        };
+        const closeModal = () => {
+          setJournalCheckpointModal(null);
+          setJournalCheckpointBlanks([]);
+          setJournalCheckpointCustomByIndex({});
+          setJournalCheckpointPopoverIndex(null);
+        };
+        return (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+            onClick={closeModal}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="journal-checkpoint-title"
+          >
+            <div
+              className="relative w-full max-w-lg rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-xl p-4 animate-fade-in-up"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <h2 id="journal-checkpoint-title" className="font-semibold text-lg text-foreground">
+                  Journal Checkpoint
+                </h2>
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  aria-label="Close journal checkpoint modal"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4" aria-hidden>
+                    <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                </button>
+              </div>
+              <p className="mb-2 text-xs text-neutral-500 dark:text-neutral-400">
+                Fill in the blank(s) to create your journal note. Tap a highlighted blank to choose an option or enter your own.
+              </p>
+              <div className="text-sm text-neutral-600 dark:text-neutral-400 mb-3 leading-relaxed flex flex-wrap items-baseline gap-1" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                {segments.map((segment, idx) => {
+                  if (/_{2,}/.test(segment)) {
+                    const blankIdx = segments.slice(0, idx).filter((s) => /_{2,}/.test(s)).length;
+                    const value = journalCheckpointBlanks[blankIdx] ?? "";
+                    const displayText = value === "__custom__"
+                      ? (journalCheckpointCustomByIndex[blankIdx] || "").trim() || "Type your own…"
+                      : value || "Select…";
+                    const isCustom = value === "__custom__";
+                    const popoverOpen = journalCheckpointPopoverIndex === blankIdx;
+                    return (
+                      <span key={idx} className="inline-flex align-baseline">
+                        {isCustom ? (
+                          <span className="inline-flex items-center gap-1">
+                            <input
+                              type="text"
+                              value={journalCheckpointCustomByIndex[blankIdx] ?? ""}
+                              onChange={(e) => setJournalCheckpointCustomByIndex((prev) => ({ ...prev, [blankIdx]: e.target.value }))}
+                              placeholder="Type your own…"
+                              className="min-w-[120px] max-w-[200px] px-2 py-1 rounded-md border border-amber-300 dark:border-amber-600 bg-amber-50/50 dark:bg-amber-900/20 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setJournalCheckpointBlanks((prev) => {
+                                  const next = [...prev];
+                                  next[blankIdx] = "";
+                                  return next;
+                                });
+                                setJournalCheckpointCustomByIndex((prev) => {
+                                  const next = { ...prev };
+                                  delete next[blankIdx];
+                                  return next;
+                                });
+                              }}
+                              className="text-[10px] text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+                            >
+                              change
+                            </button>
+                          </span>
+                        ) : (
+                          <div className="relative">
+                            <button
+                              type="button"
+                              onClick={() => setJournalCheckpointPopoverIndex((prev) => (prev === blankIdx ? null : blankIdx))}
+                              className="min-w-[110px] px-2.5 py-1 rounded-md border border-dashed border-amber-400 dark:border-amber-500 bg-amber-50/60 dark:bg-amber-900/20 text-amber-800 dark:text-amber-200 text-sm hover:bg-amber-100 dark:hover:bg-amber-900/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                            >
+                              {displayText}
+                            </button>
+                            {popoverOpen && (
+                              <>
+                                <div className="fixed inset-0 z-40" onClick={() => setJournalCheckpointPopoverIndex(null)} aria-hidden />
+                                <div className="absolute left-0 top-full mt-1 z-50 w-[min(280px,calc(100vw-3rem))] py-1 rounded-lg border border-neutral-200 dark:border-neutral-600 bg-background shadow-xl max-h-56 overflow-y-auto">
+                                  {options.map((opt, i) => (
+                                    <button
+                                      key={i}
+                                      type="button"
+                                      onClick={() => {
+                                        setJournalCheckpointBlanks((prev) => {
+                                          const next = [...prev];
+                                          next[blankIdx] = opt;
+                                          return next;
+                                        });
+                                        setJournalCheckpointPopoverIndex(null);
+                                      }}
+                                      className="w-full px-3 py-2 text-left text-sm leading-snug hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                    >
+                                      {opt}
+                                    </button>
+                                  ))}
+                                  <button
+                                      type="button"
+                                      onClick={() => {
+                                        setJournalCheckpointBlanks((prev) => {
+                                          const next = [...prev];
+                                          next[blankIdx] = "__custom__";
+                                          return next;
+                                        });
+                                        setJournalCheckpointPopoverIndex(null);
+                                      }}
+                                      className="w-full px-3 py-2 text-left text-sm text-amber-600 dark:text-amber-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 border-t border-neutral-100 dark:border-neutral-700"
+                                    >
+                                      Enter my own
+                                    </button>
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        )}
+                      </span>
+                    );
+                  }
+                  return <span key={idx}>{segment}</span>;
+                })}
+              </div>
+              <div className="mb-4 px-3 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300">
+                Preview: <span className="text-neutral-700 dark:text-neutral-200">{buildFullText()}</span>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (!isReady) return;
+                    const fullText = buildFullText();
+                    playSelectionChime();
+                    closeModal();
+                    await sendMessage(fullText, { journalCheckpoint: fullText });
+                  }}
+                  disabled={!isReady}
+                  className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                >
+                  Send
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSelectionChime();
+                    closeModal();
+                    setInputExpandModalOpen(true);
+                    setTimeout(() => inputExpandInputRef.current?.focus(), 50);
+                  }}
+                  className="px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 whitespace-nowrap"
+                >
+                  Custom message
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSelectionChime();
+                    closeModal();
+                    setSummarizeLanguageModal({ selectedLanguage: language });
+                  }}
+                  disabled={!currentSessionId || incognitoMode}
+                  className="px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 whitespace-nowrap"
+                >
+                  Summarize
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
       {transcriptModalTranscript && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
-          onClick={() => setTranscriptModalTranscript(null)}
+          onClick={() => { setTranscriptModalTranscript(null); setTranscriptExtractedConceptOpen(null); setTranscriptExtractedConceptsSectionOpen(true); }}
           aria-modal
           role="dialog"
         >
@@ -5296,7 +5613,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             <div className="relative p-4 pr-12 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <button
                 type="button"
-                onClick={() => setTranscriptModalTranscript(null)}
+                onClick={() => { setTranscriptModalTranscript(null); setTranscriptExtractedConceptOpen(null); setTranscriptExtractedConceptsSectionOpen(true); }}
                 className="absolute top-4 right-4 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                 aria-label="Close"
               >
@@ -5313,6 +5630,57 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 Open on YouTube
               </a>
             </div>
+            {transcriptModalTranscript.extractedConcepts && transcriptModalTranscript.extractedConcepts.length > 0 && (
+              <div className="px-4 pb-4 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setTranscriptExtractedConceptsSectionOpen((o) => !o)}
+                  className="flex items-center justify-between w-full text-left group"
+                >
+                  <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase">Extracted concepts</p>
+                  <span className="text-neutral-400 dark:text-neutral-500 group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors" aria-hidden>
+                    {transcriptExtractedConceptsSectionOpen ? "▼" : "▶"}
+                  </span>
+                </button>
+                {transcriptExtractedConceptsSectionOpen && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {transcriptModalTranscript.extractedConcepts.map((group, gi) =>
+                    group.concepts.map((c, ci) => {
+                      const isSelected = transcriptExtractedConceptOpen?.gi === gi && transcriptExtractedConceptOpen?.ci === ci;
+                      return (
+                        <button
+                          key={`${gi}-${ci}`}
+                          type="button"
+                          onClick={() => {
+                            openConceptDetail({
+                              _id: `extracted-${gi}-${ci}`,
+                              title: c.title,
+                              summary: c.summary,
+                              enrichmentPrompt: c.enrichmentPrompt,
+                              createdAt: "",
+                              updatedAt: "",
+                              sourceVideoTitle: transcriptModalTranscript.videoTitle,
+                            });
+                            setTranscriptExtractedConceptOpen({ gi, ci });
+                          }}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors cursor-pointer text-left ${
+                            isSelected
+                              ? "bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100 border-neutral-300 dark:border-neutral-600 ring-2 ring-foreground/20"
+                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                          }`}
+                          title="Click to view concept"
+                        >
+                          <span className="text-neutral-500 dark:text-neutral-400 truncate max-w-[6rem]">{group.domain}</span>
+                          <span className="text-neutral-400 dark:text-neutral-500">·</span>
+                          <span>{c.title}</span>
+                        </button>
+                      );
+                    })
+                  )}
+                </div>
+                )}
+              </div>
+            )}
             <div className="flex-1 overflow-y-auto p-4">
               <div className="max-w-[65ch] mx-auto text-[15px] leading-relaxed text-foreground">
                 {(() => {
@@ -5356,6 +5724,8 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   setCcYoutubeResult(null);
                   setCcYoutubeError(null);
                   setTranscriptModalTranscript(null);
+                  setTranscriptExtractedConceptOpen(null);
+                  setTranscriptExtractedConceptsSectionOpen(true);
                   setCcYoutubeModal(true);
                 }}
                 className="px-4 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
@@ -5367,7 +5737,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 onClick={() => {
                   fetch(`/api/me/transcripts/${transcriptModalTranscript.id}`, { method: "DELETE" })
                     .then(() => refetchTranscripts())
-                    .then(() => setTranscriptModalTranscript(null));
+                    .then(() => { setTranscriptModalTranscript(null); setTranscriptExtractedConceptOpen(null); setTranscriptExtractedConceptsSectionOpen(true); });
                 }}
                 className="px-4 py-2 rounded-xl text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition-colors"
               >
@@ -5440,6 +5810,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     setSummarizeModal({
                       summary: data.summary,
                       enrichmentPrompt: data.enrichmentPrompt,
+                      chainOfThought: data.chainOfThought,
                       longTermMemoryId: data.longTermMemory._id,
                     });
                     setSummarizeSuccess(true);
@@ -5480,6 +5851,25 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               </p>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {summarizeModal.chainOfThought && summarizeModal.chainOfThought.length > 0 && (
+                <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 p-3">
+                  <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2.5">
+                    Chain-of-thought
+                  </p>
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-2" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                    {summarizeModal.chainOfThought.map((step, i) => (
+                      <React.Fragment key={i}>
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600 shadow-sm whitespace-nowrap">
+                          {step}
+                        </span>
+                        {i < summarizeModal.chainOfThought!.length - 1 && (
+                          <span className="text-neutral-400 dark:text-neutral-500 shrink-0 text-[10px] font-medium" aria-hidden>→</span>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <label className="text-sm font-medium text-neutral-900 dark:text-neutral-100 min-w-0">
@@ -5622,6 +6012,25 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
+              {ltmDetailModal.chainOfThought && ltmDetailModal.chainOfThought.length > 0 && (
+                <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 p-3">
+                  <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2.5">
+                    Chain-of-thought
+                  </p>
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-2" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                    {ltmDetailModal.chainOfThought.map((step, i) => (
+                      <React.Fragment key={i}>
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600 shadow-sm whitespace-nowrap">
+                          {step}
+                        </span>
+                        {i < ltmDetailModal.chainOfThought!.length - 1 && (
+                          <span className="text-neutral-400 dark:text-neutral-500 shrink-0 text-[10px] font-medium" aria-hidden>→</span>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <label className="text-sm font-medium text-neutral-900 dark:text-neutral-100 min-w-0">
@@ -7395,6 +7804,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             body: JSON.stringify({
                               domain: group.domain,
                               concepts: validConcepts,
+                              sourceVideoTitle: ccYoutubeResult.videoTitle ?? undefined,
                             }),
                           });
                         }
@@ -7430,6 +7840,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
         <div
           className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
           onClick={() => {
+            if (ccDetailModal._id.startsWith("extracted-")) setTranscriptExtractedConceptOpen(null);
             setCcDetailModal(null);
             setCcAutoTagSuggestions(null);
             setCcTranslatePopoverOpen(false);
@@ -7443,9 +7854,17 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between">
-              <h2 className="font-semibold text-lg truncate pr-2">{ccDetailModal.title}</h2>
+              <div className="min-w-0 flex-1 pr-2">
+                <h2 className="font-semibold text-lg truncate">{ccDetailModal.title}</h2>
+                {ccDetailModal.sourceVideoTitle && (
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate mt-0.5" title={ccDetailModal.sourceVideoTitle}>
+                    From: {ccDetailModal.sourceVideoTitle}
+                  </p>
+                )}
+              </div>
               <button
                 onClick={() => {
+                  if (ccDetailModal._id.startsWith("extracted-")) setTranscriptExtractedConceptOpen(null);
                   setCcDetailModal(null);
                   setCcAutoTagSuggestions(null);
                   setCcTranslatePopoverOpen(false);
@@ -7720,6 +8139,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                           if (text) {
                             sendMessage(text);
                             setGenerateModal(null);
+                            if (ccDetailModal._id.startsWith("extracted-")) setTranscriptExtractedConceptOpen(null);
                             setCcDetailModal(null);
                           }
                         }}
@@ -8304,7 +8724,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   {(cgDetailModal.concepts ?? []).map((cc) => (
                     <div
                       key={cc._id}
-                      className="flex items-center gap-3 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors relative"
+                      className="flex items-center gap-3 p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors relative"
                     >
                       <button
                         type="button"
@@ -8352,9 +8772,9 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       <div
                         role="button"
                         tabIndex={0}
-                        onClick={() => setCcDetailModal(cc)}
+                        onClick={() => openConceptDetail(cc)}
                         onKeyDown={(e) =>
-                          e.key === "Enter" && setCcDetailModal(cc)
+                          e.key === "Enter" && openConceptDetail(cc)
                         }
                         className="flex-1 min-w-0 cursor-pointer"
                       >
