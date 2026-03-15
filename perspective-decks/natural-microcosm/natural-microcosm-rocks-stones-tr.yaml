@@ -1,0 +1,530 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Doğal Mikrokosmos — Kayalar ve Taşlar (Turkish)
+
+id: natural_microcosm_rocks_stones
+name: Doğal Mikrokosmos — Kayalar ve Taşlar
+description: Kayalar ve taşlara bakış açınızı değiştirecek 50 kart; jeolojik zamandan likene, ayrışma, erozyon ve mineralin yavaş hareket eden yaşamına kadar.
+domain: natural_microcosm
+cards:
+  - id: nmr_lichen_map
+    name: Liken Haritası
+    prompt: |
+      Liken kayaların üzerinde yavaş ve sabırla büyür. Turuncu, gri, yeşil. Bu
+      tek bir organizma değil, iki canlıdan oluşur: mantar ve alg. Bu ortaklığa
+      odaklan. Kaya ne sunar? Liken ne geri verir?
+    follow_ups:
+      - Likensiz kaya nasıl görünürdü?
+      - Liken zamanı nasıl işaretler?
+      - Liken ve ayrışma arasındaki ilişki nedir?
+  - id: nmr_pebble_smooth
+    name: Pürüzsüz Çakıl
+    prompt: |
+      Bir nehir çakılı pürüzsüzdür — su ve kum onu aşındırmıştır. Bir tane tut.
+      Bunun için kaç yıl geçti? Pürüzsüzlük bir yolculuğun kaydıdır. Keskin bir kenarın
+      anlamı ne olurdu?
+    follow_ups:
+      - Pürüzsüzlük geçmişi nasıl ortaya çıkarır?
+      - Çakıl sudan başka neyle olurdu?
+      - Şekil ve akış arasındaki ilişki nedir?
+  - id: nmr_crack_frost
+    name: Don Çatlağı
+    prompt: |
+      Su bir çatlağa girip donar, genişler. Kaya çatlar. Bu yavaş bir şiddettir.
+      Bir çatlağı olan bir kaya bulun. Ona neden olan donma ve çözülme döngülerini
+      düşünün.
+    follow_ups:
+      - Çatlaksız kaya ne olurdu?
+      - Don manzarayı nasıl şekillendirir?
+      - Su ve çatlama arasındaki ilişki nedir?
+  - id: nmr_stone_warmth
+    name: Taş Sıcaklığı
+    prompt: |
+      Güneşle ısınan bir taş ısıyı tutar. Akşamüstü üzerine oturun. Taş, emdiğini
+      salıverir. Bu alışverişi düşünün. Güneşi olmayan taş ne olurdu?
+    follow_ups:
+      - Taş nasıl mikro iklim yaratır?
+      - O ısıyı hangi canlılar kullanır?
+      - Kaya ve ısı arasındaki ilişki nedir?
+  - id: nmr_moss_crust
+    name: Yosun Kabuğu
+    prompt: |
+      Yosun taşın üzerinde büyür — ince bir kabuk. Nemi tutar, tozu yakalar.
+      Kaya bir alt katman haline gelir. Kaya ne zaman toprak olur? Sınır nerede?
+    follow_ups:
+      - Yosunsuz taş ne olurdu?
+      - Kabuk değişimi nasıl hızlandırır?
+      - Mineral ve organik arasındaki ilişki nedir?
+  - id: nmr_vein_quartz
+    name: Kuvars Damarı
+    prompt: |
+      Bir kuvars damarı kayanın içinden geçer — farklı bir mineralden bir bant.
+      Bir kırılmayı, bir dolumu işaretler. Çizgiyi izleyin. Onu hangi kuvvetler
+      oluşturdu? Damar neyi ortaya çıkarır?
+    follow_ups:
+      - Damarsız kaya ne olurdu?
+      - Damar derin zamanı nasıl işaretler?
+      - Kırılma ve güzellik arasındaki ilişki nedir?
+  - id: nmr_puddle_reflect
+    name: Taşta Su Birikintisi
+    prompt: |
+      Yağmurdan sonra kayadaki bir çukur su tutar. Küçük bir havuzdur — bir
+      bardak. İçine ne yansır? Ne buharlaşır? Taş bir kap yapmıştır.
+    follow_ups:
+      - Çukursuz kaya ne olurdu?
+      - Havuz nasıl yaşam alanı yaratır?
+      - Oyuk ve zaman arasındaki ilişki nedir?
+  - id: nmr_sand_grain
+    name: Kum Tanesi
+    prompt: |
+      Kum, küçük parçalara ayrılmış kayadır. Bir avuç alın. Her tane bir zamanlar
+      daha büyük bir şeyin parçasıydı. Ölçeği düşünün. Bir dağda kaç tane kum tanesi
+      vardır?
+    follow_ups:
+      - Tanelerden yoksun kumsal ne olurdu?
+      - Tanecik boyutu bir hikayeyi nasıl anlatır?
+      - Bütün ve parça arasındaki ilişki nedir?
+  - id: nmr_stone_circle
+    name: Taş Çember
+    prompt: |
+      Elle veya buzul tarafından dizilmiş kayalar — bir çember, bir höyük, bir
+      duvar. Biri veya bir şey onları yerleştirmiş. Amacı düşünün. Dizilimin anlamı
+      nedir?
+    follow_ups:
+      - Taşsız alan ne olurdu?
+      - Dizilim nasıl anlam yaratır?
+      - Kaya ve ayin arasındaki ilişki nedir?
+  - id: nmr_erosion_edge
+    name: Erozyon Kenarı
+    prompt: |
+      Rüzgar ve su kayayı oyar. Bir kenar bulun — bir uçurum, bir kaya bloğu.
+      Şekil, kaldırma işleminin ürünüdür. Önceden orada ne vardı? Ne kalacak?
+    follow_ups:
+      - Erozyonsuz manzara ne olurdu?
+      - Kenar zamanı nasıl işaretler?
+      - Kayıp ve form arasındaki ilişki nedir?
+  - id: nmr_color_streak
+    name: Renk Çizgisi
+    prompt: |
+      Kaya yekpare değildir — demir kırmızıyı, manganez siyahı, bakır yeşili
+      lekelenir. Bir çizgi izleyin. Renk kimyadır. Kayanın geçmişi hakkında neyi
+      ortaya çıkarır?
+    follow_ups:
+      - Renginden yoksun kaya ne olurdu?
+      - Mineraloji paleti nasıl şekillendirir?
+      - Element ve renk tonu arasındaki ilişki nedir?
+  - id: nmr_scratch_glacier
+    name: Buzul Çiziği
+    prompt: |
+      Buzul çizikleri — ana kayadaki çizikler — buzun kayaları taşın üzerinde
+      sürüklediği yeri işaretler. Çizgiler paraleldir. Kuvveti düşünün. Ne hareket
+      etti? Ne sabit kaldı?
+    follow_ups:
+      - Çiziksiz kaya ne gösterirdi?
+      - Çizik yönü nasıl işaretler?
+      - Buz ve taş arasındaki ilişki nedir?
+  - id: nmr_cobble_pattern
+    name: Kobo Desen
+    prompt: |
+      Benzer boyutta, çeşitli şekillerde kobblardan oluşan bir kumsal veya nehir
+      yatağı. Su onları ayırmıştır. Deseni düşünün. Ayırma size ne anlatıyor?
+    follow_ups:
+      - Ayırmadan yoksun kumsal ne olurdu?
+      - Akış deseni nasıl şekillendirir?
+      - Boyut ve nakil arasındaki ilişki nedir?
+  - id: nmr_cavern_drip
+    name: Mağara Damlası
+    prompt: |
+      Sarkıtlar damla damla oluşur — sızan sudan mineraller birikir. Büyüme algılanamaz
+      ölçektedir. Zaman ölçeğini düşünün. Hızlandırılmış bir film ne gösterirdi?
+    follow_ups:
+      - Damlasız mağara ne olurdu?
+      - Damla iklimi nasıl kaydeder?
+      - Su ve taş arasındaki ilişki nedir?
+  - id: nmr_boulder_shadow
+    name: Kaya Gölgesi
+    prompt: |
+      Büyük bir kaya bloğu gölge düşürür. Altındaki zemin farklıdır — daha
+      serin, daha nemli, daha az güneş. Kaya bloğu bir mikro iklim yaratır. Gölgede
+      kim yaşar?
+    follow_ups:
+      - Kaya bloğu olmayan yamaç ne olurdu?
+      - Gölge yaşamı nasıl şekillendirir?
+      - Kaya ve sığınak arasındaki ilişki nedir?
+  - id: nmr_fossil_impression
+    name: Fosil İzlenimi
+    prompt: |
+      Bir fosil, taşa dönüşmüş yaşamdır — veya tortuda kalan bir izlenim.
+      Bulabilirseniz bir tane bulun. Kaya hafızayı tutar. Bu izi hangi canlı bıraktı?
+      Ne zaman?
+    follow_ups:
+      - Fosil olmayan kaya ne olurdu?
+      - İzlenim nasıl korunur?
+      - Yaşam ve mineral arasındaki ilişki nedir?
+  - id: nmr_grit_texture
+    name: Kumlu Doku
+    prompt: |
+      Elinizi kaya üzerinde gezdirin. Kumtaşı granitten, şeyl bazalttan farklı
+      hissedilir. Doku mineral, tane, yapıdır. Dokunmak size ne anlatır?
+    follow_ups:
+      - Dokusuz kaya ne olurdu?
+      - Doku kökeni nasıl ortaya çıkarır?
+      - His ve bileşim arasındaki ilişki nedir?
+  - id: nmr_talus_slope
+    name: Kaya Döküntüsü Yamaç
+    prompt: |
+      Bir kaya döküntüsü yamaçı — bir uçurumun dibindeki kırık kayalar. Yerçekimi
+      ve hava koşulları onları indirir. Yamaç bir enkaz yığınıdır. Birikmesi ne kadar
+      sürdü?
+    follow_ups:
+      - Yamaç dibindeki döküntüsüz alan ne olurdu?
+      - Yamaç erozyonu nasıl işaretler?
+      - Düşüş ve yığın arasındaki ilişki nedir?
+  - id: nmr_soil_horizon
+    name: Toprak Ufku
+    prompt: |
+      Dikkatlice kazın. Toprağın katmanları vardır — üstte organik, altta
+      mineral, bazen belirgin bantlar. Ufuk geçmişi temsil eder. Her katmanı
+      ne yarattı?
+    follow_ups:
+      - Ufuksuz zemin ne olurdu?
+      - Ufuk zamanı nasıl kaydeder?
+      - Kaya ve toprak arasındaki ilişki nedir?
+  - id: nmr_drystone_wall
+    name: Kuru Taş Duvar
+    prompt: |
+      Kuru taş duvar — harçsız taşlar yerleştirilmiş. Duvar yerçekimi ve uyumla
+      durur. Zanaatı düşünün. Her taş bir sonrakini nasıl destekler?
+    follow_ups:
+      - Duvarı olmayan tarla ne olurdu?
+      - Duvar bölgeyi nasıl işaretler?
+      - Kaya ve sınır arasındaki ilişki nedir?
+  - id: nmr_tide_pool_rock
+    name: Gelgit Havuzu Kayası
+    prompt: |
+      Gelgit havuzundaki kayalar ıslanır, kurur, tekrar ıslanır. Canlılar
+      yapışır. Kaya bir yaşam alanıdır. Gelgitin ritmini düşünün. Kaya ne deneyimler?
+    follow_ups:
+      - Kayası olmayan havuz ne olurdu?
+      - Kaya nasıl yüzey yaratır?
+      - Kaya ve gelgit arasındaki ilişki nedir?
+  - id: nmr_crystal_face
+    name: Kristal Yüzey
+    prompt: |
+      Bazı kayalar kristal yüzeyler gösterir — yarılmış düzlemler, geometrik
+      formlar. Kristal bir boşlukta, yavaş sırayla büyümüştür. Geometriyi düşünün.
+      Onu hangi kuvvetler şekillendirdi?
+    follow_ups:
+      - Kristali olmayan kaya ne olurdu?
+      - Yüzey yapıyı nasıl ortaya çıkarır?
+      - Düzen ve mineral arasındaki ilişki nedir?
+  - id: nmr_dust_coating
+    name: Toz Kaplaması
+    prompt: |
+      Kaya toz toplar — polen, is, mineral. Zamanla kararır. Kaplama bir birikimdir.
+      Yıkanmış olsaydı kaya nasıl görünürdü? Kaplama onu nasıl değiştirir?
+    follow_ups:
+      - Kaplamasız kaya ne olurdu?
+      - Toz çevreyi nasıl işaretler?
+      - Yüzey ve birikim arasındaki ilişki nedir?
+  - id: nmr_river_sculpt
+    name: Nehir Yontusu
+    prompt: |
+      Bir nehir yatağını yontar — kazan çukurları, havuzlar, çalkantılar. Kaya
+      su ve tortu tarafından şekillenir. Bir bölüm bulun. Yontuyu okuyun. Şekil neyi
+      ortaya çıkarır?
+    follow_ups:
+      - Yontusuz nehir yatağı ne olurdu?
+      - Akış kayayı nasıl şekillendirir?
+      - Su ve şekil arasındaki ilişki nedir?
+  - id: nmr_shard_edge
+    name: Parça Kenarı
+    prompt: |
+      Bir çakmaktaşı parçası, bir çört parçası — keskin, işlenmiş veya doğal.
+      Birisi onu kullanmış olabilir. Kenar işlevseldir. Kırılmayı düşünün. Nasıl
+      yapıldı?
+    follow_ups:
+      - Kenarsız parça ne olurdu?
+      - Kırılma nasıl kullanışlılık yaratır?
+      - Kırık ve alet arasındaki ilişki nedir?
+  - id: nmr_gravel_path
+    name: Çakıl Yol
+    prompt: |
+      Bir çakıl yol — ayak altında ezilmiş kaya. Çatırtı, esneme. Yol insan
+      tercihidir. Neden bu yüzey? Çakıl toprağın yapamayacağını nasıl yapar?
+    follow_ups:
+      - Çakılsız yol ne olurdu?
+      - Yol hareketi nasıl şekillendirir?
+      - Kaya ve yürüyüş arasındaki ilişki nedir?
+  - id: nmr_bedrock_exposure
+    name: Ana Kaya Açıklığı
+    prompt: |
+      Toprağın sıyrıldığı yerlerde — erozyon, inşaat — ana kaya ortaya çıkar.
+      Temel görünür hale gelir. Genellikle neyin gizlendiğini düşünün. Açıklık
+      neyi ortaya çıkarır?
+    follow_ups:
+      - Açıklık olmayan manzara ne olurdu?
+      - Ana kaya yüzeyi nasıl şekillendirir?
+      - Gizli ve ortaya çıkan arasındaki ilişki nedir?
+  - id: nmr_wind_polish
+    name: Rüzgar Cilası
+    prompt: |
+      Çöl kayaları rüzgarla cilalanmıştır — pürüzsüz, fasetli. Kum yüzeye
+      çarpar. Cila aşındırıcıdır. Rüzgarı düşünün. Ne kadar sürdü?
+    follow_ups:
+      - Cilasız kaya ne olurdu?
+      - Rüzgar taşı nasıl şekillendirir?
+      - Parçacık ve yüzey arasındaki ilişki nedir?
+  - id: nmr_hot_cold_crack
+    name: Sıcak-Soğuk Çatlağı
+    prompt: |
+      Kaya sıcakta genleşir, soğukta büzülür. Tekrarlanan döngüler gerilme,
+      mikro çatlaklara neden olur. Bir çatlak bulun. Onu oluşturan sıcaklık salınımlarını
+      düşünün.
+    follow_ups:
+      - Çatlaksız kaya ne olurdu?
+      - Termal döngü manzarayı nasıl şekillendirir?
+      - Sıcaklık ve kırılma arasındaki ilişki nedir?
+  - id: nmr_constellation_stone
+    name: Takımyıldız Taşı
+    prompt: |
+      Benekli bir kaya — ışığı yakalayan mika, feldispat. Yüzey parıldar.
+      Mineralojiyi düşünün. Parıltıyı ne yarattı?
+    follow_ups:
+      - Beneksiz kaya ne olurdu?
+      - Işık yapıyı nasıl ortaya çıkarır?
+      - Mineral ve yansıma arasındaki ilişki nedir?
+  - id: nmr_stepping_stone
+    name: Basamak Taşı
+    prompt: |
+      Bir dereye veya çamura yerleştirilmiş kayalar — basamak taşları. Yerleştirme
+      bilinçlidir. Yolu düşünün. Her adım ne gerektirir? Taş neyi mümkün kılar?
+    follow_ups:
+      - Taşsız geçiş ne olurdu?
+      - Taş nasıl erişim yaratır?
+      - Kaya ve geçiş arasındaki ilişki nedir?
+  - id: nmr_moss_island
+    name: Yosun Adası
+    prompt: |
+      Bir deredeki kaya — üstünde yosun büyür. Kaya bir adadır. Su etrafından
+      akar. İzolasyonu düşünün. Yosuna ne ulaşır? Ne ulaşmaz?
+    follow_ups:
+      - Adası olmayan dere ne olurdu?
+      - Kaya nasıl sığınak yaratır?
+      - Kaya ve akış arasındaki ilişki nedir?
+  - id: nmr_weight_sunken
+    name: Ağırlık Batmış
+    prompt: |
+      Ağır bir kaya zamanla toprağın içine batar. Etrafında bir çöküntü oluşur.
+      Yerçekimini düşünün. Batma yere ne yapar? Taşa ne yapar?
+    follow_ups:
+      - Kayası olmayan zemin ne olurdu?
+      - Ağırlık yüzeyi nasıl şekillendirir?
+      - Kütle ve çöküntü arasındaki ilişki nedir?
+  - id: nmr_layer_sediment
+    name: Tortu Katmanı
+    prompt: |
+      Sedimanter kaya katmanlar gösterir — tabakalanma düzlemleri. Her katman bir
+      zamanlar çamur, kum, kabuktu. Kaya sıkıştırılmış zamandır. Tek bir katmanı
+      düşünün. Önceden neydi?
+    follow_ups:
+      - Katmanları olmayan kaya ne olurdu?
+      - Katman çevreyi nasıl kaydeder?
+      - Tortu ve taş arasındaki ilişki nedir?
+  - id: nmr_sunrise_heat
+    name: Gün Doğumu Sıcaklığı
+    prompt: |
+      Düz bir kaya doğuya bakar. Gün doğumunda ilk o ısınır. Yönlenmeyi düşünün.
+      Güneşe olan açı neyi belirler? Erken ısıdan kim faydalanır?
+    follow_ups:
+      - Yönlenmesi olmayan kaya ne olurdu?
+      - Yön sıcaklığı nasıl şekillendirir?
+      - Açı ve ısı arasındaki ilişki nedir?
+  - id: nmr_rain_rinse
+    name: Yağmur Yıkaması
+    prompt: |
+      Yağmur kayaya çarpar, akar. Su çözdüğünü, askıda kalanları taşır. Yıkama
+      süreklidir. Kaya ne kaybeder? Su ne kazanır?
+    follow_ups:
+      - Yağmursuz kaya ne olurdu?
+      - Yağmur akışı kayayı nasıl şekillendirir?
+      - Su ve çözünme arasındaki ilişki nedir?
+  - id: nmr_ice_wedge
+    name: Buz Kama
+    prompt: |
+      Su bir çatlağa girip donar, onu genişletir. Buz kaması kayaları parçalar.
+      Kanıt bulabilirseniz bulun. Kuvveti düşünün. Çatlak ne olacak?
+    follow_ups:
+      - Buzsuz kaya ne olurdu?
+      - Kama nasıl yayılır?
+      - Donma ve kırılma arasındaki ilişki nedir?
+  - id: nmr_resting_place
+    name: Dinlenme Yeri
+    prompt: |
+      Düz bir kaya — bir koltuk, bir masa, bir sahne. Dinlenmek, çalışmak, işaretlemek
+      için kayalar kullanırız. Üzerine oturabileceğiniz bir kayayı düşünün. Neleri
+      desteklemiştir? Neleri tutacak?
+    follow_ups:
+      - Kayası olmayan alan ne olurdu?
+      - Kaya kullanımı nasıl davet eder?
+      - Mineral ve insan arasındaki ilişki nedir?
+  - id: nmr_boundary_marker
+    name: Sınır İşaretleyici
+    prompt: |
+      Kayalar sınırları işaretler — mülkiyet hatları, mezarlar, yollar. Yerleştirme
+      bilinçlidir. Bir sınır taşını düşünün. Neleri ayırır? Neleri bağlar?
+    follow_ups:
+      - Taşı olmayan sınır ne olurdu?
+      - Kaya anlamı nasıl kodlar?
+      - İşaretleyici ve bölge arasındaki ilişki nedir?
+  - id: nmr_exfoliation_sheet
+    name: Pul Pul Dökülme Tabakası
+    prompt: |
+      Bazı kayalar pul pul dökülür — soğan gibi tabakalar soyulur. Basınç
+      giderme, termal döngü. Pul pul dökülen bir kaya bloğu bulun. Eğriyi düşünün.
+      Onu hangi kuvvetler oluşturdu?
+    follow_ups:
+      - Tabakaları olmayan kaya ne olurdu?
+      - Pul pul dökülme yüzeyi nasıl şekillendirir?
+      - Basınç ve soyulma arasındaki ilişki nedir?
+  - id: nmr_compass_orientation
+    name: Pusula Yönü
+    prompt: |
+      Kayalar hizalanabilir — buzul, nehir, insan eliyle. Yönlenme bir hikaye
+      anlatır. Hizalanmış taşlar bulun. Neleri işaret ediyorlar? Nelere direniyorlar?
+    follow_ups:
+      - Hizalanmanın anlamı ne olurdu?
+      - Yönlenme kuvveti nasıl kaydeder?
+      - Yön ve taş arasındaki ilişki nedir?
+  - id: nmr_echo_sound
+    name: Yankı Taşı
+    prompt: |
+      Bir kaya yüzeyi sesi yansıtır. Alkışlayın. Yankıyı dinleyin. Kaya, gönderdiğinizi
+      geri verir. Yüzeyi düşünün. Neyi yansıtır? Neyi emer?
+    follow_ups:
+      - Yankısı olmayan alan ne olurdu?
+      - Yüzey sesi nasıl şekillendirir?
+      - Kaya ve ses arasındaki ilişki nedir?
+  - id: nmr_anchor_hold
+    name: Çapa Tutuşu
+    prompt: |
+      Bir kaya sabitler — bir ağaç kökü onu sarar, bir kablo ona bağlanır. Kaya
+      tutunur. Tutuşu düşünün. Kaya neye direnir? Neleri mümkün kılar?
+    follow_ups:
+      - Kayası olmayan çapa ne olurdu?
+      - Kaya nasıl stabilite yaratır?
+      - Tutuş ve kütle arasındaki ilişki nedir?
+  - id: nmr_patina_age
+    name: Yaş Patinasi
+    prompt: |
+      Eski kaya patina geliştirir — ayrışma kabuğu, oksidasyon, kirlenme. Yüzey
+      değişir. Patina görünür hale gelmiş zamandır. Kaya yeni olduğunda nasıl
+      görünürdü?
+    follow_ups:
+      - Patinadan yoksun kaya ne olurdu?
+      - Patina nasıl korur veya zayıflatır?
+      - Yüzey ve yaş arasındaki ilişki nedir?
+  - id: nmr_slow_narrative
+    name: Yavaş Anlatı
+    prompt: |
+      Bir kaya yavaş bir hikaye anlatır — oluşum, nakil, ayrışma. Zaman çizelgesi
+      jeolojiktir. Bir kayanın yanında oturun. Geçmişini düşünün. Geleceği ne olacak?
+    follow_ups:
+      - Hikayeyi okuyamazsak ne kaybederiz?
+      - Kaya derin zamanla nasıl bağlantı kurar?
+      - Kaya ve hafıza arasındaki ilişki nedir?
+  - id: nmr_cairn_stack
+    name: Kuru Taş Yığını
+    prompt: |
+      Bir kuru taş yığını — elle yığılmış taşlar. Her taş dengededir. Yığın
+      bilinçli, geçicidir. Kim inşa etti? Neyi işaret ediyor?
+    follow_ups:
+      - Yığını olmayan yer ne olurdu?
+      - Yığın nasıl anlam yaratır?
+      - İnsan ve taş arasındaki ilişki nedir?
+  - id: nmr_shadow_cast
+    name: Gölge Dökümü
+    prompt: |
+      Bir kaya gölge düşürür. Gölge güneşle birlikte hareket eder. Bir saat
+      boyunca onunla oturun. Taş ve ışık saatini düşünün.
+    follow_ups:
+      - Gölgesi olmayan kaya ne olurdu?
+      - Gölge nasıl yaşam alanı yaratır?
+      - Kaya ve zaman arasındaki ilişki nedir?
+  - id: nmr_scree_slope
+    name: Kaya Döküntüsü Yamaç
+    prompt: |
+      Kaya döküntüsü — bir uçurumun dibindeki gevşek kaya. Her parça düştü.
+      Yamaç bir birikimdir. Üzerinde yürüyün. İstikrarsızlığı hissedin. Neler
+      tutuyor? Neler serbest kalacak?
+    follow_ups:
+      - Düşüşten yoksun yamaç ne olurdu?
+      - Kaya döküntüsü vadiyi nasıl şekillendirir?
+      - Uçurum ve zemin arasındaki ilişki nedir?
+  - id: nmr_fossil_imprint
+    name: Fosil Baskısı
+    prompt: |
+      Kayada bir fosil — kabuk, yaprak, kemik. Baskı bir kayıttır. Organizma
+      gitmiş; taş şeklini tutar. Korunmayı düşünün.
+    follow_ups:
+      - Fosil olmadan neyi bilirdik?
+      - Baskı zamanı nasıl köprüler?
+      - Yaşam ve mineral arasındaki ilişki nedir?
+  - id: nmr_dry_stone_wall
+    name: Kuru Taş Duvar
+    prompt: |
+      Kuru taş duvar — harç yok. Her taş, bir sonrakini uyum ve sürtünmeyle
+      tutar. Duvar bir işbirliğidir. Eklem yerlerini izleyin. Gevşek bir taş ne
+      yapardı?
+    follow_ups:
+      - Duvarı olmayan sınır ne olurdu?
+      - Uyum nasıl güç yaratır?
+      - Taş ve yapı arasındaki ilişki nedir?
+  - id: nmr_cobble_rest
+    name: Kobo Desteği
+    prompt: |
+      Su onları bıraktığı yere yerleşmiş kobblar — bir nehir kıyısı, bir kumsal.
+      Düzenleme rastgele değil. Boyut, şekil, konum akışı anlatır. Bir sel neyi
+      yeniden düzenlerdi?
+    follow_ups:
+      - Son olayı destek ne işaret eder?
+      - Taşlar su hakkında neyi ortaya çıkarırdı?
+      - Deste ve türbülans arasındaki ilişki nedir?
+  - id: nmr_moon_dust
+    name: Ay Tozu
+    prompt: |
+      Kaya toza dönüşür — rüzgar, su, kökler. En ince parçacıklar yolculuk
+      eder. Tek bir tanecik yolculuğunu düşünün. Nerede bitebilir?
+    follow_ups:
+      - Tozdan yoksun manzara ne olurdu?
+      - Toz nasıl yeni toprak yaratır?
+      - Kaya ve hava arasındaki ilişki nedir?
+  - id: nmr_touch_stone
+    name: Taşa Dokun
+    prompt: |
+      Bir taşa dokunun. Soğuk, sıcak, pürüzlü, pürüzsüz. Kaya tepki vermez —
+      ya da tepki verir mi? Isı transfer olur. Nem değişir. Sınırdaki alışverişi
+      düşünün.
+    follow_ups:
+      - Farklı bir zamanda kaya ne hissederdi?
+      - Dokunmak kayayı nasıl değiştirir?
+      - El ve taş arasındaki ilişki nedir?
+  - id: nmr_shadow_noon
+    name: Öğle Gölgesi
+    prompt: |
+      Öğlen vakti, bir kayanın gölgesi minimaldir. Şafak ve alacakaranlıkta
+      uzar. Gölge, kayanın erişimidir. Güneşin, kayanın dünyaya sunduğunu nasıl
+      değiştirdiğini düşünün.
+    follow_ups:
+      - Gölgesi olmayan kaya ne sunardı?
+      - Gölge nasıl yaşam alanı yaratır?
+      - Kaya ve ışık arasındaki ilişki nedir?
+  - id: nmr_stone_circle
+    name: Taş Çember
+    prompt: |
+      Bir çember halinde dizilmiş taşlar — insan eliyle veya buzul tarafından.
+      Çember alanı çerçeveler. İçeride ne var? Dışarıda ne var? Sınırın geometrisini
+      düşünün.
+    follow_ups:
+      - Çemberi olmayan alanın anlamı ne olurdu?
+      - Dizilim nasıl anlam yaratır?
+      - Form ve ayin arasındaki ilişki nedir?

@@ -1,0 +1,245 @@
+# yaml-language-server: $schema=../schema/perspective-deck-index-schema.json
+# Perspective Decks Index (Dutch)
+
+domains:
+  art:
+    name: Manieren om naar Kunst te Kijken
+    description: |
+      Kaarten om je perspectief te verschuiven bij het bekijken van kunst. Elk biedt een ander
+      perspectief - van licht en schaduw tot introducties en emotie - om te verdiepen hoe je
+      kunstwerken ziet en ermee omgaat.
+  urban_jungle:
+    name: Stedelijke Jungle
+    description: |
+      In plaats van alleen door een stad te lopen, kijk je ernaar als een levend organisme.
+      Kaarten richten zich op de littekens van oude gebouwen, de choreografie van verkeer,
+      en de geheime levens van steegjes.
+  culinary_lab:
+    name: Culinaire Lab
+    description: |
+      Verschuiven van smakelijk naar transformerend. Verken de chemie van een hap,
+      de geschiedenis van een ingrediënt, en de soundtrack van een restaurant.
+  natural_microcosm:
+    name: Natuurlijke Microkosmos
+    description: |
+      Perfect voor een park of een achtertuin. Deze lens richt zich op de onzichtbare
+      techniek van een blad, het slow-motion leven van een rots, of de territoriale
+      drama's van insecten.
+  human_interface:
+    name: De Menselijke Interface
+    description: |
+      De alledaagse ruimtes waar mensen elkaar ontmoeten - koffiehuizen, OV-knooppunten,
+      werkplekken, winkels, openbare parken. Kaarten richten zich op wachtrij choreografie,
+      territoriale claims, onzichtbare scripts, en de antropologie van gedeelde ruimte.
+  california_superbloom:
+    name: California Superbloom
+    description: |
+      De efemere uitbarsting van wilde bloemen na de winterregen. Kaarten richten zich op kleur,
+      schaal, bestuivers, geologie, weer, en het vluchtige spektakel van de bloei.
+decks:
+  - id: ways_of_looking_at_art
+    name: Manieren om naar Kunst te Kijken
+    path: perspective-decks/ways-of-looking-at-art.yaml
+    description: |
+      50 kaarten om je perspectief te verschuiven bij het bekijken van kunst. Elke kaart biedt een
+      ander perspectief - van licht en schaduw tot introducties en emotie - om te verdiepen hoe je
+      kunstwerken ziet en ermee omgaat.
+    domain: art
+  - id: ways_of_looking_at_california_superbloom
+    name: Manieren om naar de California Superbloom te Kijken
+    path: perspective-decks/ways-of-looking-at-california-superbloom.yaml
+    description: |
+      20 kaarten om je perspectief te verschuiven bij het ervaren van de California
+      superbloom. Elke kaart biedt een ander perspectief - van bestuivers en
+      geologie tot licht, geur en vergankelijkheid - om te verdiepen hoe je
+      wilde bloemen en de efemere kleuruitbarsting ziet.
+    domain: california_superbloom
+  - id: urban_jungle_new_york
+    name: Stedelijke Jungle — New York
+    path: perspective-decks/urban-jungle/urban-jungle-new-york.yaml
+    description: |
+      50 kaarten om hoe je New York ziet te verschuiven - van schaal en licht tot
+      lagen van geschiedenis en de ritmes van het straatleven.
+    domain: urban_jungle
+    subdomain_id: ny
+    subdomain_name: New York
+  - id: urban_jungle_san_francisco
+    name: Stedelijke Jungle — San Francisco
+    path: perspective-decks/urban-jungle/urban-jungle-san-francisco.yaml
+    description: |
+      50 kaarten om hoe je San Francisco ziet te verschuiven - van schaal en licht tot
+      lagen van geschiedenis en de ritmes van het straatleven.
+    domain: urban_jungle
+    subdomain_id: sf
+    subdomain_name: San Francisco
+  - id: urban_jungle_london
+    name: Stedelijke Jungle — Londen
+    path: perspective-decks/urban-jungle/urban-jungle-london.yaml
+    description: |
+      50 kaarten om hoe je Londen ziet te verschuiven - van schaal en licht tot
+      lagen van geschiedenis en de ritmes van het straatleven.
+    domain: urban_jungle
+    subdomain_id: london
+    subdomain_name: Londen
+  - id: urban_jungle_paris
+    name: Stedelijke Jungle — Parijs
+    path: perspective-decks/urban-jungle/urban-jungle-paris.yaml
+    description: |
+      50 kaarten om hoe je Parijs ziet te verschuiven - van schaal en licht tot
+      lagen van geschiedenis en de ritmes van het straatleven.
+    domain: urban_jungle
+    subdomain_id: paris
+    subdomain_name: Parijs
+  - id: urban_jungle_bangalore
+    name: Stedelijke Jungle — Bangalore
+    path: perspective-decks/urban-jungle/urban-jungle-bangalore.yaml
+    description: |
+      50 kaarten om hoe je Bangalore ziet te verschuiven - van schaal en licht tot
+      lagen van geschiedenis en de ritmes van het straatleven.
+    domain: urban_jungle
+    subdomain_id: blr
+    subdomain_name: Bangalore
+  - id: culinary_lab_indian
+    name: Culinaire Lab — Indiaas
+    path: perspective-decks/culinary-lab/culinary-lab-indian.yaml
+    description: |
+      50 kaarten om hoe je de Indiase keuken ervaart te verschuiven - van de chemie van
+      kruiden en hitte tot de archeologie van ingrediënten en de choreografie van
+      de gedeelde tafel.
+    domain: culinary_lab
+    subdomain_id: indian
+    subdomain_name: Indiaas
+  - id: culinary_lab_italian
+    name: Culinaire Lab — Italiaans
+    path: perspective-decks/culinary-lab/culinary-lab-italian.yaml
+    description: |
+      50 kaarten om hoe je de Italiaanse keuken ervaart te verschuiven - van de chemie van
+      olijfolie en zuur tot de sociale choreografie van de tafel en de
+      archeologie van elk ingrediënt.
+    domain: culinary_lab
+    subdomain_id: italian
+    subdomain_name: Italiaans
+  - id: culinary_lab_pizza
+    name: Culinaire Lab — Pizza
+    path: perspective-decks/culinary-lab/culinary-lab-pizza.yaml
+    description: |
+      50 kaarten om hoe je pizza ervaart te verschuiven - van de chemie van deeg
+      en vuur tot het theater van de punt en de archeologie van toppings.
+    domain: culinary_lab
+    subdomain_id: pizza
+    subdomain_name: Pizza
+  - id: culinary_lab_chinese
+    name: Culinaire Lab — Chinees
+    path: perspective-decks/culinary-lab/culinary-lab-chinese.yaml
+    description: |
+      50 kaarten om hoe je de Chinese keuken ervaart te verschuiven - van de chemie van
+      wok hei en de archeologie van soja tot de choreografie van de ronde tafel
+      en het verhaal van het banket.
+    domain: culinary_lab
+    subdomain_id: chinese
+    subdomain_name: Chinees
+  - id: culinary_lab_sushi
+    name: Culinaire Lab — Sushi
+    path: perspective-decks/culinary-lab/culinary-lab-sushi.yaml
+    description: |
+      50 kaarten om hoe je sushi ervaart te verschuiven - van de chemie van rijst
+      en vis tot de choreografie van de toonbank en de archeologie van de oorsprong
+      van elke neta.
+    domain: culinary_lab
+    subdomain_id: sushi
+    subdomain_name: Sushi
+  - id: natural_microcosm_forest_floor
+    name: Natuurlijke Microkosmos — Bosbodem
+    path: perspective-decks/natural-microcosm/natural-microcosm-forest-floor.yaml
+    description: |
+      50 kaarten om hoe je de bosbodem ziet te verschuiven - van decompositie en
+      mycelium tot architectuur van strooisel en het onzichtbare leven onder de
+      kruin.
+    domain: natural_microcosm
+    subdomain_id: forest_floor
+    subdomain_name: Bosbodem
+  - id: natural_microcosm_garden_backyard
+    name: Natuurlijke Microkosmos — Tuin & Achtertuin
+    path: perspective-decks/natural-microcosm/natural-microcosm-garden-backyard.yaml
+    description: |
+      50 kaarten om hoe je de binnenlandse wildernis ziet te verschuiven - van bestuivers en
+      bodem tot onkruid versus gewassen en de choreografie van gecultiveerde natuur.
+    domain: natural_microcosm
+    subdomain_id: garden_backyard
+    subdomain_name: Tuin & Achtertuin
+  - id: natural_microcosm_rocks_stones
+    name: Natuurlijke Microkosmos — Rotsen & Stenen
+    path: perspective-decks/natural-microcosm/natural-microcosm-rocks-stones.yaml
+    description: |
+      50 kaarten om hoe je rotsen en stenen ziet te verschuiven - van geologische tijd en
+      korstmossen tot verwering, erosie en het slow-motion leven van mineralen.
+    domain: natural_microcosm
+    subdomain_id: rocks_stones
+    subdomain_name: Rotsen & Stenen
+  - id: natural_microcosm_pond_puddle
+    name: Natuurlijke Microkosmos — Vijver & Plas
+    path: perspective-decks/natural-microcosm/natural-microcosm-pond-puddle.yaml
+    description: |
+      50 kaarten om hoe je water op kleine schaal ziet te verschuiven - van oppervlaktespanning
+      en reflecties tot waterinsecten, kikkervisjes en het leven in tijdelijke
+      plassen.
+    domain: natural_microcosm
+    subdomain_id: pond_puddle
+    subdomain_name: Vijver & Plas
+  - id: natural_microcosm_insect_territories
+    name: Natuurlijke Microkosmos — Insect Territoria
+    path: perspective-decks/natural-microcosm/natural-microcosm-insect-territories.yaml
+    description: |
+      50 kaarten om hoe je insectenleven ziet te verschuiven - van mierenpaden en bijenverkeer
+      tot spinnenwebben, territoriale drama's en de choreografie van
+      kolonies.
+    domain: natural_microcosm
+    subdomain_id: insect_territories
+    subdomain_name: Insect Territoria
+  - id: human_interface_coffee_shop
+    name: De Menselijke Interface — Koffiehuis
+    path: perspective-decks/human-interface/human-interface-coffee-shop.yaml
+    description: |
+      50 kaarten om hoe je het koffiehuis ziet te verschuiven - van wachtrij choreografie
+      en laptop territoria tot de derde plek, onzichtbare scripts, en koffie
+      als ritueel.
+    domain: human_interface
+    subdomain_id: coffee_shop
+    subdomain_name: Koffiehuis
+  - id: human_interface_transit_hub
+    name: De Menselijke Interface — OV-knooppunt
+    path: perspective-decks/human-interface/human-interface-transit-hub.yaml
+    description: |
+      50 kaarten om hoe je het OV-knooppunt ziet te verschuiven - van perrons en
+      wachten tot aankomst/vertrek stromen en de choreografie van vreemden
+      in transit.
+    domain: human_interface
+    subdomain_id: transit_hub
+    subdomain_name: OV-knooppunt
+  - id: human_interface_workplace
+    name: De Menselijke Interface — Werkplek
+    path: perspective-decks/human-interface/human-interface-workplace.yaml
+    description: |
+      50 kaarten om hoe je de werkplek ziet te verschuiven - van bureau territoria en
+      vergaderruimtes tot de waterkoeler en zichtbare versus onzichtbare hiërarchie.
+    domain: human_interface
+    subdomain_id: workplace
+    subdomain_name: Werkplek
+  - id: human_interface_retail
+    name: De Menselijke Interface — Detailhandel
+    path: perspective-decks/human-interface/human-interface-retail.yaml
+    description: |
+      50 kaarten om hoe je de winkelruimte ziet te verschuiven - van gangpaden en winkel
+      choreografie tot pashokjes en de dans van aankoop.
+    domain: human_interface
+    subdomain_id: retail
+    subdomain_name: Detailhandel
+  - id: human_interface_public_space
+    name: De Menselijke Interface — Openbare Ruimte
+    path: perspective-decks/human-interface/human-interface-public-space.yaml
+    description: |
+      50 kaarten om hoe je de openbare ruimte ziet te verschuiven - van bankjes en paden
+      tot de choreografie van vreemden en objecten als talismannen.
+    domain: human_interface
+    subdomain_id: public_space
+    subdomain_name: Openbare Ruimte

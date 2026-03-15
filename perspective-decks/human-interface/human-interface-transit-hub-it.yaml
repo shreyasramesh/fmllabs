@@ -1,0 +1,416 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# L'Interfaccia Umana — Hub di Transito (Italian)
+
+id: human_interface_transit_hub
+name: L'Interfaccia Umana — Hub di Transito
+description: 50 carte per cambiare il modo in cui vedi l'hub di transito — dalle piattaforme e l'attesa al flusso di arrivi/partenze e la coreografia di estranei in transito.
+domain: human_interface
+cards:
+  - id: hi_th_platform_edge
+    name: Bordo Piattaforma
+    prompt: |
+      Il bordo della piattaforma è una soglia. Linea gialla, spazio, binario. Le persone stanno a distanze diverse. Alcuni si sporgono in avanti; altri restano indietro. Osserva la distribuzione. Cosa significa il bordo?
+    follow_ups:
+      - Come il bordo plasma l'attesa?
+      - Come sarebbe la piattaforma senza la linea?
+      - Qual è la relazione tra bordo e rischio?
+  - id: hi_th_waiting_posture
+    name: Postura di Attesa
+    prompt: |
+      I corpi si dispongono mentre aspettano — peso su un piede, telefono in mano, borsa tra i piedi. La postura codifica la durata. Chi sembra paziente? Chi sembra irrequieto? L'attesa ha un linguaggio del corpo.
+    follow_ups:
+      - Come la postura rivela l'aspettativa?
+      - Come sarebbe la piattaforma senza attesa?
+      - Qual è la relazione tra postura e tempo?
+  - id: hi_th_arrival_flow
+    name: Flusso di Arrivo
+    prompt: |
+      Le porte del treno si aprono. Le persone escono in massa — controcorrente rispetto a chi sale. Il flusso ha una fisica. Osserva la collisione, la schivata, la fusione. Quali regole governano lo scambio?
+    follow_ups:
+      - Come il flusso plasma la piattaforma?
+      - Cosa succederebbe se tutti si affrettassero?
+      - Qual è la relazione tra flusso ed efficienza?
+  - id: hi_th_strangers_transit
+    name: Estranei in Transito
+    prompt: |
+      Condividi un vagone con persone che non vedrai mai più. Vicinanza senza connessione. Osserva il compattamento. Cosa si devono gli estranei l'un l'altro? Il vagone di transito è una società temporanea.
+    follow_ups:
+      - Come il transito crea una comunità temporanea?
+      - Come sarebbe il vagone con conversazioni?
+      - Qual è la relazione tra estraneo e civiltà?
+  - id: hi_th_departure_board
+    name: Tabellone Partenze
+    prompt: |
+      Orari, binari, ritardi — il tabellone è la fonte della verità. Gli occhi vi si alzano. Il tabellone detta il movimento. Osserva lo sguardo collettivo. Cosa fa il tabellone alla folla?
+    follow_ups:
+      - Come il tabellone plasma il comportamento?
+      - Come sarebbe l'hub senza di esso?
+      - Qual è la relazione tra visualizzazione e fiducia?
+  - id: hi_th_escalator_stand
+    name: Stazionamento Scala Mobile
+    prompt: |
+      Stai a destra, cammina a sinistra — o viceversa, a seconda della città. La scala mobile ha delle regole. Osserva chi le segue. La scala mobile è una coda in movimento. Cosa consente la regola?
+    follow_ups:
+      - Come la regola della scala mobile plasma il flusso?
+      - Cosa succederebbe se tutti stessero fermi?
+      - Qual è la relazione tra regola ed efficienza?
+  - id: hi_th_ticket_gate
+    name: Gate Biglietti
+    prompt: |
+      Il gate legge la tessera, emette un segnale acustico, si apre. Il gate è un punto di controllo. Separa chi ha pagato da chi non ha pagato. Osserva il ritmo. Chi esita? Chi scivola attraverso? Il gate è una prova.
+    follow_ups:
+      - Come il gate plasma il viaggio?
+      - Come sarebbe l'hub senza gate?
+      - Qual è la relazione tra gate e appartenenza?
+  - id: hi_th_luggage_drag
+    name: Trascino Bagagli
+    prompt: |
+      Ruote su piastrelle. La valigia segue. Il trascinamento segna il percorso dei viaggiatori. I bagagli estendono il corpo. Osserva il peso. Cosa dice il bagaglio del viaggio?
+    follow_ups:
+      - Come i bagagli plasmano il movimento?
+      - Come sarebbe l'hub senza bagagli?
+      - Qual è la relazione tra peso e destinazione?
+  - id: hi_th_bench_occupation
+    name: Occupazione Panchina
+    prompt: |
+      Le panchine costeggiano la piattaforma. Alcuni si siedono; altri stanno in piedi accanto. La panchina è una risorsa scarsa. Osserva chi la reclama. Quanto tempo rimangono? La panchina è un piccolo territorio.
+    follow_ups:
+      - Come la panchina plasma l'attesa?
+      - Come sarebbe la piattaforma senza panchine?
+      - Qual è la relazione tra sedile e durata?
+  - id: hi_th_announcement_voice
+    name: Voce Annunci
+    prompt: |
+      "Il prossimo treno..." La voce è automatizzata o umana. Taglia il rumore. L'annuncio crea conoscenza condivisa. Osserva chi ascolta. Chi ha già controllato il telefono?
+    follow_ups:
+      - Come l'annuncio plasma la folla?
+      - Come sarebbe l'hub senza di esso?
+      - Qual è la relazione tra voce e autorità?
+  - id: hi_th_door_positioning
+    name: Posizionamento Porte
+    prompt: |
+      I pendolari abituali sanno dove si apriranno le porte. Si posizionano. I nuovi arrivati indovinano. Il posizionamento è strategia. Osserva il raggruppamento. Cosa determina la posizione?
+    follow_ups:
+      - Come il posizionamento plasma l'imbarco?
+      - Come sarebbe la piattaforma se le porte fossero casuali?
+      - Qual è la relazione tra posizione e vantaggio?
+  - id: hi_th_handrail_grip
+    name: Presa Corrimano
+    prompt: |
+      All'interno del vagone, le mani cercano il corrimano. La presa è sicurezza. Osserva chi tiene, chi non ne ha bisogno. Il corrimano è un oggetto condiviso. Cosa rivela la presa?
+    follow_ups:
+      - Come il corrimano plasma la stabilità?
+      - Come sarebbe il vagone senza di esso?
+      - Qual è la relazione tra presa e fiducia?
+  - id: hi_th_window_reflection
+    name: Riflesso Finestrino
+    prompt: |
+      Il finestrino mostra il tunnel, la piattaforma e il tuo stesso volto. Il riflesso è inevitabile. Le persone si guardano o lo evitano. Osserva la relazione tra riflesso e sguardo.
+    follow_ups:
+      - Come il riflesso plasma l'autoconsapevolezza?
+      - Come sarebbe il viaggio senza il finestrino?
+      - Qual è la relazione tra riflesso e privacy?
+  - id: hi_th_seat_offer
+    name: Offerta Posto
+    prompt: |
+      Qualcuno offre un posto a un anziano, un genitore con un bambino. L'offerta è un piccolo atto morale. Osserva quando avviene. Chi offre? Chi accetta? Il posto è un dono.
+    follow_ups:
+      - Come l'offerta plasma il vagone?
+      - Come sarebbe il viaggio senza tali offerte?
+      - Qual è la relazione tra offerta e cura?
+  - id: hi_th_delay_sigh
+    name: Sospiro Ritardo
+    prompt: |
+      "Ritardo." Il sospiro collettivo. Il ritardo è destino condiviso. Sconosciuti si scambiano sguardi. Il ritardo crea un momento di solidarietà. Osserva il cambiamento. Cosa fa il ritardo alla folla?
+    follow_ups:
+      - Come il ritardo plasma l'attesa?
+      - Come sarebbe l'hub senza ritardi?
+      - Qual è la relazione tra ritardo e frustrazione?
+  - id: hi_th_backpack_turn
+    name: Rotazione Zaino
+    prompt: |
+      Su un vagone affollato, qualcuno gira lo zaino in avanti. La rotazione è premura. Crea spazio. Osserva chi lo fa. La rotazione dello zaino è un piccolo contratto sociale.
+    follow_ups:
+      - Come la rotazione plasma la vicinanza?
+      - Come sarebbe il vagone senza di essa?
+      - Qual è la relazione tra rotazione e consapevolezza?
+  - id: hi_th_exit_anticipation
+    name: Attesa Uscita
+    prompt: |
+      Avvicinandosi alla fermata, le persone si radunano vicino alla porta. L'attesa è visibile. I corpi si spostano. La porta si aprirà. Osserva la preparazione. Cosa richiede l'attesa?
+    follow_ups:
+      - Come l'attesa plasma l'uscita?
+      - Come sarebbe la fermata senza preparazione?
+      - Qual è la relazione tra attesa e flusso?
+  - id: hi_th_transfer_corridor
+    name: Corridoio di Trasbordo
+    prompt: |
+      Il corridoio collega le linee. Le persone camminano con uno scopo. Il trasbordo è una transizione — tra sistemi, tra attese. Osserva il passo. Il corridoio ha un suo ritmo.
+    follow_ups:
+      - Come il corridoio plasma il viaggio?
+      - Come sarebbe l'hub senza trasbordi?
+      - Qual è la relazione tra corridoio e connessione?
+  - id: hi_th_phone_glow
+    name: Bagliore Telefono
+    prompt: |
+      Nel vagone poco illuminato, i volti brillano dai telefoni. Il bagliore è individuale. Ogni persona ha la sua luce. Osserva la distribuzione. Il telefono crea spazio privato nel pubblico.
+    follow_ups:
+      - Come il telefono plasma il viaggio?
+      - Come sarebbe il vagone senza telefoni?
+      - Qual è la relazione tra bagliore e isolamento?
+  - id: hi_th_stroller_navigation
+    name: Navigazione Passeggino
+    prompt: |
+      Un genitore spinge un passeggino tra la folla. La navigazione è delicata. Le persone si spostano. Il passeggino cambia il flusso. Osserva l'adattamento. Cosa richiede il passeggino?
+    follow_ups:
+      - Come il passeggino plasma la folla?
+      - Come sarebbe l'hub senza passeggini?
+      - Qual è la relazione tra passeggino e cura?
+  - id: hi_th_vendor_station
+    name: Posto Venditore
+    prompt: |
+      Un chiosco vende caffè, snack, giornali. Il venditore serve persone in movimento. La transazione è rapida. Osserva lo scambio. Il venditore è un'isola nel flusso.
+    follow_ups:
+      - Come il venditore plasma l'hub?
+      - Come sarebbe l'hub senza venditori?
+      - Qual è la relazione tra venditore e attesa?
+  - id: hi_th_track_gap
+    name: Spazio tra i Binari
+    prompt: |
+      Attenzione allo spazio. Lo spazio tra la piattaforma e il vagone è un pericolo. Le persone ci camminano sopra. Lo spazio varia. Osserva la cautela. Cosa richiede lo spazio al corpo?
+    follow_ups:
+      - Come lo spazio plasma l'imbarco?
+      - Come sarebbe la piattaforma senza di esso?
+      - Qual è la relazione tra spazio e attenzione?
+  - id: hi_th_schedule_check
+    name: Controllo Orario
+    prompt: |
+      Dita toccano il telefono. L'app dice quando. Il controllo dell'orario è costante. Riduce l'incertezza. Osserva il ritmo. Quanto spesso le persone controllano?
+    follow_ups:
+      - Come l'orario plasma l'attesa?
+      - Come sarebbe l'hub senza app?
+      - Qual è la relazione tra controllo e potere?
+  - id: hi_th_crowd_density
+    name: Densità Folla
+    prompt: |
+      L'ora di punta affolla la piattaforma. I corpi si comprimono. La densità ha dei limiti. Osserva il confine. Quando diventa insopportabile? La folla ha una sua fisica.
+    follow_ups:
+      - Come la densità plasma l'esperienza?
+      - Come sarebbe l'hub a bassa densità?
+      - Qual è la relazione tra densità e tolleranza?
+  - id: hi_th_sleeping_commuter
+    name: Pendolare Addormentato
+    prompt: |
+      Qualcuno dorme — testa contro il finestrino, contro la spalla di uno sconosciuto. Il sonno è fiducia o stanchezza. Osserva la vulnerabilità. Cosa richiede il sonno al vagone?
+    follow_ups:
+      - Come il dormiente plasma lo spazio?
+      - Come sarebbe il viaggio senza dormienti?
+      - Qual è la relazione tra sonno e sicurezza?
+  - id: hi_th_map_consultation
+    name: Consultazione Mappa
+    prompt: |
+      Un visitatore fissa la mappa sul muro. La mappa è una salvezza. Altri scorrono oltre. La consultazione richiede tempo. Osserva la pausa. Cosa fornisce la mappa?
+    follow_ups:
+      - Come la mappa plasma il viaggio?
+      - Come sarebbe l'hub senza mappe?
+      - Qual è la relazione tra mappa e sicurezza?
+  - id: hi_th_platform_change
+    name: Cambio Piattaforma
+    prompt: |
+      "Cambio piattaforma." La folla si muove. Il cambio è un disturbo. Le persone hanno fretta. Osserva la corsa. Cosa estrae il cambio dalla folla?
+    follow_ups:
+      - Come il cambio plasma il flusso?
+      - Come sarebbe l'hub senza cambi?
+      - Qual è la relazione tra cambio e stress?
+  - id: hi_th_briefcase_clutch
+    name: Impugnatura Cartella
+    prompt: |
+      La cartella è tenuta vicina — tra i piedi, in grembo. Contiene qualcosa di prezioso. L'impugnatura è protettiva. Osserva la stretta. Cosa significa la cartella per chi la tiene?
+    follow_ups:
+      - Come la cartella plasma il viaggio?
+      - Come sarebbe il vagone senza cartelle?
+      - Qual è la relazione tra impugnatura e identità?
+  - id: hi_th_door_hold
+    name: Tieni Porta
+    prompt: |
+      Qualcuno tiene la porta per la persona dietro. Il treno sta per partire. Il gesto è rischio e cortesia. Osserva lo scambio. Quanto costa tenere la porta?
+    follow_ups:
+      - Come il gesto plasma l'imbarco?
+      - Come sarebbe la piattaforma senza di esso?
+      - Qual è la relazione tra gesto e civiltà?
+  - id: hi_th_standing_balance
+    name: Equilibrio in Piedi
+    prompt: |
+      Il treno si muove. I passeggeri in piedi spostano il peso. L'equilibrio è dinamico. Nessuno tiene il corrimano. Osserva i micro-aggiustamenti. Il corpo impara il movimento.
+    follow_ups:
+      - Come l'equilibrio plasma il viaggio?
+      - Come sarebbe il vagone con più posti?
+      - Qual è la relazione tra equilibrio e abitudine?
+  - id: hi_th_conversation_overhear
+    name: Conversazione Sentita di Sottecchi
+    prompt: |
+      Due persone parlano. Senti frammenti. La conversazione è privata ma pubblica. Osserva il confine. Cosa imparano gli estranei l'uno sull'altro in transito?
+    follow_ups:
+      - Come l'ascolto di sottecchi plasma il viaggio?
+      - Come sarebbe il vagone senza conversazioni?
+      - Qual è la relazione tra ascolto di sottecchi e intimità?
+  - id: hi_th_ticket_inspection
+    name: Controllo Biglietti
+    prompt: |
+      L'ispettore si muove attraverso il vagone. "Biglietti, prego." L'ispezione è casuale o sistematica. Osserva la risposta. Chi è pronto? Chi esita? L'ispezione è una prova di legittimità.
+    follow_ups:
+      - Come l'ispezione plasma il viaggio?
+      - Come sarebbe il sistema senza di esso?
+      - Qual è la relazione tra ispezione e fiducia?
+  - id: hi_th_station_name_glance
+    name: Sguardo Nome Stazione
+    prompt: |
+      Il nome passa velocemente — sul muro, sull'insegna. I pendolari abituali sanno. I nuovi arrivati guardano. Lo sguardo orienta. Osserva chi guarda. Cosa fa il nome?
+    follow_ups:
+      - Come il nome plasma l'orientamento?
+      - Come sarebbe il viaggio senza insegne?
+      - Qual è la relazione tra nome e luogo?
+  - id: hi_th_benchmark_regular
+    name: Pendolare Standard
+    prompt: |
+      Il pendolare abituale conosce il ritmo. Arriva giusto in tempo. Nessuna attesa. Il pendolare ha interiorizzato l'orario. Osserva la sicurezza. Cosa sa il pendolare abituale?
+    follow_ups:
+      - Come il pendolare abituale plasma l'hub?
+      - Come sarebbe l'hub senza pendolari abituali?
+      - Qual è la relazione tra pendolare abituale e fluidità?
+  - id: hi_th_lost_look
+    name: Sguardo Smarrito
+    prompt: |
+      Qualcuno sembra smarrito — testa che gira, passo incerto. Lo sguardo è visibile. Osserva il linguaggio del corpo. Chi aiuta? Chi ignora? Lo sguardo smarrito è un segnale. Cosa invita?
+    follow_ups:
+      - Come lo sguardo smarrito plasma l'hub?
+      - Come sarebbe l'hub senza gli smarriti?
+      - Qual è la relazione tra smarrito e aiuto?
+  - id: hi_th_earbud_insert
+    name: Inserimento Auricolari
+    prompt: |
+      Gli auricolari vengono inseriti. Il mondo si ritira. L'inserimento è un confine. Chi li indossa è presente ma assente. Osserva il cambiamento. Cosa crea l'auricolare?
+    follow_ups:
+      - Come gli auricolari plasmano il viaggio?
+      - Come sarebbe il vagone senza di essi?
+      - Qual è la relazione tra auricolare e privacy?
+  - id: hi_th_rush_hour_pack
+    name: Affollamento Ora di Punta
+    prompt: |
+      Il vagone è pieno. I corpi si toccano. L'affollamento è inevitabile. Osserva la tolleranza. Come gestiscono le persone la vicinanza? L'affollamento ha un suo galateo.
+    follow_ups:
+      - Come l'affollamento plasma il viaggio?
+      - Come sarebbe l'ora di punta senza l'affollamento?
+      - Qual è la relazione tra affollamento e resistenza?
+  - id: hi_th_destination_ask
+    name: Domanda Destinazione
+    prompt: |
+      "È questo il treno per X?" Chiede uno sconosciuto. Un altro risponde. La domanda crea un momento di connessione. Osserva lo scambio. Cosa richiede la domanda?
+    follow_ups:
+      - Come la domanda plasma il vagone?
+      - Come sarebbe il viaggio senza tali domande?
+      - Qual è la relazione tra domanda e fiducia?
+  - id: hi_th_platform_choice
+    name: Scelta Piattaforma
+    prompt: |
+      Due piattaforme, stessa destinazione. Una è più vicina; una è meno affollata. La scelta è strategia. Osserva chi va dove. Cosa determina la scelta?
+    follow_ups:
+      - Come la scelta plasma la folla?
+      - Come sarebbe l'hub con una sola piattaforma?
+      - Qual è la relazione tra scelta e risultato?
+  - id: hi_th_wipe_down_seat
+    name: Pulizia Sedile
+    prompt: |
+      Qualcuno pulisce il sedile prima di sedersi. La pulizia è precauzione. Osserva il gesto. Cosa presume la pulizia sullo spazio? La pulizia è un piccolo atto di confine.
+    follow_ups:
+      - Come la pulizia plasma il sedersi?
+      - Come sarebbe il vagone senza tali gesti?
+      - Qual è la relazione tra pulizia e igiene?
+  - id: hi_th_standing_offer
+    name: Offerta di Posto in Piedi
+    prompt: |
+      "Vuoi sederti?" L'offerta viene fatta a uno sconosciuto. A volte accettata, a volte rifiutata. Osserva lo scambio. Cosa significa l'offerta?
+    follow_ups:
+      - Come l'offerta plasma il vagone?
+      - Come sarebbe il viaggio senza offerte?
+      - Qual è la relazione tra offerta e cura?
+  - id: hi_th_exit_block
+    name: Blocco Uscita
+    prompt: |
+      Qualcuno sta sulla porta. Altri devono passare. Il blocco è inconsapevole o deliberato. Osserva la negoziazione. Come fanno le persone a passare? Il blocco è un piccolo conflitto.
+    follow_ups:
+      - Come il blocco plasma l'uscita?
+      - Come sarebbe il vagone senza chi blocca?
+      - Qual è la relazione tra blocco e consapevolezza?
+  - id: hi_th_train_rumble
+    name: Rombo Treno
+    prompt: |
+      Il treno rumoreggia — binari, ruote, movimento. Il rombo è costante. Diventa sottofondo. Osserva quando te ne accorgi. Cosa fa il rombo al corpo?
+    follow_ups:
+      - Come il rombo plasma il viaggio?
+      - Come sarebbe il vagone nel silenzio?
+      - Qual è la relazione tra rombo e ritmo?
+  - id: hi_th_connection_run
+    name: Corsa Connessione
+    prompt: |
+      Qualcuno corre — in ritardo per una coincidenza. La corsa attraversa la folla. Le persone si disperdono. Osserva il disturbo. Cosa estrae la corsa dal flusso?
+    follow_ups:
+      - Come la corsa plasma l'hub?
+      - Come sarebbe l'hub senza corridori?
+      - Qual è la relazione tra corsa e urgenza?
+  - id: hi_th_seat_saving
+    name: Riserva Posto
+    prompt: |
+      Una borsa sul sedile. "Qui è occupato." La riserva tiene il posto per un compagno assente. Osserva la pretesa. Quanto tempo si può riservare un posto? Quali sono i limiti?
+    follow_ups:
+      - Come la riserva plasma il vagone?
+      - Come sarebbe il viaggio senza riserve?
+      - Qual è la relazione tra riserva e diritto?
+  - id: hi_th_arrival_relief
+    name: Sollievo all'Arrivo
+    prompt: |
+      Il treno raggiunge il capolinea. Il sollievo è visibile. Le spalle si rilassano. Le persone raccolgono le loro cose. Il viaggio è finito. Osserva il cambiamento. Cosa offre l'arrivo?
+    follow_ups:
+      - Come l'arrivo plasma l'uscita?
+      - Come sarebbe il viaggio senza arrivo?
+      - Qual è la relazione tra sollievo e completamento?
+  - id: hi_th_wayfinding_sign
+    name: Segnale Orientamento
+    prompt: |
+      Frecce indicano. "Ai treni." "Alle uscite." I segnali guidano il flusso. Osserva chi li segue. Chi ignora? Il segnale è un suggerimento. Cosa presume?
+    follow_ups:
+      - Come i segnali plasmano il flusso?
+      - Come sarebbe l'hub senza di essi?
+      - Qual è la relazione tra segnale e fiducia?
+  - id: hi_th_waiting_room
+    name: Sala d'Attesa
+    prompt: |
+      Sedie si fronteggiano o guardano il tabellone. La sala d'attesa accoglie le persone tra i viaggi. Osserva la disposizione. Chi si siede? Chi cammina avanti e indietro? La sala d'attesa è una pausa.
+    follow_ups:
+      - Come la sala d'attesa plasma l'attesa?
+      - Come sarebbe l'hub senza di essa?
+      - Qual è la relazione tra stanza e durata?
+  - id: hi_th_stranger_proximity
+    name: Vicinanza Estraneo
+    prompt: |
+      Uno sconosciuto sta vicino — necessario in una folla. La vicinanza è impersonale ma intima. Osserva la tolleranza. Cosa permette il corpo? La vicinanza è un contratto.
+    follow_ups:
+      - Come la vicinanza plasma il viaggio?
+      - Come sarebbe il vagone con più spazio?
+      - Qual è la relazione tra vicinanza e civiltà?
+  - id: hi_th_last_train
+    name: Ultimo Treno
+    prompt: |
+      L'ultimo treno. La folla è diversa — più tarda, più rilassata. L'ultimo treno ha una sua energia. Osserva il cambiamento. Cosa fa "ultimo" alla folla?
+    follow_ups:
+      - Come l'ultimo treno plasma l'hub?
+      - Come sarebbe la notte senza di esso?
+      - Qual è la relazione tra ultimo e urgenza?
+  - id: hi_th_transit_tribe
+    name: Tribù di Transito
+    prompt: |
+      Le stesse persone, la stessa linea, lo stesso orario. Riconosci i volti. Non parli mai. La tribù di transito è una comunità silenziosa. Osserva il riconoscimento. Cosa fornisce la tribù?
+    follow_ups:
+      - Come la tribù plasma il pendolarismo?
+      - Come sarebbe il viaggio senza volti familiari?
+      - Qual è la relazione tra tribù e appartenenza?

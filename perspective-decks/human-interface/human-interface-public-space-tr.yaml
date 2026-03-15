@@ -1,0 +1,563 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# İnsan Arayüzü — Kamusal Alan (Turkish)
+
+id: human_interface_public_space
+name: İnsan Arayüzü — Kamusal Alan
+description: Kamusal alanı nasıl gördüğünüzü değiştirecek 50 kart — banklar ve yollardan yabancıların koreografisine ve tılsım olarak objelere kadar.
+domain: human_interface
+cards:
+  - id: hi_ps_bench_occupation
+    name: Bank İşgali
+    prompt: |
+      Bir bank bir vücut, bir çanta, bir duruş tarafından sahiplenilir. Bank
+      kıt bir kaynaktır. Kimin oturduğunu, kimin ayakta durduğunu, kimin
+      geçtiğini gözlemleyin. Bank farklı insanlar için farklı anlamlar taşır.
+      Ne sağlar?
+    follow_ups:
+      - Bank alanı nasıl şekillendirir?
+      - Banklar olmadan park nasıl olurdu?
+      - Bank ve dinlenme arasındaki ilişki nedir?
+  - id: hi_ps_pathway_flow
+    name: Yol Akışı
+    prompt: |
+      Yol hareketi yönlendirir. İnsanlar yürür — yalnız, çiftler halinde,
+      gruplar halinde. Akışın bir yönü vardır. Çarpışmayı gözlemleyin. Kim
+      yol verir? Yol, paylaşılan bir koridordur. Onu hangi kurallar yönetir?
+    follow_ups:
+      - Yol yürüyüşü nasıl şekillendirir?
+      - Yollar olmadan alan nasıl olurdu?
+      - Yol ve varış noktası arasındaki ilişki nedir?
+  - id: hi_ps_strangers_choreography
+    name: Yabancıların Koreografisi
+    prompt: |
+      İlgisiz bedenler paylaşılan alanda hareket eder. Koreografi
+      konuşulmamış — kenara çekil, dur, birleş. Dansı gözlemleyin. Kimse
+      konuşmuyor. Koreografi saf bedendir. Ne gerektirir?
+    follow_ups:
+      - Koreografi alanı nasıl şekillendirir?
+      - Herkes durursa ne olur?
+      - Koreografi ve medeniyet arasındaki ilişki nedir?
+  - id: hi_ps_object_talisman
+    name: Tılsım Olarak Obje
+    prompt: |
+      Bir bankın üzerinde bir kitap. Bir sandalyede bir çanta. Obje bir yer
+      tutar. "Buradayım" veya "Döneceğim" der. Obje bir tılsımdır. Sahiplenmeyi
+      gözlemleyin. Neyi korur?
+    follow_ups:
+      - Tılsım alanı nasıl şekillendirir?
+      - Bu tür sahiplenmeler olmadan alan nasıl olurdu?
+      - Obje ve varlık arasındaki ilişki nedir?
+  - id: hi_ps_bench_armrest
+    name: Bank Kolçağı
+    prompt: |
+      Bazı banklarda kolçaklar vardır. Oturağı bölerler. Uzanmayı engellerler.
+      Kolçak, amaçlı bir tasarımdır. Kimin kullandığını gözlemleyin. Kolçak
+      neyi dışlar?
+    follow_ups:
+      - Kolçak bankı nasıl şekillendirir?
+      - Kolçak olmadan bank nasıl olurdu?
+      - Kolçak ve kontrol arasındaki ilişki nedir?
+  - id: hi_ps_pathway_intersection
+    name: Yol Kesişimi
+    prompt: |
+      Yollar kesişir. Bedenler bir araya gelir. Kesişim bir çarpışma
+      noktasıdır. Birleşmeyi gözlemleyin. Akışlar buluştuğunda ne olur? Kesişim
+      pazarlık gerektirir. Neyi talep eder?
+    follow_ups:
+      - Kesişim akışı nasıl şekillendirir?
+      - Kesişimler olmadan alan nasıl olurdu?
+      - Kesişim ve dikkat arasındaki ilişki nedir?
+  - id: hi_ps_eye_contact_avoid
+    name: Göz Temasından Kaçınma
+    prompt: |
+      Yabancılar göz temasından kaçınır. Kaçınma kibardır. Bakmak, bağlantı
+      kurma riskini taşır. Bakışı gözlemleyin. Kaçınma bir sözleşmedir. Neyi
+      mümkün kılar? Neye mal olur?
+    follow_ups:
+      - Kaçınma alanı nasıl şekillendirir?
+      - Daha fazla temasla alan nasıl olurdu?
+      - Bakış ve mahremiyet arasındaki ilişki nedir?
+  - id: hi_ps_bench_share
+    name: Bank Paylaşımı
+    prompt: |
+      İki yabancı bir bankı paylaşır. Aralarında boşluk. Paylaşım,
+      bağlantısız bir yakınlıktır. Sınırı gözlemleyin. Ne kadar yakın olmak
+      çok yakındır? Paylaşım hassas bir dengedir.
+    follow_ups:
+      - Paylaşım bankı nasıl şekillendirir?
+      - Bank tek kişiyle nasıl olurdu?
+      - Paylaşım ve hoşgörü arasındaki ilişki nedir?
+  - id: hi_ps_pathway_width
+    name: Yol Genişliği
+    prompt: |
+      Yol geniş veya dardır. Genişlik akışı etkiler. İki kişi
+      geçebilir veya geçemez. Genişliği gözlemleyin. Kalabalık hakkında
+      neyi varsayar? Genişlik tasarımdır. Neyi mümkün kılar?
+    follow_ups:
+      - Genişlik yürüyüşü nasıl şekillendirir?
+      - Yol daha geniş olsaydı nasıl olurdu?
+      - Genişlik ve konfor arasındaki ilişki nedir?
+  - id: hi_ps_bench_sun
+    name: Güneşli Bank
+    prompt: |
+      Bank güneşe bakar. Ya da gölgeye. Konumu önemlidir. Kimin
+      hangisini seçtiğini gözlemleyin. Güneş bir kaynaktır. Ne sağlar? Güneşli
+      bank talep edilir.
+    follow_ups:
+      - Güneş bankı nasıl şekillendirir?
+      - Güneş olmadan alan nasıl olurdu?
+      - Güneş ve dinlenme arasındaki ilişki nedir?
+  - id: hi_ps_stranger_proximity
+    name: Yabancı Yakınlığı
+    prompt: |
+      Bir yabancı yakında durur — kuyrukta, otobüste. Yakınlık
+      samimiyetsiz ama özeldir. Hoşgörüyü gözlemleyin. Beden neye izin verir?
+      Yakınlık bir sözleşmedir. Şartları nelerdir?
+    follow_ups:
+      - Yakınlık alanı nasıl şekillendirir?
+      - Daha fazla alan olsaydı alan nasıl olurdu?
+      - Yakınlık ve medeniyet arasındaki ilişki nedir?
+  - id: hi_ps_object_left
+    name: Bırakılan Obje
+    prompt: |
+      Bir bankın üzerinde bir ceket. Bir ağacın altında bir çanta. Bırakılan
+      obje bölgeyi işaretler. Sahiplenmeyi gözlemleyin. Ne kadar süre
+      tutabilir? Bırakılan obje bir denemedir. Başkalarından ne gerektirir?
+    follow_ups:
+      - Obje alanı nasıl şekillendirir?
+      - Bu tür sahiplenmeler olmadan alan nasıl olurdu?
+      - Obje ve güven arasındaki ilişki nedir?
+  - id: hi_ps_pathway_obstacle
+    name: Yol Engeli
+    prompt: |
+      Bir şey yolu tıkar — inşaat, kalabalık, gösterici. Engel akışı saptırır.
+      Sapmayı gözlemleyin. Engel ne gerektirir? Yol asla saf değildir. Onu ne
+      kesintiye uğratır?
+    follow_ups:
+      - Engel akışı nasıl şekillendirir?
+      - Engeller olmadan yol nasıl olurdu?
+      - Engel ve adaptasyon arasındaki ilişki nedir?
+  - id: hi_ps_bench_alone
+    name: Tek Başına Bank
+    prompt: |
+      Bir bankta tek kişi. Yalnızlık görünür. Bank yalnızlığı barındırır.
+      Duruşu gözlemleyin. Tek bank ne sağlar? Tek bank bir seçimdir. Neyi
+      mümkün kılar?
+    follow_ups:
+      - Yalnızlık bankı nasıl şekillendirir?
+      - Banklar olmadan alan nasıl olurdu?
+      - Yalnızlık ve dinlenme arasındaki ilişki nedir?
+  - id: hi_ps_nod_acknowledge
+    name: Baş Sallama Tanıma
+    prompt: |
+      Hafif bir baş sallama. Kısa bir gülümseme. Tanıma minimaldir. "Seni
+      görüyorum" der, katılım olmadan. Ne zaman olduğunu gözlemleyin. Baş
+      sallama küçük bir nezakettir. Neyi yaratır?
+    follow_ups:
+      - Baş sallama alanı nasıl şekillendirir?
+      - Baş sallama olmadan alan nasıl olurdu?
+      - Baş sallama ve güvenlik arasındaki ilişki nedir?
+  - id: hi_ps_pathway_edge
+    name: Yol Kenarı
+    prompt: |
+      Yolun kenarları vardır — çimen, kaldırım, bariyer. Kenar yolu tanımlar.
+      Kimlerin yolda kaldığını, kimlerin karşıya geçtiğini gözlemleyin. Kenar
+      bir sınırdır. Neyi içerir?
+    follow_ups:
+      - Kenar yürüyüşü nasıl şekillendirir?
+      - Kenarlar olmadan yol nasıl olurdu?
+      - Kenar ve özgürlük arasındaki ilişki nedir?
+  - id: hi_ps_bench_claim
+    name: Bank Sahiplenmesi
+    prompt: |
+      Bank alınır — yayılma, duruş, çanta ile. Sahiplenme "bu benim" der.
+      Sahiplenmeyi gözlemleyin. Nasıl yapılır? Sahiplenme bir bölgedir. Neyi
+      korur?
+    follow_ups:
+      - Sahiplenme bankı nasıl şekillendirir?
+      - Sahiplenmeler olmadan alan nasıl olurdu?
+      - Sahiplenme ve konfor arasındaki ilişki nedir?
+  - id: hi_ps_stranger_help
+    name: Yabancı Yardımı
+    prompt: |
+      "Yardım eder misin?" Bir yabancı teklif eder. Yardım beklenmediktir.
+      Değişimi gözlemleyin. Kabul et veya reddet? Yabancı yardımı bir
+      hediyedir. Ne gerektirir?
+    follow_ups:
+      - Yardım alanı nasıl şekillendirir?
+      - Bu tür teklifler olmadan alan nasıl olurdu?
+      - Yardım ve güven arasındaki ilişki nedir?
+  - id: hi_ps_object_temporary
+    name: Geçici Obje
+    prompt: |
+      Bir bardak, bir gazete, bir şapka. Obje bir yeri işaretler. Geçicidir.
+      Sahibi dönecektir. Sahiplenmeyi gözlemleyin. Geçici obje
+      başkalarından ne gerektirir? Obje bir yer tutucudur.
+    follow_ups:
+      - Geçici obje alanı nasıl şekillendirir?
+      - Bu objeler olmadan alan nasıl olurdu?
+      - Geçici ve güven arasındaki ilişki nedir?
+  - id: hi_ps_pathway_rhythm
+    name: Yol Ritmi
+    prompt: |
+      Ayaklar kaldırımda. Ritim bireyseldir — hızlı, yavaş, düzensiz. Yol,
+      birçok ritim barındırır. Senkronizasyonu ve çatışmayı gözlemleyin. Ritim
+      neyi ortaya çıkarır?
+    follow_ups:
+      - Ritim yürüyüşü nasıl şekillendirir?
+      - Yol sessizlikte nasıl olurdu?
+      - Ritim ve varış noktası arasındaki ilişki nedir?
+  - id: hi_ps_bench_face
+    name: Bank Yönü
+    prompt: |
+      Bank bir yöne bakar — manzara, güneş, kalabalık. Yön
+      deneyimi şekillendirir. Kimin hangi bankı seçtiğini gözlemleyin. Yön
+      tasarımdır. Neyi varsayar?
+    follow_ups:
+      - Yön bankı nasıl şekillendirir?
+      - Yön olmadan bank nasıl olurdu?
+      - Yön ve manzara arasındaki ilişki nedir?
+  - id: hi_ps_sidewalk_dance
+    name: Kaldırım Dansı
+    prompt: |
+      İki kişi yaklaşır. Dans — kim hareket eder? Kaldırım dansı
+      evrenseldir. Kenara çekilmeyi gözlemleyin. Dans konuşulmamıştır. Ne
+      gerektirir?
+    follow_ups:
+      - Dans yürüyüşü nasıl şekillendirir?
+      - Dans olmadan kaldırım nasıl olurdu?
+      - Dans ve medeniyet arasındaki ilişki nedir?
+  - id: hi_ps_object_abandoned
+    name: Terk Edilmiş Obje
+    prompt: |
+      Yerde bir eldiven. Bankta bir atkı. Obje terk edilmiştir.
+      Onu gözlemleyin. Kim bıraktı? Kim alacak? Terk edilmiş obje küçük bir
+      gizemdir. Neyi ortaya çıkarır?
+    follow_ups:
+      - Terk edilmiş obje alanı nasıl şekillendirir?
+      - Bu objeler olmadan alan nasıl olurdu?
+      - Terk edilmişlik ve kayıp arasındaki ilişki nedir?
+  - id: hi_ps_pathway_surface
+    name: Yol Yüzeyi
+    prompt: |
+      Kaldırım, çakıl, çimen. Yüzey yürüyüşü etkiler. Seçimi gözlemleyin.
+      Yüzey bedenden ne gerektirir? Yüzey tasarımdır. Neyi mümkün kılar?
+    follow_ups:
+      - Yüzey yürüyüşü nasıl şekillendirir?
+      - Farklı yüzeyle yol nasıl olurdu?
+      - Yüzey ve erişim arasındaki ilişki nedir?
+  - id: hi_ps_bench_weather
+    name: Bank ve Hava Durumu
+    prompt: |
+      Yağmur, güneş, rüzgar. Hava durumu bankı şekillendirir. Kim yağmurda
+      oturur? Kim gölge arar? Bank açıktadır. Bank ve hava durumu arasındaki
+      ilişkiyi gözlemleyin. Hava durumu ne yapar?
+    follow_ups:
+      - Hava durumu bankı nasıl şekillendirir?
+      - Barınak olmadan bank nasıl olurdu?
+      - Hava durumu ve kullanım arasındaki ilişki nedir?
+  - id: hi_ps_stranger_glance
+    name: Yabancı Bakışı
+    prompt: |
+      Kısa bir bakış. Bakış değerlendirmedir. Güvenli mi? Tehdit mi? Bakış
+      otomatiktir. Kendi bakışlarınızı gözlemleyin. Bakış ne yapar? Bakış bir
+      hayatta kalma aracıdır. Neyi talep eder?
+    follow_ups:
+      - Bakış alanı nasıl şekillendirir?
+      - Bakışlar olmadan alan nasıl olurdu?
+      - Bakış ve güvenlik arasındaki ilişki nedir?
+  - id: hi_ps_pathway_crowd
+    name: Yol Kalabalığı
+    prompt: |
+      Yol dolu. Bedenler sıkışmış. Kalabalığın kendi akışı vardır.
+      Hareketi gözlemleyin. Kalabalık bir bütündür. Bireyden ne gerektirir?
+    follow_ups:
+      - Kalabalık yolu nasıl şekillendirir?
+      - Yol boş olsaydı nasıl olurdu?
+      - Kalabalık ve akış arasındaki ilişki nedir?
+  - id: hi_ps_bench_curve
+    name: Bank Eğriliği
+    prompt: |
+      Bazı banklar eğrilidir. Birbirlerine veya merkeze bakar. Eğrilik
+      sosyalliği şekillendirir. Düzenlemeyi gözlemleyin. Eğrilik neyi
+      mümkün kılar? Eğrilik tasarımdır. Ne istiyor?
+    follow_ups:
+      - Eğrilik bankı nasıl şekillendirir?
+      - Bank düz olsaydı nasıl olurdu?
+      - Eğrilik ve bağlantı arasındaki ilişki nedir?
+  - id: hi_ps_object_traded
+    name: Takas Edilen Obje
+    prompt: |
+      Devir. Satın alma. Hediye. Obje yabancılar arasında hareket eder.
+      Değişimi gözlemleyin. Obje dışında ne geçer? Takas bir bağlantı
+      anındır. Neyi yaratır?
+    follow_ups:
+      - Takas alanı nasıl şekillendirir?
+      - Bu tür takaslar olmadan alan nasıl olurdu?
+      - Takas ve güven arasındaki ilişki nedir?
+  - id: hi_ps_pathway_light
+    name: Yol Işığı
+    prompt: |
+      Gün, gece, sokak lambası. Işık yolu şekillendirir. Farkı gözlemleyin.
+      Kim gece yürür? Işık güvenlik ve atmosferdir. Ne sağlar?
+    follow_ups:
+      - Işık yolu nasıl şekillendirir?
+      - Karanlıkta yol nasıl olurdu?
+      - Işık ve güvenlik arasındaki ilişki nedir?
+  - id: hi_ps_bench_armrest_gap
+    name: Bank Kolçağı Boşluğu
+    prompt: |
+      Kolçak böler. Bir kişi bir bölüm için. Boşluk paylaşımı engeller.
+      Tasarıma gözlemleyin. Boşluk neyi dışlar? Kolçak boşluğu düşmanca
+      mimariye sahiptir. Neyi varsayar?
+    follow_ups:
+      - Boşluk bankı nasıl şekillendirir?
+      - Kolçaklar olmadan bank nasıl olurdu?
+      - Boşluk ve dışlama arasındaki ilişki nedir?
+  - id: hi_ps_stranger_smile
+    name: Yabancı Gülümsemesi
+    prompt: |
+      Bir yabancıdan gülümseme. Beklenmedik. Gülümseme bir hediyedir.
+      Tepkiyi gözlemleyin. Gülümseme ne yapar? Gülümseme, sözleşmenin
+      küçük bir ihlalidir. Neyi yaratır?
+    follow_ups:
+      - Gülümseme alanı nasıl şekillendirir?
+      - Daha fazla gülümsemeyle alan nasıl olurdu?
+      - Gülümseme ve bağlantı arasındaki ilişki nedir?
+  - id: hi_ps_object_touch
+    name: Obje Teması
+    prompt: |
+      Bir el korkulukta. Bir ayak basamakta. Temas beden ve alanı
+      bağlar. Obje paylaşılır. Teması gözlemleyin. Temas ne yapar? Obje bir
+      temas noktasıdır. Neyi taşır?
+    follow_ups:
+      - Temas alanı nasıl şekillendirir?
+      - Temas olmadan alan nasıl olurdu?
+      - Temas ve varlık arasındaki ilişki nedir?
+  - id: hi_ps_pathway_choice
+    name: Yol Seçimi
+    prompt: |
+      Yol ikiye ayrılır. Sol mu sağ mı? Seçim küçüktür. Kararı gözlemleyin.
+      Neyi belirler? Yol seçimi bir eylem anıdır. Neyi ortaya çıkarır?
+    follow_ups:
+      - Seçim yürüyüşü nasıl şekillendirir?
+      - Yol çatallanmalar olmadan nasıl olurdu?
+      - Seçim ve varış noktası arasındaki ilişki nedir?
+  - id: hi_ps_bench_empty
+    name: Boş Bank
+    prompt: |
+      Bank boştur. Müsait. Neden? Boş bankı gözlemleyin. Konum? Zaman?
+      Hava durumu? Boş bank bir davettir. Ne sunar?
+    follow_ups:
+      - Boş bank alanı nasıl şekillendirir?
+      - Boş banklar olmadan alan nasıl olurdu?
+      - Boşluk ve fırsat arasındaki ilişki nedir?
+  - id: hi_ps_stranger_queue
+    name: Yabancı Kuyruğu
+    prompt: |
+      Bir sıra oluşur. Yabancılar birlikte bekler. Kuyruk düzendir. Sabrı
+      gözlemleyin. Kuyruk geçici bir topluluk yaratır. Kuyruk ne
+      gerektirir? Ne sağlar?
+    follow_ups:
+      - Kuyruk alanı nasıl şekillendirir?
+      - Kuyruklar olmadan alan nasıl olurdu?
+      - Kuyruk ve adalet arasındaki ilişki nedir?
+  - id: hi_ps_object_talisman_trust
+    name: Tılsım Güveni
+    prompt: |
+      Çantanızı bırakırsınız. Alana güvenirsiniz. Tılsım bir
+      denemedir. Güveni gözlemleyin. Neyi varsayar? Tılsım güveni bir
+      kumar oyunudur. Neyi mümkün kılar?
+    follow_ups:
+      - Güven alanı nasıl şekillendirir?
+      - Bu tür güvenler olmadan alan nasıl olurdu?
+      - Güven ve kırılganlık arasındaki ilişki nedir?
+  - id: hi_ps_pathway_end
+    name: Yol Sonu
+    prompt: |
+      Yol biter. Bir varış noktası, bir duvar, bir kapı. Son bir eşiktir.
+      Varışı gözlemleyin. Son ne sağlar? Yol sonu bir kapanıştır. Ne anlama
+      gelir?
+    follow_ups:
+      - Son yürüyüşü nasıl şekillendirir?
+      - Sonu olmadan yol nasıl olurdu?
+      - Son ve tamamlama arasındaki ilişki nedir?
+  - id: hi_ps_bench_duo
+    name: Bank İkilisi
+    prompt: |
+      İki kişi bir bankı paylaşır. Arkadaşlar, sevgililer, yabancılar. İkili
+      dinamiklere sahiptir. Mesafeyi gözlemleyin. Konuşmayı veya sessizliği.
+      Bank ikilisi küçük bir sosyal birimdir. Neyi yaratır?
+    follow_ups:
+      - İkili bankı nasıl şekillendirir?
+      - Bank tek kişiyle nasıl olurdu?
+      - İkili ve bağlantı arasındaki ilişki nedir?
+  - id: hi_ps_stranger_danger
+    name: Yabancı Tehlikesi
+    prompt: |
+      Beden değerlendirir. Güvenli mi? Değerlendirme otomatiktir.
+      Sinyalleri gözlemleyin. Neyi tetikler? Yabancı tehlikesi bir hayatta
+      kalma refleksidir. Neyi korur? Ne mal olur?
+    follow_ups:
+      - Değerlendirme alanı nasıl şekillendirir?
+      - Değerlendirme olmadan alan nasıl olurdu?
+      - Tehlike ve açıklık arasındaki ilişki nedir?
+  - id: hi_ps_object_marker
+    name: İşaretleyici Olarak Obje
+    prompt: |
+      Bir bankta bir taş. Bir ağaçta bir kurdele. Obje bir şeyi işaretler.
+      Anı, sahiplenme, ritüel. İşaretleyiciyi gözlemleyin. Ne anlama gelir?
+      İşaretleyici bir mesajdır. Ne diyor?
+    follow_ups:
+      - İşaretleyici alanı nasıl şekillendirir?
+      - İşaretleyiciler olmadan alan nasıl olurdu?
+      - İşaretleyici ve anlam arasındaki ilişki nedir?
+  - id: hi_ps_pathway_grade
+    name: Yol Eğim
+    prompt: |
+      Yol eğimlidir. Yukarı veya aşağı. Eğim bedeni etkiler. Çabayı gözlemleyin.
+      Eğim tasarımdır. Yürüyen hakkında ne varsayar? Eğim bazıları için bir
+      engeldır.
+    follow_ups:
+      - Eğim yürüyüşü nasıl şekillendirir?
+      - Yol düz olsaydı nasıl olurdu?
+      - Eğim ve erişim arasındaki ilişki nedir?
+  - id: hi_ps_bench_public
+    name: Halka Açık Bank
+    prompt: |
+      Bank halka açıktır. Herkes oturabilir. Halka açık olması
+      esastır. Kimlerin kullandığını gözlemleyin. Halka açık bank bir
+      ortak alandır. Ne gerektirir? Ne sağlar?
+    follow_ups:
+      - Halka açık alan bankı nasıl şekillendirir?
+      - Halka açık banklar olmadan alan nasıl olurdu?
+      - Halka açık ve aidiyet arasındaki ilişki nedir?
+  - id: hi_ps_stranger_parallel
+    name: Yabancı Paralelliği
+    prompt: |
+      Yabancıyla yan yana yürürsiniz. Aynı yön, aynı hız. Paralellik
+      tesadüfidir. Dinamiği gözlemleyin. Uyumlanır mısınız? Ayrılır mısınız?
+      Paralellik geçici bir arkadaşlıktır. Neyi yaratır?
+    follow_ups:
+      - Paralellik yürüyüşü nasıl şekillendirir?
+      - Bu paralellikler olmadan yol nasıl olurdu?
+      - Paralellik ve yalnızlık arasındaki ilişki nedir?
+  - id: hi_ps_object_shared
+    name: Paylaşılan Obje
+    prompt: |
+      Bir su çeşmesi. Bir korkuluk. Obje paylaşılır. Birçok el ona dokunur.
+      Paylaşılan objeyi gözlemleyin. Paylaşım ne gerektirir? Paylaşılan obje bir
+      temas noktasıdır. Neyi taşır?
+    follow_ups:
+      - Paylaşılan obje alanı nasıl şekillendirir?
+      - Bu tür objeler olmadan alan nasıl olurdu?
+      - Paylaşılan ve güven arasındaki ilişki nedir?
+  - id: hi_ps_pathway_loop
+    name: Yol Döngüsü
+    prompt: |
+      Yol geri döner. Bir döngü. Hedef yok. Döngü, yürüyüşün
+      kendisi içindir. Yürüyenleri gözlemleyin. Döngü ne sağlar? Döngü farklı bir
+      yol türüdür. Neyi mümkün kılar?
+    follow_ups:
+      - Döngü yürüyüşü nasıl şekillendirir?
+      - Döngüler olmadan alan nasıl olurdu?
+      - Döngü ve yansıma arasındaki ilişki nedir?
+  - id: hi_ps_bench_legacy
+    name: Miras Bankı
+    prompt: |
+      "Anısına." Bankın bir plaketi var. Birisi burayı sevmiş. Miras bankı
+      bir hikaye taşır. Onu gözlemleyin. Plaket ne ekler? Miras bankı bir
+      hediyedir. Neyi yaratır?
+    follow_ups:
+      - Miras bankı nasıl şekillendirir?
+      - Plaket olmadan bank nasıl olurdu?
+      - Miras ve yer arasındaki ilişki nedir?
+  - id: hi_ps_stranger_ask
+    name: Yabancı Sorusu
+    prompt: |
+      "Saatiniz var mı?" "X'e giden yol nerede?" Soru bir anlık bağlantı
+      yaratır. Değişimi gözlemleyin. Soru ne gerektirir? Yabancı sorusu
+      küçük bir ihlaldir. Neyi mümkün kılar?
+    follow_ups:
+      - Soru alanı nasıl şekillendirir?
+      - Bu tür sorular olmadan alan nasıl olurdu?
+      - Soru ve yardım arasındaki ilişki nedir?
+  - id: hi_ps_object_talisman_return
+    name: Tılsım Dönüşü
+    prompt: |
+      Dönüyorsunuz. Tılsım hala orada. Çantanız, kitabınız. Dönüş güveni
+      doğrular. Rahatlamayı gözlemleyin. Dönüş ne anlama gelir? Tılsım
+      dönüşü küçük bir zaferdir. Neyi yaratır?
+    follow_ups:
+      - Dönüş alanı nasıl şekillendirir?
+      - Bu tür dönüşler olmadan alan nasıl olurdu?
+      - Dönüş ve güven arasındaki ilişki nedir?
+  - id: hi_ps_pathway_beginning
+    name: Yol Başlangıcı
+    prompt: |
+      Yol başlar. Bir eşik. Üzerine adım atarsınız. Anı gözlemleyin.
+      Başlangıç ne anlama gelir? Yol başlangıcı bir taahhüttür. Ne gerektirir?
+    follow_ups:
+      - Başlangıç yürüyüşü nasıl şekillendirir?
+      - Yollar olmadan alan nasıl olurdu?
+      - Başlangıç ve niyet arasındaki ilişki nedir?
+  - id: hi_ps_bench_community
+    name: Bank Topluluğu
+    prompt: |
+      Müdavimler bankı bilir. Aynı kişiler, aynı saat. Bank
+      topluluğu gayri resmidir. Tanınmayı gözlemleyin. Topluluk ne
+      sağlar? Bank topluluğu küçük bir sosyal dünyadır.
+    follow_ups:
+      - Topluluk bankı nasıl şekillendirir?
+      - Müdavimler olmadan bank nasıl olurdu?
+      - Topluluk ve yer arasındaki ilişki nedir?
+  - id: hi_ps_stranger_chorus
+    name: Yabancı Korosu
+    prompt: |
+      Birçok beden, bir alan. Yabancı korosu, kalabalığın sesidir —
+      ayak sesleri, sesler, hışırtı. Koroyu gözlemleyin. Ne yaratır? Koro
+      halka açık alanın sesidir. Ne anlama gelir?
+    follow_ups:
+      - Koro alanı nasıl şekillendirir?
+      - Sessizlikte alan nasıl olurdu?
+      - Koro ve aidiyet arasındaki ilişki nedir?
+  - id: hi_ps_object_talisman_loss
+    name: Tılsım Kaybı
+    prompt: |
+      Tılsım gitmiş. Çalınmış, taşınmış, yanlış anlaşılmış. Kayıp bir
+      ihlaldir. Tepkiyi gözlemleyin. Kayıp ne anlama gelir? Tılsım kaybı
+      küçük bir travmadır. Neyi ortaya çıkarır?
+    follow_ups:
+      - Kayıp alanı nasıl şekillendirir?
+      - Bu tür kayıplar olmadan alan nasıl olurdu?
+      - Kayıp ve güven arasındaki ilişki nedir?
+  - id: hi_ps_pathway_shared
+    name: Paylaşılan Yol
+    prompt: |
+      Yol paylaşılır — yürüyenler, bisikletliler, bebek arabaları. Paylaşılan
+      kullanım pazarlık gerektirir. Kuralları gözlemleyin. Kim yol verir?
+      Paylaşılan yol bir ortak alandır. Ne gerektirir?
+    follow_ups:
+      - Paylaşılan kullanım yolu nasıl şekillendirir?
+      - Tek kullanımla yol nasıl olurdu?
+      - Paylaşılan ve çatışma arasındaki ilişki nedir?
+  - id: hi_ps_bench_rest
+    name: Bank Dinlenmesi
+    prompt: |
+      Biri dinleniyor. Gözler kapalı, nefes yavaş. Dinlenme görünür. Bank
+      sağlar. Dinlenmeyi gözlemleyin. Bank neyi mümkün kılar? Bank
+      dinlenmesi, kamusal alanın bir hediyesidir. Ne anlama gelir?
+    follow_ups:
+      - Dinlenme bankı nasıl şekillendirir?
+      - Banklar olmadan alan nasıl olurdu?
+      - Dinlenme ve haysiyet arasındaki ilişki nedir?
+  - id: hi_ps_stranger_chorus_silence
+    name: Yabancı Koro Sessizliği
+    prompt: |
+      Kalabalık durur. Bir anlık sessizlik. Yabancı koro susar.
+      Değişimi gözlemleyin. Sessizlik ne yaratır? Paylaşılan sessizlik nadirdir. Ne
+      anlama gelir?
+    follow_ups:
+      - Sessizlik alanı nasıl şekillendirir?
+      - Bu tür anlar olmadan alan nasıl olurdu?
+      - Sessizlik ve bütün arasındaki ilişki nedir?

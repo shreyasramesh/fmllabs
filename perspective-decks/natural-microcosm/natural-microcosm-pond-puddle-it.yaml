@@ -1,0 +1,480 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosmo Naturale — Stagno & Pozza (Italian)
+
+id: natural_microcosm_pond_puddle
+name: Microcosmo Naturale — Stagno & Pozza
+description: 50 carte per cambiare il tuo modo di vedere l'acqua su piccola scala—dalla tensione superficiale e i riflessi agli insetti acquatici, ai girini e alla vita nelle pozze temporanee.
+domain: natural_microcosm
+cards:
+  - id: nmp_surface_tension
+    name: Tensione Superficiale
+    prompt: |
+      Una scarpattina cammina sull'acqua. La superficie regge—le molecole si aggrappano. Lascia cadere una
+      puntina delicatamente. Galleggia. Considera il film invisibile. Cosa lo romperebbe?
+    follow_ups:
+      - Come la tensione superficiale plasma chi può vivere qui?
+      - Cosa sarebbe lo stagno senza di essa?
+      - Qual è la relazione tra superficie e confine?
+  - id: nmp_skater_ripple
+    name: Increspatura della Scarpattina
+    prompt: |
+      Le zampe di una scarpattina increspano la superficie. Ogni passo crea un'increspatura.
+      Guarda il disegno. La scarpattina legge la superficie come una mappa. Cosa
+      percepisce?
+    follow_ups:
+      - Come l'increspatura trasporta informazioni?
+      - Cosa farebbe la scarpattina senza la superficie?
+      - Qual è la relazione tra increspatura e preda?
+  - id: nmp_reflection_sky
+    name: Riflesso del Cielo
+    prompt: |
+      Una pozza riflette il cielo—o un ramo, o te. Il riflesso inverte.
+      L'acqua ferma è uno specchio. Cosa aggiunge il riflesso? Cosa nasconde?
+    follow_ups:
+      - Cosa sarebbe la pozza senza il riflesso?
+      - Come la quiete plasma ciò che vediamo?
+      - Qual è la relazione tra superficie e immagine?
+  - id: nmp_tadpole_tail
+    name: Coda del Girino
+    prompt: |
+      Un girino nuota—la coda lo spinge. La coda sarà riassorbita. L'animale
+      si sta trasformando. Considera l'intermezzo. Cosa consente la coda ora?
+    follow_ups:
+      - Cosa sarebbe il girino senza la coda?
+      - Come la metamorfosi riscrive il corpo?
+      - Qual è la relazione tra forma e funzione?
+  - id: nmp_dragonfly_egg
+    name: Uovo di Libellula
+    prompt: |
+      Le libellule depongono le uova nell'acqua—o negli steli sotto la superficie. La ninfa
+      vive sott'acqua per anni prima di emergere. Considera la vita divisa.
+      Cosa collega acqua e aria?
+    follow_ups:
+      - Cosa sarebbe la libellula senza lo stadio acquatico?
+      - Come la ninfa plasma lo stagno?
+      - Qual è la relazione tra ninfa e adulta?
+  - id: nmp_algae_bloom
+    name: Fioritura Algale
+    prompt: |
+      Schiuma verde sull'acqua—alghe. È una fioritura, un impulso. Troppo nutriente,
+      troppo sole. Lo stagno risponde. Cosa lo innesca? Cosa segue?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza alghe?
+      - Come la fioritura influisce sull'ossigeno?
+      - Qual è la relazione tra nutriente e crescita?
+  - id: nmp_reed_stem
+    name: Stelo di Giunco
+    prompt: |
+      Giunchi e canne sorgono dal bordo. Sono cavi—canali d'aria scorrono
+      all'interno. Lo stelo collega acqua e aria. Chi usa il giunco come scala?
+    follow_ups:
+      - Cosa sarebbe il bordo senza i giunchi?
+      - Come il cavo consente la sopravvivenza?
+      - Qual è la relazione tra stelo e habitat?
+  - id: nmp_pond_skin
+    name: Pelle dello Stagno
+    prompt: |
+      Lo stagno ha una pelle—dove l'acqua incontra l'aria. La polvere vi si deposita. L'olio si espande.
+      La pelle è delicata. Toccala. Cosa separa la pelle?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza la pelle?
+      - Come la pelle influisce sullo scambio gassoso?
+      - Qual è la relazione tra superficie e profondità?
+  - id: nmp_temporary_pool
+    name: Pozza Temporanea
+    prompt: |
+      Una pozza dopo la pioggia—si asciugherà. Eppure la vita si è adattata. Gamberetti delle fate,
+      gamberetti unicorno, uova che aspettano. Considera l'urgenza. Cosa deve accadere
+      prima che l'acqua se ne vada?
+    follow_ups:
+      - Cosa sarebbe la pozza se fosse permanente?
+      - Come la temporaneità plasma la strategia?
+      - Qual è la relazione tra tempo e adattamento?
+  - id: nmp_whirligig_gyre
+    name: Girotondo dello Scarafaggio Acqua-Gira
+    prompt: |
+      Gli scarafaggi acqua-gira girano sulla superficie. Vedono sopra e sotto—occhi divisi.
+      Sono predatori e prede. Considera la visione doppia. Cosa consente?
+    follow_ups:
+      - Cosa sarebbe lo scarafaggio senza la visione divisa?
+      - Come il girotondo confonde i predatori?
+      - Qual è la relazione tra girare e sopravvivenza?
+  - id: nmp_diving_spider
+    name: Ragno Subacqueo
+    prompt: |
+      Un ragno subacqueo porta una bolla d'aria—una campana subacquea. Respira
+      sott'acqua. La bolla è un polmone. Considera l'invenzione. Cosa farebbe
+      il ragno senza di essa?
+    follow_ups:
+      - Come la bolla consente la caccia?
+      - Cosa succederebbe se la bolla scoppiasse?
+      - Qual è la relazione tra aria e acqua?
+  - id: nmp_pond_scum
+    name: Limo dello Stagno
+    prompt: |
+      Il limo si forma al bordo—polline, polvere, alghe, insetti. È uno strato di confine.
+      Cosa si raccoglie lì? Chi se ne nutre? Il limo è un filtro.
+    follow_ups:
+      - Cosa sarebbe lo stagno senza il limo?
+      - Come il bordo concentra la vita?
+      - Qual è la relazione tra confine e accumulo?
+  - id: nmp_ice_surface
+    name: Superficie Ghiacciata
+    prompt: |
+      In inverno, lo stagno gela. Il ghiaccio regge. Sotto, la vita continua—
+      più lenta, più fredda. Considera la barriera. Cosa protegge il ghiaccio? Cosa blocca?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza ghiaccio?
+      - Come il gelo influisce sull'ossigeno?
+      - Qual è la relazione tra ghiaccio e sopravvivenza?
+  - id: nmp_minnow_school
+    name: Banco di Alborelle
+    prompt: |
+      Le alborelle nuotano in banco—si muovono come un solo corpo. Il banco è difesa, efficienza.
+      Guarda la sincronia. Cosa le coordina? Cosa rischierebbe un'alborella solitaria?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza il banco?
+      - Come il nuoto in banco riduce la predazione?
+      - Qual è la relazione tra individuo e gruppo?
+  - id: nmp_lily_pad
+    name: Foglia di Ninfea
+    prompt: |
+      Una foglia di ninfea galleggia. La sua parte inferiore è diversa da quella superiore—peli, colore.
+      La foglia è una piattaforma. Cosa atterra su di essa? Cosa vive sotto?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza le ninfee?
+      - Come la foglia plasma la luce sotto?
+      - Qual è la relazione tra foglia e ombra?
+  - id: nmp_ripple_spread
+    name: Propagazione dell'Increspatura
+    prompt: |
+      Una pietra cade. Le increspature si diffondono. Si intersecano, interferiscono. Il disegno
+      trasporta energia. Considera il decadimento. Quanto viaggiano le increspature?
+    follow_ups:
+      - Cosa sarebbe la superficie senza increspature?
+      - Come l'increspatura segna l'impatto?
+      - Qual è la relazione tra disturbo e propagazione?
+  - id: nmp_mosquito_wiggle
+    name: Vibrazione della Zanzara
+    prompt: |
+      Le larve di zanzara pendono dalla superficie—"wigglers". Respirano attraverso un sifone.
+      La vibrazione è movimento, alimentazione. Considera il mondo della larva.
+      Cosa mangia?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza zanzare?
+      - Come la vibrazione evita i predatori?
+      - Qual è la relazione tra larva e adulta?
+  - id: nmp_leaf_boat
+    name: Barca di Foglie
+    prompt: |
+      Una foglia galleggia—caduta, alla deriva. È una zattera per alcuni, cibo per altri.
+      La foglia affonderà, decomponendosi. Traccia il suo viaggio. Cosa diventerà?
+    follow_ups:
+      - Cosa sarebbe la superficie senza detriti galleggianti?
+      - Come la foglia crea un microhabitat?
+      - Qual è la relazione tra galleggiare e affondare?
+  - id: nmp_backswimmer_top
+    name: Dorso d'Acqua Capovolto
+    prompt: |
+      Un dorso d'acqua nuota capovolto—ventre verso il cielo. Remano con le zampe.
+      Respirano in superficie, poi si immergono. Considera l'inversione. Perché
+      capovolto?
+    follow_ups:
+      - Cosa sarebbe il dorso d'acqua dritto?
+      - Come la postura aiuta la caccia?
+      - Qual è la relazione tra orientamento e preda?
+  - id: nmp_snail_trail
+    name: Traccia di Lumaca
+    prompt: |
+      Una lumaca di stagno scivola. Lascia una traccia—muco, movimento. La traccia segna
+      dove è stata. Altre lumache potrebbero seguirla. Considera il percorso. Cosa comunica
+      la traccia?
+    follow_ups:
+      - Cosa sarebbe la lumaca senza la traccia?
+      - Come il muco consente il movimento?
+      - Qual è la relazione tra traccia e seguire?
+  - id: nmp_dew_drop
+    name: Goccia di Rugiada
+    prompt: |
+      La rugiada si forma su una lama sopra l'acqua—perle, riflette. È condensazione.
+      La goccia regge. Poi cade. Considera la goccia. Cosa ingrandisce?
+    follow_ups:
+      - Cosa sarebbe la lama senza la rugiada?
+      - Come la goccia piega la luce?
+      - Qual è la relazione tra goccia e superficie?
+  - id: nmp_spring_constant
+    name: Costante della Sorgente
+    prompt: |
+      Una sorgente alimenta lo stagno—o lo stagno filtra. Il livello dell'acqua è equilibrio.
+      Considera l'input e l'output. Cosa sostiene la pozza? Cosa la seccherebbe?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza la sorgente?
+      - Come la sorgente plasma l'acqua?
+      - Qual è la relazione tra input e vita?
+  - id: nmp_edge_ecotone
+    name: Ecotono del Bordo
+    prompt: |
+      Il bordo dello stagno è un ecotono—transizione. Umido incontra asciutto. Le piante si adattano.
+      Gli animali attraversano. Il bordo è diversità. Cosa prospera nell'intermezzo?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza il bordo?
+      - Come l'ecotono crea opportunità?
+      - Qual è la relazione tra confine e diversità?
+  - id: nmp_frog_eye
+    name: Occhio di Rana
+    prompt: |
+      Una rana siede al bordo. I suoi occhi sporgono—vede sopra e avanti. La
+      rana è ferma. Poi la lingua scatta. Considera la pazienza. Cosa aspetta?
+    follow_ups:
+      - Cosa sarebbe la rana senza gli occhi sporgenti?
+      - Come la quiete consente lo scatto?
+      - Qual è la relazione tra attesa e cattura?
+  - id: nmp_oxygen_bubble
+    name: Bolla d'Ossigeno
+    prompt: |
+      Le piante nello stagno producono ossigeno—le bolle salgono. In una giornata di sole, l'acqua
+      respira. Considera lo scambio. Cosa sarebbe lo stagno senza
+      la fotosintesi?
+    follow_ups:
+      - Come l'ossigeno plasma chi può vivere qui?
+      - Cosa succede quando l'ossigeno scarseggia?
+      - Qual è la relazione tra luce e respiro?
+  - id: nmp_detritus_floor
+    name: Fondo Detritico
+    prompt: |
+      Il fondo dello stagno è detrito—foglie cadute, insetti morti, sedimento. È
+      uno strato di decomposizione. Cosa vive in esso? Chi se ne nutre? Il fondo è una
+      dispensa.
+    follow_ups:
+      - Cosa sarebbe lo stagno senza detriti?
+      - Come il fondo alimenta la colonna d'acqua?
+      - Qual è la relazione tra fondo e cima?
+  - id: nmp_rain_ring
+    name: Anello di Pioggia
+    prompt: |
+      La pioggia colpisce la superficie. Ogni goccia crea un anello—una corona, poi un cratere.
+      La pioggia texturizza l'acqua. Considera il disegno. Cosa significherebbe una
+      superficie ferma?
+    follow_ups:
+      - Come la pioggia ossigena l'acqua?
+      - Cosa interrompono gli anelli?
+      - Qual è la relazione tra pioggia e superficie?
+  - id: nmp_duckweed_carpet
+    name: Tappeto di Lenticchia d'Acqua
+    prompt: |
+      La lenticchia d'acqua ricopre la superficie—piccole piante galleggianti. Si moltiplicano velocemente.
+      Il tappeto ombreggia ciò che sta sotto. Considera la copertura. Cosa significherebbe pieno
+      sole?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza lenticchia d'acqua?
+      - Come il tappeto influisce sulla temperatura?
+      - Qual è la relazione tra copertura e vita sotto?
+  - id: nmp_phantom_midgie
+    name: Zanzara Fantasma
+    prompt: |
+      Le larve di zanzara fantasma sono trasparenti—spettrali. Pendono nell'acqua.
+      Si vede attraverso di loro. Considera l'invisibilità. Cosa protegge la trasparenza?
+    follow_ups:
+      - Cosa sarebbe la larva se fosse opaca?
+      - Come la trasparenza aiuta la predazione?
+      - Qual è la relazione tra trasparenza e sopravvivenza?
+  - id: nmp_skimmer_skip
+    name: Salto del Sasso sull'Acqua
+    prompt: |
+      Un sasso lanciato sull'acqua—uno, due, tre. Ogni rimbalzo
+      trasferisce energia. Il sasso alla fine affonda. Considera il limite.
+      Cosa determina il numero di rimbalzi?
+    follow_ups:
+      - Cosa farebbe il sasso senza la rotazione?
+      - Come l'angolo plasma il rimbalzo?
+      - Qual è la relazione tra lancio e rimbalzo?
+  - id: nmp_pollinator_drink
+    name: Bevuta dell'Impollinatore
+    prompt: |
+      Un'ape beve al bordo. Farfalle si radunano in una pozza di fango. L'acqua
+      è una risorsa. Considera chi arriva. Di cosa hanno bisogno dall'acqua?
+    follow_ups:
+      - Cosa farebbero gli impollinatori senza la pozza?
+      - Come il bordo consente di bere?
+      - Qual è la relazione tra acqua e minerale?
+  - id: nmp_evaporation_skin
+    name: Pelle dell'Evaporazione
+    prompt: |
+      Lo stagno perde acqua per evaporazione. In estate, il livello si abbassa. La
+      riva si espande. Considera il ritiro. Cosa viene esposto? Chi viene
+      lasciato a secco?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza evaporazione?
+      - Come l'abbassamento concentra la vita?
+      - Qual è la relazione tra perdita e concentrazione?
+  - id: nmp_hydra_stalk
+    name: Stelo di Idra
+    prompt: |
+      Un'idra—minuscola, tentacolata—si ancora a uno stelo. Punge le prede, le attira.
+      L'idra può rigenerarsi. Considera la semplicità. Che piano corporeo utilizza?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza idre?
+      - Come la rigenerazione aiuta la sopravvivenza?
+      - Qual è la relazione tra semplicità e resilienza?
+  - id: nmp_boatman_row
+    name: Remo del Barcaiolo d'Acqua
+    prompt: |
+      Un barcaiolo d'acqua rema—zampe simili a remi. È spesso capovolto, aggrappato
+      alla superficie. Si nutre di alghe. Considera i remi. Cosa spingono?
+    follow_ups:
+      - Cosa sarebbe il barcaiolo senza i remi?
+      - Come il remo differisce dal dorso d'acqua?
+      - Qual è la relazione tra zampa e movimento?
+  - id: nmp_caddisfly_case
+    name: Astuccio della Tricottero
+    prompt: |
+      Una larva di tricottero costruisce un astuccio—rametti, sassolini, conchiglie. Li incolla
+      con seta. L'astuccio è armatura e mimetismo. Considera la costruzione.
+      Cosa sceglie la larva?
+    follow_ups:
+      - Cosa sarebbe la larva senza l'astuccio?
+      - Come l'astuccio varia in base all'habitat?
+      - Qual è la relazione tra materiale e protezione?
+  - id: nmp_damselfly_emergence
+    name: Emergenza della Damigella
+    prompt: |
+      Una damigella emerge—la ninfa sale su uno stelo, spacca la sua pelle, l'adulta si libera.
+      Le ali si spiegano. Il momento è vulnerabile. Considera la
+      trasformazione. Cosa potrebbe andare storto?
+    follow_ups:
+      - Cosa sarebbe l'adulta senza la salita?
+      - Come l'emergenza plasma la tempistica?
+      - Qual è la relazione tra ninfa e adulta?
+  - id: nmp_floating_feather
+    name: Piuma Galleggiante
+    prompt: |
+      Una piuma galleggia—abbandonata da un uccello. Cavalca la superficie. L'acqua
+      vi si raccoglie sopra. Considera la piuma. Cosa teneva asciutto l'uccello? Cosa fa
+      adesso la piuma?
+    follow_ups:
+      - Cosa sarebbe la superficie senza oggetti galleggianti?
+      - Come la piuma intrappola l'aria?
+      - Qual è la relazione tra struttura e galleggiamento?
+  - id: nmp_moon_jelly
+    name: Medusa Lunare
+    prompt: |
+      In alcuni stagni, meduse—meduse lunari. Pulsano. Sono per lo più acqua.
+      Considera il corpo. Cosa cattura la gelatina? Cosa evita?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza meduse?
+      - Come il polso crea movimento?
+      - Qual è la relazione tra acqua e corpo?
+  - id: nmp_seep_source
+    name: Fonte del Filtraggio
+    prompt: |
+      L'acqua filtra dalla riva—una sorgente, flusso lento. Il filtraggio alimenta lo stagno.
+      O lo stagno perde. Considera il confine. Cosa attraversa? Cosa trattiene?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza il filtraggio?
+      - Come il filtraggio plasma la chimica?
+      - Qual è la relazione tra sorgente e pozza?
+  - id: nmp_wind_wave
+    name: Onda del Vento
+    prompt: |
+      Il vento spinge la superficie. Si formano piccole onde. Si infrangono al bordo.
+      Considera il fetch—la distanza che il vento percorre sull'acqua. Cosa plasma
+      l'onda?
+    follow_ups:
+      - Cosa sarebbe la superficie senza vento?
+      - Come le onde influiscono sull'ossigeno?
+      - Qual è la relazione tra vento e mescolamento?
+  - id: nmp_rotifer_wheel
+    name: Ruota del Rotifero
+    prompt: |
+      I rotiferi sono microscopici—hanno una ruota di ciglia. Gira, attira il
+      cibo. Il rotifero è un motore. Considera la scala. Cos'altro c'è in quest'acqua?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza rotiferi?
+      - Come la ruota crea flusso?
+      - Qual è la relazione tra ciglia e alimentazione?
+  - id: nmp_temperature_layer
+    name: Strato di Temperatura
+    prompt: |
+      Gli stagni possono stratificarsi—caldo sopra, freddo sotto. Gli strati non si mescolano facilmente.
+      Considera il confine. Chi vive dove? Cosa succede quando lo stagno
+      si mescola?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza stratificazione?
+      - Come la temperatura plasma l'ossigeno?
+      - Qual è la relazione tra strato e vita?
+  - id: nmp_predator_shadow
+    name: Ombra del Predatore
+    prompt: |
+      Passa l'ombra di un pesce. Le prede si immobilizzano, si disperdono. L'ombra è un segnale.
+      Considera la risposta. Cosa significherebbe un'ombra costante? Cosa significherebbe nessuna
+      ombra?
+    follow_ups:
+      - Come l'ombra innesca la fuga?
+      - Quali altri segnali oltre all'ombra contano?
+      - Qual è la relazione tra ombra e sopravvivenza?
+  - id: nmp_surface_film
+    name: Film Superficiale
+    prompt: |
+      Un sottile film sull'acqua—polline, batteri, materia organica. Può supportare
+      peso. Alcuni insetti ci camminano sopra. Considera il film. Cosa lo romperebbe?
+    follow_ups:
+      - Cosa sarebbe la superficie senza il film?
+      - Come il film influisce sullo scambio gassoso?
+      - Qual è la relazione tra film e confine?
+  - id: nmp_dry_wait
+    name: Attesa Asciutta
+    prompt: |
+      La pozza si asciugherà. Alcuni organismi hanno uova resistenti alla disidratazione.
+      Aspettano. La prossima pioggia potrebbe essere tra mesi. Considera la scommessa. Cosa
+      deve allinearsi per il successo?
+    follow_ups:
+      - Cosa sarebbe la pozza senza l'attesa?
+      - Come la dormienza attraversa l'asciutto?
+      - Qual è la relazione tra uovo e pioggia?
+  - id: nmp_shoreline_wrack
+    name: Detriti della Costa
+    prompt: |
+      Detriti si accumulano alla costa—foglie, rametti, insetti morti. I
+      detriti sono una linea. Segnano il livello massimo dell'acqua. Considera l'accumulo.
+      Chi si nutre qui?
+    follow_ups:
+      - Cosa sarebbe il bordo senza i detriti?
+      - Come i detriti creano habitat?
+      - Qual è la relazione tra linea e livello?
+  - id: nmp_duckweed_carpet
+    name: Tappeto di Lenticchia d'Acqua
+    prompt: |
+      La lenticchia d'acqua ricopre l'acqua ferma—piccoli dischi verdi. Si diffonde velocemente.
+      La superficie diventa solida. Considera l'invasione. Cosa blocca il tappeto? Cosa consente?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza lenticchia d'acqua?
+      - Come il tappeto influisce su luce e ossigeno?
+      - Qual è la relazione tra copertura e vita sotto?
+  - id: nmp_rain_ring
+    name: Anello di Pioggia
+    prompt: |
+      Una goccia di pioggia colpisce la superficie. Un anello si espande, svanisce. Sotto la pioggia, la
+      superficie diventa texture—anelli sovrapposti. Considera il disegno. Cosa
+      fa la pioggia allo stagno?
+    follow_ups:
+      - Cosa sarebbe la superficie senza pioggia?
+      - Come la pioggia mescola l'acqua?
+      - Qual è la relazione tra goccia e anello?
+  - id: nmp_minnow_school
+    name: Banco di Alborelle
+    prompt: |
+      Le alborelle nuotano in banco—decine si muovono come un solo corpo. Il banco è una strategia. Confondono
+      i predatori. Considera il coordinamento. Come decidono? Cosa costerebbe la solitudine?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza il nuoto in banco?
+      - Come risponde il banco alla minaccia?
+      - Qual è la relazione tra molti e uno?
+  - id: nmp_ice_edge
+    name: Bordo Ghiacciato
+    prompt: |
+      In inverno, il ghiaccio cresce dal bordo. Il confine avanza. Sotto, la vita
+      persiste—più fredda, più lenta. Considera il bordo. Cosa sopravvive sotto il ghiaccio?
+    follow_ups:
+      - Cosa sarebbe lo stagno senza ghiaccio?
+      - Come il ghiaccio protegge o minaccia?
+      - Qual è la relazione tra gelo e ossigeno?

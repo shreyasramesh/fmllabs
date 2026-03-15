@@ -1,0 +1,517 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Interfejs Człowieka — Kawiarnia (Polish)
+
+id: human_interface_coffee_shop
+name: Interfejs Człowieka — Kawiarnia
+description: 50 kart zmieniających sposób, w jaki postrzegasz kawiarnię — od choreografii kolejek i terytoriów laptopów, po trzecie miejsce, niewidzialne scenariusze i kawę jako rytuał.
+domain: human_interface
+cards:
+  - id: hi_cs_queue_choreography
+    name: Choreografia Kolejki
+    prompt: |
+      Obserwuj kolejkę przy ladzie. Ciała ustawiają się — pochylenie do przodu,
+      sprawdzenie telefonu, subtelne przestępowanie. Kolejka ma swój rytm. Kto zajmuje przestrzeń?
+      Jakie niewypowiedziane zasady rządzą tym, kto gdzie stoi?
+    follow_ups:
+      - Jak kolejka kształtuje oczekiwanie?
+      - Co by się stało, gdyby wszyscy zignorowali kolejność?
+      - Jaka jest zależność między czekaniem a poczuciem przynależności?
+  - id: hi_cs_laptop_territory
+    name: Terytorium Laptopa
+    prompt: |
+      Otwarty laptop na stole zajmuje miejsce. Filiżanka obok niego, torba na krześle.
+      Zwróć uwagę na granice. Ile przestrzeni zajmuje jedna osoba? Co sygnalizuje, że miejsce jest "zajęte"?
+    follow_ups:
+      - Jak laptop rozszerza ciało?
+      - Jakie byłoby to miejsce bez urządzeń?
+      - Jaka jest zależność między terytorium a czasem pobytu?
+  - id: hi_cs_third_place
+    name: Trzecie Miejsce
+    prompt: |
+      Ani dom, ani praca — kawiarnia jest trzecim miejscem. Ludzie przychodzą, by być
+      samotnymi razem. Zauważ, kto zostaje. Kto szybko wychodzi? Przestrzeń ta rządzi się innym kontraktem społecznym.
+    follow_ups:
+      - Jakie byłoby miasto bez trzecich miejsc?
+      - Czym kawiarnia różni się od biblioteki?
+      - Jaka jest zależność między miejscem a tożsamością?
+  - id: hi_cs_invisible_script
+    name: Niewidzialny Scenariusz
+    prompt: |
+      Zamów, zapłać, czekaj, odbierz, znajdź miejsce. Scenariusz jest niewidzialny, dopóki
+      ktoś go nie złamie. Obserwuj kogoś, kto jest tu pierwszy raz. Czego nie wie?
+      Scenariusz koduje przynależność.
+    follow_ups:
+      - Jak scenariusz wyklucza?
+      - Co by się stało, gdyby scenariusz został spisany?
+      - Jaka jest zależność między scenariuszem a płynnością?
+  - id: hi_cs_coffee_ritual
+    name: Kawa jako Rytuał
+    prompt: |
+      Napój jest drugorzędny. Rytuał jest pierwszorzędny — spacer, zamówienie, pierwszy łyk.
+      Zwróć uwagę na swoje własne ruchy. Co byś stracił, gdyby kawa przyjechała pod twoje drzwi?
+    follow_ups:
+      - Jak rytuał zaznacza przejście?
+      - Jaki byłby dzień bez przerwy na kawę?
+      - Jaka jest zależność między rytuałem a gotowością?
+  - id: hi_cs_counter_handoff
+    name: Przekazanie przy Ladzie
+    prompt: |
+      Barista wywołuje imię. Sięga ręka. Przekazanie to chwila kontaktu między nieznajomymi.
+      Obserwuj wymianę. Co przechodzi oprócz filiżanki?
+    follow_ups:
+      - Jak przekazanie tworzy więź?
+      - Co by się zmieniło z robotem-baristą?
+      - Jaka jest zależność między przekazaniem a zaufaniem?
+  - id: hi_cs_power_outlet_hunt
+    name: Polowanie na Gniazdko
+    prompt: |
+      Oczy skanują ściany, podłogę, pod stołami. Polowanie na gniazdko jest
+      terytorialne. Kto był pierwszy? Gniazdko decyduje o tym, gdzie usiądziesz.
+      Geografia podąża za elektrycznością.
+    follow_ups:
+      - Jak rozmieszczenie gniazdek kształtuje pokój?
+      - Jakie byłoby to miejsce z bezprzewodowym zasilaniem?
+      - Jaka jest zależność między wtyczką a trwałością?
+  - id: hi_cs_solo_table
+    name: Samotny Stół
+    prompt: |
+      Jedna osoba przy stole dla czterech. Puste krzesła są buforem. Obserwuj
+      układ. Czy to obrona? Preferencja? Samotny stół zajmuje przestrzeń przeciwko tłumowi.
+    follow_ups:
+      - Jak samotny stół sygnalizuje zamiar?
+      - Co by się stało, gdyby ktoś poprosił o współdzielenie?
+      - Jaka jest zależność między samotnością a widocznością?
+  - id: hi_cs_milk_pour
+    name: Nalewanie Mleka
+    prompt: |
+      Barista nalewa mleko do espresso — z latte art lub bez. Nalewanie to
+      rzemiosło. Obserwuj ruch. Co otrzymuje klient oprócz napoju? Nalewanie to występ.
+    follow_ups:
+      - Jak nalewanie kształtuje oczekiwania?
+      - Jaki byłby napój bez rzemiosła?
+      - Jaka jest zależność między nalewaniem a ceną?
+  - id: hi_cs_name_on_cup
+    name: Imię na Kubku
+    prompt: |
+      Imię — prawdziwe, fałszywe, przekręcone — na kubku. Personalizuje transakcję.
+      Imię przechodzi z ust do ręki do lady. Co imię robi dla wymiany?
+    follow_ups:
+      - Jak imię tworzy rozpoznanie?
+      - Jakie byłoby zamówienie bez imienia?
+      - Jaka jest zależność między imieniem a anonimowością?
+  - id: hi_cs_window_seat
+    name: Miejsce przy Oknie
+    prompt: |
+      Miejsce przy oknie jest najlepsze. Patrzysz na ulicę; plecy są chronione.
+      Obserwuj, kto je wybiera. Okno ramuje świat zewnętrzny, podczas gdy ty
+      pozostajesz w środku. Co daje widok?
+    follow_ups:
+      - Jak miejsce przy oknie kształtuje doświadczenie?
+      - Jakie byłoby to miejsce bez okien?
+      - Jaka jest zależność między wnętrzem a zewnętrzem?
+  - id: hi_cs_linger_versus_grab
+    name: Zostawić czy Wziąć
+    prompt: |
+      Niektórzy biorą swój kubek i wychodzą. Inni osiedlają się na godziny. Ta sama
+      przestrzeń mieści obu. Zwróć uwagę na podział. Co decyduje o tym, kto zostaje?
+      Kawiarnia dostosowuje się do różnych temp.
+    follow_ups:
+      - Jak długie pozostawanie wpływa na biznes?
+      - Jakie byłoby to miejsce, gdyby wszyscy wychodzili szybko?
+      - Jaka jest zależność między tempem a poczuciem przynależności?
+  - id: hi_cs_regular_recognition
+    name: Rozpoznanie Stałego Klienta
+    prompt: |
+      "Jak zwykle?" Barista wie. Stały klient jest rozpoznawany. Obserwuj
+      wymianę. Co się zmienia, gdy jesteś rozpoznawany? "Jak zwykle" to skrót —
+      i prawo do miejsca.
+    follow_ups:
+      - Jak rozpoznanie tworzy lojalność?
+      - Co straciłby stały klient bez tego?
+      - Jaka jest zależność między "jak zwykle" a tożsamością?
+  - id: hi_cs_soundscape
+    name: Krajobraz Dźwiękowy
+    prompt: |
+      Para, mielenie, gwar, muzyka. Kawiarnia ma swój krajobraz dźwiękowy. Zamknij
+      oczy. Mapuj warstwy. Co jest stałe? Jaki jest rytm? Krajobraz dźwiękowy kształtuje nastrój.
+    follow_ups:
+      - Jak krajobraz dźwiękowy wpływa na koncentrację?
+      - Jakie byłoby to miejsce w ciszy?
+      - Jaka jest zależność między dźwiękiem a produktywnością?
+  - id: hi_cs_shared_table
+    name: Wspólny Stół
+    prompt: |
+      Nieznajomi siedzą przy tym samym długim stole. Nikt nie mówi. Wspólny stół to
+      bliskość bez połączenia. Obserwuj granice. Jak blisko to za blisko? Stół utrzymuje delikatną równowagę.
+    follow_ups:
+      - Czym wspólny stół różni się od samotnego?
+      - Co by się stało, gdyby ktoś zaczął rozmowę?
+      - Jaka jest zależność między bliskością a prywatnością?
+  - id: hi_cs_tip_jar
+    name: Słoik na Napiwki
+    prompt: |
+      Monety i banknoty się gromadzą. Słoik na napiwki jest widoczny, pasywny. Kto daje napiwki?
+      Kto nie daje? Słoik stoi na granicy transakcji i prezentu.
+      Co oznacza napiwek?
+    follow_ups:
+      - Jak słoik na napiwki kształtuje wymianę?
+      - Jaka byłaby lada bez niego?
+      - Jaka jest zależność między napiwkiem a wdzięcznością?
+  - id: hi_cs_cup_sleeve
+    name: Opaska na Kubek
+    prompt: |
+      Opaska chroni dłoń przed gorącem. Jest jednorazowa, oznakowana.
+      Zwróć uwagę na to, jak ludzie trzymają kubek z nią. Opaska to mały
+      interfejs między ciałem a napojem.
+    follow_ups:
+      - Jak opaska zmienia chwyt?
+      - Jakie byłoby doświadczenie bez niej?
+      - Jaka jest zależność między opaską a marką?
+  - id: hi_cs_morning_rush
+    name: Poranne Gorączkowe Tłumy
+    prompt: |
+      Przed pracą kolejka się wydłuża. Poranne gorączkowe tłumy mają własne tempo.
+      Obserwuj tempo. Wszyscy gdzieś się spieszą. Kawiarnia jest
+      przystankiem. Co wyciągają z siebie te tłumy?
+    follow_ups:
+      - Jak gorączkowe tłumy kształtują personel?
+      - Jaki byłby poranek bez tego przystanku?
+      - Jaka jest zależność między pośpiechem a rytuałem?
+  - id: hi_cs_afternoon_slow
+    name: Popołudniowy Spokój
+    prompt: |
+      W środku popołudnia tłum rzednie. Ci, którzy zostają, są inni — studenci,
+      freelancerzy, ci bez pośpiechu. Tempo się zmienia. Zwróć uwagę na zmianę. Popołudnie gości innego rodzaju klienta.
+    follow_ups:
+      - Czym popołudnie różni się od poranka?
+      - Jakie byłoby to miejsce bez okresu spokoju?
+      - Jaka jest zależność między czasem a obłożeniem?
+  - id: hi_cs_wifi_password
+    name: Hasło WiFi
+    prompt: |
+      Hasło jest na ścianie, na paragonie, na tablicy. Trzeba pytać
+      lub szukać. WiFi to dla niektórych wstęp do wejścia. Obserwuj, kto się łączy. Kto nie musi?
+    follow_ups:
+      - Jak WiFi kształtuje to, kto zostaje?
+      - Jakie byłoby to miejsce bez niego?
+      - Jaka jest zależność między połączeniem a konsumpcją?
+  - id: hi_cs_crossword_solver
+    name: Rozwiązywacz Krzyżówek
+    prompt: |
+      Ktoś rozwiązuje krzyżówkę, w gazecie lub w telefonie. Czynność jest samotna, ale
+      widoczna. Krzyżówka zaznacza czas. Mówi "Zostaję". Co ta czynność sygnalizuje innym?
+    follow_ups:
+      - Jak krzyżówka tworzy bańkę?
+      - Co robiłby rozwiązywacz bez niej?
+      - Jaka jest zależność między czynnością a zajętością miejsca?
+  - id: hi_cs_meeting_here
+    name: Spotkanie Tutaj
+    prompt: |
+      Spotykają się dwie osoby — rozmowa kwalifikacyjna, nadrabianie zaległości, pierwsza randka. Kawiarnia jest
+      neutralnym gruntem. Obserwuj aranżację. Kto wybrał to miejsce? Stół staje się sceną dla spotkania.
+    follow_ups:
+      - Jak kawiarnia umożliwia spotkanie?
+      - Jakie byłoby spotkanie w biurze?
+      - Jaka jest zależność między miejscem a spotkaniem?
+  - id: hi_cs_bathroom_key
+    name: Klucz do Toalety
+    prompt: |
+      Klucz do toalety jest przyczepiony do bloku, łopatki, ogromnej łyżki. Trzeba pytać.
+      Klucz to mały test przynależności. Kto ma prawo
+      korzystać z toalety?
+    follow_ups:
+      - Jak klucz kontroluje dostęp?
+      - Jakie byłoby to miejsce z otwartymi toaletami?
+      - Jaka jest zależność między kluczem a zaufaniem?
+  - id: hi_cs_pastry_case
+    name: Witryna Cukiernicza
+    prompt: |
+      Różne ciasta i ciasteczka za szkłem. Witryna to pokusa i
+      ekspozycja. Zwróć uwagę, co się sprzedaje. Co leży zbyt długo? Witryna to negocjacja między pragnieniem a zwłoką.
+    follow_ups:
+      - Jak witryna kształtuje zamówienie?
+      - Jaka byłaby lada bez niej?
+      - Jaka jest zależność między ekspozycją a pragnieniem?
+  - id: hi_cs_phone_glance
+    name: Zerkanie na Telefon
+    prompt: |
+      Wszyscy zerkają na swoje telefony. Zerkanie to przerwa, sprawdzenie,
+      wycofanie. Obserwuj rytm. Jak często? Jak długo? Telefon to
+      portal z pokoju.
+    follow_ups:
+      - Jak telefon kształtuje obecność?
+      - Jakie byłoby to miejsce bez telefonów?
+      - Jaka jest zależność między zerkaniem a uwagą?
+  - id: hi_cs_steam_rise
+    name: Unosząca się Para
+    prompt: |
+      Para unosi się z nowej filiżanki. Ciepło niesie aromat. Para jest
+      ulotna — znika w kilka minut. Zwróć na nią uwagę. Co para dodaje do chwili przed pierwszym łykiem?
+    follow_ups:
+      - Jak para kształtuje oczekiwanie?
+      - Jaki byłby napój bez niej?
+      - Jaka jest zależność między parą a rytuałem?
+  - id: hi_cs_bag_on_chair
+    name: Torba na Krześle
+    prompt: |
+      Torba zajmuje krzesło obok siedzącej osoby. Chroni miejsce, rozszerza terytorium.
+      Torba to wypełniacz. Obserwuj komunikat: "To miejsce jest zajęte." Co by się stało, gdyby ktoś poprosił o usiąść?
+    follow_ups:
+      - Jak torba zajmuje miejsce?
+      - Jakie byłoby pomieszczenie bez zajmowania miejsc przez torby?
+      - Jaka jest zależność między przedmiotem a terytorium?
+  - id: hi_cs_espresso_shot
+    name: Espresso
+    prompt: |
+      Pojedyncza porcja — szybka, intensywna. Osoba pijąca espresso często stoi.
+      Espresso to znak interpunkcyjny w dniu. Obserwuj rytuał. Wchodzi, kończy, wychodzi.
+      Co osiąga espresso?
+    follow_ups:
+      - Czym espresso różni się od latte?
+      - Jaka byłaby kawiarnia bez espresso?
+      - Jaka jest zależność między porcją a szybkością?
+  - id: hi_cs_cold_brew_tap
+    name: Kran z Cold Brew
+    prompt: |
+      Cold brew z kranu — jak piwo. Sposób nalewania jest inny. Brak pary, brak czekania.
+      Klient cold brew chce czegoś innego. Zwróć uwagę na wybór. Co sygnalizuje cold brew?
+    follow_ups:
+      - Jak cold brew zmienia doświadczenie?
+      - Jakie byłoby menu bez niego?
+      - Jaka jest zależność między temperaturą a tożsamością?
+  - id: hi_cs_chalkboard_menu
+    name: Menu na Tablicy
+    prompt: |
+      Menu jest napisane ręcznie — kreda na tablicy. Zmienia się. Pismo ręczne to osobowość.
+      Zwróć uwagę, co jest wymienione, a co nie. Tablica mówi: "decyzje podejmujemy tutaj".
+    follow_ups:
+      - Jak tablica kształtuje markę?
+      - Jaka byłaby ściana z drukowanym menu?
+      - Jaka jest zależność między ręką a autentycznością?
+  - id: hi_cs_leaving_cup
+    name: Pozostawiony Kubek
+    prompt: |
+      Kubek pozostawiony na stole — pusty, porzucony. Niektórzy sprzątają sami; niektórzy
+      nie. Pozostawiony kubek to mały test uważności. Kto sprząta?
+      Kto zostawia? Kubek zaznacza koniec pobytu.
+    follow_ups:
+      - Jak sprzątanie kształtuje przestrzeń?
+      - Jaka byłaby kawiarnia, gdyby wszyscy zostawiali kubki?
+      - Jaka jest zależność między opuszczeniem a poczuciem przynależności?
+  - id: hi_cs_headphones_bubble
+    name: Bańka Słuchawek
+    prompt: |
+      Słuchawki tworzą bańkę. Osoba nosząca je jest obecna, ale niedostępna.
+      Bańka mówi "nie przeszkadzaj". Obserwuj granicę. Jak bańka kształtuje pole społeczne?
+    follow_ups:
+      - Jak słuchawki umożliwiają skupienie?
+      - Jakie byłoby to miejsce bez nich?
+      - Jaka jest zależność między bańką a produktywnością?
+  - id: hi_cs_corner_booth
+    name: Narożna Kabina
+    prompt: |
+      Narożna kabina jest pożądana — plecami do ściany, z widokiem na pokój. Jest
+      bezpieczna. Obserwuj, kto ją zajmuje. Narożnik ma inną psychologię niż centrum.
+    follow_ups:
+      - Jak narożnik kształtuje doświadczenie?
+      - Jakie byłoby pomieszczenie bez narożników?
+      - Jaka jest zależność między pozycją a bezpieczeństwem?
+  - id: hi_cs_sugar_station
+    name: Stacja z Cukrem
+    prompt: |
+      Cukier, serwetki, pokrywki, słomki — stacja jest samoobsługowa. Ludzie
+      personalizują tutaj. Stacja to pauza między ladą a siedzeniem.
+      Obserwuj wybory. Co ludzie dodają?
+    follow_ups:
+      - Jak stacja przedłuża transakcję?
+      - Jaka byłaby lada bez niej?
+      - Jaka jest zależność między personalizacją a kontrolą?
+  - id: hi_cs_barista_banter
+    name: Gwar Baristy
+    prompt: |
+      Barista rozmawia z stałym klientem. Gwar to występ i
+      połączenie. Inni słuchają lub nie. Gwar tworzy atmosferę.
+      Co dodaje do pomieszczenia?
+    follow_ups:
+      - Jak gwar kształtuje kulturę?
+      - Jaka byłaby lada bez niego?
+      - Jaka jest zależność między gwarowaniem a poczuciem przynależności?
+  - id: hi_cs_takeaway_stack
+    name: Stos na Wynos
+    prompt: |
+      Kubki piętrzą się przy strefie odbioru — wywoływane imiona, odbierane kubki. Stos
+      to tymczasowe archiwum zamówień. Obserwuj przepływ. Kto czeka? Kto
+      chwyta i idzie? Stos to porządek wyłaniający się z chaosu.
+    follow_ups:
+      - Jak stos zarządza gorączką?
+      - Jaka byłaby lada bez niego?
+      - Jaka jest zależność między stosem a sekwencją?
+  - id: hi_cs_plant_by_window
+    name: Roślina przy Oknie
+    prompt: |
+      Roślina stoi przy oknie — epipremnum, sukulent. To dekoracja i życie.
+      Roślina nie należy do nikogo. Łagodzi przestrzeń. Co roślina dodaje do pomieszczenia?
+    follow_ups:
+      - Jak roślina kształtuje atmosferę?
+      - Jakie byłoby okno bez niej?
+      - Jaka jest zależność między rośliną a opieką?
+  - id: hi_cs_closing_time
+    name: Godzina Zamknięcia
+    prompt: |
+      "Zamykamy za piętnaście minut." Ogłoszenie zmienia pokój. Krzesła
+      skrzypią, laptopy się zamykają. Kawiarnia ma granicę. Obserwuj
+      wyjście. Co wyciąga godzina zamknięcia?
+    follow_ups:
+      - Jak zamknięcie kształtuje pobyt?
+      - Jakie byłoby to miejsce bez zamknięcia?
+      - Jaka jest zależność między granicą a poczuciem przynależności?
+  - id: hi_cs_oat_milk_request
+    name: Prośba o Mleko Owsa
+    prompt: |
+      "Mleko owsiane, proszę." Prośba to tożsamość i preferencja. Alternatywne mleko
+      stało się wyznacznikiem. Zwróć uwagę, kto pyta. Co wybór sygnalizuje o pijącym?
+    follow_ups:
+      - Jak wybór mleka kształtuje zamówienie?
+      - Jakie byłoby menu bez alternatyw?
+      - Jaka jest zależność między wyborem a tożsamością?
+  - id: hi_cs_receipt_glance
+    name: Zerkanie na Paragon
+    prompt: |
+      Paragon jest podawany — często nieproszony. Niektórzy go biorą, niektórzy
+      odmawiają. Paragon to dowód i zapis. Obserwuj wymianę. Co paragon robi dla transakcji?
+    follow_ups:
+      - Jak paragon przedłuża transakcję?
+      - Jaka byłaby lada bez niego?
+      - Jaka jest zależność między paragonem a pamięcią?
+  - id: hi_cs_door_hold
+    name: Przytrzymanie Drzwi
+    prompt: |
+      Ktoś przytrzymuje drzwi dla osoby za nim. Przytrzymanie to mała
+      uprzejmość. Tworzy chwilę połączenia. Obserwuj, kiedy to się dzieje.
+      Czego wymaga przytrzymanie?
+    follow_ups:
+      - Jak przytrzymanie drzwi kształtuje wejście?
+      - Jakie byłoby przejście bez tego?
+      - Jaka jest zależność między przytrzymaniem a uprzejmością?
+  - id: hi_cs_study_group
+    name: Grupa Studyjna
+    prompt: |
+      Studenci rozkładają notatki, laptopy, książki. Stół staje się przestrzenią do nauki.
+      Grupa studyjna ma swój własny rytm — dyskusja, cisza, śmiech.
+      Obserwuj współpracę. Co zapewnia kawiarnia?
+    follow_ups:
+      - Jak kawiarnia umożliwia pracę grupie?
+      - Jakie byłoby nauka w bibliotece?
+      - Jaka jest zależność między miejscem a współpracą?
+  - id: hi_cs_grind_sound
+    name: Dźwięk Mielenia
+    prompt: |
+      Młynek krzyczy. Dźwięk jest przemysłowy, chwilowy. Zaznacza
+      przygotowanie napoju. Dźwięk przecina rozmowę. Co mielenie dodaje do krajobrazu dźwiękowego?
+    follow_ups:
+      - Jak mielenie kształtuje oczekiwanie?
+      - Jaka byłaby kawiarnia bez tego?
+      - Jaka jest zależność między dźwiękiem a rzemiosłem?
+  - id: hi_cs_cup_stack_bus
+    name: Stos Kubków do Sprzątania
+    prompt: |
+      Taca do sprzątania zapełnia się kubkami, pokrywkami, serwetkami. Ktoś to posprząta.
+      Stos to skutek wielu pobytów. Obserwuj akumulację. Co stos ujawnia o dniu?
+    follow_ups:
+      - Jak taca do sprzątania zarządza odpadami?
+      - Jaka byłaby lada bez niej?
+      - Jaka jest zależność między stosem a pracą?
+  - id: hi_cs_first_sip
+    name: Pierwszy Łyk
+    prompt: |
+      Pierwszy łyk — temperatura, smak, chwila. Obserwuj, jak ktoś go bierze. Twarz może się zmienić.
+      Pierwszy łyk to nagroda za czekanie. Co dostarcza?
+    follow_ups:
+      - Jak pierwszy łyk kształtuje resztę?
+      - Jaki byłby rytuał bez niego?
+      - Jaka jest zależność między łykiem a satysfakcją?
+  - id: hi_cs_neutral_ground
+    name: Neutralny Grunt
+    prompt: |
+      Kawiarnia nie jest niczyim terytorium. Można tu spotkać nieznajomego,
+      pracować samemu, zakończyć związek. Neutralność jest kluczowa. Co umożliwia neutralny grunt?
+    follow_ups:
+      - Jak neutralność kształtuje spotkanie?
+      - Jakie byłoby miasto bez neutralnego gruntu?
+      - Jaka jest zależność między neutralnością a bezpieczeństwem?
+  - id: hi_cs_loyalty_card
+    name: Karta Lojalnościowa
+    prompt: |
+      Kup dziesięć, odbierz jeden za darmo. Karta śledzi wizyty. Nagradza powroty.
+      Karta lojalnościowa to kontrakt — dorozumiany. Obserwuj, kto jej używa. Co karta tworzy między klientem a sklepem?
+    follow_ups:
+      - Jak karta kształtuje zachowanie?
+      - Jaka byłaby transakcja bez niej?
+      - Jaka jest zależność między pieczątką a poczuciem przynależności?
+  - id: hi_cs_outlet_tethered
+    name: Uwiązane Gniazdko
+    prompt: |
+      Ktoś siedzi tam, gdzie jest gniazdko. Kabel biegnie od ściany do laptopa.
+      Kabel ogranicza ruch. Gniazdko decyduje o miejscu. Obserwuj ograniczenie. Czego wymaga uwiązanie?
+    follow_ups:
+      - Jak gniazdko kształtuje pobyt?
+      - Jakie byłoby to miejsce z bezprzewodowym ładowaniem?
+      - Jaka jest zależność między uwiązaniem a czasem trwania?
+  - id: hi_cs_eye_contact_avoid
+    name: Unikanie Kontaktu Wzrokowego
+    prompt: |
+      Nieznajomi w kawiarni unikają kontaktu wzrokowego. Unikanie jest uprzejme.
+      Spojrzenie to ryzyko nawiązania kontaktu. Obserwuj taniec. Kto łamie zasady?
+      Co się dzieje, gdy oczy się spotykają?
+    follow_ups:
+      - Jak unikanie kształtuje pole społeczne?
+      - Jakie byłoby to miejsce z większą ilością kontaktu?
+      - Jaka jest zależność między spojrzeniem a prywatnością?
+  - id: hi_cs_rainy_day_crowd
+    name: Tłum w Deszczowy Dzień
+    prompt: |
+      Deszcz zmusza ludzi do wejścia do środka. Kawiarnia się zapełnia. Mokre płaszcze, parasole
+      przy drzwiach. Deszcz tworzy inny tłum. Obserwuj zmianę.
+      Co pogoda robi z przestrzenią?
+    follow_ups:
+      - Jak deszcz kształtuje obłożenie?
+      - Jaki byłby dzień bez tego schronienia?
+      - Jaka jest zależność między pogodą a schronieniem?
+  - id: hi_cs_saved_seat
+    name: Zarezerwowane Miejsce
+    prompt: |
+      "Rezerwuję to dla kogoś." Roszczenie chroni miejsce przed
+      tłumem. Zarezerwowane miejsce to obietnica. Obserwuj napięcie. Jak długo
+      można rezerwować miejsce? Jakie są granice?
+    follow_ups:
+      - Jak rezerwacja kształtuje pokój?
+      - Co by się stało, gdyby nikt jej nie uszanował?
+      - Jaka jest zależność między roszczeniem a zaufaniem?
+  - id: hi_cs_quiet_conversation
+    name: Cicha Rozmowa
+    prompt: |
+      Dwie osoby pochylają się. Rozmowa jest prywatna, ale postawa jest
+      widoczna. Pochylenie tworzy bańkę. Obserwuj intymność. Co
+      kawiarnia umożliwia, czego nie robią inne miejsca?
+    follow_ups:
+      - Jak przestrzeń umożliwia rozmowę?
+      - Jaka byłaby rozmowa w restauracji?
+      - Jaka jest zależność między miejscem a ujawnieniem?
+  - id: hi_cs_roaming_table
+    name: Krążący przy Stole
+    prompt: |
+      Ktoś nie może znaleźć miejsca. Krąży z kubkiem. Krążenie jest
+      tymczasowe. Skorzysta z pierwszej wolnej okazji. Obserwuj poszukiwanie. Co krążenie ujawnia o przestrzeni?
+    follow_ups:
+      - Jak krążenie kształtuje doświadczenie?
+      - Jaka byłaby kawiarnia z większą liczbą miejsc?
+      - Jaka jest zależność między poszukiwaniem a poczuciem przynależności?
+  - id: hi_cs_coffee_aroma
+    name: Aromat Kawy
+    prompt: |
+      Zapach uderza przy drzwiach. Palona, mielona, zaparzana. Aromat
+      to pierwszy kontakt. Przygotowuje do doświadczenia. Co zapach robi przed zamówieniem?
+    follow_ups:
+      - Jak aromat kształtuje pragnienie?
+      - Jakie byłoby wejście bez niego?
+      - Jaka jest zależność między zapachem a pamięcią?

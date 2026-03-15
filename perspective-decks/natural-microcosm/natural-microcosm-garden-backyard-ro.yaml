@@ -1,0 +1,461 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosm Natural — Grădină și Curte (Romanian)
+
+id: natural_microcosm_garden_backyard
+name: Microcosm Natural — Grădină și Curte
+description: 50 de cărți pentru a schimba modul în care vedeți sălbăticia domestică — de la polenizatori și sol la buruieni versus culturi și coregrafia naturii cultivate.
+domain: natural_microcosm
+cards:
+  - id: nmg_bee_landing
+    name: Aterizarea Albinelor
+    prompt: |
+      Privește o albină cum aterizează pe o floare. Apropierea, atingerea, plutirea.
+      Albina este atât prădător, cât și polenizator. Ce câștigă floarea? Ce
+      riscă?
+    follow_ups:
+      - Cum modelează aterizarea vizita următoare?
+      - Ce ar fi grădina fără albine?
+      - Care este relația dintre floare și albină?
+  - id: nmg_soil_crumble
+    name: Sfărâmarea Solului
+    prompt: |
+      Ia în mână o mână de pământ. Simte textura — sfărâmarea, granulele.
+      Acest sol conține istorie, moarte, renaștere. Ce a trăit aici înainte?
+      Ce va crește din el?
+    follow_ups:
+      - Cum modelează solul ceea ce crește?
+      - Ce ar însemna solul steril?
+      - Care este relația dintre sfărâmare și viață?
+  - id: nmg_weed_edge
+    name: Buruiana de la Margine
+    prompt: |
+      O buruiană crește acolo unde gazonul întâlnește stratul de flori. Nu a fost plantată. A fost
+      invitată — sau s-a invitat singură. Consideră granița. Cine desenează linia
+      între buruiană și floare?
+    follow_ups:
+      - Ce ar fi grădina fără buruieni?
+      - Cum creează marginea tensiune?
+      - Care este relația dintre buruiană și intenție?
+  - id: nmg_compost_steam
+    name: Aburul Compostului
+    prompt: |
+      Răstoarnă un morman de compost. Se ridică abur — descompunerea în curs. Căldura este
+      munca microbiană. Ce a fost rest de bucătărie devine sol. Urmărește
+      transformarea.
+    follow_ups:
+      - Ce ar pierde grădina fără compost?
+      - Cum marchează căldura procesul?
+      - Care este relația dintre deșeuri și fertilitate?
+  - id: nmg_seed_dormancy
+    name: Dormancy Semințelor
+    prompt: |
+      O sămânță în sol poate aștepta ani — decenii. Este vie, dar în pauză. Ce
+      o trezește? Lumină, apă, foc, perturbare. Consideră răbdarea unei
+      semințe.
+    follow_ups:
+      - Ce ar pierde germinarea fără latență?
+      - Cum modelează așteptarea supraviețuirea?
+      - Care este relația dintre pauză și apariție?
+  - id: nmg_bird_bath
+    name: Baia Păsărilor
+    prompt: |
+      O baie pentru păsări este o invitație. Privește cine vine — vrăbii, sticlete, poate un
+      gaiță. Baia creează întâlnire. Ce ar fi curtea fără acest
+      mic corp de apă?
+    follow_ups:
+      - Cum modelează baia cine vizitează?
+      - Care este coregrafia sosirii?
+      - Care este relația dintre apă și pasăre?
+  - id: nmg_tomato_truss
+    name: Racul Roșiei
+    prompt: |
+      Un rac de roșii ține fructe verzi, apoi roșii. Studiază arhitectura. Tulpina,
+      ramurile, greutatea. Planta este inginerie. Ce o susține?
+    follow_ups:
+      - Ce ar fi planta fără rac?
+      - Cum modelează structura recolta?
+      - Care este relația dintre formă și fruct?
+  - id: nmg_aphid_column
+    name: Coloana Afidelor
+    prompt: |
+      Afidele se adună pe o tulpină — sugând, înmulțindu-se. Sunt atât dăunător, cât și
+      pradă. Vor veni buburuzele. Observă ecologia. Care este relația dintre
+      izbucnire și echilibru?
+    follow_ups:
+      - Ce ar fi planta fără afide?
+      - Cum atrage colonia prădătorii?
+      - Care este relația dintre dăunător și ecosistem?
+  - id: nmg_hose_spray
+    name: Stropirea Furtunului
+    prompt: |
+      Apa dintr-un furtun lovește solul. Privește cum se adună, se absoarbe, curge. Stropirea este
+      ploaie artificială. Cum diferă de lucrul real? Ce primește planta?
+    follow_ups:
+      - Ce ar fi grădina fără furtun?
+      - Cum modelează irigația creșterea?
+      - Care este relația dintre stropire și ploaie?
+  - id: nmg_lawn_mow
+    name: Tunderea Gazonului
+    prompt: |
+      Un gazon este o sălbăticie gestionată — tăiată la înălțime, păstrată verde. Tunderea întrerupe
+      creșterea. Gândește-te ce ar deveni gazonul dacă ar fi lăsat în pace. Ce
+      reținem?
+    follow_ups:
+      - Ce ar fi curtea fără tunderea gazonului?
+      - Cum modelează tăierea identitatea?
+      - Care este relația dintre gazon și control?
+  - id: nmg_pot_bound
+    name: Îngrădit în Ghiveci
+    prompt: |
+      O plantă într-un ghiveci — rădăcini rotindu-se, căutând. Ghiveciul este o graniță. Ce
+      ar face planta cu un sol nelimitat? Ghiveciul este atât închisoare, cât și
+      protecție. Consideră schimbul.
+    follow_ups:
+      - Ce ar fi planta fără ghiveci?
+      - Cum modelează contenția creșterea?
+      - Care este relația dintre rădăcină și perete?
+  - id: nmg_mulch_layer
+    name: Stratul de Mulci
+    prompt: |
+      Mulciul acoperă solul — așchii de lemn, paie, frunze. Păstrează umiditatea,
+      suprimă buruienile, în cele din urmă devine sol. Stratul este temporar.
+      Ce face cât durează?
+    follow_ups:
+      - Ce ar fi stratul de flori fără mulci?
+      - Cum creează stratul microclimat?
+      - Care este relația dintre acoperire și sol?
+  - id: nmg_hummingbird_hover
+    name: Plutește Păsărelul Colibri
+    prompt: |
+      Un colibri plutește la o floare — aripi invizibile de viteză. Pluteala
+      este costisitoare. Nectarul trebuie să merite. Consideră economia vizitei.
+    follow_ups:
+      - Ce ar fi floarea fără colibri?
+      - Cum modelează plutirea relația?
+      - Care este relația dintre cost și recompensă?
+  - id: nmg_fence_creep
+    name: Creepingul Gardului
+    prompt: |
+      Iedera sau volbura se târăsc pe un gard. Planta nu știe că gardul este făcut de om.
+      Urcă oricum. Consideră întâlnirea dintre creștere și structură.
+    follow_ups:
+      - Ce ar urca planta fără gard?
+      - Cum modelează gardul vița de vie?
+      - Care este relația dintre urcare și sprijin?
+  - id: nmg_worm_cast
+    name: Excremente de Gărgăriță
+    prompt: |
+      Excremente de râme — mici grămezi de pământ — punctează gazonul. Râma a trecut,
+      lăsând fertilitate. Excrementul este arheologie. Ce a procesat râma?
+      Ce a lăsat în urmă?
+    follow_ups:
+      - Ce ar fi solul fără râme?
+      - Cum marchează excrementul munca râmei?
+      - Care este relația dintre excrement și aerare?
+  - id: nmg_squirrel_cache
+    name: Ascunzătoarea Veveriței
+    prompt: |
+      O veveriță îngroapă o nucă — apoi uită. Nuca poate germina. Veverița este un grădinar accidental. Consideră relația dintre memorie și dispersare. Ce crește din uitare?
+    follow_ups:
+      - Ce ar fi stejarul fără veveriță?
+      - Cum modelează ascunderea răspândirea pădurii?
+      - Care este relația dintre îngropare și germinare?
+  - id: nmg_dew_morning
+    name: Rouă Dimineața
+    prompt: |
+      Roua dimineții se adună pe frunze. Fiecare picătură conține lumină. Roua este
+      condensare — apă din aer. Se va evapora până la prânz. Consideră darul
+      efemer. Ce primește planta?
+    follow_ups:
+      - Ce ar fi dimineața fără rouă?
+      - Cum modelează picătura dimineața?
+      - Care este relația dintre condensare și frunză?
+  - id: nmg_prune_scar
+    name: Cicatricea Tăierii
+    prompt: |
+      O cicatrice de tăiere marchează locul de unde a fost tăiat un ram. Arborele s-a vindecat — sau a încercat. Cicatricea este istorie. Ce a fost îndepărtat? De ce? Ce își amintește arborele?
+    follow_ups:
+      - Ce ar fi arborele fără tăiere?
+      - Cum modelează tăierea creșterea?
+      - Care este relația dintre rană și formă?
+  - id: nmg_sunflower_turn
+    name: Rotirea Floarea-Soarelui
+    prompt: |
+      Un tânăr floarea-soarelui se rotește cu soarele — spre est la răsărit, spre vest la apus. Mișcarea
+      este heliotropism. Planta urmărește lumina. Consideră
+      coregrafia. Ce ar însemna o orientare fixă?
+    follow_ups:
+      - Ce ar fi floarea-soarelui fără rotire?
+      - Cum modelează urmărirea creșterea?
+      - Care este relația dintre mișcare și lumină?
+  - id: nmg_slug_trail
+    name: Urma Melcului
+    prompt: |
+      Un melc lasă o urmă — argintie, lipicioasă. Urma marchează trecerea. Ea
+      protejează și piciorul melcului. Consideră urma ca fiind atât înregistrare, cât și
+      adaptare. Ce permite?
+    follow_ups:
+      - Ce ar fi melcul fără urmă?
+      - Cum modelează mucusul mișcarea?
+      - Care este relația dintre urmă și prădător?
+  - id: nmg_birdhouse_hole
+    name: Gaura Casei Păsărilor
+    prompt: |
+      O casă pentru păsări are o gaură — un diametru specific. Exclude unele păsări,
+      invită altele. Gaura este un filtru. Pentru cine a fost proiectată? Cine a
+      pretins-o?
+    follow_ups:
+      - Ce ar fi curtea fără casa păsărilor?
+      - Cum modelează gaura cine cuibărește?
+      - Care este relația dintre gaură și locatar?
+  - id: nmg_root_hair
+    name: Perii Rădăcinii
+    prompt: |
+      Perii rădăcinii sunt invizibili de sus — extensii minuscule care absorb apă
+      și nutrienți. Interfața plantei cu solul. Consideră ce se întâmplă
+      dedesubt. Ce ar pierde planta fără ei?
+    follow_ups:
+      - Cum modelează perii absorbția?
+      - Care este relația dintre peri și sol?
+      - Ce ai vedea dacă i-ai putea vedea?
+  - id: nmg_frost_leaf
+    name: Bruma pe Frunză
+    prompt: |
+      Modele de brumă pe o frunză — cristaline, delicate. Bruma este apă
+      înghețată din aer. Se va topi la soare. Consideră arta temporară. Ce
+      experimentează frunza?
+    follow_ups:
+      - Ce ar fi dimineața fără brumă?
+      - Cum modelează bruma ziua frunzei?
+      - Care este relația dintre cristal și celulă?
+  - id: nmg_companion_plant
+    name: Plantă Companion
+    prompt: |
+      Busuioc lângă roșii. Gălbenele lângă dovlecei. Plantareacompanion este o juxtapunere strategică. Unele plante resping; altele atrag. Consideră viața socială a stratului de flori.
+    follow_ups:
+      - Ce ar fi roșia fără busuioc?
+      - Cum modelează juxtapunerea grădina?
+      - Care este relația dintre vecin și dăunător?
+  - id: nmg_fallen_apple
+    name: Măr Căzut
+    prompt: |
+      Un măr cade — necopt, prea copt. Se va putrezi, va hrăni viespile, poate va crește un puiet. Căderea este atât deșeu, cât și început. Consideră arcul de la ram la sol.
+    follow_ups:
+      - Ce ar fi pământul fără cădere?
+      - Cum modelează putrezirea ce urmează?
+      - Care este relația dintre cădere și dispersare?
+  - id: nmg_spider_web_corner
+    name: Pânză de Păianjen în Colț
+    prompt: |
+      O pânză de păianjen întinsă într-un colț al magaziei. Roua se prinde pe mătase. Pânza este atât capcană, cât și casă. Consideră economia păianjenului. Ce investește? Ce recoltează?
+    follow_ups:
+      - Ce ar fi colțul fără pânză?
+      - Cum modelează pânza ziua păianjenului?
+      - Care este relația dintre mătase și pradă?
+  - id: nmg_seed_packet
+    name: Pachet de Semințe
+    prompt: |
+      Un pachet de semințe — fotografie pe față, instrucțiuni pe spate. Pachetul este o promisiune. Ce va ieși din acele puncte minuscule? Consideră relația dintre imagine și realitate.
+    follow_ups:
+      - Ce ar fi grădina fără pachet?
+      - Cum modelează pachetul așteptarea?
+      - Care este relația dintre promisiune și plantă?
+  - id: nmg_rain_barrel
+    name: Butoi de Ploaie
+    prompt: |
+      Un butoi de ploaie colectează scurgerile de pe acoperiș. Apa este gratuită, moale,
+      neclorinată. Butoiul este infrastructură. Consideră ce curge de la
+      cer la butoi la rădăcină.
+    follow_ups:
+      - Ce ar fi grădina fără butoi?
+      - Cum diferă apa colectată de cea de la robinet?
+      - Care este relația dintre acoperiș și rădăcină?
+  - id: nmg_garden_glove
+    name: Mănușă de Grădinărit
+    prompt: |
+      O mănușă lăsată în stratul de flori — degete rigide, pătate de pământ. Mănușa este o
+      proteză. Extinde mâna, o protejează. Consideră granița
+      dintre om și sol. Ce permite mănușa?
+    follow_ups:
+      - Ce ar simți grădinarul fără mănușă?
+      - Cum modelează mănușa relația?
+      - Care este relația dintre mână și pământ?
+  - id: nmg_caterpillar_chew
+    name: Mestecatul Omidei
+    prompt: |
+      O omidă mănâncă o frunză — margine cu margine. Mestecatul este audibil. Omidă
+      transformă frunza în fluture. Consideră costul pentru
+      plantă. Ce câștigă gazduind-o?
+    follow_ups:
+      - Ce ar fi frunza fără mestecat?
+      - Cum modelează omida planta?
+      - Care este relația dintre a mânca și a deveni?
+  - id: nmg_fertilizer_burn
+    name: Arsură de Fertilizator
+    prompt: |
+      Prea mult fertilizator arde — vârfuri maronii, rădăcini crocante. Grădina este
+      chimie. Mai mult nu este întotdeauna mai bine. Consideră granița dintre hrană
+      și otravă. Unde este linia?
+    follow_ups:
+      - Ce ar fi planta cu mai puțin?
+      - Cum modelează excesul frunza?
+      - Care este relația dintre doză și daună?
+  - id: nmg_shade_cloth
+    name: Pânză de Umbrire
+    prompt: |
+      Pânză de umbrire întinsă peste răsaduri. Difuzează lumina, reduce căldura. Pânza
+      este mediere — între soare și plantă. Consideră ce adaugă pânza.
+      Ce scade?
+    follow_ups:
+      - Ce ar fi răsadul fără pânză?
+      - Cum modelează umbra creșterea timpurie?
+      - Care este relația dintre filtru și lumină?
+  - id: nmg_morning_glory_dawn
+    name: Volbura la Răsărit
+    prompt: |
+      Volburele se deschid la răsărit, se închid după-amiaza. Floarea are un
+      program. Consideră ritmul. Ce ar fi grădina dacă ar rămâne
+      deschisă toată ziua?
+    follow_ups:
+      - Cum modelează sincronizarea polenizarea?
+      - Care este relația dintre deschis și polenizator?
+      - De ce răsăritul?
+  - id: nmg_garden_path
+    name: Cărare în Grădină
+    prompt: |
+      O cărare prin grădină — pietre de treaptă sau mulci. Cărarea este unde
+      mergem. Restul este unde nu mergem. Consideră linia. Ce
+      protejează cărarea? Ce exclude?
+    follow_ups:
+      - Ce ar fi grădina fără cărare?
+      - Cum modelează cărarea mișcarea?
+      - Care este relația dintre pas și sol?
+  - id: nmg_cross_pollination
+    name: Polenizare Încrucișată
+    prompt: |
+      Albinele transportă polen de la o plantă la alta. Descendenții vor fi
+      hibrizi — nu identici cu niciunul dintre părinți. Consideră amestecul. Ce
+      creează încrucișarea? Ce riscă?
+    follow_ups:
+      - Ce ar fi varietatea fără încrucișare?
+      - Cum modelează albina gena?
+      - Care este relația dintre transport și combinare?
+  - id: nmg_herb_scent
+    name: Miros de Ierburi Aromatice
+    prompt: |
+      Freacă-te de rozmarin sau mentă. Mirosul se ridică — uleiuri volatile eliberate.
+      Mirosul este apărare și invitație. Consideră rolul dual. Ce
+      respinge? Ce atrage?
+    follow_ups:
+      - Ce ar fi ierburile fără miros?
+      - Cum modelează uleiul întâlnirea?
+      - Care este relația dintre atingere și eliberare?
+  - id: nmg_watering_can_pour
+    name: Turnarea Stropitorii
+    prompt: |
+      Apă dintr-o stropitoare — mai blândă decât un furtun. Turnarea este deliberată. Consideră
+      ritualul. Ce permite stropitoarea pe care furtunul nu o permite? Ce este relația dintre turnare și plantă?
+    follow_ups:
+      - Ce ar prefera răsadul?
+      - Cum modelează turnarea solul?
+      - Care este relația dintre ritual și creștere?
+  - id: nmg_bird_seed_spill
+    name: Răspândire Semințe Păsări
+    prompt: |
+      Semințe se varsă dintr-un hrănitor — floarea-soarelui, mei. Cad pe pământ.
+      Vrăbiile ciugulesc. Veverițele jefuiesc. Răspândirea creează o scenă. Consideră
+      cine beneficiază. Pentru cine a fost menită?
+    follow_ups:
+      - Ce ar fi pământul fără răspândire?
+      - Cum modelează răspândirea stolul?
+      - Care este relația dintre cădere și ospăț?
+  - id: nmg_cutting_propagate
+    name: Butaș Propagat
+    prompt: |
+      Un butaș — o tulpină în apă sau sol — prinde rădăcini. Fără sămânță. Planta se clonează.
+      Consideră scurtătura. Ce ocolește propagarea? Ce
+      conservă?
+    follow_ups:
+      - Ce ar fi grădina fără butași?
+      - Cum modelează clonarea diversitatea?
+      - Care este relația dintre tăietură și continuare?
+  - id: nmg_leaf_miner_tunnel
+    name: Tunelul Minerului de Frunze
+    prompt: |
+      Urma unui miner de frunze — sinuoasă, palidă, sub suprafață. Larva
+      mănâncă între straturi. Frunza supraviețuiește, cicatrice. Consideră
+      invazia. Ce pierde frunza? Ce păstrează?
+    follow_ups:
+      - Ce ar fi frunza fără tunel?
+      - Cum modelează minerul frunza?
+      - Care este relația dintre tunel și țesut?
+  - id: nmg_greenhouse_condensation
+    name: Condensare Seră
+    prompt: |
+      Condensarea se adună pe geamul unei sere. Aerul din interior este umed — plantele
+      exhalează. Geamul este o graniță. Consideră microclimatul. Ce reține
+      căldura? Ce reține umiditatea?
+    follow_ups:
+      - Ce ar fi sera fără geam?
+      - Cum modelează condensarea interiorul?
+      - Care este relația dintre sticlă și creștere?
+  - id: nmg_terrace_level
+    name: Nivelul Terasei
+    prompt: |
+      Un strat terasat coboară o pantă. Fiecare nivel conține sol, reține apă.
+      Terasa este control al eroziunii și scenă. Consideră arhitectura.
+      Ce ar fi panta fără ea?
+    follow_ups:
+      - Cum modelează nivelul ce crește?
+      - Care este relația dintre pas și stabilitate?
+      - De ce terase?
+  - id: nmg_native_vs_exotic
+    name: Nativ vs Exotic
+    prompt: |
+      Unele plante sunt native — aparțin. Altele sunt exotice — introduse.
+      Consideră stratul de flori. Care este care? Contează? Ce oferă nativul
+      ce nu oferă exoticul?
+    follow_ups:
+      - Ce ar fi grădina doar cu plante native?
+      - Cum modelează originea ecologia?
+      - Care este relația dintre a aparține și a prospera?
+  - id: nmg_garden_dusk
+    name: Grădina la Amurg
+    prompt: |
+      Grădina la amurg — lumina se stinge, moliile apar. Ziua se încheie; noaptea
+      începe. Consideră tranziția. Cine se trezește? Cine doarme?
+      Ce devine grădina?
+    follow_ups:
+      - Ce ar fi grădina fără amurg?
+      - Cum modelează schimbarea ecosistemul?
+      - Care este relația dintre zi și noapte?
+  - id: nmg_stake_tie
+    name: Țăruș și Legătură
+    prompt: |
+      O plantă legată de un țăruș — fasole, roșii. Țărușul corectează. Fără el,
+      planta s-ar întinde. Consideră sprijinul. Ce permite legătura?
+      Ce constrânge?
+    follow_ups:
+      - Ce ar fi planta fără țăruș?
+      - Cum modelează legătura forma?
+      - Care este relația dintre sprijin și creștere?
+  - id: nmg_first_frost
+    name: Prima Bruma
+    prompt: |
+      Prima brumă — plantele delicate se înnegresc. Grădina se schimbă. Unele lucruri
+      se termină; altele persistă. Consideră pragul. Ce selectează bruma?
+      Ce cruță?
+    follow_ups:
+      - Ce ar fi grădina fără brumă?
+      - Cum modelează prima brumă sezonul?
+      - Care este relația dintre frig și închidere?
+  - id: nmg_garden_reflection
+    name: Reflecția Grădinii
+    prompt: |
+      Privește grădina. Ea reflectă alegeri — ce a fost plantat, ce a fost
+      smuls, ce a fost lăsat în pace. Grădina este o oglindă. Ce arată
+      despre grădinar?
+    follow_ups:
+      - Ce ar spune grădina fără cuvinte?
+      - Cum modelează alegerile întregul?
+      - Care este relația dintre grădinar și crescut?

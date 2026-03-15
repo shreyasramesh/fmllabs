@@ -1,0 +1,497 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosmos Natural — Broască și Baltă (Romanian)
+
+id: natural_microcosm_pond_puddle
+name: Microcosmos Natural — Broască și Baltă
+description: 50 de cărți pentru a schimba modul în care percepi apa la scară mică—de la tensiunea superficială și reflexii la insecte acvatice, mormoloci și viața din bălțile temporare.
+domain: natural_microcosm
+cards:
+  - id: nmp_surface_tension
+    name: Tensiune Superficială
+    prompt: |
+      Un greieraș de apă merge pe apă. Suprafața rezistă—moleculele se
+      lipesc. Picură ușor un ac. Plutește. Ia în considerare pelicula invizibilă.
+      Ce ar rupe-o?
+    follow_ups:
+      - Cum modelează tensiunea superficială cine poate trăi aici?
+      - Ce ar fi iazul fără ea?
+      - Care este relația dintre suprafață și graniță?
+  - id: nmp_skater_ripple
+    name: Unduirea Greierașului
+    prompt: |
+      Picioarele unui greieraș de apă crează mici gropițe pe suprafață. Fiecare
+      pas creează o unduire. Privește modelul. Greierașul citește suprafața
+      ca pe o hartă. Ce simte?
+    follow_ups:
+      - Cum transportă unduirea informația?
+      - Ce ar face greierașul fără suprafață?
+      - Care este relația dintre unduire și pradă?
+  - id: nmp_reflection_sky
+    name: Reflecția Cerului
+    prompt: |
+      O baltă reflectă cerul—sau o creangă, sau pe tine. Reflecția inversează.
+      Apa liniștită este o oglindă. Ce adaugă reflexia? Ce ascunde?
+    follow_ups:
+      - Ce ar fi balta fără reflexie?
+      - Cum modelează liniștea ceea ce vedem?
+      - Care este relația dintre suprafață și imagine?
+  - id: nmp_tadpole_tail
+    name: Coada Mormolocului
+    prompt: |
+      Un mormoloc înoată—coada îl propulsează. Coada va fi reabsorbită.
+      Animalul se transformă. Ia în considerare in-between-ul. Ce permite coada
+      acum?
+    follow_ups:
+      - Ce ar fi mormolocul fără coadă?
+      - Cum rescrie metamorfoza corpul?
+      - Care este relația dintre formă și funcție?
+  - id: nmp_dragonfly_egg
+    name: Oul Libelulei
+    prompt: |
+      Libelulele depun ouă în apă—sau în tulpini sub suprafață. Nifa
+      trăiește sub apă ani de zile înainte de a ieși. Ia în considerare viața
+      dublă. Ce leagă apa de aer?
+    follow_ups:
+      - Ce ar fi libelula fără stadiul acvatic?
+      - Cum modelează nifa iazul?
+      - Care este relația dintre nifă și adult?
+  - id: nmp_algae_bloom
+    name: Înflorirea Algelor
+    prompt: |
+      Mucegai verde pe apă—alge. Este o înflorire, un puls. Prea mult
+      nutrient, prea mult soare. Iazul răspunde. Ce o declanșează? Ce urmează?
+    follow_ups:
+      - Ce ar fi iazul fără alge?
+      - Cum afectează înflorirea oxigenul?
+      - Care este relația dintre nutrient și creștere?
+  - id: nmp_reed_stem
+    name: Tulpina Stufărișului
+    prompt: |
+      Stufărișurile și papurile se ridică de pe margine. Sunt goale—prin ele
+      trec canale de aer. Tulpina leagă apa de aer. Cine folosește stufărișul
+      ca scară?
+    follow_ups:
+      - Ce ar fi marginea fără stufăriș?
+      - Cum permite goliciunea supraviețuirea?
+      - Care este relația dintre tulpină și habitat?
+  - id: nmp_pond_skin
+    name: Pielea Iazului
+    prompt: |
+      Iazul are o piele—unde apa întâlnește aerul. Se așează praf pe ea. Se
+      împrăștie ulei. Pielea este delicată. Atinge-o. Ce separă pielea?
+    follow_ups:
+      - Ce ar fi iazul fără piele?
+      - Cum afectează pielea schimbul de gaze?
+      - Care este relația dintre suprafață și adâncime?
+  - id: nmp_temporary_pool
+    name: Baltă Temporară
+    prompt: |
+      O baltă după ploaie—se va usca. Cu toate acestea, viața s-a adaptat.
+      Creveți de zână, creveți de mormoloc, ouă care așteaptă. Ia în considerare
+      urgența. Ce trebuie să se întâmple înainte să dispară apa?
+    follow_ups:
+      - Ce ar fi balta dacă ar fi permanentă?
+      - Cum modelează temporaritatea strategia?
+      - Care este relația dintre timp și adaptare?
+  - id: nmp_whirligig_gyre
+    name: Vârtejul Giraței
+    prompt: |
+      Girațele se învârt pe suprafață. Văd deasupra și dedesubt—ochi divizați.
+      Sunt prădători și pradă. Ia în considerare vederea dublă. Ce permite?
+    follow_ups:
+      - Ce ar fi girața fără vederea divizată?
+      - Cum confundă vârtejul prădătorii?
+      - Care este relația dintre învârtire și supraviețuire?
+  - id: nmp_diving_spider
+    name: Păianjen Scufundător
+    prompt: |
+      Un păianjen scufundător poartă o bulă de aer—o clopotniță de scufundare.
+      Respiră sub apă. Bula este un plămân. Ia în considerare invenția. Ce ar
+      face păianjenul fără ea?
+    follow_ups:
+      - Cum permite bula vânătoarea?
+      - Ce s-ar întâmpla dacă bula ar exploda?
+      - Care este relația dintre aer și apă?
+  - id: nmp_pond_scum
+    name: Mâl de Iaz
+    prompt: |
+      Mâl se formează la margine—polen, praf, alge, insecte. Este un strat
+      de graniță. Ce se acumulează acolo? Cine se hrănește cu el? Mâlurile sunt
+      un filtru.
+    follow_ups:
+      - Ce ar fi iazul fără mâl?
+      - Cum concentrează marginea viața?
+      - Care este relația dintre graniță și acumulare?
+  - id: nmp_ice_surface
+    name: Suprafața de Gheață
+    prompt: |
+      Iarna, iazul îngheață. Gheața rezistă. Sub ea, viața continuă—mai
+      lentă, mai rece. Ia în considerare bariera. Ce protejează gheața? Ce blochează?
+    follow_ups:
+      - Ce ar fi iazul fără gheață?
+      - Cum afectează înghețul oxigenul?
+      - Care este relația dintre gheață și supraviețuire?
+  - id: nmp_minnow_school
+    name: Stoc de Obli
+    prompt: |
+      Oblile stochează—se mișcă ca una. Stocul este apărare, eficiență.
+      Privește sincronizarea. Ce le coordonează? Ce risc ar avea o oblă singură?
+    follow_ups:
+      - Ce ar fi iazul fără stoc?
+      - Cum reduce stocarea prădarea?
+      - Care este relația dintre individ și grup?
+  - id: nmp_lily_pad
+    name: Frunză de Nufer
+    prompt: |
+      O frunză de nufer plutește. Partea inferioară este diferită de cea
+      superioară—perișori, culoare. Frunza este o platformă. Ce aterizează pe
+      ea? Ce trăiește dedesubt?
+    follow_ups:
+      - Ce ar fi iazul fără nuferi?
+      - Cum modelează frunza lumina dedesubt?
+      - Care este relația dintre frunză și umbră?
+  - id: nmp_ripple_spread
+    name: Întinderea Unduirii
+    prompt: |
+      O piatră cade. Unduirile se extind. Se intersectează, se interferează.
+      Modelul transportă energie. Ia în considerare degradarea. Cât de departe
+      călătoresc unduirile?
+    follow_ups:
+      - Ce ar fi suprafața fără unduiri?
+      - Cum marchează unduirea impactul?
+      - Care este relația dintre perturbare și propagare?
+  - id: nmp_mosquito_wiggle
+    name: Zvâcnirea Țânțarului
+    prompt: |
+      Larvele de țânțar atârnă de la suprafață—zvâcnitoare. Respiră printr-un
+      sifon. Zvâcnirea este mișcare, hrănire. Ia în considerare lumea larvei.
+      Ce mănâncă?
+    follow_ups:
+      - Ce ar fi iazul fără țânțari?
+      - Cum evită zvâcnirea prădătorii?
+      - Care este relația dintre larvă și adult?
+  - id: nmp_leaf_boat
+    name: Barcă de Frunză
+    prompt: |
+      O frunză plutește—căzută, plutind. Este o plută pentru unii, hrană
+      pentru alții. Frunza se va scufunda, se va descompune. Urmărește-i călătoria.
+      Ce va deveni?
+    follow_ups:
+      - Ce ar fi suprafața fără resturi plutitoare?
+      - Cum creează frunza un microhabitat?
+      - Care este relația dintre plutire și scufundare?
+  - id: nmp_backswimmer_top
+    name: Înotător pe Spate, Sus
+    prompt: |
+      Un înotător pe spate înoată cu susul în jos—burta spre cer. Vâslește cu
+      picioarele. Respiră la suprafață, apoi se scufundă. Ia în considerare
+      inversarea. De ce cu susul în jos?
+    follow_ups:
+      - Ce ar fi înotătorul pe spate cu fața în sus?
+      - Cum ajută postura la vânătoare?
+      - Care este relația dintre orientare și pradă?
+  - id: nmp_snail_trail
+    name: Urma Melcului
+    prompt: |
+      Un melc de baltă alunecă. Lasă o urmă—mucus, mișcare. Urma marchează
+      unde a fost. Alți melci pot urma. Ia în considerare drumul. Ce comunică
+      urma?
+    follow_ups:
+      - Ce ar fi melcul fără urmă?
+      - Cum permite mucusul mișcarea?
+      - Care este relația dintre urmă și urmărire?
+  - id: nmp_dew_drop
+    name: Picătură de Rouă
+    prompt: |
+      Rouă se formează pe o lamă de iarbă deasupra apei—globuri, reflectă. Este
+      condens. Picătura rezistă. Apoi cade. Ia în considerare picătura. Ce
+      mărește?
+    follow_ups:
+      - Ce ar fi lama fără rouă?
+      - Cum îndoaie picătura lumina?
+      - Care este relația dintre picătură și suprafață?
+  - id: nmp_spring_constant
+    name: Constantă de Izvor
+    prompt: |
+      Un izvor alimentează iazul—sau iazul se scurge. Nivelul apei este
+      echilibru. Ia în considerare intrarea și ieșirea. Ce susține balta? Ce ar
+      usca-o?
+    follow_ups:
+      - Ce ar fi iazul fără izvor?
+      - Cum modelează sursa apa?
+      - Care este relația dintre intrare și viață?
+  - id: nmp_edge_ecotone
+    name: Ecotonul Marginii
+    prompt: |
+      Marginea iazului este un ecoton—tranziție. Umedul întâlnește uscatul.
+      Plantele se adaptează. Animalele traversează. Marginea este diversitate.
+      Ce prosperă în in-between?
+    follow_ups:
+      - Ce ar fi iazul fără margine?
+      - Cum creează ecotonul oportunitate?
+      - Care este relația dintre graniță și diversitate?
+  - id: nmp_frog_eye
+    name: Ochiul Broaștei
+    prompt: |
+      O broască stă la margine. Ochii îi ies—vede deasupra și înainte. Broasca
+      este nemișcată. Apoi limba țâșnește. Ia în considerare răbdarea. Ce
+      așteaptă?
+    follow_ups:
+      - Ce ar fi broasca fără ochii bulbucați?
+      - Cum permite nemișcarea lovitura?
+      - Care este relația dintre așteptare și prindere?
+  - id: nmp_oxygen_bubble
+    name: Bulă de Oxigen
+    prompt: |
+      Plantele din iaz produc oxigen—bule se ridică. Într-o zi însorită, apa
+      respiră. Ia în considerare schimbul. Ce ar fi iazul fără fotosinteză?
+    follow_ups:
+      - Cum modelează oxigenul cine poate trăi aici?
+      - Ce se întâmplă când oxigenul scade?
+      - Care este relația dintre lumină și respirație?
+  - id: nmp_detritus_floor
+    name: Fundul Detritic
+    prompt: |
+      Fundul iazului este detritus—frunze căzute, insecte moarte, sediment.
+      Este un strat de descompunere. Ce trăiește în el? Cine se hrănește cu el?
+      Fundul este o cămară.
+    follow_ups:
+      - Ce ar fi iazul fără detritus?
+      - Cum alimentează fundul coloana de apă?
+      - Care este relația dintre fund și top?
+  - id: nmp_rain_ring
+    name: Inel de Ploaie
+    prompt: |
+      Ploaia lovește suprafața. Fiecare picătură face un inel—o coroană, apoi
+      un crater. Ploaia texturizează apa. Ia în considerare modelul. Ce ar
+      însemna o suprafață liniștită?
+    follow_ups:
+      - Cum oxigenează ploaia apa?
+      - Ce perturbă inelele?
+      - Care este relația dintre ploaie și suprafață?
+  - id: nmp_duckweed_carpet
+    name: Covor de Lemna
+    prompt: |
+      Lemna acoperă suprafața—plante mici plutitoare. Se multiplică repede.
+      Covorul umbrește ceea ce este dedesubt. Ia în considerare acoperirea. Ce ar
+      însemna soare deplin?
+    follow_ups:
+      - Ce ar fi iazul fără lemna?
+      - Cum afectează covorul temperatura?
+      - Care este relația dintre acoperire și viața de dedesubt?
+  - id: nmp_phantom_midgie
+    name: Molia Fantomă
+    prompt: |
+      Larvele moliei fantomă sunt transparente—fantomatice. Atârnă în apă.
+      Vezi prin ele. Ia în considerare invizibilitatea. Ce protejează transparența?
+    follow_ups:
+      - Ce ar fi larva dacă ar fi opacă?
+      - Cum ajută transparența la prădare?
+      - Care este relația dintre a vedea prin și supraviețuire?
+  - id: nmp_skimmer_skip
+    name: Sărirea Pietrei
+    prompt: |
+      O piatră sărită pe suprafață—una, două, trei. Fiecare săritură transferă
+      energie. Piatra se scufundă în cele din urmă. Ia în considerare limita.
+      Ce determină numărul de sărituri?
+    follow_ups:
+      - Ce ar face piatra fără rotație?
+      - Cum modelează unghiul săritura?
+      - Care este relația dintre aruncare și săritură?
+  - id: nmp_pollinator_drink
+    name: Bea Polenizatorilor
+    prompt: |
+      O albină bea de la margine. Fluturii se adună la o baltă de noroi. Apa
+      este o resursă. Ia în considerare cine vine. Ce au nevoie de la apă?
+    follow_ups:
+      - Ce ar face polenizatorii fără baltă?
+      - Cum permite marginea băutul?
+      - Care este relația dintre apă și mineral?
+  - id: nmp_evaporation_skin
+    name: Pielea de Evaporare
+    prompt: |
+      Iazul pierde apă prin evaporare. Vara, nivelul scade. Malul se extinde.
+      Ia în considerare retragerea. Ce se expune? Cine rămâne blocat?
+    follow_ups:
+      - Ce ar fi iazul fără evaporare?
+      - Cum concentrează scăderea viața?
+      - Care este relația dintre pierdere și concentrare?
+  - id: nmp_hydra_stalk
+    name: Tija Hidrei
+    prompt: |
+      O hidră—mică, cu tentacule—se ancorează de o tulpină. Înțeapă prada, o
+      trage înăuntru. Hidra se poate regenera. Ia în considerare simplitatea. Ce
+      plan de corp folosește?
+    follow_ups:
+      - Ce ar fi iazul fără hidre?
+      - Cum ajută regenerarea la supraviețuire?
+      - Care este relația dintre simplitate și reziliență?
+  - id: nmp_boatman_row
+    name: Vâslirea Barcagiului
+    prompt: |
+      Un barcagiu de apă vâslește—picioare ca niște vâsle. Este adesea cu
+      susul în jos, agățat de suprafață. Se hrănește cu alge. Ia în considerare
+      vâslele. Ce propulsează?
+    follow_ups:
+      - Ce ar fi barcagiul fără vâsle?
+      - Cum diferă vâslirea de cea a înotătorului pe spate?
+      - Care este relația dintre picior și mișcare?
+  - id: nmp_caddisfly_case
+    name: Carcasa Rupturii
+    prompt: |
+      O larvă de ruptură construiește o carcasă—crenguțe, pietre, cochilii. O
+      lipește cu mătase. Carcasa este armură și camuflaj. Ia în considerare
+      construcția. Ce alege larva?
+    follow_ups:
+      - Ce ar fi larva fără carcasă?
+      - Cum variază carcasa în funcție de habitat?
+      - Care este relația dintre material și protecție?
+  - id: nmp_damselfly_emergence
+    name: Eclozarea Libeluței
+    prompt: |
+      O libeluță eclozează—nifa urcă o tulpină, își crapă pielea, adultul se
+      eliberează. Aripile se desfac. Momentul este vulnerabil. Ia în considerare
+      transformarea. Ce ar putea merge prost?
+    follow_ups:
+      - Ce ar fi adultul fără urcarea pe tulpină?
+      - Cum modelează eclozarea sincronizarea?
+      - Care este relația dintre nifă și adult?
+  - id: nmp_floating_feather
+    name: Pană Plutitoare
+    prompt: |
+      O pană plutește—aruncată de o pasăre. Prinde suprafața. Apa se
+      adună pe ea. Ia în considerare pana. Ce a ținut pasărea uscată? Ce face
+      pana acum?
+    follow_ups:
+      - Ce ar fi suprafața fără obiecte plutitoare?
+      - Cum captează pana aerul?
+      - Care este relația dintre structură și plutire?
+  - id: nmp_moon_jelly
+    name: Meduză Lunară
+    prompt: |
+      În unele iazuri, meduze—meduze lunare. Pulsează. Sunt în mare parte apă.
+      Ia în considerare corpul. Ce captează gelatina? Ce evită?
+    follow_ups:
+      - Ce ar fi iazul fără meduze?
+      - Cum creează pulsul mișcare?
+      - Care este relația dintre apă și corp?
+  - id: nmp_seep_source
+    name: Sursa de Percolație
+    prompt: |
+      Apa se scurge din mal—un izvor, curgere lentă. Percolația alimentează
+      iazul. Sau iazul se scurge. Ia în considerare granița. Ce traversează? Ce
+      ține?
+    follow_ups:
+      - Ce ar fi iazul fără percolație?
+      - Cum modelează percolația chimia?
+      - Care este relația dintre sursă și baltă?
+  - id: nmp_wind_wave
+    name: Val de Vânt
+    prompt: |
+      Vântul împinge suprafața. Se formează mici valuri. Se sparg la mal.
+      Ia în considerație fetch-ul—distanța pe care o parcurge vântul peste
+      apă. Ce modelează valul?
+    follow_ups:
+      - Ce ar fi suprafața fără vânt?
+      - Cum afectează valurile oxigenul?
+      - Care este relația dintre vânt și amestecare?
+  - id: nmp_rotifer_wheel
+    name: Roata Rotiferului
+    prompt: |
+      Rotiferele sunt microscopice—au o roată de cili. Se rotește, atrage
+      hrana. Rotiferul este un motor. Ia în considerare scara. Ce altceva se
+      află în această apă?
+    follow_ups:
+      - Ce ar fi iazul fără rotifere?
+      - Cum creează roata fluxul?
+      - Care este relația dintre cili și hrănire?
+  - id: nmp_temperature_layer
+    name: Strat de Temperatură
+    prompt: |
+      Iazurile se pot stratifica—cald deasupra, rece dedesubt. Straturile nu
+      se amestecă ușor. Ia în considerație granița. Cine trăiește unde? Ce se
+      întâmplă când iazul se răstoarnă?
+    follow_ups:
+      - Ce ar fi iazul fără stratificare?
+      - Cum modelează temperatura oxigenul?
+      - Care este relația dintre strat și viață?
+  - id: nmp_predator_shadow
+    name: Umbra Prădătorului
+    prompt: |
+      Umbra unui pește trece. Prăzile îngheață, se dispersează. Umbra este
+      un semnal. Ia în considerare răspunsul. Ce ar însemna umbră constantă? Ce
+      ar însemna nicio umbră?
+    follow_ups:
+      - Cum declanșează umbra evadarea?
+      - Ce indicii pe lângă umbră contează?
+      - Care este relația dintre umbră și supraviețuire?
+  - id: nmp_surface_film
+    name: Pelicula de Suprafață
+    prompt: |
+      O peliculă subțire pe apă—polen, bacterii, materie organică. Poate
+      suporta greutate. Unele insecte merg pe ea. Ia în considerație pelicula.
+      Ce ar rupe-o?
+    follow_ups:
+      - Ce ar fi suprafața fără peliculă?
+      - Cum afectează pelicula schimbul de gaze?
+      - Care este relația dintre peliculă și graniță?
+  - id: nmp_dry_wait
+    name: Așteptare Uscată
+    prompt: |
+      Balta se va usca. Unele organisme au ouă rezistente la deshidratare.
+      Așteaptă. Următoarea ploaie poate fi peste luni. Ia în considerare pariul.
+      Ce trebuie să se alinieze pentru succes?
+    follow_ups:
+      - Ce ar fi balta fără așteptare?
+      - Cum durează dormanța prin uscat?
+      - Care este relația dintre ou și ploaie?
+  - id: nmp_shoreline_wrack
+    name: Deșeuri de pe Mal
+    prompt: |
+      Resturi se acumulează la țărm—frunze, crenguțe, insecte moarte.
+      Deșeurile sunt o linie. Marchează nivelul maxim al apei. Ia în considerație
+      acumularea. Cine se hrănește aici?
+    follow_ups:
+      - Ce ar fi marginea fără deșeuri?
+      - Cum creează deșeurile habitat?
+      - Care este relația dintre linie și nivel?
+  - id: nmp_duckweed_carpet
+    name: Covor de Lemna
+    prompt: |
+      Lemna acoperă apa liniștită—discuri verzi minuscule. Se extinde repede.
+      Suprafața devine solidă. Ia în considerație invazia. Ce blochează covorul?
+      Ce permite?
+    follow_ups:
+      - Ce ar fi iazul fără lemna?
+      - Cum afectează covorul lumina și oxigenul?
+      - Care este relația dintre acoperire și viața de dedesubt?
+  - id: nmp_rain_ring
+    name: Inel de Ploaie
+    prompt: |
+      O picătură de ploaie lovește suprafața. Un inel se extinde, dispare.
+      Într-un duș, suprafața devine textură—inele suprapuse. Ia în considerație
+      modelul. Ce face ploaia iazului?
+    follow_ups:
+      - Ce ar fi suprafața fără ploaie?
+      - Cum amestecă ploaia apa?
+      - Care este relația dintre picătură și inel?
+  - id: nmp_minnow_school
+    name: Stoc de Obli
+    prompt: |
+      Oblile stochează—zeci se mișcă ca una. Stocul este o strategie.
+      Prădătorii se confuzează. Ia în considerație coordonarea. Cum decid? Ce
+      ar costa singurătatea?
+    follow_ups:
+      - Ce ar fi iazul fără stocare în banc?
+      - Cum răspunde stocul la amenințare?
+      - Care este relația dintre mulți și unul?
+  - id: nmp_ice_edge
+    name: Marginea de Gheață
+    prompt: |
+      Iarna, gheața crește de la margine. Granița avansează. Dedubt, viața
+      persistă—mai rece, mai lentă. Ia în considerație marginea. Ce supraviețuiește
+      sub gheață?
+    follow_ups:
+      - Ce ar fi iazul fără gheață?
+      - Cum protejează sau amenință gheața?
+      - Care este relația dintre îngheț și oxigen?

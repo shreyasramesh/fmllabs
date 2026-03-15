@@ -35,6 +35,13 @@ const LANGUAGES = [
   { code: "pt", name: "Portuguese" },
   { code: "ru", name: "Russian" },
   { code: "ur", name: "Urdu" },
+  { code: "de", name: "German" },
+  { code: "it", name: "Italian" },
+  { code: "pl", name: "Polish" },
+  { code: "uk", name: "Ukrainian" },
+  { code: "ro", name: "Romanian" },
+  { code: "nl", name: "Dutch" },
+  { code: "tr", name: "Turkish" },
 ];
 
 const apiKey = process.env.GEMINI_API_KEY?.trim();

@@ -1,0 +1,557 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# De Menselijke Interface — Openbare Ruimte (Dutch)
+
+id: human_interface_public_space
+name: De Menselijke Interface — Openbare Ruimte
+description: 50 kaarten om hoe je de openbare ruimte ziet te veranderen—van bankjes en paden tot de choreografie van vreemden en objecten als talismannen.
+domain: human_interface
+cards:
+  - id: hi_ps_bench_occupation
+    name: Bezetting Bankje
+    prompt: |
+      Een bankje is bezet—door een lichaam, een tas, een houding. Het bankje is een schaarse
+      bron. Observeer wie zit, wie staat, wie voorbijgaat. Het bankje heeft
+      verschillende betekenissen voor verschillende mensen. Wat biedt het?
+    follow_ups:
+      - Hoe vormt het bankje de ruimte?
+      - Wat zou het park zijn zonder bankjes?
+      - Wat is de relatie tussen bankje en rust?
+  - id: hi_ps_pathway_flow
+    name: Padenstroom
+    prompt: |
+      Het pad stuurt beweging. Mensen lopen—alleen, in paren, in groepen. De
+      stroom heeft een richting. Observeer de botsing. Wie wijkt uit? Het pad is
+      een gedeelde gang. Welke regels gelden ervoor?
+    follow_ups:
+      - Hoe vormt het pad de wandeling?
+      - Wat zou de ruimte zijn zonder paden?
+      - Wat is de relatie tussen pad en bestemming?
+  - id: hi_ps_strangers_choreography
+    name: Vreemdenchoreografie
+    prompt: |
+      Onverwante lichamen bewegen door gedeelde ruimte. De choreografie is
+      ongesproken—zijwaarts bewegen, pauzeren, samenvloeien. Observeer de dans. Niemand spreekt.
+      De choreografie is puur lichaam. Wat vereist het?
+    follow_ups:
+      - Hoe vormt de choreografie de ruimte?
+      - Wat zou er gebeuren als iedereen stopte?
+      - Wat is de relatie tussen choreografie en burgerzin?
+  - id: hi_ps_object_talisman
+    name: Object als Talisman
+    prompt: |
+      Een boek op een bankje. Een tas op een stoel. Het object claimt een plek. Het zegt
+      "Ik ben hier" of "Ik kom terug." Het object is een talisman. Observeer de
+      claim. Wat beschermt het?
+    follow_ups:
+      - Hoe vormt de talisman de ruimte?
+      - Wat zou de ruimte zijn zonder zulke claims?
+      - Wat is de relatie tussen object en aanwezigheid?
+  - id: hi_ps_bench_armrest
+    name: Bankje Armleuning
+    prompt: |
+      Sommige bankjes hebben armleuningen. Ze verdelen de zitting. Ze voorkomen liggen.
+      De armleuning is met opzet ontworpen. Observeer wie het gebruikt. Wat sluit de
+      armleuning uit?
+    follow_ups:
+      - Hoe vormt de armleuning het bankje?
+      - Wat zou het bankje zijn zonder?
+      - Wat is de relatie tussen armleuning en controle?
+  - id: hi_ps_pathway_intersection
+    name: Paden Kruispunt
+    prompt: |
+      Paden kruisen elkaar. Lichamen komen samen. Het kruispunt is een botsingspunt.
+      Observeer de samenkomst. Wat gebeurt er als stromen samenkomen? Het kruispunt
+      vereist onderhandeling. Wat onttrekt het?
+    follow_ups:
+      - Hoe vormt het kruispunt de stroom?
+      - Wat zou de ruimte zijn zonder kruispunten?
+      - Wat is de relatie tussen kruispunt en aandacht?
+  - id: hi_ps_eye_contact_avoid
+    name: Oogcontact Vermijden
+    prompt: |
+      Vreemden vermijden oogcontact. Het vermijden is beleefd. Kijken is risico op
+      verbinding. Observeer de blik. Het vermijden is een contract. Wat maakt het mogelijk? Wat kost het?
+    follow_ups:
+      - Hoe vormt het vermijden de ruimte?
+      - Wat zou de ruimte zijn met meer contact?
+      - Wat is de relatie tussen blik en privacy?
+  - id: hi_ps_bench_share
+    name: Bankje Delen
+    prompt: |
+      Twee vreemden delen een bankje. Ruimte ertussen. Het delen is
+      nabijheid zonder verbinding. Observeer de grens. Hoe dichtbij is
+      te dichtbij? Het delen is een delicaat evenwicht.
+    follow_ups:
+      - Hoe vormt het delen het bankje?
+      - Wat zou het bankje zijn met één persoon?
+      - Wat is de relatie tussen delen en tolerantie?
+  - id: hi_ps_pathway_width
+    name: Paden Breedte
+    prompt: |
+      Het pad is breed of smal. De breedte beïnvloedt de stroom. Twee mensen
+      kunnen passeren of niet. Observeer de breedte. Wat neemt het aan over de
+      menigte? De breedte is ontwerp. Wat maakt het mogelijk?
+    follow_ups:
+      - Hoe vormt de breedte de wandeling?
+      - Wat zou het pad zijn als het breder was?
+      - Wat is de relatie tussen breedte en comfort?
+  - id: hi_ps_bench_sun
+    name: Bankje in de Zon
+    prompt: |
+      Het bankje is gericht op de zon. Of de schaduw. De positie is belangrijk. Observeer
+      wie welke kiest. De zon is een bron. Wat biedt het? Het bankje in de zon is begeerd.
+    follow_ups:
+      - Hoe vormt de zon het bankje?
+      - Wat zou de ruimte zijn zonder zon?
+      - Wat is de relatie tussen zon en rust?
+  - id: hi_ps_stranger_proximity
+    name: Vreemde Nabijheid
+    prompt: |
+      Een vreemde staat dichtbij—in een rij, in de bus. De nabijheid is
+      onpersoonlijk maar intiem. Observeer de tolerantie. Wat staat het lichaam
+      toe? De nabijheid is een contract. Wat zijn de voorwaarden?
+    follow_ups:
+      - Hoe vormt nabijheid de ruimte?
+      - Wat zou de ruimte zijn met meer ruimte?
+      - Wat is de relatie tussen nabijheid en burgerzin?
+  - id: hi_ps_object_left
+    name: Object Achtergelaten
+    prompt: |
+      Een jas op een bankje. Een tas onder een boom. Het object dat achtergelaten is, markeert
+      territorium. Observeer de claim. Hoe lang kan het duren? Het object dat achtergelaten is
+      is een test. Wat vraagt het van anderen?
+    follow_ups:
+      - Hoe vormt het object de ruimte?
+      - Wat zou de ruimte zijn zonder zulke claims?
+      - Wat is de relatie tussen object en vertrouwen?
+  - id: hi_ps_pathway_obstacle
+    name: Paden Hindernis
+    prompt: |
+      Iets blokkeert het pad—bouw, een menigte, een artiest. De
+      hindernis leidt de stroom om. Observeer de omleiding. Wat vereist de
+      hindernis? Het pad is nooit puur. Wat onderbreekt het?
+    follow_ups:
+      - Hoe vormt de hindernis de stroom?
+      - Wat zou het pad zijn zonder hindernissen?
+      - Wat is de relatie tussen hindernis en aanpassing?
+  - id: hi_ps_bench_alone
+    name: Bankje Alleen
+    prompt: |
+      Eén persoon op een bankje. Het alleen zijn is zichtbaar. Het bankje biedt
+      solitude. Observeer de houding. Wat biedt het alleen zijn op een bankje?
+      Het bankje alleen is een keuze. Wat maakt het mogelijk?
+    follow_ups:
+      - Hoe vormt het alleen zijn het bankje?
+      - Wat zou de ruimte zijn zonder bankjes?
+      - Wat is de relatie tussen alleen zijn en rust?
+  - id: hi_ps_nod_acknowledge
+    name: Knik Erkenning
+    prompt: |
+      Een lichte knik. Een korte glimlach. De erkenning is minimaal. Het zegt "Ik
+      zie je" zonder interactie. Observeer wanneer het gebeurt. De knik is een kleine burgerzin. Wat creëert het?
+    follow_ups:
+      - Hoe vormt de knik de ruimte?
+      - Wat zou de ruimte zijn zonder?
+      - Wat is de relatie tussen knik en veiligheid?
+  - id: hi_ps_pathway_edge
+    name: Paden Rand
+    prompt: |
+      Het pad heeft randen—gras, stoeprand, barrière. De rand definieert het pad.
+      Observeer wie op het pad blijft. Wie steekt over? De rand is een grens.
+      Wat bevat het?
+    follow_ups:
+      - Hoe vormt de rand de wandeling?
+      - Wat zou het pad zijn zonder randen?
+      - Wat is de relatie tussen rand en vrijheid?
+  - id: hi_ps_bench_claim
+    name: Bankje Claim
+    prompt: |
+      Het bankje is bezet—door verspreiding, door houding, door tas. De claim zegt "dit
+      is van mij." Observeer de claim. Hoe wordt deze gemaakt? De claim is territorium.
+      Wat beschermt het?
+    follow_ups:
+      - Hoe vormt de claim het bankje?
+      - Wat zou de ruimte zijn zonder claims?
+      - Wat is de relatie tussen claim en comfort?
+  - id: hi_ps_stranger_help
+    name: Vreemde Hulp
+    prompt: |
+      "Hulp nodig?" Een vreemde biedt aan. De hulp is onverwacht. Observeer de
+      uitwisseling. Accepteren of weigeren? De vreemde hulp is een geschenk. Wat vereist het?
+    follow_ups:
+      - Hoe vormt de hulp de ruimte?
+      - Wat zou de ruimte zijn zonder zulke aanbiedingen?
+      - Wat is de relatie tussen hulp en vertrouwen?
+  - id: hi_ps_object_temporary
+    name: Object Tijdelijk
+    prompt: |
+      Een beker, een krant, een hoed. Het object markeert een plek. Het is tijdelijk.
+      De eigenaar zal terugkeren. Observeer de claim. Wat vraagt het tijdelijke
+      object van anderen? Het object is een placeholder.
+    follow_ups:
+      - Hoe vormt het tijdelijke object de ruimte?
+      - Wat zou de ruimte zijn zonder?
+      - Wat is de relatie tussen tijdelijk en vertrouwen?
+  - id: hi_ps_pathway_rhythm
+    name: Paden Ritme
+    prompt: |
+      Voeten op het trottoir. Het ritme is individueel—snel, langzaam, ongelijk. Het
+      pad bevat vele ritmes. Observeer de synchronisatie en de clash. Wat onthult het ritme?
+    follow_ups:
+      - Hoe vormt het ritme de wandeling?
+      - Wat zou het pad zijn in stilte?
+      - Wat is de relatie tussen ritme en bestemming?
+  - id: hi_ps_bench_face
+    name: Bankje Gezicht
+    prompt: |
+      Het bankje is gericht op een richting—het uitzicht, de zon, de menigte. Het gezicht
+      vormt de ervaring. Observeer wie welk bankje kiest. Het gezicht is ontwerp. Wat neemt het aan?
+    follow_ups:
+      - Hoe vormt het gezicht het bankje?
+      - Wat zou het bankje zijn zonder richting?
+      - Wat is de relatie tussen gezicht en uitzicht?
+  - id: hi_ps_sidewalk_dance
+    name: Trottoir Dans
+    prompt: |
+      Twee mensen naderen. De dans—wie beweegt? De trottoir dans is
+      universeel. Observeer de zijwaartse beweging. De dans is ongesproken. Wat vereist het?
+    follow_ups:
+      - Hoe vormt de dans de wandeling?
+      - Wat zou het trottoir zijn zonder?
+      - Wat is de relatie tussen dans en burgerzin?
+  - id: hi_ps_object_abandoned
+    name: Object Verlaten
+    prompt: |
+      Een handschoen op de grond. Een sjaal op een bankje. Het object is verlaten.
+      Observeer het. Wie liet het achter? Wie neemt het mee? Het verlaten object is
+      een klein mysterie. Wat onthult het?
+    follow_ups:
+      - Hoe vormt het verlaten object de ruimte?
+      - Wat zou de ruimte zijn zonder zulke objecten?
+      - Wat is de relatie tussen verlaten en verlies?
+  - id: hi_ps_pathway_surface
+    name: Paden Ondergrond
+    prompt: |
+      Trottoir, grind, gras. De ondergrond beïnvloedt de wandeling. Observeer de
+      keuze. Wat vereist de ondergrond van het lichaam? De ondergrond is
+      ontwerp. Wat maakt het mogelijk?
+    follow_ups:
+      - Hoe vormt de ondergrond de wandeling?
+      - Wat zou het pad zijn met een andere ondergrond?
+      - Wat is de relatie tussen ondergrond en toegankelijkheid?
+  - id: hi_ps_bench_weather
+    name: Bankje en Weer
+    prompt: |
+      Regen, zon, wind. Het weer vormt het bankje. Wie zit in de regen?
+      Wie zoekt schaduw? Het bankje is blootgesteld. Observeer de relatie
+      tussen bankje en weer. Wat doet het weer?
+    follow_ups:
+      - Hoe vormt het weer het bankje?
+      - Wat zou het bankje zijn met beschutting?
+      - Wat is de relatie tussen weer en gebruik?
+  - id: hi_ps_stranger_glance
+    name: Vreemde Blik
+    prompt: |
+      Een korte blik. De blik is een beoordeling. Veilig? Bedreiging? De blik is
+      automatisch. Observeer je eigen blikken. Wat doet de blik? De
+      blik is een overlevingsinstrument. Wat onttrekt het?
+    follow_ups:
+      - Hoe vormt de blik de ruimte?
+      - Wat zou de ruimte zijn zonder blikken?
+      - Wat is de relatie tussen blik en veiligheid?
+  - id: hi_ps_pathway_crowd
+    name: Paden Drukte
+    prompt: |
+      Het pad is vol. Lichamen persen zich samen. De drukte heeft zijn eigen stroom.
+      Observeer de beweging. De drukte is een collectief. Wat vereist het
+      van het individu?
+    follow_ups:
+      - Hoe vormt de drukte het pad?
+      - Wat zou het pad zijn als het leeg was?
+      - Wat is de relatie tussen drukte en stroom?
+  - id: hi_ps_bench_curve
+    name: Bankje Curve
+    prompt: |
+      Sommige bankjes buigen. Ze kijken elkaar aan of naar het midden. De curve
+      vormt het sociale. Observeer de opstelling. Wat maakt de curve mogelijk?
+      De curve is ontwerp. Wat wil het?
+    follow_ups:
+      - Hoe vormt de curve het bankje?
+      - Wat zou het bankje zijn als het recht was?
+      - Wat is de relatie tussen curve en verbinding?
+  - id: hi_ps_object_traded
+    name: Object Verhandeld
+    prompt: |
+      Een overdracht. Een aankoop. Een geschenk. Het object gaat tussen vreemden.
+      Observeer de uitwisseling. Wat gaat er naast het object over? De handel is
+      een moment van verbinding. Wat creëert het?
+    follow_ups:
+      - Hoe vormt de handel de ruimte?
+      - Wat zou de ruimte zijn zonder zulke handel?
+      - Wat is de relatie tussen handel en vertrouwen?
+  - id: hi_ps_pathway_light
+    name: Paden Licht
+    prompt: |
+      Dag, nacht, straatlantaarn. Het licht vormt het pad. Observeer het
+      verschil. Wie loopt er 's nachts? Het licht is veiligheid en sfeer.
+      Wat biedt het?
+    follow_ups:
+      - Hoe vormt het licht het pad?
+      - Wat zou het pad zijn in duisternis?
+      - Wat is de relatie tussen licht en veiligheid?
+  - id: hi_ps_bench_armrest_gap
+    name: Bankje Armleuning Kloof
+    prompt: |
+      De armleuning verdeelt. Eén persoon per sectie. De kloof voorkomt
+      delen. Observeer het ontwerp. Wat sluit de kloof uit? De armleuning
+      kloof is vijandige architectuur. Wat neemt het aan?
+    follow_ups:
+      - Hoe vormt de kloof het bankje?
+      - Wat zou het bankje zijn zonder armleuningen?
+      - Wat is de relatie tussen kloof en uitsluiting?
+  - id: hi_ps_stranger_smile
+    name: Vreemde Glimlach
+    prompt: |
+      Een glimlach van een vreemde. Onverwacht. De glimlach is een geschenk. Observeer de
+      reactie. Wat doet de glimlach? De glimlach is een kleine breuk in het
+      contract. Wat creëert het?
+    follow_ups:
+      - Hoe vormt de glimlach de ruimte?
+      - Wat zou de ruimte zijn met meer glimlachen?
+      - Wat is de relatie tussen glimlach en verbinding?
+  - id: hi_ps_object_touch
+    name: Object Aanraking
+    prompt: |
+      Een hand op een reling. Een voet op een trede. De aanraking verbindt lichaam en
+      ruimte. Het object wordt gedeeld. Observeer de aanraking. Wat doet de aanraking?
+      Het object is een contactpunt. Wat draagt het?
+    follow_ups:
+      - Hoe vormt de aanraking de ruimte?
+      - Wat zou de ruimte zijn zonder aanraking?
+      - Wat is de relatie tussen aanraking en aanwezigheid?
+  - id: hi_ps_pathway_choice
+    name: Paden Keuze
+    prompt: |
+      Het pad splitst. Links of rechts? De keuze is klein. Observeer de
+      beslissing. Wat bepaalt het? De padenkeuze is een moment van
+      agentschap. Wat onthult het?
+    follow_ups:
+      - Hoe vormt de keuze de wandeling?
+      - Wat zou het pad zijn zonder splitsingen?
+      - Wat is de relatie tussen keuze en bestemming?
+  - id: hi_ps_bench_empty
+    name: Bankje Leeg
+    prompt: |
+      Het bankje is leeg. Beschikbaar. Waarom? Observeer het lege bankje. Locatie?
+      Tijd? Weer? Het lege bankje is een uitnodiging. Wat biedt het?
+    follow_ups:
+      - Hoe vormt het lege bankje de ruimte?
+      - Wat zou de ruimte zijn zonder lege bankjes?
+      - Wat is de relatie tussen leeg en kans?
+  - id: hi_ps_stranger_queue
+    name: Vreemde Rij
+    prompt: |
+      Er vormt zich een rij. Vreemden wachten samen. De rij is orde. Observeer de
+      geduld. De rij creëert tijdelijke gemeenschap. Wat vereist de rij? Wat biedt het?
+    follow_ups:
+      - Hoe vormt de rij de ruimte?
+      - Wat zou de ruimte zijn zonder rijen?
+      - Wat is de relatie tussen rij en eerlijkheid?
+  - id: hi_ps_object_talisman_trust
+    name: Talisman Vertrouwen
+    prompt: |
+      Je laat je tas achter. Je vertrouwt de ruimte. De talisman is een test. Observeer
+      het vertrouwen. Wat neemt het aan? Het talismanvertrouwen is een gok. Wat maakt het mogelijk?
+    follow_ups:
+      - Hoe vormt het vertrouwen de ruimte?
+      - Wat zou de ruimte zijn zonder zulke vertrouwen?
+      - Wat is de relatie tussen vertrouwen en kwetsbaarheid?
+  - id: hi_ps_pathway_end
+    name: Paden Einde
+    prompt: |
+      Het pad eindigt. Een bestemming, een muur, een poort. Het einde is een drempel.
+      Observeer de aankomst. Wat biedt het einde? Het padeneinde is
+      afsluiting. Wat betekent het?
+    follow_ups:
+      - Hoe vormt het einde de wandeling?
+      - Wat zou het pad zijn zonder einde?
+      - Wat is de relatie tussen einde en voltooiing?
+  - id: hi_ps_bench_duo
+    name: Bankje Duo
+    prompt: |
+      Twee mensen delen een bankje. Vrienden, geliefden, vreemden. Het duo heeft
+      dynamiek. Observeer de afstand. Het gesprek of de stilte. Het
+      bankje duo is een kleine sociale eenheid. Wat creëert het?
+    follow_ups:
+      - Hoe vormt het duo het bankje?
+      - Wat zou het bankje zijn met één persoon?
+      - Wat is de relatie tussen duo en verbinding?
+  - id: hi_ps_stranger_danger
+    name: Vreemde Gevaar
+    prompt: |
+      Het lichaam beoordeelt. Veilig? De beoordeling is automatisch. Observeer de
+      signalen. Wat triggert voorzichtigheid? Het vreemde gevaar is een overlevingsreflex. Wat beschermt het? Wat kost het?
+    follow_ups:
+      - Hoe vormt de beoordeling de ruimte?
+      - Wat zou de ruimte zijn zonder?
+      - Wat is de relatie tussen gevaar en openheid?
+  - id: hi_ps_object_marker
+    name: Object als Markering
+    prompt: |
+      Een steen op een bankje. Een lint aan een boom. Het object markeert iets.
+      Herinnering, claim, ritueel. Observeer de markering. Wat betekent het? De
+      markering is een boodschap. Wat zegt het?
+    follow_ups:
+      - Hoe vormt de markering de ruimte?
+      - Wat zou de ruimte zijn zonder markeringen?
+      - Wat is de relatie tussen markering en betekenis?
+  - id: hi_ps_pathway_grade
+    name: Paden Helling
+    prompt: |
+      Het pad helt. Omhoog of omlaag. De helling beïnvloedt het lichaam. Observeer de
+      inspanning. De helling is ontwerp. Wat neemt het aan over de wandelaar?
+      De helling is een barrière voor sommigen.
+    follow_ups:
+      - Hoe vormt de helling de wandeling?
+      - Wat zou het pad zijn als het vlak was?
+      - Wat is de relatie tussen helling en toegankelijkheid?
+  - id: hi_ps_bench_public
+    name: Bankje Publiek
+    prompt: |
+      Het bankje is publiek. Iedereen kan zitten. Het publieke is het punt. Observeer
+      wie het gebruikt. Het publieke bankje is een gemeenschappelijk goed. Wat vereist het?
+      Wat biedt het?
+    follow_ups:
+      - Hoe vormt het publieke het bankje?
+      - Wat zou de ruimte zijn zonder publieke bankjes?
+      - Wat is de relatie tussen publiek en verbondenheid?
+  - id: hi_ps_stranger_parallel
+    name: Vreemde Parallel
+    prompt: |
+      Je loopt naast een vreemde. Dezelfde richting, hetzelfde tempo. De parallel
+      is toevallig. Observeer de dynamiek. Synchroniseer je? Ga je uit elkaar? De
+      parallel is een tijdelijke metgezel. Wat creëert het?
+    follow_ups:
+      - Hoe vormt de parallel de wandeling?
+      - Wat zou het pad zijn zonder zulke parallellen?
+      - Wat is de relatie tussen parallel en solitude?
+  - id: hi_ps_object_shared
+    name: Object Gedeeld
+    prompt: |
+      Een waterfontein. Een trapleuning. Het object wordt gedeeld. Vele handen raken
+      het aan. Observeer het gedeelde object. Wat vereist het delen? Het
+      gedeelde object is een contactpunt. Wat draagt het?
+    follow_ups:
+      - Hoe vormt het gedeelde object de ruimte?
+      - Wat zou de ruimte zijn zonder zulke objecten?
+      - Wat is de relatie tussen gedeeld en vertrouwen?
+  - id: hi_ps_pathway_loop
+    name: Paden Lus
+    prompt: |
+      Het pad cirkelt terug. Een lus. Geen bestemming. De lus is om
+      het lopen zelf. Observeer de lopers. Wat biedt de lus?
+      De lus is een ander soort pad. Wat maakt het mogelijk?
+    follow_ups:
+      - Hoe vormt de lus de wandeling?
+      - Wat zou de ruimte zijn zonder lussen?
+      - Wat is de relatie tussen lus en reflectie?
+  - id: hi_ps_bench_legacy
+    name: Bankje Erfenis
+    prompt: |
+      "Ter nagedachtenis aan." Het bankje heeft een plaquette. Iemand hield van deze plek.
+      Het erfenisbankje draagt een verhaal. Observeer het. Wat voegt de plaquette toe?
+      Het erfenisbankje is een geschenk. Wat creëert het?
+    follow_ups:
+      - Hoe vormt de erfenis het bankje?
+      - Wat zou het bankje zijn zonder de plaquette?
+      - Wat is de relatie tussen erfenis en plek?
+  - id: hi_ps_stranger_ask
+    name: Vreemde Vraag
+    prompt: |
+      "Heb je tijd?" "Waar is X?" De vraag creëert een moment van
+      verbinding. Observeer de uitwisseling. Wat vereist de vraag? De
+      vreemde vraag is een kleine breuk. Wat maakt het mogelijk?
+    follow_ups:
+      - Hoe vormt de vraag de ruimte?
+      - Wat zou de ruimte zijn zonder zulke vragen?
+      - Wat is de relatie tussen vraag en hulp?
+  - id: hi_ps_object_talisman_return
+    name: Talisman Teruggave
+    prompt: |
+      Je keert terug. De talisman is er nog. Je tas, je boek. De
+      teruggave bevestigt het vertrouwen. Observeer de opluchting. Wat betekent de
+      teruggave? De talisman teruggave is een kleine overwinning. Wat creëert het?
+    follow_ups:
+      - Hoe vormt de teruggave de ruimte?
+      - Wat zou de ruimte zijn zonder zulke teruggaven?
+      - Wat is de relatie tussen teruggave en vertrouwen?
+  - id: hi_ps_pathway_beginning
+    name: Paden Begin
+    prompt: |
+      Het pad begint. Een drempel. Je stapt erop. Observeer het moment.
+      Wat betekent het begin? Het padenbegin is een verbintenis.
+      Wat vereist het?
+    follow_ups:
+      - Hoe vormt het begin de wandeling?
+      - Wat zou de ruimte zijn zonder paden?
+      - Wat is de relatie tussen begin en intentie?
+  - id: hi_ps_bench_community
+    name: Bankje Gemeenschap
+    prompt: |
+      Vaste bezoekers kennen het bankje. Dezelfde mensen, dezelfde tijd. De bankje
+      gemeenschap is informeel. Observeer de herkenning. Wat biedt de
+      gemeenschap? De bankje gemeenschap is een kleine sociale wereld.
+    follow_ups:
+      - Hoe vormt de gemeenschap het bankje?
+      - Wat zou het bankje zijn zonder vaste bezoekers?
+      - Wat is de relatie tussen gemeenschap en plek?
+  - id: hi_ps_stranger_chorus
+    name: Vreemde Koor
+    prompt: |
+      Veel lichamen, één ruimte. Het vreemde koor is het geluid van de
+      drukte—voetstappen, stemmen, geritsel. Observeer het koor. Wat creëert het?
+      Het koor is het geluid van het publieke. Wat betekent het?
+    follow_ups:
+      - Hoe vormt het koor de ruimte?
+      - Wat zou de ruimte zijn in stilte?
+      - Wat is de relatie tussen koor en verbondenheid?
+  - id: hi_ps_object_talisman_loss
+    name: Talisman Verlies
+    prompt: |
+      De talisman is weg. Gestolen, verplaatst, verward. Het verlies is een breuk.
+      Observeer de reactie. Wat betekent het verlies? Het talismanverlies is
+      een klein trauma. Wat onthult het?
+    follow_ups:
+      - Hoe vormt het verlies de ruimte?
+      - Wat zou de ruimte zijn zonder zulke verliezen?
+      - Wat is de relatie tussen verlies en vertrouwen?
+  - id: hi_ps_pathway_shared
+    name: Paden Gedeeld
+    prompt: |
+      Het pad wordt gedeeld—lopers, fietsers, kinderwagens. Het gedeelde gebruik
+      vereist onderhandeling. Observeer de regels. Wie wijkt uit? Het gedeelde
+      pad is een gemeenschappelijk goed. Wat vereist het?
+    follow_ups:
+      - Hoe vormt het gedeelde gebruik het pad?
+      - Wat zou het pad zijn met één gebruik?
+      - Wat is de relatie tussen gedeeld en conflict?
+  - id: hi_ps_bench_rest
+    name: Bankje Rust
+    prompt: |
+      Iemand rust. Ogen gesloten, ademhaling langzaam. De rust is zichtbaar. Het
+      bankje biedt het. Observeer de rust. Wat maakt het bankje mogelijk? Het
+      bankje rust is een geschenk van de openbare ruimte. Wat betekent het?
+    follow_ups:
+      - Hoe vormt de rust het bankje?
+      - Wat zou de ruimte zijn zonder bankjes?
+      - Wat is de relatie tussen rust en waardigheid?
+  - id: hi_ps_stranger_chorus_silence
+    name: Vreemde Koor Stilte
+    prompt: |
+      De menigte pauzeert. Een moment van stilte. Het vreemde koor wordt stil.
+      Observeer de verschuiving. Wat creëert de stilte? De gedeelde stilte
+      is zeldzaam. Wat betekent het?
+    follow_ups:
+      - Hoe vormt de stilte de ruimte?
+      - Wat zou de ruimte zijn zonder zulke momenten?
+      - Wat is de relatie tussen stilte en collectief?

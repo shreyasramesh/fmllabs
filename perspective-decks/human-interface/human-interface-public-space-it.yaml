@@ -1,0 +1,564 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# L'Interfaccia Umana — Spazio Pubblico (Italian)
+
+id: human_interface_public_space
+name: L'Interfaccia Umana — Spazio Pubblico
+description: 50 carte per cambiare il tuo modo di vedere lo spazio pubblico—da panchine e sentieri alla coreografia degli estranei e agli oggetti come talismani.
+domain: human_interface
+cards:
+  - id: hi_ps_bench_occupation
+    name: Occupazione della Panchina
+    prompt: |
+      Una panchina è occupata—da un corpo, una borsa, una postura. La panchina è una risorsa
+      scarsa. Osserva chi siede, chi sta in piedi, chi passa. La panchina assume
+      significati diversi per persone diverse. Cosa fornisce?
+    follow_ups:
+      - Come la panchina modella lo spazio?
+      - Come sarebbe il parco senza panchine?
+      - Qual è la relazione tra panchina e riposo?
+  - id: hi_ps_pathway_flow
+    name: Flusso del Sentiero
+    prompt: |
+      Il sentiero incanala il movimento. Le persone camminano—da sole, in coppia, in gruppo. Il
+      flusso ha una direzione. Osserva la collisione. Chi cede? Il sentiero è
+      un corridoio condiviso. Quali regole lo governano?
+    follow_ups:
+      - Come il sentiero modella la camminata?
+      - Come sarebbe lo spazio senza sentieri?
+      - Qual è la relazione tra sentiero e destinazione?
+  - id: hi_ps_strangers_choreography
+    name: Coreografia degli Estranei
+    prompt: |
+      Corpi non correlati si muovono attraverso lo spazio condiviso. La coreografia è
+      non detta—un passo laterale, una pausa, una fusione. Osserva la danza. Nessuno parla.
+      La coreografia è puro corpo. Cosa richiede?
+    follow_ups:
+      - Come la coreografia modella lo spazio?
+      - Cosa succederebbe se tutti si fermassero?
+      - Qual è la relazione tra coreografia e civiltà?
+  - id: hi_ps_object_talisman
+    name: Oggetto come Talismano
+    prompt: |
+      Un libro su una panchina. Una borsa su una sedia. L'oggetto occupa un posto. Dice
+      "Sono qui" o "Tornerò". L'oggetto è un talismano. Osserva l'occupazione.
+      Cosa protegge?
+    follow_ups:
+      - Come il talismano modella lo spazio?
+      - Come sarebbe lo spazio senza tali occupazioni?
+      - Qual è la relazione tra oggetto e presenza?
+  - id: hi_ps_bench_armrest
+    name: Bracciolo della Panchina
+    prompt: |
+      Alcune panchine hanno i braccioli. Dividono la seduta. Impediscono di sdraiarsi.
+      Il bracciolo è un design con un intento. Osserva chi lo usa. Cosa esclude il
+      bracciolo?
+    follow_ups:
+      - Come il bracciolo modella la panchina?
+      - Come sarebbe la panchina senza di esso?
+      - Qual è la relazione tra bracciolo e controllo?
+  - id: hi_ps_pathway_intersection
+    name: Incrocio del Sentiero
+    prompt: |
+      I sentieri si incrociano. I corpi convergono. L'incrocio è un punto di collisione.
+      Osserva la fusione. Cosa succede quando i flussi si incontrano? L'incrocio
+      richiede negoziazione. Cosa estrae?
+    follow_ups:
+      - Come l'incrocio modella il flusso?
+      - Come sarebbe lo spazio senza incroci?
+      - Qual è la relazione tra incrocio e attenzione?
+  - id: hi_ps_eye_contact_avoid
+    name: Evitare il Contatto Visivo
+    prompt: |
+      Gli estranei evitano il contatto visivo. L'evitamento è educato. Guardare è rischiare
+      connessione. Osserva lo sguardo. L'evitamento è un contratto. Cosa abilita?
+      Quanto costa?
+    follow_ups:
+      - Come l'evitamento modella lo spazio?
+      - Come sarebbe lo spazio con più contatto?
+      - Qual è la relazione tra sguardo e privacy?
+  - id: hi_ps_bench_share
+    name: Condivisione della Panchina
+    prompt: |
+      Due estranei condividono una panchina. Spazio tra di loro. La condivisione è
+      prossimità senza connessione. Osserva il confine. Quanto è troppo vicino?
+      La condivisione è un delicato equilibrio.
+    follow_ups:
+      - Come la condivisione modella la panchina?
+      - Come sarebbe la panchina con una sola persona?
+      - Qual è la relazione tra condivisione e tolleranza?
+  - id: hi_ps_pathway_width
+    name: Larghezza del Sentiero
+    prompt: |
+      Il sentiero è largo o stretto. La larghezza influisce sul flusso. Due persone
+      possono passare o meno. Osserva la larghezza. Cosa presuppone sulla
+      folla? La larghezza è design. Cosa abilita?
+    follow_ups:
+      - Come la larghezza modella la camminata?
+      - Come sarebbe il sentiero se fosse più largo?
+      - Qual è la relazione tra larghezza e comfort?
+  - id: hi_ps_bench_sun
+    name: Panchina al Sole
+    prompt: |
+      La panchina è rivolta verso il sole. O verso l'ombra. La posizione è importante. Osserva
+      chi sceglie quale. Il sole è una risorsa. Cosa fornisce? La panchina al sole è ambita.
+    follow_ups:
+      - Come il sole modella la panchina?
+      - Come sarebbe lo spazio senza sole?
+      - Qual è la relazione tra sole e riposo?
+  - id: hi_ps_stranger_proximity
+    name: Prossimità dell'Estraneo
+    prompt: |
+      Un estraneo sta vicino—in coda, sull'autobus. La prossimità è
+      impersonale ma intima. Osserva la tolleranza. Cosa permette il corpo?
+      La prossimità è un contratto. Quali sono i suoi termini?
+    follow_ups:
+      - Come la prossimità modella lo spazio?
+      - Come sarebbe lo spazio con più spazio?
+      - Qual è la relazione tra prossimità e civiltà?
+  - id: hi_ps_object_left
+    name: Oggetto Lasciato
+    prompt: |
+      Una giacca su una panchina. Una borsa sotto un albero. L'oggetto lasciato segna
+      territorio. Osserva l'occupazione. Quanto tempo può durare? L'oggetto lasciato
+      è una prova. Cosa richiede agli altri?
+    follow_ups:
+      - Come l'oggetto modella lo spazio?
+      - Come sarebbe lo spazio senza tali occupazioni?
+      - Qual è la relazione tra oggetto e fiducia?
+  - id: hi_ps_pathway_obstacle
+    name: Ostacolo sul Sentiero
+    prompt: |
+      Qualcosa blocca il sentiero—lavori, una folla, un artista. L'ostacolo devia
+      il flusso. Osserva la deviazione. Cosa richiede l'ostacolo? Il sentiero non è mai puro.
+      Cosa lo interrompe?
+    follow_ups:
+      - Come l'ostacolo modella il flusso?
+      - Come sarebbe il sentiero senza ostacoli?
+      - Qual è la relazione tra ostacolo e adattamento?
+  - id: hi_ps_bench_alone
+    name: Panchina da Soli
+    prompt: |
+      Una persona su una panchina. La solitudine è visibile. La panchina ospita
+      la solitudine. Osserva la postura. Cosa fornisce la panchina da soli?
+      La panchina da soli è una scelta. Cosa abilita?
+    follow_ups:
+      - Come la solitudine modella la panchina?
+      - Come sarebbe lo spazio senza panchine?
+      - Qual è la relazione tra solitudine e riposo?
+  - id: hi_ps_nod_acknowledge
+    name: Cenno di Riconoscimento
+    prompt: |
+      Un leggero cenno. Un breve sorriso. Il riconoscimento è minimo. Dice "Ti vedo"
+      senza coinvolgimento. Osserva quando succede. Il cenno è una piccola civiltà.
+      Cosa crea?
+    follow_ups:
+      - Come il cenno modella lo spazio?
+      - Come sarebbe lo spazio senza di esso?
+      - Qual è la relazione tra cenno e sicurezza?
+  - id: hi_ps_pathway_edge
+    name: Margine del Sentiero
+    prompt: |
+      Il sentiero ha dei margini—erba, marciapiede, barriera. Il margine definisce il sentiero.
+      Osserva chi rimane sul sentiero. Chi lo attraversa? Il margine è un confine.
+      Cosa contiene?
+    follow_ups:
+      - Come il margine modella la camminata?
+      - Come sarebbe il sentiero senza margini?
+      - Qual è la relazione tra margine e libertà?
+  - id: hi_ps_bench_claim
+    name: Occupazione della Panchina
+    prompt: |
+      La panchina è occupata—da una distesa, da una postura, da una borsa. L'occupazione dice "questo
+      è mio". Osserva l'occupazione. Come viene fatta? L'occupazione è territorio.
+      Cosa protegge?
+    follow_ups:
+      - Come l'occupazione modella la panchina?
+      - Come sarebbe lo spazio senza occupazioni?
+      - Qual è la relazione tra occupazione e comfort?
+  - id: hi_ps_stranger_help
+    name: Aiuto di un Estraneo
+    prompt: |
+      "Serve una mano?" Un estraneo si offre. L'aiuto è inaspettato. Osserva lo
+      scambio. Accetti o rifiuti? L'aiuto di un estraneo è un dono. Cosa richiede?
+    follow_ups:
+      - Come l'aiuto modella lo spazio?
+      - Come sarebbe lo spazio senza tali offerte?
+      - Qual è la relazione tra aiuto e fiducia?
+  - id: hi_ps_object_temporary
+    name: Oggetto Temporaneo
+    prompt: |
+      Una tazza, un giornale, un cappello. L'oggetto segna un posto. È temporaneo.
+      Il proprietario tornerà. Osserva l'occupazione. Cosa richiede l'oggetto temporaneo
+      agli altri? L'oggetto è un segnaposto.
+    follow_ups:
+      - Come l'oggetto temporaneo modella lo spazio?
+      - Come sarebbe lo spazio senza di esso?
+      - Qual è la relazione tra temporaneità e fiducia?
+  - id: hi_ps_pathway_rhythm
+    name: Ritmo del Sentiero
+    prompt: |
+      Passi sul marciapiede. Il ritmo è individuale—veloce, lento, irregolare. Il
+      sentiero ospita molti ritmi. Osserva la sincronia e lo scontro. Cosa rivela il
+      ritmo?
+    follow_ups:
+      - Come il ritmo modella la camminata?
+      - Come sarebbe il sentiero in silenzio?
+      - Qual è la relazione tra ritmo e destinazione?
+  - id: hi_ps_bench_face
+    name: Orientamento della Panchina
+    prompt: |
+      La panchina è rivolta in una direzione—verso la vista, il sole, la folla. L'orientamento
+      modella l'esperienza. Osserva chi sceglie quale panchina. L'orientamento è
+      design. Cosa presuppone?
+    follow_ups:
+      - Come l'orientamento modella la panchina?
+      - Come sarebbe la panchina senza direzione?
+      - Qual è la relazione tra orientamento e vista?
+  - id: hi_ps_sidewalk_dance
+    name: Danza sul Marciapiede
+    prompt: |
+      Due persone si avvicinano. La danza—chi si muove? La danza sul marciapiede è
+      universale. Osserva il passo laterale. La danza è non detta. Cosa richiede?
+    follow_ups:
+      - Come la danza modella la camminata?
+      - Come sarebbe il marciapiede senza di essa?
+      - Qual è la relazione tra danza e civiltà?
+  - id: hi_ps_object_abandoned
+    name: Oggetto Abbandonato
+    prompt: |
+      Un guanto a terra. Una sciarpa su una panchina. L'oggetto è abbandonato.
+      Osservalo. Chi l'ha lasciato? Chi lo prenderà? L'oggetto abbandonato è
+      un piccolo mistero. Cosa rivela?
+    follow_ups:
+      - Come l'oggetto abbandonato modella lo spazio?
+      - Come sarebbe lo spazio senza tali oggetti?
+      - Qual è la relazione tra abbandono e perdita?
+  - id: hi_ps_pathway_surface
+    name: Superficie del Sentiero
+    prompt: |
+      Pavimentazione, ghiaia, erba. La superficie influisce sulla camminata. Osserva la
+      scelta. Cosa richiede la superficie al corpo? La superficie è
+      design. Cosa abilita?
+    follow_ups:
+      - Come la superficie modella la camminata?
+      - Come sarebbe il sentiero con una superficie diversa?
+      - Qual è la relazione tra superficie e accesso?
+  - id: hi_ps_bench_weather
+    name: Panchina e Meteo
+    prompt: |
+      Pioggia, sole, vento. Il meteo modella la panchina. Chi siede sotto la pioggia?
+      Chi cerca l'ombra? La panchina è esposta. Osserva la relazione
+      tra panchina e meteo. Cosa fa il meteo?
+    follow_ups:
+      - Come il meteo modella la panchina?
+      - Come sarebbe la panchina con riparo?
+      - Qual è la relazione tra meteo e uso?
+  - id: hi_ps_stranger_glance
+    name: Sguardo dell'Estraneo
+    prompt: |
+      Uno sguardo fugace. Lo sguardo è valutazione. Sicuro? Minaccia? Lo sguardo è
+      automatico. Osserva i tuoi sguardi. Cosa fa lo sguardo? Lo
+      sguardo è uno strumento di sopravvivenza. Cosa estrae?
+    follow_ups:
+      - Come lo sguardo modella lo spazio?
+      - Come sarebbe lo spazio senza sguardi?
+      - Qual è la relazione tra sguardo e sicurezza?
+  - id: hi_ps_pathway_crowd
+    name: Folla sul Sentiero
+    prompt: |
+      Il sentiero è affollato. I corpi si comprimono. La folla ha un suo flusso.
+      Osserva il movimento. La folla è un collettivo. Cosa richiede
+      all'individuo?
+    follow_ups:
+      - Come la folla modella il sentiero?
+      - Come sarebbe il sentiero vuoto?
+      - Qual è la relazione tra folla e flusso?
+  - id: hi_ps_bench_curve
+    name: Curvatura della Panchina
+    prompt: |
+      Alcune panchine sono curve. Sono rivolte l'una verso l'altra o verso il centro. La curvatura
+      modella il sociale. Osserva la disposizione. Cosa abilita la curvatura?
+      La curvatura è design. Cosa vuole?
+    follow_ups:
+      - Come la curvatura modella la panchina?
+      - Come sarebbe la panchina se fosse dritta?
+      - Qual è la relazione tra curvatura e connessione?
+  - id: hi_ps_object_traded
+    name: Oggetto Scambiato
+    prompt: |
+      Uno scambio di mano. Un acquisto. Un dono. L'oggetto passa tra estranei.
+      Osserva lo scambio. Cosa passa oltre all'oggetto? Lo scambio è
+      un momento di connessione. Cosa crea?
+    follow_ups:
+      - Come lo scambio modella lo spazio?
+      - Come sarebbe lo spazio senza tali scambi?
+      - Qual è la relazione tra scambio e fiducia?
+  - id: hi_ps_pathway_light
+    name: Luce del Sentiero
+    prompt: |
+      Giorno, notte, lampione. La luce modella il sentiero. Osserva la
+      differenza. Chi cammina di notte? La luce è sicurezza e atmosfera.
+      Cosa fornisce?
+    follow_ups:
+      - Come la luce modella il sentiero?
+      - Come sarebbe il sentiero nel buio?
+      - Qual è la relazione tra luce e sicurezza?
+  - id: hi_ps_bench_armrest_gap
+    name: Spazio tra i Braccioli della Panchina
+    prompt: |
+      Il bracciolo divide. Una persona per sezione. Lo spazio impedisce
+      la condivisione. Osserva il design. Cosa esclude lo spazio? Lo spazio
+      tra i braccioli è architettura ostile. Cosa presuppone?
+    follow_ups:
+      - Come lo spazio modella la panchina?
+      - Come sarebbe la panchina senza braccioli?
+      - Qual è la relazione tra spazio ed esclusione?
+  - id: hi_ps_stranger_smile
+    name: Sorriso dell'Estraneo
+    prompt: |
+      Un sorriso da uno sconosciuto. Inaspettato. Il sorriso è un dono. Osserva la
+      risposta. Cosa fa il sorriso? Il sorriso è una piccola violazione del
+      contratto. Cosa crea?
+    follow_ups:
+      - Come il sorriso modella lo spazio?
+      - Come sarebbe lo spazio con più sorrisi?
+      - Qual è la relazione tra sorriso e connessione?
+  - id: hi_ps_object_touch
+    name: Tocco dell'Oggetto
+    prompt: |
+      Una mano su un corrimano. Un piede su un gradino. Il tocco connette corpo e
+      spazio. L'oggetto è condiviso. Osserva il tocco. Cosa fa il tocco?
+      L'oggetto è un punto di contatto. Cosa trasporta?
+    follow_ups:
+      - Come il tocco modella lo spazio?
+      - Come sarebbe lo spazio senza il tocco?
+      - Qual è la relazione tra tocco e presenza?
+  - id: hi_ps_pathway_choice
+    name: Scelta del Sentiero
+    prompt: |
+      Il sentiero si divide. A sinistra o a destra? La scelta è piccola. Osserva la
+      decisione. Cosa la determina? La scelta del sentiero è un momento di
+      agenzia. Cosa rivela?
+    follow_ups:
+      - Come la scelta modella la camminata?
+      - Come sarebbe il sentiero senza bivi?
+      - Qual è la relazione tra scelta e destinazione?
+  - id: hi_ps_bench_empty
+    name: Panchina Vuota
+    prompt: |
+      La panchina è vuota. Disponibile. Perché? Osserva la panchina vuota. Posizione?
+      Ora? Meteo? La panchina vuota è un invito. Cosa offre?
+    follow_ups:
+      - Come la panchina vuota modella lo spazio?
+      - Come sarebbe lo spazio senza panchine vuote?
+      - Qual è la relazione tra vuoto e opportunità?
+  - id: hi_ps_stranger_queue
+    name: Coda di Estranei
+    prompt: |
+      Si forma una coda. Estranei aspettano insieme. La coda è ordine. Osserva la
+      pazienza. La coda crea una comunità temporanea. Cosa richiede la coda?
+      Cosa fornisce?
+    follow_ups:
+      - Come la coda modella lo spazio?
+      - Come sarebbe lo spazio senza code?
+      - Qual è la relazione tra coda ed equità?
+  - id: hi_ps_object_talisman_trust
+    name: Fiducia del Talismano
+    prompt: |
+      Lasci la tua borsa. Ti fidi dello spazio. Il talismano è una prova. Osserva
+      la fiducia. Cosa presuppone? La fiducia del talismano è una scommessa. Cosa
+      abilita?
+    follow_ups:
+      - Come la fiducia modella lo spazio?
+      - Come sarebbe lo spazio senza tale fiducia?
+      - Qual è la relazione tra fiducia e vulnerabilità?
+  - id: hi_ps_pathway_end
+    name: Fine del Sentiero
+    prompt: |
+      Il sentiero finisce. Una destinazione, un muro, un cancello. La fine è una soglia.
+      Osserva l'arrivo. Cosa fornisce la fine? La fine del sentiero è
+      chiusura. Cosa significa?
+    follow_ups:
+      - Come la fine modella la camminata?
+      - Come sarebbe il sentiero senza una fine?
+      - Qual è la relazione tra fine e completamento?
+  - id: hi_ps_bench_duo
+    name: Duo sulla Panchina
+    prompt: |
+      Due persone condividono una panchina. Amici, amanti, estranei. Il duo ha
+      dinamiche. Osserva la distanza. La conversazione o il silenzio. Il
+      duo sulla panchina è una piccola unità sociale. Cosa crea?
+    follow_ups:
+      - Come il duo modella la panchina?
+      - Come sarebbe la panchina con una sola persona?
+      - Qual è la relazione tra duo e connessione?
+  - id: hi_ps_stranger_danger
+    name: Pericolo dell'Estraneo
+    prompt: |
+      Il corpo valuta. Sicuro? La valutazione è automatica. Osserva i
+      segnali. Cosa innesca la cautela? Il pericolo dell'estraneo è un riflesso
+      di sopravvivenza. Cosa protegge? Quanto costa?
+    follow_ups:
+      - Come la valutazione modella lo spazio?
+      - Come sarebbe lo spazio senza di essa?
+      - Qual è la relazione tra pericolo e apertura?
+  - id: hi_ps_object_marker
+    name: Oggetto come Segno
+    prompt: |
+      Una pietra su una panchina. Un nastro su un albero. L'oggetto segna qualcosa.
+      Ricordo, occupazione, rituale. Osserva il segno. Cosa significa? Il
+      segno è un messaggio. Cosa dice?
+    follow_ups:
+      - Come il segno modella lo spazio?
+      - Come sarebbe lo spazio senza segni?
+      - Qual è la relazione tra segno e significato?
+  - id: hi_ps_pathway_grade
+    name: Pendenza del Sentiero
+    prompt: |
+      Il sentiero è in pendenza. Su o giù. La pendenza influisce sul corpo. Osserva lo
+      sforzo. La pendenza è design. Cosa presuppone sul camminatore?
+      La pendenza è una barriera per alcuni.
+    follow_ups:
+      - Come la pendenza modella la camminata?
+      - Come sarebbe il sentiero se fosse pianeggiante?
+      - Qual è la relazione tra pendenza e accesso?
+  - id: hi_ps_bench_public
+    name: Panchina Pubblica
+    prompt: |
+      La panchina è pubblica. Chiunque può sedersi. Il pubblico è il punto. Osserva
+      chi la usa. La panchina pubblica è un bene comune. Cosa richiede?
+      Cosa fornisce?
+    follow_ups:
+      - Come il pubblico modella la panchina?
+      - Come sarebbe lo spazio senza panchine pubbliche?
+      - Qual è la relazione tra pubblico e appartenenza?
+  - id: hi_ps_stranger_parallel
+    name: Parallelismo dell'Estraneo
+    prompt: |
+      Cammini accanto a uno sconosciuto. Stessa direzione, stesso passo. Il parallelismo
+      è accidentale. Osserva la dinamica. Sincronizzate i passi? Divergete? Il
+      parallelismo è una compagnia temporanea. Cosa crea?
+    follow_ups:
+      - Come il parallelismo modella la camminata?
+      - Come sarebbe il sentiero senza tali parallelismi?
+      - Qual è la relazione tra parallelismo e solitudine?
+  - id: hi_ps_object_shared
+    name: Oggetto Condiviso
+    prompt: |
+      Una fontanella. Un corrimano. L'oggetto è condiviso. Molte mani lo toccano.
+      Osserva l'oggetto condiviso. Cosa richiede la condivisione? L'
+      oggetto condiviso è un punto di contatto. Cosa trasporta?
+    follow_ups:
+      - Come l'oggetto condiviso modella lo spazio?
+      - Come sarebbe lo spazio senza tali oggetti?
+      - Qual è la relazione tra condivisione e fiducia?
+  - id: hi_ps_pathway_loop
+    name: Ansa del Sentiero
+    prompt: |
+      Il sentiero gira su se stesso. Un'ansa. Nessuna destinazione. L'ansa è per
+      camminare di per sé. Osserva chi cammina. Cosa fornisce l'ansa?
+      L'ansa è un diverso tipo di sentiero. Cosa abilita?
+    follow_ups:
+      - Come l'ansa modella la camminata?
+      - Come sarebbe lo spazio senza anse?
+      - Qual è la relazione tra ansa e riflessione?
+  - id: hi_ps_bench_legacy
+    name: Panchina Commemorativa
+    prompt: |
+      "In memoria di." La panchina ha una targa. Qualcuno amava questo posto.
+      La panchina commemorativa porta una storia. Osservala. Cosa aggiunge la targa?
+      La panchina commemorativa è un dono. Cosa crea?
+    follow_ups:
+      - Come l'eredità modella la panchina?
+      - Come sarebbe la panchina senza la targa?
+      - Qual è la relazione tra eredità e luogo?
+  - id: hi_ps_stranger_ask
+    name: Richiesta all'Estraneo
+    prompt: |
+      "Hai l'ora?" "Dov'è X?" La richiesta crea un momento di
+      connessione. Osserva lo scambio. Cosa richiede la richiesta? La
+      richiesta all'estraneo è una piccola violazione. Cosa abilita?
+    follow_ups:
+      - Come la richiesta modella lo spazio?
+      - Come sarebbe lo spazio senza tali richieste?
+      - Qual è la relazione tra richiesta e aiuto?
+  - id: hi_ps_object_talisman_return
+    name: Ritorno del Talismano
+    prompt: |
+      Torni indietro. Il talismano è ancora lì. La tua borsa, il tuo libro. Il
+      ritorno conferma la fiducia. Osserva il sollievo. Cosa significa il ritorno?
+      Il ritorno del talismano è una piccola vittoria. Cosa crea?
+    follow_ups:
+      - Come il ritorno modella lo spazio?
+      - Come sarebbe lo spazio senza tali ritorni?
+      - Qual è la relazione tra ritorno e fiducia?
+  - id: hi_ps_pathway_beginning
+    name: Inizio del Sentiero
+    prompt: |
+      Il sentiero inizia. Una soglia. Ci entri sopra. Osserva il momento.
+      Cosa significa l'inizio? L'inizio del sentiero è un impegno.
+      Cosa richiede?
+    follow_ups:
+      - Come l'inizio modella la camminata?
+      - Come sarebbe lo spazio senza sentieri?
+      - Qual è la relazione tra inizio e intenzione?
+  - id: hi_ps_bench_community
+    name: Comunità della Panchina
+    prompt: |
+      I frequentatori abituali conoscono la panchina. Le stesse persone, lo stesso orario. La
+      comunità della panchina è informale. Osserva il riconoscimento. Cosa fornisce la
+      comunità? La comunità della panchina è un piccolo mondo sociale.
+    follow_ups:
+      - Come la comunità modella la panchina?
+      - Come sarebbe la panchina senza i frequentatori abituali?
+      - Qual è la relazione tra comunità e luogo?
+  - id: hi_ps_stranger_chorus
+    name: Coro di Estranei
+    prompt: |
+      Molti corpi, uno spazio. Il coro di estranei è il suono della
+      folla—passi, voci, fruscii. Osserva il coro. Cosa crea?
+      Il coro è il suono del pubblico. Cosa significa?
+    follow_ups:
+      - Come il coro modella lo spazio?
+      - Come sarebbe lo spazio in silenzio?
+      - Qual è la relazione tra coro e appartenenza?
+  - id: hi_ps_object_talisman_loss
+    name: Perdita del Talismano
+    prompt: |
+      Il talismano è sparito. Rubato, spostato, confuso. La perdita è una violazione.
+      Osserva la risposta. Cosa significa la perdita? La perdita del talismano è
+      un piccolo trauma. Cosa rivela?
+    follow_ups:
+      - Come la perdita modella lo spazio?
+      - Come sarebbe lo spazio senza tali perdite?
+      - Qual è la relazione tra perdita e fiducia?
+  - id: hi_ps_pathway_shared
+    name: Sentiero Condiviso
+    prompt: |
+      Il sentiero è condiviso—pedoni, ciclisti, passeggini. L'uso condiviso
+      richiede negoziazione. Osserva le regole. Chi cede? Il
+      sentiero condiviso è un bene comune. Cosa richiede?
+    follow_ups:
+      - Come l'uso condiviso modella il sentiero?
+      - Come sarebbe il sentiero con un solo uso?
+      - Qual è la relazione tra condivisione e conflitto?
+  - id: hi_ps_bench_rest
+    name: Riposo sulla Panchina
+    prompt: |
+      Qualcuno riposa. Occhi chiusi, respiro lento. Il riposo è visibile. La
+      panchina fornisce. Osserva il riposo. Cosa abilita la panchina? Il
+      riposo sulla panchina è un dono dello spazio pubblico. Cosa significa?
+    follow_ups:
+      - Come il riposo modella la panchina?
+      - Come sarebbe lo spazio senza panchine?
+      - Qual è la relazione tra riposo e dignità?
+  - id: hi_ps_stranger_chorus_silence
+    name: Silenzio del Coro di Estranei
+    prompt: |
+      La folla si ferma. Un momento di silenzio. Il coro di estranei tace.
+      Osserva il cambiamento. Cosa crea il silenzio? Il silenzio condiviso
+      è raro. Cosa significa?
+    follow_ups:
+      - Come il silenzio modella lo spazio?
+      - Come sarebbe lo spazio senza tali momenti?
+      - Qual è la relazione tra silenzio e collettivo?

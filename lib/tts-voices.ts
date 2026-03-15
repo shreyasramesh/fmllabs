@@ -41,6 +41,13 @@ const LANGUAGE_TO_ELEVENLABS_CODE: Record<LanguageCode, string> = {
   pt: "pt",
   ru: "ru",
   ur: "hi", // Urdu not supported; use Hindi (closely related)
+  de: "de",
+  it: "it",
+  pl: "pl",
+  uk: "uk",
+  ro: "ro",
+  nl: "nl",
+  tr: "tr",
 };
 
 export function getVoiceIdForLanguage(language: LanguageCode): string {

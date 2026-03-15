@@ -1,0 +1,474 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Doğal Mikrokozmos — Bahçe & Arka Bahçe (Turkish)
+
+id: natural_microcosm_garden_backyard
+name: Doğal Mikrokozmos — Bahçe & Arka Bahçe
+description: Evcil yaban hayatını — tozlayıcılardan ve topraktan, yabani otlara karşı ekinlere ve yetiştirilen doğanın koreografisine kadar — görme şeklinizi değiştirecek 50 kart.
+domain: natural_microcosm
+cards:
+  - id: nmg_bee_landing
+    name: Arı İnişi
+    prompt: |
+      Bir çiçeğe konan bir arıyı izleyin. Yaklaşma, dokunuş, havada kalma.
+      Arı hem avcı hem de tozlayıcıdır. Çiçek ne kazanır? Ne riske atar?
+    follow_ups:
+      - İniş, bir sonraki ziyareti nasıl şekillendirir?
+      - Arılar olmadan bahçe ne olurdu?
+      - Çiçek ve arı arasındaki ilişki nedir?
+  - id: nmg_soil_crumble
+    name: Toprak Kırıntısı
+    prompt: |
+      Avuçlarınıza bir miktar toprak alın. Dokusunu hissedin — kırıntı,
+      tahıllar. O toprak tarih, ölüm, yeniden doğuş barındırır. Daha önce
+      burada ne yaşadı? Ondan ne büyüyecek?
+    follow_ups:
+      - Toprak, neyin büyüyeceğini nasıl şekillendirir?
+      - Steril toprak ne anlama gelirdi?
+      - Kırıntı ve yaşam arasındaki ilişki nedir?
+  - id: nmg_weed_edge
+    name: Kenardaki Yabani Ot
+    prompt: |
+      Çimlerin yatağa karıştığı yerde bir yabani ot büyür. Dikilmemişti.
+      Davet edilmişti — ya da kendini davet etti. Sınırı düşünün. Yabani ot
+      ile çiçek arasındaki çizgiyi kim çizer?
+    follow_ups:
+      - Yabani otlar olmadan bahçe ne olurdu?
+      - Kenar nasıl gerilim yaratır?
+      - Yabani ot ve niyet arasındaki ilişki nedir?
+  - id: nmg_compost_steam
+    name: Kompost Buharı
+    prompt: |
+      Bir kompost yığını çevirin. Buhar yükselir — çürüme devam ediyor.
+      Isı mikrobiyal bir iştir. Mutfak artığı toprağa dönüşür. Dönüşümü
+      izleyin.
+    follow_ups:
+      - Kompost olmadan bahçe ne kaybederdi?
+      - Isı süreci nasıl işaretler?
+      - Atık ve verimlilik arasındaki ilişki nedir?
+  - id: nmg_seed_dormancy
+    name: Tohum Dormansisi
+    prompt: |
+      Topraktaki bir tohum yıllarca — on yıllarca bekleyebilir. Canlıdır
+      ama durmuştur. Onu ne uyandırır? Işık, su, ateş, rahatsızlık. Bir
+      tohumun sabrını düşünün.
+    follow_ups:
+      - Dormansi olmadan çimlenme ne kaybederdi?
+      - Beklemek hayatta kalmayı nasıl şekillendirir?
+      - Duraklama ve ortaya çıkma arasındaki ilişki nedir?
+  - id: nmg_bird_bath
+    name: Kuş Banyosu
+    prompt: |
+      Bir kuş banyosu bir davettir. Kimin geldiğini izleyin — serçeler,
+      kuzgunlar, belki bir alakarga. Banyo karşılaşma yaratır. Bu küçük
+      su kütlesi olmadan avlu ne olurdu?
+    follow_ups:
+      - Banyo, kimin ziyaret ettiğini nasıl şekillendirir?
+      - Varışın koreografisi nedir?
+      - Su ve kuş arasındaki ilişki nedir?
+  - id: nmg_tomato_truss
+    name: Domates Salkımı
+    prompt: |
+      Bir domates salkımı yeşil meyveler, sonra kırmızı tutar. Mimarisini
+      inceleyin. Sap, dallar, ağırlık. Bitki mühendisliktir. Onu ne ayakta
+      tutar?
+    follow_ups:
+      - Salkım olmadan bitki ne olurdu?
+      - Yapı hasadı nasıl şekillendirir?
+      - Biçim ve meyve arasındaki ilişki nedir?
+  - id: nmg_aphid_column
+    name: Yaprak Biti Kolonu
+    prompt: |
+      Yaprak bitleri bir sapta kümelenir — emer, çoğalırlar. Hem zararlı
+      hem de avdırlar. Uğur böcekleri gelecektir. Ekolojiyi not edin. Salgın
+      ve denge arasındaki ilişki nedir?
+    follow_ups:
+      - Yaprak bitleri olmadan bitki ne olurdu?
+      - Küme, avcıları nasıl çeker?
+      - Zararlı ve ekosistem arasındaki ilişki nedir?
+  - id: nmg_hose_spray
+    name: Hortum Spreyi
+    prompt: |
+      Bir hortumdan gelen su toprağa çarpar. Havuzlandığını, emildiğini,
+      aktığını izleyin. Sprey yapay bir yağmurdur. Gerçeğinden nasıl
+      farklıdır? Bitki ne alır?
+    follow_ups:
+      - Hortum olmadan bahçe ne olurdu?
+      - Sulama büyümeyi nasıl şekillendirir?
+      - Sprey ve yağmur arasındaki ilişki nedir?
+  - id: nmg_lawn_mow
+    name: Çim Biçme
+    prompt: |
+      Bir çim, yönetilen bir yaban hayatıdır — istenen yüksekliğe kesilmiş,
+      yeşil tutulur. Biçme büyümeyi kesintiye uğratır. Çim yalnız bırakılırsa
+      neye dönüşürdü düşünün. Neyi geri tutuyoruz?
+    follow_ups:
+      - Biçme olmadan avlu ne olurdu?
+      - Kesim kimliği nasıl şekillendirir?
+      - Çim ve kontrol arasındaki ilişki nedir?
+  - id: nmg_pot_bound
+    name: Saksı Bağlı
+    prompt: |
+      Bir saksıdaki bitki — kökler etrafta döner, arar. Saksı bir sınırdır.
+      Sınırsız toprakla bitki ne yapardı? Saksı hem hapishane hem de
+      korumadır. Takası düşünün.
+    follow_ups:
+      - Saksı olmadan bitki ne olurdu?
+      - Sınırlama büyümeyi nasıl şekillendirir?
+      - Kök ve duvar arasındaki ilişki nedir?
+  - id: nmg_mulch_layer
+    name: Malç Katmanı
+    prompt: |
+      Malç toprağı kaplar — odun yongaları, saman, yapraklar. Nemi tutar,
+      yabani otları bastırır, sonunda toprağa dönüşür. Katman geçicidir.
+      Var olduğu sürece ne yapar?
+    follow_ups:
+      - Malç olmadan yatak ne olurdu?
+      - Katman mikro iklimi nasıl yaratır?
+      - Kapak ve toprak arasındaki ilişki nedir?
+  - id: nmg_hummingbird_hover
+    name: Sinek Kuşu Duraklaması
+    prompt: |
+      Bir sinek kuşu bir çiçekte duraklar — kanatlar hızla görünmez
+      olur. Duraklama maliyetlidir. Nektar buna değmeli. Ziyaretin
+      ekonomisini düşünün.
+    follow_ups:
+      - Sinek kuşu olmadan çiçek ne olurdu?
+      - Duraklama ilişkiyi nasıl şekillendirir?
+      - Maliyet ve ödül arasındaki ilişki nedir?
+  - id: nmg_fence_creep
+    name: Çit Sürünmesi
+    prompt: |
+      Sarmaşık veya sabah sefası bir çitin kenarından sürünür. Bitki
+      çitin insan yapımı olduğunu bilmez. Yine de tırmanır. Büyüme ile
+      yapı arasındaki karşılaşmayı düşünün.
+    follow_ups:
+      - Çit olmadan bitki neye tırmanırdı?
+      - Çit sarmaşığı nasıl şekillendirir?
+      - Tırmanma ve destek arasındaki ilişki nedir?
+  - id: nmg_worm_cast
+    name: Solucan Dışkısı
+    prompt: |
+      Solucan dışkısı — küçük toprak yığınları — çimde noktalar halinde
+      görünür. Solucan geçmiş, verimlilik bırakmış. Dışkı arkeolojidir.
+      Solucan neyi işlemişti? Ne geride bıraktı?
+    follow_ups:
+      - Solucanlar olmadan toprak ne olurdu?
+      - Dışkı, solucanın işini nasıl işaretler?
+      - Dışkı ve havalandırma arasındaki ilişki nedir?
+  - id: nmg_squirrel_cache
+    name: Sincap Hazinesi
+    prompt: |
+      Bir sincap bir ceviz gömer — sonra unutur. Ceviz filizlenebilir.
+      Sincap tesadüfi bahçıvandır. Hafıza ve dağılım arasındaki
+      ilişkiyi düşünün. Unutkanlıktan ne büyür?
+    follow_ups:
+      - Sincap olmadan meşe ne olurdu?
+      - Saklama ormanın yayılmasını nasıl şekillendirir?
+      - Gömme ve filizlenme arasındaki ilişki nedir?
+  - id: nmg_dew_morning
+    name: Çiğli Sabah
+    prompt: |
+      Sabah çiyi yapraklar üzerinde damlalar halinde birikir. Her damla ışık
+      tutar. Çiğ yoğunlaşmadır — havadan gelen su. Öğleye kadar buharlaşacaktır.
+      Geçici hediyeyi düşünün. Bitki ne alır?
+    follow_ups:
+      - Çiğ olmadan yaprak ne olurdu?
+      - Damla sabahı nasıl şekillendirir?
+      - Yoğunlaşma ve yaprak arasındaki ilişki nedir?
+  - id: nmg_prune_scar
+    name: Budama İzi
+    prompt: |
+      Bir budama izi, bir dalın kesildiği yeri işaretler. Ağaç iyileşmiş —
+      ya da denemiş. İz tarihtir. Ne çıkarıldı? Neden? Ağaç neyi
+      hatırlıyor?
+    follow_ups:
+      - Budama olmadan ağaç ne olurdu?
+      - Kesim büyümeyi nasıl şekillendirir?
+      - Yara ve biçim arasındaki ilişki nedir?
+  - id: nmg_sunflower_turn
+    name: Ayçiçeği Dönüşü
+    prompt: |
+      Genç bir ayçiçeği güneşe doğru döner — şafakta doğu, alacakaranlıkta
+      batı. Hareket heliotropizmdir. Bitki ışığı izler. Koreografiyi
+      düşünün. Sabit durmak ne anlama gelirdi?
+    follow_ups:
+      - Dönüş olmadan ayçiçeği ne olurdu?
+      - İzleme büyümeyi nasıl şekillendirir?
+      - Hareket ve ışık arasındaki ilişki nedir?
+  - id: nmg_slug_trail
+    name: Sümük İzi
+    prompt: |
+      Bir sümüklüböcek bir iz bırakır — gümüş, yapışkan. İz, geçişi
+      işaretler. Aynı zamanda sümüklüböceğin ayağını korur. İzi hem kayıt
+      hem de adaptasyon olarak düşünün. Neyi mümkün kılar?
+    follow_ups:
+      - İz olmadan sümüklüböcek ne olurdu?
+      - Sümük hareketi nasıl şekillendirir?
+      - İz ve avcı arasındaki ilişki nedir?
+  - id: nmg_birdhouse_hole
+    name: Kuş Evi Deliği
+    prompt: |
+      Bir kuş evinde bir delik vardır — belirli bir çapta. Bazı kuşları
+      dışlar, bazılarını davet eder. Delik bir filtredir. Kimin için
+      tasarlanmıştı? Kim sahiplendi?
+    follow_ups:
+      - Kuş evi olmadan avlu ne olurdu?
+      - Delik, kimin yuva yaptığını nasıl şekillendirir?
+      - Delik ve kiracı arasındaki ilişki nedir?
+  - id: nmg_root_hair
+    name: Kök Tüyü
+    prompt: |
+      Kök tüyleri yukarıdan görünmez — suyu ve besinleri emen minik
+      uzantılar. Bitkinin toprakla arayüzü. Aşağıda ne olduğunu
+      düşünün. Bunlar olmadan bitki ne kaybeder?
+    follow_ups:
+      - Tüy emilimi nasıl şekillendirir?
+      - Tüy ve toprak arasındaki ilişki nedir?
+      - Bunları görebilseydiniz ne görürdünüz?
+  - id: nmg_frost_leaf
+    name: Yaprakta Don
+    prompt: |
+      Bir yaprakta don desenleri — kristal, narin. Don havadan donmuş sudur.
+      Güneşle eriyecektir. Geçici sanatı düşünün. Yaprak ne yaşar?
+    follow_ups:
+      - Don olmadan sabah ne olurdu?
+      - Don, yaprağın gününü nasıl şekillendirir?
+      - Kristal ve hücre arasındaki ilişki nedir?
+  - id: nmg_companion_plant
+    name: Yoldaş Bitki
+    prompt: |
+      Domatesin yanında fesleğen. Kabakların yanında kadife çiçeği. Yoldaş
+      bitkilendirme stratejik bir komşuluktur. Bazı bitkiler kovalar; bazıları
+      çeker. Yatağın sosyal yaşamını düşünün.
+    follow_ups:
+      - Fesleğen olmadan domates ne olurdu?
+      - Komşuluk bahçeyi nasıl şekillendirir?
+      - Komşu ve zararlı arasındaki ilişki nedir?
+  - id: nmg_fallen_apple
+    name: Düşmüş Elma
+    prompt: |
+      Bir elma düşer — toplanmamış, olgunlaşmış. Çürür, eşek arılarını
+      besler, belki bir fidan büyütür. Düşüş hem israf hem de başlangıçtır.
+      Daldan toprağa olan yayı düşünün.
+    follow_ups:
+      - Düşüş olmadan yer ne olurdu?
+      - Çürüme, sonra neyin geleceğini nasıl şekillendirir?
+      - Düşme ve dağılım arasındaki ilişki nedir?
+  - id: nmg_spider_web_corner
+    name: Köşede Örümcek Ağı
+    prompt: |
+      Bir kulübenin köşesinde bir örümcek ağı uzanır. İpek üzerinde çiğ
+      tutar. Ağ hem tuzak hem de evdir. Örümceğin ekonomisini düşünün. Neyi
+      yatırır? Neyi hasat eder?
+    follow_ups:
+      - Ağ olmadan köşe ne olurdu?
+      - Ağ, örümceğin gününü nasıl şekillendirir?
+      - İpek ve av arasındaki ilişki nedir?
+  - id: nmg_seed_packet
+    name: Tohum Paketi
+    prompt: |
+      Bir tohum paketi — önünde fotoğraf, arkasında talimatlar. Paket bir
+      vaattir. O küçük noktalardan ne ortaya çıkacak? Resim ve gerçeklik
+      arasındaki ilişkiyi düşünün.
+    follow_ups:
+      - Paket olmadan bahçe ne olurdu?
+      - Paket beklentiyi nasıl şekillendirir?
+      - Vaat ve bitki arasındaki ilişki nedir?
+  - id: nmg_rain_barrel
+    name: Yağmur Varili
+    prompt: |
+      Bir yağmur varili çatıdan gelen suyu toplar. Su ücretsiz, yumuşak,
+      klorlanmamış. Varil bir altyapıdır. Gökten varile, köke akanı
+      düşünün.
+    follow_ups:
+      - Varil olmadan bahçe ne olurdu?
+      - Yakalanan yağmur musluk suyundan nasıl farklıdır?
+      - Çatı ve kök arasındaki ilişki nedir?
+  - id: nmg_garden_glove
+    name: Bahçe Eldiveni
+    prompt: |
+      Yatakta bırakılmış bir eldiven — parmakları sertleşmiş, toprak
+      lekelenmiş. Eldiven bir protezdir. Eli uzatır, korur. İnsan ve toprak
+      arasındaki sınırı düşünün. Eldiven neye izin verir?
+    follow_ups:
+      - Eldiven olmadan bahçıvan ne hissederdi?
+      - Eldiven ilişkiyi nasıl şekillendirir?
+      - El ve toprak arasındaki ilişki nedir?
+  - id: nmg_caterpillar_chew
+    name: Tırtıl Isırığı
+    prompt: |
+      Bir tırtıl bir yaprağı yer — kenardan kenara. Isırık duyulabilir.
+      Tırtıl, yaprağı kelebeğe dönüştürüyor. Bitkinin maliyetini
+      düşünün. Ev sahipliğinden ne kazanır?
+    follow_ups:
+      - Isırık olmadan yaprak ne olurdu?
+      - Tırtıl bitkiyi nasıl şekillendirir?
+      - Yemek ve olmak arasındaki ilişki nedir?
+  - id: nmg_fertilizer_burn
+    name: Gübre Kenarı
+    prompt: |
+      Çok fazla gübre yakar — uçlar kahverengi, kökler çıtır. Bahçe bir
+      kimyadır. Daha fazlası her zaman daha iyi değildir. Besleme ve zehir
+      arasındaki kenarı düşünün. Çizgi nerede?
+    follow_ups:
+      - Daha azıyla bitki ne olurdu?
+      - Fazlalık yaprağı nasıl şekillendirir?
+      - Doz ve hasar arasındaki ilişki nedir?
+  - id: nmg_shade_cloth
+    name: Gölge Bezi
+    prompt: |
+      Fidelerin üzerine gölge bezi gerilir. Işığı yayar, ısıyı keser. Bez bir
+      aracılıktır — güneş ile bitki arasında. Bez ne ekler? Neyi çıkarır?
+    follow_ups:
+      - Bez olmadan fide ne olurdu?
+      - Gölge erken büyümeyi nasıl şekillendirir?
+      - Filtre ve ışık arasındaki ilişki nedir?
+  - id: nmg_morning_glory_dawn
+    name: Şafakta Sabah Sefası
+    prompt: |
+      Sabah sefaları şafakta açılır, öğleden sonra kapanır. Çiçeğin bir
+      programı vardır. Ritmi düşünün. Bahçe tüm gün açık kalsaydı ne olurdu?
+    follow_ups:
+      - Zamanlama tozlaşmayı nasıl şekillendirir?
+      - Açık ve tozlayıcı arasındaki ilişki nedir?
+      - Neden şafak?
+  - id: nmg_garden_path
+    name: Bahçe Yolu
+    prompt: |
+      Bahçede bir yol — basamak taşları veya malç. Yol yürüdüğümüz yerdir.
+      Geri kalanı ise yürümediğimiz yer. Çizgiyi düşünün. Yol neyi
+      korur? Neyi dışlar?
+    follow_ups:
+      - Yol olmadan bahçe ne olurdu?
+      - Yol hareketi nasıl şekillendirir?
+      - Adım ve toprak arasındaki ilişki nedir?
+  - id: nmg_cross_pollination
+    name: Çapraz Tozlaşma
+    prompt: |
+      Arılar bir bitkiden diğerine polen taşır. Yavru, her iki ebeveyne de
+      benzemeyen melezler olacaktır. Karışımı düşünün. Çaprazlama ne
+      yaratır? Ne riske atar?
+    follow_ups:
+      - Çaprazlama olmadan çeşitlilik ne olurdu?
+      - Arı geni nasıl şekillendirir?
+      - Taşıma ve birleştirme arasındaki ilişki nedir?
+  - id: nmg_herb_scent
+    name: Bitki Kokusu
+    prompt: |
+      Biberiye veya naneye sürtünün. Koku yükselir — uçucu yağlar salınır.
+      Koku savunma ve davettir. Çift rolü düşünün. Neyi kovar? Neyi
+      çeker?
+    follow_ups:
+      - Koku olmadan bitki ne olurdu?
+      - Yağ, karşılaşmayı nasıl şekillendirir?
+      - Dokunma ve salma arasındaki ilişki nedir?
+  - id: nmg_watering_can_pour
+    name: Sulama Kabı Döküşü
+    prompt: |
+      Bir kaptan su — hortumdan daha yumuşak. Döküş kasıtlıdır. Ritüeli
+      düşünün. Kap, hortumun yapmadığı neye izin verir? Döküş ve bitki
+      arasındaki ilişki nedir?
+    follow_ups:
+      - Fide neyi tercih ederdi?
+      - Döküş toprağı nasıl şekillendirir?
+      - Ritüel ve büyüme arasındaki ilişki nedir?
+  - id: nmg_bird_seed_spill
+    name: Kuş Yemi Dökülmesi
+    prompt: |
+      Bir besleyiciden tohum dökülür — ayçiçeği, darı. Yere düşer.
+      Serçeler eşeler. Sincaplar baskın yapar. Dökülme bir sahne yaratır.
+      Kimlerin faydalandığını düşünün. Kimin için tasarlanmıştı?
+    follow_ups:
+      - Dökülme olmadan yer ne olurdu?
+      - Dökülme sürüyü nasıl şekillendirir?
+      - Dökülme ve yemek yiyen arasındaki ilişki nedir?
+  - id: nmg_cutting_propagate
+    name: Çelikten Üretme
+    prompt: |
+      Bir çelik — suda veya toprakta bir sap — köklenir. Tohum yok. Bitki
+      kendini klonlar. Kısayolu düşünün. Üretme neyi atlar? Neyi
+      korur?
+    follow_ups:
+      - Çelikler olmadan bahçe ne olurdu?
+      - Klonlama çeşitliliği nasıl şekillendirir?
+      - Kesim ve devamlılık arasındaki ilişki nedir?
+  - id: nmg_leaf_miner_tunnel
+    name: Yaprak Madenci Tüneli
+    prompt: |
+      Bir yaprak madencisinin izi — kıvrımlı, soluk, yüzeyin altında. Larva,
+      katmanlar arasında yer. Yaprak hayatta kalır, yara izi kalır. İstilayı
+      düşünün. Yaprak ne kaybeder? Neyi saklar?
+    follow_ups:
+      - Tünel olmadan yaprak ne olurdu?
+      - Madenci yaprağı nasıl şekillendirir?
+      - Tünel ve doku arasındaki ilişki nedir?
+  - id: nmg_greenhouse_condensation
+    name: Sera Yoğunlaşması
+    prompt: |
+      Bir sera camında yoğunlaşma damlaları oluşur. İçerideki hava nemlidir —
+      bitkiler nefes verir. Cam bir sınırdır. Mikro iklimi düşünün. Isıyı
+      ne tutar? Nemi ne tutar?
+    follow_ups:
+      - Cam olmadan sera ne olurdu?
+      - Yoğunlaşma iç kısmı nasıl şekillendirir?
+      - Cam ve büyüme arasındaki ilişki nedir?
+  - id: nmg_terrace_level
+    name: Teras Seviyesi
+    prompt: |
+      Bir teraslı yatak bir yamaca iner. Her seviye toprak tutar, su tutar.
+      Teras erozyon kontrolü ve sahnedir. Mimarisi düşünün. Olmadan
+      yamaç ne olurdu?
+    follow_ups:
+      - Seviye neyin büyüyeceğini nasıl şekillendirir?
+      - Basamak ve stabilite arasındaki ilişki nedir?
+      - Neden teras?
+  - id: nmg_native_vs_exotic
+    name: Yerli ve Yabancı
+    prompt: |
+      Bazı bitkiler yerlidir — aitler. Diğerleri yabancıdır — tanıtılmış.
+      Yatağı düşünün. Hangisi hangisi? Fark eder mi? Yerli, yabancının
+      sunmadığı ne sunar?
+    follow_ups:
+      - Sadece yerlilerle bahçe ne olurdu?
+      - Köken ekolojiyi nasıl şekillendirir?
+      - Ait olma ve gelişme arasındaki ilişki nedir?
+  - id: nmg_garden_dusk
+    name: Alacakaranlıkta Bahçe
+    prompt: |
+      Alacakaranlıkta bahçe — ışık soluyor, güveler ortaya çıkıyor. Gündüz
+      vardiyası bitti; gece vardiyası başlıyor. Geçişi düşünün. Kim uyanır?
+      Kim uyur? Bahçe neye dönüşür?
+    follow_ups:
+      - Alacakaranlık olmadan bahçe ne olurdu?
+      - Değişim ekosistemi nasıl şekillendirir?
+      - Gün ve gece arasındaki ilişki nedir?
+  - id: nmg_stake_tie
+    name: Kazık ve Bağ
+    prompt: |
+      Bir kazığa bağlanmış bir bitki — fasulye, domates. Kazık düzeltir.
+      Onsuz bitki yayılırdı. Desteği düşünün. Bağ neyi mümkün kılar? Neyi
+      kısıtlar?
+    follow_ups:
+      - Kazık olmadan bitki ne olurdu?
+      - Bağ şekli nasıl şekillendirir?
+      - Destek ve büyüme arasındaki ilişki nedir?
+  - id: nmg_first_frost
+    name: İlk Don
+    prompt: |
+      İlk don — narin bitkiler kararır. Bahçe değişir. Bazı şeyler biter;
+      bazıları devam eder. Eşiği düşünün. Don neyi seçer? Neyi
+      esirger?
+    follow_ups:
+      - Don olmadan bahçe ne olurdu?
+      - İlk don mevsimi nasıl şekillendirir?
+      - Soğuk ve kapanış arasındaki ilişki nedir?
+  - id: nmg_garden_reflection
+    name: Bahçe Yansıması
+    prompt: |
+      Bahçeye bakın. Seçimleri yansıtır — ne ekildiği, ne yabani ot olduğu,
+      ne yalnız bırakıldığı. Bahçe bir aynadır. Bahçıvan hakkında ne
+      gösterir?
+    follow_ups:
+      - Kelimeler olmadan bahçe ne söylerdi?
+      - Seçimler bütünü nasıl şekillendirir?
+      - Bahçıvan ve büyümüş arasındaki ilişki nedir?

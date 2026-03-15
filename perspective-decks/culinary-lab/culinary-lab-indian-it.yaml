@@ -1,0 +1,392 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Laboratorio Culinario — Indian (Italian)
+
+id: culinary_lab_indian
+name: Laboratorio Culinario — Indian
+description: 50 carte per cambiare il tuo modo di vivere il cibo indiano, dalla chimica delle spezie e del calore all'archeologia degli ingredienti e alla coreografia della tavola condivisa.
+domain: culinary_lab
+cards:
+  - id: ind_tadka_crackle
+    name: Il Crepitio del Tadka
+    prompt: |
+      Tadka — soffritto — è la nota iniziale. Olio caldo incontra semi di senape, cumino, foglie di curry. Ascolta. Il crepitio è chimica in tempo reale. Cosa cambia quando lo senti prima di assaggiarlo?
+    follow_ups:
+      - Come il suono modella l'attesa?
+      - Cosa perderebbe il piatto senza il crepitio?
+      - Qual è il rapporto tra suono e sapore?
+  - id: ind_spice_route
+    name: Via delle Spezie
+    prompt: |
+      Il cardamomo proveniva dal Kerala. Lo zafferano dal Kashmir. Il pepe nero un tempo valeva il suo peso in oro. Traccia una spezia sul tuo piatto fino alla sua origine. Quale viaggio ha fatto per raggiungerti?
+    follow_ups:
+      - Come conoscere la rotta cambia il morso?
+      - Quali altre spezie hanno percorso lo stesso cammino?
+      - Qual è il rapporto tra commercio e gusto?
+  - id: ind_thali_geometry
+    name: Geometria del Thali
+    prompt: |
+      Un thali è una tela: ciotole disposte in cerchio, ognuna con un ruolo. Studia la composizione. Dove cade prima lo sguardo? Qual è lo spazio negativo?
+    follow_ups:
+      - Cosa succederebbe se mancasse una ciotola?
+      - Come l'arrangiamento modella il pasto?
+      - Qual è il rapporto tra geometria e rituale?
+  - id: ind_hand_as_tool
+    name: La Mano come Strumento
+    prompt: |
+      Roti strappato, mescolato con sabzi, portato alla bocca. La mano è utensile e sensore. Nota la coreografia. Cosa aggiunge il tatto che forchetta e coltello non possono?
+    follow_ups:
+      - Come mangiare con le mani cambia il ritmo?
+      - Cosa si perderebbe con le posate?
+      - Qual è il rapporto tra tatto e temperatura?
+  - id: ind_heat_layers
+    name: Strati di Calore
+    prompt: |
+      Il calore indiano è stratificato: il bruciore del peperoncino, il tepore del pepe nero, il fuoco dello zenzero. Dai un morso e mappa dove arriva ogni calore. Lingua, gola, stomaco. Come si costruiscono?
+    follow_ups:
+      - Come sarebbe il piatto con un solo tipo di calore?
+      - Come la stratificazione crea complessità?
+      - Qual è il rapporto tra calore e tempo?
+  - id: ind_yogurt_intervention
+    name: Intervento di Yogurt
+    prompt: |
+      Raita, dahi, lassi — lo yogurt raffredda, taglia, equilibra. Nota il momento in cui lo aggiungi. L'acido incontra il grasso, il freddo incontra il caldo. L'intervento è chimico. Cosa interrompe?
+    follow_ups:
+      - Come sarebbe il pasto senza yogurt?
+      - Come il contrasto crea sollievo?
+      - Qual è il rapporto tra intervento ed equilibrio?
+  - id: ind_betel_after
+    name: Betel Dopo Pasto
+    prompt: |
+      Paan — foglia di betel — chiude il pasto in alcune tradizioni. Non è un dolce. È una chiusura. Il palato cambia di nuovo. Cosa dice la fine dell'insieme?
+    follow_ups:
+      - Come il paan segna la transizione?
+      - Cosa mancherebbe al pasto senza di esso?
+      - Qual è il rapporto tra fine e memoria?
+  - id: ind_street_chaos
+    name: Caos di Strada
+    prompt: |
+      Un venditore di chaat lavora velocemente: bhel, papdi, chutney stratificati in secondi. Osserva la performance. La bancarella è un teatro. Qual è la sceneggiatura? Chi è il pubblico?
+    follow_ups:
+      - Come sarebbe il piatto senza la performance?
+      - Come la velocità modella l'esperienza?
+      - Qual è il rapporto tra caos e maestria?
+  - id: ind_tandoor_breathe
+    name: Il Respiro del Tandoor
+    prompt: |
+      Un tandoor respira: fiamme, fumo, argilla. Il naan viene schiaffeggiato al muro, tolto quando è abbrustolito. Stai vicino a uno. Il calore, l'odore. Qual è il rapporto tra fuoco e sapore?
+    follow_ups:
+      - Come sarebbe il naan senza il tandoor?
+      - Come l'argilla modella il cuoco?
+      - Qual è il rapporto tra respiro e pane?
+  - id: ind_turmeric_stain
+    name: Macchia di Curcuma
+    prompt: |
+      La curcuma macchia: dita, stoffa, plastica. Il colore persiste. Nota cosa segna. La macchia è archeologia. Quanto ha viaggiato questo pasto prima di raggiungerti?
+    follow_ups:
+      - Come sarebbe il piatto senza il colore?
+      - Come la macchia segna il lavoro?
+      - Qual è il rapporto tra pigmento e conservazione?
+  - id: ind_rice_architecture
+    name: Architettura del Riso
+    prompt: |
+      Il Biryani è costruito: strato di riso, strato di carne, zafferano, cipolla fritta. La struttura regge. Scavala. Come l'architettura influenza ogni morso?
+    follow_ups:
+      - Cosa succederebbe se gli strati si mescolassero troppo presto?
+      - Come la struttura crea sorpresa?
+      - Qual è il rapporto tra costruzione e pasto?
+  - id: ind_chutney_spectrum
+    name: Spettro di Chutney
+    prompt: |
+      Menta, tamarindo, cocco, pomodoro — i chutney si dispongono come una tavolozza. Ognuno cambia il morso. Assaggia un piatto con tre chutney. Come la stessa base diventa tre storie diverse?
+    follow_ups:
+      - Come sarebbe il pasto con un solo chutney?
+      - Come la scelta modella l'agenzia?
+      - Qual è il rapporto tra spettro e preferenza?
+  - id: ind_steam_rising
+    name: Vapore Ascendente
+    prompt: |
+      Idli, dosa, puri — il vapore sale quando si solleva il coperchio. Osservalo. Il vapore porta aroma prima del sapore. Cosa arriva prima? Naso o bocca?
+    follow_ups:
+      - Come il vapore modella l'attesa?
+      - Cosa si perderebbe senza il sollevamento?
+      - Qual è il rapporto tra vapore e sapore?
+  - id: ind_silver_versus_steel
+    name: Argento contro Acciaio
+    prompt: |
+      Alcune tavole usano thali d'acciaio, altre d'argento, altre foglie di banana. Nota il recipiente. Come la superficie sotto il cibo cambia l'esperienza? Peso, suono, tradizione.
+    follow_ups:
+      - Come sarebbe il pasto su diverse superfici?
+      - Come il recipiente modella la cerimonia?
+      - Qual è il rapporto tra materiale e significato?
+  - id: ind_cumin_fragrance
+    name: Fragranza di Cumino
+    prompt: |
+      I semi di cumino tostati rilasciano fragranza prima del sapore. Annusa un piatto prima di assaggiarlo. Il cumino viaggia per la stanza. Come l'aroma prepara il palato?
+    follow_ups:
+      - Come sarebbe il piatto senza l'odore?
+      - Come la fragranza segna la presenza del cuoco?
+      - Qual è il rapporto tra naso e memoria?
+  - id: ind_shared_central
+    name: Condiviso al Centro
+    prompt: |
+      I piatti stanno al centro. Tutti attingono. Non c'è un "tuo piatto" nello stesso modo. Osserva la coreografia del raggiungere, passare, prendere. Quali sono le regole non scritte?
+    follow_ups:
+      - Come sarebbe il pasto con porzioni individuali?
+      - Come la condivisione crea connessione?
+      - Qual è il rapporto tra centrale e comunitario?
+  - id: ind_ghee_gloss
+    name: Lucentezza del Ghee
+    prompt: |
+      Il ghee si accumula, brilla, ricopre. È grasso come sapore e come finitura. Nota dove si raccoglie sul piatto. Come quella lucentezza cambia consistenza e temperatura?
+    follow_ups:
+      - Come sarebbe il piatto con olio invece?
+      - Come il ghee porta altri sapori?
+      - Qual è il rapporto tra lucentezza e ricchezza?
+  - id: ind_papad_crunch
+    name: Croccantezza del Papad
+    prompt: |
+      Papad — croccante, sottile, scricchiolante. È consistenza come punteggiatura. Spezzane uno. Ascolta. Il crunch è la sezione ritmica del pasto. Come suonerebbe il silenzio senza di esso?
+    follow_ups:
+      - Come il crunch crea contrasto?
+      - Cosa mancherebbe al pasto senza il papad?
+      - Qual è il rapporto tra suono e soddisfazione?
+  - id: ind_sambar_depth
+    name: Profondità del Sambar
+    prompt: |
+      Il Sambar è stratificato: lenticchie, tamarindo, verdure, spezie. È sobbollito. Assaggia per gli strati. Quanti riesci a separare? Qual è l'archeologia di quella ciotola?
+    follow_ups:
+      - Come sarebbe il sambar con meno strati?
+      - Come il tempo costruisce la profondità?
+      - Qual è il rapporto tra sobbollire e storia?
+  - id: ind_pickle_punch
+    name: Pugno del Pickle
+    prompt: |
+      Achar — sottaceto — è il colpo di scena. Un piccolo morso cambia tutto. Dolce, aspro, piccante, fermentato. Nota quando entra. Cosa interrompe?
+    follow_ups:
+      - Come sarebbe il pasto senza il pickle?
+      - Come il pugno crea sorpresa?
+      - Qual è il rapporto tra colpo di scena e memoria?
+  - id: ind_bay_leaf_hunt
+    name: Caccia alla Foglia di Alloro
+    prompt: |
+      Le foglie di alloro si nascondono nel pulao, biryani, curry. Trovane una. Non la mangi — è archeologia. È venuta dal Kerala o dal Kashmir. Cosa ha aggiunto prima di essere rimossa?
+    follow_ups:
+      - Come l'incommestibile modella il commestibile?
+      - Come sarebbe il piatto senza la foglia?
+      - Qual è il rapporto tra nascosto e presente?
+  - id: ind_dosa_edge
+    name: Bordo del Dosa
+    prompt: |
+      Un dosa ha un bordo: croccante, simile a pizzo, dorato. Il centro è morbido. Il contrasto è architettonico. Dove mordi per primo? Come il bordo incornicia l'insieme?
+    follow_ups:
+      - Come sarebbe il dosa se fosse uniformemente croccante?
+      - Come il bordo crea interesse?
+      - Qual è il rapporto tra confine e centro?
+  - id: ind_saffron_thread
+    name: Filo di Zafferano
+    prompt: |
+      Lo zafferano — pochi fili — colora e profuma un intero piatto. Traccia un filo. Da dove proveniva? Kashmir, Iran, Spagna? La spezia più costosa. Cosa aggiunge la scarsità?
+    follow_ups:
+      - Come lo zafferano modella il lusso?
+      - Come sarebbe il piatto con curcuma invece?
+      - Qual è il rapporto tra filo e territorio?
+  - id: ind_chaat_texture
+    name: Texture del Chaat
+    prompt: |
+      Il Chaat stratifica la texture — croccante, morbida, croccante, cremosa — in un solo morso. Scomponilo. Quante texture? Come lavorano insieme? Il morso è una collaborazione.
+    follow_ups:
+      - Come sarebbe il chaat con una sola texture?
+      - Come la stratificazione crea gioco?
+      - Qual è il rapporto tra texture e piacere?
+  - id: ind_mustard_seed_pop
+    name: Scoppio dei Semi di Senape
+    prompt: |
+      I semi di senape scoppiano nell'olio — soffritto bengalese, sud indiano. Lo scoppio è chimico. I semi rilasciano composti. Annusalo. Cosa cambia quando il calore li attiva?
+    follow_ups:
+      - Come lo scoppio segna il tempismo del cuoco?
+      - Come sarebbe il piatto senza di esso?
+      - Qual è il rapporto tra scoppio e potenza?
+  - id: ind_dal_surface
+    name: Superficie del Dal
+    prompt: |
+      Il Dal ha una superficie — a volte una pellicola, a volte tadka che galleggia. Non mescolare ancora. Guardala. Cosa rivela la superficie di ciò che c'è sotto?
+    follow_ups:
+      - Come la superficie invita o resiste?
+      - Cosa succederebbe se non mescolassi mai?
+      - Qual è il rapporto tra superficie e profondità?
+  - id: ind_banana_leaf_plate
+    name: Piatto di Foglia di Banana
+    prompt: |
+      Una foglia di banana è un piatto — organico, usa e getta, tradizionale. La foglia ha consistenza, odore. Il cibo ci si posa sopra diversamente. Come la foglia cambia il pasto?
+    follow_ups:
+      - Come sarebbe il pasto su ceramica?
+      - Come la foglia modella il rituale?
+      - Qual è il rapporto tra foglia e luogo?
+  - id: ind_fenugreek_haunt
+    name: Insistenza del Fieno Greco
+    prompt: |
+      Il fieno greco — methi — ha un profumo che persiste. Amaro, vicino all'acero. Infesta la cucina, i vestiti. Nota dove si attacca. Cosa aggiunge la persistenza?
+    follow_ups:
+      - Come il fieno greco segna il territorio?
+      - Come sarebbe il piatto senza la sua persistenza?
+      - Qual è il rapporto tra infestare e memoria?
+  - id: ind_pani_puri_moment
+    name: Momento del Pani Puri
+    prompt: |
+      Il Pani puri è una storia in un solo boccone — guscio croccante, patate, ceci, acqua di tamarindo. Deve essere mangiato intero, immediatamente. Il momento è irripetibile. Cosa lo rende urgente?
+    follow_ups:
+      - Cosa succederebbe se aspettassi?
+      - Come l'urgenza crea piacere?
+      - Qual è il rapporto tra momento e memoria?
+  - id: ind_serving_order
+    name: Ordine di Servizio
+    prompt: |
+      In alcuni contesti, c'è un ordine: prima gli anziani, certi piatti prima di altri. Osserva. Chi serve? Chi aspetta? La coreografia codifica rispetto. Quali sono le regole?
+    follow_ups:
+      - Come sarebbe il pasto senza l'ordine?
+      - Come la sequenza crea significato?
+      - Qual è il rapporto tra ordine e gerarchia?
+  - id: ind_cardamom_pod
+    name: Baccello di Cardamomo
+    prompt: |
+      Un intero baccello di cardamomo si nasconde nel pulao o nel chai. Potresti morderlo, potresti metterlo da parte. Il baccello è archeologia — Verde dal Kerala, nero dalle colline. Cosa ha contribuito?
+    follow_ups:
+      - Come l'intero baccello differisce da quello macinato?
+      - Come sarebbe il piatto senza di esso?
+      - Qual è il rapporto tra baccello e luogo?
+  - id: ind_kitchen_sounds
+    name: Suoni della Cucina
+    prompt: |
+      Una cucina indiana ha un paesaggio sonoro: macinazione, frittura, sibilo della pentola a pressione. Chiudi gli occhi in una. Mappa i suoni. Cosa è costante? Qual è il ritmo?
+    follow_ups:
+      - Come sarebbe il pasto senza quei suoni?
+      - Come il suono modella l'attesa?
+      - Qual è il rapporto tra cucina e tavola?
+  - id: ind_second_helping
+    name: Il Secondo Piatto
+    prompt: |
+      "Prendi ancora" è un rituale. L'insistenza, il rifiuto, l'accettazione finale. Guarda la danza. Cosa significa il secondo piatto oltre la fame?
+    follow_ups:
+      - Come sarebbe il pasto senza l'offerta?
+      - Come l'insistenza codifica la cura?
+      - Qual è il rapporto tra "di più" e "abbastanza"?
+  - id: ind_coriander_finish
+    name: Rifinitura al Coriandolo
+    prompt: |
+      Coriandolo fresco — cilantro — guarnisce molti piatti. È l'ultima cosa aggiunta. La finitura. Nota come il verde cambia ciò che è venuto prima. Brillante, erbaceo, divisivo.
+    follow_ups:
+      - Come sarebbe il piatto senza l'erba aromatica?
+      - Come la finitura incornicia l'insieme?
+      - Qual è il rapporto tra l'ultimo e il primo?
+  - id: ind_lassi_cut
+    name: Taglio del Lassi
+    prompt: |
+      Il Lassi taglia il piccante — fresco, acidulo, denso. È sollievo. Nota il momento in cui lo bevi. Cosa interrompe? Cosa resetta?
+    follow_ups:
+      - Come sarebbe il pasto senza il lassi?
+      - Come il taglio prolunga la resistenza?
+      - Qual è il rapporto tra sollievo e ritmo?
+  - id: ind_roti_stretch
+    name: Allungamento del Roti
+    prompt: |
+      Il Roti viene allungato a mano — rotondo, sottile, bollito sulla fiamma. Guarda come viene fatto. L'allungamento è abilità. Come sarebbe il pane senza quel movimento?
+    follow_ups:
+      - Come l'allungamento influisce sulla consistenza?
+      - Cosa perderebbe il roti fatto a macchina?
+      - Qual è il rapporto tra movimento e risultato?
+  - id: ind_jaljeera_pause
+    name: Pausa Jaljeera
+    prompt: |
+      Jaljeera — cumino, menta, tamarindo — è un digestivo, una pausa. Spesso arriva a metà pasto o dopo. Nota il cambiamento. Cosa permette la pausa?
+    follow_ups:
+      - Come sarebbe il pasto senza la pausa?
+      - Come il jaljeera segna la transizione?
+      - Qual è il rapporto tra pausa e digestione?
+  - id: ind_color_conversation
+    name: Conversazione di Colori
+    prompt: |
+      I piatti indiani parlano a colori — dal giallo, sabzi verde, riso bianco, chutney rosso. Studia la tavolozza. Qual è la conversazione? Cosa striderebbe? Cosa si armonizzerebbe?
+    follow_ups:
+      - Come il colore modella l'appetito?
+      - Come sarebbe il piatto in monocromo?
+      - Qual è il rapporto tra tavolozza e regione?
+  - id: ind_clove_buried
+    name: Chiodo di Garofano Nascosto
+    prompt: |
+      I chiodi di garofano si nascondono nel biryani, nel garam masala, nel chai. Sono pungenti, caldi. Trovane uno. Potresti morderlo. Il chiodo di garofano è una reliquia del commercio delle spezie. Quali territori connette?
+    follow_ups:
+      - Come l'intero chiodo di garofano differisce da quello macinato?
+      - Come sarebbe il piatto senza i chiodi di garofano?
+      - Qual è il rapporto tra chiodo di garofano e colonialismo?
+  - id: ind_family_style
+    name: Stile Familiare
+    prompt: |
+      Il cibo arriva in ciotole per la tavola. Tutti ne mangiano. Il pasto è un progetto condiviso. Osserva chi prende cosa, chi aspetta, chi serve. Qual è l'economia della tavola?
+    follow_ups:
+      - Come sarebbe il pasto con piatti individuali?
+      - Come la condivisione codifica i valori?
+      - Qual è il rapporto tra stile e famiglia?
+  - id: ind_asafoetida_whiff
+    name: Sentore di Assafetida
+    prompt: |
+      Hing — assafetida — ha un odore forte da cruda, magico da cotta. Un pizzico trasforma dal, sabzi. È il segreto. Nota quando lo percepisci. Cosa aggiunge il sentore?
+    follow_ups:
+      - Come l'hing segna la mano del cuoco?
+      - Come sarebbe il piatto senza di esso?
+      - Qual è il rapporto tra sentore e trasformazione?
+  - id: ind_gulab_jamun_weight
+    name: Peso del Gulab Jamun
+    prompt: |
+      Il Gulab jamun è denso — solido di latte fritto, immerso nello sciroppo. Sentine il peso sulla lingua. Dolce, pesante, finale. Come si chiude il pasto con il dessert?
+    follow_ups:
+      - Come finirebbe il pasto senza di esso?
+      - Come il peso crea chiusura?
+      - Qual è il rapporto tra dessert e sazietà?
+  - id: ind_temple_prasad
+    name: Prasad del Tempio
+    prompt: |
+      Il Prasad — cibo benedetto — viene donato nei templi. Potrebbe essere semplice: laddu, riso. Ma porta un altro significato. Mangialo con quella consapevolezza. Cosa cambia quando il cibo viene donato?
+    follow_ups:
+      - Come il prasad differisce dal cibo del ristorante?
+      - Cosa aggiunge la benedizione?
+      - Qual è il rapporto tra dono e devozione?
+  - id: ind_bone_suck
+    name: Risucchiare l'Osso
+    prompt: |
+      Alcuni piatti indiani — nihari, paya — invitano a succhiare l'osso. Non è educato altrove. Qui è atteso. Il midollo, il tessuto connettivo. Cosa estrae il succhiare?
+    follow_ups:
+      - Come l'atto supera la decenza?
+      - Cosa perderebbe il piatto senza l'osso?
+      - Qual è il rapporto tra succhiare e arrendersi?
+  - id: ind_pressure_cooker_song
+    name: Canzone della Pentola a Pressione
+    prompt: |
+      La pentola a pressione fischia — uno, due, tre. È la colonna sonora di dal e riso. Quel suono significa cotto. Com'è la cucina senza di essa? Come la canzone modella il tempo?
+    follow_ups:
+      - Come il fischio segna la cottura?
+      - Cosa perderemmo con una pentola istantanea?
+      - Qual è il rapporto tra suono e sicurezza?
+  - id: ind_curry_leaf_sizzle
+    name: Sfrigolio delle Foglie di Curry
+    prompt: |
+      Le foglie di curry colpiscono l'olio caldo — soffritto sud indiano. Scricchiolano, rilasciano aroma. Non le mangi; servono per il sapore. Ma sono presenti. Cosa aggiunge la loro presenza?
+    follow_ups:
+      - Come sarebbe il piatto senza le foglie di curry?
+      - Come l'incommestibile porta sapore?
+      - Qual è il rapporto tra foglia e memoria?
+  - id: ind_mint_chutney_bright
+    name: Verde Brillante del Chutney alla Menta
+    prompt: |
+      Il chutney alla menta è fresco — un frullato di erbe, peperoncino verde, lime. Taglia la ricchezza, illumina il piatto. Nota il colore rispetto al resto del thali. Cosa fa il verde alla composizione?
+    follow_ups:
+      - Come sarebbe il pasto senza il chutney?
+      - Come la freschezza interrompe la narrazione?
+      - Qual è il rapporto tra brillantezza ed equilibrio?
+  - id: ind_wedding_feast
+    name: Banchetto di Matrimonio
+    prompt: |
+      Il cibo dei matrimoni indiani è su larga scala — centinaia, migliaia di persone sfamate. Il buffet, la varietà, l'eccesso. Nota la coreografia. Come la scala cambia il pasto? Qual è il rapporto tra celebrazione e consumo?
+    follow_ups:
+      - Come sarebbero le nozze senza il banchetto?
+      - Come l'abbondanza codifica l'ospitalità?
+      - Qual è il rapporto tra banchetto e status?

@@ -1,0 +1,468 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Miejska Dżungla — Nowy Jork (Polish)
+
+id: urban_jungle_new_york
+name: Miejska Dżungla — Nowy Jork
+description: 50 kart, które zmienią Twój sposób postrzegania Nowego Jorku — od skali i światła po warstwy historii i rytmy życia ulicznego.
+domain: urban_jungle
+cards:
+  - id: ny_vertical_city
+    name: Pionowe Miasto
+    prompt: |
+      Spójrz w górę. Nowy Jork jest zbudowany wertykalnie — wieże walczą o niebo.
+      Prześledź jeden budynek od chodnika do szczytu. Jak wysokość zmienia to,
+      co zauważasz? Gdzie zatrzymuje się Twój wzrok?
+    follow_ups:
+      - Jak wyglądałaby ulica z góry?
+      - Jak skala zniekształca się na różnych wysokościach?
+      - Co się ukrywa, gdy patrzysz tylko w górę?
+  - id: ny_grid_navigation
+    name: Nawigacja po Siatce
+    prompt: |
+      Siatka Manhattanu jest bezlitosna. Przejdź jeden blok i zauważ, jak system
+      numeracji kształtuje ruch, orientację i niespodzianki. Co się dzieje, gdy
+      łamiesz siatkę?
+    follow_ups:
+      - Gdzie siatka wydaje się opresyjna? Gdzie wyzwalająca?
+      - Jakie byłoby miasto bez niej?
+      - Jak ukośne ulice zmieniają rytm?
+  - id: ny_subway_soundscape
+    name: Krajobraz Dźwiękowy Metra
+    prompt: |
+      Zamknij oczy na stacji. Zgrzyt, hamulce, ogłoszenia, muzyk uliczny.
+      Zmapuj krajobraz dźwiękowy. Jak brzmi Nowy Jork, gdy go nie widzisz?
+    follow_ups:
+      - Które dźwięki są stałe? Które przypadkowe?
+      - Co oznaczałaby cisza tutaj?
+      - Jak dźwięk wyznacza czas pod ziemią?
+  - id: ny_fire_escape
+    name: Drabina Pożarowa
+    prompt: |
+      Drabiny pożarowe są egzoszkieletem miasta — funkcjonalne, rytmiczne, osobiste.
+      Znajdź blok, gdzie się powtarzają. Co ujawniają o budynkach za nimi? Kto
+      mógłby tam siedzieć nocą?
+    follow_ups:
+      - Co byś stamtąd zobaczył?
+      - Jak zmieniają charakter ulicy?
+      - Czego straciłby blok bez nich?
+  - id: ny_street_number
+    name: Numer Ulicy
+    prompt: |
+      Wybierz numer — numer budynku, piętro, trasa autobusu. Prześledź go przez
+      miasto. Jaki wzór się pojawia? Co oznacza ten numer tutaj?
+    follow_ups:
+      - Gdzie prowadzi Cię ten numer?
+      - Co ujawniłby inny numer?
+      - Jak liczby porządkują doświadczenie miejskie?
+  - id: ny_steam_rising
+    name: Wydobywająca się Para
+    prompt: |
+      Para z kanałów to oddech Nowego Jorku. Znajdź miejsce, gdzie się wydobywa i
+      obserwuj, jak się porusza, rozprasza, łapie światło. Co jest pod spodem? Co
+      wydechach miasto?
+    follow_ups:
+      - Co znalazłbyś pod kratką?
+      - Jak pogoda zmienia parę?
+      - Jakie inne ukryte systemy tam wentylują?
+  - id: ny_storefront_typography
+    name: Typografia Witryn Sklepów
+    prompt: |
+      Czytaj znaki. Biedronki, delikatesy, pralnie — każdy ma swój język wizualny.
+      Zbierz pięć krojów pisma z jednego bloku. Co mówią o tych, którzy tu mieszkają?
+    follow_ups:
+      - Które znaki wydają się stare? Które nowe?
+      - Jak brzmiałby blok, gdyby znaki mogły mówić?
+      - Jak typografia wyznacza zmiany?
+  - id: ny_waterfront_edge
+    name: Krawędź Nadbrzeża
+    prompt: |
+      Idź nad wodę. Miasto odwraca się plecami do rzeki, portu, zatoki. Stań tam,
+      gdzie ląd spotyka wodę. Co jest zbudowane z myślą o widoku? Co jest
+      zbudowane, by go ignorować?
+    follow_ups:
+      - Kto ma widok na wodę?
+      - Jak została zagarnięta krawędź?
+      - Jakie byłoby miasto, gdyby zwrócone było ku wodzie?
+  - id: ny_parks_as_rooms
+    name: Parki jako Pokoje
+    prompt: |
+      Central Park, Prospect Park, kieszonkowy plac — każdy jest pokojem w
+      mieście. Wejdź do jednego i zauważ jego ściany, sufit, meble. Jak natura jest
+      tutaj zaprojektowana?
+    follow_ups:
+      - Jaki jest cel pokoju?
+      - Kto zaprojektował linie widoku?
+      - Co by się stało, gdyby ściany zniknęły?
+  - id: ny_delivery_rhythm
+    name: Rytm Dostaw
+    prompt: |
+      Obserwuj dostawy — ciężarówki, wózki, rowery. Prześledź trasę jednej
+      przesyłki od ciężarówki do drzwi. Jak ruch komercyjny przepływa przez
+      ulicę? Jaki jest rytm dostawy?
+    follow_ups:
+      - Jak wyglądałby blok bez dostaw?
+      - Jak różne towary poruszają się inaczej?
+      - Kto jest niewidzialny w tym przepływie?
+  - id: ny_brownstone_steps
+    name: Stopnie Kamienic z Piaskowca
+    prompt: |
+      Stopnie kamienic z piaskowca to sceny. Usiądź na jednym i obserwuj ulicę.
+      Kto się zatrzymuje? Kto przechodzi? Co byś powiedział stąd?
+    follow_ups:
+      - Jaki jest widok z górnego stopnia?
+      - Jak stopnie tworzą terytorium?
+      - Czego straciłby blok bez nich?
+  - id: ny_bridge_as_threshold
+    name: Most jako Próg
+    prompt: |
+      Przejdź przez most pieszo. Poczuj przejście — z jednej dzielnicy do drugiej.
+      Most nie jest ani tutaj, ani tam. Co się zmienia, gdy docierasz na drugą stronę?
+    follow_ups:
+      - Co zostawiasz za sobą?
+      - Jak most kształtuje podróż?
+      - Jakie byłoby miasto bez mostów?
+  - id: ny_awning_shade
+    name: Cień Markizy
+    prompt: |
+      Markizy tworzą mikroklimaty. Stań pod jedną. Zauważ zmianę światła,
+      dźwięku, temperatury. Jak małe konstrukcje zmieniają ulicę?
+    follow_ups:
+      - Jak czułby się blok bez markiz?
+      - Jak zaznaczają własność?
+      - Jakie inne małe schronienia istnieją tutaj?
+  - id: ny_graffiti_layer
+    name: Warstwa Graffiti
+    prompt: |
+      Spójrz na ściany. Znaki, murale, plakaty — każdy to warstwa czasu i
+      pretensji. Odczytaj palimpsest. Kto znaczył tę powierzchnię?
+    follow_ups:
+      - Jaki jest najstarszy znak, jaki możesz znaleźć?
+      - Jak warstwy opowiadają historię?
+      - Co powiedziałaby ściana, gdyby mogła mówić?
+  - id: ny_rooftop_skyline
+    name: Panorama z Dachów
+    prompt: |
+      Wyobraź sobie widok z dachu. Zbiorniki na wodę, anteny, sąsiednie dachy.
+      Miasto widziane z góry to inne miasto. Co byś zobaczył?
+    follow_ups:
+      - Jak wysokość zmienia to, co ważne?
+      - Co jest ukryte przed ulicą?
+      - Kto ma dostęp do tego widoku?
+  - id: ny_crosswalk_wait
+    name: Oczekiwanie na Przejściu
+    prompt: |
+      Poczekaj na przejściu dla pieszych. Nie przechodź, gdy zmieni się światło.
+      Poczekaj na kolejny cykl. Co zauważasz w pauzie? Kto jeszcze czeka?
+    follow_ups:
+      - Jak oczekiwanie zmienia percepcję?
+      - Jakie rytmy rządzą skrzyżowaniem?
+      - Co by się stało, gdybyś nigdy nie przeszedł?
+  - id: ny_diner_booth
+    name: Kabina w Restauracji
+    prompt: |
+      Usiądź w kabinie przy oknie w restauracji. Ulica staje się filmem. Obserwuj
+      przechodniów, ruch, światło. Jaka historia jest odtwarzana?
+    follow_ups:
+      - Kim są główni bohaterowie?
+      - Jak ramka zmienia to, co widzisz?
+      - Czego byś przegapił bez okna?
+  - id: ny_scaffolding_skin
+    name: Skóra Rusztowań
+    prompt: |
+      Rusztowania owijają budynki jak bandaże. Przejdź pod nimi. Zauważ dźwięk,
+      światło, tymczasowy sufit. Co jest naprawiane? Co jest ukrywane?
+    follow_ups:
+      - Jak długo tam są?
+      - Co powiedziałby budynek bez nich?
+      - Jaka jest relacja między naprawą a ukrywaniem?
+  - id: ny_newsstand_archive
+    name: Archiwum Punktu Sprzedaży Gazet
+    prompt: |
+      Punkt sprzedaży gazet to wycinek uwagi — magazyny, gazety, słodycze. Co
+      jest wystawione? Kto się zatrzymuje? Jakie byłoby to róg bez niego?
+    follow_ups:
+      - Jaki jest bestseller?
+      - Jak punkt kształtuje blok?
+      - Co byś tam umieścił?
+  - id: ny_construction_site
+    name: Plac Budowy
+    prompt: |
+      Obserwuj plac budowy. Dźwigi, bariery, robotnicy. Miasto jest zawsze w
+      trakcie tworzenia. Co jest budowane? Co jest zastępowane?
+    follow_ups:
+      - Kto tego użyje, gdy skończą?
+      - Co było tutaj wcześniej?
+      - Jak budowa zmienia sąsiedztwo?
+  - id: ny_light_well
+    name: Świetlik
+    prompt: |
+      Szukaj świetlików — wąskich przerw między budynkami, gdzie wpada światło.
+      Kto dostaje to światło? Co tam rośnie?
+    follow_ups:
+      - Jak by to było mieszkać w tym szybie?
+      - Jak światło definiuje wartość?
+      - Co jest ukryte w cieniach?
+  - id: ny_bodega_cat
+    name: Kot w Sklepie Spożywczym
+    prompt: |
+      Znajdź sklep spożywczy z kotem. Kot jest zarówno w ramach zasad, jak i
+      poza nimi. Co jeszcze w mieście działa w ten sposób?
+    follow_ups:
+      - Co widzi kot?
+      - Jak nieformalne zasady kształtują przestrzeń?
+      - Co byłoby ze sklepu bez kota?
+  - id: ny_sidewalk_crack
+    name: Pęknięcie w Chodniku
+    prompt: |
+      Spójrz w dół. Prześledź pęknięcie w chodniku. Dokąd prowadzi? Co w nim
+      rośnie? Miasto jest pełne takich pęknięć.
+    follow_ups:
+      - Co powiedziałby chodnik o czasie?
+      - Jak małe pęknięcia mają znaczenie?
+      - Co się przebija?
+  - id: ny_air_conditioner
+    name: Klimatyzator
+    prompt: |
+      Policz klimatyzatory na jednym budynku. Są pasożytami, protezami,
+      koniecznością. Jak zmieniają fasadę? Co kapie z nich?
+    follow_ups:
+      - Jak wyglądałby budynek bez nich?
+      - Jak klimat kształtuje architekturę?
+      - Kto decyduje, gdzie się znajdują?
+  - id: ny_express_local
+    name: Ekspres / Lokalny
+    prompt: |
+      Jedź metrem. Zauważ różnicę między ekspresowym a lokalnym. Szybkość zmienia
+      to, co widzisz. Pomijaj przystanki i poczuj, jak miasto się kompresuje.
+    follow_ups:
+      - Co przegapiasz, gdy nie zatrzymujesz się?
+      - Jak szybkość kształtuje doświadczenie?
+      - Jakie byłoby miasto, gdyby wszystko było lokalne?
+  - id: ny_water_tower
+    name: Zbiornik na Wodę
+    prompt: |
+      Zbiorniki na wodę wieńczą starsze budynki. Są drewniane, beczkowate,
+      wszędobylskie. Znajdź pięć. Co mówią o panoramie miasta?
+    follow_ups:
+      - Dlaczego wciąż tu są?
+      - Jak wyglądałby dach bez nich?
+      - Jak zaznaczają wiek?
+  - id: ny_awning_stripes
+    name: Pasy Markiz
+    prompt: |
+      Pasiate markizy to nowojorska mowa uliczna. Znajdź blok, gdzie się
+      powtarzają. Jak pasy tworzą tożsamość? Co zrobiłyby jednolite kolory?
+    follow_ups:
+      - Dlaczego pasy, a nie jednolitość?
+      - Jak markizy jednoczą blok?
+      - Jaka jest historia tego wzoru?
+  - id: ny_curb_cut
+    name: Zjazd z Krawężnika
+    prompt: |
+      Zauważ zjazdy z krawężników — rampy na rogach. Są dla wózków, taczek,
+      wózków dziecięcych. Jak zmieniają ulicę? Kogo obejmują?
+    follow_ups:
+      - Jak wyglądałby blok bez nich?
+      - Jak dostęp kształtuje projekt?
+      - Jakie inne niewidzialne udogodnienia istnieją?
+  - id: ny_street_tree
+    name: Drzewo Uliczne
+    prompt: |
+      Wybierz jedno drzewo uliczne. Ile ma miejsca? Co jest w jego dołku?
+      Kto je podlewa? Drzewo jest gościem. Jak jest traktowane?
+    follow_ups:
+      - Jak wyglądałby blok bez drzew?
+      - Jak drzewa zaznaczają troskę?
+      - Co rośnie w cieniu drzewa?
+  - id: ny_loading_zone
+    name: Strefa Załadunku
+    prompt: |
+      Strefy załadunku to tymczasowe terytoria. Obserwuj jedną przez dziesięć
+      minut. Kto jej używa? Jak długo zostają? Jaki jest rytm zajmowania?
+    follow_ups:
+      - Co by się stało bez stref załadunku?
+      - Jak nagina się zasady?
+      - Jaka jest relacja między parkowaniem a handlem?
+  - id: ny_vent_grille
+    name: Kratka Wentylacyjna
+    prompt: |
+      Kratki w chodniku wentylują metro. Stań na jednej. Poczuj prąd powietrza.
+      Słuchaj. Miasto oddycha przez te otwory.
+    follow_ups:
+      - Co wznosi się z dołu?
+      - Jak kratka łączy światy?
+      - Jak wyglądałby chodnik bez niej?
+  - id: ny_basement_stairs
+    name: Schody do Piwnicy
+    prompt: |
+      Znajdź schody prowadzące w dół — do piwnicy, metra, tajnego klubu. Miasto ma
+      wiele poziomów. Co jest pod chodnikiem?
+    follow_ups:
+      - Kto schodzi w dół?
+      - Jak zejście zmienia światło?
+      - Co znalazłbyś na dole?
+  - id: ny_clock_tower
+    name: Wieża Zegara
+    prompt: |
+      Znajdź publiczny zegar. Czy jest dokładny? Kto go ustawił? Zegary porządkują
+      miasto. Co się dzieje, gdy się nie zgadzają?
+    follow_ups:
+      - Jak wyglądałby blok bez zegara?
+      - Jak czas jest synchronizowany?
+      - Jaka jest relacja między czasem zegarowym a czasem ciała?
+  - id: ny_newsstand_magazine
+    name: Magazyn w Punkcie Sprzedaży Gazet
+    prompt: |
+      W punkcie sprzedaży gazet wybierz okładkę magazynu. Dla kogo jest? Co
+      zakłada o czytelniku? Punkt jest lustrem pragnień.
+    follow_ups:
+      - Czego nauczyłby się obcy z tej wystawy?
+      - Jak okładki konkurują o uwagę?
+      - Czego nie ma na wystawie?
+  - id: ny_awning_rain
+    name: Markiza i Deszcz
+    prompt: |
+      Stań pod markizą w deszczu. Obserwuj, jak woda spływa z krawędzi. Markiza
+      tworzy suchą wyspę. Kto się z Tobą nią dzieli?
+    follow_ups:
+      - Jak czułby się blok bez schronienia?
+      - Jak deszcz zmienia ulicę?
+      - Jakie inne schronienia istnieją?
+  - id: ny_fire_hydrant
+    name: Hydrant Pożarowy
+    prompt: |
+      Hydrant pożarowy to zawór w układzie krążenia miasta. Znajdź jeden. Jakiego
+      jest koloru? Kto mógłby go otworzyć? Co przez niego płynie?
+    follow_ups:
+      - Co by zrobił blok w pożarze bez niego?
+      - Jak hydranty zaznaczają terytorium?
+      - Jaka jest relacja między hydrantem a wężem?
+  - id: ny_stoop_sale
+    name: Sprzedaż na Stopniu
+    prompt: |
+      Wyobraź sobie sprzedaż na stopniu tych schodów. Co byłoby na sprzedaż? Kto
+      by się zatrzymał? Stopień to scena wymiany.
+    follow_ups:
+      - Co byś wystawił?
+      - Jak stopień umożliwia spotkanie?
+      - Czego nauczyłby się blok ze sprzedaży?
+  - id: ny_rooftop_garden
+    name: Ogród na Dachu
+    prompt: |
+      Wyobraź sobie ogród na dachu nad Tobą. Co by tam rosło? Kto się nim opiekuje?
+      Miasto ma sekretną zieloną warstwę.
+    follow_ups:
+      - Co byś zasadził?
+      - Jak wysokość zmienia ogrodnictwo?
+      - Jak wyglądałaby panorama, gdyby wszystkie dachy były zielone?
+  - id: ny_subway_map
+    name: Mapa Metra
+    prompt: |
+      Spójrz na mapę metra. To diagram, nie geografia. Co jest zniekształcone?
+      Co zostało pominięte? Mapa kształtuje sposób, w jaki myślimy o mieście.
+    follow_ups:
+      - Jak wyglądałaby prawdziwa mapa?
+      - Jak mapa tworzy sąsiedztwa?
+      - Jaka jest relacja między mapą a terytorium?
+  - id: ny_brick_pattern
+    name: Wzór Cegieł
+    prompt: |
+      Przestudiuj ceglaną ścianę. Wzór — wiązanie wendarskie, wiązanie flamandzkie —
+      podtrzymuje ścianę. Prześledź wzór. Co by się stało, gdyby jedna cegła
+      zniknęła?
+    follow_ups:
+      - Jak wzór rozkłada ciężar?
+      - Co powiedziałaby ściana o swoim twórcy?
+      - Jak starzeje się cegła?
+  - id: ny_awning_strip
+    name: Pasek Markizy
+    prompt: |
+      Przejdź przez blok i policz markizy. Jakie kolory? W jakim stanie? Markiza
+      to mała architektura. Jak się różni?
+    follow_ups:
+      - Jak wyglądałby blok bez markiz?
+      - Jak markizy tworzą tożsamość?
+      - Jaka jest relacja między markizą a biznesem?
+  - id: ny_manhole_cover
+    name: Pokrywa Kanału
+    prompt: |
+      Przeczytaj pokrywę kanału. Nazwa miasta, departament, data. Te dyski to
+      drzwi do innego miasta. Co jest pod spodem?
+    follow_ups:
+      - Kto tam schodzi?
+      - Jak pokrywa zaznacza terytorium?
+      - Jak wyglądałaby ulica bez tych drzwi?
+  - id: ny_bus_shelter
+    name: Wiata Autobusowa
+    prompt: |
+      Poczekaj w wiacie autobusowej. Zauważ, kto jeszcze czeka. Wiata to wspólny
+      pokój. Jaka jest etykieta? Jaki jest widok?
+    follow_ups:
+      - Jak wyglądałoby czekanie bez wiaty?
+      - Jak wiata kształtuje społeczność?
+      - Co byś w niej zmienił?
+  - id: ny_street_lamp
+    name: Latarnia Uliczna
+    prompt: |
+      Stań pod latarnią uliczną o zmierzchu. Obserwuj, jak światło przejmuje
+      władzę od słońca. Latarnia tworzy plamę widoczności. Co jest w plamie? Co
+      jest poza nią?
+    follow_ups:
+      - Jak sztuczne światło zmienia ulicę?
+      - Jak wyglądałby blok bez latarni?
+      - Jak latarnie zaznaczają czas?
+  - id: ny_plaza_seat
+    name: Siedzenie na Placu
+    prompt: |
+      Usiądź na ławce na placu. Kto jeszcze siedzi? Kto przechodzi? Plac to pauza w
+      przepływie. Co sprawia, że ludzie się zatrzymują?
+    follow_ups:
+      - Jak wyglądałby plac bez miejsc do siedzenia?
+      - Jak siedzenie kształtuje spotkanie?
+      - Co byś dodał?
+  - id: ny_awning_fabric
+    name: Tkanina Markizy
+    prompt: |
+      Dotknij markizy, jeśli możesz. Tkanina, winyl, pasy. Markiza to membrana
+      między wnętrzem a zewnętrzem. Jak się czuje?
+    follow_ups:
+      - Jak czułby się blok bez tkaniny?
+      - Jak materiał ma znaczenie?
+      - Jaka jest relacja między markizą a pogodą?
+  - id: ny_newsstand_daily
+    name: Codzienność Punktu Sprzedaży Gazet
+    prompt: |
+      Punkt sprzedaży gazet zmienia się w ciągu dnia — poranne gazety, popołudniowe
+      magazyny, wieczorne przekąski. Odwiedź go o różnych porach. Jaki jest
+      rytm?
+    follow_ups:
+      - Jak wyglądałby róg bez punktu sprzedaży gazet?
+      - Jak punkt zaznacza czas?
+      - Jaka jest relacja między punktem a blokiem?
+  - id: ny_sidewalk_chalk
+    name: Kreda Chodnikowa
+    prompt: |
+      Dzieci rysują na chodnikach. Znajdź rysunki kredą. Co przedstawia rysunek?
+      Kreda jest tymczasowa. Deszcz ją zmyje. Jak ma znaczenie tymczasowość?
+    follow_ups:
+      - Jak wyglądałby chodnik bez kredy?
+      - Jak kreda tworzy dar?
+      - Jaka jest relacja między kredą a ulicą?
+  - id: ny_rooftop_ac
+    name: Klimatyzacja na Dachu
+    prompt: |
+      Jednostki klimatyzacyjne na dachach szumią latem. Słuchaj. Dach to mechaniczny
+      las. Jak dźwięk kształtuje blok?
+    follow_ups:
+      - Jak wyglądałby dach bez jednostek?
+      - Jak klimatyzacja tworzy komfort?
+      - Jaka jest relacja między jednostką a budynkiem?
+  - id: ny_street_musician
+    name: Muzyk Uliczny
+    prompt: |
+      Muzyk uliczny gra w przejściu. Zatrzymaj się i posłuchaj. Muzyka tworzy
+      bańkę. Co jest w bańce? Co jest poza nią?
+    follow_ups:
+      - Jak wyglądałoby przejście bez muzyka?
+      - Jak muzyka tworzy pauzę?
+      - Jaka jest relacja między muzykiem a ulicą?

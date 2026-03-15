@@ -1,0 +1,507 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Die Mensch-Maschine-Schnittstelle — Verkehrsknotenpunkt (German)
+
+id: human_interface_transit_hub
+name: Die Mensch-Maschine-Schnittstelle — Verkehrsknotenpunkt
+description: 50 Karten, um die Wahrnehmung des Verkehrsknotenpunkts zu verändern – von Bahnsteigen und Warten bis hin zum Ankunfts-/Abfahrtsfluss und der Choreografie von Fremden im öffentlichen Nahverkehr.
+domain: human_interface
+cards:
+  - id: hi_th_platform_edge
+    name: Bahnsteigkante
+    prompt: |
+      Die Bahnsteigkante ist eine Schwelle. Gelbe Linie, Lücke, Gleis. Menschen stehen
+      in unterschiedlichen Entfernungen. Manche lehnen sich vor; andere halten sich zurück. Beobachte
+      die Verteilung. Was bedeutet die Kante?
+    follow_ups:
+      - Wie formt die Kante die Vorfreude?
+      - Wie wäre der Bahnsteig ohne die Linie?
+      - Was ist die Beziehung zwischen Kante und Risiko?
+  - id: hi_th_waiting_posture
+    name: Wartehaltung
+    prompt: |
+      Körper arrangieren sich beim Warten – Gewicht auf einem Fuß, Handy in der
+      Hand, Tasche zwischen den Füßen. Die Haltung kodiert die Dauer. Wer wirkt
+      geduldig? Wer unruhig? Das Warten hat eine Körpersprache.
+    follow_ups:
+      - Wie offenbart die Körperhaltung Erwartung?
+      - Wie wäre der Bahnsteig ohne Warten?
+      - Was ist die Beziehung zwischen Körperhaltung und Zeit?
+  - id: hi_th_arrival_flow
+    name: Ankunftsfluss
+    prompt: |
+      Die Zugtüren öffnen sich. Menschen strömen heraus – gegen den Strom derjenigen,
+      die einsteigen. Der Fluss hat Physik. Beobachte die Kollision, den Ausweicher,
+      die Verschmelzung. Welche Regeln bestimmen den Austausch?
+    follow_ups:
+      - Wie formt der Fluss den Bahnsteig?
+      - Was würde passieren, wenn alle drängeln würden?
+      - Was ist die Beziehung zwischen Fluss und Effizienz?
+  - id: hi_th_strangers_transit
+    name: Fremde im öffentlichen Nahverkehr
+    prompt: |
+      Du teilst dir einen Waggon mit Menschen, die du nie wiedersehen wirst. Nähe ohne
+      Verbindung. Beobachte den Kompakt. Was schulden sich Fremde gegenseitig?
+      Der Waggon ist eine temporäre Gesellschaft.
+    follow_ups:
+      - Wie schafft der öffentliche Nahverkehr temporäre Gemeinschaft?
+      - Wie wäre der Waggon mit Gesprächen?
+      - Was ist die Beziehung zwischen Fremden und Höflichkeit?
+  - id: hi_th_departure_board
+    name: Abfahrtstafel
+    prompt: |
+      Zeiten, Gleise, Verspätungen – die Tafel ist die Quelle der Wahrheit. Augen heben sich
+      zu ihr. Die Tafel diktiert die Bewegung. Beobachte den kollektiven Blick. Was macht
+      die Tafel mit der Menge?
+    follow_ups:
+      - Wie formt die Tafel das Verhalten?
+      - Wie wäre der Knotenpunkt ohne sie?
+      - Was ist die Beziehung zwischen Anzeige und Vertrauen?
+  - id: hi_th_escalator_stand
+    name: Rolltreppen-Stehplatz
+    prompt: |
+      Rechts stehen, links gehen – oder umgekehrt, je nach Stadt. Die Rolltreppe hat Regeln.
+      Beobachte, wer ihnen folgt. Die Rolltreppe ist eine bewegliche Warteschlange. Was ermöglicht
+      die Regel?
+    follow_ups:
+      - Wie formt die Rolltreppenregel den Fluss?
+      - Was würde passieren, wenn alle stehen würden?
+      - Was ist die Beziehung zwischen Regel und Effizienz?
+  - id: hi_th_ticket_gate
+    name: Fahrkartenschranke
+    prompt: |
+      Die Schranke liest die Karte, piept, öffnet sich. Die Schranke ist eine Kontrollstelle.
+      Sie trennt bezahlt von unbezahlt. Beobachte den Rhythmus. Wer fummelt? Wer gleitet hindurch?
+      Die Schranke ist eine Prüfung.
+    follow_ups:
+      - Wie formt die Schranke die Reise?
+      - Wie wäre der Knotenpunkt ohne Schranken?
+      - Was ist die Beziehung zwischen Schranke und Zugehörigkeit?
+  - id: hi_th_luggage_drag
+    name: Gepäckschleppen
+    prompt: |
+      Räder auf Fliesen. Der Koffer folgt. Das Schleppen markiert den Weg der Reisenden.
+      Gepäck erweitert den Körper. Beobachte die Last. Was sagt das Gepäck über die Reise aus?
+    follow_ups:
+      - Wie formt das Gepäck die Bewegung?
+      - Wie wäre der Knotenpunkt ohne Taschen?
+      - Was ist die Beziehung zwischen Last und Ziel?
+  - id: hi_th_bench_occupation
+    name: Bankbesetzung
+    prompt: |
+      Bänke säumen den Bahnsteig. Manche sitzen; manche stehen daneben. Die Bank ist eine
+      knappe Ressource. Beobachte, wer sie beansprucht. Wie lange bleiben sie?
+      Die Bank ist ein kleines Territorium.
+    follow_ups:
+      - Wie formt die Bank das Warten?
+      - Wie wäre der Bahnsteig ohne Bänke?
+      - Was ist die Beziehung zwischen Sitzplatz und Dauer?
+  - id: hi_th_announcement_voice
+    name: Durchsage-Stimme
+    prompt: |
+      "Der nächste Zug..." Die Stimme ist automatisch oder menschlich. Sie schneidet durch den
+      Lärm. Die Durchsage schafft gemeinsames Wissen. Beobachte, wer zuhört. Wer hat schon
+      auf sein Handy geschaut?
+    follow_ups:
+      - Wie formt die Durchsage die Menge?
+      - Wie wäre der Knotenpunkt ohne sie?
+      - Was ist die Beziehung zwischen Stimme und Autorität?
+  - id: hi_th_door_positioning
+    name: Türpositionierung
+    prompt: |
+      Stammkunden wissen, wo sich die Türen öffnen werden. Sie positionieren sich.
+      Neulinge raten. Die Positionierung ist Strategie. Beobachte die Gruppierung.
+      Was bestimmt die Position?
+    follow_ups:
+      - Wie formt die Positionierung das Einsteigen?
+      - Wie wäre der Bahnsteig, wenn die Türen zufällig wären?
+      - Was ist die Beziehung zwischen Position und Vorteil?
+  - id: hi_th_handrail_grip
+    name: Haltegriff-Griff
+    prompt: |
+      Im Waggon finden Hände den Griff. Der Griff ist Sicherheit. Beobachte, wer festhält,
+      wer es nicht braucht. Der Haltegriff ist ein gemeinsames Objekt. Was verrät der Griff?
+    follow_ups:
+      - Wie formt der Haltegriff die Stabilität?
+      - Wie wäre der Waggon ohne ihn?
+      - Was ist die Beziehung zwischen Griff und Vertrauen?
+  - id: hi_th_window_reflection
+    name: Fensterspiegelung
+    prompt: |
+      Das Fenster zeigt den Tunnel, den Bahnsteig und dein eigenes Gesicht. Die Spiegelung
+      ist unvermeidlich. Menschen blicken auf sich selbst oder meiden sie.
+      Beobachte die Beziehung zwischen Spiegelung und Blick.
+    follow_ups:
+      - Wie formt die Spiegelung das Selbstbewusstsein?
+      - Wie wäre die Fahrt ohne das Fenster?
+      - Was ist die Beziehung zwischen Spiegelung und Privatsphäre?
+  - id: hi_th_seat_offer
+    name: Sitzplatzangebot
+    prompt: |
+      Jemand bietet einem Älteren, einem Elternteil mit Kind einen Sitzplatz an. Das Angebot
+      ist ein kleiner moralischer Akt. Beobachte, wann es passiert. Wer bietet an? Wer nimmt an?
+      Der Sitzplatz ist ein Geschenk.
+    follow_ups:
+      - Wie formt das Angebot den Waggon?
+      - Wie wäre die Fahrt ohne solche Angebote?
+      - Was ist die Beziehung zwischen Angebot und Fürsorge?
+  - id: hi_th_delay_sigh
+    name: Verspätungsseufzer
+    prompt: |
+      "Verspätet." Der kollektive Seufzer. Die Verspätung ist gemeinsames Schicksal. Fremde
+      tauschen Blicke aus. Die Verspätung schafft einen Moment der Solidarität. Beobachte
+      den Umschwung. Was macht die Verspätung mit der Menge?
+    follow_ups:
+      - Wie formt die Verspätung das Warten?
+      - Wie wäre der Knotenpunkt ohne Verspätungen?
+      - Was ist die Beziehung zwischen Verspätung und Frustration?
+  - id: hi_th_backpack_turn
+    name: Rucksack-Wendung
+    prompt: |
+      In einem vollen Waggon dreht jemand seinen Rucksack nach vorne. Die Wendung ist Rücksicht.
+      Sie schafft Platz. Beobachte, wer es tut. Die Rucksack-Wendung ist ein kleiner Gesellschaftsvertrag.
+    follow_ups:
+      - Wie formt die Wendung die Nähe?
+      - Wie wäre der Waggon ohne sie?
+      - Was ist die Beziehung zwischen Wendung und Bewusstsein?
+  - id: hi_th_exit_anticipation
+    name: Ausstiegs-Antizipation
+    prompt: |
+      Wenn sich die Haltestelle nähert, versammeln sich die Leute an der Tür. Die Vorfreude
+      ist sichtbar. Körper verschieben sich. Die Tür wird sich öffnen. Beobachte die Vorbereitung.
+      Was erfordert die Vorfreude?
+    follow_ups:
+      - Wie formt die Vorfreude den Ausstieg?
+      - Wie wäre die Haltestelle ohne Vorbereitung?
+      - Was ist die Beziehung zwischen Vorfreude und Fluss?
+  - id: hi_th_transfer_corridor
+    name: Umsteigekorridor
+    prompt: |
+      Der Korridor verbindet Linien. Menschen gehen zielstrebig. Der Umstieg ist ein Übergang –
+      zwischen Systemen, zwischen Wartezeiten. Beobachte das Tempo.
+      Der Korridor hat seinen eigenen Rhythmus.
+    follow_ups:
+      - Wie formt der Korridor die Reise?
+      - Wie wäre der Knotenpunkt ohne Umstiege?
+      - Was ist die Beziehung zwischen Korridor und Verbindung?
+  - id: hi_th_phone_glow
+    name: Handy-Leuchten
+    prompt: |
+      Im gedimmten Waggon leuchten Gesichter von Handys. Das Leuchten ist individuell. Jede
+      Person hat ihr eigenes Licht. Beobachte die Verteilung. Das Handy
+      schafft privaten Raum im öffentlichen Raum.
+    follow_ups:
+      - Wie formt das Handy die Fahrt?
+      - Wie wäre der Waggon ohne Handys?
+      - Was ist die Beziehung zwischen Leuchten und Isolation?
+  - id: hi_th_stroller_navigation
+    name: Kinderwagen-Navigation
+    prompt: |
+      Eine Mutter schiebt einen Kinderwagen durch die Menge. Die Navigation ist
+      delikat. Leute machen Platz. Der Kinderwagen verändert den Fluss. Beobachte
+      die Rücksichtnahme. Was fordert der Kinderwagen?
+    follow_ups:
+      - Wie formt der Kinderwagen die Menge?
+      - Wie wäre der Knotenpunkt ohne Kinderwagen?
+      - Was ist die Beziehung zwischen Kinderwagen und Fürsorge?
+  - id: hi_th_vendor_station
+    name: Verkäuferstand
+    prompt: |
+      Ein Kiosk verkauft Kaffee, Snacks, Zeitungen. Der Verkäufer bedient Menschen
+      in Bewegung. Die Transaktion ist schnell. Beobachte den Austausch. Der Verkäufer
+      ist eine Insel im Fluss.
+    follow_ups:
+      - Wie formt der Verkäufer den Knotenpunkt?
+      - Wie wäre der Knotenpunkt ohne Verkäufer?
+      - Was ist die Beziehung zwischen Verkäufer und Warten?
+  - id: hi_th_track_gap
+    name: Gleisspalt
+    prompt: |
+      Vorsicht vor dem Spalt. Der Raum zwischen Bahnsteig und Waggon ist eine Gefahr. Menschen
+      treten darüber. Der Spalt variiert. Beobachte die Vorsicht. Was erfordert der Spalt
+      vom Körper?
+    follow_ups:
+      - Wie formt der Spalt das Einsteigen?
+      - Wie wäre der Bahnsteig ohne ihn?
+      - Was ist die Beziehung zwischen Spalt und Aufmerksamkeit?
+  - id: hi_th_schedule_check
+    name: Fahrplanabfrage
+    prompt: |
+      Finger tippen auf das Handy. Die App sagt, wann. Die Fahrplanabfrage ist
+      ständig. Sie reduziert Unsicherheit. Beobachte den Rhythmus. Wie oft
+      prüfen die Leute?
+    follow_ups:
+      - Wie formt der Fahrplan das Warten?
+      - Wie wäre der Knotenpunkt ohne Apps?
+      - Was ist die Beziehung zwischen Abfrage und Kontrolle?
+  - id: hi_th_crowd_density
+    name: Menschenmenge-Dichte
+    prompt: |
+      Stoßzeit packt den Bahnsteig. Körper komprimieren sich. Die Dichte hat Grenzen.
+      Beobachte die Grenze. Wann wird es unerträglich? Die Menge hat Physik.
+    follow_ups:
+      - Wie formt die Dichte das Erlebnis?
+      - Wie wäre der Knotenpunkt bei geringer Dichte?
+      - Was ist die Beziehung zwischen Dichte und Toleranz?
+  - id: hi_th_sleeping_commuter
+    name: Schlafender Pendler
+    prompt: |
+      Jemand schläft – Kopf gegen das Fenster, gegen die Schulter eines Fremden.
+      Der Schlaf ist Vertrauen oder Erschöpfung. Beobachte die Verletzlichkeit. Was erfordert
+      der Schlaf vom Waggon?
+    follow_ups:
+      - Wie formt der Schlafende den Raum?
+      - Wie wäre die Fahrt ohne Schläfer?
+      - Was ist die Beziehung zwischen Schlaf und Sicherheit?
+  - id: hi_th_map_consultation
+    name: Kartenkonsultation
+    prompt: |
+      Ein Besucher blickt auf die Karte an der Wand. Die Karte ist eine Rettungsleine. Andere
+      fließen vorbei. Die Konsultation braucht Zeit. Beobachte die Pause. Was bietet
+      die Karte?
+    follow_ups:
+      - Wie formt die Karte die Reise?
+      - Wie wäre der Knotenpunkt ohne Karten?
+      - Was ist die Beziehung zwischen Karte und Zuversicht?
+  - id: hi_th_platform_change
+    name: Bahnsteigwechsel
+    prompt: |
+      "Bahnsteigwechsel." Die Menge bewegt sich. Der Wechsel ist Störung. Leute
+      eilen. Beobachte das Gerangel. Was fordert der Wechsel von der Menge?
+    follow_ups:
+      - Wie formt der Wechsel den Fluss?
+      - Wie wäre der Knotenpunkt ohne Wechsel?
+      - Was ist die Beziehung zwischen Wechsel und Stress?
+  - id: hi_th_briefcase_clutch
+    name: Aktentaschen-Umklammerung
+    prompt: |
+      Die Aktentasche wird eng gehalten – zwischen den Füßen, auf dem Schoß. Sie enthält etwas
+      Wertvolles. Die Umklammerung ist schützend. Beobachte den Griff. Was bedeutet die
+      Aktentasche für den Halter?
+    follow_ups:
+      - Wie formt die Aktentasche die Fahrt?
+      - Wie wäre der Waggon ohne Aktentaschen?
+      - Was ist die Beziehung zwischen Umklammerung und Identität?
+  - id: hi_th_door_hold
+    name: Tür-Halten
+    prompt: |
+      Jemand hält die Tür für die Person dahinter. Der Zug steht kurz vor der Abfahrt.
+      Das Halten ist Risiko und Höflichkeit. Beobachte den Austausch. Was kostet das Halten?
+    follow_ups:
+      - Wie formt das Halten das Einsteigen?
+      - Wie wäre der Bahnsteig ohne es?
+      - Was ist die Beziehung zwischen Halten und Höflichkeit?
+  - id: hi_th_standing_balance
+    name: Steh-Balance
+    prompt: |
+      Der Zug fährt. Stehende Passagiere verlagern ihr Gewicht. Die Balance ist
+      dynamisch. Niemand hält sich am Griff fest. Beobachte die Mikro-Anpassungen. Der
+      Körper lernt die Bewegung.
+    follow_ups:
+      - Wie formt die Balance die Fahrt?
+      - Wie wäre der Waggon mit mehr Sitzen?
+      - Was ist die Beziehung zwischen Balance und Gewohnheit?
+  - id: hi_th_conversation_overhear
+    name: Gespräch-Mithören
+    prompt: |
+      Zwei Leute reden. Du hörst Fragmente. Das Gespräch ist privat, aber
+      öffentlich. Beobachte die Grenze. Was erfahren Fremde übereinander im
+      öffentlichen Nahverkehr?
+    follow_ups:
+      - Wie formt das Mithören die Fahrt?
+      - Wie wäre der Waggon ohne Gespräche?
+      - Was ist die Beziehung zwischen Mithören und Intimität?
+  - id: hi_th_ticket_inspection
+    name: Fahrkartenkontrolle
+    prompt: |
+      Der Kontrolleur bewegt sich durch den Waggon. "Fahrkarten, bitte." Die Kontrolle
+      ist zufällig oder systematisch. Beobachte die Reaktion. Wer ist bereit? Wer
+      fummelt? Die Kontrolle ist ein Test der Legitimität.
+    follow_ups:
+      - Wie formt die Kontrolle die Fahrt?
+      - Wie wäre das System ohne sie?
+      - Was ist die Beziehung zwischen Kontrolle und Vertrauen?
+  - id: hi_th_station_name_glance
+    name: Bahnhofsnamen-Blick
+    prompt: |
+      Der Name blitzt vorbei – an der Wand, am Schild. Stammkunden wissen es. Neulinge
+      schauen. Der Blick orientiert. Beobachte, wer schaut. Was macht der Name?
+    follow_ups:
+      - Wie formt der Name die Orientierung?
+      - Wie wäre die Fahrt ohne Schilder?
+      - Was ist die Beziehung zwischen Name und Ort?
+  - id: hi_th_benchmark_regular
+    name: Benchmark-Stammkunde
+    prompt: |
+      Der Stammkunde kennt den Rhythmus. Er kommt gerade noch rechtzeitig. Kein Warten.
+      Der Stammkunde hat den Fahrplan verinnerlicht. Beobachte die Zuversicht.
+      Was weiß der Stammkunde?
+    follow_ups:
+      - Wie formt der Stammkunde den Knotenpunkt?
+      - Wie wäre der Knotenpunkt ohne Stammkunden?
+      - Was ist die Beziehung zwischen Stammkunde und Flüssigkeit?
+  - id: hi_th_lost_look
+    name: Verlorener Blick
+    prompt: |
+      Jemand sieht verloren aus – Kopf dreht sich, Tempo unsicher. Der Blick ist sichtbar.
+      Beobachte die Körpersprache. Wer hilft? Wer ignoriert? Der verlorene Blick ist ein
+      Signal. Was lädt er ein?
+    follow_ups:
+      - Wie formt der verlorene Blick den Knotenpunkt?
+      - Wie wäre der Knotenpunkt ohne Verlorene?
+      - Was ist die Beziehung zwischen Verlorenheit und Hilfe?
+  - id: hi_th_earbud_insert
+    name: Ohrhörer-Einführung
+    prompt: |
+      Ohrhörer kommen rein. Die Welt zieht sich zurück. Die Einführung ist eine Grenze.
+      Der Träger ist anwesend, aber abwesend. Beobachte den Umschwung. Was schafft
+      der Ohrhörer?
+    follow_ups:
+      - Wie formen Ohrhörer die Fahrt?
+      - Wie wäre der Waggon ohne sie?
+      - Was ist die Beziehung zwischen Ohrhörer und Privatsphäre?
+  - id: hi_th_rush_hour_pack
+    name: Stoßzeit-Gedränge
+    prompt: |
+      Der Waggon ist voll. Körper berühren sich. Das Gedränge ist unvermeidlich. Beobachte
+      die Toleranz. Wie bewältigen die Leute die Nähe? Das Gedränge hat seine eigene Etikette.
+    follow_ups:
+      - Wie formt das Gedränge die Fahrt?
+      - Wie wäre Stoßzeit ohne Gedränge?
+      - Was ist die Beziehung zwischen Gedränge und Ausdauer?
+  - id: hi_th_destination_ask
+    name: Ziel-Frage
+    prompt: |
+      "Ist das der Zug nach X?" Fragt ein Fremder. Ein anderer antwortet. Die Frage schafft
+      einen Moment der Verbindung. Beobachte den Austausch. Was erfordert die Frage?
+    follow_ups:
+      - Wie formt die Frage den Waggon?
+      - Wie wäre die Fahrt ohne solche Fragen?
+      - Was ist die Beziehung zwischen Frage und Vertrauen?
+  - id: hi_th_platform_choice
+    name: Bahnsteig-Wahl
+    prompt: |
+      Zwei Bahnsteige, dasselbe Ziel. Einer ist näher; einer ist weniger überfüllt.
+      Die Wahl ist Strategie. Beobachte, wer wohin geht. Was bestimmt die
+      Wahl?
+    follow_ups:
+      - Wie formt die Wahl die Menge?
+      - Wie wäre der Knotenpunkt mit einem Bahnsteig?
+      - Was ist die Beziehung zwischen Wahl und Ergebnis?
+  - id: hi_th_wipe_down_seat
+    name: Sitz abwischen
+    prompt: |
+      Jemand wischt den Sitz ab, bevor er sich setzt. Das Abwischen ist Vorsicht. Beobachte
+      die Geste. Was nimmt das Abwischen über den Raum an? Das Abwischen ist
+      ein kleiner Akt der Abgrenzung.
+    follow_ups:
+      - Wie formt das Abwischen den Sitz?
+      - Wie wäre der Waggon ohne solche Gesten?
+      - Was ist die Beziehung zwischen Abwischen und Sauberkeit?
+  - id: hi_th_standing_offer
+    name: Steh-Angebot
+    prompt: |
+      "Möchten Sie sitzen?" Das Angebot wird einem Fremden gemacht. Manchmal angenommen, manchmal abgelehnt.
+      Beobachte den Austausch. Was bedeutet das Angebot?
+    follow_ups:
+      - Wie formt das Angebot den Waggon?
+      - Wie wäre die Fahrt ohne Angebote?
+      - Was ist die Beziehung zwischen Angebot und Fürsorge?
+  - id: hi_th_exit_block
+    name: Ausgangs-Blockade
+    prompt: |
+      Jemand steht in der Tür. Andere müssen passieren. Die Blockade ist
+      unbewusst oder absichtlich. Beobachte die Verhandlung. Wie kommen die Leute vorbei?
+      Die Blockade ist ein kleiner Konflikt.
+    follow_ups:
+      - Wie formt die Blockade den Ausgang?
+      - Wie wäre der Waggon ohne Blocker?
+      - Was ist die Beziehung zwischen Blockade und Bewusstsein?
+  - id: hi_th_train_rumble
+    name: Zug-Grollen
+    prompt: |
+      Der Zug grollt – Gleise, Räder, Bewegung. Das Grollen ist konstant. Es
+      wird zum Hintergrund. Beobachte, wann du es bemerkst. Was macht das Grollen
+      mit dem Körper?
+    follow_ups:
+      - Wie formt das Grollen die Fahrt?
+      - Wie wäre der Waggon in Stille?
+      - Was ist die Beziehung zwischen Grollen und Rhythmus?
+  - id: hi_th_connection_run
+    name: Anschluss-Lauf
+    prompt: |
+      Jemand rennt – zu spät für einen Anschluss. Der Lauf schneidet durch die Menge.
+      Leute weichen aus. Beobachte die Störung. Was fordert der Lauf
+      vom Fluss?
+    follow_ups:
+      - Wie formt der Lauf den Knotenpunkt?
+      - Wie wäre der Knotenpunkt ohne Läufer?
+      - Was ist die Beziehung zwischen Laufen und Dringlichkeit?
+  - id: hi_th_seat_saving
+    name: Sitzplatz-Reservierung
+    prompt: |
+      Eine Tasche auf dem Sitz. "Da sitzt jemand." Die Reservierung hält den Sitz
+      für einen abwesenden Begleiter. Beobachte den Anspruch. Wie lange kann ein Sitz reserviert werden?
+      Was sind die Grenzen?
+    follow_ups:
+      - Wie formt die Reservierung den Waggon?
+      - Wie wäre die Fahrt ohne Reservierung?
+      - Was ist die Beziehung zwischen Reservierung und Anspruch?
+  - id: hi_th_arrival_relief
+    name: Ankunfts-Erleichterung
+    prompt: |
+      Der Zug erreicht den Endbahnhof. Die Erleichterung ist sichtbar. Schultern sacken nach unten.
+      Leute sammeln ihre Sachen. Die Reise ist zu Ende. Beobachte den Umschwung.
+      Was bietet die Ankunft?
+    follow_ups:
+      - Wie formt die Ankunft den Ausstieg?
+      - Wie wäre die Reise ohne Ankunft?
+      - Was ist die Beziehung zwischen Erleichterung und Abschluss?
+  - id: hi_th_wayfinding_sign
+    name: Wegweiser-Schild
+    prompt: |
+      Pfeile zeigen. "Zu den Zügen." "Zu den Ausgängen." Die Schilder leiten den Fluss. Beobachte
+      wer ihnen folgt. Wer ignoriert? Das Schild ist ein Vorschlag. Was nimmt es an?
+    follow_ups:
+      - Wie formen Schilder den Fluss?
+      - Wie wäre der Knotenpunkt ohne sie?
+      - Was ist die Beziehung zwischen Schild und Vertrauen?
+  - id: hi_th_waiting_room
+    name: Warteraum
+    prompt: |
+      Stühle stehen sich gegenüber oder der Tafel. Der Warteraum beherbergt Menschen
+      zwischen den Reisen. Beobachte die Anordnung. Wer sitzt? Wer geht auf und ab? Der
+      Warteraum ist eine Pause.
+    follow_ups:
+      - Wie formt der Warteraum das Warten?
+      - Wie wäre der Knotenpunkt ohne ihn?
+      - Was ist die Beziehung zwischen Raum und Dauer?
+  - id: hi_th_stranger_proximity
+    name: Fremden-Nähe
+    prompt: |
+      Ein Fremder steht nahe – notwendig in einer Menge. Die Nähe ist
+      unpersönlich, aber intim. Beobachte die Toleranz. Was erlaubt der Körper?
+      Die Nähe ist ein Vertrag.
+    follow_ups:
+      - Wie formt die Nähe die Fahrt?
+      - Wie wäre der Waggon mit mehr Platz?
+      - Was ist die Beziehung zwischen Nähe und Höflichkeit?
+  - id: hi_th_last_train
+    name: Letzter Zug
+    prompt: |
+      Der letzte Zug. Die Menge ist anders – später, lockerer. Der letzte Zug
+      hat seine eigene Energie. Beobachte den Umschwung. Was macht "letzter" mit der
+      Menge?
+    follow_ups:
+      - Wie formt der letzte Zug den Knotenpunkt?
+      - Wie wäre die Nacht ohne ihn?
+      - Was ist die Beziehung zwischen Letztem und Dringlichkeit?
+  - id: hi_th_transit_tribe
+    name: Nahverkehrs-Stamm
+    prompt: |
+      Die gleichen Leute, die gleiche Linie, die gleiche Zeit. Du erkennst Gesichter.
+      Du sprichst nie. Der Nahverkehrs-Stamm ist eine stille Gemeinschaft. Beobachte
+      die Wiedererkennung. Was bietet der Stamm?
+    follow_ups:
+      - Wie formt der Stamm den Arbeitsweg?
+      - Wie wäre die Fahrt ohne bekannte Gesichter?
+      - Was ist die Beziehung zwischen Stamm und Zugehörigkeit?

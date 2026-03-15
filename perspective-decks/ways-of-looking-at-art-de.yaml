@@ -1,0 +1,438 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Arten des Betrachtens von Kunst (German)
+
+id: ways_of_looking_at_art
+name: Arten des Betrachtens von Kunst
+description: |
+  Karten, um Ihre Perspektive beim Betrachten von Kunst zu verändern. Jede bietet eine andere Linse,
+  um zu vertiefen, wie Sie Kunstwerke sehen und mit ihnen interagieren.
+domain: art
+cards:
+  - id: souvenir
+    name: Souvenir
+    prompt: |
+      Wählen Sie etwas aus dem Kunstwerk aus und verstecken Sie es im nächsten Werk, das Sie betrachten.
+      Wie würden Sie es in die neue Komposition integrieren?
+    follow_ups:
+      - Was würden Sie mitnehmen?
+      - Was würde es im neuen Kontext gewinnen oder verlieren?
+      - Wo würde es passen – oder sich weigern zu passen – in das neue Werk?
+  - id: throw_a_party
+    name: Veranstalte eine Party
+    prompt: |
+      Laden Sie alle Künstler des Raumes ein. Was würden sie tragen?
+      Worüber würden sie nachdenken?
+    follow_ups:
+      - Wer würde sich zu wem hingezogen fühlen?
+      - Worüber würden sie streiten?
+      - Was würde sie an den Werken des anderen überraschen?
+  - id: time_out
+    name: Auszeit
+    prompt: |
+      Gehen Sie nach draußen. Konzentrieren Sie sich auf Licht, Geräusche und Empfindungen. Seien Sie präsent mit Ihrer
+      Umgebung. Das Erlebnis des Kunstbetrachtens handelt genauso von den Räumen dazwischen wie von den Kunstwerken selbst.
+    follow_ups:
+      - Was bemerken Sie, wenn Sie aufhören, sich auf die Kunst zu konzentrieren?
+      - Wie prägt der Raum, was Sie sehen?
+      - Was würden Sie verpassen, wenn Sie durchhetzen würden?
+  - id: plan_a_trip
+    name: Plane eine Reise
+    prompt: |
+      Was Sie heute sehen, könnte der erste Schritt auf einer viel größeren Reise sein. Wenn
+      Sie die Galerie oder den Raum verlassen, entscheiden Sie, welches Kunstwerk Sie als nächstes sehen möchten
+      und planen Sie eine ganze Reise darum herum.
+    follow_ups:
+      - Wohin würde diese Reise Sie führen?
+      - Was müssten Sie unterwegs sehen?
+      - Warum dieses Werk – was macht es reise-würdig?
+  - id: in_black_and_white
+    name: In Schwarz-Weiß
+    prompt: |
+      Konzentrieren Sie sich auf das Spiel von Licht und Schatten – Sie können sogar ein Foto in Schwarz-Weiß machen, um zu helfen. Wo sind die Töne am dunkelsten? Wie deutet dies Tiefe an oder nicht? Wie hilft dies Ihrem Verständnis der Komposition?
+    follow_ups:
+      - Was verschwindet, wenn Sie die Farbe entfernen?
+      - Was wird klarer?
+      - Wohin geht Ihr Blick zuerst in der Graustufen-Version?
+  - id: give_it_a_voice
+    name: Gib ihm eine Stimme
+    prompt: |
+      Welche Geräusche würde dieses Kunstwerk machen? Wie würden Sie die Farben,
+      die Formen und die Gestalten hören?
+    follow_ups:
+      - Ist es laut oder leise? Scharf oder weich?
+      - Welches Instrument oder welche Textur würde es einfangen?
+      - Wie würde Stille in diesem Werk klingen?
+  - id: find_the_middle_ground
+    name: Finde den Mittelpunkt
+    prompt: |
+      Wie weit ist das Kunstwerk von Ihnen entfernt? Wie groß ist es im Verhältnis zu Ihrer
+      Größe? Wie schwer? Wie viel Platz nimmt es ein? Könnten Sie es in einem Haus unterbringen?
+    follow_ups:
+      - Was würde sich ändern, wenn Sie es in Ihrer Hand halten könnten?
+      - Was, wenn es die Größe eines Raumes hätte?
+      - Wie prägt die Skalierung Ihre Beziehung dazu?
+  - id: from_the_edges
+    name: Von den Rändern
+    prompt: |
+      Wo endet das Kunstwerk und wo beginnt die "reale Welt"? Können Sie versuchen, Ihre Hände als Sucher zu benutzen, um die Kanten des Kunstwerks für
+      sich neu zu definieren? Gibt es eine erkennbare Kante?
+    follow_ups:
+      - Was passiert, wenn Sie den Rahmen ändern?
+      - Was wird einbezogen oder ausgeschlossen?
+      - Wo möchte das Werk über seine Grenzen hinaus ausströmen?
+  - id: transmogrify_it
+    name: Verwandle es
+    prompt: |
+      Was wäre, wenn Sie das Kunstwerk in ein anderes Genre ändern könnten? Ein Foto in ein Action-Gemälde oder eine Installation in eine Landschaft? Wie würden Sie es tun?
+      Würde es in der Übersetzung immer noch seinen Charakter behalten?
+    follow_ups:
+      - Was ist für das Werk wesentlich – was muss die Veränderung überstehen?
+      - Was würde bei der Übersetzung gewonnen oder verloren gehen?
+      - Welches Genre würde etwas Neues darüber enthüllen?
+  - id: the_hand_of_the_artist
+    name: Die Hand des Künstlers
+    prompt: |
+      Suchen Sie nach Spuren von Pinselstrichen, Meißelspuren, Fingerabdrücken, sogar Haaren des Künstlers. Stellen Sie sich vor, Sie machen diese Spuren selbst – in welche Position müssten Sie sich bringen? Welche Werkzeuge würden Sie verwenden?
+    follow_ups:
+      - Was verrät die Spur über den Körper des Schöpfers?
+      - Wo ist die Geste schnell oder langsam, sicher oder zögerlich?
+      - Wie würde es sich anfühlen, diese Spur zu hinterlassen?
+  - id: tell_the_story
+    name: Erzähle die Geschichte
+    prompt: |
+      Die Kunstgeschichte ist reich an Erzählungen, und heute gibt es einen spannenden Dialog zwischen Kunst, Literatur und Film. Gibt es eine Geschichte im
+      Kunstwerk? Wie erzählen Sie sie?
+    follow_ups:
+      - Was passiert vor oder nach diesem Moment?
+      - Wer ist der Erzähler? Wessen Stimme fehlt?
+      - Würde es als Film, Roman oder Gedicht funktionieren?
+  - id: shadowboxing
+    name: Schattenboxen
+    prompt: |
+      Bewegen Sie sich. Gehen Sie ganz nah heran. Gehen Sie so weit weg wie möglich. Wechseln Sie die Seiten.
+      Gehen Sie hoch. Gehen Sie runter. Probieren Sie verschiedene Winkel aus. Bleiben Sie nicht lange an derselben Stelle.
+      Genießen Sie die Veränderungen, die das Kunstwerk vornimmt, während Sie sich darum bewegen.
+    follow_ups:
+      - Was verschiebt sich, wenn Sie Ihre Position ändern?
+      - Welcher Winkel hat Sie überrascht?
+      - Wie verändert die Bewegung Ihres Körpers, was Sie sehen?
+  - id: six_degrees_of_francis_bacon
+    name: Sechs Grade von Francis Bacon
+    prompt: |
+      Künstler beeinflussen andere Künstler. Themen und Ideen entwickeln sich über Generationen und Grenzen hinweg. Verbinden Sie das Kunstwerk mit einem anderen in der Galerie mit so wenigen Verbindungen wie möglich.
+    follow_ups:
+      - Was ist der kürzeste Weg, den Sie finden können?
+      - Welche Art von Verbindung ist am stärksten – Technik, Thema, Stimmung oder Idee?
+      - Was würde der Künstler über die Verbindung denken?
+  - id: headlines
+    name: Schlagzeilen
+    prompt: |
+      Stellen Sie sich den Tag vor, an dem das Kunstwerk entstanden ist, und finden oder erfinden Sie eine Zeitungsüberschrift für diesen Tag. Vergleichen Sie sie mit den Titelseiten von heute.
+    follow_ups:
+      - Was wäre oben auf der Seite gewesen?
+      - Was hat sich geändert – und was nicht?
+      - Wie rahmt die Schlagzeile das Werk neu?
+  - id: speed_date
+    name: Speed-Dating
+    prompt: |
+      Verbringen Sie nur 10 Sekunden mit jedem Kunstwerk. Tun Sie dies, bis Sie sie alle gesehen haben
+      oder bis Ihnen die Puste ausgeht, dann gehen Sie zurück zu Ihren Favoriten und verweilen Sie.
+      Wie sehen Sie sie jetzt? Zu welchen werden Sie sich am meisten hingezogen fühlen?
+    follow_ups:
+      - Was hat der schnelle Durchgang offenbart, den das Verweilen vielleicht verpasst hat?
+      - Warum sind Sie zu diesen besonderen Werken zurückgekehrt?
+      - Wie unterscheidet sich der zweite Blick vom ersten?
+  - id: make_connections
+    name: Knüpfe Verbindungen
+    prompt: |
+      Suchen Sie auf dem Heimweg nach etwas, das Sie an das Kunstwerk erinnert, oder an einen Teil davon – eine Form oder Farbe, vielleicht ein Wort, sogar eine Empfindung.
+    follow_ups:
+      - Was haben Sie gefunden?
+      - Wie hat der Nachhall Ihre Sicht auf das Original verändert?
+      - Was würden Sie dem Künstler zeigen, wenn Sie könnten?
+  - id: dinner_party
+    name: Dinnerparty
+    prompt: |
+      Ordnen Sie ein Kunstwerk einem Geschmack zu. An welches Essen oder Getränk erinnert es Sie?
+      Stellen Sie ein Bankett zusammen.
+    follow_ups:
+      - Wie sähe die Speisekarte aus?
+      - Wer würde wo sitzen?
+      - Wie würde der erste Bissen schmecken?
+  - id: head_off_piste
+    name: Abseits der Piste gehen
+    prompt: |
+      Bitten Sie einen Museumsmitarbeiter, Ihnen sein Lieblingswerk zu zeigen, oder gehen Sie von den Karten weg und sehen Sie, was Sie finden können.
+    follow_ups:
+      - Was haben Sie abseits des ausgetretenen Pfades entdeckt?
+      - Wie unterscheidet sich sein Favorit von Ihrem?
+      - Was würden Sie jemand anderem empfehlen?
+  - id: make_it_an_mixtape
+    name: Mache daraus ein Mixtape
+    prompt: |
+      Erinnert Sie das Kunstwerk an ein bestimmtes Lied oder Musikstück?
+      Kunst und Musik überschneiden sich auf unterschiedliche Weise und teilen oft eine ähnliche Sprache.
+      Welche Qualitäten haben sie gemeinsam? Erstellen Sie eine Playlist für jeden Museumsbesuch oder für einen einzelnen Künstler.
+    follow_ups:
+      - Was ist der Eröffnungstitel?
+      - Welche Qualität verbindet das Werk mit der Musik – Rhythmus, Stimmung, Textur?
+      - Wie würde sich die Playlist ändern, wenn Sie in einem Jahr wiederkommen würden?
+  - id: read_in_context
+    name: Im Kontext lesen
+    prompt: |
+      Wo befindet sich das Kunstwerk? Wie beeinflusst seine Umgebung, wie es wahrgenommen wird?
+      Ist es auf einer Plakatwand, außerhalb einer Galerie, mitten in einem See? Lauschen Sie dem Gespräch zwischen dem Werk und seiner Umgebung.
+    follow_ups:
+      - Was würde sich ändern, wenn es woanders wäre?
+      - Was sagt der Raum oder die Umgebung zurück?
+      - Wer ist das Publikum hier – und wer fehlt?
+  - id: understand_it_less
+    name: Verstehe es weniger
+    prompt: |
+      Umarme deine Neugier. Fragen Sie sich, was an Ihrer Erfahrung des Kunstwerks seltsam oder neu ist? Wie könnten Sie es noch seltsamer machen? Lassen Sie los, was das Kunstwerk "bedeuten soll", indem Sie versuchen, es ein wenig weniger zu verstehen!
+    follow_ups:
+      - Was müssten Sie verlernen, um es neu zu sehen?
+      - Welche Frage hat keine Antwort – und warum ist das wichtig?
+      - Wie würde es aussehen, wenn man es "falsch" versteht?
+  - id: chaos_or_control
+    name: Chaos oder Kontrolle?
+    prompt: |
+      Scheint es zufällig zu sein, oder gibt es einen Plan? Zufall, Unfall und Glück spielen alle eine Rolle – manchmal eine bedeutende – bei der Entstehung eines
+      Kunstwerks. Versuchen Sie zu finden, was natürlich geschehen durfte und was kontrolliert wurde.
+    follow_ups:
+      - Wo hält der Künstler die Zügel in der Hand – und wo lässt er los?
+      - Was könnte ein Unfall gewesen sein, der wesentlich wurde?
+      - Wie würde sich das Werk mit mehr Chaos – oder mehr Kontrolle – verändern?
+  - id: palimpsest
+    name: Palimpsest
+    prompt: |
+      Suchen Sie nach Schichten! Was ist verborgen und was wird enthüllt? Wie dick ist das Werk? Wurde die Oberfläche im Laufe der Zeit aufgebaut?
+    follow_ups:
+      - Was liegt unter der Oberfläche?
+      - Was würden Sie finden, wenn Sie es abziehen könnten?
+      - Wie zeigt sich die Zeit in den Schichten?
+  - id: pattern_recognition
+    name: Mustererkennung
+    prompt: |
+      Achten Sie auf wiederkehrende Elemente. Gibt es ein Muster? Gibt es wiederholte Motive? Echoen sich bestimmte Formen gegenseitig?
+    follow_ups:
+      - Was bricht das Muster – und warum?
+      - Wohin führt die Wiederholung Ihr Auge?
+      - Was würde passieren, wenn Sie ein Motiv durch das ganze Werk verfolgen würden?
+  - id: through_another_pair_of_eyes
+    name: Durch ein anderes Augenpaar
+    prompt: |
+      Erinnern Sie sich an eine Figur aus einem Roman, einem Film, einem Theaterstück oder eine historische Persönlichkeit. Stellen Sie sich vor, Sie hätten ein Gespräch mit ihnen über das Kunstwerk. Würden Sie ihrer Meinung darüber zustimmen?
+    follow_ups:
+      - Was würde ihnen auffallen, das Sie verpasst haben?
+      - Wo würden Sie nicht zustimmen – und warum?
+      - Welche Frage würden sie Ihnen dazu stellen?
+  - id: thermostat
+    name: Thermostat
+    prompt: |
+      Welche Temperatur hat eine Farbe? Suchen Sie nach den kältesten Farben im Kunstwerk,
+      dann suchen Sie die wärmeren Farbtöne. Wie viele Ökosysteme können Sie in einem einzigen
+      Kunstwerk finden?
+    follow_ups:
+      - Wo treffen sich heiß und kalt – und was passiert dort?
+      - Welches Klima ruft das Werk hervor?
+      - Wie würde es sich anfühlen, wenn Sie in seine Temperatur eintreten würden?
+  - id: negative_space
+    name: Negativraum
+    prompt: |
+      Die Lücken zwischen einzelnen Elementen in einem Kunstwerk sind genauso bedeutsam
+      wie die Elemente selbst. Wie bei einem Puzzlespiel, achten Sie auf die fehlenden Teile. Der Negativraum: wie rahmt er das Vorhandene ein? Fühlen Sie seine Bedeutung.
+    follow_ups:
+      - Welche Form nimmt die Leere an?
+      - Was würde die Lücken füllen – und sollte es das?
+      - Wie hält der Negativraum die Komposition zusammen?
+  - id: make_yourself_at_home
+    name: Mach es dir bequem
+    prompt: |
+      Stellen Sie sich vor, Sie kriechen in das Kunstwerk. Wo würden Sie sich verstecken? Was können Sie sehen?
+      Wie fühlt es sich an?
+    follow_ups:
+      - Was würden Sie von drinnen hören?
+      - Wo würden Sie sich am sichersten – oder am exponiertesten – fühlen?
+      - Was würden Sie mitnehmen, wenn Sie bleiben könnten?
+  - id: homage
+    name: Hommage
+    prompt: |
+      Machen Sie einen Schrein oder eine Mini-Ausstellung für Ihren Lieblingskünstler. Beginnen Sie mit einer Postkarte aus dem Laden, oder finden Sie Objekte und Bilder, die auf seine Arbeit verweisen und ihr Tiefe und Farbe verleihen.
+    follow_ups:
+      - Was würde im Zentrum Ihres Schreins stehen?
+      - Welcher Gegenstand würde sie überraschen?
+      - Wie verändert die kuratorische Tätigkeit Ihre Sicht auf seine Arbeit?
+  - id: warm_up
+    name: Aufwärmen
+    prompt: |
+      Erwecken Sie Ihren Körper, um Ihre Sinne zu schärfen. Laufen Sie, springen Sie, dehnen Sie sich, klatschen Sie in die Hände, bewegen Sie Ihre Zehen. Achten Sie auf körperliche Empfindungen in Ihrem Körper
+      beim Betrachten des Kunstwerks.
+    follow_ups:
+      - Wo in Ihrem Körper spüren Sie das Werk?
+      - Wie verändert Bewegung, was Sie sehen?
+      - Welche Empfindung bleibt zurück, nachdem Sie weggeschaut haben?
+  - id: make_it_anew
+    name: Mach es neu
+    prompt: |
+      Zu Hause, erstellen Sie ein Kunstwerk mit nur dem, was Sie zur Hand haben. Schreiben Sie es auf, zeichnen Sie es, bauen Sie es mit Streichhölzern. Je einfacher und simpler Ihre
+      Methode, desto besser. Sehen Sie, was Ihnen im Gedächtnis bleibt, was Sie in Ihrer Wiedergabe bemerken.
+    follow_ups:
+      - Was haben Sie sich erinnert, ohne es zu versuchen?
+      - Was hat Ihre Version falsch gemacht – und warum ist das wichtig?
+      - Was würden Sie hinzufügen, wenn Sie noch eine Minute Zeit hätten?
+  - id: origin_story
+    name: Entstehungsgeschichte
+    prompt: |
+      Erinnern Sie sich an das erste Kunstwerk, das Sie je gesehen haben? Wo waren Sie? Wie alt waren Sie? Versuchen Sie, sich an den Raum zu erinnern, in dem Sie waren, das Licht und die Geräusche, das Gefühl, es zu betrachten. Gibt es etwas, das Sie mit dem Kunstwerk, das Sie jetzt sehen, verbinden können?
+    follow_ups:
+      - Was ist in der Art, wie Sie Kunst betrachten, gleich geblieben?
+      - Was würde dieses jüngere Ich von diesem Werk halten?
+      - Welcher Faden läuft von damals bis heute?
+  - id: words_and_images
+    name: Worte und Bilder
+    prompt: |
+      Ohne das Kunstwerk zu betrachten, lesen Sie die Beschreibung, schließen Sie die Augen und versuchen Sie, es sich vorzustellen. Dann öffnen Sie sie. Stimmt es mit Ihrer Version überein?
+    follow_ups:
+      - Was haben die Worte weggelassen?
+      - Was haben Sie hinzugefügt, das nicht da war?
+      - Wie verändert Ihr mentales Bild, wie Sie das reale sehen?
+  - id: keep_a_notebook
+    name: Führe ein Notizbuch
+    prompt: |
+      Machen Sie eine Aufzeichnung von Daten, Kunstwerken und Ihrer Reaktion darauf. Schauen Sie sich Ihre Notizen an und suchen Sie nach neuen Kunstwerken.
+    follow_ups:
+      - Welches Muster ergibt sich, wenn Sie Ihre Notizen lesen?
+      - Was würden Sie Ihrem vergangenen Ich sagen?
+      - Wohin möchte das Notizbuch Sie als Nächstes führen?
+  - id: write_a_postcard
+    name: Schreibe eine Postkarte
+    prompt: |
+      Schreiben Sie eine Postkarte an ein Kunstwerk, mit dem Sie sich besonders verbunden fühlen. Was würden Sie sagen? Wie könnte es antworten?
+    follow_ups:
+      - Was müssten Sie sagen, das Sie nicht laut sagen konnten?
+      - Wie sähe seine Handschrift aus?
+      - Was würden Sie behalten – und was würden Sie niemals senden?
+  - id: here_today_gone
+    name: Heute hier, weg...?
+    prompt: |
+      Nicht jedes Kunstwerk übersteht den Zahn der Zeit, und das ist auch nicht die Absicht jedes Künstlers. Ein Happening oder eine Performance kann einen Abend lang existieren, vielleicht Minuten oder nur Sekunden! Vielleicht betrachten Sie die Dokumentation eines flüchtigen, temporären Kunstwerks. Wie lange wird es dauern?
+    follow_ups:
+      - Was ginge verloren, wenn es morgen verschwände?
+      - Was überlebt in Erinnerung, Foto oder Geschichte?
+      - Ändert seine Vergänglichkeit Ihre Sicht darauf?
+  - id: wrap_it_up
+    name: Verpacke es
+    prompt: |
+      Was wäre, wenn Sie das Kunstwerk einpacken könnten? Würden Sie immer noch sagen können, was es ist? Könnte ein anderes Kunstwerk in dieselbe Verpackung passen?
+    follow_ups:
+      - Welche Form würde die Verpackung annehmen?
+      - Wie sähe das Geschenkpapier aus?
+      - Was ist wesentlich – und was könnte ausgetauscht werden?
+  - id: trace_a_path
+    name: Verfolge einen Pfad
+    prompt: |
+      Was schauen Sie an, wenn Sie einem Kunstwerk begegnen? Wohin wandert Ihr Blick als nächstes? Wo ruht Ihr Blick? Zeichnen Sie die Punkte auf und verbinden Sie sie.
+    follow_ups:
+      - Wohin kehren Sie immer wieder zurück?
+      - Was haben Sie übersprungen – und warum?
+      - Wie vergleicht sich Ihr Pfad mit dem von jemand anderem?
+  - id: superficial
+    name: Oberflächlich
+    prompt: |
+      Wie ist die Oberfläche? Absorbiert sie Licht oder reflektiert sie es? Ist sie glatt oder durchbrochen? Ist sie geschichtet, verfeinert oder rau? Haben Sie keine Angst, oberflächlich zu sein!
+    follow_ups:
+      - Wie würde es sich anfühlen, es zu berühren?
+      - Was enthüllt – oder verbirgt – die Oberfläche?
+      - Was passiert, wenn Sie auf der Oberfläche bleiben?
+  - id: studio_visit
+    name: Atelierbesuch
+    prompt: |
+      Es gibt so viele Künstlerateliers wie Künstler. Stellen Sie sich den Raum vor, in dem das Kunstwerk geschaffen wurde: ein Lagerhaus in Brooklyn, ein Atelier in Paris, der Küchentisch in einem geschäftigen Familienhaus – oder vielleicht an einem unwahrscheinlicheren Ort.
+    follow_ups:
+      - Was würden Sie in diesem Raum hören?
+      - Zu welcher Tageszeit wurde es geschaffen?
+      - Wie verändert der vorgestellte Ort Ihre Sicht auf das Werk?
+  - id: switch_channels
+    name: Kanäle wechseln
+    prompt: |
+      Schauen Sie sich die Leute an statt die Kunst. Wie verhalten sie sich gegenüber dem Werk?
+      Was schauen sie an? Können Sie erraten, was sie fühlen?
+    follow_ups:
+      - Wer verweilt – und wer eilt vorbei?
+      - Was würden sie sagen, wenn Sie sie fragen würden?
+      - Wie verändert das Beobachten anderer, was Sie bemerken?
+  - id: light
+    name: Licht
+    prompt: |
+      Suchen Sie die Lichtquelle. Woher kommt sie? Was ist im Schatten? Konzentrieren Sie sich darauf, was der Künstler uns sehen lassen will und was im Schatten verborgen ist.
+    follow_ups:
+      - Was enthüllt das Licht?
+      - Was könnten die Schatten verbergen?
+      - Wie würde sich das Werk in einem anderen Licht verändern?
+  - id: introductions
+    name: Vorstellungen
+    prompt: |
+      Stellen Sie ein Kunstwerk einem Freund vor, als wäre es ein Bekannter auf einer Party.
+      Wie würden Sie es so beschreiben, dass es sein Interesse weckt? Was fesselt Sie?
+    follow_ups:
+      - Was würden Sie zuerst hervorheben?
+      - Was würden Sie weglassen?
+      - Welcher Haken würde sie dazu bringen, es treffen zu wollen?
+  - id: tipping_point
+    name: Kipppunkt
+    prompt: |
+      Wo ist das Zentrum des Kunstwerks? Ist es aus dem Gleichgewicht? Suchen Sie den Kipppunkt.
+    follow_ups:
+      - Was würde es umkippen?
+      - Was hält es an Ort und Stelle?
+      - Wie erzeugt das Ungleichgewicht Spannung – oder Entspannung?
+  - id: homing
+    name: Heimkehr
+    prompt: |
+      Gehen Sie immer wieder zurück. Kehren Sie an verschiedenen Tagen oder zu verschiedenen Tageszeiten zu einem Lieblingskunstwerk zurück – gleich morgens im Winter, spät am Abend an einem Sommerabend. Führen Sie Buch darüber, wie Sie sich fühlen; Ihre Gefühle ändern sich bei jedem Besuch.
+    follow_ups:
+      - Was ist bei den Besuchen gleich geblieben?
+      - Wann hat es Sie am meisten überrascht?
+      - Was würden Sie Ihrem früheren Ich darüber erzählen?
+  - id: one_and_only
+    name: Ein und alles
+    prompt: |
+      Um nicht überfordert zu werden, wählen Sie nur ein Kunstwerk aus, das Sie sehen möchten, oder höchstens eine Handvoll. Tauchen Sie tief ein und verbringen Sie so viel Zeit wie möglich mit jedem einzelnen. Wie viele dieser Karten können Sie vor einem einzelnen Kunstwerk verwenden?
+    follow_ups:
+      - Was haben Sie beim zweiten Durchgang bemerkt?
+      - Welche Karten haben etwas Neues enthüllt?
+      - Wann wussten Sie, dass es Zeit war, weiterzugehen?
+  - id: press_pause
+    name: Pause drücken
+    prompt: |
+      Gehen Sie ganz langsam vor. Beginnen Sie mit geschlossenen Augen zu schauen, entspannen Sie sich und konzentrieren Sie sich auf Ihre Atmung, öffnen Sie die Augen langsam, fokussieren Sie neu und geben Sie dem Kunstwerk Zeit, sich vor Ihnen zu entfalten.
+    follow_ups:
+      - Was erschien, als Sie langsamer wurden?
+      - Was haben Sie zuerst bemerkt, als Sie die Augen geöffnet haben?
+      - Wie verändert Ihre Atmung, was Sie sehen?
+  - id: material
+    name: Material
+    prompt: |
+      Woraus ist das Kunstwerk gemacht? Was wäre, wenn es aus etwas anderem gemacht wäre? Je unpassender, desto besser. Würde es Ihre Gefühle dazu verändern?
+    follow_ups:
+      - Was wäre der überraschendste Ersatz?
+      - Was trägt das Material zur Bedeutung bei?
+      - Was würde den Austausch überstehen – und was würde verloren gehen?
+  - id: patch_of_sky
+    name: Wie viele Farben in einem Stück Himmel?
+    prompt: |
+      Zoomen Sie in einen Bereich des Kunstwerks. Wie viele Farben können Sie dort sehen?
+      Schauen Sie außerhalb des Museums nach oben und versuchen Sie, so viele Farben zu zählen, wie Sie in einem Stück Himmel sehen können.
+    follow_ups:
+      - Was haben Sie verpasst, als Sie das Ganze betrachtet haben?
+      - Wie vergleicht sich der Himmel mit dem Kunstwerk?
+      - Welche Farbe hat Sie am meisten überrascht?
+  - id: greening
+    name: Begrünen
+    prompt: |
+      Welche Art von Pflanze wäre das Kunstwerk? Wäre es ein Pfirsichbaum im Hochsommer, schwer von Früchten, oder eher ein zarter Farn? Welche Bedingungen braucht es zum Wachsen?
+    follow_ups:
+      - Wo würde es gedeihen – und wo würde es welken?
+      - Was bräuchte es zum Blühen?
+      - Wie verändert die botanische Metapher Ihre Sicht darauf?

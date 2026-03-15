@@ -1,0 +1,465 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinary Lab — Pizza (Turkish)
+
+id: culinary_lab_pizza
+name: Culinary Lab — Pizza
+description: Hamur ve ateşin kimyasından dilimin tiyatrosuna ve malzemelerin arkeolojisine kadar, pizzayı deneyimleme şeklinizi değiştirecek 50 kart.
+domain: culinary_lab
+cards:
+  - id: piz_dough_stretch
+    name: Hamur Açma
+    prompt: |
+      Hamurun açılmasını izleyin—elle atılan veya preslenen. Gluten ağı
+      gerilir, havayı hapseder. Şekil seçilir. Kare bir dilim, üçgenden
+      neden farklı bir anlam ifade eder?
+    follow_ups:
+      - Gerilme deneyimi nasıl tanımlar?
+      - Hamur açılmadan pizza ne olurdu?
+      - El ve şekil arasındaki ilişki nedir?
+  - id: piz_oven_breath
+    name: Fırın Nefesi
+    prompt: |
+      Bir pizza fırını nefes alır—odun ateşi, gaz veya elektrik. Kubbe
+      ısıyı tutar. Tabanı iletir. Bir tanesinin yakınına durun. Fırın,
+      aşçıdan ne talep eder? Hamurdan ne?
+    follow_ups:
+      - Fırın olmadan pizza ne olurdu?
+      - Isı hamuru nasıl şekillendirir?
+      - Nefes ve kabarcık arasındaki ilişki nedir?
+  - id: piz_sauce_spiral
+    name: Sos Sarmalı
+    prompt: |
+      Sos genellikle kenardan kenara yayılmadan, sarmal şeklinde uygulanır.
+      Deseni inceleyin. Ne kapalı? Ne açıkta? Sarmal bir kompozisyondur.
+    follow_ups:
+      - Tam soslu pizza nasıl görünürdü?
+      - Sarmal her lokmayı nasıl etkiler?
+      - Desen ve tat arasındaki ilişki nedir?
+  - id: piz_cheese_melt
+    name: Peynir Erimesi
+    prompt: |
+      Peynir farklı oranlarda erir. Mozzarella uzar; eski peynirler yağlanır.
+      Erimeyi izleyin. Yağ ve protein, ısı ve zamanın kimyası. Ne zaman bitti?
+    follow_ups:
+      - Uzama olmadan dilim ne olurdu?
+      - Erime lokmayı nasıl şekillendirir?
+      - Erime ve hafıza arasındaki ilişki nedir?
+  - id: piz_crust_char
+    name: Kabuk Yanıklığı
+    prompt: |
+      Leopar deseni—kabuktaki yanık lekeleri—odun ateşinde pişen pizzanın
+      işaretidir. Her leke, aşırı ısı ile temas anıdır. Bu lekelerin eklediği
+      tadı düşünün. Soluk bir kabuk ne anlama gelirdi?
+    follow_ups:
+      - Yanıklık deneyimi nasıl değiştirir?
+      - Yanıklık olmadan pizza ne olurdu?
+      - Yanıklık ve zanaat arasındaki ilişki nedir?
+  - id: piz_slice_fold
+    name: Dilim Katlaması
+    prompt: |
+      New York usulü: dilimi katlayın. Katlama yapısal—malzemeleri tutar,
+      yağı yönlendirir. Katlama bir koreografidir. Neye olanak tanır?
+    follow_ups:
+      - Katlama olmadan yemek ne olurdu?
+      - Katlama lokmayı nasıl şekillendirir?
+      - Katlama ve yer arasındaki ilişki nedir?
+  - id: piz_pepperoni_cup
+    name: Pepperoni Kasesi
+    prompt: |
+      İyi pepperoni kaseleri—kenarları çıtır, ortası yağ dolu. Şekil ve
+      doku dönüşümüdür. Ne zaman olduğunu fark edin. Kupayı ne yarattı?
+    follow_ups:
+      - Kase olmadan pepperoni ne olurdu?
+      - Kase tadı nasıl tutar?
+      - Yağ ve form arasındaki ilişki nedir?
+  - id: piz_basil_finish
+    name: Fesleğen Bitişi
+    prompt: |
+      Pizzaya fesleğen genellikle pişirme sonrası eklenir—taze, canlı. Temel
+      değil, bir bitiriştir. Kontrastı fark edin. Pişmiş olana tazelik ne
+      katar?
+    follow_ups:
+      - Fesleğen olmadan pizza ne olurdu?
+      - Zamanlamanın otu nasıl şekillendirdiği?
+      - Ham ve pişmiş arasındaki ilişki nedir?
+  - id: piz_margherita_minimal
+    name: Margherita Minimal
+    prompt: |
+      Margherita üç şeydir: hamur, domates, peynir. Her biri taşımalıdır.
+      Saklanacak yer yoktur. Disiplini düşünün. Minimalizm ne gerektirir?
+    follow_ups:
+      - Tek bir yanlış nota ne yapardı?
+      - Sadelik damağı nasıl odaklar?
+      - Az ve çok arasındaki ilişki nedir?
+  - id: piz_pool_table
+    name: Masa
+    prompt: |
+      Bazı pizzacılarda uzun ortak masa bulunur—yabancılar alanı paylaşır.
+      Pizza gelir. Masa bir sahnedir. Yanınızda kimler yemek yiyor?
+      Söylenmeyen sözleşme nedir?
+    follow_ups:
+      - Kabinde yemek ne olurdu?
+      - Masa karşılaşmayı nasıl şekillendirir?
+      - Paylaşılan ve özel arasındaki ilişki nedir?
+  - id: piz_box_flip
+    name: Kutu Çevirme
+    prompt: |
+      Pizza kutusu—karton, bazen ortada plastik üç ayaklı. Havalandırma,
+      istifleme için tasarlanmıştır. Kutu altyapıdır. Olmadan paket servis
+      ne olurdu?
+    follow_ups:
+      - Kutu eve yolculuğu nasıl şekillendirir?
+      - Kutu açıldığında ne olur?
+      - Kutu ve ritüel arasındaki ilişki nedir?
+  - id: piz_dough_ferment
+    name: Hamur Fermentasyonu
+    prompt: |
+      Pizza hamuru fermente olur—saatler veya günler. Maya kabarcıklar, tat
+      oluşturur. Eski hamurun ekşiliği vardır. Her lokmadaki zamanı
+      düşünün. Hızlı mayalanan hamur neyden vazgeçerdi?
+    follow_ups:
+      - Fermantasyon kabuğu nasıl şekillendirir?
+      - Zaman ve tat arasındaki ilişki nedir?
+      - Aynı gün hamuru ne anlama gelirdi?
+  - id: piz_cornicione
+    name: Kenar
+    prompt: |
+      Cornicione—kenar, kabuk—genellikle en iyi kısımdır. Havalı, yanmış,
+      belki biraz çiğnenebilir. Bazıları bırakır; bazıları önce yer.
+      Kenarla ilişkiniz nedir?
+    follow_ups:
+      - Kenar olmadan pizza ne olurdu?
+      - Kenar merkezi nasıl çerçeveler?
+      - Kabuk ve merkez arasındaki ilişki nedir?
+  - id: piz_olive_oil_drizzle
+    name: Zeytinyağı Gezdirme
+    prompt: |
+      Pişirme sonrası gezdirilen zeytinyağı—kenara veya tüm pizzaya. Parlar.
+      Yağ lezzet taşır, zenginlik katar. Ne zaman uygulandığını fark edin.
+      Gezdirme ne katar?
+    follow_ups:
+      - Yağ olmadan pizza ne olurdu?
+      - Yağ lokmayı nasıl değiştirir?
+      - Yağ ve bitiş arasındaki ilişki nedir?
+  - id: piz_anchovy_salt
+    name: Hamsi Tuzu
+    prompt: |
+      Pizzada hamsi—tuzlu, umami, bölücü. Soya karışırlar veya üstüne
+      yerleşirler. Hamsi arkeolojidir: Akdeniz, korunmuş, antik. Ne yolculuk
+      yaptı?
+    follow_ups:
+      - Hamsi olmadan dilim ne olurdu?
+      - Tuz diğer tatları nasıl şekillendirir?
+      - Korunmuş ve taze arasındaki ilişki nedir?
+  - id: piz_sound_crunch
+    name: Ses Çıtırdayışı
+    prompt: |
+      İyi yapılmış bir kabuğun ilk lokması—çıtırtı, esneme. Gözlerinizi
+      kapatın. Ses deneyimin bir parçasıdır. Pizza sessiz olsaydı ne olurdu?
+    follow_ups:
+      - Ses tatmini nasıl şekillendirir?
+      - Sulı bir kabuk nasıl ses çıkarır?
+      - Çıtır ve kalite arasındaki ilişki nedir?
+  - id: piz_second_slice
+    name: İkinci Dilim
+    prompt: |
+      İkinci dilim ilkinden farklıdır—pizzayı artık biliyorsunuz. Damak
+      ayarladı. Değişimi fark edin. İkinci dilim aynı mı tadıyor? Daha iyi?
+      Farklı?
+    follow_ups:
+      - Tekrar tekrar algıyı nasıl değiştirir?
+      - Tek dilimlik bir öğün ne eksik olurdu?
+      - İlk ve ikinci arasındaki ilişki nedir?
+  - id: piz_neapolitan_rules
+    name: Napoli Kuralları
+    prompt: |
+      Gerçek Napoli pizzası kurallara sahiptir—boyut, malzeme, yöntem.
+      VPN damgası, sertifika. Kurallar kimlik oluşturur. Kurallar neyi korur?
+      Neyi dışlar?
+    follow_ups:
+      - Kurallar olmadan pizza ne olurdu?
+      - Sertifikasyon beklentiyi nasıl şekillendirir?
+      - Kural ve zanaat arasındaki ilişki nedir?
+  - id: piz_detroit_edges
+    name: Detroit Kenarları
+    prompt: |
+      Detroit usulü—dikdörtgen, kenara kadar peynir, tavada buluştuğu yerde
+      çıtır kızarmış kabuk. Kenarlar kasıtlıdır. Mimariyi düşünün. Şekil ne
+      söyler?
+    follow_ups:
+      - Kenarlar olmadan pizza ne olurdu?
+      - Şekil kimliği nasıl oluşturur?
+      - Tava ve kabuk arasındaki ilişki nedir?
+  - id: piz_garlic_knot
+    name: Sarımsak Düğümü
+    prompt: |
+      Sarımsak düğümleri—hamur bükümlü, tereyağlı, sarımsaklı. Genellikle
+      ilk gelirler. Pizza değiller, ama aynı dünyadanlar. Düğüm ve pasta
+      arasındaki ilişki nedir?
+    follow_ups:
+      - Düğümler olmadan yemek ne olurdu?
+      - Düğüm tonu nasıl belirler?
+      - Yan ve ana arasındaki ilişki nedir?
+  - id: piz_red_pepper_flake
+    name: Pul Biber
+    prompt: |
+      Pul biber şişesi—genellikle masada. Acıyı siz seçersiniz. Pul biber
+      demokrasidir. Herkes kendi baharatını ekler. Bu seçim ne anlama gelir?
+    follow_ups:
+      - Şişe olmadan masa ne olurdu?
+      - Kendi baharatını ekleme yemeği nasıl şekillendirir?
+      - Seçim ve tat arasındaki ilişki nedir?
+  - id: piz_sicilian_slab
+    name: Sicilya Dilimi
+    prompt: |
+      Sicilya—kalın, dikdörtgen, bazen ters (üstte sos). Dilim ağırlığa
+      sahiptir. Mimari farklıdır. Kalınlık ne katar? Neyden vazgeçer?
+    follow_ups:
+      - İnce hamur farklı ne yapardı?
+      - Kalınlık lokmayı nasıl şekillendirir?
+      - Dilim ve parça arasındaki ilişki nedir?
+  - id: piz_wood_stack
+    name: Odun Yığını
+    prompt: |
+      Odun ateşinde pizzacılar kütükleri istifler. Meşe, bazen. Odun yakıttır
+      ve lezzettir. Yığın hazırlıktır. Ne yandığını düşünün. Odun gazın
+      yapamayacağını ne katar?
+    follow_ups:
+      - Odun olmadan pizza ne olurdu?
+      - Yakıt kabuğu nasıl şekillendirir?
+      - Ateş ve duman arasındaki ilişki nedir?
+  - id: piz_topping_balance
+    name: Malzeme Dengesi
+    prompt: |
+      Malzemeler ezebilir—çok fazla olursa, pizza bir güveç olur. Denge
+      hassastır. Yüklü bir pizzayı inceleyin. Nerede çizgiyi aşar?
+      Neyi kaldırırdınız?
+    follow_ups:
+      - Kısıtlama pizzayı nasıl şekillendirir?
+      - Çok ve az arasındaki ilişki nedir?
+      - Ne zaman seçim kaosa dönüşür?
+  - id: piz_cold_leftover
+    name: Soğuk Kalıntı
+    prompt: |
+      Kahvaltı için soğuk pizza—bazıları buna yemin eder. Tatlar oturmuştur.
+      Doku değişmiştir. Ertesi günkü pizzayı düşünün. Zaman ne katar?
+      Ne alır?
+    follow_ups:
+      - Soğuk deneyimi nasıl değiştirir?
+      - Isıtmak ne yapardı?
+      - Taze ve kalıntı arasındaki ilişki nedir?
+  - id: piz_sauce_sweet
+    name: Sos Tatlılığı
+    prompt: |
+      Domates sosu tatlı veya parlak olabilir, domatese, aşçıya bağlı olarak.
+      Mümkünse sosu yalnız tadın. Tatlılık nereden geliyor? Asit ne yapardı?
+    follow_ups:
+      - Sos tonu nasıl belirler?
+      - Tatlı ve ekşi arasındaki ilişki nedir?
+      - Çiğ domates ne anlama gelirdi?
+  - id: piz_roman_taglio
+    name: Roma Kesme
+    prompt: |
+      Pizza al taglio—dilimle, ağırlıkla satılır. İşaret edersiniz, onlar
+      keser. Dikdörtgen, kilogram başına fiyat. İşlem farklıdır. Ağırlıkla
+      almak ne anlama gelir?
+    follow_ups:
+      - Taglio deneyimi nasıl şekillendirir?
+      - Bütün bir pasta burada ne anlama gelirdi?
+      - Kesim ve seçim arasındaki ilişki nedir?
+  - id: piz_hot_honey
+    name: Acı Bal
+    prompt: |
+      Pizzada acı bal—yeni gelenek, şimdi her yerde. Tatlı, baharatlı,
+      viskoz. Bir bitiriştir. Ne zaman eklendiğini fark edin. Bal peynire
+      ne yapar?
+    follow_ups:
+      - Bal olmadan dilim ne olurdu?
+      - Tatlı-baharatlı lokmayı nasıl şekillendirir?
+      - Trend ve gelenek arasındaki ilişki nedir?
+  - id: piz_pecorino_grate
+    name: Pecorino Rendesi
+    prompt: |
+      Pizzanın üzerine rendelenmiş Pecorino—tuzlu, keskin. Bir katmandır.
+      Üstteki peynir eriyen peynirden farklıdır. Hiyerarşiyi düşünün.
+      Rende ne katar?
+    follow_ups:
+      - Pecorino olmadan pizza ne olurdu?
+      - İkinci peynir yemeği nasıl şekillendirir?
+      - Erime ve rende arasındaki ilişki nedir?
+  - id: piz_paddle_slide
+    name: Kürek Kaydırma
+    prompt: |
+      Kürek, kürek—tahta veya metal. Hamur üzerine kaydırılır, sonra fırına.
+      Hareket pratiktir. İzleyin. Beceri olmadan ne yanlış giderdi?
+    follow_ups:
+      - Kürek pişirmeyi nasıl sağlar?
+      - Araç ve sonuç arasındaki ilişki nedir?
+      - Düşen bir pizza ne anlama gelirdi?
+  - id: piz_sourdough_crust
+    name: Ekşi Maya Kabuğu
+    prompt: |
+      Ekşi maya pizza kabuğu—uzun fermentasyon, ekşilik. Kabuğun bir
+      kişiliği vardır. Tarafsız değildir. Ekşi mayanın ne kattığını düşünün.
+      Ticari maya farklı ne yapardı?
+    follow_ups:
+      - Ekşi maya lokmayı nasıl şekillendirir?
+      - Fermantasyon ve lezzet arasındaki ilişki nedir?
+      - Daha tatsız bir kabuk ne anlama gelirdi?
+  - id: piz_white_pie
+    name: Beyaz Pasta
+    prompt: |
+      Beyaz pizza—domates yok. Zeytinyağı, peynir, belki sarımsak. Kırmızının
+      yokluğu her şeyi değiştirir. Damak domates bekler. Beyaz pasta
+      yerine ne sunar?
+    follow_ups:
+      - Domatesli pasta ne olurdu?
+      - Yokluk beklentiyi nasıl şekillendirir?
+      - Kırmızı ve beyaz arasındaki ilişki nedir?
+  - id: piz_bar_setting
+    name: Bar Ortamı
+    prompt: |
+      Barda pizza—nerede sipariş verirseniz orada yersiniz. Bar bir
+      sahnedir. Fırını, dilimleri izlersiniz. Ortam rahat, anında. Barda
+      yemek ne katar?
+    follow_ups:
+      - Masa neyi değiştirirdi?
+      - Yakınlık deneyimi nasıl şekillendirir?
+      - Bar ve mutfak arasındaki ilişki nedir?
+  - id: piz_truffle_trend
+    name: Trüf Trendi
+    prompt: |
+      Pizzada trüf—yağ veya dilimler—lüks için bir kısayol haline geldi.
+      Aroma hakim. Trendi düşünün. Trüf ne katar? Neyi maskeler?
+    follow_ups:
+      - Trüfsüz pizza ne olurdu?
+      - Lüks lokmayı nasıl şekillendirir?
+      - Trend ve tat arasındaki ilişki nedir?
+  - id: piz_ricotta_dollop
+    name: Ricotta Damlası
+    prompt: |
+      Pizzaya damlalanmış ricotta—serin, kremsi, zıt. Mozzarella gibi
+      erimez. Oturur. Sıcaklık farkını fark edin. Damla ne katar?
+    follow_ups:
+      - Ricotta olmadan dilim ne olurdu?
+      - Soğuk, sıcağı nasıl şekillendirir?
+      - Damla ve erime arasındaki ilişki nedir?
+  - id: piz_slice_count
+    name: Dilim Sayısı
+    prompt: |
+      Kaç dilim? Sayı genellikle sekizdir—veya daha küçük bir pasta için
+      altı. Sayı porsiyonu, paylaşımı belirler. Matematiği düşünün. Dört
+      dilim ne anlama gelirdi? On iki?
+    follow_ups:
+      - Dilim sayısı yemeği nasıl şekillendirir?
+      - Kesim ve paylaşım arasındaki ilişki nedir?
+      - Ne zaman sayı önemlidir?
+  - id: piz_oven_window
+    name: Fırın Camı
+    prompt: |
+      Fırının bir camı var—ya da yok. Pizzanın pişmesini izlemek
+      tiyatrodur. Peynir kabarır. Kabuk yükselir. Manzara olmadan deneyim
+      ne olurdu?
+    follow_ups:
+      - İzlemek beklentiyi nasıl şekillendirir?
+      - Görünür ve gizli arasındaki ilişki nedir?
+      - Camdan ne öğrenirsiniz?
+  - id: piz_ranch_dip
+    name: Ranch Sosu
+    prompt: |
+      Pizzayla ranch—Amerikan geleneği, genellikle kenarla. Sos isteğe
+      bağlı, tartışmalı. Eklemeyi düşünün. Ranch ne katar? Neyin üstünü
+      örter?
+    follow_ups:
+      - Ranch olmadan kenar ne olurdu?
+      - Sos lokmayı nasıl şekillendirir?
+      - Arı ve pratik arasındaki ilişki nedir?
+  - id: piz_capers_brine
+    name: Kapari Salamurası
+    prompt: |
+      Pizzada kapari—tuzlu, keskin. Zenginliği keser. Kapari seyahat
+      etti—Akdeniz, turşu. Ne zaman göründüklerini fark edin. Salamura ne
+      katar?
+    follow_ups:
+      - Kapari olmadan dilim ne olurdu?
+      - Salamura damağı nasıl şekillendirir?
+      - Turşu ve taze arasındaki ilişki nedir?
+  - id: piz_calzone_seam
+    name: Calzone Dikişi
+    prompt: |
+      Calzone—pizza katlanmış, mühürlenmiş. Dikiş dolguyu tutar. Form
+      farklıdır. Kesersiniz. Buhar çıkar. Katlama ne katar? Ne saklar?
+    follow_ups:
+      - Açılmamış calzone ne olurdu?
+      - Dikiş nasıl sürpriz yaratır?
+      - Açık ve kapalı arasındaki ilişki nedir?
+  - id: piz_mushroom_water
+    name: Mantar Suyu
+    prompt: |
+      Pizzada mantarlar pişerken su salar. İyi bir aşçı önceden pişirmeyi
+      veya kuru çeşitleri kullanmayı bilir. Sulu mantarlar sırılsıklam
+      pizza yapar. Kimyayı düşünün. Nem ne yapar?
+    follow_ups:
+      - Mantar hazırlığı dilimi nasıl şekillendirir?
+      - Islak ve gevrek arasındaki ilişki nedir?
+      - Çiğ mantar ne yapardı?
+  - id: piz_grease_absorb
+    name: Yağ Emilimi
+    prompt: |
+      Dilime bir peçete—bazıları yağı siler. Yağ, peynir, pepperoni'den
+      gelen yağdır. Silmek mi, silmemek mi? Seçimi düşünün. Yağ neye
+      katkıda bulunur? Silmek neyi kaldırır?
+    follow_ups:
+      - Yağ deneyimi nasıl şekillendirir?
+      - Kuru bir dilim ne anlama gelirdi?
+      - Yağ ve tat arasındaki ilişki nedir?
+  - id: piz_oven_spring
+    name: Fırın Yaylanması
+    prompt: |
+      Fırın yaylanması—hamur yüksek ısıda kabarır. Maya hızlı çalışır.
+      Yapı ayarlanır. Anı düşünün. Yetersiz ısı olmadan ne olurdu?
+      Doğru un olmadan?
+    follow_ups:
+      - Yayılma kırıntıyı nasıl oluşturur?
+      - Isı ve yükseliş arasındaki ilişki nedir?
+      - Düz bir kabuk ne anlama gelirdi?
+  - id: piz_roma_tomato
+    name: Roma Domatesi
+    prompt: |
+      San Marzano veya Roma—domatesler önemlidir. Bir yerden gelirler.
+      Kampanya. DOP, teruar. Domatesi izleyin. Diliminize ne yolculuk
+      yaptı?
+    follow_ups:
+      - Başka bir domates ne yapardı?
+      - Köken sosu nasıl şekillendirir?
+      - Yer ve tat arasındaki ilişki nedir?
+  - id: piz_pizza_napoli
+    name: Napoli Pizzası
+    prompt: |
+      Napoli icat etti. Şehir ve yemek bağlıdır. Napoli'de pizza yemek,
+      kaynağında yemek demektir. Arkeolojiyi düşünün. Aynı pizza başka
+      yerde ne anlama gelirdi?
+    follow_ups:
+      - Yer deneyimi nasıl şekillendirir?
+      - Çeviri neyi kaybederdi?
+      - Köken ve özgünlük arasındaki ilişki nedir?
+  - id: piz_wine_pair
+    name: Şarap Eşleşmesi
+    prompt: |
+      Pizza ve şarap—bira yaygındır, ama şarap işe yarar. Kırmızı, genellikle.
+      Şaraptaki asit, domatesdeki asitle buluşur. Eşleşmeyi düşünün. Şarap
+      dilime ne katar?
+    follow_ups:
+      - Bira farklı ne yapardı?
+      - İçecek yemeği nasıl şekillendirir?
+      - Bardak ve tabak arasındaki ilişki nedir?
+  - id: piz_pizza_party
+    name: Pizza Partisi
+    prompt: |
+      Kalabalık için pizza—doğum günleri, oyun gecesi, ofis öğle yemeği.
+      Pizza sosyaldir. Kutular istiflenir. Herkes bir dilim kapar.
+      Koreografiyi düşünün. Kalabalık yemeği nasıl değiştirir?
+    follow_ups:
+      - Tek kişilik pizza ne anlama gelirdi?
+      - Paylaşım deneyimi nasıl şekillendirir?
+      - Pizza ve topluluk arasındaki ilişki nedir?

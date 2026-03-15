@@ -1,0 +1,488 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Doğal Mikrokozmos — Böcek Bölgeleri (Turkish)
+
+id: natural_microcosm_insect_territories
+name: Doğal Mikrokozmos — Böcek Bölgeleri
+description: Böcek yaşamına bakış açınızı değiştirecek 50 kart — karınca izleri ve arı trafiğinden örümcek ağlarına, bölgesel dramalara ve kolonilerin koreografisine kadar.
+domain: natural_microcosm
+cards:
+  - id: nmi_ant_trail
+    name: Karınca İzi
+    prompt: |
+      Karıncalar izler oluşturur — yuva ve yiyecek arasındaki feromon yolları. Akışı izleyin.
+      İki yönlü: gidiş ve dönüş. İz, birçoğunun verdiği bir karardır.
+      İzi ne bozabilir?
+    follow_ups:
+      - İz kendini nasıl pekiştirir?
+      - İzsiz bir koloni ne olurdu?
+      - İz ve koloni arasındaki ilişki nedir?
+  - id: nmi_bee_traffic
+    name: Arı Trafiği
+    prompt: |
+      Bir kovan girişi — arılar içeri girip çıkıyor. Trafiğin bir ritmi var. Bazıları
+      polen taşıyor; bazıları taşımıyor. Koreografiyi düşünün. Deseni
+      kim belirliyor?
+    follow_ups:
+      - Trafiksiz bir kovan ne olurdu?
+      - Giriş akışı nasıl şekillendiriyor?
+      - Arı ve koloni arasındaki ilişki nedir?
+  - id: nmi_spider_web
+    name: Örümcek Ağı
+    prompt: |
+      Bir örümcek ağı bölge ve tuzaktır. Örümcek kenarda bekler.
+      Titreşimler bilgi taşır. Mimariyi düşünün. Ağ neyi yakalar? Neyi dışlar?
+    follow_ups:
+      - Ağı olmayan bir örümcek ne olurdu?
+      - Ağ, örümceğin duyularını nasıl genişletiyor?
+      - İpek ve hayatta kalma arasındaki ilişki nedir?
+  - id: nmi_dragonfly_claim
+    name: Yansıtıcı Alan Talebi
+    prompt: |
+      Bir yusufçuk bir gölet şeridini devriye geziyor — ileri geri. Bölgeseldir.
+      Rakipler kovalanır. Eşler kur yapılır. Payı düşünün. Ne savunuluyor?
+    follow_ups:
+      - Toprağı olmayan bir yusufçuk ne yapardı?
+      - Devriye devriye sahipliği nasıl iletiyor?
+      - Alan ve üreme arasındaki ilişki nedir?
+  - id: nmi_caterpillar_munch
+    name: Tırtıl Kemirme
+    prompt: |
+      Bir tırtıl yer — yaprak kenarı geriliyor. Yemek yemek sürekli. Tırtıl bir
+      dönüşüm makinesidir. Oranı düşünün. Otçullar olmadan bitki ne olurdu?
+    follow_ups:
+      - Tırtıl yaprağı nasıl şekillendiriyor?
+      - Yemeden kelebek ne olurdu?
+      - Tüketim ve büyüme arasındaki ilişki nedir?
+  - id: nmi_beetle_battle
+    name: Böcek Savaşı
+    prompt: |
+      İki böcek karşılaşır — belki geyik böcekleri, belki gübre böcekleri. Kavga ederler.
+      Dövüş bir ritüeldir. Payları düşünün. Ne kazanılıyor? Ne
+      kaybediliyor?
+    follow_ups:
+      - Kaybeden ne yapardı?
+      - Savaş nasıl çözülüyor?
+      - Savaş ve çiftleşme arasındaki ilişki nedir?
+  - id: nmi_firefly_flash
+    name: Ateş Böceği Işığı
+    prompt: |
+      Ateş böcekleri yanıp söner — her türün bir kodu vardır. Desen kur yapmaktır.
+      Sinyali düşünün. Yanlış bir yanıp sönme ne anlama gelirdi? Karanlıkta
+      nasıl birbirlerini bulurlar?
+    follow_ups:
+      - Işık türü nasıl kodlar?
+      - Ateş böcekleri olmadan çayır ne olurdu?
+      - Işık ve eş arasındaki ilişki nedir?
+  - id: nmi_aphid_farm
+    name: Afit Çiftliği
+    prompt: |
+      Karıncalar afitleri yetiştirir — onlara dokunur, onları korurlar. Afitler
+      bal özü salgılar. Karıncalar onu toplar. Ortaklığı düşünün. Kim
+      fayda sağlar? Kim sömürülür?
+    follow_ups:
+      - Karıncalar olmadan afitler ne olurdu?
+      - Çiftçilik her iki türü nasıl şekillendiriyor?
+      - Bakmak ve çıkarmak arasındaki ilişki nedir?
+  - id: nmi_cicada_shell
+    name: Ağustos Böceği Kabuğu
+    prompt: |
+      Bir ağustos böceği kabuğu kabuğa yapışır — larva çıktı. Kabuk boş,
+      mükemmel. Kurmayı düşünün. Böcek geride ne bıraktı? Ne kazandı?
+    follow_ups:
+      - Kurmayı olmadan ağustos böceği ne olurdu?
+      - Kabuk geçişi nasıl işaretler?
+      - Dökülme ve büyüme arasındaki ilişki nedir?
+  - id: nmi_leaf_miner
+    name: Yaprak Madencisi
+    prompt: |
+      Bir yaprağın içinde bir iz — bir yaprak madencisinin yolu. Larva
+      katmanlar arasında yer. Yaprak kaydı tutar. Tüneli düşünün. Yaprak
+      içeriden nasıl görünürdü?
+    follow_ups:
+      - Madenci olmadan yaprak ne olurdu?
+      - Madenin larvayı nasıl koruduğu?
+      - İç ve dış arasındaki ilişki nedir?
+  - id: nmi_wasp_nest
+    name: Eşekarısı Yuvası
+    prompt: |
+      Bir kağıt eşekarısı yuvası — altıgen hücreler, çiğnenmiş ahşap. Yuva mimari
+      ve kaledir. Koloniyi düşünün. Kim inşa eder? Kim savunur? Kim
+      çoğalır?
+    follow_ups:
+      - Yuva olmadan eşekarısı ne olurdu?
+      - Yuva sosyal yapıyı nasıl şekillendiriyor?
+      - Kağıt ve koloni arasındaki ilişki nedir?
+  - id: nmi_grasshopper_leap
+    name: Çekirge Sıçraması
+    prompt: |
+      Bir çekirge sıçrar — bacaklar uzanır, kaybolur. Sıçrama kaçış veya
+      yaklaşmadır. Tetikleyiciyi düşünün. Çekirge ne gördü? Ne
+      duydu?
+    follow_ups:
+      - Sıçramadan çekirge ne olurdu?
+      - Sıçrama avlanmadan nasıl kaçar?
+      - Bacak ve uçuş arasındaki ilişki nedir?
+  - id: nmi_mantis_still
+    name: Girinci Sakin
+    prompt: |
+      Bir girinci bekler — hareketsiz. Bir avcıdır. Av yaklaşır. Vuruş
+      anidir. Sabrı düşünün. Durgunluk neye mal olur? Ne
+      sağlar?
+    follow_ups:
+      - Beklemeden girinci ne olurdu?
+      - Durgunluk nasıl aldatır?
+      - Sabır ve yakalama arasındaki ilişki nedir?
+  - id: nmi_bumblebee_buzz
+    name: Bombus Arısı Vızıltısı
+    prompt: |
+      Bir bombus arısı vızıldar — titreşir. Bazı çiçekler vızıldayarak tozlaşma gerektirir.
+      Arı poleni sarsarak serbest bırakır. Ortaklığı düşünün. Vızıltı olmadan çiçek ne olurdu?
+    follow_ups:
+      - Vızıltı poleni nasıl serbest bırakır?
+      - Vızıldayarak tozlaşmadan arı ne olurdu?
+      - Titreşim ve döllenme arasındaki ilişki nedir?
+  - id: nmi_butterfly_territory
+    name: Kelebek Bölgesi
+    prompt: |
+      Bir kelebek yüksek bir noktada durur — tepelerde. Eşler için bekler.
+      Rakipler kovalanır. Stratejiyi düşünün. Neden bu nokta? Neden değerli?
+    follow_ups:
+      - Konmadan kelebek ne yapardı?
+      - Tepede durma çiftleşmeyi nasıl şekillendiriyor?
+      - Yer ve karşılaşma arasındaki ilişki nedir?
+  - id: nmi_earwig_pincer
+    name: Kulağakaçan Kıskaç
+    prompt: |
+      Kulağakaçanların kıskaçları vardır — cerci. Savunma, kanat katlama ve av
+      tutmak için kullanılırlar. Aracı düşünün. Kıskaç olmadan kulağakaçan ne olurdu?
+    follow_ups:
+      - Kıskaç davranışı nasıl şekillendiriyor?
+      - Kıskaçsız savunma nasıl görünürdü?
+      - Biçim ve işlev arasındaki ilişki nedir?
+  - id: nmi_katydid_call
+    name: Çırcır Böceği Çağrısı
+    prompt: |
+      Bir çırcır böceği çağırır — ses çıkarma, kanatlara sürtünen bacaklar. Çağrı türe özgüdür.
+      Kur yapmadır, bölgedir. Sesi düşünün. Onsuz gece ne olurdu?
+    follow_ups:
+      - Çağrı eşleri nasıl çeker?
+      - Çırcır böceği çağrı yaparak neyi riske atar?
+      - Ses ve avlanma arasındaki ilişki nedir?
+  - id: nmi_ladybug_cluster
+    name: Uğur Böceği Kümesi
+    prompt: |
+      Uğur böcekleri kışın kümelenir — düzinelerce, yüzlerce. Sıcaklık ve
+      barınak için toplanırlar. Birleşmeyi düşünün. Onu ne tetikler? Neyi dağıtır?
+    follow_ups:
+      - Kümese olmadan uğur böcekleri ne olurdu?
+      - Küme nasıl mikroiklim yaratır?
+      - Çokluk ve hayatta kalma arasındaki ilişki nedir?
+  - id: nmi_ant_carry
+    name: Karınca Taşıma
+    prompt: |
+      Bir karınca başka birini taşır — ölü veya yaralı. Yardımdır. Koloni kendi
+      üyelerine bakar. Davranışı düşünün. Yaralı karınca yalnız ne yapardı?
+      Taşıyan ne kazanır?
+    follow_ups:
+      - Taşıma koloninin neyine hizmet eder?
+      - İşbirliği olmadan koloni ne olurdu?
+      - Birey ve kolektif arasındaki ilişki nedir?
+  - id: nmi_mosquito_hover
+    name: Sivrisinek Bekleyişi
+    prompt: |
+      Bir sivrisinek bekler — test eder, yoklar. Bir konakçı arıyor. Bekleyiş
+      değerlendirmedir. Isırık öncesi anı düşünün. Sivrisinek neyi algılar? Ne
+      karar verir?
+    follow_ups:
+      - Beklemeden sivrisinek ne yapardı?
+      - Bekleyiş tespiti nasıl en aza indirir?
+      - Yoklama ve beslenme arasındaki ilişki nedir?
+  - id: nmi_weevil_curl
+    name: Bükücü Kıvrımı
+    prompt: |
+      Bir yaprak kıvrılır — bir bükücü veya gal midyesi yaptı. Yaprak larva etrafında
+      katlanır. Manipülasyonu düşünün. Bitki ikna edilir. Böcek olmadan yaprak ne olurdu?
+    follow_ups:
+      - Kıvrım larvayı nasıl korur?
+      - Kıvrım olmadan bitki ne olurdu?
+      - Böcek ve bitki formu arasındaki ilişki nedir?
+  - id: nmi_honeybee_waggle
+    name: Bal Arısı Vıdı Vıdısı
+    prompt: |
+      Bir bal arısı vıdı vıdı yapar — bu bir danstır. Dans, çiçeklere olan mesafeyi ve
+      yönü kodlar. Diğer arılar izler. Mesajı düşünün. Vıdı vıdı olmadan koloni ne olurdu?
+    follow_ups:
+      - Dans bilgiyi nasıl aktarır?
+      - Onsuz avlanma nasıl görünürdü?
+      - Dans ve keşif arasındaki ilişki nedir?
+  - id: nmi_gnat_cloud
+    name: Süne Bulutu
+    prompt: |
+      Süneler sürüler halinde toplanır — minik böceklerden oluşan bir bulut. Sürü çiftleşmedir.
+      Erkekler toplanır; dişiler girer ve seçer. Birleşmeyi düşünün. Yalnız süne ne yapardı?
+    follow_ups:
+      - Sürü çiftleşmeyi nasıl mümkün kılar?
+      - Bulut olmadan süne ne olurdu?
+      - Çokluk ve karşılaşma arasındaki ilişki nedir?
+  - id: nmi_spider_wrap
+    name: Örümcek Sarma
+    prompt: |
+      Bir örümcek avı sarar — mücadele eden böceğin etrafına ipek. Sarma hareketsiz bırakır.
+      Örümcek enzim enjekte eder. Süreci düşünün. Sarma olmadan örümcek ne yapardı?
+    follow_ups:
+      - Sarma avı nasıl sakinleştirir?
+      - Onsuz örümcek neyi riske atardı?
+      - İpek ve sindirim arasındaki ilişki nedir?
+  - id: nmi_ant_war
+    name: Karınca Savaşı
+    prompt: |
+      İki karınca kolonisi karşılaşır — çatışma. İşçiler boğuşur, ısırır. Sınır
+      tartışmalıdır. Savaşı düşünün. Ne söz konusu? Sınır nasıl
+      belirlenir?
+    follow_ups:
+      - Savaş olmadan koloniler ne olurdu?
+      - Savaş nasıl çözülür?
+      - Bölge ve kaynak arasındaki ilişki nedir?
+  - id: nmi_moth_flutter
+    name: Güve Uçuşması
+    prompt: |
+      Bir güve bir ışığa doğru uçar — çekilir, kafası karışır. Işık
+      navigasyonu bozar. Tuzağı düşünün. Karanlıkta güve ne yapardı?
+      Işık neden yönünü şaşırtır?
+    follow_ups:
+      - Işık olmadan güve ne olurdu?
+      - Güve normalde ayı ışığını nasıl kullanır?
+      - Işık ve yön arasındaki ilişki nedir?
+  - id: nmi_stick_insect_still
+    name: Çubuk Böceği Sakin
+    prompt: |
+      Bir çubuk böceği hareketsizdir — bir dal gibi görünür. Avcılar geçer.
+      Aldatmayı düşünün. Gizlenme olmadan böcek ne olurdu?
+      Pozu ne kadar süre tutabilir?
+    follow_ups:
+      - Durgunluk nasıl korur?
+      - Hareket ederek böcek neyi riske atardı?
+      - Biçim ve hayatta kalma arasındaki ilişki nedir?
+  - id: nmi_leafcutter_carry
+    name: Yaprak Kesici Taşıma
+    prompt: |
+      Bir yaprak kesici karınca bir yaprak parçasını taşır — kendi boyutunun kat kat fazlası. Yaprak
+      yuvasına gider. Mantar için alt tabaka olur. Hasadı düşünün. Yapraklar olmadan koloni ne olurdu?
+    follow_ups:
+      - Mantar yaprağı nasıl kullanır?
+      - Mantar olmadan karınca ne yerdi?
+      - Hasat ve yetiştiricilik arasındaki ilişki nedir?
+  - id: nmi_housefly_clean
+    name: Ev Sinek Temizliği
+    prompt: |
+      Bir ev sineği kendini temizler — bacaklarını ovuşturur, kanatlarını okşar. Temizlik
+      parçacıkları giderir, sensörleri korur. Ritüeli düşünün. Temizlik olmadan sinek ne olurdu?
+    follow_ups:
+      - Temizlik işlevi nasıl sürdürür?
+      - Sinek temizleyemezse ne olurdu?
+      - Temiz ve duyusal arasındaki ilişki nedir?
+  - id: nmi_termite_mound
+    name: Termit Höyüğü
+    prompt: |
+      Bir termit höyüğü yükselir — kil, tükürük, çiğnenmiş ahşap. Bir şehirdir. İçinde,
+      tüneller, odalar, mantar bahçeleri. Mimariyi düşünün. Höyük olmadan koloni ne olurdu?
+    follow_ups:
+      - Höyük iklimi nasıl düzenler?
+      - Yapı olmadan termitler ne yapardı?
+      - Höyük ve koloni arasındaki ilişki nedir?
+  - id: nmi_cricket_chirp
+    name: Cırcır Böceği Cıvıltısı
+    prompt: |
+      Bir cırcır böceği cıvıldar — kanatlar bir arada. Cıvıltı kur yapmadır. Dişiler sese göre seçer.
+      Çağrıyı düşünün. Cıvıltısız cırcır böceği ne yapardı? Dişiler dışında kim dinler?
+    follow_ups:
+      - Cıvıltı uygunluğu nasıl kodlar?
+      - Sesten yoksun çayır ne olurdu?
+      - Çağrı ve avlanma arasındaki ilişki nedir?
+  - id: nmi_damselfly_tandem
+    name: Zebra Vızıltı Çiftleşmesi
+    prompt: |
+      Zebra vızıldayanlar tandem halinde çiftleşir — erkek başın arkasından dişiyi kavrar. Dişi,
+      sperm almak için eğilir. Çift birlikte uçabilir. Bağlantıyı düşünün. Kenetlenmeden çiftleşme ne olurdu?
+    follow_ups:
+      - Tandem erkeğin yatırımını nasıl korur?
+      - Bağlantısız çift ne yapardı?
+      - Kenetlenme ve döllenme arasındaki ilişki nedir?
+  - id: nmi_roach_scatter
+    name: Hamamböceği Dağılışı
+    prompt: |
+      Bir ışık açın — hamamböcekleri dağılır. Çatlaklar ararlar. Dağılım
+      kaçıştır. Tepkiyi düşünün. Kalıcı ışıkta hamamböceği ne yapardı? Neden karanlık?
+    follow_ups:
+      - Dağılım avlanmayı nasıl azaltır?
+      - Refleksiz hamamböceği ne olurdu?
+      - Işık ve saklanma arasındaki ilişki nedir?
+  - id: nmi_hopper_nymph
+    name: Zıplayan Nimfa
+    prompt: |
+      Genç bir çekirge — nimfa. Henüz kanatları yok. Zıplar. Aşamayı düşünün.
+      Nimfa ne olacak? Şimdi neyi eksik?
+    follow_ups:
+      - Nimfa evresi olmadan çekirge ne olurdu?
+      - Nimfa avcılardan nasıl kaçar?
+      - Kurulma ve kanat arasındaki ilişki nedir?
+  - id: nmi_sweat_bee
+    name: Ter Arısı
+    prompt: |
+      Bir ter arısı cildinize konar — tuz arar. Ter bir kaynaktır.
+      Karşılaşmayı düşünün. Ter olmadan arı ne yapardı? Neden
+      tuz gerektirir?
+    follow_ups:
+      - Arı tuzu nasıl kullanır?
+      - Konarak arı neyi riske atardı?
+      - İnsan ve arı arasındaki ilişki nedir?
+  - id: nmi_army_ant_column
+    name: Ordu Karınca Kolonu
+    prompt: |
+      Ordu karıncaları yürür — binlerce kişilik bir kolon. Akarlar. Av
+      ezilir. Sürüyü düşünün. Kolonisi olmayan karıncalar ne yapardı? Nasıl
+      koordine olurlar?
+    follow_ups:
+      - Kolon avlanmayı nasıl mümkün kılar?
+      - Ordu karıncaları olmadan orman ne olurdu?
+      - Çokluk ve güç arasındaki ilişki nedir?
+  - id: nmi_water_strider_leg
+    name: Su Vızıldayan Bacağı
+    prompt: |
+      Bir su vızıldayanın bacakları — uzun, hidrofobik. Ağırlığı dağıtırlar.
+      Yüzey tutar. Adaptasyonu düşünün. Bacak tasarımı olmadan su vızıldayan ne olurdu?
+    follow_ups:
+      - Bacak biçimi kuvveti nasıl dağıtır?
+      - Karada su vızıldayan ne yapardı?
+      - Biçim ve yüzey arasındaki ilişki nedir?
+  - id: nmi_aphid_wing
+    name: Afit Kanadı
+    prompt: |
+      Bazı afitlerin kanatları vardır — kalabalıklaştığında veya ana konakçının durumu
+      kötüleştiğinde. Dağılırlar. Değişimi düşünün. Kanat gelişimini ne tetikler? Kanat neye mal olur?
+    follow_ups:
+      - Kalabalıklaşma kanatları nasıl tetikler?
+      - Seçeneği olmadan afit ne olurdu?
+      - Kanat ve dağılım arasındaki ilişki nedir?
+  - id: nmi_scale_armor
+    name: Ölçek Zırhı
+    prompt: |
+      Ölçek böcekleri tümsek gibi görünür — zırhlıdırlar. Çok hareket etmezler.
+      Bitkiye dokunur, beslenirler. Stratejiyi düşünün. Zırh olmadan ölçek ne olurdu?
+    follow_ups:
+      - Zırh nasıl korur?
+      - Ölçek olmadan bitki ne olurdu?
+      - Durgunluk ve savunma arasındaki ilişki nedir?
+  - id: nmi_caddisfly_case
+    name: Su Piresi Kılıfı
+    prompt: |
+      Bir su piresi larvası bir kılıf inşa eder — dallar, kum, çakıllar. Kılıfı taşır.
+      Kılıf kamuflaj ve zırhtır. İnşaatı düşünün. Onsuz larva ne olurdu?
+    follow_ups:
+      - Kılıf nasıl korur?
+      - Malzemeler değişirse larva ne kullanırdı?
+      - Yapı ve hayatta kalma arasındaki ilişki nedir?
+  - id: nmi_leafhopper_flash
+    name: Yaprak Vızıltısı Flaş
+    prompt: |
+      Bir yaprak vızıldayan zıplar — ani. Kaybolur. Zıplama kaçıştır. Bacaklar enerji
+      depolar, serbest bırakır. Mekanizmayı düşünün. Zıplamadan yaprak vızıldayan ne olurdu?
+    follow_ups:
+      - Zıplama yakalanmaktan nasıl kaçar?
+      - Yaprak vızıldayan olmadan yaprak ne olurdu?
+      - Zıplama ve avlanma arasındaki ilişki nedir?
+  - id: nmi_bombardier_blast
+    name: Bombardier Patlaması
+    prompt: |
+      Bir bombardıman böceği püskürtür — sıcak, zararlı. Bu savunmadır. Sprey
+      kimyadır: iki oda, çıkışta reaksiyon. Silahı düşünün. Onsuz böcek ne yapardı?
+    follow_ups:
+      - Sprey avcıları nasıl caydırır?
+      - Püskürterek böcek neyi riske atardı?
+      - Kimya ve savunma arasındaki ilişki nedir?
+  - id: nmi_silverfish_slip
+    name: Gümüş Balığı Kayması
+    prompt: |
+      Bir gümüş balığı bir çatlaktan içeri kayar — hızlı. Düzdür. Sığar. Biçimi düşünün.
+      Düzlük olmadan gümüş balığı ne olurdu? Neden aciliyet?
+    follow_ups:
+      - Düzlük kaçışa nasıl izin verir?
+      - Açıkta gümüş balığı ne yapardı?
+      - Biçim ve sığınak arasındaki ilişki nedir?
+  - id: nmi_ant_queen
+    name: Karınca Kraliçesi
+    prompt: |
+      Bir karınca kolonisinin bir kraliçesi vardır — veya birkaçı. Yumurtlar. İşçiler ona bakar.
+      Merkezi düşünün. Kraliçesi olmayan koloni ne olurdu? Koloni onu nasıl
+      değiştirir?
+    follow_ups:
+      - Kraliçe koloniyi nasıl şekillendirir?
+      - Kraliçesi olmayan işçiler ne yapardı?
+      - Kraliçe ve koloni arasındaki ilişki nedir?
+  - id: nmi_owlfly_larva
+    name: Baykuş Sineği Larvası
+    prompt: |
+      Bir baykuş sineği larvası bekler — kumda, döküntülerde. Pusu kurar. Çeneler
+      vurur. Avcıyı düşünün. Pusu olmadan larva ne olurdu? Ne
+      olur?
+    follow_ups:
+      - Pusu beslenmeyi nasıl mümkün kılar?
+      - Larva evresi olmadan baykuş sineği ne olurdu?
+      - Bekleyiş ve yakalama arasındaki ilişki nedir?
+  - id: nmi_thrips_scatter
+    name: Thrips Dağılışı
+    prompt: |
+      Thrips küçüktür — zor görünür. Çiçeklerde, yapraklarda kümelenirler.
+      Delip emerler. Ölçeği düşünün. Thrips olmadan bitki ne olurdu? Ne
+      fark ederdik?
+    follow_ups:
+      - Thrips bitkiyi nasıl şekillendirir?
+      - Onlarsız ekosistem ne olurdu?
+      - Küçüklük ve etki arasındaki ilişki nedir?
+  - id: nmi_sting_threat
+    name: Sokma Tehdidi
+    prompt: |
+      Bir eşekarısı karnını kaldırır — iğnesi hazır. Bu bir tehdittir. Duruş
+      iletişim kurar. Gösteriyi düşünün. İhmal edilirse eşekarısı ne yapardı?
+      Duruş neye mal olur?
+    follow_ups:
+      - Tehdit nasıl caydırır?
+      - Sokarak eşekarısı neyi riske atardı?
+      - Gösteri ve savunma arasındaki ilişki nedir?
+  - id: nmi_velvet_ant
+    name: Kadife Karınca
+    prompt: |
+      Bir kadife karınca sürünür — bu kanatsız bir eşekarısıdır. Serttir. Avcılar öğrenir
+      ona dikkat etmek. Sokması şiddetlidir. Stratejiyi düşünün. Sokması olmadan kadife karınca ne olurdu?
+    follow_ups:
+      - Sokma nasıl korur?
+      - Yüzeyde kadife karınca ne yapardı?
+      - Sokma ve cesaret arasındaki ilişki nedir?
+  - id: nmi_ambush_predator
+    name: Pusu Avcısı
+    prompt: |
+      Bir çiçek üzerinde bir pusu böceği bekler — sarı, gizlenmiş. Av gelir. Böcek
+      vurur. Sabrı düşünün. Çiçek olmadan böcek ne yapardı? Neden bu konak?
+    follow_ups:
+      - Çiçek avı nasıl çeker?
+      - Pusu olmadan böcek ne olurdu?
+      - Yer ve yakalama arasındaki ilişki nedir?
+  - id: nmi_nectar_flow
+    name: Nektar Akışı
+    prompt: |
+      Çiçekler nektar üretir — arılar, kelebekler, böcekler içer. Akış
+      değişir. Ekonomiyi düşünün. Nektarsız çiçek ne olurdu? Böcek ne yapardı?
+    follow_ups:
+      - Nektar ziyareti nasıl şekillendirir?
+      - Ödül olmadan tozlaşma ne olurdu?
+      - Akış ve hizmet arasındaki ilişki nedir?
+  - id: nmi_territory_mark
+    name: Bölge İşareti
+    prompt: |
+      Bazı böcekler bölge işaretler — feromonlar, görsel ekran. İşaret "benim" der.
+      İddiayı düşünün. İşaretsiz alan ne olurdu?
+      Rakipler onu nasıl okur?
+    follow_ups:
+      - İşaret davetsiz misafirleri nasıl caydırır?
+      - Bölgesi olmayan böcek ne yapardı?
+      - İşaret ve alan arasındaki ilişki nedir?

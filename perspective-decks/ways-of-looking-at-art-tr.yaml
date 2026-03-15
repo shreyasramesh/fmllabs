@@ -1,0 +1,471 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Sanatın Bakış Açıları (Turkish)
+
+id: ways_of_looking_at_art
+name: Sanatın Bakış Açıları
+description: |
+  Sanat eserlerini görüntülerken bakış açınızı değiştirmeye yönelik kartlar. Her biri,
+  sanat eserlerini görme ve onlarla etkileşim kurma biçiminizi derinleştirmek için farklı bir mercek sunar.
+domain: art
+cards:
+  - id: souvenir
+    name: Hatıra
+    prompt: |
+      Sanat eserinden bir şey seçin ve baktığınız bir sonraki esere gizleyin.
+      Yeni kompozisyona nasıl uyarlarsınız?
+    follow_ups:
+      - Neyi taşımayı seçerdiniz?
+      - Yeni bağlamda ne kazanır veya kaybederdi?
+      - Yeni eserde nereye uyardı—ya da uymakta direnilirdi?
+  - id: throw_a_party
+    name: Parti Ver
+    prompt: |
+      Odadaki tüm sanatçıları davet edin. Ne giyerlerdi?
+      Ne düşünürlerdi?
+    follow_ups:
+      - Kimler birbirine çekilirdi?
+      - Neler hakkında tartışırlardı?
+      - Birbirlerinin eserlerinde onları ne şaşırtırdı?
+  - id: time_out
+    name: Ara Ver
+    prompt: |
+      Dışarı çıkın. Işığa, seslere ve duyumlara odaklanın. Çevrenizle birlikte var olun.
+      Sanat eserlerini görme deneyimi, sanat eserlerinin kendisi kadar aradaki boşluklar hakkında da bilgi verir.
+    follow_ups:
+      - Sanata odaklanmayı bıraktığınızda ne fark ediyorsunuz?
+      - Oda, gördüklerinizi nasıl şekillendiriyor?
+      - Acele ederseniz neleri kaçırırsınız?
+  - id: plan_a_trip
+    name: Bir Gezi Planla
+    prompt: |
+      Bugün gördükleriniz çok daha büyük bir yolculuğun ilk adımı olabilir.
+      Galeri veya mekandan ayrılırken, bir sonraki görmek istediğiniz sanat eserini belirleyin
+      ve etrafında tam bir gezi planlayın.
+    follow_ups:
+      - O yolculuk sizi nereye götürürdü?
+      - Yol boyunca neleri görmeniz gerekirdi?
+      - Neden bu eser—ne onu seyahate değer kılıyor?
+  - id: in_black_and_white
+    name: Siyah Beyaz
+    prompt: |
+      Aydınlık ve karanlık oyununa odaklanın—bunu kolaylaştırmak için siyah-beyaz
+      fotoğraf bile çekebilirsiniz. Tonlar nerede en koyu? Bu, derinlik öneriyor mu, yoksa önermiyor mu?
+      Bu, kompozisyonu anlamanıza nasıl yardımcı olur?
+    follow_ups:
+      - Rengi kaldırdığınızda ne kaybolur?
+      - Ne daha netleşir?
+      - Gri tonlamalı versiyonda gözünüz ilk nereye gider?
+  - id: give_it_a_voice
+    name: Ses Ver
+    prompt: |
+      Bu sanat eseri ne tür sesler çıkarırdı? Renkleri, şekilleri ve formları nasıl duyabilirsiniz?
+    follow_ups:
+      - Yüksek sesli mi, sessiz mi? Keskin mi, yumuşak mı?
+      - Hangi enstrüman veya doku onu yakalardı?
+      - Bu eserde sessizlik nasıl duyulurdu?
+  - id: find_the_middle_ground
+    name: Orta Yolu Bul
+    prompt: |
+      Sanat eseri sizden ne kadar uzakta? Sizin boyutunuza göre ne kadar büyük? Ne kadar ağır?
+      Ne kadar yer kaplıyor? Bir eve sığar mıydı?
+    follow_ups:
+      - Elinizde tutabilseydiniz ne değişirdi?
+      - Bir oda büyüklüğünde olsaydı ne olurdu?
+      - Ölçek, sizinle olan ilişkinizi nasıl şekillendiriyor?
+  - id: from_the_edges
+    name: Kenarlardan
+    prompt: |
+      Sanat eseri nerede biter ve "gerçek dünya" nerede başlar? Sanat eserinin kenarlarını
+      kendiniz için yeniden tanımlamak amacıyla ellerinizi vizör olarak kullanmayı deneyebilir misiniz?
+      Ayırt edilebilir bir kenar var mı?
+    follow_ups:
+      - Çerçeveyi değiştirdiğinizde ne olur?
+      - Neler dahil edilir veya dışarıda bırakılır?
+      - Eser, sınırlarının dışına taşmak istiyor gibi görünüyor mu?
+  - id: transmogrify_it
+    name: Dönüştür
+    prompt: |
+      Sanat eserini başka bir türe dönüştürebilseydiniz ne olurdu? Bir fotoğrafı aksiyon resmine
+      veya bir yerleştirmeyi bir manzaraya dönüştürmek gibi? Nasıl yapardınız?
+      Çevrilmiş olsa bile karakterini korur muydu?
+    follow_ups:
+      - Eserin özü nedir—değişimden ne hayatta kalmalı?
+      - Çeviride ne kazanılır veya kaybedilirdi?
+      - Hangi tür, onun hakkında yeni bir şey ortaya çıkarırdı?
+  - id: the_hand_of_the_artist
+    name: Sanatçının Eli
+    prompt: |
+      Sanatçının fırça darbelerinin, yontma izlerinin, parmak izlerinin, hatta saçlarının
+      kanıtlarını arayın. Kendiniz o izleri bıraktığınızı hayal edin—hangi pozisyona girmeniz gerekirdi?
+      Hangi araçları kullanırdınız?
+    follow_ups:
+      - İz, yapımcının bedeni hakkında ne ortaya koyuyor?
+      - Hareket nerede hızlı veya yavaş, emin veya tereddütlü?
+      - O izi bırakmak nasıl hissettirirdi?
+  - id: tell_the_story
+    name: Hikayeyi Anlat
+    prompt: |
+      Sanat tarihi anlatımla doludur ve bugün sanat, edebiyat ve film arasında heyecan verici bir diyalog var.
+      Sanat eserinde bir hikaye var mı? Nasıl anlatırsınız?
+    follow_ups:
+      - Bu andan önce veya sonra ne olur?
+      - Anlatıcı kim? Hangi ses eksik?
+      - Bir film, roman veya şiir olarak işe yarar mıydı?
+  - id: shadowboxing
+    name: Gölge Boksu
+    prompt: |
+      Hareket edin. Çok yakından bakın. Mümkün olduğunca uzaklaşın. Tarafları değiştirin.
+      Yukarı çıkın. Aşağı inin. Farklı açılar deneyin. Uzun süre aynı yerde kalmayın.
+      Etrafında dolaşırken sanat eserinin sergilediği değişikliklerin tadını çıkarın.
+    follow_ups:
+      - Konumunuzu değiştirdiğinizde ne değişir?
+      - Hangi açı sizi şaşırttı?
+      - Vücudunuzun hareketi, gördüklerinizi nasıl değiştirir?
+  - id: six_degrees_of_francis_bacon
+    name: Altı Derece Francis Bacon
+    prompt: |
+      Sanatçılar diğer sanatçıları etkiler. Temalar ve fikirler nesiller boyunca ve sınırlar boyunca gelişir.
+      Sanat eserini, mümkün olduğunca az bağlantı kullanarak galerideki başka bir esere bağlayın.
+    follow_ups:
+      - Bulabileceğiniz en kısa yol nedir?
+      - Hangi tür bağlantı en güçlüdür—teknik, konu, ruh hali veya fikir?
+      - Sanatçı bağlantı hakkında ne düşünürdü?
+  - id: headlines
+    name: Manşetler
+    prompt: |
+      Sanat eserinin yapıldığı günü hayal edin ve o gün için bir gazete manşeti bulun veya icat edin.
+      Bugünün manşetleriyle karşılaştırın.
+    follow_ups:
+      - Manşetlerin üst kısmında ne olurdu?
+      - Ne değişti—ve ne değişmedi?
+      - Manşet, eseri nasıl yeniden çerçeveliyor?
+  - id: speed_date
+    name: Hızlı Tanışma
+    prompt: |
+      Her sanat eserine sadece 10 saniye ayırın. Tümünü görene kadar veya enerjiniz tükenene kadar bunu yapın,
+      sonra favorilerinize geri dönün ve oyalanın. Onları şimdi nasıl görüyorsunuz? Hangisine geri dönme isteği duyuyorsunuz?
+    follow_ups:
+      - Hızlı bakış, oyalanmanın kaçırmış olabileceği neleri ortaya çıkardı?
+      - Neden özellikle bu eserlere geri döndünüz?
+      - İkinci bakış, ilkinden nasıl farklıydı?
+  - id: make_connections
+    name: Bağlantılar Kur
+    prompt: |
+      Eve dönerken, size sanat eserini veya onun bir parçasını—bir şekil veya renk, belki bir kelime, hatta bir his—anımsatan bir şey arayın.
+    follow_ups:
+      - Ne buldunuz?
+      - Yankı, orijinalini görme şeklinizi nasıl değiştirdi?
+      - Yapabilseydiniz sanatçıya ne gösterirdiniz?
+  - id: dinner_party
+    name: Akşam Yemeği Partisi
+    prompt: |
+      Bir sanat eserini bir tada eşleştirin. Hangi yiyecek veya içeceği hatırlatıyor?
+      Bir ziyafet düzenleyin.
+    follow_ups:
+      - Menü nasıl görünürdü?
+      - Kim nereye otururdu?
+      - İlk lokmanın tadı nasıl olurdu?
+  - id: head_off_piste
+    name: Pist Dışına Çık
+    prompt: |
+      Bir galeri görevlisinden en sevdiği eseri göstermesini isteyin veya kartlardan uzaklaşın ve
+      ne bulabileceğinizi görün.
+    follow_ups:
+      - Bilindik yolların dışında ne keşfettiniz?
+      - Onların favorisi sizinkinden nasıl farklı?
+      - Başka birine ne önerirdiniz?
+  - id: make_it_an_mixtape
+    name: Bir Karışık Kaset Yap
+    prompt: |
+      Sanat eseri aklınıza belirli bir şarkı veya müzik parçası getiriyor mu?
+      Sanat ve müzik farklı şekillerde örtüşür ve genellikle benzer bir dili paylaşır.
+      Hangi özellikleri ortak? Her galeri ziyareti için veya tek bir sanatçı için bir çalma listesi oluşturun.
+    follow_ups:
+      - Açılış parçası ne olurdu?
+      - Eserle müziği birbirine bağlayan hangi özellik—ritim, ruh hali, doku?
+      - Bir yıl sonra tekrar ziyaret ederseniz çalma listesi nasıl değişirdi?
+  - id: read_in_context
+    name: Bağlamda Oku
+    prompt: |
+      Sanat eseri nerede? Çevresi, nasıl algılandığını nasıl etkiliyor?
+      Bir bilboardda mı, bir galerinin dışında mı, bir gölün ortasında mı? Eser ile çevresi arasındaki konuşmaya kulak verin.
+    follow_ups:
+      - Başka bir yerde olsaydı ne değişirdi?
+      - Oda veya mekan geri ne söylüyor?
+      - Buradaki izleyici kim—ve kim eksik?
+  - id: understand_it_less
+    name: Daha Az Anla
+    prompt: |
+      Merakınızı kucaklayın. Kendinize, sanat eseriyle ilgili deneyiminizde neyin garip veya yeni olduğunu sorun?
+      Bunu daha da tuhaf hale nasıl getirebilirsiniz? Sanat eserini "anlaması gereken" şeylerden vazgeçerek
+      onu biraz daha az anlamaya çalışın!
+    follow_ups:
+      - Onu taze görmek için neleri öğrenmeniz gerekir?
+      - Cevabı olmayan soru nedir—ve bu neden önemli?
+      - Yanlış anlamak nasıl görünürdü?
+  - id: chaos_or_control
+    name: Kaos mu Kontrol mü?
+    prompt: |
+      Rastgele mi görünüyor, yoksa bir plan mı var? Şans, kaza ve tesadüf, bir sanat eserinin
+      üretiminde rol oynar—bazen önemli bir rol. Doğal olarak meydana gelmesine izin verilen şeyi ve neyin kontrol edildiğini bulmaya çalışın.
+    follow_ups:
+      - Sanatçı dizginleri nerede tutuyor—ve nerede bırakıyor?
+      - Önemli hale gelen bir kaza ne olabilirdi?
+      - Daha fazla kaos—veya daha fazla kontrol ile eser nasıl değişirdi?
+  - id: palimpsest
+    name: Palimpsest
+    prompt: |
+      Katmanları arayın! Ne gizlenmiş ve ne ortaya çıkmış? Eser ne kadar kalın?
+      Yüzey zamanla mı inşa edilmiş?
+    follow_ups:
+      - Yüzeyin altında ne var?
+      - Eğer soyabilseydiniz ne bulurdunuz?
+      - Zaman, katmanlarda kendini nasıl gösteriyor?
+  - id: pattern_recognition
+    name: Desen Tanıma
+    prompt: |
+      Tekrarlanan unsurlara dikkat edin. Bir desen var mı? Tekrarlanan motifler var mı?
+      Belirli formlar birbirini yankılıyor mu?
+    follow_ups:
+      - Deseni ne bozar—ve neden?
+      - Tekrar gözünüzü nereye götürüyor?
+      - Bir motifi eserin tamamında izleseydiniz ne olurdu?
+  - id: through_another_pair_of_eyes
+    name: Başka Bir Çift Gözle
+    prompt: |
+      Bir romandan, filmden, oyundan veya tarihi bir figürden bir karakteri aklınıza getirin.
+      Onunla sanat eseri hakkında bir sohbet ettiğinizi hayal edin. Onun eser hakkındaki fikrine katılır mıydınız?
+    follow_ups:
+      - Sizin kaçırdığınızı o ne fark ederdi?
+      - Nerede anlaşamazdınız—ve neden?
+      - Size eser hakkında ne sorardı?
+  - id: thermostat
+    name: Termostat
+    prompt: |
+      Bir rengin sıcaklığı nedir? Sanat eserindeki en soğuk renkleri bulun,
+      sonra daha sıcak tonları belirleyin. Tek bir sanat eserinde kaç ekosistem bulabilirsiniz?
+    follow_ups:
+      - Sıcak ve soğuk nerede buluşur—ve orada ne olur?
+      - Eser hangi iklimi çağrıştırıyor?
+      - Sıcaklığına adım atsaydınız nasıl hissederdiniz?
+  - id: negative_space
+    name: Negatif Alan
+    prompt: |
+      Bir sanat eserindeki bireysel unsurlar arasındaki boşluklar, unsurların kendisi kadar önemlidir.
+      Bir yapboz gibi, eksik parçalara dikkat edin. Negatif alan: mevcut olanı nasıl çerçeveliyor?
+      Anlamını hissedin.
+    follow_ups:
+      - Boşluk ne şekil alır?
+      - Boşlukları ne doldururdu—ve doldurmalı mı?
+      - Negatif alan, kompozisyonu nasıl bir arada tutar?
+  - id: make_yourself_at_home
+    name: Kendini Evinde Hisset
+    prompt: |
+      Sanat eserinin içine girdiğini hayal edin. Nerede saklanırdınız?
+      Ne görebilirdiniz? Nasıl hissederdiniz?
+    follow_ups:
+      - İçeriden ne duyardınız?
+      - Nerede en güvende—veya en savunmasız hissederdiniz?
+      - Kalabilseydiniz ne yanınıza alırdınız?
+  - id: homage
+    name: Saygı Duruşu
+    prompt: |
+      En sevdiğiniz sanatçı için bir sunak veya mini sergi oluşturun. Dükkandan bir kartpostal ile başlayın veya
+      eserlerine referans veren ve derinlik ve renk katan nesneler ve görseller bulun.
+    follow_ups:
+      - Sunaklarınızın merkezinde ne olurdu?
+      - Hangi nesne onları şaşırtırdı?
+      - Küratörlük eylemi, eserlerini görme şeklinizi nasıl değiştirir?
+  - id: warm_up
+    name: Isın
+    prompt: |
+      Duyularınızı hazırlamak için vücudunuzu uyandırın. Koşun, zıplayın, esneyin, ellerinizi çırpın,
+      parmaklarınızı oynatın. Sanat eserine bakarken vücudunuzdaki herhangi bir fiziksel duyuma dikkat edin.
+    follow_ups:
+      - Vücudunuzun neresinde eseri hissediyorsunuz?
+      - Hareket, gördüklerinizi nasıl değiştirir?
+      - Uzaklaştıktan sonra hangi duygu devam eder?
+  - id: make_it_anew
+    name: Yeniden Yap
+    prompt: |
+      Evde, elinizdeki tek malzemelerle bir sanat eserini yeniden yaratın.
+      Yazın, çizin, kibritlerle inşa edin. Yönteminiz ne kadar kolay ve basit olursa o kadar iyi.
+      Aklınızda ne kaldığını, kendi yorumunuzda ne fark ettiğinizi görün.
+    follow_ups:
+      - Çabasızce ne hatırladınız?
+      - Sizin versiyonunuz neleri yanlış yaptı—ve bu neden önemli?
+      - Bir dakika daha olsaydı ne eklerdiniz?
+  - id: origin_story
+    name: Köken Hikayesi
+    prompt: |
+      Gördüğünüz ilk sanat eserini hatırlıyor musunuz? Neredeydiniz? Kaç yaşındaydınız?
+      Bulunduğunuz odayı, ışığı ve sesleri, ona bakma hissini hatırlamaya çalışın.
+      Şimdi gördüğünüz sanat eseriyle bağlantı kurabileceğiniz bir şey var mı?
+    follow_ups:
+      - Sanata bakma şeklinizde ne aynı kaldı?
+      - O genç kendisi bu eser hakkında ne düşünürdü?
+      - O zamandan bu yana kadar uzanan iplik ne?
+  - id: words_and_images
+    name: Kelimeler ve Görseller
+    prompt: |
+      Sanat eserine bakmadan, tanımını okuyun, gözlerinizi kapatın ve onu hayal etmeye çalışın.
+      Sonra açın. Sizin versiyonunuzla eşleşiyor mu?
+    follow_ups:
+      - Kelimeler neleri dışarıda bıraktı?
+      - Olmayan şeye ne eklediniz?
+      - Zihinsel imgeniz, gerçek olanı görme şeklinizi nasıl değiştirir?
+  - id: keep_a_notebook
+    name: Bir Defter Tut
+    prompt: |
+      Tarihlerin, sanat eserlerinin ve onlara verdiğiniz tepkilerin bir kaydını tutun.
+      Notlarınıza geri dönün ve yeni sanat eserleri arayın.
+    follow_ups:
+      - Notlarınızı okurken ne tür bir desen ortaya çıkıyor?
+      - Geçmişteki kendinize ne söylerdiniz?
+      - Defter sizi bir sonraki nereye götürmek istiyor?
+  - id: write_a_postcard
+    name: Kartpostal Yaz
+    prompt: |
+      Özellikle bağlandığınız bir sanat eserine bir kartpostal yazın. Ne söylerdiniz?
+      Nasıl cevap verirdi?
+    follow_ups:
+      - Söyleyemediğiniz şeyleri sesli olarak ne kadar söylemeniz gerekirdi?
+      - El yazısı nasıl görünürdü?
+      - Neleri saklardınız—ve neleri asla göndermezdiniz?
+  - id: here_today_gone
+    name: Bugün Burada, Yarın Yok...?
+    prompt: |
+      Her sanat eseri zamanın testinden geçmez, ve her sanatçının amacı bu değildir.
+      Bir performans veya etkinlik bir akşam, belki dakikalar veya sadece saniyeler sürebilir!
+      Belki geçici, uçucu bir sanat eserinin belgelenmesine bakıyorsunuz. Ne kadar sürecek?
+    follow_ups:
+      - Yarın yok olursa ne kaybedilirdi?
+      - Hafızada, fotoğrafta veya hikayede ne hayatta kalır?
+      - Geçiciliği, ona bakma şeklinizi değiştirir mi?
+  - id: wrap_it_up
+    name: Sar
+    prompt: |
+      Sanat eserini sarabilseydiniz ne olurdu? Hala ne olduğunu söyleyebilir miydiniz?
+      Aynı pakete başka bir sanat eseri sığar mıydı?
+    follow_ups:
+      - Paketin şekli ne olurdu?
+      - Ambalaj kağıdı nasıl görünürdü?
+      - Neler esastır—ve neler değiştirilebilir?
+  - id: trace_a_path
+    name: Bir Yol Çiz
+    prompt: |
+      Bir sanat eseriyle karşılaştığınızda nelere bakarsınız? Gözünüz bir sonra nereye seyahat eder?
+      Bakışınız nerede dinlenir? Noktaları işaretleyin ve noktaları birleştirin.
+    follow_ups:
+      - Nereye geri dönmeye devam ediyorsunuz?
+      - Neleri atladınız—ve neden?
+      - Yolunuz başkasınınkiyle nasıl karşılaştırılıyor?
+  - id: superficial
+    name: Yüzeysel
+    prompt: |
+      Yüzey nasıldır? Işığı emer mi, yansıtır mı? Pürüzsüz mü, delikli mi? Katmanlı mı, rafine mi, yoksa pürüzlü mü?
+      Yüzeysel olmaktan korkmayın!
+    follow_ups:
+      - Dokunmak nasıl hissederdi?
+      - Yüzey neyi ortaya çıkarır—veya gizler?
+      - Yüzeyde kaldığınızda ne olur?
+  - id: studio_visit
+    name: Atölye Ziyareti
+    prompt: |
+      Sanatçı sayısı kadar sanatçı atölyesi vardır. Sanat eserinin yaratıldığı alanı hayal edin:
+      Brooklyn'de bir depo, Paris'te bir atölye, yoğun bir aile evindeki mutfak masası—veya belki de daha az muhtemel bir yer.
+    follow_ups:
+      - O alanda ne duyardınız?
+      - Ne zaman yapıldı?
+      - Hayal edilen yer, eseri görme şeklinizi nasıl değiştirir?
+  - id: switch_channels
+    name: Kanal Değiştir
+    prompt: |
+      Sanat yerine insanlara bakın. Eser karşısında nasıl davranıyorlar?
+      Neye bakıyorlar? Ne hissettiklerini tahmin edebilir misiniz?
+    follow_ups:
+      - Kim oyalanır—ve kim hızlıca geçer?
+      - Sorarsanız ne söylerlerdi?
+      - Başkalarını izlemek, fark ettiğiniz neleri değiştirir?
+  - id: light
+    name: Işık
+    prompt: |
+      Işık kaynağını arayın. Nereden geliyor? Gölgelerin içinde ne var?
+      Sanatçının bize neyi göstermek istediğine ve gölgelerde neyin gizlendiğine odaklanın.
+    follow_ups:
+      - Işık neyi ortaya çıkarır?
+      - Gölgeler neyi gizliyor olabilir?
+      - Farklı bir ışıkta eser nasıl değişirdi?
+  - id: introductions
+    name: Tanışmalar
+    prompt: |
+      Bir sanat eserini, bir partideki bir tanıdık gibi bir arkadaşınıza tanıtın.
+      İlgi çekici hale getirmek için nasıl tarif ederdiniz?
+      Sizin ilginizi ne çekti?
+    follow_ups:
+      - Önce neyi vurgulardınız?
+      - Neleri dışarıda bırakırdınız?
+      - Onu tanımak istemelerini sağlayacak kanca ne olurdu?
+  - id: tipping_point
+    name: Devrilme Noktası
+    prompt: |
+      Sanat eserinin merkezi nerede? Dengesiz mi? Devrilme noktasını arayın.
+    follow_ups:
+      - Onu ne devirirdi?
+      - Onu ne yerinde tutar?
+      - Dengesizlik gerilim—veya rahatlama nasıl yaratır?
+  - id: homing
+    name: Yuvaya Dönüş
+    prompt: |
+      Gidip gelmeye devam edin. Farklı günlerde veya günün farklı saatlerinde favori bir sanat eserine geri dönün—
+      kışın ilk iş olarak, yaz akşamı son iş olarak. Nasıl hissettiğinizin bir kaydını tutun;
+      hisleriniz her ziyarette değişir.
+    follow_ups:
+      - Ziyaretler boyunca ne aynı kaldı?
+      - En çok ne zaman sizi şaşırttı?
+      - Geçmişteki kendinize onun hakkında ne söylerdiniz?
+  - id: one_and_only
+    name: Bir ve Tek
+    prompt: |
+      Bunaldığınızı önlemek için sadece bir sanat eseri, en fazla bir avuç görün.
+      Derin bir dalış yapın ve her biriyle mümkün olduğunca uzun zaman geçirin. Tek bir sanat eseri önünde bu kartlardan kaç tanesini kullanabilirsiniz?
+    follow_ups:
+      - İkinci bakışta ne fark ettiniz?
+      - Hangi kartlar yeni bir şey ortaya çıkardı?
+      - Ne zaman devam etme zamanının geldiğini anladınız?
+  - id: press_pause
+    name: Duraklat
+    prompt: |
+      Yavaşlayın. Gözlerinizi kapatarak bakmaya başlayın, rahatlayın ve nefesinize odaklanın,
+      gözlerinizi yavaşça açın, yeniden odaklanın ve sanat eserinin önünüzde açılmasına izin verin.
+    follow_ups:
+      - Yavaşladığınızda ne belirdi?
+      - Gözlerinizi açtığınızda ilk neyi fark ettiniz?
+      - Nefesiniz, görme şeklinizi nasıl değiştirir?
+  - id: material
+    name: Malzeme
+    prompt: |
+      Sanat eseri neyden yapılmış? Başka bir şeyden yapılmış olsaydı ne olurdu?
+      Ne kadar uyumsuz olursa o kadar iyi. Hakkındaki hislerinizi değiştirir miydi?
+    follow_ups:
+      - En şaşırtıcı ikame ne olurdu?
+      - Malzeme anlama ne katıyor?
+      - Takasla ne hayatta kalırdı—ve ne kaybedilirdi?
+  - id: patch_of_sky
+    name: Bir Yama Gökyüzünde Kaç Renk Var?
+    prompt: |
+      Sanat eserinin bir alanına yakınlaşın. Orada kaç renk görüyorsunuz?
+      Müzenin dışında, yukarı bakın ve bir yama gökyüzünde görebildiğiniz kadar çok rengi saymaya çalışın.
+    follow_ups:
+      - Bütüne bakarken neleri kaçırdınız?
+      - Gökyüzü sanat eseriyle nasıl karşılaştırılıyor?
+      - Sizi en çok hangi renk şaşırttı?
+  - id: greening
+    name: Yeşerme
+    prompt: |
+      Sanat eseri ne tür bir bitki olurdu? Meyve yüklü bir yaz ortası şeftali ağacı mı, yoksa daha çok narin bir eğrelti otu gibi mi olurdu?
+      Büyümesi için ne tür koşullara ihtiyacı var?
+    follow_ups:
+      - Nerede gelişir—ve nerede solar?
+      - Çiçek açması için neye ihtiyacı olurdu?
+      - Botanik metafor, onu görme şeklinizi nasıl değiştirir?

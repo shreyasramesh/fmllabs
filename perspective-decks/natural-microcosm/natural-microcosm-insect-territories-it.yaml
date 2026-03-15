@@ -1,0 +1,480 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosmo Naturale — Territori degli Insetti (Italian)
+
+id: natural_microcosm_insect_territories
+name: Microcosmo Naturale — Territori degli Insetti
+description: 50 carte per cambiare il tuo modo di vedere la vita degli insetti — dai sentieri delle formiche e il traffico delle api, alle tele dei ragni, i drammi territoriali e la coreografia delle colonie.
+domain: natural_microcosm
+cards:
+  - id: nmi_ant_trail
+    name: Sentiero di Formiche
+    prompt: |
+      Le formiche creano sentieri — percorsi di feromoni tra nido e cibo. Osserva il flusso.
+      Due corsie: andata e ritorno. Il sentiero è una decisione presa da molte.
+      Cosa romperebbe il sentiero?
+    follow_ups:
+      - Come si rinforza il sentiero?
+      - Cosa sarebbe la colonia senza sentieri?
+      - Qual è il rapporto tra sentiero e colonia?
+  - id: nmi_bee_traffic
+    name: Traffico delle Api
+    prompt: |
+      L'ingresso di un alveare — api che entrano ed escono. Il traffico ha un ritmo. Alcune
+      portano polline; altre no. Considera la coreografia. Chi decide il
+      modello?
+    follow_ups:
+      - Cosa sarebbe l'alveare senza il traffico?
+      - Come l'ingresso modella il flusso?
+      - Qual è il rapporto tra ape e colonia?
+  - id: nmi_spider_web
+    name: Rete di Ragno
+    prompt: |
+      Una rete di ragno è territorio e trappola. Il ragno aspetta sul bordo.
+      Le vibrazioni trasmettono informazioni. Considera l'architettura. Cosa cattura la
+      rete? Cosa esclude?
+    follow_ups:
+      - Cosa sarebbe il ragno senza la rete?
+      - Come la rete estende i sensi del ragno?
+      - Qual è il rapporto tra seta e sopravvivenza?
+  - id: nmi_dragonfly_claim
+    name: Rivendicazione della Libellula
+    prompt: |
+      Una libellula pattuglia un tratto di stagno — avanti e indietro. È territoriale.
+      I rivali vengono cacciati. Gli accoppiamenti vengono corteggiati. Considera la posta in gioco. Cosa viene
+      difeso?
+    follow_ups:
+      - Cosa farebbe la libellula senza territorio?
+      - Come il pattugliamento comunica possesso?
+      - Qual è il rapporto tra spazio e riproduzione?
+  - id: nmi_caterpillar_munch
+    name: Bruco che Mangia
+    prompt: |
+      Un bruco mangia — il bordo della foglia si ritrae. Il mangiare è costante. Il
+      bruco è una macchina di conversione. Considera il ritmo. Cosa sarebbe la pianta senza erbivori?
+    follow_ups:
+      - Come il bruco modella la foglia?
+      - Cosa sarebbe la farfalla senza il mangiare?
+      - Qual è il rapporto tra consumo e crescita?
+  - id: nmi_beetle_battle
+    name: Battaglia di Scarabei
+    prompt: |
+      Due scarabei si incontrano — forse cervidi, forse stercorari. Si affrontano.
+      La lotta è rituale. Considera la posta in gioco. Cosa si vince? Cosa
+      si perde?
+    follow_ups:
+      - Cosa farebbe il perdente?
+      - Come si risolve la battaglia?
+      - Qual è il rapporto tra combattimento e accoppiamento?
+  - id: nmi_firefly_flash
+    name: Lampo di Lucciola
+    prompt: |
+      Le lucciole lampeggiano — ogni specie ha un codice. Il modello è corteggiamento. Considera
+      il segnale. Cosa significherebbe un lampo errato? Come si trovano nell'oscurità?
+    follow_ups:
+      - Come il lampo codifica la specie?
+      - Cosa sarebbe il prato senza lucciole?
+      - Qual è il rapporto tra luce e compagno?
+  - id: nmi_aphid_farm
+    name: Fattoria di Afidi
+    prompt: |
+      Le formiche curano gli afidi — li accarezzano, li proteggono. Gli afidi esudano
+      melata. Le formiche la raccolgono. Considera la partnership. Chi trae beneficio?
+      Chi viene sfruttato?
+    follow_ups:
+      - Cosa sarebbero gli afidi senza le formiche?
+      - Come l'allevamento modella entrambe le specie?
+      - Qual è il rapporto tra curare ed estrarre?
+  - id: nmi_cicada_shell
+    name: Esoscheletro di Cicala
+    prompt: |
+      Un esoscheletro di cicala aderisce alla corteccia — la ninfa è emersa. L'esoscheletro è vuoto,
+      perfetto. Considera la muta. Cosa ha lasciato l'insetto? Cosa ha
+      guadagnato?
+    follow_ups:
+      - Cosa sarebbe la cicala senza la muta?
+      - Come l'esoscheletro segna la transizione?
+      - Qual è il rapporto tra essersi liberato e crescita?
+  - id: nmi_leaf_miner
+    name: Minatore di Foglie
+    prompt: |
+      Un sentiero all'interno di una foglia — il percorso di un minatore di foglie. La larva mangia tra
+      gli strati. La foglia conserva la traccia. Considera il tunnel. Come
+      apparirebbe la foglia dall'interno?
+    follow_ups:
+      - Cosa sarebbe la foglia senza il minatore?
+      - Come la galleria protegge la larva?
+      - Qual è il rapporto tra interno ed esterno?
+  - id: nmi_wasp_nest
+    name: Nido di Vespe
+    prompt: |
+      Un nido di vespe di carta — celle esagonali, legno masticato. Il nido è architettura
+      e fortezza. Considera la colonia. Chi costruisce? Chi difende? Chi si riproduce?
+    follow_ups:
+      - Cosa sarebbero le vespe senza il nido?
+      - Come il nido modella la struttura sociale?
+      - Qual è il rapporto tra carta e colonia?
+  - id: nmi_grasshopper_leap
+    name: Balzo della Cavalletta
+    prompt: |
+      Una cavalletta salta — le zampe si estendono, è sparita. Il balzo è fuga o
+      avvicinamento. Considera il grilletto. Cosa ha visto la cavalletta? Cosa
+      ha sentito?
+    follow_ups:
+      - Cosa sarebbe la cavalletta senza il balzo?
+      - Come il balzo evita la predazione?
+      - Qual è il rapporto tra zampa e volo?
+  - id: nmi_mantis_still
+    name: Mantide Immobile
+    prompt: |
+      Una mantide aspetta — immobile. È una cacciatrice. La preda si avvicina. L'attacco
+      è improvviso. Considera la pazienza. Cosa costa l'immobilità? Cosa
+      permette?
+    follow_ups:
+      - Cosa sarebbe la mantide senza l'attesa?
+      - Come l'immobilità inganna?
+      - Qual è il rapporto tra pazienza e cattura?
+  - id: nmi_bumblebee_buzz
+    name: Rombante del Bombo
+    prompt: |
+      Un bombo ronza — vibra. Alcuni fiori richiedono la impollinazione vibratile.
+      L'ape scuote il polline. Considera la partnership. Cosa sarebbe il fiore senza il ronzio?
+    follow_ups:
+      - Come il ronzio rilascia il polline?
+      - Cosa sarebbe l'ape senza l'impollinazione vibratile?
+      - Qual è il rapporto tra vibrazione e fecondazione?
+  - id: nmi_butterfly_territory
+    name: Territorio della Farfalla
+    prompt: |
+      Una farfalla si posa su un punto elevato — hilltopping. Aspetta i compagni.
+      I rivali vengono cacciati. Considera la strategia. Perché questo posto? Cosa lo rende prezioso?
+    follow_ups:
+      - Cosa farebbe la farfalla senza il posatoio?
+      - Come l'hilltopping modella l'accoppiamento?
+      - Qual è il rapporto tra luogo e incontro?
+  - id: nmi_earwig_pincer
+    name: Pinza del Pesciolino
+    prompt: |
+      I pesciolini hanno pinze — cerci. Sono per la difesa, per ripiegare le ali, per
+      maneggiare la preda. Considera lo strumento. Cosa sarebbe il pesciolino senza la pinza?
+    follow_ups:
+      - Come la pinza modella il comportamento?
+      - Come sarebbe la difesa senza di essa?
+      - Qual è il rapporto tra forma e funzione?
+  - id: nmi_katydid_call
+    name: Richiamo del Cavalletta Verde
+    prompt: |
+      Una cavalletta verde chiama — stridulazione, zampe sulle ali. Il richiamo è specifico per la specie.
+      È corteggiamento, territorio. Considera il suono. Cosa sarebbe la notte senza di esso?
+    follow_ups:
+      - Come il richiamo attrae i compagni?
+      - Cosa rischierebbe la cavalletta verde chiamando?
+      - Qual è il rapporto tra suono e predazione?
+  - id: nmi_ladybug_cluster
+    name: Grappolo di Coccinelle
+    prompt: |
+      Le coccinelle si aggregano in inverno — decine, centinaia. Si riuniscono per il calore,
+      per riparo. Considera l'aggregazione. Cosa la innesca? Cosa la disperde?
+    follow_ups:
+      - Cosa sarebbero le coccinelle senza il grappolo?
+      - Come il grappolo crea un microclima?
+      - Qual è il rapporto tra molti e sopravvivenza?
+  - id: nmi_ant_carry
+    name: Formica che Trasporta
+    prompt: |
+      Una formica ne trasporta un'altra — morta o ferita. È un aiuto. La colonia si prende cura dei suoi.
+      Considera il comportamento. Cosa farebbe la formica ferita da sola?
+      Cosa guadagna chi trasporta?
+    follow_ups:
+      - Come il trasporto serve la colonia?
+      - Cosa sarebbe la colonia senza cooperazione?
+      - Qual è il rapporto tra individuo e collettivo?
+  - id: nmi_mosquito_hover
+    name: Zanzara che Staziona
+    prompt: |
+      Una zanzara staziona — valutando, sondando. Sta cercando un ospite. Lo stazionamento è
+      una valutazione. Considera il momento prima del morso. Cosa rileva la zanzara? Cosa decide?
+    follow_ups:
+      - Cosa farebbe la zanzara senza stazionare?
+      - Come lo stazionamento minimizza il rilevamento?
+      - Qual è il rapporto tra sondare e nutrirsi?
+  - id: nmi_weevil_curl
+    name: Arricciatura del Punteruolo
+    prompt: |
+      Una foglia si arriccia — un punteruolo o una mosca cecidomia l'ha fatta. La foglia si piega intorno alla
+      larva. Considera la manipolazione. La pianta è persuasa. Cosa farebbe la foglia senza l'insetto?
+    follow_ups:
+      - Come l'arricciatura protegge la larva?
+      - Cosa sarebbe la pianta senza l'arricciatura?
+      - Qual è il rapporto tra insetto e forma della pianta?
+  - id: nmi_honeybee_waggle
+    name: Danza del Lambimento dell'Ape Mellifera
+    prompt: |
+      Un'ape mellifera fa la danza del lambimento — è una danza. La danza codifica distanza e direzione
+      dei fiori. Altre api osservano. Considera il messaggio. Cosa sarebbe la colonia senza la danza del lambimento?
+    follow_ups:
+      - Come la danza trasferisce informazioni?
+      - Come sarebbe la raccolta senza di essa?
+      - Qual è il rapporto tra danza e scoperta?
+  - id: nmi_gnat_cloud
+    name: Nuvola di Zanzarole
+    prompt: |
+      Le zanzarole si radunano — una nuvola di minuscoli insetti. Lo sciame è accoppiamento. I maschi si radunano;
+      le femmine entrano e scelgono. Considera l'aggregazione. Cosa farebbe la zanzarola da sola?
+    follow_ups:
+      - Come lo sciame permette l'accoppiamento?
+      - Cosa sarebbero le zanzarole senza la nuvola?
+      - Qual è il rapporto tra molti e incontro?
+  - id: nmi_spider_wrap
+    name: Involucro di Ragno
+    prompt: |
+      Un ragno avvolge la preda — seta intorno all'insetto che si dibatte. L'involucro immobilizza.
+      Il ragno inietta enzimi. Considera il processo. Cosa farebbe il ragno senza l'involucro?
+    follow_ups:
+      - Come l'involucro sottomette la preda?
+      - Cosa rischierebbe il ragno senza di esso?
+      - Qual è il rapporto tra seta e digestione?
+  - id: nmi_ant_war
+    name: Guerra di Formiche
+    prompt: |
+      Due colonie di formiche si incontrano — conflitto. Le operaie si affrontano, mordono. Il confine è
+      conteso. Considera la battaglia. Cosa è in gioco? Come viene deciso il confine?
+    follow_ups:
+      - Cosa sarebbero le colonie senza la guerra?
+      - Come si risolve la guerra?
+      - Qual è il rapporto tra territorio e risorsa?
+  - id: nmi_moth_flutter
+    name: Sfarfallio di Falena
+    prompt: |
+      Una falena svolazza verso una luce — attratta, confusa. La luce disturba
+      la navigazione. Considera la trappola. Cosa farebbe la falena nell'oscurità?
+      Perché la luce disorienta?
+    follow_ups:
+      - Cosa sarebbe la falena senza la luce?
+      - Come la falena usa normalmente la luce lunare?
+      - Qual è il rapporto tra luce e direzione?
+  - id: nmi_stick_insect_still
+    name: Insetto Stecco Immobile
+    prompt: |
+      Un insetto stecco è immobile — sembra un rametto. I predatori passano.
+      Considera l'inganno. Cosa sarebbe l'insetto senza il travestimento?
+      Quanto a lungo può mantenere la posa?
+    follow_ups:
+      - Come l'immobilità protegge?
+      - Cosa rischierebbe l'insetto muovendosi?
+      - Qual è il rapporto tra forma e sopravvivenza?
+  - id: nmi_leafcutter_carry
+    name: Foglia Tagliata che Trasporta
+    prompt: |
+      Una formica tagliafoglie trasporta un frammento di foglia — molte volte la sua dimensione. La foglia
+      va al nido. Diventa substrato per il fungo. Considera il raccolto. Cosa sarebbe la colonia senza le foglie?
+    follow_ups:
+      - Come il fungo usa la foglia?
+      - Cosa mangerebbe la formica senza il fungo?
+      - Qual è il rapporto tra raccolto e coltivazione?
+  - id: nmi_housefly_clean
+    name: Mosca Domestica che si Pulisce
+    prompt: |
+      Una mosca domestica si pulisce — si strofina le zampe, si liscia le ali. La pulizia rimuove
+      particelle, mantiene i sensori. Considera il rituale. Cosa sarebbe la mosca senza pulirsi?
+    follow_ups:
+      - Come la pulizia mantiene la funzione?
+      - Cosa succederebbe se la mosca non potesse pulirsi?
+      - Qual è il rapporto tra pulizia e senso?
+  - id: nmi_termite_mound
+    name: Termitaio
+    prompt: |
+      Un termitaio si eleva — argilla, saliva, legno masticato. È una città. All'interno,
+      tunnel, camere, giardini di funghi. Considera l'architettura. Cosa sarebbe la colonia senza il termitaio?
+    follow_ups:
+      - Come il termitaio regola il clima?
+      - Cosa farebbero le termiti senza la struttura?
+      - Qual è il rapporto tra termitaio e colonia?
+  - id: nmi_cricket_chirp
+    name: Canto del Grillo
+    prompt: |
+      Un grillo canta — ali insieme. Il canto è corteggiamento. Le femmine scelgono in base al suono.
+      Considera il richiamo. Cosa farebbe il grillo senza il canto? Cosa ascolta oltre alle femmine?
+    follow_ups:
+      - Come il canto codifica l'idoneità?
+      - Cosa sarebbe il prato senza il suono?
+      - Qual è il rapporto tra richiamo e predazione?
+  - id: nmi_damselfly_tandem
+    name: Damigella in Tandem
+    prompt: |
+      Le damigelle si accoppiano in tandem — il maschio aggrappa la femmina dietro la testa. Lei
+      si curva per ricevere lo sperma. La coppia può volare insieme. Considera l'accoppiamento. Cosa sarebbe l'accoppiamento senza l'aggancio?
+    follow_ups:
+      - Come il tandem protegge l'investimento del maschio?
+      - Cosa farebbe la coppia senza il legame?
+      - Qual è il rapporto tra aggancio e fecondazione?
+  - id: nmi_roach_scatter
+    name: Scatto dello Scarafaggio
+    prompt: |
+      Accendi una luce — gli scarafaggi scattano. Cercano fessure. Lo scatto è una fuga.
+      Considera la risposta. Cosa farebbe lo scarafaggio in luce permanente? Perché il buio?
+    follow_ups:
+      - Come lo scatto riduce la predazione?
+      - Cosa sarebbe lo scarafaggio senza il riflesso?
+      - Qual è il rapporto tra luce e nascondiglio?
+  - id: nmi_hopper_nymph
+    name: Ninfa di Cicalina
+    prompt: |
+      Un giovane grillo — ninfa. Non ha ancora le ali. Salta. Considera lo stadio. Cosa diventerà la ninfa? Cosa le manca ora?
+    follow_ups:
+      - Cosa sarebbe la cavalletta senza lo stadio di ninfa?
+      - Come la ninfa evita i predatori?
+      - Qual è il rapporto tra muta e ala?
+  - id: nmi_sweat_bee
+    name: Ape del Sudore
+    prompt: |
+      Un'ape del sudore si posa sulla tua pelle — cercando sale. Il sudore è una risorsa.
+      Considera l'incontro. Cosa farebbe l'ape senza sudore? Perché ha bisogno del sale?
+    follow_ups:
+      - Come l'ape usa il sale?
+      - Cosa rischierebbe l'ape posandosi?
+      - Qual è il rapporto tra umano e ape?
+  - id: nmi_army_ant_column
+    name: Colonna di Formiche Legionarie
+    prompt: |
+      Le formiche legionarie marciano — una colonna di migliaia. Fluiscono. La preda viene sopraffatta.
+      Considera lo sciame. Cosa sarebbero le formiche senza la colonna? Come si coordinano?
+    follow_ups:
+      - Come la colonna permette la predazione?
+      - Cosa sarebbe la foresta senza formiche legionarie?
+      - Qual è il rapporto tra molti e potere?
+  - id: nmi_water_strider_leg
+    name: Zampa dello Gerride
+    prompt: |
+      Le zampe di un gerride — lunghe, idrofobe. Distribuiscono il peso. La
+      superficie le sostiene. Considera l'adattamento. Cosa sarebbe il gerride senza il design delle zampe?
+    follow_ups:
+      - Come la forma della zampa distribuisce la forza?
+      - Cosa farebbe il gerride sulla terra?
+      - Qual è il rapporto tra forma e superficie?
+  - id: nmi_aphid_wing
+    name: Ala di Afide
+    prompt: |
+      Alcuni afidi hanno le ali — quando sono affollati o quando l'ospite declina. Si
+      disperdono. Considera il cambiamento. Cosa innesca lo sviluppo delle ali? Cosa costa l'ala?
+    follow_ups:
+      - Come l'affollamento induce le ali?
+      - Cosa sarebbe l'afide senza l'opzione?
+      - Qual è il rapporto tra ala e dispersione?
+  - id: nmi_scale_armor
+    name: Armatura di Cocciniglia
+    prompt: |
+      Le cocciniglie sembrano protuberanze — sono corazzate. Non si muovono molto.
+      Picchiettano la pianta, si nutrono. Considera la strategia. Cosa sarebbe la cocciniglia senza l'armatura?
+    follow_ups:
+      - Come l'armatura protegge?
+      - Cosa sarebbe la pianta senza la cocciniglia?
+      - Qual è il rapporto tra immobilità e difesa?
+  - id: nmi_caddisfly_case
+    name: Astuccio della Tricoptera
+    prompt: |
+      Una larva di tricoptera costruisce un astuccio — ramoscelli, sabbia, sassolini. Trasporta l'astuccio. L'astuccio è mimetismo e armatura. Considera la costruzione. Cosa sarebbe la larva senza di esso?
+    follow_ups:
+      - Come l'astuccio protegge?
+      - Cosa userebbe la larva se i materiali cambiassero?
+      - Qual è il rapporto tra costruire e sopravvivere?
+  - id: nmi_leafhopper_flash
+    name: Lampo di Cicalina
+    prompt: |
+      Una cicalina salta — improvvisa. È sparita. Il salto è fuga. Le zampe immagazzinano
+      energia, la rilasciano. Considera il meccanismo. Cosa sarebbe la cicalina senza il salto?
+    follow_ups:
+      - Come il salto evita la cattura?
+      - Cosa sarebbe la foglia senza la cicalina?
+      - Qual è il rapporto tra salto e predazione?
+  - id: nmi_bombardier_blast
+    name: Esplosione del Scarabeo Bombardier
+    prompt: |
+      Uno scarabeo bombardier spruzza — caldo, nocivo. È difesa. Lo spray è
+      chimica: due camere, reazione all'uscita. Considera l'arma. Cosa farebbe lo scarabeo senza di essa?
+    follow_ups:
+      - Come lo spray deterrente respinge i predatori?
+      - Cosa rischierebbe lo scarabeo spruzzando?
+      - Qual è il rapporto tra chimica e difesa?
+  - id: nmi_silverfish_slip
+    name: Scivolata del Pesciolino d'Argento
+    prompt: |
+      Un pesciolino d'argento scivola in una crepa — veloce. È piatto. Si adatta. Considera la
+      forma. Cosa sarebbe il pesciolino d'argento senza la piattezza? Perché l'urgenza?
+    follow_ups:
+      - Come la piattezza permette la fuga?
+      - Cosa farebbe il pesciolino d'argento allo scoperto?
+      - Qual è il rapporto tra forma e rifugio?
+  - id: nmi_ant_queen
+    name: Regina delle Formiche
+    prompt: |
+      Una colonia di formiche ha una regina — o più. Depone le uova. Le operaie la curano.
+      Considera il centro. Cosa sarebbe la colonia senza la regina? Come la sostituisce la colonia?
+    follow_ups:
+      - Come la regina modella la colonia?
+      - Cosa farebbero le operaie senza di lei?
+      - Qual è il rapporto tra regina e colonia?
+  - id: nmi_owlfly_larva
+    name: Larva di Panfilo
+    prompt: |
+      Una larva di panfilo aspetta — nella sabbia, nei detriti. Tende agguati. Le mascelle
+      colpiscono. Considera il cacciatore. Cosa sarebbe la larva senza l'agguato?
+      Cosa diventa?
+    follow_ups:
+      - Come l'agguato permette il nutrimento?
+      - Cosa sarebbe il panfilo senza lo stadio larvale?
+      - Qual è il rapporto tra attesa e cattura?
+  - id: nmi_thrips_scatter
+    name: Dispersione dei Tripidi
+    prompt: |
+      I tripidi sono minuscoli — a malapena visibili. Si aggregano sui fiori, sulle foglie.
+      Perforano e succhiano. Considera la scala. Cosa sarebbe la pianta senza i tripidi? Cosa noteremmo?
+    follow_ups:
+      - Come i tripidi modellano la pianta?
+      - Cosa sarebbe l'ecosistema senza di loro?
+      - Qual è il rapporto tra piccolo e impatto?
+  - id: nmi_sting_threat
+    name: Minaccia del Pungiglione
+    prompt: |
+      Una vespa solleva l'addome — pungiglione pronto. È una minaccia. La postura
+      comunica. Considera l'esibizione. Cosa farebbe la vespa se ignorata?
+      Cosa costa la postura?
+    follow_ups:
+      - Come la minaccia scoraggia?
+      - Cosa rischierebbe la vespa pungendo?
+      - Qual è il rapporto tra esibizione e difesa?
+  - id: nmi_velvet_ant
+    name: Formica di Velluto
+    prompt: |
+      Una formica di velluto striscia — è una vespa senza ali. È resistente. I predatori imparano ad evitarla. Il pungiglione è feroce. Considera la strategia. Cosa sarebbe la formica di velluto senza il pungiglione?
+    follow_ups:
+      - Come il pungiglione protegge?
+      - Cosa farebbe la formica di velluto in superficie?
+      - Qual è il rapporto tra pungiglione e audacia?
+  - id: nmi_ambush_predator
+    name: Predatore d'Agguato
+    prompt: |
+      Un insetto d'agguato aspetta su un fiore — giallo, mimetizzato. Arriva la preda. L'insetto
+      colpisce. Considera la pazienza. Cosa farebbe l'insetto senza il fiore? Perché questo posatoio?
+    follow_ups:
+      - Come il fiore attira la preda?
+      - Cosa sarebbe l'insetto senza l'agguato?
+      - Qual è il rapporto tra luogo e cattura?
+  - id: nmi_nectar_flow
+    name: Flusso di Nettare
+    prompt: |
+      I fiori producono nettare — api, farfalle, coleotteri bevono. Il flusso
+      varia. Considera l'economia. Cosa sarebbe il fiore senza il nettare? Cosa farebbe l'insetto?
+    follow_ups:
+      - Come il nettare modella le visite?
+      - Cosa sarebbe l'impollinazione senza la ricompensa?
+      - Qual è il rapporto tra flusso e servizio?
+  - id: nmi_territory_mark
+    name: Segno Territoriale
+    prompt: |
+      Alcuni insetti segnano il territorio — feromoni, esibizione visiva. Il segno dice "mio".
+      Considera la rivendicazione. Cosa sarebbe lo spazio senza il segno?
+      Come lo leggono i rivali?
+    follow_ups:
+      - Come il segno deterrente respinge gli intrusi?
+      - Cosa farebbe l'insetto senza il territorio?
+      - Qual è il rapporto tra segno e spazio?

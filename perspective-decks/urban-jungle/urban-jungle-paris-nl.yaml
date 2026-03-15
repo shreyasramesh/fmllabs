@@ -1,0 +1,458 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Stedelijk Groen — Parijs (Dutch)
+
+id: urban_jungle_paris
+name: Stedelijk Groen — Parijs
+description: 50 kaarten om Parijs anders te bekijken — van schaal en licht tot lagen van geschiedenis en de ritmes van het straatleven.
+domain: urban_jungle
+cards:
+  - id: paris_balcony_flower
+    name: Balkonbloem
+    prompt: |
+      Parijse balkons bloeien met bloemen — geraniums, petunia's. Zoek een gebouw
+      waar elk balkon een pot heeft. Hoe verandert de bloem de gevel?
+    follow_ups:
+      - Wat zou de straat zijn zonder de bloemen?
+      - Hoe creëren bloemen identiteit?
+      - Wat is de relatie tussen bloem en bewoner?
+  - id: paris_haussmann_line
+    name: Haussmann-lijn
+    prompt: |
+      Haussmanniaanse boulevards snijden door oud Parijs. Loop er een. De lijn is
+      onverbiddelijk — gebouwen op één lijn, uniforme hoogtes. Hoe vormt de boulevard beweging?
+    follow_ups:
+      - Wat zou Parijs zijn zonder Haussmann?
+      - Hoe creëert de boulevard een vergezicht?
+      - Wat is de relatie tussen lijn en macht?
+  - id: paris_cafe_terrace
+    name: Caféterras
+    prompt: |
+      Parijse caféterrassen kijken uit op de straat. Ga aan een zitten. Je bent
+      zowel binnen als buiten. Het terras is een drempel. Wat zie je?
+    follow_ups:
+      - Wat zou de straat zijn zonder het terras?
+      - Hoe creëert het terras ontmoeting?
+      - Wat is de relatie tussen terras en straat?
+  - id: paris_metro_entrance
+    name: Metro-ingang
+    prompt: |
+      Art Nouveau metro-ingangen zijn iconen. Zoek er een. Het smeedijzer, de
+      belettering — de ingang is een portaal. Wat belooft het?
+    follow_ups:
+      - Wat zou de straat zijn zonder de ingang?
+      - Hoe creëert de ingang identiteit?
+      - Wat is de relatie tussen ingang en ondergrond?
+  - id: paris_shutter
+    name: Parijs Luik
+    prompt: |
+      Parijse luiken — volets — sluiten 's nachts. Ze zijn groen, grijs, blauw.
+      Zoek een straat waar de luiken gesloten zijn. Wat zit erachter?
+    follow_ups:
+      - Wat zou de gevel zijn zonder de luiken?
+      - Hoe creëren luiken privacy?
+      - Wat is de relatie tussen luik en licht?
+  - id: paris_cobble
+    name: Parijse Kassei
+    prompt: |
+      Parijse kasseien — pavés — blijven bestaan. Loop erop. Voel de textuur.
+      De kassei is een relikwie van een ander Parijs. Hoe vormt het de straat?
+    follow_ups:
+      - Wat zou de straat zijn zonder de kasseien?
+      - Hoe markeren kasseien geschiedenis?
+      - Wat is de relatie tussen kassei en revolutie?
+  - id: paris_seine_edge
+    name: Seine-oever
+    prompt: |
+      De Seine stroomt door Parijs. Ga naar de kade. De rivier is een naad. Wat
+      ligt er aan weerszijden? Hoe verdeelt en verbindt de rivier?
+    follow_ups:
+      - Wat zou Parijs zijn zonder de Seine?
+      - Hoe vormt de rivier de stad?
+      - Wat is de relatie tussen rivier en oever?
+  - id: paris_roof_zinc
+    name: Zinken Dak
+    prompt: |
+      Parijse daken zijn vaak van zink — grijs, schuin, met dakkapellen. Kijk
+      omhoog. De daklijn is kenmerkend. Hoe vormt het de skyline?
+    follow_ups:
+      - Wat zou de skyline zijn zonder het zink?
+      - Hoe creëert zink identiteit?
+      - Wat is de relatie tussen dak en zolder?
+  - id: paris_door_height
+    name: Deurhoogte
+    prompt: |
+      Parijse deuren zijn vaak hoog — dubbele hoogte. Zoek er een. Wat zou er
+      doorheen gaan? De deur is een drempel van schaal.
+    follow_ups:
+      - Wat zou het gebouw zijn zonder de hoge deur?
+      - Hoe creëert hoogte grandeur?
+      - Wat is de relatie tussen deur en gebouw?
+  - id: paris_boulangerie_smell
+    name: Bakkerij Geur
+    prompt: |
+      Een bakkerij ruikt naar brood. Volg de geur. De bakkerij is een knooppunt.
+      Wat vertelt de geur over het blok?
+    follow_ups:
+      - Wat zou de straat zijn zonder de geur?
+      - Hoe creëert geur identiteit?
+      - Wat is de relatie tussen geur en handel?
+  - id: paris_place
+    name: Parijs Plein
+    prompt: |
+      Parijs heeft pleinen — vierkanten, cirkels, knooppunten. Zoek er een. Let
+      op de geometrie. Hoe vormt het plein de straten die ernaartoe leiden?
+    follow_ups:
+      - Wat zou de buurt zijn zonder het plein?
+      - Hoe creëert het plein focus?
+      - Wat is de relatie tussen plein en verkeer?
+  - id: paris_balcony_iron
+    name: Balkonijzer
+    prompt: |
+      Parijse balkonrelingen zijn vaak sierlijk — smeedijzer, bochten, krullen.
+      Zoek er een. Hoe vormt het ijzer de gevel?
+    follow_ups:
+      - Wat zou het gebouw zijn zonder het ijzer?
+      - Hoe creëert het ijzer identiteit?
+      - Wat is de relatie tussen ijzer en vakmanschap?
+  - id: paris_plane_tree
+    name: Vlierboom
+    prompt: |
+      Parijse vlierbomen staan langs de boulevards. Hun bast schilfert. Zoek er
+      een. Hoe vormt de boom de straat? Wat zou de boulevard zonder zijn?
+    follow_ups:
+      - Wat zou de straat zijn zonder de vlierboom?
+      - Hoe creëert de vlierboom schaduw?
+      - Wat is de relatie tussen boom en boulevard?
+  - id: paris_metro_tile
+    name: Metro Tegel
+    prompt: |
+      Parijse metrohaltes hebben witte tegels. De tunnel is een buis van licht.
+      Neem een lijn. Hoe vormt de tegel de reis?
+    follow_ups:
+      - Wat zou het station zijn zonder de tegels?
+      - Hoe creëren tegels netheid?
+      - Wat is de relatie tussen tegel en ondergrond?
+  - id: paris_clock
+    name: Parijse Klok
+    prompt: |
+      Parijs heeft veel openbare klokken — op kerken, stations, gebouwen. Zoek
+      er een. Hoe laat is het? Klopt het?
+    follow_ups:
+      - Wat zou de ruimte zijn zonder de klok?
+      - Hoe vormt de klok de tijd?
+      - Wat is de relatie tussen klok en plaats?
+  - id: paris_newsstand
+    name: Parijse Kiosk
+    prompt: |
+      Parijse kiosken verkopen kranten, tijdschriften, metrokaartjes. Zoek er
+      een. Wat wordt er getoond? Wie stopt er? De kiosk is een knooppunt.
+    follow_ups:
+      - Wat zou de straat zijn zonder de kiosk?
+      - Hoe creëert de kiosk ontmoeting?
+      - Wat is de relatie tussen kiosk en straat?
+  - id: paris_bench
+    name: Parijse Bank
+    prompt: |
+      Parijs heeft groene bankjes in parken en langs de Seine. Ga op een zitten.
+      Wie zit er nog meer? Wat is het uitzicht?
+    follow_ups:
+      - Wat zou de ruimte zijn zonder de bank?
+      - Hoe creëert de bank rust?
+      - Wat is de relatie tussen bank en rivier?
+  - id: paris_boulangerie_queue
+    name: Bakkerij Rij
+    prompt: |
+      Sluit aan bij een bakkerij-rij tijdens de ochtendspits. De rij is een
+      ritueel. Wat kopen mensen? Wat is de etiquette?
+    follow_ups:
+      - Wat zou de straat zijn zonder de rij?
+      - Hoe creëert de rij gemeenschap?
+      - Wat is de relatie tussen rij en brood?
+  - id: paris_manhole
+    name: Parijse Straatkolk
+    prompt: |
+      Parijse kolkdeksels zeggen vaak "Paris" of "Eau". Zoek er een. Het deksel
+      is een deur naar de aderen van de stad. Wat ligt eronder?
+    follow_ups:
+      - Wat zou de straat zijn zonder het deksel?
+      - Hoe markeert het deksel het systeem?
+      - Wat is de relatie tussen deksel en ondergrond?
+  - id: paris_shadow
+    name: Parijse Schaduw
+    prompt: |
+      Parijs licht creëert scherpe schaduwen. Zoek een hoek waar schaduw en zon
+      elkaar ontmoeten. Hoe vormt de schaduw de straat?
+    follow_ups:
+      - Wat zou de straat zijn zonder de schaduw?
+      - Hoe creëert schaduw contrast?
+      - Wat is de relatie tussen schaduw en gebouw?
+  - id: paris_courtyard
+    name: Parijse Binnenplaats
+    prompt: |
+      Parijse gebouwen verbergen vaak binnenplaatsen — cours — achter poorten.
+      Kijk naar binnen. Wat is er binnen? De binnenplaats is een geheime kamer.
+    follow_ups:
+      - Wat zou het gebouw zijn zonder de binnenplaats?
+      - Hoe creëert de binnenplaats privacy?
+      - Wat is de relatie tussen binnenplaats en straat?
+  - id: paris_bike_lane
+    name: Parijse Fietspad
+    prompt: |
+      Parijs heeft uitgebreide fietspaden — pistes cyclables. Zoek er een. Hoe
+      vormt het pad de straat? Wie gebruikt het?
+    follow_ups:
+      - Wat zou de straat zijn zonder het pad?
+      - Hoe creëert het pad mobiliteit?
+      - Wat is de relatie tussen pad en auto?
+  - id: paris_fountain
+    name: Parijse Fontein
+    prompt: |
+      Parijs heeft fonteinen — Wallace fonteinen, monumentale fonteinen. Zoek
+      er een. Wat biedt het? Wie gebruikt het?
+    follow_ups:
+      - Wat zou de plaats zijn zonder de fontein?
+      - Hoe creëert de fontein geschenk?
+      - Wat is de relatie tussen fontein en publiek?
+  - id: paris_awning
+    name: Parijse Luifel
+    prompt: |
+      Parijse café-luifels creëren schaduw. Zoek een straat waar luifels zich
+      herhalen. Hoe vormen ze de stoep?
+    follow_ups:
+      - Wat zou de straat zijn zonder de luifels?
+      - Hoe creëren luifels territorium?
+      - Wat is de relatie tussen luifel en terras?
+  - id: paris_lamp_post
+    name: Parijse Lantaarnpaal
+    prompt: |
+      Parijse lantaarnpalen hebben een specifieke stijl — vaak sierlijk, vaak
+      groen. Zoek er een. Hoe vormt de lantaarn de straat 's nachts?
+    follow_ups:
+      - Wat zou de straat zijn zonder de lantaarn?
+      - Hoe creëert de lantaarn veiligheid?
+      - Wat is de relatie tussen lantaarn en duisternis?
+  - id: paris_door_knocker
+    name: Deurklopper
+    prompt: |
+      Parijse deuren hebben vaak kloppers — leeuwenkoppen, handen, ringen. Zoek
+      er een. Hoe zou het klinken? De klopper is een drempelobject.
+    follow_ups:
+      - Wat zou de deur zijn zonder de klopper?
+      - Hoe creëert de klopper geluid?
+      - Wat is de relatie tussen klopper en ingang?
+  - id: paris_shop_sign
+    name: Parijs Winkelbord
+    prompt: |
+      Parijse winkelborden zijn vaak handgeschilderd — bakkerij, slagerij, kaaswinkel.
+      Zoek er een. Wat zegt het bord over de winkel?
+    follow_ups:
+      - Wat zou de straat zijn zonder het bord?
+      - Hoe creëert het bord identiteit?
+      - Wat is de relatie tussen bord en vakmanschap?
+  - id: paris_parking
+    name: Parijse Parkeerplaats
+    prompt: |
+      Parijse parkeerplaatsen zijn creatief — auto's op stoepen, schuin, krap. Kijk
+      hoe iemand parkeert. Hoe past de auto? Wat is de relatie tussen auto en stad?
+    follow_ups:
+      - Wat zou de straat zijn zonder de auto's?
+      - Hoe vormt parkeren de straat?
+      - Wat is de relatie tussen parkeren en ruimte?
+  - id: paris_drain
+    name: Parijse Afvoer
+    prompt: |
+      Parijse goten lopen langs de stoeprand. Na regen stromen ze. Zoek er een.
+      Waar gaat het water naartoe? De afvoer is een naad.
+    follow_ups:
+      - Wat zou de straat zijn zonder de afvoer?
+      - Hoe beheert de afvoer water?
+      - Wat is de relatie tussen afvoer en systeem?
+  - id: paris_chimney
+    name: Parijse schoorsteen
+    prompt: |
+      Parijse schoorstenen onderbreken de daklijn. Tel ze op één gebouw. De
+      schoorsteen is een relikwie van warmte. Wat brandde hier?
+    follow_ups:
+      - Wat zou het dak zijn zonder de schoorsteen?
+      - Hoe markeert de schoorsteen geschiedenis?
+      - Wat is de relatie tussen schoorsteen en vuur?
+  - id: paris_metro_map
+    name: Metro Kaart
+    prompt: |
+      De Parijse metrokaart is een diagram. Het vervormt geografie. Wat wordt
+      benadrukt? Wat wordt weggelaten? Hoe vormt de kaart de stad?
+    follow_ups:
+      - Wat zou de oriëntatie zijn zonder de kaart?
+      - Hoe creëert de kaart verbinding?
+      - Wat is de relatie tussen kaart en gebied?
+  - id: paris_bridge
+    name: Parijse Brug
+    prompt: |
+      Parijs heeft veel bruggen over de Seine. Steek er een te voet over. Voel
+      de overgang. Wat verandert er? De brug is een drempel.
+    follow_ups:
+      - Wat zou de rivier zijn zonder de brug?
+      - Hoe verbindt de brug?
+      - Wat is de relatie tussen brug en rivier?
+  - id: paris_graffiti
+    name: Parijse Graffiti
+    prompt: |
+      Parijs heeft graffiti — tags, stencils, muurschilderingen. Zoek een muur
+      met lagen. Wat is het palimpsest? Wie heeft dit oppervlak gemarkeerd?
+    follow_ups:
+      - Wat zou de muur zijn zonder de graffiti?
+      - Hoe claimt graffiti ruimte?
+      - Wat is de relatie tussen graffiti en stad?
+  - id: paris_tree_guard
+    name: Boom Beugel
+    prompt: |
+      Parijse stadsbomen hebben vaak beugels — metalen roosters rond de basis.
+      Zoek er een. Wat beschermt de beugel? Wat sluit het uit?
+    follow_ups:
+      - Wat zou de boom zijn zonder de beugel?
+      - Hoe vormt de beugel de kuil?
+      - Wat is de relatie tussen beugel en boom?
+  - id: paris_bus_stop
+    name: Parijse Bushalte
+    prompt: |
+      Parijse bushaltes hebben abri's, dienstregelingen, digitale schermen.
+      Wacht op een halte. Wie wacht er nog meer? Wat is de etiquette?
+    follow_ups:
+      - Wat zou de straat zijn zonder de halte?
+      - Hoe creëert de halte gemeenschap?
+      - Wat is de relatie tussen halte en reis?
+  - id: paris_terrace_table
+    name: Terras Tafel
+    prompt: |
+      Een caféterras tafel kijkt uit op de straat. Ga aan een zitten. De tafel is
+      een podium. Wat kijk je? Wie kijkt naar jou?
+    follow_ups:
+      - Wat zou het terras zijn zonder de tafel?
+      - Hoe creëert de tafel ontmoeting?
+      - Wat is de relatie tussen tafel en straat?
+  - id: paris_roof_dormer
+    name: Dak Dakkapel
+    prompt: |
+      Parijse dak dakkapellen — mansardramen — onderbreken de skyline. Zoek een
+      gebouw met veel. Wat zou het uitzicht zijn van binnenuit?
+    follow_ups:
+      - Wat zou het dak zijn zonder de dakkapellen?
+      - Hoe creëren dakkapellen licht?
+      - Wat is de relatie tussen dakkapel en zolder?
+  - id: paris_parking_metre
+    name: Parkeermeter
+    prompt: |
+      Parijse parkeermeters zijn vaak grijze dozen. Zoek er een. Hoe vormt het
+      de stoeprand? Wie betaalt? Wie niet?
+    follow_ups:
+      - Wat zou de straat zijn zonder de meter?
+      - Hoe beheert de meter ruimte?
+      - Wat is de relatie tussen meter en auto?
+  - id: paris_doorway
+    name: Parijse Deuropening
+    prompt: |
+      Een Parijse deuropening is vaak hoog, vaak sierlijk. Ga ervoor staan. Hoe
+      zou het zijn om erdoorheen te gaan? De deuropening is een drempel.
+    follow_ups:
+      - Wat zou het gebouw zijn zonder de deuropening?
+      - Hoe creëert de deuropening grandeur?
+      - Wat is de relatie tussen deuropening en interieur?
+  - id: paris_metro_stair
+    name: Metro Trap
+    prompt: |
+      Metro trappen dalen af in de aarde. Tel de treden. Voel de overgang. Wat
+      is erboven? Wat is eronder?
+    follow_ups:
+      - Wat zou het station zijn zonder de trappen?
+      - Hoe creëren trappen afdaling?
+      - Wat is de relatie tussen trap en ondergrond?
+  - id: paris_bench_view
+    name: Bank Uitzicht
+    prompt: |
+      Ga op een bank zitten met uitzicht — op de Seine, een plein, een straat.
+      Wat is het frame? Wat is de focus? De bank is een uitkijkpunt.
+    follow_ups:
+      - Wat zou het uitzicht zijn zonder de bank?
+      - Hoe creëert de bank pauze?
+      - Wat is de relatie tussen bank en uitzicht?
+  - id: paris_shutter_open
+    name: Luik Open
+    prompt: |
+      Parijse luiken gaan 's ochtends open. Zoek een straat waar ze opengaan. Wat
+      is het ritueel? Wat onthult het openen?
+    follow_ups:
+      - Wat zou de straat zijn zonder de luiken?
+      - Hoe creëert het luik ritme?
+      - Wat is de relatie tussen luik en dag?
+  - id: paris_cobble_pattern
+    name: Kassei Patroon
+    prompt: |
+      Parijse kasseien zijn in patronen gelegd — soms visgraat, soms radiaal.
+      Zoek een patroon. Hoe vormt het de straat?
+    follow_ups:
+      - Wat zou de straat zijn zonder het patroon?
+      - Hoe creëert het patroon textuur?
+      - Wat is de relatie tussen patroon en vakmanschap?
+  - id: paris_plane_bark
+    name: Vlier Bast
+    prompt: |
+      Parijse vlierboom bast schilfert in plekken. Raak een aan. De bast is een
+      textuur. Hoe veroudert de boom? Wat zou de straat zonder zijn?
+    follow_ups:
+      - Wat zou de boulevard zijn zonder de vlierboom?
+      - Hoe creëert de bast identiteit?
+      - Wat is de relatie tussen bast en boom?
+  - id: paris_fountain_drink
+    name: Fontein Drank
+    prompt: |
+      Wallace fonteinen bieden gratis water. Zoek er een. Wie drinkt er? Wie
+      niet? De fontein is een geschenk. Wat betekent het?
+    follow_ups:
+      - Wat zou de plaats zijn zonder de fontein?
+      - Hoe creëert de fontein publiek goed?
+      - Wat is de relatie tussen fontein en dorst?
+  - id: paris_metro_sound
+    name: Metro Geluid
+    prompt: |
+      Sluit je ogen in de metro. Het gerommel, de remmen, de aankondigingen.
+      Breng het geluidslandschap in kaart. Hoe klinkt Parijs ondergronds?
+    follow_ups:
+      - Wat zou de reis zijn zonder het geluid?
+      - Hoe vormt geluid de ervaring?
+      - Wat is de relatie tussen geluid en ruimte?
+  - id: paris_balcony_dry
+    name: Balkon Droog
+    prompt: |
+      Parijse balkons worden vaak gebruikt om te drogen — wasgoed, planten. Zoek
+      er een met wasgoed. Wat zegt het drogen over de bewoner?
+    follow_ups:
+      - Wat zou de gevel zijn zonder het wasgoed?
+      - Hoe creëert drogen huiselijkheid?
+      - Wat is de relatie tussen balkon en huis?
+  - id: paris_bike_velib
+    name: Fiets Vélib
+    prompt: |
+      Vélib' stations verspreiden zich over Parijs. Zoek er een. Hoeveel fietsen?
+      Hoeveel docks? Het systeem is een laag. Hoe werkt het?
+    follow_ups:
+      - Wat zou de straat zijn zonder het station?
+      - Hoe creëert Vélib' mobiliteit?
+      - Wat is de relatie tussen station en fiets?
+  - id: paris_door_bell
+    name: Deurbel
+    prompt: |
+      Parijse flatgebouwen hebben meerdere deurbellen — één per appartement. Zoek een
+      paneel. Hoeveel namen? Hoe is het gebouw georganiseerd?
+    follow_ups:
+      - Wat zou de ingang zijn zonder de bellen?
+      - Hoe creëren bellen adres?
+      - Wat is de relatie tussen bel en appartement?
+  - id: paris_roof_terrace
+    name: Dakterras
+    prompt: |
+      Stel je een Parijs dakterras voor. Wat zou je zien? Wie heeft toegang? Het
+      terras is een geheim niveau. Wat zou je er laten groeien?
+    follow_ups:
+      - Wat zou het dak zijn zonder het terras?
+      - Hoe creëert het terras uitzicht?
+      - Wat is de relatie tussen terras en hemel?

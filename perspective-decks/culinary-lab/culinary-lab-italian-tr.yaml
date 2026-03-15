@@ -1,0 +1,499 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Mutfak Laboratuvarı — İtalyan (Turkish)
+
+id: culinary_lab_italian
+name: Mutfak Laboratuvarı — İtalyan
+description: |
+  İtalyan yemeklerini deneyimleme şeklinizi değiştirecek 50 kart—zeytinyağı
+  ve asidin kimyasından sofradaki sosyal koreografiye ve her bir
+  malzemenin arkeolojisine kadar.
+domain: culinary_lab
+cards:
+  - id: it_tomato_transformation
+    name: Domates Dönüşümü
+    prompt: |
+      Isı ve zamanla çiğ bir domates başka bir şeye dönüşür. Bu yay çizgisini
+      takip edin. Asidite ne olur? Yapı ne olur? Domates bir yolculuk barındırır.
+    follow_ups:
+      - Sos damak tadını nasıl değiştirir?
+      - Dönüşüm olmadan ne kaybedilir?
+      - Çiğ ve pişmiş arasındaki ilişki nedir?
+  - id: it_bread_arrival
+    name: Ekmek Gelmesi
+    prompt: |
+      Yemekten önce ekmek gelir—bazen sıcak, bazen yağ ile. İşlerin sırasını
+      fark edin. Ekmek bir açılıştır. Kim yemeye ne zaman karar verir?
+    follow_ups:
+      - Ekmek olmadan yemek ne olurdu?
+      - Ekmek ritmi nasıl ayarlar?
+      - Ekmek ve beklenti arasındaki ilişki nedir?
+  - id: it_pasta_shape
+    name: Makarna Şekli
+    prompt: |
+      Her makarna şekli sosu farklı taşır—oluklar, boşluklar, kıvrımlar. Bir yemek
+      seçin ve sorun: neden bu şekil bu sos için? Biçim bir karardır.
+    follow_ups:
+      - Farklı bir şekille ne değişirdi?
+      - Şekil lokmayı nasıl etkiler?
+      - Biçim ve işlev arasındaki ilişki nedir?
+  - id: it_basil_fragrance
+    name: Fesleğen Kokusu
+    prompt: |
+      Fesleğen ağza gelmeden buruna çarpar. Gözlerinizi kapatın ve otu bulun.
+      Yemekte nerede yaşıyor? Aroma bir haritadır.
+    follow_ups:
+      - Koku olmadan yemek ne olurdu?
+      - Aroma damak tadını nasıl hazırlar?
+      - Koku ve tat arasındaki ilişki nedir?
+  - id: it_olive_oil_pool
+    name: Zeytinyağı Havuzu
+    prompt: |
+      Zeytinyağı yüzeyde birikir veya tabağı parlatır. Nasıl hareket ettiğini izleyin.
+      Yağ lezzet ve yağ taşır. Neyi bağlar?
+    follow_ups:
+      - Yağ olmadan yemek ne olurdu?
+      - Yağ ağız hissini nasıl değiştirir?
+      - Yağ ve ısı arasındaki ilişki nedir?
+  - id: it_parmesan_shatter
+    name: Parmesan Kırılması
+    prompt: |
+      Taze rendelenmiş Parmigiano, kristal gibi çıtırdayan bir dokuya sahiptir.
+      Onu dinleyin. Peynir, tat kadar dokudur da. Lokmayı nasıl vurgular?
+    follow_ups:
+      - Çıtırtı olmadan yemek ne olurdu?
+      - Peynir damağı nasıl tamamlar?
+      - Peynir ve tuz arasındaki ilişki nedir?
+  - id: it_espresso_ritual
+    name: Espresso Ritüeli
+    prompt: |
+      Espresso sonunda gelir—küçük fincan, süt yok. Ritüel kapanışı işaretler.
+      Kim ayakta içer? Kim oturur? Espresso bir noktalama işaretidir.
+    follow_ups:
+      - Espresso olmadan yemek ne olurdu?
+      - Ritüel zamanı nasıl şekillendirir?
+      - Kahve ve bitiş arasındaki ilişki nedir?
+  - id: it_antipasti_sequence
+    name: Antipasti Sırası
+    prompt: |
+      Antipasti ilk gelir—küçük tabaklar, paylaşımlı veya değil. Sırayı
+      fark edin. Sıranın mantığı nedir? Başlangıç tonu belirler.
+    follow_ups:
+      - Sıra tersine çevrilirse ne değişirdi?
+      - Sıra nasıl iştah yaratır?
+      - İlk ve son arasındaki ilişki nedir?
+  - id: it_wine_pour
+    name: Şarap Döküşü
+    prompt: |
+      Şarap dökülür—kim döker? Ne kadar? Döküş sosyal bir koreografidir.
+      Jestlere bakın. Ne söylüyorlar?
+    follow_ups:
+      - Şarap olmadan masa ne olurdu?
+      - Döküş nasıl bir tören yaratır?
+      - Döküş ve ritim arasındaki ilişki nedir?
+  - id: it_risotto_stir
+    name: Risotto Karıştırma
+    prompt: |
+      Risotto sürekli karıştırma gerektirir. Nişasta yavaşça salınır.
+      Kasedeki emeği göz önünde bulundurun. Karıştırma olmadan ne olurdu?
+    follow_ups:
+      - Kremamsılık olmadan pirinç ne olurdu?
+      - Karıştırma dokuyu nasıl değiştirir?
+      - Emek ve sonuç arasındaki ilişki nedir?
+  - id: it_porcini_earth
+    name: Porçini Toprak
+    prompt: |
+      Porçini mantarları orman zemini tadındadır—umami, toprak, çürüme.
+      Mantarı geriye doğru izleyin. Nerede yetişti? Hangi ağaçların altında?
+    follow_ups:
+      - Topraksı tat olmadan yemek ne olurdu?
+      - Köken lezzeti nasıl şekillendirir?
+      - Mantar ve orman arasındaki ilişki nedir?
+  - id: it_plate_negative_space
+    name: Tabak Negatif Alanı
+    prompt: |
+      İtalyan sunumlarında sıklıkla boş alan bırakılır—tabak doldurulmaz.
+      Boşluğu göz önünde bulundurun. Neyi çerçeveler? Neye izin verir?
+    follow_ups:
+      - Tamamen kaplı bir yemek nasıl görünürdü?
+      - Negatif alan gözü nasıl odaklara?
+      - Boş ve dolu arasındaki ilişki nedir?
+  - id: it_garlic_sizzle
+    name: Sarımsak Cızırtısı
+    prompt: |
+      Sarımsak sıcak yağa düşer—cızırtı kimyadır. Dinleyin. Koklayın. An
+      geçicidir. Ne yanardı? Ne kaybedilirdi?
+    follow_ups:
+      - Cızırtı olmadan yemek ne olurdu?
+      - Zamanlama lezzeti nasıl şekillendirir?
+      - Isı ve aroma arasındaki ilişki nedir?
+  - id: it_crust_bubbles
+    name: Kabuk Baloncukları
+    prompt: |
+      Focaccia veya pizza kabuğu fırında baloncuklar geliştirir. Her baloncuk bir
+      buhar kesesidir. Kırıntının mimarisini düşünün.
+    follow_ups:
+      - Baloncuklar olmadan ekmek ne olurdu?
+      - Kırıntı yağı ve tuzu nasıl tutar?
+      - Hava ve yapı arasındaki ilişki nedir?
+  - id: it_prosciutto_slice
+    name: Prosciutto Dilimi
+    prompt: |
+      Prosciutto ince dilimlenir—neredeyse yarı saydam. Bıçak önemlidir.
+      Zanaatı göz önünde bulundurun. Kalın bir dilim ne yapardı?
+    follow_ups:
+      - İncelik olmadan şarküteri ne olurdu?
+      - Kalınlık erimeyi nasıl etkiler?
+      - Dilim ve tat alma arasındaki ilişki nedir?
+  - id: it_balsamic_drop
+    name: Balsamik Damla
+    prompt: |
+      Eski balsamik damla damla verilir—pahalı, değerli. Viskoziteyi izleyin.
+      Damla konsantrasyondur. Ne ekler?
+    follow_ups:
+      - Asit olmadan yemek ne olurdu?
+      - Damla yağı nasıl keser?
+      - Tatlı ve ekşi arasındaki ilişki nedir?
+  - id: it_gnocchi_pillow
+    name: Gnocchi Yastık
+    prompt: |
+      Gnocchi hafif olmalı—yastık gibi, taş gibi değil. Dokuyu hissedin.
+      Patates ve un oranı hassastır. Onu ne işe yarar hale getirir?
+    follow_ups:
+      - Gnocchi çok ağır olsaydı ne olurdu?
+      - Doku yemeği nasıl tanımlar?
+      - Patates ve un arasındaki ilişki nedir?
+  - id: it_salt_block
+    name: Tuz Bloku
+    prompt: |
+      Bazı İtalyan mutfakları ızgara için tuz blokları kullanır. Minerali göz
+      önünde bulundurun. Tuz nereden geldi? Ne katıyor?
+    follow_ups:
+      - Tuz olmadan et ne olurdu?
+      - Blok pişirmeyi nasıl değiştirir?
+      - Tuz ve alev arasındaki ilişki nedir?
+  - id: it_cacio_e_pepe
+    name: Cacio e Pepe
+    prompt: |
+      Cacio e pepe peynir, karabiber, makarna suyudur. Üç malzeme.
+      Emülsiyon hiledir. Onu ne bir arada tutar? Neyi bozar?
+    follow_ups:
+      - Emülsiyon olmadan yemek ne olurdu?
+      - Makarna suyu nasıl bağlanır?
+      - Basitlik ve teknik arasındaki ilişki nedir?
+  - id: it_cannoli_crunch
+    name: Cannoli Çıtırtısı
+    prompt: |
+      Cannoli kabuğu kırılır; dolgusu pürüzsüzdür. Kontrast kasıtlıdır.
+      Lokmanın mimarisini düşünün.
+    follow_ups:
+      - Kontrast olmadan tatlı ne olurdu?
+      - Doku nasıl keyif yaratır?
+      - Kabuk ve dolgu arasındaki ilişki nedir?
+  - id: it_risotto_clock
+    name: Risotto Saati
+    prompt: |
+      Risotto'nun bir penceresi vardır—al dente, sonra biter. Aşçı zamanla yarışır.
+      Kesinliği düşünün. Beş dakika daha ne yapardı?
+    follow_ups:
+      - Pirinç fazla pişmiş olsaydı ne olurdu?
+      - Zamanlama yemeği nasıl tanımlar?
+      - Saat ve zanaat arasındaki ilişki nedir?
+  - id: it_truffle_shave
+    name: Trüf Rendesi
+    prompt: |
+      Trüf masada rendelenir—ritüel, aroma. Trüf geçicidir. Nereden geldi?
+      Hangi hayvan buldu?
+    follow_ups:
+      - Tören olmadan yemek ne olurdu?
+      - Rendeleme lezzeti nasıl dağıtır?
+      - Ritüel ve nadirlik arasındaki ilişki nedir?
+  - id: it_spaghetti_twist
+    name: Spagetti Döndürme
+    prompt: |
+      İtalyanlar spagettiyi çatalla döndürür—kaşıksız. Döndürme kültüreldir.
+      Hareketi izleyin. Ne başarır?
+    follow_ups:
+      - Döndürme olmadan lokma ne olurdu?
+      - Jest yemeği nasıl şekillendirir?
+      - Çatal ve gelenek arasındaki ilişki nedir?
+  - id: it_caprese_layers
+    name: Caprese Katmanları
+    prompt: |
+      Caprese domates, mozzarella, fesleğen istifler. Katmanlar basittir.
+      Rengi düşünün—kırmızı, beyaz, yeşil. Tabak bir bayraktır.
+    follow_ups:
+      - Sıra olmadan yemek ne olurdu?
+      - Katmanlar nasıl uyum yaratır?
+      - Renk ve tat arasındaki ilişki nedir?
+  - id: it_polenta_set
+    name: Polenta Ayarı
+    prompt: |
+      Polenta soğudukça katılaşır—yumuşaktan serte. Sıcaklığı göz önünde
+      bulundurun. Sıcak olsaydı ne olurdu? Soğuk olsaydı? Doku zamanın bir
+      işlevidir.
+    follow_ups:
+      - Polenta hiç soğumasaydı ne olurdu?
+      - Ayarlanma yemeği nasıl değiştirir?
+      - Isı ve yapı arasındaki ilişki nedir?
+  - id: it_amaro_finish
+    name: Amaro Bitişi
+    prompt: |
+      Amaro yemeği bitirir—acı, sindirimsel. Acılık kasıtlıdır.
+      Damağa ne yapar? Vücuda ne yapar?
+    follow_ups:
+      - Amaro olmadan yemek ne olurdu?
+      - Acılık dili nasıl sıfırlar?
+      - Acılık ve kapanış arasındaki ilişki nedir?
+  - id: it_lardo_spread
+    name: Lardo Sürme
+    prompt: |
+      Lardo kürlenmiş domuz yağıdır—ekmeğe sürülür, erir. Yağı göz önünde
+      bulundurun. Nereden geldi? Ne taşıyor?
+    follow_ups:
+      - Lardo olmadan ekmek ne olurdu?
+      - Yağ lezzeti nasıl taşır?
+      - Yağ ve koruma arasındaki ilişki nedir?
+  - id: it_sardine_silver
+    name: Sardalya Gümüş
+    prompt: |
+      Taze sardalyalar parlar—gümüş derili, bütün. Balık küçük, yağlıdır.
+      Ölçeği göz önünde bulundurun. Büyük bir balık neyi değiştirirdi?
+    follow_ups:
+      - Yağ olmadan yemek ne olurdu?
+      - Boyut pişirmeyi nasıl etkiler?
+      - Küçük ve yoğun arasındaki ilişki nedir?
+  - id: it_burrata_break
+    name: Burrata Kırılması
+    prompt: |
+      Burrata kırılmalı—dış yüzeyi krema verir. An tiyatraldır.
+      Kontrastı düşünün. Dış kabuk, iç sıvı.
+    follow_ups:
+      - Kırılma olmadan peynir ne olurdu?
+      - Yırtılma nasıl sürpriz yaratır?
+      - Yapı ve akış arasındaki ilişki nedir?
+  - id: it_osso_buco_marrow
+    name: Osso Buco İlik
+    prompt: |
+      Osso buco ilik merkezlidir—kemik hazine tutar. İlik yağlı, zengindir.
+      Çıkarmayı düşünün. İliği kim alır?
+    follow_ups:
+      - Kemik olmadan yemek ne olurdu?
+      - İlik pişirmeyi nasıl tamamlar?
+      - Kemik ve lezzet arasındaki ilişki nedir?
+  - id: it_limoncello_shot
+    name: Limoncello Shot
+    prompt: |
+      Limoncello soğuk bir bardakta gelir—sarı, tatlı, güçlü. Shot bir noktalama
+      işaretidir. Limonlar nereden geliyor? Ne taşıyorlar?
+    follow_ups:
+      - Limoncello olmadan yemek ne olurdu?
+      - Shot nasıl bitişi işaretler?
+      - Limon ve yer arasındaki ilişki nedir?
+  - id: it_sfogliatella_layers
+    name: Sfogliatella Katmanları
+    prompt: |
+      Sfogliatella yüzlerce kağıt inceliğinde katmana sahiptir—katlanmış, çıtır.
+      Emeği düşünün. Her katman bir karardır. Daha az katman ne yapardı?
+    follow_ups:
+      - Katmanlar olmadan hamur işi ne olurdu?
+      - Yapı nasıl doku yaratır?
+      - Zanaat ve çıtırtı arasındaki ilişki nedir?
+  - id: it_saltimbocca_name
+    name: Saltimbocca Adı
+    prompt: |
+      Saltimbocca "ağza atlar" anlamına gelir. İsim vaat eder. Yemek vaadi yerine
+      getirir mi? İsim ile deneyim arasındaki boşluğu düşünün.
+    follow_ups:
+      - İsim olmadan yemek ne olurdu?
+      - Adlandırma beklentiyi nasıl şekillendirir?
+      - Kelime ve tat arasındaki ilişki nedir?
+  - id: it_artichoke_prep
+    name: Enginar Hazırlığı
+    prompt: |
+      Enginarlar hazırlık gerektirir—sökülür, dikenleri kesilir. İsrafı göz
+      önünde bulundurun. Ne atılır? Ne değerlidir? Sebze bir mimaridir.
+    follow_ups:
+      - Hazırlanmamış enginar ne olurdu?
+      - Hazırlık pişirmeyi nasıl değiştirir?
+      - Emek ve ödül arasındaki ilişki nedir?
+  - id: it_grappa_clear
+    name: Grappa Berrak
+    prompt: |
+      Grappa berraktır—pomace'tan damıtılır. Ruh, üzümün hayaletini taşır.
+      Dönüşümü düşünün. Geride ne kalır?
+    follow_ups:
+      - Grappa olmadan yemek ne olurdu?
+      - Damıtma nasıl yoğunlaşır?
+      - Üzüm ve ruh arasındaki ilişki nedir?
+  - id: it_panzanella_soft
+    name: Panzanella Yumuşak
+    prompt: |
+      Panzanella bayat ekmek kullanır—domates suyu, sirke ile yumuşatılmış. Ekmek
+      yeniden canlandırılır. Dönüşümü düşünün. Taze ekmek ne yapardı?
+    follow_ups:
+      - Ekmek olmadan salata ne olurdu?
+      - Islatma dokuyu nasıl değiştirir?
+      - Bayat ve yeniden canlanmış arasındaki ilişki nedir?
+  - id: it_capers_brine
+    name: Kapari Salamura
+    prompt: |
+      Kapari tomurcuklardır—turşulu, tuzlu. Vurgu yaparlar. Salamurayı
+      düşünün. Tuz nereden geldi? Turşu neyi korur?
+    follow_ups:
+      - Kapari olmadan yemek ne olurdu?
+      - Salamura tomurcuğu nasıl değiştirir?
+      - Koruma ve lezzet arasındaki ilişki nedir?
+  - id: it_ravioli_seam
+    name: Ravioli Dikişi
+    prompt: |
+      Raviolinin bir dikişi vardır—makarna nerede tutturulur. Dikiş patlayabilir.
+      Zanaatkarlığı düşünün. Dolguyu ne tutar?
+    follow_ups:
+      - Dikiş olmadan ravioli ne olurdu?
+      - Mühür dolguyu nasıl korur?
+      - Yapı ve sürpriz arasındaki ilişki nedir?
+  - id: it_negroni_orange
+    name: Negroni Portakal
+    prompt: |
+      Negroni portakalla servis edilir—dilim veya kabuk. Narenciye yüzer.
+      Garnitürü düşünün. Ne ekler? Ne zaman tadarsınız?
+    follow_ups:
+      - Portakal olmadan içecek ne olurdu?
+      - Garnitür dengeyi nasıl tamamlar?
+      - Acılık ve narenciye arasındaki ilişki nedir?
+  - id: it_focaccia_dimples
+    name: Focaccia Çukurları
+    prompt: |
+      Focaccia'da çukurlar vardır—başparmakla bastırılmış, yağ dolu. Çukurlar
+      havuz ve tuz tutar. Yüzeyi düşünün. Düz bir üst ne yapardı?
+    follow_ups:
+      - Çukurlar olmadan ekmek ne olurdu?
+      - Havuzlar nasıl lezzet yaratır?
+      - Yüzey ve baharatlama arasındaki ilişki nedir?
+  - id: it_arancini_crust
+    name: Arancini Kabuğu
+    prompt: |
+      Arancini kızarmış pirinç toplarıdır—dışı çıtır, içi erimiş. Kabuk
+      patlamayı kontrol eder. Kontrastı düşünün. Kızartma olmadan ne olurdu?
+    follow_ups:
+      - Kabuk olmadan top ne olurdu?
+      - Kızartma nasıl kontrol yaratır?
+      - Yüzey ve iç arasındaki ilişki nedir?
+  - id: it_pecorino_age
+    name: Pecorino Yaşlandırma
+    prompt: |
+      Pecorino yaşa göre değişir—fresco, stagionato. Yaş dokuyu, ısırığı,
+      lezzeti değiştirir. Zaman çizelgesini düşünün. Daha yaşlı peynir ne
+      yapardı?
+    follow_ups:
+      - Farklı yaşlarda peynir ne olurdu?
+      - Yaşlandırma nasıl yoğunlaşır?
+      - Zaman ve tat arasındaki ilişki nedir?
+  - id: it_crostini_support
+    name: Crostini Destek
+    prompt: |
+      Crostini kaplardır—kızarmış ekmek üzerini tutar. Destek önemlidir. Çok
+      kalınsa ezici olur. Çok inceyse kırılır. Dengeyi düşünün.
+    follow_ups:
+      - Ekmek olmadan üzerindeki ne olurdu?
+      - Destek lokmayı nasıl şekillendirir?
+      - Taban ve yapı arasındaki ilişki nedir?
+  - id: it_ciabatta_holes
+    name: Ciabatta Delikleri
+    prompt: |
+      Ciabatta düzensiz deliklere sahiptir—büyük, rastgele. Delikler sosu yakalar.
+      Kırıntıyı düşünün. Sıkı bir kırıntı ne yapardı?
+    follow_ups:
+      - Delikler olmadan ekmek ne olurdu?
+      - Delikler nasıl doku yaratır?
+      - Yapı ve ıslanma arasındaki ilişki nedir?
+  - id: it_zabaglione_foam
+    name: Zabaglione Köpüğü
+    prompt: |
+      Zabaglione, ısı üzerinde çırpılan yumurta ve şekerdir—havalı, sıcak. Köpük
+      hassastır. Dönüşümü düşünün. Fazla çırpılırsa ne olurdu?
+    follow_ups:
+      - Köpük olmadan tatlı ne olurdu?
+      - Çırpma nasıl hava katar?
+      - Isı ve yapı arasındaki ilişki nedir?
+  - id: it_salt_crust_fish
+    name: Tuz Kabuklu Balık
+    prompt: |
+      Balık tuz kabuğunda pişirilir—tuz bir kabuk oluşturur. Balık içinde buğulanır.
+      Kapı göz önünde bulundurun. Tuz ne katıyor?
+    follow_ups:
+      - Kabuk olmadan balık ne olurdu?
+      - Tuz nemi nasıl tutar?
+      - Kabuk ve et arasındaki ilişki nedir?
+  - id: it_panna_cotta_wobble
+    name: Panna Cotta Sallanması
+    prompt: |
+      Panna cotta sallanmalı—zar zor ayarlanmış. Sallanma işin özüdür. Jeli
+      düşünün. Daha sert ayarlanma ne yapardı?
+    follow_ups:
+      - Sallanma olmadan tatlı ne olurdu?
+      - Doku nasıl keyif yaratır?
+      - Ayar ve ipeksi doku arasındaki ilişki nedir?
+  - id: it_sopressata_marbling
+    name: Sopressata Damarlanma
+    prompt: |
+      Sopressata yağ damarlarına sahiptir—kırmızıda beyaz. Yağ lezzet taşır.
+      Dağılımı düşünün. Yağsız et ne yapardı?
+    follow_ups:
+      - Yağ olmadan salam ne olurdu?
+      - Damarlanma dilimi nasıl etkiler?
+      - Yağ ve kürleme arasındaki ilişki nedir?
+  - id: it_affogato_melt
+    name: Affogato Erimesi
+    prompt: |
+      Affogato, sıcakın soğukla buluştuğu, espresoya boğulmuş gelato'dur.
+      Erimesini izleyin. Dönüşüm hemen gerçekleşir. Zamanlamayı düşünün.
+    follow_ups:
+      - Erime olmadan tatlı ne olurdu?
+      - Sıcaklık nasıl kontrast yaratır?
+      - Sıcak ve soğuk arasındaki ilişki nedir?
+  - id: it_breadcrumb_gold
+    name: Ekmek Kırıntısı Altın
+    prompt: |
+      İtalyan mutfağı ekmek kırıntısı kullanır—kızarmış, altın rengi, çıtırdayan.
+      Yeniden kullanımını düşünün. Bayat ekmek doku olur. Yemek ne eksik kalırdı?
+    follow_ups:
+      - Kırıntılar olmadan yemek ne olurdu?
+      - Kızartma nasıl çıtırtı ekler?
+      - Bayat ve kullanışlı arasındaki ilişki nedir?
+  - id: it_radicchio_bitter
+    name: Radika Acılığı
+    prompt: |
+      Radika kasıtlı olarak acıdır—ızgara veya çiğ. Acılık bir seçimdir.
+      Damağı düşünün. Zenginlik ortasında acılık ne yapar?
+    follow_ups:
+      - Acılık olmadan yemek ne olurdu?
+      - Acılık yağı nasıl keser?
+      - Acılık ve denge arasındaki ilişki nedir?
+  - id: it_cacciucco_bowl
+    name: Cacciucco Kase
+    prompt: |
+      Cacciucco balık güveçtir—çok tür, tek pot. Kase denizi tutar.
+      Çeşitliliği düşünün. Her balık ne katkıda bulunur?
+    follow_ups:
+      - Tek balıkla güveç ne olurdu?
+      - Çeşitlilik nasıl derinlik yaratır?
+      - Çok ve bir arasındaki ilişki nedir?
+  - id: it_panna_trace
+    name: Krema İzi
+    prompt: |
+      Krema bir iz bırakır—tabakta, sosun içinde. Viskoziteyi düşünün.
+      Krema taşır ve kaplar. O olmadan yemek ne olurdu?
+    follow_ups:
+      - Krema olmadan sos ne olurdu?
+      - Krema ağız hissini nasıl değiştirir?
+      - Yağ ve ipeksi doku arasındaki ilişki nedir?
+  - id: it_orecchiette_cup
+    name: Orecchiette Fincan
+    prompt: |
+      Orecchiette "küçük kulaklar" anlamına gelir—sosları fincan gibi tutarlar.
+      Şekil işlevseldir. Tasarımı düşünün. Düz bir makarna ne yapardı?
+    follow_ups:
+      - Fincan olmadan yemek ne olurdu?
+      - Şekil sosu nasıl tutar?
+      - Biçim ve sos arasındaki ilişki nedir?

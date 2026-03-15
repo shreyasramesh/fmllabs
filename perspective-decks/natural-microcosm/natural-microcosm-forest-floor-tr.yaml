@@ -1,0 +1,409 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Doğal Mikrokozmos — Orman Tabanı (Turkish)
+
+id: natural_microcosm_forest_floor
+name: Doğal Mikrokozmos — Orman Tabanı
+description: Orman tabanına bakış açınızı değiştirecek 50 kart — çürüme ve miselyumdan yaprak döküntüsü mimarisine ve gölgeliğin altındaki görünmez yaşama kadar.
+domain: natural_microcosm
+cards:
+  - id: nmf_leaf_vein
+    name: Yaprak Damarı
+    prompt: |
+      Yere düşmüş bir yaprak alın. Damarları takip edin. Su, besin,
+      şeker taşırlardı. Mimari, bakana kadar görünmezdir. Yaprak canlıyken damar ağı neyi destekliyordu?
+    follow_ups:
+      - Türler arasında desen nasıl farklılık gösterir?
+      - Damarları olmasaydı yaprağın durumu ne olurdu?
+      - Damar ve kenar arasındaki ilişki nedir?
+  - id: nmf_leaf_litter_layer
+    name: Yaprak Döküntüsü Katmanı
+    prompt: |
+      Orman tabanı katmanlardan oluşur — en üstte taze döküntü, altında geçen yılın, daha da altında eskisi. Diz çökün. Bir katmanı soyun. Gradyan nedir? Zaman nasıl istiflenir?
+    follow_ups:
+      - Döküntü olmasaydı ormanın durumu ne olurdu?
+      - Katman nasıl habitat oluşturur?
+      - Katman ve çürüme arasındaki ilişki nedir?
+  - id: nmf_mushroom_fruiting
+    name: Mantar Meyve Verme
+    prompt: |
+      Bir mantar sadece meyve veren gövdedir. Organizma — miselyum — yeraltına, toprağa, odunlara yayılır. Gördüğünüz şeyi bir sinyal olarak düşünün. Hikayenin geri kalanı nedir?
+    follow_ups:
+      - Mantarlar olmasaydı ormanın durumu ne olurdu?
+      - Meyve veren gövde ağ ile nasıl ilişkilidir?
+      - Mantar ve çürüme arasındaki ilişki nedir?
+  - id: nmf_log_sponge
+    name: Kütük Sünger
+    prompt: |
+      Devrilmiş bir kütük suyu emer, tutar. Yağmurdan sonra bir tanesine elinizi bastırın. Kütük bir rezervuardır. Ondan kim içer? İçinde ne yaşar?
+    follow_ups:
+      - Hemşire kütükler olmasaydı ormanın durumu ne olurdu?
+      - Kütük nasıl mikro iklim yaratır?
+      - Odun ve su arasındaki ilişki nedir?
+  - id: nmf_moss_cushion
+    name: Yosun Yastığı
+    prompt: |
+      Yosun bir sünger gibi su tutar. Dokunun. Yastık bir mimaridir — küçük bitkiler birbirine sıkışmış. Aradaki boşluklarda ne yaşar?
+    follow_ups:
+      - Yosun olmasaydı tabanın durumu ne olurdu?
+      - Yastık nasıl nem oluşturur?
+      - Yosun ve fidan arasındaki ilişki nedir?
+  - id: nmf_fern_unfurl
+    name: Eğrelti Otunun Açılması
+    prompt: |
+      Eğrelti otu yaprakları sarmal şeklinde — kıvırcık başlar — açılır. Hareket yavaştır. Mümkünse birini günler boyunca izleyin. Açılma yaprağı nasıl şekillendirir?
+    follow_ups:
+      - Sarmal olmasaydı eğrelti otunun durumu ne olurdu?
+      - Açılma yaprağı nasıl korur?
+      - Sarmal ve büyüme arasındaki ilişki nedir?
+  - id: nmf_root_tangle
+    name: Kök Karmaşası
+    prompt: |
+      Kökler yüzeyin altında dolaşır. Bir ağacın devrilip kök yumruğunu kaldırdığı yeri bulun. Karmaşa bir haritadır. Kökler neye ulaşmaya çalışıyordu?
+    follow_ups:
+      - Karmaşa olmasaydı ağacın durumu ne olurdu?
+      - Kökler yeraltında alanı nasıl paylaşır?
+      - Kök ve mantar arasındaki ilişki nedir?
+  - id: nmf_slug_trail
+    name: Salyangoz İzi
+    prompt: |
+      Bir yaprağın üzerinde parlak bir salyangoz izi — mukus, yol, imza. İz salyangozun gittiği yeri işaretler. İz yırtıcılara ne anlatır? Avına ne anlatır?
+    follow_ups:
+      - İz olmasaydı salyangoz ne kaybederdi?
+      - Mukus hareketi nasıl sağlar?
+      - İz ve bölge arasındaki ilişki nedir?
+  - id: nmf_lichen_patch
+    name: Liken Yaması
+    prompt: |
+      Liken, kabuk, kaya, toprak üzerinde büyür — yavaş, bileşik. Mantar ve alg birlikte. Bir yama bulun. Ne zamandır orada? Varlığı neyi gösteriyor?
+    follow_ups:
+      - Liken olmasaydı kabuğun durumu ne olurdu?
+      - Liken zamanı nasıl işaretler?
+      - Liken ve hava kalitesi arasındaki ilişki nedir?
+  - id: nmf_saprophyte
+    name: Saprofit
+    prompt: |
+      Saprofitler ölü maddeyle beslenir — mantarlar, bakteriler, böcekler. Onlar geri dönüştürücülerdir. Çürüme kanıtı bulun. Kim yiyor? Ne dönüşüyor?
+    follow_ups:
+      - Ayrıştırıcılar olmasaydı ormanın durumu ne olurdu?
+      - Çürüme yeni büyümeyi nasıl besler?
+      - Ölüm ve toprak arasındaki ilişki nedir?
+  - id: nmf_seedling_emergence
+    name: Fidan Oluşumu
+    prompt: |
+      Bir fidan döküntüden dışarı çıkar — önce kotiledonlar, sonra gerçek yapraklar. Gücü fark edin. Dışarı çıkmak için ne gerekiyordu? Onu ne engelleyecek?
+    follow_ups:
+      - Fidanlar olmasaydı ormanın durumu ne olurdu?
+      - Oluşum döküntüye nasıl bağlıdır?
+      - Fidan ve ışık arasındaki ilişki nedir?
+  - id: nmf_anthill_mound
+    name: Karınca Yuvası Höyüğü
+    prompt: |
+      Orman tabanından bir karınca yuvası yükselir — kazılmış toprak, organize. Trafiği izleyin. Nereye gidiyorlar? Ne taşıyorlar?
+    follow_ups:
+      - Höyük olmasaydı tabanın durumu ne olurdu?
+      - Höyük drenajı nasıl şekillendirir?
+      - Höyük ve koloni arasındaki ilişki nedir?
+  - id: nmf_spider_silk
+    name: Örümcek Ağı
+    prompt: |
+      Örümcek ağı boşlukları kapsar — yapraklar, dallar arasında. Çiy onu yakalar. Ağ, ışık ona vurana kadar görünmezdir. Bir telini takip edin. Neyi bağlıyor?
+    follow_ups:
+      - Ağ olmasaydı boşluğun durumu ne olurdu?
+      - Ağ alanı nasıl yapılandırır?
+      - Ağ ve av arasındaki ilişki nedir?
+  - id: nmf_bark_flake
+    name: Kabuk Pulcuğu
+    prompt: |
+      Bir gövdeden dökülen kabuk — doku, desen, yaş. Her pul bir mevsimi anlatır. Kabuğun altında kim yaşar? Pul neyi ortaya çıkarır?
+    follow_ups:
+      - Kabuk olmasaydı ağacın durumu ne olurdu?
+      - Kabuk nasıl korur ve yalıtır?
+      - Pulcuğu ve yenilenme arasındaki ilişki nedir?
+  - id: nmf_acorn_fall
+    name: Palamut Düşüşü
+    prompt: |
+      Bir palamut düşer. Boyutuna göre ağırdır. Kök salacak veya yenilecektir. Olasılıkları düşünün. Hangi yolu ne belirler?
+    follow_ups:
+      - Palamut olmasaydı ormanın durumu ne olurdu?
+      - Düşüş tohumu nasıl dağıtır?
+      - Palamut ve meşe arasındaki ilişki nedir?
+  - id: nmf_fallen_branch
+    name: Devrilmiş Dal
+    prompt: |
+      Bir dal yerde yatar — rüzgarla kırılmış belki. Şimdi bir köprü. Kim geçer? Kim onun üzerinde büyür?
+    follow_ups:
+      - Devrilmiş odun olmasaydı tabanın durumu ne olurdu?
+      - Dal nasıl kenar habitatı yaratır?
+      - Dal ve besin arasındaki ilişki nedir?
+  - id: nmf_humus_smell
+    name: Humus Kokusu
+    prompt: |
+      Orman tabanına doğru eğilin. Koku — toprak, çürüme, yaşam. O koku kimyadır. Onu ne yaratır? O olmasaydı ormanın durumu ne olurdu?
+    follow_ups:
+      - Koku sağlığı nasıl işaretler?
+      - Steril toprak nasıl kokardı?
+      - Koku ve verimlilik arasındaki ilişki nedir?
+  - id: nmf_snail_shell
+    name: Salyangoz Kabuğu
+    prompt: |
+      Döküntüde boş bir salyangoz kabuğu durur. Sarmal, kalsiyum, geride kalmış. Salyangozu kim yemiş olabilir? Kabuğu kim kullanacak?
+    follow_ups:
+      - Kabuklar olmasaydı tabanın durumu ne olurdu?
+      - Kabuk besinleri nasıl geri dönüştürür?
+      - Kabuk ve kalsiyum arasındaki ilişki nedir?
+  - id: nmf_fungal_network
+    name: Mantar Ağı
+    prompt: |
+      Miselyum ağaçları birbirine bağlar — bir Orman Geniş Ağı. Onu göremezsiniz ama oradadır. Besinler akar. Bilgi akar. Ormanı bir ağ olarak düşünün.
+    follow_ups:
+      - Ağ olmasaydı ormanın durumu ne olurdu?
+      - Ağ kaynakları nasıl yeniden dağıtır?
+      - Mantar ve ağaç arasındaki ilişki nedir?
+  - id: nmf_fern_spore
+    name: Eğrelti Otu Sporu
+    prompt: |
+      Eğrelti otları sporlarla çoğalır — minik, sayısız. Bir yaprağın alt tarafına bakın. Soriler onları tutar. Bir sporun yolculuğunu takip etmek neyi gerektirir?
+    follow_ups:
+      - Sporlar olmasaydı eğrelti otunun durumu ne olurdu?
+      - Spor nasıl dağılır?
+      - Spor ve gametofit arasındaki ilişki nedir?
+  - id: nmf_earthworm_cast
+    name: Toprak Solucanı Dışkısı
+    prompt: |
+      Tünel girişlerinde toprak solucanı dışkıları yığılır — işlenmiş toprak, zengin. Solucan yedi ve dışkıladı. Dışkı yüzeye bir hediyedir.
+    follow_ups:
+      - Solucanlar olmasaydı toprağın durumu ne olurdu?
+      - Dışkı yapıyı nasıl iyileştirir?
+      - Solucan ve havalandırma arasındaki ilişki nedir?
+  - id: nmf_dappled_light
+    name: Benekli Işık
+    prompt: |
+      Işık, taç yaprakların arasından yamalar halinde — benekli, hareketli — yere düşer. Orman tabanı açık alandan daha az ışık alır. Bu, neyin büyümesini nasıl şekillendirir?
+    follow_ups:
+      - Tam güneş ışığında tabanın durumu ne olurdu?
+      - Beneklenme nasıl mikro habitatlar yaratır?
+      - Işık ve fidan arasındaki ilişki nedir?
+  - id: nmf_bracket_fungus
+    name: Braket Mantarı
+    prompt: |
+      Bir gövdeden braket mantarı büyür — raf, polipor. Ağacı içeriden sindiriyor. Ağaç bunu yaparken yıllarca ayakta kalabilir. Yavaş tüketimi düşünün.
+    follow_ups:
+      - Mantar olmasaydı ağacın durumu ne olurdu?
+      - Braket sporları nasıl dağıtır?
+      - Parazit ve konak arasındaki ilişki nedir?
+  - id: nmf_needle_mat
+    name: İğne Matı
+    prompt: |
+      İğne yapraklı ağaçların iğneleri ağacın altında birikir — ekşi, yavaş çürür. Mat toprağı değiştirir. İçinde ne büyür? Neler ondan kaçınır?
+    follow_ups:
+      - Mat olmasaydı tabanın durumu ne olurdu?
+      - İğne matı pH'ı nasıl etkiler?
+      - Mat ve ateş arasındaki ilişki nedir?
+  - id: nmf_salamander_under
+    name: Semender Altında
+    prompt: |
+      Semenderler kütüklerin, taşların, döküntülerin altında yaşar. Bir şeyi dikkatlice kaldırın — geri koyun. Nem, karanlık. Semenderin buna neden ihtiyacı var?
+    follow_ups:
+      - Semenderler olmasaydı ormanın durumu ne olurdu?
+      - Semender omurgasız topluluğunu nasıl şekillendirir?
+      - Nem ve amfibi arasındaki ilişki nedir?
+  - id: nmf_rot_hole
+    name: Çürüme Deliği
+    prompt: |
+      Bir kütükte bir delik — belki çürüme veya bir hayvan. Delik bir boşluktur. Orada ne yuva yapar? Orada ne saklanır?
+    follow_ups:
+      - Delik olmasaydı kütüğün durumu ne olurdu?
+      - Boşluk nasıl habitat oluşturur?
+      - Çürüme ve barınak arasındaki ilişki nedir?
+  - id: nmf_springtail_jump
+    name: Zıplakayaç Zıplaması
+    prompt: |
+      Zıplakayaçlar — minik, çok sayıda — rahatsız edildiğinde zıplar. Döküntüde, toprakta bulunurlar. Mantarları, çürümeyi işlerler. Göremediğiniz kaç tane olduğunu fark edin.
+    follow_ups:
+      - Zıplakayaçlar olmasaydı tabanın durumu ne olurdu?
+      - Zıplama kaçışı nasıl sağlar?
+      - Zıplakayaç ve çürüme arasındaki ilişki nedir?
+  - id: nmf_bark_beetle_gallery
+    name: Kabuk Böceği Galerisi
+    prompt: |
+      Kabuk böceği galerileri, kabuğun altındaki odunu aşındırır — kanallar, desenler. Böcek onları oydu. Ağaç tepki verdi. Hikaye ne?
+    follow_ups:
+      - Böcek olmasaydı ağacın durumu ne olurdu?
+      - Galeri ağacın kaderini nasıl şekillendirir?
+      - Böcek ve mantar arasındaki ilişki nedir?
+  - id: nmf_dew_on_litter
+    name: Döküntü Üzerinde Çiy
+    prompt: |
+      Sabah çiyi yapraklar, iğneler, dallar üzerinde boncuklanır. Döküntü nemi tutar. Şafakta kim içer? Çiy ıslak mevsimi nasıl uzatır?
+    follow_ups:
+      - Çiy olmasaydı tabanın durumu ne olurdu?
+      - Çiy nasıl su kaynağı oluşturur?
+      - Çiy ve buharlaşma arasındaki ilişki nedir?
+  - id: nmf_windfall_gap
+    name: Rüzgarla Devrilmiş Boşluk
+    prompt: |
+      Bir ağaç devrildi — rüzgar, yaşlılık, hastalık. Boşluk içeri ışık alır. Taban değişir. Boşlukta daha önce olamayan ne büyür?
+    follow_ups:
+      - Boşluklar olmasaydı ormanın durumu ne olurdu?
+      - Boşluk ardıllığı nasıl sıfırlar?
+      - Boşluk ve çeşitlilik arasındaki ilişki nedir?
+  - id: nmf_mycorrhizal_tip
+    name: Mikorizal Uç
+    prompt: |
+      Ağaç kökleri mantar hifleriyle buluşur — mikoriza. Mantar kökün ulaşımını uzatır. Ağaç mantarı besler. Bir kök ucunu bulun. Yeraltındaki ortaklığı hayal edin.
+    follow_ups:
+      - Mikoriza olmasaydı ağacın durumu ne olurdu?
+      - Ortaklık kök sistemini nasıl uzatır?
+      - Mantar ve fosfor arasındaki ilişki nedir?
+  - id: nmf_squirrel_cache
+    name: Sincap Gizlemesi
+    prompt: |
+      Bir sincap bir somun gömdü — belki unutuldu. Çimlenebilir. Gizleme dağılımdır. Kaç ağaç unutulmuş tohum olarak başladı?
+    follow_ups:
+      - Saklayıcılar olmasaydı ormanın durumu ne olurdu?
+      - Saklama tohum menzilini nasıl uzatır?
+      - Unutkanlık ve orman arasındaki ilişki nedir?
+  - id: nmf_carpet_moss
+    name: Halı Yosunu
+    prompt: |
+      Bazı yerlerde zemin halı gibi yosun kaplar — yumuşak, yeşil, su tutar. Üzerinde yürüyün. Verimi hissedin. Halı yüzyılların büyümesidir, üst üste katmanlar.
+    follow_ups:
+      - Halı olmasaydı tabanın durumu ne olurdu?
+      - Halı nemi nasıl tutar?
+      - Yosun ve bataklık arasındaki ilişki nedir?
+  - id: nmf_burrow_entrance
+    name: Yuva Girişi
+    prompt: |
+      Toprakta bir yuva açılır — fare, tarla faresi, sincap. Giriş bir eşiktir. İçeri ne girer? Dışarı ne çıkar? Yuva yeraltına doğru uzanır.
+    follow_ups:
+      - Yuvalar olmasaydı tabanın durumu ne olurdu?
+      - Yuva toprağı nasıl havalandırır?
+      - Yuva ve yırtıcı arasındaki ilişki nedir?
+  - id: nmf_twig_lattice
+    name: Dal Kafesi
+    prompt: |
+      Dallar birikir — rüzgar, hayvan, yerçekimi. Döküntü üzerinde bir kafes oluştururlar. Kafes yaprakları tutar, tohum yakalar. Bu rastgele bir mimaridir.
+    follow_ups:
+      - Kafes olmasaydı tabanın durumu ne olurdu?
+      - Kafes erozyonu nasıl yavaşlatır?
+      - Dal ve mikro habitat arasındaki ilişki nedir?
+  - id: nmf_rot_softness
+    name: Çürüme Yumuşaklığı
+    prompt: |
+      Çürümüş ahşap parmaklarınızın altında yumuşar — süngerimsi, ufalanır. Yapıdan toprağa geçiş. Ne kadar sürdü? Ne kaldı?
+    follow_ups:
+      - Çürüme olmasaydı ormanın durumu ne olurdu?
+      - Yumuşaklık nasıl kolonizasyona izin verir?
+      - Çürüme ve humus arasındaki ilişki nedir?
+  - id: nmf_frost_needle
+    name: Don İğnesi
+    prompt: |
+      Don iğneleri topraktan yükselir — buz kristalleri, narin. Soğuk, sakin gecelerde oluşurlar. Öğlene kadar giderler. Geçici yapıyı düşünün.
+    follow_ups:
+      - Don olmasaydı toprağın deneyimi ne olurdu?
+      - Don kaldırması kökleri nasıl etkiler?
+      - Don ve fidan arasındaki ilişki nedir?
+  - id: nmf_millipede_curl
+    name: Çok Ayaklı Kıvrılması
+    prompt: |
+      Bir çok ayaklı rahatsız edildiğinde kıvrılır — savunma. Çürümeyle beslenir. Birinin döküntüde hareket ettiğini izleyin. Beden karmaşada nasıl yol alır?
+    follow_ups:
+      - Çok ayaklılar olmasaydı tabanın durumu ne olurdu?
+      - Kıvrılma nasıl korur?
+      - Çok ayaklı ve kalsiyum arasındaki ilişki nedir?
+  - id: nmf_pinecone_open
+    name: Kozalak Açılması
+    prompt: |
+      Bir kozalak kuruduğunda açılır — pulları yayılır, tohumlar salınır. Kozalak bir mekanizmadır. Isı da tetikleyebilir. Zamanlamayı düşünün.
+    follow_ups:
+      - Kozalak olmasaydı ağacın durumu ne olurdu?
+      - Nem mekanizmayı nasıl kontrol eder?
+      - Ateş ve salım arasındaki ilişki nedir?
+  - id: nmf_hole_in_leaf
+    name: Yaprakta Delik
+    prompt: |
+      Bir yaprakta delikler var — böcek, salyangoz, mantar. Hasar bir hikaye anlatır. Kim yedi? Ne zaman? Kalan yaprak hala fotosentez yapar. Eşik nedir?
+    follow_ups:
+      - Delikler olmasaydı yaprağın durumu ne olurdu?
+      - Otlama bitkiyi nasıl şekillendirir?
+      - Hasar ve savunma arasındaki ilişki nedir?
+  - id: nmf_root_hair
+    name: Kök Tüyü
+    prompt: |
+      Kök tüyleri — mikroskobik — alımı artırmak için yüzey alanını artırır. Onları göremezsiniz ama oradalar. Bir fidanın kökleri keşfediyor. Ne buluyorlar?
+    follow_ups:
+      - Tüyler olmasaydı kökün durumu ne olurdu?
+      - Kök tüyleri suyu nasıl emer?
+      - Tüy ve besin arasındaki ilişki nedir?
+  - id: nmf_forest_silence
+    name: Orman Sessizliği
+    prompt: |
+      Orman tabanında hareketsiz durun. Sessizlik boş değil — küçük seslerle dolu. Hışırtı, damlama, gıcırtı. Durduğunuzda ne duyuyorsunuz?
+    follow_ups:
+      - Küçük sesler olmasaydı ormanın durumu ne olurdu?
+      - Sessizlik varlığı nasıl ortaya çıkarır?
+      - Dinleme ve fark etme arasındaki ilişki nedir?
+  - id: nmf_shade_adaptation
+    name: Gölge Adaptasyonu
+    prompt: |
+      Orman tabanındaki bitkiler gölgeye adapte olmuş — daha büyük yapraklar, farklı klorofil. Bir güneş yaprağını bir gölge yaprağıyla karşılaştırın. Takas nedir?
+    follow_ups:
+      - Tam güneşte bitkinin durumu ne olurdu?
+      - Gölge yaprağı nasıl şekillendirir?
+      - Işık ve yatırım arasındaki ilişki nedir?
+  - id: nmf_nutrient_cycle
+    name: Besin Döngüsü
+    prompt: |
+      Orman tabanındaki her şey döngüde — karbon, azot, fosfor. Bir yaprak düşer. Tüketilir. Toprak olur. Bir ağacı besler. Bir döngüyü takip edin.
+    follow_ups:
+      - Döngü olmasaydı ormanın durumu ne olurdu?
+      - Çürüme döngüyü nasıl tamamlar?
+      - Ölüm ve büyüme arasındaki ilişki nedir?
+  - id: nmf_footprint_compression
+    name: Ayak İzi Sıkıştırması
+    prompt: |
+      Ayak iziniz döküntüyü sıkıştırır. Alttaki toprak şekli tutar. Tabanı değiştirmek kaç ayak izi alır? Buradan kimler yürüdü?
+    follow_ups:
+      - Trafik olmasaydı tabanın durumu ne olurdu?
+      - Sıkıştırma drenajı nasıl etkiler?
+      - Yol ve sıkışma arasındaki ilişki nedir?
+  - id: nmf_seasonal_signal
+    name: Mevsimsel Sinyal
+    prompt: |
+      Orman tabanı mevsimi işaret eder — ilkbaharda yeni büyüme, sonbaharda yaşlanma. Şu anda yerde ne var? Size ne anlatıyor?
+    follow_ups:
+      - Başka bir mevsimde tabanın durumu ne olurdu?
+      - Sinyal yaşamı nasıl senkronize eder?
+      - Döküntü ve takvim arasındaki ilişki nedir?
+  - id: nmf_stump_succession
+    name: Kütük Ardıllığı
+    prompt: |
+      Kesilmiş bir kütük mantarlar, fideler, yosunlar filizlenir. Ardıllıkta bir aşamadır. Ondan önce ne vardı? Onu ne değiştirecek? Kütük hem son hem de başlangıçtır.
+    follow_ups:
+      - Boşluk olmasaydı açıklığın durumu ne olurdu?
+      - Kütük nasıl fırsat yaratır?
+      - Ölüm ve yeni büyüme arasındaki ilişki nedir?
+  - id: nmf_forest_breath
+    name: Orman Nefesi
+    prompt: |
+      Orman tabanı nefes alır — oksijen girer, karbon çıkar, veya gece tersi. Toprak canlıdır. Hareketsiz durun. Değişimi hissedebiliyor musunuz?
+    follow_ups:
+      - Taban olmasaydı havanın durumu ne olurdu?
+      - Nefes tacı nasıl şekillendirir?
+      - Toprak ve atmosfer arasındaki ilişki nedir?
+  - id: nmf_leaf_miner_trail
+    name: Yaprak Madenci İzi
+    prompt: |
+      Bir yaprak madencisi — bir böcek larvası — katmanlar arasında beslenir. İz beyaz bir çizgidir, dolambaçlı bir yoldur. Onu takip edin. Madenci ne arıyordu?
+    follow_ups:
+      - İz olmasaydı yaprağın durumu ne olurdu?
+      - Madenci görmeden nasıl yol alır?
+      - İç ve dış arasındaki ilişki nedir?
+  - id: nmf_decomposer_shift
+    name: Ayrıştırıcı Kayması
+    prompt: |
+      Malzeme çürürken, farklı ayrıştırıcılar devreye girer — önce bakteriler ve mantarlar, sonra böcekler ve toprak solucanları. Farklı aşamalardaki malzemeleri bulun. Şu anda kim çalışıyor?
+    follow_ups:
+      - Ardıllık olmadan çürüme ne olurdu?
+      - Kayma tempoyu nasıl şekillendirir?
+      - Aşama ve tüketici arasındaki ilişki nedir?

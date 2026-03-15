@@ -1,0 +1,473 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Laboratorium Kulinarnie — Pizza (Polish)
+
+id: culinary_lab_pizza
+name: Laboratorium Kulinarnie — Pizza
+description: 50 kart, które odmienią Twoje postrzeganie pizzy — od chemii ciasta i ognia po teatr krojenia i archeologię dodatków.
+domain: culinary_lab
+cards:
+  - id: piz_dough_stretch
+    name: Rozciąganie Ciasta
+    prompt: |
+      Obserwuj, jak ciasto jest rozciągane — wyrzucane ręcznie lub dociskane.
+      Sieć glutenu się rozciąga, zatrzymuje powietrze. Kształt jest wybierany.
+      Co oznaczałaby kwadratowa porcja inaczej niż trójkątna?
+    follow_ups:
+      - Jak rozciąganie definiuje doświadczenie?
+      - Czym byłaby pizza bez rozciągania?
+      - Jaka jest zależność między ręką a kształtem?
+  - id: piz_oven_breath
+    name: Oddech Piekarnika
+    prompt: |
+      Piec do pizzy oddycha — drewnem, gazem lub elektrycznością. Kopuła
+      magazynuje ciepło. Podłoga je przenosi. Stań blisko jednego. Czego
+      wymaga piekarnik od kucharza? Od ciasta?
+    follow_ups:
+      - Czym byłaby pizza bez piekarnika?
+      - Jak ciepło kształtuje skórkę?
+      - Jaka jest zależność między oddechem a bąblami?
+  - id: piz_sauce_spiral
+    name: Spirala Sosu
+    prompt: |
+      Sos często nakłada się spiralnie — nie rozsmarowuje się od brzegu do
+      brzegu. Przyjrzyj się wzorowi. Co jest pokryte? Co jest odsłonięte?
+      Spirala to kompozycja.
+    follow_ups:
+      - Jak wyglądałaby pizza z całkowicie posmarowanym sosem?
+      - Jak spirala wpływa na każdy kęs?
+      - Jaka jest zależność między wzorem a smakiem?
+  - id: piz_cheese_melt
+    name: Topnienie Sera
+    prompt: |
+      Ser topi się w różnym tempie. Mozzarella się ciągnie; dojrzewający ser
+      tłuszczeje. Obserwuj topnienie. Chemia tłuszczu i białka, ciepła i czasu.
+      Kiedy jest gotowe?
+    follow_ups:
+      - Czym byłby kawałek bez ciągnienia się?
+      - Jak topnienie kształtuje kęs?
+      - Jaka jest zależność między topnieniem a pamięcią?
+  - id: piz_crust_char
+    name: Przypalenie Skórki
+    prompt: |
+      Cętkowanie — przypalone plamki na skórce — to znak pizzy z pieca
+      opałowego drewnem. Każda plamka to moment kontaktu z ekstremalnym
+      ciepłem. Zastanów się nad smakiem, który dodają te plamki. Co oznaczałaby
+      blada skórka?
+    follow_ups:
+      - Jak przypalenie zmienia doświadczenie?
+      - Czym byłaby pizza bez tego?
+      - Jaka jest zależność między przypaleniem a rzemiosłem?
+  - id: piz_slice_fold
+    name: Składanie Kawałka
+    prompt: |
+      Styl nowojorski: złóż kawałek. Złożenie jest strukturalne — utrzymuje
+      dodatki, kieruje tłuszczem. Złożenie to choreografia. Co ono umożliwia?
+    follow_ups:
+      - Czym byłoby jedzenie bez złożenia?
+      - Jak złożenie kształtuje kęs?
+      - Jaka jest zależność między złożeniem a miejscem?
+  - id: piz_pepperoni_cup
+    name: Kieliszek Pepperoni
+    prompt: |
+      Dobre pepperoni w kieliszkach — brzegi chrupiące, środek wypełniony
+      tłuszczem. To transformacja kształtu i tekstury. Zauważ, kiedy to
+      następuje. Co stworzyło kieliszek?
+    follow_ups:
+      - Czym byłoby pepperoni bez kieliszka?
+      - Jak kieliszek zatrzymuje smak?
+      - Jaka jest zależność między tłuszczem a formą?
+  - id: piz_basil_finish
+    name: Wykończenie Bazylią
+    prompt: |
+      Bazylia na pizzy często dodawana jest po upieczeniu — świeża, aromatyczna.
+      To wykończenie, nie baza. Zauważ kontrast. Co dodaje świeżość do
+      gotowanego?
+    follow_ups:
+      - Czym byłaby pizza bez bazylii?
+      - Jak czas kształtuje zioło?
+      - Jaka jest zależność między surowym a gotowanym?
+  - id: piz_margherita_minimal
+    name: Margherita Minimalna
+    prompt: |
+      Margherita to trzy rzeczy: ciasto, pomidor, ser. Każdy musi dźwigać.
+      Nie ma gdzie się ukryć. Zastanów się nad dyscypliną. Czego wymaga
+      minimalizm?
+    follow_ups:
+      - Co zrobiłaby jedna fałszywa nuta?
+      - Jak prostota skupia podniebienie?
+      - Jaka jest zależność między małą ilością a dużą?
+  - id: piz_pool_table
+    name: Stół Bilardowy
+    prompt: |
+      Niektóre pizzerie mają długi wspólny stół — obcy dzielący przestrzeń.
+      Pizza dociera. Stół jest sceną. Kto je z Tobą? Jaki jest niewypowiedziany
+      kontrakt?
+    follow_ups:
+      - Czym byłby posiłek w kabinie?
+      - Jak stół kształtuje spotkanie?
+      - Jaka jest zależność między wspólnym a prywatnym?
+  - id: piz_box_flip
+    name: Obracanie Pudełka
+    prompt: |
+      Pudełko na pizzę — karton, czasem z plastikowym trójnogiem pośrodku.
+      Jest zaprojektowane do wentylacji, do układania. Pudełko to infrastruktura.
+      Co byłoby bez niego na wynos?
+    follow_ups:
+      - Jak pudełko kształtuje drogę do domu?
+      - Co dzieje się, gdy pudełko jest otwierane?
+      - Jaka jest zależność między pudełkiem a rytuałem?
+  - id: piz_dough_ferment
+    name: Fermentacja Ciasta
+    prompt: |
+      Ciasto na pizzę fermentuje — godziny lub dni. Drożdże tworzą bąbelki,
+      smak. Stare ciasto ma kwaskowatość. Zastanów się nad czasem w każdym
+      kęsie. Co poświęciłoby ciasto szybko rosnące?
+    follow_ups:
+      - Jak fermentacja kształtuje skórkę?
+      - Jaka jest zależność między czasem a smakiem?
+      - Co oznaczałoby ciasto jednodniowe?
+  - id: piz_cornicione
+    name: Cornicione
+    prompt: |
+      Cornicione — brzeg, skórka — często jest najlepszą częścią. Puszyste,
+      przypalone, może trochę ciągnące. Niektórzy zostawiają; inni jedzą
+      je pierwsi. Jaka jest Twoja relacja z brzegiem?
+    follow_ups:
+      - Czym byłaby pizza bez cornicione?
+      - Jak brzeg ramuje środek?
+      - Jaka jest zależność między skórką a środkiem?
+  - id: piz_olive_oil_drizzle
+    name: Skropienie Oliwy z Oliwek
+    prompt: |
+      Oliwa z oliwek skropiona po upieczeniu — na skórce lub całej pizzy.
+      Błyszczy. Oliwa przenosi smak, dodaje bogactwa. Zauważ, kiedy jest
+      nakładana. Co dodaje skropienie?
+    follow_ups:
+      - Czym byłaby pizza bez tego?
+      - Jak oliwa zmienia kęs?
+      - Jaka jest zależność między tłuszczem a wykończeniem?
+  - id: piz_anchovy_salt
+    name: Sól z Sardeli
+    prompt: |
+      Sardele na pizzy — słone, umami, dzielące. Rozpuszczają się w sosie
+      lub leżą na wierzchu. Sardela to archeologia: śródziemnomorska,
+      konserwowana, starożytna. Jaką podróż odbyła?
+    follow_ups:
+      - Czym byłby kawałek bez sardeli?
+      - Jak sól kształtuje inne smaki?
+      - Jaka jest zależność między konserwacją a świeżością?
+  - id: piz_sound_crunch
+    name: Dźwięk Chrupnięcia
+    prompt: |
+      Pierwszy kęs dobrze zrobionej skórki — chrupnięcie, ustąpienie. Zamknij
+      oczy. Dźwięk jest częścią doświadczenia. Czym byłaby pizza, gdyby
+      była cicha?
+    follow_ups:
+      - Jak dźwięk kształtuje satysfakcję?
+      - Jak brzmi rozmoczona skórka?
+      - Jaka jest zależność między chrupnięciem a jakością?
+  - id: piz_second_slice
+    name: Drugi Kawałek
+    prompt: |
+      Drugi kawałek różni się od pierwszego — teraz znasz pizzę. Podniebienie
+      się dostosowało. Zauważ zmianę. Czy drugi kawałek smakuje tak samo?
+      Lepiej? Inaczej?
+    follow_ups:
+      - Jak powtórzenie zmienia percepcję?
+      - Czego brakowałoby w jedno-kawałkowym posiłku?
+      - Jaka jest zależność między pierwszym a drugim?
+  - id: piz_neapolitan_rules
+    name: Zasady Neapolitańskie
+    prompt: |
+      Prawdziwa pizza neapolitańska ma zasady — rozmiar, składniki, metodę.
+      Pieczęć VPN, certyfikat. Zasady tworzą tożsamość. Czego chronią zasady?
+      Czego wykluczają?
+    follow_ups:
+      - Czym byłaby pizza bez zasad?
+      - Jak certyfikacja kształtuje oczekiwania?
+      - Jaka jest zależność między zasadą a rzemiosłem?
+  - id: piz_detroit_edges
+    name: Brzegi Detroit
+    prompt: |
+      Styl z Detroit — prostokątny, ser do brzegu, chrupiąca, smażona skórka,
+      gdzie styka się z formą. Brzegi są celowe. Zastanów się nad architekturą.
+      Co mówi kształt?
+    follow_ups:
+      - Czym byłaby pizza bez brzegów?
+      - Jak kształt tworzy tożsamość?
+      - Jaka jest zależność między formą a skórką?
+  - id: piz_garlic_knot
+    name: Węzełek Czosnkowy
+    prompt: |
+      Węzełki czosnkowe — skręcone ciasto, posmarowane masłem, z czosnkiem.
+      Często przybywają pierwsze. Nie są pizzą, ale są z tego samego świata.
+      Jaka jest relacja między węzłem a pizzą?
+    follow_ups:
+      - Czym byłby posiłek bez węzełków?
+      - Jak węzełek nadaje ton?
+      - Jaka jest zależność między dodatkiem a daniem głównym?
+  - id: piz_red_pepper_flake
+    name: Płatki Czerwonego Papryki
+    prompt: |
+      Młynek z płatkami czerwonej papryki — często na stole. Wybierasz ostrość.
+      Płatek to demokracja. Każdy doprawia sam. Co oznacza ten wybór?
+    follow_ups:
+      - Czym byłby stół bez młynka?
+      - Jak samodzielne doprawianie kształtuje posiłek?
+      - Jaka jest zależność między wyborem a smakiem?
+  - id: piz_sicilian_slab
+    name: Płyta Sycylijska
+    prompt: |
+      Sycylijska — gruba, prostokątna, czasem odwrócona (sos na wierzchu).
+      Płyta ma ciężar. Architektura jest inna. Co dodaje grubość? Co poświęca?
+    follow_ups:
+      - Co zrobiłaby inaczej cienka skórka?
+      - Jak grubość kształtuje kęs?
+      - Jaka jest zależność między płytą a kawałkiem?
+  - id: piz_wood_stack
+    name: Stos Drewna
+    prompt: |
+      Pizzerie opalane drewnem składują polana. Dąb, czasem. Drewno to paliwo
+      i smak. Stos to przygotowanie. Zastanów się, co się pali. Co dodaje
+      drewno, czego nie może gaz?
+    follow_ups:
+      - Czym byłaby pizza bez drewna?
+      - Jak paliwo kształtuje skórkę?
+      - Jaka jest zależność między ogniem a dymem?
+  - id: piz_topping_balance
+    name: Równowaga Dodatków
+    prompt: |
+      Dodatki mogą przytłoczyć — za dużo, a pizza staje się zapiekanką. Równowaga
+      jest delikatna. Studiuj zapakowaną pizzę. Gdzie przekracza linię?
+      Co byś usunął?
+    follow_ups:
+      - Jak powściągliwość kształtuje pizzę?
+      - Jaka jest zależność między więcej a mniej?
+      - Kiedy wybór staje się chaosem?
+  - id: piz_cold_leftover
+    name: Zimna Resztka
+    prompt: |
+      Zimna pizza na śniadanie — niektórzy przysięgają. Smaki się ustabilizowały.
+      Tekstura się zmieniła. Zastanów się nad pizzą następnego dnia. Co dodaje
+      czas? Co odbiera?
+    follow_ups:
+      - Jak zimno zmienia doświadczenie?
+      - Co zrobiłoby podgrzewanie?
+      - Jaka jest zależność między świeżym a resztką?
+  - id: piz_sauce_sweet
+    name: Słodki Sos
+    prompt: |
+      Sos pomidorowy może być słodki lub rześki, w zależności od pomidora,
+      kucharza. Spróbuj sosu osobno, jeśli możesz. Skąd pochodzi słodycz?
+      Co zrobiłby kwas?
+    follow_ups:
+      - Jak sos nadaje ton?
+      - Jaka jest zależność między słodkością a kwasowością?
+      - Co oznaczałby surowy pomidor?
+  - id: piz_roman_taglio
+    name: Taglio Rzymskie
+    prompt: |
+      Pizza al taglio — sprzedawana na kawałki, na wagę. Wskazujesz, kroją.
+      Prostokąt, cena za kilo. Transakcja jest inna. Co oznacza kupowanie
+      na wagę?
+    follow_ups:
+      - Jak taglio kształtuje doświadczenie?
+      - Co oznaczałaby cała pizza w tym miejscu?
+      - Jaka jest zależność między kawałkiem a wyborem?
+  - id: piz_hot_honey
+    name: Ostre Miodowe
+    prompt: |
+      Ostre miodowe na pizzy — nowa tradycja, teraz wszędzie. Słodkie,
+      ostre, lepkie. To wykończenie. Zauważ, kiedy jest dodawane. Co miód
+      robi z serem?
+    follow_ups:
+      - Czym byłby kawałek bez tego?
+      - Jak słodko-ostry smak kształtuje kęs?
+      - Jaka jest zależność między trendem a tradycją?
+  - id: piz_pecorino_grate
+    name: Starty Pecorino
+    prompt: |
+      Pecorino starte na pizzę — słone, ostre. To warstwa. Ser na wierzchu
+      różni się od sera, który się roztopił. Zastanów się nad hierarchią.
+      Co dodaje starty ser?
+    follow_ups:
+      - Czym byłaby pizza bez pecorino?
+      - Jak drugi ser kształtuje danie?
+      - Jaka jest zależność między topnieniem a starciem?
+  - id: piz_paddle_slide
+    name: Zsuwanie z Łopaty
+    prompt: |
+      Łopata, łopatka — drewniana lub metalowa. Ciasto jest na nią zsuwane,
+      a następnie wkładane do pieca. Ruch jest wprawny. Obserwuj go. Co
+      mogłoby pójść źle bez umiejętności?
+    follow_ups:
+      - Jak łopata umożliwia pieczenie?
+      - Jaka jest zależność między narzędziem a wynikiem?
+      - Co oznaczałaby upuszczona pizza?
+  - id: piz_sourdough_crust
+    name: Skórka na Zakwasie
+    prompt: |
+      Skórka pizzy na zakwasie — długi ferment, kwaskowatość. Skórka ma
+      osobowość. Nie jest neutralna. Zastanów się, co dodaje zakwas. Co
+      zrobiłby inny drożdż?
+    follow_ups:
+      - Jak zakwas kształtuje kęs?
+      - Jaka jest zależność między fermentacją a smakiem?
+      - Co oznaczałaby bardziej mdła skórka?
+  - id: piz_white_pie
+    name: Biała Pizza
+    prompt: |
+      Biała pizza — bez pomidorów. Oliwa z oliwek, ser, może czosnek. Brak
+      czerwieni zmienia wszystko. Podniebienie oczekuje pomidorów. Co oferuje
+      zamiast tego biała pizza?
+    follow_ups:
+      - Czym byłaby pizza z pomidorami?
+      - Jak brak kształtuje oczekiwania?
+      - Jaka jest zależność między czerwonym a białym?
+  - id: piz_bar_setting
+    name: Atmosfera Baru
+    prompt: |
+      Pizza przy barze — jesz tam, gdzie zamawiasz. Bar to scena. Obserwujesz
+      piec, kawałki. Atmosfera jest swobodna, natychmiastowa. Co dodaje jedzenie
+      przy barze?
+    follow_ups:
+      - Co zmieniłby stolik?
+      - Jak bliskość kształtuje doświadczenie?
+      - Jaka jest zależność między barem a kuchnią?
+  - id: piz_truffle_trend
+    name: Trend Trufli
+    prompt: |
+      Trufle na pizzy — oliwa lub wiórki — stały się skrótem do luksusu.
+      Aromat dominuje. Zastanów się nad trendem. Co dodają trufle? Co maskują?
+    follow_ups:
+      - Czym byłaby pizza bez trufli?
+      - Jak luksus kształtuje kęs?
+      - Jaka jest zależność między trendem a smakiem?
+  - id: piz_ricotta_dollop
+    name: Kleks Ricotty
+    prompt: |
+      Ricotta dodana łyżką na pizzę — chłodna, kremowa, kontrastująca. Nie
+      topi się jak mozzarella. Po prostu leży. Zauważ różnicę temperatury.
+      Co dodaje kleks?
+    follow_ups:
+      - Czym byłby kawałek bez ricotty?
+      - Jak chłód kształtuje gorąco?
+      - Jaka jest zależność między kleksem a topnieniem?
+  - id: piz_slice_count
+    name: Liczba Kawałków
+    prompt: |
+      Ile kawałków? Liczba to często osiem — lub sześć dla mniejszej pizzy.
+      Liczba określa porcję, dzielenie. Zastanów się nad matematyką. Co
+      oznaczałoby cztery kawałki? Dwanaście?
+    follow_ups:
+      - Jak liczba kawałków kształtuje posiłek?
+      - Jaka jest zależność między cięciem a dzieleniem?
+      - Kiedy liczba ma znaczenie?
+  - id: piz_oven_window
+    name: Okno Piekarnika
+    prompt: |
+      Piekarnik ma okno — lub nie. Obserwowanie pieczenia pizzy to teatr.
+      Ser bulgocze. Skórka rośnie. Jakie byłoby doświadczenie bez widoku?
+    follow_ups:
+      - Jak oglądanie kształtuje oczekiwanie?
+      - Jaka jest zależność między widocznym a ukrytym?
+      - Czego uczysz się z okna?
+  - id: piz_ranch_dip
+    name: Dip Ranch
+    prompt: |
+      Ranch z pizzą — amerykańska tradycja, często ze skórką. Dip jest
+      opcjonalny, kontrowersyjny. Zastanów się nad dodatkiem. Co dodaje
+      ranch? Co przyćmiewa?
+    follow_ups:
+      - Czym byłaby skórka bez ranchu?
+      - Jak dip kształtuje kęs?
+      - Jaka jest zależność między purystą a praktycznym?
+  - id: piz_capers_brine
+    name: Solanka z Kaparów
+    prompt: |
+      Kapary na pizzy — słone, ostre. Przecinają bogactwo. Kapar podróżował —
+      śródziemnomorski, marynowany. Zauważ, kiedy się pojawia. Co dodaje
+      solanka?
+    follow_ups:
+      - Czym byłby kawałek bez kaparów?
+      - Jak solanka kształtuje podniebienie?
+      - Jaka jest zależność między marynowanym a świeżym?
+  - id: piz_calzone_seam
+    name: Szew Calzone
+    prompt: |
+      Calzone — pizza złożona, zamknięta. Szew utrzymuje nadzienie. Forma
+      jest inna. Rozcinasz ją. Ulatuje para. Co dodaje złożenie? Co ukrywa?
+    follow_ups:
+      - Czym byłoby calzone rozłożone?
+      - Jak szew tworzy niespodziankę?
+      - Jaka jest zależność między otwartym a zamkniętym?
+  - id: piz_mushroom_water
+    name: Woda z Grzybów
+    prompt: |
+      Grzyby na pizzy uwalniają wodę podczas gotowania. Dobry kucharz wie,
+      jak je wcześniej podsmażyć lub użyć suchych odmian. Mokre grzyby robią
+      rozmokłą pizzę. Zastanów się nad chemią. Co robi wilgoć?
+    follow_ups:
+      - Jak przygotowanie grzybów kształtuje kawałek?
+      - Jaka jest zależność między mokrym a chrupiącym?
+      - Co zrobiłby surowy grzyb?
+  - id: piz_grease_absorb
+    name: Chłonięcie Tłuszczu
+    prompt: |
+      Serwetka na kawałku — niektórzy osuszają tłuszcz. Tłuszcz to tłuszcz z
+      sera, pepperoni. Osuszać czy nie? Zastanów się nad wyborem. Co wnosi
+      tłuszcz? Co usuwa osuszanie?
+    follow_ups:
+      - Jak tłuszcz kształtuje doświadczenie?
+      - Co oznaczałby suchy kawałek?
+      - Jaka jest zależność między tłuszczem a smakiem?
+  - id: piz_oven_spring
+    name: Sprężystość Piekarnika
+    prompt: |
+      Sprężystość piekarnika — ciasto puchnie w wysokiej temperaturze. Drożdże
+      działają szybko. Struktura się ustawia. Zastanów się nad momentem. Co
+      by się stało bez wystarczającego ciepła? Bez odpowiedniej mąki?
+    follow_ups:
+      - Jak sprężystość tworzy miąższ?
+      - Jaka jest zależność między ciepłem a wyrastaniem?
+      - Co oznaczałaby płaska skórka?
+  - id: piz_roma_tomato
+    name: Pomidor Roma
+    prompt: |
+      San Marzano lub Roma — pomidory mają znaczenie. Pochodzą z miejsca.
+      Kampania. DOP, terroir. Prześledź pomidora. Jaką podróż odbył do
+      Twojego kawałka?
+    follow_ups:
+      - Co zrobiłby inny pomidor?
+      - Jak pochodzenie kształtuje sos?
+      - Jaka jest zależność między miejscem a smakiem?
+  - id: piz_pizza_napoli
+    name: Pizza Napoli
+    prompt: |
+      Neapol ją wymyślił. Miasto i jedzenie są związane. Jeść pizzę w Neapolu
+      to jeść ją u źródła. Zastanów się nad archeologią. Co oznaczałaby ta
+      sama pizza gdzie indziej?
+    follow_ups:
+      - Jak miejsce kształtuje doświadczenie?
+      - Co straciłoby tłumaczenie?
+      - Jaka jest zależność między pochodzeniem a autentycznością?
+  - id: piz_wine_pair
+    name: Dobór Wina
+    prompt: |
+      Pizza i wino — piwo jest popularne, ale wino też pasuje. Czerwone, często.
+      Kwas w winie spotyka kwas w pomidorze. Zastanów się nad doborem. Co
+      wino dodaje do kawałka?
+    follow_ups:
+      - Co zrobiłoby inaczej piwo?
+      - Jak napój kształtuje posiłek?
+      - Jaka jest zależność między kieliszkiem a talerzem?
+  - id: piz_pizza_party
+    name: Impreza z Pizzą
+    prompt: |
+      Pizza dla tłumu — urodziny, wieczór gier, lunch w biurze. Pizza jest
+      społeczna. Pudełka się układają. Wszyscy łapią kawałek. Zastanów się
+      nad choreografią. Jak tłum zmienia posiłek?
+    follow_ups:
+      - Co oznaczałaby samotna pizza?
+      - Jak dzielenie się kształtuje doświadczenie?
+      - Jaka jest zależność między pizzą a spotkaniem?

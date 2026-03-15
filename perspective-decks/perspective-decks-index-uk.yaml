@@ -1,0 +1,245 @@
+# yaml-language-server: $schema=../schema/perspective-deck-index-schema.json
+# Perspective Decks Index (Ukrainian)
+
+domains:
+  art:
+    name: Погляди на мистецтво
+    description: |
+      Картки, щоб змінити вашу перспективу при перегляді творів мистецтва. Кожна пропонує різний
+      погляд — від світла й тіні до знайомств та емоцій — щоб поглибити те, як ви бачите
+      та взаємодієте з творами мистецтва.
+  urban_jungle:
+    name: Міські джунглі
+    description: |
+      Замість того, щоб просто гуляти містом, ви дивитеся на нього як на живу істоту.
+      Картки зосереджені на шрамах старих будівель, хореографії руху транспорту,
+      та таємному житті провулків.
+  culinary_lab:
+    name: Кулінарна лабораторія
+    description: |
+      Від смачного до трансформаційного. Дослідіть хімію укусу,
+      історію інгредієнта та саундтрек ресторану.
+  natural_microcosm:
+    name: Природний мікрокосм
+    description: |
+      Ідеально для парку чи заднього двору. Цей погляд зосереджений на невидимій
+      інженерії листа, повільному житті каменю або територіальних
+      драмах комах.
+  human_interface:
+    name: Людський інтерфейс
+    description: |
+      Щоденні простори, де зустрічаються люди — кав'ярні, транспортні вузли,
+      робочі місця, магазини, громадські парки. Картки зосереджені на хореографії черг,
+      територіальних претензіях, невидимих сценаріях та антропології спільного простору.
+  california_superbloom:
+    name: Суперцвітіння Каліфорнії
+    description: |
+      Ефемерний вибух польових квітів після зимового дощу. Картки зосереджені на кольорі,
+      масштабі, запилювачах, геології, погоді та швидкоплинному видовищі цвітіння.
+decks:
+  - id: ways_of_looking_at_art
+    name: Погляди на мистецтво
+    path: perspective-decks/ways-of-looking-at-art.yaml
+    description: |
+      50 карток, щоб змінити вашу перспективу при перегляді творів мистецтва. Кожна картка пропонує
+      різний погляд — від світла й тіні до знайомств та емоцій — щоб
+      поглибити те, як ви бачите та взаємодієте з творами мистецтва.
+    domain: art
+  - id: ways_of_looking_at_california_superbloom
+    name: Погляди на Суперцвітіння Каліфорнії
+    path: perspective-decks/ways-of-looking-at-california-superbloom.yaml
+    description: |
+      20 карток, щоб змінити вашу перспективу під час спостереження за Суперцвітінням Каліфорнії.
+      Кожна картка пропонує різний погляд — від запилювачів та
+      геології до світла, запаху та швидкоплинності — щоб поглибити те, як ви бачите
+      польові квіти та ефемерний вибух кольору.
+    domain: california_superbloom
+  - id: urban_jungle_new_york
+    name: Міські джунглі — Нью-Йорк
+    path: perspective-decks/urban-jungle/urban-jungle-new-york.yaml
+    description: |
+      50 карток, щоб змінити ваш погляд на Нью-Йорк — від масштабу та світла до шарів
+      історії та ритмів міського життя.
+    domain: urban_jungle
+    subdomain_id: ny
+    subdomain_name: Нью-Йорк
+  - id: urban_jungle_san_francisco
+    name: Міські джунглі — Сан-Франциско
+    path: perspective-decks/urban-jungle/urban-jungle-san-francisco.yaml
+    description: |
+      50 карток, щоб змінити ваш погляд на Сан-Франциско — від масштабу та світла
+      до шарів історії та ритмів міського життя.
+    domain: urban_jungle
+    subdomain_id: sf
+    subdomain_name: Сан-Франциско
+  - id: urban_jungle_london
+    name: Міські джунглі — Лондон
+    path: perspective-decks/urban-jungle/urban-jungle-london.yaml
+    description: |
+      50 карток, щоб змінити ваш погляд на Лондон — від масштабу та світла до шарів
+      історії та ритмів міського життя.
+    domain: urban_jungle
+    subdomain_id: london
+    subdomain_name: Лондон
+  - id: urban_jungle_paris
+    name: Міські джунглі — Париж
+    path: perspective-decks/urban-jungle/urban-jungle-paris.yaml
+    description: |
+      50 карток, щоб змінити ваш погляд на Париж — від масштабу та світла до шарів
+      історії та ритмів міського життя.
+    domain: urban_jungle
+    subdomain_id: paris
+    subdomain_name: Париж
+  - id: urban_jungle_bangalore
+    name: Міські джунглі — Бангалор
+    path: perspective-decks/urban-jungle/urban-jungle-bangalore.yaml
+    description: |
+      50 карток, щоб змінити ваш погляд на Бангалор — від масштабу та світла до шарів
+      історії та ритмів міського життя.
+    domain: urban_jungle
+    subdomain_id: blr
+    subdomain_name: Бангалор
+  - id: culinary_lab_indian
+    name: Кулінарна лабораторія — Індійська
+    path: perspective-decks/culinary-lab/culinary-lab-indian.yaml
+    description: |
+      50 карток, щоб змінити ваш досвід індійської кухні — від хімії
+      спецій та гостроти до археології інгредієнтів та хореографії
+      спільного столу.
+    domain: culinary_lab
+    subdomain_id: indian
+    subdomain_name: Індійська
+  - id: culinary_lab_italian
+    name: Кулінарна лабораторія — Італійська
+    path: perspective-decks/culinary-lab/culinary-lab-italian.yaml
+    description: |
+      50 карток, щоб змінити ваш досвід італійської кухні — від хімії
+      оливкової олії та кислоти до соціальної хореографії столу та
+      археології кожного інгредієнта.
+    domain: culinary_lab
+    subdomain_id: italian
+    subdomain_name: Італійська
+  - id: culinary_lab_pizza
+    name: Кулінарна лабораторія — Піца
+    path: perspective-decks/culinary-lab/culinary-lab-pizza.yaml
+    description: |
+      50 карток, щоб змінити ваш досвід піци — від хімії тіста
+      та вогню до театру скибки та археології начинок.
+    domain: culinary_lab
+    subdomain_id: pizza
+    subdomain_name: Піца
+  - id: culinary_lab_chinese
+    name: Кулінарна лабораторія — Китайська
+    path: perspective-decks/culinary-lab/culinary-lab-chinese.yaml
+    description: |
+      50 карток, щоб змінити ваш досвід китайської кухні — від хімії
+      вок-хею та археології сої до хореографії круглого столу
+      та наративу бенкету.
+    domain: culinary_lab
+    subdomain_id: chinese
+    subdomain_name: Китайська
+  - id: culinary_lab_sushi
+    name: Кулінарна лабораторія — Суші
+    path: perspective-decks/culinary-lab/culinary-lab-sushi.yaml
+    description: |
+      50 карток, щоб змінити ваш досвід суші — від хімії рису
+      та риби до хореографії стійки та археології походження кожного
+      нети.
+    domain: culinary_lab
+    subdomain_id: sushi
+    subdomain_name: Суші
+  - id: natural_microcosm_forest_floor
+    name: Природний мікрокосм — Лісова підстилка
+    path: perspective-decks/natural-microcosm/natural-microcosm-forest-floor.yaml
+    description: |
+      50 карток, щоб змінити ваш погляд на лісову підстилку — від розкладання та
+      міцелію до архітектури опалого листя та невидимого життя під
+      кронами дерев.
+    domain: natural_microcosm
+    subdomain_id: forest_floor
+    subdomain_name: Лісова підстилка
+  - id: natural_microcosm_garden_backyard
+    name: Природний мікрокосм — Сад і Задній двір
+    path: perspective-decks/natural-microcosm/natural-microcosm-garden-backyard.yaml
+    description: |
+      50 карток, щоб змінити ваш погляд на дику природу вдома — від запилювачів та
+      ґрунту до бур'янів проти культурних рослин та хореографії культивованої природи.
+    domain: natural_microcosm
+    subdomain_id: garden_backyard
+    subdomain_name: Сад і Задній двір
+  - id: natural_microcosm_rocks_stones
+    name: Природний мікрокосм — Камені та Скелі
+    path: perspective-decks/natural-microcosm/natural-microcosm-rocks-stones.yaml
+    description: |
+      50 карток, щоб змінити ваш погляд на каміння та скелі — від геологічного часу та
+      лишайників до вивітрювання, ерозії та повільного життя мінералів.
+    domain: natural_microcosm
+    subdomain_id: rocks_stones
+    subdomain_name: Камені та Скелі
+  - id: natural_microcosm_pond_puddle
+    name: Природний мікрокосм — Ставок і Калюжа
+    path: perspective-decks/natural-microcosm/natural-microcosm-pond-puddle.yaml
+    description: |
+      50 карток, щоб змінити ваш погляд на воду в малих масштабах — від поверхневого натягу
+      та віддзеркалень до водних комах, пуголовків та життя в тимчасових
+      калабанях.
+    domain: natural_microcosm
+    subdomain_id: pond_puddle
+    subdomain_name: Ставок і Калюжа
+  - id: natural_microcosm_insect_territories
+    name: Природний мікрокосм — Території комах
+    path: perspective-decks/natural-microcosm/natural-microcosm-insect-territories.yaml
+    description: |
+      50 карток, щоб змінити ваш погляд на життя комах — від мурашиних стежок та бджолиного
+      трафіку до павутинь, територіальних драм та хореографії
+      колоній.
+    domain: natural_microcosm
+    subdomain_id: insect_territories
+    subdomain_name: Території комах
+  - id: human_interface_coffee_shop
+    name: Людський інтерфейс — Кав'ярня
+    path: perspective-decks/human-interface/human-interface-coffee-shop.yaml
+    description: |
+      50 карток, щоб змінити ваш погляд на кав'ярню — від хореографії черг
+      та територій ноутбуків до третього місця, невидимих сценаріїв та кави
+      як ритуалу.
+    domain: human_interface
+    subdomain_id: coffee_shop
+    subdomain_name: Кав'ярня
+  - id: human_interface_transit_hub
+    name: Людський інтерфейс — Транспортний вузол
+    path: perspective-decks/human-interface/human-interface-transit-hub.yaml
+    description: |
+      50 карток, щоб змінити ваш погляд на транспортний вузол — від платформ та
+      очікування до потоку прибуття/відбуття та хореографії незнайомців
+      у дорозі.
+    domain: human_interface
+    subdomain_id: transit_hub
+    subdomain_name: Транспортний вузол
+  - id: human_interface_workplace
+    name: Людський інтерфейс — Робоче місце
+    path: perspective-decks/human-interface/human-interface-workplace.yaml
+    description: |
+      50 карток, щоб змінити ваш погляд на робоче місце — від територій робочих столів та
+      переговорних кімнат до кулера з водою та видимої проти невидимої ієрархії.
+    domain: human_interface
+    subdomain_id: workplace
+    subdomain_name: Робоче місце
+  - id: human_interface_retail
+    name: Людський інтерфейс — Роздрібна торгівля
+    path: perspective-decks/human-interface/human-interface-retail.yaml
+    description: |
+      50 карток, щоб змінити ваш погляд на торговельний простір — від проходів та
+      хореографії перегляду товарів до примірочних та танцю покупки.
+    domain: human_interface
+    subdomain_id: retail
+    subdomain_name: Роздрібна торгівля
+  - id: human_interface_public_space
+    name: Людський інтерфейс — Громадський простір
+    path: perspective-decks/human-interface/human-interface-public-space.yaml
+    description: |
+      50 карток, щоб змінити ваш погляд на громадський простір — від лавок та доріжок
+      до хореографії незнайомців та об'єктів як талісманів.
+    domain: human_interface
+    subdomain_id: public_space
+    subdomain_name: Громадський простір

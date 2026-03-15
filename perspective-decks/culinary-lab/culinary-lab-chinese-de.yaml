@@ -1,0 +1,514 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Kulinarisches Labor — Chinesisch (German)
+
+id: culinary_lab_chinese
+name: Kulinarisches Labor — Chinesisch
+description: 50 Karten, um Ihre Erfahrung chinesischer Speisen zu verändern – von der Chemie des Wok-Hais und der Archäologie von Sojasauce bis hin zur Choreografie des runden Tisches und der Erzählung des Banketts.
+domain: culinary_lab
+cards:
+  - id: chn_wok_hei
+    name: Wok Hei
+    prompt: |
+      Wok hei – der Atem des Woks – ist der schwer fassbare Rauch, der aus
+      extremer Hitze und Geschwindigkeit entsteht. Es ist nicht ganz rauchig;
+      es ist Transformation. Können Sie ihn einfangen? Was wäre das Pfannengericht
+      ohne ihn?
+    follow_ups:
+      - Wie prägt Hei das Gericht?
+      - Was erzeugt es? Was zerstört es?
+      - Was ist die Beziehung zwischen Hitze und Eile?
+  - id: chn_round_table
+    name: Runder Tisch
+    prompt: |
+      Der chinesische Bankett-Tisch ist rund – mit einer drehbaren Platte
+      in der Mitte. Das Essen dreht sich. Jeder greift zu. Der Tisch ist
+      Choreografie. Wer dreht? Wer wartet? Was sind die unausgesprochenen
+      Regeln?
+    follow_ups:
+      - Was würde ein rechteckiger Tisch bedeuten?
+      - Wie formt die runde Form das Essen?
+      - Was ist die Beziehung zwischen Zentrum und Rand?
+  - id: chn_soy_archeology
+    name: Soja-Archäologie
+    prompt: |
+      Sojasauce – fermentiert, gereift, regional. Hell, dunkel, Pilz, doppelschwarz.
+      Sie kam von irgendwoher. Es brauchte Zeit. Verfolgen Sie die Flasche.
+      Welche Reise hat sie gemacht? Was würde industrielle Soja opfern?
+    follow_ups:
+      - Wie prägt der Ursprung den Guss?
+      - Was wäre das Gericht ohne Soja?
+      - Was ist die Beziehung zwischen Fermentation und Umami?
+  - id: chn_chopstick_grip
+    name: Stäbchen-Griff
+    prompt: |
+      Stäbchen verlängern die Hand. Reis, glitschige Nudeln, Knödel – jedes
+      erfordert eine andere Technik. Achten Sie auf Ihren Griff. Was erfordert
+      das Utensil? Was erlaubt es?
+    follow_ups:
+      - Was würde eine Gabel ändern?
+      - Wie formt der Stäbchen den Bissen?
+      - Was ist die Beziehung zwischen Werkzeug und Tempo?
+  - id: chn_dumpling_seam
+    name: Knödelnaht
+    prompt: |
+      Knödel-Falten – die Faltung, die Versiegelung. Jiaozi, Shumai, Xiaolongbao –
+      jedes hat seine Form. Die Naht hält oder entweicht. Studieren Sie eine.
+      Was würde ein Platzen bedeuten? Was schützt die Falte?
+    follow_ups:
+      - Wie formt die Falte die Füllung?
+      - Was würde ein offener Knödel verlieren?
+      - Was ist die Beziehung zwischen Siegel und Suppe?
+  - id: chn_tea_pour
+    name: Tee-Aufguss
+    prompt: |
+      Chinesischer Tee – aufgegossen, nachgefüllt, geteilt. Die Kanne zirkuliert.
+      Leere Tassen werden gefüllt, bevor gefragt wird. Der Aufguss ist Service
+      und Fürsorge. Achten Sie auf den Rhythmus. Was wäre das Essen ohne
+      den Tee?
+    follow_ups:
+      - Wie prägt der Tee das Tempo?
+      - Was kommuniziert der Aufguss?
+      - Was ist die Beziehung zwischen Tasse und Tisch?
+  - id: chn_bone_plate
+    name: Knochen-Teller
+    prompt: |
+      Ein kleiner Teller für Knochen – weggeworfene Schalen, Hühnerknochen,
+      Garnelenschalen. Der Teller sammelt das Nicht-Essbare. Er ist Teil
+      des Gedecks. Was erlaubt der Knochen-Teller? Was würde ohne ihn passieren?
+    follow_ups:
+      - Wie formt der Teller das Essen?
+      - Wie würde der Tisch ohne ihn aussehen?
+      - Was ist die Beziehung zwischen Abfall und Würde?
+  - id: chn_soup_spoon
+    name: Suppenlöffel
+    prompt: |
+      Der chinesische Suppenlöffel – breit, flach, aus Keramik. Er fasst Brühe
+      und Festes. Der Löffel passt anders in den Mund. Achten Sie auf den
+      Schluck. Was ermöglicht die Form?
+    follow_ups:
+      - Was würde ein runder Löffel ändern?
+      - Wie formt der Löffel den Schluck?
+      - Was ist die Beziehung zwischen Form und Funktion?
+  - id: chn_steam_basket
+    name: Dampfkorb
+    prompt: |
+      Dim Sum kommt in Bambuskörben – gestapelt, geschichtet. Der Dampf steigt
+      auf. Der Korb hält die Form. Betrachten Sie den Bambus. Was würde Metall
+      anders machen? Was fügt Bambus hinzu?
+    follow_ups:
+      - Wie formt der Korb den Knödel?
+      - Was würde ein Teller verlieren?
+      - Was ist die Beziehung zwischen Bambus und Dampf?
+  - id: chn_maillard_wok
+    name: Maillard-Wok
+    prompt: |
+      Der Wok erreicht Temperaturen, die heimische Herde nicht erreichen. Das
+      Anbraten ist augenblicklich. Proteine bräunen in Sekunden. Betrachten Sie
+      die Chemie. Was würde eine niedrigere Hitze opfern? Was verlangt der
+      Wok?
+    follow_ups:
+      - Wie prägt Hitze den Geschmack?
+      - Was würde ein Induktionskochfeld anders machen?
+      - Was ist die Beziehung zwischen Flamme und Kruste?
+  - id: chn_glutinous_texture
+    name: Klebreis-Textur
+    prompt: |
+      Klebreis – klebrig, zäh – hat eine andere Chemie. Er wird für Zongzi,
+      Lo Mai Gai, Desserts verwendet. Achten Sie auf die Textur. Wie unterscheidet
+      sie sich von Langkornreis? Was ermöglicht Klebrigkeit?
+    follow_ups:
+      - Was würde normaler Reis tun?
+      - Wie prägt die Textur das Gericht?
+      - Was ist die Beziehung zwischen Kleben und Einwickeln?
+  - id: chn_century_egg
+    name: Hunderterlei Ei
+    prompt: |
+      Hunderterlei Ei – konserviert, transformiert. Das Eigelb ist dunkel,
+      das Eiweiß durchscheinend. Die Chemie ist alt. Betrachten Sie die
+      Konservierung. Was tut die Zeit? Was würde Frische bedeuten?
+    follow_ups:
+      - Wie prägt die Konservierung den Geschmack?
+      - Was wäre das Ei frisch?
+      - Was ist die Beziehung zwischen Zeit und Transformation?
+  - id: chn_oyster_sauce
+    name: Austernsauce
+    prompt: |
+      Austernsauce – Umami, dickflüssig, kantonesisch. Es ist Reduktion und
+      Extraktion. Die Auster gibt ihr Wesen preis. Verfolgen Sie den Geschmack.
+      Was wäre das Pfannengericht ohne sie?
+    follow_ups:
+      - Wie prägt die Sauce das Gericht?
+      - Was ist die Beziehung zwischen Auster und Gemüse?
+      - Was würde Sojasauce stattdessen tun?
+  - id: chn_ordering_ritual
+    name: Bestellritual
+    prompt: |
+      Bestellen in einem chinesischen Restaurant – der Gastgeber wählt aus, oder
+      der Tisch verhandelt. Balance: Fleisch, Gemüse, Suppe, Reis. Die Bestellung
+      ist eine Komposition. Achten Sie darauf, wer entscheidet. Was sind die
+      Regeln?
+    follow_ups:
+      - Wie prägt die Bestellung das Essen?
+      - Was würde jeder für sich selbst bestellen?
+      - Was ist die Beziehung zwischen Wahl und Kollektiv?
+  - id: chn_crispy_skin
+    name: Knusprige Haut
+    prompt: |
+      Pekingente-Haut – knusprig, glasiert. Oder kantonesischer Schweinebauch-Knisper.
+      Die Haut ist beabsichtigt. Hitze, Luft, Zucker. Betrachten Sie die Architektur.
+      Was würde matschige Haut bedeuten?
+    follow_ups:
+      - Wie prägt Knusprigkeit den Biss?
+      - Was erzeugt das Knistern?
+      - Was ist die Beziehung zwischen Haut und Fleisch?
+  - id: chn_noodle_slip
+    name: Nudelrutschen
+    prompt: |
+      Chinesische Nudeln – Weizen, Reis, handgezogen – variieren in der Textur.
+      Einige gleiten, andere sind zäh. Das Gleiten der Nudel gegen die Stäbchen.
+      Achten Sie auf den Widerstand. Was fügt das Gleiten hinzu?
+    follow_ups:
+      - Wie prägt die Textur das Essen?
+      - Was würde eine matschige Nudel verlieren?
+      - Was ist die Beziehung zwischen Rutschen und Zufriedenheit?
+  - id: chn_bok_choy_wilt
+    name: Pak Choi Welken
+    prompt: |
+      Pak Choi im Wok – Sekunden. Es welkt, behält aber seine Struktur. Das Grün
+      wird weicher. Betrachten Sie die Transformation. Was würde roh bedeuten?
+      Was würde übergart verlieren?
+    follow_ups:
+      - Wie prägt das Welken das Gemüse?
+      - Was ist die Beziehung zwischen Hitze und Grün?
+      - Wann ist es fertig?
+  - id: chn_five_spice
+    name: Fünf Gewürze
+    prompt: |
+      Fünf-Gewürze-Pulver – Sternanis, Nelke, Zimt, Sichuan-Pfeffer, Fenchel.
+      Es ist eine Mischung mit Geschichte. Jedes Gewürz hat eine Route. Verfolgen
+      Sie eine. Welche Reise hat es gemacht?
+    follow_ups:
+      - Was wäre das Gericht ohne es?
+      - Wie erzeugt die Mischung Identität?
+      - Was ist die Beziehung zwischen Gewürz und Konservierung?
+  - id: chn_banquet_progression
+    name: Bankett-Progression
+    prompt: |
+      Ein chinesisches Bankett hat einen Bogen – kalte Gerichte zuerst, dann warme,
+      Suppe, Reis, Dessert. Die Progression ist erzählerisch. Achten Sie auf den
+      Rhythmus. Was würde eine andere Reihenfolge bewirken?
+    follow_ups:
+      - Wie prägt die Reihenfolge das Essen?
+      - Was ist die Beziehung zwischen erstem und letztem?
+      - Wann erreicht die Geschichte ihren Höhepunkt?
+  - id: chn_white_rice_center
+    name: Weißer Reis Kern
+    prompt: |
+      Weißer Reis – schlicht, gedämpft – bildet das Fundament des Essens. Er ist
+      die Leinwand. Reichhaltige Gerichte brauchen Reis zum Ausbalancieren.
+      Achten Sie darauf, wann Sie zugreifen. Was wäre das Essen ohne das Schlichte?
+    follow_ups:
+      - Wie prägt Reis den Gaumen?
+      - Was würde gebratener Reis tun?
+      - Was ist die Beziehung zwischen Neutralem und Geschmack?
+  - id: chn_szechuan_numb
+    name: Sichuan-Betäubung
+    prompt: |
+      Sichuan-Pfeffer – Ma La – betäubend, prickelnd. Es ist keine Schärfe; es ist
+      Empfindung. Der Mund summt. Betrachten Sie die Empfindung. Was wäre
+      das Gericht ohne die Betäubung?
+    follow_ups:
+      - Wie prägt Ma La die Erfahrung?
+      - Was ist die Beziehung zwischen Betäubung und Schärfe?
+      - Warum sie kombinieren?
+  - id: chn_dark_soy
+    name: Dunkle Sojasauce
+    prompt: |
+      Dunkle Sojasauce – dicker, süßer, für Farbe. Sie färbt den Reis, glasiert
+      das Fleisch. Sie ist nicht zum Salzen da; sie ist für die Farbe. Betrachten
+      Sie das Visuelle. Was fügt das Dunkle hinzu?
+    follow_ups:
+      - Was würde helle Sojasauce tun?
+      - Wie prägt Farbe die Erwartung?
+      - Was ist die Beziehung zwischen Dunkel und Karamell?
+  - id: chn_hot_plate
+    name: Heiße Platte
+    prompt: |
+      Zischende Platten – Rindfleisch, Tintenfisch – kommen zischend an. Die
+      Eisenplatte kocht weiter. Das Geräusch ist Theater. Was wäre das Gericht
+      ohne das Zischen? Wie verlängert die heiße Platte das Garen?
+    follow_ups:
+      - Wie prägt das Zischen die Erfahrung?
+      - Was würde eine kalte Platte bedeuten?
+      - Was ist die Beziehung zwischen Geräusch und Hitze?
+  - id: chn_congee_soft
+    name: Congee Weich
+    prompt: |
+      Congee – Reisbrei – ist weich, wohltuend. Lange gekochter Reis zerfällt.
+      Die Textur ist Hingabe. Betrachten Sie die Transformation. Was würde
+      al dente hier bedeuten?
+    follow_ups:
+      - Wie prägt Weichheit das Gericht?
+      - Was würde dicker Congee tun?
+      - Was ist die Beziehung zwischen Wasser und Reis?
+  - id: chn_glass_noodle
+    name: Glasnudel
+    prompt: |
+      Glasnudeln – Mungobohnenstärke – sind transparent, glitschig. Sie nehmen
+      Geschmack auf. Achten Sie auf die Textur. Was würden Weizennudeln tun?
+      Wie wichtig ist Transparenz?
+    follow_ups:
+      - Wie prägt die Nudel das Gericht?
+      - Was ist die Beziehung zwischen Klarheit und Aufnahme?
+      - Warum Glas?
+  - id: chn_xlb_burst
+    name: XLB-Platzen
+    prompt: |
+      Xiaolongbao – Suppenknödel – enthält Brühe im Inneren. Der erste Biss kann
+      verbrennen oder platzen. Die Technik: kneifen, schlürfen, essen. Betrachten
+      Sie das Risiko. Was würde ein kalter XLB bedeuten?
+    follow_ups:
+      - Wie prägt die Suppe die Erfahrung?
+      - Was würden Sie ohne das Platzen verlieren?
+      - Was ist die Beziehung zwischen Temperatur und Gefahr?
+  - id: chn_tea_smell
+    name: Tee-Duft
+    prompt: |
+      Oolong, Jasmin, Pu-Erh – jeder Tee hat eine andere Nase. Riechen Sie vor
+      dem Schlucken. Das Aroma ist die halbe Erfahrung. Was verspricht der
+      Duft? Was liefert er?
+    follow_ups:
+      - Wie prägt der Duft den Schluck?
+      - Was wäre der Tee ohne Aroma?
+      - Was ist die Beziehung zwischen Ziehen und Duft?
+  - id: chn_crab_crack
+    name: Krabbenknacken
+    prompt: |
+      Krabbe bei einem chinesischen Bankett – Kracker werden bereitgestellt. Das
+      Knacken ist Geräusch und Arbeit. Das Fleisch wird extrahiert. Betrachten
+      Sie die Choreografie. Was würde vorgeknackt bedeuten?
+    follow_ups:
+      - Wie prägt das Knacken das Essen?
+      - Was würden Sie ohne die Arbeit verlieren?
+      - Was ist die Beziehung zwischen Aufwand und Belohnung?
+  - id: chn_turn_table
+    name: Drehteller
+    prompt: |
+      Die drehbare Platte – wer dreht sie? Wann? Das Gericht, das Sie wollen, könnte
+      auf der anderen Seite des Tisches sein. Die Drehung ist Etikette. Achten
+      Sie auf den Tanz. Was sind die Regeln? Wann warten Sie?
+    follow_ups:
+      - Wie prägt die Drehung das Essen?
+      - Was würden feste Gerichte bedeuten?
+      - Was ist die Beziehung zwischen Drehung und Teilen?
+  - id: chn_ginger_slice
+    name: Ingwerscheibe
+    prompt: |
+      Ingwer mit Meeresfrüchten – dünne Scheiben, manchmal frittiert. Es schneidet
+      das Fischige. Der Ingwer ist sowohl Garnitur als auch Funktion. Betrachten
+      Sie seine Rolle. Was wäre der Fisch ohne ihn?
+    follow_ups:
+      - Wie prägt Ingwer den Gaumen?
+      - Was ist die Beziehung zwischen Scheibe und Duft?
+      - Warum Ingwer mit Meeresfrüchten?
+  - id: chn_hoisin_dip
+    name: Hoisin-Dip
+    prompt: |
+      Hoisin mit Pekingente – der Dip ist ein Ritual. Der Pfannkuchen, die Ente,
+      die Frühlingszwiebel, die Sauce. Jedes Element hat seinen Platz. Betrachten
+      Sie die Komposition. Was würde eine fehlende Sache bewirken?
+    follow_ups:
+      - Wie prägt der Dip den Biss?
+      - Was würde eine andere Sauce tun?
+      - Was ist die Beziehung zwischen Süß und Ente?
+  - id: chn_leaf_wrap
+    name: Blatt-Wrap
+    prompt: |
+      Salatblatt-Wrap – gehacktes Fleisch, Kräuter, Sauce, eingewickelt in ein
+      Blatt. Das Blatt ist Gefäß und Textur. Der Wrap ist Handarbeit. Betrachten
+      Sie die Architektur. Was würde eine Tortilla tun?
+    follow_ups:
+      - Wie prägt das Blatt den Biss?
+      - Was würde ein Teller tun?
+      - Was ist die Beziehung zwischen Wrap und Hand?
+  - id: chn_fish_whole
+    name: Ganzer Fisch
+    prompt: |
+      Ganzer Fisch – gedämpft, mit Kopf und Schwanz. Der Fisch wird vollständig
+      präsentiert. Der Kopf hat Bedeutung. Betrachten Sie die Präsentation.
+      Was würde ein Filet opfern?
+    follow_ups:
+      - Wie prägt das Ganze das Gericht?
+      - Was bedeutet der Kopf?
+      - Was ist die Beziehung zwischen Ganzem und Respekt?
+  - id: chn_scallion_oil
+    name: Frühlingszwiebelöl
+    prompt: |
+      Frühlingszwiebelöl – zischendes Öl über gehackte Frühlingszwiebeln und Ingwer.
+      Es ist ein Dressing, ein Finish. Das Öl trägt die Aromen. Achten Sie darauf,
+      wann es aufgetragen wird. Was fügt das Zischen hinzu?
+    follow_ups:
+      - Was wäre das Gericht ohne es?
+      - Wie prägt das Öl das Finish?
+      - Was ist die Beziehung zwischen Öl und Aroma?
+  - id: chn_black_vinegar
+    name: Schwarzer Essig
+    prompt: |
+      Chinkiang-Essig – dunkel, komplex, leicht süßlich. Er schneidet die Reichhaltigkeit.
+      Ein paar Tropfen verändern den Knödel. Betrachten Sie die Säure. Was würde
+      Reisessig tun? Was fügt das Dunkle hinzu?
+    follow_ups:
+      - Wie prägt der Essig den Biss?
+      - Was wäre der Knödel ohne ihn?
+      - Was ist die Beziehung zwischen Essig und Balance?
+  - id: chn_sticky_rice
+    name: Klebreis
+    prompt: |
+      Klebreis in Lotusblatt – Lo Mai Gai. Das Blatt gibt Geschmack ab. Der Reis
+      wird eingewickelt, gedämpft. Wickeln Sie ihn aus. Achten Sie auf den Duft.
+      Was würde Folie tun?
+    follow_ups:
+      - Wie prägt das Blatt den Reis?
+      - Was ist die Beziehung zwischen Wickel und Dampf?
+      - Was würde unverpackt bedeuten?
+  - id: chn_mooncake_mold
+    name: Mondkuchenform
+    prompt: |
+      Mondkuchen – mit Zeichen, Mustern gestempelt. Die Form ist Geschichte. Das
+      Design bedeutet etwas. Betrachten Sie den Abdruck. Was würde ein einfacher
+      Kuchen verlieren?
+    follow_ups:
+      - Wie prägt die Form den Kuchen?
+      - Was bedeutet das Muster?
+      - Was ist die Beziehung zwischen Abdruck und Tradition?
+  - id: chn_egg_tart
+    name: Eierkuchen (Tart)
+    prompt: |
+      Eierkuchen (Tart) – portugiesischer Einfluss, Hongkong-Veredelung. Die
+      Custard, der Teig. Betrachten Sie die Textur. Blättrig, seidig. Was würde
+      eine andere Kruste tun?
+    follow_ups:
+      - Wie prägt der Tart das Ende des Essens?
+      - Was ist die Beziehung zwischen Custard und Knusprigkeit?
+      - Warum Eierkuchen (Tart) zum Abschluss?
+  - id: chn_hand_pull
+    name: Handgezogen
+    prompt: |
+      Handgezogene Nudeln – der Koch dehnt, faltet, zieht. Die Stränge vervielfachen
+      sich. Es ist Performance. Schauen Sie zu. Was würden Maschinen-Nudeln
+      opfern?
+    follow_ups:
+      - Wie prägt das Ziehen die Nudel?
+      - Was ist die Beziehung zwischen Hand und Textur?
+      - Was würden gleichmäßige Nudeln bedeuten?
+  - id: chn_bird_nest
+    name: Vogelnest
+    prompt: |
+      Vogelnest – nicht das Schwalbennest in der Suppe, sondern Taro-Nest oder
+      knuspriges Nudelnest, das Pfannengerichte aufnimmt. Das Nest ist Architektur.
+      Betrachten Sie die Form. Was fügt das Nest hinzu?
+    follow_ups:
+      - Wie prägt das Nest das Gericht?
+      - Was würde ein Teller tun?
+      - Was ist die Beziehung zwischen Gefäß und Inhalt?
+  - id: chn_red_envelope
+    name: Roter Umschlag
+    prompt: |
+      Bei Banketten können rote Umschläge Geschenke begleiten – Geld für die
+      Küche, für die Gastgeber. Der Umschlag ist Ritual. Betrachten Sie den
+      Austausch. Was bedeutet das Rot?
+    follow_ups:
+      - Wie prägt der Umschlag den Anlass?
+      - Was würde kein Umschlag bedeuten?
+      - Was ist die Beziehung zwischen Geschenk und Gesicht?
+  - id: chn_toasting_ritual
+    name: Anstoß-Ritual
+    prompt: |
+      Gan Bei – Prost – oder lockeres Trinken. Der Toast strukturiert das Bankett.
+      Wer stößt mit wem an? Wann? Das Ritual ist sozial. Achten Sie auf die Choreografie.
+      Was wäre das Essen ohne Anstoßen?
+    follow_ups:
+      - Wie prägt das Anstoßen das Essen?
+      - Was ist die Beziehung zwischen Anstoßen und Hierarchie?
+      - Wann trinkst du?
+  - id: chn_preserved_veg
+    name: Konserviertes Gemüse
+    prompt: |
+      Konservierter Senf, eingelegter Rettich, fermentierter Kohl – diese fügen
+      Tiefe hinzu. Es sind alte Konservierungsmethoden. Betrachten Sie die
+      Transformation. Was würde frisches Gemüse tun?
+    follow_ups:
+      - Wie prägt die Konservierung das Gericht?
+      - Was ist die Beziehung zwischen eingelegtem Gemüse und Umami?
+      - Warum konserviert?
+  - id: chn_sweet_sour
+    name: Süß-Sauer
+    prompt: |
+      Süß und sauer – die Balance ist beabsichtigt. Zucker, Essig, manchmal
+      Ketchup. Die Sauce ist kräftig. Betrachten Sie die Kombination. Was würde
+      das eine ohne das andere bedeuten?
+    follow_ups:
+      - Wie prägt die Balance das Gericht?
+      - Was ist die Beziehung zwischen Süß und Sauer?
+      - Warum diese Paarung?
+  - id: chn_wonton_soup
+    name: Wonton-Suppe
+    prompt: |
+      Wonton in klarer Brühe – die Suppe ist einfach. Der Wonton schwimmt. Die
+      Brühe ist klar. Betrachten Sie den Kontrast zu frittierten Wontons. Was
+      fügt die Suppe hinzu?
+    follow_ups:
+      - Wie prägt die Brühe den Wonton?
+      - Was würde frittiert bedeuten?
+      - Was ist die Beziehung zwischen klar und reichhaltig?
+  - id: chn_cold_dish_start
+    name: Kalte Vorspeise
+    prompt: |
+      Kalte Gerichte eröffnen das Essen – betrunkenes Huhn, Quallen, eingelegtes
+      Gemüse. Sie wecken den Gaumen. Der Kontrast zu dem, was folgt. Betrachten
+      Sie die Eröffnung. Was würde ein heißer Anfang tun?
+    follow_ups:
+      - Wie prägt das Kalte das Essen?
+      - Was ist die Beziehung zwischen zuerst und danach?
+      - Warum zuerst kalt?
+  - id: chn_fried_rice_wok
+    name: Gebratener Reis Wok
+    prompt: |
+      Gebratener Reis braucht einen Wok – hohe Hitze, schnelles Schwenken. Idealerweise
+      Reis vom Vortag. Die Körner trennen sich. Betrachten Sie die Technik.
+      Was würde eine Pfanne opfern?
+    follow_ups:
+      - Wie prägt der Wok den Reis?
+      - Was würde frischer Reis tun?
+      - Was ist die Beziehung zwischen Hitze und Trennung?
+  - id: chn_lychee_dessert
+    name: Litschi-Dessert
+    prompt: |
+      Litschi zum Dessert – frisch, aus der Dose, in Sirup. Die Frucht schließt
+      das Essen ab. Süß, duftend. Betrachten Sie das Ende. Was würde eine andere
+      Frucht tun?
+    follow_ups:
+      - Wie prägt Litschi den Abschluss?
+      - Was ist die Beziehung zwischen Frucht und Finale?
+      - Warum Litschi?
+  - id: chn_fortune_cookie
+    name: Glückskeks
+    prompt: |
+      Glückskeks – amerikanisch-chinesische Erfindung. Der Keks ist Theater.
+      Brechen Sie ihn auf. Lesen Sie das Glück. Der Keks ist nicht authentisch,
+      aber er ist Ritual. Betrachten Sie seinen Platz.
+    follow_ups:
+      - Wie würde das Essen ohne ihn enden?
+      - Wie prägt das Glück den Abschluss?
+      - Was ist die Beziehung zwischen Keks und Erwartung?
+  - id: chn_century_egg
+    name: Hunderterlei Ei
+    prompt: |
+      Hunderterlei Ei – konserviert in Asche, Lehm, Kalk. Das Eigelb wird
+      graugrün, das Eiweiß dunkelt zu Gelee. Es ist Transformation über Wochen.
+      Betrachten Sie die Archäologie. Was wäre frisches Ei? Was fügt die Konservierung
+      hinzu?
+    follow_ups:
+      - Wie prägt die Konservierung die Textur?
+      - Was wäre das Gericht ohne das Ei?
+      - Was ist die Beziehung zwischen Zeit und Transformation?

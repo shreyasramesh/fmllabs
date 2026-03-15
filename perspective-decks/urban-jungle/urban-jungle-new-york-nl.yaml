@@ -1,0 +1,428 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Urban Jungle — New York (Dutch)
+
+id: urban_jungle_new_york
+name: Urban Jungle — New York
+description: 50 kaarten om je kijk op New York te veranderen—van schaal en licht tot lagen van geschiedenis en het ritme van het straatleven.
+domain: urban_jungle
+cards:
+  - id: ny_vertical_city
+    name: Verticale Stad
+    prompt: |
+      Kijk omhoog. New York is verticaal gebouwd—torens die strijden om de hemel.
+      Volg één gebouw van het trottoir tot de top. Hoe verandert de hoogte wat
+      je opmerkt? Waar rust je oog op?
+    follow_ups:
+      - Hoe zou de straat er vanaf de top uitzien?
+      - Hoe vertekenen schaalverschillen zich op verschillende hoogtes?
+      - Wat wordt verborgen als je alleen omhoog kijkt?
+  - id: ny_grid_navigation
+    name: Raster Navigatie
+    prompt: |
+      Het raster van Manhattan is meedogenloos. Loop een blok en merk op hoe het nummeringssysteem beweging, oriëntatie en verrassing vormgeeft. Wat gebeurt er als je het raster doorbreekt?
+    follow_ups:
+      - Waar voelt het raster beklemmend? Waar bevrijdend?
+      - Hoe zou de stad voelen zonder dit raster?
+      - Hoe veranderen diagonale straten het ritme?
+  - id: ny_subway_soundscape
+    name: Metro Geluidslandschap
+    prompt: |
+      Sluit je ogen in een station. Het gerommel, het remmen, de omroepen, de straatmuzikant. Breng het geluidslandschap in kaart. Hoe klinkt New York als je het niet kunt zien?
+    follow_ups:
+      - Welke geluiden zijn constant? Welke toevallig?
+      - Wat zou stilte hier betekenen?
+      - Hoe markeert geluid de tijd ondergronds?
+  - id: ny_fire_escape
+    name: Brandtrap
+    prompt: |
+      Brandtrappen zijn het exoskelet van de stad—functioneel, ritmisch, persoonlijk.
+      Zoek een blok waar ze zich herhalen. Wat onthullen ze over de gebouwen erachter? Wie zou daar 's nachts kunnen zitten?
+    follow_ups:
+      - Wat zou je vanaf daar zien?
+      - Hoe veranderen ze het karakter van de straat?
+      - Wat zou het blok verliezen zonder hen?
+  - id: ny_street_number
+    name: Straatnummer
+    prompt: |
+      Kies een nummer—een huisnummer, een verdieping, een buslijn. Volg het door de stad. Welk patroon ontstaat er? Wat betekent dat nummer hier?
+    follow_ups:
+      - Waar leidt het nummer je heen?
+      - Wat zou een ander nummer onthullen?
+      - Hoe ordenen nummers stedelijke ervaringen?
+  - id: ny_steam_rising
+    name: Opstijgende Stoom
+    prompt: |
+      Magneetputstoom is de adem van New York. Zoek waar het opstijgt en kijk hoe het beweegt, zich verspreidt, licht vangt. Wat zit eronder? Wat ademt de stad uit?
+    follow_ups:
+      - Wat zou je onder het rooster vinden?
+      - Hoe verandert het weer de stoom?
+      - Welke andere verborgen systemen ventileren hier?
+  - id: ny_storefront_typography
+    name: Winkelgevel Typografie
+    prompt: |
+      Lees de borden. Bodega's, delicatessenwinkels, wasserijen—elk heeft een visuele taal.
+      Verzamel vijf lettertypen van één blok. Wat zeggen ze over de mensen die hier wonen?
+    follow_ups:
+      - Welke borden voelen oud aan? Welke nieuw?
+      - Hoe zou het blok klinken als de borden konden spreken?
+      - Hoe markeert typografie verandering?
+  - id: ny_waterfront_edge
+    name: Waterfront Rand
+    prompt: |
+      Ga naar het water. De stad keert de rug toe naar de rivier, de haven, de baai. Sta waar land water ontmoet. Wat is gebouwd voor het uitzicht? Wat is gebouwd om het te negeren?
+    follow_ups:
+      - Wie mag het water zien?
+      - Hoe is de rand opgeëist?
+      - Hoe zou de stad zijn als ze naar het water gekeerd was?
+  - id: ny_parks_as_rooms
+    name: Parken als Kamers
+    prompt: |
+      Central Park, Prospect Park, een klein plein—elk is een kamer in de stad.
+      Betreed er een en merk de muren, het plafond, het meubilair op. Hoe is de natuur hier ontworpen?
+    follow_ups:
+      - Wat is het doel van de kamer?
+      - Wie heeft de zichtlijnen ontworpen?
+      - Wat zou er gebeuren als de muren wegvielen?
+  - id: ny_delivery_rhythm
+    name: Bezorg Ritme
+    prompt: |
+      Kijk naar de bezorgingen—vrachtwagens, handkarren, fietsen. Volg het pad van één pakket van vrachtwagen tot deur. Hoe beweegt handel door de straat? Wat is het ritme van aankomst?
+    follow_ups:
+      - Hoe zou het blok eruitzien zonder bezorgingen?
+      - Hoe bewegen verschillende goederen verschillend?
+      - Wie is onzichtbaar in deze stroom?
+  - id: ny_brownstone_steps
+    name: Bruine Steen Trappen
+    prompt: |
+      Bruine steen trappen zijn podia. Ga op een stoep zitten en kijk naar de straat. Wie pauzeert? Wie passeert? Wat zou je vanaf hier zeggen?
+    follow_ups:
+      - Wat is het uitzicht vanaf de bovenste trede?
+      - Hoe creëren trappen territorium?
+      - Wat zou het blok verliezen zonder hen?
+  - id: ny_bridge_as_threshold
+    name: Brug als Drempel
+    prompt: |
+      Steek een brug te voet over. Voel de overgang—van het ene stadsdeel naar het andere.
+      De brug is noch hier, noch daar. Wat verandert er als je de andere kant bereikt?
+    follow_ups:
+      - Wat laat je achter?
+      - Hoe vormt de brug de reis?
+      - Hoe zou de stad zijn zonder bruggen?
+  - id: ny_awning_shade
+    name: Luifel Schaduw
+    prompt: |
+      Luifels creëren microklimaten. Ga eronder staan. Merk de verandering in licht, geluid, temperatuur op. Hoe veranderen kleine structuren de straat?
+    follow_ups:
+      - Hoe zou het blok aanvoelen zonder luifels?
+      - Hoe markeren ze eigendom?
+      - Welke andere kleine schuilplaatsen bestaan hier?
+  - id: ny_graffiti_layer
+    name: Graffiti Laag
+    prompt: |
+      Kijk naar de muren. Tags, muurschilderingen, wheatpaste—elk is een laag van tijd en claim. Lees het palimpsest. Wie heeft dit oppervlak gemarkeerd?
+    follow_ups:
+      - Wat is de oudste markering die je kunt vinden?
+      - Hoe vertellen lagen een verhaal?
+      - Wat zou de muur zeggen als het kon spreken?
+  - id: ny_rooftop_skyline
+    name: Rooftop Skyline
+    prompt: |
+      Stel je het uitzicht voor vanaf een dakterras. Watertanks, antennes, naburige daken. De stad van bovenaf is een andere stad. Wat zou je zien?
+    follow_ups:
+      - Hoe verandert hoogte wat belangrijk is?
+      - Wat is verborgen vanaf de straat?
+      - Wie heeft toegang tot dit uitzicht?
+  - id: ny_crosswalk_wait
+    name: Kruispunt Wachten
+    prompt: |
+      Wacht bij een zebrapad. Steek niet over als het licht verandert. Wacht op de volgende cyclus. Wat merk je op in de pauze? Wie wacht er nog meer?
+    follow_ups:
+      - Hoe verandert wachten de perceptie?
+      - Welke ritmes regelen de kruising?
+      - Wat zou er gebeuren als je nooit overstak?
+  - id: ny_diner_booth
+    name: Diner Booth
+    prompt: |
+      Ga zitten in een diner booth bij het raam. De straat wordt een film. Kijk naar de passanten, het verkeer, het licht. Welk verhaal wordt er afgespeeld?
+    follow_ups:
+      - Wie zijn de hoofdrolspelers?
+      - Hoe verandert het kader wat je ziet?
+      - Wat zou je missen zonder het raam?
+  - id: ny_scaffolding_skin
+    name: Steiger Huid
+    prompt: |
+      Steigers omringen gebouwen als verbanden. Loop eronderdoor. Merk het geluid, het licht, het tijdelijke plafond op. Wat wordt er gerepareerd? Wat wordt er verborgen?
+    follow_ups:
+      - Hoe lang staat het er al?
+      - Wat zou het gebouw zeggen zonder?
+      - Wat is de relatie tussen reparatie en verhulling?
+  - id: ny_newsstand_archive
+    name: Kiosk Archief
+    prompt: |
+      Een kiosk is een dwarsdoorsnede van aandacht—tijdschriften, kranten, snoep. Wat is er te zien? Wie stopt er? Hoe zou deze hoek zijn zonder?
+    follow_ups:
+      - Wat is de bestseller?
+      - Hoe vormt de kiosk het blok?
+      - Wat zou je hier neerzetten?
+  - id: ny_construction_site
+    name: Bouwplaats
+    prompt: |
+      Kijk naar een bouwplaats. Kranen, hekken, werknemers. De stad is altijd in wording. Wat wordt er gebouwd? Wat wordt er vervangen?
+    follow_ups:
+      - Wie gaat dit gebruiken als het klaar is?
+      - Wat was hier eerder?
+      - Hoe verandert de bouw de buurt?
+  - id: ny_light_well
+    name: Lichtschacht
+    prompt: |
+      Zoek naar lichtschachten—de smalle openingen tussen gebouwen waar licht naar beneden valt. Wie krijgt dat licht? Wat groeit daar?
+    follow_ups:
+      - Hoe zou het zijn om in die schacht te leven?
+      - Hoe definieert licht waarde?
+      - Wat is verborgen in de schaduwen?
+  - id: ny_bodega_cat
+    name: Bodega Kat
+    prompt: |
+      Zoek een bodega met een kat. De kat is zowel binnen als buiten de regels. Wat opereert nog meer op die manier in de stad?
+    follow_ups:
+      - Wat ziet de kat?
+      - Hoe vormen informele regels de ruimte?
+      - Hoe zou de winkel zijn zonder de kat?
+  - id: ny_sidewalk_crack
+    name: Trottoir Scheur
+    prompt: |
+      Kijk naar beneden. Volg een scheur in het trottoir. Waar gaat het heen? Wat groeit erin? De stad staat vol met zulke breuken.
+    follow_ups:
+      - Wat zou het trottoir zeggen over tijd?
+      - Hoe belangrijk zijn kleine breuken?
+      - Wat breekt er doorheen?
+  - id: ny_air_conditioner
+    name: Airconditioner
+    prompt: |
+      Tel de airconditioners op één gebouw. Het zijn parasieten, protheses,
+      noodzakelijkheden. Hoe veranderen ze de gevel? Wat druppelt eruit?
+    follow_ups:
+      - Hoe zou het gebouw er zonder uitzien?
+      - Hoe vormt het klimaat de architectuur?
+      - Wie bepaalt waar ze komen?
+  - id: ny_express_local
+    name: Snel / Lokaal
+    prompt: |
+      Reis met de metro. Merk het verschil tussen snel en lokaal op. Snelheid verandert wat je ziet. Sla haltes over en voel hoe de stad samendrukt.
+    follow_ups:
+      - Wat mis je als je niet stopt?
+      - Hoe vormt snelheid de ervaring?
+      - Hoe zou de stad zijn als alles lokaal was?
+  - id: ny_water_tower
+    name: Watertoren
+    prompt: |
+      Watertorens bekronen oudere gebouwen. Ze zijn houten, tonvormig,
+      alomtegenwoordig. Vind er vijf. Wat zeggen ze over de skyline?
+    follow_ups:
+      - Waarom staan ze er nog?
+      - Hoe zou het dak er zonder een uitzien?
+      - Hoe markeren ze leeftijd?
+  - id: ny_awning_stripes
+    name: Luifel Strepen
+    prompt: |
+      Gestreept luifels zijn een New Yorkse volkstaal. Vind een blok waar ze
+      zich herhalen. Hoe creëren strepen identiteit? Wat zouden effen kleuren doen?
+    follow_ups:
+      - Waarom strepen en geen effen kleuren?
+      - Hoe maken luifels een blok eenheid?
+      - Wat is de geschiedenis van dit patroon?
+  - id: ny_curb_cut
+    name: Trottoir Rand Verlaagd
+    prompt: |
+      Let op de verlaagde trottoirranden—de hellingen op hoeken. Ze zijn voor rolstoelen, karren, kinderwagens. Hoe veranderen ze de straat? Wie nemen ze op?
+    follow_ups:
+      - Hoe zou het blok zijn zonder hen?
+      - Hoe vormt toegankelijkheid het ontwerp?
+      - Welke andere onzichtbare voorzieningen bestaan er?
+  - id: ny_street_tree
+    name: Straatboom
+    prompt: |
+      Kies één straatboom. Hoeveel ruimte heeft hij? Wat zit er in zijn kuil?
+      Wie geeft hem water? De boom is een gast. Hoe wordt hij behandeld?
+    follow_ups:
+      - Hoe zou het blok eruitzien zonder bomen?
+      - Hoe markeren bomen zorg?
+      - Wat groeit er in de schaduw van de boom?
+  - id: ny_loading_zone
+    name: Laadzone
+    prompt: |
+      Laadzones zijn tijdelijke territoria. Observeer er tien minuten een. Wie gebruikt het? Hoe lang blijven ze? Wat is het ritme van bezetting?
+    follow_ups:
+      - Wat zou er gebeuren zonder laadzones?
+      - Hoe worden regels gebogen?
+      - Wat is de relatie tussen parkeren en handel?
+  - id: ny_vent_grille
+    name: Ventilatie Rooster
+    prompt: |
+      Trottoirroosters ventileren de metro. Sta op een. Voel de opwaartse luchtstroom. Luister.
+      De stad ademt door deze openingen.
+    follow_ups:
+      - Wat komt van beneden opstijgen?
+      - Hoe verbindt het rooster werelden?
+      - Hoe zou het trottoir zijn zonder?
+  - id: ny_basement_stairs
+    name: Kelder Trap
+    prompt: |
+      Zoek trappen die naar beneden leiden—naar een kelder, een metro, een speakeasy. De stad heeft vele niveaus. Wat is er onder het trottoir?
+    follow_ups:
+      - Wie gaat er naar beneden?
+      - Hoe verandert de afdaling het licht?
+      - Wat zou je onderaan vinden?
+  - id: ny_clock_tower
+    name: Klokkentoren
+    prompt: |
+      Zoek een openbare klok. Is hij accuraat? Wie heeft hem ingesteld? Klokken ordenen de stad.
+      Wat gebeurt er als ze het oneens zijn?
+    follow_ups:
+      - Hoe zou het blok zijn zonder de klok?
+      - Hoe wordt tijd gesynchroniseerd?
+      - Wat is de relatie tussen kloktijd en lichaamstijd?
+  - id: ny_newsstand_magazine
+    name: Kiosk Tijdschrift
+    prompt: |
+      Kies bij een kiosk een tijdschriftomslag. Voor wie is het bedoeld? Wat wordt er aangenomen over de lezer? De kiosk is een spiegel van verlangens.
+    follow_ups:
+      - Wat zou een vreemde leren van dit display?
+      - Hoe concurreren covers om aandacht?
+      - Wat ligt er niet op de kiosk?
+  - id: ny_awning_rain
+    name: Luifel Regen
+    prompt: |
+      Ga onder een luifel staan in de regen. Kijk hoe het water langs de randen wegloopt.
+      De luifel creëert een droog eiland. Wie deelt het met je?
+    follow_ups:
+      - Hoe zou het blok aanvoelen zonder beschutting?
+      - Hoe verandert regen de straat?
+      - Welke andere schuilplaatsen bestaan er?
+  - id: ny_fire_hydrant
+    name: Brandkraan
+    prompt: |
+      Een brandkraan is een stekker in het bloedsomloopsysteem van de stad. Zoek er een.
+      Welke kleur heeft hij? Wie zou hem kunnen openen? Wat stroomt er doorheen?
+    follow_ups:
+      - Wat zou het blok doen bij brand zonder?
+      - Hoe markeren brandkranen territorium?
+      - Wat is de relatie tussen kraan en slang?
+  - id: ny_stoop_sale
+    name: Stoep Verkoop
+    prompt: |
+      Stel je een stoepverkoop voor op deze treden. Wat zou er te koop zijn? Wie zou stoppen? De stoep is een podium voor uitwisseling.
+    follow_ups:
+      - Wat zou je neerzetten?
+      - Hoe maakt de stoep ontmoeting mogelijk?
+      - Wat zou het blok leren van een verkoop?
+  - id: ny_rooftop_garden
+    name: Daktuin
+    prompt: |
+      Stel je een daktuin boven je voor. Wat zou daar groeien? Wie zorgt ervoor?
+      De stad heeft een geheime groene laag.
+    follow_ups:
+      - Wat zou je planten?
+      - Hoe verandert hoogte het tuinieren?
+      - Hoe zou de skyline eruitzien als alle daken groen waren?
+  - id: ny_subway_map
+    name: Metro Kaart
+    prompt: |
+      Kijk naar een metronetkaart. Het is een diagram, geen geografie. Wat is vervormd?
+      Wat is weggelaten? De kaart vormt hoe we over de stad denken.
+    follow_ups:
+      - Hoe zou een eerlijke kaart eruitzien?
+      - Hoe creëert de kaart buurten?
+      - Wat is de relatie tussen kaart en gebied?
+  - id: ny_brick_pattern
+    name: Baksteen Patroon
+    prompt: |
+      Bestudeer een bakstenen muur. Het patroon—verband, Vlaams verband—houdt de muur staande. Volg het patroon. Wat zou er gebeuren als één baksteen ontbrak?
+    follow_ups:
+      - Hoe verdeelt het patroon het gewicht?
+      - Wat zou de muur zeggen over zijn maker?
+      - Hoe veroudert baksteen?
+  - id: ny_awning_strip
+    name: Luifel Strook
+    prompt: |
+      Loop een blok en tel de luifels. Welke kleuren? Welke condities? De luifel is een kleine architectuur. Hoe varieert het?
+    follow_ups:
+      - Hoe zou het blok eruitzien zonder luifels?
+      - Hoe creëren luifels identiteit?
+      - Wat is de relatie tussen luifel en bedrijf?
+  - id: ny_manhole_cover
+    name: Rioolputdeksel
+    prompt: |
+      Lees een rioolputdeksel. De naam van de stad, de afdeling, de datum. Deze schijven zijn deuren naar een andere stad. Wat ligt eronder?
+    follow_ups:
+      - Wie gaat daar naar beneden?
+      - Hoe markeert het deksel territorium?
+      - Hoe zou de straat zijn zonder deze deuren?
+  - id: ny_bus_shelter
+    name: Bushalte Abri
+    prompt: |
+      Wacht in een bushalte abri. Merk op wie er nog meer wacht. De abri is een gedeelde ruimte. Wat is de etiquette? Wat is het uitzicht?
+    follow_ups:
+      - Hoe zou het wachten zijn zonder de abri?
+      - Hoe vormt de abri de gemeenschap?
+      - Wat zou je eraan veranderen?
+  - id: ny_street_lamp
+    name: Straatlantaarn
+    prompt: |
+      Sta onder een straatlantaarn in de schemering. Kijk hoe het licht de zon verdringt.
+      De lantaarn creëert een plas zichtbaarheid. Wat zit er in de plas? Wat is er buiten?
+    follow_ups:
+      - Hoe verandert kunstlicht de straat?
+      - Hoe zou het blok zijn zonder lantaarns?
+      - Hoe markeren lantaarns tijd?
+  - id: ny_plaza_seat
+    name: Plein Zitplaats
+    prompt: |
+      Ga op een pleinbank zitten. Wie anders zit er? Wie passeert? Het plein is een pauze in de stroom. Wat zorgt ervoor dat mensen stoppen?
+    follow_ups:
+      - Hoe zou het plein zijn zonder zitplaatsen?
+      - Hoe vormt zitten de ontmoeting?
+      - Wat zou je toevoegen?
+  - id: ny_awning_fabric
+    name: Luifel Stof
+    prompt: |
+      Raak een luifel aan als je kunt. Stof, vinyl, strepen. De luifel is een
+      membraan tussen binnen en buiten. Hoe voelt het?
+    follow_ups:
+      - Hoe zou het blok aanvoelen zonder stof?
+      - Hoe belangrijk is materiaal?
+      - Wat is de relatie tussen luifel en weer?
+  - id: ny_newsstand_daily
+    name: Kiosk Dagelijks
+    prompt: |
+      Een kiosk verandert gedurende de dag—ochtendkranten, middag tijdschriften,
+      avond snacks. Bezoek op verschillende tijden. Wat is het ritme?
+    follow_ups:
+      - Hoe zou de hoek zijn zonder de kiosk?
+      - Hoe markeert de kiosk tijd?
+      - Wat is de relatie tussen kiosk en blok?
+  - id: ny_sidewalk_chalk
+    name: Stoepkrijt
+    prompt: |
+      Kinderen tekenen op stoepen. Zoek stoepkrijttekeningen. Wat is de tekening? Het krijt is tijdelijk. Regen zal het uitwissen. Hoe belangrijk is tijdelijkheid?
+    follow_ups:
+      - Hoe zou de stoep zijn zonder het krijt?
+      - Hoe creëert het krijt een geschenk?
+      - Wat is de relatie tussen krijt en straat?
+  - id: ny_rooftop_ac
+    name: Dak AC
+    prompt: |
+      Dak airconditioners brommen in de zomer. Luister. Het dak is een mechanisch bos.
+      Hoe vormt het geluid het blok?
+    follow_ups:
+      - Hoe zou het dak zijn zonder de units?
+      - Hoe creëert de AC comfort?
+      - Wat is de relatie tussen unit en gebouw?
+  - id: ny_street_musician
+    name: Straatmuzikant
+    prompt: |
+      Een straatmuzikant speelt in een doorgang. Stop en luister. De muziek creëert een bubbel. Wat zit er in de bubbel? Wat is er buiten?
+    follow_ups:
+      - Hoe zou de doorgang zijn zonder de muzikant?
+      - Hoe creëert de muziek een pauze?
+      - Wat is de relatie tussen muzikant en straat?

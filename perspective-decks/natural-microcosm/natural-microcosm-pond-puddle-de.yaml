@@ -1,0 +1,408 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natürliches Mikrokosmos — Teich & Pfütze (German)
+
+id: natural_microcosm_pond_puddle
+name: Natürliches Mikrokosmos — Teich & Pfütze
+description: 50 Karten, die Ihre Sichtweise auf Wasser im kleinen Maßstab verändern — von Oberflächenspannung und Reflexionen bis hin zu Wasserinsekten, Kaulquappen und dem Leben in temporären Tümpeln.
+domain: natural_microcosm
+cards:
+  - id: nmp_surface_tension
+    name: Oberflächenspannung
+    prompt: |
+      Ein Wasserläufer spaziert über dem Wasser. Die Oberfläche hält – Moleküle haften aneinander. Lasse vorsichtig eine Nadel fallen. Sie schwimmt. Betrachte den unsichtbaren Film. Was würde ihn zerbrechen?
+    follow_ups:
+      - Wie prägt die Oberflächenspannung, wer hier leben kann?
+      - Was wäre der Teich ohne sie?
+      - Was ist die Beziehung zwischen Oberfläche und Grenze?
+  - id: nmp_skater_ripple
+    name: Läuferwelle
+    prompt: |
+      Die Beine eines Wasserläufers lassen die Oberfläche einsinken. Jeder Schritt erzeugt eine Wellenbewegung. Beobachte das Muster. Der Läufer liest die Oberfläche wie eine Karte. Was spürt er?
+    follow_ups:
+      - Wie trägt die Wellenbewegung Informationen weiter?
+      - Was würde der Läufer ohne die Oberfläche tun?
+      - Was ist die Beziehung zwischen Wellenbewegung und Beute?
+  - id: nmp_reflection_sky
+    name: Spiegelung des Himmels
+    prompt: |
+      Eine Pfütze spiegelt den Himmel – oder einen Ast, oder dich. Die Spiegelung verkehrt sich. Das stille Wasser ist ein Spiegel. Was fügt die Spiegelung hinzu? Was verbirgt sie?
+    follow_ups:
+      - Was wäre die Pfütze ohne Spiegelung?
+      - Wie prägt Stille, was wir sehen?
+      - Was ist die Beziehung zwischen Oberfläche und Bild?
+  - id: nmp_tadpole_tail
+    name: Kaulquappen-Schwanz
+    prompt: |
+      Eine Kaulquappe schwimmt – der Schwanz treibt sie voran. Der Schwanz wird wieder absorbiert. Das Tier wandelt sich. Betrachte das Dazwischen. Was ermöglicht der Schwanz jetzt?
+    follow_ups:
+      - Was wäre die Kaulquappe ohne den Schwanz?
+      - Wie schreibt die Metamorphose den Körper neu?
+      - Was ist die Beziehung zwischen Form und Funktion?
+  - id: nmp_dragonfly_egg
+    name: Libellen-Ei
+    prompt: |
+      Libellen legen ihre Eier ins Wasser – oder in Stängel unter der Oberfläche. Die Larve lebt Jahre unter Wasser, bevor sie schlüpft. Betrachte das geteilte Leben. Was verbindet Wasser und Luft?
+    follow_ups:
+      - Was wäre die Libelle ohne die aquatische Phase?
+      - Wie prägt die Larve den Teich?
+      - Was ist die Beziehung zwischen Larve und erwachsenem Tier?
+  - id: nmp_algae_bloom
+    name: Algenblüte
+    prompt: |
+      Grüner Schleim auf dem Wasser – Algen. Es ist eine Blüte, ein Pulsieren. Zu viel Nährstoff, zu viel Sonne. Der Teich reagiert. Was löst es aus? Was folgt?
+    follow_ups:
+      - Was wäre der Teich ohne Algen?
+      - Wie beeinflusst die Blüte den Sauerstoffgehalt?
+      - Was ist die Beziehung zwischen Nährstoff und Wachstum?
+  - id: nmp_reed_stem
+    name: Schilfrohrstängel
+    prompt: |
+      Schilf und Binsen wachsen vom Rand aus. Sie sind hohl – Luftkanäle verlaufen hindurch. Der Stängel verbindet Wasser und Luft. Wer nutzt das Schilfrohr als Leiter?
+    follow_ups:
+      - Was wäre der Rand ohne Schilf?
+      - Wie ermöglicht das Hohlsein das Überleben?
+      - Was ist die Beziehung zwischen Stängel und Lebensraum?
+  - id: nmp_pond_skin
+    name: Teichhaut
+    prompt: |
+      Der Teich hat eine Haut – wo Wasser auf Luft trifft. Staub landet darauf. Öl breitet sich aus. Die Haut ist zart. Berühre sie. Was trennt die Haut?
+    follow_ups:
+      - Was wäre der Teich ohne die Haut?
+      - Wie beeinflusst die Haut den Gasaustausch?
+      - Was ist die Beziehung zwischen Oberfläche und Tiefe?
+  - id: nmp_temporary_pool
+    name: Temporäre Pfütze
+    prompt: |
+      Eine Pfütze nach dem Regen – sie wird austrocknen. Doch das Leben hat sich angepasst. Feen-Garnelen, Kiemenfüßer, Eier, die warten. Betrachte die Dringlichkeit. Was muss geschehen, bevor das Wasser verschwindet?
+    follow_ups:
+      - Was wäre die Pfütze, wenn sie permanent wäre?
+      - Wie prägt die Vergänglichkeit die Strategie?
+      - Was ist die Beziehung zwischen Zeit und Anpassung?
+  - id: nmp_whirligig_gyre
+    name: Wirbelkäfer-Strudel
+    prompt: |
+      Wirbelkäfer drehen sich auf der Oberfläche. Sie sehen nach oben und unten – geteilte Augen. Sie sind Raubtiere und Beute. Betrachte die Doppelansicht. Was ermöglicht sie?
+    follow_ups:
+      - Was wäre der Käfer ohne geteilte Sicht?
+      - Wie verwirrt der Strudel die Raubtiere?
+      - Was ist die Beziehung zwischen Drehung und Überleben?
+  - id: nmp_diving_spider
+    name: Taucherspinne
+    prompt: |
+      Eine Taucherspinne trägt eine Luftblase – eine Taucherglocke. Sie atmet unter Wasser. Die Blase ist eine Lunge. Betrachte die Erfindung. Was würde die Spinne ohne sie tun?
+    follow_ups:
+      - Wie ermöglicht die Blase die Jagd?
+      - Was würde passieren, wenn die Blase platzt?
+      - Was ist die Beziehung zwischen Luft und Wasser?
+  - id: nmp_pond_scum
+    name: Teichschleim
+    prompt: |
+      Schleim bildet sich am Rand – Pollen, Staub, Algen, Insekten. Es ist eine Grenzschicht. Was sammelt sich dort? Wer ernährt sich davon? Der Schleim ist ein Filter.
+    follow_ups:
+      - Was wäre der Teich ohne den Schleim?
+      - Wie konzentriert der Rand Leben?
+      - Was ist die Beziehung zwischen Grenze und Ansammlung?
+  - id: nmp_ice_surface
+    name: Eisfläche
+    prompt: |
+      Im Winter gefriert der Teich. Das Eis hält. Darunter lebt das Leben weiter – langsamer, kälter. Betrachte die Barriere. Was schützt das Eis? Was blockiert es?
+    follow_ups:
+      - Was wäre der Teich ohne Eis?
+      - Wie beeinflusst das Gefrieren den Sauerstoffgehalt?
+      - Was ist die Beziehung zwischen Eis und Überleben?
+  - id: nmp_minnow_school
+    name: Elritzen-Schwarm
+    prompt: |
+      Elritzen schwärmen – sie bewegen sich wie eins. Der Schwarm ist Verteidigung, Effizienz. Beobachte die Synchronität. Was koordiniert sie? Was riskiert eine einzelne Elritze?
+    follow_ups:
+      - Was wäre der Teich ohne den Schwarm?
+      - Wie reduziert das Schwärmen die Prädation?
+      - Was ist die Beziehung zwischen Individuum und Gruppe?
+  - id: nmp_lily_pad
+    name: Seerosenblatt
+    prompt: |
+      Ein Seerosenblatt schwimmt. Seine Unterseite unterscheidet sich von der Oberseite – Härchen, Farbe. Das Blatt ist eine Plattform. Was landet darauf? Was lebt darunter?
+    follow_ups:
+      - Was wäre der Teich ohne Seerosenblätter?
+      - Wie prägt das Blatt das Licht darunter?
+      - Was ist die Beziehung zwischen Blatt und Schatten?
+  - id: nmp_ripple_spread
+    name: Wellenverbreitung
+    prompt: |
+      Ein Stein fällt. Wellen breiten sich aus. Sie kreuzen sich, stören sich. Das Muster trägt Energie. Betrachte den Zerfall. Wie weit reisen die Wellen?
+    follow_ups:
+      - Was wäre die Oberfläche ohne Wellen?
+      - Wie markiert die Welle den Aufprall?
+      - Was ist die Beziehung zwischen Störung und Ausbreitung?
+  - id: nmp_mosquito_wiggle
+    name: Mückenlarven-Wackler
+    prompt: |
+      Mückenlarven hängen an der Oberfläche – Wackler. Sie atmen durch ein Siphon. Das Wackeln ist Bewegung, Fressen. Betrachte die Welt der Larve. Was frisst sie?
+    follow_ups:
+      - Was wäre der Teich ohne Mücken?
+      - Wie vermeidet das Wackeln Raubtiere?
+      - Was ist die Beziehung zwischen Larve und erwachsenem Tier?
+  - id: nmp_leaf_boat
+    name: Blatt-Boot
+    prompt: |
+      Ein Blatt treibt – gefallen, dahintreibend. Es ist ein Floß für manche, Nahrung für andere. Das Blatt wird sinken, verrotten. Verfolge seine Reise. Was wird daraus werden?
+    follow_ups:
+      - Was wäre die Oberfläche ohne treibenden Schutt?
+      - Wie schafft das Blatt einen Mikrohabitat?
+      - Was ist die Beziehung zwischen Schwimmen und Sinken?
+  - id: nmp_backswimmer_top
+    name: Rückenschwimmer-Oberseite
+    prompt: |
+      Ein Rückenschwimmer schwimmt kopfüber – Bauch zum Himmel. Er rudert mit den Beinen. Er atmet an der Oberfläche, taucht dann ab. Betrachte die Umkehrung. Warum kopfüber?
+    follow_ups:
+      - Was wäre der Rückenschwimmer aufrecht?
+      - Wie hilft die Haltung bei der Jagd?
+      - Was ist die Beziehung zwischen Ausrichtung und Beute?
+  - id: nmp_snail_trail
+    name: Schnecken-Spur
+    prompt: |
+      Eine Teichschnecke gleitet. Sie hinterlässt eine Spur – Schleim, Bewegung. Die Spur markiert, wo sie war. Andere Schnecken könnten folgen. Betrachte den Weg. Was kommuniziert die Spur?
+    follow_ups:
+      - Was wäre die Schnecke ohne die Spur?
+      - Wie ermöglicht Schleim die Bewegung?
+      - Was ist die Beziehung zwischen Spur und Folgen?
+  - id: nmp_dew_drop
+    name: Tautropfen
+    prompt: |
+      Tau bildet sich auf einem Halm über dem Wasser – Perlen, spiegeln. Es ist Kondensation. Der Tropfen hält. Dann fällt er. Betrachte den Tropfen. Was vergrößert er?
+    follow_ups:
+      - Was wäre der Halm ohne Tau?
+      - Wie biegt der Tropfen das Licht?
+      - Was ist die Beziehung zwischen Tropfen und Oberfläche?
+  - id: nmp_spring_constant
+    name: Quell-Konstante
+    prompt: |
+      Eine Quelle speist den Teich – oder der Teich versickert. Der Wasserstand ist Gleichgewicht. Betrachte Ein- und Ausfuhr. Was erhält den Pool? Was würde ihn austrocknen?
+    follow_ups:
+      - Was wäre der Teich ohne die Quelle?
+      - Wie prägt die Quelle das Wasser?
+      - Was ist die Beziehung zwischen Zufuhr und Leben?
+  - id: nmp_edge_ecotone
+    name: Rand-Ökoton
+    prompt: |
+      Der Teichrand ist ein Ökoton – Übergang. Nasses trifft trockenes. Pflanzen passen sich an. Tiere kreuzen. Der Rand ist Vielfalt. Was gedeiht im Dazwischen?
+    follow_ups:
+      - Was wäre der Teich ohne den Rand?
+      - Wie schafft das Ökoton Möglichkeiten?
+      - Was ist die Beziehung zwischen Grenze und Vielfalt?
+  - id: nmp_frog_eye
+    name: Froschauge
+    prompt: |
+      Ein Frosch sitzt am Rand. Seine Augen wölben sich – er sieht nach oben und voraus. Der Frosch ist still. Dann schießt die Zunge heraus. Betrachte die Geduld. Worauf wartet er?
+    follow_ups:
+      - Was wäre der Frosch ohne die gewölbten Augen?
+      - Wie ermöglicht Stille den Angriff?
+      - Was ist die Beziehung zwischen Warten und Fangen?
+  - id: nmp_oxygen_bubble
+    name: Sauerstoffblase
+    prompt: |
+      Pflanzen im Teich produzieren Sauerstoff – Blasen steigen auf. An einem sonnigen Tag atmet das Wasser. Betrachte den Austausch. Was wäre der Teich ohne Photosynthese?
+    follow_ups:
+      - Wie prägt Sauerstoff, wer hier leben kann?
+      - Was passiert, wenn der Sauerstoff knapp wird?
+      - Was ist die Beziehung zwischen Licht und Atem?
+  - id: nmp_detritus_floor
+    name: Detritus-Boden
+    prompt: |
+      Der Teichboden ist Detritus – gefallene Blätter, tote Insekten, Sediment. Es ist eine Schicht des Verfalls. Was lebt darin? Wer ernährt sich davon? Der Boden ist eine Speisekammer.
+    follow_ups:
+      - Was wäre der Teich ohne Detritus?
+      - Wie nährt der Boden die Wassersäule?
+      - Was ist die Beziehung zwischen Boden und Spitze?
+  - id: nmp_rain_ring
+    name: Regen-Ring
+    prompt: |
+      Regen trifft die Oberfläche. Jeder Tropfen macht einen Ring – eine Krone, dann einen Krater. Der Regen texturiert das Wasser. Betrachte das Muster. Was würde eine stille Oberfläche bedeuten?
+    follow_ups:
+      - Wie belüftet Regen das Wasser?
+      - Was stören die Ringe?
+      - Was ist die Beziehung zwischen Regen und Oberfläche?
+  - id: nmp_duckweed_carpet
+    name: Wasserlinsen-Teppich
+    prompt: |
+      Wasserlinsen bedecken die Oberfläche – winzige schwimmende Pflanzen. Sie vermehren sich schnell. Der Teppich beschattet, was darunter liegt. Betrachte die Bedeckung. Was würde volles Sonnenlicht bedeuten?
+    follow_ups:
+      - Was wäre der Teich ohne Wasserlinsen?
+      - Wie beeinflusst der Teppich die Temperatur?
+      - Was ist die Beziehung zwischen Bedeckung und Leben darunter?
+  - id: nmp_phantom_midgie
+    name: Phantom-Mückenlarve
+    prompt: |
+      Phantom-Mückenlarven sind transparent – gespenstisch. Sie hängen im Wasser. Man sieht durch sie hindurch. Betrachte die Unsichtbarkeit. Was schützt die Transparenz?
+    follow_ups:
+      - Was wäre die Larve, wenn sie undurchsichtig wäre?
+      - Wie hilft Transparenz bei der Prädation?
+      - Was ist die Beziehung zwischen Durchsichtigkeit und Überleben?
+  - id: nmp_skimmer_skip
+    name: Steine-Hüpfer
+    prompt: |
+      Ein Stein, über die Oberfläche gesprungen – eins, zwei, drei. Jeder Sprung überträgt Energie. Der Springer sinkt schließlich. Betrachte die Grenze. Was bestimmt die Anzahl der Sprünge?
+    follow_ups:
+      - Was würde der Stein ohne den Schwung tun?
+      - Wie prägt der Winkel den Sprung?
+      - Was ist die Beziehung zwischen Wurf und Sprung?
+  - id: nmp_pollinator_drink
+    name: Bestäuber-Trank
+    prompt: |
+      Eine Biene trinkt am Rand. Schmetterlinge sammeln sich an einer Schlammpfütze. Das Wasser ist eine Ressource. Betrachte, wer kommt. Was brauchen sie vom Wasser?
+    follow_ups:
+      - Was würden die Bestäuber ohne die Pfütze tun?
+      - Wie ermöglicht der Rand das Trinken?
+      - Was ist die Beziehung zwischen Wasser und Mineral?
+  - id: nmp_evaporation_skin
+    name: Verdunstungshaut
+    prompt: |
+      Der Teich verliert Wasser durch Verdunstung. Im Sommer sinkt der Pegel. Das Ufer dehnt sich aus. Betrachte den Rückzug. Was wird freigelegt? Wer wird gestrandet?
+    follow_ups:
+      - Was wäre der Teich ohne Verdunstung?
+      - Wie konzentriert der Rückgang das Leben?
+      - Was ist die Beziehung zwischen Verlust und Konzentration?
+  - id: nmp_hydra_stalk
+    name: Hydratentiel
+    prompt: |
+      Eine Hydra – winzig, mit Tentakeln – verankert sich an einem Stängel. Sie sticht Beute, zieht sie heran. Die Hydra kann sich regenerieren. Betrachte die Einfachheit. Welchen Körperbau nutzt sie?
+    follow_ups:
+      - Was wäre der Teich ohne Hydras?
+      - Wie hilft Regeneration beim Überleben?
+      - Was ist die Beziehung zwischen Einfachheit und Widerstandsfähigkeit?
+  - id: nmp_boatman_row
+    name: Wasserläufer-Ruderer
+    prompt: |
+      Ein Wasserläufer rudert – ruderähnliche Beine. Er ist oft kopfüber und hält sich an der Oberfläche fest. Er ernährt sich von Algen. Betrachte die Ruder. Was treiben sie an?
+    follow_ups:
+      - Was wäre der Wasserläufer ohne die Ruder?
+      - Wie unterscheidet sich das Rudern vom Rückenschwimmer?
+      - Was ist die Beziehung zwischen Bein und Bewegung?
+  - id: nmp_caddisfly_case
+    name: Köcherfliegen-Kästchen
+    prompt: |
+      Eine Köcherfliegenlarve baut ein Gehäuse – Ästchen, Steinchen, Muscheln. Sie klebt sie mit Seide zusammen. Das Gehäuse ist Rüstung und Tarnung. Betrachte den Bau. Was wählt die Larve aus?
+    follow_ups:
+      - Was wäre die Larve ohne das Gehäuse?
+      - Wie variiert das Gehäuse je nach Lebensraum?
+      - Was ist die Beziehung zwischen Material und Schutz?
+  - id: nmp_damselfly_emergence
+    name: Kleinlibellen-Schlupf
+    prompt: |
+      Eine Kleinlibelle schlüpft – die Larve klettert einen Stängel empor, teilt ihre Haut, die erwachsene Libelle zieht sich frei. Die Flügel entfalten sich. Der Moment ist verletzlich. Betrachte die Verwandlung. Was könnte schiefgehen?
+    follow_ups:
+      - Was wäre die erwachsene Libelle ohne den Aufstieg?
+      - Wie prägt der Schlupf den Zeitpunkt?
+      - Was ist die Beziehung zwischen Larve und erwachsenem Tier?
+  - id: nmp_floating_feather
+    name: Schwimmende Feder
+    prompt: |
+      Eine Feder schwimmt – von einem Vogel abgeworfen. Sie reitet auf der Oberfläche. Wasser perlt daran ab. Betrachte die Feder. Was hielt den Vogel trocken? Was macht die Feder jetzt?
+    follow_ups:
+      - Was wäre die Oberfläche ohne schwimmende Objekte?
+      - Wie fängt die Feder Luft ein?
+      - Was ist die Beziehung zwischen Struktur und Schweben?
+  - id: nmp_moon_jelly
+    name: Mondqualle
+    prompt: |
+      In manchen Teichen gibt es Quallen – Mondquallen. Sie pulsieren. Sie bestehen hauptsächlich aus Wasser. Betrachte den Körper. Was fängt die Qualle ein? Was meidet sie?
+    follow_ups:
+      - Was wäre der Teich ohne Quallen?
+      - Wie erzeugt der Puls Bewegung?
+      - Was ist die Beziehung zwischen Wasser und Körper?
+  - id: nmp_seep_source
+    name: Sickerquelle
+    prompt: |
+      Wasser sickert aus dem Ufer – eine Quelle, langsamer Fluss. Die Sickerquelle speist den Teich. Oder der Teich leckt. Betrachte die Grenze. Was kreuzt sie? Was hält sie?
+    follow_ups:
+      - Was wäre der Teich ohne die Sickerquelle?
+      - Wie prägt die Sickerquelle die Chemie?
+      - Was ist die Beziehung zwischen Quelle und Pool?
+  - id: nmp_wind_wave
+    name: Windwelle
+    prompt: |
+      Wind treibt die Oberfläche. Kleine Wellen bilden sich. Sie brechen am Rand. Betrachte den Fetch – die Entfernung, die der Wind über Wasser zurücklegt. Was formt die Welle?
+    follow_ups:
+      - Was wäre die Oberfläche ohne Wind?
+      - Wie beeinflussen Wellen den Sauerstoffgehalt?
+      - Was ist die Beziehung zwischen Wind und Durchmischung?
+  - id: nmp_rotifer_wheel
+    name: Rädertierchen-Rad
+    prompt: |
+      Rädertierchen sind mikroskopisch – sie haben ein Rad aus Zilien. Es dreht sich, zieht Nahrung an. Das Rädertierchen ist eine Maschine. Betrachte die Skala. Was ist noch in diesem Wasser?
+    follow_ups:
+      - Was wäre der Teich ohne Rädertierchen?
+      - Wie erzeugt das Rad Fluss?
+      - Was ist die Beziehung zwischen Zilien und Ernährung?
+  - id: nmp_temperature_layer
+    name: Temperaturschicht
+    prompt: |
+      Teiche können sich schichten – warm oben, kalt unten. Die Schichten vermischen sich nicht leicht. Betrachte die Grenze. Wer lebt wo? Was passiert, wenn sich der Teich überschlägt?
+    follow_ups:
+      - Was wäre der Teich ohne Schichtung?
+      - Wie prägt Temperatur den Sauerstoffgehalt?
+      - Was ist die Beziehung zwischen Schicht und Leben?
+  - id: nmp_predator_shadow
+    name: Raubtier-Schatten
+    prompt: |
+      Der Schatten eines Fisches zieht vorbei. Beute erstarrt, zerstreut sich. Der Schatten ist ein Signal. Betrachte die Reaktion. Was würde konstanter Schatten bedeuten? Was würde kein Schatten bedeuten?
+    follow_ups:
+      - Wie löst der Schatten die Flucht aus?
+      - Welche Hinweise außer Schatten sind wichtig?
+      - Was ist die Beziehung zwischen Schatten und Überleben?
+  - id: nmp_surface_film
+    name: Oberflächenfilm
+    prompt: |
+      Ein dünner Film auf dem Wasser – Pollen, Bakterien, organische Materie. Er kann Gewicht tragen. Manche Insekten laufen darauf. Betrachte den Film. Was würde ihn zerbrechen?
+    follow_ups:
+      - Was wäre die Oberfläche ohne den Film?
+      - Wie beeinflusst der Film den Gasaustausch?
+      - Was ist die Beziehung zwischen Film und Grenze?
+  - id: nmp_dry_wait
+    name: Trockenes Warten
+    prompt: |
+      Die Pfütze wird austrocknen. Manche Organismen haben austrocknungsresistente Eier. Sie warten. Der nächste Regen kann Monate entfernt sein. Betrachte die Wette. Was muss zusammenkommen, um erfolgreich zu sein?
+    follow_ups:
+      - Was wäre die Pfütze ohne das Warten?
+      - Wie überspannt die Dormanz die Trockenheit?
+      - Was ist die Beziehung zwischen Ei und Regen?
+  - id: nmp_shoreline_wrack
+    name: Ufer-Treibgut
+    prompt: |
+      Trümmer sammeln sich am Ufer – Blätter, Äste, tote Insekten. Das Treibgut ist eine Linie. Es markiert das Hochwasser. Betrachte die Ansammlung. Wer frisst hier?
+    follow_ups:
+      - Was wäre der Rand ohne das Treibgut?
+      - Wie schafft das Treibgut Lebensraum?
+      - Was ist die Beziehung zwischen Linie und Pegel?
+  - id: nmp_duckweed_carpet
+    name: Wasserlinsen-Teppich
+    prompt: |
+      Wasserlinsen bedecken stilles Wasser – winzige grüne Scheiben. Sie breiten sich schnell aus. Die Oberfläche wird fest. Betrachte die Invasion. Was blockiert der Teppich? Was ermöglicht er?
+    follow_ups:
+      - Was wäre der Teich ohne Wasserlinsen?
+      - Wie beeinflusst der Teppich Licht und Sauerstoff?
+      - Was ist die Beziehung zwischen Bedeckung und Leben darunter?
+  - id: nmp_rain_ring
+    name: Regen-Ring
+    prompt: |
+      Ein Regentropfen trifft die Oberfläche. Ein Ring dehnt sich aus, verblasst. Bei einem Schauer wird die Oberfläche texturiert – sich überlappende Ringe. Betrachte das Muster. Was macht der Regen mit dem Teich?
+    follow_ups:
+      - Was wäre die Oberfläche ohne Regen?
+      - Wie mischt Regen das Wasser?
+      - Was ist die Beziehung zwischen Tropfen und Ring?
+  - id: nmp_minnow_school
+    name: Elritzen-Schwarm
+    prompt: |
+      Elritzen schwärmen – Dutzende bewegen sich wie eins. Der Schwarm ist eine Strategie. Raubtiere verwirren. Betrachte die Koordination. Wie entscheiden sie? Was würde Einsamkeit kosten?
+    follow_ups:
+      - Was wäre der Teich ohne Schwärme?
+      - Wie reagiert der Schwarm auf Bedrohung?
+      - Was ist die Beziehung zwischen vielen und einem?
+  - id: nmp_ice_edge
+    name: Eisrand
+    prompt: |
+      Im Winter wächst das Eis vom Rand. Die Grenze rückt vor. Darunter hält das Leben an – kälter, langsamer. Betrachte den Rand. Was überlebt unter dem Eis?
+    follow_ups:
+      - Was wäre der Teich ohne Eis?
+      - Wie schützt oder bedroht Eis?
+      - Was ist die Beziehung zwischen Gefrieren und Sauerstoff?

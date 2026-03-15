@@ -1,0 +1,458 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Miejska Dżungla — San Francisco (Polish)
+
+id: urban_jungle_san_francisco
+name: Miejska Dżungla — San Francisco
+description: 50 kart, które zmienią Twoje postrzeganie San Francisco — od skali i światła po warstwy historii i rytm życia ulicznego.
+domain: urban_jungle
+cards:
+  - id: sf_hill_grade
+    name: Nachylenie Wzgórza
+    prompt: |
+      San Francisco jest zbudowane na pochyłościach. Poczuj nachylenie pod stopami. Jak
+      nachylenie zmienia to, co zauważasz? Gdzie miasto się przechyla?
+    follow_ups:
+      - Jak wyglądałaby ulica, gdyby była płaska?
+      - Jak wzgórza kształtują dzielnice?
+      - Jakie jest najstromsze wzniesienie, które pokonałeś?
+  - id: sf_fog_layer
+    name: Warstwa Mgły
+    prompt: |
+      Nadciąga mgła. Obserwuj, jak się przemieszcza – nad mostem, w dół wzgórz. Mgła
+      jest postacią. Jak zmienia światło? Dźwięk?
+    follow_ups:
+      - Jak wyglądałoby miasto bez mgły?
+      - Jak mgła wyznacza czas?
+      - Gdzie zatrzymuje się mgła?
+  - id: sf_cable_car_track
+    name: Tor Tramwaju Linowego
+    prompt: |
+      Podążaj za torem tramwaju linowego. Szczelina w chodniku, brzęczenie liny.
+      Tramwaj linowy to relikt, który wciąż działa. Co przewozi?
+    follow_ups:
+      - Jak wyglądałoby wzgórze bez toru?
+      - Jak tramwaj linowy kształtuje turystykę?
+      - Jaka jest relacja między torem a ulicą?
+  - id: sf_victorian_detail
+    name: Wiktoriański Detal
+    prompt: |
+      San Francisco Wiktoriańskie są ozdobne — koronkowe zdobienia, wykuszowe okna, kolory.
+      Znajdź jeden i przeczytaj jego szczegóły. Jaką historię opowiada ornament?
+    follow_ups:
+      - Jak wyglądałby dom bez detali?
+      - Jak kolor zmienia ulicę?
+      - Jaka jest relacja między wiktoriańskim a nowoczesnym?
+  - id: sf_painted_lady
+    name: Malowana Dama
+    prompt: |
+      Malowane Damy są sławne, ale każdy Wiktoriański ma swoją paletę. Zbierz
+      pięć kombinacji kolorystycznych z jednego bloku. Co mówią kolory?
+    follow_ups:
+      - Dlaczego te kolory?
+      - Jak farba konserwuje lub transformuje?
+      - Jak wyglądałby blok w skali szarości?
+  - id: sf_bay_window
+    name: Wykuszowe Okno
+    prompt: |
+      Wykuszowe okna wypychają się na ulicę. Służą do światła, widoku, do
+      prezentacji. Stań przed jednym. Co byś widział/a z wnętrza?
+    follow_ups:
+      - Jak wykusz zmienia pokój?
+      - Jak wyglądałaby fasada bez niego?
+      - Jak wykuszowe okna tworzą relację z ulicą?
+  - id: sf_stairway_street
+    name: Ulica-Schody
+    prompt: |
+      San Francisco ma schody, które są ulicami — stopnie zamiast asfaltu.
+      Wejdź po jednym. Jak schody zmieniają dzielnicę?
+    follow_ups:
+      - Kto korzysta z tych schodów?
+      - Jak wyglądałoby wzgórze bez nich?
+      - Jak schody tworzą społeczność?
+  - id: sf_mission_mural
+    name: Mural z Mission
+    prompt: |
+      Mission to galeria murali. Znajdź jeden i go odczytaj. Jaka jest
+      historia? Kto go namalował? Dla kogo jest?
+    follow_ups:
+      - Co mówiłaby ściana bez muralu?
+      - Jak murale zajmują przestrzeń?
+      - Jaka jest relacja między muralem a dzielnicą?
+  - id: sf_earthquake_retrofit
+    name: Wzmocnienie po Trzęsieniu Ziemi
+    prompt: |
+      Szukaj wzmocnień po trzęsieniu ziemi — śrub, wsporników, fundamentów. Miasto
+      pamięta rok 1906 i 1989. Jak strach kształtuje zbudowane środowisko?
+    follow_ups:
+      - Jak wyglądałby budynek bez wzmocnienia?
+      - Jak pokazuje się projekt sejsmiczny?
+      - Jaka jest relacja między wzmocnieniem a zaufaniem?
+  - id: sf_dolores_palm
+    name: Palma z Dolores
+    prompt: |
+      Palmy wzdłuż ulicy Dolores. Nie są rodzime, ale są ikoniczne.
+      Co mówią o relacji miasta z miejscami spoza niego?
+    follow_ups:
+      - Jak wyglądałaby ulica bez palm?
+      - Jak palmy znaczą tożsamość?
+      - Jaka jest relacja między palmą a miejscem?
+  - id: sf_twin_peaks_view
+    name: Widok z Twin Peaks
+    prompt: |
+      Wyobraź sobie widok z Twin Peaks. Miasto rozciąga się poniżej — siatka ulic, woda,
+      mosty. Jak wysokość zmienia to, co ważne?
+    follow_ups:
+      - Co byś widział stamtąd z góry?
+      - Jak widok kształtuje wizerunek miasta?
+      - Co jest ukryte ze szczytu?
+  - id: sf_ferry_building
+    name: Budynek Promu
+    prompt: |
+      Budynek Promu (Ferry Building) stoi naprzeciwko zatoki. Jest progiem — ląd i woda, miasto
+      i przeprawa. Stań przed jego wejściem. Co przez niego przepływa?
+    follow_ups:
+      - Jak wyglądałoby nabrzeże bez niego?
+      - Jak budynek zaznacza przejście?
+      - Jaka jest relacja między promem a miastem?
+  - id: sf_chinatown_gate
+    name: Brama Chinatown
+    prompt: |
+      Smocza Brama wyznacza Chinatown. Przejdź przez nią. Co się zmienia? Brama
+      jest zarówno prawdziwa, jak i symboliczna. Jak działa?
+    follow_ups:
+      - Jak wyglądałoby Chinatown bez bramy?
+      - Jak brama tworzy tożsamość?
+      - Jaka jest relacja między bramą a dzielnicą?
+  - id: sf_hydrant_color
+    name: Kolor Hydrantu
+    prompt: |
+      San Francisco hydranty mają różne kolory — niebieski, zielony, czerwony. Kolor
+      wskazuje przepływ wody. Znajdź trzy kolory. Co każdy z nich oznacza?
+    follow_ups:
+      - Co by się działo na bloku podczas pożaru?
+      - Jak kolor koduje informacje?
+      - Jaka jest relacja między hydrantem a systemem?
+  - id: sf_parklet
+    name: Parklet
+    prompt: |
+      Parklety odzyskują miejsca parkingowe dla ludzi. Usiądź w jednym. Jakie są meble?
+      Kto z niego korzysta? Jak parklet zmienia blok?
+    follow_ups:
+      - Jak wyglądałaby przestrzeń bez parkletu?
+      - Jak parklet tworzy spotkanie?
+      - Co byś dodał/a?
+  - id: sf_sf_street_sign
+    name: Znak Uliczny SF
+    prompt: |
+      San Francisco znaki uliczne mają specyficzny styl. Zwróć uwagę na czcionkę,
+      mocowanie, umiejscowienie. Jak znak kształtuje orientację w terenie?
+    follow_ups:
+      - Jak wyglądałby blok bez znaku?
+      - Jak ważna jest typografia?
+      - Jaka jest relacja między znakiem a tożsamością?
+  - id: sf_castro_rainbow
+    name: Tęcza z Castro
+    prompt: |
+      Castro powiewa tęczowymi flagami. Przejdź się ulicą i policz flagi. Jak
+      flaga zajmuje przestrzeń? Co tu oznacza?
+    follow_ups:
+      - Jak wyglądałaby dzielnica bez flag?
+      - Jak flaga tworzy społeczność?
+      - Jaka jest relacja między symbolem a miejscem?
+  - id: sf_haight_vintage
+    name: Haight Vintage
+    prompt: |
+      Haight to muzeum lat 60. XX wieku. Znajdź budynek, który się nie zmienił.
+      Co jest zachowane? Co jest przedstawieniem?
+    follow_ups:
+      - Jak wyglądałaby ulica bez vintage?
+      - Jak historia kształtuje handel?
+      - Jaka jest relacja między przeszłością a teraźniejszością?
+  - id: sf_sutro_tower
+    name: Wieża Sutro
+    prompt: |
+      Wieża Sutro jest widoczna wszędzie. Użyj jej jako kompasu. Jak
+      wieża Cię orientuje? Jak wyglądałaby panorama bez niej?
+    follow_ups:
+      - Co nadaje wieża?
+      - Jak wieża kształtuje tożsamość?
+      - Jaka jest relacja między wieżą a widokiem?
+  - id: sf_bart_underground
+    name: BART Podziemia
+    prompt: |
+      Jedź BART-em pod zatoką. Jesteś w tunelu pod wodą. Poczuj nacisk,
+      ciemność, wyłonienie. Jak tunel zmienia podróż?
+    follow_ups:
+      - Jak wyglądałaby podróż do pracy bez tunelu?
+      - Jak zatoka oddziela?
+      - Jaka jest relacja między tunelem a regionem?
+  - id: sf_taquería_line
+    name: Kolejka do Taqueríi
+    prompt: |
+      Dołącz do kolejki do taqueríi o północy. Kolejka to rytuał. Kto w niej jest? Co
+      zamawiają? Kolejka to społeczność.
+    follow_ups:
+      - Jak wyglądałby blok bez taqueríi?
+      - Jak kolejka tworzy spotkanie?
+      - Jaka jest relacja między jedzeniem a miejscem?
+  - id: sf_dolores_sun
+    name: Słońce z Dolores
+    prompt: |
+      Park Dolores jest zwrócony na zachód. W słoneczny dzień jest jak plaża. Obserwuj tłum.
+      Jak słońce kształtuje park? Kto dostaje najlepsze miejsca?
+    follow_ups:
+      - Jak wyglądałby park bez słońca?
+      - Jak ważna jest ekspozycja?
+      - Jaka jest relacja między parkiem a pogodą?
+  - id: sf_mission_door
+    name: Drzwi z Mission
+    prompt: |
+      Drzwi z Mission są często ozdobne — rzeźbione, malowane, unikalne. Znajdź pięć drzwi na
+      jednym bloku. Co mówią o budynkach za nimi?
+    follow_ups:
+      - Jak wyglądałby blok bez drzwi?
+      - Jak drzwi tworzą tożsamość?
+      - Jaka jest relacja między drzwiami a progiem?
+  - id: sf_coit_tower
+    name: Wieża Coit
+    prompt: |
+      Wieża Coit wieńczy Telegraph Hill. To pomnik, punkt widokowy, punkt orientacyjny.
+      Jak wieża kształtuje wzgórze? Jak wyglądałoby wzgórze bez niej?
+    follow_ups:
+      - Co upamiętnia wieża?
+      - Jak wieża orientuje miasto?
+      - Jaka jest relacja między wieżą a dzielnicą?
+  - id: sf_lombard_curve
+    name: Zakręt Lombard
+    prompt: |
+      Ulica Lombard zakręca w dół wzgórza. Słynie z zakrętów. Przejdź się
+      nią. Jak zakręt zmienia zjazd? Co zrobiłaby prosta ulica?
+    follow_ups:
+      - Jak wyglądałoby wzgórze bez zakrętu?
+      - Jak zakręt kształtuje doświadczenie?
+      - Jaka jest relacja między zakrętem a bezpieczeństwem?
+  - id: sf_alcatraz_silhouette
+    name: Sylwetka Alcatraz
+    prompt: |
+      Z nabrzeża Alcatraz jest sylwetką. Wyspa jest zawsze tam,
+      zawsze odległa. Co oznacza dla miasta?
+    follow_ups:
+      - Jak wyglądałaby zatoka bez wyspy?
+      - Jak wyspa kształtuje widok?
+      - Jaka jest relacja między więzieniem a miastem?
+  - id: sf_ghost_sign
+    name: Znikający Znak
+    prompt: |
+      Znikające znaki — wyblakłe reklamy na cegle — znaczą przeszłość. Znajdź jeden. Co
+      reklamował? Kto by go zobaczył?
+    follow_ups:
+      - Co mówiłaby ściana bez znaku?
+      - Jak znikający znak zachowuje historię?
+      - Jaka jest relacja między znakiem a handlem?
+  - id: sf_sf_sidewalk
+    name: Chodnik SF
+    prompt: |
+      San Francisco chodniki są często popękane, pochyłe, zarośnięte korzeniami drzew. Przejdź
+      blokiem i zauważ teksturę. Jak starzeje się chodnik?
+    follow_ups:
+      - Jak wyglądałby blok bez chodnika?
+      - Jak chodnik kształtuje ruch?
+      - Jaka jest relacja między chodnikiem a drzewem?
+  - id: sf_golden_gate_fog
+    name: Mgła nad Golden Gate
+    prompt: |
+      Most Golden Gate znika we mgle. Obserwuj, jak znika i pojawia się ponownie.
+      Mgła jest zasłoną. Co jest za nią?
+    follow_ups:
+      - Jak wyglądałby most bez mgły?
+      - Jak mgła kształtuje widok?
+      - Jaka jest relacja między mgłą a mostem?
+  - id: sf_mission_dolores
+    name: Mission Dolores
+    prompt: |
+      Mission Dolores to najstarszy budynek w mieście. Stań przed nim.
+      Co widział? Jak zaznacza czas?
+    follow_ups:
+      - Jak wyglądałaby dzielnica bez misji?
+      - Jak misja kształtuje tożsamość?
+      - Jaka jest relacja między misją a miastem?
+  - id: sf_painted_steps
+    name: Malowane Schody
+    prompt: |
+      Schody z kafelkami na 16. Alei to mozaika. Wejdź po nich. Każdy stopień jest
+      inny. Jak sztuka zmienia wspinaczkę?
+    follow_ups:
+      - Jak wyglądałyby schody bez kafelków?
+      - Jak mozaika tworzy społeczność?
+      - Jaka jest relacja między sztuką a wspinaczką?
+  - id: sf_sf_street_tree
+    name: Drzewo Uliczne SF
+    prompt: |
+      San Francisco drzewa uliczne to często palmy, magnolie lub figowce. Znajdź jedno
+      i je zidentyfikuj. Jak drzewo kształtuje blok?
+    follow_ups:
+      - Jak wyglądałby blok bez drzewa?
+      - Jak drzewo tworzy siedlisko?
+      - Jaka jest relacja między drzewem a chodnikiem?
+  - id: sf_sf_bay_window
+    name: Wykusz SF
+    prompt: |
+      Wykuszowe okna to sanfranciszkańska specyfika. Wypychają się na ulicę,
+      łapiąc światło. Jak wykusz zmienia pokój?
+    follow_ups:
+      - Jak wyglądałaby fasada bez wykuszowego okna?
+      - Jak wykusz tworzy relację z ulicą?
+      - Jaka jest relacja między wykuszem a widokiem?
+  - id: sf_sf_hill
+    name: Wzgórze SF
+    prompt: |
+      Wybierz wzgórze i wejdź na nie. Poczuj wysiłek. Na szczycie spójrz wstecz. Jak
+      wspinaczka zmienia to, co widzisz?
+    follow_ups:
+      - Jak wyglądałoby miasto bez wzgórz?
+      - Jak wzgórza kształtują dzielnice?
+      - Jaka jest relacja między wzgórzem a widokiem?
+  - id: sf_sf_fog
+    name: Mgła SF
+    prompt: |
+      Mgła ma imię — Karl. Jest lokalną celebrytką. Kiedy nadciąga Karl, jak
+      zmienia się miasto? Co się ukrywa? Co się ujawnia?
+    follow_ups:
+      - Jak wyglądałoby miasto bez Karla?
+      - Jak mgła kształtuje tożsamość?
+      - Jaka jest relacja między mgłą a światłem?
+  - id: sf_sf_cable
+    name: Lina SF
+    prompt: |
+      Tramwaj linowy biegnie na linie pod ulicą. Nie możesz jej zobaczyć, ale ją słyszysz. Jak
+      ukryta lina kształtuje widzialne miasto?
+    follow_ups:
+      - Jak wyglądałoby wzgórze bez liny?
+      - Jak lina tworzy połączenie?
+      - Jaka jest relacja między liną a ulicą?
+  - id: sf_sf_victorian
+    name: Wiktoriański SF
+    prompt: |
+      Wiktoriańskie domy przychodzą parami — dwa domy, jedna działka. Znajdź parę. Jak
+      się do siebie odnoszą? Co by było jedno bez drugiego?
+    follow_ups:
+      - Jak wyglądałby blok bez pary?
+      - Jak para tworzy rytm?
+      - Jaka jest relacja między parą a działką?
+  - id: sf_sf_mission
+    name: Mission SF
+    prompt: |
+      Dzielnica Mission ma nazwę od Mission Dolores. Przejdź się ulicą i
+      poczuj warstwy — hiszpańskie, meksykańskie, irlandzkie, środkowoamerykańskie. Jaki jest
+      ten palimpsest?
+    follow_ups:
+      - Jak wyglądałaby dzielnica bez warstw?
+      - Jak misja kształtuje tożsamość?
+      - Jaka jest relacja między misją a migracją?
+  - id: sf_sf_bridge
+    name: Most SF
+    prompt: |
+      Bay Bridge jest mniej sławny niż Golden Gate, ale bardziej używany. Przejdź przez niego
+      lub zobacz go. Jak most łączy? Co przewozi?
+    follow_ups:
+      - Jak wyglądałaby zatoka bez mostu?
+      - Jak most kształtuje region?
+      - Jaka jest relacja między mostem a dojazdem do pracy?
+  - id: sf_sf_parks
+    name: Parki SF
+    prompt: |
+      San Francisco ma wiele małych parków — kieszonkowe parki, trójkątne parki. Znajdź jeden.
+      Kto z niego korzysta? Jaki ma charakter?
+    follow_ups:
+      - Jak wyglądałaby dzielnica bez parku?
+      - Jak park tworzy wytchnienie?
+      - Jaka jest relacja między parkiem a blokiem?
+  - id: sf_sf_stairs
+    name: Schody SF
+    prompt: |
+      San Francisco ma ponad 600 publicznych schodów. Znajdź takie, po których nigdy nie wspinałeś/aś się. Co jest na górze? Co jest na dole?
+    follow_ups:
+      - Jak wyglądałoby wzgórze bez schodów?
+      - Jak schody tworzą skróty?
+      - Jaka jest relacja między schodami a dzielnicą?
+  - id: sf_sf_mural
+    name: Mural SF
+    prompt: |
+      Mission ma więcej murali na mieszkańca niż gdziekolwiek w USA. Znajdź taki,
+      który opowiada historię. Jaka jest narracja? Dla kogo jest?
+    follow_ups:
+      - Jak wyglądałaby ściana bez muralu?
+      - Jak mural zajmuje przestrzeń?
+      - Jaka jest relacja między muralem a społecznością?
+  - id: sf_sf_water
+    name: Woda SF
+    prompt: |
+      San Francisco jest otoczone wodą — zatoka, ocean, cieśnina. Podejdź do brzegu.
+      Co oznacza woda dla miasta? Jak kształtuje brzeg?
+    follow_ups:
+      - Jak wyglądałoby miasto bez wody?
+      - Jak woda kształtuje tożsamość?
+      - Jaka jest relacja między wodą a miastem?
+  - id: sf_sf_sunset
+    name: Zachód Słońca SF
+    prompt: |
+      San Francisco zachody słońca są sławne. Obserwuj jeden ze wzgórza. Światło
+      zmienia miasto. Jaki byłby widok bez zachodu słońca?
+    follow_ups:
+      - Jak zachód słońca kształtuje wieczór?
+      - Jaka jest relacja między zachodem słońca a widokiem?
+      - Czego byś przegapił/a bez światła?
+  - id: sf_sf_wind
+    name: Wiatr SF
+    prompt: |
+      San Francisco wiatr jest stały w niektórych dzielnicach. Poczuj go. Jak
+      wiatr kształtuje ulicę? Jak wyglądałby blok bez niego?
+    follow_ups:
+      - Jak wiatr tworzy mikroklimat?
+      - Jaka jest relacja między wiatrem a budynkiem?
+      - Co byś posadził/a w tym wietrze?
+  - id: sf_sf_earthquake
+    name: Trzęsienie Ziemi SF
+    prompt: |
+      San Francisco leży na uskokach. Ziemia może się poruszyć. Jak ta wiedza
+      kształtuje zbudowane środowisko? Co byś zauważył/a podczas drżenia?
+    follow_ups:
+      - Jak ryzyko sejsmiczne kształtuje projekt?
+      - Jaka jest relacja między uskokiem a miastem?
+      - Co byś zrobił/a, gdyby ziemia zadrżała?
+  - id: sf_sf_tech_bus
+    name: Autobus Technologiczny SF
+    prompt: |
+      Autobusy technologiczne przewożą pracowników do Doliny Krzemowej. Obserwuj, jak jeden się zatrzymuje. Autobus jest
+      symbolem. Co przewozi? Kogo wyklucza?
+    follow_ups:
+      - Jak wyglądałaby ulica bez autobusu?
+      - Jak autobus kształtuje dzielnicę?
+      - Jaka jest relacja między autobusem a miastem?
+  - id: sf_sf_painted_lady
+    name: Malowana Dama SF
+    prompt: |
+      Malowane Damy to wiktoriańskie domy w pastelowych kolorach. Znajdź rząd. Jak
+      kolory tworzą tożsamość? Jak wyglądałaby ulica w szarości?
+    follow_ups:
+      - Jak kolory kształtują blok?
+      - Jaka jest relacja między kolorem a zachowaniem zabytków?
+      - Co byś namalował/a na swoim domu?
+  - id: sf_sf_twin_peaks
+    name: Twin Peaks
+    prompt: |
+      Twin Peaks to dwa wzgórza w centrum miasta. Wejdź na jedno. Widok
+      jest 360-stopniowy. Jak szczyt Cię orientuje?
+    follow_ups:
+      - Jak wyglądałoby miasto bez szczytów?
+      - Jak szczyty tworzą punkt orientacyjny?
+      - Jaka jest relacja między szczytem a dzielnicą?
+  - id: sf_sf_ferry_plaza
+    name: Plac Promowy SF
+    prompt: |
+      Plac przy Ferry Building gości targ rolniczy. Przejdź przez niego. Co jest na sprzedaż?
+      Kto przychodzi? Plac jest progiem między miastem a zatoką.
+    follow_ups:
+      - Jak wyglądałoby nabrzeże bez placu?
+      - Jak targ tworzy społeczność?
+      - Jaka jest relacja między placem a promem?

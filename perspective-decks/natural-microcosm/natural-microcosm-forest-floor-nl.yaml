@@ -1,0 +1,468 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natuurlijk Microkosmos — Bosbodem (Dutch)
+
+id: natural_microcosm_forest_floor
+name: Natuurlijk Microkosmos — Bosbodem
+description: 50 kaarten om je kijk op de bosbodem te veranderen—van afbraak en mycelium tot de architectuur van bladafval en het onzichtbare leven onder het bladerdak.
+domain: natural_microcosm
+cards:
+  - id: nmf_leaf_vein
+    name: Bladnerf
+    prompt: |
+      Pak een gevallen blad op. Volg de nerven. Ze transporteerden water, voedingsstoffen,
+      suikers. De architectuur is onzichtbaar totdat je kijkt. Wat ondersteunde het
+      nerfnetwerk toen het blad leefde?
+    follow_ups:
+      - Hoe verschilt het patroon tussen soorten?
+      - Wat zou het blad zijn zonder de nerven?
+      - Wat is de relatie tussen nerf en rand?
+  - id: nmf_leaf_litter_layer
+    name: Laag Bladafval
+    prompt: |
+      De bosbodem bestaat uit lagen—vers gevallen bovenop, vorig jaar eronder, ouder
+      nog dieper. Kniel neer. Trek een laag weg. Wat is de gradiënt? Hoe stapelt tijd zich op?
+    follow_ups:
+      - Wat zou het bos zijn zonder het afval?
+      - Hoe creëert de laag leefgebied?
+      - Wat is de relatie tussen laag en verval?
+  - id: nmf_mushroom_fruiting
+    name: Vruchtlichaam Paddenstoel
+    prompt: |
+      Een paddenstoel is slechts het vruchtlichaam. Het organisme—het mycelium—spreidt
+      zich ondergronds uit, door de aarde, door het hout. Beschouw wat je ziet als een
+      signaal. Wat is de rest van het verhaal?
+    follow_ups:
+      - Wat zou het bos zijn zonder schimmels?
+      - Hoe verhoudt het vruchtlichaam zich tot het netwerk?
+      - Wat is de relatie tussen paddenstoel en verval?
+  - id: nmf_log_sponge
+    name: Boomstam Spons
+    prompt: |
+      Een omgevallen boomstam absorbeert water, houdt het vast. Druk je hand erop na regen.
+      De stam is een reservoir. Wie drinkt ervan? Wie leeft erin?
+    follow_ups:
+      - Wat zou het bos zijn zonder voedingsstammen?
+      - Hoe creëert de stam een microklimaat?
+      - Wat is de relatie tussen hout en water?
+  - id: nmf_moss_cushion
+    name: Mos Kussen
+    prompt: |
+      Mos houdt water vast als een spons. Raak het aan. Het kussen is architectuur—
+      kleine plantjes dicht op elkaar gepakt. Wie leeft er in de ruimtes ertussen?
+    follow_ups:
+      - Wat zou de bodem zijn zonder mos?
+      - Hoe creëert het kussen vochtigheid?
+      - Wat is de relatie tussen mos en zaailing?
+  - id: nmf_fern_unfurl
+    name: Varen Ontrollen
+    prompt: |
+      Varenbladen ontvouwen zich in een spiraal—varenkrullen. De beweging is langzaam.
+      Bekijk er een dagenlang, indien mogelijk. Hoe vormt het ontrollen het blad?
+    follow_ups:
+      - Wat zou de varen zijn zonder de spiraal?
+      - Hoe beschermt het ontrollen de varen?
+      - Wat is de relatie tussen krul en groei?
+  - id: nmf_root_tangle
+    name: Wortel Knoop
+    prompt: |
+      Wortels verstrengelen zich onder het oppervlak. Zoek waar een boom is gevallen en
+      til de wortelkluit op. De wirwar is een kaart van zoeken. Waarnaar reikten de wortels?
+    follow_ups:
+      - Wat zou de boom zijn zonder de wirwar?
+      - Hoe delen wortels ruimte ondergronds?
+      - Wat is de relatie tussen wortel en schimmel?
+  - id: nmf_slug_trail
+    name: Slakken Spoor
+    prompt: |
+      Een slakken spoor glinstert op een blad—slijm, pad, handtekening. Het spoor markeert
+      waar de slak ging. Wat vertelt het spoor roofdieren? Prooi?
+    follow_ups:
+      - Wat zou de slak verliezen zonder het spoor?
+      - Hoe maakt slijm beweging mogelijk?
+      - Wat is de relatie tussen spoor en territorium?
+  - id: nmf_lichen_patch
+    name: Korstmos Plek
+    prompt: |
+      Korstmossen groeien op schors, steen, aarde—langzaam, samengesteld. Schimmel en algen
+      samen. Vind een plek. Hoe lang is het er al? Wat duidt de aanwezigheid ervan aan?
+    follow_ups:
+      - Wat zou de schors zijn zonder het korstmos?
+      - Hoe markeert korstmos de tijd?
+      - Wat is de relatie tussen korstmos en luchtkwaliteit?
+  - id: nmf_saprophyte
+    name: Saprofiet
+    prompt: |
+      Saprofieten voeden zich met dode materie—schimmels, bacteriën, insecten. Zij zijn de
+      recyclers. Zoek bewijs van verval. Wie eet er? Wat wordt er
+      getransformeerd?
+    follow_ups:
+      - Wat zou het bos zijn zonder afbrekers?
+      - Hoe voedt verval nieuwe groei?
+      - Wat is de relatie tussen dood en aarde?
+  - id: nmf_seedling_emergence
+    name: Zaailing Opkomst
+    prompt: |
+      Een zaailing perst zich door het afval. Eerst de zaadlobben, dan de echte bladeren.
+      Merk de kracht op. Wat was er nodig om erdoorheen te breken? Wat zal het blokkeren?
+    follow_ups:
+      - Wat zou het bos zijn zonder zaailingen?
+      - Hoe hangt de opkomst af van het afval?
+      - Wat is de relatie tussen zaailing en licht?
+  - id: nmf_anthill_mound
+    name: Mierenhoop Heuvel
+    prompt: |
+      Een mierenhoop rijst op uit de bosbodem—uitgegraven aarde, georganiseerd.
+      Kijk naar het verkeer. Waar gaan ze heen? Wat dragen ze?
+    follow_ups:
+      - Wat zou de bodem zijn zonder de heuvel?
+      - Hoe vormt de heuvel de afwatering?
+      - Wat is de relatie tussen heuvel en kolonie?
+  - id: nmf_spider_silk
+    name: Spinnenweb Draad
+    prompt: |
+      Spinnendraden overbruggen gaten—tussen bladeren, takjes. Dauw vangt het. Het web is
+      onzichtbaar totdat het licht erop valt. Volg een draad. Wat verbindt het?
+    follow_ups:
+      - Wat zou de kloof zijn zonder de draad?
+      - Hoe structureert het web de ruimte?
+      - Wat is de relatie tussen draad en prooi?
+  - id: nmf_bark_flake
+    name: Schors Schilfer
+    prompt: |
+      Schors schilfert van een stam—textuur, patroon, leeftijd. Elke schilfer vertelt een
+      seizoen. Wie leeft onder de schors? Wat onthult de schilfer?
+    follow_ups:
+      - Wat zou de boom zijn zonder de schors?
+      - Hoe beschermt en isoleert de schors?
+      - Wat is de relatie tussen schilfer en vernieuwing?
+  - id: nmf_acorn_fall
+    name: Eikel Val
+    prompt: |
+      Een eikel valt. Hij is zwaar voor zijn grootte. Hij zal wortelen of opgegeten worden.
+      Overweeg de kansen. Wat bepaalt welk pad?
+    follow_ups:
+      - Wat zou het bos zijn zonder de eikel?
+      - Hoe verspreidt de val het zaad?
+      - Wat is de relatie tussen eikel en eik?
+  - id: nmf_fallen_branch
+    name: Gevallen Tak
+    prompt: |
+      Een tak ligt op de bodem—gebroken, misschien door wind. Het is nu een brug.
+      Wat passeert het? Wat groeit erop?
+    follow_ups:
+      - Wat zou de bodem zijn zonder gevallen hout?
+      - Hoe creëert de tak randleefgebied?
+      - Wat is de relatie tussen tak en voedingsstof?
+  - id: nmf_humus_smell
+    name: Humus Geur
+    prompt: |
+      Buig dicht naar de bosbodem. De geur—aarde, verval, leven. Die geur
+      is chemie. Wat creëert het? Wat zou het bos zijn zonder het?
+    follow_ups:
+      - Hoe markeert de geur gezondheid?
+      - Hoe zou steriele aarde ruiken?
+      - Wat is de relatie tussen geur en vruchtbaarheid?
+  - id: nmf_snail_shell
+    name: Slakkenhuis
+    prompt: |
+      Een leeg slakkenhuis rust in het afval. Spiraal, calcium, achtergelaten.
+      Wie heeft de slak mogelijk opgegeten? Wat zal het huisje gebruiken?
+    follow_ups:
+      - Wat zou de bodem zijn zonder huisjes?
+      - Hoe recycleert het huisje voedingsstoffen?
+      - Wat is de relatie tussen huisje en calcium?
+  - id: nmf_fungal_network
+    name: Schimmel Netwerk
+    prompt: |
+      Mycelium verbindt bomen—een Wood Wide Web. Je kunt het niet zien, maar het is
+      er. Voedingsstoffen stromen. Informatie stroomt. Beschouw het bos als een
+      netwerk.
+    follow_ups:
+      - Wat zou het bos zijn zonder het netwerk?
+      - Hoe herverdeelt het netwerk hulpbronnen?
+      - Wat is de relatie tussen schimmel en boom?
+  - id: nmf_fern_spore
+    name: Varen Spore
+    prompt: |
+      Varens reproduceren zich via sporen—klein, ontelbaar. Kijk aan de onderkant van een
+      varenblad. De sporenhoopjes bevatten ze. Wat zou er nodig zijn om de reis van een
+      spore te volgen?
+    follow_ups:
+      - Wat zou de varen zijn zonder sporen?
+      - Hoe verspreidt de spore zich?
+      - Wat is de relatie tussen spore en gametofyt?
+  - id: nmf_earthworm_cast
+    name: Regenworm Uitwerpsel
+    prompt: |
+      Regenworm uitwerpsels hopen zich op bij tunnelopeningen—verwerkte aarde, rijk.
+      De worm heeft gegeten en uitgescheiden. Het uitwerpsel is een geschenk aan de oppervlakte.
+    follow_ups:
+      - Wat zou de aarde zijn zonder wormen?
+      - Hoe verbetert het uitwerpsel de structuur?
+      - Wat is de relatie tussen worm en beluchting?
+  - id: nmf_dappled_light
+    name: Gevlekt Licht
+    prompt: |
+      Licht valt door het bladerdak in vlekken—gevlekt, bewegend. De bosbodem ontvangt
+      minder dan de open lucht. Hoe vormt dat wat er groeit?
+    follow_ups:
+      - Wat zou de bodem zijn in volle zon?
+      - Hoe creëert vlekkerigheid microhabitats?
+      - Wat is de relatie tussen licht en zaailing?
+  - id: nmf_bracket_fungus
+    name: Beugelschimmel
+    prompt: |
+      Een beugelschimmel groeit uit een stam—plank, polypore. Het verteert de
+      boom van binnenuit. De boom kan nog jaren blijven staan terwijl dit gebeurt. Beschouw
+      de langzame consumptie.
+    follow_ups:
+      - Wat zou de boom zijn zonder de schimmel?
+      - Hoe verspreidt de beugel sporen?
+      - Wat is de relatie tussen parasiet en gastheer?
+  - id: nmf_needle_mat
+    name: Naald Tapijt
+    prompt: |
+      Naalden van naaldbomen hopen zich op onder de boom—zuur, langzaam rottend. Het tapijt
+      verandert de aarde. Wat groeit erin? Wat vermijdt het?
+    follow_ups:
+      - Wat zou de bodem zijn zonder het tapijt?
+      - Hoe beïnvloedt het naalden tapijt de pH?
+      - Wat is de relatie tussen tapijt en vuur?
+  - id: nmf_salamander_under
+    name: Salamander Eronder
+    prompt: |
+      Salamanders leven onder stammen, stenen, afval. Til iets voorzichtig op—
+      leg het terug. De vochtigheid, de duisternis. Waarom heeft de salamander het nodig?
+    follow_ups:
+      - Wat zou het bos zijn zonder salamanders?
+      - Hoe vormt de salamander de insectengemeenschap?
+      - Wat is de relatie tussen vochtigheid en amfibie?
+  - id: nmf_rot_hole
+    name: Rot Gat
+    prompt: |
+      Een gat in een stam—rot, misschien, of een dier. Het gat is een holte. Wat
+      nestelt er? Wat verbergt zich daar?
+    follow_ups:
+      - Wat zou de stam zijn zonder het gat?
+      - Hoe creëert de holte leefgebied?
+      - Wat is de relatie tussen rot en schuilplaats?
+  - id: nmf_springtail_jump
+    name: Springstaart Sprong
+    prompt: |
+      Springstaarten—klein, talrijk—springen bij verstoring. Ze zitten in het afval,
+      de aarde. Ze verwerken schimmels, verval. Merk op hoeveel je niet kunt zien.
+    follow_ups:
+      - Wat zou de bodem zijn zonder springstaarten?
+      - Hoe maakt de sprong ontsnapping mogelijk?
+      - Wat is de relatie tussen springstaart en afbraak?
+  - id: nmf_bark_beetle_gallery
+    name: Schorskever Galerij
+    prompt: |
+      Schorskever galerijen etsen het hout onder de schors—kanalen, patronen.
+      De kever kerfde ze. De boom reageerde. Wat is het verhaal?
+    follow_ups:
+      - Wat zou de boom zijn zonder de kever?
+      - Hoe beïnvloedt de galerij het lot van de boom?
+      - Wat is de relatie tussen kever en schimmel?
+  - id: nmf_dew_on_litter
+    name: Dauw op Afval
+    prompt: |
+      Ochtenddauw parelt op bladeren, naalden, takjes. Het afval houdt vocht vast.
+      Wie drinkt bij zonsopgang? Hoe verlengt de dauw het natte seizoen?
+    follow_ups:
+      - Wat zou de bodem zijn zonder dauw?
+      - Hoe creëert dauw een waterbron?
+      - Wat is de relatie tussen dauw en verdamping?
+  - id: nmf_windfall_gap
+    name: Windval Kloof
+    prompt: |
+      Een boom viel—wind, leeftijd, ziekte. De kloof laat licht binnen. De bodem
+      verandert. Wat groeit er in de kloof dat dat eerder niet kon?
+    follow_ups:
+      - Wat zou het bos zijn zonder kloven?
+      - Hoe reset de kloof successie?
+      - Wat is de relatie tussen kloof en diversiteit?
+  - id: nmf_mycorrhizal_tip
+    name: Mycorrhiza Punt
+    prompt: |
+      Boomwortels ontmoeten schimmel hyfen—mycorrhiza. De schimmel vergroot het bereik van de wortel.
+      De boom voedt de schimmel. Vind een wortelpunt. Stel je de
+      partnerschap eronder voor.
+    follow_ups:
+      - Wat zou de boom zijn zonder mycorrhiza?
+      - Hoe vergroot de partnerschap het wortelsysteem?
+      - Wat is de relatie tussen schimmel en fosfor?
+  - id: nmf_squirrel_cache
+    name: Eekhoorn Voorraad
+    prompt: |
+      Een eekhoorn begroef een noot—vergeten, misschien. Het kan ontkiemen. De voorraad is
+      verspreiding. Hoeveel bomen begonnen als vergeten zaad?
+    follow_ups:
+      - Wat zou het bos zijn zonder verzamelaars?
+      - Hoe vergroot opslag het zaadbereik?
+      - Wat is de relatie tussen vergeetachtigheid en bos?
+  - id: nmf_carpet_moss
+    name: Tapijt Mos
+    prompt: |
+      Mos bedekt de grond op plekken—zacht, groen, water vasthoudend. Loop erop.
+      Voel de meegeeflijkheid. Het tapijt is eeuwen van groei, laag op laag.
+    follow_ups:
+      - Wat zou de bodem zijn zonder het tapijt?
+      - Hoe behoudt het tapijt vocht?
+      - Wat is de relatie tussen mos en moeras?
+  - id: nmf_burrow_entrance
+    name: Hol Opening
+    prompt: |
+      Een hol opent in de aarde—muis, woelmuis, chipmunk. De opening is een
+      drempel. Wat gaat erin? Wat komt eruit? Het hol breidt zich ondergronds uit.
+    follow_ups:
+      - Wat zou de bodem zijn zonder holen?
+      - Hoe belucht het hol de aarde?
+      - Wat is de relatie tussen hol en roofdier?
+  - id: nmf_twig_lattice
+    name: Twijgen Rooster
+    prompt: |
+      Twijgen verzamelen—wind, dier, zwaartekracht. Ze vormen een rooster over het afval.
+      Het rooster houdt bladeren vast, vangt zaad. Het is toevallige architectuur.
+    follow_ups:
+      - Wat zou de bodem zijn zonder het rooster?
+      - Hoe vertraagt het rooster erosie?
+      - Wat is de relatie tussen twijg en microhabitat?
+  - id: nmf_rot_softness
+    name: Rot Zachtheid
+    prompt: |
+      Rot hout geeft mee onder je vingers—spongieus, verkruimelend. De overgang
+      van structuur naar aarde. Hoe lang duurde het? Wat blijft er over?
+    follow_ups:
+      - Wat zou het bos zijn zonder rot?
+      - Hoe maakt zachtheid kolonisatie mogelijk?
+      - Wat is de relatie tussen rot en humus?
+  - id: nmf_frost_needle
+    name: Vorst Naald
+    prompt: |
+      Vorst naalden rijzen op uit de aarde—ijskristallen, delicaat. Ze vormen zich op koude, stille nachten.
+      Tegen de middag zijn ze verdwenen. Beschouw de efemere structuur.
+    follow_ups:
+      - Wat zou de aarde ervaren zonder vorst?
+      - Hoe beïnvloedt vorst opschudding wortels?
+      - Wat is de relatie tussen vorst en zaailing?
+  - id: nmf_millipede_curl
+    name: Duizendpoot Krul
+    prompt: |
+      Een duizendpoot krult zich op bij verstoring—verdediging. Hij voedt zich met verval.
+      Kijk hoe hij door het afval beweegt. Hoe navigeert het lichaam de wirwar?
+    follow_ups:
+      - Wat zou de bodem zijn zonder duizendpoten?
+      - Hoe beschermt de krul?
+      - Wat is de relatie tussen duizendpoot en calcium?
+  - id: nmf_pinecone_open
+    name: Dennenappel Open
+    prompt: |
+      Een dennenappel opent als hij droog is—schubben spreiden, zaden vrijgelaten. De kegel is een
+      mechanisme. Hitte kan het ook activeren. Overweeg de timing.
+    follow_ups:
+      - Wat zou de boom zijn zonder de kegel?
+      - Hoe regelt vocht het mechanisme?
+      - Wat is de relatie tussen vuur en vrijlating?
+  - id: nmf_hole_in_leaf
+    name: Gat in Blad
+    prompt: |
+      Een blad heeft gaten—insect, slak, schimmel. De schade vertelt een verhaal. Wie at?
+      Wanneer? Het resterende blad fotosynthetiseert nog steeds. Wat is de drempel?
+    follow_ups:
+      - Wat zou het blad zijn zonder de gaten?
+      - Hoe vormt herbivorie de plant?
+      - Wat is de relatie tussen schade en verdediging?
+  - id: nmf_root_hair
+    name: Wortel Haar
+    prompt: |
+      Wortelharen—microscopisch—vergroten het oppervlak voor opname. Je kunt ze niet zien,
+      maar ze zijn er. De wortels van een zaailing verkennen. Wat vinden ze?
+    follow_ups:
+      - Wat zou de wortel zijn zonder de haren?
+      - Hoe absorberen wortelharen water?
+      - Wat is de relatie tussen haar en voedingsstof?
+  - id: nmf_forest_silence
+    name: Bos Stilte
+    prompt: |
+      Sta stil op de bosbodem. De stilte is niet leeg—het zit vol
+      kleine geluiden. Geritsel, gedrup, gekraak. Wat hoor je als je stopt?
+    follow_ups:
+      - Wat zou het bos zijn zonder de kleine geluiden?
+      - Hoe onthult stilte aanwezigheid?
+      - Wat is de relatie tussen luisteren en opmerken?
+  - id: nmf_shade_adaptation
+    name: Schaduw Aanpassing
+    prompt: |
+      Planten op de bosbodem zijn aangepast aan schaduw—grotere bladeren, ander
+      chlorofyl. Vergelijk een zonblad met een schaduwblad. Wat is de afweging?
+    follow_ups:
+      - Wat zou de plant zijn in volle zon?
+      - Hoe vormt schaduw het blad?
+      - Wat is de relatie tussen licht en investering?
+  - id: nmf_nutrient_cycle
+    name: Voedingsstof Cyclus
+    prompt: |
+      Alles op de bosbodem cycelt—koolstof, stikstof, fosfor.
+      Een blad valt. Het wordt geconsumeerd. Het wordt aarde. Het voedt een boom. Volg één
+      lus.
+    follow_ups:
+      - Wat zou het bos zijn zonder de cyclus?
+      - Hoe voltooit afbraak de lus?
+      - Wat is de relatie tussen dood en groei?
+  - id: nmf_footprint_compression
+    name: Voetstap Compressie
+    prompt: |
+      Je voetstap comprimeert het afval. De onderliggende aarde houdt de vorm vast.
+      Hoeveel voetstappen zijn er nodig om de bodem te veranderen? Wie liep hier nog meer?
+    follow_ups:
+      - Wat zou de bodem zijn zonder verkeer?
+      - Hoe beïnvloedt compressie de afwatering?
+      - Wat is de relatie tussen pad en verdichting?
+  - id: nmf_seasonal_signal
+    name: Seizoens Signaal
+    prompt: |
+      De bosbodem signaleert het seizoen—nieuwe groei in de lente, senescentie in de herfst.
+      Wat ligt er nu op de grond? Wat vertelt het je?
+    follow_ups:
+      - Wat zou de bodem zijn in een ander seizoen?
+      - Hoe synchroniseert het signaal het leven?
+      - Wat is de relatie tussen afval en kalender?
+  - id: nmf_stump_succession
+    name: Stronk Successie
+    prompt: |
+      Een afgehakte stronk spruit schimmels, zaailingen, mos. Het is een stadium in successie.
+      Wat kwam ervoor? Wat zal het vervangen? De stronk is zowel einde als
+      begin.
+    follow_ups:
+      - Wat zou de open plek zijn zonder de stronk?
+      - Hoe creëert de stronk kansen?
+      - Wat is de relatie tussen dood en nieuwe groei?
+  - id: nmf_forest_breath
+    name: Bos Adem
+    prompt: |
+      De bosbodem ademt—zuurstof in, koolstof uit, of andersom 's nachts.
+      De aarde leeft. Sta stil. Kun je de uitwisseling voelen?
+    follow_ups:
+      - Wat zou de lucht zijn zonder de bodem?
+      - Hoe vormt de adem het bladerdak?
+      - Wat is de relatie tussen aarde en atmosfeer?
+  - id: nmf_leaf_miner_trail
+    name: Bladmineerder Spoor
+    prompt: |
+      Een bladmineerder—een insectenlarve—eet tussen de lagen. Het spoor is een
+      witte lijn, een meanderend pad. Volg het. Wat zocht de mineerder?
+    follow_ups:
+      - Wat zou het blad zijn zonder het spoor?
+      - Hoe navigeert de mineerder zonder te zien?
+      - Wat is de relatie tussen binnen en buiten?
+  - id: nmf_decomposer_shift
+    name: Afbreker Verschuiving
+    prompt: |
+      Naarmate materiaal vervalt, nemen verschillende afbrekers het over—eerst bacteriën en
+      schimmels, later kevers en regenwormen. Zoek materiaal in verschillende stadia.
+      Wie werkt er nu?
+    follow_ups:
+      - Wat zou afbraak zijn zonder successie?
+      - Hoe vormt de verschuiving het tempo?
+      - Wat is de relatie tussen stadium en consument?

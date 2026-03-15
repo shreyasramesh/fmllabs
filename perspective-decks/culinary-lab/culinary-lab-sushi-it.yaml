@@ -1,0 +1,503 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Laboratorio Culinario — Sushi (Italian)
+
+id: culinary_lab_sushi
+name: Laboratorio Culinario — Sushi
+description: 50 carte per cambiare il tuo modo di vivere il sushi, dalla chimica del riso e del pesce alla coreografia del bancone e all'archeologia dell'origine di ogni neta.
+domain: culinary_lab
+cards:
+  - id: sush_rice_temp
+    name: Temperatura del Riso
+    prompt: |
+      Il riso per sushi è caldo, circa alla temperatura corporea. Non freddo.
+      Il calore trasporta l'aceto. Sentilo. Cosa farebbe il riso freddo? Come
+      la temperatura modella il boccone?
+    follow_ups:
+      - Cosa sacrificherebbe il riso a temperatura ambiente?
+      - Come il calore trasporta il sapore?
+      - Qual è la relazione tra temperatura e consistenza?
+  - id: sush_shari_balance
+    name: Equilibrio dello Shari
+    prompt: |
+      Lo shari, il riso, è metà del sushi. L'equilibrio tra aceto, sale e
+      zucchero è preciso. Assaggia il riso da solo. Cosa apporta? Cosa
+      significherebbe un riso insipido?
+    follow_ups:
+      - Come il riso modella il neta?
+      - Cosa succederebbe con troppo aceto?
+      - Qual è la relazione tra shari e neta?
+  - id: sush_counter_ritual
+    name: Rituale al Bancone
+    prompt: |
+      Omakase al bancone: sei di fronte allo chef. Il sushi arriva pezzo per
+      pezzo. Il bancone è un palcoscenico. Nota la coreografia. Qual è il
+      ritmo? Chi imposta il passo?
+    follow_ups:
+      - Cosa cambierebbe un tavolo?
+      - Come il bancone modella il pasto?
+      - Qual è la relazione tra chef e cliente?
+  - id: sush_net_origin
+    name: Origine del Neta
+    prompt: |
+      Ogni neta, il condimento, proviene da qualche parte. Toyosu. Tsukiji. Una
+      barca. Un allevamento. Chiedi. Segui il pesce. Che viaggio ha fatto? Cosa
+      significherebbe surgelato dal magazzino?
+    follow_ups:
+      - Come l'origine modella il pezzo?
+      - Cosa farebbe un'altra fonte?
+      - Qual è la relazione tra luogo e qualità?
+  - id: sush_wasabi_hidden
+    name: Wasabi Nascosto
+    prompt: |
+      Il vero wasabi, radice grattugiata, è raro. La maggior parte è rafano e
+      colorante. Ma quando è vero, è diverso. Pungente, verde, fugace. Nota
+      l'intensità. Cosa aggiungerebbe, cosa sottrarrebbe il falso?
+    follow_ups:
+      - Come il wasabi modella il boccone?
+      - Cosa significherebbe senza wasabi?
+      - Qual è la relazione tra piccantezza e pesce?
+  - id: sush_finger_over_chopstick
+    name: Dita al Posto delle Bacchette
+    prompt: |
+      Il nigiri si mangia tradizionalmente con le dita, non con le bacchette.
+      Le dita sentono la temperatura, la consistenza. Prova. Cosa aggiunge il
+      dito che le bacchette non possono?
+    follow_ups:
+      - Come la mano modella l'esperienza?
+      - Cosa farebbero le bacchette?
+      - Qual è la relazione tra tatto e gusto?
+  - id: sush_piece_by_piece
+    name: Pezzo per Pezzo
+    prompt: |
+      Il sushi arriva un pezzo alla volta, o due. Il ritmo è deliberato. Mangi;
+      aspetti. Considera il ritmo. Cosa sacrificherebbe una decina di pezzi
+      tutti insieme?
+    follow_ups:
+      - Come il ritmo modella il pasto?
+      - Cosa farebbe la velocità?
+      - Qual è la relazione tra pezzo e attenzione?
+  - id: sush_gari_palate
+    name: Gari per il Palato
+    prompt: |
+      Il gari, lo zenzero marinato, pulisce tra un pezzo e l'altro. Non è una
+      guarnizione; è un reset. Nota quando lo mangi. Cosa farebbero pezzi
+      consecutivi senza gari al palato?
+    follow_ups:
+      - Come il gari modella la progressione?
+      - Cosa significherebbe senza gari?
+      - Qual è la relazione tra reset e gusto?
+  - id: sush_soy_minimal
+    name: Soia al Minimo
+    prompt: |
+      Salsa di soia: un leggero tuffo, lato pesce verso il basso. Non il riso.
+      Il riso assorbirebbe troppo. Lo chef potrebbe aver già spennellato la
+      soia. Nota. Cosa farebbe inzuppare il pezzo?
+    follow_ups:
+      - Come la soia modella il pezzo?
+      - Cosa significherebbe senza soia?
+      - Qual è la relazione tra tuffo e equilibrio?
+  - id: sush_knife_matters
+    name: Il Coltello Conta
+    prompt: |
+      Il coltello da sushi, a lama singola, affilato. Il taglio influisce sulla
+      consistenza. Controfibra o in fibra. L'angolo. Considera cosa fa la lama.
+      Cosa sacrificherebbe un coltello smussato?
+    follow_ups:
+      - Come il taglio modella il pesce?
+      - Cosa farebbe un angolo diverso?
+      - Qual è la relazione tra lama e sensazione in bocca?
+  - id: sush_otoro_fat
+    name: Grasso dell'Otoro
+    prompt: |
+      L'otoro, il tonno più grasso, si scioglie. Il grasso è il punto. Considera
+      la marezzatura. Cosa farebbe l'akami magro? Come il grasso modella
+      l'esperienza?
+    follow_ups:
+      - Cosa mancherebbe al pezzo senza il grasso?
+      - Come la marezzatura crea lusso?
+      - Qual è la relazione tra grasso e sciogliersi?
+  - id: sush_unagi_glaze
+    name: Glassa dell'Unagi
+    prompt: |
+      L'unagi, l'anguilla, viene spennellata con una salsa dolce, a volte
+      grigliata di nuovo. La glassa è una lacca. Considera la lucentezza. Cosa
+      significherebbe anguilla senza glassa?
+    follow_ups:
+      - Come la glassa modella il pezzo?
+      - Qual è la relazione tra dolce e anguilla?
+      - Perché la glassa?
+  - id: sush_nori crisp
+    name: Croccantezza del Nori
+    prompt: |
+      Il nori per il maki: tostato, croccante o morbido? Chef diversi scelgono
+      diversamente. Il nori influisce sul morso. Considera la consistenza. Cosa
+      farebbe il nori molliccio?
+    follow_ups:
+      - Come il nori modella il rotolo?
+      - Cosa significherebbe una tostatura diversa?
+      - Qual è la relazione tra croccante e fresco?
+  - id: sush_silence_counter
+    name: Silenzio al Bancone
+    prompt: |
+      Alcuni banconi da sushi sono silenziosi: concentrazione, rispetto. Altri
+      sono vivaci. Nota il paesaggio sonoro. Cosa aggiunge il silenzio? Cosa
+      aggiunge la conversazione?
+    follow_ups:
+      - Come il suono modella il pasto?
+      - Cosa farebbe musica ad alto volume?
+      - Qual è la relazione tra quiete e concentrazione?
+  - id: sush_tamago_sweet
+    name: Dolcezza del Tamago
+    prompt: |
+      Il tamago, la frittata all'uovo, spesso conclude il pasto. È dolce, a
+      strati. L'abilità dello chef è visibile. Considera la chiusura. Cosa
+      significherebbe pesce crudo come ultimo pezzo?
+    follow_ups:
+      - Come il tamago modella la fine?
+      - Qual è la relazione tra dolce e chiusura?
+      - Perché l'uovo alla fine?
+  - id: sush_tuna_spectrum
+    name: Spettro del Tonno
+    prompt: |
+      Akami, chutoro, otoro: da magro a grasso. Lo spettro è deliberato.
+      Assaggiali in ordine, se puoi. Come funziona la progressione? Cosa offre
+      ognuno?
+    follow_ups:
+      - Come il grasso modella lo spettro?
+      - Cosa significherebbe un solo grado?
+      - Qual è la relazione tra magro e ricco?
+  - id: sush_ume_shiso
+    name: Ume Shiso
+    prompt: |
+      Ume, prugna marinata, e shiso in alcuni rotoli. Aspra, erbacea. Tagliano
+      la ricchezza. Nota quando compaiono. Cosa sarebbe il rotolo senza di
+      loro?
+    follow_ups:
+      - Come l'ume modella il boccone?
+      - Qual è la relazione tra aspro e pesce?
+      - Perché lo shiso?
+  - id: sush_gunkan_hold
+    name: Tenuta del Gunkan
+    prompt: |
+      Il gunkan, "corazzata", contiene condimenti sciolti. Uova di pesce, ricci
+      di mare. Il colletto di nori contiene. Considera la forma. Cosa farebbe
+      un pezzo piatto?
+    follow_ups:
+      - Come la forma modella il condimento?
+      - Cosa significherebbe un contenitore diverso?
+      - Qual è la relazione tra tenuta e fuoriuscita?
+  - id: sush_uni_risk
+    name: Rischio dell'Uni
+    prompt: |
+      L'uni, il riccio di mare, è polarizzante. Dolce, salmastro, consistenza.
+      Può essere perfetto o meno. Considera il rischio. Cosa significherebbe
+      salmone sicuro? Cosa aggiunge il rischio?
+    follow_ups:
+      - Come l'uni modella l'esperienza?
+      - Cosa perderesti senza il rischio?
+      - Qual è la relazione tra polarizzante e memorabile?
+  - id: sush_chef_choice
+    name: Scelta dello Chef
+    prompt: |
+      Omakase, scelta dello chef. Ti arrendi al controllo. Lo chef legge la
+      giornata, il pesce, te. Considera la fiducia. Cosa cambierebbe lo scegliere
+      da solo?
+    follow_ups:
+      - Come l'arrendersi modella il pasto?
+      - Cosa significherebbe ordinare da un menu?
+      - Qual è la relazione tra fiducia ed esperienza?
+  - id: sush_sake_pair
+    name: Abbinamento con Sake
+    prompt: |
+      Sake con sushi: freddo, caldo, invecchiato. L'abbinamento è considerato.
+      Nota quando sorseggi. Pulisce? Migliora? Considera il ruolo della bevanda.
+    follow_ups:
+      - Come il sake modella il pezzo?
+      - Cosa farebbe il vino?
+      - Qual è la relazione tra riso e vino di riso?
+  - id: sush_ikura_pop
+    name: Scoppio dell'Ikura
+    prompt: |
+      L'ikura, le uova di salmone, scoppiano. Lo scoppio è consistenza e salamoia.
+      Considera la sensazione. Cosa farebbero le uova cotte? Come lo scoppio
+      modella il morso?
+    follow_ups:
+      - Cosa mancherebbe al pezzo senza lo scoppio?
+      - Come la consistenza crea piacere?
+      - Qual è la relazione tra scoppio e sale?
+  - id: sush_hirame_chew
+    name: Morso del Hirame
+    prompt: |
+      Il hirame, la sogliola, ha un morso diverso dal tonno. È magro, delicato.
+      Nota la consistenza. Cosa farebbe il pesce grasso? Come varia il morso?
+    follow_ups:
+      - Come la consistenza modella il pezzo?
+      - Qual è la relazione tra magro e delicato?
+      - Perché ordinare hirame?
+  - id: sush_amaebi_head
+    name: Testa dell'Amaebi
+    prompt: |
+      L'amaebi, il gambero dolce, a volte servito con la testa fritta. La testa
+      è croccante, umami. Considera l'uso intero. Cosa sacrificherebbe il
+      gambero senza testa?
+    follow_ups:
+      - Come la testa modella il piatto?
+      - Qual è la relazione tra intero e rispetto?
+      - Perché friggere la testa?
+  - id: sush_mirin_gloss
+    name: Lucentezza del Mirin
+    prompt: |
+      Alcuni pezzi vengono spennellati con nikiri: salsa di soia, mirin, sake.
+      La lucentezza è la finitura. Lo chef l'ha condito. Considera se aggiungere
+      altra salsa di soia. Cosa farebbe un eccesso di intingimento?
+    follow_ups:
+      - Come la spennellata modella il pezzo?
+      - Cosa significherebbe senza spennellata?
+      - Qual è la relazione tra mano dello chef e la tua?
+  - id: sush_anago_soft
+    name: Morbidezza dell'Anago
+    prompt: |
+      L'anago, l'anguilla d'acqua salata, è più morbida dell'unagi. Specie
+      diverse, preparazione diversa. Nota la consistenza. Cosa farebbe la
+      consistenza soda dell'unagi?
+    follow_ups:
+      - Come la morbidezza modella il pezzo?
+      - Qual è la relazione tra anago e unagi?
+      - Perché entrambe le anguille?
+  - id: sush_saba_silver
+    name: Argento della Saba
+    prompt: |
+      La saba, lo sgombro, viene spesso marinata. La pelle argentea, la carne
+      oleosa. È forte. Considera la conservazione. Cosa significherebbe lo
+      sgombro crudo?
+    follow_ups:
+      - Come la marinatura modella il pesce?
+      - Qual è la relazione tra olio e marinatura?
+      - Perché marinare la saba?
+  - id: sush_ginger_between
+    name: Zenzero tra i Pezzi
+    prompt: |
+      Il gari tra i pezzi: il reset. Ma quando? Dopo ogni pezzo? Dopo diversi?
+      Il ritmo è tuo. Nota il tuo schema. Cosa significherebbe nessun reset?
+    follow_ups:
+      - Come la tempistica modella il gari?
+      - Qual è la relazione tra pezzo e pezzo?
+      - Quando hai bisogno di un reset?
+  - id: sush_maki_cut
+    name: Taglio del Maki
+    prompt: |
+      I maki, i rotoli, vengono tagliati in pezzi. Sei o otto. Il taglio influisce
+      sulla sezione trasversale. Considera la spirale. Cosa farebbe un taglio
+      diverso?
+    follow_ups:
+      - Come il taglio modella il morso?
+      - Cosa significherebbero meno pezzi?
+      - Qual è la relazione tra fetta e intero?
+  - id: sush_tobiko_crunch
+    name: Croccantezza del Tobiko
+    prompt: |
+      Il tobiko, le uova di pesce volante, aggiunge croccantezza e colore. È un
+      condimento, una guarnizione. Nota quando appare. Cosa sarebbe il rotolo
+      senza di esso?
+    follow_ups:
+      - Come il tobiko modella il morso?
+      - Qual è la relazione tra croccantezza e colore?
+      - Perché pesce volante?
+  - id: sush_sashimi_contrast
+    name: Contrasto del Sashimi
+    prompt: |
+      Il sashimi, senza riso, lascia il pesce da solo. La purezza è diversa.
+      Confronta il sashimi con il nigiri. Cosa aggiunge il riso? Cosa rivela la
+      sua assenza?
+    follow_ups:
+      - Come il riso modella il nigiri?
+      - Cosa significherebbe tutto sashimi?
+      - Qual è la relazione tra pesce e riso?
+  - id: sush_tea_rinse
+    name: Risciacquo con Tè
+    prompt: |
+      Tè verde al bar sushi: riempito, condiviso. Pulisce. Il tè fa parte del
+      ritmo. Considera il suo ruolo. Cosa farebbe l'acqua? Cosa significherebbe
+      nessuna bevanda?
+    follow_ups:
+      - Come il tè modella il pasto?
+      - Qual è la relazione tra tè e reset?
+      - Perché tè verde?
+  - id: sush_bengara_tuna
+    name: Tonno Bengara
+    prompt: |
+      Il bengara, tonno magro, spesso dalla parte posteriore, è più scuro. Il
+      sapore è diverso dall'akami. Considera il taglio. Quale parte del pesce?
+      Cosa fa la posizione?
+    follow_ups:
+      - Come il taglio modella il sapore?
+      - Qual è la relazione tra posizione e gusto?
+      - Perché questo taglio?
+  - id: sush_kohada_cure
+    name: Marinatura della Kohada
+    prompt: |
+      La kohada, l'aringa ventriera, viene marinata, a volte acetata. È una prova
+      per lo chef. La pelle argentea, l'equilibrio. Considera l'abilità. Cosa
+      farebbe la kohada non marinata?
+    follow_ups:
+      - Come la marinatura modella il pesce?
+      - Qual è la relazione tra aceto e pelle argentea?
+      - Perché è una prova?
+  - id: sush_engawa_fin
+    name: Pinna dell'Engawa
+    prompt: |
+      L'engawa, il muscolo della pinna della sogliola, è pregiato. Ha una
+      consistenza distinta. Considera la parte. Cosa farebbe la sogliola normale?
+      Come differisce la pinna?
+    follow_ups:
+      - Come il taglio modella il pezzo?
+      - Qual è la relazione tra pinna e muscolo?
+      - Perché è pregiato?
+  - id: sush_first_piece
+    name: Primo Pezzo
+    prompt: |
+      Il primo pezzo imposta il tono. Spesso qualcosa di delicato: forse hirame o
+      tai. Lo chef sta calibrando. Considera l'apertura. Cosa significherebbe
+      otoro come primo pezzo?
+    follow_ups:
+      - Come il primo modella il pasto?
+      - Qual è la relazione tra primo e progressione?
+      - Perché un inizio delicato?
+  - id: sush_kampachi_fat
+    name: Grasso del Kampachi
+    prompt: |
+      Il kampachi, giovane ricciola, ha un grasso sottile. È tra magro e ricco.
+      Nota la via di mezzo. Cosa farebbe il buri? Cosa farebbe un pesce più
+      magro?
+    follow_ups:
+      - Come il grasso modella il pezzo?
+      - Qual è la relazione tra età e grasso?
+      - Perché il kampachi?
+  - id: sush_nodoguro_char
+    name: Scottatura del Nodoguro
+    prompt: |
+      Il nodoguro, persico dalla gola nera, viene spesso leggermente scottato.
+      La pelle, il grasso. La scottatura aggiunge. Considera l'applicazione del
+      calore. Cosa farebbe crudo?
+    follow_ups:
+      - Come la scottatura modella il pesce?
+      - Qual è la relazione tra scottatura e grasso?
+      - Perché scottare questo?
+  - id: sush_choji_plate
+    name: Piatto Choji
+    prompt: |
+      Il piatto, o il legno, o la pietra, contiene il pezzo. La presentazione è
+      minima. Considera il contenitore. Cosa farebbe un piatto affollato? Cosa
+      permette il minimalismo?
+    follow_ups:
+      - Come il piatto modella il pezzo?
+      - Qual è la relazione tra contenitore e concentrazione?
+      - Perché minimalista?
+  - id: sush_tea_cup
+    name: Tazza da Tè
+    prompt: |
+      La tazza da tè al bancone: senza manico, a volte grezza. La tieni con due
+      mani. Considera il contenitore. Cosa farebbe una tazza? Cosa aggiunge la
+      tazza?
+    follow_ups:
+      - Come la tazza modella il sorso?
+      - Qual è la relazione tra contenitore e rituale?
+      - Perché senza manico?
+  - id: sush_silver_slide
+    name: Scivolo d'Argento
+    prompt: |
+      Il pezzo dovrebbe scivolare via dal piatto, o essere sollevato pulito. Il
+      riso tiene ma rilascia. Considera la costruzione. Cosa significherebbe
+      riso che si sfalda?
+    follow_ups:
+      - Come la struttura modella il mangiare?
+      - Cosa farebbe il riso scotto?
+      - Qual è la relazione tra integrità e morso?
+  - id: sush_kinmedai_skin
+    name: Pelle del Kinmedai
+    prompt: |
+      Il kinmedai, pagro dall'occhio dorato, spesso con la pelle, leggermente
+      incenerita. La pelle aggiunge consistenza, grasso. Considera l'incenerimento.
+      Cosa farebbe la pelle cruda?
+    follow_ups:
+      - Come la pelle modella il pezzo?
+      - Qual è la relazione tra incenerimento e grasso?
+      - Perché incenerire?
+  - id: sush_botan_ebi
+    name: Botan Ebi
+    prompt: |
+      Il botan ebi, gambero maculato, è dolce, spesso crudo. La coda a volte
+      viene fritta. Considera l'intero. Cosa farebbe il gambero cotto?
+    follow_ups:
+      - Come la preparazione modella il pezzo?
+      - Qual è la relazione tra crudo e dolce?
+      - Perché gambero maculato?
+  - id: sush_namida_heat
+    name: Lacrima di Piccantezza
+    prompt: |
+      Il vero wasabi porta una lacrima, namida. Il piccante sale, passa. È diverso
+      dal peperoncino. Considera la sensazione. Cosa farebbe diversamente il
+      rafano?
+    follow_ups:
+      - Come la piccantezza modella il morso?
+      - Qual è la relazione tra wasabi e lacrima?
+      - Perché fa piangere?
+  - id: sush_omakase_end
+    name: Fine dell'Omakase
+    prompt: |
+      Il pasto finisce: tamago, forse miso, forse un frutto. L'arco è completo.
+      Considera la chiusura. Cosa farebbe un altro pezzo? Quando sai che hai
+      finito?
+    follow_ups:
+      - Come la fine modella il ricordo?
+      - Qual è la relazione tra chiusura e soddisfazione?
+      - Perché finire con uovo o zuppa?
+  - id: sush_counter_wait
+    name: Attesa al Bancone
+    prompt: |
+      Tra un pezzo e l'altro, aspetti. Lo chef prepara. La pausa fa parte del
+      ritmo. Nota l'attesa. Cosa sacrificherebbe il servizio istantaneo?
+    follow_ups:
+      - Come l'attesa modella il pezzo?
+      - Qual è la relazione tra pausa e attenzione?
+      - Perché non pre-impiattare?
+  - id: sush_tsukiji_legacy
+    name: Eredità di Tsukiji
+    prompt: |
+      Tsukiji non c'è più; Toyosu ha preso il suo posto. Ma il pesce scorre ancora
+      attraverso Tokyo. Considera il mercato. Cosa sarebbe il sushi senza l'asta?
+      Senza la distribuzione?
+    follow_ups:
+      - Come il mercato modella il pesce?
+      - Qual è la relazione tra asta e qualità?
+      - Cosa significava Tsukiji?
+  - id: sush_edomae_spirit
+    name: Spirito Edomae
+    prompt: |
+      Edomae, stile di Edo, sushi dalla tradizione di Tokyo. Conservato, marinato,
+      invecchiato per funzionare senza refrigerazione. Considera la storia. Cosa
+      significherebbe sempre fresco?
+    follow_ups:
+      - Come la storia modella la tecnica?
+      - Qual è la relazione tra conservazione e sapore?
+      - Perché Edomae?
+  - id: sush_gari_reset
+    name: Reset con Gari
+    prompt: |
+      Il gari, lo zenzero marinato, pulisce tra i pezzi. Le fette rosa pallido
+      resettano il palato. Nota quando lo raggiungi. Cosa sarebbe il pasto senza
+      il reset? Come modella lo zenzero la progressione?
+    follow_ups:
+      - Cosa significherebbe senza gari?
+      - Come il reset modella il pezzo successivo?
+      - Qual è la relazione tra pausa e continuità?
+  - id: sush_otoro_melt
+    name: Sciogliezza dell'Otoro
+    prompt: |
+      L'otoro, il tonno più grasso, si dissolve quasi sulla lingua. Il grasso è il
+      punto. Considera la consistenza. Cosa farebbe il tonno magro? Come lo
+      sciogliersi segna il culmine del pasto?
+    follow_ups:
+      - Cosa farebbe diversamente l'akami?
+      - Come il grasso modella l'esperienza?
+      - Qual è la relazione tra sciogliersi e lusso?

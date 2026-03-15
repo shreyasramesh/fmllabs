@@ -1,0 +1,473 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosmo Naturale — Giardino & Cortile (Italian)
+
+id: natural_microcosm_garden_backyard
+name: Microcosmo Naturale — Giardino & Cortile
+description: 50 carte per cambiare il modo in cui vedi la natura domestica — dagli impollinatori e il terreno, alle erbacce contro le colture e la coreografia della natura coltivata.
+domain: natural_microcosm
+cards:
+  - id: nmg_bee_landing
+    name: Atterraggio dell'Ape
+    prompt: |
+      Osserva un'ape atterrare su un fiore. L'avvicinamento, il tocco, il suo librarsi. L'ape
+      è sia predatore che impollinatore. Cosa guadagna il fiore? Cosa
+      rischia?
+    follow_ups:
+      - Come l'atterraggio modella la visita successiva?
+      - Com'era il giardino senza api?
+      - Qual è il rapporto tra fiore e ape?
+  - id: nmg_soil_crumble
+    name: Terreno Friabile
+    prompt: |
+      Prendi una manciata di terra. Senti la consistenza — la friabilità, i grani.
+      Quel terreno racchiude storia, morte, rinascita. Cosa viveva qui prima?
+      Cosa vi crescerà?
+    follow_ups:
+      - Come il terreno modella ciò che cresce?
+      - Cosa significherebbe un terreno sterile?
+      - Qual è il rapporto tra friabilità e vita?
+  - id: nmg_weed_edge
+    name: Erba Sull'Orlo
+    prompt: |
+      Un'erba cresce dove il prato incontra l'aiuola. Non è stata piantata. È stata
+      invitata — o si è invitata da sola. Considera il confine. Chi traccia la linea
+      tra erba e fiore?
+    follow_ups:
+      - Com'era il giardino senza erbacce?
+      - Come il confine crea tensione?
+      - Qual è il rapporto tra erba e intenzione?
+  - id: nmg_compost_steam
+    name: Vapore del Compost
+    prompt: |
+      Rivolta un cumulo di compost. Sale il vapore — decomposizione in corso. Il calore è
+      lavoro microbico. Scarti di cucina diventano terra. Segui la
+      trasformazione.
+    follow_ups:
+      - Cosa perderebbe il giardino senza compost?
+      - Come il calore segna il processo?
+      - Qual è il rapporto tra scarti e fertilità?
+  - id: nmg_seed_dormancy
+    name: Dormienza del Seme
+    prompt: |
+      Un seme nel terreno può aspettare anni — decenni. È vivo ma in pausa. Cosa
+      lo risveglia? Luce, acqua, fuoco, disturbo. Considera la pazienza di un
+      seme.
+    follow_ups:
+      - Cosa perderebbe la germinazione senza dormienza?
+      - Come l'attesa modella la sopravvivenza?
+      - Qual è il rapporto tra pausa ed emersione?
+  - id: nmg_bird_bath
+    name: Vasca per Uccelli
+    prompt: |
+      Una vasca per uccelli è un invito. Guarda chi arriva — passeri, pettirossi, forse una
+      ghiandaia. La vasca crea un incontro. Com'era il cortile senza questo
+      piccolo corpo d'acqua?
+    follow_ups:
+      - Come la vasca modella chi visita?
+      - Qual è la coreografia dell'arrivo?
+      - Qual è il rapporto tra acqua e uccello?
+  - id: nmg_tomato_truss
+    name: Grappolo di Pomodoro
+    prompt: |
+      Un grappolo di pomodoro regge frutti verdi, poi rossi. Studia l'architettura. Il
+      fusto, i rami, il peso. La pianta è ingegneria. Cosa la sorregge?
+    follow_ups:
+      - Com'era la pianta senza il grappolo?
+      - Come la struttura modella il raccolto?
+      - Qual è il rapporto tra forma e frutto?
+  - id: nmg_aphid_column
+    name: Colonna di Afidi
+    prompt: |
+      Gli afidi si ammassano su un fusto — succhiando, moltiplicandosi. Sono sia parassiti che
+      prede. Arriveranno le coccinelle. Nota l'ecologia. Qual è il rapporto tra
+      un'infestazione e l'equilibrio?
+    follow_ups:
+      - Com'era la pianta senza afidi?
+      - Come l'ammasso attira i predatori?
+      - Qual è il rapporto tra parassita ed ecosistema?
+  - id: nmg_hose_spray
+    name: Spruzzo del Tubo
+    prompt: |
+      L'acqua da un tubo colpisce il terreno. Osserva come si accumula, si inzuppa, scorre. Lo spruzzo è
+      pioggia artificiale. Come differisce dalla cosa reale? Cosa riceve la
+      pianta?
+    follow_ups:
+      - Com'era il giardino senza il tubo?
+      - Come l'irrigazione modella la crescita?
+      - Qual è il rapporto tra spruzzo e pioggia?
+  - id: nmg_lawn_mow
+    name: Taglio del Prato
+    prompt: |
+      Un prato è una natura selvaggia gestita — tagliata all'altezza, mantenuta verde. Il taglio interrompe
+      la crescita. Considera cosa diventerebbe il prato se lasciato solo. Cosa stiamo
+      trattenendo?
+    follow_ups:
+      - Com'era il cortile senza il taglio del prato?
+      - Come il taglio modella l'identità?
+      - Qual è il rapporto tra prato e controllo?
+  - id: nmg_pot_bound
+    name: Radici Legate nel Vaso
+    prompt: |
+      Una pianta in un vaso — radici che girano, cercano. Il vaso è un confine. Cosa
+      farebbe la pianta con terra illimitata? Il vaso è sia prigione che
+      protezione. Considera lo scambio.
+    follow_ups:
+      - Com'era la pianta senza il vaso?
+      - Come il contenimento modella la crescita?
+      - Qual è il rapporto tra radice e muro?
+  - id: nmg_mulch_layer
+    name: Strato di Pacciamatura
+    prompt: |
+      La pacciamatura copre il terreno — cippato, paglia, foglie. Trattiene l'umidità,
+      sopprime le erbacce, alla fine diventa terriccio. Lo strato è temporaneo.
+      Cosa fa mentre dura?
+    follow_ups:
+      - Com'era l'aiuola senza pacciamatura?
+      - Come lo strato crea microclima?
+      - Qual è il rapporto tra copertura e terreno?
+  - id: nmg_hummingbird_hover
+    name: Librarsi del Colibrì
+    prompt: |
+      Un colibrì si libra su un fiore — ali invisibili per la velocità. Il librarsi
+      è costoso. Il nettare deve valerne la pena. Considera l'economia della
+      visita.
+    follow_ups:
+      - Com'era il fiore senza il colibrì?
+      - Come il librarsi modella la relazione?
+      - Qual è il rapporto tra costo e ricompensa?
+  - id: nmg_fence_creep
+    name: Strisciare della Recinzione
+    prompt: |
+      L'edera o il convolvolo strisciano lungo una recinzione. La pianta non sa che
+      la recinzione è fatta dall'uomo. Si arrampica comunque. Considera l'incontro tra
+      crescita e struttura.
+    follow_ups:
+      - Su cosa si arramicherebbe la pianta senza la recinzione?
+      - Come la recinzione modella il rampicante?
+      - Qual è il rapporto tra arrampicarsi e supporto?
+  - id: nmg_worm_cast
+    name: Escremento di Lombrico
+    prompt: |
+      Escrementi di lombrico — piccoli cumuli di terra — punteggiano il prato. Il verme è passato,
+      lasciando fertilità. L'escremento è archeologia. Cosa ha processato il verme?
+      Cosa ha lasciato?
+    follow_ups:
+      - Com'era il terreno senza vermi?
+      - Come l'escremento segna il lavoro del verme?
+      - Qual è il rapporto tra escremento e aerazione?
+  - id: nmg_squirrel_cache
+    name: Scorta dello Scoiattolo
+    prompt: |
+      Uno scoiattolo seppellisce una noce — e poi dimentica. La noce potrebbe germogliare. Lo scoiattolo
+      è un giardiniere accidentale. Considera il rapporto tra memoria e
+      dispersione. Cosa cresce dalla dimenticanza?
+    follow_ups:
+      - Com'era la quercia senza lo scoiattolo?
+      - Come la scorta modella la diffusione della foresta?
+      - Qual è il rapporto tra seppellire e germogliare?
+  - id: nmg_dew_morning
+    name: Rugiada Mattutina
+    prompt: |
+      La rugiada mattutina forma gocce sulle foglie. Ogni goccia contiene luce. La rugiada è
+      condensazione — acqua dall'aria. Evaporerà entro mezzogiorno. Considera il
+      breve dono. Cosa riceve la pianta?
+    follow_ups:
+      - Com'era la foglia senza la rugiada?
+      - Come la goccia modella la mattina?
+      - Qual è il rapporto tra condensazione e foglia?
+  - id: nmg_prune_scar
+    name: Cicatrice di Potatura
+    prompt: |
+      Una cicatrice di potatura segna dove è stato tagliato un ramo. L'albero è guarito — o ha provato.
+      La cicatrice è storia. Cosa è stato rimosso? Perché? Cosa ricorda l'albero?
+    follow_ups:
+      - Com'era l'albero senza la potatura?
+      - Come il taglio modella la crescita?
+      - Qual è il rapporto tra ferita e forma?
+  - id: nmg_sunflower_turn
+    name: Rotazione del Girasole
+    prompt: |
+      Un giovane girasole ruota con il sole — a est all'alba, a ovest al tramonto. Il
+      movimento è eliotropismo. La pianta segue la luce. Considera la
+      coreografia. Cosa significherebbe un orientamento fisso?
+    follow_ups:
+      - Com'era il girasole senza la rotazione?
+      - Come il seguire la luce modella la crescita?
+      - Qual è il rapporto tra movimento e luce?
+  - id: nmg_slug_trail
+    name: Traccia di Lumaca
+    prompt: |
+      Una lumaca lascia una traccia — argentea, appiccicosa. La traccia segna il passaggio. Essa
+      protegge anche il piede della lumaca. Considera la traccia sia come registro che
+      come adattamento. Cosa permette?
+    follow_ups:
+      - Com'era la lumaca senza la traccia?
+      - Come il muco modella il movimento?
+      - Qual è il rapporto tra traccia e predatore?
+  - id: nmg_birdhouse_hole
+    name: Foro della Casetta per Uccelli
+    prompt: |
+      Una casetta per uccelli ha un foro — un diametro specifico. Esclude alcuni uccelli,
+      ne invita altri. Il foro è un filtro. Per chi è stato progettato? Chi lo ha
+      rivendicato?
+    follow_ups:
+      - Com'era il cortile senza la casetta per uccelli?
+      - Come il foro modella chi nidifica?
+      - Qual è il rapporto tra foro e inquilino?
+  - id: nmg_root_hair
+    name: Peli Radicali
+    prompt: |
+      I peli radicali sono invisibili dall'alto — minuscole estensioni che assorbono acqua
+      e nutrienti. L'interfaccia della pianta con il terreno. Considera cosa succede
+      sottoterra. Cosa perderebbe la pianta senza di essi?
+    follow_ups:
+      - Come i peli modellano l'assorbimento?
+      - Qual è il rapporto tra peli e terreno?
+      - Cosa vedresti se potessi vederli?
+  - id: nmg_frost_leaf
+    name: Brina sulla Foglia
+    prompt: |
+      Schemi di brina su una foglia — cristallini, delicati. La brina è acqua
+      congelata dall'aria. Si scioglierà con il sole. Considera l'arte temporanea. Cosa sperimenta la foglia?
+    follow_ups:
+      - Com'era la mattina senza brina?
+      - Come la brina modella la giornata della foglia?
+      - Qual è il rapporto tra cristallo e cellula?
+  - id: nmg_companion_plant
+    name: Pianta Compagna
+    prompt: |
+      Basilico accanto ai pomodori. Tageti accanto alle zucche. La consociazione è
+      un'adiacenza strategica. Alcune piante respingono; altre attraggono. Considera la
+      vita sociale dell'aiuola.
+    follow_ups:
+      - Com'era il pomodoro senza il basilico?
+      - Come l'adiacenza modella il giardino?
+      - Qual è il rapporto tra vicino e parassita?
+  - id: nmg_fallen_apple
+    name: Mela Caduta
+    prompt: |
+      Una mela cade — non raccolta, troppo matura. Marcirà, nutrirà vespe, forse farà crescere
+      un semenzale. La caduta è sia spreco che inizio. Considera l'arco dal
+      ramo al terreno.
+    follow_ups:
+      - Com'era il terreno senza la caduta?
+      - Come la putrefazione modella ciò che viene dopo?
+      - Qual è il rapporto tra caduta e dispersione?
+  - id: nmg_spider_web_corner
+    name: Ragnatela nell'Angolo
+    prompt: |
+      Una ragnatela attraversa un angolo della tettoia. La rugiada si posa sulla seta. La
+      ragnatela è sia trappola che casa. Considera l'economia del ragno. Cosa
+      investe? Cosa raccoglie?
+    follow_ups:
+      - Com'era l'angolo senza la ragnatela?
+      - Come la ragnatela modella la giornata del ragno?
+      - Qual è il rapporto tra seta e preda?
+  - id: nmg_seed_packet
+    name: Bustina di Semi
+    prompt: |
+      Una bustina di semi — foto sul davanti, istruzioni sul retro. La bustina
+      è una promessa. Cosa emergerà da quei minuscoli puntini? Considera il
+      rapporto tra immagine e realtà.
+    follow_ups:
+      - Com'era il giardino senza la bustina?
+      - Come la bustina modella l'aspettativa?
+      - Qual è il rapporto tra promessa e pianta?
+  - id: nmg_rain_barrel
+    name: Cisterna per la Pioggia
+    prompt: |
+      Una cisterna per la pioggia raccoglie l'acqua piovana dal tetto. L'acqua è gratuita, dolce,
+      non clorata. La cisterna è infrastruttura. Considera cosa scorre
+      dal cielo alla cisterna alla radice.
+    follow_ups:
+      - Com'era il giardino senza la cisterna?
+      - Come l'acqua piovana raccolta differisce da quella del rubinetto?
+      - Qual è il rapporto tra tetto e radice?
+  - id: nmg_garden_glove
+    name: Guanto da Giardinaggio
+    prompt: |
+      Un guanto lasciato nell'aiuola — dita rigide, macchiate di terra. Il guanto è una
+      protesi. Estende la mano, la protegge. Considera il confine
+      tra umano e terreno. Cosa permette il guanto?
+    follow_ups:
+      - Cosa sentirebbe il giardiniere senza il guanto?
+      - Come il guanto modella la relazione?
+      - Qual è il rapporto tra mano e terra?
+  - id: nmg_caterpillar_chew
+    name: Masticazione del Bruco
+    prompt: |
+      Un bruco mangia una foglia — bordo dopo bordo. La masticazione è udibile. Il
+      bruco sta trasformando la foglia in farfalla. Considera il costo per
+      la pianta. Cosa guadagna ospitandola?
+    follow_ups:
+      - Com'era la foglia senza la masticazione?
+      - Come il bruco modella la pianta?
+      - Qual è il rapporto tra mangiare e diventare?
+  - id: nmg_fertilizer_burn
+    name: Bruciatura da Fertilizzante
+    prompt: |
+      Troppo fertilizzante brucia — le punte diventano marroni, le radici secche. Il giardino è
+      chimica. Più non è sempre meglio. Considera il confine tra nutrimento
+      e veleno. Dov'è la linea?
+    follow_ups:
+      - Com'era la pianta con meno?
+      - Come l'eccesso modella la foglia?
+      - Qual è il rapporto tra dose e danno?
+  - id: nmg_shade_cloth
+    name: Telo Ombreggiante
+    prompt: |
+      Il telo ombreggiante copre le piantine. Diffonde la luce, riduce il calore. Il
+      telo è mediazione — tra sole e pianta. Considera cosa aggiunge il telo.
+      Cosa sottrae?
+    follow_ups:
+      - Com'era la piantina senza il telo?
+      - Come l'ombra modella la crescita iniziale?
+      - Qual è il rapporto tra filtro e luce?
+  - id: nmg_morning_glory_dawn
+    name: Glicine mattutino all'alba
+    prompt: |
+      I glicini mattutini si aprono all'alba, si chiudono nel pomeriggio. Il fiore ha un
+      orario. Considera il ritmo. Com'era il giardino se rimanesse aperto tutto il giorno?
+    follow_ups:
+      - Come la tempistica modella l'impollinazione?
+      - Qual è il rapporto tra apertura e impollinatore?
+      - Perché all'alba?
+  - id: nmg_garden_path
+    name: Sentiero del Giardino
+    prompt: |
+      Un sentiero attraverso il giardino — pietre o pacciamatura. Il sentiero è dove
+      camminiamo. Il resto è dove non camminiamo. Considera la linea. Cosa
+      protegge il sentiero? Cosa esclude?
+    follow_ups:
+      - Com'era il giardino senza il sentiero?
+      - Come il sentiero modella il movimento?
+      - Qual è il rapporto tra passo e terreno?
+  - id: nmg_cross_pollination
+    name: Impollinazione Incrociata
+    prompt: |
+      Le api trasportano il polline da una pianta all'altra. La prole sarà
+      ibrida — non identica a nessuno dei genitori. Considera il mix. Cosa
+      crea l'incrocio? Cosa rischia?
+    follow_ups:
+      - Com'era la varietà senza l'incrocio?
+      - Come l'ape modella il gene?
+      - Qual è il rapporto tra trasporto e combinazione?
+  - id: nmg_herb_scent
+    name: Profumo di Erba Aromatica
+    prompt: |
+      Sfiora il rosmarino o la menta. Si alza il profumo — oli volatili rilasciati.
+      Il profumo è difesa e invito. Considera il doppio ruolo. Cosa
+      respinge? Cosa attrae?
+    follow_ups:
+      - Com'era l'erba aromatica senza il profumo?
+      - Come l'olio modella l'incontro?
+      - Qual è il rapporto tra tocco e rilascio?
+  - id: nmg_watering_can_pour
+    name: Versare dell'Annaffiatoio
+    prompt: |
+      Acqua da un annaffiatoio — più delicata di un tubo. Il versamento è deliberato. Considera
+      il rituale. Cosa permette l'annaffiatoio che il tubo non permette? Qual è il rapporto tra versamento e pianta?
+    follow_ups:
+      - Cosa preferirebbe la piantina?
+      - Come il versamento modella il terreno?
+      - Qual è il rapporto tra rituale e crescita?
+  - id: nmg_bird_seed_spill
+    name: Versamento di Semi per Uccelli
+    prompt: |
+      Semi versati da una mangiatoia — girasole, miglio. Atterrano sul terreno.
+      I passeri razzolano. Gli scoiattoli saccheggiano. Il versamento crea un palcoscenico. Considera
+      chi ne beneficia. Per chi era destinato?
+    follow_ups:
+      - Com'era il terreno senza il versamento?
+      - Come il versamento modella il stormo?
+      - Qual è il rapporto tra caduta e commensale?
+  - id: nmg_cutting_propagate
+    name: Talea per Propagare
+    prompt: |
+      Una talea — un fusto in acqua o terra — radica. Nessun seme. La pianta si clona.
+      Considera la scorciatoia. Cosa aggira la propagazione? Cosa
+      preserva?
+    follow_ups:
+      - Com'era il giardino senza talee?
+      - Come la clonazione modella la diversità?
+      - Qual è il rapporto tra taglio e continuazione?
+  - id: nmg_leaf_miner_tunnel
+    name: Tunnel della Minatrice Fogliare
+    prompt: |
+      Una traccia di minatrice fogliare — tortuosa, pallida, sotto la superficie. La larva
+      mangia tra gli strati. La foglia sopravvive, segnata. Considera
+      l'invasione. Cosa perde la foglia? Cosa conserva?
+    follow_ups:
+      - Com'era la foglia senza il tunnel?
+      - Come la minatrice modella la foglia?
+      - Qual è il rapporto tra tunnel e tessuto?
+  - id: nmg_greenhouse_condensation
+    name: Condensa della Serra
+    prompt: |
+      La condensa forma gocce su un vetro della serra. L'aria all'interno è umida — le piante
+      esalano. Il vetro è un confine. Considera il microclima. Cosa trattiene
+      il calore? Cosa trattiene l'umidità?
+    follow_ups:
+      - Com'era la serra senza il vetro?
+      - Come la condensa modella l'interno?
+      - Qual è il rapporto tra vetro e crescita?
+  - id: nmg_terrace_level
+    name: Livello della Terrazza
+    prompt: |
+      Un'aiuola a terrazze scende lungo un pendio. Ogni livello trattiene terra, trattiene acqua.
+      La terrazza è controllo dell'erosione e palcoscenico. Considera l'architettura.
+      Com'era il pendio senza di essa?
+    follow_ups:
+      - Come il livello modella ciò che cresce?
+      - Qual è il rapporto tra gradino e stabilità?
+      - Perché terrazzare?
+  - id: nmg_native_vs_exotic
+    name: Nativo contro Esotico
+    prompt: |
+      Alcune piante sono native — appartengono. Altre sono esotiche — introdotte.
+      Considera l'aiuola. Quali sono quali? Ha importanza? Cosa offre il nativo
+      che l'esotico non offre?
+    follow_ups:
+      - Com'era il giardino solo con nativi?
+      - Come l'origine modella l'ecologia?
+      - Qual è il rapporto tra appartenenza e prosperità?
+  - id: nmg_garden_dusk
+    name: Giardino al Tramonto
+    prompt: |
+      Il giardino al tramonto — la luce svanisce, emergono le falene. Il cambio del giorno finisce; il
+      cambio della notte inizia. Considera la transizione. Chi si sveglia? Chi dorme?
+      Cosa diventa il giardino?
+    follow_ups:
+      - Com'era il giardino senza il tramonto?
+      - Come il cambio modella l'ecosistema?
+      - Qual è il rapporto tra giorno e notte?
+  - id: nmg_stake_tie
+    name: Palo e Legaccio
+    prompt: |
+      Una pianta legata a un palo — fagiolo, pomodoro. Il palo corregge. Senza di esso,
+      la pianta si sdraierebbe. Considera il supporto. Cosa permette il legaccio?
+      Cosa vincola?
+    follow_ups:
+      - Com'era la pianta senza il palo?
+      - Come il legaccio modella la forma?
+      - Qual è il rapporto tra supporto e crescita?
+  - id: nmg_first_frost
+    name: Prima Brina
+    prompt: |
+      La prima brina — le piante tenere diventano nere. Il giardino cambia. Alcune cose
+      finiscono; altre persistono. Considera la soglia. Cosa seleziona la brina?
+      Cosa risparmia?
+    follow_ups:
+      - Com'era il giardino senza la brina?
+      - Come la prima brina modella la stagione?
+      - Qual è il rapporto tra freddo e chiusura?
+  - id: nmg_garden_reflection
+    name: Riflesso del Giardino
+    prompt: |
+      Guarda il giardino. Riflette scelte — cosa è stato piantato, cosa è stato
+      diserbato, cosa è stato lasciato stare. Il giardino è uno specchio. Cosa mostra
+      del giardiniere?
+    follow_ups:
+      - Cosa direbbe il giardino senza parole?
+      - Come le scelte modellano l'insieme?
+      - Qual è il rapporto tra giardiniere e cresciuto?

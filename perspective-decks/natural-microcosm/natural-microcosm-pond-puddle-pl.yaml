@@ -1,0 +1,408 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natural Microcosm — Staw i Kałuża (Polish)
+
+id: natural_microcosm_pond_puddle
+name: Natural Microcosm — Staw i Kałuża
+description: 50 kart, które pozwolą spojrzeć inaczej na wodę w małej skali – od napięcia powierzchniowego i odbić po owady wodne, kijanki i życie w tymczasowych kałużach.
+domain: natural_microcosm
+cards:
+  - id: nmp_surface_tension
+    name: Napięcie Powierzchniowe
+    prompt: |
+      Nartnik chodzi po wodzie. Powierzchnia trzyma – cząsteczki przylegają. Delikatnie upuść pinezkę. Unosi się. Rozważ niewidzialną błonę. Co by ją przerwało?
+    follow_ups:
+      - Jak napięcie powierzchniowe wpływa na to, kto może tu żyć?
+      - Co by było ze stawem bez tego?
+      - Jaki jest związek między powierzchnią a granicą?
+  - id: nmp_skater_ripple
+    name: Fale Nartnika
+    prompt: |
+      Nogi nartnika wgniatają powierzchnię. Każdy krok tworzy falę. Obserwuj wzór. Nartnik czyta powierzchnię jak mapę. Co wyczuwa?
+    follow_ups:
+      - Jak fala przenosi informacje?
+      - Co by robił nartnik bez powierzchni?
+      - Jaki jest związek między falą a zdobyczą?
+  - id: nmp_reflection_sky
+    name: Odbicie Nieba
+    prompt: |
+      Kałuża odbija niebo – lub gałąź, lub ciebie. Odbicie jest odwrócone. Spokojna woda jest lustrem. Co dodaje odbicie? Co ukrywa?
+    follow_ups:
+      - Co by było z kałużą bez odbicia?
+      - Jak bezruch wpływa na to, co widzimy?
+      - Jaki jest związek między powierzchnią a obrazem?
+  - id: nmp_tadpole_tail
+    name: Ogon Kijanki
+    prompt: |
+      Kijanka pływa – ogon ją napędza. Ogon zostanie wchłonięty. Zwierzę się przekształca. Rozważ to, co pomiędzy. Co teraz umożliwia ogon?
+    follow_ups:
+      - Co by było z kijanką bez ogona?
+      - Jak metamorfoza przepisyje ciało?
+      - Jaki jest związek między formą a funkcją?
+  - id: nmp_dragonfly_egg
+    name: Jajo Ważki
+    prompt: |
+      Ważki składają jaja w wodzie – lub w łodygach pod powierzchnią. Nimfa żyje pod wodą latami, zanim się wyłoni. Rozważ podwójne życie. Co łączy wodę i powietrze?
+    follow_ups:
+      - Co by było z ważką bez etapu wodnego?
+      - Jak nimfa kształtuje staw?
+      - Jaki jest związek między nimfą a dorosłym osobnikiem?
+  - id: nmp_algae_bloom
+    name: Zakwit Alg
+    prompt: |
+      Zielony osad na wodzie – glony. To zakwit, puls. Zbyt dużo składników odżywczych, za dużo słońca. Staw reaguje. Co to wywołuje? Co następuje?
+    follow_ups:
+      - Co by było ze stawem bez glonów?
+      - Jak zakwit wpływa na tlen?
+      - Jaki jest związek między składnikami odżywczymi a wzrostem?
+  - id: nmp_reed_stem
+    name: Łodyga Trzcinowa
+    prompt: |
+      Trzciny i sitowia wyrastają z brzegu. Są puste – przez nie biegną kanały powietrzne. Łodyga łączy wodę i powietrze. Kto używa trzciny jako drabiny?
+    follow_ups:
+      - Co by było z brzegiem bez trzcin?
+      - Jak pustka umożliwia przetrwanie?
+      - Jaki jest związek między łodygą a siedliskiem?
+  - id: nmp_pond_skin
+    name: Skóra Stawu
+    prompt: |
+      Staw ma skórę – gdzie woda spotyka powietrze. Opada na nią kurz. Rozlewa się olej. Skóra jest delikatna. Dotknij jej. Co oddziela skóra?
+    follow_ups:
+      - Co by było ze stawem bez skóry?
+      - Jak skóra wpływa na wymianę gazową?
+      - Jaki jest związek między powierzchnią a głębią?
+  - id: nmp_temporary_pool
+    name: Tymczasowa Kałuża
+    prompt: |
+      Kałuża po deszczu – wyschnie. A jednak życie się przystosowało. Kiełżoraki, przekopnice, jaja, które czekają. Rozważ pilność. Co musi się wydarzyć, zanim woda zniknie?
+    follow_ups:
+      - Co by było z kałużą, gdyby była stała?
+      - Jak tymczasowość kształtuje strategię?
+      - Jaki jest związek między czasem a adaptacją?
+  - id: nmp_whirligig_gyre
+    name: Wir Wodnego Bieguna
+    prompt: |
+      Biegacz wodny wiruje na powierzchni. Widzi powyżej i poniżej – podzielone oczy. Są drapieżnikami i ofiarami. Rozważ podwójne widzenie. Co umożliwia?
+    follow_ups:
+      - Co by było z biegaczem bez podwójnego widzenia?
+      - Jak wir dezorientuje drapieżniki?
+      - Jaki jest związek między wirnikiem a przetrwaniem?
+  - id: nmp_diving_spider
+    name: Pająk Nurkujący
+    prompt: |
+      Pająk nurkujący niesie bańkę powietrza – dzwon nurkowy. Oddycha pod wodą. Bańka jest płucem. Rozważ wynalazek. Co by zrobił pająk bez niej?
+    follow_ups:
+      - Jak bańka umożliwia polowanie?
+      - Co by się stało, gdyby bańka pękła?
+      - Jaki jest związek między powietrzem a wodą?
+  - id: nmp_pond_scum
+    name: Osad ze Stawu
+    prompt: |
+      Osad tworzy się na brzegu – pyłek, kurz, glony, owady. To warstwa graniczna. Co się tam zbiera? Kto się tym żywi? Osad jest filtrem.
+    follow_ups:
+      - Co by było ze stawem bez osadu?
+      - Jak brzeg koncentruje życie?
+      - Jaki jest związek między granicą a akumulacją?
+  - id: nmp_ice_surface
+    name: Powierzchnia Lodu
+    prompt: |
+      Zimą staw zamarza. Lód trzyma. Pod nim życie trwa – wolniejsze, zimniejsze. Rozważ barierę. Co chroni lód? Co blokuje?
+    follow_ups:
+      - Co by było ze stawem bez lodu?
+      - Jak zamarzanie wpływa na tlen?
+      - Jaki jest związek między lodem a przetrwaniem?
+  - id: nmp_minnow_school
+    name: Ławica Krasnopiórki
+    prompt: |
+      Krasnopiórki tworzą ławice – poruszają się jako całość. Ławica jest obroną, efektywnością. Obserwuj synchronizację. Co je koordynuje? Co zaryzykowałaby samotna krasnopiórka?
+    follow_ups:
+      - Co by było ze stawem bez ławicy?
+      - Jak ławica redukuje drapieżnictwo?
+      - Jaki jest związek między jednostką a grupą?
+  - id: nmp_lily_pad
+    name: Liść Lilipoda
+    prompt: |
+      Liść lilipoda unosi się. Jego spód różni się od góry – włoski, kolor. Liść jest platformą. Co na nim ląduje? Co żyje pod nim?
+    follow_ups:
+      - Co by było ze stawem bez liści lilipoda?
+      - Jak liść kształtuje światło pod spodem?
+      - Jaki jest związek między liściem a cieniem?
+  - id: nmp_ripple_spread
+    name: Rozchodzenie się Fal
+    prompt: |
+      Kamień spada. Fale się rozchodzą. Przecinają się, interferują. Wzór przenosi energię. Rozważ zanikanie. Jak daleko podróżują fale?
+    follow_ups:
+      - Co by było z powierzchnią bez fal?
+      - Jak fala zaznacza uderzenie?
+      - Jaki jest związek między zakłóceniem a propagacją?
+  - id: nmp_mosquito_wiggle
+    name: Kołysanie Komara
+    prompt: |
+      Larwy komarów wiszą na powierzchni – wigglery. Oddychają syfonem. Kołysanie to ruch, żerowanie. Rozważ świat larwy. Czym się żywi?
+    follow_ups:
+      - Co by było ze stawem bez komarów?
+      - Jak kołysanie chroni przed drapieżnikami?
+      - Jaki jest związek między larwą a osobnikiem dorosłym?
+  - id: nmp_leaf_boat
+    name: Liść jako Łódź
+    prompt: |
+      Liść unosi się – opadły, dryfuje. Jest tratwą dla jednych, pokarmem dla innych. Liść zatonie, zgnije. Śledź jego podróż. W co się zmieni?
+    follow_ups:
+      - Co by było z powierzchnią bez unoszących się szczątków?
+      - Jak liść tworzy mikrosiedlisko?
+      - Jaki jest związek między pływaniem a tonięciem?
+  - id: nmp_backswimmer_top
+    name: Grzbietopływak od Spodu
+    prompt: |
+      Grzbietopływak pływa do góry nogami – brzuch do nieba. Wiosłuje nogami. Oddycha na powierzchni, potem nurkuje. Rozważ odwrócenie. Dlaczego do góry nogami?
+    follow_ups:
+      - Co by było z grzbietopływakiem gdyby pływał normalnie?
+      - Jak postawa pomaga w polowaniu?
+      - Jaki jest związek między orientacją a zdobyczą?
+  - id: nmp_snail_trail
+    name: Ślad Ślimaka
+    prompt: |
+      Ślimak stawowy ślizga się. Zostawia ślad – śluz, ruch. Ślad zaznacza, gdzie był. Inne ślimaki mogą podążać. Rozważ ścieżkę. Co przekazuje ślad?
+    follow_ups:
+      - Co by było ze ślimakiem bez śladu?
+      - Jak śluz umożliwia ruch?
+      - Jaki jest związek między śladem a podążaniem?
+  - id: nmp_dew_drop
+    name: Kropla Rosy
+    prompt: |
+      Rosa tworzy się na źdźble nad wodą – koraliki, odbicia. To kondensacja. Kropla się utrzymuje. Potem spada. Rozważ kropelkę. Co ona powiększa?
+    follow_ups:
+      - Co by było ze źdźbłem bez rosy?
+      - Jak kropelka załamuje światło?
+      - Jaki jest związek między kroplą a powierzchnią?
+  - id: nmp_spring_constant
+    name: Stała Sprężystości
+    prompt: |
+      Sprężyna zasila staw – lub staw przecieka. Poziom wody jest równowagą. Rozważ wejście i wyjście. Co zasila kałużę? Co by ją wysuszyło?
+    follow_ups:
+      - Co by było ze stawem bez sprężyny?
+      - Jak źródło kształtuje wodę?
+      - Jaki jest związek między dopływem a życiem?
+  - id: nmp_edge_ecotone
+    name: Ekoton Brzegowy
+    prompt: |
+      Brzeg stawu to ekoton – przejście. Mokre spotyka suche. Rośliny się adaptują. Zwierzęta przekraczają. Brzeg to różnorodność. Co kwitnie w tym, co pomiędzy?
+    follow_ups:
+      - Co by było ze stawem bez brzegu?
+      - Jak ekoton tworzy szansę?
+      - Jaki jest związek między granicą a różnorodnością?
+  - id: nmp_frog_eye
+    name: Oko Żaby
+    prompt: |
+      Żaba siedzi na brzegu. Jej oczy wypukłe – widzi nad i przed sobą. Żaba jest nieruchoma. Potem wysuwa język. Rozważ cierpliwość. Na co czeka?
+    follow_ups:
+      - Co by było z żabą bez wypukłych oczu?
+      - Jak bezruch umożliwia atak?
+      - Jaki jest związek między czekaniem a chwytaniem?
+  - id: nmp_oxygen_bubble
+    name: Bańka Tlenu
+    prompt: |
+      Rośliny w stawie produkują tlen – unoszą się bąbelki. W słoneczny dzień woda oddycha. Rozważ wymianę. Co by było ze stawem bez fotosyntezy?
+    follow_ups:
+      - Jak tlen kształtuje to, kto może tu żyć?
+      - Co się dzieje, gdy tlenu brakuje?
+      - Jaki jest związek między światłem a oddechem?
+  - id: nmp_detritus_floor
+    name: Dno z Detrytusu
+    prompt: |
+      Dno stawu to detrytus – opadłe liście, martwe owady, osad. To warstwa rozkładu. Co w niej żyje? Kto się nią żywi? Dno to spiżarnia.
+    follow_ups:
+      - Co by było ze stawem bez detrytusu?
+      - Jak dno zasila kolumnę wodną?
+      - Jaki jest związek między dnem a górą?
+  - id: nmp_rain_ring
+    name: Pierścień Deszczu
+    prompt: |
+      Deszcz uderza w powierzchnię. Każda kropla tworzy pierścień – koronę, potem krater. Deszcz teksturuje wodę. Rozważ wzór. Co by oznaczała spokojna powierzchnia?
+    follow_ups:
+      - Jak deszcz napowietrza wodę?
+      - Co zakłócają pierścienie?
+      - Jaki jest związek między deszczem a powierzchnią?
+  - id: nmp_duckweed_carpet
+    name: Dywan z Rzęsy
+    prompt: |
+      Rzęsa tworzy dywan na powierzchni – drobne, pływające rośliny. Szybko się mnożą. Dywan zacienia to, co pod spodem. Rozważ pokrycie. Co oznaczałoby pełne słońce?
+    follow_ups:
+      - Co by było ze stawem bez rzęsy?
+      - Jak dywan wpływa na temperaturę?
+      - Jaki jest związek między pokryciem a życiem pod spodem?
+  - id: nmp_phantom_midgie
+    name: Widmowa Ochotka
+    prompt: |
+      Larwy widmowej ochotki są przezroczyste – widmowe. Wiszą w wodzie. Przez nie widać. Rozważ niewidzialność. Co chroni przezroczystość?
+    follow_ups:
+      - Co by było z larwą, gdyby była nieprzezroczysta?
+      - Jak przezroczystość pomaga w polowaniu?
+      - Jaki jest związek między prześwitem a przetrwaniem?
+  - id: nmp_skimmer_skip
+    name: Przeskok Kamienia
+    prompt: |
+      Kamień rzucony po powierzchni – raz, dwa, trzy. Każde odbicie przenosi energię. Kamień ostatecznie tonie. Rozważ granicę. Co decyduje o liczbie odbić?
+    follow_ups:
+      - Co by zrobił kamień bez obrotu?
+      - Jak kąt wpływa na odbicie?
+      - Jaki jest związek między rzutem a odbiciem?
+  - id: nmp_pollinator_drink
+    name: Napój dla Zapylacza
+    prompt: |
+      Pszczoła pije na brzegu. Motyle zbierają się przy błotnistej kałuży. Woda jest zasobem. Rozważ, kto przychodzi. Czego potrzebują od wody?
+    follow_ups:
+      - Co by zrobiły zapylacze bez kałuży?
+      - Jak brzeg umożliwia picie?
+      - Jaki jest związek między wodą a minerałem?
+  - id: nmp_evaporation_skin
+    name: Skóra Parowania
+    prompt: |
+      Staw traci wodę przez parowanie. Latem poziom spada. Brzeg się rozszerza. Rozważ cofanie się. Co zostaje odsłonięte? Kto zostaje uwięziony?
+    follow_ups:
+      - Co by było ze stawem bez parowania?
+      - Jak spadek koncentruje życie?
+      - Jaki jest związek między stratą a koncentracją?
+  - id: nmp_hydra_stalk
+    name: Łodyga Stułbi
+    prompt: |
+      Stułbia – drobna, z mackami – przyczepia się do łodygi. Parzy zdobycz, wciąga ją. Stułbia potrafi się regenerować. Rozważ prostotę. Jaki plan ciała stosuje?
+    follow_ups:
+      - Co by było ze stawem bez stułbi?
+      - Jak regeneracja pomaga w przetrwaniu?
+      - Jaki jest związek między prostotą a odpornością?
+  - id: nmp_boatman_row
+    name: Wiosłowanie Nartnika Wodnego
+    prompt: |
+      Nartnik wodny wiosłuje – nogi jak wiosła. Często jest do góry nogami, przyczepiony do powierzchni. Żywi się glonami. Rozważ wiosła. Co napędzają?
+    follow_ups:
+      - Co by było z nartnikiem bez wioseł?
+      - Jak wiosłowanie różni się od wiosłowania grzbietopływaka?
+      - Jaki jest związek między nogą a ruchem?
+  - id: nmp_caddisfly_case
+    name: Osłonka Chruścika
+    prompt: |
+      Larwa chruścika buduje osłonkę – patyki, kamyki, muszle. Skleja je jedwabiem. Osłonka to pancerz i kamuflaż. Rozważ konstrukcję. Co wybiera larwa?
+    follow_ups:
+      - Co by było z larwą bez osłonki?
+      - Jak osłonka różni się w zależności od siedliska?
+      - Jaki jest związek między materiałem a ochroną?
+  - id: nmp_damselfly_emergence
+    name: Wyjście Ważki Lasonogi
+    prompt: |
+      Ważka lasonoga wychodzi – nimfa wspina się po łodydze, rozdziera skórę, dorosły osobnik wydostaje się. Skrzydła się rozwijają. Chwila jest wrażliwa. Rozważ transformację. Co może pójść nie tak?
+    follow_ups:
+      - Co by było z dorosłym osobnikiem bez wspinaczki?
+      - Jak wyjście wpływa na czas?
+      - Jaki jest związek między nimfą a dorosłym osobnikiem?
+  - id: nmp_floating_feather
+    name: Pływające Pióro
+    prompt: |
+      Pióro unosi się – wyrzucone przez ptaka. Płynie po powierzchni. Woda osiada na nim. Rozważ pióro. Co chroniło ptaka przed wilgocią? Co robi pióro teraz?
+    follow_ups:
+      - Co by było z powierzchnią bez pływających obiektów?
+      - Jak pióro zatrzymuje powietrze?
+      - Jaki jest związek między strukturą a pływaniem?
+  - id: nmp_moon_jelly
+    name: Meduza Księżycowa
+    prompt: |
+      W niektórych stawach żyją meduzy – meduzy księżycowe. Pulsują. Są w większości wodą. Rozważ ciało. Co łapie galareta? Czego unika?
+    follow_ups:
+      - Co by było ze stawem bez meduz?
+      - Jak puls tworzy ruch?
+      - Jaki jest związek między wodą a ciałem?
+  - id: nmp_seep_source
+    name: Źródło Przesiąkania
+    prompt: |
+      Woda przecieka z brzegu – źródło, powolny przepływ. Przesiąk zasila staw. Albo staw przecieka. Rozważ granicę. Co przekracza? Co trzyma?
+    follow_ups:
+      - Co by było ze stawem bez przesiąku?
+      - Jak przesiąk kształtuje chemię?
+      - Jaki jest związek między źródłem a stawem?
+  - id: nmp_wind_wave
+    name: Fala Wiatru
+    prompt: |
+      Wiatr pcha powierzchnię. Tworzą się małe fale. Łamią się przy brzegu. Rozważ zasięg – odległość, jaką wiatr przebywa nad wodą. Co kształtuje falę?
+    follow_ups:
+      - Co by było z powierzchnią bez wiatru?
+      - Jak fale wpływają na tlen?
+      - Jaki jest związek między wiatrem a mieszaniem?
+  - id: nmp_rotifer_wheel
+    name: Koło Wrotka
+    prompt: |
+      Wrotki są mikroskopijne – mają koło rzęsek. Kręci się, przyciąga pożywienie. Wrotek jest silnikiem. Rozważ skalę. Co jeszcze jest w tej wodzie?
+    follow_ups:
+      - Co by było ze stawem bez wrotków?
+      - Jak koło tworzy przepływ?
+      - Jaki jest związek między rzęskami a żerowaniem?
+  - id: nmp_temperature_layer
+    name: Warstwa Temperaturowa
+    prompt: |
+      Stawy mogą się stratyfikować – ciepłe na górze, zimne na dole. Warstwy nie mieszają się łatwo. Rozważ granicę. Kto gdzie żyje? Co się dzieje, gdy staw się odwraca?
+    follow_ups:
+      - Co by było ze stawem bez stratyfikacji?
+      - Jak temperatura kształtuje tlen?
+      - Jaki jest związek między warstwą a życiem?
+  - id: nmp_predator_shadow
+    name: Cień Drapieżnika
+    prompt: |
+      Cień ryby przechodzi. Ofiary zamierają, rozpraszają się. Cień jest sygnałem. Rozważ reakcję. Co by oznaczało ciągły cień? Co oznaczałby brak cienia?
+    follow_ups:
+      - Jak cień wywołuje ucieczkę?
+      - Jakie inne sygnały oprócz cienia są ważne?
+      - Jaki jest związek między cieniem a przetrwaniem?
+  - id: nmp_surface_film
+    name: Błonka Powierzchniowa
+    prompt: |
+      Cienka błonka na wodzie – pyłek, bakterie, materia organiczna. Może utrzymać ciężar. Niektóre owady po niej chodzą. Rozważ błonkę. Co by ją przerwało?
+    follow_ups:
+      - Co by było z powierzchnią bez błonki?
+      - Jak błonka wpływa na wymianę gazową?
+      - Jaki jest związek między błonką a granicą?
+  - id: nmp_dry_wait
+    name: Czekanie na Sucho
+    prompt: |
+      Kałuża wyschnie. Niektóre organizmy mają jaja odporne na odwodnienie. Czekają. Następny deszcz może być za miesiące. Rozważ zakład. Co musi się zgrać, by odnieść sukces?
+    follow_ups:
+      - Co by było z kałużą bez czekania?
+      - Jak dormancja obejmuje okres suchy?
+      - Jaki jest związek między jajem a deszczem?
+  - id: nmp_shoreline_wrack
+    name: Zwałka Brzegowa
+    prompt: |
+      Szczątki zbierają się na brzegu – liście, patyki, martwe owady. Zwałka to linia. Zaznacza linię wysokiej wody. Rozważ akumulację. Kto tu żeruje?
+    follow_ups:
+      - Co by było z brzegiem bez zwałki?
+      - Jak zwałka tworzy siedlisko?
+      - Jaki jest związek między linią a poziomem?
+  - id: nmp_duckweed_carpet
+    name: Dywan z Rzęsy
+    prompt: |
+      Rzęsa tworzy dywan na spokojnej wodzie – małe zielone dyski. Szybko się rozprzestrzenia. Powierzchnia staje się solidna. Rozważ inwazję. Co blokuje dywan? Co umożliwia?
+    follow_ups:
+      - Co by było ze stawem bez rzęsy?
+      - Jak dywan wpływa na światło i tlen?
+      - Jaki jest związek między pokryciem a życiem pod spodem?
+  - id: nmp_rain_ring
+    name: Pierścień Deszczu
+    prompt: |
+      Kropla deszczu uderza w powierzchnię. Pierścień rozszerza się, blednie. Podczas ulewy powierzchnia staje się teksturą – pierścienie się nakładają. Rozważ wzór. Co deszcz robi ze stawem?
+    follow_ups:
+      - Co by było z powierzchnią bez deszczu?
+      - Jak deszcz miesza wodę?
+      - Jaki jest związek między kroplą a pierścieniem?
+  - id: nmp_minnow_school
+    name: Ławica Krasnopiórki
+    prompt: |
+      Krasnopiórki tworzą ławice – dziesiątki poruszają się jako całość. Ławica to strategia. Drapieżniki są dezorientowane. Rozważ koordynację. Jak decydują? Jaki koszt miałaby samotność?
+    follow_ups:
+      - Co by było ze stawem bez ławic?
+      - Jak ławica reaguje na zagrożenie?
+      - Jaki jest związek między wieloma a jednym?
+  - id: nmp_ice_edge
+    name: Krawędź Lodu
+    prompt: |
+      Zimą lód rośnie od brzegu. Granica posuwa się naprzód. Pod spodem życie trwa – zimniejsze, wolniejsze. Rozważ krawędź. Co przetrwa pod lodem?
+    follow_ups:
+      - Co by było ze stawem bez lodu?
+      - Jak lód chroni lub zagraża?
+      - Jaki jest związek między zamarzaniem a tlenem?

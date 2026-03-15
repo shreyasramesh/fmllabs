@@ -1,0 +1,491 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natürliches Mikrokosmos — Insektenterritorien (German)
+
+id: natural_microcosm_insect_territories
+name: Natürliches Mikrokosmos — Insektenterritorien
+description: 50 Karten, um Ihre Sicht auf das Insektenleben zu verändern – von Ameisenstraßen und Bienenverkehr bis hin zu Spinnennetzen, territorialen Dramen und der Choreografie von Kolonien.
+domain: natural_microcosm
+cards:
+  - id: nmi_ant_trail
+    name: Ameisenstraße
+    prompt: |
+      Ameisen bilden Straßen – Pheromonpfade zwischen Nest und Futter. Beobachten Sie den Fluss.
+      Zwei Spuren: hinaus und zurück. Die Straße ist eine Entscheidung, die von vielen getroffen wird.
+      Was würde die Straße brechen?
+    follow_ups:
+      - Wie verstärkt sich die Straße selbst?
+      - Was wäre die Kolonie ohne Straßen?
+      - Was ist die Beziehung zwischen Straße und Kolonie?
+  - id: nmi_bee_traffic
+    name: Bienenverkehr
+    prompt: |
+      Ein Bienenstockeingang – Bienen strömen ein und aus. Der Verkehr hat einen Rhythmus. Einige
+      tragen Pollen; einige nicht. Betrachten Sie die Choreografie. Wer bestimmt das
+      Muster?
+    follow_ups:
+      - Was wäre der Bienenstock ohne den Verkehr?
+      - Wie formt der Eingang den Fluss?
+      - Was ist die Beziehung zwischen Biene und Kolonie?
+  - id: nmi_spider_web
+    name: Spinnennetz
+    prompt: |
+      Ein Spinnennetz ist Territorium und Falle. Die Spinne wartet am Rand.
+      Vibrationen tragen Informationen. Betrachten Sie die Architektur. Was fängt das
+      Netz? Was schließt es aus?
+    follow_ups:
+      - Was wäre die Spinne ohne das Netz?
+      - Wie erweitert das Netz die Sinne der Spinne?
+      - Was ist die Beziehung zwischen Seide und Überleben?
+  - id: nmi_dragonfly_claim
+    name: Libellenanspruch
+    prompt: |
+      Eine Libelle patrouilliert einen Abschnitt des Teiches – hin und zurück. Sie ist territorial.
+      Rivalen werden gejagt. Partner werden umworben. Betrachten Sie den Einsatz. Was wird
+      verteidigt?
+    follow_ups:
+      - Was würde die Libelle ohne Territorium tun?
+      - Wie kommuniziert die Patrouille Besitz?
+      - Was ist die Beziehung zwischen Raum und Fortpflanzung?
+  - id: nmi_caterpillar_munch
+    name: Raupenfresser
+    prompt: |
+      Eine Raupe frisst – der Blattrand zieht sich zurück. Das Fressen ist konstant. Die
+      Raupe ist eine Umwandlungsmaschine. Betrachten Sie die Rate. Was wäre die
+      Pflanze ohne Pflanzenfresser?
+    follow_ups:
+      - Wie formt die Raupe das Blatt?
+      - Was wäre der Schmetterling ohne das Fressen?
+      - Was ist die Beziehung zwischen Konsum und Wachstum?
+  - id: nmi_beetle_battle
+    name: Kämpfer
+    prompt: |
+      Zwei Käfer treffen aufeinander – vielleicht Hirschkäfer, vielleicht Mistkäfer. Sie ringen.
+      Der Kampf ist Ritual. Betrachten Sie die Einsätze. Was wird gewonnen? Was
+      wird verloren?
+    follow_ups:
+      - Was würde der Verlierer tun?
+      - Wie wird der Kampf gelöst?
+      - Was ist die Beziehung zwischen Kampf und Paarung?
+  - id: nmi_firefly_flash
+    name: Glühwürmchenblitz
+    prompt: |
+      Glühwürmchen blinken – jede Art hat einen Code. Das Muster ist Werbung. Betrachten Sie
+      das Signal. Was würde der falsche Blitz bedeuten? Wie finden sie sich in der Dunkelheit?
+    follow_ups:
+      - Wie kodiert der Blitz die Art?
+      - Was wäre die Wiese ohne Glühwürmchen?
+      - Was ist die Beziehung zwischen Licht und Partner?
+  - id: nmi_aphid_farm
+    name: Blattlausfarm
+    prompt: |
+      Ameisen pflegen Blattläuse – sie streicheln sie, sie beschützen sie. Die Blattläuse sondern
+      Honigtau aus. Die Ameisen ernten ihn. Betrachten Sie die Partnerschaft. Wer profitiert?
+      Wer wird ausgebeutet?
+    follow_ups:
+      - Was wären die Blattläuse ohne Ameisen?
+      - Wie formt die Zucht beide Arten?
+      - Was ist die Beziehung zwischen Pflege und Entnahme?
+  - id: nmi_cicada_shell
+    name: Zikadenhülle
+    prompt: |
+      Eine Zikadenhülle haftet an der Rinde – die Nymphe ist geschlüpft. Die Hülle ist leer,
+      perfekt. Betrachten Sie die Häutung. Was hat das Insekt zurückgelassen? Was hat es gewonnen?
+    follow_ups:
+      - Was wäre die Zikade ohne die Häutung?
+      - Wie markiert die Hülle den Übergang?
+      - Was ist die Beziehung zwischen Abwerfen und Wachstum?
+  - id: nmi_leaf_miner
+    name: Minierer
+    prompt: |
+      Eine Spur in einem Blatt – der Weg eines Minierers. Die Larve frisst zwischen
+      den Schichten. Das Blatt speichert die Aufzeichnung. Betrachten Sie den Tunnel. Wie würde das
+      Blatt von innen aussehen?
+    follow_ups:
+      - Was wäre das Blatt ohne den Minierer?
+      - Wie schützt die Mine die Larve?
+      - Was ist die Beziehung zwischen Innen und Außen?
+  - id: nmi_wasp_nest
+    name: Wespenbau
+    prompt: |
+      Ein Papierwespenbau – sechseckige Zellen, zerkaute Holzfasern. Der Bau ist Architektur
+      und Festung. Betrachten Sie die Kolonie. Wer baut? Wer verteidigt? Wer pflanzt sich fort?
+    follow_ups:
+      - Was wären die Wespen ohne den Bau?
+      - Wie formt der Bau die soziale Struktur?
+      - Was ist die Beziehung zwischen Papier und Kolonie?
+  - id: nmi_grasshopper_leap
+    name: Heuschrecken Sprung
+    prompt: |
+      Eine Heuschrecke springt – Beine strecken sich, sie ist weg. Der Sprung ist Flucht oder
+      Annäherung. Betrachten Sie den Auslöser. Was hat die Heuschrecke gesehen? Was hat sie gehört?
+    follow_ups:
+      - Was wäre die Heuschrecke ohne den Sprung?
+      - Wie vermeidet der Sprung die Prädation?
+      - Was ist die Beziehung zwischen Bein und Flug?
+  - id: nmi_mantis_still
+    name: Gottesanbeterin still
+    prompt: |
+      Eine Gottesanbeterin wartet – bewegungslos. Sie ist eine Jägerin. Beute nähert sich. Der Schlag
+      ist plötzlich. Betrachten Sie die Geduld. Was kostet die Stille? Was ermöglicht sie?
+    follow_ups:
+      - Was wäre die Gottesanbeterin ohne das Warten?
+      - Wie täuscht die Stille?
+      - Was ist die Beziehung zwischen Geduld und Fang?
+  - id: nmi_bumblebee_buzz
+    name: Hummelbrummen
+    prompt: |
+      Eine Hummel brummt – sie vibriert. Einige Blumen erfordern Brummerbestäubung.
+      Die Biene rüttelt den Pollen los. Betrachten Sie die Partnerschaft. Was wäre
+      die Blume ohne das Brummen?
+    follow_ups:
+      - Wie löst das Brummen den Pollen?
+      - Was wäre die Biene ohne Brummerbestäubung?
+      - Was ist die Beziehung zwischen Vibration und Bestäubung?
+  - id: nmi_butterfly_territory
+    name: Schmetterlingsterritorium
+    prompt: |
+      Ein Schmetterling sitzt an einem hohen Punkt – Hilltopping. Er wartet auf Partner.
+      Rivalen werden gejagt. Betrachten Sie die Strategie. Warum dieser Ort? Was macht ihn
+      wertvoll?
+    follow_ups:
+      - Was würde der Schmetterling ohne den Sitzplatz tun?
+      - Wie formt Hilltopping die Paarung?
+      - Was ist die Beziehung zwischen Ort und Begegnung?
+  - id: nmi_earwig_pincer
+    name: Ohrwurmzange
+    prompt: |
+      Ohrwürmer haben Zangen – Cerci. Sie dienen der Verteidigung, dem Falten der Flügel, der
+      Bearbeitung von Beute. Betrachten Sie das Werkzeug. Was wäre der Ohrwurm ohne die
+      Zange?
+    follow_ups:
+      - Wie formt die Zange das Verhalten?
+      - Wie würde Verteidigung ohne sie aussehen?
+      - Was ist die Beziehung zwischen Form und Funktion?
+  - id: nmi_katydid_call
+    name: Langfühlerschrecke Ruf
+    prompt: |
+      Eine Langfühlerschrecke ruft – Stridulation, Beine an den Flügeln. Der Ruf ist artenspezifisch.
+      Es ist Werbung, Territorium. Betrachten Sie den Klang. Was wäre die Nacht ohne ihn?
+    follow_ups:
+      - Wie lockt der Ruf Partner an?
+      - Was würde die Langfühlerschrecke riskieren, wenn sie ruft?
+      - Was ist die Beziehung zwischen Klang und Prädation?
+  - id: nmi_ladybug_cluster
+    name: Marienkäfer-Cluster
+    prompt: |
+      Marienkäfer sammeln sich im Winter – Dutzende, Hunderte. Sie aggregieren sich zur Wärme,
+      zum Schutz. Betrachten Sie die Ansammlung. Was löst sie aus? Was löst sie auf?
+    follow_ups:
+      - Was wären die Marienkäfer ohne den Cluster?
+      - Wie erzeugt der Cluster ein Mikroklima?
+      - Was ist die Beziehung zwischen Vielen und Überleben?
+  - id: nmi_ant_carry
+    name: Ameisen tragen
+    prompt: |
+      Eine Ameise trägt eine andere – tot oder verletzt. Es ist Hilfe. Die Kolonie kümmert sich um
+      ihre eigenen. Betrachten Sie das Verhalten. Was würde die verletzte Ameise allein tun?
+      Was gewinnt der Träger?
+    follow_ups:
+      - Wie dient das Tragen der Kolonie?
+      - Was wäre die Kolonie ohne Kooperation?
+      - Was ist die Beziehung zwischen Individuum und Kollektiv?
+  - id: nmi_mosquito_hover
+    name: Mücken schweben
+    prompt: |
+      Eine Mücke schwebt – testet, sondiert. Sie sucht einen Wirt. Das Schweben ist
+      Beurteilung. Betrachten Sie den Moment vor dem Stich. Was erkennt die Mücke? Was entscheidet?
+    follow_ups:
+      - Was würde die Mücke ohne das Schweben tun?
+      - Wie minimiert das Schweben die Entdeckung?
+      - Was ist die Beziehung zwischen Sondieren und Füttern?
+  - id: nmi_weevil_curl
+    name: Rüsselkäfer Kräuselung
+    prompt: |
+      Ein Blatt kräuselt sich – ein Rüsselkäfer oder eine Gallmücke hat es gemacht. Das Blatt faltet sich um die
+      Larve. Betrachten Sie die Manipulation. Die Pflanze wird überredet. Was würde
+      das Blatt ohne das Insekt tun?
+    follow_ups:
+      - Wie schützt die Kräuselung die Larve?
+      - Was wäre die Pflanze ohne die Kräuselung?
+      - Was ist die Beziehung zwischen Insekt und Pflanzenform?
+  - id: nmi_honeybee_waggle
+    name: Honigbiene Schwänzeltanz
+    prompt: |
+      Eine Honigbiene tanzt – es ist ein Tanz. Der Tanz kodiert Entfernung und Richtung
+      zu Blumen. Andere Bienen beobachten. Betrachten Sie die Nachricht. Was wäre die
+      Kolonie ohne den Schwänzeltanz?
+    follow_ups:
+      - Wie überträgt der Tanz Informationen?
+      - Wie sähe die Futtersuche ohne ihn aus?
+      - Was ist die Beziehung zwischen Tanz und Entdeckung?
+  - id: nmi_gnat_cloud
+    name: Mückenwolke
+    prompt: |
+      Mücken schwärmen – eine Wolke winziger Insekten. Der Schwarm ist Paarung. Männchen sammeln sich;
+      Weibchen treten ein und wählen. Betrachten Sie die Aggregation. Was würde die
+      Mücke allein tun?
+    follow_ups:
+      - Wie ermöglicht der Schwarm die Paarung?
+      - Was wären die Mücken ohne die Wolke?
+      - Was ist die Beziehung zwischen Vielen und Begegnung?
+  - id: nmi_spider_wrap
+    name: Spinnenwickel
+    prompt: |
+      Eine Spinne wickelt Beute – Seide um das zappelnde Insekt. Der Wickel immobilisiert.
+      Die Spinne injiziert ein Enzym. Betrachten Sie den Prozess. Was würde die Spinne ohne den Wickel tun?
+    follow_ups:
+      - Wie unterwirft der Wickel die Beute?
+      - Was würde die Spinne ohne ihn riskieren?
+      - Was ist die Beziehung zwischen Seide und Verdauung?
+  - id: nmi_ant_war
+    name: Ameisenkrieg
+    prompt: |
+      Zwei Ameisenkolonien treffen aufeinander – Konflikt. Arbeiter ringen, beißen. Die Grenze wird
+      umkämpft. Betrachten Sie die Schlacht. Was steht auf dem Spiel? Wie wird die Grenze
+      entschieden?
+    follow_ups:
+      - Was wären die Kolonien ohne den Krieg?
+      - Wie wird der Krieg gelöst?
+      - Was ist die Beziehung zwischen Territorium und Ressource?
+  - id: nmi_moth_flutter
+    name: Mottenflattern
+    prompt: |
+      Eine Motte flattert an einem Licht – angezogen, verwirrt. Das Licht stört
+      die Navigation. Betrachten Sie die Falle. Was würde die Motte in der Dunkelheit tun?
+      Warum desorientiert Licht?
+    follow_ups:
+      - Was wäre die Motte ohne das Licht?
+      - Wie nutzt die Motte normalerweise Mondlicht?
+      - Was ist die Beziehung zwischen Licht und Richtung?
+  - id: nmi_stick_insect_still
+    name: Stabheuschrecke still
+    prompt: |
+      Eine Stabheuschrecke ist bewegungslos – sie sieht aus wie ein Zweig. Raubtiere ziehen vorbei.
+      Betrachten Sie die Täuschung. Was wäre das Insekt ohne die Verkleidung?
+      Wie lange kann es die Pose halten?
+    follow_ups:
+      - Wie schützt die Stille?
+      - Was würde das Insekt riskieren, wenn es sich bewegt?
+      - Was ist die Beziehung zwischen Form und Überleben?
+  - id: nmi_leafcutter_carry
+    name: Blattschneider tragen
+    prompt: |
+      Eine Blattschneiderameise trägt ein Blattfragment – viele Male ihre Größe. Das Blatt
+      geht zum Nest. Es wird zum Substrat für Pilze. Betrachten Sie die
+      Ernte. Was wäre die Kolonie ohne die Blätter?
+    follow_ups:
+      - Wie nutzen die Pilze das Blatt?
+      - Was würde die Ameise ohne die Pilze fressen?
+      - Was ist die Beziehung zwischen Ernte und Anbau?
+  - id: nmi_housefly_clean
+    name: Hausfliege reinigen
+    prompt: |
+      Eine Hausfliege reinigt sich – reibt Beine, streicht Flügel. Die Pflege entfernt
+      Partikel, erhält die Sensoren. Betrachten Sie das Ritual. Was wäre die Fliege ohne Reinigung?
+    follow_ups:
+      - Wie erhält die Pflege die Funktion?
+      - Was würde passieren, wenn die Fliege sich nicht reinigen könnte?
+      - Was ist die Beziehung zwischen sauber und Sinn?
+  - id: nmi_termite_mound
+    name: Termitenhügel
+    prompt: |
+      Ein Termitenhügel erhebt sich – Lehm, Speichel, zerkaute Holzfasern. Es ist eine Stadt. Drinnen,
+      Tunnel, Kammern, Pilzgärten. Betrachten Sie die Architektur. Was wäre die Kolonie ohne den Hügel?
+    follow_ups:
+      - Wie reguliert der Hügel das Klima?
+      - Was würden die Termiten ohne die Struktur tun?
+      - Was ist die Beziehung zwischen Hügel und Kolonie?
+  - id: nmi_cricket_chirp
+    name: Grille zirpen
+    prompt: |
+      Eine Grille zirpt – Flügel zusammen. Das Zirpen ist Werbung. Weibchen wählen nach Klang.
+      Betrachten Sie den Ruf. Was würde die Grille ohne das Zirpen tun? Wer hört außer den Weibchen zu?
+    follow_ups:
+      - Wie kodiert das Zirpen Fitness?
+      - Was wäre die Wiese ohne den Klang?
+      - Was ist die Beziehung zwischen Ruf und Prädation?
+  - id: nmi_damselfly_tandem
+    name: Kleinlibellen-Tandem
+    prompt: |
+      Kleinlibellen paaren sich im Tandem – das Männchen umklammert das Weibchen hinter dem Kopf. Sie
+      krümmt sich, um Spermien zu empfangen. Das Paar kann zusammen fliegen. Betrachten Sie die
+      Kopplung. Was wäre die Paarung ohne die Klammer?
+    follow_ups:
+      - Wie schützt das Tandem die Investition des Männchens?
+      - Was würde das Paar ohne die Verbindung tun?
+      - Was ist die Beziehung zwischen Klammer und Befruchtung?
+  - id: nmi_roach_scatter
+    name: Kakerlaken-Verstreuung
+    prompt: |
+      Schalten Sie ein Licht ein – Kakerlaken zerstreuen sich. Sie suchen Ritzen. Die Verstreuung ist
+      Flucht. Betrachten Sie die Reaktion. Was würde die Kakerlake bei ständigem Licht tun? Warum Dunkelheit?
+    follow_ups:
+      - Wie reduziert die Verstreuung die Prädation?
+      - Was wäre die Kakerlake ohne den Reflex?
+      - Was ist die Beziehung zwischen Licht und Verstecken?
+  - id: nmi_hopper_nymph
+    name: Hopper-Nymphe
+    prompt: |
+      Eine junge Heuschrecke – Nymphe. Sie hat noch keine Flügel. Sie hüpft. Betrachten Sie die
+      Phase. Was wird die Nymphe werden? Was fehlt ihr jetzt?
+    follow_ups:
+      - Was wäre die Heuschrecke ohne die Nymphenphase?
+      - Wie vermeidet die Nymphe Raubtiere?
+      - Was ist die Beziehung zwischen Häutung und Flügel?
+  - id: nmi_sweat_bee
+    name: Schweißbiene
+    prompt: |
+      Eine Schweißbiene landet auf Ihrer Haut – sucht Salz. Schweiß ist eine Ressource.
+      Betrachten Sie die Begegnung. Was würde die Biene ohne Schweiß tun? Warum braucht sie das Salz?
+    follow_ups:
+      - Wie nutzt die Biene das Salz?
+      - Was würde die Biene riskieren, wenn sie landet?
+      - Was ist die Beziehung zwischen Mensch und Biene?
+  - id: nmi_army_ant_column
+    name: Armeeameisen-Kolonne
+    prompt: |
+      Armeeameisen marschieren – eine Kolonne von Tausenden. Sie fließen. Beute wird überwältigt.
+      Betrachten Sie den Schwarm. Was wären die Ameisen ohne die Kolonne? Wie koordinieren sie sich?
+    follow_ups:
+      - Wie ermöglicht die Kolonne die Prädation?
+      - Was wäre der Wald ohne Armeeameisen?
+      - Was ist die Beziehung zwischen Vielen und Macht?
+  - id: nmi_water_strider_leg
+    name: Wasserläufer Bein
+    prompt: |
+      Die Beine eines Wasserläufers – lang, hydrophob. Sie verteilen das Gewicht. Die
+      Oberfläche hält. Betrachten Sie die Anpassung. Was wäre der Läufer ohne das Bein-Design?
+    follow_ups:
+      - Wie verteilt die Beinform die Kraft?
+      - Was würde der Läufer an Land tun?
+      - Was ist die Beziehung zwischen Form und Oberfläche?
+  - id: nmi_aphid_wing
+    name: Blattlausflügel
+    prompt: |
+      Einige Blattläuse haben Flügel – wenn überfüllt oder wenn der Wirt zurückgeht. Sie
+      verbreiten sich. Betrachten Sie den Wechsel. Was löst die Flügelentwicklung aus? Was kostet der Flügel?
+    follow_ups:
+      - Wie induziert Überfüllung Flügel?
+      - Was wäre die Blattlaus ohne die Option?
+      - Was ist die Beziehung zwischen Flügel und Ausbreitung?
+  - id: nmi_scale_armor
+    name: Schildlaus-Panzer
+    prompt: |
+      Schildläuse sehen aus wie Beulen – sie sind gepanzert. Sie bewegen sich nicht viel.
+      Sie zapfen die Pflanze an, fressen. Betrachten Sie die Strategie. Was wäre die Schildlaus ohne den Panzer?
+    follow_ups:
+      - Wie schützt der Panzer?
+      - Was wäre die Pflanze ohne die Schildlaus?
+      - Was ist die Beziehung zwischen Stille und Verteidigung?
+  - id: nmi_caddisfly_case
+    name: Köcherfliegen-Köcher
+    prompt: |
+      Eine Köcherfliegenlarve baut einen Köcher – Stöcke, Sand, Kiesel. Sie trägt den
+      Köcher. Der Köcher ist Tarnung und Panzerung. Betrachten Sie die Konstruktion.
+      Was wäre die Larve ohne ihn?
+    follow_ups:
+      - Wie schützt der Köcher?
+      - Was würde die Larve verwenden, wenn sich die Materialien ändern?
+      - Was ist die Beziehung zwischen Bau und Überleben?
+  - id: nmi_leafhopper_flash
+    name: Zikaden-Blitz
+    prompt: |
+      Eine Zikade springt – plötzlich. Sie ist weg. Der Sprung ist Flucht. Die Beine speichern
+      Energie, setzen sie frei. Betrachten Sie den Mechanismus. Was wäre die Zikade ohne den Sprung?
+    follow_ups:
+      - Wie vermeidet der Sprung den Fang?
+      - Was wäre das Blatt ohne die Zikade?
+      - Was ist die Beziehung zwischen Sprung und Prädation?
+  - id: nmi_bombardier_blast
+    name: Bombardier-Knall
+    prompt: |
+      Ein Bombardierkäfer spritzt – heiß, übelriechend. Es ist Verteidigung. Die Sprühung ist
+      Chemie: zwei Kammern, Reaktion am Ausgang. Betrachten Sie die Waffe. Was würde der Käfer ohne sie tun?
+    follow_ups:
+      - Wie schreckt die Sprühung Raubtiere ab?
+      - Was würde der Käfer riskieren, wenn er sprüht?
+      - Was ist die Beziehung zwischen Chemie und Verteidigung?
+  - id: nmi_silverfish_slip
+    name: Silberfischchen-Schlüpfen
+    prompt: |
+      Ein Silberfischchen schlüpft in einen Spalt – schnell. Es ist flach. Es passt. Betrachten Sie die
+      Form. Was wäre das Silberfischchen ohne die Flachheit? Warum die Eile?
+    follow_ups:
+      - Wie ermöglicht die Flachheit die Flucht?
+      - Was würde das Silberfischchen im Freien tun?
+      - Was ist die Beziehung zwischen Form und Zuflucht?
+  - id: nmi_ant_queen
+    name: Ameisenkönigin
+    prompt: |
+      Eine Ameisenkolonie hat eine Königin – oder mehrere. Sie legt Eier. Arbeiter pflegen sie.
+      Betrachten Sie das Zentrum. Was wäre die Kolonie ohne die Königin? Wie ersetzt die Kolonie sie?
+    follow_ups:
+      - Wie formt die Königin die Kolonie?
+      - Was würden Arbeiter ohne sie tun?
+      - Was ist die Beziehung zwischen Königin und Kolonie?
+  - id: nmi_owlfly_larva
+    name: Ameisenjungfer Larve
+    prompt: |
+      Eine Ameisenjungfer Larve lauert – im Sand, im Geröll. Sie lauert auf. Kiefer schlagen zu.
+      Betrachten Sie den Jäger. Was wäre die Larve ohne den Hinterhalt? Was wird sie?
+    follow_ups:
+      - Wie ermöglicht der Hinterhalt die Fütterung?
+      - Was wäre die Ameisenjungfer ohne die Larvenphase?
+      - Was ist die Beziehung zwischen Warten und Fangen?
+  - id: nmi_thrips_scatter
+    name: Thrips-Verstreuung
+    prompt: |
+      Thripse sind winzig – kaum sichtbar. Sie sammeln sich auf Blumen, auf Blättern.
+      Sie stechen und saugen. Betrachten Sie die Skala. Was wäre die Pflanze ohne Thripse? Was würden wir bemerken?
+    follow_ups:
+      - Wie formen Thripse die Pflanze?
+      - Was wäre das Ökosystem ohne sie?
+      - Was ist die Beziehung zwischen Klein und Wirkung?
+  - id: nmi_sting_threat
+    name: Stich-Bedrohung
+    prompt: |
+      Eine Wespe hebt ihr Abdomen – Stachel bereit. Es ist eine Bedrohung. Die Haltung
+      kommuniziert. Betrachten Sie die Drohung. Was würde die Wespe tun, wenn sie ignoriert wird?
+      Was kostet die Haltung?
+    follow_ups:
+      - Wie schreckt die Drohung ab?
+      - Was würde die Wespe riskieren, wenn sie sticht?
+      - Was ist die Beziehung zwischen Drohung und Verteidigung?
+  - id: nmi_velvet_ant
+    name: Samtameise
+    prompt: |
+      Eine Samtameise kriecht – es ist eine flügellose Wespe. Sie ist zäh. Raubtiere lernen, sie zu meiden.
+      Der Stich ist heftig. Betrachten Sie die Strategie. Was wäre die Samtameise ohne den Stich?
+    follow_ups:
+      - Wie schützt der Stich?
+      - Was würde die Samtameise an der Oberfläche tun?
+      - Was ist die Beziehung zwischen Stich und Kühnheit?
+  - id: nmi_ambush_predator
+    name: Lauerjäger
+    prompt: |
+      Eine Lauerwanze wartet auf einer Blume – gelb, getarnt. Beute kommt. Die
+      Wanze schlägt zu. Betrachten Sie die Geduld. Was würde die Wanze ohne die Blume tun? Warum dieser Sitzplatz?
+    follow_ups:
+      - Wie lockt die Blume Beute an?
+      - Was wäre die Wanze ohne den Hinterhalt?
+      - Was ist die Beziehung zwischen Ort und Fang?
+  - id: nmi_nectar_flow
+    name: Nektarfluss
+    prompt: |
+      Blumen produzieren Nektar – Bienen, Schmetterlinge, Käfer trinken. Der Fluss
+      variiert. Betrachten Sie die Wirtschaft. Was wäre die Blume ohne den
+      Nektar? Was würde das Insekt tun?
+    follow_ups:
+      - Wie formt Nektar den Besuch?
+      - Was wäre die Bestäubung ohne die Belohnung?
+      - Was ist die Beziehung zwischen Fluss und Dienst?
+  - id: nmi_territory_mark
+    name: Territorium Markierung
+    prompt: |
+      Einige Insekten markieren ihr Territorium – Pheromone, visuelle Anzeige. Die Marke sagt
+      "meins". Betrachten Sie den Anspruch. Was wäre der Raum ohne die Markierung?
+      Wie lesen Rivalen sie?
+    follow_ups:
+      - Wie schreckt die Markierung Eindringlinge ab?
+      - Was würde das Insekt ohne das Territorium tun?
+      - Was ist die Beziehung zwischen Marke und Raum?

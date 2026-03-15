@@ -1,0 +1,478 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Mutfak Laboratuvarı — Hint (Turkish)
+
+id: culinary_lab_indian
+name: Mutfak Laboratuvarı — Hint
+description: Hint mutfağını deneyimleme şeklinizi değiştirecek 50 kart — baharatların ve acının kimyasından, malzemelerin arkeolojisine ve paylaşılan sofranın koreografisine kadar.
+domain: culinary_lab
+cards:
+  - id: ind_tadka_crackle
+    name: Tadka Çıtırtısı
+    prompt: |
+      Tadka — kavurma — ilk notadır. Sıcak yağ, hardal tohumu, kimyon,
+      köri yaprağı ile buluşur. Dinleyin. Çıtırtı gerçek zamanlı kimyadır.
+      Tatmadan önce bu sesi duyduğunuzda ne değişir?
+    follow_ups:
+      - Ses beklentiyi nasıl şekillendirir?
+      - Çıtırtı olmadan yemek ne kaybeder?
+      - Ses ve lezzet arasındaki ilişki nedir?
+  - id: ind_spice_route
+    name: Baharat Yolu
+    prompt: |
+      Kakule Kerala'dan geldi. Safran Keşmir'den. Siyah biber bir zamanlar
+      ağırlığınca altın değerindeydi. Tabağınızdaki bir baharatı geldiği yere
+      kadar izleyin. Size ulaşmak için ne yolculuk yaptı?
+    follow_ups:
+      - Yolculuğu bilmek ısırığı nasıl değiştirir?
+      - Aynı yolu hangi başka baharatlar kat etti?
+      - Ticaret ve tat arasındaki ilişki nedir?
+  - id: ind_thali_geometry
+    name: Thali Geometrisi
+    prompt: |
+      Thali bir tuvaldir — kaseler dairesel olarak düzenlenmiş, her birinin
+      bir rolü var. Kompozisyona bakın. Göz ilk nereye konuyor? Negatif boşluk
+      nedir?
+    follow_ups:
+      - Bir kase eksik olsaydı ne olurdu?
+      - Düzenleme yemeği nasıl şekillendirir?
+      - Geometri ve ayin arasındaki ilişki nedir?
+  - id: ind_hand_as_tool
+    name: El Alet Olarak
+    prompt: |
+      Roti yırtılır, sebzi ile karıştırılır, ağza götürülür. El hem alet hem de
+      sensördür. Koreografiye dikkat edin. Çatal ve bıçağın sağlayamadığı dokunuş
+      ne ekler?
+    follow_ups:
+      - Ellerle yemek yemenin temposu nasıl değişir?
+      - Gümüş çatal bıçakla ne kaybedilirdi?
+      - Dokunma ve sıcaklık arasındaki ilişki nedir?
+  - id: ind_heat_layers
+    name: Acı Katmanları
+    prompt: |
+      Hint acısı katmanlıdır — biberin yakıcılığı, karabiberin sıcaklığı,
+      zencefilin ateşi. Bir lokma alın ve her acının nereye indiğini haritalandırın.
+      Dil, boğaz, mide. Nasıl birikiyorlar?
+    follow_ups:
+      - Tek bir acı ile yemek ne olurdu?
+      - Katmanlama karmaşıklığı nasıl yaratır?
+      - Acı ve zaman arasındaki ilişki nedir?
+  - id: ind_yogurt_intervention
+    name: Yoğurt Müdahalesi
+    prompt: |
+      Raita, dahi, lassi — yoğurt serinletir, keser, dengeler. Eklediğiniz
+      anı fark edin. Asit yağla, serinlik sıcağa buluşur. Müdahale kimyasaldır.
+      Neyi kesintiye uğratır?
+    follow_ups:
+      - Yoğurt olmadan yemek ne olurdu?
+      - Zıtlık nasıl rahatlama yaratır?
+      - Müdahale ve denge arasındaki ilişki nedir?
+  - id: ind_betel_after
+    name: Betel Sonrası
+    prompt: |
+      Bazı geleneklerde Paan — betel yaprağı — yemeği bitirir. Tatlı değildir.
+      Kapatmadır. Damak tekrar değişir. Sonu, bütünü hakkında ne söylüyor?
+    follow_ups:
+      - Paan geçişi nasıl işaretler?
+      - Paan olmadan yemek ne eksik olurdu?
+      - Son ve hafıza arasındaki ilişki nedir?
+  - id: ind_street_chaos
+    name: Sokak Kaosu
+    prompt: |
+      Bir chaat satıcısı hızla çalışır — bhel, papdi, chutneyler saniyeler içinde
+      katmanlanır. Gösteriyi izleyin. Tezgah bir tiyatrodur. Senaryo ne? Seyirci
+      kim?
+    follow_ups:
+      - Gösteri olmadan yemek ne olurdu?
+      - Hız deneyimi nasıl şekillendirir?
+      - Kaos ve zanaat arasındaki ilişki nedir?
+  - id: ind_tandoor_breathe
+    name: Tandoor Nefesi
+    prompt: |
+      Tandoor nefes alır — alevler, duman, kil. Naan duvara yapıştırılır,
+      kabarcıklanırken çekilir. Birinin yanında durun. Isısı, kokusu. Ateş ve
+      lezzet arasındaki ilişki nedir?
+    follow_ups:
+      - Tandoor olmadan naan ne olurdu?
+      - Kil aşçıyı nasıl şekillendirir?
+      - Nefes ve ekmek arasındaki ilişki nedir?
+  - id: ind_turmeric_stain
+    name: Zerdeçal Lekesi
+    prompt: |
+      Zerdeçal lekeler — parmakları, kumaşı, plastiği. Renk kalır. Neyi
+      işaretlediğini fark edin. Leke arkeolojidir. Bu yemek size ulaşmadan
+      önce nereyi dolaştı?
+    follow_ups:
+      - Renk olmadan yemek ne olurdu?
+      - Leke emeği nasıl işaretler?
+      - Pigment ve koruma arasındaki ilişki nedir?
+  - id: ind_rice_architecture
+    name: Pirinç Mimarisi
+    prompt: |
+      Biryani inşa edilir — pirinç katmanı, et katmanı, safran, kızarmış
+      soğan. Yapı durur. Onu kazın. Mimari her lokmayı nasıl etkiler?
+    follow_ups:
+      - Katmanlar çok erken karışırsa ne olurdu?
+      - Yapı sürprizi nasıl yaratır?
+      - İnşa ve yeme arasındaki ilişki nedir?
+  - id: ind_chutney_spectrum
+    name: Chutney Spektrumu
+    prompt: |
+      Nane, demirhindi, hindistancevizi, domates — chutneyler bir palet
+      gibi sıralanır. Her biri lokmayı değiştirir. Üç chutney ile bir yemek
+      tadın. Aynı baz üç farklı hikayeye nasıl dönüşür?
+    follow_ups:
+      - Sadece bir chutney ile yemek ne olurdu?
+      - Seçim nasıl özgürlük şekillendirir?
+      - Spektrum ve tercih arasındaki ilişki nedir?
+  - id: ind_steam_rising
+    name: Yükselen Buhar
+    prompt: |
+      Idli, dosa, puri — kapağı kaldırdığınızda buhar yükselir. İzleyin. Buhar,
+      tatmadan önce aromayı taşır. Ne önce gelir? Burun mu, ağız mı?
+    follow_ups:
+      - Buhar beklentiyi nasıl şekillendirir?
+      - Kaldırma olmadan ne kaybedilirdi?
+      - Buhar ve lezzet arasındaki ilişki nedir?
+  - id: ind_silver_versus_steel
+    name: Gümüş ve Çelik
+    prompt: |
+      Bazı sofralarda çelik thali, bazıları gümüş, bazıları muz yaprağı kullanılır.
+      Kapların altına dikkat edin. Yemeğin altındaki yüzey deneyimi nasıl değiştirir?
+      Ağırlık, ses, gelenek.
+    follow_ups:
+      - Farklı yüzeylerde yemek ne hissettirirdi?
+      - Kap seremoniye nasıl şekil verir?
+      - Malzeme ve anlam arasındaki ilişki nedir?
+  - id: ind_cumin_fragrance
+    name: Kimyon Kokusu
+    prompt: |
+      Kavrulmuş kimyon tohumları tatmadan önce koku yayar. Bir yemeği tatmadan
+      önce koklayın. Kimyon oda boyunca yayılır. Aroma damak tadını nasıl
+      hazırlar?
+    follow_ups:
+      - Koku olmadan yemek ne olurdu?
+      - Koku aşçının varlığını nasıl işaretler?
+      - Burun ve hafıza arasındaki ilişki nedir?
+  - id: ind_shared_central
+    name: Ortak Merkez
+    prompt: |
+      Yemekler ortada durur. Herkes uzanır. Aynı şekilde "senin tabağın"
+      yoktur. Uzanan, uzatan, alan koreografisini gözlemleyin. Söylenmemiş
+      kurallar nelerdir?
+    follow_ups:
+      - Bireysel porsiyonlarla yemek ne olurdu?
+      - Paylaşım nasıl bağ kurar?
+      - Merkez ve topluluk arasındaki ilişki nedir?
+  - id: ind_ghee_gloss
+    name: Ghee Parlaklığı
+    prompt: |
+      Ghee havuzlanır, parlar, kaplar. Lezzet ve son dokunuş olarak yağdır.
+      Tabağınızda nereye toplandığını fark edin. O parlaklık doku ve sıcaklığı
+      nasıl değiştirir?
+    follow_ups:
+      - Yağ yerine yağ ile yemek ne olurdu?
+      - Ghee diğer lezzetleri nasıl taşır?
+      - Parlaklık ve zenginlik arasındaki ilişki nedir?
+  - id: ind_papad_crunch
+    name: Papad Kırtlaması
+    prompt: |
+      Papad — çıtır, ince, cızırtılı. Doku olarak noktalama işaretidir. Birini
+      kırın. Dinleyin. Kırtlama yemeğin ritim bölümüdür. Ondan yoksun sessizlik
+      nasıl ses verirdi?
+    follow_ups:
+      - Kırtlama nasıl zıtlık yaratır?
+      - Papad olmadan yemek ne eksik olurdu?
+      - Ses ve tatmin arasındaki ilişki nedir?
+  - id: ind_sambar_depth
+    name: Sambar Derinliği
+    prompt: |
+      Sambar katmanlıdır — mercimek, demir hindi, sebzeler, baharat. Kaynayıp
+      durmuş. Katmanları tatmak için tadın. Kaç tanesini ayırabilirsiniz? O
+      kasenin arkeolojisi nedir?
+    follow_ups:
+      - Daha az katmanla sambar ne olurdu?
+      - Zaman derinliği nasıl inşa eder?
+      - Kaynama ve hikaye arasındaki ilişki nedir?
+  - id: ind_pickle_punch
+    name: Turşu Vurucu
+    prompt: |
+      Achar — turşu — hikayenin dönüm noktasıdır. Küçük bir lokma her şeyi
+      değiştirir. Tatlı, ekşi, acı, fermente. Ne zaman girdiğini fark edin.
+      Neyi kesintiye uğratır?
+    follow_ups:
+      - Turşu olmadan yemek ne olurdu?
+      - Vuruş nasıl sürpriz yaratır?
+      - Dönüş ve hafıza arasındaki ilişki nedir?
+  - id: ind_bay_leaf_hunt
+    name: Defne Yaprağı Avı
+    prompt: |
+      Defne yaprakları pulao, biryani, köri içinde saklanır. Bir tane bulun.
+      Yemezsiniz — arkeolojidir. Kerala veya Keşmir'den geldi. Çıkarılmadan
+      önce ne kattı?
+    follow_ups:
+      - Yenilmeyen yenileni nasıl şekillendirir?
+      - Yaprak olmadan yemek ne olurdu?
+      - Gizli ve mevcut arasındaki ilişki nedir?
+  - id: ind_dosa_edge
+    name: Dosa Kenarı
+    prompt: |
+      Bir dosanın bir kenarı vardır — çıtır, dantelimsi, altın sarısı. Ortası
+      yumuşaktır. Zıtlık mimaridir. İlk nereye ısırırsınız? Kenar bütünü nasıl
+      çerçeveler?
+    follow_ups:
+      - Tekdüze çıtır olsaydı dosa ne olurdu?
+      - Kenar nasıl ilgi yaratır?
+      - Sınır ve merkez arasındaki ilişki nedir?
+  - id: ind_saffron_thread
+    name: Safran İpliği
+    prompt: |
+      Safran — birkaç iplik — tüm bir yemeği renklendirir ve kokulandırır.
+      Bir ipliği izleyin. Nereden geldi? Keşmir, İran, İspanya? En pahalı
+      baharat. Kıtlık ne ekler?
+    follow_ups:
+      - Safran lüksü nasıl şekillendirir?
+      - Zerdeçal yerine yemek ne olurdu?
+      - İplik ve bölge arasındaki ilişki nedir?
+  - id: ind_chaat_texture
+    name: Chaat Dokusu
+    prompt: |
+      Chaat tek bir lokmada doku katmanlar — çıtır, yumuşak, gevrek, kremamsı.
+      Onu ayrıştırın. Kaç doku var? Nasıl birlikte çalışırlar? Lokma bir işbirliğidir.
+    follow_ups:
+      - Tek dokuyla chaat ne olurdu?
+      - Katmanlama nasıl oyun yaratır?
+      - Doku ve zevk arasındaki ilişki nedir?
+  - id: ind_mustard_seed_pop
+    name: Hardal Tohumu Patlaması
+    prompt: |
+      Hardal tohumları yağda patlar — Bengal, Güney Hindistan kavurması. Patlama
+      kimyasaldır. Tohumlar bileşenleri salar. Koklayın. Isı onları aktive
+      ettiğinde ne değişir?
+    follow_ups:
+      - Patlama aşçının zamanlamasını nasıl işaretler?
+      - Patlama olmadan yemek ne olurdu?
+      - Patlama ve güç arasındaki ilişki nedir?
+  - id: ind_dal_surface
+    name: Dal Yüzeyi
+    prompt: |
+      Dalın bir yüzeyi vardır — bazen kabuk, bazen üzerinde yüzen tadka. Henüz
+      karıştırmayın. Ona bakın. Yüzey alttakiler hakkında ne ortaya koyuyor?
+    follow_ups:
+      - Yüzey nasıl davet eder veya direnir?
+      - Asla karıştırmazsanız ne olurdu?
+      - Yüzey ve derinlik arasındaki ilişki nedir?
+  - id: ind_banana_leaf_plate
+    name: Muz Yaprağı Tabağı
+    prompt: |
+      Muz yaprağı bir tabaktır — organik, tek kullanımlık, geleneksel. Yaprağın
+      dokusu, kokusu vardır. Yiyecekler üzerinde farklı durur. Yaprak yemeği
+      nasıl değiştirir?
+    follow_ups:
+      - Seramikte yemek ne olurdu?
+      - Yaprak ayini nasıl şekillendirir?
+      - Yaprak ve yer arasındaki ilişki nedir?
+  - id: ind_fenugreek_haunt
+    name: Çemen İzi
+    prompt: |
+      Çemen — methi — kalıcı bir kokuya sahiptir. Acı, akçaağaç benzeri. Mutfakta,
+      kıyafetlerde iz bırakır. Nereye yapıştığını fark edin. Kalıcılık ne ekler?
+    follow_ups:
+      - Çemen bölgeyi nasıl işaretler?
+      - Kalıcılığı olmadan yemek ne olurdu?
+      - İz ve hafıza arasındaki ilişki nedir?
+  - id: ind_pani_puri_moment
+    name: Pani Puri Anı
+    prompt: |
+      Pani puri tek lokmalık bir hikayedir — çıtır kabuk, patates, nohut,
+      demirhindi suyu. Bütün olarak, hemen yenilmelidir. An tekrarlanamaz.
+      Onu ne acil hale getirir?
+    follow_ups:
+      - Beklerseniz ne olurdu?
+      - Aciliyet nasıl zevk yaratır?
+      - An ve hafıza arasındaki ilişki nedir?
+  - id: ind_serving_order
+    name: Servis Sırası
+    prompt: |
+      Bazı ortamlarda bir sıra vardır — önce yaşlılar, bazı yemekler diğerlerinden
+      önce. Gözlemleyin. Kim servis eder? Kim bekler? Koreografi saygıyı kodlar.
+      Kurallar nelerdir?
+    follow_ups:
+      - Sıra olmadan yemek ne olurdu?
+      - Sıra nasıl anlam yaratır?
+      - Sıra ve hiyerarşi arasındaki ilişki nedir?
+  - id: ind_cardamom_pod
+    name: Kakule Tanecik
+    prompt: |
+      Bütün bir kakule taneciği pulao veya chai içinde saklanır. Isırabilirsiniz,
+      kenara itebilirsiniz. Tanecik arkeolojidir — Yeşil Kerala'dan, siyah
+      dağlardan. Ne katkıda bulundu?
+    follow_ups:
+      - Bütün tanecik öğütülmüşten nasıl farklıdır?
+      - Tanecik olmadan yemek ne olurdu?
+      - Tanecik ve yer arasındaki ilişki nedir?
+  - id: ind_kitchen_sounds
+    name: Mutfak Sesleri
+    prompt: |
+      Hint mutfağının bir ses manzarası vardır — öğütme, kızartma, düdüklü
+      tencere tıslaması. Bir mutfakta gözlerinizi kapatın. Sesleri haritalandırın.
+      Neler sabit? Ritim ne?
+    follow_ups:
+      - O sesler olmadan yemek ne olurdu?
+      - Ses beklentiyi nasıl şekillendirir?
+      - Mutfak ve masa arasındaki ilişki nedir?
+  - id: ind_second_helping
+    name: İkinci Yardım
+    prompt: |
+      "Biraz daha al" bir ayindir. Israr, reddetme, nihai kabul. Dansı izleyin.
+      İkinci yardım açlıktan öte ne anlama gelir?
+    follow_ups:
+      - Teklif olmadan yemek ne olurdu?
+      - Israr nasıl özeni kodlar?
+      - Daha fazlası ve yeterlilik arasındaki ilişki nedir?
+  - id: ind_coriander_finish
+    name: Kişniş Son Dokunuşu
+    prompt: |
+      Taze kişniş — cilantro — birçok yemeği süsler. Eklenen son şeydir.
+      Son dokunuş. Yeşilin öncekileri nasıl değiştirdiğini fark edin. Canlı,
+      bitkisel, tartışmalı.
+    follow_ups:
+      - Bitki olmadan yemek ne olurdu?
+      - Son dokunuş bütünü nasıl çerçeveler?
+      - Son ve ilk arasındaki ilişki nedir?
+  - id: ind_lassi_cut
+    name: Lassi Kesici
+    prompt: |
+      Lassi baharatı keser — serin, ekşi, kalın. Rahattır. İçtiğiniz anı fark
+      edin. Neyi kesintiye uğratır? Neyi sıfırlar?
+    follow_ups:
+      - Lassi olmadan yemek ne olurdu?
+      - Kesici dayanıklılığı nasıl uzatır?
+      - Rahatlama ve ritim arasındaki ilişki nedir?
+  - id: ind_roti_stretch
+    name: Roti Esnetme
+    prompt: |
+      Roti elle esnetilir — yuvarlak, ince, ateşte kabarcıklanmış. Yapılırken
+      izleyin. Esnetme beceridir. O hareket olmadan ekmek ne olurdu?
+    follow_ups:
+      - Esnetme dokuyu nasıl etkiler?
+      - Makinede yapılmış roti ne kaybederdi?
+      - Hareket ve sonuç arasındaki ilişki nedir?
+  - id: ind_jaljeera_pause
+    name: Jaljeera Molası
+    prompt: |
+      Jaljeera — kimyon, nane, demir hindi — bir sindirimdir, bir moladır.
+      Genellikle öğle yemeği ortasında veya sonrasında gelir. Değişimi fark edin.
+      Mola neye izin verir?
+    follow_ups:
+      - Mola olmadan yemek ne olurdu?
+      - Jaljeera geçişi nasıl işaretler?
+      - Mola ve sindirim arasındaki ilişki nedir?
+  - id: ind_color_conversation
+    name: Renk Sohbeti
+    prompt: |
+      Hint tabakları renkle konuşur — sarı dal, yeşil sebzi, beyaz pirinç,
+      kırmızı chutney. Paleti inceleyin. Sohbet ne? Neler çelişirdi? Neler
+      uyuşurdu?
+    follow_ups:
+      - Renk iştahı nasıl şekillendirir?
+      - Tabak monokromda ne olurdu?
+      - Palet ve bölge arasındaki ilişki nedir?
+  - id: ind_clove_buried
+    name: Karanfil Gömülü
+    prompt: |
+      Karanfiller biryani, garam masala, chai içinde saklanır. Keskin, sıcaktır.
+      Bir tane bulun. Isırabilirsiniz. Karanfil baharat ticaretinin bir kalıntısıdır.
+      Hangi bölgeleri birbirine bağlar?
+    follow_ups:
+      - Bütün karanfil öğütülmüşten nasıl farklıdır?
+      - Karanfil olmadan yemek ne olurdu?
+      - Karanfil ve sömürgecilik arasındaki ilişki nedir?
+  - id: ind_family_style
+    name: Aile Tarzı
+    prompt: |
+      Yemek kaselerde masaya gelir. Herkes onlardan yer. Yemek paylaşılan bir
+      projeler. Kimin ne aldığını, kimin beklediğini, kimin servis ettiğini
+      gözlemleyin. Sofranın ekonomisi nedir?
+    follow_ups:
+      - Bireysel tabaklarla yemek ne olurdu?
+      - Paylaşım değerleri nasıl kodlar?
+      - Tarz ve aile arasındaki ilişki nedir?
+  - id: ind_asafoetida_whiff
+    name: Asafoetida Esintisi
+    prompt: |
+      Hing — asafoetida — çiğken sert, pişmişken büyülü kokar. Bir tutam
+      dal, sebzeyi dönüştürür. Sır budur. Ne zaman yakaladığınızı fark edin.
+      Esinti ne ekler?
+    follow_ups:
+      - Hing aşçının elini nasıl işaretler?
+      - Asafoetida olmadan yemek ne olurdu?
+      - Esinti ve dönüşüm arasındaki ilişki nedir?
+  - id: ind_gulab_jamun_weight
+    name: Gulab Jamun Ağırlığı
+    prompt: |
+      Gulab jamun yoğundur — kızarmış süt katısı, şerbete batırılmış.
+      Dildeki ağırlığını hissedin. Tatlı, ağır, son. Tatlı yemeği nasıl bitirir?
+    follow_ups:
+      - Onsuz yemek nasıl biterdi?
+      - Ağırlık nasıl kapanış yaratır?
+      - Tatlı ve tokluk arasındaki ilişki nedir?
+  - id: ind_temple_prasad
+    name: Tapınak Prasad'ı
+    prompt: |
+      Prasad — kutsanmış yiyecek — tapınaklarda verilir. Basit olabilir:
+      laddu, pirinç. Ama başka bir anlam taşır. O farkındalıkla yiyin. Yiyecek
+      hediye edildiğinde ne değişir?
+    follow_ups:
+      - Prasad restoran yiyeceğinden nasıl farklıdır?
+      - Kutsama ne ekler?
+      - Hediye ve adanmışlık arasındaki ilişki nedir?
+  - id: ind_bone_suck
+    name: Kemik Sömürme
+    prompt: |
+      Bazı Hint yemekleri — nihari, paya — kemiği emmeyi teşvik eder. Başka
+      yerlerde kibar değildir. Burada beklenir. İlik, bağ dokusu. Sömürmek
+      ne çıkarır?
+    follow_ups:
+      - Eylem nasıl görgü kurallarını aşar?
+      - Kemik olmadan yemek ne kaybeder?
+      - Sömürme ve teslimiyet arasındaki ilişki nedir?
+  - id: ind_pressure_cooker_song
+    name: Düdüklü Tencere Şarkısı
+    prompt: |
+      Düdüklü tencere ıslık çalar — bir, iki, üç. Dal ve pirincin fon müziğidir.
+      Bu ses bitti demek. Ondan yoksun mutfak ne olurdu? Şarkı zamanı nasıl
+      şekillendirir?
+    follow_ups:
+      - Düdük bitişi nasıl işaretler?
+      - Instant pot ile ne kaybederdik?
+      - Ses ve güvenlik arasındaki ilişki nedir?
+  - id: ind_curry_leaf_sizzle
+    name: Köri Yaprağı Cızırtısı
+    prompt: |
+      Köri yaprakları sıcak yağa çarpar — Güney Hindistan kavurması. Cızırdayıp
+      aroma salarlar. Onları yemezsiniz; lezzet içindir. Ama oradadırlar.
+      Varlıkları ne ekler?
+    follow_ups:
+      - Köri yaprakları olmadan yemek ne olurdu?
+      - Yenilmeyen nasıl lezzet taşır?
+      - Yaprak ve hafıza arasındaki ilişki nedir?
+  - id: ind_mint_chutney_bright
+    name: Nane Chutney Parlaklığı
+    prompt: |
+      Nane chutney tazedir — ot, yeşil biber, limonun birleşimi. Zenginliği
+      keser, tabağı aydınlatır. Tabağın geri kalanına karşı yeşilliği fark edin.
+      Yeşil kompozisyona ne yapar?
+    follow_ups:
+      - Chutney olmadan yemek ne olurdu?
+      - Tazelik anlatıyı nasıl kesintiye uğratır?
+      - Parlaklık ve denge arasındaki ilişki nedir?
+  - id: ind_wedding_feast
+    name: Düğün Ziyafeti
+    prompt: |
+      Hint düğün yemekleri ölçeklidir — yüzlerce, binlerce kişiye ikram. Açık büfe,
+      çeşitlilik, bolluk. Koreografiyi fark edin. Ölçek yemeği nasıl değiştirir?
+      Kutlama ve tüketim arasındaki ilişki nedir?
+    follow_ups:
+      - Ziyafet olmadan düğün ne olurdu?
+      - Bolluk nasıl misafirperverliği kodlar?
+      - Ziyafet ve statü arasındaki ilişki nedir?

@@ -1,0 +1,508 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# De Menselijke Interface — Werkplek (Dutch)
+
+id: human_interface_workplace
+name: De Menselijke Interface — Werkplek
+description: 50 kaarten om je kijk op de werkplek te veranderen—van bureau-gebieden en vergaderruimtes tot de waterkoeler en zichtbare versus onzichtbare hiërarchie.
+domain: human_interface
+cards:
+  - id: hi_wp_desk_territory
+    name: Bureau Territorium
+    prompt: |
+      Een bureau is bezet—foto's, planten, mokken. Het territorium strekt zich
+      uit buiten het oppervlak. Observeer de grenzen. Wat markeert "mijn"? Het
+      bureau is een klein koninkrijk. Hoe wordt het verdedigd?
+    follow_ups:
+      - Hoe vormt het bureau identiteit?
+      - Hoe zou de werkplek zijn zonder personalisatie?
+      - Wat is de relatie tussen territorium en verbondenheid?
+  - id: hi_wp_meeting_room
+    name: Vergaderruimte
+    prompt: |
+      De ruimte heeft een tafel, stoelen, een scherm. De deur sluit. De
+      vergaderruimte is een podium voor prestaties. Observeer wie spreekt, wie
+      niet. De ruimte bevat hiërarchie. Wat maakt de ruimte mogelijk?
+    follow_ups:
+      - Hoe vormt de ruimte de vergadering?
+      - Hoe zou de werkplek zijn zonder vergaderruimtes?
+      - Wat is de relatie tussen ruimte en macht?
+  - id: hi_wp_water_cooler
+    name: Waterkoeler
+    prompt: |
+      De waterkoeler is een kruispunt. Mensen ontmoeten elkaar daar toevallig.
+      De ontmoeting is informeel. Observeer de gesprekken. Wat wordt er bij de
+      koeler gezegd wat niet in een vergadering gezegd zou worden?
+    follow_ups:
+      - Hoe vormt de koeler de cultuur?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen koeler en verbinding?
+  - id: hi_wp_visible_hierarchy
+    name: Zichtbare Hiërarchie
+    prompt: |
+      Directiekamers, bureaus bij het raam, cubicles. De ruimte codeert rang.
+      Observeer de distributie. Wie krijgt wat? De hiërarchie is ingebouwd in de
+      architectuur. Wat communiceert het?
+    follow_ups:
+      - Hoe vormt de hiërarchie gedrag?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen ruimte en status?
+  - id: hi_wp_invisible_hierarchy
+    name: Onzichtbare Hiërarchie
+    prompt: |
+      Sommige mensen worden gehoord; anderen worden onderbroken. De hiërarchie
+      staat niet op het organigram. Observeer de vergaderingen. Wie delegeert?
+      Wie domineert? De onzichtbare hiërarchie vormt de resultaten.
+    follow_ups:
+      - Hoe ontstaat de onzichtbare hiërarchie?
+      - Hoe zou de werkplek zijn als deze zichtbaar was?
+      - Wat is de relatie tussen onzichtbaar en macht?
+  - id: hi_wp_cubicle_wall
+    name: Cubicle Muur
+    prompt: |
+      De muur is laag—je kunt eroverheen kijken. Privacy is gedeeltelijk. De
+      cubicle is een compromis. Observeer de zichtlijnen. Wat kun je horen? Wat
+      kun je zien? De muur creëert een illusie van een grens.
+    follow_ups:
+      - Hoe vormt de cubicle de focus?
+      - Hoe zou de werkplek zijn met volledige muren?
+      - Wat is de relatie tussen muur en privacy?
+  - id: hi_wp_corner_office
+    name: Hoekbureau
+    prompt: |
+      Het hoekbureau heeft twee ramen. Het is de prijs. Observeer wie het
+      bezit. Het hoekbureau is zichtbaar vanaf de verdieping. Het is een symbool.
+      Wat communiceert de hoek?
+    follow_ups:
+      - Hoe vormt het hoekbureau ambitie?
+      - Hoe zou de verdieping zijn zonder?
+      - Wat is de relatie tussen hoek en autoriteit?
+  - id: hi_wp_open_plan
+    name: Open Kantoorplan
+    prompt: |
+      Geen muren. Bureaus in rijen of pods. Het open kantoorplan belooft
+      samenwerking. Observeer de realiteit. Wie draagt een koptelefoon? Het open
+      kantoorplan creëert nabijheid. Wat kost het?
+    follow_ups:
+      - Hoe vormt het open kantoorplan interactie?
+      - Hoe zou de werkplek zijn met muren?
+      - Wat is de relatie tussen open en focus?
+  - id: hi_wp_calendar_invite
+    name: Agenda-uitnodiging
+    prompt: |
+      De uitnodiging verschijnt. Accepteren, weigeren, voorlopig. De agenda
+      structureert de dag. Observeer de blokken. Wie bepaalt iemands tijd? De
+      agenda is een kaart van macht.
+    follow_ups:
+      - Hoe vormt de agenda de dag?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen uitnodiging en verplichting?
+  - id: hi_wp_knock_before_enter
+    name: Kloppen Voor Binnenkomst
+    prompt: |
+      Sommige deuren zijn gesloten. Het kloppen is een verzoek. Observeer wie
+      er klopt en wie er binnenloopt. Het kloppen codeert respect. Wat
+      beschermt de gesloten deur?
+    follow_ups:
+      - Hoe vormt het kloppen de ontmoeting?
+      - Hoe zou de werkplek zijn met open deuren?
+      - Wat is de relatie tussen kloppen en grens?
+  - id: hi_wp_headphones_signal
+    name: Koptelefoon Signaal
+    prompt: |
+      Koptelefoon op betekent "niet storen." Het signaal is universeel. Observeer
+      wie het respecteert. De koptelefoon creëert een bubbel. Wat maakt de
+      bubbel mogelijk?
+    follow_ups:
+      - Hoe vormen koptelefoons de verdieping?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen koptelefoon en focus?
+  - id: hi_wp_lunch_room
+    name: Lunchruimte
+    prompt: |
+      De lunchruimte heeft tafels, magnetron, koelkast. Mensen eten alleen of
+      samen. Observeer de groepjes. Wie zit bij wie? De lunchruimte onthult
+      allianties. Wat zegt de opstelling?
+    follow_ups:
+      - Hoe vormt de lunchruimte de cultuur?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen lunch en verbinding?
+  - id: hi_wp_slack_ping
+    name: Slack Ping
+    prompt: |
+      De ping arriveert. Onmiddellijk, asynchroon. De ping kan onderbreken of
+      wachten. Observeer de normen. Wie reageert onmiddellijk? De ping creëert
+      een nieuw ritme van communicatie. Wat vervangt het?
+    follow_ups:
+      - Hoe vormt de ping de dag?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen ping en urgentie?
+  - id: hi_wp_whiteboard_claim
+    name: Whiteboard Claim
+    prompt: |
+      Het whiteboard bevat ideeën—diagrammen, lijsten. Iemand heeft ze
+      geschreven. Het bord is een gedeeld oppervlak. Observeer wie schrijft, wie
+      uitwist. Het bord is territorium. Wat bevat het?
+    follow_ups:
+      - Hoe vormt het whiteboard de samenwerking?
+      - Hoe zou de vergadering zijn zonder?
+      - Wat is de relatie tussen bord en gedachte?
+  - id: hi_wp_elevator_encounter
+    name: Lift Ontmoeting
+    prompt: |
+      Je deelt de lift met een collega. Dertig seconden. De ontmoeting is
+      ongemakkelijk of gemakkelijk. Observeer het kleine praatje. Wat wordt er
+      gezegd? De lift comprimeert tijd. Wat vereist het?
+    follow_ups:
+      - Hoe vormt de lift de ontmoeting?
+      - Hoe zou het gebouw zijn zonder liften?
+      - Wat is de relatie tussen lift en beleefdheid?
+  - id: hi_wp_cc_email
+    name: CC E-mail
+    prompt: |
+      Je staat in de CC. Je bent niet de hoofdontvanger. De cc neemt je mee
+      in de lus. Observeer wie in de cc wordt gezet. De cc is een signaal van
+      relevantie—of politiek. Wat doet de cc?
+    follow_ups:
+      - Hoe vormt de cc de communicatie?
+      - Hoe zou de werkplek zijn zonder cc?
+      - Wat is de relatie tussen cc en zichtbaarheid?
+  - id: hi_wp_standing_desk
+    name: Staand Bureau
+    prompt: |
+      Het bureau gaat omhoog. De werknemer staat. Het staande bureau is een
+      keuze—gezondheid, voorkeur, prestatie. Observeer wie er een heeft. Wat
+      signaleert het staande bureau?
+    follow_ups:
+      - Hoe vormt het staande bureau het lichaam?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen staan en productiviteit?
+  - id: hi_wp_conference_call
+    name: Conferentiegesprek
+    prompt: |
+      Stemmen van elders. Het gesprek verbindt verspreide mensen. Observeer
+      wie spreekt, wie dempt. Het gesprek is een gedeeltelijke aanwezigheid. Wat
+      maakt het gesprek mogelijk—en wat verliest het?
+    follow_ups:
+      - Hoe vormt het gesprek de vergadering?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen gesprek en aanwezigheid?
+  - id: hi_wp_office_plant
+    name: Kantoorplant
+    prompt: |
+      Een plant op het bureau—epipremnum, vetplant. Het is decoratie en zorg.
+      De plant behoort niet toe aan het bedrijf. Observeer wie er een heeft. Wat
+      voegt de plant toe aan de ruimte?
+    follow_ups:
+      - Hoe vormt de plant het bureau?
+      - Hoe zou de werkplek zijn zonder planten?
+      - Wat is de relatie tussen plant en identiteit?
+  - id: hi_wp_after_hours
+    name: Na Kantooruren
+    prompt: |
+      Het kantoor nadat de meesten weg zijn. De lichten zijn gedimd. De werknemer
+      na kantooruren is zichtbaar—toegewijd of worstelend. Observeer de scène. Wat
+      maakt het lege kantoor mogelijk? Wat kost het?
+    follow_ups:
+      - Hoe vormt de tijd na kantooruren de cultuur?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen uren en verwachting?
+  - id: hi_wp_nameplate
+    name: Naamplaatje
+    prompt: |
+      Een naam op het bureau, op de deur. Het naamplaatje claimt de ruimte.
+      Observeer wie er een heeft. Het naamplaatje is identiteit en territorium.
+      Wat communiceert het naar passanten?
+    follow_ups:
+      - Hoe vormt het naamplaatje de ruimte?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen naamplaatje en aanwezigheid?
+  - id: hi_wp_meeting_overrun
+    name: Vergadering Uitloop
+    prompt: |
+      De vergadering zou afgelopen moeten zijn. Dat is niet zo. De uitloop is
+      gebruikelijk. Observeer de dynamiek. Wie heeft de volgende vergadering? Wie
+      kan blijven? De uitloop is een machtsspel. Wat onttrekt het?
+    follow_ups:
+      - Hoe vormt de uitloop de dag?
+      - Hoe zou de werkplek zijn met strikte eindes?
+      - Wat is de relatie tussen uitloop en respect?
+  - id: hi_wp_quick_question
+    name: Snelle Vraag
+    prompt: |
+      "Heb je een snelle vraag?" De vraag onderbreekt. Het "snelle" is een
+      belofte. Observeer de uitwisseling. Hoe snel is het? De snelle vraag is een
+      onderhandeling over tijd. Wat kost het?
+    follow_ups:
+      - Hoe vormt de snelle vraag de flow?
+      - Hoe zou de werkplek zijn zonder onderbrekingen?
+      - Wat is de relatie tussen snel en respect?
+  - id: hi_wp_bathroom_encounter
+    name: Badkamer Ontmoeting
+    prompt: |
+      Je ziet een collega in de badkamer. De ontmoeting is ambigu. Oogcontact
+      of niet? De badkamer is een liminale ruimte. Observeer de normen. Wat
+      vereist de ontmoeting?
+    follow_ups:
+      - Hoe vormt de badkamer de werkplek?
+      - Hoe zou de werkplek zijn zonder gedeelde badkamers?
+      - Wat is de relatie tussen badkamer en privacy?
+  - id: hi_wp_commute_talk
+    name: Reisgesprek
+    prompt: |
+      "Hoe was de reis?" De vraag opent een klein praatje. De reis is gedeelde
+      ervaring. Observeer de uitwisseling. Wat doet het reisgesprek voor de
+      relatie?
+    follow_ups:
+      - Hoe vormt reisgesprek de dag?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen reis en verbinding?
+  - id: hi_wp_parking_spot
+    name: Parkeerplek
+    prompt: |
+      Gereserveerde plekken, plekken voor eerstkomenden. Het parkeren codeert
+      hiërarchie. Observeer wie waar parkeert. De plek is een klein
+      voorrecht. Wat communiceert het?
+    follow_ups:
+      - Hoe vormt parkeren de werkplek?
+      - Hoe zou het parkeerterrein zijn zonder gereserveerde plekken?
+      - Wat is de relatie tussen plek en status?
+  - id: hi_wp_birthday_cake
+    name: Verjaardagstaart
+    prompt: |
+      Er verschijnt een taart. Het is iemands verjaardag. Het team verzamelt zich.
+      De taart is ritueel. Observeer de bijeenkomst. Wat doet het
+      verjaardagsmoment voor de groep?
+    follow_ups:
+      - Hoe vormt de verjaardag de cultuur?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen taart en verbondenheid?
+  - id: hi_wp_forwarded_email
+    name: Doorgestuurde E-mail
+    prompt: |
+      Een e-mail wordt doorgestuurd. "Ter info" of "Dacht dat je dit moest
+      zien." De doorsturing breidt het gesprek uit. Observeer wie wordt
+      doorgestuurd. De doorsturing is een signaal. Wat betekent het?
+    follow_ups:
+      - Hoe vormt de doorsturing de communicatie?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen doorsturen en vertrouwen?
+  - id: hi_wp_break_room
+    name: Pauzeruimte
+    prompt: |
+      Koffie, snacks, soms een bank. De pauzeruimte is een pauze. Mensen gaan
+      erheen om weg te stappen. Observeer wie het gebruikt. De pauzeruimte is een
+      toevluchtsoord. Wat biedt het?
+    follow_ups:
+      - Hoe vormt de pauzeruimte de dag?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen pauze en productiviteit?
+  - id: hi_wp_office_supply
+    name: Kantoorvoorraad
+    prompt: |
+      Pennnen, papier, nietmachines—de voorraadkast bevat de gereedschappen.
+      Iemand beheert het. Observeer wie wat pakt. De voorraad is een kleine
+      gemeenschappelijke ruimte. Wat zijn de regels?
+    follow_ups:
+      - Hoe vormt de voorraad de werkplek?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen voorraad en rechtvaardigheid?
+  - id: hi_wp_remote_camera
+    name: Afstandscamera
+    prompt: |
+      De camera staat aan of uit. De externe werknemer kiest. De keuze is
+      zichtbaar. Observeer de normen. Wie houdt hem aan? De camera is een
+      venster. Wat onthult het?
+    follow_ups:
+      - Hoe vormt de camera het gesprek?
+      - Hoe zou de vergadering zijn zonder?
+      - Wat is de relatie tussen camera en aanwezigheid?
+  - id: hi_wp_side_conversation
+    name: Zijgesprek
+    prompt: |
+      Twee mensen praten terwijl anderen werken. Het zijgesprek is privé maar
+      zichtbaar. Observeer de dynamiek. Is het storend? Het zijgesprek is een
+      kleine rebellie. Wat creëert het?
+    follow_ups:
+      - Hoe vormt het zijgesprek de verdieping?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen zij en uitsluiting?
+  - id: hi_wp_clean_desk
+    name: Schoon Bureau
+    prompt: |
+      Sommige bureaus zijn brandschoon—niets persoonlijks. Het schone bureau
+      is beleid of voorkeur. Observeer het contrast. Wat communiceert het schone
+      bureau? Steriliteit? Discipline? Afstandelijkheid?
+    follow_ups:
+      - Hoe vormt het schone bureau de werknemer?
+      - Hoe zou de werkplek zijn met rommelige bureaus?
+      - Wat is de relatie tussen schoon en identiteit?
+  - id: hi_wp_meeting_no_show
+    name: Meeting No-Show
+    prompt: |
+      De vergadering was gepland. Iemand komt niet opdagen. De no-show is een
+      boodschap. Observeer de reactie. Noemt iemand het? De no-show is een
+      kleine machtsvertoon. Wat communiceert het?
+    follow_ups:
+      - Hoe vormt de no-show de vergadering?
+      - Hoe zou de werkplek zijn zonder no-shows?
+      - Wat is de relatie tussen no-show en respect?
+  - id: hi_wp_cubicle_visit
+    name: Cubicle Bezoek
+    prompt: |
+      Iemand loopt langs. Ze staan aan de rand van de cubicle. Het bezoek is een
+      keuze—ze hadden kunnen berichten. Observeer de dynamiek. Wat maakt het
+      bezoek mogelijk dat een bericht niet kan?
+    follow_ups:
+      - Hoe vormt het bezoek de interactie?
+      - Hoe zou de werkplek zijn zonder bezoeken?
+      - Wat is de relatie tussen bezoek en onderbreking?
+  - id: hi_wp_shared_printer
+    name: Gedeelde Printer
+    prompt: |
+      De printer wordt gedeeld. Documenten stapelen zich op. Iemand moet
+      verzamelen. De printer is een kruispunt. Observeer de ontmoetingen. Wat
+      gebeurt er als twee mensen naar dezelfde output reiken?
+    follow_ups:
+      - Hoe vormt de printer de verdieping?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen printer en geduld?
+  - id: hi_wp_office_temperature
+    name: Kantoortemperatuur
+    prompt: |
+      "Het is te koud." "Het is te warm." De temperatuur is betwist. Iemand
+      regelt de thermostaat. Observeer de klachten. De temperatuur is een kleine
+      machtspositie. Wie wint?
+    follow_ups:
+      - Hoe vormt temperatuur de werkplek?
+      - Hoe zou de werkplek zijn met individuele controle?
+      - Wat is de relatie tussen temperatuur en comfort?
+  - id: hi_wp_handshake
+    name: Handdruk
+    prompt: |
+      De handdruk—eerste ontmoeting, deal gesloten. De handdruk is ritueel.
+      Observeer de grip, de duur. De handdruk codeert formaliteit. Wat
+      commuunicieert het?
+    follow_ups:
+      - Hoe vormt de handdruk de ontmoeting?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen handdruk en vertrouwen?
+  - id: hi_wp_cc_removal
+    name: CC Verwijdering
+    prompt: |
+      "Antwoord iedereen" of "Antwoorden"? De keuze is belangrijk. Iemand
+      verwijderen uit de draad is een signaal. Observeer de dynamiek. Wie wordt
+      gedropt? De cc-verwijdering is een kleine uitsluiting. Wat betekent het?
+    follow_ups:
+      - Hoe vormt de verwijdering het gesprek?
+      - Hoe zou de werkplek zijn zonder antwoordopties?
+      - Wat is de relatie tussen verwijdering en macht?
+  - id: hi_wp_office_tour
+    name: Kantoor Tour
+    prompt: |
+      Een nieuwe werknemer krijgt een rondleiding. "Dit is de keuken. Dit is
+      waar we vergaderen." De rondleiding oriënteert. Observeer de gids. Wat
+      commuunicieert de rondleiding over de cultuur?
+    follow_ups:
+      - Hoe vormt de rondleiding de nieuwkomer?
+      - Hoe zou onboarding zijn zonder?
+      - Wat is de relatie tussen rondleiding en verbondenheid?
+  - id: hi_wp_meeting_room_book
+    name: Vergaderruimte Boeking
+    prompt: |
+      De ruimte is geboekt. Of dubbel geboekt. De agenda is de scheidsrechter.
+      Observeer het conflict. Wie geeft toe? De boeking is een claim op ruimte en
+      tijd. Wat vereist het?
+    follow_ups:
+      - Hoe vormt de boeking de dag?
+      - Hoe zou de werkplek zijn zonder boeking?
+      - Wat is de relatie tussen boeking en prioriteit?
+  - id: hi_wp_goodbye_ritual
+    name: Afscheidsritueel
+    prompt: |
+      Einde van de dag. "Ga naar huis." "Tot morgen." Het afscheid is ritueel.
+      Observeer de uitwisselingen. Wie zegt wie gedag? Het ritueel markeert de
+      grens tussen werk en niet-werk.
+    follow_ups:
+      - Hoe vormt het afscheid de dag?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen afscheid en afsluiting?
+  - id: hi_wp_promotion_announce
+    name: Promotie Aankondiging
+    prompt: |
+      "We kondigen met genoegen aan..." De promotie is publiek. De aankondiging
+      creëert een moment. Observeer de reactie. Gefeliciteerd, stilte, zijdelingse
+      blikken. Wat doet de aankondiging met de ruimte?
+    follow_ups:
+      - Hoe vormt de aankondiging de cultuur?
+      - Hoe zou de werkplek zijn zonder publieke promoties?
+      - Wat is de relatie tussen aankondiging en hiërarchie?
+  - id: hi_wp_desk_move
+    name: Bureau Verplaatsing
+    prompt: |
+      Iemand verplaatst bureaus. De verplaatsing is promotie, reorganisatie of
+      keuze. Observeer het proces. Wat nemen ze mee? Wat laten ze achter? De
+      verplaatsing is een overgang. Wat betekent het?
+    follow_ups:
+      - Hoe vormt de verplaatsing de werknemer?
+      - Hoe zou de werkplek zijn zonder verplaatsingen?
+      - Wat is de relatie tussen verplaatsing en identiteit?
+  - id: hi_wp_office_gossip
+    name: Kantoor Geruchten
+    prompt: |
+      Informatie reist—wie gaat weg, wie is gefrustreerd. De geruchten zijn
+      informeel. Observeer waar het gebeurt. De waterkoeler, de gang. Wat doen de
+      geruchten voor de groep?
+    follow_ups:
+      - Hoe vormen geruchten de cultuur?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen geruchten en verbondenheid?
+  - id: hi_wp_meeting_agenda
+    name: Vergaderagenda
+    prompt: |
+      De agenda structureert de vergadering. Of niet—de vergadering dwaalt af.
+      Observeer de dynamiek. Wie volgt de agenda? Wie niet? De agenda is een
+      contract. Wat maakt het mogelijk?
+    follow_ups:
+      - Hoe vormt de agenda de vergadering?
+      - Hoe zou de vergadering zijn zonder?
+      - Wat is de relatie tussen agenda en macht?
+  - id: hi_wp_office_food
+    name: Kantooreten
+    prompt: |
+      Donuts, fruit, restjes van een klantvergadering. Het eten verschijnt.
+      Mensen verzamelen zich. Observeer het delen. Het kantooreten is een klein
+      geschenk. Wat creëert het?
+    follow_ups:
+      - Hoe vormt het eten de werkplek?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen eten en gemeenschap?
+  - id: hi_wp_last_day
+    name: Laatste Dag
+    prompt: |
+      Iemands laatste dag. Afscheid, misschien een kaart, misschien taart. De
+      laatste dag is een ritueel van vertrek. Observeer de stemming. Wat doet de
+      laatste dag voor de vertrekker en degenen die blijven?
+    follow_ups:
+      - Hoe vormt de laatste dag de cultuur?
+      - Hoe zou de werkplek zijn zonder het ritueel?
+      - Wat is de relatie tussen laatste dag en afsluiting?
+  - id: hi_wp_office_hours
+    name: Kantooruren
+    prompt: |
+      "Ik heb kantooruren dinsdag 14.00-16.00." Het blok is open. Mensen kunnen
+      langskomen. Observeer wie er komt. De kantooruren zijn een uitnodiging. Wat
+      maken ze mogelijk?
+    follow_ups:
+      - Hoe vormen kantooruren de toegang?
+      - Hoe zou de werkplek zijn zonder?
+      - Wat is de relatie tussen uren en beschikbaarheid?
+  - id: hi_wp_workspace_claim
+    name: Werkplek Claim
+    prompt: |
+      Een jas op de stoel. Een tas onder het bureau. De claim zegt "Ik ben hier"
+      of "Ik kom terug." Observeer de signalen. Hoe lang kan een claim
+      standhouden? De werkplek is tijdelijk bezit. Wat zijn de regels?
+    follow_ups:
+      - Hoe vormt de claim de verdieping?
+      - Hoe zou de werkplek zijn zonder claims?
+      - Wat is de relatie tussen claim en aanwezigheid?

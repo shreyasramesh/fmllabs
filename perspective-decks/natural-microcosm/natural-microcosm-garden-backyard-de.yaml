@@ -1,0 +1,421 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natürlicher Mikrokosmos — Garten & Hinterhof (German)
+
+id: natural_microcosm_garden_backyard
+name: Natürlicher Mikrokosmos — Garten & Hinterhof
+description: 50 Karten, um Ihre Sicht auf die heimische Wildnis zu verändern – von Bestäubern und Erde bis hin zu Unkraut und Feldfrüchten und der Choreographie der kultivierten Natur.
+domain: natural_microcosm
+cards:
+  - id: nmg_bee_landing
+    name: Landung einer Biene
+    prompt: |
+      Beobachten Sie, wie eine Biene auf einer Blume landet. Der Anflug, die Berührung, das Schweben.
+      Die Biene ist sowohl Raubtier als auch Bestäuber. Was gewinnt die Blume? Was riskiert sie?
+    follow_ups:
+      - Wie beeinflusst die Landung den nächsten Besuch?
+      - Was wäre der Garten ohne Bienen?
+      - Wie ist die Beziehung zwischen Blume und Biene?
+  - id: nmg_soil_crumble
+    name: Erdklumpen
+    prompt: |
+      Nehmen Sie eine Handvoll Erde in die Hand. Fühlen Sie die Textur – den Krümel, die Körner.
+      Diese Erde birgt Geschichte, Tod, Wiedergeburt. Was lebte hier zuvor? Was wird daraus wachsen?
+    follow_ups:
+      - Wie beeinflusst die Erde, was wächst?
+      - Was würde sterile Erde bedeuten?
+      - Wie ist die Beziehung zwischen Krümel und Leben?
+  - id: nmg_weed_edge
+    name: Unkraut am Rand
+    prompt: |
+      Ein Unkraut wächst dort, wo der Rasen auf das Beet trifft. Es wurde nicht gepflanzt. Es wurde
+      eingeladen – oder hat sich selbst eingeladen. Betrachten Sie die Grenze. Wer zieht die Linie
+      zwischen Unkraut und Blume?
+    follow_ups:
+      - Was wäre der Garten ohne Unkraut?
+      - Wie erzeugt der Rand Spannung?
+      - Wie ist die Beziehung zwischen Unkraut und Absicht?
+  - id: nmg_compost_steam
+    name: Kompostdampf
+    prompt: |
+      Wenden Sie einen Komposthaufen. Dampf steigt auf – die Zersetzung ist im Gange. Die Wärme ist
+      mikrobielle Arbeit. Was einst Küchenabfall war, wird zu Erde. Verfolgen Sie die
+      Umwandlung.
+    follow_ups:
+      - Was würde dem Garten ohne Kompost fehlen?
+      - Wie kennzeichnet die Wärme den Prozess?
+      - Wie ist die Beziehung zwischen Abfall und Fruchtbarkeit?
+  - id: nmg_seed_dormancy
+    name: Samendormanz
+    prompt: |
+      Ein Samen in der Erde kann Jahre – Jahrzehnte – warten. Er ist lebendig, aber pausiert. Was
+      weckt ihn? Licht, Wasser, Feuer, Störung. Betrachten Sie die Geduld eines
+      Samens.
+    follow_ups:
+      - Was würde die Keimung ohne Dormanz verlieren?
+      - Wie prägt das Warten das Überleben?
+      - Wie ist die Beziehung zwischen Pause und Entstehung?
+  - id: nmg_bird_bath
+    name: Vogelbad
+    prompt: |
+      Ein Vogelbad ist eine Einladung. Beobachten Sie, wer kommt – Spatzen, Rotkehlchen, vielleicht ein
+      Eichelhäher. Das Bad schafft Begegnungen. Was wäre der Hof ohne diese
+      kleine Wasserstelle?
+    follow_ups:
+      - Wie prägt das Bad, wer vorbeikommt?
+      - Was ist die Choreographie der Ankunft?
+      - Wie ist die Beziehung zwischen Wasser und Vogel?
+  - id: nmg_tomato_truss
+    name: Tomatenrispe
+    prompt: |
+      Eine Tomatenrispe trägt grüne Früchte, dann rote. Studieren Sie die Architektur. Der
+      Stiel, die Zweige, das Gewicht. Die Pflanze ist Ingenieurskunst. Was trägt sie?
+    follow_ups:
+      - Was wäre die Pflanze ohne die Rispe?
+      - Wie prägt die Struktur die Ernte?
+      - Wie ist die Beziehung zwischen Form und Frucht?
+  - id: nmg_aphid_column
+    name: Blattlauskolonie
+    prompt: |
+      Blattläuse drängen sich auf einem Stiel – saugen, vermehren sich. Sie sind sowohl Schädling als auch
+      Beute. Marienkäfer werden kommen. Beachten Sie die Ökologie. Wie ist die Beziehung zwischen
+      Ausbruch und Gleichgewicht?
+    follow_ups:
+      - Was wäre die Pflanze ohne Blattläuse?
+      - Wie zieht die Kolonie Raubtiere an?
+      - Wie ist die Beziehung zwischen Schädling und Ökosystem?
+  - id: nmg_hose_spray
+    name: Gartenschlauchsprühstrahl
+    prompt: |
+      Wasser aus einem Schlauch trifft auf den Boden. Beobachten Sie, wie es sich sammelt, einsickert,
+      fließt. Der Sprühstrahl ist künstlicher Regen. Wie unterscheidet er sich vom Original? Was erhält die
+      Pflanze?
+    follow_ups:
+      - Was wäre der Garten ohne den Schlauch?
+      - Wie prägt die Bewässerung das Wachstum?
+      - Wie ist die Beziehung zwischen Sprühstrahl und Regen?
+  - id: nmg_lawn_mow
+    name: Rasenmähen
+    prompt: |
+      Ein Rasen ist eine verwaltete Wildnis – auf eine Höhe geschnitten, grün gehalten. Das Mähen unterbricht
+      das Wachstum. Überlegen Sie, was aus dem Rasen würde, wenn er allein gelassen würde. Was halten wir
+      zurück?
+    follow_ups:
+      - Was wäre der Hof ohne Mähen?
+      - Wie prägt der Schnitt die Identität?
+      - Wie ist die Beziehung zwischen Rasen und Kontrolle?
+  - id: nmg_pot_bound
+    name: Topfgebunden
+    prompt: |
+      Eine Pflanze im Topf – Wurzeln kreisen, suchen. Der Topf ist eine Grenze. Was würde die Pflanze
+      mit unbegrenztem Boden tun? Der Topf ist sowohl Gefängnis als auch
+      Schutz. Betrachten Sie den Kompromiss.
+    follow_ups:
+      - Was wäre die Pflanze ohne den Topf?
+      - Wie prägt die Begrenzung das Wachstum?
+      - Wie ist die Beziehung zwischen Wurzel und Wand?
+  - id: nmg_mulch_layer
+    name: Mulchschicht
+    prompt: |
+      Mulch bedeckt den Boden – Holzschnitzel, Stroh, Blätter. Er speichert Feuchtigkeit,
+      unterdrückt Unkraut und wird schließlich zu Erde. Die Schicht ist temporär. Was tut sie, solange sie
+      da ist?
+    follow_ups:
+      - Was wäre das Beet ohne Mulch?
+      - Wie erzeugt die Schicht ein Mikroklima?
+      - Wie ist die Beziehung zwischen Bedeckung und Boden?
+  - id: nmg_hummingbird_hover
+    name: Kolibri-Schweben
+    prompt: |
+      Ein Kolibri schwebt an einer Blume – Flügel sind vor Schnelligkeit unsichtbar. Das Schweben ist
+      kostspielig. Der Nektar muss es wert sein. Betrachten Sie die Wirtschaftlichkeit des
+      Besuchs.
+    follow_ups:
+      - Was wäre die Blume ohne den Kolibri?
+      - Wie prägt das Schweben die Beziehung?
+      - Wie ist die Beziehung zwischen Kosten und Belohnung?
+  - id: nmg_fence_creep
+    name: Zaun-Schlinger
+    prompt: |
+      Efeu oder Prunkwinde rankt sich an einem Zaun entlang. Die Pflanze weiß nicht, dass der Zaun
+      menschengemacht ist. Sie klettert trotzdem. Betrachten Sie die Begegnung zwischen
+      Wachstum und Struktur.
+    follow_ups:
+      - Was würde die Pflanze ohne den Zaun erklimmen?
+      - Wie prägt der Zaun die Ranke?
+      - Wie ist die Beziehung zwischen Klettern und Halt?
+  - id: nmg_worm_cast
+    name: Regenwurmkot
+    prompt: |
+      Regenwurmkot – kleine Erdklumpen – punktieren den Rasen. Der Wurm ist hindurchgegangen und hat
+      Fruchtbarkeit hinterlassen. Der Kot ist Archäologie. Was hat der Wurm verarbeitet? Was hat er hinterlassen?
+    follow_ups:
+      - Was wäre die Erde ohne Regenwürmer?
+      - Wie kennzeichnet der Kot die Arbeit des Wurms?
+      - Wie ist die Beziehung zwischen Kot und Belüftung?
+  - id: nmg_squirrel_cache
+    name: Eichhörnchen-Versteck
+    prompt: |
+      Ein Eichhörnchen vergräbt eine Nuss – und vergisst sie dann. Die Nuss kann keimen. Das Eichhörnchen
+      ist ein zufälliger Gärtner. Betrachten Sie die Beziehung zwischen Erinnerung und Verbreitung. Was wächst
+      aus Vergesslichkeit?
+    follow_ups:
+      - Was wäre die Eiche ohne das Eichhörnchen?
+      - Wie prägt das Vergraben die Ausbreitung des Waldes?
+      - Wie ist die Beziehung zwischen Vergraben und Keimen?
+  - id: nmg_dew_morning
+    name: Morgentau
+    prompt: |
+      Morgentau perlt auf den Blättern. Jeder Tropfen birgt Licht. Der Tau ist
+      Kondensation – Wasser aus der Luft. Er wird bis mittags verdunsten. Betrachten Sie das
+      kurze Geschenk. Was erhält die Pflanze?
+    follow_ups:
+      - Was wäre das Blatt ohne den Tau?
+      - Wie prägt die Perle den Morgen?
+      - Wie ist die Beziehung zwischen Kondensation und Blatt?
+  - id: nmg_prune_scar
+    name: Schnittnarbe
+    prompt: |
+      Eine Schnittnarbe kennzeichnet, wo ein Ast abgeschnitten wurde. Der Baum hat sich geheilt – oder es versucht.
+      Die Narbe ist Geschichte. Was wurde entfernt? Warum? Was erinnert der Baum?
+    follow_ups:
+      - Was wäre der Baum ohne den Schnitt?
+      - Wie prägt der Schnitt das Wachstum?
+      - Wie ist die Beziehung zwischen Wunde und Form?
+  - id: nmg_sunflower_turn
+    name: Sonnenblumen-Drehung
+    prompt: |
+      Eine junge Sonnenblume dreht sich mit der Sonne – morgens nach Osten, abends nach Westen. Die
+      Bewegung ist Heliotropismus. Die Pflanze folgt dem Licht. Betrachten Sie die
+      Choreographie. Was würde ein festes Gesicht bedeuten?
+    follow_ups:
+      - Was wäre die Sonnenblume ohne die Drehung?
+      - Wie prägt das Folgen das Wachstum?
+      - Wie ist die Beziehung zwischen Bewegung und Licht?
+  - id: nmg_slug_trail
+    name: Schleimspur
+    prompt: |
+      Eine Schnecke hinterlässt eine Spur – silbern, klebrig. Die Spur markiert den Weg. Sie
+      schützt auch den Fuß der Schnecke. Betrachten Sie die Spur als sowohl Aufzeichnung als auch
+      Anpassung. Was ermöglicht sie?
+    follow_ups:
+      - Was wäre die Schnecke ohne die Spur?
+      - Wie prägt der Schleim die Bewegung?
+      - Wie ist die Beziehung zwischen Spur und Raubtier?
+  - id: nmg_birdhouse_hole
+    name: Meisenkastenloch
+    prompt: |
+      Ein Meisenkasten hat ein Loch – mit einem bestimmten Durchmesser. Es schließt einige Vögel aus,
+      lädt andere ein. Das Loch ist ein Filter. Für wen wurde es entworfen? Wer hat es beansprucht?
+    follow_ups:
+      - Was wäre der Hof ohne den Meisenkasten?
+      - Wie prägt das Loch, wer nistet?
+      - Wie ist die Beziehung zwischen Loch und Bewohner?
+  - id: nmg_root_hair
+    name: Wurzelhaar
+    prompt: |
+      Wurzelhaare sind von oben unsichtbar – winzige Ausläufer, die Wasser und Nährstoffe aufnehmen. Die Schnittstelle der Pflanze mit dem Boden. Betrachten Sie, was darunter geschieht. Was würde die Pflanze ohne sie verlieren?
+    follow_ups:
+      - Wie prägt das Haar die Absorption?
+      - Wie ist die Beziehung zwischen Haar und Boden?
+      - Was würden Sie sehen, wenn Sie sie sehen könnten?
+  - id: nmg_frost_leaf
+    name: Frost auf dem Blatt
+    prompt: |
+      Frostmuster auf einem Blatt – kristallin, zart. Der Frost ist Wasser, das aus der Luft gefriert. Er wird mit der Sonne schmelzen. Betrachten Sie die temporäre Kunst. Was erlebt das Blatt?
+    follow_ups:
+      - Was wäre der Morgen ohne Frost?
+      - Wie prägt der Frost den Tag des Blattes?
+      - Wie ist die Beziehung zwischen Kristall und Zelle?
+  - id: nmg_companion_plant
+    name: Mischkulturpflanze
+    prompt: |
+      Basilikum neben Tomaten. Ringelblumen neben Kürbissen. Mischkultur ist strategische Nähe. Einige Pflanzen stoßen ab; einige ziehen an. Betrachten Sie das soziale Leben des Beetes.
+    follow_ups:
+      - Was wäre die Tomate ohne das Basilikum?
+      - Wie prägt die Nähe den Garten?
+      - Wie ist die Beziehung zwischen Nachbar und Schädling?
+  - id: nmg_fallen_apple
+    name: Gefallener Apfel
+    prompt: |
+      Ein Apfel fällt – ungepflückt, überreif. Er wird verrotten, Wespen füttern, vielleicht einen Sämling hervorbringen. Der Fall ist sowohl Abfall als auch Anfang. Betrachten Sie den Bogen vom Zweig zum Boden.
+    follow_ups:
+      - Was wäre der Boden ohne den Fall?
+      - Wie prägt die Verrottung, was danach kommt?
+      - Wie ist die Beziehung zwischen Fall und Verbreitung?
+  - id: nmg_spider_web_corner
+    name: Spinnennetz in der Ecke
+    prompt: |
+      Ein Spinnennetz spannt sich über eine Ecke des Schuppens. Tau fängt sich im Seidengarn. Das Netz ist sowohl Falle als auch Zuhause. Betrachten Sie die Ökonomie der Spinne. Was investiert sie? Was erntet sie?
+    follow_ups:
+      - Was wäre die Ecke ohne das Netz?
+      - Wie prägt das Netz den Tag der Spinne?
+      - Wie ist die Beziehung zwischen Seide und Beute?
+  - id: nmg_seed_packet
+    name: Saatgutpäckchen
+    prompt: |
+      Ein Saatgutpäckchen – Foto auf der Vorderseite, Anleitung auf der Rückseite. Das Päckchen ist ein Versprechen. Was wird aus diesen winzigen Punkten hervorgehen? Betrachten Sie die Beziehung zwischen Bild und Realität.
+    follow_ups:
+      - Was wäre der Garten ohne das Päckchen?
+      - Wie prägt das Päckchen die Erwartung?
+      - Wie ist die Beziehung zwischen Versprechen und Pflanze?
+  - id: nmg_rain_barrel
+    name: Regentonnen
+    prompt: |
+      Eine Regentonne fängt Regenwasser vom Dach auf. Das Wasser ist kostenlos, weich, unbelastet. Die Tonne ist Infrastruktur. Betrachten Sie, was vom Himmel in die Tonne und zur Wurzel fließt.
+    follow_ups:
+      - Was wäre der Garten ohne die Tonne?
+      - Wie unterscheidet sich aufgefangenes Regenwasser von Leitungswasser?
+      - Wie ist die Beziehung zwischen Dach und Wurzel?
+  - id: nmg_garden_glove
+    name: Gartenhandschuh
+    prompt: |
+      Ein Handschuh im Beet zurückgelassen – Finger steif, erdverschmiert. Der Handschuh ist eine Prothese. Er erweitert die Hand, schützt sie. Betrachten Sie die Grenze zwischen Mensch und Boden. Was ermöglicht der Handschuh?
+    follow_ups:
+      - Was würde der Gärtner ohne den Handschuh fühlen?
+      - Wie prägt der Handschuh die Beziehung?
+      - Wie ist die Beziehung zwischen Hand und Erde?
+  - id: nmg_caterpillar_chew
+    name: Raupenbiss
+    prompt: |
+      Eine Raupe frisst ein Blatt – Kante für Kante. Der Biss ist hörbar. Die Raupe verwandelt das Blatt in einen Schmetterling. Betrachten Sie die Kosten für die Pflanze. Was gewinnt sie durch die Beherbergung?
+    follow_ups:
+      - Was wäre das Blatt ohne den Biss?
+      - Wie prägt die Raupe die Pflanze?
+      - Wie ist die Beziehung zwischen Fressen und Werden?
+  - id: nmg_fertilizer_burn
+    name: Düngerbrand
+    prompt: |
+      Zu viel Dünger verbrennt – Spitzen braun, Wurzeln versengen. Der Garten ist Chemie. Mehr ist nicht immer besser. Betrachten Sie die Grenze zwischen Nahrung und Gift. Wo ist die Linie?
+    follow_ups:
+      - Was wäre die Pflanze mit weniger?
+      - Wie prägt Überschuss das Blatt?
+      - Wie ist die Beziehung zwischen Dosis und Schaden?
+  - id: nmg_shade_cloth
+    name: Schattiernetz
+    prompt: |
+      Schattiernetz spannt sich über Setzlinge. Es diffundiert Licht, reduziert Hitze. Das Netz ist Mediation – zwischen Sonne und Pflanze. Betrachten Sie, was das Netz hinzufügt. Was subtrahiert es?
+    follow_ups:
+      - Was wäre der Setzling ohne das Netz?
+      - Wie prägt Schatten das frühe Wachstum?
+      - Wie ist die Beziehung zwischen Filter und Licht?
+  - id: nmg_morning_glory_dawn
+    name: Prunkwinde bei Morgendämmerung
+    prompt: |
+      Prunkwinden öffnen sich bei Morgendämmerung, schließen sich am Nachmittag. Die Blume hat einen Zeitplan. Betrachten Sie den Rhythmus. Was wäre der Garten, wenn er den ganzen Tag offen bliebe?
+    follow_ups:
+      - Wie prägt die Zeitgebung die Bestäubung?
+      - Wie ist die Beziehung zwischen Offenheit und Bestäuber?
+      - Warum Morgendämmerung?
+  - id: nmg_garden_path
+    name: Gartenweg
+    prompt: |
+      Ein Weg durch den Garten – Trittsteine oder Mulch. Der Weg ist, wo wir gehen. Der Rest ist, wo wir nicht gehen. Betrachten Sie die Linie. Was schützt der Weg? Was schließt er aus?
+    follow_ups:
+      - Was wäre der Garten ohne den Weg?
+      - Wie prägt der Weg die Bewegung?
+      - Wie ist die Beziehung zwischen Schritt und Boden?
+  - id: nmg_cross_pollination
+    name: Fremdbestäubung
+    prompt: |
+      Bienen tragen Pollen von einer Pflanze zur anderen. Die Nachkommen werden Hybriden sein – nicht identisch mit einem der Elternteile. Betrachten Sie die Mischung. Was schafft die Kreuzung? Was riskiert sie?
+    follow_ups:
+      - Was wäre die Vielfalt ohne Kreuzung?
+      - Wie prägt die Biene das Gen?
+      - Wie ist die Beziehung zwischen Tragen und Kombinieren?
+  - id: nmg_herb_scent
+    name: Kräuterduft
+    prompt: |
+      Streichen Sie an Rosmarin oder Minze entlang. Der Duft steigt auf – flüchtige Öle werden freigesetzt. Der Duft ist Verteidigung und Einladung. Betrachten Sie die doppelte Rolle. Was wehrt ab? Was zieht an?
+    follow_ups:
+      - Was wäre das Kraut ohne den Duft?
+      - Wie prägt das Öl die Begegnung?
+      - Wie ist die Beziehung zwischen Berührung und Freisetzung?
+  - id: nmg_watering_can_pour
+    name: Gießkannen-Guss
+    prompt: |
+      Wasser aus einer Kanne – sanfter als ein Schlauch. Der Guss ist beabsichtigt. Betrachten Sie das Ritual. Was erlaubt die Kanne, was der Schlauch nicht kann? Wie ist die Beziehung zwischen Guss und Pflanze?
+    follow_ups:
+      - Was würde der Setzling bevorzugen?
+      - Wie prägt der Guss den Boden?
+      - Wie ist die Beziehung zwischen Ritual und Wachstum?
+  - id: nmg_bird_seed_spill
+    name: Vogelfutterverschüttung
+    prompt: |
+      Samen verschüttet aus einem Futterspender – Sonnenblumenkerne, Hirse. Er fällt auf den Boden. Spatzen scharren. Eichhörnchen plündern. Die Verschüttung schafft eine Bühne. Betrachten Sie, wer profitiert. Für wen war es gedacht?
+    follow_ups:
+      - Was wäre der Boden ohne die Verschüttung?
+      - Wie prägt die Verschüttung den Schwarm?
+      - Wie ist die Beziehung zwischen Fall und Fresser?
+  - id: nmg_cutting_propagate
+    name: Stecklingsvermehrung
+    prompt: |
+      Ein Steckling – ein Stiel in Wasser oder Erde – wurzelt. Kein Samen. Die Pflanze klont sich selbst. Betrachten Sie die Abkürzung. Was umgeht die Vermehrung? Was bewahrt sie?
+    follow_ups:
+      - Was wäre der Garten ohne Stecklinge?
+      - Wie prägt das Klonen die Vielfalt?
+      - Wie ist die Beziehung zwischen Schnitt und Fortsetzung?
+  - id: nmg_leaf_miner_tunnel
+    name: Minierer-Gang im Blatt
+    prompt: |
+      Die Spur eines Minierers – gewunden, blass, unter der Oberfläche. Die Larve frisst zwischen den Schichten. Das Blatt überlebt, vernarbt. Betrachten Sie die Invasion. Was verliert das Blatt? Was behält es?
+    follow_ups:
+      - Was wäre das Blatt ohne den Gang?
+      - Wie prägt der Minierer das Blatt?
+      - Wie ist die Beziehung zwischen Gang und Gewebe?
+  - id: nmg_greenhouse_condensation
+    name: Gewächshauskondensation
+    prompt: |
+      Kondensation perlt auf einer Gewächshausscheibe. Die Luft drinnen ist feucht – Pflanzen atmen aus. Die Scheibe ist eine Grenze. Betrachten Sie das Mikroklima. Was hält die Wärme? Was hält die Feuchtigkeit?
+    follow_ups:
+      - Was wäre das Gewächshaus ohne die Scheibe?
+      - Wie prägt die Kondensation das Innere?
+      - Wie ist die Beziehung zwischen Glas und Wachstum?
+  - id: nmg_terrace_level
+    name: Terrassenstufe
+    prompt: |
+      Ein Terrassenbeet stuft einen Hang ab. Jede Ebene hält Erde, hält Wasser. Die Terrasse ist Erosionsschutz und Bühne. Betrachten Sie die Architektur. Was wäre der Hang ohne sie?
+    follow_ups:
+      - Wie prägt die Stufe, was wächst?
+      - Wie ist die Beziehung zwischen Stufe und Stabilität?
+      - Warum terrassieren?
+  - id: nmg_native_vs_exotic
+    name: Einheimisch vs. Exotisch
+    prompt: |
+      Manche Pflanzen sind einheimisch – sie gehören hierher. Andere sind exotisch – eingeführt.
+      Betrachten Sie das Beet. Welche ist welche? Spielt das eine Rolle? Was bietet Einheimisches, was Exotisches nicht bietet?
+    follow_ups:
+      - Was wäre der Garten nur mit Einheimischen?
+      - Wie prägt die Herkunft die Ökologie?
+      - Wie ist die Beziehung zwischen Zugehörigkeit und Gedeihen?
+  - id: nmg_garden_dusk
+    name: Garten in der Dämmerung
+    prompt: |
+      Der Garten in der Dämmerung – das Licht schwindet, Motten tauchen auf. Die Tagesschicht endet; die Nachtschicht beginnt. Betrachten Sie den Übergang. Wer wacht auf? Wer schläft? Was wird der Garten?
+    follow_ups:
+      - Was wäre der Garten ohne die Dämmerung?
+      - Wie prägt der Übergang das Ökosystem?
+      - Wie ist die Beziehung zwischen Tag und Nacht?
+  - id: nmg_stake_tie
+    name: Stab und Band
+    prompt: |
+      Eine Pflanze, die an einen Stab gebunden ist – Bohne, Tomate. Der Stab korrigiert. Ohne ihn würde die Pflanze sich ausbreiten. Betrachten Sie die Unterstützung. Was ermöglicht das Band? Was schränkt es ein?
+    follow_ups:
+      - Was wäre die Pflanze ohne den Stab?
+      - Wie prägt das Band die Form?
+      - Wie ist die Beziehung zwischen Unterstützung und Wachstum?
+  - id: nmg_first_frost
+    name: Erster Frost
+    prompt: |
+      Der erste Frost – empfindliche Pflanzen schwärzen. Der Garten verändert sich. Manche Dinge enden; andere bleiben bestehen. Betrachten Sie die Schwelle. Was wählt der Frost aus? Was verschont er?
+    follow_ups:
+      - Was wäre der Garten ohne Frost?
+      - Wie prägt der erste Frost die Jahreszeit?
+      - Wie ist die Beziehung zwischen Kälte und Abschluss?
+  - id: nmg_garden_reflection
+    name: Gartenspiegelung
+    prompt: |
+      Betrachten Sie den Garten. Er spiegelt Entscheidungen wider – was gepflanzt wurde, was ausgemerzt wurde, was in Ruhe gelassen wurde. Der Garten ist ein Spiegel. Was verrät er über den Gärtner?
+    follow_ups:
+      - Was würde der Garten ohne Worte sagen?
+      - Wie prägen Entscheidungen das Ganze?
+      - Wie ist die Beziehung zwischen Gärtner und Gewachsenem?

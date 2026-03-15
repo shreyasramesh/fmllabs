@@ -1,0 +1,499 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Interfața Umană — Locul de Muncă (Romanian)
+
+id: human_interface_workplace
+name: Interfața Umană — Locul de Muncă
+description: 50 de carduri pentru a-ți schimba modul în care vezi locul de muncă — de la teritoriile birourilor și sălile de ședință până la fântâna cu apă și ierarhia vizibilă versus invizibilă.
+domain: human_interface
+cards:
+  - id: hi_wp_desk_territory
+    name: Teritoriul Biroului
+    prompt: |
+      Un birou este revendicat — fotografii, plante, căni. Teritoriul se extinde
+      dincolo de suprafață. Observă granițele. Ce marchează "al meu"? Biroul este
+      un mic regat. Cum este apărat?
+    follow_ups:
+      - Cum modelează biroul identitatea?
+      - Cum ar fi locul de muncă fără personalizare?
+      - Care este relația dintre teritoriu și apartenență?
+  - id: hi_wp_meeting_room
+    name: Sală de Ședințe
+    prompt: |
+      Camera are o masă, scaune, un ecran. Ușa se închide. Sala de ședințe este
+      o scenă pentru performanță. Observă cine vorbește, cine nu. Camera
+      conține ierarhia. Ce permite spațiul?
+    follow_ups:
+      - Cum modelează camera ședința?
+      - Cum ar fi locul de muncă fără săli de ședințe?
+      - Care este relația dintre cameră și putere?
+  - id: hi_wp_water_cooler
+    name: Fântâna cu Apă
+    prompt: |
+      Fântâna cu apă este o intersecție. Oamenii se întâlnesc acolo din întâmplare.
+      Întâlnirea este informală. Observă conversațiile. Ce se spune la fântâna cu
+      apă care nu s-ar spune într-o ședință?
+    follow_ups:
+      - Cum modelează fântâna cu apă cultura?
+      - Cum ar fi locul de muncă fără ea?
+      - Care este relația dintre fântâna cu apă și conexiune?
+  - id: hi_wp_visible_hierarchy
+    name: Ierarhie Vizibilă
+    prompt: |
+      Birouri de colț, scaune cu vedere la fereastră, cabine. Spațiul codifică
+      rangul. Observă distribuția. Cine primește ce? Ierarhia este încorporată în
+      arhitectură. Ce comunică?
+    follow_ups:
+      - Cum modelează ierarhia comportamentul?
+      - Cum ar fi locul de muncă fără ea?
+      - Care este relația dintre spațiu și statut?
+  - id: hi_wp_invisible_hierarchy
+    name: Ierarhie Invizibilă
+    prompt: |
+      Unii oameni sunt ascultați; alții sunt întrerupți. Ierarhia nu este pe
+      organigrama. Observă ședințele. Cine se supune? Cine domină? Ierarhia
+      invizibilă modelează rezultatele.
+    follow_ups:
+      - Cum apare ierarhia invizibilă?
+      - Cum ar fi locul de muncă dacă ar fi vizibilă?
+      - Care este relația dintre invizibil și putere?
+  - id: hi_wp_cubicle_wall
+    name: Peretele Cabinei
+    prompt: |
+      Peretele este jos — poți vedea peste el. Intimitatea este parțială. Cabina
+      este un compromis. Observă liniile de vedere. Ce poți auzi? Ce poți vedea?
+      Peretele creează o iluzie de graniță.
+    follow_ups:
+      - Cum modelează cabina concentrarea?
+      - Cum ar fi locul de muncă cu pereți complet?
+      - Care este relația dintre perete și intimitate?
+  - id: hi_wp_corner_office
+    name: Biroul de Colț
+    prompt: |
+      Biroul de colț are două ferestre. Este premiul. Observă cine îl ocupă.
+      Biroul de colț este vizibil de pe etaj. Este un simbol. Ce comunică biroul
+      de colț?
+    follow_ups:
+      - Cum modelează biroul de colț aspirația?
+      - Cum ar fi etajul fără el?
+      - Care este relația dintre colț și autoritate?
+  - id: hi_wp_open_plan
+    name: Plan Deschis
+    prompt: |
+      Fără pereți. Birouri în rânduri sau grupuri. Planul deschis promite
+      colaborare. Observă realitatea. Cine poartă căști? Planul deschis creează
+      proximitate. Ce costă?
+    follow_ups:
+      - Cum modelează planul deschis interacțiunea?
+      - Cum ar fi locul de muncă cu pereți?
+      - Care este relația dintre deschis și concentrare?
+  - id: hi_wp_calendar_invite
+    name: Invitație în Calendar
+    prompt: |
+      Invitația apare. Acceptă, refuză, tentative. Calendarul structurează ziua.
+      Observă blocările. Cine controlează timpul cui? Calendarul este o hartă a
+      puterii.
+    follow_ups:
+      - Cum modelează calendarul ziua?
+      - Cum ar fi locul de muncă fără el?
+      - Care este relația dintre invitație și obligație?
+  - id: hi_wp_knock_before_enter
+    name: Bate Înainte de a Intra
+    prompt: |
+      Unele uși sunt închise. Bătaia este o cerere. Observă cine bate și cine intră.
+      Bătaia codifică respectul. Ce protejează ușa închisă?
+    follow_ups:
+      - Cum modelează bătaia întâlnirea?
+      - Cum ar fi locul de muncă cu uși deschise?
+      - Care este relația dintre bătaie și graniță?
+  - id: hi_wp_headphones_signal
+    name: Semnal Căști
+    prompt: |
+      Căștile puse înseamnă "nu deranja". Semnalul este universal. Observă cine îl
+      respectă. Căștile creează o bulă. Ce permite bula?
+    follow_ups:
+      - Cum modelează căștile etajul?
+      - Cum ar fi locul de muncă fără ele?
+      - Care este relația dintre căști și concentrare?
+  - id: hi_wp_lunch_room
+    name: Cameră de Prânz
+    prompt: |
+      Camera de prânz are mese, cuptor cu microunde, frigider. Oamenii mănâncă singuri sau
+      împreună. Observă grupurile. Cine stă cu cine? Camera de prânz dezvăluie alianțe.
+      Ce spune aranjamentul?
+    follow_ups:
+      - Cum modelează camera de prânz cultura?
+      - Cum ar fi locul de muncă fără ea?
+      - Care este relația dintre prânz și conexiune?
+  - id: hi_wp_slack_ping
+    name: Ping Slack
+    prompt: |
+      Ping-ul sosește. Instantaneu, asincron. Ping-ul poate întrerupe sau poate
+      aștepta. Observă normele. Cine răspunde imediat? Ping-ul creează un nou
+      ritm de comunicare. Ce înlocuiește?
+    follow_ups:
+      - Cum modelează ping-ul ziua?
+      - Cum ar fi locul de muncă fără el?
+      - Care este relația dintre ping și urgență?
+  - id: hi_wp_whiteboard_claim
+    name: Revendicare Tablă Albă
+    prompt: |
+      Tabla albă conține idei — diagrame, liste. Cineva le-a scris. Tabla este o
+      suprafață comună. Observă cine scrie, cine șterge. Tabla este teritoriu. Ce
+      conține?
+    follow_ups:
+      - Cum modelează tabla albă colaborarea?
+      - Cum ar fi ședința fără ea?
+      - Care este relația dintre tablă și gândire?
+  - id: hi_wp_elevator_encounter
+    name: Întâlnire în Lift
+    prompt: |
+      Împărți liftul cu un coleg. Treizeci de secunde. Întâlnirea este stângace sau
+      ușoară. Observă micile discuții. Ce se spune? Liftul comprimă timpul. Ce
+      necesită?
+    follow_ups:
+      - Cum modelează liftul întâlnirea?
+      - Cum ar fi clădirea fără lifturi?
+      - Care este relația dintre lift și politețe?
+  - id: hi_wp_cc_email
+    name: Email CC
+    prompt: |
+      Ești inclus în CC. Nu ești destinatarul principal. CC te include în buclă.
+      Observă cine este inclus în CC. CC este un semnal de relevanță — sau de
+      politică. Ce face CC-ul?
+    follow_ups:
+      - Cum modelează CC-ul comunicarea?
+      - Cum ar fi locul de muncă fără CC?
+      - Care este relația dintre CC și vizibilitate?
+  - id: hi_wp_standing_desk
+    name: Birou pe Picioare
+    prompt: |
+      Biroul se ridică. Muncitorul stă în picioare. Biroul pe picioare este o
+      alegere — sănătate, preferință, performanță. Observă cine are unul. Ce
+      semnalează biroul pe picioare?
+    follow_ups:
+      - Cum modelează biroul pe picioare corpul?
+      - Cum ar fi locul de muncă fără el?
+      - Care este relația dintre statul în picioare și productivitate?
+  - id: hi_wp_conference_call
+    name: Conferință Telefonică
+    prompt: |
+      Voci din altă parte. Apelul conectează oameni distribuiți. Observă cine
+      vorbește, cine se mutează. Apelul este o prezență parțială. Ce permite
+      apelul — și ce pierde?
+    follow_ups:
+      - Cum modelează apelul ședința?
+      - Cum ar fi locul de muncă fără el?
+      - Care este relația dintre apel și prezență?
+  - id: hi_wp_office_plant
+    name: Plantă de Birou
+    prompt: |
+      O plantă pe birou — scump, suculentă. Este decorație și îngrijire. Planta nu
+      aparține companiei. Observă cine are una. Ce adaugă planta spațiului?
+    follow_ups:
+      - Cum modelează planta biroul?
+      - Cum ar fi locul de muncă fără plante?
+      - Care este relația dintre plantă și identitate?
+  - id: hi_wp_after_hours
+    name: După Program
+    prompt: |
+      Biroul după ce majoritatea au plecat. Luminile sunt stinse. Muncitorul de
+      după program este vizibil — dedicat sau luptându-se. Observă scena. Ce
+      permite biroul după program? Ce costă?
+    follow_ups:
+      - Cum modelează programul de după cultură?
+      - Cum ar fi locul de muncă fără el?
+      - Care este relația dintre ore și așteptări?
+  - id: hi_wp_nameplate
+    name: Plăcuță cu Nume
+    prompt: |
+      Un nume pe birou, pe ușă. Plăcuța cu nume revendică spațiul. Observă cine
+      are una. Plăcuța cu nume este identitate și teritoriu. Ce comunică
+      persoanelor care trec pe acolo?
+    follow_ups:
+      - Cum modelează plăcuța cu nume spațiul?
+      - Cum ar fi locul de muncă fără ea?
+      - Care este relația dintre plăcuța cu nume și prezență?
+  - id: hi_wp_meeting_overrun
+    name: Depășire Ședință
+    prompt: |
+      Ședința trebuia să se termine. Nu se termină. Depășirea este comună.
+      Observă dinamica. Cine are următoarea ședință? Cine poate rămâne? Depășirea
+      este o mișcare de putere. Ce extrage?
+    follow_ups:
+      - Cum modelează depășirea ziua?
+      - Cum ar fi locul de muncă cu sfârșituri stricte?
+      - Care este relația dintre depășire și respect?
+  - id: hi_wp_quick_question
+    name: Întrebare Rapidă
+    prompt: |
+      "Am o întrebare rapidă?" Solicitarea întrerupe. "Rapid" este o promisiune.
+      Observă schimbul. Cât de rapid este? Întrebarea rapidă este o negociere a
+      timpului. Ce costă?
+    follow_ups:
+      - Cum modelează întrebarea rapidă fluxul?
+      - Cum ar fi locul de muncă fără întreruperi?
+      - Care este relația dintre rapid și respect?
+  - id: hi_wp_bathroom_encounter
+    name: Întâlnire la Baie
+    prompt: |
+      Vezi un coleg la baie. Întâlnirea este ambiguă. Contact vizual sau nu? Baia
+      este un spațiu liminal. Observă normele. Ce necesită întâlnirea?
+    follow_ups:
+      - Cum modelează baia locul de muncă?
+      - Cum ar fi locul de muncă fără băi comune?
+      - Care este relația dintre baie și intimitate?
+  - id: hi_wp_commute_talk
+    name: Discuție despre Navetă
+    prompt: |
+      "Cum a fost naveta?" Întrebarea deschide mici discuții. Naveta este o
+      experiență comună. Observă schimbul. Ce face discuția despre navetă pentru
+      relație?
+    follow_ups:
+      - Cum modelează discuția despre navetă ziua?
+      - Cum ar fi locul de muncă fără ea?
+      - Care este relația dintre navetă și conexiune?
+  - id: hi_wp_parking_spot
+    name: Loc de Parcare
+    prompt: |
+      Locuri rezervate, locuri pe principiul primului venit. Parcarea codifică
+      ierarhia. Observă cine parchează unde. Locul este un mic privilegiu. Ce
+      comunică?
+    follow_ups:
+      - Cum modelează parcarea locul de muncă?
+      - Cum ar fi parcarea fără locuri rezervate?
+      - Care este relația dintre loc și statut?
+  - id: hi_wp_birthday_cake
+    name: Tort de Ziua de Naștere
+    prompt: |
+      Apare un tort. E ziua cuiva. Echipa se adună. Tortul este un ritual. Observă
+      adunarea. Ce face momentul zilei de naștere pentru grup?
+    follow_ups:
+      - Cum modelează ziua de naștere cultura?
+      - Cum ar fi locul de muncă fără ea?
+      - Care este relația dintre tort și apartenență?
+  - id: hi_wp_forwarded_email
+    name: Email Reînaintat
+    prompt: |
+      Un email este reînaintat. "Pt informare" sau "Credeam că ar trebui să vezi asta".
+      Reînaintarea extinde conversația. Observă cine primește reînaintarea.
+      Reînaintarea este un semnal. Ce înseamnă?
+    follow_ups:
+      - Cum modelează reînaintarea comunicarea?
+      - Cum ar fi locul de muncă fără ea?
+      - Care este relația dintre reînaintare și încredere?
+  - id: hi_wp_break_room
+    name: Cameră de Pauză
+    prompt: |
+      Cafea, gustări, uneori o canapea. Camera de pauză este o pauză. Oamenii
+      merg acolo să se retragă. Observă cine o folosește. Camera de pauză este un
+      refugiu. Ce oferă?
+    follow_ups:
+      - Cum modelează camera de pauză ziua?
+      - Cum ar fi locul de muncă fără ea?
+      - Care este relația dintre pauză și productivitate?
+  - id: hi_wp_office_supply
+    name: Consumabile de Birou
+    prompt: |
+      Pixuri, hârtie, capsatoare — dulapul cu consumabile ține uneltele. Cineva
+      le gestionează. Observă cine ia ce. Consumabilele sunt un mic bun comun.
+      Care sunt regulile?
+    follow_ups:
+      - Cum modelează consumabilele locul de muncă?
+      - Cum ar fi locul de muncă fără ele?
+      - Care este relația dintre consumabile și îndreptățire?
+  - id: hi_wp_remote_camera
+    name: Cameră la Distanță
+    prompt: |
+      Camera este pornită sau oprită. Lucrătorul la distanță alege. Alegerea este
+      vizibilă. Observă normele. Cine o ține pornită? Camera este o fereastră.
+      Ce dezvăluie?
+    follow_ups:
+      - Cum modelează camera apelul?
+      - Cum ar fi ședința fără ea?
+      - Care este relația dintre cameră și prezență?
+  - id: hi_wp_side_conversation
+    name: Conversație Laterală
+    prompt: |
+      Doi oameni vorbesc în timp ce alții lucrează. Conversația laterală este privată,
+      dar vizibilă. Observă dinamica. Este perturbatoare? Conversația laterală este
+      o mică rebeliune. Ce creează?
+    follow_ups:
+      - Cum modelează conversația laterală etajul?
+      - Cum ar fi locul de muncă fără ea?
+      - Care este relația dintre lateral și excludere?
+  - id: hi_wp_clean_desk
+    name: Birou Curat
+    prompt: |
+      Unele birouri sunt impecabile — nimic personal. Biroul curat este politică sau
+      preferință. Observă contrastul. Ce comunică biroul curat? Sterilitate?
+      Disciplină? Detașare?
+    follow_ups:
+      - Cum modelează biroul curat muncitorul?
+      - Cum ar fi locul de muncă cu birouri dezordonate?
+      - Care este relația dintre curat și identitate?
+  - id: hi_wp_meeting_no_show
+    name: Lipsă de la Ședință
+    prompt: |
+      Ședința a fost programată. Cineva nu apare. Lipsa de la ședință este un
+      mesaj. Observă răspunsul. Cineva menționează asta? Lipsa de la ședință este
+      o mică mișcare de putere. Ce comunică?
+    follow_ups:
+      - Cum modelează lipsa de la ședință ședința?
+      - Cum ar fi locul de muncă fără absențe?
+      - Care este relația dintre absență și respect?
+  - id: hi_wp_cubicle_visit
+    name: Vizită la Cabină
+    prompt: |
+      Cineva se apropie. Stă la marginea cabinei. Vizita este o alegere — ar fi putut
+      trimite un mesaj. Observă dinamica. Ce permite vizita pe care un mesaj nu o
+      permite?
+    follow_ups:
+      - Cum modelează vizita interacțiunea?
+      - Cum ar fi locul de muncă fără vizite?
+      - Care este relația dintre vizită și întrerupere?
+  - id: hi_wp_shared_printer
+    name: Imprimantă Comună
+    prompt: |
+      Imprimanta este comună. Documentele se adună. Cineva trebuie să le ia.
+      Imprimanta este o intersecție. Observă întâlnirile. Ce se întâmplă când două
+      persoane ajung la același document?
+    follow_ups:
+      - Cum modelează imprimanta etajul?
+      - Cum ar fi locul de muncă fără ea?
+      - Care este relația dintre imprimantă și răbdare?
+  - id: hi_wp_office_temperature
+    name: Temperatura Biroului
+    prompt: |
+      "E prea frig." "E prea cald." Temperatura este contestată. Cineva controlează
+      termostatul. Observă plângerile. Temperatura este un mic spațiu de putere. Cine
+      câștigă?
+    follow_ups:
+      - Cum modelează temperatura locul de muncă?
+      - Cum ar fi locul de muncă cu control individual?
+      - Care este relația dintre temperatură și confort?
+  - id: hi_wp_handshake
+    name: Strângere de Mână
+    prompt: |
+      Strângerea de mână — prima întâlnire, afacere încheiată. Strângerea de mână este un
+      ritual. Observă strânsoarea, durata. Strângerea de mână codifică formalitatea.
+      Ce comunică?
+    follow_ups:
+      - Cum modelează strângerea de mână întâlnirea?
+      - Cum ar fi locul de muncă fără ea?
+      - Care este relația dintre strângerea de mână și încredere?
+  - id: hi_wp_cc_removal
+    name: Eliminare din CC
+    prompt: |
+      "Răspunde tuturor" sau "Răspunde"? Alegerea contează. Eliminarea cuiva din fir este un
+      semnal. Observă dinamica. Cine este eliminat? Eliminarea din CC este o mică
+      excludere. Ce înseamnă?
+    follow_ups:
+      - Cum modelează eliminarea conversația?
+      - Cum ar fi locul de muncă fără opțiuni de răspuns?
+      - Care este relația dintre eliminare și putere?
+  - id: hi_wp_office_tour
+    name: Turul Biroului
+    prompt: |
+      Un nou angajat primește un tur. "Aceasta este bucătăria. Aici facem ședințe."
+      Turul orientează. Observă ghidul. Ce comunică turul despre cultură?
+    follow_ups:
+      - Cum modelează turul noul venit?
+      - Cum ar fi integrarea fără el?
+      - Care este relația dintre tur și apartenență?
+  - id: hi_wp_meeting_room_book
+    name: Rezervare Sală de Ședințe
+    prompt: |
+      Camera este rezervată. Sau dublu rezervată. Calendarul este arbitru.
+      Observă conflictul. Cine cedează? Rezervarea este o revendicare asupra spațiului
+      și timpului. Ce necesită?
+    follow_ups:
+      - Cum modelează rezervarea ziua?
+      - Cum ar fi locul de muncă fără rezervare?
+      - Care este relația dintre rezervare și prioritate?
+  - id: hi_wp_goodbye_ritual
+    name: Ritualul de Adio
+    prompt: |
+      Sfârșitul zilei. "Plez." "Ne vedem mâine." Adio este un ritual.
+      Observă schimburile. Cine spune adio cui? Ritualul marchează granița dintre muncă și
+      non-muncă.
+    follow_ups:
+      - Cum modelează adio ziua?
+      - Cum ar fi locul de muncă fără el?
+      - Care este relația dintre adio și încheiere?
+  - id: hi_wp_promotion_announce
+    name: Anunț Promovare
+    prompt: |
+      "Suntem încântați să anunțăm..." Promovarea este publică. Anunțul creează un
+      moment. Observă răspunsul. Felicitări, tăcere, priviri pe furiș. Ce face
+      anunțul în cameră?
+    follow_ups:
+      - Cum modelează anunțul cultura?
+      - Cum ar fi locul de muncă fără promovări publice?
+      - Care este relația dintre anunț și ierarhie?
+  - id: hi_wp_desk_move
+    name: Mutare Birou
+    prompt: |
+      Cineva își mută biroul. Mutarea este o promovare, o reorganizare sau o alegere.
+      Observă procesul. Ce iau cu ei? Ce lasă în urmă? Mutarea este o tranziție. Ce
+      înseamnă?
+    follow_ups:
+      - Cum modelează mutarea muncitorul?
+      - Cum ar fi locul de muncă fără mutări?
+      - Care este relația dintre mutare și identitate?
+  - id: hi_wp_office_gossip
+    name: Bârfe la Birou
+    prompt: |
+      Informația circulă — cine pleacă, cine e frustrat. Bârfele sunt informale.
+      Observă unde au loc. La fântâna cu apă, pe hol. Ce fac bârfele pentru grup?
+    follow_ups:
+      - Cum modelează bârfele cultura?
+      - Cum ar fi locul de muncă fără ele?
+      - Care este relația dintre bârfe și apartenență?
+  - id: hi_wp_meeting_agenda
+    name: Agendă Ședință
+    prompt: |
+      Agendă structurează ședința. Sau nu — ședința se abate. Observă dinamica. Cine
+      urmează agenda? Cine nu? Agendă este un contract. Ce permite?
+    follow_ups:
+      - Cum modelează agenda ședința?
+      - Cum ar fi ședința fără ea?
+      - Care este relația dintre agendă și putere?
+  - id: hi_wp_office_food
+    name: Mâncare la Birou
+    prompt: |
+      Gogoși, fructe, resturi de la o întâlnire cu clienți. Mâncarea apare.
+      Oamenii se adună. Observă împărțirea. Mâncarea de la birou este un mic cadou.
+      Ce creează?
+    follow_ups:
+      - Cum modelează mâncarea locul de muncă?
+      - Cum ar fi locul de muncă fără ea?
+      - Care este relația dintre mâncare și comunitate?
+  - id: hi_wp_last_day
+    name: Ultima Zi
+    prompt: |
+      Ultima zi a cuiva. Adio, poate o felicitare, poate tort. Ultima zi este un
+      ritual de plecare. Observă atmosfera. Ce face ultima zi pentru cel care
+      pleacă și pentru cei care rămân?
+    follow_ups:
+      - Cum modelează ultima zi cultura?
+      - Cum ar fi locul de muncă fără ritual?
+      - Care este relația dintre ultima zi și încheiere?
+  - id: hi_wp_office_hours
+    name: Ore de Birou
+    prompt: |
+      "Am ore de birou marți 14-16." Blocul este deschis. Oamenii pot intra.
+      Observă cine vine. Orele de birou sunt o invitație. Ce permit?
+    follow_ups:
+      - Cum modelează orele de birou accesul?
+      - Cum ar fi locul de muncă fără ele?
+      - Care este relația dintre ore și disponibilitate?
+  - id: hi_wp_workspace_claim
+    name: Revendicare Spațiu de Lucru
+    prompt: |
+      O jachetă pe scaun. O geantă sub birou. Revendicarea spune "Sunt aici"
+      sau "Mă întorc imediat". Observă semnalele. Cât timp poate ține o revendicare?
+      Spațiul de lucru este temporar deținut. Care sunt regulile?
+    follow_ups:
+      - Cum modelează revendicarea etajul?
+      - Cum ar fi locul de muncă fără revendicări?
+      - Care este relația dintre revendicare și prezență?

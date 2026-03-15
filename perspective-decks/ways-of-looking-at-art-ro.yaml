@@ -1,0 +1,427 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Moduri de a privi arta (Romanian)
+
+id: ways_of_looking_at_art
+name: Moduri de a privi arta
+description: |
+  Cărți pentru a-ți schimba perspectiva atunci când privești arta. Fiecare oferă o lentilă diferită
+  pentru a-ți aprofunda modul în care vezi și interacționezi cu operele de artă.
+domain: art
+cards:
+  - id: souvenir
+    name: Suvenir
+    prompt: |
+      Alege ceva din opera de artă și ascunde-l în următoarea piesă pe care o privești.
+      Cum l-ai integra în noua compoziție?
+    follow_ups:
+      - Ce ai alege să transferi?
+      - Ce ar câștiga sau ar pierde în noul context?
+      - Unde s-ar potrivi—sau ar rezista să se potrivească—în noua lucrare?
+  - id: throw_a_party
+    name: Organizează o petrecere
+    prompt: |
+      Invită toți artiștii din încăpere. Ce ar purta?
+      La ce s-ar gândi?
+    follow_ups:
+      - Cine ar gravita spre cine?
+      - Despre ce s-ar certa?
+      - Ce i-ar surprinde la lucrările celorlalți?
+  - id: time_out
+    name: Pauză
+    prompt: |
+      Ieși afară. Concentrează-te pe lumină, sunete și senzații. Fii prezent cu împrejurimile tale.
+      Experiența de a privi arta implică la fel de mult spațiile intermediare ca și operele de artă în sine.
+    follow_ups:
+      - Ce observi când te oprești din a te concentra pe artă?
+      - Cum modelează încăperea ceea ce vezi?
+      - Ce ai rata dacă ai trece în grabă?
+  - id: plan_a_trip
+    name: Planifică o călătorie
+    prompt: |
+      Ceea ce vezi astăzi ar putea fi primul pas într-o călătorie mult mai mare. Când
+      părăsești galeria sau spațiul, decide ce operă de artă vrei să vezi în continuare
+      și planifică o întreagă călătorie în jurul ei.
+    follow_ups:
+      - Unde te-ar duce acea călătorie?
+      - Ce ai avea nevoie să vezi pe parcurs?
+      - De ce această lucrare—ce o face demnă de călătorie?
+  - id: in_black_and_white
+    name: Alb-negru
+    prompt: |
+      Concentrează-te pe jocul de lumini și umbre—poți chiar face o fotografie alb-negru pentru a te ajuta.
+      Unde sunt tonurile cele mai închise? Cum sugerează acest lucru profunzime sau nu? Cum ajută acest lucru la înțelegerea compoziției?
+    follow_ups:
+      - Ce dispare când elimini culoarea?
+      - Ce devine mai clar?
+      - Unde îți atrage privirea mai întâi versiunea în nuanțe de gri?
+  - id: give_it_a_voice
+    name: Dă-i o voce
+    prompt: |
+      Ce sunete ar face opera de artă? Cum ai putea auzi culorile, formele și liniile?
+    follow_ups:
+      - Este tare sau liniștită? Ascuțită sau moale?
+      - Ce instrument sau textură ar surprinde-o?
+      - Cum ar suna tăcerea în această lucrare?
+  - id: find_the_middle_ground
+    name: Găsește terenul de mijloc
+    prompt: |
+      Cât de departe este opera de artă de tine? Cât de mare este în raport cu dimensiunea ta? Cât de grea? Cât spațiu ocupă? Ai putea să o încadrezi într-o casă?
+    follow_ups:
+      - Ce s-ar schimba dacă ai putea-o ține în mână?
+      - Ce-ar fi dacă ar fi de mărimea unei camere?
+      - Cum modelează scara relația ta cu ea?
+  - id: from_the_edges
+    name: De la margini
+    prompt: |
+      Unde se termină opera de artă și începe "lumea reală"? Poți încerca să folosești mâinile ca un vizor pentru a redefini marginile operei de artă pentru tine? Există o margine discernabilă?
+    follow_ups:
+      - Ce se întâmplă când schimbi cadrul?
+      - Ce este inclus sau exclus?
+      - Unde vrea lucrarea să se revărseze dincolo de granițele sale?
+  - id: transmogrify_it
+    name: Transfigureaz-o
+    prompt: |
+      Ce-ar fi dacă ai putea schimba opera de artă într-un alt gen? O fotografie într-o pictură de acțiune sau o instalație într-un peisaj? Cum ai face asta?
+      Ar mai păstra caracterul, chiar și în traducere?
+    follow_ups:
+      - Ce este esențial pentru lucrare—ce trebuie să supraviețuiască schimbării?
+      - Ce s-ar câștiga sau s-ar pierde în traducere?
+      - Ce gen ar dezvălui ceva nou despre ea?
+  - id: the_hand_of_the_artist
+    name: Mâna artistului
+    prompt: |
+      Caută dovezi ale pensulelor artistului, ale marcajelor dăltiței, ale amprentelor, chiar și ale firelor de păr. Imaginează-ți că faci acele marcaje tu însuți—în ce poziție ai trebui să te afli? Ce unelte ai folosi?
+    follow_ups:
+      - Ce dezvăluie marcajul despre corpul creatorului?
+      - Unde este gestul rapid sau lent, sigur sau ezitant?
+      - Cum s-ar simți să faci acel marcaj?
+  - id: tell_the_story
+    name: Spune povestea
+    prompt: |
+      Istoria artei este bogată în narațiune, iar astăzi există un dialog pasionant între artă, literatură și film. Există o poveste în opera de artă? Cum o spui?
+    follow_ups:
+      - Ce se întâmplă înainte sau după acest moment?
+      - Cine este naratorul? A cui voce lipsește?
+      - Ar funcționa ca un film, un roman sau o poezie?
+  - id: shadowboxing
+    name: Box cu umbre
+    prompt: |
+      Mișcă-te. Apropie-te foarte mult. Depărtează-te cât poți de mult. Schimbă-ți partea.
+      Mergi sus. Mergi jos. Încearcă unghiuri diferite. Nu sta mult în același loc.
+      Savurează schimbările pe care le face opera de artă în timp ce te miști în jurul ei.
+    follow_ups:
+      - Ce se schimbă când îți schimbi poziția?
+      - Ce unghi te-a surprins?
+      - Cum schimbă mișcarea corpului tău ceea ce vezi?
+  - id: six_degrees_of_francis_bacon
+    name: Șase grade de Francis Bacon
+    prompt: |
+      Artiștii îi influențează pe alți artiști. Teme și idei evoluează peste generații și granițe. Conectează opera de artă la o alta din galerie folosind cât mai puține legături.
+    follow_ups:
+      - Care este cea mai scurtă cale pe care o poți găsi?
+      - Ce fel de legătură este cea mai puternică—tehnică, subiect, atmosferă sau idee?
+      - Ce ar crede artistul despre conexiune?
+  - id: headlines
+    name: Titluri
+    prompt: |
+      Imaginează-ți ziua în care a fost creată opera de artă și găsește sau inventează un titlu de ziar pentru acea zi. Compară-l cu paginile de titlu de astăzi.
+    follow_ups:
+      - Ce ar fi fost pe prima pagină?
+      - Ce s-a schimbat—și ce nu?
+      - Cum reîncadrează titlul lucrarea?
+  - id: speed_date
+    name: Speed dating
+    prompt: |
+      Petrece doar 10 secunde cu fiecare operă de artă. Fă asta până când le-ai văzut pe toate sau până când te-ai plictisit, apoi întoarce-te la preferatele tale și zăbovește.
+      Cum le vezi acum? La care te simți atras înapoi?
+    follow_ups:
+      - Ce a dezvăluit trecerea rapidă pe care o parte petrecută mai mult timp ar fi ratat-o?
+      - De ce te-ai întors la acele lucrări în mod special?
+      - Cum a diferit a doua privire de prima?
+  - id: make_connections
+    name: Fă conexiuni
+    prompt: |
+      În drum spre casă, caută ceva ce îți amintește de opera de artă, sau o parte din ea—o formă sau o culoare, poate un cuvânt, chiar o senzație.
+    follow_ups:
+      - Ce ai găsit?
+      - Cum a schimbat ecoul modul în care vezi originalul?
+      - Ce i-ai arăta artistului dacă ai putea?
+  - id: dinner_party
+    name: Cină
+    prompt: |
+      Asociază o operă de artă cu un gust. La ce mâncare sau băutură te duce cu gândul?
+      Asamblează un banchet.
+    follow_ups:
+      - Cum ar arăta meniul?
+      - Cine unde ar sta?
+      - Cum ar gusta prima înghițitură?
+  - id: head_off_piste
+    name: Abate-te de la traseu
+    prompt: |
+      Roagă un attendant al galeriei să îți indice lucrarea preferată, sau abate-te de la cărți și vezi ce poți găsi.
+    follow_ups:
+      - Ce ai descoperit în afara cărării bătute?
+      - Cum diferă preferatul lui/ei de al tău?
+      - Ce ai recomanda altcuiva?
+  - id: make_it_an_mixtape
+    name: Fă-ți un mixtape
+    prompt: |
+      Îți aduce opera de artă în minte o melodie sau o piesă muzicală anume?
+      Arta și muzica se suprapun în moduri diferite și adesea împărtășesc un limbaj similar.
+      Ce calități au în comun? Creează o listă de redare pentru fiecare vizită la galerie sau pentru un artist individual.
+    follow_ups:
+      - Care este piesa de deschidere?
+      - Ce calitate leagă lucrarea de muzică—ritm, atmosferă, textură?
+      - Cum s-ar schimba lista de redare dacă ai revizita peste un an?
+  - id: read_in_context
+    name: Citește în context
+    prompt: |
+      Unde se află opera de artă? Cum îi afectează împrejurimile modul în care este primită?
+      Este pe un panou publicitar, în afara unei galerii, în mijlocul unui lac? Ascultă conversația dintre lucrare și împrejurimile sale.
+    follow_ups:
+      - Ce s-ar schimba dacă ar fi în altă parte?
+      - Ce spune camera sau spațiul înapoi?
+      - Cine este publicul aici—și cine lipsește?
+  - id: understand_it_less
+    name: Înțelege mai puțin
+    prompt: |
+      Îmbrățișează-ți curiozitatea. Întreabă-te ce este ciudat sau nou în experiența ta cu opera de artă? Cum ai putea să o faci și mai bizară? Renunță la ceea ce "ar trebui să însemne" opera de artă încercând să o înțelegi puțin mai puțin!
+    follow_ups:
+      - Ce ar trebui să uiți pentru a o vedea proaspăt?
+      - Ce întrebare nu are răspuns—și de ce contează asta?
+      - Cum ar arăta "a greși"?
+  - id: chaos_or_control
+    name: Haos sau control?
+    prompt: |
+      Pare aleatoriu, sau există un plan? Șansa, accidentul și serendipitatea joacă un rol—uneori semnificativ—în producția unei opere de artă. Încearcă să găsești ce a fost permis să apară natural și ce a fost controlat.
+    follow_ups:
+      - Unde deține artistul frâiele—și unde le dă drumul?
+      - Ce ar fi putut fi un accident care a devenit esențial?
+      - Cum s-ar schimba lucrarea cu mai mult haos—sau mai mult control?
+  - id: palimpsest
+    name: Palimpsest
+    prompt: |
+      Caută straturi! Ce este ascuns și ce este dezvăluit? Cât de groasă este lucrarea? Suprafața a fost construită în timp?
+    follow_ups:
+      - Ce se află sub suprafață?
+      - Ce ai găsi dacă ai putea să o dezlipești?
+      - Cum se arată timpul în straturi?
+  - id: pattern_recognition
+    name: Recunoaștere de modele
+    prompt: |
+      Caută elemente care se repetă. Există un model? Există motive repetitive? Anumite forme se ecouriază reciproc?
+    follow_ups:
+      - Ce rupe modelul—și de ce?
+      - Unde te conduce repetiția cu privirea?
+      - Ce s-ar întâmpla dacă ai urmări un motiv prin întreaga lucrare?
+  - id: through_another_pair_of_eyes
+    name: Prin ochii altcuiva
+    prompt: |
+      Adu-ți aminte de un personaj dintr-un roman, un film, o piesă de teatru sau o figură istorică. Imaginează-ți că ai o conversație cu el despre opera de artă. Ai fi de acord cu opinia lui despre ea?
+    follow_ups:
+      - Ce ar observa el/ea pe care tu l-ai ratat?
+      - Unde nu ați fi de acord—și de ce?
+      - Ce întrebare ți-ar pune despre ea?
+  - id: thermostat
+    name: Termostat
+    prompt: |
+      Ce temperatură are o culoare? Caută culorile cele mai reci din opera de artă, apoi identifică nuanțele mai calde. Câte ecosisteme poți găsi într-o singură operă de artă?
+    follow_ups:
+      - Unde se întâlnesc caldul și recele—și ce se întâmplă acolo?
+      - Ce climat evocă lucrarea?
+      - Cum s-ar simți dacă ai păși în temperatura ei?
+  - id: negative_space
+    name: Spațiu negativ
+    prompt: |
+      Spațiile dintre elementele individuale dintr-o operă de artă sunt la fel de semnificative ca și elementele în sine. Ca un puzzle, acordă atenție pieselor lipsă. Spațiul negativ: cum încadrează ceea ce este acolo? Simte-i semnificația.
+    follow_ups:
+      - Ce formă ia golul?
+      - Ce ar umple golurile—și ar trebui?
+      - Cum menține spațiul negativ compoziția unită?
+  - id: make_yourself_at_home
+    name: Fă-ți casă
+    prompt: |
+      Imaginează-ți că te târăști în opera de artă. Unde te-ai ascunde? Ce poți vedea? Cum se simte?
+    follow_ups:
+      - Ce ai auzi de dinăuntru?
+      - Unde te-ai simți cel mai în siguranță—sau cel mai expus?
+      - Ce ai lua cu tine dacă ai putea rămâne?
+  - id: homage
+    name: Omagiu
+    prompt: |
+      Creează un altar sau o mini-expoziție pentru artistul tău preferat. Începe cu o carte poștală din magazin, sau caută obiecte și imagini care fac referire și adaugă profunzime și culoare lucrării lui/ei.
+    follow_ups:
+      - Ce ar sta în centrul altarului tău?
+      - Ce obiect l-ar surprinde?
+      - Cum schimbă actul de curatoriere modul în care vezi munca lui/ei?
+  - id: warm_up
+    name: Încălzire
+    prompt: |
+      Trezeste-ți corpul pentru a-ți pregăti simțurile. Aleargă, sari, întinde-te, bate din palme, mișcă degetele de la picioare. Acordă atenție oricăror senzații fizice din corpul tău când privești opera de artă.
+    follow_ups:
+      - Unde în corpul tău simți lucrarea?
+      - Cum schimbă mișcarea ceea ce vezi?
+      - Ce senzație persistă după ce te uiți în altă parte?
+  - id: make_it_anew
+    name: Fă-o din nou
+    prompt: |
+      Acasă, recreează o operă de artă folosind doar ce ai la îndemână. Scrie-o, deseneaz-o, construiește-o cu chibrituri. Cu cât metoda este mai ușoară și mai simplă, cu atât mai bine. Vezi ce îți rămâne în minte, ce observi în redarea ta.
+    follow_ups:
+      - Ce ți-ai amintit fără să încerci?
+      - Ce a greșit versiunea ta—și de ce contează asta?
+      - Ce ai adăuga dacă ai avea încă un minut?
+  - id: origin_story
+    name: Povestea originii
+    prompt: |
+      Îți amintești prima operă de artă pe care ai văzut-o vreodată? Unde erai? Câți ani aveai? Încearcă să-ți amintești camera în care erai, lumina și sunetele, sentimentul de a o privi. Există ceva ce poți conecta la opera de artă pe care o vezi acum?
+    follow_ups:
+      - Ce a rămas la fel în modul în care privești arta?
+      - Ce ar face acea versiune mai tânără a ta din această lucrare?
+      - Ce fir de legătură se întinde de atunci și până acum?
+  - id: words_and_images
+    name: Cuvinte și imagini
+    prompt: |
+      Fără să te uiți la opera de artă, citește descrierea, închide ochii și încearcă să ți-o imaginezi. Apoi deschide-i. Se potrivește cu versiunea ta?
+    follow_ups:
+      - Ce au omis cuvintele?
+      - Ce ai adăugat care nu era acolo?
+      - Cum schimbă imaginea ta mentală modul în care vezi cea reală?
+  - id: keep_a_notebook
+    name: Păstrează un caiet
+    prompt: |
+      Fă un jurnal cu date, opere de artă și răspunsul tău la ele. Uită-te peste notele tale și caută noi opere de artă.
+    follow_ups:
+      - Ce model apare când îți citești notele?
+      - Ce i-ai spune versiunii tale din trecut?
+      - Unde te duce caietul în continuare?
+  - id: write_a_postcard
+    name: Scrie o carte poștală
+    prompt: |
+      Scrie o carte poștală unei opere de artă cu care te conectezi în mod deosebit. Ce i-ai spune? Cum ar putea răspunde ea?
+    follow_ups:
+      - Ce ar trebui să spui pe care nu ai putea să o spui cu voce tare?
+      - Cum ar arăta scrisul ei?
+      - Ce ai păstra—și ce nu ai trimite niciodată?
+  - id: here_today_gone
+    name: Azi aici, plecat...?
+    prompt: |
+      Nu toate operele de artă rezistă testului timpului, nici nu aceasta este intenția fiecărui artist. O performanță sau un happening ar putea exista pentru o seară, poate minute sau doar secunde! Poate privești documentarea unei opere de artă trecătoare, temporare. Cât va dura?
+    follow_ups:
+      - Ce s-ar pierde dacă ar dispărea mâine?
+      - Ce supraviețuiește în memorie, fotografie sau poveste?
+      - Îi schimbă impermanența modul în care o privești?
+  - id: wrap_it_up
+    name: Împachetează-o
+    prompt: |
+      Ce-ar fi dacă ai putea împacheta opera de artă? Ai mai putea spune ce este? Ar încăpea o altă operă de artă în același pachet?
+    follow_ups:
+      - Ce formă ar lua pachetul?
+      - Cum ar arăta hârtia de împachetat?
+      - Ce este esențial—și ce ar putea fi înlocuit?
+  - id: trace_a_path
+    name: Urmărește o cale
+    prompt: |
+      Ce privești când întâlnești o operă de artă? Unde călătorește privirea ta apoi? Unde se oprește privirea ta? Desenează punctele și unește-le.
+    follow_ups:
+      - Unde te întorci mereu?
+      - Ce ai sărit—și de ce?
+      - Cum se compară calea ta cu cea a altcuiva?
+  - id: superficial
+    name: Superficial
+    prompt: |
+      Cum este suprafața? Absoarbe lumina sau o reflectă? Este netedă sau perforată? Este stratificată, rafinată sau aspră? Nu-ți fie teamă să fii superficial!
+    follow_ups:
+      - Cum s-ar simți la atingere?
+      - Ce dezvăluie—sau ascunde—suprafața?
+      - Ce se întâmplă când rămâi la suprafață?
+  - id: studio_visit
+    name: Vizită în atelier
+    prompt: |
+      Există atâtea ateliere de artiști câți artiști. Imaginează-ți spațiul unde a fost creată opera de artă: un depozit în Brooklyn, un atelier în Paris, masa din bucătărie dintr-o casă de familie aglomerată—sau poate undeva mai puțin probabil.
+    follow_ups:
+      - Ce ai auzi în acel spațiu?
+      - La ce oră din zi a fost făcută?
+      - Cum schimbă locul imaginat modul în care vezi lucrarea?
+  - id: switch_channels
+    name: Schimbă canalele
+    prompt: |
+      Privește oamenii în loc de artă. Cum se comportă față de lucrare?
+      La ce se uită? Poți ghici ce simt?
+    follow_ups:
+      - Cine zăbovește—și cine trece în grabă?
+      - Ce ar spune dacă i-ai întreba?
+      - Cum schimbă privirea altora ceea ce observi?
+  - id: light
+    name: Lumină
+    prompt: |
+      Caută sursa de lumină. De unde vine? Ce este în umbră? Concentrează-te pe ceea ce artistul vrea să vedem și pe ceea ce este ascuns în umbre.
+    follow_ups:
+      - Ce dezvăluie lumina?
+      - Ce ar putea ascunde umbrele?
+      - Cum s-ar schimba lucrarea într-o lumină diferită?
+  - id: introductions
+    name: Introduceri
+    prompt: |
+      Introdu o operă de artă unui prieten ca și cum ar fi o cunoștință la o petrecere.
+      Cum ai descrie-o într-un mod care să-i capteze interesul? Ce îți captează ție interesul?
+    follow_ups:
+      - Ce ai sublinia prima dată?
+      - Ce ai omite?
+      - Ce cârlig ar face-o să vrea să o cunoască?
+  - id: tipping_point
+    name: Punct de cotitură
+    prompt: |
+      Unde este centrul operei de artă? Este în dezechilibru? Caută punctul de cotitură.
+    follow_ups:
+      - Ce ar o doborî?
+      - Ce o ține pe loc?
+      - Cum creează dezechilibrul tensiune—sau eliberare?
+  - id: homing
+    name: Revenire
+    prompt: |
+      Continuă să te întorci. Revino la o operă de artă preferată în zile diferite sau la ore diferite ale zilei—dimineața devreme iarna, seara târziu vara. Păstrează o evidență a cum te simți; sentimentele tale se schimbă la fiecare vizită.
+    follow_ups:
+      - Ce a rămas la fel de-a lungul vizitelor?
+      - Când te-a surprins cel mai mult?
+      - Ce ai spune versiunii tale din trecut despre ea?
+  - id: one_and_only
+    name: Unicul
+    prompt: |
+      Pentru a evita să te simți copleșit, alege doar o operă de artă de văzut, sau cel mult o mână de opere. Aprofundează și petrece cât mai mult timp posibil cu fiecare. Câte dintre aceste cărți poți folosi în fața unei singure opere de artă?
+    follow_ups:
+      - Ce ai observat la a doua privire?
+      - Ce cărți au dezvăluit ceva nou?
+      - Când ai știut că e timpul să mergi mai departe?
+  - id: press_pause
+    name: Apasă pauză
+    prompt: |
+      Încetinește mult. Începe să privești închizând ochii, relaxează-te și concentrează-te pe respirație, deschide ochii încet, reorientează-te și dă operei de artă timp să se desfășoare în fața ta.
+    follow_ups:
+      - Ce a apărut când ai încetinit?
+      - Ce ai observat prima dată când ai deschis ochii?
+      - Cum îți schimbă respirația modul în care vezi?
+  - id: material
+    name: Material
+    prompt: |
+      Din ce este făcută opera de artă? Ce-ar fi dacă ar fi făcută din altceva? Cu cât mai incongruent, cu atât mai bine. Ar schimba modul în care te simți față de ea?
+    follow_ups:
+      - Care ar fi cel mai surprinzător substitut?
+      - Ce adaugă materialul la semnificație?
+      - Ce ar supraviețui schimbării—și ce s-ar pierde?
+  - id: patch_of_sky
+    name: Câte culori într-o porțiune de cer?
+    prompt: |
+      Mărește o zonă a operei de artă. Câte culori poți vedea acolo?
+      În afara muzeului, privește în sus și încearcă să numeri câte culori poți vedea într-o porțiune de cer.
+    follow_ups:
+      - Ce ai ratat când te uitai la întreg?
+      - Cum se compară cerul cu opera de artă?
+      - Ce culoare te-a surprins cel mai mult?
+  - id: greening
+    name: Înverzire
+    prompt: |
+      Ce fel de plantă ar fi opera de artă? Ar fi un piersic de mijloc de vară, încărcat de fructe, sau mai degrabă o ferigă delicată? Ce condiții necesită pentru a crește?
+    follow_ups:
+      - Unde ar prospera—și unde s-ar ofili?
+      - Ce ar avea nevoie pentru a înflori?
+      - Cum schimbă metafora botanică modul în care o vezi?

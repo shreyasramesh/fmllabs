@@ -1,0 +1,392 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Laboratorium Kulinarne — Indyjskie (Polish)
+
+id: culinary_lab_indian
+name: Laboratorium Kulinarne — Indyjskie
+description: 50 kart, które odmienią Twoje doświadczenie indyjskiej kuchni – od chemii przypraw i ostrości po archeologię składników i choreografię wspólnego stołu.
+domain: culinary_lab
+cards:
+  - id: ind_tadka_crackle
+    name: Chrzęst Tadki
+    prompt: |
+      Tadka – podsmażanie – to pierwsza nuta. Gorący olej spotyka nasiona gorczycy, kmin, liście curry. Posłuchaj. Chrzęst to chemia w czasie rzeczywistym. Co się zmienia, gdy słyszysz to przed spróbowaniem?
+    follow_ups:
+      - Jak dźwięk kształtuje oczekiwanie?
+      - Co straciłoby danie bez chrzęstu?
+      - Jaka jest zależność między dźwiękiem a smakiem?
+  - id: ind_spice_route
+    name: Szlak Przypraw
+    prompt: |
+      Kardamon pochodził z Kerali. Szafran z Kaszmiru. Czarny pieprz był kiedyś wart tyle co złoto. Prześledź jedną przyprawę na swoim talerzu aż do jej pochodzenia. Jaką podróż odbyła, by do Ciebie trafić?
+    follow_ups:
+      - Jak wiedza o trasie zmienia kęs?
+      - Jakie inne przyprawy podróżowały tą samą drogą?
+      - Jaka jest zależność między handlem a smakiem?
+  - id: ind_thali_geometry
+    name: Geometria Thali
+    prompt: |
+      Thali to płótno – miseczki ułożone w okręgu, każda ma swoją rolę. Przyjrzyj się kompozycji. Gdzie najpierw pada wzrok? Gdzie jest przestrzeń negatywna?
+    follow_ups:
+      - Co by się stało, gdyby brakowało jednej miseczki?
+      - Jak ułożenie kształtuje posiłek?
+      - Jaka jest zależność między geometrią a rytuałem?
+  - id: ind_hand_as_tool
+    name: Dłoń jako Narzędzie
+    prompt: |
+      Roti podrzeć, wymieszać z sabzi, włożyć do ust. Dłoń jest sztućcem i zmysłem. Zauważ choreografię. Co dodaje dotyk, czego nie potrafią widelec i nóż?
+    follow_ups:
+      - Jak jedzenie rękami zmienia tempo?
+      - Co stracilibyśmy używając sztućców?
+      - Jaka jest zależność między dotykiem a temperaturą?
+  - id: ind_heat_layers
+    name: Warstwy Ostrości
+    prompt: |
+      Indyjska ostrość jest warstwowa – palenie chili, ciepło czarnego pieprzu, ogień imbiru. Weź jeden kęs i zmapuj, gdzie ląduje każda ostrość. Język, gardło, brzuch. Jak one się budują?
+    follow_ups:
+      - Jakie byłoby danie z tylko jedną ostrością?
+      - Jak warstwowanie tworzy złożoność?
+      - Jaka jest zależność między ostrością a czasem?
+  - id: ind_yogurt_intervention
+    name: Interwencja Jogurtu
+    prompt: |
+      Raita, dahi, lassi – jogurt chłodzi, kroi, równoważy. Zauważ moment, gdy go dodajesz. Kwas spotyka tłuszcz, chłód spotyka ciepło. Interwencja jest chemiczna. Co ona przerywa?
+    follow_ups:
+      - Jakie byłoby danie bez jogurtu?
+      - Jak kontrast tworzy ulgę?
+      - Jaka jest zależność między interwencją a równowagą?
+  - id: ind_betel_after
+    name: Betel Po
+    prompt: |
+      Paan – liść betelowy – w niektórych tradycjach kończy posiłek. To nie deser. To zamknięcie. Podniebienie znów się zmienia. Co mówi zakończenie o całości?
+    follow_ups:
+      - Jak paan zaznacza przejście?
+      - Czego brakowałoby posiłkowi bez niego?
+      - Jaka jest zależność między zakończeniem a pamięcią?
+  - id: ind_street_chaos
+    name: Chaos Uliczny
+    prompt: |
+      Sprzedawca chaat pracuje szybko – bhel, papdi, chutneys warstwowane w sekundy. Obserwuj występ. Stoisko to teatr. Jaki jest scenariusz? Kto jest widzem?
+    follow_ups:
+      - Co byłoby z daniem bez występu?
+      - Jak szybkość kształtuje doświadczenie?
+      - Jaka jest zależność między chaosem a kunsztem?
+  - id: ind_tandoor_breathe
+    name: Oddech Tandoora
+    prompt: |
+      Tandoor oddycha – płomienie, dym, glina. Naan przyklejony do ściany, wyciągnięty, gdy się spęka. Stań obok niego. Ciepło, zapach. Jaka jest zależność między ogniem a smakiem?
+    follow_ups:
+      - Jakie byłoby naan bez tandoora?
+      - Jak glina kształtuje kucharza?
+      - Jaka jest zależność między oddechem a chlebem?
+  - id: ind_turmeric_stain
+    name: Plama Kurkumy
+    prompt: |
+      Kurkuma zostawia plamy – na palcach, ubraniu, plastiku. Kolor pozostaje. Zauważ, co znaczy. Plama to archeologia. Jak daleko podróżował ten posiłek, zanim do Ciebie dotarł?
+    follow_ups:
+      - Co byłoby z daniem bez koloru?
+      - Jak plama znaczy pracę?
+      - Jaka jest zależność między pigmentem a zachowaniem?
+  - id: ind_rice_architecture
+    name: Architektura Ryżu
+    prompt: |
+      Biryani jest zbudowana – warstwa ryżu, warstwa mięsa, szafran, smażona cebula. Struktura trzyma się. Odkryj ją. Jak architektura wpływa na każdy kęs?
+    follow_ups:
+      - Co by się stało, gdyby warstwy zmieszały się zbyt wcześnie?
+      - Jak struktura tworzy niespodziankę?
+      - Jaka jest zależność między budowaniem a jedzeniem?
+  - id: ind_chutney_spectrum
+    name: Spektrum Chutney
+    prompt: |
+      Mięta, tamaryndowiec, kokos, pomidor – chutneys układają się jak paleta. Każdy zmienia kęs. Spróbuj jedno danie z trzema chutney. Jak ta sama baza staje się trzema różnymi historiami?
+    follow_ups:
+      - Jakie byłoby danie z tylko jednym chutney?
+      - Jak wybór kształtuje sprawczość?
+      - Jaka jest zależność między spektrum a preferencją?
+  - id: ind_steam_rising
+    name: Wznosząca się Para
+    prompt: |
+      Idli, dosa, puri – para unosi się, gdy podnosisz pokrywkę. Obserwuj ją. Para niesie zapach przed smakiem. Co przybywa pierwsze? Nos czy usta?
+    follow_ups:
+      - Jak para kształtuje oczekiwanie?
+      - Co stracilibyśmy bez podniesienia?
+      - Jaka jest zależność między parą a smakiem?
+  - id: ind_silver_versus_steel
+    name: Srebro kontra Stal
+    prompt: |
+      Niektóre stoły używają stalowych thali, inne srebrnych, jeszcze inne liści bananowca. Zauważ naczynie. Jak powierzchnia pod jedzeniem zmienia doświadczenie? Waga, dźwięk, tradycja.
+    follow_ups:
+      - Jakie byłoby danie na różnych powierzchniach?
+      - Jak naczynie kształtuje ceremonię?
+      - Jaka jest zależność między materiałem a znaczeniem?
+  - id: ind_cumin_fragrance
+    name: Zapach Kminu
+    prompt: |
+      Prażone nasiona kminu uwalniają zapach przed smakiem. Powąchaj danie, zanim go spróbujesz. Kmin podróżuje po pokoju. Jak aromat przygotowuje podniebienie?
+    follow_ups:
+      - Co byłoby z daniem bez zapachu?
+      - Jak zapach znaczy obecność kucharza?
+      - Jaka jest zależność między nosem a pamięcią?
+  - id: ind_shared_central
+    name: Wspólny Środek
+    prompt: |
+      Dania stoją na środku. Wszyscy sięgają. Nie ma "twojego talerza" w tym samym sensie. Obserwuj choreografię sięgania, podawania, brania. Jakie są niewypowiedziane zasady?
+    follow_ups:
+      - Jakie byłoby danie z indywidualnymi porcjami?
+      - Jak dzielenie się tworzy więź?
+      - Jaka jest zależność między wspólnym a komunalnym?
+  - id: ind_ghee_gloss
+    name: Połysk Ghee
+    prompt: |
+      Ghee tworzy kałuże, błyszczy, powleka. To tłuszcz jako smak i jako wykończenie. Zauważ, gdzie zbiera się na talerzu. Jak ten połysk zmienia teksturę i temperaturę?
+    follow_ups:
+      - Jakie byłoby danie z olejem zamiast tego?
+      - Jak ghee przenosi inne smaki?
+      - Jaka jest zależność między połyskiem a bogactwem?
+  - id: ind_papad_crunch
+    name: Chrupnięcie Papadu
+    prompt: |
+      Papad – chrupki, cienki, trzaskający. To tekstura jako interpunkcja. Złam jeden. Posłuchaj. Chrupnięcie to sekcja rytmiczna posiłku. Jak brzmiałaby cisza bez niego?
+    follow_ups:
+      - Jak chrupnięcie tworzy kontrast?
+      - Czego brakowałoby posiłkowi bez papadu?
+      - Jaka jest zależność między dźwiękiem a satysfakcją?
+  - id: ind_sambar_depth
+    name: Głębokość Sambaru
+    prompt: |
+      Sambar jest warstwowy – soczewica, tamaryndowiec, warzywa, przyprawy. Długo się gotował. Spróbuj wyczuć warstwy. Ile potrafisz rozróżnić? Jaka jest archeologia tej miseczki?
+    follow_ups:
+      - Jakie byłoby sambar z mniejszą liczbą warstw?
+      - Jak czas buduje głębię?
+      - Jaka jest zależność między wolnym gotowaniem a historią?
+  - id: ind_pickle_punch
+    name: Uderzenie Piklu
+    prompt: |
+      Achar – pikle – to zwrot akcji. Jeden maleńki kęs wszystko zmienia. Słodkie, kwaśne, ostre, fermentowane. Zauważ, kiedy wchodzi do gry. Co ono zakłóca?
+    follow_ups:
+      - Jakie byłoby danie bez pikli?
+      - Jak uderzenie tworzy niespodziankę?
+      - Jaka jest zależność między zwrotem akcji a pamięcią?
+  - id: ind_bay_leaf_hunt
+    name: Polowanie na Liść Laurowy
+    prompt: |
+      Liście laurowe chowają się w pulao, biryani, curry. Znajdź jeden. Nie jesz go – to archeologia. Podróżował z Kerali lub Kaszmiru. Co dodał, zanim został usunięty?
+    follow_ups:
+      - Jak to, co niejadalne, kształtuje to, co jadalne?
+      - Co byłoby z daniem bez liścia?
+      - Jaka jest zależność między ukrytym a obecnym?
+  - id: ind_dosa_edge
+    name: Krawędź Dosy
+    prompt: |
+      Dosa ma krawędź – chrupiącą, przypominającą koronkę, złotą. Środek jest miękki. Kontrast jest architektoniczny. Gdzie gryziesz najpierw? Jak krawędź ramuje całość?
+    follow_ups:
+      - Jakie byłoby dosa, gdyby było jednolicie chrupiące?
+      - Jak krawędź tworzy zainteresowanie?
+      - Jaka jest zależność między granicą a centrum?
+  - id: ind_saffron_thread
+    name: Nić Szafranu
+    prompt: |
+      Szafran – kilka nitek – barwi i perfumuje całe danie. Prześledź jedną nić. Skąd pochodzi? Kaszmir, Iran, Hiszpania? Najdroższa przyprawa. Co dodaje niedobór?
+    follow_ups:
+      - Jak szafran kształtuje luksus?
+      - Co byłoby z daniem zamiast kurkumy?
+      - Jaka jest zależność między nitką a terytorium?
+  - id: ind_chaat_texture
+    name: Tekstura Chaat
+    prompt: |
+      Chaat w jednym kęsie nakłada tekstury – chrupiące, miękkie, kruche, kremowe. Rozłóż je na czynniki pierwsze. Ile jest tekstur? Jak współpracują? Kęs to współpraca.
+    follow_ups:
+      - Jakie byłoby chaat z jedną teksturą?
+      - Jak warstwowanie tworzy zabawę?
+      - Jaka jest zależność między teksturą a zachwytem?
+  - id: ind_mustard_seed_pop
+    name: Strzał Nasion Gorczycy
+    prompt: |
+      Nasiona gorczycy strzelają w oleju – podsmażanie w kuchni bengalskiej, południowoindyjskiej. Strzał jest chemiczny. Nasiona uwalniają związki. Powąchaj to. Co się zmienia, gdy ciepło je aktywuje?
+    follow_ups:
+      - Jak strzał zaznacza czas kucharza?
+      - Co byłoby z daniem bez tego?
+      - Jaka jest zależność między strzałem a mocą?
+  - id: ind_dal_surface
+    name: Powierzchnia Dalu
+    prompt: |
+      Dal ma powierzchnię – czasami skórkę, czasami pływający tadka. Nie mieszaj jeszcze. Spójrz na nią. Co powierzchnia ujawnia o tym, co poniżej?
+    follow_ups:
+      - Jak powierzchnia zachęca lub opiera się?
+      - Co by się stało, gdybyś nigdy nie mieszał?
+      - Jaka jest zależność między powierzchnią a głębią?
+  - id: ind_banana_leaf_plate
+    name: Talerz z Liścia Bananowca
+    prompt: |
+      Liść bananowca to talerz – organiczny, jednorazowy, tradycyjny. Liść ma teksturę, zapach. Jedzenie leży na nim inaczej. Jak liść zmienia posiłek?
+    follow_ups:
+      - Jakie byłoby danie na ceramice?
+      - Jak liść kształtuje rytuał?
+      - Jaka jest zależność między liściem a miejscem?
+  - id: ind_fenugreek_haunt
+    name: Widmo Kozieradki
+    prompt: |
+      Kozieradka – methi – ma zapach, który się utrzymuje. Gorzki, przypominający klon. Nawiedza kuchnię, ubrania. Zauważ, gdzie się przykleja. Co dodaje wytrwałość?
+    follow_ups:
+      - Jak kozieradka znaczy terytorium?
+      - Co byłoby z daniem bez jej wytrwałości?
+      - Jaka jest zależność między nawiedzeniem a pamięcią?
+  - id: ind_pani_puri_moment
+    name: Moment Pani Puri
+    prompt: |
+      Pani puri to historia jednego kęsa – chrupka skorupka, ziemniak, ciecierzyca, woda tamaryndowca. Trzeba je zjeść całe, natychmiast. Moment jest niepowtarzalny. Co czyni go pilnym?
+    follow_ups:
+      - Co by się stało, gdybyś czekał?
+      - Jak pilność tworzy przyjemność?
+      - Jaka jest zależność między momentem a pamięcią?
+  - id: ind_serving_order
+    name: Kolejność Podawania
+    prompt: |
+      W niektórych sytuacjach jest kolejność – najpierw starsi, pewne dania przed innymi. Obserwuj. Kto podaje? Kto czeka? Choreografia koduje szacunek. Jakie są zasady?
+    follow_ups:
+      - Jakie byłoby danie bez kolejności?
+      - Jak sekwencja tworzy znaczenie?
+      - Jaka jest zależność między porządkiem a hierarchią?
+  - id: ind_cardamom_pod
+    name: Strąk Kardamonu
+    prompt: |
+      Cały strąk kardamonu ukrywa się w pulao lub chai. Możesz go ugryźć, możesz go odsunąć. Strąk to archeologia – zielony z Kerali, czarny z gór. Co wniosła?
+    follow_ups:
+      - Jak cały strąk różni się od mielonego?
+      - Co byłoby z daniem bez niego?
+      - Jaka jest zależność między strąkiem a miejscem?
+  - id: ind_kitchen_sounds
+    name: Dźwięki Kuchni
+    prompt: |
+      Indyjska kuchnia ma ścieżkę dźwiękową – mielenie, smażenie, syczenie szybkowaru. Zamknij oczy w jednej z nich. Zmapuj dźwięki. Co jest stałe? Jaki jest rytm?
+    follow_ups:
+      - Co byłoby z posiłkiem bez tych dźwięków?
+      - Jak dźwięk kształtuje oczekiwanie?
+      - Jaka jest zależność między kuchnią a stołem?
+  - id: ind_second_helping
+    name: Dokładka
+    prompt: |
+      "Zjedz więcej" to rytuał. Naleganie, odmowa, ostateczna akceptacja. Obserwuj taniec. Co oznacza dokładka poza głodem?
+    follow_ups:
+      - Jakie byłoby danie bez oferty?
+      - Jak naleganie koduje troskę?
+      - Jaka jest zależność między więcej a wystarczająco?
+  - id: ind_coriander_finish
+    name: Wykończenie Kolendrą
+    prompt: |
+      Świeża kolendra – cilantro – wieńczy wiele dań. To ostatnia rzecz dodana. Wykończenie. Zauważ, jak zieleń zmienia to, co było wcześniej. Jasna, ziołowa, dzieląca.
+    follow_ups:
+      - Co byłoby z daniem bez ziół?
+      - Jak wykończenie ramuje całość?
+      - Jaka jest zależność między ostatnim a pierwszym?
+  - id: ind_lassi_cut
+    name: Przecięcie Lassi
+    prompt: |
+      Lassi przecina ostrość – chłodne, cierpkie, gęste. To ulga. Zauważ moment, gdy je pijesz. Co ono przerywa? Co resetuje?
+    follow_ups:
+      - Jakie byłoby danie bez lassi?
+      - Jak cięcie przedłuża wytrzymałość?
+      - Jaka jest zależność między ulgą a rytmem?
+  - id: ind_roti_stretch
+    name: Rozciąganie Roti
+    prompt: |
+      Roti jest rozciągane ręcznie – okrągłe, cienkie, pęcherzowe nad ogniem. Obserwuj, jak jest robione. Rozciąganie to umiejętność. Co byłoby z chlebem bez tego ruchu?
+    follow_ups:
+      - Jak rozciąganie wpływa na teksturę?
+      - Co straciłoby roti robione maszynowo?
+      - Jaka jest zależność między ruchem a wynikiem?
+  - id: ind_jaljeera_pause
+    name: Pauza Jaljeera
+    prompt: |
+      Jaljeera – kmin, mięta, tamaryndowiec – to trawienie, pauza. Często pojawia się w środku posiłku lub po. Zauważ zmianę. Co pozwala pauza?
+    follow_ups:
+      - Jakie byłoby danie bez pauzy?
+      - Jak jaljeera zaznacza przejście?
+      - Jaka jest zależność między pauzą a trawieniem?
+  - id: ind_color_conversation
+    name: Konwersacja Kolorów
+    prompt: |
+      Indyjskie talerze mówią kolorami – żółte dal, zielone sabzi, biały ryż, czerwone chutney. Studiuj paletę. Jaka jest rozmowa? Co by się gryzło? Co harmonizuje?
+    follow_ups:
+      - Jak kolor kształtuje apetyt?
+      - Jak wyglądałby talerz w monochromie?
+      - Jaka jest zależność między paletą a regionem?
+  - id: ind_clove_buried
+    name: Goździk Ukryty
+    prompt: |
+      Goździki chowają się w biryani, garam masala, chai. Są ostry, ciepłe. Znajdź jeden. Możesz go ugryźć. Goździk to relikt handlu przyprawami. Jakie terytoria łączy?
+    follow_ups:
+      - Jak cały goździk różni się od mielonego?
+      - Co byłoby z daniem bez goździków?
+      - Jaka jest zależność między goździkiem a kolonializmem?
+  - id: ind_family_style
+    name: Rodzinny Styl
+    prompt: |
+      Jedzenie przyjeżdża w miskach na stół. Wszyscy się z nich jedzą. Posiłek to wspólny projekt. Obserwuj, kto co bierze, kto czeka, kto podaje. Jaka jest ekonomia stołu?
+    follow_ups:
+      - Jakie byłoby danie z indywidualnymi talerzami?
+      - Jak dzielenie się koduje wartości?
+      - Jaka jest zależność między stylem a rodziną?
+  - id: ind_asafoetida_whiff
+    name: Powiew Asafoetidy
+    prompt: |
+      Hing – asafetyda – pachnie dziko na surowo, magicznie po ugotowaniu. Szczypta transformuje dal, sabzi. To sekret. Zauważ, kiedy go złapiesz. Co dodaje powiew?
+    follow_ups:
+      - Jak hing znaczy rękę kucharza?
+      - Co byłoby z daniem bez niego?
+      - Jaka jest zależność między powiewem a transformacją?
+  - id: ind_gulab_jamun_weight
+    name: Waga Gulab Jamun
+    prompt: |
+      Gulab jamun jest gęsty – smażona stała mleczna, nasączona syropem. Poczuj jego wagę na języku. Słodki, ciężki, końcowy. Jak deser zamyka posiłek?
+    follow_ups:
+      - Jak zakończyłby się posiłek bez niego?
+      - Jak waga tworzy zamknięcie?
+      - Jaka jest zależność między deserem a sytością?
+  - id: ind_temple_prasad
+    name: Świątynny Prasad
+    prompt: |
+      Prasad – błogosławione jedzenie – jest rozdawany w świątyniach. Może być prosty: laddu, ryż. Ale niesie inne znaczenie. Zjedz go z tą świadomością. Co się zmienia, gdy jedzenie jest darem?
+    follow_ups:
+      - Jak prasad różni się od jedzenia z restauracji?
+      - Co dodaje błogosławieństwo?
+      - Jaka jest zależność między darem a oddaniem?
+  - id: ind_bone_suck
+    name: Ssanie Kości
+    prompt: |
+      Niektóre indyjskie dania – nihari, paya – zachęcają do ssania kości. Gdzie indziej nie jest to uprzejme. Tutaj jest oczekiwane. Szpik, tkanka łączna. Co wysysa ssanie?
+    follow_ups:
+      - Jak czynność przekracza grzeczność?
+      - Co straciłoby danie bez kości?
+      - Jaka jest zależność między ssaniem a poddaniem?
+  - id: ind_pressure_cooker_song
+    name: Pieśń Szybkowaru
+    prompt: |
+      Szybkowar gwiżdże – jeden, dwa, trzy. To ścieżka dźwiękowa dal i ryżu. Ten dźwięk oznacza gotowe. Jaka byłaby kuchnia bez niego? Jak pieśń kształtuje czas?
+    follow_ups:
+      - Jak gwizdek oznacza gotowość?
+      - Co stracilibyśmy z szybkowarem zamiast instant pota?
+      - Jaka jest zależność między dźwiękiem a bezpieczeństwem?
+  - id: ind_curry_leaf_sizzle
+    name: Skwierczenie Liści Curry
+    prompt: |
+      Liście curry trafiają na gorący olej – podsmażanie w kuchni południowoindyjskiej. Skwierczą, uwalniają aromat. Nie jesz ich; służą smakowi. Ale są obecne. Co dodaje ich obecność?
+    follow_ups:
+      - Co byłoby z daniem bez liści curry?
+      - Jak to, co niejadalne, przenosi smak?
+      - Jaka jest zależność między liściem a pamięcią?
+  - id: ind_mint_chutney_bright
+    name: Jasność Miętowego Chutney
+    prompt: |
+      Miętowy chutney jest świeży – blitz ziół, zielonego chili, limonki. Przecina tłustość, rozjaśnia talerz. Zauważ kolor na tle reszty thali. Co robi zieleń w kompozycji?
+    follow_ups:
+      - Jakie byłoby danie bez chutney?
+      - Jak świeżość przerywa narrację?
+      - Jaka jest zależność między jasnością a równowagą?
+  - id: ind_wedding_feast
+    name: Uczta Weselna
+    prompt: |
+      Indyjskie jedzenie weselne to skala – setki, tysiące karmionych. Bufet, różnorodność, nadmiar. Obserwuj choreografię. Jak skala zmienia posiłek? Jaka jest zależność między celebracją a konsumpcją?
+    follow_ups:
+      - Co byłoby z wesela bez uczty?
+      - Jak obfitość koduje gościnność?
+      - Jaka jest zależność między ucztą a statusem?

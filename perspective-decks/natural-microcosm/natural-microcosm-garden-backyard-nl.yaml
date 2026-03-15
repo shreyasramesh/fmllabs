@@ -1,0 +1,471 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natuurlijke Microkosmos — Tuin & Achtertuin (Dutch)
+
+id: natural_microcosm_garden_backyard
+name: Natuurlijke Microkosmos — Tuin & Achtertuin
+description: 50 kaarten om je kijk op de inheemse wilde natuur te veranderen — van bestuivers en grond tot onkruid versus gewassen en de choreografie van gecultiveerde natuur.
+domain: natural_microcosm
+cards:
+  - id: nmg_bee_landing
+    name: Bij Landing
+    prompt: |
+      Observeer hoe een bij op een bloem landt. De nadering, de aanraking, het zweven. De
+      bij is zowel predator als bestuiver. Wat wint de bloem? Wat
+      brengt het in gevaar?
+    follow_ups:
+      - Hoe beïnvloedt de landing het volgende bezoek?
+      - Hoe zou de tuin zijn zonder bijen?
+      - Wat is de relatie tussen bloem en bij?
+  - id: nmg_soil_crumble
+    name: Bodem Kruimel
+    prompt: |
+      Pak een handvol grond. Voel de textuur — de kruimels, de korrels.
+      Die grond bevat geschiedenis, dood, wedergeboorte. Wat leefde hier eerder?
+      Wat zal hieruit groeien?
+    follow_ups:
+      - Hoe bepaalt de grond wat er groeit?
+      - Wat zou steriele grond betekenen?
+      - Wat is de relatie tussen kruimel en leven?
+  - id: nmg_weed_edge
+    name: Onkruid aan de Rand
+    prompt: |
+      Een onkruid groeit waar het gazon het border ontmoet. Het werd niet geplant. Het werd
+      uitgenodigd — of het nodigde zichzelf uit. Beschouw de grens. Wie trekt de lijn
+      tussen onkruid en bloem?
+    follow_ups:
+      - Hoe zou de tuin zijn zonder onkruid?
+      - Hoe creëert de rand spanning?
+      - Wat is de relatie tussen onkruid en intentie?
+  - id: nmg_compost_steam
+    name: Compost Damp
+    prompt: |
+      Keer een composthoop om. Damp stijgt op — ontbinding in volle gang. De hitte is
+      microbieel werk. Wat keukenafval was, wordt grond. Volg de
+      transformatie.
+    follow_ups:
+      - Wat zou de tuin verliezen zonder compost?
+      - Hoe markeert hitte het proces?
+      - Wat is de relatie tussen afval en vruchtbaarheid?
+  - id: nmg_seed_dormancy
+    name: Zaad Rust
+    prompt: |
+      Een zaadje in de grond kan jaren — decennia — wachten. Het is levend, maar in pauze. Wat
+      maakt het wakker? Licht, water, vuur, verstoring. Beschouw het geduld van een
+      zaadje.
+    follow_ups:
+      - Wat zou ontkieming verliezen zonder rust?
+      - Hoe bepaalt wachten overleving?
+      - Wat is de relatie tussen pauze en opkomst?
+  - id: nmg_bird_bath
+    name: Vogelbad
+    prompt: |
+      Een vogelbad is een uitnodiging. Kijk wie er komt — mussen, roodborstjes, misschien een
+      gaai. Het bad creëert ontmoeting. Hoe zou de tuin zijn zonder dit
+      kleine waterlichaam?
+    follow_ups:
+      - Hoe bepaalt het bad wie er komt?
+      - Wat is de choreografie van aankomst?
+      - Wat is de relatie tussen water en vogel?
+  - id: nmg_tomato_truss
+    name: Tomaten Tros
+    prompt: |
+      Een tomatentros draagt groene vruchten, dan rode. Bestudeer de architectuur. De
+      stengel, de takken, het gewicht. De plant is techniek. Wat ondersteunt het?
+    follow_ups:
+      - Hoe zou de plant zijn zonder de tros?
+      - Hoe bepaalt structuur de oogst?
+      - Wat is de relatie tussen vorm en vrucht?
+  - id: nmg_aphid_column
+    name: Bladluizen Kolom
+    prompt: |
+      Bladluizen clusteren op een stengel — zuigen, vermenigvuldigen. Ze zijn zowel plaag als
+      prooi. Lieveheersbeestjes komen eraan. Merk de ecologie op. Wat is de relatie
+      tussen uitbraak en evenwicht?
+    follow_ups:
+      - Hoe zou de plant zijn zonder bladluizen?
+      - Hoe trekt de cluster predatoren aan?
+      - Wat is de relatie tussen plaag en ecosysteem?
+  - id: nmg_hose_spray
+    name: Slang Spuit
+    prompt: |
+      Water uit een slang raakt de grond. Kijk hoe het zich verzamelt, doordrenkt, wegstroomt. De spuit is
+      kunstmatige regen. Hoe verschilt het van het echte werk? Wat krijgt de plant?
+    follow_ups:
+      - Hoe zou de tuin zijn zonder de slang?
+      - Hoe bepaalt irrigatie de groei?
+      - Wat is de relatie tussen spuit en regen?
+  - id: nmg_lawn_mow
+    name: Gazon Maaien
+    prompt: |
+      Een gazon is beheerde wildernis — op hoogte gemaaid, groen gehouden. Het maaien onderbreekt
+      de groei. Beschouw wat het gazon zou worden als het met rust werd gelaten. Wat houden
+      we tegen?
+    follow_ups:
+      - Hoe zou de tuin zijn zonder maaien?
+      - Hoe bepaalt het maaisel de identiteit?
+      - Wat is de relatie tussen gazon en controle?
+  - id: nmg_pot_bound
+    name: Pot Gebonden
+    prompt: |
+      Een plant in een pot — wortels cirkelen, zoeken. De pot is een grens. Wat
+      zou de plant doen met onbegrensde grond? De pot is zowel gevangenis als
+      bescherming. Beschouw de ruil.
+    follow_ups:
+      - Hoe zou de plant zijn zonder de pot?
+      - Hoe bepaalt insluiting de groei?
+      - Wat is de relatie tussen wortel en muur?
+  - id: nmg_mulch_layer
+    name: Mulch Laag
+    prompt: |
+      Mulch bedekt de grond — houtsnippers, stro, bladeren. Het houdt vocht vast,
+      onderdrukt onkruid, wordt uiteindelijk grond. De laag is tijdelijk.
+      Wat doet het zolang het duurt?
+    follow_ups:
+      - Hoe zou de border zijn zonder mulch?
+      - Hoe creëert de laag een microklimaat?
+      - Wat is de relatie tussen bedekking en grond?
+  - id: nmg_hummingbird_hover
+    name: Kolibrie Zweven
+    prompt: |
+      Een kolibrie zweeft bij een bloem — vleugels onzichtbaar door snelheid. Het zweven
+      is kostbaar. De nectar moet het waard zijn. Beschouw de economie van het
+      bezoek.
+    follow_ups:
+      - Hoe zou de bloem zijn zonder de kolibrie?
+      - Hoe bepaalt het zweven de relatie?
+      - Wat is de relatie tussen kosten en beloning?
+  - id: nmg_fence_creep
+    name: Hek Kruipt
+    prompt: |
+      Klimop of pronkerwt kruipt langs een hek. De plant weet niet dat het hek door de mens is gemaakt.
+      Het klimt toch. Beschouw de ontmoeting tussen groei en structuur.
+    follow_ups:
+      - Waar zou de plant tegenaan klimmen zonder het hek?
+      - Hoe bepaalt het hek de klimmer?
+      - Wat is de relatie tussen klimmen en ondersteuning?
+  - id: nmg_worm_cast
+    name: Regenworm Uitwerpselen
+    prompt: |
+      Regenworm uitwerpselen — kleine hoopjes grond — sieren het gazon. De worm is gepasseerd,
+      vruchtbaarheid achterlatend. De uitwerpsel is archeologie. Wat verwerkte de worm?
+      Wat liet het achter?
+    follow_ups:
+      - Hoe zou de grond zijn zonder wormen?
+      - Hoe markeert de uitwerpsel het werk van de worm?
+      - Wat is de relatie tussen uitwerpsel en beluchting?
+  - id: nmg_squirrel_cache
+    name: Eekhoorn Cache
+    prompt: |
+      Een eekhoorn begraaft een noot — en vergeet het dan. De noot kan ontkiemen. De eekhoorn
+      is een toevallige tuinier. Beschouw de relatie tussen geheugen en verspreiding. Wat groeit er
+      uit vergeetachtigheid?
+    follow_ups:
+      - Hoe zou de eik zijn zonder de eekhoorn?
+      - Hoe bepaalt het opslaan de verspreiding van het bos?
+      - Wat is de relatie tussen begraven en ontkiemen?
+  - id: nmg_dew_morning
+    name: Dauw Ochtend
+    prompt: |
+      Ochtenddauw parelt op bladeren. Elke druppel bevat licht. De dauw is
+      condensatie — water uit de lucht. Het zal tegen de middag verdampen. Beschouw het
+      kortstondige geschenk. Wat ontvangt de plant?
+    follow_ups:
+      - Hoe zou het blad zijn zonder de dauw?
+      - Hoe bepaalt de parel de ochtend?
+      - Wat is de relatie tussen condensatie en blad?
+  - id: nmg_prune_scar
+    name: Snoei Litteken
+    prompt: |
+      Een snoei litteken markeert waar een tak werd afgesneden. De boom is geheeld — of heeft geprobeerd.
+      Het litteken is geschiedenis. Wat werd verwijderd? Waarom? Wat herinnert de boom zich?
+    follow_ups:
+      - Hoe zou de boom zijn zonder de snoei?
+      - Hoe bepaalt de snede de groei?
+      - Wat is de relatie tussen wond en vorm?
+  - id: nmg_sunflower_turn
+    name: Zonnebloem Draai
+    prompt: |
+      Een jonge zonnebloem draait met de zon — oost bij zonsopgang, west bij zonsondergang. De
+      beweging is heliotropisme. De plant volgt het licht. Beschouw de
+      choreografie. Wat zou gefixeerd kijken betekenen?
+    follow_ups:
+      - Hoe zou de zonnebloem zijn zonder de draai?
+      - Hoe bepaalt het volgen de groei?
+      - Wat is de relatie tussen beweging en licht?
+  - id: nmg_slug_trail
+    name: Slakken Spoor
+    prompt: |
+      Een slak laat een spoor achter — zilver, plakkerig. Het spoor markeert doorgang. Het
+      beschermt ook de voet van de slak. Beschouw het spoor als zowel verslag als
+      aanpassing. Wat maakt het mogelijk?
+    follow_ups:
+      - Hoe zou de slak zijn zonder het spoor?
+      - Hoe bepaalt de slijm de beweging?
+      - Wat is de relatie tussen spoor en predator?
+  - id: nmg_birdhouse_hole
+    name: Vogelhuisje Gat
+    prompt: |
+      Een vogelhuisje heeft een gat — een specifieke diameter. Het sluit sommige vogels buiten,
+      nodigt anderen uit. Het gat is een filter. Voor wie werd het ontworpen? Wie heeft
+      het opgeëist?
+    follow_ups:
+      - Hoe zou de tuin zijn zonder het vogelhuisje?
+      - Hoe bepaalt het gat wie er nestelt?
+      - Wat is de relatie tussen gat en bewoner?
+  - id: nmg_root_hair
+    name: Wortel Haar
+    prompt: |
+      Wortelharen zijn onzichtbaar van boven — kleine uitsteeksels die water en voedingsstoffen absorberen.
+      De interface van de plant met de grond. Beschouw wat eronder gebeurt. Wat zou de plant verliezen zonder?
+    follow_ups:
+      - Hoe bepaalt het haar de absorptie?
+      - Wat is de relatie tussen haar en grond?
+      - Wat zou je zien als je ze kon zien?
+  - id: nmg_frost_leaf
+    name: Vorst op Blad
+    prompt: |
+      Vorst patronen op een blad — kristalachtig, delicaat. De vorst is water
+      bevroren uit de lucht. Het zal smelten met de zon. Beschouw de tijdelijke
+      kunst. Wat ervaart het blad?
+    follow_ups:
+      - Hoe zou de ochtend zijn zonder vorst?
+      - Hoe bepaalt vorst de dag van het blad?
+      - Wat is de relatie tussen kristal en cel?
+  - id: nmg_companion_plant
+    name: Companion Plant
+    prompt: |
+      Basilicum naast tomaten. Goudsbloemen naast courgette. Companion planting is
+      strategische nabijheid. Sommige planten weren af; sommige trekken aan. Beschouw het
+      sociale leven van de border.
+    follow_ups:
+      - Hoe zou de tomaat zijn zonder de basilicum?
+      - Hoe bepaalt nabijheid de tuin?
+      - Wat is de relatie tussen buur en plaag?
+  - id: nmg_fallen_apple
+    name: Gevallen Appel
+    prompt: |
+      Een appel valt — ongeplukt, overrijp. Hij zal rotten, wespen voeden, misschien een zaailing laten groeien.
+      De val is zowel afval als begin. Beschouw de boog van
+      tak naar grond.
+    follow_ups:
+      - Hoe zou de grond zijn zonder de val?
+      - Hoe bepaalt rot wat er daarna komt?
+      - Wat is de relatie tussen vallen en verspreiding?
+  - id: nmg_spider_web_corner
+    name: Spinnenweb Hoek
+    prompt: |
+      Een spinnenweb spant een hoek van het schuurtje. Dauw vangt op het zijde. Het
+      web is zowel val als thuis. Beschouw de economie van de spin. Wat investeert het?
+      Wat oogst het?
+    follow_ups:
+      - Hoe zou de hoek zijn zonder het web?
+      - Hoe bepaalt het web de dag van de spin?
+      - Wat is de relatie tussen zijde en prooi?
+  - id: nmg_seed_packet
+    name: Zaadverpakking
+    prompt: |
+      Een zaadverpakking — foto op de voorkant, instructies op de achterkant. De verpakking
+      is een belofte. Wat zal er uit die kleine stipjes komen? Beschouw de
+      relatie tussen beeld en werkelijkheid.
+    follow_ups:
+      - Hoe zou de tuin zijn zonder de verpakking?
+      - Hoe bepaalt de verpakking de verwachting?
+      - Wat is de relatie tussen belofte en plant?
+  - id: nmg_rain_barrel
+    name: Regenwater Vat
+    prompt: |
+      Een regenwater vat vangt afvoer van het dak op. Het water is gratis, zacht,
+      ongechloreerd. Het vat is infrastructuur. Beschouw wat er stroomt
+      van hemel naar vat naar wortel.
+    follow_ups:
+      - Hoe zou de tuin zijn zonder het vat?
+      - Hoe verschilt opgevangen regen van kraanwater?
+      - Wat is de relatie tussen dak en wortel?
+  - id: nmg_garden_glove
+    name: Tuinhandschoen
+    prompt: |
+      Een handschoen achtergelaten in de border — vingers stijf, met aarde bevlekt. De handschoen is een
+      prothese. Het verlengt de hand, beschermt hem. Beschouw de grens
+      tussen mens en grond. Wat staat de handschoen toe?
+    follow_ups:
+      - Wat zou de tuinman voelen zonder de handschoen?
+      - Hoe bepaalt de handschoen de relatie?
+      - Wat is de relatie tussen hand en aarde?
+  - id: nmg_caterpillar_chew
+    name: Rups Knaagt
+    prompt: |
+      Een rups eet een blad — rand voor rand. Het knagen is hoorbaar. De
+      rups transformeert blad tot vlinder. Beschouw de kosten voor de plant. Wat wint het door gastheer te zijn?
+    follow_ups:
+      - Hoe zou het blad zijn zonder het knagen?
+      - Hoe bepaalt de rups de plant?
+      - Wat is de relatie tussen eten en worden?
+  - id: nmg_fertilizer_burn
+    name: Meststof Verbranding
+    prompt: |
+      Te veel meststof verbrandt — punten bruin, wortels knapperig. De tuin is
+      chemie. Meer is niet altijd beter. Beschouw de grens tussen voeding
+      en gif. Waar is de lijn?
+    follow_ups:
+      - Hoe zou de plant zijn met minder?
+      - Hoe bepaalt overtolligheid het blad?
+      - Wat is de relatie tussen dosis en schade?
+  - id: nmg_shade_cloth
+    name: Schaduwdoek
+    prompt: |
+      Schaduwdoek spant over zaailingen. Het verspreidt licht, vermindert hitte. Het
+      doek is bemiddeling — tussen zon en plant. Beschouw wat het doek toevoegt.
+      Wat trekt het af?
+    follow_ups:
+      - Hoe zou de zaailing zijn zonder het doek?
+      - Hoe bepaalt schaduw de vroege groei?
+      - Wat is de relatie tussen filter en licht?
+  - id: nmg_morning_glory_dawn
+    name: Morgenrood Prachtwinden bij Dageraad
+    prompt: |
+      Prachtwinden openen bij dageraad, sluiten voor de middag. De bloem heeft een
+      schema. Beschouw het ritme. Hoe zou de tuin zijn als hij de hele dag open bleef?
+    follow_ups:
+      - Hoe bepaalt timing de bestuiving?
+      - Wat is de relatie tussen open en bestuiver?
+      - Waarom dageraad?
+  - id: nmg_garden_path
+    name: Tuinpad
+    prompt: |
+      Een pad door de tuin — stapstenen of mulch. Het pad is waar
+      we lopen. De rest is waar we niet lopen. Beschouw de lijn. Wat beschermt
+      het pad? Wat sluit het uit?
+    follow_ups:
+      - Hoe zou de tuin zijn zonder het pad?
+      - Hoe bepaalt het pad de beweging?
+      - Wat is de relatie tussen stap en grond?
+  - id: nmg_cross_pollination
+    name: Kruisbestuiving
+    prompt: |
+      Bijen dragen pollen van de ene plant naar de andere. De nakomelingen zullen
+      hybriden zijn — niet identiek aan beide ouders. Beschouw de mix. Wat creëert
+      het kruisen? Wat brengt het in gevaar?
+    follow_ups:
+      - Hoe zou de variëteit zijn zonder kruising?
+      - Hoe bepaalt de bij het gen?
+      - Wat is de relatie tussen dragen en combineren?
+  - id: nmg_herb_scent
+    name: Kruiden Geur
+    prompt: |
+      Strijk langs rozemarijn of munt. De geur stijgt op — vluchtige oliën vrijgelaten.
+      De geur is verdediging en uitnodiging. Beschouw de dubbele rol. Wat
+      weert af? Wat trekt aan?
+    follow_ups:
+      - Hoe zou het kruid zijn zonder de geur?
+      - Hoe bepaalt de olie de ontmoeting?
+      - Wat is de relatie tussen aanraking en vrijlating?
+  - id: nmg_watering_can_pour
+    name: Gieter Gieten
+    prompt: |
+      Water uit een gieter — zachter dan een slang. Het gieten is doelbewust. Beschouw
+      het ritueel. Wat laat de gieter toe wat de slang niet doet? Wat is de
+      relatie tussen gieten en plant?
+    follow_ups:
+      - Wat zou de zaailing verkiezen?
+      - Hoe bepaalt het gieten de grond?
+      - Wat is de relatie tussen ritueel en groei?
+  - id: nmg_bird_seed_spill
+    name: Vogelzaad Morsing
+    prompt: |
+      Zaad morst uit een voeder — zonnebloem, gierst. Het valt op de grond.
+      Mussen scharrelen. Eekhoorns plunderen. De morsing creëert een podium. Beschouw
+      wie profiteert. Voor wie was het bedoeld?
+    follow_ups:
+      - Hoe zou de grond zijn zonder de morsing?
+      - Hoe bepaalt de morsing de vlucht?
+      - Wat is de relatie tussen druppel en eter?
+  - id: nmg_cutting_propagate
+    name: Stekken Vermeerderen
+    prompt: |
+      Een stek — een stengel in water of grond — wortelt. Geen zaad. De plant kloont
+      zichzelf. Beschouw de shortcut. Wat omzeilt vermeerdering? Wat
+      behoudt het?
+    follow_ups:
+      - Hoe zou de tuin zijn zonder stekken?
+      - Hoe bepaalt klonen de diversiteit?
+      - Wat is de relatie tussen snede en voortzetting?
+  - id: nmg_leaf_miner_tunnel
+    name: Bladmineerder Tunnel
+    prompt: |
+      Een tunnel van een bladmineerder — kronkelig, bleek, onder het oppervlak. De larve
+      eet tussen de lagen. Het blad overleeft, gehavend. Beschouw de
+      invasie. Wat verliest het blad? Wat behoudt het?
+    follow_ups:
+      - Hoe zou het blad zijn zonder de tunnel?
+      - Hoe bepaalt de mineerder het blad?
+      - Wat is de relatie tussen tunnel en weefsel?
+  - id: nmg_greenhouse_condensation
+    name: Kas Condensatie
+    prompt: |
+      Condensatie parelt op een kasruit. De lucht binnen is vochtig — planten
+      ademen uit. Het raam is een grens. Beschouw het microklimaat. Wat houdt
+      de warmte vast? Wat houdt het vocht vast?
+    follow_ups:
+      - Hoe zou de kas zijn zonder het raam?
+      - Hoe bepaalt condensatie het interieur?
+      - Wat is de relatie tussen glas en groei?
+  - id: nmg_terrace_level
+    name: Terras Niveau
+    prompt: |
+      Een terrasvormige border loopt een helling af. Elk niveau bevat grond, bevat water.
+      Het terras is erosiecontrole en podium. Beschouw de architectuur.
+      Hoe zou de helling zijn zonder het?
+    follow_ups:
+      - Hoe bepaalt het niveau wat er groeit?
+      - Wat is de relatie tussen stap en stabiliteit?
+      - Waarom terrasvormig?
+  - id: nmg_native_vs_exotic
+    name: Inheems versus Uitheems
+    prompt: |
+      Sommige planten zijn inheems — ze horen erbij. Andere zijn uitheems — geïntroduceerd.
+      Beschouw de border. Welke is welke? Maakt het uit? Wat biedt inheems
+      dat uitheems niet doet?
+    follow_ups:
+      - Hoe zou de tuin zijn met alleen inheemse planten?
+      - Hoe bepaalt herkomst de ecologie?
+      - Wat is de relatie tussen erbij horen en gedijen?
+  - id: nmg_garden_dusk
+    name: Tuin bij Schemering
+    prompt: |
+      De tuin bij schemering — licht vervaagt, motten komen tevoorschijn. De dag verschuiving eindigt; de
+      nacht verschuiving begint. Beschouw de overgang. Wie wordt wakker? Wie slaapt?
+      Wat wordt de tuin?
+    follow_ups:
+      - Hoe zou de tuin zijn zonder schemering?
+      - Hoe bepaalt de verschuiving het ecosysteem?
+      - Wat is de relatie tussen dag en nacht?
+  - id: nmg_stake_tie
+    name: Paal en Bind
+    prompt: |
+      Een plant gebonden aan een paal — boon, tomaat. De paal corrigeert. Zonder het
+      zou de plant verspreid liggen. Beschouw de ondersteuning. Wat maakt de band mogelijk?
+      Wat beperkt het?
+    follow_ups:
+      - Hoe zou de plant zijn zonder de paal?
+      - Hoe bepaalt de band de vorm?
+      - Wat is de relatie tussen ondersteuning en groei?
+  - id: nmg_first_frost
+    name: Eerste Vorst
+    prompt: |
+      De eerste vorst — tere planten worden zwart. De tuin verschuift. Sommige dingen
+      eindigen; andere blijven bestaan. Beschouw de drempel. Wat selecteert vorst?
+      Wat spaart het?
+    follow_ups:
+      - Hoe zou de tuin zijn zonder vorst?
+      - Hoe bepaalt de eerste vorst het seizoen?
+      - Wat is de relatie tussen kou en afsluiting?
+  - id: nmg_garden_reflection
+    name: Tuin Reflectie
+    prompt: |
+      Kijk naar de tuin. Het weerspiegelt keuzes — wat werd geplant, wat werd
+      weggehaald, wat met rust werd gelaten. De tuin is een spiegel. Wat laat het zien
+      over de tuinier?
+    follow_ups:
+      - Wat zou de tuin zeggen zonder woorden?
+      - Hoe bepalen keuzes het geheel?
+      - Wat is de relatie tussen tuinier en gegroeid?

@@ -1,0 +1,416 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Interfața Umană — Nod de Tranzit (Romanian)
+
+id: human_interface_transit_hub
+name: Interfața Umană — Nod de Tranzit
+description: 50 de cărți pentru a-ți schimba modul în care privești nodul de tranzit—de la peroane și așteptare la fluxul de sosire/plecare și coregrafia străinilor în tranzit.
+domain: human_interface
+cards:
+  - id: hi_th_platform_edge
+    name: Marginea Peronului
+    prompt: |
+      Marginea peronului este un prag. Linie galbenă, spațiu, șine. Oamenii stau la distanțe diferite. Unii se apleacă înainte; alții ezită. Observă distribuția. Ce înseamnă marginea?
+    follow_ups:
+      - Cum modelează marginea anticiparea?
+      - Cum ar fi peronul fără linie?
+      - Care este relația dintre margine și risc?
+  - id: hi_th_waiting_posture
+    name: Postura de Așteptare
+    prompt: |
+      Corpurile se aranjează în timp ce așteaptă—greutatea pe un picior, telefonul în mână, geanta între picioare. Postura codifică durata. Cine pare răbdător? Cine pare neliniștit? Așteptarea are o limbă a corpului.
+    follow_ups:
+      - Cum dezvăluie postura așteptarea?
+      - Cum ar fi peronul fără așteptare?
+      - Care este relația dintre postură și timp?
+  - id: hi_th_arrival_flow
+    name: Fluxul de Sosire
+    prompt: |
+      Ușile trenului se deschid. Oamenii ies în valuri—împotriva curentului celor care urcă. Fluxul are fizică. Observă coliziunea, ocolirea, fuziunea. Ce reguli guvernează schimbul?
+    follow_ups:
+      - Cum modelează fluxul peronul?
+      - Ce s-ar întâmpla dacă toți s-ar grăbi?
+      - Care este relația dintre flux și eficiență?
+  - id: hi_th_strangers_transit
+    name: Străini în Tranzit
+    prompt: |
+      Împarți un vagon cu oameni pe care nu îi vei mai vedea niciodată. Proximitate fără conexiune. Observă compactul. Ce datorează străinii unii altora? Vagonul de tranzit este o societate temporară.
+    follow_ups:
+      - Cum creează tranzitul comunități temporare?
+      - Cum ar fi vagonul cu conversații?
+      - Care este relația dintre străin și civilitate?
+  - id: hi_th_departure_board
+    name: Panoul de Plecări
+    prompt: |
+      Ore, peronuri, întârzieri—panoul este sursa de adevăr. Ochii se ridică spre el. Panoul dictează mișcarea. Privește privirea colectivă. Ce face panoul mulțimii?
+    follow_ups:
+      - Cum modelează panoul comportamentul?
+      - Cum ar fi nodul fără el?
+      - Care este relația dintre afișaj și încredere?
+  - id: hi_th_escalator_stand
+    name: Așteptarea pe Scară Rulantă
+    prompt: |
+      Stai pe dreapta, mergi pe stânga—sau invers, în funcție de oraș. Scara rulantă are reguli. Observă cine le respectă. Scara rulantă este o coadă mobilă. Ce permite regula?
+    follow_ups:
+      - Cum modelează regula scării rulante fluxul?
+      - Ce s-ar întâmpla dacă toți ar sta?
+      - Care este relația dintre regulă și eficiență?
+  - id: hi_th_ticket_gate
+    name: Poarta de Acces
+    prompt: |
+      Poarta citește cardul, bipăie, se deschide. Poarta este un punct de control. Separa cei care au plătit de cei care nu au plătit. Observă ritmul. Cine se împiedică? Cine trece fără probleme? Poarta este un test.
+    follow_ups:
+      - Cum modelează poarta călătoria?
+      - Cum ar fi nodul fără porți?
+      - Care este relația dintre poartă și apartenență?
+  - id: hi_th_luggage_drag
+    name: Târâtul Bagajelor
+    prompt: |
+      Roți pe gresie. Valiza urmează. Târâtul marchează drumul călătorilor. Bagajul extinde corpul. Observă povara. Ce spune bagajul despre călătorie?
+    follow_ups:
+      - Cum modelează bagajul mișcarea?
+      - Cum ar fi nodul fără genți?
+      - Care este relația dintre povară și destinație?
+  - id: hi_th_bench_occupation
+    name: Ocuparea Băncii
+    prompt: |
+      Bănci de-a lungul peronului. Unii stau; alții stau lângă. Banca este o resursă rară. Observă cine o revendică. Cât timp rămân? Banca este un mic teritoriu.
+    follow_ups:
+      - Cum modelează banca așteptarea?
+      - Cum ar fi peronul fără bănci?
+      - Care este relația dintre scaun și durată?
+  - id: hi_th_announcement_voice
+    name: Vocea Anunțului
+    prompt: |
+      "Următorul tren..." Vocea este automată sau umană. Taie prin zgomot. Anunțul creează cunoștințe comune. Observă cine ascultă. Cine și-a verificat deja telefonul?
+    follow_ups:
+      - Cum modelează anunțul mulțimea?
+      - Cum ar fi nodul fără el?
+      - Care este relația dintre voce și autoritate?
+  - id: hi_th_door_positioning
+    name: Poziționarea Ușilor
+    prompt: |
+      Călătorii frecvenți știu unde se vor deschide ușile. Se poziționează. Noii veniți ghicesc. Poziționarea este o strategie. Observă gruparea. Ce determină poziția?
+    follow_ups:
+      - Cum modelează poziționarea urcarea în tren?
+      - Cum ar fi peronul dacă ușile ar fi aleatorii?
+      - Care este relația dintre poziție și avantaj?
+  - id: hi_th_handrail_grip
+    name: Prinderea Mânerului
+    prompt: |
+      În interiorul vagonului, mâinile găsesc mânerul. Prinderea este siguranță. Observă cine se ține, cine nu are nevoie. Mânerul este un obiect comun. Ce dezvăluie prinderea?
+    follow_ups:
+      - Cum modelează mânerul stabilitatea?
+      - Cum ar fi vagonul fără el?
+      - Care este relația dintre prindere și încredere?
+  - id: hi_th_window_reflection
+    name: Reflecția în Geam
+    prompt: |
+      Geamul arată tunelul, peronul și propriul tău chip. Reflecția este inevitabilă. Oamenii se privesc sau o evită. Observă relația dintre reflecție și privire.
+    follow_ups:
+      - Cum modelează reflecția conștientizarea de sine?
+      - Cum ar fi călătoria fără geam?
+      - Care este relația dintre reflecție și intimitate?
+  - id: hi_th_seat_offer
+    name: Oferta de Loc
+    prompt: |
+      Cineva oferă un loc unui bătrân, unui părinte cu copil. Oferta este un mic act moral. Observă când se întâmplă. Cine oferă? Cine acceptă? Locul este un dar.
+    follow_ups:
+      - Cum modelează oferta vagonul?
+      - Cum ar fi călătoria fără astfel de oferte?
+      - Care este relația dintre ofertă și grijă?
+  - id: hi_th_delay_sigh
+    name: Oftatul de Întârziere
+    prompt: |
+      "Întârziat." Oftatul colectiv. Întârzierea este un destin comun. Străinii schimbă priviri. Întârzierea creează un moment de solidaritate. Observă schimbarea. Ce face întârzierea mulțimii?
+    follow_ups:
+      - Cum modelează întârzierea așteptarea?
+      - Cum ar fi nodul fără întârzieri?
+      - Care este relația dintre întârziere și frustrare?
+  - id: hi_th_backpack_turn
+    name: Răsucirea Rucsacului
+    prompt: |
+      Într-un vagon aglomerat, cineva își întoarce rucsacul spre față. Răsucirea este o considerație. Creează spațiu. Observă cine o face. Răsucirea rucsacului este un mic contract social.
+    follow_ups:
+      - Cum modelează răsucirea proximitatea?
+      - Cum ar fi vagonul fără asta?
+      - Care este relația dintre răsucire și conștientizare?
+  - id: hi_th_exit_anticipation
+    name: Anticiparea Ieșirii
+    prompt: |
+      Pe măsură ce se apropie stația, oamenii se adună lângă ușă. Anticiparea este vizibilă. Corpurile se mișcă. Ușa se va deschide. Observă pregătirea. Ce necesită anticiparea?
+    follow_ups:
+      - Cum modelează anticiparea ieșirea?
+      - Cum ar fi stația fără pregătire?
+      - Care este relația dintre anticipare și flux?
+  - id: hi_th_transfer_corridor
+    name: Coridorul de Transfer
+    prompt: |
+      Coridorul leagă liniile. Oamenii merg cu scop. Transferul este o tranziție—între sisteme, între așteptări. Observă ritmul. Coridorul are propriul său ritm.
+    follow_ups:
+      - Cum modelează coridorul călătoria?
+      - Cum ar fi nodul fără transferuri?
+      - Care este relația dintre coridor și conexiune?
+  - id: hi_th_phone_glow
+    name: Strălucirea Telefonului
+    prompt: |
+      În vagonul slab luminat, fețele strălucesc de la telefoane. Strălucirea este individuală. Fiecare persoană are propria sa lumină. Observă distribuția. Telefonul creează spațiu privat în public.
+    follow_ups:
+      - Cum modelează telefonul călătoria?
+      - Cum ar fi vagonul fără telefoane?
+      - Care este relația dintre strălucire și izolare?
+  - id: hi_th_stroller_navigation
+    name: Navigarea cu Căruciorul
+    prompt: |
+      Un părinte împinge un cărucior prin mulțime. Navigarea este delicată. Oamenii fac loc. Căruciorul schimbă fluxul. Observă acomodarea. Ce cere căruciorul?
+    follow_ups:
+      - Cum modelează căruciorul mulțimea?
+      - Cum ar fi nodul fără cărucioare?
+      - Care este relația dintre cărucior și grijă?
+  - id: hi_th_vendor_station
+    name: Standul Vânzătorului
+    prompt: |
+      Un chioșc vinde cafea, gustări, ziare. Vânzătorul deservește oameni aflați în mișcare. Tranzacția este rapidă. Observă schimbul. Vânzătorul este o insulă în flux.
+    follow_ups:
+      - Cum modelează vânzătorul nodul?
+      - Cum ar fi nodul fără vânzători?
+      - Care este relația dintre vânzător și așteptare?
+  - id: hi_th_track_gap
+    name: Spațiul dintre Șine
+    prompt: |
+      Atenție la spațiu. Spațiul dintre peron și vagon este un pericol. Oamenii îl traversează. Spațiul variază. Observă precauția. Ce cere spațiul corpului?
+    follow_ups:
+      - Cum modelează spațiul urcarea în tren?
+      - Cum ar fi peronul fără el?
+      - Care este relația dintre spațiu și atenție?
+  - id: hi_th_schedule_check
+    name: Verificarea Programului
+    prompt: |
+      Degetele ating telefonul. Aplicația spune când. Verificarea programului este constantă. Reduce incertitudinea. Observă ritmul. Cât de des verifică oamenii?
+    follow_ups:
+      - Cum modelează programul așteptarea?
+      - Cum ar fi nodul fără aplicații?
+      - Care este relația dintre verificare și control?
+  - id: hi_th_crowd_density
+    name: Densitatea Mulțimii
+    prompt: |
+      Ora de vârf aglomerează peronul. Corpurile se comprimă. Densitatea are limite. Observă limita. Când devine insuportabil? Mulțimea are fizică.
+    follow_ups:
+      - Cum modelează densitatea experiența?
+      - Cum ar fi nodul la densitate mică?
+      - Care este relația dintre densitate și toleranță?
+  - id: hi_th_sleeping_commuter
+    name: Călătorul Adormit
+    prompt: |
+      Cineva doarme—capul pe geam, pe umărul unui străin. Somnul este încredere sau epuizare. Observă vulnerabilitatea. Ce cere somnul de la vagon?
+    follow_ups:
+      - Cum modelează adormitul spațiul?
+      - Cum ar fi călătoria fără adormiți?
+      - Care este relația dintre somn și siguranță?
+  - id: hi_th_map_consultation
+    name: Consultarea Hărții
+    prompt: |
+      Un vizitator privește harta de pe perete. Harta este o linie de salvare. Alții curg pe lângă. Consultarea durează. Observă pauza. Ce oferă harta?
+    follow_ups:
+      - Cum modelează harta călătoria?
+      - Cum ar fi nodul fără hărți?
+      - Care este relația dintre hartă și încredere?
+  - id: hi_th_platform_change
+    name: Schimbarea Peronului
+    prompt: |
+      "Schimbare de peron." Mulțimea se mișcă. Schimbarea este o perturbare. Oamenii aleargă. Observă agitația. Ce extrage schimbarea din mulțime?
+    follow_ups:
+      - Cum modelează schimbarea fluxul?
+      - Cum ar fi nodul fără schimbări?
+      - Care este relația dintre schimbare și stres?
+  - id: hi_th_briefcase_clutch
+    name: Prinderea Servietei
+    prompt: |
+      Servieta este ținută aproape—între picioare, în poală. Conține ceva valoros. Prinderea este protectoare. Observă strânsoarea. Ce înseamnă servieta pentru cel care o ține?
+    follow_ups:
+      - Cum modelează servieta călătoria?
+      - Cum ar fi vagonul fără serviete?
+      - Care este relația dintre prindere și identitate?
+  - id: hi_th_door_hold
+    name: Ținerea Ușii
+    prompt: |
+      Cineva ține ușa pentru persoana din spate. Trenul este pe cale să plece. Ținerea este risc și curtoazie. Observă schimbul. Ce costă ținerea?
+    follow_ups:
+      - Cum modelează ținerea urcarea în tren?
+      - Cum ar fi peronul fără ea?
+      - Care este relația dintre ținere și civilitate?
+  - id: hi_th_standing_balance
+    name: Echilibru în Picioare
+    prompt: |
+      Trenul se mișcă. Pasagerii care stau își schimbă greutatea. Echilibrul este dinamic. Nimeni nu ține mânerul. Observă micro-ajustările. Corpul învață mișcarea.
+    follow_ups:
+      - Cum modelează echilibrul călătoria?
+      - Cum ar fi vagonul cu mai multe locuri?
+      - Care este relația dintre echilibru și obișnuință?
+  - id: hi_th_conversation_overhear
+    name: Conversație Auzită din Întâmplare
+    prompt: |
+      Doi oameni vorbesc. Auzi fragmente. Conversația este privată, dar publică. Observă limita. Ce află străinii unii despre alții în tranzit?
+    follow_ups:
+      - Cum modelează auzirea întâmplătoare a conversației călătoria?
+      - Cum ar fi vagonul fără conversații?
+      - Care este relația dintre auzire și intimitate?
+  - id: hi_th_ticket_inspection
+    name: Inspecția Biletelor
+    prompt: |
+      Inspectorul se plimbă prin vagon. "Bilete, vă rog." Inspecția este aleatorie sau sistematică. Observă răspunsul. Cine este pregătit? Cine se bâlbâie? Inspecția este un test de legitimitate.
+    follow_ups:
+      - Cum modelează inspecția călătoria?
+      - Cum ar fi sistemul fără ea?
+      - Care este relația dintre inspecție și încredere?
+  - id: hi_th_station_name_glance
+    name: Privire Spre Numele Stației
+    prompt: |
+      Numele trece în viteză—pe perete, pe indicator. Călătorii obișnuiți știu. Vizitatorii privesc. Privirea orientează. Observă cine privește. Ce face numele?
+    follow_ups:
+      - Cum modelează numele orientarea?
+      - Cum ar fi călătoria fără indicatoare?
+      - Care este relația dintre nume și loc?
+  - id: hi_th_benchmark_regular
+    name: Obiceiul de Referință
+    prompt: |
+      Obișnuitul cunoaște ritmul. Ajunge exact la timp. Fără așteptare. Obișnuitul a internalizat programul. Observă încrederea. Ce știe obișnuitul?
+    follow_ups:
+      - Cum modelează obișnuitul nodul?
+      - Cum ar fi nodul fără obișnuiți?
+      - Care este relația dintre obișnuit și fluiditate?
+  - id: hi_th_lost_look
+    name: Privirea Pierdută
+    prompt: |
+      Cineva pare pierdut—capul întorcându-se, ritmul nesigur. Privirea este vizibilă. Observă limbajul corpului. Cine ajută? Cine ignoră? Privirea pierdută este un semnal. Ce invită?
+    follow_ups:
+      - Cum modelează privirea pierdută nodul?
+      - Cum ar fi nodul fără cei pierduți?
+      - Care este relația dintre pierdut și ajutor?
+  - id: hi_th_earbud_insert
+    name: Introducerea Căștilor
+    prompt: |
+      Căștile intră. Lumea se retrage. Introducerea este o barieră. Purtătorul este prezent, dar absent. Observă schimbarea. Ce creează căștile?
+    follow_ups:
+      - Cum modelează căștile călătoria?
+      - Cum ar fi vagonul fără ele?
+      - Care este relația dintre căști și intimitate?
+  - id: hi_th_rush_hour_pack
+    name: Aglomerația din Ora de Vârf
+    prompt: |
+      Vagonul este plin. Corpurile se ating. Aglomerația este inevitabilă. Observă toleranța. Cum gestionează oamenii proximitatea? Aglomerația are eticheta ei.
+    follow_ups:
+      - Cum modelează aglomerația călătoria?
+      - Cum ar fi ora de vârf fără aglomerație?
+      - Care este relația dintre aglomerație și anduranță?
+  - id: hi_th_destination_ask
+    name: Întrebarea Destinației
+    prompt: |
+      "Acesta e trenul spre X?" Întreabă un străin. Altul răspunde. Întrebarea creează un moment de conexiune. Observă schimbul. Ce necesită întrebarea?
+    follow_ups:
+      - Cum modelează întrebarea vagonul?
+      - Cum ar fi călătoria fără astfel de întrebări?
+      - Care este relația dintre întrebare și încredere?
+  - id: hi_th_platform_choice
+    name: Alegerea Peronului
+    prompt: |
+      Două peronuri, aceeași destinație. Unul este mai aproape; unul este mai puțin aglomerat. Alegerea este o strategie. Observă cine merge unde. Ce determină alegerea?
+    follow_ups:
+      - Cum modelează alegerea mulțimea?
+      - Cum ar fi nodul cu un singur peron?
+      - Care este relația dintre alegere și rezultat?
+  - id: hi_th_wipe_down_seat
+    name: Ștergerea Scaunului
+    prompt: |
+      Cineva șterge scaunul înainte de a se așeza. Ștergerea este o precauție. Observă gestul. Ce presupune ștergerea despre spațiu? Ștergerea este un mic act de delimitare.
+    follow_ups:
+      - Cum modelează ștergerea așezarea?
+      - Cum ar fi vagonul fără astfel de gesturi?
+      - Care este relația dintre ștergere și curățenie?
+  - id: hi_th_standing_offer
+    name: Oferta de a Sta pe Loc
+    prompt: |
+      "Doriți să stați?" Oferta este făcută unui străin. Uneori acceptată, uneori refuzată. Observă schimbul. Ce înseamnă oferta?
+    follow_ups:
+      - Cum modelează oferta vagonul?
+      - Cum ar fi călătoria fără oferte?
+      - Care este relația dintre ofertă și grijă?
+  - id: hi_th_exit_block
+    name: Blocarea Ieșirii
+    prompt: |
+      Cineva stă în ușă. Alții trebuie să treacă. Blocajul este inconștient sau deliberat. Observă negocierea. Cum trec oamenii? Blocajul este un mic conflict.
+    follow_ups:
+      - Cum modelează blocajul ieșirea?
+      - Cum ar fi vagonul fără blocaje?
+      - Care este relația dintre blocaj și conștientizare?
+  - id: hi_th_train_rumble
+    name: Zgomotul Trenului
+    prompt: |
+      Trenul zdrăngăne—șine, roți, mișcare. Zgomotul este constant. Devine fundal. Observă când îl remarci. Ce face zgomotul corpului?
+    follow_ups:
+      - Cum modelează zgomotul călătoria?
+      - Cum ar fi vagonul în tăcere?
+      - Care este relația dintre zgomot și ritm?
+  - id: hi_th_connection_run
+    name: Alergarea pentru Conexiune
+    prompt: |
+      Cineva aleargă—întârziat pentru o conexiune. Alergarea taie prin mulțime. Oamenii se împrăștie. Observă perturbarea. Ce extrage alergarea din flux?
+    follow_ups:
+      - Cum modelează alergarea nodul?
+      - Cum ar fi nodul fără alergători?
+      - Care este relația dintre alergare și urgență?
+  - id: hi_th_seat_saving
+    name: Păstrarea Locului
+    prompt: |
+      O geantă pe scaun. "Locul este ocupat." Păstrarea ține locul pentru un companion absent. Observă revendicarea. Cât timp poate fi păstrat un loc? Care sunt limitele?
+    follow_ups:
+      - Cum modelează păstrarea vagonul?
+      - Cum ar fi călătoria fără păstrare?
+      - Care este relația dintre păstrare și drept de proprietate?
+  - id: hi_th_arrival_relief
+    name: Ușurarea Sosirii
+    prompt: |
+      Trenul ajunge la capăt. Ușurarea este vizibilă. Umerii se relaxează. Oamenii își iau lucrurile. Călătoria s-a terminat. Observă schimbarea. Ce oferă sosirea?
+    follow_ups:
+      - Cum modelează sosirea ieșirea?
+      - Cum ar fi călătoria fără sosire?
+      - Care este relația dintre ușurare și finalizare?
+  - id: hi_th_wayfinding_sign
+    name: Indicatorul de Orientare
+    prompt: |
+      Săgeți indică. "Spre trenuri." "Spre ieșiri." Indicatoarele ghidează fluxul. Observă cine le urmează. Cine ignoră? Indicatorul este o sugestie. Ce presupune?
+    follow_ups:
+      - Cum modelează indicatoarele fluxul?
+      - Cum ar fi nodul fără ele?
+      - Care este relația dintre indicator și încredere?
+  - id: hi_th_waiting_room
+    name: Sala de Așteptare
+    prompt: |
+      Scaunele stau față în față sau spre panou. Sala de așteptare ține oamenii între călătorii. Observă aranjamentul. Cine stă? Cine se plimbă? Sala de așteptare este o pauză.
+    follow_ups:
+      - Cum modelează sala de așteptare așteptarea?
+      - Cum ar fi nodul fără ea?
+      - Care este relația dintre sală și durată?
+  - id: hi_th_stranger_proximity
+    name: Proximitatea Străinului
+    prompt: |
+      Un străin stă aproape—necesar într-o mulțime. Proximitatea este impersonală, dar intimă. Observă toleranța. Ce permite corpul? Proximitatea este un contract.
+    follow_ups:
+      - Cum modelează proximitatea călătoria?
+      - Cum ar fi vagonul cu mai mult spațiu?
+      - Care este relația dintre proximitate și civilitate?
+  - id: hi_th_last_train
+    name: Ultimul Tren
+    prompt: |
+      Ultimul tren. Mulțimea este diferită—mai târzie, mai relaxată. Ultimul tren are propria sa energie. Observă schimbarea. Ce face "ultimul" mulțimii?
+    follow_ups:
+      - Cum modelează ultimul tren nodul?
+      - Cum ar fi noaptea fără el?
+      - Care este relația dintre ultimul și urgența?
+  - id: hi_th_transit_tribe
+    name: Tribul de Tranzit
+    prompt: |
+      Aceiași oameni, aceeași linie, același timp. Recunoști fețe. Nu vorbești niciodată. Tribul de tranzit este o comunitate tăcută. Observă recunoașterea. Ce oferă tribul?
+    follow_ups:
+      - Cum modelează tribul naveta?
+      - Cum ar fi călătoria fără fețe familiare?
+      - Care este relația dintre trib și apartenență?

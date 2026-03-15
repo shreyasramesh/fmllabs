@@ -1,0 +1,458 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Jungla Urbană — Paris (Romanian)
+
+id: urban_jungle_paris
+name: Jungla Urbană — Paris
+description: 50 de cărți pentru a-ți schimba modul în care vezi Parisul — de la scară și lumină, la straturi de istorie și ritmurile vieții stradale.
+domain: urban_jungle
+cards:
+  - id: paris_balcony_flower
+    name: Floare pe Balcon
+    prompt: |
+      Balcoanele pariziene înfloresc cu flori — mușcate, petunii. Găsește o clădire
+      unde fiecare balcon are un ghiveci. Cum schimbă floarea fațada?
+    follow_ups:
+      - Ce ar fi strada fără flori?
+      - Cum creează florile identitate?
+      - Care este relația dintre floare și rezident?
+  - id: paris_haussmann_line
+    name: Linia Haussmann
+    prompt: |
+      Bulevardele Haussmann taie vechiul Paris. Mergi pe unul. Linia este
+      neînduplecată — clădiri aliniate, înălțimi uniforme. Cum modelează bulevardul mișcarea?
+    follow_ups:
+      - Ce ar fi Parisul fără Haussmann?
+      - Cum creează bulevardul o perspectivă?
+      - Care este relația dintre linie și putere?
+  - id: paris_cafe_terrace
+    name: Terasă de Cafenea
+    prompt: |
+      Terasele de cafenea pariziene sunt orientate spre stradă. Stai la una. Ești
+      atât înăuntru, cât și afară. Terasă este un prag. Ce vezi?
+    follow_ups:
+      - Ce ar fi strada fără terasă?
+      - Cum creează terasa întâlniri?
+      - Care este relația dintre terasă și stradă?
+  - id: paris_metro_entrance
+    name: Intrare Metrou
+    prompt: |
+      Intrările în metrou Art Nouveau sunt icoane. Găsește una. Fierul forjat,
+      scrisul — intrarea este un portal. Ce promite?
+    follow_ups:
+      - Ce ar fi strada fără intrare?
+      - Cum creează intrarea identitate?
+      - Care este relația dintre intrare și subteran?
+  - id: paris_shutter
+    name: Obloane Parisiene
+    prompt: |
+      Obloanele pariziene — volets — se închid noaptea. Sunt verzi, gri, albastre. Găsește
+      o stradă unde obloanele sunt închise. Ce este în spatele lor?
+    follow_ups:
+      - Ce ar fi fațada fără obloane?
+      - Cum creează obloanele intimitate?
+      - Care este relația dintre oblon și lumină?
+  - id: paris_cobble
+    name: Pavaj Parisian
+    prompt: |
+      Pavajul parizian — pavés — persistă. Mergi pe el. Simte textura. Pavajul este
+      o relicvă a unui alt Paris. Cum modelează strada?
+    follow_ups:
+      - Ce ar fi strada fără pavaj?
+      - Cum marchează pavajul istoria?
+      - Care este relația dintre pavaj și revoluție?
+  - id: paris_seine_edge
+    name: Malul Senei
+    prompt: |
+      Sena curge prin Paris. Mergi pe chei. Râul este o cusătură. Ce este pe ambele
+      părți? Cum divide și unește râul?
+    follow_ups:
+      - Ce ar fi Parisul fără Sena?
+      - Cum modelează râul orașul?
+      - Care este relația dintre râu și mal?
+  - id: paris_roof_zinc
+    name: Tablă de Zinc pe Acoperiș
+    prompt: |
+      Acoperișurile pariziene sunt adesea din zinc — gri, înclinate, cu lucarne. Privește în sus. Linia
+      acoperișului este distinctivă. Cum modelează orizontul?
+    follow_ups:
+      - Ce ar fi orizontul fără tabla de zinc?
+      - Cum creează tabla de zinc identitate?
+      - Care este relația dintre acoperiș și pod?
+  - id: paris_door_height
+    name: Înălțimea Ușii
+    prompt: |
+      Ușile pariziene sunt adesea înalte — dublă înălțime. Găsește una. Ce ar trece
+      prin ea? Ușa este un prag de scară.
+    follow_ups:
+      - Ce ar fi clădirea fără ușa înaltă?
+      - Cum creează înălțimea grandoare?
+      - Care este relația dintre ușă și clădire?
+  - id: paris_boulangerie_smell
+    name: Miros de Brutărie
+    prompt: |
+      O brutărie miroase a pâine. Urmează mirosul. Brutăria este un nod.
+      Ce spune mirosul despre cartier?
+    follow_ups:
+      - Ce ar fi strada fără miros?
+      - Cum creează mirosul identitate?
+      - Care este relația dintre miros și comerț?
+  - id: paris_place
+    name: Piața Parisului
+    prompt: |
+      Parisul are piețe — pătrate, cercuri, noduri. Găsește una. Observă
+      geometria. Cum modelează piața străzile care o alimentează?
+    follow_ups:
+      - Ce ar fi cartierul fără piață?
+      - Cum creează piața un punct focal?
+      - Care este relația dintre piață și flux?
+  - id: paris_balcony_iron
+    name: Fier Forjat pe Balcon
+    prompt: |
+      Balustradele balcoanelor pariziene sunt adesea ornamentate — fier forjat, curbe, volute.
+      Găsește una. Cum modelează fierul fațada?
+    follow_ups:
+      - Ce ar fi clădirea fără fierul forjat?
+      - Cum creează fierul forjat identitate?
+      - Care este relația dintre fier și meșteșug?
+  - id: paris_plane_tree
+    name: Platan Parisian
+    prompt: |
+      Platanii parizieni mărginesc bulevardele. Scoarța lor se cojește. Găsește unul. Cum
+      modelează copacul strada? Ce ar fi bulevardul fără el?
+    follow_ups:
+      - Ce ar fi strada fără platan?
+      - Cum creează platanul umbră?
+      - Care este relația dintre copac și bulevard?
+  - id: paris_metro_tile
+    name: Faianță Metrou
+    prompt: |
+      Stațiile de metrou pariziene au faianță albă. Tunelul este un tub de lumină. Mergi
+      pe o linie. Cum modelează faianța călătoria?
+    follow_ups:
+      - Ce ar fi stația fără faianță?
+      - Cum creează faianța curățenie?
+      - Care este relația dintre faianță și subteran?
+  - id: paris_clock
+    name: Ceas Paris
+    prompt: |
+      Parisul are multe ceasuri publice — pe biserici, gări, clădiri. Găsește unul.
+      Ce oră arată? Este corect?
+    follow_ups:
+      - Ce ar fi spațiul fără ceas?
+      - Cum modelează ceasul timpul?
+      - Care este relația dintre ceas și loc?
+  - id: paris_newsstand
+    name: Chioșc de Ziare Paris
+    prompt: |
+      Chioșcurile pariziene vând ziare, reviste, bilete de metrou. Găsește unul. Ce este
+      expus? Cine se oprește? Chioșcul este un nod.
+    follow_ups:
+      - Ce ar fi strada fără chioșc?
+      - Cum creează chioșcul întâlniri?
+      - Care este relația dintre chioșc și stradă?
+  - id: paris_bench
+    name: Bancă Paris
+    prompt: |
+      Parisul are bănci verzi în parcuri și de-a lungul Senei. Stai pe una. Cine altcineva
+      stă? Care este priveliștea?
+    follow_ups:
+      - Ce ar fi spațiul fără bancă?
+      - Cum creează banca respiro?
+      - Care este relația dintre bancă și râu?
+  - id: paris_boulangerie_queue
+    name: Coadă la Brutărie
+    prompt: |
+      Alătură-te unei cozi la brutărie în timpul orelor de vârf de dimineață. Coada este un ritual. Ce
+      cumpără oamenii? Care este eticheta?
+    follow_ups:
+      - Ce ar fi strada fără coadă?
+      - Cum creează coada comunitate?
+      - Care este relația dintre coadă și pâine?
+  - id: paris_manhole
+    name: Gura de Canal Paris
+    prompt: |
+      Gurile de canal pariziene spun adesea "Paris" sau "Eau". Găsește una. Capacul este
+      o ușă către venele orașului. Ce este dedesubt?
+    follow_ups:
+      - Ce ar fi strada fără capac?
+      - Cum marchează capacul sistemul?
+      - Care este relația dintre capac și subteran?
+  - id: paris_shadow
+    name: Umbră Paris
+    prompt: |
+      Lumina pariziană creează umbre puternice. Găsește un colț unde umbra și soarele se întâlnesc. Cum
+      modelează umbra strada?
+    follow_ups:
+      - Ce ar fi strada fără umbră?
+      - Cum creează umbra contrast?
+      - Care este relația dintre umbră și clădire?
+  - id: paris_courtyard
+    name: Curte Parisiană
+    prompt: |
+      Clădirile pariziene ascund adesea curți — cours — în spatele porților. Trage cu
+      ochiul. Ce este înăuntru? Curtea este o cameră secretă.
+    follow_ups:
+      - Ce ar fi clădirea fără curte?
+      - Cum creează curtea intimitate?
+      - Care este relația dintre curte și stradă?
+  - id: paris_bike_lane
+    name: Pista de Biciclete Paris
+    prompt: |
+      Parisul are piste de biciclete extinse — pistes cyclables. Găsește una. Cum
+      modelează pista strada? Cine o folosește?
+    follow_ups:
+      - Ce ar fi strada fără pistă?
+      - Cum creează pista mobilitate?
+      - Care este relația dintre pistă și mașină?
+  - id: paris_fountain
+    name: Fântână Paris
+    prompt: |
+      Parisul are fântâni — fântâni Wallace, fântâni monumentale. Găsește una.
+      Ce oferă? Cine o folosește?
+    follow_ups:
+      - Ce ar fi locul fără fântână?
+      - Cum creează fântâna dar?
+      - Care este relația dintre fântână și public?
+  - id: paris_awning
+    name: Tendasă Paris
+    prompt: |
+      Tendaselr pariziene ale cafenelelor creează umbră. Găsește o stradă unde tendaselor se repetă. Cum
+      modelează ele trotuarul?
+    follow_ups:
+      - Ce ar fi strada fără tendaselor?
+      - Cum creează tendaselor teritoriu?
+      - Care este relația dintre tendaselor și terasă?
+  - id: paris_lamp_post
+    name: Stâlp de Iluminat Paris
+    prompt: |
+      Stâlpii de iluminat parizieni au un stil particular — adesea ornamentați, adesea verzi. Găsește
+      unul. Cum modelează stâlpul strada noaptea?
+    follow_ups:
+      - Ce ar fi strada fără stâlp?
+      - Cum creează stâlpul siguranță?
+      - Care este relația dintre stâlp și întuneric?
+  - id: paris_door_knocker
+    name: Clopot de Ușă
+    prompt: |
+      Ușile pariziene au adesea clopote — capete de leu, mâini, inele. Găsește unul. Ce
+      sunet ar produce? Clopotul este un obiect de prag.
+    follow_ups:
+      - Ce ar fi ușa fără clopot?
+      - Cum creează clopotul sunet?
+      - Care este relația dintre clopot și intrare?
+  - id: paris_shop_sign
+    name: Firmă Magazin Paris
+    prompt: |
+      Firmele magazinelor pariziene sunt adesea pictate manual — brutărie, măcelărie, brânzărie.
+      Găsește una. Ce spune firma despre magazin?
+    follow_ups:
+      - Ce ar fi strada fără firmă?
+      - Cum creează firma identitate?
+      - Care este relația dintre firmă și meșteșug?
+  - id: paris_parking
+    name: Parcare Paris
+    prompt: |
+      Parcarea în Paris este creativă — mașini pe trotuare, parcate oblic, înghesuite. Privește
+      pe cineva parcând. Cum se potrivește mașina? Care este relația dintre mașină și oraș?
+    follow_ups:
+      - Ce ar fi strada fără mașini?
+      - Cum modelează parcarea strada?
+      - Care este relația dintre parcare și spațiu?
+  - id: paris_drain
+    name: Canalizare Paris
+    prompt: |
+      Canalele pariziene curg de-a lungul trotuarului. După ploaie, acestea curg. Găsește una. Unde
+      se duce apa? Canalizarea este o cusătură.
+    follow_ups:
+      - Ce ar fi strada fără canalizare?
+      - Cum gestionează canalizarea apa?
+      - Care este relația dintre canalizare și sistem?
+  - id: paris_chimney
+    name: Coș de Fum Paris
+    prompt: |
+      Coșurile de fum pariziene punctuează linia acoperișului. Numără-le pe o clădire. Coșul de fum este
+      o relicvă a căldurii. Ce a ars aici?
+    follow_ups:
+      - Ce ar fi acoperișul fără coșul de fum?
+      - Cum marchează coșul de fum istoria?
+      - Care este relația dintre coșul de fum și foc?
+  - id: paris_metro_map
+    name: Hartă Metrou
+    prompt: |
+      Harta metroului parizian este un diagramă. Distorsionează geografia. Ce este
+      accentuat? Ce este omis? Cum modelează harta orașul?
+    follow_ups:
+      - Ce ar fi orientarea fără hartă?
+      - Cum creează harta conexiune?
+      - Care este relația dintre hartă și teritoriu?
+  - id: paris_bridge
+    name: Pod Paris
+    prompt: |
+      Parisul are multe poduri peste Sena. Traversează unul pe jos. Simte
+      tranziția. Ce se schimbă? Podul este un prag.
+    follow_ups:
+      - Ce ar fi râul fără pod?
+      - Cum conectează podul?
+      - Care este relația dintre pod și râu?
+  - id: paris_graffiti
+    name: Graffiti Paris
+    prompt: |
+      Parisul are graffiti — taguri, șabloane, murale. Găsește un perete cu straturi. Ce este
+      palimpsestul? Cine a marcat această suprafață?
+    follow_ups:
+      - Ce ar fi peretele fără graffiti?
+      - Cum revendică graffiti spațiul?
+      - Care este relația dintre graffiti și oraș?
+  - id: paris_tree_guard
+    name: Protecție Copac
+    prompt: |
+      Copacii stradali parizieni au adesea protecții — grilaje metalice în jurul bazei. Găsește
+      una. Ce protejează protecția? Ce exclude?
+    follow_ups:
+      - Ce ar fi copacul fără protecție?
+      - Cum modelează protecția groapa?
+      - Care este relația dintre protecție și copac?
+  - id: paris_bus_stop
+    name: Stație Autobuz Paris
+    prompt: |
+      Stațiile de autobuz pariziene au adăposturi, orare, ecrane digitale. Așteaptă la una.
+      Cine altcineva așteaptă? Care este eticheta?
+    follow_ups:
+      - Ce ar fi strada fără stație?
+      - Cum creează stația comunitate?
+      - Care este relația dintre stație și călătorie?
+  - id: paris_terrace_table
+    name: Masă Terasă
+    prompt: |
+      O masă pe terasa unei cafenele este orientată spre stradă. Stai la una. Masa este o scenă.
+      Ce privești? Ce te privește?
+    follow_ups:
+      - Ce ar fi terasa fără masă?
+      - Cum creează masa întâlniri?
+      - Care este relația dintre masă și stradă?
+  - id: paris_roof_dormer
+    name: Lucarnă Acoperiș
+    prompt: |
+      Lucarnele pariziene — ferestre mansardate — punctuează orizontul. Găsește o clădire
+      cu multe. Care ar fi priveliștea din interior?
+    follow_ups:
+      - Ce ar fi acoperișul fără lucarne?
+      - Cum creează lucarnele lumină?
+      - Care este relația dintre lucarnă și pod?
+  - id: paris_parking_metre
+    name: Metru Parcare
+    prompt: |
+      Metrele de parcare pariziene sunt adesea cutii gri. Găsește unul. Cum modelează
+      curba? Cine plătește? Cine nu?
+    follow_ups:
+      - Ce ar fi strada fără metru?
+      - Cum gestionează metrul spațiul?
+      - Care este relația dintre metru și mașină?
+  - id: paris_doorway
+    name: Intrare Paris
+    prompt: |
+      O intrare pariziană este adesea înaltă, adesea ornamentată. Stai în fața uneia. Cum ar
+      fi să treci prin ea? Intrarea este un prag.
+    follow_ups:
+      - Ce ar fi clădirea fără intrare?
+      - Cum creează intrarea grandoare?
+      - Care este relația dintre intrare și interior?
+  - id: paris_metro_stair
+    name: Scară Metrou
+    prompt: |
+      Scările de metrou coboară în pământ. Numără treptele. Simte
+      tranziția. Ce este deasupra? Ce este dedesubt?
+    follow_ups:
+      - Ce ar fi stația fără scări?
+      - Cum creează scările coborârea?
+      - Care este relația dintre scară și subteran?
+  - id: paris_bench_view
+    name: Priveliște de pe Bancă
+    prompt: |
+      Stai pe o bancă cu o priveliște — a Senei, a unei piețe, a unei străzi. Care este
+      încadrarea? Care este punctul focal? Banca este un punct de observație.
+    follow_ups:
+      - Ce ar fi priveliștea fără bancă?
+      - Cum creează banca pauză?
+      - Care este relația dintre bancă și priveliște?
+  - id: paris_shutter_open
+    name: Obloane Deschise
+    prompt: |
+      Obloanele pariziene se deschid dimineața. Găsește o stradă unde se deschid. Care este
+      ritualul? Ce dezvăluie deschiderea?
+    follow_ups:
+      - Ce ar fi strada fără obloane?
+      - Cum creează oblonul ritm?
+      - Care este relația dintre oblon și zi?
+  - id: paris_cobble_pattern
+    name: Model Pavaj
+    prompt: |
+      Pavajul parizian este așezat în modele — uneori herringbone, uneori
+      radial. Găsește un model. Cum modelează strada?
+    follow_ups:
+      - Ce ar fi strada fără model?
+      - Cum creează modelul textură?
+      - Care este relația dintre model și meșteșug?
+  - id: paris_plane_bark
+    name: Scoarță Platan
+    prompt: |
+      Scoarța platanilor parizieni se cojește în petice. Atinge una. Scoarța este o textură.
+      Cum îmbătrânește copacul? Ce ar fi strada fără el?
+    follow_ups:
+      - Ce ar fi bulevardul fără platan?
+      - Cum creează scoarța identitate?
+      - Care este relația dintre scoarță și copac?
+  - id: paris_fountain_drink
+    name: Băutură de la Fântână
+    prompt: |
+      Fântânile Wallace oferă apă gratuită. Găsește una. Cine bea? Cine nu?
+      Fântâna este un dar. Ce înseamnă?
+    follow_ups:
+      - Ce ar fi locul fără fântână?
+      - Cum creează fântâna bun public?
+      - Care este relația dintre fântână și sete?
+  - id: paris_metro_sound
+    name: Sunet Metrou
+    prompt: |
+      Închide ochii în metrou. Zgomotul, frânele, anunțurile.
+      Kartează peisajul sonor. Cum sună Parisul subteran?
+    follow_ups:
+      - Ce ar fi călătoria fără sunet?
+      - Cum modelează sunetul experiența?
+      - Care este relația dintre sunet și spațiu?
+  - id: paris_balcony_dry
+    name: Uscător pe Balcon
+    prompt: |
+      Balcoanele pariziene sunt adesea folosite pentru uscat — rufe, plante. Găsește unul cu
+      rufe. Ce spune uscarea despre locatar?
+    follow_ups:
+      - Ce ar fi fațada fără rufe?
+      - Cum creează uscarea domesticire?
+      - Care este relația dintre balcon și casă?
+  - id: paris_bike_velib
+    name: Bicicletă Vélib
+    prompt: |
+      Stațiile Vélib' punctează Parisul. Găsește una. Câte biciclete? Câte docuri? Sistemul
+      este un strat. Cum funcționează?
+    follow_ups:
+      - Ce ar fi strada fără stație?
+      - Cum creează Vélib' mobilitate?
+      - Care este relația dintre stație și bicicletă?
+  - id: paris_door_bell
+    name: Sonerie Ușă
+    prompt: |
+      Clădirile de apartamente pariziene au mai multe sonerii — câte una pentru fiecare apartament. Găsește o
+      plăcuță. Câte nume? Cum este organizată clădirea?
+    follow_ups:
+      - Ce ar fi intrarea fără sonerii?
+      - Cum creează soneriile adresă?
+      - Care este relația dintre sonerie și apartament?
+  - id: paris_roof_terrace
+    name: Terasă pe Acoperiș
+    prompt: |
+      Imaginează-ți o terasă pe acoperiș pariziană. Ce ai vedea? Cine are acces? Terasă
+      este un nivel secret. Ce ai cultiva acolo?
+    follow_ups:
+      - Ce ar fi acoperișul fără terasă?
+      - Cum creează terasa priveliște?
+      - Care este relația dintre terasă și cer?

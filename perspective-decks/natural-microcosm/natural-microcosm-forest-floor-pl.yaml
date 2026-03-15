@@ -1,0 +1,463 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natural Microcosm — Forest Floor (Polish)
+
+id: natural_microcosm_forest_floor
+name: Natural Microcosm — Forest Floor
+description: 50 kart, które pozwolą Ci spojrzeć na dno lasu z innej perspektywy — od rozkładu i grzybni po architekturę ściółki liściowej i niewidzialne życie pod baldachimem.
+domain: natural_microcosm
+cards:
+  - id: nmf_leaf_vein
+    name: Żyłka liścia
+    prompt: |
+      Podnieś opadły liść. Prześledź żyłki. Przenosiły wodę, składniki odżywcze,
+      cukry. Architektura jest niewidoczna, dopóki jej nie dostrzeżesz. Co zasilała sieć żyłek, gdy liść był żywy?
+    follow_ups:
+      - Jak wzór różni się między gatunkami?
+      - Czym byłby liść bez żyłek?
+      - Jaka jest zależność między żyłką a brzegiem?
+  - id: nmf_leaf_litter_layer
+    name: Warstwa ściółki liściowej
+    prompt: |
+      Dno lasu to warstwy — świeży opad na wierzchu, zeszłoroczny poniżej, starszy
+      jeszcze głębiej. Klęknij. Odkryj jedną warstwę. Jaki jest gradient? Jak czas się piętrzy?
+    follow_ups:
+      - Czym byłby las bez ściółki?
+      - Jak warstwa tworzy siedlisko?
+      - Jaka jest zależność między warstwą a rozkładem?
+  - id: nmf_mushroom_fruiting
+    name: Owocnik grzyba
+    prompt: |
+      Grzyb to tylko owocnik. Organizm — grzybnia — rozprzestrzenia się
+      pod ziemią, przez glebę, przez drewno. Rozważ to, co widzisz, jako
+      sygnał. Jaka jest reszta historii?
+    follow_ups:
+      - Czym byłby las bez grzybów?
+      - Jak owocnik odnosi się do sieci?
+      - Jaka jest zależność między grzybem a rozkładem?
+  - id: nmf_log_sponge
+    name: Gąbka-kłoda
+    prompt: |
+      Upadła kłoda wchłania wodę, zatrzymuje ją. Po deszczu przyciśnij do niej dłoń.
+      Kłoda jest rezerwuarem. Kto z niej pije? Co w niej żyje?
+    follow_ups:
+      - Czym byłby las bez kłód-pielęgniarek?
+      - Jak kłoda tworzy mikroklimat?
+      - Jaka jest zależność między drewnem a wodą?
+  - id: nmf_moss_cushion
+    name: Poduszka mchu
+    prompt: |
+      Mech zatrzymuje wodę jak gąbka. Dotknij go. Poduszka to architektura —
+      maleńkie rośliny ściśnięte razem. Co żyje w przestrzeniach między nimi?
+    follow_ups:
+      - Czym byłoby dno bez mchu?
+      - Jak poduszka tworzy wilgotność?
+      - Jaka jest zależność między mchem a sadzonką?
+  - id: nmf_fern_unfurl
+    name: Rozwijający się paproć
+    prompt: |
+      Liście paproci rozwijają się spiralnie — pastorały. Ruch jest powolny. Obserwuj
+      jedną przez kilka dni, jeśli możesz. Jak rozwinięcie kształtuje liść?
+    follow_ups:
+      - Czym byłaby paproć bez spirali?
+      - Jak rozwijanie chroni liść?
+      - Jaka jest zależność między zwinięciem a wzrostem?
+  - id: nmf_root_tangle
+    name: Splątanie korzeni
+    prompt: |
+      Korzenie splątują się pod powierzchnią. Znajdź miejsce, gdzie upadło drzewo i
+      unieś jego bryłę korzeniową. Splątanie to mapa poszukiwań. Czego szukały korzenie?
+    follow_ups:
+      - Czym byłoby drzewo bez splątania?
+      - Jak korzenie dzielą przestrzeń pod ziemią?
+      - Jaka jest zależność między korzeniem a grzybem?
+  - id: nmf_slug_trail
+    name: Ślad ślimaka
+    prompt: |
+      Na liściu lśni ślad ślimaka — śluz, ścieżka, podpis. Ślad oznacza
+      tam, gdzie ślimak przeszedł. Co ślad mówi drapieżnikom? Ofiarom?
+    follow_ups:
+      - Co straciłby ślimak bez śladu?
+      - Jak śluz umożliwia ruch?
+      - Jaka jest zależność między śladem a terytorium?
+  - id: nmf_lichen_patch
+    name: Płaty porostów
+    prompt: |
+      Porosty rosną na korze, skałach, glebie — powoli, złożone. Grzyb i glon
+      razem. Znajdź płat. Jak długo tam jest? Co wskazuje jego obecność?
+    follow_ups:
+      - Czym byłaby kora bez porostów?
+      - Jak porosty znaczą czas?
+      - Jaka jest zależność między porostami a jakością powietrza?
+  - id: nmf_saprophyte
+    name: Saprofit
+    prompt: |
+      Saprofity odżywiają się martwą materią — grzyby, bakterie, owady. Są
+      recyklerami. Znajdź dowody rozkładu. Kto je? Co jest przekształcane?
+    follow_ups:
+      - Czym byłby las bez rozkładających się organizmów?
+      - Jak rozkład zasila nowy wzrost?
+      - Jaka jest zależność między śmiercią a glebą?
+  - id: nmf_seedling_emergence
+    name: Wykiełkowanie sadzonki
+    prompt: |
+      Sadzonka przebija się przez ściółkę. Najpierw liścienie, potem właściwe liście.
+      Zauważ siłę. Co było potrzebne, by się przebić? Co ją zablokuje?
+    follow_ups:
+      - Czym byłby las bez sadzonek?
+      - Jak kiełkowanie zależy od ściółki?
+      - Jaka jest zależność między sadzonką a światłem?
+  - id: nmf_anthill_mound
+    name: Kopiec mrowiska
+    prompt: |
+      Mrowisko wyrasta z dna lasu — wykopana gleba, zorganizowana.
+      Obserwuj ruch. Dokąd idą? Co niosą?
+    follow_ups:
+      - Czym byłoby dno bez kopca?
+      - Jak kopiec kształtuje drenaż?
+      - Jaka jest zależność między kopcem a kolonią?
+  - id: nmf_spider_silk
+    name: Pajęcza nić
+    prompt: |
+      Pajęcza nić rozciąga się między szczelinami — między liśćmi, gałązkami. Złapana
+      przez rosę. Sieć jest niewidoczna, dopóki światło jej nie oświetli. Prześledź jedną nić. Co ona łączy?
+    follow_ups:
+      - Czym byłaby szczelina bez nici?
+      - Jak sieć strukturyzuje przestrzeń?
+      - Jaka jest zależność między nicią a ofiarą?
+  - id: nmf_bark_flake
+    name: Płatek kory
+    prompt: |
+      Kora odpada od pnia — tekstura, wzór, wiek. Każdy płatek opowiada o
+      sezonie. Kto mieszka pod korą? Co płatek ujawnia?
+    follow_ups:
+      - Czym byłoby drzewo bez kory?
+      - Jak kora chroni i izoluje?
+      - Jaka jest zależność między płatkiem a odnową?
+  - id: nmf_acorn_fall
+    name: Spadający żołądź
+    prompt: |
+      Żołądź spada. Jest ciężki jak na swój rozmiar. Ukorzeni się lub zostanie zjedzony.
+      Rozważ szanse. Co decyduje o tym, która ścieżka?
+    follow_ups:
+      - Czym byłby las bez żołędzi?
+      - Jak spadanie roznosi nasiona?
+      - Jaka jest zależność między żołędziem a dębem?
+  - id: nmf_fallen_branch
+    name: Opadła gałąź
+    prompt: |
+      Gałąź leży na ziemi — złamana, być może przez wiatr. Teraz jest mostem.
+      Co ją przekracza? Co na niej rośnie?
+    follow_ups:
+      - Czym byłoby dno bez opadłego drewna?
+      - Jak gałąź tworzy siedlisko przygraniczne?
+      - Jaka jest zależność między gałęzią a składnikami odżywczymi?
+  - id: nmf_humus_smell
+    name: Zapach próchnicy
+    prompt: |
+      Zbliż się do dna lasu. Zapach — ziemia, rozkład, życie. Ten zapach
+      to chemia. Co go tworzy? Czym byłby las bez niego?
+    follow_ups:
+      - Jak zapach oznacza zdrowie?
+      - Jak pachniałaby sterylna gleba?
+      - Jaka jest zależność między zapachem a żyznością?
+  - id: nmf_snail_shell
+    name: Skorupka ślimaka
+    prompt: |
+      Pusta skorupka ślimaka leży w ściółce. Spirala, wapń, pozostawiona.
+      Kto mógł zjeść ślimaka? Co wykorzysta skorupkę?
+    follow_ups:
+      - Czym byłoby dno bez skorupek?
+      - Jak skorupka recyklinguje składniki odżywcze?
+      - Jaka jest zależność między skorupką a wapniem?
+  - id: nmf_fungal_network
+    name: Sieć grzybowa
+    prompt: |
+      Grzybnia łączy drzewa — Sieć Lasów (Wood Wide Web). Nie można jej zobaczyć, ale
+      jest tam. Przepływają składniki odżywcze. Przepływają informacje. Rozważ las jako
+      sieć.
+    follow_ups:
+      - Czym byłby las bez sieci?
+      - Jak sieć redystrybuuje zasoby?
+      - Jaka jest zależność między grzybem a drzewem?
+  - id: nmf_fern_spore
+    name: Zarodnik paproci
+    prompt: |
+      Paprocie rozmnażają się przez zarodniki — maleńkie, niezliczone. Spójrz pod
+      liść. Sori je zawierają. Co byłoby potrzebne, by prześledzić podróż jednego zarodnika?
+    follow_ups:
+      - Czym byłaby paproć bez zarodników?
+      - Jak zarodnik się rozprzestrzenia?
+      - Jaka jest zależność między zarodnikiem a gametofitem?
+  - id: nmf_earthworm_cast
+    name: Odchody dżdżownicy
+    prompt: |
+      Odchody dżdżownic gromadzą się przy wejściach do tuneli — przetworzona gleba, bogata.
+      Dżdżownica jadła i wydalała. Odchody są darem dla powierzchni.
+    follow_ups:
+      - Czym byłaby gleba bez dżdżownic?
+      - Jak odchody poprawiają strukturę?
+      - Jaka jest zależność między dżdżownicą a napowietrzaniem?
+  - id: nmf_dappled_light
+    name: Cętki światła
+    prompt: |
+      Światło pada przez baldachim w plamach — cętkowane, ruchome. Dno lasu
+      otrzymuje mniej światła niż otwarta przestrzeń. Jak to kształtuje to, co rośnie?
+    follow_ups:
+      - Czym byłoby dno przy pełnym słońcu?
+      - Jak cętkowanie tworzy mikrosiedliska?
+      - Jaka jest zależność między światłem a sadzonką?
+  - id: nmf_bracket_fungus
+    name: Hubiak
+    prompt: |
+      Hubiak rośnie na pniu — półka, poropień. Traktuje drzewo od wewnątrz.
+      Drzewo może stać latami, gdy to się dzieje. Rozważ powolne trawienie.
+    follow_ups:
+      - Czym byłoby drzewo bez hubiaka?
+      - Jak hubiak roznosi zarodniki?
+      - Jaka jest zależność między pasożytem a żywicielem?
+  - id: nmf_needle_mat
+    name: Mat igieł
+    prompt: |
+      Igły drzew iglastych gromadzą się pod drzewem — kwaśne, powoli się rozkładające. Mat
+      zmienia glebę. Co na nim rośnie? Czego unika?
+    follow_ups:
+      - Czym byłoby dno bez maty?
+      - Jak mat igieł wpływa na pH?
+      - Jaka jest zależność między matą a ogniem?
+  - id: nmf_salamander_under
+    name: Salamandra pod spodem
+    prompt: |
+      Salamandry żyją pod kłodami, kamieniami, ściółką. Ostrożnie podnieś coś —
+      odłóż z powrotem. Wilgoć, ciemność. Dlaczego salamandra tego potrzebuje?
+    follow_ups:
+      - Czym byłby las bez salamander?
+      - Jak salamandra kształtuje społeczność bezkręgowców?
+      - Jaka jest zależność między wilgocią a płazem?
+  - id: nmf_rot_hole
+    name: Dziura w zgniliźnie
+    prompt: |
+      Dziura w kłodzie — być może zgnilizna lub zwierzę. Dziura to jama. Co
+      tam gnieździ? Co się tam ukrywa?
+    follow_ups:
+      - Czym byłaby kłoda bez dziury?
+      - Jak jama tworzy siedlisko?
+      - Jaka jest zależność między zgnilizną a schronieniem?
+  - id: nmf_springtail_jump
+    name: Skok skoczogonków
+    prompt: |
+      Skoczogonki — maleńkie, liczne — skaczą, gdy zostaną wzruszone. Są w ściółce,
+      glebie. Przetwarzają grzyby, rozkład. Zauważ, jak wielu ich nie widzisz.
+    follow_ups:
+      - Czym byłoby dno bez skoczogonków?
+      - Jak skok umożliwia ucieczkę?
+      - Jaka jest zależność między skoczogonkiem a rozkładem?
+  - id: nmf_bark_beetle_gallery
+    name: Galeria kornika
+    prompt: |
+      Galerie korników ryją pod korą drewno — kanały, wzory.
+      Kornik je wyrzeźbił. Drzewo zareagowało. Jaka jest historia?
+    follow_ups:
+      - Czym byłoby drzewo bez kornika?
+      - Jak galeria kształtuje los drzewa?
+      - Jaka jest zależność między kornikiem a grzybem?
+  - id: nmf_dew_on_litter
+    name: Rosa na ściółce
+    prompt: |
+      Poranna rosa perli się na liściach, igłach, gałązkach. Ściółka zatrzymuje wilgoć.
+      Kto pije o świcie? Jak rosa przedłuża sezon wilgotności?
+    follow_ups:
+      - Czym byłoby dno bez rosy?
+      - Jak rosa tworzy źródło wody?
+      - Jaka jest zależność między rosą a parowaniem?
+  - id: nmf_windfall_gap
+    name: Prześwit po wietrznym upadku
+    prompt: |
+      Upadło drzewo — wiatr, wiek, choroba. Prześwit wpuszcza światło. Dno
+      zmienia się. Co rośnie w prześwicie, czego wcześniej nie było?
+    follow_ups:
+      - Czym byłby las bez prześwitów?
+      - Jak prześwit resetuje sukcesję?
+      - Jaka jest zależność między prześwitem a różnorodnością?
+  - id: nmf_mycorrhizal_tip
+    name: Końcówka mikoryzowa
+    prompt: |
+      Korzenie drzew spotykają strzępki grzybów — mikoryza. Grzyb rozszerza zasięg korzenia.
+      Drzewo karmi grzyb. Znajdź końcówkę korzenia. Wyobraź sobie
+      partnerstwo pod ziemią.
+    follow_ups:
+      - Czym byłoby drzewo bez mikoryzy?
+      - Jak partnerstwo rozszerza system korzeniowy?
+      - Jaka jest zależność między grzybem a fosforem?
+  - id: nmf_squirrel_cache
+    name: Skrytka wiewiórki
+    prompt: |
+      Wiewiórka zakopała orzech — zapomniany, być może. Może wykiełkować. Skrytka to
+      rozsiew. Ile drzew zaczęło się od zapomnianego nasiona?
+    follow_ups:
+      - Czym byłby las bez "przechowujących"?
+      - Jak skrytki rozszerzają zasięg nasion?
+      - Jaka jest zależność między zapominalstwem a lasem?
+  - id: nmf_carpet_moss
+    name: Mech dywanowy
+    prompt: |
+      Mech w miejscach dywanuje ziemię — miękki, zielony, zatrzymujący wodę. Chodź po
+      nim. Poczuj ugięcie. Dywan to wieki wzrostu, warstwa na warstwie.
+    follow_ups:
+      - Czym byłoby dno bez dywanu?
+      - Jak dywan zatrzymuje wilgoć?
+      - Jaka jest zależność między mchem a torfowiskiem?
+  - id: nmf_burrow_entrance
+    name: Wejście do nory
+    prompt: |
+      Nora otwiera się w glebie — mysz, nornica, wiewiórka ziemna. Wejście to
+      próg. Co wchodzi? Co wychodzi? Nory rozciągają się pod ziemią.
+    follow_ups:
+      - Czym byłoby dno bez nor?
+      - Jak nora napowietrza glebę?
+      - Jaka jest zależność między norą a drapieżnikiem?
+  - id: nmf_twig_lattice
+    name: Kratka z gałązek
+    prompt: |
+      Gałązki się zbierają — wiatr, zwierzę, grawitacja. Tworzą kratkę nad ściółką.
+      Kratka zatrzymuje liście, łapie nasiona. To przypadkowa architektura.
+    follow_ups:
+      - Czym byłoby dno bez kratki?
+      - Jak kratka spowalnia erozję?
+      - Jaka jest zależność między gałązką a mikrosiedliskiem?
+  - id: nmf_rot_softness
+    name: Miękkość zgnilizny
+    prompt: |
+      Zgnite drewno ugina się pod palcami — gąbczaste, kruszące się. Przejście
+      od struktury do gleby. Jak długo to trwało? Co pozostało?
+    follow_ups:
+      - Czym byłby las bez zgnilizny?
+      - Jak miękkość umożliwia kolonizację?
+      - Jaka jest zależność między zgnilizną a próchnicą?
+  - id: nmf_frost_needle
+    name: Igła szronu
+    prompt: |
+      Igły szronu unoszą się z gleby — kryształki lodu, delikatne. Tworzą się w zimne, bezwietrzne noce.
+      W południe znikają. Rozważ efemeryczną strukturę.
+    follow_ups:
+      - Czego doświadczyłaby gleba bez szronu?
+      - Jak podnoszenie przez szron wpływa na korzenie?
+      - Jaka jest zależność między szronem a sadzonką?
+  - id: nmf_millipede_curl
+    name: Zwinięcie krocionoga
+    prompt: |
+      Krocionóg zwija się, gdy jest wzruszony — obrona. Odżywia się rozkładem. Obserwuj
+      jego ruch przez ściółkę. Jak ciało nawiguje w plątaninie?
+    follow_ups:
+      - Czym byłoby dno bez krocionogów?
+      - Jak zwinięcie chroni?
+      - Jaka jest zależność między krocionogiem a wapniem?
+  - id: nmf_pinecone_open
+    name: Otwierająca się szyszka
+    prompt: |
+      Szyszka otwiera się, gdy jest sucha — łuski rozchylają się, nasiona uwalniane. Szyszka to
+      mechanizm. Może go wywołać też ciepło. Rozważ czas.
+    follow_ups:
+      - Czym byłoby drzewo bez szyszki?
+      - Jak wilgotność kontroluje mechanizm?
+      - Jaka jest zależność między ogniem a uwolnieniem?
+  - id: nmf_hole_in_leaf
+    name: Dziura w liściu
+    prompt: |
+      Liść ma dziury — owad, ślimak, grzyb. Uszkodzenie opowiada historię. Kto jadł?
+      Kiedy? Pozostały liść nadal fotosyntetyzuje. Jaki jest próg?
+    follow_ups:
+      - Czym byłby liść bez dziur?
+      - Jak żerowanie kształtuje roślinę?
+      - Jaka jest zależność między uszkodzeniem a obroną?
+  - id: nmf_root_hair
+    name: Włoski korzeniowe
+    prompt: |
+      Włoski korzeniowe — mikroskopijne — zwiększają powierzchnię do pobierania. Nie można ich zobaczyć, ale są tam. Korzenie sadzonki badają teren. Co znajdują?
+    follow_ups:
+      - Czym byłby korzeń bez włosków?
+      - Jak włoski korzeniowe absorbują wodę?
+      - Jaka jest zależność między włoskiem a składnikami odżywczymi?
+  - id: nmf_forest_silence
+    name: Leśna cisza
+    prompt: |
+      Stań nieruchomo na dnie lasu. Cisza nie jest pusta — jest pełna
+      drobnych dźwięków. Szeleszcz, kapie, skrzypi. Co słyszysz, gdy przestajesz się ruszać?
+    follow_ups:
+      - Czym byłby las bez drobnych dźwięków?
+      - Jak cisza ujawnia obecność?
+      - Jaka jest zależność między słuchaniem a zauważaniem?
+  - id: nmf_shade_adaptation
+    name: Adaptacja do cienia
+    prompt: |
+      Rośliny na dnie lasu są przystosowane do cienia — większe liście, inna
+      chlorofil. Porównaj liść słoneczny i liść cienisty. Jaki jest kompromis?
+    follow_ups:
+      - Czym byłaby roślina przy pełnym słońcu?
+      - Jak cień kształtuje liść?
+      - Jaka jest zależność między światłem a inwestycją?
+  - id: nmf_nutrient_cycle
+    name: Cykl składników odżywczych
+    prompt: |
+      Wszystko na dnie lasu krąży — węgiel, azot, fosfor.
+      Opadnie liść. Zostanie zjedzony. Stanie się glebą. Zasili drzewo. Prześledź jeden
+      obieg.
+    follow_ups:
+      - Czym byłby las bez cyklu?
+      - Jak rozkład domyka obieg?
+      - Jaka jest zależność między śmiercią a wzrostem?
+  - id: nmf_footprint_compression
+    name: Kompresja odcisku stopy
+    prompt: |
+      Twój ślad kompresuje ściółkę. Gleba pod spodem zachowuje kształt.
+      Ile kroków potrzeba, by zmienić dno lasu? Kto jeszcze tu chodził?
+    follow_ups:
+      - Czym byłoby dno bez ruchu?
+      - Jak kompresja wpływa na drenaż?
+      - Jaka jest zależność między ścieżką a zagęszczeniem?
+  - id: nmf_seasonal_signal
+    name: Sygnał sezonowy
+    prompt: |
+      Dno lasu sygnalizuje porę roku — nowy wzrost wiosną, więdnięcie jesienią.
+      Co jest teraz na ziemi? Co Ci to mówi?
+    follow_ups:
+      - Czym byłoby dno w innej porze roku?
+      - Jak sygnał synchronizuje życie?
+      - Jaka jest zależność między ściółką a kalendarzem?
+  - id: nmf_stump_succession
+    name: Sukcesja pnia
+    prompt: |
+      Ścięty pień wypuszcza grzyby, sadzonki, mech. To etap sukcesji.
+      Co było wcześniej? Co go zastąpi? Pień to zarówno koniec, jak i
+      początek.
+    follow_ups:
+      - Czym byłoby wycięcie bez pnia?
+      - Jak pień stwarza okazję?
+      - Jaka jest zależność między śmiercią a nowym wzrostem?
+  - id: nmf_forest_breath
+    name: Oddech lasu
+    prompt: |
+      Dno lasu oddycha — tlen wchodzi, dwutlenek węgla wychodzi, lub odwrotnie w nocy.
+      Gleba jest żywa. Stań nieruchomo. Czy czujesz wymianę?
+    follow_ups:
+      - Czym byłoby powietrze bez dna lasu?
+      - Jak oddech kształtuje baldachim?
+      - Jaka jest zależność między glebą a atmosferą?
+  - id: nmf_leaf_miner_trail
+    name: Ślad minera liściowego
+    prompt: |
+      Minera liściowy — larwa owada — je między warstwami. Ślad to
+      biała linia, kręta ścieżka. Prześledź ją. Czego szukał minera?
+    follow_ups:
+      - Czym byłby liść bez śladu?
+      - Jak minera nawiguje bez widzenia?
+      - Jaka jest zależność między wnętrzem a zewnętrzem?
+  - id: nmf_decomposer_shift
+    name: Zmiana rozkładających organizmów
+    prompt: |
+      Gdy materia ulega rozkładowi, przejmują ją różne organizmy — najpierw bakterie i
+      grzyby, później chrząszcze i dżdżownice. Znajdź materiał w różnych stadiach.
+      Kto teraz pracuje?
+    follow_ups:
+      - Czym byłby rozkład bez sukcesji?
+      - Jak zmiana kształtuje tempo?
+      - Jaka jest zależność między etapem a konsumentem?

@@ -1,0 +1,463 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Kent Ormanı — Bangalore (Turkish)
+
+id: urban_jungle_bangalore
+name: Kent Ormanı — Bangalore
+description: 50 kart, Bangalore'a bakış açınızı ölçek ve ışıktan tarih katmanlarına ve sokak hayatının ritimlerine kadar değiştiriyor.
+domain: urban_jungle
+cards:
+  - id: blr_gate_colony
+    name: Kapılı Site
+    prompt: |
+      Bangalore'daki kapılı sitelerin duvarları, muhafızları, kapıları vardır. Bir kapının önünde durun.
+      İçeride ne var? Kim giriyor? Kapı bir sınırı işaretler. Neyi korur?
+    follow_ups:
+      - Kapı olmadan sokak nasıl olurdu?
+      - Kapı güvenliği nasıl yaratır?
+      - Kapı ve site arasındaki ilişki nedir?
+  - id: blr_tree_canopy
+    name: Ağaç Örtüsü
+    prompt: |
+      Bangalore bir zamanlar bahçe şehriydi. Eski ağaçlar hala bazı sokakları
+      örtüyor. Birinin altından yürüyün. Örtü ışığı nasıl değiştirir? Sesi
+      nasıl değiştirir?
+    follow_ups:
+      - Ağaç olmadan sokak nasıl olurdu?
+      - Ağaç örtüsü mikro iklimi nasıl yaratır?
+      - Ağaç ve şehir arasındaki ilişki nedir?
+  - id: blr_tech_park
+    name: Teknoloji Parkı
+    prompt: |
+      Teknoloji parkları kampüslerdir — cam, çimen, servis otobüsleri. Bir tanesini bulun. Park şehirden nasıl ayrılır? İç ve dış arasındaki ilişki nedir?
+    follow_ups:
+      - Park olmadan bölge nasıl olurdu?
+      - Park kimlik nasıl yaratır?
+      - Park ve sokak arasındaki ilişki nedir?
+  - id: blr_auto_rickshaw
+    name: Otomatik Tuk Tuk
+    prompt: |
+      Otomatik tuk tuklar trafiğin arasında ilerler. Birini bir kavşağı
+      yönetirken izleyin. Otomatik tuk tuk, arabaların giremediği yerlere
+      nasıl uyar? Örgü mantığı nedir?
+    follow_ups:
+      - Otomatik tuk tuk olmadan sokak nasıl olurdu?
+      - Otomatik tuk tuk hareketlilik nasıl yaratır?
+      - Otomatik tuk tuk ve trafik arasındaki ilişki nedir?
+  - id: blr_chai_stall
+    name: Çay Tezgahı
+    prompt: |
+      Çay tezgahları düğüm noktalarıdır — küçük, geçici, vazgeçilmez. Birini
+      bulun. Kimler toplanır? Ritim nedir? Tezgah sosyal bir makinedir.
+    follow_ups:
+      - Tezgah olmadan köşe nasıl olurdu?
+      - Tezgah karşılaşma nasıl yaratır?
+      - Tezgah ve sokak arasındaki ilişki nedir?
+  - id: blr_billboard
+    name: Bangalore Reklam Panosu
+    prompt: |
+      Bangalore reklam panoları teknoloji, emlak, eğitim reklamı yapar. Birini bulun.
+      Ne satılıyor? Hedef kitle kim? Reklam panosu bir özlem aynasıdır.
+    follow_ups:
+      - Reklam panosu olmadan sokak nasıl olurdu?
+      - Reklam panosu arzuyu nasıl şekillendirir?
+      - Reklam panosu ve şehir arasındaki ilişki nedir?
+  - id: blr_compound_wall
+    name: Apartman Duvarı
+    prompt: |
+      Apartman duvarları özel olanı kamusaldan ayırır. Bir duvar bulun.
+      Arkasında ne var? Ne kadar yüksek? Duvar bir sınır yaratır. Neyi dışlar?
+    follow_ups:
+      - Duvar olmadan sokak nasıl olurdu?
+      - Duvar mahremiyeti nasıl yaratır?
+      - Duvar ve apartman arasındaki ilişki nedir?
+  - id: blr_signal_wait
+    name: Sinyal Bekleyişi
+    prompt: |
+      Trafik sinyalinde bekleyin. Satıcıları izleyin — çiçekler, oyuncaklar,
+      kitaplar. Sinyal bir duraklama yaratır. Duraklamada ne olur?
+    follow_ups:
+      - Sinyal olmadan kavşak nasıl olurdu?
+      - Sinyal ekonomiyi nasıl yaratır?
+      - Sinyal ve sokak arasındaki ilişki nedir?
+  - id: blr_rain_drain
+    name: Yağmur Drenajı
+    prompt: |
+      Bangalore musonları drenajları taşırır. Yağmurdan sonra suyu izleyin.
+      Nereye gider? Nerede birikir? Drenaj bir sınırdır.
+    follow_ups:
+      - Drenaj olmadan sokak nasıl olurdu?
+      - Drenaj suyu nasıl yönetir?
+      - Drenaj ve muson arasındaki ilişki nedir?
+  - id: blr_sarjapur_road
+    name: Sarjapur Yolu
+    prompt: |
+      Sarjapur Yolu, eski Bangalore'u teknoloji koridoruna bağlar. Bir bölümünde
+      araba sürün veya yürüyün. Ne değişiyor? Şehir nerede kayıyor?
+    follow_ups:
+      - Yol olmadan koridor nasıl olurdu?
+      - Yol bağlantı nasıl yaratır?
+      - Yol ve büyüme arasındaki ilişki nedir?
+  - id: blr_parks_maidans
+    name: Parklar ve Meydanlar
+    prompt: |
+      Bangalore'da parklar ve meydanlar var — Cubbon Park, Lalbagh, mahalle
+      alanları. Birine girin. Kimler kullanıyor? Ritim nedir?
+    follow_ups:
+      - Park olmadan şehir nasıl olurdu?
+      - Park dinginlik nasıl yaratır?
+      - Park ve mahalle arasındaki ilişki nedir?
+  - id: blr_temple_street
+    name: Tapınak Sokağı
+    prompt: |
+      Tapınaklar Bangalore sokaklarını noktalar. Birini bulun. Adakları,
+      çanları, kalabalığı fark edin. Tapınak bloğu nasıl şekillendirir?
+    follow_ups:
+      - Tapınak olmadan sokak nasıl olurdu?
+      - Tapınak topluluk nasıl yaratır?
+      - Tapınak ve sokak arasındaki ilişki nedir?
+  - id: blr_silk_board
+    name: İpek Kurulu
+    prompt: |
+      İpek Kurulu kavşağı kötü şöhretlidir. Kenarında durun. Trafiği izleyin.
+      Kavşak nasıl işler? Kaosun mantığı nedir?
+    follow_ups:
+      - Kavşak olmadan koridor nasıl olurdu?
+      - Kavşak darboğaz nasıl yaratır?
+      - Kavşak ve ulaşım arasındaki ilişki nedir?
+  - id: blr_metro_elevated
+    name: Metro Yüksekte
+    prompt: |
+      Bangalore Metrosu şehrin bazı bölgelerinde yüksekten geçer. Üzerinden
+      binin veya altından durun. Yüksek hat, aşağıdaki sokağı nasıl
+      değiştirir?
+    follow_ups:
+      - Metro olmadan sokak nasıl olurdu?
+      - Metro bağlantı nasıl yaratır?
+      - Yüksekte ve zemin arasındaki ilişki nedir?
+  - id: blr_apartment_tower
+    name: Apartman Kulesi
+    prompt: |
+      Apartman kuleleri Bangalore boyunca yükselir. Birini bulun. Kaç katlı? Kimler
+      yaşıyor? Kule dikey yoğunluktur. Neyi değiştirir?
+    follow_ups:
+      - Kule olmadan silüet nasıl olurdu?
+      - Kule konut nasıl yaratır?
+      - Kule ve zemin arasındaki ilişki nedir?
+  - id: blr_roadside_vendor
+    name: Yol Kenarı Satıcısı
+    prompt: |
+      Yol kenarı satıcıları meyve, atıştırmalık, şarj aleti satar. Birini bulun.
+      Teşhir ne? Kimler durur? Satıcı gayri resmi ekonomidir.
+    follow_ups:
+      - Satıcı olmadan sokak nasıl olurdu?
+      - Satıcı geçim nasıl yaratır?
+      - Satıcı ve sokak arasındaki ilişki nedir?
+  - id: blr_borewell
+    name: Sondaj Kuyusu
+    prompt: |
+      Bangalore sondaj kuyularına bağımlıdır. Boruları, depoları, pompaları arayın. Su aşağıdan çekilir. Şehir ve akifer arasındaki ilişki nedir?
+    follow_ups:
+      - Sondaj kuyusu olmadan bina nasıl olurdu?
+      - Sondaj kuyusu tedarik nasıl yaratır?
+      - Sondaj kuyusu ve kıtlık arasındaki ilişki nedir?
+  - id: blr_garbage_heap
+    name: Çöp Yığını
+    prompt: |
+      Köşelerde, duvarların yanında çöp yığınları belirir. Birini fark edin.
+      İçinde ne var? Kimler karıştırır? Yığın sistemin bir sınırıdır.
+    follow_ups:
+      - Yığın olmadan sokak nasıl olurdu?
+      - Yığın başarısızlığı nasıl işaretler?
+      - Yığın ve şehir arasındaki ilişki nedir?
+  - id: blr_marquee_wedding
+    name: Düğün Çadırı
+    prompt: |
+      Düğün çadırları sokakları tıkar. Birini bulun. Çadır geçici bir
+      bölgedir. Kutlama ve sokak arasındaki ilişki nedir?
+    follow_ups:
+      - Çadır olmadan sokak nasıl olurdu?
+      - Çadır talep nasıl yaratır?
+      - Düğün ve kamusal alan arasındaki ilişki nedir?
+  - id: blr_old_bungalow
+    name: Eski Villa
+    prompt: |
+      Eski Bangalore villaları kuleler arasında kalır. Birini bulun. Villa bir
+      bahçe duvarı, ağaçlar, alan içerir. Ne onun yerini alacak?
+    follow_ups:
+      - Villa olmadan sokak nasıl olurdu?
+      - Villa tarihi nasıl işaretler?
+      - Villa ve kule arasındaki ilişki nedir?
+  - id: blr_coffee_house
+    name: Kahve Evi
+    prompt: |
+      Indian Coffee House bir kurumdur. Birinde oturun. Kahve evi bir
+      sohbet odasıdır. Ritim nedir? Kimler gelir?
+    follow_ups:
+      - Kahve evi olmadan sokak nasıl olurdu?
+      - Kahve evi topluluk nasıl yaratır?
+      - Kahve evi ve şehir arasındaki ilişki nedir?
+  - id: blr_phone_booth
+    name: Telefon Kulübesi
+    prompt: |
+      Halka açık telefon kulübeleri hala var. Birini bulun. Çalışıyor mu? Kimler
+      kullanır? Kulübe bir kalıntıdır. Yerini ne aldı?
+    follow_ups:
+      - Kulübe olmadan sokak nasıl olurdu?
+      - Kulübe değişimi nasıl işaretler?
+      - Kulübe ve mobil arasındaki ilişki nedir?
+  - id: blr_bus_stop
+    name: Bangalore Otobüs Durağı
+    prompt: |
+      Bangalore otobüs durakları genellikle bir direk ve bir kalabalıktır. Birinde
+      bekleyin. Kimler bekler? Görgü kuralları nedir? Durak minimal
+      altyapıdır.
+    follow_ups:
+      - Durak olmadan sokak nasıl olurdu?
+      - Durak bağlantı nasıl yaratır?
+      - Durak ve otobüs arasındaki ilişki nedir?
+  - id: blr_power_line
+    name: Elektrik Hattı
+    prompt: |
+      Bangalore elektrik hatları bir karmaşadır — kablolar, transformatörler,
+      döngüler. Bir hattı izleyin. Nereye gider? Şebeke görünür. Neyi
+      güçlendirir?
+    follow_ups:
+      - Hatlar olmadan sokak nasıl olurdu?
+      - Şebeke tedarik nasıl yaratır?
+      - Hat ve kesinti arasındaki ilişki nedir?
+  - id: blr_speed_breaker
+    name: Hız Kesici
+    prompt: |
+      Hız kesiciler — uyuyan polisler — Bangalore yollarını doldurur. Birini
+      hissedin. Neden burada? Neyi yavaşlatır? Kesici yerel bir müdahaledir.
+    follow_ups:
+      - Kesici olmadan yol nasıl olurdu?
+      - Kesici güvenliği nasıl yaratır?
+      - Kesici ve hız arasındaki ilişki nedir?
+  - id: blr_compound_tree
+    name: Bahçe Duvarı Ağacı
+    prompt: |
+      Bahçe duvarı ağaçları duvarların üzerine sarkar. Birini bulun. Ağaç hem
+      içeride hem de dışarıdadır. Neyi gölgeler? Kime ait?
+    follow_ups:
+      - Ağaç olmadan sokak nasıl olurdu?
+      - Ağaç hediye nasıl yaratır?
+      - Ağaç ve bahçe duvarı arasındaki ilişki nedir?
+  - id: blr_shop_shutter
+    name: Dükkan Kepengi
+    prompt: |
+      Bangalore dükkan kepenkleri gece iner. Kapalı bir kepenk bulun.
+      Arkasında ne var? Kepenk günlük bir döngüdür. Neyi korur?
+    follow_ups:
+      - Kepenk olmadan sokak nasıl olurdu?
+      - Kepenk güvenliği nasıl yaratır?
+      - Kepenk ve ticaret arasındaki ilişki nedir?
+  - id: blr_water_tanker
+    name: Su Tankeri
+    prompt: |
+      Su tankerleri mahallelere tedarik sağlar. Birini teslimat yaparken izleyin.
+      Tanker mobil bir altyapıdır. Tanker ve musluk arasındaki ilişki nedir?
+    follow_ups:
+      - Tanker olmadan mahalle nasıl olurdu?
+      - Tanker tedarik nasıl yaratır?
+      - Tanker ve kıtlık arasındaki ilişki nedir?
+  - id: blr_metro_station
+    name: Metro İstasyonu
+    prompt: |
+      Bangalore Metro istasyonları yenidir — temiz, markalı. Birine girin.
+      İstasyon sokaktan nasıl farklıdır? Geçiş nedir?
+    follow_ups:
+      - İstasyon olmadan koridor nasıl olurdu?
+      - İstasyon bağlantı nasıl yaratır?
+      - İstasyon ve şehir arasındaki ilişki nedir?
+  - id: blr_rickshaw_stand
+    name: Tuk Tuk Durağı
+    prompt: |
+      Tuk tuk durakları kavşaklarda kümelenir. Birini bulun. Sürücüler bekler.
+      Durak bir düğüm noktasıdır. Ekonomi nedir?
+    follow_ups:
+      - Durak olmadan kavşak nasıl olurdu?
+      - Durak hareketlilik nasıl yaratır?
+      - Durak ve sürücü arasındaki ilişki nedir?
+  - id: blr_pavement_sleep
+    name: Kaldırım Uykusu
+    prompt: |
+      Kaldırımda uyuyanlar şehrin bir parçasıdır. Dikkatle fark edin. Nerede
+      uyurlar? Sokak ve barınak arasındaki ilişki nedir?
+    follow_ups:
+      - Uyuyanlar olmadan sokak nasıl olurdu?
+      - Kaldırım nasıl yuva olur?
+      - Uyku ve şehir arasındaki ilişki nedir?
+  - id: blr_gate_security
+    name: Kapı Güvenliği
+    prompt: |
+      Site kapılarında güvenlik vardır — muhafızlar, bariyerler, kayıtlar.
+      Akışı izleyin. Kim girer? Kim durdurulur? Kapı bir filtredir.
+    follow_ups:
+      - Kapı olmadan site nasıl olurdu?
+      - Kapı güvenliği nasıl yaratır?
+      - Kapı ve güven arasındaki ilişki nedir?
+  - id: blr_street_dog
+    name: Sokak Köpeği
+    prompt: |
+      Sokak köpekleri Bangalore'un bir parçasıdır. Birini fark edin. Nerede
+      uyur? Ne yer? Köpek hem vahşi hem de evcildir.
+    follow_ups:
+      - Köpek olmadan sokak nasıl olurdu?
+      - Köpek ilişki nasıl yaratır?
+      - Köpek ve şehir arasındaki ilişki nedir?
+  - id: blr_hoarding
+    name: Reklam Panosu
+    prompt: |
+      Büyük reklam panoları — büyük billboardlar — kavşaklara hakimdir. Birini
+      bulun. Ne reklamı yapılıyor? Reklam panosu bir özlem ölçeğidir. Ne
+      vaat ediyor?
+    follow_ups:
+      - Reklam panosu olmadan kavşak nasıl olurdu?
+      - Reklam panosu arzuyu nasıl şekillendirir?
+      - Reklam panosu ve şehir arasındaki ilişki nedir?
+  - id: blr_rain_tree
+    name: Yağmur Ağacı
+    prompt: |
+      Yağmur ağaçları — Samanea saman — bazı Bangalore sokaklarını örter. Birini
+      bulun. Ağaç bir mirastır. Bloğu nasıl şekillendirir?
+    follow_ups:
+      - Yağmur ağacı olmadan sokak nasıl olurdu?
+      - Ağaç mikro iklimi nasıl yaratır?
+      - Ağaç ve bahçe şehri arasındaki ilişki nedir?
+  - id: blr_corner_shop
+    name: Bangalore Köşe Dükkanı
+    prompt: |
+      Köşe dükkanları — kirana dükkanları — her şeyi satar. Birine girin. Envanter
+      nedir? Kim işletiyor? Dükkan bir mahalle düğümüdür.
+    follow_ups:
+      - Dükkan olmadan blok nasıl olurdu?
+      - Dükkan karşılaşma nasıl yaratır?
+      - Dükkan ve topluluk arasındaki ilişki nedir?
+  - id: blr_flyover
+    name: Köprü
+    prompt: |
+      Bangalore köprüleri kavşakların üzerinden atlar. Birinin altında durun.
+      Köprü gölge, gürültü, yeni bir katman yaratır. Üstünde ne var? Altında
+      ne var?
+    follow_ups:
+      - Köprü olmadan kavşak nasıl olurdu?
+      - Köprü akış nasıl yaratır?
+      - Köprü ve zemin arasındaki ilişki nedir?
+  - id: blr_water_tap
+    name: Halka Açık Su Musluğu
+    prompt: |
+      Halka açık su muslukları hala var. Birini bulun. Kim kullanır? Musluk bir
+      ortak alandır. Musluk ve erişim arasındaki ilişki nedir?
+    follow_ups:
+      - Musluk olmadan sokak nasıl olurdu?
+      - Musluk hediye nasıl yaratır?
+      - Musluk ve kıtlık arasındaki ilişki nedir?
+  - id: blr_construction_crane
+    name: İnşaat Vinci
+    prompt: |
+      İnşaat vinçleri silüeti noktalar. Birini bulun. Ne inşa ediliyor?
+      Vinç büyümenin bir işaretidir. Neyi ne değiştirecek?
+    follow_ups:
+      - Vinç olmadan silüet nasıl olurdu?
+      - Vinç değişimi nasıl işaretler?
+      - Vinç ve şehir arasındaki ilişki nedir?
+  - id: blr_parking_lot
+    name: Otopark
+    prompt: |
+      Otoparklar geçicidir — gelişim olana kadar boş arazi. Birini bulun. Ondan
+      önce ne vardı? Ne gelecek? Alan bir duraklamadır.
+    follow_ups:
+      - Alan olmadan blok nasıl olurdu?
+      - Alan geçici kullanım nasıl yaratır?
+      - Alan ve gelişim arasındaki ilişki nedir?
+  - id: blr_street_food
+    name: Sokak Yemeği
+    prompt: |
+      Sokak yemeği satıcıları alacakaranlıkta kurulur. Birini bulun. Ne pişiyor?
+      Kim yer? Satıcı gayri resmi bir altyapıdır. Ekonomi nedir?
+    follow_ups:
+      - Satıcı olmadan sokak nasıl olurdu?
+      - Satıcı geçim nasıl yaratır?
+      - Satıcı ve sokak arasındaki ilişki nedir?
+  - id: blr_compound_garden
+    name: Bahçe Duvarı Bahçesi
+    prompt: |
+      Bahçe duvarı bahçeleri özeldir — kapılardan görünür. İçeri göz atın. Ne yetişiyor? Bahçe bir yeşil ceptir. Ondan yoksun bir sokak nasıl olurdu?
+    follow_ups:
+      - Bahçe olmadan apartman nasıl olurdu?
+      - Bahçe dinginlik nasıl yaratır?
+      - Bahçe ve şehir arasındaki ilişki nedir?
+  - id: blr_bus_crowd
+    name: Otobüs Kalabalığı
+    prompt: |
+      Bangalore otobüsleri mesai saatlerinde dolar. Bir otobüs durağını izleyin.
+      Kalabalık bir dalga halinde biner. Kalabalık düzeni nasıl yaratır?
+      Görgü kuralları nedir?
+    follow_ups:
+      - Kalabalık olmadan durak nasıl olurdu?
+      - Kalabalık baskı nasıl yaratır?
+      - Kalabalık ve otobüs arasındaki ilişki nedir?
+  - id: blr_metro_pillar
+    name: Metro Ayağı
+    prompt: |
+      Metro ayakları yüksek hattı destekler. Birinin altında durun. Ayak bir mekan sütunu yaratır. Ayak ve sokak arasındaki ilişki nedir?
+    follow_ups:
+      - Ayak olmadan sokak nasıl olurdu?
+      - Ayak yapı nasıl yaratır?
+      - Ayak ve metro arasındaki ilişki nedir?
+  - id: blr_temple_bell
+    name: Tapınak Çanı
+    prompt: |
+      Tapınak çanları dua saatlerini işaretler. Dinleyin. Çan bir ritim
+      yaratır. Çan mahalleyi nasıl şekillendirir? Ondan yoksun bir sokak
+      nasıl olurdu?
+    follow_ups:
+      - Çan olmadan tapınak nasıl olurdu?
+      - Çan zaman nasıl yaratır?
+      - Çan ve topluluk arasındaki ilişki nedir?
+  - id: blr_road_widening
+    name: Yol Genişletme
+    prompt: |
+      Yol genişletme mahalleleri kesip geçer. Bir bölüm bulun. Ne kaldırıldı?
+      Ne kaldı? Genişletme bir yara izidir. Neye hizmet eder?
+    follow_ups:
+      - Genişletme olmadan yol nasıl olurdu?
+      - Genişletme akış nasıl yaratır?
+      - Genişletme ve yerinden edilme arasındaki ilişki nedir?
+  - id: blr_apartment_balcony
+    name: Apartman Balkonu
+    prompt: |
+      Apartman balkonları sokağa bakar. Bir bina bulun. Balkonlarda ne var? Bitkiler? Çamaşır? Balkon bir eşiktir. Birinden ne görürdünüz?
+    follow_ups:
+      - Balkon olmadan bina nasıl olurdu?
+      - Balkon sokakla ilişki nasıl yaratır?
+      - Balkon ve apartman arasındaki ilişki nedir?
+  - id: blr_night_light
+    name: Gece Işığı
+    prompt: |
+      Geceleri Bangalore — sokak lambaları, dükkan ışıkları, apartman
+      pencereleri. Bir blokta yürüyün. Işık sokağı nasıl şekillendirir? Ne
+      aydınlatılmış? Ne karanlık?
+    follow_ups:
+      - Işık olmadan sokak nasıl olurdu?
+      - Işık güvenliği nasıl yaratır?
+      - Işık ve gece arasındaki ilişki nedir?
+  - id: blr_morning_walk
+    name: Sabah Yürüyüşü
+    prompt: |
+      Sabah yürüyüşçüleri parkları ve sokakları doldurur. Katılın veya izleyin.
+      Sabah yürüyüşü bir ritüeldir. Rota nedir? Kimler yürür?
+    follow_ups:
+      - Yürüyüşçüler olmadan sabah nasıl olurdu?
+      - Yürüyüş topluluk nasıl yaratır?
+      - Yürüyüş ve sağlık arasındaki ilişki nedir?
+  - id: blr_garden_city
+    name: Bahçe Şehri
+    prompt: |
+      Bangalore bahçe şehriydi. Kalıntılar devam ediyor — Lalbagh, Cubbon Park,
+      eski ağaçlar. Bir kalıntı bulun. Bahçe kazansaydı şehir ne olurdu?
+    follow_ups:
+      - Bahçeler olmadan Bangalore ne olurdu?
+      - Bahçe kimliği nasıl yaratır?
+      - Bahçe ve şehir arasındaki ilişki nedir?

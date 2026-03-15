@@ -1,0 +1,444 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosmos Natural — Solul Pădurii (Romanian)
+
+id: natural_microcosm_forest_floor
+name: Microcosmos Natural — Solul Pădurii
+description: 50 de cărți pentru a-ți schimba perspectiva asupra solului pădurii — de la descompunere și miceliu la arhitectura așternutului de frunze și viața invizibilă de sub coroană.
+domain: natural_microcosm
+cards:
+  - id: nmf_leaf_vein
+    name: Nervură Frunză
+    prompt: |
+      Ridică o frunză căzută. Urmărește-i nervurile. Ele transportau apă, nutrienți,
+      zahăr. Arhitectura este invizibilă până când te uiți. Ce susținea rețeaua de nervuri
+      când frunza era vie?
+    follow_ups:
+      - Cum diferă modelul între specii?
+      - Ce ar fi frunza fără nervuri?
+      - Care este relația dintre nervură și margine?
+  - id: nmf_leaf_litter_layer
+    name: Strat Așternut Frunze
+    prompt: |
+      Solul pădurii este stratificat — cădere proaspătă deasupra, anul trecut dedesubt,
+      și mai vechi și mai jos. Îngenunchează. Desfă un strat. Care este gradientul? Cum se suprapune timpul?
+    follow_ups:
+      - Ce ar fi pădurea fără așternutul de frunze?
+      - Cum creează stratul habitat?
+      - Care este relația dintre strat și descompunere?
+  - id: nmf_mushroom_fruiting
+    name: Ciupercă — Corpuri Fructifere
+    prompt: |
+      O ciupercă este doar corpul fructifer. Organismul — miceliul — se extinde
+      sub pământ, prin sol, prin lemn. Consideră ceea ce vezi ca un semnal. Care este restul poveștii?
+    follow_ups:
+      - Ce ar fi pădurea fără fungi?
+      - Cum se leagă corpul fructifer de rețea?
+      - Care este relația dintre ciupercă și descompunere?
+  - id: nmf_log_sponge
+    name: Bucște — Burete
+    prompt: |
+      Un buștean căzut absoarbe apă, o reține. Apasă mâna pe el după ploaie.
+      Bușteanul este un rezervor. Cine bea din el? Ce trăiește înăuntru?
+    follow_ups:
+      - Ce ar fi pădurea fără bușteni-nurse?
+      - Cum creează bușteanul microclimatul?
+      - Care este relația dintre lemn și apă?
+  - id: nmf_moss_cushion
+    name: Mușchi — Pernuță
+    prompt: |
+      Mușchiul reține apa ca un burete. Atinge-l. Pernuța este o arhitectură —
+      plante minuscule, înghesuite. Ce trăiește în spațiile dintre ele?
+    follow_ups:
+      - Ce ar fi solul fără mușchi?
+      - Cum creează pernuța umiditatea?
+      - Care este relația dintre mușchi și răsad?
+  - id: nmf_fern_unfurl
+    name: Ferigă — Desfăcare
+    prompt: |
+      Frunzele ferigii se desfac în spirală — "coarne de berbec". Mișcarea este lentă. Privește una timp de zile, dacă poți. Cum modelează desfăcarea frunza?
+    follow_ups:
+      - Ce ar fi feriga fără spirală?
+      - Cum protejează desfăcarea frunza?
+      - Care este relația dintre spirală și creștere?
+  - id: nmf_root_tangle
+    name: Rădăcini — Încâlcire
+    prompt: |
+      Rădăcinile se încurcă sub suprafață. Găsește unde a căzut un copac și ridică
+      balotul de rădăcini. Încâlcirea este o hartă a căutării. După ce tânjeau rădăcinile?
+    follow_ups:
+      - Ce ar fi copacul fără încâlcire?
+      - Cum împart rădăcinile spațiul subteran?
+      - Care este relația dintre rădăcină și ciupercă?
+  - id: nmf_slug_trail
+    name: Melc — Dâră
+    prompt: |
+      O dâră de melc strălucește pe o frunză — mucus, drum, semnătură. Dâra marchează
+      pe unde a mers melcul. Ce spun dâra prădătorilor? Prăzii?
+    follow_ups:
+      - Ce ar pierde melcul fără dâră?
+      - Cum permite mucusul mișcarea?
+      - Care este relația dintre dâră și teritoriu?
+  - id: nmf_lichen_patch
+    name: Lichen — Petec
+    prompt: |
+      Lichenii cresc pe scoarță, piatră, sol — lent, compoziți. Fungus și algă
+      împreună. Găsește un petec. De cât timp este acolo? Ce indică prezența lui?
+    follow_ups:
+      - Ce ar fi scoarța fără lichen?
+      - Cum marchează lichenul timpul?
+      - Care este relația dintre lichen și calitatea aerului?
+  - id: nmf_saprophyte
+    name: Saprofit
+    prompt: |
+      Saprofitele se hrănesc din materie moartă — fungi, bacterii, insecte. Ele sunt reciclatorii.
+      Găsește dovezi de descompunere. Cine mănâncă? Ce se transformă?
+    follow_ups:
+      - Ce ar fi pădurea fără descompunători?
+      - Cum hrănește descompunerea creșterea nouă?
+      - Care este relația dintre moarte și sol?
+  - id: nmf_seedling_emergence
+    name: Răsad — Ieșire la Lumină
+    prompt: |
+      Un răsad împinge prin așternutul de frunze. Mai întâi cotiledoanele, apoi frunzele adevărate.
+      Observă forța. Ce a fost nevoie pentru a ieși? Ce îl va bloca?
+    follow_ups:
+      - Ce ar fi pădurea fără răsaduri?
+      - Cum depinde ieșirea la lumină de așternut?
+      - Care este relația dintre răsad și lumină?
+  - id: nmf_anthill_mound
+    name: Furnicar — Movilă
+    prompt: |
+      O movilă de furnici se ridică din solul pădurii — sol excavat, organizat.
+      Privește traficul. Unde se duc? Ce duc?
+    follow_ups:
+      - Ce ar fi solul fără movilă?
+      - Cum modelează movila drenajul?
+      - Care este relația dintre movilă și colonie?
+  - id: nmf_spider_silk
+    name: Pânză Păianjen
+    prompt: |
+      Pânza de păianjen traversează goluri — între frunze, crenguțe. Roua o prinde. Pânza este invizibilă până când lumina cade pe ea. Urmărește un fir. Ce conectează?
+    follow_ups:
+      - Ce ar fi golul fără pânză?
+      - Cum structurează pânza spațiul?
+      - Care este relația dintre pânză și pradă?
+  - id: nmf_bark_flake
+    name: Scoarță — Așchie
+    prompt: |
+      Așchii de scoarță se desprind de pe trunchi — textură, model, vârstă. Fiecare așchie povestește un anotimp. Cine trăiește sub scoarță? Ce dezvăluie așchia?
+    follow_ups:
+      - Ce ar fi copacul fără scoarță?
+      - Cum protejează și izolează scoarța?
+      - Care este relația dintre așchie și reînnoire?
+  - id: nmf_acorn_fall
+    name: Ghindă — Cădere
+    prompt: |
+      O ghindă cade. Este grea pentru dimensiunea ei. Va înrădăcina sau va fi mâncată.
+      Consideră șansele. Ce determină calea?
+    follow_ups:
+      - Ce ar fi pădurea fără ghinde?
+      - Cum distribuie căderea semințele?
+      - Care este relația dintre ghindă și stejar?
+  - id: nmf_fallen_branch
+    name: Creangă Căzută
+    prompt: |
+      O creangă zace pe sol — ruptă, poate de vânt. Acum este un pod.
+      Ce o traversează? Ce crește pe ea?
+    follow_ups:
+      - Ce ar fi solul fără lemn căzut?
+      - Cum creează creanga habitat de margine?
+      - Care este relația dintre creangă și nutrienți?
+  - id: nmf_humus_smell
+    name: Umus — Miros
+    prompt: |
+      Apleacă-te aproape de solul pădurii. Mirosul — pământ, descompunere, viață. Acel miros este chimie. Ce îl creează? Ce ar fi pădurea fără el?
+    follow_ups:
+      - Cum marchează mirosul sănătatea?
+      - Cum ar mirosi solul steril?
+      - Care este relația dintre miros și fertilitate?
+  - id: nmf_snail_shell
+    name: Scoică Melc
+    prompt: |
+      O scoică goală de melc zace în așternut. Spirală, calciu, rămasă în urmă.
+      Cine ar fi mâncat melcul? Ce va folosi scoica?
+    follow_ups:
+      - Ce ar fi solul fără scoici?
+      - Cum reciclează scoica nutrienții?
+      - Care este relația dintre scoică și calciu?
+  - id: nmf_fungal_network
+    name: Rețea Fungală
+    prompt: |
+      Miceliul conectează copacii — o rețea forestieră (Wood Wide Web). Nu o poți vedea, dar există. Nutrienții curg. Informația curge. Consideră pădurea ca o rețea.
+    follow_ups:
+      - Ce ar fi pădurea fără rețea?
+      - Cum redistribuie rețeaua resursele?
+      - Care este relația dintre ciupercă și copac?
+  - id: nmf_fern_spore
+    name: Ferigă — Spore
+    prompt: |
+      Ferigile se reproduc prin spori — mici, nenumărați. Privește partea inferioară a unei frunze. Soriile îi conțin. Ce ar fi necesar pentru a urmări călătoria unei singure spori?
+    follow_ups:
+      - Ce ar fi feriga fără spori?
+      - Cum se dispersează sporii?
+      - Care este relația dintre spor și gametofit?
+  - id: nmf_earthworm_cast
+    name: Râmă — Excrement (Cast)
+    prompt: |
+      Excrementele de râme se adună la intrările tunelurilor — sol procesat, bogat.
+      Râma a mâncat și a excretat. Excrementul este un dar pentru suprafață.
+    follow_ups:
+      - Ce ar fi solul fără râme?
+      - Cum îmbunătățește excrementul structura solului?
+      - Care este relația dintre râmă și aerare?
+  - id: nmf_dappled_light
+    name: Lumină Peticuită
+    prompt: |
+      Lumina cade prin coroană în pete — peticită, mișcătoare. Solul pădurii primește mai puțină lumină decât spațiile deschise. Cum modelează asta ce crește?
+    follow_ups:
+      - Ce ar fi solul în plin soare?
+      - Cum creează petele microhabitate?
+      - Care este relația dintre lumină și răsad?
+  - id: nmf_bracket_fungus
+    name: Ciupercă Suport (Bracket)
+    prompt: |
+      O ciupercă suport crește dintr-un trunchi — raft, polipor. Digerează
+      copacul din interior. Copacul poate sta în picioare ani de zile cât timp se întâmplă asta. Consideră consumul lent.
+    follow_ups:
+      - Ce ar fi copacul fără ciuperca suport?
+      - Cum dispersează ciuperca suport sporii?
+      - Care este relația dintre parazit și gazdă?
+  - id: nmf_needle_mat
+    name: Ac — Covor
+    prompt: |
+      Acele de conifer se adună sub copac — acre, greu de descompus. Covorul
+      modifică solul. Ce crește în el? Ce îl evită?
+    follow_ups:
+      - Ce ar fi solul fără covor de ace?
+      - Cum afectează covorul de ace pH-ul?
+      - Care este relația dintre covorul de ace și foc?
+  - id: nmf_salamander_under
+    name: Salamandră — Dedubt
+    prompt: |
+      Salamandrele trăiesc sub bușteni, pietre, așternut. Ridică ceva cu grijă —
+      înlocuiește-l. Umiditatea, întunericul. De ce are nevoie salamandra de ele?
+    follow_ups:
+      - Ce ar fi pădurea fără salamandre?
+      - Cum modelează salamandra comunitatea de nevertebrate?
+      - Care este relația dintre umiditate și amfibian?
+  - id: nmf_rot_hole
+    name: Putregai — Găaură
+    prompt: |
+      O gaură într-un buștean — putregai, poate, sau un animal. Gaura este o cavitate. Ce își face cuibul acolo? Ce se ascunde acolo?
+    follow_ups:
+      - Ce ar fi bușteanul fără gaură?
+      - Cum creează cavitatea habitat?
+      - Care este relația dintre putregai și adăpost?
+  - id: nmf_springtail_jump
+    name: Izopode (Springtail) — Săritură
+    prompt: |
+      Izopodele — minuscule, numeroase — sar când sunt deranjate. Sunt în așternut,
+      în sol. Procesează fungi, descompunere. Observă cât de multe nu poți vedea.
+    follow_ups:
+      - Ce ar fi solul fără izopode?
+      - Cum permite "arcul" (spring) evadarea?
+      - Care este relația dintre izopodă și descompunere?
+  - id: nmf_bark_beetle_gallery
+    name: Gândac Scoarță — Galerie
+    prompt: |
+      Galeriile gândacilor de scoarță cioplesc lemnul de sub scoarță — canale, modele.
+      Gândacul le-a sculptat. Copacul a răspuns. Care este povestea?
+    follow_ups:
+      - Ce ar fi copacul fără gândac?
+      - Cum modelează galeria soarta copacului?
+      - Care este relația dintre gândac și ciupercă?
+  - id: nmf_dew_on_litter
+    name: Rouă pe Așternut
+    prompt: |
+      Rouă de dimineață se adună pe frunze, ace, crenguțe. Așternutul reține umezeala.
+      Cine bea la răsărit? Cum extinde roua sezonul umed?
+    follow_ups:
+      - Ce ar fi solul fără rouă?
+      - Cum creează roua o sursă de apă?
+      - Care este relația dintre rouă și evaporare?
+  - id: nmf_windfall_gap
+    name: Prăbușire Vânt — Gol
+    prompt: |
+      Un copac a căzut — vânt, vârstă, boală. Golul lasă lumina să intre. Solul
+      se schimbă. Ce crește în gol care nu putea înainte?
+    follow_ups:
+      - Ce ar fi pădurea fără goluri?
+      - Cum resetează golul succesiunea ecologică?
+      - Care este relația dintre gol și diversitate?
+  - id: nmf_mycorrhizal_tip
+    name: Vârf Micorizic
+    prompt: |
+      Rădăcinile copacilor întâlnesc hife fungice — micoriză. Ciuperca extinde raza de acțiune a rădăcinii. Copacul hrănește ciuperca. Găsește un vârf de rădăcină. Imaginează-ți parteneriatul subteran.
+    follow_ups:
+      - Ce ar fi copacul fără micoriză?
+      - Cum extinde parteneriatul sistemul radicular?
+      - Care este relația dintre ciupercă și fosfor?
+  - id: nmf_squirrel_cache
+    name: Veveriță — Rezervă (Cache)
+    prompt: |
+      O veveriță a îngropat o nucă — uitată, poate. Poate germina. Rezerva este dispersie. Câți copaci au început ca semințe uitate?
+    follow_ups:
+      - Ce ar fi pădurea fără depozitari?
+      - Cum extinde depozitarea raza de răspândire a semințelor?
+      - Care este relația dintre uitare și pădure?
+  - id: nmf_carpet_moss
+    name: Mușchi — Covor
+    prompt: |
+      Mușchiul acoperă solul în unele locuri — moale, verde, reținând apa. Mergi pe el. Simte cedarea. Covorul este secole de creștere, strat peste strat.
+    follow_ups:
+      - Ce ar fi solul fără covor?
+      - Cum reține covorul umiditatea?
+      - Care este relația dintre mușchi și mlaștină?
+  - id: nmf_burrow_entrance
+    name: Vizuină — Intrarea
+    prompt: |
+      O vizuină se deschide în sol — șoarece, popândău, veveriță de copac. Intrarea este un prag. Ce intră? Ce iese? Vizuina se extinde subteran.
+    follow_ups:
+      - Ce ar fi solul fără vizuini?
+      - Cum aerisește vizuina solul?
+      - Care este relația dintre vizuină și prădător?
+  - id: nmf_twig_lattice
+    name: Crenguțe — Plasă
+    prompt: |
+      Crenguțe se adună — vânt, animal, gravitație. Formează o plasă peste așternut.
+      Plasa reține frunze, prinde semințe. Este o arhitectură incidentală.
+    follow_ups:
+      - Ce ar fi solul fără plasă?
+      - Cum încetinește plasa eroziunea?
+      - Care este relația dintre crenguță și microhabitat?
+  - id: nmf_rot_softness
+    name: Putreziciune — Moliciune
+    prompt: |
+      Lemnul putrezit cedează sub degetele tale — spongios, sfărâmicios. Tranziția
+      de la structură la sol. Cât a durat? Ce a rămas?
+    follow_ups:
+      - Ce ar fi pădurea fără putreziciune?
+      - Cum permite moliciunea colonizarea?
+      - Care este relația dintre putregai și umus?
+  - id: nmf_frost_needle
+    name: Ac de Gheață (Frost Needle)
+    prompt: |
+      Ace de gheață se ridică din sol — cristale de gheață, delicate. Se formează în nopți reci și liniștite. Până la prânz dispar. Consideră structura efemeră.
+    follow_ups:
+      - Ce ar experimenta solul fără gheață?
+      - Cum afectează ridicarea solului de gheață rădăcinile?
+      - Care este relația dintre gheață și răsad?
+  - id: nmf_millipede_curl
+    name: Miropod — Încârligare
+    prompt: |
+      Un miropod se încolăcește când e deranjat — apărare. Se hrănește din descompunere. Privește unul
+      cum se mișcă prin așternut. Cum navighează corpul prin încâlcire?
+    follow_ups:
+      - Ce ar fi solul fără miropode?
+      - Cum protejează încolăcirea?
+      - Care este relația dintre miropod și calciu?
+  - id: nmf_pinecone_open
+    name: Con Pin — Deschidere
+    prompt: |
+      Un con de pin se deschide când e uscat — solzi se desfac, semințe eliberate. Conul este un mecanism. Căldura îl poate declanșa, de asemenea. Consideră sincronizarea.
+    follow_ups:
+      - Ce ar fi copacul fără con?
+      - Cum controlează umiditatea mecanismul?
+      - Care este relația dintre foc și eliberare?
+  - id: nmf_hole_in_leaf
+    name: Gaura în Frunză
+    prompt: |
+      O frunză are găuri — insectă, melc, ciupercă. Dauna spune o poveste. Cine a mâncat?
+      Când? Frunza rămasă încă fotosintetizează. Care este pragul?
+    follow_ups:
+      - Ce ar fi frunza fără găuri?
+      - Cum modelează erbivoria planta?
+      - Care este relația dintre daună și apărare?
+  - id: nmf_root_hair
+    name: Păr Radicular
+    prompt: |
+      Perii radiculari — microscopici — măresc suprafața pentru absorbție. Nu îi poți vedea, dar există. Rădăcinile unui răsad explorează. Ce găsesc?
+    follow_ups:
+      - Ce ar fi rădăcina fără peri?
+      - Cum absorb perii radiculari apa?
+      - Care este relația dintre păr și nutrienți?
+  - id: nmf_forest_silence
+    name: Pădure — Tăcere
+    prompt: |
+      Stai nemișcat pe solul pădurii. Tăcerea nu este goală — este plină de
+      sunete mici. Foșnet, picătură, scârțâit. Ce auzi când te oprești?
+    follow_ups:
+      - Ce ar fi pădurea fără sunetele mici?
+      - Cum dezvăluie tăcerea prezența?
+      - Care este relația dintre ascultare și observare?
+  - id: nmf_shade_adaptation
+    name: Adaptare la Umbră
+    prompt: |
+      Plantele de pe solul pădurii sunt adaptate la umbră — frunze mai mari, clorofilă diferită. Compară o frunză de soare cu o frunză de umbră. Care este compromisul?
+    follow_ups:
+      - Ce ar fi planta în plin soare?
+      - Cum modelează umbra frunza?
+      - Care este relația dintre lumină și investiție?
+  - id: nmf_nutrient_cycle
+    name: Ciclu Nutrienți
+    prompt: |
+      Totul pe solul pădurii este în ciclu — carbon, azot, fosfor.
+      O frunză cade. Este consumată. Devine sol. Hrănește un copac. Urmărește o buclă.
+    follow_ups:
+      - Ce ar fi pădurea fără ciclu?
+      - Cum completează descompunerea bucla?
+      - Care este relația dintre moarte și creștere?
+  - id: nmf_footprint_compression
+    name: Urmă Picior — Compresie
+    prompt: |
+      Urma ta de picior comprimă așternutul. Solul de dedesubt păstrează forma.
+      Câte pași sunt necesari pentru a schimba solul? Cine altcineva a pășit aici?
+    follow_ups:
+      - Ce ar fi solul fără trafic?
+      - Cum afectează compresia drenajul?
+      - Care este relația dintre drum și compactare?
+  - id: nmf_seasonal_signal
+    name: Semnal Sezonier
+    prompt: |
+      Solul pădurii semnalează anotimpul — creștere nouă primăvara, senescență toamna.
+      Ce este pe sol chiar acum? Ce îți spune?
+    follow_ups:
+      - Ce ar fi solul într-un alt anotimp?
+      - Cum sincronizează semnalul viața?
+      - Care este relația dintre așternut și calendar?
+  - id: nmf_stump_succession
+    name: Ciocan — Succesiune
+    prompt: |
+      Un ciot tăiat germinează fungi, răsaduri, mușchi. Este o etapă în succesiunea ecologică.
+      Ce a fost înainte? Ce îl va înlocui? Ciocanul este atât sfârșit, cât și început.
+    follow_ups:
+      - Ce ar fi golul fără ciot?
+      - Cum creează ciotul oportunitate?
+      - Care este relația dintre moarte și creșterea nouă?
+  - id: nmf_forest_breath
+    name: Pădure — Respirație
+    prompt: |
+      Solul pădurii respiră — oxigen intră, carbon iese, sau invers noaptea.
+      Solul este viu. Stai nemișcat. Poți simți schimbul?
+    follow_ups:
+      - Ce ar fi aerul fără solul pădurii?
+      - Cum modelează respirația coroana copacilor?
+      - Care este relația dintre sol și atmosferă?
+  - id: nmf_leaf_miner_trail
+    name: Miner Frunză — Dâră
+    prompt: |
+      Un miner de frunze — o larvă de insectă — mănâncă între straturi. Dâra este o
+      linie albă, un traseu sinuos. Urmărește-l. Ce căuta minerul?
+    follow_ups:
+      - Ce ar fi frunza fără dâră?
+      - Cum navighează minerul fără să vadă?
+      - Care este relația dintre interior și exterior?
+  - id: nmf_decomposer_shift
+    name: Descompunere — Schimbare
+    prompt: |
+      Pe măsură ce materialul putrezește, alți descompunători preiau controlul — mai întâi bacterii și
+      fungi, mai târziu gândaci și râme. Găsește material în diferite stadii.
+      Cine lucrează acum?
+    follow_ups:
+      - Ce ar fi descompunerea fără succesiune?
+      - Cum modelează schimbarea ritmul?
+      - Care este relația dintre stadiu și consumator?

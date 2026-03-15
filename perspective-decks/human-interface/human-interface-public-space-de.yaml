@@ -1,0 +1,456 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Die menschliche Schnittstelle — Öffentlicher Raum (German)
+
+id: human_interface_public_space
+name: Die menschliche Schnittstelle — Öffentlicher Raum
+description: 50 Karten, um Ihre Sicht auf den öffentlichen Raum zu verändern – von Bänken und Wegen bis hin zur Choreografie von Fremden und Objekten als Talismanen.
+domain: human_interface
+cards:
+  - id: hi_ps_bench_occupation
+    name: Besetzung einer Bank
+    prompt: |
+      Eine Bank wird beansprucht – von einem Körper, einer Tasche, einer Haltung. Die Bank ist eine knappe Ressource. Beobachten Sie, wer sitzt, wer steht, wer vorbeigeht. Die Bank hat für verschiedene Menschen unterschiedliche Bedeutungen. Was bietet sie?
+    follow_ups:
+      - Wie gestaltet die Bank den Raum?
+      - Wie wäre der Park ohne Bänke?
+      - Was ist die Beziehung zwischen Bank und Ruhe?
+  - id: hi_ps_pathway_flow
+    name: Wegflusses
+    prompt: |
+      Der Weg kanalisiert die Bewegung. Menschen gehen – allein, zu zweit, in Gruppen. Der Fluss hat eine Richtung. Beobachten Sie die Kollision. Wer weicht aus? Der Weg ist ein gemeinsamer Korridor. Welche Regeln gelten dafür?
+    follow_ups:
+      - Wie gestaltet der Weg den Gang?
+      - Wie wäre der Raum ohne Wege?
+      - Was ist die Beziehung zwischen Weg und Ziel?
+  - id: hi_ps_strangers_choreography
+    name: Choreografie von Fremden
+    prompt: |
+      Unzusammenhängende Körper bewegen sich durch gemeinsamen Raum. Die Choreografie ist unausgesprochen – zur Seite treten, innehalten, verschmelzen. Beobachten Sie den Tanz. Niemand spricht. Die Choreografie ist reine Körperlichkeit. Was erfordert sie?
+    follow_ups:
+      - Wie gestaltet die Choreografie den Raum?
+      - Was würde passieren, wenn alle anhalten würden?
+      - Was ist die Beziehung zwischen Choreografie und Höflichkeit?
+  - id: hi_ps_object_talisman
+    name: Objekt als Talisman
+    prompt: |
+      Ein Buch auf einer Bank. Eine Tasche auf einem Stuhl. Das Objekt beansprucht einen Platz. Es sagt "Ich bin hier" oder "Ich komme wieder". Das Objekt ist ein Talisman. Beobachten Sie den Anspruch. Was schützt es?
+    follow_ups:
+      - Wie gestaltet der Talisman den Raum?
+      - Wie wäre der Raum ohne solche Ansprüche?
+      - Was ist die Beziehung zwischen Objekt und Präsenz?
+  - id: hi_ps_bench_armrest
+    name: Banklehne
+    prompt: |
+      Manche Bänke haben Armlehnen. Sie teilen die Sitzfläche. Sie verhindern das Hinlegen. Die Armlehne ist ein absichtlich gestaltetes Element. Beobachten Sie, wer sie benutzt. Was schließt die Armlehne aus?
+    follow_ups:
+      - Wie gestaltet die Armlehne die Bank?
+      - Wie wäre die Bank ohne sie?
+      - Was ist die Beziehung zwischen Armlehne und Kontrolle?
+  - id: hi_ps_pathway_intersection
+    name: Wegkreuzung
+    prompt: |
+      Wege kreuzen sich. Körper treffen aufeinander. Die Kreuzung ist ein Kollisionspunkt. Beobachten Sie das Zusammentreffen. Was passiert, wenn Flüsse aufeinandertreffen? Die Kreuzung erfordert Verhandlung. Was fordert sie?
+    follow_ups:
+      - Wie gestaltet die Kreuzung den Fluss?
+      - Wie wäre der Raum ohne Kreuzungen?
+      - Was ist die Beziehung zwischen Kreuzung und Aufmerksamkeit?
+  - id: hi_ps_eye_contact_avoid
+    name: Blickkontakt vermeiden
+    prompt: |
+      Fremde meiden Blickkontakt. Das Vermeiden ist höflich. Hinsehen birgt das Risiko einer Verbindung. Beobachten Sie den Blick. Das Vermeiden ist ein Vertrag. Was ermöglicht es? Was kostet es?
+    follow_ups:
+      - Wie gestaltet das Vermeiden den Raum?
+      - Wie wäre der Raum mit mehr Kontakt?
+      - Was ist die Beziehung zwischen Blick und Privatsphäre?
+  - id: hi_ps_bench_share
+    name: Bank teilen
+    prompt: |
+      Zwei Fremde teilen sich eine Bank. Raum dazwischen. Das Teilen ist Nähe ohne Verbindung. Beobachten Sie die Grenze. Wie nah ist zu nah? Das Teilen ist ein delikates Gleichgewicht.
+    follow_ups:
+      - Wie gestaltet das Teilen die Bank?
+      - Wie wäre die Bank mit einer Person?
+      - Was ist die Beziehung zwischen Teilen und Toleranz?
+  - id: hi_ps_pathway_width
+    name: Wegbreite
+    prompt: |
+      Der Weg ist breit oder schmal. Die Breite beeinflusst den Fluss. Zwei Personen können passieren oder nicht. Beobachten Sie die Breite. Was nimmt sie über die Menge an? Die Breite ist Design. Was ermöglicht sie?
+    follow_ups:
+      - Wie gestaltet die Breite den Gang?
+      - Wie wäre der Weg breiter?
+      - Was ist die Beziehung zwischen Breite und Komfort?
+  - id: hi_ps_bench_sun
+    name: Bank in der Sonne
+    prompt: |
+      Die Bank ist der Sonne zugewandt. Oder dem Schatten. Die Position ist wichtig. Beobachten Sie, wer was wählt. Die Sonne ist eine Ressource. Was bietet sie? Die Bank in der Sonne ist begehrt.
+    follow_ups:
+      - Wie gestaltet die Sonne die Bank?
+      - Wie wäre der Raum ohne Sonne?
+      - Was ist die Beziehung zwischen Sonne und Ruhe?
+  - id: hi_ps_stranger_proximity
+    name: Nähe zu Fremden
+    prompt: |
+      Ein Fremder steht nahe – in einer Schlange, im Bus. Die Nähe ist unpersönlich, aber intim. Beobachten Sie die Toleranz. Was erlaubt der Körper? Die Nähe ist ein Vertrag. Was sind seine Bedingungen?
+    follow_ups:
+      - Wie gestaltet die Nähe den Raum?
+      - Wie wäre der Raum mit mehr Platz?
+      - Was ist die Beziehung zwischen Nähe und Höflichkeit?
+  - id: hi_ps_object_left
+    name: Zurückgelassenes Objekt
+    prompt: |
+      Eine Jacke auf einer Bank. Eine Tasche unter einem Baum. Das zurückgelassene Objekt markiert Territorium. Beobachten Sie den Anspruch. Wie lange kann es halten? Das zurückgelassene Objekt ist ein Test. Was erfordert es von anderen?
+    follow_ups:
+      - Wie gestaltet das Objekt den Raum?
+      - Wie wäre der Raum ohne solche Ansprüche?
+      - Was ist die Beziehung zwischen Objekt und Vertrauen?
+  - id: hi_ps_pathway_obstacle
+    name: Weg Hindernis
+    prompt: |
+      Etwas blockiert den Weg – Bauarbeiten, eine Menschenmenge, ein Darsteller. Das Hindernis lenkt den Fluss ab. Beobachten Sie die Umleitung. Was erfordert das Hindernis? Der Weg ist nie rein. Was unterbricht ihn?
+    follow_ups:
+      - Wie gestaltet das Hindernis den Fluss?
+      - Wie wäre der Weg ohne Hindernisse?
+      - Was ist die Beziehung zwischen Hindernis und Anpassung?
+  - id: hi_ps_bench_alone
+    name: Alleine auf einer Bank
+    prompt: |
+      Eine Person auf einer Bank. Das Alleinsein ist sichtbar. Die Bank beherbergt Einsamkeit. Beobachten Sie die Haltung. Was bietet die Bank allein? Die Bank allein ist eine Wahl. Was ermöglicht sie?
+    follow_ups:
+      - Wie gestaltet das Alleinsein die Bank?
+      - Wie wäre der Raum ohne Bänke?
+      - Was ist die Beziehung zwischen Alleinsein und Ruhe?
+  - id: hi_ps_nod_acknowledge
+    name: Nicken als Anerkennung
+    prompt: |
+      Ein leichtes Nicken. Ein kurzes Lächeln. Die Anerkennung ist minimal. Sie sagt "Ich sehe dich" ohne Engagement. Beobachten Sie, wann es passiert. Das Nicken ist eine kleine Höflichkeit. Was schafft es?
+    follow_ups:
+      - Wie gestaltet das Nicken den Raum?
+      - Wie wäre der Raum ohne es?
+      - Was ist die Beziehung zwischen Nicken und Sicherheit?
+  - id: hi_ps_pathway_edge
+    name: Wegrand
+    prompt: |
+      Der Weg hat Ränder – Gras, Bordstein, Barriere. Der Rand definiert den Weg. Beobachten Sie, wer auf dem Weg bleibt. Wer überquert? Der Rand ist eine Grenze. Was begrenzt er?
+    follow_ups:
+      - Wie gestaltet der Rand den Gang?
+      - Wie wäre der Weg ohne Ränder?
+      - Was ist die Beziehung zwischen Rand und Freiheit?
+  - id: hi_ps_bench_claim
+    name: Bankanspruch
+    prompt: |
+      Die Bank ist besetzt – durch Ausbreitung, durch Haltung, durch Tasche. Der Anspruch sagt "Das ist meins". Beobachten Sie den Anspruch. Wie wird er gestellt? Der Anspruch ist Territorium. Was schützt er?
+    follow_ups:
+      - Wie gestaltet der Anspruch die Bank?
+      - Wie wäre der Raum ohne Ansprüche?
+      - Was ist die Beziehung zwischen Anspruch und Komfort?
+  - id: hi_ps_stranger_help
+    name: Hilfe von Fremden
+    prompt: |
+      "Brauchen Sie Hilfe?" Ein Fremder bietet sie an. Die Hilfe ist unerwartet. Beobachten Sie den Austausch. Annehmen oder ablehnen? Die Hilfe von Fremden ist ein Geschenk. Was erfordert sie?
+    follow_ups:
+      - Wie gestaltet die Hilfe den Raum?
+      - Wie wäre der Raum ohne solche Angebote?
+      - Was ist die Beziehung zwischen Hilfe und Vertrauen?
+  - id: hi_ps_object_temporary
+    name: Temporäres Objekt
+    prompt: |
+      Eine Tasse, eine Zeitung, ein Hut. Das Objekt markiert einen Platz. Es ist temporär. Der Besitzer wird zurückkehren. Beobachten Sie den Anspruch. Was erfordert das temporäre Objekt von anderen? Das Objekt ist ein Platzhalter.
+    follow_ups:
+      - Wie gestaltet das temporäre Objekt den Raum?
+      - Wie wäre der Raum ohne es?
+      - Was ist die Beziehung zwischen Temporär und Vertrauen?
+  - id: hi_ps_pathway_rhythm
+    name: Wegrhythmus
+    prompt: |
+      Füße auf Pflaster. Der Rhythmus ist individuell – schnell, langsam, ungleichmäßig. Der Weg beherbergt viele Rhythmen. Beobachten Sie die Synchronisation und den Zusammenstoß. Was enthüllt der Rhythmus?
+    follow_ups:
+      - Wie gestaltet der Rhythmus den Gang?
+      - Wie wäre der Weg in Stille?
+      - Was ist die Beziehung zwischen Rhythmus und Ziel?
+  - id: hi_ps_bench_face
+    name: Bankausrichtung
+    prompt: |
+      Die Bank ist in eine Richtung ausgerichtet – auf die Aussicht, die Sonne, die Menge. Die Ausrichtung prägt die Erfahrung. Beobachten Sie, wer welche Bank wählt. Die Ausrichtung ist Design. Was nimmt sie an?
+    follow_ups:
+      - Wie gestaltet die Ausrichtung die Bank?
+      - Wie wäre die Bank ohne Richtung?
+      - Was ist die Beziehung zwischen Ausrichtung und Aussicht?
+  - id: hi_ps_sidewalk_dance
+    name: Bürgersteigtanz
+    prompt: |
+      Zwei Leute nähern sich. Der Tanz – wer bewegt sich? Der Bürgersteigtanz ist universell. Beobachten Sie das Ausweichen. Der Tanz ist unausgesprochen. Was erfordert er?
+    follow_ups:
+      - Wie gestaltet der Tanz den Gang?
+      - Wie wäre der Bürgersteig ohne ihn?
+      - Was ist die Beziehung zwischen Tanz und Höflichkeit?
+  - id: hi_ps_object_abandoned
+    name: Verlassenes Objekt
+    prompt: |
+      Ein Handschuh auf dem Boden. Ein Schal auf einer Bank. Das Objekt ist verlassen. Beobachten Sie es. Wer hat es hinterlassen? Wer wird es mitnehmen? Das verlassene Objekt ist ein kleines Rätsel. Was enthüllt es?
+    follow_ups:
+      - Wie gestaltet das verlassene Objekt den Raum?
+      - Wie wäre der Raum ohne solche Objekte?
+      - Was ist die Beziehung zwischen Verlassen und Verlust?
+  - id: hi_ps_pathway_surface
+    name: Wegoberfläche
+    prompt: |
+      Pflaster, Kies, Gras. Die Oberfläche beeinflusst den Gang. Beobachten Sie die Wahl. Was erfordert die Oberfläche vom Körper? Die Oberfläche ist Design. Was ermöglicht sie?
+    follow_ups:
+      - Wie gestaltet die Oberfläche den Gang?
+      - Wie wäre der Weg mit anderer Oberfläche?
+      - Was ist die Beziehung zwischen Oberfläche und Zugang?
+  - id: hi_ps_bench_weather
+    name: Bank und Wetter
+    prompt: |
+      Regen, Sonne, Wind. Das Wetter prägt die Bank. Wer sitzt im Regen? Wer sucht Schatten? Die Bank ist exponiert. Beobachten Sie die Beziehung zwischen Bank und Wetter. Was tut das Wetter?
+    follow_ups:
+      - Wie gestaltet das Wetter die Bank?
+      - Wie wäre die Bank mit Schutz?
+      - Was ist die Beziehung zwischen Wetter und Nutzung?
+  - id: hi_ps_stranger_glance
+    name: Blick von Fremden
+    prompt: |
+      Ein kurzer Blick. Der Blick ist eine Einschätzung. Sicher? Bedrohlich? Der Blick ist automatisch. Beobachten Sie Ihre eigenen Blicke. Was tut der Blick? Der Blick ist ein Überlebenswerkzeug. Was fordert er?
+    follow_ups:
+      - Wie gestaltet der Blick den Raum?
+      - Wie wäre der Raum ohne Blicke?
+      - Was ist die Beziehung zwischen Blick und Sicherheit?
+  - id: hi_ps_pathway_crowd
+    name: Weg Menschenmenge
+    prompt: |
+      Der Weg ist voll. Körper komprimieren sich. Die Menge hat ihren eigenen Fluss. Beobachten Sie die Bewegung. Die Menge ist ein Kollektiv. Was erfordert sie vom Individuum?
+    follow_ups:
+      - Wie gestaltet die Menge den Weg?
+      - Wie wäre der Weg leer?
+      - Was ist die Beziehung zwischen Menge und Fluss?
+  - id: hi_ps_bench_curve
+    name: Bankkurve
+    prompt: |
+      Manche Bänke sind geschwungen. Sie sind einander oder der Mitte zugewandt. Die Krümmung gestaltet das Soziale. Beobachten Sie die Anordnung. Was ermöglicht die Krümmung? Die Krümmung ist Design. Was will sie?
+    follow_ups:
+      - Wie gestaltet die Krümmung die Bank?
+      - Wie wäre die Bank gerade?
+      - Was ist die Beziehung zwischen Krümmung und Verbindung?
+  - id: hi_ps_object_traded
+    name: Objekt getauscht
+    prompt: |
+      Ein Händedruck. Ein Kauf. Ein Geschenk. Das Objekt bewegt sich zwischen Fremden. Beobachten Sie den Austausch. Was geht außer dem Objekt über? Der Tausch ist ein Moment der Verbindung. Was schafft er?
+    follow_ups:
+      - Wie gestaltet der Tausch den Raum?
+      - Wie wäre der Raum ohne solche Täusche?
+      - Was ist die Beziehung zwischen Tausch und Vertrauen?
+  - id: hi_ps_pathway_light
+    name: Weglicht
+    prompt: |
+      Tag, Nacht, Straßenlaterne. Das Licht prägt den Weg. Beobachten Sie den Unterschied. Wer geht nachts? Das Licht ist Sicherheit und Atmosphäre. Was bietet es?
+    follow_ups:
+      - Wie gestaltet das Licht den Weg?
+      - Wie wäre der Weg in Dunkelheit?
+      - Was ist die Beziehung zwischen Licht und Sicherheit?
+  - id: hi_ps_bench_armrest_gap
+    name: Lücke in der Banklehne
+    prompt: |
+      Die Armlehne teilt. Eine Person pro Abschnitt. Die Lücke verhindert das Teilen. Beobachten Sie das Design. Was schließt die Lücke aus? Die Lücken in der Armlehne sind feindliche Architektur. Was nimmt sie an?
+    follow_ups:
+      - Wie gestaltet die Lücke die Bank?
+      - Wie wäre die Bank ohne Armlehnen?
+      - Was ist die Beziehung zwischen Lücke und Ausgrenzung?
+  - id: hi_ps_stranger_smile
+    name: Lächeln von Fremden
+    prompt: |
+      Ein Lächeln von einem Fremden. Unerwartet. Das Lächeln ist ein Geschenk. Beobachten Sie die Reaktion. Was tut das Lächeln? Das Lächeln ist ein kleiner Bruch des Vertrags. Was schafft es?
+    follow_ups:
+      - Wie gestaltet das Lächeln den Raum?
+      - Wie wäre der Raum mit mehr Lächeln?
+      - Was ist die Beziehung zwischen Lächeln und Verbindung?
+  - id: hi_ps_object_touch
+    name: Objektberührung
+    prompt: |
+      Eine Hand auf einem Geländer. Ein Fuß auf einer Stufe. Die Berührung verbindet Körper und Raum. Das Objekt wird geteilt. Beobachten Sie die Berührung. Was tut die Berührung? Das Objekt ist ein Kontaktpunkt. Was trägt es?
+    follow_ups:
+      - Wie gestaltet die Berührung den Raum?
+      - Wie wäre der Raum ohne Berührung?
+      - Was ist die Beziehung zwischen Berührung und Präsenz?
+  - id: hi_ps_pathway_choice
+    name: Wegentscheidung
+    prompt: |
+      Der Weg gabelt sich. Links oder rechts? Die Entscheidung ist klein. Beobachten Sie die Entscheidung. Was bestimmt sie? Die Wegentscheidung ist ein Moment der Handlungsfähigkeit. Was enthüllt sie?
+    follow_ups:
+      - Wie gestaltet die Entscheidung den Gang?
+      - Wie wäre der Weg ohne Gabelungen?
+      - Was ist die Beziehung zwischen Entscheidung und Ziel?
+  - id: hi_ps_bench_empty
+    name: Leere Bank
+    prompt: |
+      Die Bank ist leer. Verfügbar. Warum? Beobachten Sie die leere Bank. Ort? Zeit? Wetter? Die leere Bank ist eine Einladung. Was bietet sie?
+    follow_ups:
+      - Wie gestaltet die leere Bank den Raum?
+      - Wie wäre der Raum ohne leere Bänke?
+      - Was ist die Beziehung zwischen Leer und Gelegenheit?
+  - id: hi_ps_stranger_queue
+    name: Schlange von Fremden
+    prompt: |
+      Eine Schlange bildet sich. Fremde warten zusammen. Die Schlange ist Ordnung. Beobachten Sie die Geduld. Die Schlange schafft temporäre Gemeinschaft. Was erfordert die Schlange? Was bietet sie?
+    follow_ups:
+      - Wie gestaltet die Schlange den Raum?
+      - Wie wäre der Raum ohne Schlangen?
+      - Was ist die Beziehung zwischen Schlange und Fairness?
+  - id: hi_ps_object_talisman_trust
+    name: Talisman Vertrauen
+    prompt: |
+      Sie lassen Ihre Tasche zurück. Sie vertrauen dem Raum. Der Talisman ist ein Test. Beobachten Sie das Vertrauen. Was nimmt er an? Das Talisman-Vertrauen ist ein Glücksspiel. Was ermöglicht es?
+    follow_ups:
+      - Wie gestaltet das Vertrauen den Raum?
+      - Wie wäre der Raum ohne dieses Vertrauen?
+      - Was ist die Beziehung zwischen Vertrauen und Verletzlichkeit?
+  - id: hi_ps_pathway_end
+    name: Wegende
+    prompt: |
+      Der Weg endet. Ein Ziel, eine Wand, ein Tor. Das Ende ist eine Schwelle. Beobachten Sie die Ankunft. Was bietet das Ende? Das Wegende ist ein Abschluss. Was bedeutet es?
+    follow_ups:
+      - Wie gestaltet das Ende den Gang?
+      - Wie wäre der Weg ohne Ende?
+      - Was ist die Beziehung zwischen Ende und Vollendung?
+  - id: hi_ps_bench_duo
+    name: Zweierbank
+    prompt: |
+      Zwei Personen teilen sich eine Bank. Freunde, Liebende, Fremde. Das Duo hat Dynamiken. Beobachten Sie die Distanz. Das Gespräch oder die Stille. Das Duo auf der Bank ist eine kleine soziale Einheit. Was schafft es?
+    follow_ups:
+      - Wie gestaltet das Duo die Bank?
+      - Wie wäre die Bank mit einer Person?
+      - Was ist die Beziehung zwischen Duo und Verbindung?
+  - id: hi_ps_stranger_danger
+    name: Gefahr durch Fremde
+    prompt: |
+      Der Körper bewertet. Sicher? Die Bewertung ist automatisch. Beobachten Sie die Signale. Was löst Vorsicht aus? Die Gefahr durch Fremde ist ein Überlebensreflex. Was schützt er? Was kostet er?
+    follow_ups:
+      - Wie gestaltet die Bewertung den Raum?
+      - Wie wäre der Raum ohne sie?
+      - Was ist die Beziehung zwischen Gefahr und Offenheit?
+  - id: hi_ps_object_marker
+    name: Objekt als Markierung
+    prompt: |
+      Ein Stein auf einer Bank. Ein Band an einem Baum. Das Objekt markiert etwas. Erinnerung, Anspruch, Ritual. Beobachten Sie die Markierung. Was bedeutet sie? Die Markierung ist eine Botschaft. Was sagt sie?
+    follow_ups:
+      - Wie gestaltet die Markierung den Raum?
+      - Wie wäre der Raum ohne Markierungen?
+      - Was ist die Beziehung zwischen Markierung und Bedeutung?
+  - id: hi_ps_pathway_grade
+    name: Wegsteigung
+    prompt: |
+      Der Weg steigt an. Aufwärts oder abwärts. Die Steigung beeinflusst den Körper. Beobachten Sie die Anstrengung. Die Steigung ist Design. Was nimmt sie über den Gehenden an? Die Steigung ist für manche eine Barriere.
+    follow_ups:
+      - Wie gestaltet die Steigung den Gang?
+      - Wie wäre der Weg flach?
+      - Was ist die Beziehung zwischen Steigung und Zugang?
+  - id: hi_ps_bench_public
+    name: Öffentliche Bank
+    prompt: |
+      Die Bank ist öffentlich. Jeder kann sitzen. Das Öffentliche ist der Sinn. Beobachten Sie, wer sie nutzt. Die öffentliche Bank ist ein Gemeingut. Was erfordert sie? Was bietet sie?
+    follow_ups:
+      - Wie gestaltet das Öffentliche die Bank?
+      - Wie wäre der Raum ohne öffentliche Bänke?
+      - Was ist die Beziehung zwischen Öffentlich und Zugehörigkeit?
+  - id: hi_ps_stranger_parallel
+    name: Parallele von Fremden
+    prompt: |
+      Sie gehen neben einem Fremden. Gleiche Richtung, gleiches Tempo. Die Parallele ist zufällig. Beobachten Sie die Dynamik. Synchronisieren Sie sich? Weichen Sie ab? Die Parallele ist eine temporäre Begleitung. Was schafft sie?
+    follow_ups:
+      - Wie gestaltet die Parallele den Gang?
+      - Wie wäre der Weg ohne solche Parallelen?
+      - Was ist die Beziehung zwischen Parallele und Einsamkeit?
+  - id: hi_ps_object_shared
+    name: Geteiltes Objekt
+    prompt: |
+      Ein Trinkbrunnen. Ein Handlauf. Das Objekt wird geteilt. Viele Hände berühren es. Beobachten Sie das geteilte Objekt. Was erfordert das Teilen? Das geteilte Objekt ist ein Kontaktpunkt. Was trägt es?
+    follow_ups:
+      - Wie gestaltet das geteilte Objekt den Raum?
+      - Wie wäre der Raum ohne solche Objekte?
+      - Was ist die Beziehung zwischen Geteilt und Vertrauen?
+  - id: hi_ps_pathway_loop
+    name: Weg Schleife
+    prompt: |
+      Der Weg führt zurück. Eine Schleife. Kein Ziel. Die Schleife dient dem Gehen an sich. Beobachten Sie die Gehenden. Was bietet die Schleife? Die Schleife ist eine andere Art von Weg. Was ermöglicht sie?
+    follow_ups:
+      - Wie gestaltet die Schleife den Gang?
+      - Wie wäre der Raum ohne Schleifen?
+      - Was ist die Beziehung zwischen Schleife und Reflexion?
+  - id: hi_ps_bench_legacy
+    name: Gedenkbank
+    prompt: |
+      "In Gedenken an." Die Bank hat eine Plakette. Jemand liebte diesen Ort. Die Gedenkbank trägt eine Geschichte. Beobachten Sie sie. Was fügt die Plakette hinzu? Die Gedenkbank ist ein Geschenk. Was schafft sie?
+    follow_ups:
+      - Wie gestaltet das Erbe die Bank?
+      - Wie wäre die Bank ohne die Plakette?
+      - Was ist die Beziehung zwischen Erbe und Ort?
+  - id: hi_ps_stranger_ask
+    name: Frage von Fremden
+    prompt: |
+      "Haben Sie kurz Zeit?" "Wie komme ich zu X?" Die Frage schafft einen Moment der Verbindung. Beobachten Sie den Austausch. Was erfordert die Frage? Die Frage von Fremden ist ein kleiner Bruch. Was ermöglicht sie?
+    follow_ups:
+      - Wie gestaltet die Frage den Raum?
+      - Wie wäre der Raum ohne solche Fragen?
+      - Was ist die Beziehung zwischen Frage und Hilfe?
+  - id: hi_ps_object_talisman_return
+    name: Rückkehr des Talismans
+    prompt: |
+      Sie kehren zurück. Der Talisman ist noch da. Ihre Tasche, Ihr Buch. Die Rückkehr bestätigt das Vertrauen. Beobachten Sie die Erleichterung. Was bedeutet die Rückkehr? Die Rückkehr des Talismans ist ein kleiner Sieg. Was schafft sie?
+    follow_ups:
+      - Wie gestaltet die Rückkehr den Raum?
+      - Wie wäre der Raum ohne solche Rückkehren?
+      - Was ist die Beziehung zwischen Rückkehr und Vertrauen?
+  - id: hi_ps_pathway_beginning
+    name: Wegbeginn
+    prompt: |
+      Der Weg beginnt. Eine Schwelle. Sie betreten ihn. Beobachten Sie den Moment. Was bedeutet der Anfang? Der Wegbeginn ist eine Verpflichtung. Was erfordert er?
+    follow_ups:
+      - Wie gestaltet der Anfang den Gang?
+      - Wie wäre der Raum ohne Wege?
+      - Was ist die Beziehung zwischen Anfang und Absicht?
+  - id: hi_ps_bench_community
+    name: Bankgemeinschaft
+    prompt: |
+      Stammgäste kennen die Bank. Dieselben Leute, zur selben Zeit. Die Bankgemeinschaft ist informell. Beobachten Sie die Anerkennung. Was bietet die Gemeinschaft? Die Bankgemeinschaft ist eine kleine soziale Welt.
+    follow_ups:
+      - Wie gestaltet die Gemeinschaft die Bank?
+      - Wie wäre die Bank ohne Stammgäste?
+      - Was ist die Beziehung zwischen Gemeinschaft und Ort?
+  - id: hi_ps_stranger_chorus
+    name: Chorgesang von Fremden
+    prompt: |
+      Viele Körper, ein Raum. Der Chorgesang von Fremden ist der Klang der Menge – Schritte, Stimmen, Rascheln. Beobachten Sie den Chorgesang. Was schafft er? Der Chorgesang ist der Klang der Öffentlichkeit. Was bedeutet er?
+    follow_ups:
+      - Wie gestaltet der Chorgesang den Raum?
+      - Wie wäre der Raum in Stille?
+      - Was ist die Beziehung zwischen Chorgesang und Zugehörigkeit?
+  - id: hi_ps_object_talisman_loss
+    name: Verlust des Talismans
+    prompt: |
+      Der Talisman ist weg. Gestohlen, verloren, verwechselt. Der Verlust ist ein Bruch. Beobachten Sie die Reaktion. Was bedeutet der Verlust? Der Verlust des Talismans ist ein kleines Trauma. Was enthüllt er?
+    follow_ups:
+      - Wie gestaltet der Verlust den Raum?
+      - Wie wäre der Raum ohne solche Verluste?
+      - Was ist die Beziehung zwischen Verlust und Vertrauen?
+  - id: hi_ps_pathway_shared
+    name: Geteilter Weg
+    prompt: |
+      Der Weg wird geteilt – Fußgänger, Radfahrer, Kinderwagen. Die gemeinsame Nutzung erfordert Verhandlung. Beobachten Sie die Regeln. Wer weicht aus? Der geteilte Weg ist ein Gemeingut. Was erfordert er?
+    follow_ups:
+      - Wie gestaltet die gemeinsame Nutzung den Weg?
+      - Wie wäre der Weg mit nur einer Nutzung?
+      - Was ist die Beziehung zwischen Geteilt und Konflikt?
+  - id: hi_ps_bench_rest
+    name: Bank Ruhe
+    prompt: |
+      Jemand ruht sich aus. Augen geschlossen, langsames Atmen. Die Ruhe ist sichtbar. Die Bank bietet sie. Beobachten Sie die Ruhe. Was ermöglicht die Bank? Die Ruhe auf der Bank ist ein Geschenk des öffentlichen Raums. Was bedeutet sie?
+    follow_ups:
+      - Wie gestaltet die Ruhe die Bank?
+      - Wie wäre der Raum ohne Bänke?
+      - Was ist die Beziehung zwischen Ruhe und Würde?
+  - id: hi_ps_stranger_chorus_silence
+    name: Stille im Chorgesang von Fremden
+    prompt: |
+      Die Menge hält inne. Ein Moment der Stille. Der Chorgesang von Fremden verstummt. Beobachten Sie die Veränderung. Was schafft die Stille? Die gemeinsame Stille ist selten. Was bedeutet sie?
+    follow_ups:
+      - Wie gestaltet die Stille den Raum?
+      - Wie wäre der Raum ohne solche Momente?
+      - Was ist die Beziehung zwischen Stille und Kollektiv?

@@ -1,0 +1,462 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Jungla Urbană — San Francisco (Romanian)
+
+id: urban_jungle_san_francisco
+name: Jungla Urbană — San Francisco
+description: 50 de cărți pentru a schimba modul în care vedeți San Francisco — de la scară și lumină la straturi de istorie și ritmurile vieții pe stradă.
+domain: urban_jungle
+cards:
+  - id: sf_hill_grade
+    name: Panta Dealului
+    prompt: |
+      San Francisco este construit pe pante. Simțiți panta sub picioarele dvs. Cum
+      modifică panta ceea ce observați? Unde se înclină orașul?
+    follow_ups:
+      - Cum ar arăta strada dacă ar fi plată?
+      - Cum modelează dealurile cartierele?
+      - Care este cea mai abruptă stradă pe care ați urcat-o?
+  - id: sf_fog_layer
+    name: Strat de Ceață
+    prompt: |
+      Ceața se apropie. Priviți-o cum se mișcă — peste pod, pe dealuri. Ceața
+      este un personaj. Cum schimbă lumina? Sunetul?
+    follow_ups:
+      - Cum ar fi orașul fără ceață?
+      - Cum marchează ceața timpul?
+      - Unde se oprește ceața?
+  - id: sf_cable_car_track
+    name: Șina Tramvaiului Electric
+    prompt: |
+      Urmăriți o șină de tramvai electric. Fanta din pavaj, zumzetul cablului.
+      Tramvaiul electric este o relicvă care încă funcționează. Ce transportă?
+    follow_ups:
+      - Cum ar fi dealul fără șină?
+      - Cum modelează tramvaiul electric turismul?
+      - Care este relația dintre șină și stradă?
+  - id: sf_victorian_detail
+    name: Detaliu Victorian
+    prompt: |
+      Casele victoriene din San Francisco sunt ornamentate — gingerbread, ferestre
+      băi, culori. Găsiți una și citiți-i detaliile. Ce poveste spun ornamentele?
+    follow_ups:
+      - Cum ar fi casa fără detalii?
+      - Cum schimbă culoarea strada?
+      - Care este relația dintre victorian și modern?
+  - id: sf_painted_lady
+    name: Doamnă Pictată
+    prompt: |
+      Doamnele Pictate sunt faimoase, dar fiecare casă victoriană are o paletă.
+      Colectați cinci combinații de culori de pe o stradă. Ce spun culorile?
+    follow_ups:
+      - De ce aceste culori?
+      - Cum conservă sau transformă vopseaua?
+      - Cum ar arăta strada în alb-negru?
+  - id: sf_bay_window
+    name: Fereastră Bază
+    prompt: |
+      Ferestrele bază se umflă spre stradă. Sunt pentru lumină, pentru priveliște,
+      pentru expunere. Stați în fața uneia. Ce ați vedea din interior?
+    follow_ups:
+      - Cum schimbă fereastra bază camera?
+      - Cum ar fi fațada fără ea?
+      - Cum creează ferestrele bază o relație cu strada?
+  - id: sf_stairway_street
+    name: Stradă cu Scări
+    prompt: |
+      San Francisco are scări care sunt străzi — trepte în loc de pavaj. Urcați
+      una. Cum schimbă scara cartierul?
+    follow_ups:
+      - Cine folosește aceste scări?
+      - Cum ar fi dealul fără ele?
+      - Cum creează scările comunitate?
+  - id: sf_mission_mural
+    name: Murală Mission
+    prompt: |
+      Districtul Mission este o galerie de murale. Găsiți una și citiți-o. Care
+      este povestea? Cine a pictat-o? Pentru cine este?
+    follow_ups:
+      - Ce ar spune zidul fără murală?
+      - Cum își revendică spațiul muralele?
+      - Care este relația dintre murală și cartier?
+  - id: sf_earthquake_retrofit
+    name: Ranforsare Antiseismică
+    prompt: |
+      Căutați ranforsări antiseismice — șuruburi, ranforsări, fundații. Orașul
+      își amintește 1906 și 1989. Cum modelează frica mediul construit?
+    follow_ups:
+      - Cum ar fi clădirea fără ranforsare?
+      - Cum se arată proiectarea seismică?
+      - Care este relația dintre ranforsare și încredere?
+  - id: sf_dolores_palm
+    name: Palmier Dolores
+    prompt: |
+      Palmieri se aliniază pe strada Dolores. Nu sunt nativi, dar sunt iconici.
+      Ce spun despre relația orașului cu altundeva?
+    follow_ups:
+      - Cum ar fi strada fără palmieri?
+      - Cum marchează palmierii identitatea?
+      - Care este relația dintre palmier și loc?
+  - id: sf_twin_peaks_view
+    name: Priveliște de la Twin Peaks
+    prompt: |
+      Imaginați-vă priveliștea de la Twin Peaks. Orașul se întinde dedesubt —
+      grilă, apă, poduri. Cum modifică altitudinea ceea ce contează?
+    follow_ups:
+      - Ce ați vedea de sus?
+      - Cum modelează priveliștea imaginea orașului?
+      - Ce este ascuns de pe vârf?
+  - id: sf_ferry_building
+    name: Clădirea Feribotului
+    prompt: |
+      Clădirea Feribotului este orientată spre golf. Este un prag — pământ și apă,
+      oraș și navetă. Stați la intrarea sa. Ce curge prin ea?
+    follow_ups:
+      - Cum ar fi faleza fără ea?
+      - Cum marchează clădirea tranziția?
+      - Care este relația dintre feribot și oraș?
+  - id: sf_chinatown_gate
+    name: Poarta Chinatown
+    prompt: |
+      Poarta Dragonului marchează Chinatown. Treceți prin ea. Ce se schimbă? Poarta
+      este atât reală, cât și simbolică. Cum funcționează?
+    follow_ups:
+      - Cum ar fi Chinatown fără poartă?
+      - Cum creează poarta identitate?
+      - Care este relația dintre poartă și cartier?
+  - id: sf_hydrant_color
+    name: Culoare Hidrant
+    prompt: |
+      Hidranții din San Francisco au culori diferite — albastru, verde, roșu. Culoarea
+      indică fluxul de apă. Găsiți trei culori. Ce înseamnă fiecare?
+    follow_ups:
+      - Ce ar face strada în caz de incendiu?
+      - Cum codifică culoarea informația?
+      - Care este relația dintre hidrant și sistem?
+  - id: sf_parklet
+    name: Parc-mic
+    prompt: |
+      Parculețele recuperează locuri de parcare pentru oameni. Stați într-unul.
+      Care sunt mobilierul? Cine îl folosește? Cum schimbă parculetul strada?
+    follow_ups:
+      - Cum ar fi spațiul fără parculet?
+      - Cum creează parculetul întâlniri?
+      - Ce ați adăuga?
+  - id: sf_sf_street_sign
+    name: Semn de Stradă SF
+    prompt: |
+      Semnele de stradă din San Francisco au un stil aparte. Observați fontul,
+      montura, amplasarea. Cum modelează semnul orientarea?
+    follow_ups:
+      - Cum ar fi strada fără semn?
+      - De ce contează tipografia?
+      - Care este relația dintre semn și identitate?
+  - id: sf_castro_rainbow
+    name: Curcubeu Castro
+    prompt: |
+      Districtul Castro arborează steaguri curcubeu. Plimbați-vă pe stradă și numărați
+      steagurile. Cum își revendică steagul spațiul? Ce înseamnă aici?
+    follow_ups:
+      - Cum ar fi cartierul fără steaguri?
+      - Cum creează steagul comunitate?
+      - Care este relația dintre simbol și loc?
+  - id: sf_haight_vintage
+    name: Vintage Haight
+    prompt: |
+      Districtul Haight este un muzeu al anilor '60. Găsiți o clădire neschimbată.
+      Ce este conservat? Ce este performanță?
+    follow_ups:
+      - Cum ar fi strada fără vintage?
+      - Cum modelează istoria comerțul?
+      - Care este relația dintre trecut și prezent?
+  - id: sf_sutro_tower
+    name: Turnul Sutro
+    prompt: |
+      Turnul Sutro este vizibil de oriunde. Folosiți-l ca pe o busolă. Cum vă
+      orientează turnul? Cum ar fi skyline-ul fără el?
+    follow_ups:
+      - Ce transmite turnul?
+      - Cum modelează turnul identitatea?
+      - Care este relația dintre turn și priveliște?
+  - id: sf_bart_underground
+    name: BART Subteran
+    prompt: |
+      Călătoriți cu BART sub golf. Sunteți într-un tunel sub apă. Simțiți presiunea,
+      întunericul, ieșirea la suprafață. Cum schimbă tunelul călătoria?
+    follow_ups:
+      - Cum ar fi naveta fără tunel?
+      - Cum separă golful?
+      - Care este relația dintre tunel și regiune?
+  - id: sf_taquería_line
+    name: Coadă la Taquería
+    prompt: |
+      Alăturați-vă unei cozi la o taquería la miezul nopții. Coada este un ritual.
+      Cine se află în ea? Ce comandă? Coada este comunitate.
+    follow_ups:
+      - Cum ar fi strada fără taquería?
+      - Cum creează coada întâlniri?
+      - Care este relația dintre mâncare și loc?
+  - id: sf_dolores_sun
+    name: Soare Dolores
+    prompt: |
+      Parcul Dolores este orientat spre vest. Într-o zi însorită, este o plajă.
+      Priviți mulțimea. Cum modelează soarele parcul? Cine prinde cele mai
+      bune locuri?
+    follow_ups:
+      - Cum ar fi parcul fără soare?
+      - De ce contează aspectul?
+      - Care este relația dintre parc și vreme?
+  - id: sf_mission_door
+    name: Ușă Mission
+    prompt: |
+      Ușile din Mission sunt adesea ornamentate — sculptate, pictate, unice. Găsiți
+      cinci uși pe o stradă. Ce spun despre clădirile din spatele lor?
+    follow_ups:
+      - Cum ar fi strada fără uși?
+      - Cum creează ușa identitate?
+      - Care este relația dintre ușă și prag?
+  - id: sf_coit_tower
+    name: Turnul Coit
+    prompt: |
+      Turnul Coit încoronează Telegraph Hill. Este un monument, un punct de vedere, un punct de reper.
+      Cum modelează turnul dealul? Cum ar fi dealul fără el?
+    follow_ups:
+      - Ce comemorează turnul?
+      - Cum orientează turnul orașul?
+      - Care este relația dintre turn și cartier?
+  - id: sf_lombard_curve
+    name: Curbă Lombard
+    prompt: |
+      Strada Lombard coboară pe pantă în curbe. Este faimoasă pentru virajele sale strânse. Mergeți pe ea. Cum modifică curba coborârea? Ce ar face o stradă dreaptă?
+    follow_ups:
+      - Cum ar fi dealul fără curbă?
+      - Cum modelează curba experiența?
+      - Care este relația dintre curbă și siguranță?
+  - id: sf_alcatraz_silhouette
+    name: Siluetă Alcatraz
+    prompt: |
+      De pe faleză, Alcatraz este o siluetă. Insula este mereu acolo, mereu
+      distantă. Ce înseamnă pentru oraș?
+    follow_ups:
+      - Cum ar fi golful fără insulă?
+      - Cum modelează insula priveliștea?
+      - Care este relația dintre închisoare și oraș?
+  - id: sf_ghost_sign
+    name: Semn Fantomă
+    prompt: |
+      Semnele fantomă — reclame estompate pe cărămidă — marchează trecutul.
+      Găsiți unul. Ce promova? Cine l-ar fi văzut?
+    follow_ups:
+      - Ce ar spune zidul fără semn?
+      - Cum conservă semnul fantomă istoria?
+      - Care este relația dintre semn și comerț?
+  - id: sf_sf_sidewalk
+    name: Trotuar SF
+    prompt: |
+      Trottoarele din San Francisco sunt adesea crăpate, înclinate, cu rădăcini
+      de copaci. Mergeți pe o stradă și observați textura. Cum îmbătrânește
+      trotuarul?
+    follow_ups:
+      - Cum ar fi strada fără trotuar?
+      - Cum modelează trotuarul mișcarea?
+      - Care este relația dintre trotuar și copac?
+  - id: sf_golden_gate_fog
+    name: Ceață Golden Gate
+    prompt: |
+      Podul Golden Gate dispare în ceață. Priviți-l cum dispare și reapare.
+      Ceața este o perdea. Ce este în spatele ei?
+    follow_ups:
+      - Cum ar fi podul fără ceață?
+      - Cum modelează ceața priveliștea?
+      - Care este relația dintre ceață și pod?
+  - id: sf_mission_dolores
+    name: Mission Dolores
+    prompt: |
+      Mission Dolores este cea mai veche clădire din oraș. Stați în fața ei.
+      Ce a văzut? Cum marchează timpul?
+    follow_ups:
+      - Cum ar fi cartierul fără misiune?
+      - Cum modelează misiunea identitatea?
+      - Care este relația dintre misiune și oraș?
+  - id: sf_painted_steps
+    name: Scări Pictate
+    prompt: |
+      Scările din Aleea 16 sunt un mozaic. Urcați-le. Fiecare treaptă este
+      diferită. Cum schimbă arta urcarea?
+    follow_ups:
+      - Cum ar fi scările fără mozaic?
+      - Cum creează mozaicul comunitate?
+      - Care este relația dintre artă și urcare?
+  - id: sf_sf_street_tree
+    name: Copac Stradal SF
+    prompt: |
+      Copacii stradali din San Francisco sunt adesea palmieri, magnolii sau ficuși.
+      Găsiți unul și identificați-l. Cum modelează copacul strada?
+    follow_ups:
+      - Cum ar fi strada fără copac?
+      - Cum creează copacul habitat?
+      - Care este relația dintre copac și trotuar?
+  - id: sf_sf_bay_window
+    name: Fereastră Bază SF
+    prompt: |
+      Ferestrele bază sunt un element vernacular din San Francisco. Ele se umflă
+      spre stradă, captând lumina. Cum schimbă fereastra bază camera?
+    follow_ups:
+      - Cum ar fi fațada fără fereastra bază?
+      - Cum creează fereastra bază o relație cu strada?
+      - Care este relația dintre fereastra bază și priveliște?
+  - id: sf_sf_hill
+    name: Deal SF
+    prompt: |
+      Alegeți un deal și urcați-l. Simțiți arsurile musculare. În vârf, priviți
+      înapoi. Cum modifică urcarea ceea ce vedeți?
+    follow_ups:
+      - Cum ar fi orașul fără dealuri?
+      - Cum modelează dealurile cartierele?
+      - Care este relația dintre deal și priveliște?
+  - id: sf_sf_fog
+    name: Ceață SF
+    prompt: |
+      Ceața are un nume — Karl. Este o celebritate locală. Când sosește Karl,
+      cum se schimbă orașul? Ce este ascuns? Ce este dezvăluit?
+    follow_ups:
+      - Cum ar fi orașul fără Karl?
+      - Cum modelează ceața identitatea?
+      - Care este relația dintre ceață și lumină?
+  - id: sf_sf_cable
+    name: Cablu SF
+    prompt: |
+      Tramvaiul electric funcționează pe un cablu sub stradă. Nu îl puteți vedea,
+      dar îl auziți. Cum modelează cablul ascuns orașul vizibil?
+    follow_ups:
+      - Cum ar fi dealul fără cablu?
+      - Cum creează cablul conexiune?
+      - Care este relația dintre cablu și stradă?
+  - id: sf_sf_victorian
+    name: Victorian SF
+    prompt: |
+      Casele victoriene vin în perechi — două case, un teren. Găsiți o pereche.
+      Cum se relaționează? Cum ar fi una fără cealaltă?
+    follow_ups:
+      - Cum ar fi strada fără pereche?
+      - Cum creează perechea ritm?
+      - Care este relația dintre pereche și teren?
+  - id: sf_sf_mission
+    name: Mission SF
+    prompt: |
+      Districtul Mission este numit după Mission Dolores. Plimbați-vă pe stradă
+      și simțiți straturile — spaniole, mexicane, irlandeze, central-americane.
+      Ce este palimpsestul?
+    follow_ups:
+      - Cum ar fi cartierul fără straturi?
+      - Cum modelează misiunea identitatea?
+      - Care este relația dintre misiune și migrație?
+  - id: sf_sf_bridge
+    name: Pod SF
+    prompt: |
+      Podul Bay este mai puțin faimos decât Golden Gate, dar mai utilizat. Traversați-l
+      sau priviți-l. Cum conectează podul? Ce transportă?
+    follow_ups:
+      - Cum ar fi golful fără pod?
+      - Cum modelează podul regiunea?
+      - Care este relația dintre pod și navetă?
+  - id: sf_sf_parks
+    name: Parcuri SF
+    prompt: |
+      San Francisco are multe parcuri mici — parcuri de buzunar, parcuri triunghiulare.
+      Găsiți unul. Cine îl folosește? Care este caracterul său?
+    follow_ups:
+      - Cum ar fi cartierul fără parc?
+      - Cum creează parcul respiro?
+      - Care este relația dintre parc și stradă?
+  - id: sf_sf_stairs
+    name: Scări SF
+    prompt: |
+      San Francisco are peste 600 de scări publice. Găsiți una pe care nu ați
+      urcat-o niciodată. Ce este sus? Ce este jos?
+    follow_ups:
+      - Cum ar fi dealul fără scări?
+      - Cum creează scările scurtături?
+      - Care este relația dintre scări și cartier?
+  - id: sf_sf_mural
+    name: Murală SF
+    prompt: |
+      Districtul Mission are mai multe murale pe cap de locuitor decât oriunde
+      în SUA. Găsiți una care spune o poveste. Care este narațiunea? Pentru
+      cine este?
+    follow_ups:
+      - Cum ar fi zidul fără murală?
+      - Cum își revendică spațiul murală?
+      - Care este relația dintre murală și comunitate?
+  - id: sf_sf_water
+    name: Apă SF
+    prompt: |
+      San Francisco este înconjurat de apă — golf, ocean, strâmtoare. Mergeți la
+      margine. Ce înseamnă apa pentru oraș? Cum modelează marginea?
+    follow_ups:
+      - Cum ar fi orașul fără apă?
+      - Cum modelează apa identitatea?
+      - Care este relația dintre apă și oraș?
+  - id: sf_sf_sunset
+    name: Apus SF
+    prompt: |
+      Apulele din San Francisco sunt faimoase. Priviți unul de pe un deal. Lumina
+      schimbă orașul. Cum ar fi priveliștea fără apus?
+    follow_ups:
+      - Cum modelează apusul seara?
+      - Care este relația dintre apus și priveliște?
+      - Ce ați rata fără lumină?
+  - id: sf_sf_wind
+    name: Vânt SF
+    prompt: |
+      Vântul din San Francisco este constant în unele cartiere. Simțiți-l. Cum
+      modelează vântul strada? Cum ar fi strada fără el?
+    follow_ups:
+      - Cum creează vântul microclimat?
+      - Care este relația dintre vânt și clădire?
+      - Ce ați planta în acest vânt?
+  - id: sf_sf_earthquake
+    name: Cutremur SF
+    prompt: |
+      San Francisco se află pe falii. Pământul se poate mișca. Cum modelează
+      această cunoaștere mediul construit? Ce ați observa într-o tresărire?
+    follow_ups:
+      - Cum modelează riscul seismic proiectarea?
+      - Care este relația dintre falie și oraș?
+      - Ce ați face dacă pământul s-ar cutremura?
+  - id: sf_sf_tech_bus
+    name: Autobuz Tehnologic
+    prompt: |
+      Autobuzele tehnologice transportă lucrători către Silicon Valley. Priviți
+      unul cum se oprește. Autobuzul este un simbol. Ce transportă? Ce
+      exclude?
+    follow_ups:
+      - Cum ar fi strada fără autobuz?
+      - Cum modelează autobuzul cartierul?
+      - Care este relația dintre autobuz și oraș?
+  - id: sf_sf_painted_lady
+    name: Doamnă Pictată SF
+    prompt: |
+      Doamnele Pictate sunt case victoriene în culori pastelate. Găsiți un rând.
+      Cum creează culorile identitate? Cum ar fi strada în gri?
+    follow_ups:
+      - Cum modelează culorile strada?
+      - Care este relația dintre culoare și conservare?
+      - Ce ați picta pe casa dvs.?
+  - id: sf_sf_twin_peaks
+    name: Twin Peaks
+    prompt: |
+      Twin Peaks sunt doi munți în centrul orașului. Urcați unul. Priveliștea
+      este de 360 de grade. Cum vă orientează vârful?
+    follow_ups:
+      - Cum ar fi orașul fără vârfuri?
+      - Cum creează vârfurile puncte de reper?
+      - Care este relația dintre vârf și cartier?
+  - id: sf_sf_ferry_plaza
+    name: Piața Feribotului
+    prompt: |
+      Piața Clădirii Feribotului găzduiește o piață agricolă. Plimbați-vă prin
+      ea. Ce este de vânzare? Cine vine? Piața este un prag între oraș și golf.
+    follow_ups:
+      - Cum ar fi faleza fără piață?
+      - Cum creează piața comunitate?
+      - Care este relația dintre piață și feribot?

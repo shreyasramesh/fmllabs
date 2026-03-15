@@ -1,0 +1,494 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Sposoby patrzenia na sztukę (Polish)
+
+id: ways_of_looking_at_art
+name: Sposoby patrzenia na sztukę
+description: |
+  Karty, które pozwolą Ci spojrzeć na sztukę z innej perspektywy. Każda z nich
+  oferuje inne spojrzenie, aby pogłębić sposób, w jaki widzisz i angażujesz się
+  w dzieła sztuki.
+domain: art
+cards:
+  - id: souvenir
+    name: Pamiątka
+    prompt: |
+      Wybierz coś z dzieła sztuki i ukryj to w następnym, na które spojrzysz.
+      Jak byś to dopasował/a do nowej kompozycji?
+    follow_ups:
+      - Co byś wybrał/a do przeniesienia?
+      - Co by zyskało lub straciło w nowym kontekście?
+      - Gdzie by to pasowało – lub opierało się dopasowaniu – w nowym dziele?
+  - id: throw_a_party
+    name: Zorganizuj imprezę
+    prompt: |
+      Zaproś wszystkich artystów znajdujących się w sali. W co byliby ubrani?
+      O czym by myśleli?
+    follow_ups:
+      - Kto by do kogo lgnął?
+      - O czym by się kłócili?
+      - Co by ich zaskoczyło w dziełach innych?
+  - id: time_out
+    name: Przerwa
+    prompt: |
+      Wyjdź na zewnątrz. Skup się na świetle, dźwiękach i wrażeniach. Bądź obecny/a
+      w swoim otoczeniu. Doświadczenie oglądania sztuki dotyczy w takim samym stopniu
+      przestrzeni pomiędzy dziełami, co samych dzieł sztuki.
+    follow_ups:
+      - Co zauważasz, gdy przestajesz skupiać się na sztuce?
+      - Jak sala kształtuje to, co widzisz?
+      - Czego byś przegapił/a, gdybyś się spieszył/a?
+  - id: plan_a_trip
+    name: Zaplanuj podróż
+    prompt: |
+      To, co dziś widzisz, może być pierwszym krokiem na znacznie większej
+      podróży. Kiedy opuścisz galerię lub przestrzeń, zdecyduj, które dzieło sztuki
+      chcesz zobaczyć następne i zaplanuj wokół niego całą podróż.
+    follow_ups:
+      - Dokąd zaprowadziłaby Cię ta podróż?
+      - Czego potrzebowałbyś/abyś po drodze?
+      - Dlaczego akurat to dzieło – co sprawia, że warto dla niego podróżować?
+  - id: in_black_and_white
+    name: W czerni i bieli
+    prompt: |
+      Skup się na grze światła i cieni – możesz nawet zrobić zdjęcie w czerni
+      i bieli, aby sobie pomóc. Gdzie tony są najciemniejsze? Jak to sugeruje głębię
+      lub nie? Jak to pomaga w zrozumieniu kompozycji?
+    follow_ups:
+      - Co znika, gdy usuwasz kolor?
+      - Co staje się jaśniejsze?
+      - Gdzie najpierw pada Twoje oko w wersji czarno-białej?
+  - id: give_it_a_voice
+    name: Daj mu głos
+    prompt: |
+      Jakie dźwięki wydawałoby to dzieło sztuki? Jak mógłbyś/mogłabyś usłyszeć
+      kolory, kształty i formy?
+    follow_ups:
+      - Czy jest głośne czy ciche? Ostry czy miękki?
+      - Jaki instrument lub tekstura by je oddała?
+      - Jak brzmiałaby cisza w tym dziele?
+  - id: find_the_middle_ground
+    name: Znajdź złoty środek
+    prompt: |
+      Jak daleko znajduje się dzieło sztuki od Ciebie? Jak duże jest w stosunku do
+      Twojego rozmiaru? Jak ciężkie? Ile miejsca zajmuje? Czy zmieściłoby się w domu?
+    follow_ups:
+      - Co by się zmieniło, gdybyś mógł/mogła trzymać je w dłoni?
+      - Co by było, gdyby miało rozmiar pokoju?
+      - Jak skala kształtuje Twoją relację z nim?
+  - id: from_the_edges
+    name: Od krawędzi
+    prompt: |
+      Gdzie dzieło sztuki się kończy, a zaczyna się "prawdziwy świat"? Czy możesz
+      spróbować użyć dłoni jako wizjera, aby ponownie zdefiniować krawędzie dzieła
+      sztuki dla siebie? Czy istnieje wyraźna krawędź?
+    follow_ups:
+      - Co się dzieje, gdy zmieniasz ramę?
+      - Co zostaje włączone lub wykluczone?
+      - Gdzie dzieło chce się wylać poza swoje granice?
+  - id: transmogrify_it
+    name: Transmutuj je
+    prompt: |
+      Co by było, gdybyś mógł/mogła zmienić dzieło sztuki na inny gatunek? Z fotografii
+      na malarstwo akcji, czy z instalacji na pejzaż? Jak byś to zrobił/a? Czy nadal
+      zachowałoby swój charakter nawet w tłumaczeniu?
+    follow_ups:
+      - Co jest istotą dzieła – co musi przetrwać zmianę?
+      - Co zostałoby zyskane lub utracone w tłumaczeniu?
+      - Który gatunek ujawniłby coś nowego na jego temat?
+  - id: the_hand_of_the_artist
+    name: Ręka artysty
+    prompt: |
+      Szukaj śladów pociągnięć pędzla artysty, śladów dłuta, odcisków palców,
+      nawet włosów. Wyobraź sobie, że sam/a wykonujesz te ślady – w jakiej pozycji
+      musiał(a)byś się znaleźć? Jakich narzędzi byś użył/a?
+    follow_ups:
+      - Co ślad ujawnia o ciele twórcy?
+      - Gdzie gest jest szybki czy wolny, pewny czy niezdecydowany?
+      - Jakie byłoby uczucie wykonania tego śladu?
+  - id: tell_the_story
+    name: Opowiedz historię
+    prompt: |
+      Historia sztuki jest bogata w narrację, a dziś istnieje ekscytujący dialog
+      między sztuką, literaturą i filmem. Czy w dziele sztuki jest historia? Jak ją
+      opowiadasz?
+    follow_ups:
+      - Co dzieje się przed lub po tej chwili?
+      - Kim jest narrator? Czyj głos brakuje?
+      - Czy sprawdziłoby się jako film, powieść, czy wiersz?
+  - id: shadowboxing
+    name: Cieniowanie
+    prompt: |
+      Ruszaj się. Podejdź bardzo blisko. Oddal się tak daleko, jak to możliwe.
+      Przejdź na drugą stronę. Idź wysoko. Idź nisko. Próbuj różnych kątów. Nie
+      zostawaj długo w tym samym miejscu. Ciesz się zmianami, których dzieło sztuki
+      doświadcza, gdy się wokół niego poruszasz.
+    follow_ups:
+      - Co się zmienia, gdy zmieniasz pozycję?
+      - Który kąt Cię zaskoczył?
+      - Jak ruch Twojego ciała zmienia to, co widzisz?
+  - id: six_degrees_of_francis_bacon
+    name: Sześć stopni od Francisa Bacona
+    prompt: |
+      Artyści wpływają na innych artystów. Tematy i idee ewoluują przez pokolenia
+      i przez granice. Połącz dzieło sztuki z innym w galerii, używając jak najmniejszej
+      liczby połączeń.
+    follow_ups:
+      - Jaką najkrótszą ścieżkę możesz znaleźć?
+      - Jaki rodzaj połączenia jest najsilniejszy – technika, temat, nastrój, czy idea?
+      - Co artysta pomyślałby o tym połączeniu?
+  - id: headlines
+    name: Nagłówki
+    prompt: |
+      Wyobraź sobie dzień, w którym powstało dzieło sztuki i znajdź lub wymyśl
+      nagłówek gazety z tego dnia. Porównaj go z nagłówkami dzisiejszych gazet.
+    follow_ups:
+      - Co znalazłoby się na pierwszej stronie?
+      - Co się zmieniło – a co nie?
+      - Jak nagłówek zmienia postrzeganie dzieła?
+  - id: speed_date
+    name: Randka w ciemno (na czas)
+    prompt: |
+      Spędź tylko 10 sekund z każdym dziełem sztuki. Rób to, aż zobaczysz wszystkie
+      lub do momentu, gdy zabraknie Ci sił, a następnie wróć do swoich ulubionych
+      i zostań dłużej. Jak teraz je widzisz? Do których dzieł czujesz się przyciągany/a?
+    follow_ups:
+      - Co ujawniło szybkie spojrzenie, czego mogło przegapić dłuższe przyglądanie się?
+      - Dlaczego wróciłeś/aś do tych konkretnych dzieł?
+      - Czym różniło się drugie spojrzenie od pierwszego?
+  - id: make_connections
+    name: Nawiązuj połączenia
+    prompt: |
+      W drodze do domu poszukaj czegoś, co przypomina Ci dzieło sztuki lub jego
+      część – kształtu lub koloru, być może słowa, nawet wrażenia.
+    follow_ups:
+      - Co znalazłeś/aś?
+      - Jak echo zmieniło sposób, w jaki widzisz oryginał?
+      - Co pokazałbyś/abyś artyście, gdybyś mógł/mogła?
+  - id: dinner_party
+    name: Kolacja
+    prompt: |
+      Dopasuj dzieło sztuki do smaku. Do jakiego jedzenia lub napoju Cię to
+      przypomina? Złóż bankiet.
+    follow_ups:
+      - Jak wyglądałoby menu?
+      - Kto gdzie by siedział?
+      - Jak smakowałby pierwszy kęs?
+  - id: head_off_piste
+    name: Zejdź z utartych ścieżek
+    prompt: |
+      Poproś pracownika galerii o wskazanie jego ulubionego dzieła lub oddal się
+      od kart i zobacz, co uda Ci się znaleźć.
+    follow_ups:
+      - Co odkryłeś/aś poza utartymi ścieżkami?
+      - Czym jego/jej faworyt różni się od Twojego?
+      - Co poleciłbyś/abyś komuś innemu?
+  - id: make_it_an_mixtape
+    name: Stwórz mixtape
+    prompt: |
+      Czy dzieło sztuki przywodzi Ci na myśl konkretną piosenkę lub utwór muzyczny?
+      Sztuka i muzyka przenikają się na różne sposoby i często dzielą podobny język.
+      Jakie cechy mają wspólne? Stwórz playlistę na każdą wizytę w galerii lub dla
+      pojedynczego artysty.
+    follow_ups:
+      - Jaki jest utwór otwierający?
+      - Jaka cecha łączy dzieło z muzyką – rytm, nastrój, tekstura?
+      - Jak zmieniłaby się playlista, gdybyś odwiedził/a ją za rok?
+  - id: read_in_context
+    name: Odczytaj w kontekście
+    prompt: |
+      Gdzie znajduje się dzieło sztuki? Jak jego otoczenie wpływa na to, jak jest
+      odbierane? Czy jest na billboardzie, na zewnątrz galerii, na środku jeziora?
+      Podsłuchaj rozmowę między dziełem a jego otoczeniem.
+    follow_ups:
+      - Co by się zmieniło, gdyby znajdowało się gdzie indziej?
+      - Co mówi sala lub przestrzeń w zamian?
+      - Kto jest tutaj odbiorcą – a kogo brakuje?
+  - id: understand_it_less
+    name: Zrozum je mniej
+    prompt: |
+      Przyjmij swoją ciekawość. Zapytaj siebie, co jest dziwne lub nowe w Twoim
+      doświadczeniu dzieła sztuki? Jak można je uczynić jeszcze bardziej dziwnym?
+      Puść to, co dzieło sztuki "powinno znaczyć", próbując zrozumieć je trochę mniej!
+    follow_ups:
+      - Czego musiał(a)byś się oduczyć, aby zobaczyć je na nowo?
+      - Jakie pytanie nie ma odpowiedzi – i dlaczego to jest ważne?
+      - Jak wyglądałoby "złe zrozumienie"?
+  - id: chaos_or_control
+    name: Chaos czy kontrola?
+    prompt: |
+      Czy wydaje się losowe, czy jest plan? Przypadek, wypadek i szczęśliwy zbieg
+      okoliczności odgrywają rolę – czasami znaczącą – w tworzeniu dzieła sztuki.
+      Spróbuj znaleźć to, co było dozwolone, aby działo się naturalnie, a co było kontrolowane.
+    follow_ups:
+      - Gdzie artysta trzyma lejce – a gdzie je puszcza?
+      - Co mogło być wypadkiem, które stało się istotne?
+      - Jak zmieniłoby się dzieło z większą ilością chaosu – lub większą kontrolą?
+  - id: palimpsest
+    name: Palimpsest
+    prompt: |
+      Szukaj warstw! Co jest ukryte, a co ujawnione? Jak grube jest dzieło? Czy
+      powierzchnia była budowana przez czas?
+    follow_ups:
+      - Co kryje się pod powierzchnią?
+      - Co byś znalazł/a, gdybyś mógł/mogła to odkleić?
+      - Jak czas manifestuje się w warstwach?
+  - id: pattern_recognition
+    name: Rozpoznawanie wzorców
+    prompt: |
+      Szukaj powtarzających się elementów. Czy istnieje wzór? Czy są powtarzające
+      się motywy? Czy pewne formy echem odbijają się nawzajem?
+    follow_ups:
+      - Co łamie wzór – i dlaczego?
+      - Gdzie powtórzenie prowadzi Twoje oko?
+      - Co by się stało, gdybyś prześledził/a jeden motyw przez całe dzieło?
+  - id: through_another_pair_of_eyes
+    name: Przez inne oczy
+    prompt: |
+      Przywołaj postać z powieści, filmu, sztuki lub postać historyczną. Wyobraź
+      sobie rozmowę z nimi o dziele sztuki. Czy zgodził(a)byś się z ich opinią o nim?
+    follow_ups:
+      - Co zauważyliby, czego Ty przegapiłeś/aś?
+      - Gdzie byście się nie zgodzili – i dlaczego?
+      - Jakie pytanie zadaliby Ci o to?
+  - id: thermostat
+    name: Termometr
+    prompt: |
+      Jaką temperaturę ma kolor? Szukaj najchłodniejszych kolorów w dziele sztuki,
+      a następnie wskaż cieplejsze odcienie. Ile ekosystemów można znaleźć w pojedynczym
+      dziele sztuki?
+    follow_ups:
+      - Gdzie gorąco i zimno się spotykają – i co się tam dzieje?
+      - Jaki klimat wywołuje dzieło?
+      - Jak byś się czuł/a, gdybyś wszedł/weszła do jego temperatury?
+  - id: negative_space
+    name: Przestrzeń negatywna
+    prompt: |
+      Luki między poszczególnymi elementami dzieła sztuki są równie istotne
+      jak same elementy. Jak w łamigłówce, zwróć uwagę na brakujące elementy.
+      Przestrzeń negatywna: jak ramuje to, co jest? Poczuj jej znaczenie.
+    follow_ups:
+      - Jaki kształt przybiera pustka?
+      - Co wypełniłoby luki – i czy powinno?
+      - Jak przestrzeń negatywna spaja kompozycję?
+  - id: make_yourself_at_home
+    name: Poczuj się jak w domu
+    prompt: |
+      Wyobraź sobie, że wpełzasz do dzieła sztuki. Gdzie byś się ukrył/a? Co widzisz?
+      Jak się czujesz?
+    follow_ups:
+      - Co byś słyszał/a z wnętrza?
+      - Gdzie czuł(a)byś się najbezpieczniej – lub najbardziej narażony/a?
+      - Co byś ze sobą zabrał/a, gdybyś mógł/mogła zostać?
+  - id: homage
+    name: Hołd
+    prompt: |
+      Zbuduj ołtarz lub mini-wystawę dla swojego ulubionego artysty. Zacznij od pocztówki
+      ze sklepu lub znajdź przedmioty i obrazy, które nawiązują do jego pracy i dodają
+      jej głębi i koloru.
+    follow_ups:
+      - Co znalazłoby się w centrum Twojego ołtarza?
+      - Który przedmiot by ich zaskoczył?
+      - Jak akt kuratorowania zmienia sposób, w jaki widzisz ich pracę?
+  - id: warm_up
+    name: Rozgrzewka
+    prompt: |
+      Rozbudź swoje ciało, aby przygotować zmysły. Biegnij, skacz, rozciągaj się,
+      klaszcz w dłonie, ruszaj palcami u stóp. Zwróć uwagę na wszelkie fizyczne odczucia
+      w swoim ciele podczas oglądania dzieła sztuki.
+    follow_ups:
+      - Gdzie w swoim ciele czujesz dzieło?
+      - Jak ruch zmienia to, co widzisz?
+      - Jakie wrażenie pozostaje po odwróceniu wzroku?
+  - id: make_it_anew
+    name: Stwórz je na nowo
+    prompt: |
+      W domu odtwórz dzieło sztuki, używając tylko tego, co masz pod ręką. Zapisz
+      to, narysuj, zbuduj z zapałek. Im łatwiejsza i prostsza metoda, tym lepiej.
+      Zobacz, co pozostaje w Twojej pamięci, co zauważasz w swojej interpretacji.
+    follow_ups:
+      - Co pamiętałeś/aś bez wysiłku?
+      - Co Twoja wersja zrobiła źle – i dlaczego to jest ważne?
+      - Co byś dodał/a, gdybyś miał/a jeszcze jedną minutę?
+  - id: origin_story
+    name: Historia pochodzenia
+    prompt: |
+      Czy pamiętasz pierwsze dzieło sztuki, które kiedykolwiek widziałeś/aś? Gdzie
+      byłeś/aś? Ile miałeś/aś lat? Spróbuj przypomnieć sobie pokój, w którym byłeś/aś,
+      światło i dźwięki, uczucie oglądania go. Czy jest coś, co możesz połączyć z dziełem
+      sztuki, które widzisz teraz?
+    follow_ups:
+      - Co pozostało niezmienione w sposobie, w jaki patrzysz na sztukę?
+      - Co by pomyślało Twoje młodsze ja o tym dziele?
+      - Jaka nić biegnie od tamtego czasu do teraz?
+  - id: words_and_images
+    name: Słowa i obrazy
+    prompt: |
+      Nie patrząc na dzieło sztuki, przeczytaj opis, zamknij oczy i spróbuj je sobie
+      wyobrazić. Następnie otwórz oczy. Czy pasuje do Twojej wersji?
+    follow_ups:
+      - Co pominęły słowa?
+      - Co dodałeś/aś, czego tam nie było?
+      - Jak Twój mentalny obraz zmienia sposób, w jaki widzisz rzeczywisty?
+  - id: keep_a_notebook
+    name: Prowadź notatnik
+    prompt: |
+      Rób dziennik dat, dzieł sztuki i Twoich reakcji na nie. Przeglądaj swoje notatki
+      i szukaj nowych dzieł sztuki.
+    follow_ups:
+      - Jaki wzór wyłania się podczas czytania Twoich notatek?
+      - Co powiedział(a)byś swojej przeszłej sobie?
+      - Dokąd chce Cię zabrać notatnik dalej?
+  - id: write_a_postcard
+    name: Napisz pocztówkę
+    prompt: |
+      Napisz pocztówkę do dzieła sztuki, z którym szczególnie się łączysz. Co byś
+      powiedział/a? Jak by mogło odpowiedzieć?
+    follow_ups:
+      - Co musiał(a)byś powiedzieć, czego nie można powiedzieć na głos?
+      - Jak wyglądałby jego/jej charakter pisma?
+      - Co byś zatrzymał/a – a czego nigdy byś nie wysłał/a?
+  - id: here_today_gone
+    name: Tu dziś, zniknie...?
+    prompt: |
+      Nie każde dzieło sztuki przetrwa próbę czasu, ani nie takie jest zamierzenie
+      każdego artysty. Happening lub performance może istnieć przez wieczór, może
+      minuty lub tylko sekundy! Być może patrzysz na dokumentację ulotnego, tymczasowego
+      dzieła sztuki. Jak długo to potrwa?
+    follow_ups:
+      - Co by zginęło, gdyby jutro zniknęło?
+      - Co przetrwa w pamięci, fotografii, czy historii?
+      - Czy jego nietrwałość zmienia sposób, w jaki na nie patrzysz?
+  - id: wrap_it_up
+    name: Zawiń to
+    prompt: |
+      Co by było, gdybyś mógł/mogła zapakować dzieło sztuki? Czy nadal byłoby
+      można rozpoznać, co to jest? Czy inne dzieło sztuki zmieściłoby się w tym samym
+      opakowaniu?
+    follow_ups:
+      - Jaki kształt przybrałoby opakowanie?
+      - Jak wyglądałby papier do pakowania?
+      - Co jest istotne – a co można by zamienić?
+  - id: trace_a_path
+    name: Naszkicuj ścieżkę
+    prompt: |
+      Na co patrzysz, gdy napotykasz dzieło sztuki? Dokąd Twoje oko podróżuje
+      następnie? Gdzie Twój wzrok spoczywa? Naszkicuj punkty i połącz kropki.
+    follow_ups:
+      - Gdzie ciągle wracasz?
+      - Co pominąłeś/aś – i dlaczego?
+      - Jak Twoja ścieżka porównuje się do ścieżki kogoś innego?
+  - id: superficial
+    name: Powierzchowny
+    prompt: |
+      Jaka jest powierzchnia? Pochłania światło czy je odbija? Jest gładka czy
+      perforowana? Jest warstwowa, dopracowana czy szorstka? Nie bój się być powierzchowny/a!
+    follow_ups:
+      - Jakie by to było w dotyku?
+      - Co powierzchnia ujawnia – lub ukrywa?
+      - Co się dzieje, gdy pozostajesz na powierzchni?
+  - id: studio_visit
+    name: Wizyta w pracowni
+    prompt: |
+      Istnieje tyle pracowni artystycznych, ilu jest artystów. Wyobraź sobie przestrzeń,
+      w której powstało dzieło sztuki: magazyn na Brooklynie, pracownię w Paryżu,
+      stół kuchenny w zapracowanym domu rodzinnym – lub może gdzieś mniej prawdopodobnym.
+    follow_ups:
+      - Co byś usłyszał/a w tej przestrzeni?
+      - O której godzinie zostało wykonane?
+      - Jak wyobrażone miejsce zmienia sposób, w jaki widzisz dzieło?
+  - id: switch_channels
+    name: Zmień kanały
+    prompt: |
+      Patrz na ludzi, a nie na sztukę. Jak zachowują się wobec dzieła? Na co patrzą?
+      Czy możesz zgadnąć, co czują?
+    follow_ups:
+      - Kto zostaje dłużej – a kto szybko przechodzi?
+      - Co by powiedzieli, gdybyś zapytał/a?
+      - Jak obserwowanie innych zmienia to, co zauważasz?
+  - id: light
+    name: Światło
+    prompt: |
+      Szukaj źródła światła. Skąd ono pochodzi? Co znajduje się w cieniu? Skup się
+      na tym, co artysta chce, abyśmy widzieli, i na tym, co ukryte w cieniach.
+    follow_ups:
+      - Co ujawnia światło?
+      - Co mogą ukrywać cienie?
+      - Jak zmieniłoby się dzieło w innym oświetleniu?
+  - id: introductions
+    name: Przedstawienia
+    prompt: |
+      Przedstaw dzieło sztuki przyjacielowi, tak jakby było znajomym na przyjęciu.
+      Jak byś je opisał/a w sposób, który wzbudziłby jego zainteresowanie? Co przyciąga
+      Twoje?
+    follow_ups:
+      - Co byś podkreślił/a najpierw?
+      - Co byś pominął/a?
+      - Jaki haczyk sprawiłby, że chciał(a)by je poznać?
+  - id: tipping_point
+    name: Punkt krytyczny
+    prompt: |
+      Gdzie jest środek dzieła sztuki? Czy jest poza równowagą? Szukaj punktu krytycznego.
+    follow_ups:
+      - Co by je przewróciło?
+      - Co je utrzymuje na miejscu?
+      - Jak brak równowagi tworzy napięcie – lub ulgę?
+  - id: homing
+    name: Powrót do domu
+    prompt: |
+      Wracaj. Wracaj do ulubionego dzieła sztuki w różne dni lub o różnych porach
+      dnia – wcześnie rano zimą, późnym wieczorem latem. Prowadź zapis tego, jak się
+      czujesz; Twoje uczucia zmieniają się przy każdej wizycie.
+    follow_ups:
+      - Co pozostało niezmienione między wizytami?
+      - Kiedy zaskoczyło Cię najbardziej?
+      - Co powiedział(a)byś swojej przeszłej sobie o tym?
+  - id: one_and_only
+    name: Jedno i jedyne
+    prompt: |
+      Aby uniknąć przytłoczenia, wybierz tylko jedno dzieło sztuki do obejrzenia,
+      lub co najwyżej garstkę. Zanurz się głęboko i spędź z każdym tyle czasu,
+      ile możesz. Ile z tych kart możesz użyć przed pojedynczym dziełem sztuki?
+    follow_ups:
+      - Co zauważyłeś/aś podczas drugiego przejścia?
+      - Które karty ujawniły coś nowego?
+      - Kiedy wiedziałeś/aś, że czas się ruszyć dalej?
+  - id: press_pause
+    name: Naciśnij pauzę
+    prompt: |
+      Zwolnij tempo. Zacznij od patrzenia, zamykając oczy, zrelaksuj się i skoncentruj
+      na oddechu, powoli otwórz oczy, ponownie skup się i daj dziełu sztuki czas,
+      aby się przed Tobą rozwinęło.
+    follow_ups:
+      - Co pojawiło się, gdy zwolniłeś/aś tempo?
+      - Co zauważyłeś/aś najpierw, gdy otworzyłeś/aś oczy?
+      - Jak Twój oddech zmienia sposób, w jaki patrzysz?
+  - id: material
+    name: Materiał
+    prompt: |
+      Z czego wykonane jest dzieło sztuki? Co by było, gdyby było zrobione z czegoś
+      innego? Im bardziej nieprzystające, tym lepiej. Czy zmieniłoby to sposób, w jaki
+      się o nim czujesz?
+    follow_ups:
+      - Jaki byłby najbardziej zaskakujący zamiennik?
+      - Co materiał dodaje do znaczenia?
+      - Co by przetrwało zamianę – a co by zginęło?
+  - id: patch_of_sky
+    name: Ile kolorów na skrawku nieba?
+    prompt: |
+      Zbliż się do obszaru dzieła sztuki. Ile kolorów tam widzisz? Na zewnątrz
+      muzeum spójrz w górę i spróbuj policzyć jak najwięcej kolorów, które możesz
+      zobaczyć na skrawku nieba.
+    follow_ups:
+      - Co przegapiłeś/aś, gdy patrzyłeś/aś na całość?
+      - Jak niebo porównuje się do dzieła sztuki?
+      - Który kolor zaskoczył Cię najbardziej?
+  - id: greening
+    name: Zielenienie
+    prompt: |
+      Jakim rodzajem rośliny byłoby dzieło sztuki? Czy byłoby to drzewo brzoskwiniowe
+      w środku lata, obciążone owocami, czy bardziej jak delikatna paproć? Jakie
+      warunki potrzebuje do wzrostu?
+    follow_ups:
+      - Gdzie by kwitło – a gdzie by więdło?
+      - Czego by potrzebowało, aby zakwitnąć?
+      - Jak metafora botaniczna zmienia sposób, w jaki je widzisz?

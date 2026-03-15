@@ -1,0 +1,424 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Interfața Umană — Retail (Romanian)
+
+id: human_interface_retail
+name: Interfața Umană — Retail
+description: 50 de carduri pentru a schimba modul în care vezi spațiul de retail—de la culoar și coregrafia răsfoirii la cabinele de probă și dansul achiziției.
+domain: human_interface
+cards:
+  - id: hi_rt_aisle_flow
+    name: Fluxul culoarului
+    prompt: |
+      Coridorul canalizează mișcarea. Cărucioarele merg într-o direcție; corpurile navighează. Observați fluxul. Cine cedează? Cine blochează? Coridorul are fizică. Ce reguli guvernează dansul?
+    follow_ups:
+      - Cum modelează culoarul răsfoirea?
+      - Ce ar fi magazinul fără culoare?
+      - Care este relația dintre flux și design?
+  - id: hi_rt_browsing_choreography
+    name: Coregrafia răsfoirii
+    prompt: |
+      Degetele ating țesătura. Ochii scanează rafturile. Răsfoirea are un ritm—pauză, considerare, plecare. Observați coregrafia. Ce face corpul când nu cumpără?
+    follow_ups:
+      - Cum modelează răsfoirea experiența?
+      - Ce ar fi magazinul fără răsfoire?
+      - Care este relația dintre răsfoire și dorință?
+  - id: hi_rt_fitting_room
+    name: Cabina de probă
+    prompt: |
+      Cortina se închide. Cabina de probă este un prag—de la public la privat. Înăuntru, încerci un sine posibil. Observați întoarcerea. Ce spune fața? Cabina de probă este o scenă pentru decizie.
+    follow_ups:
+      - Cum modelează cabina de probă achiziția?
+      - Ce ar fi magazinul fără ea?
+      - Care este relația dintre probă și identitate?
+  - id: hi_rt_dance_of_purchase
+    name: Dansul achiziției
+    prompt: |
+      Apropiere, selecție, transport, plată. Achiziția are pași. Observați secvența. Unde ezită oamenii? Dansul este coregrafiat de magazin. Ce extrage?
+    follow_ups:
+      - Cum modelează dansul rezultatul?
+      - Ce ar fi magazinul fără secvență?
+      - Care este relația dintre dans și dorință?
+  - id: hi_rt_cart_territory
+    name: Teritoriul căruciorului
+    prompt: |
+      Căruciorul extinde corpul. Conține alegeri, blochează trecerea. Observați calea căruciorului. Căruciorul este un teritoriu mobil. Ce revendică?
+    follow_ups:
+      - Cum modelează căruciorul mișcarea?
+      - Ce ar fi magazinul fără cărucioare?
+      - Care este relația dintre cărucior și acumulare?
+  - id: hi_rt_endcap_display
+    name: Display la capăt de culoar
+    prompt: |
+      Capătul culoarului găzduiește un display—impuls, ofertă, sezonier. Capătul de culoar atrage privirea. Observați cine se oprește. Capătul de culoar este o capcană. Ce face?
+    follow_ups:
+      - Cum modelează capătul de culoar răsfoirea?
+      - Ce ar fi culoarul fără el?
+      - Care este relația dintre display și impuls?
+  - id: hi_rt_checkout_line
+    name: Coada la casă
+    prompt: |
+      Se formează coada. Bomboane, reviste, ultime șanse. Casa este un test final. Observați așteptarea. Ce fac oamenii? Coada este un prag între răsfoire și ieșire.
+    follow_ups:
+      - Cum modelează coada achiziția?
+      - Ce ar fi magazinul fără așteptare?
+      - Care este relația dintre coadă și impuls?
+  - id: hi_rt_shelf_height
+    name: Înălțimea raftului
+    prompt: |
+      Nivelul ochilor vinde. Înălțimea raftului este design. Observați ce este unde. Ce este jos? Ce este sus? Înălțimea codifică valoarea. Ce presupune despre corp?
+    follow_ups:
+      - Cum modelează înălțimea raftului răsfoirea?
+      - Ce ar fi magazinul cu înălțime uniformă?
+      - Care este relația dintre înălțime și acces?
+  - id: hi_rt_price_tag
+    name: Eticheta de preț
+    prompt: |
+      Eticheta arată prețul. Uneori ascunsă, uneori proeminentă. Observați plasarea. Eticheta este informație și barieră. Ce face eticheta momentului atingerii?
+    follow_ups:
+      - Cum modelează eticheta decizia?
+      - Ce ar fi articolul fără etichetă?
+      - Care este relația dintre etichetă și valoare?
+  - id: hi_rt_store_entrance
+    name: Intrarea în magazin
+    prompt: |
+      Ușa se deschide. Intrați. Intrarea este un prag. Observați ce vedeți prima dată. Intrarea stabilește tonul. Ce vrea să simți magazinul?
+    follow_ups:
+      - Cum modelează intrarea vizita?
+      - Ce ar fi magazinul fără design?
+      - Care este relația dintre intrare și așteptare?
+  - id: hi_rt_sales_associate
+    name: Agent de vânzări
+    prompt: |
+      "Pot să vă ajut să găsiți ceva?" Oferta este scenarizată. Observați schimbul. Acceptați sau refuzați? Agentul este un ghid și o presiune. Ce face oferta?
+    follow_ups:
+      - Cum modelează agentul răsfoirea?
+      - Ce ar fi magazinul fără ei?
+      - Care este relația dintre ofertă și obligație?
+  - id: hi_rt_basket_versus_cart
+    name: Coș versus cărucior
+    prompt: |
+      Coș pentru câteva articole. Cărucior pentru mai multe. Alegerea prezice achiziția. Observați cine ia ce. Coșul limitează; căruciorul invită. Ce permite alegerea?
+    follow_ups:
+      - Cum modelează coșul vizita?
+      - Ce ar fi magazinul doar cu cărucioare?
+      - Care este relația dintre recipient și acumulare?
+  - id: hi_rt_return_counter
+    name: Casă de retur
+    prompt: |
+      Coada de retur este diferită. Oamenii duc genți, bonuri, regret. Returul este o inversare. Observați schimbul. Ce costă returul—emoțional, social? Casa de retur este un loc al anulării.
+    follow_ups:
+      - Cum modelează returul relația?
+      - Ce ar fi magazinul fără retururi?
+      - Care este relația dintre retur și încredere?
+  - id: hi_rt_dressing_room_limit
+    name: Limită cabină de probă
+    prompt: |
+      "Șase articole maxim." Limita controlează proba. Observați negocierea. Ce se întâmplă când aveți șapte? Limita modelează experiența din cabina de probă. Ce presupune?
+    follow_ups:
+      - Cum modelează limita proba?
+      - Ce ar fi cabina de probă fără ea?
+      - Care este relația dintre limită și furt?
+  - id: hi_rt_impulse_buy
+    name: Cumpărare impulsivă
+    prompt: |
+      Articolul nu era pe listă. A atras atenția. Cumpărarea impulsivă este un moment de predare. Observați când se întâmplă. Ce a declanșat-o? Impulsul este design care întâlnește dorința.
+    follow_ups:
+      - Cum modelează impulsul achiziția?
+      - Ce ar fi magazinul fără impuls?
+      - Care este relația dintre impuls și regret?
+  - id: hi_rt_store_music
+    name: Muzică în magazin
+    prompt: |
+      Cântecul se aude—lent, familiar, conceput. Muzica modelează starea de spirit și ritmul. Observați tempo-ul. Magazin rapid, muzică lentă? Muzica este un design invizibil. Ce face corpului?
+    follow_ups:
+      - Cum modelează muzica vizita?
+      - Ce ar fi magazinul în tăcere?
+      - Care este relația dintre muzică și durată?
+  - id: hi_rt_mannequin
+    name: Mannequin
+    prompt: |
+      Mannequinul poartă hainele. Este un corp ideal, o sugestie. Observați cum se uită oamenii la el. Mannequinul este o oglindă și o fantezie. Ce promite?
+    follow_ups:
+      - Cum modelează mannequinul răsfoirea?
+      - Ce ar fi magazinul fără el?
+      - Care este relația dintre mannequin și dorință?
+  - id: hi_rt_sample_station
+    name: Stație de mostre
+    prompt: |
+      Gustă asta. Încearcă asta. Mostra invită la atingere. Stația creează o pauză. Observați cine se oprește. Mostra este un mic cadou. Ce extrage?
+    follow_ups:
+      - Cum modelează mostra achiziția?
+      - Ce ar fi magazinul fără mostre?
+      - Care este relația dintre mostră și obligație?
+  - id: hi_rt_sale_rack
+    name: Raft cu reduceri
+    prompt: |
+      Raftul cu reduceri este haos—redus, șifonat. Oamenii caută. Raftul cu reduceri este un alt tip de răsfoire. Observați comportamentul. Ce face reducerea atingerii?
+    follow_ups:
+      - Cum modelează raftul cu reduceri vizita?
+      - Ce ar fi magazinul fără el?
+      - Care este relația dintre reducere și valoare?
+  - id: hi_rt_mirror_encounter
+    name: Întâlnire cu oglinda
+    prompt: |
+      Te vezi în oglinda magazinului. Întâlnirea este inevitabilă. Observați privirea. Ce verificați? Oglinda este un test. Magazinul oferă oglinda. Ce vrea?
+    follow_ups:
+      - Cum modelează oglinda proba?
+      - Ce ar fi cabina de probă fără ea?
+      - Care este relația dintre oglindă și sine?
+  - id: hi_rt_cashier_small_talk
+    name: Conversație lejeră la casă
+    prompt: |
+      "Ați găsit tot ce căutați?" întreabă casierul. Conversația lejeră este scenarizată. Observați schimbul. Ce face întrebarea? Casierul este ultimul contact uman. Ce creează conversația?
+    follow_ups:
+      - Cum modelează conversația lejeră ieșirea?
+      - Ce ar fi casa de marcat fără ea?
+      - Care este relația dintre conversație și tranzacție?
+  - id: hi_rt_store_layout
+    name: Amenajarea magazinului
+    prompt: |
+      Traseul este proiectat. Esențiale în spate. Impuls la front. Amenajarea coregrafiază vizita. Observați traseul dumneavoastră. Prin ce a vrut designerul să treceți?
+    follow_ups:
+      - Cum modelează amenajarea răsfoirea?
+      - Ce ar fi magazinul cu o amenajare aleatorie?
+      - Care este relația dintre amenajare și expunere?
+  - id: hi_rt_touch_decide
+    name: Atingerea decide
+    prompt: |
+      Degetele ating țesătura, suprafața. Atingerea decide. Observați momentul. Ce învață mâna pe care ochiul nu o poate vedea? Atingerea este un prag. Ce necesită?
+    follow_ups:
+      - Cum modelează atingerea decizia?
+      - Ce ar fi magazinul fără atingere?
+      - Care este relația dintre atingere și angajament?
+  - id: hi_rt_receipt_handoff
+    name: Predarea bonului
+    prompt: |
+      Bonul este oferit—în pungă sau separat. Unii îl iau; alții refuză. Bonul este dovadă și înregistrare. Observați schimbul. Ce face bonul pentru tranzacție?
+    follow_ups:
+      - Cum modelează bonul ieșirea?
+      - Ce ar fi casa de marcat fără el?
+      - Care este relația dintre bon și încheiere?
+  - id: hi_rt_store_exit
+    name: Ieșirea din magazin
+    prompt: |
+      Ușa se deschide. Plecați cu o pungă—sau cu mâinile goale. Ieșirea este un prag. Observați sentimentul. Ce extrage ieșirea? Ieșirea este sfârșitul dansului. Ce rămâne?
+    follow_ups:
+      - Cum modelează ieșirea vizita?
+      - Ce ar fi magazinul fără ușă?
+      - Care este relația dintre ieșire și satisfacție?
+  - id: hi_rt_loyalty_card_ask
+    name: Întrebarea despre cardul de fidelitate
+    prompt: |
+      "Aveți cardul nostru de recompense?" Întrebarea este de rutină. Observați răspunsul. Da, nu, înscriere. Cardul de fidelitate extinde relația. Ce creează întrebarea?
+    follow_ups:
+      - Cum modelează cardul de fidelitate tranzacția?
+      - Ce ar fi casa de marcat fără el?
+      - Care este relația dintre card și date?
+  - id: hi_rt_abandoned_cart
+    name: Cărucior abandonat
+    prompt: |
+      Un cărucior stă în culoar—plin, nesupravegheat. Căruciorul este abandonat. Observați conținutul. Ce au luat în considerare? Abandonarea este un moment de refuz. Ce dezvăluie?
+    follow_ups:
+      - Cum modelează căruciorul abandonat magazinul?
+      - Ce ar învăța magazinul din el?
+      - Care este relația dintre abandon și dorință?
+  - id: hi_rt_fitting_room_opinion
+    name: Opinie din cabina de probă
+    prompt: |
+      "Cum arată?" întreabă cineva din afara perdelei. Opinia este căutată. Cabina de probă devine socială. Observați schimbul. Ce face opinia?
+    follow_ups:
+      - Cum modelează opinia decizia?
+      - Ce ar fi proba singură?
+      - Care este relația dintre opinie și achiziție?
+  - id: hi_rt_store_scent
+    name: Mirosul magazinului
+    prompt: |
+      Magazinul are un miros—parfum, piele, curat. Mirosul este proiectat. Intră înainte să-l observi. Observați când îl simțiți. Ce face mirosul corpului?
+    follow_ups:
+      - Cum modelează mirosul vizita?
+      - Ce ar fi magazinul fără el?
+      - Care este relația dintre miros și memorie?
+  - id: hi_rt_compare_prices
+    name: Compară prețurile
+    prompt: |
+      Telefonul afară. Scanare. Verificarea prețului este cercetare. Observați momentul. Ce dezvăluie telefonul? Comparația are loc în culoar. Ce face deciziei?
+    follow_ups:
+      - Cum modelează comparația achiziția?
+      - Ce ar fi magazinul fără telefoane?
+      - Care este relația dintre comparație și putere?
+  - id: hi_rt_window_display
+    name: Vitrina
+    prompt: |
+      Vitrina dă spre stradă. Mannequins, recuzită, o poveste. Display-ul oprește mersul. Observați ce atrage privirea. Vitrina este o invitație. Ce promite?
+    follow_ups:
+      - Cum modelează vitrina intrarea?
+      - Ce ar fi magazinul fără ea?
+      - Care este relația dintre display și dorință?
+  - id: hi_rt_size_search
+    name: Căutare mărime
+    prompt: |
+      Degetele răsfoiesc umerașele. Căutând mărimea. Căutarea are un ritm. Observați frustrarea sau ușurarea. Mărimea este o poartă. Ce necesită căutarea?
+    follow_ups:
+      - Cum modelează căutarea mărimii răsfoirea?
+      - Ce ar fi magazinul cu toate mărimile vizibile?
+      - Care este relația dintre mărime și corp?
+  - id: hi_rt_payment_choice
+    name: Alegerea plății
+    prompt: |
+      Card, numerar, telefon. Alegerea plății este momentul tranzacției. Observați metoda. Alegerea este obicei și identitate. Ce comunică metoda de plată?
+    follow_ups:
+      - Cum modelează plata ieșirea?
+      - Ce ar fi magazinul cu o singură metodă?
+      - Care este relația dintre plată și viteză?
+  - id: hi_rt_store_regular
+    name: Client obișnuit al magazinului
+    prompt: |
+      Clientul obișnuit cunoaște amenajarea. Se mișcă cu scop. Agentul aprobă din cap. Observați clientul obișnuit. Ce știe el ce nu știe noul venit? Clientul obișnuit are o relație cu spațiul.
+    follow_ups:
+      - Cum modelează clientul obișnuit magazinul?
+      - Ce ar fi magazinul fără clienți obișnuiți?
+      - Care este relația dintre obișnuit și loialitate?
+  - id: hi_rt_bag_handoff
+    name: Predarea genții
+    prompt: |
+      Genta este predată—plină, branduită. Predarea finalizează tranzacția. Observați schimbul. Ce face geanta pentru ieșire? Geanta este dovadă și povară.
+    follow_ups:
+      - Cum modelează geanta ieșirea?
+      - Ce ar fi achiziția fără ea?
+      - Care este relația dintre geantă și identitate?
+  - id: hi_rt_fitting_room_overflow
+    name: Suplimentar cabină de probă
+    prompt: |
+      Prea multe articole. Agentul preia suplimentarul. "Le țin eu." Suplimentarul este încredere. Observați schimbul. Ce ține agentul? Suplimentarul extinde proba. Ce permite?
+    follow_ups:
+      - Cum modelează suplimentarul proba?
+      - Ce ar fi cabina de probă fără el?
+      - Care este relația dintre suplimentar și încredere?
+  - id: hi_rt_store_lighting
+    name: Iluminatul magazinului
+    prompt: |
+      Lumina este proiectată—flattering, luminoasă, caldă. Iluminatul modelează cum arată lucrurile. Observați oglinda în acea lumină. Ce face iluminatul feței, țesăturii?
+    follow_ups:
+      - Cum modelează iluminatul achiziția?
+      - Ce ar fi magazinul în lumină dură?
+      - Care este relația dintre lumină și adevăr?
+  - id: hi_rt_aisle_block
+    name: Blocaj pe culoar
+    prompt: |
+      Cineva stă pe culoar. Trebuie să treceți. Blocajul este inconștient sau deliberat. Observați negocierea. "Scuzați-mă." Blocajul este o mică frecare. Ce necesită?
+    follow_ups:
+      - Cum modelează blocajul fluxul?
+      - Ce ar fi magazinul cu culoare mai largi?
+      - Care este relația dintre blocaj și politețe?
+  - id: hi_rt_clearance_section
+    name: Secțiune de lichidare
+    prompt: |
+      Secțiunea de lichidare este în spate, în colț. Sezonul trecut, ultima șansă. Secțiunea are o energie diferită. Observați răsfoirea. Ce face reducerea atingerii, considerației?
+    follow_ups:
+      - Cum modelează secțiunea de lichidare vizita?
+      - Ce ar fi magazinul fără ea?
+      - Care este relația dintre lichidare și valoare?
+  - id: hi_rt_store_map
+    name: Harta magazinului
+    prompt: |
+      "Unde este X?" Harta sau agentul răspund. Magazinul are geografie. Observați dezorientarea. Ce oferă harta? Harta este orientare. Ce presupune?
+    follow_ups:
+      - Cum modelează harta vizita?
+      - Ce ar fi magazinul fără ea?
+      - Care este relația dintre hartă și fluență?
+  - id: hi_rt_try_on_stack
+    name: Stivă probe
+    prompt: |
+      Agentul returnează articolele de probă. Sunt împăturite, agățate. Stiva se întoarce pe podea. Observați munca. Cine a atins astea? Stiva de probe este rezultatul multor "poate".
+    follow_ups:
+      - Cum modelează stiva podeaua?
+      - Ce ar fi cabina de probă fără ea?
+      - Care este relația dintre stivă și muncă?
+  - id: hi_rt_store_hours
+    name: Programul magazinului
+    prompt: |
+      Semnul arată când se deschide magazinul, când se închide. Programul este o graniță. Observați mulțimea înainte de deschidere. Programul structurează accesul. Ce presupune despre client?
+    follow_ups:
+      - Cum modelează programul vizita?
+      - Ce ar fi magazinul cu acces 24 de ore?
+      - Care este relația dintre program și disponibilitate?
+  - id: hi_rt_shopping_list
+    name: Lista de cumpărături
+    prompt: |
+      Telefon sau hârtie. Lista ghidează vizita. Observați cine are una. Lista este intenție. Rezistă impulsului—sau nu. Ce face lista răsfoirii?
+    follow_ups:
+      - Cum modelează lista achiziția?
+      - Ce ar fi vizita fără ea?
+      - Care este relația dintre listă și control?
+  - id: hi_rt_store_emptiness
+    name: Vidul magazinului
+    prompt: |
+      Ore libere, zi lentă. Magazinul este gol. Vidul schimbă senzația. Observați spațiul. Ce dezvăluie vidul? Magazinul gol este un alt tip de scenă.
+    follow_ups:
+      - Cum modelează vidul răsfoirea?
+      - Ce ar fi magazinul dacă ar fi mereu gol?
+      - Care este relația dintre gol și confort?
+  - id: hi_rt_fitting_room_curtain
+    name: Perdeaua cabinei de probă
+    prompt: |
+      Perdeaua se închide. Intimitatea este parțială—goluri, sunete. Perdeaua este un prag. Observați granița. Ce protejează perdeaua? Ce nu reușește să protejeze?
+    follow_ups:
+      - Cum modelează perdeaua proba?
+      - Ce ar fi cabina de probă cu ușă?
+      - Care este relația dintre perdeaua și intimitate?
+  - id: hi_rt_store_aroma
+    name: Aroma magazinului
+    prompt: |
+      Brutărie, cafea, parfum—magazinul are un miros. Aroma este primul contact. Pregătește vizita. Observați când o simțiți. Ce face aroma înainte să cumpărați?
+    follow_ups:
+      - Cum modelează aroma vizita?
+      - Ce ar fi magazinul fără ea?
+      - Care este relația dintre aromă și dorință?
+  - id: hi_rt_purchase_regret
+    name: Regretul achiziției
+    prompt: |
+      Geanta în mână. Îndoiala se strecoară. Regretul poate veni mai târziu. Observați fața care părăsește magazinul. Ce înseamnă achiziția? Regretul este umbra dansului. Ce îl creează?
+    follow_ups:
+      - Cum modelează regretul vizita următoare?
+      - Ce ar fi achiziția fără regret?
+      - Care este relația dintre regret și dorință?
+  - id: hi_rt_store_thank_you
+    name: Mulțumirea magazinului
+    prompt: |
+      "Vă mulțumim că ați cumpărat de la noi." Fraza încheie tranzacția. Este scenarizată. Observați schimbul. Ce face mulțumirea? Fraza este un mic ritual. Ce creează?
+    follow_ups:
+      - Cum modelează mulțumirea ieșirea?
+      - Ce ar fi casa de marcat fără ea?
+      - Care este relația dintre mulțumire și încheiere?
+  - id: hi_rt_store_entrance_sensor
+    name: Senzor intrare magazin
+    prompt: |
+      Ușa se deschide automat. Senzorul detectează apropierea. Intrarea este coregrafiată. Observați pragul. Ce face ușa automată sosirii? Senzorul creează o tranziție fără cusur.
+    follow_ups:
+      - Cum modelează senzorul intrarea?
+      - Ce ar fi magazinul cu o ușă manuală?
+      - Care este relația dintre senzor și primire?
+  - id: hi_rt_price_match
+    name: Potrivirea prețurilor
+    prompt: |
+      "Vom potrivi prețurile concurenților." Oferta este o promisiune. Observați când cineva o folosește. Potrivirea prețurilor este o negociere. Ce necesită de la client? Potrivirea creează încredere—sau suspiciune.
+    follow_ups:
+      - Cum modelează potrivirea prețurilor achiziția?
+      - Ce ar fi magazinul fără ea?
+      - Care este relația dintre potrivire și loialitate?
+  - id: hi_rt_fitting_room_number
+    name: Număr cabină de probă
+    prompt: |
+      "Câte?" întreabă agentul. Numărul limitează proba. Observați negocierea. Ce se întâmplă când aveți mai multe? Numărul este un control. Ce presupune despre client?
+    follow_ups:
+      - Cum modelează numărul proba?
+      - Ce ar fi cabina de probă fără limite?
+      - Care este relația dintre număr și încredere?
+  - id: hi_rt_gift_receipt
+    name: Bon cadou
+    prompt: |
+      "Doriți un bon cadou?" Oferta separă prețul de cadou. Bonul cadou permite returul fără a dezvălui costul. Observați alegerea. Ce protejează bonul cadou?
+    follow_ups:
+      - Cum modelează bonul cadou achiziția?
+      - Ce ar fi cadoul fără el?
+      - Care este relația dintre bon și discreție?

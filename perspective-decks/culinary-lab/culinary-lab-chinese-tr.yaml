@@ -1,0 +1,481 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Mutfak Laboratuvarı — Çin (Turkish)
+
+id: culinary_lab_chinese
+name: Mutfak Laboratuvarı — Çin
+description: Çin yemeklerini deneyimleme şeklinizi değiştirecek 50 kart — wok hei'nin kimyasından soya arkeolojisine, yuvarlak masa dansından ziyafet anlatısına kadar.
+domain: culinary_lab
+cards:
+  - id: chn_wok_hei
+    name: Wok Hei
+    prompt: |
+      Wok hei—wok'un nefesi—aşırı ısı ve hızdan gelen yakalanması zor dumandır. Tam bir dumanlılık değil; bir dönüşümdür.
+      Onu yakalayabilir misin? Ondan yoksun bir sote neye benzerdi?
+    follow_ups:
+      - Hei yemeği nasıl şekillendirir?
+      - Ne onu yaratır? Ne onu yok eder?
+      - Isı ve acele arasındaki ilişki nedir?
+  - id: chn_round_table
+    name: Yuvarlak Masa
+    prompt: |
+      Çin ziyafet masası yuvarlaktır—ortada döner tepsi. Yiyecekler döner. Herkes ulaşır. Masa bir koreografidir. Kim çevirir? Kim bekler?
+      Söylenmemiş kurallar nelerdir?
+    follow_ups:
+      - Dikdörtgen bir masa ne anlama gelirdi?
+      - Yuvarlak şekil yemeği nasıl şekillendirir?
+      - Merkez ve kenar arasındaki ilişki nedir?
+  - id: chn_soy_archeology
+    name: Soya Arkeolojisi
+    prompt: |
+      Soya sosu—fermente, yaşlandırılmış, bölgesel. Açık, koyu, mantarlı, çift-siyah.
+      Bir yerden geldi. Zaman aldı. Şişeyi izle. Ne yolculuk yaptı? Endüstriyel soya neyi feda ederdi?
+    follow_ups:
+      - Köken, dökmeyi nasıl şekillendirir?
+      - Soya olmadan yemek neye benzerdi?
+      - Fermentasyon ve umami arasındaki ilişki nedir?
+  - id: chn_chopstick_grip
+    name: Çubuk Tutuşu
+    prompt: |
+      Çubuklar eli uzatır. Pirinç, kaygan erişte, mantı—her biri
+      farklı teknik gerektirir. Tutuşunu fark et. Çatal gerektirir?
+      Neye izin verir?
+    follow_ups:
+      - Çatal neyi değiştirirdi?
+      - Çubuk, lokmayı nasıl şekillendirir?
+      - Araç ve hız arasındaki ilişki nedir?
+  - id: chn_dumpling_seam
+    name: Mantı Dikişi
+    prompt: |
+      Mantı pileleri—katlama, mühürleme. Jiaozi, shumai, xiaolongbao—her birinin
+      şekli vardır. Dikiş tutar veya salar. Birini incele. Bir patlama ne anlama gelirdi?
+      Pile neyi korur?
+    follow_ups:
+      - Kat, iç harcı nasıl şekillendirir?
+      - Açık bir mantı ne kaybederdi?
+      - Mühür ve çorba arasındaki ilişki nedir?
+  - id: chn_tea_pour
+    name: Çay Döküşü
+    prompt: |
+      Çin çayı—dökülür, doldurulur, paylaşılır. Demlik dolaşır. Boş fincanlar
+      sorulmadan doldurulur. Döküş servis ve bakımdır. Ritmine dikkat et.
+      Çaysız yemek neye benzerdi?
+    follow_ups:
+      - Çay, hızı nasıl şekillendirir?
+      - Döküş neyi iletir?
+      - Fincan ve masa arasındaki ilişki nedir?
+  - id: chn_bone_plate
+    name: Kemik Tabağı
+    prompt: |
+      Kemikler için küçük bir tabak—atılmış kabuklar, tavuk kemikleri, karides kabukları.
+      Tabak yenmeyenleri toplar. Sofra düzeninin bir parçasıdır.
+      Kemik tabağı neye izin verir? Ondan yoksun ne olurdu?
+    follow_ups:
+      - Tabak, yemeği nasıl şekillendirir?
+      - Masanın görünümü onsuz neye benzerdi?
+      - Atık ve haysiyet arasındaki ilişki nedir?
+  - id: chn_soup_spoon
+    name: Çorba Kaşığı
+    prompt: |
+      Çin çorba kaşığı—geniş, sığ, seramik. Suyunu ve katıları tutar.
+      Kaşık ağza farklı oturur. Yudumu fark et. Şekil neyi mümkün kılar?
+    follow_ups:
+      - Yuvarlak bir kaşık neyi değiştirirdi?
+      - Kaşık, yudumu nasıl şekillendirir?
+      - Şekil ve işlev arasındaki ilişki nedir?
+  - id: chn_steam_basket
+    name: Buhar Sepeti
+    prompt: |
+      Dim sum bambu sepetlerde gelir—üst üste, katmanlı. Buhar yükselir.
+      Sepet şekli tutar. Bambuyu düşün. Metal neyi farklı yapardı?
+      Bambu ne ekler?
+    follow_ups:
+      - Sepet, mantıyı nasıl şekillendirir?
+      - Bir tabak ne kaybederdi?
+      - Bambu ve buhar arasındaki ilişki nedir?
+  - id: chn_maillard_wok
+    name: Maillard Wok
+    prompt: |
+      Wok, ev ocaklarının ulaşamayacağı sıcaklıklara ulaşır. Kızarma anında olur.
+      Proteinler saniyeler içinde kararır. Kimyayı düşün. Daha düşük
+      ısı neyi feda ederdi? Wok ne gerektirir?
+    follow_ups:
+      - Isı, lezzeti nasıl şekillendirir?
+      - Elektrikli neyi farklı yapardı?
+      - Alev ve kabuk arasındaki ilişki nedir?
+  - id: chn_glutinous_texture
+    name: Yapışkan Doku
+    prompt: |
+      Yapışkan pirinç—yapışkan, çiğnenebilir—farklı bir kimyaya sahiptir.
+      Zongzi, lo mai gai, tatlılar için kullanılır. Dokuyu fark et. Uzun taneli pirinçten nasıl farklıdır?
+      Yapışkanlık neyi mümkün kılar?
+    follow_ups:
+      - Normal pirinç ne yapardı?
+      - Doku, yemeği nasıl şekillendirir?
+      - Yapışkanlık ve sarmak arasındaki ilişki nedir?
+  - id: chn_century_egg
+    name: Yüzyıl Yumurtası
+    prompt: |
+      Yüzyıl yumurtası—korunmuş, dönüştürülmüş. Sarısı koyu, beyazı yarı saydam.
+      Kimya eskidir. Korunmayı düşün. Zaman ne yapar?
+      Tazelik ne anlama gelirdi?
+    follow_ups:
+      - Koruma, lezzeti nasıl şekillendirir?
+      - Yumurta taze olsaydı ne olurdu?
+      - Zaman ve dönüşüm arasındaki ilişki nedir?
+  - id: chn_oyster_sauce
+    name: İstiridye Sosu
+    prompt: |
+      İstiridye sosu—umami, koyu, Kanton. Redüksiyon ve ekstraksiyondur.
+      İstiridye özünü verir. Lezzeti izle. Ondan yoksun sote neye benzerdi?
+    follow_ups:
+      - Sos, yemeği nasıl şekillendirir?
+      - İstiridye ve sebze arasındaki ilişki nedir?
+      - Yerine soya ne yapardı?
+  - id: chn_ordering_ritual
+    name: Sipariş Ritüeli
+    prompt: |
+      Çin restoranında sipariş vermek—ev sahibi seçer veya masa müzakere eder.
+      Denge: et, sebze, çorba, pirinç. Sipariş bir kompozisyondur. Kimin
+      karar verdiğini fark et. Kurallar nelerdir?
+    follow_ups:
+      - Sipariş, yemeği nasıl şekillendirir?
+      - Herkes kendisi için ne sipariş ederdi?
+      - Seçim ve topluluk arasındaki ilişki nedir?
+  - id: chn_crispy_skin
+    name: Çıtır Deri
+    prompt: |
+      Pekin ördeği derisi—çıtır, parlak. Veya Kanton usulü kızarmış domuz çıtırtısı.
+      Deri bilinçli yapılmıştır. Isı, hava, şeker. Mimariyi düşün.
+      Sulu deri ne anlama gelirdi?
+    follow_ups:
+      - Çıtırlık, lokmayı nasıl şekillendirir?
+      - Çıtırtıyı ne yaratır?
+      - Deri ve et arasındaki ilişki nedir?
+  - id: chn_noodle_slip
+    name: Erişte Kayganlığı
+    prompt: |
+      Çin erişteleri—buğday, pirinç, elde çekilmiş—dokuda farklılık gösterir. Bazıları kayar;
+      bazıları çiğnenir. Eriştenin çubuklara sürtünmesi. Direnci fark et.
+      Kayganlık ne ekler?
+    follow_ups:
+      - Doku, yemeyi nasıl şekillendirir?
+      - Lapa gibi bir erişte ne kaybederdi?
+      - Kayganlık ve tatmin arasındaki ilişki nedir?
+  - id: chn_bok_choy_wilt
+    name: Bok Choy Solması
+    prompt: |
+      Wok'ta Bok Choy—saniyeler içinde. Solar ama yapısını korur. Yeşillik yumuşar.
+      Dönüşümü düşün. Çiğ ne anlama gelirdi? Fazla pişmiş ne kaybederdi?
+    follow_ups:
+      - Solma, sebzeyi nasıl şekillendirir?
+      - Isı ve yeşillik arasındaki ilişki nedir?
+      - Ne zaman pişmiş olur?
+  - id: chn_five_spice
+    name: Beş Baharat
+    prompt: |
+      Beş baharat tozu—yıldız anasonu, karanfil, tarçın, Sichuan biberi, rezene.
+      Tarihi olan bir karışımdır. Her baharatın bir rotası vardır. Birini izle.
+      Ne yolculuk yaptı?
+    follow_ups:
+      - Ondan yoksun yemek neye benzerdi?
+      - Karışım kimliği nasıl oluşturur?
+      - Baharat ve koruma arasındaki ilişki nedir?
+  - id: chn_banquet_progression
+    name: Ziyafet Akışı
+    prompt: |
+      Çin ziyafetinin bir yay oku vardır—önce soğuk mezeler, sonra sıcaklar, çorba, pirinç, tatlı.
+      Akış bir anlatıdır. Ritme dikkat et. Farklı bir sıra ne yapardı?
+    follow_ups:
+      - Sıra, yemeği nasıl şekillendirir?
+      - İlk ve son arasındaki ilişki nedir?
+      - Hikaye ne zaman zirveye ulaşır?
+  - id: chn_white_rice_center
+    name: Beyaz Pirinç Merkezi
+    prompt: |
+      Beyaz pirinç—sade, buğulanmış—yemeği demirler. Tuvaldir. Zengin yemekler
+      denge için pirince ihtiyaç duyar. Ona uzandığında fark et. Sade olandan
+      yoksun yemek neye benzerdi?
+    follow_ups:
+      - Pirinç, damak tadını nasıl şekillendirir?
+      - Kızarmış pirinç ne yapardı?
+      - Nötr ve lezzet arasındaki ilişki nedir?
+  - id: chn_szechuan_numb
+    name: Sichuan Uyuşturucu Etkisi
+    prompt: |
+      Sichuan biberi—ma la—uyuşturucu, karıncalandırıcı. Isı değil; histir.
+      Ağız vızıldar. Hisleri düşün. Uyuşturan şeyden yoksun yemek neye benzerdi?
+    follow_ups:
+      - Ma la, deneyimi nasıl şekillendirir?
+      - Uyuşturma ve ısı arasındaki ilişki nedir?
+      - Neden onları eşleştirirsin?
+  - id: chn_dark_soy
+    name: Koyu Soya
+    prompt: |
+      Koyu soya—daha kalın, daha tatlı, renk için. Pirinci lekeleyor, etin üzerine parlaklık veriyor.
+      Tuz için değil; ton içindir. Görseli düşün. Koyu ne ekler?
+    follow_ups:
+      - Açık soya ne yapardı?
+      - Renk, beklentiyi nasıl şekillendirir?
+      - Koyu ve karamel arasındaki ilişki nedir?
+  - id: chn_hot_plate
+    name: Sıcak Tabak
+    prompt: |
+      Cızırtılı tabaklar—biftek, kalamar—hıslayarak gelir. Demir tabak pişirmeye devam eder.
+      Ses tiyatrodur. Cızırtıdan yoksun yemek neye benzerdi? Sıcak tabak
+      pişirmeyi nasıl uzatır?
+    follow_ups:
+      - Cızırtı, deneyimi nasıl şekillendirir?
+      - Soğuk bir tabak ne anlama gelirdi?
+      - Ses ve ısı arasındaki ilişki nedir?
+  - id: chn_congee_soft
+    name: Congee Yumuşak
+    prompt: |
+      Congee—pirinç lapası—yumuşak, rahatlatıcıdır. Uzun süre pişmiş pirinç parçalanır.
+      Doku teslimiyettir. Dönüşümü düşün. Burada al dente ne anlama gelirdi?
+    follow_ups:
+      - Yumuşaklık, yemeği nasıl şekillendirir?
+      - Kalın congee ne yapardı?
+      - Su ve pirinç arasındaki ilişki nedir?
+  - id: chn_glass_noodle
+    name: Cam Erişte
+    prompt: |
+      Cam erişteler—maş fasulyesi nişastası—şeffaf, kaygandır. Lezzeti emerler.
+      Dokuyu fark et. Buğday erişteleri ne yapardı? Şeffaflık neden önemlidir?
+    follow_ups:
+      - Erişte, yemeği nasıl şekillendirir?
+      - Berrak ve emici arasındaki ilişki nedir?
+      - Neden cam?
+  - id: chn_xlb_burst
+    name: XLB Patlaması
+    prompt: |
+      Xiaolongbao—sulu mantı—içinde suyu tutar. İlk lokma yakabilir veya patlayabilir.
+      Teknik: dişle, yudumla, ye. Riski düşün. Soğuk bir xlb ne anlama gelirdi?
+    follow_ups:
+      - Su, deneyimi nasıl şekillendirir?
+      - Patlamadan yoksun ne kaybederdin?
+      - Sıcaklık ve tehlike arasındaki ilişki nedir?
+  - id: chn_tea_smell
+    name: Çay Kokusu
+    prompt: |
+      Oolong, yasemin, pu-erh—her çayın farklı bir burnu vardır. Yudumlamadan önce kokla.
+      Aroma deneyimin yarısıdır. Koku ne vaat eder? Ne sunar?
+    follow_ups:
+      - Koku, yudumu nasıl şekillendirir?
+      - Aroması olmadan çay neye benzerdi?
+      - Demleme ve koku arasındaki ilişki nedir?
+  - id: chn_crab_crack
+    name: Yengeç Kırma
+    prompt: |
+      Çin ziyafetinde yengeç—kırıcılar sağlanır. Kırma ses ve emektir.
+      Et çıkarılır. Koreografiyi düşün. Önceden kırılmış ne anlama gelirdi?
+    follow_ups:
+      - Kırma, yemeği nasıl şekillendirir?
+      - Emekten yoksun ne kaybederdin?
+      - Çaba ve ödül arasındaki ilişki nedir?
+  - id: chn_turn_table
+    name: Döner Tabla
+    prompt: |
+      Döner tepsi—kim çevirir? Ne zaman? İstediğin yemek masanın diğer ucunda olabilir.
+      Dönüş görgü kurallarıdır. Dansta fark et. Kurallar nelerdir?
+      Ne zaman beklersin?
+    follow_ups:
+      - Dönüş, yemeği nasıl şekillendirir?
+      - Sabit yemekler ne anlama gelirdi?
+      - Dönüş ve paylaşım arasındaki ilişki nedir?
+  - id: chn_ginger_slice
+    name: Zencefil Dilimi
+    prompt: |
+      Zencefil deniz ürünleriyle—ince dilimler, bazen kızartılmış. Balık kokusunu giderir.
+      Zencefil hem garnitür hem de fonksiyondur. Rolünü düşün. Ondan yoksun balık neye benzerdi?
+    follow_ups:
+      - Zencefil, damak tadını nasıl şekillendirir?
+      - Dilim ve koku arasındaki ilişki nedir?
+      - Neden deniz ürünleriyle zencefil?
+  - id: chn_hoisin_dip
+    name: Hoisin Sosu
+    prompt: |
+      Pekin ördeğiyle Hoisin—dipsos ritüeldir. Pankek, ördek, taze soğan, sos.
+      Her öğenin bir yeri vardır. Kompozisyonu düşün. Eksik bir ne yapardı?
+    follow_ups:
+      - Dipsos, lokmayı nasıl şekillendirir?
+      - Başka bir sos ne yapardı?
+      - Tatlı ve ördek arasındaki ilişki nedir?
+  - id: chn_leaf_wrap
+    name: Yaprak Sarması
+    prompt: |
+      marul sarması—kıyma, otlar, sos, bir yaprağa sarılmış. Yaprak
+      kap ve dokudur. Sarma el işidir. Mimariyi düşün.
+      Tortilla ne yapardı?
+    follow_ups:
+      - Yaprak, lokmayı nasıl şekillendirir?
+      - Bir tabak ne yapardı?
+      - Sarma ve el arasındaki ilişki nedir?
+  - id: chn_fish_whole
+    name: Bütün Balık
+    prompt: |
+      Bütün balık—buharda, başı ve kuyruğu üzerinde. Balık tamamlanmış olarak sunulur.
+      Kafanın anlamı vardır. Sunumu düşün. Fileto neyi feda ederdi?
+    follow_ups:
+      - Bütünlük, yemeği nasıl şekillendirir?
+      - Kafa ne anlama gelir?
+      - Bütün ve saygı arasındaki ilişki nedir?
+  - id: chn_scallion_oil
+    name: Taze Soğan Yağı
+    prompt: |
+      Taze soğan yağı—kıyılmış taze soğan ve zencefil üzerine cızırdayan yağ.
+      Bir sos, bir bitiriştir. Yağ aromatikleri taşır. Ne zaman uygulandığını fark et.
+      Cızırtı ne ekler?
+    follow_ups:
+      - Ondan yoksun yemek neye benzerdi?
+      - Yağ, bitirişi nasıl şekillendirir?
+      - Yağ ve aroma arasındaki ilişki nedir?
+  - id: chn_black_vinegar
+    name: Kara Sirke
+    prompt: |
+      Chinkiang sirkesi—koyu, karmaşık, hafif tatlı. Zenginliği keser.
+      Birkaç damla mantıyı değiştirir. Asidi düşün. Pirinç sirkesi ne yapardı?
+      Koyu ne ekler?
+    follow_ups:
+      - Sirke, lokmayı nasıl şekillendirir?
+      - Mantı ondan yoksun neye benzerdi?
+      - Sirke ve denge arasındaki ilişki nedir?
+  - id: chn_sticky_rice
+    name: Yapışkan Pirinç
+    prompt: |
+      Lotus yaprağında yapışkan pirinç—lo mai gai. Yaprak lezzet katıyor. Pirinç
+      sarılır, buğulanır. Aç. Kokuyu fark et. Folyo ne yapardı?
+    follow_ups:
+      - Yaprak, pirinci nasıl şekillendirir?
+      - Sarma ve buhar arasındaki ilişki nedir?
+      - Açılmamış ne anlama gelirdi?
+  - id: chn_mooncake_mold
+    name: Ay Kurabiyesi Kalıbı
+    prompt: |
+      Ay kurabiyeleri—karakterler, desenlerle damgalanmış. Kalıp tarihtir.
+      Tasarım bir anlam ifade eder. Baskıyı düşün. Sade bir kurabiye ne kaybederdi?
+    follow_ups:
+      - Kalıp, kurabiyeyi nasıl şekillendirir?
+      - Desen ne anlama gelir?
+      - Baskı ve gelenek arasındaki ilişki nedir?
+  - id: chn_egg_tart
+    name: Yumurta Tartı
+    prompt: |
+      Yumurta tartı—Portekiz etkisi, Hong Kong inceliği. Muhallebi,
+      hamur işi. Dokuyu düşün. Kat kat, ipeksi. Farklı bir
+      kabuk ne yapardı?
+    follow_ups:
+      - Tart, yemeğin sonunu nasıl şekillendirir?
+      - Muhallebi ve çıtır arasındaki ilişki nedir?
+      - Neden yumurta tartı ile kapatılır?
+  - id: chn_hand_pull
+    name: El Çekme
+    prompt: |
+      Elde çekilmiş erişteler—aşçı gerer, katlar, çeker. Teller çoğalır.
+      Performanstır. İzle. Makine erişteleri neyi feda ederdi?
+    follow_ups:
+      - Çekme, erişteleri nasıl şekillendirir?
+      - El ve doku arasındaki ilişki nedir?
+      - Tekdüze erişteler ne anlama gelirdi?
+  - id: chn_bird_nest
+    name: Kuş Yuvası
+    prompt: |
+      Kuş yuvası—çorbadaki kırlangıç yuvası değil, ama taro yuvası veya çıtır
+      erişte yuvası sote tutar. Yuva mimaridir. Formu düşün.
+      Yuva ne ekler?
+    follow_ups:
+      - Yuva, yemeği nasıl şekillendirir?
+      - Bir tabak ne yapardı?
+      - Kap ve içerik arasındaki ilişki nedir?
+  - id: chn_red_envelope
+    name: Kırmızı Zarf
+    prompt: |
+      Ziyafetlerde, kırmızı zarflar hediyelerle birlikte gelebilir—mutfak için para, ev sahipleri için.
+      Zarf ritüeldir. Değişimi düşün. Kırmızı ne anlama gelir?
+    follow_ups:
+      - Zarf, olayı nasıl şekillendirir?
+      - Zarf olmasa ne olurdu?
+      - Hediye ve yüz arasındaki ilişki nedir?
+  - id: chn_toasting_ritual
+    name: Kadeh Kaldırma Ritüeli
+    prompt: |
+      Gan bei—dipsiz—veya rahat yudumlar. Kadeh kaldırma ziyafetini yapılandırır.
+      Kimi kime kaldırır? Ne zaman? Ritüel sosyaldir. Koreografiyi fark et.
+      Kadehsiz yemek neye benzerdi?
+    follow_ups:
+      - Kadeh kaldırma, yemeği nasıl şekillendirir?
+      - Kadeh kaldırma ve hiyerarşi arasındaki ilişki nedir?
+      - Ne zaman içersin?
+  - id: chn_preserved_veg
+    name: Konserve Sebze
+    prompt: |
+      Konserve hardal, turşu, fermente lahana—bunlar derinlik katar.
+      Bunlar eski muhafazadır. Dönüşümü düşün. Taze sebze ne yapardı?
+    follow_ups:
+      - Muhafaza, yemeği nasıl şekillendirir?
+      - Turşu ve umami arasındaki ilişki nedir?
+      - Neden konserve?
+  - id: chn_sweet_sour
+    name: Tatlı Ekşi
+    prompt: |
+      Tatlı ve ekşi—denge bilinçlidir. Şeker, sirke, bazen
+      ketçap. Sos cesurdur. Kombinasyonu düşün. Birinden biri diğerinden yoksun ne anlama gelirdi?
+    follow_ups:
+      - Denge, yemeği nasıl şekillendirir?
+      - Tatlı ve ekşi arasındaki ilişki nedir?
+      - Neden bu eşleşme?
+  - id: chn_wonton_soup
+    name: Wonton Çorbası
+    prompt: |
+      Berrak suda wonton—çorba basittir. Wonton yüzer. Çorba temizdir.
+      Kızarmış wonton ile karşıtlığı düşün. Çorba ne ekler?
+    follow_ups:
+      - Çorba, wonton'u nasıl şekillendirir?
+      - Kızarmış ne anlama gelirdi?
+      - Berrak ve zengin arasındaki ilişki nedir?
+  - id: chn_cold_dish_start
+    name: Soğuk Başlangıç
+    prompt: |
+      Soğuk mezeler yemeği açar—alkollü tavuk, denizanası, turşu. Damak tadını uyandırır.
+      Sonrakilerle karşıtlık. Açılışı düşün. Sıcak bir başlangıç ne yapardı?
+    follow_ups:
+      - Soğuk, yemeği nasıl şekillendirir?
+      - İlk ve sonraki arasındaki ilişki nedir?
+      - Neden önce soğuk?
+  - id: chn_fried_rice_wok
+    name: Kızarmış Pirinç Wok
+    prompt: |
+      Kızarmış pirinç wok gerektirir—yüksek ısı, hızlı karıştırma. İdeal olarak bayat pirinç.
+      Taneler ayrılır. Tekniği düşün. Tava neyi feda ederdi?
+    follow_ups:
+      - Wok, pirinci nasıl şekillendirir?
+      - Taze pirinç ne yapardı?
+      - Isı ve ayrım arasındaki ilişki nedir?
+  - id: chn_lychee_dessert
+    name: Liçi Tatlısı
+    prompt: |
+      Tatlı için liçi—taze, konserve, şurupta. Meyve yemeği kapatır.
+      Tatlı, hoş kokulu. Sonu düşün. Başka bir meyve ne yapardı?
+    follow_ups:
+      - Liçi, kapanışı nasıl şekillendirir?
+      - Meyve ve final arasındaki ilişki nedir?
+      - Neden liçi?
+  - id: chn_fortune_cookie
+    name: Fal Kurabiyesi
+    prompt: |
+      Fal kurabiyesi—Amerikan-Çin icadı. Kurabiye tiyatrodur. Kır.
+      Falını oku. Kurabiye otantik değil, ama ritüeldir.
+      Yerini düşün.
+    follow_ups:
+      - Ondan yoksun yemek nasıl biterdi?
+      - Fal, kapanışı nasıl şekillendirir?
+      - Kurabiye ve beklenti arasındaki ilişki nedir?
+  - id: chn_century_egg
+    name: Yüzyıl Yumurtası
+    prompt: |
+      Yüzyıl yumurtası—kül, kil, kireç içinde korunmuş. Yumurta sarısı grimsi-yeşil olur,
+      beyazı jöleye dönüşecek kadar kararır. Haftalar süren bir dönüşümdür.
+      Arkeolojiyi düşün. Taze yumurta ne olurdu? Koruma ne ekler?
+    follow_ups:
+      - Koruma, dokuyu nasıl şekillendirir?
+      - Yumurtasız yemek neye benzerdi?
+      - Zaman ve dönüşüm arasındaki ilişki nedir?

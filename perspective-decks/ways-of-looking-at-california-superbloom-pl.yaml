@@ -1,0 +1,204 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Sposoby patrzenia na kalifornijskie superkwitnienie (Polish)
+
+id: ways_of_looking_at_california_superbloom
+name: Sposoby patrzenia na kalifornijskie superkwitnienie
+description: |
+  Karty, które zmieniają perspektywę podczas doświadczania kalifornijskiego superkwitnienia.
+  Każda z nich oferuje inne spojrzenie, aby pogłębić sposób, w jaki widzisz dzikie kwiaty, zbocza i
+  przemijający wybuch kolorów po zimowym deszczu.
+domain: california_superbloom
+cards:
+  - id: the_rain_that_made_it
+    name: Deszcz, który to spowodował
+    prompt: |
+      Zanim pojawiły się kwiaty, był deszcz. Wyobraź sobie burze, które nawodniły glebę, nasiona czekające pod ziemią. Jakie warunki musiały się zbiec, aby doszło do tego kwitnienia? Prześledź superkwitnienie wstecz, do jego źródeł.
+    follow_ups:
+      - Co byłoby inaczej przy większej - lub mniejszej - ilości deszczu?
+      - Ile lat spoczynku może kryć się za jednym zboczem?
+      - Co oznacza, że ta chwila nigdy nie była gwarantowana?
+  - id: one_species_at_a_time
+    name: Po jednym gatunku naraz
+    prompt: |
+      Wybierz jeden gatunek kwiatu i podążaj za nim. Pomarańczowe maki, fioletowe łubiny,
+      żółte złocienie – na chwilę zignoruj wszystko inne. Jak skupienie się na jednym zmienia to, co widzisz?
+    follow_ups:
+      - Gdzie ten gatunek dominuje - a gdzie ustępuje?
+      - Jak wyglądałoby zbocze, gdyby kwitł tylko ten jeden?
+      - Jak radzi sobie pośród innych?
+  - id: pollinators_view
+    name: Widok zapylacza
+    prompt: |
+      Wyobraź sobie, że jesteś pszczołą, motylem lub kolibrem. Co by cię przyciągnęło? Które kwiaty odwiedził(a)byś najpierw? Jak wygląda krajobraz z kilku centymetrów nad płatkami?
+    follow_ups:
+      - Jakie wzory kierowałyby twoją ścieżką?
+      - Które kwiaty byś pominął - i dlaczego?
+      - Jak skala zmienia doświadczenie?
+  - id: ground_level
+    name: Poziom gruntu
+    prompt: |
+      Przyjrzyj się z bliska. Połóż się na brzuchu lub uklęknij. Zobacz superkwitnienie z perspektywy gleby – łodygi wznoszące się, płatki łukowato wygięte nad tobą, niebo
+      odległym pasem nad tobą.
+    follow_ups:
+      - Co zauważasz, co umknęło ci z wysokości stojącej?
+      - Jakie jest uczucie pod tobą podłoża?
+      - Co zobaczyłby chrząszcz stąd?
+  - id: time_lapse
+    name: Film poklatkowy
+    prompt: |
+      Superkwitnienie to moment w dłuższej historii. Wyobraź sobie zbocze w
+      przyspieszonym tempie: zielone pędy, pierwsze pąki, szczyt koloru, a potem zanikanie. Jak długo trwa widowisko? Co było przed i co potem?
+    follow_ups:
+      - Kiedy zdecydował(a)byś się odwiedzić, gdybyś mógł/mogła tylko raz?
+      - Co już przeminęło, gdy przybywasz?
+      - Co pozostanie, gdy kolor zblednie?
+  - id: the_chemistry_of_color
+    name: Chemia koloru
+    prompt: |
+      Skup się na pigmentach. Pomarańczowy, fioletowy, żółty, niebieski – co tworzy każdy odcień?
+      Jak się ze sobą łączą? Gdzie kolory się gryzą, a gdzie harmonizują?
+      Traktuj zbocze jak paletę.
+    follow_ups:
+      - Jaki kolor byś dodał - lub odjął?
+      - Jak światło zmienia kolory w ciągu dnia?
+      - Jak wyglądałoby to w czerni i bieli?
+  - id: negative_space
+    name: Pusta przestrzeń
+    prompt: |
+      Spójrz na to, co nie jest kwiatami. Niebo, gołe łaty gleby, luki
+      pomiędzy kwitami. Jak pusta przestrzeń kształtuje to, co widzisz? Poczuj
+      znaczenie tego, czego tam nie ma.
+    follow_ups:
+      - Gdzie koncentruje się pustka?
+      - Co wypełniłoby te luki - i czy powinno?
+      - Jak pusta przestrzeń spaja kompozycję?
+  - id: the_path_through
+    name: Ścieżka przez
+    prompt: |
+      Zwróć uwagę na ścieżki – ludzkie, zwierzęce lub rozwiane przez wiatr. Gdzie chodzą ludzie?
+      Gdzie krajobraz opiera się przejściu? Prześledź ścieżkę przez kwitnienie
+      i zapytaj, co by kosztowało jej podążanie.
+    follow_ups:
+      - Czego byś bronił/broniła, nie idąc tamtędy?
+      - Dokąd chce cię zabrać ścieżka?
+      - Czego byś przegapił/przegapiła, zostając na szlaku?
+  - id: geology_beneath
+    name: Geologia pod spodem
+    prompt: |
+      Kwiaty spoczywają na milionach lat. Jaka skała leży pod glebą?
+      Co ukształtowało te wzgórza? Pozwól superkwitnieniu połączyć cię z głębokim czasem
+      pod twoimi stopami.
+    follow_ups:
+      - Jak geologia wpływa na to, co tu rośnie?
+      - Jak wyglądałoby to miejsce przed uformowaniem się wzgórz?
+      - Co pozostanie, gdy kwiaty znikną?
+  - id: scent_and_sound
+    name: Zapach i dźwięk
+    prompt: |
+      Zamknij oczy. Co czujesz? Pyłek, kurz, szałwię, wilgotną ziemię? Co słyszysz?
+      Pszczoły, wiatr, kroki, ciszę? Pozwól, by zmysły inne niż wzrok
+      przejęły na chwilę kontrolę.
+    follow_ups:
+      - Jaki dźwięk byś dodał/dodała, aby uchwycić to doświadczenie?
+      - Jak zmienia się zapach, gdy się poruszasz?
+      - Czego byś przegapił/przegapiła, gdybyś tylko patrzył/patrzyła?
+  - id: light_and_shadow
+    name: Światło i cień
+    prompt: |
+      Obserwuj, jak światło porusza się po zboczu. Poranek, południe, wieczór – jak
+      kąt słońca zmienia kwiaty? Gdzie padają cienie?
+      Co jest ujawniane, a co ukryte?
+    follow_ups:
+      - Kiedy światło wydaje się najbardziej żywe?
+      - Co byś zobaczył/zobaczyła o świcie, czego nie dostrzegł(a)byś w południe?
+      - Jak cienie kształtują krajobraz?
+  - id: seed_to_flower
+    name: Od nasiona do kwiatu
+    prompt: |
+      Prześledź pojedynczą roślinę od nasiona do kwitnienia. Jak się tu znalazła? Wiatr, zwierzę,
+      woda? Jak długo czekała? Czym się stanie, gdy opadną płatki?
+      Podążaj za jednym życiem przez jego cykl.
+    follow_ups:
+      - Czego doświadczyłoby nasiono pod ziemią?
+      - Co roślina po sobie zostawi?
+      - Ile pokoleń reprezentuje to zbocze?
+  - id: micro_vs_macro
+    name: Mikro kontra makro
+    prompt: |
+      Zbliż się do pojedynczego płatka, kropli rosy, ziarenka pyłku. Następnie cofnij się,
+      aby zobaczyć całe zbocze, dolinę, stan. Jak skala zmienia znaczenie
+      superkwitnienia?
+    follow_ups:
+      - Co jest niewidoczne w jednej skali, a oczywiste w innej?
+      - Gdzie naturalnie spoczywa twoja uwaga?
+      - Jak widok makro zmienia mikro – i na odwrót?
+  - id: weathers_hand
+    name: Ręka pogody
+    prompt: |
+      Superkwitnienie to współpraca pogody. Deszcz, słońce, wiatr, temperatura –
+      każde z nich ma rolę. Wyobraź sobie pogodę jako współtwórcę. Co ona postanowiła?
+      Czego odmówiła?
+    follow_ups:
+      - Co wyprodukowałaby inna zima?
+      - Jak dzisiejsza pogoda kształtuje twoje doświadczenie?
+      - Co by powiedziały kwiaty o pogodzie, gdyby mogły?
+  - id: human_witness
+    name: Ludzkie świadectwo
+    prompt: |
+      Nie jesteś pierwszą osobą, która to widzi. Kto jeszcze tu stał? Hodowcy bydła,
+      ludność rdzenna, fotografowie, podróżnicy. Jak twoja obecność
+      zmienia to miejsce? Co to znaczy być świadkiem?
+    follow_ups:
+      - Co oni by zobaczyli, czego ty nie widzisz?
+      - Co zabierzesz ze sobą?
+      - Czym różni się bycie świadkiem od posiadania lub zabierania?
+  - id: the_next_year
+    name: Następny rok
+    prompt: |
+      To kwitnienie nie powtórzy się dokładnie. Następny rok może przynieść suszę, pożar lub
+      inny zestaw gatunków. Wyobraź sobie powrót za rok. Czego byś
+      oczekiwał/oczekiwała, że znajdziesz? Czego byś był/była gotów/gotowa stracić?
+    follow_ups:
+      - Co sprawia, że ta chwila jest niepowtarzalna?
+      - Co powiedział(a)byś swojej przyszłej wersji?
+      - Jak nietrwałość pogłębia doświadczenie?
+  - id: texture_and_touch
+    name: Tekstura i dotyk
+    prompt: |
+      Jak by to było przejechać ręką przez kwiaty? Miękkie płatki,
+      kruche łodygi, lepki pyłek, szorstkie liście. Wyobraź sobie tekstury bez
+      dotykania – lub, tam gdzie dozwolone, dotknij delikatnie i zauważ.
+    follow_ups:
+      - Która tekstura najbardziej cię zaskakuje?
+      - Czego byś unikał/unikała dotykać – i dlaczego?
+      - Jak tekstura dodaje to, czego sam kolor nie potrafi przekazać?
+  - id: before_and_after
+    name: Przed i po
+    prompt: |
+      Wyobraź sobie to zbocze w porze suchej – brązowe, uśpione, pozornie martwe.
+      Teraz połącz oba obrazy: przed i po. Co odsłania kontrast
+      o odporności, cierpliwości i transformacji?
+    follow_ups:
+      - Czego przegapiłby ktoś, kto widział tylko porę suchą?
+      - Jak wspomnienie spoczynku wzbogaca kwitnienie?
+      - Jakie inne momenty „przed i po” przywołuje to wydarzenie?
+  - id: make_it_a_mixtape
+    name: Stwórz miksturę
+    prompt: |
+      Jaka muzyka towarzyszyłaby temu krajobrazowi? Stwórz playlistę dla
+      superkwitnienia. Jakie tempo, jaki nastrój, jakie instrumenty? Pozwól kwiatom
+      sugerować ścieżkę dźwiękową.
+    follow_ups:
+      - Jaki jest utwór otwierający?
+      - Jaka cecha łączy muzykę z kwiatami – rytm, kolor, uczucie?
+      - Jak playlistę zmieniłaby się w różnych porach dnia?
+  - id: take_one_thing_home
+    name: Weź jedną rzecz do domu
+    prompt: |
+      Nie możesz zabrać kwiatów – należą do tego miejsca. Ale możesz zabrać wspomnienie,
+      wrażenie, pytanie. Co jednego zabierzesz ze sobą? Jak
+      zachowasz to, nie zrywając ani jednego kwiatu?
+    follow_ups:
+      - Co byś pokazał/pokazała komuś, kto nie mógł przyjść?
+      - Jak opiszesz to później?
+      - Co byś celowo zostawił/zostawiła?

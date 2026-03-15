@@ -1,0 +1,523 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# L'Interfaccia Umana — Vendita al Dettaglio (Italian)
+
+id: human_interface_retail
+name: L'Interfaccia Umana — Vendita al Dettaglio
+description: 50 carte per cambiare il modo in cui vedi lo spazio commerciale—dai corridoi e dalla coreografia della navigazione fino ai camerini e alla danza dell'acquisto.
+domain: human_interface
+cards:
+  - id: hi_rt_aisle_flow
+    name: Flusso del Corridoio
+    prompt: |
+      Il corridoio incanala il movimento. I carrelli vanno in una direzione; le persone navigano. Osserva
+      il flusso. Chi cede? Chi blocca? Il corridoio ha una sua fisica. Quali regole
+      governano questa danza?
+    follow_ups:
+      - Come il corridoio modella la navigazione?
+      - Com'è il negozio senza corridoi?
+      - Qual è la relazione tra flusso e design?
+  - id: hi_rt_browsing_choreography
+    name: Coreografia della Navigazione
+    prompt: |
+      Le dita toccano il tessuto. Gli occhi scorrono gli scaffali. La navigazione ha un ritmo—pausa,
+      considerazione, si prosegue. Osserva la coreografia. Cosa fa il corpo quando
+      non sta comprando?
+    follow_ups:
+      - Come la navigazione plasma l'esperienza?
+      - Com'è il negozio senza navigazione?
+      - Qual è la relazione tra navigazione e desiderio?
+  - id: hi_rt_fitting_room
+    name: Camerino
+    prompt: |
+      La tenda si chiude. Il camerino è una soglia—dal pubblico al privato.
+      All'interno, provi un sé possibile. Osserva il ritorno. Cosa dice il volto?
+      Il camerino è un palcoscenico per la decisione.
+    follow_ups:
+      - Come il camerino modella l'acquisto?
+      - Com'è il negozio senza camerini?
+      - Qual è la relazione tra prova e identità?
+  - id: hi_rt_dance_of_purchase
+    name: Danza dell'Acquisto
+    prompt: |
+      Avvicinati, seleziona, porta, paga. L'acquisto ha dei passi. Osserva la
+      sequenza. Dove esitano le persone? La danza è coreografata dal
+      negozio. Cosa estrae?
+    follow_ups:
+      - Come la danza plasma il risultato?
+      - Com'è il negozio senza questa sequenza?
+      - Qual è la relazione tra danza e desiderio?
+  - id: hi_rt_cart_territory
+    name: Territorio del Carrello
+    prompt: |
+      Il carrello estende il corpo. Contiene scelte, blocca il passaggio. Osserva
+      il percorso del carrello. Il carrello è un territorio mobile. Cosa rivendica?
+    follow_ups:
+      - Come il carrello modella il movimento?
+      - Com'è il negozio senza carrelli?
+      - Qual è la relazione tra carrello e accumulo?
+  - id: hi_rt_endcap_display
+    name: Esposizione di Fine Corridoio
+    prompt: |
+      La fine del corridoio ospita un'esposizione—impulso, offerta, stagionale.
+      L'esposizione di fine corridoio cattura lo sguardo. Osserva chi si ferma. È una trappola.
+      Cosa fa?
+    follow_ups:
+      - Come l'esposizione di fine corridoio modella la navigazione?
+      - Com'è il corridoio senza di essa?
+      - Qual è la relazione tra esposizione e impulso?
+  - id: hi_rt_checkout_line
+    name: Coda alla Cassa
+    prompt: |
+      Si forma la coda. Caramelle, riviste, ultime possibilità. La cassa è un
+      test finale. Osserva l'attesa. Cosa fanno le persone? La coda è una
+      soglia tra la navigazione e l'uscita.
+    follow_ups:
+      - Come la coda modella l'acquisto?
+      - Com'è il negozio senza l'attesa?
+      - Qual è la relazione tra coda e impulso?
+  - id: hi_rt_shelf_height
+    name: Altezza dello Scaffale
+    prompt: |
+      All'altezza degli occhi si vende. L'altezza dello scaffale è design. Osserva cosa c'è dove.
+      Cosa c'è in basso? Cosa c'è in alto? L'altezza codifica il valore.
+      Cosa presuppone del corpo?
+    follow_ups:
+      - Come l'altezza dello scaffale modella la navigazione?
+      - Com'è il negozio con altezze uniformi?
+      - Qual è la relazione tra altezza e accesso?
+  - id: hi_rt_price_tag
+    name: Etichetta del Prezzo
+    prompt: |
+      L'etichetta indica il prezzo. A volte nascosta, a volte in evidenza. Osserva
+      il posizionamento. L'etichetta è informazione e barriera. Cosa fa l'etichetta
+      al momento del contatto?
+    follow_ups:
+      - Come l'etichetta modella la decisione?
+      - Com'è l'articolo senza etichetta?
+      - Qual è la relazione tra etichetta e valore?
+  - id: hi_rt_store_entrance
+    name: Ingresso del Negozio
+    prompt: |
+      La porta si apre. Entri. L'ingresso è una soglia. Osserva cosa
+      vedi per primo. L'ingresso dà il tono. Cosa vuole farti sentire il negozio?
+    follow_ups:
+      - Come l'ingresso modella la visita?
+      - Com'è il negozio senza design?
+      - Qual è la relazione tra ingresso e aspettativa?
+  - id: hi_rt_sales_associate
+    name: Addetto alle Vendite
+    prompt: |
+      "Posso aiutarla a trovare qualcosa?" L'offerta è scriptata. Osserva lo
+      scambio. Accetti o rifiuti? L'addetto è una guida e una pressione.
+      Cosa fa l'offerta?
+    follow_ups:
+      - Come l'addetto modella la navigazione?
+      - Com'è il negozio senza di lui?
+      - Qual è la relazione tra offerta e obbligo?
+  - id: hi_rt_basket_versus_cart
+    name: Cesto contro Carrello
+    prompt: |
+      Il cesto per pochi articoli. Il carrello per di più. La scelta prevede l'acquisto.
+      Osserva chi prende cosa. Il cesto limita; il carrello invita. Cosa abilita la scelta?
+    follow_ups:
+      - Come il cesto modella la visita?
+      - Com'è il negozio solo con carrelli?
+      - Qual è la relazione tra contenitore e accumulo?
+  - id: hi_rt_return_counter
+    name: Banco dei Resi
+    prompt: |
+      La coda per i resi è diversa. Le persone portano borse, scontrini, rimpianti.
+      Il reso è un'inversione. Osserva lo scambio. Cosa costa il reso—emotivamente, socialmente?
+      Il banco dei resi è un luogo di annullamento.
+    follow_ups:
+      - Come il reso modella la relazione?
+      - Com'è il negozio senza resi?
+      - Qual è la relazione tra reso e fiducia?
+  - id: hi_rt_dressing_room_limit
+    name: Limite del Camerino
+    prompt: |
+      "Sei articoli massimo." Il limite controlla la prova. Osserva la
+      negoziazione. Cosa succede quando ne hai sette? Il limite modella
+      l'esperienza del camerino. Cosa presuppone?
+    follow_ups:
+      - Come il limite modella la prova?
+      - Com'è il camerino senza di esso?
+      - Qual è la relazione tra limite e furto?
+  - id: hi_rt_impulse_buy
+    name: Acquisto d'Impulso
+    prompt: |
+      L'articolo non era in lista. Ha attirato l'attenzione. L'acquisto d'impulso è
+      un momento di resa. Osserva quando avviene. Cosa l'ha scatenato?
+      L'impulso è design che incontra desiderio.
+    follow_ups:
+      - Come l'impulso modella l'acquisto?
+      - Com'è il negozio senza impulsi?
+      - Qual è la relazione tra impulso e rimpianto?
+  - id: hi_rt_store_music
+    name: Musica del Negozio
+    prompt: |
+      La musica suona—lenta, familiare, studiata. La musica modella umore e ritmo.
+      Osserva il tempo. Negozio veloce, musica lenta? La musica è un design invisibile.
+      Cosa fa al corpo?
+    follow_ups:
+      - Come la musica modella la visita?
+      - Com'è il negozio in silenzio?
+      - Qual è la relazione tra musica e durata?
+  - id: hi_rt_mannequin
+    name: Manichino
+    prompt: |
+      Il manichino indossa i vestiti. È un corpo ideale, un suggerimento.
+      Osserva come la gente lo guarda. Il manichino è uno specchio e una
+      fantasia. Cosa promette?
+    follow_ups:
+      - Come il manichino modella la navigazione?
+      - Com'è il negozio senza di esso?
+      - Qual è la relazione tra manichino e desiderio?
+  - id: hi_rt_sample_station
+    name: Stazione dei Campioni
+    prompt: |
+      Assaggia questo. Prova questo. Il campione invita al contatto. La stazione crea
+      una pausa. Osserva chi si ferma. Il campione è un piccolo regalo. Cosa
+      estrapola?
+    follow_ups:
+      - Come il campione modella l'acquisto?
+      - Com'è il negozio senza campioni?
+      - Qual è la relazione tra campione e obbligo?
+  - id: hi_rt_sale_rack
+    name: Scaffale delle Offerte
+    prompt: |
+      Lo scaffale delle offerte è caos—scontato, stropicciato. La gente scava. È un tipo di
+      navigazione diverso. Osserva il comportamento. Cosa fa lo
+      sconto al tatto?
+    follow_ups:
+      - Come lo scaffale delle offerte modella la visita?
+      - Com'è il negozio senza di esso?
+      - Qual è la relazione tra offerta e valore?
+  - id: hi_rt_mirror_encounter
+    name: Incontro con lo Specchio
+    prompt: |
+      Ti vedi nello specchio del negozio. L'incontro è inevitabile.
+      Osserva lo sguardo. Cosa controlli? Lo specchio è una prova. Il negozio
+      fornisce lo specchio. Cosa vuole?
+    follow_ups:
+      - Come lo specchio modella la prova?
+      - Com'è il camerino senza specchio?
+      - Qual è la relazione tra specchio e sé?
+  - id: hi_rt_cashier_small_talk
+    name: Conversazione di Cortesia alla Cassa
+    prompt: |
+      "Ha trovato tutto?" chiede la cassiera. La conversazione è scriptata.
+      Osserva lo scambio. Cosa fa la domanda? La cassiera è l'ultimo contatto umano.
+      Cosa crea la conversazione?
+    follow_ups:
+      - Come la conversazione modella l'uscita?
+      - Com'è la cassa senza di essa?
+      - Qual è la relazione tra conversazione e transazione?
+  - id: hi_rt_store_layout
+    name: Layout del Negozio
+    prompt: |
+      Il percorso è studiato. Articoli di prima necessità sul retro. Impulsi davanti. Il
+      layout coreografa la visita. Osserva il tuo percorso. Da cosa ti ha fatto passare il
+      progettista?
+    follow_ups:
+      - Come il layout modella la navigazione?
+      - Com'è il negozio con un layout casuale?
+      - Qual è la relazione tra layout ed esposizione?
+  - id: hi_rt_touch_decide
+    name: Tocco Decide
+    prompt: |
+      Le dita toccano il tessuto, la superficie. Il tocco decide. Osserva il
+      momento. Cosa impara la mano che l'occhio non può? Il tocco è
+      una soglia. Cosa richiede?
+    follow_ups:
+      - Come il tocco modella la decisione?
+      - Com'è il negozio senza il tatto?
+      - Qual è la relazione tra tocco e impegno?
+  - id: hi_rt_receipt_handoff
+    name: Consegna dello Scontrino
+    prompt: |
+      Viene offerto lo scontrino—nella borsa o separato. Alcuni lo prendono; altri
+      rifiutano. Lo scontrino è prova e registro. Osserva lo scambio. Cosa fa lo
+      scontrino per la transazione?
+    follow_ups:
+      - Come lo scontrino modella l'uscita?
+      - Com'è la cassa senza di esso?
+      - Qual è la relazione tra scontrino e chiusura?
+  - id: hi_rt_store_exit
+    name: Uscita dal Negozio
+    prompt: |
+      La porta si apre. Esci con una borsa—o a mani vuote. L'uscita è una
+      soglia. Osserva la sensazione. Cosa estrae l'uscita? È la fine della danza.
+      Cosa rimane?
+    follow_ups:
+      - Come l'uscita modella la visita?
+      - Com'è il negozio senza la porta?
+      - Qual è la relazione tra uscita e soddisfazione?
+  - id: hi_rt_loyalty_card_ask
+    name: Richiesta Carta Fedeltà
+    prompt: |
+      "Ha la nostra carta fedeltà?" La richiesta è di routine. Osserva la
+      risposta. Sì, no, iscrizione. La carta fedeltà estende la relazione.
+      Cosa crea la richiesta?
+    follow_ups:
+      - Come la carta fedeltà modella la transazione?
+      - Com'è la cassa senza di essa?
+      - Qual è la relazione tra carta e dati?
+  - id: hi_rt_abandoned_cart
+    name: Carrello Abbandonato
+    prompt: |
+      Un carrello si trova nel corridoio—pieno, incustodito. Il carrello è abbandonato.
+      Osserva il contenuto. Cosa avevano considerato? L'abbandono è un
+      momento di negazione. Cosa rivela?
+    follow_ups:
+      - Come il carrello abbandonato modella il negozio?
+      - Cosa imparerebbe il negozio da esso?
+      - Qual è la relazione tra abbandono e desiderio?
+  - id: hi_rt_fitting_room_opinion
+    name: Opinione sul Camerino
+    prompt: |
+      "Come sta?" chiede qualcuno da fuori la tenda. L'opinione è richiesta.
+      Il camerino diventa sociale. Osserva lo scambio. Cosa fa l'opinione?
+    follow_ups:
+      - Come l'opinione modella la decisione?
+      - Com'è la prova da soli?
+      - Qual è la relazione tra opinione e acquisto?
+  - id: hi_rt_store_scent
+    name: Profumo del Negozio
+    prompt: |
+      Il negozio ha un odore—profumo, pelle, pulito. Il profumo è studiato.
+      Entra prima che tu te ne accorga. Osserva quando lo senti. Cosa fa
+      il profumo al corpo?
+    follow_ups:
+      - Come il profumo modella la visita?
+      - Com'è il negozio senza di esso?
+      - Qual è la relazione tra profumo e memoria?
+  - id: hi_rt_compare_prices
+    name: Confronto Prezzi
+    prompt: |
+      Telefono fuori. Scansione. Il controllo prezzi è ricerca. Osserva il momento.
+      Cosa rivela il telefono? Il confronto avviene nel corridoio. Cosa fa
+      alla decisione?
+    follow_ups:
+      - Come il confronto modella l'acquisto?
+      - Com'è il negozio senza telefoni?
+      - Qual è la relazione tra confronto e potere?
+  - id: hi_rt_window_display
+    name: Vetrine
+    prompt: |
+      La vetrina si affaccia sulla strada. Manichini, oggetti, una storia. L'esposizione
+      ferma la camminata. Osserva cosa attira lo sguardo. La vetrina è un
+      invito. Cosa promette?
+    follow_ups:
+      - Come la vetrina modella l'ingresso?
+      - Com'è il negozio senza di essa?
+      - Qual è la relazione tra esposizione e desiderio?
+  - id: hi_rt_size_search
+    name: Ricerca Taglia
+    prompt: |
+      Le dita scorrono le grucce. Cercando la taglia. La ricerca ha un ritmo.
+      Osserva la frustrazione o il sollievo. La taglia è un varco.
+      Cosa richiede la ricerca?
+    follow_ups:
+      - Come la ricerca taglia modella la navigazione?
+      - Com'è il negozio con tutte le taglie visibili?
+      - Qual è la relazione tra taglia e corpo?
+  - id: hi_rt_payment_choice
+    name: Scelta di Pagamento
+    prompt: |
+      Carta, contanti, telefono. La scelta di pagamento è il momento della transazione.
+      Osserva il metodo. La scelta è abitudine e identità. Cosa comunica
+      il metodo di pagamento?
+    follow_ups:
+      - Come il pagamento modella la cassa?
+      - Com'è il negozio con un solo metodo?
+      - Qual è la relazione tra pagamento e velocità?
+  - id: hi_rt_store_regular
+    name: Cliente Abituale del Negozio
+    prompt: |
+      Il cliente abituale conosce il layout. Si muove con scopo. L'addetto annuisce.
+      Osserva il cliente abituale. Cosa sa lui che il nuovo arrivato
+      non sa? Il cliente abituale ha una relazione con lo spazio.
+    follow_ups:
+      - Come il cliente abituale modella il negozio?
+      - Com'è il negozio senza clienti abituali?
+      - Qual è la relazione tra abituale e fedeltà?
+  - id: hi_rt_bag_handoff
+    name: Consegna della Borsa
+    prompt: |
+      La borsa viene consegnata—piena, brandizzata. La consegna completa la
+      transazione. Osserva lo scambio. Cosa fa la borsa per l'uscita? È prova e fardello.
+    follow_ups:
+      - Come la borsa modella l'uscita?
+      - Com'è l'acquisto senza di essa?
+      - Qual è la relazione tra borsa e identità?
+  - id: hi_rt_fitting_room_overflow
+    name: Sovraccarico Camerino
+    prompt: |
+      Troppi articoli. L'addetto prende l'eccedenza. "Tengo questi."
+      L'eccedenza è fiducia. Osserva lo scambio. Cosa tiene l'addetto?
+      L'eccedenza estende la prova. Cosa abilita?
+    follow_ups:
+      - Come l'eccedenza modella la prova?
+      - Com'è il camerino senza di essa?
+      - Qual è la relazione tra eccedenza e fiducia?
+  - id: hi_rt_store_lighting
+    name: Illuminazione del Negozio
+    prompt: |
+      La luce è studiata—lusinghiera, luminosa, calda. L'illuminazione modella
+      l'aspetto delle cose. Osserva lo specchio in quella luce. Cosa fa
+      l'illuminazione al viso, al tessuto?
+    follow_ups:
+      - Come l'illuminazione modella l'acquisto?
+      - Com'è il negozio in una luce dura?
+      - Qual è la relazione tra luce e verità?
+  - id: hi_rt_aisle_block
+    name: Blocco del Corridoio
+    prompt: |
+      Qualcuno sta fermo nel corridoio. Devi passare. Il blocco è
+      inconsapevole o deliberato. Osserva la negoziazione. "Scusi." Il
+      blocco è una piccola frizione. Cosa richiede?
+    follow_ups:
+      - Come il blocco modella il flusso?
+      - Com'è il negozio con corridoi più larghi?
+      - Qual è la relazione tra blocco e civiltà?
+  - id: hi_rt_clearance_section
+    name: Sezione Saldi
+    prompt: |
+      La sezione saldi è sul retro, nell'angolo. Ultima stagione, ultima
+      possibilità. La sezione ha un'energia diversa. Osserva la navigazione. Cosa fa
+      lo sconto al tatto, alla considerazione?
+    follow_ups:
+      - Come la sezione saldi modella la visita?
+      - Com'è il negozio senza di essa?
+      - Qual è la relazione tra saldi e valore?
+  - id: hi_rt_store_map
+    name: Mappa del Negozio
+    prompt: |
+      "Dov'è la X?" La mappa o l'addetto rispondono. Il negozio ha una geografia.
+      Osserva la disorientamento. Cosa fornisce la mappa?
+      La mappa è orientamento. Cosa presuppone?
+    follow_ups:
+      - Come la mappa modella la visita?
+      - Com'è il negozio senza di essa?
+      - Qual è la relazione tra mappa e fluidità?
+  - id: hi_rt_try_on_stack
+    name: Pila dei Provati
+    prompt: |
+      L'addetto restituisce gli articoli provati. Sono piegati, appesi. La pila
+      torna sul pavimento. Osserva il lavoro. Chi li ha toccati? La
+      pila dei provati è l'aftermath di molti forse.
+    follow_ups:
+      - Come la pila modella il pavimento?
+      - Com'è il camerino senza di essa?
+      - Qual è la relazione tra pila e lavoro?
+  - id: hi_rt_store_hours
+    name: Orari del Negozio
+    prompt: |
+      Il cartello indica quando il negozio apre, quando chiude. Gli orari sono
+      un confine. Osserva la folla prima dell'apertura. Gli orari strutturano
+      l'accesso. Cosa presuppongono del cliente?
+    follow_ups:
+      - Come gli orari modellano la visita?
+      - Com'è il negozio con accesso 24 ore?
+      - Qual è la relazione tra orari e disponibilità?
+  - id: hi_rt_shopping_list
+    name: Lista della Spesa
+    prompt: |
+      Telefono o carta. La lista guida la visita. Osserva chi ne ha una. La
+      lista è intenzione. Resiste all'impulso—o no. Cosa fa la
+      lista per la navigazione?
+    follow_ups:
+      - Come la lista modella l'acquisto?
+      - Com'è la visita senza di essa?
+      - Qual è la relazione tra lista e controllo?
+  - id: hi_rt_store_emptiness
+    name: Vuoto del Negozio
+    prompt: |
+      Fuori orario, giorno lento. Il negozio è vuoto. Il vuoto cambia la sensazione.
+      Osserva lo spazio. Cosa rivela il vuoto? Il negozio vuoto è uno
+      scenario diverso.
+    follow_ups:
+      - Come il vuoto modella la navigazione?
+      - Com'è il negozio se sempre vuoto?
+      - Qual è la relazione tra vuoto e comfort?
+  - id: hi_rt_fitting_room_curtain
+    name: Tenda del Camerino
+    prompt: |
+      La tenda si chiude. La privacy è parziale—spazi, suoni. La tenda è
+      una soglia. Osserva il confine. Cosa protegge la tenda?
+      Cosa non protegge?
+    follow_ups:
+      - Come la tenda modella la prova?
+      - Com'è il camerino con una porta?
+      - Qual è la relazione tra tenda e privacy?
+  - id: hi_rt_store_aroma
+    name: Aroma del Negozio
+    prompt: |
+      Panetteria, caffè, profumo—il negozio ha un odore. L'aroma è il primo
+      contatto. Prepara la visita. Osserva quando lo noti. Cosa fa
+      l'aroma prima che tu compri?
+    follow_ups:
+      - Come l'aroma modella la visita?
+      - Com'è il negozio senza di esso?
+      - Qual è la relazione tra aroma e desiderio?
+  - id: hi_rt_purchase_regret
+    name: Rimpianto sull'Acquisto
+    prompt: |
+      La borsa in mano. Il dubbio si insinua. Il rimpianto potrebbe arrivare dopo. Osserva
+      il volto che esce dal negozio. Cosa significa l'acquisto? Il rimpianto
+      è l'ombra della danza. Cosa lo crea?
+    follow_ups:
+      - Come il rimpianto modella la prossima visita?
+      - Com'è l'acquisto senza rimpianto?
+      - Qual è la relazione tra rimpianto e desiderio?
+  - id: hi_rt_store_thank_you
+    name: Ringraziamento del Negozio
+    prompt: |
+      "Grazie per aver fatto acquisti da noi." La frase chiude la transazione.
+      È scriptata. Osserva lo scambio. Cosa fa il ringraziamento? La
+      frase è un piccolo rituale. Cosa crea?
+    follow_ups:
+      - Come il ringraziamento modella l'uscita?
+      - Com'è la cassa senza di esso?
+      - Qual è la relazione tra ringraziamento e chiusura?
+  - id: hi_rt_store_entrance_sensor
+    name: Sensore di Ingresso del Negozio
+    prompt: |
+      La porta si apre automaticamente. Il sensore rileva il tuo avvicinamento. L'ingresso è
+      coreografato. Osserva la soglia. Cosa fa la
+      porta automatica all'arrivo? Il sensore crea una transizione fluida.
+    follow_ups:
+      - Come il sensore modella l'ingresso?
+      - Com'è il negozio con una porta manuale?
+      - Qual è la relazione tra sensore e benvenuto?
+  - id: hi_rt_price_match
+    name: Parità di Prezzo
+    prompt: |
+      "Abbiniamo i prezzi dei concorrenti." L'offerta è una promessa. Osserva quando
+      qualcuno la utilizza. La parità di prezzo è una negoziazione. Cosa
+      richiede al cliente? La parità crea fiducia—o sospetto.
+    follow_ups:
+      - Come la parità di prezzo modella l'acquisto?
+      - Com'è il negozio senza di essa?
+      - Qual è la relazione tra parità e fedeltà?
+  - id: hi_rt_fitting_room_number
+    name: Numero del Camerino
+    prompt: |
+      "Quanti?" chiede l'addetto. Il numero limita la prova. Osserva la
+      negoziazione. Cosa succede quando ne hai di più? Il numero è un
+      controllo. Cosa presuppone del cliente?
+    follow_ups:
+      - Come il numero modella la prova?
+      - Com'è il camerino senza limiti?
+      - Qual è la relazione tra numero e fiducia?
+  - id: hi_rt_gift_receipt
+    name: Scontrino Regalo
+    prompt: |
+      "Vorrebbe uno scontrino regalo?" L'offerta separa il prezzo dal
+      regalo. Lo scontrino regalo permette il reso senza rivelare il costo.
+      Osserva la scelta. Cosa protegge lo scontrino regalo?
+    follow_ups:
+      - Come lo scontrino regalo modella l'acquisto?
+      - Com'è il regalo senza di esso?
+      - Qual è la relazione tra scontrino e discrezione?

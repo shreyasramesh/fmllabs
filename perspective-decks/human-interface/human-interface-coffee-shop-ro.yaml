@@ -1,0 +1,545 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Interfața Umană — Cafenea (Romanian)
+
+id: human_interface_coffee_shop
+name: Interfața Umană — Cafenea
+description: 50 de cărți pentru a schimba modul în care vezi cafeneaua — de la coregrafia cozii și teritoriile laptopurilor, la al treilea loc, scenarii invizibile și cafeaua ca ritual.
+domain: human_interface
+cards:
+  - id: hi_cs_queue_choreography
+    name: Coregrafia Cozii
+    prompt: |
+      Observă coada de la tejghea. Corpurile se aranjează — aplecate înainte,
+      verificând telefonul, șovăind subtil. Coada are un ritm. Cine deține
+      spațiul? Ce reguli nescrise guvernează cine stă unde?
+    follow_ups:
+      - Cum modelează coada anticiparea?
+      - Ce s-ar întâmpla dacă toată lumea ar ignora ordinea?
+      - Care este relația dintre așteptare și apartenență?
+  - id: hi_cs_laptop_territory
+    name: Teritoriul Laptopului
+    prompt: |
+      Un laptop deschis pe o masă revendică spațiu. Cana de lângă el, geanta
+      de pe scaun. Observă limitele. Cât spațiu ocupă o persoană? Ce semnalează
+      "ocupat"?
+    follow_ups:
+      - Cum extinde laptopul corpul?
+      - Cum ar fi spațiul fără dispozitive?
+      - Care este relația dintre teritoriu și durată?
+  - id: hi_cs_third_place
+    name: Al Treilea Loc
+    prompt: |
+      Nici acasă, nici la muncă — cafeneaua este un al treilea loc. Oamenii vin
+      să fie singuri împreună. Observă cine rămâne. Cine pleacă repede?
+      Spațiul deține un contract social diferit.
+    follow_ups:
+      - Ce ar fi orașul fără al treilea loc?
+      - Cum diferă cafeneaua de o bibliotecă?
+      - Care este relația dintre loc și identitate?
+  - id: hi_cs_invisible_script
+    name: Scenariul Invizibil
+    prompt: |
+      Comandă, plătește, așteaptă, primește, găsește un loc. Scenariul este
+      invizibil până când cineva îl încalcă. Observă un nou venit. Ce nu știe?
+      Scenariul codifică apartenența.
+    follow_ups:
+      - Cum exclude scenariul?
+      - Ce s-ar întâmpla dacă scenariul ar fi scris?
+      - Care este relația dintre scenariu și fluență?
+  - id: hi_cs_coffee_ritual
+    name: Cafeaua ca Ritual
+    prompt: |
+      Băutura este secundară. Ritualul este primar — drumul, comanda, prima
+      înghițitură. Observă-ți propriile mișcări. Ce ai pierde dacă cafeaua
+      ar ajunge la ușa ta?
+    follow_ups:
+      - Cum marchează ritualul tranziția?
+      - Ce ar fi ziua fără pauza de cafea?
+      - Care este relația dintre ritual și pregătire?
+  - id: hi_cs_counter_handoff
+    name: Predarea de la Tejghea
+    prompt: |
+      Barista strigă un nume. O mână se întinde. Predarea este un moment de
+      contact între străini. Observă schimbul. Ce trece pe lângă ceașcă?
+    follow_ups:
+      - Cum creează predarea conexiune?
+      - Ce s-ar schimba cu un barista robot?
+      - Care este relația dintre predare și încredere?
+  - id: hi_cs_power_outlet_hunt
+    name: Vânătoarea Prizei
+    prompt: |
+      Ochii scanează pereții, podeaua, sub mese. Vânătoarea prizei este
+      teritorială. Cine a ajuns primul? Priza determină unde stai. Geografia
+      urmează electricitatea.
+    follow_ups:
+      - Cum modelează poziționarea prizelor camera?
+      - Cum ar fi spațiul cu energie wireless?
+      - Care este relația dintre priză și permanență?
+  - id: hi_cs_solo_table
+    name: Masa Solitară
+    prompt: |
+      O persoană la o masă pentru patru. Scaunele goale sunt un tampon.
+      Observă aranjamentul. Este apărare? Preferință? Masa solitară păstrează
+      spațiu împotriva mulțimii.
+    follow_ups:
+      - Cum semnalează masa solitară intenția?
+      - Ce s-ar întâmpla dacă cineva ar cere să se așeze?
+      - Care este relația dintre singurătate și vizibilitate?
+  - id: hi_cs_milk_pour
+    name: Turnarea Laptelui
+    prompt: |
+      Barista toarnă lapte în espresso — cu sau fără latte art. Turnarea este
+      meșteșug. Observă mișcarea. Ce primește clientul dincolo de băutură?
+      Turnarea este spectacol.
+    follow_ups:
+      - Cum modelează turnarea așteptarea?
+      - Ce ar fi băutura fără meșteșug?
+      - Care este relația dintre turnare și preț?
+  - id: hi_cs_name_on_cup
+    name: Numele pe Ceașcă
+    prompt: |
+      Un nume — real, fals, greșit scris — pe o ceașcă. Personalizează
+      tranzacția. Numele călătorește de la gură la mână la tejghea. Ce face
+      numele pentru schimb?
+    follow_ups:
+      - Cum creează numele recunoașterea?
+      - Ce ar fi comanda fără nume?
+      - Care este relația dintre nume și anonimat?
+  - id: hi_cs_window_seat
+    name: Locul de la Fereastră
+    prompt: |
+      Locul de la fereastră este cel mai bun. Te uiți spre stradă; spatele tău
+      este protejat. Observă cine îl alege. Fereastra încadrează lumea de afară,
+      în timp ce tu stai înăuntru. Ce oferă priveliștea?
+    follow_ups:
+      - Cum modelează locul de la fereastră experiența?
+      - Cum ar fi spațiul fără ferestre?
+      - Care este relația dintre interior și exterior?
+  - id: hi_cs_linger_versus_grab
+    name: Zăbovit sau Luat pe Drum
+    prompt: |
+      Unii își iau ceașca și pleacă. Alții se așază ore în șir. Același spațiu
+      îi găzduiește pe amândoi. Observă diviziunea. Ce determină cine rămâne?
+      Cafeneaua se adaptează la diferite ritmuri.
+    follow_ups:
+      - Cum afectează zăbovirea afacerea?
+      - Cum ar fi spațiul dacă toată lumea ar pleca repede?
+      - Care este relația dintre viteză și apartenență?
+  - id: hi_cs_regular_recognition
+    name: Recunoașterea Clienților Obișnuiți
+    prompt: |
+      "Cel obișnuit?" Barista știe. Clientul obișnuit este cunoscut. Observă
+      schimbul. Ce se schimbă când ești recunoscut? "Cel obișnuit" este o
+      scurtătură — și o revendicare a locului.
+    follow_ups:
+      - Cum creează recunoașterea loialitate?
+      - Ce ar pierde clientul obișnuit fără ea?
+      - Care este relația dintre "obișnuit" și identitate?
+  - id: hi_cs_soundscape
+    name: Peisaj Sonor
+    prompt: |
+      Abur, râșniță, bârfă, muzică. Cafeneaua are un peisaj sonor. Închide ochii.
+      Cartografiază straturile. Ce este constant? Care este ritmul? Peisajul sonor
+      modelează starea de spirit.
+    follow_ups:
+      - Cum afectează peisajul sonor concentrarea?
+      - Cum ar fi spațiul în tăcere?
+      - Care este relația dintre sunet și productivitate?
+  - id: hi_cs_shared_table
+    name: Masa Comună
+    prompt: |
+      Străini stau la aceeași masă lungă. Nimeni nu vorbește. Masa comună este
+      proximitate fără conexiune. Observă limitele. Cât de aproape este prea
+      aproape? Masa menține un echilibru delicat.
+    follow_ups:
+      - Cum diferă masa comună de o masă solitară?
+      - Ce s-ar întâmpla dacă cineva ar începe o conversație?
+      - Care este relația dintre proximitate și intimitate?
+  - id: hi_cs_tip_jar
+    name: Borcanul pentru Bacșișuri
+    prompt: |
+      Monede și bancnote se acumulează. Borcanul pentru bacșișuri este vizibil,
+      pasiv. Cine lasă bacșiș? Cine nu? Borcanul stă la granița dintre tranzacție
+      și dar. Ce înseamnă bacșișul?
+    follow_ups:
+      - Cum modelează borcanul pentru bacșișuri schimbul?
+      - Cum ar fi tejgheaua fără el?
+      - Care este relația dintre bacșiș și gratitudine?
+  - id: hi_cs_cup_sleeve
+    name: Mâneca Ceștii
+    prompt: |
+      Mâneca protejează mâna de căldură. Este de unică folosință, branduită.
+      Observă cum țin oamenii ceașca cu ea. Mâneca este o mică interfață între
+      corp și băutură.
+    follow_ups:
+      - Cum schimbă mâneca prinderea?
+      - Cum ar fi experiența fără ea?
+      - Care este relația dintre mânecă și branding?
+  - id: hi_cs_morning_rush
+    name: Agitația de Dimineață
+    prompt: |
+      Înainte de muncă, coada se întinde. Agitația de dimineață are propriul
+      tempo. Observă ritmul. Toată lumea se îndreaptă spre altceva. Cafeneaua
+      este un popas. Ce extrage agitația?
+    follow_ups:
+      - Cum modelează agitația personalul?
+      - Ce ar fi dimineața fără oprire?
+      - Care este relația dintre agitație și ritual?
+  - id: hi_cs_afternoon_slow
+    name: Liniștea de După-amiază
+    prompt: |
+      La mijlocul după-amiezii, mulțimea se rărește. Cei care rămân sunt diferiți —
+      studenți, freelanceri, cei fără grabă. Ritmul se schimbă. Observă schimbarea.
+      După-amiaza găzduiește un alt tip de client.
+    follow_ups:
+      - Cum diferă după-amiaza de dimineață?
+      - Cum ar fi spațiul fără perioada liniștită?
+      - Care este relația dintre timp și ocupare?
+  - id: hi_cs_wifi_password
+    name: Parola WiFi
+    prompt: |
+      Parola este pe perete, pe bon, pe tablă. Trebuie să întrebi sau să cauți.
+      WiFi-ul este prețul intrării pentru unii. Observă cine se conectează. Cine
+      nu are nevoie?
+    follow_ups:
+      - Cum modelează WiFi-ul cine rămâne?
+      - Cum ar fi spațiul fără el?
+      - Care este relația dintre conexiune și consum?
+  - id: hi_cs_crossword_solver
+    name: Rezolvitor de Cuvinte Încrucișate
+    prompt: |
+      Cineva lucrează la un cuvânt încrucișat, în ziar sau pe telefon. Activitatea
+      este solitară, dar vizibilă. Cuvintele încrucișate marchează timpul. Spune
+      "stau". Ce semnalează activitatea altora?
+    follow_ups:
+      - Cum creează cuvântul încrucișat o bulă?
+      - Ce ar face rezolvitorul fără el?
+      - Care este relația dintre activitate și ocupare?
+  - id: hi_cs_meeting_here
+    name: Întâlnire Aici
+    prompt: |
+      Doi oameni se întâlnesc — interviu, revedere, primă întâlnire. Cafeneaua
+      este un teren neutru. Observă aranjamentul. Cine a ales locul? Masa devine
+      o scenă pentru întâlnire.
+    follow_ups:
+      - Cum permite cafeneaua întâlnirea?
+      - Cum ar fi întâlnirea la birou?
+      - Care este relația dintre loc și întâlnire?
+  - id: hi_cs_bathroom_key
+    name: Cheia de la Baie
+    prompt: |
+      Cheia de la baie este legată de o greutate, o paletă, o lingură uriașă.
+      Trebuie să ceri. Cheia este un mic test de apartenență. Cine are dreptul
+      să folosească baia?
+    follow_ups:
+      - Cum controlează cheia accesul?
+      - Cum ar fi spațiul cu băi deschise?
+      - Care este relația dintre cheie și încredere?
+  - id: hi_cs_pastry_case
+    name: Vitrina cu Produse de Patiserie
+    prompt: |
+      Croissante, brioșe, prăjituri în spatele sticlei. Vitrina este tentație
+      și expoziție. Observă ce se vinde. Ce stă prea mult? Vitrina este o
+      negociere între dorință și amânare.
+    follow_ups:
+      - Cum modelează vitrina comanda?
+      - Cum ar fi tejgheaua fără ea?
+      - Care este relația dintre expoziție și dorință?
+  - id: hi_cs_phone_glance
+    name: Aruncare de Priviri la Telefon
+    prompt: |
+      Toată lumea aruncă o privire la telefon. Privirea este o pauză, o verificare,
+      o retragere. Observă ritmul. Cât de des? Cât de mult? Telefonul este un
+      portal de ieșire din cameră.
+    follow_ups:
+      - Cum modelează telefonul prezența?
+      - Cum ar fi spațiul fără telefoane?
+      - Care este relația dintre aruncarea de priviri și atenție?
+  - id: hi_cs_steam_rise
+    name: Ridicarea Aburului
+    prompt: |
+      Aburul se ridică dintr-o ceașcă proaspătă. Căldura poartă aroma. Aburul
+      este efemer — dispare în câteva minute. Observă-l. Ce adaugă aburul
+      momentului dinaintea primei înghițituri?
+    follow_ups:
+      - Cum modelează aburul anticiparea?
+      - Ce ar fi băutura fără el?
+      - Care este relația dintre vapori și ritual?
+  - id: hi_cs_bag_on_chair
+    name: Geanta pe Scaun
+    prompt: |
+      O geantă ocupă scaunul de lângă persoana așezată. Salvează locul, extinde
+      teritoriul. Geanta este un substituent. Observă mesajul: "Acest spațiu
+      este ocupat." Ce s-ar întâmpla dacă cineva ar cere să se așeze?
+    follow_ups:
+      - Cum revendică geanta spațiu?
+      - Cum ar fi camera fără salvarea locurilor cu genți?
+      - Care este relația dintre obiect și teritoriu?
+  - id: hi_cs_espresso_shot
+    name: Shot de Espresso
+    prompt: |
+      Un singur shot — rapid, intens. Băutorul de espresso stă adesea în picioare.
+      Shot-ul este o pauză în zi. Observă ritualul. Intrat, gata, ieșit. Ce
+      realizează shot-ul?
+    follow_ups:
+      - Cum diferă shot-ul de o cafea latte?
+      - Cum ar fi cafeneaua fără espresso?
+      - Care este relația dintre shot și viteză?
+  - id: hi_cs_cold_brew_tap
+    name: Apăsător de Cold Brew
+    prompt: |
+      Cold brew de la un robinet — ca berea. Servirea este diferită. Fără abur,
+      fără așteptare. Clientul de cold brew dorește altceva. Observă alegerea.
+      Ce semnalează cold brew?
+    follow_ups:
+      - Cum schimbă cold brew experiența?
+      - Cum ar fi meniul fără el?
+      - Care este relația dintre temperatură și identitate?
+  - id: hi_cs_chalkboard_menu
+    name: Meniu pe Tablă
+    prompt: |
+      Meniul este scris de mână — cretă pe tablă. Se schimbă. Scrisul de mână
+      este personalitate. Observă ce este listat, ce nu. Tabla spune "noi luăm
+      decizii aici."
+    follow_ups:
+      - Cum modelează tabla brandul?
+      - Cum ar fi peretele cu un meniu tipărit?
+      - Care este relația dintre mână și autenticitate?
+  - id: hi_cs_leaving_cup
+    name: Ceașca Lăsată
+    prompt: |
+      Ceașca lăsată pe masă — goală, abandonată. Unii își curăță singuri; alții
+      nu. Ceașca lăsată este un mic test de considerație. Cine curăță? Cine
+      lasă? Ceașca marchează sfârșitul șederii.
+    follow_ups:
+      - Cum modelează curățenia spațiul?
+      - Cum ar fi cafeneaua dacă toată lumea ar lăsa ceștile?
+      - Care este relația dintre plecare și apartenență?
+  - id: hi_cs_headphones_bubble
+    name: Bula Căștilelor
+    prompt: |
+      Căștile creează o bulă. Purtătorul este prezent, dar indisponibil. Bula
+      spune "nu deranja". Observă limita. Cum modelează bula câmpul social?
+    follow_ups:
+      - Cum permit căștile concentrarea?
+      - Cum ar fi spațiul fără ele?
+      - Care este relația dintre bulă și productivitate?
+  - id: hi_cs_corner_booth
+    name: Colțarul
+    prompt: |
+      Colțarul este râvnit — spatele la perete, priveliște asupra camerei. Este
+      defensiv. Observă cine îl revendică. Colțul deține o psihologie diferită
+      de centru.
+    follow_ups:
+      - Cum modelează colțul experiența?
+      - Cum ar fi camera fără colțuri?
+      - Care este relația dintre poziție și securitate?
+  - id: hi_cs_sugar_station
+    name: Stația de Zahăr
+    prompt: |
+      Zahăr, șervețele, capace, paie — stația este self-service. Oamenii se
+      personalizează aici. Stația este o pauză între tejghea și loc. Observă
+      alegerile. Ce adaugă oamenii?
+    follow_ups:
+      - Cum extinde stația tranzacția?
+      - Cum ar fi tejgheaua fără ea?
+      - Care este relația dintre personalizare și control?
+  - id: hi_cs_barista_banter
+    name: Conversația Barista
+    prompt: |
+      Barista discută cu un client obișnuit. Conversația este spectacol și
+      conexiune. Alții ascultă sau nu. Conversația creează atmosferă. Ce adaugă
+      camerei?
+    follow_ups:
+      - Cum modelează conversația cultura?
+      - Cum ar fi tejgheaua fără ea?
+      - Care este relația dintre conversație și apartenență?
+  - id: hi_cs_takeaway_stack
+    name: Stiva de Preluare
+    prompt: |
+      Ceștile se stivuiesc la zona de preluare — nume strigate, cești revendicate.
+      Stiva este o arhivă temporară a comenzilor. Observă fluxul. Cine așteaptă?
+      Cine ia și pleacă? Stiva este ordinea care apare din haos.
+    follow_ups:
+      - Cum gestionează stiva agitația?
+      - Cum ar fi tejgheaua fără ea?
+      - Care este relația dintre stivă și secvență?
+  - id: hi_cs_plant_by_window
+    name: Plantă lângă Fereastră
+    prompt: |
+      O plantă stă lângă fereastră — iederă, suculentă. Este decor și viață.
+      Planta nu aparține nimănui. Înmoaie spațiul. Ce adaugă planta camerei?
+    follow_ups:
+      - Cum modelează planta atmosfera?
+      - Cum ar fi fereastra fără ea?
+      - Care este relația dintre plantă și îngrijire?
+  - id: hi_cs_closing_time
+    name: Ora de Închidere
+    prompt: |
+      "Închidem în cincisprezece minute." Anunțul schimbă camera. Scaunele se
+      scârțâie, laptopurile se închid. Cafeneaua are o limită. Observă exodul.
+      Ce extrage ora de închidere?
+    follow_ups:
+      - Cum modelează închiderea șederea?
+      - Cum ar fi spațiul fără o închidere?
+      - Care este relația dintre limită și apartenență?
+  - id: hi_cs_oat_milk_request
+    name: Cererea de Lapte de Ovăz
+    prompt: |
+      "Lapte de ovăz, vă rog." Cererea este identitate și preferință. Laptele
+      alternativ a devenit un marcator. Observă cine întreabă. Ce semnalează
+      alegerea despre băutor?
+    follow_ups:
+      - Cum modelează alegerea laptelui comanda?
+      - Cum ar fi meniul fără alternative?
+      - Care este relația dintre alegere și identitate?
+  - id: hi_cs_receipt_glance
+    name: Privirea Bonului Fiscal
+    prompt: |
+      Bonul fiscal este înmânat — adesea necerut. Unii îl iau, alții refuză.
+      Bonul fiscal este dovadă și înregistrare. Observă schimbul. Ce face
+      bonul fiscal pentru tranzacție?
+    follow_ups:
+      - Cum extinde bonul fiscal tranzacția?
+      - Cum ar fi tejgheaua fără el?
+      - Care este relația dintre bon și memorie?
+  - id: hi_cs_door_hold
+    name: Ținerea Ușii
+    prompt: |
+      Cineva ține ușa pentru persoana din spate. Ținerea ușii este o mică
+      curtoazie. Creează un moment de conexiune. Observă când se întâmplă.
+      Ce necesită ținerea ușii?
+    follow_ups:
+      - Cum modelează ținerea ușii intrarea?
+      - Cum ar fi pragul fără ea?
+      - Care este relația dintre ținere și bunăvoință?
+  - id: hi_cs_study_group
+    name: Grup de Studiu
+    prompt: |
+      Studenți răspândesc notițe, laptopuri, cărți. Masa devine un spațiu de
+      lucru. Grupul de studiu are propriul ritm — discuții, tăcere, râsete.
+      Observă colaborarea. Ce oferă cafeneaua?
+    follow_ups:
+      - Cum permite cafeneaua grupului?
+      - Cum ar fi studiul în bibliotecă?
+      - Care este relația dintre loc și colaborare?
+  - id: hi_cs_grind_sound
+    name: Sunetul Râșniței
+    prompt: |
+      Râșnița țipă. Sunetul este industrial, momentan. Marchează prepararea
+      unei băuturi. Sunetul taie prin conversație. Ce adaugă râșnița
+      peisajului sonor?
+    follow_ups:
+      - Cum modelează râșnița anticiparea?
+      - Cum ar fi cafeneaua fără ea?
+      - Care este relația dintre sunet și meșteșug?
+  - id: hi_cs_cup_stack_bus
+    name: Stiva de Cești Curățată
+    prompt: |
+      Vagonașul de curățenie se umple cu cești, capace, șervețele. Cineva îl
+      va goli. Stiva este urmările multor șederi. Observă acumularea. Ce
+      dezvăluie stiva despre zi?
+    follow_ups:
+      - Cum gestionează vagonașul de curățenie deșeurile?
+      - Cum ar fi tejgheaua fără el?
+      - Care este relația dintre stivă și muncă?
+  - id: hi_cs_first_sip
+    name: Prima Înghițitură
+    prompt: |
+      Prima înghițitură — temperatură, aromă, moment. Observă pe cineva
+      luând-o. Fața se poate schimba. Prima înghițitură este recompensa
+      așteptării. Ce livrează?
+    follow_ups:
+      - Cum modelează prima înghițitură restul?
+      - Cum ar fi ritualul fără ea?
+      - Care este relația dintre înghițitură și satisfacție?
+  - id: hi_cs_neutral_ground
+    name: Teren Neutru
+    prompt: |
+      Cafeneaua nu este teritoriul nimănui. Poți întâlni un străin aici, lucra
+      singur, încheia o relație. Neutralitatea este scopul. Ce permite terenul
+      neutru?
+    follow_ups:
+      - Cum modelează neutralitatea întâlnirea?
+      - Ce ar fi orașul fără teren neutru?
+      - Care este relația dintre neutralitate și siguranță?
+  - id: hi_cs_loyalty_card
+    name: Card de Loialitate
+    prompt: |
+      Cumperi zece, primești unul gratis. Cardul urmărește vizitele. Recompensează
+      revenirea. Cardul de loialitate este un contract — implicit. Observă cine
+      îl folosește. Ce creează cardul între client și magazin?
+    follow_ups:
+      - Cum modelează cardul comportamentul?
+      - Ce ar fi tranzacția fără el?
+      - Care este relația dintre ștampilă și apartenență?
+  - id: hi_cs_outlet_tethered
+    name: Priză Legată
+    prompt: |
+      Cineva stă unde este priza. Cablul merge de la perete la laptop. Legătura
+      limitează mișcarea. Priza determină locul. Observă constrângerea. Ce
+      cere legătura?
+    follow_ups:
+      - Cum modelează priza șederea?
+      - Cum ar fi spațiul cu încărcare wireless?
+      - Care este relația dintre legătură și durată?
+  - id: hi_cs_eye_contact_avoid
+    name: Evitarea Contactului Vizual
+    prompt: |
+      Străinii într-o cafenea evită contactul vizual. Evitarea este politicoasă.
+      A privi înseamnă a risca o conexiune. Observă dansul. Cine încalcă regula?
+      Ce se întâmplă când ochii se întâlnesc?
+    follow_ups:
+      - Cum modelează evitarea câmpul social?
+      - Cum ar fi spațiul cu mai mult contact?
+      - Care este relația dintre privire și intimitate?
+  - id: hi_cs_rainy_day_crowd
+    name: Mulțime într-o Zi Ploioasă
+    prompt: |
+      Ploaia îi forțează pe oameni să intre. Cafeneaua se umple. Haine ude,
+      umbrele lângă ușă. Ploaia creează o mulțime diferită. Observă schimbarea.
+      Ce face vremea spațiului?
+    follow_ups:
+      - Cum modelează ploaia ocuparea?
+      - Ce ar fi ziua fără refugiu?
+      - Care este relația dintre vreme și adăpost?
+  - id: hi_cs_saved_seat
+    name: Loc Păstrat
+    prompt: |
+      "Păstrez locul acesta pentru cineva." Revendicarea păstrează locul
+      împotriva mulțimii. Locul păstrat este o promisiune. Observă tensiunea.
+      Cât timp poate fi păstrat un loc? Care sunt limitele?
+    follow_ups:
+      - Cum modelează păstrarea locului camera?
+      - Ce s-ar întâmpla dacă nimeni nu l-ar onora?
+      - Care este relația dintre revendicare și încredere?
+  - id: hi_cs_quiet_conversation
+    name: Conversație Discretă
+    prompt: |
+      Doi oameni se apleacă unul spre celălalt. Conversația este privată,
+      dar postura este vizibilă. Aplecarea creează o bulă. Observă intimitatea.
+      Ce permite cafeneaua pe care alte locuri nu o permit?
+    follow_ups:
+      - Cum permite spațiul conversația?
+      - Cum ar fi discuția la un restaurant?
+      - Care este relația dintre loc și dezvăluire?
+  - id: hi_cs_roaming_table
+    name: Masă în Căutare
+    prompt: |
+      Cineva nu găsește un loc. Plimbă cu ceașca în mână. Plimbarea este
+      provizorie. Vor lua prima oportunitate. Observă căutarea. Ce dezvăluie
+      plimbarea despre spațiu?
+    follow_ups:
+      - Cum modelează plimbarea experiența?
+      - Cum ar fi cafeneaua cu mai multe locuri?
+      - Care este relația dintre căutare și apartenență?
+  - id: hi_cs_coffee_aroma
+    name: Aroma Cafelei
+    prompt: |
+      Mirosul te lovește la ușă. Prăjită, măcinată, preparată. Aroma este
+      primul contact. Pregătește experiența. Ce face mirosul înainte să
+      comanzi?
+    follow_ups:
+      - Cum modelează aroma dorința?
+      - Cum ar fi intrarea fără ea?
+      - Care este relația dintre miros și memorie?

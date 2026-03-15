@@ -1,0 +1,523 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Die menschliche Schnittstelle — Café (German)
+
+id: human_interface_coffee_shop
+name: Die menschliche Schnittstelle — Café
+description: 50 Karten, um Ihre Sicht auf das Café zu verändern – von der Schlangenchoreographie und Laptop-Territorien bis hin zum dritten Ort, unsichtbaren Skripten und Kaffee als Ritual.
+domain: human_interface
+cards:
+  - id: hi_cs_queue_choreography
+    name: Schlangenchoreographie
+    prompt: |
+      Beobachten Sie die Schlange an der Theke. Körper ordnen sich an –
+      vorgebeugt, Handy-Check, subtiles Scharren. Die Schlange hat einen Rhythmus.
+      Wer hält den Raum? Welche unausgesprochenen Regeln bestimmen, wer wo steht?
+    follow_ups:
+      - Wie prägt die Schlange die Erwartung?
+      - Was würde passieren, wenn jeder die Reihenfolge ignorieren würde?
+      - Wie ist die Beziehung zwischen Warten und Zugehörigkeit?
+  - id: hi_cs_laptop_territory
+    name: Laptop-Territorium
+    prompt: |
+      Ein Laptop auf einem Tisch beansprucht Raum. Die Tasse daneben, die Tasche
+      auf dem Stuhl. Beobachten Sie die Grenzen. Wie viel Fläche nimmt eine Person
+      ein? Was signalisiert "besetzt"?
+    follow_ups:
+      - Wie erweitert der Laptop den Körper?
+      - Wie wäre der Raum ohne Geräte?
+      - Wie ist die Beziehung zwischen Territorium und Verweildauer?
+  - id: hi_cs_third_place
+    name: Dritter Ort
+    prompt: |
+      Nicht zu Hause, nicht bei der Arbeit – das Café ist ein dritter Ort. Menschen
+      kommen, um allein zusammen zu sein. Achten Sie darauf, wer bleibt. Wer geht
+      schnell? Der Raum hält einen anderen sozialen Vertrag.
+    follow_ups:
+      - Was wäre die Stadt ohne dritte Orte?
+      - Wie unterscheidet sich das Café von einer Bibliothek?
+      - Wie ist die Beziehung zwischen Ort und Identität?
+  - id: hi_cs_invisible_script
+    name: Unsichtbares Skript
+    prompt: |
+      Bestellen, bezahlen, warten, erhalten, Sitzplatz suchen. Das Skript ist
+      unsichtbar, bis jemand es bricht. Beobachten Sie einen Erstbesucher. Was weiß er
+      nicht? Das Skript kodiert Zugehörigkeit.
+    follow_ups:
+      - Wie schließt das Skript aus?
+      - Was würde passieren, wenn das Skript aufgeschrieben würde?
+      - Wie ist die Beziehung zwischen Skript und Geläufigkeit?
+  - id: hi_cs_coffee_ritual
+    name: Kaffee als Ritual
+    prompt: |
+      Das Getränk ist zweitrangig. Das Ritual ist primär – der Gang, die Bestellung,
+      der erste Schluck. Achten Sie auf Ihre eigenen Bewegungen. Was würden Sie
+      verlieren, wenn der Kaffee Ihnen nach Hause geliefert würde?
+    follow_ups:
+      - Wie markiert Ritual den Übergang?
+      - Was wäre der Tag ohne den Kaffeestopp?
+      - Wie ist die Beziehung zwischen Ritual und Bereitschaft?
+  - id: hi_cs_counter_handoff
+    name: Übergabe an der Theke
+    prompt: |
+      Der Barista ruft einen Namen. Eine Hand greift zu. Die Übergabe ist ein Moment
+      des Kontakts zwischen Fremden. Beobachten Sie den Austausch. Was wird neben der
+      Tasse übergeben?
+    follow_ups:
+      - Wie schafft die Übergabe Verbindung?
+      - Was würde sich bei einem Roboter-Barista ändern?
+      - Wie ist die Beziehung zwischen Übergabe und Vertrauen?
+  - id: hi_cs_power_outlet_hunt
+    name: Suche nach Steckdosen
+    prompt: |
+      Augen scannen Wände, Boden, unter Tischen. Die Suche nach einer Steckdose ist
+      territorial. Wer war zuerst da? Die Steckdose bestimmt, wo Sie sitzen.
+      Die Geographie folgt der Elektrizität.
+    follow_ups:
+      - Wie prägt die Platzierung von Steckdosen den Raum?
+      - Wie wäre der Raum mit drahtloser Stromversorgung?
+      - Wie ist die Beziehung zwischen Stecker und Dauerhaftigkeit?
+  - id: hi_cs_solo_table
+    name: Solotisch
+    prompt: |
+      Eine Person an einem Tisch für vier. Die leeren Stühle sind ein Puffer.
+      Beobachten Sie die Anordnung. Ist es Abwehr? Vorliebe? Der Solotisch hält
+      Raum gegen die Menge.
+    follow_ups:
+      - Wie signalisiert der Solotisch die Absicht?
+      - Was würde passieren, wenn jemand fragte, ob er sich dazusetzen darf?
+      - Wie ist die Beziehung zwischen Einsamkeit und Sichtbarkeit?
+  - id: hi_cs_milk_pour
+    name: Milcheinschenkung
+    prompt: |
+      Der Barista gießt Milch in Espresso – mit oder ohne Latte Art. Das Einschenken
+      ist Handwerk. Beobachten Sie die Bewegung. Was erhält der Kunde außer dem
+      Getränk? Das Einschenken ist eine Performance.
+    follow_ups:
+      - Wie prägt das Einschenken die Erwartung?
+      - Was wäre das Getränk ohne das Handwerk?
+      - Wie ist die Beziehung zwischen Einschenken und Preis?
+  - id: hi_cs_name_on_cup
+    name: Name auf dem Becher
+    prompt: |
+      Ein Name – echt, falsch, falsch geschrieben – auf einem Becher. Er personalisiert
+      die Transaktion. Der Name reist von Mund zu Hand zur Theke. Was bewirkt der Name
+      für den Austausch?
+    follow_ups:
+      - Wie schafft der Name Wiedererkennung?
+      - Was wäre die Bestellung ohne den Namen?
+      - Wie ist die Beziehung zwischen Name und Anonymität?
+  - id: hi_cs_window_seat
+    name: Fensterplatz
+    prompt: |
+      Der Fensterplatz ist begehrt. Sie blicken auf die Straße; Ihr Rücken ist geschützt.
+      Beobachten Sie, wer ihn wählt. Das Fenster rahmt die Welt draußen ein, während
+      Sie drinnen bleiben. Was bietet die Aussicht?
+    follow_ups:
+      - Wie prägt der Fensterplatz das Erlebnis?
+      - Wie wäre der Raum ohne Fenster?
+      - Wie ist die Beziehung zwischen Innen und Außen?
+  - id: hi_cs_linger_versus_grab
+    name: Verweilen versus Mitnehmen
+    prompt: |
+      Manche nehmen ihren Becher und gehen. Andere setzen sich für Stunden hin. Der gleiche
+      Raum beherbergt beide. Achten Sie auf die Spaltung. Was bestimmt, wer bleibt? Das
+      Café ermöglicht unterschiedliche Geschwindigkeiten.
+    follow_ups:
+      - Wie beeinflusst das Verweilen das Geschäft?
+      - Wie wäre der Raum, wenn alle schnell gingen?
+      - Wie ist die Beziehung zwischen Geschwindigkeit und Zugehörigkeit?
+  - id: hi_cs_regular_recognition
+    name: Wiedererkennung von Stammkunden
+    prompt: |
+      "Das Übliche?" Der Barista weiß es. Der Stammkunde ist bekannt. Beobachten Sie den
+      Austausch. Was ändert sich, wenn Sie erkannt werden? Das Übliche ist eine Abkürzung –
+      und ein Anspruch auf einen Platz.
+    follow_ups:
+      - Wie schafft Wiedererkennung Loyalität?
+      - Was würde der Stammkunde ohne sie verlieren?
+      - Wie ist die Beziehung zwischen Üblichkeit und Identität?
+  - id: hi_cs_soundscape
+    name: Klanglandschaft
+    prompt: |
+      Dampf, Mahlwerk, Geplapper, Musik. Das Café hat eine Klanglandschaft. Schließen
+      Sie die Augen. Ordnen Sie die Ebenen zu. Was ist konstant? Was ist der Rhythmus?
+      Die Klanglandschaft prägt die Stimmung.
+    follow_ups:
+      - Wie beeinflusst die Klanglandschaft die Konzentration?
+      - Wie wäre der Raum in Stille?
+      - Wie ist die Beziehung zwischen Ton und Produktivität?
+  - id: hi_cs_shared_table
+    name: Gemeinschaftstisch
+    prompt: |
+      Fremde sitzen am selben langen Tisch. Niemand spricht. Der Gemeinschaftstisch
+      bedeutet Nähe ohne Verbindung. Beobachten Sie die Grenzen. Wie nah ist zu nah?
+      Der Tisch hält ein feines Gleichgewicht.
+    follow_ups:
+      - Wie unterscheidet sich der Gemeinschaftstisch von einem Solotisch?
+      - Was würde passieren, wenn jemand ein Gespräch beginnen würde?
+      - Wie ist die Beziehung zwischen Nähe und Privatsphäre?
+  - id: hi_cs_tip_jar
+    name: Spendenkasse
+    prompt: |
+      Münzen und Scheine sammeln sich an. Die Spendenkasse ist sichtbar, passiv.
+      Wer gibt Trinkgeld? Wer nicht? Die Kasse steht an der Grenze von Transaktion und Geschenk.
+      Was bedeutet das Trinkgeld?
+    follow_ups:
+      - Wie prägt die Spendenkasse den Austausch?
+      - Wie wäre die Theke ohne sie?
+      - Wie ist die Beziehung zwischen Trinkgeld und Dankbarkeit?
+  - id: hi_cs_cup_sleeve
+    name: Becherhülle
+    prompt: |
+      Die Hülle schützt die Hand vor Hitze. Sie ist wegwerfbar, gebrandet.
+      Beachten Sie, wie Leute den Becher damit halten. Die Hülle ist eine kleine
+      Schnittstelle zwischen Körper und Getränk.
+    follow_ups:
+      - Wie verändert die Hülle den Griff?
+      - Wie wäre das Erlebnis ohne sie?
+      - Wie ist die Beziehung zwischen Hülle und Branding?
+  - id: hi_cs_morning_rush
+    name: Morgenansturm
+    prompt: |
+      Vor der Arbeit reicht die Schlange. Der Morgenansturm hat sein eigenes Tempo.
+      Beobachten Sie das Tempo. Alle gehen woanders hin. Das Café ist eine Raststation.
+      Was fordert der Ansturm?
+    follow_ups:
+      - Wie prägt der Ansturm das Personal?
+      - Was wäre der Morgen ohne den Stopp?
+      - Wie ist die Beziehung zwischen Ansturm und Ritual?
+  - id: hi_cs_afternoon_slow
+    name: Nachmittagsruhe
+    prompt: |
+      Am Nachmittag dünnt die Menge aus. Diejenigen, die bleiben, sind anders – Studenten,
+      Freiberufler, die Ungestressten. Das Tempo verschiebt sich. Achten Sie auf die Veränderung.
+      Der Nachmittag beherbergt eine andere Art von Kunde.
+    follow_ups:
+      - Wie unterscheidet sich der Nachmittag vom Morgen?
+      - Wie wäre der Raum ohne die ruhige Phase?
+      - Wie ist die Beziehung zwischen Zeit und Belegung?
+  - id: hi_cs_wifi_password
+    name: WLAN-Passwort
+    prompt: |
+      Das Passwort steht an der Wand, auf dem Kassenbon, auf der Tafel. Sie müssen
+      fragen oder nachsehen. Das WLAN ist für manche der Eintrittspreis. Beobachten Sie,
+      wer sich verbindet. Wer muss es nicht?
+    follow_ups:
+      - Wie prägt WLAN, wer bleibt?
+      - Wie wäre der Raum ohne ihn?
+      - Wie ist die Beziehung zwischen Verbindung und Konsum?
+  - id: hi_cs_crossword_solver
+    name: Kreuzworträtsel-Löser
+    prompt: |
+      Jemand löst ein Kreuzworträtsel, Zeitung oder Handy. Die Aktivität ist solo, aber
+      sichtbar. Das Kreuzworträtsel markiert Zeit. Es sagt: "Ich bleibe." Was signalisiert
+      die Aktivität anderen?
+    follow_ups:
+      - Wie schafft das Kreuzworträtsel eine Blase?
+      - Was würde der Löser ohne tun?
+      - Wie ist die Beziehung zwischen Aktivität und Belegung?
+  - id: hi_cs_meeting_here
+    name: Treffen hier
+    prompt: |
+      Zwei Leute treffen sich – Vorstellungsgespräch, Wiedersehen, erstes Date. Das Café
+      ist neutraler Boden. Beobachten Sie die Einrichtung. Wer hat den Ort gewählt? Der Tisch
+      wird zur Bühne für die Begegnung.
+    follow_ups:
+      - Wie ermöglicht das Café das Treffen?
+      - Wie wäre das Treffen in einem Büro?
+      - Wie ist die Beziehung zwischen Ort und Begegnung?
+  - id: hi_cs_bathroom_key
+    name: Badezimmerschlüssel
+    prompt: |
+      Der Badezimmerschlüssel ist an einem Klotz, einem Paddel, einem riesigen Löffel
+      befestigt. Sie müssen fragen. Der Schlüssel ist ein kleiner Test der Zugehörigkeit.
+      Wer hat das Recht, das Bad zu benutzen?
+    follow_ups:
+      - Wie kontrolliert der Schlüssel den Zugang?
+      - Wie wäre der Raum mit offenen Badezimmern?
+      - Wie ist die Beziehung zwischen Schlüssel und Vertrauen?
+  - id: hi_cs_pastry_case
+    name: Gebäckvitrine
+    prompt: |
+      Croissants, Muffins, Kekse hinter Glas. Die Vitrine ist Versuchung und Auslage.
+      Beachten Sie, was sich verkauft. Was bleibt zu lange liegen? Die Vitrine ist eine
+      Verhandlung zwischen Verlangen und Verzögerung.
+    follow_ups:
+      - Wie prägt die Vitrine die Bestellung?
+      - Wie wäre die Theke ohne sie?
+      - Wie ist die Beziehung zwischen Auslage und Verlangen?
+  - id: hi_cs_phone_glance
+    name: Handy-Blick
+    prompt: |
+      Jeder wirft einen Blick auf sein Handy. Der Blick ist eine Pause, ein Check, ein Rückzug.
+      Beobachten Sie den Rhythmus. Wie oft? Wie lange? Das Handy ist ein Portal aus dem Raum.
+    follow_ups:
+      - Wie prägt das Handy die Anwesenheit?
+      - Wie wäre der Raum ohne Handys?
+      - Wie ist die Beziehung zwischen Blick und Aufmerksamkeit?
+  - id: hi_cs_steam_rise
+    name: Dampf steigt auf
+    prompt: |
+      Dampf steigt von einer frischen Tasse auf. Die Hitze trägt das Aroma. Der Dampf ist
+      vergänglich – in wenigen Minuten verschwunden. Beachten Sie ihn. Was fügt der Dampf dem
+      Moment vor dem ersten Schluck hinzu?
+    follow_ups:
+      - Wie prägt der Dampf die Vorfreude?
+      - Was wäre das Getränk ohne ihn?
+      - Wie ist die Beziehung zwischen Dampf und Ritual?
+  - id: hi_cs_bag_on_chair
+    name: Tasche auf dem Stuhl
+    prompt: |
+      Eine Tasche nimmt den Stuhl neben dem Sitzenden ein. Sie reserviert den Platz, erweitert das
+      Territorium. Die Tasche ist ein Platzhalter. Beobachten Sie die Botschaft: "Dieser Platz
+      ist besetzt." Was würde passieren, wenn jemand fragte, ob er sich setzen darf?
+    follow_ups:
+      - Wie beansprucht die Tasche Raum?
+      - Wie wäre der Raum ohne das Reservieren mit Taschen?
+      - Wie ist die Beziehung zwischen Gegenstand und Territorium?
+  - id: hi_cs_espresso_shot
+    name: Espresso-Shot
+    prompt: |
+      Ein einzelner Shot – schnell, intensiv. Der Espresso-Trinker steht oft. Der Shot ist ein
+      Ausrufezeichen im Tag. Beobachten Sie das Ritual. Rein, fertig, raus. Was leistet der Shot?
+    follow_ups:
+      - Wie unterscheidet sich der Shot von einem Latte?
+      - Was wäre das Café ohne Espresso?
+      - Wie ist die Beziehung zwischen Shot und Geschwindigkeit?
+  - id: hi_cs_cold_brew_tap
+    name: Cold Brew Zapfhahn
+    prompt: |
+      Cold Brew vom Zapfhahn – wie Bier. Die Ausgabe ist anders. Kein Dampf, keine Wartezeit.
+      Der Cold Brew Kunde will etwas anderes. Achten Sie auf die Wahl. Was signalisiert Cold Brew?
+    follow_ups:
+      - Wie verändert Cold Brew das Erlebnis?
+      - Was wäre die Speisekarte ohne ihn?
+      - Wie ist die Beziehung zwischen Temperatur und Identität?
+  - id: hi_cs_chalkboard_menu
+    name: Tafelmenü
+    prompt: |
+      Das Menü ist handgeschrieben – Kreide auf Tafel. Es ändert sich. Die Handschrift ist Persönlichkeit.
+      Beachten Sie, was aufgeführt ist, was nicht. Die Tafel sagt: "Wir treffen hier Entscheidungen."
+    follow_ups:
+      - Wie prägt die Tafel die Marke?
+      - Wie wäre die Wand mit einem gedruckten Menü?
+      - Wie ist die Beziehung zwischen Hand und Authentizität?
+  - id: hi_cs_leaving_cup
+    name: Zurückgelassener Becher
+    prompt: |
+      Der Becher auf dem Tisch – leer, verlassen. Manche räumen selbst ab; manche nicht. Der zurückgelassene
+      Becher ist ein kleiner Test der Rücksichtnahme. Wer räumt ab? Wer geht? Der Becher markiert das Ende
+      des Aufenthalts.
+    follow_ups:
+      - Wie prägt das Abräumen den Raum?
+      - Was wäre das Café, wenn alle Becher zurückließen?
+      - Wie ist die Beziehung zwischen Gehen und Zugehörigkeit?
+  - id: hi_cs_headphones_bubble
+    name: Kopfhörerblase
+    prompt: |
+      Kopfhörer schaffen eine Blase. Der Träger ist präsent, aber nicht verfügbar. Die Blase sagt:
+      "Nicht stören." Beobachten Sie die Grenze. Wie prägt die Blase das soziale Feld?
+    follow_ups:
+      - Wie ermöglichen Kopfhörer Konzentration?
+      - Wie wäre der Raum ohne sie?
+      - Wie ist die Beziehung zwischen Blase und Produktivität?
+  - id: hi_cs_corner_booth
+    name: Eckbank
+    prompt: |
+      Die Eckbank ist begehrt – Rücken zur Wand, Blick auf den Raum. Sie ist verteidigbar. Beobachten Sie,
+      wer sie beansprucht. Die Ecke hat eine andere Psychologie als die Mitte.
+    follow_ups:
+      - Wie prägt die Ecke das Erlebnis?
+      - Wie wäre der Raum ohne Ecken?
+      - Wie ist die Beziehung zwischen Position und Sicherheit?
+  - id: hi_cs_sugar_station
+    name: Zuckerstation
+    prompt: |
+      Zucker, Servietten, Deckel, Strohhalme – die Station ist Selbstbedienung. Hier passen die Leute an.
+      Die Station ist eine Pause zwischen Theke und Sitzplatz. Beobachten Sie die Entscheidungen. Was fügen
+      die Leute hinzu?
+    follow_ups:
+      - Wie erweitert die Station die Transaktion?
+      - Wie wäre die Theke ohne sie?
+      - Wie ist die Beziehung zwischen Anpassung und Kontrolle?
+  - id: hi_cs_barista_banter
+    name: Barista-Geplänkel
+    prompt: |
+      Der Barista unterhält sich mit einem Stammgast. Das Geplänkel ist Performance und Verbindung.
+      Andere hören zu oder nicht. Das Geplänkel schafft Atmosphäre. Was fügt es dem Raum hinzu?
+    follow_ups:
+      - Wie prägt Geplänkel die Kultur?
+      - Wie wäre die Theke ohne sie?
+      - Wie ist die Beziehung zwischen Geplänkel und Zugehörigkeit?
+  - id: hi_cs_takeaway_stack
+    name: Mitnahme-Stapel
+    prompt: |
+      Becher stapeln sich am Abholbereich – Namen gerufen, Becher abgeholt. Der Stapel ist ein temporäres
+      Archiv von Bestellungen. Beobachten Sie den Fluss. Wer wartet? Wer greift zu und geht? Der Stapel ist
+      Ordnung, die aus Chaos entsteht.
+    follow_ups:
+      - Wie verwaltet der Stapel den Ansturm?
+      - Wie wäre die Theke ohne ihn?
+      - Wie ist die Beziehung zwischen Stapel und Reihenfolge?
+  - id: hi_cs_plant_by_window
+    name: Pflanze am Fenster
+    prompt: |
+      Eine Pflanze steht am Fenster – Efeutute, Sukkulente. Sie ist Dekoration und Leben.
+      Die Pflanze gehört niemandem. Sie mildert den Raum. Was fügt die Pflanze dem Raum hinzu?
+    follow_ups:
+      - Wie prägt die Pflanze die Atmosphäre?
+      - Wie wäre das Fenster ohne sie?
+      - Wie ist die Beziehung zwischen Pflanze und Pflege?
+  - id: hi_cs_closing_time
+    name: Schließzeit
+    prompt: |
+      "Wir schließen in fünfzehn Minuten." Die Ankündigung verändert den Raum. Stühle schaben, Laptops werden
+      zugeklappt. Das Café hat eine Grenze. Beobachten Sie den Auszug. Was fordert die Schließzeit?
+    follow_ups:
+      - Wie prägt die Schließung den Aufenthalt?
+      - Wie wäre der Raum ohne ein Ende?
+      - Wie ist die Beziehung zwischen Grenze und Zugehörigkeit?
+  - id: hi_cs_oat_milk_request
+    name: Hafermilch-Anfrage
+    prompt: |
+      "Hafermilch, bitte." Die Anfrage ist Identität und Präferenz. Die alternative Milch ist zu einer
+      Markierung geworden. Achten Sie darauf, wer fragt. Was signalisiert die Wahl über den Trinker?
+    follow_ups:
+      - Wie prägt die Milchwahl die Bestellung?
+      - Was wäre die Speisekarte ohne Alternativen?
+      - Wie ist die Beziehung zwischen Wahl und Identität?
+  - id: hi_cs_receipt_glance
+    name: Kassenbon-Blick
+    prompt: |
+      Der Kassenbon wird übergeben – oft unaufgefordert. Manche nehmen ihn, manche lehnen ab. Der Kassenbon
+      ist Beweis und Aufzeichnung. Beobachten Sie den Austausch. Was bewirkt der Kassenbon für die Transaktion?
+    follow_ups:
+      - Wie erweitert der Kassenbon die Transaktion?
+      - Wie wäre die Theke ohne ihn?
+      - Wie ist die Beziehung zwischen Kassenbon und Gedächtnis?
+  - id: hi_cs_door_hold
+    name: Tür aufhalten
+    prompt: |
+      Jemand hält die Tür für die Person dahinter auf. Das Aufhalten ist eine kleine Höflichkeit.
+      Es schafft einen Moment der Verbindung. Beobachten Sie, wann es passiert. Was erfordert das Aufhalten?
+    follow_ups:
+      - Wie prägt das Aufhalten der Tür den Eingang?
+      - Wie wäre die Schwelle ohne ihn?
+      - Wie ist die Beziehung zwischen Aufhalten und Höflichkeit?
+  - id: hi_cs_study_group
+    name: Lerngruppe
+    prompt: |
+      Studenten breiten Notizen, Laptops, Bücher aus. Der Tisch wird zum Arbeitsplatz. Die Lerngruppe hat ihren
+      eigenen Rhythmus – Diskussion, Stille, Lachen. Beobachten Sie die Zusammenarbeit. Was bietet das Café?
+    follow_ups:
+      - Wie ermöglicht das Café die Gruppe?
+      - Wie wäre das Studium in einer Bibliothek?
+      - Wie ist die Beziehung zwischen Ort und Zusammenarbeit?
+  - id: hi_cs_grind_sound
+    name: Mahlgeräusch
+    prompt: |
+      Die Mühle schreit. Der Ton ist industriell, momentan. Er markiert die Zubereitung eines Getränks.
+      Der Ton durchbricht die Konversation. Was fügt das Mahlen zur Klanglandschaft hinzu?
+    follow_ups:
+      - Wie prägt das Mahlen die Vorfreude?
+      - Was wäre das Café ohne ihn?
+      - Wie ist die Beziehung zwischen Ton und Handwerk?
+  - id: hi_cs_cup_stack_bus
+    name: Tassenstapel Abräumen
+    prompt: |
+      Die Abräumwanne füllt sich mit Tassen, Deckeln, Servietten. Jemand wird sie leeren. Der Stapel ist das
+      Nachspiel vieler Aufenthalte. Beobachten Sie die Ansammlung. Was offenbart der Stapel über den Tag?
+    follow_ups:
+      - Wie verwaltet die Abräumwanne Abfall?
+      - Wie wäre die Theke ohne sie?
+      - Wie ist die Beziehung zwischen Stapel und Arbeit?
+  - id: hi_cs_first_sip
+    name: Erster Schluck
+    prompt: |
+      Der erste Schluck – Temperatur, Geschmack, Moment. Beobachten Sie jemanden, der ihn nimmt. Das Gesicht
+      kann sich ändern. Der erste Schluck ist die Belohnung des Wartens. Was liefert er?
+    follow_ups:
+      - Wie prägt der erste Schluck den Rest?
+      - Was wäre das Ritual ohne ihn?
+      - Wie ist die Beziehung zwischen Schluck und Zufriedenheit?
+  - id: hi_cs_neutral_ground
+    name: Neutraler Boden
+    prompt: |
+      Das Café ist kein Territorium von jemandem. Sie können hier einen Fremden treffen, allein arbeiten, eine
+      Beziehung beenden. Die Neutralität ist der Punkt. Was ermöglicht neutraler Boden?
+    follow_ups:
+      - Wie prägt Neutralität die Begegnung?
+      - Was wäre die Stadt ohne neutralen Boden?
+      - Wie ist die Beziehung zwischen Neutralität und Sicherheit?
+  - id: hi_cs_loyalty_card
+    name: Treuekarte
+    prompt: |
+      Zehn kaufen, einer gratis. Die Karte verfolgt Besuche. Sie belohnt Rückkehr. Die Treuekarte ist ein
+      Vertrag – implizit. Beobachten Sie, wer sie benutzt. Was schafft die Karte zwischen Kunde und Laden?
+    follow_ups:
+      - Wie prägt die Karte das Verhalten?
+      - Was wäre die Transaktion ohne sie?
+      - Wie ist die Beziehung zwischen Stempel und Zugehörigkeit?
+  - id: hi_cs_outlet_tethered
+    name: Steckdose angekettet
+    prompt: |
+      Jemand sitzt dort, wo die Steckdose ist. Das Kabel läuft von der Wand zum Laptop. Die Kette begrenzt die
+      Bewegung. Die Steckdose bestimmt den Sitz. Beobachten Sie die Einschränkung. Was verlangt die Kette?
+    follow_ups:
+      - Wie prägt die Steckdose den Aufenthalt?
+      - Wie wäre der Raum mit drahtlosem Aufladen?
+      - Wie ist die Beziehung zwischen Kette und Dauer?
+  - id: hi_cs_eye_contact_avoid
+    name: Blickkontakt vermeiden
+    prompt: |
+      Fremde im Café vermeiden Blickkontakt. Die Vermeidung ist höflich. Ein Blick riskiert Verbindung. Beobachten
+      Sie den Tanz. Wer bricht die Regel? Was passiert, wenn sich Augen treffen?
+    follow_ups:
+      - Wie prägt die Vermeidung das soziale Feld?
+      - Wie wäre der Raum mit mehr Kontakt?
+      - Wie ist die Beziehung zwischen Blick und Privatsphäre?
+  - id: hi_cs_rainy_day_crowd
+    name: Regenwettermenge
+    prompt: |
+      Regen treibt die Leute nach drinnen. Das Café füllt sich. Nasse Mäntel, Regenschirme an der Tür. Der Regen
+      schafft eine andere Menge. Beobachten Sie die Veränderung. Was macht das Wetter mit dem Raum?
+    follow_ups:
+      - Wie prägt Regen die Belegung?
+      - Was wäre der Tag ohne den Zufluchtsort?
+      - Wie ist die Beziehung zwischen Wetter und Schutz?
+  - id: hi_cs_saved_seat
+    name: Reservierter Platz
+    prompt: |
+      "Ich spare diesen für jemanden." Der Anspruch hält den Platz gegen die Menge. Der reservierte Platz ist
+      ein Versprechen. Beobachten Sie die Spannung. Wie lange kann ein Platz reserviert sein? Was sind die Grenzen?
+    follow_ups:
+      - Wie prägt das Reservieren den Raum?
+      - Was würde passieren, wenn niemand es ehren würde?
+      - Wie ist die Beziehung zwischen Anspruch und Vertrauen?
+  - id: hi_cs_quiet_conversation
+    name: Leises Gespräch
+    prompt: |
+      Zwei Leute beugen sich vor. Das Gespräch ist privat, aber die Haltung ist sichtbar. Das Vorbeugen schafft
+      eine Blase. Beobachten Sie die Intimität. Was erlaubt das Café, was andere Orte nicht tun?
+    follow_ups:
+      - Wie ermöglicht der Raum das Gespräch?
+      - Wie wäre das Gespräch in einem Restaurant?
+      - Wie ist die Beziehung zwischen Ort und Offenlegung?
+  - id: hi_cs_roaming_table
+    name: Herumwandernder Tisch
+    prompt: |
+      Jemand findet keinen Platz. Er wandert mit seinem Becher herum. Das Herumwandern ist provisorisch. Er wird
+      die erste freie Stelle nehmen. Beobachten Sie die Suche. Was offenbart das Umherwandern über den Raum?
+    follow_ups:
+      - Wie prägt das Herumwandern das Erlebnis?
+      - Wie wäre das Café mit mehr Plätzen?
+      - Wie ist die Beziehung zwischen Suche und Zugehörigkeit?
+  - id: hi_cs_coffee_aroma
+    name: Kaffee-Aroma
+    prompt: |
+      Der Geruch trifft Sie an der Tür. Geröstet, gemahlen, gebrüht. Das Aroma ist der erste Kontakt. Es bereitet
+      das Erlebnis vor. Was bewirkt der Geruch, bevor Sie bestellen?
+    follow_ups:
+      - Wie prägt das Aroma die Begierde?
+      - Wie wäre der Eingang ohne ihn?
+      - Wie ist die Beziehung zwischen Geruch und Erinnerung?

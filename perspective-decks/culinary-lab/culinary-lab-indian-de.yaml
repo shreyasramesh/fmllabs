@@ -1,0 +1,431 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Kulinarisches Labor — Indisch (German)
+
+id: culinary_lab_indian
+name: Kulinarisches Labor — Indisch
+description: 50 Karten, um Ihre Erfahrung indischer Küche zu verändern – von der Chemie der Gewürze und Schärfe bis zur Archäologie der Zutaten und der Choreografie des gemeinsamen Tisches.
+domain: culinary_lab
+cards:
+  - id: ind_tadka_crackle
+    name: Das Tadka-Knistern
+    prompt: |
+      Tadka – das Temperieren – ist die Eröffnungsnote. Heißes Öl trifft Senfkörner, Kreuzkümmel, Curryblätter. Lauschen Sie. Das Knistern ist Chemie in Echtzeit. Was verändert sich, wenn Sie es hören, bevor Sie es schmecken?
+    follow_ups:
+      - Wie prägt der Klang die Vorfreude?
+      - Was würde dem Gericht ohne das Knistern fehlen?
+      - Was ist die Beziehung zwischen Klang und Geschmack?
+  - id: ind_spice_route
+    name: Gewürzroute
+    prompt: |
+      Kardamom kam aus Kerala. Safran aus Kaschmir. Schwarzer Pfeffer war einst sein Gewicht in Gold wert. Verfolgen Sie ein Gewürz auf Ihrem Teller bis zu seinem Ursprung. Welche Reise hat es gemacht, um Sie zu erreichen?
+    follow_ups:
+      - Wie verändert das Wissen um die Route den Biss?
+      - Welche anderen Gewürze reisten denselben Weg?
+      - Was ist die Beziehung zwischen Handel und Geschmack?
+  - id: ind_thali_geometry
+    name: Thali-Geometrie
+    prompt: |
+      Ein Thali ist eine Leinwand – Schüsseln im Kreis angeordnet, jede mit einer Rolle. Studieren Sie die Komposition. Wohin fällt der Blick zuerst? Was ist der Leerraum?
+    follow_ups:
+      - Was würde passieren, wenn eine Schüssel fehlen würde?
+      - Wie prägt die Anordnung das Essen?
+      - Was ist die Beziehung zwischen Geometrie und Ritual?
+  - id: ind_hand_as_tool
+    name: Hand als Werkzeug
+    prompt: |
+      Roti zerreißen, mit Sabzi mischen, in den Mund führen. Die Hand ist Utensil und Sensor. Beachten Sie die Choreografie. Was fügt Berührung hinzu, was Gabel und Messer nicht können?
+    follow_ups:
+      - Wie verändert das Essen mit den Händen das Tempo?
+      - Was ginge mit Besteck verloren?
+      - Was ist die Beziehung zwischen Berührung und Temperatur?
+  - id: ind_heat_layers
+    name: Schärfeschichten
+    prompt: |
+      Indische Schärfe ist geschichtet – das Brennen von Chili, die Wärme von schwarzem Pfeffer, das Feuer von Ingwer. Nehmen Sie einen Bissen und ordnen Sie zu, wo jede Schärfe landet. Zunge, Rachen, Bauch. Wie bauen sie sich auf?
+    follow_ups:
+      - Wie wäre das Gericht nur mit einer Schärfe?
+      - Wie schafft Schichten Komplexität?
+      - Was ist die Beziehung zwischen Schärfe und Zeit?
+  - id: ind_yogurt_intervention
+    name: Joghurt-Intervention
+    prompt: |
+      Raita, Dahi, Lassi – Joghurt kühlt, schneidet, balanciert. Beachten Sie den Moment, in dem Sie ihn hinzufügen. Säure trifft Fett, Kühle trifft Hitze. Die Intervention ist chemisch. Was unterbricht sie?
+    follow_ups:
+      - Wie wäre das Essen ohne Joghurt?
+      - Wie schafft der Kontrast Erleichterung?
+      - Was ist die Beziehung zwischen Intervention und Gleichgewicht?
+  - id: ind_betel_after
+    name: Betel danach
+    prompt: |
+      Paan – Betelblatt – beendet in manchen Traditionen die Mahlzeit. Es ist kein Dessert. Es ist ein Abschluss. Der Gaumen verschiebt sich erneut. Was sagt das Ende über das Ganze aus?
+    follow_ups:
+      - Wie markiert Paan den Übergang?
+      - Was würde der Mahlzeit ohne Paan fehlen?
+      - Was ist die Beziehung zwischen Ende und Erinnerung?
+  - id: ind_street_chaos
+    name: Straßenchaos
+    prompt: |
+      Ein Chaat-Wallah arbeitet mit Geschwindigkeit – Bhel, Papdi, Chutneys in Sekunden geschichtet. Beobachten Sie die Performance. Der Stand ist Theater. Was ist das Drehbuch? Wer ist das Publikum?
+    follow_ups:
+      - Was wäre das Gericht ohne die Performance?
+      - Wie prägt Geschwindigkeit das Erlebnis?
+      - Was ist die Beziehung zwischen Chaos und Handwerk?
+  - id: ind_tandoor_breathe
+    name: Tandoor-Atem
+    prompt: |
+      Ein Tandoor atmet – Flammen, Rauch, Lehm. Naan wird an die Wand geklatscht, herausgezogen, wenn es Blasen wirft. Stehen Sie in der Nähe. Die Hitze, der Geruch. Was ist die Beziehung zwischen Feuer und Geschmack?
+    follow_ups:
+      - Wie wäre Naan ohne den Tandoor?
+      - Wie prägt Lehm den Koch?
+      - Was ist die Beziehung zwischen Atem und Brot?
+  - id: ind_turmeric_stain
+    name: Kurkuma-Fleck
+    prompt: |
+      Kurkuma hinterlässt Flecken – Finger, Stoff, Plastik. Die Farbe bleibt. Beachten Sie, was sie markiert. Der Fleck ist Archäologie. Wo ist diese Mahlzeit gereist, bevor sie Sie erreichte?
+    follow_ups:
+      - Wie wäre das Gericht ohne die Farbe?
+      - Wie markiert der Fleck Arbeit?
+      - Was ist die Beziehung zwischen Pigment und Konservierung?
+  - id: ind_rice_architecture
+    name: Reis-Architektur
+    prompt: |
+      Biryani ist gebaut – Reisschicht, Fleischschicht, Safran, frittierte Zwiebeln. Die Struktur hält. Graben Sie sie aus. Wie beeinflusst die Architektur jeden Bissen?
+    follow_ups:
+      - Was würde passieren, wenn sich die Schichten zu früh vermischten?
+      - Wie schafft Struktur Überraschung?
+      - Was ist die Beziehung zwischen Bauen und Essen?
+  - id: ind_chutney_spectrum
+    name: Chutney-Spektrum
+    prompt: |
+      Minze, Tamarinde, Kokosnuss, Tomate – Chutneys sind wie eine Palette aufgereiht. Jedes verändert den Bissen. Probieren Sie ein Gericht mit drei Chutneys. Wie wird aus derselben Basis eine von drei verschiedenen Geschichten?
+    follow_ups:
+      - Wie wäre das Essen mit nur einem Chutney?
+      - Wie prägt Wahl die Handlungsfähigkeit?
+      - Was ist die Beziehung zwischen Spektrum und Vorliebe?
+  - id: ind_steam_rising
+    name: Aufsteigender Dampf
+    prompt: |
+      Idli, Dosa, Puri – Dampf steigt auf, wenn der Deckel angehoben wird. Beobachten Sie ihn. Der Dampf trägt Aroma vor dem Geschmack. Was kommt zuerst? Nase oder Mund?
+    follow_ups:
+      - Wie prägt Dampf die Vorfreude?
+      - Was ginge ohne das Anheben verloren?
+      - Was ist die Beziehung zwischen Dampf und Geschmack?
+  - id: ind_silver_versus_steel
+    name: Silber gegen Stahl
+    prompt: |
+      Manche Tische verwenden Stahl-Thalis, manche Silber, manche Bananenblätter. Beachten Sie das Gefäß. Wie verändert die Oberfläche unter dem Essen das Erlebnis? Gewicht, Klang, Tradition.
+    follow_ups:
+      - Wie würde sich das Essen auf verschiedenen Oberflächen anfühlen?
+      - Wie prägt das Gefäß die Zeremonie?
+      - Was ist die Beziehung zwischen Material und Bedeutung?
+  - id: ind_cumin_fragrance
+    name: Kreuzkümmelduft
+    prompt: |
+      Geröstete Kreuzkümmelsamen setzen Duft vor Geschmack frei. Riechen Sie ein Gericht, bevor Sie es probieren. Kreuzkümmel reist durch den Raum. Wie bereitet Aroma den Gaumen vor?
+    follow_ups:
+      - Wie wäre das Gericht ohne den Geruch?
+      - Wie kennzeichnet Duft die Anwesenheit des Kochs?
+      - Was ist die Beziehung zwischen Nase und Erinnerung?
+  - id: ind_shared_central
+    name: Geteilt Zentral
+    prompt: |
+      Gerichte stehen in der Mitte. Jeder greift zu. Es gibt nicht "deinen Teller" im gleichen Sinne. Beobachten Sie die Choreografie des Greifens, Weiterreichens, Nehmens. Was sind die unausgesprochenen Regeln?
+    follow_ups:
+      - Wie wäre das Essen mit einzelnen Portionen?
+      - Wie schafft Teilen Verbindung?
+      - Was ist die Beziehung zwischen Zentral und Gemeinschaftlich?
+  - id: ind_ghee_gloss
+    name: Ghee-Glanz
+    prompt: |
+      Ghee sammelt sich, glänzt, überzieht. Es ist Fett als Geschmack und als Finish. Beachten Sie, wo es sich auf dem Teller sammelt. Wie verändert dieser Glanz Textur und Temperatur?
+    follow_ups:
+      - Wie wäre das Gericht mit Öl statt Ghee?
+      - Wie transportiert Ghee andere Aromen?
+      - Was ist die Beziehung zwischen Glanz und Reichhaltigkeit?
+  - id: ind_papad_crunch
+    name: Papad-Knuspern
+    prompt: |
+      Papad – knusprig, dünn, knackig. Es ist Textur als Satzzeichen. Brechen Sie einen. Lauschen Sie. Das Knuspern ist der Rhythmus der Mahlzeit. Wie würde die Stille klingen, ohne es?
+    follow_ups:
+      - Wie schafft Knuspern Kontrast?
+      - Was würde der Mahlzeit ohne Papad fehlen?
+      - Was ist die Beziehung zwischen Klang und Zufriedenheit?
+  - id: ind_sambar_depth
+    name: Sambar-Tiefe
+    prompt: |
+      Sambar ist geschichtet – Linsen, Tamarinde, Gemüse, Gewürze. Es hat
+      geköchelt. Schmecken Sie die Schichten. Wie viele können Sie trennen? Was ist
+      die Archäologie dieser Schüssel?
+    follow_ups:
+      - Wie wäre Sambar mit weniger Schichten?
+      - Wie baut Zeit Tiefe auf?
+      - Was ist die Beziehung zwischen Köcheln und Geschichte?
+  - id: ind_pickle_punch
+    name: Pickel-Punch
+    prompt: |
+      Achar – eingelegtes – ist der Handlungsdrehpunkt. Ein winziger Bissen verändert alles. Süß, sauer, scharf, fermentiert. Beachten Sie, wann er ins Spiel kommt. Was stört er?
+    follow_ups:
+      - Wie wäre das Essen ohne Pickel?
+      - Wie schafft der Punch Überraschung?
+      - Was ist die Beziehung zwischen Drehpunkt und Erinnerung?
+  - id: ind_bay_leaf_hunt
+    name: Lorbeerblatt-Jagd
+    prompt: |
+      Lorbeerblätter verstecken sich in Pulao, Biryani, Currys. Finden Sie eines. Sie essen es nicht –
+      es ist Archäologie. Es reiste aus Kerala oder Kaschmir. Was hat es hinzugefügt, bevor es entfernt wurde?
+    follow_ups:
+      - Wie prägt das Unverdauliche das Essbare?
+      - Wie wäre das Gericht ohne das Blatt?
+      - Was ist die Beziehung zwischen Verstecktem und Vorhandenem?
+  - id: ind_dosa_edge
+    name: Dosa-Rand
+    prompt: |
+      Eine Dosa hat einen Rand – knusprig, spitzenartig, golden. Das Zentrum ist weich. Der Kontrast ist architektonisch. Wo beißen Sie zuerst hinein? Wie rahmt der Rand das Ganze ein?
+    follow_ups:
+      - Wie wäre Dosa, wenn sie durchgehend knusprig wäre?
+      - Wie schafft Rand Interesse?
+      - Was ist die Beziehung zwischen Grenze und Zentrum?
+  - id: ind_saffron_thread
+    name: Safranfaden
+    prompt: |
+      Safran – wenige Fäden – färbt und parfümiert ein ganzes Gericht. Verfolgen Sie einen Faden. Woher kam er? Kaschmir, Iran, Spanien? Das teuerste Gewürz. Was fügt Knappheit hinzu?
+    follow_ups:
+      - Wie prägt Safran Luxus?
+      - Wie wäre das Gericht mit Kurkuma statt Safran?
+      - Was ist die Beziehung zwischen Faden und Territorium?
+  - id: ind_chaat_texture
+    name: Chaat-Textur
+    prompt: |
+      Chaat schichtet Texturen – knusprig, weich, knackig, cremig – in einem Bissen. Dekonstruieren Sie es. Wie viele Texturen? Wie arbeiten sie zusammen? Der Bissen ist eine
+      Kollaboration.
+    follow_ups:
+      - Wie wäre Chaat mit nur einer Textur?
+      - Wie schafft Schichten Spiel?
+      - Was ist die Beziehung zwischen Textur und Genuss?
+  - id: ind_mustard_seed_pop
+    name: Senfkorn-Ploppen
+    prompt: |
+      Senfkörner ploppen in Öl – Bengali, südindische Temperierung. Das Ploppen ist chemisch. Samen setzen Verbindungen frei. Riechen Sie es. Was verändert sich, wenn Hitze sie aktiviert?
+    follow_ups:
+      - Wie markiert das Ploppen das Timing des Kochs?
+      - Wie wäre das Gericht ohne es?
+      - Was ist die Beziehung zwischen Ploppen und Potenz?
+  - id: ind_dal_surface
+    name: Dal-Oberfläche
+    prompt: |
+      Dal hat eine Oberfläche – manchmal eine Haut, manchmal schwimmt Tadka darauf. Noch nicht umrühren. Schauen Sie sie an. Was verrät die Oberfläche über das darunterliegende?
+    follow_ups:
+      - Wie lädt die Oberfläche ein oder wehrt ab?
+      - Was würde passieren, wenn Sie nie umrühren würden?
+      - Was ist die Beziehung zwischen Oberfläche und Tiefe?
+  - id: ind_banana_leaf_plate
+    name: Bananenblatt-Teller
+    prompt: |
+      Ein Bananenblatt ist ein Teller – organisch, wegwerfbar, traditionell. Das Blatt hat
+      Textur, Geruch. Essen liegt anders darauf. Wie verändert das Blatt die
+      Mahlzeit?
+    follow_ups:
+      - Wie wäre die Mahlzeit auf Keramik?
+      - Wie prägt das Blatt das Ritual?
+      - Was ist die Beziehung zwischen Blatt und Ort?
+  - id: ind_fenugreek_haunt
+    name: Bockshornklee-Spur
+    prompt: |
+      Bockshornklee – Methi – hat einen Duft, der nachklingt. Bitter, Ahorn-ähnlich. Er
+      spukt in der Küche, in der Kleidung. Beachten Sie, wo er haftet. Was fügt
+      Hartnäckigkeit hinzu?
+    follow_ups:
+      - Wie markiert Bockshornklee Territorium?
+      - Wie wäre das Gericht ohne seine Hartnäckigkeit?
+      - Was ist die Beziehung zwischen Spuk und Erinnerung?
+  - id: ind_pani_puri_moment
+    name: Pani Puri-Moment
+    prompt: |
+      Pani Puri ist eine Ein-Bissen-Geschichte – knusprige Hülle, Kartoffel, Kichererbse, Tamarindenwasser. Sie muss ganz und sofort gegessen werden. Der Moment ist unwiederholbar. Was macht ihn dringend?
+    follow_ups:
+      - Was würde passieren, wenn Sie warten würden?
+      - Wie schafft Dringlichkeit Vergnügen?
+      - Was ist die Beziehung zwischen Moment und Erinnerung?
+  - id: ind_serving_order
+    name: Servierreihenfolge
+    prompt: |
+      In manchen Settings gibt es eine Reihenfolge – zuerst Ältere, bestimmte Gerichte vor
+      anderen. Beobachten Sie. Wer serviert? Wer wartet? Die Choreografie kodiert Respekt.
+      Was sind die Regeln?
+    follow_ups:
+      - Wie wäre das Essen ohne die Reihenfolge?
+      - Wie schafft Sequenz Bedeutung?
+      - Was ist die Beziehung zwischen Reihenfolge und Hierarchie?
+  - id: ind_cardamom_pod
+    name: Kardamomkapsel
+    prompt: |
+      Eine ganze Kardamomkapsel versteckt sich in Pulao oder Chai. Sie könnten hineinbeißen, sie beiseite schieben. Die Kapsel ist Archäologie – Grün aus Kerala, Schwarz aus den Hügeln. Was hat sie beigetragen?
+    follow_ups:
+      - Wie unterscheidet sich die ganze Kapsel von gemahlenem Kardamom?
+      - Wie wäre das Gericht ohne sie?
+      - Was ist die Beziehung zwischen Kapsel und Ort?
+  - id: ind_kitchen_sounds
+    name: Küchengeräusche
+    prompt: |
+      Eine indische Küche hat eine Klanglandschaft – Mahlen, Braten, Zischen des Schnellkochtopfs. Schließen Sie die Augen in einer. Ordnen Sie die Geräusche zu. Was ist konstant? Was ist
+      der Rhythmus?
+    follow_ups:
+      - Wie wäre das Essen ohne diese Geräusche?
+      - Wie prägt Klang die Vorfreude?
+      - Was ist die Beziehung zwischen Küche und Tisch?
+  - id: ind_second_helping
+    name: Zweite Portion
+    prompt: |
+      "Noch etwas?" ist Ritual. Die Beharrlichkeit, die Weigerung, die endgültige
+      Annahme. Beobachten Sie den Tanz. Was bedeutet die zweite Portion jenseits des Hungers?
+    follow_ups:
+      - Wie wäre das Essen ohne das Angebot?
+      - Wie kodiert Beharrlichkeit Fürsorge?
+      - Was ist die Beziehung zwischen Mehr und Genug?
+  - id: ind_coriander_finish
+    name: Koriander-Finish
+    prompt: |
+      Frischer Koriander – Zierkoriander – krönt viele Gerichte. Es ist das Letzte, was hinzugefügt wird.
+      Das Finish. Beachten Sie, wie das Grün das Vorherige verändert. Frisch,
+      kräuterig, spaltend.
+    follow_ups:
+      - Wie wäre das Gericht ohne das Kraut?
+      - Wie rahmt das Finish das Ganze ein?
+      - Was ist die Beziehung zwischen Letztem und Erstem?
+  - id: ind_lassi_cut
+    name: Lassi-Schnitt
+    prompt: |
+      Lassi schneidet durch die Schärfe – kühl, säuerlich, dickflüssig. Es ist Erleichterung. Beachten Sie den
+      Moment, in dem Sie es trinken. Was unterbricht es? Was setzt es zurück?
+    follow_ups:
+      - Wie wäre das Essen ohne Lassi?
+      - Wie verlängert der Schnitt die Ausdauer?
+      - Was ist die Beziehung zwischen Erleichterung und Rhythmus?
+  - id: ind_roti_stretch
+    name: Roti-Dehnen
+    prompt: |
+      Roti wird von Hand gedehnt – rund, dünn, über der Flamme aufgeblasen. Beobachten Sie,
+      wie es gemacht wird. Das Dehnen ist Können. Was wäre das Brot ohne
+      diese Bewegung?
+    follow_ups:
+      - Wie beeinflusst das Dehnen die Textur?
+      - Was würde maschinell hergestelltes Roti verlieren?
+      - Was ist die Beziehung zwischen Bewegung und Ergebnis?
+  - id: ind_jaljeera_pause
+    name: Jaljeera-Pause
+    prompt: |
+      Jaljeera – Kreuzkümmel, Minze, Tamarinde – ist ein Verdauungsmittel, eine Pause. Es kommt oft
+      mitten in der Mahlzeit oder danach. Beachten Sie die Verschiebung. Was ermöglicht die Pause?
+    follow_ups:
+      - Wie wäre das Essen ohne die Pause?
+      - Wie markiert Jaljeera den Übergang?
+      - Was ist die Beziehung zwischen Pause und Verdauung?
+  - id: ind_color_conversation
+    name: Farbgespräch
+    prompt: |
+      Indische Teller sprechen in Farbe – gelbes Dal, grünes Sabzi, weißer Reis, rotes
+      Chutney. Studieren Sie die Palette. Was ist das Gespräch? Was würde kollidieren?
+      Was harmonisiert?
+    follow_ups:
+      - Wie prägt Farbe den Appetit?
+      - Wie wäre der Teller in Monochrom?
+      - Was ist die Beziehung zwischen Palette und Region?
+  - id: ind_clove_buried
+    name: Gewürznelke Vergraben
+    prompt: |
+      Gewürznelken verstecken sich in Biryani, Garam Masala, Chai. Sie sind scharf, warm.
+      Finden Sie eine. Sie könnten hineinbeißen. Die Gewürznelke ist ein Relikt des Gewürzhandels.
+      Welche Territorien verbindet sie?
+    follow_ups:
+      - Wie unterscheidet sich die ganze Gewürznelke von gemahlener?
+      - Wie wäre das Gericht ohne Gewürznelken?
+      - Was ist die Beziehung zwischen Gewürznelke und Kolonialismus?
+  - id: ind_family_style
+    name: Familien-Stil
+    prompt: |
+      Essen kommt in Schüsseln für den Tisch. Jeder isst daraus. Das
+      Essen ist ein gemeinsames Projekt. Beobachten Sie, wer was nimmt, wer wartet, wer
+      serviert. Was ist die Ökonomie des Tisches?
+    follow_ups:
+      - Wie wäre das Essen mit einzelnen Tellern?
+      - Wie kodiert Teilen Werte?
+      - Was ist die Beziehung zwischen Stil und Familie?
+  - id: ind_asafoetida_whiff
+    name: Asant-Hauch
+    prompt: |
+      Hing – Asant – riecht roh stechend, gekocht magisch. Eine Prise verwandelt
+      Dal, Sabzi. Es ist das Geheimnis. Beachten Sie, wann Sie es auffangen. Was fügt
+      der Hauch hinzu?
+    follow_ups:
+      - Wie markiert Hing die Hand des Kochs?
+      - Wie wäre das Gericht ohne es?
+      - Was ist die Beziehung zwischen Hauch und Transformation?
+  - id: ind_gulab_jamun_weight
+    name: Gulab Jamun Gewicht
+    prompt: |
+      Gulab Jamun ist dicht – frittierte Milchfestigkeit, in Sirup getränkt. Fühlen Sie sein
+      Gewicht auf der Zunge. Süß, schwer, abschließend. Wie schließt das Dessert
+      die Mahlzeit ab?
+    follow_ups:
+      - Wie würde die Mahlzeit ohne es enden?
+      - Wie schafft Gewicht den Abschluss?
+      - Was ist die Beziehung zwischen Dessert und Sättigung?
+  - id: ind_temple_prasad
+    name: Tempel-Prasad
+    prompt: |
+      Prasad – gesegnetes Essen – wird in Tempeln gegeben. Es kann einfach sein: Laddu,
+      Reis. Aber es trägt eine andere Bedeutung. Essen Sie es mit diesem Bewusstsein.
+      Was verändert sich, wenn Essen geschenkt wird?
+    follow_ups:
+      - Wie unterscheidet sich Prasad von Restaurantessen?
+      - Was fügt der Segen hinzu?
+      - Was ist die Beziehung zwischen Geschenk und Hingabe?
+  - id: ind_bone_suck
+    name: Knochen-Saugen
+    prompt: |
+      Manche indischen Gerichte – Nihari, Paya – laden dazu ein, den Knochen auszusaugen. Es ist nicht
+      woanders höflich. Hier wird es erwartet. Das Mark, das Bindegewebe. Was extrahiert das Saugen?
+    follow_ups:
+      - Wie kreuzt die Handlung die Anstandsregeln?
+      - Was würde das Gericht ohne den Knochen verlieren?
+      - Was ist die Beziehung zwischen Saugen und Hingabe?
+  - id: ind_pressure_cooker_song
+    name: Schnellkochtopf-Lied
+    prompt: |
+      Der Schnellkochtopf pfeift – eins, zwei, drei. Es ist der Soundtrack von
+      Dal und Reis. Dieses Geräusch bedeutet fertig. Was wäre die Küche ohne
+      ihn? Wie prägt das Lied die Zeit?
+    follow_ups:
+      - Wie markiert das Pfeifen die Fertigstellung?
+      - Was würden wir mit einem Instant Pot verlieren?
+      - Was ist die Beziehung zwischen Klang und Sicherheit?
+  - id: ind_curry_leaf_sizzle
+    name: Curryblatt-Zischen
+    prompt: |
+      Curryblätter treffen auf heißes Öl – südindische Temperierung. Sie knistern, setzen
+      Aroma frei. Sie essen sie nicht; sie sind für den Geschmack da. Aber sie sind präsent.
+      Was fügt ihre Anwesenheit hinzu?
+    follow_ups:
+      - Wie wäre das Gericht ohne Curryblätter?
+      - Wie trägt das Unverdauliche Geschmack?
+      - Was ist die Beziehung zwischen Blatt und Erinnerung?
+  - id: ind_mint_chutney_bright
+    name: Minz-Chutney-Strahlend
+    prompt: |
+      Minz-Chutney ist frisch – ein Blitz aus Kraut, grüner Chili, Limette. Es durchschneidet
+      Reichhaltigkeit, hellt den Teller auf. Beachten Sie die Farbe im Vergleich zum Rest
+      des Thali. Was macht Grün mit der Komposition?
+    follow_ups:
+      - Wie wäre das Essen ohne das Chutney?
+      - Wie unterbricht Frische die Erzählung?
+      - Was ist die Beziehung zwischen Strahlendem und Gleichgewicht?
+  - id: ind_wedding_feast
+    name: Hochzeitsmahlzeit
+    prompt: |
+      Indische Hochzeitsmahlzeiten sind Ausmaß – Hunderte, Tausende werden gespeist. Das Buffet, die
+      Vielfalt, der Überfluss. Beachten Sie die Choreografie. Wie verändert das Ausmaß die
+      Mahlzeit? Was ist die Beziehung zwischen Feier und Konsum?
+    follow_ups:
+      - Wie wäre die Hochzeit ohne das Festmahl?
+      - Wie kodiert Fülle Gastfreundschaft?
+      - Was ist die Beziehung zwischen Festmahl und Status?

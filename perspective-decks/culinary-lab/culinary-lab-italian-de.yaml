@@ -1,0 +1,494 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Kulinarisches Labor — Italienisch (German)
+
+id: culinary_lab_italian
+name: Kulinarisches Labor — Italienisch
+description: 50 Karten, um Ihre Erfahrung italienischer Speisen zu verändern – von der Chemie von Olivenöl und Säure bis hin zur sozialen Choreografie des Tisches und der Archäologie jeder Zutat.
+domain: culinary_lab
+cards:
+  - id: it_tomato_transformation
+    name: Tomaten-Transformation
+    prompt: |
+      Eine rohe Tomate wird durch Hitze und Zeit zu etwas anderem. Verfolgen Sie diesen Bogen.
+      Was passiert mit der Säure? Mit der Struktur? Die Tomate birgt eine Reise.
+    follow_ups:
+      - Wie verändert die Sauce den Gaumen?
+      - Was ginge ohne die Transformation verloren?
+      - Was ist die Beziehung zwischen roh und gekocht?
+  - id: it_bread_arrival
+    name: Brotanlieferung
+    prompt: |
+      Brot kommt vor dem Essen an – manchmal warm, manchmal mit Öl. Beachten Sie die Reihenfolge der Dinge.
+      Das Brot ist eine Eröffnung. Wer entscheidet, wann gegessen wird?
+    follow_ups:
+      - Was wäre das Essen ohne das Brot?
+      - Wie gibt das Brot den Takt vor?
+      - Was ist die Beziehung zwischen Brot und Vorfreude?
+  - id: it_pasta_shape
+    name: Pastatform
+    prompt: |
+      Jede Pastaporm trägt die Sauce anders – Rillen, Hohlräume, Kurven. Wählen Sie ein Gericht und fragen Sie: Warum diese Form für diese Sauce?
+      Die Form ist eine Entscheidung.
+    follow_ups:
+      - Was würde sich mit einer anderen Form ändern?
+      - Wie beeinflusst die Form den Bissen?
+      - Was ist die Beziehung zwischen Form und Funktion?
+  - id: it_basil_fragrance
+    name: Basilikumduft
+    prompt: |
+      Basilikum erreicht die Nase, bevor es den Mund erreicht. Schließen Sie die Augen und finden Sie das Kraut.
+      Wo lebt es im Gericht? Das Aroma ist eine Landkarte.
+    follow_ups:
+      - Was wäre das Gericht ohne den Duft?
+      - Wie bereitet der Duft den Gaumen vor?
+      - Was ist die Beziehung zwischen Aroma und Geschmack?
+  - id: it_olive_oil_pool
+    name: Olivenöl-Pfütze
+    prompt: |
+      Olivenöl sammelt sich auf der Oberfläche oder glänzt den Teller. Beobachten Sie, wie es sich bewegt.
+      Das Öl trägt Geschmack und Fett. Was bindet es?
+    follow_ups:
+      - Was wäre das Gericht ohne das Öl?
+      - Wie verändert Öl das Mundgefühl?
+      - Was ist die Beziehung zwischen Öl und Hitze?
+  - id: it_parmesan_shatter
+    name: Parmesan-Splitter
+    prompt: |
+      Frisch geriebener Parmigiano hat einen kristallinen Biss. Hören Sie ihn.
+      Der Käse ist mehr Textur als Geschmack. Wie unterbricht er den Bissen?
+    follow_ups:
+      - Was wäre das Gericht ohne den Biss?
+      - Wie vervollständigt der Käse den Gaumen?
+      - Was ist die Beziehung zwischen Käse und Salz?
+  - id: it_espresso_ritual
+    name: Espresso-Ritual
+    prompt: |
+      Espresso kommt am Ende – kleine Tasse, keine Milch. Das Ritual markiert den Abschluss.
+      Wer trinkt ihn stehend? Wer sitzt? Der Espresso ist eine Interpunktion.
+    follow_ups:
+      - Was wäre das Essen ohne den Espresso?
+      - Wie gestaltet das Ritual die Zeit?
+      - Was ist die Beziehung zwischen Kaffee und Abschluss?
+  - id: it_antipasti_sequence
+    name: Antipasti-Reihenfolge
+    prompt: |
+      Antipasti kommen zuerst – kleine Teller, geteilt oder nicht. Beachten Sie die Reihenfolge.
+      Was ist die Logik der Reihenfolge? Der Anfang gibt den Ton an.
+    follow_ups:
+      - Was würde sich ändern, wenn die Reihenfolge umgekehrt wäre?
+      - Wie erzeugt die Reihenfolge Appetit?
+      - Was ist die Beziehung zwischen Anfang und Ende?
+  - id: it_wine_pour
+    name: Weinausschank
+    prompt: |
+      Wein wird eingeschenkt – wer schenkt ein? Wie viel? Der Ausschank ist soziale Choreografie.
+      Beobachten Sie die Gesten. Was sagen sie aus?
+    follow_ups:
+      - Was wäre der Tisch ohne den Wein?
+      - Wie schafft der Ausschank Zeremonie?
+      - Was ist die Beziehung zwischen Ausschank und Tempo?
+  - id: it_risotto_stir
+    name: Risotto-Rühren
+    prompt: |
+      Risotto erfordert ständiges Rühren. Die Stärke löst sich langsam.
+      Betrachten Sie die Arbeit im Topf. Was würde ohne das Rühren passieren?
+    follow_ups:
+      - Was wäre der Reis ohne die Cremigkeit?
+      - Wie verändert das Rühren die Textur?
+      - Was ist die Beziehung zwischen Arbeit und Ergebnis?
+  - id: it_porcini_earth
+    name: Steinpilz-Erde
+    prompt: |
+      Steinpilze schmecken nach Waldboden – Umami, Erde, Verfall. Verfolgen Sie den Pilz zurück.
+      Wo wuchs er? Unter welchen Bäumen?
+    follow_ups:
+      - Was wäre das Gericht ohne die Erdigkeit?
+      - Wie prägt der Ursprung den Geschmack?
+      - Was ist die Beziehung zwischen Pilz und Wald?
+  - id: it_plate_negative_space
+    name: Teller-Negativraum
+    prompt: |
+      Italienische Anrichteweisen lassen oft Raum – der Teller ist nicht gefüllt.
+      Betrachten Sie die Leere. Was rahmt sie ein? Was erlaubt sie?
+    follow_ups:
+      - Wie würde das Gericht aussehen, wenn es vollständig bedeckt wäre?
+      - Wie lenkt der Negativraum den Blick?
+      - Was ist die Beziehung zwischen Leer und Voll?
+  - id: it_garlic_sizzle
+    name: Knoblauch-Zischen
+    prompt: |
+      Knoblauch trifft auf heiße Öl – das Zischen ist Chemie. Hören Sie zu. Riechen Sie.
+      Der Moment ist flüchtig. Was würde verbrennen? Was ginge verloren?
+    follow_ups:
+      - Was wäre das Gericht ohne das Zischen?
+      - Wie prägt der Zeitpunkt den Geschmack?
+      - Was ist die Beziehung zwischen Hitze und Aroma?
+  - id: it_crust_bubbles
+    name: Krusten-Blasen
+    prompt: |
+      Focaccia- oder Pizzakruste entwickelt Blasen im Ofen. Jede Blase ist ein Dampf-Pocket.
+      Betrachten Sie die Architektur der Krume.
+    follow_ups:
+      - Was wäre das Brot ohne die Blasen?
+      - Wie hält die Krume Öl und Salz?
+      - Was ist die Beziehung zwischen Luft und Struktur?
+  - id: it_prosciutto_slice
+    name: Prosciutto-Scheibe
+    prompt: |
+      Prosciutto wird hauchdünn geschnitten – fast durchscheinend. Das Messer ist wichtig.
+      Betrachten Sie das Handwerk. Was würde eine dicke Scheibe bewirken?
+    follow_ups:
+      - Was wäre die Wurstware ohne die Dünne?
+      - Wie beeinflusst die Dicke das Schmelzen?
+      - Was ist die Beziehung zwischen Scheibe und Genuss?
+  - id: it_balsamic_drop
+    name: Balsamico-Tropfen
+    prompt: |
+      Alter Balsamico wird tropfenweise abgegeben – teuer, kostbar. Beobachten Sie die Viskosität.
+      Der Tropfen ist Konzentration. Was fügt er hinzu?
+    follow_ups:
+      - Was wäre das Gericht ohne die Säure?
+      - Wie schneidet der Tropfen durch Fett?
+      - Was ist die Beziehung zwischen Süß und Sauer?
+  - id: it_gnocchi_pillow
+    name: Gnocchi-Kissen
+    prompt: |
+      Gnocchi sollten leicht sein – Kissen, keine Steine. Fühlen Sie die Textur.
+      Das Verhältnis von Kartoffel zu Mehl ist delikat. Was lässt es funktionieren?
+    follow_ups:
+      - Was wären die Gnocchi, wenn sie zu schwer wären?
+      - Wie definiert die Textur das Gericht?
+      - Was ist die Beziehung zwischen Kartoffel und Mehl?
+  - id: it_salt_block
+    name: Salzblock
+    prompt: |
+      Manche italienischen Küchen verwenden Salzblöcke zum Grillen. Betrachten Sie das Mineral.
+      Woher kam das Salz? Was verleiht es?
+    follow_ups:
+      - Was wäre das Fleisch ohne das Salz?
+      - Wie verändert der Block das Garen?
+      - Was ist die Beziehung zwischen Salz und Flamme?
+  - id: it_cacio_e_pepe
+    name: Cacio e Pepe
+    prompt: |
+      Cacio e pepe ist Käse, Pfeffer, Pastawasser. Drei Zutaten.
+      Die Emulsion ist der Trick. Was hält sie zusammen? Was bricht sie?
+    follow_ups:
+      - Was wäre das Gericht ohne die Emulsion?
+      - Wie bindet Pastawasser?
+      - Was ist die Beziehung zwischen Einfachheit und Technik?
+  - id: it_cannoli_crunch
+    name: Cannoli-Knusprigkeit
+    prompt: |
+      Cannoli-Schale zerbricht; Füllung ist cremig. Der Kontrast ist beabsichtigt.
+      Betrachten Sie die Architektur des Bisses.
+    follow_ups:
+      - Was wäre das Dessert ohne den Kontrast?
+      - Wie erzeugt Textur Vergnügen?
+      - Was ist die Beziehung zwischen Schale und Füllung?
+  - id: it_risotto_clock
+    name: Risotto-Uhr
+    prompt: |
+      Risotto hat ein Zeitfenster – al dente, dann vorbei. Der Koch rennt gegen die Zeit.
+      Betrachten Sie die Präzision. Was würden fünf Minuten mehr tun?
+    follow_ups:
+      - Was wäre der Reis, wenn er übergart wäre?
+      - Wie definiert der Zeitpunkt das Gericht?
+      - Was ist die Beziehung zwischen Uhr und Handwerk?
+  - id: it_truffle_shave
+    name: Trüffel-Hobel
+    prompt: |
+      Trüffel wird am Tisch gehobelt – das Ritual, das Aroma. Der Trüffel ist flüchtig.
+      Woher kam er? Welches Tier hat ihn gefunden?
+    follow_ups:
+      - Was wäre das Gericht ohne die Zeremonie?
+      - Wie verteilt das Hobeln den Geschmack?
+      - Was ist die Beziehung zwischen Ritual und Seltenheit?
+  - id: it_spaghetti_twist
+    name: Spaghetti-Drehung
+    prompt: |
+      Italiener drehen Spaghetti mit einer Gabel – keine Löffel. Die Drehung ist kulturell.
+      Beobachten Sie die Bewegung. Was bewirkt sie?
+    follow_ups:
+      - Was wäre der Bissen ohne die Drehung?
+      - Wie gestaltet die Geste das Essen?
+      - Was ist die Beziehung zwischen Utensil und Tradition?
+  - id: it_caprese_layers
+    name: Caprese-Schichten
+    prompt: |
+      Caprese stapelt Tomate, Mozzarella, Basilikum. Die Schichten sind einfach.
+      Betrachten Sie die Farbe – rot, weiß, grün. Der Teller ist eine Flagge.
+    follow_ups:
+      - Was wäre das Gericht ohne die Reihenfolge?
+      - Wie erzeugen die Schichten Harmonie?
+      - Was ist die Beziehung zwischen Farbe und Geschmack?
+  - id: it_polenta_set
+    name: Polenta-Set
+    prompt: |
+      Polenta wird beim Abkühlen fest – weich bis fest. Betrachten Sie die Temperatur.
+      Was wäre sie heiß? Kalt? Die Textur ist eine Funktion der Zeit.
+    follow_ups:
+      - Was wäre die Polenta, wenn sie nie abkühlte?
+      - Wie verändert das Festwerden das Gericht?
+      - Was ist die Beziehung zwischen Hitze und Struktur?
+  - id: it_amaro_finish
+    name: Amaro-Abschluss
+    prompt: |
+      Amaro beendet das Essen – bitter, verdauungsfördernd. Die Bitterkeit ist beabsichtigt.
+      Was tut es dem Gaumen an? Dem Körper?
+    follow_ups:
+      - Was wäre das Essen ohne den Amaro?
+      - Wie setzt Bitterkeit die Zunge zurück?
+      - Was ist die Beziehung zwischen Bitter und Abschluss?
+  - id: it_lardo_spread
+    name: Lardo-Aufstrich
+    prompt: |
+      Lardo ist gepökeltes Schweinefett – auf Brot gestrichen, schmelzend. Betrachten Sie das Fett.
+      Woher kam es? Was trägt es?
+    follow_ups:
+      - Was wäre das Brot ohne das Lardo?
+      - Wie trägt Fett Geschmack?
+      - Was ist die Beziehung zwischen Fett und Konservierung?
+  - id: it_sardine_silver
+    name: Sardinen-Silber
+    prompt: |
+      Frische Sardinen glänzen – silberne Haut, ganz. Der Fisch ist klein, ölig.
+      Betrachten Sie die Größe. Was würde ein größerer Fisch verändern?
+    follow_ups:
+      - Was wäre das Gericht ohne das Öl?
+      - Wie beeinflusst die Größe das Garen?
+      - Was ist die Beziehung zwischen klein und intensiv?
+  - id: it_burrata_break
+    name: Burrata-Bruch
+    prompt: |
+      Burrata muss aufgeschnitten werden – die Außenseite weicht einer Creme. Der Moment ist theatralisch.
+      Betrachten Sie den Kontrast. Äußere Hülle, flüssiger Kern.
+    follow_ups:
+      - Was wäre der Käse ohne den Bruch?
+      - Wie erzeugt der Bruch Überraschung?
+      - Was ist die Beziehung zwischen Struktur und Fluss?
+  - id: it_osso_buco_marrow
+    name: Osso Buco-Mark
+    prompt: |
+      Osso buco konzentriert sich auf das Mark – der Knochen birgt einen Schatz. Das Mark ist unctuös, reichhaltig.
+      Betrachten Sie die Extraktion. Wer bekommt das Mark?
+    follow_ups:
+      - Was wäre das Gericht ohne den Knochen?
+      - Wie vervollständigt das Mark den Schmorbraten?
+      - Was ist die Beziehung zwischen Knochen und Geschmack?
+  - id: it_limoncello_shot
+    name: Limoncello-Shot
+    prompt: |
+      Limoncello kommt in einem gekühlten Glas – gelb, süß, stark. Der Shot ist eine Interpunktion.
+      Woher kommen die Zitronen? Was tragen sie?
+    follow_ups:
+      - Was wäre das Essen ohne den Limoncello?
+      - Wie markiert der Shot das Ende?
+      - Was ist die Beziehung zwischen Zitrone und Ort?
+  - id: it_sfogliatella_layers
+    name: Sfogliatella-Schichten
+    prompt: |
+      Sfogliatella hat Hunderte von hauchdünnen Schichten – gefaltet, knusprig.
+      Betrachten Sie die Arbeit. Jede Schicht ist eine Entscheidung. Was würden weniger Schichten tun?
+    follow_ups:
+      - Was wäre das Gebäck ohne die Schichten?
+      - Wie erzeugt die Struktur Textur?
+      - Was ist die Beziehung zwischen Handwerk und Knusprigkeit?
+  - id: it_saltimbocca_name
+    name: Saltimbocca-Name
+    prompt: |
+      Saltimbocca bedeutet "springt in den Mund". Der Name verspricht. Hält das Gericht, was es verspricht?
+      Betrachten Sie die Lücke zwischen Name und Erfahrung.
+    follow_ups:
+      - Was wäre das Gericht ohne den Namen?
+      - Wie prägt die Namensgebung Erwartungen?
+      - Was ist die Beziehung zwischen Wort und Geschmack?
+  - id: it_artichoke_prep
+    name: Artischocken-Vorbereitung
+    prompt: |
+      Artischocken erfordern Vorbereitung – Dornen entfernt, Stiele getrimmt.
+      Betrachten Sie die Abfälle. Was wird weggeworfen? Was wird geschätzt? Das Gemüse ist Architektur.
+    follow_ups:
+      - Was wäre die Artischocke ohne Vorbereitung?
+      - Wie verändert die Vorbereitung das Garen?
+      - Was ist die Beziehung zwischen Aufwand und Belohnung?
+  - id: it_grappa_clear
+    name: Grappa-Klarheit
+    prompt: |
+      Grappa ist klar – destilliert aus Trester. Der Geist trägt den Geist der Traube.
+      Betrachten Sie die Transformation. Was bleibt zurück?
+    follow_ups:
+      - Was wäre das Essen ohne den Grappa?
+      - Wie konzentriert die Destillation?
+      - Was ist die Beziehung zwischen Traube und Spirituose?
+  - id: it_panzanella_soft
+    name: Panzanella-Weichheit
+    prompt: |
+      Panzanella verwendet altes Brot – aufgeweicht durch Tomatensaft, Essig. Das Brot wird wiederbelebt.
+      Betrachten Sie die Transformation. Was würde frisches Brot tun?
+    follow_ups:
+      - Was wäre der Salat ohne das Brot?
+      - Wie verändert das Einweichen die Textur?
+      - Was ist die Beziehung zwischen alt und wiederbelebt?
+  - id: it_capers_brine
+    name: Kapern-Lake
+    prompt: |
+      Kapern sind Knospen – eingelegt, salzig. Sie setzen Akzente.
+      Betrachten Sie die Lake. Woher kam das Salz? Was bewahrt das Einlegen?
+    follow_ups:
+      - Was wäre das Gericht ohne die Kapern?
+      - Wie verändert Lake die Knospe?
+      - Was ist die Beziehung zwischen Konservierung und Geschmack?
+  - id: it_ravioli_seam
+    name: Ravioli-Naht
+    prompt: |
+      Ravioli haben eine Naht – wo die Pasta zusammengekniffen wird. Die Naht kann aufplatzen.
+      Betrachten Sie die Handwerkskunst. Was hält die Füllung zusammen?
+    follow_ups:
+      - Was wären die Ravioli ohne die Naht?
+      - Wie schützt die Abdichtung die Füllung?
+      - Was ist die Beziehung zwischen Struktur und Überraschung?
+  - id: it_negroni_orange
+    name: Negroni-Orange
+    prompt: |
+      Ein Negroni wird mit Orange serviert – Scheibe oder Schale. Die Zitrusfrucht schwimmt.
+      Betrachten Sie die Garnitur. Was fügt sie hinzu? Wann schmecken Sie sie?
+    follow_ups:
+      - Was wäre das Getränk ohne die Orange?
+      - Wie vervollständigt die Garnitur die Balance?
+      - Was ist die Beziehung zwischen Bitter und Zitrussüße?
+  - id: it_focaccia_dimples
+    name: Focaccia-Dellen
+    prompt: |
+      Focaccia hat Dellen – mit dem Daumen eingedrückt, mit Öl gefüllt. Die Dellen halten Pfützen und Salz.
+      Betrachten Sie die Oberfläche. Was würde eine flache Oberseite bewirken?
+    follow_ups:
+      - Was wäre das Brot ohne die Dellen?
+      - Wie erzeugen die Pfützen Geschmack?
+      - Was ist die Beziehung zwischen Oberfläche und Würzung?
+  - id: it_arancini_crust
+    name: Arancini-Kruste
+    prompt: |
+      Arancini sind frittierte Reisbällchen – außen knusprig, innen geschmolzen. Die Kruste hält die Explosion.
+      Betrachten Sie den Kontrast. Was würde ohne das Frittieren passieren?
+    follow_ups:
+      - Was wäre der Ball ohne die Kruste?
+      - Wie erzeugt das Frittieren Eindämmung?
+      - Was ist die Beziehung zwischen Oberfläche und Innerem?
+  - id: it_pecorino_age
+    name: Pecorino-Alter
+    prompt: |
+      Pecorino variiert je nach Alter – fresco, stagionato. Das Alter verändert Textur, Biss, Geschmack.
+      Betrachten Sie die Zeitlinie. Was würde älterer Käse bewirken?
+    follow_ups:
+      - Was wäre der Käse in verschiedenen Altersstufen?
+      - Wie konzentriert das Altern?
+      - Was ist die Beziehung zwischen Zeit und Geschmack?
+  - id: it_crostini_support
+    name: Crostini-Unterstützung
+    prompt: |
+      Crostini sind Gefäße – Toast hält Belag. Die Unterstützung ist wichtig. Zu dick und es überwältigt. Zu dünn und es bricht.
+      Betrachten Sie die Balance.
+    follow_ups:
+      - Was wäre der Belag ohne das Brot?
+      - Wie gestaltet die Unterstützung den Bissen?
+      - Was ist die Beziehung zwischen Basis und Aufbau?
+  - id: it_ciabatta_holes
+    name: Ciabatta-Löcher
+    prompt: |
+      Ciabatta hat unregelmäßige Löcher – groß, zufällig. Die Löcher fangen Sauce auf.
+      Betrachten Sie die Krume. Was würde eine dichte Krume bewirken?
+    follow_ups:
+      - Was wäre das Brot ohne die Löcher?
+      - Wie erzeugen die Löcher Textur?
+      - Was ist die Beziehung zwischen Struktur und Saugfähigkeit?
+  - id: it_zabaglione_foam
+    name: Zabaglione-Schaum
+    prompt: |
+      Zabaglione ist Ei und Zucker, über Hitze aufgeschlagen – luftig, warm. Der Schaum ist zart.
+      Betrachten Sie die Transformation. Was würde passieren, wenn er überschlagen wird?
+    follow_ups:
+      - Was wäre das Dessert ohne den Schaum?
+      - Wie integriert das Aufschlagen Luft?
+      - Was ist die Beziehung zwischen Hitze und Struktur?
+  - id: it_salt_crust_fish
+    name: Fisch in Salzkruste
+    prompt: |
+      Fisch in Salzkruste gebacken – das Salz bildet eine Hülle. Der Fisch dämpft innen.
+      Betrachten Sie das Gefäß. Was verleiht das Salz?
+    follow_ups:
+      - Was wäre der Fisch ohne die Kruste?
+      - Wie hält das Salz Feuchtigkeit zurück?
+      - Was ist die Beziehung zwischen Hülle und Fleisch?
+  - id: it_panna_cotta_wobble
+    name: Panna Cotta-Wackel
+    prompt: |
+      Panna cotta sollte wackeln – kaum fest. Das Wackeln ist der Sinn der Sache.
+      Betrachten Sie das Gel. Was würde eine festere Konsistenz bewirken?
+    follow_ups:
+      - Was wäre das Dessert ohne das Wackeln?
+      - Wie erzeugt die Textur Vergnügen?
+      - Was ist die Beziehung zwischen Festigkeit und Seidigkeit?
+  - id: it_sopressata_marbling
+    name: Sopressata-Marmorierung
+    prompt: |
+      Sopressata hat Fettmarmorierung – weiß in rot. Das Fett trägt Geschmack.
+      Betrachten Sie die Verteilung. Was würde mageres Fleisch bewirken?
+    follow_ups:
+      - Was wäre die Salami ohne das Fett?
+      - Wie beeinflusst die Marmorierung die Scheibe?
+      - Was ist die Beziehung zwischen Fett und Reifung?
+  - id: it_affogato_melt
+    name: Affogato-Schmelze
+    prompt: |
+      Affogato ist Gelato ertränkt in Espresso – heiß trifft kalt. Beobachten Sie das Schmelzen.
+      Die Transformation ist unmittelbar. Betrachten Sie den Zeitpunkt.
+    follow_ups:
+      - Was wäre das Dessert ohne das Schmelzen?
+      - Wie erzeugt Temperatur Kontrast?
+      - Was ist die Beziehung zwischen heiß und kalt?
+  - id: it_breadcrumb_gold
+    name: Paniermehl-Gold
+    prompt: |
+      Die italienische Küche verwendet Paniermehl – getoastet, golden, für Knusprigkeit.
+      Betrachten Sie die Wiederverwendung. Altes Brot wird zu Textur. Was würde dem Gericht fehlen?
+    follow_ups:
+      - Was wäre das Gericht ohne die Krümel?
+      - Wie fügt das Toasten Knusprigkeit hinzu?
+      - Was ist die Beziehung zwischen alt und nützlich?
+  - id: it_radicchio_bitter
+    name: Radicchio-Bitterkeit
+    prompt: |
+      Radicchio ist absichtlich bitter – gegrillt oder roh. Die Bitterkeit ist eine Wahl.
+      Betrachten Sie den Gaumen. Was bewirkt Bitterkeit inmitten von Reichhaltigkeit?
+    follow_ups:
+      - Was wäre das Gericht ohne die Bitterkeit?
+      - Wie schneidet Bitterkeit Fett?
+      - Was ist die Beziehung zwischen Bitterkeit und Balance?
+  - id: it_cacciucco_bowl
+    name: Cacciucco-Schüssel
+    prompt: |
+      Cacciucco ist ein Fisch-Eintopf – viele Arten, ein Topf. Die Schüssel hält das Meer.
+      Betrachten Sie die Vielfalt. Was trägt jeder Fisch bei?
+    follow_ups:
+      - Was wäre der Eintopf mit nur einem Fisch?
+      - Wie erzeugt Vielfalt Tiefe?
+      - Was ist die Beziehung zwischen vielen und einem?
+  - id: it_panna_trace
+    name: Panna-Spur
+    prompt: |
+      Sahne hinterlässt eine Spur – auf dem Teller, in der Sauce.
+      Betrachten Sie die Viskosität. Die Sahne trägt und überzieht. Was wäre das Gericht ohne sie?
+    follow_ups:
+      - Was wäre die Sauce ohne die Sahne?
+      - Wie verändert Sahne das Mundgefühl?
+      - Was ist die Beziehung zwischen Fett und Seidigkeit?
+  - id: it_orecchiette_cup
+    name: Orecchiette-Becher
+    prompt: |
+      Orecchiette bedeutet "kleine Ohren" – sie fangen Sauce auf. Die Form ist funktional.
+      Betrachten Sie das Design. Was würde eine flache Pasta bewirken?
+    follow_ups:
+      - Was wäre das Gericht ohne den Becher?
+      - Wie hält die Form Sauce?
+      - Was ist die Beziehung zwischen Form und Sauce?

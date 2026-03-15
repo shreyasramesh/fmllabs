@@ -1,0 +1,457 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Urban Jungle — Bangalore (German)
+
+id: urban_jungle_bangalore
+name: Urban Jungle — Bangalore
+description: 50 Karten, um Bangalore anders zu sehen – von Ausmaß und Licht bis zu Geschichtsschichten und dem Rhythmus des Straßenlebens.
+domain: urban_jungle
+cards:
+  - id: blr_gate_colony
+    name: Tor-Kolonie
+    prompt: |
+      Bangalores Tor-Kolonien haben Mauern, Wachen, Tore. Stelle dich an ein Tor.
+      Was ist drinnen? Wer kommt rein? Das Tor markiert eine Grenze. Was schützt es?
+    follow_ups:
+      - Was wäre die Straße ohne das Tor?
+      - Wie schafft das Tor Sicherheit?
+      - Was ist die Beziehung zwischen Tor und Kolonie?
+  - id: blr_tree_canopy
+    name: Baumdach
+    prompt: |
+      Bangalore war einst eine Gartenstadt. Alte Bäume überdachen noch einige Straßen.
+      Gehe unter einem hindurch. Wie verändert das Dach das Licht? Den Klang?
+    follow_ups:
+      - Was wäre die Straße ohne den Baum?
+      - Wie schafft das Dach Mikroklima?
+      - Was ist die Beziehung zwischen Baum und Stadt?
+  - id: blr_tech_park
+    name: Tech Park
+    prompt: |
+      Tech Parks sind Campus – Glas, Rasen, Shuttlebusse. Finde einen. Wie
+      trennt sich der Park von der Stadt? Was ist die Beziehung zwischen Innen und Außen?
+    follow_ups:
+      - Was wäre das Gebiet ohne den Park?
+      - Wie schafft der Park Identität?
+      - Was ist die Beziehung zwischen Park und Straße?
+  - id: blr_auto_rickshaw
+    name: Autorikscha
+    prompt: |
+      Autorikschas schlängeln sich durch den Verkehr. Beobachte eine, die eine Kreuzung meistert. Wie
+      passt die Autorikscha, wo Autos nicht hinkönnen? Was ist die Logik des Schlängelns?
+    follow_ups:
+      - Was wäre die Straße ohne die Autorikscha?
+      - Wie schafft die Autorikscha Mobilität?
+      - Was ist die Beziehung zwischen Autorikscha und Verkehr?
+  - id: blr_chai_stall
+    name: Chai-Stand
+    prompt: |
+      Chai-Stände sind Knotenpunkte – klein, temporär, essentiell. Finde einen. Wer versammelt sich?
+      Was ist der Rhythmus? Der Stand ist eine soziale Maschine.
+    follow_ups:
+      - Was wäre die Ecke ohne den Stand?
+      - Wie schafft der Stand Begegnung?
+      - Was ist die Beziehung zwischen Stand und Straße?
+  - id: blr_billboard
+    name: Bangalore Plakatwand
+    prompt: |
+      Bangalore Plakatwände werben für Technik, Immobilien, Bildung. Finde eine.
+      Was wird verkauft? Wer ist die Zielgruppe? Die Plakatwand ist ein Spiegel der Aspiration.
+    follow_ups:
+      - Was wäre die Straße ohne die Plakatwand?
+      - Wie formt die Plakatwand Verlangen?
+      - Was ist die Beziehung zwischen Plakatwand und Stadt?
+  - id: blr_compound_wall
+    name: Umfassungsmauer
+    prompt: |
+      Umfassungsmauern trennen Privates von Öffentlichem. Finde eine Mauer. Was ist dahinter?
+      Wie hoch ist sie? Die Mauer schafft eine Grenze. Was schließt sie aus?
+    follow_ups:
+      - Was wäre die Straße ohne die Mauer?
+      - Wie schafft die Mauer Privatsphäre?
+      - Was ist die Beziehung zwischen Mauer und Grundstück?
+  - id: blr_signal_wait
+    name: Ampel warten
+    prompt: |
+      Warte an einer Ampel. Beobachte die Verkäufer – Blumen, Spielzeug, Bücher. Die
+      Ampel schafft eine Pause. Was passiert in der Pause?
+    follow_ups:
+      - Was wäre die Kreuzung ohne die Ampel?
+      - Wie schafft die Ampel Wirtschaft?
+      - Was ist die Beziehung zwischen Ampel und Straße?
+  - id: blr_rain_drain
+    name: Regenwasserkanal
+    prompt: |
+      Bangalores Monsun überflutet die Kanäle. Beobachte nach dem Regen das Wasser. Wohin
+      fließt es? Wo sammelt es sich? Der Kanal ist eine Grenze.
+    follow_ups:
+      - Was wäre die Straße ohne den Kanal?
+      - Wie verwaltet der Kanal Wasser?
+      - Was ist die Beziehung zwischen Kanal und Monsun?
+  - id: blr_sarjapur_road
+    name: Sarjapur Road
+    prompt: |
+      Die Sarjapur Road verbindet das alte Bangalore mit dem Tech-Korridor. Fahre oder gehe
+      ein Stück entlang. Was verändert sich? Wo verschiebt sich die Stadt?
+    follow_ups:
+      - Was wäre der Korridor ohne die Straße?
+      - Wie schafft die Straße Verbindung?
+      - Was ist die Beziehung zwischen Straße und Wachstum?
+  - id: blr_parks_maidans
+    name: Parks & Maidans
+    prompt: |
+      Bangalore hat Parks und Maidans – Cubbon Park, Lalbagh, Nachbarschaftsplätze. Betrete einen. Wer nutzt ihn?
+      Was ist der Rhythmus?
+    follow_ups:
+      - Was wäre die Stadt ohne den Park?
+      - Wie schafft der Park Erholung?
+      - Was ist die Beziehung zwischen Park und Nachbarschaft?
+  - id: blr_temple_street
+    name: Tempelstraße
+    prompt: |
+      Tempel prägen Bangalores Straßen. Finde einen. Achte auf Opfergaben, Glocken,
+      die Menge. Wie formt der Tempel den Block?
+    follow_ups:
+      - Was wäre die Straße ohne den Tempel?
+      - Wie schafft der Tempel Gemeinschaft?
+      - Was ist die Beziehung zwischen Tempel und Straße?
+  - id: blr_silk_board
+    name: Silk Board
+    prompt: |
+      Die Silk Board Kreuzung ist berüchtigt. Stelle dich an den Rand. Beobachte den Verkehr.
+      Wie funktioniert die Kreuzung? Was ist die Logik des Chaos?
+    follow_ups:
+      - Was wäre der Korridor ohne die Kreuzung?
+      - Wie schafft die Kreuzung eine Engstelle?
+      - Was ist die Beziehung zwischen Kreuzung und Pendeln?
+  - id: blr_metro_elevated
+    name: Metro Hochbahn
+    prompt: |
+      Bangalores Metro verläuft stellenweise Hochbahn durch die Stadt. Fahre damit oder stelle dich darunter. Wie
+      verändert die Hochbahn die Straße darunter?
+    follow_ups:
+      - Was wäre die Straße ohne die Metro?
+      - Wie schafft die Metro Verbindung?
+      - Was ist die Beziehung zwischen Hochbahn und Boden?
+  - id: blr_apartment_tower
+    name: Wohnturm
+    prompt: |
+      Wohntürme ragen in Bangalore empor. Finde einen. Wie viele Stockwerke? Wer wohnt dort?
+      Der Turm ist vertikale Dichte. Was ersetzt er?
+    follow_ups:
+      - Was wäre die Skyline ohne den Turm?
+      - Wie schafft der Turm Wohnraum?
+      - Was ist die Beziehung zwischen Turm und Boden?
+  - id: blr_roadside_vendor
+    name: Straßenhändler
+    prompt: |
+      Straßenhändler verkaufen Obst, Snacks, Handy-Ladegeräte. Finde einen. Was ist die
+      Auslage? Wer hält an? Der Händler ist informelle Wirtschaft.
+    follow_ups:
+      - Was wäre die Straße ohne den Händler?
+      - Wie schafft der Händler Lebensunterhalt?
+      - Was ist die Beziehung zwischen Händler und Straße?
+  - id: blr_borewell
+    name: Brunnenbohrung
+    prompt: |
+      Bangalore ist auf Brunnenbohrungen angewiesen. Achte auf Rohre, Tanks,
+      Pumpen. Wasser wird von unten gefördert. Was ist die Beziehung zwischen Stadt und Grundwasserleiter?
+    follow_ups:
+      - Was wäre das Gebäude ohne die Brunnenbohrung?
+      - Wie schafft die Brunnenbohrung Versorgung?
+      - Was ist die Beziehung zwischen Brunnenbohrung und Knappheit?
+  - id: blr_garbage_heap
+    name: Müllhaufen
+    prompt: |
+      Müllhaufen tauchen an Ecken, an Mauern auf. Beachte einen. Was ist darin? Wer durchsucht ihn?
+      Der Haufen ist eine Grenze des Systems.
+    follow_ups:
+      - Was wäre die Straße ohne den Haufen?
+      - Wie kennzeichnet der Haufen ein Versagen?
+      - Was ist die Beziehung zwischen Haufen und Stadt?
+  - id: blr_marquee_wedding
+    name: Festzelt Hochzeit
+    prompt: |
+      Hochzeitszelte blockieren Straßen. Finde eines. Das Zelt ist ein temporäres
+      Gebiet. Was ist die Beziehung zwischen Feier und Straße?
+    follow_ups:
+      - Was wäre die Straße ohne das Zelt?
+      - Wie schafft das Zelt Anspruch?
+      - Was ist die Beziehung zwischen Hochzeit und Öffentlichkeit?
+  - id: blr_old_bungalow
+    name: Altes Bungalow
+    prompt: |
+      Alte Bangalores Bungalows bestehen zwischen den Türmen fort. Finde einen. Das Bungalow hat
+      einen ummauerten Garten, Bäume, Platz. Was wird es ersetzen?
+    follow_ups:
+      - Was wäre die Straße ohne das Bungalow?
+      - Wie kennzeichnet das Bungalow Geschichte?
+      - Was ist die Beziehung zwischen Bungalow und Turm?
+  - id: blr_coffee_house
+    name: Kaffeehaus
+    prompt: |
+      Das Indian Coffee House ist eine Institution. Setze dich in eines. Das Kaffeehaus ist
+      ein Raum der Konversation. Was ist der Rhythmus? Wer kommt?
+    follow_ups:
+      - Was wäre die Straße ohne das Kaffeehaus?
+      - Wie schafft das Kaffeehaus Gemeinschaft?
+      - Was ist die Beziehung zwischen Kaffeehaus und Stadt?
+  - id: blr_phone_booth
+    name: Telefonzelle
+    prompt: |
+      Öffentliche Telefonzellen gibt es noch. Finde eine. Funktioniert sie? Wer benutzt sie?
+      Die Zelle ist ein Relikt. Was hat sie ersetzt?
+    follow_ups:
+      - Was wäre die Straße ohne die Zelle?
+      - Wie kennzeichnet die Zelle Veränderung?
+      - Was ist die Beziehung zwischen Zelle und Handy?
+  - id: blr_bus_stop
+    name: Bangalore Bushaltestelle
+    prompt: |
+      Bangalore Bushaltestellen sind oft ein Schild und eine Menge. Warte an einer. Wer
+      wartet? Was ist die Etikette? Die Haltestelle ist minimale Infrastruktur.
+    follow_ups:
+      - Was wäre die Straße ohne die Haltestelle?
+      - Wie schafft die Haltestelle Verbindung?
+      - Was ist die Beziehung zwischen Haltestelle und Bus?
+  - id: blr_power_line
+    name: Stromleitung
+    prompt: |
+      Bangalore Stromleitungen sind ein Durcheinander – Kabel, Transformatoren, Schleifen. Verfolge
+      eine Leitung. Wohin geht sie? Das Netz ist sichtbar. Was versorgt es?
+    follow_ups:
+      - Was wäre die Straße ohne die Leitungen?
+      - Wie schafft das Netz Versorgung?
+      - Was ist die Beziehung zwischen Leitung und Stromausfall?
+  - id: blr_speed_breaker
+    name: Geschwindigkeitsbegrenzer
+    prompt: |
+      Geschwindigkeitsbegrenzer – schlafende Polizisten – säumen die Straßen Bangalores. Fühle einen. Warum ist er
+      hier? Was verlangsamt er? Der Begrenzer ist eine lokale Intervention.
+    follow_ups:
+      - Was wäre die Straße ohne den Begrenzer?
+      - Wie schafft der Begrenzer Sicherheit?
+      - Was ist die Beziehung zwischen Begrenzer und Geschwindigkeit?
+  - id: blr_compound_tree
+    name: ummauerter Baum
+    prompt: |
+      Bäume auf ummauerten Grundstücken überragen Mauern. Finde einen. Der Baum ist sowohl drinnen als auch
+      draußen. Was spendet er Schatten? Wem gehört er?
+    follow_ups:
+      - Was wäre die Straße ohne den Baum?
+      - Wie schafft der Baum ein Geschenk?
+      - Was ist die Beziehung zwischen Baum und Grundstück?
+  - id: blr_shop_shutter
+    name: Ladenrollade
+    prompt: |
+      Bangalore Ladenrolladen werden nachts heruntergelassen. Finde eine geschlossene Rollade. Was ist
+      dahinter? Die Rollade ist ein täglicher Zyklus. Was schützt sie?
+    follow_ups:
+      - Was wäre die Straße ohne die Rollade?
+      - Wie schafft die Rollade Sicherheit?
+      - Was ist die Beziehung zwischen Rollade und Handel?
+  - id: blr_water_tanker
+    name: Wassertankwagen
+    prompt: |
+      Wassertankwagen versorgen Nachbarschaften. Beobachte einen bei der Lieferung. Der Tankwagen ist
+      mobile Infrastruktur. Was ist die Beziehung zwischen Tankwagen und Hahn?
+    follow_ups:
+      - Was wäre die Nachbarschaft ohne den Tankwagen?
+      - Wie schafft der Tankwagen Versorgung?
+      - Was ist die Beziehung zwischen Tankwagen und Knappheit?
+  - id: blr_metro_station
+    name: Metrostation
+    prompt: |
+      Bangalore Metrostationen sind neu – sauber, markenbewusst. Betrete eine. Wie
+      unterscheidet sich die Station von der Straße? Was ist der Übergang?
+    follow_ups:
+      - Was wäre der Korridor ohne die Station?
+      - Wie schafft die Station Verbindung?
+      - Was ist die Beziehung zwischen Station und Stadt?
+  - id: blr_rickshaw_stand
+    name: Rikschaständer
+    prompt: |
+      Rikschaständer gruppieren sich an Kreuzungen. Finde einen. Die Fahrer warten. Der
+      Stand ist ein Knotenpunkt. Was ist die Wirtschaft?
+    follow_ups:
+      - Was wäre die Kreuzung ohne den Stand?
+      - Wie schafft der Stand Mobilität?
+      - Was ist die Beziehung zwischen Stand und Fahrer?
+  - id: blr_pavement_sleep
+    name: auf dem Bürgersteig schlafen
+    prompt: |
+      Menschen, die auf dem Bürgersteig schlafen, sind Teil der Stadt. Beobachte mit Sorgfalt. Wo schlafen sie?
+      Was ist die Beziehung zwischen Straße und Obdach?
+    follow_ups:
+      - Was wäre die Straße ohne die Schlafenden?
+      - Wie wird der Bürgersteig zum Zuhause?
+      - Was ist die Beziehung zwischen Schlaf und Stadt?
+  - id: blr_gate_security
+    name: Torsicherheit
+    prompt: |
+      Kolonentore haben Sicherheit – Wachen, Barrieren, Register. Beobachte den Fluss.
+      Wer kommt rein? Wer wird gestoppt? Das Tor ist ein Filter.
+    follow_ups:
+      - Was wäre die Kolonie ohne das Tor?
+      - Wie schafft das Tor Sicherheit?
+      - Was ist die Beziehung zwischen Tor und Vertrauen?
+  - id: blr_street_dog
+    name: Straßenhund
+    prompt: |
+      Straßenhunde sind Teil Bangalores. Beachte einen. Wo schläft er? Was
+      frisst er? Der Hund ist sowohl wild als auch domestiziert.
+    follow_ups:
+      - Was wäre die Straße ohne den Hund?
+      - Wie schafft der Hund Beziehung?
+      - Was ist die Beziehung zwischen Hund und Stadt?
+  - id: blr_hoarding
+    name: Werbetafel
+    prompt: |
+      Werbetafeln – große Plakatwände – dominieren Kreuzungen. Finde eine. Was wird
+      beworben? Die Werbetafel ist ein Ausmaß der Aspiration. Was verspricht sie?
+    follow_ups:
+      - Was wäre die Kreuzung ohne die Werbetafel?
+      - Wie formt die Werbetafel Verlangen?
+      - Was ist die Beziehung zwischen Werbetafel und Stadt?
+  - id: blr_rain_tree
+    name: Regenbaum
+    prompt: |
+      Regenbäume – Samanea saman – überdachen einige Bangalores Straßen. Finde einen. Der
+      Baum ist ein Erbe. Wie formt er den Block?
+    follow_ups:
+      - Was wäre die Straße ohne den Regenbaum?
+      - Wie schafft der Baum Mikroklima?
+      - Was ist die Beziehung zwischen Baum und Gartenstadt?
+  - id: blr_corner_shop
+    name: Bangalore Tante-Emma-Laden
+    prompt: |
+      Tante-Emma-Läden – Kirana-Läden – verkaufen alles. Betrete einen. Was ist das
+      Sortiment? Wer führt ihn? Der Laden ist ein Nachbarschaftsknotenpunkt.
+    follow_ups:
+      - Was wäre der Block ohne den Laden?
+      - Wie schafft der Laden Begegnung?
+      - Was ist die Beziehung zwischen Laden und Gemeinschaft?
+  - id: blr_flyover
+    name: Überführung
+    prompt: |
+      Bangalore Überführungen überspringen Kreuzungen. Stelle dich unter eine. Die Überführung
+      schafft Schatten, Lärm, eine neue Ebene. Was ist oben? Was ist unten?
+    follow_ups:
+      - Was wäre die Kreuzung ohne die Überführung?
+      - Wie schafft die Überführung Fluss?
+      - Was ist die Beziehung zwischen Überführung und Boden?
+  - id: blr_water_tap
+    name: Öffentlicher Wasserhahn
+    prompt: |
+      Öffentliche Wasserhähne gibt es noch. Finde einen. Wer benutzt ihn? Der Hahn ist ein
+      Gemeingut. Was ist die Beziehung zwischen Hahn und Zugang?
+    follow_ups:
+      - Was wäre die Straße ohne den Hahn?
+      - Wie schafft der Hahn ein Geschenk?
+      - Was ist die Beziehung zwischen Hahn und Knappheit?
+  - id: blr_construction_crane
+    name: Baukran
+    prompt: |
+      Bkrane prägen die Skyline. Finde einen. Was wird gebaut?
+      Der Kran ist ein Zeichen des Wachstums. Was wird was ersetzen?
+    follow_ups:
+      - Was wäre die Skyline ohne den Kran?
+      - Wie kennzeichnet der Kran Veränderung?
+      - Was ist die Beziehung zwischen Kran und Stadt?
+  - id: blr_parking_lot
+    name: Parkplatz
+    prompt: |
+      Parkplätze sind temporär – leeres Land bis zur Bebauung. Finde einen. Was
+      war vorher hier? Was wird kommen? Der Platz ist eine Pause.
+    follow_ups:
+      - Was wäre der Block ohne den Platz?
+      - Wie schafft der Platz eine Zwischennutzung?
+      - Was ist die Beziehung zwischen Platz und Entwicklung?
+  - id: blr_street_food
+    name: Street Food
+    prompt: |
+      Street Food Verkäufer bauen bei Einbruch der Dunkelheit auf. Finde einen. Was kocht? Wer isst?
+      Der Verkäufer ist informelle Infrastruktur. Was ist die Wirtschaft?
+    follow_ups:
+      - Was wäre die Straße ohne den Verkäufer?
+      - Wie schafft der Verkäufer Lebensunterhalt?
+      - Was ist die Beziehung zwischen Verkäufer und Straße?
+  - id: blr_compound_garden
+    name: ummauerter Garten
+    prompt: |
+      Ummauerte Gärten sind privat – durch Tore sichtbar. Schau hindurch. Was wächst dort? Der Garten ist ein grünes Fleckchen. Was wäre die Straße ohne ihn?
+    follow_ups:
+      - Was wäre das Grundstück ohne den Garten?
+      - Wie schafft der Garten Erholung?
+      - Was ist die Beziehung zwischen Garten und Stadt?
+  - id: blr_bus_crowd
+    name: Bus Gedränge
+    prompt: |
+      Bangalore Busse sind zur Stoßzeit voll. Beobachte eine Bushaltestelle. Die Menge steigt in
+      einer Welle ein. Wie schafft die Menge Ordnung? Was ist die Etikette?
+    follow_ups:
+      - Was wäre die Haltestelle ohne das Gedränge?
+      - Wie schafft das Gedränge Druck?
+      - Was ist die Beziehung zwischen Gedränge und Bus?
+  - id: blr_metro_pillar
+    name: Metro-Pfeiler
+    prompt: |
+      Metro-Pfeiler tragen die Hochbahn. Stelle dich unter einen. Der Pfeiler
+      schafft eine Raumsäule. Was ist die Beziehung zwischen Pfeiler und Straße?
+    follow_ups:
+      - Was wäre die Straße ohne den Pfeiler?
+      - Wie schafft der Pfeiler Struktur?
+      - Was ist die Beziehung zwischen Pfeiler und Metro?
+  - id: blr_temple_bell
+    name: Tempelglocke
+    prompt: |
+      Tempelglocken markieren Gebetszeiten. Höre zu. Die Glocke schafft einen Rhythmus. Wie
+      formt die Glocke die Nachbarschaft? Was wäre die Straße ohne sie?
+    follow_ups:
+      - Was wäre der Tempel ohne die Glocke?
+      - Wie schafft die Glocke Zeit?
+      - Was ist die Beziehung zwischen Glocke und Gemeinschaft?
+  - id: blr_road_widening
+    name: Straßenverbreiterung
+    prompt: |
+      Straßenverbreiterungen schneiden durch Nachbarschaften. Finde einen Abschnitt. Was wurde
+      entfernt? Was bleibt? Die Verbreiterung ist eine Narbe. Was dient sie?
+    follow_ups:
+      - Was wäre die Straße ohne die Verbreiterung?
+      - Wie schafft die Verbreiterung Fluss?
+      - Was ist die Beziehung zwischen Verbreiterung und Vertreibung?
+  - id: blr_apartment_balcony
+    name: Wohnungsbalkon
+    prompt: |
+      Wohnungsbalkone blicken auf die Straße. Finde ein Gebäude. Was ist auf den
+      Balkonen? Pflanzen? Wäsche? Der Balkon ist eine Schwelle. Was würdest du von einem sehen?
+    follow_ups:
+      - Was wäre das Gebäude ohne den Balkon?
+      - Wie schafft der Balkon eine Beziehung zur Straße?
+      - Was ist die Beziehung zwischen Balkon und Wohnung?
+  - id: blr_night_light
+    name: Nachtlicht
+    prompt: |
+      Bangalore bei Nacht – Straßenlaternen, Ladenbeleuchtung, Wohnungsfenster. Gehe einen Block entlang. Wie
+      formt das Licht die Straße? Was ist beleuchtet? Was ist dunkel?
+    follow_ups:
+      - Was wäre die Straße ohne das Licht?
+      - Wie schafft das Licht Sicherheit?
+      - Was ist die Beziehung zwischen Licht und Nacht?
+  - id: blr_morning_walk
+    name: Morgenspaziergang
+    prompt: |
+      Morgenspaziergänger füllen Parks und Straßen. Mache mit oder beobachte. Der Morgenspaziergang
+      ist ein Ritual. Was ist die Route? Wer geht?
+    follow_ups:
+      - Was wäre der Morgen ohne die Spaziergänger?
+      - Wie schafft der Spaziergang Gemeinschaft?
+      - Was ist die Beziehung zwischen Spaziergang und Gesundheit?
+  - id: blr_garden_city
+    name: Gartenstadt
+    prompt: |
+      Bangalore war die Gartenstadt. Reste bestehen fort – Lalbagh, Cubbon Park,
+      alte Bäume. Finde einen Rest. Was wäre die Stadt, wenn der Garten gewonnen hätte?
+    follow_ups:
+      - Was wäre Bangalore ohne die Gärten?
+      - Wie schafft der Garten Identität?
+      - Was ist die Beziehung zwischen Garten und Stadt?

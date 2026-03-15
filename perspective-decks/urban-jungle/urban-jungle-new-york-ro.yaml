@@ -1,0 +1,458 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Junglă Urbană — New York (Romanian)
+
+id: urban_jungle_new_york
+name: Junglă Urbană — New York
+description: 50 de cărți pentru a-ți schimba perspectiva asupra New York-ului — de la scară și lumină, la straturi de istorie și ritmurile vieții de stradă.
+domain: urban_jungle
+cards:
+  - id: ny_vertical_city
+    name: Oraș Vertical
+    prompt: |
+      Privește în sus. New York-ul este construit pe verticală — turnuri care concurează pentru cer.
+      Urmărește o clădire de la trotuar până la vârf. Cum schimbă înălțimea ceea ce
+      observi? Unde se oprește privirea ta?
+    follow_ups:
+      - Cum ar arăta strada de sus?
+      - Cum distorsionează scara la înălțimi diferite?
+      - Ce rămâne ascuns când privești doar în sus?
+  - id: ny_grid_navigation
+    name: Navigare prin Grilă
+    prompt: |
+      Grila Manhattan-ului este necruțătoare. Mergi un bloc și observă cum sistemul de numerotare
+      modelează mișcarea, orientarea și surpriza. Ce se întâmplă când încalci grila?
+    follow_ups:
+      - Unde simți că grila este opresivă? Unde eliberatoare?
+      - Cum ar fi orașul fără ea?
+      - Cum schimbă străzile diagonale ritmul?
+  - id: ny_subway_soundscape
+    name: Peisaj Sonor al Metroului
+    prompt: |
+      Închide ochii într-o stație. Zumzetul, frânele, anunțurile, muzicantul stradal.
+      Desenează harta peisajului sonor. Cum sună New York-ul când nu îl poți vedea?
+    follow_ups:
+      - Ce sunete sunt constante? Ce sunete sunt accidentale?
+      - Ce ar însemna liniștea aici?
+      - Cum marchează sunetul timpul subteran?
+  - id: ny_fire_escape
+    name: Evacuare în Caz de Incendiu
+    prompt: |
+      Scările de evacuare sunt exoscheletul orașului — funcționale, ritmice, personale.
+      Găsește un bloc unde se repetă. Ce dezvăluie despre clădirile din spatele lor?
+      Cine ar putea sta acolo noaptea?
+    follow_ups:
+      - Ce ai vedea de pe una?
+      - Cum schimbă caracterul străzii?
+      - Ce ar pierde blocul fără ele?
+  - id: ny_street_number
+    name: Număr de Stradă
+    prompt: |
+      Alege un număr — un număr de clădire, un etaj, o rută de autobuz. Urmărește-l prin oraș.
+      Ce tipar apare? Ce înseamnă acel număr aici?
+    follow_ups:
+      - Unde te duce numărul?
+      - Ce ar dezvălui un număr diferit?
+      - Cum ordonează numerele experiența urbană?
+  - id: ny_steam_rising
+    name: Abur Ridicându-se
+    prompt: |
+      Aburul din gurile de canal este respirația New York-ului. Găsește locul unde se ridică și privește cum se mișcă, cum se dispersează, cum prinde lumina.
+      Ce este dedesubt? Ce expiră orașul?
+    follow_ups:
+      - Ce ai găsi sub grilaj?
+      - Cum schimbă vremea aburul?
+      - Ce alte sisteme ascunse se ventilează aici?
+  - id: ny_storefront_typography
+    name: Tipografie Vitrină Magazin
+    prompt: |
+      Citește semnele. Bodegas, delis, spălătorii — fiecare are un limbaj vizual.
+      Colectează cinci tipuri de fonturi de pe un bloc. Ce spun despre cine locuiește aici?
+    follow_ups:
+      - Ce semne par vechi? Ce par noi?
+      - Cum ar suna blocul dacă semnele ar putea vorbi?
+      - Cum marchează tipografia schimbarea?
+  - id: ny_waterfront_edge
+    name: Marginea Waterfrontului
+    prompt: |
+      Mergi la apă. Orașul își întoarce spatele râului, portului, golfului.
+      Stai unde pământul întâlnește apa. Ce este construit pentru priveliște? Ce este construit pentru a o ignora?
+    follow_ups:
+      - Cine are acces la priveliștea apei?
+      - Cum a fost revendicată marginea?
+      - Ce ar fi orașul dacă s-ar uita spre apă?
+  - id: ny_parks_as_rooms
+    name: Parcuri ca Niște Camere
+    prompt: |
+      Central Park, Prospect Park, o piațetă mică — fiecare este o cameră în oraș.
+      Intră într-una și observă-i pereții, tavanul, mobilierul. Cum este natura
+      proiectată aici?
+    follow_ups:
+      - Care este scopul camerei?
+      - Cine a proiectat liniile de vizibilitate?
+      - Ce s-ar întâmpla dacă pereții ar cădea?
+  - id: ny_delivery_rhythm
+    name: Ritmul Livrărilor
+    prompt: |
+      Privește livrările — camioane, cărucioare, biciclete. Urmărește traseul unui pachet
+      de la camion la ușă. Cum circulă comerțul pe stradă? Care este
+      ritmul sosirii?
+    follow_ups:
+      - Cum ar arăta blocul fără livrări?
+      - Cum circulă diferite bunuri diferit?
+      - Cine este invizibil în acest flux?
+  - id: ny_brownstone_steps
+    name: Trepte de Brownstone
+    prompt: |
+      Pragurile de brownstone sunt scene. Stai pe unul și privește strada. Cine
+      se oprește? Cine trece? Ce ai spune de aici?
+    follow_ups:
+      - Care este priveliștea de pe treapta cea mai de sus?
+      - Cum creează treptele teritorii?
+      - Ce ar pierde blocul fără ele?
+  - id: ny_bridge_as_threshold
+    name: Pod ca Prag
+    prompt: |
+      Traversează un pod pe jos. Simte tranziția — de la un cartier la altul.
+      Podul nu este nici aici, nici acolo. Ce se schimbă când ajungi pe partea cealaltă?
+    follow_ups:
+      - Ce lași în urmă?
+      - Cum modelează podul călătoria?
+      - Ce ar fi orașul fără poduri?
+  - id: ny_awning_shade
+    name: Umbra Copertinei
+    prompt: |
+      Copertinele creează microclimate. Stai sub una. Observă schimbarea de lumină,
+      sunet, temperatură. Cum schimbă structurile mici strada?
+    follow_ups:
+      - Cum s-ar simți blocul fără copertine?
+      - Cum marchează ele proprietatea?
+      - Ce alte adăposturi mici există aici?
+  - id: ny_graffiti_layer
+    name: Strat de Graffiti
+    prompt: |
+      Privește pereții. Taguri, murale, lipituri — fiecare este un strat de timp și revendicare.
+      Citește palinpsestul. Cine a marcat această suprafață?
+    follow_ups:
+      - Care este cel mai vechi semn pe care îl găsești?
+      - Cum spun straturile o poveste?
+      - Ce ar spune peretele dacă ar putea vorbi?
+  - id: ny_rooftop_skyline
+    name: Linia Orizontului de pe Acoperiș
+    prompt: |
+      Imaginează-ți priveliștea de pe un acoperiș. Rezervoare de apă, antene, acoperișuri vecine.
+      Orașul de sus este un oraș diferit. Ce ai vedea?
+    follow_ups:
+      - Cum schimbă înălțimea ceea ce contează?
+      - Ce este ascuns de pe stradă?
+      - Cine are acces la această priveliște?
+  - id: ny_crosswalk_wait
+    name: Așteptare la Trecere de Pietoni
+    prompt: |
+      Așteaptă la o trecere de pietoni. Nu traversa când se schimbă semaforul. Așteaptă
+      următorul ciclu. Ce observi în pauză? Cine altcineva așteaptă?
+    follow_ups:
+      - Cum schimbă așteptarea percepția?
+      - Ce ritmuri guvernează intersecția?
+      - Ce s-ar întâmpla dacă nu ai traversa niciodată?
+  - id: ny_diner_booth
+    name: Banchetă la Diner
+    prompt: |
+      Stai într-o banchetă la un diner, lângă fereastră. Strada devine un film. Privește
+      trecătorii, traficul, lumina. Ce poveste se desfășoară?
+    follow_ups:
+      - Cine sunt personajele principale?
+      - Cum schimbă cadrul ceea ce vezi?
+      - Ce ai rata fără fereastră?
+  - id: ny_scaffolding_skin
+    name: Piele de Schele
+    prompt: |
+      Schelele înfășoară clădirile ca niște pansamente. Mergi pe sub ele. Observă
+      sunetul, lumina, tavanul temporar. Ce se repară? Ce se ascunde?
+    follow_ups:
+      - De cât timp este acolo?
+      - Ce ar spune clădirea fără ele?
+      - Care este relația dintre reparație și ascundere?
+  - id: ny_newsstand_archive
+    name: Arhivă Chioșc de Ziare
+    prompt: |
+      Un chioșc de ziare este o felie de atenție — reviste, ziare, bomboane. Ce este expus?
+      Cine se oprește? Ce ar fi acest colț fără el?
+    follow_ups:
+      - Care este cel mai bine vândut produs?
+      - Cum modelează chioșcul blocul?
+      - Ce ai pune aici?
+  - id: ny_construction_site
+    name: Șantier de Construcții
+    prompt: |
+      Privește un șantier de construcții. Macarale, bariere, muncitori. Orașul este mereu în devenire.
+      Ce se construiește? Ce se înlocuiește?
+    follow_ups:
+      - Cine va folosi asta când va fi gata?
+      - Ce era aici înainte?
+      - Cum schimbă construcția cartierul?
+  - id: ny_light_well
+    name: Fântână de Lumină
+    prompt: |
+      Caută fântâni de lumină — spațiile înguste dintre clădiri unde cade lumina.
+      Cine primește acea lumină? Ce crește acolo?
+    follow_ups:
+      - Cum ar fi să locuiești în acel puț?
+      - Cum definește lumina valoarea?
+      - Ce este ascuns în umbre?
+  - id: ny_bodega_cat
+    name: Pisica din Bodega
+    prompt: |
+      Găsește o bodega cu o pisică. Pisica este atât în interior, cât și în afara regulilor.
+      Ce altceva în oraș funcționează astfel?
+    follow_ups:
+      - Ce vede pisica?
+      - Cum modelează regulile informale spațiul?
+      - Ce ar fi magazinul fără pisică?
+  - id: ny_sidewalk_crack
+    name: Crăpătură în Trotuar
+    prompt: |
+      Privește în jos. Urmărește o crăpătură în trotuar. Unde duce? Ce crește în ea?
+      Orașul este plin de astfel de fisuri.
+    follow_ups:
+      - Ce ar spune trotuarul despre timp?
+      - Cum contează micile rupturi?
+      - Ce se ivește?
+  - id: ny_air_conditioner
+    name: Aer Condiționat
+    prompt: |
+      Numără aparatele de aer condiționat de pe o clădire. Sunt paraziți, proteze,
+      necesități. Cum schimbă fațada? Ce picură?
+    follow_ups:
+      - Cum ar arăta clădirea fără ele?
+      - Cum modelează clima arhitectura?
+      - Cine decide unde merg?
+  - id: ny_express_local
+    name: Express / Local
+    prompt: |
+      Mergi cu metroul. Observă diferența dintre express și local. Viteza
+      schimbă ceea ce vezi. Sari peste stații și simte cum orașul se comprimă.
+    follow_ups:
+      - Ce ratezi când nu te oprești?
+      - Cum modelează viteza experiența?
+      - Ce ar fi orașul dacă totul ar fi local?
+  - id: ny_water_tower
+    name: Rezervor de Apă
+    prompt: |
+      Rezervoarele de apă încoronează clădirile mai vechi. Sunt din lemn, în formă de butoi,
+      ubicuite. Găsește cinci. Ce spun despre linia orizontului?
+    follow_ups:
+      - De ce sunt încă aici?
+      - Cum ar arăta acoperișul fără unul?
+      - Cum marchează ele vechimea?
+  - id: ny_awning_stripes
+    name: Dungi Copertină
+    prompt: |
+      Copertinele cu dungi sunt un vernacular din New York. Găsește un bloc unde se repetă.
+      Cum creează dungile identitate? Ce ar face culorile solide?
+    follow_ups:
+      - De ce dungi și nu culori solide?
+      - Cum unifică copertinele un bloc?
+      - Care este istoria acestui model?
+  - id: ny_curb_cut
+    name: Rampe la Bordură
+    prompt: |
+      Observă rampele la bordură — rampele de la colțuri. Sunt pentru fotolii rulante, cărucioare,
+      pătuțuri. Cum schimbă strada? Pe cine includ?
+    follow_ups:
+      - Ce ar fi blocul fără ele?
+      - Cum modelează accesul designul?
+      - Ce alte acomodări invizibile există?
+  - id: ny_street_tree
+    name: Copac de Stradă
+    prompt: |
+      Alege un copac de stradă. Cât spațiu are? Ce este în groapa lui?
+      Cine îl udă? Copacul este un oaspete. Cum este tratat?
+    follow_ups:
+      - Ce ar fi blocul fără copaci?
+      - Cum marchează copacii grija?
+      - Ce crește la umbra copacului?
+  - id: ny_loading_zone
+    name: Zonă de Încărcare
+    prompt: |
+      Zonele de încărcare sunt teritorii temporare. Privește una timp de zece minute. Cine
+      o folosește? Cât timp stau? Care este ritmul ocupației?
+    follow_ups:
+      - Ce s-ar întâmpla fără zone de încărcare?
+      - Cum sunt încălcate regulile?
+      - Care este relația dintre parcare și comerț?
+  - id: ny_vent_grille
+    name: Grilaj Ventilație
+    prompt: |
+      Grilajele de trotuar ventilează metroul. Stai pe unul. Simte curentul ascendent. Ascultă.
+      Orașul respiră prin aceste deschideri.
+    follow_ups:
+      - Ce se ridică de dedesubt?
+      - Cum conectează grilajul lumile?
+      - Ce ar fi trotuarul fără el?
+  - id: ny_basement_stairs
+    name: Scări Subsol
+    prompt: |
+      Găsește scări care duc în jos — spre un subsol, un metrou, un bar clandestin. Orașul
+      are multe niveluri. Ce este sub trotuar?
+    follow_ups:
+      - Cine coboară?
+      - Cum schimbă coborârea lumina?
+      - Ce ai găsi la capăt?
+  - id: ny_clock_tower
+    name: Turn cu Ceas
+    prompt: |
+      Găsește un ceas public. Este precis? Cine l-a setat? Ceasurile ordonează orașul.
+      Ce se întâmplă când sunt în dezacord?
+    follow_ups:
+      - Ce ar fi blocul fără ceas?
+      - Cum se sincronizează timpul?
+      - Care este relația dintre timpul ceasului și timpul corpului?
+  - id: ny_newsstand_magazine
+    name: Revistă de la Chioșc
+    prompt: |
+      La un chioșc de ziare, alege o copertă de revistă. Pentru cine este? Ce presupune
+      despre cititor? Chioșcul este o oglindă a dorințelor.
+    follow_ups:
+      - Ce ar învăța un străin din acest afișaj?
+      - Cum concurează coperțile pentru atenție?
+      - Ce nu este expus?
+  - id: ny_awning_rain
+    name: Copertină Ploaie
+    prompt: |
+      Stai sub o copertină pe ploaie. Privește cum apa se scurge pe margini.
+      Copertina creează o insulă uscată. Cine o împarte cu tine?
+    follow_ups:
+      - Cum s-ar simți blocul fără adăpost?
+      - Cum schimbă ploaia strada?
+      - Ce alte adăposturi există?
+  - id: ny_fire_hydrant
+    name: Hidrant de Incendiu
+    prompt: |
+      Un hidrant de incendiu este o legătură la sistemul circulator al orașului. Găsește unul.
+      Ce culoare are? Cine l-ar putea deschide? Ce curge prin el?
+    follow_ups:
+      - Ce ar face blocul într-un incendiu fără el?
+      - Cum marchează hidranții teritoriul?
+      - Care este relația dintre hidrant și furtun?
+  - id: ny_stoop_sale
+    name: Vânzare pe Prag
+    prompt: |
+      Imaginează-ți o vânzare pe prag pe aceste trepte. Ce s-ar vinde? Cine s-ar opri?
+      Pragul este o scenă pentru schimb.
+    follow_ups:
+      - Ce ai pune afară?
+      - Cum facilitează pragul întâlnirea?
+      - Ce ar învăța blocul dintr-o vânzare?
+  - id: ny_rooftop_garden
+    name: Grădină pe Acoperiș
+    prompt: |
+      Imaginează-ți o grădină pe acoperiș deasupra ta. Ce ar crește acolo? Cine o îngrijește?
+      Orașul are un strat verde secret.
+    follow_ups:
+      - Ce ai planta?
+      - Cum schimbă altitudinea grădinăritul?
+      - Cum ar arăta linia orizontului dacă toate acoperișurile ar fi verzi?
+  - id: ny_subway_map
+    name: Hartă Metrou
+    prompt: |
+      Privește o hartă de metrou. Este un diagram, nu geografie. Ce este distorsionat?
+      Ce este omis? Harta modelează modul în care gândim despre oraș.
+    follow_ups:
+      - Cum ar arăta o hartă adevărată?
+      - Cum creează harta cartiere?
+      - Care este relația dintre hartă și teritoriu?
+  - id: ny_brick_pattern
+    name: Model Cărămidă
+    prompt: |
+      Studiază un zid de cărămidă. Modelul — legătură curentă, legătură flamandă — ține zidul.
+      Urmărește modelul. Ce s-ar întâmpla dacă o cărămidă ar lipsi?
+    follow_ups:
+      - Cum distribuie modelul greutatea?
+      - Ce ar spune zidul despre creatorul său?
+      - Cum îmbătrânește cărămida?
+  - id: ny_awning_strip
+    name: Bandă Copertină
+    prompt: |
+      Mergi pe un bloc și numără copertinele. Ce culori? Ce condiții? Copertina este o mică arhitectură. Cum variază?
+    follow_ups:
+      - Cum ar arăta blocul fără copertine?
+      - Cum creează copertinele identitate?
+      - Care este relația dintre copertină și afacere?
+  - id: ny_manhole_cover
+    name: Capac Gura Canal
+    prompt: |
+      Citește un capac de gură de canal. Numele orașului, departamentul, data. Aceste discuri sunt uși către un alt oraș. Ce este dedesubt?
+    follow_ups:
+      - Cine coboară acolo?
+      - Cum marchează capacul teritoriul?
+      - Ce ar fi strada fără aceste uși?
+  - id: ny_bus_shelter
+    name: Adăpost Autobuz
+    prompt: |
+      Așteaptă într-un adăpost de autobuz. Observă cine altcineva așteaptă. Adăpostul este o cameră comună. Care este eticheta? Care este priveliștea?
+    follow_ups:
+      - Cum ar fi așteptarea fără adăpost?
+      - Cum modelează adăpostul comunitatea?
+      - Ce ai schimba la el?
+  - id: ny_street_lamp
+    name: Lampă Stradală
+    prompt: |
+      Stai sub o lampă stradală la amurg. Privește cum lumina preia controlul de la soare.
+      Lampa creează o baltă de vizibilitate. Ce este în baltă? Ce este în afara ei?
+    follow_ups:
+      - Cum schimbă lumina artificială strada?
+      - Cum ar fi blocul fără lămpi?
+      - Cum marchează lămpile timpul?
+  - id: ny_plaza_seat
+    name: Scaun Piațetă
+    prompt: |
+      Stai pe o bancă într-o piațetă. Cine altcineva stă? Cine trece? Piațeta este o pauză în flux.
+      Ce îi face pe oameni să se oprească?
+    follow_ups:
+      - Ce ar fi piațeta fără scaune?
+      - Cum modelează așezarea întâlnirea?
+      - Ce ai adăuga?
+  - id: ny_awning_fabric
+    name: Material Copertină
+    prompt: |
+      Atinge o copertină dacă poți. Material, vinil, dungi. Copertina este o membrană între interior și exterior. Cum se simte?
+    follow_ups:
+      - Cum s-ar simți blocul fără material?
+      - Cum contează materialul?
+      - Care este relația dintre copertină și vreme?
+  - id: ny_newsstand_daily
+    name: Zilnic la Chioșc
+    prompt: |
+      Un chioșc de ziare se schimbă pe parcursul zilei — ziare de dimineață, reviste de prânz,
+      gustări de seară. Vizitează la ore diferite. Care este ritmul?
+    follow_ups:
+      - Ce ar fi colțul fără chioșc?
+      - Cum marchează chioșcul timpul?
+      - Care este relația dintre chioșc și bloc?
+  - id: ny_sidewalk_chalk
+    name: Creta pe Trotuar
+    prompt: |
+      Copiii desenează pe trotuare. Găsește artă cu cretă. Ce este desenul? Creta este
+      temporară. Ploaia o va șterge. Cum contează temporaritatea?
+    follow_ups:
+      - Ce ar fi trotuarul fără cretă?
+      - Cum creează creta un cadou?
+      - Care este relația dintre cretă și stradă?
+  - id: ny_rooftop_ac
+    name: AC Acoperiș
+    prompt: |
+      Unitățile de aer condiționat de pe acoperiș zumzăie vara. Ascultă. Acoperișul este o pădure mecanică.
+      Cum modelează sunetul blocul?
+    follow_ups:
+      - Ce ar fi acoperișul fără unități?
+      - Cum creează AC-ul confortul?
+      - Care este relația dintre unitate și clădire?
+  - id: ny_street_musician
+    name: Muzicant Stradal
+    prompt: |
+      Un muzicant stradal cântă într-un pasaj. Oprește-te și ascultă. Muzica creează o bulă.
+      Ce este în interiorul bulei? Ce este în afara ei?
+    follow_ups:
+      - Ce ar fi pasajul fără muzicant?
+      - Cum creează muzica o pauză?
+      - Care este relația dintre muzicant și stradă?

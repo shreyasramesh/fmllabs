@@ -1,0 +1,459 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Kentsel Orman — San Francisco (Turkish)
+
+id: urban_jungle_san_francisco
+name: Kentsel Orman — San Francisco
+description: San Francisco'u görme biçiminizi değiştirecek 50 kart — ölçek ve ışıktan tarih katmanlarına ve sokak yaşamının ritimlerine kadar.
+domain: urban_jungle
+cards:
+  - id: sf_hill_grade
+    name: Yokuş Derecesi
+    prompt: |
+      San Francisco eğimler üzerine kuruludur. Yokuşu ayaklarınızın altında hissedin.
+      Derece, neleri fark ettiğinizi nasıl değiştirir? Şehir nerede eğimli?
+    follow_ups:
+      - Eğer düz olsaydı sokak nasıl görünürdü?
+      - Yokuşlar mahalleleri nasıl şekillendirir?
+      - Tırmandığınız en dik blok hangisiydi?
+  - id: sf_fog_layer
+    name: Sis Katmanı
+    prompt: |
+      Sis içeri giriyor. Hareketini izleyin — köprünün üzerinden, yokuşlardan aşağı.
+      Sis bir karakterdir. Işığı nasıl değiştirir? Sesi nasıl?
+    follow_ups:
+      - Sis olmasaydı şehir nasıl olurdu?
+      - Sis zamanı nasıl işaretler?
+      - Sis nerede durur?
+  - id: sf_cable_car_track
+    name: Tramvay Rayı
+    prompt: |
+      Bir tramvay rayını takip edin. Kaldırımdaki yuva, kablonun uğultusu.
+      Tramvay hala çalışan bir kalıntıdır. Neler taşır?
+    follow_ups:
+      - Ray olmasaydı yokuş nasıl olurdu?
+      - Tramvay turizmi nasıl şekillendirir?
+      - Ray ve sokak arasındaki ilişki nedir?
+  - id: sf_victorian_detail
+    name: Viktorya Dönemi Detayı
+    prompt: |
+      San Francisco Viktorya dönemi evleri süslüdür — dantel, cumbalı pencere,
+      renk. Bir tane bulun ve detaylarını okuyun. Süsleme ne hikaye anlatır?
+    follow_ups:
+      - Detayları olmasaydı ev nasıl olurdu?
+      - Renk sokağı nasıl değiştirir?
+      - Viktorya dönemi ve modern arasındaki ilişki nedir?
+  - id: sf_painted_lady
+    name: Boyalı Hanımefendi
+    prompt: |
+      Boyalı Hanımefendiler ünlüdür, ancak her Viktorya dönemi evinin bir renk paleti
+      vardır. Bir bloktan beş renk kombinasyonu toplayın. Renkler ne söylüyor?
+    follow_ups:
+      - Neden bu renkler?
+      - Boya nasıl korur veya dönüştürür?
+      - Gri tonda blok nasıl görünürdü?
+  - id: sf_bay_window
+    name: Cumbalı Pencere
+    prompt: |
+      Cumbalı pencereler sokağa doğru kabarır. Işık, manzara, sergileme
+      içindir. Birinin önünde durun. İçeriden ne görürdünüz?
+    follow_ups:
+      - Cumba odayı nasıl değiştirir?
+      - Onsuz cephe nasıl olurdu?
+      - Cumbalı pencereler sokakla nasıl bir ilişki kurar?
+  - id: sf_stairway_street
+    name: Merdivenli Sokak
+    prompt: |
+      San Francisco'nun sokak olan merdivenleri var — kaldırım yerine basamaklar.
+      Birine tırmanın. Merdiven mahalleyi nasıl değiştirir?
+    follow_ups:
+      - Bu merdivenleri kimler kullanır?
+      - Onlar olmasaydı yokuş nasıl olurdu?
+      - Merdivenler toplumu nasıl oluşturur?
+  - id: sf_mission_mural
+    name: Misyon Duvar Resmi
+    prompt: |
+      Misyon, duvar resimlerinden oluşan bir galeridir. Birini bulun ve okuyun.
+      Hikaye nedir? Kim çizdi? Kimin için?
+    follow_ups:
+      - Duvar resimsiz duvar ne söylerdi?
+      - Duvar resimleri alanı nasıl sahiplenir?
+      - Duvar resmi ve mahalle arasındaki ilişki nedir?
+  - id: sf_earthquake_retrofit
+    name: Deprem Güçlendirmesi
+    prompt: |
+      Deprem güçlendirmeleri arayın — cıvatalar, destekler, temeller. Şehir
+      1906 ve 1989'u hatırlıyor. Korku inşa edilmiş çevreyi nasıl şekillendirir?
+    follow_ups:
+      - Güçlendirmesiz bina nasıl olurdu?
+      - Sismik tasarım nasıl gösterilir?
+      - Güçlendirme ve güven arasındaki ilişki nedir?
+  - id: sf_dolores_palm
+    name: Dolores Palmiyesi
+    prompt: |
+      Dolores Caddesi boyunca palmiye ağaçları sıralanır. Yerli değiller, ancak
+      ikoniktirler. Şehrin başka yerlerle olan ilişkisi hakkında ne söylüyorlar?
+    follow_ups:
+      - Palmiye ağaçları olmasaydı cadde nasıl olurdu?
+      - Palmiyeler kimliği nasıl işaretler?
+      - Palmiye ve yer arasındaki ilişki nedir?
+  - id: sf_twin_peaks_view
+    name: İkiz Tepeler Manzarası
+    prompt: |
+      İkiz Tepeler'den manzarayı hayal edin. Şehir aşağıda yayılır — ızgara,
+      su, köprüler. Yükseklik neleri önemli kılar?
+    follow_ups:
+      - Oradan yukarıdan ne görürdünüz?
+      - Manzara şehrin imajını nasıl şekillendirir?
+      - Zirveden ne saklanıyor?
+  - id: sf_ferry_building
+    name: Feribot Binası
+    prompt: |
+      Feribot Binası körfeze bakar. Bir eşiktir — kara ve su, şehir ve
+      ulaşım. Girişinde durun. Neler akar?
+    follow_ups:
+      - Sahil şeridi onsuz nasıl olurdu?
+      - Bina geçişi nasıl işaretler?
+      - Feribot ve şehir arasındaki ilişki nedir?
+  - id: sf_chinatown_gate
+    name: Çin Mahallesi Kapısı
+    prompt: |
+      Ejderha Kapısı Çin Mahallesi'ni işaretler. İçinden geçin. Ne değişir? Kapı
+      hem gerçek hem de semboliktir. Nasıl çalışır?
+    follow_ups:
+      - Kapısız Çin Mahallesi nasıl olurdu?
+      - Kapı kimliği nasıl oluşturur?
+      - Kapı ve mahalle arasındaki ilişki nedir?
+  - id: sf_hydrant_color
+    name: Yangın Musluğu Rengi
+    prompt: |
+      San Francisco yangın muslukları farklı renklerdedir — mavi, yeşil,
+      kırmızı. Renk su akışını gösterir. Üç renk bulun. Her biri ne anlama
+      geliyor?
+    follow_ups:
+      - Bir yangın durumunda blok ne yapardı?
+      - Renk bilgiyi nasıl kodlar?
+      - Yangın musluğu ve sistem arasındaki ilişki nedir?
+  - id: sf_parklet
+    name: Park Alanı
+    prompt: |
+      Park alanları otoparkları insanlar için geri alır. Birine oturun. Mobilyalar
+      nedir? Kimler kullanır? Park alanı bloğu nasıl değiştirir?
+    follow_ups:
+      - Park alanı olmasaydı alan nasıl olurdu?
+      - Park alanı nasıl karşılaşma yaratır?
+      - Ne eklerdiniz?
+  - id: sf_sf_street_sign
+    name: SF Sokak Tabelası
+    prompt: |
+      San Francisco sokak tabelalarının özel bir stili vardır. Yazı tipini,
+      montajı, yerleşimi fark edin. Tabela yolu bulmayı nasıl şekillendirir?
+    follow_ups:
+      - Tabelasız blok nasıl olurdu?
+      - Tipografi neden önemlidir?
+      - Tabela ve kimlik arasındaki ilişki nedir?
+  - id: sf_castro_rainbow
+    name: Castro Gökkuşağı
+    prompt: |
+      Castro gökkuşağı bayrakları dalgalandırır. Sokağı yürüyün ve bayrakları
+      sayın. Bayrak alanı nasıl sahiplenir? Burada ne anlama geliyor?
+    follow_ups:
+      - Bayraksız mahalle nasıl olurdu?
+      - Bayrak toplumu nasıl oluşturur?
+      - Sembol ve yer arasındaki ilişki nedir?
+  - id: sf_haight_vintage
+    name: Haight Vintage
+    prompt: |
+      Haight, 1960'ların bir müzesidir. Değişmemiş bir bina bulun. Ne
+      korunmuş? Ne performans?
+    follow_ups:
+      - Vintage olmasaydı sokak nasıl olurdu?
+      - Tarih ticareti nasıl şekillendirir?
+      - Geçmiş ve şimdi arasındaki ilişki nedir?
+  - id: sf_sutro_tower
+    name: Sutro Kulesi
+    prompt: |
+      Sutro Kulesi her yerden görünür. Pusula olarak kullanın. Kule sizi nasıl
+      yönlendirir? Onsuz silüet nasıl olurdu?
+    follow_ups:
+      - Kule ne yayınlar?
+      - Kule kimliği nasıl şekillendirir?
+      - Kule ve manzara arasındaki ilişki nedir?
+  - id: sf_bart_underground
+    name: BART Yeraltı
+    prompt: |
+      BART ile körfezin altından gidin. Su altındaki bir tüneldesiniz. Basıncı,
+      karanlığı, ortaya çıkışı hissedin. Tünel yolculuğu nasıl değiştirir?
+    follow_ups:
+      - Tünelsiz ulaşım nasıl olurdu?
+      - Körfez nasıl ayırır?
+      - Tünel ve bölge arasındaki ilişki nedir?
+  - id: sf_taquería_line
+    name: Taquería Sırası
+    prompt: |
+      Gece yarısı bir taquería sırasına katılın. Sıra bir ritüeldir. Kimler
+      içinde? Ne sipariş ediyorlar? Sıra topluluktur.
+    follow_ups:
+      - Taquería olmasaydı blok nasıl olurdu?
+      - Sıra nasıl karşılaşma yaratır?
+      - Yemek ve yer arasındaki ilişki nedir?
+  - id: sf_dolores_sun
+    name: Dolores Güneşi
+    prompt: |
+      Dolores Park batıya bakar. Güneşli bir günde plajdır. Kalabalığı izleyin.
+      Güneş parkı nasıl şekillendirir? En iyi yerleri kimler alır?
+    follow_ups:
+      - Güneş olmasaydı park nasıl olurdu?
+      - Yön neden önemlidir?
+      - Park ve hava arasındaki ilişki nedir?
+  - id: sf_mission_door
+    name: Misyon Kapısı
+    prompt: |
+      Misyon kapıları genellikle süslüdür — oyma, boyalı, benzersiz. Bir bloktan
+      beş kapı bulun. Arkalarındaki binalar hakkında ne söylüyorlar?
+    follow_ups:
+      - Kapılar olmasaydı blok nasıl olurdu?
+      - Kapı kimliği nasıl oluşturur?
+      - Kapı ve eşik arasındaki ilişki nedir?
+  - id: sf_coit_tower
+    name: Coit Kulesi
+    prompt: |
+      Coit Kulesi, Telegraph Hill'in tepesinde yer alır. Bir anıt, bir bakış açısı, bir dönüm noktasıdır.
+      Kule tepeyi nasıl şekillendirir? O olmadan tepe nasıl olurdu?
+    follow_ups:
+      - Kule neyi anıyor?
+      - Kule şehri nasıl yönlendirir?
+      - Kule ve mahalle arasındaki ilişki nedir?
+  - id: sf_lombard_curve
+    name: Lombard Virajı
+    prompt: |
+      Lombard Sokağı tepeden aşağı kıvrılır. Keskin dönüşleriyle ünlüdür. Yürüyün
+      . Viraj inişi nasıl değiştirir? Düz bir sokak ne yapardı?
+    follow_ups:
+      - Viraj olmasaydı yokuş nasıl olurdu?
+      - Viraj deneyimi nasıl şekillendirir?
+      - Viraj ve güvenlik arasındaki ilişki nedir?
+  - id: sf_alcatraz_silhouette
+    name: Alcatraz Silüeti
+    prompt: |
+      Sahil şeridinden Alcatraz bir silüettir. Ada her zaman oradadır, her zaman
+      uzaktır. Şehir için ne anlama geliyor?
+    follow_ups:
+      - Ada olmasaydı körfez nasıl olurdu?
+      - Ada manzarayı nasıl şekillendirir?
+      - Hapishane ve şehir arasındaki ilişki nedir?
+  - id: sf_ghost_sign
+    name: Hayalet Tabela
+    prompt: |
+      Hayalet tabelalar — tuğla üzerindeki solmuş reklamlar — geçmişi işaretler.
+      Birini bulun. Ne reklam yapıyordu? Kimler görürdü?
+    follow_ups:
+      - Tabelasız duvar ne söylerdi?
+      - Hayalet tabela tarihi nasıl korur?
+      - Tabela ve ticaret arasındaki ilişki nedir?
+  - id: sf_sf_sidewalk
+    name: SF Kaldırım
+    prompt: |
+      San Francisco kaldırımları genellikle çatlak, eğimli, ağaç kökleriyle dolu.
+      Bir bloğu yürüyün ve dokusunu fark edin. Kaldırım nasıl yaşlanır?
+    follow_ups:
+      - Kaldırımsız blok nasıl olurdu?
+      - Kaldırım hareketi nasıl şekillendirir?
+      - Kaldırım ve ağaç arasındaki ilişki nedir?
+  - id: sf_golden_gate_fog
+    name: Golden Gate Sisi
+    prompt: |
+      Golden Gate Köprüsü sis içinde kaybolur. Kaybolup yeniden ortaya çıkmasını
+      izleyin. Sis bir perdedir. Arkasında ne var?
+    follow_ups:
+      - Sis olmasaydı köprü nasıl olurdu?
+      - Sis manzarayı nasıl şekillendirir?
+      - Sis ve köprü arasındaki ilişki nedir?
+  - id: sf_mission_dolores
+    name: Mission Dolores
+    prompt: |
+      Mission Dolores, şehirdeki en eski yapıdır. Önünde durun. Neleri gördü?
+      Zamanı nasıl işaretler?
+    follow_ups:
+      - Misyon olmasaydı mahalle nasıl olurdu?
+      - Misyon kimliği nasıl şekillendirir?
+      - Misyon ve şehir arasındaki ilişki nedir?
+  - id: sf_painted_steps
+    name: Boyalı Merdivenler
+    prompt: |
+      16th Avenue Mozaik Merdivenler bir mozaiktir. Tırmanın. Her basamak
+      farklıdır. Sanat tırmanışı nasıl değiştirir?
+    follow_ups:
+      - Mozaikler olmasaydı merdivenler nasıl olurdu?
+      - Mozaik toplumu nasıl oluşturur?
+      - Sanat ve tırmanış arasındaki ilişki nedir?
+  - id: sf_sf_street_tree
+    name: SF Sokak Ağacı
+    prompt: |
+      San Francisco sokak ağaçları genellikle palmiye, manolya veya ficus'tur.
+      Birini bulun ve tanımlayın. Ağaç bloğu nasıl şekillendirir?
+    follow_ups:
+      - Ağaç olmasaydı blok nasıl olurdu?
+      - Ağaç nasıl yaşam alanı oluşturur?
+      - Ağaç ve kaldırım arasındaki ilişki nedir?
+  - id: sf_sf_bay_window
+    name: SF Cumbalı Pencere
+    prompt: |
+      Cumbalı pencereler San Francisco'nun ağız dilidir. Sokağa doğru kabarır,
+      ışığı yakalarlar. Cumbalı pencere odayı nasıl değiştirir?
+    follow_ups:
+      - Cumbalı pencere olmasaydı cephe nasıl olurdu?
+      - Cumba sokakla nasıl bir ilişki kurar?
+      - Cumba ve manzara arasındaki ilişki nedir?
+  - id: sf_sf_hill
+    name: SF Yokuşu
+    prompt: |
+      Bir yokuş seçin ve tırmanın. Yanmayı hissedin. Zirvede, geriye bakın.
+      Tırmanış gördüklerinizi nasıl değiştirir?
+    follow_ups:
+      - Yokuşlar olmasaydı şehir nasıl olurdu?
+      - Yokuşlar mahalleleri nasıl şekillendirir?
+      - Yokuş ve manzara arasındaki ilişki nedir?
+  - id: sf_sf_fog
+    name: SF Sisi
+    prompt: |
+      Sis bir isme sahip — Karl. Yerel bir ünlüdür. Karl içeri girdiğinde, şehir
+      nasıl değişir? Ne gizlenir? Ne ortaya çıkar?
+    follow_ups:
+      - Karl olmasaydı şehir nasıl olurdu?
+      - Sis kimliği nasıl şekillendirir?
+      - Sis ve ışık arasındaki ilişki nedir?
+  - id: sf_sf_cable
+    name: SF Kablo
+    prompt: |
+      Tramvay sokak altındaki bir kablo üzerinde çalışır. Onu göremezsiniz, ama
+      duyarsınız. Gizli kablo görünen şehri nasıl şekillendirir?
+    follow_ups:
+      - Kablo olmasaydı yokuş nasıl olurdu?
+      - Kablo nasıl bağlantı oluşturur?
+      - Kablo ve sokak arasındaki ilişki nedir?
+  - id: sf_sf_victorian
+    name: SF Viktorya Dönemi Evi
+    prompt: |
+      Viktorya dönemi evleri çiftler halinde gelir — iki ev, bir arsa. Bir çift
+      bulun. Nasıl ilişki kurarlar? Biri diğerinden ne olurdu?
+    follow_ups:
+      - Çift olmasaydı blok nasıl olurdu?
+      - Çift nasıl ritim yaratır?
+      - Çift ve arsa arasındaki ilişki nedir?
+  - id: sf_sf_mission
+    name: SF Misyon
+    prompt: |
+      Misyon bölgesi, Mission Dolores'ten adını alır. Sokakta yürüyün ve katmanları
+      hissedin — İspanyol, Meksika, İrlanda, Orta Amerika. Palimpsest nedir?
+    follow_ups:
+      - Katmanlar olmasaydı mahalle nasıl olurdu?
+      - Misyon kimliği nasıl şekillendirir?
+      - Misyon ve göç arasındaki ilişki nedir?
+  - id: sf_sf_bridge
+    name: SF Köprüsü
+    prompt: |
+      Körfez Köprüsü Golden Gate'ten daha az ünlü ama daha çok kullanılır.
+      Üzerinden geçin veya izleyin. Köprü nasıl bağlanır? Neler taşır?
+    follow_ups:
+      - Köprü olmasaydı körfez nasıl olurdu?
+      - Köprü bölgeyi nasıl şekillendirir?
+      - Köprü ve ulaşım arasındaki ilişki nedir?
+  - id: sf_sf_parks
+    name: SF Parklar
+    prompt: |
+      San Francisco'da çok sayıda küçük park var — cep parkları, üçgen
+      parkları. Birini bulun. Kimler kullanır? Karakteri nedir?
+    follow_ups:
+      - Park olmasaydı mahalle nasıl olurdu?
+      - Park nasıl dinlenme yaratır?
+      - Park ve blok arasındaki ilişki nedir?
+  - id: sf_sf_stairs
+    name: SF Merdivenleri
+    prompt: |
+      San Francisco'da 600'den fazla halk merdiveni var. Daha önce tırmanmadığınız
+      birini bulun. Tepede ne var? Dibi ne var?
+    follow_ups:
+      - Merdivenler olmasaydı yokuş nasıl olurdu?
+      - Merdivenler nasıl kestirme yollar yaratır?
+      - Merdiven ve mahalle arasındaki ilişki nedir?
+  - id: sf_sf_mural
+    name: SF Duvar Resmi
+    prompt: |
+      Misyon, ABD'deki kişi başına en çok duvar resmine sahiptir. Bir hikaye
+      anlatan birini bulun. Anlatı nedir? Kimin için?
+    follow_ups:
+      - Duvar resimsiz duvar ne söylerdi?
+      - Duvar resmi alanı nasıl sahiplenir?
+      - Duvar resmi ve topluluk arasındaki ilişki nedir?
+  - id: sf_sf_water
+    name: SF Su
+    prompt: |
+      San Francisco su ile çevrilidir — körfez, okyanus, boğaz. Kenara gidin.
+      Su şehir için ne anlama geliyor? Kenarı nasıl şekillendirir?
+    follow_ups:
+      - Su olmasaydı şehir nasıl olurdu?
+      - Su kimliği nasıl şekillendirir?
+      - Su ve şehir arasındaki ilişki nedir?
+  - id: sf_sf_sunset
+    name: SF Gün Batımı
+    prompt: |
+      San Francisco gün batımları ünlüdür. Bir yokuştan birini izleyin. Işık
+      şehri değiştirir. Gün batımı olmasaydı manzara ne olurdu?
+    follow_ups:
+      - Gün batımı akşamı nasıl şekillendirir?
+      - Gün batımı ve manzara arasındaki ilişki nedir?
+      - Işık olmadan neyi kaçırırdınız?
+  - id: sf_sf_wind
+    name: SF Rüzgar
+    prompt: |
+      San Francisco rüzgarı bazı mahallelerde sabittir. Hissedin. Rüzgar sokağı
+      nasıl şekillendirir? Onsuz blok nasıl olurdu?
+    follow_ups:
+      - Rüzgar nasıl mikro iklim yaratır?
+      - Rüzgar ve bina arasındaki ilişki nedir?
+      - Bu rüzgarda ne ekersiniz?
+  - id: sf_sf_earthquake
+    name: SF Deprem
+    prompt: |
+      San Francisco fay hatları üzerindedir. Yer hareket edebilir. O bilgi inşa
+      edilmiş çevreyi nasıl şekillendirir? Bir sarsıntıda ne fark ederdiniz?
+    follow_ups:
+      - Sismik risk tasarımı nasıl şekillendirir?
+      - Fay ve şehir arasındaki ilişki nedir?
+      - Yer sallansaydı ne yapardınız?
+  - id: sf_sf_tech_bus
+    name: Teknoloji Otobüsü
+    prompt: |
+      Teknoloji otobüsleri çalışanları Silikon Vadisi'ne taşıyor. Birinin durmasını
+      izleyin. Otobüs bir semboldür. Ne taşıyor? Neleri dışlıyor?
+    follow_ups:
+      - Otobüs olmasaydı sokak nasıl olurdu?
+      - Otobüs mahalleyi nasıl şekillendirir?
+      - Otobüs ve şehir arasındaki ilişki nedir?
+  - id: sf_sf_painted_lady
+    name: SF Boyalı Hanımefendi
+    prompt: |
+      Boyalı Hanımefendiler pastel renkli Viktorya dönemi evleridir. Bir sıra
+      bulun. Renkler kimliği nasıl yaratır? Gri renkte sokak nasıl olurdu?
+    follow_ups:
+      - Renkler bloğu nasıl şekillendirir?
+      - Renk ve koruma arasındaki ilişki nedir?
+      - Evinizi ne boyardınız?
+  - id: sf_sf_twin_peaks
+    name: SF İkiz Tepeler
+    prompt: |
+      İkiz Tepeler şehrin merkezindeki iki tepedir. Birine tırmanın. Manzara
+      360 derecedir. Tepe sizi nasıl yönlendirir?
+    follow_ups:
+      - Tepeler olmasaydı şehir nasıl olurdu?
+      - Tepeler nasıl dönüm noktası yaratır?
+      - Tepe ve mahalle arasındaki ilişki nedir?
+  - id: sf_sf_ferry_plaza
+    name: SF Feribot Meydanı
+    prompt: |
+      Feribot Binası meydanında bir çiftçi pazarı kurulur. İçinden yürüyün. Ne
+      satılıyor? Kimler gelir? Meydan şehir ve körfez arasında bir eşiktir.
+    follow_ups:
+      - Meydan olmasaydı sahil şeridi nasıl olurdu?
+      - Pazar toplumu nasıl oluşturur?
+      - Meydan ve feribot arasındaki ilişki nedir?

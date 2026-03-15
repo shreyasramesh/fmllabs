@@ -1,0 +1,505 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Kuchnia Chińska – Laboratorium Smaków (Polish)
+
+id: culinary_lab_chinese
+name: Kuchnia Chińska – Laboratorium Smaków
+description: 50 kart, które odmienią Twoje doświadczenie chińskiej kuchni – od chemii "wok hei" i archeologii sosu sojowego, po choreografię okrągłego stołu i narrację bankietu.
+domain: culinary_lab
+cards:
+  - id: chn_wok_hei
+    name: Wok Hei
+    prompt: |
+      Wok hei – oddech woka – to ulotny dym, który powstaje w ekstremalnej
+      temperaturze i przy dużej szybkości. To nie tyle dymność; to transformacja.
+      Czy potrafisz go uchwycić? Co by było z potrawą z woka bez niego?
+    follow_ups:
+      - Jak "hei" kształtuje danie?
+      - Co go tworzy? Co go niszczy?
+      - Jaka jest relacja między żarem a pośpiechem?
+  - id: chn_round_table
+    name: Okrągły Stół
+    prompt: |
+      Chiński stół bankietowy jest okrągły – pośrodku znajduje się obrotowy
+      talerz. Jedzenie wiruje. Wszyscy sięgają. Stół to choreografia. Kto
+      kręci? Kto czeka? Jakie są niewypowiedziane zasady?
+    follow_ups:
+      - Co oznaczałby prostokątny stół?
+      - Jak okrągły kształt wpływa na posiłek?
+      - Jaka jest relacja między środkiem a brzegiem?
+  - id: chn_soy_archeology
+    name: Archeologia Sosu Sojowego
+    prompt: |
+      Sos sojowy – fermentowany, dojrzewający, regionalny. Jasny, ciemny, z
+      grzybami, podwójnie ciemny. Skądś pochodzi. Potrzebował czasu.
+      Prześledź butelkę. Jaką podróż odbył? Co poświęciłby sos przemysłowy?
+    follow_ups:
+      - Jak pochodzenie kształtuje sposób podania?
+      - Co by było z potrawą bez sosu sojowego?
+      - Jaka jest relacja między fermentacją a umami?
+  - id: chn_chopstick_grip
+    name: Chwyt Pałeczek
+    prompt: |
+      Pałeczki przedłużają dłoń. Ryż, śliskie makarony, pierożki – każde danie
+      wymaga innej techniki. Zwróć uwagę na swój chwyt. Czego wymaga
+      narzędzie? Co umożliwia?
+    follow_ups:
+      - Co zmieniłby widelec?
+      - Jak pałeczki kształtują kęs?
+      - Jaka jest relacja między narzędziem a tempem?
+  - id: chn_dumpling_seam
+    name: Szew Pierożka
+    prompt: |
+      Zmarszczki pierożków – fałda, zamknięcie. Jiaozi, shumai, xiaolongbao –
+      każdy ma swoją formę. Szew trzyma lub uwalnia. Przyjrzyj się jednemu.
+      Co oznaczałoby pęknięcie? Czego broni fałda?
+    follow_ups:
+      - Jak fałda kształtuje nadzienie?
+      - Co straciłby otwarty pierożek?
+      - Jaka jest relacja między zamknięciem a zupą?
+  - id: chn_tea_pour
+    name: Nalewanie Herbaty
+    prompt: |
+      Chińska herbata – nalewana, uzupełniana, dzielona. Czajniczek krąży.
+      Puste filiżanki są napełniane, zanim poprosisz. Nalewanie to służba i
+      troska. Zwróć uwagę na rytm. Co by było z posiłkiem bez herbaty?
+    follow_ups:
+      - Jak herbata kształtuje tempo?
+      - Co komunikuje nalewanie?
+      - Jaka jest relacja między filiżanką a stołem?
+  - id: chn_bone_plate
+    name: Talerz na Kości
+    prompt: |
+      Mały talerz na kości – wyrzucone skorupki, kości kurczaka, skórki krewetek.
+      Talerz zbiera to, co niejadalne. Jest częścią zastawy. Co umożliwia
+      talerz na kości? Co by się stało bez niego?
+    follow_ups:
+      - Jak talerz kształtuje posiłek?
+      - Jak wyglądałby stół bez niego?
+      - Jaka jest relacja między odrzutem a godnością?
+  - id: chn_soup_spoon
+    name: Łyżka do Zupy
+    prompt: |
+      Chińska łyżka do zupy – szeroka, płytka, ceramiczna. Zbierze bulion i
+      składniki stałe. Łyżka inaczej pasuje do ust. Zwróć uwagę na łyk. Co
+      kształt umożliwia?
+    follow_ups:
+      - Co zmieniłaby okrągła łyżka?
+      - Jak łyżka kształtuje łyk?
+      - Jaka jest relacja między formą a funkcją?
+  - id: chn_steam_basket
+    name: Koszyk do Gotowania na Parze
+    prompt: |
+      Dim sum podawany w bambusowych koszykach – ułożone, warstwowe. Para unosi
+      się. Koszyk utrzymuje kształt. Zastanów się nad bambusem. Co zrobiłoby
+      metal inaczej? Co dodaje bambus?
+    follow_ups:
+      - Jak koszyk kształtuje pierożka?
+      - Co straciłby talerz?
+      - Jaka jest relacja między bambusem a parą?
+  - id: chn_maillard_wok
+    name: Reakcja Maillarda w Woku
+    prompt: |
+      Wok osiąga temperatury, których nie osiągają domowe kuchenki. Obsmażanie
+      jest natychmiastowe. Białka brązowieją w ciągu sekund. Zastanów się nad
+      chemią. Co poświęciłaby niższa temperatura? Czego wymaga wok?
+    follow_ups:
+      - Jak ciepło kształtuje smak?
+      - Co zrobiłoby coś elektrycznego inaczej?
+      - Jaka jest relacja między płomieniem a skórką?
+  - id: chn_glutinous_texture
+    name: Glutynowa Konsystencja
+    prompt: |
+      Ryż glutynowy – lepki, ciągnący – ma inną chemię. Używany do zongzi, lo
+      mai gai, deserów. Zwróć uwagę na konsystencję. Jak różni się od
+      długoziarnistego? Co umożliwia lepkość?
+    follow_ups:
+      - Co zrobiłby zwykły ryż?
+      - Jak konsystencja kształtuje danie?
+      - Jaka jest relacja między lepkością a zawijaniem?
+  - id: chn_century_egg
+    name: Stoletnie Jajo
+    prompt: |
+      Stoletnie jajo – konserwowane, przetworzone. Żółtko jest ciemne, białko
+      przezroczyste. Chemia jest pradawna. Zastanów się nad konserwacją.
+      Co robi czas? Co oznaczałaby świeżość?
+    follow_ups:
+      - Jak konserwacja kształtuje smak?
+      - Co by było ze świeżym jajkiem?
+      - Jaka jest relacja między czasem a transformacją?
+  - id: chn_oyster_sauce
+    name: Sos Ostrygowy
+    prompt: |
+      Sos ostrygowy – umami, gęsty, kantoński. To redukcja i ekstrakcja.
+      Ostryga oddaje swoją esencję. Prześledź smak. Co by było z potrawą z
+      woka bez niego?
+    follow_ups:
+      - Jak sos kształtuje danie?
+      - Jaka jest relacja między ostrygą a warzywami?
+      - Co zrobiłby zamiast niego sos sojowy?
+  - id: chn_ordering_ritual
+    name: Rytuał Zamawiania
+    prompt: |
+      Zamawianie w chińskiej restauracji – wybiera gospodarz lub negocjuje stół.
+      Równowaga: mięso, warzywa, zupa, ryż. Kolejność to kompozycja. Zwróć
+      uwagę na to, kto decyduje. Jakie są zasady?
+    follow_ups:
+      - Jak zamawianie kształtuje posiłek?
+      - Co zamówiłby każdy dla siebie?
+      - Jaka jest relacja między wyborem a kolektywem?
+  - id: chn_crispy_skin
+    name: Chrupiąca Skórka
+    prompt: |
+      Skórka kaczki po pekińsku – chrupiąca, glazurowana. Albo skwarki z kantońskiej
+      pieczonej wieprzowiny. Skórka jest celowa. Ciepło, powietrze, cukier.
+      Zastanów się nad architekturą. Co oznaczałaby mokra skórka?
+    follow_ups:
+      - Jak chrupkość kształtuje kęs?
+      - Co tworzy skwierczenie?
+      - Jaka jest relacja między skórką a mięsem?
+  - id: chn_noodle_slip
+    name: Poślizg Makaronu
+    prompt: |
+      Chińskie makarony – pszenny, ryżowy, ciągnięty ręcznie – różnią się
+      konsystencją. Niektóre się ślizgają; inne są ciągnące. Opór makaronu
+      na pałeczkach. Zwróć uwagę na opór. Co dodaje poślizg?
+    follow_ups:
+      - Jak konsystencja kształtuje jedzenie?
+      - Co straciłby rozmoczony makaron?
+      - Jaka jest relacja między poślizgiem a satysfakcją?
+  - id: chn_bok_choy_wilt
+    name: Więdnięcie Bok Choy
+    prompt: |
+      Bok choy w woku – sekundy. Więdnie, ale zachowuje strukturę. Zieleń
+      mięknie. Zastanów się nad transformacją. Co oznaczałoby surowe? Co
+      straciłoby przegotowane?
+    follow_ups:
+      - Jak więdnięcie kształtuje warzywo?
+      - Jaka jest relacja między ciepłem a zielenią?
+      - Kiedy jest gotowe?
+  - id: chn_five_spice
+    name: Pięć Przypraw
+    prompt: |
+      Mieszanka pięciu przypraw – anyż gwiazdkowy, goździk, cynamon, pieprz
+      syczuański, koper włoski. To mieszanka z historią. Każda przyprawa ma
+      swoją trasę. Prześledź jedną. Jaką podróż odbyła?
+    follow_ups:
+      - Co by było z potrawą bez niej?
+      - Jak mieszanka tworzy tożsamość?
+      - Jaka jest relacja między przyprawą a konserwacją?
+  - id: chn_banquet_progression
+    name: Przebieg Bankietu
+    prompt: |
+      Chiński bankiet ma łuk – najpierw zimne dania, potem gorące, zupa, ryż,
+      deser. Przebieg to narracja. Zwróć uwagę na rytm. Co zrobiłaby inna
+      kolejność?
+    follow_ups:
+      - Jak sekwencja kształtuje posiłek?
+      - Jaka jest relacja między pierwszym a ostatnim daniem?
+      - Kiedy historia osiąga punkt kulminacyjny?
+  - id: chn_white_rice_center
+    name: Biały Ryż w Centrum
+    prompt: |
+      Biały ryż – prosty, gotowany na parze – stanowi podstawę posiłku. To
+      płótno. Bogate dania potrzebują ryżu do zbalansowania. Zwróć uwagę,
+      kiedy po niego sięgasz. Co by było z posiłkiem bez tego prostego?
+    follow_ups:
+      - Jak ryż kształtuje podniebienie?
+      - Co zrobiłby smażony ryż?
+      - Jaka jest relacja między neutralnością a smakiem?
+  - id: chn_szechuan_numb
+    name: Syczuańskie Drętwienie
+    prompt: |
+      Pieprz syczuański – ma la – znieczulający, mrowiący. To nie ostrość; to
+      wrażenie. Usta wibrują. Zastanów się nad wrażeniem. Co by było z
+      potrawą bez tego znieczulenia?
+    follow_ups:
+      - Jak "ma la" kształtuje doświadczenie?
+      - Jaka jest relacja między znieczuleniem a ostrością?
+      - Dlaczego je połączyć?
+  - id: chn_dark_soy
+    name: Ciemny Sos Sojowy
+    prompt: |
+      Ciemny sos sojowy – gęstszy, słodszy, do koloru. Barwi ryż, glazuje
+      mięso. Nie służy do solenia; służy do koloru. Zastanów się nad
+      wyglądem. Co dodaje ciemny?
+    follow_ups:
+      - Co zrobiłby jasny sos sojowy?
+      - Jak kolor kształtuje oczekiwania?
+      - Jaka jest relacja między ciemnym a karmelem?
+  - id: chn_hot_plate
+    name: Gorąca Płyta
+    prompt: |
+      Skwierczące talerze – wołowina, kalmary – przybywają sycząc. Żelazna płyta
+      ciągle gotuje. Dźwięk to teatr. Co by było z potrawą bez skwierczenia?
+      Jak gorąca płyta przedłuża gotowanie?
+    follow_ups:
+      - Jak skwierczenie kształtuje doświadczenie?
+      - Co oznaczałaby zimna płyta?
+      - Jaka jest relacja między dźwiękiem a ciepłem?
+  - id: chn_congee_soft
+    name: Miękki Congee
+    prompt: |
+      Congee – ryżowa owsianka – jest miękka, pocieszająca. Długo gotowany
+      ryż rozpada się. Konsystencja to poddanie. Zastanów się nad
+      transformacją. Co oznaczałoby "al dente" tutaj?
+    follow_ups:
+      - Jak miękkość kształtuje danie?
+      - Co zrobiłoby gęste congee?
+      - Jaka jest relacja między wodą a ryżem?
+  - id: chn_glass_noodle
+    name: Makaron Szklany
+    prompt: |
+      Makaron szklany – skrobia z fasoli mung – jest przezroczysty, śliski.
+      Absorbuje smak. Zwróć uwagę na konsystencję. Co zrobiłby makaron
+      pszenny? Dlaczego przezroczystość jest ważna?
+    follow_ups:
+      - Jak makaron kształtuje danie?
+      - Jaka jest relacja między przezroczystością a wchłanianiem?
+      - Dlaczego szklany?
+  - id: chn_xlb_burst
+    name: Wybuch XLB
+    prompt: |
+      Xiaolongbao – pierożek z zupą w środku – zawiera bulion. Pierwszy kęs może
+      oparzyć lub wybuchnąć. Technika: uszczypnij, upij, zjedz. Zastanów
+      się nad ryzykiem. Co oznaczałoby zimne xlb?
+    follow_ups:
+      - Jak zupa kształtuje doświadczenie?
+      - Co byś stracił bez wybuchu?
+      - Jaka jest relacja między temperaturą a niebezpieczeństwem?
+  - id: chn_tea_smell
+    name: Zapach Herbaty
+    prompt: |
+      Oolong, jaśminowa, pu-erh – każda herbata ma inny zapach. Wąchaj przed
+      spożyciem. Aromat to połowa doświadczenia. Co obiecuje zapach? Co
+      dostarcza?
+    follow_ups:
+      - Jak zapach kształtuje łyk?
+      - Co by było z herbatą bez aromatu?
+      - Jaka jest relacja między parzeniem a zapachem?
+  - id: chn_crab_crack
+    name: Kruszenie Kraba
+    prompt: |
+      Krab na chińskim bankiecie – dostarczane są łamaki. Kruszenie to dźwięk i
+      praca. Mięso jest wydobywane. Zastanów się nad choreografią. Co
+      oznaczałoby coś wstępnie pokruszonego?
+    follow_ups:
+      - Jak kruszenie kształtuje posiłek?
+      - Co byś stracił bez pracy?
+      - Jaka jest relacja między wysiłkiem a nagrodą?
+  - id: chn_turn_table
+    name: Obracany Talerz
+    prompt: |
+      Obrotowy talerz – kto nim kręci? Kiedy? Danie, którego chcesz, może być
+      po drugiej stronie stołu. Obrót to etykieta. Zwróć uwagę na taniec.
+      Jakie są zasady? Kiedy czekasz?
+    follow_ups:
+      - Jak obrót kształtuje posiłek?
+      - Co oznaczałoby stałe potrawy?
+      - Jaka jest relacja między obrotem a dzieleniem się?
+  - id: chn_ginger_slice
+    name: Plasterek Imbiru
+    prompt: |
+      Imbir z owocami morza – cienkie plasterki, czasem podsmażane. Usuwa rybi
+      zapach. Imbir jest zarówno ozdobą, jak i funkcją. Zastanów się nad
+      jego rolą. Co by było z rybą bez niego?
+    follow_ups:
+      - Jak imbir kształtuje podniebienie?
+      - Jaka jest relacja między plasterkiem a zapachem?
+      - Dlaczego imbir z owocami morza?
+  - id: chn_hoisin_dip
+    name: Dip Hoisin
+    prompt: |
+      Hoisin z kaczką po pekińsku – dip to rytuał. Placka, kaczka, dymka, sos.
+      Każdy element ma swoje miejsce. Zastanów się nad kompozycją. Co zrobiłoby
+      coś brakującego?
+    follow_ups:
+      - Jak dip kształtuje kęs?
+      - Co zrobiłby inny sos?
+      - Jaka jest relacja między słodyczą a kaczką?
+  - id: chn_leaf_wrap
+    name: Owinięcie w Liść
+    prompt: |
+      Wrap w liściu sałaty – mielone mięso, zioła, sos, zawinięte w liść. Liść
+      jest naczyniem i teksturą. Owinięcie to ręczna praca. Zastanów się nad
+      architekturą. Co zrobiłaby tortilla?
+    follow_ups:
+      - Jak liść kształtuje kęs?
+      - Co zrobiłby talerz?
+      - Jaka jest relacja między zawinięciem a ręką?
+  - id: chn_fish_whole
+    name: Cała Ryba
+    prompt: |
+      Cała ryba – gotowana na parze, z głową i ogonem. Ryba jest prezentowana
+      w całości. Głowa ma znaczenie. Zastanów się nad prezentacją. Co poświęciłby filet?
+    follow_ups:
+      - Jak całość kształtuje danie?
+      - Co oznacza głowa?
+      - Jaka jest relacja między całością a szacunkiem?
+  - id: chn_scallion_oil
+    name: Olej z Dymki
+    prompt: |
+      Olej z dymki – skwierczący olej na posiekanej dymce i imbirze. To sos,
+      wykończenie. Olej przenosi aromaty. Zwróć uwagę, kiedy jest nakładany.
+      Co dodaje skwierczenie?
+    follow_ups:
+      - Co by było z potrawą bez niego?
+      - Jak olej kształtuje wykończenie?
+      - Jaka jest relacja między olejem a aromatem?
+  - id: chn_black_vinegar
+    name: Czarny Ocet
+    prompt: |
+      Ocet Chinkiang – ciemny, złożony, lekko słodki. Tnie tłustość. Kilka kropli
+      zmienia pierożka. Zastanów się nad kwasowością. Co zrobiłby ocet
+      ryżowy? Co dodaje ciemny?
+    follow_ups:
+      - Jak ocet kształtuje kęs?
+      - Co by było z pierożkiem bez niego?
+      - Jaka jest relacja między octem a równowagą?
+  - id: chn_sticky_rice
+    name: Kleisty Ryż
+    prompt: |
+      Kleisty ryż w liściu lotosu – lo mai gai. Liść nadaje smak. Ryż jest
+      zawinięty, gotowany na parze. Rozwiń go. Zwróć uwagę na zapach. Co
+      zrobiłaby folia?
+    follow_ups:
+      - Jak liść kształtuje ryż?
+      - Jaka jest relacja między opakowaniem a parą?
+      - Co oznaczałoby rozpakowane?
+  - id: chn_mooncake_mold
+    name: Forma do Mooncake
+    prompt: |
+      Mooncake – stemplowane znakami, wzorami. Forma to historia. Wzór coś
+      znaczy. Zastanów się nad odciskiem. Co straciłby prosty placek?
+    follow_ups:
+      - Jak forma kształtuje ciasto?
+      - Co oznacza wzór?
+      - Jaka jest relacja między odciskiem a tradycją?
+  - id: chn_egg_tart
+    name: Tarta Jajeczna
+    prompt: |
+      Tarta jajeczna – portugalskie wpływy, hongkońskie udoskonalenie.
+      Krem, ciasto. Zastanów się nad konsystencją. Kruche, jedwabiste. Co
+      zrobiłaby inna skórka?
+    follow_ups:
+      - Jak tarta kształtuje koniec posiłku?
+      - Jaka jest relacja między kremem a chrupkością?
+      - Dlaczego tarta jajeczna na zakończenie?
+  - id: chn_hand_pull
+    name: Ręczne Ciągnięcie
+    prompt: |
+      Makarony ciągnięte ręcznie – kucharz rozciąga, składa, ciągnie. Nitki
+      się mnożą. To występ. Oglądaj to. Co poświęciłyby makarony z maszyny?
+    follow_ups:
+      - Jak ciągnięcie kształtuje makaron?
+      - Jaka jest relacja między ręką a konsystencją?
+      - Co oznaczałby jednolity makaron?
+  - id: chn_bird_nest
+    name: Gniazdo Ptaka
+    prompt: |
+      Gniazdo ptaka – nie zupa z gniazda jaskółki, ale gniazdo z taro, albo
+      chrupiące gniazdo z makaronu trzymające danie z woka. Gniazdo to
+      architektura. Zastanów się nad formą. Co dodaje gniazdo?
+    follow_ups:
+      - Jak gniazdo kształtuje danie?
+      - Co zrobiłby talerz?
+      - Jaka jest relacja między naczyniem a zawartością?
+  - id: chn_red_envelope
+    name: Czerwona Koperta
+    prompt: |
+      Na bankietach czerwone koperty mogą towarzyszyć prezentom – pieniądze dla
+      kuchni, dla gospodarzy. Koperta to rytuał. Zastanów się nad wymianą.
+      Co oznacza czerwień?
+    follow_ups:
+      - Jak koperta kształtuje okazję?
+      - Co oznaczałoby brak koperty?
+      - Jaka jest relacja między prezentem a twarzą?
+  - id: chn_toasting_ritual
+    name: Rytuał Toastów
+    prompt: |
+      Gan bei – na zdrowie – albo swobodne łyki. Toast strukturyzuje bankiet.
+      Kto komu toastuje? Kiedy? Rytuał jest społeczny. Zwróć uwagę na
+      choreografię. Co by było z posiłkiem bez toastów?
+    follow_ups:
+      - Jak toastowanie kształtuje posiłek?
+      - Jaka jest relacja między toastem a hierarchią?
+      - Kiedy pijesz?
+  - id: chn_preserved_veg
+    name: Konserwowane Warzywa
+    prompt: |
+      Konserwowane warzywa musztardowe, marynowana rzodkiewka, fermentowana
+      kapusta – dodają głębi. To starożytna konserwacja. Zastanów się nad
+      transformacją. Co zrobiłoby świeże warzywo?
+    follow_ups:
+      - Jak konserwacja kształtuje danie?
+      - Jaka jest relacja między marynatą a umami?
+      - Dlaczego konserwowane?
+  - id: chn_sweet_sour
+    name: Słodko-Kwaśny
+    prompt: |
+      Słodko-kwaśny – równowaga jest celowa. Cukier, ocet, czasem keczup. Sos
+      jest odważny. Zastanów się nad połączeniem. Co oznaczałoby jedno bez
+      drugiego?
+    follow_ups:
+      - Jak równowaga kształtuje danie?
+      - Jaka jest relacja między słodkim a kwaśnym?
+      - Dlaczego ta para?
+  - id: chn_wonton_soup
+    name: Zupa Wonton
+    prompt: |
+      Wonton w klarownym bulionie – zupa jest prosta. Wonton pływa. Bulion jest
+      czysty. Zastanów się nad kontrastem z smażonym wontonem. Co dodaje zupa?
+    follow_ups:
+      - Jak bulion kształtuje wonton?
+      - Co oznaczałoby smażone?
+      - Jaka jest relacja między klarownością a bogactwem?
+  - id: chn_cold_dish_start
+    name: Zimny Początek
+    prompt: |
+      Zimne dania otwierają posiłek – kurczak w alkoholu, meduza, pikle.
+      Budzą podniebienie. Kontrast z tym, co następuje. Zastanów się nad
+      otwarciem. Co zrobiłby gorący początek?
+    follow_ups:
+      - Jak zimno kształtuje posiłek?
+      - Jaka jest relacja między pierwszym a następnym daniem?
+      - Dlaczego zimne na początku?
+  - id: chn_fried_rice_wok
+    name: Smażony Ryż w Woku
+    prompt: |
+      Smażony ryż wymaga woka – wysoka temperatura, szybkie mieszanie. Najlepiej
+      jednodniowy ryż. Ziarna się rozdzielają. Zastanów się nad techniką.
+      Co poświęciłaby patelnia?
+    follow_ups:
+      - Jak wok kształtuje ryż?
+      - Co zrobiłby świeży ryż?
+      - Jaka jest relacja między ciepłem a rozdzieleniem?
+  - id: chn_lychee_dessert
+    name: Deser z Liczi
+    prompt: |
+      Liczi na deser – świeże, w puszce, w syropie. Owoc zamyka posiłek.
+      Słodki, aromatyczny. Zastanów się nad zakończeniem. Co zrobiłby inny
+      owoc?
+    follow_ups:
+      - Jak liczi kształtuje zakończenie?
+      - Jaka jest relacja między owocem a finałem?
+      - Dlaczego liczi?
+  - id: chn_fortune_cookie
+    name: Ciasteczko z Wróżbą
+    prompt: |
+      Ciasteczko z wróżbą – amerykańsko-chiński wynalazek. Ciasteczko to teatr.
+      Rozkrusz je. Przeczytaj wróżbę. Ciasteczko nie jest autentyczne, ale
+      jest rytuałem. Zastanów się nad jego miejscem.
+    follow_ups:
+      - Jak zakończyłby się posiłek bez niego?
+      - Jak wróżba kształtuje zakończenie?
+      - Jaka jest relacja między ciasteczkiem a oczekiwaniem?
+  - id: chn_century_egg
+    name: Stoletnie Jajo
+    prompt: |
+      Stoletnie jajo – konserwowane w popiele, glinie, wapnie. Żółtko staje się
+      szaro-zielone, białko ciemnieje, stając się galaretowate. To transformacja
+      trwająca tygodnie. Zastanów się nad archeologią. Co oznaczałoby świeże
+      jajo? Co dodaje konserwacja?
+    follow_ups:
+      - Jak konserwacja kształtuje teksturę?
+      - Co by było z potrawą bez jajka?
+      - Jaka jest relacja między czasem a transformacją?

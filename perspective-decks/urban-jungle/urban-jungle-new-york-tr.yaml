@@ -1,0 +1,411 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Kentsel Vahşi Yaşam — New York (Turkish)
+
+id: urban_jungle_new_york
+name: Kentsel Vahşi Yaşam — New York
+description: New York'u görme biçiminizi değiştirecek 50 kart — ölçek ve ışıktan tarih katmanlarına ve sokak yaşamının ritimlerine kadar.
+domain: urban_jungle
+cards:
+  - id: ny_vertical_city
+    name: Dikey Şehir
+    prompt: |
+      Yukarı bak. New York dikey üzerine kurulu — gökyüzü için yarışan kuleler.
+      Tek bir binayı kaldırımdan tepesine kadar izle. Yükseklik fark edişini nasıl değiştiriyor? Gözün nereye takılıyor?
+    follow_ups:
+      - Sokak yukarıdan nasıl görünürdü?
+      - Farklı yüksekliklerde ölçek nasıl çarpıtılır?
+      - Sadece yukarı baktığında neler gizlenir?
+  - id: ny_grid_navigation
+    name: Izgara Navigasyonu
+    prompt: |
+      Manhattan'ın ızgarası acımasız. Bir blok yürü ve numaralandırma sisteminin hareketi, yönlenmeyi ve sürprizi nasıl şekillendirdiğini fark et. Izgarayı bozduğunda ne olur?
+    follow_ups:
+      - Izgara nerede ezici? Nerede özgürleştirici hissediliyor?
+      - Izgara olmadan şehir nasıl hissederdi?
+      - Çapraz sokaklar ritmi nasıl değiştirir?
+  - id: ny_subway_soundscape
+    name: Metro Ses Ortamı
+    prompt: |
+      Bir istasyonda gözlerini kapat. Gürültü, frenler, anonslar, sokak müzisyeni. Ses ortamını haritalandır. Göremediğinde New York nasıl ses çıkarır?
+    follow_ups:
+      - Hangi sesler sürekli? Hangileri tesadüfi?
+      - Sessizlik burada ne anlama gelirdi?
+      - Ses, yerin altındaki zamanı nasıl işaretler?
+  - id: ny_fire_escape
+    name: Yangın Merdiveni
+    prompt: |
+      Yangın merdivenleri şehrin dış iskeleti — işlevsel, ritmik, kişisel. Tekrarlandığı bir blok bul. Arkalarındaki binalar hakkında neyi ortaya çıkarıyorlar? Geceleri kim orada oturabilir?
+    follow_ups:
+      - Birinden ne görürdün?
+      - Sokağın karakterini nasıl değiştiriyorlar?
+      - Onlar olmadan blok ne kaybederdi?
+  - id: ny_street_number
+    name: Sokak Numarası
+    prompt: |
+      Bir numara seç — bir bina numarası, bir kat, bir otobüs güzergahı. Onu şehirde takip et. Hangi desen ortaya çıkıyor? Bu numara burada ne anlama geliyor?
+    follow_ups:
+      - Numara seni nereye götürüyor?
+      - Farklı bir numara neyi ortaya çıkarırdı?
+      - Numaralar kentsel deneyimi nasıl düzenler?
+  - id: ny_steam_rising
+    name: Yükselen Buhar
+    prompt: |
+      Kapak buharı New York'un nefesidir. Yükseldiği yeri bul ve hareketini, dağılımını, ışığı nasıl yakaladığını izle. Altında ne var? Şehir neyi dışarı veriyor?
+    follow_ups:
+      - Izgaranın altında ne bulurdun?
+      - Hava durumu buharı nasıl değiştirir?
+      - Hangi diğer gizli sistemler burada havalandırılıyor?
+  - id: ny_storefront_typography
+    name: Dükkan Cephesi Yazı Tipleri
+    prompt: |
+      Tabelaları oku. Bakkallar, şarküteriler, çamaşırhaneler — her birinin bir görsel dili var.
+      Tek bir bloktan beş yazı tipi topla. Burada kimin yaşadığı hakkında ne söylüyorlar?
+    follow_ups:
+      - Hangi tabelalar eski hissediyor? Hangileri yeni?
+      - Tabelalar konuşabilseydi blok nasıl ses çıkarırdı?
+      - Yazı tipi değişimi nasıl işaretler?
+  - id: ny_waterfront_edge
+    name: Sahil Şeridi
+    prompt: |
+      Suya git. Şehir sırtını nehre, limana, körfeze döner. Karayı suyun buluştuğu yerde dur. Manzara için ne inşa edilmiş? Manzarayı görmezden gelmek için ne inşa edilmiş?
+    follow_ups:
+      - Suyun tadını kim çıkarabilir?
+      - Kenar nasıl sahiplenildi?
+      - Şehir suya dönük olsaydı ne olurdu?
+  - id: ny_parks_as_rooms
+    name: Parklar Odalar Gibi
+    prompt: |
+      Central Park, Prospect Park, küçük bir plaza — her biri şehirde bir oda. Birine gir ve duvarlarını, tavanını, mobilyalarını fark et. Doğa burada nasıl tasarlanmış?
+    follow_ups:
+      - Odanın amacı neydi?
+      - Görüş hatlarını kim tasarladı?
+      - Duvarlar yıkılırsa ne olurdu?
+  - id: ny_delivery_rhythm
+    name: Teslimat Ritmi
+    prompt: |
+      Teslimatları izle — kamyonlar, el arabaları, bisikletler. Tek bir paketin kamyondan kapıya olan yolunu izle. Ticaret sokaktan nasıl hareket eder? Varış ritmi neydi?
+    follow_ups:
+      - Teslimatlar olmadan blok nasıl görünürdü?
+      - Farklı mallar nasıl farklı hareket eder?
+      - Bu akışta kimler görünmez?
+  - id: ny_brownstone_steps
+    name: Kumtaşı Basamakları
+    prompt: |
+      Kumtaşı basamakları sahnedir. Birine otur ve sokağı izle. Kim duraklıyor? Kim geçiyor? Buradan ne söylerdin?
+    follow_ups:
+      - En üst basamaktan manzara neydi?
+      - Basamaklar nasıl bölge oluşturur?
+      - Onlar olmadan blok ne kaybederdi?
+  - id: ny_bridge_as_threshold
+    name: Köprü Eşik Gibi
+    prompt: |
+      Bir köprüden yaya olarak geç. Geçişi hisset — bir ilçeden diğerine. Köprü ne buradadır ne de oradadır. Karşı tarafa ulaştığında ne değişir?
+    follow_ups:
+      - Neleri geride bırakıyorsun?
+      - Köprü yolculuğu nasıl şekillendirir?
+      - Köprüler olmadan şehir ne olurdu?
+  - id: ny_awning_shade
+    name: Tente Gölgesi
+    prompt: |
+      Tentenler mikro iklimler yaratır. Birinin altına gir. Işık, ses, sıcaklıktaki değişimi fark et. Küçük yapılar sokağı nasıl değiştirir?
+    follow_ups:
+      - Tenteler olmadan blok nasıl hissederdi?
+      - Mülkiyeti nasıl işaretlerler?
+      - Burada başka hangi küçük barınaklar var?
+  - id: ny_graffiti_layer
+    name: Grafiti Katmanı
+    prompt: |
+      Duvarlara bak. Etiketler, duvar resimleri, yapıştırma — her biri zaman ve sahiplik katmanıdır. Palimpsesti oku. Bu yüzeyi kim işaretlemiş?
+    follow_ups:
+      - Bulabildiğin en eski işaret neydi?
+      - Katmanlar bir hikayeyi nasıl anlatır?
+      - Duvar konuşabilseydi ne söylerdi?
+  - id: ny_rooftop_skyline
+    name: Çatı Silüeti
+    prompt: |
+      Bir çatının manzarasını hayal et. Su tankları, antenler, komşu çatılar. Yukarıdan şehir farklı bir şehirdir. Ne görürdün?
+    follow_ups:
+      - Yükseklik neyin önemli olduğunu nasıl değiştirir?
+      - Sokaktan ne gizlenir?
+      - Bu manzaraya kimlerin erişimi var?
+  - id: ny_crosswalk_wait
+    name: Yaya Geçidi Bekleyişi
+    prompt: |
+      Bir yaya geçidinde bekle. Işık değiştiğinde geçme. Bir sonraki döngüyü bekle. Duraklamada ne fark ediyorsun? Başka kimler bekliyor?
+    follow_ups:
+      - Bekleyiş algıyı nasıl değiştirir?
+      - Kesişimi hangi ritimler yönetir?
+      - Asla geçmeseydin ne olurdu?
+  - id: ny_diner_booth
+    name: Lokanta Kabini
+    prompt: |
+      Penceresi olan bir lokanta kabininde otur. Sokak bir filme dönüşür. Geçenleri, trafiği, ışığı izle. Hangi hikaye oynuyor?
+    follow_ups:
+      - Ana karakterler kimler?
+      - Çerçeve neyi görmeni nasıl değiştirir?
+      - Pencere olmadan neyi kaçırırdın?
+  - id: ny_scaffolding_skin
+    name: İskele Derisi
+    prompt: |
+      İskeleler binaları bandaj gibi sarar. Altından yürü. Sesi, ışığı, geçici tavanı fark et. Ne tamir ediliyor? Ne gizleniyor?
+    follow_ups:
+      - Ne kadar süredir orada?
+      - İskele olmadan bina ne söylerdi?
+      - Tamir ve gizleme arasındaki ilişki nedir?
+  - id: ny_newsstand_archive
+    name: Gazete Bayisi Arşivi
+    prompt: |
+      Bir gazete bayisi dikkat dilimidir — dergiler, gazeteler, şekerlemeler. Ne sergileniyor? Kim durur? O köşe onsuz ne olurdu?
+    follow_ups:
+      - En çok satan ne?
+      - Bayi bloğu nasıl şekillendirir?
+      - Buraya ne koyardın?
+  - id: ny_construction_site
+    name: İnşaat Alanı
+    prompt: |
+      Bir inşaat alanını izle. Vinçler, bariyerler, işçiler. Şehir hep oluşuyor. Ne inşa ediliyor? Ne değiştiriliyor?
+    follow_ups:
+      - Bittiğinde kimler kullanacak?
+      - Bundan önce ne vardı?
+      - İnşaat mahalleyi nasıl değiştirir?
+  - id: ny_light_well
+    name: Işık Kuyusu
+    prompt: |
+      Işık kuyularını ara — binalar arasındaki ışığın düştüğü dar boşluklar. O ışığı kim alır? Orada ne büyür?
+    follow_ups:
+      - O boşlukta yaşamak nasıl olurdu?
+      - Işık değeri nasıl belirler?
+      - Gölgelerde ne gizlidir?
+  - id: ny_bodega_cat
+    name: Bakkal Kedisi
+    prompt: |
+      Kedi olan bir bakkal bul. Kedi hem kuralların içinde hem de dışında. Şehirde başka neler bu şekilde işler?
+    follow_ups:
+      - Kedi ne görüyor?
+      - Gayri resmi kurallar alanı nasıl şekillendirir?
+      - Kedi olmadan dükkan ne olurdu?
+  - id: ny_sidewalk_crack
+    name: Kaldırım Çatlağı
+    prompt: |
+      Aşağı bak. Bir kaldırım çatlağını takip et. Nereye gidiyor? İçinde ne büyüyor? Şehir böyle çatlaklarla dolu.
+    follow_ups:
+      - Kaldırım zaman hakkında ne söylerdi?
+      - Küçük kırıklar neden önemlidir?
+      - Neler içinden geçmeye çalışıyor?
+  - id: ny_air_conditioner
+    name: Klima
+    prompt: |
+      Tek bir binadaki klima sayısını say. Onlar parazitler, protezler,
+      ihtiyaçlardır. Cepheyi nasıl değiştirirler? Ne damlatırlar?
+    follow_ups:
+      - Klimalar olmadan bina nasıl görünürdü?
+      - İklim mimariyi nasıl şekillendirir?
+      - Nereye gideceklerine kim karar verir?
+  - id: ny_express_local
+    name: Ekspres / Yerel
+    prompt: |
+      Metroyu kullan. Ekspres ve yerel arasındaki farkı fark et. Hız, gördüklerini değiştirir. Durakları atla ve şehrin sıkıştığını hisset.
+    follow_ups:
+      - Durmadığında neyi kaçırırsın?
+      - Hız deneyimi nasıl şekillendirir?
+      - Her şey yerel olsaydı şehir ne olurdu?
+  - id: ny_water_tower
+    name: Su Kulesi
+    prompt: |
+      Su kuleleri eski binaların tepesinde durur. Ahşaptırlar, fıçı şeklindedirler, her yerdeler. Beş tane bul. Silüet hakkında ne söylüyorlar?
+    follow_ups:
+      - Neden hala buradalar?
+      - Onlarsız çatı nasıl görünürdü?
+      - Yaşı nasıl işaretlerler?
+  - id: ny_awning_stripes
+    name: Tente Çizgileri
+    prompt: |
+      Çizgili tenteler bir New York lehçesidir. Tekrarlandığı bir blok bul. Çizgiler kimliği nasıl oluşturur? Düz renkler ne yapardı?
+    follow_ups:
+      - Neden çizgili, düz renkler değil?
+      - Tenteler bir bloğu nasıl birleştirir?
+      - Bu desenin tarihi nedir?
+  - id: ny_curb_cut
+    name: Kaldırım Kenarı Rampası
+    prompt: |
+      Kaldırım kenarı rampalarını fark et — köşelerdeki rampalar. Tekerlekli sandalyeler, arabalar, bebek arabaları için. Sokağı nasıl değiştiriyorlar? Kimi kapsıyorlar?
+    follow_ups:
+      - Onlar olmadan blok ne olurdu?
+      - Erişim tasarımı nasıl şekillendirir?
+      - Başka hangi görünmez düzenlemeler var?
+  - id: ny_street_tree
+    name: Sokak Ağacı
+    prompt: |
+      Tek bir sokak ağacı seç. Ne kadar yeri var? Çukurunda ne var? Kim suluyor? Ağaç bir misafirdir. Nasıl muamele görüyor?
+    follow_ups:
+      - Ağaçlar olmadan blok ne olurdu?
+      - Ağaçlar bakımı nasıl işaretler?
+      - Ağacın gölgesinde ne büyür?
+  - id: ny_loading_zone
+    name: Yükleme Alanı
+    prompt: |
+      Yükleme alanları geçici bölgelerdir. On dakikayı izle. Kim kullanıyor? Ne kadar kalıyorlar? İşgalin ritmi neydi?
+    follow_ups:
+      - Yükleme alanları olmadan ne olurdu?
+      - Kurallar nasıl esnetilir?
+      - Park ve ticaret arasındaki ilişki nedir?
+  - id: ny_vent_grille
+    name: Havalandırma Izgarası
+    prompt: |
+      Kaldırım ızgaraları metronun havalandırmasını sağlar. Birinin üzerine bas. Yukarı doğru çıkan hava akışını hisset. Dinle. Şehir bu açıklıklardan nefes alır.
+    follow_ups:
+      - Aşağıdan ne yükseliyor?
+      - Izgara dünyaları nasıl birbirine bağlar?
+      - Onlarsız kaldırım ne olurdu?
+  - id: ny_basement_stairs
+    name: Bodrum Merdivenleri
+    prompt: |
+      Aşağı inen merdivenleri bul — bodruma, metroya, gizli bir bara. Şehrin birçok seviyesi var. Kaldırımın altında ne var?
+    follow_ups:
+      - Kimler aşağı iner?
+      - İniş ışığı nasıl değiştirir?
+      - En altta ne bulurdun?
+  - id: ny_clock_tower
+    name: Saat Kulesi
+    prompt: |
+      Bir kamu saati bul. Doğru mu? Kim ayarladı? Saatler şehri düzenler. Anlaşmazlığa düştüklerinde ne olur?
+    follow_ups:
+      - Saat olmadan blok ne olurdu?
+      - Zaman nasıl senkronize edilir?
+      - Saat zamanı ve beden zamanı arasındaki ilişki nedir?
+  - id: ny_newsstand_magazine
+    name: Gazete Bayisi Dergisi
+    prompt: |
+      Bir gazete bayisinde bir dergi kapağı seç. Kimin için? Okuyucu hakkında ne varsayıyor? Stand bir arzu aynasıdır.
+    follow_ups:
+      - Yabancı biri bu sergiden ne öğrenirdi?
+      - Kapaklar dikkat için nasıl rekabet eder?
+      - Stantta ne yok?
+  - id: ny_awning_rain
+    name: Tente Yağmuru
+    prompt: |
+      Yağmurda bir tentenin altında dur. Suyun kenarlardan nasıl aktığını izle. Tente kuru bir ada yaratır. Seninle kim paylaşıyor?
+    follow_ups:
+      - Barınak olmadan blok nasıl hissederdi?
+      - Yağmur sokağı nasıl değiştirir?
+      - Başka ne tür barınaklar var?
+  - id: ny_fire_hydrant
+    name: Yangın Musluğu
+    prompt: |
+      Yangın musluğu şehrin dolaşım sistemine bir tapadır. Birini bul. Rengi ne? Kim açabilir? Ne akıyor?
+    follow_ups:
+      - Onsuz yangında blok ne yapardı?
+      - Musluklar bölgeyi nasıl işaretler?
+      - Musluk ve hortum arasındaki ilişki nedir?
+  - id: ny_stoop_sale
+    name: Basamak Satışı
+    prompt: |
+      Bu basamaklarda bir basamak satışı hayal et. Ne satılırdı? Kim dururdu? Basamak değişim için bir sahnedir.
+    follow_ups:
+      - Ne koyardın?
+      - Basamak karşılaşmayı nasıl mümkün kılar?
+      - Blok bir satıştan ne öğrenirdi?
+  - id: ny_rooftop_garden
+    name: Çatı Bahçesi
+    prompt: |
+      Üzerinde bir çatı bahçesi hayal et. Orada ne yetişirdi? Kim ilgilenir? Şehrin gizli yeşil bir katmanı var.
+    follow_ups:
+      - Ne ekardin?
+      - Yükseklik bahçeciliği nasıl değiştirir?
+      - Tüm çatılar yeşil olsaydı silüet nasıl görünürdü?
+  - id: ny_subway_map
+    name: Metro Haritası
+    prompt: |
+      Metro haritasına bak. Bu bir coğrafya değil, bir şemadır. Ne çarpıtılmış? Ne atlanmış? Harita şehri hakkındaki düşüncelerimizi şekillendirir.
+    follow_ups:
+      - Gerçekçi bir harita nasıl görünürdü?
+      - Harita mahalleleri nasıl oluşturur?
+      - Harita ve bölge arasındaki ilişki nedir?
+  - id: ny_brick_pattern
+    name: Tuğla Deseni
+    prompt: |
+      Tuğla duvarı incele. Desen — yanyana tuğla, Flaman deseni — duvarı ayakta tutar. Deseni izle. Tek bir tuğla eksik olsaydı ne olurdu?
+    follow_ups:
+      - Desen ağırlığı nasıl dağıtır?
+      - Duvar yapımcısı hakkında ne söylerdi?
+      - Tuğla nasıl yaşlanır?
+  - id: ny_awning_strip
+    name: Tente Şeridi
+    prompt: |
+      Bir blok yürü ve tenteleri say. Hangi renkler? Hangi koşullar? Tente küçük bir mimaridir. Nasıl değişir?
+    follow_ups:
+      - Tenteler olmadan blok nasıl görünürdü?
+      - Tenteler kimliği nasıl oluşturur?
+      - Tente ve işyeri arasındaki ilişki nedir?
+  - id: ny_manhole_cover
+    name: Kanalizasyon Kapağı
+    prompt: |
+      Kanalizasyon kapağını oku. Şehrin adı, departman, tarih. Bu diskler başka bir şehrin kapılarıdır. Altında ne var?
+    follow_ups:
+      - Kimler oraya iner?
+      - Kapak bölgeyi nasıl işaretler?
+      - Bu kapılar olmadan sokak ne olurdu?
+  - id: ny_bus_shelter
+    name: Otobüs Durağı
+    prompt: |
+      Bir otobüs durağında bekle. Başka kimin beklediğini fark et. Durak paylaşılan bir odadır. Nezaket kuralları neydi? Manzara neydi?
+    follow_ups:
+      - Durak olmadan beklemek nasıl olurdu?
+      - Durak topluluğu nasıl şekillendirir?
+      - Onda neyi değiştirirdin?
+  - id: ny_street_lamp
+    name: Sokak Lambası
+    prompt: |
+      Alacakaranlıkta bir sokak lambasının altında dur. Işığın güneşten devralışını izle. Lamba bir görünürlük havuzu yaratır. Havuzda ne var? Dışarıda ne var?
+    follow_ups:
+      - Yapay ışık sokağı nasıl değiştirir?
+      - Lambalar olmadan blok nasıl olurdu?
+      - Lambalar zamanı nasıl işaretler?
+  - id: ny_plaza_seat
+    name: Meydan Oturağı
+    prompt: |
+      Bir meydan bankına otur. Başka kim oturur? Kim geçer? Meydan akışta bir duraktır. İnsanları ne durdurur?
+    follow_ups:
+      - Oturak olmasaydı meydan ne olurdu?
+      - Oturma karşılaşmayı nasıl şekillendirir?
+      - Ne eklerdin?
+  - id: ny_awning_fabric
+    name: Tente Kumaşı
+    prompt: |
+      Eğer yapabiliyorsan bir tenteye dokun. Kumaş, vinil, çizgiler. Tente iç ve dış arasındaki bir zardır. Nasıl hissediliyor?
+    follow_ups:
+      - Kumaş olmadan blok nasıl hissederdi?
+      - Malzeme nasıl önemlidir?
+      - Tente ve hava arasındaki ilişki nedir?
+  - id: ny_newsstand_daily
+    name: Gazete Bayisi Günlük
+    prompt: |
+      Bir gazete bayisi gün içinde değişir — sabah gazeteleri, öğleden sonra dergiler, akşam atıştırmalıkları. Farklı zamanlarda ziyaret et. Ritim neydi?
+    follow_ups:
+      - Gazete bayisi olmadan köşe ne olurdu?
+      - Bayi zamanı nasıl işaretler?
+      - Bayi ve blok arasındaki ilişki nedir?
+  - id: ny_sidewalk_chalk
+    name: Kaldırım Tekbeşliği
+    prompt: |
+      Çocuklar kaldırımlara resim yapar. Tekbeşlik sanatı bul. Resim neydi? Tekbeşlik geçicidir. Yağmur onu silecektir. Geçicilik neden önemlidir?
+    follow_ups:
+      - Tekbeşlik olmadan kaldırım ne olurdu?
+      - Tekbeşlik hediye olarak nasıl yaratılır?
+      - Tekbeşlik ve sokak arasındaki ilişki nedir?
+  - id: ny_rooftop_ac
+    name: Çatı Kliması
+    prompt: |
+      Çatı klima üniteleri yaz aylarında uğuldar. Dinle. Çatı mekanik bir ormandır. Ses blokları nasıl şekillendirir?
+    follow_ups:
+      - Üniteler olmadan çatı ne olurdu?
+      - Klima nasıl konfor yaratır?
+      - Ünite ve bina arasındaki ilişki nedir?
+  - id: ny_street_musician
+    name: Sokak Müzisyeni
+    prompt: |
+      Bir sokak müzisyeni bir geçitte çalar. Dur ve dinle. Müzik bir baloncuk yaratır. Baloncuğun içinde ne var? Dışında ne var?
+    follow_ups:
+      - Müzisyen olmadan geçit ne olurdu?
+      - Müzik nasıl duraklama yaratır?
+      - Müzisyen ve sokak arasındaki ilişki nedir?

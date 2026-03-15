@@ -1,0 +1,453 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Urban Jungle — Bangalore (Dutch)
+
+id: urban_jungle_bangalore
+name: Urban Jungle — Bangalore
+description: 50 kaarten om Bangalore anders te bekijken — van schaal en licht tot lagen van geschiedenis en het ritme van het straatleven.
+domain: urban_jungle
+cards:
+  - id: blr_gate_colony
+    name: Poortkolonie
+    prompt: |
+      De gated communities van Bangalore hebben muren, bewakers, poorten. Sta bij een poort.
+      Wat zit er binnenin? Wie gaat er naar binnen? De poort markeert een grens. Wat beschermt het?
+    follow_ups:
+      - Wat zou de straat zijn zonder de poort?
+      - Hoe creëert de poort veiligheid?
+      - Wat is de relatie tussen poort en kolonie?
+  - id: blr_tree_canopy
+    name: Boomkronen
+    prompt: |
+      Bangalore was ooit een tuinstad. Oude bomen overkappen nog steeds sommige straten.
+      Loop eronder. Hoe verandert de kroon het licht? Het geluid?
+    follow_ups:
+      - Wat zou de straat zijn zonder de boom?
+      - Hoe creëert de kroon microklimaat?
+      - Wat is de relatie tussen boom en stad?
+  - id: blr_tech_park
+    name: Technologiepark
+    prompt: |
+      Technologieparken zijn campussen — glas, gazon, shuttlebussen. Zoek er een. Hoe
+      scheidt het park zich van de stad? Wat is de relatie tussen binnen en buiten?
+    follow_ups:
+      - Wat zou het gebied zijn zonder het park?
+      - Hoe creëert het park identiteit?
+      - Wat is de relatie tussen park en straat?
+  - id: blr_auto_rickshaw
+    name: Auto-riksja
+    prompt: |
+      Auto-riksja's slingeren door het verkeer. Kijk hoe een exemplaar een kruispunt navigeert. Hoe
+      past de auto waar auto's niet kunnen? Wat is de logica van het slingeren?
+    follow_ups:
+      - Wat zou de straat zijn zonder de auto?
+      - Hoe creëert de auto mobiliteit?
+      - Wat is de relatie tussen auto en verkeer?
+  - id: blr_chai_stall
+    name: Chai-kraam
+    prompt: |
+      Chai-kramen zijn knooppunten — klein, tijdelijk, essentieel. Zoek er een. Wie verzamelt zich?
+      Wat is het ritme? De kraam is een sociale machine.
+    follow_ups:
+      - Wat zou de hoek zijn zonder de kraam?
+      - Hoe creëert de kraam ontmoeting?
+      - Wat is de relatie tussen kraam en straat?
+  - id: blr_billboard
+    name: Bangalore Reclamebord
+    prompt: |
+      Bangalore reclameborden adverteren technologie, onroerend goed, onderwijs. Zoek er een.
+      Wat wordt er verkocht? Wie is het publiek? Het reclamebord is een spiegel van ambitie.
+    follow_ups:
+      - Wat zou de straat zijn zonder het reclamebord?
+      - Hoe vormt het reclamebord verlangen?
+      - Wat is de relatie tussen reclamebord en stad?
+  - id: blr_compound_wall
+    name: Omheining
+    prompt: |
+      Omheiningen scheiden privé van publiek. Zoek een muur. Wat zit erachter?
+      Hoe hoog is het? De muur creëert een grens. Wat sluit het buiten?
+    follow_ups:
+      - Wat zou de straat zijn zonder de muur?
+      - Hoe creëert de muur privacy?
+      - Wat is de relatie tussen muur en terrein?
+  - id: blr_signal_wait
+    name: Wachten bij het Signaal
+    prompt: |
+      Wacht bij een verkeerslicht. Kijk naar de verkopers — bloemen, speelgoed, boeken.
+      Het signaal creëert een pauze. Wat gebeurt er in de pauze?
+    follow_ups:
+      - Wat zou het kruispunt zijn zonder het signaal?
+      - Hoe creëert het signaal economie?
+      - Wat is de relatie tussen signaal en straat?
+  - id: blr_rain_drain
+    name: Regenafvoer
+    prompt: |
+      Bangalore moesson overspoelt afvoeren. Kijk na de regen naar het water. Waar gaat het naartoe? Waar hoopt het zich op? De afvoer is een limiet.
+    follow_ups:
+      - Wat zou de straat zijn zonder de afvoer?
+      - Hoe beheert de afvoer water?
+      - Wat is de relatie tussen afvoer en moesson?
+  - id: blr_sarjapur_road
+    name: Sarjapur Weg
+    prompt: |
+      Sarjapur Road verbindt het oude Bangalore met de technologiecorridor. Rijd of loop
+      een stuk. Wat verandert er? Waar verschuift de stad?
+    follow_ups:
+      - Wat zou de corridor zijn zonder de weg?
+      - Hoe creëert de weg verbinding?
+      - Wat is de relatie tussen weg en groei?
+  - id: blr_parks_maidans
+    name: Parken & Pleinen
+    prompt: |
+      Bangalore heeft parken en pleinen — Cubbon Park, Lalbagh, buurtpleinen. Ga er een binnen. Wie gebruikt het? Wat is het ritme?
+    follow_ups:
+      - Wat zou de stad zijn zonder het park?
+      - Hoe creëert het park respijt?
+      - Wat is de relatie tussen park en buurt?
+  - id: blr_temple_street
+    name: Tempelstraat
+    prompt: |
+      Tempels onderbreken de straten van Bangalore. Zoek er een. Let op de offers, de
+      klokken, de menigte. Hoe vormt de tempel het blok?
+    follow_ups:
+      - Wat zou de straat zijn zonder de tempel?
+      - Hoe creëert de tempel gemeenschap?
+      - Wat is de relatie tussen tempel en straat?
+  - id: blr_silk_board
+    name: Zijdebord
+    prompt: |
+      Het Zijdebord kruispunt is berucht. Ga aan de rand staan. Kijk naar het verkeer.
+      Hoe werkt het kruispunt? Wat is de logica van de chaos?
+    follow_ups:
+      - Wat zou de corridor zijn zonder het kruispunt?
+      - Hoe creëert het kruispunt een knelpunt?
+      - Wat is de relatie tussen kruispunt en woon-werkverkeer?
+  - id: blr_metro_elevated
+    name: Verhoogde Metro
+    prompt: |
+      De Bangalore Metro rijdt verhoogd door delen van de stad. Rijd ermee of sta
+      eronder. Hoe verandert de verhoogde lijn de straat eronder?
+    follow_ups:
+      - Wat zou de straat zijn zonder de metro?
+      - Hoe creëert de metro verbinding?
+      - Wat is de relatie tussen verhoogd en grond?
+  - id: blr_apartment_tower
+    name: Appartementencomplex
+    prompt: |
+      Appartementencomplexen rijzen op in heel Bangalore. Zoek er een. Hoeveel verdiepingen? Wie
+      woont er? De toren is verticale dichtheid. Wat vervangt het?
+    follow_ups:
+      - Wat zou de skyline zijn zonder de toren?
+      - Hoe creëert de toren huisvesting?
+      - Wat is de relatie tussen toren en grond?
+  - id: blr_roadside_vendor
+    name: Straatverkoper
+    prompt: |
+      Straatverkopers verkopen fruit, snacks, telefoonladers. Zoek er een. Wat is de
+      uitstalling? Wie stopt er? De verkoper is informele economie.
+    follow_ups:
+      - Wat zou de straat zijn zonder de verkoper?
+      - Hoe creëert de verkoper levensonderhoud?
+      - Wat is de relatie tussen verkoper en straat?
+  - id: blr_borewell
+    name: Boorput
+    prompt: |
+      Bangalore is afhankelijk van boorputten. Kijk naar de leidingen, de tanks, de
+      pompen. Water wordt van onderaf gewonnen. Wat is de relatie tussen stad en watervoerende laag?
+    follow_ups:
+      - Wat zou het gebouw zijn zonder de boorput?
+      - Hoe creëert de boorput aanbod?
+      - Wat is de relatie tussen boorput en schaarste?
+  - id: blr_garbage_heap
+    name: Vuilnisbelt
+    prompt: |
+      Vuilnishoopen verschijnen op hoeken, bij muren. Merk er een op. Wat zit erin? Wie
+      doorzoekt het? De hoop is een limiet van het systeem.
+    follow_ups:
+      - Wat zou de straat zijn zonder de hoop?
+      - Hoe markeert de hoop falen?
+      - Wat is de relatie tussen hoop en stad?
+  - id: blr_marquee_wedding
+    name: Bruilofts Tent
+    prompt: |
+      Bruiloftstenten blokkeren straten. Zoek er een. De tent is een tijdelijk
+      gebied. Wat is de relatie tussen viering en straat?
+    follow_ups:
+      - Wat zou de straat zijn zonder de tent?
+      - Hoe creëert de tent aanspraak?
+      - Wat is de relatie tussen bruiloft en publiek?
+  - id: blr_old_bungalow
+    name: Oude Bungalow
+    prompt: |
+      Oude Bangalore bungalows blijven bestaan tussen de torens. Zoek er een. De bungalow heeft
+      een terrein, bomen, ruimte. Wat zal het vervangen?
+    follow_ups:
+      - Wat zou de straat zijn zonder de bungalow?
+      - Hoe markeert de bungalow geschiedenis?
+      - Wat is de relatie tussen bungalow en toren?
+  - id: blr_coffee_house
+    name: Koffiehuis
+    prompt: |
+      Indian Coffee House is een instelling. Ga erin zitten. Het koffiehuis is
+      een ruimte voor gesprek. Wat is het ritme? Wie komt er?
+    follow_ups:
+      - Wat zou de straat zijn zonder het koffiehuis?
+      - Hoe creëert het koffiehuis gemeenschap?
+      - Wat is de relatie tussen koffiehuis en stad?
+  - id: blr_phone_booth
+    name: Telefooncel
+    prompt: |
+      Openbare telefooncellen bestaan nog steeds. Zoek er een. Werkt het? Wie gebruikt het?
+      De cel is een relikwie. Wat heeft het vervangen?
+    follow_ups:
+      - Wat zou de straat zijn zonder de cel?
+      - Hoe markeert de cel verandering?
+      - Wat is de relatie tussen cel en mobiel?
+  - id: blr_bus_stop
+    name: Bangalore Bushalte
+    prompt: |
+      Bangalore bushaltes zijn vaak een paal en een menigte. Wacht bij een. Wie
+      wacht er? Wat is de etiquette? De halte is minimale infrastructuur.
+    follow_ups:
+      - Wat zou de straat zijn zonder de halte?
+      - Hoe creëert de halte verbinding?
+      - Wat is de relatie tussen halte en bus?
+  - id: blr_power_line
+    name: Stroomkabel
+    prompt: |
+      Bangalore stroomkabels zijn een wirwar — kabels, transformatoren, lussen. Volg
+      een lijn. Waar gaat het naartoe? Het netwerk is zichtbaar. Wat voedt het?
+    follow_ups:
+      - Wat zou de straat zijn zonder de lijnen?
+      - Hoe creëert het netwerk aanbod?
+      - Wat is de relatie tussen lijn en uitval?
+  - id: blr_speed_breaker
+    name: Snelheidsdrempel
+    prompt: |
+      Snelheidsdrempels — liggende agenten — bezaaien de wegen van Bangalore. Voel er een. Waarom is het
+      hier? Wat vertraagt het? De drempel is een lokale interventie.
+    follow_ups:
+      - Wat zou de weg zijn zonder de drempel?
+      - Hoe creëert de drempel veiligheid?
+      - Wat is de relatie tussen drempel en snelheid?
+  - id: blr_compound_tree
+    name: Terreinboom
+    prompt: |
+      Terrein bomen overhangen muren. Zoek er een. De boom is zowel binnen als
+      buiten. Wat schaduwt het? Wie bezit het?
+    follow_ups:
+      - Wat zou de straat zijn zonder de boom?
+      - Hoe creëert de boom geschenk?
+      - Wat is de relatie tussen boom en terrein?
+  - id: blr_shop_shutter
+    name: Winkelroluik
+    prompt: |
+      Bangalore winkelroluiken gaan 's nachts naar beneden. Zoek een gesloten luik. Wat zit
+      erachter? Het luik is een dagelijkse cyclus. Wat beschermt het?
+    follow_ups:
+      - Wat zou de straat zijn zonder het luik?
+      - Hoe creëert het luik veiligheid?
+      - Wat is de relatie tussen luik en handel?
+  - id: blr_water_tanker
+    name: Watertankwagen
+    prompt: |
+      Watertankwagens bevoorraden buurten. Kijk hoe een levert. De tankwagen is
+      mobiele infrastructuur. Wat is de relatie tussen tankwagen en kraan?
+    follow_ups:
+      - Wat zou de buurt zijn zonder de tankwagen?
+      - Hoe creëert de tankwagen aanbod?
+      - Wat is de relatie tussen tankwagen en schaarste?
+  - id: blr_metro_station
+    name: Metrostation
+    prompt: |
+      Bangalore metro stations zijn nieuw — schoon, gemerkt. Ga er een binnen. Hoe verschilt het
+      station van de straat? Wat is de overgang?
+    follow_ups:
+      - Wat zou de corridor zijn zonder het station?
+      - Hoe creëert het station verbinding?
+      - Wat is de relatie tussen station en stad?
+  - id: blr_rickshaw_stand
+    name: Riksja-standplaats
+    prompt: |
+      Riksja-standplaatsen clusteren bij kruispunten. Zoek er een. De chauffeurs wachten. De
+      standplaats is een knooppunt. Wat is de economie?
+    follow_ups:
+      - Wat zou het kruispunt zijn zonder de standplaats?
+      - Hoe creëert de standplaats mobiliteit?
+      - Wat is de relatie tussen standplaats en chauffeur?
+  - id: blr_pavement_sleep
+    name: Slaap op de Stoep
+    prompt: |
+      Mensen die op de stoep slapen, maken deel uit van de stad. Kijk met zorg. Waar slapen ze? Wat is de relatie tussen straat en onderdak?
+    follow_ups:
+      - Wat zou de straat zijn zonder de slapers?
+      - Hoe wordt de stoep een thuis?
+      - Wat is de relatie tussen slapen en stad?
+  - id: blr_gate_security
+    name: Poortbeveiliging
+    prompt: |
+      Koloniepoorten hebben beveiliging — bewakers, barrières, registers. Kijk naar de stroom.
+      Wie gaat er naar binnen? Wie wordt tegengehouden? De poort is een filter.
+    follow_ups:
+      - Wat zou de kolonie zijn zonder de poort?
+      - Hoe creëert de poort veiligheid?
+      - Wat is de relatie tussen poort en vertrouwen?
+  - id: blr_street_dog
+    name: Straathond
+    prompt: |
+      Straathonden maken deel uit van Bangalore. Merk er een op. Waar slaapt hij? Wat
+      eet hij? De hond is zowel wild als gedomesticeerd.
+    follow_ups:
+      - Wat zou de straat zijn zonder de hond?
+      - Hoe creëert de hond relatie?
+      - Wat is de relatie tussen hond en stad?
+  - id: blr_hoarding
+    name: Reclamebord
+    prompt: |
+      Reclameborden — grote billboards — domineren kruispunten. Zoek er een. Wat wordt er
+      geadverteerd? Het reclamebord is een schaal van ambitie. Wat belooft het?
+    follow_ups:
+      - Wat zou het kruispunt zijn zonder het reclamebord?
+      - Hoe vormt het reclamebord verlangen?
+      - Wat is de relatie tussen reclamebord en stad?
+  - id: blr_rain_tree
+    name: Regenboom
+    prompt: |
+      Regenbomen — Samanea saman — overkappen sommige straten van Bangalore. Zoek er een.
+      De boom is een erfenis. Hoe vormt hij het blok?
+    follow_ups:
+      - Wat zou de straat zijn zonder de regenboom?
+      - Hoe creëert de boom microklimaat?
+      - Wat is de relatie tussen boom en tuinstad?
+  - id: blr_corner_shop
+    name: Bangalore Buurtwinkel
+    prompt: |
+      Buurtwinkels — kirana winkels — verkopen alles. Ga er een binnen. Wat is de
+      voorraad? Wie runt het? De winkel is een buurtknooppunt.
+    follow_ups:
+      - Wat zou het blok zijn zonder de winkel?
+      - Hoe creëert de winkel ontmoeting?
+      - Wat is de relatie tussen winkel en gemeenschap?
+  - id: blr_flyover
+    name: Viaduct
+    prompt: |
+      Bangalore viaducten springen over kruispunten. Sta eronder. Het viaduct
+      creëert schaduw, geluid, een nieuwe laag. Wat is er boven? Wat is eronder?
+    follow_ups:
+      - Wat zou het kruispunt zijn zonder het viaduct?
+      - Hoe creëert het viaduct doorstroming?
+      - Wat is de relatie tussen viaduct en grond?
+  - id: blr_water_tap
+    name: Openbare Waterkraan
+    prompt: |
+      Openbare waterkranen bestaan nog steeds. Zoek er een. Wie gebruikt het? De kraan is een
+      gemeenschappelijk goed. Wat is de relatie tussen kraan en toegang?
+    follow_ups:
+      - Wat zou de straat zijn zonder de kraan?
+      - Hoe creëert de kraan geschenk?
+      - Wat is de relatie tussen kraan en schaarste?
+  - id: blr_construction_crane
+    name: Bouwkraan
+    prompt: |
+      Bouwkranen onderbreken de skyline. Zoek er een. Wat wordt er gebouwd?
+      De kraan is een teken van groei. Wat zal er vervangen worden?
+    follow_ups:
+      - Wat zou de skyline zijn zonder de kraan?
+      - Hoe markeert de kraan verandering?
+      - Wat is de relatie tussen kraan en stad?
+  - id: blr_parking_lot
+    name: Parkeerterrein
+    prompt: |
+      Parkeerterreinen zijn tijdelijk — leeg land tot ontwikkeling. Zoek er een. Wat
+      was hier eerder? Wat komt er? Het terrein is een pauze.
+    follow_ups:
+      - Wat zou het blok zijn zonder het terrein?
+      - Hoe creëert het terrein tijdelijk gebruik?
+      - Wat is de relatie tussen terrein en ontwikkeling?
+  - id: blr_street_food
+    name: Straatvoedsel
+    prompt: |
+      Straatvoedselverkopers zetten zich op bij schemering. Zoek er een. Wat wordt er gekookt? Wie eet er?
+      De verkoper is informele infrastructuur. Wat is de economie?
+    follow_ups:
+      - Wat zou de straat zijn zonder de verkoper?
+      - Hoe creëert de verkoper levensonderhoud?
+      - Wat is de relatie tussen verkoper en straat?
+  - id: blr_compound_garden
+    name: Terrein Tuin
+    prompt: |
+      Terrein tuinen zijn privé — zichtbaar door poorten. Kijk erdoorheen. Wat groeit er? De tuin is een groen zakje. Wat zou de straat zijn zonder?
+    follow_ups:
+      - Wat zou het terrein zijn zonder de tuin?
+      - Hoe creëert de tuin respijt?
+      - Wat is de relatie tussen tuin en stad?
+  - id: blr_bus_crowd
+    name: Busmenigte
+    prompt: |
+      Bangalore bussen zitten vol tijdens de spits. Kijk naar een bushalte. De menigte stapt
+      in een golf. Hoe creëert de menigte orde? Wat is de etiquette?
+    follow_ups:
+      - Wat zou de halte zijn zonder de menigte?
+      - Hoe creëert de menigte druk?
+      - Wat is de relatie tussen menigte en bus?
+  - id: blr_metro_pillar
+    name: Metro Pilaar
+    prompt: |
+      Metro pilaren ondersteunen de verhoogde lijn. Sta eronder. De pilaar
+      creëert een ruimtekolom. Wat is de relatie tussen pilaar en straat?
+    follow_ups:
+      - Wat zou de straat zijn zonder de pilaar?
+      - Hoe creëert de pilaar structuur?
+      - Wat is de relatie tussen pilaar en metro?
+  - id: blr_temple_bell
+    name: Tempelklok
+    prompt: |
+      Tempelklokken markeren gebedstijden. Luister. De klok creëert een ritme. Hoe
+      vormt de klok de buurt? Wat zou de straat zijn zonder?
+    follow_ups:
+      - Wat zou de tempel zijn zonder de klok?
+      - Hoe creëert de klok tijd?
+      - Wat is de relatie tussen klok en gemeenschap?
+  - id: blr_road_widening
+    name: Wegverbreding
+    prompt: |
+      Wegverbreding snijdt door buurten. Zoek een stuk. Wat is er verwijderd? Wat blijft er over? De verbreding is een litteken. Wat dient het?
+    follow_ups:
+      - Wat zou de weg zijn zonder de verbreding?
+      - Hoe creëert de verbreding doorstroming?
+      - Wat is de relatie tussen verbreding en ontheemding?
+  - id: blr_apartment_balcony
+    name: Appartement Balkon
+    prompt: |
+      Appartement balkons kijken uit op de straat. Zoek een gebouw. Wat staat er op de
+      balkons? Planten? Wasgoed? Het balkon is een drempel. Wat zou je vanaf één zien?
+    follow_ups:
+      - Wat zou het gebouw zijn zonder het balkon?
+      - Hoe creëert het balkon relatie met de straat?
+      - Wat is de relatie tussen balkon en appartement?
+  - id: blr_night_light
+    name: Nachtlicht
+    prompt: |
+      Bangalore 's nachts — straatlantaarns, winkelverlichting, appartementramen. Loop een
+      blok. Hoe vormt het licht de straat? Wat wordt verlicht? Wat is donker?
+    follow_ups:
+      - Wat zou de straat zijn zonder het licht?
+      - Hoe creëert het licht veiligheid?
+      - Wat is de relatie tussen licht en nacht?
+  - id: blr_morning_walk
+    name: Ochtendwandeling
+    prompt: |
+      Ochtendwandelaars vullen parken en straten. Doe mee of kijk. De ochtendwandeling
+      is een ritueel. Wat is de route? Wie loopt er?
+    follow_ups:
+      - Wat zou de ochtend zijn zonder de wandelaars?
+      - Hoe creëert de wandeling gemeenschap?
+      - Wat is de relatie tussen wandeling en gezondheid?
+  - id: blr_garden_city
+    name: Tuinstad
+    prompt: |
+      Bangalore was de tuinstad. Restanten blijven bestaan — Lalbagh, Cubbon Park,
+      oude bomen. Zoek een restant. Wat zou de stad zijn als de tuin had gewonnen?
+    follow_ups:
+      - Wat zou Bangalore zijn zonder de tuinen?
+      - Hoe creëert de tuin identiteit?
+      - Wat is de relatie tussen tuin en stad?

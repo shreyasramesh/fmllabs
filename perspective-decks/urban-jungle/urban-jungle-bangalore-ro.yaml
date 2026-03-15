@@ -1,0 +1,456 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Jungla Urbană — Bangalore (Romanian)
+
+id: urban_jungle_bangalore
+name: Jungla Urbană — Bangalore
+description: 50 de cărți pentru a-ți schimba percepția despre Bangalore — de la scară și lumină, la straturi de istorie și ritmurile vieții de stradă.
+domain: urban_jungle
+cards:
+  - id: blr_gate_colony
+    name: Cartier Împrejmuit
+    prompt: |
+      Cartierele împrejmuite din Bangalore au ziduri, paznici, porți. Stai la o poartă.
+      Ce este înăuntru? Cine intră? Poarta marchează o graniță. Ce protejează ea?
+    follow_ups:
+      - Ce ar fi strada fără poartă?
+      - Cum creează poarta securitate?
+      - Care este relația dintre poartă și cartier?
+  - id: blr_tree_canopy
+    name: Coroana Arborilor
+    prompt: |
+      Bangalore a fost odată un oraș-grădină. Copaci bătrâni încă umbresc unele străzi.
+      Mergi sub unul. Cum schimbă coroana lumina? Sunetul?
+    follow_ups:
+      - Ce ar fi strada fără copac?
+      - Cum creează coroana un microclimat?
+      - Care este relația dintre copac și oraș?
+  - id: blr_tech_park
+    name: Parc Tehnologic
+    prompt: |
+      Parcurile tehnologice sunt campusuri — sticlă, gazon, autobuze navetă. Găsește unul. Cum se
+      separă parcul de oraș? Care este relația dintre interior și exterior?
+    follow_ups:
+      - Ce ar fi zona fără parc?
+      - Cum creează parcul identitate?
+      - Care este relația dintre parc și stradă?
+  - id: blr_auto_rickshaw
+    name: Auto-ricșă
+    prompt: |
+      Auto-ricșele se strecoară prin trafic. Privește una cum negociază o intersecție. Cum se
+
+      potrivește auto-ricșa unde mașinile nu pot? Care este logica strecurării?
+    follow_ups:
+      - Ce ar fi strada fără auto-ricșă?
+      - Cum creează auto-ricșa mobilitate?
+      - Care este relația dintre auto-ricșă și trafic?
+  - id: blr_chai_stall
+    name: Tarabă cu Chai
+    prompt: |
+      Tarabele cu chai sunt noduri — mici, temporare, esențiale. Găsește una. Cine se adună?
+      Care este ritmul? Taraba este o mașinărie socială.
+    follow_ups:
+      - Ce ar fi colțul străzii fără tarabă?
+      - Cum creează taraba întâlniri?
+      - Care este relația dintre tarabă și stradă?
+  - id: blr_billboard
+    name: Panou Publicitar Bangalore
+    prompt: |
+      Panourile publicitare din Bangalore promovează tehnologie, imobiliare, educație. Găsește unul.
+      Ce se vinde? Cine este publicul? Panoul publicitar este o oglindă a aspirațiilor.
+    follow_ups:
+      - Ce ar fi strada fără panou publicitar?
+      - Cum modelează panoul publicitar dorința?
+      - Care este relația dintre panou publicitar și oraș?
+  - id: blr_compound_wall
+    name: Zid de Incintă
+    prompt: |
+      Zidurile de incintă separă spațiul privat de cel public. Găsește un zid. Ce este în spatele
+      lui? Cât de înalt este? Zidul creează o graniță. Ce exclude?
+    follow_ups:
+      - Ce ar fi strada fără zid?
+      - Cum creează zidul intimitate?
+      - Care este relația dintre zid și incintă?
+  - id: blr_signal_wait
+    name: Așteptare la Semafor
+    prompt: |
+      Așteaptă la un semafor. Privește vânzătorii — flori, jucării, cărți. Semaforul creează o pauză.
+      Ce se întâmplă în pauză?
+    follow_ups:
+      - Ce ar fi intersecția fără semafor?
+      - Cum creează semaforul economie?
+      - Care este relația dintre semafor și stradă?
+  - id: blr_rain_drain
+    name: Canal de Ploaie
+    prompt: |
+      Monsonul din Bangalore copleșește canalele. După ploaie, privește apa. Unde se duce? Unde se
+      adună? Canalul este o limită.
+    follow_ups:
+      - Ce ar fi strada fără canal?
+      - Cum gestionează canalul apa?
+      - Care este relația dintre canal și monsun?
+  - id: blr_sarjapur_road
+    name: Drumul Sarjapur
+    prompt: |
+      Drumul Sarjapur leagă vechiul Bangalore de coridorul tehnologic. Condu sau mergi pe o porțiune.
+      Ce se schimbă? Unde se transformă orașul?
+    follow_ups:
+      - Ce ar fi coridorul fără drum?
+      - Cum creează drumul conexiune?
+      - Care este relația dintre drum și creștere?
+  - id: blr_parks_maidans
+    name: Parcuri și Esplanade
+    prompt: |
+      Bangalore are parcuri și esplanade — Parcul Cubbon, Lalbagh, terenuri de cartier. Intră într-unul.
+      Cine îl folosește? Care este ritmul?
+    follow_ups:
+      - Ce ar fi orașul fără parc?
+      - Cum creează parcul respiro?
+      - Care este relația dintre parc și cartier?
+  - id: blr_temple_street
+    name: Stradă cu Temple
+    prompt: |
+      Templele punctează străzile din Bangalore. Găsește unul. Observă ofrandele, clopotele, mulțimea.
+      Cum influențează templul blocul?
+    follow_ups:
+      - Ce ar fi strada fără templu?
+      - Cum creează templul comunitate?
+      - Care este relația dintre templu și stradă?
+  - id: blr_silk_board
+    name: Intersecția Silk Board
+    prompt: |
+      Intersecția Silk Board este infamă. Stai la margine. Privește traficul. Cum funcționează
+      intersecția? Care este logica haosului?
+    follow_ups:
+      - Ce ar fi coridorul fără intersecție?
+      - Cum creează intersecția blocaj?
+      - Care este relația dintre intersecție și navetă?
+  - id: blr_metro_elevated
+    name: Metrou Suspendat
+    prompt: |
+      Metroul din Bangalore circulă suspendat prin anumite zone ale orașului. Călătorește cu el sau
+      stai sub el. Cum schimbă linia suspendată strada de dedesubt?
+    follow_ups:
+      - Ce ar fi strada fără metrou?
+      - Cum creează metroul conexiune?
+      - Care este relația dintre suspendat și sol?
+  - id: blr_apartment_tower
+    name: Turn de Apartamente
+    prompt: |
+      Turnuri de apartamente se înalță în tot Bangalore. Găsește unul. Câte etaje are? Cine locuiește
+      acolo? Turnul este densitate verticală. Ce înlocuiește?
+    follow_ups:
+      - Ce ar fi orizontul orașului fără turn?
+      - Cum creează turnul locuințe?
+      - Care este relația dintre turn și sol?
+  - id: blr_roadside_vendor
+    name: Vânzător Ambulant
+    prompt: |
+      Vânzătorii ambulanți vând fructe, gustări, încărcătoare de telefon. Găsește unul. Cum este
+      expus? Cine se oprește? Vânzătorul este economie informală.
+    follow_ups:
+      - Ce ar fi strada fără vânzător?
+      - Cum creează vânzătorul mijloace de trai?
+      - Care este relația dintre vânzător și stradă?
+  - id: blr_borewell
+    name: Fântână Arteesiană
+    prompt: |
+      Bangalore depinde de fântâni arteziene. Caută țevile, rezervoarele, pompele.
+      Apa este extrasă de jos. Care este relația dintre oraș și acvifer?
+    follow_ups:
+      - Ce ar fi clădirea fără fântâna arteziană?
+      - Cum creează fântâna arteziană aprovizionare?
+      - Care este relația dintre fântână arteziană și penurie?
+  - id: blr_garbage_heap
+    name: Grămadă de Gunoi
+    prompt: |
+      Grămezi de gunoi apar la colțuri, lângă ziduri. Observă una. Ce este în ea? Cine caută prin ea?
+      Grămada este o limită a sistemului.
+    follow_ups:
+      - Ce ar fi strada fără grămadă de gunoi?
+      - Cum marchează grămada de gunoi eșecul?
+      - Care este relația dintre grămada de gunoi și oraș?
+  - id: blr_marquee_wedding
+    name: Cort Nupțial
+    prompt: |
+      Corturile nupțiale blochează străzile. Găsește unul. Cortul este un teritoriu temporar. Care este
+      relația dintre celebrare și stradă?
+    follow_ups:
+      - Ce ar fi strada fără cortul nupțial?
+      - Cum creează cortul nupțial revendicare?
+      - Care este relația dintre nuntă și spațiul public?
+  - id: blr_old_bungalow
+    name: Bungalou Vechi
+    prompt: |
+      Bungalourile vechi din Bangalore persistă printre turnuri. Găsește unul. Bungaloul are o incintă,
+      copaci, spațiu. Ce îl va înlocui?
+    follow_ups:
+      - Ce ar fi strada fără bungalou?
+      - Cum marchează bungaloul istoria?
+      - Care este relația dintre bungalou și turn?
+  - id: blr_coffee_house
+    name: Cafenea
+    prompt: |
+      Indian Coffee House este o instituție. Stai într-una. Cafeneaua este o cameră de conversație.
+      Care este ritmul? Cine vine?
+    follow_ups:
+      - Ce ar fi strada fără cafenea?
+      - Cum creează cafeneaua comunitate?
+      - Care este relația dintre cafenea și oraș?
+  - id: blr_phone_booth
+    name: cabină telefonică
+    prompt: |
+      Cabinetele telefonice publice încă există. Găsește una. Funcționează? Cine o folosește?
+      Cabina este o relicvă. Ce a înlocuit-o?
+    follow_ups:
+      - Ce ar fi strada fără cabină?
+      - Cum marchează cabina schimbarea?
+      - Care este relația dintre cabină și mobil?
+  - id: blr_bus_stop
+    name: Stație de Autobuz Bangalore
+    prompt: |
+      Stațiile de autobuz din Bangalore sunt adesea un stâlp și o mulțime. Așteaptă la una. Cine
+      așteaptă? Care este eticheta? Stația este o infrastructură minimă.
+    follow_ups:
+      - Ce ar fi strada fără stație?
+      - Cum creează stația conexiune?
+      - Care este relația dintre stație și autobuz?
+  - id: blr_power_line
+    name: Linie Electrică
+    prompt: |
+      Liniile electrice din Bangalore sunt un amestec — cabluri, transformatoare, bucle. Urmărește
+      o linie. Unde merge? Rețeaua este vizibilă. Ce alimentează?
+    follow_ups:
+      - Ce ar fi strada fără linii?
+      - Cum creează rețeaua aprovizionare?
+      - Care este relația dintre linie și pană de curent?
+  - id: blr_speed_breaker
+    name: Limitator de Viteză
+    prompt: |
+      Limitatoare de viteză — polițiști adormiți — punctează drumurile din Bangalore. Simte unul. De ce este
+      aici? Ce încetinește? Limitatorul este o intervenție locală.
+    follow_ups:
+      - Ce ar fi drumul fără limitator?
+      - Cum creează limitatorul siguranță?
+      - Care este relația dintre limitator și viteză?
+  - id: blr_compound_tree
+    name: Copac din Incintă
+    prompt: |
+      Copacii din incinte depășesc zidurile. Găsește unul. Copacul este atât înăuntru, cât și în afara.
+      Ce umbrește? Cine îl deține?
+    follow_ups:
+      - Ce ar fi strada fără copac?
+      - Cum creează copacul dar?
+      - Care este relația dintre copac și incintă?
+  - id: blr_shop_shutter
+    name: Obloane Magazin
+    prompt: |
+      Obloanele magazinelor din Bangalore coboară noaptea. Găsește un oblon închis. Ce este
+      în spatele lui? Obloanele sunt un ciclu zilnic. Ce protejează?
+    follow_ups:
+      - Ce ar fi strada fără oblon?
+      - Cum creează oblonul securitate?
+      - Care este relația dintre oblon și comerț?
+  - id: blr_water_tanker
+    name: Autobasculantă Apă
+    prompt: |
+      Autobasculantele de apă aprovizionează cartierele. Privește una livrând. Autobasculanta este
+      infrastructură mobilă. Care este relația dintre autobasculantă și robinet?
+    follow_ups:
+      - Ce ar fi cartierul fără autobasculantă?
+      - Cum creează autobasculanta aprovizionare?
+      - Care este relația dintre autobasculantă și penurie?
+  - id: blr_metro_station
+    name: Stație de Metrou
+    prompt: |
+      Stațiile de metrou din Bangalore sunt noi — curate, branduite. Intră într-una. Cum diferă
+      stația de stradă? Care este tranziția?
+    follow_ups:
+      - Ce ar fi coridorul fără stație?
+      - Cum creează stația conexiune?
+      - Care este relația dintre stație și oraș?
+  - id: blr_rickshaw_stand
+    name: Stație de Ricșe
+    prompt: |
+      Stațiile de ricșe se adună la intersecții. Găsește una. Șoferii așteaptă.
+      Stația este un nod. Care este economia?
+    follow_ups:
+      - Ce ar fi intersecția fără stație?
+      - Cum creează stația mobilitate?
+      - Care este relația dintre stație și șofer?
+  - id: blr_pavement_sleep
+    name: Dormit pe Trotuar
+    prompt: |
+      Cei care dorm pe trotuar fac parte din oraș. Observă cu grijă. Unde dorm?
+      Care este relația dintre stradă și adăpost?
+    follow_ups:
+      - Ce ar fi strada fără cei care dorm pe trotuar?
+      - Cum devine trotuarul casă?
+      - Care este relația dintre somn și oraș?
+  - id: blr_gate_security
+    name: Securitate la Poartă
+    prompt: |
+      Porțile cartierelor au securitate — paznici, bariere, registre. Privește fluxul.
+      Cine intră? Cine este oprit? Poarta este un filtru.
+    follow_ups:
+      - Ce ar fi cartierul fără poartă?
+      - Cum creează poarta securitate?
+      - Care este relația dintre poartă și încredere?
+  - id: blr_street_dog
+    name: Câine de Stradă
+    prompt: |
+      Câinii de stradă fac parte din Bangalore. Observă unul. Unde doarme? Ce
+      mănâncă? Câinele este atât sălbatic, cât și domestic.
+    follow_ups:
+      - Ce ar fi strada fără câine?
+      - Cum creează câinele relație?
+      - Care este relația dintre câine și oraș?
+  - id: blr_hoarding
+    name: Panou Publicitar Mare
+    prompt: |
+      Panourile publicitare mari domină intersecțiile. Găsește unul. Ce se
+      promovează? Panoul publicitar este o scară a aspirației. Ce promite?
+    follow_ups:
+      - Ce ar fi intersecția fără panou publicitar?
+      - Cum modelează panoul publicitar dorința?
+      - Care este relația dintre panou publicitar și oraș?
+  - id: blr_rain_tree
+    name: Arbore de Ploaie
+    prompt: |
+      Arborii de ploaie — Samanea saman — umbresc unele străzi din Bangalore. Găsește unul.
+      Arborele este o moștenire. Cum influențează blocul?
+    follow_ups:
+      - Ce ar fi strada fără arborele de ploaie?
+      - Cum creează arborele microclimat?
+      - Care este relația dintre arbore și oraș-grădină?
+  - id: blr_corner_shop
+    name: Magazin de Colț Bangalore
+    prompt: |
+      Magazinele de colț — magazine kirana — vând totul. Intră într-unul. Care este
+      inventarul? Cine îl conduce? Magazinul este un nod de cartier.
+    follow_ups:
+      - Ce ar fi blocul fără magazin?
+      - Cum creează magazinul întâlniri?
+      - Care este relația dintre magazin și comunitate?
+  - id: blr_flyover
+    name: Pasaj Suprateran
+    prompt: |
+      Pasajele supraterane din Bangalore trec peste intersecții. Stai sub unul. Pasajul suprateran
+      creează umbră, zgomot, un nou strat. Ce este deasupra? Ce este dedesubt?
+    follow_ups:
+      - Ce ar fi intersecția fără pasaj suprateran?
+      - Cum creează pasajul flux?
+      - Care este relația dintre pasaj suprateran și sol?
+  - id: blr_water_tap
+    name: Robinet Public de Apă
+    prompt: |
+      Robineții publici de apă încă există. Găsește unul. Cine îl folosește? Robinetul este un
+      bun comun. Care este relația dintre robinet și acces?
+    follow_ups:
+      - Ce ar fi strada fără robinet?
+      - Cum creează robinetul dar?
+      - Care este relația dintre robinet și penurie?
+  - id: blr_construction_crane
+    name: Macara de Construcții
+    prompt: |
+      Macaralele de construcții punctează orizontul orașului. Găsește una. Ce se construiește?
+      Macaraua este un semn de creștere. Ce va înlocui ce?
+    follow_ups:
+      - Ce ar fi orizontul orașului fără macaraua de construcții?
+      - Cum marchează macaraua schimbarea?
+      - Care este relația dintre macaraua de construcții și oraș?
+  - id: blr_parking_lot
+    name: Parc de Mașini
+    prompt: |
+      Parcurile de mașini sunt temporare — terenuri goale până la dezvoltare. Găsește unul. Ce a fost
+      aici înainte? Ce va veni? Locul este o pauză.
+    follow_ups:
+      - Ce ar fi blocul fără locul de parcare?
+      - Cum creează locul de parcare utilizare interimară?
+      - Care este relația dintre locul de parcare și dezvoltare?
+  - id: blr_street_food
+    name: Mâncare Stradală
+    prompt: |
+      Vânzătorii de mâncare stradală se instalează la apus. Găsește unul. Ce se gătește? Cine mănâncă?
+      Vânzătorul este infrastructură informală. Care este economia?
+    follow_ups:
+      - Ce ar fi strada fără vânzător?
+      - Cum creează vânzătorul mijloace de trai?
+      - Care este relația dintre vânzător și stradă?
+  - id: blr_compound_garden
+    name: Grădină din Incintă
+    prompt: |
+      Grădinile din incintă sunt private — vizibile prin porți. Trage cu ochiul. Ce crește? Grădina este un petic de verdeață. Ce ar fi strada fără ea?
+    follow_ups:
+      - Ce ar fi incinta fără grădină?
+      - Cum creează grădina respiro?
+      - Care este relația dintre grădină și oraș?
+  - id: blr_bus_crowd
+    name: Mulțime la Autobuz
+    prompt: |
+      Autobuzele din Bangalore sunt pline la orele de vârf. Privește o stație de autobuz. Mulțimea
+      urcă în masă. Cum creează mulțimea ordine? Care este eticheta?
+    follow_ups:
+      - Ce ar fi stația fără mulțime?
+      - Cum creează mulțimea presiune?
+      - Care este relația dintre mulțime și autobuz?
+  - id: blr_metro_pillar
+    name: Stâlp de Metrou
+    prompt: |
+      Stâlpii de metrou susțin linia suspendată. Stai sub unul. Stâlpul creează o coloană de spațiu. Care este relația dintre stâlp și stradă?
+    follow_ups:
+      - Ce ar fi strada fără stâlp?
+      - Cum creează stâlpul structură?
+      - Care este relația dintre stâlp și metrou?
+  - id: blr_temple_bell
+    name: Clopot de Templu
+    prompt: |
+      Clopotele templului marchează orele de rugăciune. Ascultă. Clopotul creează un ritm. Cum
+      modelează clopotul cartierul? Ce ar fi strada fără el?
+    follow_ups:
+      - Ce ar fi templul fără clopot?
+      - Cum creează clopotul timp?
+      - Care este relația dintre clopot și comunitate?
+  - id: blr_road_widening
+    name: Lărgire de Drum
+    prompt: |
+      Lărgirea de drum taie prin cartiere. Găsește o porțiune. Ce a fost
+      îndepărtat? Ce rămâne? Lărgirea este o cicatrice. Ce deservește?
+    follow_ups:
+      - Ce ar fi drumul fără lărgire?
+      - Cum creează lărgirea flux?
+      - Care este relația dintre lărgire și strămutare?
+  - id: blr_apartment_balcony
+    name: Balcon de Apartament
+    prompt: |
+      Balcoanele apartamentelor dau spre stradă. Găsește o clădire. Ce este pe balcoane? Plante? Rufe? Balconul este un prag. Ce ai vedea de pe unul?
+    follow_ups:
+      - Ce ar fi clădirea fără balcon?
+      - Cum creează balconul relație cu strada?
+      - Care este relația dintre balcon și apartament?
+  - id: blr_night_light
+    name: Lumină de Noapte
+    prompt: |
+      Bangalore noaptea — felinare stradale, lumini de magazine, ferestre de apartamente. Mergi un
+      bloc. Cum modelează lumina strada? Ce este luminat? Ce este întunecat?
+    follow_ups:
+      - Ce ar fi strada fără lumină?
+      - Cum creează lumina siguranță?
+      - Care este relația dintre lumină și noapte?
+  - id: blr_morning_walk
+    name: Plimbare de Dimineață
+    prompt: |
+      Pietonii de dimineață umplu parcurile și străzile. Alătură-te sau privește. Plimbarea de dimineață
+      este un ritual. Care este traseul? Cine merge?
+    follow_ups:
+      - Ce ar fi dimineața fără pietoni?
+      - Cum creează plimbarea comunitate?
+      - Care este relația dintre plimbare și sănătate?
+  - id: blr_garden_city
+    name: Oraș-Grădină
+    prompt: |
+      Bangalore a fost orașul-grădină. Rămășițe persistă — Lalbagh, Parcul Cubbon,
+      copaci vechi. Găsește o rămășiță. Ce ar fi orașul dacă grădina ar fi câștigat?
+    follow_ups:
+      - Ce ar fi Bangalore fără grădini?
+      - Cum creează grădina identitate?
+      - Care este relația dintre grădină și oraș?

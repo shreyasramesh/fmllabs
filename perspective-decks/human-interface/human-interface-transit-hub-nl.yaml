@@ -1,0 +1,519 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# De Menselijke Interface — OV Knooppunt (Dutch)
+
+id: human_interface_transit_hub
+name: De Menselijke Interface — OV Knooppunt
+description: 50 kaarten om je kijk op het OV knooppunt te veranderen — van perrons en wachten tot aankomst/vertrek flow en de choreografie van vreemden onderweg.
+domain: human_interface
+cards:
+  - id: hi_th_platform_edge
+    name: Perronrand
+    prompt: |
+      De perronrand is een drempel. Gele lijn, spleet, spoor. Mensen staan
+      op verschillende afstanden. Sommigen leunen voorover; anderen blijven
+      terug. Observeer de verdeling. Wat betekent de rand?
+    follow_ups:
+      - Hoe vormt de rand anticipatie?
+      - Wat zou het perron zijn zonder de lijn?
+      - Wat is de relatie tussen rand en risico?
+  - id: hi_th_waiting_posture
+    name: Wacht Houding
+    prompt: |
+      Lichamen rangschikken zich tijdens het wachten — gewicht op één voet,
+      telefoon in de hand, tas tussen de voeten. De houding codeert de
+      duur. Wie ziet er geduldig uit? Wie rusteloos? Het wachten heeft
+      lichaamstaal.
+    follow_ups:
+      - Hoe onthult houding verwachting?
+      - Wat zou het perron zijn zonder wachten?
+      - Wat is de relatie tussen houding en tijd?
+  - id: hi_th_arrival_flow
+    name: Aankomststroom
+    prompt: |
+      De deuren van de trein gaan open. Mensen stromen eruit — tegen de
+      stroom in van degenen die instappen. De stroom heeft fysica. Observeer
+      de botsing, de zijwaartse beweging, de samensmelting. Welke regels
+      beheersen de uitwisseling?
+    follow_ups:
+      - Hoe vormt de stroom het perron?
+      - Wat zou er gebeuren als iedereen zich haastte?
+      - Wat is de relatie tussen stroom en efficiëntie?
+  - id: hi_th_strangers_transit
+    name: Vreemden Onderweg
+    prompt: |
+      Je deelt een coupé met mensen die je nooit meer zult zien. Nabijheid
+      zonder verbinding. Observeer het compacte. Wat zijn vreemden elkaar
+      verschuldigd? De OV-coupé is een tijdelijke samenleving.
+    follow_ups:
+      - Hoe creëert OV een tijdelijke gemeenschap?
+      - Wat zou de coupé zijn met gesprekken?
+      - Wat is de relatie tussen vreemdeling en beschaving?
+  - id: hi_th_departure_board
+    name: Vertrekbord
+    prompt: |
+      Tijden, perrons, vertragingen — het bord is de bron van waarheid.
+      Ogen kijken ernaar. Het bord dicteert beweging. Kijk naar de
+      collectieve blik. Wat doet het bord met de menigte?
+    follow_ups:
+      - Hoe vormt het bord gedrag?
+      - Wat zou het knooppunt zijn zonder dit?
+      - Wat is de relatie tussen weergave en vertrouwen?
+  - id: hi_th_escalator_stand
+    name: Roltrap Staan
+    prompt: |
+      Rechts staan, links lopen — of andersom, afhankelijk van de stad.
+      De roltrap heeft regels. Observeer wie ze volgt. De roltrap is een
+      bewegende rij. Wat maakt de regel mogelijk?
+    follow_ups:
+      - Hoe vormt de roltrapregel de stroom?
+      - Wat zou er gebeuren als iedereen bleef staan?
+      - Wat is de relatie tussen regel en efficiëntie?
+  - id: hi_th_ticket_gate
+    name: Toegangspoortje
+    prompt: |
+      Het poortje leest de kaart, piept, gaat open. Het poortje is een
+      controlepunt. Het scheidt betaald van onbetaald. Observeer het ritme.
+      Wie stuntelt? Wie glijdt erdoorheen? Het poortje is een test.
+    follow_ups:
+      - Hoe vormt het poortje de reis?
+      - Wat zou het knooppunt zijn zonder poortjes?
+      - Wat is de relatie tussen poortje en ergens bij horen?
+  - id: hi_th_luggage_drag
+    name: Bagage Slepen
+    prompt: |
+      Wielen op tegels. De koffer volgt. Het slepen markeert het pad van
+      reizigers. Bagage verlengt het lichaam. Observeer de last. Wat zegt
+      de bagage over de reis?
+    follow_ups:
+      - Hoe vormt bagage beweging?
+      - Wat zou het knooppunt zijn zonder tassen?
+      - Wat is de relatie tussen last en bestemming?
+  - id: hi_th_bench_occupation
+    name: Bank Bezetting
+    prompt: |
+      Banken staan langs het perron. Sommigen zitten; sommigen staan ernaast.
+      De bank is een schaarse bron. Observeer wie hem claimt. Hoe lang
+      blijven ze? De bank is een klein territorium.
+    follow_ups:
+      - Hoe vormt de bank het wachten?
+      - Wat zou het perron zijn zonder banken?
+      - Wat is de relatie tussen zitplaats en duur?
+  - id: hi_th_announcement_voice
+    name: Aankondiging Stem
+    prompt: |
+      "De volgende trein..." De stem is geautomatiseerd of menselijk. Hij
+      snijdt door het lawaai heen. De aankondiging creëert gedeelde kennis.
+      Observeer wie luistert. Wie heeft al op de telefoon gekeken?
+    follow_ups:
+      - Hoe vormt de aankondiging de menigte?
+      - Wat zou het knooppunt zijn zonder dit?
+      - Wat is de relatie tussen stem en autoriteit?
+  - id: hi_th_door_positioning
+    name: Deur Positionering
+    prompt: |
+      Vaste reizigers weten waar de deuren zullen openen. Ze positioneren
+      zichzelf. Nieuwkomers gokken. De positionering is strategie. Observeer
+      de clustering. Wat bepaalt de positie?
+    follow_ups:
+      - Hoe vormt positionering het instappen?
+      - Wat zou het perron zijn als deuren willekeurig waren?
+      - Wat is de relatie tussen positie en voordeel?
+  - id: hi_th_handrail_grip
+    name: Handgreep Leuning
+    prompt: |
+      Binnen in de coupé grijpen handen de leuning. De greep is veiligheid.
+      Observeer wie vasthoudt, wie het niet nodig heeft. De leuning is een
+      gedeeld object. Wat onthult de greep?
+    follow_ups:
+      - Hoe vormt de leuning stabiliteit?
+      - Wat zou de coupé zijn zonder dit?
+      - Wat is de relatie tussen greep en vertrouwen?
+  - id: hi_th_window_reflection
+    name: Raam Reflectie
+    prompt: |
+      Het raam toont de tunnel, het perron, en je eigen gezicht. De reflectie
+      is onvermijdelijk. Mensen kijken naar zichzelf of mijden het. Observeer
+      de relatie tussen reflectie en blik.
+    follow_ups:
+      - Hoe vormt de reflectie zelfbewustzijn?
+      - Wat zou de rit zijn zonder het raam?
+      - Wat is de relatie tussen reflectie en privacy?
+  - id: hi_th_seat_offer
+    name: Zitplaats Aanbod
+    prompt: |
+      Iemand biedt een zitplaats aan aan een oudere, een ouder met een kind.
+      Het aanbod is een kleine morele daad. Observeer wanneer het gebeurt.
+      Wie biedt aan? Wie accepteert? De zitplaats is een geschenk.
+    follow_ups:
+      - Hoe vormt het aanbod de coupé?
+      - Wat zou de rit zijn zonder zulke aanbiedingen?
+      - Wat is de relatie tussen aanbod en zorg?
+  - id: hi_th_delay_sigh
+    name: Vertraging Zucht
+    prompt: |
+      "Vertraagd." De collectieve zucht. De vertraging is gedeeld lot.
+      Vreemden wisselen blikken uit. De vertraging creëert een moment van
+      solidariteit. Observeer de verschuiving. Wat doet de vertraging met
+      de menigte?
+    follow_ups:
+      - Hoe vormt de vertraging het wachten?
+      - Wat zou het knooppunt zijn zonder vertragingen?
+      - Wat is de relatie tussen vertraging en frustratie?
+  - id: hi_th_backpack_turn
+    name: Rugzak Draai
+    prompt: |
+      In een drukke coupé draait iemand zijn rugzak naar voren. De draai
+      is attentie. Het creëert ruimte. Observeer wie het doet. De rugzakdraai
+      is een klein sociaal contract.
+    follow_ups:
+      - Hoe vormt de draai nabijheid?
+      - Wat zou de coupé zijn zonder dit?
+      - Wat is de relatie tussen draai en bewustzijn?
+  - id: hi_th_exit_anticipation
+    name: Uitgang Anticipatie
+    prompt: |
+      Als de halte nadert, verzamelen mensen zich bij de deur. De anticipatie
+      is zichtbaar. Lichamen verschuiven. De deur zal openen. Observeer de
+      voorbereiding. Wat vereist de anticipatie?
+    follow_ups:
+      - Hoe vormt anticipatie de uitgang?
+      - Wat zou de halte zijn zonder voorbereiding?
+      - Wat is de relatie tussen anticipatie en stroom?
+  - id: hi_th_transfer_corridor
+    name: Overstap Corridor
+    prompt: |
+      De corridor verbindt lijnen. Mensen lopen doelgericht. De overstap
+      is een transitie — tussen systemen, tussen wachttijden. Observeer
+      het tempo. De corridor heeft zijn eigen ritme.
+    follow_ups:
+      - Hoe vormt de corridor de reis?
+      - Wat zou het knooppunt zijn zonder overstappen?
+      - Wat is de relatie tussen corridor en verbinding?
+  - id: hi_th_phone_glow
+    name: Telefoon Gloed
+    prompt: |
+      In de schemerige coupé lichten gezichten op van telefoons. De gloed
+      is individueel. Elke persoon heeft zijn eigen licht. Observeer de
+      verdeling. De telefoon creëert privéruimte in het openbaar.
+    follow_ups:
+      - Hoe vormt de telefoon de rit?
+      - Wat zou de coupé zijn zonder telefoons?
+      - Wat is de relatie tussen gloed en isolatie?
+  - id: hi_th_stroller_navigation
+    name: Kinderwagen Navigatie
+    prompt: |
+      Een ouder duwt een kinderwagen door de menigte. De navigatie is
+      delicaat. Mensen maken plaats. De kinderwagen verandert de stroom.
+      Observeer de accommodatie. Wat eist de kinderwagen?
+    follow_ups:
+      - Hoe vormt de kinderwagen de menigte?
+      - Wat zou het knooppunt zijn zonder kinderwagens?
+      - Wat is de relatie tussen kinderwagen en zorg?
+  - id: hi_th_vendor_station
+    name: Verkoopstation
+    prompt: |
+      Een kiosk verkoopt koffie, snacks, kranten. De verkoper bedient mensen
+      in beweging. De transactie is snel. Observeer de uitwisseling. De
+      verkoper is een eiland in de stroom.
+    follow_ups:
+      - Hoe vormt de verkoper het knooppunt?
+      - Wat zou het knooppunt zijn zonder verkopers?
+      - Wat is de relatie tussen verkoper en wachten?
+  - id: hi_th_track_gap
+    name: Spoor Spleet
+    prompt: |
+      Let op de spleet. De ruimte tussen perron en trein is een gevaar. Mensen
+      stappen eroverheen. De spleet varieert. Observeer de voorzichtigheid.
+      Wat vereist de spleet van het lichaam?
+    follow_ups:
+      - Hoe vormt de spleet het instappen?
+      - Wat zou het perron zijn zonder dit?
+      - Wat is de relatie tussen spleet en aandacht?
+  - id: hi_th_schedule_check
+    name: Schema Controle
+    prompt: |
+      Vingers tikken op de telefoon. De app zegt wanneer. De schema controle
+      is constant. Het vermindert onzekerheid. Observeer het ritme. Hoe
+      vaak controleren mensen?
+    follow_ups:
+      - Hoe vormt het schema het wachten?
+      - Wat zou het knooppunt zijn zonder apps?
+      - Wat is de relatie tussen controle en beheersing?
+  - id: hi_th_crowd_density
+    name: Dichtheid Menigte
+    prompt: |
+      Spitsuur pakt het perron vol. Lichamen comprimeren. De dichtheid heeft
+      grenzen. Observeer de grens. Wanneer wordt het ondraaglijk? De menigte
+      heeft fysica.
+    follow_ups:
+      - Hoe vormt dichtheid de ervaring?
+      - Wat zou het knooppunt zijn bij lage dichtheid?
+      - Wat is de relatie tussen dichtheid en tolerantie?
+  - id: hi_th_sleeping_commuter
+    name: Slapende Reiziger
+    prompt: |
+      Iemand slaapt — hoofd tegen het raam, tegen de schouder van een
+      vreemdeling. De slaap is vertrouwen of uitputting. Observeer de
+      kwetsbaarheid. Wat vereist de slaap van de coupé?
+    follow_ups:
+      - Hoe vormt de slaper de ruimte?
+      - Wat zou de rit zijn zonder slapers?
+      - Wat is de relatie tussen slaap en veiligheid?
+  - id: hi_th_map_consultation
+    name: Kaart Raadpleging
+    prompt: |
+      Een bezoeker staart naar de kaart aan de muur. De kaart is een levenslijn.
+      Anderen stromen voorbij. De raadpleging kost tijd. Observeer de pauze.
+      Wat biedt de kaart?
+    follow_ups:
+      - Hoe vormt de kaart de reis?
+      - Wat zou het knooppunt zijn zonder kaarten?
+      - Wat is de relatie tussen kaart en vertrouwen?
+  - id: hi_th_platform_change
+    name: Perron Wisseling
+    prompt: |
+      "Perronwisseling." De menigte beweegt. De wisseling is verstoring. Mensen
+      hasten. Observeer de commotie. Wat onttrekt de wisseling aan de menigte?
+    follow_ups:
+      - Hoe vormt de wisseling de stroom?
+      - Wat zou het knooppunt zijn zonder wisselingen?
+      - Wat is de relatie tussen wisseling en stress?
+  - id: hi_th_briefcase_clutch
+    name: Aktetas Klem
+    prompt: |
+      De aktetas wordt dicht gehouden — tussen de voeten, op schoot. Hij
+      bevat iets waardevols. De klem is beschermend. Observeer de greep.
+      Wat betekent de aktetas voor de houder?
+    follow_ups:
+      - Hoe vormt de aktetas de rit?
+      - Wat zou de coupé zijn zonder aktetassen?
+      - Wat is de relatie tussen klem en identiteit?
+  - id: hi_th_door_hold
+    name: Deur Vasthouden
+    prompt: |
+      Iemand houdt de deur open voor de persoon erachter. De trein staat
+      op het punt te vertrekken. Het vasthouden is risico en hoffelijkheid.
+      Observeer de uitwisseling. Wat kost het vasthouden?
+    follow_ups:
+      - Hoe vormt het vasthouden het instappen?
+      - Wat zou het perron zijn zonder dit?
+      - Wat is de relatie tussen vasthouden en beschaving?
+  - id: hi_th_standing_balance
+    name: Staand Evenwicht
+    prompt: |
+      De trein beweegt. Staande passagiers verplaatsen hun gewicht. Het evenwicht
+      is dynamisch. Niemand houdt de leuning vast. Observeer de micro-aanpassingen.
+      Het lichaam leert de beweging.
+    follow_ups:
+      - Hoe vormt evenwicht de rit?
+      - Wat zou de coupé zijn met meer zitplaatsen?
+      - Wat is de relatie tussen evenwicht en gewoonte?
+  - id: hi_th_conversation_overhear
+    name: Gesprek Meeluisteren
+    prompt: |
+      Twee mensen praten. Je hoort fragmenten. Het gesprek is privé maar
+      openbaar. Observeer de grens. Wat leren vreemden over elkaar onderweg?
+    follow_ups:
+      - Hoe vormt meeluisteren de rit?
+      - Wat zou de coupé zijn zonder gesprekken?
+      - Wat is de relatie tussen meeluisteren en intimiteit?
+  - id: hi_th_ticket_inspection
+    name: Kaartje Inspectie
+    prompt: |
+      De inspecteur beweegt door de coupé. "Kaartjes, alstublieft." De inspectie
+      is willekeurig of systematisch. Observeer de reactie. Wie is klaar? Wie
+      stuntelt? De inspectie is een test van legitimiteit.
+    follow_ups:
+      - Hoe vormt de inspectie de rit?
+      - Wat zou het systeem zijn zonder dit?
+      - Wat is de relatie tussen inspectie en vertrouwen?
+  - id: hi_th_station_name_glance
+    name: Station Naam Blik
+    prompt: |
+      De naam flitst voorbij — op de muur, op het bord. Vaste reizigers
+      weten het. Nieuwkomers kijken. De blik oriënteert. Observeer wie
+      kijkt. Wat doet de naam?
+    follow_ups:
+      - Hoe vormt de naam oriëntatie?
+      - Wat zou de rit zijn zonder borden?
+      - Wat is de relatie tussen naam en plaats?
+  - id: hi_th_benchmark_regular
+    name: Vaste Reiziger Benchmarking
+    prompt: |
+      De vaste reiziger kent het ritme. Ze arriveren net op tijd. Geen wachttijd.
+      De vaste reiziger heeft het schema geïnternaliseerd. Observeer het
+      vertrouwen. Wat weet de vaste reiziger?
+    follow_ups:
+      - Hoe vormt de vaste reiziger het knooppunt?
+      - Wat zou het knooppunt zijn zonder vaste reizigers?
+      - Wat is de relatie tussen vaste reiziger en vloeibaarheid?
+  - id: hi_th_lost_look
+    name: Verloren Blik
+    prompt: |
+      Iemand kijkt verloren — hoofd draaien, pas onzeker. De blik is zichtbaar.
+      Observeer de lichaamstaal. Wie helpt? Wie negeert? De verloren blik
+      is een signaal. Wat nodigt het uit?
+    follow_ups:
+      - Hoe vormt de verloren blik het knooppunt?
+      - Wat zou het knooppunt zijn zonder de verdwaalden?
+      - Wat is de relatie tussen verloren en hulp?
+  - id: hi_th_earbud_insert
+    name: Oordopjes Invoegen
+    prompt: |
+      Oordopjes gaan erin. De wereld trekt zich terug. Het invoegen is
+      een grens. De drager is aanwezig maar afwezig. Observeer de
+      verschuiving. Wat creëren de oordopjes?
+    follow_ups:
+      - Hoe vormen oordopjes de rit?
+      - Wat zou de coupé zijn zonder deze?
+      - Wat is de relatie tussen oordopje en privacy?
+  - id: hi_th_rush_hour_pack
+    name: Spitsuur Pakket
+    prompt: |
+      De coupé is vol. Lichamen raken elkaar. Het pakket is onvermijdelijk.
+      Observeer de tolerantie. Hoe beheren mensen de nabijheid? Het pakket
+      heeft zijn eigen etiquette.
+    follow_ups:
+      - Hoe vormt het pakket de rit?
+      - Wat zou spitsuur zijn zonder proppen?
+      - Wat is de relatie tussen pakket en uithoudingsvermogen?
+  - id: hi_th_destination_ask
+    name: Bestemming Vraag
+    prompt: |
+      "Is dit de trein naar X?" Vraagt een vreemdeling. Een ander antwoordt.
+      De vraag creëert een moment van verbinding. Observeer de uitwisseling.
+      Wat vereist de vraag?
+    follow_ups:
+      - Hoe vormt de vraag de coupé?
+      - Wat zou de rit zijn zonder zulke vragen?
+      - Wat is de relatie tussen vraag en vertrouwen?
+  - id: hi_th_platform_choice
+    name: Perron Keuze
+    prompt: |
+      Twee perrons, dezelfde bestemming. Een is dichterbij; een is minder
+      druk. De keuze is strategie. Observeer wie waarheen gaat. Wat bepaalt
+      de keuze?
+    follow_ups:
+      - Hoe vormt de keuze de menigte?
+      - Wat zou het knooppunt zijn met één perron?
+      - Wat is de relatie tussen keuze en uitkomst?
+  - id: hi_th_wipe_down_seat
+    name: Stoel Afvegen
+    prompt: |
+      Iemand veegt de stoel af voordat hij gaat zitten. Het afvegen is
+      voorzorg. Observeer het gebaar. Wat veronderstelt het afvegen over
+      de ruimte? Het afvegen is een kleine grensactie.
+    follow_ups:
+      - Hoe vormt het afvegen de zit?
+      - Wat zou de coupé zijn zonder zulke gebaren?
+      - Wat is de relatie tussen afvegen en netheid?
+  - id: hi_th_standing_offer
+    name: Staande Aanbieding
+    prompt: |
+      "Wilt u zitten?" Het aanbod wordt aan een vreemdeling gedaan. Soms
+      geaccepteerd, soms geweigerd. Observeer de uitwisseling. Wat betekent
+      het aanbod?
+    follow_ups:
+      - Hoe vormt het aanbod de coupé?
+      - Wat zou de rit zijn zonder aanbiedingen?
+      - Wat is de relatie tussen aanbod en zorg?
+  - id: hi_th_exit_block
+    name: Uitgang Blokkeren
+    prompt: |
+      Iemand staat in de deuropening. Anderen moeten passeren. Het blokkeren
+      is onbewust of bewust. Observeer de onderhandeling. Hoe komen mensen
+      voorbij? Het blokkeren is een klein conflict.
+    follow_ups:
+      - Hoe vormt het blokkeren de uitgang?
+      - Wat zou de coupé zijn zonder blokkades?
+      - Wat is de relatie tussen blokkeren en bewustzijn?
+  - id: hi_th_train_rumble
+    name: Trein Gebrom
+    prompt: |
+      De trein rommelt — rails, wielen, beweging. Het gebrom is constant. Het
+      wordt achtergrond. Observeer wanneer je het opmerkt. Wat doet het
+      gebrom met het lichaam?
+    follow_ups:
+      - Hoe vormt het gebrom de rit?
+      - Wat zou de coupé zijn in stilte?
+      - Wat is de relatie tussen gebrom en ritme?
+  - id: hi_th_connection_run
+    name: Aansluiting Sprint
+    prompt: |
+      Iemand rent — te laat voor een aansluiting. De sprint snijdt door de
+      menigte. Mensen verspreiden zich. Observeer de verstoring. Wat
+      onttrekt de sprint aan de stroom?
+    follow_ups:
+      - Hoe vormt de sprint het knooppunt?
+      - Wat zou het knooppunt zijn zonder sprinters?
+      - Wat is de relatie tussen sprint en urgentie?
+  - id: hi_th_seat_saving
+    name: Stoel Reserveren
+    prompt: |
+      Een tas op de stoel. "Hier zit iemand." De reservering houdt de stoel
+      vrij voor een afwezige metgezel. Observeer de claim. Hoe lang kan
+      een stoel gereserveerd blijven? Wat zijn de grenzen?
+    follow_ups:
+      - Hoe vormt reserveren de coupé?
+      - Wat zou de rit zijn zonder reserveringen?
+      - Wat is de relatie tussen reserveren en recht?
+  - id: hi_th_arrival_relief
+    name: Aankomst Opluchting
+    prompt: |
+      De trein bereikt de eindbestemming. De opluchting is zichtbaar. Schouders
+      laten zakken. Mensen verzamelen hun spullen. De reis is voorbij.
+      Observeer de verschuiving. Wat biedt aankomst?
+    follow_ups:
+      - Hoe vormt aankomst de uitgang?
+      - Wat zou de reis zijn zonder aankomst?
+      - Wat is de relatie tussen opluchting en voltooiing?
+  - id: hi_th_wayfinding_sign
+    name: Bewegwijzering Bord
+    prompt: |
+      Pijlen wijzen. "Naar treinen." "Naar uitgangen." De borden leiden de
+      stroom. Observeer wie ze volgt. Wie negeert? Het bord is een suggestie.
+      Wat veronderstelt het?
+    follow_ups:
+      - Hoe vormen borden de stroom?
+      - Wat zou het knooppunt zijn zonder deze?
+      - Wat is de relatie tussen bord en vertrouwen?
+  - id: hi_th_waiting_room
+    name: Wachtruimte
+    prompt: |
+      Stoelen staan tegenover elkaar of naar het bord gericht. De wachtruimte
+      herbergt mensen tussen reizen. Observeer de opstelling. Wie zit? Wie
+      ijlt heen en weer? De wachtruimte is een pauze.
+    follow_ups:
+      - Hoe vormt de wachtruimte het wachten?
+      - Wat zou het knooppunt zijn zonder dit?
+      - Wat is de relatie tussen ruimte en duur?
+  - id: hi_th_stranger_proximity
+    name: Vreemdeling Nabijheid
+    prompt: |
+      Een vreemdeling staat dichtbij — noodzakelijk in een menigte. De nabijheid
+      is onpersoonlijk maar intiem. Observeer de tolerantie. Wat staat het
+      lichaam toe? De nabijheid is een contract.
+    follow_ups:
+      - Hoe vormt nabijheid de rit?
+      - Wat zou de coupé zijn met meer ruimte?
+      - Wat is de relatie tussen nabijheid en beschaving?
+  - id: hi_th_last_train
+    name: Laatste Trein
+    prompt: |
+      De laatste trein. De menigte is anders — later, losser. De laatste
+      trein heeft zijn eigen energie. Observeer de verschuiving. Wat doet
+      "laatste" met de menigte?
+    follow_ups:
+      - Hoe vormt de laatste trein het knooppunt?
+      - Wat zou de nacht zijn zonder deze?
+      - Wat is de relatie tussen laatste en urgentie?
+  - id: hi_th_transit_tribe
+    name: OV Stam
+    prompt: |
+      Dezelfde mensen, dezelfde lijn, dezelfde tijd. Je herkent gezichten.
+      Je spreekt nooit. De OV stam is een stille gemeenschap. Observeer de
+      herkenning. Wat biedt de stam?
+    follow_ups:
+      - Hoe vormt de stam de forensentocht?
+      - Wat zou de rit zijn zonder bekende gezichten?
+      - Wat is de relatie tussen stam en ergens bij horen?

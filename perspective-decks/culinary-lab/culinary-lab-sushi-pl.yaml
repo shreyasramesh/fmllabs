@@ -1,0 +1,478 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Laboratorium Kulinarne — Sushi (Polish)
+
+id: culinary_lab_sushi
+name: Laboratorium Kulinarne — Sushi
+description: 50 kart, które odmienią sposób, w jaki doświadczasz sushi — od chemii ryżu i ryb po choreografię przy ladzie i archeologię pochodzenia każdego neta.
+domain: culinary_lab
+cards:
+  - id: sush_rice_temp
+    name: Temperatura Ryżu
+    prompt: |
+      Ryż do sushi jest ciepły — mniej więcej w temperaturze ciała. Nie zimny. Ciepło
+      przenosi ocet. Poczuj to. Co zrobiłby zimny ryż? Jak temperatura kształtuje
+      kęs?
+    follow_ups:
+      - Co poświęciłaby temperatura pokojowa?
+      - Jak ciepło przenosi smak?
+      - Jaka jest zależność między temperaturą a teksturą?
+  - id: sush_shari_balance
+    name: Równowaga Shari
+    prompt: |
+      Shari — ryż — to połowa sushi. Równowaga octu, soli, cukru jest
+      precyzyjna. Posmakuj sam ryż. Co wnosi? Co oznaczałby mdły
+      ryż?
+    follow_ups:
+      - Jak ryż kształtuje neta?
+      - Co zrobiłoby zbyt dużo octu?
+      - Jaka jest zależność między shari a netą?
+  - id: sush_counter_ritual
+    name: Rytuał przy Ladzie
+    prompt: |
+      Omakase przy ladzie — stajesz naprzeciwko szefa kuchni. Sushi dociera kawałek
+      po kawałku. Lada to scena. Zauważ choreografię. Jaki jest rytm? Kto nadaje tempo?
+    follow_ups:
+      - Co zmieniłby stolik?
+      - Jak lada kształtuje posiłek?
+      - Jaka jest zależność między szefem kuchni a gościem?
+  - id: sush_net_origin
+    name: Pochodzenie Nety
+    prompt: |
+      Każdy neta — dodatek — pochodził skądś. Z Toyosu. Tsukiji. Z łodzi. Z
+      gospodarstwa. Zapytaj. Prześledź rybę. Jaką podróż odbyła? Co oznaczałoby
+      zamrożenie z magazynu?
+    follow_ups:
+      - Jak pochodzenie kształtuje kawałek?
+      - Co zrobiłoby inne źródło?
+      - Jaka jest zależność między miejscem a jakością?
+  - id: sush_wasabi_hidden
+    name: Ukryty Wasabi
+    prompt: |
+      Prawdziwy wasabi — starty korzeń — jest rzadkością. Większość to chrzan i
+      barwnik. Ale gdy jest prawdziwy, jest inny. Ostry, zielony, ulotny. Zauważ ostrość.
+      Co dodałaby podróbka? Ujęła?
+    follow_ups:
+      - Jak wasabi kształtuje kęs?
+      - Co oznaczałoby brak wasabi?
+      - Jaka jest zależność między ostrością a rybą?
+  - id: sush_finger_over_chopstick
+    name: Palec zamiast Pałeczek
+    prompt: |
+      Nigiri tradycyjnie je się palcami — nie pałeczkami. Palce czują temperaturę,
+      teksturę. Spróbuj. Co palec dodaje, czego nie potrafią pałeczki?
+    follow_ups:
+      - Jak dłoń kształtuje doświadczenie?
+      - Co zrobiłyby pałeczki?
+      - Jaka jest zależność między dotykiem a smakiem?
+  - id: sush_piece_by_piece
+    name: Kawałek po Kawałku
+    prompt: |
+      Sushi dociera po jednym kawałku — lub dwa. Tempo jest celowe. Jesz; czekasz.
+      Rozważ rytm. Co poświęciłaby tacka dziesięciu kawałków naraz?
+    follow_ups:
+      - Jak tempo kształtuje posiłek?
+      - Co zrobiłaby szybkość?
+      - Jaka jest zależność między kawałkiem a uwagą?
+  - id: sush_gari_palate
+    name: Gari dla Podniebienia
+    prompt: |
+      Gari — marynowany imbir — oczyszcza między kawałkami. To nie ozdoba; to
+      reset. Zauważ, kiedy go jesz. Co zrobiłyby kolejne kawałki bez
+      gari dla podniebienia?
+    follow_ups:
+      - Jak gari kształtuje progresję?
+      - Co oznaczałoby brak gari?
+      - Jaka jest zależność między resetem a smakiem?
+  - id: sush_soy_minimal
+    name: Minimalna Soya
+    prompt: |
+      Soya — lekki dip, rybą w dół. Nie ryżem. Ryż wchłonąłby zbyt dużo.
+      Szef kuchni mógł już posmarować soją. Zauważ. Co zrobiłoby zalanie?
+    follow_ups:
+      - Jak soya kształtuje kawałek?
+      - Co oznaczałoby brak soi?
+      - Jaka jest zależność między dipem a równowagą?
+  - id: sush_knife_matters
+    name: Nóż Ma Znaczenie
+    prompt: |
+      Nóż do sushi — jednostronny, ostry. Cięcie wpływa na teksturę. Z włóknami
+      lub pod włos. Kąt. Rozważ, co robi ostrze. Co poświęciłby tępy nóż?
+    follow_ups:
+      - Jak cięcie kształtuje rybę?
+      - Co zrobiłby inny kąt?
+      - Jaka jest zależność między ostrzem a odczuciem w ustach?
+  - id: sush_otoro_fat
+    name: Tłuszcz Otoro
+    prompt: |
+      Otoro — najtłustszy tuńczyk — rozpływa się. Tłuszcz jest kluczem. Rozważ
+      marmurkowatość. Co zrobiłaby chuda akami? Jak tłuszcz kształtuje doświadczenie?
+    follow_ups:
+      - Co zrobiłby kawałek bez tłuszczu?
+      - Jak marmurkowatość tworzy luksus?
+      - Jaka jest zależność między tłuszczem a rozpływaniem?
+  - id: sush_unagi_glaze
+    name: Glazura Unagi
+    prompt: |
+      Unagi — węgorz — jest smarowany słodkim sosem, czasem ponownie grillowany.
+      Glazura to lakier. Rozważ połysk. Co oznaczałby niesmarowany węgorz?
+    follow_ups:
+      - Jak glazura kształtuje kawałek?
+      - Jaka jest zależność między słodkim a węgorzem?
+      - Po co glazura?
+  - id: sush_nori crisp
+    name: Chrupkość Nori
+    prompt: |
+      Nori do maki — tostowane, chrupiące czy miękkie? Różni szefowie kuchni wybierają
+      różnie. Nori wpływa na kęs. Rozważ teksturę. Co zrobiłoby rozmoknięte nori?
+    follow_ups:
+      - Jak nori kształtuje rolkę?
+      - Co oznaczałoby inne tostowanie?
+      - Jaka jest zależność między chrupkością a świeżością?
+  - id: sush_silence_counter
+    name: Cisza przy Ladzie
+    prompt: |
+      Niektóre lady sushi są ciche — koncentracja, szacunek. Inne są żywe. Zauważ
+      krajobraz dźwiękowy. Co dodaje cisza? Co dodaje rozmowa?
+    follow_ups:
+      - Jak dźwięk kształtuje posiłek?
+      - Co zrobiłaby głośna muzyka?
+      - Jaka jest zależność między ciszą a skupieniem?
+  - id: sush_tamago_sweet
+    name: Słodkość Tamago
+    prompt: |
+      Tamago — jajeczny krem — często kończy posiłek. Jest słodki, warstwowy.
+      Umiejętności szefa kuchni są widoczne. Rozważ zakończenie. Co oznaczałoby surowa ryba
+      jako ostatni kawałek?
+    follow_ups:
+      - Jak tamago kształtuje zakończenie?
+      - Jaka jest zależność między słodkim a zakończeniem?
+      - Dlaczego jajko na końcu?
+  - id: sush_tuna_spectrum
+    name: Spektrum Tuńczyka
+    prompt: |
+      Akami, chutoro, otoro — od chudego do tłustego. Spektrum jest celowe. Posmakuj
+      je w tej kolejności, jeśli możesz. Jak działa progresja? Co
+      oferuje każdy z nich?
+    follow_ups:
+      - Jak tłuszcz kształtuje spektrum?
+      - Co oznaczałaby jedna klasa sama w sobie?
+      - Jaka jest zależność między chudym a bogatym?
+  - id: sush_ume_shiso
+    name: Ume Shiso
+    prompt: |
+      Ume — marynowana śliwka — i shiso w niektórych rolkach. Kwaśne, ziołowe.
+      Przeciwdziałają tłustości. Zauważ, kiedy się pojawiają. Co oznaczałaby rolka bez nich?
+    follow_ups:
+      - Jak ume kształtuje kęs?
+      - Jaka jest zależność między kwaśnym a rybą?
+      - Po co shiso?
+  - id: sush_gunkan_hold
+    name: Gunkan Trzyma
+    prompt: |
+      Gunkan — pancernik — trzyma luźne dodatki. Ikra, jeżowiec. Kołnierz z nori
+      je zawiera. Rozważ formę. Co zrobiłby płaski kawałek?
+    follow_ups:
+      - Jak forma kształtuje dodatek?
+      - Co oznaczałoby inne naczynie?
+      - Jaka jest zależność między trzymaniem a rozsypywaniem?
+  - id: sush_uni_risk
+    name: Ryzyko Uni
+    prompt: |
+      Uni — jeżowiec — jest polaryzujący. Słodki, słony, tekstura. Może być doskonały
+      lub nie. Rozważ ryzyko. Co oznaczałby bezpieczny łosoś? Co dodaje
+      ryzyko?
+    follow_ups:
+      - Jak uni kształtuje doświadczenie?
+      - Co straciłbyś bez ryzyka?
+      - Jaka jest zależność między polaryznością a zapamiętywaniem?
+  - id: sush_chef_choice
+    name: Wybór Szefa Kuchni
+    prompt: |
+      Omakase — wybór szefa kuchni. Oddajesz kontrolę. Szef kuchni czyta dzień,
+      ryby, ciebie. Rozważ zaufanie. Co zmieniłoby wybieranie samemu?
+    follow_ups:
+      - Jak poddanie się kształtuje posiłek?
+      - Co oznaczałoby zamawianie z karty?
+      - Jaka jest zależność między zaufaniem a doświadczeniem?
+  - id: sush_sake_pair
+    name: Parowanie z Sake
+    prompt: |
+      Sake do sushi — zimne, ciepłe, starzone. Parowanie jest przemyślane. Zauważ,
+      kiedy pijesz. Czy oczyszcza? Wzmacnia? Rozważ rolę napoju.
+    follow_ups:
+      - Jak sake kształtuje kawałek?
+      - Co zrobiłoby wino?
+      - Jaka jest zależność między ryżem a winem ryżowym?
+  - id: sush_ikura_pop
+    name: Strzał Ikry
+    prompt: |
+      Ikura — ikra łososia — wybucha. Strzał to tekstura i słoność. Rozważ
+      wrażenie. Co zrobiłaby gotowana ikra? Jak strzał kształtuje kęs?
+    follow_ups:
+      - Co zrobiłby kawałek bez strzału?
+      - Jak tekstura tworzy przyjemność?
+      - Jaka jest zależność między strzałem a słonością?
+  - id: sush_hirame_chew
+    name: Żucie Hirame
+    prompt: |
+      Hirame — flądra — ma inne żucie niż tuńczyk. Jest chuda, delikatna.
+      Zauważ teksturę. Co zrobiłaby tłusta ryba? Jak zmienia się żucie?
+    follow_ups:
+      - Jak tekstura kształtuje kawałek?
+      - Jaka jest zależność między chudym a delikatnym?
+      - Dlaczego zamawiać hirame?
+  - id: sush_amaebi_head
+    name: Głowa Amaebi
+    prompt: |
+      Amaebi — słodka krewetka — czasem podawana z usmażoną głową. Głowa jest
+      chrupiąca, umami. Rozważ wykorzystanie całości. Co poświęciłaby krewetka bez głowy?
+    follow_ups:
+      - Jak głowa kształtuje danie?
+      - Jaka jest zależność między całością a szacunkiem?
+      - Po co smażyć głowę?
+  - id: sush_mirin_gloss
+    name: Połysk Mirinu
+    prompt: |
+      Niektóre kawałki są smarowane nikiri — soją, mirinem, sake. Połysk to
+      wykończenie. Szef kuchni już je posmarował. Rozważ, czy dodać więcej soi.
+      Co zrobiłoby nadmierne zanurzenie?
+    follow_ups:
+      - Jak pędzel kształtuje kawałek?
+      - Co oznaczałoby brak pędzla?
+      - Jaka jest zależność między ręką szefa kuchni a twoją?
+  - id: sush_anago_soft
+    name: Miękkość Anago
+    prompt: |
+      Anago — węgorz morski — jest bardziej miękki niż unagi. Różne gatunki, różne
+      przygotowanie. Zauważ teksturę. Co zrobiłaby jędrność unagi?
+    follow_ups:
+      - Jak miękkość kształtuje kawałek?
+      - Jaka jest zależność między anago a unagi?
+      - Po co oba węgorze?
+  - id: sush_saba_silver
+    name: Srebro Saba
+    prompt: |
+      Saba — makrela — jest często marynowana. Srebrna skóra, tłusty mięso. Jest
+      intensywna. Rozważ konserwację. Co oznaczałaby surowa makrela?
+    follow_ups:
+      - Jak marynowanie kształtuje rybę?
+      - Jaka jest zależność między tłuszczem a marynowaniem?
+      - Dlaczego marynować saba?
+  - id: sush_ginger_between
+    name: Imbir Pomiędzy
+    prompt: |
+      Gari między kawałkami — reset. Ale kiedy? Po każdym? Po kilku?
+      Rytm jest twój. Zauważ swój wzorzec. Co zrobiłoby brak resetu?
+    follow_ups:
+      - Jak czas kształtuje gari?
+      - Jaka jest zależność między kawałkiem a kawałkiem?
+      - Kiedy potrzebujesz resetu?
+  - id: sush_maki_cut
+    name: Cięcie Maki
+    prompt: |
+      Maki — rolki — są krojone na kawałki. Sześć lub osiem. Cięcie wpływa na
+      przekrój. Rozważ spiralę. Co zrobiłoby inne cięcie?
+    follow_ups:
+      - Jak cięcie kształtuje kęs?
+      - Co oznaczałoby mniej kawałków?
+      - Jaka jest zależność między plastrem a całością?
+  - id: sush_tobiko_crunch
+    name: Chrupkość Tobiko
+    prompt: |
+      Tobiko — ikra latającej ryby — dodaje chrupkości i koloru. To dodatek, ozdoba.
+      Zauważ, kiedy się pojawia. Co oznaczałaby rolka bez niej?
+    follow_ups:
+      - Jak tobiko kształtuje kęs?
+      - Jaka jest zależność między chrupkością a kolorem?
+      - Po co latająca ryba?
+  - id: sush_sashimi_contrast
+    name: Kontrast Sashimi
+    prompt: |
+      Sashimi — bez ryżu — pozwala rybie stać samodzielnie. Czystość jest inna.
+      Porównaj sashimi z nigiri. Co dodaje ryż? Co ujawnia jego
+      brak?
+    follow_ups:
+      - Jak ryż kształtuje nigiri?
+      - Co oznaczałoby samo sashimi?
+      - Jaka jest zależność między rybą a ryżem?
+  - id: sush_tea_rinse
+    name: Płukanie Herbatą
+    prompt: |
+      Zielona herbata przy ladzie sushi — uzupełniana, dzielona. Oczyszcza. Herbata jest
+      częścią rytmu. Rozważ jej rolę. Co zrobiłaby woda? Co oznaczałoby brak napoju?
+    follow_ups:
+      - Jak herbata kształtuje posiłek?
+      - Jaka jest zależność między herbatą a resetem?
+      - Dlaczego zielona herbata?
+  - id: sush_bengara_tuna
+    name: Tuńczyk Bengara
+    prompt: |
+      Bengara — chudy tuńczyk, często z grzbietu — jest ciemniejszy. Smak jest
+      inny niż akami. Rozważ cięcie. Z jakiej części ryby? Co robi
+      lokalizacja?
+    follow_ups:
+      - Jak cięcie kształtuje smak?
+      - Jaka jest zależność między lokalizacją a smakiem?
+      - Dlaczego to cięcie?
+  - id: sush_kohada_cure
+    name: Marynata Kohada
+    prompt: |
+      Kohada — sardynka japońska — jest marynowana, czasem zakwaszana octem. To
+      próba szefa kuchni. Srebrna skóra, równowaga. Rozważ umiejętności. Co zrobiłoby
+      niemarynowane?
+    follow_ups:
+      - Jak marynata kształtuje rybę?
+      - Jaka jest zależność między octem a srebrną skórą?
+      - Dlaczego to próba?
+  - id: sush_engawa_fin
+    name: Płetwa Engawa
+    prompt: |
+      Engawa — mięsień płetwy płastugi — jest ceniony. Ma wyraźną teksturę.
+      Rozważ część. Co zrobiłaby zwykła hirame? Czym różni się płetwa?
+    follow_ups:
+      - Jak cięcie kształtuje kawałek?
+      - Jaka jest zależność między płetwą a mięśniem?
+      - Dlaczego jest ceniony?
+  - id: sush_first_piece
+    name: Pierwszy Kawałek
+    prompt: |
+      Pierwszy kawałek nadaje ton. Często coś łagodnego — może hirame lub
+      tai. Szef kuchni kalibruje. Rozważ otwarcie. Co oznaczałoby otoro
+      na początku?
+    follow_ups:
+      - Jak pierwsze kształtuje posiłek?
+      - Jaka jest zależność między pierwszym a progresją?
+      - Dlaczego łagodne na początku?
+  - id: sush_kampachi_fat
+    name: Tłuszcz Kampachi
+    prompt: |
+      Kampachi — młody żółty okoń — ma subtelny tłuszcz. Jest między chudym
+      a bogatym. Zauważ środek. Co zrobiłoby buri? Co zrobiłaby
+      chudsza ryba?
+    follow_ups:
+      - Jak tłuszcz kształtuje kawałek?
+      - Jaka jest zależność między wiekiem a tłuszczem?
+      - Dlaczego kampachi?
+  - id: sush_nodoguro_char
+    name: Przypieczenie Nodoguro
+    prompt: |
+      Nodoguro — okoń czarnogardły — jest często lekko przypiekany. Skóra, tłuszcz.
+      Przypieczenie dodaje. Rozważ zastosowanie ciepła. Co zrobiłoby surowe?
+    follow_ups:
+      - Jak przypieczenie kształtuje rybę?
+      - Jaka jest zależność między przypieczeniem a tłuszczem?
+      - Dlaczego przypiekać tego?
+  - id: sush_choji_plate
+    name: Talerz Choji
+    prompt: |
+      Talerz — lub drewno, lub kamień — trzyma kawałek. Prezentacja
+      jest minimalistyczna. Rozważ naczynie. Co zrobiłby zatłoczony talerz? Co
+      umożliwia minimalizm?
+    follow_ups:
+      - Jak talerz kształtuje kawałek?
+      - Jaka jest zależność między naczyniem a skupieniem?
+      - Dlaczego minimalizm?
+  - id: sush_tea_cup
+    name: Filiżanka Herbaty
+    prompt: |
+      Filiżanka herbaty przy ladzie — bez ucha, czasem szorstka. Trzymasz ją
+      oburącz. Rozważ naczynie. Co zrobiłby kubek? Co dodaje filiżanka?
+    follow_ups:
+      - Jak filiżanka kształtuje łyk?
+      - Jaka jest zależność między naczyniem a rytuałem?
+      - Dlaczego bez ucha?
+  - id: sush_silver_slide
+    name: Sreślizg
+    prompt: |
+      Kawałek powinien zsunąć się z talerza — lub dać się podnieść czysto. Ryż się trzyma,
+      ale puszcza. Rozważ konstrukcję. Co oznaczałby ryż rozpadający się?
+    follow_ups:
+      - Jak konstrukcja kształtuje jedzenie?
+      - Co zrobiłby rozgotowany ryż?
+      - Jaka jest zależność między integralnością a kęsem?
+  - id: sush_kinmedai_skin
+    name: Skóra Kinmedai
+    prompt: |
+      Kinmedai — złocisty dorad — często ze skórą, lekko podpalany. Skóra dodaje
+      tekstury, tłuszczu. Rozważ podpalanie. Co zrobiłaby surowa skóra?
+    follow_ups:
+      - Jak skóra kształtuje kawałek?
+      - Jaka jest zależność między podpalaniem a tłuszczem?
+      - Dlaczego podpalanie?
+  - id: sush_botan_ebi
+    name: Botan Ebi
+    prompt: |
+      Botan ebi — krewetka tygrysia — jest słodka, często surowa. Ogon czasem przychodzi
+      usmażony. Rozważ całość. Co zrobiłaby gotowana krewetka?
+    follow_ups:
+      - Jak przygotowanie kształtuje kawałek?
+      - Jaka jest zależność między surowym a słodkim?
+      - Dlaczego krewetka tygrysia?
+  - id: sush_namida_heat
+    name: Ostrość Namida
+    prompt: |
+      Prawdziwy wasabi powoduje łzę — namida. Ostrość wznosi się, mija. Jest
+      inna niż chili. Rozważ wrażenie. Co zrobiłby inaczej chrzan?
+    follow_ups:
+      - Jak ostrość kształtuje kęs?
+      - Jaka jest zależność między wasabi a łzą?
+      - Dlaczego sprawia, że płaczesz?
+  - id: sush_omakase_end
+    name: Koniec Omakase
+    prompt: |
+      Posiłek się kończy — tamago, może miso, może owoc. Łuk jest kompletny.
+      Rozważ zakończenie. Co zrobiłby kolejny kawałek? Kiedy wiesz, że jesteś
+      skończony?
+    follow_ups:
+      - Jak zakończenie kształtuje pamięć?
+      - Jaka jest zależność między końcem a satysfakcją?
+      - Dlaczego kończyć jajkiem lub zupą?
+  - id: sush_counter_wait
+    name: Czekanie przy Ladzie
+    prompt: |
+      Między kawałkami czekasz. Szef kuchni przygotowuje. Pauza jest częścią
+      rytmu. Zauważ oczekiwanie. Co poświęciłaby natychmiastowa obsługa?
+    follow_ups:
+      - Jak czekanie kształtuje kawałek?
+      - Jaka jest zależność między pauzą a uwagą?
+      - Dlaczego nie podawać z góry?
+  - id: sush_tsukiji_legacy
+    name: Dziedzictwo Tsukiji
+    prompt: |
+      Tsukiji zniknęło; Toyosu zajęło jego miejsce. Ale ryby nadal przepływają przez
+      Tokio. Rozważ rynek. Co oznaczałoby sushi bez aukcji?
+      Bez dystrybucji?
+    follow_ups:
+      - Jak rynek kształtuje ryby?
+      - Jaka jest zależność między aukcją a jakością?
+      - Co oznaczało Tsukiji?
+  - id: sush_edomae_spirit
+    name: Duch Edomae
+    prompt: |
+      Edomae — styl z Edo — sushi z tradycji Tokio. Konserwowane, marynowane, starzone,
+      aby działać bez chłodzenia. Rozważ historię. Co oznaczałoby
+      zawsze świeże?
+    follow_ups:
+      - Jak historia kształtuje technikę?
+      - Jaka jest zależność między konserwacją a smakiem?
+      - Dlaczego Edomae?
+  - id: sush_gari_reset
+    name: Reset Gari
+    prompt: |
+      Gari — marynowany imbir — oczyszcza między kawałkami. Jasnoróżowe plasterki resetują
+      podniebienie. Zauważ, kiedy po niego sięgasz. Co oznaczałby posiłek bez
+      resetu? Jak imbir kształtuje progresję?
+    follow_ups:
+      - Co oznaczałoby brak gari?
+      - Jak reset kształtuje kolejny kawałek?
+      - Jaka jest zależność między pauzą a ciągłością?
+  - id: sush_otoro_melt
+    name: Rozpływanie Otoro
+    prompt: |
+      Otoro — najtłustszy tuńczyk — prawie rozpływa się na języku. Tłuszcz jest
+      kluczem. Rozważ teksturę. Co zrobiłby chudy tuńczyk? Jak
+      rozpływanie oznacza szczyt posiłku?
+    follow_ups:
+      - Co zrobiłaby akami inaczej?
+      - Jak tłuszcz kształtuje doświadczenie?
+      - Jaka jest zależność między rozpływaniem a luksusem?

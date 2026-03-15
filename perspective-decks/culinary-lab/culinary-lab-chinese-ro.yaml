@@ -1,0 +1,503 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Laborator Culinar — Chinezesc (Romanian)
+
+id: culinary_lab_chinese
+name: Laborator Culinar — Chinezesc
+description: 50 de cărți pentru a schimba modul în care experimentați mâncarea chinezească — de la chimia wok hei și arheologia sosului de soia, la coregrafia mesei rotunde și narațiunea banchetului.
+domain: culinary_lab
+cards:
+  - id: chn_wok_hei
+    name: Wok Hei
+    prompt: |
+      Wok hei — suflarea wok-ului — este fumul evaziv care provine din
+      căldură și viteză extreme. Nu este chiar afumătură; este transformare.
+      Îl poți surprinde? Ce ar fi un stir-fry fără el?
+    follow_ups:
+      - Cum modelează hei-ul preparatul?
+      - Ce îl creează? Ce îl distruge?
+      - Care este relația dintre căldură și grabă?
+  - id: chn_round_table
+    name: Masă Rotundă
+    prompt: |
+      Masa festivă chinezească este rotundă — cu platanul rotativ în centru.
+      Mâncarea se învârte. Toată lumea întinde mâna. Masa este coregrafie.
+      Cine rotește? Cine așteaptă? Care sunt regulile nescrise?
+    follow_ups:
+      - Ce ar însemna o masă dreptunghiulară?
+      - Cum modelează forma rotundă masa?
+      - Care este relația dintre centru și margine?
+  - id: chn_soy_archeology
+    name: Arheologia Sosului de Soia
+    prompt: |
+      Sos de soia — fermentat, maturat, regional. Deschis, închis, cu ciuperci,
+      dublu închis. A venit de undeva. A necesitat timp. Urmărește sticla.
+      Ce călătorie a făcut? Ce ar sacrifica sosul industrial?
+    follow_ups:
+      - Cum modelează originea turnarea?
+      - Ce ar fi preparatul fără sos de soia?
+      - Care este relația dintre ferment și umami?
+  - id: chn_chopstick_grip
+    name: Prinderea Bețișoarelor
+    prompt: |
+      Bețișoarele extind mâna. Orez, tăiței alunecoși, găluște — fiecare
+      necesită o tehnică diferită. Observă-ți prinderea. Ce necesită ustensila?
+      Ce permite?
+    follow_ups:
+      - Ce ar schimba o furculiță?
+      - Cum modelează bețișorul mușcătura?
+      - Care este relația dintre unealtă și ritm?
+  - id: chn_dumpling_seam
+    name: Marginea Găluștei
+    prompt: |
+      Pliurile găluștei — îndoitura, sigiliul. Jiaozi, shumai, xiaolongbao —
+      fiecare are forma sa. Marginea ține sau eliberează. Studiază una. Ce ar
+      însemna o spargere? Ce protejează pliul?
+    follow_ups:
+      - Cum modelează pliul umplutura?
+      - Ce ar pierde o gălușcă deschisă?
+      - Care este relația dintre sigiliu și supă?
+  - id: chn_tea_pour
+    name: Turnarea Ceaiului
+    prompt: |
+      Ceai chinezesc — turnat, reumplut, împărțit. Ceainicul circulă. Căniile
+      goale sunt umplute înainte de a fi cerute. Turnarea este serviciu și grijă.
+      Observă ritmul. Ce ar fi masa fără ceai?
+    follow_ups:
+      - Cum modelează ceaiul ritmul?
+      - Ce comunică turnarea?
+      - Care este relația dintre cană și masă?
+  - id: chn_bone_plate
+    name: Farfuria pentru Oase
+    prompt: |
+      O farfurie mică pentru oase — cochilii aruncate, oase de pui, coji de
+      creveți. Farfuria adună ceea ce nu este comestibil. Este parte din aranjament.
+      Ce permite farfuria pentru oase? Ce s-ar întâmpla fără ea?
+    follow_ups:
+      - Cum modelează farfuria masa?
+      - Cum ar arăta masa fără ea?
+      - Care este relația dintre aruncare și demnitate?
+  - id: chn_soup_spoon
+    name: Lingura de Supă
+    prompt: |
+      Lingura chinezească de supă — lată, rasă, ceramică. Conține supă și
+      elemente solide. Lingura se potrivește diferit gurii. Observă sorbitura.
+      Ce permite forma?
+    follow_ups:
+      - Ce ar schimba o lingură rotundă?
+      - Cum modelează lingura sorbitura?
+      - Care este relația dintre formă și funcție?
+  - id: chn_steam_basket
+    name: Coș de Aburi
+    prompt: |
+      Dim sum-ul ajunge în coșuri de bambus — suprapuse, stratificate. Aburul
+      se ridică. Coșul păstrează forma. Consideră bambusul. Ce ar face metalul
+      diferit? Ce adaugă bambusul?
+    follow_ups:
+      - Cum modelează coșul gălușca?
+      - Ce ar pierde o farfurie?
+      - Care este relația dintre bambus și abur?
+  - id: chn_maillard_wok
+    name: Wok-ul Maillard
+    prompt: |
+      Wok-ul atinge temperaturi pe care aragazurile casnice nu le pot atinge.
+      Rumeneala este instantanee. Proteinele se rumenesc în secunde. Consideră
+      chimia. Ce ar sacrifica o căldură mai mică? Ce cere wok-ul?
+    follow_ups:
+      - Cum modelează căldura aroma?
+      - Ce ar face electricul diferit?
+      - Care este relația dintre flacără și crustă?
+  - id: chn_glutinous_texture
+    name: Textura Glutinoasă
+    prompt: |
+      Orezul glutinos — lipicios, masticabil — are o chimie diferită. Este
+      folosit pentru zongzi, lo mai gai, deserturi. Observă textura. Cum diferă
+      de orezul cu bob lung? Ce permite lipiciunea?
+    follow_ups:
+      - Ce ar face orezul obișnuit?
+      - Cum modelează textura preparatul?
+      - Care este relația dintre lipiciune și împachetare?
+  - id: chn_century_egg
+    name: Ou Century
+    prompt: |
+      Ou century — conservat, transformat. Gălbenușul este întunecat, albușul
+      translucid. Chimia este antică. Consideră conservarea. Ce face timpul?
+      Ce ar însemna prospețimea?
+    follow_ups:
+      - Cum modelează conservarea aroma?
+      - Cum ar fi oul proaspăt?
+      - Care este relația dintre timp și transformare?
+  - id: chn_oyster_sauce
+    name: Sos de Străidi
+    prompt: |
+      Sos de stridii — umami, gros, cantonez. Este reducere și extracție.
+      Strida își dă esența. Urmărește aroma. Ce ar fi stir-fry-ul fără el?
+    follow_ups:
+      - Cum modelează sosul preparatul?
+      - Care este relația dintre stridie și legumă?
+      - Ce ar face sosul de soia în loc?
+  - id: chn_ordering_ritual
+    name: Ritualul de Comandare
+    prompt: |
+      Comandarea la un restaurant chinezesc — gazda alege, sau masa negociază.
+      Echilibru: carne, legumă, supă, orez. Comanda este o compoziție. Observă
+      cine decide. Care sunt regulile?
+    follow_ups:
+      - Cum modelează comandarea masa?
+      - Ce ar comanda fiecare pentru sine?
+      - Care este relația dintre alegere și colectivitate?
+  - id: chn_crispy_skin
+    name: Piele Crocantă
+    prompt: |
+      Pielea de rață Peking — crocantă, glazurată. Sau jumările de porc
+      cantonez. Pielea este intenționată. Căldură, aer, zahăr. Consideră arhitectura.
+      Ce ar însemna pielea moale?
+    follow_ups:
+      - Cum modelează crocantul mușcătura?
+      - Ce creează crăpătura?
+      - Care este relația dintre piele și carne?
+  - id: chn_noodle_slip
+    name: Alunecarea Tăițeiilor
+    prompt: |
+      Tăiței chinezești — de grâu, de orez, trași manual — variază în textură.
+      Unii alunecă; alții sunt masticabili. Frecarea tăițeiilor pe bețișoare.
+      Observă rezistența. Ce adaugă alunecarea?
+    follow_ups:
+      - Cum modelează textura mâncarea?
+      - Ce ar pierde un tăițel moale?
+      - Care este relația dintre alunecare și satisfacție?
+  - id: chn_bok_choy_wilt
+    name: Ofilitura de Bok Choy
+    prompt: |
+      Bok choy în wok — secunde. Se ofilește, dar își păstrează structura.
+      Verdele se înmoaie. Consideră transformarea. Ce ar însemna crud? Ce ar
+      pierde cel gătit prea mult?
+    follow_ups:
+      - Cum modelează ofilirea leguma?
+      - Care este relația dintre căldură și verde?
+      - Când este gata?
+  - id: chn_five_spice
+    name: Cinci Condimente
+    prompt: |
+      Praf de cinci condimente — anason stelat, cuișoare, scorțișoară, piper
+      Sichuan, fenicul. Este un amestec cu istorie. Fiecare condiment are o rută.
+      Urmărește unul. Ce călătorie a făcut?
+    follow_ups:
+      - Ce ar fi preparatul fără el?
+      - Cum creează amestecul identitate?
+      - Care este relația dintre condiment și conservare?
+  - id: chn_banquet_progression
+    name: Progresia Banchetului
+    prompt: |
+      Un banchet chinezesc are un arc — preparate reci mai întâi, apoi calde,
+      supă, orez, desert. Progresia este narativă. Observă ritmul. Ce ar face
+      o ordine diferită?
+    follow_ups:
+      - Cum modelează secvența masa?
+      - Care este relația dintre primul și ultimul?
+      - Când atinge povestea apogeul?
+  - id: chn_white_rice_center
+    name: Orezul Alb în Centru
+    prompt: |
+      Orezul alb — simplu, fiert la aburi — ancorează masa. Este pânza.
+      Preparatele bogate au nevoie de orez pentru a echilibra. Observă când
+      ajungi la el. Ce ar fi masa fără cel simplu?
+    follow_ups:
+      - Cum modelează orezul palatul?
+      - Ce ar face orezul prăjit?
+      - Care este relația dintre neutru și aromă?
+  - id: chn_szechuan_numb
+    name: Amorțeală Sichuan
+    prompt: |
+      Piper Sichuan — ma la — amorțitor, furnicător. Nu este ardei iute; este
+      senzație. Gura vibrează. Consideră senzația. Ce ar fi preparatul fără
+      amorțeală?
+    follow_ups:
+      - Cum modelează ma la experiența?
+      - Care este relația dintre amorțeală și iuțeală?
+      - De ce se combină?
+  - id: chn_dark_soy
+    name: Sos de Soia Închis
+    prompt: |
+      Sos de soia închis — mai gros, mai dulce, pentru culoare. Pătrunde orezul,
+      glazurează carnea. Nu este pentru sare; este pentru nuanță. Consideră vizualul.
+      Ce adaugă cel închis?
+    follow_ups:
+      - Ce ar face sosul de soia deschis?
+      - Cum modelează culoarea așteptarea?
+      - Care este relația dintre închis și caramel?
+  - id: chn_hot_plate
+    name: Placă Fierbinte
+    prompt: |
+      Plăci înăbușite — vită, calamar — ajung sfârâind. Placa de fier continuă
+      să gătească. Sunetul este teatru. Ce ar fi preparatul fără sfârâit? Cum
+      prelungește placa fierbinte gătitul?
+    follow_ups:
+      - Cum modelează sfârâitul experiența?
+      - Ce ar însemna o placă rece?
+      - Care este relația dintre sunet și căldură?
+  - id: chn_congee_soft
+    name: Congee Moale
+    prompt: |
+      Congee — terci de orez — este moale, reconfortant. Orezul fiert mult timp
+      se descompune. Textura este cedare. Consideră transformarea. Ce ar însemna
+      al dente aici?
+    follow_ups:
+      - Cum modelează moliciunea preparatul?
+      - Ce ar face congee-ul gros?
+      - Care este relația dintre apă și orez?
+  - id: chn_glass_noodle
+    name: Tăiței de Sticlă
+    prompt: |
+      Tăiței de sticlă — amidon de mazăre mung — sunt transparenți, alunecoși.
+      Absorb arome. Observă textura. Ce ar face tăițeii de grâu? De ce contează
+      transparența?
+    follow_ups:
+      - Cum modelează tăițeii preparatul?
+      - Care este relația dintre transparent și absorbant?
+      - De ce sticlă?
+  - id: chn_xlb_burst
+    name: Spargerea XLB
+    prompt: |
+      Xiaolongbao — gălușcă cu supă — conține supă în interior. Prima mușcătură
+      poate arde sau sparge. Tehnica: ciupit, sorbit, mâncat. Consideră riscul.
+      Ce ar însemna un xlb rece?
+    follow_ups:
+      - Cum modelează supa experiența?
+      - Ce ai pierde fără spargere?
+      - Care este relația dintre temperatură și pericol?
+  - id: chn_tea_smell
+    name: Mirosul Ceaiului
+    prompt: |
+      Oolong, iasomie, pu-erh — fiecare ceai are un miros diferit. Miroase
+      înainte de a sorbi. Aroma este jumătate din experiență. Ce promite mirosul?
+      Ce livrează?
+    follow_ups:
+      - Cum modelează mirosul sorbitura?
+      - Ce ar fi ceaiul fără aromă?
+      - Care este relația dintre infuzare și parfum?
+  - id: chn_crab_crack
+    name: Crăparea Crabului
+    prompt: |
+      Crab la un banchet chinezesc — se oferă clești. Crăparea este sunet și
+      efort. Carnea este extrasă. Consideră coregrafia. Ce ar însemna un crab
+      pre-crăpat?
+    follow_ups:
+      - Cum modelează crăparea masa?
+      - Ce ai pierde fără efort?
+      - Care este relația dintre efort și recompensă?
+  - id: chn_turn_table
+    name: Platan Rotativ
+    prompt: |
+      Platanul rotativ — cine îl rotește? Când? Preparatul dorit poate fi
+      pe partea opusă a mesei. Rotația este etichetă. Observă dansul. Care sunt
+      regulile? Când aștepți?
+    follow_ups:
+      - Cum modelează rotația masa?
+      - Ce ar însemna preparatele fixe?
+      - Care este relația dintre rotație și împărtășire?
+  - id: chn_ginger_slice
+    name: Felie de Ghimbir
+    prompt: |
+      Ghimbir cu fructe de mare — felii subțiri, uneori prăjite. Taie gustul
+      de pește. Ghimbirul este atât garnitură, cât și funcție. Consideră rolul său.
+      Ce ar fi peștele fără el?
+    follow_ups:
+      - Cum modelează ghimbirul palatul?
+      - Care este relația dintre felie și aromă?
+      - De ce ghimbir cu fructe de mare?
+  - id: chn_hoisin_dip
+    name: Sos Hoisin de Înmuiat
+    prompt: |
+      Hoisin cu rață Peking — înmuiatul este ritual. Clătita, rața, ceapa
+      verde, sosul. Fiecare element are locul său. Consideră compoziția. Ce ar
+      face lipsa unuia?
+    follow_ups:
+      - Cum modelează înmuiatul mușcătura?
+      - Ce ar face un alt sos?
+      - Care este relația dintre dulce și rață?
+  - id: chn_leaf_wrap
+    name: Împachetat în Frunză
+    prompt: |
+      Împachetat în salată — carne tocată, ierburi, sos, împachetat într-o
+      frunză. Frunza este recipient și textură. Împachetarea este muncă manuală.
+      Consideră arhitectura. Ce ar face o tortilla?
+    follow_ups:
+      - Cum modelează frunza mușcătura?
+      - Ce ar face o farfurie?
+      - Care este relația dintre împachetare și mână?
+  - id: chn_fish_whole
+    name: Pește Întreg
+    prompt: |
+      Pește întreg — fiert la aburi, cu cap și coadă. Peștele este prezentat
+      complet. Capul are semnificație. Consideră prezentarea. Ce ar sacrifica
+      un file?
+    follow_ups:
+      - Cum modelează întregul preparatul?
+      - Ce înseamnă capul?
+      - Care este relația dintre întreg și respect?
+  - id: chn_scallion_oil
+    name: Ulei de Ceapă Verde
+    prompt: |
+      Ulei de ceapă verde — ulei fierbinte peste ceapă verde tocată și ghimbir.
+      Este un dressing, un finisaj. Uleiul transportă aromele. Observă când este
+      aplicat. Ce adaugă sfârâitul?
+    follow_ups:
+      - Ce ar fi preparatul fără el?
+      - Cum modelează uleiul finisajul?
+      - Care este relația dintre ulei și aromă?
+  - id: chn_black_vinegar
+    name: Oțet Negru
+    prompt: |
+      Oțet Chinkiang — închis, complex, ușor dulce. Taie bogăția. Câteva picături
+      schimbă gălușca. Consideră aciditatea. Ce ar face oțetul de orez? Ce
+      adaugă cel închis?
+    follow_ups:
+      - Cum modelează oțetul mușcătura?
+      - Ce ar fi gălușca fără el?
+      - Care este relația dintre oțet și echilibru?
+  - id: chn_sticky_rice
+    name: Orez Lipicios
+    prompt: |
+      Orez lipicios în frunză de lotus — lo mai gai. Frunza conferă aromă.
+      Orezul este împachetat, fiert la aburi. Despachetează-l. Observă mirosul.
+      Ce ar face folia de aluminiu?
+    follow_ups:
+      - Cum modelează frunza orezul?
+      - Care este relația dintre împachetare și abur?
+      - Ce ar însemna nedeosepact?
+  - id: chn_mooncake_mold
+    name: Matriță de Prăjitură Lună
+    prompt: |
+      Prăjituri lună — ștampilate cu caractere, modele. Matrița este istorie.
+      Designul înseamnă ceva. Consideră amprenta. Ce ar pierde o prăjitură simplă?
+    follow_ups:
+      - Cum modelează matrița prăjitura?
+      - Ce înseamnă modelul?
+      - Care este relația dintre amprentă și tradiție?
+  - id: chn_egg_tart
+    name: Tartă cu Ou
+    prompt: |
+      Tartă cu ou — influență portugheză, rafinament Hong Kong. Custardul,
+      foietajul. Consideră textura. Crocant, mătăsos. Ce ar face o crustă
+      diferită?
+    follow_ups:
+      - Cum modelează tarta finalul mesei?
+      - Care este relația dintre custard și crocant?
+      - De ce tartă cu ou la final?
+  - id: chn_hand_pull
+    name: Tras Manual
+    prompt: |
+      Tăiței trași manual — bucătarul întinde, pliază, trage. Șuvițele se
+      multiplică. Este spectacol. Privește-l. Ce ar sacrifica tăițeii de mașină?
+    follow_ups:
+      - Cum modelează trasul tăițeii?
+      - Care este relația dintre mână și textură?
+      - Ce ar însemna tăiței uniformi?
+  - id: chn_bird_nest
+    name: Cuib de Pasăre
+    prompt: |
+      Cuib de pasăre — nu cuibul de rândunică din supă, ci cuibul de taro,
+      sau cuibul crocant de tăiței care susține stir-fry-ul. Cuibul este arhitectură.
+      Consideră forma. Ce adaugă cuibul?
+    follow_ups:
+      - Cum modelează cuibul preparatul?
+      - Ce ar face o farfurie?
+      - Care este relația dintre recipient și conținut?
+  - id: chn_red_envelope
+    name: Plic Roșu
+    prompt: |
+      La banchete, plicurile roșii pot însoți cadouri — bani pentru bucătărie,
+      pentru gazde. Plicul este ritual. Consideră schimbul. Ce înseamnă roșul?
+    follow_ups:
+      - Cum modelează plicul ocazia?
+      - Ce ar însemna lipsa plicului?
+      - Care este relația dintre cadou și față?
+  - id: chn_toasting_ritual
+    name: Ritualul de Toast
+    prompt: |
+      Gan bei — până la fund — sau sorbituri ocazionale. Toastul structurează
+      banchetul. Cine toastază pe cine? Când? Ritualul este social. Observă
+      coregrafia. Ce ar fi masa fără toasturi?
+    follow_ups:
+      - Cum modelează toastul masa?
+      - Care este relația dintre toast și ierarhie?
+      - Când bei?
+  - id: chn_preserved_veg
+    name: Legumă Murată
+    prompt: |
+      Muștar murat, ridiche murată, varză fermentată — acestea adaugă profunzime.
+      Sunt conservare antică. Consideră transformarea. Ce ar face leguma
+      proaspătă?
+    follow_ups:
+      - Cum modelează conservarea preparatul?
+      - Care este relația dintre murat și umami?
+      - De ce murat?
+  - id: chn_sweet_sour
+    name: Dulce-Acrișor
+    prompt: |
+      Dulce și acrișor — echilibrul este deliberat. Zahăr, oțet, uneori
+      ketchup. Sosul este îndrăzneț. Consideră combinația. Ce ar însemna unul
+      fără celălalt?
+    follow_ups:
+      - Cum modelează echilibrul preparatul?
+      - Care este relația dintre dulce și acrișor?
+      - De ce această combinație?
+  - id: chn_wonton_soup
+    name: Supă Wonton
+    prompt: |
+      Wonton în supă limpede — supa este simplă. Wonton-ul plutește. Supa este
+      curată. Consideră contrastul cu wonton-ul prăjit. Ce adaugă supa?
+    follow_ups:
+      - Cum modelează supa wonton-ul?
+      - Ce ar însemna prăjit?
+      - Care este relația dintre transparent și bogat?
+  - id: chn_cold_dish_start
+    name: Start cu Preparate Reci
+    prompt: |
+      Preparatele reci deschid masa — pui marinat, meduză, murături. Ele trezesc
+      palatul. Contrastul cu ce urmează. Consideră deschiderea. Ce ar face un
+      start fierbinte?
+    follow_ups:
+      - Cum modelează rece masa?
+      - Care este relația dintre primul și următorul?
+      - De ce rece mai întâi?
+  - id: chn_fried_rice_wok
+    name: Orez Prăjit în Wok
+    prompt: |
+      Orezul prăjit necesită un wok — căldură mare, amestecare rapidă. Orez
+      de o zi, ideal. Boabele se separă. Consideră tehnica. Ce ar sacrifica o
+      tigaie?
+    follow_ups:
+      - Cum modelează wok-ul orezul?
+      - Ce ar face orezul proaspăt?
+      - Care este relația dintre căldură și separare?
+  - id: chn_lychee_dessert
+    name: Desert cu Lici
+    prompt: |
+      Lici pentru desert — proaspăt, conservat, în sirop. Fructul încheie
+      masa. Dulce, parfumat. Consideră finalul. Ce ar face un alt fruct?
+    follow_ups:
+      - Cum modelează liciul încheierea?
+      - Care este relația dintre fruct și final?
+      - De ce lici?
+  - id: chn_fortune_cookie
+    name: Fursec cu Mesaj
+    prompt: |
+      Fursec cu mesaj — invenție sino-americană. Fursecul este teatru.
+      Crăpă-l. Citește mesajul. Fursecul nu este autentic, dar este ritual.
+      Consideră locul său.
+    follow_ups:
+      - Cum s-ar termina masa fără el?
+      - Cum modelează mesajul finalul?
+      - Care este relația dintre fursec și așteptare?
+  - id: chn_century_egg
+    name: Ou Century
+    prompt: |
+      Ou century — conservat în cenușă, argilă, var. Gălbenușul devine gri-verzui,
+      albușul se închide la culoare, transformându-se în jeleu. Este transformare
+      timp de săptămâni. Consideră arheologia. Ce ar fi un ou proaspăt? Ce
+      adaugă conservarea?
+    follow_ups:
+      - Cum modelează conservarea textura?
+      - Ce ar fi preparatul fără ou?
+      - Care este relația dintre timp și transformare?

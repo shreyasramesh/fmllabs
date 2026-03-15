@@ -17,5 +17,7 @@ export async function GET(request: Request) {
       list.push({ id: m.id, name: m.name });
     }
   }
-  return NextResponse.json(list);
+  return NextResponse.json(list, {
+    headers: { "Cache-Control": "no-store, max-age=0" },
+  });
 }

@@ -1,0 +1,520 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natural Microcosm — Kamienie i Skały (Polish)
+
+id: natural_microcosm_rocks_stones
+name: Natural Microcosm — Kamienie i Skały
+description: 50 kart, które zmienią Twój sposób postrzegania skał i kamieni — od czasu geologicznego i porostów po wietrzenie, erozję i powolne życie minerałów.
+domain: natural_microcosm
+cards:
+  - id: nmr_lichen_map
+    name: Mapa Porostów
+    prompt: |
+      Porosty rosną na skale — powoli, cierpliwie. Pomarańczowe, szare, zielone. To nie jeden
+      organizm, ale dwa: grzyb i algi. Rozważ tę współpracę. Co oferuje skała? Co oddają porosty?
+    follow_ups:
+      - Jak wyglądałaby skała bez porostów?
+      - Jak porosty zaznaczają czas?
+      - Jaka jest zależność między porostami a wietrzeniem?
+  - id: nmr_pebble_smooth
+    name: Gładki Kamień
+    prompt: |
+      Kamień rzeczny jest gładki — wygładziły go woda i piasek. Weź taki w dłoń. Ile
+      lat to zajęło? Gładkość jest zapisem podróży. Co oznaczałby ostry brzeg?
+    follow_ups:
+      - Jak gładkość ujawnia historię?
+      - Co oznaczałby kamień bez wody?
+      - Jaka jest zależność między kształtem a przepływem?
+  - id: nmr_crack_frost
+    name: Pęknięcie Mrozowe
+    prompt: |
+      Woda zamarza w pęknięciu, rozszerza się. Skała pęka. To powolna przemoc.
+      Znajdź skałę z pęknięciem. Zastanów się nad cyklami zamarzania i odmarzania,
+      które je spowodowały.
+    follow_ups:
+      - Co oznaczałaby skała bez pęknięcia?
+      - Jak mróz kształtuje krajobraz?
+      - Jaka jest zależność między wodą a pękaniem?
+  - id: nmr_stone_warmth
+    name: Ciepło Kamienia
+    prompt: |
+      Nagrzany słońcem kamień przechowuje ciepło. Usiądź na nim o zmierzchu. Kamień oddaje to,
+      co wchłonął. Rozważ wymianę. Co oznaczałby kamień bez
+      słońca?
+    follow_ups:
+      - Jak kamień tworzy mikroklimat?
+      - Jakie stworzenia korzystają z tego ciepła?
+      - Jaka jest zależność między skałą a ciepłem?
+  - id: nmr_moss_crust
+    name: Skorupa Mchu
+    prompt: |
+      Mech rośnie na kamieniu — cienka skorupa. Zatrzymuje wilgoć, zbiera kurz.
+      Kamień staje się podłożem. Kiedy skała staje się glebą? Gdzie jest granica?
+    follow_ups:
+      - Co oznaczałby kamień bez mchu?
+      - Jak skorupa przyspiesza zmiany?
+      - Jaka jest zależność między minerałem a materią organiczną?
+  - id: nmr_vein_quartz
+    name: Żyła Kwarcowa
+    prompt: |
+      Żyła kwarcu przecina skałę — żyłka innego minerału. Oznacza pęknięcie, wypełnienie.
+      Śledź linię. Jakie siły ją stworzyły? Co ujawnia żyła?
+    follow_ups:
+      - Co oznaczałaby skała bez żyły?
+      - Jak żyła zaznacza głęboki czas?
+      - Jaka jest zależność między pęknięciem a pięknem?
+  - id: nmr_puddle_reflect
+    name: Kałuża w Skale
+    prompt: |
+      W zagłębieniu w skale po deszczu gromadzi się woda. To maleńki staw — czarka. Co się w niej
+      odbija? Co wyparowuje? Kamień stworzył naczynie.
+    follow_ups:
+      - Co oznaczałaby skała bez zagłębienia?
+      - Jak kałuża tworzy siedlisko?
+      - Jaka jest zależność między zagłębieniem a czasem?
+  - id: nmr_sand_grain
+    name: Ziarno Piasku
+    prompt: |
+      Piasek to rozdrobniona skała. Weź garść. Każde ziarno było kiedyś częścią
+      czegoś większego. Rozważ skalę. Ile ziaren w górze?
+    follow_ups:
+      - Co oznaczałaby plaża bez ziaren?
+      - Jak wielkość ziarna opowiada historię?
+      - Jaka jest zależność między całością a fragmentem?
+  - id: nmr_stone_circle
+    name: Krąg Kamieni
+    prompt: |
+      Kamienie ułożone ręką lub przez lodowiec — krąg, kopiec, mur. Ktoś
+      lub coś je ułożył. Rozważ zamiar. Co oznacza to ułożenie?
+    follow_ups:
+      - Co oznaczałaby przestrzeń bez kamieni?
+      - Jak ułożenie tworzy znaczenie?
+      - Jaka jest zależność między skałą a rytuałem?
+  - id: nmr_erosion_edge
+    name: Krawędź Erozji
+    prompt: |
+      Wiatr i woda rzeźbią skałę. Znajdź krawędź — klif, głaz. Kształt
+      jest produktem usuwania. Co było tam wcześniej? Co pozostanie?
+    follow_ups:
+      - Co oznaczałby krajobraz bez erozji?
+      - Jak krawędź zaznacza czas?
+      - Jaka jest zależność między stratą a formą?
+  - id: nmr_color_streak
+    name: Smuga Koloru
+    prompt: |
+      Skała nie jest jednolita — żelazo plami na czerwono, mangan na czarno, miedź na zielono.
+      Śledź smugę. Kolor to chemia. Co ujawnia ona o historii skały?
+    follow_ups:
+      - Co oznaczałaby skała bez koloru?
+      - Jak mineralogia kształtuje paletę barw?
+      - Jaka jest zależność między pierwiastkiem a odcieniem?
+  - id: nmr_scratch_glacier
+    name: Rysa Lodowcowa
+    prompt: |
+      Rysy lodowcowe — zadrapania na podłożu skalnym — zaznaczają miejsca, gdzie lód przeciągał kamienie
+      po skale. Linie są równoległe. Rozważ siłę. Co się poruszyło?
+      Co pozostało nieruchome?
+    follow_ups:
+      - Co pokazywałaby skała bez rys?
+      - Jak rysa zaznacza kierunek?
+      - Jaka jest zależność między lodem a skałą?
+  - id: nmr_cobble_pattern
+    name: Wzór Bruku
+    prompt: |
+      Plaża lub dno rzeki wybrukowane otoczakami — podobne rozmiary, różnorodne kształty. Woda
+      je posortowała. Rozważ wzór. Co mówi Ci to sortowanie?
+    follow_ups:
+      - Co oznaczałaby plaża bez sortowania?
+      - Jak przepływ kształtuje wzór?
+      - Jaka jest zależność między rozmiarem a transportem?
+  - id: nmr_cavern_drip
+    name: Kapiąca Stalaktyt
+    prompt: |
+      Stalaktyty formują się kropelka po kropelce — osady minerałów z przesączającej się wody.
+      Wzrost jest niedostrzegalny. Rozważ skalę czasową. Co pokazałby przyspieszony
+      film?
+    follow_ups:
+      - Co oznaczałaby jaskinia bez kapiącej wody?
+      - Jak kapanie zapisuje klimat?
+      - Jaka jest zależność między wodą a skałą?
+  - id: nmr_boulder_shadow
+    name: Cień Głazu
+    prompt: |
+      Duży głaz rzuca cień. Ziemia pod nim jest inna — chłodniejsza, wilgotniejsza, mniej słońca.
+      Głaz tworzy mikroklimat. Kto żyje w tym cieniu?
+    follow_ups:
+      - Co oznaczałoby zbocze bez głazu?
+      - Jak cień kształtuje życie?
+      - Jaka jest zależność między skałą a schronieniem?
+  - id: nmr_fossil_impression
+    name: Odcisk Skamieniałości
+    prompt: |
+      Skamieniałość to życie zamienione w kamień — lub odcisk pozostawiony w osadzie.
+      Znajdź jedną, jeśli możesz. Skała przechowuje pamięć. Jakie stworzenie to zostawiło?
+      Kiedy?
+    follow_ups:
+      - Co oznaczałaby skała bez skamieniałości?
+      - Jak odcisk zachowuje?
+      - Jaka jest zależność między życiem a minerałem?
+  - id: nmr_grit_texture
+    name: Faktura Piasku
+    prompt: |
+      Przejedź ręką po skale. Piaskowiec ma inną fakturę niż granit, łupek
+      niż bazalt. Faktura to minerały, ziarna, struktura. Co mówi Ci dotyk?
+    follow_ups:
+      - Co oznaczałaby skała bez swojej faktury?
+      - Jak faktura ujawnia pochodzenie?
+      - Jaka jest zależność między odczuciem a składem?
+  - id: nmr_talus_slope
+    name: Stożek Usypiskowy
+    prompt: |
+      Stożek usypiskowy — potrzaskana skała u podnóża klifu. Grawitacja i pogoda
+      spychają ją w dół. Stożek to zwał resztek. Ile czasu zajęło jego nagromadzenie?
+    follow_ups:
+      - Co oznaczałoby podnóże klifu bez stożka usypiskowego?
+      - Jak stożek zaznacza erozję?
+      - Jaka jest zależność między upadkiem a stertą?
+  - id: nmr_soil_horizon
+    name: Poziom Gleby
+    prompt: |
+      Kop ostrożnie. Gleba ma warstwy — organiczna na wierzchu, mineralna poniżej, czasem
+      wyraźne pasma. Poziom to historia. Co stworzyło każdą warstwę?
+    follow_ups:
+      - Co oznaczałaby ziemia bez poziomów?
+      - Jak poziom zapisuje czas?
+      - Jaka jest zależność między skałą a glebą?
+  - id: nmr_drystone_wall
+    name: Mur Suchy
+    prompt: |
+      Mur suchy — kamienie ułożone bez zaprawy. Mur trzyma się dzięki grawitacji
+      i dopasowaniu. Rozważ rzemiosło. Jak każdy kamień wspiera następny?
+    follow_ups:
+      - Co oznaczałoby pole bez muru?
+      - Jak mur zaznacza terytorium?
+      - Jaka jest zależność między skałą a granicą?
+  - id: nmr_tide_pool_rock
+    name: Kamień w Mocy
+    prompt: |
+      Kamienie w moczarze są zwilżane, suszone, ponownie zwilżane. Stworzenia się ich czepiają.
+      Skała jest siedliskiem. Rozważ rytm przypływu. Czego doświadcza kamień?
+    follow_ups:
+      - Co oznaczałaby moczara bez kamienia?
+      - Jak kamień tworzy powierzchnię?
+      - Jaka jest zależność między skałą a przypływem?
+  - id: nmr_crystal_face
+    name: Ściana Kryształu
+    prompt: |
+      Niektóre skały pokazują ściany kryształów — płaszczyzny łupliwości, geometryczne formy.
+      Kryształ rósł w kawernie, w powolnym porządku. Rozważ geometrię. Jakie siły ją
+      ukształtowały?
+    follow_ups:
+      - Co oznaczałaby skała bez kryształu?
+      - Jak ściana ujawnia strukturę?
+      - Jaka jest zależność między porządkiem a minerałem?
+  - id: nmr_dust_coating
+    name: Pokrywa Pyłu
+    prompt: |
+      Skała zbiera kurz — pyłki, sadzę, minerały. Z czasem ciemnieje.
+      Pokrywa to akumulacja. Jak wyglądałaby skała po umyciu? Jak ją zmienia
+      pokrywa?
+    follow_ups:
+      - Co oznaczałaby skała bez pokrywy?
+      - Jak kurz zaznacza środowisko?
+      - Jaka jest zależność między powierzchnią a akumulacją?
+  - id: nmr_river_sculpt
+    name: Rzeźba Rzeczna
+    prompt: |
+      Rzeka rzeźbi swoje koryto — kotły, kałuże, bystrza. Skała jest kształtowana
+      przez wodę i osady. Znajdź odcinek. Odczytaj rzeźbę. Co ujawnia forma?
+    follow_ups:
+      - Co oznaczałoby dno rzeki bez rzeźby?
+      - Jak przepływ kształtuje skałę?
+      - Jaka jest zależność między wodą a formą?
+  - id: nmr_shard_edge
+    name: Krawędź Odprysku
+    prompt: |
+      Odprysk krzemienia, kawałek czertu — ostry, obrobiony lub naturalny. Ktoś mógł go używać.
+      Krawędź jest funkcjonalna. Rozważ pęknięcie. Jak zostało wykonane?
+    follow_ups:
+      - Co oznaczałby odprysk bez krawędzi?
+      - Jak pęknięcie tworzy użyteczność?
+      - Jaka jest zależność między złamaniem a narzędziem?
+  - id: nmr_gravel_path
+    name: Ścieżka Żwirowa
+    prompt: |
+      Ścieżka żwirowa — kruszona skała pod stopami. Chrzęst, ugięcie. Ścieżka
+      to ludzki wybór. Dlaczego taka nawierzchnia? Co robi żwir, czego nie zrobi gleba?
+    follow_ups:
+      - Co oznaczałaby ścieżka bez żwiru?
+      - Jak ścieżka kształtuje ruch?
+      - Jaka jest zależność między skałą a chodzeniem?
+  - id: nmr_bedrock_exposure
+    name: Odsłonięcie Podłoża Skalnego
+    prompt: |
+      Gdzie gleba została zmyta — erozja, budowa — pojawia się podłoże skalne.
+      Fundament jest widoczny. Rozważ, co zazwyczaj się ukrywa. Co ujawnia
+      to odsłonięcie?
+    follow_ups:
+      - Co oznaczałby krajobraz bez odsłonięcia?
+      - Jak podłoże skalne kształtuje powierzchnię?
+      - Jaka jest zależność między ukrytym a ujawnionym?
+  - id: nmr_wind_polish
+    name: Wygładzenie Wiatrowe
+    prompt: |
+      Skały pustynne są wygładzone przez wiatr — gładkie, fasetowane. Piasek szlifuje powierzchnię.
+      Wygładzenie jest ścierne. Rozważ wiatr. Ile czasu to zajęło?
+    follow_ups:
+      - Co oznaczałaby skała bez wygładzenia?
+      - Jak wiatr kształtuje skałę?
+      - Jaka jest zależność między cząstką a powierzchnią?
+  - id: nmr_hot_cold_crack
+    name: Pęknięcie Ciepło-Zimno
+    prompt: |
+      Skała rozszerza się w cieple, kurczy w zimnie. Powtarzające się cykle powodują naprężenia,
+      mikropęknięcia. Znajdź pęknięcie. Rozważ zmiany temperatury, które je
+      spowodowały.
+    follow_ups:
+      - Co oznaczałaby skała bez pęknięcia?
+      - Jak cykle termiczne kształtują krajobraz?
+      - Jaka jest zależność między temperaturą a pękaniem?
+  - id: nmr_constellation_stone
+    name: Kamień Konstelacji
+    prompt: |
+      Skała z drobinami — mika, skalenie — które odbijają światło. Powierzchnia
+      migocze. Rozważ mineralogię. Co stworzyło ten blask?
+    follow_ups:
+      - Co oznaczałaby skała bez drobin?
+      - Jak światło ujawnia strukturę?
+      - Jaka jest zależność między minerałem a odbiciem?
+  - id: nmr_stepping_stone
+    name: Kamień do Przejścia
+    prompt: |
+      Kamienie umieszczone w strumieniu lub błocie — kamienie do przejścia. Umieszczenie jest
+      celowe. Rozważ ścieżkę. Czego wymaga każdy krok? Co umożliwia kamień?
+    follow_ups:
+      - Co oznaczałoby przejście bez kamieni?
+      - Jak kamień tworzy dostęp?
+      - Jaka jest zależność między skałą a przejściem?
+  - id: nmr_moss_island
+    name: Wyspa Mchu
+    prompt: |
+      Kamień w strumieniu — mech rośnie na wierzchu. Kamień jest wyspą. Woda płynie
+      wokół. Rozważ izolację. Co dociera do mchu? Co nie?
+    follow_ups:
+      - Co oznaczałby strumień bez wyspy?
+      - Jak kamień tworzy schronienie?
+      - Jaka jest zależność między skałą a przepływem?
+  - id: nmr_weight_sunken
+    name: Zatopiony Ciężarem
+    prompt: |
+      Ciężki kamień z czasem zapada się w glebę. Wokół niego tworzy się zagłębienie.
+      Rozważ grawitację. Co robi zapadanie się z gruntem? Z kamieniem?
+    follow_ups:
+      - Co oznaczałaby ziemia bez kamienia?
+      - Jak ciężar kształtuje powierzchnię?
+      - Jaka jest zależność między masą a zagłębieniem?
+  - id: nmr_layer_sediment
+    name: Warstwa Osadu
+    prompt: |
+      Skała osadowa pokazuje warstwy — płaszczyzny uławicenia. Każda warstwa była kiedyś błotem,
+      piaskiem, skorupkami. Skała to skompresowany czas. Rozważ pojedynczą warstwę.
+      Czym była wcześniej?
+    follow_ups:
+      - Co oznaczałaby skała bez warstw?
+      - Jak warstwa zapisuje środowisko?
+      - Jaka jest zależność między osadem a skałą?
+  - id: nmr_sunrise_heat
+    name: Ciepło Wschodu Słońca
+    prompt: |
+      Płaski kamień zwrócony na wschód. O wschodzie słońca nagrzewa się najpierw. Rozważ
+      orientację. Co określa kąt padania słońca? Kto korzysta z wczesnego ciepła?
+    follow_ups:
+      - Co oznaczałaby skała bez orientacji?
+      - Jak nachylenie kształtuje temperaturę?
+      - Jaka jest zależność między kątem a ciepłem?
+  - id: nmr_rain_rinse
+    name: Płukanie Deszczem
+    prompt: |
+      Deszcz uderza w skałę, spływa po niej. Woda niesie to, co rozpuściła, co zawiesiła.
+      Płukanie jest ciągłe. Co traci skała? Co zyskuje woda?
+    follow_ups:
+      - Co oznaczałaby skała bez deszczu?
+      - Jak spływ kształtuje skałę?
+      - Jaka jest zależność między wodą a rozpuszczaniem?
+  - id: nmr_ice_wedge
+    name: Klin Lodowy
+    prompt: |
+      Woda zamarza w pęknięciu, rozszerza je. Klinowanie przez lód rozbija skały.
+      Znajdź dowody, jeśli możesz. Rozważ siłę. Czym stanie się pęknięcie?
+    follow_ups:
+      - Co oznaczałaby skała bez lodu?
+      - Jak klin się rozprzestrzenia?
+      - Jaka jest zależność między zamarzaniem a pękaniem?
+  - id: nmr_resting_place
+    name: Miejsce Odpoczynku
+    prompt: |
+      Płaski kamień — siedzisko, stół, scena. Używamy kamieni do odpoczynku, pracy, zaznaczania.
+      Rozważ kamień, na którym mógłbyś usiąść. Co podtrzymywał? Co
+      będzie trzymał?
+    follow_ups:
+      - Co oznaczałaby przestrzeń bez kamienia?
+      - Jak kamień zaprasza do użytku?
+      - Jaka jest zależność między minerałem a człowiekiem?
+  - id: nmr_boundary_marker
+    name: Znak Graniczny
+    prompt: |
+      Kamienie oznaczają granice — linie własności, groby, szlaki. Umieszczenie jest
+      celowe. Rozważ kamień graniczny. Co rozdziela? Co
+      łączy?
+    follow_ups:
+      - Co oznaczałaby granica bez kamienia?
+      - Jak kamień koduje znaczenie?
+      - Jaka jest zależność między znakiem a terytorium?
+  - id: nmr_exfoliation_sheet
+    name: Łuska Złuszczająca
+    prompt: |
+      Niektóre skały łuszczą się — warstwy odchodzą jak cebula. Uwolnienie naprężeń, cykle termiczne.
+      Znajdź łuszczący się głaz. Rozważ krzywiznę. Jakie siły ją
+      spowodowały?
+    follow_ups:
+      - Co oznaczałaby skała bez łusek?
+      - Jak złuszczanie kształtuje powierzchnię?
+      - Jaka jest zależność między naciskiem a łuszczeniem?
+  - id: nmr_compass_orientation
+    name: Orientacja Kompasu
+    prompt: |
+      Kamienie mogą być wyrównane — przez lodowiec, rzekę, ludzką rękę. Orientacja
+      opowiada historię. Znajdź wyrównane kamienie. Na co wskazują? Czego się opierają?
+    follow_ups:
+      - Co oznaczałoby wyrównanie?
+      - Jak orientacja zapisuje siłę?
+      - Jaka jest zależność między kierunkiem a skałą?
+  - id: nmr_echo_sound
+    name: Kamień Echa
+    prompt: |
+      Ściana skalna odbija dźwięk. Klaszcz. Posłuchaj echa. Skała zwraca to,
+      co wysyłasz. Rozważ powierzchnię. Co odbija? Co
+      pochłania?
+    follow_ups:
+      - Co oznaczałaby przestrzeń bez echa?
+      - Jak powierzchnia kształtuje dźwięk?
+      - Jaka jest zależność między skałą a głosem?
+  - id: nmr_anchor_hold
+    name: Uchwyt Kotwicy
+    prompt: |
+      Skała zakotwicza — korzeń drzewa ją owija, kabel jest do niej przywiązany. Skała trzyma.
+      Rozważ chwyt. Czego skała się opiera? Co umożliwia?
+    follow_ups:
+      - Co oznaczałaby kotwica bez skały?
+      - Jak skała tworzy stabilność?
+      - Jaka jest zależność między trzymaniem a masą?
+  - id: nmr_patina_age
+    name: Patyna Wieku
+    prompt: |
+      Stara skała rozwija patynę — skorupę wietrzeniową, utlenianie, zabrudzenie.
+      Powierzchnia się zmienia. Patyna to widoczny czas. Jak wyglądałaby skała, gdyby była nowa?
+    follow_ups:
+      - Co oznaczałaby skała bez patyny?
+      - Jak patyna chroni lub osłabia?
+      - Jaka jest zależność między powierzchnią a wiekiem?
+  - id: nmr_slow_narrative
+    name: Powolna Narracja
+    prompt: |
+      Skała opowiada powolną historię — powstanie, transport, wietrzenie. Oś czasu
+      jest geologiczna. Usiądź z kamieniem. Rozważ jego przeszłość. Jaka będzie jego przyszłość?
+    follow_ups:
+      - Czego byśmy stracili, gdybyśmy nie mogli odczytać tej historii?
+      - Jak skała łączy się z głębokim czasem?
+      - Jaka jest zależność między skałą a pamięcią?
+  - id: nmr_cairn_stack
+    name: Stos Kamieni
+    prompt: |
+      Kairn — kamienie ułożone ręcznie. Każdy kamień się równoważy. Stos jest
+      celowy, tymczasowy. Kto go zbudował? Co oznacza?
+    follow_ups:
+      - Co oznaczałoby miejsce bez kairnu?
+      - Jak stos tworzy znaczenie?
+      - Jaka jest zależność między człowiekiem a kamieniem?
+  - id: nmr_shadow_cast
+    name: Rzucony Cień
+    prompt: |
+      Skała rzuca cień. Cień porusza się wraz ze słońcem. Usiądź z nim na godzinę.
+      Rozważ zegar z kamienia i światła.
+    follow_ups:
+      - Co oznaczałaby skała bez cienia?
+      - Jak cień tworzy siedlisko?
+      - Jaka jest zależność między skałą a czasem?
+  - id: nmr_scree_slope
+    name: Zwałisko Kamieni
+    prompt: |
+      Zwał — luźna skała u podnóża klifu. Każdy kawałek spadł. Zwał to
+      akumulacja. Chodź po nim. Poczuj niestabilność. Co go trzyma?
+      Co się uwolni?
+    follow_ups:
+      - Co oznaczałby zwał bez spadania?
+      - Jak zwał kształtuje dolinę?
+      - Jaka jest zależność między klifem a dnem?
+  - id: nmr_fossil_imprint
+    name: Odcisk Skamieniałości
+    prompt: |
+      Skamieniałość w skale — muszla, liść, kość. Odcisk jest zapisem.
+      Organizm zniknął; kamień przechowuje jego kształt. Rozważ zachowanie.
+    follow_ups:
+      - Co byśmy wiedzieli bez skamieniałości?
+      - Jak odcisk jest pomostem między czasami?
+      - Jaka jest zależność między życiem a minerałem?
+  - id: nmr_dry_stone_wall
+    name: Mur z Suchych Kamieni
+    prompt: |
+      Mur z suchych kamieni — bez zaprawy. Każdy kamień trzyma następny dzięki dopasowaniu i
+      tarciu. Mur to współpraca. Śledź połączenia. Co zrobiłby
+      jeden luźny kamień?
+    follow_ups:
+      - Co oznaczałaby granica bez muru?
+      - Jak dopasowanie tworzy siłę?
+      - Jaka jest zależność między kamieniem a strukturą?
+  - id: nmr_cobble_rest
+    name: Spoczynek Otoczaków
+    prompt: |
+      Otoczaki spoczywają tam, gdzie zostawiła je woda — na ławicy rzecznej, plaży. Ułożenie
+      nie jest przypadkowe. Rozmiar, kształt, pozycja mówią o przepływie. Co przestawiłaby powódź?
+    follow_ups:
+      - Jak spoczynek zaznacza ostatnie zdarzenie?
+      - Co kamienie ujawniłyby o wodzie?
+      - Jaka jest zależność między spoczynkiem a turbulencją?
+  - id: nmr_moon_dust
+    name: Pył Księżycowy
+    prompt: |
+      Skała zamienia się w pył — wiatr, woda, korzenie. Najdrobniejsze cząstki podróżują.
+      Rozważ podróż pojedynczego ziarna. Gdzie może się zakończyć?
+    follow_ups:
+      - Co oznaczałby krajobraz bez pyłu?
+      - Jak pył tworzy nową glebę?
+      - Jaka jest zależność między skałą a powietrzem?
+  - id: nmr_touch_stone
+    name: Dotknij Kamienia
+    prompt: |
+      Dotknij skały. Zimna, ciepła, szorstka, gładka. Skała nie odpowiada — czyżby?
+      Ciepło się przenosi. Wilgoć się zmienia. Rozważ wymianę na granicy.
+    follow_ups:
+      - Jak kamień czułby się w innym czasie?
+      - Jak dotyk zmienia kamień?
+      - Jaka jest zależność między dłonią a kamieniem?
+  - id: nmr_shadow_noon
+    name: Cień w Południe
+    prompt: |
+      W południe cień skały jest minimalny. O świcie i zmierzchu rozciąga się.
+      Cień jest zasięgiem skały. Rozważ, jak słońce zmienia to, co skała oferuje światu.
+    follow_ups:
+      - Co skała oferowałaby bez cienia?
+      - Jak cień tworzy siedlisko?
+      - Jaka jest zależność między skałą a światłem?
+  - id: nmr_stone_circle
+    name: Krąg Kamieni
+    prompt: |
+      Kamienie ułożone w okrąg — ludzką ręką lub przez lodowiec. Krąg
+      ramuje przestrzeń. Co jest w środku? Co na zewnątrz? Rozważ geometrię
+      granicy.
+    follow_ups:
+      - Co oznaczałaby przestrzeń bez kręgu?
+      - Jak ułożenie tworzy znaczenie?
+      - Jaka jest zależność między formą a rytuałem?

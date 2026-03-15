@@ -1,0 +1,206 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Kaliforniya Süper Çiçeklenmesini Görme Yolları (Turkish)
+
+id: ways_of_looking_at_california_superbloom
+name: Kaliforniya Süper Çiçeklenmesini Görme Yolları
+description: |
+  Kaliforniya süper çiçeklenmesini deneyimlerken bakış açınızı değiştirecek kartlar.
+  Her biri, kış yağmurundan sonraki kırların, yamaçların ve geçici renk patlamalarının
+  nasıl gördüğünüzü derinleştirmek için farklı bir mercek sunar.
+domain: california_superbloom
+cards:
+  - id: the_rain_that_made_it
+    name: Bunu Yaratan Yağmur
+    prompt: |
+      Çiçeklerden önce yağmur vardı. Toprağı dolduran fırtınaları, yerin altındaki tohumları hayal edin.
+      Bu çiçeklenmenin gerçekleşmesi için hangi koşulların bir araya gelmesi gerekiyordu?
+      Süper çiçeklenmeyi kökenlerine doğru geriye doğru izleyin.
+    follow_ups:
+      - Daha fazla—veya daha az—yağmurla ne farklı olurdu?
+      - Tek bir yamaçta kaç yıllık uyku yatıyor olabilir?
+      - Bu anın hiçbir zaman garanti edilmediği ne anlama geliyor?
+  - id: one_species_at_a_time
+    name: Tek Seferde Bir Tür
+    prompt: |
+      Tek bir çiçek türü seçin ve onu takip edin. Turuncu gelincikler, mor luzulalar,
+      sarı altın alanları—bir anlığına her şeyi görmezden gelin.
+      Tek bir türe odaklanmak, ne gördüğünüzü nasıl değiştirir?
+    follow_ups:
+      - Bu tür nerede hakim—ve nerede geri çekiliyor?
+      - Sadece bu tür çiçek açsaydı yamaç nasıl görünürdü?
+      - Diğerlerinin arasında kendi yerini nasıl tutuyor?
+  - id: pollinators_view
+    name: Polinatörlerin Görüşü
+    prompt: |
+      Bir arı, bir kelebek veya bir sinek kuşu olduğunuzu hayal edin. Sizi ne çekerdi?
+      Önce hangi çiçekleri ziyaret ederdiniz? Yaprakların birkaç santimetre yukarısından manzara nasıl görünüyor?
+    follow_ups:
+      - Yolunuzu hangi desenler yönlendirirdi?
+      - Hangi çiçekleri atlardınız—ve neden?
+      - Ölçek deneyimi nasıl değiştirir?
+  - id: ground_level
+    name: Yer Seviyesi
+    prompt: |
+      Alçalın. Karnınızın üzerine uzanın veya diz çökün. Süper çiçeklenmeyi topraktan
+      perspektifinden görün—yükselen gövdeler, üzerinize eğilen yapraklar, uzakta bir şerit halinde gökyüzü.
+    follow_ups:
+      - Ayakta durma yüksekliğinden kaçırdığınız neleri fark ediyorsunuz?
+      - Altınızdaki zemini nasıl hissediyorsunuz?
+      - Bir böcek buradan ne görürdü?
+  - id: time_lapse
+    name: Hızlandırılmış Çekim
+    prompt: |
+      Süper çiçeklenme, daha uzun bir hikayedeki bir andır. Yamaçı hızlandırılmış çekimde hayal edin:
+      yeşil filizler, ilk tomurcuklar, zirve renkleri, sonra solma.
+      Gösteri ne kadar sürer? Ondan önce ve sonra ne var?
+    follow_ups:
+      - Sadece bir kez gidebilseydiniz ne zaman ziyaret etmeyi seçerdiniz?
+      - Geldiğinizde ne çoktan gitmiş olur?
+      - Renk solduğunda ne kalacak?
+  - id: the_chemistry_of_color
+    name: Renklerin Kimyası
+    prompt: |
+      Pigmentlere odaklanın. Turuncu, mor, sarı, mavi—her tonu ne yapar?
+      Nasıl etkileşime girerler? Renkler nerede çakışıyor ve nerede uyum sağlıyor?
+      Yamaçları bir palet gibi ele alın.
+    follow_ups:
+      - Ne renk eklerdiniz—veya çıkarırdınız?
+      - Gün boyunca ışık renkleri nasıl değiştirir?
+      - Siyah beyaz nasıl görünürdü?
+  - id: negative_space
+    name: Negatif Alan
+    prompt: |
+      Çiçek olmayanlara bakın. Gökyüzü, çıplak toprak yamaları, çiçekler arasındaki boşluklar.
+      Boş alan gördüklerinizi nasıl şekillendirir? Olmayanın anlamını hissedin.
+    follow_ups:
+      - Boşluk nerede yoğunlaşıyor?
+      - Bu boşlukları ne doldururdu—ve doldurmalı mı?
+      - Negatif alan kompozisyonu nasıl bir arada tutuyor?
+  - id: the_path_through
+    name: İçinden Geçen Yol
+    prompt: |
+      İzleri fark edin—insan, hayvan veya rüzgarla oluşan. İnsanlar nereye yürüyor?
+      Manzara geçişe nerede direniyor? Çiçeklerin arasından bir yol çizin ve onu takip etmenin
+      neye mal olacağını sorun.
+    follow_ups:
+      - Orada yürümediğiniz için neyi korurdunuz?
+      - Yol sizi nereye götürmek istiyor?
+      - İz üzerinde kalarak neyi kaçırırdınız?
+  - id: geology_beneath
+    name: Altındaki Jeoloji
+    prompt: |
+      Çiçekler milyonlarca yıla dayanıyor. Toprağın altında ne kaya var?
+      Bu tepeleri ne şekillendirdi? Süper çiçeklenmenin sizi ayaklarınızın altındaki derin zamanla
+      bağlamasına izin verin.
+    follow_ups:
+      - Jeoloji burada neyin yetiştiğini nasıl etkiler?
+      - Tepeler oluşmadan önce bu yer nasıl görünürdü?
+      - Çiçekler gittiğinde ne kalacak?
+  - id: scent_and_sound
+    name: Koku ve Ses
+    prompt: |
+      Gözlerinizi kapatın. Ne kokluyorsunuz? Polen, toz, adaçayı, nemli toprak?
+      Ne duyuyorsunuz? Arılar, rüzgar, ayak sesleri, sessizlik? Görsel olmayan duyulara
+      bir an için liderlik etmelerine izin verin.
+    follow_ups:
+      - Deneyimi yakalamak için ne ses eklerdiniz?
+      - Hareket ettikçe koku nasıl değişir?
+      - Sadece bakarak neyi kaçırırdınız?
+  - id: light_and_shadow
+    name: Işık ve Gölge
+    prompt: |
+      Işığın yamaç boyunca nasıl hareket ettiğini izleyin. Sabah, öğlen, akşam—güneşin açısı
+      çiçekleri nasıl değiştirir? Gölgeler nereye düşer?
+      Ne ortaya çıkıyor ve ne gizleniyor?
+    follow_ups:
+      - Işık ne zaman en canlı hissediyor?
+      - Öğlen kaçıracağınız şeyi şafakta ne görürdünüz?
+      - Gölgeler manzarayı nasıl şekillendirir?
+  - id: seed_to_flower
+    name: Tohumdan Çiçeğe
+    prompt: |
+      Tek bir bitkiyi tohumdan çiçeğe kadar izleyin. Buraya nasıl geldi? Rüzgar, hayvan,
+      su? Ne kadar bekledi? Yapraklar düştüğünde ne olacak?
+      Tek bir hayatı döngüsü boyunca takip edin.
+    follow_ups:
+      - Tohum yerin altında neye tanık olmuştu?
+      - Bitki geride ne bırakacak?
+      - Bu yamaçta kaç nesil temsil ediliyor?
+  - id: micro_vs_macro
+    name: Mikro ve Makro
+    prompt: |
+      Tek bir yaprağa, bir su damlasına, bir polen taneciğine yakınlaştırın. Sonra
+      tüm yamaç, vadi, eyalet seviyesine geri çekilin. Ölçek, süper çiçeklenmenin
+      ne anlama geldiğini nasıl değiştirir?
+    follow_ups:
+      - Bir ölçekte görünmez olan ne, diğerinde açık?
+      - Dikkatleriniz doğal olarak nereye yerleşiyor?
+      - Makro görünüm mikro'yu nasıl değiştirir—ve tersi?
+  - id: weathers_hand
+    name: Hava'nın Eli
+    prompt: |
+      Süper çiçeklenme hava ile bir işbirliğidir. Yağmur, güneş, rüzgar, sıcaklık—
+      her birinin bir rolü var. Hava'yı bir ortak yaratıcı olarak hayal edin. Ne karar verdi?
+      Neyi esirgedi?
+    follow_ups:
+      - Farklı bir kış ne üretirdi?
+      - Bugünkü hava durumunuz deneyiminizi nasıl şekillendiriyor?
+      - Çiçekler konuşabilseydi hava hakkında ne söylerdi?
+  - id: human_witness
+    name: İnsan Tanıklığı
+    prompt: |
+      Bunu gören ilk kişi siz değilsiniz. Başka kimler burada durdu? Çiftçiler,
+      yerli halklar, fotoğrafçılar, gezginler. Varlığınız yeri nasıl değiştirir?
+      Tanıklık etmek ne anlama gelir?
+    follow_ups:
+      - Siz ne görmezken onlar ne görürdü?
+      - Yanınızda ne götüreceksiniz?
+      - Tanıklık etmek, sahiplenmek veya almakla nasıl farklılık gösterir?
+  - id: the_next_year
+    name: Gelecek Yıl
+    prompt: |
+      Bu çiçeklenme tam olarak tekrarlanmayacak. Gelecek yıl kuraklık, yangın veya
+      farklı bir tür karışımı olabilir. Bir yıl sonra geri döndüğünüzü hayal edin.
+      Ne bulmayı umardınız? Neyi kaybetmeye hazırlıklı olurdunuz?
+    follow_ups:
+      - Bu anı ne yeri doldurulamaz kılar?
+      - Gelecekteki kendinize ne söylerdiniz?
+      - Kalıcılık deneyimi nasıl derinleştirir?
+  - id: texture_and_touch
+    name: Doku ve Dokunuş
+    prompt: |
+      Ellerinizi çiçeklerin arasından geçirmek nasıl hissettirir? Yumuşak yapraklar,
+      kırılgan gövdeler, yapışkan polen, pürüzlü yapraklar. Dokunmadan dokuları hayal edin—veya
+      izin verilen yerlerde, nazikçe dokunun ve fark edin.
+    follow_ups:
+      - Hangi doku sizi en çok şaşırtıyor?
+      - Neye dokunmaktan kaçınırdınız—ve neden?
+      - Doku, rengin tek başına iletemediği şeye nasıl katkıda bulunur?
+  - id: before_and_after
+    name: Önce ve Sonra
+    prompt: |
+      Bu yamaçı kuru mevsimde hayal edin—kahverengi, uykuda, görünüşte ölü.
+      Şimdi iki görüntüyü tutun: öncesi ve sonrası. Kontrast, dayanıklılık, sabır ve dönüşüm
+      hakkında neyi ortaya koyuyor?
+    follow_ups:
+      - Sadece kuru mevsimi gören biri neyi kaçırırdı?
+      - Uykunun anısı çiçeklenmeyi nasıl zenginleştirir?
+      - Bu başka hangi "önce ve sonra" anlarını çağrıştırıyor?
+  - id: make_it_a_mixtape
+    name: Bir Karma Albüm Yapın
+    prompt: |
+      Bu manzaraya hangi müzik eşlik ederdi? Süper çiçeklenme için bir çalma listesi oluşturun.
+      Ne tempo, ne ruh hali, ne enstrümanlar? Çiçeklerin müziğin temasını önermesine izin verin.
+    follow_ups:
+      - Açılış parçası ne?
+      - Müziği çiçeklerle bağlayan hangi nitelik—ritim, renk, duygu?
+      - Çalma listesi günün farklı saatlerinde nasıl değişirdi?
+  - id: take_one_thing_home
+    name: Bir Şey Götürün
+    prompt: |
+      Çiçekleri alamazsınız—buraya aitler. Ama bir anı, bir duygu, bir soru alabilirsiniz.
+      Yanınızda ne götüreceksiniz? Tek bir çiçek koparmadan ona nasıl tutunacaksınız?
+    follow_ups:
+      - Gelemeyen birine ne gösterirdiniz?
+      - Daha sonra nasıl tarif edeceksiniz?
+      - Kasten neyi geride bırakırdınız?

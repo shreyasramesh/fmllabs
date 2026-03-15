@@ -1,0 +1,535 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosmo Naturale — Rocce e Pietre (Italian)
+
+id: natural_microcosm_rocks_stones
+name: Microcosmo Naturale — Rocce e Pietre
+description: 50 carte per cambiare il modo in cui vedi rocce e pietre—dal tempo geologico e i licheni agli agenti atmosferici, all'erosione e alla vita al rallentatore dei minerali.
+domain: natural_microcosm
+cards:
+  - id: nmr_lichen_map
+    name: Mappa di Licheni
+    prompt: |
+      Il lichene cresce sulla roccia—lento, paziente. Arancione, grigio, verde. Non è un
+      organismo ma due: fungo e alga. Considera la partnership. Cosa offre la roccia?
+      Cosa restituisce il lichene?
+    follow_ups:
+      - Come sarebbe la roccia senza il lichene?
+      - Come segna il tempo il lichene?
+      - Qual è la relazione tra il lichene e l'erosione?
+  - id: nmr_pebble_smooth
+    name: Ciottolo Liscio
+    prompt: |
+      Un ciottolo di fiume è liscio—l'acqua e la sabbia lo hanno consumato. Tienine uno in mano.
+      Quanti anni ci sono voluti? La levigatezza è una testimonianza del viaggio. Cosa significherebbe un
+      bordo affilato?
+    follow_ups:
+      - Come rivela la storia la levigatezza?
+      - Cosa sarebbe il ciottolo senza l'acqua?
+      - Qual è la relazione tra forma e flusso?
+  - id: nmr_crack_frost
+    name: Crepa da Gelo
+    prompt: |
+      L'acqua congela in una crepa, si espande. La roccia si spacca. È una violenza lenta.
+      Trova una roccia con una fessura. Considera i cicli di gelo e disgelo
+      che l'hanno creata.
+    follow_ups:
+      - Cosa sarebbe la roccia senza la crepa?
+      - Come modella il paesaggio il gelo?
+      - Qual è la relazione tra acqua e frattura?
+  - id: nmr_stone_warmth
+    name: Calore della Pietra
+    prompt: |
+      Una roccia scaldata dal sole trattiene il calore. Siediti su una al tramonto. La pietra rilascia ciò che
+      ha assorbito. Considera lo scambio. Cosa sarebbe la roccia senza il
+      sole?
+    follow_ups:
+      - Come crea la pietra un microclima?
+      - Quali creature usano quel calore?
+      - Qual è la relazione tra roccia e calore?
+  - id: nmr_moss_crust
+    name: Crosta di Muschio
+    prompt: |
+      Il muschio cresce sulla pietra—una sottile crosta. Trattiene l'umidità, intrappola la polvere. La
+      roccia diventa un substrato. Quando la roccia diventa suolo? Dov'è il limite?
+    follow_ups:
+      - Cosa sarebbe la pietra senza il muschio?
+      - Come accelera la crosta il cambiamento?
+      - Qual è la relazione tra minerale e organico?
+  - id: nmr_vein_quartz
+    name: Filone di Quarzo
+    prompt: |
+      Un filone di quarzo attraversa la roccia—una vena di minerale diverso. Segna una
+      frattura, un riempimento. Segui la linea. Quali forze l'hanno creata? Cosa rivela il
+      filone?
+    follow_ups:
+      - Cosa sarebbe la roccia senza il filone?
+      - Come segna il tempo profondo il filone?
+      - Qual è la relazione tra frattura e bellezza?
+  - id: nmr_puddle_reflect
+    name: Pozza nella Roccia
+    prompt: |
+      Una depressione nella roccia trattiene l'acqua dopo la pioggia. È una piccola pozza—una coppa. Cosa
+      vi si riflette? Cosa evapora? La pietra ha creato un recipiente.
+    follow_ups:
+      - Cosa sarebbe la roccia senza la depressione?
+      - Come crea l'habitat la pozza?
+      - Qual è la relazione tra cavità e tempo?
+  - id: nmr_sand_grain
+    name: Granello di Sabbia
+    prompt: |
+      La sabbia è roccia spezzata in piccoli pezzi. Tienine una manciata. Ogni granello era un tempo parte di
+      qualcosa di più grande. Considera la scala. Quanti granelli in una montagna?
+    follow_ups:
+      - Cosa sarebbe la spiaggia senza i granelli?
+      - Come racconta una storia la dimensione dei grani?
+      - Qual è la relazione tra intero e frammento?
+  - id: nmr_stone_circle
+    name: Cerchio di Pietre
+    prompt: |
+      Rocce disposte a mano o dal ghiacciaio—un cerchio, un cumulo di pietre, un muro. Qualcuno
+      o qualcosa le ha posizionate. Considera l'intenzione. Cosa significa la
+      disposizione?
+    follow_ups:
+      - Cosa sarebbe lo spazio senza le pietre?
+      - Come crea significato la disposizione?
+      - Qual è la relazione tra roccia e rito?
+  - id: nmr_erosion_edge
+    name: Margine di Erosione
+    prompt: |
+      Il vento e l'acqua scavano la roccia. Trova un margine—una scogliera, un masso. La forma
+      è il prodotto della rimozione. Cos'era lì prima? Cosa rimarrà?
+    follow_ups:
+      - Cosa sarebbe il paesaggio senza l'erosione?
+      - Come segna il tempo il margine?
+      - Qual è la relazione tra perdita e forma?
+  - id: nmr_color_streak
+    name: Striscia di Colore
+    prompt: |
+      La roccia non è uniforme—il ferro macchia di rosso, il manganese di nero, il rame di verde.
+      Segui una striscia. Il colore è chimica. Cosa rivela sulla storia della
+      roccia?
+    follow_ups:
+      - Cosa sarebbe la roccia senza il colore?
+      - Come modella la mineralogia la tavolozza?
+      - Qual è la relazione tra elemento e tonalità?
+  - id: nmr_scratch_glacier
+    name: Graffio del Ghiacciaio
+    prompt: |
+      Striature glaciali—graffi sulla roccia madre—segnalano dove il ghiaccio ha trascinato le rocce
+      sulla pietra. Le linee sono parallele. Considera la forza. Cosa si è mosso?
+      Cosa è rimasto fermo?
+    follow_ups:
+      - Cosa mostrerebbe la roccia senza i graffi?
+      - Come segna la direzione il graffio?
+      - Qual è la relazione tra ghiaccio e pietra?
+  - id: nmr_cobble_pattern
+    name: Modello di Ciottoli
+    prompt: |
+      Una spiaggia o un letto di fiume di ciottoli—dimensioni simili, forme varie. L'acqua li ha
+      ordinati. Considera il modello. Cosa ti dice l'ordinamento?
+    follow_ups:
+      - Cosa sarebbe la spiaggia senza l'ordinamento?
+      - Come modella il modello il flusso?
+      - Qual è la relazione tra dimensione e trasporto?
+  - id: nmr_cavern_drip
+    name: Gocciolio della Grotta
+    prompt: |
+      Le stalattiti si formano goccia a goccia—depositi minerali dall'acqua che filtra. La
+      crescita è impercettibile. Considera la scala temporale. Cosa mostrerebbe un film accelerato?
+    follow_ups:
+      - Cosa sarebbe la grotta senza il gocciolio?
+      - Come registra il clima il gocciolio?
+      - Qual è la relazione tra acqua e pietra?
+  - id: nmr_boulder_shadow
+    name: Ombra del Masso
+    prompt: |
+      Un grande masso proietta un'ombra. Il terreno sottostante è diverso—più fresco,
+      più umido, meno sole. Il masso crea un microclima. Chi vive nell'ombra?
+    follow_ups:
+      - Cosa sarebbe il pendio senza il masso?
+      - Come modella la vita l'ombra?
+      - Qual è la relazione tra roccia e rifugio?
+  - id: nmr_fossil_impression
+    name: Impronta di Fossile
+    prompt: |
+      Un fossile è vita trasformata in pietra—o un'impronta lasciata nel sedimento.
+      Trovane uno se puoi. La roccia conserva la memoria. Quale creatura ha lasciato questo?
+      Quando?
+    follow_ups:
+      - Cosa sarebbe la roccia senza il fossile?
+      - Come conserva l'impronta?
+      - Qual è la relazione tra vita e minerale?
+  - id: nmr_grit_texture
+    name: Texture Granulosa
+    prompt: |
+      Passa la mano su una roccia. L'arenaria è diversa dal granito, l'ardesia
+      dal basalto. La texture è minerale, granulometria, struttura. Cosa ti dice il tatto?
+    follow_ups:
+      - Cosa sarebbe la roccia senza la sua texture?
+      - Come rivela la texture l'origine?
+      - Qual è la relazione tra sensazione e composizione?
+  - id: nmr_talus_slope
+    name: Pendio di Talus
+    prompt: |
+      Un pendio di talus—roccia frantumata alla base di una scogliera. Gravità e agenti atmosferici
+      la fanno cadere. Il pendio è un cumulo di conseguenze. Quanto tempo ci è voluto
+      per accumularsi?
+    follow_ups:
+      - Cosa sarebbe la base della scogliera senza il talus?
+      - Come segna il pendio l'erosione?
+      - Qual è la relazione tra caduta e accumulo?
+  - id: nmr_soil_horizon
+    name: Orizzonte del Suolo
+    prompt: |
+      Scava con attenzione. Il suolo ha strati—organico in alto, minerale sotto, a volte
+      fasce distinte. L'orizzonte è storia. Cosa ha creato ogni strato?
+    follow_ups:
+      - Cosa sarebbe il terreno senza gli orizzonti?
+      - Come registra il tempo l'orizzonte?
+      - Qual è la relazione tra roccia e suolo?
+  - id: nmr_drystone_wall
+    name: Muro a Secco
+    prompt: |
+      Un muro a secco—pietre incastrate senza malta. Il muro regge per gravità
+      e incastro. Considera l'arte. Come ogni pietra sostiene la successiva?
+    follow_ups:
+      - Cosa sarebbe il campo senza il muro?
+      - Come segna il territorio il muro?
+      - Qual è la relazione tra roccia e confine?
+  - id: nmr_tide_pool_rock
+    name: Roccia della Pozza di Marea
+    prompt: |
+      Le rocce in una pozza di marea vengono bagnate, asciugate, bagnate di nuovo. Le creature si aggrappano.
+      La roccia è habitat. Considera il ritmo della marea. Cosa sperimenta la roccia?
+    follow_ups:
+      - Cosa sarebbe la pozza senza la roccia?
+      - Come crea la roccia una superficie?
+      - Qual è la relazione tra roccia e marea?
+  - id: nmr_crystal_face
+    name: Faccia Cristallina
+    prompt: |
+      Alcune rocce mostrano facce cristalline—piani di sfaldatura, forma geometrica. Il
+      cristallo è cresciuto in una cavità, lentamente. Considera la geometria. Quali
+      forze l'hanno plasmato?
+    follow_ups:
+      - Cosa sarebbe la roccia senza il cristallo?
+      - Come rivela la faccia la struttura?
+      - Qual è la relazione tra ordine e minerale?
+  - id: nmr_dust_coating
+    name: Rivestimento di Polvere
+    prompt: |
+      La roccia raccoglie polvere—polline, fuliggine, minerali. Nel tempo si scurisce. Il
+      rivestimento è accumulo. Come sarebbe la roccia se lavata? Come la cambia
+      il rivestimento?
+    follow_ups:
+      - Cosa sarebbe la roccia senza il rivestimento?
+      - Come segna l'ambiente la polvere?
+      - Qual è la relazione tra superficie e accumulo?
+  - id: nmr_river_sculpt
+    name: Scoltura del Fiume
+    prompt: |
+      Un fiume scolpisce il suo letto—marmitte dei giganti, pozze, rapide. La roccia è modellata
+      dall'acqua e dal sedimento. Trova un tratto. Leggi la scultura. Cosa rivela la
+      forma?
+    follow_ups:
+      - Cosa sarebbe il letto del fiume senza la scultura?
+      - Come modella il flusso la roccia?
+      - Qual è la relazione tra acqua e forma?
+  - id: nmr_shard_edge
+    name: Bordo di Scheggia
+    prompt: |
+      Una scheggia di selce, un pezzo di selce—affilata, lavorata o naturale. Qualcuno potrebbe
+      averla usata. Il bordo è funzionale. Considera la frattura. Come è stata
+      creata?
+    follow_ups:
+      - Cosa sarebbe la scheggia senza il bordo?
+      - Come crea utilità la frattura?
+      - Qual è la relazione tra rottura e strumento?
+  - id: nmr_gravel_path
+    name: Sentiero di Ghiaia
+    prompt: |
+      Un sentiero di ghiaia—roccia frantumata sotto i piedi. Lo scricchiolio, il cedimento. Il sentiero
+      è scelta umana. Perché questa superficie? Cosa fa la ghiaia che il suolo
+      non farebbe?
+    follow_ups:
+      - Cosa sarebbe il sentiero senza la ghiaia?
+      - Come modella il movimento il sentiero?
+      - Qual è la relazione tra roccia e camminata?
+  - id: nmr_bedrock_exposure
+    name: Esposizione di Roccia Madre
+    prompt: |
+      Dove il suolo è stato rimosso—erosione, costruzioni—appare la roccia madre. Le
+      fondamenta sono visibili. Considera ciò che di solito nasconde. Cosa rivela
+      l'esposizione?
+    follow_ups:
+      - Cosa sarebbe il paesaggio senza l'esposizione?
+      - Come modella la superficie la roccia madre?
+      - Qual è la relazione tra nascosto e rivelato?
+  - id: nmr_wind_polish
+    name: Lucidatura del Vento
+    prompt: |
+      Le rocce del deserto sono lucidate dal vento—lisce, sfaccettate. La sabbia leviga la superficie.
+      La lucidatura è abrasiva. Considera il vento. Quanto tempo ci è voluto?
+    follow_ups:
+      - Cosa sarebbe la roccia senza la lucidatura?
+      - Come modella il vento la pietra?
+      - Qual è la relazione tra particella e superficie?
+  - id: nmr_hot_cold_crack
+    name: Crepa Caldo-Freddo
+    prompt: |
+      La roccia si espande col caldo, si contrae col freddo. Cicli ripetuti causano stress, microfratture.
+      Trova una crepa. Considera gli sbalzi di temperatura che l'hanno
+      creata.
+    follow_ups:
+      - Cosa sarebbe la roccia senza la crepa?
+      - Come modella il paesaggio il ciclo termico?
+      - Qual è la relazione tra temperatura e frattura?
+  - id: nmr_constellation_stone
+    name: Pietra Costellazione
+    prompt: |
+      Una roccia con pagliuzze—mica, feldspato—che catturano la luce. La superficie
+      luccica. Considera la mineralogia. Cosa ha creato lo scintillio?
+    follow_ups:
+      - Cosa sarebbe la roccia senza le pagliuzze?
+      - Come rivela la luce la struttura?
+      - Qual è la relazione tra minerale e riflessione?
+  - id: nmr_stepping_stone
+    name: Pietra Passatoia
+    prompt: |
+      Rocce posizionate in un ruscello o nel fango—pietre passatoie. Il posizionamento è
+      deliberato. Considera il percorso. Cosa richiede ogni passo? Cosa abilita
+      la pietra?
+    follow_ups:
+      - Cosa sarebbe l'attraversamento senza le pietre?
+      - Come crea l'accesso la pietra?
+      - Qual è la relazione tra roccia e passaggio?
+  - id: nmr_moss_island
+    name: Isola di Muschio
+    prompt: |
+      Una roccia in un ruscello—il muschio cresce in cima. La roccia è un'isola. L'acqua scorre
+      attorno. Considera l'isolamento. Cosa raggiunge il muschio? Cosa no?
+    follow_ups:
+      - Cosa sarebbe il ruscello senza l'isola?
+      - Come crea la roccia rifugio?
+      - Qual è la relazione tra roccia e flusso?
+  - id: nmr_weight_sunken
+    name: Peso Affondato
+    prompt: |
+      Una roccia pesante affonda nel terreno nel tempo. La depressione si forma attorno.
+      Considera la gravità. Cosa fa l'affondamento al terreno? Alla
+      roccia?
+    follow_ups:
+      - Cosa sarebbe il terreno senza la roccia?
+      - Come modella la superficie il peso?
+      - Qual è la relazione tra massa e depressione?
+  - id: nmr_layer_sediment
+    name: Strato Sedimentario
+    prompt: |
+      La roccia sedimentaria mostra strati—piani di stratificazione. Ogni strato era un tempo fango,
+      sabbia, conchiglie. La roccia è tempo compresso. Considera un singolo strato.
+      Cos'era prima?
+    follow_ups:
+      - Cosa sarebbe la roccia senza gli strati?
+      - Come registra l'ambiente lo strato?
+      - Qual è la relazione tra sedimento e pietra?
+  - id: nmr_sunrise_heat
+    name: Calore dell'Alba
+    prompt: |
+      Una roccia piatta è rivolta a est. All'alba si scalda per prima. Considera l'orientamento.
+      Cosa determina l'angolo rispetto al sole? Chi beneficia del primo
+      calore?
+    follow_ups:
+      - Cosa sarebbe la roccia senza l'orientamento?
+      - Come modella l'esposizione la temperatura?
+      - Qual è la relazione tra angolo e calore?
+  - id: nmr_rain_rinse
+    name: Risciacquo della Pioggia
+    prompt: |
+      La pioggia colpisce la roccia, scorre via. L'acqua porta via ciò che scioglie, ciò che sospende. Il
+      risciacquo è continuo. Cosa perde la roccia? Cosa guadagna l'acqua?
+    follow_ups:
+      - Cosa sarebbe la roccia senza la pioggia?
+      - Come modella il ruscellamento la roccia?
+      - Qual è la relazione tra acqua e dissoluzione?
+  - id: nmr_ice_wedge
+    name: Cuneo di Ghiaccio
+    prompt: |
+      L'acqua congela in una crepa, la allarga. Il cuneo di ghiaccio spacca le rocce.
+      Trova prove se puoi. Considera la forza. Cosa diventerà la crepa?
+    follow_ups:
+      - Cosa sarebbe la roccia senza il ghiaccio?
+      - Come si propaga il cuneo?
+      - Qual è la relazione tra gelo e frattura?
+  - id: nmr_resting_place
+    name: Luogo di Riposo
+    prompt: |
+      Una roccia piatta—un sedile, un tavolo, un palcoscenico. Usiamo le rocce per riposare, lavorare,
+      segnalare. Considera la roccia su cui potresti sederti. Cosa ha sostenuto? Cosa
+      sosterrà?
+    follow_ups:
+      - Cosa sarebbe lo spazio senza la roccia?
+      - Come invita all'uso la roccia?
+      - Qual è la relazione tra minerale e umano?
+  - id: nmr_boundary_marker
+    name: Marcatore di Confine
+    prompt: |
+      Le rocce segnano i confini—linee di proprietà, tombe, sentieri. Il posizionamento è
+      deliberato. Considera una pietra di confine. Cosa separa? Cosa
+      connette?
+    follow_ups:
+      - Cosa sarebbe il confine senza la pietra?
+      - Come codifica la roccia il significato?
+      - Qual è la relazione tra marcatore e territorio?
+  - id: nmr_exfoliation_sheet
+    name: Lamina di Esfoliazione
+    prompt: |
+      Alcune rocce si sfogliano—strati che si staccano come una cipolla. Rilascio di pressione, ciclo
+      termico. Trova un masso che si sfoglia. Considera la curva. Quali forze
+      l'hanno creata?
+    follow_ups:
+      - Cosa sarebbe la roccia senza le lamine?
+      - Come modella la superficie l'esfoliazione?
+      - Qual è la relazione tra pressione e sfogliatura?
+  - id: nmr_compass_orientation
+    name: Orientamento della Bussola
+    prompt: |
+      Le rocce possono allinearsi—dal ghiacciaio, dal fiume, dalla mano umana. L'orientamento
+      racconta una storia. Trova pietre allineate. Verso cosa puntano? Cosa
+      resistono?
+    follow_ups:
+      - Cosa significherebbe l'allineamento?
+      - Come registra la forza l'orientamento?
+      - Qual è la relazione tra direzione e pietra?
+  - id: nmr_echo_sound
+    name: Pietra dell'Eco
+    prompt: |
+      Una parete rocciosa riflette il suono. Batti le mani. Ascolta l'eco. La roccia restituisce
+      ciò che invii. Considera la superficie. Cosa riflette? Cosa
+      assorbe?
+    follow_ups:
+      - Cosa sarebbe lo spazio senza l'eco?
+      - Come modella il suono la superficie?
+      - Qual è la relazione tra roccia e voce?
+  - id: nmr_anchor_hold
+    name: Presa d'Ancora
+    prompt: |
+      Una roccia ancora—una radice d'albero la avvolge, un cavo vi si lega. La roccia tiene.
+      Considera la presa. Cosa resiste la roccia? Cosa abilita?
+    follow_ups:
+      - Cosa sarebbe l'ancora senza la roccia?
+      - Come crea stabilità la roccia?
+      - Qual è la relazione tra presa e massa?
+  - id: nmr_patina_age
+    name: Patina dell'Età
+    prompt: |
+      La vecchia roccia sviluppa una patina—crosta di alterazione, ossidazione, sporco. La
+      superficie cambia. La patina è tempo reso visibile. Come sarebbe la roccia
+      quando era nuova?
+    follow_ups:
+      - Cosa sarebbe la roccia senza la patina?
+      - Come protegge o indebolisce la patina?
+      - Qual è la relazione tra superficie ed età?
+  - id: nmr_slow_narrative
+    name: Narrazione Lenta
+    prompt: |
+      Una roccia racconta una storia lenta—formazione, trasporto, erosione. La linea temporale
+      è geologica. Siediti con una roccia. Considera il suo passato. Quale sarà il suo futuro?
+    follow_ups:
+      - Cosa perderemmo se non potessimo leggere la storia?
+      - Come si connette la roccia al tempo profondo?
+      - Qual è la relazione tra roccia e memoria?
+  - id: nmr_cairn_stack
+    name: Cumulo di Cairn
+    prompt: |
+      Un cairn—pietre impilate a mano. Ogni pietra è in equilibrio. La pila è
+      deliberata, temporanea. Chi l'ha costruita? Cosa segnala?
+    follow_ups:
+      - Cosa sarebbe il luogo senza il cairn?
+      - Come crea significato la pila?
+      - Qual è la relazione tra umano e pietra?
+  - id: nmr_shadow_cast
+    name: Ombra Proiettata
+    prompt: |
+      Una roccia proietta un'ombra. L'ombra si muove col sole. Siediti con essa per un'ora.
+      Considera l'orologio di pietra e luce.
+    follow_ups:
+      - Cosa sarebbe la roccia senza l'ombra?
+      - Come crea l'ombra l'habitat?
+      - Qual è la relazione tra roccia e tempo?
+  - id: nmr_scree_slope
+    name: Pendio di Ghiaione
+    prompt: |
+      Ghiaione—roccia sciolta alla base di una scogliera. Ogni pezzo è caduto. Il pendio è
+      accumulo. Percorrilo. Senti l'instabilità. Cosa lo tiene insieme? Cosa
+      si libererà?
+    follow_ups:
+      - Cosa sarebbe il pendio senza la caduta?
+      - Come modella la valle il ghiaione?
+      - Qual è la relazione tra scogliera e suolo?
+  - id: nmr_fossil_imprint
+    name: Impronta Fossile
+    prompt: |
+      Un fossile nella roccia—conchiglia, foglia, osso. L'impronta è una testimonianza. L'organismo
+      è scomparso; la pietra ne conserva la forma. Considera la conservazione.
+    follow_ups:
+      - Cosa sapremmo senza il fossile?
+      - Come colma il tempo l'impronta?
+      - Qual è la relazione tra vita e minerale?
+  - id: nmr_dry_stone_wall
+    name: Muro di Pietra Secca
+    prompt: |
+      Un muro di pietra secca—senza malta. Ogni pietra trattiene la successiva per incastro e
+      attrito. Il muro è collaborazione. Traccia le giunture. Cosa farebbe
+      una singola pietra allentata?
+    follow_ups:
+      - Cosa sarebbe il confine senza il muro?
+      - Come crea forza l'incastro?
+      - Qual è la relazione tra pietra e struttura?
+  - id: nmr_cobble_rest
+    name: Riposo dei Ciottoli
+    prompt: |
+      I ciottoli riposano dove l'acqua li ha lasciati—un banco fluviale, una spiaggia. La disposizione
+      non è casuale. Dimensioni, forma, posizione parlano del flusso. Cosa
+      riorganizzerà un'inondazione?
+    follow_ups:
+      - Come segna l'ultimo evento il riposo?
+      - Cosa rivelerebbero i sassi sull'acqua?
+      - Qual è la relazione tra riposo e turbolenza?
+  - id: nmr_moon_dust
+    name: Polvere Lunare
+    prompt: |
+      La roccia diventa polvere—vento, acqua, radici. Le particelle più fini viaggiano.
+      Considera il viaggio di un singolo granello. Dove potrebbe finire?
+    follow_ups:
+      - Cosa sarebbe il paesaggio senza la polvere?
+      - Come crea nuova terra la polvere?
+      - Qual è la relazione tra roccia e aria?
+  - id: nmr_touch_stone
+    name: Toccare la Pietra
+    prompt: |
+      Tocca una roccia. Fredda, calda, ruvida, liscia. La roccia non risponde—o
+      sì? Il calore si trasferisce. L'umidità si sposta. Considera lo scambio al confine.
+    follow_ups:
+      - Come sarebbe la roccia in un momento diverso?
+      - Come cambia il tatto la roccia?
+      - Qual è la relazione tra mano e pietra?
+  - id: nmr_shadow_noon
+    name: Ombra a Mezzogiorno
+    prompt: |
+      A mezzogiorno, l'ombra di una roccia è minima. All'alba e al tramonto, si allunga.
+      L'ombra è la portata della roccia. Considera come il sole cambia ciò che la
+      roccia offre al mondo.
+    follow_ups:
+      - Cosa offrirebbe la roccia senza ombra?
+      - Come crea l'ombra l'habitat?
+      - Qual è la relazione tra roccia e luce?
+  - id: nmr_stone_circle
+    name: Cerchio di Pietre
+    prompt: |
+      Pietre disposte in cerchio—dalla mano umana o dal ghiacciaio. Il cerchio
+      incornicia lo spazio. Cosa c'è dentro? Cosa c'è fuori? Considera la geometria del
+      confine.
+    follow_ups:
+      - Cosa significherebbe lo spazio senza il cerchio?
+      - Come crea significato la disposizione?
+      - Qual è la relazione tra forma e rito?

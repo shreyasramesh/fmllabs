@@ -1,0 +1,521 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Ludzki Interfejs — Handel Detaliczny (Polish)
+
+id: human_interface_retail
+name: Ludzki Interfejs — Handel Detaliczny
+description: 50 kart, które pomogą Ci spojrzeć na przestrzeń handlu detalicznego z innej perspektywy — od alejek i choreografii przeglądania produktów, po przymierzalnie i taniec zakupu.
+domain: human_interface
+cards:
+  - id: hi_rt_aisle_flow
+    name: Przepływ w Alejce
+    prompt: |
+      Alejka kanalizuje ruch. Wózki jadą w jednym kierunku; ludzie nawigują. Obserwuj
+      przepływ. Kto ustępuje? Kto blokuje? Alejka ma swoją fizykę. Jakie zasady
+      rządzą tym tańcem?
+    follow_ups:
+      - Jak alejka kształtuje przeglądanie produktów?
+      - Jaki byłby sklep bez alejek?
+      - Jaka jest relacja między przepływem a projektem?
+  - id: hi_rt_browsing_choreography
+    name: Choreografia Przeglądania
+    prompt: |
+      Palce dotykają tkaniny. Oczy skanują półki. Przeglądanie ma swój rytm — pauza,
+      rozważenie, przejście dalej. Obserwuj choreografię. Co robi ciało, gdy
+      nie kupuje?
+    follow_ups:
+      - Jak przeglądanie kształtuje doświadczenie?
+      - Jaki byłby sklep bez przeglądania?
+      - Jaka jest relacja między przeglądaniem a pragnieniem?
+  - id: hi_rt_fitting_room
+    name: Przymierzalnia
+    prompt: |
+      Zasłona się zamyka. Przymierzalnia to próg — od publicznego do prywatnego.
+      W środku przymierzasz możliwą wersję siebie. Obserwuj zwrot. Co mówi twarz?
+      Przymierzalnia to scena decyzji.
+    follow_ups:
+      - Jak przymierzalnia kształtuje zakup?
+      - Jaki byłby sklep bez niej?
+      - Jaka jest relacja między przymierzaniem a tożsamością?
+  - id: hi_rt_dance_of_purchase
+    name: Taniec Zakupu
+    prompt: |
+      Podejdź, wybierz, zabierz, zapłać. Zakup ma swoje kroki. Obserwuj
+      sekwencję. Gdzie ludzie wahają się? Taniec jest choreografowany przez
+      sklep. Co on wydobywa?
+    follow_ups:
+      - Jak taniec kształtuje wynik?
+      - Jaki byłby sklep bez tej sekwencji?
+      - Jaka jest relacja między tańcem a pragnieniem?
+  - id: hi_rt_cart_territory
+    name: Terytorium Wózka
+    prompt: |
+      Wózek przedłuża ciało. Przechowuje wybory, blokuje przejście. Obserwuj
+      trasę wózka. Wózek to mobilne terytorium. Czego on dochodzi?
+    follow_ups:
+      - Jak wózek kształtuje ruch?
+      - Jaki byłby sklep bez wózków?
+      - Jaka jest relacja między wózkiem a gromadzeniem?
+  - id: hi_rt_endcap_display
+    name: Ekspozycja na Końcu Alejki
+    prompt: |
+      Koniec alejki zajmuje ekspozycja — impuls, promocja, sezonowość.
+      Ekspozycja na końcu alejki przyciąga wzrok. Obserwuj, kto się zatrzymuje.
+      Ekspozycja to pułapka. Co ona robi?
+    follow_ups:
+      - Jak ekspozycja na końcu alejki kształtuje przeglądanie?
+      - Jaka byłaby alejka bez niej?
+      - Jaka jest relacja między ekspozycją a impulsem?
+  - id: hi_rt_checkout_line
+    name: Kolejka do Kasy
+    prompt: |
+      Tworzy się kolejka. Czekoladki, czasopisma, ostatnie szanse. Strefa kasy to
+      ostateczny test. Obserwuj czekanie. Co robią ludzie? Kolejka to
+      próg między przeglądaniem a wyjściem.
+    follow_ups:
+      - Jak kolejka kształtuje zakup?
+      - Jaki byłby sklep bez czekania?
+      - Jaka jest relacja między kolejką a impulsem?
+  - id: hi_rt_shelf_height
+    name: Wysokość Półki
+    prompt: |
+      Na wysokości wzroku najlepiej się sprzedaje. Wysokość półki to projekt.
+      Obserwuj, co gdzie leży. Co jest na dole? Co na górze? Wysokość koduje wartość.
+      Co ona zakłada o ciele?
+    follow_ups:
+      - Jak wysokość półki kształtuje przeglądanie?
+      - Jaki byłby sklep z jednolitą wysokością półek?
+      - Jaka jest relacja między wysokością a dostępem?
+  - id: hi_rt_price_tag
+    name: Metka Cenowa
+    prompt: |
+      Metka podaje cenę. Czasem ukryta, czasem wyeksponowana. Obserwuj
+      jej umiejscowienie. Metka to informacja i bariera. Co metka robi
+      z chwilą dotyku?
+    follow_ups:
+      - Jak metka kształtuje decyzję?
+      - Jaki byłby produkt bez metki?
+      - Jaka jest relacja między metką a wartością?
+  - id: hi_rt_store_entrance
+    name: Wejście do Sklepu
+    prompt: |
+      Drzwi się otwierają. Wchodzisz. Wejście to próg. Obserwuj, co
+      widzisz najpierw. Wejście nadaje ton. Co sklep chce, żebyś poczuł?
+    follow_ups:
+      - Jak wejście kształtuje wizytę?
+      - Jaki byłby sklep bez projektu?
+      - Jaka jest relacja między wejściem a oczekiwaniem?
+  - id: hi_rt_sales_associate
+    name: Sprzedawca
+    prompt: |
+      "Czy mogę pomóc w znalezieniu czegoś?" Oferta jest scenariuszem. Obserwuj
+      wymianę. Przyjmujesz czy odmawiasz? Sprzedawca to przewodnik i presja.
+      Co robi ta oferta?
+    follow_ups:
+      - Jak sprzedawca kształtuje przeglądanie?
+      - Jaki byłby sklep bez nich?
+      - Jaka jest relacja między ofertą a zobowiązaniem?
+  - id: hi_rt_basket_versus_cart
+    name: Koszyk vs. Wózek
+    prompt: |
+      Koszyk na kilka rzeczy. Wózek na więcej. Wybór przewiduje zakup. Obserwuj,
+      kto co bierze. Koszyk ogranicza; wózek zachęca. Co umożliwia ten wybór?
+    follow_ups:
+      - Jak koszyk kształtuje wizytę?
+      - Jaki byłby sklep tylko z wózkami?
+      - Jaka jest relacja między naczyniem a gromadzeniem?
+  - id: hi_rt_return_counter
+    name: Punkt Zwrotów
+    prompt: |
+      Kolejka do zwrotu jest inna. Ludzie niosą torby, paragony, żal. Zwrot to odwrócenie.
+      Obserwuj wymianę. Co kosztuje zwrot — emocjonalnie, społecznie? Punkt zwrotów
+      to miejsce unieważniania.
+    follow_ups:
+      - Jak zwrot kształtuje relację?
+      - Jaki byłby sklep bez zwrotów?
+      - Jaka jest relacja między zwrotem a zaufaniem?
+  - id: hi_rt_dressing_room_limit
+    name: Limit w Przymierzalni
+    prompt: |
+      "Maksymalnie sześć sztuk." Limit kontroluje przymierzanie. Obserwuj
+      negocjacje. Co się dzieje, gdy masz siedem? Limit kształtuje doświadczenie
+      w przymierzalni. Co on zakłada?
+    follow_ups:
+      - Jak limit kształtuje przymierzanie?
+      - Jaka byłaby przymierzalnia bez niego?
+      - Jaka jest relacja między limitem a kradzieżą?
+  - id: hi_rt_impulse_buy
+    name: Zakup Impulsywny
+    prompt: |
+      Produkt nie był na liście. Przykuł wzrok. Zakup impulsywny to
+      chwila poddania się. Obserwuj, kiedy to się dzieje. Co go wywołało?
+      Impuls to spotkanie projektu z pragnieniem.
+    follow_ups:
+      - Jak impuls kształtuje zakup?
+      - Jaki byłby sklep bez impulsów?
+      - Jaka jest relacja między impulsem a żalem?
+  - id: hi_rt_store_music
+    name: Muzyka w Sklepie
+    prompt: |
+      Gra muzyka — wolna, znajoma, zaprojektowana. Muzyka kształtuje nastrój i tempo.
+      Obserwuj tempo. Szybki sklep, wolna muzyka? Muzyka to niewidzialny
+      projekt. Co ona robi ciału?
+    follow_ups:
+      - Jak muzyka kształtuje wizytę?
+      - Jaki byłby sklep w ciszy?
+      - Jaka jest relacja między muzyką a czasem trwania?
+  - id: hi_rt_mannequin
+    name: Manekin
+    prompt: |
+      Manekin nosi ubrania. To idealne ciało, sugestia.
+      Obserwuj, jak ludzie na niego patrzą. Manekin to lustro i fantazja.
+      Co on obiecuje?
+    follow_ups:
+      - Jak manekin kształtuje przeglądanie?
+      - Jaki byłby sklep bez niego?
+      - Jaka jest relacja między manekinem a pragnieniem?
+  - id: hi_rt_sample_station
+    name: Stoisko z Próbkami
+    prompt: |
+      Spróbuj tego. Dotknij tego. Próbka zachęca do dotyku. Stoisko tworzy
+      chwilę przerwy. Obserwuj, kto się zatrzymuje. Próbka to mały prezent. Co
+      ona wydobywa?
+    follow_ups:
+      - Jak próbka kształtuje zakup?
+      - Jaki byłby sklep bez próbek?
+      - Jaka jest relacja między próbką a zobowiązaniem?
+  - id: hi_rt_sale_rack
+    name: Stojak z Wyprzedażami
+    prompt: |
+      Stojak z wyprzedażami to chaos — przeceniony, pognieciony. Ludzie grzebią.
+      Stojak z wyprzedażami to inny rodzaj przeglądania. Obserwuj zachowanie. Co
+      zniżka robi z dotykiem?
+    follow_ups:
+      - Jak stojak z wyprzedażami kształtuje wizytę?
+      - Jaki byłby sklep bez niego?
+      - Jaka jest relacja między wyprzedażą a wartością?
+  - id: hi_rt_mirror_encounter
+    name: Spotkanie z Lustrem
+    prompt: |
+      Widzisz siebie w lustrze sklepowym. Spotkanie jest nieuniknione.
+      Obserwuj spojrzenie. Co sprawdzasz? Lustro to test. Sklep
+      udostępnia lustro. Czego ono chce?
+    follow_ups:
+      - Jak lustro kształtuje przymierzanie?
+      - Jaka byłaby przymierzalnia bez niego?
+      - Jaka jest relacja między lustrem a jaźnią?
+  - id: hi_rt_cashier_small_talk
+    name: Small Talk z Kasjerem
+    prompt: |
+      "Czy wszystko w porządku?" pyta kasjer. Small talk jest scenariuszem.
+      Obserwuj wymianę. Co robi to pytanie? Kasjer to ostatni kontakt z człowiekiem.
+      Co tworzy ta rozmowa?
+    follow_ups:
+      - Jak small talk kształtuje wyjście?
+      - Jaka byłaby kasa bez tego?
+      - Jaka jest relacja między rozmową a transakcją?
+  - id: hi_rt_store_layout
+    name: Układ Sklepu
+    prompt: |
+      Ścieżka jest zaprojektowana. Podstawowe produkty z tyłu. Impulsowe z przodu.
+      Układ choreografuje wizytę. Obserwuj swoją trasę. Co chciał projektant,
+      żebyś minął?
+    follow_ups:
+      - Jak układ kształtuje przeglądanie?
+      - Jaki byłby sklep z losowym układem?
+      - Jaka jest relacja między układem a ekspozycją?
+  - id: hi_rt_touch_decide
+    name: Dotyk Decyduje
+    prompt: |
+      Palce dotykają tkaniny, powierzchni. Dotyk decyduje. Obserwuj
+      tę chwilę. Czego dłoń się uczy, czego oko nie widzi? Dotyk to
+      próg. Czego on wymaga?
+    follow_ups:
+      - Jak dotyk kształtuje decyzję?
+      - Jaki byłby sklep bez dotyku?
+      - Jaka jest relacja między dotykiem a zobowiązaniem?
+  - id: hi_rt_receipt_handoff
+    name: Przekazanie Paragonu
+    prompt: |
+      Paragon jest oferowany — w torbie lub osobno. Niektórzy biorą; niektórzy
+      odmawiają. Paragon to dowód i zapis. Obserwuj wymianę. Co paragon robi
+      dla transakcji?
+    follow_ups:
+      - Jak paragon kształtuje wyjście?
+      - Jaka byłaby kasa bez niego?
+      - Jaka jest relacja między paragonem a zamknięciem?
+  - id: hi_rt_store_exit
+    name: Wyjście ze Sklepu
+    prompt: |
+      Drzwi się otwierają. Wychodzisz z torbą — lub z pustymi rękami. Wyjście to
+      próg. Obserwuj uczucia. Co wyjście wydobywa? Wyjście to koniec tańca. Co
+      pozostaje?
+    follow_ups:
+      - Jak wyjście kształtuje wizytę?
+      - Jaki byłby sklep bez drzwi?
+      - Jaka jest relacja między wyjściem a satysfakcją?
+  - id: hi_rt_loyalty_card_ask
+    name: Pytanie o Kartę Stałego Klienta
+    prompt: |
+      "Czy mają Państwo naszą kartę rabatową?" Pytanie jest rutynowe. Obserwuj
+      odpowiedź. Tak, nie, zapisuję się. Karta stałego klienta przedłuża relację.
+      Co tworzy to pytanie?
+    follow_ups:
+      - Jak karta stałego klienta kształtuje transakcję?
+      - Jaka byłaby kasa bez niej?
+      - Jaka jest relacja między kartą a danymi?
+  - id: hi_rt_abandoned_cart
+    name: Opuszczony Wózek
+    prompt: |
+      Wózek stoi w alejce — pełny, opuszczony. Wózek został porzucony.
+      Obserwuj zawartość. Co rozważali? Porzucenie to
+      chwila "nie". Co ono ujawnia?
+    follow_ups:
+      - Jak opuszczony wózek kształtuje sklep?
+      - Czego sklep by się z niego nauczył?
+      - Jaka jest relacja między porzuceniem a pragnieniem?
+  - id: hi_rt_fitting_room_opinion
+    name: Opinia z Przymierzalni
+    prompt: |
+      "Jak to wygląda?" ktoś pyta zza zasłony. Opinia jest poszukiwana.
+      Przymierzalnia staje się towarzyska. Obserwuj wymianę. Co robi ta opinia?
+    follow_ups:
+      - Jak opinia kształtuje decyzję?
+      - Jaka byłaby przymierzalnia samotnie?
+      - Jaka jest relacja między opinią a zakupem?
+  - id: hi_rt_store_scent
+    name: Zapach Sklepu
+    prompt: |
+      Sklep ma zapach — perfumy, skóra, czystość. Zapach jest zaprojektowany.
+      Dociera do Ciebie, zanim go zauważysz. Obserwuj, kiedy go czujesz. Co
+      robi zapach z ciałem?
+    follow_ups:
+      - Jak zapach kształtuje wizytę?
+      - Jaki byłby sklep bez niego?
+      - Jaka jest relacja między zapachem a pamięcią?
+  - id: hi_rt_compare_prices
+    name: Porównanie Cen
+    prompt: |
+      Telefon wyjęty. Skanowanie. Sprawdzenie ceny to badanie. Obserwuj tę chwilę.
+      Co ujawnia telefon? Porównanie odbywa się w alejce. Co ono robi z decyzją?
+    follow_ups:
+      - Jak porównanie kształtuje zakup?
+      - Jaki byłby sklep bez telefonów?
+      - Jaka jest relacja między porównaniem a siłą?
+  - id: hi_rt_window_display
+    name: Ekspozycja Okienna
+    prompt: |
+      Okno wychodzi na ulicę. Manekiny, rekwizyty, historia. Ekspozycja
+      zatrzymuje spacer. Obserwuj, co przyciąga wzrok. Okno to
+      zaproszenie. Co ono obiecuje?
+    follow_ups:
+      - Jak okno kształtuje wejście?
+      - Jaki byłby sklep bez niego?
+      - Jaka jest relacja między ekspozycją a pragnieniem?
+  - id: hi_rt_size_search
+    name: Szukanie Rozmiaru
+    prompt: |
+      Palce przewracają wieszaki. Szukanie rozmiaru. Poszukiwanie ma rytm.
+      Obserwuj frustrację lub ulgę. Rozmiar to brama.
+      Czego wymaga to poszukiwanie?
+    follow_ups:
+      - Jak szukanie rozmiaru kształtuje przeglądanie?
+      - Jaki byłby sklep, gdyby wszystkie rozmiary były widoczne?
+      - Jaka jest relacja między rozmiarem a ciałem?
+  - id: hi_rt_payment_choice
+    name: Wybór Płatności
+    prompt: |
+      Karta, gotówka, telefon. Wybór płatności to moment transakcji.
+      Obserwuj metodę. Wybór to nawyk i tożsamość. Co komunikuje metoda płatności?
+    follow_ups:
+      - Jak płatność kształtuje kasę?
+      - Jaki byłby sklep z jedną metodą płatności?
+      - Jaka jest relacja między płatnością a szybkością?
+  - id: hi_rt_store_regular
+    name: Regularny Klient Sklepu
+    prompt: |
+      Regularny klient zna układ. Porusza się z celem. Sprzedawca kiwa głową.
+      Obserwuj regularnego klienta. Co on wie, czego nie wie nowicjusz?
+      Regularny klient ma relację z przestrzenią.
+    follow_ups:
+      - Jak regularny klient kształtuje sklep?
+      - Jaki byłby sklep bez stałych klientów?
+      - Jaka jest relacja między stałym klientem a lojalnością?
+  - id: hi_rt_bag_handoff
+    name: Przekazanie Torby
+    prompt: |
+      Torba jest podawana — pełna, markowa. Przekazanie kończy
+      transakcję. Obserwuj wymianę. Co torba robi dla wyjścia?
+      Torba to dowód i ciężar.
+    follow_ups:
+      - Jak torba kształtuje wyjście?
+      - Jaki byłby zakup bez niej?
+      - Jaka jest relacja między torbą a tożsamością?
+  - id: hi_rt_fitting_room_overflow
+    name: Nadmiar Rzeczy w Przymierzalni
+    prompt: |
+      Zbyt wiele przedmiotów. Sprzedawca zabiera nadmiar. "Potrzymam je."
+      Nadmiar to zaufanie. Obserwuj wymianę. Co sprzedawca
+      trzyma? Nadmiar przedłuża przymierzanie. Co on umożliwia?
+    follow_ups:
+      - Jak nadmiar kształtuje przymierzanie?
+      - Jaka byłaby przymierzalnia bez niego?
+      - Jaka jest relacja między nadmiarem a zaufaniem?
+  - id: hi_rt_store_lighting
+    name: Oświetlenie Sklepu
+    prompt: |
+      Światło jest zaprojektowane — pochlebne, jasne, ciepłe. Oświetlenie kształtuje
+      wygląd rzeczy. Obserwuj lustro w tym świetle. Co światło robi z twarzą,
+      tkaniną?
+    follow_ups:
+      - Jak oświetlenie kształtuje zakup?
+      - Jaki byłby sklep w ostrym świetle?
+      - Jaka jest relacja między światłem a prawdą?
+  - id: hi_rt_aisle_block
+    name: Blokada Alejki
+    prompt: |
+      Ktoś stoi w alejce. Musisz przejść. Blokada jest
+      nieświadoma lub celowa. Obserwuj negocjacje. "Przepraszam." Blokada to
+      małe tarcie. Czego ona wymaga?
+    follow_ups:
+      - Jak blokada kształtuje przepływ?
+      - Jaki byłby sklep z szerszymi alejkami?
+      - Jaka jest relacja między blokadą a uprzejmością?
+  - id: hi_rt_clearance_section
+    name: Strefa Wyprzedaży
+    prompt: |
+      Strefa wyprzedaży jest z tyłu, w kącie. Ostatni sezon, ostatnia szansa.
+      Strefa ma inną energię. Obserwuj przeglądanie. Co
+      zniżka robi z dotykiem, rozważeniem?
+    follow_ups:
+      - Jak strefa wyprzedaży kształtuje wizytę?
+      - Jaki byłby sklep bez niej?
+      - Jaka jest relacja między wyprzedażą a wartością?
+  - id: hi_rt_store_map
+    name: Mapa Sklepu
+    prompt: |
+      "Gdzie jest X?" Mapa lub sprzedawca odpowiadają. Sklep ma
+      geografię. Obserwuj dezorientację. Co daje mapa?
+      Mapa to orientacja. Co ona zakłada?
+    follow_ups:
+      - Jak mapa kształtuje wizytę?
+      - Jaki byłby sklep bez niej?
+      - Jaka jest relacja między mapą a płynnością?
+  - id: hi_rt_try_on_stack
+    name: Stos Przymierzanych Rzeczy
+    prompt: |
+      Sprzedawca zwraca rzeczy po przymierzeniu. Są złożone, powieszone. Stos
+      wraca na podłogę. Obserwuj pracę. Kto tego dotykał? Stos rzeczy po
+      przymierzaniu to skutki wielu "może".
+    follow_ups:
+      - Jak stos kształtuje podłogę?
+      - Jaka byłaby przymierzalnia bez niego?
+      - Jaka jest relacja między stosem a pracą?
+  - id: hi_rt_store_hours
+    name: Godziny Otwarcia Sklepu
+    prompt: |
+      Znak mówi, kiedy sklep się otwiera, kiedy zamyka. Godziny otwarcia to
+      granica. Obserwuj tłum przed otwarciem. Godziny otwarcia strukturyzują
+      dostęp. Co one zakładają o kliencie?
+    follow_ups:
+      - Jak godziny otwarcia kształtują wizytę?
+      - Jaki byłby sklep z dostępem przez całą dobę?
+      - Jaka jest relacja między godzinami otwarcia a dostępnością?
+  - id: hi_rt_shopping_list
+    name: Lista Zakupów
+    prompt: |
+      Telefon lub papier. Lista kieruje wizytą. Obserwuj, kto ją ma. Lista to
+      intencja. Oprze się impulsowi — lub nie. Co lista robi dla przeglądania?
+    follow_ups:
+      - Jak lista kształtuje zakup?
+      - Jaka byłaby wizyta bez niej?
+      - Jaka jest relacja między listą a kontrolą?
+  - id: hi_rt_store_emptiness
+    name: Pustka w Sklepie
+    prompt: |
+      Poza godzinami szczytu, powolny dzień. Sklep jest pusty. Pustka zmienia
+      wrażenie. Obserwuj przestrzeń. Co ujawnia pustka? Pusty
+      sklep to inny rodzaj sceny.
+    follow_ups:
+      - Jak pustka kształtuje przeglądanie?
+      - Jaki byłby sklep, gdyby zawsze był pusty?
+      - Jaka jest relacja między pustką a komfortem?
+  - id: hi_rt_fitting_room_curtain
+    name: Zasłona w Przymierzalni
+    prompt: |
+      Zasłona się zamyka. Prywatność jest częściowa — szpary, dźwięki. Zasłona to
+      próg. Obserwuj granicę. Czego zasłona chroni?
+      Czego ona nie chroni?
+    follow_ups:
+      - Jak zasłona kształtuje przymierzanie?
+      - Jaka byłaby przymierzalnia z drzwiami?
+      - Jaka jest relacja między zasłoną a prywatnością?
+  - id: hi_rt_store_aroma
+    name: Aromat Sklepu
+    prompt: |
+      Piekarnia, kawa, perfumy — sklep ma zapach. Aromat to pierwszy
+      kontakt. Przygotowuje do wizyty. Obserwuj, kiedy go zauważasz. Co
+      robi aromat, zanim kupisz?
+    follow_ups:
+      - Jak aromat kształtuje wizytę?
+      - Jaki byłby sklep bez niego?
+      - Jaka jest relacja między aromatem a pragnieniem?
+  - id: hi_rt_purchase_regret
+    name: Żal po Zakupie
+    prompt: |
+      Torba w dłoni. Pojawia się wątpliwość. Żal może nadejść później. Obserwuj
+      twarz opuszczającą sklep. Co znaczy ten zakup? Żal
+      to cień tańca. Co go tworzy?
+    follow_ups:
+      - Jak żal kształtuje następną wizytę?
+      - Jaki byłby zakup bez żalu?
+      - Jaka jest relacja między żalem a pragnieniem?
+  - id: hi_rt_store_thank_you
+    name: Podziękowanie w Sklepie
+    prompt: |
+      "Dziękujemy za zakupy." Fraza zamyka transakcję.
+      Jest scenariuszem. Obserwuj wymianę. Co robi "dziękuję"? Fraza to mały rytuał.
+      Co ona tworzy?
+    follow_ups:
+      - Jak podziękowanie kształtuje wyjście?
+      - Jaka byłaby kasa bez niego?
+      - Jaka jest relacja między podziękowaniem a zamknięciem?
+  - id: hi_rt_store_entrance_sensor
+    name: Czujnik Wejścia
+    prompt: |
+      Drzwi otwierają się automatycznie. Czujnik wykrywa Twoje podejście. Wejście
+      jest choreografowane. Obserwuj próg. Co automatyczne drzwi robią z przybyciem?
+      Czujnik tworzy płynne przejście.
+    follow_ups:
+      - Jak czujnik kształtuje wejście?
+      - Jaki byłby sklep z ręcznymi drzwiami?
+      - Jaka jest relacja między czujnikiem a powitaniem?
+  - id: hi_rt_price_match
+    name: Dopasowanie Ceny
+    prompt: |
+      "Dopasujemy ceny konkurencji." Oferta to obietnica. Obserwuj, kiedy
+      ktoś z niej korzysta. Dopasowanie ceny to negocjacje. Czego ono wymaga
+      od klienta? Dopasowanie tworzy zaufanie — lub podejrzliwość.
+    follow_ups:
+      - Jak dopasowanie ceny kształtuje zakup?
+      - Jaki byłby sklep bez tego?
+      - Jaka jest relacja między dopasowaniem a lojalnością?
+  - id: hi_rt_fitting_room_number
+    name: Numer w Przymierzalni
+    prompt: |
+      "Ile sztuk?" pyta sprzedawca. Numer ogranicza przymierzanie. Obserwuj
+      negocjacje. Co się dzieje, gdy masz więcej? Numer to
+      kontrola. Co on zakłada o kliencie?
+    follow_ups:
+      - Jak numer kształtuje przymierzanie?
+      - Jaka byłaby przymierzalnia bez limitów?
+      - Jaka jest relacja między numerem a zaufaniem?
+  - id: hi_rt_gift_receipt
+    name: Paragon Prezentowy
+    prompt: |
+      "Czy chcieliby Państwo paragon prezentowy?" Oferta oddziela cenę
+      od prezentu. Paragon prezentowy umożliwia zwrot bez ujawniania kosztu.
+      Obserwuj wybór. Czego chroni paragon prezentowy?
+    follow_ups:
+      - Jak paragon prezentowy kształtuje zakup?
+      - Jaki byłby prezent bez niego?
+      - Jaka jest relacja między paragonem a dyskrecją?

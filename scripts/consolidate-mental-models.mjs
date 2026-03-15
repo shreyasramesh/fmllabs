@@ -71,7 +71,7 @@ function main() {
 
   const toProcess = onlyLang
     ? [onlyLang]
-    : ["en", "hi", "ta", "kn", "ja", "zh", "es", "ar", "fr", "bn", "pt", "ru", "ur"];
+    : ["en", "hi", "ta", "kn", "ja", "zh", "es", "ar", "fr", "bn", "pt", "ru", "ur", "de", "it", "pl", "uk", "ro", "nl", "tr"];
 
   for (const code of toProcess) {
     if (code === "default") continue;

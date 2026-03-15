@@ -1,0 +1,500 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natuurlijk Microkosmos — Insecten Territoria (Dutch)
+
+id: natural_microcosm_insect_territories
+name: Natuurlijk Microkosmos — Insecten Territoria
+description: 50 kaarten om je kijk op insectenleven te veranderen — van mierenpaden en bijenverkeer tot spinnenwebben, territoriale drama's en de choreografie van kolonies.
+domain: natural_microcosm
+cards:
+  - id: nmi_ant_trail
+    name: Mierenpad
+    prompt: |
+      Mieren vormen paden — feromonenpaden tussen nest en voedsel. Kijk naar de stroom.
+      Twee banen: heen en terug. Het pad is een beslissing van velen.
+      Wat zou het pad breken?
+    follow_ups:
+      - Hoe versterkt het pad zichzelf?
+      - Wat zou de kolonie zijn zonder paden?
+      - Wat is de relatie tussen het pad en de kolonie?
+  - id: nmi_bee_traffic
+    name: Bijenverkeer
+    prompt: |
+      Een bijenkorfingang — bijen stromen in en uit. Het verkeer heeft ritme. Sommigen
+      dragen stuifmeel; sommigen niet. Denk aan de choreografie. Wie bepaalt het
+      patroon?
+    follow_ups:
+      - Wat zou de korf zijn zonder het verkeer?
+      - Hoe vormt de ingang de stroom?
+      - Wat is de relatie tussen de bij en de kolonie?
+  - id: nmi_spider_web
+    name: Spinnenweb
+    prompt: |
+      Een spinnenweb is territorium en val. De spin wacht aan de rand.
+      Trillingen dragen informatie. Denk aan de architectuur. Wat vangt het
+      web? Wat sluit het uit?
+    follow_ups:
+      - Wat zou de spin zijn zonder het web?
+      - Hoe breidt het web de zintuigen van de spin uit?
+      - Wat is de relatie tussen zijde en overleving?
+  - id: nmi_dragonfly_claim
+    name: Libelle Claim
+    prompt: |
+      Een libelle patrouilleert een stuk vijver — heen en weer. Het is territoriaal.
+      Rivalen worden weggejaagd. Partners worden hof gemaakt. Denk aan de inzet. Wat wordt er verdedigd?
+    follow_ups:
+      - Wat zou de libelle doen zonder territorium?
+      - Hoe communiceert de patrouille eigendom?
+      - Wat is de relatie tussen ruimte en voortplanting?
+  - id: nmi_caterpillar_munch
+    name: Rups Eten
+    prompt: |
+      Een rups eet — de rand van het blad neemt af. Het eten is constant. De
+      rups is een conversiemachine. Denk aan de snelheid. Wat zou de plant zijn zonder herbivoren?
+    follow_ups:
+      - Hoe vormt de rups het blad?
+      - Wat zou de vlinder zijn zonder het eten?
+      - Wat is de relatie tussen consumptie en groei?
+  - id: nmi_beetle_battle
+    name: Kever Gevecht
+    prompt: |
+      Twee kevers ontmoeten elkaar — misschien vliegende hertjes, misschien mestkevers. Ze worstelen.
+      Het gevecht is ritueel. Denk aan de inzet. Wat wordt er gewonnen? Wat wordt er verloren?
+    follow_ups:
+      - Wat zou de verliezer doen?
+      - Hoe eindigt het gevecht?
+      - Wat is de relatie tussen gevecht en paring?
+  - id: nmi_firefly_flash
+    name: Vuurvliegje Flits
+    prompt: |
+      Vuurvliegjes flitsen — elke soort heeft een code. Het patroon is hofmakerij. Denk aan
+      het signaal. Wat zou de verkeerde flits betekenen? Hoe vinden ze elkaar in het donker?
+    follow_ups:
+      - Hoe codeert de flits de soort?
+      - Wat zou de weide zijn zonder vuurvliegjes?
+      - Wat is de relatie tussen licht en partner?
+  - id: nmi_aphid_farm
+    name: Bladluis Boerderij
+    prompt: |
+      Mieren verzorgen bladluizen — ze strelen ze, ze beschermen ze. De bladluizen scheiden
+      honingdauw uit. De mieren oogsten het. Denk aan het partnerschap. Wie profiteert?
+      Wie wordt geëxploiteerd?
+    follow_ups:
+      - Wat zouden de bladluizen zijn zonder mieren?
+      - Hoe vormt de landbouw beide soorten?
+      - Wat is de relatie tussen verzorgen en oogsten?
+  - id: nmi_cicada_shell
+    name: Cicade Huid
+    prompt: |
+      Een cicade huid kleeft aan de bast — de nimf is eruit gekomen. De huid is leeg,
+      perfect. Denk aan de vervelling. Wat liet het insect achter? Wat won het?
+    follow_ups:
+      - Wat zou de cicade zijn zonder de vervelling?
+      - Hoe markeert de huid de overgang?
+      - Wat is de relatie tussen afwerpen en groei?
+  - id: nmi_leaf_miner
+    name: Bladmijn
+    prompt: |
+      Een spoor in een blad — het pad van een bladmijn. De larve eet tussen
+      lagen. Het blad houdt het spoor bij. Denk aan de tunnel. Hoe zou het
+      blad er van binnenuit uitzien?
+    follow_ups:
+      - Wat zou het blad zijn zonder de mijn?
+      - Hoe beschermt de mijn de larve?
+      - Wat is de relatie tussen binnen en buiten?
+  - id: nmi_wasp_nest
+    name: Wespen Nest
+    prompt: |
+      Een papierwespen nest — hexagonale cellen, gekauwd hout. Het nest is architectuur
+      en fort. Denk aan de kolonie. Wie bouwt? Wie verdedigt? Wie plant zich voort?
+    follow_ups:
+      - Wat zouden de wespen zijn zonder het nest?
+      - Hoe vormt het nest de sociale structuur?
+      - Wat is de relatie tussen papier en kolonie?
+  - id: nmi_grasshopper_leap
+    name: Sprinkhaan Sprong
+    prompt: |
+      Een sprinkhaan springt — poten strekken, het is weg. De sprong is ontsnapping of
+      nadering. Denk aan de trigger. Wat zag de sprinkhaan? Wat hoorde het?
+    follow_ups:
+      - Wat zou de sprinkhaan zijn zonder de sprong?
+      - Hoe ontwijkt de sprong predatie?
+      - Wat is de relatie tussen poot en vlucht?
+  - id: nmi_mantis_still
+    name: Bidsprinkhaan Stilte
+    prompt: |
+      Een bidsprinkhaan wacht — bewegingloos. Het is een jager. Prooi nadert. De slag
+      is plotseling. Denk aan het geduld. Wat kost de stilte? Wat maakt het mogelijk?
+    follow_ups:
+      - Wat zou de bidsprinkhaan zijn zonder het wachten?
+      - Hoe misleidt de stilte?
+      - Wat is de relatie tussen geduld en vangst?
+  - id: nmi_bumblebee_buzz
+    name: Hommel Zoem
+    prompt: |
+      Een hommel zoemt — het trilt. Sommige bloemen vereisen zoem-bestuiving.
+      De hommel schudt het stuifmeel los. Denk aan het partnerschap. Wat zou
+      de bloem zijn zonder het gezoem?
+    follow_ups:
+      - Hoe maakt het gezoem stuifmeel los?
+      - Wat zou de hommel zijn zonder zoem-bestuiving?
+      - Wat is de relatie tussen trilling en bevruchting?
+  - id: nmi_butterfly_territory
+    name: Vlinder Territorium
+    prompt: |
+      Een vlinder zit op een hoog punt — hilltopping. Het wacht op partners.
+      Rivalen worden weggejaagd. Denk aan de strategie. Waarom deze plek? Wat maakt het waardevol?
+    follow_ups:
+      - Wat zou de vlinder doen zonder de zitplek?
+      - Hoe vormt hilltopping de paring?
+      - Wat is de relatie tussen plaats en ontmoeting?
+  - id: nmi_earwig_pincer
+    name: Orenkruiper Tang
+    prompt: |
+      Orenkruipers hebben tangen — cerci. Ze zijn voor verdediging, voor het vouwen van vleugels, voor
+      het hanteren van prooi. Denk aan het gereedschap. Wat zou de orenkruiper zijn zonder de
+      tang?
+    follow_ups:
+      - Hoe vormt de tang gedrag?
+      - Hoe zou verdediging er zonder uitzien?
+      - Wat is de relatie tussen vorm en functie?
+  - id: nmi_katydid_call
+    name: Zangkrekel Roep
+    prompt: |
+      Een zangkrekel roept — stridulatie, poten op vleugels. De roep is soortspecifiek.
+      Het is hofmakerij, territorium. Denk aan het geluid. Wat zou de nacht zijn zonder het?
+    follow_ups:
+      - Hoe trekt de roep partners aan?
+      - Wat zou de zangkrekel riskeren door te roepen?
+      - Wat is de relatie tussen geluid en predatie?
+  - id: nmi_ladybug_cluster
+    name: Lieveheersbeestje Cluster
+    prompt: |
+      Lieveheersbeestjes clusteren in de winter — tientallen, honderden. Ze aggregeren voor warmte,
+      voor beschutting. Denk aan de bijeenkomst. Wat triggert het? Wat verspreidt het?
+    follow_ups:
+      - Wat zouden de lieveheersbeestjes zijn zonder de cluster?
+      - Hoe creëert de cluster microklimaat?
+      - Wat is de relatie tussen velen en overleving?
+  - id: nmi_ant_carry
+    name: Mier Dragen
+    prompt: |
+      Een mier draagt een andere — dood of gewond. Het is hulp. De kolonie zorgt
+      voor zijn eigen. Denk aan het gedrag. Wat zou de gewonde mier alleen doen?
+      Wat wint de drager?
+    follow_ups:
+      - Hoe dient het dragen de kolonie?
+      - Wat zou de kolonie zijn zonder samenwerking?
+      - Wat is de relatie tussen individu en collectief?
+  - id: nmi_mosquito_hover
+    name: Mug Zweven
+    prompt: |
+      Een mug zweeft — testend, prikkend. Het zoekt een gastheer. Het zweven is
+      beoordeling. Denk aan het moment voor de beet. Wat detecteert de mug? Wat beslist?
+    follow_ups:
+      - Wat zou de mug doen zonder het zweven?
+      - Hoe minimaliseert het zweven detectie?
+      - Wat is de relatie tussen prikken en voeden?
+  - id: nmi_weevil_curl
+    name: Snuitkever Krul
+    prompt: |
+      Een blad krult — een snuitkever of galmug maakte het. Het blad vouwt zich om de
+      larve. Denk aan de manipulatie. De plant wordt overgehaald. Wat zou
+      het blad doen zonder het insect?
+    follow_ups:
+      - Hoe beschermt de krul de larve?
+      - Wat zou de plant zijn zonder de krul?
+      - Wat is de relatie tussen insect en plantvorm?
+  - id: nmi_honeybee_waggle
+    name: Honingbij Waggel
+    prompt: |
+      Een honingbij waggelt — het is een dans. De dans codeert afstand en richting
+      naar bloemen. Andere bijen kijken toe. Denk aan de boodschap. Wat zou de
+      kolonie zijn zonder het waggelen?
+    follow_ups:
+      - Hoe draagt de dans informatie over?
+      - Hoe zou foerageren er zonder uitzien?
+      - Wat is de relatie tussen dans en ontdekking?
+  - id: nmi_gnat_cloud
+    name: Muggen Zwerm
+    prompt: |
+      Muggen zwermen — een wolk van kleine insecten. De zwerm is paring. Mannetjes verzamelen zich;
+      vrouwtjes komen binnen en kiezen. Denk aan de aggregatie. Wat zou de
+      mug alleen doen?
+    follow_ups:
+      - Hoe maakt de zwerm paring mogelijk?
+      - Wat zouden de muggen zijn zonder de wolk?
+      - Wat is de relatie tussen velen en ontmoeting?
+  - id: nmi_spider_wrap
+    name: Spin Wikkelen
+    prompt: |
+      Een spin wikkelt prooi — zijde rond het worstelende insect. Het wikkelen immobiliseert.
+      De spin injecteert enzymen. Denk aan het proces. Wat zou de spin doen zonder het wikkelen?
+    follow_ups:
+      - Hoe onderwerpt het wikkelen de prooi?
+      - Wat zou de spin riskeren zonder het?
+      - Wat is de relatie tussen zijde en vertering?
+  - id: nmi_ant_war
+    name: Mieren Oorlog
+    prompt: |
+      Twee mierenkolonies ontmoeten elkaar — conflict. Werkers worstelen, bijten. De grens wordt
+      betwist. Denk aan het gevecht. Wat staat er op het spel? Hoe wordt de grens
+      bepaald?
+    follow_ups:
+      - Wat zouden de kolonies zijn zonder de oorlog?
+      - Hoe eindigt de oorlog?
+      - Wat is de relatie tussen territorium en hulpbron?
+  - id: nmi_moth_flutter
+    name: Mot Fladderen
+    prompt: |
+      Een mot fladdert naar een licht — aangetrokken, verward. Het licht verstoort
+      navigatie. Denk aan de val. Wat zou de mot doen in het donker?
+      Waarom desoriënteert licht?
+    follow_ups:
+      - Wat zou de mot zijn zonder het licht?
+      - Hoe gebruikt de mot het maanlicht normaal?
+      - Wat is de relatie tussen licht en richting?
+  - id: nmi_stick_insect_still
+    name: Wandelende Tak Stil
+    prompt: |
+      Een wandelende tak is bewegingloos — het lijkt op een takje. Roofdieren gaan voorbij.
+      Denk aan de misleiding. Wat zou het insect zijn zonder de vermomming?
+      Hoe lang kan het de pose aanhouden?
+    follow_ups:
+      - Hoe beschermt de stilte?
+      - Wat zou het insect riskeren door te bewegen?
+      - Wat is de relatie tussen vorm en overleving?
+  - id: nmi_leafcutter_carry
+    name: Bladsnijder Dragen
+    prompt: |
+      Een bladsnijder mier draagt een bladfragment — vele malen zijn eigen grootte. Het blad
+      gaat naar het nest. Het wordt substraat voor schimmel. Denk aan de
+      oogst. Wat zou de kolonie zijn zonder de bladeren?
+    follow_ups:
+      - Hoe gebruikt de schimmel het blad?
+      - Wat zou de mier eten zonder de schimmel?
+      - Wat is de relatie tussen oogst en teelt?
+  - id: nmi_housefly_clean
+    name: Huisvlieg Schoonmaken
+    prompt: |
+      Een huisvlieg maakt zichzelf schoon — wrijft poten, strijkt vleugels. Het poetsen verwijdert
+      deeltjes, onderhoudt sensoren. Denk aan het ritueel. Wat zou de vlieg zijn zonder het schoonmaken?
+    follow_ups:
+      - Hoe onderhoudt het poetsen de functie?
+      - Wat zou er gebeuren als de vlieg zich niet kon schoonmaken?
+      - Wat is de relatie tussen schoon en zintuig?
+  - id: nmi_termite_mound
+    name: Termieten Heuvel
+    prompt: |
+      Een termietenheuvel rijst op — klei, speeksel, gekauwd hout. Het is een stad. Binnenin,
+      tunnels, kamers, schimmeltuinen. Denk aan de architectuur. Wat zou
+      de kolonie zijn zonder de heuvel?
+    follow_ups:
+      - Hoe reguleert de heuvel het klimaat?
+      - Wat zouden de termieten doen zonder de structuur?
+      - Wat is de relatie tussen heuvel en kolonie?
+  - id: nmi_cricket_chirp
+    name: Krekels Krekelen
+    prompt: |
+      Een krekel krekkelt — vleugels samen. Het gekrekel is hofmakerij. Vrouwtjes kiezen
+      op geluid. Denk aan de roep. Wat zou de krekel doen zonder het
+      gekrekel? Wie luistert er naast vrouwtjes?
+    follow_ups:
+      - Hoe codeert het gekrekel de fitheid?
+      - Wat zou de weide zijn zonder het geluid?
+      - Wat is de relatie tussen roep en predatie?
+  - id: nmi_damselfly_tandem
+    name: Juffrouw Vliegen Tandem
+    prompt: |
+      Juffrouwen vliegen paren in tandem — mannetje klemt vrouwtje achter het hoofd. Zij
+      buigt om sperma te ontvangen. Het paar kan samen vliegen. Denk aan de
+      koppeling. Wat zou paring zijn zonder de klem?
+    follow_ups:
+      - Hoe beschermt de tandem de investering van het mannetje?
+      - Wat zou het paar doen zonder de verbinding?
+      - Wat is de relatie tussen klem en bevruchting?
+  - id: nmi_roach_scatter
+    name: Kakkerlak Verspreiding
+    prompt: |
+      Doe een licht aan — kakkerlakken verspreiden zich. Ze zoeken spleten. De verspreiding is
+      ontsnapping. Denk aan de reactie. Wat zou de kakkerlak doen in permanent
+      licht? Waarom donker?
+    follow_ups:
+      - Hoe vermindert de verspreiding predatie?
+      - Wat zou de kakkerlak zijn zonder de reflex?
+      - Wat is de relatie tussen licht en schuilen?
+  - id: nmi_hopper_nymph
+    name: Sprinkhaan Nimf
+    prompt: |
+      Een jonge sprinkhaan — nimf. Het heeft nog geen vleugels. Het springt. Denk aan de
+      fase. Wat zal de nimf worden? Wat mist het nu?
+    follow_ups:
+      - Wat zou de sprinkhaan zijn zonder de nimffase?
+      - Hoe ontwijkt de nimf roofdieren?
+      - Wat is de relatie tussen vervelling en vleugel?
+  - id: nmi_sweat_bee
+    name: Zweet Bij
+    prompt: |
+      Een zweetbij landt op je huid — op zoek naar zout. Zweet is een bron.
+      Denk aan de ontmoeting. Wat zou de bij doen zonder zweet? Waarom heeft het het zout nodig?
+    follow_ups:
+      - Hoe gebruikt de bij het zout?
+      - Wat zou de bij riskeren door te landen?
+      - Wat is de relatie tussen mens en bij?
+  - id: nmi_army_ant_column
+    name: Legermier Kolom
+    prompt: |
+      Legermieren marcheren — een kolom van duizenden. Ze stromen. Prooi wordt overweldigd.
+      Denk aan de zwerm. Wat zouden de mieren zijn zonder de kolom? Hoe
+      coördineren ze?
+    follow_ups:
+      - Hoe maakt de kolom predatie mogelijk?
+      - Wat zou het bos zijn zonder legermieren?
+      - Wat is de relatie tussen velen en macht?
+  - id: nmi_water_strider_leg
+    name: Schaatser Poot
+    prompt: |
+      De poten van een schaatser — lang, hydrofoob. Ze verdelen het gewicht. Het
+      oppervlak houdt het. Denk aan de aanpassing. Wat zou de schaatser zijn
+      zonder het pootontwerp?
+    follow_ups:
+      - Hoe verdeelt de poot de kracht?
+      - Wat zou de schaatser doen op land?
+      - Wat is de relatie tussen vorm en oppervlak?
+  - id: nmi_aphid_wing
+    name: Bladluis Vleugel
+    prompt: |
+      Sommige bladluizen hebben vleugels — als het druk is of als de gastheer afneemt. Ze
+      verspreiden zich. Denk aan de schakelaar. Wat triggert de vleugelontwikkeling? Wat
+      kost de vleugel?
+    follow_ups:
+      - Hoe induceren drukte vleugels?
+      - Wat zou de bladluis zijn zonder de optie?
+      - Wat is de relatie tussen vleugel en verspreiding?
+  - id: nmi_scale_armor
+    name: Schild Schild
+    prompt: |
+      Schildluizen lijken op bultjes — ze zijn gepantserd. Ze bewegen weinig.
+      Ze tappen de plant, voeden zich. Denk aan de strategie. Wat zou het schild zijn zonder het pantser?
+    follow_ups:
+      - Hoe beschermt het pantser?
+      - Wat zou de plant zijn zonder het schild?
+      - Wat is de relatie tussen stilte en verdediging?
+  - id: nmi_caddisfly_case
+    name: Kokerjuffer Koker
+    prompt: |
+      Een kokerjuffer larve bouwt een koker — takjes, zand, kiezels. Het draagt de
+      koker. De koker is camouflage en pantser. Denk aan de constructie.
+      Wat zou de larve zijn zonder het?
+    follow_ups:
+      - Hoe beschermt de koker?
+      - Wat zou de larve gebruiken als materialen veranderden?
+      - Wat is de relatie tussen bouwen en overleven?
+  - id: nmi_leafhopper_flash
+    name: Bladspringer Sprong
+    prompt: |
+      Een bladspringer springt — plotseling. Het is weg. De sprong is ontsnapping. De poten slaan
+      energie op, geven vrij. Denk aan het mechanisme. Wat zou de bladspringer zijn zonder de sprong?
+    follow_ups:
+      - Hoe ontwijkt de sprong vangst?
+      - Wat zou het blad zijn zonder de bladspringer?
+      - Wat is de relatie tussen sprong en predatie?
+  - id: nmi_bombardier_blast
+    name: Bombardier Knal
+    prompt: |
+      Een bombardierkever spuit — heet, giftig. Het is verdediging. De spuit is
+      chemie: twee kamers, reactie bij uitgang. Denk aan het wapen. Wat zou
+      de kever doen zonder het?
+    follow_ups:
+      - Hoe ontmoedigt de spuit roofdieren?
+      - Wat zou de kever riskeren door te spuiten?
+      - Wat is de relatie tussen chemie en verdediging?
+  - id: nmi_silverfish_slip
+    name: Zilvervisje Glij
+    prompt: |
+      Een zilvervisje glijdt in een spleet — snel. Het is plat. Het past. Denk aan de
+      vorm. Wat zou het zilvervisje zijn zonder de platheid? Waarom de
+      urgentie?
+    follow_ups:
+      - Hoe maakt de platheid ontsnapping mogelijk?
+      - Wat zou het zilvervisje doen in het openbaar?
+      - Wat is de relatie tussen vorm en toevluchtsoord?
+  - id: nmi_ant_queen
+    name: Mieren Koningin
+    prompt: |
+      Een mierenkolonie heeft een koningin — of meerdere. Zij legt eieren. Werkers verzorgen haar.
+      Denk aan het centrum. Wat zou de kolonie zijn zonder de koningin? Hoe
+      vervangt de kolonie haar?
+    follow_ups:
+      - Hoe vormt de koningin de kolonie?
+      - Wat zouden werkers doen zonder haar?
+      - Wat is de relatie tussen koningin en kolonie?
+  - id: nmi_owlfly_larva
+    name: Doodskopvlieg Larve
+    prompt: |
+      Een doodskopvlieg larve ligt te wachten — in zand, in puin. Het overvalt. Kaken
+      slaan toe. Denk aan de jager. Wat zou de larve zijn zonder de hinderlaag?
+      Wat wordt het?
+    follow_ups:
+      - Hoe maakt de hinderlaag voeding mogelijk?
+      - Wat zou de doodskopvlieg zijn zonder de larvale fase?
+      - Wat is de relatie tussen wachten en vangen?
+  - id: nmi_thrips_scatter
+    name: Thrips Verspreiding
+    prompt: |
+      Thrips zijn piepklein — nauwelijks zichtbaar. Ze clusteren op bloemen, op bladeren.
+      Ze prikken en zuigen. Denk aan de schaal. Wat zou de plant zijn
+      zonder thrips? Wat zouden we merken?
+    follow_ups:
+      - Hoe vormen thrips de plant?
+      - Wat zou het ecosysteem zijn zonder hen?
+      - Wat is de relatie tussen klein en impact?
+  - id: nmi_sting_threat
+    name: Steek Dreiging
+    prompt: |
+      Een wesp heft haar achterlijf — steek klaar. Het is een dreiging. De houding
+      communiceert. Denk aan de vertoning. Wat zou de wesp doen als genegeerd?
+      Wat kost de houding?
+    follow_ups:
+      - Hoe ontmoedigt de dreiging?
+      - Wat zou de wesp riskeren door te steken?
+      - Wat is de relatie tussen vertoning en verdediging?
+  - id: nmi_velvet_ant
+    name: Fluweel Mier
+    prompt: |
+      Een fluwelen mier kruipt — het is een gevleugelde wesp. Het is taai. Roofdieren leren het
+      te vermijden. De steek is fel. Denk aan de strategie. Wat zou de
+      fluwelen mier zijn zonder de steek?
+    follow_ups:
+      - Hoe beschermt de steek?
+      - Wat zou de fluwelen mier doen op de oppervlakte?
+      - Wat is de relatie tussen steek en durf?
+  - id: nmi_ambush_predator
+    name: Hinderlaag Roofdier
+    prompt: |
+      Een hinderlaag sprinkhaan wacht op een bloem — geel, vermomd. Prooi arriveert. De
+      sprinkhaan slaat toe. Denk aan het geduld. Wat zou de sprinkhaan doen zonder de
+      bloem? Waarom deze zitplaats?
+    follow_ups:
+      - Hoe trekt de bloem prooi aan?
+      - Wat zou de sprinkhaan zijn zonder de hinderlaag?
+      - Wat is de relatie tussen plaats en vangst?
+  - id: nmi_nectar_flow
+    name: Nectar Stroom
+    prompt: |
+      Bloemen produceren nectar — bijen, vlinders, kevers drinken. De stroom
+      varieert. Denk aan de economie. Wat zou de bloem zijn zonder de
+      nectar? Wat zou het insect doen?
+    follow_ups:
+      - Hoe vormt nectar het bezoek?
+      - Wat zou bestuiving zijn zonder de beloning?
+      - Wat is de relatie tussen stroom en dienst?
+  - id: nmi_territory_mark
+    name: Territorium Markering
+    prompt: |
+      Sommige insecten markeren territorium — feromonen, visuele weergave. De markering zegt
+      "van mij". Denk aan de claim. Wat zou de ruimte zijn zonder de markering?
+      Hoe lezen rivalen het?
+    follow_ups:
+      - Hoe ontmoedigt de markering indringers?
+      - Wat zou het insect doen zonder het territorium?
+      - Wat is de relatie tussen markering en ruimte?

@@ -1,0 +1,409 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Kent Ormanı — Londra (Turkish)
+
+id: urban_jungle_london
+name: Kent Ormanı — Londra
+description: Londra'yı ölçek, ışık, katmanlı tarih ve sokak hayatının ritimleri açısından görme şeklinizi değiştirecek 50 kart.
+domain: urban_jungle
+cards:
+  - id: london_layer
+    name: Londra Katmanı
+    prompt: |
+      Londra katmanlar halinde inşa edilmiştir—Roma, ortaçağ, Viktorya, modern. Dönemlerin çarpıştığı bir yer bulun. Görebildiğiniz en eski şey ne? En yeni?
+    follow_ups:
+      - Katmanlar olmadan cadde neye benzerdi?
+      - Tarih inşa edilmiş biçimde nasıl kendini gösterir?
+      - Katman ve kimlik arasındaki ilişki nedir?
+  - id: london_pub_threshold
+    name: Pub Eşiği
+    prompt: |
+      Londra bir pub'ının bir eşiği vardır—yukarı doğru adım, kapı, bar. Eşikte durun. İçeride ne var? Dışarıda ne var? Pub, şehirdeki bir odadır.
+    follow_ups:
+      - Pub olmadan blok neye benzerdi?
+      - Eşik geçişi nasıl yaratır?
+      - Pub ve cadde arasındaki ilişki nedir?
+  - id: london_blue_plaque
+    name: Mavi Plaka
+    prompt: |
+      Mavi plakalar, ünlü birinin yaşadığı yerleri işaretler. Bir tane bulun. Burada kim yaşadı? Ne yaptılar? Plaka tarihi görünür kılar.
+    follow_ups:
+      - Plaka olmadan bina neye benzerdi?
+      - Plaka hafızayı nasıl şekillendirir?
+      - Plaka ve yer arasındaki ilişki nedir?
+  - id: london_underground
+    name: Yer Altı
+    prompt: |
+      Metro, şehrin altındaki bir şehirdir. İn. Fayanslara, haritalara, yürüyen merdivenlere dikkat edin. Yer altı üstünü nasıl şekillendirir?
+    follow_ups:
+      - Metro olmadan Londra neye benzerdi?
+      - Yer altı bağlantıyı nasıl yaratır?
+      - Yer altı ve yüzey arasındaki ilişki nedir?
+  - id: london_thames_edge
+    name: Thames Kenarı
+    prompt: |
+      Thames Londra'dan akar. Sahile gidin. Nehir bir dikiştir. İki yanında ne var? Nehir nasıl böler ve birleştirir?
+    follow_ups:
+      - Thames olmadan Londra neye benzerdi?
+      - Nehir şehri nasıl şekillendirir?
+      - Nehir ve kenar arasındaki ilişki nedir?
+  - id: london_georgian_row
+    name: Georgian Sıra
+    prompt: |
+      Georgian teraslar tekrarlanır—kapı, pencere, kapı, pencere. Bir sırayı yürüyün. Tekrar ritim yaratır. Onu ne bozar? Onu bir arada tutan ne?
+    follow_ups:
+      - Sıra olmadan cadde neye benzerdi?
+      - Tekrar kimlik nasıl yaratır?
+      - Sıra ve birey arasındaki ilişki nedir?
+  - id: london_mews
+    name: Mews
+    prompt: |
+      Mews ahırlardı, şimdi evler. Bir tane bulun. Dar ara sokak, arnavut kaldırımı, dönüştürülmüş at arabası evleri. Geçmiş nasıl kalıcı olur?
+    follow_ups:
+      - Tarih olmadan mews neye benzerdi?
+      - Mews mahremiyeti nasıl yaratır?
+      - Mews ve ana cadde arasındaki ilişki nedir?
+  - id: london_phone_box
+    name: Telefon Kabini
+    prompt: |
+      Kırmızı telefon kulübeleri ikonlardır. Bir tane bulun. Hala telefon mu? Bir defibrilatör mü? Bir kütüphane mi? İkonlar nasıl yeniden kullanılır?
+    follow_ups:
+      - Kulübe olmadan cadde neye benzerdi?
+      - Kulübe İngilizliği nasıl işaretler?
+      - Kulübe ve işlev arasındaki ilişki nedir?
+  - id: london_postbox
+    name: Posta Kutusu
+    prompt: |
+      Kırmızı posta kutuları her yerdedir. Bir tane bulun. Kraliyet mührüne dikkat edin. Posta kutusu bir ağdaki bir düğümdür. İçinden ne akar?
+    follow_ups:
+      - Posta kutusu olmadan cadde neye benzerdi?
+      - Posta kutusu bölgeyi nasıl işaretler?
+      - Posta kutusu ve mektup arasındaki ilişki nedir?
+  - id: london_pavement
+    name: Kaldırım
+    prompt: |
+      İngiliz "pavement" Amerikan "sidewalk"ıdır. Kelime düşünme şeklimizi şekillendirir. Kaldırımı yürüyün. Kaldırım ve yol arasındaki ilişki nedir?
+    follow_ups:
+      - Kaldırım olmadan cadde neye benzerdi?
+      - Kaldırım güvenliği nasıl yaratır?
+      - Kaldırım ve yaya arasındaki ilişki nedir?
+  - id: london_brick
+    name: Londra Tuğlası
+    prompt: |
+      Londra tuğlası genellikle sarı veya kırmızıdır—Londra stoğu. Bir tuğla duvar bulun ve rengini, dokusunu, bağını inceleyin. Tuğla nasıl yaşlanır?
+    follow_ups:
+      - Tuğla olmadan bina neye benzerdi?
+      - Tuğla kimlik nasıl yaratır?
+      - Tuğla ve yer arasındaki ilişki nedir?
+  - id: london_weather
+    name: Londra Hava Durumu
+    prompt: |
+      Londra havası değişkendir. Yirmi dakika boyunca tek bir yerde durun. Gökyüzünü izleyin. Hava durumu şehrin ruh halini nasıl şekillendirir?
+    follow_ups:
+      - Yağmur olmadan Londra neye benzerdi?
+      - Hava durumu mimariyi nasıl şekillendirir?
+      - Hava durumu ve sokak hayatı arasındaki ilişki nedir?
+  - id: london_queue
+    name: Sıra
+    prompt: |
+      İngilizler sıraya girer. Bir sıra bulun—otobüs, dükkan, atraksiyon. Etiketi gözlemleyin. Sıra bir düzen biçimidir. Nasıl çalışır?
+    follow_ups:
+      - Sıra olmadan mekan neye benzerdi?
+      - Sıra adaleti nasıl yaratır?
+      - Sıra ve kültür arasındaki ilişki nedir?
+  - id: london_roundabout
+    name: Kavşak
+    prompt: |
+      Londra'da birçok kavşak vardır—trafik çemberleri. Birini izleyin. Trafik nasıl akar? Mantığı nedir? Kavşak bir düğümdür.
+    follow_ups:
+      - Kavşak olmadan kesişim neye benzerdi?
+      - Kavşak akışı nasıl şekillendirir?
+      - Kavşak ve kavşak noktası arasındaki ilişki nedir?
+  - id: london_parks_room
+    name: Park Odası
+    prompt: |
+      Londra parkları odalardır—Hyde Park, Regent's Park, meydanlar. Birine girin. Sınırları, yolları, mobilyaları fark edin. Doğa nasıl tasarlanır?
+    follow_ups:
+      - Parklar olmadan Londra neye benzerdi?
+      - Park rahatlamayı nasıl yaratır?
+      - Park ve şehir arasındaki ilişki nedir?
+  - id: london_square
+    name: Londra Meydanı
+    prompt: |
+      Londra meydanları genellikle özeldir—kilitli, anahtarlı. Bir tane bulun. İçinde ne var? Kimin erişimi var? Meydan bir ayrıcalık kesesidir.
+    follow_ups:
+      - Meydan olmadan mahalle neye benzerdi?
+      - Meydan topluluğu nasıl yaratır?
+      - Meydan ve cadde arasındaki ilişki nedir?
+  - id: london_terrace
+    name: Teras
+    prompt: |
+      Teras, bir sıra evdir. Birini yürüyün. Tekdüzeliği ve değişimi fark edin. Teras kimliği nasıl yaratır?
+    follow_ups:
+      - Teras olmadan cadde neye benzerdi?
+      - Teras ritmi nasıl yaratır?
+      - Teras ve birey arasındaki ilişki nedir?
+  - id: london_corner_shop
+    name: Köşe Dükkanı
+    prompt: |
+      Köşe dükkanı bir Londra kurumudur. Birine girin. Ne satılıyor? Kim işletiyor? Dükkan mahallede bir düğümdür.
+    follow_ups:
+      - Dükkan olmadan blok neye benzerdi?
+      - Dükkan karşılaşmayı nasıl yaratır?
+      - Dükkan ve topluluk arasındaki ilişki nedir?
+  - id: london_bus_route
+    name: Otobüs Güzergahı
+    prompt: |
+      Londra otobüslerinin numaraları ve varış noktaları vardır. Hiç binmediğiniz bir otobüse binin. Nereye gidiyor? Güzergah şehri nasıl şekillendirir?
+    follow_ups:
+      - Otobüs olmadan yolculuk neye benzerdi?
+      - Güzergah bağlantıyı nasıl yaratır?
+      - Otobüs ve mahalle arasındaki ilişki nedir?
+  - id: london_clock
+    name: Londra Saati
+    prompt: |
+      Big Ben, istasyondaki saat, kilisedeki saat. Londra kamu saatleriyle doludur. Bir tane bulun. Hangi saati gösteriyor? Doğru mu?
+    follow_ups:
+      - Saat olmadan mekan neye benzerdi?
+      - Saat zamanı nasıl şekillendirir?
+      - Saat ve yer arasındaki ilişki nedir?
+  - id: london_bridge
+    name: Londra Köprüsü
+    prompt: |
+      Londra'da birçok köprü vardır—Tower Bridge, Millennium Bridge, Waterloo. Birinden yaya olarak geçin. Geçişi hissedin. Ne değişiyor?
+    follow_ups:
+      - Köprü olmadan nehir neye benzerdi?
+      - Köprü nasıl bağlanır?
+      - Köprü ve nehir arasındaki ilişki nedir?
+  - id: london_street_market
+    name: Sokak Pazarı
+    prompt: |
+      Londra'da sokak pazarları vardır—Borough, Camden, Portobello. Birini yürüyün. Ne satılıyor? Kim satıyor? Pazar geçici bir şehirdir.
+    follow_ups:
+      - Pazar olmadan cadde neye benzerdi?
+      - Pazar karşılaşmayı nasıl yaratır?
+      - Pazar ve mahalle arasındaki ilişki nedir?
+  - id: london_ghost_sign
+    name: Londra Hayalet Tabelası
+    prompt: |
+      Tuğlalardaki soluk tabelalar—hayalet tabelalar—geçmişi işaretler. Bir tane bulun. Neyi reklam ediyordu? Kim onu görmüş olurdu?
+    follow_ups:
+      - Tabela olmadan duvar neye benzerdi?
+      - Hayalet tabela tarihi nasıl korur?
+      - Tabela ve ticaret arasındaki ilişki nedir?
+  - id: london_bollard
+    name: Duba
+    prompt: |
+      Dubalar sınırları işaretler—yaya bölgeleri, park yasağı. Bir sıra dubayı bulun. Neyi koruyorlar? Neyi dışlıyorlar?
+    follow_ups:
+      - Dubalar olmadan mekan neye benzerdi?
+      - Dubalar akışı nasıl şekillendirir?
+      - Duba ve sınır arasındaki ilişki nedir?
+  - id: london_door_number
+    name: Kapı Numarası
+    prompt: |
+      Londra adresleri tuhaf olabilir—tek sayılar bir tarafta, çift sayılar diğer tarafta. Numaraları takip edin. Numaralandırma caddeyi nasıl şekillendirir?
+    follow_ups:
+      - Numaralar olmadan yol bulma neye benzerdi?
+      - Numaralandırma düzeni nasıl yaratır?
+      - Numara ve yer arasındaki ilişki nedir?
+  - id: london_basement
+    name: Londra Bodrum Katı
+    prompt: |
+      Londra evlerinin genellikle bodrum katları vardır—bazen yol seviyesinin altında. Aşağı inen adımlara, önündeki alana dikkat edin. Kaldırımın altında ne var?
+    follow_ups:
+      - Bodrum katı olmadan ev neye benzerdi?
+      - Bodrum katı alanı nasıl yaratır?
+      - Bodrum katı ve cadde arasındaki ilişki nedir?
+  - id: london_roof_line
+    name: Çatı Hattı
+    prompt: |
+      Londra'nın çatı hatları çeşitlidir—arduvaz, kiremit, düz. Yukarı bakın. Ufuk çizgisini izleyin. Çatı caddeyi nasıl şekillendirir?
+    follow_ups:
+      - Çatılar olmadan cadde neye benzerdi?
+      - Çatı hattı kimliği nasıl yaratır?
+      - Çatı ve gökyüzü arasındaki ilişki nedir?
+  - id: london_cobble
+    name: Arnavut Kaldırımı
+    prompt: |
+      Bazı caddelerde arnavut kaldırımları hala duruyor. Üzerlerinde yürüyün. Dokusunu hissedin. Yüzey caddeyi nasıl şekillendirir?
+    follow_ups:
+      - Arnavut kaldırımı olmadan cadde neye benzerdi?
+      - Arnavut kaldırımı tarihi nasıl işaretler?
+      - Arnavut kaldırımı ve modernite arasındaki ilişki nedir?
+  - id: london_lamp_post
+    name: Lamba Direği
+    prompt: |
+      Londra lamba direkleri belirli bir stile sahiptir—Viktorya, modern. Bir tane bulun. Lamba geceleyin caddeyi nasıl şekillendirir?
+    follow_ups:
+      - Lamba olmadan cadde neye benzerdi?
+      - Lamba güvenliği nasıl yaratır?
+      - Lamba ve karanlık arasındaki ilişki nedir?
+  - id: london_bus_stop
+    name: Otobüs Durağı
+    prompt: |
+      Londra otobüs duraklarında barınaklar, tarifeler, numaralar bulunur. Birinde bekleyin. Başka kim bekliyor? Etiket ne?
+    follow_ups:
+      - Durak olmadan cadde neye benzerdi?
+      - Durak topluluğu nasıl yaratır?
+      - Durak ve yolculuk arasındaki ilişki nedir?
+  - id: london_pub_sign
+    name: Pub Tabelası
+    prompt: |
+      Pub tabelaları caddenin üzerine asılır—The Crown, The Red Lion. Bir tane bulun. Görüntü ne? Hikaye ne? Tabela bir dönüm noktasıdır.
+    follow_ups:
+      - Tabela olmadan cadde neye benzerdi?
+      - Tabela kimliği nasıl yaratır?
+      - Tabela ve pub arasındaki ilişki nedir?
+  - id: london_church_spire
+    name: Kilise Çan Kulesi
+    prompt: |
+      Kilise çan kuleleri Londra silüetini deler. Bir tane bulun. Çan kulesi sizi nasıl yönlendirir? Onsuz manzara neye benzerdi?
+    follow_ups:
+      - Çan kulesi olmadan silüet neye benzerdi?
+      - Çan kulesi dönüm noktasını nasıl yaratır?
+      - Çan kulesi ve mahalle arasındaki ilişki nedir?
+  - id: london_canal
+    name: Londra Kanalı
+    prompt: |
+      Londra'da kanallar vardır—Regent's Canal, Grand Union. Yürüyüş yolunu yürüyün. Kanal bir dikiştir. İki yanında ne var?
+    follow_ups:
+      - Kanal olmadan şehir neye benzerdi?
+      - Kanal bağlantıyı nasıl yaratır?
+      - Kanal ve sanayi arasındaki ilişki nedir?
+  - id: london_garden_square
+    name: Bahçe Meydanı
+    prompt: |
+      Londra bahçe meydanları genellikle kilitlidir. Kapıdan göz atın. İçinde ne var? Kimin anahtarı var? Bahçe gizli bir odadır.
+    follow_ups:
+      - Bahçe olmadan meydan neye benzerdi?
+      - Bahçe ayrıcalığı nasıl yaratır?
+      - Bahçe ve meydan arasındaki ilişki nedir?
+  - id: london_taxi
+    name: Londra Taksi
+    prompt: |
+      Siyah taksiler ikonlardır. Birinin durduğunu, yolcu aldığını, kalktığını izleyin. Taksi caddeyi nasıl şekillendirir? Onsuz şehir neye benzerdi?
+    follow_ups:
+      - Taksi olmadan cadde neye benzerdi?
+      - Taksi hareketliliği nasıl yaratır?
+      - Taksi ve bilgi arasındaki ilişki nedir?
+  - id: london_underground_tile
+    name: Yer Altı Fayansı
+    prompt: |
+      Metro istasyonlarında belirgin fayanslar vardır—Baker Street'in Sherlock'u, Victoria hattının mavisi. Karakteri olan bir istasyon bulun. Fayanslar ne anlatıyor?
+    follow_ups:
+      - Fayanslar olmadan istasyon neye benzerdi?
+      - Fayanslar kimliği nasıl yaratır?
+      - Fayans ve yer arasındaki ilişki nedir?
+  - id: london_bench
+    name: Londra Bankı
+    prompt: |
+      Londra'da çok sayıda bank vardır—parklarda, caddelerde, otobüs duraklarının yanında. Birine oturun. Başka kim oturuyor? Manzara ne?
+    follow_ups:
+      - Bank olmadan mekan neye benzerdi?
+      - Bank rahatlamayı nasıl yaratır?
+      - Bank ve cadde arasındaki ilişki nedir?
+  - id: london_drain
+    name: Londra Drenajı
+    prompt: |
+      Aşağı bakın. Bir drenaj bulun—oluk, ızgara. Su nereye gidiyor? Drenaj, şehrin gizli sistemlerine açılan bir kapıdır.
+    follow_ups:
+      - Drenaj olmadan cadde neye benzerdi?
+      - Drenaj suyu nasıl yönetir?
+      - Drenaj ve sistem arasındaki ilişki nedir?
+  - id: london_shop_front
+    name: Dükkan Cephesi
+    prompt: |
+      Londra dükkan cepheleri genellikle küçüktür—dar, derin. Pencereden bakın. Ne
+      sergileniyor? Cephe caddeyi nasıl şekillendirir?
+    follow_ups:
+      - Dükkan cephesi olmadan cadde neye benzerdi?
+      - Cephe kimliği nasıl yaratır?
+      - Cephe ve ticaret arasındaki ilişki nedir?
+  - id: london_paving
+    name: Londra Kaplaması
+    prompt: |
+      Londra kaplaması değişir—taş levhalar, asfalt, tuğla. Bir blok yürüyün ve değişiklikleri fark edin. Yüzey caddeyi nasıl şekillendirir?
+    follow_ups:
+      - Kaplama olmadan cadde neye benzerdi?
+      - Kaplama bölgeyi nasıl işaretler?
+      - Kaplama ve yaya arasındaki ilişki nedir?
+  - id: london_balcony
+    name: Londra Balkonu
+    prompt: |
+      Londra balkonları genellikle küçüktür—Juliet balkonları, küçük teraslar. Bir tane bulun. Orada ne yetiştirirdiniz? Kim kullanırdı?
+    follow_ups:
+      - Balkon olmadan bina neye benzerdi?
+      - Balkon dış mekanı nasıl yaratır?
+      - Balkon ve daire arasındaki ilişki nedir?
+  - id: london_chimney
+    name: Londra Bacası
+    prompt: |
+      Londra bacaları çatı hattını deler. Bir binadaki sayılarını sayın. Eskiden kaç ateş yanıyordu? Baca bir kalıntıdır.
+    follow_ups:
+      - Baca olmadan çatı neye benzerdi?
+      - Baca tarihi nasıl işaretler?
+      - Baca ve ısı arasındaki ilişki nedir?
+  - id: london_bike_stand
+    name: Bisiklet Standı
+    prompt: |
+      Londra'da bisiklet durakları, Santander bisikletleri, teslimat bisikletleri vardır. Bir küme bulun. Bisikletler caddeyi nasıl şekillendirir? Onlarsız blok neye benzerdi?
+    follow_ups:
+      - Bisikletler olmadan cadde neye benzerdi?
+      - Bisikletler hareketliliği nasıl yaratır?
+      - Bisiklet ve şehir arasındaki ilişki nedir?
+  - id: london_tree_pit
+    name: Ağaç Çukuru
+    prompt: |
+      Londra sokak ağaçları çukurlarda büyür—genellikle küçük, genellikle mücadele ediyor. Bir tane bulun. Çukurda ne var? Ağaç nasıl gidiyor?
+    follow_ups:
+      - Ağaç olmadan cadde neye benzerdi?
+      - Çukur ağacın hayatını nasıl şekillendirir?
+      - Çukur ve kaldırım arasındaki ilişki nedir?
+  - id: london_rain
+    name: Londra Yağmuru
+    prompt: |
+      Londra yağmuru sıktır. Bir barınağın altında durup izleyin. Yağmur caddeyi nasıl değiştirir? Ondan başka şehir neye benzerdi?
+    follow_ups:
+      - Yağmur ruh halini nasıl şekillendirir?
+      - Yağmur ve şemsiye arasındaki ilişki nedir?
+      - Kuraklıkta ne fark ederdiniz?
+  - id: london_cab_rank
+    name: Taksi Durağı
+    prompt: |
+      Siyah taksiler duraklarda sıraya girer. Akışı izleyin. Durak bir düğümdür. Taksi caddeyi nasıl şekillendirir? Ondan başka kavşak neye benzerdi?
+    follow_ups:
+      - Durak düzeni nasıl yaratır?
+      - Taksi ve bilgi arasındaki ilişki nedir?
+      - Bir taksiciye ne sorardınız?
+  - id: london_pub_window
+    name: Pub Penceresi
+    prompt: |
+      Pub pencereleri genellikle kurşunlu, genellikle küçüktür. Birinden içeri bakın. Manzara ne? Pencere caddeyi çerçeveler. Çerçeve nasıl önemlidir?
+    follow_ups:
+      - Pencere olmadan pub neye benzerdi?
+      - Pencere ilişkiyi nasıl yaratır?
+      - Pencere ve cadde arasındaki ilişki nedir?
+  - id: london_mews_cobble
+    name: Mews Arnavut Kaldırımı
+    prompt: |
+      Mews sokakları genellikle arnavut kaldırımlıdır. Birini yürüyün. Dokusunu hissedin. Arnavut kaldırımı tarihi işaretler. Asfaltla mews neye benzerdi?
+    follow_ups:
+      - Arnavut kaldırımı sokağı nasıl şekillendirir?
+      - Arnavut kaldırımı ve at arasındaki ilişki nedir?
+      - Arnavut kaldırımlarında ne duyardınız?
+  - id: london_underground_escalator
+    name: Yer Altı Yürüyen Merdiveni
+    prompt: |
+      Metro yürüyen merdivenleri uzundur—Angel'inki en uzunlardan biridir. Birine binin. İnişi hissedin. Yürüyen merdiven yolculuğu nasıl şekillendirir?
+    follow_ups:
+      - Yürüyen merdiven olmadan istasyon neye benzerdi?
+      - Yürüyen merdiven akışı nasıl yaratır?
+      - Yürüyen merdiven ve derinlik arasındaki ilişki nedir?
+  - id: london_thames_path
+    name: Thames Yolu
+    prompt: |
+      Thames Yolu nehrin kenarından akar. Bir bölüm yürüyün. Yol bir koridor yaratır. İki yanında ne var? Yolculuğu nasıl şekillendirir?
+    follow_ups:
+      - Yol olmadan nehir neye benzerdi?
+      - Yol erişimi nasıl yaratır?
+      - Yol ve nehir arasındaki ilişki nedir?

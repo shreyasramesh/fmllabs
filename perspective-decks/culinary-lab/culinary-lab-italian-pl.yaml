@@ -1,0 +1,491 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Kulinarne Laboratorium — Włoskie (Polish)
+
+id: culinary_lab_italian
+name: Kulinarne Laboratorium — Włoskie
+description: 50 kart, które odmienią Twoje postrzeganie włoskiego jedzenia — od chemii oliwy z oliwek i kwasów, przez społeczną choreografię stołu, po archeologię każdego składnika.
+domain: culinary_lab
+cards:
+  - id: it_tomato_transformation
+    name: Transformacja Pomidora
+    prompt: |
+      Surowy pomidor pod wpływem ciepła i czasu staje się czymś innym. Prześledź tę drogę.
+      Co dzieje się z kwasowością? Ze strukturą? Pomidor zawiera w sobie podróż.
+    follow_ups:
+      - Jak sos zmienia smak na podniebieniu?
+      - Co zostałoby utracone bez tej transformacji?
+      - Jaka jest zależność między surowym a gotowanym?
+  - id: it_bread_arrival
+    name: Przybycie Chleba
+    prompt: |
+      Chleb pojawia się przed posiłkiem — czasem ciepły, czasem z oliwą. Zwróć uwagę na kolejność rzeczy.
+      Chleb jest wstępem. Kto decyduje, kiedy zacząć jeść?
+    follow_ups:
+      - Czym byłby posiłek bez chleba?
+      - Jak chleb nadaje tempo?
+      - Jaka jest zależność między chlebem a oczekiwaniem?
+  - id: it_pasta_shape
+    name: Kształt Makaronu
+    prompt: |
+      Każdy kształt makaronu inaczej trzyma sos — rowki, wgłębienia, krzywizny. Wybierz jedno danie i zapytaj: dlaczego ten kształt do tego sosu? Forma jest decyzją.
+    follow_ups:
+      - Co zmieniłoby się przy innym kształcie?
+      - Jak kształt wpływa na kęs?
+      - Jaka jest zależność między formą a funkcją?
+  - id: it_basil_fragrance
+    name: Zapach Bazylii
+    prompt: |
+      Bazylia dociera do nosa, zanim trafi do ust. Zamknij oczy i odszukaj zioło. Gdzie ono jest w daniu?
+      Aromat jest mapą.
+    follow_ups:
+      - Czym byłoby danie bez zapachu?
+      - Jak zapach przygotowuje podniebienie?
+      - Jaka jest zależność między aromatem a smakiem?
+  - id: it_olive_oil_pool
+    name: Kałuża Oliwy z Oliwek
+    prompt: |
+      Oliwa z oliwek tworzy kałużę na powierzchni lub nabłyszcza talerz. Obserwuj, jak się porusza.
+      Oliwa przenosi smak i tłuszcz. Co ona wiąże?
+    follow_ups:
+      - Czym byłoby danie bez oliwy?
+      - Jak oliwa zmienia odczucie w ustach?
+      - Jaka jest zależność między oliwą a ciepłem?
+  - id: it_parmesan_shatter
+    name: Kruszenie Parmezanu
+    prompt: |
+      Świeżo starty Parmigiano chrzęści jak kryształki. Nasłuchuj tego. Ser to w równej mierze tekstura, co smak. Jak on puentuje kęs?
+    follow_ups:
+      - Czym byłoby danie bez chrupnięcia?
+      - Jak ser dopełnia smak na podniebieniu?
+      - Jaka jest zależność między serem a solą?
+  - id: it_espresso_ritual
+    name: Rytuał Espresso
+    prompt: |
+      Espresso podawane jest na koniec — mała filiżanka, bez mleka. Rytuał oznacza zamknięcie.
+      Kto pije je na stojąco? Kto siedzi? Espresso to interpunkcja.
+    follow_ups:
+      - Czym byłby posiłek bez espresso?
+      - Jak rytuał kształtuje czas?
+      - Jaka jest zależność między kawą a końcem?
+  - id: it_antipasti_sequence
+    name: Sekwencja Antipasti
+    prompt: |
+      Antipasti podawane są na początku — małe talerze, dzielone lub nie. Zwróć uwagę na sekwencję.
+      Jaka jest logika kolejności? Początek nadaje ton.
+    follow_ups:
+      - Co zmieniłoby się, gdyby odwrócić kolejność?
+      - Jak sekwencja buduje apetyt?
+      - Jaka jest zależność między początkiem a końcem?
+  - id: it_wine_pour
+    name: Nalewanie Wina
+    prompt: |
+      Wino jest nalewane — kto nalewa? Ile? Nalewanie to społeczna choreografia. Obserwuj gesty.
+      Co one mówią?
+    follow_ups:
+      - Czym byłby stół bez wina?
+      - Jak nalewanie tworzy ceremonię?
+      - Jaka jest zależność między nalewaniem a tempem?
+  - id: it_risotto_stir
+    name: Mieszanie Risotto
+    prompt: |
+      Risotto wymaga ciągłego mieszania. Skrobia uwalnia się powoli. Zastanów się nad pracą włożoną w miskę.
+      Co by się stało bez mieszania?
+    follow_ups:
+      - Czym byłby ryż bez kremowości?
+      - Jak mieszanie zmienia teksturę?
+      - Jaka jest zależność między pracą a wynikiem?
+  - id: it_porcini_earth
+    name: Ziemisty Smak Borowików
+    prompt: |
+      Borowiki smakują jak leśne podłoże — umami, ziemia, rozkład. Prześledź grzyb do jego pochodzenia.
+      Gdzie rósł? Pod jakimi drzewami?
+    follow_ups:
+      - Czym byłoby danie bez ziemistego smaku?
+      - Jak pochodzenie kształtuje smak?
+      - Jaka jest zależność między grzybem a lasem?
+  - id: it_plate_negative_space
+    name: Pusta Przestrzeń na Talerzu
+    prompt: |
+      Włoskie serwowanie często pozostawia pustą przestrzeń — talerz nie jest wypełniony. Zastanów się nad pustką.
+      Co ona ramuje? Co ona umożliwia?
+    follow_ups:
+      - Jak wyglądałoby danie przy całkowitym wypełnieniu?
+      - Jak pusta przestrzeń skupia wzrok?
+      - Jaka jest zależność między pustym a pełnym?
+  - id: it_garlic_sizzle
+    name: Skwierczenie Czosnku
+    prompt: |
+      Czosnek trafia na gorący olej — skwierczenie to chemia. Słuchaj. Wąchaj. Chwila jest ulotna.
+      Co by się spaliło? Co by przepadło?
+    follow_ups:
+      - Czym byłoby danie bez skwierczenia?
+      - Jak czas kształtuje smak?
+      - Jaka jest zależność między ciepłem a aromatem?
+  - id: it_crust_bubbles
+    name: Pęcherzyki na Skórce
+    prompt: |
+      Skórka focacci lub pizzy tworzy pęcherzyki w piekarniku. Każdy pęcherzyk to kieszeń pary wodnej.
+      Zastanów się nad architekturą miąższu.
+    follow_ups:
+      - Czym byłby chleb bez pęcherzyków?
+      - Jak miąższ zatrzymuje oliwę i sól?
+      - Jaka jest zależność między powietrzem a strukturą?
+  - id: it_prosciutto_slice
+    name: Plaster Prosciutto
+    prompt: |
+      Prosciutto jest krojone cienko — prawie półprzezroczysto. Nóż ma znaczenie. Zastanów się nad kunsztem.
+      Co by zrobił gruby plaster?
+    follow_ups:
+      - Czym byłaby wędlina bez cienkości?
+      - Jak grubość wpływa na rozpływanie się w ustach?
+      - Jaka jest zależność między plastrem a delektowaniem się?
+  - id: it_balsamic_drop
+    name: Kropla Balsamico
+    prompt: |
+      Dojrzały balsamico dozowany jest w kroplach — drogi, cenny. Obserwuj lepkość.
+      Kropla to koncentracja. Co ona dodaje?
+    follow_ups:
+      - Czym byłoby danie bez tej kwasowości?
+      - Jak kropla przełamuje tłuszcz?
+      - Jaka jest zależność między słodkim a kwaśnym?
+  - id: it_gnocchi_pillow
+    name: Poduszka Gnocchi
+    prompt: |
+      Gnocchi powinny być lekkie — jak poduszki, nie kamienie. Poczuj teksturę. Stosunek ziemniaków do mąki jest delikatny.
+      Co sprawia, że działają?
+    follow_ups:
+      - Czym byłyby gnocchi, gdyby były za ciężkie?
+      - Jak tekstura definiuje danie?
+      - Jaka jest zależność między ziemniakiem a mąką?
+  - id: it_salt_block
+    name: Blok Solny
+    prompt: |
+      Niektóre włoskie kuchnie używają bloków solnych do grillowania. Zastanów się nad minerałem.
+      Skąd pochodziła sól? Co ona nadaje?
+    follow_ups:
+      - Czym byłoby mięso bez soli?
+      - Jak blok zmienia proces gotowania?
+      - Jaka jest zależność między solą a ogniem?
+  - id: it_cacio_e_pepe
+    name: Cacio e Pepe
+    prompt: |
+      Cacio e pepe to ser, pieprz, woda z makaronu. Trzy składniki. Emulsja to sztuczka.
+      Co ją trzyma razem? Co ją rozbija?
+    follow_ups:
+      - Czym byłoby danie bez emulsji?
+      - Jak woda z makaronu wiąże?
+      - Jaka jest zależność między prostotą a techniką?
+  - id: it_cannoli_crunch
+    name: Chrupnięcie Cannoli
+    prompt: |
+      Skorupka cannoli kruszy się; nadzienie jest gładkie. Kontrast jest celowy. Zastanów się nad architekturą kęsa.
+    follow_ups:
+      - Czym byłby deser bez kontrastu?
+      - Jak tekstura tworzy przyjemność?
+      - Jaka jest zależność między skorupką a nadzieniem?
+  - id: it_risotto_clock
+    name: Zegar Risotto
+    prompt: |
+      Risotto ma swoje okienko — al dente, potem już po nim. Kucharz ściga się z czasem. Zastanów się nad precyzją.
+      Co by się stało po pięciu dodatkowych minutach?
+    follow_ups:
+      - Czym byłby ryż, gdyby był rozgotowany?
+      - Jak czas definiuje danie?
+      - Jaka jest zależność między zegarem a rzemiosłem?
+  - id: it_truffle_shave
+    name: Tryfle Rozdrobnione
+    prompt: |
+      Trufle są ścierane przy stole — rytuał, aromat. Trufle są ulotne. Skąd pochodziły?
+      Jakie zwierzę je znalazło?
+    follow_ups:
+      - Czym byłoby danie bez ceremonii?
+      - Jak ścieranie rozprowadza smak?
+      - Jaka jest zależność między rytuałem a rzadkością?
+  - id: it_spaghetti_twist
+    name: Skręcenie Spaghetti
+    prompt: |
+      Włosi zawijają spaghetti na widelcu — bez łyżki. Ten gest jest kulturowy. Obserwuj ruch.
+      Co on osiąga?
+    follow_ups:
+      - Czym byłby kęs bez skręcenia?
+      - Jak gest kształtuje posiłek?
+      - Jaka jest zależność między sztućcem a tradycją?
+  - id: it_caprese_layers
+    name: Warstwy Caprese
+    prompt: |
+      Caprese układa pomidora, mozzarellę, bazylię. Warstwy są proste. Zastanów się nad kolorami — czerwony, biały, zielony.
+      Talerz jest flagą.
+    follow_ups:
+      - Czym byłoby danie bez tej kolejności?
+      - Jak warstwy tworzą harmonię?
+      - Jaka jest zależność między kolorem a smakiem?
+  - id: it_polenta_set
+    name: Zastyganie Polenty
+    prompt: |
+      Polenta zastyga w miarę stygnięcia — od miękkiej do twardej. Zastanów się nad temperaturą.
+      Jaka byłaby na gorąco? Na zimno? Tekstura jest funkcją czasu.
+    follow_ups:
+      - Czym byłaby polenta, gdyby nigdy nie ostygła?
+      - Jak zastyganie zmienia danie?
+      - Jaka jest zależność między ciepłem a strukturą?
+  - id: it_amaro_finish
+    name: Wykończenie Amaro
+    prompt: |
+      Amaro kończy posiłek — gorzkie, trawienne. Gorycz jest zamierzona. Co to robi z podniebieniem?
+      Z ciałem?
+    follow_ups:
+      - Czym byłby posiłek bez amaro?
+      - Jak gorycz odświeża język?
+      - Jaka jest zależność między goryczą a zamknięciem?
+  - id: it_lardo_spread
+    name: Rozsmarowywanie Lardo
+    prompt: |
+      Lardo to peklowana smalec wieprzowy — rozsmarowywany na chlebie, rozpływający się. Zastanów się nad tłuszczem.
+      Skąd pochodził? Co przenosi?
+    follow_ups:
+      - Czym byłby chleb bez lardo?
+      - Jak tłuszcz przenosi smak?
+      - Jaka jest zależność między tłuszczem a konserwacją?
+  - id: it_sardine_silver
+    name: Srebrzystość Sardynek
+    prompt: |
+      Świeże sardynki błyszczą — srebrzysta skóra, całe. Ryba jest mała, tłusta. Zastanów się nad skalą.
+      Co by zmieniła większa ryba?
+    follow_ups:
+      - Czym byłoby danie bez tłuszczu?
+      - Jak rozmiar wpływa na gotowanie?
+      - Jaka jest zależność między małym a intensywnym?
+  - id: it_burrata_break
+    name: Przerwanie Burraty
+    prompt: |
+      Burratę trzeba przerwać — zewnętrzna warstwa ustępuje kremowi. Chwila jest teatralna. Zastanów się nad kontrastem.
+      Zewnętrzna skorupa, wewnętrzny płyn.
+    follow_ups:
+      - Czym byłby ser bez przerwania?
+      - Jak przerwanie wywołuje zaskoczenie?
+      - Jaka jest zależność między strukturą a przepływem?
+  - id: it_osso_buco_marrow
+    name: Szpik Osso Buco
+    prompt: |
+      Osso buco koncentruje się na szpiku — kość zawiera skarb. Szpik jest tłusty, bogaty. Zastanów się nad wydobywaniem.
+      Kto dostaje szpik?
+    follow_ups:
+      - Czym byłoby danie bez kości?
+      - Jak szpik dopełnia gulasz?
+      - Jaka jest zależność między kością a smakiem?
+  - id: it_limoncello_shot
+    name: Kieliszek Limoncello
+    prompt: |
+      Limoncello podawane jest w schłodzonym kieliszku — żółte, słodkie, mocne. Kieliszek to puenta.
+      Skąd pochodzą cytryny? Co one niosą?
+    follow_ups:
+      - Czym byłby posiłek bez limoncello?
+      - Jak kieliszek oznacza zakończenie?
+      - Jaka jest zależność między cytryną a miejscem?
+  - id: it_sfogliatella_layers
+    name: Warstwy Sfogliatelli
+    prompt: |
+      Sfogliatella ma setki cienkich jak papier warstw — złożonych, chrupkich. Zastanów się nad pracą.
+      Każda warstwa to decyzja. Co by zrobiło mniej warstw?
+    follow_ups:
+      - Czym byłoby ciastko bez warstw?
+      - Jak struktura tworzy teksturę?
+      - Jaka jest zależność między rzemiosłem a chrupkością?
+  - id: it_saltimbocca_name
+    name: Nazwa Saltimbocca
+    prompt: |
+      Saltimbocca znaczy „skacze do ust”. Nazwa obiecuje. Czy danie spełnia obietnicę?
+      Zastanów się nad luką między nazwą a doświadczeniem.
+    follow_ups:
+      - Czym byłoby danie bez nazwy?
+      - Jak nazewnictwo kształtuje oczekiwania?
+      - Jaka jest zależność między słowem a smakiem?
+  - id: it_artichoke_prep
+    name: Przygotowanie Kardona
+    prompt: |
+      Kardony wymagają przygotowania — usunięcia serca, przycięcia kolców. Zastanów się nad odpadami.
+      Co jest wyrzucane? Co jest cenne? Warzywo to architektura.
+    follow_ups:
+      - Czym byłby karczoch nieprzygotowany?
+      - Jak przygotowanie zmienia gotowanie?
+      - Jaka jest zależność między wysiłkiem a nagrodą?
+  - id: it_grappa_clear
+    name: Czysta Grappa
+    prompt: |
+      Grappa jest klarowna — destylowana z wytłoków winogronowych. Alkohol niesie ducha winogrona.
+      Zastanów się nad transformacją. Co zostaje?
+    follow_ups:
+      - Czym byłby posiłek bez grappy?
+      - Jak destylacja koncentruje?
+      - Jaka jest zależność między winogronem a alkoholem?
+  - id: it_panzanella_soft
+    name: Miękkość Panzanelli
+    prompt: |
+      Panzanella używa czerstwego chleba — zmiękczonego sokiem pomidorowym, octem. Chleb jest wskrzeszony.
+      Zastanów się nad transformacją. Co by zrobił świeży chleb?
+    follow_ups:
+      - Czym byłaby sałatka bez chleba?
+      - Jak moczenie zmienia teksturę?
+      - Jaka jest zależność między czerstwym a odrodzonym?
+  - id: it_capers_brine
+    name: Zalewa Kaparów
+    prompt: |
+      Kapary to pączki — marynowane, słone. One puentują. Zastanów się nad zalewą. Skąd pochodziła sól?
+      Co konserwuje marynata?
+    follow_ups:
+      - Czym byłoby danie bez kaparów?
+      - Jak zalewa zmienia pączek?
+      - Jaka jest zależność między konserwacją a smakiem?
+  - id: it_ravioli_seam
+    name: Szew Ravioli
+    prompt: |
+      Ravioli mają szew — miejsce, gdzie ciasto jest ściśnięte. Szew może pęknąć. Zastanów się nad rzemiosłem.
+      Co trzyma farsz?
+    follow_ups:
+      - Czym byłyby ravioli bez szwu?
+      - Jak uszczelnienie chroni farsz?
+      - Jaka jest zależność między strukturą a zaskoczeniem?
+  - id: it_negroni_orange
+    name: Pomarańcza w Negroni
+    prompt: |
+      Negroni serwowane jest z pomarańczą — plasterkiem lub skórką. Cytrus pływa. Zastanów się nad dekoracją.
+      Co ona dodaje? Kiedy ją czujesz?
+    follow_ups:
+      - Czym byłby napój bez pomarańczy?
+      - Jak dekoracja dopełnia równowagę?
+      - Jaka jest zależność między goryczą a cytrusami?
+  - id: it_focaccia_dimples
+    name: Dołeczki Focacci
+    prompt: |
+      Focaccia ma dołeczki — wciśnięte kciukiem, wypełnione oliwą. Dołeczki zatrzymują płyn i sól.
+      Zastanów się nad powierzchnią. Co zrobiłaby płaska góra?
+    follow_ups:
+      - Czym byłby chleb bez dołeczków?
+      - Jak kałuże tworzą smak?
+      - Jaka jest zależność między powierzchnią a przyprawieniem?
+  - id: it_arancini_crust
+    name: Skórka Arancini
+    prompt: |
+      Arancini to smażone kulki ryżowe — chrupkie na zewnątrz, płynne w środku. Skórka powstrzymuje eksplozję.
+      Zastanów się nad kontrastem. Co by się stało bez smażenia?
+    follow_ups:
+      - Czym byłaby kulka bez skórki?
+      - Jak smażenie tworzy zamknięcie?
+      - Jaka jest zależność między powierzchnią a wnętrzem?
+  - id: it_pecorino_age
+    name: Wiek Pecorino
+    prompt: |
+      Pecorino różni się wiekiem — fresco, stagionato. Wiek zmienia teksturę, ostrość, smak.
+      Zastanów się nad linią czasu. Co by zrobił starszy ser?
+    follow_ups:
+      - Czym byłby ser w różnym wieku?
+      - Jak dojrzewanie koncentruje?
+      - Jaka jest zależność między czasem a smakiem?
+  - id: it_crostini_support
+    name: Podparcie Crostini
+    prompt: |
+      Crostini są naczyniami — tost stanowi bazę dla dodatku. Podparcie ma znaczenie. Zbyt grube go przytłacza.
+      Zbyt cienkie pęka. Zastanów się nad równowagą.
+    follow_ups:
+      - Czym byłby dodatek bez chleba?
+      - Jak podparcie kształtuje kęs?
+      - Jaka jest zależność między bazą a konstrukcją?
+  - id: it_ciabatta_holes
+    name: Dziury w Ciabattcie
+    prompt: |
+      Ciabatta ma nieregularne dziury — duże, przypadkowe. Dziury łapią sos. Zastanów się nad miąższem.
+      Co zrobiłby gęsty miąższ?
+    follow_ups:
+      - Czym byłby chleb bez dziur?
+      - Jak dziury tworzą teksturę?
+      - Jaka jest zależność między strukturą a nasiąkaniem?
+  - id: it_zabaglione_foam
+    name: Piana Zabaglione
+    prompt: |
+      Zabaglione to ubijane na ciepło jajka z cukrem — puszyste, ciepłe. Piana jest delikatna.
+      Zastanów się nad transformacją. Co by się stało przy zbyt długim ubijaniu?
+    follow_ups:
+      - Czym byłby deser bez piany?
+      - Jak ubijanie wciąga powietrze?
+      - Jaka jest zależność między ciepłem a strukturą?
+  - id: it_salt_crust_fish
+    name: Ryba w Skorupie Solnej
+    prompt: |
+      Ryba pieczona w skorupie solnej — sól tworzy skorupę. Ryba gotuje się w środku. Zastanów się nad naczyniem.
+      Co nadaje sól?
+    follow_ups:
+      - Czym byłaby ryba bez skorupy?
+      - Jak sól zatrzymuje wilgoć?
+      - Jaka jest zależność między skorupą a mięsem?
+  - id: it_panna_cotta_wobble
+    name: Drżenie Panna Cotta
+    prompt: |
+      Panna cotta powinna drżeć — ledwo ścięta. Drżenie jest kluczowe. Zastanów się nad żelem.
+      Co by zrobiło mocniejsze ścięcie?
+    follow_ups:
+      - Czym byłby deser bez drżenia?
+      - Jak tekstura tworzy przyjemność?
+      - Jaka jest zależność między ścięciem a jedwabistością?
+  - id: it_sopressata_marbling
+    name: Marmurkowatość Sopressaty
+    prompt: |
+      Sopressata ma marmurkowaty tłuszcz — biały w czerwonym. Tłuszcz niesie smak. Zastanów się nad dystrybucją.
+      Co zrobiłoby chude mięso?
+    follow_ups:
+      - Czym byłaby salami bez tłuszczu?
+      - Jak marmurkowatość wpływa na plaster?
+      - Jaka jest zależność między tłuszczem a peklowaniem?
+  - id: it_affogato_melt
+    name: Topienie Affogato
+    prompt: |
+      Affogato to gelato zalane espresso — gorące spotyka zimne. Obserwuj topnienie. Transformacja jest natychmiastowa.
+      Zastanów się nad czasem.
+    follow_ups:
+      - Czym byłby deser bez topnienia?
+      - Jak temperatura tworzy kontrast?
+      - Jaka jest zależność między gorącem a zimnem?
+  - id: it_breadcrumb_gold
+    name: Złoto Bułki Tartej
+    prompt: |
+      Włoska kuchnia używa bułki tartej — podsmażonej, złotej, dla chrupkości. Zastanów się nad ponownym wykorzystaniem.
+      Czerstwy chleb staje się teksturą. Czego brakowałoby w daniu?
+    follow_ups:
+      - Czym byłoby danie bez okruszków?
+      - Jak podsmażenie dodaje chrupkości?
+      - Jaka jest zależność między czerstwym a użytecznym?
+  - id: it_radicchio_bitter
+    name: Gorycz Cykorii
+    prompt: |
+      Cykorii jest celowo gorzka — grillowana lub surowa. Gorycz jest wyborem. Zastanów się nad podniebieniem.
+      Co robi gorycz wśród bogactwa?
+    follow_ups:
+      - Czym byłoby danie bez goryczy?
+      - Jak gorycz przełamuje tłuszcz?
+      - Jaka jest zależność między goryczą a równowagą?
+  - id: it_cacciucco_bowl
+    name: Miska Cacciucco
+    prompt: |
+      Cacciucco to zupa rybna — wiele gatunków, jeden garnek. Miska zawiera morze. Zastanów się nad różnorodnością.
+      Co wnosi każda ryba?
+    follow_ups:
+      - Czym byłaby zupa z jedną rybą?
+      - Jak różnorodność tworzy głębię?
+      - Jaka jest zależność między wieloma a jednym?
+  - id: it_panna_trace
+    name: Ślad Śmietanki
+    prompt: |
+      Śmietanka zostawia ślad — na talerzu, w sosie. Zastanów się nad lepkością. Śmietanka przenosi i otacza.
+      Czym byłoby danie bez niej?
+    follow_ups:
+      - Czym byłby sos bez śmietanki?
+      - Jak śmietanka zmienia odczucie w ustach?
+      - Jaka jest zależność między tłuszczem a jedwabistością?
+  - id: it_orecchiette_cup
+    name: Kieliszek Orecchiette
+    prompt: |
+      Orecchiette znaczy „małe uszka” — one zbierają sos. Kształt jest funkcjonalny. Zastanów się nad designem.
+      Co zrobiłby płaski makaron?
+    follow_ups:
+      - Czym byłoby danie bez „kieliszka”?
+      - Jak kształt trzyma sos?
+      - Jaka jest zależność między formą a sosem?

@@ -1,0 +1,494 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinaire Lab — Italiaans (Dutch)
+
+id: culinary_lab_italian
+name: Culinaire Lab — Italiaans
+description: 50 kaarten om je beleving van de Italiaanse keuken te veranderen - van de chemie van olijfolie en zuur tot de sociale choreografie van de tafel en de archeologie van elk ingrediënt.
+domain: culinary_lab
+cards:
+  - id: it_tomato_transformation
+    name: Tomaten Transformatie
+    prompt: |
+      Een rauwe tomaat wordt iets anders met hitte en tijd. Volg die boog.
+      Wat gebeurt er met de zuurgraad? Met de structuur? De tomaat draagt een reis in zich.
+    follow_ups:
+      - Hoe verandert de saus het palet?
+      - Wat zou er verloren gaan zonder de transformatie?
+      - Wat is de relatie tussen rauw en gekookt?
+  - id: it_bread_arrival
+    name: Brood Aankomst
+    prompt: |
+      Brood arriveert voor de maaltijd - soms warm, soms met olie. Merk de volgorde van de dingen op.
+      Het brood is een opening. Wie beslist wanneer te eten?
+    follow_ups:
+      - Wat zou de maaltijd zijn zonder het brood?
+      - Hoe bepaalt het brood het tempo?
+      - Wat is de relatie tussen brood en anticipatie?
+  - id: it_pasta_shape
+    name: Pastavorm
+    prompt: |
+      Elke pastavorm draagt saus anders - richels, holtes, curves. Kies één gerecht en vraag: waarom deze vorm voor deze saus?
+      De vorm is een beslissing.
+    follow_ups:
+      - Wat zou er veranderen met een andere vorm?
+      - Hoe beïnvloedt de vorm de hap?
+      - Wat is de relatie tussen vorm en functie?
+  - id: it_basil_fragrance
+    name: Basilicum Geur
+    prompt: |
+      Basilicum bereikt de neus voordat het de mond bereikt. Sluit je ogen en vind de kruid.
+      Waar leeft het in het gerecht? Het aroma is een kaart.
+    follow_ups:
+      - Wat zou het gerecht zijn zonder de geur?
+      - Hoe bereidt de geur het palet voor?
+      - Wat is de relatie tussen aroma en smaak?
+  - id: it_olive_oil_pool
+    name: Olijfolie Plas
+    prompt: |
+      Olijfolie vormt plasjes op het oppervlak of glanst op het bord. Kijk hoe het beweegt.
+      De olie draagt smaak en vet. Wat bindt het?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder de olie?
+      - Hoe verandert olie de mondgevoel?
+      - Wat is de relatie tussen olie en hitte?
+  - id: it_parmesan_shatter
+    name: Parmezaan Krak
+    prompt: |
+      Vers geraspte Parmezaan heeft een kristallijne crunch. Luister ernaar.
+      De kaas is evenveel textuur als smaak. Hoe onderbreekt het de hap?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder de crunch?
+      - Hoe maakt de kaas het palet compleet?
+      - Wat is de relatie tussen kaas en zout?
+  - id: it_espresso_ritual
+    name: Espresso Ritueel
+    prompt: |
+      Espresso komt aan het einde - klein kopje, geen melk. Het ritueel markeert afsluiting.
+      Wie drinkt het staand? Wie zit? De espresso is een interpunctie.
+    follow_ups:
+      - Wat zou de maaltijd zijn zonder de espresso?
+      - Hoe vormt het ritueel de tijd?
+      - Wat is de relatie tussen koffie en afsluiting?
+  - id: it_antipasti_sequence
+    name: Antipasti Volgorde
+    prompt: |
+      Antipasti komen eerst - kleine gerechten, al dan niet gedeeld. Merk de volgorde op.
+      Wat is de logica van de volgorde? Het begin zet de toon.
+    follow_ups:
+      - Wat zou er veranderen als de volgorde omgekeerd werd?
+      - Hoe creëert volgorde eetlust?
+      - Wat is de relatie tussen eerste en laatste?
+  - id: it_wine_pour
+    name: Wijndosis
+    prompt: |
+      Wijn wordt ingeschonken - wie schenkt in? Hoeveel? De schenking is sociale choreografie.
+      Kijk naar de gebaren. Wat zeggen ze?
+    follow_ups:
+      - Wat zou de tafel zijn zonder de wijn?
+      - Hoe creëert de schenking ceremonie?
+      - Wat is de relatie tussen schenking en tempo?
+  - id: it_risotto_stir
+    name: Risotto Roeren
+    prompt: |
+      Risotto vereist constant roeren. De zetmeel komt langzaam vrij. Overweeg de arbeid in de kom.
+      Wat zou er gebeuren zonder het roeren?
+    follow_ups:
+      - Wat zou de rijst zijn zonder de romigheid?
+      - Hoe verandert roeren de textuur?
+      - Wat is de relatie tussen arbeid en resultaat?
+  - id: it_porcini_earth
+    name: Porcini Aarde
+    prompt: |
+      Porcini smaken naar bosbodem - umami, aarde, verval. Traceer de paddenstoel terug.
+      Waar groeide hij? Onder welke bomen?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder de aardse smaak?
+      - Hoe vormt de oorsprong de smaak?
+      - Wat is de relatie tussen paddenstoel en bos?
+  - id: it_plate_negative_space
+    name: Bord Negatieve Ruimte
+    prompt: |
+      Italiaanse presentatie laat vaak ruimte - het bord is niet gevuld. Overweeg de leegte.
+      Wat omlijst het? Wat staat het toe?
+    follow_ups:
+      - Hoe zou het gerecht eruitzien als het volledig bedekt was?
+      - Hoe focust negatieve ruimte het oog?
+      - Wat is de relatie tussen leeg en vol?
+  - id: it_garlic_sizzle
+    name: Knoflook Sissen
+    prompt: |
+      Knoflook in hete olie - het sissen is chemie. Luister. Ruik. Het moment is vluchtig.
+      Wat zou verbranden? Wat zou verloren gaan?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder het sissen?
+      - Hoe vormt timing de smaak?
+      - Wat is de relatie tussen hitte en aroma?
+  - id: it_crust_bubbles
+    name: Korst Bellen
+    prompt: |
+      Focaccia of pizzakorst ontwikkelt bellen in de oven. Elke bel is een zakje stoom.
+      Overweeg de architectuur van de kruim.
+    follow_ups:
+      - Wat zou het brood zijn zonder de bellen?
+      - Hoe houdt de kruim olie en zout vast?
+      - Wat is de relatie tussen lucht en structuur?
+  - id: it_prosciutto_slice
+    name: Prosciutto Plakje
+    prompt: |
+      Prosciutto is dun gesneden - bijna doorschijnend. Het mes doet ertoe.
+      Overweeg het vakmanschap. Wat zou een dik plakje doen?
+    follow_ups:
+      - Wat zou het vleeswaren zijn zonder de dunheid?
+      - Hoe beïnvloedt dikte het smelten?
+      - Wat is de relatie tussen plakje en proeven?
+  - id: it_balsamic_drop
+    name: Balsamico Druppel
+    prompt: |
+      Oude balsamico wordt in druppels gedoseerd - duur, kostbaar. Kijk naar de viscositeit.
+      De druppel is concentratie. Wat voegt het toe?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder het zuur?
+      - Hoe snijdt de druppel door vet?
+      - Wat is de relatie tussen zoet en zuur?
+  - id: it_gnocchi_pillow
+    name: Gnocchi Kussen
+    prompt: |
+      Gnocchi moeten licht zijn - kussentjes, geen stenen. Voel de textuur.
+      De verhouding aardappel en bloem is delicaat. Wat maakt het werkend?
+    follow_ups:
+      - Wat zouden de gnocchi zijn als ze te zwaar waren?
+      - Hoe definieert textuur het gerecht?
+      - Wat is de relatie tussen aardappel en bloem?
+  - id: it_salt_block
+    name: Zoutblok
+    prompt: |
+      Sommige Italiaanse keukens gebruiken zoutblokken om te grillen. Overweeg het mineraal.
+      Waar kwam het zout vandaan? Wat geeft het mee?
+    follow_ups:
+      - Wat zou het vlees zijn zonder het zout?
+      - Hoe verandert het blok het koken?
+      - Wat is de relatie tussen zout en vlam?
+  - id: it_cacio_e_pepe
+    name: Cacio e Pepe
+    prompt: |
+      Cacio e pepe is kaas, peper, pastawater. Drie ingrediënten. De emulsie is de truc.
+      Wat houdt het samen? Wat breekt het?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder de emulsie?
+      - Hoe bindt pastawater?
+      - Wat is de relatie tussen eenvoud en techniek?
+  - id: it_cannoli_crunch
+    name: Cannoli Krak
+    prompt: |
+      Cannoli schaal breekt; vulling is glad. Het contrast is bewust.
+      Overweeg de architectuur van de hap.
+    follow_ups:
+      - Wat zou het dessert zijn zonder het contrast?
+      - Hoe creëert textuur genot?
+      - Wat is de relatie tussen schaal en vulling?
+  - id: it_risotto_clock
+    name: Risotto Klok
+    prompt: |
+      Risotto heeft een venster - al dente, dan weg. De kok racet tegen de tijd.
+      Overweeg de precisie. Wat zouden vijf minuten extra doen?
+    follow_ups:
+      - Wat zou de rijst zijn als het gaar was?
+      - Hoe bepaalt timing het gerecht?
+      - Wat is de relatie tussen klok en vakmanschap?
+  - id: it_truffle_shave
+    name: Truffel Schilfer
+    prompt: |
+      Truffel wordt aan tafel geschraapt - het ritueel, het aroma. De truffel is vluchtig.
+      Waar kwam hij vandaan? Welk dier vond hem?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder de ceremonie?
+      - Hoe verdeelt de schilfer de smaak?
+      - Wat is de relatie tussen ritueel en zeldzaamheid?
+  - id: it_spaghetti_twist
+    name: Spaghetti Draai
+    prompt: |
+      Italianen draaien spaghetti met een vork - geen lepel. De draai is cultureel.
+      Kijk naar de beweging. Wat bereikt het?
+    follow_ups:
+      - Wat zou de hap zijn zonder de draai?
+      - Hoe vormt het gebaar de maaltijd?
+      - Wat is de relatie tussen bestek en traditie?
+  - id: it_caprese_layers
+    name: Caprese Lagen
+    prompt: |
+      Caprese stapelt tomaat, mozzarella, basilicum. De lagen zijn eenvoudig.
+      Overweeg de kleur - rood, wit, groen. Het bord is een vlag.
+    follow_ups:
+      - Wat zou het gerecht zijn zonder de volgorde?
+      - Hoe creëren de lagen harmonie?
+      - Wat is de relatie tussen kleur en smaak?
+  - id: it_polenta_set
+    name: Polenta Zet
+    prompt: |
+      Polenta zet zich terwijl het afkoelt - zacht naar stevig. Overweeg de temperatuur.
+      Wat zou het zijn heet? Koel? De textuur is een functie van tijd.
+    follow_ups:
+      - Wat zou de polenta zijn als het nooit afkoelde?
+      - Hoe verandert het zetten het gerecht?
+      - Wat is de relatie tussen hitte en structuur?
+  - id: it_amaro_finish
+    name: Amaro Afwerking
+    prompt: |
+      Amaro beëindigt de maaltijd - bitter, digestief. De bitterheid is opzettelijk.
+      Wat doet het met het palet? Met het lichaam?
+    follow_ups:
+      - Wat zou de maaltijd zijn zonder de amaro?
+      - Hoe reset bitter de tong?
+      - Wat is de relatie tussen bitter en afsluiting?
+  - id: it_lardo_spread
+    name: Lardo Smeer
+    prompt: |
+      Lardo is gezouten varkensvet - op brood gesmeerd, smeltend. Overweeg het vet.
+      Waar kwam het vandaan? Wat draagt het mee?
+    follow_ups:
+      - Wat zou het brood zijn zonder de lardo?
+      - Hoe draagt vet smaak?
+      - Wat is de relatie tussen vet en conservering?
+  - id: it_sardine_silver
+    name: Sardine Zilver
+    prompt: |
+      Verse sardientjes glimmen - zilveren huid, heel. De vis is klein, olieachtig.
+      Overweeg de schaal. Wat zou een grotere vis veranderen?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder de olie?
+      - Hoe beïnvloedt grootte het koken?
+      - Wat is de relatie tussen klein en intens?
+  - id: it_burrata_break
+    name: Burrata Breuk
+    prompt: |
+      Burrata moet gebroken worden - de buitenkant wijkt voor room. Het moment is theatraal.
+      Overweeg het contrast. Buitenste schil, binnenste vloeistof.
+    follow_ups:
+      - Wat zou de kaas zijn zonder de breuk?
+      - Hoe creëert de scheur verrassing?
+      - Wat is de relatie tussen structuur en stroming?
+  - id: it_osso_buco_marrow
+    name: Osso Buco Merg
+    prompt: |
+      Osso buco draait om het merg - het bot bevat schat. Het merg is unctuos, rijk.
+      Overweeg de extractie. Wie krijgt het merg?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder het bot?
+      - Hoe voltooit het merg de stoof?
+      - Wat is de relatie tussen bot en smaak?
+  - id: it_limoncello_shot
+    name: Limoncello Shot
+    prompt: |
+      Limoncello arriveert in een gekoeld glas - geel, zoet, sterk. De shot is een interpunctie.
+      Waar komen de citroenen vandaan? Wat dragen ze mee?
+    follow_ups:
+      - Wat zou de maaltijd zijn zonder de limoncello?
+      - Hoe markeert de shot het einde?
+      - Wat is de relatie tussen citroen en plaats?
+  - id: it_sfogliatella_layers
+    name: Sfogliatella Lagen
+    prompt: |
+      Sfogliatella heeft honderden flinterdunne lagen - gevouwen, knapperig. Overweeg de arbeid.
+      Elke laag is een beslissing. Wat zouden minder lagen doen?
+    follow_ups:
+      - Wat zou het gebak zijn zonder de lagen?
+      - Hoe creëert de structuur textuur?
+      - Wat is de relatie tussen vakmanschap en crunch?
+  - id: it_saltimbocca_name
+    name: Saltimbocca Naam
+    prompt: |
+      Saltimbocca betekent "springt in de mond". De naam belooft. Levert het gerecht?
+      Overweeg de kloof tussen naam en ervaring.
+    follow_ups:
+      - Wat zou het gerecht zijn zonder de naam?
+      - Hoe vormt naamgeving verwachting?
+      - Wat is de relatie tussen woord en smaak?
+  - id: it_artichoke_prep
+    name: Artisjok Bereiding
+    prompt: |
+      Artisjokken vereisen voorbereiding - stengel verwijderd, stekels getrimd. Overweeg het afval.
+      Wat wordt weggegooid? Wat wordt gekoesterd? De groente is architectuur.
+    follow_ups:
+      - Wat zou de artisjok zijn zonder voorbereiding?
+      - Hoe verandert voorbereiding het koken?
+      - Wat is de relatie tussen inspanning en beloning?
+  - id: it_grappa_clear
+    name: Grappa Helder
+    prompt: |
+      Grappa is helder - gedestilleerd uit pomace. De drank draagt de geest van de druif.
+      Overweeg de transformatie. Wat blijft er over?
+    follow_ups:
+      - Wat zou de maaltijd zijn zonder de grappa?
+      - Hoe concentreert destillatie?
+      - Wat is de relatie tussen druif en drank?
+  - id: it_panzanella_soft
+    name: Panzanella Zacht
+    prompt: |
+      Panzanella gebruikt oud brood - verzacht door tomatensap, azijn. Het brood wordt gered.
+      Overweeg de transformatie. Wat zou vers brood doen?
+    follow_ups:
+      - Wat zou de salade zijn zonder het brood?
+      - Hoe verandert weken de textuur?
+      - Wat is de relatie tussen oud en herleefd?
+  - id: it_capers_brine
+    name: Kapertjes Pekel
+    prompt: |
+      Kappertjes zijn knoppen - gepekeld, zout. Ze onderbreken. Overweeg de pekel.
+      Waar kwam het zout vandaan? Wat behoudt de pekel?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder de kappertjes?
+      - Hoe verandert pekel de knop?
+      - Wat is de relatie tussen conservering en smaak?
+  - id: it_ravioli_seam
+    name: Ravioli Naad
+    prompt: |
+      Ravioli hebben een naad - waar de pasta is dichtgeknepen. De naad kan barsten.
+      Overweeg het vakmanschap. Wat houdt de vulling vast?
+    follow_ups:
+      - Wat zouden de ravioli zijn zonder de naad?
+      - Hoe beschermt de afdichting de vulling?
+      - Wat is de relatie tussen structuur en verrassing?
+  - id: it_negroni_orange
+    name: Negroni Sinaasappel
+    prompt: |
+      Een Negroni wordt geserveerd met sinaasappel - schijfje of schil. Het citrus drijft.
+      Overweeg de garnering. Wat voegt het toe? Wanneer proef je het?
+    follow_ups:
+      - Wat zou het drankje zijn zonder de sinaasappel?
+      - Hoe maakt de garnering de balans compleet?
+      - Wat is de relatie tussen bitter en citrus?
+  - id: it_focaccia_dimples
+    name: Focaccia Kuiltjes
+    prompt: |
+      Focaccia heeft kuiltjes - met duim afgedrukt, met olie gevuld. De kuiltjes houden plasjes en zout vast.
+      Overweeg het oppervlak. Wat zou een platte bovenkant doen?
+    follow_ups:
+      - Wat zou het brood zijn zonder de kuiltjes?
+      - Hoe creëren de plasjes smaak?
+      - Wat is de relatie tussen oppervlak en kruiding?
+  - id: it_arancini_crust
+    name: Arancini Korst
+    prompt: |
+      Arancini zijn gefrituurde rijstballen - knapperig van buiten, gesmolten van binnen. De korst bevat explosie.
+      Overweeg het contrast. Wat zou er gebeuren zonder het frituren?
+    follow_ups:
+      - Wat zou de bal zijn zonder de korst?
+      - Hoe creëert frituren containment?
+      - Wat is de relatie tussen oppervlak en interieur?
+  - id: it_pecorino_age
+    name: Pecorino Leeftijd
+    prompt: |
+      Pecorino varieert per leeftijd - fresco, stagionato. De leeftijd verandert textuur, beet, smaak.
+      Overweeg de tijdlijn. Wat zou oudere kaas doen?
+    follow_ups:
+      - Wat zouden de kazen zijn op verschillende leeftijden?
+      - Hoe concentreert rijping?
+      - Wat is de relatie tussen tijd en smaak?
+  - id: it_crostini_support
+    name: Crostini Ondersteuning
+    prompt: |
+      Crostini zijn vaartuigen - toast draagt topping. De ondersteuning doet ertoe. Te dik en het overheerst.
+      Te dun en het breekt. Overweeg de balans.
+    follow_ups:
+      - Wat zou de topping zijn zonder het brood?
+      - Hoe vormt de ondersteuning de hap?
+      - Wat is de relatie tussen basis en opbouw?
+  - id: it_ciabatta_holes
+    name: Ciabatta Gaten
+    prompt: |
+      Ciabatta heeft onregelmatige gaten - groot, willekeurig. De gaten vangen saus.
+      Overweeg de kruim. Wat zou een dichte kruim doen?
+    follow_ups:
+      - Wat zou het brood zijn zonder de gaten?
+      - Hoe creëren de gaten textuur?
+      - Wat is de relatie tussen structuur en absorptie?
+  - id: it_zabaglione_foam
+    name: Zabaglione Schuim
+    prompt: |
+      Zabaglione is ei en suiker geklopt boven hitte - luchtig, warm. Het schuim is delicaat.
+      Overweeg de transformatie. Wat zou er gebeuren als het te lang werd geklopt?
+    follow_ups:
+      - Wat zou het dessert zijn zonder het schuim?
+      - Hoe incorporeert het kloppen lucht?
+      - Wat is de relatie tussen hitte en structuur?
+  - id: it_salt_crust_fish
+    name: Zoutkorst Vis
+    prompt: |
+      Vis gebakken in zoutkorst - het zout vormt een schil. De vis stoomt van binnen.
+      Overweeg het vat. Wat geeft het zout mee?
+    follow_ups:
+      - Wat zou de vis zijn zonder de korst?
+      - Hoe bevat het zout vocht?
+      - Wat is de relatie tussen schil en vlees?
+  - id: it_panna_cotta_wobble
+    name: Panna Cotta Wobbel
+    prompt: |
+      Panna cotta moet wobbelen - nauwelijks gezet. De wobble is het punt.
+      Overweeg de gel. Wat zou een stevigere set doen?
+    follow_ups:
+      - Wat zou het dessert zijn zonder de wobble?
+      - Hoe creëert de textuur genot?
+      - Wat is de relatie tussen set en zijde?
+  - id: it_sopressata_marbling
+    name: Sopressata Marmering
+    prompt: |
+      Sopressata heeft vet marmering - wit in rood. Het vet draagt smaak.
+      Overweeg de distributie. Wat zou mager vlees doen?
+    follow_ups:
+      - Wat zou de salami zijn zonder het vet?
+      - Hoe beïnvloedt marmering de plak?
+      - Wat is de relatie tussen vet en conservering?
+  - id: it_affogato_melt
+    name: Affogato Smelt
+    prompt: |
+      Affogato is gelato verdronken in espresso - heet ontmoet koud. Kijk naar het smelten.
+      De transformatie is onmiddellijk. Overweeg de timing.
+    follow_ups:
+      - Wat zou het dessert zijn zonder het smelten?
+      - Hoe creëert temperatuur contrast?
+      - Wat is de relatie tussen heet en koud?
+  - id: it_breadcrumb_gold
+    name: Broodkruim Goud
+    prompt: |
+      Italiaans koken gebruikt broodkruim - geroosterd, goud, voor crunch. Overweeg het hergebruik.
+      Oud brood wordt textuur. Wat zou het gerecht missen?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder de kruimels?
+      - Hoe voegt het roosteren crunch toe?
+      - Wat is de relatie tussen oud en bruikbaar?
+  - id: it_radicchio_bitter
+    name: Radicchio Bitter
+    prompt: |
+      Radicchio is bewust bitter - gegrild of rauw. De bitterheid is een keuze.
+      Overweeg het palet. Wat doet bitter te midden van rijkdom?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder het bittere?
+      - Hoe snijdt bitterheid vet?
+      - Wat is de relatie tussen bitter en balans?
+  - id: it_cacciucco_bowl
+    name: Cacciucco Kom
+    prompt: |
+      Cacciucco is visstoof - vele soorten, één pot. De kom bevat de zee.
+      Overweeg de variëteit. Wat draagt elke vis bij?
+    follow_ups:
+      - Wat zou de stoof zijn met één vis?
+      - Hoe creëert variëteit diepte?
+      - Wat is de relatie tussen velen en één?
+  - id: it_panna_trace
+    name: Panna Spoor
+    prompt: |
+      Room laat een spoor achter - op het bord, in de saus. Overweeg de viscositeit.
+      De room draagt en bedekt. Wat zou het gerecht zijn zonder het?
+    follow_ups:
+      - Wat zou de saus zijn zonder de room?
+      - Hoe verandert room de mondgevoel?
+      - Wat is de relatie tussen vet en zijde?
+  - id: it_orecchiette_cup
+    name: Orecchiette Kommetje
+    prompt: |
+      Orecchiette betekent "kleine oortjes" - ze cuppen saus. De vorm is functioneel.
+      Overweeg het ontwerp. Wat zou platte pasta doen?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder het kommetje?
+      - Hoe houdt de vorm saus vast?
+      - Wat is de relatie tussen vorm en saus?

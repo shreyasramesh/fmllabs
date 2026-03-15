@@ -1,0 +1,408 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Urban Jungle — London (German)
+
+id: urban_jungle_london
+name: Urban Jungle — London
+description: 50 Karten, um Ihre Sicht auf London zu verändern – von Größe und Licht bis hin zu historischen Schichten und dem Rhythmus des Straßenlebens.
+domain: urban_jungle
+cards:
+  - id: london_layer
+    name: Londoner Schicht
+    prompt: |
+      London ist in Schichten aufgebaut – römisch, mittelalterlich, viktorianisch, modern. Finden Sie einen Ort, an dem sich Epochen treffen. Was ist das Älteste, das Sie sehen können? Das Neueste?
+    follow_ups:
+      - Was wäre die Straße ohne die Schichten?
+      - Wie zeigt sich Geschichte in der gebauten Form?
+      - Was ist die Beziehung zwischen Schicht und Identität?
+  - id: london_pub_threshold
+    name: Pub-Schwelle
+    prompt: |
+      Ein Londoner Pub hat eine Schwelle – die Stufe nach oben, die Tür, die Theke. Stehen Sie an der Schwelle. Was ist drinnen? Was ist draußen? Das Pub ist ein Raum in der Stadt.
+    follow_ups:
+      - Was wäre der Block ohne das Pub?
+      - Wie schafft die Schwelle den Übergang?
+      - Was ist die Beziehung zwischen Pub und Straße?
+  - id: london_blue_plaque
+    name: Blaue Plakette
+    prompt: |
+      Blaue Plaketten markieren Orte, an denen berühmte Persönlichkeiten gelebt haben. Finden Sie eine. Wer lebte hier? Was hat er/sie getan? Die Plakette macht Geschichte sichtbar.
+    follow_ups:
+      - Was wäre das Gebäude ohne die Plakette?
+      - Wie prägt die Plakette die Erinnerung?
+      - Was ist die Beziehung zwischen Plakette und Ort?
+  - id: london_underground
+    name: Untergrund
+    prompt: |
+      Die U-Bahn ist eine Stadt unter der Stadt. Steigen Sie hinab. Beachten Sie die Fliesen, die Karten, die Rolltreppen. Wie prägt der Untergrund das Oberirdische?
+    follow_ups:
+      - Was wäre London ohne die U-Bahn?
+      - Wie schafft der Untergrund Verbindung?
+      - Was ist die Beziehung zwischen U-Bahn und Oberfläche?
+  - id: london_thames_edge
+    name: Themse-Ufer
+    prompt: |
+      Die Themse fließt durch London. Gehen Sie zur Anlegestelle. Der Fluss ist eine Nahtstelle. Was ist auf beiden Seiten? Wie teilt und verbindet der Fluss?
+    follow_ups:
+      - Was wäre London ohne die Themse?
+      - Wie prägt der Fluss die Stadt?
+      - Was ist die Beziehung zwischen Fluss und Ufer?
+  - id: london_georgian_row
+    name: Georgische Reihe
+    prompt: |
+      Georgische Reihenhäuser wiederholen sich – Tür, Fenster, Tür, Fenster. Gehen Sie eine Reihe entlang. Die Wiederholung schafft Rhythmus. Was unterbricht ihn? Was hält ihn zusammen?
+    follow_ups:
+      - Was wäre die Straße ohne die Reihe?
+      - Wie schafft Wiederholung Identität?
+      - Was ist die Beziehung zwischen Reihe und Einzelperson?
+  - id: london_mews
+    name: Mews
+    prompt: |
+      Mews waren einst Ställe, jetzt sind es Wohnhäuser. Finden Sie eine. Die schmale Gasse, das Kopfsteinpflaster, die umgebauten Kutschenhäuser. Wie hält die Vergangenheit an?
+    follow_ups:
+      - Was wäre die Mews ohne die Geschichte?
+      - Wie schafft die Mews Privatsphäre?
+      - Was ist die Beziehung zwischen Mews und Hauptstraße?
+  - id: london_phone_box
+    name: Telefonzelle
+    prompt: |
+      Rote Telefonzellen sind Ikonen. Finden Sie eine. Ist sie noch ein Telefon? Ein Defibrillator? Eine Bibliothek? Wie werden Ikonen neu interpretiert?
+    follow_ups:
+      - Was wäre die Straße ohne die Zelle?
+      - Wie kennzeichnet die Zelle Britischsein?
+      - Was ist die Beziehung zwischen Zelle und Funktion?
+  - id: london_postbox
+    name: Briefkasten
+    prompt: |
+      Rote Briefkästen sind überall. Finden Sie einen. Beachten Sie das königliche Monogramm. Der Briefkasten ist ein Knotenpunkt in einem Netzwerk. Was fließt durch ihn?
+    follow_ups:
+      - Was wäre die Straße ohne den Briefkasten?
+      - Wie kennzeichnet der Briefkasten Territorien?
+      - Was ist die Beziehung zwischen Briefkasten und Brief?
+  - id: london_pavement
+    name: Bürgersteig
+    prompt: |
+      Das britische "pavement" ist das amerikanische "sidewalk". Das Wort prägt unser Denken. Gehen Sie über den Bürgersteig. Was ist die Beziehung zwischen Bürgersteig und Straße?
+    follow_ups:
+      - Was wäre die Straße ohne den Bürgersteig?
+      - Wie schafft der Bürgersteig Sicherheit?
+      - Was ist die Beziehung zwischen Bürgersteig und Fußgänger?
+  - id: london_brick
+    name: Londoner Ziegelstein
+    prompt: |
+      Londoner Ziegelsteine sind oft gelb oder rot – London Stock. Finden Sie eine Ziegelmauer und studieren Sie die Farbe, die Textur, den Verband. Wie altert Ziegelstein?
+    follow_ups:
+      - Was wäre das Gebäude ohne den Ziegelstein?
+      - Wie schafft Ziegelstein Identität?
+      - Was ist die Beziehung zwischen Ziegelstein und Ort?
+  - id: london_weather
+    name: Londoner Wetter
+    prompt: |
+      Das Londoner Wetter ist wechselhaft. Stehen Sie zwanzig Minuten lang an einem Ort. Beobachten Sie den Himmel. Wie prägt das Wetter die Stimmung der Stadt?
+    follow_ups:
+      - Was wäre London ohne den Regen?
+      - Wie prägt das Wetter die Architektur?
+      - Was ist die Beziehung zwischen Wetter und Straßenleben?
+  - id: london_queue
+    name: Schlange
+    prompt: |
+      Briten stehen Schlange. Finden Sie eine Schlange – am Bus, im Geschäft, vor einer Attraktion. Beobachten Sie die Etikette. Die Schlange ist eine Form der Ordnung. Wie funktioniert sie?
+    follow_ups:
+      - Was wäre der Raum ohne die Schlange?
+      - Wie schafft die Schlange Fairness?
+      - Was ist die Beziehung zwischen Schlange und Kultur?
+  - id: london_roundabout
+    name: Kreisverkehr
+    prompt: |
+      London hat viele Kreisverkehre – Verkehrskreisel. Beobachten Sie einen. Wie fließt der Verkehr? Was ist die Logik? Der Kreisverkehr ist ein Knotenpunkt.
+    follow_ups:
+      - Was wäre die Kreuzung ohne den Kreisverkehr?
+      - Wie prägt der Kreisverkehr den Fluss?
+      - Was ist die Beziehung zwischen Kreisverkehr und Knotenpunkt?
+  - id: london_parks_room
+    name: Parks als Raum
+    prompt: |
+      Londoner Parks sind Räume – Hyde Park, Regent's Park, die Squares. Betreten Sie einen. Beachten Sie die Grenzen, die Wege, die Möbel. Wie wird Natur gestaltet?
+    follow_ups:
+      - Was wäre London ohne die Parks?
+      - Wie schafft der Park Erholung?
+      - Was ist die Beziehung zwischen Park und Stadt?
+  - id: london_square
+    name: Londoner Platz
+    prompt: |
+      Londoner Plätze sind oft privat – umzäunt, verschlossen. Finden Sie einen. Was ist drinnen? Wer hat Zugang? Der Platz ist ein Hort der Exklusivität.
+    follow_ups:
+      - Was wäre die Nachbarschaft ohne den Platz?
+      - Wie schafft der Platz Gemeinschaft?
+      - Was ist die Beziehung zwischen Platz und Straße?
+  - id: london_terrace
+    name: Reihenhaus
+    prompt: |
+      Ein Reihenhaus ist eine Reihe von Häusern. Gehen Sie eine entlang. Beachten Sie die Gleichförmigkeit und die Variation. Wie schafft das Reihenhaus Identität?
+    follow_ups:
+      - Was wäre die Straße ohne das Reihenhaus?
+      - Wie schafft das Reihenhaus Rhythmus?
+      - Was ist die Beziehung zwischen Reihenhaus und Einzelperson?
+  - id: london_corner_shop
+    name: Eckgeschäft
+    prompt: |
+      Das Eckgeschäft ist eine Londoner Institution. Betreten Sie eines. Was wird verkauft? Wer betreibt es? Das Geschäft ist ein Knotenpunkt in der Nachbarschaft.
+    follow_ups:
+      - Was wäre der Block ohne das Geschäft?
+      - Wie schafft das Geschäft Begegnung?
+      - Was ist die Beziehung zwischen Geschäft und Gemeinschaft?
+  - id: london_bus_route
+    name: Buslinie
+    prompt: |
+      Londoner Busse haben Nummern und Ziele. Nehmen Sie einen Bus, den Sie noch nie genommen haben. Wohin fährt er? Wie prägt die Route die Stadt?
+    follow_ups:
+      - Was wäre die Fahrt ohne den Bus?
+      - Wie schafft die Route Verbindung?
+      - Was ist die Beziehung zwischen Bus und Nachbarschaft?
+  - id: london_clock
+    name: Londoner Uhr
+    prompt: |
+      Big Ben, die Uhr am Bahnhof, die Uhr an der Kirche. London ist voller öffentlicher Uhren. Finden Sie eine. Wie spät zeigt sie an? Stimmt sie?
+    follow_ups:
+      - Was wäre der Raum ohne die Uhr?
+      - Wie prägt die Uhr die Zeit?
+      - Was ist die Beziehung zwischen Uhr und Ort?
+  - id: london_bridge
+    name: Londoner Brücke
+    prompt: |
+      London hat viele Brücken – Tower Bridge, Millennium Bridge, Waterloo. Überqueren Sie eine zu Fuß. Spüren Sie den Übergang. Was ändert sich?
+    follow_ups:
+      - Was wäre der Fluss ohne die Brücke?
+      - Wie verbindet die Brücke?
+      - Was ist die Beziehung zwischen Brücke und Fluss?
+  - id: london_street_market
+    name: Straßenmarkt
+    prompt: |
+      London hat Straßenmärkte – Borough, Camden, Portobello. Gehen Sie über einen. Was wird verkauft? Wer verkauft? Der Markt ist eine temporäre Stadt.
+    follow_ups:
+      - Was wäre die Straße ohne den Markt?
+      - Wie schafft der Markt Begegnung?
+      - Was ist die Beziehung zwischen Markt und Nachbarschaft?
+  - id: london_ghost_sign
+    name: Londoner Ghost Sign
+    prompt: |
+      Verblasste Schilder auf Ziegelsteinen – Ghost Signs – markieren die Vergangenheit. Finden Sie eines. Wofür warb es? Wer hätte es gesehen?
+    follow_ups:
+      - Was wäre die Wand ohne das Schild?
+      - Wie bewahrt das Ghost Sign die Geschichte?
+      - Was ist die Beziehung zwischen Schild und Handel?
+  - id: london_bollard
+    name: Poller
+    prompt: |
+      Poller markieren Grenzen – Fußgängerzonen, Parkverbote. Finden Sie eine Reihe von Pollern. Was schützen sie? Was schließen sie aus?
+    follow_ups:
+      - Was wäre der Raum ohne die Poller?
+      - Wie prägen Poller den Fluss?
+      - Was ist die Beziehung zwischen Poller und Grenze?
+  - id: london_door_number
+    name: Hausnummer
+    prompt: |
+      Londoner Adressen können ungerade sein – ungerade auf der einen Seite, gerade auf der anderen. Folgen Sie den Nummern. Wie prägt die Nummerierung die Straße?
+    follow_ups:
+      - Was wäre die Wegfindung ohne Nummern?
+      - Wie schafft Nummerierung Ordnung?
+      - Was ist die Beziehung zwischen Nummer und Ort?
+  - id: london_basement
+    name: Londoner Keller
+    prompt: |
+      Londoner Häuser haben oft Keller – manchmal unter Straßenniveau. Beachten Sie die Treppen nach unten, den Vorgarten. Was ist unter dem Bürgersteig?
+    follow_ups:
+      - Was wäre das Haus ohne den Keller?
+      - Wie schafft der Keller Raum?
+      - Was ist die Beziehung zwischen Keller und Straße?
+  - id: london_roof_line
+    name: Dachlinie
+    prompt: |
+      Londoner Dachlinien sind vielfältig – Schiefer, Ziegel, flach. Schauen Sie nach oben. Verfolgen Sie die Skyline. Wie prägt das Dach die Straße?
+    follow_ups:
+      - Was wäre die Straße ohne die Dächer?
+      - Wie schafft die Dachlinie Identität?
+      - Was ist die Beziehung zwischen Dach und Himmel?
+  - id: london_cobble
+    name: Kopfsteinpflaster
+    prompt: |
+      Kopfsteinpflaster ist auf einigen Straßen noch erhalten. Gehen Sie darauf. Spüren Sie die Textur. Wie prägt die Oberfläche die Straße?
+    follow_ups:
+      - Was wäre die Straße ohne das Kopfsteinpflaster?
+      - Wie kennzeichnet Kopfsteinpflaster Geschichte?
+      - Was ist die Beziehung zwischen Kopfsteinpflaster und Moderne?
+  - id: london_lamp_post
+    name: Laternenpfahl
+    prompt: |
+      Londoner Laternenpfähle haben einen besonderen Stil – viktorianisch, modern. Finden Sie einen. Wie prägt die Lampe die Straße bei Nacht?
+    follow_ups:
+      - Was wäre die Straße ohne die Lampe?
+      - Wie schafft die Lampe Sicherheit?
+      - Was ist die Beziehung zwischen Lampe und Dunkelheit?
+  - id: london_bus_stop
+    name: Bushaltestelle
+    prompt: |
+      Londoner Bushaltestellen haben Wartehäuschen, Fahrpläne, Nummern. Warten Sie an einer. Wer wartet noch? Was ist die Etikette?
+    follow_ups:
+      - Was wäre die Straße ohne die Haltestelle?
+      - Wie schafft die Haltestelle Gemeinschaft?
+      - Was ist die Beziehung zwischen Haltestelle und Fahrt?
+  - id: london_pub_sign
+    name: Pub-Schild
+    prompt: |
+      Pub-Schilder hängen über der Straße – The Crown, The Red Lion. Finden Sie eines. Was ist das Bild? Was ist die Geschichte? Das Schild ist ein Wahrzeichen.
+    follow_ups:
+      - Was wäre die Straße ohne das Schild?
+      - Wie schafft das Schild Identität?
+      - Was ist die Beziehung zwischen Schild und Pub?
+  - id: london_church_spire
+    name: Kirchturmspitze
+    prompt: |
+      Kirchturmspitzen gliedern die Londoner Skyline. Finden Sie eine. Wie orientiert Sie die Spitze? Wie wäre die Aussicht ohne sie?
+    follow_ups:
+      - Was wäre die Skyline ohne die Spitze?
+      - Wie schafft die Spitze ein Wahrzeichen?
+      - Was ist die Beziehung zwischen Spitze und Nachbarschaft?
+  - id: london_canal
+    name: Londoner Kanal
+    prompt: |
+      London hat Kanäle – Regent's Canal, Grand Union. Gehen Sie den Treidelpfad entlang. Der Kanal ist eine Nahtstelle. Was ist auf beiden Seiten?
+    follow_ups:
+      - Was wäre die Stadt ohne den Kanal?
+      - Wie schafft der Kanal Verbindung?
+      - Was ist die Beziehung zwischen Kanal und Industrie?
+  - id: london_garden_square
+    name: Gartenplatz
+    prompt: |
+      Londoner Gartenplätze sind oft verschlossen. Werfen Sie einen Blick durch das Tor. Was ist drinnen? Wer hat den Schlüssel? Der Garten ist ein versteckter Raum.
+    follow_ups:
+      - Was wäre der Platz ohne den Garten?
+      - Wie schafft der Garten Exklusivität?
+      - Was ist die Beziehung zwischen Garten und Platz?
+  - id: london_taxi
+    name: Londoner Taxi
+    prompt: |
+      Schwarze Taxis sind Ikonen. Beobachten Sie, wie eines anhält, Fahrgäste aufnimmt, weiterfährt. Wie prägt das Taxi die Straße? Was wäre die Stadt ohne es?
+    follow_ups:
+      - Was wäre die Straße ohne das Taxi?
+      - Wie schafft das Taxi Mobilität?
+      - Was ist die Beziehung zwischen Taxi und Wissen?
+  - id: london_underground_tile
+    name: U-Bahn-Fliese
+    prompt: |
+      U-Bahn-Stationen haben charakteristische Fliesen – Baker Streets Sherlock, das Blau der Victoria Line. Finden Sie eine Station mit Charakter. Was sagen die Fliesen aus?
+    follow_ups:
+      - Was wäre die Station ohne die Fliesen?
+      - Wie schaffen Fliesen Identität?
+      - Was ist die Beziehung zwischen Fliese und Ort?
+  - id: london_bench
+    name: Londoner Bank
+    prompt: |
+      London hat viele Bänke – in Parks, auf Straßen, an Bushaltestellen. Setzen Sie sich auf eine. Wer sitzt noch? Wie ist die Aussicht?
+    follow_ups:
+      - Was wäre der Raum ohne die Bank?
+      - Wie schafft die Bank Erholung?
+      - Was ist die Beziehung zwischen Bank und Straße?
+  - id: london_drain
+    name: Londoner Gully
+    prompt: |
+      Schauen Sie nach unten. Finden Sie einen Gully – eine Rinne, ein Gitter. Wohin fließt das Wasser? Der Gully ist ein Portal zu den verborgenen Systemen der Stadt.
+    follow_ups:
+      - Was wäre die Straße ohne den Gully?
+      - Wie verwaltet der Gully Wasser?
+      - Was ist die Beziehung zwischen Gully und System?
+  - id: london_shop_front
+    name: Schaufenster
+    prompt: |
+      Londoner Schaufenster sind oft klein – schmal, tief. Schauen Sie ins Fenster. Was wird ausgestellt? Wie prägt die Fassade die Straße?
+    follow_ups:
+      - Was wäre die Straße ohne das Schaufenster?
+      - Wie schafft die Fassade Identität?
+      - Was ist die Beziehung zwischen Fassade und Handel?
+  - id: london_paving
+    name: Londoner Pflaster
+    prompt: |
+      Londoner Pflaster variiert – Steinplatten, Asphalt, Ziegel. Gehen Sie einen Block entlang und bemerken Sie die Veränderungen. Wie prägt die Oberfläche die Straße?
+    follow_ups:
+      - Was wäre die Straße ohne das Pflaster?
+      - Wie kennzeichnet Pflaster Territorien?
+      - Was ist die Beziehung zwischen Pflaster und Fußgänger?
+  - id: london_balcony
+    name: Londoner Balkon
+    prompt: |
+      Londoner Balkone sind oft klein – Juliet-Balkone, winzige Terrassen. Finden Sie einen. Was würden Sie dort anbauen? Wer würde ihn nutzen?
+    follow_ups:
+      - Was wäre das Gebäude ohne den Balkon?
+      - Wie schafft der Balkon Außenraum?
+      - Was ist die Beziehung zwischen Balkon und Wohnung?
+  - id: london_chimney
+    name: Londoner Schornstein
+    prompt: |
+      Londoner Schornsteine gliedern die Dachlinie. Zählen Sie sie an einem Gebäude. Wie viele Feuer brannten einst? Der Schornstein ist ein Relikt.
+    follow_ups:
+      - Was wäre das Dach ohne den Schornstein?
+      - Wie kennzeichnet der Schornstein Geschichte?
+      - Was ist die Beziehung zwischen Schornstein und Wärme?
+  - id: london_bike_stand
+    name: Fahrradständer
+    prompt: |
+      London hat Fahrradständer, Santander-Räder, Lieferräder. Finden Sie eine Ansammlung. Wie prägen Fahrräder die Straße? Was wäre der Block ohne sie?
+    follow_ups:
+      - Was wäre die Straße ohne die Fahrräder?
+      - Wie schaffen Fahrräder Mobilität?
+      - Was ist die Beziehung zwischen Fahrrad und Stadt?
+  - id: london_tree_pit
+    name: Baumgrube
+    prompt: |
+      Londoner Straßenbäume wachsen in Gruben – oft klein, oft kämpfend. Finden Sie eine. Was ist in der Grube? Wie geht es dem Baum?
+    follow_ups:
+      - Was wäre die Straße ohne den Baum?
+      - Wie prägt die Grube das Leben des Baumes?
+      - Was ist die Beziehung zwischen Grube und Bürgersteig?
+  - id: london_rain
+    name: Londoner Regen
+    prompt: |
+      Londoner Regen ist häufig. Stehen Sie unter einem Unterstand und beobachten Sie. Wie verändert der Regen die Straße? Was wäre die Stadt ohne ihn?
+    follow_ups:
+      - Wie prägt Regen die Stimmung?
+      - Was ist die Beziehung zwischen Regen und Regenschirm?
+      - Was würden Sie bei Trockenheit bemerken?
+  - id: london_cab_rank
+    name: Taxistand
+    prompt: |
+      Schwarze Taxis stehen in Reihen an den Taxiständen. Beobachten Sie den Fluss. Der Stand ist ein Knotenpunkt. Wie prägt das Taxi die Straße? Was wäre die Kreuzung ohne ihn?
+    follow_ups:
+      - Wie schafft der Stand Ordnung?
+      - Was ist die Beziehung zwischen Taxi und Wissen?
+      - Was würden Sie einen Taxifahrer fragen?
+  - id: london_pub_window
+    name: Pub-Fenster
+    prompt: |
+      Pub-Fenster sind oft bleiverglast, oft klein. Schauen Sie durch eines. Wie ist die Aussicht? Das Fenster rahmt die Straße ein. Wie wichtig ist der Rahmen?
+    follow_ups:
+      - Was wäre das Pub ohne das Fenster?
+      - Wie schafft das Fenster Beziehung?
+      - Was ist die Beziehung zwischen Fenster und Straße?
+  - id: london_mews_cobble
+    name: Mews-Kopfsteinpflaster
+    prompt: |
+      Mews-Gassen sind oft mit Kopfsteinpflaster belegt. Gehen Sie eine entlang. Spüren Sie die Textur. Das Kopfsteinpflaster markiert Geschichte. Was wäre die Mews mit Asphalt?
+    follow_ups:
+      - Wie prägt das Kopfsteinpflaster die Gasse?
+      - Was ist die Beziehung zwischen Kopfsteinpflaster und Pferd?
+      - Was würden Sie auf Kopfsteinpflaster hören?
+  - id: london_underground_escalator
+    name: U-Bahn-Rolltreppe
+    prompt: |
+      U-Bahn-Rolltreppen sind lang – die von Angel ist eine der längsten. Fahren Sie mit einer. Spüren Sie den Abstieg. Wie prägt die Rolltreppe die Fahrt?
+    follow_ups:
+      - Was wäre die Station ohne die Rolltreppe?
+      - Wie schafft die Rolltreppe Fluss?
+      - Was ist die Beziehung zwischen Rolltreppe und Tiefe?
+  - id: london_thames_path
+    name: Themse-Weg
+    prompt: |
+      Der Themse-Weg verläuft entlang des Flusses. Gehen Sie ein Stück. Der Weg schafft einen Korridor. Was ist auf beiden Seiten? Wie prägt der Weg die Fahrt?
+    follow_ups:
+      - Was wäre der Fluss ohne den Weg?
+      - Wie schafft der Weg Zugang?
+      - Was ist die Beziehung zwischen Weg und Fluss?

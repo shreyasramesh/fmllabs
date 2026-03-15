@@ -1,0 +1,422 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Manieren om naar kunst te kijken (Dutch)
+
+id: ways_of_looking_at_art
+name: Manieren om naar kunst te kijken
+description: |
+  Kaarten om je perspectief te veranderen bij het bekijken van kunst. Elk biedt een andere lens
+  om je manier van zien en je interactie met kunstwerken te verdiepen.
+domain: art
+cards:
+  - id: souvenir
+    name: Souvenir
+    prompt: |
+      Kies iets uit het kunstwerk en verberg het in het volgende werk dat je bekijkt.
+      Hoe zou je het in de nieuwe compositie passen?
+    follow_ups:
+      - Wat zou je meenemen?
+      - Wat zou het winnen of verliezen in de nieuwe context?
+      - Waar zou het passen - of juist niet passen - in het nieuwe werk?
+  - id: throw_a_party
+    name: Organiseer een feestje
+    prompt: |
+      Nodig alle kunstenaars in de ruimte uit. Wat zouden ze dragen?
+      Waar zouden ze aan denken?
+    follow_ups:
+      - Wie zou tot wie aangetrokken worden?
+      - Waar zouden ze ruzie over maken?
+      - Wat zou hen verrassen in elkaars werk?
+  - id: time_out
+    name: Pauze
+    prompt: |
+      Ga naar buiten. Concentreer je op licht, geluiden en sensaties. Wees aanwezig in je
+      omgeving. De ervaring van het bekijken van kunst gaat net zo goed over de ruimtes
+      daartussen als over de kunstwerken zelf.
+    follow_ups:
+      - Wat merk je op als je stopt met je op de kunst te concentreren?
+      - Hoe vormt de ruimte wat je ziet?
+      - Wat zou je missen als je gehaast was?
+  - id: plan_a_trip
+    name: Plan een reis
+    prompt: |
+      Wat je vandaag ziet, kan de eerste stap zijn op een veel grotere reis. Wanneer
+      je de galerie of ruimte verlaat, beslis welk kunstwerk je hierna wilt zien
+      en plan een hele reis eromheen.
+    follow_ups:
+      - Waar zou die reis je naartoe brengen?
+      - Wat zou je onderweg moeten zien?
+      - Waarom dit werk - wat maakt het de reis waard?
+  - id: in_black_and_white
+    name: In zwart-wit
+    prompt: |
+      Focus op het spel van licht en donker - je kunt zelfs een foto in zwart-wit maken om te helpen.
+      Waar zijn de tinten het donkerst? Hoe suggereert dit diepte of niet? Hoe helpt dit je begrip van de compositie?
+    follow_ups:
+      - Wat verdwijnt er als je kleur verwijdert?
+      - Wat wordt duidelijker?
+      - Waar gaat je oog als eerste naartoe in de grijstintenversie?
+  - id: give_it_a_voice
+    name: Geef het een stem
+    prompt: |
+      Welke geluiden zou dit kunstwerk maken? Hoe zou je de kleuren, de vormen en de figuren kunnen horen?
+    follow_ups:
+      - Is het luid of stil? Scherp of zacht?
+      - Welk instrument of welke textuur zou het kunnen vastleggen?
+      - Hoe zou stilte klinken in dit werk?
+  - id: find_the_middle_ground
+    name: Vind het midden
+    prompt: |
+      Hoe ver is het kunstwerk van je verwijderd? Hoe groot is het in verhouding tot jouw formaat? Hoe zwaar? Hoeveel ruimte neemt het in beslag? Zou het in een huis passen?
+    follow_ups:
+      - Wat zou er veranderen als je het in je hand kon houden?
+      - Wat als het de grootte van een kamer had?
+      - Hoe vormt schaal je relatie ermee?
+  - id: from_the_edges
+    name: Vanaf de randen
+    prompt: |
+      Waar eindigt het kunstwerk en begint de "echte wereld"? Kun je proberen je handen als zoeker te gebruiken om de randen van het kunstwerk opnieuw te definiëren? Is er een duidelijke rand?
+    follow_ups:
+      - Wat gebeurt er als je het kader verandert?
+      - Wat wordt opgenomen of uitgesloten?
+      - Waar wil het werk buiten zijn grenzen stromen?
+  - id: transmogrify_it
+    name: Transmogrifeer het
+    prompt: |
+      Wat als je het kunstwerk naar een ander genre zou kunnen veranderen? Een foto naar een actie schilderij of een installatie naar een landschap? Hoe zou je het doen? Zou het nog steeds zijn karakter behouden, zelfs in vertaling?
+    follow_ups:
+      - Wat is essentieel voor het werk - wat moet de verandering overleven?
+      - Wat zou er gewonnen of verloren gaan in de vertaling?
+      - Welk genre zou er iets nieuws over onthullen?
+  - id: the_hand_of_the_artist
+    name: De Hand van de Kunstenaar
+    prompt: |
+      Zoek naar bewijs van de penseelstreken, beitelsporen, vingerafdrukken, zelfs haren van de kunstenaar. Stel je voor dat je die sporen zelf maakt - in welke positie zou je moeten komen? Welke gereedschappen zou je gebruiken?
+    follow_ups:
+      - Wat onthult het spoor over het lichaam van de maker?
+      - Waar is het gebaar snel of langzaam, zeker of aarzelend?
+      - Hoe zou het voelen om dat spoor te maken?
+  - id: tell_the_story
+    name: Vertel het verhaal
+    prompt: |
+      De geschiedenis van kunst is rijk aan verhalen, en vandaag de dag is er een spannende dialoog tussen kunst, literatuur en film. Zit er een verhaal in het kunstwerk? Hoe vertel je het?
+    follow_ups:
+      - Wat gebeurt er voor of na dit moment?
+      - Wie is de verteller? Wiens stem ontbreekt?
+      - Zou het werken als film, roman of gedicht?
+  - id: shadowboxing
+    name: Schaduwboksen
+    prompt: |
+      Beweeg rond. Kom heel dichtbij. Ga zo ver mogelijk weg. Wissel van kant. Ga hoog. Ga laag. Probeer verschillende hoeken. Blijf niet lang op dezelfde plek. Geniet van de veranderingen die het kunstwerk ondergaat als je eromheen beweegt.
+    follow_ups:
+      - Wat verschuift er als je van positie verandert?
+      - Welke hoek verraste je?
+      - Hoe verandert de beweging van je lichaam wat je ziet?
+  - id: six_degrees_of_francis_bacon
+    name: Zes graden van Francis Bacon
+    prompt: |
+      Kunstenaars beïnvloeden andere kunstenaars. Thema's en ideeën evolueren over generaties en grenzen heen. Verbind het kunstwerk met een ander in de galerie met zo min mogelijk schakels.
+    follow_ups:
+      - Wat is het kortste pad dat je kunt vinden?
+      - Wat voor soort verbinding is het sterkst - techniek, onderwerp, sfeer of idee?
+      - Wat zou de kunstenaar denken van de verbinding?
+  - id: headlines
+    name: Krantenkoppen
+    prompt: |
+      Stel je de dag voor dat het kunstwerk werd gemaakt en zoek of bedenk een krantenkop voor die dag. Vergelijk het met de voorpagina's van vandaag.
+    follow_ups:
+      - Wat zou er bovenaan de fold hebben gestaan?
+      - Wat is er veranderd - en wat niet?
+      - Hoe herkadert de kop het werk?
+  - id: speed_date
+    name: Speeddaten
+    prompt: |
+      Breng slechts 10 seconden door met elk kunstwerk. Doe dit totdat je ze allemaal hebt gezien of totdat je geen energie meer hebt, ga dan terug naar je favorieten en blijf hangen. Hoe zie je ze nu? Welke werken trekken je terug?
+    follow_ups:
+      - Wat onthulde de snelle blik die blijven hangen misschien had gemist?
+      - Waarom keerde je terug naar die specifieke werken?
+      - Hoe verschilde de tweede blik van de eerste?
+  - id: make_connections
+    name: Maak verbindingen
+    prompt: |
+      Zoek op weg naar huis iets dat je doet denken aan het kunstwerk, of een deel ervan - een vorm of kleur, misschien een woord, zelfs een sensatie.
+    follow_ups:
+      - Wat heb je gevonden?
+      - Hoe veranderde de echo hoe je het origineel ziet?
+      - Wat zou je de kunstenaar laten zien als je kon?
+  - id: dinner_party
+    name: Diner
+    prompt: |
+      Koppel een kunstwerk aan een smaak. Aan welk eten of drinken doet het je denken?
+      Stel een banket samen.
+    follow_ups:
+      - Hoe zou het menu eruit zien?
+      - Wie zou waar zitten?
+      - Hoe zou de eerste hap smaken?
+  - id: head_off_piste
+    name: Ga van de gebaande paden
+    prompt: |
+      Vraag een medewerker van de galerie om hun favoriete werk aan te wijzen, of ga weg van de kaarten en kijk wat je kunt vinden.
+    follow_ups:
+      - Wat ontdekte je buiten de gebaande paden?
+      - Hoe verschilt hun favoriet van de jouwe?
+      - Wat zou je aan iemand anders aanbevelen?
+  - id: make_it_an_mixtape
+    name: Maak er een mixtape van
+    prompt: |
+      Doet het kunstwerk je denken aan een bepaald lied of muziekstuk?
+      Kunst en muziek overlappen op verschillende manieren en delen vaak een vergelijkbare taal.
+      Welke kwaliteiten hebben ze gemeen? Maak een afspeellijst voor elk galeriebezoek of voor een individuele kunstenaar.
+    follow_ups:
+      - Wat is het openingsnummer?
+      - Welke kwaliteit verbindt het werk met de muziek - ritme, sfeer, textuur?
+      - Hoe zou de afspeellijst veranderen als je het over een jaar opnieuw zou beluisteren?
+  - id: read_in_context
+    name: Lees in context
+    prompt: |
+      Waar is het kunstwerk? Hoe beïnvloeden de omgeving hoe het wordt ontvangen?
+      Staat het op een billboard, buiten een galerie, midden in een meer? Luister naar het gesprek tussen het werk en zijn omgeving.
+    follow_ups:
+      - Wat zou er veranderen als het ergens anders was?
+      - Wat zegt de ruimte terug?
+      - Wie is hier het publiek - en wie ontbreekt?
+  - id: understand_it_less
+    name: Begrijp het minder
+    prompt: |
+      Omarm je nieuwsgierigheid. Vraag jezelf af wat er vreemd of nieuw is aan je ervaring van het kunstwerk? Hoe zou je het nog vreemder kunnen maken? Laat los wat het kunstwerk "zou moeten betekenen" door het een beetje minder te proberen te begrijpen!
+    follow_ups:
+      - Wat zou je moeten afleren om het fris te zien?
+      - Welke vraag heeft geen antwoord - en waarom is dat belangrijk?
+      - Hoe zou "het verkeerd begrijpen" eruitzien?
+  - id: chaos_or_control
+    name: Chaos of controle?
+    prompt: |
+      Lijkt het willekeurig, of is er een plan? Toeval, ongeluk en serendipiteit spelen allemaal een rol - soms een belangrijke - in de productie van een kunstwerk. Probeer te vinden wat natuurlijk is toegestaan en wat is gecontroleerd.
+    follow_ups:
+      - Waar houdt de kunstenaar de teugels vast - en waar laat hij los?
+      - Wat had een ongeluk kunnen zijn dat essentieel werd?
+      - Hoe zou het werk veranderen met meer chaos - of meer controle?
+  - id: palimpsest
+    name: Palimpsest
+    prompt: |
+      Zoek naar lagen! Wat wordt verborgen en wat wordt onthuld? Hoe dik is het werk? Is het oppervlak in de loop van de tijd opgebouwd?
+    follow_ups:
+      - Wat ligt er onder het oppervlak?
+      - Wat zou je vinden als je het kon afpellen?
+      - Hoe toont de tijd zich in de lagen?
+  - id: pattern_recognition
+    name: Patroonherkenning
+    prompt: |
+      Let op herhalende elementen. Is er een patroon? Zijn er herhaalde motieven? Echoen bepaalde vormen elkaar?
+    follow_ups:
+      - Wat doorbreekt het patroon - en waarom?
+      - Waar leidt de herhaling je oog naartoe?
+      - Wat zou er gebeuren als je één motief door het hele werk zou traceren?
+  - id: through_another_pair_of_eyes
+    name: Door de ogen van een ander
+    prompt: |
+      Roep een personage uit een roman, film, toneelstuk of een historische figuur in gedachten. Stel je voor dat je met hen over het kunstwerk praat. Zou je het eens zijn met hun mening erover?
+    follow_ups:
+      - Wat zouden zij opmerken dat jij miste?
+      - Waar zouden jullie het oneens zijn - en waarom?
+      - Welke vraag zouden ze jou erover stellen?
+  - id: thermostat
+    name: Thermostaat
+    prompt: |
+      Welke temperatuur heeft een kleur? Zoek naar de koelste kleuren in het kunstwerk, pin dan de warmere tinten vast. Hoeveel ecosystemen kun je vinden in één enkel kunstwerk?
+    follow_ups:
+      - Waar ontmoeten heet en koud elkaar - en wat gebeurt er daar?
+      - Welk klimaat roept het werk op?
+      - Hoe zou het voelen als je zijn temperatuur zou betreden?
+  - id: negative_space
+    name: Negatieve Ruimte
+    prompt: |
+      De gaten tussen individuele elementen in een kunstwerk zijn net zo belangrijk als de elementen zelf. Net als een puzzel, let op de ontbrekende stukjes. De negatieve ruimte: hoe kadreert het wat er is? Voel de betekenis ervan.
+    follow_ups:
+      - Welke vorm neemt de leegte aan?
+      - Wat zou de gaten vullen - en zou het dat moeten?
+      - Hoe houdt de negatieve ruimte de compositie bij elkaar?
+  - id: make_yourself_at_home
+    name: Voel je thuis
+    prompt: |
+      Stel je voor dat je in het kunstwerk kruipt. Waar zou je je verstoppen? Wat kun je zien? Hoe voelt het?
+    follow_ups:
+      - Wat zou je van binnenuit horen?
+      - Waar zou je je het veiligst - of het meest blootgesteld - voelen?
+      - Wat zou je meenemen als je mocht blijven?
+  - id: homage
+    name: Hommage
+    prompt: |
+      Maak een altaar of een mini-expositie voor je favoriete kunstenaar. Begin met een ansichtkaart uit de winkel, of zoek objecten en afbeeldingen die hun werk refereren en diepte en kleur toevoegen.
+    follow_ups:
+      - Wat zou in het midden van je altaar staan?
+      - Welk object zou hen verrassen?
+      - Hoe verandert de daad van het cureren hoe je hun werk ziet?
+  - id: warm_up
+    name: Opwarmen
+    prompt: |
+      Ontwaak je lichaam om je zintuigen te primen. Ren, spring, rek je uit, klap in je handen, wiebel met je tenen. Let op eventuele fysieke sensaties in je lichaam bij het bekijken van het kunstwerk.
+    follow_ups:
+      - Waar in je lichaam voel je het werk?
+      - Hoe verandert beweging wat je ziet?
+      - Welke sensatie blijft hangen nadat je wegkijkt?
+  - id: make_it_anew
+    name: Maak het opnieuw
+    prompt: |
+      Thuis, reconstrueer een kunstwerk met alleen wat je bij de hand hebt. Schrijf het op, teken het uit, bouw het met lucifers. Hoe makkelijker en eenvoudiger je methode, hoe beter. Kijk wat er in je hoofd blijft hangen, wat je opvalt in je versie.
+    follow_ups:
+      - Wat herinnerde je je zonder het te proberen?
+      - Wat had je versie verkeerd - en waarom is dat belangrijk?
+      - Wat zou je toevoegen als je nog een minuut had?
+  - id: origin_story
+    name: Oorsprongsverhaal
+    prompt: |
+      Kun je je het eerste kunstwerk herinneren dat je ooit zag? Waar was je? Hoe oud was je? Probeer je de kamer te herinneren waarin je was, het licht en de geluiden, het gevoel van het bekijken ervan. Is er iets wat je kunt verbinden met het kunstwerk dat je nu ziet?
+    follow_ups:
+      - Wat is hetzelfde gebleven in hoe je naar kunst kijkt?
+      - Wat zou die jongere zelf van dit werk maken?
+      - Welke draad loopt van toen tot nu?
+  - id: words_and_images
+    name: Woorden en beelden
+    prompt: |
+      Lees, zonder naar het kunstwerk te kijken, de beschrijving, sluit je ogen en probeer het je voor te stellen. Open ze dan. Komt het overeen met jouw versie?
+    follow_ups:
+      - Wat lieten de woorden weg?
+      - Wat heb je toegevoegd dat er niet was?
+      - Hoe verandert je mentale beeld hoe je het echte ziet?
+  - id: keep_a_notebook
+    name: Houd een notitieboek bij
+    prompt: |
+      Maak een logboek van data, kunstwerken en je reactie erop. Kijk terug naar je notities en zoek naar nieuwe kunstwerken.
+    follow_ups:
+      - Welk patroon ontstaat als je je notities leest?
+      - Wat zou je je vroegere zelf vertellen?
+      - Waar wil het notitieboek je hiernaartoe brengen?
+  - id: write_a_postcard
+    name: Schrijf een ansichtkaart
+    prompt: |
+      Schrijf een ansichtkaart naar een kunstwerk waarmee je je bijzonder verbonden voelt. Wat zou je zeggen? Hoe zou het kunnen antwoorden?
+    follow_ups:
+      - Wat zou je moeten zeggen dat je niet hardop kon zeggen?
+      - Hoe zou zijn handschrift eruitzien?
+      - Wat zou je bewaren - en wat zou je nooit versturen?
+  - id: here_today_gone
+    name: Hier vandaag, weg...?
+    prompt: |
+      Niet elk kunstwerk overleeft de tand des tijds, noch is dat de bedoeling van elke kunstenaar. Een happening of performance kan een avond duren, misschien minuten of slechts seconden! Misschien bekijk je de documentatie van een vluchtig, tijdelijk kunstwerk. Hoe lang zal het duren?
+    follow_ups:
+      - Wat zou verloren gaan als het morgen verdween?
+      - Wat overleeft in herinnering, foto of verhaal?
+      - Verandert de vergankelijkheid hoe je ernaar kijkt?
+  - id: wrap_it_up
+    name: Pak het in
+    prompt: |
+      Wat als je het kunstwerk zou kunnen inpakken? Zou je nog steeds kunnen zien wat het was? Zou een ander kunstwerk in hetzelfde pakket passen?
+    follow_ups:
+      - Welke vorm zou het pakket aannemen?
+      - Hoe zou het inpakpapier eruitzien?
+      - Wat is essentieel - en wat kan worden uitgewisseld?
+  - id: trace_a_path
+    name: Traceer een pad
+    prompt: |
+      Waar kijk je naar als je een kunstwerk tegenkomt? Waar reist je oog vervolgens naartoe? Waar rust je blik? Teken de punten uit en verbind de stippen.
+    follow_ups:
+      - Waar keer je steeds naar terug?
+      - Wat sloeg je over - en waarom?
+      - Hoe verhoudt je pad zich tot dat van iemand anders?
+  - id: superficial
+    name: Oppervlakkig
+    prompt: |
+      Hoe is het oppervlak? Absorbeert het licht of reflecteert het? Is het glad of geperforeerd? Is het gelaagd, verfijnd of ruw? Wees niet bang om oppervlakkig te zijn!
+    follow_ups:
+      - Hoe zou het voelen om aan te raken?
+      - Wat onthult het oppervlak - of verbergt het?
+      - Wat gebeurt er als je op het oppervlak blijft?
+  - id: studio_visit
+    name: Atelierbezoek
+    prompt: |
+      Er zijn evenveel kunstenaarsateliers als kunstenaars. Stel je de ruimte voor waar het kunstwerk werd gecreëerd: een pakhuis in Brooklyn, een atelier in Parijs, de keukentafel in een druk gezin - of misschien ergens minder voor de hand liggend.
+    follow_ups:
+      - Wat zou je horen in die ruimte?
+      - Op welk tijdstip van de dag werd het gemaakt?
+      - Hoe verandert de verbeelde plek hoe je het werk ziet?
+  - id: switch_channels
+    name: Wissel van kanaal
+    prompt: |
+      Kijk naar de mensen in plaats van naar de kunst. Hoe gedragen ze zich ten opzichte van het werk? Waar kijken ze naar? Kun je raden wat ze voelen?
+    follow_ups:
+      - Wie blijft hangen - en wie haast zich voorbij?
+      - Wat zouden ze zeggen als je het vroeg?
+      - Hoe verandert het kijken naar anderen wat je opmerkt?
+  - id: light
+    name: Licht
+    prompt: |
+      Zoek naar de lichtbron. Waar komt het vandaan? Wat bevindt zich in de schaduw? Concentreer je op wat de kunstenaar wil dat we zien en wat verborgen is in de schaduwen.
+    follow_ups:
+      - Wat onthult het licht?
+      - Wat zouden de schaduwen kunnen verbergen?
+      - Hoe zou het werk veranderen in een ander licht?
+  - id: introductions
+    name: Introducties
+    prompt: |
+      Introduceer een kunstwerk aan een vriend alsof het een kennis op een feestje is. Hoe zou je het beschrijven op een manier die hun interesse wekt? Wat wekt jouw interesse?
+    follow_ups:
+      - Wat zou je eerst benadrukken?
+      - Wat zou je weglaten?
+      - Welke haak zou hen ertoe aanzetten het te willen ontmoeten?
+  - id: tipping_point
+    name: Kantelpunt
+    prompt: |
+      Waar is het centrum van het kunstwerk? Is het uit balans? Zoek naar het kantelpunt.
+    follow_ups:
+      - Wat zou het omgooien?
+      - Wat houdt het op zijn plaats?
+      - Hoe creëert de onbalans spanning - of ontspanning?
+  - id: homing
+    name: Terug naar huis
+    prompt: |
+      Blijf teruggaan. Keer op verschillende dagen of tijdstippen terug naar een favoriet kunstwerk - 's ochtends vroeg in de winter, 's avonds laat op een zomeravond. Houd bij hoe je je voelt; je gevoelens veranderen bij elk bezoek.
+    follow_ups:
+      - Wat is hetzelfde gebleven tijdens de bezoeken?
+      - Wanneer verraste het je het meest?
+      - Wat zou je je vroegere zelf over vertellen?
+  - id: one_and_only
+    name: Enige echte
+    prompt: |
+      Om overweldiging te voorkomen, kies slechts één kunstwerk om te zien, of hooguit een handvol. Ga diep in en besteed er zoveel mogelijk tijd aan. Hoeveel van deze kaarten kun je gebruiken voor één enkel kunstwerk?
+    follow_ups:
+      - Wat merkte je op bij de tweede blik?
+      - Welke kaarten onthulden iets nieuws?
+      - Wanneer wist je dat het tijd was om verder te gaan?
+  - id: press_pause
+    name: Pauzeer
+    prompt: |
+      Vertraag. Begin met kijken door je ogen te sluiten, ontspan en concentreer je op je ademhaling, open je ogen langzaam, focus opnieuw en geef het kunstwerk de tijd om zich voor je te ontvouwen.
+    follow_ups:
+      - Wat verscheen er toen je vertraagde?
+      - Wat merkte je als eerste op toen je je ogen opendeed?
+      - Hoe verandert je ademhaling hoe je ziet?
+  - id: material
+    name: Materiaal
+    prompt: |
+      Waar is het kunstwerk van gemaakt? Wat als het van iets anders gemaakt was? Hoe inconsequenter, hoe beter. Zou het de manier veranderen waarop je erover voelt?
+    follow_ups:
+      - Wat zou de meest verrassende vervanging zijn?
+      - Wat voegt het materiaal toe aan de betekenis?
+      - Wat zou de ruil overleven - en wat zou verloren gaan?
+  - id: patch_of_sky
+    name: Hoeveel kleuren in een stukje lucht?
+    prompt: |
+      Zoom in op een gebied van het kunstwerk. Hoeveel kleuren kun je daar zien?
+      Kijk buiten het museum omhoog en probeer zoveel mogelijk kleuren te tellen in een stukje lucht.
+    follow_ups:
+      - Wat miste je toen je naar het geheel keek?
+      - Hoe verhoudt de lucht zich tot het kunstwerk?
+      - Welke kleur verraste je het meest?
+  - id: greening
+    name: Groen maken
+    prompt: |
+      Wat voor soort plant zou het kunstwerk zijn? Zou het een midzomer perzikboom zijn, zwaar van fruit, of meer als een delicate varen? Welke omstandigheden heeft het nodig om te groeien?
+    follow_ups:
+      - Waar zou het gedijen - en waar zou het verwelken?
+      - Wat zou het nodig hebben om te bloeien?
+      - Hoe verandert de botanische metafoor hoe je het ziet?

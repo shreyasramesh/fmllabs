@@ -1,0 +1,460 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Şehir Ormanı — Paris (Turkish)
+
+id: urban_jungle_paris
+name: Şehir Ormanı — Paris
+description: Paris'i görme şeklinizi değiştirecek 50 kart — ölçek ve ışıktan tarih katmanlarına ve sokak yaşamının ritimlerine kadar.
+domain: urban_jungle
+cards:
+  - id: paris_balcony_flower
+    name: Balkon Çiçeği
+    prompt: |
+      Paris balkonları çiçeklerle dolu — sardunyalar, petunyalar. Her balkonda
+      bir saksı olan bir bina bulun. Çiçek cepheyi nasıl değiştirir?
+    follow_ups:
+      - Çiçekler olmadan sokak neye benzerdi?
+      - Çiçekler kimlik nasıl yaratır?
+      - Çiçek ve sakin arasındaki ilişki nedir?
+  - id: paris_haussmann_line
+    name: Haussmann Hattı
+    prompt: |
+      Haussmann bulvarları eski Paris'in içinden geçiyor. Birinde yürüyün. Hat amansızdır — binalar hizalı, yükseklikler üniform. Bulvar hareketi nasıl şekillendirir?
+    follow_ups:
+      - Haussmann olmadan Paris neye benzerdi?
+      - Bulvar nasıl manzara yaratır?
+      - Hat ve güç arasındaki ilişki nedir?
+  - id: paris_cafe_terrace
+    name: Kafe Terası
+    prompt: |
+      Paris kafe terasları sokağa bakar. Birine oturun. Hem içindesiniz hem de
+      dışındasınız. Teras bir eşiktir. Ne görüyorsunuz?
+    follow_ups:
+      - Teras olmadan sokak neye benzerdi?
+      - Teras nasıl karşılaşma yaratır?
+      - Teras ve sokak arasındaki ilişki nedir?
+  - id: paris_metro_entrance
+    name: Metro Girişi
+    prompt: |
+      Art Nouveau metro girişleri ikoniktir. Birini bulun. Demir işçiliği,
+      yazı tipi — giriş bir portaldır. Ne vaat ediyor?
+    follow_ups:
+      - Giriş olmadan sokak neye benzerdi?
+      - Giriş kimlik nasıl yaratır?
+      - Giriş ve yeraltı arasındaki ilişki nedir?
+  - id: paris_shutter
+    name: Paris Panjuru
+    prompt: |
+      Paris panjurları — voletler — geceleri kapanır. Yeşil, gri, mavidir.
+      Panjurların kapalı olduğu bir sokak bulun. Arkalarında ne var?
+    follow_ups:
+      - Panjurlar olmadan cephe neye benzerdi?
+      - Panjurlar nasıl gizlilik yaratır?
+      - Panjur ve ışık arasındaki ilişki nedir?
+  - id: paris_cobble
+    name: Paris Arka Kaldırımı
+    prompt: |
+      Paris arka kaldırımları — pavé — kalıcıdır. Üzerlerinde yürüyün.
+      Dokuyu hissedin. Arka kaldırım başka bir Paris'in kalıntısıdır. Sokağı
+      nasıl şekillendirir?
+    follow_ups:
+      - Arka kaldırımlar olmadan sokak neye benzerdi?
+      - Arka kaldırımlar tarihi nasıl işaretler?
+      - Arka kaldırım ve devrim arasındaki ilişki nedir?
+  - id: paris_seine_edge
+    name: Seine Kenarı
+    prompt: |
+      Seine Nehri Paris'in içinden akar. Quay'e gidin. Nehir bir dikiştir. İki
+      tarafında ne var? Nehir nasıl böler ve birleştirir?
+    follow_ups:
+      - Seine olmadan Paris neye benzerdi?
+      - Nehir şehri nasıl şekillendirir?
+      - Nehir ve kenar arasındaki ilişki nedir?
+  - id: paris_roof_zinc
+    name: Çatı Çinkosu
+    prompt: |
+      Paris çatıları genellikle çinkodur — gri, eğimli, çatı pencereli. Yukarı
+      bakın. Çatı hattı belirgindir. Ufku nasıl şekillendirir?
+    follow_ups:
+      - Çinko olmadan ufuk neye benzerdi?
+      - Çinko kimlik nasıl yaratır?
+      - Çatı ve çatı katı arasındaki ilişki nedir?
+  - id: paris_door_height
+    name: Kapı Yüksekliği
+    prompt: |
+      Paris kapıları genellikle uzundur — çift yükseklik. Birini bulun.
+      Neler geçerdi? Kapı ölçekli bir eşiktir.
+    follow_ups:
+      - Yüksek kapı olmadan bina neye benzerdi?
+      - Yükseklik nasıl ihtişam yaratır?
+      - Kapı ve bina arasındaki ilişki nedir?
+  - id: paris_boulangerie_smell
+    name: Fırın Kokusu
+    prompt: |
+      Bir fırın ekmek kokar. Kokusunu takip edin. Fırın bir düğümdür. Koku
+      blok hakkında ne söylüyor?
+    follow_ups:
+      - Koku olmadan sokak neye benzerdi?
+      - Koku kimlik nasıl yaratır?
+      - Koku ve ticaret arasındaki ilişki nedir?
+  - id: paris_place
+    name: Paris Meydanı
+    prompt: |
+      Paris'in meydanları — kareler, daireler, düğümler var. Birini bulun.
+      Geometriye dikkat edin. Meydan onu besleyen sokakları nasıl
+      şekillendirir?
+    follow_ups:
+      - Meydan olmadan mahalle neye benzerdi?
+      - Meydan nasıl odak noktası yaratır?
+      - Meydan ve akış arasındaki ilişki nedir?
+  - id: paris_balcony_iron
+    name: Balkon Demirleri
+    prompt: |
+      Paris balkon parmaklıkları genellikle süslüdür — dövme demir, kıvrımlar,
+      süslemeler. Birini bulun. Demir cepheyi nasıl şekillendirir?
+    follow_ups:
+      - Demir olmadan bina neye benzerdi?
+      - Demir kimlik nasıl yaratır?
+      - Demir ve zanaat arasındaki ilişki nedir?
+  - id: paris_plane_tree
+    name: Çınar Ağacı
+    prompt: |
+      Paris çınar ağaçları bulvarları çevreler. Kabukları soyulur. Birini
+      bulun. Ağaç sokağı nasıl şekillendirir? Onsuz bulvar neye benzerdi?
+    follow_ups:
+      - Ağaç olmadan sokak neye benzerdi?
+      - Çınar nasıl gölge yaratır?
+      - Ağaç ve bulvar arasındaki ilişki nedir?
+  - id: paris_metro_tile
+    name: Metro Fayansı
+    prompt: |
+      Paris metro istasyonlarında beyaz fayanslar bulunur. Tünel bir ışık
+      tüpüdür. Bir hatta binin. Fayans yolculuğu nasıl şekillendirir?
+    follow_ups:
+      - Fayanslar olmadan istasyon neye benzerdi?
+      - Fayanslar nasıl temizlik yaratır?
+      - Fayans ve yeraltı arasındaki ilişki nedir?
+  - id: paris_clock
+    name: Paris Saati
+    prompt: |
+      Paris'te birçok kamu saati var — kiliselerde, istasyonlarda,
+      binalarda. Birini bulun. Hangi saati gösteriyor? Doğru mu?
+    follow_ups:
+      - Saat olmadan alan neye benzerdi?
+      - Saat zamanı nasıl şekillendirir?
+      - Saat ve mekan arasındaki ilişki nedir?
+  - id: paris_newsstand
+    name: Paris Gazete Bayii
+    prompt: |
+      Paris kiosklarda gazete, dergi, metro bileti satılır. Birini bulun.
+      Neler sergileniyor? Kim duruyor? Kioske bir düğümdür.
+    follow_ups:
+      - Kioske olmadan sokak neye benzerdi?
+      - Kioske nasıl karşılaşma yaratır?
+      - Kioske ve sokak arasındaki ilişki nedir?
+  - id: paris_bench
+    name: Paris Bankı
+    prompt: |
+      Paris'te parklarda ve Seine boyunca yeşil banklar bulunur. Birine oturun.
+      Başka kim oturuyor? Manzara nasıl?
+    follow_ups:
+      - Bank olmadan alan neye benzerdi?
+      - Bank nasıl dinlenme yaratır?
+      - Bank ve nehir arasındaki ilişki nedir?
+  - id: paris_boulangerie_queue
+    name: Fırın Kuyruğu
+    prompt: |
+      Sabah yoğunluğunda bir fırın kuyruğuna katılın. Kuyruk bir ritüeldir.
+      İnsanlar ne alıyor? Nezaket kuralları nelerdir?
+    follow_ups:
+      - Kuyruk olmadan sokak neye benzerdi?
+      - Kuyruk nasıl topluluk yaratır?
+      - Kuyruk ve ekmek arasındaki ilişki nedir?
+  - id: paris_manhole
+    name: Paris Baca Kapağı
+    prompt: |
+      Paris baca kapaklarında genellikle "Paris" veya "Eau" yazar. Birini
+      bulun. Kapak, şehrin damarlarına açılan bir kapıdır. Altında ne var?
+    follow_ups:
+      - Kapak olmadan sokak neye benzerdi?
+      - Kapak sistemi nasıl işaretler?
+      - Kapak ve yeraltı arasındaki ilişki nedir?
+  - id: paris_shadow
+    name: Paris Gölgesi
+    prompt: |
+      Paris ışığı keskin gölgeler yaratır. Gölge ve güneşin buluştuğu bir
+      köşe bulun. Gölge sokağı nasıl şekillendirir?
+    follow_ups:
+      - Gölge olmadan sokak neye benzerdi?
+      - Gölge nasıl kontrast yaratır?
+      - Gölge ve bina arasındaki ilişki nedir?
+  - id: paris_courtyard
+    name: Paris Avlusu
+    prompt: |
+      Paris binaları genellikle kapıların arkasında avlular — cours — gizler.
+      İçeri göz atın. İçeride ne var? Avlu gizli bir odadır.
+    follow_ups:
+      - Avlu olmadan bina neye benzerdi?
+      - Avlu nasıl gizlilik yaratır?
+      - Avlu ve sokak arasındaki ilişki nedir?
+  - id: paris_bike_lane
+    name: Paris Bisiklet Şeridi
+    prompt: |
+      Paris'te bisiklet şeritleri — piste cyclable — genişlemiştir. Birini
+      bulun. Şerit sokağı nasıl şekillendirir? Kimler kullanıyor?
+    follow_ups:
+      - Şerit olmadan sokak neye benzerdi?
+      - Şerit nasıl hareketlilik yaratır?
+      - Şerit ve araba arasındaki ilişki nedir?
+  - id: paris_fountain
+    name: Paris Çeşmesi
+    prompt: |
+      Paris'te çeşmeler var — Wallace çeşmeleri, anıtsal çeşmeler. Birini
+      bulun. Ne sunuyor? Kimler kullanıyor?
+    follow_ups:
+      - Çeşme olmadan mekan neye benzerdi?
+      - Çeşme nasıl armağan yaratır?
+      - Çeşme ve halk arasındaki ilişki nedir?
+  - id: paris_awning
+    name: Paris Tente
+    prompt: |
+      Paris kafe tenteleri gölge yaratır. Tentelerin tekrarlandığı bir sokak
+      bulun. Kaldırımı nasıl şekillendirirler?
+    follow_ups:
+      - Tenteler olmadan sokak neye benzerdi?
+      - Tenteler nasıl bölge yaratır?
+      - Tente ve teras arasındaki ilişki nedir?
+  - id: paris_lamp_post
+    name: Paris Lamba Direği
+    prompt: |
+      Paris lamba direkleri belirli bir stile sahiptir — genellikle süslü,
+      genellikle yeşil. Birini bulun. Lamba gece sokağı nasıl şekillendirir?
+    follow_ups:
+      - Lamba olmadan sokak neye benzerdi?
+      - Lamba nasıl güvenlik yaratır?
+      - Lamba ve karanlık arasındaki ilişki nedir?
+  - id: paris_door_knocker
+    name: Kapı Tokmağı
+    prompt: |
+      Paris kapılarında genellikle tokmaklar bulunur — aslan başları, eller,
+      halkalar. Birini bulun. Nasıl bir ses çıkarırdı? Tokmak bir eşik nesnesidir.
+    follow_ups:
+      - Tokmak olmadan kapı neye benzerdi?
+      - Tokmak nasıl ses yaratır?
+      - Tokmak ve giriş arasındaki ilişki nedir?
+  - id: paris_shop_sign
+    name: Paris Dükkan Tabelası
+    prompt: |
+      Paris dükkan tabelaları genellikle elle boyanmıştır — fırın, kasap, peynirci.
+      Birini bulun. Tabela dükkan hakkında ne söylüyor?
+    follow_ups:
+      - Tabela olmadan sokak neye benzerdi?
+      - Tabela kimlik nasıl yaratır?
+      - Tabela ve zanaat arasındaki ilişki nedir?
+  - id: paris_parking
+    name: Paris Park Yeri
+    prompt: |
+      Paris park yerleri yaratıcıdır — kaldırımlarda arabalar, açılı, sıkışık. Birinin park etmesini izleyin. Araba nasıl sığıyor? Araba ve şehir arasındaki ilişki nedir?
+    follow_ups:
+      - Arabalar olmadan sokak neye benzerdi?
+      - Park yeri sokağı nasıl şekillendirir?
+      - Park yeri ve alan arasındaki ilişki nedir?
+  - id: paris_drain
+    name: Paris Kanalizasyon Izgarası
+    prompt: |
+      Paris olukları kaldırım boyunca akar. Yağmurdan sonra akarlar. Birini
+      bulun. Su nereye gidiyor? Izgara bir dikiştir.
+    follow_ups:
+      - Izgara olmadan sokak neye benzerdi?
+      - Izgara suyu nasıl yönetir?
+      - Izgara ve sistem arasındaki ilişki nedir?
+  - id: paris_chimney
+    name: Paris Bacası
+    prompt: |
+      Paris bacaları çatı hattını deler. Bir binadaki sayılarını sayın. Baca
+      ısı kalıntısıdır. Burada ne yanıyordu?
+    follow_ups:
+      - Baca olmadan çatı neye benzerdi?
+      - Baca tarihi nasıl işaretler?
+      - Baca ve ateş arasındaki ilişki nedir?
+  - id: paris_metro_map
+    name: Metro Haritası
+    prompt: |
+      Paris metro haritası bir şemadır. Coğrafyayı bozar. Ne vurgulanıyor?
+      Ne atlanıyor? Harita şehri nasıl şekillendirir?
+    follow_ups:
+      - Harita olmadan yol bulma neye benzerdi?
+      - Harita nasıl bağlantı yaratır?
+      - Harita ve bölge arasındaki ilişki nedir?
+  - id: paris_bridge
+    name: Paris Köprüsü
+    prompt: |
+      Paris'te Seine Nehri üzerinde birçok köprü var. Yürüyerek birinden
+      geçin. Geçişi hissedin. Ne değişiyor? Köprü bir eşiktir.
+    follow_ups:
+      - Köprü olmadan nehir neye benzerdi?
+      - Köprü nasıl bağlanır?
+      - Köprü ve nehir arasındaki ilişki nedir?
+  - id: paris_graffiti
+    name: Paris Grafitisi
+    prompt: |
+      Paris'te grafitiler var — etiketler, şablonlar, duvar resimleri. Katmanlı
+      bir duvar bulun. Palimpsest nedir? Bu yüzeyi kim işaretledi?
+    follow_ups:
+      - Grafiti olmadan duvar neye benzerdi?
+      - Grafiti alanı nasıl sahiplenir?
+      - Grafiti ve şehir arasındaki ilişki nedir?
+  - id: paris_tree_guard
+    name: Ağaç Koruyucusu
+    prompt: |
+      Paris sokak ağaçlarının genellikle koruyucuları vardır — tabanının
+      etrafında metal ızgaralar. Birini bulun. Koruyucu neyi koruyor? Neyi
+      dışlıyor?
+    follow_ups:
+      - Koruyucu olmadan ağaç neye benzerdi?
+      - Koruyucu çukuru nasıl şekillendirir?
+      - Koruyucu ve ağaç arasındaki ilişki nedir?
+  - id: paris_bus_stop
+    name: Paris Otobüs Durağı
+    prompt: |
+      Paris otobüs duraklarında barınaklar, tarifeler, dijital ekranlar bulunur.
+      Birini bekleyin. Başka kim bekliyor? Nezaket kuralları nelerdir?
+    follow_ups:
+      - Durak olmadan sokak neye benzerdi?
+      - Durak nasıl topluluk yaratır?
+      - Durak ve yolculuk arasındaki ilişki nedir?
+  - id: paris_terrace_table
+    name: Teras Masası
+    prompt: |
+      Bir kafe terası masası sokağa bakar. Birine oturun. Masa bir sahnedir.
+      Neyi izliyorsunuz? Sizi ne izliyor?
+    follow_ups:
+      - Masa olmadan teras neye benzerdi?
+      - Masa nasıl karşılaşma yaratır?
+      - Masa ve sokak arasındaki ilişki nedir?
+  - id: paris_roof_dormer
+    name: Çatı Penci
+    prompt: |
+      Paris çatı pencereleri — mansart pencereleri — ufku deler. Birçok binası
+      olan bir bina bulun. İçeriden manzara nasıl olurdu?
+    follow_ups:
+      - Pencereler olmadan çatı neye benzerdi?
+      - Pencereler nasıl ışık yaratır?
+      - Pencere ve çatı katı arasındaki ilişki nedir?
+  - id: paris_parking_metre
+    name: Park Metresi
+    prompt: |
+      Paris park sayaçları genellikle gri kutulardır. Birini bulun. Kaldırımı
+      nasıl şekillendirir? Kim öder? Kim ödemez?
+    follow_ups:
+      - Sayaç olmadan sokak neye benzerdi?
+      - Sayaç alanı nasıl yönetir?
+      - Sayaç ve araba arasındaki ilişki nedir?
+  - id: paris_doorway
+    name: Paris Kapı Aralığı
+    prompt: |
+      Bir Paris kapı aralığı genellikle uzundur, genellikle süslüdür. Birinin
+      önünde durun. İçinden geçmek nasıl olurdu? Kapı aralığı bir eşiktir.
+    follow_ups:
+      - Kapı aralığı olmadan bina neye benzerdi?
+      - Kapı aralığı nasıl ihtişam yaratır?
+      - Kapı aralığı ve iç mekan arasındaki ilişki nedir?
+  - id: paris_metro_stair
+    name: Metro Merdiveni
+    prompt: |
+      Metro merdivenleri yere iner. Adımları sayın. Geçişi hissedin. Yukarıda
+      ne var? Aşağıda ne var?
+    follow_ups:
+      - Merdivenler olmadan istasyon neye benzerdi?
+      - Merdivenler nasıl iniş yaratır?
+      - Merdiven ve yeraltı arasındaki ilişki nedir?
+  - id: paris_bench_view
+    name: Bank Manzarası
+    prompt: |
+      Manzaralı bir banka oturun — Seine, bir meydan, bir sokak. Çerçeve
+      nedir? Odak noktası nedir? Bank bir bakış açısıdır.
+    follow_ups:
+      - Bank olmadan manzara neye benzerdi?
+      - Bank nasıl duraklama yaratır?
+      - Bank ve manzara arasındaki ilişki nedir?
+  - id: paris_shutter_open
+    name: Panjur Açık
+    prompt: |
+      Paris panjurları sabahları açılır. Açılan bir sokak bulun. Ritüel nedir?
+      Açılma neyi ortaya çıkarır?
+    follow_ups:
+      - Panjurlar olmadan sokak neye benzerdi?
+      - Panjur nasıl ritim yaratır?
+      - Panjur ve gün arasındaki ilişki nedir?
+  - id: paris_cobble_pattern
+    name: Arka Kaldırım Deseni
+    prompt: |
+      Paris arka kaldırımları desenler halinde döşenir — bazen balıksırtı,
+      bazen radyal. Bir desen bulun. Sokağı nasıl şekillendirir?
+    follow_ups:
+      - Desen olmadan sokak neye benzerdi?
+      - Desen nasıl doku yaratır?
+      - Desen ve zanaat arasındaki ilişki nedir?
+  - id: paris_plane_bark
+    name: Çınar Kabuğu
+    prompt: |
+      Paris çınar ağacı kabuğu yamalar halinde soyulur. Birine dokunun. Kabuk
+      bir dokudur. Ağaç nasıl yaşlanır? Onsuz sokak neye benzerdi?
+    follow_ups:
+      - Ağaç olmadan bulvar neye benzerdi?
+      - Kabuk kimlik nasıl yaratır?
+      - Kabuk ve ağaç arasındaki ilişki nedir?
+  - id: paris_fountain_drink
+    name: Çeşme İçeceği
+    prompt: |
+      Wallace çeşmeleri ücretsiz su sunar. Birini bulun. Kim içer? Kim içmez?
+      Çeşme bir armağandır. Ne anlama geliyor?
+    follow_ups:
+      - Çeşme olmadan mekan neye benzerdi?
+      - Çeşme nasıl kamu yararı yaratır?
+      - Çeşme ve susuzluk arasındaki ilişki nedir?
+  - id: paris_metro_sound
+    name: Metro Sesi
+    prompt: |
+      Metronun içinde gözlerinizi kapatın. Gürültü, frenler, anonslar.
+      Ses manzarasını haritalayın. Yeraltında Paris nasıl ses çıkarır?
+    follow_ups:
+      - Ses olmadan yolculuk neye benzerdi?
+      - Ses deneyimi nasıl şekillendirir?
+      - Ses ve mekan arasındaki ilişki nedir?
+  - id: paris_balcony_dry
+    name: Balkonda Kurutma
+    prompt: |
+      Paris balkonları genellikle kurutma amaçlı kullanılır — çamaşır,
+      bitkiler. Çamaşır asılı birini bulun. Kurutma, sakin hakkında ne
+      söylüyor?
+    follow_ups:
+      - Çamaşır olmadan cephe neye benzerdi?
+      - Kurutma nasıl ev yaşamı yaratır?
+      - Balkon ve ev arasındaki ilişki nedir?
+  - id: paris_bike_velib
+    name: Bisiklet Vélib
+    prompt: |
+      Vélib' istasyonları Paris'te yaygındır. Birini bulun. Kaç bisiklet?
+      Kaç park yeri? Sistem bir katmandır. Nasıl çalışıyor?
+    follow_ups:
+      - İstasyon olmadan sokak neye benzerdi?
+      - Vélib' nasıl hareketlilik yaratır?
+      - İstasyon ve bisiklet arasındaki ilişki nedir?
+  - id: paris_door_bell
+    name: Kapı Zili
+    prompt: |
+      Paris apartman binalarında birden fazla kapı zili bulunur — her daire için bir tane. Bir
+      panel bulun. Kaç isim var? Bina nasıl organize edilmiş?
+    follow_ups:
+      - Ziller olmadan giriş neye benzerdi?
+      - Ziller nasıl adres yaratır?
+      - Zil ve daire arasındaki ilişki nedir?
+  - id: paris_roof_terrace
+    name: Çatı Terası
+    prompt: |
+      Bir Paris çatı terası hayal edin. Ne görürdünüz? Kimlerin erişimi var?
+      Teras gizli bir kattır. Orada ne yetiştirirdiniz?
+    follow_ups:
+      - Teras olmadan çatı neye benzerdi?
+      - Teras nasıl manzara yaratır?
+      - Teras ve gökyüzü arasındaki ilişki nedir?

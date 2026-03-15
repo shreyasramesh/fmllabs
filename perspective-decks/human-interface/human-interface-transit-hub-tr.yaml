@@ -1,0 +1,504 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# İnsan Arayüzü — Aktarma Merkezi (Turkish)
+
+id: human_interface_transit_hub
+name: İnsan Arayüzü — Aktarma Merkezi
+description: Aktarma merkezine bakış açınızı değiştirecek 50 kart — platformlar ve beklemeden varış/kalkış akışına ve transit halindeki yabancıların koreografisine kadar.
+domain: human_interface
+cards:
+  - id: hi_th_platform_edge
+    name: Platform Kenarı
+    prompt: |
+      Platform kenarı bir eşiktir. Sarı çizgi, boşluk, ray. İnsanlar farklı mesafelerde durur.
+      Bazıları öne doğru eğilir; diğerleri geride kalır. Dağılımı gözlemleyin.
+      Kenarın anlamı nedir?
+    follow_ups:
+      - Kenar beklentiyi nasıl şekillendirir?
+      - Çizgi olmasaydı platform neye benzerdi?
+      - Kenar ve risk arasındaki ilişki nedir?
+  - id: hi_th_waiting_posture
+    name: Bekleme Duruşu
+    prompt: |
+      Beklerken bedenler kendilerini düzenler—ağırlık bir ayakta, telefon elde,
+      çantalar ayakların arasında. Duruş süreyi kodlar. Kim sabırlı görünür?
+      Kim huzursuz? Bekleyişin bir beden dili vardır.
+    follow_ups:
+      - Duruş beklentiyi nasıl ortaya koyar?
+      - Bekleyiş olmasaydı platform neye benzerdi?
+      - Duruş ve zaman arasındaki ilişki nedir?
+  - id: hi_th_arrival_flow
+    name: Varış Akışı
+    prompt: |
+      Tren kapıları açılır. İnsanlar dışarı akın eder—binmekte olanlara karşı bir akıntıyla.
+      Akışın bir fiziği vardır. Çarpışmayı, yana kaçmayı, birleşmeyi gözlemleyin.
+      Değişimi hangi kurallar yönetir?
+    follow_ups:
+      - Akış platformu nasıl şekillendirir?
+      - Herkes acele etse ne olurdu?
+      - Akış ve verimlilik arasındaki ilişki nedir?
+  - id: hi_th_strangers_transit
+    name: Transit Halindeki Yabancılar
+    prompt: |
+      Asla tekrar görmeyeceğiniz insanlarla bir vagonu paylaşıyorsunuz. Bağlantı olmadan yakınlık.
+      Sıkışıklığı gözlemleyin. Yabancıların birbirlerine ne borcu var?
+      Transit vagonu geçici bir toplumdur.
+    follow_ups:
+      - Transit geçici bir toplumu nasıl oluşturur?
+      - Sohbet olsaydı vagon neye benzerdi?
+      - Yabancı ve medeniyet arasındaki ilişki nedir?
+  - id: hi_th_departure_board
+    name: Kalkış Panosu
+    prompt: |
+      Saatler, platformlar, gecikmeler—pano doğruluk kaynağıdır. Gözler ona yükselir.
+      Pano hareketi belirler. Kolektif bakışı izleyin. Pano kalabalığa ne yapar?
+    follow_ups:
+      - Pano davranışı nasıl şekillendirir?
+      - Pano olmasaydı merkez neye benzerdi?
+      - Ekran ve güven arasındaki ilişki nedir?
+  - id: hi_th_escalator_stand
+    name: Yürüyen Merdiven Durma Kuralı
+    prompt: |
+      Sağda dur, soldan yürü — ya da tersi, şehre bağlı olarak. Yürüyen merdivenin
+      kuralları vardır. Kimin uyduğunu gözlemleyin. Yürüyen merdiven hareketli bir kuyruktur.
+      Kural neyi mümkün kılar?
+    follow_ups:
+      - Yürüyen merdiven kuralı akışı nasıl şekillendirir?
+      - Herkes dursaydı ne olurdu?
+      - Kural ve verimlilik arasındaki ilişki nedir?
+  - id: hi_th_ticket_gate
+    name: Bilet Kapısı
+    prompt: |
+      Kapı kartı okur, bip sesleri çıkarır, açılır. Kapı bir kontrol noktasıdır.
+      Ödemiş olanları ödememiş olanlardan ayırır. Ritmeyi gözlemleyin. Kim
+      beceriksizleşir? Kim kayarak geçer? Kapı bir sınavdır.
+    follow_ups:
+      - Kapı yolculuğu nasıl şekillendirir?
+      - Kapılar olmasaydı merkez neye benzerdi?
+      - Kapı ve aidiyet arasındaki ilişki nedir?
+  - id: hi_th_luggage_drag
+    name: Bavul Sürükleme
+    prompt: |
+      Tekerlekler fayans üzerinde. Bavul peşinden gelir. Sürükleme yolcuların
+      yolunu işaretler. Bavul bedeni uzatır. Yükü gözlemleyin. Bavul yolculuk
+      hakkında ne söylüyor?
+    follow_ups:
+      - Bavul hareketi nasıl şekillendirir?
+      - Çantalar olmasaydı merkez neye benzerdi?
+      - Yük ve varış noktası arasındaki ilişki nedir?
+  - id: hi_th_bench_occupation
+    name: Bank Oturumu
+    prompt: |
+      Banklar platformu döşer. Bazıları oturur; bazıları yanında durur. Bank
+      kıt bir kaynaktır. Kimin talep ettiğini gözlemleyin. Ne kadar kalırlar?
+      Bank küçük bir bölgedir.
+    follow_ups:
+      - Bank bekleyişi nasıl şekillendirir?
+      - Bank olmasaydı platform neye benzerdi?
+      - Oturma yeri ve süre arasındaki ilişki nedir?
+  - id: hi_th_announcement_voice
+    name: Anons Sesi
+    prompt: |
+      "Sıradaki tren..." Ses otomatik veya insanidir. Gürültüyü deler.
+      Anons ortak bilgi yaratır. Kimin dinlediğini gözlemleyin. Kim
+      zaten telefonuna bakmıştır?
+    follow_ups:
+      - Anons kalabalığı nasıl şekillendirir?
+      - Anons olmasaydı merkez neye benzerdi?
+      - Ses ve otorite arasındaki ilişki nedir?
+  - id: hi_th_door_positioning
+    name: Kapı Konumlandırması
+    prompt: |
+      Müdavimler kapıların nereye açılacağını bilir. Kendilerini konumlandırırlar.
+      Yeni gelenler tahmin eder. Konumlandırma stratejidir. Kümelenmeyi gözlemleyin.
+      Konum neyi belirler?
+    follow_ups:
+      - Konumlandırma binişi nasıl şekillendirir?
+      - Kapılar rastgele olsaydı platform neye benzerdi?
+      - Konum ve avantaj arasındaki ilişki nedir?
+  - id: hi_th_handrail_grip
+    name: Tutamak Kavrayışı
+    prompt: |
+      Vagonun içinde eller tutamağı bulur. Kavrayış güvenliktir. Kimin tuttuğunu,
+      kimin ihtiyacı olmadığını gözlemleyin. Tutamak paylaşılan bir nesnedir.
+      Kavrayış neyi ortaya çıkarır?
+    follow_ups:
+      - Tutamak dengede nasıl bir etki yaratır?
+      - Tutamak olmasaydı vagon neye benzerdi?
+      - Kavrayış ve güven arasındaki ilişki nedir?
+  - id: hi_th_window_reflection
+    name: Pencere Yansıması
+    prompt: |
+      Pencere tüneli, platformu ve kendi yüzünüzü gösterir. Yansıma
+      kaçınılmazdır. İnsanlar kendilerine bakar ya da ondan kaçınır.
+      Yansıma ve bakış arasındaki ilişkiyi gözlemleyin.
+    follow_ups:
+      - Yansıma öz-farkındalığı nasıl şekillendirir?
+      - Pencere olmasaydı yolculuk neye benzerdi?
+      - Yansıma ve mahremiyet arasındaki ilişki nedir?
+  - id: hi_th_seat_offer
+    name: Koltuk Teklifi
+    prompt: |
+      Biri yaşlı birine, çocuklu bir ebeveyne koltuk teklif eder. Teklif
+      küçük bir ahlaki eylemdir. Ne zaman olduğunu gözlemleyin. Kim teklif eder?
+      Kim kabul eder? Koltuk bir hediyedir.
+    follow_ups:
+      - Teklif vagonu nasıl şekillendirir?
+      - Bu tür teklifler olmasaydı yolculuk neye benzerdi?
+      - Teklif ve ilgi arasındaki ilişki nedir?
+  - id: hi_th_delay_sigh
+    name: Gecikme İç Çekişi
+    prompt: |
+      "Gecikmeli." Kolektif iç çekiş. Gecikme paylaşılan kaderdir. Yabancılar
+      göz göze gelir. Gecikme bir dayanışma anı yaratır. Değişimi gözlemleyin.
+      Gecikme kalabalığa ne yapar?
+    follow_ups:
+      - Gecikme bekleyişi nasıl şekillendirir?
+      - Gecikmeler olmasaydı merkez neye benzerdi?
+      - Gecikme ve hayal kırıklığı arasındaki ilişki nedir?
+  - id: hi_th_backpack_turn
+    name: Sırt Çantası Çevirme
+    prompt: |
+      Kalabalık bir vagonda biri sırt çantasını öne çevirir. Çevirme düşünceliliktir.
+      Yer açar. Kimin yaptığını gözlemleyin. Sırt çantası çevirme küçük bir sosyal
+      sözleşmedir.
+    follow_ups:
+      - Çevirme yakınlığı nasıl şekillendirir?
+      - Çevirme olmasaydı vagon neye benzerdi?
+      - Dönüş ve farkındalık arasındaki ilişki nedir?
+  - id: hi_th_exit_anticipation
+    name: Çıkış Beklentisi
+    prompt: |
+      Durak yaklaştıkça insanlar kapıya doğru toplanır. Beklenti görünür.
+      Bedenler kayar. Kapı açılacaktır. Hazırlığı gözlemleyin.
+      Beklenti neyi gerektirir?
+    follow_ups:
+      - Beklenti çıkışı nasıl şekillendirir?
+      - Hazırlık olmasaydı durak neye benzerdi?
+      - Beklenti ve akış arasındaki ilişki nedir?
+  - id: hi_th_transfer_corridor
+    name: Aktarma Koridoru
+    prompt: |
+      Koridor hatları birbirine bağlar. İnsanlar amaçla yürür. Aktarma bir
+      geçiştir—sistemler arasında, bekleyişler arasında. Tempoyu gözlemleyin.
+      Koridorun kendi ritmi vardır.
+    follow_ups:
+      - Koridor yolculuğu nasıl şekillendirir?
+      - Aktarmalar olmasaydı merkez neye benzerdi?
+      - Koridor ve bağlantı arasındaki ilişki nedir?
+  - id: hi_th_phone_glow
+    name: Telefon Işıltısı
+    prompt: |
+      Loş vagonda, yüzler telefonlardan parlar. Işıltı bireyseldir. Herkesin
+      kendi ışığı vardır. Dağılımı gözlemleyin. Telefon kamusal alanda özel
+      alan yaratır.
+    follow_ups:
+      - Telefon yolculuğu nasıl şekillendirir?
+      - Telefon olmasaydı vagon neye benzerdi?
+      - Işıltı ve izolasyon arasındaki ilişki nedir?
+  - id: hi_th_stroller_navigation
+    name: Bebek Arabası Navigasyonu
+    prompt: |
+      Bir ebeveyn kalabalığın içinden bir bebek arabası iter. Navigasyon
+      hassastır. İnsanlar yol verir. Bebek arabası akışı değiştirir. Konaklamayı
+      gözlemleyin. Bebek arabası neyi talep eder?
+    follow_ups:
+      - Bebek arabası kalabalığı nasıl şekillendirir?
+      - Bebek arabaları olmasaydı merkez neye benzerdi?
+      - Bebek arabası ve ilgi arasındaki ilişki nedir?
+  - id: hi_th_vendor_station
+    name: Satıcı İstasyonu
+    prompt: |
+      Bir kiosk kahve, atıştırmalık, gazete satar. Satıcı hareket halindeki
+      insanlara hizmet eder. İşlem hızlıdır. Değişimi gözlemleyin. Satıcı
+      akış içinde bir adadır.
+    follow_ups:
+      - Satıcı merkezi nasıl şekillendirir?
+      - Satıcılar olmasaydı merkez neye benzerdi?
+      - Satıcı ve bekleyiş arasındaki ilişki nedir?
+  - id: hi_th_track_gap
+    name: Ray Boşluğu
+    prompt: |
+      Boşluğa dikkat edin. Platform ve vagon arasındaki boşluk bir tehlikedir.
+      İnsanlar üzerinden adım atar. Boşluk değişir. Tedbiri gözlemleyin.
+      Boşluk bedenden ne gerektirir?
+    follow_ups:
+      - Boşluk binişi nasıl şekillendirir?
+      - Boşluk olmasaydı platform neye benzerdi?
+      - Boşluk ve dikkat arasındaki ilişki nedir?
+  - id: hi_th_schedule_check
+    name: Tarife Kontrolü
+    prompt: |
+      Parmaklar telefona dokunur. Uygulama ne zaman olduğunu söyler. Tarife
+      kontrolü sabittir. Belirsizliği azaltır. Ritmeyi gözlemleyin. İnsanlar
+      ne sıklıkla kontrol eder?
+    follow_ups:
+      - Tarife bekleyişi nasıl şekillendirir?
+      - Uygulamalar olmasaydı merkez neye benzerdi?
+      - Kontrol ve hakimiyet arasındaki ilişki nedir?
+  - id: hi_th_crowd_density
+    name: Kalabalık Yoğunluğu
+    prompt: |
+      Trafik saati platformu doldurur. Bedenler sıkışır. Yoğunluğun sınırları
+      vardır. Sınırı gözlemleyin. Ne zaman dayanılmaz hale gelir? Kalabalığın
+      bir fiziği vardır.
+    follow_ups:
+      - Yoğunluk deneyimi nasıl şekillendirir?
+      - Düşük yoğunlukta merkez neye benzerdi?
+      - Yoğunluk ve hoşgörü arasındaki ilişki nedir?
+  - id: hi_th_sleeping_commuter
+    name: Uyuyan Yolcu
+    prompt: |
+      Biri uyuyor—baş pencereye yaslanmış, bir yabancının omzuna. Uykusu
+      güven ya da yorgunluktur. Kırılganlığı gözlemleyin. Uyku vagondan
+      ne gerektirir?
+    follow_ups:
+      - Uyuyan kişi alanı nasıl şekillendirir?
+      - Uyuyanlar olmasaydı yolculuk neye benzerdi?
+      - Uyku ve güvenlik arasındaki ilişki nedir?
+  - id: hi_th_map_consultation
+    name: Harita Danışması
+    prompt: |
+      Bir ziyaretçi duvardaki haritaya bakar. Harita bir can simididir. Diğerleri
+      akıp gider. Danışma zaman alır. Duraklamayı gözlemleyin. Harita ne sağlar?
+    follow_ups:
+      - Harita yolculuğu nasıl şekillendirir?
+      - Haritalar olmasaydı merkez neye benzerdi?
+      - Harita ve güven arasındaki ilişki nedir?
+  - id: hi_th_platform_change
+    name: Platform Değişikliği
+    prompt: |
+      "Platform değişikliği." Kalabalık hareket eder. Değişiklik bir aksamadır. İnsanlar
+      acele eder. Karmakarışıklığı gözlemleyin. Değişiklik kalabalıktan neyi
+      çıkarır?
+    follow_ups:
+      - Değişiklik akışı nasıl şekillendirir?
+      - Değişiklikler olmasaydı merkez neye benzerdi?
+      - Değişiklik ve stres arasındaki ilişki nedir?
+  - id: hi_th_briefcase_clutch
+    name: Çanta Tutuşu
+    prompt: |
+      Çanta yakında tutulur—ayakların arasında, kucakta. Değerli bir şey içerir.
+      Tutuş koruyucudur. Kavrayışı gözlemleyin. Çantanın sahip için anlamı
+      nedir?
+    follow_ups:
+      - Çanta yolculuğu nasıl şekillendirir?
+      - Çantalar olmasaydı vagon neye benzerdi?
+      - Tutuş ve kimlik arasındaki ilişki nedir?
+  - id: hi_th_door_hold
+    name: Kapı Tutma
+    prompt: |
+      Biri arkasındaki kişi için kapıyı tutar. Tren kalkmak üzeredir. Tutma risk
+      ve nezakettir. Değişimi gözlemleyin. Tutmanın bedeli nedir?
+    follow_ups:
+      - Tutma binişi nasıl şekillendirir?
+      - Tutma olmasaydı platform neye benzerdi?
+      - Tutma ve medeniyet arasındaki ilişki nedir?
+  - id: hi_th_standing_balance
+    name: Ayakta Denge
+    prompt: |
+      Tren hareket eder. Ayakta duran yolcular ağırlık kaydırır. Denge dinamiktir.
+      Kimse tutamağı tutmaz. Mikro ayarlamaları gözlemleyin. Beden hareketi öğrenir.
+    follow_ups:
+      - Denge yolculuğu nasıl şekillendirir?
+      - Daha fazla koltuk olsaydı vagon neye benzerdi?
+      - Denge ve alışkanlık arasındaki ilişki nedir?
+  - id: hi_th_conversation_overhear
+    name: Sohbeti Dinleme
+    prompt: |
+      İki kişi konuşur. Parçalar duyarsınız. Sohbet özeldir ama kamusaldır.
+      Sınırı gözlemleyin. Transit halindeyken yabancılar birbirleri hakkında
+      ne öğrenir?
+    follow_ups:
+      - Dinleme yolculuğu nasıl şekillendirir?
+      - Sohbet olmasaydı vagon neye benzerdi?
+      - Dinleme ve samimiyet arasındaki ilişki nedir?
+  - id: hi_th_ticket_inspection
+    name: Bilet Denetimi
+    prompt: |
+      Denetçi vagon boyunca ilerler. "Biletler lütfen." Denetim rastgele
+      veya sistematiktir. Tepkiyi gözlemleyin. Kim hazırdır? Kim beceriksizleşir?
+      Denetim meşruiyetin bir sınavıdır.
+    follow_ups:
+      - Denetim yolculuğu nasıl şekillendirir?
+      - Denetim olmasaydı sistem neye benzerdi?
+      - Denetim ve güven arasındaki ilişki nedir?
+  - id: hi_th_station_name_glance
+    name: İstasyon Adı Bakışı
+    prompt: |
+      İsim geçer — duvarda, tabelada. Müdavimler bilir. Yeni gelenler izler.
+      Bakış yönlendirir. Kimin baktığını gözlemleyin. İsim ne yapar?
+    follow_ups:
+      - İsim yönlendirmeyi nasıl şekillendirir?
+      - Tabelalar olmasaydı yolculuk neye benzerdi?
+      - İsim ve yer arasındaki ilişki nedir?
+  - id: hi_th_benchmark_regular
+    name: Tanıdık Müdavim
+    prompt: |
+      Müdavim ritmi bilir. Tam zamanında gelirler. Bekleyiş yok. Müdavim
+      tarifenin içine yerleşmiştir. Güveni gözlemleyin. Müdavim neyi bilir?
+    follow_ups:
+      - Müdavim merkezi nasıl şekillendirir?
+      - Müdavimler olmasaydı merkez neye benzerdi?
+      - Müdavim ve akıcılık arasındaki ilişki nedir?
+  - id: hi_th_lost_look
+    name: Kayıp Bakış
+    prompt: |
+      Biri kaybolmuş gibi bakar—baş döner, pace belirsiz. Bakış görünürdür.
+      Beden dilini gözlemleyin. Kim yardım eder? Kim görmezden gelir? Kayıp
+      bakış bir işarettir. Neyi davet eder?
+    follow_ups:
+      - Kayıp bakış merkezi nasıl şekillendirir?
+      - Kaybolmuşlar olmasaydı merkez neye benzerdi?
+      - Kayıp ve yardım arasındaki ilişki nedir?
+  - id: hi_th_earbud_insert
+    name: Kulaklık Takma
+    prompt: |
+      Kulaklıklar takılır. Dünya geri çekilir. Takma bir sınırdır. Kullanıcı
+      orada ama yok. Değişimi gözlemleyin. Kulaklık ne yaratır?
+    follow_ups:
+      - Kulaklıklar yolculuğu nasıl şekillendirir?
+      - Kulaklık olmasaydı vagon neye benzerdi?
+      - Kulaklık ve mahremiyet arasındaki ilişki nedir?
+  - id: hi_th_rush_hour_pack
+    name: Trafik Saati Sıkışıklığı
+    prompt: |
+      Vagon dolu. Bedenler birbirine değiyor. Sıkışıklık kaçınılmazdır.
+      Hoşgörüyü gözlemleyin. İnsanlar yakınlığı nasıl yönetir? Sıkışıklığın
+      kendi görgü kuralları vardır.
+    follow_ups:
+      - Sıkışıklık yolculuğu nasıl şekillendirir?
+      - Sıkışıklık olmasaydı trafik saati neye benzerdi?
+      - Sıkışıklık ve dayanıklılık arasındaki ilişki nedir?
+  - id: hi_th_destination_ask
+    name: Varış Noktası Sorma
+    prompt: |
+      "X'e giden tren bu mu?" Bir yabancı sorar. Başka biri cevaplar. Sorma
+      bir bağlantı anı yaratır. Değişimi gözlemleyin. Sorma ne gerektirir?
+    follow_ups:
+      - Sorma vagonu nasıl şekillendirir?
+      - Bu tür sormalar olmasaydı yolculuk neye benzerdi?
+      - Sorma ve güven arasındaki ilişki nedir?
+  - id: hi_th_platform_choice
+    name: Platform Seçimi
+    prompt: |
+      İki platform, aynı varış noktası. Biri daha yakın; biri daha az kalabalık.
+      Seçim stratejidir. Kimin nereye gittiğini gözlemleyin. Seçimi ne belirler?
+    follow_ups:
+      - Seçim kalabalığı nasıl şekillendirir?
+      - Bir platform olsaydı merkez neye benzerdi?
+      - Seçim ve sonuç arasındaki ilişki nedir?
+  - id: hi_th_wipe_down_seat
+    name: Koltuk Silme
+    prompt: |
+      Biri oturmadan önce koltuğu siler. Silme önlemdir. Jestü gözlemleyin.
+      Silme alandan ne varsayar? Silme küçük bir sınır eylemidir.
+    follow_ups:
+      - Silme oturuşu nasıl şekillendirir?
+      - Bu tür jestler olmasaydı vagon neye benzerdi?
+      - Silme ve temizlik arasındaki ilişki nedir?
+  - id: hi_th_standing_offer
+    name: Ayakta Oturma Teklifi
+    prompt: |
+      "Oturmak ister misin?" Teklif bir yabancıya yapılır. Bazen kabul edilir, bazen
+      reddedilir. Değişimi gözlemleyin. Teklif ne anlama gelir?
+    follow_ups:
+      - Teklif vagonu nasıl şekillendirir?
+      - Teklifler olmasaydı yolculuk neye benzerdi?
+      - Teklif ve ilgi arasındaki ilişki nedir?
+  - id: hi_th_exit_block
+    name: Çıkış Engeli
+    prompt: |
+      Biri kapı aralığında durur. Diğerlerinin geçmesi gerekir. Engel
+      farkında olmadan ya da kasıtlıdır. Müzakereyi gözlemleyin. İnsanlar
+      nasıl geçer? Engel küçük bir çatışmadır.
+    follow_ups:
+      - Engel çıkışı nasıl şekillendirir?
+      - Engelleyenler olmasaydı vagon neye benzerdi?
+      - Engel ve farkındalık arasındaki ilişki nedir?
+  - id: hi_th_train_rumble
+    name: Tren Gürültüsü
+    prompt: |
+      Tren gürültü yapar—raylar, tekerlekler, hareket. Gürültü sabittir.
+      Arka plan olur. Ne zaman fark ettiğinizi gözlemleyin. Gürültü
+      bedene ne yapar?
+    follow_ups:
+      - Gürültü yolculuğu nasıl şekillendirir?
+      - Sessizlik olsaydı vagon neye benzerdi?
+      - Gürültü ve ritim arasındaki ilişki nedir?
+  - id: hi_th_connection_run
+    name: Bağlantı Koşusu
+    prompt: |
+      Biri koşar—bir bağlantıyı kaçırmak üzere. Koşu kalabalığı delip geçer.
+      İnsanlar dağılır. Aksaklığı gözlemleyin. Koşu akıştan neyi çıkarır?
+    follow_ups:
+      - Koşu merkezi nasıl şekillendirir?
+      - Koşucular olmasaydı merkez neye benzerdi?
+      - Koşu ve aciliyet arasındaki ilişki nedir?
+  - id: hi_th_seat_saving
+    name: Koltuk Saklama
+    prompt: |
+      Koltukta bir çanta. "Biri oturuyor." Saklama, koltuğu yok bir arkadaşı
+      için tutar. İddiayı gözlemleyin. Bir koltuk ne kadar süre saklanabilir?
+      Sınırlar nelerdir?
+    follow_ups:
+      - Saklama vagonu nasıl şekillendirir?
+      - Saklama olmasaydı yolculuk neye benzerdi?
+      - Saklama ve hak iddiası arasındaki ilişki nedir?
+  - id: hi_th_arrival_relief
+    name: Varış Rahatlığı
+    prompt: |
+      Tren terminale ulaşır. Rahatlama görünür. Omuzlar düşer. İnsanlar eşyalarını
+      toplar. Yolculuk bitti. Değişimi gözlemleyin. Varış ne sağlar?
+    follow_ups:
+      - Varış çıkışı nasıl şekillendirir?
+      - Varış olmasaydı yolculuk neye benzerdi?
+      - Rahatlama ve tamamlama arasındaki ilişki nedir?
+  - id: hi_th_wayfinding_sign
+    name: Yönlendirme Tabelası
+    prompt: |
+      Oklar gösterir. "Trenlere." "Çıkışlara." Tabelalar akışı yönlendirir.
+      Kimlerin takip ettiğini gözlemleyin. Kim görmezden gelir? Tabela bir
+      öneridir. Ne varsayar?
+    follow_ups:
+      - Tabelalar akışı nasıl şekillendirir?
+      - Tabelalar olmasaydı merkez neye benzerdi?
+      - Tabela ve güven arasındaki ilişki nedir?
+  - id: hi_th_waiting_room
+    name: Bekleme Salonu
+    prompt: |
+      Sandalyeler birbirine veya panoya bakar. Bekleme salonu insanları
+      yolculuklar arasında tutar. Düzenlemeyi gözlemleyin. Kim oturur?
+      Kim volta atar? Bekleme salonu bir duraklamadır.
+    follow_ups:
+      - Bekleme salonu bekleyişi nasıl şekillendirir?
+      - Bekleme salonu olmasaydı merkez neye benzerdi?
+      - Salon ve süre arasındaki ilişki nedir?
+  - id: hi_th_stranger_proximity
+    name: Yabancı Yakınlığı
+    prompt: |
+      Bir yabancı yakında durur—kalabalıkta gereklidir. Yakınlık kişisel
+      değildir ama samimidir. Hoşgörüyü gözlemleyin. Beden neye izin verir?
+      Yakınlık bir sözleşmedir.
+    follow_ups:
+      - Yakınlık yolculuğu nasıl şekillendirir?
+      - Daha fazla alan olsaydı vagon neye benzerdi?
+      - Yakınlık ve medeniyet arasındaki ilişki nedir?
+  - id: hi_th_last_train
+    name: Son Tren
+    prompt: |
+      Son tren. Kalabalık farklıdır—daha geç, daha gevşek. Son trenin kendi
+      enerjisi vardır. Değişimi gözlemleyin. "Son" kalabalığa ne yapar?
+    follow_ups:
+      - Son tren merkezi nasıl şekillendirir?
+      - Gece olmasaydı ne olurdu?
+      - Son ve aciliyet arasındaki ilişki nedir?
+  - id: hi_th_transit_tribe
+    name: Transit Kabilesi
+    prompt: |
+      Aynı insanlar, aynı hat, aynı saat. Yüzleri tanırsınız. Asla konuşmazsınız.
+      Transit kabilesi sessiz bir topluluktur. Tanımayı gözlemleyin. Kabile
+      ne sağlar?
+    follow_ups:
+      - Kabile yolculuğu nasıl şekillendirir?
+      - Tanıdık yüzler olmasaydı yolculuk neye benzerdi?
+      - Kabile ve aidiyet arasındaki ilişki nedir?

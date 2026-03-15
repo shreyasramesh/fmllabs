@@ -1,0 +1,441 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinary Lab — Pizza (Romanian)
+
+id: culinary_lab_pizza
+name: Culinary Lab — Pizza
+description: 50 de cărți pentru a schimba modul în care experimentezi pizza—de la chimia aluatului și a focului, la teatrul feliei și arheologia topping-urilor.
+domain: culinary_lab
+cards:
+  - id: piz_dough_stretch
+    name: Întinderea Aluatului
+    prompt: |
+      Privește cum se întinde aluatul—învârtit cu mâna sau presat. Rețeaua de gluten
+      se întinde, captează aer. Se alege forma. Ce ar însemna o felie pătrată diferit
+      de una triunghiulară?
+    follow_ups:
+      - Cum definește întinderea experiența?
+      - Ce ar fi pizza fără întindere?
+      - Care este relația dintre mână și formă?
+  - id: piz_oven_breath
+    name: Respirația Cuptorului
+    prompt: |
+      Un cuptor de pizza respiră—foc de lemne, sau gaz, sau electric. Domul reține căldura.
+      Plita o transferă. Stai aproape de unul. Ce cere cuptorul de la bucătar? De la aluat?
+    follow_ups:
+      - Ce ar fi pizza fără cuptor?
+      - Cum modelează căldura crusta?
+      - Care este relația dintre respirație și crusta pătată?
+  - id: piz_sauce_spiral
+    name: Spirala Sosului
+    prompt: |
+      Sosul este adesea aplicat în spirală—nu întins dintr-o margine în alta. Studiază
+      tiparul. Ce este acoperit? Ce este expus? Spirala este compoziție.
+    follow_ups:
+      - Cum ar arăta pizza complet unsă cu sos?
+      - Cum afectează spirala fiecare înghițitură?
+      - Care este relația dintre tipar și gust?
+  - id: piz_cheese_melt
+    name: Topirea Brânzei
+    prompt: |
+      Brânza se topește în rate diferite. Mozzarella se întinde; brânzeturile maturate se
+      unge. Privește topirea. Chimia grăsimii și a proteinei, căldură și timp. Când este
+      gata?
+    follow_ups:
+      - Ce ar fi felia fără întindere?
+      - Cum modelează topirea înghițitura?
+      - Care este relația dintre topire și memorie?
+  - id: piz_crust_char
+    name: Arsura Cruste
+    prompt: |
+      Leoparding—petele arse pe crustă—marchează pizza coaptă pe lemne. Fiecare pată
+      este un moment de contact cu căldură extremă. Consideră aroma pe care o adaugă acele
+      pete. Ce ar însemna o crustă palidă?
+    follow_ups:
+      - Cum schimbă arsura experiența?
+      - Ce ar fi pizza fără ea?
+      - Care este relația dintre arsură și măiestrie?
+  - id: piz_slice_fold
+    name: Plierea Fetei
+    prompt: |
+      Stil New York: pliază felia. Plierea este structurală—susține topping-urile, canalizează
+      grăsimea. Plierea este coregrafie. Ce permite ea?
+    follow_ups:
+      - Ce ar fi mâncatul fără pliere?
+      - Cum modelează plierea înghițitura?
+      - Care este relația dintre pliere și loc?
+  - id: piz_pepperoni_cup
+    name: Cupa de Pepperoni
+    prompt: |
+      Pepperoni bun cu margini ridicate—marginile crocante, centrul acumulează ulei. Este
+      o transformare a formei și texturii. Observă când se întâmplă. Ce a creat cupa?
+    follow_ups:
+      - Ce ar fi pepperoni fără cupă?
+      - Cum reține aroma cupa?
+      - Care este relația dintre grăsime și formă?
+  - id: piz_basil_finish
+    name: Finisaj cu Busuioc
+    prompt: |
+      Busuiocul pe pizza este adesea adăugat după coacere—proaspăt, vibrant. Este un
+      finisaj, nu o bază. Observă contrastul. Ce adaugă prospețimea la gătit?
+    follow_ups:
+      - Ce ar fi pizza fără busuioc?
+      - Cum modelează momentul de adăugare ierburile?
+      - Care este relația dintre crud și gătit?
+  - id: piz_margherita_minimal
+    name: Margherita Minimalistă
+    prompt: |
+      Margherita este formată din trei elemente: aluat, roșii, brânză. Fiecare trebuie
+      să reziste. Nu ai unde să te ascunzi. Consideră disciplina. Ce cere minimalismul?
+    follow_ups:
+      - Ce ar face o notă greșită?
+      - Cum concentrează simplitatea palatul?
+      - Care este relația dintre puține și multe?
+  - id: piz_pool_table
+    name: Masă de Biliard (Comunală)
+    prompt: |
+      Unele pizzerii au masa lungă, comunală—străini care împart spațiu. Pizza ajunge.
+      Masa este o scenă. Cine mănâncă alături de tine? Care este contractul nescris?
+    follow_ups:
+      - Ce ar fi masa într-o cabină?
+      - Cum modelează masa întâlnirea?
+      - Care este relația dintre comun și privat?
+  - id: piz_box_flip
+    name: Rotirea Cutiei
+    prompt: |
+      Cutia de pizza—carton, uneori cu un trepied de plastic în centru. Este concepută
+      pentru a permite aerisirea, pentru a se suprapune. Cutia este infrastructură. Ce ar
+      însemna mâncarea la pachet fără ea?
+    follow_ups:
+      - Cum modelează cutia drumul spre casă?
+      - Ce se întâmplă când se deschide cutia?
+      - Care este relația dintre cutie și ritual?
+  - id: piz_dough_ferment
+    name: Fermentarea Aluatului
+    prompt: |
+      Aluatul de pizza fermentează—ore sau zile. Drojdia creează bule, aromă. Aluatul vechi
+      are gust acrișor. Consideră timpul din fiecare înghițitură. Ce ar sacrifica un aluat cu
+      creștere rapidă?
+    follow_ups:
+      - Cum modelează fermentarea crusta?
+      - Care este relația dintre timp și gust?
+      - Ce ar însemna un aluat făcut în aceeași zi?
+  - id: piz_cornicione
+    name: Cornicione
+    prompt: |
+      Cornicione—marginea, crusta—este adesea cea mai bună parte. Aerată, pătată,
+      poate puțin gumoasă. Unii o lasă; alții o mănâncă prima. Care este relația ta cu
+      marginea?
+    follow_ups:
+      - Ce ar fi pizza fără cornicione?
+      - Cum încadrează marginea centrul?
+      - Care este relația dintre crustă și centru?
+  - id: piz_olive_oil_drizzle
+    name: Strop de Ulei de Măsline
+    prompt: |
+      Ulei de măsline stropit după coacere—pe crustă, sau pe toată pizza. Strălucește.
+      Uleiul poartă aromă, adaugă bogăție. Observă când este aplicat. Ce adaugă stropul?
+    follow_ups:
+      - Ce ar fi pizza fără el?
+      - Cum schimbă uleiul înghițitura?
+      - Care este relația dintre grăsime și finisaj?
+  - id: piz_anchovy_salt
+    name: Sarea de Anșoa
+    prompt: |
+      Anșoa pe pizza—sărată, umami, divizivă. Se dizolvă în sos, sau stau deasupra. Anșoaul
+      este arheologie: mediteranean, conservat, vechi. Ce călătorie a făcut?
+    follow_ups:
+      - Ce ar fi felia fără anșoa?
+      - Cum modelează sarea celelalte arome?
+      - Care este relația dintre conservat și proaspăt?
+  - id: piz_sound_crunch
+    name: Sunetul Crocant
+    prompt: |
+      Prima înghițitură dintr-o crustă bine făcută—sunetul crocant, rezistența. Închide-ți ochii.
+      Sunetul face parte din experiență. Ce ar fi pizza dacă ar fi tăcută?
+    follow_ups:
+      - Cum modelează sunetul satisfacția?
+      - Cum sună o crustă moale?
+      - Care este relația dintre crocant și calitate?
+  - id: piz_second_slice
+    name: A Doua Felie
+    prompt: |
+      A doua felie este diferită de prima—cunoști deja pizza. Palatul s-a adaptat. Observă
+      schimbarea. A doua felie are același gust? Mai bun? Diferit?
+    follow_ups:
+      - Cum schimbă repetiția percepția?
+      - Ce ar lipsi unei mese de o singură felie?
+      - Care este relația dintre prima și a doua?
+  - id: piz_neapolitan_rules
+    name: Regulile Napoletane
+    prompt: |
+      Pizza napoletană adevărată are reguli—dimensiune, ingrediente, metodă. Ștampila VPN,
+      certificarea. Regulile creează identitate. Ce protejează regulile? Ce exclud ele?
+    follow_ups:
+      - Ce ar fi pizza fără reguli?
+      - Cum modelează certificarea așteptările?
+      - Care este relația dintre regulă și măiestrie?
+  - id: piz_detroit_edges
+    name: Marginile din Detroit
+    prompt: |
+      Stil Detroit—dreptunghiular, brânză până la margine, crustă prăjită crocantă acolo
+      unde întâlnește tigaia. Marginile sunt deliberate. Consideră arhitectura. Ce spune forma?
+    follow_ups:
+      - Ce ar fi pizza fără margini?
+      - Cum creează forma identitate?
+      - Care este relația dintre tigaie și crustă?
+  - id: piz_garlic_knot
+    name: Nod de Usturoi
+    prompt: |
+      Noduri de usturoi—torsade de aluat, unse cu unt, cu usturoi. Adesea sosesc primele.
+      Nu sunt pizza, dar sunt din aceeași lume. Care este relația dintre nod și plăcintă?
+    follow_ups:
+      - Ce ar fi masa fără noduri?
+      - Cum stabilește nodul tonul?
+      - Care este relația dintre garnitură și fel principal?
+  - id: piz_red_pepper_flake
+    name: Fulgi de Ardei Roșu
+    prompt: |
+      Râșnița cu fulgi de ardei roșu—adesea pe masă. Alegi iuțeala. Fulgul este democrație.
+      Fiecare condimentează după gust. Ce înseamnă acea alegere?
+    follow_ups:
+      - Ce ar fi masa fără râșniță?
+      - Cum modelează condimentarea proprie masa?
+      - Care este relația dintre alegere și gust?
+  - id: piz_sicilian_slab
+    name: Placă Siciliană
+    prompt: |
+      Siciliană—groasă, rectangulară, uneori cu sosul deasupra. Placa are substanță.
+      Arhitectura este diferită. Ce adaugă grosimea? Ce sacrifică?
+    follow_ups:
+      - Ce ar face diferit crusta subțire?
+      - Cum modelează grosimea înghițitura?
+      - Care este relația dintre placă și felie?
+  - id: piz_wood_stack
+    name: Stivă de Lemne
+    prompt: |
+      Pizzeriile pe lemne stivuiesc bușteni. Stejar, uneori. Lemnul este combustibil și
+      aromă. Stiva este pregătire. Consideră ce arde. Ce adaugă lemnul pe care gazul nu îl
+      poate?
+    follow_ups:
+      - Ce ar fi pizza fără lemn?
+      - Cum modelează combustibilul crusta?
+      - Care este relația dintre foc și fum?
+  - id: piz_topping_balance
+    name: Echilibrul Topping-urilor
+    prompt: |
+      Topping-urile pot copleși—prea multe și pizza devine o caserolă. Echilibrul este delicat.
+      Studiază o pizza încărcată. Unde trece linia? Ce ai elimina?
+    follow_ups:
+      - Cum modelează reținerea pizza?
+      - Care este relația dintre mai mult și mai puțin?
+      - Când devine alegerea haos?
+  - id: piz_cold_leftover
+    name: Rămasă Rece
+    prompt: |
+      Pizza rece la micul dejun—unii o adoră. Aromele s-au așezat. Textura s-a schimbat.
+      Consideră pizza de a doua zi. Ce adaugă timpul? Ce ia?
+    follow_ups:
+      - Cum schimbă răceala experiența?
+      - Ce ar face reîncălzirea?
+      - Care este relația dintre proaspăt și rămas?
+  - id: piz_sauce_sweet
+    name: Dulceața Sosului
+    prompt: |
+      Sosul de roșii poate fi dulce sau acrișor, în funcție de roșii, de bucătar. Gustă sosul
+      singur, dacă poți. De unde vine dulceața? Ce ar face acidul?
+    follow_ups:
+      - Cum stabilește sosul tonul?
+      - Care este relația dintre dulce și acid?
+      - Ce ar însemna roșii crude?
+  - id: piz_roman_taglio
+    name: Taglio Roman
+    prompt: |
+      Pizza al taglio—vândută la felie, la greutate. Arăți, ei taie. Dreptunghiul, prețul pe
+      kilo. Tranzacția este diferită. Ce înseamnă cumpărarea la greutate?
+    follow_ups:
+      - Cum modelează taglio experiența?
+      - Ce ar însemna o pizza întreagă aici?
+      - Care este relația dintre felie și alegere?
+  - id: piz_hot_honey
+    name: Miere Picantă
+    prompt: |
+      Miere picantă pe pizza—tradiție nouă, acum peste tot. Dulce, picant, vâscos.
+      Este un finisaj. Observă când este adăugată. Ce face mierea brânzei?
+    follow_ups:
+      - Ce ar fi felia fără ea?
+      - Cum modelează dulce-picantul înghițitura?
+      - Care este relația dintre trend și tradiție?
+  - id: piz_pecorino_grate
+    name: Pecorino Ras
+    prompt: |
+      Pecorino ras peste pizza—sărat, acrișor. Este un strat. Brânza de deasupra este
+      diferită de brânza care s-a topit. Consideră ierarhia. Ce adaugă rasul?
+    follow_ups:
+      - Ce ar fi pizza fără pecorino?
+      - Cum modelează a doua brânză preparatul?
+      - Care este relația dintre topire și ras?
+  - id: piz_paddle_slide
+    name: Glisarea cu Lopata
+    prompt: |
+      Lopata, paleta—lemn sau metal. Aluatul este glisat pe ea, apoi în cuptor. Mișcarea este
+      exersată. Privește-o. Ce ar putea merge prost fără îndemânare?
+    follow_ups:
+      - Cum permite lopata coacerea?
+      - Care este relația dintre unealtă și rezultat?
+      - Ce ar însemna o pizza căzută?
+  - id: piz_sourdough_crust
+    name: Crusta cu Maia
+    prompt: |
+      Crusta de pizza cu maia—fermentare lungă, gust acrișor. Crusta are personalitate.
+      Nu este neutră. Consideră ce adaugă maiaua. Ce ar face drojdia comercială diferit?
+    follow_ups:
+      - Cum modelează maiaua înghițitura?
+      - Care este relația dintre fermentare și aromă?
+      - Ce ar însemna o crustă mai fadă?
+  - id: piz_white_pie
+    name: Plăcintă Albă
+    prompt: |
+      Pizza albă—fără roșii. Ulei de măsline, brânză, poate usturoi. Absența roșului schimbă
+      totul. Palatul se așteaptă la roșii. Ce oferă în schimb plăcinta albă?
+    follow_ups:
+      - Ce ar face plăcinta cu roșii?
+      - Cum modelează absența așteptările?
+      - Care este relația dintre roșu și alb?
+  - id: piz_bar_setting
+    name: Ambiția de Bar
+    prompt: |
+      Pizza la bar—mănânci unde comanzi. Barul este o scenă. Privești cuptorul, feliile.
+      Ambiția este casual, imediată. Ce adaugă mâncatul la bar?
+    follow_ups:
+      - Ce ar schimba o masă?
+      - Cum modelează proximitatea experiența?
+      - Care este relația dintre bar și bucătărie?
+  - id: piz_truffle_trend
+    name: Trendul Trufei
+    prompt: |
+      Trufă pe pizza—ulei sau fâșii—a devenit un substitut pentru lux. Aroma domină.
+      Consideră trendul. Ce adaugă truful? Ce maschează?
+    follow_ups:
+      - Ce ar fi pizza fără trufe?
+      - Cum modelează luxul înghițitura?
+      - Care este relația dintre trend și gust?
+  - id: piz_ricotta_dollop
+    name: Biluță de Ricotta
+    prompt: |
+      Ricotta pusă în biluțe pe pizza—rece, cremoasă, contrastantă. Nu se topește ca mozzarella.
+      Rămâne. Observă diferența de temperatură. Ce adaugă biluța?
+    follow_ups:
+      - Ce ar fi felia fără ricotta?
+      - Cum modelează recele fierbinte?
+      - Care este relația dintre biluță și topire?
+  - id: piz_slice_count
+    name: Numărul de Felii
+    prompt: |
+      Câte felii? Numărul este adesea opt—sau șase pentru o pizza mai mică. Numărul determină
+      porția, împărțirea. Consideră matematica. Ce ar însemna patru felii? Douăsprezece?
+    follow_ups:
+      - Cum modelează numărul de felii masa?
+      - Care este relația dintre tăiere și împărțire?
+      - Când contează numărul?
+  - id: piz_oven_window
+    name: Fereastra Cuptorului
+    prompt: |
+      Cuptorul are o fereastră—sau nu. A privi pizza cum se coace este teatru. Brânza
+      bolborosește. Crusta crește. Cum ar fi experiența fără priveliște?
+    follow_ups:
+      - Cum modelează privitul anticiparea?
+      - Care este relația dintre vizibil și ascuns?
+      - Ce înveți din fereastră?
+  - id: piz_ranch_dip
+    name: Sos Ranch
+    prompt: |
+      Sos ranch cu pizza—tradiție americană, adesea cu crusta. Sosul este opțional,
+      controversat. Consideră adăugarea. Ce adaugă sosul ranch? Ce anulează?
+    follow_ups:
+      - Ce ar fi crusta fără sos ranch?
+      - Cum modelează sosul înghițitura?
+      - Care este relația dintre purist și practic?
+  - id: piz_capers_brine
+    name: Saramura de Capere
+    prompt: |
+      Capere pe pizza—sărate, iuți. Taie prin bogăția aromelor. Caperele au călătorit—mediteraneene,
+      murate. Observă când apar. Ce adaugă saramura?
+    follow_ups:
+      - Ce ar fi felia fără capere?
+      - Cum modelează saramura palatul?
+      - Care este relația dintre murat și proaspăt?
+  - id: piz_calzone_seam
+    name: Cusătura Calzone
+    prompt: |
+      Calzone—pizza îndoită, sigilată. Cusătura ține umplutura. Forma este diferită.
+      O tai. Aburul scapă. Ce adaugă plierea? Ce ascunde?
+    follow_ups:
+      - Ce ar fi calzone-ul desfăcut?
+      - Cum creează cusătura surpriza?
+      - Care este relația dintre deschis și închis?
+  - id: piz_mushroom_water
+    name: Apa Ciupercilor
+    prompt: |
+      Ciupercile de pe pizza eliberează apă în timpul coacerii. Un bucătar bun știe să le
+      pre-gătească sau să folosească varietăți uscate. Ciupercile umede fac pizza apoasă.
+      Consideră chimia. Ce face umezeala?
+    follow_ups:
+      - Cum modelează prepararea ciupercilor felia?
+      - Care este relația dintre umed și crocant?
+      - Ce ar face ciupercile crude?
+  - id: piz_grease_absorb
+    name: Absorbția Grăsimii
+    prompt: |
+      Un șervețel pe felie—unii absorb grăsimea. Grăsimea este din brânză, pepperoni.
+      A absorbi sau nu? Consideră alegerea. Ce contribuie grăsimea? Ce elimină absorbția?
+    follow_ups:
+      - Cum modelează grăsimea experiența?
+      - Ce ar însemna o felie uscată?
+      - Care este relația dintre grăsime și aromă?
+  - id: piz_oven_spring
+    name: Creșterea la Cuptor
+    prompt: |
+      Creșterea la cuptor—aluatul crește rapid în căldura mare. Drojdia lucrează repede. Structura
+      se fixează. Consideră momentul. Ce s-ar întâmpla fără suficientă căldură? Fără făina potrivită?
+    follow_ups:
+      - Cum creează creșterea miezul?
+      - Care este relația dintre căldură și creștere?
+      - Ce ar însemna o crustă plată?
+  - id: piz_roma_tomato
+    name: Roșia Roma
+    prompt: |
+      San Marzano, sau Roma—roșiile contează. Sunt dintr-un loc. Campania. DOP-ul, terroir-ul.
+      Urmărește roșia. Ce călătorie a făcut până la felia ta?
+    follow_ups:
+      - Ce ar face altă roșie?
+      - Cum modelează originea sosul?
+      - Care este relația dintre loc și gust?
+  - id: piz_pizza_napoli
+    name: Pizza Napoli
+    prompt: |
+      Napoli a inventat-o. Orașul și mâncarea sunt legate. A mânca pizza în Napoli
+      înseamnă a o mânca la sursă. Consideră arheologia. Ce ar însemna aceeași pizza în altă
+      parte?
+    follow_ups:
+      - Cum modelează locul experiența?
+      - Ce ar pierde traducerea?
+      - Care este relația dintre origine și autenticitate?
+  - id: piz_wine_pair
+    name: Asortarea cu Vin
+    prompt: |
+      Pizza și vinul—berea este comună, dar vinul funcționează. Roșu, adesea. Aciditatea din
+      vin se întâlnește cu aciditatea din roșii. Consideră asortarea. Ce adaugă vinul feliei?
+    follow_ups:
+      - Ce ar face berea diferit?
+      - Cum modelează băutura masa?
+      - Care este relația dintre pahar și farfurie?
+  - id: piz_pizza_party
+    name: Petrecere cu Pizza
+    prompt: |
+      Pizza pentru mulțime—zile de naștere, seară de joc, prânz la birou. Pizza este socială.
+      Cutii se suprapun. Fiecare își ia o felie. Consideră coregrafia. Cum schimbă mulțimea
+      masa?
+    follow_ups:
+      - Ce ar însemna o pizza singură?
+      - Cum modelează împărțirea experiența?
+      - Care este relația dintre pizza și adunare?

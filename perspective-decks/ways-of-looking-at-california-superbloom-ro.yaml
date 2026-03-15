@@ -1,0 +1,206 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Moduri de a privi Superînflorirea Californiei (Romanian)
+
+id: ways_of_looking_at_california_superbloom
+name: Moduri de a privi Superînflorirea Californiei
+description: |
+  Cărți pentru a-ți schimba perspectiva atunci când experimentezi Superînflorirea Californiei.
+  Fiecare oferă o lentilă diferită pentru a aprofunda modul în care vezi florile sălbatice, versanții și
+  explozia efemeră de culoare după ploaia de iarnă.
+domain: california_superbloom
+cards:
+  - id: the_rain_that_made_it
+    name: Ploaia Care A Făcut-o
+    prompt: |
+      Înainte de flori, a fost ploaie. Imaginează-ți furtunile care au umplut
+      solul, semințele care așteptau sub pământ. Ce condiții au trebuit să se alinieze pentru ca această
+      înflorire să aibă loc? Urmărește superînflorirea înapoi la originile sale.
+    follow_ups:
+      - Ce ar fi fost diferit cu mai multă – sau mai puțină – ploaie?
+      - Câți ani de latență ar putea sta în spatele unui singur versant?
+      - Ce înseamnă că acest moment nu a fost niciodată garantat?
+  - id: one_species_at_a_time
+    name: O Specie O Dată
+    prompt: |
+      Alege o singură specie de flori și urmărește-o. Maci portocalii, lupin violet,
+      floarea-soarelui galbenă – ignoră tot restul pentru un moment. Cum schimbă concentrarea pe una singură ceea ce vezi?
+    follow_ups:
+      - Unde domină această specie – și unde cedează?
+      - Cum ar arăta versantul dacă doar aceasta ar înflori?
+      - Cum se menține ea printre celelalte?
+  - id: pollinators_view
+    name: Privirea Polenizatorilor
+    prompt: |
+      Imaginează-ți că ești o albină, un fluture sau o pasăre colibri. Ce te-ar atrage?
+      Ce flori ai vizita mai întâi? Cum arată peisajul de la câțiva centimetri deasupra petalelor?
+    follow_ups:
+      - Ce modele ți-ar ghida drumul?
+      - Ce flori ai ocoli – și de ce?
+      - Cum schimbă scara experiența?
+  - id: ground_level
+    name: Nivelul Solului
+    prompt: |
+      Cobori jos. Culcă-te pe burtă sau îngenunchează. Vezi superînflorirea din perspectiva
+      solului – tulpini care se ridică, petale care se arcuiesc deasupra ta, cerul
+      o fâșie îndepărtată deasupra.
+    follow_ups:
+      - Ce remarci pe care l-ai ratat de la înălțimea în picioare?
+      - Cum se simte pământul de sub tine?
+      - Ce ar vedea o gândac de aici?
+  - id: time_lapse
+    name: Time-Lapse
+    prompt: |
+      Superînflorirea este un moment dintr-o poveste mai lungă. Imaginează-ți versantul
+      în fast-forward: lăstari verzi, primele muguri, culoare maximă, apoi estompare. Cât timp
+      durează spectacolul? Ce vine înainte și după?
+    follow_ups:
+      - Când ai fi ales să vizitezi dacă ai fi putut merge o singură dată?
+      - Ce este deja dispărut până când ajungi?
+      - Ce va rămâne când culoarea se va estompa?
+  - id: the_chemistry_of_color
+    name: Chimia Culorii
+    prompt: |
+      Concentrează-te pe pigmenți. Portocaliu, violet, galben, albastru – ce face fiecare nuanță?
+      Cum interacționează? Unde se ciocnesc culorile și unde se armonizează?
+      Tratează versantul ca pe o paletă.
+    follow_ups:
+      - Ce culoare ai adăuga – sau ai elimina?
+      - Cum schimbă lumina culorile pe parcursul zilei?
+      - Cum ar arăta în alb și negru?
+  - id: negative_space
+    name: Spațiul Negativ
+    prompt: |
+      Privește ce nu sunt flori. Cerul, petele goale de pământ, spațiile dintre flori.
+      Cum modelează spațiul gol ceea ce vezi? Simte semnificația a ceea ce nu este acolo.
+    follow_ups:
+      - Unde se concentrează golul?
+      - Ce ar umple acele spații – și ar trebui?
+      - Cum ține spațiul negativ compoziția unită?
+  - id: the_path_through
+    name: Drumul Prin
+    prompt: |
+      Observă cărările – umane, de animale sau purtate de vânt. Pe unde merg oamenii?
+      Unde rezistă peisajul trecerii? Urmărește o cărare prin înflorire și întreabă-te ce ar costa să o urmezi.
+    follow_ups:
+      - Ce ai proteja prin ne-a merge acolo?
+      - Unde vrea să te ducă cărarea?
+      - Ce ai rata stând pe cărare?
+  - id: geology_beneath
+    name: Geologia de Dedesubt
+    prompt: |
+      Florile stau pe milioane de ani. Ce rocă se află sub sol?
+      Ce a modelat acești munți? Lasă superînflorirea să te conecteze la timpul adânc
+      de sub picioarele tale.
+    follow_ups:
+      - Cum influențează geologia ceea ce crește aici?
+      - Cum ar fi arătat acest loc înainte ca munții să se formeze?
+      - Ce va rămâne când florile vor dispărea?
+  - id: scent_and_sound
+    name: Miros și Sunet
+    prompt: |
+      Închide ochii. Ce miroși? Polenizări, praf, salvie, pământ umed? Ce
+      auzi? Albine, vânt, pași, liniște? Lasă simțurile non-vizuale
+      să te ghideze pentru un moment.
+    follow_ups:
+      - Ce sunet ai adăuga pentru a surprinde experiența?
+      - Cum se schimbă mirosul pe măsură ce te miști?
+      - Ce ai rata dacă doar te-ai uita?
+  - id: light_and_shadow
+    name: Lumină și Umbră
+    prompt: |
+      Urmărește cum lumina se mișcă pe versant. Dimineață, amiază, seară – cum
+      modifică unghiul soarelui florile? Unde cad umbrele?
+      Ce este revelat și ce este ascuns?
+    follow_ups:
+      - Când pare lumina cea mai vie?
+      - Ce ai vedea la răsărit pe care l-ai rata la amiază?
+      - Cum modelează umbrele peisajul?
+  - id: seed_to_flower
+    name: De la Sămânță la Floare
+    prompt: |
+      Urmărește o singură plantă de la sămânță la floare. Cum a ajuns aici? Vânt, animal,
+      apă? Cât timp a așteptat? Ce va deveni când petalele vor cădea?
+      Urmărește o viață prin ciclul său.
+    follow_ups:
+      - Ce ar fi văzut sămânța sub pământ?
+      - Ce va lăsa în urmă planta?
+      - Câte generații sunt reprezentate pe acest versant?
+  - id: micro_vs_macro
+    name: Micro vs. Macro
+    prompt: |
+      Fă zoom pe o singură petală, o picătură de rouă, un grăunte de polen. Apoi trage înapoi
+      la întregul versant, la vale, la stat. Cum schimbă scara ceea ce înseamnă superînflorirea?
+    follow_ups:
+      - Ce este invizibil la o scară și evident la alta?
+      - Unde se oprește în mod natural atenția ta?
+      - Cum schimbă vederea macro micro – și invers?
+  - id: weathers_hand
+    name: Mâna Vremii
+    prompt: |
+      Superînflorirea este o colaborare a vremii. Ploaie, soare, vânt, temperatură –
+      fiecare are un rol. Imaginează-ți vremea ca pe un co-creator. Ce a decis ea?
+      Ce a reținut?
+    follow_ups:
+      - Ce ar fi produs o iarnă diferită?
+      - Cum îți modelează vremea de azi experiența?
+      - Ce ar spune florile despre vreme dacă ar putea?
+  - id: human_witness
+    name: Martor Uman
+    prompt: |
+      Nu ești primul care vede asta. Cine altcineva a stat aici? Fermieri,
+      popoare indigene, fotografi, călători. Cum îți schimbă prezența ta
+      locul? Ce înseamnă a fi martor?
+    follow_ups:
+      - Ce ar fi văzut ei pe care tu nu îl vezi?
+      - Ce vei purta cu tine?
+      - Cum diferă a fi martor de a deține sau a lua?
+  - id: the_next_year
+    name: Anul Următor
+    prompt: |
+      Această înflorire nu se va repeta exact. Anul următor poate fi secetă, foc, sau
+      un amestec diferit de specii. Imaginează-ți că te întorci într-un an. Ce ai
+      spera să găsești? De ce ai fi pregătit să renunți?
+    follow_ups:
+      - Ce face acest moment irepetabil?
+      - Ce i-ai spune sinelui tău viitor?
+      - Cum aprofundează impermanența experiența?
+  - id: texture_and_touch
+    name: Textură și Atingere
+    prompt: |
+      Cum s-ar simți să-ți plimbi mâna prin flori? Petale moi, tulpini
+      fragile, polen lipicios, frunze aspre. Imaginează-ți texturile fără
+      a atinge – sau, unde este permis, atinge ușor și observă.
+    follow_ups:
+      - Ce textură te surprinde cel mai mult?
+      - Ce ai evita să atingi – și de ce?
+      - Cum adaugă textura la ceea ce culoarea singură nu poate transmite?
+  - id: before_and_after
+    name: Înainte și După
+    prompt: |
+      Imaginează-ți acest versant în sezonul uscat – maro, latent, aparent mort.
+      Acum ține ambele imagini: înainte și după. Ce dezvăluie contrastul
+      despre reziliență, răbdare și transformare?
+    follow_ups:
+      - Ce ar rata cineva care a văzut doar sezonul uscat?
+      - Cum îmbogățește memoria latenței înflorirea?
+      - Ce alte momente "înainte și după" evocă acesta?
+  - id: make_it_a_mixtape
+    name: Fă o Mixtape
+    prompt: |
+      Ce muzică ar însoți acest peisaj? Construiește o listă de redare pentru
+      superînflorire. Ce tempo, ce atmosferă, ce instrumente? Lasă florile
+      să sugereze coloana sonoră.
+    follow_ups:
+      - Care este piesa de deschidere?
+      - Ce calitate leagă muzica de flori – ritm, culoare, sentiment?
+      - Cum s-ar schimba lista de redare în diferite momente ale zilei?
+  - id: take_one_thing_home
+    name: Ia Un Lucru Acasă
+    prompt: |
+      Nu poți lua florile – aparțin aici. Dar poți lua o amintire,
+      o senzație, o întrebare. Ce lucru vei purta cu tine? Cum îl vei
+      păstra fără a culege o singură floare?
+    follow_ups:
+      - Ce ai arăta cuiva care nu ar putea veni?
+      - Cum o vei descrie mai târziu?
+      - Ce ai lăsa intenționat în urmă?

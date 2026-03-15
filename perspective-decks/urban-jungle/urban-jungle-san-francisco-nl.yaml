@@ -1,0 +1,459 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Stedelijk Jagen — San Francisco (Dutch)
+
+id: urban_jungle_san_francisco
+name: Stedelijk Jagen — San Francisco
+description: 50 kaarten om je kijk op San Francisco te veranderen — van schaal en licht tot lagen van geschiedenis en het ritme van het straatleven.
+domain: urban_jungle
+cards:
+  - id: sf_hill_grade
+    name: Hellinggraad
+    prompt: |
+      San Francisco is gebouwd op hellingen. Voel de helling onder je voeten. Hoe
+      verandert de helling wat je opmerkt? Waar helt de stad?
+    follow_ups:
+      - Hoe zou de straat eruitzien als hij plat was?
+      - Hoe vormen heuvels wijken?
+      - Wat is het steilste blok waar je overheen bent geklommen?
+  - id: sf_fog_layer
+    name: Nevel Laag
+    prompt: |
+      De mist trekt op. Kijk hoe hij beweegt — over de brug, de heuvels af. De mist
+      is een personage. Hoe verandert hij het licht? Het geluid?
+    follow_ups:
+      - Hoe zou de stad zijn zonder mist?
+      - Hoe markeert mist tijd?
+      - Waar stopt de mist?
+  - id: sf_cable_car_track
+    name: Tramlijn
+    prompt: |
+      Volg een tramlijn. De sleuf in het wegdek, het gezoem van de kabel.
+      De tram is een relikwie dat nog steeds werkt. Wat vervoert hij?
+    follow_ups:
+      - Hoe zou de heuvel eruitzien zonder de lijn?
+      - Hoe vormt de tram het toerisme?
+      - Wat is de relatie tussen lijn en straat?
+  - id: sf_victorian_detail
+    name: Victoriaanse Details
+    prompt: |
+      Victoriaanse huizen in San Francisco zijn sierlijk — gingerbread, erkers, kleur.
+      Zoek er een en lees de details. Welk verhaal vertelt het ornament?
+    follow_ups:
+      - Hoe zou het huis eruitzien zonder de details?
+      - Hoe verandert kleur de straat?
+      - Wat is de relatie tussen Victoriaans en modern?
+  - id: sf_painted_lady
+    name: Beschilderde Dame
+    prompt: |
+      De Painted Ladies zijn beroemd, maar elk Victoriaans huis heeft een palet. Verzamel
+      vijf kleurencombinaties van één blok. Wat zeggen de kleuren?
+    follow_ups:
+      - Waarom deze kleuren?
+      - Hoe behoudt of transformeert verf?
+      - Hoe zou het blok eruitzien in grijstinten?
+  - id: sf_bay_window
+    name: Erker
+    prompt: |
+      Erkers puilen de straat in. Ze zijn voor licht, voor uitzicht, voor
+      etalage. Sta voor een ervan. Wat zou je van binnenuit zien?
+    follow_ups:
+      - Hoe verandert de erker de kamer?
+      - Hoe zou de gevel eruitzien zonder?
+      - Hoe creëren erkers een relatie met de straat?
+  - id: sf_stairway_street
+    name: Trappenstraat
+    prompt: |
+      San Francisco heeft trappen die straten zijn — treden in plaats van asfalt.
+      Beklim er een. Hoe verandert de trap de buurt?
+    follow_ups:
+      - Wie gebruikt deze trappen?
+      - Hoe zou de heuvel eruitzien zonder ze?
+      - Hoe creëren trappen gemeenschap?
+  - id: sf_mission_mural
+    name: Mission Muurschildering
+    prompt: |
+      De Mission is een galerij van muurschilderingen. Zoek er een en lees hem. Wat is het
+      verhaal? Wie heeft hem geschilderd? Voor wie is hij?
+    follow_ups:
+      - Wat zou de muur zeggen zonder de muurschildering?
+      - Hoe claimen muurschilderingen ruimte?
+      - Wat is de relatie tussen muurschildering en buurt?
+  - id: sf_earthquake_retrofit
+    name: Aardbevingsversteviging
+    prompt: |
+      Zoek naar aardbevingsverstevigingen — bouten, steunen, funderingen. De stad
+      herinnert zich 1906 en 1989. Hoe vormt angst de gebouwde omgeving?
+    follow_ups:
+      - Hoe zou het gebouw eruitzien zonder de versteviging?
+      - Hoe is seismisch ontwerp zichtbaar?
+      - Wat is de relatie tussen versteviging en vertrouwen?
+  - id: sf_dolores_palm
+    name: Dolores Palm
+    prompt: |
+      Palmbomen flankeren Dolores Street. Ze zijn niet inheems, maar iconisch.
+      Wat zeggen ze over de relatie van de stad met elders?
+    follow_ups:
+      - Hoe zou de straat eruitzien zonder palmen?
+      - Hoe markeren palmen identiteit?
+      - Wat is de relatie tussen palm en plaats?
+  - id: sf_twin_peaks_view
+    name: Uitzicht Twin Peaks
+    prompt: |
+      Stel je het uitzicht vanaf Twin Peaks voor. De stad spreidt zich uit — raster, water,
+      bruggen. Hoe verandert de hoogte wat belangrijk is?
+    follow_ups:
+      - Wat zou je daar vanaf zien?
+      - Hoe vormt het uitzicht het stadsbeeld?
+      - Wat is verborgen vanaf de top?
+  - id: sf_ferry_building
+    name: Ferry Building
+    prompt: |
+      De Ferry Building kijkt uit over de baai. Het is een drempel — land en water, stad
+      en woon-werkverkeer. Ga voor de ingang staan. Wat stroomt er doorheen?
+    follow_ups:
+      - Hoe zou de waterkant eruitzien zonder?
+      - Hoe markeert het gebouw transitie?
+      - Wat is de relatie tussen veerboot en stad?
+  - id: sf_chinatown_gate
+    name: Chinatown Poort
+    prompt: |
+      De Drakenpoort markeert Chinatown. Ga erdoorheen. Wat verandert er? De poort
+      is zowel echt als symbolisch. Hoe werkt het?
+    follow_ups:
+      - Hoe zou Chinatown eruitzien zonder de poort?
+      - Hoe creëert de poort identiteit?
+      - Wat is de relatie tussen poort en buurt?
+  - id: sf_hydrant_color
+    name: Brandkraan Kleur
+    prompt: |
+      San Francisco brandkranen hebben verschillende kleuren — blauw, groen, rood. De kleur
+      geeft de waterstroom aan. Zoek drie kleuren. Wat betekent elke kleur?
+    follow_ups:
+      - Wat zou het blok doen bij brand?
+      - Hoe codeert kleur informatie?
+      - Wat is de relatie tussen brandkraan en systeem?
+  - id: sf_parklet
+    name: Parklet
+    prompt: |
+      Parklets nemen parkeerplaatsen in voor mensen. Ga er in zitten. Wat is het meubilair?
+      Wie gebruikt het? Hoe verandert de parklet het blok?
+    follow_ups:
+      - Hoe zou de ruimte eruitzien zonder de parklet?
+      - Hoe creëert de parklet ontmoeting?
+      - Wat zou je toevoegen?
+  - id: sf_sf_street_sign
+    name: SF Straatbord
+    prompt: |
+      San Francisco straatnaamborden hebben een specifieke stijl. Let op het lettertype, de
+      montage, de plaatsing. Hoe vormt het bord de wegwijzing?
+    follow_ups:
+      - Hoe zou het blok eruitzien zonder het bord?
+      - Hoe belangrijk is typografie?
+      - Wat is de relatie tussen bord en identiteit?
+  - id: sf_castro_rainbow
+    name: Castro Regenboog
+    prompt: |
+      De Castro wappert regenboogvlaggen. Loop de straat in en tel de vlaggen. Hoe
+      claimt de vlag ruimte? Wat betekent het hier?
+    follow_ups:
+      - Hoe zou de buurt eruitzien zonder de vlaggen?
+      - Hoe creëert de vlag gemeenschap?
+      - Wat is de relatie tussen symbool en plaats?
+  - id: sf_haight_vintage
+    name: Haight Vintage
+    prompt: |
+      De Haight is een museum uit de jaren '60. Zoek een gebouw dat niet is veranderd.
+      Wat is er bewaard gebleven? Wat is performance?
+    follow_ups:
+      - Hoe zou de straat eruitzien zonder de vintage?
+      - Hoe vormt geschiedenis handel?
+      - Wat is de relatie tussen verleden en heden?
+  - id: sf_sutro_tower
+    name: Sutro Toren
+    prompt: |
+      Sutro Tower is overal zichtbaar. Gebruik het als kompas. Hoe oriënteert de
+      toren je? Hoe zou de skyline eruitzien zonder?
+    follow_ups:
+      - Wat zendt de toren uit?
+      - Hoe vormt de toren identiteit?
+      - Wat is de relatie tussen toren en uitzicht?
+  - id: sf_bart_underground
+    name: BART Ondergronds
+    prompt: |
+      Rij met BART onder de baai. Je bent in een tunnel onder water. Voel de druk,
+      de duisternis, de opkomst. Hoe verandert de tunnel de reis?
+    follow_ups:
+      - Hoe zou het woon-werkverkeer eruitzien zonder de tunnel?
+      - Hoe scheidt de baai?
+      - Wat is de relatie tussen tunnel en regio?
+  - id: sf_taquería_line
+    name: Taquería Rij
+    prompt: |
+      Sluit je om middernacht aan bij een taquería rij. De rij is een ritueel. Wie staat erin? Wat
+      bestellen ze? De rij is gemeenschap.
+    follow_ups:
+      - Hoe zou het blok eruitzien zonder de taquería?
+      - Hoe creëert de rij ontmoeting?
+      - Wat is de relatie tussen eten en plaats?
+  - id: sf_dolores_sun
+    name: Dolores Zon
+    prompt: |
+      Dolores Park kijkt naar het westen. Op een zonnige dag is het een strand. Kijk naar de menigte.
+      Hoe vormt de zon het park? Wie krijgt de beste plekken?
+    follow_ups:
+      - Hoe zou het park eruitzien zonder de zon?
+      - Hoe belangrijk is de ligging?
+      - Wat is de relatie tussen park en weer?
+  - id: sf_mission_door
+    name: Mission Deur
+    prompt: |
+      Mission deuren zijn vaak sierlijk — gesneden, geschilderd, uniek. Zoek vijf deuren op
+      één blok. Wat zeggen ze over de gebouwen erachter?
+    follow_ups:
+      - Hoe zou het blok eruitzien zonder de deuren?
+      - Hoe creëert de deur identiteit?
+      - Wat is de relatie tussen deur en drempel?
+  - id: sf_coit_tower
+    name: Coit Toren
+    prompt: |
+      Coit Tower bekroont Telegraph Hill. Het is een monument, een uitzichtpunt, een bezienswaardigheid.
+      Hoe vormt de toren de heuvel? Hoe zou de heuvel eruitzien zonder?
+    follow_ups:
+      - Wat herdenkt de toren?
+      - Hoe oriënteert de toren de stad?
+      - Wat is de relatie tussen toren en buurt?
+  - id: sf_lombard_curve
+    name: Lombard Bocht
+    prompt: |
+      Lombard Street kronkelt de heuvel af. Het is beroemd om zijn haarspeldbochten. Loop
+      het. Hoe verandert de bocht de afdaling? Wat zou een rechte straat doen?
+    follow_ups:
+      - Hoe zou de heuvel eruitzien zonder de bocht?
+      - Hoe vormt de bocht de ervaring?
+      - Wat is de relatie tussen bocht en veiligheid?
+  - id: sf_alcatraz_silhouette
+    name: Alcatraz Silhouet
+    prompt: |
+      Vanaf de waterkant is Alcatraz een silhouet. Het eiland is er altijd,
+      altijd ver weg. Wat betekent het voor de stad?
+    follow_ups:
+      - Hoe zou de baai eruitzien zonder het eiland?
+      - Hoe vormt het eiland het uitzicht?
+      - Wat is de relatie tussen gevangenis en stad?
+  - id: sf_ghost_sign
+    name: Spook Reclame
+    prompt: |
+      Spook reclames — vervaagde advertenties op baksteen — markeren het verleden. Zoek er een. Wat
+      adverteerde het? Wie zou het hebben gezien?
+    follow_ups:
+      - Wat zou de muur zeggen zonder de reclame?
+      - Hoe behoudt de spook reclame geschiedenis?
+      - Wat is de relatie tussen reclame en handel?
+  - id: sf_sf_sidewalk
+    name: SF Stoep
+    prompt: |
+      San Francisco stoepen zijn vaak gebarsten, gekanteld, met boomwortels. Loop een
+      blok en let op de textuur. Hoe veroudert de stoep?
+    follow_ups:
+      - Hoe zou het blok eruitzien zonder de stoep?
+      - Hoe vormt de stoep beweging?
+      - Wat is de relatie tussen stoep en boom?
+  - id: sf_golden_gate_fog
+    name: Golden Gate Mist
+    prompt: |
+      De Golden Gate Bridge verdwijnt in de mist. Kijk hoe hij verdwijnt en weer verschijnt.
+      De mist is een gordijn. Wat zit erachter?
+    follow_ups:
+      - Hoe zou de brug eruitzien zonder de mist?
+      - Hoe vormt de mist het uitzicht?
+      - Wat is de relatie tussen mist en brug?
+  - id: sf_mission_dolores
+    name: Mission Dolores
+    prompt: |
+      Mission Dolores is het oudste gebouw van de stad. Ga ervoor staan.
+      Wat heeft het gezien? Hoe markeert het tijd?
+    follow_ups:
+      - Hoe zou de buurt eruitzien zonder de missie?
+      - Hoe vormt de missie identiteit?
+      - Wat is de relatie tussen missie en stad?
+  - id: sf_painted_steps
+    name: Beschilderde Trappen
+    prompt: |
+      De 16th Avenue Tiled Steps zijn een mozaïek. Beklim ze. Elke trede is
+      anders. Hoe verandert de kunst de klim?
+    follow_ups:
+      - Hoe zouden de trappen eruitzien zonder de tegels?
+      - Hoe creëert het mozaïek gemeenschap?
+      - Wat is de relatie tussen kunst en klim?
+  - id: sf_sf_street_tree
+    name: SF Straatboom
+    prompt: |
+      San Francisco straatbomen zijn vaak palmen, magnolia's of ficussen. Zoek er een
+      en identificeer hem. Hoe vormt de boom het blok?
+    follow_ups:
+      - Hoe zou het blok eruitzien zonder de boom?
+      - Hoe creëert de boom leefgebied?
+      - Wat is de relatie tussen boom en stoep?
+  - id: sf_sf_bay_window
+    name: SF Erker
+    prompt: |
+      Erkers zijn San Francisco volksmond. Ze puilen de straat in en vangen licht. Hoe
+      verandert de erker de kamer?
+    follow_ups:
+      - Hoe zou de gevel eruitzien zonder de erker?
+      - Hoe creëert de erker een relatie met de straat?
+      - Wat is de relatie tussen erker en uitzicht?
+  - id: sf_sf_hill
+    name: SF Heuvel
+    prompt: |
+      Kies een heuvel en beklim hem. Voel de inspanning. Kijk bovenaan terug. Hoe
+      verandert de klim wat je ziet?
+    follow_ups:
+      - Hoe zou de stad eruitzien zonder de heuvels?
+      - Hoe vormen heuvels wijken?
+      - Wat is de relatie tussen heuvel en uitzicht?
+  - id: sf_sf_fog
+    name: SF Mist
+    prompt: |
+      De mist heeft een naam — Karl. Het is een lokale beroemdheid. Als Karl opkomt, hoe
+      verandert de stad dan? Wat wordt verborgen? Wat wordt onthuld?
+    follow_ups:
+      - Hoe zou de stad eruitzien zonder Karl?
+      - Hoe vormt de mist identiteit?
+      - Wat is de relatie tussen mist en licht?
+  - id: sf_sf_cable
+    name: SF Kabel
+    prompt: |
+      De kabeltram rijdt op een kabel onder de straat. Je kunt hem niet zien, maar wel horen.
+      Hoe vormt de verborgen kabel de zichtbare stad?
+    follow_ups:
+      - Hoe zou de heuvel eruitzien zonder de kabel?
+      - Hoe creëert de kabel verbinding?
+      - Wat is de relatie tussen kabel en straat?
+  - id: sf_sf_victorian
+    name: SF Victoriaans
+    prompt: |
+      Victoriaanse huizen komen in paren — twee huizen, één perceel. Zoek een paar. Hoe
+      verhouden ze zich tot elkaar? Hoe zou het ene eruitzien zonder het andere?
+    follow_ups:
+      - Hoe zou het blok eruitzien zonder het paar?
+      - Hoe creëert het paar ritme?
+      - Wat is de relatie tussen paar en perceel?
+  - id: sf_sf_mission
+    name: SF Mission
+    prompt: |
+      Het Mission district is vernoemd naar Mission Dolores. Loop de straat in en
+      voel de lagen — Spaans, Mexicaans, Iers, Centraal-Amerikaans. Wat is het
+      palimpsest?
+    follow_ups:
+      - Hoe zou de buurt eruitzien zonder de lagen?
+      - Hoe vormt de missie identiteit?
+      - Wat is de relatie tussen missie en migratie?
+  - id: sf_sf_bridge
+    name: SF Brug
+    prompt: |
+      De Bay Bridge is minder beroemd dan de Golden Gate, maar wordt meer gebruikt. Steek hem
+      over of bekijk hem. Hoe verbindt de brug? Wat vervoert hij?
+    follow_ups:
+      - Hoe zou de baai eruitzien zonder de brug?
+      - Hoe vormt de brug de regio?
+      - Wat is de relatie tussen brug en woon-werkverkeer?
+  - id: sf_sf_parks
+    name: SF Parken
+    prompt: |
+      San Francisco heeft veel kleine parken — pocket parken, driehoeksparken. Zoek er een.
+      Wie gebruikt het? Wat is het karakter?
+    follow_ups:
+      - Hoe zou de buurt eruitzien zonder het park?
+      - Hoe creëert het park rust?
+      - Wat is de relatie tussen park en blok?
+  - id: sf_sf_stairs
+    name: SF Trappen
+    prompt: |
+      San Francisco heeft meer dan 600 openbare trappen. Zoek er een die je nog nooit
+      bent opgeklommen. Wat is er aan de top? Wat is er aan de onderkant?
+    follow_ups:
+      - Hoe zou de heuvel eruitzien zonder de trappen?
+      - Hoe creëren trappen shortcuts?
+      - Wat is de relatie tussen trappen en buurt?
+  - id: sf_sf_mural
+    name: SF Muurschildering
+    prompt: |
+      De Mission heeft meer muurschilderingen per hoofd van de bevolking dan waar ook in de VS. Zoek een
+      die een verhaal vertelt. Wat is de narratief? Voor wie is het?
+    follow_ups:
+      - Hoe zou de muur eruitzien zonder de muurschildering?
+      - Hoe claimt de muurschildering ruimte?
+      - Wat is de relatie tussen muurschildering en gemeenschap?
+  - id: sf_sf_water
+    name: SF Water
+    prompt: |
+      San Francisco is omringd door water — baai, oceaan, zeestraat. Ga naar de rand.
+      Wat betekent het water voor de stad? Hoe vormt het de rand?
+    follow_ups:
+      - Hoe zou de stad eruitzien zonder het water?
+      - Hoe vormt het water identiteit?
+      - Wat is de relatie tussen water en stad?
+  - id: sf_sf_sunset
+    name: SF Zonsondergang
+    prompt: |
+      San Francisco zonsondergangen zijn beroemd. Kijk er een vanaf een heuvel. Het licht
+      verandert de stad. Hoe zou het uitzicht eruitzien zonder de zonsondergang?
+    follow_ups:
+      - Hoe vormt de zonsondergang de avond?
+      - Wat is de relatie tussen zonsondergang en uitzicht?
+      - Wat zou je missen zonder het licht?
+  - id: sf_sf_wind
+    name: SF Wind
+    prompt: |
+      San Francisco wind is constant in sommige wijken. Voel het. Hoe
+      vormt de wind de straat? Hoe zou het blok eruitzien zonder?
+    follow_ups:
+      - Hoe creëert de wind microklimaat?
+      - Wat is de relatie tussen wind en gebouw?
+      - Wat zou je in deze wind planten?
+  - id: sf_sf_earthquake
+    name: SF Aardbeving
+    prompt: |
+      San Francisco ligt op breuklijnen. De grond kan bewegen. Hoe
+      vormt die kennis de gebouwde omgeving? Wat zou je opmerken bij een trilling?
+    follow_ups:
+      - Hoe vormt seismisch risico het ontwerp?
+      - Wat is de relatie tussen breuklijn en stad?
+      - Wat zou je doen als de grond schudde?
+  - id: sf_sf_tech_bus
+    name: Tech Bus
+    prompt: |
+      Tech bussen shuttelen werknemers naar Silicon Valley. Kijk hoe er een stopt. De bus is
+      een symbool. Wat vervoert het? Wat sluit het uit?
+    follow_ups:
+      - Hoe zou de straat eruitzien zonder de bus?
+      - Hoe vormt de bus de buurt?
+      - Wat is de relatie tussen bus en stad?
+  - id: sf_sf_painted_lady
+    name: SF Beschilderde Dame
+    prompt: |
+      Painted Ladies zijn Victoriaanse huizen in pastelkleuren. Zoek een rij. Hoe
+      creëren de kleuren identiteit? Hoe zou de straat eruitzien in grijs?
+    follow_ups:
+      - Hoe vormen de kleuren het blok?
+      - Wat is de relatie tussen kleur en behoud?
+      - Wat zou je je huis schilderen?
+  - id: sf_sf_twin_peaks
+    name: SF Twin Peaks
+    prompt: |
+      Twin Peaks zijn twee heuvels in het centrum van de stad. Beklim er een. Het uitzicht
+      is 360 graden. Hoe oriënteert de piek je?
+    follow_ups:
+      - Hoe zou de stad eruitzien zonder de pieken?
+      - Hoe creëren de pieken een herkenningspunt?
+      - Wat is de relatie tussen piek en buurt?
+  - id: sf_sf_ferry_plaza
+    name: SF Ferry Plaza
+    prompt: |
+      Het Ferry Building plein organiseert een boerenmarkt. Loop erdoorheen. Wat wordt er
+      verkocht? Wie komt er? Het plein is een drempel tussen stad en baai.
+    follow_ups:
+      - Hoe zou de waterkant eruitzien zonder het plein?
+      - Hoe creëert de markt gemeenschap?
+      - Wat is de relatie tussen plein en veerboot?

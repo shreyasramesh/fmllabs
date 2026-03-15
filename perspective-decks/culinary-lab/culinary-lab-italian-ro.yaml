@@ -1,0 +1,502 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Laborator Culinar — Italian (Romanian)
+
+id: culinary_lab_italian
+name: Laborator Culinar — Italian
+description: |
+  50 de cărți pentru a schimba modul în care experimentați mâncarea italiană —
+  de la chimia uleiului de măsline și a acidului la coregrafia socială a mesei
+  și arheologia fiecărui ingredient.
+domain: culinary_lab
+cards:
+  - id: it_tomato_transformation
+    name: Transformarea Roșiilor
+    prompt: |
+      O roșie crudă devine altceva prin căldură și timp. Urmărește acest arc.
+      Ce se întâmplă cu aciditatea? Cu structura? Roșia păstrează o călătorie.
+    follow_ups:
+      - Cum schimbă sosul gustul?
+      - Ce s-ar pierde fără transformare?
+      - Care este relația dintre crud și gătit?
+  - id: it_bread_arrival
+    name: Sosirea Pâinii
+    prompt: |
+      Pâinea ajunge înainte de masă — uneori caldă, uneori cu ulei. Observă
+      ordinea lucrurilor. Pâinea este o deschidere. Cine decide când să mănânci?
+    follow_ups:
+      - Ce ar fi masa fără pâine?
+      - Cum setează pâinea ritmul?
+      - Care este relația dintre pâine și anticipare?
+  - id: it_pasta_shape
+    name: Forma Pastei
+    prompt: |
+      Fiecare formă de pastă reține sosul diferit — striuri, cavități, curbe.
+      Alege un fel de mâncare și întreabă: de ce această formă pentru acest sos?
+      Forma este o decizie.
+    follow_ups:
+      - Ce s-ar schimba cu o altă formă?
+      - Cum afectează forma mușcătura?
+      - Care este relația dintre formă și funcție?
+  - id: it_basil_fragrance
+    name: Parfumul Busuiocului
+    prompt: |
+      Busuiocul îți ajunge la nas înainte să-l guști. Închide ochii și găsește
+      iarba. Unde se află în preparat? Aroma este o hartă.
+    follow_ups:
+      - Ce ar fi preparatul fără miros?
+      - Cum pregătește parfumul papilele gustative?
+      - Care este relația dintre aromă și gust?
+  - id: it_olive_oil_pool
+    name: Lacul de Ulei de Măsline
+    prompt: |
+      Uleiul de măsline formează bălți pe suprafață sau glazurează farfuria.
+      Observă cum se mișcă. Uleiul poartă aromă și grăsime. Ce leagă?
+    follow_ups:
+      - Ce ar fi preparatul fără ulei?
+      - Cum schimbă uleiul senzația în gură?
+      - Care este relația dintre ulei și căldură?
+  - id: it_parmesan_shatter
+    name: Sfărâmarea Parmezanului
+    prompt: |
+      Parmigiano proaspăt ras are o crocantă cristalină. Ascultă-l. Brânza este
+      la fel de mult textură cât și gust. Cum punctează mușcătura?
+    follow_ups:
+      - Ce ar fi preparatul fără crocantă?
+      - Cum completează brânza gustul?
+      - Care este relația dintre brânză și sare?
+  - id: it_espresso_ritual
+    name: Ritualul de Espresso
+    prompt: |
+      Espresso ajunge la final — ceașcă mică, fără lapte. Ritualul marchează
+      încheierea. Cine îl bea în picioare? Cine stă jos? Espresso este o
+      punctuație.
+    follow_ups:
+      - Ce ar fi masa fără espresso?
+      - Cum modelează ritualul timpul?
+      - Care este relația dintre cafea și final?
+  - id: it_antipasti_sequence
+    name: Secvența Antipasti
+    prompt: |
+      Antipastii vin primele — farfurii mici, împărțite sau nu. Observă secvența.
+      Care este logica ordinii? Începutul setează tonul.
+    follow_ups:
+      - Ce s-ar schimba dacă ordinea s-ar inversa?
+      - Cum creează secvența pofta de mâncare?
+      - Care este relația dintre primul și ultimul?
+  - id: it_wine_pour
+    name: Turnarea Vinului
+    prompt: |
+      Vinul este turnat — cine toarnă? Cât de mult? Turnarea este o coregrafie
+      socială. Privește gesturile. Ce spun ele?
+    follow_ups:
+      - Ce ar fi masa fără vin?
+      - Cum creează turnarea ceremonie?
+      - Care este relația dintre turnare și ritm?
+  - id: it_risotto_stir
+    name: Amestecarea Risotto-ului
+    prompt: |
+      Risotto necesită amestecare constantă. Amidonul se eliberează lent.
+      Consideră munca depusă în bol. Ce s-ar întâmpla fără amestecare?
+    follow_ups:
+      - Ce ar fi orezul fără cremozitate?
+      - Cum schimbă amestecarea textura?
+      - Care este relația dintre efort și rezultat?
+  - id: it_porcini_earth
+    name: Pământul de Porcini
+    prompt: |
+      Porcini au gust de pământ de pădure — umami, pământesc, putreziciune.
+      Urmărește ciuperca înapoi. Unde a crescut? Sub ce copaci?
+    follow_ups:
+      - Ce ar fi preparatul fără gustul de pământ?
+      - Cum modelează originea aroma?
+      - Care este relația dintre ciupercă și pădure?
+  - id: it_plate_negative_space
+    name: Spațiul Negativ al Farfuriei
+    prompt: |
+      Aranjarea italiană a farfuriei lasă adesea spațiu — farfuria nu este plină.
+      Consideră golul. Ce încadrează? Ce permite?
+    follow_ups:
+      - Cum ar arăta preparatul complet acoperit?
+      - Cum concentrează spațiul negativ ochiul?
+      - Care este relația dintre gol și plin?
+  - id: it_garlic_sizzle
+    name: Sfițâitul Usturoiului
+    prompt: |
+      Usturoiul cade în ulei încins — sfițâitul este chimie. Ascultă. Miroase.
+      Momentul este trecător. Ce s-ar arde? Ce s-ar pierde?
+    follow_ups:
+      - Ce ar fi preparatul fără sfițâit?
+      - Cum modelează momentul aroma?
+      - Care este relația dintre căldură și aromă?
+  - id: it_crust_bubbles
+    name: Bulele Cojii
+    prompt: |
+      Cojița de focaccia sau de pizza dezvoltă bule în cuptor. Fiecare bulă este
+      un buzunar de abur. Consideră arhitectura miezului.
+    follow_ups:
+      - Ce ar fi pâinea fără bule?
+      - Cum reține miezul uleiul și sarea?
+      - Care este relația dintre aer și structură?
+  - id: it_prosciutto_slice
+    name: Felia de Prosciutto
+    prompt: |
+      Prosciutto este feliat subțire — aproape translucid. Cuțitul contează.
+      Consideră măiestria. Ce ar face o felie groasă?
+    follow_ups:
+      - Ce ar fi preparatul de mezeluri fără subțire?
+      - Cum afectează grosimea topirea?
+      - Care este relația dintre felie și savurare?
+  - id: it_balsamic_drop
+    name: Picătura de Balsamic
+    prompt: |
+      Oțetul balsamic învechit este dozat în picături — scump, prețios.
+      Observă vâscozitatea. Picătura este concentrare. Ce adaugă?
+    follow_ups:
+      - Ce ar fi preparatul fără aciditate?
+      - Cum taie picătura grăsimea?
+      - Care este relația dintre dulce și acru?
+  - id: it_gnocchi_pillow
+    name: Perne de Gnocchi
+    prompt: |
+      Gnocchi trebuie să fie ușori — perne, nu pietre. Simte textura. Raportul
+      dintre cartofi și făină este delicat. Ce îi face să funcționeze?
+    follow_ups:
+      - Ce ar fi gnocchi dacă ar fi prea grei?
+      - Cum definește textura preparatul?
+      - Care este relația dintre cartofi și făină?
+  - id: it_salt_block
+    name: Bloc de Sare
+    prompt: |
+      Unele bucătării italiene folosesc blocuri de sare pentru grătar. Consideră
+      mineralul. De unde a venit sarea? Ce transmite?
+    follow_ups:
+      - Ce ar fi carnea fără sare?
+      - Cum schimbă blocul gătirea?
+      - Care este relația dintre sare și flacără?
+  - id: it_cacio_e_pepe
+    name: Cacio e Pepe
+    prompt: |
+      Cacio e pepe este brânză, piper, apă de la paste. Trei ingrediente.
+      Emulsia este trucul. Ce o ține împreună? Ce o strică?
+    follow_ups:
+      - Ce ar fi preparatul fără emulsie?
+      - Cum leagă apa de la paste?
+      - Care este relația dintre simplitate și tehnică?
+  - id: it_cannoli_crunch
+    name: Crocantul Cannoli
+    prompt: |
+      Coaja de cannoli se sparge; umplutura este fină. Contrastul este deliberat.
+      Consideră arhitectura mușcăturii.
+    follow_ups:
+      - Ce ar fi desertul fără contrast?
+      - Cum creează textura plăcere?
+      - Care este relația dintre coajă și umplutură?
+  - id: it_risotto_clock
+    name: Ceasul Risotto-ului
+    prompt: |
+      Risotto are o fereastră — al dente, apoi dispare. Bucătarul concurează cu
+      timpul. Consideră precizia. Ce ar face cinci minute în plus?
+    follow_ups:
+      - Ce ar fi orezul dacă ar fi prea gătit?
+      - Cum definește timpul preparatul?
+      - Care este relația dintre ceas și măiestrie?
+  - id: it_truffle_shave
+    name: Răzuirea Trufei
+    prompt: |
+      Trufă este rasă la masă — ritualul, aroma. Trufa este efemeră. De unde a
+      venit? Ce animal a găsit-o?
+    follow_ups:
+      - Ce ar fi preparatul fără ceremonie?
+      - Cum distribuie răzuirea aroma?
+      - Care este relația dintre ritual și raritate?
+  - id: it_spaghetti_twist
+    name: Răsucirea Spaghettei
+    prompt: |
+      Italienii răsucesc spaghetele cu furculița — fără lingură. Răsucirea este
+      culturală. Privește mișcarea. Ce realizează?
+    follow_ups:
+      - Ce ar fi mușcătura fără răsucire?
+      - Cum modelează gestul masa?
+      - Care este relația dintre ustensilă și tradiție?
+  - id: it_caprese_layers
+    name: Straturile Caprese
+    prompt: |
+      Caprese suprapune roșii, mozzarella, busuioc. Straturile sunt simple.
+      Consideră culorile — roșu, alb, verde. Farfuria este un steag.
+    follow_ups:
+      - Ce ar fi preparatul fără ordine?
+      - Cum creează straturile armonie?
+      - Care este relația dintre culoare și gust?
+  - id: it_polenta_set
+    name: Setarea Polentei
+    prompt: |
+      Polenta se încheagă pe măsură ce se răcește — de la moale la ferm. Consideră
+      temperatura. Ce ar fi fierbinte? Rece? Textura este o funcție a timpului.
+    follow_ups:
+      - Ce ar fi polenta dacă nu s-ar răci niciodată?
+      - Cum schimbă închegarea preparatul?
+      - Care este relația dintre căldură și structură?
+  - id: it_amaro_finish
+    name: Finalul cu Amaro
+    prompt: |
+      Amaro încheie masa — amar, digestiv. Amăreala este intenționată. Ce face
+      cu palatul? Cu corpul?
+    follow_ups:
+      - Ce ar fi masa fără amaro?
+      - Cum resetează amăreala limba?
+      - Care este relația dintre amar și încheiere?
+  - id: it_lardo_spread
+    name: Întinderea Lardo-ului
+    prompt: |
+      Lardo este seu de porc vindecat — întins pe pâine, topindu-se. Consideră
+      grăsimea. De unde a venit? Ce poartă?
+    follow_ups:
+      - Ce ar fi pâinea fără lardo?
+      - Cum poartă grăsimea aroma?
+      - Care este relația dintre grăsime și conservare?
+  - id: it_sardine_silver
+    name: Argintiul Sardelelor
+    prompt: |
+      Sardelele proaspete strălucesc — piele argintie, întregi. Peștele este mic,
+      uleios. Consideră scara. Ce ar schimba un pește mai mare?
+    follow_ups:
+      - Ce ar fi preparatul fără ulei?
+      - Cum afectează dimensiunea gătirea?
+      - Care este relația dintre mic și intens?
+  - id: it_burrata_break
+    name: Ruperea Burratei
+    prompt: |
+      Burrata trebuie ruptă — exteriorul cedează în fața cremei. Momentul este
+      teatral. Consideră contrastul. Carcasă exterioară, lichid interior.
+    follow_ups:
+      - Ce ar fi brânza fără rupere?
+      - Cum creează ruptura surpriză?
+      - Care este relația dintre structură și flux?
+  - id: it_osso_buco_marrow
+    name: Măduva din Osso Buco
+    prompt: |
+      Osso buco se centrează pe măduvă — osul ține comoara. Măduva este
+      onctuoasă, bogată. Consideră extracția. Cine ia măduva?
+    follow_ups:
+      - Ce ar fi preparatul fără os?
+      - Cum completează măduva tocană?
+      - Care este relația dintre os și aromă?
+  - id: it_limoncello_shot
+    name: Shot de Limoncello
+    prompt: |
+      Limoncello ajunge într-un pahar răcit — galben, dulce, tare. Shot-ul este
+      o punctuație. De unde provin lămâile? Ce poartă?
+    follow_ups:
+      - Ce ar fi masa fără limoncello?
+      - Cum marchează shot-ul finalul?
+      - Care este relația dintre lămâie și loc?
+  - id: it_sfogliatella_layers
+    name: Straturile de Sfogliatella
+    prompt: |
+      Sfogliatella are sute de straturi subțiri ca hârtia — pliate, crocante.
+      Consideră munca depusă. Fiecare strat este o decizie. Ce ar face mai puține
+      straturi?
+    follow_ups:
+      - Ce ar fi patiseria fără straturi?
+      - Cum creează structura textura?
+      - Care este relația dintre măiestrie și crocant?
+  - id: it_saltimbocca_name
+    name: Numele Saltimbocca
+    prompt: |
+      Saltimbocca înseamnă "sare în gură". Numele promite. Se ridică preparatul
+      la nivelul promisiunii? Consideră decalajul dintre nume și experiență.
+    follow_ups:
+      - Ce ar fi preparatul fără nume?
+      - Cum modelează denumirea așteptările?
+      - Care este relația dintre cuvânt și gust?
+  - id: it_artichoke_prep
+    name: Pregătirea Anghinarei
+    prompt: |
+      Anghinarele necesită pregătire — gâtul îndepărtat, țepii tăiați. Consideră
+      risipa. Ce este aruncat? Ce este prețuit? Leguma este arhitectură.
+    follow_ups:
+      - Ce ar fi anghinarea nepregătită?
+      - Cum schimbă pregătirea gătirea?
+      - Care este relația dintre efort și recompensă?
+  - id: it_grappa_clear
+    name: Grappa Clară
+    prompt: |
+      Grappa este limpede — distilată din tescovină. Băutura poartă fantoma
+      strugurelui. Consideră transformarea. Ce rămâne în urmă?
+    follow_ups:
+      - Ce ar fi masa fără grappa?
+      - Cum concentrează distilarea?
+      - Care este relația dintre strugure și băutură?
+  - id: it_panzanella_soft
+    name: Panzanella Moale
+    prompt: |
+      Panzanella folosește pâine veche — înmuiată în suc de roșii, oțet. Pâinea
+      este reînviată. Consideră transformarea. Ce ar face pâinea proaspătă?
+    follow_ups:
+      - Ce ar fi salata fără pâine?
+      - Cum schimbă înmuierea textura?
+      - Care este relația dintre vechi și reînviat?
+  - id: it_capers_brine
+    name: Saramura Caperelor
+    prompt: |
+      Caperele sunt muguri — murați, sărați. Ei punctează. Consideră saramura.
+      De unde a venit sarea? Ce conservă murătura?
+    follow_ups:
+      - Ce ar fi preparatul fără capere?
+      - Cum schimbă saramura mugurele?
+      - Care este relația dintre conservare și aromă?
+  - id: it_ravioli_seam
+    name: Cusătura Ravioli
+    prompt: |
+      Ravioli au o cusătură — unde aluatul este strâns. Cusătura se poate rupe.
+      Consideră măiestria. Ce ține umplutura?
+    follow_ups:
+      - Ce ar fi ravioli fără cusătură?
+      - Cum protejează sigilarea umplutura?
+      - Care este relația dintre structură și surpriză?
+  - id: it_negroni_orange
+    name: Portocala din Negroni
+    prompt: |
+      Un Negroni este servit cu portocală — felie sau coajă. Citricele plutesc.
+      Consideră garnitura. Ce adaugă? Când o guști?
+    follow_ups:
+      - Ce ar fi băutura fără portocală?
+      - Cum completează garnitura echilibrul?
+      - Care este relația dintre amar și citrice?
+  - id: it_focaccia_dimples
+    name: Gropițele din Focaccia
+    prompt: |
+      Focaccia are gropițe — marcate cu degetul, umplute cu ulei. Gropițele
+      rețin lichid și sare. Consideră suprafața. Ce ar face un top plat?
+    follow_ups:
+      - Ce ar fi pâinea fără gropițe?
+      - Cum creează bălțile aroma?
+      - Care este relația dintre suprafață și asezonare?
+  - id: it_arancini_crust
+    name: Coaja Arancinilor
+    prompt: |
+      Arancini sunt bile de orez prăjite — crocante la exterior, topite la
+      interior. Coaja conține explozia. Consideră contrastul. Ce s-ar întâmpla
+      fără prăjire?
+    follow_ups:
+      - Ce ar fi bila fără coajă?
+      - Cum creează prăjirea închiderea?
+      - Care este relația dintre suprafață și interior?
+  - id: it_pecorino_age
+    name: Vârsta Pecorino-ului
+    prompt: |
+      Pecorino variază în funcție de vârstă — fresco, stagionato. Vârsta schimbă
+      textura, gustul, aroma. Consideră cronologia. Ce ar face brânza mai
+      învechită?
+    follow_ups:
+      - Ce ar fi brânza la diferite vârste?
+      - Cum concentrează maturarea?
+      - Care este relația dintre timp și gust?
+  - id: it_crostini_support
+    name: Suportul Crostini-ului
+    prompt: |
+      Crostini sunt vase — pâinea prăjită susține topping-ul. Suportul contează.
+      Prea gros și copleșește. Prea subțire și se rupe. Consideră echilibrul.
+    follow_ups:
+      - Ce ar fi topping-ul fără pâine?
+      - Cum modelează suportul mușcătura?
+      - Care este relația dintre bază și construcție?
+  - id: it_ciabatta_holes
+    name: Găurile din Ciabatta
+    prompt: |
+      Ciabatta are găuri neregulate — mari, aleatorii. Găurile prind sosul.
+      Consideră miezul. Ce ar face un miez dens?
+    follow_ups:
+      - Ce ar fi pâinea fără găuri?
+      - Cum creează găurile textura?
+      - Care este relația dintre structură și absorbție?
+  - id: it_zabaglione_foam
+    name: Spuma de Zabaglione
+    prompt: |
+      Zabaglione este ou și zahăr bătute la foc — aerat, cald. Spuma este delicată.
+      Consideră transformarea. Ce s-ar întâmpla dacă ar fi prea bătut?
+    follow_ups:
+      - Ce ar fi desertul fără spumă?
+      - Cum încorporează bătutul aerul?
+      - Care este relația dintre căldură și structură?
+  - id: it_salt_crust_fish
+    name: Pește în Crustă de Sare
+    prompt: |
+      Pește copt în crustă de sare — sarea formează o carapace. Peștele se
+      fierbe înăuntru. Consideră vasul. Ce transmite sarea?
+    follow_ups:
+      - Ce ar fi peștele fără crustă?
+      - Cum reține sarea umezeala?
+      - Care este relația dintre crustă și carne?
+  - id: it_panna_cotta_wobble
+    name: Tremuratul Panna Cotta
+    prompt: |
+      Panna cotta ar trebui să tremure — abia închegată. Tremuratul este punctul.
+      Consideră gelul. Ce ar face o închegare mai fermă?
+    follow_ups:
+      - Ce ar fi desertul fără tremurat?
+      - Cum creează textura plăcere?
+      - Care este relația dintre închegare și catifelare?
+  - id: it_sopressata_marbling
+    name: Marmorarea Sopressatei
+    prompt: |
+      Sopressata are marmorare de grăsime — albă în roșu. Grăsimea poartă aroma.
+      Consideră distribuția. Ce ar face carnea slabă?
+    follow_ups:
+      - Ce ar fi salamul fără grăsime?
+      - Cum afectează marmorarea felierea?
+      - Care este relația dintre grăsime și vindecare?
+  - id: it_affogato_melt
+    name: Topirea Affogato
+    prompt: |
+      Affogato este gelato înecat în espresso — fierbinte întâlnește rece. Privește
+      topirea. Transformarea este imediată. Consideră momentul.
+    follow_ups:
+      - Ce ar fi desertul fără topire?
+      - Cum creează temperatura contrastul?
+      - Care este relația dintre fierbinte și rece?
+  - id: it_breadcrumb_gold
+    name: Aurul Pesmetului
+    prompt: |
+      Gătirea italiană folosește pesmet — prăjit, auriu, pentru crocant. Consideră
+      reutilizarea. Pâinea veche devine textură. Ce ar lipsi preparatului?
+    follow_ups:
+      - Ce ar fi preparatul fără pesmet?
+      - Cum adaugă prăjirea crocant?
+      - Care este relația dintre vechi și util?
+  - id: it_radicchio_bitter
+    name: Amăreala Radicchio-ului
+    prompt: |
+      Radicchio este intenționat amar — la grătar sau crud. Amăreala este o
+      alegere. Consideră palatul. Ce face amăreala printre bogăție?
+    follow_ups:
+      - Ce ar fi preparatul fără amăreală?
+      - Cum taie amăreala grăsimea?
+      - Care este relația dintre amar și echilibru?
+  - id: it_cacciucco_bowl
+    name: Bolul de Cacciucco
+    prompt: |
+      Cacciucco este tocăniță de pește — multe specii, un singur vas. Bolul
+      ține marea. Consideră varietatea. Ce contribuie fiecare pește?
+    follow_ups:
+      - Ce ar fi tocana cu un singur pește?
+      - Cum creează varietatea profunzime?
+      - Care este relația dintre mulți și unul?
+  - id: it_panna_trace
+    name: Urma de Smântână
+    prompt: |
+      Smântâna lasă o dâră — pe farfurie, în sos. Consideră vâscozitatea. Smântâna
+      poartă și acoperă. Ce ar fi preparatul fără ea?
+    follow_ups:
+      - Ce ar fi sosul fără smântână?
+      - Cum schimbă smântâna senzația în gură?
+      - Care este relația dintre grăsime și catifelare?
+  - id: it_orecchiette_cup
+    name: Cupa Orecchiette
+    prompt: |
+      Orecchiette înseamnă "urechiușe" — ele cupează sosul. Forma este funcțională.
+      Consideră designul. Ce ar face o pastă plată?
+    follow_ups:
+      - Ce ar fi preparatul fără cupă?
+      - Cum reține forma sosul?
+      - Care este relația dintre formă și sos?

@@ -39,6 +39,19 @@ type MentionOption =
 const MAX_RESULTS_PER_SECTION = 5;
 const MAX_RESULTS_SHOW_ALL = 100;
 
+const DEFAULT_MENTION_TRANSLATIONS = {
+  mentalModels: "Mental Models",
+  longTermMemory: "Long Term Memory",
+  customConcepts: "Custom Concepts",
+  myDomains: "My Domains",
+  hint: "/c concepts · /m models · /d domains · /g groups · /l memories",
+  noResults: "No results",
+  mentalModelSuffix: "Mental Model",
+  memorySuffix: "Memory",
+  conceptSuffix: "Concept",
+  domainSuffix: "Domain",
+};
+
 const CHIP_CLASS =
   "inline-flex items-baseline py-px px-1.5 rounded-lg text-sm font-medium bg-foreground text-background border border-background mx-0.5 align-baseline cursor-pointer";
 
@@ -408,6 +421,7 @@ export function MentionInput({
   onConceptGroupClick,
   previewMap,
   placeholderTopAligned = false,
+  mentionTranslations,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -430,6 +444,19 @@ export function MentionInput({
   previewMap?: Map<string, { oneLiner?: string; quickIntro?: string }>;
   /** Render placeholder at first text row instead of centered */
   placeholderTopAligned?: boolean;
+  /** Translated labels for section headers, hint, etc. */
+  mentionTranslations?: {
+    mentalModels: string;
+    longTermMemory: string;
+    customConcepts: string;
+    myDomains: string;
+    hint: string;
+    noResults: string;
+    mentalModelSuffix: string;
+    memorySuffix: string;
+    conceptSuffix: string;
+    domainSuffix: string;
+  };
 }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [highlightIndex, setHighlightIndex] = useState(0);
@@ -443,6 +470,7 @@ export function MentionInput({
   const containerRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const ref = externalRef ?? internalRef;
+  const t = mentionTranslations ?? DEFAULT_MENTION_TRANSLATIONS;
   const [isMobile, setIsMobile] = useState(false);
   const [chipTooltip, setChipTooltip] = useState<{
     text: string;
@@ -914,7 +942,7 @@ export function MentionInput({
         >
           {mentionState?.mode === "both" && mentionState?.filterQuery === "" && (
             <p className="px-4 py-1.5 text-[11px] text-neutral-500 dark:text-neutral-400 border-b border-neutral-100 dark:border-neutral-800 mb-1">
-              /c concepts · /m models · /d domains · /g groups · /l memories
+              {t.hint}
             </p>
           )}
           {hasResults ? (
@@ -922,7 +950,7 @@ export function MentionInput({
               {filteredMM.length > 0 && (
                 <div className="px-3 pb-1">
                   <p className="text-[10px] uppercase tracking-wide text-neutral-500 dark:text-neutral-400 font-medium px-2 py-1">
-                    Mental Models
+                    {t.mentalModels}
                   </p>
                   {filteredMM.map((m, i) => {
                     const opt: MentionOption = {
@@ -938,7 +966,7 @@ export function MentionInput({
                       (cc) => cc.title.toLowerCase() === m.name.toLowerCase()
                     );
                     const displayLabel = nameMatchesLtm || nameMatchesCc
-                      ? `${m.name} (Mental Model)`
+                      ? `${m.name} (${t.mentalModelSuffix})`
                       : m.name;
                     return (
                       <button
@@ -961,7 +989,7 @@ export function MentionInput({
               {filteredLTM.length > 0 && (
                 <div className="px-3">
                   <p className="text-[10px] uppercase tracking-wide text-neutral-500 dark:text-neutral-400 font-medium px-2 py-1">
-                    Long Term Memory
+                    {t.longTermMemory}
                   </p>
                   {filteredLTM.map((m, i) => {
                     const opt: MentionOption = {
@@ -977,7 +1005,7 @@ export function MentionInput({
                       (cc) => cc.title.toLowerCase() === m.title.toLowerCase()
                     );
                     const displayLabel = nameMatchesMentalModel || nameMatchesCc
-                      ? `${m.title} (Memory)`
+                      ? `${m.title} (${t.memorySuffix})`
                       : m.title;
                     return (
                       <button
@@ -1000,7 +1028,7 @@ export function MentionInput({
               {filteredCC.length > 0 && (
                 <div className="px-3">
                   <p className="text-[10px] uppercase tracking-wide text-neutral-500 dark:text-neutral-400 font-medium px-2 py-1">
-                    Custom Concepts
+                    {t.customConcepts}
                   </p>
                   {filteredCC.map((m, i) => {
                     const opt: MentionOption = {
@@ -1039,7 +1067,7 @@ export function MentionInput({
               {filteredCG.length > 0 && (
                 <div className="px-3">
                   <p className="text-[10px] uppercase tracking-wide text-neutral-500 dark:text-neutral-400 font-medium px-2 py-1">
-                    My Domains
+                    {t.myDomains}
                   </p>
                   {filteredCG.map((m, i) => {
                     const opt: MentionOption = {
@@ -1081,7 +1109,7 @@ export function MentionInput({
             </>
           ) : (
             <p className="px-4 py-3 text-sm text-neutral-500 dark:text-neutral-400">
-              No results
+              {t.noResults}
             </p>
           )}
         </div>

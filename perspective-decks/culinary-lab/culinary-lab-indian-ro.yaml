@@ -1,0 +1,392 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Laboratorul Culinar — Indian (Romanian)
+
+id: culinary_lab_indian
+name: Laboratorul Culinar — Indian
+description: 50 de cărți pentru a schimba modul în care experimentați mâncarea indiană—de la chimia condimentelor și a iuțimii, la arheologia ingredientelor și coregrafia mesei comune.
+domain: culinary_lab
+cards:
+  - id: ind_tadka_crackle
+    name: Crăcănitul Tadka
+    prompt: |
+      Tadka—călirea—este nota de deschidere. Uleiul încins întâlnește semințele de muștar, chimenul, frunzele de curry. Ascultă. Crăcănitul este chimie în timp real. Ce se schimbă atunci când îl auzi înainte de a-l gusta?
+    follow_ups:
+      - Cum modelează sunetul anticiparea?
+      - Ce ar pierde preparatul fără crăcănit?
+      - Care este relația dintre sunet și aromă?
+  - id: ind_spice_route
+    name: Ruta Condimentelor
+    prompt: |
+      Cardamomul a venit din Kerala. Șofranul din Kashmir. Piperul negru valora odată greutatea sa în aur. Urmărește un condiment de pe farfurie înapoi la originea sa. Ce călătorie a făcut pentru a ajunge la tine?
+    follow_ups:
+      - Cum schimbă cunoașterea rutei mușcătura?
+      - Ce alte condimente au călătorit pe aceeași rută?
+      - Care este relația dintre comerț și gust?
+  - id: ind_thali_geometry
+    name: Geometria Thali
+    prompt: |
+      Un thali este o pânză—boluri aranjate într-un cerc, fiecare cu un rol. Studiază compoziția. Unde cade mai întâi ochiul? Care este spațiul negativ?
+    follow_ups:
+      - Ce s-ar întâmpla dacă un bol ar lipsi?
+      - Cum modelează aranjamentul masa?
+      - Care este relația dintre geometrie și ritual?
+  - id: ind_hand_as_tool
+    name: Mâna ca Unealtă
+    prompt: |
+      Roti ruptă, amestecată cu sabzi, introdusă în gură. Mâna este ustensilă și senzor. Observă coregrafia. Ce adaugă atingerea pe care furculița și cuțitul nu o pot oferi?
+    follow_ups:
+      - Cum schimbă mâncatul cu mâinile ritmul?
+      - Ce s-ar pierde cu tacâmurile?
+      - Care este relația dintre atingere și temperatură?
+  - id: ind_heat_layers
+    name: Straturi de Iuțeală
+    prompt: |
+      Iuțeala indiană este stratificată—arsura ardeiului iute, căldura piperului negru, focul ghimbirului. Ia o mușcătură și identifică unde se așază fiecare iuțeală. Limbă, gât, stomac. Cum se construiesc ele?
+    follow_ups:
+      - Cum ar fi preparatul cu o singură iuțeală?
+      - Cum creează stratificarea complexitate?
+      - Care este relația dintre iuțeală și timp?
+  - id: ind_yogurt_intervention
+    name: Intervenția Iaurtului
+    prompt: |
+      Raita, dahi, lassi—iaurtul răcește, taie, echilibrează. Observă momentul în care îl adaugi. Acidul întâlnește grăsimea, răceala întâlnește iuțeala. Intervenția este chimică. Ce întrerupe?
+    follow_ups:
+      - Cum ar fi masa fără iaurt?
+      - Cum creează contrastul o ușurare?
+      - Care este relația dintre intervenție și echilibru?
+  - id: ind_betel_after
+    name: Betel După
+    prompt: |
+      Paan—frunză de betel—încheie masa în unele tradiții. Nu este un desert. Este o încheiere. Palatul se schimbă din nou. Ce spune finalul despre întreg?
+    follow_ups:
+      - Cum marchează paan tranziția?
+      - Ce ar lipsi mesei fără el?
+      - Care este relația dintre final și memorie?
+  - id: ind_street_chaos
+    name: Haosul Străzii
+    prompt: |
+      Un vânzător de chaat lucrează rapid—bhel, papdi, chutney-uri stratificate în secunde. Privește spectacolul. Taraba este teatru. Care este scenariul? Cine este publicul?
+    follow_ups:
+      - Ce ar fi preparatul fără spectacol?
+      - Cum modelează viteza experiența?
+      - Care este relația dintre haos și măiestrie?
+  - id: ind_tandoor_breathe
+    name: Respirația Tandoorului
+    prompt: |
+      Un tandoor respiră—flăcări, fum, lut. Naan lipit de perete, scos când e umflat. Stai lângă unul. Căldura, mirosul. Care este relația dintre foc și aromă?
+    follow_ups:
+      - Cum ar fi naan-ul fără tandoor?
+      - Cum modelează lutul bucătarul?
+      - Care este relația dintre respirație și pâine?
+  - id: ind_turmeric_stain
+    name: Pata de Turmeric
+    prompt: |
+      Turmericul pătează—degete, haine, plastic. Culoarea persistă. Observă ce marchează. Pata este arheologie. Unde a călătorit această masă înainte de a ajunge la tine?
+    follow_ups:
+      - Ce ar fi preparatul fără culoare?
+      - Cum marchează pata efortul depus?
+      - Care este relația dintre pigment și conservare?
+  - id: ind_rice_architecture
+    name: Arhitectura Orezului
+    prompt: |
+      Biryani este construit—straturi de orez, straturi de carne, șofran, ceapă prăjită. Structura se menține. Descoper-o. Cum afectează arhitectura fiecare mușcătură?
+    follow_ups:
+      - Ce s-ar întâmpla dacă straturile s-ar amesteca prea devreme?
+      - Cum creează structura surpriza?
+      - Care este relația dintre construcție și mâncare?
+  - id: ind_chutney_spectrum
+    name: Spectrul Chutney
+    prompt: |
+      Mentă, tamarind, cocos, roșii—chutney-urile se aliniază ca o paletă. Fiecare schimbă mușcătura. Gustă un preparat cu trei chutney-uri. Cum devine aceeași bază trei povești diferite?
+    follow_ups:
+      - Cum ar fi masa cu un singur chutney?
+      - Cum modelează alegerea agenția?
+      - Care este relația dintre spectru și preferință?
+  - id: ind_steam_rising
+    name: Abur Ridicându-se
+    prompt: |
+      Idli, dosa, puri—aburul se ridică atunci când capacul este ridicat. Privește-l. Aburul poartă aroma înainte de gust. Ce ajunge primul? Nasul sau gura?
+    follow_ups:
+      - Cum modelează aburul anticiparea?
+      - Ce s-ar pierde fără ridicarea capacului?
+      - Care este relația dintre vapori și aromă?
+  - id: ind_silver_versus_steel
+    name: Argint versus Oțel
+    prompt: |
+      Unele mese folosesc thali-uri din oțel, altele din argint, altele din frunză de bananier. Observă vasul. Cum schimbă suprafața de sub mâncare experiența? Greutate, sunet, tradiție.
+    follow_ups:
+      - Cum ar fi masa pe suprafețe diferite?
+      - Cum modelează vasul ceremonia?
+      - Care este relația dintre material și semnificație?
+  - id: ind_cumin_fragrance
+    name: Parfum de Chimen
+    prompt: |
+      Boabele de chimen prăjite eliberează parfum înainte de aromă. Miroase un preparat înainte de a-l gusta. Chimenul călătorește prin cameră. Cum pregătește aroma palatul?
+    follow_ups:
+      - Ce ar fi preparatul fără miros?
+      - Cum marchează parfumul prezența bucătarului?
+      - Care este relația dintre nas și memorie?
+  - id: ind_shared_central
+    name: Central Comun
+    prompt: |
+      Preparatele stau în centru. Toată lumea întinde mâna. Nu există "farfuria ta" în același mod. Observă coregrafia întinderii, pasării, luării. Care sunt regulile nescrise?
+    follow_ups:
+      - Cum ar fi masa cu porții individuale?
+      - Cum creează împărțirea conexiunea?
+      - Care este relația dintre central și comunal?
+  - id: ind_ghee_gloss
+    name: Luciu de Ghee
+    prompt: |
+      Ghee-ul se adună, strălucește, acoperă. Este grăsime ca aromă și ca finisaj. Observă unde se acumulează pe farfurie. Cum schimbă acel luciu textura și temperatura?
+    follow_ups:
+      - Ce ar fi preparatul cu ulei în loc de ghee?
+      - Cum transportă ghee-ul alte arome?
+      - Care este relația dintre luciu și bogăție?
+  - id: ind_papad_crunch
+    name: Crăcănitul Papad
+    prompt: |
+      Papad—crocant, subțire, pocnit. Este textură ca punctuație. Rupe unul. Ascultă. Crăcănitul este secțiunea ritmică a mesei. Cum ar suna liniștea fără el?
+    follow_ups:
+      - Cum creează crăcănitul contrastul?
+      - Ce ar lipsi mesei fără papad?
+      - Care este relația dintre sunet și satisfacție?
+  - id: ind_sambar_depth
+    name: Profunzimea Sambar
+    prompt: |
+      Sambarul este stratificat—linte, tamarind, legume, condimente. A fost fiert încet. Gustă pentru a descoperi straturile. Câte poți separa? Care este arheologia acelui bol?
+    follow_ups:
+      - Cum ar fi sambarul cu mai puține straturi?
+      - Cum construiește timpul profunzimea?
+      - Care este relația dintre fierberea lentă și poveste?
+  - id: ind_pickle_punch
+    name: Șocul Murăturilor
+    prompt: |
+      Achar—murături—este răsturnarea de situație. O mică mușcătură schimbă totul. Dulce, acru, picant, fermentat. Observă când intră în scenă. Ce perturbă?
+    follow_ups:
+      - Cum ar fi masa fără murături?
+      - Cum creează șocul surpriza?
+      - Care este relația dintre răsturnare de situație și memorie?
+  - id: ind_bay_leaf_hunt
+    name: Căutare Frunză de Dafin
+    prompt: |
+      Frunzele de dafin se ascund în pulao, biryani, curry-uri. Găsește una. Nu o mănânci—este arheologie. A călătorit din Kerala sau Kashmir. Ce a adăugat înainte de a fi îndepărtată?
+    follow_ups:
+      - Cum modelează ce nu se mănâncă ce se mănâncă?
+      - Ce ar fi preparatul fără frunză?
+      - Care este relația dintre ascuns și prezent?
+  - id: ind_dosa_edge
+    name: Marginea Dosa
+    prompt: |
+      O dosa are o margine—crocantă, ca o dantelă, aurie. Centrul este moale. Contrastul este arhitectural. Unde muști prima dată? Cum încadrează marginea întregul?
+    follow_ups:
+      - Cum ar fi dosa dacă ar fi uniform crocantă?
+      - Cum creează marginea interesul?
+      - Care este relația dintre graniță și centru?
+  - id: ind_saffron_thread
+    name: Fir de Șofran
+    prompt: |
+      Șofranul—câteva fire—colorează și parfumează un întreg preparat. Urmărește un fir. De unde a venit? Kashmir, Iran, Spania? Cel mai scump condiment. Ce adaugă raritatea?
+    follow_ups:
+      - Cum modelează șofranul luxul?
+      - Ce ar fi preparatul cu turmeric în loc de șofran?
+      - Care este relația dintre fir și teritoriu?
+  - id: ind_chaat_texture
+    name: Textura Chaat
+    prompt: |
+      Chaat-ul stratifică texturi—crocant, moale, crocant, cremos—într-o singură mușcătură. Deconstruiește-l. Câte texturi? Cum lucrează împreună? Mușcătura este o colaborare.
+    follow_ups:
+      - Cum ar fi chaat-ul cu o singură textură?
+      - Cum creează stratificarea joaca?
+      - Care este relația dintre textură și încântare?
+  - id: ind_mustard_seed_pop
+    name: Pocnetul Semințelor de Muștar
+    prompt: |
+      Semințele de muștar pocnesc în ulei—călirea bengaleză, sud-indiană. Pocnetul este chimic. Semințele eliberează compuși. Miroase-l. Ce se schimbă când căldura le activează?
+    follow_ups:
+      - Cum marchează pocnetul momentul bucătarului?
+      - Ce ar fi preparatul fără el?
+      - Care este relația dintre pocnet și potență?
+  - id: ind_dal_surface
+    name: Suprafața Dal
+    prompt: |
+      Dal-ul are o suprafață—uneori o peliculă, uneori tadka plutind. Nu amesteca încă. Privește-o. Ce dezvăluie suprafața despre ce se află dedesubt?
+    follow_ups:
+      - Cum invită sau respinge suprafața?
+      - Ce s-ar întâmpla dacă nu ai amesteca niciodată?
+      - Care este relația dintre suprafață și profunzime?
+  - id: ind_banana_leaf_plate
+    name: Farfurie din Frunză de Bananier
+    prompt: |
+      O frunză de bananier este o farfurie—organică, de unică folosință, tradițională. Frunza are textură, miros. Mâncarea stă diferit pe ea. Cum schimbă frunza masa?
+    follow_ups:
+      - Cum ar fi masa pe ceramică?
+      - Cum modelează frunza ritualul?
+      - Care este relația dintre frunză și loc?
+  - id: ind_fenugreek_haunt
+    name: Pecetea Schindufului
+    prompt: |
+      Schinduful—methi—are un miros care persistă. Amărui, apropiat de caramel. Bântuie bucătăria, hainele. Observă unde se lipește. Ce adaugă persistența?
+    follow_ups:
+      - Cum marchează schinduful teritoriul?
+      - Ce ar fi preparatul fără persistența sa?
+      - Care este relația dintre pecete și memorie?
+  - id: ind_pani_puri_moment
+    name: Momentul Pani Puri
+    prompt: |
+      Pani puri este o poveste într-o singură mușcătură—coajă crocantă, cartof, năut, apă de tamarind. Trebuie mâncat întreg, imediat. Momentul este irepetabil. Ce îl face urgent?
+    follow_ups:
+      - Ce s-ar întâmpla dacă ai aștepta?
+      - Cum creează urgența plăcerea?
+      - Care este relația dintre moment și memorie?
+  - id: ind_serving_order
+    name: Ordinea Servirii
+    prompt: |
+      În unele medii, există o ordine—mai întâi cei în vârstă, anumite preparate înainte de altele. Observă. Cine servește? Cine așteaptă? Coregrafia codifică respectul. Care sunt regulile?
+    follow_ups:
+      - Cum ar fi masa fără ordine?
+      - Cum creează secvența sensul?
+      - Care este relația dintre ordine și ierarhie?
+  - id: ind_cardamom_pod
+    name: Păstaie de Cardamom
+    prompt: |
+      O păstaie întreagă de cardamom se ascunde în pulao sau chai. O poți mușca, o poți da la o parte. Păstaia este arheologie—verde din Kerala, neagră din munți. Ce a contribuit?
+    follow_ups:
+      - Cum diferă păstaia întreagă de cea măcinată?
+      - Ce ar fi preparatul fără ea?
+      - Care este relația dintre păstaie și loc?
+  - id: ind_kitchen_sounds
+    name: Sunetele Bucătăriei
+    prompt: |
+      O bucătărie indiană are o peisaj sonor—măcinat, prăjit, șuieratul oalei sub presiune. Închide ochii într-una. Mapează sunetele. Ce este constant? Care este ritmul?
+    follow_ups:
+      - Cum ar fi masa fără acele sunete?
+      - Cum modelează sunetul anticiparea?
+      - Care este relația dintre bucătărie și masă?
+  - id: ind_second_helping
+    name: A Doua Porție
+    prompt: |
+      "Mai mănânci" este un ritual. Insistența, refuzul, acceptarea finală. Privește dansul. Ce înseamnă a doua porție dincolo de foame?
+    follow_ups:
+      - Cum ar fi masa fără ofertă?
+      - Cum codifică insistența grija?
+      - Care este relația dintre mai mult și destul?
+  - id: ind_coriander_finish
+    name: Finisaj cu Coriandru
+    prompt: |
+      Coriandru proaspăt—cilantro—acoperă multe preparate. Este ultimul lucru adăugat. Finisajul. Observă cum verdele schimbă ce a fost înainte. Strălucitor, erbaceu, diviziv.
+    follow_ups:
+      - Ce ar fi preparatul fără ienibahar?
+      - Cum încadrează finisajul întregul?
+      - Care este relația dintre ultimul și primul?
+  - id: ind_lassi_cut
+    name: Tăietura Lassi
+    prompt: |
+      Lassi-ul taie iuțeala—răcoritor, acrișor, gros. Este o ușurare. Observă momentul în care îl bei. Ce întrerupe? Ce resetează?
+    follow_ups:
+      - Cum ar fi masa fără lassi?
+      - Cum extinde tăietura rezistența?
+      - Care este relația dintre ușurare și ritm?
+  - id: ind_roti_stretch
+    name: Întinderea Roti
+    prompt: |
+      Roti este întinsă cu mâna—rotundă, subțire, înnegrită pe flacără. Privește cum este făcută. Întinderea este măiestrie. Cum ar fi pâinea fără acea mișcare?
+    follow_ups:
+      - Cum afectează întinderea textura?
+      - Ce ar pierde roti făcută la mașină?
+      - Care este relația dintre mișcare și rezultat?
+  - id: ind_jaljeera_pause
+    name: Pauză Jaljeera
+    prompt: |
+      Jaljeera—chimen, mentă, tamarind—este un digestiv, o pauză. Adesea sosește la mijlocul mesei sau după. Observă schimbarea. Ce permite pauza?
+    follow_ups:
+      - Cum ar fi masa fără pauză?
+      - Cum marchează jaljeera tranziția?
+      - Care este relația dintre pauză și digestie?
+  - id: ind_color_conversation
+    name: Conversația Culorilor
+    prompt: |
+      Farfuriile indiene vorbesc în culori—dal galben, sabzi verde, orez alb, chutney roșu. Studiază paleta. Care este conversația? Ce ar intra în conflict? Ce s-ar armoniza?
+    follow_ups:
+      - Cum modelează culoarea apetitul?
+      - Cum ar fi farfuria în monocrom?
+      - Care este relația dintre paletă și regiune?
+  - id: ind_clove_buried
+    name: Cuișoare Îngropate
+    prompt: |
+      Cuișoarele se ascund în biryani, garam masala, chai. Sunt înțepătoare, calde. Găsește unul. Poți mușca din el. Cuișorul este o relicvă a comerțului cu mirodenii. Ce teritorii conectează?
+    follow_ups:
+      - Cum diferă cuișorul întreg de cel măcinat?
+      - Ce ar fi preparatul fără cuișoare?
+      - Care este relația dintre cuișor și colonialism?
+  - id: ind_family_style
+    name: Stil Familial
+    prompt: |
+      Mâncarea sosește în boluri pentru masă. Toată lumea mănâncă din ele. Masa este un proiect comun. Observă cine ia ce, cine așteaptă, cine servește. Care este economia mesei?
+    follow_ups:
+      - Cum ar fi masa cu farfurii individuale?
+      - Cum codifică împărțirea valorile?
+      - Care este relația dintre stil și familie?
+  - id: ind_asafoetida_whiff
+    name: Iz de Asafoetida
+    prompt: |
+      Hing—asafoetida—miroase puternic crud, magic gătit. O picătură transformă dal-ul, sabzi-ul. Este secretul. Observă când îl simți. Ce adaugă izul?
+    follow_ups:
+      - Cum marchează hing mâna bucătarului?
+      - Ce ar fi preparatul fără el?
+      - Care este relația dintre iz și transformare?
+  - id: ind_gulab_jamun_weight
+    name: Greutatea Gulab Jamun
+    prompt: |
+      Gulab jamun este dens—solid de lapte prăjit, înmuiat în sirop. Simte-i greutatea pe limbă. Dulce, greu, final. Cum încheie desertul masa?
+    follow_ups:
+      - Cum s-ar încheia masa fără el?
+      - Cum creează greutatea încheierea?
+      - Care este relația dintre desert și sațietate?
+  - id: ind_temple_prasad
+    name: Prasad de Templu
+    prompt: |
+      Prasad—mâncare binecuvântată—este oferită la temple. Poate fi simplă: laddu, orez. Dar poartă un alt sens. Mănânc-o cu acea conștientizare. Ce se schimbă când mâncarea este dăruită?
+    follow_ups:
+      - Cum diferă prasad-ul de mâncarea de restaurant?
+      - Ce adaugă binecuvântarea?
+      - Care este relația dintre dar și devoțiune?
+  - id: ind_bone_suck
+    name: Sugere Os
+    prompt: |
+      Unele preparate indiene—nihari, paya—invită la sugerarea osului. Nu este politicos în altă parte. Aici este așteptat. Măduva, țesutul conjunctiv. Ce extrage sugerea?
+    follow_ups:
+      - Cum trece actul peste politețe?
+      - Ce ar pierde preparatul fără os?
+      - Care este relația dintre sugerare și renunțare?
+  - id: ind_pressure_cooker_song
+    name: Cântecul Oalei sub Presiune
+    prompt: |
+      Oala sub presiune fluieră—unu, doi, trei. Este coloana sonoră pentru dal și orez. Acel sunet înseamnă gata. Cum ar fi bucătăria fără el? Cum modelează cântecul timpul?
+    follow_ups:
+      - Cum marchează fluieratul gătirea?
+      - Ce am pierde cu un Instant Pot?
+      - Care este relația dintre sunet și siguranță?
+  - id: ind_curry_leaf_sizzle
+    name: Sâsâitul Frunzei de Curry
+    prompt: |
+      Frunzele de curry intră în uleiul fierbinte—călirea sud-indiană. Pocnesc, eliberează aromă. Nu le mănânci; sunt pentru aromă. Dar sunt prezente. Ce adaugă prezența lor?
+    follow_ups:
+      - Ce ar fi preparatul fără frunzele de curry?
+      - Cum poartă ceea ce nu se mănâncă aromă?
+      - Care este relația dintre frunză și memorie?
+  - id: ind_mint_chutney_bright
+    name: Chutney de Mentă Strălucitor
+    prompt: |
+      Chutney-ul de mentă este proaspăt—un blitz de ierburi, ardei iute, lime. Taie prin bogăție, luminează farfuria. Observă culoarea în contrast cu restul thali-ului. Ce face verdele compoziției?
+    follow_ups:
+      - Cum ar fi masa fără chutney?
+      - Cum întrerupe prospețimea narațiunea?
+      - Care este relația dintre strălucitor și echilibru?
+  - id: ind_wedding_feast
+    name: Festin de Nuntă
+    prompt: |
+      Mâncarea de nuntă indiană este la scară—sute, mii de oameni serviți. Bufetul, varietatea, excesul. Observă coregrafia. Cum schimbă scara masa? Care este relația dintre celebrare și consum?
+    follow_ups:
+      - Cum ar fi nunta fără festin?
+      - Cum codifică abundența ospitalitatea?
+      - Care este relația dintre festin și statut?

@@ -1,0 +1,520 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# İnsan Arayüzü — Perakende (Turkish)
+
+id: human_interface_retail
+name: İnsan Arayüzü — Perakende
+description: 50 kartla perakende alanına bakış açınızı değiştirin — koridorlardan ve gezinme koreografisinden deneme kabinlerine ve satın alma dansına kadar.
+domain: human_interface
+cards:
+  - id: hi_rt_aisle_flow
+    name: Koridor Akışı
+    prompt: |
+      Koridor hareketi yönlendirir. Arabalar bir yöne gider; insanlar gezinir.
+      Akışı gözlemleyin. Kim yol verir? Kim engeller? Koridorun bir fiziği
+      vardır. Bu dansı hangi kurallar yönetir?
+    follow_ups:
+      - Koridor gezinmeyi nasıl şekillendirir?
+      - Koridorlar olmadan mağaza neye benzerdi?
+      - Akış ve tasarım arasındaki ilişki nedir?
+  - id: hi_rt_browsing_choreography
+    name: Gezinme Koreografisi
+    prompt: |
+      Parmaklar kumaşa dokunur. Gözler rafları tarar. Gezinmenin bir ritmi
+      vardır—durakla, düşün, devam et. Koreografiyi gözlemleyin. Vücut
+      satın almadığında ne yapar?
+    follow_ups:
+      - Gezinme deneyimi nasıl şekillendirir?
+      - Gezinme olmadan mağaza neye benzerdi?
+      - Gezinme ve arzu arasındaki ilişki nedir?
+  - id: hi_rt_fitting_room
+    name: Deneme Kabini
+    prompt: |
+      Perde kapanır. Deneme kabini bir eşiktir—kamusaldan özel alana.
+      İçeride, olası bir benliği denersiniz. Geri dönüşü gözlemleyin. Yüz
+      ne söylüyor? Deneme kabini bir karar sahnesidir.
+    follow_ups:
+      - Deneme kabini satın almayı nasıl şekillendirir?
+      - Deneme kabini olmadan mağaza neye benzerdi?
+      - Deneme ve kimlik arasındaki ilişki nedir?
+  - id: hi_rt_dance_of_purchase
+    name: Satın Alma Dansı
+    prompt: |
+      Yaklaş, seç, taşı, öde. Satın almanın adımları vardır. Sırayı gözlemleyin.
+      İnsanlar nerede tereddüt ediyor? Dans mağaza tarafından
+      koreograflanmıştır. Neyi çeker?
+    follow_ups:
+      - Dans sonucu nasıl şekillendirir?
+      - Sıra olmadan mağaza neye benzerdi?
+      - Dans ve arzu arasındaki ilişki nedir?
+  - id: hi_rt_cart_territory
+    name: Arabanın Alanı
+    prompt: |
+      Araba bedeni uzatır. Seçimleri tutar, geçişi engeller. Arabanın
+      rotasını gözlemleyin. Araba hareketli bir alandır. Neyi iddia eder?
+    follow_ups:
+      - Araba hareketi nasıl şekillendirir?
+      - Arabalar olmadan mağaza neye benzerdi?
+      - Araba ve birikim arasındaki ilişki nedir?
+  - id: hi_rt_endcap_display
+    name: Raf Sonu Panosu
+    prompt: |
+      Koridorun sonu bir pano tutar—ani, indirimli, mevsimlik. Raf sonu
+      gözü yakalar. Kimin durduğunu gözlemleyin. Raf sonu bir tuzaktır.
+      Ne yapar?
+    follow_ups:
+      - Raf sonu gezinmeyi nasıl şekillendirir?
+      - Raf sonu olmadan koridor neye benzerdi?
+      - Pano ve dürtü arasındaki ilişki nedir?
+  - id: hi_rt_checkout_line
+    name: Ödeme Sırası
+    prompt: |
+      Sıra oluşur. Şeker, dergi, son şanslar. Ödeme, son bir sınavdır.
+      Bekleyişi gözlemleyin. İnsanlar ne yapar? Sıra, gezinme ve çıkış
+      arasında bir eşiktir.
+    follow_ups:
+      - Sıra satın almayı nasıl şekillendirir?
+      - Bekleyiş olmadan mağaza neye benzerdi?
+      - Sıra ve dürtü arasındaki ilişki nedir?
+  - id: hi_rt_shelf_height
+    name: Raf Yüksekliği
+    prompt: |
+      Göz hizası satar. Raf yüksekliği tasarımdır. Nelerin nerede olduğunu
+      gözlemleyin. Altta ne var? Üstte ne var? Yükseklik değeri kodlar.
+      Beden hakkında ne varsayar?
+    follow_ups:
+      - Raf yüksekliği gezinmeyi nasıl şekillendirir?
+      - Tekdüze yüksekliğe sahip bir mağaza neye benzerdi?
+      - Yükseklik ve erişim arasındaki ilişki nedir?
+  - id: hi_rt_price_tag
+    name: Fiyat Etiketi
+    prompt: |
+      Etiket fiyatı belirtir. Bazen gizli, bazen belirgin. Yerleşimi
+      gözlemleyin. Etiket bilgi ve bariyerdir. Dokunma anına etiket
+      ne yapar?
+    follow_ups:
+      - Etiket kararı nasıl şekillendirir?
+      - Etiket olmadan ürün neye benzerdi?
+      - Etiket ve değer arasındaki ilişki nedir?
+  - id: hi_rt_store_entrance
+    name: Mağaza Girişi
+    prompt: |
+      Kapı açılır. İçeri girersiniz. Giriş bir eşiktir. İlk ne gördüğünüzü
+      gözlemleyin. Giriş havayı belirler. Mağaza ne hissetmenizi istiyor?
+    follow_ups:
+      - Giriş ziyareti nasıl şekillendirir?
+      - Tasarım olmadan mağaza neye benzerdi?
+      - Giriş ve beklenti arasındaki ilişki nedir?
+  - id: hi_rt_sales_associate
+    name: Satış Danışmanı
+    prompt: |
+      "Bir şey bulmanıza yardım edebilir miyim?" Teklif senaryolu.
+      Değişimi gözlemleyin. Kabul mü, reddetme mi? Danışman bir rehber
+      ve baskıdır. Teklif ne yapar?
+    follow_ups:
+      - Danışman gezinmeyi nasıl şekillendirir?
+      - Onlar olmadan mağaza neye benzerdi?
+      - Teklif ve yükümlülük arasındaki ilişki nedir?
+  - id: hi_rt_basket_versus_cart
+    name: Sepet ve Araba Karşılaştırması
+    prompt: |
+      Birkaç ürün için sepet. Daha fazlası için araba. Seçim satın almayı
+      tahmin eder. Kimin ne aldığını gözlemleyin. Sepet sınırlar; araba
+      davet eder. Seçim neyi mümkün kılar?
+    follow_ups:
+      - Sepet ziyareti nasıl şekillendirir?
+      - Sadece arabalarla mağaza neye benzerdi?
+      - Kap ve birikim arasındaki ilişki nedir?
+  - id: hi_rt_return_counter
+    name: İade Tezgahı
+    prompt: |
+      İade sırası farklıdır. İnsanlar çantalar, fişler, pişmanlık taşır.
+      İade bir tersine dönmedir. Değişimi gözlemleyin. İadenin bedeli
+      nedir—duygusal, sosyal olarak? İade tezgahı geri alma yeridir.
+    follow_ups:
+      - İade ilişkiyi nasıl şekillendirir?
+      - İadeler olmadan mağaza neye benzerdi?
+      - İade ve güven arasındaki ilişki nedir?
+  - id: hi_rt_dressing_room_limit
+    name: Deneme Kabini Sınırı
+    prompt: |
+      "En fazla altı ürün." Sınır denemeyi kontrol eder. Müzakereyi gözlemleyin.
+      Yedinciye sahip olduğunuzda ne olur? Sınır, deneme kabini deneyimini
+      şekillendirir. Ne varsayar?
+    follow_ups:
+      - Sınır denemeyi nasıl şekillendirir?
+      - Sınır olmadan deneme kabini neye benzerdi?
+      - Sınır ve hırsızlık arasındaki ilişki nedir?
+  - id: hi_rt_impulse_buy
+    name: Ani Satın Alma
+    prompt: |
+      Ürün listede yoktu. Gözü yakaladı. Ani satın alma teslimiyet anıdır.
+      Ne zaman olduğunu gözlemleyin. Tetikleyicisi neydi? Ani, tasarımın
+      arzuyla buluşmasıdır.
+    follow_ups:
+      - Ani satın alma nasıl şekillendirir?
+      - Ani satın alma olmadan mağaza neye benzerdi?
+      - Ani ve pişmanlık arasındaki ilişki nedir?
+  - id: hi_rt_store_music
+    name: Mağaza Müziği
+    prompt: |
+      Müzik çalar—yavaş, tanıdık, tasarlanmış. Müzik ruh halini ve
+      temposunu şekillendirir. Tempoyu gözlemleyin. Hızlı mağaza, yavaş
+      müzik mi? Müzik görünmez tasarımdır. Beden üzerinde ne yapar?
+    follow_ups:
+      - Müzik ziyareti nasıl şekillendirir?
+      - Sessizlikte mağaza neye benzerdi?
+      - Müzik ve süre arasındaki ilişki nedir?
+  - id: hi_rt_mannequin
+    name: Manken
+    prompt: |
+      Manken kıyafetleri giyer. İdeal bir bedendir, bir öneridir. İnsanların
+      ona nasıl baktığını gözlemleyin. Manken bir ayna ve bir fantezidir.
+      Ne vaat eder?
+    follow_ups:
+      - Manken gezinmeyi nasıl şekillendirir?
+      - Manken olmadan mağaza neye benzerdi?
+      - Manken ve arzu arasındaki ilişki nedir?
+  - id: hi_rt_sample_station
+    name: Numune İstasyonu
+    prompt: |
+      Bunu tadın. Bunu deneyin. Numune dokunmaya davet eder. İstasyon bir
+      duraklama yaratır. Kimin durduğunu gözlemleyin. Numune küçük bir
+      hediyedir. Neyi çeker?
+    follow_ups:
+      - Numune satın almayı nasıl şekillendirir?
+      - Numuneler olmadan mağaza neye benzerdi?
+      - Numune ve yükümlülük arasındaki ilişki nedir?
+  - id: hi_rt_sale_rack
+    name: İndirim Askısı
+    prompt: |
+      İndirim askısı kaostur—indirimi yapılmış, buruşuk. İnsanlar karıştırır.
+      İndirim askısı farklı bir gezinme türüdür. Davranışı gözlemleyin.
+      İndirim dokunmaya ne yapar?
+    follow_ups:
+      - İndirim askısı ziyareti nasıl şekillendirir?
+      - İndirim askısı olmadan mağaza neye benzerdi?
+      - İndirim ve değer arasındaki ilişki nedir?
+  - id: hi_rt_mirror_encounter
+    name: Ayna Karşılaşması
+    prompt: |
+      Mağaza aynasında kendinizi görürsünüz. Karşılaşma kaçınılmazdır.
+      Bakışı gözlemleyin. Neyi kontrol edersiniz? Ayna bir testtir. Mağaza
+      ayna sağlar. Ne istiyor?
+    follow_ups:
+      - Ayna denemeyi nasıl şekillendirir?
+      - Ayna olmadan deneme kabini neye benzerdi?
+      - Ayna ve benlik arasındaki ilişki nedir?
+  - id: hi_rt_cashier_small_talk
+    name: Kasiyer Sohbeti
+    prompt: |
+      "Her şeyi yolunda buldun mu?" Kasiyer sorar. Sohbet senaryolu.
+      Değişimi gözlemleyin. Soru ne yapar? Kasiyer son insan temas noktasıdır.
+      Sohbet ne yaratır?
+    follow_ups:
+      - Sohbet çıkışı nasıl şekillendirir?
+      - Sohbet olmadan ödeme neye benzerdi?
+      - Sohbet ve işlem arasındaki ilişki nedir?
+  - id: hi_rt_store_layout
+    name: Mağaza Yerleşimi
+    prompt: |
+      Rota tasarlanmıştır. Temel ürünler arkada. Ani ürünler önde. Yerleşim
+      ziyareti koreograflar. Rotaınızı gözlemleyin. Tasarımcı neyin
+      önünüzden geçmenizi istedi?
+    follow_ups:
+      - Yerleşim gezinmeyi nasıl şekillendirir?
+      - Rastgele yerleşime sahip bir mağaza neye benzerdi?
+      - Yerleşim ve maruz kalma arasındaki ilişki nedir?
+  - id: hi_rt_touch_decide
+    name: Dokunarak Karar Ver
+    prompt: |
+      Parmaklar kumaşa, yüzeye dokunur. Dokunma karar verir. Anı gözlemleyin.
+      El gözün yapamadığını nasıl öğrenir? Dokunma bir eşiktir. Ne gerektirir?
+    follow_ups:
+      - Dokunma kararı nasıl şekillendirir?
+      - Dokunma olmadan mağaza neye benzerdi?
+      - Dokunma ve bağlılık arasındaki ilişki nedir?
+  - id: hi_rt_receipt_handoff
+    name: Fiş Teslimi
+    prompt: |
+      Fiş sunulur—çantada veya ayrı. Bazıları alır; bazıları reddeder.
+      Fiş kanıt ve kayıttır. Değişimi gözlemleyin. Fiş işlem için ne yapar?
+    follow_ups:
+      - Fiş çıkışı nasıl şekillendirir?
+      - Fiş olmadan ödeme neye benzerdi?
+      - Fiş ve kapanış arasındaki ilişki nedir?
+  - id: hi_rt_store_exit
+    name: Mağaza Çıkışı
+    prompt: |
+      Kapı açılır. Çantayla — veya boş elle ayrılırsınız. Çıkış bir
+      eşiktir. Duyguyu gözlemleyin. Çıkış neyi çeker? Çıkış dansın sonudur.
+      Ne kalır?
+    follow_ups:
+      - Çıkış ziyareti nasıl şekillendirir?
+      - Kapı olmadan mağaza neye benzerdi?
+      - Çıkış ve memnuniyet arasındaki ilişki nedir?
+  - id: hi_rt_loyalty_card_ask
+    name: Sadakat Kartı Sorusu
+    prompt: |
+      "Ödül kartınız var mı?" Soru rutindir. Cevabı gözlemleyin. Evet,
+      hayır, kaydol. Sadakat kartı ilişkiyi uzatır. Soru ne yaratır?
+    follow_ups:
+      - Sadakat kartı işlemi nasıl şekillendirir?
+      - Sadakat kartı olmadan ödeme neye benzerdi?
+      - Kart ve veri arasındaki ilişki nedir?
+  - id: hi_rt_abandoned_cart
+    name: Terk Edilmiş Araba
+    prompt: |
+      Bir araba koridorda durur—dolu, terk edilmiş. Araba terk edilmiştir.
+      İçindekileri gözlemleyin. Neyi düşünmüşlerdi? Terk edilme bir
+      "hayır" anıdır. Neyi ortaya çıkarır?
+    follow_ups:
+      - Terk edilmiş araba mağazayı nasıl şekillendirir?
+      - Mağaza bundan ne öğrenirdi?
+      - Terk etme ve arzu arasındaki ilişki nedir?
+  - id: hi_rt_fitting_room_opinion
+    name: Deneme Kabini Görüşü
+    prompt: |
+      "Nasıl görünüyor?" Perdenin dışından biri sorar. Görüş aranır.
+      Deneme kabini sosyal olur. Değişimi gözlemleyin. Görüş ne yapar?
+    follow_ups:
+      - Görüş kararı nasıl şekillendirir?
+      - Yalnız denemek neye benzerdi?
+      - Görüş ve satın alma arasındaki ilişki nedir?
+  - id: hi_rt_store_scent
+    name: Mağaza Kokusu
+    prompt: |
+      Mağazanın bir kokusu vardır—parfüm, deri, temiz. Koku tasarlanmıştır.
+      Fark etmeden önce içeri girer. Ne zaman kokladığınızı gözlemleyin.
+      Koku bedene ne yapar?
+    follow_ups:
+      - Koku ziyareti nasıl şekillendirir?
+      - Koku olmadan mağaza neye benzerdi?
+      - Koku ve hafıza arasındaki ilişki nedir?
+  - id: hi_rt_compare_prices
+    name: Fiyat Karşılaştırma
+    prompt: |
+      Telefon çıktı. Tarama. Fiyat kontrolü araştırmadır. Anı gözlemleyin.
+      Telefon ne ortaya çıkarır? Karşılaştırma koridorda gerçekleşir.
+      Kararı ne yapar?
+    follow_ups:
+      - Karşılaştırma satın almayı nasıl şekillendirir?
+      - Telefonlar olmadan mağaza neye benzerdi?
+      - Karşılaştırma ve güç arasındaki ilişki nedir?
+  - id: hi_rt_window_display
+    name: Vitrin Panosu
+    prompt: |
+      Pencere sokağa bakar. Mankenler, aksesuarlar, bir hikaye. Pano
+      yürüyüşü durdurur. Gözü neyin yakaladığını gözlemleyin. Pencere bir
+      davettir. Ne vaat eder?
+    follow_ups:
+      - Pencere girişi nasıl şekillendirir?
+      - Pencere olmadan mağaza neye benzerdi?
+      - Pano ve arzu arasındaki ilişki nedir?
+  - id: hi_rt_size_search
+    name: Beden Arama
+    prompt: |
+      Parmaklar askıları çevirir. Beden aranır. Arama bir ritme sahiptir.
+      Hayal kırıklığı veya rahatlamayı gözlemleyin. Beden bir kapıdır.
+      Arama ne gerektirir?
+    follow_ups:
+      - Beden arama gezinmeyi nasıl şekillendirir?
+      - Tüm bedenlerin görünür olduğu bir mağaza neye benzerdi?
+      - Beden ve vücut arasındaki ilişki nedir?
+  - id: hi_rt_payment_choice
+    name: Ödeme Seçimi
+    prompt: |
+      Kart, nakit, telefon. Ödeme seçimi işlemin anıdır. Yöntemi gözlemleyin.
+      Seçim alışkanlık ve kimliktir. Ödeme yöntemi neyi iletir?
+    follow_ups:
+      - Ödeme ödemeyi nasıl şekillendirir?
+      - Tek bir yöntemle mağaza neye benzerdi?
+      - Ödeme ve hız arasındaki ilişki nedir?
+  - id: hi_rt_store_regular
+    name: Mağaza Müdavimi
+    prompt: |
+      Müdavim yerleşimi bilir. Amaçlı hareket ederler. Danışman başıyla
+      selamlar. Müdavimi gözlemleyin. Yeniden gelene göre ne biliyor?
+      Müdavimin mekanla bir ilişkisi vardır.
+    follow_ups:
+      - Müdavim mağazayı nasıl şekillendirir?
+      - Müdavimler olmadan mağaza neye benzerdi?
+      - Müdavim ve sadakat arasındaki ilişki nedir?
+  - id: hi_rt_bag_handoff
+    name: Çanta Teslimi
+    prompt: |
+      Çanta teslim edilir—dolu, markalı. Teslim işlemeyi tamamlar.
+      Değişimi gözlemleyin. Çanta çıkış için ne yapar? Çanta kanıt ve
+      yükümlülüktür.
+    follow_ups:
+      - Çanta çıkışı nasıl şekillendirir?
+      - Çanta olmadan satın alma neye benzerdi?
+      - Çanta ve kimlik arasındaki ilişki nedir?
+  - id: hi_rt_fitting_room_overflow
+    name: Deneme Kabini Taşması
+    prompt: |
+      Çok fazla ürün. Danışman fazlasını alır. "Bunları ben tutacağım."
+      Taşma güvendir. Değişimi gözlemleyin. Danışman neyi tutar? Taşma
+      denemeyi uzatır. Neyi mümkün kılar?
+    follow_ups:
+      - Taşma denemeyi nasıl şekillendirir?
+      - Taşma olmadan deneme kabini neye benzerdi?
+      - Taşma ve güven arasındaki ilişki nedir?
+  - id: hi_rt_store_lighting
+    name: Mağaza Aydınlatması
+    prompt: |
+      Işık tasarlanmıştır—çekici, parlak, sıcak. Aydınlatma nesnelerin
+      nasıl göründüğünü şekillendirir. O ışıkta aynayı gözlemleyin.
+      Aydınlatma yüze, kumaşa ne yapar?
+    follow_ups:
+      - Aydınlatma satın almayı nasıl şekillendirir?
+      - Sert ışıkta mağaza neye benzerdi?
+      - Işık ve gerçek arasındaki ilişki nedir?
+  - id: hi_rt_aisle_block
+    name: Koridor Engeli
+    prompt: |
+      Biri koridorda durur. Geçmeniz gerekir. Engel kayıtsız veya kasıtlıdır.
+      Müzakereyi gözlemleyin. "Afedersiniz." Engel küçük bir sürtünmedir.
+      Ne gerektirir?
+    follow_ups:
+      - Engel akışı nasıl şekillendirir?
+      - Daha geniş koridorlarda mağaza neye benzerdi?
+      - Engel ve medeniyet arasındaki ilişki nedir?
+  - id: hi_rt_clearance_section
+    name: İndirim Bölümü
+    prompt: |
+      İndirim bölümü arka tarafta, köşede. Son sezon, son şans. Bölümün
+      farklı bir enerjisi vardır. Gezinmeyi gözlemleyin. İndirim dokunmaya,
+      düşünmeye ne yapar?
+    follow_ups:
+      - İndirim ziyareti nasıl şekillendirir?
+      - İndirim bölümü olmadan mağaza neye benzerdi?
+      - İndirim ve değer arasındaki ilişki nedir?
+  - id: hi_rt_store_map
+    name: Mağaza Haritası
+    prompt: |
+      "X nerede?" Harita veya danışman cevaplar. Mağazanın coğrafyası
+      vardır. Disoryantasyonu gözlemleyin. Harita ne sağlar? Harita bir
+      oryantasyondur. Ne varsayar?
+    follow_ups:
+      - Harita ziyareti nasıl şekillendirir?
+      - Harita olmadan mağaza neye benzerdi?
+      - Harita ve akıcılık arasındaki ilişki nedir?
+  - id: hi_rt_try_on_stack
+    name: Deneme Yığını
+    prompt: |
+      Danışman denenenleri geri getirir. Katlanmış, asılmışlardır. Yığın
+      yere geri döner. İş gücünü gözlemleyin. Bunlara kim dokundu? Deneme
+      yığını birçok "belki"nin sonrasıdır.
+    follow_ups:
+      - Yığın zemini nasıl şekillendirir?
+      - Yığın olmadan deneme kabini neye benzerdi?
+      - Yığın ve iş gücü arasındaki ilişki nedir?
+  - id: hi_rt_store_hours
+    name: Mağaza Saatleri
+    prompt: |
+      Tabela mağazanın ne zaman açıldığını, ne zaman kapandığını belirtir.
+      Saatler bir sınırdır. Açılış öncesi kalabalığı gözlemleyin. Saatler
+      erişimi yapılandırır. Müşteri hakkında ne varsayarlar?
+    follow_ups:
+      - Saatler ziyareti nasıl şekillendirir?
+      - 24 saat erişimli bir mağaza neye benzerdi?
+      - Saatler ve uygunluk arasındaki ilişki nedir?
+  - id: hi_rt_shopping_list
+    name: Alışveriş Listesi
+    prompt: |
+      Telefon veya kağıt. Liste ziyareti yönlendirir. Kimin listesi olduğunu
+      gözlemleyin. Liste niyettir. Ani alımlara direnir—ya da direnmez.
+      Liste gezinme için ne yapar?
+    follow_ups:
+      - Liste satın almayı nasıl şekillendirir?
+      - Liste olmadan ziyaret neye benzerdi?
+      - Liste ve kontrol arasındaki ilişki nedir?
+  - id: hi_rt_store_emptiness
+    name: Mağaza Boşluğu
+    prompt: |
+      Mesai dışı saatler, yavaş gün. Mağaza boş. Boşluk hissi değiştirir.
+      Mekanı gözlemleyin. Boşluk ne ortaya çıkarır? Boş mağaza farklı bir
+      sahnedir.
+    follow_ups:
+      - Boşluk gezinmeyi nasıl şekillendirir?
+      - Her zaman boş bir mağaza neye benzerdi?
+      - Boşluk ve rahatlık arasındaki ilişki nedir?
+  - id: hi_rt_fitting_room_curtain
+    name: Deneme Kabini Perdesi
+    prompt: |
+      Perde kapanır. Mahremiyet kısmen—boşluklar, sesler. Perde bir
+      eşiktir. Sınırı gözlemleyin. Perde neyi korur? Neyi koruyamaz?
+    follow_ups:
+      - Perde denemeyi nasıl şekillendirir?
+      - Kapılı bir deneme kabini neye benzerdi?
+      - Perde ve mahremiyet arasındaki ilişki nedir?
+  - id: hi_rt_store_aroma
+    name: Mağaza Aroması
+    prompt: |
+      Fırın, kahve, parfüm—mağazanın bir kokusu vardır. Aroma ilk
+      temastır. Ziyareti hazırlar. Ne zaman fark ettiğinizi gözlemleyin.
+      Satın almadan önce aroma ne yapar?
+    follow_ups:
+      - Aroma ziyareti nasıl şekillendirir?
+      - Aroma olmadan mağaza neye benzerdi?
+      - Aroma ve arzu arasındaki ilişki nedir?
+  - id: hi_rt_purchase_regret
+    name: Satın Alma Pişmanlığı
+    prompt: |
+      Eldeki çanta. Şüphe sızar. Pişmanlık daha sonra gelebilir. Mağazadan
+      çıkan yüzü gözlemleyin. Satın alma ne anlama gelir? Pişmanlık, dansın
+      gölgesidir. Neyi yaratır?
+    follow_ups:
+      - Pişmanlık bir sonraki ziyareti nasıl şekillendirir?
+      - Pişmanlık olmadan satın alma neye benzerdi?
+      - Pişmanlık ve arzu arasındaki ilişki nedir?
+  - id: hi_rt_store_thank_you
+    name: Mağaza Teşekkürü
+    prompt: |
+      "Bizimle alışveriş yaptığınız için teşekkürler." Cümle işlemi
+      kapatır. Senaryoludur. Değişimi gözlemleyin. Teşekkür ne yapar?
+      Cümle küçük bir ritüeldir. Ne yaratır?
+    follow_ups:
+      - Teşekkür çıkışı nasıl şekillendirir?
+      - Teşekkür olmadan ödeme neye benzerdi?
+      - Teşekkür ve kapanış arasındaki ilişki nedir?
+  - id: hi_rt_store_entrance_sensor
+    name: Giriş Sensörü
+    prompt: |
+      Kapı otomatik açılır. Sensör yaklaşmanızı algılar. Giriş
+      koreograflıdır. Eşiği gözlemleyin. Otomatik kapı varışa ne yapar?
+      Sensör kesintisiz bir geçiş yaratır.
+    follow_ups:
+      - Sensör girişi nasıl şekillendirir?
+      - Manuel kapılı bir mağaza neye benzerdi?
+      - Sensör ve karşılama arasındaki ilişki nedir?
+  - id: hi_rt_price_match
+    name: Fiyat Eşleştirme
+    prompt: |
+      "Rakip fiyatlarını eşleştireceğiz." Teklif bir vaattir. Biri kullandığında
+      gözlemleyin. Fiyat eşleştirme bir müzakeredir. Müşteriden ne gerektirir?
+      Eşleştirme güven—veya şüphe yaratır.
+    follow_ups:
+      - Fiyat eşleştirme satın almayı nasıl şekillendirir?
+      - Fiyat eşleştirme olmadan mağaza neye benzerdi?
+      - Eşleştirme ve sadakat arasındaki ilişki nedir?
+  - id: hi_rt_fitting_room_number
+    name: Deneme Kabini Numarası
+    prompt: |
+      "Kaç tane?" Danışman sorar. Numara denemeyi sınırlar. Müzakereyi
+      gözlemleyin. Daha fazlanız olduğunda ne olur? Numara bir kontroldür.
+      Müşteri hakkında ne varsayar?
+    follow_ups:
+      - Numara denemeyi nasıl şekillendirir?
+      - Sınırsız bir deneme kabini neye benzerdi?
+      - Numara ve güven arasındaki ilişki nedir?
+  - id: hi_rt_gift_receipt
+    name: Hediye Fişi
+    prompt: |
+      "Hediye fişi ister misiniz?" Teklif fiyatı hediyeden ayırır. Hediye fişi,
+      maliyeti açıklamadan iadeyi mümkün kılar. Seçimi gözlemleyin. Hediye
+      fişi neyi korur?
+    follow_ups:
+      - Hediye fişi satın almayı nasıl şekillendirir?
+      - Hediye fişi olmadan hediye neye benzerdi?
+      - Fiş ve gizlilik arasındaki ilişki nedir?

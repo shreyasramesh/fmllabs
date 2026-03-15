@@ -1,0 +1,506 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinary Lab — Sushi (German)
+
+id: culinary_lab_sushi
+name: Culinary Lab — Sushi
+description: 50 Karten, um Ihre Sushi-Erfahrung zu verändern – von der Chemie von Reis und Fisch bis zur Choreografie am Tresen und der Archäologie der Herkunft jedes Neta.
+domain: culinary_lab
+cards:
+  - id: sush_rice_temp
+    name: Reis-Temperatur
+    prompt: |
+      Sushi-Reis ist warm – etwa Körpertemperatur. Nicht kalt. Die Wärme
+      trägt den Essig. Fühlen Sie es. Was würde kalter Reis tun? Wie formt die
+      Temperatur den Bissen?
+    follow_ups:
+      - Was würde Zimmertemperatur opfern?
+      - Wie trägt Wärme Geschmack?
+      - Was ist die Beziehung zwischen Temperatur und Textur?
+  - id: sush_shari_balance
+    name: Shari-Balance
+    prompt: |
+      Shari – der Reis – ist die Hälfte des Sushis. Das Gleichgewicht von Essig,
+      Salz, Zucker ist präzise. Schmecken Sie den Reis allein. Was bringt er?
+      Was würde geschmackloser Reis bedeuten?
+    follow_ups:
+      - Wie formt der Reis das Neta?
+      - Was würde zu viel Essig tun?
+      - Was ist die Beziehung zwischen Shari und Neta?
+  - id: sush_counter_ritual
+    name: Tresen-Ritual
+    prompt: |
+      Omakase am Tresen – Sie blicken dem Koch gegenüber. Das Sushi kommt Stück
+      für Stück. Der Tresen ist eine Bühne. Beachten Sie die Choreografie.
+      Was ist der Rhythmus? Wer gibt das Tempo vor?
+    follow_ups:
+      - Was würde ein Tisch ändern?
+      - Wie formt der Tresen die Mahlzeit?
+      - Was ist die Beziehung zwischen Koch und Gast?
+  - id: sush_net_origin
+    name: Neta-Herkunft
+    prompt: |
+      Jedes Neta – der Belag – kam von irgendwoher. Toyosu. Tsukiji. Ein Boot.
+      Ein Gehöft. Fragen Sie. Verfolgen Sie den Fisch. Welche Reise hat er
+      gemacht? Was würde gefroren aus dem Lager bedeuten?
+    follow_ups:
+      - Wie formt die Herkunft das Stück?
+      - Was würde eine andere Quelle tun?
+      - Was ist die Beziehung zwischen Ort und Qualität?
+  - id: sush_wasabi_hidden
+    name: Versteckter Wasabi
+    prompt: |
+      Echter Wasabi – geriebene Wurzel – ist selten. Meistens Meerrettich und
+      Farbe. Aber wenn er echt ist, ist er anders. Scharf, grün, flüchtig.
+      Beachten Sie die Schärfe. Was würde das Falsche hinzufügen? Wegnehmen?
+    follow_ups:
+      - Wie formt Wasabi den Bissen?
+      - Was würde kein Wasabi bedeuten?
+      - Was ist die Beziehung zwischen Schärfe und Fisch?
+  - id: sush_finger_over_chopstick
+    name: Finger statt Stäbchen
+    prompt: |
+      Nigiri wird traditionell mit den Fingern gegessen – nicht mit Stäbchen.
+      Die Finger spüren die Temperatur, die Textur. Probieren Sie es. Was
+      fügt der Finger hinzu, was das Stäbchen nicht kann?
+    follow_ups:
+      - Wie formt die Hand das Erlebnis?
+      - Was würden Stäbchen tun?
+      - Was ist die Beziehung zwischen Berührung und Geschmack?
+  - id: sush_piece_by_piece
+    name: Stück für Stück
+    prompt: |
+      Sushi kommt einzeln – oder zu zweit. Das Tempo ist bewusst gewählt. Sie
+      essen; Sie warten. Betrachten Sie den Rhythmus. Was würde eine Platte
+      mit zehn Stücken auf einmal opfern?
+    follow_ups:
+      - Wie formt das Tempo die Mahlzeit?
+      - Was würde Schnelligkeit tun?
+      - Was ist die Beziehung zwischen Stück und Aufmerksamkeit?
+  - id: sush_gari_palate
+    name: Gari-Gaumen
+    prompt: |
+      Gari – eingelegter Ingwer – reinigt zwischen den Stücken. Es ist kein
+      Garnitur; es ist ein Reset. Beachten Sie, wann Sie es essen. Was würde
+      aufeinanderfolgende Stücke ohne Gari mit dem Gaumen machen?
+    follow_ups:
+      - Wie formt Gari den Verlauf?
+      - Was würde kein Gari bedeuten?
+      - Was ist die Beziehung zwischen Reset und Geschmack?
+  - id: sush_soy_minimal
+    name: Minimal Soja
+    prompt: |
+      Soja – ein leichter Dip, fischseitig nach unten. Nicht der Reis. Der Reis
+      würde zu viel aufsaugen. Der Koch hat vielleicht schon Soja aufgetragen.
+      Beachten Sie. Was würde ein Durchnässen tun?
+    follow_ups:
+      - Wie formt Soja das Stück?
+      - Was würde kein Soja bedeuten?
+      - Was ist die Beziehung zwischen Dip und Gleichgewicht?
+  - id: sush_knife_matters
+    name: Messer zählt
+    prompt: |
+      Das Sushi-Messer – einseitig geschliffen, scharf. Der Schnitt beeinflusst
+      die Textur. Gegen die Faser oder mit ihr. Der Winkel. Betrachten Sie,
+      was die Klinge tut. Was würde ein stumpfes Messer opfern?
+    follow_ups:
+      - Wie formt der Schnitt den Fisch?
+      - Was würde ein anderer Winkel tun?
+      - Was ist die Beziehung zwischen Klinge und Mundgefühl?
+  - id: sush_otoro_fat
+    name: Otoro-Fett
+    prompt: |
+      Otoro – der fetteste Thunfisch – schmilzt. Das Fett ist der Punkt.
+      Betrachten Sie die Marmorierung. Was würde mageres Akami tun? Wie formt
+      Fett das Erlebnis?
+    follow_ups:
+      - Was wäre das Stück ohne das Fett?
+      - Wie schafft Marmorierung Luxus?
+      - Was ist die Beziehung zwischen Fett und Schmelzen?
+  - id: sush_unagi_glaze
+    name: Unagi-Glasur
+    prompt: |
+      Unagi – Aal – wird mit süßer Soße bestrichen, manchmal wieder gegrillt.
+      Die Glasur ist Lack. Betrachten Sie den Glanz. Was würde unglasierter Aal
+      bedeuten?
+    follow_ups:
+      - Wie formt die Glasur das Stück?
+      - Was ist die Beziehung zwischen Süße und Aal?
+      - Warum Glasur?
+  - id: sush_nori crisp
+    name: Nori-Knusprigkeit
+    prompt: |
+      Nori für Maki – geröstet, knusprig oder weich? Verschiedene Köche wählen
+      unterschiedlich. Das Nori beeinflusst den Biss. Betrachten Sie die
+      Textur. Was würde durchweichtes Nori tun?
+    follow_ups:
+      - Wie formt Nori die Rolle?
+      - Was würde ein anderes Rösten bedeuten?
+      - Was ist die Beziehung zwischen Knusprigkeit und Frische?
+  - id: sush_silence_counter
+    name: Stille am Tresen
+    prompt: |
+      Manche Sushi-Tresen sind ruhig – Konzentration, Respekt. Andere sind
+      lebhaft. Beachten Sie die Geräuschkulisse. Was fügt Stille hinzu? Was
+      fügt Konversation hinzu?
+    follow_ups:
+      - Wie formt Schall die Mahlzeit?
+      - Was würde laute Musik tun?
+      - Was ist die Beziehung zwischen Stille und Fokus?
+  - id: sush_tamago_sweet
+    name: Tamago-Süße
+    prompt: |
+      Tamago – die Eiercreme – beendet oft die Mahlzeit. Sie ist süß, geschichtet.
+      Das Können des Kochs ist sichtbar. Betrachten Sie den Abschluss. Was
+      würde roher Fisch als letztes Stück bedeuten?
+    follow_ups:
+      - Wie formt Tamago das Ende?
+      - Was ist die Beziehung zwischen Süße und Abschluss?
+      - Warum Ei zuletzt?
+  - id: sush_tuna_spectrum
+    name: Thunfisch-Spektrum
+    prompt: |
+      Akami, Chutoro, Otoro – mager bis fett. Das Spektrum ist bewusst gewählt.
+      Schmecken Sie sie in Reihenfolge, wenn Sie können. Wie funktioniert der
+      Fortschritt? Was bietet jedes Stück?
+    follow_ups:
+      - Wie formt Fett das Spektrum?
+      - Was würde eine einzelne Sorte bedeuten?
+      - Was ist die Beziehung zwischen mager und reichhaltig?
+  - id: sush_ume_shiso
+    name: Ume-Shiso
+    prompt: |
+      Ume – eingelegte Pflaume – und Shiso in einigen Rollen. Herb, kräuterartig.
+      Sie schneiden die Reichhaltigkeit. Beachten Sie, wann sie erscheinen. Was
+      wäre die Rolle ohne sie?
+    follow_ups:
+      - Wie formt Ume den Biss?
+      - Was ist die Beziehung zwischen Säure und Fisch?
+      - Warum Shiso?
+  - id: sush_gunkan_hold
+    name: Gunkan-Halt
+    prompt: |
+      Gunkan – Schlachtschiff – hält lose Beläge. Rogen, Seeigel. Der Nori-Kragen
+      hält. Betrachten Sie die Form. Was würde ein flaches Stück tun?
+    follow_ups:
+      - Wie formt die Form den Belag?
+      - Was würde ein anderes Gefäß bedeuten?
+      - Was ist die Beziehung zwischen Halt und Verschütten?
+  - id: sush_uni_risk
+    name: Uni-Risiko
+    prompt: |
+      Uni – Seeigel – ist polarisierend. Süß, salzig, Textur. Es kann perfekt
+      sein oder schlecht. Betrachten Sie das Risiko. Was würde sicherer Lachs
+      bedeuten? Was fügt das Risiko hinzu?
+    follow_ups:
+      - Wie formt Uni das Erlebnis?
+      - Was würden Sie ohne das Risiko verlieren?
+      - Was ist die Beziehung zwischen polarisierend und denkwürdig?
+  - id: sush_chef_choice
+    name: Wahl des Kochs
+    prompt: |
+      Omakase – Wahl des Kochs. Sie geben die Kontrolle ab. Der Koch liest den
+      Tag, den Fisch, Sie. Betrachten Sie das Vertrauen. Was würde es ändern,
+      selbst zu wählen?
+    follow_ups:
+      - Wie formt das Aufgeben die Mahlzeit?
+      - Was würde eine Menübestellung bedeuten?
+      - Was ist die Beziehung zwischen Vertrauen und Erlebnis?
+  - id: sush_sake_pair
+    name: Sake-Paarung
+    prompt: |
+      Sake mit Sushi – kalt, warm, gereift. Die Paarung ist durchdacht.
+      Beachten Sie, wann Sie schlürfen. Reinigt er? Verstärkt er? Betrachten Sie
+      die Rolle des Getränks.
+    follow_ups:
+      - Wie formt Sake das Stück?
+      - Was würde Wein tun?
+      - Was ist die Beziehung zwischen Reis und Reiswein?
+  - id: sush_ikura_pop
+    name: Ikura-Platzen
+    prompt: |
+      Ikura – Lachsrogen – platzt. Der Stoß ist Textur und Salzlake. Betrachten
+      Sie die Empfindung. Was würde gekochter Rogen tun? Wie formt das Platzen
+      den Biss?
+    follow_ups:
+      - Was wäre das Stück ohne das Platzen?
+      - Wie schafft Textur Genuss?
+      - Was ist die Beziehung zwischen Platzen und Salz?
+  - id: sush_hirame_chew
+    name: Hirame-Kau
+    prompt: |
+      Hirame – Scholle – hat einen anderen Biss als Thunfisch. Sie ist mager,
+      zart. Beachten Sie die Textur. Was würde fetter Fisch tun? Wie variiert
+      das Kauen?
+    follow_ups:
+      - Wie formt Textur das Stück?
+      - Was ist die Beziehung zwischen mager und zart?
+      - Warum Hirame bestellen?
+  - id: sush_amaebi_head
+    name: Amaebi-Kopf
+    prompt: |
+      Amaebi – Süßgarnele – manchmal mit frittiertem Kopf serviert. Der Kopf ist
+      knusprig, umami. Betrachten Sie die Verwendung des Ganzen. Was würde
+      kopflose Garnele opfern?
+    follow_ups:
+      - Wie formt der Kopf das Gericht?
+      - Was ist die Beziehung zwischen Ganzem und Respekt?
+      - Warum den Kopf frittieren?
+  - id: sush_mirin_gloss
+    name: Mirin-Glanz
+    prompt: |
+      Einige Stücke werden mit Nikiri – Soja, Mirin, Sake – bestrichen. Der Glanz
+      ist das Finish. Der Koch hat es gesaucen. Überlegen Sie, ob Sie mehr
+      Soja hinzufügen möchten. Was würde Über-Dippen tun?
+    follow_ups:
+      - Wie formt der Pinsel das Stück?
+      - Was würde kein Pinsel bedeuten?
+      - Was ist die Beziehung zwischen der Hand des Kochs und Ihrer?
+  - id: sush_anago_soft
+    name: Anago-Weichheit
+    prompt: |
+      Anago – Salzwasseraal – ist weicher als Unagi. Andere Arten, andere
+      Zubereitung. Beachten Sie die Textur. Was würde die Festigkeit von
+      Unagi tun?
+    follow_ups:
+      - Wie formt die Weichheit das Stück?
+      - Was ist die Beziehung zwischen Anago und Unagi?
+      - Warum beide Aale?
+  - id: sush_saba_silver
+    name: Saba-Silber
+    prompt: |
+      Saba – Makrele – wird oft mariniert. Die Silberhaut, das ölige Fleisch. Es
+      ist stark. Betrachten Sie die Konservierung. Was würde rohe Makrele
+      bedeuten?
+    follow_ups:
+      - Wie formt das Marinieren den Fisch?
+      - Was ist die Beziehung zwischen Öl und Marinade?
+      - Warum Saba marinieren?
+  - id: sush_ginger_between
+    name: Ingwer dazwischen
+    prompt: |
+      Gari zwischen den Stücken – der Reset. Aber wann? Nach jedem? Nach
+      mehreren? Der Rhythmus ist Ihrer. Beachten Sie Ihr Muster. Was würde
+      kein Reset tun?
+    follow_ups:
+      - Wie formt die Zeitplanung das Gari?
+      - Was ist die Beziehung zwischen Stück und Stück?
+      - Wann brauchen Sie einen Reset?
+  - id: sush_maki_cut
+    name: Maki-Schnitt
+    prompt: |
+      Maki – Rollen – werden in Stücke geschnitten. Sechs oder acht. Der Schnitt
+      beeinflusst den Querschnitt. Betrachten Sie die Spirale. Was würde ein
+      anderer Schnitt tun?
+    follow_ups:
+      - Wie formt der Schnitt den Biss?
+      - Was würden weniger Stücke bedeuten?
+      - Was ist die Beziehung zwischen Scheibe und Ganzem?
+  - id: sush_tobiko_crunch
+    name: Tobiko-Crunch
+    prompt: |
+      Tobiko – fliegender Fischrogen – fügt Knusprigkeit und Farbe hinzu. Es ist
+      ein Belag, eine Garnitur. Beachten Sie, wann es erscheint. Was wäre die
+      Rolle ohne ihn?
+    follow_ups:
+      - Wie formt Tobiko den Biss?
+      - Was ist die Beziehung zwischen Knusprigkeit und Farbe?
+      - Warum fliegender Fisch?
+  - id: sush_sashimi_contrast
+    name: Sashimi-Kontrast
+    prompt: |
+      Sashimi – ohne Reis – lässt den Fisch für sich allein stehen. Die Reinheit
+      ist anders. Vergleichen Sie Sashimi mit Nigiri. Was fügt der Reis hinzu?
+      Was enthüllt seine Abwesenheit?
+    follow_ups:
+      - Wie formt der Reis Nigiri?
+      - Was würde alles Sashimi bedeuten?
+      - Was ist die Beziehung zwischen Fisch und Reis?
+  - id: sush_tea_rinse
+    name: Tee-Spülung
+    prompt: |
+      Grüner Tee an der Sushi-Bar – nachgefüllt, geteilt. Er reinigt. Der Tee
+      ist Teil des Rhythmus. Betrachten Sie seine Rolle. Was würde Wasser
+      tun? Was würde kein Getränk bedeuten?
+    follow_ups:
+      - Wie formt Tee die Mahlzeit?
+      - Was ist die Beziehung zwischen Tee und Reset?
+      - Warum grüner Tee?
+  - id: sush_bengara_tuna
+    name: Bengara-Thunfisch
+    prompt: |
+      Bengara – magerer Thunfisch, oft vom Rücken – ist dunkler. Der Geschmack
+      ist anders als bei Akami. Betrachten Sie den Schnitt. Welcher Teil des
+      Fisches? Was tut der Ort?
+    follow_ups:
+      - Wie formt der Schnitt den Geschmack?
+      - Was ist die Beziehung zwischen Ort und Geschmack?
+      - Warum dieser Schnitt?
+  - id: sush_kohada_cure
+    name: Kohada-Marinade
+    prompt: |
+      Kohada – Gizzard Shad – wird mariniert, manchmal mit Essig. Es ist ein
+      Test für den Koch. Die Silberhaut, das Gleichgewicht. Betrachten Sie das
+      Können. Was würde unmariniert bedeuten?
+    follow_ups:
+      - Wie formt die Marinade den Fisch?
+      - Was ist die Beziehung zwischen Essig und Silberhaut?
+      - Warum ist es ein Test?
+  - id: sush_engawa_fin
+    name: Engawa-Flosse
+    prompt: |
+      Engawa – der Flossenmuskel von Scholle – wird geschätzt. Er hat eine
+      besondere Textur. Betrachten Sie den Teil. Was würde normale Hirame tun?
+      Wie unterscheidet sich die Flosse?
+    follow_ups:
+      - Wie formt der Schnitt das Stück?
+      - Was ist die Beziehung zwischen Flosse und Muskel?
+      - Warum wird er geschätzt?
+  - id: sush_first_piece
+    name: Erstes Stück
+    prompt: |
+      Das erste Stück gibt den Ton an. Oft etwas Mildes – vielleicht Hirame
+      oder Tai. Der Koch kalibriert. Betrachten Sie die Eröffnung. Was würde
+      Otoro zuerst bedeuten?
+    follow_ups:
+      - Wie formt das Erste die Mahlzeit?
+      - Was ist die Beziehung zwischen Erstem und Verlauf?
+      - Warum zuerst etwas Mildes?
+  - id: sush_kampachi_fat
+    name: Kampachi-Fett
+    prompt: |
+      Kampachi – junger Gelbschwanz – hat ein subtiles Fett. Er liegt zwischen
+      mager und reichhaltig. Beachten Sie die Mitte. Was würde Buri tun? Was
+      würde magerer Fisch tun?
+    follow_ups:
+      - Wie formt das Fett das Stück?
+      - Was ist die Beziehung zwischen Alter und Fett?
+      - Warum Kampachi?
+  - id: sush_nodoguro_char
+    name: Nodoguro-Anbraten
+    prompt: |
+      Nodoguro – Schwarzkehlbarsch – wird oft leicht angebraten. Die Haut, das
+      Fett. Das Anbraten fügt hinzu. Betrachten Sie die Hitzeanwendung. Was
+      würde roh bedeuten?
+    follow_ups:
+      - Wie formt das Anbraten den Fisch?
+      - Was ist die Beziehung zwischen Anbraten und Fett?
+      - Warum diesen Fisch anbraten?
+  - id: sush_choji_plate
+    name: Choji-Platte
+    prompt: |
+      Die Platte – oder das Holz, oder der Stein – hält das Stück. Die Präsentation
+      ist minimal. Betrachten Sie das Gefäß. Was würde eine volle Platte
+      tun? Was erlaubt Minimalismus?
+    follow_ups:
+      - Wie formt die Platte das Stück?
+      - Was ist die Beziehung zwischen Gefäß und Fokus?
+      - Warum minimalistisch?
+  - id: sush_tea_cup
+    name: Teetasse
+    prompt: |
+      Die Teetasse am Tresen – kein Henkel, manchmal rau. Sie halten sie mit
+      beiden Händen. Betrachten Sie das Gefäß. Was würde ein Becher tun? Was
+      fügt die Tasse hinzu?
+    follow_ups:
+      - Wie formt die Tasse den Schluck?
+      - Was ist die Beziehung zwischen Gefäß und Ritual?
+      - Warum kein Henkel?
+  - id: sush_silver_slide
+    name: Silberrutsche
+    prompt: |
+      Das Stück sollte von der Platte gleiten – oder sauber abgenommen werden.
+      Der Reis hält, gibt aber nach. Betrachten Sie die Konstruktion. Was
+      würde zerfallender Reis bedeuten?
+    follow_ups:
+      - Wie formt die Struktur den Verzehr?
+      - Was würde matschiger Reis tun?
+      - Was ist die Beziehung zwischen Integrität und Biss?
+  - id: sush_kinmedai_skin
+    name: Kinmedai-Haut
+    prompt: |
+      Kinmedai – Goldaugen-Schnapper – oft mit der Haut, leicht angebrannt. Die
+      Haut fügt Textur, Fett hinzu. Betrachten Sie das Anbrennen. Was würde
+      rohe Haut tun?
+    follow_ups:
+      - Wie formt die Haut das Stück?
+      - Was ist die Beziehung zwischen Anbrennen und Fett?
+      - Warum anbrennen?
+  - id: sush_botan_ebi
+    name: Botan-Garnele
+    prompt: |
+      Botan ebi – Spot-Garnele – ist süß, oft roh. Der Schwanz kommt manchmal
+      frittiert. Betrachten Sie das Ganze. Was würde gekochte Garnele tun?
+    follow_ups:
+      - Wie formt die Zubereitung das Stück?
+      - Was ist die Beziehung zwischen roh und süß?
+      - Warum Spot-Garnele?
+  - id: sush_namida_heat
+    name: Namida-Schärfe
+    prompt: |
+      Echter Wasabi bringt eine Träne – Namida. Die Schärfe steigt auf, vergeht.
+      Sie ist anders als Chili. Betrachten Sie die Empfindung. Was würde
+      Meerrettich anders tun?
+    follow_ups:
+      - Wie formt die Schärfe den Biss?
+      - Was ist die Beziehung zwischen Wasabi und Träne?
+      - Warum weint man davon?
+  - id: sush_omakase_end
+    name: Omakase-Ende
+    prompt: |
+      Die Mahlzeit endet – Tamago, vielleicht Miso, vielleicht eine Frucht. Der
+      Bogen ist vollendet. Betrachten Sie den Abschluss. Was würde ein
+      weiteres Stück tun? Wann wissen Sie, dass Sie fertig sind?
+    follow_ups:
+      - Wie formt das Ende die Erinnerung?
+      - Was ist die Beziehung zwischen Abschluss und Zufriedenheit?
+      - Warum mit Ei oder Suppe enden?
+  - id: sush_counter_wait
+    name: Warten am Tresen
+    prompt: |
+      Zwischen den Stücken warten Sie. Der Koch bereitet vor. Die Pause ist
+      Teil des Rhythmus. Beachten Sie die Vorfreude. Was würde sofortiger
+      Service opfern?
+    follow_ups:
+      - Wie formt das Warten das Stück?
+      - Was ist die Beziehung zwischen Pause und Aufmerksamkeit?
+      - Warum nicht vorab servieren?
+  - id: sush_tsukiji_legacy
+    name: Tsukiji-Erbe
+    prompt: |
+      Tsukiji ist weg; Toyosu hat seinen Platz eingenommen. Aber der Fisch
+      fließt immer noch durch Tokio. Betrachten Sie den Markt. Was wäre Sushi
+      ohne die Auktion? Ohne die Verteilung?
+    follow_ups:
+      - Wie formt der Markt den Fisch?
+      - Was ist die Beziehung zwischen Auktion und Qualität?
+      - Was bedeutete Tsukiji?
+  - id: sush_edomae_spirit
+    name: Edomae-Geist
+    prompt: |
+      Edomae – Edo-Stil – Sushi aus Tokios Tradition. Konserviert, mariniert,
+      gereift, um ohne Kühlung zu funktionieren. Betrachten Sie die Geschichte.
+      Was würde immer frisch bedeuten?
+    follow_ups:
+      - Wie formt Geschichte die Technik?
+      - Was ist die Beziehung zwischen Konservierung und Geschmack?
+      - Warum Edomae?
+  - id: sush_gari_reset
+    name: Gari-Reset
+    prompt: |
+      Gari – eingelegter Ingwer – reinigt zwischen den Stücken. Die blassrosa
+      Scheiben setzen den Gaumen zurück. Beachten Sie, wann Sie danach greifen.
+      Was wäre die Mahlzeit ohne den Reset? Wie formt der Ingwer den Verlauf?
+    follow_ups:
+      - Was würde kein Gari bedeuten?
+      - Wie formt der Reset das nächste Stück?
+      - Was ist die Beziehung zwischen Pause und Kontinuität?
+  - id: sush_otoro_melt
+    name: Otoro-Schmelzen
+    prompt: |
+      Otoro – fetteste Thunfisch – löst sich fast auf der Zunge. Das Fett ist
+      der Punkt. Betrachten Sie die Textur. Was würde magerer Thunfisch tun?
+      Wie markiert das Schmelzen den Höhepunkt der Mahlzeit?
+    follow_ups:
+      - Was würde Akami anders tun?
+      - Wie formt das Fett das Erlebnis?
+      - Was ist die Beziehung zwischen Schmelzen und Luxus?

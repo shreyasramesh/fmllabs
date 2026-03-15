@@ -1,0 +1,545 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# De Menselijke Interface — Koffiehuis (Dutch)
+
+id: human_interface_coffee_shop
+name: De Menselijke Interface — Koffiehuis
+description: 50 kaarten om je kijk op het koffiehuis te veranderen — van wachtrijchoreografie en laptopgebieden tot de derde plek, onzichtbare scripts, en koffie als ritueel.
+domain: human_interface
+cards:
+  - id: hi_cs_queue_choreography
+    name: Wachtrijchoreografie
+    prompt: |
+      Observeer de rij bij de kassa. Lichamen rangschikken zich — vooroverbuiging,
+      telefoon checken, subtiel schuifelen. De rij heeft ritme. Wie bewaakt de ruimte?
+      Welke onuitgesproken regels bepalen wie waar staat?
+    follow_ups:
+      - Hoe vormt de rij de verwachting?
+      - Wat zou er gebeuren als iedereen de volgorde negeerde?
+      - Wat is de relatie tussen wachten en ergens bij horen?
+  - id: hi_cs_laptop_territory
+    name: Laptopgebied
+    prompt: |
+      Een geopende laptop op een tafel claimt ruimte. De kop ernaast, de tas op de
+      stoel. Observeer de grenzen. Hoeveel oppervlakte neemt één persoon in beslag?
+      Wat signaleert "bezet"?
+    follow_ups:
+      - Hoe verlengt de laptop het lichaam?
+      - Hoe zou de ruimte eruitzien zonder apparaten?
+      - Wat is de relatie tussen gebied en duur?
+  - id: hi_cs_third_place
+    name: Derde Plek
+    prompt: |
+      Niet thuis, niet werk — het koffiehuis is een derde plek. Mensen komen om
+      alleen samen te zijn. Merk op wie blijft. Wie vertrekt snel? De ruimte herbergt
+      een ander sociaal contract.
+    follow_ups:
+      - Wat zou de stad zijn zonder derde plekken?
+      - Hoe verschilt het koffiehuis van een bibliotheek?
+      - Wat is de relatie tussen plek en identiteit?
+  - id: hi_cs_invisible_script
+    name: Onzichtbaar Script
+    prompt: |
+      Bestellen, betalen, wachten, ontvangen, een plek zoeken. Het script is onzichtbaar
+      totdat iemand het doorbreekt. Kijk naar een eerste bezoeker. Wat weten ze niet?
+      Het script codeert ergens bij horen.
+    follow_ups:
+      - Hoe sluit het script mensen buiten?
+      - Wat zou er gebeuren als het script werd opgeschreven?
+      - Wat is de relatie tussen script en vloeiendheid?
+  - id: hi_cs_coffee_ritual
+    name: Koffie als Ritueel
+    prompt: |
+      Het drankje is secundair. Het ritueel is primair — de wandeling, de bestelling,
+      de eerste slok. Merk je eigen bewegingen op. Wat zou je verliezen als de koffie
+      bij je deur werd afgeleverd?
+    follow_ups:
+      - Hoe markeert ritueel een overgang?
+      - Wat zou de dag zijn zonder de koffiepauze?
+      - Wat is de relatie tussen ritueel en paraatheid?
+  - id: hi_cs_counter_handoff
+    name: Balie-overdracht
+    prompt: |
+      De barista roept een naam. Een hand reikt uit. De overdracht is een moment van
+      contact tussen vreemden. Observeer de uitwisseling. Wat gaat er over naast de kop?
+    follow_ups:
+      - Hoe creëert de overdracht verbinding?
+      - Wat zou er veranderen met een robotbarista?
+      - Wat is de relatie tussen overdracht en vertrouwen?
+  - id: hi_cs_power_outlet_hunt
+    name: Stroomstop-jacht
+    prompt: |
+      Ogen scannen muren, vloer, onder tafels. De jacht op een stopcontact is
+      territoriaal. Wie was er eerst? Het stopcontact bepaalt waar je zit.
+      Geografie volgt elektriciteit.
+    follow_ups:
+      - Hoe vormt de plaatsing van stopcontacten de ruimte?
+      - Hoe zou de ruimte eruitzien met draadloze stroom?
+      - Wat is de relatie tussen stekker en permanentie?
+  - id: hi_cs_solo_table
+    name: Tafel voor één
+    prompt: |
+      Eén persoon aan een tafel voor vier. De lege stoelen zijn een buffer. Observeer
+      de opstelling. Is het verdediging? Voorkeur? De tafel voor één behoudt ruimte
+      tegen de menigte in.
+    follow_ups:
+      - Hoe signaleert de tafel voor één intentie?
+      - Wat zou er gebeuren als iemand vroeg om mee te zitten?
+      - Wat is de relatie tussen eenzaamheid en zichtbaarheid?
+  - id: hi_cs_milk_pour
+    name: Melk Gieten
+    prompt: |
+      De barista giet melk in espresso — met of zonder latte art. Het gieten is
+      vakmanschap. Kijk naar de beweging. Wat ontvangt de klant naast het
+      drankje? Het gieten is performance.
+    follow_ups:
+      - Hoe vormt het gieten de verwachting?
+      - Hoe zou het drankje zijn zonder het vakmanschap?
+      - Wat is de relatie tussen gieten en prijs?
+  - id: hi_cs_name_on_cup
+    name: Naam op Kop
+    prompt: |
+      Een naam — echt, verzonnen, verkeerd gespeld — op een kop. Het personaliseert de transactie.
+      De naam reist van mond naar hand naar toonbank. Wat doet de naam voor de uitwisseling?
+    follow_ups:
+      - Hoe creëert de naam herkenning?
+      - Hoe zou de bestelling zijn zonder de naam?
+      - Wat is de relatie tussen naam en anonimiteit?
+  - id: hi_cs_window_seat
+    name: Zitje bij het Raam
+    prompt: |
+      Het zitje bij het raam is de beste plek. Je kijkt naar de straat; je rug is beschermd.
+      Observeer wie het kiest. Het raam kadert de buitenwereld terwijl je binnen blijft.
+      Wat biedt het uitzicht?
+    follow_ups:
+      - Hoe vormt het zitje bij het raam de ervaring?
+      - Hoe zou de ruimte eruitzien zonder ramen?
+      - Wat is de relatie tussen binnen en buiten?
+  - id: hi_cs_linger_versus_grab
+    name: Blijven Versus Meenemen
+    prompt: |
+      Sommigen nemen hun kop mee en gaan weg. Anderen settelen zich voor uren. Dezelfde
+      ruimte herbergt beiden. Merk de splitsing op. Wat bepaalt wie blijft? Het
+      koffiehuis biedt ruimte aan verschillende snelheden.
+    follow_ups:
+      - Hoe beïnvloedt blijven de zaak?
+      - Hoe zou de ruimte eruitzien als iedereen snel wegging?
+      - Wat is de relatie tussen snelheid en ergens bij horen?
+  - id: hi_cs_regular_recognition
+    name: Stamgast Herkenning
+    prompt: |
+      "Het gebruikelijke?" De barista weet het. De stamgast is bekend. Observeer de
+      uitwisseling. Wat verandert er als je herkend wordt? Het gebruikelijke is een
+      afsnijding — en een claim op een plek.
+    follow_ups:
+      - Hoe creëert herkenning loyaliteit?
+      - Wat zou de stamgast verliezen zonder het?
+      - Wat is de relatie tussen het gebruikelijke en identiteit?
+  - id: hi_cs_soundscape
+    name: Geluidslandschap
+    prompt: |
+      Stoom, malen, geklets, muziek. Het koffiehuis heeft een geluidslandschap. Sluit
+      je ogen. Breng de lagen in kaart. Wat is constant? Wat is het ritme? Het
+      geluidslandschap vormt de sfeer.
+    follow_ups:
+      - Hoe beïnvloedt het geluidslandschap de concentratie?
+      - Hoe zou de ruimte eruitzien in stilte?
+      - Wat is de relatie tussen geluid en productiviteit?
+  - id: hi_cs_shared_table
+    name: Gedeelde Tafel
+    prompt: |
+      Vreemden zitten aan dezelfde lange tafel. Niemand spreekt. De gedeelde tafel
+      betekent nabijheid zonder verbinding. Observeer de grenzen. Hoe dichtbij is
+      te dichtbij? De tafel herbergt een delicaat evenwicht.
+    follow_ups:
+      - Hoe verschilt de gedeelde tafel van een tafel voor één?
+      - Wat zou er gebeuren als iemand een gesprek begon?
+      - Wat is de relatie tussen nabijheid en privacy?
+  - id: hi_cs_tip_jar
+    name: Fooienpot
+    prompt: |
+      Munten en biljetten hopen zich op. De fooienpot is zichtbaar, passief. Wie geeft
+      fooi? Wie niet? De pot staat aan de grens van transactie en gift.
+      Wat betekent de fooi?
+    follow_ups:
+      - Hoe vormt de fooienpot de uitwisseling?
+      - Hoe zou de balie eruitzien zonder?
+      - Wat is de relatie tussen fooi en dankbaarheid?
+  - id: hi_cs_cup_sleeve
+    name: Kopjeshoes
+    prompt: |
+      Het hoesje beschermt de hand tegen hitte. Het is wegwerpbaar, gemerkt.
+      Merk op hoe mensen de kop ermee vasthouden. Het hoesje is een kleine
+      interface tussen lichaam en drankje.
+    follow_ups:
+      - Hoe verandert het hoesje de grip?
+      - Hoe zou de ervaring zijn zonder?
+      - Wat is de relatie tussen hoesje en branding?
+  - id: hi_cs_morning_rush
+    name: Ochtenddrukte
+    prompt: |
+      Voor het werk strekt de rij zich uit. De ochtenddrukte heeft zijn eigen tempo.
+      Observeer het tempo. Iedereen gaat ergens anders heen. Het koffiehuis is
+      een tussenstop. Wat eist de drukte?
+    follow_ups:
+      - Hoe vormt de drukte het personeel?
+      - Wat zou de ochtend zijn zonder de stop?
+      - Wat is de relatie tussen drukte en ritueel?
+  - id: hi_cs_afternoon_slow
+    name: Namiddagrust
+    prompt: |
+      Midden in de middag dun de menigte uit. Degenen die blijven zijn anders — studenten,
+      freelancers, de onhaastigen. Het tempo verschuift. Merk de verandering op. De
+      namiddag herbergt een ander soort klant.
+    follow_ups:
+      - Hoe verschilt de namiddag van de ochtend?
+      - Hoe zou de ruimte eruitzien zonder de rustige periode?
+      - Wat is de relatie tussen tijd en bezetting?
+  - id: hi_cs_wifi_password
+    name: Wifi-wachtwoord
+    prompt: |
+      Het wachtwoord staat op de muur, de bon, het schoolbord. Je moet het vragen of
+      opzoeken. De WiFi is de toegangsprijs voor sommigen. Observeer wie verbinding
+      maakt. Wie hoeft dat niet?
+    follow_ups:
+      - Hoe vormt WiFi wie er blijft?
+      - Hoe zou de ruimte eruitzien zonder?
+      - Wat is de relatie tussen verbinding en consumptie?
+  - id: hi_cs_crossword_solver
+    name: Kruiswoordpuzzeloplosser
+    prompt: |
+      Iemand werkt aan een kruiswoordpuzzel, krant of telefoon. De activiteit is solo,
+      maar zichtbaar. De kruiswoordpuzzel markeert tijd. Het zegt "ik blijf". Wat signaleert
+      de activiteit aan anderen?
+    follow_ups:
+      - Hoe creëert de kruiswoordpuzzel een bubbel?
+      - Wat zou de oplosser doen zonder?
+      - Wat is de relatie tussen activiteit en bezetting?
+  - id: hi_cs_meeting_here
+    name: Hier Afspreken
+    prompt: |
+      Twee mensen ontmoeten elkaar — sollicitatiegesprek, bijpraten, eerste date. Het
+      koffiehuis is neutraal terrein. Observeer de opstelling. Wie koos de plek? De tafel
+      wordt een podium voor de ontmoeting.
+    follow_ups:
+      - Hoe faciliteert het koffiehuis de ontmoeting?
+      - Hoe zou het gesprek zijn op kantoor?
+      - Wat is de relatie tussen plek en ontmoeting?
+  - id: hi_cs_bathroom_key
+    name: Toilet Sleutel
+    prompt: |
+      De toilettensleutel is vastgemaakt aan een blok, een peddel, een gigantische lepel.
+      Je moet het vragen. De sleutel is een kleine test van ergens bij horen. Wie heeft
+      het recht om het toilet te gebruiken?
+    follow_ups:
+      - Hoe regelt de sleutel de toegang?
+      - Hoe zou de ruimte eruitzien met open toiletten?
+      - Wat is de relatie tussen sleutel en vertrouwen?
+  - id: hi_cs_pastry_case
+    name: Gebakvitrine
+    prompt: |
+      Croissants, muffins, koekjes achter glas. De vitrine is verleiding en display.
+      Merk op wat verkoopt. Wat blijft te lang liggen? De vitrine is een
+      onderhandeling tussen verlangen en vertraging.
+    follow_ups:
+      - Hoe vormt de vitrine de bestelling?
+      - Hoe zou de balie eruitzien zonder?
+      - Wat is de relatie tussen display en verlangen?
+  - id: hi_cs_phone_glance
+    name: Telefoon-blik
+    prompt: |
+      Iedereen kijkt op zijn telefoon. De blik is een pauze, een check, een
+      terugtrekking. Observeer het ritme. Hoe vaak? Hoe lang? De telefoon is een
+      portaal uit de kamer.
+    follow_ups:
+      - Hoe vormt de telefoon de aanwezigheid?
+      - Hoe zou de ruimte eruitzien zonder telefoons?
+      - Wat is de relatie tussen blik en aandacht?
+  - id: hi_cs_steam_rise
+    name: Stoom Stijgt
+    prompt: |
+      Stoom stijgt op uit een verse kop. De hitte draagt aroma. De stoom is
+      vluchtig — verdwenen in minuten. Merk het op. Wat voegt de stoom toe aan het
+      moment voor de eerste slok?
+    follow_ups:
+      - Hoe vormt stoom de verwachting?
+      - Hoe zou het drankje zijn zonder?
+      - Wat is de relatie tussen damp en ritueel?
+  - id: hi_cs_bag_on_chair
+    name: Tas op Stoel
+    prompt: |
+      Een tas bezet de stoel naast de zittende persoon. Het reserveert de plaats, breidt
+      het gebied uit. De tas is een placeholder. Observeer de boodschap: "Deze ruimte
+      is bezet." Wat zou er gebeuren als iemand vroeg om te gaan zitten?
+    follow_ups:
+      - Hoe claimt de tas ruimte?
+      - Hoe zou de ruimte eruitzien zonder plaats reserveren met tassen?
+      - Wat is de relatie tussen object en gebied?
+  - id: hi_cs_espresso_shot
+    name: Espresso Shot
+    prompt: |
+      Een enkele shot — snel, intens. De espresso drinker staat vaak. De
+      shot is een leesteken in de dag. Observeer het ritueel. In, klaar, uit.
+      Wat bereikt de shot?
+    follow_ups:
+      - Hoe verschilt de shot van een latte?
+      - Hoe zou het koffiehuis zijn zonder espresso?
+      - Wat is de relatie tussen shot en snelheid?
+  - id: hi_cs_cold_brew_tap
+    name: Cold Brew Kraan
+    prompt: |
+      Cold brew uit een tap — zoals bier. De afgifte is anders. Geen stoom, geen wachttijd.
+      De cold brew klant wil iets anders. Merk de keuze op. Wat signaleert cold brew?
+    follow_ups:
+      - Hoe verandert cold brew de ervaring?
+      - Hoe zou het menu zijn zonder?
+      - Wat is de relatie tussen temperatuur en identiteit?
+  - id: hi_cs_chalkboard_menu
+    name: Schoolbord Menu
+    prompt: |
+      Het menu is handgeschreven — krijt op bord. Het verandert. Het handschrift is persoonlijkheid.
+      Merk op wat er vermeld staat, wat niet. Het schoolbord zegt
+      "wij beslissen hier."
+    follow_ups:
+      - Hoe vormt het schoolbord het merk?
+      - Hoe zou de muur eruitzien met een gedrukt menu?
+      - Wat is de relatie tussen hand en authenticiteit?
+  - id: hi_cs_leaving_cup
+    name: Achtergelaten Kop
+    prompt: |
+      De kop die op tafel wordt achtergelaten — leeg, verlaten. Sommigen ruimen zelf op; sommigen
+      niet. De achtergelaten kop is een kleine test van attentheid. Wie ruimt op?
+      Wie laat achter? De kop markeert het einde van het verblijf.
+    follow_ups:
+      - Hoe vormt opruimen de ruimte?
+      - Hoe zou het café eruitzien als iedereen koppen achterliet?
+      - Wat is de relatie tussen achterlaten en ergens bij horen?
+  - id: hi_cs_headphones_bubble
+    name: Koptelefoon Bellen
+    prompt: |
+      Koptelefoons creëren een bubbel. De drager is aanwezig maar onbereikbaar.
+      De bubbel zegt "onderbreek niet." Observeer de grens. Hoe vormt de
+      bubbel het sociale veld?
+    follow_ups:
+      - Hoe faciliteren koptelefoons focus?
+      - Hoe zou de ruimte eruitzien zonder?
+      - Wat is de relatie tussen bubbel en productiviteit?
+  - id: hi_cs_corner_booth
+    name: Hoekbankje
+    prompt: |
+      Het hoekbankje is gewild — rug tegen de muur, zicht op de ruimte. Het is
+      verdedigbaar. Observeer wie het claimt. De hoek herbergt een andere
+      psychologie dan het centrum.
+    follow_ups:
+      - Hoe vormt de hoek de ervaring?
+      - Hoe zou de ruimte eruitzien zonder hoeken?
+      - Wat is de relatie tussen positie en veiligheid?
+  - id: hi_cs_sugar_station
+    name: Suikerstation
+    prompt: |
+      Suiker, servetten, deksels, rietjes — het station is zelfbediening. Mensen
+      personaliseren hier. Het station is een pauze tussen balie en zitplaats.
+      Observeer de keuzes. Wat voegen mensen toe?
+    follow_ups:
+      - Hoe verlengt het station de transactie?
+      - Hoe zou de balie eruitzien zonder?
+      - Wat is de relatie tussen personalisatie en controle?
+  - id: hi_cs_barista_banter
+    name: Barista Babbeltje
+    prompt: |
+      De barista kletst met een stamgast. Het geklets is performance en
+      verbinding. Anderen luisteren of niet. Het geklets creëert sfeer.
+      Wat voegt het toe aan de ruimte?
+    follow_ups:
+      - Hoe vormt het geklets de cultuur?
+      - Hoe zou de balie eruitzien zonder?
+      - Wat is de relatie tussen geklets en ergens bij horen?
+  - id: hi_cs_takeaway_stack
+    name: Afhaal Stapel
+    prompt: |
+      Kopjes stapelen zich op bij de afhaallocatie — namen worden geroepen, kopjes
+      opgehaald. De stapel is een tijdelijk archief van bestellingen. Kijk naar de
+      stroom. Wie wacht? Wie pakt en gaat? De stapel is orde die uit chaos ontstaat.
+    follow_ups:
+      - Hoe beheert de stapel de drukte?
+      - Hoe zou de balie eruitzien zonder?
+      - Wat is de relatie tussen stapel en sequentie?
+  - id: hi_cs_plant_by_window
+    name: Plant bij Raam
+    prompt: |
+      Een plant staat bij het raam — Pothos, vetplant. Het is decoratie en leven.
+      De plant behoort niemand toe. Het verzacht de ruimte. Wat voegt de
+      plant toe aan de ruimte?
+    follow_ups:
+      - Hoe vormt de plant de sfeer?
+      - Hoe zou het raam eruitzien zonder?
+      - Wat is de relatie tussen plant en zorg?
+  - id: hi_cs_closing_time
+    name: Sluitingstijd
+    prompt: |
+      "We sluiten over vijftien minuten." De aankondiging verschuift de ruimte. Stoelen
+      schrapen, laptops gaan dicht. Het koffiehuis heeft een grens. Observeer de
+      uittocht. Wat eist sluitingstijd?
+    follow_ups:
+      - Hoe vormt sluitingstijd het verblijf?
+      - Hoe zou de ruimte eruitzien zonder sluiting?
+      - Wat is de relatie tussen grens en ergens bij horen?
+  - id: hi_cs_oat_milk_request
+    name: Havermelk Verzoek
+    prompt: |
+      "Havermelk, alsjeblieft." Het verzoek is identiteit en voorkeur. De
+      alternatieve melk is een kenmerk geworden. Merk op wie vraagt. Wat signaleert
+      de keuze over de drinker?
+    follow_ups:
+      - Hoe vormt de melkkeuze de bestelling?
+      - Hoe zou het menu zijn zonder alternatieven?
+      - Wat is de relatie tussen keuze en identiteit?
+  - id: hi_cs_receipt_glance
+    name: Bon Blik
+    prompt: |
+      De bon wordt overhandigd — vaak ongevraagd. Sommigen nemen hem mee, sommigen
+      weigeren. De bon is bewijs en registratie. Observeer de uitwisseling. Wat doet
+      de bon voor de transactie?
+    follow_ups:
+      - Hoe verlengt de bon de transactie?
+      - Hoe zou de balie eruitzien zonder?
+      - Wat is de relatie tussen bon en geheugen?
+  - id: hi_cs_door_hold
+    name: Deur Vasthouden
+    prompt: |
+      Iemand houdt de deur open voor degene erachter. Het vasthouden is een kleine
+      beleefdheid. Het creëert een moment van verbinding. Observeer wanneer het gebeurt.
+      Wat vereist het vasthouden?
+    follow_ups:
+      - Hoe vormt het vasthouden van de deur de entree?
+      - Hoe zou de drempel eruitzien zonder?
+      - Wat is de relatie tussen vasthouden en beleefdheid?
+  - id: hi_cs_study_group
+    name: Studiegroep
+    prompt: |
+      Studenten verspreiden aantekeningen, laptops, boeken. De tafel wordt een werkplek.
+      De studiegroep heeft zijn eigen ritme — discussie, stilte, lachen.
+      Observeer de samenwerking. Wat biedt het koffiehuis?
+    follow_ups:
+      - Hoe faciliteert het koffiehuis de groep?
+      - Hoe zou de studie zijn in een bibliotheek?
+      - Wat is de relatie tussen plek en samenwerking?
+  - id: hi_cs_grind_sound
+    name: Maal Geluid
+    prompt: |
+      De molen schreeuwt. Het geluid is industrieel, momentaan. Het markeert
+      het maken van een drankje. Het geluid snijdt door het gesprek. Wat voegt
+      het malen toe aan het geluidslandschap?
+    follow_ups:
+      - Hoe vormt het malen de verwachting?
+      - Hoe zou het café eruitzien zonder?
+      - Wat is de relatie tussen geluid en vakmanschap?
+  - id: hi_cs_cup_stack_bus
+    name: Kop Stapel Ruimen
+    prompt: |
+      De afruimbak vult zich met koppen, deksels, servetten. Iemand zal het opruimen.
+      De stapel is de nasleep van vele verblijven. Observeer de accumulatie.
+      Wat onthult de stapel over de dag?
+    follow_ups:
+      - Hoe beheert de afruimbak afval?
+      - Hoe zou de balie eruitzien zonder?
+      - Wat is de relatie tussen stapel en arbeid?
+  - id: hi_cs_first_sip
+    name: Eerste Slok
+    prompt: |
+      De eerste slok — temperatuur, smaak, moment. Kijk hoe iemand hem neemt. Het
+      gezicht kan veranderen. De eerste slok is de beloning van het wachten. Wat levert
+      het op?
+    follow_ups:
+      - Hoe vormt de eerste slok de rest?
+      - Hoe zou het ritueel zijn zonder?
+      - Wat is de relatie tussen slok en voldoening?
+  - id: hi_cs_neutral_ground
+    name: Neutraal Terrein
+    prompt: |
+      Het koffiehuis is niemands territorium. Je kunt hier een vreemde ontmoeten,
+      alleen werken, een relatie beëindigen. De neutraliteit is het punt. Wat faciliteert
+      neutraal terrein?
+    follow_ups:
+      - Hoe vormt neutraliteit de ontmoeting?
+      - Hoe zou de stad zijn zonder neutraal terrein?
+      - Wat is de relatie tussen neutraliteit en veiligheid?
+  - id: hi_cs_loyalty_card
+    name: Spaarkaart
+    prompt: |
+      Koop er tien, krijg er één gratis. De kaart houdt bezoeken bij. Het beloont terugkeer.
+      De spaarkaart is een contract — impliciet. Observeer wie hem gebruikt. Wat creëert
+      de kaart tussen klant en winkel?
+    follow_ups:
+      - Hoe vormt de kaart gedrag?
+      - Hoe zou de transactie zijn zonder?
+      - Wat is de relatie tussen punt en ergens bij horen?
+  - id: hi_cs_outlet_tethered
+    name: Aangesloten Stopcontact
+    prompt: |
+      Iemand zit waar het stopcontact is. Het snoer loopt van muur naar laptop.
+      De kabel beperkt de beweging. Het stopcontact bepaalt de zitplaats. Observeer
+      de beperking. Wat eist de kabel?
+    follow_ups:
+      - Hoe vormt het stopcontact het verblijf?
+      - Hoe zou de ruimte eruitzien met draadloos opladen?
+      - Wat is de relatie tussen kabel en duur?
+  - id: hi_cs_eye_contact_avoid
+    name: Oogcontact Vermijden
+    prompt: |
+      Vreemden in een koffiehuis vermijden oogcontact. Het vermijden is beleefd.
+      Kijken is een risico op verbinding. Observeer de dans. Wie doorbreekt de regel?
+      Wat gebeurt er als ogen elkaar ontmoeten?
+    follow_ups:
+      - Hoe vormt vermijding het sociale veld?
+      - Hoe zou de ruimte eruitzien met meer contact?
+      - Wat is de relatie tussen blik en privacy?
+  - id: hi_cs_rainy_day_crowd
+    name: Regenachtige Dag Drukte
+    prompt: |
+      Regen drijft mensen naar binnen. Het koffiehuis vult zich. Natte jassen, paraplu's
+      bij de deur. De regen creëert een andere menigte. Observeer de verschuiving.
+      Wat doet het weer met de ruimte?
+    follow_ups:
+      - Hoe vormt regen de bezetting?
+      - Wat zou de dag zijn zonder de toevluchtsoord?
+      - Wat is de relatie tussen weer en schuilplaats?
+  - id: hi_cs_saved_seat
+    name: Gereserveerde Stoel
+    prompt: |
+      "Ik reserveer deze voor iemand." De claim behoudt de stoel tegen de
+      menigte. De gereserveerde stoel is een belofte. Observeer de spanning. Hoe lang kan
+      een stoel gereserveerd blijven? Wat zijn de grenzen?
+    follow_ups:
+      - Hoe vormt reserveren de ruimte?
+      - Wat zou er gebeuren als niemand het eerde?
+      - Wat is de relatie tussen claim en vertrouwen?
+  - id: hi_cs_quiet_conversation
+    name: Stille Conversatie
+    prompt: |
+      Twee mensen leunen naar elkaar toe. Het gesprek is privé maar de houding is
+      zichtbaar. Het leunen creëert een bubbel. Observeer de intimiteit. Wat staat
+      het koffiehuis toe dat andere plekken niet?
+    follow_ups:
+      - Hoe faciliteert de ruimte het gesprek?
+      - Hoe zou het gesprek zijn in een restaurant?
+      - Wat is de relatie tussen plek en openbaarmaking?
+  - id: hi_cs_roaming_table
+    name: Rondlopende Tafel
+    prompt: |
+      Iemand kan geen zitplaats vinden. Ze lopen rond met hun kop. Het rondlopen is
+      voorlopig. Ze nemen de eerste opening. Observeer de zoektocht. Wat onthult het
+      rondlopen over de ruimte?
+    follow_ups:
+      - Hoe vormt rondlopen de ervaring?
+      - Hoe zou het café eruitzien met meer zitplaatsen?
+      - Wat is de relatie tussen zoeken en ergens bij horen?
+  - id: hi_cs_coffee_aroma
+    name: Koffie Aroma
+    prompt: |
+      De geur treft je bij de deur. Geroosterd, gemalen, gezet. Het aroma
+      is het eerste contact. Het bereidt de ervaring voor. Wat doet de geur
+      voordat je bestelt?
+    follow_ups:
+      - Hoe vormt aroma het verlangen?
+      - Hoe zou de entree eruitzien zonder?
+      - Wat is de relatie tussen geur en geheugen?

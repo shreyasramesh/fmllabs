@@ -1,0 +1,497 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Laboratorio Culinario — Cinese (Italian)
+
+id: culinary_lab_chinese
+name: Laboratorio Culinario — Cinese
+description: 50 carte per cambiare il tuo modo di vivere il cibo cinese — dalla chimica del wok hei, all'archeologia della salsa di soia, alla coreografia della tavola rotonda e alla narrazione del banchetto.
+domain: culinary_lab
+cards:
+  - id: chn_wok_hei
+    name: Wok Hei
+    prompt: |
+      Wok hei — il respiro del wok — è il fumo sfuggente che proviene da
+      calore e velocità estremi. Non è proprio affumicato; è trasformazione.
+      Riesci a coglierlo? Cosa sarebbe il saltato in padella senza di esso?
+    follow_ups:
+      - Come modella l'hei il piatto?
+      - Cosa lo crea? Cosa lo distrugge?
+      - Qual è il rapporto tra calore e fretta?
+  - id: chn_round_table
+    name: Tavola Rotonda
+    prompt: |
+      La tavola del banchetto cinese è rotonda — il piatto girevole al centro. Il cibo
+      gira. Tutti allungano la mano. La tavola è coreografia. Chi gira? Chi aspetta?
+      Quali sono le regole non dette?
+    follow_ups:
+      - Cosa significherebbe una tavola rettangolare?
+      - Come la forma rotonda modella il pasto?
+      - Qual è il rapporto tra centro e bordo?
+  - id: chn_soy_archeology
+    name: Archeologia della Soia
+    prompt: |
+      Salsa di soia — fermentata, invecchiata, regionale. Chiara, scura, ai funghi, doppio-nera.
+      Proviene da qualche parte. Ci è voluto tempo. Segui la bottiglia. Che viaggio ha fatto?
+      Cosa sacrificherebbe la soia industriale?
+    follow_ups:
+      - Come l'origine modella il versamento?
+      - Cosa sarebbe il piatto senza la soia?
+      - Qual è il rapporto tra fermentazione e umami?
+  - id: chn_chopstick_grip
+    name: Presa delle Bacchette
+    prompt: |
+      Le bacchette estendono la mano. Riso, noodles scivolosi, ravioli — ognuno
+      richiede una tecnica diversa. Nota la tua presa. Cosa richiede l'utensile?
+      Cosa permette?
+    follow_ups:
+      - Cosa cambierebbe una forchetta?
+      - Come le bacchette modellano il boccone?
+      - Qual è il rapporto tra strumento e ritmo?
+  - id: chn_dumpling_seam
+    name: Cucitura del Raviolo
+    prompt: |
+      Pieghe dei ravioli — la piega, la sigillatura. Jiaozi, shumai, xiaolongbao — ognuno ha
+      la sua forma. La cucitura tiene o rilascia. Studiane uno. Cosa significherebbe una rottura?
+      Cosa protegge la piega?
+    follow_ups:
+      - Come la piega modella il ripieno?
+      - Cosa perderebbe un raviolo aperto?
+      - Qual è il rapporto tra sigillatura e brodo?
+  - id: chn_tea_pour
+    name: Versare il Tè
+    prompt: |
+      Tè cinese — versato, riempito, condiviso. La teiera circola. Le tazze vuote vengono
+      riempite prima di essere richieste. Il versamento è servizio e cura. Nota il ritmo.
+      Cosa sarebbe il pasto senza il tè?
+    follow_ups:
+      - Come il tè modella il ritmo?
+      - Cosa comunica il versamento?
+      - Qual è il rapporto tra tazza e tavola?
+  - id: chn_bone_plate
+    name: Piatto per Ossa
+    prompt: |
+      Un piccolo piatto per le ossa — gusci scartati, ossa di pollo, bucce di gamberi.
+      Il piatto raccoglie ciò che non è commestibile. Fa parte dell'apparecchiatura. Cosa permette
+      il piatto per ossa? Cosa succederebbe senza di esso?
+    follow_ups:
+      - Come il piatto modella il pasto?
+      - Come apparirebbe la tavola senza di esso?
+      - Qual è il rapporto tra scarto e dignità?
+  - id: chn_soup_spoon
+    name: Cucchiaio da Brodo
+    prompt: |
+      Il cucchiaio da brodo cinese — largo, poco profondo, di ceramica. Contiene brodo e solidi.
+      Il cucchiaio si adatta alla bocca in modo diverso. Nota il sorso. Cosa permette la forma?
+    follow_ups:
+      - Cosa cambierebbe un cucchiaio rotondo?
+      - Come il cucchiaio modella il sorso?
+      - Qual è il rapporto tra forma e funzione?
+  - id: chn_steam_basket
+    name: Cestello per Vapore
+    prompt: |
+      Il dim sum arriva in cestelli di bambù — impilati, stratificati. Il vapore sale.
+      Il cestello mantiene la forma. Considera il bambù. Cosa farebbe diversamente il metallo?
+      Cosa aggiunge il bambù?
+    follow_ups:
+      - Come il cestello modella il raviolo?
+      - Cosa perderebbe un piatto?
+      - Qual è il rapporto tra bambù e vapore?
+  - id: chn_maillard_wok
+    name: Wok Maillard
+    prompt: |
+      Il wok raggiunge temperature che i fornelli casalinghi non possono raggiungere. La scottatura è istantanea.
+      Le proteine si dorano in secondi. Considera la chimica. Cosa sacrificherebbe un calore più basso?
+      Cosa richiede il wok?
+    follow_ups:
+      - Come il calore modella il sapore?
+      - Cosa farebbe diversamente l'elettricità?
+      - Qual è il rapporto tra fiamma e crosta?
+  - id: chn_glutinous_texture
+    name: Consistenza Glutinosa
+    prompt: |
+      Riso glutinoso — appiccicoso, gommoso — ha una chimica diversa. Viene usato per
+      zongzi, lo mai gai, dolci. Nota la consistenza. Come differisce dal chicco lungo?
+      Cosa permette l'appiccicosità?
+    follow_ups:
+      - Cosa farebbe il riso normale?
+      - Come la consistenza modella il piatto?
+      - Qual è il rapporto tra appiccicoso e involucro?
+  - id: chn_century_egg
+    name: Uovo Secolare
+    prompt: |
+      Uovo secolare — conservato, trasformato. Il tuorlo è scuro, l'albume traslucido.
+      La chimica è antica. Considera la conservazione. Cosa fa il tempo?
+      Cosa significherebbe freschezza?
+    follow_ups:
+      - Come la conservazione modella il sapore?
+      - Cosa sarebbe l'uovo fresco?
+      - Qual è il rapporto tra tempo e trasformazione?
+  - id: chn_oyster_sauce
+    name: Salsa di Ostriche
+    prompt: |
+      Salsa di ostriche — umami, densa, cantonese. È riduzione ed estrazione.
+      L'ostrica dona la sua essenza. Segui il sapore. Cosa sarebbe il saltato in padella
+      senza di essa?
+    follow_ups:
+      - Come la salsa modella il piatto?
+      - Qual è il rapporto tra ostrica e verdura?
+      - Cosa farebbe al suo posto la salsa di soia?
+  - id: chn_ordering_ritual
+    name: Rituale dell'Ordinazione
+    prompt: |
+      Ordinare in un ristorante cinese — l'ospite sceglie, o il tavolo negozia.
+      Equilibrio: carne, verdura, zuppa, riso. L'ordine è una composizione. Nota
+      chi decide. Quali sono le regole?
+    follow_ups:
+      - Come l'ordinazione modella il pasto?
+      - Cosa ordinerebbe ognuno per sé?
+      - Qual è il rapporto tra scelta e collettività?
+  - id: chn_crispy_skin
+    name: Pelle Croccante
+    prompt: |
+      Pelle di anatra laccata — croccante, glassata. O la cotenna croccante del maiale arrosto cantonese.
+      La pelle è deliberata. Calore, aria, zucchero. Considera l'architettura. Cosa
+      significherebbe pelle molliccia?
+    follow_ups:
+      - Come la croccantezza modella il morso?
+      - Cosa crea lo scrocchio?
+      - Qual è il rapporto tra pelle e carne?
+  - id: chn_noodle_slip
+    name: Scivolosità dei Noodles
+    prompt: |
+      Noodles cinesi — di grano, di riso, tirati a mano — variano nella consistenza. Alcuni scivolano;
+      altri sono gommosi. Lo scivolamento del noodle contro le bacchette. Nota la
+      resistenza. Cosa aggiunge lo scivolamento?
+    follow_ups:
+      - Come la consistenza modella il mangiarlo?
+      - Cosa perderebbe un noodle pastoso?
+      - Qual è il rapporto tra scivolosità e soddisfazione?
+  - id: chn_bok_choy_wilt
+    name: Appassimento del Bok Choy
+    prompt: |
+      Bok choy nel wok — secondi. Appassisce ma mantiene la struttura. Il verde
+      si ammorbidisce. Considera la trasformazione. Cosa significherebbe crudo? Cosa perderebbe
+      se troppo cotto?
+    follow_ups:
+      - Come l'appassimento modella la verdura?
+      - Qual è il rapporto tra calore e verde?
+      - Quando è pronto?
+  - id: chn_five_spice
+    name: Cinque Spezie
+    prompt: |
+      Polvere di cinque spezie — anice stellato, chiodi di garofano, cannella, pepe del Sichuan, finocchio.
+      È una miscela con una storia. Ogni spezia ha una rotta. Segui una di esse. Che
+      viaggio ha fatto?
+    follow_ups:
+      - Cosa sarebbe il piatto senza di essa?
+      - Come la miscela crea identità?
+      - Qual è il rapporto tra spezia e conservazione?
+  - id: chn_banquet_progression
+    name: Progressione del Banchetto
+    prompt: |
+      Un banchetto cinese ha un arco — piatti freddi prima, poi caldi, zuppa, riso, dessert.
+      La progressione è narrativa. Nota il ritmo. Cosa farebbe un ordine diverso?
+    follow_ups:
+      - Come la sequenza modella il pasto?
+      - Qual è il rapporto tra primo e ultimo?
+      - Quando raggiunge il picco la storia?
+  - id: chn_white_rice_center
+    name: Riso Bianco al Centro
+    prompt: |
+      Riso bianco — semplice, al vapore — ancora il pasto. È la tela. Piatti ricchi
+      hanno bisogno di riso per bilanciare. Nota quando ne prendi. Cosa sarebbe il pasto
+      senza il semplice?
+    follow_ups:
+      - Come il riso modella il palato?
+      - Cosa farebbe il riso fritto?
+      - Qual è il rapporto tra neutro e sapore?
+  - id: chn_szechuan_numb
+    name: Intorpidimento Sichuan
+    prompt: |
+      Pepe del Sichuan — ma la — intorpidisce, pizzica. Non è piccantezza; è sensazione.
+      La bocca vibra. Considera la sensazione. Cosa sarebbe il piatto senza
+      l'intorpidimento?
+    follow_ups:
+      - Come il ma la modella l'esperienza?
+      - Qual è il rapporto tra intorpidimento e piccantezza?
+      - Perché abbinarli?
+  - id: chn_dark_soy
+    name: Soia Scura
+    prompt: |
+      Salsa di soia scura — più densa, più dolce, per il colore. Macchia il riso, glassa la
+      carne. Non è per il sale; è per il colore. Considera il visivo. Cosa aggiunge il
+      scuro?
+    follow_ups:
+      - Cosa farebbe la salsa di soia chiara?
+      - Come il colore modella l'aspettativa?
+      - Qual è il rapporto tra scuro e caramello?
+  - id: chn_hot_plate
+    name: Piatto Caldo
+    prompt: |
+      Piatti sfrigolanti — manzo, calamari — arrivano sibilando. La piastra di ferro continua a cuocere.
+      Il suono è teatro. Cosa sarebbe il piatto senza lo sfrigolio? Come
+      la piastra calda prolunga la cottura?
+    follow_ups:
+      - Come lo sfrigolio modella l'esperienza?
+      - Cosa significherebbe una piastra fredda?
+      - Qual è il rapporto tra suono e calore?
+  - id: chn_congee_soft
+    name: Congee Morbido
+    prompt: |
+      Congee — porridge di riso — è morbido, confortante. Il riso cotto a lungo si sfalda.
+      La consistenza è resa. Considera la trasformazione. Cosa significherebbe al dente
+      qui?
+    follow_ups:
+      - Come la morbidezza modella il piatto?
+      - Cosa farebbe un congee denso?
+      - Qual è il rapporto tra acqua e riso?
+  - id: chn_glass_noodle
+    name: Noodles di Vetro
+    prompt: |
+      Noodles di vetro — amido di fagioli mungo — sono trasparenti, scivolosi. Assorbono
+      il sapore. Nota la consistenza. Cosa farebbero i noodles di grano? Come
+      l'importanza della trasparenza?
+    follow_ups:
+      - Come il noodle modella il piatto?
+      - Qual è il rapporto tra trasparente e assorbire?
+      - Perché di vetro?
+  - id: chn_xlb_burst
+    name: Scoppio XLB
+    prompt: |
+      Xiaolongbao — raviolo con brodo — contiene brodo all'interno. Il primo morso può scottare o
+      scoppiare. La tecnica: pizzicare, sorseggiare, mangiare. Considera il rischio. Cosa
+      significherebbe un xlb freddo?
+    follow_ups:
+      - Come il brodo modella l'esperienza?
+      - Cosa perderesti senza lo scoppio?
+      - Qual è il rapporto tra temperatura e pericolo?
+  - id: chn_tea_smell
+    name: Odore del Tè
+    prompt: |
+      Oolong, gelsomino, pu-erh — ogni tè ha un naso diverso. Annusa prima di sorseggiare.
+      L'aroma è metà dell'esperienza. Cosa promette l'odore? Cosa
+      consegna?
+    follow_ups:
+      - Come l'odore modella il sorso?
+      - Cosa sarebbe il tè senza aroma?
+      - Qual è il rapporto tra infusione e profumo?
+  - id: chn_crab_crack
+    name: Rottura del Granchio
+    prompt: |
+      Granchio in un banchetto cinese — cracker forniti. La rottura è suono e fatica.
+      La carne viene estratta. Considera la coreografia. Cosa significherebbe pre-rotto
+      pre-rotto?
+    follow_ups:
+      - Come la rottura modella il pasto?
+      - Cosa perderesti senza la fatica?
+      - Qual è il rapporto tra sforzo e ricompensa?
+  - id: chn_turn_table
+    name: Piatto Girevole
+    prompt: |
+      Il piatto girevole — chi lo gira? Quando? Il piatto che vuoi potrebbe essere dall'altra parte della
+      tavola. La rotazione è etichetta. Nota la danza. Quali sono le regole?
+      Quando aspetti?
+    follow_ups:
+      - Come la rotazione modella il pasto?
+      - Cosa significherebbero piatti fissi?
+      - Qual è il rapporto tra giro e condivisione?
+  - id: chn_ginger_slice
+    name: Fettina di Zenzero
+    prompt: |
+      Zenzero con pesce — sottili fettine, a volte fritte. Taglia l'odore di pesce.
+      Lo zenzero è sia guarnizione che funzione. Considera il suo ruolo. Cosa sarebbe il
+      pesce senza di esso?
+    follow_ups:
+      - Come lo zenzero modella il palato?
+      - Qual è il rapporto tra fettina e profumo?
+      - Perché lo zenzero con il pesce?
+  - id: chn_hoisin_dip
+    name: Salsa Hoisin per Intingere
+    prompt: |
+      Hoisin con anatra laccata — l'intingere è un rituale. La crepe, l'anatra, il
+      cipollotto, la salsa. Ogni elemento ha il suo posto. Considera la composizione.
+      Cosa farebbe uno mancante?
+    follow_ups:
+      - Come l'intingere modella il morso?
+      - Cosa farebbe un'altra salsa?
+      - Qual è il rapporto tra dolce e anatra?
+  - id: chn_leaf_wrap
+    name: Involucro di Foglia
+    prompt: |
+      Involucro di lattuga — carne tritata, erbe, salsa, avvolti in una foglia. La foglia è
+      contenitore e consistenza. L'involucro è lavoro manuale. Considera l'architettura.
+      Cosa farebbe una tortilla?
+    follow_ups:
+      - Come la foglia modella il morso?
+      - Cosa farebbe un piatto?
+      - Qual è il rapporto tra involucro e mano?
+  - id: chn_fish_whole
+    name: Pesce Intero
+    prompt: |
+      Pesce intero — al vapore, con testa e coda. Il pesce viene presentato completo.
+      La testa ha un significato. Considera la presentazione. Cosa sacrificherebbe un filetto?
+    follow_ups:
+      - Come l'interezza modella il piatto?
+      - Cosa significa la testa?
+      - Qual è il rapporto tra intero e rispetto?
+  - id: chn_scallion_oil
+    name: Olio di Cipollotto
+    prompt: |
+      Olio di cipollotto — olio sfrigolante su cipollotto e zenzero tritati. È un
+      condimento, una finitura. L'olio trasporta gli aromatici. Nota quando viene
+      applicato. Cosa aggiunge lo sfrigolio?
+    follow_ups:
+      - Cosa sarebbe il piatto senza di esso?
+      - Come l'olio modella la finitura?
+      - Qual è il rapporto tra olio e aroma?
+  - id: chn_black_vinegar
+    name: Aceto Nero
+    prompt: |
+      Aceto Chinkiang — scuro, complesso, leggermente dolce. Taglia la ricchezza. Poche
+      gocce cambiano il raviolo. Considera l'acidità. Cosa farebbe l'aceto di riso? Cosa aggiunge il
+      scuro?
+    follow_ups:
+      - Come l'aceto modella il morso?
+      - Cosa sarebbe il raviolo senza di esso?
+      - Qual è il rapporto tra aceto e equilibrio?
+  - id: chn_sticky_rice
+    name: Riso Appiccicoso
+    prompt: |
+      Riso appiccicoso in foglia di loto — lo mai gai. La foglia impartisce sapore. Il riso
+      viene avvolto, cotto al vapore. Srotolalo. Nota il profumo. Cosa farebbe la carta stagnola?
+    follow_ups:
+      - Come la foglia modella il riso?
+      - Qual è il rapporto tra involucro e vapore?
+      - Cosa significherebbe non avvolto?
+  - id: chn_mooncake_mold
+    name: Stampo per Mooncake
+    prompt: |
+      Mooncakes — stampati con caratteri, disegni. Lo stampo è storia. Il
+      disegno ha un significato. Considera l'impronta. Cosa perderebbe una torta semplice?
+    follow_ups:
+      - Come lo stampo modella la torta?
+      - Cosa significa il disegno?
+      - Qual è il rapporto tra impronta e tradizione?
+  - id: chn_egg_tart
+    name: Tortino all'Uovo
+    prompt: |
+      Tortino all'uovo — influenza portoghese, raffinatezza di Hong Kong. La crema, la
+      pasta. Considera la consistenza. Sfogliata, setosa. Cosa farebbe una crosta diversa?
+    follow_ups:
+      - Come il tortino modella la fine del pasto?
+      - Qual è il rapporto tra crema e croccantezza?
+      - Perché il tortino all'uovo per chiudere?
+  - id: chn_hand_pull
+    name: Tirato a Mano
+    prompt: |
+      Noodles tirati a mano — il cuoco stira, piega, tira. I fili si moltiplicano.
+      È uno spettacolo. Guardalo. Cosa sacrificherebbero i noodles industriali?
+    follow_ups:
+      - Come la trazione modella il noodle?
+      - Qual è il rapporto tra mano e consistenza?
+      - Cosa significherebbero noodles uniformi?
+  - id: chn_bird_nest
+    name: Nido d'Uccello
+    prompt: |
+      Nido d'uccello — non il nido di rondine da zuppa, ma un nido di taro, o un nido croccante
+      di noodles che contiene un saltato in padella. Il nido è architettura. Considera la
+      forma. Cosa aggiunge il nido?
+    follow_ups:
+      - Come il nido modella il piatto?
+      - Cosa farebbe un piatto?
+      - Qual è il rapporto tra contenitore e contenuto?
+  - id: chn_red_envelope
+    name: Bustina Rossa
+    prompt: |
+      Ai banchetti, le bustine rosse possono accompagnare i doni — denaro per la cucina, per gli
+      ospiti. La bustina è un rituale. Considera lo scambio. Cosa significa il
+      rosso?
+    follow_ups:
+      - Come la bustina modella l'occasione?
+      - Cosa significherebbe nessuna bustina?
+      - Qual è il rapporto tra dono e faccia?
+  - id: chn_toasting_ritual
+    name: Rituale del Brindisi
+    prompt: |
+      Gan bei — a cul sec — o sorsi informali. Il brindisi struttura il banchetto.
+      Chi brinda a chi? Quando? Il rituale è sociale. Nota la coreografia.
+      Cosa sarebbe il pasto senza brindisi?
+    follow_ups:
+      - Come il brindisi modella il pasto?
+      - Qual è il rapporto tra brindisi e gerarchia?
+      - Quando bevi?
+  - id: chn_preserved_veg
+    name: Verdura Conservata
+    prompt: |
+      Senape conservata, ravanello sottaceto, cavolo fermentato — questi aggiungono profondità.
+      Sono conservazione antica. Considera la trasformazione. Cosa farebbe
+      la verdura fresca?
+    follow_ups:
+      - Come la conservazione modella il piatto?
+      - Qual è il rapporto tra sottaceto e umami?
+      - Perché conservato?
+  - id: chn_sweet_sour
+    name: Dolce Acido
+    prompt: |
+      Dolce e acido — l'equilibrio è deliberato. Zucchero, aceto, a volte
+      ketchup. La salsa è audace. Considera la combinazione. Cosa significherebbe uno senza l'altro?
+    follow_ups:
+      - Come l'equilibrio modella il piatto?
+      - Qual è il rapporto tra dolce e acido?
+      - Perché questo abbinamento?
+  - id: chn_wonton_soup
+    name: Zuppa di Wonton
+    prompt: |
+      Wonton in brodo chiaro — la zuppa è semplice. Il wonton galleggia. Il brodo
+      è pulito. Considera il contrasto con il wonton fritto. Cosa aggiunge la zuppa?
+    follow_ups:
+      - Come il brodo modella il wonton?
+      - Cosa significherebbe fritto?
+      - Qual è il rapporto tra chiaro e ricco?
+  - id: chn_cold_dish_start
+    name: Inizio con Piatti Freddi
+    prompt: |
+      I piatti freddi aprono il pasto — pollo ubriaco, medusa, sottaceti. Svegliano
+      il palato. Il contrasto con ciò che segue. Considera l'apertura. Cosa
+      farebbe un inizio caldo?
+    follow_ups:
+      - Come il freddo modella il pasto?
+      - Qual è il rapporto tra primo e successivo?
+      - Perché freddo all'inizio?
+  - id: chn_fried_rice_wok
+    name: Riso Fritto nel Wok
+    prompt: |
+      Il riso fritto richiede un wok — calore alto, mescolata rapida. Riso del giorno prima, idealmente.
+      I chicchi si separano. Considera la tecnica. Cosa sacrificherebbe una padella?
+    follow_ups:
+      - Come il wok modella il riso?
+      - Cosa farebbe il riso fresco?
+      - Qual è il rapporto tra calore e separazione?
+  - id: chn_lychee_dessert
+    name: Dessert al Litchi
+    prompt: |
+      Litchi per dessert — freschi, in scatola, sciroppati. Il frutto chiude il pasto.
+      Dolce, profumato. Considera la fine. Cosa farebbe un altro frutto?
+    follow_ups:
+      - Come il litchi modella la chiusura?
+      - Qual è il rapporto tra frutta e finale?
+      - Perché il litchi?
+  - id: chn_fortune_cookie
+    name: Biscotto della Fortuna
+    prompt: |
+      Biscotto della fortuna — invenzione sino-americana. Il biscotto è teatro. Rompilo.
+      Leggi la fortuna. Il biscotto non è autentico, ma è un rituale.
+      Considera il suo posto.
+    follow_ups:
+      - Come finirebbe il pasto senza di esso?
+      - Come la fortuna modella la chiusura?
+      - Qual è il rapporto tra biscotto e aspettativa?
+  - id: chn_century_egg
+    name: Uovo Secolare
+    prompt: |
+      Uovo secolare — conservato in cenere, argilla, calce. Il tuorlo diventa verde-grigio,
+      l'albume si scurisce diventando gelatinoso. È trasformazione nel corso di settimane. Considera l'archeologia.
+      Cosa sarebbe un uovo fresco? Cosa aggiunge la conservazione?
+    follow_ups:
+      - Come la conservazione modella la consistenza?
+      - Cosa sarebbe il piatto senza l'uovo?
+      - Qual è il rapporto tra tempo e trasformazione?

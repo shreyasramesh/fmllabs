@@ -1,0 +1,489 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinaire Lab — Sushi (Dutch)
+
+id: culinary_lab_sushi
+name: Culinaire Lab — Sushi
+description: 50 kaarten om je sushi-ervaring te veranderen — van de chemie van rijst en vis tot de choreografie van de toonbank en de archeologie van de oorsprong van elke neta.
+domain: culinary_lab
+cards:
+  - id: sush_rice_temp
+    name: Rijstemperatuur
+    prompt: |
+      Sushirijst is warm — lichaamstemperatuur, ongeveer. Niet koud. De warmte
+      draagt de azijn. Voel het. Wat zou koude rijst doen? Hoe vormt temperatuur
+      de hap?
+    follow_ups:
+      - Wat zou kamertemperatuur opofferen?
+      - Hoe draagt warmte smaak?
+      - Wat is de relatie tussen temperatuur en textuur?
+  - id: sush_shari_balance
+    name: Shari Balans
+    prompt: |
+      Shari — de rijst — is de helft van de sushi. De balans van azijn, zout, suiker is
+      precies. Proef de rijst alleen. Wat brengt het? Wat zou smakeloze
+      rijst betekenen?
+    follow_ups:
+      - Hoe vormt de rijst de neta?
+      - Wat zou te veel azijn doen?
+      - Wat is de relatie tussen shari en neta?
+  - id: sush_counter_ritual
+    name: Balie Ritueel
+    prompt: |
+      Omakase aan de balie — je staat tegenover de chef. De sushi komt stuk voor
+      stuk aan. De balie is een podium. Merk de choreografie op. Wat is het
+      ritme? Wie zet het tempo?
+    follow_ups:
+      - Wat zou een tafel veranderen?
+      - Hoe vormt de balie de maaltijd?
+      - Wat is de relatie tussen chef en gast?
+  - id: sush_net_origin
+    name: Neta Oorsprong
+    prompt: |
+      Elke neta — de topping — kwam ergens vandaan. Toyosu. Tsukiji. Een boot. Een
+      boerderij. Vraag het. Volg de vis. Welke reis heeft het gemaakt? Wat zou
+      bevroren-uit-het-magazijn betekenen?
+    follow_ups:
+      - Hoe vormt de oorsprong het stuk?
+      - Wat zou een andere bron doen?
+      - Wat is de relatie tussen plaats en kwaliteit?
+  - id: sush_wasabi_hidden
+    name: Wasabi Verborgen
+    prompt: |
+      Echte wasabi — geraspte wortel — is zeldzaam. Meestal is het mierikswortel en kleurstof.
+      Maar als het echt is, is het anders. Scherpe, groene, vluchtige smaak. Merk de prikkeling op.
+      Wat zou de nepperd toevoegen? Verminderen?
+    follow_ups:
+      - Hoe vormt wasabi de hap?
+      - Wat zou geen wasabi betekenen?
+      - Wat is de relatie tussen prikkeling en vis?
+  - id: sush_finger_over_chopstick
+    name: Vinger boven eetstokjes
+    prompt: |
+      Nigiri wordt traditioneel met de vingers gegeten — niet met eetstokjes. De vingers
+      voelen de temperatuur, de textuur. Probeer het. Wat voegt de vinger toe
+      wat de eetstokjes niet kunnen?
+    follow_ups:
+      - Hoe vormt de hand de ervaring?
+      - Wat zouden eetstokjes doen?
+      - Wat is de relatie tussen aanraking en smaak?
+  - id: sush_piece_by_piece
+    name: Stuk voor Stuk
+    prompt: |
+      Sushi komt één stuk tegelijk — of twee — aan. Het tempo is weloverwogen. Jij
+      eet; jij wacht. Beschouw het ritme. Wat zou een schaal van tien tegelijk opofferen?
+    follow_ups:
+      - Hoe vormt het tempo de maaltijd?
+      - Wat zou snelheid doen?
+      - Wat is de relatie tussen stuk en aandacht?
+  - id: sush_gari_palate
+    name: Gari Palet
+    prompt: |
+      Gari — ingelegde gember — reinigt tussen de stukken. Het is geen garnering; het is
+      een reset. Merk op wanneer je het eet. Wat zou opeenvolgende stukken zonder
+      gari doen met het palet?
+    follow_ups:
+      - Hoe vormt gari de progressie?
+      - Wat zou geen gari betekenen?
+      - Wat is de relatie tussen reset en smaak?
+  - id: sush_soy_minimal
+    name: Soy Minimaal
+    prompt: |
+      Sojasauce — een lichte dip, viskant naar beneden. Niet de rijst. De rijst zou te veel
+      opnemen. De chef heeft mogelijk al sojasaus gesmeerd. Merk op. Wat zou
+      drenken doen?
+    follow_ups:
+      - Hoe vormt sojasaus het stuk?
+      - Wat zou geen sojasaus betekenen?
+      - Wat is de relatie tussen dip en balans?
+  - id: sush_knife_matters
+    name: Mes Telt
+    prompt: |
+      Het sushi mes — enkele snede, scherp. De snede beïnvloedt de textuur. Tegen de draad in
+      of mee. De hoek. Overweeg wat het mes doet. Wat zou een bot mes opofferen?
+    follow_ups:
+      - Hoe vormt de snede de vis?
+      - Wat zou een andere hoek doen?
+      - Wat is de relatie tussen mes en mondgevoel?
+  - id: sush_otoro_fat
+    name: Otoro Vet
+    prompt: |
+      Otoro — de vetste tonijn — smelt. Het vet is het punt. Beschouw de
+      marmering. Wat zou magere akami doen? Hoe vormt vet de ervaring?
+    follow_ups:
+      - Wat zou het stuk zijn zonder het vet?
+      - Hoe creëert marmering luxe?
+      - Wat is de relatie tussen vet en smelten?
+  - id: sush_unagi_glaze
+    name: Unagi Glazuur
+    prompt: |
+      Unagi — paling — wordt ingesmeerd met zoete saus, soms weer gegrild. Het
+      glazuur is lak. Beschouw de glans. Wat zou ongeglazuurde paling betekenen?
+    follow_ups:
+      - Hoe vormt het glazuur het stuk?
+      - Wat is de relatie tussen zoet en paling?
+      - Waarom glazuur?
+  - id: sush_nori crisp
+    name: Nori Krokant
+    prompt: |
+      Nori voor maki — geroosterd, krokant, of zacht? Verschillende chefs kiezen
+      verschillend. De nori beïnvloedt de beet. Beschouw de textuur. Wat zou
+      soggy nori doen?
+    follow_ups:
+      - Hoe vormt nori de rol?
+      - Wat zou een andere roostering betekenen?
+      - Wat is de relatie tussen krokant en vers?
+  - id: sush_silence_counter
+    name: Stilte aan de Balie
+    prompt: |
+      Sommige sushi-balies zijn stil — concentratie, respect. Andere zijn
+      levendig. Merk het geluidslandschap op. Wat voegt stilte toe? Wat voegt
+      gesprek toe?
+    follow_ups:
+      - Hoe vormt geluid de maaltijd?
+      - Wat zou luide muziek doen?
+      - Wat is de relatie tussen stilte en focus?
+  - id: sush_tamago_sweet
+    name: Tamago Zoet
+    prompt: |
+      Tamago — het ei-custard — eindigt vaak de maaltijd. Het is zoet, gelaagd. De
+      vaardigheid van de chef is zichtbaar. Beschouw de afsluiter. Wat zou rauwe vis
+      als laatste stuk betekenen?
+    follow_ups:
+      - Hoe vormt tamago het einde?
+      - Wat is de relatie tussen zoet en einde?
+      - Waarom ei als laatste?
+  - id: sush_tuna_spectrum
+    name: Tonijn Spectrum
+    prompt: |
+      Akami, chutoro, otoro — mager tot vet. Het spectrum is weloverwogen. Proef
+      ze in volgorde als je kunt. Hoe werkt de progressie? Wat biedt elk?
+    follow_ups:
+      - Hoe vormt vet het spectrum?
+      - Wat zou één soort alleen betekenen?
+      - Wat is de relatie tussen mager en rijk?
+  - id: sush_ume_shiso
+    name: Ume Shiso
+    prompt: |
+      Ume — ingelegde pruim — en shiso in sommige rollen. Zuur, kruidig. Ze snijden
+      de rijkdom. Merk op wanneer ze verschijnen. Wat zou de rol zonder hen
+      zijn?
+    follow_ups:
+      - Hoe vormt ume de hap?
+      - Wat is de relatie tussen zuur en vis?
+      - Waarom shiso?
+  - id: sush_gunkan_hold
+    name: Gunkan Houder
+    prompt: |
+      Gunkan — slagschip — houdt losse toppings vast. Kuit, zee-egel. De nori
+      kraag bevat. Beschouw de vorm. Wat zou een plat stuk doen?
+    follow_ups:
+      - Hoe vormt de vorm de topping?
+      - Wat zou een ander vat betekenen?
+      - Wat is de relatie tussen houder en morsen?
+  - id: sush_uni_risk
+    name: Uni Risico
+    prompt: |
+      Uni — zee-egel — is polariserend. Zoet, zoutig, textuur. Het kan perfect
+      zijn of bedorven. Beschouw het risico. Wat zou veilige zalm betekenen? Wat voegt
+      het risico toe?
+    follow_ups:
+      - Hoe vormt uni de ervaring?
+      - Wat zou je verliezen zonder het risico?
+      - Wat is de relatie tussen polariserend en memorabel?
+  - id: sush_chef_choice
+    name: Chef's Keuze
+    prompt: |
+      Omakase — chef's keuze. Je geeft controle op. De chef leest de dag,
+      de vis, jou. Beschouw het vertrouwen. Wat zou het veranderen als je zelf
+      koos?
+    follow_ups:
+      - Hoe vormt overgave de maaltijd?
+      - Wat zou een menu-bestelling betekenen?
+      - Wat is de relatie tussen vertrouwen en ervaring?
+  - id: sush_sake_pair
+    name: Sake Paar
+    prompt: |
+      Sake met sushi — koud, warm, gerijpt. De pairing is weloverwogen. Merk op
+      wanneer je slokt. Reinigt het? Verbetert het? Beschouw de rol van het
+      drankje.
+    follow_ups:
+      - Hoe vormt sake het stuk?
+      - Wat zou wijn doen?
+      - Wat is de relatie tussen rijst en rijstwijn?
+  - id: sush_ikura_pop
+    name: Ikura Pop
+    prompt: |
+      Ikura — zalmkuit — knapt. De explosie is textuur en zout. Beschouw de
+      sensatie. Wat zou gekookte kuit doen? Hoe vormt de knal de hap?
+    follow_ups:
+      - Wat zou het stuk zijn zonder de knal?
+      - Hoe creëert textuur plezier?
+      - Wat is de relatie tussen knal en zout?
+  - id: sush_hirame_chew
+    name: Hirame Kauw
+    prompt: |
+      Hirame — schol — heeft een andere kauw dan tonijn. Het is mager, delicaat.
+      Merk de textuur op. Wat zou vette vis doen? Hoe varieert de kauw?
+    follow_ups:
+      - Hoe vormt textuur het stuk?
+      - Wat is de relatie tussen mager en delicaat?
+      - Waarom hirame bestellen?
+  - id: sush_amaebi_head
+    name: Amaebi Kop
+    prompt: |
+      Amaebi — zoete garnalen — soms geserveerd met de kop gefrituurd. De kop is
+      krokant, umami. Beschouw het gebruik van het geheel. Wat zou onthoofde
+      garnalen opofferen?
+    follow_ups:
+      - Hoe vormt de kop het gerecht?
+      - Wat is de relatie tussen geheel en respect?
+      - Waarom de kop frituren?
+  - id: sush_mirin_gloss
+    name: Mirin Glans
+    prompt: |
+      Sommige stukken worden ingesmeerd met nikiri — sojasaus, mirin, sake. De glans is
+      de afwerking. De chef heeft het saus gegeven. Overweeg of je nog meer sojasaus
+      moet toevoegen. Wat zou te veel dippen doen?
+    follow_ups:
+      - Hoe vormt de kwast het stuk?
+      - Wat zou geen kwast betekenen?
+      - Wat is de relatie tussen de hand van de chef en die van jou?
+  - id: sush_anago_soft
+    name: Anago Zacht
+    prompt: |
+      Anago — zeepaling — is zachter dan unagi. Andere soorten, andere
+      bereiding. Merk de textuur op. Wat zou de stevigheid van unagi doen?
+    follow_ups:
+      - Hoe vormt het zachte het stuk?
+      - Wat is de relatie tussen anago en unagi?
+      - Waarom beide palingen?
+  - id: sush_saba_silver
+    name: Saba Zilver
+    prompt: |
+      Saba — makreel — wordt vaak gepekeld. De zilveren huid, het olieachtige vlees. Het is
+      krachtig. Beschouw de conservering. Wat zou rauwe makreel betekenen?
+    follow_ups:
+      - Hoe vormt de pekel de vis?
+      - Wat is de relatie tussen olie en pekel?
+      - Waarom saba pekelen?
+  - id: sush_ginger_between
+    name: Gember Tussen
+    prompt: |
+      Gari tussen stukken — de reset. Maar wanneer? Na elk stuk? Na enkele?
+      Het ritme is van jou. Merk je patroon op. Wat zou geen reset doen?
+    follow_ups:
+      - Hoe vormt de timing de gari?
+      - Wat is de relatie tussen stuk en stuk?
+      - Wanneer heb je reset nodig?
+  - id: sush_maki_cut
+    name: Maki Snede
+    prompt: |
+      Maki — rollen — worden in stukken gesneden. Zes of acht. De snede beïnvloedt de
+      doorsnede. Beschouw de spiraal. Wat zou een andere snede doen?
+    follow_ups:
+      - Hoe vormt de snede de hap?
+      - Wat zouden minder stukken betekenen?
+      - Wat is de relatie tussen plak en geheel?
+  - id: sush_tobiko_crunch
+    name: Tobiko Crunch
+    prompt: |
+      Tobiko — vliegende viskuit — voegt crunch en kleur toe. Het is een topping, een garnering.
+      Merk op wanneer het verschijnt. Wat zou de rol zonder zijn?
+    follow_ups:
+      - Hoe vormt tobiko de hap?
+      - Wat is de relatie tussen crunch en kleur?
+      - Waarom vliegende vis?
+  - id: sush_sashimi_contrast
+    name: Sashimi Contrast
+    prompt: |
+      Sashimi — zonder rijst — laat de vis op zichzelf staan. De puurheid is anders.
+      Vergelijk sashimi met nigiri. Wat voegt de rijst toe? Wat onthult de
+      afwezigheid ervan?
+    follow_ups:
+      - Hoe vormt de rijst nigiri?
+      - Wat zou alleen sashimi betekenen?
+      - Wat is de relatie tussen vis en rijst?
+  - id: sush_tea_rinse
+    name: Thee Spoeling
+    prompt: |
+      Groene thee aan de sushibar — bijgevuld, gedeeld. Het reinigt. De thee is
+      deel van het ritme. Beschouw de rol ervan. Wat zou water doen? Wat zou
+      geen drank betekenen?
+    follow_ups:
+      - Hoe vormt thee de maaltijd?
+      - Wat is de relatie tussen thee en reset?
+      - Waarom groene thee?
+  - id: sush_bengara_tuna
+    name: Bengara Tonijn
+    prompt: |
+      Bengara — magere tonijn, vaak van de rug — is donkerder. De smaak is
+      anders dan akami. Beschouw de snede. Welk deel van de vis? Wat doet
+      de locatie?
+    follow_ups:
+      - Hoe vormt de snede de smaak?
+      - Wat is de relatie tussen locatie en smaak?
+      - Waarom deze snede?
+  - id: sush_kohada_cure
+    name: Kohada Pekel
+    prompt: |
+      Kohada — sprot — wordt gepekeld, soms ingelegd met azijn. Het is een test voor de
+      chef. De zilveren huid, de balans. Beschouw de vaardigheid. Wat zou
+      ongepekelde vis doen?
+    follow_ups:
+      - Hoe vormt de pekel de vis?
+      - Wat is de relatie tussen azijn en zilveren huid?
+      - Waarom is het een test?
+  - id: sush_engawa_fin
+    name: Engawa Vin
+    prompt: |
+      Engawa — de vinspier van platvis — wordt gewaardeerd. Het heeft een onderscheidende textuur.
+      Beschouw het deel. Wat zou gewone hirame doen? Hoe verschilt de vin?
+    follow_ups:
+      - Hoe vormt de snede het stuk?
+      - Wat is de relatie tussen vin en spier?
+      - Waarom wordt het gewaardeerd?
+  - id: sush_first_piece
+    name: Eerste Stuk
+    prompt: |
+      Het eerste stuk zet de toon. Vaak iets milds — misschien hirame of
+      tai. De chef kalibreert. Beschouw de opening. Wat zou otoro als eerste
+      betekenen?
+    follow_ups:
+      - Hoe vormt het eerste het de maaltijd?
+      - Wat is de relatie tussen eerste en progressie?
+      - Waarom mild als eerste?
+  - id: sush_kampachi_fat
+    name: Kampachi Vet
+    prompt: |
+      Kampachi — jonge geelstaart — heeft een subtiel vetgehalte. Het zit tussen mager
+      en rijk in. Merk de middenweg op. Wat zou buri doen? Wat zou
+      magerdere vis doen?
+    follow_ups:
+      - Hoe vormt het vet het stuk?
+      - Wat is de relatie tussen leeftijd en vet?
+      - Waarom kampachi?
+  - id: sush_nodoguro_char
+    name: Nodoguro Schroeien
+    prompt: |
+      Nodoguro — zwarte keelbaars — wordt vaak licht geschroeid. De huid, het vet.
+      Het schroeien voegt toe. Beschouw de toepassing van hitte. Wat zou rauw doen?
+    follow_ups:
+      - Hoe vormt het schroeien de vis?
+      - Wat is de relatie tussen schroeiing en vet?
+      - Waarom dit schroeien?
+  - id: sush_choji_plate
+    name: Choji Bord
+    prompt: |
+      Het bord — of het hout, of de steen — bevat het stuk. De presentatie
+      is minimaal. Beschouw het vaartuig. Wat zou een druk bord doen? Wat
+      staat minimaal toe?
+    follow_ups:
+      - Hoe vormt het bord het stuk?
+      - Wat is de relatie tussen vaartuig en focus?
+      - Waarom minimaal?
+  - id: sush_tea_cup
+    name: Theekop
+    prompt: |
+      Het theekopje aan de balie — geen handvat, soms ruw. Je houdt het vast
+      met beide handen. Beschouw het vaartuig. Wat zou een mok doen? Wat voegt
+      het kopje toe?
+    follow_ups:
+      - Hoe vormt het kopje de slok?
+      - Wat is de relatie tussen vaartuig en ritueel?
+      - Waarom geen handvat?
+  - id: sush_silver_slide
+    name: Zilveren Glijbaan
+    prompt: |
+      Het stuk moet van het bord glijden — of schoon worden opgetild. De rijst houdt
+      maar geeft los. Beschouw de constructie. Wat zou uit elkaar vallende rijst
+      betekenen?
+    follow_ups:
+      - Hoe vormt de structuur de eetervaring?
+      - Wat zou papperige rijst doen?
+      - Wat is de relatie tussen integriteit en hap?
+  - id: sush_kinmedai_skin
+    name: Kinmedai Huid
+    prompt: |
+      Kinmedai — gouden oog snapper — vaak met de huid, lichtjes aangestoken. De
+      huid voegt textuur, vet toe. Beschouw het aansteken. Wat zou rauwe huid doen?
+    follow_ups:
+      - Hoe vormt de huid het stuk?
+      - Wat is de relatie tussen aansteken en vet?
+      - Waarom aansteken?
+  - id: sush_botan_ebi
+    name: Botan Ebi
+    prompt: |
+      Botan ebi — spot garnalen — is zoet, vaak rauw. De staart komt soms
+      gefrituurd. Beschouw het geheel. Wat zou gekookte garnalen doen?
+    follow_ups:
+      - Hoe vormt de bereiding het stuk?
+      - Wat is de relatie tussen rauw en zoet?
+      - Waarom spot garnalen?
+  - id: sush_namida_heat
+    name: Namida Hitte
+    prompt: |
+      Echte wasabi brengt tranen — namida. De hitte stijgt, verdwijnt. Het is
+      anders dan chili. Beschouw de sensatie. Wat zou mierikswortel anders doen?
+    follow_ups:
+      - Hoe vormt de hitte de hap?
+      - Wat is de relatie tussen wasabi en traan?
+      - Waarom tranen de ogen?
+  - id: sush_omakase_end
+    name: Omakase Einde
+    prompt: |
+      De maaltijd eindigt — tamago, misschien miso, wellicht fruit. De boog is compleet.
+      Beschouw het einde. Wat zou nog een stuk doen? Wanneer weet je dat je
+      klaar bent?
+    follow_ups:
+      - Hoe vormt het einde de herinnering?
+      - Wat is de relatie tussen einde en tevredenheid?
+      - Waarom eindigen met ei of soep?
+  - id: sush_counter_wait
+    name: Balie Wachten
+    prompt: |
+      Tussen de stukken wacht je. De chef bereidt voor. De pauze is deel van het
+      ritme. Merk de anticipatie op. Wat zou instant service opofferen?
+    follow_ups:
+      - Hoe vormt het wachten het stuk?
+      - Wat is de relatie tussen pauze en aandacht?
+      - Waarom niet vooraf borden?
+  - id: sush_tsukiji_legacy
+    name: Tsukiji Nalatenschap
+    prompt: |
+      Tsukiji is verdwenen; Toyosu heeft zijn plaats ingenomen. Maar de vis stroomt nog steeds door
+      Tokio. Beschouw de markt. Wat zou sushi zijn zonder de veiling?
+      Zonder de distributie?
+    follow_ups:
+      - Hoe vormt de markt de vis?
+      - Wat is de relatie tussen veiling en kwaliteit?
+      - Wat betekende Tsukiji?
+  - id: sush_edomae_spirit
+    name: Edomae Geest
+    prompt: |
+      Edomae — Edo-stijl — sushi uit de traditie van Tokio. Geconserveerd, gepekeld, gerijpt
+      om zonder koeling te werken. Beschouw de geschiedenis. Wat zou
+      altijd-vers betekenen?
+    follow_ups:
+      - Hoe vormt geschiedenis de techniek?
+      - Wat is de relatie tussen conservering en smaak?
+      - Waarom Edomae?
+  - id: sush_gari_reset
+    name: Gari Reset
+    prompt: |
+      Gari — ingelegde gember — reinigt tussen de stukken. De bleekroze plakjes resetten
+      het palet. Merk op wanneer je ernaar grijpt. Wat zou de maaltijd zijn zonder
+      de reset? Hoe vormt de gember de progressie?
+    follow_ups:
+      - Wat zou geen gari betekenen?
+      - Hoe vormt de reset het volgende stuk?
+      - Wat is de relatie tussen pauze en continuïteit?
+  - id: sush_otoro_melt
+    name: Otoro Smelt
+    prompt: |
+      Otoro — vetste tonijn — lost bijna op op de tong. Het vet is het
+      punt. Beschouw de textuur. Wat zou magere tonijn doen? Hoe markeert de
+      smelt de piek van de maaltijd?
+    follow_ups:
+      - Wat zou akami anders doen?
+      - Hoe vormt het vet de ervaring?
+      - Wat is de relatie tussen smelten en luxe?

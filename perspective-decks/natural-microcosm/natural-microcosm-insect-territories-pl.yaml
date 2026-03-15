@@ -1,0 +1,497 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Naturalny Mikrokosmos — Terytoria Owadów (Polish)
+
+id: natural_microcosm_insect_territories
+name: Naturalny Mikrokosmos — Terytoria Owadów
+description: 50 kart, które zmienią sposób patrzenia na życie owadów — od ścieżek mrówek i ruchu pszczół po sieci pająków, dramaty terytorialne i choreografię kolonii.
+domain: natural_microcosm
+cards:
+  - id: nmi_ant_trail
+    name: Ścieżka Mrówki
+    prompt: |
+      Mrówki tworzą ścieżki — szlaki feromonowe między gniazdem a pożywieniem. Obserwuj przepływ.
+      Dwa pasy: wyjazdowy i powrotny. Ścieżka jest decyzją wielu.
+      Co mogłoby przerwać ścieżkę?
+    follow_ups:
+      - Jak ścieżka wzmacnia samą siebie?
+      - Czym byłaby kolonia bez ścieżek?
+      - Jaka jest relacja między ścieżką a kolonią?
+  - id: nmi_bee_traffic
+    name: Ruch Pszczeli
+    prompt: |
+      Wejście do ula — pszczoły wpływają i wypływają. Ruch ma rytm. Niektóre
+      niosą pyłek; niektóre nie. Zastanów się nad choreografią. Kto decyduje o
+      wzorze?
+    follow_ups:
+      - Czym byłby ul bez ruchu?
+      - Jak wejście kształtuje przepływ?
+      - Jaka jest relacja między pszczołą a kolonią?
+  - id: nmi_spider_web
+    name: Sieć Pająka
+    prompt: |
+      Sieć pająka to terytorium i pułapka. Pająk czeka na brzegu.
+      Wibracje niosą informacje. Zastanów się nad architekturą. Co łapie sieć? Czego nie łapie?
+    follow_ups:
+      - Czym byłby pająk bez sieci?
+      - Jak sieć rozszerza zmysły pająka?
+      - Jaka jest relacja między jedwabiem a przetrwaniem?
+  - id: nmi_dragonfly_claim
+    name: Zajęcie Wodniczki
+    prompt: |
+      Wodniczka patroluje odcinek stawu — tam i z powrotem. Jest terytorialna.
+      Rywale są przepędzani. Partnerki są zalecane. Zastanów się nad stawką. Czego się broni?
+    follow_ups:
+      - Co zrobiłaby wodniczka bez terytorium?
+      - Jak patrol komunikuje własność?
+      - Jaka jest relacja między przestrzenią a rozmnażaniem?
+  - id: nmi_caterpillar_munch
+    name: Obiad Gąsienicy
+    prompt: |
+      Gąsienica je — krawędź liścia się cofa. Jedzenie jest ciągłe.
+      Gąsienica to maszyna do przemiany. Zastanów się nad tempem. Czym byłaby roślina bez roślinożerców?
+    follow_ups:
+      - Jak gąsienica kształtuje liść?
+      - Czym byłby motyl bez jedzenia?
+      - Jaka jest relacja między konsumpcją a wzrostem?
+  - id: nmi_beetle_battle
+    name: Walka Chrząszczy
+    prompt: |
+      Dwa chrząszcze się spotykają — może jelonki, może żuki gnojowe. Zmagają się.
+      Walka jest rytuałem. Zastanów się nad stawką. Co jest wygrywane? Co jest tracone?
+    follow_ups:
+      - Co zrobiłby przegrany?
+      - Jak kończy się walka?
+      - Jaka jest relacja między walką a zalotami?
+  - id: nmi_firefly_flash
+    name: Błysk Świetlika
+    prompt: |
+      Świetliki błyskają — każdy gatunek ma swój kod. Wzór jest zalotami. Zastanów się nad sygnałem.
+      Co oznaczałby zły błysk? Jak odnajdują się w ciemności?
+    follow_ups:
+      - Jak błysk koduje gatunek?
+      - Czym byłaby łąka bez świetlików?
+      - Jaka jest relacja między światłem a partnerem?
+  - id: nmi_aphid_farm
+    name: Pasieka Mszyc
+    prompt: |
+      Mrówki doglądają mszyc — głaszczą je, chronią. Mszyce wydzielają rosę miodową.
+      Mrówki ją zbierają. Zastanów się nad partnerstwem. Kto korzysta? Kto jest wykorzystywany?
+    follow_ups:
+      - Czym byłyby mszyce bez mrówek?
+      - Jak hodowla kształtuje oba gatunki?
+      - Jaka jest relacja między doglądaniem a pozyskiwaniem?
+  - id: nmi_cicada_shell
+    name: Skorupa Cykady
+    prompt: |
+      Skorupa cykady przylega do kory — nimfa się wykluła. Skorupa jest pusta,
+      idealna. Zastanów się nad linieniem. Co owad zostawił za sobą? Co zyskał?
+    follow_ups:
+      - Czym byłaby cykada bez linienia?
+      - Jak skorupa oznacza przejście?
+      - Jaka jest relacja między zrzucaniem a wzrostem?
+  - id: nmi_leaf_miner
+    name: Minier Liściowy
+    prompt: |
+      Ścieżka wewnątrz liścia — droga miniera liściowego. Larwa je między
+      warstwami. Liść przechowuje zapis. Zastanów się nad tunelem. Jak wyglądałby liść od środka?
+    follow_ups:
+      - Czym byłby liść bez miniera?
+      - Jak korytarz chroni larwę?
+      - Jaka jest relacja między wnętrzem a zewnętrzem?
+  - id: nmi_wasp_nest
+    name: Gniazdo Osy
+    prompt: |
+      Gniazdo osy papierówki — sześciokątne komórki, przeżute drewno. Gniazdo to architektura
+      i forteca. Zastanów się nad kolonią. Kto buduje? Kto broni? Kto się rozmnaża?
+    follow_ups:
+      - Czym byłyby osy bez gniazda?
+      - Jak gniazdo kształtuje strukturę społeczną?
+      - Jaka jest relacja między papierem a kolonią?
+  - id: nmi_grasshopper_leap
+    name: Skok Konika Polnego
+    prompt: |
+      Konik polny skacze — nogi się prostują, znika. Skok to ucieczka lub
+      zbliżenie. Zastanów się nad bodźcem. Co zobaczył konik polny? Co
+      usłyszał?
+    follow_ups:
+      - Czym byłby konik polny bez skoku?
+      - Jak skok unika drapieżnictwa?
+      - Jaka jest relacja między nogą a lotem?
+  - id: nmi_mantis_still
+    name: Bezwład Modliszki
+    prompt: |
+      Modliszka czeka — bez ruchu. Jest łowcą. Ofiara się zbliża. Atak
+      jest nagły. Zastanów się nad cierpliwością. Czego kosztuje bezruch? Co
+      umożliwia?
+    follow_ups:
+      - Czym byłaby modliszka bez czekania?
+      - Jak bezruch oszukuje?
+      - Jaka jest relacja między cierpliwością a schwytaniem?
+  - id: nmi_bumblebee_buzz
+    name: Bzyczenie Trzmiela
+    prompt: |
+      Trzmiel bzyczy — wibruje. Niektóre kwiaty wymagają zapylania przez wibrację.
+      Pszczoła wstrząsa pyłek. Zastanów się nad partnerstwem. Czym byłby kwiat bez
+      bzyczenia?
+    follow_ups:
+      - Jak bzyczenie uwalnia pyłek?
+      - Czym byłby trzmiel bez zapylania przez wibrację?
+      - Jaka jest relacja między wibracją a zapłodnieniem?
+  - id: nmi_butterfly_territory
+    name: Terytorium Motyla
+    prompt: |
+      Motyl siada na wzniesieniu — hilltopping. Czeka na partnerów.
+      Rywalizujące motyle są przepędzane. Zastanów się nad strategią. Dlaczego to miejsce? Co czyni je cennym?
+    follow_ups:
+      - Co zrobiłby motyl bez miejsca do siadania?
+      - Jak hilltopping kształtuje zaloty?
+      - Jaka jest relacja między miejscem a spotkaniem?
+  - id: nmi_earwig_pincer
+    name: Szczypce Skorka
+    prompt: |
+      Skorki mają szczypce — przysadki odwłokowe. Służą do obrony, składania skrzydeł,
+      chwytania ofiary. Zastanów się nad narzędziem. Czym byłby skorek bez
+      szczypiec?
+    follow_ups:
+      - Jak szczypce kształtują zachowanie?
+      - Jak wyglądałaby obrona bez nich?
+      - Jaka jest relacja między formą a funkcją?
+  - id: nmi_katydid_call
+    name: Wołanie Pasikonika
+    prompt: |
+      Pasikonik woła — strydulacja, nogi na skrzydłach. Wołanie jest specyficzne dla gatunku.
+      To zaloty, terytorium. Zastanów się nad dźwiękiem. Czym byłaby noc bez
+      niego?
+    follow_ups:
+      - Jak wołanie przyciąga partnerów?
+      - Czego zaryzykowałby pasikonik wołając?
+      - Jaka jest relacja między dźwiękiem a drapieżnictwem?
+  - id: nmi_ladybug_cluster
+    name: Gromada Biedronek
+    prompt: |
+      Biedronki gromadzą się zimą — dziesiątki, setki. Grupują się dla ciepła,
+      dla schronienia. Zastanów się nad zgromadzeniem. Co je wywołuje? Co je rozprasza?
+    follow_ups:
+      - Czym byłyby biedronki bez gromady?
+      - Jak gromada tworzy mikroklimat?
+      - Jaka jest relacja między wieloma a przetrwaniem?
+  - id: nmi_ant_carry
+    name: Noszenie przez Mrówkę
+    prompt: |
+      Mrówka niesie inną — martwą lub ranną. To pomoc. Kolonia troszczy się
+      o swoje członkinie. Zastanów się nad zachowaniem. Co zrobiłaby ranna mrówka sama?
+      Co zyskuje niosąca?
+    follow_ups:
+      - Jak noszenie służy kolonii?
+      - Czym byłaby kolonia bez współpracy?
+      - Jaka jest relacja między jednostką a kolektywem?
+  - id: nmi_mosquito_hover
+    name: Zawis Komara
+    prompt: |
+      Komar zawisa — testuje, sondy. Szuka żywiciela. Zawis to
+      ocena. Zastanów się nad chwilą przed ukąszeniem. Co wyczuwa komar? Co decyduje?
+    follow_ups:
+      - Co zrobiłby komar bez zawisu?
+      - Jak zawis minimalizuje wykrycie?
+      - Jaka jest relacja między sondowaniem a karmieniem?
+  - id: nmi_weevil_curl
+    name: Zwijanie Ryjkowca
+    prompt: |
+      Liść się zwija — zrobił to ryjkowiec lub mucha galasówka. Liść zwija się wokół
+      larwy. Zastanów się nad manipulacją. Roślina jest przekonywana. Co zrobiłby
+      liść bez owada?
+    follow_ups:
+      - Jak zwinięcie chroni larwę?
+      - Czym byłaby roślina bez zwinięcia?
+      - Jaka jest relacja między owadem a formą rośliny?
+  - id: nmi_honeybee_waggle
+    name: Taniec Wigglowania Pszczoły Miodnej
+    prompt: |
+      Pszczoła miodna wigglowa — to taniec. Taniec koduje odległość i kierunek
+      do kwiatów. Inne pszczoły patrzą. Zastanów się nad wiadomością. Czym byłaby
+      kolonia bez wigglowania?
+    follow_ups:
+      - Jak taniec przekazuje informacje?
+      - Jak wyglądałoby zbieranie pokarmu bez niego?
+      - Jaka jest relacja między tańcem a odkryciem?
+  - id: nmi_gnat_cloud
+    name: Chmura Ochotki
+    prompt: |
+      Ochotki roją się — chmura maleńkich owadów. Rój to rozmnażanie. Samce się gromadzą;
+      samice wchodzą i wybierają. Zastanów się nad agregacją. Co zrobiłaby
+      ochotka sama?
+    follow_ups:
+      - Jak rój umożliwia rozmnażanie?
+      - Czym byłyby ochotki bez chmury?
+      - Jaka jest relacja między wieloma a spotkaniem?
+  - id: nmi_spider_wrap
+    name: Oplatanie Pająka
+    prompt: |
+      Pająk oplata ofiarę — jedwabem wokół szamoczącego się owada. Oplatanie unieruchamia.
+      Pająk wstrzykuje enzym. Zastanów się nad procesem. Co zrobiłby pająk
+      bez oplatania?
+    follow_ups:
+      - Jak oplatanie obezwładnia ofiarę?
+      - Czego zaryzykowałby pająk bez tego?
+      - Jaka jest relacja między jedwabiem a trawieniem?
+  - id: nmi_ant_war
+    name: Wojna Mrówek
+    prompt: |
+      Dwie kolonie mrówek się spotykają — konflikt. Robotnice się zmagają, gryzą. Granica jest
+      sporna. Zastanów się nad bitwą. Co jest stawką? Jak ustalana jest granica?
+    follow_ups:
+      - Czym byłyby kolonie bez wojny?
+      - Jak kończy się wojna?
+      - Jaka jest relacja między terytorium a zasobem?
+  - id: nmi_moth_flutter
+    name: Migotanie Ćmy
+    prompt: |
+      Ćma migocze przy świetle — przyciągana, zdezorientowana. Światło zakłóca
+      nawigację. Zastanów się nad pułapką. Co zrobiłaby ćma w ciemności?
+      Dlaczego światło dezorientuje?
+    follow_ups:
+      - Czym byłaby ćma bez światła?
+      - Jak ćma normalnie używa światła księżyca?
+      - Jaka jest relacja między światłem a kierunkiem?
+  - id: nmi_stick_insect_still
+    name: Bezwład Strzykwy
+    prompt: |
+      Strzykwa jest nieruchoma — wygląda jak gałązka. Drapieżniki przechodzą.
+      Zastanów się nad oszustwem. Czym byłby owad bez przebrania?
+      Jak długo może utrzymać pozę?
+    follow_ups:
+      - Jak bezruch chroni?
+      - Czego zaryzykowałby owad, poruszając się?
+      - Jaka jest relacja między formą a przetrwaniem?
+  - id: nmi_leafcutter_carry
+    name: Noszenie przez Mrówkę Liściarkę
+    prompt: |
+      Mrówka liściarka niesie fragment liścia — wiele razy większy od niej. Liść
+      trafia do gniazda. Staje się podłożem dla grzyba. Zastanów się nad
+      żniwami. Czym byłaby kolonia bez liści?
+    follow_ups:
+      - Jak grzyb używa liścia?
+      - Co zjadłaby mrówka bez grzyba?
+      - Jaka jest relacja między żniwami a uprawą?
+  - id: nmi_housefly_clean
+    name: Czystość Muchy Domowej
+    prompt: |
+      Mucha domowa czyści się — pociera nogi, głaszcze skrzydła. Pielęgnacja usuwa
+      cząsteczki, utrzymuje czujniki. Zastanów się nad rytuałem. Czym byłaby mucha
+      bez czyszczenia?
+    follow_ups:
+      - Jak pielęgnacja utrzymuje funkcję?
+      - Co by się stało, gdyby mucha nie mogła się czyścić?
+      - Jaka jest relacja między czystością a zmysłem?
+  - id: nmi_termite_mound
+    name: Kopiec Termitów
+    prompt: |
+      Kopiec termitów się wznosi — glina, ślina, przeżute drewno. To miasto. W środku,
+      tunele, komory, ogrody grzybowe. Zastanów się nad architekturą. Czym byłaby
+      kolonia bez kopca?
+    follow_ups:
+      - Jak kopiec reguluje klimat?
+      - Co zrobiliby termity bez struktury?
+      - Jaka jest relacja między kopcem a kolonią?
+  - id: nmi_cricket_chirp
+    name: Świerszczowy Ćwierkot
+    prompt: |
+      Świerszcz ćwierka — skrzydła razem. Ćwierkanie to zaloty. Samice wybierają
+      na podstawie dźwięku. Zastanów się nad wołaniem. Co zrobiłby świerszcz bez
+      ćwierkania? Kto słucha oprócz samic?
+    follow_ups:
+      - Jak ćwierkanie koduje sprawność?
+      - Czym byłaby łąka bez dźwięku?
+      - Jaka jest relacja między wołaniem a drapieżnictwem?
+  - id: nmi_damselfly_tandem
+    name: Tandem Ważek
+    prompt: |
+      Ważki kopulują w tandemie — samiec obejmuje samicę za głową. Ona
+      wykrzywia się, by przyjąć spermę. Para może latać razem. Zastanów się nad
+      połączeniem. Czym byłoby kopulowanie bez uścisku?
+    follow_ups:
+      - Jak tandem chroni inwestycję samca?
+      - Co zrobiłaby para bez połączenia?
+      - Jaka jest relacja między uściskiem a zapłodnieniem?
+  - id: nmi_roach_scatter
+    name: Rozproszenie Karalucha
+    prompt: |
+      Włącz światło — karaluchy się rozpraszają. Szukają szczelin. Rozproszenie to
+      ucieczka. Zastanów się nad reakcją. Co zrobiłby karaluch przy stałym
+      świetle? Dlaczego ciemność?
+    follow_ups:
+      - Jak rozproszenie zmniejsza drapieżnictwo?
+      - Czym byłby karaluch bez odruchu?
+      - Jaka jest relacja między światłem a ukrywaniem się?
+  - id: nmi_hopper_nymph
+    name: Nimfa Konika Polnego
+    prompt: |
+      Młody konik polny — nimfa. Jeszcze nie ma skrzydeł. Skacze. Zastanów się nad
+      stadium. Czym stanie się nimfa? Czego jej teraz brakuje?
+    follow_ups:
+      - Czym byłby konik polny bez stadium nimfy?
+      - Jak nimfa unika drapieżników?
+      - Jaka jest relacja między linieniem a skrzydłem?
+  - id: nmi_sweat_bee
+    name: Pszczoła Potna
+    prompt: |
+      Pszczoła potna ląduje na twojej skórze — szuka soli. Pot jest zasobem.
+      Zastanów się nad spotkaniem. Co zrobiłaby pszczoła bez potu? Dlaczego potrzebuje soli?
+    follow_ups:
+      - Jak pszczoła używa soli?
+      - Czego zaryzykowałaby pszczoła, lądując?
+      - Jaka jest relacja między człowiekiem a pszczołą?
+  - id: nmi_army_ant_column
+    name: Kolumna Mrówek Żołnierskich
+    prompt: |
+      Mrówki żołnierskie maszerują — kolumna tysięcy. Płyną. Ofiara jest przytłoczona.
+      Zastanów się nad rojem. Czym byłyby mrówki bez kolumny? Jak się koordynują?
+    follow_ups:
+      - Jak kolumna umożliwia drapieżnictwo?
+      - Czym byłby las bez mrówek żołnierskich?
+      - Jaka jest relacja między wieloma a siłą?
+  - id: nmi_water_strider_leg
+    name: Noga Nartnika
+    prompt: |
+      Nogi nartnika — długie, hydrofobowe. Rozkładają ciężar. Powierzchnia je trzyma.
+      Zastanów się nad adaptacją. Czym byłby nartnik bez konstrukcji nóg?
+    follow_ups:
+      - Jak konstrukcja nogi rozkłada siłę?
+      - Co zrobiłby nartnik na lądzie?
+      - Jaka jest relacja między formą a powierzchnią?
+  - id: nmi_aphid_wing
+    name: Skrzydło Mszycy
+    prompt: |
+      Niektóre mszyce mają skrzydła — gdy jest tłoczno lub gdy żywiciel słabnie. Rozpraszają się.
+      Zastanów się nad przełącznikiem. Co wywołuje rozwój skrzydeł? Czego kosztuje skrzydło?
+    follow_ups:
+      - Jak tłok indukuje skrzydła?
+      - Czym byłaby mszyca bez tej opcji?
+      - Jaka jest relacja między skrzydłem a rozproszeniem?
+  - id: nmi_scale_armor
+    name: Pancerz Tarcznika
+    prompt: |
+      Tarczniki wyglądają jak guzki — są opancerzone. Niewiele się ruszają.
+      Pobierają sok z rośliny, karmią się. Zastanów się nad strategią. Czym byłby tarcznik bez
+      pancerza?
+    follow_ups:
+      - Jak pancerz chroni?
+      - Czym byłaby roślina bez tarcznika?
+      - Jaka jest relacja między bezruchem a obroną?
+  - id: nmi_caddisfly_case
+    name: Osłonka Chruścika
+    prompt: |
+      Larwa chruścika buduje osłonkę — patyki, piasek, kamyczki. Nosi tę osłonkę.
+      Osłonka jest kamuflażem i pancerzem. Zastanów się nad budową. Czym byłaby larwa bez niej?
+    follow_ups:
+      - Jak osłonka chroni?
+      - Czego użyłaby larwa, gdyby materiały się zmieniły?
+      - Jaka jest relacja między budową a przetrwaniem?
+  - id: nmi_leafhopper_flash
+    name: Błysk Skoczki Liściowej
+    prompt: |
+      Skoczek liściowy skacze — nagle. Znika. Skok to ucieczka. Nogi magazynują
+      energię, uwalniają. Zastanów się nad mechanizmem. Czym byłaby skoczek liściowy bez
+      skoku?
+    follow_ups:
+      - Jak skok unika schwytania?
+      - Czym byłby liść bez skoczki liściowej?
+      - Jaka jest relacja między skokiem a drapieżnictwem?
+  - id: nmi_bombardier_blast
+    name: Wybuch Bombardierki
+    prompt: |
+      Chrząszcz bombardier rozpyla — gorący, szkodliwy. To obrona. Rozpylanie to
+      chemia: dwie komory, reakcja przy wyjściu. Zastanów się nad bronią. Co zrobiłby chrząszcz
+      bez niej?
+    follow_ups:
+      - Jak rozpylanie odstrasza drapieżniki?
+      - Czego zaryzykowałby chrząszcz, rozpylając?
+      - Jaka jest relacja między chemią a obroną?
+  - id: nmi_silverfish_slip
+    name: Poślizgnięcie Rybika Cukrowego
+    prompt: |
+      Rybik cukrowy wślizguje się do szczeliny — szybko. Jest płaski. Pasuje.
+      Zastanów się nad formą. Czym byłby rybik cukrowy bez płaskości? Dlaczego pośpiech?
+    follow_ups:
+      - Jak płaskość umożliwia ucieczkę?
+      - Co zrobiłby rybik cukrowy na otwartej przestrzeni?
+      - Jaka jest relacja między formą a schronieniem?
+  - id: nmi_ant_queen
+    name: Królowa Mrówek
+    prompt: |
+      Kolonia mrówek ma królową — lub kilka. Składa jaja. Robotnice się nią opiekują.
+      Zastanów się nad centrum. Czym byłaby kolonia bez królowej? Jak
+      kolonia ją zastępuje?
+    follow_ups:
+      - Jak królowa kształtuje kolonię?
+      - Co zrobiłyby robotnice bez niej?
+      - Jaka jest relacja między królową a kolonią?
+  - id: nmi_owlfly_larva
+    name: Larwa Wężówki
+    prompt: |
+      Larwa wężówki czeka w zasadzce — w piasku, w gruzach. Atakuje z zaskoczenia. Szczęki
+      uderzają. Zastanów się nad łowcą. Czym byłaby larwa bez zasadzki?
+      W co się staje?
+    follow_ups:
+      - Jak zasadzka umożliwia karmienie?
+      - Czym byłaby wężówka bez stadium larwalnego?
+      - Jaka jest relacja między czekaniem a schwytaniem?
+  - id: nmi_thrips_scatter
+    name: Rozproszenie Wciornastków
+    prompt: |
+      Wciornastki są malutkie — ledwo widoczne. Gromadzą się na kwiatach, na liściach.
+      Przebijają i wysysają. Zastanów się nad skalą. Czym byłaby roślina bez
+      wciornastków? Co byśmy zauważyli?
+    follow_ups:
+      - Jak wciornastki kształtują roślinę?
+      - Czym byłby ekosystem bez nich?
+      - Jaka jest relacja między małym a wpływem?
+  - id: nmi_sting_threat
+    name: Groźba Użądlenia
+    prompt: |
+      Osa unosi odwłok — żądło gotowe. To groźba. Postawa komunikuje.
+      Zastanów się nad pokazem. Co zrobiłaby osa, gdyby ją zignorowano? Czego kosztuje postawa?
+    follow_ups:
+      - Jak groźba odstrasza?
+      - Czego zaryzykowałaby osa, żądląc?
+      - Jaka jest relacja między pokazem a obroną?
+  - id: nmi_velvet_ant
+    name: Mrówka Aksamitna
+    prompt: |
+      Mrówka aksamitna pełza — to beznoga osa. Jest wytrzymała. Drapieżniki uczą się jej unikać.
+      Użądlenie jest zaciekłe. Zastanów się nad strategią. Czym byłaby mrówka aksamitna bez
+      użądlenia?
+    follow_ups:
+      - Jak użądlenie chroni?
+      - Co zrobiłaby mrówka aksamitna na powierzchni?
+      - Jaka jest relacja między użądleniem a śmiałością?
+  - id: nmi_ambush_predator
+    name: Drapieżnik Zasadzkowy
+    prompt: |
+      Pluskwiak zasadzkowy czeka na kwiatku — żółty, zamaskowany. Ofiara przybywa.
+      Pluskwiak atakuje. Zastanów się nad cierpliwością. Co zrobiłby pluskwiak bez
+      kwiatka? Dlaczego to miejsce?
+    follow_ups:
+      - Jak kwiatek przyciąga ofiary?
+      - Czym byłby pluskwiak bez zasadzki?
+      - Jaka jest relacja między miejscem a schwytaniem?
+  - id: nmi_nectar_flow
+    name: Przepływ Nektaru
+    prompt: |
+      Kwiaty produkują nektar — pszczoły, motyle, chrząszcze piją. Przepływ
+      się zmienia. Zastanów się nad ekonomią. Czym byłby kwiatek bez
+      nektaru? Co zrobiłby owad?
+    follow_ups:
+      - Jak nektar kształtuje wizyty?
+      - Czym byłoby zapylanie bez nagrody?
+      - Jaka jest relacja między przepływem a usługą?
+  - id: nmi_territory_mark
+    name: Oznacznik Terytorium
+    prompt: |
+      Niektóre owady oznaczają terytorium — feromonami, wizualnym pokazem. Znak mówi "moje".
+      Zastanów się nad roszczeniem. Czym byłaby przestrzeń bez znaku?
+      Jak odczytują go rywale?
+    follow_ups:
+      - Jak znak odstrasza intruzów?
+      - Co zrobiłby owad bez terytorium?
+      - Jaka jest relacja między znakiem a przestrzenią?

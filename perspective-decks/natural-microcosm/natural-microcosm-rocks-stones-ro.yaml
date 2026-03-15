@@ -1,0 +1,519 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosmos Natural — Pietre și Stânci (Romanian)
+
+id: natural_microcosm_rocks_stones
+name: Microcosmos Natural — Pietre și Stânci
+description: 50 de cărți pentru a schimba modul în care vezi pietrele și stâncile — de la timpul geologic și licheni la eroziune, meteorizare și viața în slow-motion a mineralelor.
+domain: natural_microcosm
+cards:
+  - id: nmr_lichen_map
+    name: Hartă de Licheni
+    prompt: |
+      Lichenii cresc pe piatră — lent, cu răbdare. Portocaliu, gri, verde. Nu este un singur
+      organism, ci doi: ciupercă și algă. Gândește-te la parteneriat. Ce oferă piatra?
+      Ce aduce lichenul înapoi?
+    follow_ups:
+      - Cum ar arăta piatra fără licheni?
+      - Cum marchează lichenii timpul?
+      - Care este relația dintre licheni și eroziune?
+  - id: nmr_pebble_smooth
+    name: Pietricică Netedă
+    prompt: |
+      O pietricică de râu este netedă — apa și nisipul au șlefuit-o. Ține una în mână. Câți
+      ani a durat? Netezimea este o amintire a călătoriei. Ce ar însemna o margine ascuțită?
+    follow_ups:
+      - Cum dezvăluie netezimea istoria?
+      - Ce ar fi pietricica fără apă?
+      - Care este relația dintre formă și curgere?
+  - id: nmr_crack_frost
+    name: Fisură de Ger
+    prompt: |
+      Apa îngheață într-o fisură, se extinde. Piatra se crapă. Este o violență lentă.
+      Găsește o piatră cu o fisură. Gândește-te la ciclurile de îngheț și dezgheț
+      care au creat-o.
+    follow_ups:
+      - Ce ar fi piatra fără fisura?
+      - Cum modelează gerul peisajul?
+      - Care este relația dintre apă și fractură?
+  - id: nmr_stone_warmth
+    name: Căldura Pietrei
+    prompt: |
+      O piatră încălzită de soare reține căldura. Așază-te pe una la amurg. Piatra eliberează ceea ce
+      a absorbit. Gândește-te la schimb. Ce ar fi piatra fără soare?
+    follow_ups:
+      - Cum creează piatra un microclimat?
+      - Ce creaturi folosesc acea căldură?
+      - Care este relația dintre piatră și căldură?
+  - id: nmr_moss_crust
+    name: Crustă de Mușchi
+    prompt: |
+      Mușchiul crește pe piatră — o crustă subțire. Reține umiditatea, prinde praful.
+      Piatra devine un substrat. Când devine piatra sol? Unde este linia?
+    follow_ups:
+      - Ce ar fi piatra fără mușchi?
+      - Cum accelerează crusta schimbarea?
+      - Care este relația dintre mineral și organic?
+  - id: nmr_vein_quartz
+    name: Venă de Cuarț
+    prompt: |
+      O venă de cuarț taie piatra — o cusătură de mineral diferit. Marchează o
+      fractură, o umplutură. Urmărește linia. Ce forțe au creat-o? Ce dezvăluie vena?
+    follow_ups:
+      - Ce ar fi piatra fără venă?
+      - Cum marchează vena timpul profund?
+      - Care este relația dintre fractură și frumusețe?
+  - id: nmr_puddle_reflect
+    name: Baltoacă în Piatră
+    prompt: |
+      O depresiune în piatră reține apa după ploaie. Este o mică baltă — o cupă. Ce
+      reflectă în ea? Ce se evaporă? Piatra a creat un recipient.
+    follow_ups:
+      - Ce ar fi piatra fără depresiune?
+      - Cum creează balta habitat?
+      - Care este relația dintre scobitură și timp?
+  - id: nmr_sand_grain
+    name: Granul de Nisip
+    prompt: |
+      Nisipul este piatră sfărâmată mărunt. Ia o mână de nisip. Fiecare granul a fost odată parte din
+      ceva mai mare. Gândește-te la scară. Câte granule sunt într-un munte?
+    follow_ups:
+      - Ce ar fi plaja fără granulele de nisip?
+      - Cum spune dimensiunea granulelor o poveste?
+      - Care este relația dintre întreg și fragment?
+  - id: nmr_stone_circle
+    name: Cerc de Piatră
+    prompt: |
+      Pietre aranjate de mână sau de ghețar — un cerc, un tête-de-pont, un zid. Cineva
+      sau ceva le-a așezat. Gândește-te la intenție. Ce înseamnă aranjamentul?
+    follow_ups:
+      - Ce ar fi spațiul fără pietre?
+      - Cum creează aranjamentul sens?
+      - Care este relația dintre piatră și ritual?
+  - id: nmr_erosion_edge
+    name: Margine Erodrată
+    prompt: |
+      Vântul și apa sculptează piatra. Găsește o margine — o stâncă, un bolovan. Forma
+      este rezultatul îndepărtării. Ce a fost acolo înainte? Ce va rămâne?
+    follow_ups:
+      - Ce ar fi peisajul fără eroziune?
+      - Cum marchează marginea timpul?
+      - Care este relația dintre pierdere și formă?
+  - id: nmr_color_streak
+    name: Dâră de Culoare
+    prompt: |
+      Piatra nu este uniformă — fierul colorează în roșu, manganul în negru, cuprul în verde.
+      Urmărește o dâră. Culoarea este chimie. Ce dezvăluie despre istoria pietrei?
+    follow_ups:
+      - Ce ar fi piatra fără culoare?
+      - Cum modelează mineralogia paleta?
+      - Care este relația dintre element și nuanță?
+  - id: nmr_scratch_glacier
+    name: Zgârietură de Ghețar
+    prompt: |
+      Striuri glaciare — zgârieturi pe rocă — marchează unde gheața a tras pietre
+      peste piatră. Liniile sunt paralele. Gândește-te la forță. Ce s-a mișcat?
+      Ce a rămas nemișcat?
+    follow_ups:
+      - Ce ar arăta piatra fără zgârieturi?
+      - Cum marchează zgârietura direcția?
+      - Care este relația dintre gheață și piatră?
+  - id: nmr_cobble_pattern
+    name: Model de Pietriș
+    prompt: |
+      O plajă sau un albie de râu cu pietriș — de dimensiuni similare, forme variate. Apa
+      le-a sortat. Gândește-te la model. Ce îți spune sortarea?
+    follow_ups:
+      - Ce ar fi plaja fără sortare?
+      - Cum modelează curgerea modelul?
+      - Care este relația dintre dimensiune și transport?
+  - id: nmr_cavern_drip
+    name: Picătură de Cavernă
+    prompt: |
+      Stalactitele se formează picătură cu picătură — depuneri minerale din apa care se scurge. Creșterea
+      este imperceptibilă. Gândește-te la scară temporală. Ce ar arăta un film accelerat?
+    follow_ups:
+      - Ce ar fi cavernul fără picătură?
+      - Cum înregistrează picătura climatul?
+      - Care este relația dintre apă și piatră?
+  - id: nmr_boulder_shadow
+    name: Umbra Bolovanului
+    prompt: |
+      Un bolovan mare aruncă umbră. Solul de sub el este diferit — mai rece, mai umed, mai puțin soare.
+      Bolovanul creează un microclimat. Cine trăiește în umbră?
+    follow_ups:
+      - Ce ar fi panta fără bolovan?
+      - Cum modelează umbra viața?
+      - Care este relația dintre piatră și refugiu?
+  - id: nmr_fossil_impression
+    name: Amprentă de Fosila
+    prompt: |
+      O fosilă este viață transformată în piatră — sau o amprentă lăsată în sediment.
+      Găsește una dacă poți. Piatra păstrează amintiri. Ce creatură a lăsat asta?
+      Când?
+    follow_ups:
+      - Ce ar fi piatra fără fosila?
+      - Cum conservă amprenta?
+      - Care este relația dintre viață și mineral?
+  - id: nmr_grit_texture
+    name: Textură Granuloasă
+    prompt: |
+      Trece-ți mâna peste piatră. Gresiile se simt diferit de granit, ardezia
+      de bazalt. Textura este minerală, granulă, structură. Ce îți spune atingerea?
+    follow_ups:
+      - Ce ar fi piatra fără textura ei?
+      - Cum dezvăluie textura originea?
+      - Care este relația dintre senzație și compoziție?
+  - id: nmr_talus_slope
+    name: Pantă de Grohotiș
+    prompt: |
+      O pantă de grohotiș — rocă sfărâmată la baza unei stânci. Gravitația și vremea
+      o aduc în jos. Panta este un morman de resturi. Cât timp a durat să se acumuleze?
+    follow_ups:
+      - Ce ar fi baza stâncii fără grohotiș?
+      - Cum marchează panta eroziunea?
+      - Care este relația dintre cădere și morman?
+  - id: nmr_soil_horizon
+    name: Orizont de Sol
+    prompt: |
+      Sapă cu atenție. Solul are straturi — organic deasupra, mineral dedesubt, uneori
+      benzi distincte. Orizontul este istorie. Ce a creat fiecare strat?
+    follow_ups:
+      - Ce ar fi pământul fără orizonturi?
+      - Cum înregistrează orizontul timpul?
+      - Care este relația dintre piatră și sol?
+  - id: nmr_drystone_wall
+    name: Zid de Piatră Uscată
+    prompt: |
+      Un zid de piatră uscată — pietre așezate fără mortar. Zidul se menține prin gravitație
+      și potrivire. Gândește-te la meșteșug. Cum se sprijină fiecare piatră pe următoarea?
+    follow_ups:
+      - Ce ar fi câmpul fără zid?
+      - Cum marchează zidul teritoriul?
+      - Care este relația dintre piatră și graniță?
+  - id: nmr_tide_pool_rock
+    name: Piatră din Rezervor de Maree
+    prompt: |
+      Pietrele dintr-un rezervor de maree sunt umezite, uscate, umezite din nou. Creaturi se agață.
+      Piatra este habitat. Gândește-te la ritmul mareei. Ce experimentează piatra?
+    follow_ups:
+      - Ce ar fi rezervorul fără piatră?
+      - Cum creează piatra o suprafață?
+      - Care este relația dintre piatră și maree?
+  - id: nmr_crystal_face
+    name: Față de Cristal
+    prompt: |
+      Unele pietre prezintă fețe de cristal — plane de clivaj, formă geometrică. Cristalul
+      a crescut într-o cavitate, încet. Gândește-te la geometrie. Ce forțe l-au modelat?
+    follow_ups:
+      - Ce ar fi piatra fără cristal?
+      - Cum dezvăluie fața structura?
+      - Care este relația dintre ordine și mineral?
+  - id: nmr_dust_coating
+    name: Strat de Praf
+    prompt: |
+      Piatra colectează praf — polen, funingine, minerale. În timp, se înnegrește.
+      Stratul este acumulare. Cum ar arăta piatra dacă ar fi spălată? Cum o schimbă stratul?
+    follow_ups:
+      - Ce ar fi piatra fără stratul de praf?
+      - Cum marchează praful mediul?
+      - Care este relația dintre suprafață și acumulare?
+  - id: nmr_river_sculpt
+    name: Sculptură de Râu
+    prompt: |
+      Un râu își sculptează albia — găuri de moară, bazine, praguri. Piatra este modelată
+      de apă și sediment. Găsește o porțiune. Citește sculptura. Ce dezvăluie forma?
+    follow_ups:
+      - Ce ar fi albia râului fără sculptură?
+      - Cum modelează curgerea piatra?
+      - Care este relația dintre apă și formă?
+  - id: nmr_shard_edge
+    name: Marginea Așchiei
+    prompt: |
+      O așchie de silex, o bucată de cremene — ascuțită, prelucrată sau naturală. Cineva ar
+      fi putut-o folosi. Marginea este funcțională. Gândește-te la fractură. Cum a fost creată?
+    follow_ups:
+      - Ce ar fi așchia fără margine?
+      - Cum creează fractura utilitate?
+      - Care este relația dintre rupere și unealtă?
+  - id: nmr_gravel_path
+    name: Cale de Pietriș
+    prompt: |
+      O cărare de pietriș — piatră zdrobită sub picioare. Croncănitul, cedarea. Calea
+      este o alegere umană. De ce acest strat? Ce face pietrișul pe care nu l-ar face solul?
+    follow_ups:
+      - Ce ar fi calea fără pietriș?
+      - Cum modelează calea mișcarea?
+      - Care este relația dintre piatră și mers?
+  - id: nmr_bedrock_exposure
+    name: Expunere de Rocă de Bază
+    prompt: |
+      Unde solul a fost îndepărtat — eroziune, construcție — apare roca de bază. Fundația
+      este vizibilă. Gândește-te la ce ascunde de obicei. Ce dezvăluie expunerea?
+    follow_ups:
+      - Ce ar fi peisajul fără expunere?
+      - Cum modelează roca de bază suprafața?
+      - Care este relația dintre ascuns și dezvăluit?
+  - id: nmr_wind_polish
+    name: Lustruire Eoliană
+    prompt: |
+      Pietrele din deșert sunt lustruite de vânt — netede, fațetate. Nisipul sablează suprafața.
+      Lustruirea este abrazivă. Gândește-te la vânt. Cât timp a durat?
+    follow_ups:
+      - Ce ar fi piatra fără lustruire?
+      - Cum modelează vântul piatra?
+      - Care este relația dintre particulă și suprafață?
+  - id: nmr_hot_cold_crack
+    name: Fisură de Cald-Rece
+    prompt: |
+      Piatra se dilată la căldură, se contractă la frig. Ciclurile repetate cauzează stres,
+      microfracturi. Găsește o fisură. Gândește-te la fluctuațiile de temperatură care
+      au creat-o.
+    follow_ups:
+      - Ce ar fi piatra fără fisură?
+      - Cum modelează ciclarea termică peisajul?
+      - Care este relația dintre temperatură și fractură?
+  - id: nmr_constellation_stone
+    name: Piatră Constelație
+    prompt: |
+      O piatră cu pete — mică, feldspat — care prind lumina. Suprafața
+      scânteiază. Gândește-te la mineralogie. Ce a creat scânteierea?
+    follow_ups:
+      - Ce ar fi piatra fără petele?
+      - Cum dezvăluie lumina structura?
+      - Care este relația dintre mineral și reflexie?
+  - id: nmr_stepping_stone
+    name: Piatră de Trecere
+    prompt: |
+      Pietre așezate într-un râu sau noroi — pietre de trecere. Așezarea este
+      deliberată. Gândește-te la traseu. Ce necesită fiecare pas? Ce permite piatra?
+    follow_ups:
+      - Ce ar fi traversarea fără pietrele de trecere?
+      - Cum creează piatra acces?
+      - Care este relația dintre piatră și pasaj?
+  - id: nmr_moss_island
+    name: Insulă de Mușchi
+    prompt: |
+      O piatră într-un râu — mușchi crește deasupra. Piatra este o insulă. Apa curge
+      în jur. Gândește-te la izolare. Ce ajunge la mușchi? Ce nu?
+    follow_ups:
+      - Ce ar fi râul fără insulă?
+      - Cum creează piatra refugiu?
+      - Care este relația dintre piatră și curgere?
+  - id: nmr_weight_sunken
+    name: Greutate Afundată
+    prompt: |
+      O piatră grea se afundă în sol în timp. Depresiunea se formează în jurul ei.
+      Gândește-te la gravitație. Ce face afundarea solului? Pietrei?
+    follow_ups:
+      - Ce ar fi pământul fără piatră?
+      - Cum modelează greutatea suprafața?
+      - Care este relația dintre masă și depresiune?
+  - id: nmr_layer_sediment
+    name: Strat de Sediment
+    prompt: |
+      Piatra sedimentară prezintă straturi — plane de stratificație. Fiecare strat a fost odată noroi,
+      nisip, scoici. Piatra este timp comprimat. Gândește-te la un singur strat.
+      Ce a fost înainte?
+    follow_ups:
+      - Ce ar fi piatra fără straturi?
+      - Cum înregistrează stratul mediul?
+      - Care este relația dintre sediment și piatră?
+  - id: nmr_sunrise_heat
+    name: Căldura Răsăritului
+    prompt: |
+      O piatră plată orientată spre est. La răsărit se încălzește prima. Gândește-te la
+      orientare. Ce determină unghiul față de soare? Cine beneficiază de căldura timpurie?
+    follow_ups:
+      - Ce ar fi piatra fără orientare?
+      - Cum modelează aspectul temperatura?
+      - Care este relația dintre unghi și căldură?
+  - id: nmr_rain_rinse
+    name: Clătire de Ploaie
+    prompt: |
+      Ploaia lovește piatra, se scurge. Apa poartă ceea ce dizolvă, ceea ce suspendă.
+      Clătirea este continuă. Ce pierde piatra? Ce câștigă apa?
+    follow_ups:
+      - Ce ar fi piatra fără ploaie?
+      - Cum modelează scurgerea piatra?
+      - Care este relația dintre apă și dizolvare?
+  - id: nmr_ice_wedge
+    name: Pană de Gheață
+    prompt: |
+      Apa îngheață într-o fisură, o lărgește. Pana de gheață sparge pietrele.
+      Găsește dovezi dacă poți. Gândește-te la forță. Ce va deveni fisura?
+    follow_ups:
+      - Ce ar fi piatra fără gheața?
+      - Cum se propagă pana?
+      - Care este relația dintre îngheț și fractură?
+  - id: nmr_resting_place
+    name: Loc de Odihnă
+    prompt: |
+      O piatră plată — un scaun, o masă, o scenă. Folosim pietre pentru a ne odihni, a lucra, a
+      marca. Gândește-te la piatra pe care ai putea sta. Ce a susținut? Ce
+      va susține?
+    follow_ups:
+      - Ce ar fi spațiul fără piatră?
+      - Cum invită piatra la utilizare?
+      - Care este relația dintre mineral și om?
+  - id: nmr_boundary_marker
+    name: Marcator de Graniță
+    prompt: |
+      Pietrele marchează granițe — linii de proprietate, morminte, poteci. Așezarea este
+      deliberată. Gândește-te la o piatră de graniță. Ce separă? Ce
+      conectează?
+    follow_ups:
+      - Ce ar fi granița fără piatră?
+      - Cum codifică piatra sens?
+      - Care este relația dintre marcator și teritoriu?
+  - id: nmr_exfoliation_sheet
+    name: Foaie de Exfoliere
+    prompt: |
+      Unele pietre se exfoliază — straturi se desprind ca o ceapă. Eliberarea presiunii, ciclare termică.
+      Găsește un bolovan care se exfoliază. Gândește-te la curbura. Ce forțe
+      au creat-o?
+    follow_ups:
+      - Ce ar fi piatra fără foile de exfoliere?
+      - Cum modelează exfolierea suprafața?
+      - Care este relația dintre presiune și desprindere?
+  - id: nmr_compass_orientation
+    name: Orientare Compas
+    prompt: |
+      Pietrele se pot alinia — de către ghețar, râu, mână umană. Orientarea
+      spune o poveste. Găsește pietre aliniate. Spre ce indică? Ce
+      rezistă?
+    follow_ups:
+      - Ce ar însemna alinierea?
+      - Cum înregistrează orientarea forța?
+      - Care este relația dintre direcție și piatră?
+  - id: nmr_echo_sound
+    name: Piatră Ecou
+    prompt: |
+      Un perete de stâncă reflectă sunetul. Bate din palme. Ascultă ecoul. Piatra returnează ceea ce
+      trimiți. Gândește-te la suprafață. Ce reflectă? Ce
+      absoarbe?
+    follow_ups:
+      - Ce ar fi spațiul fără ecou?
+      - Cum modelează suprafața sunetul?
+      - Care este relația dintre piatră și voce?
+  - id: nmr_anchor_hold
+    name: Prindere Ancoră
+    prompt: |
+      O piatră ancorează — o rădăcină de copac o înconjoară, un cablu este legat de ea. Piatra ține.
+      Gândește-te la prindere. Ce rezistă piatra? Ce
+      permite?
+    follow_ups:
+      - Ce ar fi ancora fără piatră?
+      - Cum creează piatra stabilitate?
+      - Care este relația dintre prindere și masă?
+  - id: nmr_patina_age
+    name: Patină a Vârstei
+    prompt: |
+      Piatra veche dezvoltă patină — crustă de eroziune, oxidare, murdărie. Suprafața
+      se schimbă. Patina este timp vizualizat. Cum ar arăta piatra când era nouă?
+    follow_ups:
+      - Ce ar fi piatra fără patină?
+      - Cum protejează sau slăbește patina?
+      - Care este relația dintre suprafață și vârstă?
+  - id: nmr_slow_narrative
+    name: Narațiune Lentă
+    prompt: |
+      O piatră spune o poveste lentă — formare, transport, eroziune. Linia temporală
+      este geologică. Stai cu o piatră. Gândește-te la trecutul ei. Care va fi viitorul ei?
+    follow_ups:
+      - Ce am pierde dacă nu am putea citi povestea?
+      - Cum se conectează piatra la timpul profund?
+      - Care este relația dintre piatră și memorie?
+  - id: nmr_cairn_stack
+    name: Morman de Pietre (Cairn)
+    prompt: |
+      Un cairn — pietre stivuite de mână. Fiecare piatră se echilibrează. Mormanul este
+      deliberat, temporar. Cine l-a construit? Ce marchează?
+    follow_ups:
+      - Ce ar fi locul fără mormanul de pietre?
+      - Cum creează stiva sens?
+      - Care este relația dintre om și piatră?
+  - id: nmr_shadow_cast
+    name: Umbră Aruncată
+    prompt: |
+      O piatră aruncă umbră. Umbra se mișcă odată cu soarele. Stai cu ea o oră.
+      Gândește-te la ceasul de piatră și lumină.
+    follow_ups:
+      - Ce ar fi piatra fără umbră?
+      - Cum creează umbra habitat?
+      - Care este relația dintre piatră și timp?
+  - id: nmr_scree_slope
+    name: Panta de Pietriș Sfărâmicios (Scree)
+    prompt: |
+      Scree — rocă liberă la baza unei stânci. Fiecare bucată a căzut. Panta este
+      acumulare. Mers pe ea. Simte instabilitatea. Ce o ține?
+      Ce se va elibera?
+    follow_ups:
+      - Ce ar fi panta fără cădere?
+      - Cum modelează scree-ul valea?
+      - Care este relația dintre stâncă și podea?
+  - id: nmr_fossil_imprint
+    name: Amprentă de Fosila
+    prompt: |
+      O fosilă în piatră — scoică, frunză, os. Amprenta este o înregistrare.
+      Organismul a dispărut; piatra păstrează forma. Gândește-te la conservare.
+    follow_ups:
+      - Ce am ști fără fosilă?
+      - Cum face amprenta legătura între timp?
+      - Care este relația dintre viață și mineral?
+  - id: nmr_dry_stone_wall
+    name: Zid de Piatră Uscată
+    prompt: |
+      Un zid de piatră uscată — fără mortar. Fiecare piatră o ține pe următoarea prin potrivire și
+      frecare. Zidul este colaborare. Urmărește rosturile. Ce ar face
+      o singură piatră desprinsă?
+    follow_ups:
+      - Ce ar fi granița fără zid?
+      - Cum creează potrivirea rezistență?
+      - Care este relația dintre piatră și structură?
+  - id: nmr_cobble_rest
+    name: Odihna Pietrișului
+    prompt: |
+      Pietrișul se odihnește acolo unde apa l-a lăsat — un banc de râu, o plajă. Aranjamentul
+      nu este aleatoriu. Dimensiunea, forma, poziția vorbesc despre curgere. Ce ar rearanja o inundație?
+    follow_ups:
+      - Cum marchează odihna ultimul eveniment?
+      - Ce ar dezvălui pietrele despre apă?
+      - Care este relația dintre odihnă și turbulență?
+  - id: nmr_moon_dust
+    name: Praf Lunar (metaforic)
+    prompt: |
+      Piatra devine praf — vânt, apă, rădăcini. Cele mai fine particule călătoresc.
+      Gândește-te la călătoria unei singure granule. Unde ar putea ajunge?
+    follow_ups:
+      - Ce ar fi peisajul fără praf?
+      - Cum creează praful sol nou?
+      - Care este relația dintre piatră și aer?
+  - id: nmr_touch_stone
+    name: Atinge Piatra
+    prompt: |
+      Atinge o piatră. Rece, caldă, aspră, netedă. Piatra nu răspunde — sau
+      răspunde? Căldura se transferă. Umiditatea se schimbă. Gândește-te la schimbul la
+      graniță.
+    follow_ups:
+      - Cum s-ar simți piatra la un alt moment?
+      - Cum schimbă atingerea piatra?
+      - Care este relația dintre mână și piatră?
+  - id: nmr_shadow_noon
+    name: Umbra la Amiază
+    prompt: |
+      La amiază, umbra unei pietre este minimă. La răsărit și apus, se întinde.
+      Umbra este extinderea pietrei. Gândește-te cum soarele schimbă ceea ce piatra oferă lumii.
+    follow_ups:
+      - Ce ar oferi piatra fără umbră?
+      - Cum creează umbra habitat?
+      - Care este relația dintre piatră și lumină?
+  - id: nmr_stone_circle
+    name: Cerc de Piatră
+    prompt: |
+      Pietre aranjate într-un cerc — de mână umană sau de ghețar. Cercul
+      încadrează spațiu. Ce este în interior? Ce este în exterior? Gândește-te la geometria
+      graniței.
+    follow_ups:
+      - Ce ar însemna spațiul fără cerc?
+      - Cum creează aranjamentul sens?
+      - Care este relația dintre formă și ritual?

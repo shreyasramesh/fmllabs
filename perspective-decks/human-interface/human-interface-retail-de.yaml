@@ -1,0 +1,501 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Die menschliche Schnittstelle – Einzelhandel (German)
+
+id: human_interface_retail
+name: Die menschliche Schnittstelle – Einzelhandel
+description: 50 Karten, um den Einzelhandelsraum neu zu betrachten – von Gängen und der Choreografie des Stöberns bis hin zu Umkleidekabinen und dem Tanz des Kaufs.
+domain: human_interface
+cards:
+  - id: hi_rt_aisle_flow
+    name: Gang-Fluss
+    prompt: |
+      Der Gang kanalisiert Bewegung. Einkaufswagen fahren in eine Richtung;
+      Menschen navigieren. Beobachten Sie den Fluss. Wer weicht aus? Wer blockiert?
+      Der Gang hat Physik. Welche Regeln beherrschen den Tanz?
+    follow_ups:
+      - Wie prägt der Gang das Stöbern?
+      - Was wäre der Laden ohne Gänge?
+      - Wie ist die Beziehung zwischen Fluss und Design?
+  - id: hi_rt_browsing_choreography
+    name: Stöber-Choreografie
+    prompt: |
+      Finger berühren Stoff. Augen scannen Regale. Das Stöbern hat einen Rhythmus
+      – Pause, Überlegen, Weitergehen. Beobachten Sie die Choreografie. Was macht der Körper,
+      wenn er nicht kauft?
+    follow_ups:
+      - Wie prägt das Stöbern das Erlebnis?
+      - Was wäre der Laden ohne Stöbern?
+      - Wie ist die Beziehung zwischen Stöbern und Verlangen?
+  - id: hi_rt_fitting_room
+    name: Umkleidekabine
+    prompt: |
+      Der Vorhang schließt sich. Die Umkleidekabine ist eine Schwelle – vom Öffentlichen
+      zum Privaten. Drinnen probieren Sie ein mögliches Ich an. Beobachten Sie die Rückkehr.
+      Was sagt das Gesicht? Die Umkleidekabine ist eine Bühne für Entscheidungen.
+    follow_ups:
+      - Wie prägt die Umkleidekabine den Kauf?
+      - Was wäre der Laden ohne sie?
+      - Wie ist die Beziehung zwischen Anprobieren und Identität?
+  - id: hi_rt_dance_of_purchase
+    name: Tanz des Kaufs
+    prompt: |
+      Annähern, auswählen, tragen, bezahlen. Der Kauf hat Schritte. Beobachten Sie die
+      Sequenz. Wo zögern die Leute? Der Tanz wird vom Geschäft choreografiert. Was holt er heraus?
+    follow_ups:
+      - Wie prägt der Tanz das Ergebnis?
+      - Was wäre der Laden ohne die Sequenz?
+      - Wie ist die Beziehung zwischen Tanz und Verlangen?
+  - id: hi_rt_cart_territory
+    name: Einkaufswagen-Territorium
+    prompt: |
+      Der Einkaufswagen erweitert den Körper. Er birgt Entscheidungen, blockiert den Durchgang.
+      Beobachten Sie den Weg des Einkaufswagens. Der Einkaufswagen ist ein mobiles Territorium.
+      Was beansprucht er?
+    follow_ups:
+      - Wie prägt der Einkaufswagen die Bewegung?
+      - Was wäre der Laden ohne Einkaufswagen?
+      - Wie ist die Beziehung zwischen Einkaufswagen und Anhäufung?
+  - id: hi_rt_endcap_display
+    name: Gondelspitzen-Display
+    prompt: |
+      Das Ende des Ganges beherbergt ein Display – Impuls, Sale, saisonal. Die Gondelspitze
+      fängt das Auge. Beobachten Sie, wer stehen bleibt. Die Gondelspitze ist eine Falle.
+      Was macht sie?
+    follow_ups:
+      - Wie prägt die Gondelspitze das Stöbern?
+      - Was wäre der Gang ohne sie?
+      - Wie ist die Beziehung zwischen Display und Impuls?
+  - id: hi_rt_checkout_line
+    name: Kassen-Schlange
+    prompt: |
+      Die Schlange bildet sich. Süßigkeiten, Zeitschriften, letzte Chancen. Die Kasse ist ein
+      letzter Test. Beobachten Sie das Warten. Was tun die Leute? Die Schlange ist eine
+      Schwelle zwischen Stöbern und Ausgang.
+    follow_ups:
+      - Wie prägt die Schlange den Kauf?
+      - Was wäre der Laden ohne das Warten?
+      - Wie ist die Beziehung zwischen Schlange und Impuls?
+  - id: hi_rt_shelf_height
+    name: Regalhöhe
+    prompt: |
+      Augenhöhe verkauft. Die Regalhöhe ist Design. Beobachten Sie, was wo liegt. Was liegt unten?
+      Was liegt oben? Die Höhe kodiert Wert. Was nimmt sie über den Körper an?
+    follow_ups:
+      - Wie prägt die Regalhöhe das Stöbern?
+      - Was wäre der Laden mit einheitlicher Höhe?
+      - Wie ist die Beziehung zwischen Höhe und Zugang?
+  - id: hi_rt_price_tag
+    name: Preisschild
+    prompt: |
+      Das Etikett nennt den Preis. Manchmal versteckt, manchmal prominent. Beobachten Sie
+      die Platzierung. Das Etikett ist Information und Barriere. Was macht das Etikett
+      mit dem Moment der Berührung?
+    follow_ups:
+      - Wie prägt das Etikett die Entscheidung?
+      - Was wäre der Artikel ohne das Etikett?
+      - Wie ist die Beziehung zwischen Etikett und Wert?
+  - id: hi_rt_store_entrance
+    name: Ladeneingang
+    prompt: |
+      Die Tür öffnet sich. Sie treten ein. Der Eingang ist eine Schwelle. Beobachten Sie, was
+      Sie zuerst sehen. Der Eingang gibt den Ton an. Was soll der Laden Sie fühlen lassen?
+    follow_ups:
+      - Wie prägt der Eingang den Besuch?
+      - Was wäre der Laden ohne Design?
+      - Wie ist die Beziehung zwischen Eingang und Erwartung?
+  - id: hi_rt_sales_associate
+    name: Verkaufsmitarbeiter
+    prompt: |
+      "Kann ich Ihnen bei der Suche helfen?" Das Angebot ist geskriptet. Beobachten Sie den
+      Austausch. Annehmen oder ablehnen? Der Mitarbeiter ist ein Führer und ein Druck.
+      Was bewirkt das Angebot?
+    follow_ups:
+      - Wie prägt der Mitarbeiter das Stöbern?
+      - Was wäre der Laden ohne sie?
+      - Wie ist die Beziehung zwischen Angebot und Verpflichtung?
+  - id: hi_rt_basket_versus_cart
+    name: Korb versus Einkaufswagen
+    prompt: |
+      Korb für wenige Artikel. Einkaufswagen für mehr. Die Wahl prognostiziert den Kauf.
+      Beobachten Sie, wer was nimmt. Der Korb begrenzt; der Einkaufswagen lädt ein. Was ermöglicht
+      die Wahl?
+    follow_ups:
+      - Wie prägt der Korb den Besuch?
+      - Was wäre der Laden nur mit Einkaufswagen?
+      - Wie ist die Beziehung zwischen Behälter und Anhäufung?
+  - id: hi_rt_return_counter
+    name: Rückgabe-Schalter
+    prompt: |
+      Die Rückgabe-Schlange ist anders. Leute tragen Taschen, Quittungen, Bedauern.
+      Die Rückgabe ist eine Umkehrung. Beobachten Sie den Austausch. Was kostet die Rückgabe –
+      emotional, sozial? Der Rückgabe-Schalter ist ein Ort des Rückgängigmachens.
+    follow_ups:
+      - Wie prägt die Rückgabe die Beziehung?
+      - Was wäre der Laden ohne Rückgaben?
+      - Wie ist die Beziehung zwischen Rückgabe und Vertrauen?
+  - id: hi_rt_dressing_room_limit
+    name: Umkleidekabinen-Limit
+    prompt: |
+      "Sechs Artikel maximal." Das Limit kontrolliert das Anprobieren. Beobachten Sie die
+      Verhandlung. Was passiert, wenn Sie sieben haben? Das Limit prägt das Umkleidekabinen-Erlebnis.
+      Was nimmt es an?
+    follow_ups:
+      - Wie prägt das Limit das Anprobieren?
+      - Was wäre die Umkleidekabine ohne es?
+      - Wie ist die Beziehung zwischen Limit und Diebstahl?
+  - id: hi_rt_impulse_buy
+    name: Impulskauf
+    prompt: |
+      Der Artikel stand nicht auf der Liste. Er hat das Auge gefangen. Der Impulskauf ist ein
+      Moment der Hingabe. Beobachten Sie, wann er passiert. Was hat ihn ausgelöst? Der Impuls ist
+      Design, das auf Verlangen trifft.
+    follow_ups:
+      - Wie prägt der Impuls den Kauf?
+      - Was wäre der Laden ohne Impuls?
+      - Wie ist die Beziehung zwischen Impuls und Bedauern?
+  - id: hi_rt_store_music
+    name: Ladenmusik
+    prompt: |
+      Musik spielt – langsam, vertraut, gestaltet. Die Musik prägt Stimmung und Tempo.
+      Beobachten Sie das Tempo. Schnelles Geschäft, langsame Musik? Die Musik ist unsichtbares
+      Design. Was macht sie mit dem Körper?
+    follow_ups:
+      - Wie prägt die Musik den Besuch?
+      - Was wäre der Laden in Stille?
+      - Wie ist die Beziehung zwischen Musik und Dauer?
+  - id: hi_rt_mannequin
+    name: Schaufensterpuppe
+    prompt: |
+      Die Schaufensterpuppe trägt die Kleidung. Sie ist ein ideales Körperbild, ein Vorschlag.
+      Beobachten Sie, wie Leute sie ansehen. Die Schaufensterpuppe ist ein Spiegel und eine
+      Fantasie. Was verspricht sie?
+    follow_ups:
+      - Wie prägt die Schaufensterpuppe das Stöbern?
+      - Was wäre der Laden ohne sie?
+      - Wie ist die Beziehung zwischen Schaufensterpuppe und Verlangen?
+  - id: hi_rt_sample_station
+    name: Probier-Station
+    prompt: |
+      Probieren Sie das. Testen Sie das. Die Probe lädt zur Berührung ein. Die Station schafft
+      eine Pause. Beobachten Sie, wer stehen bleibt. Die Probe ist ein kleines Geschenk. Was holt sie heraus?
+    follow_ups:
+      - Wie prägt die Probe den Kauf?
+      - Was wäre der Laden ohne Proben?
+      - Wie ist die Beziehung zwischen Probe und Verpflichtung?
+  - id: hi_rt_sale_rack
+    name: Sonderangebote-Rack
+    prompt: |
+      Das Sonderangebote-Rack ist Chaos – reduziert, zerknittert. Leute graben. Das Sonderangebote-Rack
+      ist eine andere Art von Stöbern. Beobachten Sie das Verhalten. Was macht der Rabatt mit der Berührung?
+    follow_ups:
+      - Wie prägt das Sonderangebote-Rack den Besuch?
+      - Was wäre der Laden ohne es?
+      - Wie ist die Beziehung zwischen Angebot und Wert?
+  - id: hi_rt_mirror_encounter
+    name: Spiegel-Begegnung
+    prompt: |
+      Sie sehen sich im Laden-Spiegel. Die Begegnung ist unvermeidlich. Beobachten Sie den Blick.
+      Was prüfen Sie? Der Spiegel ist ein Test. Der Laden stellt den Spiegel bereit. Was will er?
+    follow_ups:
+      - Wie prägt der Spiegel das Anprobieren?
+      - Was wäre die Umkleidekabine ohne ihn?
+      - Wie ist die Beziehung zwischen Spiegel und Selbst?
+  - id: hi_rt_cashier_small_talk
+    name: Smalltalk an der Kasse
+    prompt: |
+      "Alles gefunden?" fragt der Kassierer. Der Smalltalk ist geskriptet. Beobachten Sie den
+      Austausch. Was macht die Frage? Der Kassierer ist der letzte menschliche Kontakt. Was schafft der Smalltalk?
+    follow_ups:
+      - Wie prägt der Smalltalk den Ausgang?
+      - Was wäre die Kasse ohne ihn?
+      - Wie ist die Beziehung zwischen Smalltalk und Transaktion?
+  - id: hi_rt_store_layout
+    name: Laden-Layout
+    prompt: |
+      Der Weg ist gestaltet. Grundbedarf hinten. Impulskäufe vorne. Das Layout choreografiert
+      den Besuch. Beobachten Sie Ihre Route. An was wollte der Designer Sie vorbeiführen?
+    follow_ups:
+      - Wie prägt das Layout das Stöbern?
+      - Was wäre der Laden mit zufälligem Layout?
+      - Wie ist die Beziehung zwischen Layout und Exposition?
+  - id: hi_rt_touch_decide
+    name: Berühren entscheidet
+    prompt: |
+      Finger berühren den Stoff, die Oberfläche. Die Berührung entscheidet. Beobachten Sie den
+      Moment. Was lernt die Hand, was das Auge nicht kann? Die Berührung ist eine Schwelle.
+      Was erfordert sie?
+    follow_ups:
+      - Wie prägt die Berührung die Entscheidung?
+      - Was wäre der Laden ohne Berührung?
+      - Wie ist die Beziehung zwischen Berührung und Verpflichtung?
+  - id: hi_rt_receipt_handoff
+    name: Quittungs-Übergabe
+    prompt: |
+      Die Quittung wird angeboten – in der Tüte oder separat. Manche nehmen sie; manche
+      lehnen sie ab. Die Quittung ist Beweis und Aufzeichnung. Beobachten Sie den Austausch.
+      Was bewirkt die Quittung für die Transaktion?
+    follow_ups:
+      - Wie prägt die Quittung den Ausgang?
+      - Was wäre die Kasse ohne sie?
+      - Wie ist die Beziehung zwischen Quittung und Abschluss?
+  - id: hi_rt_store_exit
+    name: Laden-Ausgang
+    prompt: |
+      Die Tür öffnet sich. Sie gehen mit einer Tüte – oder leer. Der Ausgang ist eine
+      Schwelle. Beobachten Sie das Gefühl. Was zieht der Ausgang heraus? Der Ausgang ist das Ende des Tanzes.
+      Was bleibt?
+    follow_ups:
+      - Wie prägt der Ausgang den Besuch?
+      - Was wäre der Laden ohne die Tür?
+      - Wie ist die Beziehung zwischen Ausgang und Zufriedenheit?
+  - id: hi_rt_loyalty_card_ask
+    name: Nachfrage nach Kundenkarte
+    prompt: |
+      "Haben Sie unsere Treuekarte?" Die Frage ist Routine. Beobachten Sie die Antwort. Ja,
+      nein, anmelden. Die Treuekarte erweitert die Beziehung. Was schafft die Frage?
+    follow_ups:
+      - Wie prägt die Treuekarte die Transaktion?
+      - Was wäre die Kasse ohne sie?
+      - Wie ist die Beziehung zwischen Karte und Daten?
+  - id: hi_rt_abandoned_cart
+    name: Verlassener Einkaufswagen
+    prompt: |
+      Ein Einkaufswagen steht im Gang – voll, unbeaufsichtigt. Der Einkaufswagen ist verlassen.
+      Beobachten Sie den Inhalt. Was haben sie in Erwägung gezogen? Die Aufgabe ist ein Moment des
+      Neins. Was enthüllt sie?
+    follow_ups:
+      - Wie prägt der verlassene Einkaufswagen den Laden?
+      - Was würde der Laden daraus lernen?
+      - Wie ist die Beziehung zwischen Aufgabe und Verlangen?
+  - id: hi_rt_fitting_room_opinion
+    name: Meinung zur Umkleidekabine
+    prompt: |
+      "Wie sieht es aus?" fragt jemand von außerhalb des Vorhangs. Die Meinung wird gesucht.
+      Die Umkleidekabine wird sozial. Beobachten Sie den Austausch. Was bewirkt die Meinung?
+    follow_ups:
+      - Wie prägt die Meinung die Entscheidung?
+      - Was wäre das Anprobieren allein?
+      - Wie ist die Beziehung zwischen Meinung und Kauf?
+  - id: hi_rt_store_scent
+    name: Laden-Duft
+    prompt: |
+      Der Laden hat einen Geruch – Parfüm, Leder, sauber. Der Duft ist gestaltet. Er dringt ein,
+      bevor Sie ihn bemerken. Beobachten Sie, wann Sie ihn riechen. Was macht der Duft mit dem Körper?
+    follow_ups:
+      - Wie prägt der Duft den Besuch?
+      - Was wäre der Laden ohne ihn?
+      - Wie ist die Beziehung zwischen Duft und Erinnerung?
+  - id: hi_rt_compare_prices
+    name: Preise vergleichen
+    prompt: |
+      Handy raus. Scannen. Die Preiskontrolle ist Recherche. Beobachten Sie den Moment. Was enthüllt
+      das Handy? Der Vergleich findet im Gang statt. Was macht er mit der Entscheidung?
+    follow_ups:
+      - Wie prägt der Vergleich den Kauf?
+      - Was wäre der Laden ohne Handys?
+      - Wie ist die Beziehung zwischen Vergleichen und Macht?
+  - id: hi_rt_window_display
+    name: Schaufenster-Dekoration
+    prompt: |
+      Das Fenster blickt auf die Straße. Schaufensterpuppen, Requisiten, eine Geschichte. Die
+      Dekoration stoppt den Gang. Beobachten Sie, was das Auge fesselt. Das Fenster ist eine Einladung.
+      Was verspricht es?
+    follow_ups:
+      - Wie prägt die Dekoration den Eingang?
+      - Was wäre der Laden ohne sie?
+      - Wie ist die Beziehung zwischen Dekoration und Verlangen?
+  - id: hi_rt_size_search
+    name: Größensuche
+    prompt: |
+      Finger blättern durch Kleiderbügel. Suche nach der Größe. Die Suche hat einen Rhythmus.
+      Beobachten Sie die Frustration oder die Erleichterung. Die Größe ist ein Tor. Was erfordert die Suche?
+    follow_ups:
+      - Wie prägt die Größensuche das Stöbern?
+      - Was wäre der Laden mit allen Größen sichtbar?
+      - Wie ist die Beziehung zwischen Größe und Körper?
+  - id: hi_rt_payment_choice
+    name: Zahlungsart
+    prompt: |
+      Karte, Bargeld, Handy. Die Zahlungsart ist der Moment der Transaktion. Beobachten Sie die
+      Methode. Die Wahl ist Gewohnheit und Identität. Was kommuniziert die Zahlungsmethode?
+    follow_ups:
+      - Wie prägt die Zahlung die Kasse?
+      - Was wäre der Laden mit nur einer Methode?
+      - Wie ist die Beziehung zwischen Zahlung und Geschwindigkeit?
+  - id: hi_rt_store_regular
+    name: Laden-Stammkunde
+    prompt: |
+      Der Stammkunde kennt das Layout. Er bewegt sich zielgerichtet. Der Mitarbeiter nickt.
+      Beobachten Sie den Stammkunden. Was weiß er, was der Neuankömmling nicht weiß? Der Stammkunde
+      hat eine Beziehung zum Raum.
+    follow_ups:
+      - Wie prägt der Stammkunde den Laden?
+      - Was wäre der Laden ohne Stammkunden?
+      - Wie ist die Beziehung zwischen Stammkunde und Loyalität?
+  - id: hi_rt_bag_handoff
+    name: Tüten-Übergabe
+    prompt: |
+      Die Tüte wird überreicht – voll, gebrandet. Die Übergabe schließt die Transaktion ab.
+      Beobachten Sie den Austausch. Was bewirkt die Tüte für den Ausgang? Die Tüte ist Beweis und Last.
+    follow_ups:
+      - Wie prägt die Tüte den Ausgang?
+      - Was wäre der Kauf ohne sie?
+      - Wie ist die Beziehung zwischen Tüte und Identität?
+  - id: hi_rt_fitting_room_overflow
+    name: Überfüllte Umkleidekabine
+    prompt: |
+      Zu viele Artikel. Der Mitarbeiter nimmt den Überfluss. "Ich halte diese zurück." Der Überfluss
+      ist Vertrauen. Beobachten Sie den Austausch. Was hält der Mitarbeiter zurück? Der Überfluss erweitert
+      das Anprobieren. Was ermöglicht er?
+    follow_ups:
+      - Wie prägt der Überfluss die Anprobe?
+      - Was wäre die Umkleidekabine ohne ihn?
+      - Wie ist die Beziehung zwischen Überfluss und Vertrauen?
+  - id: hi_rt_store_lighting
+    name: Laden-Beleuchtung
+    prompt: |
+      Das Licht ist gestaltet – schmeichelhaft, hell, warm. Die Beleuchtung prägt, wie Dinge aussehen.
+      Beobachten Sie den Spiegel im Licht. Was macht die Beleuchtung mit dem Gesicht, dem Stoff?
+    follow_ups:
+      - Wie prägt die Beleuchtung den Kauf?
+      - Was wäre der Laden bei grellem Licht?
+      - Wie ist die Beziehung zwischen Licht und Wahrheit?
+  - id: hi_rt_aisle_block
+    name: Gang-Blockade
+    prompt: |
+      Jemand steht im Gang. Sie müssen passieren. Die Blockade ist unachtsam oder absichtlich.
+      Beobachten Sie die Verhandlung. "Entschuldigung." Die Blockade ist eine kleine Reibung. Was erfordert sie?
+    follow_ups:
+      - Wie prägt die Blockade den Fluss?
+      - Was wäre der Laden mit breiteren Gängen?
+      - Wie ist die Beziehung zwischen Blockade und Höflichkeit?
+  - id: hi_rt_clearance_section
+    name: Ausverkauf-Bereich
+    prompt: |
+      Der Ausverkauf-Bereich ist hinten, in der Ecke. Letzte Saison, letzte Chance. Der Bereich hat
+      eine andere Energie. Beobachten Sie das Stöbern. Was macht der Rabatt mit der Berührung, der Überlegung?
+    follow_ups:
+      - Wie prägt der Ausverkauf den Besuch?
+      - Was wäre der Laden ohne ihn?
+      - Wie ist die Beziehung zwischen Ausverkauf und Wert?
+  - id: hi_rt_store_map
+    name: Laden-Karte
+    prompt: |
+      "Wo ist X?" Die Karte oder der Mitarbeiter antwortet. Der Laden hat Geografie. Beobachten Sie die
+      Desorientierung. Was bietet die Karte? Die Karte ist Orientierung. Was nimmt sie an?
+    follow_ups:
+      - Wie prägt die Karte den Besuch?
+      - Was wäre der Laden ohne sie?
+      - Wie ist die Beziehung zwischen Karte und Flüssigkeit?
+  - id: hi_rt_try_on_stack
+    name: Anproben-Stapel
+    prompt: |
+      Der Mitarbeiter gibt die Anproben zurück. Sie sind gefaltet, aufgehängt. Der Stapel geht zurück
+      auf den Boden. Beobachten Sie die Arbeit. Wer hat diese berührt? Der Anproben-Stapel ist das Nachspiel vieler Maybes.
+    follow_ups:
+      - Wie prägt der Stapel den Boden?
+      - Was wäre die Umkleidekabine ohne ihn?
+      - Wie ist die Beziehung zwischen Stapel und Arbeit?
+  - id: hi_rt_store_hours
+    name: Ladenöffnungszeiten
+    prompt: |
+      Das Schild gibt an, wann der Laden öffnet, wann er schließt. Die Zeiten sind eine Grenze.
+      Beobachten Sie die Menge vor der Öffnung. Die Zeiten strukturieren den Zugang. Was nehmen sie
+      über den Kunden an?
+    follow_ups:
+      - Wie prägen die Zeiten den Besuch?
+      - Was wäre der Laden mit 24-Stunden-Zugang?
+      - Wie ist die Beziehung zwischen Zeiten und Verfügbarkeit?
+  - id: hi_rt_shopping_list
+    name: Einkaufsliste
+    prompt: |
+      Handy oder Papier. Die Liste führt den Besuch. Beobachten Sie, wer eine hat. Die Liste ist
+      Absicht. Sie widersteht dem Impuls – oder auch nicht. Was bewirkt die Liste für das Stöbern?
+    follow_ups:
+      - Wie prägt die Liste den Kauf?
+      - Was wäre der Besuch ohne sie?
+      - Wie ist die Beziehung zwischen Liste und Kontrolle?
+  - id: hi_rt_store_emptiness
+    name: Laden-Leere
+    prompt: |
+      Außerhalb der Stoßzeiten, ein langsamer Tag. Der Laden ist leer. Die Leere verändert das Gefühl.
+      Beobachten Sie den Raum. Was enthüllt die Leere? Der leere Laden ist eine andere Art von Bühne.
+    follow_ups:
+      - Wie prägt die Leere das Stöbern?
+      - Was wäre der Laden, wenn er immer leer wäre?
+      - Wie ist die Beziehung zwischen leer und Komfort?
+  - id: hi_rt_fitting_room_curtain
+    name: Umkleidekabinen-Vorhang
+    prompt: |
+      Der Vorhang schließt sich. Privatsphäre ist teilweise – Lücken, Geräusche. Der Vorhang ist
+      eine Schwelle. Beobachten Sie die Grenze. Was schützt der Vorhang? Was schützt er nicht?
+    follow_ups:
+      - Wie prägt der Vorhang das Anprobieren?
+      - Was wäre die Umkleidekabine mit Tür?
+      - Wie ist die Beziehung zwischen Vorhang und Privatsphäre?
+  - id: hi_rt_store_aroma
+    name: Laden-Aroma
+    prompt: |
+      Bäckerei, Kaffee, Parfüm – der Laden hat einen Duft. Das Aroma ist der erste Kontakt. Es bereitet
+      den Besuch vor. Beobachten Sie, wann Sie es bemerken. Was macht das Aroma, bevor Sie kaufen?
+    follow_ups:
+      - Wie prägt das Aroma den Besuch?
+      - Was wäre der Laden ohne es?
+      - Wie ist die Beziehung zwischen Aroma und Verlangen?
+  - id: hi_rt_purchase_regret
+    name: Kauf-Bedauern
+    prompt: |
+      Die Tüte in der Hand. Der Zweifel schleicht sich ein. Das Bedauern kann später kommen. Beobachten Sie
+      das Gesicht, das den Laden verlässt. Was bedeutet der Kauf? Das Bedauern ist der Schatten des Tanzes.
+      Was erzeugt es?
+    follow_ups:
+      - Wie prägt Bedauern den nächsten Besuch?
+      - Was wäre der Kauf ohne Bedauern?
+      - Wie ist die Beziehung zwischen Bedauern und Verlangen?
+  - id: hi_rt_store_thank_you
+    name: Laden-Dankeschön
+    prompt: |
+      "Danke, dass Sie bei uns eingekauft haben." Der Satz schließt die Transaktion ab. Er ist geskriptet.
+      Beobachten Sie den Austausch. Was bewirkt das Dankeschön? Der Satz ist ein kleines Ritual. Was schafft er?
+    follow_ups:
+      - Wie prägt das Dankeschön den Ausgang?
+      - Was wäre die Kasse ohne es?
+      - Wie ist die Beziehung zwischen Dankeschön und Abschluss?
+  - id: hi_rt_store_entrance_sensor
+    name: Eingangssensor
+    prompt: |
+      Die Tür öffnet sich automatisch. Der Sensor erfasst Ihre Annäherung. Der Eingang ist choreografiert.
+      Beobachten Sie die Schwelle. Was bewirkt die automatische Tür bei der Ankunft? Der Sensor schafft
+      einen nahtlosen Übergang.
+    follow_ups:
+      - Wie prägt der Sensor den Eingang?
+      - Was wäre der Laden mit manueller Tür?
+      - Wie ist die Beziehung zwischen Sensor und Willkommen?
+  - id: hi_rt_price_match
+    name: Preisabgleich
+    prompt: |
+      "Wir passen die Preise der Konkurrenz an." Das Angebot ist ein Versprechen. Beobachten Sie, wann
+      jemand es nutzt. Der Preisabgleich ist eine Verhandlung. Was verlangt er vom Kunden? Der Abgleich schafft
+      Vertrauen – oder Misstrauen.
+    follow_ups:
+      - Wie prägt der Preisabgleich den Kauf?
+      - Was wäre der Laden ohne ihn?
+      - Wie ist die Beziehung zwischen Abgleich und Loyalität?
+  - id: hi_rt_fitting_room_number
+    name: Umkleidekabinen-Nummer
+    prompt: |
+      "Wie viele?" fragt der Mitarbeiter. Die Nummer begrenzt das Anprobieren. Beobachten Sie die
+      Verhandlung. Was passiert, wenn Sie mehr haben? Die Nummer ist eine Kontrolle. Was nimmt sie über den Kunden an?
+    follow_ups:
+      - Wie prägt die Nummer die Anprobe?
+      - Was wäre die Umkleidekabine ohne Limits?
+      - Wie ist die Beziehung zwischen Nummer und Vertrauen?
+  - id: hi_rt_gift_receipt
+    name: Geschenkbeleg
+    prompt: |
+      "Möchten Sie einen Geschenkbeleg?" Das Angebot trennt den Preis vom Geschenk. Der Geschenkbeleg
+      ermöglicht die Rückgabe, ohne Kosten preiszugeben. Beobachten Sie die Wahl. Was schützt der Geschenkbeleg?
+    follow_ups:
+      - Wie prägt der Geschenkbeleg den Kauf?
+      - Was wäre das Geschenk ohne ihn?
+      - Wie ist die Beziehung zwischen Beleg und Diskretion?

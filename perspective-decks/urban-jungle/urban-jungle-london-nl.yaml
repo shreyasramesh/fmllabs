@@ -1,0 +1,444 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Stedelijk Jungletoneel — Londen (Dutch)
+
+id: urban_jungle_london
+name: Stedelijk Jungletoneel — Londen
+description: 50 kaarten om je kijk op Londen te veranderen - van schaal en licht tot lagen van geschiedenis en de ritmes van het straatleven.
+domain: urban_jungle
+cards:
+  - id: london_layer
+    name: Laag van Londen
+    prompt: |
+      Londen is in lagen gebouwd - Romeins, middeleeuws, Victoriaans, modern. Zoek een plek
+      waar tijdperken botsen. Wat is het oudste dat je kunt zien? Het nieuwste?
+    follow_ups:
+      - Wat zou de straat zijn zonder de lagen?
+      - Hoe uit geschiedenis zich in de gebouwde vorm?
+      - Wat is de relatie tussen laag en identiteit?
+  - id: london_pub_threshold
+    name: Drempel van de Pub
+    prompt: |
+      Een Londense pub heeft een drempel - de opstap, de deur, de bar. Sta bij de
+      drempel. Wat is er binnen? Wat is er buiten? De pub is een kamer in de stad.
+    follow_ups:
+      - Wat zou het blok zijn zonder de pub?
+      - Hoe creëert de drempel overgang?
+      - Wat is de relatie tussen pub en straat?
+  - id: london_blue_plaque
+    name: Blauwe Plaquette
+    prompt: |
+      Blauwe plaquettes markeren waar iemand beroemds woonde. Zoek er een. Wie woonde hier?
+      Wat deden ze? De plaquette maakt geschiedenis zichtbaar.
+    follow_ups:
+      - Wat zou het gebouw zijn zonder de plaquette?
+      - Hoe vormt de plaquette herinnering?
+      - Wat is de relatie tussen plaquette en plek?
+  - id: london_underground
+    name: Ondergronds
+    prompt: |
+      De Tube is een stad onder de stad. Daal af. Merk de tegels op, de
+      kaarten, de roltrappen. Hoe vormt het ondergrondse het bovengrondse?
+    follow_ups:
+      - Wat zou Londen zijn zonder de Tube?
+      - Hoe creëert het ondergrondse verbinding?
+      - Wat is de relatie tussen Tube en oppervlak?
+  - id: london_thames_edge
+    name: Oever van de Theems
+    prompt: |
+      De Theems stroomt door Londen. Ga naar de kade. De rivier is een naad. Wat ligt er aan beide zijden? Hoe verdeelt en verbindt de rivier?
+    follow_ups:
+      - Wat zou Londen zijn zonder de Theems?
+      - Hoe vormt de rivier de stad?
+      - Wat is de relatie tussen rivier en oever?
+  - id: london_georgian_row
+    name: Georgische Rij
+    prompt: |
+      Georgische rijen herhalen zich - deur, raam, deur, raam. Loop een rij af. De
+      herhaling creëert ritme. Wat doorbreekt het? Wat houdt het bij elkaar?
+    follow_ups:
+      - Wat zou de straat zijn zonder de rij?
+      - Hoe creëert herhaling identiteit?
+      - Wat is de relatie tussen rij en individu?
+  - id: london_mews
+    name: Mews
+    prompt: |
+      Mews waren stallen, nu zijn het huizen. Zoek er een. De smalle steeg, de
+      kasseien, de omgebouwde koetshuizen. Hoe blijft het verleden bestaan?
+    follow_ups:
+      - Wat zou de mews zijn zonder de geschiedenis?
+      - Hoe creëert de mews privacy?
+      - Wat is de relatie tussen mews en hoofdweg?
+  - id: london_phone_box
+    name: Telefooncel
+    prompt: |
+      Rode telefooncellen zijn iconen. Zoek er een. Is het nog steeds een telefoon? Een defibrillator? Een bibliotheek? Hoe worden iconen hergebruikt?
+    follow_ups:
+      - Wat zou de straat zijn zonder de cel?
+      - Hoe markeert de cel Britse identiteit?
+      - Wat is de relatie tussen cel en functie?
+  - id: london_postbox
+    name: Brievenbus
+    prompt: |
+      Rode brievenbussen zijn overal. Zoek er een. Let op het koninklijke monogram. De
+      brievenbus is een knooppunt in een netwerk. Wat stroomt erdoorheen?
+    follow_ups:
+      - Wat zou de straat zijn zonder de brievenbus?
+      - Hoe markeert de brievenbus territorium?
+      - Wat is de relatie tussen brievenbus en brief?
+  - id: london_pavement
+    name: Trottoir
+    prompt: |
+      Brits "pavement" is Amerikaans "sidewalk". Het woord vormt hoe we denken.
+      Loop over het trottoir. Wat is de relatie tussen trottoir en weg?
+    follow_ups:
+      - Wat zou de straat zijn zonder het trottoir?
+      - Hoe creëert het trottoir veiligheid?
+      - Wat is de relatie tussen trottoir en voetganger?
+  - id: london_brick
+    name: Londense Baksteen
+    prompt: |
+      Londen baksteen is vaak geel of rood - Londense steen. Zoek een bakstenen muur en
+      bestudeer de kleur, de textuur, de voeg. Hoe veroudert baksteen?
+    follow_ups:
+      - Wat zou het gebouw zijn zonder de baksteen?
+      - Hoe creëert baksteen identiteit?
+      - Wat is de relatie tussen baksteen en plek?
+  - id: london_weather
+    name: Londens Weer
+    prompt: |
+      Het Londense weer is wisselvallig. Sta twintig minuten op één plek. Kijk
+      naar de lucht. Hoe beïnvloedt het weer de stemming van de stad?
+    follow_ups:
+      - Wat zou Londen zijn zonder de regen?
+      - Hoe beïnvloedt weer architectuur?
+      - Wat is de relatie tussen weer en straatleven?
+  - id: london_queue
+    name: Wachtrij
+    prompt: |
+      Britten staan in de rij. Zoek een rij - bus, winkel, attractie. Observeer de etiquette.
+      De rij is een vorm van orde. Hoe werkt het?
+    follow_ups:
+      - Wat zou de ruimte zijn zonder de rij?
+      - Hoe creëert de rij eerlijkheid?
+      - Wat is de relatie tussen rij en cultuur?
+  - id: london_roundabout
+    name: Rotonde
+    prompt: |
+      Londen heeft veel rotondes - verkeerspleinen. Bekijk er een. Hoe stroomt het verkeer? Wat is de logica? De rotonde is een knooppunt.
+    follow_ups:
+      - Wat zou de kruising zijn zonder de rotonde?
+      - Hoe beïnvloedt de rotonde de stroom?
+      - Wat is de relatie tussen rotonde en kruispunt?
+  - id: london_parks_room
+    name: Park Kamer
+    prompt: |
+      Londen parken zijn kamers - Hyde Park, Regent's Park, de pleinen. Ga er een binnen.
+      Merk de grenzen op, de paden, het meubilair. Hoe wordt natuur ontworpen?
+    follow_ups:
+      - Wat zou Londen zijn zonder de parken?
+      - Hoe creëert het park rust?
+      - Wat is de relatie tussen park en stad?
+  - id: london_square
+    name: Londens Plein
+    prompt: |
+      Londen pleinen zijn vaak privé - omheind, met sleutel. Zoek er een. Wat is er binnen?
+      Wie heeft toegang? Het plein is een pocket van exclusiviteit.
+    follow_ups:
+      - Wat zou de buurt zijn zonder het plein?
+      - Hoe creëert het plein gemeenschap?
+      - Wat is de relatie tussen plein en straat?
+  - id: london_terrace
+    name: Terras
+    prompt: |
+      Een terras is een rij huizen. Loop er een af. Merk de uniformiteit en de
+      variatie op. Hoe creëert het terras identiteit?
+    follow_ups:
+      - Wat zou de straat zijn zonder het terras?
+      - Hoe creëert het terras ritme?
+      - Wat is de relatie tussen terras en individu?
+  - id: london_corner_shop
+    name: Buurtwinkel
+    prompt: |
+      De buurtwinkel is een Londense instelling. Ga er een binnen. Wat wordt er verkocht? Wie runt het? De winkel is een knooppunt in de buurt.
+    follow_ups:
+      - Wat zou het blok zijn zonder de winkel?
+      - Hoe creëert de winkel ontmoeting?
+      - Wat is de relatie tussen winkel en gemeenschap?
+  - id: london_bus_route
+    name: Busroute
+    prompt: |
+      Londen bussen hebben nummers en bestemmingen. Neem een bus die je nog nooit hebt genomen.
+      Waar gaat het heen? Hoe vormt de route de stad?
+    follow_ups:
+      - Wat zou de reis zijn zonder de bus?
+      - Hoe creëert de route verbinding?
+      - Wat is de relatie tussen bus en buurt?
+  - id: london_clock
+    name: Londense Klok
+    prompt: |
+      Big Ben, de klok op het station, de klok op de kerk. Londen zit vol met openbare klokken. Zoek er een. Hoe laat is het? Klopt het?
+    follow_ups:
+      - Wat zou de ruimte zijn zonder de klok?
+      - Hoe vormt de klok tijd?
+      - Wat is de relatie tussen klok en plek?
+  - id: london_bridge
+    name: Londense Brug
+    prompt: |
+      Londen heeft veel bruggen - Tower Bridge, Millennium Bridge, Waterloo. Steek er een te voet over. Voel de overgang. Wat verandert er?
+    follow_ups:
+      - Wat zou de rivier zijn zonder de brug?
+      - Hoe verbindt de brug?
+      - Wat is de relatie tussen brug en rivier?
+  - id: london_street_market
+    name: Straatmarkt
+    prompt: |
+      Londen heeft straatmarkten - Borough, Camden, Portobello. Loop er een af. Wat wordt er
+      verkocht? Wie verkoopt? De markt is een tijdelijke stad.
+    follow_ups:
+      - Wat zou de straat zijn zonder de markt?
+      - Hoe creëert de markt ontmoeting?
+      - Wat is de relatie tussen markt en buurt?
+  - id: london_ghost_sign
+    name: Londen Spooksignaal
+    prompt: |
+      Vervagende reclames op bakstenen - spooksignalen - markeren het verleden. Zoek er een. Wat adverteerde het? Wie zou het gezien hebben?
+    follow_ups:
+      - Wat zou de muur zijn zonder het signaal?
+      - Hoe bewaart het spooksignaal geschiedenis?
+      - Wat is de relatie tussen signaal en handel?
+  - id: london_bollard
+    name: Paaltje
+    prompt: |
+      Paaltjes markeren grenzen - voetgangerszones, parkeerverboden. Zoek een rij
+      paaltjes. Wat beschermen ze? Wat sluiten ze uit?
+    follow_ups:
+      - Wat zou de ruimte zijn zonder de paaltjes?
+      - Hoe beïnvloeden paaltjes de stroom?
+      - Wat is de relatie tussen paaltje en grens?
+  - id: london_door_number
+    name: Deurnummer
+    prompt: |
+      Londen adressen kunnen vreemd zijn - oneven aan de ene kant, even aan de andere. Volg
+      de nummers. Hoe vormt de nummering de straat?
+    follow_ups:
+      - Wat zou wegvinden zijn zonder nummers?
+      - Hoe creëert nummering orde?
+      - Wat is de relatie tussen nummer en plek?
+  - id: london_basement
+    name: Londense Kelder
+    prompt: |
+      Londen huizen hebben vaak kelders - soms onder het straatniveau. Let op
+      de treden naar beneden, het gebied ervoor. Wat ligt er onder het trottoir?
+    follow_ups:
+      - Wat zou het huis zijn zonder de kelder?
+      - Hoe creëert de kelder ruimte?
+      - Wat is de relatie tussen kelder en straat?
+  - id: london_roof_line
+    name: Daklijn
+    prompt: |
+      Londen daklijnen zijn gevarieerd - leisteen, tegel, plat. Kijk omhoog. Volg de
+      horizon. Hoe vormt het dak de straat?
+    follow_ups:
+      - Wat zou de straat zijn zonder de daken?
+      - Hoe creëert de daklijn identiteit?
+      - Wat is de relatie tussen dak en lucht?
+  - id: london_cobble
+    name: Kassei
+    prompt: |
+      Kasseien zijn nog steeds aanwezig in sommige straten. Loop erop. Voel de textuur.
+      Hoe vormt het oppervlak de straat?
+    follow_ups:
+      - Wat zou de straat zijn zonder de kasseien?
+      - Hoe markeren kasseien geschiedenis?
+      - Wat is de relatie tussen kassei en moderniteit?
+  - id: london_lamp_post
+    name: Lantaarnpaal
+    prompt: |
+      Londen lantaarnpalen hebben een specifieke stijl - Victoriaans, modern. Zoek er een.
+      Hoe vormt de lamp de straat 's nachts?
+    follow_ups:
+      - Wat zou de straat zijn zonder de lamp?
+      - Hoe creëert de lamp veiligheid?
+      - Wat is de relatie tussen lamp en duisternis?
+  - id: london_bus_stop
+    name: Bushalte
+    prompt: |
+      Londen haltes hebben shelters, dienstregelingen, nummers. Wacht bij een halte. Wie anders wacht er? Wat is de etiquette?
+    follow_ups:
+      - Wat zou de straat zijn zonder de halte?
+      - Hoe creëert de halte gemeenschap?
+      - Wat is de relatie tussen halte en reis?
+  - id: london_pub_sign
+    name: Pubbord
+    prompt: |
+      Pubborden hangen boven de straat - The Crown, The Red Lion. Zoek er een. Wat is het
+      beeld? Wat is het verhaal? Het bord is een oriëntatiepunt.
+    follow_ups:
+      - Wat zou de straat zijn zonder het bord?
+      - Hoe creëert het bord identiteit?
+      - Wat is de relatie tussen bord en pub?
+  - id: london_church_spire
+    name: Kerkspits
+    prompt: |
+      Kerkspitsen doorbreken de Londense skyline. Zoek er een. Hoe oriënteert de spits
+      je? Wat zou het uitzicht zijn zonder het?
+    follow_ups:
+      - Wat zou de skyline zijn zonder de spits?
+      - Hoe creëert de spits een oriëntatiepunt?
+      - Wat is de relatie tussen spits en buurt?
+  - id: london_canal
+    name: Londens Kanaal
+    prompt: |
+      Londen heeft kanalen - Regent's Canal, Grand Union. Loop over het jaagpad. Het
+      kanaal is een naad. Wat ligt er aan beide zijden?
+    follow_ups:
+      - Wat zou de stad zijn zonder het kanaal?
+      - Hoe creëert het kanaal verbinding?
+      - Wat is de relatie tussen kanaal en industrie?
+  - id: london_garden_square
+    name: Tuinplein
+    prompt: |
+      Londen tuinpleinen zijn vaak op slot. Peek door het hek. Wat is er
+      binnen? Wie heeft de sleutel? De tuin is een verborgen kamer.
+    follow_ups:
+      - Wat zou het plein zijn zonder de tuin?
+      - Hoe creëert de tuin exclusiviteit?
+      - Wat is de relatie tussen tuin en plein?
+  - id: london_taxi
+    name: Londense Taxi
+    prompt: |
+      Zwarte taxi's zijn iconen. Kijk hoe er een stopt, iemand oppikt, wegrijdt. Hoe vormt de
+      taxi de straat? Wat zou de stad zijn zonder het?
+    follow_ups:
+      - Wat zou de straat zijn zonder de taxi?
+      - Hoe creëert de taxi mobiliteit?
+      - Wat is de relatie tussen taxi en kennis?
+  - id: london_underground_tile
+    name: Ondergrondse Tegel
+    prompt: |
+      Tube stations hebben kenmerkende tegels - Baker Street's Sherlock, de
+      Victoria line's blauw. Zoek een station met karakter. Wat zeggen de tegels?
+    follow_ups:
+      - Wat zou het station zijn zonder de tegels?
+      - Hoe creëren tegels identiteit?
+      - Wat is de relatie tussen tegel en plek?
+  - id: london_bench
+    name: Londense Bank
+    prompt: |
+      Londen heeft veel banken - in parken, op straten, bij bushaltes. Ga op een zitten.
+      Wie zit er nog meer? Wat is het uitzicht?
+    follow_ups:
+      - Wat zou de ruimte zijn zonder de bank?
+      - Hoe creëert de bank rust?
+      - Wat is de relatie tussen bank en straat?
+  - id: london_drain
+    name: Londense Afvoer
+    prompt: |
+      Kijk naar beneden. Zoek een afvoer - een goot, een rooster. Waar gaat het water naartoe? De
+      afvoer is een portaal naar de verborgen systemen van de stad.
+    follow_ups:
+      - Wat zou de straat zijn zonder de afvoer?
+      - Hoe beheert de afvoer water?
+      - Wat is de relatie tussen afvoer en systeem?
+  - id: london_shop_front
+    name: Winkelpui
+    prompt: |
+      Londen winkelpuien zijn vaak klein - smal, diep. Kijk in het raam. Wat wordt er tentoongesteld? Hoe vormt de pui de straat?
+    follow_ups:
+      - Wat zou de straat zijn zonder de winkelpui?
+      - Hoe creëert de pui identiteit?
+      - Wat is de relatie tussen pui en handel?
+  - id: london_paving
+    name: Londense Bestrating
+    prompt: |
+      Londen bestrating varieert - tegels, asfalt, baksteen. Loop een blok af en merk
+      de veranderingen op. Hoe vormt het oppervlak de straat?
+    follow_ups:
+      - Wat zou de straat zijn zonder de bestrating?
+      - Hoe markeert bestrating territorium?
+      - Wat is de relatie tussen bestrating en voetganger?
+  - id: london_balcony
+    name: Londens Balkon
+    prompt: |
+      Londen balkons zijn vaak klein - Julia balkons, kleine terrassen. Zoek er een. Wat zou je er kweken? Wie zou het gebruiken?
+    follow_ups:
+      - Wat zou het gebouw zijn zonder het balkon?
+      - Hoe creëert het balkon buitenruimte?
+      - Wat is de relatie tussen balkon en flat?
+  - id: london_chimney
+    name: Londense Schoorsteen
+    prompt: |
+      Londen schoorstenen doorbreken de daklijn. Tel ze op één gebouw. Hoeveel vuren brandden er ooit? De schoorsteen is een relikwie.
+    follow_ups:
+      - Wat zou het dak zijn zonder de schoorsteen?
+      - Hoe markeert de schoorsteen geschiedenis?
+      - Wat is de relatie tussen schoorsteen en warmte?
+  - id: london_bike_stand
+    name: Fietsenrek
+    prompt: |
+      Londen heeft fietsenrekken, Santander-fietsen, bezorgfietsen. Zoek een cluster. Hoe vormen fietsen de straat? Wat zou het blok zijn zonder ze?
+    follow_ups:
+      - Wat zou de straat zijn zonder de fietsen?
+      - Hoe creëren fietsen mobiliteit?
+      - Wat is de relatie tussen fiets en stad?
+  - id: london_tree_pit
+    name: Boomput
+    prompt: |
+      Londen stadsbomen groeien in putten - vaak klein, vaak vechtend. Zoek er een. Wat ligt er in de put? Hoe gaat het met de boom?
+    follow_ups:
+      - Wat zou de straat zijn zonder de boom?
+      - Hoe vormt de put het leven van de boom?
+      - Wat is de relatie tussen put en trottoir?
+  - id: london_rain
+    name: Londense Regen
+    prompt: |
+      Londen regen is frequent. Sta onder een beschutting en kijk. Hoe verandert de
+      regen de straat? Wat zou de stad zijn zonder het?
+    follow_ups:
+      - Hoe beïnvloedt regen de stemming?
+      - Wat is de relatie tussen regen en paraplu?
+      - Wat zou je merken in de droogte?
+  - id: london_cab_rank
+    name: Taxistandplaats
+    prompt: |
+      Zwarte taxi's wachten in rijen op standplaatsen. Kijk naar de stroom. De standplaats is een knooppunt. Hoe vormt de taxi de straat? Wat zou het kruispunt zijn zonder het?
+    follow_ups:
+      - Hoe creëert de standplaats orde?
+      - Wat is de relatie tussen taxi en kennis?
+      - Wat zou je een taxichauffeur vragen?
+  - id: london_pub_window
+    name: Pubraam
+    prompt: |
+      Pubramen zijn vaak gebrandschilderd, vaak klein. Kijk erdoorheen. Wat is het
+      uitzicht? Het raam kadert de straat. Hoe belangrijk is het kader?
+    follow_ups:
+      - Wat zou de pub zijn zonder het raam?
+      - Hoe creëert het raam relatie?
+      - Wat is de relatie tussen raam en straat?
+  - id: london_mews_cobble
+    name: Mews Kassei
+    prompt: |
+      Mews steegjes zijn vaak geplaveid. Loop er een af. Voel de textuur. De kassei
+      markeert geschiedenis. Wat zou de mews zijn in asfalt?
+    follow_ups:
+      - Hoe vormt de kassei de steeg?
+      - Wat is de relatie tussen kassei en paard?
+      - Wat zou je horen op kasseien?
+  - id: london_underground_escalator
+    name: Ondergrondse Roltrap
+    prompt: |
+      Tube roltrappen zijn lang - die van Angel is een van de langste. Rijd er een. Voel de
+      afdaling. Hoe vormt de roltrap de reis?
+    follow_ups:
+      - Wat zou het station zijn zonder de roltrap?
+      - Hoe creëert de roltrap stroom?
+      - Wat is de relatie tussen roltrap en diepte?
+  - id: london_thames_path
+    name: Theems Pad
+    prompt: |
+      Het Theems Pad loopt langs de rivier. Loop een stuk. Het pad creëert een
+      corridor. Wat ligt er aan beide zijden? Hoe vormt het pad de reis?
+    follow_ups:
+      - Wat zou de rivier zijn zonder het pad?
+      - Hoe creëert het pad toegang?
+      - Wat is de relatie tussen pad en rivier?

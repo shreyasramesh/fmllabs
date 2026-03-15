@@ -1,0 +1,535 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natuurlijk Microkosmos — Rotsen & Stenen (Dutch)
+
+id: natural_microcosm_rocks_stones
+name: Natuurlijk Microkosmos — Rotsen & Stenen
+description: 50 kaarten om je kijk op rotsen en stenen te veranderen—van geologische tijd en korstmossen tot verwering, erosie en het langzame leven van mineralen.
+domain: natural_microcosm
+cards:
+  - id: nmr_lichen_map
+    name: Korstmos Kaart
+    prompt: |
+      Korstmossen groeien op rotsen—langzaam, geduldig. Oranje, grijs, groen. Het is geen
+      enkel organisme maar twee: schimmel en alg. Beschouw het partnerschap. Wat biedt de
+      rots? Wat geeft het korstmos terug?
+    follow_ups:
+      - Hoe zou de rots eruitzien zonder korstmos?
+      - Hoe markeert korstmos de tijd?
+      - Wat is de relatie tussen korstmos en verwering?
+  - id: nmr_pebble_smooth
+    name: Kiezel Glad
+    prompt: |
+      Een rivierkei is glad—water en zand hebben hem gesleten. Houd er een vast. Hoeveel
+      jaren duurde dat? De gladheid is een verslag van een reis. Wat zou een
+      scherpe rand betekenen?
+    follow_ups:
+      - Hoe onthult gladheid geschiedenis?
+      - Wat zou de kei zijn zonder water?
+      - Wat is de relatie tussen vorm en stroming?
+  - id: nmr_crack_frost
+    name: Vorstscheur
+    prompt: |
+      Water bevriest in een spleet, zet uit. De rots splijt. Het is langzame
+      geweldpleging. Zoek een rots met een spleet. Beschouw de cycli van vriezen en dooien
+      die hem hebben gevormd.
+    follow_ups:
+      - Wat zou de rots zijn zonder de scheur?
+      - Hoe vormt vorst het landschap?
+      - Wat is de relatie tussen water en breuk?
+  - id: nmr_stone_warmth
+    name: Steenwarmte
+    prompt: |
+      Een door de zon opgewarmde steen houdt warmte vast. Ga erop zitten bij
+      schemering. De steen geeft af wat hij heeft geabsorbeerd. Beschouw de uitwisseling.
+      Wat zou de steen zijn zonder de zon?
+    follow_ups:
+      - Hoe creëert de steen microklimaat?
+      - Welke wezens gebruiken die warmte?
+      - Wat is de relatie tussen rots en warmte?
+  - id: nmr_moss_crust
+    name: Moskorst
+    prompt: |
+      Mos groeit op steen—een dun korstje. Het houdt vocht vast, vangt stof op. De
+      rots wordt een substraat. Wanneer wordt rots aarde? Waar is de grens?
+    follow_ups:
+      - Wat zou de steen zijn zonder het mos?
+      - Hoe versnelt het korstje verandering?
+      - Wat is de relatie tussen mineraal en organisch?
+  - id: nmr_vein_quartz
+    name: Kwartsader
+    prompt: |
+      Een kwartsader snijdt door rots—een naad van een ander mineraal. Het markeert een
+      breuk, een opvulling. Volg de lijn. Welke krachten hebben hem gemaakt? Wat onthult de
+      ader?
+    follow_ups:
+      - Wat zou de rots zijn zonder de ader?
+      - Hoe markeert de ader diepe tijd?
+      - Wat is de relatie tussen breuk en schoonheid?
+  - id: nmr_puddle_reflect
+    name: Puddle in Stone
+    prompt: |
+      Een kuil in rots houdt water vast na regen. Het is een piepklein
+      plasje—een bekertje. Wat weerspiegelt erin? Wat verdampt? De steen heeft een vat
+      gemaakt.
+    follow_ups:
+      - Wat zou de rots zijn zonder de kuil?
+      - Hoe creëert het plasje habitat?
+      - Wat is de relatie tussen holte en tijd?
+  - id: nmr_sand_grain
+    name: Zandkorrel
+    prompt: |
+      Zand is kleine gebroken rots. Houd een handvol vast. Elke korrel was ooit
+      onderdeel van iets groters. Beschouw de schaal. Hoeveel korrels in een berg?
+    follow_ups:
+      - Wat zou het strand zijn zonder de korrels?
+      - Hoe vertelt korrelgrootte een verhaal?
+      - Wat is de relatie tussen geheel en fragment?
+  - id: nmr_stone_circle
+    name: Steen Cirkel
+    prompt: |
+      Rotsen gearrangeerd met de hand of door een gletsjer—een cirkel, een cairn, een
+      muur. Iemand of iets heeft ze geplaatst. Beschouw de intentie. Wat betekent de
+      rangschikking?
+    follow_ups:
+      - Wat zou de ruimte zijn zonder de stenen?
+      - Hoe creëert rangschikking betekenis?
+      - Wat is de relatie tussen rots en ritueel?
+  - id: nmr_erosion_edge
+    name: Erosie Rand
+    prompt: |
+      Wind en water snijden rotsen uit. Zoek een rand—een klif, een kei. De vorm
+      is het product van verwijdering. Wat was er eerder? Wat zal er blijven?
+    follow_ups:
+      - Wat zou het landschap zijn zonder erosie?
+      - Hoe markeert de rand de tijd?
+      - Wat is de relatie tussen verlies en vorm?
+  - id: nmr_color_streak
+    name: Kleur Streep
+    prompt: |
+      Rots is niet uniform—ijzer vlekt rood, mangaan zwart, koper groen.
+      Volg een streep. De kleur is chemie. Wat onthult het over de geschiedenis van de rots?
+    follow_ups:
+      - Wat zou de rots zijn zonder de kleur?
+      - Hoe vormt mineralogie het palet?
+      - Wat is de relatie tussen element en tint?
+  - id: nmr_scratch_glacier
+    name: Gletsjer Kras
+    prompt: |
+      Gletsjerstriaties—krassen op bedrock—markeren waar ijs rotsen meesleepte
+      over steen. De lijnen zijn parallel. Beschouw de kracht. Wat bewoog?
+      Wat bleef stil?
+    follow_ups:
+      - Wat zou de rots tonen zonder de krassen?
+      - Hoe markeert de kras richting?
+      - Wat is de relatie tussen ijs en steen?
+  - id: nmr_cobble_pattern
+    name: Keien Patroon
+    prompt: |
+      Een strand of rivierbedding van keien—gelijk van grootte, gevarieerd van vorm. Het water
+      heeft ze gesorteerd. Beschouw het patroon. Wat vertelt de sortering je?
+    follow_ups:
+      - Wat zou het strand zijn zonder de sortering?
+      - Hoe vormt stroming het patroon?
+      - Wat is de relatie tussen grootte en transport?
+  - id: nmr_cavern_drip
+    name: Grot Druip
+    prompt: |
+      Stalactieten vormen druppel voor druppel—mineraalafzettingen van sijpelend water. De
+      groei is onmerkbaar. Beschouw de tijdschaal. Wat zou een versnelde
+      film tonen?
+    follow_ups:
+      - Wat zou de grot zijn zonder het druipen?
+      - Hoe registreert het druipen het klimaat?
+      - Wat is de relatie tussen water en steen?
+  - id: nmr_boulder_shadow
+    name: Kei Schaduw
+    prompt: |
+      Een grote kei werpt schaduw. De grond eronder is anders—koeler,
+      vochtiger, minder zon. De kei creëert een microklimaat. Wie leeft in de
+      schaduw?
+    follow_ups:
+      - Wat zou de helling zijn zonder de kei?
+      - Hoe vormt de schaduw het leven?
+      - Wat is de relatie tussen rots en toevluchtsoord?
+  - id: nmr_fossil_impression
+    name: Fossiele Indruk
+    prompt: |
+      Een fossiel is leven dat steen is geworden—of een afdruk achtergelaten in sediment.
+      Vind er een als je kunt. De rots houdt herinnering vast. Welk wezen heeft dit achtergelaten?
+      Wanneer?
+    follow_ups:
+      - Wat zou de rots zijn zonder het fossiel?
+      - Hoe preserveert de afdruk?
+      - Wat is de relatie tussen leven en mineraal?
+  - id: nmr_grit_texture
+    name: Korrel Textuur
+    prompt: |
+      Laat je hand over rots glijden. Zandsteen voelt anders dan graniet, leisteen
+      dan basalt. De textuur is mineraal, korrel, structuur. Wat vertelt tastzin?
+    follow_ups:
+      - Wat zou de rots zijn zonder zijn textuur?
+      - Hoe onthult textuur de oorsprong?
+      - Wat is de relatie tussen gevoel en samenstelling?
+  - id: nmr_talus_slope
+    name: Puinhelling
+    prompt: |
+      Een puinhelling—gebroken rots aan de voet van een klif. Zwaartekracht en weer
+      brengen het naar beneden. De helling is een hoop nasleep. Hoe lang duurde het om zich te
+      accumuleren?
+    follow_ups:
+      - Wat zou de voet van de klif zijn zonder het puin?
+      - Hoe markeert de helling erosie?
+      - Wat is de relatie tussen val en hoop?
+  - id: nmr_soil_horizon
+    name: Bodem Horizon
+    prompt: |
+      Graaf voorzichtig. Bodem heeft lagen—organisch boven, mineraal onder, soms
+      duidelijke banden. De horizon is geschiedenis. Wat creëerde elke laag?
+    follow_ups:
+      - Wat zou de grond zijn zonder de horizonten?
+      - Hoe registreert de horizon tijd?
+      - Wat is de relatie tussen rots en aarde?
+  - id: nmr_drystone_wall
+    name: Droge Steen Muur
+    prompt: |
+      Een droge-steen muur—stenen passend zonder mortel. De muur houdt stand door
+      zwaartekracht en pasvorm. Beschouw het vakmanschap. Hoe ondersteunt elke steen de
+      volgende?
+    follow_ups:
+      - Wat zou het veld zijn zonder de muur?
+      - Hoe markeert de muur territorium?
+      - Wat is de relatie tussen rots en grens?
+  - id: nmr_tide_pool_rock
+    name: Getijdenpoel Steen
+    prompt: |
+      Rotsen in een getijdenpoel worden nat, droog, weer nat. Wezens klampen zich vast.
+      De rots is habitat. Beschouw het ritme van de getijden. Wat ervaart de rots?
+    follow_ups:
+      - Wat zou de poel zijn zonder de rots?
+      - Hoe creëert de rots oppervlak?
+      - Wat is de relatie tussen rots en getij?
+  - id: nmr_crystal_face
+    name: Kristal Vlak
+    prompt: |
+      Sommige rotsen tonen kristalvlakken—gebroken vlakken, geometrische vorm. Het
+      kristal groeide in een holte, op langzame wijze. Beschouw de geometrie. Welke
+      krachten vormden het?
+    follow_ups:
+      - Wat zou de rots zijn zonder het kristal?
+      - Hoe onthult het vlak de structuur?
+      - Wat is de relatie tussen orde en mineraal?
+  - id: nmr_dust_coating
+    name: Stof Coating
+    prompt: |
+      Rots verzamelt stof—pollen, roet, mineraal. Na verloop van tijd wordt het donkerder. De
+      coating is accumulatie. Hoe zou de rots eruitzien als hij gewassen zou worden? Hoe
+      verandert de coating hem?
+    follow_ups:
+      - Wat zou de rots zijn zonder de coating?
+      - Hoe markeert stof de omgeving?
+      - Wat is de relatie tussen oppervlak en accumulatie?
+  - id: nmr_river_sculpt
+    name: Rivier Beeldhouwen
+    prompt: |
+      Een rivier beeldhouwt zijn bedding—kolkgaten, poelen, stroomversnellingen. De rots wordt
+      gevormd door water en sediment. Zoek een stuk. Lees het beeldhouwwerk. Wat onthult de
+      vorm?
+    follow_ups:
+      - Wat zou de rivierbedding zijn zonder het beeldhouwwerk?
+      - Hoe vormt stroming de rots?
+      - Wat is de relatie tussen water en vorm?
+  - id: nmr_shard_edge
+    name: Scherf Rand
+    prompt: |
+      Een vuurstenen scherf, een stuk chert—scherp, bewerkt of natuurlijk. Iemand kan het
+      gebruikt hebben. De rand is functioneel. Beschouw de breuk. Hoe is het gemaakt?
+    follow_ups:
+      - Wat zou de scherf zijn zonder de rand?
+      - Hoe creëert breuk bruikbaarheid?
+      - Wat is de relatie tussen breuk en gereedschap?
+  - id: nmr_gravel_path
+    name: Grind Pad
+    prompt: |
+      Een grindpad—vermorzelde rots onder de voeten. Het kraken, het meegeven. Het pad
+      is een menselijke keuze. Waarom dit oppervlak? Wat doet het grind dat aarde niet zou
+      doen?
+    follow_ups:
+      - Wat zou het pad zijn zonder het grind?
+      - Hoe vormt het pad beweging?
+      - Wat is de relatie tussen rots en lopen?
+  - id: nmr_bedrock_exposure
+    name: Bedrock Ontsluiting
+    prompt: |
+      Waar aarde is weggevaagd—erosie, constructie—verschijnt bedrock. De
+      fundering is zichtbaar. Beschouw wat normaal verborgen is. Wat onthult de
+      ontsluiting?
+    follow_ups:
+      - Wat zou het landschap zijn zonder de ontsluiting?
+      - Hoe vormt bedrock het oppervlak?
+      - Wat is de relatie tussen verborgen en onthuld?
+  - id: nmr_wind_polish
+    name: Wind Polijsten
+    prompt: |
+      Woestijnrotsen zijn windgepolijst—glad, gefacetteerd. Zand blaast het oppervlak op.
+      De polijsting is schurend. Beschouw de wind. Hoe lang duurde het?
+    follow_ups:
+      - Wat zou de rots zijn zonder de polijsting?
+      - Hoe vormt wind steen?
+      - Wat is de relatie tussen deeltje en oppervlak?
+  - id: nmr_hot_cold_crack
+    name: Hitte-koude Scheur
+    prompt: |
+      Rots zet uit bij hitte, krimpt bij kou. Herhaalde cycli veroorzaken stress,
+      microbreuken. Zoek een scheur. Beschouw de temperatuurschommelingen die hem
+      hebben gevormd.
+    follow_ups:
+      - Wat zou de rots zijn zonder de scheur?
+      - Hoe vormt thermische cycli het landschap?
+      - Wat is de relatie tussen temperatuur en breuk?
+  - id: nmr_constellation_stone
+    name: Constellatie Steen
+    prompt: |
+      Een rots met spikkels—mica, veldspaat—die het licht vangen. Het oppervlak
+      glinstert. Beschouw de mineralogie. Wat creëerde de sprankeling?
+    follow_ups:
+      - Wat zou de rots zijn zonder de spikkels?
+      - Hoe onthult licht de structuur?
+      - Wat is de relatie tussen mineraal en reflectie?
+  - id: nmr_stepping_stone
+    name: Stapsteen
+    prompt: |
+      Stenen geplaatst in een beek of modder—stapstenen. De plaatsing is
+      bewust. Beschouw het pad. Wat vereist elke stap? Wat maakt de steen
+      mogelijk?
+    follow_ups:
+      - Wat zou de oversteek zijn zonder de stenen?
+      - Hoe creëert de steen toegang?
+      - Wat is de relatie tussen rots en doorgang?
+  - id: nmr_moss_island
+    name: Mos Eiland
+    prompt: |
+      Een rots in een beek—mos groeit erop. De rots is een eiland. Water stroomt
+      eromheen. Beschouw de isolatie. Wat bereikt het mos? Wat niet?
+    follow_ups:
+      - Wat zou de beek zijn zonder het eiland?
+      - Hoe creëert de rots toevlucht?
+      - Wat is de relatie tussen rots en stroming?
+  - id: nmr_weight_sunken
+    name: Gewicht Ingezonken
+    prompt: |
+      Een zware rots zakt na verloop van tijd in de grond. De depressie vormt zich eromheen.
+      Beschouw de zwaartekracht. Wat doet het zinken met de grond? Met de rots?
+    follow_ups:
+      - Wat zou de grond zijn zonder de rots?
+      - Hoe vormt gewicht het oppervlak?
+      - Wat is de relatie tussen massa en depressie?
+  - id: nmr_layer_sediment
+    name: Sediment Laag
+    prompt: |
+      Sedimentair gesteente toont lagen—gelaagdheid. Elke laag was ooit modder,
+      zand, schelpen. De rots is samengeperste tijd. Beschouw een enkele laag.
+      Wat was het daarvoor?
+    follow_ups:
+      - Wat zou de rots zijn zonder de lagen?
+      - Hoe registreert de laag het milieu?
+      - Wat is de relatie tussen sediment en steen?
+  - id: nmr_sunrise_heat
+    name: Zonsopkomst Warmte
+    prompt: |
+      Een platte steen kijkt naar het oosten. Bij zonsopkomst warmt hij eerst op.
+      Beschouw de oriëntatie. Wat bepaalt de hoek ten opzichte van de zon? Wie profiteert van
+      de vroege warmte?
+    follow_ups:
+      - Wat zou de rots zijn zonder de oriëntatie?
+      - Hoe vormt de ligging de temperatuur?
+      - Wat is de relatie tussen hoek en warmte?
+  - id: nmr_rain_rinse
+    name: Regen Afspoelen
+    prompt: |
+      Regen slaat op rots, loopt weg. Het water draagt mee wat het oplost, wat het
+      suspendeert. Het afspoelen is continu. Wat verliest de rots? Wat wint het water?
+    follow_ups:
+      - Wat zou de rots zijn zonder de regen?
+      - Hoe vormt afstroming de rots?
+      - Wat is de relatie tussen water en oplossing?
+  - id: nmr_ice_wedge
+    name: IJswig
+    prompt: |
+      Water bevriest in een spleet, verbreedt hem. Ijsvorming breekt rotsen uiteen.
+      Zoek bewijs als je kunt. Beschouw de kracht. Wat zal de spleet worden?
+    follow_ups:
+      - Wat zou de rots zijn zonder het ijs?
+      - Hoe plant de wig zich voort?
+      - Wat is de relatie tussen bevriezen en breuk?
+  - id: nmr_resting_place
+    name: Rustplek
+    prompt: |
+      Een platte steen—een zitplaats, een tafel, een podium. We gebruiken rotsen om te rusten,
+      te werken, te markeren. Beschouw de steen waarop je zou kunnen zitten. Wat heeft het
+      ondersteund? Wat zal het dragen?
+    follow_ups:
+      - Wat zou de ruimte zijn zonder de rots?
+      - Hoe nodigt de rots uit tot gebruik?
+      - Wat is de relatie tussen mineraal en mens?
+  - id: nmr_boundary_marker
+    name: Grens Markering
+    prompt: |
+      Rotsen markeren grenzen—eigendomslijnen, graven, paden. De plaatsing is
+      bewust. Beschouw een grenspaal. Wat scheidt het? Wat verbindt het?
+    follow_ups:
+      - Wat zou de grens zijn zonder de steen?
+      - Hoe codeert de rots betekenis?
+      - Wat is de relatie tussen marker en territorium?
+  - id: nmr_exfoliation_sheet
+    name: Exfoliatie Blad
+    prompt: |
+      Sommige rotsen schilferen af—lagen pellen als een ui. Drukvermindering, thermische
+      cycli. Vind een schilferende kei. Beschouw de curve. Welke krachten
+      vormden het?
+    follow_ups:
+      - Wat zou de rots zijn zonder de schilfers?
+      - Hoe vormt exfoliatie het oppervlak?
+      - Wat is de relatie tussen druk en pellen?
+  - id: nmr_compass_orientation
+    name: Kompas Oriëntatie
+    prompt: |
+      Rotsen kunnen zich uitlijnen—door gletsjer, door rivier, door mensenhand. De oriëntatie
+      vertelt een verhaal. Vind uitgelijnde stenen. Waar wijzen ze naar? Wat weerstaan ze?
+    follow_ups:
+      - Wat zou de uitlijning betekenen?
+      - Hoe registreert oriëntatie kracht?
+      - Wat is de relatie tussen richting en steen?
+  - id: nmr_echo_sound
+    name: Echo Klank
+    prompt: |
+      Een rotswand reflecteert geluid. Klap. Luister naar de echo. De rots geeft terug
+      wat je stuurt. Beschouw het oppervlak. Wat reflecteert het? Wat absorbeert het?
+    follow_ups:
+      - Wat zou de ruimte zijn zonder de echo?
+      - Hoe vormt het oppervlak geluid?
+      - Wat is de relatie tussen rots en stem?
+  - id: nmr_anchor_hold
+    name: Anker Houden
+    prompt: |
+      Een rots verankert—een boomwortel wikkelt zich eromheen, een kabel bindt eraan. De rots
+      houdt vast. Beschouw de grip. Wat weerstaat de rots? Wat maakt hij mogelijk?
+    follow_ups:
+      - Wat zou het anker zijn zonder de rots?
+      - Hoe creëert de rots stabiliteit?
+      - Wat is de relatie tussen vasthouden en massa?
+  - id: nmr_patina_age
+    name: Patina van Leeftijd
+    prompt: |
+      Oude rots ontwikkelt patina—verweringsschilfering, oxidatie, vuil. Het
+      oppervlak verandert. Het patina is zichtbare tijd. Hoe zou de rots eruitzien toen hij nieuw
+      was?
+    follow_ups:
+      - Wat zou de rots zijn zonder het patina?
+      - Hoe beschermt of verzwakt het patina?
+      - Wat is de relatie tussen oppervlak en leeftijd?
+  - id: nmr_slow_narrative
+    name: Langzaam Verhaal
+    prompt: |
+      Een rots vertelt een langzaam verhaal—vorming, transport, verwering. De tijdlijn
+      is geologisch. Ga met een rots zitten. Beschouw zijn verleden. Wat zal zijn toekomst
+      zijn?
+    follow_ups:
+      - Wat zouden we verliezen als we het verhaal niet konden lezen?
+      - Hoe verbindt de rots zich met diepe tijd?
+      - Wat is de relatie tussen rots en geheugen?
+  - id: nmr_cairn_stack
+    name: Cairn Stapel
+    prompt: |
+      Een cairn—stenen met de hand gestapeld. Elke steen balanceert. De stapel is
+      bewust, tijdelijk. Wie heeft hem gebouwd? Wat markeert hij?
+    follow_ups:
+      - Wat zou de plek zijn zonder de cairn?
+      - Hoe creëert de stapel betekenis?
+      - Wat is de relatie tussen mens en steen?
+  - id: nmr_shadow_cast
+    name: Schaduw Gegooid
+    prompt: |
+      Een rots werpt een schaduw. De schaduw beweegt met de zon. Ga er een uur mee
+      zitten. Beschouw de klok van steen en licht.
+    follow_ups:
+      - Wat zou de rots zijn zonder de schaduw?
+      - Hoe creëert de schaduw habitat?
+      - Wat is de relatie tussen rots en tijd?
+  - id: nmr_scree_slope
+    name: Puin Helling
+    prompt: |
+      Puin—losse rots aan de voet van een klif. Elk stuk viel. De helling is
+      accumulatie. Loop erop. Voel de instabiliteit. Wat houdt het tegen? Wat
+      zal loslaten?
+    follow_ups:
+      - Wat zou de helling zijn zonder de val?
+      - Hoe vormt het puin de vallei?
+      - Wat is de relatie tussen klif en vloer?
+  - id: nmr_fossil_imprint
+    name: Fossiele Afdruk
+    prompt: |
+      Een fossiel in rots—schelp, blad, bot. De afdruk is een verslag. Het
+      organisme is weg; de steen houdt zijn vorm vast. Beschouw de preservatie.
+    follow_ups:
+      - Wat zouden we weten zonder het fossiel?
+      - Hoe overbrugt de afdruk tijd?
+      - Wat is de relatie tussen leven en mineraal?
+  - id: nmr_dry_stone_wall
+    name: Droge Steen Muur
+    prompt: |
+      Een droge-steen muur—geen mortel. Elke steen houdt de volgende vast door pasvorm en
+      wrijving. De muur is samenwerking. Volg de voegen. Wat zou
+      één losse steen doen?
+    follow_ups:
+      - Wat zou de grens zijn zonder de muur?
+      - Hoe creëert de pasvorm sterkte?
+      - Wat is de relatie tussen steen en structuur?
+  - id: nmr_cobble_rest
+    name: Kei Rust
+    prompt: |
+      Keien rusten waar water ze achterliet—een rivierbank, een strand. De rangschikking
+      is niet willekeurig. Grootte, vorm, positie vertellen over stroming. Wat zou een vloed
+      herschikken?
+    follow_ups:
+      - Hoe markeert de rust de laatste gebeurtenis?
+      - Wat zouden de stenen onthullen over water?
+      - Wat is de relatie tussen rust en turbulentie?
+  - id: nmr_moon_dust
+    name: Maan Stof
+    prompt: |
+      Rots wordt stof—wind, water, wortels. De fijnste deeltjes reizen.
+      Beschouw de reis van een enkele korrel. Waar zou het kunnen eindigen?
+    follow_ups:
+      - Wat zou het landschap zijn zonder stof?
+      - Hoe creëert stof nieuwe aarde?
+      - Wat is de relatie tussen rots en lucht?
+  - id: nmr_touch_stone
+    name: Raak Steen
+    prompt: |
+      Raak een rots aan. Koud, warm, ruw, glad. De rots reageert niet—of
+      wel? Warmte wordt overgedragen. Vocht verschuift. Beschouw de uitwisseling aan de
+      grens.
+    follow_ups:
+      - Hoe zou de rots aanvoelen op een ander tijdstip?
+      - Hoe verandert aanraking de rots?
+      - Wat is de relatie tussen hand en steen?
+  - id: nmr_shadow_noon
+    name: Schaduw 's Middags
+    prompt: |
+      's Middags is de schaduw van een rots minimaal. Bij zonsopgang en zonsondergang strekt
+      hij zich uit. De schaduw is het bereik van de rots. Beschouw hoe de zon verandert wat de
+      rots aan de wereld biedt.
+    follow_ups:
+      - Wat zou de rots bieden zonder schaduw?
+      - Hoe creëert de schaduw habitat?
+      - Wat is de relatie tussen rots en licht?
+  - id: nmr_stone_circle
+    name: Steen Cirkel
+    prompt: |
+      Stenen gerangschikt in een cirkel—door mensenhand of door gletsjer. De cirkel
+      omkadert ruimte. Wat is er binnen? Wat is er buiten? Beschouw de geometrie van de
+      grens.
+    follow_ups:
+      - Wat zou de ruimte betekenen zonder de cirkel?
+      - Hoe creëert de rangschikking betekenis?
+      - Wat is de relatie tussen vorm en ritueel?

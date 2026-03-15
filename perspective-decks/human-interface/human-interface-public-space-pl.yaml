@@ -1,0 +1,456 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Ludzki Interfejs — Przestrzeń Publiczna (Polish)
+
+id: human_interface_public_space
+name: Ludzki Interfejs — Przestrzeń Publiczna
+description: 50 kart, które zmienią sposób, w jaki postrzegasz przestrzeń publiczną – od ławek i ścieżek po choreografię obcych i przedmioty jako talizmany.
+domain: human_interface
+cards:
+  - id: hi_ps_bench_occupation
+    name: Zajęcie Ławki
+    prompt: |
+      Ławka jest zajęta – przez ciało, torbę, postawę. Ławka to ograniczony zasób. Obserwuj, kto siada, kto stoi, kto przechodzi. Ławka ma różne znaczenia dla różnych ludzi. Co ona zapewnia?
+    follow_ups:
+      - Jak ławka kształtuje przestrzeń?
+      - Czym byłby park bez ławek?
+      - Jaka jest relacja między ławką a odpoczynkiem?
+  - id: hi_ps_pathway_flow
+    name: Przepływ na Ścieżce
+    prompt: |
+      Ścieżka kieruje ruchem. Ludzie idą – samotnie, w parach, w grupach. Przepływ ma kierunek. Obserwuj zderzenia. Kto ustępuje? Ścieżka to wspólny korytarz. Jakie zasady nią rządzą?
+    follow_ups:
+      - Jak ścieżka kształtuje spacer?
+      - Czym byłaby przestrzeń bez ścieżek?
+      - Jaka jest relacja między ścieżką a celem podróży?
+  - id: hi_ps_strangers_choreography
+    name: Choreografia Obcych
+    prompt: |
+      Niepowiązane ciała poruszają się w wspólnej przestrzeni. Choreografia jest niewerbalna – odejście na bok, pauza, połączenie. Obserwuj taniec. Nikt nie mówi. Choreografia jest czysto cielesna. Czego ona wymaga?
+    follow_ups:
+      - Jak choreografia kształtuje przestrzeń?
+      - Co by się stało, gdyby wszyscy się zatrzymali?
+      - Jaka jest relacja między choreografią a uprzejmością?
+  - id: hi_ps_object_talisman
+    name: Przedmiot jako Talizman
+    prompt: |
+      Książka na ławce. Torba na krześle. Przedmiot zajmuje miejsce. Mówi "Jestem tutaj" lub "Wrócę". Przedmiot jest talizmanem. Obserwuj zajęcie. Czego on broni?
+    follow_ups:
+      - Jak talizman kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez takich zajęć?
+      - Jaka jest relacja między przedmiotem a obecnością?
+  - id: hi_ps_bench_armrest
+    name: Podłokietnik Ławki
+    prompt: |
+      Niektóre ławki mają podłokietniki. Dzielą siedzenie. Uniemożliwiają leżenie. Podłokietnik jest celowym elementem designu. Obserwuj, kto go używa. Czego podłokietnik wyklucza?
+    follow_ups:
+      - Jak podłokietnik kształtuje ławkę?
+      - Czym byłaby ławka bez niego?
+      - Jaka jest relacja między podłokietnikiem a kontrolą?
+  - id: hi_ps_pathway_intersection
+    name: Skrzyżowanie Ścieżek
+    prompt: |
+      Ścieżki się przecinają. Ciała zbiegają się. Skrzyżowanie to punkt kolizji. Obserwuj połączenie. Co się dzieje, gdy przepływy się spotykają? Skrzyżowanie wymaga negocjacji. Czego ono wymaga?
+    follow_ups:
+      - Jak skrzyżowanie kształtuje przepływ?
+      - Czym byłaby przestrzeń bez skrzyżowań?
+      - Jaka jest relacja między skrzyżowaniem a uwagą?
+  - id: hi_ps_eye_contact_avoid
+    name: Unikanie Kontaktu Wzrokowego
+    prompt: |
+      Obcy unikają kontaktu wzrokowego. To unikanie jest uprzejme. Patrzeć to ryzykować połączenie. Obserwuj spojrzenie. Unikanie to kontrakt. Co ono umożliwia? Ile kosztuje?
+    follow_ups:
+      - Jak unikanie kształtuje przestrzeń?
+      - Czym byłaby przestrzeń z większą ilością kontaktu?
+      - Jaka jest relacja między spojrzeniem a prywatnością?
+  - id: hi_ps_bench_share
+    name: Wspólna Ławka
+    prompt: |
+      Dwaj obcy dzielą ławkę. Przestrzeń między nimi. Dzielenie to bliskość bez połączenia. Obserwuj granicę. Jak blisko to za blisko? Dzielenie to delikatna równowaga.
+    follow_ups:
+      - Jak wspólne korzystanie kształtuje ławkę?
+      - Czym byłaby ławka z jedną osobą?
+      - Jaka jest relacja między dzieleniem a tolerancją?
+  - id: hi_ps_pathway_width
+    name: Szerokość Ścieżki
+    prompt: |
+      Ścieżka jest szeroka lub wąska. Szerokość wpływa na przepływ. Dwie osoby mogą przejść lub nie. Obserwuj szerokość. Co ona zakłada na temat tłumu? Szerokość to projekt. Co ona umożliwia?
+    follow_ups:
+      - Jak szerokość kształtuje spacer?
+      - Czym byłaby ścieżka, gdyby była szersza?
+      - Jaka jest relacja między szerokością a komfortem?
+  - id: hi_ps_bench_sun
+    name: Ławka w Słońcu
+    prompt: |
+      Ławka jest zwrócona w stronę słońca. Lub cienia. Położenie ma znaczenie. Obserwuj, kto wybiera którą. Słońce jest zasobem. Co ono zapewnia? Ławka w słońcu jest pożądana.
+    follow_ups:
+      - Jak słońce kształtuje ławkę?
+      - Czym byłaby przestrzeń bez słońca?
+      - Jaka jest relacja między słońcem a odpoczynkiem?
+  - id: hi_ps_stranger_proximity
+    name: Bliskość Obcego
+    prompt: |
+      Obcy stoi blisko – w kolejce, w autobusie. Bliskość jest bezosobowa, ale intymna. Obserwuj tolerancję. Co ciało dopuszcza? Bliskość to kontrakt. Jakie są jego warunki?
+    follow_ups:
+      - Jak bliskość kształtuje przestrzeń?
+      - Czym byłaby przestrzeń z większą ilością miejsca?
+      - Jaka jest relacja między bliskością a uprzejmością?
+  - id: hi_ps_object_left
+    name: Pozostawiony Przedmiot
+    prompt: |
+      Kurtka na ławce. Torba pod drzewem. Pozostawiony przedmiot oznacza terytorium. Obserwuj zajęcie. Jak długo może trwać? Pozostawiony przedmiot to test. Czego on wymaga od innych?
+    follow_ups:
+      - Jak przedmiot kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez takich zajęć?
+      - Jaka jest relacja między przedmiotem a zaufaniem?
+  - id: hi_ps_pathway_obstacle
+    name: Przeszkoda na Ścieżce
+    prompt: |
+      Coś blokuje ścieżkę – budowa, tłum, wykonawca. Przeszkoda odwraca przepływ. Obserwuj objazd. Czego wymaga przeszkoda? Ścieżka nigdy nie jest czysta. Co ją przerywa?
+    follow_ups:
+      - Jak przeszkoda kształtuje przepływ?
+      - Czym byłaby ścieżka bez przeszkód?
+      - Jaka jest relacja między przeszkodą a adaptacją?
+  - id: hi_ps_bench_alone
+    name: Samotna Ławka
+    prompt: |
+      Jedna osoba na ławce. Samotność jest widoczna. Ławka zapewnia samotność. Obserwuj postawę. Co zapewnia samotna ławka? Samotna ławka to wybór. Co ona umożliwia?
+    follow_ups:
+      - Jak samotność kształtuje ławkę?
+      - Czym byłaby przestrzeń bez ławek?
+      - Jaka jest relacja między samotnością a odpoczynkiem?
+  - id: hi_ps_nod_acknowledge
+    name: Kiwnięcie Głową jako Potwierdzenie
+    prompt: |
+      Lekkie kiwnięcie głową. Krótki uśmiech. Potwierdzenie jest minimalne. Mówi "Widzę cię" bez zaangażowania. Obserwuj, kiedy się zdarza. Kiwnięcie to mała uprzejmość. Co ono tworzy?
+    follow_ups:
+      - Jak kiwnięcie kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez niego?
+      - Jaka jest relacja między kiwnięciem a bezpieczeństwem?
+  - id: hi_ps_pathway_edge
+    name: Krawędź Ścieżki
+    prompt: |
+      Ścieżka ma krawędzie – trawa, krawężnik, bariera. Krawędź definiuje ścieżkę. Obserwuj, kto pozostaje na ścieżce. Kto ją przekracza? Krawędź to granica. Co ona zawiera?
+    follow_ups:
+      - Jak krawędź kształtuje spacer?
+      - Czym byłaby ścieżka bez krawędzi?
+      - Jaka jest relacja między krawędzią a wolnością?
+  - id: hi_ps_bench_claim
+    name: Zajęcie Ławki
+    prompt: |
+      Ławka jest zajęta – przez rozłożenie się, postawę, torbę. Zajęcie mówi "to jest moje". Obserwuj zajęcie. Jak jest dokonywane? Zajęcie to terytorium. Czego ono broni?
+    follow_ups:
+      - Jak zajęcie kształtuje ławkę?
+      - Czym byłaby przestrzeń bez zajęć?
+      - Jaka jest relacja między zajęciem a komfortem?
+  - id: hi_ps_stranger_help
+    name: Pomoc Obcego
+    prompt: |
+      "Potrzebujesz pomocy?" Obcy oferuje. Pomoc jest nieoczekiwana. Obserwuj wymianę. Przyjąć czy odmówić? Pomoc obcego to dar. Czego ona wymaga?
+    follow_ups:
+      - Jak pomoc kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez takich ofert?
+      - Jaka jest relacja między pomocą a zaufaniem?
+  - id: hi_ps_object_temporary
+    name: Tymczasowy Przedmiot
+    prompt: |
+      Kubek, gazeta, kapelusz. Przedmiot oznacza miejsce. Jest tymczasowy. Właściciel wróci. Obserwuj zajęcie. Czego wymaga tymczasowy przedmiot od innych? Przedmiot jest zastępstwem.
+    follow_ups:
+      - Jak tymczasowy przedmiot kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez tego?
+      - Jaka jest relacja między tymczasowością a zaufaniem?
+  - id: hi_ps_pathway_rhythm
+    name: Rytm Ścieżki
+    prompt: |
+      Stopy na chodniku. Rytm jest indywidualny – szybki, wolny, nierówny. Ścieżka zawiera wiele rytmów. Obserwuj synchronizację i zderzenia. Co ujawnia rytm?
+    follow_ups:
+      - Jak rytm kształtuje spacer?
+      - Czym byłaby ścieżka w ciszy?
+      - Jaka jest relacja między rytmem a celem podróży?
+  - id: hi_ps_bench_face
+    name: Kierunek Ławki
+    prompt: |
+      Ławka jest zwrócona w określonym kierunku – widok, słońce, tłum. Kierunek kształtuje doświadczenie. Obserwuj, kto wybiera którą ławkę. Kierunek to projekt. Co on zakłada?
+    follow_ups:
+      - Jak kierunek kształtuje ławkę?
+      - Czym byłaby ławka bez kierunku?
+      - Jaka jest relacja między kierunkiem a widokiem?
+  - id: hi_ps_sidewalk_dance
+    name: Taniec na Chodniku
+    prompt: |
+      Dwie osoby się zbliżają. Taniec – kto się rusza? Taniec na chodniku jest uniwersalny. Obserwuj omijanie. Taniec jest niewerbalny. Czego on wymaga?
+    follow_ups:
+      - Jak taniec kształtuje spacer?
+      - Czym byłby chodnik bez niego?
+      - Jaka jest relacja między tańcem a uprzejmością?
+  - id: hi_ps_object_abandoned
+    name: Porzucony Przedmiot
+    prompt: |
+      Rękawiczka na ziemi. Szalik na ławce. Przedmiot jest porzucony. Obserwuj go. Kto go zostawił? Kto go podniesie? Porzucony przedmiot to mała zagadka. Co on ujawnia?
+    follow_ups:
+      - Jak porzucony przedmiot kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez takich przedmiotów?
+      - Jaka jest relacja między porzuconym przedmiotem a stratą?
+  - id: hi_ps_pathway_surface
+    name: Nawierzchnia Ścieżki
+    prompt: |
+      Chodnik, żwir, trawa. Nawierzchnia wpływa na spacer. Obserwuj wybór. Czego wymaga nawierzchnia od ciała? Nawierzchnia to projekt. Co ona umożliwia?
+    follow_ups:
+      - Jak nawierzchnia kształtuje spacer?
+      - Czym byłaby ścieżka z inną nawierzchnią?
+      - Jaka jest relacja między nawierzchnią a dostępnością?
+  - id: hi_ps_bench_weather
+    name: Ławka i Pogoda
+    prompt: |
+      Deszcz, słońce, wiatr. Pogoda kształtuje ławkę. Kto siedzi w deszczu? Kto szuka cienia? Ławka jest wystawiona na działanie czynników. Obserwuj relację między ławką a pogodą. Co robi pogoda?
+    follow_ups:
+      - Jak pogoda kształtuje ławkę?
+      - Czym byłaby ławka z zadaszeniem?
+      - Jaka jest relacja między pogodą a użytkowaniem?
+  - id: hi_ps_stranger_glance
+    name: Spojrzenie Obcego
+    prompt: |
+      Krótkie spojrzenie. Spojrzenie to ocena. Bezpieczne? Zagrożenie? Spojrzenie jest automatyczne. Obserwuj swoje spojrzenia. Co robi spojrzenie? Spojrzenie to narzędzie przetrwania. Co ono wyciąga?
+    follow_ups:
+      - Jak spojrzenie kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez spojrzeń?
+      - Jaka jest relacja między spojrzeniem a bezpieczeństwem?
+  - id: hi_ps_pathway_crowd
+    name: Tłum na Ścieżce
+    prompt: |
+      Ścieżka jest zatłoczona. Ciała się ściskają. Tłum ma swój własny przepływ. Obserwuj ruch. Tłum to zbiorowość. Czego on wymaga od jednostki?
+    follow_ups:
+      - Jak tłum kształtuje ścieżkę?
+      - Czym byłaby ścieżka pusta?
+      - Jaka jest relacja między tłumem a przepływem?
+  - id: hi_ps_bench_curve
+    name: Łuk Ławki
+    prompt: |
+      Niektóre ławki są zakrzywione. Są zwrócone ku sobie lub ku środkowi. Łuk kształtuje interakcje społeczne. Obserwuj rozmieszczenie. Co umożliwia łuk? Łuk to projekt. Czego on chce?
+    follow_ups:
+      - Jak łuk kształtuje ławkę?
+      - Czym byłaby ławka, gdyby była prosta?
+      - Jaka jest relacja między łukiem a połączeniem?
+  - id: hi_ps_object_traded
+    name: Wymieniany Przedmiot
+    prompt: |
+      Podanie z ręki do ręki. Zakup. Dar. Przedmiot przechodzi między obcymi. Obserwuj wymianę. Co przechodzi oprócz przedmiotu? Wymiana to chwila połączenia. Co ona tworzy?
+    follow_ups:
+      - Jak wymiana kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez takich wymian?
+      - Jaka jest relacja między wymianą a zaufaniem?
+  - id: hi_ps_pathway_light
+    name: Światło na Ścieżce
+    prompt: |
+      Dzień, noc, latarnia uliczna. Światło kształtuje ścieżkę. Obserwuj różnicę. Kto chodzi nocą? Światło to bezpieczeństwo i atmosfera. Co ono zapewnia?
+    follow_ups:
+      - Jak światło kształtuje ścieżkę?
+      - Czym byłaby ścieżka w ciemności?
+      - Jaka jest relacja między światłem a bezpieczeństwem?
+  - id: hi_ps_bench_armrest_gap
+    name: Przerwa w Podłokietniku Ławki
+    prompt: |
+      Podłokietnik dzieli. Jedna osoba na sekcję. Przerwa uniemożliwia dzielenie się. Obserwuj projekt. Czego wyklucza przerwa? Przerwa w podłokietniku to wroga architektura. Co ona zakłada?
+    follow_ups:
+      - Jak przerwa kształtuje ławkę?
+      - Czym byłaby ławka bez podłokietników?
+      - Jaka jest relacja między przerwą a wykluczeniem?
+  - id: hi_ps_stranger_smile
+    name: Uśmiech Obcego
+    prompt: |
+      Uśmiech od obcego. Nieoczekiwany. Uśmiech to dar. Obserwuj reakcję. Co robi uśmiech? Uśmiech to małe naruszenie kontraktu. Co on tworzy?
+    follow_ups:
+      - Jak uśmiech kształtuje przestrzeń?
+      - Czym byłaby przestrzeń z większą ilością uśmiechów?
+      - Jaka jest relacja między uśmiechem a połączeniem?
+  - id: hi_ps_object_touch
+    name: Dotyk Przedmiotu
+    prompt: |
+      Dłoń na balustradzie. Stopa na stopniu. Dotyk łączy ciało i przestrzeń. Przedmiot jest wspólny. Obserwuj dotyk. Co robi dotyk? Przedmiot to punkt kontaktu. Co on niesie?
+    follow_ups:
+      - Jak dotyk kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez dotyku?
+      - Jaka jest relacja między dotykiem a obecnością?
+  - id: hi_ps_pathway_choice
+    name: Wybór Ścieżki
+    prompt: |
+      Ścieżka się rozwidla. W lewo czy w prawo? Wybór jest mały. Obserwuj decyzję. Co ją determinuje? Wybór ścieżki to chwila działania. Co on ujawnia?
+    follow_ups:
+      - Jak wybór kształtuje spacer?
+      - Czym byłaby ścieżka bez rozwidleń?
+      - Jaka jest relacja między wyborem a celem podróży?
+  - id: hi_ps_bench_empty
+    name: Pusta Ławka
+    prompt: |
+      Ławka jest pusta. Dostępna. Dlaczego? Obserwuj pustą ławkę. Lokalizacja? Czas? Pogoda? Pusta ławka to zaproszenie. Co ona oferuje?
+    follow_ups:
+      - Jak pusta ławka kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez pustych ławek?
+      - Jaka jest relacja między pustką a możliwością?
+  - id: hi_ps_stranger_queue
+    name: Kolejka Obcych
+    prompt: |
+      Tworzy się kolejka. Obcy czekają razem. Kolejka to porządek. Obserwuj cierpliwość. Kolejka tworzy tymczasową społeczność. Czego wymaga kolejka? Co ona zapewnia?
+    follow_ups:
+      - Jak kolejka kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez kolejek?
+      - Jaka jest relacja między kolejką a uczciwością?
+  - id: hi_ps_object_talisman_trust
+    name: Zaufanie Talizmanu
+    prompt: |
+      Zostawiasz swoją torbę. Ufasz przestrzeni. Talizman to test. Obserwuj zaufanie. Co ono zakłada? Zaufanie talizmanu to ryzyko. Co ono umożliwia?
+    follow_ups:
+      - Jak zaufanie kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez takiego zaufania?
+      - Jaka jest relacja między zaufaniem a wrażliwością?
+  - id: hi_ps_pathway_end
+    name: Koniec Ścieżki
+    prompt: |
+      Ścieżka się kończy. Cel, ściana, brama. Koniec to próg. Obserwuj przybycie. Co zapewnia koniec? Koniec ścieżki to zakończenie. Co on oznacza?
+    follow_ups:
+      - Jak koniec kształtuje spacer?
+      - Czym byłaby ścieżka bez końca?
+      - Jaka jest relacja między końcem a zakończeniem?
+  - id: hi_ps_bench_duo
+    name: Para na Ławce
+    prompt: |
+      Dwie osoby dzielą ławkę. Przyjaciele, kochankowie, obcy. Para ma dynamikę. Obserwuj dystans. Rozmowę lub milczenie. Para na ławce to mała jednostka społeczna. Co ona tworzy?
+    follow_ups:
+      - Jak para kształtuje ławkę?
+      - Czym byłaby ławka z jedną osobą?
+      - Jaka jest relacja między parą a połączeniem?
+  - id: hi_ps_stranger_danger
+    name: Zagrożenie ze Strony Obcego
+    prompt: |
+      Ciało ocenia. Bezpieczne? Ocena jest automatyczna. Obserwuj sygnały. Co wywołuje ostrożność? Zagrożenie ze strony obcego to instynkt przetrwania. Czego on broni? Ile kosztuje?
+    follow_ups:
+      - Jak ocena kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez tego?
+      - Jaka jest relacja między zagrożeniem a otwartością?
+  - id: hi_ps_object_marker
+    name: Przedmiot jako Oznacznik
+    prompt: |
+      Kamień na ławce. Wstążka na drzewie. Przedmiot coś oznacza. Pamięć, zajęcie, rytuał. Obserwuj oznacznik. Co on oznacza? Oznacznik to wiadomość. Co mówi?
+    follow_ups:
+      - Jak oznacznik kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez oznaczników?
+      - Jaka jest relacja między oznacznikiem a znaczeniem?
+  - id: hi_ps_pathway_grade
+    name: Pochylenie Ścieżki
+    prompt: |
+      Ścieżka jest nachylona. W górę lub w dół. Pochylenie wpływa na ciało. Obserwuj wysiłek. Pochylenie to projekt. Co ono zakłada na temat wędrowca? Pochylenie to bariera dla niektórych.
+    follow_ups:
+      - Jak pochylenie kształtuje spacer?
+      - Czym byłaby ścieżka, gdyby była płaska?
+      - Jaka jest relacja między pochyleniem a dostępnością?
+  - id: hi_ps_bench_public
+    name: Publiczna Ławka
+    prompt: |
+      Ławka jest publiczna. Każdy może usiąść. Publiczność to cel. Obserwuj, kto jej używa. Publiczna ławka to dobro wspólne. Czego ona wymaga? Co ona zapewnia?
+    follow_ups:
+      - Jak publiczność kształtuje ławkę?
+      - Czym byłaby przestrzeń bez publicznych ławek?
+      - Jaka jest relacja między publicznością a przynależnością?
+  - id: hi_ps_stranger_parallel
+    name: Równoległy Chód z Obcym
+    prompt: |
+      Idziesz obok obcego. Ten sam kierunek, to samo tempo. Równoległość jest przypadkowa. Obserwuj dynamikę. Synchronizujecie się? Rozchodzicie? Równoległość to tymczasowe towarzystwo. Co ona tworzy?
+    follow_ups:
+      - Jak równoległość kształtuje spacer?
+      - Czym byłaby ścieżka bez takich równoległości?
+      - Jaka jest relacja między równoległością a samotnością?
+  - id: hi_ps_object_shared
+    name: Wspólny Przedmiot
+    prompt: |
+      Fontanna wody. Poręcz. Przedmiot jest wspólny. Dotyka go wiele rąk. Obserwuj wspólny przedmiot. Czego wymaga dzielenie się? Wspólny przedmiot to punkt kontaktu. Co on niesie?
+    follow_ups:
+      - Jak wspólny przedmiot kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez takich przedmiotów?
+      - Jaka jest relacja między wspólnym przedmiotem a zaufaniem?
+  - id: hi_ps_pathway_loop
+    name: Pętla Ścieżki
+    prompt: |
+      Ścieżka zawraca. Pętla. Brak celu. Pętla służy do samego spaceru. Obserwuj spacerowiczów. Co zapewnia pętla? Pętla to inny rodzaj ścieżki. Co ona umożliwia?
+    follow_ups:
+      - Jak pętla kształtuje spacer?
+      - Czym byłaby przestrzeń bez pętli?
+      - Jaka jest relacja między pętlą a refleksją?
+  - id: hi_ps_bench_legacy
+    name: Ławka z Przesłaniem
+    prompt: |
+      "Ku pamięci." Ławka ma tabliczkę. Ktoś kochał to miejsce. Ławka z przesłaniem niesie historię. Obserwuj ją. Co dodaje tabliczka? Ławka z przesłaniem to dar. Co ona tworzy?
+    follow_ups:
+      - Jak przesłanie kształtuje ławkę?
+      - Czym byłaby ławka bez tabliczki?
+      - Jaka jest relacja między przesłaniem a miejscem?
+  - id: hi_ps_stranger_ask
+    name: Pytanie Obcego
+    prompt: |
+      "Masz zegarek?" "Gdzie jest X?" Pytanie tworzy chwilę połączenia. Obserwuj wymianę. Czego wymaga pytanie? Pytanie obcego to małe naruszenie. Co ono umożliwia?
+    follow_ups:
+      - Jak pytanie kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez takich pytań?
+      - Jaka jest relacja między pytaniem a pomocą?
+  - id: hi_ps_object_talisman_return
+    name: Powrót Talizmanu
+    prompt: |
+      Wracasz. Talizman nadal tam jest. Twoja torba, twoja książka. Powrót potwierdza zaufanie. Obserwuj ulgę. Co oznacza powrót? Powrót talizmanu to małe zwycięstwo. Co on tworzy?
+    follow_ups:
+      - Jak powrót kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez takich powrotów?
+      - Jaka jest relacja między powrotem a zaufaniem?
+  - id: hi_ps_pathway_beginning
+    name: Początek Ścieżki
+    prompt: |
+      Ścieżka się zaczyna. Próg. Wchodzisz na nią. Obserwuj chwilę. Co oznacza początek? Początek ścieżki to zobowiązanie. Czego on wymaga?
+    follow_ups:
+      - Jak początek kształtuje spacer?
+      - Czym byłaby przestrzeń bez ścieżek?
+      - Jaka jest relacja między początkiem a zamierzeniem?
+  - id: hi_ps_bench_community
+    name: Społeczność Ławkowa
+    prompt: |
+      Stali bywalcy znają ławkę. Ci sami ludzie, ten sam czas. Społeczność ławkowa jest nieformalna. Obserwuj rozpoznanie. Co zapewnia społeczność? Społeczność ławkowa to mały świat społeczny.
+    follow_ups:
+      - Jak społeczność kształtuje ławkę?
+      - Czym byłaby ławka bez stałych bywalców?
+      - Jaka jest relacja między społecznością a miejscem?
+  - id: hi_ps_stranger_chorus
+    name: Chór Obcych
+    prompt: |
+      Wiele ciał, jedna przestrzeń. Chór obcych to dźwięk tłumu – kroki, głosy, szelest. Obserwuj chór. Co on tworzy? Chór to dźwięk publiczny. Co on oznacza?
+    follow_ups:
+      - Jak chór kształtuje przestrzeń?
+      - Czym byłaby przestrzeń w ciszy?
+      - Jaka jest relacja między chórem a przynależnością?
+  - id: hi_ps_object_talisman_loss
+    name: Utrata Talizmanu
+    prompt: |
+      Talizman zniknął. Skradziony, przeniesiony, pomylony. Utrata to naruszenie. Obserwuj reakcję. Co oznacza strata? Utrata talizmanu to mała trauma. Co ona ujawnia?
+    follow_ups:
+      - Jak strata kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez takich strat?
+      - Jaka jest relacja między stratą a zaufaniem?
+  - id: hi_ps_pathway_shared
+    name: Wspólna Ścieżka
+    prompt: |
+      Ścieżka jest wspólna – piesi, rowerzyści, wózki. Wspólne użytkowanie wymaga negocjacji. Obserwuj zasady. Kto ustępuje? Wspólna ścieżka to dobro wspólne. Czego ona wymaga?
+    follow_ups:
+      - Jak wspólne użytkowanie kształtuje ścieżkę?
+      - Czym byłaby ścieżka z jednym rodzajem użytkowania?
+      - Jaka jest relacja między wspólnym użytkowaniem a konfliktem?
+  - id: hi_ps_bench_rest
+    name: Odpoczynek na Ławce
+    prompt: |
+      Ktoś odpoczywa. Zamknięte oczy, powolny oddech. Odpoczynek jest widoczny. Ławka zapewnia. Obserwuj odpoczynek. Co umożliwia ławka? Odpoczynek na ławce to dar przestrzeni publicznej. Co on oznacza?
+    follow_ups:
+      - Jak odpoczynek kształtuje ławkę?
+      - Czym byłaby przestrzeń bez ławek?
+      - Jaka jest relacja między odpoczynkiem a godnością?
+  - id: hi_ps_stranger_chorus_silence
+    name: Cisza w Chórze Obcych
+    prompt: |
+      Tłum się zatrzymuje. Chwila ciszy. Chór obcych milknie. Obserwuj zmianę. Co tworzy cisza? Wspólna cisza jest rzadka. Co ona oznacza?
+    follow_ups:
+      - Jak cisza kształtuje przestrzeń?
+      - Czym byłaby przestrzeń bez takich chwil?
+      - Jaka jest relacja między ciszą a zbiorowością?

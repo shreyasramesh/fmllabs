@@ -1,0 +1,503 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natural Microcosm — Vijver & Puddle (Dutch)
+
+id: natural_microcosm_pond_puddle
+name: Natural Microcosm — Vijver & Puddle
+description: 50 kaarten om je kijk op water op kleine schaal te veranderen—van oppervlaktespanning en reflecties tot waterinsecten, kikkervisjes en het leven in tijdelijke poelen.
+domain: natural_microcosm
+cards:
+  - id: nmp_surface_tension
+    name: Oppervlaktespanning
+    prompt: |
+      Een schaatsenrijder loopt op het water. Het oppervlak houdt — moleculen
+      kleven aan elkaar. Laat voorzichtig een speld vallen. Hij blijft
+      drijven. Denk aan de onzichtbare film. Wat zou het breken?
+    follow_ups:
+      - Hoe bepaalt oppervlaktespanning wie hier kan leven?
+      - Wat zou de vijver zijn zonder?
+      - Wat is de relatie tussen oppervlak en grens?
+  - id: nmp_skater_ripple
+    name: Schaatsenrijderrimpeling
+    prompt: |
+      De poten van een schaatsenrijder deuken het oppervlak. Elke stap creëert
+      een rimpeling. Kijk naar het patroon. De schaatsenrijder leest het
+      oppervlak als een kaart. Wat voelt hij?
+    follow_ups:
+      - Hoe draagt de rimpeling informatie over?
+      - Wat zou de schaatsenrijder doen zonder het oppervlak?
+      - Wat is de relatie tussen rimpeling en prooi?
+  - id: nmp_reflection_sky
+    name: Weerspiegeling van de Hemel
+    prompt: |
+      Een plas weerspiegelt de lucht—of een tak, of jou. De weerspiegeling
+      is omgekeerd. Het stilstaande water is een spiegel. Wat voegt de
+      weerspiegeling toe? Wat verbergt het?
+    follow_ups:
+      - Wat zou de plas zijn zonder weerspiegeling?
+      - Hoe bepaalt stilstand wat we zien?
+      - Wat is de relatie tussen oppervlak en beeld?
+  - id: nmp_tadpole_tail
+    name: Kikkervisjesstaart
+    prompt: |
+      Een kikkervisje zwemt—de staart stuwt het voort. De staart zal worden
+      geabsorbeerd. Het dier transformeert. Denk aan het tussengebied. Wat
+      maakt de staart nu mogelijk?
+    follow_ups:
+      - Wat zou het kikkervisje zijn zonder de staart?
+      - Hoe herschrijft metamorfose het lichaam?
+      - Wat is de relatie tussen vorm en functie?
+  - id: nmp_dragonfly_egg
+    name: Libelle-ei
+    prompt: |
+      Libellen leggen eieren in water—of in stengels onder het oppervlak. De
+      nimf leeft jarenlang onder water voordat hij tevoorschijn komt. Denk
+      aan het gespleten leven. Wat verbindt water en lucht?
+    follow_ups:
+      - Wat zou de libelle zijn zonder het aquatische stadium?
+      - Hoe vormt de nimf de vijver?
+      - Wat is de relatie tussen nimf en volwassene?
+  - id: nmp_algae_bloom
+    name: Algenbloei
+    prompt: |
+      Groene smurrie op het water—algen. Het is een bloei, een golf. Te veel
+      voedingsstoffen, te veel zon. De vijver reageert. Wat triggert het? Wat
+      volgt?
+    follow_ups:
+      - Wat zou de vijver zijn zonder algen?
+      - Hoe beïnvloedt de bloei zuurstof?
+      - Wat is de relatie tussen voedingsstof en groei?
+  - id: nmp_reed_stem
+    name: Rietstengel
+    prompt: |
+      Riet en bies stijgen op vanaf de rand. Ze zijn hol—luchtkanaaltjes lopen
+      erin. De stengel verbindt water en lucht. Wie gebruikt het riet als
+      ladder?
+    follow_ups:
+      - Wat zou de rand zijn zonder riet?
+      - Hoe maakt het holle overleven mogelijk?
+      - Wat is de relatie tussen stengel en habitat?
+  - id: nmp_pond_skin
+    name: Vijverhuid
+    prompt: |
+      De vijver heeft een huid—waar water lucht ontmoet. Stof landt erop. Olie
+      verspreidt zich. De huid is delicaat. Raak hem aan. Wat scheidt de huid?
+    follow_ups:
+      - Wat zou de vijver zijn zonder de huid?
+      - Hoe beïnvloedt de huid gasuitwisseling?
+      - Wat is de relatie tussen oppervlak en diepte?
+  - id: nmp_temporary_pool
+    name: Tijdelijke Plas
+    prompt: |
+      Een plas na regen—hij zal opdrogen. Toch heeft leven zich aangepast.
+      Pequeños crustáceos, pekelkreeftjes, eieren die wachten. Denk aan de
+      urgentie. Wat moet er gebeuren voordat het water verdwijnt?
+    follow_ups:
+      - Wat zou de plas zijn als hij permanent was?
+      - Hoe bepaalt tijdelijkheid de strategie?
+      - Wat is de relatie tussen tijd en aanpassing?
+  - id: nmp_whirligig_gyre
+    name: Watervlooienspiraal
+    prompt: |
+      Watervlooien draaien op het oppervlak. Ze zien boven en onder—gespleten
+      ogen. Ze zijn roofdieren en prooien. Denk aan het dubbele zicht. Wat
+      maakt het mogelijk?
+    follow_ups:
+      - Wat zou de kever zijn zonder gespleten zicht?
+      - Hoe verwarren de spiralen roofdieren?
+      - Wat is de relatie tussen draaien en overleven?
+  - id: nmp_diving_spider
+    name: Duikspin
+    prompt: |
+      Een duikspin draagt een luchtbel—een duikklok. Hij ademt onder water. De
+      bel is een long. Denk aan de uitvinding. Wat zou de spin doen zonder?
+    follow_ups:
+      - Hoe maakt de bel jagen mogelijk?
+      - Wat zou er gebeuren als de bel zou barsten?
+      - Wat is de relatie tussen lucht en water?
+  - id: nmp_pond_scum
+    name: Vijversmurrie
+    prompt: |
+      Smurrie vormt zich aan de rand—pollen, stof, algen, insecten. Het is een
+      grenslaag. Wat verzamelt zich daar? Wie voedt zich ermee? De smurrie is
+      een filter.
+    follow_ups:
+      - Wat zou de vijver zijn zonder de smurrie?
+      - Hoe concentreert de rand leven?
+      - Wat is de relatie tussen grens en accumulatie?
+  - id: nmp_ice_surface
+    name: IJsoppervlak
+    prompt: |
+      In de winter bevriest de vijver. Het ijs houdt. Eronder gaat het leven
+      door—langzamer, kouder. Denk aan de barrière. Wat beschermt het ijs? Wat
+      blokkeert het?
+    follow_ups:
+      - Wat zou de vijver zijn zonder ijs?
+      - Hoe beïnvloedt bevriezing zuurstof?
+      - Wat is de relatie tussen ijs en overleven?
+  - id: nmp_minnow_school
+    name: Elftschool
+    prompt: |
+      Elften zwemmen in scholen—ze bewegen als één. De school is verdediging,
+      efficiëntie. Kijk naar de synchroniciteit. Wat coördineert hen? Wat zou
+      een eenzame elft riskeren?
+    follow_ups:
+      - Wat zou de vijver zijn zonder de school?
+      - Hoe vermindert schoolvorming predatie?
+      - Wat is de relatie tussen individu en groep?
+  - id: nmp_lily_pad
+    name: Waterlelieblad
+    prompt: |
+      Een waterlelieblad drijft. De onderkant is anders dan de bovenkant—haren,
+      kleur. Het blad is een platform. Wat landt erop? Wat leeft eronder?
+    follow_ups:
+      - Wat zou de vijver zijn zonder waterleliebladeren?
+      - Hoe vormt het blad het licht eronder?
+      - Wat is de relatie tussen blad en schaduw?
+  - id: nmp_ripple_spread
+    name: Golfverspreiding
+    prompt: |
+      Een steen valt. Golven verspreiden zich. Ze kruisen elkaar, interfereren.
+      Het patroon draagt energie over. Denk aan het verval. Hoe ver reizen de
+      golven?
+    follow_ups:
+      - Wat zou het oppervlak zijn zonder golven?
+      - Hoe markeert de golf de impact?
+      - Wat is de relatie tussen verstoring en verspreiding?
+  - id: nmp_mosquito_wiggle
+    name: Muggenwaggel
+    prompt: |
+      Muggenlarven hangen aan het oppervlak—waggelaars. Ze ademen via een sifon.
+      De waggel is beweging, voeding. Denk aan de wereld van de larve. Wat
+      eet het?
+    follow_ups:
+      - Wat zou de vijver zijn zonder muggen?
+      - Hoe vermijdt de waggel roofdieren?
+      - Wat is de relatie tussen larve en volwassene?
+  - id: nmp_leaf_boat
+    name: Bladboot
+    prompt: |
+      Een blad drijft—gevallen, ronddobberend. Het is een vlot voor sommigen,
+      voedsel voor anderen. Het blad zal zinken, rotten. Volg zijn reis. Wat
+      wordt het?
+    follow_ups:
+      - Wat zou het oppervlak zijn zonder drijvend puin?
+      - Hoe creëert het blad microhabitat?
+      - Wat is de relatie tussen drijven en zinken?
+  - id: nmp_backswimmer_top
+    name: Rugzwemmer boven
+    prompt: |
+      Een rugzwemmer zwemt ondersteboven—buik naar de hemel. Hij roeit met
+      zijn poten. Hij ademt aan het oppervlak en duikt dan. Denk aan de
+      omkering. Waarom ondersteboven?
+    follow_ups:
+      - Wat zou de rugzwemmer zijn rechtop?
+      - Hoe helpt de houding bij de jacht?
+      - Wat is de relatie tussen oriëntatie en prooi?
+  - id: nmp_snail_trail
+    name: Slakkenpad
+    prompt: |
+      Een vijverslak glijdt. Hij laat een spoor achter—slijm, beweging. Het
+      spoor markeert waar het is geweest. Andere slakken kunnen volgen. Denk
+      aan het pad. Wat communiceert het spoor?
+    follow_ups:
+      - Wat zou de slak zijn zonder het spoor?
+      - Hoe maakt slijm beweging mogelijk?
+      - Wat is de relatie tussen spoor en volgen?
+  - id: nmp_dew_drop
+    name: Dauwdruppel
+    prompt: |
+      Dauw vormt zich op een blad boven het water—druppels, weerspiegelt. Het is
+      condensatie. De druppel houdt. Dan valt hij. Denk aan de druppel. Wat
+      vergroot het?
+    follow_ups:
+      - Wat zou het blad zijn zonder dauw?
+      - Hoe buigt de druppel licht?
+      - Wat is de relatie tussen druppel en oppervlak?
+  - id: nmp_spring_constant
+    name: Bronconstante
+    prompt: |
+      Een bron voedt de vijver—of de vijver sijpelt. Het waterpeil is balans.
+      Denk aan de input en output. Wat houdt de plas in stand? Wat zou hem
+      laten opdrogen?
+    follow_ups:
+      - Wat zou de vijver zijn zonder de bron?
+      - Hoe vormt de bron het water?
+      - Wat is de relatie tussen input en leven?
+  - id: nmp_edge_ecotone
+    name: Rand Ecotone
+    prompt: |
+      De vijverrand is een ecotoon—overgang. Nat ontmoet droog. Planten passen
+      zich aan. Dieren steken over. De rand is diversiteit. Wat gedijt in het
+      tussengebied?
+    follow_ups:
+      - Wat zou de vijver zijn zonder de rand?
+      - Hoe creëert de ecotone kansen?
+      - Wat is de relatie tussen grens en diversiteit?
+  - id: nmp_frog_eye
+    name: Kikker oog
+    prompt: |
+      Een kikker zit aan de rand. Zijn ogen puilen uit—hij ziet boven en
+      vooruit. De kikker is stil. Dan schiet de tong eruit. Denk aan het
+      geduld. Waar wacht hij op?
+    follow_ups:
+      - Wat zou de kikker zijn zonder de uitpuilende ogen?
+      - Hoe maakt stilte de slag mogelijk?
+      - Wat is de relatie tussen wachten en vangen?
+  - id: nmp_oxygen_bubble
+    name: Zuurstofbel
+    prompt: |
+      Planten in de vijver produceren zuurstof—bellen stijgen op. Op een zonnige
+      dag ademt het water. Denk aan de uitwisseling. Wat zou de vijver zijn
+      zonder fotosynthese?
+    follow_ups:
+      - Hoe bepaalt zuurstof wie hier kan leven?
+      - Wat gebeurt er als de zuurstof laag wordt?
+      - Wat is de relatie tussen licht en ademhaling?
+  - id: nmp_detritus_floor
+    name: Detritus bodem
+    prompt: |
+      De bodem van de vijver is detritus—gevallen bladeren, dode insecten,
+      sediment. Het is een laag van verval. Wat leeft erin? Wie voedt zich
+      ermee? De bodem is een voorraadkamer.
+    follow_ups:
+      - Wat zou de vijver zijn zonder detritus?
+      - Hoe voedt de bodem de waterkolom?
+      - Wat is de relatie tussen bodem en top?
+  - id: nmp_rain_ring
+    name: Regenring
+    prompt: |
+      Regen raakt het oppervlak. Elke druppel maakt een ring—een kroon, dan
+      een krater. De regen texturiseert het water. Denk aan het patroon. Wat
+      zou een stil oppervlak betekenen?
+    follow_ups:
+      - Hoe oxygeneert regen het water?
+      - Wat verstoren de ringen?
+      - Wat is de relatie tussen regen en oppervlak?
+  - id: nmp_duckweed_carpet
+    name: Lemna tapijt
+    prompt: |
+      Lemna bedekt het oppervlak—kleine drijvende plantjes. Ze vermenigvuldigen
+      zich snel. Het tapijt schaduwt wat eronder is. Denk aan de bedekking.
+      Wat zou volle zon betekenen?
+    follow_ups:
+      - Wat zou de vijver zijn zonder lemna?
+      - Hoe beïnvloedt het tapijt de temperatuur?
+      - Wat is de relatie tussen dekking en leven eronder?
+  - id: nmp_phantom_midgie
+    name: Fantoommug
+    prompt: |
+      Fantoommug larven zijn transparant—spookachtig. Ze hangen in het water.
+      Je ziet erdoorheen. Denk aan onzichtbaarheid. Wat beschermt transparantie?
+    follow_ups:
+      - Wat zou de larve zijn als hij ondoorzichtig was?
+      - Hoe helpt transparantie bij de jacht?
+      - Wat is de relatie tussen doorzichtigheid en overleven?
+  - id: nmp_skimmer_skip
+    name: Schijfveer-sprong
+    prompt: |
+      Een steen die over het oppervlak wordt gesprongen—één, twee, drie. Elke
+      stuiter brengt energie over. De steen zinkt uiteindelijk. Denk aan de
+      limiet. Wat bepaalt het aantal sprongen?
+    follow_ups:
+      - Wat zou de steen doen zonder de draai?
+      - Hoe bepaalt de hoek de sprong?
+      - Wat is de relatie tussen worp en stuiter?
+  - id: nmp_pollinator_drink
+    name: Bestuiver drankje
+    prompt: |
+      Een bij drinkt aan de rand. Vlinders verzamelen zich bij een modderplas.
+      Het water is een hulpbron. Denk aan wie er komt. Wat hebben ze nodig
+      van het water?
+    follow_ups:
+      - Wat zouden de bestuivers doen zonder de plas?
+      - Hoe maakt de rand drinken mogelijk?
+      - Wat is de relatie tussen water en mineralen?
+  - id: nmp_evaporation_skin
+    name: Verdampingshuid
+    prompt: |
+      De vijver verliest water door verdamping. In de zomer daalt het peil. De
+      oever breidt zich uit. Denk aan de terugtrekking. Wat komt er bloot te
+      liggen? Wie wordt gestrand?
+    follow_ups:
+      - Wat zou de vijver zijn zonder verdamping?
+      - Hoe concentreert de daling leven?
+      - Wat is de relatie tussen verlies en concentratie?
+  - id: nmp_hydra_stalk
+    name: Hydra stengel
+    prompt: |
+      Een hydra—klein, met tentakels—ankert aan een stengel. Hij steekt prooien
+      en trekt ze naar binnen. De hydra kan regenereren. Denk aan de
+      eenvoud. Welk lichaamsplan gebruikt hij?
+    follow_ups:
+      - Wat zou de vijver zijn zonder hydra's?
+      - Hoe helpt regeneratie bij overleven?
+      - Wat is de relatie tussen eenvoud en veerkracht?
+  - id: nmp_boatman_row
+    name: Bootman roeien
+    prompt: |
+      Een bootsmann-waterkever roeit—roeispaanachtige poten. Hij is vaak
+      ondersteboven, aan het oppervlak. Hij voedt zich met algen. Denk aan de
+      roeispanen. Wat stuwen ze voort?
+    follow_ups:
+      - Wat zou de bootsman zijn zonder de roeispanen?
+      - Hoe verschilt het roeien van de rugzwemmer?
+      - Wat is de relatie tussen poot en beweging?
+  - id: nmp_caddisfly_case
+    name: Kokerjufferkoker
+    prompt: |
+      Een kokerjufferlarve bouwt een koker—takjes, steentjes, schelpen. Hij
+      lijmt ze met zijde. De koker is pantser en camouflage. Denk aan de
+      constructie. Wat kiest de larve?
+    follow_ups:
+      - Wat zou de larve zijn zonder de koker?
+      - Hoe varieert de koker per habitat?
+      - Wat is de relatie tussen materiaal en bescherming?
+  - id: nmp_damselfly_emergence
+    name: Limoenemergentie
+    prompt: |
+      Een libelle komt tevoorschijn—nimf klimt op een stengel, splitst zijn
+      huid, volwassene trekt zich vrij. De vleugels vouwen zich open. Het
+      moment is kwetsbaar. Denk aan de transformatie. Wat kan er misgaan?
+    follow_ups:
+      - Wat zou de volwassene zijn zonder de klim?
+      - Hoe bepaalt de emergentie de timing?
+      - Wat is de relatie tussen nimf en volwassene?
+  - id: nmp_floating_feather
+    name: Drijvende veer
+    prompt: |
+      Een veer drijft—verlaten door een vogel. Hij rijdt op het oppervlak.
+      Water parelt erop. Denk aan de veer. Wat hield de vogel droog? Wat doet
+      de veer nu?
+    follow_ups:
+      - Wat zou het oppervlak zijn zonder drijvende objecten?
+      - Hoe vangt de veer lucht?
+      - Wat is de relatie tussen structuur en drijfvermogen?
+  - id: nmp_moon_jelly
+    name: Maankwal
+    prompt: |
+      In sommige vijvers, kwallen—maankwallen. Ze pulseren. Ze bestaan grotendeels
+      uit water. Denk aan het lichaam. Wat vangt de jelly? Wat vermijdt het?
+    follow_ups:
+      - Wat zou de vijver zijn zonder kwallen?
+      - Hoe creëert de puls beweging?
+      - Wat is de relatie tussen water en lichaam?
+  - id: nmp_seep_source
+    name: Sijpelbron
+    prompt: |
+      Water sijpelt uit de oever—een bron, langzame stroming. De sijpeling voedt
+      de vijver. Of de vijver lekt. Denk aan de grens. Wat kruist het? Wat
+      houdt het tegen?
+    follow_ups:
+      - Wat zou de vijver zijn zonder de sijpeling?
+      - Hoe vormt de sijpeling de chemie?
+      - Wat is de relatie tussen bron en plas?
+  - id: nmp_wind_wave
+    name: Windgolf
+    prompt: |
+      Wind duwt het oppervlak. Kleine golven vormen zich. Ze breken aan de rand.
+      Denk aan de fetch—de afstand die wind over water reist. Wat vormt de
+      golf?
+    follow_ups:
+      - Wat zou het oppervlak zijn zonder wind?
+      - Hoe beïnvloeden golven zuurstof?
+      - Wat is de relatie tussen wind en menging?
+  - id: nmp_rotifer_wheel
+    name: Raderdiertje wiel
+    prompt: |
+      Raderdiertjes zijn microscopisch—ze hebben een wiel van trilharen. Het
+      draait, trekt voedsel naar binnen. Het raderdiertje is een motor. Denk
+      aan de schaal. Wat anders is er in dit water?
+    follow_ups:
+      - Wat zou de vijver zijn zonder raderdiertjes?
+      - Hoe creëert het wiel stroming?
+      - Wat is de relatie tussen trilharen en voeding?
+  - id: nmp_temperature_layer
+    name: Temperatuurlaag
+    prompt: |
+      Vijvers kunnen stratificeren—warm boven, koud beneden. De lagen mengen
+      niet gemakkelijk. Denk aan de grens. Wie leeft waar? Wat gebeurt er
+      als de vijver omkeert?
+    follow_ups:
+      - Wat zou de vijver zijn zonder stratificatie?
+      - Hoe bepaalt temperatuur zuurstof?
+      - Wat is de relatie tussen laag en leven?
+  - id: nmp_predator_shadow
+    name: Roofdier schaduw
+    prompt: |
+      De schaduw van een vis passeert. Prooi bevriest, verspreidt zich. De
+      schaduw is een signaal. Denk aan de reactie. Wat zou constante schaduw
+      betekenen? Wat zou geen schaduw betekenen?
+    follow_ups:
+      - Hoe triggert de schaduw de ontsnapping?
+      - Welke andere signalen dan schaduw zijn belangrijk?
+      - Wat is de relatie tussen schaduw en overleven?
+  - id: nmp_surface_film
+    name: Oppervlaktefilm
+    prompt: |
+      Een dunne film op het water—pollen, bacteriën, organisch materiaal. Het
+      kan gewicht dragen. Sommige insecten lopen erop. Denk aan de film. Wat
+      zou het breken?
+    follow_ups:
+      - Wat zou het oppervlak zijn zonder de film?
+      - Hoe beïnvloedt de film gasuitwisseling?
+      - Wat is de relatie tussen film en grens?
+  - id: nmp_dry_wait
+    name: Droog wachten
+    prompt: |
+      De plas zal opdrogen. Sommige organismen hebben uitdroging-resistente
+      eieren. Ze wachten. De volgende regen kan maanden duren. Denk aan de
+      weddenschap. Wat moet samenkomen voor succes?
+    follow_ups:
+      - Wat zou de plas zijn zonder het wachten?
+      - Hoe overspant dormantie de droogte?
+      - Wat is de relatie tussen ei en regen?
+  - id: nmp_shoreline_wrack
+    name: Kustlijn afval
+    prompt: |
+      Afval verzamelt zich aan de kustlijn—bladeren, takjes, dode insecten. Het
+      afval is een lijn. Het markeert het hoge water. Denk aan de accumulatie.
+      Wie voedt zich hier?
+    follow_ups:
+      - Wat zou de rand zijn zonder het afval?
+      - Hoe creëert het afval habitat?
+      - Wat is de relatie tussen lijn en niveau?
+  - id: nmp_duckweed_carpet
+    name: Lemna tapijt
+    prompt: |
+      Lemna bedekt stilstaand water—kleine groene schijven. Het verspreidt zich
+      snel. Het oppervlak wordt solide. Denk aan de invasie. Wat blokkeert het
+      tapijt? Wat maakt het mogelijk?
+    follow_ups:
+      - Wat zou de vijver zijn zonder lemna?
+      - Hoe beïnvloedt het tapijt licht en zuurstof?
+      - Wat is de relatie tussen dekking en leven eronder?
+  - id: nmp_rain_ring
+    name: Regenring
+    prompt: |
+      Een regendruppel raakt het oppervlak. Een ring breidt zich uit, vervaagt.
+      Bij een bui wordt het oppervlak textuur—overlappende ringen. Denk aan het
+      patroon. Wat doet de regen met de vijver?
+    follow_ups:
+      - Wat zou het oppervlak zijn zonder regen?
+      - Hoe mengt regen het water?
+      - Wat is de relatie tussen druppel en ring?
+  - id: nmp_minnow_school
+    name: Elftschool
+    prompt: |
+      Elften zwemmen in scholen—tientallen bewegen als één. De school is een
+      strategie. Roofdieren raken verward. Denk aan de coördinatie. Hoe
+      beslissen ze? Wat zou eenzaamheid kosten?
+    follow_ups:
+      - Wat zou de vijver zijn zonder schoolvorming?
+      - Hoe reageert de school op dreiging?
+      - Wat is de relatie tussen velen en één?
+  - id: nmp_ice_edge
+    name: IJsrand
+    prompt: |
+      In de winter groeit ijs vanaf de rand. De grens rukt op. Eronder blijft
+      leven bestaan—kouder, langzamer. Denk aan de rand. Wat overleeft onder
+      het ijs?
+    follow_ups:
+      - Wat zou de vijver zijn zonder ijs?
+      - Hoe beschermt of bedreigt ijs?
+      - Wat is de relatie tussen bevriezing en zuurstof?

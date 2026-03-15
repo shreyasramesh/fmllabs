@@ -1,0 +1,456 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Giungla Urbana — Londra (Italian)
+
+id: urban_jungle_london
+name: Giungla Urbana — Londra
+description: 50 carte per cambiare il tuo modo di vedere Londra, dalla scala e dalla luce agli strati di storia e ai ritmi della vita di strada.
+domain: urban_jungle
+cards:
+  - id: london_layer
+    name: Strato Londinese
+    prompt: |
+      Londra è costruita a strati: romani, medievali, vittoriani, moderni. Trova un posto
+      dove le epoche si scontrano. Qual è la cosa più antica che puoi vedere? La più nuova?
+    follow_ups:
+      - Cosa sarebbe la strada senza gli strati?
+      - Come si manifesta la storia nella forma costruita?
+      - Qual è la relazione tra strato e identità?
+  - id: london_pub_threshold
+    name: Soglia del Pub
+    prompt: |
+      Un pub londinese ha una soglia: il gradino, la porta, il bancone. Stai sulla soglia.
+      Cosa c'è dentro? Cosa c'è fuori? Il pub è una stanza nella città.
+    follow_ups:
+      - Cosa sarebbe l'isolato senza il pub?
+      - Come la soglia crea transizione?
+      - Qual è la relazione tra pub e strada?
+  - id: london_blue_plaque
+    name: Targa Blu
+    prompt: |
+      Le targhe blu segnano dove ha vissuto qualcuno di famoso. Trovane una. Chi viveva qui?
+      Cosa faceva? La targa rende visibile la storia.
+    follow_ups:
+      - Cosa sarebbe l'edificio senza la targa?
+      - Come la targa modella la memoria?
+      - Qual è la relazione tra targa e luogo?
+  - id: london_underground
+    name: Sotterraneo
+    prompt: |
+      La Tube è una città sotto la città. Scendi. Nota le piastrelle, le
+      mappe, le scale mobili. Come il sotterraneo modella ciò che sta sopra?
+    follow_ups:
+      - Cosa sarebbe Londra senza la Tube?
+      - Come il sotterraneo crea connessione?
+      - Qual è la relazione tra Tube e superficie?
+  - id: london_thames_edge
+    name: Riva del Tamigi
+    prompt: |
+      Il Tamigi attraversa Londra. Vai sull'argine. Il fiume è una cucitura.
+      Cosa c'è su entrambi i lati? Come il fiume divide e connette?
+    follow_ups:
+      - Cosa sarebbe Londra senza il Tamigi?
+      - Come il fiume modella la città?
+      - Qual è la relazione tra fiume e riva?
+  - id: london_georgian_row
+    name: Filare Georgiano
+    prompt: |
+      Le file georgiane si ripetono: porta, finestra, porta, finestra. Percorri una fila.
+      La ripetizione crea ritmo. Cosa lo interrompe? Cosa lo tiene insieme?
+    follow_ups:
+      - Cosa sarebbe la strada senza la fila?
+      - Come la ripetizione crea identità?
+      - Qual è la relazione tra fila e individuo?
+  - id: london_mews
+    name: Mews
+    prompt: |
+      I Mews erano scuderie, ora sono case. Trovane uno. Il vicolo stretto, i
+      ciottoli, le ex rimesse per carrozze. Come persiste il passato?
+    follow_ups:
+      - Cosa sarebbero i mews senza la storia?
+      - Come i mews creano privacy?
+      - Qual è la relazione tra mews e strada principale?
+  - id: london_phone_box
+    name: Cabina Telefonica
+    prompt: |
+      Le cabine telefoniche rosse sono icone. Trovane una. È ancora un telefono? Un defibrillatore?
+      Una biblioteca? Come le icone vengono riadattate?
+    follow_ups:
+      - Cosa sarebbe la strada senza la cabina?
+      - Come la cabina segna l'identità britannica?
+      - Qual è la relazione tra cabina e funzione?
+  - id: london_postbox
+    name: Cassetta delle Lettere
+    prompt: |
+      Le cassette delle lettere rosse sono ovunque. Trovane una. Nota il monogramma reale.
+      La cassetta è un nodo in una rete. Cosa ci scorre attraverso?
+    follow_ups:
+      - Cosa sarebbe la strada senza la cassetta delle lettere?
+      - Come la cassetta delle lettere marca il territorio?
+      - Qual è la relazione tra cassetta delle lettere e lettera?
+  - id: london_pavement
+    name: Marciapiede
+    prompt: |
+      "Pavement" britannico è "sidewalk" americano. La parola modella il nostro pensiero.
+      Cammina sul marciapiede. Qual è la relazione tra marciapiede e strada?
+    follow_ups:
+      - Cosa sarebbe la strada senza il marciapiede?
+      - Come il marciapiede crea sicurezza?
+      - Qual è la relazione tra marciapiede e pedone?
+  - id: london_brick
+    name: Mattone Londinese
+    prompt: |
+      Il mattone londinese è spesso giallo o rosso, il "London stock". Trova un muro di mattoni e
+      studia il colore, la texture, la posa. Come invecchia il mattone?
+    follow_ups:
+      - Cosa sarebbe l'edificio senza il mattone?
+      - Come il mattone crea identità?
+      - Qual è la relazione tra mattone e luogo?
+  - id: london_weather
+    name: Meteo Londinese
+    prompt: |
+      Il meteo londinese è mutevole. Stai fermo in un posto per venti minuti. Guarda
+      il cielo. Come il meteo modella l'umore della città?
+    follow_ups:
+      - Cosa sarebbe Londra senza la pioggia?
+      - Come il meteo modella l'architettura?
+      - Qual è la relazione tra meteo e vita di strada?
+  - id: london_queue
+    name: Coda
+    prompt: |
+      I britannici fanno la coda. Trova una coda: autobus, negozio, attrazione. Osserva l'etichetta.
+      La coda è una forma di ordine. Come funziona?
+    follow_ups:
+      - Cosa sarebbe lo spazio senza la coda?
+      - Come la coda crea equità?
+      - Qual è la relazione tra coda e cultura?
+  - id: london_roundabout
+    name: Rotonda
+    prompt: |
+      Londra ha molte rotonde, rotatorie. Osservane una. Come scorre il traffico?
+      Qual è la logica? La rotatoria è un nodo.
+    follow_ups:
+      - Cosa sarebbe l'incrocio senza la rotatoria?
+      - Come la rotatoria modella il flusso?
+      - Qual è la relazione tra rotatoria e incrocio?
+  - id: london_parks_room
+    name: Stanza dei Parchi
+    prompt: |
+      I parchi londinesi sono stanze: Hyde Park, Regent's Park, le piazze. Entra in uno.
+      Nota i confini, i sentieri, gli arredi. Come è progettata la natura?
+    follow_ups:
+      - Cosa sarebbe Londra senza i parchi?
+      - Come il parco crea respiro?
+      - Qual è la relazione tra parco e città?
+  - id: london_square
+    name: Piazza Londinese
+    prompt: |
+      Le piazze londinesi sono spesso private, recintate, con accesso su invito. Trovane una.
+      Cosa c'è dentro? Chi ha accesso? La piazza è una tasca di esclusività.
+    follow_ups:
+      - Cosa sarebbe il quartiere senza la piazza?
+      - Come la piazza crea comunità?
+      - Qual è la relazione tra piazza e strada?
+  - id: london_terrace
+    name: Terrazza
+    prompt: |
+      Una terrazza è una fila di case. Percorrine una. Nota l'uniformità e la
+      variazione. Come la terrazza crea identità?
+    follow_ups:
+      - Cosa sarebbe la strada senza la terrazza?
+      - Come la terrazza crea ritmo?
+      - Qual è la relazione tra terrazza e individuo?
+  - id: london_corner_shop
+    name: Negozio d'Angolo
+    prompt: |
+      Il negozio d'angolo è un'istituzione londinese. Entra in uno. Cosa viene venduto? Chi
+      lo gestisce? Il negozio è un nodo nel quartiere.
+    follow_ups:
+      - Cosa sarebbe l'isolato senza il negozio?
+      - Come il negozio crea incontro?
+      - Qual è la relazione tra negozio e comunità?
+  - id: london_bus_route
+    name: Linea dell'Autobus
+    prompt: |
+      Gli autobus londinesi hanno numeri e destinazioni. Prendi un autobus che non hai mai preso.
+      Dove va? Come la linea modella la città?
+    follow_ups:
+      - Cosa sarebbe il viaggio senza l'autobus?
+      - Come la linea crea connessione?
+      - Qual è la relazione tra autobus e quartiere?
+  - id: london_clock
+    name: Orologio Londinese
+    prompt: |
+      Big Ben, l'orologio della stazione, l'orologio della chiesa. Londra è piena di orologi pubblici.
+      Trovane uno. Che ora segna? È giusto?
+    follow_ups:
+      - Cosa sarebbe lo spazio senza l'orologio?
+      - Come l'orologio modella il tempo?
+      - Qual è la relazione tra orologio e luogo?
+  - id: london_bridge
+    name: Ponte Londinese
+    prompt: |
+      Londra ha molti ponti: Tower Bridge, Millennium Bridge, Waterloo. Attraversane uno a piedi.
+      Senti la transizione. Cosa cambia?
+    follow_ups:
+      - Cosa sarebbe il fiume senza il ponte?
+      - Come il ponte connette?
+      - Qual è la relazione tra ponte e fiume?
+  - id: london_street_market
+    name: Mercato di Strada
+    prompt: |
+      Londra ha mercati di strada: Borough, Camden, Portobello. Percorrine uno. Cosa viene
+      venduto? Chi vende? Il mercato è una città temporanea.
+    follow_ups:
+      - Cosa sarebbe la strada senza il mercato?
+      - Come il mercato crea incontro?
+      - Qual è la relazione tra mercato e quartiere?
+  - id: london_ghost_sign
+    name: Ghost Sign Londinese
+    prompt: |
+      Segnali sbiaditi sui mattoni, "ghost signs", segnano il passato. Trovane uno. Cosa
+      pubblicizzava? Chi lo avrebbe visto?
+    follow_ups:
+      - Cosa sarebbe il muro senza il cartello?
+      - Come il ghost sign preserva la storia?
+      - Qual è la relazione tra cartello e commercio?
+  - id: london_bollard
+    name: Bitte
+    prompt: |
+      Le bitte segnano confini: zone pedonali, divieto di parcheggio. Trova una fila di
+      bitte. Cosa proteggono? Cosa escludono?
+    follow_ups:
+      - Cosa sarebbe lo spazio senza le bitte?
+      - Come le bitte modellano il flusso?
+      - Qual è la relazione tra bitte e confine?
+  - id: london_door_number
+    name: Numero Civico
+    prompt: |
+      Gli indirizzi londinesi possono essere strani: dispari da un lato, pari dall'altro. Segui
+      i numeri. Come la numerazione modella la strada?
+    follow_ups:
+      - Cosa sarebbe l'orientamento senza i numeri?
+      - Come la numerazione crea ordine?
+      - Qual è la relazione tra numero e luogo?
+  - id: london_basement
+    name: Seminterrato Londinese
+    prompt: |
+      Le case londinesi hanno spesso seminterrati, a volte sotto il livello della strada. Nota
+      i gradini che scendono, l'area davanti. Cosa c'è sotto il marciapiede?
+    follow_ups:
+      - Cosa sarebbe la casa senza il seminterrato?
+      - Come il seminterrato crea spazio?
+      - Qual è la relazione tra seminterrato e strada?
+  - id: london_roof_line
+    name: Linea del Tetto
+    prompt: |
+      Le linee dei tetti londinesi sono varie: ardesia, tegole, piatte. Guarda in alto. Traccia lo
+      skyline. Come il tetto modella la strada?
+    follow_ups:
+      - Cosa sarebbe la strada senza i tetti?
+      - Come la linea del tetto crea identità?
+      - Qual è la relazione tra tetto e cielo?
+  - id: london_cobble
+    name: Ciottolo
+    prompt: |
+      I ciottoli persistono in alcune strade. Cammina su di essi. Senti la texture.
+      Come la superficie modella la strada?
+    follow_ups:
+      - Cosa sarebbe la strada senza i ciottoli?
+      - Come i ciottoli segnano la storia?
+      - Qual è la relazione tra ciottolo e modernità?
+  - id: london_lamp_post
+    name: Lampione
+    prompt: |
+      I lampioni londinesi hanno uno stile particolare: vittoriano, moderno. Trovane uno.
+      Come il lampione modella la strada di notte?
+    follow_ups:
+      - Cosa sarebbe la strada senza il lampione?
+      - Come il lampione crea sicurezza?
+      - Qual è la relazione tra lampione e oscurità?
+  - id: london_bus_stop
+    name: Fermata dell'Autobus
+    prompt: |
+      Le fermate dell'autobus londinesi hanno pensiline, orari, numeri. Aspetta a una. Chi altro
+      aspetta? Qual è l'etichetta?
+    follow_ups:
+      - Cosa sarebbe la strada senza la fermata?
+      - Come la fermata crea comunità?
+      - Qual è la relazione tra fermata e viaggio?
+  - id: london_pub_sign
+    name: Insegna del Pub
+    prompt: |
+      Le insegne dei pub pendono sulla strada: The Crown, The Red Lion. Trovane una. Qual è
+      l'immagine? Qual è la storia? L'insegna è un punto di riferimento.
+    follow_ups:
+      - Cosa sarebbe la strada senza l'insegna?
+      - Come l'insegna crea identità?
+      - Qual è la relazione tra insegna e pub?
+  - id: london_church_spire
+    name: Guglia della Chiesa
+    prompt: |
+      Le guglie delle chiese punteggiano lo skyline londinese. Trovane una. Come la guglia ti
+      orienta? Cosa sarebbe la vista senza di essa?
+    follow_ups:
+      - Cosa sarebbe lo skyline senza la guglia?
+      - Come la guglia crea un punto di riferimento?
+      - Qual è la relazione tra guglia e quartiere?
+  - id: london_canal
+    name: Canale Londinese
+    prompt: |
+      Londra ha canali: Regent's Canal, Grand Union. Percorri il sentiero di alaggio.
+      Il canale è una cucitura. Cosa c'è su entrambi i lati?
+    follow_ups:
+      - Cosa sarebbe la città senza il canale?
+      - Come il canale crea connessione?
+      - Qual è la relazione tra canale e industria?
+  - id: london_garden_square
+    name: Piazza Giardino
+    prompt: |
+      Le piazze giardino londinesi sono spesso chiuse. Sbircia attraverso il cancello. Cosa c'è
+      dentro? Chi ha la chiave? Il giardino è una stanza nascosta.
+    follow_ups:
+      - Cosa sarebbe la piazza senza il giardino?
+      - Come il giardino crea esclusività?
+      - Qual è la relazione tra giardino e piazza?
+  - id: london_taxi
+    name: Taxi Londinese
+    prompt: |
+      I taxi neri sono icone. Osservane uno fermarsi, prendere un passeggero, partire. Come il
+      taxi modella la strada? Cosa sarebbe la città senza di esso?
+    follow_ups:
+      - Cosa sarebbe la strada senza il taxi?
+      - Come il taxi crea mobilità?
+      - Qual è la relazione tra taxi e conoscenza?
+  - id: london_underground_tile
+    name: Piastrella della Metropolitana
+    prompt: |
+      Le stazioni della Tube hanno piastrelle distintive: quella di Baker Street con Sherlock, l'azzurro della Victoria line. Trova una stazione con carattere. Cosa dicono le piastrelle?
+    follow_ups:
+      - Cosa sarebbe la stazione senza le piastrelle?
+      - Come le piastrelle creano identità?
+      - Qual è la relazione tra piastrella e luogo?
+  - id: london_bench
+    name: Panchina Londinese
+    prompt: |
+      Londra ha molte panchine: nei parchi, per strada, vicino alle fermate degli autobus. Siediti su una.
+      Chi altro si siede? Qual è la vista?
+    follow_ups:
+      - Cosa sarebbe lo spazio senza la panchina?
+      - Come la panchina crea respiro?
+      - Qual è la relazione tra panchina e strada?
+  - id: london_drain
+    name: Scarico Londinese
+    prompt: |
+      Guarda in basso. Trova uno scarico: una grondaia, una grata. Dove va l'acqua? Lo
+      scarico è un portale verso i sistemi nascosti della città.
+    follow_ups:
+      - Cosa sarebbe la strada senza lo scarico?
+      - Come lo scarico gestisce l'acqua?
+      - Qual è la relazione tra scarico e sistema?
+  - id: london_shop_front
+    name: Vetrina di Negozio
+    prompt: |
+      Le vetrine dei negozi londinesi sono spesso piccole: strette, profonde. Guarda dentro la finestra. Cosa viene esposto? Come la facciata modella la strada?
+    follow_ups:
+      - Cosa sarebbe la strada senza la vetrina?
+      - Come la facciata crea identità?
+      - Qual è la relazione tra facciata e commercio?
+  - id: london_paving
+    name: Pavimentazione Londinese
+    prompt: |
+      La pavimentazione londinese varia: lastre, asfalto, mattoni. Cammina per un isolato e nota
+      i cambiamenti. Come la superficie modella la strada?
+    follow_ups:
+      - Cosa sarebbe la strada senza la pavimentazione?
+      - Come la pavimentazione marca il territorio?
+      - Qual è la relazione tra pavimentazione e pedone?
+  - id: london_balcony
+    name: Balcone Londinese
+    prompt: |
+      I balconi londinesi sono spesso piccoli: balconi alla francese, minuscole terrazze. Trovane uno.
+      Cosa ci coltiveresti? Chi lo userebbe?
+    follow_ups:
+      - Cosa sarebbe l'edificio senza il balcone?
+      - Come il balcone crea spazio esterno?
+      - Qual è la relazione tra balcone e appartamento?
+  - id: london_chimney
+    name: Camino Londinese
+    prompt: |
+      I camini londinesi punteggiano la linea del tetto. Contane uno per edificio. Quanti fuochi bruciavano
+      una volta? Il camino è un relitto.
+    follow_ups:
+      - Cosa sarebbe il tetto senza il camino?
+      - Come il camino segna la storia?
+      - Qual è la relazione tra camino e calore?
+  - id: london_bike_stand
+    name: Rastrelliera per Bici
+    prompt: |
+      Londra ha rastrelliere per biciclette, biciclette Santander, biciclette da consegna. Trova un gruppo.
+      Come le biciclette modellano la strada? Cosa sarebbe l'isolato senza di esse?
+    follow_ups:
+      - Cosa sarebbe la strada senza le biciclette?
+      - Come le biciclette creano mobilità?
+      - Qual è la relazione tra bicicletta e città?
+  - id: london_tree_pit
+    name: Fossa per Albero
+    prompt: |
+      Gli alberi stradali londinesi crescono in fosse, spesso piccole, spesso in difficoltà. Trovane una.
+      Cosa c'è nella fossa? Come sta l'albero?
+    follow_ups:
+      - Cosa sarebbe la strada senza l'albero?
+      - Come la fossa modella la vita dell'albero?
+      - Qual è la relazione tra fossa e marciapiede?
+  - id: london_rain
+    name: Pioggia Londinese
+    prompt: |
+      La pioggia londinese è frequente. Stai sotto una tettoia e osserva. Come la
+      pioggia cambia la strada? Cosa sarebbe la città senza di essa?
+    follow_ups:
+      - Come la pioggia modella l'umore?
+      - Qual è la relazione tra pioggia e ombrello?
+      - Cosa noteresti con l'asciutto?
+  - id: london_cab_rank
+    name: Stallo dei Taxi
+    prompt: |
+      I taxi neri fanno la coda negli stalli. Osserva il flusso. Lo stallo è un nodo. Come il
+      taxi modella la strada? Cosa sarebbe l'incrocio senza di esso?
+    follow_ups:
+      - Come lo stallo crea ordine?
+      - Qual è la relazione tra taxi e conoscenza?
+      - Cosa chiederesti a un tassista?
+  - id: london_pub_window
+    name: Finestra del Pub
+    prompt: |
+      Le finestre dei pub sono spesso a vetri piombati, spesso piccole. Guarda attraverso una. Qual è
+      la vista? La finestra incornicia la strada. Quanto conta la cornice?
+    follow_ups:
+      - Cosa sarebbe il pub senza la finestra?
+      - Come la finestra crea relazione?
+      - Qual è la relazione tra finestra e strada?
+  - id: london_mews_cobble
+    name: Ciottolo del Mews
+    prompt: |
+      I vicoli dei mews sono spesso acciottolati. Percorrine uno. Senti la texture. Il ciottolo
+      segna la storia. Cosa sarebbero i mews in asfalto?
+    follow_ups:
+      - Come il ciottolo modella il vicolo?
+      - Qual è la relazione tra ciottolo e cavallo?
+      - Cosa sentiresti sui ciottoli?
+  - id: london_underground_escalator
+    name: Scala Mobile della Metropolitana
+    prompt: |
+      Le scale mobili della Tube sono lunghe, quella di Angel's è tra le più lunghe. Percorrine una.
+      Senti la discesa. Come la scala mobile modella il viaggio?
+    follow_ups:
+      - Cosa sarebbe la stazione senza la scala mobile?
+      - Come la scala mobile crea flusso?
+      - Qual è la relazione tra scala mobile e profondità?
+  - id: london_thames_path
+    name: Sentiero del Tamigi
+    prompt: |
+      Il Sentiero del Tamigi costeggia il fiume. Percorri un tratto. Il sentiero crea un
+      corridoio. Cosa c'è su entrambi i lati? Come il sentiero modella il viaggio?
+    follow_ups:
+      - Cosa sarebbe il fiume senza il sentiero?
+      - Come il sentiero crea accesso?
+      - Qual è la relazione tra sentiero e fiume?

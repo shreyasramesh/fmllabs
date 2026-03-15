@@ -1,0 +1,545 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# İnsan Arayüzü — Kahve Dükkanı (Turkish)
+
+id: human_interface_coffee_shop
+name: İnsan Arayüzü — Kahve Dükkanı
+description: Kahve dükkanına bakış açınızı değiştirecek 50 kart; sipariş sırası koreografisi ve dizüstü bilgisayar bölgelerinden üçüncü mekana, görünmez senaryolara ve ritüel olarak kahveye kadar.
+domain: human_interface
+cards:
+  - id: hi_cs_queue_choreography
+    name: Sıra Koreografisi
+    prompt: |
+      Tezgahtaki sıraya bakın. Bedenler kendiliğinden düzenlenir — öne
+      eğilme, telefon kontrolü, hafifçe sallanma. Sıranın bir ritmi vardır.
+      Boşluğu kim tutuyor? Kimin nerede duracağını hangi söylenmemiş
+      kurallar yönetir?
+    follow_ups:
+      - Beklentiyi sıra nasıl şekillendirir?
+      - Herkes sıraya uymazsa ne olur?
+      - Bekleme ve aidiyet arasındaki ilişki nedir?
+  - id: hi_cs_laptop_territory
+    name: Dizüstü Bilgisayar Bölgesi
+    prompt: |
+      Masadaki açık bir dizüstü bilgisayar alan kaplar. Yanındaki fincan,
+      sandalyedeki çanta. Sınırları gözlemleyin. Bir kişi ne kadar yer
+      kaplar? Ney "dolu" sinyali verir?
+    follow_ups:
+      - Dizüstü bilgisayar bedeni nasıl genişletir?
+      - Cihazlar olmadan alan neye benzerdi?
+      - Bölge ve süreklilik arasındaki ilişki nedir?
+  - id: hi_cs_third_place
+    name: Üçüncü Mekan
+    prompt: |
+      Ne ev, ne iş — kahve dükkanı bir üçüncü mekandır. İnsanlar birlikte
+      yalnız kalmaya gelirler. Kimin kaldığına, kimin çabucak ayrıldığına
+      dikkat edin. Mekan farklı bir sosyal sözleşmeyi barındırır.
+    follow_ups:
+      - Üçüncü mekanlar olmadan şehir neye benzerdi?
+      - Kahve dükkanı bir kütüphaneden nasıl farklıdır?
+      - Mekan ve kimlik arasındaki ilişki nedir?
+  - id: hi_cs_invisible_script
+    name: Görünmez Senaryo
+    prompt: |
+      Sipariş ver, öde, bekle, al, oturacak yer bul. Senaryo, biri bozmadıkça
+      görünmezdir. İlk kez gelen birini izleyin. Neyi bilmiyor? Senaryo,
+      aidiyeti kodlar.
+    follow_ups:
+      - Senaryo nasıl dışlar?
+      - Senaryo yazılsaydı ne olurdu?
+      - Senaryo ve akıcılık arasındaki ilişki nedir?
+  - id: hi_cs_coffee_ritual
+    name: Kahve Ritüeli
+    prompt: |
+      İçecek ikincildir. Ritüel birincildir — yürüyüş, sipariş, ilk yudum.
+      Kendi hareketlerinize dikkat edin. Kahve kapınıza gelirse ne kaybederdiniz?
+    follow_ups:
+      - Ritüel geçişi nasıl işaretler?
+      - Kahve molası olmadan gün neye benzerdi?
+      - Ritüel ve hazırlık arasındaki ilişki nedir?
+  - id: hi_cs_counter_handoff
+    name: Tezgah Teslimatı
+    prompt: |
+      Barista bir isim söyler. Bir el uzanır. Teslimat, yabancı ile yabancı
+      arasında bir temas anıdır. Değişimi izleyin. Fincanın dışında ne
+      aktarılır?
+    follow_ups:
+      - Teslimat nasıl bağ kurar?
+      - Robot barista ile ne değişirdi?
+      - Teslimat ve güven arasındaki ilişki nedir?
+  - id: hi_cs_power_outlet_hunt
+    name: Priz Avı
+    prompt: |
+      Gözler duvarları, zemini, masaların altını tarar. Priz avı
+      toprak mücadelesidir. Kim önce ulaştı? Priz nerede oturacağınızı belirler.
+      Coğrafya elektriği takip eder.
+    follow_ups:
+      - Priz yerleşimi odayı nasıl şekillendirir?
+      - Kablosuz güç olsaydı alan neye benzerdi?
+      - Fiş ve kalıcılık arasındaki ilişki nedir?
+  - id: hi_cs_solo_table
+    name: Tekli Masa
+    prompt: |
+      Dört kişilik bir masada tek bir kişi. Boş sandalyeler bir tampondur.
+      Düzenlemeyi gözlemleyin. Bu bir savunma mı? Tercih mi? Tekli masa,
+      kalabalığa karşı bir alan tutar.
+    follow_ups:
+      - Tekli masa nasıl niyet belirtir?
+      - Biri oturmayı isteseydi ne olurdu?
+      - Yalnızlık ve görünürlük arasındaki ilişki nedir?
+  - id: hi_cs_milk_pour
+    name: Süt Döküşü
+    prompt: |
+      Barista espressoya süt döker — latte art olsun ya da olmasın. Döküş
+      bir zanaattır. Hareketi izleyin. Müşteri içeceğin ötesinde ne alır?
+      Döküş bir performanstır.
+    follow_ups:
+      - Döküş beklentiyi nasıl şekillendirir?
+      - Zanaat olmadan içecek neye benzerdi?
+      - Döküş ve fiyat arasındaki ilişki nedir?
+  - id: hi_cs_name_on_cup
+    name: Fincanda İsim
+    prompt: |
+      Bir fincanın üzerinde bir isim — gerçek, sahte, yanlış yazılmış.
+      İşlemi kişiselleştirir. İsim, ağızdan ele, oradan tezgaha seyahat eder.
+      İsim değişime ne yapar?
+    follow_ups:
+      - İsim nasıl tanıma yol açar?
+      - İsimsiz sipariş neye benzerdi?
+      - İsim ve anonimlik arasındaki ilişki nedir?
+  - id: hi_cs_window_seat
+    name: Pencere Kenarı Oturacağı
+    prompt: |
+      Pencere kenarı oturağı özeldir. Caddeye bakarsınız; arkanız korunur.
+      Kimlerin onu seçtiğini gözlemleyin. Pencere, dışarıdaki dünyayı
+      çerçevelerken siz içeride kalırsınız. Manzara ne sağlar?
+    follow_ups:
+      - Pencere kenarı oturağı deneyimi nasıl şekillendirir?
+      - Pencereler olmadan alan neye benzerdi?
+      - İç ve dış arasındaki ilişki nedir?
+  - id: hi_cs_linger_versus_grab
+    name: Oyalama veya Kapıp Kaçma
+    prompt: |
+      Bazıları fincanını alıp gider. Diğerleri saatlerce oturur. Aynı alan
+      ikisini de barındırır. Ayrıma dikkat edin. Kimin kalacağını ne belirler?
+      Kahve dükkanı farklı hızlara uyum sağlar.
+    follow_ups:
+      - Oyalama işi nasıl etkiler?
+      - Herkes çabucak ayrılsaydı alan neye benzerdi?
+      - Hız ve aidiyet arasındaki ilişki nedir?
+  - id: hi_cs_regular_recognition
+    name: Daimi Müşteri Tanıma
+    prompt: |
+      "Her zamankinden mi?" Barista biliyor. Daimi müşteri tanınır.
+      Değişimi izleyin. Tanındığınızda ne değişir? Her zamanki kısayol —
+      ve bir yer talebidir.
+    follow_ups:
+      - Tanıma nasıl sadakat yaratır?
+      - Daimi müşteri bunu kaybetse ne kaybederdi?
+      - Her zamanki ve kimlik arasındaki ilişki nedir?
+  - id: hi_cs_soundscape
+    name: Ses Ortamı
+    prompt: |
+      Buhar, öğütme, sohbet, müzik. Kahve dükkanının bir ses ortamı vardır.
+      Gözlerinizi kapatın. Katmanları haritalandırın. Sabit olan ne? Ritmi ne?
+      Ses ortamı ruh halini şekillendirir.
+    follow_ups:
+      - Ses ortamı konsantrasyonu nasıl etkiler?
+      - Sessizlikte alan neye benzerdi?
+      - Ses ve üretkenlik arasındaki ilişki nedir?
+  - id: hi_cs_shared_table
+    name: Paylaşılan Masa
+    prompt: |
+      Yabancılar aynı uzun masada otururlar. Kimse konuşmaz. Paylaşılan
+      masa, bağlantı olmadan yakınlıktır. Sınırları gözlemleyin. Ne kadar
+      yakın çok yakındır? Masa hassas bir dengeyi tutar.
+    follow_ups:
+      - Paylaşılan masa tekli masadan nasıl farklıdır?
+      - Biri sohbet başlatsaydı ne olurdu?
+      - Yakınlık ve mahremiyet arasındaki ilişki nedir?
+  - id: hi_cs_tip_jar
+    name: Bahşiş Kutusu
+    prompt: |
+      Madeni paralar ve banknotlar birikir. Bahşiş kutusu görünür, pasiftir.
+      Kim bahşiş verir? Kim vermez? Kutu, işlem ve hediye arasındaki
+      sınırda durur. Bahşiş ne anlama gelir?
+    follow_ups:
+      - Bahşiş kutusu değişimi nasıl şekillendirir?
+      - Onsuz tezgah neye benzerdi?
+      - Bahşiş ve şükran arasındaki ilişki nedir?
+  - id: hi_cs_cup_sleeve
+    name: Fincan Kolu
+    prompt: |
+      Kolu, eli sıcaktan korur. Tek kullanımlıktır, markalıdır.
+      İnsanların fincanı onunla nasıl tuttuğuna dikkat edin. Kol, beden ve
+      içecek arasındaki küçük bir arayüzdür.
+    follow_ups:
+      - Kol tutuşu nasıl değiştirir?
+      - Kol olmasaydı deneyim neye benzerdi?
+      - Kol ve markalaşma arasındaki ilişki nedir?
+  - id: hi_cs_morning_rush
+    name: Sabah Koşturmacası
+    prompt: |
+      İşten önce, sıra uzar. Sabah koşturmacasının kendine özgü bir temposu
+      vardır. Hıza bakın. Herkes başka bir yere gidiyor. Kahve dükkanı bir
+      aktarma istasyonudur. Koşturmaca neyi çeker?
+    follow_ups:
+      - Koşturmaca personeli nasıl şekillendirir?
+      - Kahve molası olmadan sabah neye benzerdi?
+      - Koşturmaca ve ritüel arasındaki ilişki nedir?
+  - id: hi_cs_afternoon_slow
+    name: Öğleden Sonra Sakinliği
+    prompt: |
+      Öğleden sonra ortası, kalabalık seyrekleşir. Kalanlar farklıdır —
+      öğrenciler, serbest çalışanlar, acele etmeyenler. Tempo değişir. Değişimi
+      fark edin. Öğleden sonra farklı bir tür müşteri barındırır.
+    follow_ups:
+      - Öğleden sonra sabahtan nasıl farklıdır?
+      - Sakin dönem olmadan alan neye benzerdi?
+      - Zaman ve doluluk arasındaki ilişki nedir?
+  - id: hi_cs_wifi_password
+    name: WiFi Şifresi
+    prompt: |
+      Şifre duvarda, fişte, karatahtada yazar. Sormak veya bakmak zorundasınız.
+      WiFi, bazıları için giriş ücretidir. Kimlerin bağlandığını gözlemleyin.
+      Kimlerin ihtiyacı yok?
+    follow_ups:
+      - WiFi nasıl kalanları şekillendirir?
+      - Onsuz alan neye benzerdi?
+      - Bağlantı ve tüketim arasındaki ilişki nedir?
+  - id: hi_cs_crossword_solver
+    name: Bulmaca Çözücü
+    prompt: |
+      Biri bir bulmaca, gazete veya telefonla uğraşır. Aktivite tek kişilik
+      ama görünür. Bulmaca zamanı işaretler. "Kalıyorum" der. Aktivite
+      başkalarına ne sinyali verir?
+    follow_ups:
+      - Bulmaca nasıl bir balon oluşturur?
+      - Onsuz çözücü ne yapardı?
+      - Aktivite ve doluluk arasındaki ilişki nedir?
+  - id: hi_cs_meeting_here
+    name: Burada Buluşma
+    prompt: |
+      İki kişi buluşur — mülakat, sohbet, ilk buluşma. Kahve dükkanı
+      tarafsız bir alandır. Kurulumu gözlemleyin. Kim yeri seçti? Masa
+      karşılaşma için bir sahne haline gelir.
+    follow_ups:
+      - Kahve dükkanı buluşmayı nasıl sağlar?
+      - Bir ofiste buluşma neye benzerdi?
+      - Mekan ve karşılaşma arasındaki ilişki nedir?
+  - id: hi_cs_bathroom_key
+    name: Tuvalet Anahtarı
+    prompt: |
+      Tuvalet anahtarı bir bloğa, bir kürek şekline, dev bir kaşığa
+      zincirlenmiştir. Sormak zorundasınız. Anahtar küçük bir aidiyet
+      testidir. Tuvaleti kullanma hakkına kim sahiptir?
+    follow_ups:
+      - Anahtar erişimi nasıl kontrol eder?
+      - Açık tuvaletler olsaydı alan neye benzerdi?
+      - Anahtar ve güven arasındaki ilişki nedir?
+  - id: hi_cs_pastry_case
+    name: Pasta Vitrini
+    prompt: |
+      Kruvasanlar, kekler, kurabiyeler camın arkasında. Vitrin bir cazibe
+      ve sergilemedir. Nelerin satıldığına dikkat edin. Neler çok uzun süre
+      kalır? Vitrin, arzu ve gecikme arasındaki bir müzakeredir.
+    follow_ups:
+      - Vitrin siparişi nasıl şekillendirir?
+      - Onsuz tezgah neye benzerdi?
+      - Sergi ve arzu arasındaki ilişki nedir?
+  - id: hi_cs_phone_glance
+    name: Telefon Göz Atma
+    prompt: |
+      Herkes telefonuna göz atar. Göz atma bir ara, bir kontrol, bir
+      geri çekilmedir. Ritmi gözlemleyin. Ne sıklıkla? Ne kadar uzun?
+      Telefon, odadan çıkış portalıdır.
+    follow_ups:
+      - Telefon varlığı nasıl şekillendirir?
+      - Telefonlar olmadan alan neye benzerdi?
+      - Göz atma ve dikkat arasındaki ilişki nedir?
+  - id: hi_cs_steam_rise
+    name: Buhar Yükselişi
+    prompt: |
+      Taze bir fincandan buhar yükselir. Isı aromayı taşır. Buhar geçicidir —
+      birkaç dakika içinde kaybolur. Dikkat edin. İlk yudumdan önceki ana buhar
+      ne katar?
+    follow_ups:
+      - Buhar beklentiyi nasıl şekillendirir?
+      - Onsuz içecek neye benzerdi?
+      - Buhar ve ritüel arasındaki ilişki nedir?
+  - id: hi_cs_bag_on_chair
+    name: Sandalyedeki Çanta
+    prompt: |
+      Bir çanta, oturanın yanındaki sandalyeyi işgal eder. Koltuğu korur,
+      bölgeyi genişletir. Çanta bir yer tutucudur. Mesaja dikkat edin: "Bu alan
+      dolu." Birisi oturmak isteseydi ne olurdu?
+    follow_ups:
+      - Çanta nasıl alan kaplar?
+      - Çanta kurtarma olmadan oda neye benzerdi?
+      - Nesne ve bölge arasındaki ilişki nedir?
+  - id: hi_cs_espresso_shot
+    name: Espresso Shot
+    prompt: |
+      Tek bir shot — hızlı, yoğun. Espresso içicisi genellikle ayakta
+      durur. Shot, günün bir noktalama işaretidir. Ritüeli izleyin. İç, bitir, çık.
+      Shot neyi başarır?
+    follow_ups:
+      - Shot latte'den nasıl farklıdır?
+      - Espresso olmadan kahve dükkanı neye benzerdi?
+      - Shot ve hız arasındaki ilişki nedir?
+  - id: hi_cs_cold_brew_tap
+    name: Soğuk Demleme Musluğu
+    prompt: |
+      Musluktan soğuk demleme — bira gibi. Dağıtım farklıdır. Buhar yok,
+      bekleme yok. Soğuk demleme müşterisi başka bir şey ister. Seçimi fark edin.
+      Soğuk demleme ne sinyali verir?
+    follow_ups:
+      - Soğuk demleme deneyimi nasıl değiştirir?
+      - Onsuz menü neye benzerdi?
+      - Sıcaklık ve kimlik arasındaki ilişki nedir?
+  - id: hi_cs_chalkboard_menu
+    name: Karatahta Menü
+    prompt: |
+      Menü el yazısıdır — tahtada tebeşir. Değişir. El yazısı kişilik.
+      Listelenenlere, listelenmeyenlere dikkat edin. Karatahta "burada karar
+      veririz" der.
+    follow_ups:
+      - Karatahta markayı nasıl şekillendirir?
+      - Basılı menü ile duvar neye benzerdi?
+      - El ve otantiklik arasındaki ilişki nedir?
+  - id: hi_cs_leaving_cup
+    name: Ayrılan Fincan
+    prompt: |
+      Masada bırakılan fincan — boş, terk edilmiş. Bazıları kendisi toplar;
+      bazıları toplamaz. Bırakılan fincan küçük bir düşüncelilik testidir.
+      Kim temizler? Kim bırakır? Fincan, kalışın sonunu işaretler.
+    follow_ups:
+      - Toplama alanı nasıl şekillendirir?
+      - Herkes fincan bıraksaydı kafe neye benzerdi?
+      - Ayrılma ve aidiyet arasındaki ilişki nedir?
+  - id: hi_cs_headphones_bubble
+    name: Kulaklık Balonu
+    prompt: |
+      Kulaklıklar bir balon oluşturur. Kullanıcı oradadır ama ulaşılamazdır.
+      Balon "bölme" der. Sınırı gözlemleyin. Balon sosyal alanı nasıl
+      şekillendirir?
+    follow_ups:
+      - Kulaklıklar nasıl odaklanmayı sağlar?
+      - Onlarsız alan neye benzerdi?
+      - Balon ve üretkenlik arasındaki ilişki nedir?
+  - id: hi_cs_corner_booth
+    name: Köşe Kabin
+    prompt: |
+      Köşe kabini çok istenir — arkası duvara dönük, odayı gören manzara.
+      Savunulabilir. Kimlerin onu talep ettiğini gözlemleyin. Köşe, merkezden
+      farklı bir psikoloji barındırır.
+    follow_ups:
+      - Köşe deneyimi nasıl şekillendirir?
+      - Köşeler olmadan oda neye benzerdi?
+      - Pozisyon ve güvenlik arasındaki ilişki nedir?
+  - id: hi_cs_sugar_station
+    name: Şeker İstasyonu
+    prompt: |
+      Şeker, peçete, kapak, pipet — istasyon kendi kendine hizmettir. İnsanlar
+      burada özelleştirir. İstasyon, tezgah ile koltuk arasındaki bir duraklamadır.
+      Seçimleri gözlemleyin. İnsanlar ne ekler?
+    follow_ups:
+      - İstasyon işlemi nasıl uzatır?
+      - Onsuz tezgah neye benzerdi?
+      - Özelleştirme ve kontrol arasındaki ilişki nedir?
+  - id: hi_cs_barista_banter
+    name: Barista Sohbeti
+    prompt: |
+      Barista daimi bir müşteriyle sohbet eder. Sohbet, performans ve
+      bağlantıdır. Diğerleri dinler ya da dinlemez. Sohbet atmosfer yaratır.
+      Odaya ne katar?
+    follow_ups:
+      - Sohbet kültürü nasıl şekillendirir?
+      - Onsuz tezgah neye benzerdi?
+      - Sohbet ve aidiyet arasındaki ilişki nedir?
+  - id: hi_cs_takeaway_stack
+    name: Paket Servis Yığını
+    prompt: |
+      Paket alma alanında fincanlar üst üste — isimler söylenir, fincanlar
+      alınır. Yığın, siparişlerin geçici bir arşividir. Akışı izleyin. Kim
+      bekler? Kim alıp gider? Yığın, kaosun içinden çıkan düzendir.
+    follow_ups:
+      - Yığın koşturmacayı nasıl yönetir?
+      - Onsuz tezgah neye benzerdi?
+      - Yığın ve sıra arasındaki ilişki nedir?
+  - id: hi_cs_plant_by_window
+    name: Pencere Kenarı Bitkisi
+    prompt: |
+      Pencere kenarında bir bitki durur — sarmaşık, sukulent. Dekor ve
+      yaşamdır. Bitki kimseye ait değildir. Mekanı yumuşatır. Bitki odaya
+      ne katar?
+    follow_ups:
+      - Bitki atmosferi nasıl şekillendirir?
+      - Onsuz pencere neye benzerdi?
+      - Bitki ve bakım arasındaki ilişki nedir?
+  - id: hi_cs_closing_time
+    name: Kapanış Saati
+    prompt: |
+      "On beş dakika sonra kapanıyoruz." Duyuru odayı değiştirir. Sandalyeler
+      sürüklenir, dizüstü bilgisayarlar kapanır. Kahve dükkanının bir sınırı
+      vardır. Tahliyeyi gözlemleyin. Kapanış saati neyi çeker?
+    follow_ups:
+      - Kapanış kalışı nasıl şekillendirir?
+      - Kapanış olmadan alan neye benzerdi?
+      - Sınır ve aidiyet arasındaki ilişki nedir?
+  - id: hi_cs_oat_milk_request
+    name: Yulaf Sütü İsteği
+    prompt: |
+      "Yulaf sütü lütfen." İstek, kimlik ve tercihtir. Alternatif süt, bir
+      işaret haline gelmiştir. Kimlerin sorduğuna dikkat edin. Seçim içici
+      hakkında neyi işaret eder?
+    follow_ups:
+      - Süt seçimi siparişi nasıl şekillendirir?
+      - Alternatifler olmadan menü neye benzerdi?
+      - Seçim ve kimlik arasındaki ilişki nedir?
+  - id: hi_cs_receipt_glance
+    name: Fiş Göz Atma
+    prompt: |
+      Fiş verilir — genellikle istenmeden. Bazıları alır, bazıları reddeder.
+      Fiş kanıt ve kayıttır. Değişimi gözlemleyin. Fiş işlem için ne yapar?
+    follow_ups:
+      - Fiş işlemi nasıl uzatır?
+      - Onsuz tezgah neye benzerdi?
+      - Fiş ve hafıza arasındaki ilişki nedir?
+  - id: hi_cs_door_hold
+    name: Kapı Tutma
+    prompt: |
+      Birisi arkasındaki kişi için kapıyı tutar. Tutuş küçük bir nezakettir.
+      Bir temas anı yaratır. Ne zaman olduğunu gözlemleyin. Tutuş ne gerektirir?
+    follow_ups:
+      - Kapı tutma girişi nasıl şekillendirir?
+      - Onsuz eşik neye benzerdi?
+      - Tutuş ve nezaket arasındaki ilişki nedir?
+  - id: hi_cs_study_group
+    name: Ders Grubu
+    prompt: |
+      Öğrenciler notları, dizüstü bilgisayarları, kitapları yayarlar. Masa
+      bir çalışma alanı haline gelir. Ders grubunun kendine özgü bir ritmi
+      vardır — tartışma, sessizlik, kahkaha. İşbirliğini gözlemleyin. Kahve
+      dükkanı ne sağlar?
+    follow_ups:
+      - Kahve dükkanı grubu nasıl sağlar?
+      - Bir kütüphanede ders neye benzerdi?
+      - Mekan ve işbirliği arasındaki ilişki nedir?
+  - id: hi_cs_grind_sound
+    name: Öğütme Sesi
+    prompt: |
+      Öğütücü çığlık atar. Ses endüstriyel, anlıktır. Bir içeceğin yapılmasını
+      işaret eder. Ses, sohbeti keser. Öğütme ses ortamına ne katar?
+    follow_ups:
+      - Öğütme beklentiyi nasıl şekillendirir?
+      - Onsuz kafe neye benzerdi?
+      - Ses ve zanaat arasındaki ilişki nedir?
+  - id: hi_cs_cup_stack_bus
+    name: Fincan Yığını Toplama
+    prompt: |
+      Toplama kabı fincanlar, kapaklar, peçetelerle dolar. Birisi onu temizleyecektir.
+      Yığın, birçok kalışın sonrasıdır. Birikimi gözlemleyin. Yığın gün hakkında
+      ne ortaya çıkarır?
+    follow_ups:
+      - Toplama kabı atığı nasıl yönetir?
+      - Onsuz tezgah neye benzerdi?
+      - Yığın ve emek arasındaki ilişki nedir?
+  - id: hi_cs_first_sip
+    name: İlk Yudum
+    prompt: |
+      İlk yudum — sıcaklık, lezzet, an. Birinin onu aldığını izleyin. Yüz
+      değişebilir. İlk yudum, beklemenin karşılığıdır. Ne sunar?
+    follow_ups:
+      - İlk yudum gerisini nasıl şekillendirir?
+      - Onsuz ritüel neye benzerdi?
+      - Yudum ve tatmin arasındaki ilişki nedir?
+  - id: hi_cs_neutral_ground
+    name: Tarafsız Alan
+    prompt: |
+      Kahve dükkanı kimsenin bölgesi değildir. Burada bir yabancıyla
+      buluşabilir, yalnız çalışabilir, ilişkiyi bitirebilirsiniz. Tarafsızlık
+      işin özüdür. Tarafsız alan neyi sağlar?
+    follow_ups:
+      - Tarafsızlık karşılaşmayı nasıl şekillendirir?
+      - Tarafsız alan olmadan şehir neye benzerdi?
+      - Tarafsızlık ve güvenlik arasındaki ilişki nedir?
+  - id: hi_cs_loyalty_card
+    name: Sadakat Kartı
+    prompt: |
+      On tane al, bir tane bedava kazan. Kart ziyaretleri takip eder.
+      Geri dönmeyi ödüllendirir. Sadakat kartı örtük bir sözleşmedir.
+      Kimlerin kullandığını gözlemleyin. Kart müşteri ve dükkan arasında
+      ne yaratır?
+    follow_ups:
+      - Kart davranışı nasıl şekillendirir?
+      - Onsuz işlem neye benzerdi?
+      - Vuruş ve aidiyet arasındaki ilişki nedir?
+  - id: hi_cs_outlet_tethered
+    name: Priz Bağlı
+    prompt: |
+      Biri prizin olduğu yere oturur. Kablo duvardan dizüstü bilgisayara
+      iner. Bağ, hareketi sınırlar. Priz koltuğu belirler. Kısıtlamayı
+      gözlemleyin. Bağ ne gerektirir?
+    follow_ups:
+      - Priz kalışı nasıl şekillendirir?
+      - Kablosuz şarj olsaydı alan neye benzerdi?
+      - Bağ ve süreklilik arasındaki ilişki nedir?
+  - id: hi_cs_eye_contact_avoid
+    name: Göz Teması Kaçırma
+    prompt: |
+      Kahve dükkanındaki yabancılar göz temasından kaçınır. Kaçınma kibarlıktır.
+      Bakmak, temas riskini almak demektir. Dansı gözlemleyin. Kuralı kim
+      bozar? Gözler buluştuğunda ne olur?
+    follow_ups:
+      - Kaçınma sosyal alanı nasıl şekillendirir?
+      - Daha fazla temas olsaydı alan neye benzerdi?
+      - Bakış ve mahremiyet arasındaki ilişki nedir?
+  - id: hi_cs_rainy_day_crowd
+    name: Yağmurlu Gün Kalabalığı
+    prompt: |
+      Yağmur insanları içeri çeker. Kahve dükkanı dolar. Kapıda ıslak
+      montlar, şemsiyeler. Yağmur farklı bir kalabalık yaratır. Değişimi
+      gözlemleyin. Hava, mekana ne yapar?
+    follow_ups:
+      - Yağmur doluluğu nasıl şekillendirir?
+      - Sığınak olmadan gün neye benzerdi?
+      - Hava ve barınak arasındaki ilişki nedir?
+  - id: hi_cs_saved_seat
+    name: Ayrılmış Koltuk
+    prompt: |
+      "Birini bekliyorum." Talep, koltuğu kalabalığa karşı korur. Ayrılmış
+      koltuk bir vaattir. Gerilimi gözlemleyin. Bir koltuk ne kadar süreyle
+      ayrılabilir? Sınırlar nelerdir?
+    follow_ups:
+      - Ayırma odayı nasıl şekillendirir?
+      - Kimse ona saygı duymasaydı ne olurdu?
+      - Talep ve güven arasındaki ilişki nedir?
+  - id: hi_cs_quiet_conversation
+    name: Sessiz Sohbet
+    prompt: |
+      İki kişi öne eğilir. Sohbet özeldir ama duruş görünürdür. Eğilme
+      bir balon yaratır. Samimiyeti gözlemleyin. Kahve dükkanı diğer
+      yerlerin sağlamadığı neyi sağlar?
+    follow_ups:
+      - Mekan sohbeti nasıl sağlar?
+      - Bir restoranda konuşma neye benzerdi?
+      - Mekan ve ifşa arasındaki ilişki nedir?
+  - id: hi_cs_roaming_table
+    name: Dolaşan Masa
+    prompt: |
+      Biri yer bulamıyor. Fincanıyla dolaşıyor. Dolaşım geçicidir. İlk
+      boşluğu alacaktır. Aramayı gözlemleyin. Dolaşım mekan hakkında ne
+      ortaya çıkarır?
+    follow_ups:
+      - Dolaşım deneyimi nasıl şekillendirir?
+      - Daha fazla masa olsaydı kafe neye benzerdi?
+      - Arama ve aidiyet arasındaki ilişki nedir?
+  - id: hi_cs_coffee_aroma
+    name: Kahve Aroması
+    prompt: |
+      Koku kapıda çarpar. Kavrulmuş, öğütülmüş, demlenmiş. Koku ilk
+      temastır. Deneyimi hazırlar. Sipariş vermeden önce koku ne yapar?
+    follow_ups:
+      - Aroma arzuyu nasıl şekillendirir?
+      - Onsuz giriş neye benzerdi?
+      - Koku ve hafıza arasındaki ilişki nedir?

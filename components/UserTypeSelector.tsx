@@ -75,7 +75,7 @@ export function UserTypeSelector() {
               : { right: position.right ?? "auto", left: "auto" }),
           }}
         >
-          {USER_TYPES.map(({ id, name, description }) => (
+          {USER_TYPES.map(({ id, name, icon, description }) => (
             <button
               key={id}
               role="option"
@@ -85,16 +85,19 @@ export function UserTypeSelector() {
                 setUserType(id);
                 setOpen(false);
               }}
-              className={`w-full px-4 py-2.5 text-left transition-colors ${
+              className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors ${
                 userType === id
                   ? "bg-neutral-100 dark:bg-neutral-800 text-foreground font-medium"
                   : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
               }`}
             >
-              <span className="block text-sm font-medium">{name}</span>
-              <span className="block text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-                {description}
-              </span>
+              <span className="text-lg shrink-0" aria-hidden>{icon}</span>
+              <div className="min-w-0">
+                <span className="block text-sm font-medium">{name}</span>
+                <span className="block text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+                  {description}
+                </span>
+              </div>
             </button>
           ))}
         </div>,

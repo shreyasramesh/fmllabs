@@ -1,0 +1,490 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Doğal Mikrokosmos — Gölet & Su Birikintisi (Turkish)
+
+id: natural_microcosm_pond_puddle
+name: Doğal Mikrokosmos — Gölet & Su Birikintisi
+description: Yüzey geriliminden yansımalara, su böceklerine, kurbağa yavrularına ve geçici havuzlardaki yaşama kadar, küçük ölçekteki suyu görme şeklinizi değiştiren 50 kart.
+domain: natural_microcosm
+cards:
+  - id: nmp_surface_tension
+    name: Yüzey Gerilimi
+    prompt: |
+      Bir su yürüyücüsü suyun üzerinde yürüyor. Yüzey tutuyor—moleküller
+      yapışıyor. Nazikçe bir iğne bırak. Yüzüyor. Görünmez filmi düşün.
+      Neler onu kırardı?
+    follow_ups:
+      - Yüzey gerilimi buradaki kimlerin yaşayabileceğini nasıl şekillendiriyor?
+      - Yüzey gerilimi olmadan gölet ne olurdu?
+      - Yüzey ile sınır arasındaki ilişki nedir?
+  - id: nmp_skater_ripple
+    name: Yürüyen Yarıntı
+    prompt: |
+      Bir su yürüyücüsünün bacakları yüzeyi çökertiyor. Her adım bir yarıntı
+      oluşturuyor. Deseni izle. Yürüyen, yüzeyi bir harita gibi okuyor.
+      Neler hissediyor?
+    follow_ups:
+      - Yarıntı bilgiyi nasıl taşıyor?
+      - Yüzey olmadan su yürüyücüsü ne yapardı?
+      - Yarıntı ile av arasındaki ilişki nedir?
+  - id: nmp_reflection_sky
+    name: Gökyüzü Yansıması
+    prompt: |
+      Bir su birikintisi gökyüzünü—veya bir dalı, veya seni—yansıtıyor.
+      Yansıma ters çeviriyor. Durgun su bir aynadır. Yansıma ne katıyor?
+      Neleri gizliyor?
+    follow_ups:
+      - Yansıma olmadan su birikintisi ne olurdu?
+      - Durgunluk görme şeklimizi nasıl şekillendiriyor?
+      - Yüzey ile görüntü arasındaki ilişki nedir?
+  - id: nmp_tadpole_tail
+    name: Kurbağa Yavrusu Kuyruğu
+    prompt: |
+      Bir kurbağa yavrusu yüzüyor—kuyruğu onu itiyor. Kuyruk yeniden
+      emilecek. Hayvan dönüşüyor. Aradakini düşün. Kuyruk şimdi neye imkan
+      veriyor?
+    follow_ups:
+      - Kuyruk olmadan kurbağa yavrusu ne olurdu?
+      - Metamorfoz bedeni nasıl yeniden yazar?
+      - Biçim ile işlev arasındaki ilişki nedir?
+  - id: nmp_dragonfly_egg
+    name: Yüksük Otu Yumurtası
+    prompt: |
+      Yüksük otları suya—veya suyun altındaki saplara—yumurtlarlar.
+      Larva çıkmadan önce yıllarca su altında yaşar. Bölünmüş yaşamı düşün.
+      Su ile havayı ne birleştirir?
+    follow_ups:
+      - Su aşaması olmadan yüksük otu ne olurdu?
+      - Larva göleti nasıl şekillendirir?
+      - Larva ile yetişkin arasındaki ilişki nedir?
+  - id: nmp_algae_bloom
+    name: Alg Patlaması
+    prompt: |
+      Sudaki yeşil küf—alg. Bu bir patlama, bir nabız. Çok fazla besin, çok
+      fazla güneş. Gölet yanıt veriyor. Neler tetikler? Neler takip eder?
+    follow_ups:
+      - Alg olmadan gölet ne olurdu?
+      - Patlama oksijeni nasıl etkiliyor?
+      - Besin ile büyüme arasındaki ilişki nedir?
+  - id: nmp_reed_stem
+    name: Saz Sapı
+    prompt: |
+      Sazlar ve kamışlar kenardan yükseliyor. Bunlar içi boş—içinden hava
+      kanalları geçiyor. Sap su ile havayı birleştiriyor. Sazı merdiven olarak
+      kim kullanır?
+    follow_ups:
+      - Sazlar olmadan kenar ne olurdu?
+      - İçinin boş olması hayatta kalmayı nasıl sağlar?
+      - Sap ile yaşam alanı arasındaki ilişki nedir?
+  - id: nmp_pond_skin
+    name: Gölet Derisi
+    prompt: |
+      Göletin bir derisi var—suyun hava ile buluştuğu yer. Tozlar üzerine
+      düşer. Yağ yayılır. Deri hassastır. Ona dokun. Deri neleri ayırır?
+    follow_ups:
+      - Deri olmadan gölet ne olurdu?
+      - Deri gaz değişimini nasıl etkiler?
+      - Yüzey ile derinlik arasındaki ilişki nedir?
+  - id: nmp_temporary_pool
+    name: Geçici Havuz
+    prompt: |
+      Yağmur sonrası bir su birikintisi—kuruyacak. Yine de yaşam adapte
+      olmuş. Peri karidesi, kurbağa yavrusu karidesi, bekleyen yumurtalar.
+      Aciliyeti düşün. Su gitmeden önce neler olmalı?
+    follow_ups:
+      - Kalıcı olsaydı havuz ne olurdu?
+      - Geçicilik stratejiyi nasıl şekillendirir?
+      - Zaman ile adaptasyon arasındaki ilişki nedir?
+  - id: nmp_whirligig_gyre
+    name: Su Üstü Böceği Girdabı
+    prompt: |
+      Su üstü böcekleri yüzeyde dönerek ilerler. Yukarıyı ve aşağıyı görürler—
+      bölünmüş gözler. Hem av hem de avcıdırlar. Çift görüşü düşün. Neye
+      imkan verir?
+    follow_ups:
+      - Bölünmüş görüş olmadan böcek ne olurdu?
+      - Girdap avcıları nasıl şaşırtır?
+      - Dönüş ile hayatta kalma arasındaki ilişki nedir?
+  - id: nmp_diving_spider
+    name: Dalgıç Örümcek
+    prompt: |
+      Bir dalgıç örümcek hava kabarcığı taşıyor—bir dalış çanı. Suyun
+      altında nefes alır. Kabarcık bir akciğerdir. İcadı düşün. Kabarcık
+      olmadan örümcek ne yapardı?
+    follow_ups:
+      - Kabarcık avlanmaya nasıl imkan verir?
+      - Kabarcık patlarsa ne olur?
+      - Hava ile su arasındaki ilişki nedir?
+  - id: nmp_pond_scum
+    name: Gölet Küfü
+    prompt: |
+      Kenarda küf oluşur—polen, toz, alg, böcekler. Bu bir sınır tabakasıdır.
+      Orada ne birikir? Kim onu yer? Küf bir filtredir.
+    follow_ups:
+      - Küf olmadan gölet ne olurdu?
+      - Kenar yaşamı nasıl yoğunlaştırır?
+      - Sınır ile birikim arasındaki ilişki nedir?
+  - id: nmp_ice_surface
+    name: Buz Yüzeyi
+    prompt: |
+      Kışın, gölet donar. Buz tutar. Altında, yaşam devam eder—daha yavaş,
+      daha soğuk. Engeli düşün. Buz neleri korur? Neleri engeller?
+    follow_ups:
+      - Buz olmadan gölet ne olurdu?
+      - Donma oksijeni nasıl etkiler?
+      - Buz ile hayatta kalma arasındaki ilişki nedir?
+  - id: nmp_minnow_school
+    name: Küçük Balık Sürüsü
+    prompt: |
+      Küçük balıklar sürüler halinde—tek bir beden gibi hareket ederler. Sürü
+      savunmadır, verimliliktir. Senkronizasyona bak. Onları ne koordine
+      ediyor? Yalnız bir küçük balık ne riske girer?
+    follow_ups:
+      - Sürü olmadan gölet ne olurdu?
+      - Sürü avlanmayı nasıl azaltır?
+      - Birey ile grup arasındaki ilişki nedir?
+  - id: nmp_lily_pad
+    name: Nilüfer Yaprağı
+    prompt: |
+      Bir nilüfer yaprağı yüzer. Alt yüzeyi üst yüzeyinden farklıdır—tüyler,
+      renk. Yaprak bir platformdur. Üzerine neler iner? Altında neler yaşar?
+    follow_ups:
+      - Nilüfer yaprakları olmadan gölet ne olurdu?
+      - Yaprak alttaki ışığı nasıl şekillendirir?
+      - Yaprak ile gölge arasındaki ilişki nedir?
+  - id: nmp_ripple_spread
+    name: Yarıntı Yayılımı
+    prompt: |
+      Bir taş düşer. Yarıntılar yayılır. Kesişirler, müdahale ederler. Desen
+      enerji taşır. Çürümeyi düşün. Yarıntılar ne kadar uzağa seyahat eder?
+    follow_ups:
+      - Yarıntılar olmadan yüzey ne olurdu?
+      - Yarıntı darbeyi nasıl işaretler?
+      - Rahatsızlık ile yayılma arasındaki ilişki nedir?
+  - id: nmp_mosquito_wiggle
+    name: Sivrisinek Kıvranması
+    prompt: |
+      Sivrisinek larvaları yüzeyden sarkarlar—kıvrananlar. Sifonları ile
+      nefes alırlar. Kıvranma harekettir, beslenmedir. Larvanın dünyasını
+      düşün. Ne yer?
+    follow_ups:
+      - Sivrisinekler olmadan gölet ne olurdu?
+      - Kıvranma avcılardan nasıl kaçınır?
+      - Larva ile yetişkin arasındaki ilişki nedir?
+  - id: nmp_leaf_boat
+    name: Yaprak Tekne
+    prompt: |
+      Bir yaprak yüzer—düşmüş, sürükleniyor. Bazıları için bir sal,
+      diğerleri için yiyecektir. Yaprak batacak, çürüyerek yok olacak.
+      Yolculuğunu izle. Ne olacak?
+    follow_ups:
+      - Yüzen döküntü olmadan yüzey ne olurdu?
+      - Yaprak mikro habitatı nasıl oluşturur?
+      - Yüzen ile batan arasındaki ilişki nedir?
+  - id: nmp_backswimmer_top
+    name: Ters Yüzücü Üst
+    prompt: |
+      Bir ters yüzücü ters yüzer—karnı gökyüzüne dönük. Bacaklarıyla kürek
+      çeker. Yüzeyden nefes alır, sonra dalar. Tersliği düşün. Neden ters
+      yüzüyor?
+    follow_ups:
+      - Düz yüzücü olsaydı ters yüzücü ne olurdu?
+      - Duruş avlanmaya nasıl yardımcı olur?
+      - Yönelim ile av arasındaki ilişki nedir?
+  - id: nmp_snail_trail
+    name: Salyangoz İzleri
+    prompt: |
+      Bir gölet salyangozu kayarak ilerler. Bir iz bırakır—mukus, hareket.
+      İz, nereye gittiğini işaretler. Başka salyangozlar takip edebilir.
+      Yolu düşün. İz neyi iletir?
+    follow_ups:
+      - İz olmadan salyangoz ne olurdu?
+      - Mukus hareketi nasıl sağlar?
+      - İz ile takip arasındaki ilişki nedir?
+  - id: nmp_dew_drop
+    name: Çiy Damlası
+    prompt: |
+      Çiy, suyun üzerindeki bir yaprakta oluşur—boncuklar, yansıtır. Bu
+      yoğunlaşmadır. Damla tutunur. Sonra düşer. Damlacığı düşün. Neleri
+      büyütür?
+    follow_ups:
+      - Çiy olmadan yaprak ne olurdu?
+      - Damla ışığı nasıl büküyor?
+      - Damla ile yüzey arasındaki ilişki nedir?
+  - id: nmp_spring_constant
+    name: Kaynak Sabiti
+    prompt: |
+      Bir kaynak göleti besler—veya gölet sızdırır. Su seviyesi dengedir.
+      Giriş ve çıkışı düşün. Havuzu ne sürdürüyor? Neler onu kuruturdu?
+    follow_ups:
+      - Kaynak olmadan gölet ne olurdu?
+      - Kaynak suyu nasıl şekillendirir?
+      - Giriş ile yaşam arasındaki ilişki nedir?
+  - id: nmp_edge_ecotone
+    name: Kenar Ekotonu
+    prompt: |
+      Gölet kenarı bir ekotondur—geçiş. Islak kuruyla buluşur. Bitkiler
+      adapte olur. Hayvanlar geçer. Kenar çeşitliliktir. Ortada neler
+      çoğalır?
+    follow_ups:
+      - Kenar olmadan gölet ne olurdu?
+      - Ekoton nasıl fırsat yaratır?
+      - Sınır ile çeşitlilik arasındaki ilişki nedir?
+  - id: nmp_frog_eye
+    name: Kurbağa Gözü
+    prompt: |
+      Bir kurbağa kenarda oturur. Gözleri dışarı fırlar—yukarıyı ve ileriyi
+      görür. Kurbağa hareketsizdir. Sonra dili fırlatır. Sabrı düşün. Neleri
+      bekler?
+    follow_ups:
+      - Dışarı fırlayan gözler olmadan kurbağa ne olurdu?
+      - Hareketsizlik vuruşu nasıl sağlar?
+      - Bekleme ile yakalama arasındaki ilişki nedir?
+  - id: nmp_oxygen_bubble
+    name: Oksijen Kabarcığı
+    prompt: |
+      Göletteki bitkiler oksijen üretir—kabarcıklar yükselir. Güneşli bir
+      günde, su nefes alır. Değişimi düşün. Fotosentez olmadan gölet ne
+      olurdu?
+    follow_ups:
+      - Oksijen buradaki kimlerin yaşayabileceğini nasıl şekillendiriyor?
+      - Oksijen azaldığında ne olur?
+      - Işık ile nefes arasındaki ilişki nedir?
+  - id: nmp_detritus_floor
+    name: Kalıntı Zemini
+    prompt: |
+      Göletin dibi kalıntıdır—düşmüş yapraklar, ölü böcekler, tortu. Çürüme
+      tabakasıdır. Orada neler yaşar? Kim onu yer? Zemin bir erzak deposudur.
+    follow_ups:
+      - Kalıntı olmadan gölet ne olurdu?
+      - Zemin su sütununu nasıl besler?
+      - Dip ile üst arasındaki ilişki nedir?
+  - id: nmp_rain_ring
+    name: Yağmur Halkası
+    prompt: |
+      Yağmur yüzeye vurur. Her damla bir halka—bir taç, sonra bir krater
+      oluşturur. Yağmur suyu dokulandırır. Deseni düşün. Durgun bir yüzey
+      ne anlama gelirdi?
+    follow_ups:
+      - Yağmur suyu nasıl oksijenlendirir?
+      - Halkalar neleri bozar?
+      - Yağmur ile yüzey arasındaki ilişki nedir?
+  - id: nmp_duckweed_carpet
+    name: Su Mercimeği Halısı
+    prompt: |
+      Su mercimeği yüzeyi kaplar—küçük yüzen bitkiler. Hızla çoğalırlar.
+      Halı alttakileri gölgeler. Kapsamı düşün. Tam güneş ne anlama gelirdi?
+    follow_ups:
+      - Su mercimeği olmadan gölet ne olurdu?
+      - Halı sıcaklığı nasıl etkiler?
+      - Kapak ile alttaki yaşam arasındaki ilişki nedir?
+  - id: nmp_phantom_midgie
+    name: Hayalet Sinek Larvası
+    prompt: |
+      Hayalet sinek larvaları şeffaftır—hayalet gibi. Suda sarkarlar.
+      Onların içinden görürsünüz. Görünmezliği düşün. Şeffaflık neleri
+      korur?
+    follow_ups:
+      - Opak olsaydı larva ne olurdu?
+      - Şeffaflık avlanmaya nasıl yardımcı olur?
+      - Şeffaf ile hayatta kalma arasındaki ilişki nedir?
+  - id: nmp_skimmer_skip
+    name: Taş Atlama
+    prompt: |
+      Bir taş yüzeyde atlandı—bir, iki, üç. Her zıplama enerji aktarır.
+      Atlayan sonunda batar. Limiti düşün. Kaç zıplamayı ne belirler?
+    follow_ups:
+      - Dönüş olmadan taş ne yapardı?
+      - Açı zıplamayı nasıl şekillendirir?
+      - Atış ile zıplama arasındaki ilişki nedir?
+  - id: nmp_pollinator_drink
+    name: Tozlayıcı İçeceği
+    prompt: |
+      Bir arı kenardan içer. Kelebekler bir çamur birikintisinde toplanır. Su
+      bir kaynaktır. Kimlerin geldiğini düşün. Sudan neye ihtiyaçları var?
+    follow_ups:
+      - Birikinti olmadan tozlayıcılar ne yapardı?
+      - Kenar içmeyi nasıl mümkün kılar?
+      - Su ile mineral arasındaki ilişki nedir?
+  - id: nmp_evaporation_skin
+    name: Buharlaşma Derisi
+    prompt: |
+      Gölet buharlaşma ile su kaybeder. Yazın, seviye düşer. Kıyı genişler.
+      Geri çekilmeyi düşün. Neler ortaya çıkar? Kimler mahsur kalır?
+    follow_ups:
+      - Buharlaşma olmadan gölet ne olurdu?
+      - Düşüş yaşamı nasıl yoğunlaştırır?
+      - Kayıp ile yoğunlaşma arasındaki ilişki nedir?
+  - id: nmp_hydra_stalk
+    name: Hidra Sapı
+    prompt: |
+      Bir hidra—küçük, dokunaçlı—bir dala tutunur. Avını sokar, içeri çeker.
+      Hidra yenilenebilir. Basitliği düşün. Ne beden planı kullanır?
+    follow_ups:
+      - Hidralar olmadan gölet ne olurdu?
+      - Yenilenme hayatta kalmaya nasıl yardımcı olur?
+      - Basitlik ile dayanıklılık arasındaki ilişki nedir?
+  - id: nmp_boatman_row
+    name: Tekneci Kürek
+    prompt: |
+      Bir su tekneci kürek çeker—kürek gibi bacaklar. Genellikle ters
+      döner, yüzeye tutunur. Alglerle beslenir. Kurekleri düşün. Neleri
+      ileri doğru iterler?
+    follow_ups:
+      - Kurekler olmadan tekneci ne olurdu?
+      - Kürek, ters yüzücüden nasıl farklıdır?
+      - Bacak ile hareket arasındaki ilişki nedir?
+  - id: nmp_caddisfly_case
+    name: Cüce Sinek Kabuğu
+    prompt: |
+      Bir cüce sinek larvası bir kabuk inşa eder—çubuklar, taşlar,
+      kabuklar. İpekle yapıştırır. Kabuk zırh ve kamuflajdır. Yapıyı
+      düşünün. Larva neleri seçer?
+    follow_ups:
+      - Kabuk olmadan larva ne olurdu?
+      - Kabuk yaşam alanına göre nasıl değişir?
+      - Malzeme ile koruma arasındaki ilişki nedir?
+  - id: nmp_damselfly_emergence
+    name: Yusufçuk Çıkışı
+    prompt: |
+      Bir yusufçuk çıkar—larva bir dala tırmanır, derisini yarar, yetişkin
+      serbest kalır. Kanatlar açılır. An çok hassastır. Dönüşümü
+      düşünün. Neler ters gidebilir?
+    follow_ups:
+      - Tırmanış olmadan yetişkin ne olurdu?
+      - Çıkış zamanlamayı nasıl şekillendirir?
+      - Larva ile yetişkin arasındaki ilişki nedir?
+  - id: nmp_floating_feather
+    name: Yüzen Tüy
+    prompt: |
+      Bir tüy yüzer—bir kuş tarafından atılmış. Yüzeyde seyahat eder. Su
+      üzerinde boncuklanır. Tüyü düşün. Tüy kuşu nasıl kuru tuttu? Tüy
+      şimdi ne yapıyor?
+    follow_ups:
+      - Yüzen nesneler olmadan yüzey ne olurdu?
+      - Tüy havayı nasıl hapseder?
+      - Yapı ile yüzme arasındaki ilişki nedir?
+  - id: nmp_moon_jelly
+    name: Ay Denizanası
+    prompt: |
+      Bazı göletlerde, denizanası—ay denizanası. Nabız atar. Çoğunlukla
+      sudurlar. Bedeni düşün. Denizanası neleri yakalar? Nelerden kaçınır?
+    follow_ups:
+      - Denizanası olmadan gölet ne olurdu?
+      - Nabız nasıl hareket yaratır?
+      - Su ile beden arasındaki ilişki nedir?
+  - id: nmp_seep_source
+    name: Sızıntı Kaynağı
+    prompt: |
+      Su kenardan sızar—bir kaynak, yavaş akış. Sızıntı göleti besler.
+      Veya gölet sızdırır. Sınırı düşün. Neler geçer? Neler tutunur?
+    follow_ups:
+      - Sızıntı olmadan gölet ne olurdu?
+      - Sızıntı kimyayı nasıl şekillendirir?
+      - Kaynak ile havuz arasındaki ilişki nedir?
+  - id: nmp_wind_wave
+    name: Rüzgar Dalgası
+    prompt: |
+      Rüzgar yüzeyi iter. Küçük dalgalar oluşur. Kenarda kırılırlar.
+      Fetch'i düşün—rüzgarın su üzerinde katettiği mesafe. Dalga neleri
+      şekillendirir?
+    follow_ups:
+      - Rüzgar olmadan yüzey ne olurdu?
+      - Dalgalar oksijeni nasıl etkiler?
+      - Rüzgar ile karışım arasındaki ilişki nedir?
+  - id: nmp_rotifer_wheel
+    name: Rotifer Çarkı
+    prompt: |
+      Rotiferler mikroskobik—bir kirpik çarkları var. Döner, yiyecek
+      çeker. Rotifer bir motordur. Ölçeği düşün. Bu suda başka neler var?
+    follow_ups:
+      - Rotiferler olmadan gölet ne olurdu?
+      - Çark nasıl akış yaratır?
+      - Kirpik ile beslenme arasındaki ilişki nedir?
+  - id: nmp_temperature_layer
+    name: Sıcaklık Katmanı
+    prompt: |
+      Göletler katmanlanabilir—üstte sıcak, altta soğuk. Katmanlar kolayca
+      karışmaz. Sınırı düşün. Neler nerede yaşar? Gölet döndüğünde ne olur?
+    follow_ups:
+      - Katmanlanma olmadan gölet ne olurdu?
+      - Sıcaklık oksijeni nasıl şekillendirir?
+      - Katman ile yaşam arasındaki ilişki nedir?
+  - id: nmp_predator_shadow
+    name: Avcı Gölgesi
+    prompt: |
+      Bir balığın gölgesi geçer. Av donar, dağılır. Gölge bir sinyaldir.
+      Tepkiyi düşün. Sürekli gölge ne anlama gelirdi? Gölge olmaması ne
+      anlama gelirdi?
+    follow_ups:
+      - Gölge kaçışı nasıl tetikler?
+      - Gölge dışında hangi ipuçları önemlidir?
+      - Gölge ile hayatta kalma arasındaki ilişki nedir?
+  - id: nmp_surface_film
+    name: Yüzey Filmi
+    prompt: |
+      Sudaki ince bir film—polen, bakteri, organik madde. Ağırlık taşıyabilir.
+      Bazı böcekler onun üzerinde yürür. Filmi düşün. Neler onu kırardı?
+    follow_ups:
+      - Film olmadan yüzey ne olurdu?
+      - Film gaz değişimini nasıl etkiler?
+      - Film ile sınır arasındaki ilişki nedir?
+  - id: nmp_dry_wait
+    name: Kuru Bekleyiş
+    prompt: |
+      Su birikintisi kuruyacak. Bazı organizmalar kuraklığa dayanıklı
+      yumurtalara sahiptir. Beklerler. Bir sonraki yağmur aylarca uzakta
+      olabilir. Bahsi düşün. Başarı için nelerin uyum sağlaması gerekir?
+    follow_ups:
+      - Bekleyiş olmadan havuz ne olurdu?
+      - Dormansi kuraklığı nasıl kapsar?
+      - Yumurta ile yağmur arasındaki ilişki nedir?
+  - id: nmp_shoreline_wrack
+    name: Sahil Döküntüsü
+    prompt: |
+      Kıyıya döküntüler toplanır—yapraklar, çubuklar, ölü böcekler.
+      Döküntü bir çizgidir. Yüksek suyu işaretler. Birikimi düşün. Kimler
+      burada beslenir?
+    follow_ups:
+      - Döküntü olmadan kenar ne olurdu?
+      - Döküntü nasıl yaşam alanı yaratır?
+      - Çizgi ile seviye arasındaki ilişki nedir?
+  - id: nmp_duckweed_carpet
+    name: Su Mercimeği Halısı
+    prompt: |
+      Su mercimeği durgun suyu kaplar—küçük yeşil diskler. Hızla yayılır.
+      Yüzey katı hale gelir. İstilayı düşün. Halı neleri engeller? Neleri
+      mümkün kılar?
+    follow_ups:
+      - Su mercimeği olmadan gölet ne olurdu?
+      - Halı ışık ve oksijeni nasıl etkiler?
+      - Kapak ile alttaki yaşam arasındaki ilişki nedir?
+  - id: nmp_rain_ring
+    name: Yağmur Halkası
+    prompt: |
+      Bir yağmur damlası yüzeye vurur. Bir halka genişler, solar. Bir sağanakta,
+      yüzey doku haline gelir—halkalar üst üste biner. Deseni düşün. Yağmur
+      gölete ne yapar?
+    follow_ups:
+      - Yağmur olmadan yüzey ne olurdu?
+      - Yağmur suyu nasıl karıştırır?
+      - Damla ile halka arasındaki ilişki nedir?
+  - id: nmp_minnow_school
+    name: Küçük Balık Sürüsü
+    prompt: |
+      Küçük balıklar sürüler halinde—onlarca kişi tek bir beden gibi hareket
+      eder. Sürü bir stratejidir. Avcıları şaşırtır. Koordinasyonu düşün.
+      Nasıl karar verirler? Yalnızlık neye mal olur?
+    follow_ups:
+      - Sürü olmadan gölet ne olurdu?
+      - Sürü tehdide nasıl tepki verir?
+      - Çokluk ile tek arasındaki ilişki nedir?
+  - id: nmp_ice_edge
+    name: Buz Kenarı
+    prompt: |
+      Kışın, buz kenardan büyür. Sınır ilerler. Altında, yaşam devam eder—
+      daha soğuk, daha yavaş. Kenarı düşün. Buzun altında neler hayatta
+      kalır?
+    follow_ups:
+      - Buz olmadan gölet ne olurdu?
+      - Buz nasıl korur veya tehdit eder?
+      - Donma ile oksijen arasındaki ilişki nedir?

@@ -1,0 +1,513 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Interfejs człowiek — Węzeł przesiadkowy (Polish)
+
+id: human_interface_transit_hub
+name: Interfejs człowiek — Węzeł przesiadkowy
+description: 50 kart, które zmienią sposób, w jaki postrzegasz węzeł przesiadkowy — od peronów i oczekiwania, po przepływ przyjazdów/odjazdów i choreografię obcych w transporcie.
+domain: human_interface
+cards:
+  - id: hi_th_platform_edge
+    name: Krawędź peronu
+    prompt: |
+      Krawędź peronu to próg. Żółta linia, przepaść, tor. Ludzie stoją w
+      różnych odległościach. Niektórzy pochylają się do przodu; inni
+      trzymają się z tyłu. Obserwuj rozkład. Co oznacza krawędź?
+    follow_ups:
+      - Jak krawędź kształtuje oczekiwanie?
+      - Jaki byłby peron bez linii?
+      - Jaka jest relacja między krawędzią a ryzykiem?
+  - id: hi_th_waiting_posture
+    name: Postawa podczas oczekiwania
+    prompt: |
+      Ciała układają się podczas oczekiwania — ciężar na jednej nodze,
+      telefon w ręku, torba między nogami. Postawa koduje czas trwania. Kto
+      wygląda na cierpliwego? Kto na niespokojnego? Oczekiwanie ma
+      język ciała.
+    follow_ups:
+      - Jak postawa ujawnia oczekiwania?
+      - Co by się działo bez czekania na peronie?
+      - Jaka jest relacja między postawą a czasem?
+  - id: hi_th_arrival_flow
+    name: Przepływ przyjazdów
+    prompt: |
+      Drzwi pociągu otwierają się. Ludzie wylewają się — pod prąd
+      wsiadających. Przepływ ma fizykę. Obserwuj zderzenie, omijanie,
+      włączanie się. Jakie zasady kierują wymianą?
+    follow_ups:
+      - Jak przepływ kształtuje peron?
+      - Co by się stało, gdyby wszyscy się spieszyli?
+      - Jaka jest relacja między przepływem a wydajnością?
+  - id: hi_th_strangers_transit
+    name: Obcy w transporcie
+    prompt: |
+      Dzielisz wagon z ludźmi, których nigdy więcej nie zobaczysz. Bliskość
+      bez połączenia. Obserwuj zwartość. Co obcy są sobie winni? Wagon
+      transportu to tymczasowe społeczeństwo.
+    follow_ups:
+      - Jak transport tworzy tymczasową społeczność?
+      - Co by było w wagonie z rozmową?
+      - Jaka jest relacja między obcym a uprzejmością?
+  - id: hi_th_departure_board
+    name: Tablica odjazdów
+    prompt: |
+      Godziny, perony, opóźnienia — tablica jest źródłem prawdy. Oczy
+      wznoszą się ku niej. Tablica dyktuje ruch. Obserwuj zbiorowe spojrzenie.
+      Co tablica robi z tłumem?
+    follow_ups:
+      - Jak tablica kształtuje zachowanie?
+      - Co by było bez niej w węźle przesiadkowym?
+      - Jaka jest relacja między wyświetlaniem a zaufaniem?
+  - id: hi_th_escalator_stand
+    name: Stojak na schodach ruchomych
+    prompt: |
+      Stój po prawej, idź po lewej — lub odwrotnie, w zależności od miasta.
+      Schody ruchome mają zasady. Obserwuj, kto ich przestrzega. Schody
+      ruchome to ruchoma kolejka. Co umożliwiają te zasady?
+    follow_ups:
+      - Jak zasada schodów ruchomych kształtuje przepływ?
+      - Co by się stało, gdyby wszyscy stali?
+      - Jaka jest relacja między zasadą a wydajnością?
+  - id: hi_th_ticket_gate
+    name: Bramka biletowa
+    prompt: |
+      Bramka odczytuje kartę, pika, otwiera się. Bramka to punkt kontrolny.
+      Oddziela opłaconych od nieopłaconych. Obserwuj rytm. Kto ma
+      problemy? Kto przemyka przez nią gładko? Bramka to test.
+    follow_ups:
+      - Jak bramka kształtuje podróż?
+      - Co by było bez bramek w węźle przesiadkowym?
+      - Jaka jest relacja między bramką a przynależnością?
+  - id: hi_th_luggage_drag
+    name: Ciągnięcie bagażu
+    prompt: |
+      Kółka na płytkach. Walizka podąża. Ciągnięcie zaznacza ścieżkę
+      podróżnych. Bagaż przedłuża ciało. Obserwuj ciężar. Co mówi
+      bagaż o podróży?
+    follow_ups:
+      - Jak bagaż kształtuje ruch?
+      - Co by było bez toreb w węźle przesiadkowym?
+      - Jaka jest relacja między ciężarem a celem podróży?
+  - id: hi_th_bench_occupation
+    name: Zajmowanie ławki
+    prompt: |
+      Ławki wzdłuż peronu. Niektórzy siedzą; niektórzy stoją obok. Ławka
+      to ograniczony zasób. Obserwuj, kto ją zajmuje. Jak długo
+      pozostają? Ławka to małe terytorium.
+    follow_ups:
+      - Jak ławka kształtuje oczekiwanie?
+      - Co by było bez ławek na peronie?
+      - Jaka jest relacja między siedzeniem a czasem trwania?
+  - id: hi_th_announcement_voice
+    name: Głos zapowiedzi
+    prompt: |
+      "Następny pociąg..." Głos jest automatyczny lub ludzki. Przebija się
+      przez hałas. Zapowiedź tworzy wspólną wiedzę. Obserwuj, kto
+      słucha. Kto już sprawdził swój telefon?
+    follow_ups:
+      - Jak zapowiedź kształtuje tłum?
+      - Co by było bez niej w węźle przesiadkowym?
+      - Jaka jest relacja między głosem a autorytetem?
+  - id: hi_th_door_positioning
+    name: Pozycjonowanie drzwi
+    prompt: |
+      Stali bywalcy wiedzą, gdzie otworzą się drzwi. Ustawiają się.
+      Nowicjusze zgadują. Pozycjonowanie to strategia. Obserwuj grupowanie.
+      Co determinuje pozycja?
+    follow_ups:
+      - Jak pozycjonowanie kształtuje wsiadanie?
+      - Jaki byłby peron, gdyby drzwi otwierały się losowo?
+      - Jaka jest relacja między pozycją a przewagą?
+  - id: hi_th_handrail_grip
+    name: Uścisk poręczy
+    prompt: |
+      Wewnątrz wagonu ręce chwytają poręcz. Uścisk to bezpieczeństwo.
+      Obserwuj, kto się trzyma, a kto nie musi. Poręcz to wspólny przedmiot.
+      Co ujawnia uścisk?
+    follow_ups:
+      - Jak poręcz kształtuje stabilność?
+      - Co by było bez niej w wagonie?
+      - Jaka jest relacja między uściskiem a zaufaniem?
+  - id: hi_th_window_reflection
+    name: Odbicie w oknie
+    prompt: |
+      Okno pokazuje tunel, peron i twoją własną twarz. Odbicie jest
+      nieuniknione. Ludzie patrzą na siebie lub tego unikają. Obserwuj
+      relację między odbiciem a spojrzeniem.
+    follow_ups:
+      - Jak odbicie kształtuje samoświadomość?
+      - Co by było bez okna podczas jazdy?
+      - Jaka jest relacja między odbiciem a prywatnością?
+  - id: hi_th_seat_offer
+    name: Oferta miejsca
+    prompt: |
+      Ktoś oferuje miejsce starszej osobie, rodzicowi z dzieckiem. Oferta
+      to mały moralny akt. Obserwuj, kiedy się zdarza. Kto oferuje? Kto
+      przyjmuje? Miejsce to dar.
+    follow_ups:
+      - Jak oferta kształtuje wagon?
+      - Co by było bez takich ofert podczas jazdy?
+      - Jaka jest relacja między ofertą a troską?
+  - id: hi_th_delay_sigh
+    name: Westchnienie opóźnienia
+    prompt: |
+      "Opóźniony." Zbiorowe westchnienie. Opóźnienie to wspólny los.
+      Obcy wymieniają spojrzenia. Opóźnienie tworzy chwilę solidarności.
+      Obserwuj zmianę. Co opóźnienie robi z tłumem?
+    follow_ups:
+      - Jak opóźnienie kształtuje oczekiwanie?
+      - Co by było bez opóźnień w węźle przesiadkowym?
+      - Jaka jest relacja między opóźnieniem a frustracją?
+  - id: hi_th_backpack_turn
+    name: Obrót plecaka
+    prompt: |
+      W zatłoczonym wagonie ktoś odwraca plecak do przodu. Obrót to
+      uwzględnienie innych. Tworzy przestrzeń. Obserwuj, kto to robi.
+      Obrót plecaka to mała umowa społeczna.
+    follow_ups:
+      - Jak obrót kształtuje bliskość?
+      - Co by było bez tego w wagonie?
+      - Jaka jest relacja między obrotem a świadomością?
+  - id: hi_th_exit_anticipation
+    name: Oczekiwanie na wyjście
+    prompt: |
+      Gdy zbliża się przystanek, ludzie gromadzą się przy drzwiach. Oczekiwanie
+      jest widoczne. Ciała się przesuwają. Drzwi się otworzą. Obserwuj
+      przygotowanie. Czego wymaga oczekiwanie?
+    follow_ups:
+      - Jak oczekiwanie kształtuje wyjście?
+      - Co by było bez przygotowania na przystanku?
+      - Jaka jest relacja między oczekiwaniem a przepływem?
+  - id: hi_th_transfer_corridor
+    name: Korytarz przesiadkowy
+    prompt: |
+      Korytarz łączy linie. Ludzie idą z determinacją. Przesiadka to
+      przejście — między systemami, między oczekiwaniami. Obserwuj tempo.
+      Korytarz ma swój własny rytm.
+    follow_ups:
+      - Jak korytarz kształtuje podróż?
+      - Co by było bez przesiadek w węźle przesiadkowym?
+      - Jaka jest relacja między korytarzem a połączeniem?
+  - id: hi_th_phone_glow
+    name: Blask telefonu
+    prompt: |
+      W przygaszonym wagonie twarze rozświetlają się od telefonów. Blask jest
+      indywidualny. Każda osoba ma swoje własne światło. Obserwuj
+      rozkład. Telefon tworzy prywatną przestrzeń w publicznej.
+    follow_ups:
+      - Jak telefon kształtuje jazdę?
+      - Co by było bez telefonów w wagonie?
+      - Jaka jest relacja między blaskiem a izolacją?
+  - id: hi_th_stroller_navigation
+    name: Nawigacja z wózkiem
+    prompt: |
+      Rodzic prowadzi wózek przez tłum. Nawigacja jest delikatna. Ludzie
+      robią miejsce. Wózek zmienia przepływ. Obserwuj dostosowanie. Czego
+      wymaga wózek?
+    follow_ups:
+      - Jak wózek kształtuje tłum?
+      - Co by było bez wózków w węźle przesiadkowym?
+      - Jaka jest relacja między wózkiem a troską?
+  - id: hi_th_vendor_station
+    name: Stanowisko sprzedawcy
+    prompt: |
+      Kiosk sprzedaje kawę, przekąski, gazety. Sprzedawca obsługuje ludzi
+      w ruchu. Transakcja jest szybka. Obserwuj wymianę. Sprzedawca to
+      wyspa w przepływie.
+    follow_ups:
+      - Jak sprzedawca kształtuje węzeł przesiadkowy?
+      - Co by było bez sprzedawców w węźle przesiadkowym?
+      - Jaka jest relacja między sprzedawcą a oczekiwaniem?
+  - id: hi_th_track_gap
+    name: Szczelina między torami
+    prompt: |
+      Uwaga na szczelinę. Przestrzeń między peronem a wagonem jest
+      niebezpieczna. Ludzie ją przekraczają. Szczelina jest różna. Obserwuj
+      ostrożność. Czego wymaga szczelina od ciała?
+    follow_ups:
+      - Jak szczelina kształtuje wsiadanie?
+      - Co by było bez niej na peronie?
+      - Jaka jest relacja między szczeliną a uwagą?
+  - id: hi_th_schedule_check
+    name: Sprawdzenie rozkładu
+    prompt: |
+      Palce stukają w telefon. Aplikacja mówi, kiedy. Sprawdzenie rozkładu
+      jest ciągłe. Redukuje niepewność. Obserwuj rytm. Jak często ludzie
+      sprawdzają?
+    follow_ups:
+      - Jak rozkład kształtuje oczekiwanie?
+      - Co by było bez aplikacji w węźle przesiadkowym?
+      - Jaka jest relacja między sprawdzaniem a kontrolą?
+  - id: hi_th_crowd_density
+    name: Gęstość tłumu
+    prompt: |
+      Godziny szczytu zapełniają peron. Ciała się ściskają. Gęstość ma
+      granice. Obserwuj granicę. Kiedy staje się nieznośna? Tłum ma
+      fizykę.
+    follow_ups:
+      - Jak gęstość kształtuje doświadczenie?
+      - Jaki byłby węzeł przesiadkowy przy niskiej gęstości?
+      - Jaka jest relacja między gęstością a tolerancją?
+  - id: hi_th_sleeping_commuter
+    name: Śpiący pasażer
+    prompt: |
+      Ktoś śpi — głowa oparta o okno, o ramię obcego. Sen to zaufanie
+      lub wyczerpanie. Obserwuj bezbronność. Czego wymaga sen od wagonu?
+    follow_ups:
+      - Jak śpiący kształtuje przestrzeń?
+      - Co by było bez śpiących podczas jazdy?
+      - Jaka jest relacja między snem a bezpieczeństwem?
+  - id: hi_th_map_consultation
+    name: Konsultacja mapy
+    prompt: |
+      Gość wpatruje się w mapę na ścianie. Mapa to koło ratunkowe. Inni
+      przepływają obok. Konsultacja zajmuje czas. Obserwuj pauzę. Co
+      dostarcza mapa?
+    follow_ups:
+      - Jak mapa kształtuje podróż?
+      - Co by było bez map w węźle przesiadkowym?
+      - Jaka jest relacja między mapą a pewnością siebie?
+  - id: hi_th_platform_change
+    name: Zmiana peronu
+    prompt: |
+      "Zmiana peronu." Tłum się przemieszcza. Zmiana to zakłócenie. Ludzie
+      się spieszą. Obserwuj przepychankę. Co zmiana wyciąga z tłumu?
+    follow_ups:
+      - Jak zmiana kształtuje przepływ?
+      - Co by było bez zmian w węźle przesiadkowym?
+      - Jaka jest relacja między zmianą a stresem?
+  - id: hi_th_briefcase_clutch
+    name: Trzymanie teczki
+    prompt: |
+      Teczka jest trzymana blisko — między nogami, na kolanach. Zawiera coś
+      cennego. Trzymanie jest ochronne. Obserwuj uścisk. Co teczka
+      znaczy dla posiadacza?
+    follow_ups:
+      - Jak teczka kształtuje jazdę?
+      - Co by było bez teczek w wagonie?
+      - Jaka jest relacja między trzymaniem a tożsamością?
+  - id: hi_th_door_hold
+    name: Przytrzymanie drzwi
+    prompt: |
+      Ktoś przytrzymuje drzwi dla osoby za nim. Pociąg ma odjechać.
+      Przytrzymanie to ryzyko i uprzejmość. Obserwuj wymianę. Ile kosztuje
+      przytrzymanie?
+    follow_ups:
+      - Jak przytrzymanie kształtuje wsiadanie?
+      - Co by było bez tego na peronie?
+      - Jaka jest relacja między przytrzymaniem a uprzejmością?
+  - id: hi_th_standing_balance
+    name: Równowaga stojąc
+    prompt: |
+      Pociąg się porusza. Stojący pasażerowie przenoszą ciężar. Równowaga
+      jest dynamiczna. Nikt nie trzyma poręczy. Obserwuj mikroregulacje.
+      Ciało uczy się ruchu.
+    follow_ups:
+      - Jak równowaga kształtuje jazdę?
+      - Co by było w wagonie z większą liczbą miejsc siedzących?
+      - Jaka jest relacja między równowagą a nawykiem?
+  - id: hi_th_conversation_overhear
+    name: Zasłuchanie rozmowy
+    prompt: |
+      Dwie osoby rozmawiają. Słyszysz fragmenty. Rozmowa jest prywatna,
+      ale publiczna. Obserwuj granicę. Czego obcy dowiadują się o sobie
+      w transporcie?
+    follow_ups:
+      - Jak zasłuchanie kształtuje jazdę?
+      - Co by było bez rozmów w wagonie?
+      - Jaka jest relacja między zasłuchaniem a intymnością?
+  - id: hi_th_ticket_inspection
+    name: Kontrola biletów
+    prompt: |
+      Kontroler przechodzi przez wagon. "Bilety do kontroli." Kontrola
+      jest losowa lub systematyczna. Obserwuj reakcję. Kto jest gotowy? Kto
+      ma kłopoty? Kontrola to test legitymacji.
+    follow_ups:
+      - Jak kontrola kształtuje jazdę?
+      - Co by było bez niej w systemie?
+      - Jaka jest relacja między kontrolą a zaufaniem?
+  - id: hi_th_station_name_glance
+    name: Spojrzenie na nazwę stacji
+    prompt: |
+      Nazwa przelatuje — na ścianie, na znaku. Stali bywalcy wiedzą.
+      Nowicjusze obserwują. Spojrzenie orientuje. Obserwuj, kto patrzy.
+      Co robi nazwa?
+    follow_ups:
+      - Jak nazwa kształtuje orientację?
+      - Co by było bez znaków podczas jazdy?
+      - Jaka jest relacja między nazwą a miejscem?
+  - id: hi_th_benchmark_regular
+    name: Stary wyjadacz
+    prompt: |
+      Stary wyjadacz zna rytm. Przybywa na czas. Bez czekania. Stary
+      wyjadacz zinternalizował rozkład. Obserwuj pewność siebie. Co
+      wie stary wyjadacz?
+    follow_ups:
+      - Jak stary wyjadacz kształtuje węzeł przesiadkowy?
+      - Co by było bez stałych bywalców w węźle przesiadkowym?
+      - Jaka jest relacja między stałym bywalcem a płynnością?
+  - id: hi_th_lost_look
+    name: Zagubione spojrzenie
+    prompt: |
+      Ktoś wygląda na zagubionego — głowa się obraca, tempo niepewne.
+      Spojrzenie jest widoczne. Obserwuj język ciała. Kto pomaga? Kto
+      ignoruje? Zagubione spojrzenie jest sygnałem. Czego zaprasza?
+    follow_ups:
+      - Jak zagubione spojrzenie kształtuje węzeł przesiadkowy?
+      - Co by było bez zagubionych w węźle przesiadkowym?
+      - Jaka jest relacja między zagubieniem a pomocą?
+  - id: hi_th_earbud_insert
+    name: Wkładanie słuchawek
+    prompt: |
+      Słuchawki trafiają do uszu. Świat się oddala. Włożenie to granica.
+      Noszący jest obecny, ale nieobecny. Obserwuj zmianę. Co tworzą
+      słuchawki?
+    follow_ups:
+      - Jak słuchawki kształtują jazdę?
+      - Co by było bez nich w wagonie?
+      - Jaka jest relacja między słuchawkami a prywatnością?
+  - id: hi_th_rush_hour_pack
+    name: Paczka w godzinach szczytu
+    prompt: |
+      Wagon jest pełny. Ciała się dotykają. Paczka jest nieunikniona.
+      Obserwuj tolerancję. Jak ludzie radzą sobie z bliskością? Paczka ma
+      swoją etykietę.
+    follow_ups:
+      - Jak paczka kształtuje jazdę?
+      - Co by było z godzinami szczytu bez ścisku?
+      - Jaka jest relacja między paczką a wytrzymałością?
+  - id: hi_th_destination_ask
+    name: Pytanie o cel podróży
+    prompt: |
+      "Czy to pociąg do X?" Pyta obcy. Inny odpowiada. Pytanie tworzy
+      chwilę połączenia. Obserwuj wymianę. Czego wymaga pytanie?
+    follow_ups:
+      - Jak pytanie kształtuje wagon?
+      - Co by było bez takich pytań podczas jazdy?
+      - Jaka jest relacja między pytaniem a zaufaniem?
+  - id: hi_th_platform_choice
+    name: Wybór peronu
+    prompt: |
+      Dwa perony, ten sam cel podróży. Jeden jest bliżej; jeden mniej
+      zatłoczony. Wybór to strategia. Obserwuj, kto gdzie idzie. Co
+      determinie wybór?
+    follow_ups:
+      - Jak wybór kształtuje tłum?
+      - Co by było z węzłem przesiadkowym z jednym peronem?
+      - Jaka jest relacja między wyborem a wynikiem?
+  - id: hi_th_wipe_down_seat
+    name: Przetarcie siedzenia
+    prompt: |
+      Ktoś wyciera siedzenie przed usiąściem. Tarcie to środek zapobiegawczy.
+      Obserwuj gest. Co zakłada tarcie o przestrzeni? Tarcie to mały akt
+      granicy.
+    follow_ups:
+      - Jak tarcie kształtuje siedzenie?
+      - Co by było bez takich gestów w wagonie?
+      - Jaka jest relacja między tarciem a czystością?
+  - id: hi_th_standing_offer
+    name: Oferta stania
+    prompt: |
+      "Czy chcesz usiąść?" Oferta jest skierowana do obcego. Czasem
+      przyjęta, czasem odrzucona. Obserwuj wymianę. Co znaczy oferta?
+    follow_ups:
+      - Jak oferta kształtuje wagon?
+      - Co by było bez ofert podczas jazdy?
+      - Jaka jest relacja między ofertą a troską?
+  - id: hi_th_exit_block
+    name: Blokada wyjścia
+    prompt: |
+      Ktoś stoi w drzwiach. Inni muszą przejść. Blokada jest nieświadoma
+      lub celowa. Obserwuj negocjacje. Jak ludzie się przeciskają? Blokada
+      to mały konflikt.
+    follow_ups:
+      - Jak blokada kształtuje wyjście?
+      - Co by było bez blokujących w wagonie?
+      - Jaka jest relacja między blokadą a świadomością?
+  - id: hi_th_train_rumble
+    name: Warkot pociągu
+    prompt: |
+      Pociąg warkocze — tory, koła, ruch. Warkot jest stały. Staje się
+      tłem. Obserwuj, kiedy go zauważasz. Co warkot robi z ciałem?
+    follow_ups:
+      - Jak warkot kształtuje jazdę?
+      - Co by było w ciszy w wagonie?
+      - Jaka jest relacja między warkotem a rytmem?
+  - id: hi_th_connection_run
+    name: Bieg na przesiadkę
+    prompt: |
+      Ktoś biegnie — spóźniony na przesiadkę. Bieg przecina tłum. Ludzie
+      rozbiegają się. Obserwuj zakłócenie. Co bieg wyciąga z przepływu?
+    follow_ups:
+      - Jak bieg kształtuje węzeł przesiadkowy?
+      - Co by było bez biegaczy w węźle przesiadkowym?
+      - Jaka jest relacja między biegiem a pilnością?
+  - id: hi_th_seat_saving
+    name: Rezerwacja miejsca
+    prompt: |
+      Torba na siedzeniu. "Ktoś tu siedzi." Rezerwacja trzyma miejsce dla
+      nieobecnego towarzysza. Obserwuj roszczenie. Jak długo można
+      rezerwować miejsce? Jakie są granice?
+    follow_ups:
+      - Jak rezerwacja kształtuje wagon?
+      - Co by było bez rezerwacji podczas jazdy?
+      - Jaka jest relacja między rezerwacją a uprawnieniem?
+  - id: hi_th_arrival_relief
+    name: Ulga po przyjeździe
+    prompt: |
+      Pociąg dociera do terminalu. Ulga jest widoczna. Ramiona opadają.
+      Ludzie zbierają swoje rzeczy. Podróż się skończyła. Obserwuj zmianę.
+      Co daje przyjazd?
+    follow_ups:
+      - Jak przyjazd kształtuje wyjście?
+      - Co by było bez przyjazdu podczas podróży?
+      - Jaka jest relacja między ulgą a ukończeniem?
+  - id: hi_th_wayfinding_sign
+    name: Znak nawigacyjny
+    prompt: |
+      Strzałki wskazują. "Do pociągów." "Do wyjść." Znaki kierują przepływem.
+      Obserwuj, kto ich przestrzega. Kto ignoruje? Znak to sugestia. Co
+      zakłada?
+    follow_ups:
+      - Jak znaki kształtują przepływ?
+      - Co by było bez nich w węźle przesiadkowym?
+      - Jaka jest relacja między znakiem a zaufaniem?
+  - id: hi_th_waiting_room
+    name: Poczekalnia
+    prompt: |
+      Krzesła stoją naprzeciw siebie lub przed tablicą. Poczekalnia mieści
+      ludzi między podróżami. Obserwuj aranżację. Kto siedzi? Kto
+      krąży? Poczekalnia to pauza.
+    follow_ups:
+      - Jak poczekalnia kształtuje oczekiwanie?
+      - Co by było bez niej w węźle przesiadkowym?
+      - Jaka jest relacja między poczekalnią a czasem trwania?
+  - id: hi_th_stranger_proximity
+    name: Bliskość obcego
+    prompt: |
+      Obcy stoi blisko — konieczne w tłumie. Bliskość jest bezosobowa,
+      ale intymna. Obserwuj tolerancję. Co ciało dopuszcza? Bliskość to
+      kontrakt.
+    follow_ups:
+      - Jak bliskość kształtuje jazdę?
+      - Co by było w wagonie z większą przestrzenią?
+      - Jaka jest relacja między bliskością a uprzejmością?
+  - id: hi_th_last_train
+    name: Ostatni pociąg
+    prompt: |
+      Ostatni pociąg. Tłum jest inny — późniejszy, luźniejszy. Ostatni
+      pociąg ma swoją własną energię. Obserwuj zmianę. Co "ostatni"
+      robi z tłumem?
+    follow_ups:
+      - Jak ostatni pociąg kształtuje węzeł przesiadkowy?
+      - Co by było bez niego w nocy?
+      - Jaka jest relacja między ostatnim a pilnością?
+  - id: hi_th_transit_tribe
+    name: Plemię transportu
+    prompt: |
+      Ci sami ludzie, ta sama linia, ten sam czas. Rozpoznajesz twarze.
+      Nigdy nie rozmawiasz. Plemię transportu to milcząca społeczność.
+      Obserwuj rozpoznawanie. Co daje plemię?
+    follow_ups:
+      - Jak plemię kształtuje dojazdy?
+      - Co by było bez znajomych twarzy podczas jazdy?
+      - Jaka jest relacja między plemieniem a przynależnością?

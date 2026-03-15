@@ -1,0 +1,478 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Laboratorio Culinario — Pizza (Italian)
+
+id: culinary_lab_pizza
+name: Laboratorio Culinario — Pizza
+description: 50 carte per cambiare il modo in cui vivi la pizza—dalla chimica dell'impasto e del fuoco al teatro della fetta e all'archeologia dei condimenti.
+domain: culinary_lab
+cards:
+  - id: piz_dough_stretch
+    name: Stesura dell'Impasto
+    prompt: |
+      Osserva l'impasto mentre viene steso—lanciato a mano o pressato. La rete
+      di glutine si tende, intrappolando aria. La forma viene scelta. Cosa
+      significherebbe una fetta quadrata diversamente da una triangolare?
+    follow_ups:
+      - In che modo la stesura definisce l'esperienza?
+      - Cosa sarebbe la pizza senza la stesura?
+      - Qual è la relazione tra mano e forma?
+  - id: piz_oven_breath
+    name: Respiro del Forno
+    prompt: |
+      Un forno per pizza respira—fuoco a legna, o a gas, o elettrico. La cupola
+      trattiene il calore. Il piano lo trasferisce. Stai vicino a uno. Cosa
+      chiede il forno al pizzaiolo? All'impasto?
+    follow_ups:
+      - Cosa sarebbe la pizza senza il forno?
+      - Come modella il calore il cornicione?
+      - Qual è la relazione tra respiro e bolle?
+  - id: piz_sauce_spiral
+    name: Spirale di Salsa
+    prompt: |
+      La salsa viene spesso applicata a spirale—non spalmata da bordo a bordo.
+      Studia il motivo. Cosa viene coperto? Cosa viene esposto? La spirale è
+      composizione.
+    follow_ups:
+      - Che aspetto avrebbe la pizza con la salsa ovunque?
+      - Come influisce la spirale su ogni morso?
+      - Qual è la relazione tra motivo e sapore?
+  - id: piz_cheese_melt
+    name: Scioglimento del Formaggio
+    prompt: |
+      Il formaggio si scioglie a velocità diverse. La mozzarella fila; i formaggi
+      stagionati rilasciano grasso. Osserva lo scioglimento. La chimica di
+      grasso e proteina, calore e tempo. Quando è pronta?
+    follow_ups:
+      - Cosa sarebbe la fetta senza la filatura?
+      - Come modella lo scioglimento il morso?
+      - Qual è la relazione tra scioglimento e memoria?
+  - id: piz_crust_char
+    name: Bruciatura del Cornicione
+    prompt: |
+      Leopardatura—le macchie bruciate sul cornicione—segno distintivo della
+      pizza a legna. Ogni macchia è un momento di contatto con calore estremo.
+      Considera il sapore che aggiungono quelle macchie. Cosa significherebbe
+      un cornicione pallido?
+    follow_ups:
+      - Come cambia la bruciatura l'esperienza?
+      - Cosa sarebbe la pizza senza di essa?
+      - Qual è la relazione tra bruciatura e maestria?
+  - id: piz_slice_fold
+    name: Piegatura della Fetta
+    prompt: |
+      Stile newyorkese: piega la fetta. La piega è strutturale—tiene i condimenti,
+      incanala il grasso. La piega è coreografia. Cosa rende possibile?
+    follow_ups:
+      - Cosa sarebbe mangiare senza la piega?
+      - Come modella la piega il morso?
+      - Qual è la relazione tra piega e luogo?
+  - id: piz_pepperoni_cup
+    name: Coppa di Salame Piccante
+    prompt: |
+      Salame piccante che forma una coppa—i bordi croccanti, il centro raccoglie
+      il grasso. È una trasformazione di forma e consistenza. Nota quando
+      succede. Cosa ha creato la coppa?
+    follow_ups:
+      - Cosa sarebbe il salame senza la coppa?
+      - Come trattiene il sapore la coppa?
+      - Qual è la relazione tra grasso e forma?
+  - id: piz_basil_finish
+    name: Guarnizione al Basilico
+    prompt: |
+      Il basilico sulla pizza viene spesso aggiunto dopo la cottura—fresco,
+      profumato. È una finitura, non una base. Nota il contrasto. Cosa aggiunge
+      il fresco al cotto?
+    follow_ups:
+      - Cosa sarebbe la pizza senza il basilico?
+      - Come modella il tempo l'erba aromatica?
+      - Qual è la relazione tra crudo e cotto?
+  - id: piz_margherita_minimal
+    name: Margherita Minimalista
+    prompt: |
+      La Margherita sono tre cose: impasto, pomodoro, formaggio. Ognuno deve
+      fare la sua parte. Non c'è dove nascondersi. Considera la disciplina.
+      Cosa richiede il minimalismo?
+    follow_ups:
+      - Cosa farebbe una nota stonata?
+      - Come focalizza la semplicità il palato?
+      - Qual è la relazione tra pochi e molti?
+  - id: piz_pool_table
+    name: Tavolo da Ping Pong
+    prompt: |
+      Alcune pizzerie hanno il lungo tavolo comune—sconosciuti che condividono
+      lo spazio. Arriva la pizza. Il tavolo è un palcoscenico. Chi mangia
+      accanto a te? Qual è il contratto non detto?
+    follow_ups:
+      - Cosa sarebbe il pasto in una cabina?
+      - Come modella il tavolo l'incontro?
+      - Qual è la relazione tra condiviso e privato?
+  - id: piz_box_flip
+    name: Scatola Capovolta
+    prompt: |
+      La scatola della pizza—cartone, a volte con il treppiede di plastica al
+      centro. È progettata per ventilare, per impilare. La scatola è
+      infrastruttura. Cosa sarebbe da asporto senza di essa?
+    follow_ups:
+      - Come modella la scatola il viaggio a casa?
+      - Cosa succede quando si apre la scatola?
+      - Qual è la relazione tra scatola e rituale?
+  - id: piz_dough_ferment
+    name: Fermentazione dell'Impasto
+    prompt: |
+      L'impasto per pizza fermenta—ore o giorni. Il lievito crea bolle, sapore.
+      Il vecchio impasto ha un aroma pungente. Considera il tempo in ogni
+      morso. Cosa sacrificherebbe un impasto a lievitazione rapida?
+    follow_ups:
+      - Come modella la fermentazione il cornicione?
+      - Qual è la relazione tra tempo e sapore?
+      - Cosa significherebbe un impasto dello stesso giorno?
+  - id: piz_cornicione
+    name: Cornicione
+    prompt: |
+      Il cornicione—il bordo, la crosta—è spesso la parte migliore. Arioso,
+      bruciato, forse un po' gommoso. Alcuni lo lasciano; altri lo mangiano
+      per primi. Qual è la tua relazione con il bordo?
+    follow_ups:
+      - Cosa sarebbe la pizza senza il cornicione?
+      - Come incornicia il bordo il centro?
+      - Qual è la relazione tra cornicione e centro?
+  - id: piz_olive_oil_drizzle
+    name: Nappatura di Olio d'Oliva
+    prompt: |
+      Olio d'oliva nappato dopo la cottura—sul cornicione, o su tutta la
+      pizza. Glistra. L'olio trasporta sapore, aggiunge ricchezza. Nota
+      quando viene applicato. Cosa aggiunge la nappatura?
+    follow_ups:
+      - Cosa sarebbe la pizza senza di esso?
+      - Come cambia l'olio il morso?
+      - Qual è la relazione tra grasso e finitura?
+  - id: piz_anchovy_salt
+    name: Sale di Acciughe
+    prompt: |
+      Acciughe sulla pizza—salate, umami, divisive. Si sciolgono nella salsa,
+      o stanno sopra. L'acciuga è archeologia: mediterranea, conservata, antica.
+      Che viaggio ha fatto?
+    follow_ups:
+      - Cosa sarebbe la fetta senza acciughe?
+      - Come modella il sale gli altri sapori?
+      - Qual è la relazione tra conservato e fresco?
+  - id: piz_sound_crunch
+    name: Suono Croccante
+    prompt: |
+      Il primo morso di un cornicione ben fatto—il croccante, il cedimento.
+      Chiudi gli occhi. Il suono è parte dell'esperienza. Cosa sarebbe la
+      pizza se fosse silenziosa?
+    follow_ups:
+      - Come modella il suono la soddisfazione?
+      - Che suono ha un cornicione molliccio?
+      - Qual è la relazione tra croccantezza e qualità?
+  - id: piz_second_slice
+    name: Seconda Fetta
+    prompt: |
+      La seconda fetta è diversa dalla prima—ora conosci la pizza. Il palato
+      si è adattato. Nota il cambiamento. La seconda fetta sa dello stesso?
+      Meglio? Diversamente?
+    follow_ups:
+      - Come cambia la percezione la ripetizione?
+      - Cosa mancherebbe a un pasto di una sola fetta?
+      - Qual è la relazione tra prima e seconda?
+  - id: piz_neapolitan_rules
+    name: Regole Napoletane
+    prompt: |
+      La vera pizza napoletana ha delle regole—dimensione, ingredienti, metodo.
+      Il timbro VPN, la certificazione. Le regole creano identità. Cosa proteggono
+      le regole? Cosa escludono?
+    follow_ups:
+      - Cosa sarebbe la pizza senza le regole?
+      - Come modella la certificazione l'aspettativa?
+      - Qual è la relazione tra regola e maestria?
+  - id: piz_detroit_edges
+    name: Bordi di Detroit
+    prompt: |
+      Stile Detroit—rettangolare, formaggio fino al bordo, cornicione fritto
+      croccante dove incontra la teglia. I bordi sono deliberati. Considera
+      l'architettura. Cosa dice la forma?
+    follow_ups:
+      - Cosa sarebbe la pizza senza i bordi?
+      - Come crea la forma l'identità?
+      - Qual è la relazione tra teglia e cornicione?
+  - id: piz_garlic_knot
+    name: Nodo all'Aglio
+    prompt: |
+      Nodi all'aglio—torsioni di impasto, imburrati, all'aglio. Spesso arrivano
+      per primi. Non sono pizza, ma provengono dallo stesso mondo. Qual è
+      la relazione tra il nodo e la torta?
+    follow_ups:
+      - Cosa sarebbe il pasto senza i nodi?
+      - Come imposta il tono il nodo?
+      - Qual è la relazione tra contorno e principale?
+  - id: piz_red_pepper_flake
+    name: Fiocchi di Peperoncino
+    prompt: |
+      Il contenitore dei fiocchi di peperoncino—spesso sul tavolo. Scegli tu
+      il piccante. Il fiocco è democrazia. Ognuno condisce il proprio. Cosa
+      significa quella scelta?
+    follow_ups:
+      - Cosa sarebbe il tavolo senza il contenitore?
+      - Come modella l'auto-condimento il pasto?
+      - Qual è la relazione tra scelta e sapore?
+  - id: piz_sicilian_slab
+    name: Lastra Siciliana
+    prompt: |
+      Siciliana—spessa, rettangolare, a volte capovolta (salsa sopra). La lastra
+      ha consistenza. L'architettura è diversa. Cosa aggiunge lo spessore?
+      Cosa sacrifica?
+    follow_ups:
+      - Cosa farebbe diversamente un impasto sottile?
+      - Come modella lo spessore il morso?
+      - Qual è la relazione tra lastra e fetta?
+  - id: piz_wood_stack
+    name: Cumulo di Legna
+    prompt: |
+      Le pizzerie a legna accumulano tronchi. Quercia, a volte. La legna è
+      combustibile e sapore. Il cumulo è preparazione. Considera cosa brucia.
+      Cosa aggiunge la legna che il gas non può?
+    follow_ups:
+      - Cosa sarebbe la pizza senza la legna?
+      - Come modella il combustibile il cornicione?
+      - Qual è la relazione tra fuoco e fumo?
+  - id: piz_topping_balance
+    name: Equilibrio dei Condimenti
+    prompt: |
+      I condimenti possono sopraffare—troppi, e la pizza diventa una cotoletta.
+      L'equilibrio è delicato. Studia una pizza carica. Dove attraversa il
+      limite? Cosa rimuoveresti?
+    follow_ups:
+      - Come modella la pizza la moderazione?
+      - Qual è la relazione tra più e meno?
+      - Quando la scelta diventa caos?
+  - id: piz_cold_leftover
+    name: Avanzo Freddo
+    prompt: |
+      Pizza fredda a colazione—alcuni la venerano. I sapori si sono depositati.
+      La consistenza è cambiata. Considera la pizza del giorno dopo. Cosa aggiunge
+      il tempo? Cosa toglie?
+    follow_ups:
+      - Come cambia l'esperienza il freddo?
+      - Cosa farebbe il riscaldamento?
+      - Qual è la relazione tra fresco e avanzato?
+  - id: piz_sauce_sweet
+    name: Salsa Dolce
+    prompt: |
+      La salsa di pomodoro può essere dolce o acidula, a seconda del pomodoro,
+      del cuoco. Assaggia la salsa da sola, se puoi. Da dove viene la dolcezza?
+      Cosa farebbe l'acido?
+    follow_ups:
+      - Come imposta il tono la salsa?
+      - Qual è la relazione tra dolce e acido?
+      - Cosa significherebbe pomodoro crudo?
+  - id: piz_roman_taglio
+    name: Taglio Romano
+    prompt: |
+      Pizza al taglio—venduta a pezzi, a peso. Indichi, loro tagliano. Il
+      rettangolo, il prezzo al chilo. La transazione è diversa. Cosa significa
+      comprare a peso?
+    follow_ups:
+      - Come modella il taglio l'esperienza?
+      - Cosa significherebbe una pizza intera qui?
+      - Qual è la relazione tra taglio e scelta?
+  - id: piz_hot_honey
+    name: Miele Piccante
+    prompt: |
+      Miele piccante sulla pizza—nuova tradizione, ora ovunque. Dolce, piccante,
+      viscoso. È una finitura. Nota quando viene aggiunto. Cosa fa il miele
+      al formaggio?
+    follow_ups:
+      - Cosa sarebbe la fetta senza di esso?
+      - Come modella il dolce-piccante il morso?
+      - Qual è la relazione tra tendenza e tradizione?
+  - id: piz_pecorino_grate
+    name: Grattugiato di Pecorino
+    prompt: |
+      Pecorino grattugiato sulla pizza—salato, pungente. È uno strato. Il
+      formaggio sopra è diverso dal formaggio che si è sciolto. Considera
+      la gerarchia. Cosa aggiunge la grattugia?
+    follow_ups:
+      - Cosa sarebbe la pizza senza pecorino?
+      - Come modella il secondo formaggio il piatto?
+      - Qual è la relazione tra scioglimento e grattugiato?
+  - id: piz_paddle_slide
+    name: Scivolata sulla Pala
+    prompt: |
+      La pala, il remo—legno o metallo. L'impasto viene fatto scivolare su
+      essa, poi nel forno. Il movimento è praticato. Osservalo. Cosa potrebbe
+      andare storto senza l'abilità?
+    follow_ups:
+      - Come abilita la cottura la pala?
+      - Qual è la relazione tra strumento e risultato?
+      - Cosa significherebbe una pizza caduta?
+  - id: piz_sourdough_crust
+    name: Crosta di Pasta Madre
+    prompt: |
+      Crosta di pizza con pasta madre—lunga fermentazione, acidità. La crosta
+      ha personalità. Non è neutra. Considera cosa aggiunge la pasta madre.
+      Cosa farebbe il lievito commerciale diversamente?
+    follow_ups:
+      - Come modella la pasta madre il morso?
+      - Qual è la relazione tra fermentazione e sapore?
+      - Cosa significherebbe una crosta più blanda?
+  - id: piz_white_pie
+    name: Pizza Bianca
+    prompt: |
+      Pizza bianca—senza pomodoro. Olio d'oliva, formaggio, forse aglio.
+      L'assenza di rosso cambia tutto. Il palato si aspetta il pomodoro. Cosa
+      offre invece la pizza bianca?
+    follow_ups:
+      - Cosa farebbe la pizza con il pomodoro?
+      - Come modella l'assenza l'aspettativa?
+      - Qual è la relazione tra rosso e bianco?
+  - id: piz_bar_setting
+    name: Ambientazione al Bar
+    prompt: |
+      Pizza al bar—mangi dove ordini. Il bar è un palcoscenico. Osservi il
+      forno, le fette. L'ambientazione è casual, immediata. Cosa aggiunge
+      mangiare al bar?
+    follow_ups:
+      - Cosa cambierebbe un tavolo?
+      - Come modella la prossimità l'esperienza?
+      - Qual è la relazione tra bar e cucina?
+  - id: piz_truffle_trend
+    name: Tendenza al Tartufo
+    prompt: |
+      Il tartufo sulla pizza—olio o scaglie—è diventato un sinonimo di lusso.
+      L'aroma domina. Considera la tendenza. Cosa aggiunge il tartufo? Cosa
+      maschera?
+    follow_ups:
+      - Cosa sarebbe la pizza senza tartufo?
+      - Come modella il lusso il morso?
+      - Qual è la relazione tra tendenza e sapore?
+  - id: piz_ricotta_dollop
+    name: Nappatura di Ricotta
+    prompt: |
+      Ricotta nappata sulla pizza—fresca, cremosa, contrastante. Non si scioglie
+      come la mozzarella. Rimane. Nota la differenza di temperatura. Cosa
+      aggiunge la nappatura?
+    follow_ups:
+      - Cosa sarebbe la fetta senza ricotta?
+      - Come modella il freddo il caldo?
+      - Qual è la relazione tra nappatura e scioglimento?
+  - id: piz_slice_count
+    name: Conteggio Fette
+    prompt: |
+      Quante fette? Il numero è spesso otto—o sei per una pizza più piccola.
+      Il conteggio determina la porzione, la condivisione. Considera la matematica.
+      Cosa significherebbero quattro fette? Dodici?
+    follow_ups:
+      - Come modella il conteggio delle fette il pasto?
+      - Qual è la relazione tra taglio e condivisione?
+      - Quando conta il numero?
+  - id: piz_oven_window
+    name: Finestra del Forno
+    prompt: |
+      Il forno ha una finestra—o no. Osservare la pizza cuocere è teatro.
+      Il formaggio bolle. Il cornicione si alza. Come sarebbe l'esperienza
+      senza la vista?
+    follow_ups:
+      - Come modella l'attesa l'osservazione?
+      - Qual è la relazione tra visibile e nascosto?
+      - Cosa impari dalla finestra?
+  - id: piz_ranch_dip
+    name: Salsa Ranch
+    prompt: |
+      Ranch con la pizza—tradizione americana, spesso con il cornicione. La
+      salsa è opzionale, controversa. Considera l'aggiunta. Cosa aggiunge
+      il ranch? Cosa soppianta?
+    follow_ups:
+      - Cosa sarebbe il cornicione senza ranch?
+      - Come modella la salsa il morso?
+      - Qual è la relazione tra purista e pratico?
+  - id: piz_capers_brine
+    name: Salamoia di Capperi
+    prompt: |
+      Capperi sulla pizza—salmastri, pungenti. Tagliano la ricchezza. Il
+      cappero ha viaggiato—mediterraneo, sottaceto. Nota quando appaiono.
+      Cosa aggiunge la salamoia?
+    follow_ups:
+      - Cosa sarebbe la fetta senza capperi?
+      - Come modella la salamoia il palato?
+      - Qual è la relazione tra sottaceto e fresco?
+  - id: piz_calzone_seam
+    name: Cucitura del Calzone
+    prompt: |
+      Calzone—pizza piegata, sigillata. La cucitura tiene il ripieno. La
+      forma è diversa. Lo tagli aperto. Il vapore esce. Cosa aggiunge la
+      piega? Cosa nasconde?
+    follow_ups:
+      - Cosa sarebbe il calzone spiegato?
+      - Come crea la cucitura la sorpresa?
+      - Qual è la relazione tra aperto e chiuso?
+  - id: piz_mushroom_water
+    name: Acqua dei Funghi
+    prompt: |
+      I funghi sulla pizza rilasciano acqua durante la cottura. Un buon cuoco
+      sa come precuocerli o usare varietà secche. Funghi umidi rendono la
+      pizza molliccia. Considera la chimica. Cosa fa l'umidità?
+    follow_ups:
+      - Come modella la preparazione dei funghi la fetta?
+      - Qual è la relazione tra umido e croccante?
+      - Cosa farebbero i funghi crudi?
+  - id: piz_grease_absorb
+    name: Assorbimento Grasso
+    prompt: |
+      Un tovagliolo sulla fetta—alcuni tamponano il grasso. Il grasso è grasso
+      di formaggio, salame. Tamponare o no? Considera la scelta. Cosa contribuisce
+      il grasso? Cosa rimuove il tamponamento?
+    follow_ups:
+      - Come modella l'esperienza il grasso?
+      - Cosa significherebbe una fetta asciutta?
+      - Qual è la relazione tra grasso e sapore?
+  - id: piz_oven_spring
+    name: Spinta del Forno
+    prompt: |
+      Spinta del forno—l'impasto si gonfia nell'alta temperatura. Il lievito
+      lavora velocemente. La struttura si fissa. Considera il momento. Cosa
+      succederebbe senza abbastanza calore? Senza la farina giusta?
+    follow_ups:
+      - Come crea la mollica la spinta?
+      - Qual è la relazione tra calore e lievitazione?
+      - Cosa significherebbe un cornicione piatto?
+  - id: piz_roma_tomato
+    name: Pomodoro Roma
+    prompt: |
+      San Marzano o Roma—i pomodori contano. Vengono da un posto. Campania.
+      La DOP, il terroir. Segui il pomodoro. Che viaggio ha fatto fino alla
+      tua fetta?
+    follow_ups:
+      - Cosa farebbe un altro pomodoro?
+      - Come modella l'origine la salsa?
+      - Qual è la relazione tra luogo e sapore?
+  - id: piz_pizza_napoli
+    name: Pizza Napoli
+    prompt: |
+      Napoli l'ha inventata. La città e il cibo sono legati. Mangiare la pizza
+      a Napoli è mangiarla alla fonte. Considera l'archeologia. Cosa significherebbe
+      la stessa pizza altrove?
+    follow_ups:
+      - Come modella il luogo l'esperienza?
+      - Cosa perderebbe la traduzione?
+      - Qual è la relazione tra origine e autenticità?
+  - id: piz_wine_pair
+    name: Abbinamento Vino
+    prompt: |
+      Pizza e vino—la birra è comune, ma il vino funziona. Rosso, spesso.
+      L'acidità nel vino incontra l'acidità nel pomodoro. Considera l'abbinamento.
+      Cosa aggiunge il vino alla fetta?
+    follow_ups:
+      - Cosa farebbe diversamente la birra?
+      - Come modella la bevanda il pasto?
+      - Qual è la relazione tra bicchiere e piatto?
+  - id: piz_pizza_party
+    name: Festa della Pizza
+    prompt: |
+      Pizza per la folla—compleanni, serate giochi, pranzo d'ufficio. La
+      pizza è sociale. Le scatole si accumulano. Ognuno prende una fetta.
+      Considera la coreografia. Come cambia la folla il pasto?
+    follow_ups:
+      - Cosa significherebbe una pizza in solitaria?
+      - Come modella la condivisione l'esperienza?
+      - Qual è la relazione tra pizza e riunione?

@@ -1,0 +1,496 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natürlicher Mikrokosmos — Waldboden (German)
+
+id: natural_microcosm_forest_floor
+name: Natürlicher Mikrokosmos — Waldboden
+description: 50 Karten, um Ihre Wahrnehmung des Waldbodens zu verändern – von Zersetzung und Myzel bis hin zur Architektur von Laubstreu und dem unsichtbaren Leben unter dem Blätterdach.
+domain: natural_microcosm
+cards:
+  - id: nmf_leaf_vein
+    name: Blattader
+    prompt: |
+      Heben Sie ein abgefallenes Blatt auf. Verfolgen Sie die Adern. Sie transportierten
+      Wasser, Nährstoffe, Zucker. Die Architektur ist unsichtbar, bis man
+      genauer hinsieht. Was ernährte das Adernetzwerk, als das Blatt lebte?
+    follow_ups:
+      - Wie unterscheidet sich das Muster zwischen den Arten?
+      - Was wäre das Blatt ohne die Adern?
+      - Was ist die Beziehung zwischen Ader und Rand?
+  - id: nmf_leaf_litter_layer
+    name: Laubschicht
+    prompt: |
+      Der Waldboden besteht aus Schichten – frisch Gefallenes oben, vom letzten
+      Jahr darunter, älteres noch tiefer. Knien Sie sich hin. Ziehen Sie eine
+      Schicht ab. Wie ist der Gradient? Wie stapelt sich die Zeit?
+    follow_ups:
+      - Was wäre der Wald ohne die Streu?
+      - Wie schafft die Schicht Lebensraum?
+      - Was ist die Beziehung zwischen Schicht und Verfall?
+  - id: nmf_mushroom_fruiting
+    name: Pilzfruchtkörper
+    prompt: |
+      Ein Pilz ist nur der Fruchtkörper. Der Organismus – das Myzel – breitet
+      sich unterirdisch aus, durch den Boden, durch Holz. Betrachten Sie, was
+      Sie sehen, als Signal. Was ist der Rest der Geschichte?
+    follow_ups:
+      - Was wäre der Wald ohne Pilze?
+      - Wie bezieht sich der Fruchtkörper auf das Netzwerk?
+      - Was ist die Beziehung zwischen Pilz und Verfall?
+  - id: nmf_log_sponge
+    name: Holzschwamm
+    prompt: |
+      Ein umgestürzter Baumstamm saugt Wasser auf, hält es. Drücken Sie nach
+      einem Regen Ihre Hand dagegen. Der Stamm ist ein Reservoir. Wer trinkt daraus?
+      Was lebt darin?
+    follow_ups:
+      - Was wäre der Wald ohne Baumpflege-Stämme?
+      - Wie schafft der Stamm Mikroklima?
+      - Was ist die Beziehung zwischen Holz und Wasser?
+  - id: nmf_moss_cushion
+    name: Mooskissen
+    prompt: |
+      Moos hält Wasser wie ein Schwamm. Berühren Sie es. Das Kissen ist
+      Architektur – winzige Pflanzen dicht aneinander. Was lebt in den Zwischenräumen?
+    follow_ups:
+      - Was wäre der Boden ohne Moos?
+      - Wie schafft das Kissen Feuchtigkeit?
+      - Was ist die Beziehung zwischen Moos und Sämling?
+  - id: nmf_fern_unfurl
+    name: Farnentrollung
+    prompt: |
+      Farnwedel entrollen sich spiralförmig – Fiddlesheads. Die Bewegung ist
+      langsam. Beobachten Sie eine über Tage, wenn Sie können. Wie formt die
+      Entrollung das Blatt?
+    follow_ups:
+      - Was wäre der Farn ohne die Spirale?
+      - Wie schützt das Entrollen den Wedel?
+      - Was ist die Beziehung zwischen Krümmung und Wachstum?
+  - id: nmf_root_tangle
+    name: Wurzelgewirr
+    prompt: |
+      Wurzeln verheddern sich unter der Oberfläche. Finden Sie, wo ein Baum
+      umgefallen ist und seinen Wurzelballen angehoben hat. Das Gewirr ist eine
+      Karte der Suche. Wonach strebten die Wurzeln?
+    follow_ups:
+      - Was wäre der Baum ohne das Gewirr?
+      - Wie teilen sich Wurzeln den Raum unter der Erde?
+      - Was ist die Beziehung zwischen Wurzel und Pilz?
+  - id: nmf_slug_trail
+    name: Schneckenweg
+    prompt: |
+      Ein Schneckenweg glänzt auf einem Blatt – Schleim, Spur, Signatur. Der
+      Weg markiert, wo die Schnecke war. Was sagt der Weg Raubtieren? Beute?
+    follow_ups:
+      - Was würde die Schnecke ohne den Weg verlieren?
+      - Wie ermöglicht Schleim die Bewegung?
+      - Was ist die Beziehung zwischen Weg und Territorium?
+  - id: nmf_lichen_patch
+    name: Flechtenfleck
+    prompt: |
+      Flechten wachsen auf Rinde, Stein, Erde – langsam, zusammengesetzt.
+      Pilz und Alge zusammen. Finden Sie einen Fleck. Wie lange ist er schon da?
+      Was deutet seine Anwesenheit an?
+    follow_ups:
+      - Was wäre die Rinde ohne die Flechte?
+      - Wie markiert Flechte die Zeit?
+      - Was ist die Beziehung zwischen Flechte und Luftqualität?
+  - id: nmf_saprophyte
+    name: Saprophyt
+    prompt: |
+      Saprophyten ernähren sich von totem Material – Pilze, Bakterien, Insekten.
+      Sie sind die Recycler. Finden Sie Spuren von Verfall. Wer frisst? Was wird
+      transformiert?
+    follow_ups:
+      - Was wäre der Wald ohne Zersetzer?
+      - Wie ernährt Verfall neues Wachstum?
+      - Was ist die Beziehung zwischen Tod und Boden?
+  - id: nmf_seedling_emergence
+    name: Sämlingsaustritt
+    prompt: |
+      Ein Sämling drängt durch die Streu. Zuerst die Keimblätter, dann die
+      echten Blätter. Beachten Sie die Kraft. Was brauchte es, um hindurchzubrechen?
+      Was wird ihn blockieren?
+    follow_ups:
+      - Was wäre der Wald ohne Sämlinge?
+      - Wie hängt der Austritt von der Streu ab?
+      - Was ist die Beziehung zwischen Sämling und Licht?
+  - id: nmf_anthill_mound
+    name: Ameisenhügel
+    prompt: |
+      Ein Ameisenhügel erhebt sich vom Waldboden – ausgehobene Erde, organisiert.
+      Beobachten Sie den Verkehr. Wohin gehen sie? Was tragen sie?
+    follow_ups:
+      - Was wäre der Boden ohne den Hügel?
+      - Wie formt der Hügel die Drainage?
+      - Was ist die Beziehung zwischen Hügel und Kolonie?
+  - id: nmf_spider_silk
+    name: Spinnenseide
+    prompt: |
+      Spinnenseide überspannt Lücken – zwischen Blättern, Zweigen. Tau fängt
+      sie auf. Das Netz ist unsichtbar, bis das Licht darauf fällt. Verfolgen Sie
+      einen Faden. Was verbindet er?
+    follow_ups:
+      - Was wäre die Lücke ohne die Seide?
+      - Wie strukturiert das Netz den Raum?
+      - Was ist die Beziehung zwischen Seide und Beute?
+  - id: nmf_bark_flake
+    name: Rindenflocke
+    prompt: |
+      Rinde blättert vom Stamm ab – Textur, Muster, Alter. Jede Flocke erzählt
+      eine Jahreszeit. Wer lebt unter der Rinde? Was verrät die Flocke?
+    follow_ups:
+      - Was wäre der Baum ohne die Rinde?
+      - Wie schützt und isoliert die Rinde?
+      - Was ist die Beziehung zwischen Flocke und Erneuerung?
+  - id: nmf_acorn_fall
+    name: Eichelfall
+    prompt: |
+      Eine Eichel fällt. Sie ist schwer für ihre Größe. Sie wird wurzeln oder
+      gefressen werden. Betrachten Sie die Wahrscheinlichkeit. Was bestimmt den
+      Weg?
+    follow_ups:
+      - Was wäre der Wald ohne die Eichel?
+      - Wie verteilt der Fall den Samen?
+      - Was ist die Beziehung zwischen Eichel und Eiche?
+  - id: nmf_fallen_branch
+    name: Gefallener Ast
+    prompt: |
+      Ein Ast liegt auf dem Boden – gebrochen, vielleicht vom Wind. Er ist
+      jetzt eine Brücke. Was überquert ihn? Was wächst darauf?
+    follow_ups:
+      - Was wäre der Boden ohne Totholz?
+      - Wie schafft der Ast Randlebensraum?
+      - Was ist die Beziehung zwischen Ast und Nährstoff?
+  - id: nmf_humus_smell
+    name: Humusgeruch
+    prompt: |
+      Beugen Sie sich nah an den Waldboden. Der Geruch – Erde, Verfall, Leben.
+      Dieser Geruch ist Chemie. Was erzeugt ihn? Was wäre der Wald ohne ihn?
+    follow_ups:
+      - Wie markiert der Geruch die Gesundheit?
+      - Wie würde sterile Erde riechen?
+      - Was ist die Beziehung zwischen Geruch und Fruchtbarkeit?
+  - id: nmf_snail_shell
+    name: Schneckenhaus
+    prompt: |
+      Ein leeres Schneckenhaus liegt in der Streu. Spirale, Kalzium, zurückgelassen.
+      Wer könnte die Schnecke gefressen haben? Was wird das Haus nutzen?
+    follow_ups:
+      - Was wäre der Boden ohne Häuser?
+      - Wie recycelt das Haus Nährstoffe?
+      - Was ist die Beziehung zwischen Haus und Kalzium?
+  - id: nmf_fungal_network
+    name: Pilznetzwerk
+    prompt: |
+      Myzel verbindet Bäume – ein "Wood Wide Web". Man kann es nicht sehen,
+      aber es ist da. Nährstoffe fließen. Informationen fließen. Betrachten Sie
+      den Wald als Netzwerk.
+    follow_ups:
+      - Was wäre der Wald ohne das Netzwerk?
+      - Wie verteilt das Netzwerk Ressourcen um?
+      - Was ist die Beziehung zwischen Pilz und Baum?
+  - id: nmf_fern_spore
+    name: Farnspore
+    prompt: |
+      Farne vermehren sich durch Sporen – winzig, unzählig. Schauen Sie auf die
+      Unterseite eines Wedels. Die Sori enthalten sie. Was bräuchte es, um die
+      Reise einer Spore zu verfolgen?
+    follow_ups:
+      - Was wäre der Farn ohne Sporen?
+      - Wie verbreitet sich die Spore?
+      - Was ist die Beziehung zwischen Spore und Gametophyt?
+  - id: nmf_earthworm_cast
+    name: Regenwurmkot
+    prompt: |
+      Regenwurmkot häuft sich an Tunnelöffnungen – verarbeiteter Boden, reichhaltig.
+      Der Wurm hat gefressen und ausgeschieden. Der Kot ist ein Geschenk an die
+      Oberfläche.
+    follow_ups:
+      - Was wäre der Boden ohne Würmer?
+      - Wie verbessert der Kot die Struktur?
+      - Was ist die Beziehung zwischen Wurm und Belüftung?
+  - id: nmf_dappled_light
+    name: Geflecktes Licht
+    prompt: |
+      Licht fällt in Flecken durch das Blätterdach – gefleckt, beweglich. Der
+      Waldboden erhält weniger Licht als die offene Fläche. Wie formt das, was
+      wächst?
+    follow_ups:
+      - Was wäre der Boden bei voller Sonne?
+      - Wie schafft das Fleckenbildung Mikrolebensräume?
+      - Was ist die Beziehung zwischen Licht und Sämling?
+  - id: nmf_bracket_fungus
+    name: Riesenporling
+    prompt: |
+      Ein Riesenporling wächst aus einem Stamm – Regal, Polypore. Er verdaut
+      den Baum von innen. Der Baum kann jahrelang stehen, während dies geschieht.
+      Betrachten Sie den langsamen Verbrauch.
+    follow_ups:
+      - Was wäre der Baum ohne den Pilz?
+      - Wie verbreitet der Riesenporling Sporen?
+      - Was ist die Beziehung zwischen Parasit und Wirt?
+  - id: nmf_needle_mat
+    name: Nadelmatte
+    prompt: |
+      Nadeln von Nadelbäumen häufen sich unter dem Baum – sauer, langsam
+      zersetzend. Die Matte verändert den Boden. Was wächst darin? Was meidet
+      sie?
+    follow_ups:
+      - Was wäre der Boden ohne die Matte?
+      - Wie beeinflusst die Nadelmatte den pH-Wert?
+      - Was ist die Beziehung zwischen Matte und Feuer?
+  - id: nmf_salamander_under
+    name: Salamander darunter
+    prompt: |
+      Salamander leben unter Stämmen, Steinen, Laubstreu. Heben Sie vorsichtig
+      etwas an – legen Sie es zurück. Die Feuchtigkeit, die Dunkelheit. Warum
+      braucht der Salamander das?
+    follow_ups:
+      - Was wäre der Wald ohne Salamander?
+      - Wie formt der Salamander die Wirbellosen-Gemeinschaft?
+      - Was ist die Beziehung zwischen Feuchtigkeit und Amphibium?
+  - id: nmf_rot_hole
+    name: Fäulnisloch
+    prompt: |
+      Ein Loch in einem Stamm – Fäulnis, vielleicht, oder ein Tier. Das Loch ist
+      eine Höhle. Was nistet dort? Was versteckt sich dort?
+    follow_ups:
+      - Was wäre der Stamm ohne das Loch?
+      - Wie schafft die Höhle Lebensraum?
+      - Was ist die Beziehung zwischen Fäulnis und Unterschlupf?
+  - id: nmf_springtail_jump
+    name: Springschwanzsprung
+    prompt: |
+      Springschwänze – winzig, zahlreich – springen, wenn sie gestört werden.
+      Sie sind in der Streu, im Boden. Sie verarbeiten Pilze, Verfall. Beachten
+      Sie, wie viele Sie nicht sehen können.
+    follow_ups:
+      - Was wäre der Boden ohne Springschwänze?
+      - Wie ermöglicht der Sprung die Flucht?
+      - Was ist die Beziehung zwischen Springschwanz und Zersetzung?
+  - id: nmf_bark_beetle_gallery
+    name: Borkenkäfergalerie
+    prompt: |
+      Borkenkäfergalerien ätzen das Holz unter der Rinde – Kanäle, Muster.
+      Der Käfer schnitzte sie. Der Baum reagierte. Was ist die Geschichte?
+    follow_ups:
+      - Was wäre der Baum ohne den Käfer?
+      - Wie formt die Galerie das Schicksal des Baumes?
+      - Was ist die Beziehung zwischen Käfer und Pilz?
+  - id: nmf_dew_on_litter
+    name: Tau auf der Streu
+    prompt: |
+      Morgentau perlt auf Blättern, Nadeln, Zweigen. Die Streu hält Feuchtigkeit.
+      Wer trinkt im Morgengrauen? Wie verlängert der Tau die nasse Jahreszeit?
+    follow_ups:
+      - Was wäre der Boden ohne Tau?
+      - Wie schafft Tau eine Wasserquelle?
+      - Was ist die Beziehung zwischen Tau und Verdunstung?
+  - id: nmf_windfall_gap
+    name: Windfall-Lücke
+    prompt: |
+      Ein Baum fiel – Wind, Alter, Krankheit. Die Lücke lässt Licht herein. Der
+      Boden verändert sich. Was wächst in der Lücke, das vorher nicht konnte?
+    follow_ups:
+      - Was wäre der Wald ohne Lücken?
+      - Wie setzt die Lücke die Sukzession zurück?
+      - Was ist die Beziehung zwischen Lücke und Vielfalt?
+  - id: nmf_mycorrhizal_tip
+    name: Mykorrhizaspitze
+    prompt: |
+      Baumwurzeln treffen Pilz-Hyphen – Mykorrhiza. Der Pilz erweitert die
+      Reichweite der Wurzel. Der Baum ernährt den Pilz. Finden Sie eine
+      Wurzelspitze. Stellen Sie sich die Partnerschaft darunter vor.
+    follow_ups:
+      - Was wäre der Baum ohne Mykorrhiza?
+      - Wie erweitert die Partnerschaft das Wurzelsystem?
+      - Was ist die Beziehung zwischen Pilz und Phosphor?
+  - id: nmf_squirrel_cache
+    name: Eichhörnchen-Versteck
+    prompt: |
+      Ein Eichhörnchen vergrub eine Nuss – vergessen, vielleicht. Sie kann
+      keimen. Das Versteck ist Verbreitung. Wie viele Bäume begannen als
+      vergessener Samen?
+    follow_ups:
+      - Was wäre der Wald ohne Verstecker?
+      - Wie erweitert das Verstecken die Samenreichweite?
+      - Was ist die Beziehung zwischen Vergesslichkeit und Wald?
+  - id: nmf_carpet_moss
+    name: Teppichmoos
+    prompt: |
+      Moos bedeckt den Boden stellenweise – weich, grün, Wasser haltend. Gehen
+      Sie darauf. Spüren Sie das Nachgeben. Der Teppich ist jahrhundertelanges
+      Wachstum, Schicht auf Schicht.
+    follow_ups:
+      - Was wäre der Boden ohne den Teppich?
+      - Wie hält der Teppich Feuchtigkeit zurück?
+      - Was ist die Beziehung zwischen Moos und Moor?
+  - id: nmf_burrow_entrance
+    name: Höhleneingang
+    prompt: |
+      Eine Höhle öffnet sich im Boden – Maus, Wühlmaus, Streifenhörnchen. Der
+      Eingang ist eine Schwelle. Was geht hinein? Was kommt heraus? Die Höhle
+      erstreckt sich unterirdisch.
+    follow_ups:
+      - Was wäre der Boden ohne Höhlen?
+      - Wie belüftet die Höhle den Boden?
+      - Was ist die Beziehung zwischen Höhle und Raubtier?
+  - id: nmf_twig_lattice
+    name: Zweiggitter
+    prompt: |
+      Zweige sammeln sich – Wind, Tier, Schwerkraft. Sie bilden ein Gitter
+      über der Streu. Das Gitter hält Blätter, fängt Samen. Es ist zufällige
+      Architektur.
+    follow_ups:
+      - Was wäre der Boden ohne das Gitter?
+      - Wie verlangsamt das Gitter Erosion?
+      - Was ist die Beziehung zwischen Zweig und Mikrolebensraum?
+  - id: nmf_rot_softness
+    name: Fäulnis-Weichheit
+    prompt: |
+      Verrottendes Holz gibt unter Ihren Fingern nach – schwammig, bröckelnd.
+      Der Übergang von Struktur zu Boden. Wie lange dauerte das? Was bleibt
+      übrig?
+    follow_ups:
+      - Was wäre der Wald ohne Fäulnis?
+      - Wie ermöglicht Weichheit die Besiedlung?
+      - Was ist die Beziehung zwischen Fäulnis und Humus?
+  - id: nmf_frost_needle
+    name: Frostnadel
+    prompt: |
+      Frostnadeln heben sich aus dem Boden – Eiskristalle, zart. Sie bilden
+      sich in kalten, stillen Nächten. Bis Mittag sind sie weg. Betrachten Sie
+      die ephemere Struktur.
+    follow_ups:
+      - Was würde der Boden ohne Frost erleben?
+      - Wie wirkt sich Frosthub auf Wurzeln aus?
+      - Was ist die Beziehung zwischen Frost und Sämling?
+  - id: nmf_millipede_curl
+    name: Tausendfüßler-Kringel
+    prompt: |
+      Ein Tausendfüßler krümmt sich, wenn er gestört wird – Verteidigung. Er
+      ernährt sich von Verfall. Beobachten Sie einen, der sich durch die Streu
+      bewegt. Wie navigiert der Körper das Gewirr?
+    follow_ups:
+      - Was wäre der Boden ohne Tausendfüßler?
+      - Wie schützt der Kringel?
+      - Was ist die Beziehung zwischen Tausendfüßler und Kalzium?
+  - id: nmf_pinecone_open
+    name: Kiefernzapfenöffnung
+    prompt: |
+      Ein Kiefernzapfen öffnet sich, wenn er trocken ist – Schuppen spreizen
+      sich, Samen werden freigesetzt. Der Zapfen ist ein Mechanismus. Wärme kann
+      ihn auch auslösen. Betrachten Sie die Zeitplanung.
+    follow_ups:
+      - Was wäre der Baum ohne den Zapfen?
+      - Wie kontrolliert Feuchtigkeit den Mechanismus?
+      - Was ist die Beziehung zwischen Feuer und Freisetzung?
+  - id: nmf_hole_in_leaf
+    name: Loch im Blatt
+    prompt: |
+      Ein Blatt hat Löcher – Insekt, Schnecke, Pilz. Der Schaden erzählt eine
+      Geschichte. Wer fraß? Wann? Das verbleibende Blatt fotosynthetisiert
+      weiter. Was ist die Schwelle?
+    follow_ups:
+      - Was wäre das Blatt ohne die Löcher?
+      - Wie formt Herbivorie die Pflanze?
+      - Was ist die Beziehung zwischen Schaden und Verteidigung?
+  - id: nmf_root_hair
+    name: Wurzelhaar
+    prompt: |
+      Wurzelhaare – mikroskopisch – vergrößern die Oberfläche für die
+      Aufnahme. Man kann sie nicht sehen, aber sie sind da. Die Wurzeln eines
+      Sämlings erkunden. Was finden sie?
+    follow_ups:
+      - Was wäre die Wurzel ohne die Haare?
+      - Wie nehmen Wurzelhaare Wasser auf?
+      - Was ist die Beziehung zwischen Haar und Nährstoff?
+  - id: nmf_forest_silence
+    name: Waldstille
+    prompt: |
+      Stehen Sie still auf dem Waldboden. Die Stille ist nicht leer – sie ist
+      voll von kleinen Geräuschen. Rascheln, Tropfen, Knarren. Was hören Sie,
+      wenn Sie aufhören?
+    follow_ups:
+      - Was wäre der Wald ohne die kleinen Geräusche?
+      - Wie enthüllt Stille Anwesenheit?
+      - Was ist die Beziehung zwischen Zuhören und Bemerken?
+  - id: nmf_shade_adaptation
+    name: Schattenanpassung
+    prompt: |
+      Pflanzen auf dem Waldboden sind an Schatten angepasst – größere Blätter,
+      anderes Chlorophyll. Vergleichen Sie ein Sonnenblatt mit einem Schattenblatt.
+      Was ist der Kompromiss?
+    follow_ups:
+      - Was wäre die Pflanze bei voller Sonne?
+      - Wie formt Schatten das Blatt?
+      - Was ist die Beziehung zwischen Licht und Investition?
+  - id: nmf_nutrient_cycle
+    name: Nährstoffkreislauf
+    prompt: |
+      Alles auf dem Waldboden zirkuliert – Kohlenstoff, Stickstoff, Phosphor.
+      Ein Blatt fällt. Es wird verzehrt. Es wird zu Erde. Es ernährt einen Baum.
+      Verfolgen Sie eine Schleife.
+    follow_ups:
+      - Was wäre der Wald ohne den Kreislauf?
+      - Wie schließt die Zersetzung die Schleife?
+      - Was ist die Beziehung zwischen Tod und Wachstum?
+  - id: nmf_footprint_compression
+    name: Fußabdruck-Kompression
+    prompt: |
+      Ihr Fußabdruck komprimiert die Streu. Der Boden darunter behält die
+      Form. Wie viele Schritte braucht es, um den Boden zu verändern? Wer ist
+      hier noch gelaufen?
+    follow_ups:
+      - Was wäre der Boden ohne Verkehr?
+      - Wie beeinflusst Kompression die Drainage?
+      - Was ist die Beziehung zwischen Weg und Verdichtung?
+  - id: nmf_seasonal_signal
+    name: Saisonales Signal
+    prompt: |
+      Der Waldboden signalisiert die Jahreszeit – neues Wachstum im Frühling,
+      Verwelken im Herbst. Was ist gerade am Boden? Was sagt es Ihnen?
+    follow_ups:
+      - Was wäre der Boden in einer anderen Jahreszeit?
+      - Wie synchronisiert das Signal das Leben?
+      - Was ist die Beziehung zwischen Streu und Kalender?
+  - id: nmf_stump_succession
+    name: Stubben-Sukzession
+    prompt: |
+      Ein gefällter Baumstumpf treibt Pilze, Sämlinge, Moos. Er ist ein
+      Stadium der Sukzession. Was kam davor? Was wird ihn ersetzen? Der Stumpf
+      ist sowohl Ende als auch Anfang.
+    follow_ups:
+      - Was wäre die Lichtung ohne den Stumpf?
+      - Wie schafft der Stumpf Gelegenheit?
+      - Was ist die Beziehung zwischen Tod und neuem Wachstum?
+  - id: nmf_forest_breath
+    name: Waldatem
+    prompt: |
+      Der Waldboden atmet – Sauerstoff rein, Kohlenstoff raus, oder umgekehrt
+      in der Nacht. Der Boden ist lebendig. Stehen Sie still. Können Sie den
+      Austausch spüren?
+    follow_ups:
+      - Was wäre die Luft ohne den Boden?
+      - Wie formt der Atem das Blätterdach?
+      - Was ist die Beziehung zwischen Boden und Atmosphäre?
+  - id: nmf_leaf_miner_trail
+    name: Minierer-Spur im Blatt
+    prompt: |
+      Ein Minierer – eine Insektenlarve – frisst zwischen den Schichten. Die
+      Spur ist eine weiße Linie, ein sich windender Pfad. Verfolgen Sie sie.
+      Was suchte der Minierer?
+    follow_ups:
+      - Was wäre das Blatt ohne die Spur?
+      - Wie navigiert der Minierer ohne zu sehen?
+      - Was ist die Beziehung zwischen Innen und Außen?
+  - id: nmf_decomposer_shift
+    name: Zersetzer-Schichtwechsel
+    prompt: |
+      Während Material verrottet, übernehmen verschiedene Zersetzer – zuerst
+      Bakterien und Pilze, später Käfer und Regenwürmer. Finden Sie Material in
+      verschiedenen Stadien. Wer arbeitet gerade?
+    follow_ups:
+      - Was wäre die Zersetzung ohne Sukzession?
+      - Wie formt der Wechsel das Tempo?
+      - Was ist die Beziehung zwischen Stadium und Konsument?

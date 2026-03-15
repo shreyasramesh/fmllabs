@@ -1,46 +1,14 @@
 /** User type / conversation style. Affects only chat tone, not concepts/summary/etc. */
 
 export const USER_TYPES = [
-  {
-    id: "genz",
-    name: "Gen Z",
-    description: "Slang, memes, relatable vibes",
-  },
-  {
-    id: "millennial",
-    name: "Millennial",
-    description: "Burnout-friendly, self-aware, slightly ironic",
-  },
-  {
-    id: "genx",
-    name: "Gen X",
-    description: "Straight-forward, no fluff, 80s/90s nostalgia",
-  },
-  {
-    id: "boomer",
-    name: "Baby Boomer",
-    description: "Warm, patient, traditional values",
-  },
-  {
-    id: "professional",
-    name: "Professional",
-    description: "Polished, structured, career-focused",
-  },
-  {
-    id: "casual",
-    name: "Casual",
-    description: "Extra relaxed, like texting a friend",
-  },
-  {
-    id: "thoughtful",
-    name: "Thoughtful",
-    description: "Reflective, philosophical, invites contemplation",
-  },
-  {
-    id: "direct",
-    name: "Direct",
-    description: "Brevity first, get to the point",
-  },
+  { id: "genz", name: "Gen Z", icon: "📱", description: "Slang, memes, relatable vibes" },
+  { id: "millennial", name: "Millennial", icon: "☕", description: "Burnout-friendly, self-aware, slightly ironic" },
+  { id: "genx", name: "Gen X", icon: "📼", description: "Straight-forward, no fluff, 80s/90s nostalgia" },
+  { id: "boomer", name: "Baby Boomer", icon: "🪴", description: "Warm, patient, traditional values" },
+  { id: "professional", name: "Professional", icon: "💼", description: "Polished, structured, career-focused" },
+  { id: "casual", name: "Casual", icon: "😌", description: "Extra relaxed, like texting a friend" },
+  { id: "thoughtful", name: "Thoughtful", icon: "🤔", description: "Reflective, philosophical, invites contemplation" },
+  { id: "direct", name: "Direct", icon: "🎯", description: "Brevity first, get to the point" },
 ] as const;
 
 export type UserTypeId = (typeof USER_TYPES)[number]["id"];

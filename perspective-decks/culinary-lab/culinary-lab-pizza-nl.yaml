@@ -1,0 +1,473 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinaire Lab — Pizza (Dutch)
+
+id: culinary_lab_pizza
+name: Culinaire Lab — Pizza
+description: 50 kaarten om je pizzabeleving te veranderen — van de chemie van deeg en vuur tot het theater van de punt en de archeologie van toppings.
+domain: culinary_lab
+cards:
+  - id: piz_dough_stretch
+    name: Deeg Uitrekken
+    prompt: |
+      Kijk hoe deeg wordt uitgerekt — met de hand geworpen, of aangedrukt. Het glutennetwerk
+      rekt uit, vangt lucht. De vorm wordt gekozen. Wat zou een vierkante punt anders betekenen
+      dan een driehoek?
+    follow_ups:
+      - Hoe definieert het uitrekken de ervaring?
+      - Wat zou de pizza zijn zonder het uitrekken?
+      - Wat is de relatie tussen hand en vorm?
+  - id: piz_oven_breath
+    name: Oven Adem
+    prompt: |
+      Een pizzaoven ademt — houtvuur, of gas, of elektrisch. De koepel houdt warmte vast.
+      De vloer draagt het over. Ga bij een staan. Wat eist de oven van de kok? Van het deeg?
+    follow_ups:
+      - Wat zou pizza zijn zonder de oven?
+      - Hoe vormt warmte de korst?
+      - Wat is de relatie tussen adem en blaarvorming?
+  - id: piz_sauce_spiral
+    name: Saus Spiraal
+    prompt: |
+      Saus wordt vaak in een spiraal aangebracht — niet uitgesmeerd van rand tot rand. Bestudeer
+      het patroon. Wat is bedekt? Wat is blootgesteld? De spiraal is compositie.
+    follow_ups:
+      - Hoe zou de pizza er volledig gesausd uitzien?
+      - Hoe beïnvloedt de spiraal elke hap?
+      - Wat is de relatie tussen patroon en smaak?
+  - id: piz_cheese_melt
+    name: Kaas Smelt
+    prompt: |
+      Kaas smelt in verschillende tempo's. Mozzarella rekt uit; oude kaas olie.
+      Kijk naar het smelten. De chemie van vet en eiwit, warmte en tijd. Wanneer is
+      het klaar?
+    follow_ups:
+      - Wat zou de punt zijn zonder het smelten?
+      - Hoe vormt het smelten de hap?
+      - Wat is de relatie tussen smelten en herinnering?
+  - id: piz_crust_char
+    name: Korst Char
+    prompt: |
+      Luipaardprint — de verbrande vlekken op de korst — kenmerkt houtgestookte pizza. Elke vlek
+      is een moment van contact met extreme hitte. Overweeg de smaak die die vlekken
+      toevoegen. Wat zou een bleke korst betekenen?
+    follow_ups:
+      - Hoe verandert char de ervaring?
+      - Wat zou de pizza zijn zonder het?
+      - Wat is de relatie tussen char en vakmanschap?
+  - id: piz_slice_fold
+    name: Punt Vouwen
+    prompt: |
+      New Yorkse stijl: vouw de punt. De vouw is structureel — het houdt de
+      toppings vast, kanaliseert het vet. De vouw is choreografie. Wat maakt het mogelijk?
+    follow_ups:
+      - Wat zou eten zijn zonder de vouw?
+      - Hoe vormt de vouw de hap?
+      - Wat is de relatie tussen vouw en plaats?
+  - id: piz_pepperoni_cup
+    name: Pepperoni Cup
+    prompt: |
+      Goede pepperoni cups — de randen knapperig, het midden olie verzamelend. Het is een
+      transformatie van vorm en textuur. Merk op wanneer het gebeurt. Wat creëerde
+      de cup?
+    follow_ups:
+      - Wat zou pepperoni zijn zonder de cup?
+      - Hoe houdt de cup smaak vast?
+      - Wat is de relatie tussen vet en vorm?
+  - id: piz_basil_finish
+    name: Basilicum Afwerking
+    prompt: |
+      Basilicum op pizza wordt vaak na het bakken toegevoegd — fris, helder. Het is een
+      afwerking, geen basis. Merk het contrast op. Wat voegt vers toe aan gekookt?
+    follow_ups:
+      - Wat zou de pizza zijn zonder basilicum?
+      - Hoe vormt timing het kruid?
+      - Wat is de relatie tussen rauw en gekookt?
+  - id: piz_margherita_minimal
+    name: Margherita Minimalisme
+    prompt: |
+      Margherita is drie dingen: deeg, tomaat, kaas. Elk moet dragen.
+      Er is nergens om je te verstoppen. Overweeg de discipline. Wat eist minimalisme?
+    follow_ups:
+      - Wat zou één verkeerde noot doen?
+      - Hoe focust eenvoud het palet?
+      - Wat is de relatie tussen weinige en veel?
+  - id: piz_pool_table
+    name: Pooltafel
+    prompt: |
+      Sommige pizzeria's hebben de lange gemeenschappelijke tafel — vreemden delen ruimte.
+      De pizza arriveert. De tafel is een podium. Wie eet er naast je? Wat is
+      het onuitgesproken contract?
+    follow_ups:
+      - Wat zou de maaltijd zijn in een hokje?
+      - Hoe vormt de tafel ontmoeting?
+      - Wat is de relatie tussen gedeeld en privé?
+  - id: piz_box_flip
+    name: Doos Omdraaien
+    prompt: |
+      De pizzadoos — karton, soms met het plastic statiefje in het midden.
+      Het is ontworpen om te ventileren, om te stapelen. De doos is infrastructuur. Wat zou
+      afhaal zijn zonder het?
+    follow_ups:
+      - Hoe vormt de doos de reis naar huis?
+      - Wat gebeurt er als de doos wordt geopend?
+      - Wat is de relatie tussen doos en ritueel?
+  - id: piz_dough_ferment
+    name: Deeg Fermentatie
+    prompt: |
+      Pizzadeeg fermenteert — uren of dagen. De gist creëert bellen, smaak.
+      Oud deeg heeft pit. Overweeg de tijd in elke hap. Wat zou een
+      snelrijzend deeg opofferen?
+    follow_ups:
+      - Hoe vormt fermentatie de korst?
+      - Wat is de relatie tussen tijd en smaak?
+      - Wat zou deeg van dezelfde dag betekenen?
+  - id: piz_cornicione
+    name: Cornicione
+    prompt: |
+      De cornicione — de rand, de korst — is vaak het beste deel. Luchtig, geblakerd,
+      misschien een beetje taai. Sommigen laten het liggen; sommigen eten het eerst. Wat is jouw
+      relatie met de rand?
+    follow_ups:
+      - Wat zou de pizza zijn zonder de cornicione?
+      - Hoe kadert de rand het midden?
+      - Wat is de relatie tussen korst en midden?
+  - id: piz_olive_oil_drizzle
+    name: Olijfolie Drup
+    prompt: |
+      Olijfolie gedrupt na het bakken — op de korst, of de hele taart. Het
+      glinstert. De olie draagt smaak, voegt rijkdom toe. Merk op wanneer het
+      wordt aangebracht. Wat voegt de drup toe?
+    follow_ups:
+      - Wat zou de pizza zijn zonder het?
+      - Hoe verandert olie de hap?
+      - Wat is de relatie tussen vet en afwerking?
+  - id: piz_anchovy_salt
+    name: Ansjovis Zout
+    prompt: |
+      Ansjovis op pizza — zout, umami, controversieel. Ze lossen op in de
+      saus, of liggen er bovenop. De ansjovis is archeologie: Mediterraan, geconserveerd,
+      oud. Welke reis heeft het gemaakt?
+    follow_ups:
+      - Wat zou de punt zijn zonder ansjovis?
+      - Hoe vormt zout de andere smaken?
+      - Wat is de relatie tussen geconserveerd en vers?
+  - id: piz_sound_crunch
+    name: Geluid Knapperigheid
+    prompt: |
+      De eerste hap van een goed gemaakte korst — de knapperigheid, de meegeven. Sluit je
+      ogen. Het geluid is deel van de ervaring. Wat zou de pizza zijn als
+      het stil was?
+    follow_ups:
+      - Hoe vormt geluid voldoening?
+      - Hoe klinkt een slappe korst?
+      - Wat is de relatie tussen knapperigheid en kwaliteit?
+  - id: piz_second_slice
+    name: Tweede Punt
+    prompt: |
+      De tweede punt is anders dan de eerste — je kent de pizza nu. Het
+      palet heeft zich aangepast. Merk de verschuiving op. Smaakt de tweede punt
+      hetzelfde? Beter? Anders?
+    follow_ups:
+      - Hoe verandert herhaling de perceptie?
+      - Wat zou een maaltijd van één punt missen?
+      - Wat is de relatie tussen eerste en tweede?
+  - id: piz_neapolitan_rules
+    name: Napolitaanse Regels
+    prompt: |
+      Echte Napolitaanse pizza heeft regels — grootte, ingrediënten, methode. Het VPN-stempel,
+      het certificaat. Regels creëren identiteit. Wat beschermen de regels? Wat
+      sluiten ze uit?
+    follow_ups:
+      - Wat zou pizza zijn zonder de regels?
+      - Hoe vormt certificering verwachting?
+      - Wat is de relatie tussen regel en vakmanschap?
+  - id: piz_detroit_edges
+    name: Detroit Randen
+    prompt: |
+      Detroit stijl — rechthoekig, kaas tot aan de rand, knapperig gebakken korst waar
+      het de pan raakt. De randen zijn doelbewust. Overweeg de architectuur.
+      Wat zegt de vorm?
+    follow_ups:
+      - Wat zou de pizza zijn zonder de randen?
+      - Hoe creëert vorm identiteit?
+      - Wat is de relatie tussen pan en korst?
+  - id: piz_garlic_knot
+    name: Knoflook Knoop
+    prompt: |
+      Knoflookknopen — deeg twist, beboterd, met knoflook. Ze komen vaak eerst.
+      Het is geen pizza, maar het komt uit dezelfde wereld. Wat is de relatie
+      tussen knoop en taart?
+    follow_ups:
+      - Wat zou de maaltijd zijn zonder de knopen?
+      - Hoe zet de knoop de toon?
+      - Wat is de relatie tussen bijgerecht en hoofdgerecht?
+  - id: piz_red_pepper_flake
+    name: Rode Pepervlok
+    prompt: |
+      De shaker met rode pepervlokken — vaak op tafel. Jij kiest de hitte.
+      De vlok is democratie. Iedereen kruidt zijn eigen stukje. Wat betekent die
+      keuze?
+    follow_ups:
+      - Wat zou de tafel zijn zonder de shaker?
+      - Hoe vormt zelfkruiden de maaltijd?
+      - Wat is de relatie tussen keuze en smaak?
+  - id: piz_sicilian_slab
+    name: Siciliaanse Plak
+    prompt: |
+      Siciliaans — dik, rechthoekig, soms ondersteboven (saus bovenop). De
+      plak heeft gewicht. De architectuur is anders. Wat voegt dikte toe?
+      Wat offert het?
+    follow_ups:
+      - Wat zou dunne korst anders doen?
+      - Hoe vormt dikte de hap?
+      - Wat is de relatie tussen plak en punt?
+  - id: piz_wood_stack
+    name: Hout Stapel
+    prompt: |
+      Houtgestookte pizzeria's stapelen stammen. Eiken, soms. Het hout is brandstof en
+      smaak. De stapel is voorbereiding. Overweeg wat er brandt. Wat voegt het
+      hout toe dat gas niet kan?
+    follow_ups:
+      - Wat zou de pizza zijn zonder hout?
+      - Hoe vormt brandstof de korst?
+      - Wat is de relatie tussen vuur en rook?
+  - id: piz_topping_balance
+    name: Topping Balans
+    prompt: |
+      Toppings kunnen overweldigen — te veel, en de pizza wordt een ovenschotel. De
+      balans is delicaat. Bestudeer een geladen taart. Waar passeert het de grens?
+      Wat zou je verwijderen?
+    follow_ups:
+      - Hoe vormt terughoudendheid de pizza?
+      - Wat is de relatie tussen meer en minder?
+      - Wanneer wordt keuze chaos?
+  - id: piz_cold_leftover
+    name: Koude Restjes
+    prompt: |
+      Koude pizza voor het ontbijt — sommigen zweren erbij. De smaken zijn
+      vergezeld. De textuur is veranderd. Overweeg de taart van de volgende dag. Wat voegt tijd toe?
+      Wat neemt het weg?
+    follow_ups:
+      - Hoe verandert kou de ervaring?
+      - Wat zou opwarmen doen?
+      - Wat is de relatie tussen vers en restjes?
+  - id: piz_sauce_sweet
+    name: Saus Zoet
+    prompt: |
+      Tomatensaus kan zoet of fris zijn, afhankelijk van de tomaat, de kok.
+      Proef de saus alleen als je kunt. Waar komt de zoetheid vandaan?
+      Wat zou zuur doen?
+    follow_ups:
+      - Hoe zet saus de toon?
+      - Wat is de relatie tussen zoet en zuur?
+      - Wat zou rauwe tomaat betekenen?
+  - id: piz_roman_taglio
+    name: Romeinse Taglio
+    prompt: |
+      Pizza al taglio — verkocht per punt, per gewicht. Je wijst, zij snijden.
+      De rechthoek, de prijs per kilo. De transactie is anders. Wat
+      betekent kopen op gewicht?
+    follow_ups:
+      - Hoe vormt taglio de ervaring?
+      - Wat zou een hele taart hier betekenen?
+      - Wat is de relatie tussen punt en keuze?
+  - id: piz_hot_honey
+    name: Hete Honing
+    prompt: |
+      Hete honing op pizza — nieuwe traditie, nu overal. Zoet, pittig, stroperig.
+      Het is een afwerking. Merk op wanneer het wordt toegevoegd. Wat doet de honing met de
+      kaas?
+    follow_ups:
+      - Wat zou de punt zijn zonder het?
+      - Hoe vormt zoet-pittig de hap?
+      - Wat is de relatie tussen trend en traditie?
+  - id: piz_pecorino_grate
+    name: Pecorino Geraspt
+    prompt: |
+      Pecorino geraspt over pizza — zout, scherp. Het is een laag. De kaas bovenop
+      is anders dan de kaas die smolt. Overweeg de hiërarchie. Wat voegt het
+      raspen toe?
+    follow_ups:
+      - Wat zou de pizza zijn zonder pecorino?
+      - Hoe vormt de tweede kaas het gerecht?
+      - Wat is de relatie tussen smelten en raspen?
+  - id: piz_paddle_slide
+    name: Peddel Schuif
+    prompt: |
+      De peddel — hout of metaal. Het deeg wordt erop geschoven, dan in de
+      oven. De beweging is geoefend. Kijk ernaar. Wat zou er misgaan zonder
+      de vaardigheid?
+    follow_ups:
+      - Hoe maakt de peddel het bakken mogelijk?
+      - Wat is de relatie tussen gereedschap en resultaat?
+      - Wat zou een gevallen pizza betekenen?
+  - id: piz_sourdough_crust
+    name: Zuurdesem Korst
+    prompt: |
+      Zuurdesem pizzakorst — lange fermentatie, pit. De korst heeft persoonlijkheid.
+      Het is niet neutraal. Overweeg wat het zuurdesem toevoegt. Wat zou commerciële
+      gist anders doen?
+    follow_ups:
+      - Hoe vormt zuurdesem de hap?
+      - Wat is de relatie tussen fermentatie en smaak?
+      - Wat zou een saaiere korst betekenen?
+  - id: piz_white_pie
+    name: Witte Taart
+    prompt: |
+      Witte pizza — geen tomaat. Olijfolie, kaas, misschien knoflook. De afwezigheid
+      van rood verandert alles. Het palet verwacht tomaat. Wat biedt de witte
+      taart in plaats daarvan?
+    follow_ups:
+      - Wat zou de taart zijn met tomaat?
+      - Hoe vormt afwezigheid verwachting?
+      - Wat is de relatie tussen rood en wit?
+  - id: piz_bar_setting
+    name: Bar Instelling
+    prompt: |
+      Pizza aan de bar — je eet waar je bestelt. De bar is een podium. Je kijkt
+      naar de oven, de punten. De setting is informeel, direct. Wat voegt eten
+      aan de bar toe?
+    follow_ups:
+      - Wat zou een tafel veranderen?
+      - Hoe vormt nabijheid de ervaring?
+      - Wat is de relatie tussen bar en keuken?
+  - id: piz_truffle_trend
+    name: Truffel Trend
+    prompt: |
+      Truffel op pizza — olie of schaafsels — is een synoniem geworden voor luxe. Het
+      aroma domineert. Overweeg de trend. Wat voegt truffel toe? Wat
+      maskeert het?
+    follow_ups:
+      - Wat zou de pizza zijn zonder truffel?
+      - Hoe vormt luxe de hap?
+      - Wat is de relatie tussen trend en smaak?
+  - id: piz_ricotta_dollop
+    name: Ricotta Kloddertje
+    prompt: |
+      Ricotta kloddertjes op pizza — koel, romig, contrasterend. Het smelt niet
+      zoals mozzarella. Het blijft liggen. Merk het temperatuurverschil op. Wat voegt
+      het kloddertje toe?
+    follow_ups:
+      - Wat zou de punt zijn zonder ricotta?
+      - Hoe vormt koel heet?
+      - Wat is de relatie tussen kloddertje en smelten?
+  - id: piz_slice_count
+    name: Punt Aantal
+    prompt: |
+      Hoeveel punten? Het aantal is vaak acht — of zes voor een kleinere taart.
+      Het aantal bepaalt portie, delen. Overweeg de wiskunde. Wat zou
+      vier punten betekenen? Twaalf?
+    follow_ups:
+      - Hoe vormt het puntentotaal de maaltijd?
+      - Wat is de relatie tussen snede en delen?
+      - Wanneer is het aantal belangrijk?
+  - id: piz_oven_window
+    name: Oven Raam
+    prompt: |
+      De oven heeft een raam — of niet. De pizza zien bakken is theater. De
+      kaas bubbelt. De korst rijst. Hoe zou de ervaring zijn zonder
+      het uitzicht?
+    follow_ups:
+      - Hoe vormt kijken anticipatie?
+      - Wat is de relatie tussen zichtbaar en verborgen?
+      - Wat leer je van het raam?
+  - id: piz_ranch_dip
+    name: Ranch Dip
+    prompt: |
+      Ranch met pizza — Amerikaanse traditie, vaak met de korst. De dip is
+      optioneel, controversieel. Overweeg de toevoeging. Wat voegt ranch toe? Wat
+      overheerst het?
+    follow_ups:
+      - Wat zou de korst zijn zonder ranch?
+      - Hoe vormt de dip de hap?
+      - Wat is de relatie tussen purist en praktisch?
+  - id: piz_capers_brine
+    name: Kappers Peper
+    prompt: |
+      Kappers op pizza — hartig, scherp. Ze snijden door de rijkdom. De kappers
+      hebben gereisd — Mediterraan, ingelegd. Merk op wanneer ze verschijnen. Wat voegt
+      de pekel toe?
+    follow_ups:
+      - Wat zou de punt zijn zonder kappers?
+      - Hoe vormt pekel het palet?
+      - Wat is de relatie tussen inlegsel en vers?
+  - id: piz_calzone_seam
+    name: Calzone Naad
+    prompt: |
+      Calzone — pizza gevouwen, verzegeld. De naad houdt de vulling vast. De vorm is
+      anders. Je snijdt hem open. Stoom ontsnapt. Wat voegt de vouw toe? Wat
+      verbergt het?
+    follow_ups:
+      - Wat zou de calzone zijn zonder vouw?
+      - Hoe creëert de naad verrassing?
+      - Wat is de relatie tussen open en gesloten?
+  - id: piz_mushroom_water
+    name: Champignon Water
+    prompt: |
+      Champignons op pizza geven water af tijdens het koken. Een goede kok weet hoe
+      vooraf te koken of droge soorten te gebruiken. Natte champignons maken slappe pizza. Overweeg
+      de chemie. Wat doet vocht?
+    follow_ups:
+      - Hoe vormt champignonbereiding de punt?
+      - Wat is de relatie tussen nat en knapperig?
+      - Wat zouden rauwe champignons doen?
+  - id: piz_grease_absorb
+    name: Vet Absorberen
+    prompt: |
+      Een servet op de punt — sommigen deppen het vet. Het vet is vet van
+      kaas, pepperoni. Deppen of niet? Overweeg de keuze. Wat draagt het
+      vet bij? Wat verwijdert het deppen?
+    follow_ups:
+      - Hoe vormt vet de ervaring?
+      - Wat zou een droge punt betekenen?
+      - Wat is de relatie tussen vet en smaak?
+  - id: piz_oven_spring
+    name: Oven Veerkracht
+    prompt: |
+      Oven veerkracht — het deeg zwelt in de hoge hitte. De gist werkt snel. De
+      structuur zet. Overweeg het moment. Wat zou er gebeuren zonder genoeg
+      hitte? Zonder het juiste meel?
+    follow_ups:
+      - Hoe creëert de veerkracht de kruim?
+      - Wat is de relatie tussen hitte en rijzen?
+      - Wat zou een platte korst betekenen?
+  - id: piz_roma_tomato
+    name: Roma Tomaat
+    prompt: |
+      San Marzano, of Roma — de tomaten zijn belangrijk. Ze komen ergens vandaan. Campania.
+      De DOP, de terroir. Traceer de tomaat. Welke reis heeft het gemaakt naar jouw
+      punt?
+    follow_ups:
+      - Wat zou een andere tomaat doen?
+      - Hoe vormt herkomst de saus?
+      - Wat is de relatie tussen plaats en smaak?
+  - id: piz_pizza_napoli
+    name: Pizza Napels
+    prompt: |
+      Napels heeft het uitgevonden. De stad en het eten zijn verbonden. Pizza eten in
+      Napels is het eten aan de bron. Overweeg de archeologie. Wat zou
+      dezelfde pizza elders betekenen?
+    follow_ups:
+      - Hoe vormt plaats de ervaring?
+      - Wat zou vertaling verliezen?
+      - Wat is de relatie tussen oorsprong en authenticiteit?
+  - id: piz_wine_pair
+    name: Wijn Combinatie
+    prompt: |
+      Pizza en wijn — bier is gebruikelijk, maar wijn werkt. Rood, vaak. Het zuur in
+      de wijn ontmoet het zuur in de tomaat. Overweeg de combinatie. Wat voegt de
+      wijn toe aan de punt?
+    follow_ups:
+      - Wat zou bier anders doen?
+      - Hoe vormt het drankje de maaltijd?
+      - Wat is de relatie tussen glas en bord?
+  - id: piz_pizza_party
+    name: Pizza Feest
+    prompt: |
+      Pizza voor een menigte — verjaardagen, spelletjesavond, kantoorlunch. De pizza is
+      sociaal. De dozen stapelen. Iedereen pakt een punt. Overweeg de choreografie.
+      Hoe verandert de menigte de maaltijd?
+    follow_ups:
+      - Wat zou een solo pizza betekenen?
+      - Hoe vormt delen de ervaring?
+      - Wat is de relatie tussen pizza en samenzijn?

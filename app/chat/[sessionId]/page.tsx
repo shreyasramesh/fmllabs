@@ -34,6 +34,9 @@ import { LANGUAGES, isRtlLanguage, type LanguageCode } from "@/lib/languages";
 import { USER_TYPES, type UserTypeId } from "@/lib/user-types";
 import { AIGenerateIcon, GenerateRelevantMessageButton, GhostIcon, SparklesIcon, TrashIcon } from "@/components/SharedIcons";
 import { getModalTranslations } from "@/lib/mental-model-modal-translations";
+import { getMentionTranslations } from "@/lib/mention-translations";
+import { getLandingTranslations } from "@/lib/landing-translations";
+import { getUiTranslations } from "@/lib/ui-translations";
 import { playSelectionChime } from "@/lib/selection-chime";
 import { stripMarkdown } from "@/lib/strip-markdown";
 import { resolveTtsReferenceText } from "@/lib/tts-reference-text";
@@ -49,6 +52,7 @@ import { TtsHighlightedText } from "@/components/TtsHighlightedText";
 import { FeedbackModal } from "@/components/FeedbackModal";
 import { FeatureTour } from "@/components/FeatureTour";
 import { ChromeIcon } from "@/components/ChromeIcon";
+import { SettingsLanguageSelector } from "@/components/SettingsLanguageSelector";
 
 interface Message {
   role: "user" | "assistant";
@@ -1299,6 +1303,41 @@ const EXAMPLE_PILLS_BY_LANGUAGE: Record<LanguageCode, string[][]> = {
       "دو اچھے انتخاب میں سے ایک چننا",
     ],
   ],
+  de: [
+    ["Karrierewechsel", "Neues Jobangebot", "Gehaltserhöhung verlangen", "Job kündigen", "Nebenprojekt", "Work-Life-Balance", "Giftiges Arbeitsumfeld", "Branche wechseln", "Bei einem scheiternden Projekt bleiben", "Gehaltsverhandlung"],
+    ["Beziehungsentscheidung", "In eine neue Stadt ziehen", "Haus kaufen", "Großer Kauf", "Rentenplanung", "Geld investieren", "Konflikt mit jemandem", "Finanzielles Risiko eingehen", "Kosten fair teilen", "Eine Investition aufgeben"],
+    ["Unternehmen gründen", "Zurück zur Schule", "Familienplanung", "Gesundheitsgewohnheit", "Prokrastination", "Etwas ablehnen", "Ein Versprechen halten", "Eine vergangene Entscheidung hinterfragen", "Etwas vermeiden, dem ich mich stellen sollte", "Zwischen zwei guten Optionen wählen"],
+  ],
+  it: [
+    ["Cambio di carriera", "Nuova offerta di lavoro", "Chiedere un aumento", "Lasciare il lavoro", "Progetto parallelo", "Equilibrio lavoro-vita", "Ambiente di lavoro tossico", "Cambiare settore", "Restare in un progetto fallimentare", "Negoziazione dello stipendio"],
+    ["Decisione di coppia", "Trasferirsi in una nuova città", "Comprare casa", "Grande acquisto", "Pianificazione pensionistica", "Investire denaro", "Conflitto con qualcuno", "Assumere un rischio finanziario", "Dividere le spese in modo equo", "Rinunciare a un investimento"],
+    ["Avviare un'attività", "Tornare a studiare", "Pianificazione familiare", "Abitudine salutare", "Procrastinazione", "Dire di no a qualcosa", "Mantenere un impegno", "Mettere in dubbio una decisione passata", "Evitare qualcosa che dovrei affrontare", "Scegliere tra due buone opzioni"],
+  ],
+  pl: [
+    ["Zmiana kariery", "Nowa oferta pracy", "Prośba o podwyżkę", "Rezygnacja z pracy", "Projekt poboczny", "Równowaga praca–życie", "Toksyczne miejsce pracy", "Zmiana branży", "Trwanie przy upadającym projekcie", "Negocjacje płacowe"],
+    ["Decyzja w związku", "Przeprowadzka do nowego miasta", "Kupno domu", "Duży zakup", "Planowanie emerytury", "Inwestowanie pieniędzy", "Konflikt z kimś", "Podejmowanie ryzyka finansowego", "Sprawiedliwy podział kosztów", "Rezygnacja z inwestycji"],
+    ["Zakładanie firmy", "Powrót do szkoły", "Planowanie rodziny", "Nawyk zdrowotny", "Prokrastynacja", "Odmawianie czemuś", "Dotrzymywanie zobowiązania", "Wątpienie w przeszłą decyzję", "Unikanie czegoś, z czym powinienem się zmierzyć", "Wybór między dwiema dobrymi opcjami"],
+  ],
+  uk: [
+    ["Зміна кар'єри", "Нова пропозиція роботи", "Попросити підвищення", "Звільнитися з роботи", "Побічний проєкт", "Баланс роботи та життя", "Токсичне робоче середовище", "Змінити галузь", "Залишатися в провальному проєкті", "Переговори про зарплату"],
+    ["Рішення в стосунках", "Переїзд у нове місто", "Купівля будинку", "Велика покупка", "Планування пенсії", "Інвестування грошей", "Конфлікт з кимось", "Фінансовий ризик", "Справедливий поділ витрат", "Відмова від інвестиції"],
+    ["Почати бізнес", "Повернутися до навчання", "Планування сім'ї", "Здорова звичка", "Прокрастинація", "Відмовити чомусь", "Дотриматися обіцянки", "Сумніватися в минулому рішенні", "Уникати того, з чим треба зіткнутися", "Обирати між двома хорошими варіантами"],
+  ],
+  ro: [
+    ["Schimbare de carieră", "Ofertă nouă de job", "Cerere de mărire", "Demisie", "Proiect secundar", "Echilibru muncă-viață", "Mediu de lucru toxic", "Schimbare de industrie", "Rămânere într-un proiect eșuat", "Negociere salarială"],
+    ["Decizie în relație", "Mutare într-un oraș nou", "Cumpărare casă", "Achiziție mare", "Planificare pensionare", "Investiții", "Conflict cu cineva", "Asumare risc financiar", "Împărțire echitabilă a cheltuielilor", "Renunțare la o investiție"],
+    ["Începere afacere", "Revenire la școală", "Planificare familială", "Obicei de sănătate", "Procrastinare", "Refuz la ceva", "Respectare angajament", "Îndoială față de o decizie trecută", "Evitarea a ceva ce ar trebui confruntat", "Alegere între două opțiuni bune"],
+  ],
+  nl: [
+    ["Carrièrewissel", "Nieuw baanaanbod", "Salarisverhoging vragen", "Ontslag nemen", "Zijproject", "Werk-privébalans", "Giftige werkomgeving", "Van sector wisselen", "Bij een falend project blijven", "Salarisonderhandeling"],
+    ["Relatiebeslissing", "Verhuizen naar een nieuwe stad", "Huis kopen", "Grote aankoop", "Pensioenplanning", "Geld investeren", "Conflict met iemand", "Financieel risico nemen", "Kosten eerlijk verdelen", "Een investering loslaten"],
+    ["Bedrijf starten", "Terug naar school", "Gezinsplanning", "Gezondheidsgewoonte", "Uitstelgedrag", "Nee zeggen tegen iets", "Een toezegging nakomen", "Twijfelen aan een eerdere beslissing", "Iets vermijden dat ik moet aangaan", "Kiezen tussen twee goede opties"],
+  ],
+  tr: [
+    ["Kariyer değişikliği", "Yeni iş teklifi", "Zam istemek", "İşten ayrılmak", "Yan proje", "İş-yaşam dengesi", "Zehirli iş ortamı", "Sektör değiştirmek", "Başarısız bir projede kalmak", "Maaş pazarlığı"],
+    ["İlişki kararı", "Yeni bir şehre taşınmak", "Ev almak", "Büyük alışveriş", "Emeklilik planlaması", "Para yatırmak", "Biriyle çatışma", "Finansal risk almak", "Maliyetleri adil paylaşmak", "Bir yatırımdan vazgeçmek"],
+    ["İş kurmak", "Okula dönmek", "Aile planlaması", "Sağlık alışkanlığı", "Erteleme", "Bir şeye hayır demek", "Sözünde durmak", "Geçmiş bir kararı sorgulamak", "Yüzleşmem gereken bir şeyden kaçınmak", "İki iyi seçenek arasında seçim yapmak"],
+  ],
 };
 
 function RippleIcon({ className }: { className?: string }) {
@@ -1336,6 +1375,13 @@ const PERSPECTIVE_CARD_PHRASES: Record<
   pt: { intro: "Deixe-me convidá-lo a olhar através desta lente:", outro: "O que vem à sua mente?" },
   ru: { intro: "Позвольте пригласить вас посмотреть через эту призму:", outro: "Что приходит вам на ум?" },
   ur: { intro: "مجھے آپ کو اس لینس کے ذریعے دیکھنے کی دعوت دینے دیں:", outro: "آپ کے ذہن میں کیا آتا ہے؟" },
+  de: { intro: "Lass mich dich einladen, durch diese Linse zu schauen:", outro: "Was fällt dir ein?" },
+  it: { intro: "Lascia che ti inviti a guardare attraverso questa lente:", outro: "Cosa ti viene in mente?" },
+  pl: { intro: "Pozwól, że zaproszę cię do spojrzenia przez tę soczewkę:", outro: "Co przychodzi ci do głowy?" },
+  uk: { intro: "Дозвольте запросити вас подивитися крізь цю лінзу:", outro: "Що спадає вам на думку?" },
+  ro: { intro: "Lasă-mă să te invit să privești prin această lentilă:", outro: "Ce îți vine în minte?" },
+  nl: { intro: "Laat me je uitnodigen om door deze lens te kijken:", outro: "Wat komt er bij je op?" },
+  tr: { intro: "Bu mercekten bakman için seni davet edeyim:", outro: "Aklına ne geliyor?" },
 };
 
 function buildPerspectiveCardMessage(language: LanguageCode, prompt: string): string {
@@ -1631,6 +1677,7 @@ export default function ChatPage() {
   const [ccCreateInput, setCcCreateInput] = useState("");
   const [ccCreateStep, setCcCreateStep] = useState<"input" | "preview">("input");
   const [conceptGroups, setConceptGroups] = useState<ConceptGroupItem[]>([]);
+  const [translatedTitles, setTranslatedTitles] = useState<Record<string, string>>({});
   const [savedTranscripts, setSavedTranscripts] = useState<{
     _id: string;
     videoId: string;
@@ -2174,6 +2221,32 @@ export default function ChatPage() {
   }, [refetchConceptGroups]);
 
   useEffect(() => {
+    if (language === "en" || isAnonymous) {
+      setTranslatedTitles({});
+      return;
+    }
+    const items: { id: string; title: string }[] = [
+      ...longTermMemories.map((l) => ({ id: l._id, title: l.title || "" })),
+      ...customConcepts.map((c) => ({ id: c._id, title: c.title || "" })),
+      ...conceptGroups.map((g) => ({ id: g._id, title: g.title || "" })),
+    ].filter((i) => i.title.trim());
+    if (items.length === 0) {
+      setTranslatedTitles({});
+      return;
+    }
+    fetch("/api/me/translate-titles", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items, language }),
+    })
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((data: { translations?: Record<string, string> }) => {
+        setTranslatedTitles(data.translations ?? {});
+      })
+      .catch(() => setTranslatedTitles({}));
+  }, [language, isAnonymous, longTermMemories, customConcepts, conceptGroups]);
+
+  useEffect(() => {
     if (isAnonymous && !isNew) {
       setSessionLoading(false);
       return;
@@ -2353,9 +2426,9 @@ export default function ChatPage() {
       mentionedConceptGroupIds,
     } = parseMentionsFromMessage(rawText, {
       idToName: mentalModelsIndex,
-      ltmIdToTitle: new Map(longTermMemories.map((ltm) => [ltm._id, ltm.title])),
-      ccIdToTitle: new Map(customConcepts.map((cc) => [cc._id, cc.title])),
-      cgIdToTitle: new Map(conceptGroups.map((cg) => [cg._id, cg.title])),
+      ltmIdToTitle: new Map(longTermMemories.map((ltm) => [ltm._id, translatedTitles[ltm._id] ?? ltm.title])),
+      ccIdToTitle: new Map(customConcepts.map((cc) => [cc._id, translatedTitles[cc._id] ?? cc.title])),
+      cgIdToTitle: new Map(conceptGroups.map((cg) => [cg._id, translatedTitles[cg._id] ?? cg.title])),
     });
     const messageToSend =
       cleanedMessage ||
@@ -3134,12 +3207,17 @@ export default function ChatPage() {
   }, []);
 
   useEffect(() => {
-    fetch(`/api/mental-models?language=${language}`)
+    const requestedLang = language;
+    fetch(`/api/mental-models?language=${requestedLang}`, { cache: "no-store" })
       .then((r) => r.json())
       .then((list: { id: string; name: string }[]) => {
         const map = new Map<string, string>();
         list.forEach((m) => map.set(m.id, m.name));
-        setMentalModelsIndex(map);
+        setMentalModelsIndex((prev) => {
+          // Only update if language hasn't changed (avoid stale fetch overwriting)
+          if (languageRef.current !== requestedLang) return prev;
+          return map;
+        });
       })
       .catch(() => {})
       .finally(() => setMentalModelsLoaded(true));
@@ -3201,18 +3279,18 @@ export default function ChatPage() {
           }
           const { mentionedMentalModelIds } = parseMentionsFromMessage(m.content, {
             idToName: mentalModelsIndex,
-            ltmIdToTitle: new Map(longTermMemories.map((ltm) => [ltm._id, ltm.title])),
-            ccIdToTitle: new Map(customConcepts.map((cc) => [cc._id, cc.title])),
-            cgIdToTitle: new Map(conceptGroups.map((cg) => [cg._id, cg.title])),
+            ltmIdToTitle: new Map(longTermMemories.map((ltm) => [ltm._id, translatedTitles[ltm._id] ?? ltm.title])),
+            ccIdToTitle: new Map(customConcepts.map((cc) => [cc._id, translatedTitles[cc._id] ?? cc.title])),
+            cgIdToTitle: new Map(conceptGroups.map((cg) => [cg._id, translatedTitles[cg._id] ?? cg.title])),
           });
           return mentionedMentalModelIds;
         }),
         // Include IDs from current input for type-box hover tooltips
         ...parseMentionsFromMessage(input, {
           idToName: mentalModelsIndex,
-          ltmIdToTitle: new Map(longTermMemories.map((ltm) => [ltm._id, ltm.title])),
-          ccIdToTitle: new Map(customConcepts.map((cc) => [cc._id, cc.title])),
-          cgIdToTitle: new Map(conceptGroups.map((cg) => [cg._id, cg.title])),
+          ltmIdToTitle: new Map(longTermMemories.map((ltm) => [ltm._id, translatedTitles[ltm._id] ?? ltm.title])),
+          ccIdToTitle: new Map(customConcepts.map((cc) => [cc._id, translatedTitles[cc._id] ?? cc.title])),
+          cgIdToTitle: new Map(conceptGroups.map((cg) => [cg._id, translatedTitles[cg._id] ?? cg.title])),
         }).mentionedMentalModelIds,
       ]),
     ];
@@ -3228,7 +3306,7 @@ export default function ChatPage() {
         setPreviewMap(map);
       })
       .catch(() => {});
-  }, [messages, input, mentalModelsIndex, longTermMemories, customConcepts, conceptGroups, language]);
+  }, [messages, input, mentalModelsIndex, longTermMemories, customConcepts, conceptGroups, translatedTitles, language]);
 
   const handleMentalModelClick = useCallback(
     (id: string, sourceMessage?: string) => {
@@ -3332,7 +3410,7 @@ export default function ChatPage() {
                   className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 shrink-0 ${
                     incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
                   }`}
-                  aria-label="New conversation"
+                  aria-label={getLandingTranslations(language).newConversation}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -3342,7 +3420,7 @@ export default function ChatPage() {
               </>
             ) : (
               <h1 className="font-medium truncate">
-                {currentSession?.title || (currentSessionId ? "Conversation" : "New conversation")}
+                {currentSession?.title || (currentSessionId ? getLandingTranslations(language).conversation : getLandingTranslations(language).newConversation)}
               </h1>
             )}
           </div>
@@ -3460,22 +3538,22 @@ export default function ChatPage() {
               }
             }}
             className="flex items-center justify-center gap-2 w-full mb-4 px-3 py-2 rounded-xl border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0"
-            aria-label="New conversation"
+            aria-label={getLandingTranslations(language).newConversation}
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
               <path d="M12 5v14M5 12h14" />
             </svg>
-            New conversation
+            {getLandingTranslations(language).newConversation}
           </Link>
           {/* Primary nav - Claude.ai pill style, compact selector for center panel */}
           <nav className="flex flex-col gap-0.5 shrink-0 mb-4 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30" aria-label="Select view" data-tour="sidebar-nav">
             {[
-              { id: "conversations" as const, label: "Conversations", icon: "chat", onClick: () => { playSelectionChime(); setLibraryPanelOpen("conversations"); setConversationsCollapsed(false); } },
-              { id: "nuggets" as const, label: "Nuggets", icon: "nuggets", onClick: () => { playSelectionChime(); setLibraryPanelOpen("nuggets"); } },
-              { id: "cc" as const, label: "Concepts", icon: "concepts", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cc"); } },
-              { id: "concepts" as const, label: "Mental Models", icon: "models", onClick: () => { playSelectionChime(); setLibraryPanelOpen("concepts"); } },
-              { id: "ltm" as const, label: "Long-Term Memory", icon: "memory", onClick: () => { playSelectionChime(); setLibraryPanelOpen("ltm"); } },
-              { id: "cg" as const, label: "Domains", icon: "domains", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cg"); } },
+              { id: "conversations" as const, label: getUiTranslations(language).conversations, icon: "chat", onClick: () => { playSelectionChime(); setLibraryPanelOpen("conversations"); setConversationsCollapsed(false); } },
+              { id: "nuggets" as const, label: getUiTranslations(language).nuggets, icon: "nuggets", onClick: () => { playSelectionChime(); setLibraryPanelOpen("nuggets"); } },
+              { id: "cc" as const, label: getUiTranslations(language).concepts, icon: "concepts", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cc"); } },
+              { id: "concepts" as const, label: getUiTranslations(language).mentalModels, icon: "models", onClick: () => { playSelectionChime(); setLibraryPanelOpen("concepts"); } },
+              { id: "ltm" as const, label: getUiTranslations(language).longTermMemory, icon: "memory", onClick: () => { playSelectionChime(); setLibraryPanelOpen("ltm"); } },
+              { id: "cg" as const, label: getUiTranslations(language).domains, icon: "domains", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cg"); } },
             ].map(({ id, label, icon, onClick }) => {
               const isActive = libraryPanelOpen === id;
               return (
@@ -3543,7 +3621,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 <path d="M3 9h18" />
                 <path d="M3 15h18" />
               </svg>
-              <span className="truncate shimmer-text-colorful">Prompt Games</span>
+              <span className="truncate shimmer-text-colorful">{getUiTranslations(language).promptGames}</span>
             </button>
           </div>
 
@@ -3577,11 +3655,11 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               {filteredSessions.length === 0 ? (
                 <div className="px-3 py-1.5 space-y-0.5">
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                    {sessionSearchQuery ? "No conversations match" : "No conversations yet"}
+                    {sessionSearchQuery ? getLandingTranslations(language).noConversationsMatch : getLandingTranslations(language).noConversationsYet}
                   </p>
                   {!sessionSearchQuery && (
                     <p className="text-[11px] text-neutral-400 dark:text-neutral-500">
-                      Ready to have a conversation whenever you say something
+                      {getLandingTranslations(language).readyToConversation}
                     </p>
                   )}
                 </div>
@@ -3603,7 +3681,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     }`}
                     >
                       <span className="flex-1 min-w-0">
-                        <span className="block truncate">{s.title || "New conversation"}</span>
+                        <span className="block truncate">{s.title || getLandingTranslations(language).newConversation}</span>
                         {s.updatedAt && (
                           <span className="block text-[11px] text-neutral-500 dark:text-neutral-400 font-normal mt-0.5">
                             {formatRelativeTime(s.updatedAt)}
@@ -3621,7 +3699,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       setDeleteSessionConfirmModal(s);
                     }}
                     className="p-1 rounded opacity-50 hover:opacity-100 group-hover:opacity-100 text-neutral-500 hover:text-red-600 dark:hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 active:scale-95 shrink-0"
-                    aria-label="Delete conversation"
+                    aria-label={getLandingTranslations(language).deleteConversation}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -4091,10 +4169,10 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   ) : (
                     <>
                       <p className="w-full min-w-0 break-words text-neutral-500 dark:text-neutral-400 text-base sm:text-lg">
-                        Let&apos;s dig in—with mental models that actually work
+                        {getLandingTranslations(language).letsDigIn}
                       </p>
                       <p className="w-full min-w-0 break-words text-neutral-400 dark:text-neutral-500 text-sm mt-2 mb-6">
-                        Ready to have a conversation whenever you say something
+                        {getLandingTranslations(language).readyToConversation}
                       </p>
                       <div className="space-y-3 mb-6 w-full">
                         <button
@@ -4118,8 +4196,8 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             </svg>
                           </span>
                           <div className="min-w-0">
-                            <p className="font-medium text-foreground">Draw a perspective card</p>
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400">Shift how you look at something—art, decisions, or any topic</p>
+                            <p className="font-medium text-foreground">{getLandingTranslations(language).drawPerspectiveCard}</p>
+                            <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).shiftHowYouLook}</p>
                           </div>
                         </button>
                         <button
@@ -4138,8 +4216,8 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             </svg>
                           </span>
                           <div className="min-w-0">
-                            <p className="font-medium text-foreground">Browse Mental Models</p>
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400">Frameworks and biases for better decision-making</p>
+                            <p className="font-medium text-foreground">{getLandingTranslations(language).browseMentalModels}</p>
+                            <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).frameworksAndBiases}</p>
                           </div>
                         </button>
                       </div>
@@ -4190,9 +4268,9 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   m.role === "user" && isLoading && i === messages.length - 2
                 }
                 idToName={mentalModelsIndex}
-                ltmIdToTitle={new Map(longTermMemories.map((ltm) => [ltm._id, ltm.title]))}
-                ccIdToTitle={new Map(customConcepts.map((cc) => [cc._id, cc.title]))}
-                cgIdToTitle={new Map(conceptGroups.map((cg) => [cg._id, cg.title]))}
+                ltmIdToTitle={new Map(longTermMemories.map((ltm) => [ltm._id, translatedTitles[ltm._id] ?? ltm.title]))}
+                ccIdToTitle={new Map(customConcepts.map((cc) => [cc._id, translatedTitles[cc._id] ?? cc.title]))}
+                cgIdToTitle={new Map(conceptGroups.map((cg) => [cg._id, translatedTitles[cg._id] ?? cg.title]))}
                 onMentalModelClick={handleMentalModelClick}
                 onLtmClick={(id) => {
                   const ltm = longTermMemories.find((l) => l._id === id);
@@ -4330,18 +4408,19 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   }))}
                   longTermMemories={longTermMemories.map((ltm) => ({
                     _id: ltm._id,
-                    title: ltm.title,
+                    title: translatedTitles[ltm._id] ?? ltm.title,
                     enrichmentPrompt: ltm.enrichmentPrompt,
                   }))}
                   customConcepts={customConcepts.map((cc) => ({
                     _id: cc._id,
-                    title: cc.title,
+                    title: translatedTitles[cc._id] ?? cc.title,
                     enrichmentPrompt: cc.enrichmentPrompt,
                   }))}
                   conceptGroups={conceptGroups.map((cg) => ({
                     _id: cg._id,
-                    title: cg.title,
+                    title: translatedTitles[cg._id] ?? cg.title,
                   }))}
+                  mentionTranslations={getMentionTranslations(language)}
                   placeholder="/ to search"
                   placeholderMobile="/ to search"
                   disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
@@ -4446,7 +4525,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   type="button"
                   onClick={() => setInputExpandModalOpen(false)}
                   className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shrink-0 text-neutral-600 dark:text-neutral-400"
-                  aria-label="Close"
+                  aria-label={getUiTranslations(language).close}
                 >
                   ✕
                 </button>
@@ -4478,18 +4557,19 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   }))}
                   longTermMemories={longTermMemories.map((ltm) => ({
                     _id: ltm._id,
-                    title: ltm.title,
+                    title: translatedTitles[ltm._id] ?? ltm.title,
                     enrichmentPrompt: ltm.enrichmentPrompt,
                   }))}
                   customConcepts={customConcepts.map((cc) => ({
                     _id: cc._id,
-                    title: cc.title,
+                    title: translatedTitles[cc._id] ?? cc.title,
                     enrichmentPrompt: cc.enrichmentPrompt,
                   }))}
                   conceptGroups={conceptGroups.map((cg) => ({
                     _id: cg._id,
-                    title: cg.title,
+                    title: translatedTitles[cg._id] ?? cg.title,
                   }))}
+                  mentionTranslations={getMentionTranslations(language)}
                   placeholder="/ to search"
                   placeholderMobile="/ to search"
                   disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
@@ -4566,29 +4646,29 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             role="dialog"
             aria-modal
               aria-label={
-                libraryPanelOpen === "conversations" ? "Conversations" :
-                libraryPanelOpen === "concepts" ? "Mental Models" :
-                libraryPanelOpen === "ltm" ? "Long-Term Memory" :
-                libraryPanelOpen === "cc" ? "Concepts" :
-                libraryPanelOpen === "cg" ? "Domains" :
-                "Nuggets"
+                libraryPanelOpen === "conversations" ? getUiTranslations(language).conversations :
+                libraryPanelOpen === "concepts" ? getUiTranslations(language).mentalModels :
+                libraryPanelOpen === "ltm" ? getUiTranslations(language).longTermMemory :
+                libraryPanelOpen === "cc" ? getUiTranslations(language).concepts :
+                libraryPanelOpen === "cg" ? getUiTranslations(language).domains :
+                getUiTranslations(language).nuggets
               }
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between gap-2 px-4 py-3 border-b-[0.75px] border-neutral-200/80 dark:border-white/8 shrink-0">
                 <h2 className="text-lg font-semibold text-foreground">
-                  {libraryPanelOpen === "conversations" ? "Conversations" :
-                   libraryPanelOpen === "concepts" ? "Mental Models" :
-                   libraryPanelOpen === "ltm" ? "Long-Term Memory" :
-                   libraryPanelOpen === "cc" ? "Concepts" :
-                   libraryPanelOpen === "cg" ? "Domains" :
-                   "Nuggets"}
+                  {libraryPanelOpen === "conversations" ? getUiTranslations(language).conversations :
+                   libraryPanelOpen === "concepts" ? getUiTranslations(language).mentalModels :
+                   libraryPanelOpen === "ltm" ? getUiTranslations(language).longTermMemory :
+                   libraryPanelOpen === "cc" ? getUiTranslations(language).concepts :
+                   libraryPanelOpen === "cg" ? getUiTranslations(language).domains :
+                   getUiTranslations(language).nuggets}
                 </h2>
               <button
                 type="button"
                 onClick={() => setLibraryPanelOpen(null)}
                   className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shrink-0 text-neutral-600 dark:text-neutral-400"
-                aria-label="Close"
+                aria-label={getUiTranslations(language).close}
               >
                 ✕
               </button>
@@ -4604,7 +4684,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                       <path d="M12 5v14M5 12h14" />
                     </svg>
-                    New conversation
+                    {getLandingTranslations(language).newConversation}
                   </Link>
                   <div className="relative">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none">
@@ -4613,22 +4693,22 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     </svg>
                     <input
                       type="search"
-                      placeholder="Search conversations"
+                      placeholder={getLandingTranslations(language).searchConversations}
                       value={sessionSearchQuery}
                       onChange={(e) => setSessionSearchQuery(e.target.value)}
                       className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-foreground placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600"
-                      aria-label="Search conversations"
+                      aria-label={getLandingTranslations(language).searchConversations}
                     />
                   </div>
                   <nav className="max-h-[60vh] overflow-y-auto">
                     {filteredSessions.length === 0 ? (
                       <div className="px-3 py-4 space-y-1">
                         <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                          {sessionSearchQuery ? "No conversations match" : "No conversations yet"}
+                          {sessionSearchQuery ? getLandingTranslations(language).noConversationsMatch : getLandingTranslations(language).noConversationsYet}
                         </p>
                         {!sessionSearchQuery && (
                           <p className="text-xs text-neutral-400 dark:text-neutral-500">
-                            Ready to have a conversation whenever you say something
+                            {getLandingTranslations(language).readyToConversation}
                           </p>
                         )}
                       </div>
@@ -4652,7 +4732,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                               }`}
                             >
                               <span className="flex-1 min-w-0">
-                                <span className="block truncate">{s.title || "New conversation"}</span>
+                                <span className="block truncate">{s.title || getLandingTranslations(language).newConversation}</span>
                                 {s.updatedAt && (
                                   <span className="block text-xs text-neutral-500 dark:text-neutral-400 font-normal mt-0.5">
                                     {formatRelativeTime(s.updatedAt)}
@@ -4670,7 +4750,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                                 setDeleteSessionConfirmModal(s);
                               }}
                               className="p-1.5 rounded opacity-50 hover:opacity-100 group-hover:opacity-100 text-neutral-500 hover:text-red-600 dark:hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 active:scale-95 shrink-0"
-                              aria-label="Delete conversation"
+                              aria-label={getLandingTranslations(language).deleteConversation}
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                                 <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
@@ -4965,7 +5045,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             onClick={() => setMmCreateModalOpen(false)}
                             className="px-3 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors"
                           >
-                            Cancel
+                            {getUiTranslations(language).cancel}
                               </button>
                           <button
                             type="button"
@@ -5090,7 +5170,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               )}
               {libraryPanelOpen === "cc" && (
                 <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-foreground">Concepts</h2>
+                  <h2 className="text-lg font-semibold text-foreground">{getUiTranslations(language).concepts}</h2>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Ideas and contexts you define. Use when you want the agent to reference your own concepts, goals, or frameworks.</p>
                   <div className="flex items-center justify-end gap-2">
                     <div className="flex gap-1">
@@ -5246,7 +5326,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               )}
               {libraryPanelOpen === "cg" && (
                 <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-foreground">Domains</h2>
+                  <h2 className="text-lg font-semibold text-foreground">{getUiTranslations(language).domains}</h2>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Domain groups created via AI. Use when you want the agent to think in terms of a topic (e.g. finance, health) with related concepts.</p>
                   <div className="flex items-center justify-end gap-1">
                     <button type="button" onClick={() => { setCgCreateDomain(""); setCgCreateStep(1); setCgCreateQuestions([]); setCgCreateAnswers({}); setCgCreateConcepts([]); setCgCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Domain</button>
@@ -5372,7 +5452,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                         <button type="button" onClick={async () => { if (!nuggetCreateContent.trim() || nuggetSuggestSourceLoading) return; setNuggetSuggestSourceLoading(true); try { const res = await fetch("/api/me/nuggets/suggest-source", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent }) }); const data = await res.json(); if (data.source) setNuggetCreateSource(data.source); } catch { /* ignore */ } finally { setNuggetSuggestSourceLoading(false); } }} disabled={!nuggetCreateContent.trim() || nuggetSuggestSourceLoading} className="p-2 rounded-lg text-neutral-500 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 shrink-0" title="Suggest source" aria-label="Suggest source"><SparklesIcon className="w-4 h-4" /></button>
                       </div>
                       <div className="flex gap-2 justify-end">
-                        <button onClick={() => { setNuggetFormOpen(null); setNuggetCreateContent(""); setNuggetCreateSource(""); }} className="px-3 py-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg">Cancel</button>
+                        <button onClick={() => { setNuggetFormOpen(null); setNuggetCreateContent(""); setNuggetCreateSource(""); }} className="px-3 py-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg">{getUiTranslations(language).cancel}</button>
                         <button disabled={!nuggetCreateContent.trim() || nuggetCreateLoading} onClick={async () => { if (!nuggetCreateContent.trim() || nuggetCreateLoading) return; setNuggetCreateLoading(true); try { await fetch("/api/me/nuggets", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent.trim(), source: nuggetCreateSource.trim() || undefined }) }); refetchNuggets(); setNuggetFormOpen(null); setNuggetCreateContent(""); setNuggetCreateSource(""); } catch { /* ignore */ } finally { setNuggetCreateLoading(false); } }} className="px-3 py-1.5 text-xs font-medium bg-foreground text-background rounded-lg hover:opacity-90 disabled:opacity-50">{nuggetCreateLoading ? "Saving..." : "Save"}</button>
                       </div>
                     </div>
@@ -5452,7 +5532,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             </div>
           </div>
           <div className="flex gap-2 justify-end mt-2">
-            <button onClick={() => { setNuggetFormOpen(null); setNuggetFormPosition(null); setNuggetCreateContent(""); setNuggetCreateSource(""); }} className="px-3 py-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg">Cancel</button>
+            <button onClick={() => { setNuggetFormOpen(null); setNuggetFormPosition(null); setNuggetCreateContent(""); setNuggetCreateSource(""); }} className="px-3 py-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg">{getUiTranslations(language).cancel}</button>
             <button disabled={!nuggetCreateContent.trim() || nuggetCreateLoading} onClick={async () => { if (!nuggetCreateContent.trim() || nuggetCreateLoading) return; setNuggetCreateLoading(true); try { await fetch("/api/me/nuggets", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent.trim(), source: nuggetCreateSource.trim() || undefined }) }); refetchNuggets(); setNuggetFormOpen(null); setNuggetFormPosition(null); setNuggetCreateContent(""); setNuggetCreateSource(""); } catch { /* ignore */ } finally { setNuggetCreateLoading(false); } }} className="px-3 py-1.5 text-xs font-medium bg-foreground text-background rounded-lg hover:opacity-90 disabled:opacity-50">{nuggetCreateLoading ? "Saving..." : "Save"}</button>
           </div>
         </div>
@@ -5667,7 +5747,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 type="button"
                 onClick={() => { setTranscriptModalTranscript(null); setTranscriptExtractedConceptOpen(null); setTranscriptExtractedConceptsSectionOpen(true); }}
                 className="absolute top-4 right-4 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                aria-label="Close"
+                aria-label={getUiTranslations(language).close}
               >
                 ✕
               </button>
@@ -5842,7 +5922,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 onClick={() => setSummarizeLanguageModal(null)}
                 className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
-                Cancel
+                {getUiTranslations(language).cancel}
               </button>
               <button
                 onClick={async () => {
@@ -5992,7 +6072,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 }}
                 className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
-                Cancel
+                {getUiTranslations(language).cancel}
               </button>
               <button
                 onClick={async () => {
@@ -6058,7 +6138,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               <button
                 onClick={() => setLtmDetailModal(null)}
                 className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                aria-label="Close"
+                aria-label={getUiTranslations(language).close}
               >
                 ✕
               </button>
@@ -6209,7 +6289,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                         onClick={() => setGenerateModal(null)}
                         className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                       >
-                        Cancel
+                        {getUiTranslations(language).cancel}
                       </button>
                       <button
                         onClick={() => {
@@ -6258,120 +6338,146 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   type="button"
                   onClick={() => setSettingsOpen(false)}
                   className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shrink-0 text-neutral-600 dark:text-neutral-400"
-                  aria-label="Close"
+                  aria-label={getUiTranslations(language).close}
                 >
                   ✕
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto p-4 sm:p-5 min-h-0 space-y-6">
-                <section>
-                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3">Extension</h3>
-                  <Link
-                    href="/extension"
-                    onClick={() => setSettingsOpen(false)}
-                    className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-[#f2b37d] bg-transparent text-[#c96b25] dark:text-[#f2b37d] text-sm font-semibold hover:bg-[#fff1df] dark:hover:bg-[#3a2415] transition-colors"
-                  >
-                    <ChromeIcon className="w-[18px] h-[18px]" />
-                    Install Extension
-                  </Link>
-                </section>
-
-                <section>
-                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3">Account</h3>
-                  {!isAnonymous && user ? (
-                    <div
-                      ref={profileTriggerRef}
-                      role="button"
-                      tabIndex={0}
-                      aria-label="Account menu"
-                      className="inline-flex items-center gap-2.5 min-w-0 rounded-xl border-[0.75px] border-neutral-200 dark:border-white/12 hover:border-neutral-300 dark:hover:border-white/18 px-3 py-2 w-fit transition-colors cursor-pointer"
-                      onClick={(e) => {
-                        const trigger = (e.currentTarget as HTMLElement).querySelector("button");
-                        if (trigger && !trigger.contains(e.target as Node)) {
-                          trigger.click();
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          (e.currentTarget as HTMLElement).querySelector("button")?.click();
-                        }
-                      }}
+                <div className="flex flex-wrap items-end gap-3 sm:gap-4">
+                  <div className="flex flex-col gap-1.5">
+                    <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Extension</h3>
+                    <Link
+                      href="/extension"
+                      onClick={() => setSettingsOpen(false)}
+                      className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-[#f2b37d] bg-transparent text-[#c96b25] dark:text-[#f2b37d] text-sm font-semibold hover:bg-[#fff1df] dark:hover:bg-[#3a2415] transition-colors shrink-0"
                     >
-                      <UserButton
-                        appearance={{
-                          elements: {
-                            rootBox: "shrink-0",
-                            avatarBox: "w-8 h-8 ring-0",
-                          },
+                      <ChromeIcon className="w-4 h-4" />
+                      Install Extension
+                    </Link>
+                  </div>
+                  <div className="flex flex-col gap-1.5 min-w-0 flex-1">
+                    <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Account</h3>
+                    {!isAnonymous && user ? (
+                      <div
+                        ref={profileTriggerRef}
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Account menu"
+                        className="inline-flex items-center gap-2 min-w-0 rounded-xl border-[0.75px] border-neutral-200 dark:border-white/12 hover:border-neutral-300 dark:hover:border-white/18 px-3 py-2 w-fit max-w-full transition-colors cursor-pointer"
+                        onClick={(e) => {
+                          const trigger = (e.currentTarget as HTMLElement).querySelector("button");
+                          if (trigger && !trigger.contains(e.target as Node)) {
+                            trigger.click();
+                          }
                         }}
-                      />
-                      <span className="text-sm font-medium text-foreground truncate">
-                        {user.firstName && user.lastName
-                          ? `${user.firstName} ${user.lastName}`
-                          : user.primaryEmailAddress?.emailAddress ?? "Account"}
-                      </span>
-                    </div>
-                  ) : (
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            (e.currentTarget as HTMLElement).querySelector("button")?.click();
+                          }
+                        }}
+                      >
+                        <UserButton
+                          appearance={{
+                            elements: {
+                              rootBox: "shrink-0",
+                              avatarBox: "w-7 h-7 ring-0",
+                            },
+                          }}
+                        />
+                        <span className="text-sm font-medium text-foreground truncate">
+                          {user.firstName && user.lastName
+                            ? `${user.firstName} ${user.lastName}`
+                            : user.primaryEmailAddress?.emailAddress ?? "Account"}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-wrap gap-2">
+                        <Link
+                          href="/sign-in"
+                          onClick={() => setSettingsOpen(false)}
+                          className="px-3 py-2 rounded-xl text-sm font-medium border-2 border-neutral-300 dark:border-neutral-600/35 hover:border-neutral-400 dark:hover:border-neutral-500/45 text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
+                        >
+                          Sign In
+                        </Link>
+                        <Link
+                          href="/sign-up"
+                          onClick={() => setSettingsOpen(false)}
+                          className="px-3 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                        >
+                          Create account
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Appearance</h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Choose a background for your chat.</p>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Background</label>
                     <div className="flex flex-wrap gap-2">
-                      <Link
-                        href="/sign-in"
-                        onClick={() => setSettingsOpen(false)}
-                        className="px-4 py-2.5 rounded-xl text-sm font-medium border-2 border-neutral-300 dark:border-neutral-600/35 hover:border-neutral-400 dark:hover:border-neutral-500/45 text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
-                      >
-                        Sign In
-                      </Link>
-                      <Link
-                        href="/sign-up"
-                        onClick={() => setSettingsOpen(false)}
-                        className="px-4 py-2.5 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
-                      >
-                        Create account
-                      </Link>
+                      {[
+                        { id: "default" as const, name: "Classic", image: null },
+                        { id: "air" as const, name: "Wind", image: "/images/wind.png" },
+                        { id: "water" as const, name: "Water", image: "/images/water.png" },
+                        { id: "earth" as const, name: "Earth", image: "/images/earth.png" },
+                        { id: "fire" as const, name: "Fire", image: "/images/fire.png" },
+                      ].map(({ id, name, image }) => (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => setBackground(id)}
+                          title={name}
+                          className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-colors border-[0.75px] ${
+                            background === id
+                              ? "border-foreground bg-neutral-100 dark:bg-neutral-800 text-foreground ring-2 ring-foreground/20"
+                              : "border-neutral-200/60 dark:border-white/12 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                          }`}
+                        >
+                          {image ? (
+                            <Image
+                              src={image}
+                              alt={name}
+                              width={18}
+                              height={18}
+                              className="w-[18px] h-[18px] shrink-0 object-contain"
+                            />
+                          ) : (
+                            <DefaultIcon className="w-[18px] h-[18px] shrink-0" />
+                          )}
+                          <span>{name}</span>
+                        </button>
+                      ))}
                     </div>
-                  )}
+                  </div>
                 </section>
 
                 <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
-                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Conversation</h3>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Language and tone for your conversations.</p>
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">Conversation</h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">Language and tone for your conversations.</p>
                   <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Language</label>
-                      <div className="flex flex-wrap gap-2">
-                        {LANGUAGES.map(({ code, name }) => (
-                          <button
-                            key={code}
-                            type="button"
-                            onClick={() => setLanguage(code)}
-                            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                              language === code
-                                ? "bg-foreground text-background"
-                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.75px] border-neutral-200/60 dark:border-white/12"
-                            }`}
-                          >
-                            {name}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+                    <SettingsLanguageSelector />
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Voice style</label>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
                         {USER_TYPES.find((t) => t.id === userType)?.description}
                       </p>
                       <div className="flex flex-wrap gap-2">
-                        {USER_TYPES.map(({ id, name }) => (
+                        {USER_TYPES.map(({ id, name, icon }) => (
                           <button
                             key={id}
                             type="button"
                             onClick={() => setUserType(id)}
-                            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                               userType === id
                                 ? "bg-foreground text-background"
                                 : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.75px] border-neutral-200/60 dark:border-white/12"
                             }`}
                           >
+                            <span aria-hidden>{icon}</span>
                             {name}
                           </button>
                         ))}
@@ -6641,48 +6747,6 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   </div>
                 </section>
 
-                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
-                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Appearance</h3>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Choose a background for your chat.</p>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Background</label>
-                    <div className="flex flex-wrap gap-2">
-                      {[
-                        { id: "default" as const, name: "Classic", image: null },
-                        { id: "air" as const, name: "Wind", image: "/images/wind.png" },
-                        { id: "water" as const, name: "Water", image: "/images/water.png" },
-                        { id: "earth" as const, name: "Earth", image: "/images/earth.png" },
-                        { id: "fire" as const, name: "Fire", image: "/images/fire.png" },
-                      ].map(({ id, name, image }) => (
-                        <button
-                          key={id}
-                          type="button"
-                          onClick={() => setBackground(id)}
-                          title={name}
-                          className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-colors border-[0.75px] ${
-                            background === id
-                              ? "border-foreground bg-neutral-100 dark:bg-neutral-800 text-foreground ring-2 ring-foreground/20"
-                              : "border-neutral-200/60 dark:border-white/12 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                          }`}
-                        >
-                          {image ? (
-                            <Image
-                              src={image}
-                              alt={name}
-                              width={18}
-                              height={18}
-                              className="w-[18px] h-[18px] shrink-0 object-contain"
-                            />
-                          ) : (
-                            <DefaultIcon className="w-[18px] h-[18px] shrink-0" />
-                          )}
-                          <span>{name}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </section>
-
                 {!isAnonymous && (
                 <section className="pt-6 border-t border-neutral-100 dark:border-neutral-700/20">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Help</h3>
@@ -6887,7 +6951,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 type="button"
                 onClick={() => setSignInFeaturesModalOpen(false)}
                 className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                aria-label="Close"
+                aria-label={getUiTranslations(language).close}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                   <path d="M18 6 6 18" />
@@ -6976,7 +7040,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 onClick={() => setDeleteAllDataModalOpen(false)}
                 className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
-                Cancel
+                {getUiTranslations(language).cancel}
               </button>
               <button
                 onClick={async () => {
@@ -7107,16 +7171,16 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             className="bg-background rounded-3xl shadow-xl max-w-md w-full p-6 border border-neutral-200 dark:border-neutral-700"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="font-semibold text-lg">Delete conversation?</h2>
+            <h2 className="font-semibold text-lg">{getLandingTranslations(language).deleteConversationConfirm}</h2>
             <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
-              &quot;{deleteSessionConfirmModal.title || "New conversation"}&quot; will be permanently deleted. This cannot be undone.
+              &quot;{deleteSessionConfirmModal.title || getLandingTranslations(language).newConversation}&quot; {getLandingTranslations(language).deleteConversationPermanent}
             </p>
             <div className="mt-6 flex gap-2 justify-end">
               <button
                 onClick={() => setDeleteSessionConfirmModal(null)}
                 className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
-                Cancel
+                {getUiTranslations(language).cancel}
               </button>
               <button
                 onClick={async () => {
@@ -7168,7 +7232,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 disabled={goBackLoading}
                 className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
               >
-                Cancel
+                {getUiTranslations(language).cancel}
               </button>
               <button
                 onClick={async () => {
@@ -7233,7 +7297,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 onClick={() => setLtmDeleteConfirmModal(null)}
                 className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
-                Cancel
+                {getUiTranslations(language).cancel}
               </button>
               <button
                 onClick={async () => {
@@ -7326,7 +7390,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     }}
                     className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
                   >
-                    Cancel
+                    {getUiTranslations(language).cancel}
                   </button>
                   <button
                     onClick={async () => {
@@ -7678,7 +7742,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     onClick={() => !ccYoutubeLoading && (setCcYoutubeModal(false), setCcYoutubeUrl(""), setCcYoutubeExtractPrompt(""), setCcYoutubeTranscriptId(null), setCcYoutubeResult(null), setCcYoutubeError(null))}
                     className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
                   >
-                    Cancel
+                    {getUiTranslations(language).cancel}
                   </button>
                   <button
                     onClick={async () => {
@@ -7922,7 +7986,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                   setCcTranslatePopoverOpen(false);
                 }}
                 className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                aria-label="Close"
+                aria-label={getUiTranslations(language).close}
               >
                 ✕
               </button>
@@ -8183,7 +8247,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                         onClick={() => setGenerateModal(null)}
                         className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                       >
-                        Cancel
+                        {getUiTranslations(language).cancel}
                       </button>
                       <button
                         onClick={() => {
@@ -8335,7 +8399,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 onClick={() => setCcDeleteConfirmModal(null)}
                 className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
-                Cancel
+                {getUiTranslations(language).cancel}
               </button>
               <button
                 onClick={async () => {
@@ -8439,7 +8503,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 onClick={() => !cgCustomCreateLoading && (setCgCustomCreateModal(false), setCgCustomCreateTitle(""), setCgCustomCreateSelectedIds(new Set()))}
                 className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
               >
-                Cancel
+                {getUiTranslations(language).cancel}
               </button>
               <button
                 onClick={async () => {
@@ -8511,7 +8575,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     onClick={() => !cgCreateLoading && (setCgCreateModal(false), setCgCreateStep(1), setCgCreateDomain(""), setCgCreateQuestions([]), setCgCreateAnswers({}), setCgCreateConcepts([]))}
                     className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
                   >
-                    Cancel
+                    {getUiTranslations(language).cancel}
                   </button>
                   <button
                     onClick={async () => {
@@ -8765,7 +8829,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               <button
                 onClick={() => setCgDetailModal(null)}
                 className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                aria-label="Close"
+                aria-label={getUiTranslations(language).close}
               >
                 ✕
               </button>
@@ -8885,7 +8949,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 onClick={() => setCgDeleteConfirmModal(null)}
                 className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
-                Cancel
+                {getUiTranslations(language).cancel}
               </button>
               <button
                 onClick={async () => {
@@ -8975,7 +9039,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           }}
           role="dialog"
           aria-modal="true"
-          aria-label="Prompt Games"
+          aria-label={getUiTranslations(language).promptGames}
         >
           <div
             className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,720px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
@@ -9004,7 +9068,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 )}
                 <h2 className="text-lg font-semibold text-foreground">
                   {waysOfLookingAtDrawMode && !waysOfLookingAtCategory
-                    ? "Draw a perspective card"
+                    ? getLandingTranslations(language).drawPerspectiveCard
                     : waysOfLookingAtCity
                       ? `${domainDisplayName[waysOfLookingAtCategory ?? ""] ?? "Urban Jungle"} — ${urbanJungleCityToName[waysOfLookingAtCity] ?? waysOfLookingAtCity}`
                       : waysOfLookingAtCuisine
@@ -9016,15 +9080,15 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                             : waysOfLookingAtDigital
                               ? `${domainDisplayName["digital_ghost"] ?? "Digital Ghost"} — ${digitalGhostSubToName[waysOfLookingAtDigital] ?? waysOfLookingAtDigital}`
                               : waysOfLookingAtCategory
-                                ? domainDisplayName[waysOfLookingAtCategory] ?? perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ?? "Prompt Games"
-                                : "Prompt Games"}
+                                ? domainDisplayName[waysOfLookingAtCategory] ?? perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ?? getUiTranslations(language).promptGames
+                                : getUiTranslations(language).promptGames}
                 </h2>
               </div>
               <button
                 type="button"
                 onClick={() => { setWaysOfLookingAtModalOpen(false); setWaysOfLookingAtDrawMode(false); }}
                 className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-600 dark:text-neutral-400"
-                aria-label="Close"
+                aria-label={getUiTranslations(language).close}
               >
                 ✕
               </button>
@@ -9570,7 +9634,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                               setDrawnPerspectiveCard({
                                 card,
                                 deckId: deck?.id ?? "",
-                                deckName: deck?.name ?? "Prompt Games",
+                                deckName: deck?.name ?? getUiTranslations(language).promptGames,
                               });
                             }}
                             className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px] cursor-pointer"
@@ -9622,7 +9686,7 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
               <button
                 onClick={() => { setDrawnPerspectiveCard(null); setTtsHighlight(null); }}
                 className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                aria-label="Close"
+                aria-label={getUiTranslations(language).close}
               >
                 ✕
               </button>

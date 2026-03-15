@@ -1,0 +1,201 @@
+# yaml-language-server: $schema=../schema/perspective-deck-index-schema.json
+# Perspective Decks Index (Romanian)
+
+domains:
+  art:
+    name: Căi de a Privi Arta
+    description: |
+      Cărți pentru a-ți schimba perspectiva atunci când privești arta. Fiecare oferă o lentilă diferită – de la lumină și umbră la introduceri și emoție – pentru a aprofunda modul în care vezi și interacționezi cu operele de artă.
+  urban_jungle:
+    name: Jungla Urbană
+    description: |
+      În loc să mergi doar prin oraș, îl privești ca pe un organism viu. Cărțile se concentrează pe cicatricile clădirilor vechi, coregrafia traficului și viețile secrete ale aleilor.
+  culinary_lab:
+    name: Laborator Culinar
+    description: |
+      Trecând de la gustos la transformator. Explorează chimia unei mușcături, istoria unui ingredient și coloana sonoră a unui restaurant.
+  natural_microcosm:
+    name: Microcosmos Natural
+    description: |
+      Perfect pentru un parc sau o grădină. Această perspectivă se concentrează pe ingineria invizibilă a unei frunze, viața în slow-motion a unei pietre sau dramele teritoriale ale insectelor.
+  human_interface:
+    name: Interfața Umană
+    description: |
+      Spațiile cotidiene unde oamenii se întâlnesc – cafenele, noduri de transport, locuri de muncă, spații de vânzare cu amănuntul, parcuri publice. Cărțile se concentrează pe coregrafia cozilor, revendicările teritoriale, scenariile invizibile și antropologia spațiului comun.
+  california_superbloom:
+    name: Superinflorirea Californiei
+    description: |
+      Explozia efemeră de flori sălbatice după ploaia de iarnă. Cărțile se concentrează pe culoare, scară, polenizatori, geologie, vreme și spectacolul trecător al înfloririi.
+decks:
+  - id: ways_of_looking_at_art
+    name: Căi de a Privi Arta
+    path: perspective-decks/ways-of-looking-at-art.yaml
+    description: |
+      50 de cărți pentru a-ți schimba perspectiva atunci când privești arta. Fiecare carte oferă o lentilă diferită – de la lumină și umbră la introduceri și emoție – pentru a aprofunda modul în care vezi și interacționezi cu operele de artă.
+    domain: art
+  - id: ways_of_looking_at_california_superbloom
+    name: Căi de a Privi Superînflorirea Californiei
+    path: perspective-decks/ways-of-looking-at-california-superbloom.yaml
+    description: |
+      20 de cărți pentru a-ți schimba perspectiva atunci când experimentezi superînflorirea Californiei. Fiecare carte oferă o lentilă diferită – de la polenizatori și geologie la lumină, miros și impermanență – pentru a aprofunda modul în care vezi florile sălbatice și explozia efemeră de culoare.
+    domain: california_superbloom
+  - id: urban_jungle_new_york
+    name: Jungla Urbană — New York
+    path: perspective-decks/urban-jungle/urban-jungle-new-york.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care vezi New York-ul – de la scară și lumină la straturi de istorie și ritmurile vieții pe stradă.
+    domain: urban_jungle
+    subdomain_id: ny
+    subdomain_name: New York
+  - id: urban_jungle_san_francisco
+    name: Jungla Urbană — San Francisco
+    path: perspective-decks/urban-jungle/urban-jungle-san-francisco.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care vezi San Francisco – de la scară și lumină la straturi de istorie și ritmurile vieții pe stradă.
+    domain: urban_jungle
+    subdomain_id: sf
+    subdomain_name: San Francisco
+  - id: urban_jungle_london
+    name: Jungla Urbană — Londra
+    path: perspective-decks/urban-jungle/urban-jungle-london.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care vezi Londra – de la scară și lumină la straturi de istorie și ritmurile vieții pe stradă.
+    domain: urban_jungle
+    subdomain_id: london
+    subdomain_name: London
+  - id: urban_jungle_paris
+    name: Jungla Urbană — Paris
+    path: perspective-decks/urban-jungle/urban-jungle-paris.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care vezi Parisul – de la scară și lumină la straturi de istorie și ritmurile vieții pe stradă.
+    domain: urban_jungle
+    subdomain_id: paris
+    subdomain_name: Paris
+  - id: urban_jungle_bangalore
+    name: Jungla Urbană — Bangalore
+    path: perspective-decks/urban-jungle/urban-jungle-bangalore.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care vezi Bangalore – de la scară și lumină la straturi de istorie și ritmurile vieții pe stradă.
+    domain: urban_jungle
+    subdomain_id: blr
+    subdomain_name: Bangalore
+  - id: culinary_lab_indian
+    name: Laborator Culinar — Indian
+    path: perspective-decks/culinary-lab/culinary-lab-indian.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care experimentezi mâncarea indiană – de la chimia mirodeniilor și a iuțimii la arheologia ingredientelor și coregrafia mesei comune.
+    domain: culinary_lab
+    subdomain_id: indian
+    subdomain_name: Indian
+  - id: culinary_lab_italian
+    name: Laborator Culinar — Italian
+    path: perspective-decks/culinary-lab/culinary-lab-italian.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care experimentezi mâncarea italiană – de la chimia uleiului de măsline și a acidității la coregrafia socială a mesei și arheologia fiecărui ingredient.
+    domain: culinary_lab
+    subdomain_id: italian
+    subdomain_name: Italian
+  - id: culinary_lab_pizza
+    name: Laborator Culinar — Pizza
+    path: perspective-decks/culinary-lab/culinary-lab-pizza.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care experimentezi pizza – de la chimia aluatului și a focului la teatrul feliei și arheologia topping-urilor.
+    domain: culinary_lab
+    subdomain_id: pizza
+    subdomain_name: Pizza
+  - id: culinary_lab_chinese
+    name: Laborator Culinar — Chinezesc
+    path: perspective-decks/culinary-lab/culinary-lab-chinese.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care experimentezi mâncarea chinezească – de la chimia wok hei și arheologia sosului de soia la coregrafia mesei rotunde și narațiunea banchetului.
+    domain: culinary_lab
+    subdomain_id: chinese
+    subdomain_name: Chinese
+  - id: culinary_lab_sushi
+    name: Laborator Culinar — Sushi
+    path: perspective-decks/culinary-lab/culinary-lab-sushi.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care experimentezi sushi – de la chimia orezului și a peștelui la coregrafia tejghelei și arheologia originii fiecărui neta.
+    domain: culinary_lab
+    subdomain_id: sushi
+    subdomain_name: Sushi
+  - id: natural_microcosm_forest_floor
+    name: Microcosmos Natural — Podeaua Pădurii
+    path: perspective-decks/natural-microcosm/natural-microcosm-forest-floor.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care vezi podeaua pădurii – de la descompunere și miceliu la arhitectura litierului și viața invizibilă de sub coronament.
+    domain: natural_microcosm
+    subdomain_id: forest_floor
+    subdomain_name: Podeaua Pădurii
+  - id: natural_microcosm_garden_backyard
+    name: Microcosmos Natural — Grădină și Curte
+    path: perspective-decks/natural-microcosm/natural-microcosm-garden-backyard.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care vezi sălbăticia domestică – de la polenizatori și sol la buruieni versus culturi și coregrafia naturii cultivate.
+    domain: natural_microcosm
+    subdomain_id: garden_backyard
+    subdomain_name: Grădină și Curte
+  - id: natural_microcosm_rocks_stones
+    name: Microcosmos Natural — Pietre și Rocile
+    path: perspective-decks/natural-microcosm/natural-microcosm-rocks-stones.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care vezi pietrele și rocile – de la timpul geologic și licheni la intemperii, eroziune și viața lentă a mineralelor.
+    domain: natural_microcosm
+    subdomain_id: rocks_stones
+    subdomain_name: Pietre și Rocile
+  - id: natural_microcosm_pond_puddle
+    name: Microcosmos Natural — Baltă și Băltișoară
+    path: perspective-decks/natural-microcosm/natural-microcosm-pond-puddle.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care vezi apa la scară mică – de la tensiunea superficială și reflexii la insecte acvatice, mormoloci și viața din bazine temporare.
+    domain: natural_microcosm
+    subdomain_id: pond_puddle
+    subdomain_name: Baltă și Băltișoară
+  - id: natural_microcosm_insect_territories
+    name: Microcosmos Natural — Teritoriile Insectelor
+    path: perspective-decks/natural-microcosm/natural-microcosm-insect-territories.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care vezi viața insectelor – de la traseele furnicilor și traficul albinelor la pânze de păianjen, drame teritoriale și coregrafia coloniilor.
+    domain: natural_microcosm
+    subdomain_id: insect_territories
+    subdomain_name: Teritoriile Insectelor
+  - id: human_interface_coffee_shop
+    name: Interfața Umană — Cafenea
+    path: perspective-decks/human-interface/human-interface-coffee-shop.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care vezi cafeneaua – de la coregrafia cozilor și teritoriile laptopurilor la al treilea loc, scenariile invizibile și cafeaua ca ritual.
+    domain: human_interface
+    subdomain_id: coffee_shop
+    subdomain_name: Cafenea
+  - id: human_interface_transit_hub
+    name: Interfața Umană — Nod de Transport
+    path: perspective-decks/human-interface/human-interface-transit-hub.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care vezi nodul de transport – de la peroane și așteptare la fluxul de sosiri/plecări și coregrafia străinilor în tranzit.
+    domain: human_interface
+    subdomain_id: transit_hub
+    subdomain_name: Nod de Transport
+  - id: human_interface_workplace
+    name: Interfața Umană — Loc de Muncă
+    path: perspective-decks/human-interface/human-interface-workplace.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care vezi locul de muncă – de la teritoriile birourilor și sălile de ședință la fântâna de apă și ierarhia vizibilă versus invizibilă.
+    domain: human_interface
+    subdomain_id: workplace
+    subdomain_name: Loc de Muncă
+  - id: human_interface_retail
+    name: Interfața Umană — Retail
+    path: perspective-decks/human-interface/human-interface-retail.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care vezi spațiul de retail – de la culoares și coregrafia răsfoirii la cabinele de probă și dansul achiziției.
+    domain: human_interface
+    subdomain_id: retail
+    subdomain_name: Retail
+  - id: human_interface_public_space
+    name: Interfața Umană — Spațiu Public
+    path: perspective-decks/human-interface/human-interface-public-space.yaml
+    description: |
+      50 de cărți pentru a-ți schimba modul în care vezi spațiul public – de la bănci și alei la coregrafia străinilor și obiectele ca talismane.
+    domain: human_interface
+    subdomain_id: public_space
+    subdomain_name: Spațiu Public

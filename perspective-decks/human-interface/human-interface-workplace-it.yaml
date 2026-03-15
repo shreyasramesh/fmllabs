@@ -1,0 +1,480 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# L'Interfaccia Umana — Luogo di Lavoro (Italian)
+
+id: human_interface_workplace
+name: L'Interfaccia Umana — Luogo di Lavoro
+description: 50 carte per cambiare il tuo modo di vedere il luogo di lavoro—dagli spazi della scrivania alle sale riunioni, dal beverone alla gerarchia visibile e invisibile.
+domain: human_interface
+cards:
+  - id: hi_wp_desk_territory
+    name: Territorio della Scrivania
+    prompt: |
+      Una scrivania è stata rivendicata—foto, piante, tazze. Il territorio si estende oltre
+      la superficie. Osserva i confini. Cosa segna "mio"? La scrivania è
+      un piccolo regno. Come viene difeso?
+    follow_ups:
+      - Come la scrivania modella l'identità?
+      - Come sarebbe il posto di lavoro senza personalizzazione?
+      - Qual è la relazione tra territorio e appartenenza?
+  - id: hi_wp_meeting_room
+    name: Sala Riunioni
+    prompt: |
+      La stanza ha un tavolo, sedie, uno schermo. La porta si chiude. La sala riunioni
+      è un palcoscenico per le performance. Osserva chi parla, chi no. La
+      stanza contiene la gerarchia. Cosa abilita lo spazio?
+    follow_ups:
+      - Come la stanza modella la riunione?
+      - Come sarebbe il posto di lavoro senza sale riunioni?
+      - Qual è la relazione tra stanza e potere?
+  - id: hi_wp_water_cooler
+    name: Beverone
+    prompt: |
+      Il beverone è un crocevia. Le persone si incontrano lì per caso. L'incontro
+      è informale. Osserva le conversazioni. Cosa viene detto al
+      beverone che non verrebbe detto in una riunione?
+    follow_ups:
+      - Come il beverone modella la cultura?
+      - Come sarebbe il posto di lavoro senza di esso?
+      - Qual è la relazione tra beverone e connessione?
+  - id: hi_wp_visible_hierarchy
+    name: Gerarchia Visibile
+    prompt: |
+      Uffici d'angolo, postazioni con finestra, cubicoli. Lo spazio codifica il rango. Osserva
+      la distribuzione. Chi ottiene cosa? La gerarchia è incorporata nell'
+      architettura. Cosa comunica?
+    follow_ups:
+      - Come la gerarchia modella il comportamento?
+      - Come sarebbe il posto di lavoro senza di essa?
+      - Qual è la relazione tra spazio e status?
+  - id: hi_wp_invisible_hierarchy
+    name: Gerarchia Invisibile
+    prompt: |
+      Alcune persone vengono ascoltate; altre vengono interrotte. La gerarchia
+      non è sull'organigramma. Osserva le riunioni. Chi cede? Chi
+      domina? La gerarchia invisibile modella i risultati.
+    follow_ups:
+      - Come emerge la gerarchia invisibile?
+      - Come sarebbe il posto di lavoro se fosse visibile?
+      - Qual è la relazione tra invisibile e potere?
+  - id: hi_wp_cubicle_wall
+    name: Muro del Cubicolo
+    prompt: |
+      Il muro è basso—si può vedere oltre. La privacy è parziale. Il cubicolo
+      è un compromesso. Osserva le linee di vista. Cosa puoi sentire? Cosa puoi vedere? Il muro crea un'illusione di confine.
+    follow_ups:
+      - Come il cubicolo modella la concentrazione?
+      - Come sarebbe il posto di lavoro con muri completi?
+      - Qual è la relazione tra muro e privacy?
+  - id: hi_wp_corner_office
+    name: Ufficio d'Angolo
+    prompt: |
+      L'ufficio d'angolo ha due finestre. È il premio. Osserva chi lo occupa. L'ufficio d'angolo è visibile dal piano. È un simbolo. Cosa comunica l'angolo?
+    follow_ups:
+      - Come l'ufficio d'angolo modella l'aspirazione?
+      - Come sarebbe il piano senza di esso?
+      - Qual è la relazione tra angolo e autorità?
+  - id: hi_wp_open_plan
+    name: Open Space
+    prompt: |
+      Nessun muro. Scrivanie in file o gruppi. L'open space promette collaborazione.
+      Osserva la realtà. Chi indossa cuffie? L'open space crea
+      prossimità. Cosa costa?
+    follow_ups:
+      - Come l'open space modella l'interazione?
+      - Come sarebbe il posto di lavoro con i muri?
+      - Qual è la relazione tra aperto e concentrazione?
+  - id: hi_wp_calendar_invite
+    name: Invito sul Calendario
+    prompt: |
+      L'invito appare. Accetta, rifiuta, provvisorio. Il calendario struttura
+      la giornata. Osserva i blocchi. Chi controlla il tempo altrui? Il calendario
+      è una mappa di potere.
+    follow_ups:
+      - Come il calendario modella la giornata?
+      - Come sarebbe il posto di lavoro senza di esso?
+      - Qual è la relazione tra invito e obbligo?
+  - id: hi_wp_knock_before_enter
+    name: Bussare Prima di Entrare
+    prompt: |
+      Alcune porte sono chiuse. Il bussare è una richiesta. Osserva chi bussa e
+      chi entra. Il bussare codifica rispetto. Cosa protegge la porta chiusa?
+    follow_ups:
+      - Come il bussare modella l'incontro?
+      - Come sarebbe il posto di lavoro con porte aperte?
+      - Qual è la relazione tra bussare e confine?
+  - id: hi_wp_headphones_signal
+    name: Segnale Cuffie
+    prompt: |
+      Le cuffie indossate significano "non disturbare". Il segnale è universale. Osserva
+      chi lo rispetta. Le cuffie creano una bolla. Cosa abilita la bolla?
+    follow_ups:
+      - Come le cuffie modellano il piano?
+      - Come sarebbe il posto di lavoro senza di esse?
+      - Qual è la relazione tra cuffie e concentrazione?
+  - id: hi_wp_lunch_room
+    name: Sala Pranzo
+    prompt: |
+      La sala pranzo ha tavoli, microonde, frigorifero. Le persone mangiano da sole o
+      insieme. Osserva i gruppi. Chi siede con chi? La sala pranzo
+      rivela alleanze. Cosa dice la disposizione?
+    follow_ups:
+      - Come la sala pranzo modella la cultura?
+      - Come sarebbe il posto di lavoro senza di essa?
+      - Qual è la relazione tra pranzo e connessione?
+  - id: hi_wp_slack_ping
+    name: Ping su Slack
+    prompt: |
+      Arriva il ping. Istantaneo, asincrono. Il ping può interrompere o
+      aspettare. Osserva le norme. Chi risponde immediatamente? Il ping crea
+      un nuovo ritmo di comunicazione. Cosa sostituisce?
+    follow_ups:
+      - Come il ping modella la giornata?
+      - Come sarebbe il posto di lavoro senza di esso?
+      - Qual è la relazione tra ping e urgenza?
+  - id: hi_wp_whiteboard_claim
+    name: Rivendicazione Lavagna Bianca
+    prompt: |
+      La lavagna bianca contiene idee—diagrammi, elenchi. Qualcuno li ha scritti. La
+      lavagna è una superficie condivisa. Osserva chi scrive, chi cancella. La lavagna
+      è territorio. Cosa contiene?
+    follow_ups:
+      - Come la lavagna bianca modella la collaborazione?
+      - Come sarebbe la riunione senza di essa?
+      - Qual è la relazione tra lavagna e pensiero?
+  - id: hi_wp_elevator_encounter
+    name: Incontro in Ascensore
+    prompt: |
+      Condividi l'ascensore con un collega. Trenta secondi. L'incontro
+      è imbarazzante o facile. Osserva la conversazione leggera. Cosa viene detto? L'ascensore
+      comprime il tempo. Cosa richiede?
+    follow_ups:
+      - Come l'ascensore modella l'incontro?
+      - Come sarebbe l'edificio senza ascensori?
+      - Qual è la relazione tra ascensore e civiltà?
+  - id: hi_wp_cc_email
+    name: Email in CC
+    prompt: |
+      Sei in copia conoscenza (cc). Non sei il destinatario principale. La copia conoscenza ti include nel loop. Osserva chi riceve la copia conoscenza. La copia conoscenza è un segnale di rilevanza—
+      o politica. Cosa fa la copia conoscenza?
+    follow_ups:
+      - Come la copia conoscenza modella la comunicazione?
+      - Come sarebbe il posto di lavoro senza la copia conoscenza?
+      - Qual è la relazione tra copia conoscenza e visibilità?
+  - id: hi_wp_standing_desk
+    name: Scrivania in Piedi
+    prompt: |
+      La scrivania si alza. Il lavoratore sta in piedi. La scrivania in piedi è una scelta—salute,
+      preferenza, performance. Osserva chi ne ha una. Cosa segnala la scrivania in piedi?
+    follow_ups:
+      - Come la scrivania in piedi modella il corpo?
+      - Come sarebbe il posto di lavoro senza di essa?
+      - Qual è la relazione tra stare in piedi e produttività?
+  - id: hi_wp_conference_call
+    name: Conference Call
+    prompt: |
+      Voci da altrove. La chiamata connette persone distribuite. Osserva
+      chi parla, chi silenzia. La chiamata è una presenza parziale. Cosa abilita la chiamata—e cosa perde?
+    follow_ups:
+      - Come la chiamata modella la riunione?
+      - Come sarebbe il posto di lavoro senza di essa?
+      - Qual è la relazione tra chiamata e presenza?
+  - id: hi_wp_office_plant
+    name: Pianta da Ufficio
+    prompt: |
+      Una pianta sulla scrivania—pothos, succulenta. È decorazione e cura. La
+      pianta non appartiene all'azienda. Osserva chi ne ha una. Cosa aggiunge la pianta allo spazio?
+    follow_ups:
+      - Come la pianta modella la scrivania?
+      - Come sarebbe il posto di lavoro senza piante?
+      - Qual è la relazione tra pianta e identità?
+  - id: hi_wp_after_hours
+    name: Dopo l'Orario d'Ufficio
+    prompt: |
+      L'ufficio dopo che la maggior parte se n'è andata. Le luci sono soffuse. Il lavoratore
+      fuori orario è visibile—dedito o in difficoltà. Osserva la scena. Cosa abilita l'ufficio vuoto? Cosa costa?
+    follow_ups:
+      - Come il dopo orario modella la cultura?
+      - Come sarebbe il posto di lavoro senza di esso?
+      - Qual è la relazione tra ore e aspettativa?
+  - id: hi_wp_nameplate
+    name: Targhetta Nome
+    prompt: |
+      Un nome sulla scrivania, sulla porta. La targhetta rivendica lo spazio. Osserva
+      chi ne ha una. La targhetta è identità e territorio. Cosa comunica ai passanti?
+    follow_ups:
+      - Come la targhetta modella lo spazio?
+      - Come sarebbe il posto di lavoro senza di essa?
+      - Qual è la relazione tra targhetta e presenza?
+  - id: hi_wp_meeting_overrun
+    name: Riunione Fuori Orario
+    prompt: |
+      La riunione doveva finire. Non finisce. L'eccesso di tempo è comune.
+      Osserva la dinamica. Chi ha la prossima riunione? Chi può restare? L'eccesso di tempo è una mossa di potere. Cosa estrae?
+    follow_ups:
+      - Come l'eccesso di tempo modella la giornata?
+      - Come sarebbe il posto di lavoro con chiusure rigorose?
+      - Qual è la relazione tra eccesso di tempo e rispetto?
+  - id: hi_wp_quick_question
+    name: Domanda Veloce
+    prompt: |
+      "Hai una domanda veloce?" La richiesta interrompe. Il "veloce" è una promessa.
+      Osserva lo scambio. Quanto veloce è? La domanda veloce è una
+      negoziazione di tempo. Cosa costa?
+    follow_ups:
+      - Come la domanda veloce modella il flusso?
+      - Come sarebbe il posto di lavoro senza interruzioni?
+      - Qual è la relazione tra veloce e rispetto?
+  - id: hi_wp_bathroom_encounter
+    name: Incontro in Bagno
+    prompt: |
+      Vedi un collega in bagno. L'incontro è ambiguo. Contatto visivo o no? Il bagno è uno spazio liminale. Osserva le norme. Cosa richiede l'incontro?
+    follow_ups:
+      - Come il bagno modella il posto di lavoro?
+      - Come sarebbe il posto di lavoro senza bagni condivisi?
+      - Qual è la relazione tra bagno e privacy?
+  - id: hi_wp_commute_talk
+    name: Conversazione sul Pendolarismo
+    prompt: |
+      "Com'è stato il pendolarismo?" La domanda apre una conversazione leggera. Il pendolarismo è un'esperienza condivisa. Osserva lo scambio. Cosa fa la conversazione sul pendolarismo per la relazione?
+    follow_ups:
+      - Come la conversazione sul pendolarismo modella la giornata?
+      - Come sarebbe il posto di lavoro senza di essa?
+      - Qual è la relazione tra pendolarismo e connessione?
+  - id: hi_wp_parking_spot
+    name: Posto Auto
+    prompt: |
+      Posti riservati, posti per primi arrivati. Il parcheggio codifica la gerarchia. Osserva
+      chi parcheggia dove. Il posto è un piccolo privilegio. Cosa comunica?
+    follow_ups:
+      - Come il parcheggio modella il posto di lavoro?
+      - Come sarebbe il parcheggio senza posti riservati?
+      - Qual è la relazione tra posto e status?
+  - id: hi_wp_birthday_cake
+    name: Torta di Compleanno
+    prompt: |
+      Appare una torta. È il compleanno di qualcuno. Il team si riunisce. La torta
+      è un rito. Osserva la riunione. Cosa fa il momento del compleanno per il gruppo?
+    follow_ups:
+      - Come il compleanno modella la cultura?
+      - Come sarebbe il posto di lavoro senza di esso?
+      - Qual è la relazione tra torta e appartenenza?
+  - id: hi_wp_forwarded_email
+    name: Email Inoltrata
+    prompt: |
+      Un'email viene inoltrata. "Per tua informazione" o "Pensavo dovessi vederlo". L'inoltro estende la conversazione. Osserva chi riceve l'inoltro. L'inoltro è un segnale. Cosa significa?
+    follow_ups:
+      - Come l'inoltro modella la comunicazione?
+      - Come sarebbe il posto di lavoro senza di esso?
+      - Qual è la relazione tra inoltro e fiducia?
+  - id: hi_wp_break_room
+    name: Sala Relax
+    prompt: |
+      Caffè, snack, a volte un divano. La sala relax è una pausa. Le persone
+      vanno lì per allontanarsi. Osserva chi la usa. La sala relax è un
+      rifugio. Cosa fornisce?
+    follow_ups:
+      - Come la sala relax modella la giornata?
+      - Come sarebbe il posto di lavoro senza di essa?
+      - Qual è la relazione tra pausa e produttività?
+  - id: hi_wp_office_supply
+    name: Fornitura d'Ufficio
+    prompt: |
+      Penne, carta, cucitrici—l'armadietto delle forniture contiene gli strumenti. Qualcuno
+      lo gestisce. Osserva chi prende cosa. La fornitura è un piccolo bene comune.
+      Quali sono le regole?
+    follow_ups:
+      - Come la fornitura modella il posto di lavoro?
+      - Come sarebbe il posto di lavoro senza di essa?
+      - Qual è la relazione tra fornitura e diritto?
+  - id: hi_wp_remote_camera
+    name: Telecamera Remota
+    prompt: |
+      La telecamera è accesa o spenta. Il lavoratore remoto sceglie. La scelta è
+      visibile. Osserva le norme. Chi la tiene accesa? La telecamera è una finestra.
+      Cosa rivela?
+    follow_ups:
+      - Come la telecamera modella la chiamata?
+      - Come sarebbe la riunione senza di essa?
+      - Qual è la relazione tra telecamera e presenza?
+  - id: hi_wp_side_conversation
+    name: Conversazione Laterale
+    prompt: |
+      Due persone parlano mentre altri lavorano. La conversazione laterale è privata
+      ma visibile. Osserva la dinamica. È dirompente? La conversazione
+      laterale è una piccola ribellione. Cosa crea?
+    follow_ups:
+      - Come la conversazione laterale modella il piano?
+      - Come sarebbe il posto di lavoro senza di essa?
+      - Qual è la relazione tra laterale ed esclusione?
+  - id: hi_wp_clean_desk
+    name: Scrivania Pulita
+    prompt: |
+      Alcune scrivanie sono immacolate—nulla di personale. La scrivania pulita è politica o
+      preferenza. Osserva il contrasto. Cosa comunica la scrivania pulita?
+      Sterilità? Disciplina? Distacco?
+    follow_ups:
+      - Come la scrivania pulita modella il lavoratore?
+      - Come sarebbe il posto di lavoro con scrivanie disordinate?
+      - Qual è la relazione tra pulito e identità?
+  - id: hi_wp_meeting_no_show
+    name: Assenza alla Riunione
+    prompt: |
+      La riunione era programmata. Qualcuno non si presenta. L'assenza è un
+      messaggio. Osserva la risposta. Qualcuno la menziona? L'assenza è una piccola mossa di potere. Cosa comunica?
+    follow_ups:
+      - Come l'assenza modella la riunione?
+      - Come sarebbe il posto di lavoro senza assenze?
+      - Qual è la relazione tra assenza e rispetto?
+  - id: hi_wp_cubicle_visit
+    name: Visita al Cubicolo
+    prompt: |
+      Qualcuno si avvicina. Sta al bordo del cubicolo. La visita è una scelta—potrebbe aver mandato un messaggio. Osserva la dinamica. Cosa abilita la visita che un messaggio non può?
+    follow_ups:
+      - Come la visita modella l'interazione?
+      - Come sarebbe il posto di lavoro senza visite?
+      - Qual è la relazione tra visita e interruzione?
+  - id: hi_wp_shared_printer
+    name: Stampante Condivisa
+    prompt: |
+      La stampante è condivisa. I documenti si accumulano. Qualcuno deve ritirarli. La
+      stampante è un crocevia. Osserva gli incontri. Cosa succede quando
+      due persone prendono lo stesso output?
+    follow_ups:
+      - Come la stampante modella il piano?
+      - Come sarebbe il posto di lavoro senza di essa?
+      - Qual è la relazione tra stampante e pazienza?
+  - id: hi_wp_office_temperature
+    name: Temperatura dell'Ufficio
+    prompt: |
+      "Fa troppo freddo." "Fa troppo caldo." La temperatura è contestata. Qualcuno
+      controlla il termostato. Osserva le lamentele. La temperatura è un
+      piccolo sito di potere. Chi vince?
+    follow_ups:
+      - Come la temperatura modella il posto di lavoro?
+      - Come sarebbe il posto di lavoro con controllo individuale?
+      - Qual è la relazione tra temperatura e comfort?
+  - id: hi_wp_handshake
+    name: Stretta di Mano
+    prompt: |
+      La stretta di mano—primo incontro, affare concluso. La stretta di mano è un rito. Osserva
+      la presa, la durata. La stretta di mano codifica formalità. Cosa comunica?
+    follow_ups:
+      - Come la stretta di mano modella l'incontro?
+      - Come sarebbe il posto di lavoro senza di essa?
+      - Qual è la relazione tra stretta di mano e fiducia?
+  - id: hi_wp_cc_removal
+    name: Rimozione CC
+    prompt: |
+      "Rispondi a tutti" o "Rispondi"? La scelta è importante. Rimuovere qualcuno dal
+      thread è un segnale. Osserva le dinamiche. Chi viene escluso? La rimozione in copia conoscenza è una piccola esclusione. Cosa significa?
+    follow_ups:
+      - Come la rimozione modella la conversazione?
+      - Come sarebbe il posto di lavoro senza opzioni di risposta?
+      - Qual è la relazione tra rimozione e potere?
+  - id: hi_wp_office_tour
+    name: Tour dell'Ufficio
+    prompt: |
+      Un nuovo assunto fa un tour. "Questa è la cucina. Qui facciamo le riunioni."
+      Il tour orienta. Osserva la guida. Cosa comunica il tour sulla cultura?
+    follow_ups:
+      - Come il tour modella il nuovo arrivato?
+      - Come sarebbe l'onboarding senza di esso?
+      - Qual è la relazione tra tour e appartenenza?
+  - id: hi_wp_meeting_room_book
+    name: Prenotazione Sala Riunioni
+    prompt: |
+      La stanza è prenotata. O prenotata due volte. Il calendario è l'arbitro.
+      Osserva il conflitto. Chi cede? La prenotazione è una rivendicazione di spazio e
+      tempo. Cosa richiede?
+    follow_ups:
+      - Come la prenotazione modella la giornata?
+      - Come sarebbe il posto di lavoro senza prenotazione?
+      - Qual è la relazione tra prenotazione e priorità?
+  - id: hi_wp_goodbye_ritual
+    name: Rito di Saluto
+    prompt: |
+      Fine giornata. "Vado via." "Ci vediamo domani." Il saluto è un rito.
+      Osserva gli scambi. Chi saluta chi? Il rito segna il
+      confine tra lavoro e non lavoro.
+    follow_ups:
+      - Come il saluto modella la giornata?
+      - Come sarebbe il posto di lavoro senza di esso?
+      - Qual è la relazione tra saluto e chiusura?
+  - id: hi_wp_promotion_announce
+    name: Annuncio Promozione
+    prompt: |
+      "Siamo lieti di annunciare..." La promozione è pubblica. L'annuncio
+      crea un momento. Osserva la risposta. Congratulazioni, silenzio,
+      sguardi di lato. Cosa fa l'annuncio alla stanza?
+    follow_ups:
+      - Come l'annuncio modella la cultura?
+      - Come sarebbe il posto di lavoro senza promozioni pubbliche?
+      - Qual è la relazione tra annuncio e gerarchia?
+  - id: hi_wp_desk_move
+    name: Trasferimento Scrivania
+    prompt: |
+      Qualcuno si trasferisce di scrivania. Il trasferimento è promozione, riorganizzazione o scelta.
+      Osserva il processo. Cosa portano? Cosa lasciano? Il trasferimento
+      è una transizione. Cosa significa?
+    follow_ups:
+      - Come il trasferimento modella il lavoratore?
+      - Come sarebbe il posto di lavoro senza trasferimenti?
+      - Qual è la relazione tra trasferimento e identità?
+  - id: hi_wp_office_gossip
+    name: Pettegolezzi d'Ufficio
+    prompt: |
+      Le informazioni viaggiano—chi se ne va, chi è frustrato. Il pettegolezzo è
+      informale. Osserva dove avviene. Il beverone, il corridoio.
+      Cosa fa il pettegolezzo per il gruppo?
+    follow_ups:
+      - Come il pettegolezzo modella la cultura?
+      - Come sarebbe il posto di lavoro senza di esso?
+      - Qual è la relazione tra pettegolezzo e appartenenza?
+  - id: hi_wp_meeting_agenda
+    name: Ordine del Giorno Riunione
+    prompt: |
+      L'ordine del giorno struttura la riunione. O non lo fa—la riunione divaga.
+      Osserva la dinamica. Chi segue l'ordine del giorno? Chi no? L'ordine del giorno
+      è un contratto. Cosa abilita?
+    follow_ups:
+      - Come l'ordine del giorno modella la riunione?
+      - Come sarebbe la riunione senza di esso?
+      - Qual è la relazione tra ordine del giorno e potere?
+  - id: hi_wp_office_food
+    name: Cibo d'Ufficio
+    prompt: |
+      Ciambelle, frutta, avanzi di una riunione con il cliente. Appare il cibo.
+      Le persone si riuniscono. Osserva la condivisione. Il cibo d'ufficio è un piccolo dono.
+      Cosa crea?
+    follow_ups:
+      - Come il cibo modella il posto di lavoro?
+      - Come sarebbe il posto di lavoro senza di esso?
+      - Qual è la relazione tra cibo e comunità?
+  - id: hi_wp_last_day
+    name: Ultimo Giorno
+    prompt: |
+      L'ultimo giorno di qualcuno. Saluti, forse un biglietto, forse una torta. L'ultimo giorno
+      è un rito di partenza. Osserva l'umore. Cosa fa l'ultimo giorno
+      per chi parte e per chi resta?
+    follow_ups:
+      - Come l'ultimo giorno modella la cultura?
+      - Come sarebbe il posto di lavoro senza il rito?
+      - Qual è la relazione tra ultimo giorno e chiusura?
+  - id: hi_wp_office_hours
+    name: Orario d'Ufficio
+    prompt: |
+      "Ho orario d'ufficio martedì dalle 14 alle 16." Il blocco è aperto. Le persone possono passare. Osserva chi viene. L'orario d'ufficio è un invito. Cosa abilita?
+    follow_ups:
+      - Come l'orario d'ufficio modella l'accesso?
+      - Come sarebbe il posto di lavoro senza di esso?
+      - Qual è la relazione tra ore e disponibilità?
+  - id: hi_wp_workspace_claim
+    name: Rivendicazione Spazio di Lavoro
+    prompt: |
+      Una giacca sulla sedia. Una borsa sotto la scrivania. La rivendicazione dice "Sono qui"
+      o "Torno subito". Osserva i segnali. Quanto a lungo può valere una rivendicazione?
+      Lo spazio di lavoro è temporaneamente posseduto. Quali sono le regole?
+    follow_ups:
+      - Come la rivendicazione modella il piano?
+      - Come sarebbe il posto di lavoro senza rivendicazioni?
+      - Qual è la relazione tra rivendicazione e presenza?

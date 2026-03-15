@@ -1,0 +1,503 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Mutfak Laboratuvarı — Suşi (Turkish)
+
+id: culinary_lab_sushi
+name: Mutfak Laboratuvarı — Suşi
+description: Suşi deneyiminizi değiştirecek 50 kart — pirinç ve balığın kimyasından, tezgahın koreografisine ve her bir neta'nın köken arkeolojisine kadar.
+domain: culinary_lab
+cards:
+  - id: sush_rice_temp
+    name: Pirinç Sıcaklığı
+    prompt: |
+      Suşi pirinci ılık olur — kabaca vücut sıcaklığında. Soğuk değil.
+      Sıcaklık sirkeyi taşır. Bunu hissedin. Soğuk pirinç ne yapardı?
+      Sıcaklık lokmayı nasıl şekillendirir?
+    follow_ups:
+      - Oda sıcaklığı neyden vazgeçerdi?
+      - Sıcaklık lezzeti nasıl taşır?
+      - Sıcaklık ve doku arasındaki ilişki nedir?
+  - id: sush_shari_balance
+    name: Şari Dengesi
+    prompt: |
+      Şari — pirinç — suşinin yarısıdır. Sirke, tuz, şeker dengesi
+      hassastır. Pirinci tek başına tadın. Ne getiriyor? Tatsız
+      pirinç ne anlama gelirdi?
+    follow_ups:
+      - Pirinç netayı nasıl şekillendirir?
+      - Fazla sirke ne yapardı?
+      - Şari ve neya arasındaki ilişki nedir?
+  - id: sush_counter_ritual
+    name: Tezgah Ritüeli
+    prompt: |
+      Tezgahta Omakase — şefe bakarsınız. Suşi parça parça gelir.
+      Tezgah bir sahnedir. Koreografiyi fark edin. Ritim nedir?
+      Hızı kim belirler?
+    follow_ups:
+      - Masa neyi değiştirirdi?
+      - Tezgah yemeği nasıl şekillendirir?
+      - Şef ve konuk arasındaki ilişki nedir?
+  - id: sush_net_origin
+    name: Neta Kökeni
+    prompt: |
+      Her bir neta — üst malzeme — bir yerden geldi. Toyosu. Tsukiji. Bir
+      tekne. Bir çiftlik. Sorun. Balığı izleyin. Ne yolculuk yaptı?
+      Depodan donmuş ne anlama gelirdi?
+    follow_ups:
+      - Köken parçayı nasıl şekillendirir?
+      - Başka bir kaynak ne yapardı?
+      - Yer ve kalite arasındaki ilişki nedir?
+  - id: sush_wasabi_hidden
+    name: Gizli Wasabi
+    prompt: |
+      Gerçek wasabi — rendelenmiş kök — nadirdir. Çoğu yaban turpu ve
+      boyadır. Ama gerçek olduğunda farklıdır. Keskin, yeşil, geçici.
+      Isıya dikkat edin. Sahtesi ne eklerdi? Ne çıkarırdı?
+    follow_ups:
+      - Wasabi lokmayı nasıl şekillendirir?
+      - Wasabi olmaması ne anlama gelirdi?
+      - Isı ve balık arasındaki ilişki nedir?
+  - id: sush_finger_over_chopstick
+    name: Parmak Çubukların Üzerinde
+    prompt: |
+      Nigiri geleneksel olarak parmaklarla yenir — çubuklarla değil.
+      Parmaklar sıcaklığı, dokuyu hisseder. Deneyin. Parmak, çubuğun
+      yapamayacağı neyi ekler?
+    follow_ups:
+      - El deneyimi nasıl şekillendirir?
+      - Çubuklar ne yapardı?
+      - Dokunma ve tat arasındaki ilişki nedir?
+  - id: sush_piece_by_piece
+    name: Parça Parça
+    prompt: |
+      Suşi birer birer — veya ikişer — gelir. Hız bilinçlidir. Siz
+      yiyersiniz; siz beklersiniz. Ritime dikkat edin. Bir anda on tane
+      tabak neyden vazgeçerdi?
+    follow_ups:
+      - Hız yemeği nasıl şekillendirir?
+      - Hız ne yapardı?
+      - Parça ve dikkat arasındaki ilişki nedir?
+  - id: sush_gari_palate
+    name: Gari Damak
+    prompt: |
+      Gari — turşu zencefil — parçalar arasında temizler. Garnitür değil;
+      yeniden ayarlar. Ne zaman yediğinize dikkat edin. Gari olmadan
+      ardışık parçalar damakta ne yapardı?
+    follow_ups:
+      - Gari ilerlemeyi nasıl şekillendirir?
+      - Gari olmaması ne anlama gelirdi?
+      - Yeniden ayarlama ve tat arasındaki ilişki nedir?
+  - id: sush_soy_minimal
+    name: Minimal Soya
+    prompt: |
+      Soya — hafif bir batırma, balık tarafı aşağı. Pirinç değil. Pirinç
+      çok fazla emer. Şef zaten soya sürmüş olabilir. Fark edin.
+      Boğmak ne yapardı?
+    follow_ups:
+      - Soya parçayı nasıl şekillendirir?
+      - Soya olmaması ne anlama gelirdi?
+      - Batırma ve denge arasındaki ilişki nedir?
+  - id: sush_knife_matters
+    name: Bıçak Önemli
+    prompt: |
+      Suşi bıçağı — tek eğimli, keskin. Kesim dokuyu etkiler. Taneye
+      karşı veya taneyle birlikte. Açı. Bıçağın ne yaptığını düşünün.
+      Kör bir bıçak neyden vazgeçerdi?
+    follow_ups:
+      - Kesim balığı nasıl şekillendirir?
+      - Farklı bir açı ne yapardı?
+      - Bıçak ve ağız hissi arasındaki ilişki nedir?
+  - id: sush_otoro_fat
+    name: Otoro Yağı
+    prompt: |
+      Otoro — en yağlı ton balığı — erir. Yağın özü budur. Damarlılığı
+      düşünün. Yağsız akami ne yapardı? Yağ deneyimi nasıl
+      şekillendirir?
+    follow_ups:
+      - Yağ olmadan parça ne olurdu?
+      - Damarlılık lüksü nasıl yaratır?
+      - Yağ ve erime arasındaki ilişki nedir?
+  - id: sush_unagi_glaze
+    name: Yılan Balığı Glazürü
+    prompt: |
+      Unagi — yılan balığı — tatlı sosla fırçalanır, bazen tekrar ızgara
+      yapılır. Glazür verniktir. Parlaklığa dikkat edin. Glazürsüz
+      yılan balığı ne anlama gelirdi?
+    follow_ups:
+      - Glazür parçayı nasıl şekillendirir?
+      - Tatlı ve yılan balığı arasındaki ilişki nedir?
+      - Neden glazür?
+  - id: sush_nori crisp
+    name: Nori Çıtır
+    prompt: |
+      Maki için Nori — kızarmış, çıtır mı, yoksa yumuşak mı? Farklı şefler
+      farklı seçer. Nori lokmayı etkiler. Dokuya dikkat edin. Sosis
+      nori ne yapardı?
+    follow_ups:
+      - Nori ruloyu nasıl şekillendirir?
+      - Farklı bir kızartma ne yapardı?
+      - Çıtır ve taze arasındaki ilişki nedir?
+  - id: sush_silence_counter
+    name: Tezgahta Sessizlik
+    prompt: |
+      Bazı suşi tezgahları sessizdir — konsantrasyon, saygı. Diğerleri
+      hareketlidir. Ses ortamına dikkat edin. Sessizlik ne katar?
+      Konuşma ne katar?
+    follow_ups:
+      - Ses yemeği nasıl şekillendirir?
+      - Yüksek müzik ne yapardı?
+      - Sessizlik ve odaklanma arasındaki ilişki nedir?
+  - id: sush_tamago_sweet
+    name: Tamago Tatlısı
+    prompt: |
+      Tamago — yumurta muhallebisi — genellikle yemeği bitirir. Tatlıdır,
+      katmanlıdır. Şefin becerisi görünür. Kapanışa dikkat edin. Son
+      parça olarak çiğ balık ne anlama gelirdi?
+    follow_ups:
+      - Tamago sonu nasıl şekillendirir?
+      - Tatlı ve kapanış arasındaki ilişki nedir?
+      - Neden yumurta son?
+  - id: sush_tuna_spectrum
+    name: Ton Balığı Spektrumu
+    prompt: |
+      Akami, chutoro, otoro — yağsızdan yağa. Spektrum bilinçlidir.
+      Yapabiliyorsanız sırayla tadın. İlerleme nasıl çalışır? Her biri
+      ne sunar?
+    follow_ups:
+      - Yağ spektrumu nasıl şekillendirir?
+      - Tek bir sınıf ne anlama gelirdi?
+      - Yağsız ve zengin arasındaki ilişki nedir?
+  - id: sush_ume_shiso
+    name: Ume Shiso
+    prompt: |
+      Bazı rulolarda Ume — turşu erik — ve shiso. Ekşi, otsu. Yağlılığı
+      keserler. Ne zaman ortaya çıktıklarına dikkat edin. Onlarsız rulo
+      ne olurdu?
+    follow_ups:
+      - Ume lokmayı nasıl şekillendirir?
+      - Ekşi ve balık arasındaki ilişki nedir?
+      - Neden shiso?
+  - id: sush_gunkan_hold
+    name: Gunkan Tutuş
+    prompt: |
+      Gunkan — savaş gemisi — gevşek üst malzemeleri tutar. Balık yumurtası,
+      deniz kestanesi. Nori yakası tutar. Formu düşünün. Düz bir parça ne
+      yapardı?
+    follow_ups:
+      - Form üst malzemeyi nasıl şekillendirir?
+      - Farklı bir kap ne yapardı?
+      - Tutuş ve dökülme arasındaki ilişki nedir?
+  - id: sush_uni_risk
+    name: Uni Riski
+    prompt: |
+      Uni — deniz kestanesi — bölücü. Tatlı, tuzlu, doku. Mükemmel veya
+      bozuk olabilir. Riski düşünün. Güvenli somon ne anlama gelirdi?
+      Risk ne katar?
+    follow_ups:
+      - Uni deneyimi nasıl şekillendirir?
+      - Riski olmadan ne kaybederdiniz?
+      - Bölücü ve akılda kalıcı arasındaki ilişki nedir?
+  - id: sush_chef_choice
+    name: Şefin Seçimi
+    prompt: |
+      Omakase — şefin seçimi. Kontrolü teslim edersiniz. Şef günü, balığı,
+      sizi okur. Güveni düşünün. Kendiniz seçmek neyi değiştirirdi?
+    follow_ups:
+      - Teslimiyet yemeği nasıl şekillendirir?
+      - Menü siparişi ne anlama gelirdi?
+      - Güven ve deneyim arasındaki ilişki nedir?
+  - id: sush_sake_pair
+    name: Sake Eşleşmesi
+    prompt: |
+      Suşi ile Sake — soğuk, ılık, yıllanmış. Eşleşme düşünülmüştür. Ne
+      zaman yudumladığınıza dikkat edin. Temizler mi? Geliştirir mi?
+      İçeceğin rolünü düşünün.
+    follow_ups:
+      - Sake parçayı nasıl şekillendirir?
+      - Şarap ne yapardı?
+      - Pirinç ve pirinç şarabı arasındaki ilişki nedir?
+  - id: sush_ikura_pop
+    name: Ikura Patlaması
+    prompt: |
+      Ikura — somon yumurtası — patlar. Patlama doku ve tuzdur. Duyumu
+      düşünün. Pişmiş yumurta ne yapardı? Patlama lokmayı nasıl
+      şekillendirir?
+    follow_ups:
+      - Patlama olmadan parça ne olurdu?
+      - Doku zevki nasıl yaratır?
+      - Patlama ve tuz arasındaki ilişki nedir?
+  - id: sush_hirame_chew
+    name: Hirame Çiğneme
+    prompt: |
+      Hirame — dil balığı — ton balığından farklı bir çiğneme gerektirir.
+      Yağsız, narindir. Dokuyu fark edin. Yağlı balık ne yapardı?
+      Çiğneme nasıl değişir?
+    follow_ups:
+      - Doku parçayı nasıl şekillendirir?
+      - Yağsız ve narin arasındaki ilişki nedir?
+      - Neden hirame siparişi verilir?
+  - id: sush_amaebi_head
+    name: Amaebi Başı
+    prompt: |
+      Amaebi — tatlı karides — bazen başı kızartılmış olarak servis
+      edilir. Baş çıtır çıtır, umami lezzetindedir. Bütünün kullanımını
+      düşünün. Başsız karides neyden vazgeçerdi?
+    follow_ups:
+      - Baş yemeği nasıl şekillendirir?
+      - Bütün ve saygı arasındaki ilişki nedir?
+      - Neden başı kızartmak?
+  - id: sush_mirin_gloss
+    name: Mirin Parlaklığı
+    prompt: |
+      Bazı parçalar nikiri — soya, mirin, sake — ile fırçalanır. Parlaklık
+      bitişdir. Şef soslamıştır. Daha fazla soya ekleyip eklememeyi
+      düşünün. Fazla batırmak ne yapardı?
+    follow_ups:
+      - Fırçalama parçayı nasıl şekillendirir?
+      - Fırça olmaması ne yapardı?
+      - Şefin eli ve sizin eliniz arasındaki ilişki nedir?
+  - id: sush_anago_soft
+    name: Anago Yumuşak
+    prompt: |
+      Anago — tuzlu su yılan balığı — unagiden daha yumuşaktır. Farklı
+      türler, farklı hazırlık. Dokuyu fark edin. Unagi'nin sertliği ne
+      yapardı?
+    follow_ups:
+      - Yumuşaklık parçayı nasıl şekillendirir?
+      - Anago ve unagi arasındaki ilişki nedir?
+      - Neden her iki yılan balığı?
+  - id: sush_saba_silver
+    name: Saba Gümüş
+    prompt: |
+      Saba — uskumru — genellikle kürlenir. Gümüş derisi, yağlı eti.
+      Güçlüdür. Korunmayı düşünün. Çiğ uskumru ne anlama gelirdi?
+    follow_ups:
+      - Kürleme balığı nasıl şekillendirir?
+      - Yağ ve kür arasındaki ilişki nedir?
+      - Neden saba kürlenir?
+  - id: sush_ginger_between
+    name: Arada Zencefil
+    prompt: |
+      Parçalar arasında Gari — yeniden ayarlar. Ama ne zaman? Her birinden
+      sonra? Birkaç tane sonra? Ritim sizindir. Desenize dikkat edin.
+      Sıfır yeniden ayar ne yapardı?
+    follow_ups:
+      - Zamanlama garı nasıl şekillendirir?
+      - Parça ve parça arasındaki ilişki nedir?
+      - Ne zaman yeniden ayara ihtiyacınız var?
+  - id: sush_maki_cut
+    name: Maki Kesimi
+    prompt: |
+      Maki — rulolar — parçalara kesilir. Altı veya sekiz. Kesim enine
+      kesimi etkiler. Spirali düşünün. Farklı bir kesim ne yapardı?
+    follow_ups:
+      - Kesim lokmayı nasıl şekillendirir?
+      - Daha az parça ne anlama gelirdi?
+      - Dilim ve bütün arasındaki ilişki nedir?
+  - id: sush_tobiko_crunch
+    name: Tobiko Çıtırdayan
+    prompt: |
+      Tobiko — uçan balık yumurtası — çıtırtı ve renk katar. Üst malzemedir,
+      garnitürdür. Ne zaman ortaya çıktığına dikkat edin. Onlarsız rulo
+      ne olurdu?
+    follow_ups:
+      - Tobiko lokmayı nasıl şekillendirir?
+      - Çıtır ve renk arasındaki ilişki nedir?
+      - Neden uçan balık?
+  - id: sush_sashimi_contrast
+    name: Sashimi Kontrastı
+    prompt: |
+      Sashimi — pirinçsiz — balığı yalnız bırakır. Saflığı farklıdır.
+      Sashimiyi nigiri ile karşılaştırın. Pirinç ne katar? Yokluğu ne
+      ortaya çıkarır?
+    follow_ups:
+      - Pirinç nigiriyi nasıl şekillendirir?
+      - Tamamı sashimi ne olurdu?
+      - Balık ve pirinç arasındaki ilişki nedir?
+  - id: sush_tea_rinse
+    name: Çay Durulama
+    prompt: |
+      Suşi barında yeşil çay — doldurulur, paylaşılır. Temizler. Çay ritmin
+      bir parçasıdır. Rolünü düşünün. Su ne yapardı? İçecek olmaması
+      ne anlama gelirdi?
+    follow_ups:
+      - Çay yemeği nasıl şekillendirir?
+      - Çay ve yeniden ayarlama arasındaki ilişki nedir?
+      - Neden yeşil çay?
+  - id: sush_bengara_tuna
+    name: Bengara Ton Balığı
+    prompt: |
+      Bengara — yağsız ton balığı, genellikle sırt kısmından — daha
+      koyudur. Tadı akamiden farklıdır. Kesimi düşünün. Balığın hangi
+      kısmı? Yer ne yapar?
+    follow_ups:
+      - Kesim tadı nasıl şekillendirir?
+      - Yer ve tat arasındaki ilişki nedir?
+      - Neden bu kesim?
+  - id: sush_kohada_cure
+    name: Kohada Kürleme
+    prompt: |
+      Kohada — gizzard shad — kürlenir, bazen sirkelenir. Şefin bir
+      sınavıdır. Gümüş derisi, denge. Beceriye dikkat edin. Kürlenmemiş
+      ne yapardı?
+    follow_ups:
+      - Kürleme balığı nasıl şekillendirir?
+      - Sirke ve gümüş deri arasındaki ilişki nedir?
+      - Neden bir sınav?
+  - id: sush_engawa_fin
+    name: Engawa Yüzgeci
+    prompt: |
+      Engawa — dil balığının yüzgeç kası — değerlidir. Belirgin bir
+      dokusu vardır. Parçayı düşünün. Normal hirame ne yapardı?
+      Yüzgeç nasıl farklılık gösterir?
+    follow_ups:
+      - Kesim parçayı nasıl şekillendirir?
+      - Yüzgeç ve kas arasındaki ilişki nedir?
+      - Neden değerlidir?
+  - id: sush_first_piece
+    name: İlk Parça
+    prompt: |
+      İlk parça tonu belirler. Genellikle yumuşak bir şey — belki hirame
+      veya tai. Şef kalibre ediyor. Açılışa dikkat edin. İlk parça
+      otoro ne anlama gelirdi?
+    follow_ups:
+      - İlk parça yemeği nasıl şekillendirir?
+      - İlk ve ilerleme arasındaki ilişki nedir?
+      - Neden ilk başta yumuşak?
+  - id: sush_kampachi_fat
+    name: Kampachi Yağı
+    prompt: |
+      Kampachi — genç sarıkanat — hafif bir yağa sahiptir. Yağsız ve
+      zengin arasındadır. Orta zemine dikkat edin. Buri ne yapardı?
+      Daha yağsız balık ne yapardı?
+    follow_ups:
+      - Yağ parçayı nasıl şekillendirir?
+      - Yaş ve yağ arasındaki ilişki nedir?
+      - Neden kampachi?
+  - id: sush_nodoguro_char
+    name: Nodoguro Karartma
+    prompt: |
+      Nodoguro — kara boğazlı levrek — genellikle hafifçe kızartılır.
+      Derisi, yağı. Karartma ekler. Isının uygulanmasını düşünün.
+      Çiğ ne yapardı?
+    follow_ups:
+      - Kızartma balığı nasıl şekillendirir?
+      - Karartma ve yağ arasındaki ilişki nedir?
+      - Neden bunu kızartmak?
+  - id: sush_choji_plate
+    name: Çanak Tabak
+    prompt: |
+      Tabak — veya ahşap, veya taş — parçayı tutar. Sunum
+      minimaldir. Kabı düşünün. Kalabalık bir tabak ne yapardı?
+      Minimal neye izin verir?
+    follow_ups:
+      - Tabak parçayı nasıl şekillendirir?
+      - Kap ve odak arasındaki ilişki nedir?
+      - Neden minimal?
+  - id: sush_tea_cup
+    name: Çay Fincanı
+    prompt: |
+      Tezgahtaki çay fincanı — kulpsuz, bazen pürüzlü. İki elle tutarsınız.
+      Kabı düşünün. Kupa ne yapardı? Fincan ne katar?
+    follow_ups:
+      - Fincan yudumu nasıl şekillendirir?
+      - Kap ve ritüel arasındaki ilişki nedir?
+      - Neden kulpsuz?
+  - id: sush_silver_slide
+    name: Gümüş Kayma
+    prompt: |
+      Parça tabaktan kaymalı — veya temizce kaldırılmalı. Pirinç tutar
+      ancak bırakır. Yapıyı düşünün. Dağılan pirinç ne anlama
+      gelirdi?
+    follow_ups:
+      - Yapı yemeği nasıl şekillendirir?
+      - Lapa pirinç ne yapardı?
+      - Bütünlük ve lokma arasındaki ilişki nedir?
+  - id: sush_kinmedai_skin
+    name: Kinmedai Derisi
+    prompt: |
+      Kinmedai — altın gözlü çipura — genellikle derisiyle, hafifçe
+      yakılmış. Deri doku, yağ ekler. Yakmayı düşünün. Çiğ deri ne
+      yapardı?
+    follow_ups:
+      - Deri parçayı nasıl şekillendirir?
+      - Yakma ve yağ arasındaki ilişki nedir?
+      - Neden yakmak?
+  - id: sush_botan_ebi
+    name: Botan Karidesi
+    prompt: |
+      Botan ebi — benekli karides — tatlıdır, genellikle çiğdir. Kuyruk
+      bazen kızartılmış gelir. Bütün düşünün. Pişmiş karides ne
+      yapardı?
+    follow_ups:
+      - Hazırlık parçayı nasıl şekillendirir?
+      - Çiğ ve tatlı arasındaki ilişki nedir?
+      - Neden benekli karides?
+  - id: sush_namida_heat
+    name: Namida Isısı
+    prompt: |
+      Gerçek wasabi göz yaşartır — namida. Isı yükselir, geçer. Biberden
+      farklıdır. Duyumu düşünün. Yaban turpu farklı ne yapardı?
+    follow_ups:
+      - Isı lokmayı nasıl şekillendirir?
+      - Wasabi ve gözyaşı arasındaki ilişki nedir?
+      - Neden ağlatır?
+  - id: sush_omakase_end
+    name: Omakase Sonu
+    prompt: |
+      Yemek biter — tamago, belki miso, belki bir meyve. Ark tamamlandı.
+      Kapanışa dikkat edin. Başka bir parça ne yapardı? Ne zaman
+      bittiğini bilirsiniz?
+    follow_ups:
+      - Son anıyı nasıl şekillendirir?
+      - Kapanış ve tatmin arasındaki ilişki nedir?
+      - Neden yumurta veya çorba ile bitirilir?
+  - id: sush_counter_wait
+    name: Tezgahta Bekleme
+    prompt: |
+      Parçalar arasında beklersiniz. Şef hazırlanır. Duraklama ritmin
+      bir parçasıdır. Beklentiyi fark edin. Anında servis neyden
+      vazgeçerdi?
+    follow_ups:
+      - Bekleme parçayı nasıl şekillendirir?
+      - Duraklama ve dikkat arasındaki ilişki nedir?
+      - Neden önceden tabaklanmaz?
+  - id: sush_tsukiji_legacy
+    name: Tsukiji Mirası
+    prompt: |
+      Tsukiji gitti; Toyosu yerini aldı. Ama balık hala Tokyo'dan akıyor.
+      Pazarı düşünün. Müzayedesiz suşi ne olurdu? Dağıtımsız?
+    follow_ups:
+      - Pazar balığı nasıl şekillendirir?
+      - Müzayede ve kalite arasındaki ilişki nedir?
+      - Tsukiji ne anlama geliyordu?
+  - id: sush_edomae_spirit
+    name: Edo'nun Ruhu
+    prompt: |
+      Edomae — Edo tarzı — Tokyo geleneğinden suşi. Buzdolabı olmadan
+      çalışmak için korunmuş, kürlenmiş, yıllanmış. Tarihi düşünün.
+      Her zaman taze ne anlama gelirdi?
+    follow_ups:
+      - Tarih tekniği nasıl şekillendirir?
+      - Koruma ve lezzet arasındaki ilişki nedir?
+      - Neden Edo?
+  - id: sush_gari_reset
+    name: Gari Yeniden Ayarlama
+    prompt: |
+      Gari — turşu zencefil — parçalar arasında temizler. Soluk pembe dilimler
+      damak tadını sıfırlar. Ne zaman el attığınıza dikkat edin.
+      Yeniden ayarlama olmadan yemek ne olurdu? Zencefil ilerlemeyi
+      nasıl şekillendirir?
+    follow_ups:
+      - Gari olmaması ne anlama gelirdi?
+      - Yeniden ayarlama bir sonraki parçayı nasıl şekillendirir?
+      - Duraklama ve süreklilik arasındaki ilişki nedir?
+  - id: sush_otoro_melt
+    name: Otoro Erimesi
+    prompt: |
+      Otoro — en yağlı ton balığı — dilde neredeyse erir. Yağın özü budur.
+      Dokuyu düşünün. Yağsız ton balığı ne yapardı? Erime yemeğin
+      doruğunu nasıl işaretler?
+    follow_ups:
+      - Akami farklı ne yapardı?
+      - Yağ deneyimi nasıl şekillendirir?
+      - Erime ve lüks arasındaki ilişki nedir?

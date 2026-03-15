@@ -1,0 +1,462 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Giungla Urbana — New York (Italian)
+
+id: urban_jungle_new_york
+name: Giungla Urbana — New York
+description: 50 carte per cambiare il tuo modo di vedere New York—dalla scala e dalla luce agli strati di storia e ai ritmi della vita di strada.
+domain: urban_jungle
+cards:
+  - id: ny_vertical_city
+    name: Città Verticale
+    prompt: |
+      Guarda in alto. New York è costruita in verticale—torri che competono per il cielo.
+      Segui un edificio dal marciapiede alla cima. Come cambia l'altezza ciò che
+      notizzi? Dove si posa il tuo sguardo?
+    follow_ups:
+      - Come sarebbe la strada vista dall'alto?
+      - Come distorce la scala a diverse altezze?
+      - Cosa viene nascosto quando guardi solo in alto?
+  - id: ny_grid_navigation
+    name: Navigazione a Griglia
+    prompt: |
+      La griglia di Manhattan è implacabile. Percorri un isolato e nota come il sistema
+      di numerazione modella il movimento, l'orientamento e la sorpresa. Cosa succede quando
+      rompi la griglia?
+    follow_ups:
+      - Dove la griglia ti sembra opprimente? Dove liberatoria?
+      - Come sarebbe la città senza di essa?
+      - Come cambiano le strade diagonali il ritmo?
+  - id: ny_subway_soundscape
+    name: Paesaggio Sonoro della Metropolitana
+    prompt: |
+      Chiudi gli occhi in una stazione. Il rombo, i freni, gli annunci, il musicista di strada.
+      Mappa il paesaggio sonoro. Come suona New York quando non puoi vederla?
+    follow_ups:
+      - Quali suoni sono costanti? Quali accidentali?
+      - Cosa significherebbe il silenzio qui?
+      - Come il suono segna il tempo sottoterra?
+  - id: ny_fire_escape
+    name: Scala Antincendio
+    prompt: |
+      Le scale antincendio sono l'esoscheletro della città—funzionali, ritmiche, personali.
+      Trova un isolato dove si ripetono. Cosa rivelano sugli edifici dietro di esse? Chi potrebbe
+      sedersi lì di notte?
+    follow_ups:
+      - Cosa vedresti da una scala antincendio?
+      - Come cambiano il carattere della strada?
+      - Cosa perderebbe l'isolato senza di esse?
+  - id: ny_street_number
+    name: Numero Civico
+    prompt: |
+      Scegli un numero—un numero civico, un piano, una linea di autobus. Seguilo attraverso
+      la città. Quale schema emerge? Cosa significa quel numero qui?
+    follow_ups:
+      - Dove ti porta il numero?
+      - Cosa rivelerebbe un numero diverso?
+      - Come i numeri ordinano l'esperienza urbana?
+  - id: ny_steam_rising
+    name: Vapore Ascendente
+    prompt: |
+      Il vapore dai tombini è il respiro di New York. Trova dove sale e osserva come
+      si muove, si disperde, cattura la luce. Cos'è sotto? Cosa espira la città?
+    follow_ups:
+      - Cosa troveresti sotto la grata?
+      - Come cambia il vapore il tempo atmosferico?
+      - Quali altri sistemi nascosti sfogano qui?
+  - id: ny_storefront_typography
+    name: Tipografia delle Vetrine
+    prompt: |
+      Leggi le insegne. Negozi di alimentari, gastronomie, lavanderie—ognuno ha un linguaggio visivo.
+      Colleziona cinque caratteri tipografici da un isolato. Cosa dicono su chi vive qui?
+    follow_ups:
+      - Quali insegne sembrano vecchie? Quali nuove?
+      - Come suonerebbe l'isolato se le insegne potessero parlare?
+      - Come la tipografia segna il cambiamento?
+  - id: ny_waterfront_edge
+    name: Margine del Lungofiume
+    prompt: |
+      Vai all'acqua. La città dà le spalle al fiume, al porto, alla baia. Stai dove la terra incontra l'acqua.
+      Cosa è costruito per la vista? Cosa è costruito per ignorarla?
+    follow_ups:
+      - Chi può vedere l'acqua?
+      - Come è stato rivendicato il margine?
+      - Come sarebbe la città se fosse rivolta verso l'acqua?
+  - id: ny_parks_as_rooms
+    name: Parchi come Stanze
+    prompt: |
+      Central Park, Prospect Park, una piccola piazza—ognuno è una stanza nella città.
+      Entra in una e nota i suoi muri, il suo soffitto, i suoi arredi. Come è progettata la natura qui?
+    follow_ups:
+      - Qual è lo scopo della stanza?
+      - Chi ha progettato le linee di vista?
+      - Cosa succederebbe se i muri venissero abbattuti?
+  - id: ny_delivery_rhythm
+    name: Ritmo delle Consegne
+    prompt: |
+      Osserva le consegne—camion, carretti, biciclette. Segui il percorso di un pacco
+      dal camion alla porta. Come si muove il commercio per la strada? Qual è il ritmo dell'arrivo?
+    follow_ups:
+      - Come sarebbe l'isolato senza consegne?
+      - Come si muovono diversamente le merci diverse?
+      - Chi è invisibile in questo flusso?
+  - id: ny_brownstone_steps
+    name: Gradini dei Brownstone
+    prompt: |
+      Gli scalini dei brownstone sono palcoscenici. Siediti su uno e guarda la strada. Chi
+      si ferma? Chi passa? Cosa diresti da qui?
+    follow_ups:
+      - Qual è la vista dal gradino più alto?
+      - Come i gradini creano territorio?
+      - Cosa perderebbe l'isolato senza di essi?
+  - id: ny_bridge_as_threshold
+    name: Ponte come Soglia
+    prompt: |
+      Attraversa un ponte a piedi. Senti la transizione—da un quartiere all'altro. Il
+      ponte non è né qui né là. Cosa cambia quando raggiungi l'altro lato?
+    follow_ups:
+      - Cosa lasci alle spalle?
+      - Come il ponte modella il viaggio?
+      - Come sarebbe la città senza ponti?
+  - id: ny_awning_shade
+    name: Ombra della Tenda da Sole
+    prompt: |
+      Le tende da sole creano microclimi. Stai sotto una. Nota il cambiamento di luce,
+      suono, temperatura. Come le piccole strutture cambiano la strada?
+    follow_ups:
+      - Come si sentirebbe l'isolato senza tende da sole?
+      - Come segnano la proprietà?
+      - Quali altri piccoli ripari esistono qui?
+  - id: ny_graffiti_layer
+    name: Strato di Graffiti
+    prompt: |
+      Guarda i muri. Tag, murales, wheatpaste—ogni cosa è uno strato di tempo e rivendicazione.
+      Leggi il palinsesto. Chi ha segnato questa superficie?
+    follow_ups:
+      - Qual è il segno più antico che riesci a trovare?
+      - Come gli strati raccontano una storia?
+      - Cosa direbbe il muro se potesse parlare?
+  - id: ny_rooftop_skyline
+    name: Skyline dei Tetti
+    prompt: |
+      Immagina la vista da un tetto. Serbatoi d'acqua, antenne, tetti vicini.
+      La città dall'alto è una città diversa. Cosa vedresti?
+    follow_ups:
+      - Come l'altezza cambia ciò che è importante?
+      - Cosa è nascosto dalla strada?
+      - Chi ha accesso a questa vista?
+  - id: ny_crosswalk_wait
+    name: Attesa al Passaggio Pedonale
+    prompt: |
+      Aspetta a un passaggio pedonale. Non attraversare quando cambia la luce. Aspetta
+      il ciclo successivo. Cosa noti nella pausa? Chi altro aspetta?
+    follow_ups:
+      - Come l'attesa cambia la percezione?
+      - Quali ritmi governano l'incrocio?
+      - Cosa succederebbe se non attraversassi mai?
+  - id: ny_diner_booth
+    name: Sedile da Diner
+    prompt: |
+      Siediti in un sedile da diner vicino alla finestra. La strada diventa un film. Guarda
+      i passanti, il traffico, la luce. Quale storia sta andando in scena?
+    follow_ups:
+      - Chi sono i personaggi principali?
+      - Come la cornice cambia ciò che vedi?
+      - Cosa perderesti senza la finestra?
+  - id: ny_scaffolding_skin
+    name: Pelle di Ponteggio
+    prompt: |
+      I ponteggi avvolgono gli edifici come bende. Cammina sotto. Nota il
+      suono, la luce, il soffitto temporaneo. Cosa viene riparato? Cosa viene
+      nascosto?
+    follow_ups:
+      - Da quanto tempo è lì?
+      - Cosa direbbe l'edificio senza di esso?
+      - Qual è il rapporto tra riparazione e occultamento?
+  - id: ny_newsstand_archive
+    name: Archivio dell'Edicola
+    prompt: |
+      Un'edicola è una fetta di attenzione—riviste, giornali, caramelle. Cosa è in esposizione?
+      Chi si ferma? Come sarebbe questo angolo senza di essa?
+    follow_ups:
+      - Qual è il bestseller?
+      - Come l'edicola modella l'isolato?
+      - Cosa ci metteresti?
+  - id: ny_construction_site
+    name: Cantiere
+    prompt: |
+      Osserva un cantiere. Gru, barriere, operai. La città è in continua evoluzione.
+      Cosa viene costruito? Cosa viene sostituito?
+    follow_ups:
+      - Chi lo userà una volta finito?
+      - Cos'era qui prima?
+      - Come la costruzione cambia il quartiere?
+  - id: ny_light_well
+    name: Pozzo di Luce
+    prompt: |
+      Cerca i pozzi di luce—gli stretti spazi tra gli edifici dove cade la luce. Chi riceve
+      quella luce? Cosa ci cresce?
+    follow_ups:
+      - Come sarebbe vivere in quel pozzo?
+      - Come la luce definisce il valore?
+      - Cosa è nascosto nelle ombre?
+  - id: ny_bodega_cat
+    name: Gatto della Bodega
+    prompt: |
+      Trova una bodega con un gatto. Il gatto è sia dentro che fuori dalle regole.
+      Cos'altro in città opera in questo modo?
+    follow_ups:
+      - Cosa vede il gatto?
+      - Come le regole informali modellano lo spazio?
+      - Come sarebbe il negozio senza il gatto?
+  - id: ny_sidewalk_crack
+    name: Crepa del Marciapiede
+    prompt: |
+      Guarda in basso. Segui una crepa nel marciapiede. Dove va? Cosa ci cresce?
+      La città è piena di tali fratture.
+    follow_ups:
+      - Cosa direbbe il marciapiede del tempo?
+      - Come contano le piccole fratture?
+      - Cosa sta spingendo attraverso?
+  - id: ny_air_conditioner
+    name: Condizionatore d'Aria
+    prompt: |
+      Conta i condizionatori d'aria su un edificio. Sono parassiti, protesi,
+      necessità. Come cambiano la facciata? Cosa gocciolano?
+    follow_ups:
+      - Come sarebbe l'edificio senza di essi?
+      - Come il clima modella l'architettura?
+      - Chi decide dove vanno?
+  - id: ny_express_local
+    name: Espresso / Locale
+    prompt: |
+      Prendi la metropolitana. Nota la differenza tra espresso e locale. La velocità cambia
+      ciò che vedi. Salta le fermate e senti la città comprimersi.
+    follow_ups:
+      - Cosa perdi quando non ti fermi?
+      - Come la velocità modella l'esperienza?
+      - Come sarebbe la città se tutto fosse locale?
+  - id: ny_water_tower
+    name: Serbatoio dell'Acqua
+    prompt: |
+      I serbatoi dell'acqua coronano gli edifici più vecchi. Sono di legno, a forma di botte,
+      ubiqui. Trova cinque. Cosa dicono dello skyline?
+    follow_ups:
+      - Perché sono ancora qui?
+      - Come sarebbe il tetto senza uno?
+      - Come segnano l'età?
+  - id: ny_awning_stripes
+    name: Strisce delle Tende da Sole
+    prompt: |
+      Le tende da sole a strisce sono un vernacolo newyorkese. Trova un isolato dove si
+      ripetono. Come le strisce creano identità? Cosa farebbero i colori uniti?
+    follow_ups:
+      - Perché le strisce e non i colori uniti?
+      - Come le tende da sole unificano un isolato?
+      - Qual è la storia di questo motivo?
+  - id: ny_curb_cut
+    name: Taglio del Marciapiede
+    prompt: |
+      Nota i tagli del marciapiede—le rampe agli angoli. Sono per sedie a rotelle, carrelli,
+      passeggini. Come cambiano la strada? Chi includono?
+    follow_ups:
+      - Come sarebbe l'isolato senza di essi?
+      - Come l'accesso modella la progettazione?
+      - Quali altri alloggiamenti invisibili esistono?
+  - id: ny_street_tree
+    name: Albero Stradale
+    prompt: |
+      Scegli un albero stradale. Quanto spazio ha? Cosa c'è nella sua buca?
+      Chi lo annaffia? L'albero è un ospite. Come viene trattato?
+    follow_ups:
+      - Come sarebbe l'isolato senza alberi?
+      - Come gli alberi segnano la cura?
+      - Cosa cresce all'ombra dell'albero?
+  - id: ny_loading_zone
+    name: Zona di Carico
+    prompt: |
+      Le zone di carico sono territori temporanei. Osserva una per dieci minuti. Chi
+      la usa? Quanto tempo rimangono? Qual è il ritmo di occupazione?
+    follow_ups:
+      - Cosa succederebbe senza zone di carico?
+      - Come si piegano le regole?
+      - Qual è il rapporto tra parcheggio e commercio?
+  - id: ny_vent_grille
+    name: Grata di Ventilazione
+    prompt: |
+      Le grate sui marciapiedi ventilano la metropolitana. Stai su una. Senti la corrente ascensionale.
+      Ascolta. La città respira attraverso queste aperture.
+    follow_ups:
+      - Cosa sale da sotto?
+      - Come la grata connette i mondi?
+      - Come sarebbe il marciapiede senza di essa?
+  - id: ny_basement_stairs
+    name: Scale del Seminterrato
+    prompt: |
+      Trova scale che scendono—verso un seminterrato, una metropolitana, uno speakeasy.
+      La città ha molti livelli. Cos'è sotto il marciapiede?
+    follow_ups:
+      - Chi scende?
+      - Come la discesa cambia la luce?
+      - Cosa troveresti in fondo?
+  - id: ny_clock_tower
+    name: Torre dell'Orologio
+    prompt: |
+      Trova un orologio pubblico. È preciso? Chi lo ha impostato? Gli orologi ordinano la città.
+      Cosa succede quando non sono d'accordo?
+    follow_ups:
+      - Come sarebbe l'isolato senza l'orologio?
+      - Come viene sincronizzato il tempo?
+      - Qual è il rapporto tra l'ora dell'orologio e l'ora del corpo?
+  - id: ny_newsstand_magazine
+    name: Rivista dell'Edicola
+    prompt: |
+      A un'edicola, scegli una copertina di rivista. Per chi è? Cosa presume del lettore?
+      L'edicola è uno specchio del desiderio.
+    follow_ups:
+      - Cosa imparerebbe uno sconosciuto da questa esposizione?
+      - Come le copertine competono per l'attenzione?
+      - Cosa non c'è sull'edicola?
+  - id: ny_awning_rain
+    name: Tenda da Sole Sotto la Pioggia
+    prompt: |
+      Stai sotto una tenda da sole sotto la pioggia. Osserva l'acqua che scorre dai bordi.
+      La tenda crea un'isola asciutta. Chi la condivide con te?
+    follow_ups:
+      - Come si sentirebbe l'isolato senza riparo?
+      - Come la pioggia cambia la strada?
+      - Quali altri ripari esistono?
+  - id: ny_fire_hydrant
+    name: Idrante Antincendio
+    prompt: |
+      Un idrante antincendio è un tappo nel sistema circolatorio della città. Trovane uno.
+      Di che colore è? Chi potrebbe aprirlo? Cosa scorre attraverso?
+    follow_ups:
+      - Cosa farebbe l'isolato in caso di incendio senza di esso?
+      - Come gli idranti segnano il territorio?
+      - Qual è il rapporto tra idrante e manichette?
+  - id: ny_stoop_sale
+    name: Vendita sull'Appartamento
+    prompt: |
+      Immagina una vendita sull'appartamento su questi gradini. Cosa sarebbe in vendita? Chi
+      si fermerebbe? L'appartamento è un palcoscenico per lo scambio.
+    follow_ups:
+      - Cosa metteresti fuori?
+      - Come l'appartamento facilita l'incontro?
+      - Cosa imparerebbe l'isolato da una vendita?
+  - id: ny_rooftop_garden
+    name: Giardino sul Tetto
+    prompt: |
+      Immagina un giardino sul tetto sopra di te. Cosa ci crescerebbe? Chi lo cura?
+      La città ha uno strato verde segreto.
+    follow_ups:
+      - Cosa pianteresti?
+      - Come l'altitudine cambia il giardinaggio?
+      - Come sarebbe lo skyline se tutti i tetti fossero verdi?
+  - id: ny_subway_map
+    name: Mappa della Metropolitana
+    prompt: |
+      Guarda una mappa della metropolitana. È un diagramma, non geografia. Cosa è distorto?
+      Cosa è omesso? La mappa modella il nostro pensiero sulla città.
+    follow_ups:
+      - Come sarebbe una mappa veritiera?
+      - Come la mappa crea quartieri?
+      - Qual è il rapporto tra mappa e territorio?
+  - id: ny_brick_pattern
+    name: Motivo dei Mattoni
+    prompt: |
+      Studia un muro di mattoni. Il motivo—corsa, fiammingo—tiene su il muro. Traccia il motivo.
+      Cosa succederebbe se un mattone fosse mancante?
+    follow_ups:
+      - Come il motivo distribuisce il peso?
+      - Cosa direbbe il muro del suo creatore?
+      - Come invecchia il mattone?
+  - id: ny_awning_strip
+    name: Striscia della Tenda da Sole
+    prompt: |
+      Percorri un isolato e conta le tende da sole. Di che colore? In che condizioni?
+      La tenda da sole è una piccola architettura. Come varia?
+    follow_ups:
+      - Come sarebbe l'isolato senza tende da sole?
+      - Come le tende da sole creano identità?
+      - Qual è il rapporto tra tenda da sole e attività commerciale?
+  - id: ny_manhole_cover
+    name: Chiocciola del Tombino
+    prompt: |
+      Leggi una chiocciola di tombino. Il nome della città, il dipartimento, la data.
+      Questi dischi sono porte verso un'altra città. Cos'è sotto?
+    follow_ups:
+      - Chi scende lì sotto?
+      - Come la chiocciola segna il territorio?
+      - Come sarebbe la strada senza queste porte?
+  - id: ny_bus_shelter
+    name: Pensilina dell'Autobus
+    prompt: |
+      Aspetta in una pensilina dell'autobus. Nota chi altro aspetta. La pensilina è una stanza
+      condivisa. Qual è l'etichetta? Qual è la vista?
+    follow_ups:
+      - Come sarebbe aspettare senza la pensilina?
+      - Come la pensilina modella la comunità?
+      - Cosa cambieresti?
+  - id: ny_street_lamp
+    name: Lampione Stradale
+    prompt: |
+      Stai sotto un lampione stradale al crepuscolo. Osserva la luce che prende il posto del sole.
+      Il lampione crea una pozza di visibilità. Cosa c'è nella pozza? Cosa è fuori?
+    follow_ups:
+      - Come la luce artificiale cambia la strada?
+      - Come sarebbe l'isolato senza lampioni?
+      - Come i lampioni segnano il tempo?
+  - id: ny_plaza_seat
+    name: Sedile della Piazza
+    prompt: |
+      Siediti su una panchina della piazza. Chi altro si siede? Chi passa? La piazza è una pausa
+      nel flusso. Cosa fa fermare le persone?
+    follow_ups:
+      - Come sarebbe la piazza senza sedili?
+      - Come la seduta modella l'incontro?
+      - Cosa aggiungeresti?
+  - id: ny_awning_fabric
+    name: Tessuto della Tenda da Sole
+    prompt: |
+      Tocca una tenda da sole se puoi. Tessuto, vinile, strisce. La tenda da sole è una
+      membrana tra interno ed esterno. Come si sente?
+    follow_ups:
+      - Come si sentirebbe l'isolato senza tessuto?
+      - Come il materiale conta?
+      - Qual è il rapporto tra tenda da sole e tempo atmosferico?
+  - id: ny_newsstand_daily
+    name: Quotidiano dell'Edicola
+    prompt: |
+      Un'edicola cambia durante il giorno—giornali del mattino, riviste di mezzogiorno,
+      snack serali. Visita in orari diversi. Qual è il ritmo?
+    follow_ups:
+      - Come sarebbe l'angolo senza l'edicola?
+      - Come l'edicola segna il tempo?
+      - Qual è il rapporto tra edicola e isolato?
+  - id: ny_sidewalk_chalk
+    name: Gesso da Marciapiede
+    prompt: |
+      I bambini disegnano sui marciapiedi. Trova disegni a gesso. Cos'è il disegno? Il gesso è
+      temporaneo. La pioggia lo cancellerà. Come conta la temporaneità?
+    follow_ups:
+      - Come sarebbe il marciapiede senza il gesso?
+      - Come il gesso crea un dono?
+      - Qual è il rapporto tra gesso e strada?
+  - id: ny_rooftop_ac
+    name: Condizionatore sul Tetto
+    prompt: |
+      Le unità di condizionamento sui tetti ronzano in estate. Ascolta. Il tetto è una foresta meccanica.
+      Come il suono modella l'isolato?
+    follow_ups:
+      - Come sarebbe il tetto senza le unità?
+      - Come il condizionamento crea comfort?
+      - Qual è il rapporto tra unità e edificio?
+  - id: ny_street_musician
+    name: Musicista di Strada
+    prompt: |
+      Un musicista di strada suona in un passaggio. Fermati e ascolta. La musica crea una
+      bolla. Cos'è dentro la bolla? Cos'è fuori?
+    follow_ups:
+      - Come sarebbe il passaggio senza il musicista?
+      - Come la musica crea una pausa?
+      - Qual è il rapporto tra musicista e strada?

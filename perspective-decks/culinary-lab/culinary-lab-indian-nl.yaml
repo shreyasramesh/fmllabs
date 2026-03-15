@@ -1,0 +1,476 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Kooklab — Indiaas (Dutch)
+
+id: culinary_lab_indian
+name: Kooklab — Indiaas
+description: 50 kaarten om je beleving van de Indiase keuken te veranderen—van de chemie van specerijen en hitte tot de archeologie van ingrediënten en de choreografie van de gedeelde tafel.
+domain: culinary_lab
+cards:
+  - id: ind_tadka_crackle
+    name: Het Tadka-knetteren
+    prompt: |
+      Tadka—het tempereren—is de openingsnoot. Hete olie ontmoet mosterdzaad, komijn,
+      curryblad. Luister. Het geknetter is chemie in realtime. Wat verandert er
+      als je het hoort voordat je het proeft?
+    follow_ups:
+      - Hoe vormt het geluid de anticipatie?
+      - Wat zou het gerecht verliezen zonder het geknetter?
+      - Wat is de relatie tussen geluid en smaak?
+  - id: ind_spice_route
+    name: Specerijenroute
+    prompt: |
+      Kardemom kwam uit Kerala. Saffraan uit Kasjmir. Zwarte peper was ooit
+      evenveel waard als goud. Traceer één specerij op je bord terug naar de oorsprong.
+      Welke reis heeft het afgelegd om jou te bereiken?
+    follow_ups:
+      - Hoe verandert het kennen van de route de hap?
+      - Welke andere specerijen reisden hetzelfde pad?
+      - Wat is de relatie tussen handel en smaak?
+  - id: ind_thali_geometry
+    name: Thali Geometrie
+    prompt: |
+      Een thali is een canvas—kommetjes gerangschikt in een cirkel, elk met een rol. Bestudeer
+      de compositie. Waar valt het oog als eerste op? Wat is de negatieve ruimte?
+    follow_ups:
+      - Wat zou er gebeuren als één kommetje ontbrak?
+      - Hoe vormt de opstelling de maaltijd?
+      - Wat is de relatie tussen geometrie en ritueel?
+  - id: ind_hand_as_tool
+    name: Hand als Gereedschap
+    prompt: |
+      Roti gescheurd, gemengd met sabzi, in de mond gestopt. De hand is een hulpmiddel
+      en sensor. Merk de choreografie op. Wat voegt aanraking toe wat vork en
+      mes niet kunnen?
+    follow_ups:
+      - Hoe verandert eten met de handen het tempo?
+      - Wat zou er verloren gaan met bestek?
+      - Wat is de relatie tussen aanraking en temperatuur?
+  - id: ind_heat_layers
+    name: Hitte Lagen
+    prompt: |
+      Indiase hitte is gelaagd—de brand van chili, de warmte van zwarte peper, het vuur van gember.
+      Neem één hap en breng in kaart waar elke hitte landt. Tong, keel, buik.
+      Hoe bouwen ze zich op?
+    follow_ups:
+      - Hoe zou het gerecht zijn met slechts één type hitte?
+      - Hoe creëert gelaagdheid complexiteit?
+      - Wat is de relatie tussen hitte en tijd?
+  - id: ind_yogurt_intervention
+    name: Yoghurt Interventie
+    prompt: |
+      Raita, dahi, lassi—yoghurt koelt, snijdt, balanceert. Merk het moment op dat je het toevoegt.
+      Zuur ontmoet vet, koelte ontmoet hitte. De interventie is chemisch.
+      Wat onderbreekt het?
+    follow_ups:
+      - Hoe zou de maaltijd zijn zonder yoghurt?
+      - Hoe creëert het contrast verlichting?
+      - Wat is de relatie tussen interventie en balans?
+  - id: ind_betel_after
+    name: Betel Naderhand
+    prompt: |
+      Paan—betelblad—sluit in sommige tradities de maaltijd af. Het is geen dessert.
+      Het is afsluiting. Het palet verschuift opnieuw. Wat zegt het einde over het geheel?
+    follow_ups:
+      - Hoe markeert paan overgang?
+      - Wat zou de maaltijd missen zonder?
+      - Wat is de relatie tussen einde en geheugen?
+  - id: ind_street_chaos
+    name: Straat Chaos
+    prompt: |
+      Een chaat-verkoper werkt snel—bhel, papdi, chutneys in seconden gelaagd.
+      Kijk naar de voorstelling. De kraam is theater. Wat is het script? Wie is
+      het publiek?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder de voorstelling?
+      - Hoe vormt snelheid de ervaring?
+      - Wat is de relatie tussen chaos en vakmanschap?
+  - id: ind_tandoor_breathe
+    name: Tandoor Adem
+    prompt: |
+      Een tandoor ademt—vlammen, rook, klei. Naan tegen de muur geslagen, eruit gehaald
+      wanneer geblakerd. Sta er dichtbij. De hitte, de geur. Wat is de
+      relatie tussen vuur en smaak?
+    follow_ups:
+      - Hoe zou naan zijn zonder de tandoor?
+      - Hoe vormt klei de kok?
+      - Wat is de relatie tussen adem en brood?
+  - id: ind_turmeric_stain
+    name: Kurkuma Vlek
+    prompt: |
+      Kurkuma vlekt—vingers, stof, plastic. De kleur blijft. Merk op wat het markeert.
+      De vlek is archeologie. Waar is deze maaltijd gereisd voordat het jou bereikte?
+    follow_ups:
+      - Hoe zou het gerecht zijn zonder de kleur?
+      - Hoe markeert de vlek arbeid?
+      - Wat is de relatie tussen pigment en conservering?
+  - id: ind_rice_architecture
+    name: Rijst Architectuur
+    prompt: |
+      Biryani is opgebouwd—rijstlaag, vleeslaag, saffraan, gebakken ui. De
+      structuur houdt stand. Ontdek het. Hoe beïnvloedt de architectuur elke hap?
+    follow_ups:
+      - Wat zou er gebeuren als de lagen te vroeg mengden?
+      - Hoe creëert structuur verrassing?
+      - Wat is de relatie tussen bouwen en eten?
+  - id: ind_chutney_spectrum
+    name: Chutney Spectrum
+    prompt: |
+      Munt, tamarinde, kokosnoot, tomaat—chutneys als een palet. Elk verandert de hap.
+      Proef één gerecht met drie chutneys. Hoe wordt dezelfde basis drie verschillende verhalen?
+    follow_ups:
+      - Hoe zou de maaltijd zijn met slechts één chutney?
+      - Hoe vormt keuze autonomie?
+      - Wat is de relatie tussen spectrum en voorkeur?
+  - id: ind_steam_rising
+    name: Stoom Opstijgend
+    prompt: |
+      Idli, dosa, puri—stoom komt omhoog als het deksel wordt opgetild. Kijk ernaar. De stoom
+      draagt aroma vóór smaak. Wat komt er eerst? Neus of mond?
+    follow_ups:
+      - Hoe vormt stoom anticipatie?
+      - Wat zou verloren gaan zonder het optillen?
+      - Wat is de relatie tussen damp en smaak?
+  - id: ind_silver_versus_steel
+    name: Zilver versus Staal
+    prompt: |
+      Sommige tafels gebruiken stalen thali's, sommige zilveren, sommige bananenblad. Merk het
+      vaatwerk op. Hoe verandert het oppervlak onder het eten de ervaring?
+      Gewicht, geluid, traditie.
+    follow_ups:
+      - Hoe zou de maaltijd aanvoelen op verschillende oppervlakken?
+      - Hoe vormt het vaatwerk ceremonie?
+      - Wat is de relatie tussen materiaal en betekenis?
+  - id: ind_cumin_fragrance
+    name: Komijn Geur
+    prompt: |
+      Geroosterde komijnzaadjes verspreiden geur vóór smaak. Ruik een gerecht voordat
+      je het proeft. Komijn reist door de kamer. Hoe bereidt aroma het
+      palet voor?
+    follow_ups:
+      - Hoe zou het gerecht zijn zonder de geur?
+      - Hoe markeert geur de aanwezigheid van de kok?
+      - Wat is de relatie tussen neus en geheugen?
+  - id: ind_shared_central
+    name: Gedeeld Centraal
+    prompt: |
+      Gerechten staan in het midden. Iedereen reikt. Er is niet zozeer een "jouw bord".
+      Observeer de choreografie van reiken, doorgeven, nemen.
+      Wat zijn de onuitgesproken regels?
+    follow_ups:
+      - Hoe zou de maaltijd zijn met individuele porties?
+      - Hoe creëert delen verbinding?
+      - Wat is de relatie tussen centraal en gemeenschappelijk?
+  - id: ind_ghee_gloss
+    name: Ghee Glans
+    prompt: |
+      Ghee poelt, glanst, bedekt. Het is vet als smaak en als afwerking. Merk op waar
+      het zich op het bord verzamelt. Hoe verandert die glans textuur en temperatuur?
+    follow_ups:
+      - Hoe zou het gerecht zijn met olie in plaats daarvan?
+      - Hoe draagt ghee andere smaken?
+      - Wat is de relatie tussen glans en rijkdom?
+  - id: ind_papad_crunch
+    name: Papad Krak
+    prompt: |
+      Papad—krokant, dun, knappend. Het is textuur als interpunctie. Breek er één.
+      Luister. De krak is de ritmesectie van de maaltijd. Hoe zou de stilte
+      klinken zonder?
+    follow_ups:
+      - Hoe creëert de krak contrast?
+      - Wat zou de maaltijd missen zonder papad?
+      - Wat is de relatie tussen geluid en voldoening?
+  - id: ind_sambar_depth
+    name: Sambar Diepte
+    prompt: |
+      Sambar is gelaagd—linzen, tamarinde, groenten, specerijen. Het heeft
+      gesudderd. Proef de lagen. Hoeveel kun je scheiden? Wat is de
+      archeologie van die kom?
+    follow_ups:
+      - Hoe zou sambar zijn met minder lagen?
+      - Hoe bouwt tijd diepte op?
+      - Wat is de relatie tussen sudderen en verhaal?
+  - id: ind_pickle_punch
+    name: Augurk Punch
+    prompt: |
+      Achar—augurk—is de plot twist. Eén klein hapje verandert alles. Zoet,
+      zuur, heet, gefermenteerd. Merk op wanneer het binnenkomt. Wat onderbreekt het?
+    follow_ups:
+      - Hoe zou de maaltijd zijn zonder augurk?
+      - Hoe creëert de punch verrassing?
+      - Wat is de relatie tussen twist en geheugen?
+  - id: ind_bay_leaf_hunt
+    name: Laurierblad Jacht
+    prompt: |
+      Laurierbladeren verstoppen zich in pulao, biryani, curries. Vind er één. Je eet hem niet—
+      het is archeologie. Hij reisde van Kerala of Kasjmir. Wat voegde hij toe
+      voordat hij werd verwijderd?
+    follow_ups:
+      - Hoe vormt het oneetbare het eetbare?
+      - Hoe zou het gerecht zijn zonder het blad?
+      - Wat is de relatie tussen verborgen en aanwezig?
+  - id: ind_dosa_edge
+    name: Dosa Rand
+    prompt: |
+      Een dosa heeft een rand—krokant, kantachtig, goudkleurig. Het midden is zacht. Het
+      contrast is architectonisch. Waar bijt je eerst? Hoe omlijst de rand het geheel?
+    follow_ups:
+      - Hoe zou dosa zijn als het uniform krokant was?
+      - Hoe creëert de rand interesse?
+      - Wat is de relatie tussen grens en midden?
+  - id: ind_saffron_thread
+    name: Saffraan Draad
+    prompt: |
+      Saffraan—een paar draadjes—kleurt en parfumeert een heel gerecht. Traceer één draadje.
+      Waar kwam het vandaan? Kasjmir, Iran, Spanje? De duurste specerij.
+      Wat voegt schaarste toe?
+    follow_ups:
+      - Hoe vormt saffraan luxe?
+      - Hoe zou het gerecht zijn met kurkuma in plaats daarvan?
+      - Wat is de relatie tussen draad en grondgebied?
+  - id: ind_chaat_texture
+    name: Chaat Textuur
+    prompt: |
+      Chaat legt textuur in elkaar—krokant, zacht, knapperig, romig—in één hap. Ontleed
+      het. Hoeveel texturen? Hoe werken ze samen? De hap is een
+      samenwerking.
+    follow_ups:
+      - Hoe zou chaat zijn met één textuur?
+      - Hoe creëert gelaagdheid spel?
+      - Wat is de relatie tussen textuur en genot?
+  - id: ind_mustard_seed_pop
+    name: Mosterdzaad Popt
+    prompt: |
+      Mosterdzaadjes poppen in olie—Bengals, Zuid-Indiase tempering. Het poppen is
+      chemisch. Zaden geven stoffen af. Ruik het. Wat verandert er als hitte
+      ze activeert?
+    follow_ups:
+      - Hoe markeert het poppen de timing van de kok?
+      - Hoe zou het gerecht zijn zonder?
+      - Wat is de relatie tussen poppen en potentie?
+  - id: ind_dal_surface
+    name: Dal Oppervlak
+    prompt: |
+      Dal heeft een oppervlak—soms een vel, soms drijvende tadka. Nog niet roeren.
+      Kijk ernaar. Wat onthult het oppervlak over wat eronder zit?
+    follow_ups:
+      - Hoe nodigt het oppervlak uit of verzet het zich?
+      - Wat zou er gebeuren als je nooit roerde?
+      - Wat is de relatie tussen oppervlak en diepte?
+  - id: ind_banana_leaf_plate
+    name: Bananenblad Bord
+    prompt: |
+      Een bananenblad is een bord—organisch, wegwerpbaar, traditioneel. Het blad heeft
+      textuur, geur. Eten ligt er anders op. Hoe verandert het blad de
+      maaltijd?
+    follow_ups:
+      - Hoe zou de maaltijd zijn op keramiek?
+      - Hoe vormt het blad het ritueel?
+      - Wat is de relatie tussen blad en plaats?
+  - id: ind_fenugreek_haunt
+    name: Fenegriek Spookt
+    prompt: |
+      Fenegriek—methi—heeft een geur die blijft hangen. Bitter, esdoorn-achtig. Het
+      spookt in de keuken, de kleding. Merk op waar het blijft hangen. Wat voegt
+      aanhoudendheid toe?
+    follow_ups:
+      - Hoe markeert fenegriek territorium?
+      - Hoe zou het gerecht zijn zonder de aanhoudendheid?
+      - Wat is de relatie tussen spook en geheugen?
+  - id: ind_pani_puri_moment
+    name: Pani Puri Moment
+    prompt: |
+      Pani puri is een verhaal van één hap—krokant omhulsel, aardappel, kikkererwt, tamarindewater.
+      Het moet in één keer, onmiddellijk worden gegeten. Het moment is onherhaalbaar.
+      Wat maakt het urgent?
+    follow_ups:
+      - Wat zou er gebeuren als je wachtte?
+      - Hoe creëert urgentie plezier?
+      - Wat is de relatie tussen moment en geheugen?
+  - id: ind_serving_order
+    name: Serveer Volgorde
+    prompt: |
+      In sommige settings is er een volgorde—eerst ouderen, bepaalde gerechten vóór
+      andere. Observeer. Wie serveert? Wie wacht? De choreografie codeert respect.
+      Wat zijn de regels?
+    follow_ups:
+      - Hoe zou de maaltijd zijn zonder de volgorde?
+      - Hoe creëert sequentie betekenis?
+      - Wat is de relatie tussen volgorde en hiërarchie?
+  - id: ind_cardamom_pod
+    name: Kardemom Peul
+    prompt: |
+      Een hele kardemom peul verstopt zich in pulao of chai. Je kunt erin bijten, je kunt
+      het opzij duwen. De peul is archeologie—groen uit Kerala, zwart uit
+      de heuvels. Wat droeg het bij?
+    follow_ups:
+      - Hoe verschilt de hele peul van gemalen?
+      - Hoe zou het gerecht zijn zonder?
+      - Wat is de relatie tussen peul en plaats?
+  - id: ind_kitchen_sounds
+    name: Keuken Geluiden
+    prompt: |
+      Een Indiase keuken heeft een soundscape—malen, frituren, fluitende snelkookpan.
+      Sluit je ogen in een. Breng de geluiden in kaart. Wat is constant? Wat is
+      het ritme?
+    follow_ups:
+      - Hoe zou de maaltijd zijn zonder die geluiden?
+      - Hoe vormt geluid anticipatie?
+      - Wat is de relatie tussen keuken en tafel?
+  - id: ind_second_helping
+    name: Tweede Opscheppen
+    prompt: |
+      "Nog wat?" is ritueel. De aandrang, de weigering, de uiteindelijke
+      acceptatie. Kijk naar de dans. Wat betekent het tweede opscheppen naast
+      honger?
+    follow_ups:
+      - Hoe zou de maaltijd zijn zonder het aanbod?
+      - Hoe codeert aandrang zorg?
+      - Wat is de relatie tussen meer en genoeg?
+  - id: ind_coriander_finish
+    name: Koriander Afwerking
+    prompt: |
+      Verse koriander—cilantro—toppen veel gerechten. Het is het laatste wat wordt toegevoegd.
+      De afwerking. Merk op hoe het groen verandert wat eraan voorafging. Helder,
+      kruidig, verdeeld.
+    follow_ups:
+      - Hoe zou het gerecht zijn zonder de kruid?
+      - Hoe omlijst de afwerking het geheel?
+      - Wat is de relatie tussen laatste en eerste?
+  - id: ind_lassi_cut
+    name: Lassi Snij
+    prompt: |
+      Lassi snijdt door specerijen—koel, pittig, dik. Het is verlichting. Merk het
+      moment op dat je het drinkt. Wat onderbreekt het? Wat reset het?
+    follow_ups:
+      - Hoe zou de maaltijd zijn zonder lassi?
+      - Hoe verlengt de snede uithoudingsvermogen?
+      - Wat is de relatie tussen verlichting en ritme?
+  - id: ind_roti_stretch
+    name: Roti Rek
+    prompt: |
+      Roti wordt met de hand uitgerekt—rond, dun, geblakerd boven vuur. Kijk hoe het
+      wordt gemaakt. Het rek is vaardigheid. Hoe zou het brood zijn zonder
+      die beweging?
+    follow_ups:
+      - Hoe beïnvloedt het rek de textuur?
+      - Wat zou machinaal gemaakte roti verliezen?
+      - Wat is de relatie tussen beweging en resultaat?
+  - id: ind_jaljeera_pause
+    name: Jaljeera Pauze
+    prompt: |
+      Jaljeera—komijn, munt, tamarinde—is een spijsverteringsdrank, een pauze. Het komt vaak
+      halverwege of na de maaltijd. Merk de verschuiving op. Wat staat de pauze toe?
+    follow_ups:
+      - Hoe zou de maaltijd zijn zonder de pauze?
+      - Hoe markeert jaljeera overgang?
+      - Wat is de relatie tussen pauze en spijsvertering?
+  - id: ind_color_conversation
+    name: Kleuren Gesprek
+    prompt: |
+      Indiase borden spreken in kleur—gele dal, groene sabzi, witte rijst, rode
+      chutney. Bestudeer het palet. Wat is het gesprek? Wat zou clashen?
+      Wat harmoniseert?
+    follow_ups:
+      - Hoe vormt kleur de eetlust?
+      - Hoe zou het bord zijn in monochrome?
+      - Wat is de relatie tussen palet en regio?
+  - id: ind_clove_buried
+    name: Kruidnagel Begraven
+    prompt: |
+      Kruidnagels verstoppen zich in biryani, garam masala, chai. Ze zijn prikkelend, warm.
+      Vind er één. Je kunt erin bijten. De kruidnagel is een overblijfsel van de specerijenhandel.
+      Welke gebieden verbindt het?
+    follow_ups:
+      - Hoe verschilt de hele kruidnagel van gemalen?
+      - Hoe zou het gerecht zijn zonder kruidnagels?
+      - Wat is de relatie tussen kruidnagel en kolonialisme?
+  - id: ind_family_style
+    name: Familiaal Stijl
+    prompt: |
+      Eten komt in kommen op tafel. Iedereen eet ervan. De
+      maaltijd is een gedeeld project. Observeer wie wat neemt, wie wacht, wie
+      serveert. Wat is de economie van de tafel?
+    follow_ups:
+      - Hoe zou de maaltijd zijn met individuele borden?
+      - Hoe codeert delen waarden?
+      - Wat is de relatie tussen stijl en familie?
+  - id: ind_asafoetida_whiff
+    name: Duivelsdrek Snufje
+    prompt: |
+      Hing—duivelsdrek—ruikt fel rauw, magisch gekookt. Een snufje transformeert
+      dal, sabzi. Het is het geheim. Merk op wanneer je het vangt. Wat voegt
+      het snufje toe?
+    follow_ups:
+      - Hoe markeert hing de hand van de kok?
+      - Hoe zou het gerecht zijn zonder?
+      - Wat is de relatie tussen snufje en transformatie?
+  - id: ind_gulab_jamun_weight
+    name: Gulab Jamun Gewicht
+    prompt: |
+      Gulab jamun is dicht—gebakken melksubstantie, gedrenkt in siroop. Voel het
+      gewicht op de tong. Zoet, zwaar, definitief. Hoe sluit het dessert de
+      maaltijd af?
+    follow_ups:
+      - Hoe zou de maaltijd eindigen zonder?
+      - Hoe creëert gewicht afsluiting?
+      - Wat is de relatie tussen dessert en volheid?
+  - id: ind_temple_prasad
+    name: Tempel Prasad
+    prompt: |
+      Prasad—gezegen voedsel—wordt in tempels gegeven. Het kan eenvoudig zijn: laddu,
+      rijst. Maar het draagt een andere betekenis. Eet het met dat bewustzijn.
+      Wat verandert er als voedsel wordt geschonken?
+    follow_ups:
+      - Hoe verschilt prasad van restaurantvoedsel?
+      - Wat voegt de zegen toe?
+      - Wat is de relatie tussen geschenk en devotie?
+  - id: ind_bone_suck
+    name: Bot Zuigen
+    prompt: |
+      Sommige Indiase gerechten—nihari, paya—nodigen uit tot het zuigen van het bot. Het is niet
+      beleefd elders. Hier wordt het verwacht. Het merg, het bindweefsel. Wat trekt
+      het zuigen eruit?
+    follow_ups:
+      - Hoe overschrijdt de handeling fatsoen?
+      - Wat zou het gerecht verliezen zonder het bot?
+      - Wat is de relatie tussen zuigen en overgave?
+  - id: ind_pressure_cooker_song
+    name: Snelkookpan Lied
+    prompt: |
+      De snelkookpan fluit—één, twee, drie. Het is de soundtrack van
+      dal en rijst. Dat geluid betekent klaar. Hoe zou de keuken zijn zonder
+      het? Hoe vormt het lied de tijd?
+    follow_ups:
+      - Hoe markeert het fluiten de gaarheid?
+      - Wat zouden we verliezen met een instant pot?
+      - Wat is de relatie tussen geluid en veiligheid?
+  - id: ind_curry_leaf_sizzle
+    name: Curryblad Sisselen
+    prompt: |
+      Currybladeren raken hete olie—Zuid-Indiase tempering. Ze knetteren, verspreiden
+      aroma. Je eet ze niet; ze zijn voor smaak. Maar ze zijn aanwezig.
+      Wat voegt hun aanwezigheid toe?
+    follow_ups:
+      - Hoe zou het gerecht zijn zonder currybladeren?
+      - Hoe draagt het oneetbare smaak?
+      - Wat is de relatie tussen blad en geheugen?
+  - id: ind_mint_chutney_bright
+    name: Munt Chutney Fris
+    prompt: |
+      Munt chutney is vers—blitz van kruid, groene chili, limoen. Het snijdt door
+      rijkdom, fleurt het bord op. Merk de kleur op tegen de rest van de
+      thali. Wat doet groen met de compositie?
+    follow_ups:
+      - Hoe zou de maaltijd zijn zonder de chutney?
+      - Hoe onderbreekt versheid het verhaal?
+      - Wat is de relatie tussen fris en balans?
+  - id: ind_wedding_feast
+    name: Bruiloft Feestmaal
+    prompt: |
+      Indiase bruiloftskost is schaal—honderden, duizenden gevoed. Het buffet, de
+      variëteit, het overschot. Merk de choreografie op. Hoe verandert de schaal
+      de maaltijd? Wat is de relatie tussen viering en consumptie?
+    follow_ups:
+      - Hoe zou de bruiloft zijn zonder het feestmaal?
+      - Hoe codeert overvloed gastvrijheid?
+      - Wat is de relatie tussen feestmaal en status?

@@ -1,0 +1,171 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Arten, Kalifornien Superbloom zu betrachten (German)
+
+id: ways_of_looking_at_california_superbloom
+name: Arten, Kalifornien Superbloom zu betrachten
+description: |
+  Karten, um Ihre Perspektive auf die kalifornische Superbloom zu ändern.
+  Jede bietet eine andere Linse, um zu vertiefen, wie Sie Wildblumen, Berghänge und
+  den vergänglichen Farbausbruch nach dem Winterregen sehen.
+domain: california_superbloom
+cards:
+  - id: the_rain_that_made_it
+    name: Der Regen, der es ermöglichte
+    prompt: |
+      Vor den Blumen gab es Regen. Stellen Sie sich die Stürme vor, die den Boden durchtränkten, die Samen, die unter der Erde warteten. Welche Bedingungen mussten zusammenkommen, damit diese Blüte stattfinden konnte? Verfolgen Sie die Superbloom rückwärts zu ihren Ursprüngen.
+    follow_ups:
+      - Was wäre bei mehr – oder weniger – Regen anders gewesen?
+      - Wie viele Jahre der Dormanz könnten hinter einem einzelnen Berghang liegen?
+      - Was bedeutet es, dass dieser Moment nie garantiert war?
+  - id: one_species_at_a_time
+    name: Eine Art nach der anderen
+    prompt: |
+      Wählen Sie eine einzige Blumenart aus und verfolgen Sie sie. Orange Mohnblumen, lila Lupinen, gelbe Goldfelder – ignorieren Sie für einen Moment alles andere. Wie verändert die Konzentration auf eine einzige Art das, was Sie sehen?
+    follow_ups:
+      - Wo dominiert diese Art – und wo weicht sie zurück?
+      - Wie würde der Berghang aussehen, wenn nur diese eine blühen würde?
+      - Wie behauptet sie sich unter den anderen?
+  - id: pollinators_view
+    name: Die Sicht der Bestäuber
+    prompt: |
+      Stellen Sie sich vor, Sie sind eine Biene, ein Schmetterling oder ein Kolibri. Was würde Sie anziehen? Welche Blumen würden Sie zuerst besuchen? Wie sieht die Landschaft aus wenigen Zentimetern Höhe über den Blütenblättern aus?
+    follow_ups:
+      - Welche Muster würden Ihren Weg leiten?
+      - Welche Blumen würden Sie überspringen – und warum?
+      - Wie verändert die Skala die Erfahrung?
+  - id: ground_level
+    name: Bodenniveau
+    prompt: |
+      Gehen Sie tief runter. Legen Sie sich auf den Bauch oder knien Sie. Betrachten Sie die Superbloom aus der Perspektive des Bodens – Stängel ragen empor, Blütenblätter wölben sich über Ihnen, der Himmel ist ein ferner Streifen darüber.
+    follow_ups:
+      - Was bemerken Sie, das Sie aus stehender Höhe übersehen haben?
+      - Wie fühlt sich der Boden unter Ihnen an?
+      - Was würde ein Käfer von hier aus sehen?
+  - id: time_lapse
+    name: Zeitraffer
+    prompt: |
+      Die Superbloom ist ein Moment in einer längeren Geschichte. Stellen Sie sich den Berghang im Zeitraffer vor: grüne Triebe, erste Knospen, maximale Farbe, dann Verblassen. Wie lange dauert das Spektakel? Was kommt davor und danach?
+    follow_ups:
+      - Wann hätten Sie einen Besuch gewählt, wenn Sie nur einmal kommen könnten?
+      - Was ist bereits vorbei, wenn Sie ankommen?
+      - Was wird bleiben, wenn die Farbe verblasst?
+  - id: the_chemistry_of_color
+    name: Die Chemie der Farbe
+    prompt: |
+      Konzentrieren Sie sich auf die Pigmente. Orange, Lila, Gelb, Blau – was macht jeden Farbton aus? Wie interagieren sie? Wo kollidieren Farben und wo harmonieren sie? Betrachten Sie den Berghang als eine Palette.
+    follow_ups:
+      - Welche Farbe würden Sie hinzufügen – oder wegnehmen?
+      - Wie verändert das Licht die Farben im Laufe des Tages?
+      - Wie würde es in Schwarzweiß aussehen?
+  - id: negative_space
+    name: Negativraum
+    prompt: |
+      Betrachten Sie das, was keine Blumen sind. Der Himmel, die kahlen Bodenstellen, die Lücken zwischen den Blüten. Wie formt der leere Raum, was Sie sehen? Spüren Sie die Bedeutung dessen, was nicht da ist.
+    follow_ups:
+      - Wo konzentriert sich die Leere?
+      - Was würde diese Lücken füllen – und sollte es das?
+      - Wie hält der Negativraum die Komposition zusammen?
+  - id: the_path_through
+    name: Der Weg hindurch
+    prompt: |
+      Beachten Sie die Wege – menschlich, tierisch oder windgepeitscht. Wo gehen die Menschen? Wo widersetzt sich die Landschaft dem Durchgang? Zeichnen Sie einen Weg durch die Blüte und fragen Sie sich, was es kosten würde, ihm zu folgen.
+    follow_ups:
+      - Was würden Sie schützen, indem Sie dort nicht gehen?
+      - Wohin will Sie der Weg führen?
+      - Was würden Sie verpassen, wenn Sie auf dem Weg bleiben?
+  - id: geology_beneath
+    name: Die Geologie darunter
+    prompt: |
+      Die Blumen ruhen auf Millionen von Jahren. Welcher Fels liegt unter der Erde? Was hat diese Hügel geformt? Lassen Sie die Superbloom Sie mit der tiefen Zeit unter Ihren Füßen verbinden.
+    follow_ups:
+      - Wie beeinflusst die Geologie, was hier wächst?
+      - Wie sah dieser Ort aus, bevor sich die Hügel gebildet haben?
+      - Was wird bleiben, wenn die Blumen weg sind?
+  - id: scent_and_sound
+    name: Duft und Klang
+    prompt: |
+      Schließen Sie die Augen. Was riechen Sie? Pollen, Staub, Salbei, feuchte Erde? Was hören Sie? Bienen, Wind, Schritte, Stille? Lassen Sie die nicht-visuellen Sinne für einen Moment führen.
+    follow_ups:
+      - Welchen Klang würden Sie hinzufügen, um die Erfahrung einzufangen?
+      - Wie verändert sich der Duft, wenn Sie sich bewegen?
+      - Was würden Sie verpassen, wenn Sie nur schauen würden?
+  - id: light_and_shadow
+    name: Licht und Schatten
+    prompt: |
+      Beobachten Sie, wie sich das Licht über den Berghang bewegt. Morgen, Mittag, Abend – wie verändert der Sonnenstand die Blumen? Wo fallen Schatten? Was wird enthüllt und was verborgen?
+    follow_ups:
+      - Wann fühlt sich das Licht am lebendigsten an?
+      - Was würden Sie im Morgengrauen sehen, das Sie mittags verpassen würden?
+      - Wie formen Schatten die Landschaft?
+  - id: seed_to_flower
+    name: Von der Saat zur Blüte
+    prompt: |
+      Verfolgen Sie eine einzelne Pflanze von der Saat zur Blüte. Wie ist sie hierhergekommen? Wind, Tier, Wasser? Wie lange hat sie gewartet? Was wird sie werden, wenn die Blütenblätter fallen? Folgen Sie einem Leben durch seinen Zyklus.
+    follow_ups:
+      - Was hätte der Samen unter der Erde erlebt?
+      - Was wird die Pflanze zurücklassen?
+      - Wie viele Generationen sind auf diesem Berghang vertreten?
+  - id: micro_vs_macro
+    name: Mikro vs. Makro
+    prompt: |
+      Zoomen Sie auf ein einzelnes Blütenblatt, einen Tautropfen, ein Pollenkorn. Ziehen Sie sich dann zur gesamten Berghang, zum Tal, zum Bundesstaat zurück. Wie verändert die Skala die Bedeutung der Superbloom?
+    follow_ups:
+      - Was ist auf einer Skala unsichtbar und auf einer anderen offensichtlich?
+      - Wo ruht Ihre Aufmerksamkeit natürlich?
+      - Wie verändert die Makroansicht das Mikro – und umgekehrt?
+  - id: weathers_hand
+    name: Die Hand des Wetters
+    prompt: |
+      Die Superbloom ist eine Zusammenarbeit des Wetters. Regen, Sonne, Wind, Temperatur – jeder hat eine Rolle. Stellen Sie sich das Wetter als Mitgestalter vor. Was hat es entschieden? Was hat es zurückgehalten?
+    follow_ups:
+      - Was hätte ein anderer Winter hervorgebracht?
+      - Wie prägt das heutige Wetter Ihre Erfahrung?
+      - Was würden die Blumen über das Wetter sagen, wenn sie könnten?
+  - id: human_witness
+    name: Menschliche Zeugenschaft
+    prompt: |
+      Sie sind nicht der Erste, der das sieht. Wer hat hier noch gestanden? Rancher, indigene Völker, Fotografen, Reisende. Wie verändert Ihre Anwesenheit den Ort? Was bedeutet es, Zeuge zu sein?
+    follow_ups:
+      - Was hätten sie gesehen, was Sie nicht sehen?
+      - Was werden Sie mitnehmen?
+      - Wie unterscheidet sich das Zeugnis vom Besitzen oder Nehmen?
+  - id: the_next_year
+    name: Das nächste Jahr
+    prompt: |
+      Diese Blüte wird sich nicht genau wiederholen. Nächstes Jahr könnte Dürre, Feuer oder eine andere Mischung von Arten sein. Stellen Sie sich vor, Sie kehren in einem Jahr zurück. Was würden Sie hoffen zu finden? Wofür wären Sie bereit, sich zu verabschieden?
+    follow_ups:
+      - Was macht diesen Moment unwiederbringlich?
+      - Was würden Sie Ihrem zukünftigen Ich sagen?
+      - Wie vertieft Vergänglichkeit die Erfahrung?
+  - id: texture_and_touch
+    name: Textur und Berührung
+    prompt: |
+      Wie würde es sich anfühlen, mit der Hand durch die Blumen zu fahren? Weiche Blütenblätter, spröde Stängel, klebriger Pollen, raue Blätter. Stellen Sie sich die Texturen ohne Berührung vor – oder, wo erlaubt, berühren Sie sanft und bemerken Sie.
+    follow_ups:
+      - Welche Textur überrascht Sie am meisten?
+      - Was würden Sie vermeiden zu berühren – und warum?
+      - Wie trägt die Textur zum bei, was Farbe allein nicht vermitteln kann?
+  - id: before_and_after
+    name: Vorher und nachher
+    prompt: |
+      Stellen Sie sich diesen Berghang in der Trockenzeit vor – braun, ruhend, scheinbar tot. Halten Sie nun beide Bilder fest: das Vorher und das Nachher. Was offenbart der Kontrast über Widerstandsfähigkeit, Geduld und Transformation?
+    follow_ups:
+      - Was würde jemand verpassen, der nur die Trockenzeit gesehen hat?
+      - Wie bereichert die Erinnerung an die Dormanz die Blüte?
+      - Welche anderen "Vorher und Nachher"-Momente ruft dies hervor?
+  - id: make_it_a_mixtape
+    name: Machen Sie ein Mixtape daraus
+    prompt: |
+      Welche Musik würde diese Landschaft begleiten? Bauen Sie eine Playlist für die Superbloom. Welches Tempo, welche Stimmung, welche Instrumente? Lassen Sie die Blumen den Soundtrack vorgeben.
+    follow_ups:
+      - Was ist der Eröffnungssong?
+      - Welche Eigenschaft verbindet die Musik mit den Blumen – Rhythmus, Farbe, Gefühl?
+      - Wie würde sich die Playlist zu verschiedenen Tageszeiten ändern?
+  - id: take_one_thing_home
+    name: Nehmen Sie eine Sache mit nach Hause
+    prompt: |
+      Sie können die Blumen nicht mitnehmen – sie gehören hierher. Aber Sie können eine Erinnerung, eine Empfindung, eine Frage mitnehmen. Was werden Sie mitnehmen? Wie werden Sie es festhalten, ohne eine einzige Blüte zu pflücken?
+    follow_ups:
+      - Was würden Sie jemandem zeigen, der nicht kommen konnte?
+      - Wie werden Sie es später beschreiben?
+      - Was würden Sie absichtlich zurücklassen?

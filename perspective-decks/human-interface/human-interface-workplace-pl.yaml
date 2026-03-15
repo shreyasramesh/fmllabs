@@ -1,0 +1,508 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Interfejs Człowieka — Miejsce Pracy (Polish)
+
+id: human_interface_workplace
+name: Interfejs Człowieka — Miejsce Pracy
+description: 50 kart zmieniających sposób, w jaki postrzegasz miejsce pracy – od przestrzeni biurka i sal konferencyjnych po dystrybutor wody i widzialną lub niewidzialną hierarchię.
+domain: human_interface
+cards:
+  - id: hi_wp_desk_territory
+    name: Terytorium Biurka
+    prompt: |
+      Biurko jest zajęte – zdjęcia, rośliny, kubki. Terytorium wykracza poza
+      powierzchnię. Obserwuj granice. Co oznacza "moje"? Biurko jest
+      małym królestwem. Jak jest bronione?
+    follow_ups:
+      - Jak biurko kształtuje tożsamość?
+      - Jakie byłoby miejsce pracy bez personalizacji?
+      - Jaka jest relacja między terytorium a przynależnością?
+  - id: hi_wp_meeting_room
+    name: Sala Konferencyjna
+    prompt: |
+      W pokoju jest stół, krzesła, ekran. Drzwi się zamykają. Sala konferencyjna
+      jest sceną dla występu. Obserwuj, kto mówi, a kto milczy. Pokój
+      zawiera hierarchię. Co umożliwia przestrzeń?
+    follow_ups:
+      - Jak pokój kształtuje spotkanie?
+      - Jakie byłoby miejsce pracy bez sal konferencyjnych?
+      - Jaka jest relacja między pokojem a władzą?
+  - id: hi_wp_water_cooler
+    name: Dystrybutor Wody
+    prompt: |
+      Dystrybutor wody jest skrzyżowaniem. Ludzie spotykają się tam przypadkiem.
+      Spotkanie jest nieformalne. Obserwuj rozmowy. Co mówi się
+      przy dystrybutorze, czego nie powiedziałoby się na spotkaniu?
+    follow_ups:
+      - Jak dystrybutor kształtuje kulturę?
+      - Jakie byłoby miejsce pracy bez niego?
+      - Jaka jest relacja między dystrybutorem a więzią?
+  - id: hi_wp_visible_hierarchy
+    name: Widzialna Hierarchia
+    prompt: |
+      Narożne biura, miejsca przy oknie, boksy. Przestrzeń koduje rangę.
+      Obserwuj rozkład. Kto co dostaje? Hierarchia jest wpisana
+      w architekturę. Co ona komunikuje?
+    follow_ups:
+      - Jak hierarchia kształtuje zachowanie?
+      - Jakie byłoby miejsce pracy bez niej?
+      - Jaka jest relacja między przestrzenią a statusem?
+  - id: hi_wp_invisible_hierarchy
+    name: Niewidzialna Hierarchia
+    prompt: |
+      Niektórzy są słuchani; inni są przerywani. Hierarchia
+      nie jest na schemacie organizacyjnym. Obserwuj spotkania. Kto
+      ulega? Kto dominuje? Niewidzialna hierarchia kształtuje wyniki.
+    follow_ups:
+      - Jak wyłania się niewidzialna hierarchia?
+      - Jakie byłoby miejsce pracy, gdyby była widzialna?
+      - Jaka jest relacja między niewidzialnym a władzą?
+  - id: hi_wp_cubicle_wall
+    name: Ścianka Boksowa
+    prompt: |
+      Ścianka jest niska – można przez nią przejrzeć. Prywatność jest częściowa.
+      Boks jest kompromisem. Obserwuj linie widoczności. Co słyszysz? Co
+      widzisz? Ścianka tworzy iluzję granicy.
+    follow_ups:
+      - Jak boks kształtuje skupienie?
+      - Jakie byłoby miejsce pracy z pełnymi ściankami?
+      - Jaka jest relacja między ścianką a prywatnością?
+  - id: hi_wp_corner_office
+    name: Narożne Biuro
+    prompt: |
+      Narożne biuro ma dwa okna. To jest nagroda. Obserwuj, kto je zajmuje.
+      Narożne biuro jest widoczne z korytarza. To symbol. Co
+      komunikuje narożne biuro?
+    follow_ups:
+      - Jak narożne biuro kształtuje aspiracje?
+      - Jakie byłoby piętro bez niego?
+      - Jaka jest relacja między narożnikiem a autorytetem?
+  - id: hi_wp_open_plan
+    name: Open Space
+    prompt: |
+      Brak ścian. Biurka w rzędach lub grupach. Open space obiecuje współpracę.
+      Obserwuj rzeczywistość. Kto nosi słuchawki? Open space tworzy
+      bliskość. Czego kosztuje?
+    follow_ups:
+      - Jak open space kształtuje interakcję?
+      - Jakie byłoby miejsce pracy ze ścianami?
+      - Jaka jest relacja między otwartością a skupieniem?
+  - id: hi_wp_calendar_invite
+    name: Zaproszenie w Kalendarzu
+    prompt: |
+      Pojawia się zaproszenie. Akceptuj, odrzuć, tymczasowo. Kalendarz
+      strukturyzuje dzień. Obserwuj bloki. Kto kontroluje czyjś czas?
+      Kalendarz jest mapą władzy.
+    follow_ups:
+      - Jak kalendarz kształtuje dzień?
+      - Jakie byłoby miejsce pracy bez niego?
+      - Jaka jest relacja między zaproszeniem a obowiązkiem?
+  - id: hi_wp_knock_before_enter
+    name: Pukanie Przed Wejściem
+    prompt: |
+      Niektóre drzwi są zamknięte. Pukanie jest prośbą. Obserwuj, kto puka
+      a kto wchodzi. Pukanie koduje szacunek. Czego strzeżą zamknięte
+      drzwi?
+    follow_ups:
+      - Jak pukanie kształtuje spotkanie?
+      - Jakie byłoby miejsce pracy z otwartymi drzwiami?
+      - Jaka jest relacja między pukaniem a granicą?
+  - id: hi_wp_headphones_signal
+    name: Sygnał Słuchawek
+    prompt: |
+      Słuchawki na uszach oznaczają "nie przeszkadzać". Sygnał jest uniwersalny.
+      Obserwuj, kto go szanuje. Słuchawki tworzą bańkę. Co ta bańka
+      umożliwia?
+    follow_ups:
+      - Jak słuchawki kształtują przestrzeń pracy?
+      - Jakie byłoby miejsce pracy bez nich?
+      - Jaka jest relacja między słuchawkami a skupieniem?
+  - id: hi_wp_lunch_room
+    name: Jadalnia
+    prompt: |
+      W jadalni są stoły, mikrofalówka, lodówka. Ludzie jedzą sami lub
+      razem. Obserwuj grupy. Kto z kim siedzi? Jadalnia
+      ujawnia sojusze. Co mówi układ?
+    follow_ups:
+      - Jak jadalnia kształtuje kulturę?
+      - Jakie byłoby miejsce pracy bez niej?
+      - Jaka jest relacja między jedzeniem a więzią?
+  - id: hi_wp_slack_ping
+    name: Ping na Slacku
+    prompt: |
+      Pojawia się ping. Natychmiastowy, asynchroniczny. Ping może przerywać
+      lub czekać. Obserwuj normy. Kto odpowiada natychmiast? Ping tworzy
+      nowy rytm komunikacji. Co zastępuje?
+    follow_ups:
+      - Jak ping kształtuje dzień?
+      - Jakie byłoby miejsce pracy bez niego?
+      - Jaka jest relacja między pingiem a pilnością?
+  - id: hi_wp_whiteboard_claim
+    name: Tablica Biała – Zajęta
+    prompt: |
+      Tablica przechowuje pomysły – schematy, listy. Ktoś je napisał.
+      Tablica jest wspólną powierzchnią. Obserwuj, kto pisze, kto wyciera.
+      Tablica jest terytorium. Co zawiera?
+    follow_ups:
+      - Jak tablica kształtuje współpracę?
+      - Jakie byłoby spotkanie bez niej?
+      - Jaka jest relacja między tablicą a myślą?
+  - id: hi_wp_elevator_encounter
+    name: Spotkanie w Winda
+    prompt: |
+      Jedziesz windą ze współpracownikiem. Trzydzieści sekund. Spotkanie
+      jest niezręczne lub łatwe. Obserwuj small talk. Co zostaje powiedziane?
+      Winda kompresuje czas. Czego wymaga?
+    follow_ups:
+      - Jak winda kształtuje spotkanie?
+      - Jakie byłoby budynek bez wind?
+      - Jaka jest relacja między windą a uprzejmością?
+  - id: hi_wp_cc_email
+    name: CC w Mailu
+    prompt: |
+      Jesteś na kopii. Nie jesteś głównym odbiorcą. Kopia włącza Cię
+      do obiegu. Obserwuj, kto dostaje kopię. Kopia jest sygnałem
+      znaczenia – lub polityki. Co robi kopia?
+    follow_ups:
+      - Jak kopia kształtuje komunikację?
+      - Jakie byłoby miejsce pracy bez kopii?
+      - Jaka jest relacja między kopią a widocznością?
+  - id: hi_wp_standing_desk
+    name: Biurko Stojące
+    prompt: |
+      Biurko się podnosi. Pracownik stoi. Biurko stojące jest wyborem –
+      zdrowie, preferencja, wydajność. Obserwuj, kto je ma. Co sygnalizuje
+      biurko stojące?
+    follow_ups:
+      - Jak biurko stojące kształtuje ciało?
+      - Jakie byłoby miejsce pracy bez niego?
+      - Jaka jest relacja między staniem a produktywnością?
+  - id: hi_wp_conference_call
+    name: Połączenie Konferencyjne
+    prompt: |
+      Głosy z zewnątrz. Połączenie łączy rozproszonych ludzi. Obserwuj,
+      kto mówi, kto się wycisza. Połączenie jest częściową obecnością. Co
+      umożliwia połączenie – a co traci?
+    follow_ups:
+      - Jak połączenie kształtuje spotkanie?
+      - Jakie byłoby miejsce pracy bez niego?
+      - Jaka jest relacja między połączeniem a obecnością?
+  - id: hi_wp_office_plant
+    name: Roślina Biurowa
+    prompt: |
+      Roślina na biurku – pothos, sukulent. To dekoracja i troska.
+      Roślina nie należy do firmy. Obserwuj, kto ją ma. Co
+      roślina dodaje przestrzeni?
+    follow_ups:
+      - Jak roślina kształtuje biurko?
+      - Jakie byłoby miejsce pracy bez roślin?
+      - Jaka jest relacja między rośliną a tożsamością?
+  - id: hi_wp_after_hours
+    name: Po Godzinach
+    prompt: |
+      Biuro po tym, jak większość już wyszła. Światła są przygaszone.
+      Pracownik pracujący po godzinach jest widoczny – oddany lub walczący.
+      Obserwuj scenę. Co umożliwia puste biuro? Czego kosztuje?
+    follow_ups:
+      - Jak praca po godzinach kształtuje kulturę?
+      - Jakie byłoby miejsce pracy bez niej?
+      - Jaka jest relacja między godzinami a oczekiwaniami?
+  - id: hi_wp_nameplate
+    name: Tabliczka z Nazwiskiem
+    prompt: |
+      Nazwisko na biurku, na drzwiach. Tabliczka z nazwiskiem rości sobie
+      prawa do przestrzeni. Obserwuj, kto ją ma. Tabliczka z nazwiskiem
+      to tożsamość i terytorium. Co ona komunikuje przechodniom?
+    follow_ups:
+      - Jak tabliczka z nazwiskiem kształtuje przestrzeń?
+      - Jakie byłoby miejsce pracy bez niej?
+      - Jaka jest relacja między tabliczką a obecnością?
+  - id: hi_wp_meeting_overrun
+    name: Przedłużone Spotkanie
+    prompt: |
+      Spotkanie miało się zakończyć. Nie kończy się. Przedłużenie jest częste.
+      Obserwuj dynamikę. Kto ma następne spotkanie? Kto może zostać?
+      Przedłużenie jest ruchem władzy. Co ono wyciąga?
+    follow_ups:
+      - Jak przedłużenie kształtuje dzień?
+      - Jakie byłoby miejsce pracy z rygorystycznymi końcówkami?
+      - Jaka jest relacja między przedłużeniem a szacunkiem?
+  - id: hi_wp_quick_question
+    name: Szybkie Pytanie
+    prompt: |
+      "Mam szybkie pytanie?" Prośba przerywa. "Szybkie" jest obietnicą.
+      Obserwuj wymianę. Jak szybka jest? Szybkie pytanie jest
+      negocjacją czasu. Czego kosztuje?
+    follow_ups:
+      - Jak szybkie pytanie kształtuje przepływ?
+      - Jakie byłoby miejsce pracy bez przerw?
+      - Jaka jest relacja między szybkością a szacunkiem?
+  - id: hi_wp_bathroom_encounter
+    name: Spotkanie w Łazience
+    prompt: |
+      Widzisz kolegę w łazience. Spotkanie jest niejednoznaczne. Kontakt wzrokowy
+      czy nie? Łazienka jest przestrzenią przejściową. Obserwuj normy.
+      Czego wymaga spotkanie?
+    follow_ups:
+      - Jak łazienka kształtuje miejsce pracy?
+      - Jakie byłoby miejsce pracy bez wspólnych łazienek?
+      - Jaka jest relacja między łazienką a prywatnością?
+  - id: hi_wp_commute_talk
+    name: Rozmowa o Dojazdach
+    prompt: |
+      "Jak minął dojazd?" Pytanie otwiera small talk. Dojazd jest wspólnym
+      doświadczeniem. Obserwuj wymianę. Co daje rozmowa o dojazdach
+      relacji?
+    follow_ups:
+      - Jak rozmowa o dojazdach kształtuje dzień?
+      - Jakie byłoby miejsce pracy bez niej?
+      - Jaka jest relacja między dojazdem a więzią?
+  - id: hi_wp_parking_spot
+    name: Miejsce Parkingowe
+    prompt: |
+      Miejsca zarezerwowane, miejsca dla pierwszych przybyłych. Parking koduje
+      hierarchię. Obserwuj, kto gdzie parkuje. Miejsce parkingowe jest
+      małym przywilejem. Co ono komunikuje?
+    follow_ups:
+      - Jak parking kształtuje miejsce pracy?
+      - Jaka byłaby przestrzeń parkingowa bez miejsc zarezerwowanych?
+      - Jaka jest relacja między miejscem a statusem?
+  - id: hi_wp_birthday_cake
+    name: Tort Urodzinowy
+    prompt: |
+      Pojawia się tort. To czyjeś urodziny. Zespół się zbiera. Tort jest
+      rytuałem. Obserwuj zgromadzenie. Co moment urodzin robi
+      dla grupy?
+    follow_ups:
+      - Jak urodziny kształtują kulturę?
+      - Jakie byłoby miejsce pracy bez nich?
+      - Jaka jest relacja między tortem a przynależnością?
+  - id: hi_wp_forwarded_email
+    name: Przekazany Mail
+    prompt: |
+      Email jest przekazywany. "Do wiadomości" lub "Myślę, że powinieneś to
+      zobaczyć". Przekazanie przedłuża rozmowę. Obserwuj, komu jest
+      przekazywany. Przekazanie jest sygnałem. Co ono oznacza?
+    follow_ups:
+      - Jak przekazanie kształtuje komunikację?
+      - Jakie byłoby miejsce pracy bez niego?
+      - Jaka jest relacja między przekazaniem a zaufaniem?
+  - id: hi_wp_break_room
+    name: Pokój Przerw
+    prompt: |
+      Kawa, przekąski, czasem kanapa. Pokój przerw to pauza. Ludzie
+      idą tam, aby odpocząć. Obserwuj, kto z niego korzysta. Pokój
+      przerw to schronienie. Co zapewnia?
+    follow_ups:
+      - Jak pokój przerw kształtuje dzień?
+      - Jakie byłoby miejsce pracy bez niego?
+      - Jaka jest relacja między przerwą a produktywnością?
+  - id: hi_wp_office_supply
+    name: Artykuły Biurowe
+    prompt: |
+      Długopisy, papier, zszywacze – szafka z artykułami zawiera narzędzia.
+      Ktoś nią zarządza. Obserwuj, kto co bierze. Artykuły są małym
+      wspólnym dobrem. Jakie są zasady?
+    follow_ups:
+      - Jak artykuły kształtują miejsce pracy?
+      - Jakie byłoby miejsce pracy bez nich?
+      - Jaka jest relacja między artykułami a uprawnieniem?
+  - id: hi_wp_remote_camera
+    name: Kamera Zdalna
+    prompt: |
+      Kamera jest włączona lub wyłączona. Pracownik zdalny wybiera. Wybór
+      jest widoczny. Obserwuj normy. Kto ją trzyma włączoną? Kamera
+      jest oknem. Co ujawnia?
+    follow_ups:
+      - Jak kamera kształtuje połączenie?
+      - Jakie byłoby spotkanie bez niej?
+      - Jaka jest relacja między kamerą a obecnością?
+  - id: hi_wp_side_conversation
+    name: Rozmowa na Uboczu
+    prompt: |
+      Dwie osoby rozmawiają, podczas gdy inni pracują. Rozmowa na uboczu
+      jest prywatna, ale widoczna. Obserwuj dynamikę. Czy jest
+      rozpraszająca? Rozmowa na uboczu jest małym buntem. Co ona tworzy?
+    follow_ups:
+      - Jak rozmowa na uboczu kształtuje przestrzeń pracy?
+      - Jakie byłoby miejsce pracy bez niej?
+      - Jaka jest relacja między rozmową na uboczu a wykluczeniem?
+  - id: hi_wp_clean_desk
+    name: Czyste Biurko
+    prompt: |
+      Niektóre biurka są nieskazitelne – nic osobistego. Czyste biurko to
+      polityka lub preferencja. Obserwuj kontrast. Co komunikuje
+      czyste biurko? Sterylność? Dyscyplinę? Dystans?
+    follow_ups:
+      - Jak czyste biurko kształtuje pracownika?
+      - Jakie byłoby miejsce pracy z bałaganiarskimi biurkami?
+      - Jaka jest relacja między czystością a tożsamością?
+  - id: hi_wp_meeting_no_show
+    name: Nieobecność na Spotkaniu
+    prompt: |
+      Spotkanie zostało zaplanowane. Ktoś się nie pojawił. Nieobecność jest
+      wiadomością. Obserwuj reakcję. Czy ktoś o tym wspomina? Nieobecność
+      jest małym ruchem władzy. Co ona komunikuje?
+    follow_ups:
+      - Jak nieobecność kształtuje spotkanie?
+      - Jakie byłoby miejsce pracy bez nieobecności?
+      - Jaka jest relacja między nieobecnością a szacunkiem?
+  - id: hi_wp_cubicle_visit
+    name: Wizyta w Boksie
+    prompt: |
+      Ktoś podchodzi. Stoi na krawędzi boksu. Wizyta jest wyborem – mógłby
+      wysłać wiadomość. Obserwuj dynamikę. Co umożliwia wizyta, czego
+      nie umożliwia wiadomość?
+    follow_ups:
+      - Jak wizyta kształtuje interakcję?
+      - Jakie byłoby miejsce pracy bez wizyt?
+      - Jaka jest relacja między wizytą a przerwaniem?
+  - id: hi_wp_shared_printer
+    name: Drukarka Wspólna
+    prompt: |
+      Drukarka jest wspólna. Dokumenty się piętrzą. Ktoś musi je zabrać.
+      Drukarka jest skrzyżowaniem. Obserwuj spotkania. Co się dzieje,
+      gdy dwie osoby sięgają po ten sam wydruk?
+    follow_ups:
+      - Jak drukarka kształtuje przestrzeń pracy?
+      - Jakie byłoby miejsce pracy bez niej?
+      - Jaka jest relacja między drukarką a cierpliwością?
+  - id: hi_wp_office_temperature
+    name: Temperatura Biura
+    prompt: |
+      "Jest za zimno." "Jest za gorąco." Temperatura jest sporna. Ktoś
+      kontroluje termostat. Obserwuj skargi. Temperatura jest małym
+      obszarem władzy. Kto wygrywa?
+    follow_ups:
+      - Jak temperatura kształtuje miejsce pracy?
+      - Jakie byłoby miejsce pracy z indywidualną kontrolą?
+      - Jaka jest relacja między temperaturą a komfortem?
+  - id: hi_wp_handshake
+    name: Uścisk Dłoni
+    prompt: |
+      Uścisk dłoni – pierwsze spotkanie, zamknięcie umowy. Uścisk dłoni
+      jest rytuałem. Obserwuj uścisk, czas trwania. Uścisk dłoni
+      koduje formalność. Co on komunikuje?
+    follow_ups:
+      - Jak uścisk dłoni kształtuje spotkanie?
+      - Jakie byłoby miejsce pracy bez niego?
+      - Jaka jest relacja między uściskiem dłoni a zaufaniem?
+  - id: hi_wp_cc_removal
+    name: Usunięcie z Kopii
+    prompt: |
+      "Odpowiedz wszystkim" czy "Odpowiedz"? Wybór ma znaczenie. Usunięcie
+      kogoś z wątku jest sygnałem. Obserwuj dynamikę. Kto jest pomijany?
+      Usunięcie z kopii jest małym wykluczeniem. Co ono oznacza?
+    follow_ups:
+      - Jak usunięcie kształtuje rozmowę?
+      - Jakie byłoby miejsce pracy bez opcji odpowiedzi?
+      - Jaka jest relacja między usunięciem a władzą?
+  - id: hi_wp_office_tour
+    name: Oprowadzanie po Biurze
+    prompt: |
+      Nowy pracownik dostaje oprowadzanie. "To jest kuchnia. Tutaj mamy
+      spotkania." Oprowadzanie orientuje. Obserwuj przewodnika. Co
+      komunikuje oprowadzanie o kulturze?
+    follow_ups:
+      - Jak oprowadzanie kształtuje nowicjusza?
+      - Jakie byłoby wdrożenie bez niego?
+      - Jaka jest relacja między oprowadzaniem a przynależnością?
+  - id: hi_wp_meeting_room_book
+    name: Rezerwacja Sali Konferencyjnej
+    prompt: |
+      Pokój jest zarezerwowany. Albo podwójnie zarezerwowany. Kalendarz jest
+      rozjemcą. Obserwuj konflikt. Kto ustępuje? Rezerwacja jest roszczeniem
+      do przestrzeni i czasu. Czego ona wymaga?
+    follow_ups:
+      - Jak rezerwacja kształtuje dzień?
+      - Jakie byłoby miejsce pracy bez rezerwacji?
+      - Jaka jest relacja między rezerwacją a priorytetem?
+  - id: hi_wp_goodbye_ritual
+    name: Rytuał Pożegnania
+    prompt: |
+      Koniec dnia. "Wychodzę." "Do jutra." Pożegnanie jest rytuałem.
+      Obserwuj wymiany. Kto komu mówi "do widzenia"? Rytuał wyznacza
+      granicę między pracą a niepracą.
+    follow_ups:
+      - Jak pożegnanie kształtuje dzień?
+      - Jakie byłoby miejsce pracy bez niego?
+      - Jaka jest relacja między pożegnaniem a zamknięciem?
+  - id: hi_wp_promotion_announce
+    name: Ogłoszenie Awansu
+    prompt: |
+      "Z przyjemnością ogłaszamy..." Awans jest publiczny. Ogłoszenie
+      tworzy moment. Obserwuj reakcję. Gratulacje, cisza, ukradkowe
+      spojrzenia. Co ogłoszenie robi z pokojem?
+    follow_ups:
+      - Jak ogłoszenie kształtuje kulturę?
+      - Jakie byłoby miejsce pracy bez publicznych awansów?
+      - Jaka jest relacja między ogłoszeniem a hierarchią?
+  - id: hi_wp_desk_move
+    name: Przeprowadzka Biurka
+    prompt: |
+      Ktoś przenosi biurko. Przeprowadzka jest awansem, reorganizacją lub
+      wyborem. Obserwuj proces. Co zabiera? Co zostawia? Przeprowadzka
+      jest przejściem. Co ona oznacza?
+    follow_ups:
+      - Jak przeprowadzka kształtuje pracownika?
+      - Jakie byłoby miejsce pracy bez przeprowadzek?
+      - Jaka jest relacja między przeprowadzką a tożsamością?
+  - id: hi_wp_office_gossip
+    name: Plotki Biurowe
+    prompt: |
+      Informacje krążą – kto odchodzi, kto jest sfrustrowany. Plotki są
+      nieformalne. Obserwuj, gdzie się dzieją. Dystrybutor wody, korytarz.
+      Co plotki robią dla grupy?
+    follow_ups:
+      - Jak plotki kształtują kulturę?
+      - Jakie byłoby miejsce pracy bez nich?
+      - Jaka jest relacja między plotkami a przynależnością?
+  - id: hi_wp_meeting_agenda
+    name: Agenda Spotkania
+    prompt: |
+      Agenda strukturyzuje spotkanie. Albo nie – spotkanie dryfuje.
+      Obserwuj dynamikę. Kto przestrzega agendy? Kto nie? Agenda
+      jest umową. Co ona umożliwia?
+    follow_ups:
+      - Jak agenda kształtuje spotkanie?
+      - Jakie byłoby spotkanie bez niej?
+      - Jaka jest relacja między agendą a władzą?
+  - id: hi_wp_office_food
+    name: Jedzenie w Biurze
+    prompt: |
+      Pączki, owoce, resztki z klientowskiego spotkania. Jedzenie się pojawia.
+      Ludzie się zbierają. Obserwuj dzielenie się. Jedzenie w biurze jest
+      małym prezentem. Co ono tworzy?
+    follow_ups:
+      - Jak jedzenie kształtuje miejsce pracy?
+      - Jakie byłoby miejsce pracy bez niego?
+      - Jaka jest relacja między jedzeniem a społecznością?
+  - id: hi_wp_last_day
+    name: Ostatni Dzień
+    prompt: |
+      Czyjś ostatni dzień. Pożegnania, może kartka, może tort. Ostatni dzień
+      jest rytuałem odejścia. Obserwuj nastrój. Co ostatni dzień robi
+      dla odchodzącego i tych, którzy zostają?
+    follow_ups:
+      - Jak ostatni dzień kształtuje kulturę?
+      - Jakie byłoby miejsce pracy bez rytuału?
+      - Jaka jest relacja między ostatnim dniem a zamknięciem?
+  - id: hi_wp_office_hours
+    name: Godziny Przyjęć
+    prompt: |
+      "Mam godziny przyjęć wtorek 14-16." Blok jest otwarty. Ludzie mogą
+      wpadać. Obserwuj, kto przychodzi. Godziny przyjęć są zaproszeniem. Co
+      one umożliwiają?
+    follow_ups:
+      - Jak godziny przyjęć kształtują dostęp?
+      - Jakie byłoby miejsce pracy bez nich?
+      - Jaka jest relacja między godzinami a dostępnością?
+  - id: hi_wp_workspace_claim
+    name: Zgłoszenie Miejsca Pracy
+    prompt: |
+      Kurtka na krześle. Torba pod biurkiem. Zgłoszenie mówi "Jestem tu"
+      lub "Wrócę". Obserwuj sygnały. Jak długo może obowiązywać zgłoszenie?
+      Miejsce pracy jest tymczasowo własnością. Jakie są zasady?
+    follow_ups:
+      - Jak zgłoszenie kształtuje przestrzeń pracy?
+      - Jakie byłoby miejsce pracy bez zgłoszeń?
+      - Jaka jest relacja między zgłoszeniem a obecnością?

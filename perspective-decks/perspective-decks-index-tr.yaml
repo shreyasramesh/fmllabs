@@ -1,0 +1,247 @@
+# yaml-language-server: $schema=../schema/perspective-deck-index-schema.json
+# Perspective Decks Index (Turkish)
+
+domains:
+  art:
+    name: Sanata Bakış Açıları
+    description: |
+      Sanat eserlerini incelerken bakış açınızı değiştirecek kartlar. Her biri
+      ışık ve gölgeden girişlere ve duyguya kadar farklı bir mercek sunar—
+      eserleri nasıl gördüğünüzü ve onlarla nasıl etkileşim kurduğunuzu derinleştirmek için.
+  urban_jungle:
+    name: Kentsel Orman
+    description: |
+      Bir şehirden sadece yürüyerek geçmek yerine, onu canlı bir organizma
+      olarak görün. Kartlar eski binaların yaralarına, trafiğin koreografisine
+      ve ara sokakların gizli yaşamlarına odaklanır.
+  culinary_lab:
+    name: Mutfak Laboratuvarı
+    description: |
+      Lezzetten dönüşüme geçiş. Bir lokmanın kimyasını, bir malzemenin
+      tarihini ve bir restoranın müziğini keşfedin.
+  natural_microcosm:
+    name: Doğal Mikrokozmos
+    description: |
+      Bir park veya arka bahçe için mükemmel. Bu mercek, bir yaprağın
+      görünmez mühendisliğine, bir kayanın ağır çekim yaşamına veya böceklerin
+      bölgesel dramalarına odaklanır.
+  human_interface:
+    name: İnsan Etkileşimi
+    description: |
+      İnsanların buluştuğu günlük alanlar—kahve dükkanları, ulaşım merkezleri,
+      iş yerleri, perakende mağazaları, halka açık parklar. Kartlar sıra
+      koreografisine, bölge iddialarına, görünmez senaryolara ve paylaşılan
+      alan antropolojisine odaklanır.
+  california_superbloom:
+    name: Kaliforniya Süper Çiçeklenmesi
+    description: |
+      Kış yağmurundan sonraki geçici kır çiçekleri patlaması. Kartlar renk,
+      ölçek, tozlayıcılar, jeoloji, hava durumu ve çiçeklenmenin geçici
+      gösterisine odaklanır.
+decks:
+  - id: ways_of_looking_at_art
+    name: Sanata Bakış Açıları
+    path: perspective-decks/ways-of-looking-at-art.yaml
+    description: |
+      Sanat eserlerini incelerken bakış açınızı değiştirecek 50 kart. Her kart
+      ışık ve gölgeden girişlere ve duyguya kadar farklı bir mercek sunar—
+      eserleri nasıl gördüğünüzü ve onlarla nasıl etkileşim kurduğunuzu derinleştirmek için.
+    domain: art
+  - id: ways_of_looking_at_california_superbloom
+    name: Kaliforniya Süper Çiçeklenmesine Bakış Açıları
+    path: perspective-decks/ways-of-looking-at-california-superbloom.yaml
+    description: |
+      Kaliforniya süper çiçeklenmesini deneyimlerken bakış açınızı
+      değiştirecek 20 kart. Her kart tozlayıcılardan ve jeolojiden ışığa,
+      kokulara ve geçiciliğe kadar farklı bir mercek sunar—kır çiçeklerini
+      ve geçici renk patlamasını nasıl gördüğünüzü derinleştirmek için.
+    domain: california_superbloom
+  - id: urban_jungle_new_york
+    name: Kentsel Orman — New York
+    path: perspective-decks/urban-jungle/urban-jungle-new-york.yaml
+    description: |
+      New York'a bakış açınızı değiştirecek 50 kart—ölçek ve ışıktan tarih
+      katmanlarına ve sokak yaşamının ritimlerine kadar.
+    domain: urban_jungle
+    subdomain_id: ny
+    subdomain_name: New York
+  - id: urban_jungle_san_francisco
+    name: Kentsel Orman — San Francisco
+    path: perspective-decks/urban-jungle/urban-jungle-san-francisco.yaml
+    description: |
+      San Francisco'ya bakış açınızı değiştirecek 50 kart—ölçek ve ışıktan
+      tarih katmanlarına ve sokak yaşamının ritimlerine kadar.
+    domain: urban_jungle
+    subdomain_id: sf
+    subdomain_name: San Francisco
+  - id: urban_jungle_london
+    name: Kentsel Orman — Londra
+    path: perspective-decks/urban-jungle/urban-jungle-london.yaml
+    description: |
+      Londra'ya bakış açınızı değiştirecek 50 kart—ölçek ve ışıktan tarih
+      katmanlarına ve sokak yaşamının ritimlerine kadar.
+    domain: urban_jungle
+    subdomain_id: london
+    subdomain_name: London
+  - id: urban_jungle_paris
+    name: Kentsel Orman — Paris
+    path: perspective-decks/urban-jungle/urban-jungle-paris.yaml
+    description: |
+      Paris'e bakış açınızı değiştirecek 50 kart—ölçek ve ışıktan tarih
+      katmanlarına ve sokak yaşamının ritimlerine kadar.
+    domain: urban_jungle
+    subdomain_id: paris
+    subdomain_name: Paris
+  - id: urban_jungle_bangalore
+    name: Kentsel Orman — Bangalore
+    path: perspective-decks/urban-jungle/urban-jungle-bangalore.yaml
+    description: |
+      Bangalore'a bakış açınızı değiştirecek 50 kart—ölçek ve ışıktan tarih
+      katmanlarına ve sokak yaşamının ritimlerine kadar.
+    domain: urban_jungle
+    subdomain_id: blr
+    subdomain_name: Bangalore
+  - id: culinary_lab_indian
+    name: Mutfak Laboratuvarı — Hint
+    path: perspective-decks/culinary-lab/culinary-lab-indian.yaml
+    description: |
+      Hint yemeklerini deneyimleme şeklinizi değiştirecek 50 kart—baharatların
+      ve acının kimyasından, malzemelerin arkeolojisine ve paylaşılan masanın
+      koreografisine kadar.
+    domain: culinary_lab
+    subdomain_id: indian
+    subdomain_name: Hint
+  - id: culinary_lab_italian
+    name: Mutfak Laboratuvarı — İtalyan
+    path: perspective-decks/culinary-lab/culinary-lab-italian.yaml
+    description: |
+      İtalyan yemeklerini deneyimleme şeklinizi değiştirecek 50 kart—zeytinyağının
+      ve asidin kimyasından, masanın sosyal koreografisine ve her malzemenin
+      arkeolojisine kadar.
+    domain: culinary_lab
+    subdomain_id: italian
+    subdomain_name: İtalyan
+  - id: culinary_lab_pizza
+    name: Mutfak Laboratuvarı — Pizza
+    path: perspective-decks/culinary-lab/culinary-lab-pizza.yaml
+    description: |
+      Pizza deneyimleme şeklinizi değiştirecek 50 kart—hamurun ve ateşin
+      kimyasından dilimin tiyatrosuna ve malzemelerin arkeolojisine kadar.
+    domain: culinary_lab
+    subdomain_id: pizza
+    subdomain_name: Pizza
+  - id: culinary_lab_chinese
+    name: Mutfak Laboratuvarı — Çin
+    path: perspective-decks/culinary-lab/culinary-lab-chinese.yaml
+    description: |
+      Çin yemeklerini deneyimleme şeklinizi değiştirecek 50 kart—wok
+      hevesinin kimyasından ve soyunun arkeolojisinden, yuvarlak masa
+      koreografisine ve ziyafetin anlatısına kadar.
+    domain: culinary_lab
+    subdomain_id: chinese
+    subdomain_name: Çin
+  - id: culinary_lab_sushi
+    name: Mutfak Laboratuvarı — Suşi
+    path: perspective-decks/culinary-lab/culinary-lab-sushi.yaml
+    description: |
+      Suşi deneyimleme şeklinizi değiştirecek 50 kart—pirincin ve balığın
+      kimyasından tezgahın koreografisine ve her netanın kökenlerinin
+      arkeolojisine kadar.
+    domain: culinary_lab
+    subdomain_id: sushi
+    subdomain_name: Suşi
+  - id: natural_microcosm_forest_floor
+    name: Doğal Mikrokozmos — Orman Zemini
+    path: perspective-decks/natural-microcosm/natural-microcosm-forest-floor.yaml
+    description: |
+      Orman zeminine bakış açınızı değiştirecek 50 kart—ayrışma ve miselyumdan
+      yaprak döküntüsü mimarisine ve gölgelerin altındaki görünmez yaşama kadar.
+    domain: natural_microcosm
+    subdomain_id: forest_floor
+    subdomain_name: Orman Zemini
+  - id: natural_microcosm_garden_backyard
+    name: Doğal Mikrokozmos — Bahçe ve Arka Bahçe
+    path: perspective-decks/natural-microcosm/natural-microcosm-garden-backyard.yaml
+    description: |
+      Evcil vahşi yaşama bakış açınızı değiştirecek 50 kart—tozlayıcılardan
+      ve topraktan yabani otlar ve ürünler arasındaki ilişkiye ve
+      kültüre alınmış doğanın koreografisine kadar.
+    domain: natural_microcosm
+    subdomain_id: garden_backyard
+    subdomain_name: Bahçe ve Arka Bahçe
+  - id: natural_microcosm_rocks_stones
+    name: Doğal Mikrokozmos — Kayalar ve Taşlar
+    path: perspective-decks/natural-microcosm/natural-microcosm-rocks-stones.yaml
+    description: |
+      Kayalara ve taşlara bakış açınızı değiştirecek 50 kart—jeolojik zamandan
+      ve likenden, ayrışma, erozyon ve mineralin ağır çekim yaşamına kadar.
+    domain: natural_microcosm
+    subdomain_id: rocks_stones
+    subdomain_name: Kayalar ve Taşlar
+  - id: natural_microcosm_pond_puddle
+    name: Doğal Mikrokozmos — Gölet ve Su Birikintisi
+    path: perspective-decks/natural-microcosm/natural-microcosm-pond-puddle.yaml
+    description: |
+      Küçük ölçekteki suya bakış açınızı değiştirecek 50 kart—yüzey geriliminden
+      ve yansımalardan su böceklerine, kurbağa yavrularına ve geçici havuzlardaki
+      yaşama kadar.
+    domain: natural_microcosm
+    subdomain_id: pond_puddle
+    subdomain_name: Gölet ve Su Birikintisi
+  - id: natural_microcosm_insect_territories
+    name: Doğal Mikrokozmos — Böcek Bölgeleri
+    path: perspective-decks/natural-microcosm/natural-microcosm-insect-territories.yaml
+    description: |
+      Böcek yaşamına bakış açınızı değiştirecek 50 kart—karınca izlerinden
+      ve arı trafiğinden örümcek ağlarına, bölgesel dramalara ve kolonilerin
+      koreografisine kadar.
+    domain: natural_microcosm
+    subdomain_id: insect_territories
+    subdomain_name: Böcek Bölgeleri
+  - id: human_interface_coffee_shop
+    name: İnsan Etkileşimi — Kahve Dükkanı
+    path: perspective-decks/human-interface/human-interface-coffee-shop.yaml
+    description: |
+      Kahve dükkanına bakış açınızı değiştirecek 50 kart—sıra koreografisinden
+      ve dizüstü bilgisayar bölgelerinden üçüncü mekana, görünmez senaryolara
+      ve ritüel olarak kahveye kadar.
+    domain: human_interface
+    subdomain_id: coffee_shop
+    subdomain_name: Kahve Dükkanı
+  - id: human_interface_transit_hub
+    name: İnsan Etkileşimi — Ulaşım Merkezi
+    path: perspective-decks/human-interface/human-interface-transit-hub.yaml
+    description: |
+      Ulaşım merkezine bakış açınızı değiştirecek 50 kart—peronlardan ve
+      beklemekten varış/ayrılış akışına ve yolculuk halindeki
+      yabancıların koreografisine kadar.
+    domain: human_interface
+    subdomain_id: transit_hub
+    subdomain_name: Ulaşım Merkezi
+  - id: human_interface_workplace
+    name: İnsan Etkileşimi — İş Yeri
+    path: perspective-decks/human-interface/human-interface-workplace.yaml
+    description: |
+      İş yerine bakış açınızı değiştirecek 50 kart—masa bölgelerinden ve
+      toplantı odalarından su sebili ve görünür ile görünmez hiyerarşiye kadar.
+    domain: human_interface
+    subdomain_id: workplace
+    subdomain_name: İş Yeri
+  - id: human_interface_retail
+    name: İnsan Etkileşimi — Perakende
+    path: perspective-decks/human-interface/human-interface-retail.yaml
+    description: |
+      Perakende alanına bakış açınızı değiştirecek 50 kart—koridorlardan ve
+      göz atma koreografisinden deneme kabinlerine ve satın alma dansına kadar.
+    domain: human_interface
+    subdomain_id: retail
+    subdomain_name: Perakende
+  - id: human_interface_public_space
+    name: İnsan Etkileşimi — Halka Açık Alan
+    path: perspective-decks/human-interface/human-interface-public-space.yaml
+    description: |
+      Halka açık alana bakış açınızı değiştirecek 50 kart—banklardan ve
+      yollardan yabancıların koreografisine ve tılsım olarak nesnelere kadar.
+    domain: human_interface
+    subdomain_id: public_space
+    subdomain_name: Halka Açık Alan

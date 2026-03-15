@@ -1,0 +1,410 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Urban Jungle — San Francisco (German)
+
+id: urban_jungle_san_francisco
+name: Urban Jungle — San Francisco
+description: 50 Karten, um Ihre Sicht auf San Francisco zu verändern – von Maßstab und Licht bis hin zu Schichten der Geschichte und dem Rhythmus des Straßenlebens.
+domain: urban_jungle
+cards:
+  - id: sf_hill_grade
+    name: Steigung der Hügel
+    prompt: |
+      San Francisco ist auf Hängen gebaut. Spüren Sie die Neigung unter Ihren Füßen. Wie verändert die Steigung, was Sie bemerken? Wo kippt die Stadt?
+    follow_ups:
+      - Wie würde die Straße aussehen, wenn sie flach wäre?
+      - Wie prägen Hügel die Viertel?
+      - Was war die steilste Straße, die Sie je erklommen haben?
+  - id: sf_fog_layer
+    name: Nebelschicht
+    prompt: |
+      Der Nebel zieht herein. Beobachten Sie ihn, wie er sich bewegt – über die Brücke, die Hügel hinunter. Der Nebel ist eine Figur. Wie verändert er das Licht? Den Klang?
+    follow_ups:
+      - Wie sähe die Stadt ohne Nebel aus?
+      - Wie markiert Nebel die Zeit?
+      - Wo hört der Nebel auf?
+  - id: sf_cable_car_track
+    name: Straßenbahnschiene
+    prompt: |
+      Folgen Sie einer Straßenbahnschiene. Die Spur im Bürgersteig, das Summen des Kabels. Die Straßenbahn ist ein Relikt, das noch funktioniert. Was transportiert sie?
+    follow_ups:
+      - Wie sähe der Hügel ohne die Schiene aus?
+      - Wie prägt die Straßenbahn den Tourismus?
+      - Was ist die Beziehung zwischen Schiene und Straße?
+  - id: sf_victorian_detail
+    name: Viktorianisches Detail
+    prompt: |
+      Viktorianische Häuser in San Francisco sind opulent – Schnitzereien, Erkerfenster, Farben. Finden Sie eines und lesen Sie seine Details. Welche Geschichte erzählt der Schmuck?
+    follow_ups:
+      - Wie sähe das Haus ohne die Details aus?
+      - Wie verändert Farbe die Straße?
+      - Was ist die Beziehung zwischen viktorianisch und modern?
+  - id: sf_painted_lady
+    name: Painted Lady
+    prompt: |
+      Die Painted Ladies sind berühmt, aber jedes viktorianische Haus hat eine Farbpalette. Sammeln Sie fünf Farbkombinationen von einem Block. Was sagen die Farben aus?
+    follow_ups:
+      - Warum diese Farben?
+      - Wie bewahrt oder verändert Farbe?
+      - Wie sähe der Block in Graustufen aus?
+  - id: sf_bay_window
+    name: Erkerfenster
+    prompt: |
+      Erkerfenster wölben sich auf die Straße hinaus. Sie dienen dem Licht, der Aussicht, der Präsentation. Stellen Sie sich vor eines. Was würden Sie von drinnen sehen?
+    follow_ups:
+      - Wie verändert der Erker den Raum?
+      - Wie sähe die Fassade ohne ihn aus?
+      - Wie schaffen Erkerfenster eine Beziehung zur Straße?
+  - id: sf_stairway_street
+    name: Treppenstraße
+    prompt: |
+      San Francisco hat Treppen, die Straßen sind – Stufen statt Bürgersteig. Klettern Sie eine hinauf. Wie verändert die Treppe das Viertel?
+    follow_ups:
+      - Wer benutzt diese Treppen?
+      - Wie sähe der Hügel ohne sie aus?
+      - Wie schaffen Treppen Gemeinschaft?
+  - id: sf_mission_mural
+    name: Mission-Wandgemälde
+    prompt: |
+      Die Mission ist eine Galerie von Wandgemälden. Finden Sie eines und lesen Sie es. Was ist die Geschichte? Wer hat es gemalt? Für wen ist es?
+    follow_ups:
+      - Was würde die Wand ohne das Wandgemälde sagen?
+      - Wie beanspruchen Wandgemälde Raum?
+      - Was ist die Beziehung zwischen Wandgemälde und Viertel?
+  - id: sf_earthquake_retrofit
+    name: Erdbebensicherungsmaßnahme
+    prompt: |
+      Suchen Sie nach Erdbebensicherungsmaßnahmen – Bolzen, Streben, Fundamente. Die Stadt erinnert sich an 1906 und 1989. Wie prägt Angst die gebaute Umwelt?
+    follow_ups:
+      - Wie sähe das Gebäude ohne die Verstärkung aus?
+      - Wie zeigt sich die seismische Konstruktion?
+      - Was ist die Beziehung zwischen Verstärkung und Vertrauen?
+  - id: sf_dolores_palm
+    name: Dolores-Palme
+    prompt: |
+      Palmen säumen die Dolores Street. Sie sind nicht heimisch, aber ikonisch. Was sagen sie über die Beziehung der Stadt zu anderen Orten aus?
+    follow_ups:
+      - Wie sähe die Straße ohne Palmen aus?
+      - Wie prägen Palmen die Identität?
+      - Was ist die Beziehung zwischen Palme und Ort?
+  - id: sf_twin_peaks_view
+    name: Twin Peaks Aussicht
+    prompt: |
+      Stellen Sie sich die Aussicht von den Twin Peaks vor. Die Stadt breitet sich darunter aus – Gitterwerk, Wasser, Brücken. Wie verändert die Höhe, was wichtig ist?
+    follow_ups:
+      - Was würden Sie von dort oben sehen?
+      - Wie prägt die Aussicht das Image der Stadt?
+      - Was ist von der Spitze aus verborgen?
+  - id: sf_ferry_building
+    name: Fährgebäude
+    prompt: |
+      Das Fährgebäude liegt zur Bucht hin. Es ist eine Schwelle – Land und Wasser, Stadt und Pendelverkehr. Stehen Sie an seinem Eingang. Was fließt hindurch?
+    follow_ups:
+      - Wie sähe die Uferpromenade ohne es aus?
+      - Wie markiert das Gebäude den Übergang?
+      - Was ist die Beziehung zwischen Fähre und Stadt?
+  - id: sf_chinatown_gate
+    name: Chinatown-Tor
+    prompt: |
+      Das Drachentor markiert Chinatown. Gehen Sie hindurch. Was verändert sich? Das Tor ist sowohl real als auch symbolisch. Wie funktioniert es?
+    follow_ups:
+      - Wie sähe Chinatown ohne das Tor aus?
+      - Wie schafft das Tor Identität?
+      - Was ist die Beziehung zwischen Tor und Viertel?
+  - id: sf_hydrant_color
+    name: Hydrantenfarbe
+    prompt: |
+      Feuerhydranten in San Francisco haben unterschiedliche Farben – blau, grün, rot. Die Farbe zeigt den Wasserfluss an. Finden Sie drei Farben. Was bedeutet jede?
+    follow_ups:
+      - Was würde der Block bei einem Brand tun?
+      - Wie kodiert Farbe Informationen?
+      - Was ist die Beziehung zwischen Hydrant und System?
+  - id: sf_parklet
+    name: Parklet
+    prompt: |
+      Parklets geben Parkplätze für Menschen zurück. Setzen Sie sich in eines. Was ist die Möblierung? Wer benutzt es? Wie verändert das Parklet den Block?
+    follow_ups:
+      - Wie sähe der Raum ohne das Parklet aus?
+      - Wie schafft das Parklet Begegnungen?
+      - Was würden Sie hinzufügen?
+  - id: sf_sf_street_sign
+    name: SF Straßenschild
+    prompt: |
+      Straßenschilder in San Francisco haben einen besonderen Stil. Achten Sie auf die Schriftart, die Halterung, die Platzierung. Wie prägt das Schild die Wegfindung?
+    follow_ups:
+      - Wie sähe der Block ohne das Schild aus?
+      - Wie wichtig ist Typografie?
+      - Was ist die Beziehung zwischen Schild und Identität?
+  - id: sf_castro_rainbow
+    name: Castro-Regenbogen
+    prompt: |
+      Der Castro hisst Regenbogenfahnen. Gehen Sie die Straße entlang und zählen Sie die Fahnen. Wie beansprucht die Fahne Raum? Was bedeutet sie hier?
+    follow_ups:
+      - Wie sähe das Viertel ohne die Fahnen aus?
+      - Wie schafft die Fahne Gemeinschaft?
+      - Was ist die Beziehung zwischen Symbol und Ort?
+  - id: sf_haight_vintage
+    name: Haight Vintage
+    prompt: |
+      Der Haight ist ein Museum der 1960er Jahre. Finden Sie ein Gebäude, das sich nicht verändert hat. Was ist erhalten geblieben? Was ist Performance?
+    follow_ups:
+      - Wie sähe die Straße ohne das Vintage aus?
+      - Wie prägt Geschichte den Handel?
+      - Was ist die Beziehung zwischen Vergangenheit und Gegenwart?
+  - id: sf_sutro_tower
+    name: Sutro Tower
+    prompt: |
+      Der Sutro Tower ist von überall sichtbar. Benutzen Sie ihn als Kompass. Wie orientiert Sie der Turm? Wie sähe die Skyline ohne ihn aus?
+    follow_ups:
+      - Was sendet der Turm aus?
+      - Wie prägt der Turm die Identität?
+      - Was ist die Beziehung zwischen Turm und Aussicht?
+  - id: sf_bart_underground
+    name: BART Untergrundbahn
+    prompt: |
+      Fahren Sie mit BART unter der Bucht hindurch. Sie sind in einem Tunnel unter Wasser. Spüren Sie den Druck, die Dunkelheit, das Auftauchen. Wie verändert der Tunnel die Fahrt?
+    follow_ups:
+      - Wie sähe die Fahrt ohne den Tunnel aus?
+      - Wie trennt die Bucht?
+      - Was ist die Beziehung zwischen Tunnel und Region?
+  - id: sf_taquería_line
+    name: Taquería-Schlange
+    prompt: |
+      Stellen Sie sich um Mitternacht in eine Taquería-Schlange. Die Schlange ist ein Ritual. Wer steht darin? Was bestellen sie? Die Schlange ist Gemeinschaft.
+    follow_ups:
+      - Wie sähe der Block ohne die Taquería aus?
+      - Wie schafft die Schlange Begegnungen?
+      - Was ist die Beziehung zwischen Essen und Ort?
+  - id: sf_dolores_sun
+    name: Dolores-Sonne
+    prompt: |
+      Der Dolores Park blickt nach Westen. An einem sonnigen Tag ist er ein Strand. Beobachten Sie die Menge. Wie prägt die Sonne den Park? Wer bekommt die besten Plätze?
+    follow_ups:
+      - Wie sähe der Park ohne die Sonne aus?
+      - Wie wichtig ist die Ausrichtung?
+      - Was ist die Beziehung zwischen Park und Wetter?
+  - id: sf_mission_door
+    name: Mission-Tür
+    prompt: |
+      Türen in der Mission sind oft aufwendig – geschnitzt, bemalt, einzigartig. Finden Sie fünf Türen auf einem Block. Was sagen sie über die dahinterliegenden Gebäude aus?
+    follow_ups:
+      - Wie sähe der Block ohne die Türen aus?
+      - Wie schafft die Tür Identität?
+      - Was ist die Beziehung zwischen Tür und Schwelle?
+  - id: sf_coit_tower
+    name: Coit Tower
+    prompt: |
+      Der Coit Tower krönt Telegraph Hill. Er ist ein Denkmal, ein Aussichtspunkt, ein Wahrzeichen.
+      Wie prägt der Turm den Hügel? Wie sähe der Hügel ohne ihn aus?
+    follow_ups:
+      - Was gedenkt der Turm?
+      - Wie orientiert der Turm die Stadt?
+      - Was ist die Beziehung zwischen Turm und Viertel?
+  - id: sf_lombard_curve
+    name: Lombard-Kurve
+    prompt: |
+      Die Lombard Street schlängelt sich den Hügel hinunter. Sie ist berühmt für ihre Serpentinen. Gehen Sie
+      sie hinunter. Wie verändert die Kurve die Abfahrt? Was würde eine gerade Straße tun?
+    follow_ups:
+      - Wie sähe der Hügel ohne die Kurve aus?
+      - Wie prägt die Kurve das Erlebnis?
+      - Was ist die Beziehung zwischen Kurve und Sicherheit?
+  - id: sf_alcatraz_silhouette
+    name: Alcatraz-Silhouette
+    prompt: |
+      Von der Uferpromenade aus ist Alcatraz eine Silhouette. Die Insel ist immer da, immer fern. Was bedeutet sie für die Stadt?
+    follow_ups:
+      - Wie sähe die Bucht ohne die Insel aus?
+      - Wie prägt die Insel die Aussicht?
+      - Was ist die Beziehung zwischen Gefängnis und Stadt?
+  - id: sf_ghost_sign
+    name: Geisterreklame
+    prompt: |
+      Geisterreklamen – verblasste Anzeigen auf Ziegelsteinen – markieren die Vergangenheit. Finden Sie eine. Wofür warb sie? Wer hätte sie gesehen?
+    follow_ups:
+      - Was würde die Wand ohne die Anzeige sagen?
+      - Wie bewahrt die Geisterreklame die Geschichte?
+      - Was ist die Beziehung zwischen Anzeige und Handel?
+  - id: sf_sf_sidewalk
+    name: SF Bürgersteig
+    prompt: |
+      Bürgersteige in San Francisco sind oft rissig, schief, von Bäumen durchwachsen. Gehen Sie einen Block entlang und bemerken Sie die Textur. Wie altert der Bürgersteig?
+    follow_ups:
+      - Wie sähe der Block ohne den Bürgersteig aus?
+      - Wie prägt der Bürgersteig die Bewegung?
+      - Was ist die Beziehung zwischen Bürgersteig und Baum?
+  - id: sf_golden_gate_fog
+    name: Golden Gate Nebel
+    prompt: |
+      Die Golden Gate Bridge verschwindet im Nebel. Beobachten Sie, wie sie verschwindet und wieder erscheint. Der Nebel ist ein Vorhang. Was ist dahinter?
+    follow_ups:
+      - Wie sähe die Brücke ohne den Nebel aus?
+      - Wie prägt der Nebel die Aussicht?
+      - Was ist die Beziehung zwischen Nebel und Brücke?
+  - id: sf_mission_dolores
+    name: Mission Dolores
+    prompt: |
+      Mission Dolores ist das älteste Gebäude der Stadt. Stellen Sie sich davor. Was hat es gesehen? Wie markiert es die Zeit?
+    follow_ups:
+      - Wie sähe das Viertel ohne die Mission aus?
+      - Wie prägt die Mission die Identität?
+      - Was ist die Beziehung zwischen Mission und Stadt?
+  - id: sf_painted_steps
+    name: Bemalte Stufen
+    prompt: |
+      Die 16th Avenue Tiled Steps sind ein Mosaik. Erklimmen Sie sie. Jede Stufe ist anders. Wie verändert die Kunst den Aufstieg?
+    follow_ups:
+      - Wie sähen die Stufen ohne die Kacheln aus?
+      - Wie schafft das Mosaik Gemeinschaft?
+      - Was ist die Beziehung zwischen Kunst und Aufstieg?
+  - id: sf_sf_street_tree
+    name: SF Straßenbaum
+    prompt: |
+      Straßenbäume in San Francisco sind oft Palmen, Magnolien oder Feigenbäume. Finden Sie einen und identifizieren Sie ihn. Wie prägt der Baum den Block?
+    follow_ups:
+      - Wie sähe der Block ohne den Baum aus?
+      - Wie schafft der Baum Lebensraum?
+      - Was ist die Beziehung zwischen Baum und Bürgersteig?
+  - id: sf_sf_bay_window
+    name: SF Erkerfenster
+    prompt: |
+      Erkerfenster sind ein venezianischer Stil in San Francisco. Sie wölben sich auf die Straße, fangen das Licht ein. Wie verändert das Erkerfenster den Raum?
+    follow_ups:
+      - Wie sähe die Fassade ohne den Erker aus?
+      - Wie schafft der Erker eine Beziehung zur Straße?
+      - Was ist die Beziehung zwischen Erker und Aussicht?
+  - id: sf_sf_hill
+    name: SF Hügel
+    prompt: |
+      Wählen Sie einen Hügel und erklimmen Sie ihn. Spüren Sie die Anstrengung. Oben angekommen, schauen Sie zurück. Wie verändert der Aufstieg, was Sie sehen?
+    follow_ups:
+      - Wie sähe die Stadt ohne die Hügel aus?
+      - Wie prägen Hügel die Viertel?
+      - Was ist die Beziehung zwischen Hügel und Aussicht?
+  - id: sf_sf_fog
+    name: SF Nebel
+    prompt: |
+      Der Nebel hat einen Namen – Karl. Er ist eine lokale Berühmtheit. Wenn Karl hereinkommt, wie verändert sich die Stadt? Was wird verborgen? Was wird enthüllt?
+    follow_ups:
+      - Wie sähe die Stadt ohne Karl aus?
+      - Wie prägt der Nebel die Identität?
+      - Was ist die Beziehung zwischen Nebel und Licht?
+  - id: sf_sf_cable
+    name: SF Kabel
+    prompt: |
+      Die Straßenbahn fährt auf einem Kabel unter der Straße. Man kann es nicht sehen, aber man hört es. Wie prägt das verborgene Kabel die sichtbare Stadt?
+    follow_ups:
+      - Wie sähe der Hügel ohne das Kabel aus?
+      - Wie schafft das Kabel Verbindung?
+      - Was ist die Beziehung zwischen Kabel und Straße?
+  - id: sf_sf_victorian
+    name: SF Viktorianisch
+    prompt: |
+      Viktorianische Häuser kommen paarweise – zwei Häuser, ein Grundstück. Finden Sie ein Paar. Wie beziehen sie sich aufeinander? Wie sähe eines ohne das andere aus?
+    follow_ups:
+      - Wie sähe der Block ohne das Paar aus?
+      - Wie schafft das Paar Rhythmus?
+      - Was ist die Beziehung zwischen Paar und Grundstück?
+  - id: sf_sf_mission
+    name: SF Mission
+    prompt: |
+      Das Mission-Viertel ist nach Mission Dolores benannt. Gehen Sie die Straße entlang und spüren Sie die Schichten – spanisch, mexikanisch, irisch, zentralamerikanisch. Was ist das Palimpsest?
+    follow_ups:
+      - Wie sähe das Viertel ohne die Schichten aus?
+      - Wie prägt die Mission die Identität?
+      - Was ist die Beziehung zwischen Mission und Migration?
+  - id: sf_sf_bridge
+    name: SF Brücke
+    prompt: |
+      Die Bay Bridge ist weniger berühmt als die Golden Gate Bridge, aber häufiger genutzt. Überqueren Sie sie oder betrachten Sie sie. Wie verbindet die Brücke? Was transportiert sie?
+    follow_ups:
+      - Wie sähe die Bucht ohne die Brücke aus?
+      - Wie prägt die Brücke die Region?
+      - Was ist die Beziehung zwischen Brücke und Pendelverkehr?
+  - id: sf_sf_parks
+    name: SF Parks
+    prompt: |
+      San Francisco hat viele kleine Parks – Pocket Parks, Dreiecksparks. Finden Sie einen. Wer benutzt ihn? Was ist sein Charakter?
+    follow_ups:
+      - Wie sähe das Viertel ohne den Park aus?
+      - Wie schafft der Park Erholung?
+      - Was ist die Beziehung zwischen Park und Block?
+  - id: sf_sf_stairs
+    name: SF Treppen
+    prompt: |
+      San Francisco hat mehr als 600 öffentliche Treppen. Finden Sie eine, die Sie noch nie erklommen haben. Was ist oben? Was ist unten?
+    follow_ups:
+      - Wie sähe der Hügel ohne die Treppen aus?
+      - Wie schaffen Treppen Abkürzungen?
+      - Was ist die Beziehung zwischen Treppen und Viertel?
+  - id: sf_sf_mural
+    name: SF Wandgemälde
+    prompt: |
+      Die Mission hat mehr Wandgemälde pro Kopf als jeder andere Ort in den USA. Finden Sie eines, das eine Geschichte erzählt. Was ist die Erzählung? Für wen ist es?
+    follow_ups:
+      - Wie sähe die Wand ohne das Wandgemälde aus?
+      - Wie beansprucht das Wandgemälde Raum?
+      - Was ist die Beziehung zwischen Wandgemälde und Gemeinschaft?
+  - id: sf_sf_water
+    name: SF Wasser
+    prompt: |
+      San Francisco ist von Wasser umgeben – Bucht, Ozean, Meerenge. Gehen Sie zum Rand. Was bedeutet das Wasser für die Stadt? Wie prägt es den Rand?
+    follow_ups:
+      - Wie sähe die Stadt ohne das Wasser aus?
+      - Wie prägt das Wasser die Identität?
+      - Was ist die Beziehung zwischen Wasser und Stadt?
+  - id: sf_sf_sunset
+    name: SF Sonnenuntergang
+    prompt: |
+      Sonnenuntergänge in San Francisco sind berühmt. Beobachten Sie einen von einem Hügel aus. Das Licht verändert die Stadt. Wie sähe die Aussicht ohne den Sonnenuntergang aus?
+    follow_ups:
+      - Wie prägt der Sonnenuntergang den Abend?
+      - Was ist die Beziehung zwischen Sonnenuntergang und Aussicht?
+      - Was würden Sie ohne das Licht vermissen?
+  - id: sf_sf_wind
+    name: SF Wind
+    prompt: |
+      Der Wind in San Francisco ist in einigen Vierteln konstant. Spüren Sie ihn. Wie prägt der Wind die Straße? Wie sähe der Block ohne ihn aus?
+    follow_ups:
+      - Wie schafft der Wind Mikroklima?
+      - Was ist die Beziehung zwischen Wind und Gebäude?
+      - Was würden Sie bei diesem Wind pflanzen?
+  - id: sf_sf_earthquake
+    name: SF Erdbeben
+    prompt: |
+      San Francisco liegt auf Verwerfungen. Der Boden kann sich bewegen. Wie prägt dieses Wissen die gebaute Umwelt? Was würden Sie bei einem Beben bemerken?
+    follow_ups:
+      - Wie prägt das seismische Risiko das Design?
+      - Was ist die Beziehung zwischen Verwerfung und Stadt?
+      - Was würden Sie tun, wenn der Boden bebt?
+  - id: sf_sf_tech_bus
+    name: Tech-Bus
+    prompt: |
+      Tech-Busse pendeln Arbeiter ins Silicon Valley. Beobachten Sie einen Stopp. Der Bus ist ein Symbol. Was transportiert er? Was schließt er aus?
+    follow_ups:
+      - Wie sähe die Straße ohne den Bus aus?
+      - Wie prägt der Bus das Viertel?
+      - Was ist die Beziehung zwischen Bus und Stadt?
+  - id: sf_sf_painted_lady
+    name: SF Painted Lady
+    prompt: |
+      Painted Ladies sind viktorianische Häuser in Pastellfarben. Finden Sie eine Reihe. Wie schafft die Farbe Identität? Wie sähe die Straße in Grau aus?
+    follow_ups:
+      - Wie prägt die Farbe den Block?
+      - Was ist die Beziehung zwischen Farbe und Erhaltung?
+      - Was würden Sie Ihr Haus streichen?
+  - id: sf_sf_twin_peaks
+    name: SF Twin Peaks
+    prompt: |
+      Die Twin Peaks sind zwei Hügel im Zentrum der Stadt. Erklimmen Sie einen. Die Aussicht ist 360 Grad. Wie orientiert Sie der Gipfel?
+    follow_ups:
+      - Wie sähe die Stadt ohne die Gipfel aus?
+      - Wie schaffen die Gipfel Wahrzeichen?
+      - Was ist die Beziehung zwischen Gipfel und Viertel?
+  - id: sf_sf_ferry_plaza
+    name: SF Ferry Plaza
+    prompt: |
+      Der Platz vor dem Fährgebäude beherbergt einen Bauernmarkt. Gehen Sie hindurch. Was wird verkauft? Wer kommt? Der Platz ist eine Schwelle zwischen Stadt und Bucht.
+    follow_ups:
+      - Wie sähe die Uferpromenade ohne den Platz aus?
+      - Wie schafft der Markt Gemeinschaft?
+      - Was ist die Beziehung zwischen Platz und Fähre?

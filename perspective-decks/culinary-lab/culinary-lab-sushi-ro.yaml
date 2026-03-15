@@ -1,0 +1,485 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Laborator Culinar — Sushi (Romanian)
+
+id: culinary_lab_sushi
+name: Laborator Culinar — Sushi
+description: 50 de cărți pentru a schimba modul în care experimentezi sushi—de la chimia orezului și a peștelui la coregrafia tejghelei și arheologia originii fiecărui neta.
+domain: culinary_lab
+cards:
+  - id: sush_rice_temp
+    name: Temperatura Orezului
+    prompt: |
+      Orezul de sushi este cald—aproximativ la temperatura corpului. Nu rece.
+      Căldura transportă oțetul. Simte-o. Ce ar face orezul rece? Cum
+      modelează temperatura mușcătura?
+    follow_ups:
+      - Ce ar sacrifica orezul la temperatura camerei?
+      - Cum transportă căldura aroma?
+      - Care este relația dintre temperatură și textură?
+  - id: sush_shari_balance
+    name: Echilibru Shari
+    prompt: |
+      Shari—orez—este jumătate din sushi. Echilibrul dintre oțet, sare, zahăr
+      este precis. Gustă orezul singur. Ce aduce? Ce ar însemna orezul fad?
+    follow_ups:
+      - Cum modelează orezul neta?
+      - Ce ar face prea mult oțet?
+      - Care este relația dintre shari și neta?
+  - id: sush_counter_ritual
+    name: Ritual la Tejghea
+    prompt: |
+      Omakase la tejghea—te confrunți cu bucătarul. Sushi-ul ajunge bucată cu
+      bucată. Tejgheaua este o scenă. Observă coregrafia. Care este ritmul?
+      Cine stabilește tempo-ul?
+    follow_ups:
+      - Ce ar schimba o masă?
+      - Cum modelează tejgheaua masa?
+      - Care este relația dintre bucătar și oaspete?
+  - id: sush_net_origin
+    name: Originea Neta
+    prompt: |
+      Fiecare neta—topping—a venit de undeva. Toyosu. Tsukiji. O barcă. O
+      fermă. Întreabă. Urmărește peștele. Ce călătorie a făcut? Ce ar însemna
+      congelat din depozit?
+    follow_ups:
+      - Cum modelează originea piesa?
+      - Ce ar face o altă sursă?
+      - Care este relația dintre loc și calitate?
+  - id: sush_wasabi_hidden
+    name: Wasabi Ascuns
+    prompt: |
+      Wasabi adevărat—rădăcină rasă—este rar. Majoritatea este hrean și colorant.
+      Dar când este adevărat, este diferit. Acru, verde, trecător. Observă
+      picantul. Ce ar adăuga sau scoate cel fals?
+    follow_ups:
+      - Cum modelează wasabi mușcătura?
+      - Ce ar însemna fără wasabi?
+      - Care este relația dintre picant și pește?
+  - id: sush_finger_over_chopstick
+    name: Deget în Loc de Bețișoare
+    prompt: |
+      Nigiri este consumat tradițional cu degetele—nu cu bețișoare. Degetele
+      simt temperatura, textura. Încearcă. Ce adaugă degetul pe care bețișoarele
+      nu îl pot adăuga?
+    follow_ups:
+      - Cum modelează mâna experiența?
+      - Ce ar face bețișoarele?
+      - Care este relația dintre atingere și gust?
+  - id: sush_piece_by_piece
+    name: Bucată cu Bucată
+    prompt: |
+      Sushi-ul ajunge câte o bucată—sau două. Ritmul este deliberat. Mănânci;
+      aștepți. Consideră ritmul. Ce ar sacrifica o farfurie cu zece bucăți odată?
+    follow_ups:
+      - Cum modelează ritmul masa?
+      - Ce ar face viteza?
+      - Care este relația dintre bucată și atenție?
+  - id: sush_gari_palate
+    name: Gari pentru Palat
+    prompt: |
+      Gari—ghimbir murat—curăță între bucăți. Nu e garnitură; e resetare.
+      Observă când îl mănânci. Ce ar face bucățile consecutive fără gari palatului?
+    follow_ups:
+      - Cum modelează gari progresia?
+      - Ce ar însemna fără gari?
+      - Care este relația dintre resetare și gust?
+  - id: sush_soy_minimal
+    name: Sos de Soia Minimal
+    prompt: |
+      Sos de soia—o scufundare ușoară, cu peștele în jos. Nu pe orez. Orezul
+      ar absorbi prea mult. Bucătarul poate a deja aplicat sos. Observă. Ce
+      ar face înmuierea excesivă?
+    follow_ups:
+      - Cum modelează sosul de soia piesa?
+      - Ce ar însemna fără sos de soia?
+      - Care este relația dintre scufundare și echilibru?
+  - id: sush_knife_matters
+    name: Cuțitul Contează
+    prompt: |
+      Cuțitul de sushi—cu o singură teșit, ascuțit. Tăietura afectează textura.
+      Pe fibră sau în contra fibrei. Unghiul. Consideră ce face lama. Ce ar
+      sacrifica un cuțit tocit?
+    follow_ups:
+      - Cum modelează tăietura peștele?
+      - Ce ar face un unghi diferit?
+      - Care este relația dintre lamă și senzația în gură?
+  - id: sush_otoro_fat
+    name: Grăsimea Otoro
+    prompt: |
+      Otoro—tonul cel mai gras—se topește. Grăsimea este esențială. Consideră
+      marmorarea. Ce ar face akami slab? Cum modelează grăsimea experiența?
+    follow_ups:
+      - Ce ar fi piesa fără grăsime?
+      - Cum creează marmorarea luxul?
+      - Care este relația dintre grăsime și topire?
+  - id: sush_unagi_glaze
+    name: Glazura Unagi
+    prompt: |
+      Unagi—țipar—este uns cu sos dulce, uneori grătar din nou. Glazura este
+      lac. Consideră luciul. Ce ar însemna țipar neglazurat?
+    follow_ups:
+      - Cum modelează glazura piesa?
+      - Care este relația dintre dulce și țipar?
+      - De ce glazurat?
+  - id: sush_nori crisp
+    name: Crocant Nori
+    prompt: |
+      Nori pentru maki—prăjit, crocant sau moale? Diferiți bucătari aleg
+      diferit. Nori afectează mușcătura. Consideră textura. Ce ar face nori
+      moi?
+    follow_ups:
+      - Cum modelează nori ruloul?
+      - Ce ar face o prăjire diferită?
+      - Care este relația dintre crocant și proaspăt?
+  - id: sush_silence_counter
+    name: Liniște la Tejghea
+    prompt: |
+      Unele tejghele de sushi sunt liniștite—concentrare, respect. Altele sunt
+      animate. Observă peisajul sonor. Ce adaugă liniștea? Ce adaugă
+      conversația?
+    follow_ups:
+      - Cum modelează sunetul masa?
+      - Ce ar face muzica tare?
+      - Care este relația dintre liniște și concentrare?
+  - id: sush_tamago_sweet
+    name: Dulce Tamago
+    prompt: |
+      Tamago—prăjitura de ou—adesea încheie masa. Este dulce, stratificată.
+      Abilitatea bucătarului este vizibilă. Consideră finalul. Ce ar însemna
+      pește crud ca ultimă bucată?
+    follow_ups:
+      - Cum modelează tamago finalul?
+      - Care este relația dintre dulce și încheiere?
+      - De ce ou la final?
+  - id: sush_tuna_spectrum
+    name: Spectrul Tonului
+    prompt: |
+      Akami, chutoro, otoro—de la slab la gras. Spectrul este deliberat.
+      Gustă-le în ordine, dacă poți. Cum funcționează progresia? Ce oferă
+      fiecare?
+    follow_ups:
+      - Cum modelează grăsimea spectrul?
+      - Ce ar însemna o singură calitate?
+      - Care este relația dintre slab și bogat?
+  - id: sush_ume_shiso
+    name: Ume Shiso
+    prompt: |
+      Ume—prună murată—și shiso în unele rulouri. Acru, erbaceu. Taie
+      bogăția. Observă când apar. Ce ar fi ruloul fără ele?
+    follow_ups:
+      - Cum modelează ume mușcătura?
+      - Care este relația dintre acru și pește?
+      - De ce shiso?
+  - id: sush_gunkan_hold
+    name: Cară Gunkan
+    prompt: |
+      Gunkan—navă de război—ține toppinguri vrac. Icre, arici de mare. Gulerul
+      de nori conține. Consideră forma. Ce ar face o piesă plată?
+    follow_ups:
+      - Cum modelează forma toppingul?
+      - Ce ar însemna un recipient diferit?
+      - Care este relația dintre reținere și vărsare?
+  - id: sush_uni_risk
+    name: Risc Uni
+    prompt: |
+      Uni—arici de mare—este polarizant. Dulce, sărat, textură. Poate fi perfect
+      sau stricat. Consideră riscul. Ce ar însemna somon sigur? Ce adaugă
+      riscul?
+    follow_ups:
+      - Cum modelează uni experiența?
+      - Ce ai pierde fără risc?
+      - Care este relația dintre polarizant și memorabil?
+  - id: sush_chef_choice
+    name: Alegerea Bucătarului
+    prompt: |
+      Omakase—alegerea bucătarului. Renunți la control. Bucătarul citește ziua,
+      peștele, pe tine. Consideră încrederea. Ce ar schimba alegerea ta?
+    follow_ups:
+      - Cum modelează renunțarea la control masa?
+      - Ce ar însemna o comandă de pe meniu?
+      - Care este relația dintre încredere și experiență?
+  - id: sush_sake_pair
+    name: Pereche Sake
+    prompt: |
+      Sake cu sushi—rece, cald, maturat. Perechea este atentă. Observă când
+      bei o gură. Curăță? Îmbunătățește? Consideră rolul băuturii.
+    follow_ups:
+      - Cum modelează sake piesa?
+      - Ce ar face vinul?
+      - Care este relația dintre orez și vin de orez?
+  - id: sush_ikura_pop
+    name: Pop Ikura
+    prompt: |
+      Ikura—icre de somon—pocnesc. Explozia este textură și saramură. Consideră
+      senzația. Ce ar face icrele gătite? Cum modelează pocnitura mușcătura?
+    follow_ups:
+      - Ce ar fi piesa fără pocnitură?
+      - Cum creează textura plăcere?
+      - Care este relația dintre pocnitură și sare?
+  - id: sush_hirame_chew
+    name: Mestecat Hirame
+    prompt: |
+      Hirame—plătică—are o textură de mestecat diferită de ton. Este slabă,
+      delicată. Observă textura. Ce ar face peștele gras? Cum variază
+      textura de mestecat?
+    follow_ups:
+      - Cum modelează textura piesa?
+      - Care este relația dintre slab și delicat?
+      - De ce să comanzi hirame?
+  - id: sush_amaebi_head
+    name: Cap Amaebi
+    prompt: |
+      Amaebi—crevete dulce—uneori servit cu capul prăjit. Capul este crocant,
+      umami. Consideră utilizarea integrală. Ce ar sacrifica crevetelui fără
+      cap?
+    follow_ups:
+      - Cum modelează capul felul de mâncare?
+      - Care este relația dintre întreg și respect?
+      - De ce să prăjești capul?
+  - id: sush_mirin_gloss
+    name: Luciu Mirin
+    prompt: |
+      Unele piese sunt unse cu nikiri—sos de soia, mirin, sake. Luciul este
+      finisaj. Bucătarul a asezonat-o. Consideră dacă să mai adaugi sos de
+      soia. Ce ar face înmuierea excesivă?
+    follow_ups:
+      - Cum modelează pensula piesa?
+      - Ce ar însemna fără pensulă?
+      - Care este relația dintre mâna bucătarului și a ta?
+  - id: sush_anago_soft
+    name: Moale Anago
+    prompt: |
+      Anago—țipar de apă sărată—este mai moale decât unagi. Specii diferite,
+      preparare diferită. Observă textura. Ce ar face fermitatea unagi?
+    follow_ups:
+      - Cum modelează moliciunea piesa?
+      - Care este relația dintre anago și unagi?
+      - De ce ambii țipari?
+  - id: sush_saba_silver
+    name: Argintiu Saba
+    prompt: |
+      Saba—macrou—este adesea conservat. Pielea argintie, carnea grasă. Este
+      puternic. Consideră conservarea. Ce ar însemna macrou crud?
+    follow_ups:
+      - Cum modelează conservarea peștele?
+      - Care este relația dintre ulei și conservare?
+      - De ce să conservezi saba?
+  - id: sush_ginger_between
+    name: Ghimbir Între
+    prompt: |
+      Gari între bucăți—resetarea. Dar când? După fiecare? După mai multe?
+      Ritmul este al tău. Observă modelul tău. Ce ar însemna fără resetare?
+    follow_ups:
+      - Cum modelează momentul ales gari?
+      - Care este relația dintre bucată și bucată?
+      - Când ai nevoie de resetare?
+  - id: sush_maki_cut
+    name: Tăiere Maki
+    prompt: |
+      Maki—rulouri—sunt tăiate în bucăți. Șase sau opt. Tăietura afectează
+      secțiunea transversală. Consideră spirala. Ce ar face o tăietură
+      diferită?
+    follow_ups:
+      - Cum modelează tăietura mușcătura?
+      - Ce ar însemna mai puține bucăți?
+      - Care este relația dintre felie și întreg?
+  - id: sush_tobiko_crunch
+    name: Crocant Tobiko
+    prompt: |
+      Tobiko—icre de pește zburător—adaugă crocant și culoare. Este un topping,
+      o garnitură. Observă când apare. Ce ar fi ruloul fără el?
+    follow_ups:
+      - Cum modelează tobiko mușcătura?
+      - Care este relația dintre crocant și culoare?
+      - De ce pește zburător?
+  - id: sush_sashimi_contrast
+    name: Contrast Sashimi
+    prompt: |
+      Sashimi—fără orez—lasă peștele să se manifeste singur. Puritatea este
+      diferită. Compară sashimi cu nigiri. Ce adaugă orezul? Ce dezvăluie
+      absența sa?
+    follow_ups:
+      - Cum modelează orezul nigiri?
+      - Ce ar însemna tot sashimi?
+      - Care este relația dintre pește și orez?
+  - id: sush_tea_rinse
+    name: Clătire cu Ceai
+    prompt: |
+      Ceai verde la barul de sushi—reinăscut, împărtășit. Curăță. Ceaiul este
+      parte din ritm. Consideră rolul său. Ce ar face apa? Ce ar însemna fără
+      băutură?
+    follow_ups:
+      - Cum modelează ceaiul masa?
+      - Care este relația dintre ceai și resetare?
+      - De ce ceai verde?
+  - id: sush_bengara_tuna
+    name: Ton Bengara
+    prompt: |
+      Bengara—ton slab, adesea din partea dorsală—este mai închis la culoare.
+      Gustul este diferit de akami. Consideră tăietura. Ce parte a peștelui? Ce
+      face locația?
+    follow_ups:
+      - Cum modelează tăietura aroma?
+      - Care este relația dintre locație și gust?
+      - De ce această tăietură?
+  - id: sush_kohada_cure
+    name: Conservare Kohada
+    prompt: |
+      Kohada—shad ventricular—este conservat, uneori oțetit. Este un test al
+      bucătarului. Pielea argintie, echilibrul. Consideră abilitatea. Ce ar
+      face neconserat?
+    follow_ups:
+      - Cum modelează conservarea peștele?
+      - Care este relația dintre oțet și pielea argintie?
+      - De ce este un test?
+  - id: sush_engawa_fin
+    name: Aripioară Engawa
+    prompt: |
+      Engawa—mușchiul aripioarei de plătică—este prețuit. Are o textură
+      distinctă. Consideră partea. Ce ar face plătică obișnuită? Cum diferă
+      aripioara?
+    follow_ups:
+      - Cum modelează tăietura piesa?
+      - Care este relația dintre aripioară și mușchi?
+      - De ce este prețuit?
+  - id: sush_first_piece
+    name: Prima Bucată
+    prompt: |
+      Prima bucată stabilește tonul. Adesea ceva blând—poate hirame sau tai.
+      Bucătarul calibrează. Consideră deschiderea. Ce ar însemna otoro la
+      început?
+    follow_ups:
+      - Cum modelează prima bucată masa?
+      - Care este relația dintre început și progresie?
+      - De ce o primă bucată blândă?
+  - id: sush_kampachi_fat
+    name: Grăsime Kampachi
+    prompt: |
+      Kampachi—young yellowtail—are o grăsime subtilă. Este între slab și
+      bogat. Observă mijlocul. Ce ar face buri? Ce ar face peștele mai slab?
+    follow_ups:
+      - Cum modelează grăsimea piesa?
+      - Care este relația dintre vârstă și grăsime?
+      - De ce kampachi?
+  - id: sush_nodoguro_char
+    name: Ars Nodoguro
+    prompt: |
+      Nodoguro—perchă cu gât negru—este adesea ușor ars. Pielea, grăsimea.
+      Arsul adaugă. Consideră aplicarea căldurii. Ce ar face crud?
+    follow_ups:
+      - Cum modelează arsura peștele?
+      - Care este relația dintre arsură și grăsime?
+      - De ce să arzi acesta?
+  - id: sush_choji_plate
+    name: Farfurie Choji
+    prompt: |
+      Farfuria—sau lemnul, sau piatra—susține piesa. Prezentarea este minimă.
+      Consideră recipientul. Ce ar face o farfurie aglomerată? Ce permite
+      minimalismul?
+    follow_ups:
+      - Cum modelează farfuria piesa?
+      - Care este relația dintre recipient și concentrare?
+      - De ce minimalist?
+  - id: sush_tea_cup
+    name: Ceașcă de Ceai
+    prompt: |
+      Ceașca de ceai la tejghea—fără mâner, uneori aspră. O ții cu ambele
+      mâini. Consideră recipientul. Ce ar face o cană? Ce adaugă ceașca?
+    follow_ups:
+      - Cum modelează ceașca gura de ceai?
+      - Care este relația dintre recipient și ritual?
+      - De ce fără mâner?
+  - id: sush_silver_slide
+    name: Alunecare Argintie
+    prompt: |
+      Piesa ar trebui să alunece de pe farfurie—sau să fie ridicată curat. Orezul
+      susține dar eliberează. Consideră construcția. Ce ar însemna orezul
+      dezintegrat?
+    follow_ups:
+      - Cum modelează structura actul de a mânca?
+      - Ce ar face orezul moale?
+      - Care este relația dintre integritate și mușcătură?
+  - id: sush_kinmedai_skin
+    name: Piele Kinmedai
+    prompt: |
+      Kinmedai—dorada cu ochi aurii—adesea cu pielea, ușor arsă. Pielea adaugă
+      textură, grăsime. Consideră arderea. Ce ar face pielea crudă?
+    follow_ups:
+      - Cum modelează pielea piesa?
+      - Care este relația dintre arsură și grăsime?
+      - De ce ars?
+  - id: sush_botan_ebi
+    name: Botan Ebi
+    prompt: |
+      Botan ebi—crevete pătat—este dulce, adesea crud. Coada vine uneori
+      prăjită. Consideră întregul. Ce ar face crevetelui gătit?
+    follow_ups:
+      - Cum modelează prepararea piesa?
+      - Care este relația dintre crud și dulce?
+      - De ce crevete pătat?
+  - id: sush_namida_heat
+    name: Picant Namida
+    prompt: |
+      Wasabi real aduce o lacrimă—namida. Picantul urcă, dispare. Este diferit
+      de ardei. Consideră senzația. Ce ar face hreanul diferit?
+    follow_ups:
+      - Cum modelează picantul mușcătura?
+      - Care este relația dintre wasabi și lacrimă?
+      - De ce te face să plângi?
+  - id: sush_omakase_end
+    name: Final Omakase
+    prompt: |
+      Masa se termină—tamago, poate miso, poate un fruct. Arcul este complet.
+      Consideră încheierea. Ce ar face o altă bucată? Când știi că ai terminat?
+    follow_ups:
+      - Cum modelează finalul amintirea?
+      - Care este relația dintre încheiere și satisfacție?
+      - De ce să închei cu ou sau supă?
+  - id: sush_counter_wait
+    name: Așteptare la Tejghea
+    prompt: |
+      Între bucăți, aștepți. Bucătarul pregătește. Pauza este parte din ritm.
+      Observă anticiparea. Ce ar sacrifica serviciul instantaneu?
+    follow_ups:
+      - Cum modelează așteptarea piesa?
+      - Care este relația dintre pauză și atenție?
+      - De ce nu pre-servire?
+  - id: sush_tsukiji_legacy
+    name: Moștenirea Tsukiji
+    prompt: |
+      Tsukiji a dispărut; Toyosu i-a luat locul. Dar peștele curge încă prin
+      Tokyo. Consideră piața. Ce ar fi sushi fără licitație? Fără distribuție?
+    follow_ups:
+      - Cum modelează piața peștele?
+      - Care este relația dintre licitație și calitate?
+      - Ce a însemnat Tsukiji?
+  - id: sush_edomae_spirit
+    name: Spirit Edomae
+    prompt: |
+      Edomae—stil Edo—sushi din tradiția Tokyo. Conservat, marinat, maturat
+      pentru a funcționa fără refrigerare. Consideră istoria. Ce ar însemna
+      mereu proaspăt?
+    follow_ups:
+      - Cum modelează istoria tehnica?
+      - Care este relația dintre conservare și aromă?
+      - De ce Edomae?
+  - id: sush_gari_reset
+    name: Resetare Gari
+    prompt: |
+      Gari—ghimbir murat—curăță între bucăți. Felii roz pal resetează palatul.
+      Observă când apelezi la el. Ce ar fi masa fără resetare? Cum modelează
+      ghimbirul progresia?
+    follow_ups:
+      - Ce ar însemna fără gari?
+      - Cum modelează resetarea piesa următoare?
+      - Care este relația dintre pauză și continuitate?
+  - id: sush_otoro_melt
+    name: Topire Otoro
+    prompt: |
+      Otoro—tonul cel mai gras—se dizolvă aproape pe limbă. Grăsimea este
+      esențială. Consideră textura. Ce ar face tonul slab? Cum marchează
+      topirea apogeul mesei?
+    follow_ups:
+      - Ce ar face akami diferit?
+      - Cum modelează grăsimea experiența?
+      - Care este relația dintre topire și lux?

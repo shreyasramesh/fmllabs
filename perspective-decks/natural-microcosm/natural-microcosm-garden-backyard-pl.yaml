@@ -1,0 +1,477 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Naturalny Mikrokosmos — Ogród i Podwórko (Polish)
+
+id: natural_microcosm_garden_backyard
+name: Naturalny Mikrokosmos — Ogród i Podwórko
+description: 50 kart, które pomogą Ci spojrzeć inaczej na dziką naturę w otoczeniu domu – od zapylaczy i gleby, po chwasty i uprawy oraz choreografię uprawianej natury.
+domain: natural_microcosm
+cards:
+  - id: nmg_bee_landing
+    name: Lądowanie Pszczoły
+    prompt: |
+      Obserwuj, jak pszczoła ląduje na kwiatku. Podejście, dotyk, zawis.
+      Pszczoła jest jednocześnie drapieżnikiem i zapylaczem. Co zyskuje kwiat?
+      Czego ryzykuje?
+    follow_ups:
+      - Jak lądowanie kształtuje kolejną wizytę?
+      - Jaki byłby ogród bez pszczół?
+      - Jaka jest relacja między kwiatem a pszczołą?
+  - id: nmg_soil_crumble
+    name: Krusząca się Gleba
+    prompt: |
+      Weź garść gleby. Poczuj jej teksturę – jak się kruszy, jej ziarna.
+      Ta gleba zawiera historię, śmierć, odrodzenie. Co tu rosło wcześniej?
+      Co z niej wyrośnie?
+    follow_ups:
+      - Jak gleba kształtuje to, co rośnie?
+      - Co oznaczałaby jałowa gleba?
+      - Jaka jest relacja między okruchem a życiem?
+  - id: nmg_weed_edge
+    name: Chwast na Krawędzi
+    prompt: |
+      Chwast rośnie tam, gdzie trawnik styka się z rabatą. Nie został
+      zasadzony. Został zaproszony – albo sam się zaprosił. Zastanów się nad
+      granicą. Kto wyznacza linię między chwastem a kwiatem?
+    follow_ups:
+      - Jaki byłby ogród bez chwastów?
+      - Jak krawędź tworzy napięcie?
+      - Jaka jest relacja między chwastem a intencją?
+  - id: nmg_compost_steam
+    name: Para z Kompostu
+    prompt: |
+      Przekop stos kompostowy. Unosi się para – zachodzi rozkład. Ciepło to
+      praca mikrobiologiczna. To, co było resztkami z kuchni, staje się
+      glebą. Prześledź przemianę.
+    follow_ups:
+      - Czego brakowałoby ogrodowi bez kompostu?
+      - Jak ciepło naznacza proces?
+      - Jaka jest relacja między odpadami a żyznością?
+  - id: nmg_seed_dormancy
+    name: Uśpienie Nasiona
+    prompt: |
+      Nasiono w glebie może czekać latami – dekadami. Jest żywe, ale w
+      stanie uśpienia. Co je budzi? Światło, woda, ogień, zakłócenie.
+      Zastanów się nad cierpliwością nasiona.
+    follow_ups:
+      - Czego brakowałoby kiełkowaniu bez uśpienia?
+      - Jak czekanie kształtuje przetrwanie?
+      - Jaka jest relacja między pauzą a wyłonieniem?
+  - id: nmg_bird_bath
+    name: Poidło dla Ptaków
+    prompt: |
+      Poidło dla ptaków jest zaproszeniem. Zobacz, kto przychodzi – wróble,
+      rudziki, może sójka. Poidło tworzy spotkanie. Jaki byłby dziedziniec bez
+      tego małego zbiornika wody?
+    follow_ups:
+      - Jak poidło kształtuje przybywających?
+      - Jaka jest choreografia przybycia?
+      - Jaka jest relacja między wodą a ptakiem?
+  - id: nmg_tomato_truss
+    name: Grono Pomidora
+    prompt: |
+      Grono pomidora trzyma zielone owoce, potem czerwone. Studiuj jego
+      architekturę. Łodyga, gałązki, ciężar. Roślina to inżynieria. Co ją
+      utrzymuje?
+    follow_ups:
+      - Jaka byłaby roślina bez grona?
+      - Jak struktura kształtuje zbiory?
+      - Jaka jest relacja między formą a owocem?
+  - id: nmg_aphid_column
+    name: Kolumna Mszyc
+    prompt: |
+      Mszyce kłębią się na łodydze – ssą, mnożą się. Są jednocześnie szkodnikiem i
+      ofiarą. Przyjdą biedronki. Zwróć uwagę na ekologię. Jaka jest relacja
+      między plagą a równowagą?
+    follow_ups:
+      - Jaka byłaby roślina bez mszyc?
+      - Jak kłębek przyciąga drapieżniki?
+      - Jaka jest relacja między szkodnikiem a ekosystemem?
+  - id: nmg_hose_spray
+    name: Zraszacz z Węża
+    prompt: |
+      Woda z węża pada na glebę. Obserwuj, jak się zbiera, wsiąka, spływa.
+      Zraszanie to sztuczny deszcz. Czym różni się od prawdziwego? Co otrzymuje
+      roślina?
+    follow_ups:
+      - Jaki byłby ogród bez węża?
+      - Jak nawadnianie kształtuje wzrost?
+      - Jaka jest relacja między zraszaniem a deszczem?
+  - id: nmg_lawn_mow
+    name: Koszenie Trawnika
+    prompt: |
+      Trawnik to zarządzana dzikość – przycinana do określonej wysokości,
+      utrzymywana w zieleni. Koszenie przerywa wzrost. Zastanów się, czym
+      stałby się trawnik, gdyby pozostawić go samemu sobie. Co powstrzymujemy?
+    follow_ups:
+      - Jaki byłby dziedziniec bez koszenia?
+      - Jak cięcie kształtuje tożsamość?
+      - Jaka jest relacja między trawnikiem a kontrolą?
+  - id: nmg_pot_bound
+    name: Korzenie w Doniczce
+    prompt: |
+      Roślina w doniczce – korzenie krążą, szukają. Doniczka to granica. Co
+      zrobiłaby roślina z nieograniczoną glebą? Doniczka jest jednocześnie więzieniem i
+      ochroną. Zastanów się nad kompromisem.
+    follow_ups:
+      - Jaka byłaby roślina bez doniczki?
+      - Jak ograniczenie kształtuje wzrost?
+      - Jaka jest relacja między korzeniem a ścianą?
+  - id: nmg_mulch_layer
+    name: Warstwa Ściółki
+    prompt: |
+      Ściółka okrywa glebę – zrębki drewna, słoma, liście. Utrzymuje wilgoć,
+      tłumi chwasty, w końcu staje się glebą. Warstwa jest tymczasowa.
+      Co robi, dopóki trwa?
+    follow_ups:
+      - Jaka byłaby rabata bez ściółki?
+      - Jak warstwa tworzy mikroklimat?
+      - Jaka jest relacja między okryciem a glebą?
+  - id: nmg_hummingbird_hover
+    name: Wiszący Koliber
+    prompt: |
+      Koliber wisi nad kwiatem – skrzydła niewidoczne z prędkości. Wiszenie
+      jest kosztowne. Nektar musi być tego wart. Zastanów się nad ekonomią
+      wizyty.
+    follow_ups:
+      - Jaki byłby kwiat bez kolibra?
+      - Jak zawis kształtuje relację?
+      - Jaka jest relacja między kosztem a nagrodą?
+  - id: nmg_fence_creep
+    name: Pnącze na Płocie
+    prompt: |
+      Bluszcz lub wilec pnie się po płocie. Roślina nie wie, że płot jest dziełem człowieka.
+      Mimo to wspina się. Zastanów się nad spotkaniem między wzrostem a strukturą.
+    follow_ups:
+      - Po czym wspinałaby się roślina bez płotu?
+      - Jak płot kształtuje pnącze?
+      - Jaka jest relacja między wspinaczką a wsparciem?
+  - id: nmg_worm_cast
+    name: Dżdżownice Odchody
+    prompt: |
+      Odchody dżdżownic – małe kupki gleby – pojawiają się na trawniku.
+      Dżdżownica przeszła, pozostawiając żyzność. Odchody to archeologia. Co
+      przetworzyła dżdżownica? Co po sobie zostawiła?
+    follow_ups:
+      - Jaka byłaby gleba bez dżdżownic?
+      - Jak odchody naznaczają pracę dżdżownicy?
+      - Jaka jest relacja między odchodami a napowietrzeniem?
+  - id: nmg_squirrel_cache
+    name: Skrytka Wiewiórki
+    prompt: |
+      Wiewiórka zakopuje orzech – a potem zapomina. Orzech może wykiełkować.
+      Wiewiórka to przypadkowy ogrodnik. Zastanów się nad relacją między
+      pamięcią a rozsiewaniem. Co rośnie z zapomnienia?
+    follow_ups:
+      - Jaki byłby dąb bez wiewiórki?
+      - Jak skrytka kształtuje rozprzestrzenianie się lasu?
+      - Jaka jest relacja między zakopywaniem a kiełkowaniem?
+  - id: nmg_dew_morning
+    name: Poranna Rosa
+    prompt: |
+      Poranna rosa osiada na liściach. Każda kropla zawiera światło. Rosa to
+      kondensacja – woda z powietrza. Do południa wyparuje. Zastanów się nad
+      krótkim darem. Co otrzymuje roślina?
+    follow_ups:
+      - Jaki byłby poranek bez rosy?
+      - Jak kropla kształtuje poranek?
+      - Jaka jest relacja między kondensacją a liściem?
+  - id: nmg_prune_scar
+    name: Blizna po Cięciu
+    prompt: |
+      Blizna po cięciu zaznacza miejsce, gdzie odcięto gałąź. Drzewo się
+      zagoiło – lub próbowało. Blizna to historia. Co zostało usunięte?
+      Dlaczego? Czego drzewo pamięta?
+    follow_ups:
+      - Jakie byłoby drzewo bez cięcia?
+      - Jak cięcie kształtuje wzrost?
+      - Jaka jest relacja między raną a formą?
+  - id: nmg_sunflower_turn
+    name: Obracanie Się Słonecznika
+    prompt: |
+      Młody słonecznik obraca się za słońcem – od wschodu o świcie, na
+      zachód o zmierzchu. Ruch to heliotropizm. Roślina śledzi światło.
+      Zastanów się nad choreografią. Co oznaczałoby stałe skierowanie?
+    follow_ups:
+      - Jaki byłby słonecznik bez obracania się?
+      - Jak śledzenie kształtuje wzrost?
+      - Jaka jest relacja między ruchem a światłem?
+  - id: nmg_slug_trail
+    name: Śluzowy Ślad
+    prompt: |
+      Ślimak zostawia ślad – srebrzysty, lepki. Ślad oznacza przejście.
+      Chronii również stopę ślimaka. Zastanów się nad śladem jako zarówno
+      zapisem, jak i adaptacją. Co umożliwia?
+    follow_ups:
+      - Jaki byłby ślimak bez śladu?
+      - Jak śluz kształtuje ruch?
+      - Jaka jest relacja między śladem a drapieżnikiem?
+  - id: nmg_birdhouse_hole
+    name: Otwór w Domku dla Ptaków
+    prompt: |
+      Domek dla ptaków ma otwór – o określonej średnicy. Wyklucza niektóre
+      ptaki, zaprasza inne. Otwór to filtr. Dla kogo został zaprojektowany?
+      Kto go zasiedlił?
+    follow_ups:
+      - Jaki byłby dziedziniec bez domku dla ptaków?
+      - Jak otwór kształtuje gniazdujących?
+      - Jaka jest relacja między otworem a lokatorem?
+  - id: nmg_root_hair
+    name: Włośnik Korzeniowy
+    prompt: |
+      Włośniki korzeniowe są niewidoczne z góry – maleńkie rozszerzenia, które
+      absorbują wodę i składniki odżywcze. Interfejs rośliny z glebą.
+      Zastanów się, co dzieje się pod powierzchnią. Czego brakowałoby roślinie
+      bez nich?
+    follow_ups:
+      - Jak włośnik kształtuje absorpcję?
+      - Jaka jest relacja między włośnikiem a glebą?
+      - Co byś zobaczył, gdybyś mógł je zobaczyć?
+  - id: nmg_frost_leaf
+    name: Szron na Liściu
+    prompt: |
+      Wzory szronu na liściu – krystaliczne, delikatne. Szron to woda
+      zamarznięta z powietrza. Roztopi się z pierwszymi promieniami słońca.
+      Zastanów się nad tymczasową sztuką. Czego doświadcza liść?
+    follow_ups:
+      - Jaki byłby poranek bez szronu?
+      - Jak szron kształtuje dzień liścia?
+      - Jaka jest relacja między kryształkiem a komórką?
+  - id: nmg_companion_plant
+    name: Roślina Towarzysząca
+    prompt: |
+      Bazylia obok pomidorów. Nagietki obok dyni. Sadzenie roślin towarzyszących to
+      strategiczne sąsiedztwo. Niektóre rośliny odstraszają; inne przyciągają.
+      Zastanów się nad życiem społecznym rabaty.
+    follow_ups:
+      - Jaki byłby pomidor bez bazylii?
+      - Jak sąsiedztwo kształtuje ogród?
+      - Jaka jest relacja między sąsiadem a szkodnikiem?
+  - id: nmg_fallen_apple
+    name: Spadłe Jabłko
+    prompt: |
+      Jabłko spada – niezebrane, przejrzałe. Zgnije, nakarmi osy, być może
+      wyrośnie z niego sadzonka. Upadek to jednocześnie strata i początek.
+      Zastanów się nad łukiem od gałęzi do gleby.
+    follow_ups:
+      - Jaka byłaby ziemia bez spadania?
+      - Jak gnicie kształtuje to, co następuje?
+      - Jaka jest relacja między upadkiem a rozsiewaniem?
+  - id: nmg_spider_web_corner
+    name: Pajęczyna w Rogu
+    prompt: |
+      Pajęczyna rozpościera się w rogu szopy. Rosa łapie się na jedwabiu.
+      Pajęczyna to jednocześnie pułapka i dom. Zastanów się nad ekonomią pająka.
+      Co inwestuje? Co zbiera?
+    follow_ups:
+      - Jaki byłby róg bez pajęczyny?
+      - Jak pajęczyna kształtuje dzień pająka?
+      - Jaka jest relacja między jedwabiem a ofiarą?
+  - id: nmg_seed_packet
+    name: Saszetka z Nasionami
+    prompt: |
+      Saszetka z nasionami – zdjęcie z przodu, instrukcja z tyłu. Saszetka to
+      obietnica. Co wyłoni się z tych maleńkich kropek? Zastanów się nad
+      relacją między obrazem a rzeczywistością.
+    follow_ups:
+      - Jaki byłby ogród bez saszetki?
+      - Jak saszetka kształtuje oczekiwania?
+      - Jaka jest relacja między obietnicą a rośliną?
+  - id: nmg_rain_barrel
+    name: Beczka na Deszczówkę
+    prompt: |
+      Beczka na deszczówkę zbiera wodę spływającą z dachu. Woda jest darmowa,
+      miękka, niechlorowana. Beczka to infrastruktura. Zastanów się, co płynie
+      z nieba do beczki, a potem do korzenia.
+    follow_ups:
+      - Jaki byłby ogród bez beczki?
+      - Czym różni się zebrana deszczówka od wody z kranu?
+      - Jaka jest relacja między dachem a korzeniem?
+  - id: nmg_garden_glove
+    name: Rękawica Ogrodowa
+    prompt: |
+      Rękawica pozostawiona na rabacie – palce sztywne, poplamione ziemią.
+      Rękawica to proteza. Przedłuża rękę, chroni ją. Zastanów się nad granicą
+      między człowiekiem a glebą. Co umożliwia rękawica?
+    follow_ups:
+      - Co poczułby ogrodnik bez rękawicy?
+      - Jak rękawica kształtuje relację?
+      - Jaka jest relacja między ręką a ziemią?
+  - id: nmg_caterpillar_chew
+    name: Gryzienie Gąsienicy
+    prompt: |
+      Gąsienica zjada liść – krawędź po krawędzi. Gryzienie jest słyszalne.
+      Gąsienica zamienia liść w motyla. Zastanów się nad kosztem dla
+      rośliny. Co zyskuje, goszcząc ją?
+    follow_ups:
+      - Jaki byłby liść bez gryzienia?
+      - Jak gąsienica kształtuje roślinę?
+      - Jaka jest relacja między jedzeniem a stawaniem się?
+  - id: nmg_fertilizer_burn
+    name: Poparzenie Nawozem
+    prompt: |
+      Nadmiar nawozu parzy – końcówki brązowieją, korzenie chrupią. Ogród to
+      chemia. Więcej nie zawsze znaczy lepiej. Zastanów się nad granicą
+      między karmieniem a trucizną. Gdzie jest linia?
+    follow_ups:
+      - Jaka byłaby roślina z mniejszą ilością?
+      - Jak nadmiar kształtuje liść?
+      - Jaka jest relacja między dawką a uszkodzeniem?
+  - id: nmg_shade_cloth
+    name: Siatka Cieniująca
+    prompt: |
+      Siatka cieniująca rozciąga się nad sadzonkami. Rozprasza światło, obniża
+      temperaturę. Siatka to pośrednictwo – między słońcem a rośliną.
+      Zastanów się, co dodaje siatka. Co odejmuje?
+    follow_ups:
+      - Jaka byłaby sadzonka bez siatki?
+      - Jak cień kształtuje wczesny wzrost?
+      - Jaka jest relacja między filtrem a światłem?
+  - id: nmg_morning_glory_dawn
+    name: Wilec Poranny o Świcie
+    prompt: |
+      Wilce poranne otwierają się o świcie, zamykają po południu. Kwiat ma
+      harmonogram. Zastanów się nad rytmem. Jaki byłby ogród, gdyby pozostał
+      otwarty cały dzień?
+    follow_ups:
+      - Jak czas kształtuje zapylanie?
+      - Jaka jest relacja między otwieraniem się a zapylaczem?
+      - Dlaczego świt?
+  - id: nmg_garden_path
+    name: Ścieżka Ogrodowa
+    prompt: |
+      Ścieżka przez ogród – kamienie lub ściółka. Ścieżka to miejsce, po którym
+      chodzimy. Reszta to miejsce, po którym nie chodzimy. Zastanów się nad
+      linią. Co chroni ścieżka? Co wyklucza?
+    follow_ups:
+      - Jaki byłby ogród bez ścieżki?
+      - Jak ścieżka kształtuje ruch?
+      - Jaka jest relacja między krokiem a glebą?
+  - id: nmg_cross_pollination
+    name: Zapylanie Krzyżowe
+    prompt: |
+      Pszczoły przenoszą pyłek z jednej rośliny na drugą. Potomstwo będzie
+      hybrydą – nie identyczną z żadnym z rodziców. Zastanów się nad mieszanką.
+      Co tworzy krzyżowanie? Czego ryzykuje?
+    follow_ups:
+      - Jaka byłaby różnorodność bez krzyżowania?
+      - Jak pszczoła kształtuje gen?
+      - Jaka jest relacja między przenoszeniem a łączeniem?
+  - id: nmg_herb_scent
+    name: Zapach Ziół
+    prompt: |
+      Potrzyj rozmaryn lub miętę. Unosi się zapach – uwalniane są lotne
+      olejki. Zapach to obrona i zaproszenie. Zastanów się nad podwójną rolą.
+      Co odstrasza? Co przyciąga?
+    follow_ups:
+      - Jaki byłby zioło bez zapachu?
+      - Jak olejek kształtuje spotkanie?
+      - Jaka jest relacja między dotykiem a uwolnieniem?
+  - id: nmg_watering_can_pour
+    name: Nalewanie z Konewki
+    prompt: |
+      Woda z konewki – delikatniejsza niż z węża. Nalewanie jest celowe.
+      Zastanów się nad rytuałem. Co umożliwia konewka, czego nie umożliwia
+      wąż? Jaka jest relacja między nalewaniem a rośliną?
+    follow_ups:
+      - Czego wolałaby sadzonka?
+      - Jak nalewanie kształtuje glebę?
+      - Jaka jest relacja między rytuałem a wzrostem?
+  - id: nmg_bird_seed_spill
+    name: Rozsypane Nasiona Ptaków
+    prompt: |
+      Nasiona rozsypują się z karmnika – słonecznik, proso. Lądują na ziemi.
+      Wróble skubią. Wiewiórki podkradają. Rozsypanie tworzy scenę.
+      Zastanów się, kto na tym korzysta. Dla kogo było przeznaczone?
+    follow_ups:
+      - Jaka byłaby ziemia bez rozsypania?
+      - Jak rozsypanie kształtuje stado?
+      - Jaka jest relacja między upadkiem a stołówką?
+  - id: nmg_cutting_propagate
+    name: Sadzonka do Rozmnażania
+    prompt: |
+      Sadzonka – łodyga w wodzie lub glebie – zapuszcza korzenie. Bez nasiona.
+      Roślina klonuje się. Zastanów się nad skrótem. Czego unika rozmnażanie?
+      Co zachowuje?
+    follow_ups:
+      - Jaki byłby ogród bez sadzonek?
+      - Jak klonowanie kształtuje różnorodność?
+      - Jaka jest relacja między cięciem a kontynuacją?
+  - id: nmg_leaf_miner_tunnel
+    name: Tunel Minera Liściowego
+    prompt: |
+      Ślad minera liściowego – kręty, blady, pod powierzchnią. Larwa
+      żeruje między warstwami. Liść przeżywa, naznaczony. Zastanów się nad
+      inwazją. Co traci liść? Co zachowuje?
+    follow_ups:
+      - Jaki byłby liść bez tunelu?
+      - Jak minier kształtuje liść?
+      - Jaka jest relacja między tunelem a tkanką?
+  - id: nmg_greenhouse_condensation
+    name: Kondensacja w Szklarni
+    prompt: |
+      Kondensacja osiada na szybie szklarni. Powietrze w środku jest wilgotne – rośliny
+      wydychają. Szyba to granica. Zastanów się nad mikroklimatem. Co zatrzymuje
+      ciepło? Co zatrzymuje wilgoć?
+    follow_ups:
+      - Jaka byłaby szklarnia bez szyby?
+      - Jak kondensacja kształtuje wnętrze?
+      - Jaka jest relacja między szkłem a wzrostem?
+  - id: nmg_terrace_level
+    name: Poziom Tarasu
+    prompt: |
+      Tarasowe rabaty schodzą po zboczu. Każdy poziom zatrzymuje glebę, zatrzymuje
+      wodę. Taras to kontrola erozji i scena. Zastanów się nad architekturą.
+      Jaki byłby zbocze bez niego?
+    follow_ups:
+      - Jak poziom kształtuje to, co rośnie?
+      - Jaka jest relacja między stopniem a stabilnością?
+      - Dlaczego tarasować?
+  - id: nmg_native_vs_exotic
+    name: Rodzime vs Obce
+    prompt: |
+      Niektóre rośliny są rodzime – należą. Inne są obce – wprowadzone.
+      Zastanów się nad rabatą. Które jest które? Czy to ma znaczenie? Co rodzime
+      oferuje, czego nie oferuje obce?
+    follow_ups:
+      - Jaki byłby ogród tylko z rodzimych roślin?
+      - Jak pochodzenie kształtuje ekologię?
+      - Jaka jest relacja między przynależnością a rozwojem?
+  - id: nmg_garden_dusk
+    name: Ogród o Zmierzchu
+    prompt: |
+      Ogród o zmierzchu – światło blednie, pojawiają się ćmy. Kończy się zmiana
+      dzienna; zaczyna się nocna. Zastanów się nad przejściem. Kto się budzi?
+      Kto śpi? Czym staje się ogród?
+    follow_ups:
+      - Jaki byłby ogród bez zmierzchu?
+      - Jak zmiana kształtuje ekosystem?
+      - Jaka jest relacja między dniem a nocą?
+  - id: nmg_stake_tie
+    name: Palik i Zawiązanie
+    prompt: |
+      Roślina przywiązana do palika – fasola, pomidor. Palik koryguje. Bez niego
+      roślina by się rozkładała. Zastanów się nad wsparciem. Co umożliwia
+      wiązanie? Co ogranicza?
+    follow_ups:
+      - Jaka byłaby roślina bez palika?
+      - Jak wiązanie kształtuje formę?
+      - Jaka jest relacja między wsparciem a wzrostem?
+  - id: nmg_first_frost
+    name: Pierwszy Przymrozek
+    prompt: |
+      Pierwszy przymrozek – delikatne rośliny czernieją. Ogród się zmienia.
+      Niektóre rzeczy się kończą; inne trwają. Zastanów się nad progiem. Co
+      wybiera przymrozek? Czego oszczędza?
+    follow_ups:
+      - Jaki byłby ogród bez przymrozku?
+      - Jak pierwszy przymrozek kształtuje sezon?
+      - Jaka jest relacja między zimnem a zamknięciem?
+  - id: nmg_garden_reflection
+    name: Refleksja Ogrodowa
+    prompt: |
+      Spojrzyj na ogród. Odzwierciedla wybory – co zostało posadzone, co
+      wyplewione, co pozostawione. Ogród to lustro. Co pokazuje o ogrodniku?
+    follow_ups:
+      - Co powiedziałby ogród bez słów?
+      - Jak wybory kształtują całość?
+      - Jaka jest relacja między ogrodnikiem a tym, co wyrosło?

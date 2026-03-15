@@ -25,6 +25,13 @@ const LANG_TO_SPEECH: Partial<Record<LanguageCode, string>> = {
   pt: "pt-BR",
   ru: "ru-RU",
   ur: "ur-PK",
+  de: "de-DE",
+  it: "it-IT",
+  pl: "pl-PL",
+  uk: "uk-UA",
+  ro: "ro-RO",
+  nl: "nl-NL",
+  tr: "tr-TR",
 };
 
 type SpeechRecognitionCtor = new () => {

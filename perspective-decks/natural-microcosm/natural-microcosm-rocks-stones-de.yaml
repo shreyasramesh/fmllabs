@@ -1,0 +1,510 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Natürlicher Mikrokosmos — Felsen & Steine (German)
+
+id: natural_microcosm_rocks_stones
+name: Natürlicher Mikrokosmos — Felsen & Steine
+description: 50 Karten, um Ihre Sicht auf Felsen und Steine zu verändern – von geologischer Zeit und Flechten bis hin zu Verwitterung, Erosion und dem Zeitlupenleben von Mineralien.
+domain: natural_microcosm
+cards:
+  - id: nmr_lichen_map
+    name: Flechtenkarte
+    prompt: |
+      Flechten wachsen auf Felsen – langsam, geduldig. Orange, grau, grün. Es ist nicht ein
+      Organismus, sondern zwei: Pilz und Alge. Betrachten Sie die Partnerschaft. Was bietet der
+      Felsen? Was gibt die Flechte zurück?
+    follow_ups:
+      - Wie würde der Felsen ohne Flechten aussehen?
+      - Wie markieren Flechten die Zeit?
+      - Wie ist die Beziehung zwischen Flechten und Verwitterung?
+  - id: nmr_pebble_smooth
+    name: Glatter Kiesel
+    prompt: |
+      Ein Flusskiesel ist glatt – Wasser und Sand haben ihn abgetragen. Halten Sie einen. Wie viele
+      Jahre hat es gedauert? Die Glätte ist eine Aufzeichnung einer Reise. Was würde eine
+      scharfe Kante bedeuten?
+    follow_ups:
+      - Wie enthüllt Glätte Geschichte?
+      - Was wäre der Kiesel ohne Wasser?
+      - Wie ist die Beziehung zwischen Form und Fluss?
+  - id: nmr_crack_frost
+    name: Frostspalt
+    prompt: |
+      Wasser gefriert in einem Spalt, dehnt sich aus. Der Felsen bricht. Es ist langsame Gewalt.
+      Finden Sie einen Felsen mit einer Spalte. Betrachten Sie die Zyklen von Frost und Tauwetter,
+      die ihn gemacht haben.
+    follow_ups:
+      - Was wäre der Felsen ohne den Spalt?
+      - Wie formt Frost die Landschaft?
+      - Wie ist die Beziehung zwischen Wasser und Bruch?
+  - id: nmr_stone_warmth
+    name: Steinerne Wärme
+    prompt: |
+      Ein von der Sonne erwärmter Stein speichert Wärme. Setzen Sie sich abends auf einen. Der Stein gibt das ab,
+      was er aufgenommen hat. Betrachten Sie den Austausch. Was wäre der Stein ohne die Sonne?
+    follow_ups:
+      - Wie schafft der Stein ein Mikroklima?
+      - Welche Kreaturen nutzen diese Wärme?
+      - Wie ist die Beziehung zwischen Gestein und Wärme?
+  - id: nmr_moss_crust
+    name: Mooskruste
+    prompt: |
+      Moos wächst auf Stein – eine dünne Kruste. Es speichert Feuchtigkeit, fängt Staub auf. Der
+      Stein wird zu einem Substrat. Wann wird Stein zu Erde? Wo ist die Grenze?
+    follow_ups:
+      - Was wäre der Stein ohne das Moos?
+      - Wie beschleunigt die Kruste den Wandel?
+      - Wie ist die Beziehung zwischen Mineral und Organischem?
+  - id: nmr_vein_quartz
+    name: Quarzader
+    prompt: |
+      Eine Quarzader durchschneidet Fels – eine Naht aus anderem Mineral. Sie markiert einen
+      Bruch, eine Füllung. Verfolgen Sie die Linie. Welche Kräfte haben sie geschaffen? Was verrät die
+      Ader?
+    follow_ups:
+      - Was wäre der Stein ohne die Ader?
+      - Wie markiert die Ader tiefe Zeit?
+      - Wie ist die Beziehung zwischen Bruch und Schönheit?
+  - id: nmr_puddle_reflect
+    name: Pfütze im Stein
+    prompt: |
+      Eine Vertiefung im Felsen speichert nach Regen Wasser. Es ist ein winziger Pool – ein Becher. Was
+      spiegelt sich darin? Was verdunstet? Der Stein hat ein Gefäß geschaffen.
+    follow_ups:
+      - Was wäre der Stein ohne die Vertiefung?
+      - Wie schafft der Pool Lebensraum?
+      - Wie ist die Beziehung zwischen Höhle und Zeit?
+  - id: nmr_sand_grain
+    name: Sandkorn
+    prompt: |
+      Sand ist zerkleinerter Stein. Halten Sie eine Handvoll. Jedes Korn war einst Teil von
+      etwas Größerem. Betrachten Sie den Maßstab. Wie viele Körner in einem Berg?
+    follow_ups:
+      - Was wäre der Strand ohne die Körner?
+      - Wie erzählt die Korngröße eine Geschichte?
+      - Wie ist die Beziehung zwischen Ganzem und Fragment?
+  - id: nmr_stone_circle
+    name: Steinkreis
+    prompt: |
+      Felsen, von Hand oder Gletscher angeordnet – ein Kreis, ein Steinhaufen, eine Mauer. Jemand
+      oder etwas hat sie platziert. Betrachten Sie die Absicht. Was bedeutet die Anordnung?
+    follow_ups:
+      - Was wäre der Raum ohne die Steine?
+      - Wie schafft Anordnung Bedeutung?
+      - Wie ist die Beziehung zwischen Gestein und Ritual?
+  - id: nmr_erosion_edge
+    name: Erosionskante
+    prompt: |
+      Wind und Wasser schnitzen Felsen. Finden Sie eine Kante – eine Klippe, einen Felsbrocken. Die Form
+      ist das Ergebnis der Entfernung. Was war vorher da? Was wird bleiben?
+    follow_ups:
+      - Was wäre die Landschaft ohne Erosion?
+      - Wie markiert die Kante die Zeit?
+      - Wie ist die Beziehung zwischen Verlust und Form?
+  - id: nmr_color_streak
+    name: Farbstrich
+    prompt: |
+      Stein ist nicht einheitlich – Eisen färbt rot, Mangan schwarz, Kupfer grün.
+      Verfolgen Sie einen Strich. Die Farbe ist Chemie. Was verrät sie über die Geschichte des Steins?
+    follow_ups:
+      - Was wäre der Stein ohne die Farbe?
+      - Wie prägt Mineralogie die Palette?
+      - Wie ist die Beziehung zwischen Element und Farbton?
+  - id: nmr_scratch_glacier
+    name: Gletscherschliff
+    prompt: |
+      Gletscherschrammen – Kratzer auf dem Grundgestein – markieren, wo Eis Felsen
+      über Stein zog. Die Linien sind parallel. Betrachten Sie die Kraft. Was bewegte sich?
+      Was blieb still?
+    follow_ups:
+      - Was würde der Stein ohne die Kratzer zeigen?
+      - Wie markiert der Kratzer die Richtung?
+      - Wie ist die Beziehung zwischen Eis und Stein?
+  - id: nmr_cobble_pattern
+    name: Kieselsteinmuster
+    prompt: |
+      Ein Strand oder Flussbett aus Kieselsteinen – ähnliche Größe, unterschiedliche Form. Das Wasser
+      hat sie sortiert. Betrachten Sie das Muster. Was sagt Ihnen die Sortierung?
+    follow_ups:
+      - Was wäre der Strand ohne die Sortierung?
+      - Wie formt der Fluss das Muster?
+      - Wie ist die Beziehung zwischen Größe und Transport?
+  - id: nmr_cavern_drip
+    name: Höhlentropfen
+    prompt: |
+      Stalaktiten bilden sich Tropfen für Tropfen – Mineralablagerungen aus sickerndem Wasser. Das
+      Wachstum ist unmerklich. Betrachten Sie die Zeitskala. Was würde ein beschleunigter Film zeigen?
+    follow_ups:
+      - Was wäre die Höhle ohne den Tropfen?
+      - Wie zeichnet der Tropfen das Klima auf?
+      - Wie ist die Beziehung zwischen Wasser und Stein?
+  - id: nmr_boulder_shadow
+    name: Schatten des Felsens
+    prompt: |
+      Ein großer Felsbrocken wirft Schatten. Der Boden darunter ist anders – kühler,
+      feuchter, weniger Sonne. Der Felsbrocken schafft ein Mikroklima. Wer lebt im Schatten?
+    follow_ups:
+      - Was wäre der Hang ohne den Felsbrocken?
+      - Wie formt der Schatten das Leben?
+      - Wie ist die Beziehung zwischen Gestein und Zuflucht?
+  - id: nmr_fossil_impression
+    name: Fossilabdruck
+    prompt: |
+      Ein Fossil ist Leben, das zu Stein wurde – oder ein Abdruck im Sediment.
+      Finden Sie eins, wenn Sie können. Der Stein birgt Erinnerung. Welches Wesen hinterließ das?
+      Wann?
+    follow_ups:
+      - Was wäre der Stein ohne das Fossil?
+      - Wie bewahrt der Abdruck?
+      - Wie ist die Beziehung zwischen Leben und Mineral?
+  - id: nmr_grit_texture
+    name: Kiesstruktur
+    prompt: |
+      Fahren Sie mit der Hand über Stein. Sandstein fühlt sich anders an als Granit, Schiefer
+      als Basalt. Die Textur ist Mineral, Korn, Struktur. Was sagt Ihnen die Berührung?
+    follow_ups:
+      - Was wäre der Stein ohne seine Textur?
+      - Wie enthüllt Textur den Ursprung?
+      - Wie ist die Beziehung zwischen Gefühl und Zusammensetzung?
+  - id: nmr_talus_slope
+    name: Geröllhalde
+    prompt: |
+      Eine Geröllhalde – zerbrochener Stein am Fuß einer Klippe. Schwerkraft und Wetter
+      bringen ihn herunter. Der Hang ist ein Haufen von Nachwirkungen. Wie lange hat es gedauert,
+      bis er sich angesammelt hat?
+    follow_ups:
+      - Was wäre der Fuß der Klippe ohne das Geröll?
+      - Wie markiert der Hang die Erosion?
+      - Wie ist die Beziehung zwischen Fall und Haufen?
+  - id: nmr_soil_horizon
+    name: Bodenhorizont
+    prompt: |
+      Graben Sie vorsichtig. Erde hat Schichten – organisch oben, mineralisch unten, manchmal
+      deutliche Bänder. Der Horizont ist Geschichte. Was hat jede Schicht geschaffen?
+    follow_ups:
+      - Was wäre der Boden ohne die Horizonte?
+      - Wie zeichnet der Horizont die Zeit auf?
+      - Wie ist die Beziehung zwischen Gestein und Erde?
+  - id: nmr_drystone_wall
+    name: Trockenmauer
+    prompt: |
+      Eine Trockenmauer – Steine ohne Mörtel zusammengefügt. Die Mauer hält durch Schwerkraft
+      und Passform. Betrachten Sie das Handwerk. Wie stützt jeder Stein den nächsten?
+    follow_ups:
+      - Was wäre das Feld ohne die Mauer?
+      - Wie markiert die Mauer Territorium?
+      - Wie ist die Beziehung zwischen Gestein und Grenze?
+  - id: nmr_tide_pool_rock
+    name: Gezeitentümpelstein
+    prompt: |
+      Steine in einem Gezeitentümpel werden befeuchtet, getrocknet, wieder befeuchtet. Kreaturen
+      haften daran. Der Stein ist Lebensraum. Betrachten Sie den Rhythmus der Gezeiten. Was erlebt der Stein?
+    follow_ups:
+      - Was wäre der Tümpel ohne den Stein?
+      - Wie schafft der Stein Oberfläche?
+      - Wie ist die Beziehung zwischen Stein und Gezeit?
+  - id: nmr_crystal_face
+    name: Kristallfläche
+    prompt: |
+      Manche Steine zeigen Kristallflächen – Spaltflächen, geometrische Formen. Der
+      Kristall wuchs in einem Hohlraum, langsam geordnet. Betrachten Sie die Geometrie. Welche Kräfte haben sie geformt?
+    follow_ups:
+      - Was wäre der Stein ohne den Kristall?
+      - Wie enthüllt die Fläche die Struktur?
+      - Wie ist die Beziehung zwischen Ordnung und Mineral?
+  - id: nmr_dust_coating
+    name: Staubschicht
+    prompt: |
+      Stein sammelt Staub – Pollen, Ruß, Mineralien. Mit der Zeit wird er dunkler. Die
+      Schicht ist Akkumulation. Wie würde der Stein aussehen, wenn er gewaschen würde? Wie verändert ihn die Schicht?
+    follow_ups:
+      - Was wäre der Stein ohne die Schicht?
+      - Wie markiert Staub die Umwelt?
+      - Wie ist die Beziehung zwischen Oberfläche und Akkumulation?
+  - id: nmr_river_sculpt
+    name: Flussskulptur
+    prompt: |
+      Ein Fluss formt sein Bett – Kolk, Becken, Stromschnellen. Der Stein wird von Wasser und Sediment
+      geformt. Finden Sie einen Abschnitt. Lesen Sie die Formgebung. Was verrät die Form?
+    follow_ups:
+      - Was wäre das Flussbett ohne die Formgebung?
+      - Wie formt der Fluss den Stein?
+      - Wie ist die Beziehung zwischen Wasser und Form?
+  - id: nmr_shard_edge
+    name: Splitterkante
+    prompt: |
+      Ein Feuerstein-Splitter, ein Stück Chert – scharf, bearbeitet oder natürlich. Jemand könnte ihn benutzt haben. Die Kante ist funktional. Betrachten Sie den Bruch. Wie wurde er gemacht?
+    follow_ups:
+      - Was wäre der Splitter ohne die Kante?
+      - Wie schafft Bruch Nützlichkeit?
+      - Wie ist die Beziehung zwischen Bruch und Werkzeug?
+  - id: nmr_gravel_path
+    name: Kiesweg
+    prompt: |
+      Ein Kiesweg – zerstoßener Stein unter den Füßen. Das Knirschen, das Nachgeben. Der Weg
+      ist menschliche Wahl. Warum diese Oberfläche? Was macht der Kies, was Erde nicht tun würde?
+    follow_ups:
+      - Was wäre der Weg ohne den Kies?
+      - Wie formt der Weg die Bewegung?
+      - Wie ist die Beziehung zwischen Gestein und Weg?
+  - id: nmr_bedrock_exposure
+    name: Grundgestein-Aufschluss
+    prompt: |
+      Wo Erde abgetragen wurde – Erosion, Bauarbeiten – erscheint Grundgestein. Das
+      Fundament ist sichtbar. Betrachten Sie, was normalerweise verborgen ist. Was enthüllt der
+      Aufschluss?
+    follow_ups:
+      - Was wäre die Landschaft ohne den Aufschluss?
+      - Wie prägt Grundgestein die Oberfläche?
+      - Wie ist die Beziehung zwischen Verborgenen und Enthüllten?
+  - id: nmr_wind_polish
+    name: Windpolitur
+    prompt: |
+      Wüstensteine sind windpoliert – glatt, facettiert. Sand bläst die Oberfläche.
+      Die Politur ist abrasiv. Betrachten Sie den Wind. Wie lange hat es gedauert?
+    follow_ups:
+      - Was wäre der Stein ohne die Politur?
+      - Wie formt Wind Stein?
+      - Wie ist die Beziehung zwischen Partikel und Oberfläche?
+  - id: nmr_hot_cold_crack
+    name: Hitze-Kälte-Spalt
+    prompt: |
+      Stein dehnt sich bei Hitze aus, zieht sich bei Kälte zusammen. Wiederholte Zyklen verursachen Spannung,
+      Mikrorisse. Finden Sie einen Spalt. Betrachten Sie die Temperaturschwankungen, die ihn gemacht haben.
+    follow_ups:
+      - Was wäre der Stein ohne den Spalt?
+      - Wie formt zyklische Temperaturänderung die Landschaft?
+      - Wie ist die Beziehung zwischen Temperatur und Bruch?
+  - id: nmr_constellation_stone
+    name: Sternensteinkristall
+    prompt: |
+      Ein Stein mit Einschlüssen – Glimmer, Feldspat –, die das Licht einfangen. Die Oberfläche
+      schimmert. Betrachten Sie die Mineralogie. Was hat das Funkeln erzeugt?
+    follow_ups:
+      - Was wäre der Stein ohne die Einschlüsse?
+      - Wie enthüllt Licht die Struktur?
+      - Wie ist die Beziehung zwischen Mineral und Reflexion?
+  - id: nmr_stepping_stone
+    name: Trittstein
+    prompt: |
+      Steine in einem Bach oder Schlamm platziert – Trittsteine. Die Platzierung ist
+      bewusst. Betrachten Sie den Weg. Was erfordert jeder Schritt? Was ermöglicht der Stein?
+    follow_ups:
+      - Was wäre die Überquerung ohne die Steine?
+      - Wie schafft der Stein Zugang?
+      - Wie ist die Beziehung zwischen Gestein und Durchgang?
+  - id: nmr_moss_island
+    name: Moosinsel
+    prompt: |
+      Ein Stein in einem Bach – Moos wächst darauf. Der Stein ist eine Insel. Wasser fließt
+      darum herum. Betrachten Sie die Isolation. Was erreicht das Moos? Was nicht?
+    follow_ups:
+      - Was wäre der Bach ohne die Insel?
+      - Wie schafft der Stein Zuflucht?
+      - Wie ist die Beziehung zwischen Stein und Fluss?
+  - id: nmr_weight_sunken
+    name: Eingesunkener Gewicht
+    prompt: |
+      Ein schwerer Stein sinkt mit der Zeit in die Erde. Die Vertiefung bildet sich um ihn herum.
+      Betrachten Sie die Schwerkraft. Was macht das Sinken mit dem Boden? Mit dem Stein?
+    follow_ups:
+      - Was wäre der Boden ohne den Stein?
+      - Wie formt Gewicht die Oberfläche?
+      - Wie ist die Beziehung zwischen Masse und Vertiefung?
+  - id: nmr_layer_sediment
+    name: Sedimentationsschicht
+    prompt: |
+      Sedimentgestein zeigt Schichten – bedding planes. Jede Schicht war einst Schlamm,
+      Sand, Muscheln. Der Stein ist komprimierte Zeit. Betrachten Sie eine einzelne Schicht.
+      Was war sie vorher?
+    follow_ups:
+      - Was wäre der Stein ohne die Schichten?
+      - Wie zeichnet die Schicht die Umwelt auf?
+      - Wie ist die Beziehung zwischen Sediment und Stein?
+  - id: nmr_sunrise_heat
+    name: Sonnenaufgangswärme
+    prompt: |
+      Ein flacher Stein zeigt nach Osten. Bei Sonnenaufgang wärmt er sich zuerst auf. Betrachten Sie die
+      Ausrichtung. Was bestimmt der Winkel zur Sonne? Wer profitiert von der frühen Wärme?
+    follow_ups:
+      - Was wäre der Stein ohne die Ausrichtung?
+      - Wie formt die Ausrichtung die Temperatur?
+      - Wie ist die Beziehung zwischen Winkel und Wärme?
+  - id: nmr_rain_rinse
+    name: Regen spült ab
+    prompt: |
+      Regen trifft Stein, läuft ab. Das Wasser trägt mit, was es auflöst, was es suspendiert. Das Abspülen ist kontinuierlich. Was verliert der Stein? Was gewinnt das Wasser?
+    follow_ups:
+      - Was wäre der Stein ohne den Regen?
+      - Wie formt Abfluss den Stein?
+      - Wie ist die Beziehung zwischen Wasser und Auflösung?
+  - id: nmr_ice_wedge
+    name: Eiskeil
+    prompt: |
+      Wasser gefriert in einem Spalt, erweitert ihn. Eiskeildruck bricht Steine auseinander.
+      Finden Sie Beweise, wenn Sie können. Betrachten Sie die Kraft. Was wird aus dem Spalt werden?
+    follow_ups:
+      - Was wäre der Stein ohne das Eis?
+      - Wie breitet sich der Keil aus?
+      - Wie ist die Beziehung zwischen Frost und Bruch?
+  - id: nmr_resting_place
+    name: Rastplatz
+    prompt: |
+      Ein flacher Stein – ein Sitz, ein Tisch, eine Bühne. Wir nutzen Steine zum Ausruhen, Arbeiten, Markieren. Betrachten Sie den Stein, auf dem Sie vielleicht sitzen. Was hat er getragen? Was wird er halten?
+    follow_ups:
+      - Was wäre der Raum ohne den Stein?
+      - Wie lädt der Stein zur Nutzung ein?
+      - Wie ist die Beziehung zwischen Mineral und Mensch?
+  - id: nmr_boundary_marker
+    name: Grenzmarkierung
+    prompt: |
+      Steine markieren Grenzen – Grundstücksgrenzen, Gräber, Wege. Die Platzierung ist
+      bewusst. Betrachten Sie einen Grenzstein. Was trennt er? Was verbindet er?
+    follow_ups:
+      - Was wäre die Grenze ohne den Stein?
+      - Wie kodiert der Stein Bedeutung?
+      - Wie ist die Beziehung zwischen Markierung und Territorium?
+  - id: nmr_exfoliation_sheet
+    name: Abblätternde Schicht
+    prompt: |
+      Manche Steine blättern ab – Schichten schälen sich wie eine Zwiebel ab. Druckentlastung, thermisches Cycling. Finden Sie einen abblätternden Felsbrocken. Betrachten Sie die Krümmung. Welche Kräfte haben sie geformt?
+    follow_ups:
+      - Was wäre der Stein ohne die Schichten?
+      - Wie formt Abblätterung die Oberfläche?
+      - Wie ist die Beziehung zwischen Druck und Abblättern?
+  - id: nmr_compass_orientation
+    name: Kompassausrichtung
+    prompt: |
+      Steine können sich ausrichten – durch Gletscher, Fluss oder menschliche Hand. Die Ausrichtung
+      erzählt eine Geschichte. Finden Sie ausgerichtete Steine. Wohin zeigen sie? Was widerstehen sie?
+    follow_ups:
+      - Was würde die Ausrichtung bedeuten?
+      - Wie zeichnet die Ausrichtung Kraft auf?
+      - Wie ist die Beziehung zwischen Richtung und Stein?
+  - id: nmr_echo_sound
+    name: Echo-Stein
+    prompt: |
+      Eine Felswand reflektiert Schall. Klatschen Sie. Hören Sie das Echo. Der Stein gibt zurück,
+      was Sie senden. Betrachten Sie die Oberfläche. Was reflektiert sie? Was absorbiert sie?
+    follow_ups:
+      - Was wäre der Raum ohne das Echo?
+      - Wie formt die Oberfläche Schall?
+      - Wie ist die Beziehung zwischen Stein und Stimme?
+  - id: nmr_anchor_hold
+    name: Ankerhalt
+    prompt: |
+      Ein Stein verankert – ein Baumwurzel umschlingt ihn, ein Kabel ist daran befestigt. Der Stein hält.
+      Betrachten Sie den Griff. Was widersteht der Stein? Was ermöglicht er?
+    follow_ups:
+      - Was wäre der Anker ohne den Stein?
+      - Wie schafft der Stein Stabilität?
+      - Wie ist die Beziehung zwischen Halt und Masse?
+  - id: nmr_patina_age
+    name: Patina des Alters
+    prompt: |
+      Alter Stein entwickelt Patina – Verwitterungsrinde, Oxidation, Verschmutzung. Die
+      Oberfläche verändert sich. Die Patina ist sichtbare Zeit. Wie würde der Stein aussehen, als er neu war?
+    follow_ups:
+      - Was wäre der Stein ohne die Patina?
+      - Wie schützt oder schwächt die Patina?
+      - Wie ist die Beziehung zwischen Oberfläche und Alter?
+  - id: nmr_slow_narrative
+    name: Langsame Erzählung
+    prompt: |
+      Ein Stein erzählt eine langsame Geschichte – Entstehung, Transport, Verwitterung. Die Zeitachse
+      ist geologisch. Setzen Sie sich zu einem Stein. Betrachten Sie seine Vergangenheit. Wie wird seine Zukunft sein?
+    follow_ups:
+      - Was würden wir verlieren, wenn wir die Geschichte nicht lesen könnten?
+      - Wie verbindet sich der Stein mit tiefer Zeit?
+      - Wie ist die Beziehung zwischen Stein und Erinnerung?
+  - id: nmr_cairn_stack
+    name: Steinhaufen-Stapel
+    prompt: |
+      Ein Steinhaufen – von Hand gestapelte Steine. Jeder Stein balanciert. Der Stapel ist
+      bewusst, temporär. Wer hat ihn gebaut? Was markiert er?
+    follow_ups:
+      - Was wäre der Ort ohne den Steinhaufen?
+      - Wie schafft der Stapel Bedeutung?
+      - Wie ist die Beziehung zwischen Mensch und Stein?
+  - id: nmr_shadow_cast
+    name: Schattenwurf
+    prompt: |
+      Ein Stein wirft einen Schatten. Der Schatten bewegt sich mit der Sonne. Setzen Sie sich eine Stunde lang damit auseinander. Betrachten Sie die Uhr aus Stein und Licht.
+    follow_ups:
+      - Was wäre der Stein ohne den Schatten?
+      - Wie schafft der Schatten Lebensraum?
+      - Wie ist die Beziehung zwischen Stein und Zeit?
+  - id: nmr_scree_slope
+    name: Geröllhang
+    prompt: |
+      Geröll – loser Stein am Fuß einer Klippe. Jedes Stück fiel. Der Hang ist
+      Akkumulation. Gehen Sie ihn entlang. Spüren Sie die Instabilität. Was hält ihn? Was
+      wird sich lösen?
+    follow_ups:
+      - Was wäre der Hang ohne den Fall?
+      - Wie formt das Geröll das Tal?
+      - Wie ist die Beziehung zwischen Klippe und Boden?
+  - id: nmr_fossil_imprint
+    name: Fossilabdruck
+    prompt: |
+      Ein Fossil in Stein – Muschel, Blatt, Knochen. Der Abdruck ist eine Aufzeichnung. Das
+      Organismus ist weg; der Stein behält seine Form. Betrachten Sie die Konservierung.
+    follow_ups:
+      - Was wüssten wir ohne das Fossil?
+      - Wie überbrückt der Abdruck die Zeit?
+      - Wie ist die Beziehung zwischen Leben und Mineral?
+  - id: nmr_dry_stone_wall
+    name: Trockenmauer
+    prompt: |
+      Eine Trockenmauer – kein Mörtel. Jeder Stein hält den nächsten durch Passform und
+      Reibung. Die Mauer ist Kollaboration. Verfolgen Sie die Fugen. Was würde
+      ein loser Stein tun?
+    follow_ups:
+      - Was wäre die Grenze ohne die Mauer?
+      - Wie schafft die Passform Stärke?
+      - Wie ist die Beziehung zwischen Stein und Struktur?
+  - id: nmr_cobble_rest
+    name: Kieselsteinruhe
+    prompt: |
+      Kieselsteine ruhen dort, wo das Wasser sie hinterlassen hat – eine Flussbarre, ein Strand. Die Anordnung
+      ist nicht zufällig. Größe, Form, Position erzählen vom Fluss. Was würde eine Flut neu anordnen?
+    follow_ups:
+      - Wie markiert die Ruhe das letzte Ereignis?
+      - Was würden die Steine über Wasser verraten?
+      - Wie ist die Beziehung zwischen Ruhe und Turbulenz?
+  - id: nmr_moon_dust
+    name: Mondstaub
+    prompt: |
+      Stein wird zu Staub – Wind, Wasser, Wurzeln. Die feinsten Partikel reisen.
+      Betrachten Sie die Reise eines einzelnen Korns. Wo könnte es enden?
+    follow_ups:
+      - Was wäre die Landschaft ohne Staub?
+      - Wie schafft Staub neue Erde?
+      - Wie ist die Beziehung zwischen Stein und Luft?
+  - id: nmr_touch_stone
+    name: Steinberührung
+    prompt: |
+      Berühren Sie einen Stein. Kalt, warm, rau, glatt. Der Stein reagiert nicht – oder
+      doch? Wärme überträgt sich. Feuchtigkeit verschiebt sich. Betrachten Sie den Austausch an der Grenze.
+    follow_ups:
+      - Wie würde sich der Stein zu einer anderen Zeit anfühlen?
+      - Wie verändert Berührung den Stein?
+      - Wie ist die Beziehung zwischen Hand und Stein?
+  - id: nmr_shadow_noon
+    name: Mittags-Schatten
+    prompt: |
+      Mittags ist der Schatten eines Steins minimal. Bei Sonnenauf- und -untergang dehnt er sich aus.
+      Der Schatten ist die Reichweite des Steins. Betrachten Sie, wie die Sonne das verändert, was der
+      Stein der Welt bietet.
+    follow_ups:
+      - Was würde der Stein ohne Schatten bieten?
+      - Wie schafft der Schatten Lebensraum?
+      - Wie ist die Beziehung zwischen Stein und Licht?
+  - id: nmr_stone_circle
+    name: Steinkreis
+    prompt: |
+      Steine in einem Kreis angeordnet – von menschlicher Hand oder von einem Gletscher. Der Kreis
+      rahmt den Raum. Was ist drinnen? Was ist draußen? Betrachten Sie die Geometrie der Grenze.
+    follow_ups:
+      - Was würde der Raum ohne den Kreis bedeuten?
+      - Wie schafft die Anordnung Bedeutung?
+      - Wie ist die Beziehung zwischen Form und Ritual?

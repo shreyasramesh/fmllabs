@@ -525,6 +525,32 @@ Return ONLY valid JSON, no markdown or extra text:
   }
 }
 
+/** Batch-translate titles for display (e.g. LTM, custom concepts, concept groups). Returns id -> translated title. */
+export async function translateTitlesBatch(
+  items: { id: string; title: string }[],
+  targetLanguageName: string
+): Promise<Record<string, string>> {
+  if (items.length === 0) return {};
+  const model = getModel();
+  const list = items.map((i) => `${i.id}|${i.title}`).join("\n");
+  const result = await model.generateContent(
+    `Translate these titles into ${targetLanguageName}. Each line is "id|title". Return a JSON object mapping each id to its translated title. Preserve meaning; keep titles concise. Return ONLY valid JSON, no markdown.
+
+Input:
+${list}
+
+Example output: {"id1":"Translated Title 1","id2":"Translated Title 2"}`
+  );
+  const text = result.response.text().trim();
+  const cleaned = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  const parsed = JSON.parse(cleaned) as Record<string, string>;
+  const out: Record<string, string> = {};
+  for (const { id, title } of items) {
+    out[id] = (parsed[id] ?? title).trim() || title;
+  }
+  return out;
+}
+
 export async function translateConcept(
   concept: { title: string; summary: string; enrichmentPrompt: string },
   targetLanguageName: string

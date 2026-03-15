@@ -1,0 +1,190 @@
+# yaml-language-server: $schema=../schema/perspective-deck-schema.json
+# Manieren om naar de California Superbloom te kijken (Dutch)
+
+id: ways_of_looking_at_california_superbloom
+name: Manieren om naar de California Superbloom te kijken
+description: |
+  Kaarten om je perspectief te verschuiven bij het ervaren van de California superbloom.
+  Elke kaart biedt een andere lens om je kijk op wilde bloemen, heuvels en de
+  kortstondige kleuruitbarsting na de winterregen te verdiepen.
+domain: california_superbloom
+cards:
+  - id: the_rain_that_made_it
+    name: De Regen Die Het Deed
+    prompt: |
+      Voor de bloemen was er regen. Stel je de stormen voor die de grond vulden,
+      de zaden die onder de grond wachtten. Welke omstandigheden moesten samenkomen
+      om deze bloei mogelijk te maken? Traceer de superbloom terug naar zijn oorsprong.
+    follow_ups:
+      - Wat zou anders zijn geweest met meer—of minder—regen?
+      - Hoeveel jaren van rust kunnen er achter één enkele heuvelrug liggen?
+      - Wat betekent het dat dit moment nooit gegarandeerd was?
+  - id: one_species_at_a_time
+    name: Eén Soort Tegelijk
+    prompt: |
+      Kies één bloemsoort en volg die. Oranje klaprozen, paarse lupines,
+      gele goudsbloemen—negeer al het andere even. Hoe verandert focussen op één soort
+      wat je ziet?
+    follow_ups:
+      - Waar domineert deze soort—en waar wijkt hij?
+      - Hoe zou de heuvel eruitzien als alleen deze bloeide?
+      - Hoe handhaaft hij zijn eigen plek tussen de anderen?
+  - id: pollinators_view
+    name: Perspectief van Bestuivers
+    prompt: |
+      Stel je voor dat je een bij, een vlinder of een kolibrie bent. Wat zou je aantrekken?
+      Welke bloemen zou je als eerste bezoeken? Hoe ziet het landschap eruit vanuit een paar centimeter boven de bloemblaadjes?
+    follow_ups:
+      - Welke patronen zouden je pad leiden?
+      - Welke bloemen zou je overslaan—en waarom?
+      - Hoe verandert schaal de ervaring?
+  - id: ground_level
+    name: Grondniveau
+    prompt: |
+      Ga laag zitten. Ga op je buik liggen of kniel. Zie de superbloom vanuit het perspectief van de grond—stengels die omhoog rijzen, bloemblaadjes die over je heen bogen, de lucht een verre strook erboven.
+    follow_ups:
+      - Wat merk je op dat je vanaf staande hoogte miste?
+      - Hoe voelt de grond onder je?
+      - Wat zou een kever hier zien?
+  - id: time_lapse
+    name: Time-Lapse
+    prompt: |
+      De superbloom is een moment in een langer verhaal. Stel je de heuvel voor
+      in versneld tempo: groene scheuten, eerste knoppen, piekervaring van kleur, daarna vervagend. Hoe lang duurt het spektakel? Wat komt ervoor en erna?
+    follow_ups:
+      - Wanneer zou je hebben gekozen om te bezoeken als je maar één keer kon gaan?
+      - Wat is al verdwenen tegen de tijd dat je aankomt?
+      - Wat zal er blijven als de kleur vervaagt?
+  - id: the_chemistry_of_color
+    name: De Chemie van Kleur
+    prompt: |
+      Focus op de pigmenten. Oranje, paars, geel, blauw—wat maakt elke tint?
+      Hoe interageren ze? Waar botsen kleuren, en waar harmoniseren ze?
+      Behandel de heuvel als een palet.
+    follow_ups:
+      - Welke kleur zou je toevoegen—of verwijderen?
+      - Hoe verandert licht de kleuren gedurende de dag?
+      - Hoe zou het er in zwart-wit uitzien?
+  - id: negative_space
+    name: Negatieve Ruimte
+    prompt: |
+      Kijk naar wat geen bloemen zijn. De lucht, de kale plekken grond, de gaten tussen de bloemen. Hoe vormt de lege ruimte wat je ziet? Voel de betekenis van wat er niet is.
+    follow_ups:
+      - Waar concentreert de leegte zich?
+      - Wat zou die gaten vullen—en zou het moeten?
+      - Hoe houdt de negatieve ruimte de compositie bij elkaar?
+  - id: the_path_through
+    name: Het Pad Eroverheen
+    prompt: |
+      Merk de paden op—menselijk, dierlijk of door de wind gevormd. Waar lopen mensen?
+      Waar verzet het landschap zich tegen doorgang? Volg een pad door de bloei en vraag je af wat het zou kosten om het te volgen.
+    follow_ups:
+      - Wat zou je beschermen door er niet te lopen?
+      - Waar wil het pad je naartoe brengen?
+      - Wat zou je missen door op het pad te blijven?
+  - id: geology_beneath
+    name: Onderliggende Geologie
+    prompt: |
+      De bloemen rusten op miljoenen jaren. Welke rots ligt onder de grond?
+      Wat heeft deze heuvels gevormd? Laat de superbloom je verbinden met de diepe tijd onder je voeten.
+    follow_ups:
+      - Hoe beïnvloedt de geologie wat hier groeit?
+      - Hoe zou deze plek eruit hebben gezien voordat de heuvels zich vormden?
+      - Wat zal er blijven als de bloemen weg zijn?
+  - id: scent_and_sound
+    name: Geur en Geluid
+    prompt: |
+      Sluit je ogen. Wat ruik je? Pollen, stof, salie, vochtige aarde? Wat hoor je? Bijen, wind, voetstappen, stilte? Laat de niet-visuele zintuigen even de leiding nemen.
+    follow_ups:
+      - Welk geluid zou je toevoegen om de ervaring vast te leggen?
+      - Hoe verandert de geur als je je verplaatst?
+      - Wat zou je missen als je alleen maar keek?
+  - id: light_and_shadow
+    name: Licht en Schaduw
+    prompt: |
+      Kijk hoe het licht over de heuvel beweegt. Ochtend, middag, avond—hoe verandert de hoek van de zon de bloemen? Waar vallen schaduwen? Wat wordt onthuld en wat wordt verborgen?
+    follow_ups:
+      - Wanneer voelt het licht het meest levendig?
+      - Wat zou je bij zonsopgang zien dat je om twaalf uur mist?
+      - Hoe vormen schaduwen het landschap?
+  - id: seed_to_flower
+    name: Zaad tot Bloem
+    prompt: |
+      Volg één plant van zaad tot bloei. Hoe is hij hier gekomen? Wind, dier, water? Hoe lang heeft hij gewacht? Wat zal hij worden als de bloemblaadjes vallen? Volg één leven door zijn cyclus.
+    follow_ups:
+      - Wat zou het zaad onder de grond hebben meegemaakt?
+      - Wat zal de plant achterlaten?
+      - Hoeveel generaties worden er op deze heuvel vertegenwoordigd?
+  - id: micro_vs_macro
+    name: Micro versus Macro
+    prompt: |
+      Zoom in op een enkel bloemblaadje, een dauwdruppel, een korrel pollen. Trek je dan terug naar de hele heuvel, de vallei, de staat. Hoe verandert schaal wat de superbloom betekent?
+    follow_ups:
+      - Wat is onzichtbaar op de ene schaal en duidelijk op de andere?
+      - Waar rust je aandacht van nature op?
+      - Hoe verandert het macro-beeld de micro—en vice versa?
+  - id: weathers_hand
+    name: De Hand van het Weer
+    prompt: |
+      De superbloom is een samenwerking van het weer. Regen, zon, wind, temperatuur—
+      elk heeft een rol. Stel je het weer voor als een co-creator. Wat heeft het besloten?
+      Wat heeft het achtergehouden?
+    follow_ups:
+      - Wat zou een andere winter hebben voortgebracht?
+      - Hoe beïnvloedt het weer van vandaag je ervaring?
+      - Wat zouden de bloemen zeggen over het weer als ze konden?
+  - id: human_witness
+    name: Menselijke Getuige
+    prompt: |
+      Je bent niet de eerste die dit ziet. Wie anders heeft hier gestaan? Veehouders,
+      inheemse volkeren, fotografen, reizigers. Hoe verandert jouw aanwezigheid de plek? Wat betekent het om te getuigen?
+    follow_ups:
+      - Wat zouden zij hebben gezien dat jij niet ziet?
+      - Wat neem je mee?
+      - Hoe verschilt getuigen van bezitten of nemen?
+  - id: the_next_year
+    name: Het Volgende Jaar
+    prompt: |
+      Deze bloei zal zich niet precies herhalen. Volgend jaar kan er droogte zijn, of brand, of een andere mix van soorten. Stel je voor dat je over een jaar terugkeert. Wat hoop je te vinden? Waar zou je op voorbereid zijn om te verliezen?
+    follow_ups:
+      - Wat maakt dit moment onvervangbaar?
+      - Wat zou je tegen je toekomstige zelf zeggen?
+      - Hoe verdiept vergankelijkheid de ervaring?
+  - id: texture_and_touch
+    name: Textuur en Aanraking
+    prompt: |
+      Hoe zou het voelen om met je hand door de bloemen te gaan? Zachte bloemblaadjes,
+      broze stengels, kleverig pollen, ruwe bladeren. Stel je de texturen voor zonder aan te raken—of, waar toegestaan, raak voorzichtig aan en merk het op.
+    follow_ups:
+      - Welke textuur verrast je het meest?
+      - Wat zou je vermijden aan te raken—en waarom?
+      - Hoe voegt textuur toe aan wat kleur alleen niet kan overbrengen?
+  - id: before_and_after
+    name: Voor en Na
+    prompt: |
+      Stel je deze heuvel voor in het droge seizoen—bruin, slapend, schijnbaar dood.
+      Houd nu beide beelden vast: het voor en het na. Wat onthult het contrast
+      over veerkracht, geduld en transformatie?
+    follow_ups:
+      - Wat zou iemand die alleen het droge seizoen zag missen?
+      - Hoe verrijkt de herinnering aan rust de bloei?
+      - Welke andere "voor en na" momenten roept dit op?
+  - id: make_it_a_mixtape
+    name: Maak Er Een Mixtape Van
+    prompt: |
+      Welke muziek zou dit landschap begeleiden? Bouw een afspeellijst voor de
+      superbloom. Welk tempo, welke sfeer, welke instrumenten? Laat de bloemen
+      de soundtrack suggereren.
+    follow_ups:
+      - Wat is het openingsnummer?
+      - Welke kwaliteit verbindt de muziek met de bloemen—ritme, kleur, gevoel?
+      - Hoe zou de afspeellijst op verschillende tijdstippen van de dag veranderen?
+  - id: take_one_thing_home
+    name: Neem Eén Ding Mee Naar Huis
+    prompt: |
+      Je kunt de bloemen niet meenemen—ze horen hier thuis. Maar je kunt wel een herinnering,
+      een sensatie, een vraag meenemen. Welk één ding zal je meenemen? Hoe zal je het vasthouden zonder één bloem te plukken?
+    follow_ups:
+      - Wat zou je aan iemand laten zien die niet kon komen?
+      - Hoe zul je het later beschrijven?
+      - Wat zou je opzettelijk achterlaten?

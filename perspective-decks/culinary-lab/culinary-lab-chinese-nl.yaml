@@ -1,0 +1,449 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Culinary Lab — Chinees (Dutch)
+
+id: culinary_lab_chinese
+name: Culinary Lab — Chinees
+description: 50 kaarten om je ervaring met de Chinese keuken te veranderen — van de chemie van wok hei en de archeologie van soja tot de choreografie van de ronde tafel en het narratief van het banket.
+domain: culinary_lab
+cards:
+  - id: chn_wok_hei
+    name: Wok Hei
+    prompt: |
+      Wok hei — de adem van de wok — is de ongrijpbare rook die ontstaat door extreme hitte en snelheid. Het is niet echt rokerig; het is transformatie.
+      Kun je het vangen? Wat zou de roerbak zijn zonder?
+    follow_ups:
+      - Hoe vormt hei het gerecht?
+      - Wat creëert het? Wat vernietigt het?
+      - Wat is de relatie tussen hitte en haast?
+  - id: chn_round_table
+    name: Ronde Tafel
+    prompt: |
+      De Chinese bankettafel is rond — de draaitafel in het midden. Eten draait rond. Iedereen reikt. De tafel is choreografie. Wie draait? Wie wacht?
+      Wat zijn de onuitgesproken regels?
+    follow_ups:
+      - Wat zou een rechthoekige tafel betekenen?
+      - Hoe vormt de ronde vorm de maaltijd?
+      - Wat is de relatie tussen het midden en de rand?
+  - id: chn_soy_archeology
+    name: Soja Archeologie
+    prompt: |
+      Sojasaus — gefermenteerd, gerijpt, regionaal. Licht, donker, champignon, dubbelzwart.
+      Het kwam ergens vandaan. Het kostte tijd. Traceer de fles. Welke reis heeft het gemaakt? Wat zou industrieel soja opofferen?
+    follow_ups:
+      - Hoe bepaalt de oorsprong de schenking?
+      - Wat zou het gerecht zijn zonder soja?
+      - Wat is de relatie tussen fermentatie en umami?
+  - id: chn_chopstick_grip
+    name: Stokjes Greep
+    prompt: |
+      Stokjes verlengen de hand. Rijst, gladde noedels, dumplings — elk vereist een andere techniek. Merk je grip op. Wat vereist het keukengerei? Wat staat het toe?
+    follow_ups:
+      - Wat zou een vork veranderen?
+      - Hoe vormt de stok de hap?
+      - Wat is de relatie tussen gereedschap en tempo?
+  - id: chn_dumpling_seam
+    name: Dumpling Naad
+    prompt: |
+      Dumpling plooien — de vouw, de sluiting. Jiaozi, shumai, xiaolongbao — elk heeft zijn vorm. De naad houdt vast of laat los. Bestudeer er een. Wat zou een barst betekenen? Wat beschermt de plooi?
+    follow_ups:
+      - Hoe bepaalt de vouw de vulling?
+      - Wat zou een open dumpling verliezen?
+      - Wat is de relatie tussen sluiting en soep?
+  - id: chn_tea_pour
+    name: Thee Schenking
+    prompt: |
+      Chinese thee — geschonken, bijgevuld, gedeeld. De pot circuleert. Lege kopjes worden gevuld voordat er gevraagd wordt. De schenking is dienstbaarheid en zorg. Merk het ritme op. Wat zou de maaltijd zijn zonder de thee?
+    follow_ups:
+      - Hoe bepaalt de thee het tempo?
+      - Wat communiceert de schenking?
+      - Wat is de relatie tussen kop en tafel?
+  - id: chn_bone_plate
+    name: Botten Bordje
+    prompt: |
+      Een klein bordje voor botten — weggegooide schalen, kippenbotten, garnalendoppen.
+      Het bordje verzamelt wat niet eetbaar is. Het is onderdeel van de tafelopstelling. Wat staat het bottenbordje toe? Wat zou er gebeuren zonder?
+    follow_ups:
+      - Hoe bepaalt het bordje de maaltijd?
+      - Hoe zou de tafel er zonder uitzien?
+      - Wat is de relatie tussen afval en waardigheid?
+  - id: chn_soup_spoon
+    name: Soeplepel
+    prompt: |
+      De Chinese soeplepel — breed, ondiep, keramisch. Hij bevat bouillon en vaste stoffen.
+      De lepel past anders in de mond. Merk de slok op. Wat maakt de vorm mogelijk?
+    follow_ups:
+      - Wat zou een ronde lepel veranderen?
+      - Hoe vormt de lepel de slok?
+      - Wat is de relatie tussen vorm en functie?
+  - id: chn_steam_basket
+    name: Stoommandje
+    prompt: |
+      Dim sum wordt geserveerd in bamboemandjes — gestapeld, gelaagd. De stoom stijgt op.
+      Het mandje behoudt de vorm. Overweeg de bamboe. Wat zou metaal anders doen? Wat voegt bamboe toe?
+    follow_ups:
+      - Hoe vormt het mandje de dumpling?
+      - Wat zou een bord verliezen?
+      - Wat is de relatie tussen bamboe en stoom?
+  - id: chn_maillard_wok
+    name: Maillard Wok
+    prompt: |
+      De wok bereikt temperaturen die thuisfornuizen niet kunnen. Het dichtschroeien is ogenblikkelijk.
+      Eiwitten bruinen in seconden. Beschouw de chemie. Wat zou lagere hitte opofferen? Wat eist de wok?
+    follow_ups:
+      - Hoe bepaalt hitte de smaak?
+      - Wat zou elektrisch anders doen?
+      - Wat is de relatie tussen vlam en korst?
+  - id: chn_glutinous_texture
+    name: Kleefrijst Textuur
+    prompt: |
+      Kleefrijst — plakkerig, taai — heeft een andere chemie. Het wordt gebruikt voor
+      zongzi, lo mai gai, desserts. Merk de textuur op. Hoe verschilt het van langkorrelige rijst? Wat maakt kleverigheid mogelijk?
+    follow_ups:
+      - Wat zou gewone rijst doen?
+      - Hoe bepaalt textuur het gerecht?
+      - Wat is de relatie tussen kleefkracht en verpakking?
+  - id: chn_century_egg
+    name: Eeuwig Ei
+    prompt: |
+      Eeuwig ei — geconserveerd, getransformeerd. De dooier is donker, het eiwit doorschijnend.
+      De chemie is oud. Beschouw de conservering. Wat doet tijd?
+      Wat zou vers betekenen?
+    follow_ups:
+      - Hoe bepaalt conservering de smaak?
+      - Wat zou het ei zijn als het vers was?
+      - Wat is de relatie tussen tijd en transformatie?
+  - id: chn_oyster_sauce
+    name: Oestersaus
+    prompt: |
+      Oestersaus — umami, dik, Kantonees. Het is reductie en extractie.
+      De oester geeft zijn essentie. Traceer de smaak. Wat zou de roerbak zijn zonder?
+    follow_ups:
+      - Hoe bepaalt de saus het gerecht?
+      - Wat is de relatie tussen oester en groente?
+      - Wat zou soja in plaats daarvan doen?
+  - id: chn_ordering_ritual
+    name: Bestel Ritueel
+    prompt: |
+      Bestellen in een Chinees restaurant — de gastheer kiest, of de tafel onderhandelt.
+      Balans: vlees, groente, soep, rijst. De bestelling is een compositie. Merk op wie beslist. Wat zijn de regels?
+    follow_ups:
+      - Hoe bepaalt het bestellen de maaltijd?
+      - Wat zou iedereen voor zichzelf bestellen?
+      - Wat is de relatie tussen keuze en collectief?
+  - id: chn_crispy_skin
+    name: Krokant Huidje
+    prompt: |
+      Peking eendenhuid — knapperig, geglazuurd. Of Kantonese geroosterde varkensbuik knapperig. De huid is doelbewust. Hitte, lucht, suiker. Beschouw de architectuur. Wat zou zacht huidje betekenen?
+    follow_ups:
+      - Hoe bepaalt knapperigheid de hap?
+      - Wat zorgt voor het kraken?
+      - Wat is de relatie tussen huid en vlees?
+  - id: chn_noodle_slip
+    name: Noedel Glij
+    prompt: |
+      Chinese noedels — tarwe, rijst, met de hand getrokken — variëren in textuur. Sommige glijden; sommigen kauwen.
+      De weerstand van de noedel tegen de stokjes. Merk de weerstand op. Wat voegt de glij toe?
+    follow_ups:
+      - Hoe bepaalt textuur de eetervaring?
+      - Wat zou een papperige noedel verliezen?
+      - Wat is de relatie tussen glijden en voldoening?
+  - id: chn_bok_choy_wilt
+    name: Bok Choy Verwelken
+    prompt: |
+      Bok choy in de wok — seconden. Het verwelkt maar behoudt structuur. Het groen verzacht.
+      Beschouw de transformatie. Wat zou rauw betekenen? Wat zou te gaar verliezen?
+    follow_ups:
+      - Hoe bepaalt het verwelken de groente?
+      - Wat is de relatie tussen hitte en groen?
+      - Wanneer is het klaar?
+  - id: chn_five_spice
+    name: Vijfkruiden
+    prompt: |
+      Vijfkruidenpoeder — steranijs, kruidnagel, kaneel, Szechuan peper, venkel.
+      Het is een mengsel met geschiedenis. Elke specerij heeft een route. Traceer er een. Welke reis heeft het gemaakt?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder?
+      - Hoe creëert het mengsel identiteit?
+      - Wat is de relatie tussen specerij en conservering?
+  - id: chn_banquet_progression
+    name: Banket Verloop
+    prompt: |
+      Een Chinees banket heeft een boog — koude gerechten eerst, dan heet, soep, rijst, dessert.
+      Het verloop is narratief. Merk het ritme op. Wat zou een andere volgorde doen?
+    follow_ups:
+      - Hoe bepaalt de volgorde de maaltijd?
+      - Wat is de relatie tussen eerste en laatste?
+      - Wanneer piekt het verhaal?
+  - id: chn_white_rice_center
+    name: Witte Rijst Centrum
+    prompt: |
+      Witte rijst — eenvoudig, gestoomd — is de basis van de maaltijd. Het is het canvas. Rijke gerechten hebben rijst nodig om in balans te komen. Merk op wanneer je ernaar grijpt. Wat zou de maaltijd zijn zonder het eenvoudige?
+    follow_ups:
+      - Hoe bepaalt rijst het palet?
+      - Wat zou gebakken rijst doen?
+      - Wat is de relatie tussen neutraal en smaak?
+  - id: chn_szechuan_numb
+    name: Sichuan Verdoofd
+    prompt: |
+      Sichuan peperkorrel — ma la — verdovend, tintelend. Het is geen hitte; het is sensatie.
+      De mond bruist. Beschouw de sensatie. Wat zou het gerecht zijn zonder het verdovende?
+    follow_ups:
+      - Hoe bepaalt ma la de ervaring?
+      - Wat is de relatie tussen verdovend en heet?
+      - Waarom combineren?
+  - id: chn_dark_soy
+    name: Donkere Soja
+    prompt: |
+      Donkere soja — dikker, zoeter, voor kleur. Het kleurt de rijst, glazuurt het vlees.
+      Het is niet voor zout; het is voor kleur. Beschouw het visuele. Wat voegt het donkere toe?
+    follow_ups:
+      - Wat zou lichte soja doen?
+      - Hoe bepaalt kleur de verwachting?
+      - Wat is de relatie tussen donker en karamel?
+  - id: chn_hot_plate
+    name: Hete Schaal
+    prompt: |
+      Sissende schalen — rundvlees, inktvis — komen sissend aan. De ijzeren schaal blijft koken.
+      Het geluid is theater. Wat zou het gerecht zijn zonder het sissen? Hoe verlengt de hete schaal het kookproces?
+    follow_ups:
+      - Hoe bepaalt het sissen de ervaring?
+      - Wat zou een koude schaal betekenen?
+      - Wat is de relatie tussen geluid en hitte?
+  - id: chn_congee_soft
+    name: Congee Zacht
+    prompt: |
+      Congee — rijstpap — is zacht, troostrijk. Lang gekookte rijst breekt af.
+      De textuur is overgave. Beschouw de transformatie. Wat zou al dente hier betekenen?
+    follow_ups:
+      - Hoe bepaalt zachtheid het gerecht?
+      - Wat zou dikke congee doen?
+      - Wat is de relatie tussen water en rijst?
+  - id: chn_glass_noodle
+    name: Glasnoedel
+    prompt: |
+      Glasnoedels — mungbonenzetmeel — zijn transparant, glad. Ze absorberen smaak.
+      Merk de textuur op. Wat zouden tarwenoedels doen? Hoe belangrijk is transparantie?
+    follow_ups:
+      - Hoe bepaalt de noedel het gerecht?
+      - Wat is de relatie tussen helder en absorberen?
+      - Waarom glas?
+  - id: chn_xlb_burst
+    name: XLB Barst
+    prompt: |
+      Xiaolongbao — soepdumpling — bevat bouillon van binnen. De eerste hap kan verbranden of barsten.
+      De techniek: knijpen, slurpen, eten. Beschouw het risico. Wat zou een koude xlb betekenen?
+    follow_ups:
+      - Hoe bepaalt de soep de ervaring?
+      - Wat zou je verliezen zonder de barst?
+      - Wat is de relatie tussen temperatuur en gevaar?
+  - id: chn_tea_smell
+    name: Theelucht
+    prompt: |
+      Oolong, jasmijn, pu-erh — elke thee heeft een ander aroma. Ruik voordat je nipt.
+      De geur is de helft van de ervaring. Wat belooft de geur? Wat levert het op?
+    follow_ups:
+      - Hoe bepaalt geur de slok?
+      - Wat zou de thee zijn zonder aroma?
+      - Wat is de relatie tussen trekken en geur?
+  - id: chn_crab_crack
+    name: Krab Kraken
+    prompt: |
+      Krab op een Chinees banket — krakers voorzien. Het kraken is geluid en arbeid.
+      Het vlees wordt geëxtraheerd. Beschouw de choreografie. Wat zou vooraf gekraakt betekenen?
+    follow_ups:
+      - Hoe bepaalt het kraken de maaltijd?
+      - Wat zou je verliezen zonder de arbeid?
+      - Wat is de relatie tussen inspanning en beloning?
+  - id: chn_turn_table
+    name: Draaitafel
+    prompt: |
+      De draaitafel — wie draait eraan? Wanneer? Het gerecht dat je wilt, is misschien aan de andere kant van de tafel. De draai is etiquette. Merk de dans op. Wat zijn de regels? Wanneer wacht je?
+    follow_ups:
+      - Hoe bepaalt de draai de maaltijd?
+      - Wat zouden vaste gerechten betekenen?
+      - Wat is de relatie tussen draaien en delen?
+  - id: chn_ginger_slice
+    name: Gember Schijfje
+    prompt: |
+      Gember met zeevruchten — dunne schijfjes, soms gebakken. Het snijdt het vissige.
+      De gember is zowel garnituur als functie. Beschouw zijn rol. Wat zou de vis zijn zonder?
+    follow_ups:
+      - Hoe bepaalt gember het palet?
+      - Wat is de relatie tussen schijfje en geur?
+      - Waarom gember bij zeevruchten?
+  - id: chn_hoisin_dip
+    name: Hoisin Dip
+    prompt: |
+      Hoisin met Peking eend — de dip is ritueel. De pannenkoek, de eend, de lente-ui, de saus. Elk element heeft zijn plaats. Beschouw de compositie. Wat zou er één missen?
+    follow_ups:
+      - Hoe bepaalt de dip de hap?
+      - Wat zou een andere saus doen?
+      - Wat is de relatie tussen zoet en eend?
+  - id: chn_leaf_wrap
+    name: Bladwikkel
+    prompt: |
+      Slawikkel — gehakt, kruiden, saus, gewikkeld in een blad. Het blad is een omhulsel en textuur. De wikkel is handwerk. Beschouw de architectuur. Wat zou een tortilla doen?
+    follow_ups:
+      - Hoe bepaalt het blad de hap?
+      - Wat zou een bord doen?
+      - Wat is de relatie tussen wikkel en hand?
+  - id: chn_fish_whole
+    name: Vis Geheel
+    prompt: |
+      Hele vis — gestoomd, kop en staart eraan. De vis wordt compleet gepresenteerd.
+      De kop heeft betekenis. Beschouw de presentatie. Wat zou een filet opofferen?
+    follow_ups:
+      - Hoe bepaalt het geheel het gerecht?
+      - Wat betekent de kop?
+      - Wat is de relatie tussen geheel en respect?
+  - id: chn_scallion_oil
+    name: Lente-ui Olie
+    prompt: |
+      Lente-ui olie — sissende olie over fijngesneden lente-ui en gember. Het is een dressing, een afwerking.
+      De olie draagt de aroma's. Merk op wanneer het wordt aangebracht. Wat voegt het sissen toe?
+    follow_ups:
+      - Wat zou het gerecht zijn zonder?
+      - Hoe bepaalt de olie de afwerking?
+      - Wat is de relatie tussen olie en aroma?
+  - id: chn_black_vinegar
+    name: Zwarte Azijn
+    prompt: |
+      Chinkiang azijn — donker, complex, licht zoet. Het snijdt de rijkdom. Een paar druppels veranderen de dumpling.
+      Beschouw het zuur. Wat zou rijstazijn doen? Wat voegt het donkere toe?
+    follow_ups:
+      - Hoe bepaalt de azijn de hap?
+      - Wat zou de dumpling zijn zonder?
+      - Wat is de relatie tussen azijn en balans?
+  - id: chn_sticky_rice
+    name: Kleefrijst
+    prompt: |
+      Kleefrijst in lotusblad — lo mai gai. Het blad geeft smaak. De rijst wordt gewikkeld, gestoomd. Pak het uit. Merk de geur op. Wat zou folie doen?
+    follow_ups:
+      - Hoe bepaalt het blad de rijst?
+      - Wat is de relatie tussen wikkel en stoom?
+      - Wat zou uitgepakt betekenen?
+  - id: chn_mooncake_mold
+    name: Maan Koek Vorm
+    prompt: |
+      Maan koeken — gestempeld met karakters, patronen. De vorm is geschiedenis. Het ontwerp heeft betekenis.
+      Beschouw de afdruk. Wat zou een gewone koek verliezen?
+    follow_ups:
+      - Hoe bepaalt de vorm de koek?
+      - Wat betekent het patroon?
+      - Wat is de relatie tussen afdruk en traditie?
+  - id: chn_egg_tart
+    name: Eiertaartje
+    prompt: |
+      Eiertaartje — Portugese invloed, Hong Kong verfijning. De custard, het gebak.
+      Beschouw de textuur. Bladerig, zijdezacht. Wat zou een andere korst doen?
+    follow_ups:
+      - Hoe bepaalt het taartje het einde van de maaltijd?
+      - Wat is de relatie tussen custard en knapperig?
+      - Waarom eiertaartje als afsluiting?
+  - id: chn_hand_pull
+    name: Hand Getrokken
+    prompt: |
+      Met de hand getrokken noedels — de kok strekt, vouwt, trekt. De strengen vermenigvuldigen zich.
+      Het is performance. Kijk ernaar. Wat zou machinale noedels opofferen?
+    follow_ups:
+      - Hoe bepaalt het trekken de noedel?
+      - Wat is de relatie tussen hand en textuur?
+      - Wat zouden uniforme noedels betekenen?
+  - id: chn_bird_nest
+    name: Vogelnest
+    prompt: |
+      Vogelnest — niet het zwaluwennest van soep, maar taro nest, of knapperig noedelnest dat roerbak gerechten bevat. Het nest is architectuur. Beschouw de vorm. Wat voegt het nest toe?
+    follow_ups:
+      - Hoe bepaalt het nest het gerecht?
+      - Wat zou een bord doen?
+      - Wat is de relatie tussen omhulsel en inhoud?
+  - id: chn_red_envelope
+    name: Rode Envelop
+    prompt: |
+      Bij banketten kunnen rode enveloppen cadeaus vergezellen — geld voor de keuken, voor de gastheren. De envelop is ritueel.
+      Beschouw de uitwisseling. Wat betekent het rood?
+    follow_ups:
+      - Hoe bepaalt de envelop de gelegenheid?
+      - Wat zou geen envelop betekenen?
+      - Wat is de relatie tussen geschenk en gezicht?
+  - id: chn_toasting_ritual
+    name: Proosten Ritueel
+    prompt: |
+      Gan bei — proost — of informele slokjes. De toast structureert het banket.
+      Wie proost op wie? Wanneer? Het ritueel is sociaal. Merk de choreografie op. Wat zou de maaltijd zijn zonder proosten?
+    follow_ups:
+      - Hoe bepaalt proosten de maaltijd?
+      - Wat is de relatie tussen proosten en hiërarchie?
+      - Wanneer drink je?
+  - id: chn_preserved_veg
+    name: Geconserveerde Groente
+    prompt: |
+      Geconserveerde mosterd, ingelegde radijs, gefermenteerde kool — deze voegen diepte toe.
+      Het zijn eeuwenoude conserveringsmethoden. Beschouw de transformatie. Wat zou verse groente doen?
+    follow_ups:
+      - Hoe bepaalt conservering het gerecht?
+      - Wat is de relatie tussen augurk en umami?
+      - Waarom geconserveerd?
+  - id: chn_sweet_sour
+    name: Zoet Zuur
+    prompt: |
+      Zoet en zuur — de balans is doelbewust. Suiker, azijn, soms ketchup. De saus is gedurfd.
+      Beschouw de combinatie. Wat zou één zonder de ander betekenen?
+    follow_ups:
+      - Hoe bepaalt de balans het gerecht?
+      - Wat is de relatie tussen zoet en zuur?
+      - Waarom deze combinatie?
+  - id: chn_wonton_soup
+    name: Wonton Soep
+    prompt: |
+      Wonton in heldere bouillon — de soep is eenvoudig. De wonton drijft. De bouillon is zuiver.
+      Beschouw het contrast met gefrituurde wonton. Wat voegt de soep toe?
+    follow_ups:
+      - Hoe bepaalt de bouillon de wonton?
+      - Wat zou gebakken betekenen?
+      - Wat is de relatie tussen helder en rijk?
+  - id: chn_cold_dish_start
+    name: Koud Gerecht Start
+    prompt: |
+      Koude gerechten openen de maaltijd — dronken kip, kwallen, augurken. Ze wekken het palet. Het contrast met wat volgt.
+      Beschouw de opening. Wat zou een hete start doen?
+    follow_ups:
+      - Hoe bepaalt het koude de maaltijd?
+      - Wat is de relatie tussen eerste en volgende?
+      - Waarom eerst koud?
+  - id: chn_fried_rice_wok
+    name: Gebakken Rijst Wok
+    prompt: |
+      Gebakken rijst heeft een wok nodig — hoge hitte, snel omscheppen. Rijst van gisteren, idealiter.
+      De korrels scheiden zich. Beschouw de techniek. Wat zou een koekenpan opofferen?
+    follow_ups:
+      - Hoe bepaalt de wok de rijst?
+      - Wat zou verse rijst doen?
+      - Wat is de relatie tussen hitte en scheiding?
+  - id: chn_lychee_dessert
+    name: Lychee Dessert
+    prompt: |
+      Lychee als dessert — vers, uit blik, in siroop. Het fruit sluit de maaltijd af.
+      Zoet, geparfumeerd. Beschouw het einde. Wat zou een ander fruit doen?
+    follow_ups:
+      - Hoe bepaalt lychee de afsluiting?
+      - Wat is de relatie tussen fruit en finale?
+      - Waarom lychee?
+  - id: chn_fortune_cookie
+    name: Gelukskoekje
+    prompt: |
+      Gelukskoekje — Amerikaans-Chinese uitvinding. Het koekje is theater. Kraak het. Lees het lot. Het koekje is niet authentiek, maar het is ritueel.
+      Beschouw zijn plaats.
+    follow_ups:
+      - Hoe zou de maaltijd eindigen zonder?
+      - Hoe bepaalt het lot de afsluiting?
+      - Wat is de relatie tussen koekje en verwachting?
+  - id: chn_century_egg
+    name: Eeuwig Ei
+    prompt: |
+      Eeuwig ei — bewaard in as, klei, kalk. De dooier wordt grijsgroen, het eiwit wordt donker tot gelei. Het is transformatie over weken.
+      Beschouw de archeologie. Wat zou een vers ei zijn? Wat voegt conservering toe?
+    follow_ups:
+      - Hoe bepaalt de conservering de textuur?
+      - Wat zou het gerecht zijn zonder het ei?
+      - Wat is de relatie tussen tijd en transformatie?

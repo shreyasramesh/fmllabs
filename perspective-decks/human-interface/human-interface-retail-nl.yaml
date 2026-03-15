@@ -1,0 +1,526 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# De Menselijke Interface — Retail (Dutch)
+
+id: human_interface_retail
+name: De Menselijke Interface — Retail
+description: 50 kaarten om hoe je de retailruimte ziet te veranderen—van gangpaden en de choreografie van het browsen tot paskamers en de dans van de aankoop.
+domain: human_interface
+cards:
+  - id: hi_rt_aisle_flow
+    name: Gangpadstroming
+    prompt: |
+      Het gangpad stuurt beweging. Winkelwagens gaan één kant op; mensen navigeren.
+      Observeer de stroming. Wie geeft toe? Wie blokkeert? Het gangpad heeft fysica.
+      Welke regels bepalen de dans?
+    follow_ups:
+      - Hoe vormt het gangpad het browsen?
+      - Wat zou de winkel zijn zonder gangpaden?
+      - Wat is de relatie tussen stroming en ontwerp?
+  - id: hi_rt_browsing_choreography
+    name: Browse Choreografie
+    prompt: |
+      Vingers raken stof aan. Ogen scannen schappen. Het browsen heeft een ritme—pauze,
+      overwegen, verdergaan. Observeer de choreografie. Wat doet het lichaam als
+      het niet koopt?
+    follow_ups:
+      - Hoe vormt browsen de ervaring?
+      - Wat zou de winkel zijn zonder browsen?
+      - Wat is de relatie tussen browsen en verlangen?
+  - id: hi_rt_fitting_room
+    name: Paskamer
+    prompt: |
+      Het gordijn sluit. De paskamer is een drempel—publiek naar privé.
+      Binnenin trek je een mogelijke zelf aan. Observeer de terugkeer. Wat zegt het
+      gezicht? De paskamer is een podium voor beslissing.
+    follow_ups:
+      - Hoe vormt de paskamer de aankoop?
+      - Wat zou de winkel zijn zonder?
+      - Wat is de relatie tussen passen en identiteit?
+  - id: hi_rt_dance_of_purchase
+    name: Dans van Aankoop
+    prompt: |
+      Benaderen, selecteren, dragen, betalen. De aankoop heeft stappen. Observeer de
+      volgorde. Waar aarzelen mensen? De dans wordt gechoreografeerd door
+      de winkel. Wat extraheert het?
+    follow_ups:
+      - Hoe vormt de dans het resultaat?
+      - Wat zou de winkel zijn zonder de volgorde?
+      - Wat is de relatie tussen dans en verlangen?
+  - id: hi_rt_cart_territory
+    name: Winkelwagen Territorium
+    prompt: |
+      De winkelwagen breidt het lichaam uit. Het bevat keuzes, blokkeert doorgang. Observeer
+      het pad van de winkelwagen. De winkelwagen is een mobiel territorium. Wat claimt het?
+    follow_ups:
+      - Hoe vormt de winkelwagen beweging?
+      - Wat zou de winkel zijn zonder winkelwagens?
+      - Wat is de relatie tussen winkelwagen en accumulatie?
+  - id: hi_rt_endcap_display
+    name: Eindschap Display
+    prompt: |
+      Het einde van het gangpad heeft een display—impuls, uitverkoop, seizoensgebonden. De
+      eindschap trekt de aandacht. Observeer wie stopt. De eindschap is een valstrik.
+      Wat doet het?
+    follow_ups:
+      - Hoe vormt de eindschap het browsen?
+      - Wat zou het gangpad zijn zonder?
+      - Wat is de relatie tussen display en impuls?
+  - id: hi_rt_checkout_line
+    name: Kassa-rij
+    prompt: |
+      De rij vormt zich. Snoep, tijdschriften, laatste kansen. De kassa is een
+      laatste test. Observeer het wachten. Wat doen mensen? De rij is een
+      drempel tussen browsen en uitgang.
+    follow_ups:
+      - Hoe vormt de rij de aankoop?
+      - Wat zou de winkel zijn zonder het wachten?
+      - Wat is de relatie tussen rij en impuls?
+  - id: hi_rt_shelf_height
+    name: Schaphoogte
+    prompt: |
+      Ooghoogte verkoopt. De schaphoogte is ontwerp. Observeer wat waar is.
+      Wat ligt eronder? Wat ligt erboven? De hoogte codeert waarde.
+      Wat neemt het aan over het lichaam?
+    follow_ups:
+      - Hoe vormt schaphoogte het browsen?
+      - Wat zou de winkel zijn met uniforme hoogte?
+      - Wat is de relatie tussen hoogte en toegang?
+  - id: hi_rt_price_tag
+    name: Prijskaartje
+    prompt: |
+      Het kaartje vermeldt de prijs. Soms verborgen, soms prominent. Observeer
+      de plaatsing. Het kaartje is informatie en barrière. Wat doet het kaartje
+      met het moment van aanraking?
+    follow_ups:
+      - Hoe vormt het kaartje de beslissing?
+      - Wat zou het item zijn zonder het kaartje?
+      - Wat is de relatie tussen kaartje en waarde?
+  - id: hi_rt_store_entrance
+    name: Winkelentree
+    prompt: |
+      De deur gaat open. Je gaat naar binnen. De entree is een drempel. Observeer wat
+      je als eerste ziet. De entree bepaalt de toon. Wat wil de winkel dat je voelt?
+    follow_ups:
+      - Hoe vormt de entree het bezoek?
+      - Wat zou de winkel zijn zonder ontwerp?
+      - Wat is de relatie tussen entree en verwachting?
+  - id: hi_rt_sales_associate
+    name: Verkoopmedewerker
+    prompt: |
+      "Kan ik u ergens mee helpen?" Het aanbod is gescript. Observeer de
+      uitwisseling. Accepteren of weigeren? De medewerker is een gids en een druk.
+      Wat doet het aanbod?
+    follow_ups:
+      - Hoe vormt de medewerker het browsen?
+      - Wat zou de winkel zijn zonder hen?
+      - Wat is de relatie tussen aanbod en verplichting?
+  - id: hi_rt_basket_versus_cart
+    name: Mandje versus Winkelwagen
+    prompt: |
+      Mandje voor een paar items. Winkelwagen voor meer. De keuze voorspelt de
+      aankoop. Observeer wie wat neemt. Het mandje beperkt; de winkelwagen
+      nodigt uit. Wat maakt de keuze mogelijk?
+    follow_ups:
+      - Hoe vormt het mandje het bezoek?
+      - Wat zou de winkel zijn met alleen winkelwagens?
+      - Wat is de relatie tussen vaartuig en accumulatie?
+  - id: hi_rt_return_counter
+    name: Retourbalie
+    prompt: |
+      De retour-rij is anders. Mensen dragen tassen, bonnetjes, spijt.
+      De retour is een omkering. Observeer de uitwisseling. Wat kost de retour—emotioneel, sociaal?
+      De retourbalie is een plaats van ongedaan maken.
+    follow_ups:
+      - Hoe vormt de retour de relatie?
+      - Wat zou de winkel zijn zonder retouren?
+      - Wat is de relatie tussen retour en vertrouwen?
+  - id: hi_rt_dressing_room_limit
+    name: Limiet Paskamer
+    prompt: |
+      "Maximaal zes items." De limiet bepaalt de pasbeurt. Observeer de
+      onderhandeling. Wat gebeurt er als je er zeven hebt? De limiet vormt
+      de paskamerervaring. Wat neemt het aan?
+    follow_ups:
+      - Hoe vormt de limiet de pasbeurt?
+      - Wat zou de paskamer zijn zonder?
+      - Wat is de relatie tussen limiet en diefstal?
+  - id: hi_rt_impulse_buy
+    name: Impulsaankoop
+    prompt: |
+      Het item stond niet op de lijst. Het trok de aandacht. De impulsaankoop is
+      een moment van overgave. Observeer wanneer het gebeurt. Wat triggerde het?
+      De impuls is ontwerp dat verlangen ontmoet.
+    follow_ups:
+      - Hoe vormt de impuls de aankoop?
+      - Wat zou de winkel zijn zonder impuls?
+      - Wat is de relatie tussen impuls en spijt?
+  - id: hi_rt_store_music
+    name: Winkelmuziek
+    prompt: |
+      Muziek speelt—langzaam, bekend, ontworpen. De muziek vormt de stemming en het tempo.
+      Observeer het tempo. Snelle winkel, langzame muziek? De muziek is onzichtbaar
+      ontwerp. Wat doet het met het lichaam?
+    follow_ups:
+      - Hoe vormt de muziek het bezoek?
+      - Wat zou de winkel zijn in stilte?
+      - Wat is de relatie tussen muziek en duur?
+  - id: hi_rt_mannequin
+    name: Paspop
+    prompt: |
+      De paspop draagt de kleding. Het is een ideaal lichaam, een suggestie.
+      Observeer hoe mensen ernaar kijken. De paspop is een spiegel en een
+      fantasie. Wat belooft het?
+    follow_ups:
+      - Hoe vormt de paspop het browsen?
+      - Wat zou de winkel zijn zonder?
+      - Wat is de relatie tussen paspop en verlangen?
+  - id: hi_rt_sample_station
+    name: Sample Station
+    prompt: |
+      Proef dit. Probeer dit. Het sample nodigt uit tot aanraking. Het station creëert
+      een pauze. Observeer wie stopt. Het sample is een klein geschenk. Wat extraheert het?
+    follow_ups:
+      - Hoe vormt het sample de aankoop?
+      - Wat zou de winkel zijn zonder samples?
+      - Wat is de relatie tussen sample en verplichting?
+  - id: hi_rt_sale_rack
+    name: Uitverkooprek
+    prompt: |
+      Het uitverkooprek is chaos—korting, gekreukt. Mensen graven. Het uitverkooprek
+      is een ander soort browse. Observeer het gedrag. Wat doet de
+      korting met de aanraking?
+    follow_ups:
+      - Hoe vormt het uitverkooprek het bezoek?
+      - Wat zou de winkel zijn zonder?
+      - Wat is de relatie tussen uitverkoop en waarde?
+  - id: hi_rt_mirror_encounter
+    name: Spiegelontmoeting
+    prompt: |
+      Je ziet jezelf in de winkelspiegel. De ontmoeting is onvermijdelijk.
+      Observeer de blik. Wat controleer je? De spiegel is een test. De winkel
+      verstrekt de spiegel. Wat wil het?
+    follow_ups:
+      - Hoe vormt de spiegel de pasbeurt?
+      - Wat zou de paskamer zijn zonder?
+      - Wat is de relatie tussen spiegel en zelf?
+  - id: hi_rt_cashier_small_talk
+    name: Kassier Kleine Praatjes
+    prompt: |
+      "Alles gevonden?" vraagt de kassier. De kleine praatjes zijn gescript.
+      Observeer de uitwisseling. Wat doet de vraag? De kassier is het
+      laatste menselijke contact. Wat creëert de praat?
+    follow_ups:
+      - Hoe vormen de kleine praatjes de uitgang?
+      - Wat zou de kassa zijn zonder?
+      - Wat is de relatie tussen praat en transactie?
+  - id: hi_rt_store_layout
+    name: Winkelindeling
+    prompt: |
+      Het pad is ontworpen. Basisproducten achterin. Impuls vooraan. De
+      indeling choreografeert het bezoek. Observeer je route. Wat wilde de
+      ontwerper dat je passeerde?
+    follow_ups:
+      - Hoe vormt de indeling het browsen?
+      - Wat zou de winkel zijn met willekeurige indeling?
+      - Wat is de relatie tussen indeling en blootstelling?
+  - id: hi_rt_touch_decide
+    name: Aanraken Beslissen
+    prompt: |
+      Vingers raken de stof, het oppervlak aan. De aanraking beslist. Observeer het
+      moment. Wat leert de hand dat het oog niet kan? De aanraking is
+      een drempel. Wat vereist het?
+    follow_ups:
+      - Hoe vormt aanraking de beslissing?
+      - Wat zou de winkel zijn zonder aanraking?
+      - Wat is de relatie tussen aanraking en verbintenis?
+  - id: hi_rt_receipt_handoff
+    name: Bon Aangeven
+    prompt: |
+      De bon wordt aangeboden—in de tas of apart. Sommigen nemen hem aan; sommigen
+      weigeren. De bon is bewijs en registratie. Observeer de uitwisseling. Wat
+      doet de bon voor de transactie?
+    follow_ups:
+      - Hoe vormt de bon de uitgang?
+      - Wat zou de kassa zijn zonder?
+      - Wat is de relatie tussen bon en afsluiting?
+  - id: hi_rt_store_exit
+    name: Winkeluitgang
+    prompt: |
+      De deur gaat open. Je vertrekt met een tas—of met lege handen. De uitgang is een
+      drempel. Observeer het gevoel. Wat extraheert de uitgang? De uitgang
+      is het einde van de dans. Wat blijft er over?
+    follow_ups:
+      - Hoe vormt de uitgang het bezoek?
+      - Wat zou de winkel zijn zonder de deur?
+      - Wat is de relatie tussen uitgang en tevredenheid?
+  - id: hi_rt_loyalty_card_ask
+    name: Vraag Klantenkaart
+    prompt: |
+      "Heeft u onze spaarkaart?" De vraag is routine. Observeer de
+      reactie. Ja, nee, aanmelden. De klantenkaart verlengt de relatie.
+      Wat creëert de vraag?
+    follow_ups:
+      - Hoe vormt de klantenkaart de transactie?
+      - Wat zou de kassa zijn zonder?
+      - Wat is de relatie tussen kaart en gegevens?
+  - id: hi_rt_abandoned_cart
+    name: Verlaten Winkelwagen
+    prompt: |
+      Een winkelwagen staat in het gangpad—vol, onbeheerd. De winkelwagen is verlaten.
+      Observeer de inhoud. Wat hebben ze overwogen? De verlating is een
+      moment van nee. Wat onthult het?
+    follow_ups:
+      - Hoe vormt de verlaten winkelwagen de winkel?
+      - Wat zou de winkel ervan leren?
+      - Wat is de relatie tussen verlaten en verlangen?
+  - id: hi_rt_fitting_room_opinion
+    name: Mering Paskamer
+    prompt: |
+      "Hoe staat het?" vraagt iemand van buiten het gordijn. De mening wordt
+      gezocht. De paskamer wordt sociaal. Observeer de uitwisseling.
+      Wat doet de mening?
+    follow_ups:
+      - Hoe vormt de mening de beslissing?
+      - Wat zou de pasbeurt alleen zijn?
+      - Wat is de relatie tussen mening en aankoop?
+  - id: hi_rt_store_scent
+    name: Winkelgeur
+    prompt: |
+      De winkel heeft een geur—parfum, leer, schoon. De geur is ontworpen.
+      Het dringt binnen voordat je het merkt. Observeer wanneer je het ruikt. Wat doet
+      de geur met het lichaam?
+    follow_ups:
+      - Hoe vormt de geur het bezoek?
+      - Wat zou de winkel zijn zonder?
+      - Wat is de relatie tussen geur en geheugen?
+  - id: hi_rt_compare_prices
+    name: Prijzen Vergelijken
+    prompt: |
+      Telefoon uit. Scannen. De prijscontrole is onderzoek. Observeer het moment.
+      Wat onthult de telefoon? De vergelijking vindt plaats in het gangpad. Wat
+      doet het met de beslissing?
+    follow_ups:
+      - Hoe vormt de vergelijking de aankoop?
+      - Wat zou de winkel zijn zonder telefoons?
+      - Wat is de relatie tussen vergelijken en macht?
+  - id: hi_rt_window_display
+    name: Vitrine Display
+    prompt: |
+      Het raam kijkt uit op straat. Paspoppen, rekwisieten, een verhaal. De display
+      stopt de loop. Observeer wat de aandacht trekt. Het raam is een
+      uitnodiging. Wat belooft het?
+    follow_ups:
+      - Hoe vormt het raam de entree?
+      - Wat zou de winkel zijn zonder?
+      - Wat is de relatie tussen display en verlangen?
+  - id: hi_rt_size_search
+    name: Maat Zoeken
+    prompt: |
+      Vingers bladeren door hangers. Op zoek naar de maat. Het zoeken heeft
+      een ritme. Observeer de frustratie of opluchting. De maat is een poort.
+      Wat vereist het zoeken?
+    follow_ups:
+      - Hoe vormt het zoeken naar maten het browsen?
+      - Wat zou de winkel zijn met alle maten zichtbaar?
+      - Wat is de relatie tussen maat en lichaam?
+  - id: hi_rt_payment_choice
+    name: Betaalkeuze
+    prompt: |
+      Kaart, contant, telefoon. De betaalkeuze is een moment van de transactie.
+      Observeer de methode. De keuze is gewoonte en identiteit. Wat communiceert
+      de betaalmethode?
+    follow_ups:
+      - Hoe vormt de betaling de kassa?
+      - Wat zou de winkel zijn met één methode?
+      - Wat is de relatie tussen betaling en snelheid?
+  - id: hi_rt_store_regular
+    name: Winkel Stamgast
+    prompt: |
+      De stamgast kent de indeling. Ze bewegen doelgericht. De medewerker
+      knikt. Observeer de stamgast. Wat weten ze wat de nieuwkomer
+      niet weet? De stamgast heeft een relatie met de ruimte.
+    follow_ups:
+      - Hoe vormt de stamgast de winkel?
+      - Wat zou de winkel zijn zonder stamgasten?
+      - Wat is de relatie tussen stamgast en loyaliteit?
+  - id: hi_rt_bag_handoff
+    name: Tas Aangeven
+    prompt: |
+      De tas wordt overhandigd—vol, merk. De overhandiging voltooit de
+      transactie. Observeer de uitwisseling. Wat doet de tas voor de
+      uitgang? De tas is bewijs en last.
+    follow_ups:
+      - Hoe vormt de tas de uitgang?
+      - Wat zou de aankoop zijn zonder?
+      - Wat is de relatie tussen tas en identiteit?
+  - id: hi_rt_fitting_room_overflow
+    name: Overloop Paskamer
+    prompt: |
+      Te veel items. De medewerker neemt de overloop aan. "Ik bewaar deze."
+      De overloop is vertrouwen. Observeer de uitwisseling. Wat houdt de medewerker
+      vast? De overloop verlengt de pasbeurt. Wat maakt het mogelijk?
+    follow_ups:
+      - Hoe vormt de overloop de pasbeurt?
+      - Wat zou de paskamer zijn zonder?
+      - Wat is de relatie tussen overloop en vertrouwen?
+  - id: hi_rt_store_lighting
+    name: Winkelverlichting
+    prompt: |
+      Het licht is ontworpen—vleiend, helder, warm. De verlichting vormt
+      hoe dingen eruitzien. Observeer de spiegel in dat licht. Wat doet de
+      verlichting met het gezicht, de stof?
+    follow_ups:
+      - Hoe vormt de verlichting de aankoop?
+      - Wat zou de winkel zijn in hard licht?
+      - Wat is de relatie tussen licht en waarheid?
+  - id: hi_rt_aisle_block
+    name: Gangpadblokkade
+    prompt: |
+      Iemand staat in het gangpad. Je moet passeren. De blokkade is
+      onbewust of opzettelijk. Observeer de onderhandeling. "Excuseer." De
+      blokkade is een kleine wrijving. Wat vereist het?
+    follow_ups:
+      - Hoe vormt de blokkade de stroming?
+      - Wat zou de winkel zijn met bredere gangpaden?
+      - Wat is de relatie tussen blokkade en beleefdheid?
+  - id: hi_rt_clearance_section
+    name: Opruimingssectie
+    prompt: |
+      De opruimingssectie is achterin, de hoek. Vorig seizoen, laatste kans.
+      De sectie heeft een andere energie. Observeer het browsen. Wat doet de
+      korting met de aanraking, de overweging?
+    follow_ups:
+      - Hoe vormt de opruiming het bezoek?
+      - Wat zou de winkel zijn zonder?
+      - Wat is de relatie tussen opruiming en waarde?
+  - id: hi_rt_store_map
+    name: Winkelkaart
+    prompt: |
+      "Waar is de X?" De kaart of de medewerker antwoordt. De winkel heeft
+      geografie. Observeer de desoriëntatie. Wat biedt de kaart?
+      De kaart is oriëntatie. Wat neemt het aan?
+    follow_ups:
+      - Hoe vormt de kaart het bezoek?
+      - Wat zou de winkel zijn zonder?
+      - Wat is de relatie tussen kaart en vloeiendheid?
+  - id: hi_rt_try_on_stack
+    name: Stapel Gepaste Items
+    prompt: |
+      De medewerker retourneert de gepaste items. Ze zijn gevouwen, gehangen. De stapel
+      gaat terug naar de vloer. Observeer het werk. Wie heeft deze aangeraakt? De
+      stapel gepaste items is het nasleep van vele misschien-jes.
+    follow_ups:
+      - Hoe vormt de stapel de vloer?
+      - Wat zou de paskamer zijn zonder?
+      - Wat is de relatie tussen stapel en arbeid?
+  - id: hi_rt_store_hours
+    name: Winkelopeningstijden
+    prompt: |
+      Het bord geeft aan wanneer de winkel opent, wanneer hij sluit. De tijden zijn
+      een grens. Observeer de menigte voor opening. De tijden structureren
+      toegang. Wat nemen ze aan over de klant?
+    follow_ups:
+      - Hoe vormen de tijden het bezoek?
+      - Wat zou de winkel zijn met 24-uurs toegang?
+      - Wat is de relatie tussen tijden en beschikbaarheid?
+  - id: hi_rt_shopping_list
+    name: Boodschappenlijstje
+    prompt: |
+      Telefoon of papier. Het lijstje stuurt het bezoek. Observeer wie er een heeft. Het
+      lijstje is intentie. Het verzet zich tegen impuls—of niet. Wat doet het
+      lijstje voor het browsen?
+    follow_ups:
+      - Hoe vormt het lijstje de aankoop?
+      - Wat zou het bezoek zijn zonder?
+      - Wat is de relatie tussen lijstje en controle?
+  - id: hi_rt_store_emptiness
+    name: Winkel Leegte
+    prompt: |
+      Buiten openingstijd, trage dag. De winkel is leeg. De leegte verandert het
+      gevoel. Observeer de ruimte. Wat onthult de leegte? De lege
+      winkel is een ander soort podium.
+    follow_ups:
+      - Hoe vormt de leegte het browsen?
+      - Wat zou de winkel zijn als hij altijd leeg was?
+      - Wat is de relatie tussen leeg en comfort?
+  - id: hi_rt_fitting_room_curtain
+    name: Gordijn Paskamer
+    prompt: |
+      Het gordijn sluit. Privacy is gedeeltelijk—kieren, geluiden. Het gordijn is
+      een drempel. Observeer de grens. Wat beschermt het gordijn?
+      Wat beschermt het niet?
+    follow_ups:
+      - Hoe vormt het gordijn de pasbeurt?
+      - Wat zou de paskamer zijn met een deur?
+      - Wat is de relatie tussen gordijn en privacy?
+  - id: hi_rt_store_aroma
+    name: Winkel Aroma
+    prompt: |
+      Bakkerij, koffie, parfum—de winkel heeft een geur. Het aroma is het eerste
+      contact. Het primeert het bezoek. Observeer wanneer je het opmerkt. Wat doet
+      het aroma voordat je koopt?
+    follow_ups:
+      - Hoe vormt het aroma het bezoek?
+      - Wat zou de winkel zijn zonder?
+      - Wat is de relatie tussen aroma en verlangen?
+  - id: hi_rt_purchase_regret
+    name: Aankoop Spijt
+    prompt: |
+      De tas in de hand. De twijfel sluipt binnen. De spijt kan later komen. Observeer
+      het gezicht dat de winkel verlaat. Wat betekent de aankoop? De spijt
+      is de schaduw van de dans. Wat creëert het?
+    follow_ups:
+      - Hoe vormt spijt het volgende bezoek?
+      - Wat zou de aankoop zijn zonder spijt?
+      - Wat is de relatie tussen spijt en verlangen?
+  - id: hi_rt_store_thank_you
+    name: Winkel Dank U
+    prompt: |
+      "Bedankt voor uw aankoop." De zin sluit de transactie af.
+      Het is gescript. Observeer de uitwisseling. Wat doet het dank je? De
+      zin is een klein ritueel. Wat creëert het?
+    follow_ups:
+      - Hoe vormt het dank je de uitgang?
+      - Wat zou de kassa zijn zonder?
+      - Wat is de relatie tussen dank je en afsluiting?
+  - id: hi_rt_store_entrance_sensor
+    name: Entree Sensor
+    prompt: |
+      De deur gaat automatisch open. De sensor detecteert je nadering. De
+      entree is gechoreografeerd. Observeer de drempel. Wat doet de
+      automatische deur met de aankomst? De sensor creëert een naadloze
+      overgang.
+    follow_ups:
+      - Hoe vormt de sensor de entree?
+      - Wat zou de winkel zijn met een handmatige deur?
+      - Wat is de relatie tussen sensor en welkom?
+  - id: hi_rt_price_match
+    name: Prijs Match
+    prompt: |
+      "We matchen de prijzen van concurrenten." Het aanbod is een belofte. Observeer wanneer
+      iemand het gebruikt. De prijs match is een onderhandeling. Wat vereist het
+      van de klant? De match creëert vertrouwen—of argwaan.
+    follow_ups:
+      - Hoe vormt de prijs match de aankoop?
+      - Wat zou de winkel zijn zonder?
+      - Wat is de relatie tussen match en loyaliteit?
+  - id: hi_rt_fitting_room_number
+    name: Aantal Paskamer
+    prompt: |
+      "Hoeveel?" vraagt de medewerker. Het aantal beperkt de pasbeurt. Observeer
+      de onderhandeling. Wat gebeurt er als je er meer hebt? Het aantal is een
+      controle. Wat neemt het aan over de klant?
+    follow_ups:
+      - Hoe vormt het aantal de pasbeurt?
+      - Wat zou de paskamer zijn zonder limieten?
+      - Wat is de relatie tussen aantal en vertrouwen?
+  - id: hi_rt_gift_receipt
+    name: Cadeaubon
+    prompt: |
+      "Wilt u een cadeaubon?" Het aanbod scheidt de prijs van het
+      cadeau. De cadeaubon maakt retourneren mogelijk zonder de kosten te onthullen.
+      Observeer de keuze. Wat beschermt de cadeaubon?
+    follow_ups:
+      - Hoe vormt de cadeaubon de aankoop?
+      - Wat zou het cadeau zijn zonder?
+      - Wat is de relatie tussen bon en discretie?

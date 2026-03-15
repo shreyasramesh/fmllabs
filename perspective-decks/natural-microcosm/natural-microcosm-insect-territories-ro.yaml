@@ -1,0 +1,478 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Microcosmos Natural — Teritoriile Insectelor (Romanian)
+
+id: natural_microcosm_insect_territories
+name: Microcosmos Natural — Teritoriile Insectelor
+description: 50 de cărți pentru a-ți schimba perspectiva asupra vieții insectelor — de la potecile furnicilor și traficul albinelor la pânzele de păianjen, dramele teritoriale și coregrafia coloniilor.
+domain: natural_microcosm
+cards:
+  - id: nmi_ant_trail
+    name: Poteca Furnicilor
+    prompt: |
+      Furnicile formează poteci — căi de feromoni între cuib și hrană. Urmărește fluxul.
+      Două benzi: outbound și retur. Poteca este o decizie luată de mulți.
+      Ce ar rupe poteca?
+    follow_ups:
+      - Cum se auto-întărește poteca?
+      - Ce ar fi colonia fără poteci?
+      - Care este relația dintre potecă și colonie?
+  - id: nmi_bee_traffic
+    name: Traficul Albinelor
+    prompt: |
+      O intrare în stup — albinele curg înăuntru și afară. Traficul are un ritm. Unele
+      duc polen; altele nu. Ia în considerare coregrafia. Cine decide
+      modelul?
+    follow_ups:
+      - Ce ar fi stupul fără trafic?
+      - Cum modelează intrarea fluxul?
+      - Care este relația dintre albină și colonie?
+  - id: nmi_spider_web
+    name: Pânza de Păianjen
+    prompt: |
+      O pânză de păianjen este teritoriu și capcană. Păianjenul așteaptă la margine.
+      Vibrațiile poartă informații. Ia în considerare arhitectura. Ce prinde pânza? Ce exclude?
+    follow_ups:
+      - Ce ar fi păianjenul fără pânză?
+      - Cum extinde pânza simțurile păianjenului?
+      - Care este relația dintre mătase și supraviețuire?
+  - id: nmi_dragonfly_claim
+    name: Pretenția Libelulei
+    prompt: |
+      O libelulă patrulează o porțiune de iaz — înainte și înapoi. Este teritorială.
+      Rivalii sunt alungați. Partenerii sunt curtați. Ia în considerare miza. Ce se apără?
+    follow_ups:
+      - Ce ar face libelula fără teritoriu?
+      - Cum comunică patrularea posesia?
+      - Care este relația dintre spațiu și reproducere?
+  - id: nmi_caterpillar_munch
+    name: Ronțăitul Omidei
+    prompt: |
+      O omidă mănâncă — marginea frunzei dispare. Mâncatul este constant. Omidă
+      este o mașină de conversie. Ia în considerare rata. Ce ar fi planta fără erbivore?
+    follow_ups:
+      - Cum modelează omida frunza?
+      - Ce ar fi fluturele fără mâncat?
+      - Care este relația dintre consum și creștere?
+  - id: nmi_beetle_battle
+    name: Lupta Gândacilor
+    prompt: |
+      Doi gândaci se întâlnesc — poate gândaci de cerb, poate gândaci de bălegar. Se încleștează.
+      Lupta este ritualică. Ia în considerare miza. Ce se câștigă? Ce
+      se pierde?
+    follow_ups:
+      - Ce ar face învinsul?
+      - Cum se rezolvă lupta?
+      - Care este relația dintre luptă și împerechere?
+  - id: nmi_firefly_flash
+    name: Strălucirea Licuricilor
+    prompt: |
+      Licuricii strălucesc — fiecare specie are un cod. Modelul este curtare. Ia în considerare
+      semnalul. Ce ar însemna un strălucire greșită? Cum se găsesc în întuneric?
+    follow_ups:
+      - Cum codifică strălucirea specia?
+      - Ce ar fi pajiștea fără licurici?
+      - Care este relația dintre lumină și partener?
+  - id: nmi_aphid_farm
+    name: Ferma Afidelor
+    prompt: |
+      Furnicile îngrijesc afide — le mângâie, le protejează. Afidele excretă
+      roua de miere. Furnicile o recoltează. Ia în considerare parteneriatul. Cine beneficiază?
+      Cine este exploatat?
+    follow_ups:
+      - Ce ar fi afidele fără furnici?
+      - Cum modelează agricultura ambele specii?
+      - Care este relația dintre îngrijire și extracție?
+  - id: nmi_cicada_shell
+    name: Învelișul Cicladei
+    prompt: |
+      Un înveliș de cicladă se agață de scoarță — nimfa a ieșit. Învelișul este gol,
+      perfect. Ia în considerare năpârlirea. Ce a lăsat insecta în urmă? Ce
+      a câștigat?
+    follow_ups:
+      - Ce ar fi ciclada fără năpârlire?
+      - Cum marchează învelișul tranziția?
+      - Care este relația dintre năpârlire și creștere?
+  - id: nmi_leaf_miner
+    name: Minerul de Frunze
+    prompt: |
+      O potecă în interiorul unei frunze — calea unui miner de frunze. Larva mănâncă între
+      straturi. Frunza păstrează înregistrarea. Ia în considerare tunelul. Cum ar arăta frunza din interior?
+    follow_ups:
+      - Ce ar fi frunza fără miner?
+      - Cum protejează mina larva?
+      - Care este relația dintre interior și exterior?
+  - id: nmi_wasp_nest
+    name: Cuibul Viespilor
+    prompt: |
+      Un cuib de viespi de hârtie — celule hexagonale, lemn mestecat. Cuibul este arhitectură
+      și fortăreață. Ia în considerare colonia. Cine construiește? Cine apără? Cine se reproduce?
+    follow_ups:
+      - Ce ar fi viespile fără cuib?
+      - Cum modelează cuibul structura socială?
+      - Care este relația dintre hârtie și colonie?
+  - id: nmi_grasshopper_leap
+    name: Săritura Lăcustei
+    prompt: |
+      O lăcustă sare — picioarele se extind, a dispărut. Saltul este evadare sau
+      apropiere. Ia în considerare declanșatorul. Ce a văzut lăcustă? Ce
+      a auzit?
+    follow_ups:
+      - Ce ar fi lăcustă fără salt?
+      - Cum evită saltul prădarea?
+      - Care este relația dintre picior și zbor?
+  - id: nmi_mantis_still
+    name: Imobilitatea Mantișei
+    prompt: |
+      O mantișă așteaptă — nemișcată. Este un vânător. Pradă se apropie. Lovitura
+      este bruscă. Ia în considerare răbdarea. Ce costă imobilitatea? Ce
+      permite?
+    follow_ups:
+      - Ce ar fi mantișă fără așteptare?
+      - Cum înșeală imobilitatea?
+      - Care este relația dintre răbdare și captură?
+  - id: nmi_bumblebee_buzz
+    name: Zgomotul Bombusului
+    prompt: |
+      Un bondar bâzâie — vibrează. Unele flori necesită polenizare prin vibrații.
+      Bondarul scutură polenul. Ia în considerare parteneriatul. Ce ar fi floarea fără bâzâit?
+    follow_ups:
+      - Cum eliberează bâzâitul polenul?
+      - Ce ar fi bondarul fără polenizare prin vibrații?
+      - Care este relația dintre vibrație și fertilizare?
+  - id: nmi_butterfly_territory
+    name: Teritoriul Fluturelui
+    prompt: |
+      Un fluture stă pe un punct înalt — "hilltopping". Așteaptă parteneri.
+      Rivalii sunt alungați. Ia în considerare strategia. De ce acest loc? Ce îl face valoros?
+    follow_ups:
+      - Ce ar face fluturele fără așezare?
+      - Cum modelează "hilltopping"-ul împerecherea?
+      - Care este relația dintre loc și întâlnire?
+  - id: nmi_earwig_pincer
+    name: Cleștele Urechelniței
+    prompt: |
+      Urechelnițele au clești — cerci. Sunt pentru apărare, pentru a plia aripile, pentru
+      a manipula prada. Ia în considerare unealta. Ce ar fi urechelnița fără clește?
+    follow_ups:
+      - Cum modelează cleștele comportamentul?
+      - Cum ar arăta apărarea fără el?
+      - Care este relația dintre formă și funcție?
+  - id: nmi_katydid_call
+    name: Chemarea Katydidului
+    prompt: |
+      Un katydid cheamă — stridulație, picioare pe aripi. Chemarea este specifică speciei.
+      Este curtare, teritoriu. Ia în considerare sunetul. Ce ar fi noaptea fără el?
+    follow_ups:
+      - Cum atrage chemarea parteneri?
+      - Ce ar risca katydid-ul chemând?
+      - Care este relația dintre sunet și prădare?
+  - id: nmi_ladybug_cluster
+    name: Gruparea Buburuzelor
+    prompt: |
+      Buburuzele se grupează iarna — zeci, sute. Se adună pentru căldură,
+      pentru adăpost. Ia în considerare adunarea. Ce o declanșează? Ce o dispersează?
+    follow_ups:
+      - Ce ar fi buburuzele fără grup?
+      - Cum creează grupul microclimat?
+      - Care este relația dintre mulți și supraviețuire?
+  - id: nmi_ant_carry
+    name: Transportul Furnicii
+    prompt: |
+      O furnică transportă alta — moartă sau rănită. Este ajutor. Colonia are grijă de a sa.
+      Ia în considerare comportamentul. Ce ar face furnica rănită singură? Ce câștigă transportatorul?
+    follow_ups:
+      - Cum servește transportul colonia?
+      - Ce ar fi colonia fără cooperare?
+      - Care este relația dintre individ și colectiv?
+  - id: nmi_mosquito_hover
+    name: Planarea Țânțarului
+    prompt: |
+      Un țânțar planează — testând, sondând. Caută o gazdă. Planarea este
+      evaluare. Ia în considerare momentul dinaintea mușcăturii. Ce detectează țânțarul? Ce decide?
+    follow_ups:
+      - Ce ar face țânțarul fără planare?
+      - Cum minimizează planarea detecția?
+      - Care este relația dintre sondare și hrănire?
+  - id: nmi_weevil_curl
+    name: Răsucirea Gândacului
+    prompt: |
+      O frunză se răsucește — un gândac sau o muscă de găleată a făcut-o. Frunza se închide în jurul larvei.
+      Ia în considerare manipularea. Planta este convinsă. Ce ar face frunza fără insectă?
+    follow_ups:
+      - Cum protejează răsucirea larva?
+      - Ce ar fi planta fără răsucire?
+      - Care este relația dintre insectă și forma plantei?
+  - id: nmi_honeybee_waggle
+    name: Dansul Fagurelui Albinei
+    prompt: |
+      O albină de fagure se mișcă — este un dans. Dansul codifică distanța și direcția
+      către flori. Alte albine privesc. Ia în considerare mesajul. Ce ar fi colonia fără dansul fagurelui?
+    follow_ups:
+      - Cum transferă dansul informația?
+      - Cum ar arăta culesul fără el?
+      - Care este relația dintre dans și descoperire?
+  - id: nmi_gnat_cloud
+    name: Norul Mlilemelor
+    prompt: |
+      Mlilmele roițesc — un nor de insecte minuscule. Roiul este împerechere. Masculii se adună;
+      femelele intră și aleg. Ia în considerare agregarea. Ce ar face milimea singură?
+    follow_ups:
+      - Cum permite roiul împerecherea?
+      - Ce ar fi milimele fără nor?
+      - Care este relația dintre mulți și întâlnire?
+  - id: nmi_spider_wrap
+    name: Înfășurarea Păianjenului
+    prompt: |
+      Un păianjen înfășoară prada — mătase în jurul insectei care se zbate. Înfășurarea imobilizează.
+      Păianjenul injectează enzimă. Ia în considerare procesul. Ce ar face păianjenul fără înfășurare?
+    follow_ups:
+      - Cum subdue înfășurarea prada?
+      - Ce ar risca păianjenul fără ea?
+      - Care este relația dintre mătase și digestie?
+  - id: nmi_ant_war
+    name: Războiul Furnicilor
+    prompt: |
+      Două colonii de furnici se întâlnesc — conflict. Muncitoarele se încleștează, mușcă. Granița este
+      contestată. Ia în considerare lupta. Ce este în joc? Cum se decide granița?
+    follow_ups:
+      - Ce ar fi coloniile fără război?
+      - Cum se rezolvă războiul?
+      - Care este relația dintre teritoriu și resursă?
+  - id: nmi_moth_flutter
+    name: Fluturarea Moliilor
+    prompt: |
+      O molie flutură la o lumină — atrasă, confuză. Lumina perturbă
+      navigația. Ia în considerare capcana. Ce ar face molia în întuneric?
+      De ce lumina dezorientează?
+    follow_ups:
+      - Ce ar fi molia fără lumină?
+      - Cum folosește molia lumina lunii normal?
+      - Care este relația dintre lumină și direcție?
+  - id: nmi_stick_insect_still
+    name: Imobilitatea Insectei Băț
+    prompt: |
+      O insectă băț este nemișcată — arată ca o crenguță. Prădătorii trec pe lângă.
+      Ia în considerare înșelăciunea. Ce ar fi insecta fără deghizare?
+      Cât timp poate menține poziția?
+    follow_ups:
+      - Cum protejează imobilitatea?
+      - Ce ar risca insecta mișcându-se?
+      - Care este relația dintre formă și supraviețuire?
+  - id: nmi_leafcutter_carry
+    name: Transportul Tăietoarei de Frunze
+    prompt: |
+      O furnică tăietoare de frunze transportă un fragment de frunză — de multe ori dimensiunea sa. Frunza
+      merge la cuib. Devine substrat pentru ciuperci. Ia în considerare
+      recolta. Ce ar fi colonia fără frunze?
+    follow_ups:
+      - Cum folosește ciuperca frunza?
+      - Ce ar mânca furnica fără ciupercă?
+      - Care este relația dintre recoltă și cultivare?
+  - id: nmi_housefly_clean
+    name: Curățarea Muștei de Casă
+    prompt: |
+      O muscă de casă se curăță — își freacă picioarele, își netezește aripile. Grijulii îndepărtează
+      particulele, menține senzorii. Ia în considerare ritualul. Ce ar fi musca fără curățare?
+    follow_ups:
+      - Cum menține grija funcția?
+      - Ce s-ar întâmpla dacă musca nu s-ar putea curăța?
+      - Care este relația dintre curățenie și simț?
+  - id: nmi_termite_mound
+    name: Termitiera
+    prompt: |
+      O termitieră se ridică — lut, salivă, lemn mestecat. Este un oraș. În interior,
+      tuneluri, camere, grădini de ciuperci. Ia în considerare arhitectura. Ce ar fi colonia fără termitieră?
+    follow_ups:
+      - Cum reglează termitiera climatul?
+      - Ce ar face termite fără structură?
+      - Care este relația dintre termitieră și colonie?
+  - id: nmi_cricket_chirp
+    name: Cârâitul Greierului
+    prompt: |
+      Un greier ciripește — aripi împreună. Ciripitul este curtare. Femele aleg
+      după sunet. Ia în considerare chemarea. Ce ar face greierul fără ciripit? Cine ascultă în afară de femele?
+    follow_ups:
+      - Cum codifică ciripitul fitness-ul?
+      - Ce ar fi pajiștea fără sunet?
+      - Care este relația dintre chemare și prădare?
+  - id: nmi_damselfly_tandem
+    name: Tandemul Lăstunei
+    prompt: |
+      Lăstunii se împerechează în tandem — masculul prinde femela după cap. Ea
+      se curbează pentru a primi sperma. Perechea poate zbura împreună. Ia în considerare
+      împerecherea. Ce ar fi împerecherea fără strângere?
+    follow_ups:
+      - Cum protejează tandemul investiția masculului?
+      - Ce ar face perechea fără legătură?
+      - Care este relația dintre strângere și fertilizare?
+  - id: nmi_roach_scatter
+    name: Dispersia Gândacului de Bucătărie
+    prompt: |
+      Aprinde o lumină — gândacii de bucătărie se dispersează. Caută crăpături. Dispersia este
+      evadare. Ia în considerare răspunsul. Ce ar face gândacul de bucătărie în lumină permanentă? De ce întunericul?
+    follow_ups:
+      - Cum reduce dispersia prădarea?
+      - Ce ar fi gândacul de bucătărie fără reflex?
+      - Care este relația dintre lumină și ascundere?
+  - id: nmi_hopper_nymph
+    name: Nimfa Lăcustei
+    prompt: |
+      O lăcustă tânără — nimfă. Încă nu are aripi. Sare. Ia în considerare
+      stadiul. Ce va deveni nimfa? Ce îi lipsește acum?
+    follow_ups:
+      - Ce ar fi lăcustă fără stadiul de nimfă?
+      - Cum evită nimfa prădătorii?
+      - Care este relația dintre năpârlire și aripă?
+  - id: nmi_sweat_bee
+    name: Albină de Transpirație
+    prompt: |
+      O albină de transpirație aterizează pe pielea ta — căutând sare. Transpirația este o resursă.
+      Ia în considerare întâlnirea. Ce ar face albina fără transpirație? De ce are nevoie de sare?
+    follow_ups:
+      - Cum folosește albina sarea?
+      - Ce ar risca albina aterizând?
+      - Care este relația dintre om și albină?
+  - id: nmi_army_ant_column
+    name: Coloana Furnicilor Armate
+    prompt: |
+      Furnicile armate mărșăluiesc — o coloană de mii. Fluxesc. Prada este copleșită.
+      Ia în considerare roiul. Ce ar fi furnicile fără coloană? Cum se coordonează?
+    follow_ups:
+      - Cum permite coloana prădarea?
+      - Ce ar fi pădurea fără furnici armate?
+      - Care este relația dintre mulți și putere?
+  - id: nmi_water_strider_leg
+    name: Piciorul Gâscului de Apă
+    prompt: |
+      Picioarele unui gâsc de apă — lungi, hidrofobe. Își extind greutatea.
+      Suprafața se menține. Ia în considerare adaptarea. Ce ar fi gâsc-ul de apă fără designul piciorului?
+    follow_ups:
+      - Cum distribuie piciorul forța?
+      - Ce ar face gâsc-ul de apă pe uscat?
+      - Care este relația dintre formă și suprafață?
+  - id: nmi_aphid_wing
+    name: Aripa Afidei
+    prompt: |
+      Unele afide au aripi — când sunt aglomerate sau când gazda declină. Ele
+      se dispersează. Ia în considerare comutatorul. Ce declanșează dezvoltarea aripilor? Ce costă aripa?
+    follow_ups:
+      - Cum induce aglomerarea aripile?
+      - Ce ar fi afida fără opțiunea?
+      - Care este relația dintre aripă și dispersie?
+  - id: nmi_scale_armor
+    name: Armura Scutului
+    prompt: |
+      Insectele scut arată ca niște umflături — sunt blindate. Nu se mișcă mult.
+      Ating planta, se hrănesc. Ia în considerare strategia. Ce ar fi scutul fără armură?
+    follow_ups:
+      - Cum protejează armura?
+      - Ce ar fi planta fără scut?
+      - Care este relația dintre imobilitate și apărare?
+  - id: nmi_caddisfly_case
+    name: Carcasa Fluturașului de Sticlă
+    prompt: |
+      O larvă de fluturaș de sticlă construiește o carcasă — crenguțe, nisip, pietricele. Poartă carcasa.
+      Carcasa este camuflaj și armură. Ia în considerare construcția. Ce ar fi larva fără ea?
+    follow_ups:
+      - Cum protejează carcasa?
+      - Ce ar folosi larva dacă materialele s-ar schimba?
+      - Care este relația dintre construcție și supraviețuire?
+  - id: nmi_leafhopper_flash
+    name: Saltul Frunzărapei
+    prompt: |
+      O frunzărapi sare — brusc. A dispărut. Saltul este evadare. Picioarele stochează
+      energie, se eliberează. Ia în considerare mecanismul. Ce ar fi frunzărapi fără salt?
+    follow_ups:
+      - Cum evită saltul capturarea?
+      - Ce ar fi frunza fără frunzărapi?
+      - Care este relația dintre salt și prădare?
+  - id: nmi_bombardier_blast
+    name: Explozia Bombardierului
+    prompt: |
+      Un gândac bombardier pulverizează — fierbinte, nociv. Este apărare. Pulverizarea este
+      chimie: două camere, reacție la ieșire. Ia în considerare arma. Ce ar face gândacul fără ea?
+    follow_ups:
+      - Cum respinge pulverizarea prădătorii?
+      - Ce ar risca gândacul pulverizând?
+      - Care este relația dintre chimie și apărare?
+  - id: nmi_silverfish_slip
+    name: Alunecarea Argintiei
+    prompt: |
+      O argintie alunecă într-o crăpătură — rapid. Este plată. Se potrivește. Ia în considerare
+      forma. Ce ar fi argintia fără aplatizare? De ce urgența?
+    follow_ups:
+      - Cum permite aplatizarea evadarea?
+      - Ce ar face argintia în aer liber?
+      - Care este relația dintre formă și refugiu?
+  - id: nmi_ant_queen
+    name: Regina Furnicilor
+    prompt: |
+      O colonie de furnici are o regină — sau mai multe. Ea depune ouă. Muncitoarele o îngrijesc.
+      Ia în considerare centrul. Ce ar fi colonia fără regină? Cum o înlocuiește colonia?
+    follow_ups:
+      - Cum modelează regina colonia?
+      - Ce ar face muncitoarele fără ea?
+      - Care este relația dintre regină și colonie?
+  - id: nmi_owlfly_larva
+    name: Larva Bufniței Zburătoare
+    prompt: |
+      O larvă de bufniță zburătoare stă la pândă — în nisip, în resturi. Ambusează. Falcile
+      lovete. Ia în considerare vânătorul. Ce ar fi larva fără ambuscadă? Ce devine?
+    follow_ups:
+      - Cum permite ambuscada hrănirea?
+      - Ce ar fi bufnița zburătoare fără stadiul larval?
+      - Care este relația dintre așteptare și captură?
+  - id: nmi_thrips_scatter
+    name: Dispersia Tripșilor
+    prompt: |
+      Tripșii sunt minusculi — abia vizibili. Se grupează pe flori, pe frunze.
+      Perforează și sug. Ia în considerare scara. Ce ar fi planta fără tripși? Ce am observa?
+    follow_ups:
+      - Cum modelează tripșii planta?
+      - Ce ar fi ecosistemul fără ei?
+      - Care este relația dintre mic și impact?
+  - id: nmi_sting_threat
+    name: Amenințarea Înțepăturii
+    prompt: |
+      O viespe își ridică abdomenul — gata de înțepat. Este o amenințare. Postura
+      comunică. Ia în considerare afișajul. Ce ar face viespea dacă ar fi ignorată? Ce costă postura?
+    follow_ups:
+      - Cum respinge amenințarea?
+      - Ce ar risca viespea înțepând?
+      - Care este relația dintre afișaj și apărare?
+  - id: nmi_velvet_ant
+    name: Furnica de Catifea
+    prompt: |
+      O furnică de catifea se târăște — este o viespe fără aripi. Este rezistentă. Prădătorii învață să o evite.
+      Înțepătura este feroce. Ia în considerare strategia. Ce ar fi furnica de catifea fără înțepătură?
+    follow_ups:
+      - Cum protejează înțepătura?
+      - Ce ar face furnica de catifea la suprafață?
+      - Care este relația dintre înțepătură și îndrăzneală?
+  - id: nmi_ambush_predator
+    name: Prădător de Ambuscadă
+    prompt: |
+      O bug de ambuscadă așteaptă pe o floare — galbenă, deghizată. Pradă ajunge. Bug-ul
+      lovește. Ia în considerare răbdarea. Ce ar face bug-ul fără floare? De ce acest așezare?
+    follow_ups:
+      - Cum atrage floarea prada?
+      - Ce ar fi bug-ul fără ambuscadă?
+      - Care este relația dintre loc și captură?
+  - id: nmi_nectar_flow
+    name: Fluxul de Nectar
+    prompt: |
+      Florile produc nectar — albine, fluturi, gândaci beau. Fluxul
+      variază. Ia în considerare economia. Ce ar fi floarea fără nectar? Ce ar face insecta?
+    follow_ups:
+      - Cum modelează nectarul vizitele?
+      - Ce ar fi polenizarea fără recompensă?
+      - Care este relația dintre flux și serviciu?
+  - id: nmi_territory_mark
+    name: Marcajul Teritoriului
+    prompt: |
+      Unele insecte marchează teritoriul — feromoni, afișaj vizual. Marcajul spune "al meu".
+      Ia în considerare pretenția. Ce ar fi spațiul fără marcaj? Cum îl citesc rivalii?
+    follow_ups:
+      - Cum descurajează marcajul intrușii?
+      - Ce ar face insecta fără teritoriu?
+      - Care este relația dintre marcaj și spațiu?

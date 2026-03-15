@@ -1,0 +1,502 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Die menschliche Schnittstelle — Arbeitsplatz (German)
+
+id: human_interface_workplace
+name: Die menschliche Schnittstelle — Arbeitsplatz
+description: 50 Karten, um Ihre Sicht auf den Arbeitsplatz zu verändern — von Schreibtischterritorien und Besprechungsräumen bis hin zum Wasserkühler und sichtbaren versus unsichtbaren Hierarchien.
+domain: human_interface
+cards:
+  - id: hi_wp_desk_territory
+    name: Schreibtisch-Territorium
+    prompt: |
+      Ein Schreibtisch wird beansprucht – Fotos, Pflanzen, Tassen. Das Territorium reicht über die
+      Oberfläche hinaus. Beobachten Sie die Grenzen. Was kennzeichnet "mein"? Der Schreibtisch ist
+      ein kleines Königreich. Wie wird es verteidigt?
+    follow_ups:
+      - Wie prägt der Schreibtisch die Identität?
+      - Wie sähe der Arbeitsplatz ohne Personalisierung aus?
+      - Was ist die Beziehung zwischen Territorium und Zugehörigkeit?
+  - id: hi_wp_meeting_room
+    name: Besprechungsraum
+    prompt: |
+      Der Raum hat einen Tisch, Stühle, einen Bildschirm. Die Tür schließt sich. Der Besprechungsraum
+      ist eine Bühne für Performance. Beobachten Sie, wer spricht, wer nicht. Der Raum birgt Hierarchie.
+      Was ermöglicht der Raum?
+    follow_ups:
+      - Wie prägt der Raum die Besprechung?
+      - Wie sähe der Arbeitsplatz ohne Besprechungsräume aus?
+      - Was ist die Beziehung zwischen Raum und Macht?
+  - id: hi_wp_water_cooler
+    name: Wasserkühler
+    prompt: |
+      Der Wasserkühler ist eine Kreuzung. Leute treffen sich dort zufällig. Die
+      Begegnung ist informell. Beobachten Sie die Gespräche. Was wird am Kühler gesagt,
+      was in einer Besprechung nicht gesagt würde?
+    follow_ups:
+      - Wie prägt der Kühler die Kultur?
+      - Wie sähe der Arbeitsplatz ohne ihn aus?
+      - Was ist die Beziehung zwischen Kühler und Verbindung?
+  - id: hi_wp_visible_hierarchy
+    name: Sichtbare Hierarchie
+    prompt: |
+      Büros in der Ecke, Fensterplätze, Kubikel. Der Raum kodiert den Rang. Beobachten Sie
+      die Verteilung. Wer bekommt was? Die Hierarchie ist in die Architektur eingebaut.
+      Was kommuniziert sie?
+    follow_ups:
+      - Wie prägt die Hierarchie das Verhalten?
+      - Wie sähe der Arbeitsplatz ohne sie aus?
+      - Was ist die Beziehung zwischen Raum und Status?
+  - id: hi_wp_invisible_hierarchy
+    name: Unsichtbare Hierarchie
+    prompt: |
+      Manche Leute werden gehört; andere werden unterbrochen. Die Hierarchie
+      steht nicht im Organigramm. Beobachten Sie die Besprechungen. Wer weicht aus? Wer
+      dominiert? Die unsichtbare Hierarchie prägt Ergebnisse.
+    follow_ups:
+      - Wie entsteht die unsichtbare Hierarchie?
+      - Wie sähe der Arbeitsplatz aus, wenn sie sichtbar wäre?
+      - Was ist die Beziehung zwischen Unsichtbarem und Macht?
+  - id: hi_wp_cubicle_wall
+    name: Kubikelwand
+    prompt: |
+      Die Wand ist niedrig – man kann darüber hinwegsehen. Privatsphäre ist partiell. Das Kubikel
+      ist ein Kompromiss. Beobachten Sie die Sichtlinien. Was kann man hören? Was kann
+      man sehen? Die Wand schafft eine Illusion von Grenze.
+    follow_ups:
+      - Wie prägt das Kubikel den Fokus?
+      - Wie sähe der Arbeitsplatz mit vollständigen Wänden aus?
+      - Was ist die Beziehung zwischen Wand und Privatsphäre?
+  - id: hi_wp_corner_office
+    name: Eckbüro
+    prompt: |
+      Das Eckbüro hat zwei Fenster. Es ist der Preis. Beobachten Sie, wer es besetzt.
+      Das Eckbüro ist vom Flur aus sichtbar. Es ist ein Symbol. Was kommuniziert das Eckbüro?
+    follow_ups:
+      - Wie prägt das Eckbüro die Ambitionen?
+      - Wie sähe der Flur ohne es aus?
+      - Was ist die Beziehung zwischen Ecke und Autorität?
+  - id: hi_wp_open_plan
+    name: Großraumbüro
+    prompt: |
+      Keine Wände. Schreibtische in Reihen oder Gruppen. Das Großraumbüro verspricht Zusammenarbeit.
+      Beobachten Sie die Realität. Wer trägt Kopfhörer? Das Großraumbüro schafft
+      Nähe. Was kostet es?
+    follow_ups:
+      - Wie prägt das Großraumbüro die Interaktion?
+      - Wie sähe der Arbeitsplatz mit Wänden aus?
+      - Was ist die Beziehung zwischen Offenheit und Fokus?
+  - id: hi_wp_calendar_invite
+    name: Kalendereinladung
+    prompt: |
+      Die Einladung erscheint. Akzeptieren, ablehnen, vorläufig. Der Kalender strukturiert
+      den Tag. Beobachten Sie die Blöcke. Wer kontrolliert wessen Zeit? Der Kalender
+      ist eine Machtkarte.
+    follow_ups:
+      - Wie prägt der Kalender den Tag?
+      - Wie sähe der Arbeitsplatz ohne ihn aus?
+      - Was ist die Beziehung zwischen Einladung und Verpflichtung?
+  - id: hi_wp_knock_before_enter
+    name: Klopfen vor dem Betreten
+    prompt: |
+      Manche Türen sind geschlossen. Das Klopfen ist eine Bitte. Beobachten Sie, wer klopft und
+      wer eintritt. Das Klopfen kodiert Respekt. Was schützt die geschlossene Tür?
+    follow_ups:
+      - Wie prägt das Klopfen die Begegnung?
+      - Wie sähe der Arbeitsplatz mit offenen Türen aus?
+      - Was ist die Beziehung zwischen Klopfen und Grenze?
+  - id: hi_wp_headphones_signal
+    name: Kopfhörer-Signal
+    prompt: |
+      Kopfhörer auf bedeutet "nicht stören". Das Signal ist universell. Beobachten Sie, wer es respektiert.
+      Die Kopfhörer schaffen eine Blase. Was ermöglicht die Blase?
+    follow_ups:
+      - Wie prägen Kopfhörer den Flur?
+      - Wie sähe der Arbeitsplatz ohne sie aus?
+      - Was ist die Beziehung zwischen Kopfhörern und Fokus?
+  - id: hi_wp_lunch_room
+    name: Pausenraum (Mittagessen)
+    prompt: |
+      Der Pausenraum hat Tische, Mikrowelle, Kühlschrank. Leute essen allein oder
+      zusammen. Beobachten Sie die Gruppen. Wer sitzt mit wem? Der Pausenraum
+      offenbart Allianzen. Was sagt die Anordnung aus?
+    follow_ups:
+      - Wie prägt der Pausenraum die Kultur?
+      - Wie sähe der Arbeitsplatz ohne ihn aus?
+      - Was ist die Beziehung zwischen Mittagessen und Verbindung?
+  - id: hi_wp_slack_ping
+    name: Slack-Ping
+    prompt: |
+      Der Ping kommt an. Sofort, asynchron. Der Ping kann unterbrechen oder warten.
+      Beobachten Sie die Normen. Wer antwortet sofort? Der Ping schafft
+      einen neuen Kommunikationsrhythmus. Was ersetzt er?
+    follow_ups:
+      - Wie prägt der Ping den Tag?
+      - Wie sähe der Arbeitsplatz ohne ihn aus?
+      - Was ist die Beziehung zwischen Ping und Dringlichkeit?
+  - id: hi_wp_whiteboard_claim
+    name: Whiteboard-Anspruch
+    prompt: |
+      Das Whiteboard hält Ideen – Diagramme, Listen. Jemand hat sie geschrieben.
+      Das Board ist eine gemeinsame Fläche. Beobachten Sie, wer schreibt, wer radiert. Das Board
+      ist Territorium. Was hält es?
+    follow_ups:
+      - Wie prägt das Whiteboard die Zusammenarbeit?
+      - Wie sähe die Besprechung ohne es aus?
+      - Was ist die Beziehung zwischen Board und Gedanke?
+  - id: hi_wp_elevator_encounter
+    name: Aufzug-Begegnung
+    prompt: |
+      Sie teilen sich den Aufzug mit einem Kollegen. Dreißig Sekunden. Die Begegnung
+      ist peinlich oder einfach. Beobachten Sie das Smalltalk. Was wird gesagt? Der
+      Aufzug komprimiert die Zeit. Was erfordert er?
+    follow_ups:
+      - Wie prägt der Aufzug die Begegnung?
+      - Wie sähe das Gebäude ohne Aufzüge aus?
+      - Was ist die Beziehung zwischen Aufzug und Höflichkeit?
+  - id: hi_wp_cc_email
+    name: CC-E-Mail
+    prompt: |
+      Sie sind im CC. Sie sind nicht der Hauptempfänger. Das CC bezieht Sie in
+      die Schleife ein. Beobachten Sie, wer im CC steht. Das CC ist ein Signal der Relevanz –
+      oder der Politik. Was macht das CC?
+    follow_ups:
+      - Wie prägt das CC die Kommunikation?
+      - Wie sähe der Arbeitsplatz ohne CC aus?
+      - Was ist die Beziehung zwischen CC und Sichtbarkeit?
+  - id: hi_wp_standing_desk
+    name: Stehpult
+    prompt: |
+      Der Schreibtisch hebt sich. Der Arbeiter steht. Das Stehpult ist eine Wahl – Gesundheit,
+      Vorliebe, Leistung. Beobachten Sie, wer eines hat. Was signalisiert das Stehpult?
+    follow_ups:
+      - Wie prägt das Stehpult den Körper?
+      - Wie sähe der Arbeitsplatz ohne ihn aus?
+      - Was ist die Beziehung zwischen Stehen und Produktivität?
+  - id: hi_wp_conference_call
+    name: Konferenzschaltung
+    prompt: |
+      Stimmen von anderswo. Der Anruf verbindet verteilte Personen. Beobachten Sie,
+      wer spricht, wer stumm schaltet. Der Anruf ist eine partielle Präsenz. Was ermöglicht
+      der Anruf – und was geht verloren?
+    follow_ups:
+      - Wie prägt der Anruf die Besprechung?
+      - Wie sähe der Arbeitsplatz ohne ihn aus?
+      - Was ist die Beziehung zwischen Anruf und Präsenz?
+  - id: hi_wp_office_plant
+    name: Büro-Pflanze
+    prompt: |
+      Eine Pflanze auf dem Schreibtisch – Efeutute, Sukkulente. Sie ist Dekoration und Pflege.
+      Die Pflanze gehört nicht zum Unternehmen. Beobachten Sie, wer eine hat. Was bereichert
+      die Pflanze den Raum?
+    follow_ups:
+      - Wie prägt die Pflanze den Schreibtisch?
+      - Wie sähe der Arbeitsplatz ohne Pflanzen aus?
+      - Was ist die Beziehung zwischen Pflanze und Identität?
+  - id: hi_wp_after_hours
+    name: Nach Feierabend
+    prompt: |
+      Das Büro, nachdem die meisten gegangen sind. Die Lichter sind gedämpft. Der Nachfeierschicht-Arbeiter
+      ist sichtbar – engagiert oder kämpfend. Beobachten Sie die Szene. Was ermöglicht
+      das leere Büro? Was kostet es?
+    follow_ups:
+      - Wie prägt die Zeit nach Feierabend die Kultur?
+      - Wie sähe der Arbeitsplatz ohne sie aus?
+      - Was ist die Beziehung zwischen Stunden und Erwartung?
+  - id: hi_wp_nameplate
+    name: Namensschild
+    prompt: |
+      Ein Name auf dem Schreibtisch, an der Tür. Das Namensschild beansprucht den Raum. Beobachten Sie,
+      wer eines hat. Das Namensschild ist Identität und Territorium. Was kommuniziert
+      es Passanten?
+    follow_ups:
+      - Wie prägt das Namensschild den Raum?
+      - Wie sähe der Arbeitsplatz ohne ihn aus?
+      - Was ist die Beziehung zwischen Namensschild und Präsenz?
+  - id: hi_wp_meeting_overrun
+    name: Besprechungsüberschreitung
+    prompt: |
+      Die Besprechung sollte enden. Sie tut es nicht. Die Überschreitung ist üblich.
+      Beobachten Sie die Dynamik. Wer hat die nächste Besprechung? Wer kann bleiben? Die
+      Überschreitung ist ein Machtspiel. Was entzieht sie?
+    follow_ups:
+      - Wie prägt die Überschreitung den Tag?
+      - Wie sähe der Arbeitsplatz mit strikten Endungen aus?
+      - Was ist die Beziehung zwischen Überschreitung und Respekt?
+  - id: hi_wp_quick_question
+    name: Kurze Frage
+    prompt: |
+      "Haben Sie eine schnelle Frage?" Die Frage unterbricht. Das "schnell" ist ein Versprechen.
+      Beobachten Sie den Austausch. Wie schnell ist er? Die schnelle Frage ist eine
+      Verhandlung von Zeit. Was kostet sie?
+    follow_ups:
+      - Wie prägt die schnelle Frage den Fluss?
+      - Wie sähe der Arbeitsplatz ohne Unterbrechungen aus?
+      - Was ist die Beziehung zwischen Schnellheit und Respekt?
+  - id: hi_wp_bathroom_encounter
+    name: Badezimmer-Begegnung
+    prompt: |
+      Sie sehen einen Kollegen im Badezimmer. Die Begegnung ist ambivalent. Augenkontakt oder nicht?
+      Das Badezimmer ist ein liminaler Raum. Beobachten Sie die Normen.
+      Was erfordert die Begegnung?
+    follow_ups:
+      - Wie prägt das Badezimmer den Arbeitsplatz?
+      - Wie sähe der Arbeitsplatz ohne gemeinsame Badezimmer aus?
+      - Was ist die Beziehung zwischen Badezimmer und Privatsphäre?
+  - id: hi_wp_commute_talk
+    name: Pendelgespräch
+    prompt: |
+      "Wie war der Weg zur Arbeit?" Die Frage eröffnet Smalltalk. Der Weg zur Arbeit ist
+      eine gemeinsame Erfahrung. Beobachten Sie den Austausch. Was leistet das Pendelgespräch
+      für die Beziehung?
+    follow_ups:
+      - Wie prägt das Pendelgespräch den Tag?
+      - Wie sähe der Arbeitsplatz ohne es aus?
+      - Was ist die Beziehung zwischen Pendeln und Verbindung?
+  - id: hi_wp_parking_spot
+    name: Parkplatz
+    prompt: |
+      Reservierte Plätze, Plätze nach dem Motto "Wer zuerst kommt". Das Parken kodiert Hierarchie. Beobachten Sie,
+      wer wo parkt. Der Platz ist ein kleines Privileg. Was kommuniziert er?
+    follow_ups:
+      - Wie prägt das Parken den Arbeitsplatz?
+      - Wie sähe der Parkplatz ohne reservierte Plätze aus?
+      - Was ist die Beziehung zwischen Platz und Status?
+  - id: hi_wp_birthday_cake
+    name: Geburtstagskuchen
+    prompt: |
+      Ein Kuchen erscheint. Es ist jemandens Geburtstag. Das Team versammelt sich. Der Kuchen
+      ist ein Ritual. Beobachten Sie die Versammlung. Was bewirkt der Geburtstagsmoment
+      für die Gruppe?
+    follow_ups:
+      - Wie prägt der Geburtstag die Kultur?
+      - Wie sähe der Arbeitsplatz ohne ihn aus?
+      - Was ist die Beziehung zwischen Kuchen und Zugehörigkeit?
+  - id: hi_wp_forwarded_email
+    name: Weitergeleitete E-Mail
+    prompt: |
+      Eine E-Mail wird weitergeleitet. "Zur Info" oder "Dachte, Sie sollten das sehen". Die
+      Weiterleitung erweitert das Gespräch. Beobachten Sie, wer weitergeleitet wird. Die
+      Weiterleitung ist ein Signal. Was bedeutet sie?
+    follow_ups:
+      - Wie prägt die Weiterleitung die Kommunikation?
+      - Wie sähe der Arbeitsplatz ohne sie aus?
+      - Was ist die Beziehung zwischen Weiterleitung und Vertrauen?
+  - id: hi_wp_break_room
+    name: Pausenraum
+    prompt: |
+      Kaffee, Snacks, manchmal eine Couch. Der Pausenraum ist eine Pause. Leute
+      gehen dorthin, um sich zurückzuziehen. Beobachten Sie, wer ihn nutzt. Der Pausenraum
+      ist ein Zufluchtsort. Was bietet er?
+    follow_ups:
+      - Wie prägt der Pausenraum den Tag?
+      - Wie sähe der Arbeitsplatz ohne ihn aus?
+      - Was ist die Beziehung zwischen Pause und Produktivität?
+  - id: hi_wp_office_supply
+    name: Büromaterial
+    prompt: |
+      Stifte, Papier, Tacker – der Materialraum birgt die Werkzeuge. Jemand
+      verwaltet ihn. Beobachten Sie, wer was nimmt. Das Material ist ein kleiner Gemeinschaftsraum.
+      Was sind die Regeln?
+    follow_ups:
+      - Wie prägt das Material den Arbeitsplatz?
+      - Wie sähe der Arbeitsplatz ohne es aus?
+      - Was ist die Beziehung zwischen Material und Anspruchsdenken?
+  - id: hi_wp_remote_camera
+    name: Remote-Kamera
+    prompt: |
+      Die Kamera ist an oder aus. Der Remote-Mitarbeiter wählt. Die Wahl ist
+      sichtbar. Beobachten Sie die Normen. Wer lässt sie eingeschaltet? Die Kamera ist ein Fenster.
+      Was enthüllt sie?
+    follow_ups:
+      - Wie prägt die Kamera den Anruf?
+      - Wie sähe die Besprechung ohne sie aus?
+      - Was ist die Beziehung zwischen Kamera und Präsenz?
+  - id: hi_wp_side_conversation
+    name: Nebengespräch
+    prompt: |
+      Zwei Leute reden, während andere arbeiten. Das Nebengespräch ist privat,
+      aber sichtbar. Beobachten Sie die Dynamik. Ist es störend? Das Nebengespräch
+      ist eine kleine Rebellion. Was schafft es?
+    follow_ups:
+      - Wie prägt das Nebengespräch den Flur?
+      - Wie sähe der Arbeitsplatz ohne es aus?
+      - Was ist die Beziehung zwischen Neben und Ausgrenzung?
+  - id: hi_wp_clean_desk
+    name: Sauberer Schreibtisch
+    prompt: |
+      Manche Schreibtische sind makellos – nichts Persönliches. Der saubere Schreibtisch ist Politik oder
+      Vorliebe. Beobachten Sie den Kontrast. Was kommuniziert der saubere Schreibtisch?
+      Sterilität? Disziplin? Distanz?
+    follow_ups:
+      - Wie prägt der saubere Schreibtisch den Arbeiter?
+      - Wie sähe der Arbeitsplatz mit unordentlichen Schreibtischen aus?
+      - Was ist die Beziehung zwischen Sauberkeit und Identität?
+  - id: hi_wp_meeting_no_show
+    name: Meeting-Nichterscheinen
+    prompt: |
+      Die Besprechung war angesetzt. Jemand erscheint nicht. Das Nichterscheinen ist
+      eine Nachricht. Beobachten Sie die Reaktion. Erwähnt es jemand? Das Nichterscheinen
+      ist ein kleines Machtspiel. Was kommuniziert es?
+    follow_ups:
+      - Wie prägt das Nichterscheinen die Besprechung?
+      - Wie sähe der Arbeitsplatz ohne Nichterscheinen aus?
+      - Was ist die Beziehung zwischen Nichterscheinen und Respekt?
+  - id: hi_wp_cubicle_visit
+    name: Kubikel-Besuch
+    prompt: |
+      Jemand geht hinüber. Er steht am Rand des Kubikels. Der Besuch ist
+      eine Wahl – er hätte auch eine Nachricht schicken können. Beobachten Sie die Dynamik. Was ermöglicht
+      der Besuch, was eine Nachricht nicht kann?
+    follow_ups:
+      - Wie prägt der Besuch die Interaktion?
+      - Wie sähe der Arbeitsplatz ohne Besuche aus?
+      - Was ist die Beziehung zwischen Besuch und Unterbrechung?
+  - id: hi_wp_shared_printer
+    name: Gemeinsamer Drucker
+    prompt: |
+      Der Drucker wird gemeinsam genutzt. Dokumente stapeln sich. Jemand muss sie abholen. Der
+      Drucker ist eine Kreuzung. Beobachten Sie die Begegnungen. Was passiert, wenn
+      zwei Leute nach demselben Ausdruck greifen?
+    follow_ups:
+      - Wie prägt der Drucker den Flur?
+      - Wie sähe der Arbeitsplatz ohne ihn aus?
+      - Was ist die Beziehung zwischen Drucker und Geduld?
+  - id: hi_wp_office_temperature
+    name: Bürotemperatur
+    prompt: |
+      "Es ist zu kalt." "Es ist zu heiß." Die Temperatur ist umstritten. Jemand
+      kontrolliert das Thermostat. Beobachten Sie die Beschwerden. Die Temperatur ist ein
+      kleiner Machtbereich. Wer gewinnt?
+    follow_ups:
+      - Wie prägt die Temperatur den Arbeitsplatz?
+      - Wie sähe der Arbeitsplatz mit individueller Kontrolle aus?
+      - Was ist die Beziehung zwischen Temperatur und Komfort?
+  - id: hi_wp_handshake
+    name: Händedruck
+    prompt: |
+      Der Händedruck – erste Begegnung, abgeschlossener Deal. Der Händedruck ist ein Ritual. Beobachten Sie
+      den Griff, die Dauer. Der Händedruck kodiert Formalität. Was kommuniziert er?
+    follow_ups:
+      - Wie prägt der Händedruck die Begegnung?
+      - Wie sähe der Arbeitsplatz ohne ihn aus?
+      - Was ist die Beziehung zwischen Händedruck und Vertrauen?
+  - id: hi_wp_cc_removal
+    name: CC-Entfernung
+    prompt: |
+      "Allen antworten" oder "Antworten"? Die Wahl ist wichtig. Jemanden aus dem
+      Thread zu entfernen ist ein Signal. Beobachten Sie die Dynamik. Wer wird herausgenommen? Die CC-Entfernung
+      ist eine kleine Ausgrenzung. Was bedeutet sie?
+    follow_ups:
+      - Wie prägt die Entfernung die Konversation?
+      - Wie sähe der Arbeitsplatz ohne Antwortoptionen aus?
+      - Was ist die Beziehung zwischen Entfernung und Macht?
+  - id: hi_wp_office_tour
+    name: Büro-Tour
+    prompt: |
+      Ein neuer Mitarbeiter bekommt eine Tour. "Das ist die Küche. Hier haben wir Besprechungen."
+      Die Tour orientiert. Beobachten Sie den Führer. Was kommuniziert die Tour
+      über die Kultur?
+    follow_ups:
+      - Wie prägt die Tour den Neuankömmling?
+      - Wie sähe die Einarbeitung ohne sie aus?
+      - Was ist die Beziehung zwischen Tour und Zugehörigkeit?
+  - id: hi_wp_meeting_room_book
+    name: Besprechungsraum-Buchung
+    prompt: |
+      Der Raum ist gebucht. Oder doppelt gebucht. Der Kalender ist der Schiedsrichter.
+      Beobachten Sie den Konflikt. Wer gibt nach? Die Buchung ist ein Anspruch auf Raum und
+      Zeit. Was erfordert sie?
+    follow_ups:
+      - Wie prägt die Buchung den Tag?
+      - Wie sähe der Arbeitsplatz ohne Buchung aus?
+      - Was ist die Beziehung zwischen Buchung und Priorität?
+  - id: hi_wp_goodbye_ritual
+    name: Abschiedsritual
+    prompt: |
+      Ende des Tages. "Gehe jetzt." "Bis morgen." Der Abschied ist ein Ritual.
+      Beobachten Sie die Austausche. Wer verabschiedet sich von wem? Das Ritual markiert
+      die Grenze zwischen Arbeit und Nicht-Arbeit.
+    follow_ups:
+      - Wie prägt der Abschied den Tag?
+      - Wie sähe der Arbeitsplatz ohne ihn aus?
+      - Was ist die Beziehung zwischen Abschied und Abschluss?
+  - id: hi_wp_promotion_announce
+    name: Beförderungsankündigung
+    prompt: |
+      "Wir freuen uns, bekannt zu geben..." Die Beförderung ist öffentlich. Die Ankündigung
+      schafft einen Moment. Beobachten Sie die Reaktion. Glückwünsche, Stille,
+      Seitenblicke. Was bewirkt die Ankündigung im Raum?
+    follow_ups:
+      - Wie prägt die Ankündigung die Kultur?
+      - Wie sähe der Arbeitsplatz ohne öffentliche Beförderungen aus?
+      - Was ist die Beziehung zwischen Ankündigung und Hierarchie?
+  - id: hi_wp_desk_move
+    name: Schreibtisch-Umzug
+    prompt: |
+      Jemand zieht den Schreibtisch um. Der Umzug ist Beförderung, Reorganisation oder Wahl.
+      Beobachten Sie den Prozess. Was nehmen sie mit? Was lassen sie zurück? Der Umzug
+      ist ein Übergang. Was bedeutet er?
+    follow_ups:
+      - Wie prägt der Umzug den Arbeiter?
+      - Wie sähe der Arbeitsplatz ohne Umzüge aus?
+      - Was ist die Beziehung zwischen Umzug und Identität?
+  - id: hi_wp_office_gossip
+    name: Büro-Klatsch
+    prompt: |
+      Informationen verbreiten sich – wer geht, wer ist frustriert. Der Klatsch ist
+      informell. Beobachten Sie, wo er stattfindet. Der Wasserkühler, der Flur.
+      Was bewirkt der Klatsch für die Gruppe?
+    follow_ups:
+      - Wie prägt der Klatsch die Kultur?
+      - Wie sähe der Arbeitsplatz ohne ihn aus?
+      - Was ist die Beziehung zwischen Klatsch und Zugehörigkeit?
+  - id: hi_wp_meeting_agenda
+    name: Besprechungsagenda
+    prompt: |
+      Die Agenda strukturiert die Besprechung. Oder sie tut es nicht – die Besprechung treibt umher.
+      Beobachten Sie die Dynamik. Wer folgt der Agenda? Wer nicht? Die Agenda
+      ist ein Vertrag. Was ermöglicht sie?
+    follow_ups:
+      - Wie prägt die Agenda die Besprechung?
+      - Wie sähe die Besprechung ohne sie aus?
+      - Was ist die Beziehung zwischen Agenda und Macht?
+  - id: hi_wp_office_food
+    name: Büro-Essen
+    prompt: |
+      Donuts, Obst, Reste von einem Kundengespräch. Das Essen erscheint.
+      Leute versammeln sich. Beobachten Sie das Teilen. Das Büriefest ist ein kleines Geschenk.
+      Was schafft es?
+    follow_ups:
+      - Wie prägt das Essen den Arbeitsplatz?
+      - Wie sähe der Arbeitsplatz ohne es aus?
+      - Was ist die Beziehung zwischen Essen und Gemeinschaft?
+  - id: hi_wp_last_day
+    name: Letzter Tag
+    prompt: |
+      Jemand hat seinen letzten Tag. Abschiede, vielleicht eine Karte, vielleicht Kuchen. Der letzte Tag
+      ist ein Abschiedsritual. Beobachten Sie die Stimmung. Was bewirkt der letzte Tag
+      für den Gehenden und für diejenigen, die bleiben?
+    follow_ups:
+      - Wie prägt der letzte Tag die Kultur?
+      - Wie sähe der Arbeitsplatz ohne das Ritual aus?
+      - Was ist die Beziehung zwischen letztem Tag und Abschluss?
+  - id: hi_wp_office_hours
+    name: Sprechstunden
+    prompt: |
+      "Ich habe Sprechstunden Dienstag 14-16 Uhr." Der Block ist offen. Leute können vorbeikommen.
+      Beobachten Sie, wer kommt. Die Sprechstunden sind eine Einladung. Was ermöglichen
+      sie?
+    follow_ups:
+      - Wie prägen Sprechstunden den Zugang?
+      - Wie sähe der Arbeitsplatz ohne sie aus?
+      - Was ist die Beziehung zwischen Stunden und Verfügbarkeit?
+  - id: hi_wp_workspace_claim
+    name: Arbeitsplatz-Anspruch
+    prompt: |
+      Eine Jacke auf dem Stuhl. Eine Tasche unter dem Schreibtisch. Der Anspruch sagt "Ich bin hier"
+      oder "Ich bin gleich zurück". Beobachten Sie die Signale. Wie lange kann ein Anspruch halten?
+      Der Arbeitsplatz ist vorübergehend besessen. Was sind die Regeln?
+    follow_ups:
+      - Wie prägt der Anspruch den Flur?
+      - Wie sähe der Arbeitsplatz ohne Ansprüche aus?
+      - Was ist die Beziehung zwischen Anspruch und Präsenz?

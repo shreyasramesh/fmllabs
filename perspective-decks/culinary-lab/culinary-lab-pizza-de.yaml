@@ -1,0 +1,467 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Kulinarisches Labor — Pizza (German)
+
+id: culinary_lab_pizza
+name: Kulinarisches Labor — Pizza
+description: 50 Karten, um deine Pizzaliebhaberei zu verändern — von der Chemie von Teig und Feuer bis zum Theater des Pizzastücks und der Archäologie von Belägen.
+domain: culinary_lab
+cards:
+  - id: piz_dough_stretch
+    name: Teigausrollen
+    prompt: |
+      Beobachte, wie Teig gedehnt wird – von Hand geworfen oder gepresst. Das Glutengerüst
+      streckt sich, fängt Luft ein. Die Form wird gewählt. Was würde ein quadratisches Stück
+      anders bedeuten als ein dreieckiges?
+    follow_ups:
+      - Wie definiert die Dehnung das Erlebnis?
+      - Was wäre die Pizza ohne das Ausdehnen?
+      - Was ist die Beziehung zwischen Hand und Form?
+  - id: piz_oven_breath
+    name: Ofenatem
+    prompt: |
+      Ein Pizzaofen atmet – Holzfeuer, Gas oder elektrisch. Die Kuppel speichert Wärme.
+      Der Boden leitet sie weiter. Stelle dich in die Nähe eines solchen Ofens. Was verlangt der Ofen vom Koch? Vom Teig?
+    follow_ups:
+      - Was wäre Pizza ohne den Ofen?
+      - Wie formt Hitze die Kruste?
+      - Was ist die Beziehung zwischen Atem und Blasenbildung?
+  - id: piz_sauce_spiral
+    name: Soßenspirale
+    prompt: |
+      Soße wird oft in einer Spirale aufgetragen – nicht bis zum Rand verteilt. Studiere
+      das Muster. Was ist bedeckt? Was ist frei? Die Spirale ist Komposition.
+    follow_ups:
+      - Wie würde die Pizza aussehen, vollständig mit Soße bedeckt?
+      - Wie beeinflusst die Spirale jeden Bissen?
+      - Was ist die Beziehung zwischen Muster und Geschmack?
+  - id: piz_cheese_melt
+    name: Käseschmelze
+    prompt: |
+      Käse schmilzt unterschiedlich schnell. Mozzarella zieht Fäden; gereifter Käse ölt.
+      Beobachte das Schmelzen. Die Chemie von Fett und Protein, Hitze und Zeit. Wann ist er fertig?
+    follow_ups:
+      - Was wäre das Stück ohne das Ziehen von Fäden?
+      - Wie formt die Schmelze den Biss?
+      - Was ist die Beziehung zwischen Schmelze und Erinnerung?
+  - id: piz_crust_char
+    name: Krustenverkohlung
+    prompt: |
+      Leoparding – die verkohlten Flecken auf der Kruste – kennzeichnen Holzofenpizza. Jeder Fleck
+      ist ein Moment des Kontakts mit extremer Hitze. Betrachte den Geschmack, den diese Flecken
+      hinzufügen. Was würde eine blasse Kruste bedeuten?
+    follow_ups:
+      - Wie verändert die Verkohlung das Erlebnis?
+      - Was wäre die Pizza ohne sie?
+      - Was ist die Beziehung zwischen Verkohlung und Handwerk?
+  - id: piz_slice_fold
+    name: Stückfalz
+    prompt: |
+      New Yorker Art: das Stück falten. Der Falz ist strukturell – er hält den Belag, leitet das Fett.
+      Der Falz ist Choreografie. Was ermöglicht er?
+    follow_ups:
+      - Wie wäre das Essen ohne den Falz?
+      - Wie formt der Falz den Biss?
+      - Was ist die Beziehung zwischen Falz und Ort?
+  - id: piz_pepperoni_cup
+    name: Pepperoni-Schale
+    prompt: |
+      Gute Pepperoni bildet Schalen – die Ränder knusprig, das Zentrum sammelt Öl. Es ist eine
+      Transformation von Form und Textur. Achte darauf, wann es passiert. Was hat die Schale geformt?
+    follow_ups:
+      - Was wäre Pepperoni ohne die Schale?
+      - Wie hält die Schale den Geschmack?
+      - Was ist die Beziehung zwischen Fett und Form?
+  - id: piz_basil_finish
+    name: Basilikum-Finish
+    prompt: |
+      Basilikum auf Pizza wird oft nach dem Backen hinzugefügt – frisch, aromatisch. Es ist ein
+      Finish, keine Basis. Achte auf den Kontrast. Was fügt Frisches Gekochtem hinzu?
+    follow_ups:
+      - Was wäre die Pizza ohne das Basilikum?
+      - Wie formt der Zeitpunkt das Kraut?
+      - Was ist die Beziehung zwischen Roh und Gekocht?
+  - id: piz_margherita_minimal
+    name: Margherita Minimal
+    prompt: |
+      Margherita besteht aus drei Dingen: Teig, Tomate, Käse. Jede Komponente muss überzeugen.
+      Es gibt keinen Platz zum Verstecken. Betrachte die Disziplin. Was verlangt Minimalismus?
+    follow_ups:
+      - Was würde eine falsche Note bewirken?
+      - Wie konzentriert Einfachheit den Gaumen?
+      - Was ist die Beziehung zwischen Wenigen und Vielen?
+  - id: piz_pool_table
+    name: Pool-Tisch
+    prompt: |
+      Manche Pizzerien haben den langen Gemeinschaftstisch – Fremde teilen sich den Raum.
+      Die Pizza kommt. Der Tisch ist eine Bühne. Wer isst neben dir? Was ist der unausgesprochene Vertrag?
+    follow_ups:
+      - Was wäre das Essen in einer Nische?
+      - Wie formt der Tisch die Begegnung?
+      - Was ist die Beziehung zwischen Geteilt und Privat?
+  - id: piz_box_flip
+    name: Pizzakarton-Wenden
+    prompt: |
+      Der Pizzakarton – Pappe, manchmal mit dem Plastikständer in der Mitte.
+      Er ist zum Lüften, zum Stapeln konzipiert. Der Karton ist Infrastruktur. Was wäre
+      Lieferung ohne ihn?
+    follow_ups:
+      - Wie formt der Karton den Weg nach Hause?
+      - Was passiert, wenn der Karton geöffnet wird?
+      - Was ist die Beziehung zwischen Karton und Ritual?
+  - id: piz_dough_ferment
+    name: Teigfermentation
+    prompt: |
+      Pizzateig fermentiert – Stunden oder Tage. Die Hefe erzeugt Blasen, Geschmack.
+      Alter Teig hat Würze. Betrachte die Zeit in jedem Bissen. Was würde ein
+      Schnellteig opfern?
+    follow_ups:
+      - Wie formt die Fermentation die Kruste?
+      - Was ist die Beziehung zwischen Zeit und Geschmack?
+      - Was würde ein Teig vom selben Tag bedeuten?
+  - id: piz_cornicione
+    name: Cornicione
+    prompt: |
+      Der Cornicione – der Rand, die Kruste – ist oft der beste Teil. Luftig, blasig,
+      vielleicht etwas zäh. Manche lassen ihn liegen; andere essen ihn zuerst. Was ist deine
+      Beziehung zum Rand?
+    follow_ups:
+      - Was wäre die Pizza ohne den Cornicione?
+      - Wie rahmt der Rand das Zentrum ein?
+      - Was ist die Beziehung zwischen Kruste und Zentrum?
+  - id: piz_olive_oil_drizzle
+    name: Olivenöl-Träufelung
+    prompt: |
+      Olivenöl wird nach dem Backen darüber geträufelt – auf die Kruste oder die ganze Pizza.
+      Es glänzt. Das Öl trägt Aroma, fügt Reichtum hinzu. Achte darauf, wann es aufgetragen wird. Was fügt die Träufelung hinzu?
+    follow_ups:
+      - Was wäre die Pizza ohne es?
+      - Wie verändert Öl den Biss?
+      - Was ist die Beziehung zwischen Fett und Finish?
+  - id: piz_anchovy_salt
+    name: Sardellen-Salz
+    prompt: |
+      Sardellen auf Pizza – salzig, Umami, spaltend. Sie lösen sich in der
+      Soße auf oder liegen obenauf. Die Sardelle ist Archäologie: mediterran, konserviert,
+      uralt. Welche Reise hat sie gemacht?
+    follow_ups:
+      - Was wäre das Stück ohne Sardellen?
+      - Wie formt Salz die anderen Aromen?
+      - Was ist die Beziehung zwischen Konserviertem und Frischem?
+  - id: piz_sound_crunch
+    name: Knackgeräusch
+    prompt: |
+      Der erste Bissen einer gut gemachten Kruste – das Knacken, das Nachgeben. Schließe die Augen.
+      Das Geräusch ist Teil des Erlebnisses. Was wäre die Pizza, wenn
+      sie still wäre?
+    follow_ups:
+      - Wie formt Geräusch Zufriedenheit?
+      - Wie klingt eine matschige Kruste?
+      - Was ist die Beziehung zwischen Knackigkeit und Qualität?
+  - id: piz_second_slice
+    name: Zweites Stück
+    prompt: |
+      Das zweite Stück ist anders als das erste – du kennst die Pizza jetzt. Der
+      Gaumen hat sich angepasst. Achte auf die Veränderung. Schmeckt das zweite Stück
+      gleich? Besser? Anders?
+    follow_ups:
+      - Wie verändert Wiederholung die Wahrnehmung?
+      - Was würde einer Mahlzeit mit nur einem Stück fehlen?
+      - Was ist die Beziehung zwischen dem ersten und dem zweiten?
+  - id: piz_neapolitan_rules
+    name: Neapolitanische Regeln
+    prompt: |
+      Echte neapolitanische Pizza hat Regeln – Größe, Zutaten, Methode. Der VPN-Stempel, die Zertifizierung.
+      Regeln schaffen Identität. Was schützen die Regeln? Was schließen sie aus?
+    follow_ups:
+      - Was wäre Pizza ohne Regeln?
+      - Wie formt Zertifizierung Erwartungen?
+      - Was ist die Beziehung zwischen Regel und Handwerk?
+  - id: piz_detroit_edges
+    name: Detroit-Kanten
+    prompt: |
+      Detroit-Stil – rechteckig, Käse bis zum Rand, knusprig frittierte Kruste, wo
+      sie die Pfanne berührt. Die Kanten sind bewusst gestaltet. Betrachte die Architektur.
+      Was sagt die Form aus?
+    follow_ups:
+      - Was wäre die Pizza ohne die Kanten?
+      - Wie schafft Form Identität?
+      - Was ist die Beziehung zwischen Pfanne und Kruste?
+  - id: piz_garlic_knot
+    name: Knoblauchknoten
+    prompt: |
+      Knoblauchknoten – Teigwindungen, gebuttert, mit Knoblauch gewürzt. Sie kommen oft zuerst.
+      Sie sind keine Pizza, aber sie gehören zur selben Welt. Was ist die Beziehung
+      zwischen Knoten und Kuchen?
+    follow_ups:
+      - Was wäre die Mahlzeit ohne die Knoten?
+      - Wie setzt der Knoten den Ton?
+      - Was ist die Beziehung zwischen Beilage und Hauptgericht?
+  - id: piz_red_pepper_flake
+    name: Chiliflocken
+    prompt: |
+      Der Spender mit Chiliflocken – oft auf dem Tisch. Du wählst die Schärfe.
+      Die Flocke ist Demokratie. Jeder würzt seine eigene. Was bedeutet diese
+      Wahl?
+    follow_ups:
+      - Was wäre der Tisch ohne den Spender?
+      - Wie formt Selbstwürzen die Mahlzeit?
+      - Was ist die Beziehung zwischen Wahl und Geschmack?
+  - id: piz_sicilian_slab
+    name: Sizilianischer Laib
+    prompt: |
+      Sizilianisch – dick, rechteckig, manchmal umgedreht (Soße obenauf).
+      Der Laib hat Gewicht. Die Architektur ist anders. Was fügt Dicke hinzu?
+      Was opfert sie?
+    follow_ups:
+      - Was würde dünne Kruste anders machen?
+      - Wie formt Dicke den Biss?
+      - Was ist die Beziehung zwischen Laib und Stück?
+  - id: piz_wood_stack
+    name: Holzstapel
+    prompt: |
+      Holzofenpizzerien stapeln Holzscheite. Eiche, manchmal. Das Holz ist Brennstoff und
+      Geschmack. Der Stapel ist Vorbereitung. Betrachte, was brennt. Was fügt das
+      Holz hinzu, was Gas nicht kann?
+    follow_ups:
+      - Was wäre die Pizza ohne Holz?
+      - Wie formt Brennstoff die Kruste?
+      - Was ist die Beziehung zwischen Feuer und Rauch?
+  - id: piz_topping_balance
+    name: Belagsbalance
+    prompt: |
+      Beläge können überwältigend sein – zu viele, und die Pizza wird zu einem Auflauf.
+      Die Balance ist heikel. Studiere eine beladene Pizza. Wo überschreitet sie die Grenze?
+      Was würdest du entfernen?
+    follow_ups:
+      - Wie formt Zurückhaltung die Pizza?
+      - Was ist die Beziehung zwischen Mehr und Weniger?
+      - Wann wird Wahl zum Chaos?
+  - id: piz_cold_leftover
+    name: Kalte Reste
+    prompt: |
+      Kalte Pizza zum Frühstück – manche schwören darauf. Die Aromen haben sich gesetzt.
+      Die Textur hat sich verändert. Betrachte die Pizza vom nächsten Tag. Was fügt Zeit hinzu?
+      Was nimmt sie?
+    follow_ups:
+      - Wie verändert Kälte das Erlebnis?
+      - Was würde Erhitzen bewirken?
+      - Was ist die Beziehung zwischen Frisch und Rest?
+  - id: piz_sauce_sweet
+    name: Süße Soße
+    prompt: |
+      Tomatensoße kann süß oder spritzig sein, je nach Tomate, je nach Koch.
+      Schmecke die Soße allein, wenn du kannst. Woher kommt die Süße?
+      Was würde Säure bewirken?
+    follow_ups:
+      - Wie setzt die Soße den Ton?
+      - Was ist die Beziehung zwischen Süße und Säure?
+      - Was würde rohe Tomate bedeuten?
+  - id: piz_roman_taglio
+    name: Römische Taglio
+    prompt: |
+      Pizza al taglio – verkauft nach Stück, nach Gewicht. Du zeigst, sie schneiden.
+      Das Rechteck, der Preis pro Kilo. Die Transaktion ist anders. Was
+      bedeutet Kaufen nach Gewicht?
+    follow_ups:
+      - Wie formt Taglio das Erlebnis?
+      - Was würde eine ganze Pizza hier bedeuten?
+      - Was ist die Beziehung zwischen Schnitt und Wahl?
+  - id: piz_hot_honey
+    name: Scharfer Honig
+    prompt: |
+      Scharfer Honig auf Pizza – neue Tradition, jetzt überall. Süß, scharf, zähflüssig.
+      Es ist ein Finish. Achte darauf, wann er hinzugefügt wird. Was macht der Honig mit dem
+      Käse?
+    follow_ups:
+      - Was wäre das Stück ohne ihn?
+      - Wie formt süß-scharf den Biss?
+      - Was ist die Beziehung zwischen Trend und Tradition?
+  - id: piz_pecorino_grate
+    name: Pecorino-Reibe
+    prompt: |
+      Pecorino über Pizza gerieben – salzig, scharf. Es ist eine Schicht. Der Käse obenauf
+      ist anders als der Käse, der geschmolzen ist. Betrachte die Hierarchie. Was fügt die
+      Reibe hinzu?
+    follow_ups:
+      - Was wäre die Pizza ohne Pecorino?
+      - Wie formt der zweite Käse das Gericht?
+      - Was ist die Beziehung zwischen Schmelze und Reibe?
+  - id: piz_paddle_slide
+    name: Schieber-Gleiten
+    prompt: |
+      Der Schieber, das Paddel – Holz oder Metall. Der Teig wird darauf geschoben, dann in den
+      Ofen. Die Bewegung ist geübt. Beobachte sie. Was würde ohne
+      die Fähigkeit schiefgehen?
+    follow_ups:
+      - Wie ermöglicht der Schieber das Backen?
+      - Was ist die Beziehung zwischen Werkzeug und Ergebnis?
+      - Was würde eine heruntergefallene Pizza bedeuten?
+  - id: piz_sourdough_crust
+    name: Sauerteigkruste
+    prompt: |
+      Sauerteig-Pizzakruste – lange Fermentation, Würze. Die Kruste hat Persönlichkeit.
+      Sie ist nicht neutral. Betrachte, was der Sauerteig hinzufügt. Was würde kommerzielle
+      Hefe anders machen?
+    follow_ups:
+      - Wie formt Sauerteig den Biss?
+      - Was ist die Beziehung zwischen Fermentation und Geschmack?
+      - Was würde eine fader Kruste bedeuten?
+  - id: piz_white_pie
+    name: Weiße Pizza
+    prompt: |
+      Weiße Pizza – keine Tomate. Olivenöl, Käse, vielleicht Knoblauch. Das Fehlen von
+      Rot verändert alles. Der Gaumen erwartet Tomaten. Was bietet die weiße Pizza stattdessen?
+    follow_ups:
+      - Was wäre die Pizza mit Tomate?
+      - Wie formt Abwesenheit Erwartungen?
+      - Was ist die Beziehung zwischen Rot und Weiß?
+  - id: piz_bar_setting
+    name: Bar-Ambiente
+    prompt: |
+      Pizza an der Bar – du isst dort, wo du bestellst. Die Bar ist eine Bühne. Du siehst
+      den Ofen, die Stücke. Die Atmosphäre ist leger, unmittelbar. Was fügt das Essen
+      an der Bar hinzu?
+    follow_ups:
+      - Was würde ein Tisch ändern?
+      - Wie formt Nähe das Erlebnis?
+      - Was ist die Beziehung zwischen Bar und Küche?
+  - id: piz_truffle_trend
+    name: Trüffel-Trend
+    prompt: |
+      Trüffel auf Pizza – Öl oder Späne – ist zu einem Kürzel für Luxus geworden.
+      Das Aroma dominiert. Betrachte den Trend. Was fügt Trüffel hinzu? Was
+      maskiert er?
+    follow_ups:
+      - Was wäre die Pizza ohne Trüffel?
+      - Wie formt Luxus den Biss?
+      - Was ist die Beziehung zwischen Trend und Geschmack?
+  - id: piz_ricotta_dollop
+    name: Ricotta-Klecks
+    prompt: |
+      Ricotta klecksweise auf Pizza – kühl, cremig, kontrastierend. Er schmilzt nicht
+      wie Mozzarella. Er liegt darauf. Achte auf den Temperaturunterschied. Was fügt
+      der Klecks hinzu?
+    follow_ups:
+      - Was wäre das Stück ohne Ricotta?
+      - Wie formt Kälte Wärme?
+      - Was ist die Beziehung zwischen Klecks und Schmelze?
+  - id: piz_slice_count
+    name: Stückzahl
+    prompt: |
+      Wie viele Stücke? Die Zahl ist oft acht – oder sechs für eine kleinere Pizza.
+      Die Zahl bestimmt Portion, Teilen. Betrachte die Mathematik. Was würde
+      vier Stücke bedeuten? Zwölf?
+    follow_ups:
+      - Wie formt die Stückzahl die Mahlzeit?
+      - Was ist die Beziehung zwischen Schnitt und Teilen?
+      - Wann ist die Anzahl wichtig?
+  - id: piz_oven_window
+    name: Ofenfenster
+    prompt: |
+      Der Ofen hat ein Fenster – oder nicht. Die Pizza beim Backen zu beobachten ist Theater.
+      Der Käse blubbert. Die Kruste geht auf. Wie wäre das Erlebnis ohne
+      die Aussicht?
+    follow_ups:
+      - Wie formt Zuschauen die Vorfreude?
+      - Was ist die Beziehung zwischen Sichtbarem und Verstecktem?
+      - Was lernst du durch das Fenster?
+  - id: piz_ranch_dip
+    name: Ranch-Dip
+    prompt: |
+      Ranch mit Pizza – amerikanische Tradition, oft mit Kruste. Der Dip ist
+      optional, umstritten. Betrachte die Zugabe. Was fügt Ranch hinzu? Was
+      überschreibt er?
+    follow_ups:
+      - Was wäre die Kruste ohne Ranch?
+      - Wie formt der Dip den Biss?
+      - Was ist die Beziehung zwischen Purist und Praktiker?
+  - id: piz_capers_brine
+    name: Kapern-Lake
+    prompt: |
+      Kapern auf Pizza – salzig, spritzig. Sie durchschneiden die Reichhaltigkeit. Die Kapern
+      reisten – Mittelmeer, eingelegt. Achte darauf, wann sie erscheinen. Was fügt die
+      Lake hinzu?
+    follow_ups:
+      - Was wäre das Stück ohne Kapern?
+      - Wie formt die Lake den Gaumen?
+      - Was ist die Beziehung zwischen Eingelegtem und Frischem?
+  - id: piz_calzone_seam
+    name: Calzone-Naht
+    prompt: |
+      Calzone – Pizza gefaltet, versiegelt. Die Naht hält die Füllung. Die Form ist
+      anders. Du schneidest sie auf. Dampf entweicht. Was fügt die Faltung hinzu? Was
+      versteckt sie?
+    follow_ups:
+      - Was wäre die Calzone entfaltet?
+      - Wie schafft die Naht Überraschung?
+      - Was ist die Beziehung zwischen Offen und Geschlossen?
+  - id: piz_mushroom_water
+    name: Pilzwasser
+    prompt: |
+      Pilze auf Pizza geben beim Kochen Wasser ab. Ein guter Koch weiß, wie man sie
+      vorkocht oder trockene Sorten verwendet. Nasse Pilze machen eine matschige Pizza. Betrachte
+      die Chemie. Was macht Feuchtigkeit?
+    follow_ups:
+      - Wie formt die Pilzzubereitung das Stück?
+      - Was ist die Beziehung zwischen Nässe und Knusprigkeit?
+      - Was würde rohe Pilze bedeuten?
+  - id: piz_grease_absorb
+    name: Fett aufsaugen
+    prompt: |
+      Eine Serviette auf dem Stück – manche tupfen das Fett ab. Das Fett ist Fett von
+      Käse, Pepperoni. Abtupfen oder nicht? Betrachte die Wahl. Was trägt das
+      Fett bei? Was entfernt das Abtupfen?
+    follow_ups:
+      - Wie formt Fett das Erlebnis?
+      - Was würde ein trockenes Stück bedeuten?
+      - Was ist die Beziehung zwischen Fett und Geschmack?
+  - id: piz_oven_spring
+    name: Ofentrieb
+    prompt: |
+      Ofentrieb – der Teig bläht sich in der hohen Hitze auf. Die Hefe arbeitet schnell. Die
+      Struktur setzt sich. Betrachte den Moment. Was würde ohne genug
+      Hitze passieren? Ohne das richtige Mehl?
+    follow_ups:
+      - Wie schafft der Trieb die Krume?
+      - Was ist die Beziehung zwischen Hitze und Aufgehen?
+      - Was würde eine flache Kruste bedeuten?
+  - id: piz_roma_tomato
+    name: Roma-Tomate
+    prompt: |
+      San Marzano oder Roma – die Tomaten zählen. Sie kommen von einem Ort. Kampanien.
+      Die g.U., das Terroir. Verfolge die Tomate. Welche Reise hat sie zu deinem
+      Stück gemacht?
+    follow_ups:
+      - Was würde eine andere Tomate bewirken?
+      - Wie formt die Herkunft die Soße?
+      - Was ist die Beziehung zwischen Ort und Geschmack?
+  - id: piz_pizza_napoli
+    name: Pizza Neapel
+    prompt: |
+      Neapel hat sie erfunden. Die Stadt und das Essen sind verbunden. Pizza in
+      Neapel zu essen, bedeutet, sie am Ursprungsort zu essen. Betrachte die Archäologie. Was würde
+      die gleiche Pizza woanders bedeuten?
+    follow_ups:
+      - Wie formt der Ort das Erlebnis?
+      - Was würde die Übersetzung verlieren?
+      - Was ist die Beziehung zwischen Ursprung und Authentizität?
+  - id: piz_wine_pair
+    name: Weinbegleitung
+    prompt: |
+      Pizza und Wein – Bier ist üblich, aber Wein passt gut. Rotwein, oft. Die Säure im
+      Wein trifft auf die Säure in der Tomate. Betrachte die Paarung. Was fügt
+      der Wein dem Stück hinzu?
+    follow_ups:
+      - Was würde Bier anders bewirken?
+      - Wie formt das Getränk die Mahlzeit?
+      - Was ist die Beziehung zwischen Glas und Teller?
+  - id: piz_pizza_party
+    name: Pizza-Party
+    prompt: |
+      Pizza für eine Menge – Geburtstage, Spieleabend, Mittagessen im Büro. Die Pizza ist
+      sozial. Die Kartons stapeln sich. Jeder greift sich ein Stück. Betrachte die Choreografie.
+      Wie verändert die Menge die Mahlzeit?
+    follow_ups:
+      - Was würde eine Pizza für eine Person bedeuten?
+      - Wie formt das Teilen das Erlebnis?
+      - Was ist die Beziehung zwischen Pizza und Treffen?

@@ -1,0 +1,447 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Junglă Urbană — Londra (Romanian)
+
+id: urban_jungle_london
+name: Junglă Urbană — Londra
+description: 50 de cărți pentru a-ți schimba viziunea asupra Londrei — de la scară și lumină la straturi de istorie și ritmurile vieții stradale.
+domain: urban_jungle
+cards:
+  - id: london_layer
+    name: Strat Londonez
+    prompt: |
+      Londra este construită în straturi — roman, medieval, victorian, modern. Găsește un loc
+      unde se ciocnesc epoci. Care este cel mai vechi lucru pe care îl poți vedea? Cel mai nou?
+    follow_ups:
+      - Ce ar fi strada fără straturi?
+      - Cum se arată istoria în forma construită?
+      - Care este relația dintre strat și identitate?
+  - id: london_pub_threshold
+    name: Pragul Pub-ului
+    prompt: |
+      Un pub londonez are un prag — treapta, ușa, barul. Stai la prag. Ce este înăuntru? Ce este afară? Pub-ul este o cameră în oraș.
+    follow_ups:
+      - Ce ar fi cartierul fără pub?
+      - Cum creează pragul tranziția?
+      - Care este relația dintre pub și stradă?
+  - id: london_blue_plaque
+    name: Placă Albastră
+    prompt: |
+      Plăcile albastre marchează unde a locuit cineva faimos. Găsește una. Cine a locuit aici?
+      Ce au făcut? Placa face istoria vizibilă.
+    follow_ups:
+      - Ce ar fi clădirea fără placă?
+      - Cum modelează placa memoria?
+      - Care este relația dintre placă și loc?
+  - id: london_underground
+    name: Metrou
+    prompt: |
+      Metroul este un oraș sub oraș. Coboară. Observă faianța, hărțile, scările rulante. Cum modelează subteranul suprafața?
+    follow_ups:
+      - Ce ar fi Londra fără Metrou?
+      - Cum creează subteranul conexiunea?
+      - Care este relația dintre subteran și suprafață?
+  - id: london_thames_edge
+    name: Malul Tamisei
+    prompt: |
+      Tamisa curge prin Londra. Mergi pe mal. Râul este o cusătură. Ce este pe fiecare parte? Cum împarte și conectează râul?
+    follow_ups:
+      - Ce ar fi Londra fără Tamisa?
+      - Cum modelează râul orașul?
+      - Care este relația dintre râu și mal?
+  - id: london_georgian_row
+    name: Șir Georgian
+    prompt: |
+      Terasele georgiene se repetă — ușă, fereastră, ușă, fereastră. Mergi pe un șir. Repetiția creează ritm. Ce îl întrerupe? Ce îl ține laolaltă?
+    follow_ups:
+      - Ce ar fi strada fără șir?
+      - Cum creează repetiția identitatea?
+      - Care este relația dintre șir și individ?
+  - id: london_mews
+    name: Curte Mews
+    prompt: |
+      Curțile mews erau grajduri, acum sunt case. Găsește una. Aleea îngustă, pavajul, grajdurile convertite. Cum persistă trecutul?
+    follow_ups:
+      - Ce ar fi curtea mews fără istorie?
+      - Cum creează curtea mews intimitatea?
+      - Care este relația dintre curtea mews și strada principală?
+  - id: london_phone_box
+    name: Cutie Poștală Telefon
+    prompt: |
+      Cabinetele telefonice roșii sunt icoane. Găsește unul. Mai este un telefon? Un defibrilator? O bibliotecă? Cum sunt repurstate icoanele?
+    follow_ups:
+      - Ce ar fi strada fără cabină?
+      - Cum marchează cabina britanicitatea?
+      - Care este relația dintre cabină și funcție?
+  - id: london_postbox
+    name: Cutie Poștală
+    prompt: |
+      Cutii poștale roșii sunt peste tot. Găsește una. Observă monograma regală. Cutia poștală este un nod într-o rețea. Ce curge prin ea?
+    follow_ups:
+      - Ce ar fi strada fără cutia poștală?
+      - Cum marchează cutia poștală teritoriul?
+      - Care este relația dintre cutia poștală și scrisoare?
+  - id: london_pavement
+    name: Trotoar
+    prompt: |
+      "Pavement" britanic este "sidewalk" american. Cuvântul modelează modul în care gândim.
+      Mergi pe trotuar. Care este relația dintre trotuar și drum?
+    follow_ups:
+      - Ce ar fi strada fără trotuar?
+      - Cum creează trotuarul siguranța?
+      - Care este relația dintre trotuar și pieton?
+  - id: london_brick
+    name: Cărămidă Londoneză
+    prompt: |
+      Cărămida londoneză este adesea galbenă sau roșie — "London stock". Găsește un zid de cărămidă și
+      studiază culoarea, textura, legătura. Cum îmbătrânește căramida?
+    follow_ups:
+      - Ce ar fi clădirea fără cărămidă?
+      - Cum creează căramida identitatea?
+      - Care este relația dintre cărămidă și loc?
+  - id: london_weather
+    name: Vremea Londoneză
+    prompt: |
+      Vremea londoneză este schimbătoare. Stai într-un loc timp de douăzeci de minute. Privește
+      cerul. Cum modelează vremea starea de spirit a orașului?
+    follow_ups:
+      - Ce ar fi Londra fără ploaie?
+      - Cum modelează vremea arhitectura?
+      - Care este relația dintre vreme și viața stradală?
+  - id: london_queue
+    name: Coadă
+    prompt: |
+      Britanicii stau la coadă. Găsește o coadă — autobuz, magazin, atracție. Observă eticheta.
+      Coada este o formă de ordine. Cum funcționează?
+    follow_ups:
+      - Ce ar fi spațiul fără coadă?
+      - Cum creează coada corectitudinea?
+      - Care este relația dintre coadă și cultură?
+  - id: london_roundabout
+    name: Sens Giratoriu
+    prompt: |
+      Londra are multe sensuri giratorii — cercuri de trafic. Privește unul. Cum curge traficul?
+      Care este logica? Sensul giratoriu este un nod.
+    follow_ups:
+      - Ce ar fi intersecția fără sensul giratoriu?
+      - Cum modelează sensul giratoriu fluxul?
+      - Care este relația dintre sensul giratoriu și intersecție?
+  - id: london_parks_room
+    name: Spațiu Verde — Parcul
+    prompt: |
+      Parcurile londoneze sunt spații — Hyde Park, Regent's Park, piețele. Intră într-unul.
+      Observă limitele, aleile, mobilierul. Cum este proiectată natura?
+    follow_ups:
+      - Ce ar fi Londra fără parcuri?
+      - Cum creează parcul răgazul?
+      - Care este relația dintre parc și oraș?
+  - id: london_square
+    name: Piață Londoneză
+    prompt: |
+      Piețele londoneze sunt adesea private — îngrădite, cu cheie. Găsește una. Ce este înăuntru?
+      Cine are acces? Piața este un buzunar de exclusivitate.
+    follow_ups:
+      - Ce ar fi cartierul fără piață?
+      - Cum creează piața comunitatea?
+      - Care este relația dintre piață și stradă?
+  - id: london_terrace
+    name: Terasă (Șir de Locuințe)
+    prompt: |
+      O terasă este un șir de case. Mergi pe una. Observă uniformitatea și
+      variația. Cum creează terasa identitatea?
+    follow_ups:
+      - Ce ar fi strada fără terasă?
+      - Cum creează terasa ritmul?
+      - Care este relația dintre terasă și individ?
+  - id: london_corner_shop
+    name: Magazin de Colț
+    prompt: |
+      Magazinul de colț este o instituție londoneză. Intră într-unul. Ce se vinde? Cine îl conduce? Magazinul este un nod în cartier.
+    follow_ups:
+      - Ce ar fi blocul fără magazin?
+      - Cum creează magazinul întâlnirea?
+      - Care este relația dintre magazin și comunitate?
+  - id: london_bus_route
+    name: Rută de Autobuz
+    prompt: |
+      Autobuzele londoneze au numere și destinații. Ia un autobuz pe care nu l-ai mai luat.
+      Unde duce? Cum modelează ruta orașul?
+    follow_ups:
+      - Ce ar fi călătoria fără autobuz?
+      - Cum creează ruta conexiunea?
+      - Care este relația dintre autobuz și cartier?
+  - id: london_clock
+    name: Ceas Londonez
+    prompt: |
+      Big Ben, ceasul din gară, ceasul de pe biserică. Londra este plină de ceasuri publice. Găsește unul. Ce oră arată? Este corect?
+    follow_ups:
+      - Ce ar fi spațiul fără ceas?
+      - Cum modelează ceasul timpul?
+      - Care este relația dintre ceas și loc?
+  - id: london_bridge
+    name: Pod Londonez
+    prompt: |
+      Londra are multe poduri — Tower Bridge, Millennium Bridge, Waterloo. Traversează
+      unul pe jos. Simte tranziția. Ce se schimbă?
+    follow_ups:
+      - Ce ar fi râul fără pod?
+      - Cum conectează podul?
+      - Care este relația dintre pod și râu?
+  - id: london_street_market
+    name: Piață Stradală
+    prompt: |
+      Londra are piețe stradale — Borough, Camden, Portobello. Mergi prin una. Ce se
+      vinde? Cine vinde? Piața este un oraș temporar.
+    follow_ups:
+      - Ce ar fi strada fără piață?
+      - Cum creează piața întâlnirea?
+      - Care este relația dintre piață și cartier?
+  - id: london_ghost_sign
+    name: Semn Fantomatic Londonez
+    prompt: |
+      Semne decolorate pe cărămidă — semne fantomatice — marchează trecutul. Găsește unul. Ce
+      reclamau? Cine le-ar fi văzut?
+    follow_ups:
+      - Ce ar fi zidul fără semn?
+      - Cum păstrează semnul fantomatic istoria?
+      - Care este relația dintre semn și comerț?
+  - id: london_bollard
+    name: Bolarzi
+    prompt: |
+      Bolarzii marchează limite — zone pietonale, interzis parcarea. Găsește un rând de
+      bolarzi. Ce protejează? Ce exclud?
+    follow_ups:
+      - Ce ar fi spațiul fără bolarzi?
+      - Cum modelează bolarzii fluxul?
+      - Care este relația dintre bolarzi și delimitare?
+  - id: london_door_number
+    name: Număr de Ușă
+    prompt: |
+      Adresele londoneze pot fi ciudate — impare pe o parte, pare pe cealaltă. Urmărește
+      numerele. Cum modelează numerotarea strada?
+    follow_ups:
+      - Ce ar fi orientarea fără numere?
+      - Cum creează numerotarea ordine?
+      - Care este relația dintre număr și loc?
+  - id: london_basement
+    name: Subsol Londonez
+    prompt: |
+      Casele londoneze au adesea subsoluri — uneori sub nivelul străzii. Observă
+      treptele în jos, zona din față. Ce este sub trotuar?
+    follow_ups:
+      - Ce ar fi casa fără subsol?
+      - Cum creează subsolul spațiu?
+      - Care este relația dintre subsol și stradă?
+  - id: london_roof_line
+    name: Linia Acoperișului
+    prompt: |
+      Liniile acoperișurilor londoneze sunt variate — ardezie, țiglă, plate. Privește în sus. Urmărește
+      linia orizontului. Cum modelează acoperișul strada?
+    follow_ups:
+      - Ce ar fi strada fără acoperișuri?
+      - Cum creează linia acoperișului identitate?
+      - Care este relația dintre acoperiș și cer?
+  - id: london_cobble
+    name: Piatră de Pavaj
+    prompt: |
+      Pietrele de pavaj persistă pe unele străzi. Mergi pe ele. Simte textura.
+      Cum modelează suprafața strada?
+    follow_ups:
+      - Ce ar fi strada fără pietre de pavaj?
+      - Cum marchează pietrele de pavaj istoria?
+      - Care este relația dintre piatra de pavaj și modernitate?
+  - id: london_lamp_post
+    name: Stâlp de Iluminat
+    prompt: |
+      Stâlpii de iluminat londonezi au un stil aparte — victorian, modern. Găsește unul.
+      Cum modelează stâlpul strada noaptea?
+    follow_ups:
+      - Ce ar fi strada fără stâlp?
+      - Cum creează stâlpul siguranța?
+      - Care este relația dintre stâlp și întuneric?
+  - id: london_bus_stop
+    name: Stație de Autobuz
+    prompt: |
+      Stațiile de autobuz londoneze au adăposturi, orare, numere. Așteaptă la una. Cine altcineva
+      așteaptă? Care este eticheta?
+    follow_ups:
+      - Ce ar fi strada fără stație?
+      - Cum creează stația comunitatea?
+      - Care este relația dintre stație și călătorie?
+  - id: london_pub_sign
+    name: Panou Pub
+    prompt: |
+      Panourile pub-urilor atârnă deasupra străzii — The Crown, The Red Lion. Găsește unul. Care este
+      imaginea? Care este povestea? Panoul este un punct de reper.
+    follow_ups:
+      - Ce ar fi strada fără panou?
+      - Cum creează panoul identitate?
+      - Care este relația dintre panou și pub?
+  - id: london_church_spire
+    name: Fleșă Biserică
+    prompt: |
+      Fleșele bisericilor punctează linia orizontului londonez. Găsește una. Cum te orientează
+      fleșa? Ce ar fi priveliștea fără ea?
+    follow_ups:
+      - Ce ar fi linia orizontului fără fleșă?
+      - Cum creează fleșa un punct de reper?
+      - Care este relația dintre fleșă și cartier?
+  - id: london_canal
+    name: Canal Londonez
+    prompt: |
+      Londra are canale — Regent's Canal, Grand Union. Mergi pe poteca de pe mal.
+      Canalul este o cusătură. Ce este pe fiecare parte?
+    follow_ups:
+      - Ce ar fi orașul fără canal?
+      - Cum creează canalul conexiunea?
+      - Care este relația dintre canal și industrie?
+  - id: london_garden_square
+    name: Piață cu Grădină
+    prompt: |
+      Piețele cu grădină londoneze sunt adesea încuiate. Trage cu ochiul prin poartă. Ce este
+      înăuntru? Cine are cheia? Grădina este o cameră ascunsă.
+    follow_ups:
+      - Ce ar fi piața fără grădină?
+      - Cum creează grădina exclusivitatea?
+      - Care este relația dintre grădină și piață?
+  - id: london_taxi
+    name: Taxi Londonez
+    prompt: |
+      Taxiurile negre sunt icoane. Privește unul oprindu-se, luând pasageri, plecând. Cum modelează
+      taxiul strada? Ce ar fi orașul fără el?
+    follow_ups:
+      - Ce ar fi strada fără taxi?
+      - Cum creează taxiul mobilitatea?
+      - Care este relația dintre taxi și cunoaștere?
+  - id: london_underground_tile
+    name: Faianță Metrou
+    prompt: |
+      Gările de metrou au faianțe distinctive — cele din Baker Street cu Sherlock, albastrul liniei Victoria. Găsește o gară cu personalitate. Ce spun faianțele?
+    follow_ups:
+      - Ce ar fi gara fără faianțe?
+      - Cum creează faianțele identitatea?
+      - Care este relația dintre faianță și loc?
+  - id: london_bench
+    name: Bancă Londoneză
+    prompt: |
+      Londra are multe bănci — în parcuri, pe străzi, lângă stațiile de autobuz. Așează-te pe una.
+      Cine altcineva se așează? Care este priveliștea?
+    follow_ups:
+      - Ce ar fi spațiul fără bancă?
+      - Cum creează banca răgazul?
+      - Care este relația dintre bancă și stradă?
+  - id: london_drain
+    name: Canalizare Londoneză
+    prompt: |
+      Privește în jos. Găsește o canalizare — o rigolă, o grilă. Unde se duc apele?
+      Canalizarea este un portal către sistemele ascunse ale orașului.
+    follow_ups:
+      - Ce ar fi strada fără canalizare?
+      - Cum gestionează canalizarea apa?
+      - Care este relația dintre canalizare și sistem?
+  - id: london_shop_front
+    name: Fațadă Magazin
+    prompt: |
+      Fațadele magazinelor londoneze sunt adesea mici — înguste, adânci. Privește în vitrină. Ce este
+      expus? Cum modelează fațada strada?
+    follow_ups:
+      - Ce ar fi strada fără fațada magazinului?
+      - Cum creează fațada identitatea?
+      - Care este relația dintre fațadă și comerț?
+  - id: london_paving
+    name: Pavaj Londonez
+    prompt: |
+      Pavajul londonez variază — dale, asfalt, cărămidă. Mergi pe un bloc și observă
+      schimbările. Cum modelează suprafața strada?
+    follow_ups:
+      - Ce ar fi strada fără pavaj?
+      - Cum marchează pavajul teritoriul?
+      - Care este relația dintre pavaj și pieton?
+  - id: london_balcony
+    name: Balcon Londonez
+    prompt: |
+      Balcoanele londoneze sunt adesea mici — balcoane Juliet, terase minuscule. Găsește
+      unul. Ce ai cultiva acolo? Cine l-ar folosi?
+    follow_ups:
+      - Ce ar fi clădirea fără balcon?
+      - Cum creează balconul spațiu exterior?
+      - Care este relația dintre balcon și apartament?
+  - id: london_chimney
+    name: Horn Londonez
+    prompt: |
+      Hornurile londoneze punctează linia acoperișului. Numără-le pe o clădire. Câte focuri ardeau odată? Hornul este o relicvă.
+    follow_ups:
+      - Ce ar fi acoperișul fără horn?
+      - Cum marchează hornul istoria?
+      - Care este relația dintre horn și căldură?
+  - id: london_bike_stand
+    name: Suport Biciclete
+    prompt: |
+      Londra are suporturi pentru biciclete, biciclete Santander, biciclete de livrare. Găsește un grup.
+      Cum modelează bicicletele strada? Ce ar fi blocul fără ele?
+    follow_ups:
+      - Ce ar fi strada fără biciclete?
+      - Cum creează bicicletele mobilitatea?
+      - Care este relația dintre bicicletă și oraș?
+  - id: london_tree_pit
+    name: Gropi pentru Copaci Stradali
+    prompt: |
+      Copacii stradali londonezi cresc în gropi — adesea mici, adesea chinuite. Găsește una.
+      Ce este în groapă? Cum se descurcă copacul?
+    follow_ups:
+      - Ce ar fi strada fără copac?
+      - Cum modelează groapa viața copacului?
+      - Care este relația dintre groapă și trotuar?
+  - id: london_rain
+    name: Ploaia Londoneză
+    prompt: |
+      Ploaia londoneză este frecventă. Stai sub un adăpost și privește. Cum schimbă
+      ploaia strada? Ce ar fi orașul fără ea?
+    follow_ups:
+      - Cum modelează ploaia starea de spirit?
+      - Care este relația dintre ploaie și umbrelă?
+      - Ce ai observa pe uscat?
+  - id: london_cab_rank
+    name: Stație Taxiuri
+    prompt: |
+      Taxiurile negre stau la coadă la stații. Privește fluxul. Stația este un nod. Cum modelează
+      taxiul strada? Ce ar fi intersecția fără ea?
+    follow_ups:
+      - Cum creează stația ordine?
+      - Care este relația dintre taxi și cunoaștere?
+      - Ce ai întreba un șofer de taxi?
+  - id: london_pub_window
+    name: Fereastră Pub
+    prompt: |
+      Ferestrele pub-urilor sunt adesea cu plumb, adesea mici. Privește prin una. Care este
+      priveliștea? Fereastra încadrează strada. Cum contează cadrul?
+    follow_ups:
+      - Ce ar fi pub-ul fără fereastră?
+      - Cum creează fereastra relația?
+      - Care este relația dintre fereastră și stradă?
+  - id: london_mews_cobble
+    name: Piatră de Pavaj Mews
+    prompt: |
+      Aleile mews sunt adesea pavate. Mergi pe una. Simte textura. Piatra de pavaj
+      marchează istoria. Cum ar fi mews pe asfalt?
+    follow_ups:
+      - Cum modelează piatra de pavaj aleea?
+      - Care este relația dintre piatra de pavaj și cal?
+      - Ce ai auzi pe piatră de pavaj?
+  - id: london_underground_escalator
+    name: Scară Rulantă Metrou
+    prompt: |
+      Scările rulante ale metroului sunt lungi — cea din Angel este una dintre cele mai lungi. Mergi pe una. Simte
+      coborârea. Cum modelează scara rulantă călătoria?
+    follow_ups:
+      - Ce ar fi gara fără scară rulantă?
+      - Cum creează scara rulantă fluxul?
+      - Care este relația dintre scara rulantă și adâncime?
+  - id: london_thames_path
+    name: Aleea Tamisei
+    prompt: |
+      Aleea Tamisei se desfășoară de-a lungul râului. Mergi pe o porțiune. Aleea creează un
+      coridor. Ce este pe fiecare parte? Cum modelează aleea călătoria?
+    follow_ups:
+      - Ce ar fi râul fără alee?
+      - Cum creează aleea accesul?
+      - Care este relația dintre alee și râu?

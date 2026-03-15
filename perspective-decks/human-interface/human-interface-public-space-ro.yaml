@@ -1,0 +1,526 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# Interfața Umană — Spațiul Public (Romanian)
+
+id: human_interface_public_space
+name: Interfața Umană — Spațiul Public
+description: 50 de cărți pentru a schimba modul în care vezi spațiul public—de la bănci și poteci, la coregrafia străinilor și obiecte ca talismane.
+domain: human_interface
+cards:
+  - id: hi_ps_bench_occupation
+    name: Ocuparea Băncii
+    prompt: |
+      O bancă este revendicată—de un corp, o geantă, o postură. Banca este o resursă
+      limitată. Observă cine se așază, cine stă în picioare, cine trece. Banca are
+      înțelesuri diferite pentru oameni diferiți. Ce oferă?
+    follow_ups:
+      - Cum modelează banca spațiul?
+      - Cum ar fi parcul fără bănci?
+      - Care este relația dintre bancă și odihnă?
+  - id: hi_ps_pathway_flow
+    name: Fluxul Potecii
+    prompt: |
+      Poteca canalizează mișcarea. Oamenii merg—singuri, în perechi, în grupuri. Fluxul
+      are direcție. Observă coliziunea. Cine cedează? Poteca este un coridor comun.
+      Ce reguli o guvernează?
+    follow_ups:
+      - Cum modelează poteca mersul?
+      - Cum ar fi spațiul fără poteci?
+      - Care este relația dintre potecă și destinație?
+  - id: hi_ps_strangers_choreography
+    name: Coregrafia Străinilor
+    prompt: |
+      Corpuri fără legătură se mișcă prin spațiul comun. Coregrafia este
+      nerosibilă—faci un pas lateral, te oprești, te contopești. Observă dansul. Nimeni nu vorbește.
+      Coregrafia este pur trupească. Ce necesită?
+    follow_ups:
+      - Cum modelează coregrafia spațiul?
+      - Ce s-ar întâmpla dacă toată lumea s-ar opri?
+      - Care este relația dintre coregrafie și bună cuviință?
+  - id: hi_ps_object_talisman
+    name: Obiectul ca Talisman
+    prompt: |
+      O carte pe o bancă. O geantă pe un scaun. Obiectul păstrează un loc. Spune
+      "Sunt aici" sau "Mă întorc". Obiectul este un talisman. Observă revendicarea. Ce protejează?
+    follow_ups:
+      - Cum modelează talismanul spațiul?
+      - Cum ar fi spațiul fără astfel de revendicări?
+      - Care este relația dintre obiect și prezență?
+  - id: hi_ps_bench_armrest
+    name: Cotierele Băncii
+    prompt: |
+      Unele bănci au cotiere. Ele împart șezutul. Previn întinderea. Cotierele sunt
+      proiectate cu intenție. Observă cine le folosește. Ce exclude cotiera?
+    follow_ups:
+      - Cum modelează cotiera banca?
+      - Cum ar fi banca fără ea?
+      - Care este relația dintre cotieră și control?
+  - id: hi_ps_pathway_intersection
+    name: Intersecția Potecii
+    prompt: |
+      Potecile se intersectează. Corpurile converg. Intersecția este un punct de coliziune.
+      Observă contopirea. Ce se întâmplă când fluxurile se întâlnesc? Intersecția
+      necesită negociere. Ce extrage?
+    follow_ups:
+      - Cum modelează intersecția fluxul?
+      - Cum ar fi spațiul fără intersecții?
+      - Care este relația dintre intersecție și atenție?
+  - id: hi_ps_eye_contact_avoid
+    name: Evitarea Contactului Vizual
+    prompt: |
+      Străinii evită contactul vizual. Evitarea este politicoasă. A privi înseamnă a risca
+      conexiunea. Observă privirea. Evitarea este un contract. Ce permite? Ce costă?
+    follow_ups:
+      - Cum modelează evitarea spațiul?
+      - Cum ar fi spațiul cu mai mult contact?
+      - Care este relația dintre privire și intimitate?
+  - id: hi_ps_bench_share
+    name: Împărțirea Băncii
+    prompt: |
+      Doi străini împart o bancă. Spațiu între ei. Împărțirea este
+      proximitate fără conexiune. Observă granița. Cât de aproape este
+      prea aproape? Împărțirea este un echilibru delicat.
+    follow_ups:
+      - Cum modelează împărțirea banca?
+      - Cum ar fi banca cu o singură persoană?
+      - Care este relația dintre împărțire și toleranță?
+  - id: hi_ps_pathway_width
+    name: Lățimea Potecii
+    prompt: |
+      Poteca este lată sau îngustă. Lățimea afectează fluxul. Două persoane
+      pot trece sau nu. Observă lățimea. Ce presupune despre mulțime? Lățimea este design. Ce permite?
+    follow_ups:
+      - Cum modelează lățimea mersul?
+      - Cum ar fi poteca dacă ar fi mai lată?
+      - Care este relația dintre lățime și confort?
+  - id: hi_ps_bench_sun
+    name: Banca la Soare
+    prompt: |
+      Banca este orientată spre soare. Sau spre umbră. Poziția contează. Observă
+      cine alege ce. Soarele este o resursă. Ce oferă? Banca la soare este râvnită.
+    follow_ups:
+      - Cum modelează soarele banca?
+      - Cum ar fi spațiul fără soare?
+      - Care este relația dintre soare și odihnă?
+  - id: hi_ps_stranger_proximity
+    name: Proximitatea Străinului
+    prompt: |
+      Un străin stă aproape—într-un rând, într-un autobuz. Proximitatea este
+      impersonală, dar intimă. Observă toleranța. Ce permite corpul? Proximitatea este un contract. Care sunt termenii ei?
+    follow_ups:
+      - Cum modelează proximitatea spațiul?
+      - Cum ar fi spațiul cu mai mult loc?
+      - Care este relația dintre proximitate și bună cuviință?
+  - id: hi_ps_object_left
+    name: Obiect Lăsat
+    prompt: |
+      O jachetă pe o bancă. O geantă sub un copac. Obiectul lăsat marchează
+      teritoriul. Observă revendicarea. Cât timp poate să-l țină? Obiectul lăsat
+      este un test. Ce cere de la alții?
+    follow_ups:
+      - Cum modelează obiectul spațiul?
+      - Cum ar fi spațiul fără astfel de revendicări?
+      - Care este relația dintre obiect și încredere?
+  - id: hi_ps_pathway_obstacle
+    name: Obstacol pe Potecă
+    prompt: |
+      Ceva blochează poteca—construcție, o mulțime, un artist. Obstacolul deturnează
+      fluxul. Observă ocolul. Ce necesită obstacolul? Poteca nu este niciodată pură. Ce o întrerupe?
+    follow_ups:
+      - Cum modelează obstacolul fluxul?
+      - Cum ar fi poteca fără obstacole?
+      - Care este relația dintre obstacol și adaptare?
+  - id: hi_ps_bench_alone
+    name: Banca Singură
+    prompt: |
+      O singură persoană pe o bancă. Singurătatea este vizibilă. Banca găzduiește
+      solitudinea. Observă postura. Ce oferă banca singură? Banca singură este o alegere. Ce permite?
+    follow_ups:
+      - Cum modelează singurătatea banca?
+      - Cum ar fi spațiul fără bănci?
+      - Care este relația dintre singurătate și odihnă?
+  - id: hi_ps_nod_acknowledge
+    name: Înclinarea Capului ca Salut
+    prompt: |
+      O ușoară înclinare a capului. Un zâmbet scurt. Salutul este minim. Spune "Te
+      văd" fără angajament. Observă când se întâmplă. Înclinarea capului este o mică bună cuviință. Ce creează?
+    follow_ups:
+      - Cum modelează înclinarea capului spațiul?
+      - Cum ar fi spațiul fără ea?
+      - Care este relația dintre înclinarea capului și siguranță?
+  - id: hi_ps_pathway_edge
+    name: Marginea Potecii
+    prompt: |
+      Poteca are margini—iarbă, bordură, barieră. Marginea definește poteca.
+      Observă cine rămâne pe potecă. Cine o traversează? Marginea este o graniță. Ce conține?
+    follow_ups:
+      - Cum modelează marginea mersul?
+      - Cum ar fi poteca fără margini?
+      - Care este relația dintre margine și libertate?
+  - id: hi_ps_bench_claim
+    name: Revendicarea Băncii
+    prompt: |
+      Banca este ocupată—prin întindere, prin postură, prin geantă. Revendicarea spune "asta
+      este a mea". Observă revendicarea. Cum este făcută? Revendicarea este teritoriu. Ce protejează?
+    follow_ups:
+      - Cum modelează revendicarea banca?
+      - Cum ar fi spațiul fără revendicări?
+      - Care este relația dintre revendicare și confort?
+  - id: hi_ps_stranger_help
+    name: Ajutorul unui Străin
+    prompt: |
+      "Ai nevoie de o mână?" Un străin oferă. Ajutorul este neașteptat. Observă
+      schimbul. Accepți sau refuzi? Ajutorul străinului este un dar. Ce necesită?
+    follow_ups:
+      - Cum modelează ajutorul spațiul?
+      - Cum ar fi spațiul fără astfel de oferte?
+      - Care este relația dintre ajutor și încredere?
+  - id: hi_ps_object_temporary
+    name: Obiect Temporar
+    prompt: |
+      O cană, un ziar, o pălărie. Obiectul marchează un loc. Este temporar.
+      Proprietarul se va întoarce. Observă revendicarea. Ce cere obiectul temporar
+      de la alții? Obiectul este un substitut.
+    follow_ups:
+      - Cum modelează obiectul temporar spațiul?
+      - Cum ar fi spațiul fără el?
+      - Care este relația dintre temporar și încredere?
+  - id: hi_ps_pathway_rhythm
+    name: Ritmul Potecii
+    prompt: |
+      Pași pe pavaj. Ritmul este individual—rapid, lent, neuniform. Poteca găzduiește
+      multe ritmuri. Observă sincronizarea și ciocnirea. Ce dezvăluie ritmul?
+    follow_ups:
+      - Cum modelează ritmul mersul?
+      - Cum ar fi poteca în tăcere?
+      - Care este relația dintre ritm și destinație?
+  - id: hi_ps_bench_face
+    name: Orientarea Băncii
+    prompt: |
+      Banca este orientată într-o direcție—spre priveliște, spre soare, spre mulțime. Orientarea
+      modelează experiența. Observă cine alege ce bancă. Orientarea este design. Ce presupune?
+    follow_ups:
+      - Cum modelează orientarea banca?
+      - Cum ar fi banca fără direcție?
+      - Care este relația dintre orientare și priveliște?
+  - id: hi_ps_sidewalk_dance
+    name: Dansul de pe Trotuar
+    prompt: |
+      Două persoane se apropie. Dansul—cine se mișcă? Dansul de pe trotuar este
+      universal. Observă pasul lateral. Dansul este nerosibil. Ce necesită?
+    follow_ups:
+      - Cum modelează dansul mersul?
+      - Cum ar fi trotuarul fără el?
+      - Care este relația dintre dans și bună cuviință?
+  - id: hi_ps_object_abandoned
+    name: Obiect Abandonat
+    prompt: |
+      O mănușă pe jos. O eșarfă pe o bancă. Obiectul este abandonat.
+      Observă-l. Cine l-a lăsat? Cine îl va lua? Obiectul abandonat este
+      un mic mister. Ce dezvăluie?
+    follow_ups:
+      - Cum modelează obiectul abandonat spațiul?
+      - Cum ar fi spațiul fără astfel de obiecte?
+      - Care este relația dintre abandonat și pierdere?
+  - id: hi_ps_pathway_surface
+    name: Suprafeța Potecii
+    prompt: |
+      Pavaj, pietriș, iarbă. Suprafeța afectează mersul. Observă alegerea. Ce cere suprafața
+      corpului? Suprafeța este design. Ce permite?
+    follow_ups:
+      - Cum modelează suprafața mersul?
+      - Cum ar fi poteca cu o altă suprafață?
+      - Care este relația dintre suprafață și acces?
+  - id: hi_ps_bench_weather
+    name: Banca și Vremea
+    prompt: |
+      Ploaie, soare, vânt. Vremea modelează banca. Cine stă în ploaie?
+      Cine caută umbră? Banca este expusă. Observă relația
+      dintre bancă și vreme. Ce face vremea?
+    follow_ups:
+      - Cum modelează vremea banca?
+      - Cum ar fi banca cu un adăpost?
+      - Care este relația dintre vreme și utilizare?
+  - id: hi_ps_stranger_glance
+    name: Privirea Străinului
+    prompt: |
+      O privire scurtă. Privirea este evaluare. Sigur? Pericol? Privirea este
+      automată. Observă-ți propriile priviri. Ce face privirea? Privirea este un instrument de supraviețuire. Ce extrage?
+    follow_ups:
+      - Cum modelează privirea spațiul?
+      - Cum ar fi spațiul fără priviri?
+      - Care este relația dintre privire și siguranță?
+  - id: hi_ps_pathway_crowd
+    name: Mulțimea pe Potecă
+    prompt: |
+      Poteca este aglomerată. Corpurile se comprimă. Mulțimea are propriul flux.
+      Observă mișcarea. Mulțimea este un colectiv. Ce necesită
+      de la individ?
+    follow_ups:
+      - Cum modelează mulțimea poteca?
+      - Cum ar fi poteca goală?
+      - Care este relația dintre mulțime și flux?
+  - id: hi_ps_bench_curve
+    name: Curbura Băncii
+    prompt: |
+      Unele bănci se curbează. Ele se privesc sau spre centru. Curbura
+      modelează socialul. Observă aranjamentul. Ce permite curbura? Curbura este design. Ce dorește?
+    follow_ups:
+      - Cum modelează curbura banca?
+      - Cum ar fi banca dacă ar fi dreaptă?
+      - Care este relația dintre curbură și conexiune?
+  - id: hi_ps_object_traded
+    name: Obiect Tranzacționat
+    prompt: |
+      O predare. O achiziție. Un dar. Obiectul se mișcă între străini.
+      Observă schimbul. Ce trece pe lângă obiect? Tranzacția este
+      un moment de conexiune. Ce creează?
+    follow_ups:
+      - Cum modelează tranzacția spațiul?
+      - Cum ar fi spațiul fără astfel de tranzacții?
+      - Care este relația dintre tranzacție și încredere?
+  - id: hi_ps_pathway_light
+    name: Lumina pe Potecă
+    prompt: |
+      Zi, noapte, felinar. Lumina modelează poteca. Observă
+      diferența. Cine merge noaptea? Lumina este siguranță și atmosferă.
+      Ce oferă?
+    follow_ups:
+      - Cum modelează lumina poteca?
+      - Cum ar fi poteca în întuneric?
+      - Care este relația dintre lumină și siguranță?
+  - id: hi_ps_bench_armrest_gap
+    name: Spațiul dintre Cotierele Băncii
+    prompt: |
+      Cotiera împarte. O persoană pe secțiune. Spațiul previne
+      împărțirea. Observă designul. Ce exclude spațiul? Cotiera este o arhitectură ostilă. Ce presupune?
+    follow_ups:
+      - Cum modelează spațiul banca?
+      - Cum ar fi banca fără cotiere?
+      - Care este relația dintre spațiu și excludere?
+  - id: hi_ps_stranger_smile
+    name: Zâmbetul Străinului
+    prompt: |
+      Un zâmbet de la un străin. Neașteptat. Zâmbetul este un dar. Observă
+      răspunsul. Ce face zâmbetul? Zâmbetul este o mică încălcare a contractului. Ce creează?
+    follow_ups:
+      - Cum modelează zâmbetul spațiul?
+      - Cum ar fi spațiul cu mai multe zâmbete?
+      - Care este relația dintre zâmbet și conexiune?
+  - id: hi_ps_object_touch
+    name: Atingerea Obiectului
+    prompt: |
+      O mână pe balustradă. Un picior pe o treaptă. Atingerea conectează corpul și
+      spațiul. Obiectul este comun. Observă atingerea. Ce face atingerea? Obiectul este un punct de contact. Ce poartă?
+    follow_ups:
+      - Cum modelează atingerea spațiul?
+      - Cum ar fi spațiul fără atingere?
+      - Care este relația dintre atingere și prezență?
+  - id: hi_ps_pathway_choice
+    name: Alegerea Potecii
+    prompt: |
+      Poteca se bifurcă. La stânga sau la dreapta? Alegerea este mică. Observă
+      decizia. Ce o determină? Alegerea potecii este un moment de agenție. Ce dezvăluie?
+    follow_ups:
+      - Cum modelează alegerea mersul?
+      - Cum ar fi poteca fără bifurcații?
+      - Care este relația dintre alegere și destinație?
+  - id: hi_ps_bench_empty
+    name: Banca Goală
+    prompt: |
+      Banca este goală. Disponibilă. De ce? Observă banca goală. Locație?
+      Timp? Vreme? Banca goală este o invitație. Ce oferă?
+    follow_ups:
+      - Cum modelează banca goală spațiul?
+      - Cum ar fi spațiul fără bănci goale?
+      - Care este relația dintre gol și oportunitate?
+  - id: hi_ps_stranger_queue
+    name: Coada de Străini
+    prompt: |
+      Se formează un rând. Străinii așteaptă împreună. Coada este ordine. Observă
+      răbdarea. Coada creează o comunitate temporară. Ce necesită coada? Ce oferă?
+    follow_ups:
+      - Cum modelează coada spațiul?
+      - Cum ar fi spațiul fără cozi?
+      - Care este relația dintre coadă și corectitudine?
+  - id: hi_ps_object_talisman_trust
+    name: Încrederea Talismanului
+    prompt: |
+      Îți lași geanta. Ai încredere în spațiu. Talismanul este un test. Observă
+      încrederea. Ce presupune? Încrederea talismanului este un pariu. Ce permite?
+    follow_ups:
+      - Cum modelează încrederea spațiul?
+      - Cum ar fi spațiul fără astfel de încredere?
+      - Care este relația dintre încredere și vulnerabilitate?
+  - id: hi_ps_pathway_end
+    name: Capătul Potecii
+    prompt: |
+      Poteca se termină. O destinație, un zid, o poartă. Capătul este un prag.
+      Observă sosirea. Ce oferă capătul? Capătul potecii este
+      încheiere. Ce înseamnă?
+    follow_ups:
+      - Cum modelează capătul mersul?
+      - Cum ar fi poteca fără un capăt?
+      - Care este relația dintre capăt și finalizare?
+  - id: hi_ps_bench_duo
+    name: Duo pe Bancă
+    prompt: |
+      Două persoane împart o bancă. Prieteni, iubiți, străini. Duo-ul are
+      dinamică. Observă distanța. Conversația sau tăcerea. Duo-ul pe bancă este o mică unitate socială. Ce creează?
+    follow_ups:
+      - Cum modelează duo-ul banca?
+      - Cum ar fi banca cu o singură persoană?
+      - Care este relația dintre duo și conexiune?
+  - id: hi_ps_stranger_danger
+    name: Pericolul Străinului
+    prompt: |
+      Corpul evaluează. Sigur? Evaluarea este automată. Observă
+      semnalele. Ce declanșează precauția? Pericolul străinului este un reflex de supraviețuire. Ce protejează? Ce costă?
+    follow_ups:
+      - Cum modelează evaluarea spațiul?
+      - Cum ar fi spațiul fără ea?
+      - Care este relația dintre pericol și deschidere?
+  - id: hi_ps_object_marker
+    name: Obiectul ca Marcator
+    prompt: |
+      O piatră pe o bancă. O panglică pe un copac. Obiectul marchează ceva.
+      Memorie, revendicare, ritual. Observă marcatorul. Ce înseamnă? Marcatorul este un mesaj. Ce spune?
+    follow_ups:
+      - Cum modelează marcatorul spațiul?
+      - Cum ar fi spațiul fără marcatori?
+      - Care este relația dintre marcator și semnificație?
+  - id: hi_ps_pathway_grade
+    name: Panta Potecii
+    prompt: |
+      Poteca înclină. Sus sau jos. Panta afectează corpul. Observă
+      efortul. Panta este design. Ce presupune despre mers? Panta este o barieră pentru unii.
+    follow_ups:
+      - Cum modelează panta mersul?
+      - Cum ar fi poteca dacă ar fi plată?
+      - Care este relația dintre pantă și acces?
+  - id: hi_ps_bench_public
+    name: Banca Publică
+    prompt: |
+      Banca este publică. Oricine se poate așeza. Publicul este scopul. Observă
+      cine o folosește. Banca publică este un bun comun. Ce necesită?
+      Ce oferă?
+    follow_ups:
+      - Cum modelează publicul banca?
+      - Cum ar fi spațiul fără bănci publice?
+      - Care este relația dintre public și apartenență?
+  - id: hi_ps_stranger_parallel
+    name: Paralela cu Străinul
+    prompt: |
+      Mergi alături de un străin. Aceeași direcție, același ritm. Paralela este
+      accidentală. Observă dinamica. Te sincronizezi? Te separi? Paralela este o companie temporară. Ce creează?
+    follow_ups:
+      - Cum modelează paralela mersul?
+      - Cum ar fi poteca fără astfel de paralele?
+      - Care este relația dintre paralelă și singurătate?
+  - id: hi_ps_object_shared
+    name: Obiect Comun
+    prompt: |
+      O fântână de apă. O balustradă. Obiectul este comun. Multe mâini îl ating.
+      Observă obiectul comun. Ce necesită împărțirea? Obiectul comun este un punct de contact. Ce poartă?
+    follow_ups:
+      - Cum modelează obiectul comun spațiul?
+      - Cum ar fi spațiul fără astfel de obiecte?
+      - Care este relația dintre comun și încredere?
+  - id: hi_ps_pathway_loop
+    name: Bucla Potecii
+    prompt: |
+      Poteca se întoarce. O buclă. Fără destinație. Bucla este pentru
+      mersul în sine. Observă mersul. Ce oferă bucla? Bucla este un alt tip de potecă. Ce permite?
+    follow_ups:
+      - Cum modelează bucla mersul?
+      - Cum ar fi spațiul fără bucle?
+      - Care este relația dintre buclă și reflecție?
+  - id: hi_ps_bench_legacy
+    name: Banca de Moștenire
+    prompt: |
+      "În amintirea." Banca are o placă. Cineva a iubit acest loc.
+      Banca de moștenire poartă o poveste. Observă-o. Ce adaugă placa? Banca de moștenire este un dar. Ce creează?
+    follow_ups:
+      - Cum modelează moștenirea banca?
+      - Cum ar fi banca fără placă?
+      - Care este relația dintre moștenire și loc?
+  - id: hi_ps_stranger_ask
+    name: Întrebarea Străinului
+    prompt: |
+      "Ai ceasul?" "În ce direcție este X?" Întrebarea creează un moment de
+      conexiune. Observă schimbul. Ce necesită întrebarea? Întrebarea străinului este o mică încălcare. Ce permite?
+    follow_ups:
+      - Cum modelează întrebarea spațiul?
+      - Cum ar fi spațiul fără astfel de întrebări?
+      - Care este relația dintre întrebare și ajutor?
+  - id: hi_ps_object_talisman_return
+    name: Revenirea Talismanului
+    prompt: |
+      Te întorci. Talismanul este încă acolo. Geanta ta, cartea ta.
+      Revenirea confirmă încrederea. Observă ușurarea. Ce înseamnă revenirea? Revenirea talismanului este o mică victorie. Ce creează?
+    follow_ups:
+      - Cum modelează revenirea spațiul?
+      - Cum ar fi spațiul fără astfel de reveniri?
+      - Care este relația dintre revenire și încredere?
+  - id: hi_ps_pathway_beginning
+    name: Începutul Potecii
+    prompt: |
+      Poteca începe. Un prag. Pășești pe ea. Observă momentul.
+      Ce înseamnă începutul? Începutul potecii este un angajament. Ce necesită?
+    follow_ups:
+      - Cum modelează începutul mersul?
+      - Cum ar fi spațiul fără poteci?
+      - Care este relația dintre început și intenție?
+  - id: hi_ps_bench_community
+    name: Comunitatea Băncii
+    prompt: |
+      Regularii cunosc banca. Aceiași oameni, același timp. Comunitatea băncii este informală. Observă recunoașterea. Ce oferă
+      comunitatea? Comunitatea băncii este o mică lume socială.
+    follow_ups:
+      - Cum modelează comunitatea banca?
+      - Cum ar fi banca fără regulari?
+      - Care este relația dintre comunitate și loc?
+  - id: hi_ps_stranger_chorus
+    name: Corul Străinilor
+    prompt: |
+      Multe corpuri, un spațiu. Corul străinilor este sunetul
+      mulțimii—pași, voci, foșnet. Observă corul. Ce creează? Corul este sunetul publicului. Ce înseamnă?
+    follow_ups:
+      - Cum modelează corul spațiul?
+      - Cum ar fi spațiul în tăcere?
+      - Care este relația dintre cor și apartenență?
+  - id: hi_ps_object_talisman_loss
+    name: Pierderea Talismanului
+    prompt: |
+      Talismanul a dispărut. Furat, mutat, confundat. Pierderea este o încălcare.
+      Observă răspunsul. Ce înseamnă pierderea? Pierderea talismanului este un mic traumatism. Ce dezvăluie?
+    follow_ups:
+      - Cum modelează pierderea spațiul?
+      - Cum ar fi spațiul fără astfel de pierderi?
+      - Care este relația dintre pierdere și încredere?
+  - id: hi_ps_pathway_shared
+    name: Poteca Comună
+    prompt: |
+      Poteca este comună—mers pe jos, bicicliști, cărucioare. Utilizarea comună
+      necesită negociere. Observă regulile. Cine cedează? Poteca comună este un bun comun. Ce necesită?
+    follow_ups:
+      - Cum modelează utilizarea comună poteca?
+      - Cum ar fi poteca cu o singură utilizare?
+      - Care este relația dintre comun și conflict?
+  - id: hi_ps_bench_rest
+    name: Odihna pe Bancă
+    prompt: |
+      Cineva se odihnește. Ochii închiși, respirația lentă. Odihna este vizibilă.
+      Banca oferă. Observă odihna. Ce permite banca? Odihna pe bancă este un dar al spațiului public. Ce înseamnă?
+    follow_ups:
+      - Cum modelează odihna banca?
+      - Cum ar fi spațiul fără bănci?
+      - Care este relația dintre odihnă și demnitate?
+  - id: hi_ps_stranger_chorus_silence
+    name: Tăcerea Corului Străinilor
+    prompt: |
+      Mulțimea se oprește. Un moment de tăcere. Corul străinilor amuțește.
+      Observă schimbarea. Ce creează tăcerea? Tăcerea comună este rară. Ce înseamnă?
+    follow_ups:
+      - Cum modelează tăcerea spațiul?
+      - Cum ar fi spațiul fără astfel de momente?
+      - Care este relația dintre tăcere și colectivitate?

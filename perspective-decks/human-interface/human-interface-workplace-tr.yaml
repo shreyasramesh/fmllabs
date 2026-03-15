@@ -1,0 +1,408 @@
+# yaml-language-server: $schema=../../schema/perspective-deck-schema.json
+# İnsan Arayüzü — İş Yeri (Turkish)
+
+id: human_interface_workplace
+name: İnsan Arayüzü — İş Yeri
+description: İş yerini görme biçiminizi değiştiren 50 kart — masa alanlarından toplantı odalarına, su sebili ve görünür ile görünmez hiyerarşi arasındaki ilişkilere kadar.
+domain: human_interface
+cards:
+  - id: hi_wp_desk_territory
+    name: Masa Alanı
+    prompt: |
+      Bir masa sahiplenilmiş — fotoğraflar, bitkiler, kupalar. Alan yüzeyin ötesine uzanır. Sınırları gözlemleyin. "Benim" olanı ne işaretler? Masa küçük bir krallıktır. Nasıl savunulur?
+    follow_ups:
+      - Masa kimliği nasıl şekillendirir?
+      - Kişiselleştirme olmadan iş yeri neye benzerdi?
+      - Alan ve ait olma arasındaki ilişki nedir?
+  - id: hi_wp_meeting_room
+    name: Toplantı Odası
+    prompt: |
+      Odanın bir masası, sandalyeleri, ekranı var. Kapı kapanır. Toplantı odası bir performans sahnesidir. Kimin konuştuğunu, kimin konuşmadığını gözlemleyin. Oda hiyerarşiyi barındırır. Alan neyi mümkün kılar?
+    follow_ups:
+      - Oda toplantıyı nasıl şekillendirir?
+      - Toplantı odaları olmadan iş yeri neye benzerdi?
+      - Oda ve güç arasındaki ilişki nedir?
+  - id: hi_wp_water_cooler
+    name: Su Sebili
+    prompt: |
+      Su sebili bir kavşaktır. İnsanlar orada rastlantısal olarak buluşur. Karşılaşma gayriresmidir. Sohbetleri gözlemleyin. Bir toplantıda söylenmeyecekler, sebil başında ne söylenir?
+    follow_ups:
+      - Sebili kültürü nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Sebili ve bağ kurma arasındaki ilişki nedir?
+  - id: hi_wp_visible_hierarchy
+    name: Görünür Hiyerarşi
+    prompt: |
+      Köşe ofisler, pencere kenarı koltuklar, kübikül. Alan sıralamayı kodlar. Dağılımı gözlemleyin. Kim neyi alır? Hiyerarşi mimariye işlenmiştir. Ne ifade eder?
+    follow_ups:
+      - Hiyerarşi davranışı nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Alan ve statü arasındaki ilişki nedir?
+  - id: hi_wp_invisible_hierarchy
+    name: Görünmez Hiyerarşi
+    prompt: |
+      Bazı insanlara kulak verilir; diğerlerine sözleri kesilir. Hiyerarşi organizasyon şemasında değildir. Toplantıları gözlemleyin. Kim boyun eğer? Kim baskın çıkar? Görünmez hiyerarşi sonuçları şekillendirir.
+    follow_ups:
+      - Görünmez hiyerarşi nasıl ortaya çıkar?
+      - Görünür olsaydı iş yeri neye benzerdi?
+      - Görünmez ve güç arasındaki ilişki nedir?
+  - id: hi_wp_cubicle_wall
+    name: Kübikül Duvarı
+    prompt: |
+      Duvar alçaktır — üzerinden görebilirsiniz. Mahremiyet kısmen sağlanır. Kübikül bir uzlaşmadır. Görüş hatlarını gözlemleyin. Ne duyabilirsiniz? Ne görebilirsiniz? Duvar bir sınır yanılsaması yaratır.
+    follow_ups:
+      - Kübikül odaklanmayı nasıl şekillendirir?
+      - Tam duvarlı bir iş yeri neye benzerdi?
+      - Duvar ve mahremiyet arasındaki ilişki nedir?
+  - id: hi_wp_corner_office
+    name: Köşe Ofis
+    prompt: |
+      Köşe ofisin iki penceresi vardır. Ödül odur. Kimin oturduğunu gözlemleyin. Köşe ofis kattan görünür. Bir semboldür. Köşe ne ifade eder?
+    follow_ups:
+      - Köşe ofis hedefi nasıl şekillendirir?
+      - O olmadan kat neye benzerdi?
+      - Köşe ve otorite arasındaki ilişki nedir?
+  - id: hi_wp_open_plan
+    name: Açık Plan
+    prompt: |
+      Duvar yok. Sıralar veya kümeler halinde masalar. Açık plan iş birliği vaat eder. Gerçekliği gözlemleyin. Kim kulaklık takar? Açık plan yakınlık yaratır. Bedeli nedir?
+    follow_ups:
+      - Açık plan etkileşimi nasıl şekillendirir?
+      - Duvarlı bir iş yeri neye benzerdi?
+      - Açıklık ve odaklanma arasındaki ilişki nedir?
+  - id: hi_wp_calendar_invite
+    name: Takvim Daveti
+    prompt: |
+      Davet belirir. Kabul et, reddet, geçici. Takvim günü yapılandırır. Blokları gözlemleyin. Kimin zamanına kim hükmeder? Takvim güç haritasıdır.
+    follow_ups:
+      - Takvim günü nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Davet ve zorunluluk arasındaki ilişki nedir?
+  - id: hi_wp_knock_before_enter
+    name: Girmeden Önce Vurmak
+    prompt: |
+      Bazı kapılar kapalıdır. Vuruş bir istektir. Kimin vurduğunu ve kimin içeri girdiğini gözlemleyin. Vuruş saygı anlamına gelir. Kapalı kapı neyi korur?
+    follow_ups:
+      - Vuruş karşılaşmayı nasıl şekillendirir?
+      - Açık kapılı bir iş yeri neye benzerdi?
+      - Vuruş ve sınır arasındaki ilişki nedir?
+  - id: hi_wp_headphones_signal
+    name: Kulaklık Sinyali
+    prompt: |
+      Kulaklık takılı demek "rahatsız etmeyin" demektir. Sinyal evrenseldir. Kimin saygı gösterdiğini gözlemleyin. Kulaklık bir balon yaratır. Balon neyi mümkün kılar?
+    follow_ups:
+      - Kulaklık katı nasıl şekillendirir?
+      - Onlar olmadan iş yeri neye benzerdi?
+      - Kulaklık ve odaklanma arasındaki ilişki nedir?
+  - id: hi_wp_lunch_room
+    name: Yemek Odası
+    prompt: |
+      Yemek odasında masalar, mikrodalga fırın, buzdolabı vardır. İnsanlar yalnız veya birlikte yer. Kümeleri gözlemleyin. Kim kiminle oturur? Yemek odası ittifakları ortaya çıkarır. Düzenleme ne ifade eder?
+    follow_ups:
+      - Yemek odası kültürü nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Yemek ve bağ kurma arasındaki ilişki nedir?
+  - id: hi_wp_slack_ping
+    name: Slack Ping
+    prompt: |
+      Ping gelir. Anında, eşzamansız. Ping kesebilir veya bekleyebilir. Kuralları gözlemleyin. Kim hemen yanıt verir? Ping yeni bir iletişim ritmi yaratır. Nenin yerine geçer?
+    follow_ups:
+      - Ping günü nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Ping ve aciliyet arasındaki ilişki nedir?
+  - id: hi_wp_whiteboard_claim
+    name: Beyaz Tahta Sahipliği
+    prompt: |
+      Beyaz tahta fikirleri tutar — diyagramlar, listeler. Birisi onları yazdı. Tahta paylaşılan bir yüzeydir. Kimin yazdığını, kimin sildiğini gözlemleyin. Tahta bir alandır. Neyi tutar?
+    follow_ups:
+      - Beyaz tahta iş birliğini nasıl şekillendirir?
+      - O olmadan toplantı neye benzerdi?
+      - Tahta ve düşünce arasındaki ilişki nedir?
+  - id: hi_wp_elevator_encounter
+    name: Asansör Karşılaşması
+    prompt: |
+      Bir iş arkadaşınızla asansörü paylaşıyorsunuz. Otuz saniye. Karşılaşma gariptir veya kolaydır. Küçük sohbeti gözlemleyin. Ne söylenir? Asansör zamanı sıkıştırır. Ne gerektirir?
+    follow_ups:
+      - Asansör karşılaşmayı nasıl şekillendirir?
+      - Asansörler olmadan bina neye benzerdi?
+      - Asansör ve görgü arasındaki ilişki nedir?
+  - id: hi_wp_cc_email
+    name: CC E-posta
+    prompt: |
+      CC'ye eklendiniz. Ana alıcı siz değilsiniz. CC sizi döngüye dahil eder. Kimlerin CC'ye eklendiğini gözlemleyin. CC, ilgi — veya politika — sinyalidir. CC ne yapar?
+    follow_ups:
+      - CC iletişimi nasıl şekillendirir?
+      - CC olmadan iş yeri neye benzerdi?
+      - CC ve görünürlük arasındaki ilişki nedir?
+  - id: hi_wp_standing_desk
+    name: Ayakta Çalışma Masası
+    prompt: |
+      Masa yükselir. Çalışan ayakta durur. Ayakta çalışma masası bir seçimdir — sağlık, tercih, performans. Kimde olduğunu gözlemleyin. Ayakta çalışma masası neyi işaret eder?
+    follow_ups:
+      - Ayakta çalışma masası bedeni nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Ayakta durmak ve üretkenlik arasındaki ilişki nedir?
+  - id: hi_wp_conference_call
+    name: Konferans Araması
+    prompt: |
+      Başka yerlerden gelen sesler. Arama dağılmış insanları bağlar. Kimin konuştuğunu, kimin sesi kapattığını gözlemleyin. Arama kısmi bir varoluştur. Arama neyi mümkün kılar — ve neyi kaybeder?
+    follow_ups:
+      - Arama toplantıyı nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Arama ve varlık arasındaki ilişki nedir?
+  - id: hi_wp_office_plant
+    name: Ofis Bitkisi
+    prompt: |
+      Masa üzerinde bir bitki — pothos, sukulent. Dekorasyon ve bakımdır. Bitki şirkete ait değildir. Kimde olduğunu gözlemleyin. Bitki mekana ne katar?
+    follow_ups:
+      - Bitki masayı nasıl şekillendirir?
+      - Bitkiler olmadan iş yeri neye benzerdi?
+      - Bitki ve kimlik arasındaki ilişki nedir?
+  - id: hi_wp_after_hours
+    name: Mesai Sonrası
+    prompt: |
+      Çoğu kişi ayrıldıktan sonra ofis. Işıklar loş. Mesai sonrası çalışan görünür — adanmış veya mücadele eden. Sahneyi gözlemleyin. Boş ofis neyi mümkün kılar? Bedeli nedir?
+    follow_ups:
+      - Mesai sonrası kültürü nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Saatler ve beklenti arasındaki ilişki nedir?
+  - id: hi_wp_nameplate
+    name: İsimlik
+    prompt: |
+      Masada, kapıda bir isim. İsimlik alanı sahiplenir. Kimde olduğunu gözlemleyin. İsimlik kimlik ve alandır. Geçenlere ne ifade eder?
+    follow_ups:
+      - İsimlik alanı nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - İsimlik ve varlık arasındaki ilişki nedir?
+  - id: hi_wp_meeting_overrun
+    name: Toplantı Gecikmesi
+    prompt: |
+      Toplantı bitmeliydi. Bitmedi. Gecikme yaygındır. Dinamiği gözlemleyin. Kimin bir sonraki toplantısı var? Kim kalabilir? Gecikme bir güç gösterisidir. Neyi çeker?
+    follow_ups:
+      - Gecikme günü nasıl şekillendirir?
+      - Sıkı bitişleri olan bir iş yeri neye benzerdi?
+      - Gecikme ve saygı arasındaki ilişki nedir?
+  - id: hi_wp_quick_question
+    name: Hızlı Soru
+    prompt: |
+      "Hızlı bir sorum var?" Soru keser. "Hızlı" bir vaattir. Alışverişi gözlemleyin. Ne kadar hızlı? Hızlı soru bir zaman pazarlığıdır. Bedeli nedir?
+    follow_ups:
+      - Hızlı soru akışı nasıl şekillendirir?
+      - Kesintiler olmadan iş yeri neye benzerdi?
+      - Hızlılık ve saygı arasındaki ilişki nedir?
+  - id: hi_wp_bathroom_encounter
+    name: Tuvalet Karşılaşması
+    prompt: |
+      Tuvalette bir iş arkadaşınızla karşılaşıyorsunuz. Karşılaşma belirsizdir. Göz teması mı, değil mi? Tuvalet geçişli bir alandır. Kuralları gözlemleyin. Karşılaşma ne gerektirir?
+    follow_ups:
+      - Tuvalet iş yerini nasıl şekillendirir?
+      - Ortak tuvaletler olmadan iş yeri neye benzerdi?
+      - Tuvalet ve mahremiyet arasındaki ilişki nedir?
+  - id: hi_wp_commute_talk
+    name: İşe Gidiş Sohbeti
+    prompt: |
+      "İşe gidiş nasıldı?" Soru küçük sohbeti açar. İşe gidiş ortak deneyimdir. Sohbeti gözlemleyin. İşe gidiş sohbeti ilişkiye ne yapar?
+    follow_ups:
+      - İşe gidiş sohbeti günü nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - İşe gidiş ve bağ kurma arasındaki ilişki nedir?
+  - id: hi_wp_parking_spot
+    name: Park Yeri
+    prompt: |
+      Ayrılmış yerler, ilk gelen yerler. Park yeri hiyerarşiyi kodlar. Kimin nereye park ettiğini gözlemleyin. Yer küçük bir ayrıcalıktır. Ne ifade eder?
+    follow_ups:
+      - Park yeri iş yerini nasıl şekillendirir?
+      - Ayrılmış yerler olmadan otopark neye benzerdi?
+      - Yer ve statü arasındaki ilişki nedir?
+  - id: hi_wp_birthday_cake
+    name: Doğum Günü Pastası
+    prompt: |
+      Bir pasta belirir. Birinin doğum günü. Ekip toplanır. Pasta bir ritüeldir. Toplantıyı gözlemleyin. Doğum günü anı gruba ne yapar?
+    follow_ups:
+      - Pasta kültürü nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Pasta ve ait olma arasındaki ilişki nedir?
+  - id: hi_wp_forwarded_email
+    name: İletilen E-posta
+    prompt: |
+      Bir e-posta iletilir. "Bilginize" veya "Görmeniz gerektiğini düşündüm." İletim sohbeti uzatır. Kimlere iletildiğini gözlemleyin. İletim bir sinyaldir. Ne anlama gelir?
+    follow_ups:
+      - İletim iletişimi nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - İletim ve güven arasındaki ilişki nedir?
+  - id: hi_wp_break_room
+    name: Mola Odası
+    prompt: |
+      Kahve, atıştırmalıklar, bazen bir kanepe. Mola odası bir ara duraktır. İnsanlar oraya gitmek için uzaklaşır. Kimlerin kullandığını gözlemleyin. Mola odası bir sığınaktır. Ne sağlar?
+    follow_ups:
+      - Mola odası günü nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Mola ve üretkenlik arasındaki ilişki nedir?
+  - id: hi_wp_office_supply
+    name: Ofis Malzemesi
+    prompt: |
+      Kalemler, kağıt, zımba — malzeme dolabı araçları tutar. Birisi onu yönetir. Kimin ne aldığını gözlemleyin. Malzeme küçük bir ortak alandır. Kurallar nelerdir?
+    follow_ups:
+      - Malzeme iş yerini nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Malzeme ve hak iddia etme arasındaki ilişki nedir?
+  - id: hi_wp_remote_camera
+    name: Uzak Kamera
+    prompt: |
+      Kamera açıktır veya kapalıdır. Uzak çalışan seçer. Seçim görünür. Kuralları gözlemleyin. Kim açık tutar? Kamera bir penceredir. Ne ortaya çıkarır?
+    follow_ups:
+      - Kamera aramayı nasıl şekillendirir?
+      - O olmadan toplantı neye benzerdi?
+      - Kamera ve varlık arasındaki ilişki nedir?
+  - id: hi_wp_side_conversation
+    name: Yan Sohbet
+    prompt: |
+      İki kişi çalışırken konuşur. Yan sohbet özeldir ama görünürdür. Dinamiği gözlemleyin. Rahatsız edici mi? Yan sohbet küçük bir isyandır. Ne yaratır?
+    follow_ups:
+      - Yan sohbet katı nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Yan ve dışlama arasındaki ilişki nedir?
+  - id: hi_wp_clean_desk
+    name: Temiz Masa
+    prompt: |
+      Bazı masalar tertemizdir — kişisel hiçbir şey yok. Temiz masa politika veya tercihtir. Zıtlığı gözlemleyin. Temiz masa ne ifade eder? Sterilite mi? Disiplin mi? Kopukluk mu?
+    follow_ups:
+      - Temiz masa çalışanı nasıl şekillendirir?
+      - Dağınık masaları olan bir iş yeri neye benzerdi?
+      - Temizlik ve kimlik arasındaki ilişki nedir?
+  - id: hi_wp_meeting_no_show
+    name: Toplantıya Gelmeme
+    prompt: |
+      Toplantı planlanmıştı. Biri gelmedi. Gelmeme bir mesajdır. Yanıtı gözlemleyin. Birisi bundan bahseder mi? Gelmeme küçük bir güç gösterisidir. Ne ifade eder?
+    follow_ups:
+      - Gelmeme toplantıyı nasıl şekillendirir?
+      - Gelmeyenler olmadan iş yeri neye benzerdi?
+      - Gelmeme ve saygı arasındaki ilişki nedir?
+  - id: hi_wp_cubicle_visit
+    name: Kübikül Ziyareti
+    prompt: |
+      Biri gelir. Kübikülün kenarında dururlar. Ziyaret bir seçimdir — mesajlaşabilirlerdi. Dinamiği gözlemleyin. Bir mesajın sağlayamadığı neyi ziyaret mümkün kılar?
+    follow_ups:
+      - Ziyaret etkileşimi nasıl şekillendirir?
+      - Ziyaretler olmadan iş yeri neye benzerdi?
+      - Ziyaret ve kesinti arasındaki ilişki nedir?
+  - id: hi_wp_shared_printer
+    name: Paylaşımlı Yazıcı
+    prompt: |
+      Yazıcı paylaşılır. Belgeler yığılır. Birisi toplamalıdır. Yazıcı bir kavşaktır. Karşılaşmaları gözlemleyin. Aynı çıktıya iki kişi ulaştığında ne olur?
+    follow_ups:
+      - Yazıcı katı nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Yazıcı ve sabır arasındaki ilişki nedir?
+  - id: hi_wp_office_temperature
+    name: Ofis Sıcaklığı
+    prompt: |
+      "Çok soğuk." "Çok sıcak." Sıcaklık tartışmalıdır. Biri termostatı kontrol eder. Şikayetleri gözlemleyin. Sıcaklık küçük bir güç alanıdır. Kim kazanır?
+    follow_ups:
+      - Sıcaklık iş yerini nasıl şekillendirir?
+      - Bireysel kontrolü olan bir iş yeri neye benzerdi?
+      - Sıcaklık ve konfor arasındaki ilişki nedir?
+  - id: hi_wp_handshake
+    name: El Sıkışma
+    prompt: |
+      El sıkışma — ilk tanışma, anlaşma kapandı. El sıkışma bir ritüeldir. Tutuşu, süreyi gözlemleyin. El sıkışma resmiyet anlamına gelir. Ne ifade eder?
+    follow_ups:
+      - El sıkışma karşılaşmayı nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - El sıkışma ve güven arasındaki ilişki nedir?
+  - id: hi_wp_cc_removal
+    name: CC Kaldırma
+    prompt: |
+      "Tümünü yanıtla" mı, "Yanıtla" mı? Seçim önemlidir. Birini iş parçacığından çıkarmak bir sinyaldir. Dinamikleri gözlemleyin. Kim düşürülür? CC kaldırma küçük bir dışlamadır. Ne anlama gelir?
+    follow_ups:
+      - Kaldırma konuşmayı nasıl şekillendirir?
+      - Yanıt seçenekleri olmadan iş yeri neye benzerdi?
+      - Kaldırma ve güç arasındaki ilişki nedir?
+  - id: hi_wp_office_tour
+    name: Ofis Turu
+    prompt: |
+      Yeni bir işe alınan kişiye bir tur verilir. "Burası mutfak. Toplantıları burada yaparız." Tur yönlendirir. Rehberi gözlemleyin. Tur kültür hakkında ne ifade eder?
+    follow_ups:
+      - Tur yeniyi nasıl şekillendirir?
+      - O olmadan işe alım neye benzerdi?
+      - Tur ve ait olma arasındaki ilişki nedir?
+  - id: hi_wp_meeting_room_book
+    name: Toplantı Odası Rezervasyonu
+    prompt: |
+      Oda rezerve edilmiştir. Veya çift rezerve edilmiştir. Takvim hakemdir. Çatışmayı gözlemleyin. Kim razı olur? Rezervasyon, alan ve zamana bir iddiadır. Ne gerektirir?
+    follow_ups:
+      - Rezervasyon günü nasıl şekillendirir?
+      - Rezervasyon olmadan iş yeri neye benzerdi?
+      - Rezervasyon ve öncelik arasındaki ilişki nedir?
+  - id: hi_wp_goodbye_ritual
+    name: Veda Ritüeli
+    prompt: |
+      Günün sonu. "Çıkıyorum." "Yarın görüşürüz." Veda bir ritüeldir. Sohbetleri gözlemleyin. Kim kime veda eder? Ritüel iş ve iş dışı arasındaki sınırı işaretler.
+    follow_ups:
+      - Veda günü nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Veda ve kapanış arasındaki ilişki nedir?
+  - id: hi_wp_promotion_announce
+    name: Terfi Duyurusu
+    prompt: |
+      "Duyurmaktan memnuniyet duyarız..." Terfi halka açıktır. Duyuru bir an yaratır. Yanıtı gözlemleyin. Tebrikler, sessizlik, yan bakışlar. Duyuru odaya ne yapar?
+    follow_ups:
+      - Duyuru kültürü nasıl şekillendirir?
+      - Halka açık terfiler olmadan iş yeri neye benzerdi?
+      - Duyuru ve hiyerarşi arasındaki ilişki nedir?
+  - id: hi_wp_desk_move
+    name: Masa Taşıma
+    prompt: |
+      Birisi masa taşıyor. Taşıma terfi, yeniden düzenleme veya seçimdir. Süreci gözlemleyin. Ne alıyorlar? Ne bırakıyorlar? Taşıma bir geçiştir. Ne anlama gelir?
+    follow_ups:
+      - Taşıma çalışanı nasıl şekillendirir?
+      - Taşıma olmadan iş yeri neye benzerdi?
+      - Taşıma ve kimlik arasındaki ilişki nedir?
+  - id: hi_wp_office_gossip
+    name: Ofis Dedikodusu
+    prompt: |
+      Bilgi yayılır — kim ayrılıyor, kim hayal kırıklığına uğramış. Dedikodu gayriresmidir. Nerede olduğunu gözlemleyin. Su sebili, koridor. Dedikodu gruba ne yapar?
+    follow_ups:
+      - Dedikodu kültürü nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Dedikodu ve ait olma arasındaki ilişki nedir?
+  - id: hi_wp_meeting_agenda
+    name: Toplantı Gündemi
+    prompt: |
+      Gündem toplantıyı yapılandırır. Veya yapmaz — toplantı sürüklenir. Dinamiği gözlemleyin. Kim gündemi takip eder? Kim etmez? Gündem bir sözleşmedir. Ne mümkün kılar?
+    follow_ups:
+      - Gündem toplantıyı nasıl şekillendirir?
+      - O olmadan toplantı neye benzerdi?
+      - Gündem ve güç arasındaki ilişki nedir?
+  - id: hi_wp_office_food
+    name: Ofis Yemeği
+    prompt: |
+      Donutlar, meyveler, bir müşteri toplantısından kalanlar. Yiyecek belirir. İnsanlar toplanır. Paylaşımı gözlemleyin. Ofis yemeği küçük bir hediyedir. Ne yaratır?
+    follow_ups:
+      - Yiyecek iş yerini nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Yiyecek ve topluluk arasındaki ilişki nedir?
+  - id: hi_wp_last_day
+    name: Son Gün
+    prompt: |
+      Birinin son günü. Vedalar, belki bir kart, belki pasta. Son gün bir ayrılış ritüelidir. Ruh halini gözlemleyin. Son gün ayrılan ve kalanlar için ne yapar?
+    follow_ups:
+      - Son gün kültürü nasıl şekillendirir?
+      - Ritüel olmadan iş yeri neye benzerdi?
+      - Son gün ve kapanış arasındaki ilişki nedir?
+  - id: hi_wp_office_hours
+    name: Ofis Saatleri
+    prompt: |
+      "Salı günleri 2-4 arası ofis saatlerim var." Blok açıktır. İnsanlar uğrayabilir. Kimlerin geldiğini gözlemleyin. Ofis saatleri bir davettir. Ne mümkün kılar?
+    follow_ups:
+      - Ofis saatleri erişimi nasıl şekillendirir?
+      - O olmadan iş yeri neye benzerdi?
+      - Saatler ve kullanılabilirlik arasındaki ilişki nedir?
+  - id: hi_wp_workspace_claim
+    name: Alan Sahiplenme
+    prompt: |
+      Sandalyede bir ceket. Masanın altında bir çanta. Sahiplenme "Buradayım" veya "Döneceğim" der. Sinyalleri gözlemleyin. Bir sahiplenme ne kadar süreyle geçerli olabilir? Çalışma alanı geçici olarak sahiplenilmiştir. Kurallar nelerdir?
+    follow_ups:
+      - Sahiplenme katı nasıl şekillendirir?
+      - Sahiplenmeler olmadan iş yeri neye benzerdi?
+      - Sahiplenme ve varlık arasındaki ilişki nedir?
