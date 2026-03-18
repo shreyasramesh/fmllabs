@@ -6634,7 +6634,7 @@ export default function ChatPage() {
                           </button>
                           {voiceCloneRecordedBlob && (
                             <span className="text-xs text-neutral-500 dark:text-neutral-400">
-                              Recorded ({Math.round(voiceCloneRecordedBlob.size / 1024)} KB)
+                              Recorded ({Math.round((voiceCloneRecordedBlob?.size ?? 0) / 1024)} KB)
                             </span>
                           )}
                           {voiceCloneRecordedBlob && (
@@ -7046,7 +7046,6 @@ export default function ChatPage() {
           onOpenSidebar={() => setSidebarOpen(true)}
           onSelectPanel={(panel) => {
             setLibraryPanelOpen(panel);
-            if (panel) setConversationsCollapsed(false);
           }}
         />
       )}
