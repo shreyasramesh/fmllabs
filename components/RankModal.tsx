@@ -99,35 +99,70 @@ export function RankModal({ score, onClose }: RankModalProps) {
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          {/* Rank badge - SVG for all ranks */}
+          {/* Rank badge - SVG for all ranks with rank name centered */}
           <div className="flex flex-col items-center gap-3">
             {score.rank === "Iron" ? (
-              <div className="w-96 h-96 shrink-0 [&_svg]:w-full [&_svg]:h-full">
-                <IronRankBadge className="w-full h-full object-contain" />
+              <div className="relative w-96 h-96 shrink-0 flex items-center justify-center">
+                <div className="absolute inset-0 [&_svg]:w-full [&_svg]:h-full [&_svg]:object-contain">
+                  <IronRankBadge className="w-full h-full object-contain" />
+                </div>
+                <span className="relative z-10 text-white font-bold text-3xl tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none">
+                  {score.rank}
+                </span>
               </div>
             ) : score.rank === "Bronze" ? (
-              <div className="w-96 h-96 shrink-0 [&_svg]:w-full [&_svg]:h-full">
-                <BronzeRankBadge className="w-full h-full object-contain" />
+              <div className="relative w-96 h-96 shrink-0 flex items-center justify-center">
+                <div className="absolute inset-0 [&_svg]:w-full [&_svg]:h-full [&_svg]:object-contain">
+                  <BronzeRankBadge className="w-full h-full object-contain" />
+                </div>
+                <span className="relative z-10 text-white font-bold text-3xl tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none">
+                  {score.rank}
+                </span>
               </div>
             ) : score.rank === "Silver" ? (
-              <div className="w-96 h-96 shrink-0 [&_svg]:w-full [&_svg]:h-full">
-                <SilverRankBadge className="w-full h-full object-contain" />
+              <div className="relative w-96 h-96 shrink-0 flex items-center justify-center">
+                <div className="absolute inset-0 [&_svg]:w-full [&_svg]:h-full [&_svg]:object-contain">
+                  <SilverRankBadge className="w-full h-full" />
+                </div>
+                <span className="relative z-10 text-white font-bold text-3xl tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pointer-events-none">
+                  {score.rank}
+                </span>
               </div>
             ) : score.rank === "Gold" ? (
-              <div className="w-96 h-96 shrink-0 [&_svg]:w-full [&_svg]:h-full">
-                <GoldRankBadge className="w-full h-full object-contain" />
+              <div className="relative w-96 h-96 shrink-0 flex items-center justify-center">
+                <div className="absolute inset-0 [&_svg]:w-full [&_svg]:h-full [&_svg]:object-contain">
+                  <GoldRankBadge className="w-full h-full object-contain" />
+                </div>
+                <span className="relative z-10 text-amber-950 font-bold text-3xl tracking-wide drop-shadow-[0_1px_2px_rgba(255,255,255,0.5)] pointer-events-none">
+                  {score.rank}
+                </span>
               </div>
             ) : score.rank === "Platinum" ? (
-              <div className="w-96 h-96 shrink-0 [&_svg]:w-full [&_svg]:h-full">
-                <PlatinumRankBadge className="w-full h-full object-contain" />
+              <div className="relative w-96 h-96 shrink-0 flex items-center justify-center">
+                <div className="absolute inset-0 [&_svg]:w-full [&_svg]:h-full [&_svg]:object-contain">
+                  <PlatinumRankBadge className="w-full h-full object-contain" />
+                </div>
+                <span className="relative z-10 text-white font-bold text-3xl tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] pointer-events-none">
+                  {score.rank}
+                </span>
               </div>
             ) : score.rank === "Diamond" ? (
-              <div className="w-96 h-96 shrink-0 [&_svg]:w-full [&_svg]:h-full">
-                <DiamondRankBadge className="w-full h-full object-contain" />
+              <div className="relative w-96 h-96 shrink-0 flex items-center justify-center">
+                <div className="absolute inset-0 [&_svg]:w-full [&_svg]:h-full [&_svg]:object-contain">
+                  <DiamondRankBadge className="w-full h-full" />
+                </div>
+                <span className="relative z-10 text-white font-bold text-3xl tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] pointer-events-none">
+                  {score.rank}
+                </span>
               </div>
             ) : score.rank === "Master" ? (
-              <div className="w-96 h-96 shrink-0 [&_svg]:w-full [&_svg]:h-full">
-                <MasterRankBadge className="w-full h-full object-contain" />
+              <div className="relative w-96 h-96 shrink-0 flex items-center justify-center">
+                <div className="absolute inset-0 [&_svg]:w-full [&_svg]:h-full [&_svg]:object-contain">
+                  <MasterRankBadge className="w-full h-full object-contain" />
+                </div>
+                <span className="relative z-10 text-white font-bold text-3xl tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] pointer-events-none">
+                  {score.rank}
+                </span>
               </div>
             ) : (
               <div

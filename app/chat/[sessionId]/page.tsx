@@ -2337,11 +2337,11 @@ export default function ChatPage() {
             };
             const { prompt, name } = parsed;
             if (parsed.fetchFigureOnLoad) {
-              setMessages([{
-                role: "assistant",
+            setMessages([{
+              role: "assistant",
                 content: "Finding your guide…",
-                perspectiveCard: { name, prompt },
-              }]);
+              perspectiveCard: { name, prompt },
+            }]);
               setPendingCardFetch({ prompt, name });
             } else {
               if (parsed.figure) setActiveConversationFigure(parsed.figure);
@@ -2369,11 +2369,11 @@ export default function ChatPage() {
               const figure = { id: figureId, name: figureName };
               setActiveConversationFigure(figure);
               const assistantContent = buildPerspectiveCardMessage(language, prompt, figure);
-              setMessages([{
-                role: "assistant",
-                content: assistantContent,
-                perspectiveCard: { name, prompt },
-              }]);
+            setMessages([{
+              role: "assistant",
+              content: assistantContent,
+              perspectiveCard: { name, prompt },
+            }]);
               setPendingCardContext({ prompt, name, figure });
             } else {
               setMessages([{
@@ -3843,20 +3843,22 @@ export default function ChatPage() {
               type="button"
               onClick={() => { playSelectionChime(); setWaysOfLookingAtModalOpen(true); setWaysOfLookingAtDrawMode(false); setWaysOfLookingAtCategory(null); setWaysOfLookingAtCity(null); setWaysOfLookingAtCuisine(null); setWaysOfLookingAtMicrocosm(null); }}
               title={!sidebarOpen ? getUiTranslations(language).promptGames : undefined}
-              className={`flex items-center w-full rounded-full text-left text-[13px] sm:text-[14px] font-medium transition-colors border-2 border-transparent text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:border-neutral-400 dark:hover:border-neutral-500 ${
+              className={`group relative overflow-hidden flex items-center w-full rounded-2xl text-left text-[13px] sm:text-[14px] font-medium transition-colors active:scale-[0.98] ${
                 sidebarOpen ? "gap-2.5 px-3 py-1.5" : "justify-center p-2 lg:px-2 lg:py-2"
               }`}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+              <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-100 via-amber-50 to-yellow-50 dark:from-rose-900/40 dark:via-amber-900/30 dark:to-yellow-900/30 transition-opacity duration-300" aria-hidden />
+              <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-200 via-amber-100 to-yellow-100 dark:from-rose-800/50 dark:via-amber-800/40 dark:to-yellow-800/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden />
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 w-4 h-4 shrink-0 text-foreground">
                 <rect width="18" height="14" x="3" y="3" rx="2" />
                 <path d="M3 9h18" />
                 <path d="M3 15h18" />
               </svg>
-              {sidebarOpen && <span className="truncate shimmer-text-colorful">{getUiTranslations(language).promptGames}</span>}
+              {sidebarOpen && <span className="relative z-10 truncate text-foreground">{getUiTranslations(language).promptGames}</span>}
             </button>
           </div>
 
-        </div>
+            </div>
         {/* Accounts section - bottom of left panel (Browser Use style) */}
         <div className="mt-auto shrink-0 px-2 py-3 border-t border-neutral-200/80 dark:border-neutral-800">
             {user ? (
@@ -3869,7 +3871,7 @@ export default function ChatPage() {
                     ? "border-neutral-200 dark:border-white/12 hover:border-neutral-300 dark:hover:border-white/18"
                     : "border-neutral-200 dark:border-transparent hover:border-neutral-300 dark:hover:border-transparent justify-center lg:px-2"
                 }`}
-                onClick={(e) => {
+                    onClick={(e) => {
                   const trigger = (e.currentTarget as HTMLElement).querySelector("button");
                   if (trigger && !trigger.contains(e.target as Node)) {
                     trigger.click();
@@ -3877,7 +3879,7 @@ export default function ChatPage() {
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
+                              e.preventDefault();
                     (e.currentTarget as HTMLElement).querySelector("button")?.click();
                   }
                 }}
@@ -3902,8 +3904,8 @@ export default function ChatPage() {
                         {user.primaryEmailAddress.emailAddress}
                       </p>
                     )}
-                  </div>
-                )}
+                    </div>
+                  )}
               </div>
             ) : (
               <div className={`flex gap-2 ${sidebarOpen ? "flex-wrap" : "flex-col items-center"}`}>
@@ -3921,9 +3923,9 @@ export default function ChatPage() {
                 >
                   Create account
                 </Link>
-              </div>
-            )}
-          </div>
+                </div>
+          )}
+        </div>
         </>
         )}
         {isAnonymous && (
@@ -4367,8 +4369,8 @@ export default function ChatPage() {
                       previewMap={previewMap}
                     />
                     {isMobileViewport && !drawnPerspectiveCard && (
-                      <button
-                        type="button"
+                        <button
+                          type="button"
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
@@ -4393,9 +4395,9 @@ export default function ChatPage() {
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                         <path d="M15 3h6v6" />
                         <path d="M9 21H3v-6" />
-                      </svg>
+                            </svg>
                     </button>
-                  </div>
+                          </div>
                   <VoiceInputButton
                     onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
                     language={language}
@@ -4420,24 +4422,26 @@ export default function ChatPage() {
                         Send
                       </>
                     )}
-                  </button>
+                        </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    playSelectionChime();
+                        <button
+                          type="button"
+                          onClick={() => {
+                            playSelectionChime();
                     setIdeasModalOpen(true);
-                  }}
-                  className="flex items-center gap-2 px-5 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 active:scale-[0.98] animate-fade-in-up"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
+                          }}
+                  className="group relative overflow-hidden flex items-center gap-2 px-5 py-3 rounded-2xl active:scale-[0.98] animate-fade-in-up"
+                        >
+                          <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-100 via-amber-50 to-yellow-50 dark:from-rose-900/40 dark:via-amber-900/30 dark:to-yellow-900/30 transition-opacity duration-300" aria-hidden />
+                          <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-200 via-amber-100 to-yellow-100 dark:from-rose-800/50 dark:via-amber-800/40 dark:to-yellow-800/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden />
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 w-5 h-5 text-foreground">
                     <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
                     <path d="M9 18h6" />
                     <path d="M10 22h4" />
-                  </svg>
-                  {getLandingTranslations(language).ideas}
-                </button>
-                </div>
+                            </svg>
+                  <span className="relative z-10">{getLandingTranslations(language).ideas}</span>
+                        </button>
+                      </div>
                 {isAnonymous && <LeaderboardEmbed />}
               </div>
             )}
@@ -4724,7 +4728,7 @@ export default function ChatPage() {
                     Send
                   </>
                 )}
-              </button>
+                </button>
               </div>
           </div>
           )}
@@ -4882,7 +4886,7 @@ export default function ChatPage() {
                     ? "max-w-[min(94vw,880px)]"
                     : libraryPanelOpen === "habits"
                       ? "max-w-[min(94vw,720px)]"
-                      : "max-w-[min(94vw,608px)]"
+                  : "max-w-[min(94vw,608px)]"
               }`}
               data-tour="library-modal"
             role="dialog"
@@ -5174,22 +5178,22 @@ export default function ChatPage() {
                               </svg>
                             </button>
                           ) : (
-                            <button
-                              type="button"
-                              onClick={(e) => { e.stopPropagation(); e.preventDefault(); toggleMmFavorite(id); }}
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); e.preventDefault(); toggleMmFavorite(id); }}
                               className="absolute top-3 right-3 z-10 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors touch-manipulation"
-                              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-                            >
-                              {isFavorite ? (
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden>
-                                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                                </svg>
-                              ) : (
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4 text-neutral-400 dark:text-neutral-500" aria-hidden>
-                                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                                </svg>
-                              )}
-                            </button>
+                            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+                          >
+                            {isFavorite ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden>
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                              </svg>
+                            ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4 text-neutral-400 dark:text-neutral-500" aria-hidden>
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                              </svg>
+                            )}
+                          </button>
                           )}
                           <div
                             role="button"
@@ -5708,8 +5712,8 @@ export default function ChatPage() {
                           onKeyDown={(e) => e.key === "Enter" && setHabitDetailModal(h)}
                           className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]"
                         >
-                          <button
-                            type="button"
+                            <button
+                              type="button"
                             onClick={(e) => {
                               e.stopPropagation();
                               e.preventDefault();
@@ -5722,7 +5726,7 @@ export default function ChatPage() {
                               <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
                               <path d="M10 11v6M14 11v6" />
                             </svg>
-                          </button>
+                            </button>
                           <div className="flex-1 min-w-0 pr-10">
                             <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
                             <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{h.description}</p>
@@ -5772,7 +5776,7 @@ export default function ChatPage() {
                         {cat.name}
                       </button>
                     ))}
-                  </div>
+              </div>
                   {figuresLoading ? (
                     <p className="text-xs text-neutral-500 dark:text-neutral-400">Loading figures…</p>
                   ) : !figuresData ? (
@@ -5836,18 +5840,18 @@ export default function ChatPage() {
                               <div className="flex-1 min-w-0 pr-10">
                                 <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{f.name}</span>
                                 <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-3">{f.description}</p>
-                              </div>
-                            </div>
+          </div>
+            </div>
                           );
                         })}
-                      </div>
+            </div>
                     );
                   })()}
-                </div>
+          </div>
               )}
               </div>
-            </div>
           </div>
+        </div>
         </>
       )}
 
