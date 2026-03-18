@@ -3,7 +3,7 @@
 
 domains:
   art:
-    name: Modi di guardare l'arte
+    name: Arte
     description: |
       Carte per cambiare la tua prospettiva quando guardi l'arte. Ognuna offre una diversa
       lente—dalla luce e ombra alle introduzioni e all'emozione—per approfondire come vedi
@@ -38,7 +38,7 @@ domains:
       scala, impollinatori, geologia, meteo e lo spettacolo fugace della fioritura.
 decks:
   - id: ways_of_looking_at_art
-    name: Modi di guardare l'arte
+    name: Arte
     path: perspective-decks/ways-of-looking-at-art.yaml
     description: |
       50 carte per cambiare la tua prospettiva quando guardi l'arte. Ogni carta offre una

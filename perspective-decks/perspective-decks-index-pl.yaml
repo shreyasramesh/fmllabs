@@ -3,7 +3,7 @@
 
 domains:
   art:
-    name: Sposoby patrzenia na sztukę
+    name: Sztuka
     description: |
       Karty, które zmieniają perspektywę podczas oglądania sztuki. Każda oferuje
       inny punkt widzenia – od światła i cienia, po wprowadzenia i emocje –
@@ -38,7 +38,7 @@ domains:
       skali, zapylaczach, geologii, pogodzie i ulotnym widowisku kwitnienia.
 decks:
   - id: ways_of_looking_at_art
-    name: Sposoby patrzenia na sztukę
+    name: Sztuka
     path: perspective-decks/ways-of-looking-at-art.yaml
     description: |
       50 kart, które zmieniają perspektywę podczas oglądania sztuki. Każda karta oferuje

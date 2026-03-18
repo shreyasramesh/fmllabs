@@ -36,6 +36,7 @@ import { AIGenerateIcon, GenerateRelevantMessageButton, GhostIcon, SparklesIcon,
 import { getModalTranslations } from "@/lib/mental-model-modal-translations";
 import { getMentionTranslations } from "@/lib/mention-translations";
 import { getLandingTranslations } from "@/lib/landing-translations";
+import { APP_VERSION } from "@/lib/version";
 import { getUiTranslations } from "@/lib/ui-translations";
 import { playSelectionChime } from "@/lib/selection-chime";
 import { stripMarkdown } from "@/lib/strip-markdown";
@@ -1398,7 +1399,7 @@ const PROMPT_LENSES_BY_LANGUAGE: Partial<
       prompt:
         "Pick something out from what you are looking at and hide it in the next thing you examine. What changes when you carry this detail forward?",
       domain: "Art",
-      subdomain: "Ways of Looking at Art",
+      subdomain: "Art",
     },
     {
       name: "Vertical City",
@@ -1440,7 +1441,7 @@ const PROMPT_LENSES_BY_LANGUAGE: Partial<
       prompt:
         "Remove color and focus only on light and dark. Where is the strongest contrast, and how does that change what feels important?",
       domain: "Art",
-      subdomain: "Ways of Looking at Art",
+      subdomain: "Art",
     },
     {
       name: "Subway Soundscape",
@@ -2688,7 +2689,6 @@ export default function ChatPage() {
   const [deleteAllDataModalOpen, setDeleteAllDataModalOpen] = useState(false);
   const [deleteAllDataConfirmInput, setDeleteAllDataConfirmInput] = useState("");
   const [deleteAllDataLoading, setDeleteAllDataLoading] = useState(false);
-  const [conversationsCollapsed, setConversationsCollapsed] = useState(false);
   const [selectedMentalModel, setSelectedMentalModel] =
     useState<MentalModel | null>(null);
   const [drawnPerspectiveCard, setDrawnPerspectiveCard] = useState<{
@@ -3543,7 +3543,7 @@ export default function ChatPage() {
           {/* Primary nav - Claude.ai pill style; icon-only when collapsed (Browser Use style) */}
           <nav className={`flex flex-col gap-0.5 shrink-0 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 ${sidebarOpen ? "mb-4" : ""}`} aria-label="Select view" data-tour="sidebar-nav">
             {[
-              { id: "conversations" as const, label: getUiTranslations(language).conversations, icon: "chat", onClick: () => { playSelectionChime(); setLibraryPanelOpen("conversations"); setConversationsCollapsed(false); } },
+              { id: "conversations" as const, label: getUiTranslations(language).conversations, icon: "chat", onClick: () => { playSelectionChime(); setLibraryPanelOpen("conversations"); } },
               { id: "nuggets" as const, label: getUiTranslations(language).nuggets, icon: "nuggets", onClick: () => { playSelectionChime(); setLibraryPanelOpen("nuggets"); } },
               { id: "cc" as const, label: getUiTranslations(language).concepts, icon: "concepts", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cc"); } },
               { id: "concepts" as const, label: getUiTranslations(language).mentalModels, icon: "models", onClick: () => { playSelectionChime(); setLibraryPanelOpen("concepts"); } },
@@ -3626,153 +3626,6 @@ export default function ChatPage() {
             </button>
           </div>
 
-          {sidebarOpen && (
-          <>
-          <button
-            type="button"
-            onClick={() => setConversationsCollapsed(!conversationsCollapsed)}
-            className="flex items-center justify-between w-full px-3 py-1.5 mt-2 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors shrink-0"
-          >
-            Recents
-            <span className="text-[10px] transition-transform" aria-hidden>
-              {conversationsCollapsed ? "▶" : "▼"}
-            </span>
-          </button>
-          {!conversationsCollapsed && (
-            <>
-            <div className="relative mb-2">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none">
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-              </svg>
-            <input
-              type="search"
-                placeholder="Search"
-              value={sessionSearchQuery}
-              onChange={(e) => setSessionSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-1.5 text-[13px] rounded-lg border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-foreground placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 shrink-0"
-              aria-label="Search conversations"
-            />
-            </div>
-            <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-0">
-              {filteredSessions.length === 0 ? (
-                <div className="px-3 py-1.5 space-y-0.5">
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                    {sessionSearchQuery ? getLandingTranslations(language).noConversationsMatch : getLandingTranslations(language).noConversationsYet}
-                  </p>
-                  {!sessionSearchQuery && (
-                    <p className="text-[11px] text-neutral-400 dark:text-neutral-500">
-                      {getLandingTranslations(language).readyToConversation}
-                    </p>
-                  )}
-                </div>
-              ) : (
-              filteredSessions.map((s) => (
-                <div
-                  key={s._id}
-                  className={`group flex flex-col gap-0 rounded-2xl border bg-white dark:bg-neutral-900 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 ${
-                    currentSessionId === s._id
-                      ? "border-neutral-300 dark:border-neutral-600"
-                      : "border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-500"
-                  }`}
-                >
-                  <div className="flex items-center gap-1 min-w-0">
-                    <Link
-                      href={`/chat/${s._id}`}
-                      className={`flex-1 min-w-0 flex items-center gap-2 py-1.5 px-2.5 truncate text-[13px] ${
-                      currentSessionId === s._id ? "font-medium text-foreground" : "text-neutral-800 dark:text-neutral-200"
-                    }`}
-                    >
-                      <span className="flex-1 min-w-0">
-                        <span className="block truncate">{s.title || getLandingTranslations(language).newConversation}</span>
-                        {s.updatedAt && (
-                          <span className="block text-[11px] text-neutral-500 dark:text-neutral-400 font-normal mt-0.5">
-                            {formatRelativeTime(s.updatedAt)}
-                          </span>
-                        )}
-                      </span>
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-neutral-400 shrink-0 flex-shrink-0">
-                        <path d="M9 18l6-6-6-6" />
-                      </svg>
-                    </Link>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setDeleteSessionConfirmModal(s);
-                    }}
-                    className="p-1 rounded opacity-50 hover:opacity-100 group-hover:opacity-100 text-neutral-500 hover:text-red-600 dark:hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 active:scale-95 shrink-0"
-                    aria-label={getLandingTranslations(language).deleteConversation}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="w-4 h-4"
-                    >
-                      <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
-                      <path d="M10 11v6M14 11v6" />
-                    </svg>
-                  </button>
-                  </div>
-                  {s.mentalModelTags && s.mentalModelTags.length > 0 &&
-                    !hiddenTagsSessions.has(s._id) && (
-                    <div className="flex flex-wrap items-center gap-1.5 px-3 pb-1">
-                      <div className="flex flex-wrap gap-1">
-                        {s.mentalModelTags.map((id) => (
-                          <button
-                            key={id}
-                            type="button"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleMentalModelClick(id);
-                            }}
-                            className="inline-flex px-2 py-0.5 rounded-lg text-[9px] font-medium bg-neutral-200 dark:bg-neutral-600 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-500 transition-all duration-200 active:scale-95"
-                          >
-                            {mentalModelsIndex.get(id) ?? id.replace(/_/g, " ")}
-                          </button>
-                        ))}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          toggleTagsHidden(s._id);
-                        }}
-                        className="text-[9px] text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 underline-offset-2 hover:underline"
-                      >
-                        Hide tags
-                      </button>
-                    </div>
-                  )}
-                  {s.mentalModelTags && s.mentalModelTags.length > 0 &&
-                    hiddenTagsSessions.has(s._id) && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        toggleTagsHidden(s._id);
-                      }}
-                      className="px-3 pb-1 text-left text-[9px] text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-400"
-                    >
-                      Show {s.mentalModelTags.length} tags
-                    </button>
-                  )}
-                </div>
-              ))
-              )}
-            </nav>
-            </>
-          )}
-          </>
-          )}
         </div>
         {/* Accounts section - bottom of left panel (Browser Use style) */}
         <div className="mt-auto shrink-0 px-2 py-3 border-t border-neutral-200/80 dark:border-neutral-800">
@@ -3781,8 +3634,10 @@ export default function ChatPage() {
                 role="button"
                 tabIndex={0}
                 aria-label="Account menu"
-                className={`flex items-center gap-2 min-w-0 rounded-xl border-[0.75px] border-neutral-200 dark:border-white/12 hover:border-neutral-300 dark:hover:border-white/18 px-2 py-2 w-full transition-colors cursor-pointer ${
-                  sidebarOpen ? "" : "justify-center lg:px-2"
+                className={`flex items-center gap-2 min-w-0 rounded-xl border-[0.75px] px-2 py-2 w-full transition-colors cursor-pointer ${
+                  sidebarOpen
+                    ? "border-neutral-200 dark:border-white/12 hover:border-neutral-300 dark:hover:border-white/18"
+                    : "border-neutral-200 dark:border-transparent hover:border-neutral-300 dark:hover:border-transparent justify-center lg:px-2"
                 }`}
                 onClick={(e) => {
                   const trigger = (e.currentTarget as HTMLElement).querySelector("button");
@@ -3934,6 +3789,9 @@ export default function ChatPage() {
                 Privacy Policy
               </Link>
             </div>
+            <p className="mt-1.5 text-[10px] text-neutral-500 dark:text-neutral-400">
+              v{APP_VERSION}
+            </p>
           </div>
         </div>
         )}
@@ -4485,7 +4343,7 @@ export default function ChatPage() {
             </Link>
           </p>
         )}
-        {/* Bottom bar - fixed on mobile so it stays visible when scrolling. Hidden during onboarding or when empty (input is in centered content on new conversation page). */}
+        {/* Bottom bar - fixed on mobile when scrolling. Shown only for ongoing conversations; new conversation uses centered input. */}
         <div className={`fixed inset-x-0 bottom-0 z-30 flex flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background ${messages.length === 0 ? "hidden" : ""}`}>
           {!isAnonymous && messages.length >= 2 && (!currentSession || !currentSession.isCollapsed) && (
             <div className="px-4 pt-1 pb-0.5 sm:pt-1.5 sm:pb-1">
@@ -6595,7 +6453,8 @@ export default function ChatPage() {
                       ))}
                     </div>
                   </div>
-                  {!isAnonymous && (
+                  {/* Voice cloning hidden - feature kept for future use. Change false to !isAnonymous to re-enable. */}
+                  {false && (
                     <div className="mt-5">
                       <label className="block text-sm font-medium text-foreground mb-2">Personalized Reflection Voice</label>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">
@@ -9270,7 +9129,7 @@ export default function ChatPage() {
         />
       )}
 
-      {/* Prompt Games - dedicated modal with category selection and gallery-style browsing */}
+      {/* Ways of Looking At - dedicated modal with category selection and gallery-style browsing */}
       {waysOfLookingAtModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"

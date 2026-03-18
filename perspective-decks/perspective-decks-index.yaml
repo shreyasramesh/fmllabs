@@ -4,7 +4,7 @@
 
 domains:
   art:
-    name: Ways of Looking at Art
+    name: Art
     description: |
       Cards to shift your perspective when viewing art. Each offers a different
       lens—from light and shadow to introductions and emotion—to deepen how you
@@ -40,7 +40,7 @@ domains:
 
 decks:
   - id: ways_of_looking_at_art
-    name: Ways of Looking at Art
+    name: Art
     path: perspective-decks/ways-of-looking-at-art.yaml
     description: |
       50 cards to shift your perspective when viewing art. Each card offers a

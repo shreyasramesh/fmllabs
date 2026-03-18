@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getUserSettings } from "@/lib/db";
+import { recordUsageEvent, computeTtsCostFromDurationSeconds } from "@/lib/usage";
 import { isValidLanguageCode, type LanguageCode } from "@/lib/languages";
 import { getVoiceIdForLanguage, getLanguageCodeForTts } from "@/lib/tts-voices";
 
@@ -78,6 +79,19 @@ export async function POST(request: Request) {
         { status: 502 }
       );
     }
+
+    const endTimes = alignment.character_end_times_seconds as number[] | undefined;
+    const durationSeconds = Array.isArray(endTimes) && endTimes.length > 0
+      ? endTimes[endTimes.length - 1]
+      : text.length / 900 * 60;
+    const costUsd = computeTtsCostFromDurationSeconds(durationSeconds);
+    await recordUsageEvent({
+      userId: userId ?? null,
+      service: "elevenlabs_tts",
+      eventType: "tts_with_timestamps",
+      costUsd,
+      metadata: { charCount: text.length, durationSeconds },
+    });
 
     return NextResponse.json({
       audio_base64,

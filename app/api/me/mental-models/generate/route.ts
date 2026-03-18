@@ -24,7 +24,8 @@ export async function POST(request: Request) {
     const languageName = getLanguageName(languageCode);
     const result = await generateMentalModelFromUserInput(
       userInput.trim(),
-      languageName
+      languageName,
+      { userId, eventType: "generate_mental_model" }
     );
     return NextResponse.json(result);
   } catch (err) {

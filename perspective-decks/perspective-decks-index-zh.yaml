@@ -3,7 +3,7 @@
 
 domains:
   art:
-    name: 观赏艺术的方式
+    name: 艺术
     description: |
       用于转变您在观看艺术时的视角的卡片。每张卡片提供一个不同的视角——
       从光影到介绍和情感——以加深您如何看待和欣赏艺术作品。
@@ -33,7 +33,7 @@ domains:
       以及花期转瞬即逝的奇观。
 decks:
   - id: ways_of_looking_at_art
-    name: 观赏艺术的方式
+    name: 艺术
     path: perspective-decks/ways-of-looking-at-art.yaml
     description: |
       50 张卡片，用于转变您在观看艺术时的视角。每张卡片提供一个不同的视角——

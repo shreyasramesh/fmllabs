@@ -3,7 +3,7 @@
 
 domains:
   art:
-    name: Manieren om naar Kunst te Kijken
+    name: Kunst
     description: |
       Kaarten om je perspectief te verschuiven bij het bekijken van kunst. Elk biedt een ander
       perspectief - van licht en schaduw tot introducties en emotie - om te verdiepen hoe je
@@ -38,7 +38,7 @@ domains:
       schaal, bestuivers, geologie, weer, en het vluchtige spektakel van de bloei.
 decks:
   - id: ways_of_looking_at_art
-    name: Manieren om naar Kunst te Kijken
+    name: Kunst
     path: perspective-decks/ways-of-looking-at-art.yaml
     description: |
       50 kaarten om je perspectief te verschuiven bij het bekijken van kunst. Elke kaart biedt een

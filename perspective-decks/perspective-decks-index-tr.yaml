@@ -3,7 +3,7 @@
 
 domains:
   art:
-    name: Sanata Bakış Açıları
+    name: Sanat
     description: |
       Sanat eserlerini incelerken bakış açınızı değiştirecek kartlar. Her biri
       ışık ve gölgeden girişlere ve duyguya kadar farklı bir mercek sunar—
@@ -40,7 +40,7 @@ domains:
       gösterisine odaklanır.
 decks:
   - id: ways_of_looking_at_art
-    name: Sanata Bakış Açıları
+    name: Sanat
     path: perspective-decks/ways-of-looking-at-art.yaml
     description: |
       Sanat eserlerini incelerken bakış açınızı değiştirecek 50 kart. Her kart

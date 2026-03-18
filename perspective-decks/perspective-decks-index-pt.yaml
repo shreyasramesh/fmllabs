@@ -3,7 +3,7 @@
 
 domains:
   art:
-    name: Maneiras de Olhar Arte
+    name: Arte
     description: |
       Cartas para mudar sua perspectiva ao visualizar arte. Cada uma oferece uma
       lente diferente — de luz e sombra a introduções e emoção — para aprofundar como você
@@ -38,7 +38,7 @@ domains:
       escala, polinizadores, geologia, clima e o espetáculo fugaz da floração.
 decks:
   - id: ways_of_looking_at_art
-    name: Maneiras de Olhar Arte
+    name: Arte
     path: perspective-decks/ways-of-looking-at-art.yaml
     description: |
       50 cartas para mudar sua perspectiva ao visualizar arte. Cada carta oferece uma

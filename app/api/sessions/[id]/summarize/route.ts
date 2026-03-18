@@ -9,6 +9,7 @@ import {
   updateSession,
 } from "@/lib/db";
 import { generateSummaryAndEnrichment } from "@/lib/gemini";
+import { recordMongoUsageRequest } from "@/lib/usage";
 import { getLanguageName, isValidLanguageCode } from "@/lib/languages";
 
 export async function POST(
@@ -38,6 +39,8 @@ export async function POST(
       );
     }
 
+    recordMongoUsageRequest(userId).catch(() => {});
+
     const messagesForSummary = messages.map((m) => {
       const base = { role: m.role, content: m.content };
       if (m.role === "user" && "journalCheckpoint" in m && m.journalCheckpoint) {
@@ -55,7 +58,10 @@ export async function POST(
     const languageName = getLanguageName(languageCode);
 
     const { summary, enrichmentPrompt: generatedEnrichment, chainOfThought } =
-      await generateSummaryAndEnrichment(messagesForSummary, languageName);
+      await generateSummaryAndEnrichment(messagesForSummary, languageName, {
+        userId,
+        eventType: "summarize",
+      });
     const enrichmentPrompt =
       typeof userEnrichmentPrompt === "string" && userEnrichmentPrompt.trim()
         ? userEnrichmentPrompt.trim()

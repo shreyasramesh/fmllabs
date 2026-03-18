@@ -7,6 +7,7 @@ import {
   saveTranscript,
   updateTranscriptExtractedConcepts,
 } from "@/lib/db";
+import { recordUsageEvent, computeTranscribrCost, recordMongoUsageRequest } from "@/lib/usage";
 
 function extractVideoId(urlOrId: string): string | null {
   const trimmed = urlOrId.trim();
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const apiKey = process.env.TRANSCRIBR_API_KEY?.trim();
+  recordMongoUsageRequest(userId).catch(() => {});
   try {
     const body = await request.json().catch(() => ({}));
     const transcriptId = typeof body.transcriptId === "string" ? body.transcriptId.trim() : null;
@@ -115,6 +117,13 @@ export async function POST(request: Request) {
 
       const saved = await saveTranscript(userId, videoId, transcriptText, videoTitle ?? undefined, channel ?? undefined);
       savedTranscriptId = saved._id;
+      await recordUsageEvent({
+        userId,
+        service: "transcribr",
+        eventType: "transcript_fetch",
+        costUsd: computeTranscribrCost(),
+        metadata: { videoId },
+      });
     }
 
     const { groups } = await generateConceptsFromTranscript(
@@ -122,7 +131,8 @@ export async function POST(request: Request) {
       videoTitle ?? undefined,
       channel ?? undefined,
       languageName,
-      extractPrompt || undefined
+      extractPrompt || undefined,
+      { userId, eventType: "from_youtube" }
     );
 
     if (savedTranscriptId) {

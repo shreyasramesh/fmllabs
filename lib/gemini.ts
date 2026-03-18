@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { recordUsageEvent, computeGeminiCost } from "@/lib/usage";
 
 const apiKey = process.env.GEMINI_API_KEY?.trim();
 if (!apiKey) {
@@ -26,6 +27,24 @@ function prettyJsonIfPossible(content: string): string {
   }
 }
 
+function recordGeminiUsageFromResult(
+  result: { response: { usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } } },
+  usageContext: { userId: string | null; eventType: string }
+): void {
+  const um = result.response.usageMetadata;
+  if (!um || (um.promptTokenCount ?? 0) === 0) return;
+  const inputTokens = um.promptTokenCount ?? 0;
+  const outputTokens = um.candidatesTokenCount ?? 0;
+  const costUsd = computeGeminiCost(inputTokens, outputTokens);
+  recordUsageEvent({
+    userId: usageContext.userId,
+    service: "gemini",
+    eventType: usageContext.eventType,
+    costUsd,
+    metadata: { inputTokens, outputTokens },
+  }).catch((e) => console.error("Gemini usage recording failed:", e));
+}
+
 export function getModel(systemInstruction?: string) {
   return genAI.getGenerativeModel({
     model: MODEL,
@@ -33,9 +52,14 @@ export function getModel(systemInstruction?: string) {
   });
 }
 
+export interface StreamGenerateContentOptions {
+  onUsage?: (inputTokens: number, outputTokens: number) => void;
+}
+
 export async function* streamGenerateContent(
   systemPrompt: string,
-  messages: { role: "user" | "assistant"; content: string }[]
+  messages: { role: "user" | "assistant"; content: string }[],
+  options?: StreamGenerateContentOptions
 ) {
   const model = getModel(systemPrompt);
 
@@ -54,15 +78,32 @@ export async function* streamGenerateContent(
   const result = await chat.sendMessageStream(lastMessage.content);
   const stream = result.stream;
 
+  let lastUsage: { promptTokenCount: number; candidatesTokenCount: number } | null = null;
   for await (const chunk of stream) {
+    const um = (chunk as { usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } }).usageMetadata;
+    if (um && (um.promptTokenCount ?? 0) > 0) {
+      lastUsage = {
+        promptTokenCount: um.promptTokenCount ?? 0,
+        candidatesTokenCount: um.candidatesTokenCount ?? 0,
+      };
+    }
     const text = chunk.text();
     if (text) yield text;
   }
+  if (options?.onUsage && lastUsage) {
+    options.onUsage(lastUsage.promptTokenCount, lastUsage.candidatesTokenCount);
+  }
+}
+
+export interface GeminiUsageContext {
+  userId: string | null;
+  eventType: string;
 }
 
 export async function generateSummaryAndEnrichment(
   messages: { role: string; content: string }[],
-  languageName?: string
+  languageName?: string,
+  usageContext?: GeminiUsageContext
 ): Promise<{ summary: string; enrichmentPrompt: string; chainOfThought: string[] }> {
   const conversation = messages
     .map((m) => `${m.role}: ${m.content}`)
@@ -96,6 +137,7 @@ ${conversation}`
   const chainOfThought = Array.isArray(parsed.chainOfThought)
     ? parsed.chainOfThought.filter((s): s is string => typeof s === "string")
     : [];
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
   return {
     summary: parsed.summary ?? "",
     enrichmentPrompt: parsed.enrichmentPrompt ?? "",
@@ -105,7 +147,8 @@ ${conversation}`
 
 export async function generateJournalCheckpointSuggestion(
   messages: { role: string; content: string }[],
-  languageName?: string
+  languageName?: string,
+  usageContext?: GeminiUsageContext
 ): Promise<{ prompt: string; options: string[] }> {
   const conversation = messages
     .slice(-16)
@@ -147,6 +190,7 @@ ${conversation}`
         .filter((opt) => opt.length > 0)
         .slice(0, 6)
     : [];
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
   return {
     prompt: (parsed.prompt ?? "I want to remember _____").trim(),
     options,
@@ -155,7 +199,8 @@ ${conversation}`
 
 export async function generateConceptFromUserInput(
   userInput: string,
-  languageName?: string
+  languageName?: string,
+  usageContext?: GeminiUsageContext
 ): Promise<{ title: string; summary: string; enrichmentPrompt: string }> {
   const languageInstruction =
     languageName && languageName !== "English"
@@ -181,6 +226,7 @@ ${userInput}`
     summary?: string;
     enrichmentPrompt?: string;
   };
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
   return {
     title: parsed.title ?? "Custom concept",
     summary: parsed.summary ?? "",
@@ -208,7 +254,8 @@ export interface GeneratedMentalModel {
 
 export async function generateMentalModelFromUserInput(
   userInput: string,
-  languageName?: string
+  languageName?: string,
+  usageContext?: GeminiUsageContext
 ): Promise<GeneratedMentalModel> {
   const languageInstruction =
     languageName && languageName !== "English"
@@ -258,6 +305,7 @@ ${userInput}`
   };
   const whenToUse = ensureArray(parsed.when_to_use);
   if (!whenToUse.includes("custom")) whenToUse.unshift("custom");
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
   return {
     name: ensureString(parsed.name) || "Custom mental model",
     quick_introduction: ensureString(parsed.quick_introduction),
@@ -296,7 +344,7 @@ export async function generatePerspectiveCardFromTopic(
       : "";
   const model = getModel();
   const result = await model.generateContent(
-    `You are creating a perspective card—a lens designed to shift how someone looks at something. Perspective cards invite the user to see differently, ask unexpected questions, or notice what they might have missed. They are used in "Prompt Games" to spark reflective conversations.
+    `You are creating a perspective card—a lens designed to shift how someone looks at something. Perspective cards invite the user to see differently, ask unexpected questions, or notice what they might have missed. They are used in "Ways of Looking At" to spark reflective conversations.
 
 Given the user's topic, create ONE perspective card that would help them explore it through a fresh lens. The card should invite curiosity and discovery, not lecture or summarize.
 
@@ -358,7 +406,8 @@ export async function generateConceptsFromTranscript(
   videoTitle?: string,
   channel?: string,
   languageName?: string,
-  extractPrompt?: string
+  extractPrompt?: string,
+  usageContext?: GeminiUsageContext
 ): Promise<{
   groups: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
 }> {
@@ -401,6 +450,7 @@ If a concept doesn't fit a clear domain, use "General" or infer from context. Me
 Return ONLY valid JSON, no markdown or extra text.
 Example: {"groups":[{"domain":"Psychology","concepts":[{"title":"...","summary":"...","enrichmentPrompt":"..."}]}]}`
   );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
   const text = result.response.text().trim();
   const cleaned = text.replace(/^```json\s*/i, "").replace(/\s*```\s*$/i, "").trim();
   const parsed = JSON.parse(cleaned) as {
@@ -595,7 +645,8 @@ export async function predictRelevantContext(
   mentalModels: { id: string; name: string; oneLiner: string }[],
   longTermMemories: { id: string; enrichmentPrompt: string; title?: string }[],
   customConcepts: { id: string; enrichmentPrompt: string; title?: string }[] = [],
-  conceptGroups: { id: string; title: string; enrichmentPrompts: string[] }[] = []
+  conceptGroups: { id: string; title: string; enrichmentPrompts: string[] }[] = [],
+  usageContext?: GeminiUsageContext
 ): Promise<RelevantContextResult> {
   const historyText = conversationHistory
     .slice(-6)
@@ -654,6 +705,7 @@ Return ONLY valid JSON. Do not include markdown formatting blocks (\`\`\`json) o
 
   const model = getModel();
   const result = await model.generateContent(prompt);
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
   const text = result.response.text().trim();
 
   if (process.env.NODE_ENV === "development") {
@@ -801,7 +853,8 @@ Return ONLY valid JSON, no markdown, no extra text:
 }
 
 export async function generateTitle(
-  messages: { role: string; content: string }[]
+  messages: { role: string; content: string }[],
+  usageContext?: GeminiUsageContext
 ): Promise<string> {
   const summary = messages
     .slice(0, 6)
@@ -811,6 +864,7 @@ export async function generateTitle(
   const result = await model.generateContent(
     `Based on this conversation, generate a short 3-6 word title. Return ONLY the title, no quotes or punctuation.\n\nConversation:\n${summary}`
   );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
   const text = result.response.text();
   return text.trim().slice(0, 60) || "Conversation";
 }

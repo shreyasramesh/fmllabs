@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getUserSettings } from "@/lib/db";
+import { recordUsageEvent, computeTtsCost } from "@/lib/usage";
 import { isValidLanguageCode, type LanguageCode } from "@/lib/languages";
 import { getVoiceIdForLanguage, getLanguageCodeForTts } from "@/lib/tts-voices";
 
@@ -71,6 +72,14 @@ export async function POST(request: Request) {
     }
 
     const audio = await res.arrayBuffer();
+    const costUsd = computeTtsCost(text.length);
+    await recordUsageEvent({
+      userId: userId ?? null,
+      service: "elevenlabs_tts",
+      eventType: "tts",
+      costUsd,
+      metadata: { charCount: text.length },
+    });
     return new NextResponse(audio, {
       headers: {
         "Content-Type": "audio/mpeg",

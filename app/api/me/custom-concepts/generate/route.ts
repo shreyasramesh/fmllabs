@@ -21,7 +21,10 @@ export async function POST(request: Request) {
       ? body.language
       : "en";
     const languageName = getLanguageName(languageCode);
-    const result = await generateConceptFromUserInput(userInput.trim(), languageName);
+    const result = await generateConceptFromUserInput(userInput.trim(), languageName, {
+      userId,
+      eventType: "generate_concept",
+    });
     return NextResponse.json(result);
   } catch (err) {
     console.error("Failed to generate custom concept:", err);

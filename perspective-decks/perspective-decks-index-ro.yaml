@@ -3,7 +3,7 @@
 
 domains:
   art:
-    name: Căi de a Privi Arta
+    name: Artă
     description: |
       Cărți pentru a-ți schimba perspectiva atunci când privești arta. Fiecare oferă o lentilă diferită – de la lumină și umbră la introduceri și emoție – pentru a aprofunda modul în care vezi și interacționezi cu operele de artă.
   urban_jungle:
@@ -28,7 +28,7 @@ domains:
       Explozia efemeră de flori sălbatice după ploaia de iarnă. Cărțile se concentrează pe culoare, scară, polenizatori, geologie, vreme și spectacolul trecător al înfloririi.
 decks:
   - id: ways_of_looking_at_art
-    name: Căi de a Privi Arta
+    name: Artă
     path: perspective-decks/ways-of-looking-at-art.yaml
     description: |
       50 de cărți pentru a-ți schimba perspectiva atunci când privești arta. Fiecare carte oferă o lentilă diferită – de la lumină și umbră la introduceri și emoție – pentru a aprofunda modul în care vezi și interacționezi cu operele de artă.

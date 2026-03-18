@@ -86,6 +86,7 @@ async function startElevenLabsStt(
     audio_format: audioFormat,
   });
 
+  const sessionStartMs = Date.now();
   const ws = new WebSocket(`${ELEVENLABS_WS_URL}?${params}`);
   let resolveCommitWait: (() => void) | null = null;
 
@@ -94,6 +95,14 @@ async function startElevenLabsStt(
   const cleanup = () => {
     if (cleaned) return;
     cleaned = true;
+    const durationSeconds = (Date.now() - sessionStartMs) / 1000;
+    if (durationSeconds > 0) {
+      fetch("/api/me/usage/stt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ durationSeconds }),
+      }).catch(() => {});
+    }
     onOrbNodesChange?.(null);
     cleanupFns.forEach((fn) => fn());
     ws.close();

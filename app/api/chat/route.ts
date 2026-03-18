@@ -35,6 +35,7 @@ import {
   isValidUserTypeId,
   type UserTypeId,
 } from "@/lib/user-types";
+import { recordUsageEvent, computeGeminiCost, recordMongoUsageRequest } from "@/lib/usage";
 
 const SYSTEM_PROMPT = `You are an empathetic confidant, anxiety-relief guide, and wise friend. Your role is to help users talk through their anxieties by providing grounding facts, validating their emotions, and gently helping them find clarity and calm.
 
@@ -253,6 +254,8 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
+
+  recordMongoUsageRequest(userId ?? null).catch(() => {});
 
   let messagesForModel: { role: "user" | "assistant"; content: string }[];
   let ltmEnrichmentWithIds: { id: string; enrichmentPrompt: string; title?: string }[] = [];
@@ -485,7 +488,8 @@ export async function POST(request: Request) {
     mentalModelCandidates,
     ltmEnrichmentWithIds,
     ccEnrichmentWithIds,
-    conceptGroupEnrichment
+    conceptGroupEnrichment,
+    { userId: userId ?? null, eventType: "predict_relevant_context" }
   ).catch((e) => {
     console.error("predictRelevantContext failed:", e);
     return {
@@ -738,7 +742,19 @@ export async function POST(request: Request) {
           controller.enqueue(encoder.encode(contextBlockForStream));
           for await (const chunk of streamGenerateContent(
             systemPromptForGemini,
-            messagesForGemini
+            messagesForGemini,
+            {
+              onUsage: (inputTokens, outputTokens) => {
+                const costUsd = computeGeminiCost(inputTokens, outputTokens);
+                recordUsageEvent({
+                  userId: userId ?? null,
+                  service: "gemini",
+                  eventType: "chat",
+                  costUsd,
+                  metadata: { inputTokens, outputTokens },
+                }).catch((e) => console.error("Gemini usage recording failed:", e));
+              },
+            }
           )) {
             fullResponse += chunk;
             controller.enqueue(encoder.encode(chunk));
@@ -794,7 +810,7 @@ export async function POST(request: Request) {
               { role: "assistant", content: fullResponse },
             ];
             const mentalModelTags = extractMentalModelIdsFromMessages(allMessages);
-            generateTitle(allMessages)
+            generateTitle(allMessages, { userId, eventType: "generate_title" })
               .then((title) =>
                 updateSession(sessionId, userId, { title, mentalModelTags })
               )

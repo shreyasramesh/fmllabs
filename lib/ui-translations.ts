@@ -23,7 +23,7 @@ const EN: UiTranslations = {
   settings: "Settings",
   close: "Close",
   cancel: "Cancel",
-  promptGames: "Prompt Games",
+  promptGames: "Ways of Looking At",
 };
 
 const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
@@ -38,7 +38,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
     settings: "सेटिंग्स",
     close: "बंद करें",
     cancel: "रद्द करें",
-    promptGames: "प्रॉम्प्ट गेम्स",
+    promptGames: "देखने के तरीके",
   },
   ta: {
     conversations: "உரையாடல்கள்",
@@ -50,7 +50,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
     settings: "அமைப்புகள்",
     close: "மூடு",
     cancel: "ரத்து",
-    promptGames: "ப்ராம்ப்ட் கேம்ஸ்",
+    promptGames: "பார்ப்பதற்கான வழிகள்",
   },
   kn: {
     conversations: "ಸಂಭಾಷಣೆಗಳು",
@@ -62,7 +62,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
     settings: "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
     close: "ಮುಚ್ಚಿ",
     cancel: "ರದ್ದು",
-    promptGames: "ಪ್ರಾಂಪ್ಟ್ ಗೇಮ್ಸ್",
+    promptGames: "ನೋಡುವ ವಿಧಾನಗಳು",
   },
   ja: {
     conversations: "会話",
@@ -74,7 +74,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
     settings: "設定",
     close: "閉じる",
     cancel: "キャンセル",
-    promptGames: "プロンプトゲーム",
+    promptGames: "見る視点",
   },
   zh: {
     conversations: "对话",
@@ -98,7 +98,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
     settings: "Ajustes",
     close: "Cerrar",
     cancel: "Cancelar",
-    promptGames: "Juegos de prompts",
+    promptGames: "Formas de mirar",
   },
   ar: {
     conversations: "المحادثات",
@@ -110,7 +110,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
     settings: "الإعدادات",
     close: "إغلاق",
     cancel: "إلغاء",
-    promptGames: "ألعاب التوجيه",
+    promptGames: "طرق النظر",
   },
   fr: {
     conversations: "Conversations",
@@ -134,7 +134,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
     settings: "সেটিংস",
     close: "বন্ধ করুন",
     cancel: "বাতিল",
-    promptGames: "প্রম্পট গেমস",
+    promptGames: "দেখার উপায়",
   },
   pt: {
     conversations: "Conversas",
@@ -146,7 +146,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
     settings: "Configurações",
     close: "Fechar",
     cancel: "Cancelar",
-    promptGames: "Jogos de prompts",
+    promptGames: "Formas de olhar",
   },
   ru: {
     conversations: "Разговоры",
@@ -158,7 +158,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
     settings: "Настройки",
     close: "Закрыть",
     cancel: "Отмена",
-    promptGames: "Игры с подсказками",
+    promptGames: "Способы взгляда",
   },
   ur: {
     conversations: "بات چیتیں",
@@ -182,7 +182,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
     settings: "Einstellungen",
     close: "Schließen",
     cancel: "Abbrechen",
-    promptGames: "Prompt-Spiele",
+    promptGames: "Wege des Betrachtens",
   },
   it: {
     conversations: "Conversazioni",
@@ -194,7 +194,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
     settings: "Impostazioni",
     close: "Chiudi",
     cancel: "Annulla",
-    promptGames: "Giochi di prompt",
+    promptGames: "Modi di guardare",
   },
   pl: {
     conversations: "Rozmowy",
@@ -218,7 +218,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
     settings: "Налаштування",
     close: "Закрити",
     cancel: "Скасувати",
-    promptGames: "Ігри з підказками",
+    promptGames: "Способи дивитися",
   },
   ro: {
     conversations: "Conversații",
@@ -230,7 +230,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
     settings: "Setări",
     close: "Închide",
     cancel: "Anulare",
-    promptGames: "Jocuri cu prompturi",
+    promptGames: "Moduri de a privi",
   },
   nl: {
     conversations: "Gesprekken",
@@ -242,7 +242,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
     settings: "Instellingen",
     close: "Sluiten",
     cancel: "Annuleren",
-    promptGames: "Prompt-spellen",
+    promptGames: "Manieren van kijken",
   },
   tr: {
     conversations: "Sohbetler",
@@ -254,7 +254,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
     settings: "Ayarlar",
     close: "Kapat",
     cancel: "İptal",
-    promptGames: "İpucu oyunları",
+    promptGames: "Bakış açıları",
   },
 };
 

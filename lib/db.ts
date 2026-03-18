@@ -221,6 +221,23 @@ interface UserMentalModelDoc extends Omit<UserMentalModel, "_id"> {
   _id: ObjectId;
 }
 
+export type UsageService =
+  | "transcribr"
+  | "mongodb"
+  | "gemini"
+  | "elevenlabs_tts"
+  | "elevenlabs_stt";
+
+export interface UsageEventDoc {
+  _id?: ObjectId;
+  userId: string | null;
+  service: UsageService;
+  eventType: string;
+  costUsd: number;
+  metadata: Record<string, unknown>;
+  timestamp: Date;
+}
+
 export async function getSessions(userId: string): Promise<(Session & { _id: string })[]> {
   const database = await getDb();
   const sessions = await database

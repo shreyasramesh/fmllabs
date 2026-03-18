@@ -3,7 +3,7 @@
 
 domains:
   art:
-    name: Wege, Kunst zu betrachten
+    name: Kunst
     description: |
       Karten, um Ihre Perspektive beim Betrachten von Kunst zu ändern. Jede bietet eine andere
       Linse – von Licht und Schatten bis hin zu Einführungen und Emotionen –, um zu vertiefen, wie Sie
@@ -38,7 +38,7 @@ domains:
       Größe, Bestäuber, Geologie, Wetter und das flüchtige Schauspiel der Blüte.
 decks:
   - id: ways_of_looking_at_art
-    name: Wege, Kunst zu betrachten
+    name: Kunst
     path: perspective-decks/ways-of-looking-at-art.yaml
     description: |
       50 Karten, um Ihre Perspektive beim Betrachten von Kunst zu ändern. Jede Karte bietet eine

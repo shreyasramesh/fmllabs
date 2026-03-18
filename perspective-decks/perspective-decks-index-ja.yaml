@@ -3,7 +3,7 @@
 
 domains:
   art:
-    name: アートの見方
+    name: アート
     description: |
       アート鑑賞の視点を変えるカード集。光と影、導入、感情など、
       さまざまなレンズを通して、作品をより深く見たり、関わったりするための
@@ -37,7 +37,7 @@ domains:
       焦点を当てたカードです。
 decks:
   - id: ways_of_looking_at_art
-    name: アートの見方
+    name: アート
     path: perspective-decks/ways-of-looking-at-art.yaml
     description: |
       アート鑑賞の視点を変える50枚のカード。各カードは、光と影、導入、感情など、

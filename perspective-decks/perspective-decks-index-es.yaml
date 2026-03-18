@@ -3,7 +3,7 @@
 
 domains:
   art:
-    name: Maneras de Ver el Arte
+    name: Arte
     description: |
       Tarjetas para cambiar tu perspectiva al ver arte. Cada una ofrece una lente
       diferente —desde la luz y la sombra hasta presentaciones y emoción— para
@@ -41,7 +41,7 @@ domains:
       geología, el clima y el efímero espectáculo de la floración.
 decks:
   - id: ways_of_looking_at_art
-    name: Maneras de Ver el Arte
+    name: Arte
     path: perspective-decks/ways-of-looking-at-art.yaml
     description: |
       50 tarjetas para cambiar tu perspectiva al ver arte. Cada tarjeta ofrece

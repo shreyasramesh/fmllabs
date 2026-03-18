@@ -28,7 +28,7 @@ domains:
       L'explosion éphémère de fleurs sauvages après la pluie d'hiver. Les cartes se concentrent sur la couleur, l'échelle, les pollinisateurs, la géologie, la météo et le spectacle fugace de la floraison.
 decks:
   - id: ways_of_looking_at_art
-    name: Manières de regarder l'art
+    name: Art
     path: perspective-decks/ways-of-looking-at-art.yaml
     description: |
       50 cartes pour changer votre perspective lorsque vous regardez de l'art. Chaque carte offre une lentille différente — de la lumière et de l'ombre aux introductions et à l'émotion — pour approfondir votre façon de voir et d'interagir avec les œuvres d'art.
