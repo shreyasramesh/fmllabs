@@ -2828,6 +2828,7 @@ export default function ChatPage() {
   const [figuresSearchQuery, setFiguresSearchQuery] = useState("");
   const [figuresCategoryFilter, setFiguresCategoryFilter] = useState<string>("all");
   const [followedFigureIds, setFollowedFigureIds] = useState<string[]>([]);
+  const [leaderboardOptIn, setLeaderboardOptIn] = useState(false);
   const [habits, setHabits] = useState<HabitItem[]>([]);
   const [habitPromoteModal, setHabitPromoteModal] = useState<{
     sourceType: "concept" | "ltm";
@@ -3046,6 +3047,17 @@ export default function ChatPage() {
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
   }, [settingsOpen]);
+
+  useEffect(() => {
+    if (!settingsOpen || !userId) return;
+    fetch("/api/me/settings")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.leaderboardOptIn === true) setLeaderboardOptIn(true);
+        else setLeaderboardOptIn(false);
+      })
+      .catch(() => {});
+  }, [settingsOpen, userId]);
 
   useEffect(() => {
     if (!settingsOpen) {
@@ -7021,6 +7033,55 @@ export default function ChatPage() {
                     </div>
                   </div>
                 </section>
+
+                {!isAnonymous && (
+                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Leaderboard</h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Appear on the global XP leaderboard and compete with other learners.</p>
+                  <div className="flex items-center justify-between gap-4">
+                    <label htmlFor="leaderboard-opt-in" className="text-sm font-medium text-foreground cursor-pointer">
+                      Show my name on the leaderboard
+                    </label>
+                    <button
+                      id="leaderboard-opt-in"
+                      type="button"
+                      role="switch"
+                      aria-checked={leaderboardOptIn}
+                      onClick={async () => {
+                        const next = !leaderboardOptIn;
+                        setLeaderboardOptIn(next);
+                        try {
+                          const res = await fetch("/api/me/settings", {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ leaderboardOptIn: next }),
+                          });
+                          if (res.ok) refetchScore();
+                          else setLeaderboardOptIn(!next);
+                        } catch {
+                          setLeaderboardOptIn(!next);
+                        }
+                      }}
+                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/30 focus:ring-offset-2 ${
+                        leaderboardOptIn ? "bg-amber-500 dark:bg-amber-500" : "bg-neutral-200 dark:bg-neutral-700"
+                      }`}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition-transform ${
+                          leaderboardOptIn ? "translate-x-5" : "translate-x-1"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  <Link
+                    href="/leaderboard"
+                    onClick={() => setSettingsOpen(false)}
+                    className="mt-2 inline-block text-sm text-amber-600 dark:text-amber-400 hover:underline"
+                  >
+                    View leaderboard →
+                  </Link>
+                </section>
+                )}
 
                 {!isAnonymous && (
                 <section className="pt-6 border-t border-neutral-100 dark:border-neutral-700/20">

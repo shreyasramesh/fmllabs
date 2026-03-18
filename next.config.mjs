@@ -7,6 +7,9 @@ const mentalModelsInclude = ["./mental-models/*.yaml"];
 const perspectiveDecksInclude = ["./perspective-decks/**/*.yaml"];
 
 const nextConfig = {
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "img.clerk.com", pathname: "/**" }],
+  },
   experimental: {
     outputFileTracingIncludes: {
       "/api/mental-models": mentalModelsInclude,

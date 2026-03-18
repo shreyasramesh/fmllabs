@@ -89,6 +89,9 @@ export async function PATCH(request: Request) {
         updates.followedFigureIds = ids;
       }
     }
+    if (body.leaderboardOptIn !== undefined) {
+      updates.leaderboardOptIn = Boolean(body.leaderboardOptIn);
+    }
 
     if (Object.keys(updates).length === 0) {
       const current = await getUserSettings(userId);

@@ -211,6 +211,8 @@ export interface UserSettings {
   clonedVoices?: ClonedVoiceSetting[];
   background?: BackgroundElement;
   weatherFormat?: "condition-temp" | "emoji-temp" | "temp-only";
+  /** When true, user appears on the global XP leaderboard */
+  leaderboardOptIn?: boolean;
   updatedAt: Date;
 }
 
@@ -1337,13 +1339,14 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     background: doc.background,
     weatherFormat: doc.weatherFormat,
     followedFigureIds: doc.followedFigureIds,
+    leaderboardOptIn: doc.leaderboardOptIn,
     updatedAt: doc.updatedAt,
   };
 }
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat" | "followedFigureIds">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat" | "followedFigureIds" | "leaderboardOptIn">>
 ): Promise<UserSettings> {
   const database = await getDb();
   const now = new Date();
@@ -1367,6 +1370,7 @@ export async function upsertUserSettings(
     background: result.background,
     weatherFormat: result.weatherFormat,
     followedFigureIds: result.followedFigureIds,
+    leaderboardOptIn: result.leaderboardOptIn,
     updatedAt: result.updatedAt,
   };
 }
