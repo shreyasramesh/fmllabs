@@ -7,6 +7,8 @@ export interface UiTranslations {
   concepts: string;
   groups: string;
   famousFigures: string;
+  habits: string;
+  promoteToHabit: string;
   settings: string;
   close: string;
   cancel: string;
@@ -16,17 +18,19 @@ export interface UiTranslations {
 const EN: UiTranslations = {
   conversations: "Conversations",
   mentalModels: "Mental Models",
-  longTermMemory: "Long-Term Memory",
+  longTermMemory: "Memory",
   concepts: "Concepts",
   groups: "Groups",
-  famousFigures: "Famous Figures",
+  famousFigures: "Personas",
+  habits: "Habits",
+  promoteToHabit: "Promote to Habit",
   settings: "Settings",
   close: "Close",
   cancel: "Cancel",
   promptGames: "Ways of Looking At",
 };
 
-const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
+const TRANSLATIONS: Partial<Record<LanguageCode, Partial<UiTranslations>>> = {
   en: EN,
   hi: {
     conversations: "बातचीत",
@@ -259,5 +263,6 @@ const TRANSLATIONS: Partial<Record<LanguageCode, UiTranslations>> = {
 };
 
 export function getUiTranslations(language: LanguageCode): UiTranslations {
-  return TRANSLATIONS[language] ?? EN;
+  const t = TRANSLATIONS[language];
+  return t ? { ...EN, ...t } : EN;
 }

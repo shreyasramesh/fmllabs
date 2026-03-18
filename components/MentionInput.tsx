@@ -43,7 +43,7 @@ const MAX_RESULTS_SHOW_ALL = 100;
 
 const DEFAULT_MENTION_TRANSLATIONS = {
   mentalModels: "Mental Models",
-  longTermMemory: "Long Term Memory",
+  longTermMemory: "Memory",
   customConcepts: "Custom Concepts",
   myGroups: "My Groups",
   hint: "@c concepts · @m models · @d/@g groups · @l memories",

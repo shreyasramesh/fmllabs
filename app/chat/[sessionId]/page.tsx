@@ -130,6 +130,19 @@ interface ConceptGroupItem {
   concepts?: CustomConceptItem[];
 }
 
+interface HabitItem {
+  _id: string;
+  userId: string;
+  sourceType: "concept" | "ltm";
+  sourceId: string;
+  name: string;
+  description: string;
+  howToFollowThrough: string;
+  tips: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 type WeatherFormat = "condition-temp" | "emoji-temp" | "temp-only";
 const LETTER_MODAL_TITLE = "a note from the developer";
 type ExportDataSection =
@@ -150,7 +163,7 @@ const EXPORT_DATA_SECTION_OPTIONS: Array<{
   { key: "settings", label: "Settings", description: "Theme, language, voice, and app preferences." },
   { key: "sessions", label: "Sessions", description: "Conversation list and metadata." },
   { key: "messages", label: "Messages", description: "Full chat history for your sessions." },
-  { key: "long_term_memory", label: "Long-term memory", description: "Saved memory summaries and prompts." },
+  { key: "long_term_memory", label: "Memory", description: "Saved memory summaries and prompts." },
   { key: "custom_concepts", label: "Custom concepts", description: "Your created concepts and enrichments." },
   { key: "concept_groups", label: "Concept groups", description: "Groups and linked concept IDs." },
   { key: "transcripts", label: "Saved transcripts", description: "Video transcript captures." },
@@ -1779,7 +1792,7 @@ export default function ChatPage() {
   const ONBOARDING_COMPLETE_KEY = "fml-labs-onboarding-complete";
   const FEATURE_TOUR_COMPLETE_KEY = "fml-labs-feature-tour-complete";
   const FEATURE_TOUR_STEPS = [
-    { target: "[data-tour=menu-button]", title: "Open the menu", content: "Tap here to access conversations, concepts, mental models, long-term memory, and groups.", ringClass: "ring-white dark:ring-neutral-300" },
+    { target: "[data-tour=menu-button]", title: "Open the menu", content: "Tap here to access conversations, concepts, mental models, memory, and groups.", ringClass: "ring-white dark:ring-neutral-300" },
     { target: "[data-tour=sidebar-nav]", title: "Your library", content: "All your content in one place—let's explore each section.", ringClass: "ring-white dark:ring-neutral-300" },
     { target: "[data-tour=tour-conversations]", title: "Conversations", content: "Your chat history. Start new conversations, pick up where you left off, or search through past chats.", panel: "conversations", ringClass: "ring-white dark:ring-neutral-300" },
     { target: "[data-tour=tour-cc]", title: "Concepts", content: "Your custom frameworks and values. The AI uses them to personalize responses.", panel: "cc", ringClass: "ring-white dark:ring-neutral-300" },
@@ -1803,7 +1816,7 @@ export default function ChatPage() {
     { label: "Saved conversations", description: "Access your full chat history across devices. Pick up where you left off.", icon: "chat" },
     { label: "Custom concepts", description: "Define your own frameworks, values, or principles. The AI uses them to personalize responses.", icon: "concepts" },
     { label: "Mental models library", description: "Explore proven mental models and cognitive biases to improve thinking and decisions.", icon: "mental-models" },
-    { label: "Long-term memory", description: "The AI remembers key context from past conversations to give more relevant advice.", icon: "memory" },
+    { label: "Memory", description: "The AI remembers key context from past conversations to give more relevant advice.", icon: "memory" },
     { label: "Groups", description: "Group related concepts (e.g. career, health). The AI draws from them when relevant.", icon: "groups" },
     { label: "Voice (speech to text + text to speech)", description: "Use your voice to ask questions and listen to AI responses with natural playback.", icon: "voice" },
     { label: "Summarize and collapse", description: "Collapse long chats into compact summaries and keep key insights easy to revisit.", icon: "summary" },
@@ -2176,6 +2189,17 @@ export default function ChatPage() {
       .then((r) => r.json())
       .then((data) => setSavedTranscripts(Array.isArray(data) ? data : []))
       .catch(() => setSavedTranscripts([]));
+  }, [isAnonymous]);
+
+  const refetchHabits = useCallback(() => {
+    if (isAnonymous) {
+      setHabits([]);
+      return;
+    }
+    fetch("/api/me/habits", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => setHabits(Array.isArray(data) ? data : []))
+      .catch(() => setHabits([]));
   }, [isAnonymous]);
 
   const refetchSavedPerspectiveCards = useCallback(() => {
@@ -2734,7 +2758,7 @@ export default function ChatPage() {
     setSidebarOpenState(open);
   }, []);
 
-  const [libraryPanelOpen, setLibraryPanelOpen] = useState<"conversations" | "ltm" | "concepts" | "cc" | "cg" | "decks" | "figures" | null>(null);
+  const [libraryPanelOpen, setLibraryPanelOpen] = useState<"conversations" | "ltm" | "concepts" | "cc" | "cg" | "decks" | "figures" | "habits" | null>(null);
   const [waysOfLookingAtModalOpen, setWaysOfLookingAtModalOpen] = useState(false);
   const [waysOfLookingAtDrawMode, setWaysOfLookingAtDrawMode] = useState(false);
   const [waysOfLookingAtCategory, setWaysOfLookingAtCategory] = useState<string | null>(null);
@@ -2781,6 +2805,23 @@ export default function ChatPage() {
   const [figuresSearchQuery, setFiguresSearchQuery] = useState("");
   const [figuresCategoryFilter, setFiguresCategoryFilter] = useState<string>("all");
   const [followedFigureIds, setFollowedFigureIds] = useState<string[]>([]);
+  const [habits, setHabits] = useState<HabitItem[]>([]);
+  const [habitPromoteModal, setHabitPromoteModal] = useState<{
+    sourceType: "concept" | "ltm";
+    source: CustomConceptItem | LongTermMemoryItem;
+  } | null>(null);
+  const [habitPromoteStep, setHabitPromoteStep] = useState<"generate" | "preview">("generate");
+  const [habitPromoteDraft, setHabitPromoteDraft] = useState<{
+    name: string;
+    description: string;
+    howToFollowThrough: string;
+    tips: string;
+  } | null>(null);
+  const [habitPromoteLanguage, setHabitPromoteLanguage] = useState<LanguageCode>("en");
+  const [habitPromoteLoading, setHabitPromoteLoading] = useState(false);
+  const [habitDetailModal, setHabitDetailModal] = useState<HabitItem | null>(null);
+  const [habitDetailEdit, setHabitDetailEdit] = useState<{ name: string; description: string; howToFollowThrough: string; tips: string } | null>(null);
+  const [habitDeleteConfirmModal, setHabitDeleteConfirmModal] = useState<HabitItem | null>(null);
   const [isSafari, setIsSafari] = useState(false);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
   const selectedExportSections = EXPORT_DATA_SECTION_OPTIONS
@@ -2923,7 +2964,7 @@ export default function ChatPage() {
   );
 
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !journalCheckpointModal) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitDeleteConfirmModal) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (journalCheckpointModal) setJournalCheckpointModal(null);
@@ -2938,12 +2979,18 @@ export default function ChatPage() {
           else if (waysOfLookingAtCategory) setWaysOfLookingAtCategory(null);
           else { setWaysOfLookingAtModalOpen(false); setWaysOfLookingAtDrawMode(false); }
         } else if (selectedMentalModel) setSelectedMentalModel(null);
-        else if (libraryPanelOpen) setLibraryPanelOpen(null);
+        else if (habitDeleteConfirmModal) setHabitDeleteConfirmModal(null);
+        else if (habitDetailModal) setHabitDetailModal(null);
+        else if (habitPromoteModal && !habitPromoteLoading) {
+          setHabitPromoteModal(null);
+          setHabitPromoteStep("generate");
+          setHabitPromoteDraft(null);
+        } else if (libraryPanelOpen) setLibraryPanelOpen(null);
       }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, journalCheckpointModal, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, journalCheckpointModal, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitDeleteConfirmModal, habitPromoteLoading]);
 
   // Reset journal checkpoint modal state when modal opens
   useEffect(() => {
@@ -3045,6 +3092,24 @@ export default function ChatPage() {
       .catch(() => setFollowedFigureIds([]))
       .finally(() => setFiguresLoading(false));
   }, [libraryPanelOpen, userId]);
+
+  useEffect(() => {
+    if (libraryPanelOpen !== "habits") return;
+    refetchHabits();
+  }, [libraryPanelOpen, refetchHabits]);
+
+  useEffect(() => {
+    if (habitDetailModal) {
+      setHabitDetailEdit({
+        name: habitDetailModal.name,
+        description: habitDetailModal.description,
+        howToFollowThrough: habitDetailModal.howToFollowThrough,
+        tips: habitDetailModal.tips,
+      });
+    } else {
+      setHabitDetailEdit(null);
+    }
+  }, [habitDetailModal]);
 
   type PerspectiveDecksConfig = {
     decks: { id: string; name: string; description: string; domain: string }[];
@@ -3643,7 +3708,10 @@ export default function ChatPage() {
               { id: "concepts" as const, label: getUiTranslations(language).mentalModels, icon: "models", onClick: () => { playSelectionChime(); setLibraryPanelOpen("concepts"); } },
               { id: "ltm" as const, label: getUiTranslations(language).longTermMemory, icon: "memory", onClick: () => { playSelectionChime(); setLibraryPanelOpen("ltm"); } },
               { id: "cg" as const, label: getUiTranslations(language).groups, icon: "groups", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cg"); } },
-              ...(!isAnonymous ? [{ id: "figures" as const, label: getUiTranslations(language).famousFigures, icon: "figures" as const, onClick: () => { playSelectionChime(); setLibraryPanelOpen("figures"); } }] : []),
+              ...(!isAnonymous ? [
+                { id: "habits" as const, label: getUiTranslations(language).habits, icon: "habits" as const, onClick: () => { playSelectionChime(); setLibraryPanelOpen("habits"); } },
+                { id: "figures" as const, label: getUiTranslations(language).famousFigures, icon: "figures" as const, onClick: () => { playSelectionChime(); setLibraryPanelOpen("figures"); } },
+              ] : []),
             ].map(({ id, label, icon, onClick }) => {
               const isActive = libraryPanelOpen === id;
               return (
@@ -3690,6 +3758,12 @@ export default function ChatPage() {
                       <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
                       <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
                       <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
+                    </svg>
+                  )}
+                  {icon === "habits" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <path d="M22 4 12 14.01l-3-3" />
                     </svg>
                   )}
                   {icon === "figures" && (
@@ -3907,7 +3981,7 @@ export default function ChatPage() {
         {summarizeSuccess && (
           <div className="mx-4 mt-2 px-4 py-3 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border-2 border-neutral-300 dark:border-neutral-600 text-sm font-medium text-neutral-700 dark:text-neutral-300 animate-celebrate flex items-center gap-2">
             <span className="text-lg">✨</span>
-            Conversation summarized and saved to long-term memory.
+            Conversation summarized and saved to memory.
           </div>
         )}
 
@@ -4031,7 +4105,7 @@ export default function ChatPage() {
                   <button
                     type="button"
                     onClick={() => setLtmDeleteConfirmModal(collapsedSummary)}
-                    aria-label="Delete from long-term memory"
+                    aria-label="Delete from memory"
                     className="p-2 rounded-xl text-red-600 dark:text-red-500 hover:text-red-700 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                   >
                     <svg
@@ -4472,7 +4546,7 @@ export default function ChatPage() {
                     setSummarizeLanguageModal({ selectedLanguage: language });
                   }}
                 disabled={incognitoMode}
-                  title={incognitoMode ? "Not available in incognito" : "Summarize this conversation and save it to long-term memory"}
+                  title={incognitoMode ? "Not available in incognito" : "Summarize this conversation and save it to memory"}
                   className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 px-3 py-1.5 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-600 hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                   <SparklesIcon className="w-3.5 h-3.5" />
@@ -4743,7 +4817,9 @@ export default function ChatPage() {
                   ? "max-w-[var(--modal-library-concepts-decks-max-w)]"
                   : libraryPanelOpen === "figures"
                     ? "max-w-[min(94vw,880px)]"
-                    : "max-w-[min(94vw,608px)]"
+                    : libraryPanelOpen === "habits"
+                      ? "max-w-[min(94vw,720px)]"
+                      : "max-w-[min(94vw,608px)]"
               }`}
               data-tour="library-modal"
             role="dialog"
@@ -4754,6 +4830,7 @@ export default function ChatPage() {
                 libraryPanelOpen === "ltm" ? getUiTranslations(language).longTermMemory :
                 libraryPanelOpen === "cc" ? getUiTranslations(language).concepts :
                 libraryPanelOpen === "cg" ? getUiTranslations(language).groups :
+                libraryPanelOpen === "habits" ? getUiTranslations(language).habits :
                 libraryPanelOpen === "figures" ? getUiTranslations(language).famousFigures :
                 getUiTranslations(language).promptGames
               }
@@ -4766,6 +4843,7 @@ export default function ChatPage() {
                    libraryPanelOpen === "ltm" ? getUiTranslations(language).longTermMemory :
                    libraryPanelOpen === "cc" ? getUiTranslations(language).concepts :
                    libraryPanelOpen === "cg" ? getUiTranslations(language).groups :
+                   libraryPanelOpen === "habits" ? getUiTranslations(language).habits :
                    libraryPanelOpen === "figures" ? getUiTranslations(language).famousFigures :
                    getUiTranslations(language).promptGames}
                 </h2>
@@ -5552,16 +5630,57 @@ export default function ChatPage() {
               )}
                 </div>
               )}
+              {libraryPanelOpen === "habits" && (
+                <div className="space-y-4">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Habits you&apos;ve created from concepts and memories. Use in daily life—not sent to the AI.</p>
+                  {habits.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {habits.map((h) => (
+                        <div
+                          key={h._id}
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => setHabitDetailModal(h)}
+                          onKeyDown={(e) => e.key === "Enter" && setHabitDetailModal(h)}
+                          className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]"
+                        >
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              setHabitDeleteConfirmModal(h);
+                            }}
+                            className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
+                            aria-label={`Delete ${h.name}`}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                              <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
+                              <path d="M10 11v6M14 11v6" />
+                            </svg>
+                          </button>
+                          <div className="flex-1 min-w-0 pr-10">
+                            <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
+                            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{h.description}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Promote a concept or memory to create a habit.</p>
+                  )}
+                </div>
+              )}
               {libraryPanelOpen === "figures" && (
                 <div className="space-y-4">
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Follow famous figures to get contextual nudges in chat: &quot;What would [figure] have to say about this?&quot;</p>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Follow personas to get contextual nudges in chat: &quot;What would [persona] have to say about this?&quot;</p>
                   <input
                     type="search"
-                    placeholder="Search figures..."
+                    placeholder="Search personas..."
                     value={figuresSearchQuery}
                     onChange={(e) => setFiguresSearchQuery(e.target.value)}
                     className="w-full px-3 py-1.5 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground"
-                    aria-label="Search figures"
+                    aria-label="Search personas"
                   />
                   <div className="flex flex-wrap gap-2">
                     <button
@@ -5593,7 +5712,7 @@ export default function ChatPage() {
                   {figuresLoading ? (
                     <p className="text-xs text-neutral-500 dark:text-neutral-400">Loading figures…</p>
                   ) : !figuresData ? (
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Failed to load figures.</p>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Failed to load personas.</p>
                   ) : (() => {
                     const q = figuresSearchQuery.toLowerCase().trim();
                     let filtered = figuresData.figures;
@@ -5609,7 +5728,7 @@ export default function ChatPage() {
                       filtered = filtered.filter((f) => f.category === figuresCategoryFilter);
                     }
                     if (filtered.length === 0) {
-                      return <p className="text-xs text-neutral-500 dark:text-neutral-400">{q || figuresCategoryFilter !== "all" ? "No figures match." : "No figures."}</p>;
+                      return <p className="text-xs text-neutral-500 dark:text-neutral-400">{q || figuresCategoryFilter !== "all" ? "No personas match." : "No personas."}</p>;
                     }
                     const toggleFollow = async (id: string, e: React.MouseEvent) => {
                       e.stopPropagation();
@@ -6340,6 +6459,19 @@ export default function ChatPage() {
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setHabitPromoteModal({ sourceType: "ltm", source: ltmDetailModal });
+                    setHabitPromoteStep("generate");
+                    setHabitPromoteDraft(null);
+                    setHabitPromoteLanguage(language);
+                    setLtmDetailModal(null);
+                  }}
+                  className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
+                >
+                  {getUiTranslations(language).promoteToHabit}
+                </button>
                 <GenerateRelevantMessageButton
                   label="Generate Relevant Message"
                   expandOnHover={false}
@@ -6382,7 +6514,7 @@ export default function ChatPage() {
                   }}
                   className="px-4 py-2 rounded-full text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
                 >
-                  Delete from long-term memory
+                  Delete from memory
                 </button>
               </div>
               {generateModal?.type === "ltm" && (
@@ -6546,7 +6678,7 @@ export default function ChatPage() {
                         <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                       </svg>
                       <span className="font-medium">{getUiTranslations(language).famousFigures}</span>
-                      <span className="text-xs text-neutral-500 dark:text-neutral-400 ml-auto">Follow figures for chat nudges</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400 ml-auto">Follow personas for chat nudges</span>
                     </button>
                   </section>
                 )}
@@ -7534,7 +7666,7 @@ export default function ChatPage() {
             className="bg-background rounded-3xl shadow-xl max-w-md w-full p-6 border border-neutral-200 dark:border-neutral-700"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="font-semibold text-lg">Delete from long-term memory?</h2>
+            <h2 className="font-semibold text-lg">Delete from memory?</h2>
             <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
               Removing &quot;{ltmDeleteConfirmModal.title}&quot; will stop the agent from using this context in future conversations. <strong>This will impact agent accuracy</strong>—the agent will have less context about you and your past decisions.
             </p>
@@ -8519,6 +8651,21 @@ export default function ChatPage() {
               )}
             </div>
             <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex flex-nowrap items-center gap-2 min-w-0">
+              {!ccDetailModal._id.startsWith("extracted-") && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setHabitPromoteModal({ sourceType: "concept", source: ccDetailModal });
+                    setHabitPromoteStep("generate");
+                    setHabitPromoteDraft(null);
+                    setHabitPromoteLanguage(language);
+                    setCcDetailModal(null);
+                  }}
+                  className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors shrink-0"
+                >
+                  {getUiTranslations(language).promoteToHabit}
+                </button>
+              )}
               <GenerateRelevantMessageButton
                 label={getModalTranslations(language).generateRelevantMessage}
                 aria-label={getModalTranslations(language).generateRelevantMessage}
@@ -8661,6 +8808,358 @@ export default function ChatPage() {
                     if (res.ok) {
                       setCustomConcepts((prev) => prev.filter((x) => x._id !== cc._id));
                       refetchCustomConcepts();
+                    }
+                  } catch {
+                    /* ignore */
+                  }
+                }}
+                className="px-4 py-2 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {habitPromoteModal && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => {
+            if (!habitPromoteLoading) {
+              setHabitPromoteModal(null);
+              setHabitPromoteStep("generate");
+              setHabitPromoteDraft(null);
+            }
+          }}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {habitPromoteStep === "generate" ? (
+              <>
+                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                  <h2 className="font-semibold text-lg mb-2">{getUiTranslations(language).promoteToHabit}</h2>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    Convert this {habitPromoteModal.sourceType === "concept" ? "concept" : "memory"} into a daily habit. The AI will suggest a name, description, how to follow through, and tips.
+                  </p>
+                </div>
+                <div className="p-4 flex-1 overflow-y-auto space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Language to generate in</label>
+                    <select
+                      value={habitPromoteLanguage}
+                      onChange={(e) => setHabitPromoteLanguage(e.target.value as LanguageCode)}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                    >
+                      {LANGUAGES.map(({ code, name }) => (
+                        <option key={code} value={code}>{name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Source</label>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
+                      {habitPromoteModal.source.title}: {(habitPromoteModal.source.summary || "").slice(0, 100)}…
+                    </p>
+                  </div>
+                </div>
+                <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+                  <button
+                    onClick={() => {
+                      if (!habitPromoteLoading) {
+                        setHabitPromoteModal(null);
+                        setHabitPromoteStep("generate");
+                        setHabitPromoteDraft(null);
+                      }
+                    }}
+                    className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
+                  >
+                    {getUiTranslations(language).cancel}
+                  </button>
+                  <button
+                    onClick={async () => {
+                      if (habitPromoteLoading) return;
+                      setHabitPromoteLoading(true);
+                      try {
+                        const res = await fetch("/api/me/habits/generate", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            sourceType: habitPromoteModal.sourceType,
+                            sourceId: habitPromoteModal.source._id,
+                            language: habitPromoteLanguage,
+                          }),
+                        });
+                        if (!res.ok) throw new Error("Generate failed");
+                        const data = await res.json();
+                        setHabitPromoteDraft({
+                          name: data.name ?? "",
+                          description: data.description ?? "",
+                          howToFollowThrough: data.howToFollowThrough ?? "",
+                          tips: data.tips ?? "",
+                        });
+                        setHabitPromoteStep("preview");
+                      } catch {
+                        /* ignore */
+                      } finally {
+                        setHabitPromoteLoading(false);
+                      }
+                    }}
+                    disabled={habitPromoteLoading}
+                    className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
+                  >
+                    {habitPromoteLoading ? "Generating…" : "Generate"}
+                  </button>
+                </div>
+              </>
+            ) : (
+              habitPromoteDraft && (
+                <>
+                  <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                    <h2 className="font-semibold text-lg mb-2">Review and edit</h2>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                      Edit the generated habit below, then click Save.
+                    </p>
+                  </div>
+                  <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Habit name</label>
+                      <input
+                        type="text"
+                        value={habitPromoteDraft.name}
+                        onChange={(e) => setHabitPromoteDraft((d) => d ? { ...d, name: e.target.value } : null)}
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                        placeholder="Short name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Description</label>
+                      <textarea
+                        value={habitPromoteDraft.description}
+                        onChange={(e) => setHabitPromoteDraft((d) => d ? { ...d, description: e.target.value } : null)}
+                        rows={4}
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                        placeholder="What this habit is and why it matters"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">How to follow through</label>
+                      <textarea
+                        value={habitPromoteDraft.howToFollowThrough}
+                        onChange={(e) => setHabitPromoteDraft((d) => d ? { ...d, howToFollowThrough: e.target.value } : null)}
+                        rows={4}
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                        placeholder="One step per line"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Tips</label>
+                      <textarea
+                        value={habitPromoteDraft.tips}
+                        onChange={(e) => setHabitPromoteDraft((d) => d ? { ...d, tips: e.target.value } : null)}
+                        rows={3}
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                        placeholder="One tip per line"
+                      />
+                    </div>
+                  </div>
+                  <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+                    <button
+                      onClick={() => {
+                        setHabitPromoteStep("generate");
+                        setHabitPromoteDraft(null);
+                      }}
+                      className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    >
+                      Back
+                    </button>
+                    <button
+                      onClick={async () => {
+                        if (!habitPromoteModal.source._id || habitPromoteLoading) return;
+                        setHabitPromoteLoading(true);
+                        try {
+                          const res = await fetch("/api/me/habits", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              sourceType: habitPromoteModal.sourceType,
+                              sourceId: habitPromoteModal.source._id,
+                              name: habitPromoteDraft.name.trim(),
+                              description: habitPromoteDraft.description.trim(),
+                              howToFollowThrough: habitPromoteDraft.howToFollowThrough.trim(),
+                              tips: habitPromoteDraft.tips.trim(),
+                            }),
+                          });
+                          if (res.ok) {
+                            const created = await res.json();
+                            setHabits((prev) => [created, ...prev]);
+                            setHabitPromoteModal(null);
+                            setHabitPromoteStep("generate");
+                            setHabitPromoteDraft(null);
+                            setLibraryPanelOpen("habits");
+                          }
+                        } catch {
+                          /* ignore */
+                        } finally {
+                          setHabitPromoteLoading(false);
+                        }
+                      }}
+                      disabled={habitPromoteLoading || !habitPromoteDraft.name.trim()}
+                      className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </>
+              )
+            )}
+          </div>
+        </div>
+      )}
+
+      {habitDetailModal && habitDetailEdit && (
+        <div
+          className="fixed inset-0 z-[65] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => setHabitDetailModal(null)}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between">
+              <h2 className="font-semibold text-lg truncate pr-2">{habitDetailEdit.name}</h2>
+              <button
+                onClick={() => setHabitDetailModal(null)}
+                className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label={getUiTranslations(language).close}
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Habit name</label>
+                <input
+                  type="text"
+                  value={habitDetailEdit.name}
+                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, name: e.target.value } : null)}
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Description</label>
+                <textarea
+                  value={habitDetailEdit.description}
+                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, description: e.target.value } : null)}
+                  rows={4}
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">How to follow through</label>
+                <textarea
+                  value={habitDetailEdit.howToFollowThrough}
+                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, howToFollowThrough: e.target.value } : null)}
+                  rows={4}
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                  placeholder="One step per line"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Tips</label>
+                <textarea
+                  value={habitDetailEdit.tips}
+                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, tips: e.target.value } : null)}
+                  rows={3}
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                  placeholder="One tip per line"
+                />
+              </div>
+            </div>
+            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+              <button
+                type="button"
+                onClick={() => {
+                  setHabitDeleteConfirmModal(habitDetailModal);
+                  setHabitDetailModal(null);
+                }}
+                className="px-4 py-2 rounded-full text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+              >
+                Delete
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!habitDetailModal._id || !habitDetailEdit) return;
+                  try {
+                    const res = await fetch(`/api/me/habits/${habitDetailModal._id}`, {
+                      method: "PATCH",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        name: habitDetailEdit.name.trim(),
+                        description: habitDetailEdit.description.trim(),
+                        howToFollowThrough: habitDetailEdit.howToFollowThrough.trim(),
+                        tips: habitDetailEdit.tips.trim(),
+                      }),
+                    });
+                    if (res.ok) {
+                      const updated = await res.json();
+                      setHabits((prev) => prev.map((h) => (h._id === habitDetailModal._id ? updated : h)));
+                      setHabitDetailModal(updated);
+                    }
+                  } catch {
+                    /* ignore */
+                  }
+                }}
+                className="px-4 py-2 rounded-full text-sm font-medium bg-foreground text-background hover:opacity-90 transition-colors"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {habitDeleteConfirmModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => setHabitDeleteConfirmModal(null)}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-md w-full p-6 border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="font-semibold text-lg">Delete habit?</h2>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+              Removing &quot;{habitDeleteConfirmModal.name}&quot; will permanently delete this habit.
+            </p>
+            <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-500">
+              Are you sure you want to delete?
+            </p>
+            <div className="mt-6 flex gap-2 justify-end">
+              <button
+                onClick={() => setHabitDeleteConfirmModal(null)}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                {getUiTranslations(language).cancel}
+              </button>
+              <button
+                onClick={async () => {
+                  const h = habitDeleteConfirmModal;
+                  setHabitDeleteConfirmModal(null);
+                  try {
+                    const res = await fetch(`/api/me/habits/${h._id}`, { method: "DELETE" });
+                    if (res.ok) {
+                      setHabits((prev) => prev.filter((x) => x._id !== h._id));
+                      refetchHabits();
                     }
                   } catch {
                     /* ignore */

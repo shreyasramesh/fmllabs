@@ -234,6 +234,48 @@ ${userInput}`
   };
 }
 
+export async function generateHabitFromConceptOrLtm(
+  source: { type: "concept" | "ltm"; title: string; summary: string; enrichmentPrompt: string },
+  languageName?: string,
+  usageContext?: GeminiUsageContext
+): Promise<{ name: string; description: string; howToFollowThrough: string; tips: string }> {
+  const languageInstruction =
+    languageName && languageName !== "English"
+      ? ` Write all content in ${languageName}.`
+      : "";
+  const model = getModel();
+  const result = await model.generateContent(
+    `You are converting a concept or memory into a daily habit the user can practice. Return a JSON object with exactly four keys:
+- "name": A short 2-5 word name for the habit (e.g. "Morning reflection", "Pause before reacting").
+- "description": A 2-4 sentence description of what this habit is and why it matters for daily life.
+- "howToFollowThrough": Step-by-step instructions for how to practice this habit. Use newline-separated bullet points (one step per line).
+- "tips": Practical tips for sticking with it, avoiding pitfalls, or integrating into daily routine. Use newline-separated bullet points (one tip per line).
+${languageInstruction}
+
+Return ONLY valid JSON, no markdown or extra text.
+
+Source (concept or memory):
+Title: ${source.title}
+Summary: ${source.summary}
+Enrichment: ${source.enrichmentPrompt}`
+  );
+  const text = result.response.text().trim();
+  const cleaned = text.replace(/^```json\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  const parsed = JSON.parse(cleaned) as {
+    name?: string;
+    description?: string;
+    howToFollowThrough?: string;
+    tips?: string;
+  };
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  return {
+    name: parsed.name ?? "Daily habit",
+    description: parsed.description ?? "",
+    howToFollowThrough: parsed.howToFollowThrough ?? "",
+    tips: parsed.tips ?? "",
+  };
+}
+
 /** Generated mental model (id will be assigned server-side as custom_<hex>). */
 export interface GeneratedMentalModel {
   name: string;

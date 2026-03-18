@@ -115,6 +115,24 @@ interface ConceptGroupDoc extends Omit<ConceptGroup, "_id"> {
   _id: ObjectId;
 }
 
+export interface Habit {
+  _id?: string;
+  userId: string;
+  /** Source: "concept" | "ltm" */
+  sourceType: "concept" | "ltm";
+  sourceId: string;
+  name: string;
+  description: string;
+  howToFollowThrough: string;
+  tips: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface HabitDoc extends Omit<Habit, "_id"> {
+  _id: ObjectId;
+}
+
 export type ExtractedConcept = {
   title: string;
   summary: string;
@@ -833,6 +851,82 @@ export async function deleteCustomConcept(id: string, userId: string): Promise<b
   return result.deletedCount > 0;
 }
 
+export async function getHabits(userId: string): Promise<(Habit & { _id: string })[]> {
+  const database = await getDb();
+  const docs = await database
+    .collection<HabitDoc>("habits")
+    .find({ userId })
+    .sort({ updatedAt: -1 })
+    .toArray();
+  return docs.map((d) => ({ ...d, _id: d._id.toString() })) as (Habit & { _id: string })[];
+}
+
+export async function getHabit(id: string, userId: string): Promise<(Habit & { _id: string }) | null> {
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return null;
+  }
+  const doc = await database
+    .collection<HabitDoc>("habits")
+    .findOne({ _id: oid, userId });
+  if (!doc) return null;
+  return { ...doc, _id: doc._id.toString() } as Habit & { _id: string };
+}
+
+export async function createHabit(
+  userId: string,
+  habit: { sourceType: "concept" | "ltm"; sourceId: string; name: string; description: string; howToFollowThrough: string; tips: string }
+): Promise<Habit & { _id: string }> {
+  const database = await getDb();
+  const now = new Date();
+  const doc: Omit<Habit, "_id"> = {
+    userId,
+    sourceType: habit.sourceType,
+    sourceId: habit.sourceId,
+    name: habit.name,
+    description: habit.description,
+    howToFollowThrough: habit.howToFollowThrough,
+    tips: habit.tips,
+    createdAt: now,
+    updatedAt: now,
+  };
+  const result = await database.collection("habits").insertOne(doc);
+  return { ...doc, _id: result.insertedId.toString() } as Habit & { _id: string };
+}
+
+export async function updateHabit(
+  id: string,
+  userId: string,
+  updates: { name?: string; description?: string; howToFollowThrough?: string; tips?: string }
+): Promise<boolean> {
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return false;
+  }
+  const result = await database
+    .collection<HabitDoc>("habits")
+    .updateOne({ _id: oid, userId }, { $set: { ...updates, updatedAt: new Date() } });
+  return result.modifiedCount > 0;
+}
+
+export async function deleteHabit(id: string, userId: string): Promise<boolean> {
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return false;
+  }
+  const result = await database.collection<HabitDoc>("habits").deleteOne({ _id: oid, userId });
+  return result.deletedCount > 0;
+}
+
 export async function getSavedPerspectiveCards(
   userId: string
 ): Promise<(SavedPerspectiveCard & { _id: string })[]> {
@@ -1299,4 +1393,5 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   await database.collection<UserMentalModelDoc>("user_mental_models").deleteMany({ userId });
   await database.collection<UserSettingsDoc>("user_settings").deleteMany({ userId });
   await database.collection<SavedPerspectiveCardDoc>("saved_perspective_cards").deleteMany({ userId });
+  await database.collection<HabitDoc>("habits").deleteMany({ userId });
 }

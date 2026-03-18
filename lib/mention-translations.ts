@@ -15,7 +15,7 @@ export interface MentionTranslations {
 
 const EN: MentionTranslations = {
   mentalModels: "Mental Models",
-  longTermMemory: "Long Term Memory",
+  longTermMemory: "Memory",
   customConcepts: "Custom Concepts",
   myGroups: "My Groups",
   hint: "@c concepts · @m models · @d/@g groups · @l memories",

@@ -25,7 +25,7 @@ const EN: ModalTranslations = {
   deleteCustomConcept: "Delete custom concept",
   deleteButton: "Delete",
   deleteCustomConceptConfirm: "Delete custom concept?",
-  deleteFromLtm: "Delete from long-term memory",
+  deleteFromLtm: "Delete from memory",
   autoTagGroups: "Auto tag groups",
   createAndAddGroup: "Create & add",
   close: "Close",

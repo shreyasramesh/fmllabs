@@ -120,7 +120,7 @@ export async function POST(request: Request) {
 
     if (sections.includes("long_term_memory")) {
       const memories = await db.collection("long_term_memory").find({ userId }).sort({ updatedAt: -1 }).toArray();
-      lines.push("## Long-Term Memory");
+      lines.push("## Memory");
       lines.push("");
       lines.push(
         toMarkdownTable(
