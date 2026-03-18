@@ -4367,6 +4367,7 @@ export default function ChatPage() {
               </div>
             </div>
           )}
+          {messages.length > 0 && (
           <div className="flex flex-col items-center justify-center px-4 pt-2 pb-2 sm:pt-3 sm:pb-3 min-w-0 gap-1.5 sm:gap-2">
             <div className="min-w-0 max-w-2xl w-full flex items-stretch gap-1.5 sm:gap-2 min-h-[52px]" data-tour="input-area">
               <div className="relative flex-1 min-w-0">
@@ -4475,6 +4476,7 @@ export default function ChatPage() {
               </button>
               </div>
           </div>
+          )}
         </div>
       </main>
       </div>
