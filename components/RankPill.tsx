@@ -62,7 +62,7 @@ export function RankPill({
     <button
       type="button"
       onClick={onClick}
-      className={`flex items-center gap-2 px-2.5 py-1.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm font-medium transition-all duration-200 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-600 ${
+      className={`flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-gradient-to-r from-rose-100 via-amber-50 to-yellow-50 dark:from-rose-900/40 dark:via-amber-900/30 dark:to-yellow-900/30 text-sm font-medium transition-all duration-200 hover:from-rose-200 hover:via-amber-100 hover:to-yellow-100 dark:hover:from-rose-800/50 dark:hover:via-amber-800/40 dark:hover:to-yellow-800/40 ${
         showRankUpAnimation ? "animate-pulse ring-2 ring-amber-400 dark:ring-amber-500" : ""
       }`}
       aria-label={`Rank: ${score.rank}, ${displayXp} XP. Click to view details.`}

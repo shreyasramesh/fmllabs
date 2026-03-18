@@ -57,6 +57,7 @@ import { FeedbackModal } from "@/components/FeedbackModal";
 import { FeatureTour } from "@/components/FeatureTour";
 import { ChromeIcon } from "@/components/ChromeIcon";
 import { SettingsLanguageSelector } from "@/components/SettingsLanguageSelector";
+import { LeaderboardEmbed } from "@/components/LeaderboardEmbed";
 
 interface Message {
   role: "user" | "assistant";
@@ -4085,10 +4086,12 @@ export default function ChatPage() {
           className={`flex-1 min-h-0 flex flex-col transition-all duration-500 ${
             messages.length > 0
               ? "pb-24 md:pb-0 overflow-y-auto scroll-smooth"
-              : "pb-0 overflow-visible"
+              : isAnonymous
+                ? "pb-24 md:pb-0 overflow-y-auto scroll-smooth"
+                : "pb-0 overflow-visible"
           } ${convertToDeepSuccess ? "animate-convert-to-deep" : ""}`}
         >
-          <div ref={messagesScrollRef} className={`flex-1 min-h-0 min-w-0 ${messages.length > 0 ? "overflow-y-auto" : "overflow-visible flex flex-col"}`}>
+          <div ref={messagesScrollRef} className={`flex-1 min-h-0 min-w-0 ${messages.length > 0 || (messages.length === 0 && isAnonymous) ? "overflow-y-auto" : "overflow-visible flex flex-col"}`}>
           {currentSession?.isCollapsed && collapsedSummary ? (
             <div className="min-h-full flex items-center justify-center p-4">
               <div className="w-full max-w-2xl">
@@ -4305,10 +4308,11 @@ export default function ChatPage() {
           ) : (
           <div
             ref={messagesContainerRef}
-            className={`max-w-2xl mx-auto w-full min-w-0 px-4 py-6 no-touch-callout ${messages.length === 0 ? "flex-1 min-h-0 flex flex-col items-center justify-center" : "space-y-6"}`}
+            className={`max-w-2xl mx-auto w-full min-w-0 px-4 py-6 no-touch-callout ${messages.length === 0 ? (isAnonymous ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-12" : "flex-1 min-h-0 flex flex-col items-center justify-center") : "space-y-6"}`}
           >
             {messages.length === 0 && (
-              <div className="flex w-full min-w-0 max-w-2xl flex-col items-center justify-center text-center px-2 space-y-6">
+              <div className="flex w-full min-w-0 max-w-2xl flex-col items-center text-center px-2">
+                <div className={`flex flex-col items-center justify-center space-y-6 ${isAnonymous ? "min-h-[calc(100dvh-12rem)]" : ""}`}>
                 <h1 className="text-xl sm:text-2xl font-semibold text-foreground animate-fade-in-up">
                   {incognitoMode ? "Let's chat incognito" : getLandingTranslations(language).letsDigIn}
                 </h1>
@@ -4433,6 +4437,8 @@ export default function ChatPage() {
                   </svg>
                   {getLandingTranslations(language).ideas}
                 </button>
+                </div>
+                {isAnonymous && <LeaderboardEmbed />}
               </div>
             )}
             {messages.map((m, i) => (
