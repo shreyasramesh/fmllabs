@@ -78,20 +78,28 @@ export async function* streamGenerateContent(
   const result = await chat.sendMessageStream(lastMessage.content);
   const stream = result.stream;
 
-  let lastUsage: { promptTokenCount: number; candidatesTokenCount: number } | null = null;
   for await (const chunk of stream) {
-    const um = (chunk as { usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } }).usageMetadata;
-    if (um && (um.promptTokenCount ?? 0) > 0) {
-      lastUsage = {
-        promptTokenCount: um.promptTokenCount ?? 0,
-        candidatesTokenCount: um.candidatesTokenCount ?? 0,
-      };
-    }
     const text = chunk.text();
     if (text) yield text;
   }
-  if (options?.onUsage && lastUsage) {
-    options.onUsage(lastUsage.promptTokenCount, lastUsage.candidatesTokenCount);
+
+  // Use aggregated response for usage - stream chunks may not include usageMetadata until the final chunk.
+  // The response promise resolves with the full aggregated response including usageMetadata.
+  const finalResponse = await result.response;
+  const um = finalResponse.usageMetadata as
+    | {
+        promptTokenCount?: number;
+        candidatesTokenCount?: number;
+        prompt_token_count?: number;
+        candidates_token_count?: number;
+      }
+    | undefined;
+  if (options?.onUsage && um) {
+    const inputTokens = um.promptTokenCount ?? um.prompt_token_count ?? 0;
+    const outputTokens = um.candidatesTokenCount ?? um.candidates_token_count ?? 0;
+    if (inputTokens > 0) {
+      options.onUsage(inputTokens, outputTokens);
+    }
   }
 }
 

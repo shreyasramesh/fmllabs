@@ -1394,4 +1394,5 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   await database.collection<UserSettingsDoc>("user_settings").deleteMany({ userId });
   await database.collection<SavedPerspectiveCardDoc>("saved_perspective_cards").deleteMany({ userId });
   await database.collection<HabitDoc>("habits").deleteMany({ userId });
+  await database.collection("user_progress").deleteMany({ userId });
 }

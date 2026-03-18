@@ -48,6 +48,9 @@ import { useBackground } from "@/components/BackgroundProvider";
 import Image from "next/image";
 import { DefaultIcon } from "@/components/ElementIcons";
 import { Clock } from "@/components/Clock";
+import { RankPill } from "@/components/RankPill";
+import { RankModal } from "@/components/RankModal";
+import type { UserScore } from "@/lib/score-types";
 import { TtsHighlightContext, type TtsHighlightState } from "@/components/TtsHighlightContext";
 import { TtsHighlightedText } from "@/components/TtsHighlightedText";
 import { FeedbackModal } from "@/components/FeedbackModal";
@@ -2213,6 +2216,25 @@ export default function ChatPage() {
       .catch(() => setSavedPerspectiveCards([]));
   }, [isAnonymous]);
 
+  const refetchScore = useCallback(() => {
+    if (isAnonymous || incognitoMode) return;
+    fetch("/api/me/score", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!data) return;
+        setUserScore(data);
+        setScoreOptimisticDelta(0);
+        setPreviousRankIndex((prev) => {
+          if (data.rankIndex > prev && prev >= 0) {
+            setShowRankUpAnimation(true);
+            setTimeout(() => setShowRankUpAnimation(false), 2500);
+          }
+          return data.rankIndex;
+        });
+      })
+      .catch(() => {});
+  }, [isAnonymous, incognitoMode]);
+
   const [mentalModelsIndex, setMentalModelsIndex] = useState<
     Map<string, string>
   >(new Map());
@@ -2708,8 +2730,9 @@ export default function ChatPage() {
       setIsLoading(false);
       inputRef.current?.focus();
       refetchSessions();
+      refetchScore();
     }
-  }, [input, isLoading, currentSessionId, router, refetchSessions, messages, messages.length, sessions.length, dismissOnboarding, mentalModelsIndex, longTermMemories, customConcepts, conceptGroups, isAnonymous, incognitoMode, pendingCardContext]);
+  }, [input, isLoading, currentSessionId, router, refetchSessions, refetchScore, messages, messages.length, sessions.length, dismissOnboarding, mentalModelsIndex, longTermMemories, customConcepts, conceptGroups, isAnonymous, incognitoMode, pendingCardContext]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (
@@ -2822,6 +2845,11 @@ export default function ChatPage() {
   const [habitDetailModal, setHabitDetailModal] = useState<HabitItem | null>(null);
   const [habitDetailEdit, setHabitDetailEdit] = useState<{ name: string; description: string; howToFollowThrough: string; tips: string } | null>(null);
   const [habitDeleteConfirmModal, setHabitDeleteConfirmModal] = useState<HabitItem | null>(null);
+  const [userScore, setUserScore] = useState<UserScore | null>(null);
+  const [rankModalOpen, setRankModalOpen] = useState(false);
+  const [scoreOptimisticDelta, setScoreOptimisticDelta] = useState(0);
+  const [previousRankIndex, setPreviousRankIndex] = useState(-1);
+  const [showRankUpAnimation, setShowRankUpAnimation] = useState(false);
   const [isSafari, setIsSafari] = useState(false);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
   const selectedExportSections = EXPORT_DATA_SECTION_OPTIONS
@@ -2964,7 +2992,7 @@ export default function ChatPage() {
   );
 
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitDeleteConfirmModal) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitDeleteConfirmModal && !rankModalOpen) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (journalCheckpointModal) setJournalCheckpointModal(null);
@@ -2985,12 +3013,13 @@ export default function ChatPage() {
           setHabitPromoteModal(null);
           setHabitPromoteStep("generate");
           setHabitPromoteDraft(null);
-        } else if (libraryPanelOpen) setLibraryPanelOpen(null);
+        } else if (rankModalOpen) setRankModalOpen(false);
+        else if (libraryPanelOpen) setLibraryPanelOpen(null);
       }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, journalCheckpointModal, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitDeleteConfirmModal, habitPromoteLoading]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, journalCheckpointModal, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitDeleteConfirmModal, habitPromoteLoading, rankModalOpen]);
 
   // Reset journal checkpoint modal state when modal opens
   useEffect(() => {
@@ -3097,6 +3126,14 @@ export default function ChatPage() {
     if (libraryPanelOpen !== "habits") return;
     refetchHabits();
   }, [libraryPanelOpen, refetchHabits]);
+
+  useEffect(() => {
+    if (userId && !incognitoMode && !isAnonymous) {
+      refetchScore();
+    } else {
+      setUserScore(null);
+    }
+  }, [userId, incognitoMode, isAnonymous, refetchScore]);
 
   useEffect(() => {
     if (habitDetailModal) {
@@ -3563,6 +3600,14 @@ export default function ChatPage() {
             )}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 shrink-0 overflow-visible">
+            {!incognitoMode && !isAnonymous && userScore && (
+              <RankPill
+                score={userScore}
+                optimisticDelta={scoreOptimisticDelta}
+                onClick={() => setRankModalOpen(true)}
+                showRankUpAnimation={showRankUpAnimation}
+              />
+            )}
             <Clock weatherFormat={weatherFormat} onMoonPhaseChange={setMoonPhase} />
             {!incognitoMode && !isAnonymous && (
               <div className="relative group/incognito">
@@ -5300,6 +5345,7 @@ export default function ChatPage() {
                                 if (!r.ok) throw new Error(data?.error ?? "Save failed");
                                 setMmCreateModalOpen(false);
                                 setMmCreateGenerated(null);
+                                refetchScore();
                                 setMmCreateInput("");
                                 setMentalModelsRefreshKey((k) => k + 1);
                                 setSelectedMmCategory("custom");
@@ -5738,11 +5784,12 @@ export default function ChatPage() {
                         : [...followedFigureIds, id];
                       setFollowedFigureIds(next);
                       try {
-                        await fetch("/api/me/settings", {
+                        const res = await fetch("/api/me/settings", {
                           method: "PATCH",
                           headers: { "Content-Type": "application/json" },
                           body: JSON.stringify({ followedFigureIds: next }),
                         });
+                        if (res.ok && next.length > followedFigureIds.length) refetchScore();
                       } catch {
                         setFollowedFigureIds(followedFigureIds);
                       }
@@ -8041,6 +8088,7 @@ export default function ChatPage() {
                           setCcCreateSelectedGroupIds(new Set());
                           setCcCreateSelectedNewGroupNames(new Set());
                             refetchCustomConcepts();
+                            refetchScore();
                             setCcCreateSuccess(true);
                             setTimeout(() => setCcCreateSuccess(false), 2000);
                         } catch {
@@ -8295,7 +8343,7 @@ export default function ChatPage() {
                             (c) => c.title?.trim() && c.summary?.trim() && c.enrichmentPrompt?.trim()
                           );
                           if (validConcepts.length === 0) continue;
-                          await fetch("/api/me/concept-groups", {
+                          const cgRes = await fetch("/api/me/concept-groups", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
@@ -8304,6 +8352,7 @@ export default function ChatPage() {
                               sourceVideoTitle: ccYoutubeResult.videoTitle ?? undefined,
                             }),
                           });
+                          if (cgRes.ok) refetchScore();
                         }
                         setCcYoutubeModal(false);
                         setCcYoutubeUrl("");
@@ -8525,6 +8574,7 @@ export default function ChatPage() {
                         }),
                       });
                                       if (res.ok) {
+                                        refetchScore();
                       const data = await res.json();
                                         setConceptGroups((prev) => [...prev, { ...data, conceptIds: [ccDetailModal._id] }]);
                                         refetchConceptGroups();
@@ -9001,6 +9051,7 @@ export default function ChatPage() {
                             setHabitPromoteStep("generate");
                             setHabitPromoteDraft(null);
                             setLibraryPanelOpen("habits");
+                            refetchScore();
                           }
                         } catch {
                           /* ignore */
@@ -9174,6 +9225,10 @@ export default function ChatPage() {
         </div>
       )}
 
+      {rankModalOpen && userScore && (
+        <RankModal score={userScore} onClose={() => setRankModalOpen(false)} />
+      )}
+
       {cgCreateSuccess && (
         <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border-2 border-neutral-300 dark:border-neutral-600 text-sm font-medium text-neutral-800 dark:text-neutral-200 animate-celebrate flex items-center gap-2 shadow-lg">
           <span className="text-lg">✨</span>
@@ -9258,7 +9313,7 @@ export default function ChatPage() {
                   if (!cgCustomCreateTitle.trim() || cgCustomCreateLoading) return;
                   setCgCustomCreateLoading(true);
                   try {
-                    const res = await fetch("/api/me/concept-groups", {
+                    const cgRes = await fetch("/api/me/concept-groups", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({
@@ -9266,11 +9321,12 @@ export default function ChatPage() {
                         conceptIds: Array.from(cgCustomCreateSelectedIds),
                       }),
                     });
-                    if (res.ok) {
+                    if (cgRes.ok) {
                       setCgCustomCreateModal(false);
                       setCgCustomCreateTitle("");
                       setCgCustomCreateSelectedIds(new Set());
                       refetchConceptGroups();
+                      refetchScore();
                       refetchCustomConcepts();
                     }
                   } catch {
@@ -9758,6 +9814,7 @@ export default function ChatPage() {
           }}
           onSavedToLibrary={() => {
             refetchSavedConcepts();
+            refetchScore();
             setConceptSavedToast(true);
             setTimeout(() => setConceptSavedToast(false), 3000);
           }}
@@ -10551,6 +10608,7 @@ export default function ChatPage() {
                           if (res.ok && data._id) {
                             setDrawnPerspectiveCard((prev) => prev ? { ...prev, savedId: data._id } : null);
                             refetchSavedPerspectiveCards();
+                            refetchScore();
                           }
                         } catch {
                           /* ignore */
