@@ -1,6 +1,8 @@
 import type { LanguageCode } from "./languages";
 
 export interface LandingTranslations {
+  whatShouldIDo: string;
+  ideas: string;
   letsDigIn: string;
   readyToConversation: string;
   drawPerspectiveCard: string;
@@ -18,6 +20,8 @@ export interface LandingTranslations {
 }
 
 const EN: LandingTranslations = {
+  whatShouldIDo: "What should I do?",
+  ideas: "Ideas",
   letsDigIn: "Let's dig in—with mental models that actually work",
   readyToConversation: "Ready to have a conversation whenever you say something",
   drawPerspectiveCard: "Draw a perspective card",
@@ -37,6 +41,8 @@ const EN: LandingTranslations = {
 const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
   en: EN,
   hi: {
+    whatShouldIDo: "मुझे क्या करना चाहिए?",
+    ideas: "विचार",
     letsDigIn: "शुरू करें—ऐसे मानसिक मॉडल के साथ जो वाकई काम करते हैं",
     readyToConversation: "जब भी आप कुछ कहेंगे, बातचीत के लिए तैयार",
     drawPerspectiveCard: "एक परिप्रेक्ष्य कार्ड निकालें",
@@ -53,6 +59,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "बातचीत खोजें",
   },
   ta: {
+    whatShouldIDo: "நான் என்ன செய்ய வேண்டும்?",
+    ideas: "யோசனைகள்",
     letsDigIn: "தொடங்குவோம்—உண்மையில் வேலை செய்யும் மன மாதிரிகளுடன்",
     readyToConversation: "நீங்கள் எதையாவது சொல்லும்போதெல்லாம் உரையாட தயார்",
     drawPerspectiveCard: "ஒரு முன்னோக்கு அட்டை வரையவும்",
@@ -69,6 +77,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "உரையாடல்களை தேடுங்கள்",
   },
   kn: {
+    whatShouldIDo: "ನಾನು ಏನು ಮಾಡಬೇಕು?",
+    ideas: "ಕಲ್ಪನೆಗಳು",
     letsDigIn: "ಪ್ರಾರಂಭಿಸೋಣ—ನಿಜವಾಗಿಯೂ ಕೆಲಸ ಮಾಡುವ ಮಾನಸಿಕ ಮಾದರಿಗಳೊಂದಿಗೆ",
     readyToConversation: "ನೀವು ಏನನ್ನಾದರೂ ಹೇಳಿದಾಗಲೆಲ್ಲಾ ಸಂಭಾಷಣೆಗೆ ಸಿದ್ಧರಾಗಿರಿ",
     drawPerspectiveCard: "ಒಂದು ದೃಷ್ಟಿಕೋನ ಕಾರ್ಡ್ ಎಳೆಯಿರಿ",
@@ -85,6 +95,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "ಸಂಭಾಷಣೆಗಳನ್ನು ಹುಡುಕಿ",
   },
   ja: {
+    whatShouldIDo: "何をすればいいですか？",
+    ideas: "アイデア",
     letsDigIn: "始めましょう—本当に役立つメンタルモデルとともに",
     readyToConversation: "何か言うときはいつでも会話の準備ができています",
     drawPerspectiveCard: "視点カードを引く",
@@ -101,6 +113,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "会話を検索",
   },
   zh: {
+    whatShouldIDo: "我该做什么？",
+    ideas: "创意",
     letsDigIn: "开始吧——用真正有效的心智模型",
     readyToConversation: "随时准备与您对话",
     drawPerspectiveCard: "抽取视角卡片",
@@ -117,6 +131,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "搜索对话",
   },
   es: {
+    whatShouldIDo: "¿Qué debería hacer?",
+    ideas: "Ideas",
     letsDigIn: "Empecemos—con modelos mentales que realmente funcionan",
     readyToConversation: "Listo para conversar cuando digas algo",
     drawPerspectiveCard: "Sacar una carta de perspectiva",
@@ -133,6 +149,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "Buscar conversaciones",
   },
   ar: {
+    whatShouldIDo: "ماذا يجب أن أفعل؟",
+    ideas: "أفكار",
     letsDigIn: "لنبدأ—بنماذج عقلية تعمل فعلاً",
     readyToConversation: "مستعد للمحادثة متى قلت شيئاً",
     drawPerspectiveCard: "اسحب بطاقة منظور",
@@ -149,6 +167,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "البحث في المحادثات",
   },
   fr: {
+    whatShouldIDo: "Que dois-je faire ?",
+    ideas: "Idées",
     letsDigIn: "Allons-y—avec des modèles mentaux qui fonctionnent vraiment",
     readyToConversation: "Prêt à converser dès que vous dites quelque chose",
     drawPerspectiveCard: "Tirer une carte de perspective",
@@ -165,6 +185,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "Rechercher des conversations",
   },
   bn: {
+    whatShouldIDo: "আমার কী করা উচিত?",
+    ideas: "ধারণা",
     letsDigIn: "শুরু করি—যে মানসিক মডেল সত্যিই কাজ করে",
     readyToConversation: "আপনি কিছু বললেই আলাপের জন্য প্রস্তুত",
     drawPerspectiveCard: "একটি দৃষ্টিভঙ্গি কার্ড টানুন",
@@ -181,6 +203,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "আলাপ খুঁজুন",
   },
   pt: {
+    whatShouldIDo: "O que devo fazer?",
+    ideas: "Ideias",
     letsDigIn: "Vamos lá—com modelos mentais que realmente funcionam",
     readyToConversation: "Pronto para conversar sempre que você disser algo",
     drawPerspectiveCard: "Tirar uma carta de perspectiva",
@@ -197,6 +221,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "Buscar conversas",
   },
   ru: {
+    whatShouldIDo: "Что мне делать?",
+    ideas: "Идеи",
     letsDigIn: "Приступим—с ментальными моделями, которые действительно работают",
     readyToConversation: "Готов к разговору, когда вы что-нибудь скажете",
     drawPerspectiveCard: "Вытянуть карту перспективы",
@@ -213,6 +239,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "Поиск разговоров",
   },
   ur: {
+    whatShouldIDo: "مجھے کیا کرنا چاہیے؟",
+    ideas: "خیالات",
     letsDigIn: "شروع کریں—ذہنی ماڈل کے ساتھ جو واقعی کام کرتے ہیں",
     readyToConversation: "جب بھی آپ کچھ کہیں گے بات چیت کے لیے تیار",
     drawPerspectiveCard: "ایک نقطہ نظر کارڈ نکالیں",
@@ -229,6 +257,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "بات چیتیں تلاش کریں",
   },
   de: {
+    whatShouldIDo: "Was soll ich tun?",
+    ideas: "Ideen",
     letsDigIn: "Lass uns loslegen—mit mentalen Modellen, die wirklich funktionieren",
     readyToConversation: "Bereit für ein Gespräch, sobald du etwas sagst",
     drawPerspectiveCard: "Eine Perspektivkarte ziehen",
@@ -245,6 +275,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "Gespräche suchen",
   },
   it: {
+    whatShouldIDo: "Cosa dovrei fare?",
+    ideas: "Idee",
     letsDigIn: "Iniziamo—con modelli mentali che funzionano davvero",
     readyToConversation: "Pronto a conversare quando dici qualcosa",
     drawPerspectiveCard: "Pesca una carta di prospettiva",
@@ -261,6 +293,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "Cerca conversazioni",
   },
   pl: {
+    whatShouldIDo: "Co powinienem zrobić?",
+    ideas: "Pomysły",
     letsDigIn: "Zaczynajmy—z modelami mentalnymi, które naprawdę działają",
     readyToConversation: "Gotowy do rozmowy, gdy coś powiesz",
     drawPerspectiveCard: "Wylosuj kartę perspektywy",
@@ -277,6 +311,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "Szukaj rozmów",
   },
   uk: {
+    whatShouldIDo: "Що мені робити?",
+    ideas: "Ідеї",
     letsDigIn: "Почнімо—з ментальними моделями, які справді працюють",
     readyToConversation: "Готовий до розмови, коли ви щось скажете",
     drawPerspectiveCard: "Витягнути картку перспективи",
@@ -293,6 +329,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "Пошук розмов",
   },
   ro: {
+    whatShouldIDo: "Ce ar trebui să fac?",
+    ideas: "Idei",
     letsDigIn: "Să începem—cu modele mentale care funcționează cu adevărat",
     readyToConversation: "Gata de conversație ori de câte ori spui ceva",
     drawPerspectiveCard: "Trage o carte de perspectivă",
@@ -309,6 +347,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "Caută conversații",
   },
   nl: {
+    whatShouldIDo: "Wat moet ik doen?",
+    ideas: "Ideeën",
     letsDigIn: "Laten we beginnen—met mentale modellen die echt werken",
     readyToConversation: "Klaar voor een gesprek zodra je iets zegt",
     drawPerspectiveCard: "Trek een perspectiefkaart",
@@ -325,6 +365,8 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
     searchConversations: "Gesprekken zoeken",
   },
   tr: {
+    whatShouldIDo: "Ne yapmalıyım?",
+    ideas: "Fikirler",
     letsDigIn: "Başlayalım—gerçekten işe yarayan zihinsel modellerle",
     readyToConversation: "Bir şey söylediğinizde sohbet etmeye hazır",
     drawPerspectiveCard: "Bir perspektif kartı çek",

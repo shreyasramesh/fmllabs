@@ -5,8 +5,10 @@ import {
   useRef,
   useEffect,
   useCallback,
+  useLayoutEffect,
   KeyboardEvent,
 } from "react";
+import { createPortal } from "react-dom";
 
 export interface MentalModelOption {
   id: string;
@@ -548,6 +550,7 @@ export function MentionInput({
   const isComposingRef = useRef(false);
   const lastCaretOnInputRef = useRef<{ offset: number; value: string } | null>(null);
   const prevValueRef = useRef<string>(value);
+  const [isFocused, setIsFocused] = useState(false);
   const mentalModelsRef = useRef(mentalModels);
   const longTermMemoriesRef = useRef(longTermMemories);
   const customConceptsRef = useRef(customConcepts);
@@ -866,6 +869,25 @@ export function MentionInput({
 
   const isEmpty = !value || value.trim() === "";
 
+  const [dropdownRect, setDropdownRect] = useState<DOMRect | null>(null);
+  const updateDropdownRect = useCallback(() => {
+    if (!containerRef.current) return;
+    setDropdownRect(containerRef.current.getBoundingClientRect());
+  }, []);
+  useLayoutEffect(() => {
+    if (!showDropdown || !containerRef.current) {
+      setDropdownRect(null);
+      return;
+    }
+    updateDropdownRect();
+    window.addEventListener("scroll", updateDropdownRect, true);
+    window.addEventListener("resize", updateDropdownRect);
+    return () => {
+      window.removeEventListener("scroll", updateDropdownRect, true);
+      window.removeEventListener("resize", updateDropdownRect);
+    };
+  }, [showDropdown, updateDropdownRect]);
+
   const handleContainerClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       const target = e.target as HTMLElement;
@@ -890,8 +912,11 @@ export function MentionInput({
         ref={ref as React.RefObject<HTMLDivElement>}
         contentEditable={!disabled}
         suppressContentEditableWarning
+        dir="ltr"
         onInput={handleInput}
         onKeyDown={handleKeyDown}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         onClick={handleContainerClick}
         onMouseOver={handleChipMouseOver}
         onMouseOut={handleChipMouseOut}
@@ -905,16 +930,17 @@ export function MentionInput({
         data-placeholder={displayPlaceholder}
         className={`flex-1 min-h-0 overflow-y-auto ${className} ${
           isEmpty ? "empty" : ""
-        }`}
+        } text-left`}
         style={{
           ...(isEmpty && {
             // Placeholder styling - use ::before in CSS or data attr
           }),
         }}
       />
-      {isEmpty && (
+      {isEmpty && !isFocused && (
         <span
-          className={`pointer-events-none absolute left-4 right-4 text-neutral-500 dark:text-neutral-400 select-none whitespace-nowrap overflow-hidden text-ellipsis ${
+          dir="ltr"
+          className={`pointer-events-none absolute left-4 right-4 text-neutral-500 dark:text-neutral-400 select-none whitespace-nowrap overflow-hidden text-ellipsis text-left ${
             placeholderTopAligned ? "top-4" : "top-1/2 -translate-y-1/2"
           }`}
           aria-hidden
@@ -935,11 +961,17 @@ export function MentionInput({
           {chipTooltip.text}
         </div>
       )}
-      {showDropdown && (
-        <div
-          ref={dropdownRef}
-          className="absolute left-0 right-0 bottom-full mb-1 z-50 py-2 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-lg max-h-64 overflow-y-auto animate-fade-in-up"
-        >
+      {showDropdown && dropdownRect && typeof document !== "undefined"
+        ? createPortal(
+            <div
+            ref={dropdownRef}
+            className="fixed z-[100] py-2 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-lg max-h-64 overflow-y-auto animate-fade-in-up"
+            style={{
+              left: dropdownRect.left,
+              width: dropdownRect.width,
+              bottom: window.innerHeight - dropdownRect.top + 4,
+            }}
+          >
           {mentionState?.mode === "both" && mentionState?.filterQuery === "" && (
             <p className="px-4 py-1.5 text-[11px] text-neutral-500 dark:text-neutral-400 border-b border-neutral-100 dark:border-neutral-800 mb-1">
               {t.hint}
@@ -1112,8 +1144,10 @@ export function MentionInput({
               {t.noResults}
             </p>
           )}
-        </div>
-      )}
+            </div>,
+            document.body
+          )
+        : null}
     </div>
   );
 }

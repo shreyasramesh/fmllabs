@@ -512,19 +512,19 @@ function MessageBubble({
                   }
                 }}
               >
-                <div className="px-3.5 py-2.5 flex items-center justify-between gap-2 border-b border-neutral-200/60 dark:border-white/10">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                <div className="px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-2 border-b border-neutral-200/60 dark:border-white/10">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 shrink-0">
                     Context used
                   </span>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2 min-w-0">
                     {showConvertToDeep && onConvertToDeep && (
                       <button
                         type="button"
                         onClick={onConvertToDeep}
-                        className="relative overflow-hidden shimmer-button py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm"
+                        className="relative overflow-hidden shimmer-button py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm shrink-0 min-w-0"
                         title="Use full context (mental models, memories) for this conversation"
                       >
-                        <span className="relative z-10">Convert to: Deep Conversation</span>
+                        <span className="relative z-10 whitespace-normal">Convert to: Deep Conversation</span>
                       </button>
                     )}
                     <button
@@ -598,11 +598,11 @@ function MessageBubble({
                 </div>
               </div>
             ) : (
-              <div className="inline-flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   onClick={() => setCtxExpanded(true)}
-                  className="inline-flex items-center gap-2 py-1.5 px-3 rounded-xl text-xs font-medium bg-gradient-to-r from-neutral-100 to-neutral-50 dark:from-neutral-800 dark:to-neutral-800 text-neutral-600 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-600 hover:from-neutral-200 hover:to-neutral-100 dark:hover:from-neutral-700 dark:hover:to-neutral-700 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 shadow-sm"
+                  className="inline-flex items-center gap-2 py-1.5 px-3 rounded-xl text-xs font-medium bg-gradient-to-r from-neutral-100 to-neutral-50 dark:from-neutral-800 dark:to-neutral-800 text-neutral-600 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-600 hover:from-neutral-200 hover:to-neutral-100 dark:hover:from-neutral-700 dark:hover:to-neutral-700 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 shadow-sm shrink-0"
                 >
                   <span className="flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-400 dark:bg-amber-500" aria-hidden />
@@ -616,7 +616,7 @@ function MessageBubble({
                     type="button"
                     onClick={onManualJournalCheckpoint}
                     disabled={manualJournalLoading}
-                    className="inline-flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm disabled:opacity-70 disabled:cursor-wait"
+                    className="inline-flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm disabled:opacity-70 disabled:cursor-wait shrink-0"
                     title="Add a journal checkpoint"
                   >
                     {manualJournalLoading && (
@@ -632,10 +632,10 @@ function MessageBubble({
                   <button
                     type="button"
                     onClick={onConvertToDeep}
-                    className="relative overflow-hidden shimmer-button py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm"
+                    className="relative overflow-hidden shimmer-button py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm shrink-0 min-w-0"
                     title="Use full context (mental models, memories) for this conversation"
                   >
-                    <span className="relative z-10">Convert to: Deep Conversation</span>
+                    <span className="relative z-10 sm:whitespace-normal">Convert to: Deep Conversation</span>
                   </button>
                 )}
               </div>
@@ -1665,6 +1665,7 @@ export default function ChatPage() {
   const [restartLoading, setRestartLoading] = useState(false);
   const [ltmDetailModal, setLtmDetailModal] = useState<LongTermMemoryItem | null>(null);
   const [ltmDeleteConfirmModal, setLtmDeleteConfirmModal] = useState<LongTermMemoryItem | null>(null);
+  const [mmDeleteConfirmModal, setMmDeleteConfirmModal] = useState<{ id: string; name: string } | null>(null);
   const [customConcepts, setCustomConcepts] = useState<CustomConceptItem[]>([]);
   const [ccDetailModal, setCcDetailModal] = useState<CustomConceptItem | null>(null);
   const [ccDeleteConfirmModal, setCcDeleteConfirmModal] = useState<CustomConceptItem | null>(null);
@@ -1853,7 +1854,6 @@ export default function ChatPage() {
   const ccAutoTagPopoverRef = useRef<HTMLDivElement>(null);
   const ccTranslatePopoverRef = useRef<HTMLDivElement>(null);
   const ccAutoTagSuggestionsRef = useRef(ccAutoTagSuggestions);
-  const profileTriggerRef = useRef<HTMLDivElement>(null);
   ccAutoTagSuggestionsRef.current = ccAutoTagSuggestions;
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
 
@@ -2684,6 +2684,7 @@ export default function ChatPage() {
   const [waysOfLookingAtCardsLoading, setWaysOfLookingAtCardsLoading] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+  const [ideasModalOpen, setIdeasModalOpen] = useState(false);
   const [deleteAllDataModalOpen, setDeleteAllDataModalOpen] = useState(false);
   const [deleteAllDataConfirmInput, setDeleteAllDataConfirmInput] = useState("");
   const [deleteAllDataLoading, setDeleteAllDataLoading] = useState(false);
@@ -2855,10 +2856,11 @@ export default function ChatPage() {
   );
 
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !journalCheckpointModal) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !journalCheckpointModal) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (journalCheckpointModal) setJournalCheckpointModal(null);
+        else if (ideasModalOpen) setIdeasModalOpen(false);
         else if (drawnPerspectiveCard) setDrawnPerspectiveCard(null);
         else if (waysOfLookingAtModalOpen) {
           if (waysOfLookingAtDigital) setWaysOfLookingAtDigital(null);
@@ -2874,7 +2876,7 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, journalCheckpointModal, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, journalCheckpointModal, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital]);
 
   // Reset journal checkpoint modal state when modal opens
   useEffect(() => {
@@ -3023,6 +3025,7 @@ export default function ChatPage() {
     setSignInFeaturesModalOpen(false);
     setInputExpandModalOpen(false);
     setFeedbackModalOpen(false);
+    setIdeasModalOpen(false);
     setDeleteAllDataModalOpen(false);
     setMmCreateModalOpen(false);
     setDeleteSessionConfirmModal(null);
@@ -3369,9 +3372,9 @@ export default function ChatPage() {
             <button
               onClick={() => setSidebarOpen(true)}
               data-tour="menu-button"
-              className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 shrink-0 ${
-                !sidebarOpen ? "" : "lg:hidden"
-              } ${incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"}`}
+              className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 shrink-0 lg:hidden ${
+                incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              }`}
               aria-label="Open menu"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
@@ -3392,31 +3395,6 @@ export default function ChatPage() {
                     {currentSession.title}
                   </span>
                 ) : null}
-                <Link
-                  href={incognitoMode ? "/chat/incognito" : "/chat/new"}
-                  onClick={(e) => {
-                    closeAllModalsExceptLeftPanel();
-                    if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
-                    if (sessionId === "new" || sessionId === "incognito") {
-                      e.preventDefault();
-                      anonymousActiveRef.current = false;
-                      setMessages([]);
-                      setCurrentSessionId(null);
-                      setCurrentSession(null);
-                      setCollapsedSummary(null);
-                      setInput("");
-                    }
-                  }}
-                  className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 shrink-0 ${
-                    incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                  }`}
-                  aria-label={getLandingTranslations(language).newConversation}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                  </svg>
-                </Link>
               </>
             ) : (
               <h1 className="font-medium truncate">
@@ -3489,13 +3467,13 @@ export default function ChatPage() {
       <div className="shrink-0 md:hidden" style={{ height: "calc(3.5rem + env(safe-area-inset-top))" }} aria-hidden />
 
       <div className="flex flex-1 min-h-0 overflow-hidden">
-      {/* Sidebar - fixed overlay on mobile; in-flow on desktop when open. Fade in/out animation. */}
+      {/* Sidebar - fixed overlay on mobile; in-flow on desktop. Collapsed = icon-only strip (Browser Use style). */}
       <aside
-        className={`z-40 w-72 bg-background border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col min-h-0 transition-[transform,opacity,width] duration-300 ease-out
+        className={`z-40 bg-background border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col min-h-0 transition-[transform,opacity,width] duration-300 ease-out
           fixed inset-y-0 left-0 lg:static lg:inset-auto lg:translate-x-0
           ${sidebarOpen
-            ? "translate-x-0 opacity-100 lg:w-72"
-            : "-translate-x-full opacity-0 pointer-events-none lg:translate-x-0 lg:w-0 lg:min-w-0 lg:overflow-hidden lg:border-r-0"
+            ? "w-72 translate-x-0 opacity-100 lg:w-72"
+            : "-translate-x-full opacity-0 pointer-events-none lg:translate-x-0 lg:opacity-100 lg:pointer-events-auto lg:w-14 lg:min-w-14"
           }
           lg:flex`}
       >
@@ -3517,10 +3495,25 @@ export default function ChatPage() {
             </button>
           </div>
         </div>
-        <div className="flex-1 min-h-0 flex flex-col overflow-y-auto overscroll-contain">
+        <div className={`flex-1 min-h-0 flex flex-col overflow-y-auto overscroll-contain ${!sidebarOpen ? "lg:justify-center" : ""}`}>
+        {/* Hamburger to expand - centered with other buttons when closed (desktop only) */}
+        {!sidebarOpen && (
+          <div className="hidden lg:flex shrink-0 justify-center">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              data-tour="menu-button"
+              className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              aria-label="Open menu"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+        )}
         {!isAnonymous && (
         <>
-        <div className="flex-1 min-h-0 flex flex-col min-w-0 px-2 py-1.5">
+        <div className={`flex flex-col min-w-0 px-2 py-1.5 ${sidebarOpen ? "flex-1 min-h-0" : "shrink-0 lg:gap-1"}`}>
           {/* New conversation - always visible at top of sidebar */}
           <Link
             href={incognitoMode ? "/chat/incognito" : "/chat/new"}
@@ -3537,16 +3530,18 @@ export default function ChatPage() {
                 setInput("");
               }
             }}
-            className="flex items-center justify-center gap-2 w-full mb-4 px-3 py-2 rounded-xl border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0"
+            className={`flex items-center w-full rounded-xl border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0 ${
+              sidebarOpen ? "justify-center gap-2 px-3 py-2 mb-4" : "justify-center p-2 lg:px-2 lg:py-2"
+            }`}
             aria-label={getLandingTranslations(language).newConversation}
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
               <path d="M12 5v14M5 12h14" />
             </svg>
-            {getLandingTranslations(language).newConversation}
+            {sidebarOpen && <span className="truncate">{getLandingTranslations(language).newConversation}</span>}
           </Link>
-          {/* Primary nav - Claude.ai pill style, compact selector for center panel */}
-          <nav className="flex flex-col gap-0.5 shrink-0 mb-4 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30" aria-label="Select view" data-tour="sidebar-nav">
+          {/* Primary nav - Claude.ai pill style; icon-only when collapsed (Browser Use style) */}
+          <nav className={`flex flex-col gap-0.5 shrink-0 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 ${sidebarOpen ? "mb-4" : ""}`} aria-label="Select view" data-tour="sidebar-nav">
             {[
               { id: "conversations" as const, label: getUiTranslations(language).conversations, icon: "chat", onClick: () => { playSelectionChime(); setLibraryPanelOpen("conversations"); setConversationsCollapsed(false); } },
               { id: "nuggets" as const, label: getUiTranslations(language).nuggets, icon: "nuggets", onClick: () => { playSelectionChime(); setLibraryPanelOpen("nuggets"); } },
@@ -3562,7 +3557,10 @@ export default function ChatPage() {
                   type="button"
                   onClick={onClick}
                   data-tour={`tour-${id}`}
-className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left text-[13px] sm:text-[14px] font-medium transition-colors border-2 ${
+                  title={!sidebarOpen ? label : undefined}
+                  className={`flex items-center w-full rounded-full text-left text-[13px] sm:text-[14px] font-medium transition-colors border-2 ${
+                    sidebarOpen ? "gap-2.5 px-3 py-1.5" : "justify-center p-2 lg:px-2 lg:py-2"
+                  } ${
                       isActive
                         ? "border-neutral-300 dark:border-neutral-400 bg-white dark:bg-neutral-700 text-foreground"
                         : "border-transparent text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:border-neutral-400 dark:hover:border-neutral-500"
@@ -3604,27 +3602,32 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
                     </svg>
                   )}
-                  <span className="truncate">{label}</span>
+                  {sidebarOpen && <span className="truncate">{label}</span>}
                 </button>
               );
             })}
           </nav>
 
-          <div className="mt-2 pt-2 border-t-[0.5px] border-neutral-200/60 dark:border-neutral-600/60">
+          <div className={`border-t-[0.5px] border-neutral-200/60 dark:border-neutral-600/60 ${sidebarOpen ? "mt-2 pt-2" : "mt-1 pt-1"}`}>
             <button
               type="button"
               onClick={() => { playSelectionChime(); setWaysOfLookingAtModalOpen(true); setWaysOfLookingAtDrawMode(false); setWaysOfLookingAtCategory(null); setWaysOfLookingAtCity(null); setWaysOfLookingAtCuisine(null); setWaysOfLookingAtMicrocosm(null); }}
-              className="flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left text-[13px] sm:text-[14px] font-medium transition-colors border-2 border-transparent text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:border-neutral-400 dark:hover:border-neutral-500"
+              title={!sidebarOpen ? getUiTranslations(language).promptGames : undefined}
+              className={`flex items-center w-full rounded-full text-left text-[13px] sm:text-[14px] font-medium transition-colors border-2 border-transparent text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:border-neutral-400 dark:hover:border-neutral-500 ${
+                sidebarOpen ? "gap-2.5 px-3 py-1.5" : "justify-center p-2 lg:px-2 lg:py-2"
+              }`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
                 <rect width="18" height="14" x="3" y="3" rx="2" />
                 <path d="M3 9h18" />
                 <path d="M3 15h18" />
               </svg>
-              <span className="truncate shimmer-text-colorful">{getUiTranslations(language).promptGames}</span>
+              {sidebarOpen && <span className="truncate shimmer-text-colorful">{getUiTranslations(language).promptGames}</span>}
             </button>
           </div>
 
+          {sidebarOpen && (
+          <>
           <button
             type="button"
             onClick={() => setConversationsCollapsed(!conversationsCollapsed)}
@@ -3768,11 +3771,78 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             </nav>
             </>
           )}
+          </>
+          )}
         </div>
+        {/* Accounts section - bottom of left panel (Browser Use style) */}
+        <div className="mt-auto shrink-0 px-2 py-3 border-t border-neutral-200/80 dark:border-neutral-800">
+            {user ? (
+              <div
+                role="button"
+                tabIndex={0}
+                aria-label="Account menu"
+                className={`flex items-center gap-2 min-w-0 rounded-xl border-[0.75px] border-neutral-200 dark:border-white/12 hover:border-neutral-300 dark:hover:border-white/18 px-2 py-2 w-full transition-colors cursor-pointer ${
+                  sidebarOpen ? "" : "justify-center lg:px-2"
+                }`}
+                onClick={(e) => {
+                  const trigger = (e.currentTarget as HTMLElement).querySelector("button");
+                  if (trigger && !trigger.contains(e.target as Node)) {
+                    trigger.click();
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    (e.currentTarget as HTMLElement).querySelector("button")?.click();
+                  }
+                }}
+              >
+                <UserButton
+                  appearance={{
+                    elements: {
+                      rootBox: "shrink-0",
+                      avatarBox: "w-8 h-8 ring-0",
+                    },
+                  }}
+                />
+                {sidebarOpen && (
+                  <div className="min-w-0 flex-1 truncate">
+                    <p className="text-sm font-medium text-foreground truncate">
+                      {user.firstName && user.lastName
+                        ? `${user.firstName} ${user.lastName}`
+                        : user.primaryEmailAddress?.emailAddress ?? "Account"}
+                    </p>
+                    {user.primaryEmailAddress?.emailAddress && (
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate">
+                        {user.primaryEmailAddress.emailAddress}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className={`flex gap-2 ${sidebarOpen ? "flex-wrap" : "flex-col items-center"}`}>
+                <Link
+                  href="/sign-in"
+                  onClick={() => typeof window !== "undefined" && window.innerWidth < 1024 && setSidebarOpen(false)}
+                  className="px-3 py-2 rounded-xl text-sm font-medium border-2 border-neutral-300 dark:border-neutral-600/35 hover:border-neutral-400 dark:hover:border-neutral-500/45 text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/sign-up"
+                  onClick={() => typeof window !== "undefined" && window.innerWidth < 1024 && setSidebarOpen(false)}
+                  className="px-3 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                >
+                  Create account
+                </Link>
+              </div>
+            )}
+          </div>
         </>
         )}
         {isAnonymous && (
-          <div className="px-3 py-2 flex-1 min-h-0 flex flex-col gap-2 items-center">
+          <div className={`px-3 py-2 flex flex-col gap-2 items-center ${sidebarOpen ? "flex-1 min-h-0" : "shrink-0 lg:hidden"}`}>
             <p className="w-full max-w-[220px] flex items-center gap-1.5 text-[13px] sm:text-[14px] font-medium text-neutral-600 dark:text-neutral-400 text-left">
               <SparklesIcon className="w-3.5 h-3.5 shrink-0" />
               <span>Sign in to unlock:</span>
@@ -3833,15 +3903,16 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           </div>
         )}
         </div>
+        {sidebarOpen && (
         <div className="shrink-0 px-3 pt-5 pb-4 mt-4">
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-2 text-center">
             {!isAnonymous && (
             <button
               type="button"
               onClick={() => setFeedbackModalOpen(true)}
-              className="flex items-center gap-2 px-2.5 py-1 rounded-lg text-[15px] text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              className="flex items-center justify-center gap-2 px-2.5 py-1 rounded-lg text-[15px] text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors whitespace-nowrap"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 shrink-0">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
               Send feedback
@@ -3850,21 +3921,22 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             <button
               type="button"
               onClick={() => setLetterModalOpen(true)}
-              className="font-developer text-[1.2em] leading-none font-normal text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
+              className="font-developer text-[1.2em] leading-none font-normal text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors whitespace-nowrap"
             >
               Crafted with Intention
             </button>
-            <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] text-neutral-500 dark:text-neutral-400">
-              <Link href="/terms-of-service" className="hover:text-foreground transition-colors">
+            <div className="mt-1 flex items-center justify-center gap-x-2 text-[10px] text-neutral-500 dark:text-neutral-400">
+              <Link href="/terms-of-service" className="hover:text-foreground transition-colors whitespace-nowrap">
                 Terms of Service
               </Link>
-              <span className="text-neutral-400 dark:text-neutral-500" aria-hidden>·</span>
-              <Link href="/privacy-policy" className="hover:text-foreground transition-colors">
+              <span className="text-neutral-400 dark:text-neutral-500 shrink-0" aria-hidden>·</span>
+              <Link href="/privacy-policy" className="hover:text-foreground transition-colors whitespace-nowrap">
                 Privacy Policy
               </Link>
             </div>
           </div>
         </div>
+        )}
       </aside>
 
       {/* Overlay when sidebar open on mobile - fades in/out */}
@@ -3926,10 +3998,10 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
           className={`flex-1 min-h-0 flex flex-col transition-all duration-500 ${
             messages.length > 0
               ? "pb-24 md:pb-0 overflow-y-auto scroll-smooth"
-              : "pb-0 overflow-hidden"
+              : "pb-0 overflow-visible"
           } ${convertToDeepSuccess ? "animate-convert-to-deep" : ""}`}
         >
-          <div ref={messagesScrollRef} className={`flex-1 min-h-0 min-w-0 ${messages.length > 0 ? "overflow-y-auto" : "overflow-hidden flex flex-col"}`}>
+          <div ref={messagesScrollRef} className={`flex-1 min-h-0 min-w-0 ${messages.length > 0 ? "overflow-y-auto" : "overflow-visible flex flex-col"}`}>
           {currentSession?.isCollapsed && collapsedSummary ? (
             <div className="min-h-full flex items-center justify-center p-4">
               <div className="w-full max-w-2xl">
@@ -4149,88 +4221,131 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             className={`max-w-2xl mx-auto w-full min-w-0 px-4 py-6 no-touch-callout ${messages.length === 0 ? "flex-1 min-h-0 flex flex-col items-center justify-center" : "space-y-6"}`}
           >
             {messages.length === 0 && (
-              <div className="flex w-full min-w-0 max-w-2xl flex-col items-center justify-center text-center px-2 space-y-8">
-                <div className="animate-fade-in-up w-full min-w-0">
-                  {incognitoMode ? (
-                    <div className="flex flex-col items-center gap-4 text-neutral-600 dark:text-neutral-400">
-                      <span className="group shrink-0 w-12 h-12 flex items-center justify-center" aria-hidden>
-                        <GhostIcon className="w-12 h-12" />
-                      </span>
-                      <p className="text-base sm:text-lg font-medium text-foreground">
-                        Let&apos;s chat incognito
-                      </p>
-                      <p className="text-sm max-w-md">
-                        Secure and private—nothing is saved. Your conversation won&apos;t appear in history.
-                      </p>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-500">
-                        Unavailable: Summarize & collapse, nuggets, saving to concepts
-                      </p>
-                    </div>
-                  ) : (
-                    <>
-                      <p className="w-full min-w-0 break-words text-neutral-500 dark:text-neutral-400 text-base sm:text-lg">
-                        {getLandingTranslations(language).letsDigIn}
-                      </p>
-                      <p className="w-full min-w-0 break-words text-neutral-400 dark:text-neutral-500 text-sm mt-2 mb-6">
-                        {getLandingTranslations(language).readyToConversation}
-                      </p>
-                      <div className="space-y-3 mb-6 w-full">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            playSelectionChime();
-                            setWaysOfLookingAtModalOpen(true);
-                            setWaysOfLookingAtDrawMode(true);
-                            setWaysOfLookingAtCategory(null);
-                            setWaysOfLookingAtCity(null);
-                            setWaysOfLookingAtCuisine(null);
-                            setWaysOfLookingAtMicrocosm(null);
-                          }}
-                          className="flex items-center gap-3 w-full max-w-sm mx-auto px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
-                        >
-                          <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
-                              <rect width="18" height="14" x="3" y="3" rx="2" />
-                              <path d="M3 9h18" />
-                              <path d="M3 15h18" />
-                            </svg>
-                          </span>
-                          <div className="min-w-0">
-                            <p className="font-medium text-foreground">{getLandingTranslations(language).drawPerspectiveCard}</p>
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).shiftHowYouLook}</p>
-                          </div>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            playSelectionChime();
-                            setLibraryPanelOpen("concepts");
-                            setSidebarOpen(false);
-                          }}
-                          className="flex items-center gap-3 w-full max-w-sm mx-auto px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
-                        >
-                          <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
-                              <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
-                              <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
-                            </svg>
-                          </span>
-                          <div className="min-w-0">
-                            <p className="font-medium text-foreground">{getLandingTranslations(language).browseMentalModels}</p>
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).frameworksAndBiases}</p>
-                          </div>
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-                <div className="w-full">
-                  <MovingPills
+              <div className="flex w-full min-w-0 max-w-2xl flex-col items-center justify-center text-center px-2 space-y-6">
+                <h1 className="text-xl sm:text-2xl font-semibold text-foreground animate-fade-in-up">
+                  {incognitoMode ? "Let's chat incognito" : getLandingTranslations(language).letsDigIn}
+                </h1>
+                <div className="w-full max-w-2xl flex items-stretch gap-1.5 sm:gap-2 min-h-[52px] animate-fade-in-up" data-tour="input-area">
+                  <div className="relative flex-1 min-w-0">
+                    <MentionInput
+                      inputRef={inputRef}
+                      value={input}
+                      onChange={setInput}
+                      onKeyDown={handleKeyDown}
+                      mentalModels={Array.from(mentalModelsIndex.entries()).map(([id, name]) => ({
+                        id,
+                        name,
+                      }))}
+                      longTermMemories={longTermMemories.map((ltm) => ({
+                        _id: ltm._id,
+                        title: translatedTitles[ltm._id] ?? ltm.title,
+                        enrichmentPrompt: ltm.enrichmentPrompt,
+                      }))}
+                      customConcepts={customConcepts.map((cc) => ({
+                        _id: cc._id,
+                        title: translatedTitles[cc._id] ?? cc.title,
+                        enrichmentPrompt: cc.enrichmentPrompt,
+                      }))}
+                      conceptGroups={conceptGroups.map((cg) => ({
+                        _id: cg._id,
+                        title: translatedTitles[cg._id] ?? cg.title,
+                      }))}
+                      mentionTranslations={getMentionTranslations(language)}
+                      placeholder="/ to search"
+                      placeholderMobile="/ to search"
+                      disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                      className="w-full h-[52px] max-h-[52px] py-3 pl-4 pr-4 sm:pr-10 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
+                      onMentalModelClick={handleMentalModelClick}
+                      onLtmClick={(id) => {
+                        const ltm = longTermMemories.find((l) => l._id === id);
+                        if (ltm) setLtmDetailModal(ltm);
+                      }}
+                      onCustomConceptClick={(id) => {
+                        const cc = customConcepts.find((c) => c._id === id);
+                        if (cc) openConceptDetail(cc);
+                      }}
+                      onConceptGroupClick={(id) => {
+                        const cg = conceptGroups.find((g) => g._id === id);
+                        if (cg) {
+                          fetch(`/api/me/concept-groups/${id}`)
+                            .then((r) => r.ok ? r.json() : Promise.reject())
+                            .then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] }))
+                            .catch(() => setCgDetailModal(cg));
+                        }
+                      }}
+                      previewMap={previewMap}
+                    />
+                    {isMobileViewport && !drawnPerspectiveCard && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setInputExpandModalOpen(true);
+                        }}
+                        disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                        className="absolute inset-0 z-10 sm:hidden rounded-2xl"
+                        aria-label="Open composer"
+                      />
+                    )}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setInputExpandModalOpen(true);
+                      }}
+                      disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                      className="hidden absolute top-2 right-2 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 disabled:opacity-50"
+                      aria-label="Expand input"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                        <path d="M15 3h6v6" />
+                        <path d="M9 21H3v-6" />
+                      </svg>
+                    </button>
+                  </div>
+                  <VoiceInputButton
+                    onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
                     language={language}
-                    onSelectStarter={(text) => sendMessage(text)}
-                    onSelectPrompt={(card) => startConversationFromPerspectiveCard(card)}
+                    disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                    ariaLabel="Voice input"
+                    className="!min-h-[48px] !min-w-[48px] sm:!min-h-[52px] sm:!min-w-[52px]"
                   />
+                  <button
+                    onClick={() => sendMessage()}
+                    disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
+                    aria-label="Send message"
+                    className="flex items-center justify-center gap-2 px-4 min-h-[48px] sm:min-h-[52px] rounded-2xl bg-accent text-white text-sm font-semibold transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
+                  >
+                    {isLoading ? (
+                      <LoadingDots aria-label="Sending" />
+                    ) : (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                          <path d="m22 2-7 20-4-9-9-4Z" />
+                          <path d="M22 2 11 13" />
+                        </svg>
+                        Send
+                      </>
+                    )}
+                  </button>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSelectionChime();
+                    setIdeasModalOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-5 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 active:scale-[0.98] animate-fade-in-up"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
+                    <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+                    <path d="M9 18h6" />
+                    <path d="M10 22h4" />
+                  </svg>
+                  {getLandingTranslations(language).ideas}
+                </button>
               </div>
             )}
             {messages.map((m, i) => (
@@ -4370,8 +4485,8 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             </Link>
           </p>
         )}
-        {/* Bottom bar - fixed on mobile so it stays visible when scrolling. When voice mode, show orb in same section instead of input. Hidden only during first-time onboarding (no messages). On mobile, use gradient so scroll-to-bottom area is transparent and content shows through. */}
-        <div className={`fixed inset-x-0 bottom-0 z-30 flex flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background ${onboardingStep !== null && messages.length === 0 ? "hidden" : ""}`}>
+        {/* Bottom bar - fixed on mobile so it stays visible when scrolling. Hidden during onboarding or when empty (input is in centered content on new conversation page). */}
+        <div className={`fixed inset-x-0 bottom-0 z-30 flex flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background ${messages.length === 0 ? "hidden" : ""}`}>
           {!isAnonymous && messages.length >= 2 && (!currentSession || !currentSession.isCollapsed) && (
             <div className="px-4 pt-1 pb-0.5 sm:pt-1.5 sm:pb-1">
               <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
@@ -4486,14 +4601,20 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 onClick={() => sendMessage()}
                 disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
                 aria-label="Send message"
-                className="flex items-center justify-center w-[48px] h-[48px] sm:w-[52px] sm:h-[52px] rounded-2xl bg-accent text-white text-[11px] sm:text-xs font-semibold transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
+                className="flex items-center justify-center gap-2 px-4 min-h-[48px] sm:min-h-[52px] rounded-2xl bg-accent text-white text-sm font-semibold transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
               >
                 {isLoading ? (
                   <LoadingDots aria-label="Sending" />
                 ) : (
-                  "Send"
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                      <path d="m22 2-7 20-4-9-9-4Z" />
+                      <path d="M22 2 11 13" />
+                    </svg>
+                    Send
+                  </>
                 )}
-                </button>
+              </button>
               </div>
           </div>
         </div>
@@ -4609,12 +4730,18 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                     }}
                     disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
                     aria-label="Send message"
-                    className="flex items-center justify-center w-[44px] h-[44px] sm:w-[48px] sm:h-[48px] rounded-2xl bg-accent text-white text-[11px] sm:text-xs font-semibold transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
+                    className="flex items-center justify-center gap-2 px-4 min-h-[44px] sm:min-h-[48px] rounded-2xl bg-accent text-white text-sm font-semibold transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
                   >
                     {isLoading ? (
                       <LoadingDots aria-label="Sending" />
                     ) : (
-                      "Send"
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                          <path d="m22 2-7 20-4-9-9-4Z" />
+                          <path d="M22 2 11 13" />
+                        </svg>
+                        Send
+                      </>
                     )}
                   </button>
                 </div>
@@ -4915,24 +5042,39 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       const description = preview?.oneLiner ?? preview?.quickIntro ?? "Tap to explore";
                       const isFavorite = mmFavorites.has(id);
                       const hasImage = !id.startsWith("custom_");
+                      const isCustom = id.startsWith("custom_");
                       return (
                         <div key={id} className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]">
-                          <button
-                            type="button"
-                            onClick={(e) => { e.stopPropagation(); e.preventDefault(); toggleMmFavorite(id); }}
-                            className="absolute top-2 right-2 z-10 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors touch-manipulation"
-                            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-                          >
-                            {isFavorite ? (
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden>
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                          {isCustom ? (
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); e.preventDefault(); setMmDeleteConfirmModal({ id, name }); }}
+                              className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
+                              aria-label={`Delete ${name}`}
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
+                                <path d="M10 11v6M14 11v6" />
                               </svg>
-                            ) : (
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4 text-neutral-400 dark:text-neutral-500" aria-hidden>
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                              </svg>
-                            )}
-                          </button>
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); e.preventDefault(); toggleMmFavorite(id); }}
+                              className="absolute top-2 right-2 z-10 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors touch-manipulation"
+                              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+                            >
+                              {isFavorite ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden>
+                                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                </svg>
+                              ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4 text-neutral-400 dark:text-neutral-500" aria-hidden>
+                                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                </svg>
+                              )}
+                            </button>
+                          )}
                           <div
                             role="button"
                             tabIndex={0}
@@ -6356,61 +6498,6 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                       Install Extension
                     </Link>
                   </div>
-                  <div className="flex flex-col gap-1.5 min-w-0 flex-1">
-                    <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Account</h3>
-                    {!isAnonymous && user ? (
-                      <div
-                        ref={profileTriggerRef}
-                        role="button"
-                        tabIndex={0}
-                        aria-label="Account menu"
-                        className="inline-flex items-center gap-2 min-w-0 rounded-xl border-[0.75px] border-neutral-200 dark:border-white/12 hover:border-neutral-300 dark:hover:border-white/18 px-3 py-2 w-fit max-w-full transition-colors cursor-pointer"
-                        onClick={(e) => {
-                          const trigger = (e.currentTarget as HTMLElement).querySelector("button");
-                          if (trigger && !trigger.contains(e.target as Node)) {
-                            trigger.click();
-                          }
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            (e.currentTarget as HTMLElement).querySelector("button")?.click();
-                          }
-                        }}
-                      >
-                        <UserButton
-                          appearance={{
-                            elements: {
-                              rootBox: "shrink-0",
-                              avatarBox: "w-7 h-7 ring-0",
-                            },
-                          }}
-                        />
-                        <span className="text-sm font-medium text-foreground truncate">
-                          {user.firstName && user.lastName
-                            ? `${user.firstName} ${user.lastName}`
-                            : user.primaryEmailAddress?.emailAddress ?? "Account"}
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="flex flex-wrap gap-2">
-                        <Link
-                          href="/sign-in"
-                          onClick={() => setSettingsOpen(false)}
-                          className="px-3 py-2 rounded-xl text-sm font-medium border-2 border-neutral-300 dark:border-neutral-600/35 hover:border-neutral-400 dark:hover:border-neutral-500/45 text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
-                        >
-                          Sign In
-                        </Link>
-                        <Link
-                          href="/sign-up"
-                          onClick={() => setSettingsOpen(false)}
-                          className="px-3 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
-                        >
-                          Create account
-                        </Link>
-                      </div>
-                    )}
-                  </div>
                 </div>
 
                 <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
@@ -6926,6 +7013,107 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
         <FeedbackModal onClose={() => setFeedbackModalOpen(false)} />
       )}
 
+      {ideasModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => setIdeasModalOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={getLandingTranslations(language).ideas}
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,640px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <div className="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
+                  <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+                  <path d="M9 18h6" />
+                  <path d="M10 22h4" />
+                </svg>
+                <h2 className="text-lg font-semibold text-foreground">{getLandingTranslations(language).ideas}</h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIdeasModalOpen(false)}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-6">
+              <div className="space-y-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSelectionChime();
+                    setIdeasModalOpen(false);
+                    setWaysOfLookingAtModalOpen(true);
+                    setWaysOfLookingAtDrawMode(true);
+                    setWaysOfLookingAtCategory(null);
+                    setWaysOfLookingAtCity(null);
+                    setWaysOfLookingAtCuisine(null);
+                    setWaysOfLookingAtMicrocosm(null);
+                  }}
+                  className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+                >
+                  <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
+                      <rect width="18" height="14" x="3" y="3" rx="2" />
+                      <path d="M3 9h18" />
+                      <path d="M3 15h18" />
+                    </svg>
+                  </span>
+                  <div className="min-w-0">
+                    <p className="font-medium text-foreground">{getLandingTranslations(language).drawPerspectiveCard}</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).shiftHowYouLook}</p>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSelectionChime();
+                    setIdeasModalOpen(false);
+                    setLibraryPanelOpen("concepts");
+                    setSidebarOpen(false);
+                  }}
+                  className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+                >
+                  <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
+                      <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
+                      <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
+                    </svg>
+                  </span>
+                  <div className="min-w-0">
+                    <p className="font-medium text-foreground">{getLandingTranslations(language).browseMentalModels}</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).frameworksAndBiases}</p>
+                  </div>
+                </button>
+              </div>
+              <div className="pt-2 border-t border-neutral-200 dark:border-neutral-700">
+                <MovingPills
+                  language={language}
+                  onSelectStarter={(text) => {
+                    setIdeasModalOpen(false);
+                    sendMessage(text);
+                  }}
+                  onSelectPrompt={(card) => {
+                    setIdeasModalOpen(false);
+                    startConversationFromPerspectiveCard(card);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {signInFeaturesModalOpen && isAnonymous && (
         <div
           className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
@@ -7268,6 +7456,59 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
                 className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-60"
               >
                 {goBackLoading ? "Going back…" : "Go back"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {mmDeleteConfirmModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => setMmDeleteConfirmModal(null)}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-md w-full p-6 border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="font-semibold text-lg">Delete custom mental model?</h2>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+              Removing &quot;{mmDeleteConfirmModal.name}&quot; will permanently delete this custom mental model. The agent will no longer use it in conversations.
+            </p>
+            <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-500">
+              Are you sure you want to delete?
+            </p>
+            <div className="mt-6 flex gap-2 justify-end">
+              <button
+                onClick={() => setMmDeleteConfirmModal(null)}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                {getUiTranslations(language).cancel}
+              </button>
+              <button
+                onClick={async () => {
+                  const { id } = mmDeleteConfirmModal;
+                  setMmDeleteConfirmModal(null);
+                  if (selectedMentalModel?.id === id) {
+                    setSelectedMentalModel(null);
+                    setRelevanceContext(null);
+                  }
+                  try {
+                    const res = await fetch(`/api/me/mental-models/${id}`, {
+                      method: "DELETE",
+                    });
+                    if (res.ok) {
+                      setMentalModelsRefreshKey((k) => k + 1);
+                    }
+                  } catch {
+                    /* ignore */
+                  }
+                }}
+                className="px-4 py-2 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+              >
+                Delete
               </button>
             </div>
           </div>
@@ -8987,6 +9228,11 @@ className={`flex items-center gap-2.5 w-full px-3 py-1.5 rounded-full text-left 
             setSelectedMentalModel(null);
             setRelevanceContext(null);
           }}
+          onDeleteCustom={
+            selectedMentalModel.id.startsWith("custom_")
+              ? () => setMentalModelsRefreshKey((k) => k + 1)
+              : undefined
+          }
           messages={messages}
           onSendMessage={(text) => {
             setSelectedMentalModel(null);

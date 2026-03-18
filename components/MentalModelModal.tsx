@@ -138,6 +138,7 @@ export function MentalModelModal({
   onTagAdded,
   onOpenRelated,
   onSavedToLibrary,
+  onDeleteCustom,
   isSavedInConcepts = false,
   canSaveToConcepts = true,
   messages = [],
@@ -151,6 +152,7 @@ export function MentalModelModal({
   onTagAdded?: (updatedSession?: { _id: string; mentalModelTags?: string[] }) => void;
   onOpenRelated?: (id: string) => void;
   onSavedToLibrary?: () => void;
+  onDeleteCustom?: (id: string) => void;
   isSavedInConcepts?: boolean;
   canSaveToConcepts?: boolean;
   messages?: { role: string; content: string }[];
@@ -172,6 +174,7 @@ export function MentalModelModal({
     generatedText: string;
     loading: boolean;
   } | null>(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   useEffect(() => {
     setFeedbackGiven(null);
@@ -180,6 +183,7 @@ export function MentalModelModal({
     setStep(0);
     setSavedCelebration(false);
     setGenerateModal(null);
+    setDeleteConfirmOpen(false);
   }, [model?.id]);
 
   // Add tag to conversation when modal opens (regardless of feedback)
@@ -325,13 +329,28 @@ export function MentalModelModal({
                 ))}
               </div>
             </div>
-            <button
-              onClick={handleClose}
-              className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-              aria-label="Close"
-            >
-              ✕
-            </button>
+            <div className="flex items-center gap-1">
+              {model.id.startsWith("custom_") && onDeleteCustom && (
+                <button
+                  type="button"
+                  onClick={() => setDeleteConfirmOpen(true)}
+                  className="p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/30 text-neutral-500 hover:text-red-600 transition-colors"
+                  aria-label="Delete"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                    <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
+                    <path d="M10 11v6M14 11v6" />
+                  </svg>
+                </button>
+              )}
+              <button
+                onClick={handleClose}
+                className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
         </div>
 
         <div className="relative flex-1 min-h-[min(400px,55vh)] overflow-y-auto p-4">
@@ -1027,6 +1046,54 @@ export function MentalModelModal({
                 className="px-4 py-2 rounded-xl text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Add to Conversation
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {deleteConfirmOpen && (
+        <div
+          className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-black/40 rounded-3xl"
+          onClick={() => setDeleteConfirmOpen(false)}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-2xl shadow-xl max-w-sm w-full p-5 border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="font-semibold text-base">Delete this mental model?</h3>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+              &quot;{model.name}&quot; will be permanently removed. The agent will no longer use it.
+            </p>
+            <div className="mt-4 flex gap-2 justify-end">
+              <button
+                type="button"
+                onClick={() => setDeleteConfirmOpen(false)}
+                className="px-3 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    const res = await fetch(`/api/me/mental-models/${model.id}`, {
+                      method: "DELETE",
+                    });
+                    if (res.ok) {
+                      setDeleteConfirmOpen(false);
+                      onDeleteCustom?.(model.id);
+                      handleClose();
+                    }
+                  } catch {
+                    /* ignore */
+                  }
+                }}
+                className="px-3 py-2 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+              >
+                Delete
               </button>
             </div>
           </div>
