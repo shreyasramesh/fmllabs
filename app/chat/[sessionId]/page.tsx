@@ -139,7 +139,6 @@ type ExportDataSection =
   | "long_term_memory"
   | "custom_concepts"
   | "concept_groups"
-  | "nuggets"
   | "transcripts"
   | "saved_mental_models";
 
@@ -154,7 +153,6 @@ const EXPORT_DATA_SECTION_OPTIONS: Array<{
   { key: "long_term_memory", label: "Long-term memory", description: "Saved memory summaries and prompts." },
   { key: "custom_concepts", label: "Custom concepts", description: "Your created concepts and enrichments." },
   { key: "concept_groups", label: "Concept groups", description: "Groups and linked concept IDs." },
-  { key: "nuggets", label: "Nuggets", description: "Saved insights and source notes." },
   { key: "transcripts", label: "Saved transcripts", description: "Video transcript captures." },
   {
     key: "saved_mental_models",
@@ -170,7 +168,6 @@ const DEFAULT_EXPORT_SELECTIONS: Record<ExportDataSection, boolean> = {
   long_term_memory: true,
   custom_concepts: true,
   concept_groups: true,
-  nuggets: true,
   transcripts: true,
   saved_mental_models: true,
 };
@@ -203,6 +200,8 @@ function MessageBubble({
   ltmIdToTitle,
   ccIdToTitle,
   cgIdToTitle,
+  figureIdToName = new Map(),
+  figureIdToDescription = new Map(),
   onMentalModelClick,
   onLtmClick,
   onCustomConceptClick,
@@ -218,6 +217,7 @@ function MessageBubble({
   onConvertToDeep,
   onManualJournalCheckpoint,
   manualJournalLoading = false,
+  isFindingGuide = false,
 }: {
   message: Message;
   messageIndex: number;
@@ -232,6 +232,8 @@ function MessageBubble({
   ltmIdToTitle: Map<string, string>;
   ccIdToTitle: Map<string, string>;
   cgIdToTitle: Map<string, string>;
+  figureIdToName?: Map<string, string>;
+  figureIdToDescription?: Map<string, string>;
   onMentalModelClick: (id: string, sourceMessage?: string) => void;
   onLtmClick: (id: string) => void;
   onCustomConceptClick?: (id: string) => void;
@@ -247,6 +249,7 @@ function MessageBubble({
   onConvertToDeep?: () => void;
   onManualJournalCheckpoint?: () => void;
   manualJournalLoading?: boolean;
+  isFindingGuide?: boolean;
 }) {
   const { text, options } =
     message.role === "assistant"
@@ -261,11 +264,11 @@ function MessageBubble({
   const ctx = message.role === "assistant" ? message.selectedContexts : undefined;
   const ctxCount = ctx && ctx.mentalModels.length + ctx.longTermMemories.length + (ctx.customConcepts?.length ?? 0) + (ctx.conceptGroups?.length ?? 0) + (ctx.perspectiveCards?.length ?? 0);
   const assistantPlainText = message.role === "assistant"
-    ? resolveTtsReferenceText(text, { idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle })
+    ? resolveTtsReferenceText(text, { idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle, figureIdToName })
     : "";
   const optionPlainTexts = message.role === "assistant"
     ? options.map((option) =>
-        resolveTtsReferenceText(option, { idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle })
+        resolveTtsReferenceText(option, { idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle, figureIdToName })
       )
     : [];
   const assistantOptionsPrefix = optionPlainTexts.length > 0 ? " Follow-up options: " : "";
@@ -273,7 +276,7 @@ function MessageBubble({
     ? (assistantPlainText + assistantOptionsPrefix + optionPlainTexts.join(". ")).trim()
     : text;
   const userPlainText = message.role === "user"
-    ? resolveTtsReferenceText(text, { idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle })
+    ? resolveTtsReferenceText(text, { idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle, figureIdToName })
     : "";
   const isAssistantTtsActive =
     message.role === "assistant" && typeof ttsHighlight === "number" && ttsHighlight >= 0;
@@ -400,7 +403,7 @@ function MessageBubble({
         }`}
         dir={isRtl ? "rtl" : undefined}
       >
-        {showTtsButton && (
+        {showTtsButton && !isFindingGuide && (
         <div className="absolute top-2 right-2">
           <TTSButton
               text={message.role === "assistant" ? assistantSpeechText : text}
@@ -428,6 +431,8 @@ function MessageBubble({
                 ltmIdToTitle={ltmIdToTitle}
                 ccIdToTitle={ccIdToTitle}
                 cgIdToTitle={cgIdToTitle}
+                figureIdToName={figureIdToName}
+                figureIdToDescription={figureIdToDescription}
                 onMentalModelClick={(id) => onMentalModelClick(id, text)}
                 onLtmClick={onLtmClick}
                 onCustomConceptClick={onCustomConceptClick}
@@ -452,7 +457,12 @@ function MessageBubble({
             )}
             {text ? (
               <>
-                {isSpeakingAssistantBody ? (
+                {isFindingGuide ? (
+                  <span className="flex items-center gap-2">
+                    <span>{text}</span>
+                    <LoadingDots className="opacity-70 w-4 h-4" aria-hidden />
+                  </span>
+                ) : isSpeakingAssistantBody ? (
                   <TtsHighlightedText
                     text={assistantPlainText}
                     charEnd={ttsHighlight}
@@ -464,6 +474,8 @@ function MessageBubble({
                   ltmIdToTitle={ltmIdToTitle}
                   ccIdToTitle={ccIdToTitle}
                   cgIdToTitle={cgIdToTitle}
+                  figureIdToName={figureIdToName}
+                  figureIdToDescription={figureIdToDescription}
                   onMentalModelClick={onMentalModelClick}
                   onLtmClick={onLtmClick}
                   onCustomConceptClick={onCustomConceptClick}
@@ -667,6 +679,8 @@ function MessageBubble({
                 ltmIdToTitle={ltmIdToTitle}
                 ccIdToTitle={ccIdToTitle}
                 cgIdToTitle={cgIdToTitle}
+                figureIdToName={figureIdToName}
+                figureIdToDescription={figureIdToDescription}
                 chipStyle="assistant"
                 onMentalModelClick={(id) => onMentalModelClick(id, opt)}
                 onLtmClick={onLtmClick}
@@ -1361,33 +1375,38 @@ function ChatBubbleIcon({ className }: { className?: string }) {
 
 const PERSPECTIVE_CARD_PHRASES: Record<
   LanguageCode,
-  { intro: string; outro: string }
+  { intro: string; outro: string; figureIntro: (name: string) => string }
 > = {
-  en: { intro: "Let me invite you to look through this lens:", outro: "What comes to mind?" },
-  hi: { intro: "मैं आपको इस लेंस के माध्यम से देखने के लिए आमंत्रित करता हूं:", outro: "आपके मन में क्या आता है?" },
-  ta: { intro: "இந்த வில்லை வழியாக பார்க்க உங்களை அழைக்கிறேன்:", outro: "உங்கள் மனதில் என்ன வருகிறது?" },
-  kn: { intro: "ಈ ಲೆನ್ಸ್ ಮೂಲಕ ನೋಡಲು ನಿಮ್ಮನ್ನು ಆಹ್ವಾನಿಸುತ್ತೇನೆ:", outro: "ನಿಮ್ಮ ಮನಸ್ಸಿಗೆ ಏನು ಬರುತ್ತದೆ?" },
-  ja: { intro: "このレンズを通して見るようにお誘いします:", outro: "何が思い浮かびますか？" },
-  zh: { intro: "让我邀请您通过这个视角来看:", outro: "您想到了什么？" },
-  es: { intro: "Déjame invitarte a mirar a través de esta lente:", outro: "¿Qué te viene a la mente?" },
-  ar: { intro: "دعني أدعوك للنظر من خلال هذه العدسة:", outro: "ما الذي يخطر ببالك؟" },
-  fr: { intro: "Laissez-moi vous inviter à regarder à travers cette lentille:", outro: "Qu'est-ce qui vous vient à l'esprit ?" },
-  bn: { intro: "আমি আপনাকে এই লেন্স দিয়ে দেখতে আমন্ত্রণ জানাচ্ছি:", outro: "আপনার মনে কী আসে?" },
-  pt: { intro: "Deixe-me convidá-lo a olhar através desta lente:", outro: "O que vem à sua mente?" },
-  ru: { intro: "Позвольте пригласить вас посмотреть через эту призму:", outro: "Что приходит вам на ум?" },
-  ur: { intro: "مجھے آپ کو اس لینس کے ذریعے دیکھنے کی دعوت دینے دیں:", outro: "آپ کے ذہن میں کیا آتا ہے؟" },
-  de: { intro: "Lass mich dich einladen, durch diese Linse zu schauen:", outro: "Was fällt dir ein?" },
-  it: { intro: "Lascia che ti inviti a guardare attraverso questa lente:", outro: "Cosa ti viene in mente?" },
-  pl: { intro: "Pozwól, że zaproszę cię do spojrzenia przez tę soczewkę:", outro: "Co przychodzi ci do głowy?" },
-  uk: { intro: "Дозвольте запросити вас подивитися крізь цю лінзу:", outro: "Що спадає вам на думку?" },
-  ro: { intro: "Lasă-mă să te invit să privești prin această lentilă:", outro: "Ce îți vine în minte?" },
-  nl: { intro: "Laat me je uitnodigen om door deze lens te kijken:", outro: "Wat komt er bij je op?" },
-  tr: { intro: "Bu mercekten bakman için seni davet edeyim:", outro: "Aklına ne geliyor?" },
+  en: { intro: "Let me invite you to look through this lens:", outro: "What comes to mind?", figureIntro: (name) => `${name} invites you to look through this lens:` },
+  hi: { intro: "मैं आपको इस लेंस के माध्यम से देखने के लिए आमंत्रित करता हूं:", outro: "आपके मन में क्या आता है?", figureIntro: (name) => `${name} invites you to look through this lens:` },
+  ta: { intro: "இந்த வில்லை வழியாக பார்க்க உங்களை அழைக்கிறேன்:", outro: "உங்கள் மனதில் என்ன வருகிறது?", figureIntro: (name) => `${name} invites you to look through this lens:` },
+  kn: { intro: "ಈ ಲೆನ್ಸ್ ಮೂಲಕ ನೋಡಲು ನಿಮ್ಮನ್ನು ಆಹ್ವಾನಿಸುತ್ತೇನೆ:", outro: "ನಿಮ್ಮ ಮನಸ್ಸಿಗೆ ಏನು ಬರುತ್ತದೆ?", figureIntro: (name) => `${name} invites you to look through this lens:` },
+  ja: { intro: "このレンズを通して見るようにお誘いします:", outro: "何が思い浮かびますか？", figureIntro: (name) => `${name} invites you to look through this lens:` },
+  zh: { intro: "让我邀请您通过这个视角来看:", outro: "您想到了什么？", figureIntro: (name) => `${name} invites you to look through this lens:` },
+  es: { intro: "Déjame invitarte a mirar a través de esta lente:", outro: "¿Qué te viene a la mente?", figureIntro: (name) => `${name} te invita a mirar a través de esta lente:` },
+  ar: { intro: "دعني أدعوك للنظر من خلال هذه العدسة:", outro: "ما الذي يخطر ببالك؟", figureIntro: (name) => `${name} invites you to look through this lens:` },
+  fr: { intro: "Laissez-moi vous inviter à regarder à travers cette lentille:", outro: "Qu'est-ce qui vous vient à l'esprit ?", figureIntro: (name) => `${name} vous invite à regarder à travers cette lentille:` },
+  bn: { intro: "আমি আপনাকে এই লেন্স দিয়ে দেখতে আমন্ত্রণ জানাচ্ছি:", outro: "আপনার মনে কী আসে?", figureIntro: (name) => `${name} invites you to look through this lens:` },
+  pt: { intro: "Deixe-me convidá-lo a olhar através desta lente:", outro: "O que vem à sua mente?", figureIntro: (name) => `${name} convida você a olhar através desta lente:` },
+  ru: { intro: "Позвольте пригласить вас посмотреть через эту призму:", outro: "Что приходит вам на ум?", figureIntro: (name) => `${name} invites you to look through this lens:` },
+  ur: { intro: "مجھے آپ کو اس لینس کے ذریعے دیکھنے کی دعوت دینے دیں:", outro: "آپ کے ذہن میں کیا آتا ہے؟", figureIntro: (name) => `${name} invites you to look through this lens:` },
+  de: { intro: "Lass mich dich einladen, durch diese Linse zu schauen:", outro: "Was fällt dir ein?", figureIntro: (name) => `${name} lädt dich ein, durch diese Linse zu schauen:` },
+  it: { intro: "Lascia che ti inviti a guardare attraverso questa lente:", outro: "Cosa ti viene in mente?", figureIntro: (name) => `${name} ti invita a guardare attraverso questa lente:` },
+  pl: { intro: "Pozwól, że zaproszę cię do spojrzenia przez tę soczewkę:", outro: "Co przychodzi ci do głowy?", figureIntro: (name) => `${name} invites you to look through this lens:` },
+  uk: { intro: "Дозвольте запросити вас подивитися крізь цю лінзу:", outro: "Що спадає вам на думку?", figureIntro: (name) => `${name} invites you to look through this lens:` },
+  ro: { intro: "Lasă-mă să te invit să privești prin această lentilă:", outro: "Ce îți vine în minte?", figureIntro: (name) => `${name} invites you to look through this lens:` },
+  nl: { intro: "Laat me je uitnodigen om door deze lens te kijken:", outro: "Wat komt er bij je op?", figureIntro: (name) => `${name} nodigt je uit om door deze lens te kijken:` },
+  tr: { intro: "Bu mercekten bakman için seni davet edeyim:", outro: "Aklına ne geliyor?", figureIntro: (name) => `${name} invites you to look through this lens:` },
 };
 
-function buildPerspectiveCardMessage(language: LanguageCode, prompt: string): string {
-  const { intro, outro } = PERSPECTIVE_CARD_PHRASES[language] ?? PERSPECTIVE_CARD_PHRASES.en;
-  return `${intro}\n\n${prompt}\n\n${outro}`;
+function buildPerspectiveCardMessage(
+  language: LanguageCode,
+  prompt: string,
+  figure?: { id: string; name: string }
+): string {
+  const phrases = PERSPECTIVE_CARD_PHRASES[language] ?? PERSPECTIVE_CARD_PHRASES.en;
+  const intro = figure ? phrases.figureIntro(`[[figure:${figure.id}]]`) : phrases.intro;
+  return `${intro}\n\n${prompt}\n\n${phrases.outro}`;
 }
 
 const PROMPT_LENSES_BY_LANGUAGE: Partial<
@@ -1690,16 +1709,6 @@ export default function ChatPage() {
       concepts: { title: string; summary: string; enrichmentPrompt: string }[];
     }[];
   }[]>([]);
-  const [nuggets, setNuggets] = useState<{ _id: string; content: string; source?: string }[]>([]);
-  const [nuggetFormOpen, setNuggetFormOpen] = useState<"selection" | "panel" | null>(null);
-  const [nuggetFormPosition, setNuggetFormPosition] = useState<{ x: number; y: number } | null>(null);
-  const [nuggetCreateContent, setNuggetCreateContent] = useState("");
-  const [nuggetCreateSource, setNuggetCreateSource] = useState("");
-  const [nuggetCreateLoading, setNuggetCreateLoading] = useState(false);
-  const [nuggetSuggestSourceLoading, setNuggetSuggestSourceLoading] = useState(false);
-  const [nuggetImproveLoading, setNuggetImproveLoading] = useState(false);
-  const [nuggetLearnId, setNuggetLearnId] = useState<string | null>(null);
-  const [nuggetLearnExplanation, setNuggetLearnExplanation] = useState<string | null>(null);
   const [cgDetailModal, setCgDetailModal] = useState<ConceptGroupItem | null>(null);
   const [cgCreateModal, setCgCreateModal] = useState(false);
   const [cgCreateStep, setCgCreateStep] = useState<1 | 2 | 3 | 4>(1);
@@ -1770,13 +1779,12 @@ export default function ChatPage() {
   const ONBOARDING_COMPLETE_KEY = "fml-labs-onboarding-complete";
   const FEATURE_TOUR_COMPLETE_KEY = "fml-labs-feature-tour-complete";
   const FEATURE_TOUR_STEPS = [
-    { target: "[data-tour=menu-button]", title: "Open the menu", content: "Tap here to access conversations, nuggets, concepts, mental models, long-term memory, and domains.", ringClass: "ring-white dark:ring-neutral-300" },
+    { target: "[data-tour=menu-button]", title: "Open the menu", content: "Tap here to access conversations, concepts, mental models, long-term memory, and groups.", ringClass: "ring-white dark:ring-neutral-300" },
     { target: "[data-tour=sidebar-nav]", title: "Your library", content: "All your content in one place—let's explore each section.", ringClass: "ring-white dark:ring-neutral-300" },
     { target: "[data-tour=tour-conversations]", title: "Conversations", content: "Your chat history. Start new conversations, pick up where you left off, or search through past chats.", panel: "conversations", ringClass: "ring-white dark:ring-neutral-300" },
-    { target: "[data-tour=tour-nuggets]", title: "Nuggets", content: "Save impactful quotes and snippets. Highlight text in conversations or paste from clipboard.", panel: "nuggets", ringClass: "ring-white dark:ring-neutral-300" },
     { target: "[data-tour=tour-cc]", title: "Concepts", content: "Your custom frameworks and values. The AI uses them to personalize responses.", panel: "cc", ringClass: "ring-white dark:ring-neutral-300" },
     { target: "[data-tour=tour-concepts]", title: "Mental Models", content: "Proven thinking frameworks and cognitive biases. Browse, search, and save your favorites.", panel: "concepts", ringClass: "ring-white dark:ring-neutral-300" },
-    { target: "[data-tour=input-area]", title: "Ask anything", content: "Type your question here. Use / to search mental models and concepts. The AI uses them to help you think through decisions.", ringClass: "ring-white dark:ring-neutral-300" },
+    { target: "[data-tour=input-area]", title: "Ask anything", content: "Type your question here. Use @ to search mental models and concepts. The AI uses them to help you think through decisions.", ringClass: "ring-white dark:ring-neutral-300" },
     { target: "[data-tour=settings-button]", title: "Customize", content: "Change language, voice style, playback speed, and more in settings.", ringClass: "ring-white dark:ring-neutral-300" },
   ] as const;
   const [onboardingStep, setOnboardingStep] = useState<0 | 1 | 2 | 3 | null>(null);
@@ -1793,22 +1801,20 @@ export default function ChatPage() {
     : sessionsLoaded && conceptsLoaded && ltmLoaded && ccLoaded && cgLoaded && mentalModelsLoaded;
   const signInFeatures = [
     { label: "Saved conversations", description: "Access your full chat history across devices. Pick up where you left off.", icon: "chat" },
-    { label: "Nuggets", description: "Save impactful quotes, words, and snippets. Paste from clipboard or highlight text in conversations.", icon: "nuggets" },
     { label: "Custom concepts", description: "Define your own frameworks, values, or principles. The AI uses them to personalize responses.", icon: "concepts" },
     { label: "Mental models library", description: "Explore proven mental models and cognitive biases to improve thinking and decisions.", icon: "mental-models" },
     { label: "Long-term memory", description: "The AI remembers key context from past conversations to give more relevant advice.", icon: "memory" },
-    { label: "Domains", description: "Group related concepts into domains (e.g. career, health). The AI draws from them when relevant.", icon: "domains" },
+    { label: "Groups", description: "Group related concepts (e.g. career, health). The AI draws from them when relevant.", icon: "groups" },
     { label: "Voice (speech to text + text to speech)", description: "Use your voice to ask questions and listen to AI responses with natural playback.", icon: "voice" },
     { label: "Summarize and collapse", description: "Collapse long chats into compact summaries and keep key insights easy to revisit.", icon: "summary" },
     { label: "Incognito mode", description: "Chat privately without saving to history. Conversations stay off the record.", icon: "ghost" },
   ];
   const signInFeatureIconSvg = (name: string) => {
     if (name === "chat") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>;
-    if (name === "nuggets") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>;
     if (name === "concepts") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /><path d="M12 3v18" /></svg>;
     if (name === "mental-models") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M12 3v3" /><path d="M7.5 5.5 9.5 8" /><path d="m16.5 5.5-2 2.5" /><path d="M4 13a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" /></svg>;
     if (name === "memory") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z" /><path d="M12 6v6l4 2" /></svg>;
-    if (name === "domains") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" /><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" /><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" /></svg>;
+    if (name === "groups") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" /><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" /><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" /></svg>;
     if (name === "voice") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z" /><path d="M19 11v1a7 7 0 0 1-14 0v-1" /><path d="M12 19v3" /></svg>;
     if (name === "summary") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M4 5h16" /><path d="M4 10h16" /><path d="M4 15h10" /><path d="M4 20h7" /></svg>;
     return <GhostIcon className="w-4 h-4 shrink-0" />;
@@ -1836,14 +1842,13 @@ export default function ChatPage() {
     if (!leftPanelReady) return;
     const hasNoData =
       sessions.length === 0 &&
-      nuggets.length === 0 &&
       customConcepts.length === 0 &&
       longTermMemories.length === 0 &&
       conceptGroups.length === 0;
     if (!hasNoData) return;
     const timer = setTimeout(() => setFeatureTourStep(0), 800);
     return () => clearTimeout(timer);
-  }, [isAnonymous, incognitoMode, leftPanelReady, sessions.length, nuggets.length, customConcepts.length, longTermMemories.length, conceptGroups.length]);
+  }, [isAnonymous, incognitoMode, leftPanelReady, sessions.length, customConcepts.length, longTermMemories.length, conceptGroups.length]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -2173,17 +2178,6 @@ export default function ChatPage() {
       .catch(() => setSavedTranscripts([]));
   }, [isAnonymous]);
 
-  const refetchNuggets = useCallback(() => {
-    if (isAnonymous) {
-      setNuggets([]);
-      return;
-    }
-    fetch("/api/me/nuggets", { cache: "no-store" })
-      .then((r) => r.json())
-      .then((data) => setNuggets(Array.isArray(data) ? data : []))
-      .catch(() => setNuggets([]));
-  }, [isAnonymous]);
-
   const refetchSavedPerspectiveCards = useCallback(() => {
     if (isAnonymous) {
       setSavedPerspectiveCards([]);
@@ -2287,17 +2281,30 @@ export default function ChatPage() {
           const stored = sessionStorage.getItem(PERSPECTIVE_CARD_START_KEY);
           if (stored) {
             sessionStorage.removeItem(PERSPECTIVE_CARD_START_KEY);
-            const { assistantContent, prompt, name } = JSON.parse(stored) as {
-              assistantContent: string;
+            const parsed = JSON.parse(stored) as {
+              assistantContent?: string;
               prompt: string;
               name: string;
+              figure?: { id: string; name: string };
+              fetchFigureOnLoad?: boolean;
             };
-            setMessages([{
-              role: "assistant",
-              content: assistantContent,
-              perspectiveCard: { name, prompt },
-            }]);
-            setPendingCardContext({ prompt, name });
+            const { prompt, name } = parsed;
+            if (parsed.fetchFigureOnLoad) {
+              setMessages([{
+                role: "assistant",
+                content: "Finding your guide…",
+                perspectiveCard: { name, prompt },
+              }]);
+              setPendingCardFetch({ prompt, name });
+            } else {
+              if (parsed.figure) setActiveConversationFigure(parsed.figure);
+              setMessages([{
+                role: "assistant",
+                content: parsed.assistantContent ?? buildPerspectiveCardMessage(language, prompt, parsed.figure),
+                perspectiveCard: { name, prompt },
+              }]);
+              setPendingCardContext({ prompt, name, figure: parsed.figure });
+            }
             setCurrentSessionId(null);
             setCurrentSession(null);
             setCollapsedSummary(null);
@@ -2308,14 +2315,27 @@ export default function ChatPage() {
           const params = new URLSearchParams(window.location.search);
           const prompt = params.get("pcPrompt");
           const name = params.get("pcName");
+          const figureId = params.get("pcFigureId");
+          const figureName = params.get("pcFigureName");
           if (prompt && name) {
-            const assistantContent = buildPerspectiveCardMessage(language, prompt);
-            setMessages([{
-              role: "assistant",
-              content: assistantContent,
-              perspectiveCard: { name, prompt },
-            }]);
-            setPendingCardContext({ prompt, name });
+            if (figureId && figureName) {
+              const figure = { id: figureId, name: figureName };
+              setActiveConversationFigure(figure);
+              const assistantContent = buildPerspectiveCardMessage(language, prompt, figure);
+              setMessages([{
+                role: "assistant",
+                content: assistantContent,
+                perspectiveCard: { name, prompt },
+              }]);
+              setPendingCardContext({ prompt, name, figure });
+            } else {
+              setMessages([{
+                role: "assistant",
+                content: "Finding your guide…",
+                perspectiveCard: { name, prompt },
+              }]);
+              setPendingCardFetch({ prompt, name });
+            }
             setCurrentSessionId(null);
             setCurrentSession(null);
             setCollapsedSummary(null);
@@ -2345,16 +2365,17 @@ export default function ChatPage() {
   const [pendingCardContext, setPendingCardContext] = useState<{
     prompt: string;
     name: string;
+    figure?: { id: string; name: string; description?: string };
   } | null>(null);
+  const [activeConversationFigure, setActiveConversationFigure] = useState<{
+    id: string;
+    name: string;
+    description?: string;
+  } | null>(null);
+  const [pendingCardFetch, setPendingCardFetch] = useState<{ prompt: string; name: string } | null>(null);
 
   const startConversationFromPerspectiveCard = useCallback(
     ({ name, prompt }: { name: string; prompt: string }) => {
-      const assistantContent = buildPerspectiveCardMessage(language, prompt);
-      const initialMessage = {
-        role: "assistant" as const,
-        content: assistantContent,
-        perspectiveCard: { name, prompt },
-      };
       setDrawnPerspectiveCard(null);
       setWaysOfLookingAtModalOpen(false);
       setWaysOfLookingAtDrawMode(false);
@@ -2369,31 +2390,68 @@ export default function ChatPage() {
         setSidebarOpen(false);
       }
       if (sessionId !== "new" && sessionId !== "incognito") {
-        const nextUrl = `/chat/new?pcName=${encodeURIComponent(name)}&pcPrompt=${encodeURIComponent(prompt)}`;
         try {
           sessionStorage.setItem(
             PERSPECTIVE_CARD_START_KEY,
-            JSON.stringify({
-              assistantContent,
-              prompt,
-              name,
-            })
+            JSON.stringify({ prompt, name, fetchFigureOnLoad: true })
           );
         } catch {
           /* ignore */
         }
-        router.push(nextUrl);
+        router.push(`/chat/new?pcName=${encodeURIComponent(name)}&pcPrompt=${encodeURIComponent(prompt)}`);
       } else {
-        setMessages([initialMessage]);
-        setPendingCardContext({ prompt, name });
+        setMessages([{
+          role: "assistant",
+          content: "Finding your guide…",
+          perspectiveCard: { name, prompt },
+        }]);
+        setPendingCardFetch({ prompt, name });
         setCurrentSessionId(null);
         setCurrentSession(null);
         setCollapsedSummary(null);
         inputRef.current?.focus();
       }
     },
-    [router, sessionId, language]
+    [router, sessionId]
   );
+
+  useEffect(() => {
+    if (!pendingCardFetch) return;
+    let cancelled = false;
+    (async () => {
+      let figure: { id: string; name: string; description?: string } | undefined;
+      try {
+        const res = await fetch("/api/perspective-card/select-figure", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: pendingCardFetch.prompt, cardName: pendingCardFetch.name }),
+        });
+        if (cancelled) return;
+        if (res.ok) {
+          const data = await res.json();
+          if (data?.id && data?.name) {
+            figure = { id: data.id, name: data.name, description: data.description };
+          }
+        }
+      } catch {
+        /* ignore */
+      }
+      if (cancelled) return;
+      const assistantContent = buildPerspectiveCardMessage(language, pendingCardFetch.prompt, figure);
+      setMessages([{
+        role: "assistant",
+        content: assistantContent,
+        perspectiveCard: { name: pendingCardFetch.name, prompt: pendingCardFetch.prompt },
+      }]);
+      setPendingCardContext({ prompt: pendingCardFetch.prompt, name: pendingCardFetch.name, figure });
+      if (figure) setActiveConversationFigure(figure);
+      setPendingCardFetch(null);
+      inputRef.current?.focus();
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [pendingCardFetch, language]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -2495,8 +2553,12 @@ export default function ChatPage() {
     if (cardCtx) {
       chatBody.activeCardPrompt = cardCtx.prompt;
       chatBody.activeCardName = cardCtx.name;
+      if (cardCtx.figure) {
+        chatBody.activeCardFigureId = cardCtx.figure.id;
+        chatBody.activeCardFigureName = cardCtx.figure.name;
+      }
       if (!isAnonymous && !incognitoMode) {
-        chatBody.prependMessages = [{ role: "assistant", content: buildPerspectiveCardMessage(languageRef.current, cardCtx.prompt) }];
+        chatBody.prependMessages = [{ role: "assistant", content: buildPerspectiveCardMessage(languageRef.current, cardCtx.prompt, cardCtx.figure) }];
       }
     } else if (options?.activeCardPrompt) {
       chatBody.activeCardPrompt = options.activeCardPrompt;
@@ -2672,7 +2734,7 @@ export default function ChatPage() {
     setSidebarOpenState(open);
   }, []);
 
-  const [libraryPanelOpen, setLibraryPanelOpen] = useState<"conversations" | "ltm" | "concepts" | "cc" | "cg" | "nuggets" | "decks" | null>(null);
+  const [libraryPanelOpen, setLibraryPanelOpen] = useState<"conversations" | "ltm" | "concepts" | "cc" | "cg" | "decks" | "figures" | null>(null);
   const [waysOfLookingAtModalOpen, setWaysOfLookingAtModalOpen] = useState(false);
   const [waysOfLookingAtDrawMode, setWaysOfLookingAtDrawMode] = useState(false);
   const [waysOfLookingAtCategory, setWaysOfLookingAtCategory] = useState<string | null>(null);
@@ -2714,6 +2776,11 @@ export default function ChatPage() {
   const [journalCheckpointBlanks, setJournalCheckpointBlanks] = useState<string[]>([]);
   const [journalCheckpointCustomByIndex, setJournalCheckpointCustomByIndex] = useState<Record<number, string>>({});
   const [journalCheckpointPopoverIndex, setJournalCheckpointPopoverIndex] = useState<number | null>(null);
+  const [figuresData, setFiguresData] = useState<{ categories: { id: string; name: string }[]; figures: { id: string; name: string; description: string; category: string }[] } | null>(null);
+  const [figuresLoading, setFiguresLoading] = useState(false);
+  const [figuresSearchQuery, setFiguresSearchQuery] = useState("");
+  const [figuresCategoryFilter, setFiguresCategoryFilter] = useState<string>("all");
+  const [followedFigureIds, setFollowedFigureIds] = useState<string[]>([]);
   const [isSafari, setIsSafari] = useState(false);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
   const selectedExportSections = EXPORT_DATA_SECTION_OPTIONS
@@ -2948,8 +3015,36 @@ export default function ChatPage() {
   }, [libraryPanelOpen, refetchTranscripts]);
 
   useEffect(() => {
-    if (libraryPanelOpen === "nuggets") refetchNuggets();
-  }, [libraryPanelOpen, refetchNuggets]);
+    fetch("/api/famous-figures")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.categories && data?.figures) {
+          setFiguresData({ categories: data.categories, figures: data.figures });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (libraryPanelOpen !== "figures") return;
+    setFiguresLoading(true);
+    Promise.all([
+      fetch("/api/famous-figures").then((r) => (r.ok ? r.json() : null)),
+      userId ? fetch("/api/me/settings").then((r) => (r.ok ? r.json() : null)) : Promise.resolve(null),
+    ])
+      .then(([figRes, settingsRes]) => {
+        if (figRes?.categories && figRes?.figures) {
+          setFiguresData({ categories: figRes.categories, figures: figRes.figures });
+        }
+        if (settingsRes?.followedFigureIds && Array.isArray(settingsRes.followedFigureIds)) {
+          setFollowedFigureIds(settingsRes.followedFigureIds);
+        } else {
+          setFollowedFigureIds([]);
+        }
+      })
+      .catch(() => setFollowedFigureIds([]))
+      .finally(() => setFiguresLoading(false));
+  }, [libraryPanelOpen, userId]);
 
   type PerspectiveDecksConfig = {
     decks: { id: string; name: string; description: string; domain: string }[];
@@ -3544,11 +3639,11 @@ export default function ChatPage() {
           <nav className={`flex flex-col gap-0.5 shrink-0 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 ${sidebarOpen ? "mb-4" : ""}`} aria-label="Select view" data-tour="sidebar-nav">
             {[
               { id: "conversations" as const, label: getUiTranslations(language).conversations, icon: "chat", onClick: () => { playSelectionChime(); setLibraryPanelOpen("conversations"); } },
-              { id: "nuggets" as const, label: getUiTranslations(language).nuggets, icon: "nuggets", onClick: () => { playSelectionChime(); setLibraryPanelOpen("nuggets"); } },
               { id: "cc" as const, label: getUiTranslations(language).concepts, icon: "concepts", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cc"); } },
               { id: "concepts" as const, label: getUiTranslations(language).mentalModels, icon: "models", onClick: () => { playSelectionChime(); setLibraryPanelOpen("concepts"); } },
               { id: "ltm" as const, label: getUiTranslations(language).longTermMemory, icon: "memory", onClick: () => { playSelectionChime(); setLibraryPanelOpen("ltm"); } },
-              { id: "cg" as const, label: getUiTranslations(language).domains, icon: "domains", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cg"); } },
+              { id: "cg" as const, label: getUiTranslations(language).groups, icon: "groups", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cg"); } },
+              ...(!isAnonymous ? [{ id: "figures" as const, label: getUiTranslations(language).famousFigures, icon: "figures" as const, onClick: () => { playSelectionChime(); setLibraryPanelOpen("figures"); } }] : []),
             ].map(({ id, label, icon, onClick }) => {
               const isActive = libraryPanelOpen === id;
               return (
@@ -3571,11 +3666,6 @@ export default function ChatPage() {
                       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                     </svg>
                   )}
-                  {icon === "nuggets" && (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-                    </svg>
-                  )}
                   {icon === "concepts" && (
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
                       <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
@@ -3595,11 +3685,19 @@ export default function ChatPage() {
                       <path d="M12 6v6l4 2" />
                     </svg>
                   )}
-                  {icon === "domains" && (
+                  {icon === "groups" && (
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
                       <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
                       <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
                       <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
+                    </svg>
+                  )}
+                  {icon === "figures" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                     </svg>
                   )}
                   {sidebarOpen && <span className="truncate">{label}</span>}
@@ -4109,9 +4207,9 @@ export default function ChatPage() {
                         title: translatedTitles[cg._id] ?? cg.title,
                       }))}
                       mentionTranslations={getMentionTranslations(language)}
-                      placeholder="/ to search"
-                      placeholderMobile="/ to search"
-                      disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                      placeholder="@ to search"
+                      placeholderMobile="@ to search"
+                      disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed || !!pendingCardFetch}
                       className="w-full h-[52px] max-h-[52px] py-3 pl-4 pr-4 sm:pr-10 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
                       onMentalModelClick={handleMentalModelClick}
                       onLtmClick={(id) => {
@@ -4141,7 +4239,7 @@ export default function ChatPage() {
                           e.stopPropagation();
                           setInputExpandModalOpen(true);
                         }}
-                        disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                        disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed || !!pendingCardFetch}
                         className="absolute inset-0 z-10 sm:hidden rounded-2xl"
                         aria-label="Open composer"
                       />
@@ -4153,7 +4251,7 @@ export default function ChatPage() {
                         e.stopPropagation();
                         setInputExpandModalOpen(true);
                       }}
-                      disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                      disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed || !!pendingCardFetch}
                       className="hidden absolute top-2 right-2 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 disabled:opacity-50"
                       aria-label="Expand input"
                     >
@@ -4166,13 +4264,13 @@ export default function ChatPage() {
                   <VoiceInputButton
                     onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
                     language={language}
-                    disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                    disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed || !!pendingCardFetch}
                     ariaLabel="Voice input"
                     className="!min-h-[48px] !min-w-[48px] sm:!min-h-[52px] sm:!min-w-[52px]"
                   />
                   <button
                     onClick={() => sendMessage()}
-                    disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
+                    disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed || !!pendingCardFetch}
                     aria-label="Send message"
                     className="flex items-center justify-center gap-2 px-4 min-h-[48px] sm:min-h-[52px] rounded-2xl bg-accent text-white text-sm font-semibold transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
                   >
@@ -4244,6 +4342,16 @@ export default function ChatPage() {
                 ltmIdToTitle={new Map(longTermMemories.map((ltm) => [ltm._id, translatedTitles[ltm._id] ?? ltm.title]))}
                 ccIdToTitle={new Map(customConcepts.map((cc) => [cc._id, translatedTitles[cc._id] ?? cc.title]))}
                 cgIdToTitle={new Map(conceptGroups.map((cg) => [cg._id, translatedTitles[cg._id] ?? cg.title]))}
+                figureIdToName={(() => {
+                  const m = new Map(figuresData?.figures.map((f) => [f.id, f.name]) ?? []);
+                  if (activeConversationFigure) m.set(activeConversationFigure.id, activeConversationFigure.name);
+                  return m;
+                })()}
+                figureIdToDescription={(() => {
+                  const m = new Map(figuresData?.figures.map((f) => [f.id, f.description]) ?? []);
+                  if (activeConversationFigure?.description) m.set(activeConversationFigure.id, activeConversationFigure.description);
+                  return m;
+                })()}
                 onMentalModelClick={handleMentalModelClick}
                 onLtmClick={(id) => {
                   const ltm = longTermMemories.find((l) => l._id === id);
@@ -4309,6 +4417,12 @@ export default function ChatPage() {
                     : undefined
                 }
                 manualJournalLoading={journalCheckpointLoading && m.role === "assistant" && i === messages.length - 1}
+                isFindingGuide={
+                  !!pendingCardFetch &&
+                  m.role === "assistant" &&
+                  i === messages.length - 1 &&
+                  m.content === "Finding your guide…"
+                }
               />
             ))}
             <div ref={messagesEndRef} />
@@ -4395,8 +4509,8 @@ export default function ChatPage() {
                     title: translatedTitles[cg._id] ?? cg.title,
                   }))}
                   mentionTranslations={getMentionTranslations(language)}
-                  placeholder="/ to search"
-                  placeholderMobile="/ to search"
+                  placeholder="@ to search"
+                  placeholderMobile="@ to search"
                   disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                   className="w-full h-[52px] max-h-[52px] py-3 pl-4 pr-4 sm:pr-10 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
                   onMentalModelClick={handleMentalModelClick}
@@ -4551,8 +4665,8 @@ export default function ChatPage() {
                     title: translatedTitles[cg._id] ?? cg.title,
                   }))}
                   mentionTranslations={getMentionTranslations(language)}
-                  placeholder="/ to search"
-                  placeholderMobile="/ to search"
+                  placeholder="@ to search"
+                  placeholderMobile="@ to search"
                   disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                   className="w-full min-h-[200px] max-h-[50vh] py-4 px-4 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground overflow-y-auto flex-1"
                   onMentalModelClick={handleMentalModelClick}
@@ -4579,7 +4693,7 @@ export default function ChatPage() {
                   <VoiceInputButton
                     onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
                     language={language}
-                    disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                    disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed || !!pendingCardFetch}
                     ariaLabel="Voice input"
                     className="!min-h-[44px] !min-w-[44px] sm:!min-h-[48px] sm:!min-w-[48px]"
                   />
@@ -4588,7 +4702,7 @@ export default function ChatPage() {
                       sendMessage();
                       setInputExpandModalOpen(false);
                     }}
-                    disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
+                    disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed || !!pendingCardFetch}
                     aria-label="Send message"
                     className="flex items-center justify-center gap-2 px-4 min-h-[44px] sm:min-h-[48px] rounded-2xl bg-accent text-white text-sm font-semibold transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
                   >
@@ -4627,7 +4741,9 @@ export default function ChatPage() {
               className={`pointer-events-auto w-full max-h-[90vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-800 animate-fade-in-up ${
                 libraryPanelOpen === "concepts"
                   ? "max-w-[var(--modal-library-concepts-decks-max-w)]"
-                  : "max-w-[min(94vw,608px)]"
+                  : libraryPanelOpen === "figures"
+                    ? "max-w-[min(94vw,880px)]"
+                    : "max-w-[min(94vw,608px)]"
               }`}
               data-tour="library-modal"
             role="dialog"
@@ -4637,8 +4753,9 @@ export default function ChatPage() {
                 libraryPanelOpen === "concepts" ? getUiTranslations(language).mentalModels :
                 libraryPanelOpen === "ltm" ? getUiTranslations(language).longTermMemory :
                 libraryPanelOpen === "cc" ? getUiTranslations(language).concepts :
-                libraryPanelOpen === "cg" ? getUiTranslations(language).domains :
-                getUiTranslations(language).nuggets
+                libraryPanelOpen === "cg" ? getUiTranslations(language).groups :
+                libraryPanelOpen === "figures" ? getUiTranslations(language).famousFigures :
+                getUiTranslations(language).promptGames
               }
               onClick={(e) => e.stopPropagation()}
             >
@@ -4648,8 +4765,9 @@ export default function ChatPage() {
                    libraryPanelOpen === "concepts" ? getUiTranslations(language).mentalModels :
                    libraryPanelOpen === "ltm" ? getUiTranslations(language).longTermMemory :
                    libraryPanelOpen === "cc" ? getUiTranslations(language).concepts :
-                   libraryPanelOpen === "cg" ? getUiTranslations(language).domains :
-                   getUiTranslations(language).nuggets}
+                   libraryPanelOpen === "cg" ? getUiTranslations(language).groups :
+                   libraryPanelOpen === "figures" ? getUiTranslations(language).famousFigures :
+                   getUiTranslations(language).promptGames}
                 </h2>
               <button
                 type="button"
@@ -4660,7 +4778,7 @@ export default function ChatPage() {
                 ✕
               </button>
             </div>
-              <div className="flex-1 overflow-y-auto p-4 min-h-0">
+              <div className="flex-1 overflow-y-auto px-4 pt-6 pb-4 min-h-0">
               {libraryPanelOpen === "conversations" && (
                 <div className="space-y-4">
                   <Link
@@ -4687,7 +4805,7 @@ export default function ChatPage() {
                       aria-label={getLandingTranslations(language).searchConversations}
                     />
                   </div>
-                  <nav className="max-h-[60vh] overflow-y-auto">
+                  <nav className="max-h-[60vh] overflow-y-auto pt-2">
                     {filteredSessions.length === 0 ? (
                       <div className="px-3 py-4 space-y-1">
                         <p className="text-sm text-neutral-500 dark:text-neutral-400">
@@ -4710,7 +4828,7 @@ export default function ChatPage() {
                               : "border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-500"
                           }`}
                         >
-                          <div className="flex items-center gap-1 min-w-0">
+                          <div className="flex items-center gap-1 min-w-0 pr-2">
                             <Link
                               href={`/chat/${s._id}`}
                               onClick={() => { setLibraryPanelOpen(null); setSidebarOpen(false); }}
@@ -4799,11 +4917,8 @@ export default function ChatPage() {
               )}
               {libraryPanelOpen === "concepts" && (
                 <div className="space-y-4">
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                  <h2 className="text-lg font-semibold text-foreground">Models</h2>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks and biases, grouped by when to use. Star to add to Favorites.</p>
-                    </div>
+                  <div className="flex items-start justify-end gap-2">
                     {!isAnonymous && (
                       <button
                         type="button"
@@ -4909,7 +5024,7 @@ export default function ChatPage() {
                             <button
                               type="button"
                               onClick={(e) => { e.stopPropagation(); e.preventDefault(); setMmDeleteConfirmModal({ id, name }); }}
-                              className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
+                              className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
                               aria-label={`Delete ${name}`}
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
@@ -4921,7 +5036,7 @@ export default function ChatPage() {
                             <button
                               type="button"
                               onClick={(e) => { e.stopPropagation(); e.preventDefault(); toggleMmFavorite(id); }}
-                              className="absolute top-2 right-2 z-10 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors touch-manipulation"
+                              className="absolute top-3 right-3 z-10 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors touch-manipulation"
                               aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
                             >
                               {isFavorite ? (
@@ -5128,7 +5243,6 @@ export default function ChatPage() {
               )}
               {libraryPanelOpen === "ltm" && (
                 <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-foreground">Memory</h2>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Summaries of past conversations. Use when you want the agent to remember your context, preferences, and what you&apos;ve shared before.</p>
                   {longTermMemories.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -5144,7 +5258,7 @@ export default function ChatPage() {
                               e.preventDefault();
                               setLtmDeleteConfirmModal(ltm);
                             }}
-                            className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
+                            className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
                             aria-label={`Delete ${ltm.title}`}
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
@@ -5157,7 +5271,7 @@ export default function ChatPage() {
                             tabIndex={0}
                             onClick={() => setLtmDetailModal(ltm)}
                             onKeyDown={(e) => e.key === "Enter" && setLtmDetailModal(ltm)}
-                            className="flex-1 min-w-0 cursor-pointer pr-8"
+                            className="flex-1 min-w-0 cursor-pointer pr-10"
                           >
                             <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{ltm.title}</span>
                             <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{ltm.summary || ltm.enrichmentPrompt}</p>
@@ -5172,7 +5286,6 @@ export default function ChatPage() {
               )}
               {libraryPanelOpen === "cc" && (
                 <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-foreground">{getUiTranslations(language).concepts}</h2>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Ideas and contexts you define. Use when you want the agent to reference your own concepts, goals, or frameworks.</p>
                   <div className="flex items-center justify-end gap-2">
                     <div className="flex gap-1">
@@ -5267,7 +5380,7 @@ export default function ChatPage() {
                                           e.stopPropagation();
                                           setCgDeleteConfirmModal(cg);
                                         }}
-                                        className="p-1.5 rounded-lg text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors shrink-0 -mr-1"
+                                        className="p-1.5 rounded-lg text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors shrink-0"
                                         aria-label={`Delete ${cg.title}`}
                                       >
                                         <TrashIcon className="w-4 h-4" />
@@ -5280,10 +5393,10 @@ export default function ChatPage() {
                                         <p className="text-xs text-neutral-500 dark:text-neutral-400 py-2">No concepts in this group yet.</p>
                                       ) : concepts.map((cc) => (
                                         <div key={cc._id} className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]">
-                                          <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
+                                          <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" /><path d="M10 11v6M14 11v6" /></svg>
                                           </button>
-                                          <div role="button" tabIndex={0} onClick={() => openConceptDetail(cc)} onKeyDown={(e) => e.key === "Enter" && openConceptDetail(cc)} className="flex-1 min-w-0 cursor-pointer pr-8">
+                                          <div role="button" tabIndex={0} onClick={() => openConceptDetail(cc)} onKeyDown={(e) => e.key === "Enter" && openConceptDetail(cc)} className="flex-1 min-w-0 cursor-pointer pr-10">
                                             <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{cc.title}</span>
                                             <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{cc.summary || cc.enrichmentPrompt}</p>
                                           </div>
@@ -5304,10 +5417,10 @@ export default function ChatPage() {
                                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     {standalone.map((cc) => (
                                       <div key={cc._id} className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]">
-                                        <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
+                                        <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
                                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" /><path d="M10 11v6M14 11v6" /></svg>
                                         </button>
-                                        <div role="button" tabIndex={0} onClick={() => openConceptDetail(cc)} onKeyDown={(e) => e.key === "Enter" && openConceptDetail(cc)} className="flex-1 min-w-0 cursor-pointer pr-8">
+                                        <div role="button" tabIndex={0} onClick={() => openConceptDetail(cc)} onKeyDown={(e) => e.key === "Enter" && openConceptDetail(cc)} className="flex-1 min-w-0 cursor-pointer pr-10">
                                           <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{cc.title}</span>
                                           <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{cc.summary || cc.enrichmentPrompt}</p>
                                         </div>
@@ -5328,10 +5441,9 @@ export default function ChatPage() {
               )}
               {libraryPanelOpen === "cg" && (
                 <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-foreground">{getUiTranslations(language).domains}</h2>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Domain groups created via AI. Use when you want the agent to think in terms of a topic (e.g. finance, health) with related concepts.</p>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Groups created via AI. Use when you want the agent to think in terms of a topic (e.g. finance, health) with related concepts.</p>
                   <div className="flex items-center justify-end gap-1">
-                    <button type="button" onClick={() => { setCgCreateDomain(""); setCgCreateStep(1); setCgCreateQuestions([]); setCgCreateAnswers({}); setCgCreateConcepts([]); setCgCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Domain</button>
+                    <button type="button" onClick={() => { setCgCreateDomain(""); setCgCreateStep(1); setCgCreateQuestions([]); setCgCreateAnswers({}); setCgCreateConcepts([]); setCgCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Group</button>
                     <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Add From YouTube Transcript</button>
                   </div>
                   {conceptGroups.length > 0 ? (
@@ -5356,7 +5468,7 @@ export default function ChatPage() {
                                   e.preventDefault();
                                   setCgDeleteConfirmModal(cg);
                                 }}
-                                className="absolute top-2 right-2 z-10 p-1.5 rounded-lg text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                                className="absolute top-3 right-3 z-10 p-1.5 rounded-lg text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
                                 aria-label={`Delete ${cg.title}`}
                               >
                                 <TrashIcon className="w-3.5 h-3.5" />
@@ -5440,104 +5552,118 @@ export default function ChatPage() {
               )}
                 </div>
               )}
-              {libraryPanelOpen === "nuggets" && (
+              {libraryPanelOpen === "figures" && (
                 <div className="space-y-4">
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Save impactful quotes, words, and snippets. Paste from clipboard or highlight text in conversations.</p>
-                  {nuggetFormOpen === "panel" ? (
-                    <div className="space-y-2">
-                      <div className="flex gap-1">
-                        <textarea value={nuggetCreateContent} onChange={(e) => setNuggetCreateContent(e.target.value)} placeholder="Paste or type your nugget..." rows={3} className="flex-1 px-2 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y" />
-                        <button type="button" onClick={async () => { if (!nuggetCreateContent.trim() || nuggetImproveLoading) return; setNuggetImproveLoading(true); try { const res = await fetch("/api/me/nuggets/improve", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent }) }); const data = await res.json(); if (data.improved) setNuggetCreateContent(data.improved); } catch { /* ignore */ } finally { setNuggetImproveLoading(false); } }} disabled={!nuggetCreateContent.trim() || nuggetImproveLoading} className="p-2 rounded-lg text-neutral-500 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 shrink-0" title="Improve with LLM" aria-label="Improve with LLM"><AIGenerateIcon className="w-4 h-4" /></button>
-                      </div>
-                      <div className="flex gap-1">
-                        <input type="text" value={nuggetCreateSource} onChange={(e) => setNuggetCreateSource(e.target.value)} placeholder="Source (optional)" className="flex-1 px-2 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20" />
-                        <button type="button" onClick={async () => { if (!nuggetCreateContent.trim() || nuggetSuggestSourceLoading) return; setNuggetSuggestSourceLoading(true); try { const res = await fetch("/api/me/nuggets/suggest-source", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent }) }); const data = await res.json(); if (data.source) setNuggetCreateSource(data.source); } catch { /* ignore */ } finally { setNuggetSuggestSourceLoading(false); } }} disabled={!nuggetCreateContent.trim() || nuggetSuggestSourceLoading} className="p-2 rounded-lg text-neutral-500 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 shrink-0" title="Suggest source" aria-label="Suggest source"><SparklesIcon className="w-4 h-4" /></button>
-                      </div>
-                      <div className="flex gap-2 justify-end">
-                        <button onClick={() => { setNuggetFormOpen(null); setNuggetCreateContent(""); setNuggetCreateSource(""); }} className="px-3 py-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg">{getUiTranslations(language).cancel}</button>
-                        <button disabled={!nuggetCreateContent.trim() || nuggetCreateLoading} onClick={async () => { if (!nuggetCreateContent.trim() || nuggetCreateLoading) return; setNuggetCreateLoading(true); try { await fetch("/api/me/nuggets", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent.trim(), source: nuggetCreateSource.trim() || undefined }) }); refetchNuggets(); setNuggetFormOpen(null); setNuggetCreateContent(""); setNuggetCreateSource(""); } catch { /* ignore */ } finally { setNuggetCreateLoading(false); } }} className="px-3 py-1.5 text-xs font-medium bg-foreground text-background rounded-lg hover:opacity-90 disabled:opacity-50">{nuggetCreateLoading ? "Saving..." : "Save"}</button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex justify-end">
-                      <button type="button" onClick={() => { setNuggetCreateContent(""); setNuggetCreateSource(""); setNuggetFormOpen("panel"); setNuggetFormPosition(null); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Add Nugget</button>
-                    </div>
-                  )}
-                  {nuggets.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {nuggets.map((n) => (
-                        <div key={n._id} className="group relative p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200">
-                          <p className="text-sm text-foreground whitespace-pre-wrap">{n.content}</p>
-                          {n.source && <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-1">{n.source}</p>}
-                          {nuggetLearnId === n._id && nuggetLearnExplanation && (
-                            <div className="mt-2 p-2 rounded-lg bg-neutral-100 dark:bg-neutral-800/70 text-xs text-foreground">
-                              {nuggetLearnExplanation}
-                            </div>
-                          )}
-                          <div className="flex gap-1 justify-end mt-2">
-                            <button
-                              type="button"
-                              onClick={async () => {
-                                if (nuggetLearnId === n._id) { setNuggetLearnId(null); setNuggetLearnExplanation(null); return; }
-                                setNuggetLearnId(n._id);
-                                setNuggetLearnExplanation(null);
-                                try {
-                                  const res = await fetch("/api/me/nuggets/learn", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: n.content }) });
-                                  const data = await res.json();
-                                  if (data.explanation) setNuggetLearnExplanation(data.explanation);
-                                } catch { setNuggetLearnExplanation("Failed to load."); }
-                              }}
-                              className="px-2 py-1 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Follow famous figures to get contextual nudges in chat: &quot;What would [figure] have to say about this?&quot;</p>
+                  <input
+                    type="search"
+                    placeholder="Search figures..."
+                    value={figuresSearchQuery}
+                    onChange={(e) => setFiguresSearchQuery(e.target.value)}
+                    className="w-full px-3 py-1.5 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground"
+                    aria-label="Search figures"
+                  />
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setFiguresCategoryFilter("all")}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
+                        figuresCategoryFilter === "all"
+                          ? "bg-foreground text-background border-foreground"
+                          : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                      }`}
+                    >
+                      All
+                    </button>
+                    {figuresData?.categories.map((cat) => (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setFiguresCategoryFilter(cat.id)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
+                          figuresCategoryFilter === cat.id
+                            ? "bg-foreground text-background border-foreground"
+                            : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                        }`}
+                      >
+                        {cat.name}
+                      </button>
+                    ))}
+                  </div>
+                  {figuresLoading ? (
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Loading figures…</p>
+                  ) : !figuresData ? (
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Failed to load figures.</p>
+                  ) : (() => {
+                    const q = figuresSearchQuery.toLowerCase().trim();
+                    let filtered = figuresData.figures;
+                    if (q) {
+                      filtered = filtered.filter(
+                        (f) =>
+                          f.name.toLowerCase().includes(q) ||
+                          f.description.toLowerCase().includes(q) ||
+                          f.id.toLowerCase().includes(q)
+                      );
+                    }
+                    if (figuresCategoryFilter !== "all") {
+                      filtered = filtered.filter((f) => f.category === figuresCategoryFilter);
+                    }
+                    if (filtered.length === 0) {
+                      return <p className="text-xs text-neutral-500 dark:text-neutral-400">{q || figuresCategoryFilter !== "all" ? "No figures match." : "No figures."}</p>;
+                    }
+                    const toggleFollow = async (id: string, e: React.MouseEvent) => {
+                      e.stopPropagation();
+                      if (isAnonymous) return;
+                      const next = followedFigureIds.includes(id)
+                        ? followedFigureIds.filter((x) => x !== id)
+                        : [...followedFigureIds, id];
+                      setFollowedFigureIds(next);
+                      try {
+                        await fetch("/api/me/settings", {
+                          method: "PATCH",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ followedFigureIds: next }),
+                        });
+                      } catch {
+                        setFollowedFigureIds(followedFigureIds);
+                      }
+                    };
+                    return (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2 max-h-[50vh] overflow-y-auto">
+                        {filtered.map((f) => {
+                          const isFollowing = followedFigureIds.includes(f.id);
+                          return (
+                            <div
+                              key={f.id}
+                              className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]"
                             >
-                              {nuggetLearnId === n._id && !nuggetLearnExplanation ? "Loading..." : nuggetLearnId === n._id ? "Hide" : "Learn this Nugget"}
-                            </button>
-                            <button type="button" onClick={() => fetch(`/api/me/nuggets/${n._id}`, { method: "DELETE" }).then(() => refetchNuggets())} className="p-1.5 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors" aria-label="Delete nugget"><TrashIcon className="w-3.5 h-3.5" /></button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : nuggetFormOpen !== "panel" && (
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">No nuggets yet. Add one to get started.</p>
-                  )}
+                              <button
+                                type="button"
+                                onClick={(e) => toggleFollow(f.id, e)}
+                                disabled={isAnonymous}
+                                className={`absolute top-3 right-3 z-20 shrink-0 w-7 h-7 flex items-center justify-center text-xs font-medium rounded-lg transition-colors ${
+                                  isFollowing
+                                    ? "bg-foreground text-background"
+                                    : "bg-neutral-100 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-600"
+                                }`}
+                              >
+                                {isFollowing ? "✓" : "+"}
+                              </button>
+                              <div className="flex-1 min-w-0 pr-10">
+                                <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{f.name}</span>
+                                <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-3">{f.description}</p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
               </div>
             </div>
           </div>
-        </>
-      )}
-
-      {nuggetFormOpen === "selection" && nuggetFormPosition && (
-        <>
-          <div
-            className="fixed inset-0 z-[49] bg-black/20 animate-fade-in"
-            onClick={() => { if (!nuggetCreateLoading) { setNuggetFormOpen(null); setNuggetFormPosition(null); setNuggetCreateContent(""); setNuggetCreateSource(""); } }}
-            aria-hidden
-          />
-          <div
-            className="fixed z-50 w-[min(360px,calc(100vw-2rem))] animate-fade-in rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-xl p-3"
-            style={{ left: nuggetFormPosition.x, top: nuggetFormPosition.y }}
-            onClick={(e) => e.stopPropagation()}
-          >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Save nugget</span>
-            <button type="button" onClick={() => { setNuggetFormOpen(null); setNuggetFormPosition(null); setNuggetCreateContent(""); setNuggetCreateSource(""); }} className="p-1 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800">✕</button>
-          </div>
-          <div className="space-y-2">
-            <div className="flex gap-1">
-              <textarea value={nuggetCreateContent} onChange={(e) => setNuggetCreateContent(e.target.value)} placeholder="Paste or type..." rows={3} className="flex-1 px-2 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y" />
-              <button type="button" onClick={async () => { if (!nuggetCreateContent.trim() || nuggetImproveLoading) return; setNuggetImproveLoading(true); try { const res = await fetch("/api/me/nuggets/improve", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent }) }); const data = await res.json(); if (data.improved) setNuggetCreateContent(data.improved); } catch { /* ignore */ } finally { setNuggetImproveLoading(false); } }} disabled={!nuggetCreateContent.trim() || nuggetImproveLoading} className="p-2 rounded-lg text-neutral-500 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 shrink-0" title="Improve with LLM" aria-label="Improve with LLM"><AIGenerateIcon className="w-4 h-4" /></button>
-            </div>
-            <div className="flex gap-1">
-              <input type="text" value={nuggetCreateSource} onChange={(e) => setNuggetCreateSource(e.target.value)} placeholder="Source (optional)" className="flex-1 px-2 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20" />
-              <button type="button" onClick={async () => { if (!nuggetCreateContent.trim() || nuggetSuggestSourceLoading) return; setNuggetSuggestSourceLoading(true); try { const res = await fetch("/api/me/nuggets/suggest-source", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent }) }); const data = await res.json(); if (data.source) setNuggetCreateSource(data.source); } catch { /* ignore */ } finally { setNuggetSuggestSourceLoading(false); } }} disabled={!nuggetCreateContent.trim() || nuggetSuggestSourceLoading} className="p-2 rounded-lg text-neutral-500 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 shrink-0" title="Suggest source" aria-label="Suggest source"><SparklesIcon className="w-4 h-4" /></button>
-            </div>
-          </div>
-          <div className="flex gap-2 justify-end mt-2">
-            <button onClick={() => { setNuggetFormOpen(null); setNuggetFormPosition(null); setNuggetCreateContent(""); setNuggetCreateSource(""); }} className="px-3 py-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg">{getUiTranslations(language).cancel}</button>
-            <button disabled={!nuggetCreateContent.trim() || nuggetCreateLoading} onClick={async () => { if (!nuggetCreateContent.trim() || nuggetCreateLoading) return; setNuggetCreateLoading(true); try { await fetch("/api/me/nuggets", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: nuggetCreateContent.trim(), source: nuggetCreateSource.trim() || undefined }) }); refetchNuggets(); setNuggetFormOpen(null); setNuggetFormPosition(null); setNuggetCreateContent(""); setNuggetCreateSource(""); } catch { /* ignore */ } finally { setNuggetCreateLoading(false); } }} className="px-3 py-1.5 text-xs font-medium bg-foreground text-background rounded-lg hover:opacity-90 disabled:opacity-50">{nuggetCreateLoading ? "Saving..." : "Save"}</button>
-          </div>
-        </div>
         </>
       )}
 
@@ -6402,6 +6528,28 @@ export default function ChatPage() {
                   </div>
                 </section>
 
+                {!isAnonymous && (
+                  <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
+                    <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Library</h3>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSettingsOpen(false);
+                        setLibraryPanelOpen("figures");
+                      }}
+                      className="flex items-center gap-2 w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-left"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                      </svg>
+                      <span className="font-medium">{getUiTranslations(language).famousFigures}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400 ml-auto">Follow figures for chat nudges</span>
+                    </button>
+                  </section>
+                )}
                 <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">Conversation</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">Language and tone for your conversations.</p>
@@ -6847,7 +6995,7 @@ export default function ChatPage() {
                     <div className="rounded-xl border border-red-200/50 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/30 p-4">
                       <h4 className="font-semibold text-neutral-900 dark:text-neutral-100 text-sm">Delete all my data</h4>
                       <p className="mt-1.5 text-xs text-red-600 dark:text-red-400">
-                        Irreversible. Removes conversations, memories, concepts, mental models, and nuggets.
+                        Irreversible. Removes conversations, memories, concepts, mental models, and groups.
                       </p>
                       <button
                         type="button"
@@ -7070,7 +7218,7 @@ export default function ChatPage() {
             <div className="p-6">
               <h3 className="font-semibold text-lg text-neutral-900 dark:text-neutral-100">Delete all my data</h3>
               <p className="mt-2 text-sm text-red-600 dark:text-red-400">
-                Warning: Deleting all data is irreversible and will permanently remove your conversations, long-term memories, custom concepts, saved mental models, and nuggets.
+                Warning: Deleting all data is irreversible and will permanently remove your conversations, long-term memories, custom concepts, saved mental models, and groups.
               </p>
               <p className="mt-4 text-sm font-medium text-neutral-800 dark:text-neutral-200">
                 Type <span className="font-mono font-bold text-red-600 dark:text-red-400">&quot;delete everything&quot;</span> to confirm:
@@ -7919,7 +8067,7 @@ export default function ChatPage() {
                               );
                               setCcYoutubeResult({ ...ccYoutubeResult, groups: next });
                             }}
-                            className="absolute top-2 right-2 z-10 p-1.5 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                            className="absolute top-3 right-3 z-10 p-1.5 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
                             aria-label={`Delete concept ${c.title || "concept"}`}
                           >
                             <TrashIcon className="w-3.5 h-3.5" />
@@ -8969,7 +9117,7 @@ export default function ChatPage() {
                             }
                           });
                         }}
-                        className="absolute top-2 right-2 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 bg-black/50 text-white hover:bg-red-600 transition-all duration-200 touch-manipulation"
+                        className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 bg-black/50 text-white hover:bg-red-600 transition-all duration-200 touch-manipulation"
                         aria-label={`Remove ${cc.title} from ${cgDetailModal.isCustomGroup ? "group" : "domain"}`}
                       >
                         <svg
@@ -9199,7 +9347,7 @@ export default function ChatPage() {
                 ✕
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 overflow-y-auto px-4 pt-6 pb-4">
               {!waysOfLookingAtCategory ? (
                 <div className="space-y-4">
                   {!isAnonymous && savedPerspectiveCards.length > 0 && (
@@ -9266,7 +9414,7 @@ export default function ChatPage() {
                                   /* ignore */
                                 }
                               }}
-                              className="absolute top-2 right-2 p-1.5 rounded-lg opacity-60 hover:opacity-100 hover:bg-red-100 dark:hover:bg-red-900/30 text-neutral-500 hover:text-red-600 dark:hover:text-red-400 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-500 focus-visible:ring-offset-1"
+                              className="absolute top-3 right-3 p-1.5 rounded-lg opacity-60 hover:opacity-100 hover:bg-red-100 dark:hover:bg-red-900/30 text-neutral-500 hover:text-red-600 dark:hover:text-red-400 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-500 focus-visible:ring-offset-1"
                               aria-label="Delete saved card"
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">

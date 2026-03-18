@@ -10,11 +10,13 @@ import {
   getCustomConceptEnrichmentPromptsWithIds,
   getConceptGroupEnrichmentWithIds,
   getUserMentalModels,
+  getUserSettings,
 } from "@/lib/db";
 import {
   loadMentalModelsIndex,
   getIndexSummary,
 } from "@/lib/mental-models";
+import { getFiguresByIds } from "@/lib/famous-figures";
 import {
   extractMentalModelIdsFromMessages,
   getRelevantContextBlockDelimiters,
@@ -100,7 +102,9 @@ MENTAL MODELS INDEX:
 [Insert Index Here]
 
 USER CONTEXT (Memories, Concepts, Groups):
-[Insert Context Here]`;
+[Insert Context Here]
+
+[Insert Followed Figures Nudge Here]`;
 
 const PERSPECTIVE_CARD_SYSTEM_PROMPT = `You are a guide helping the user dive deeper and gain new perspectives. They have chosen a perspective card—a lens designed to shift how they look at something (art, a situation, an idea). Your job is to help them *learn something new* and *see differently*.
 
@@ -178,6 +182,8 @@ export async function POST(request: Request) {
   let prependMessages: { role: string; content: string }[] = [];
   let activeCardPrompt: string | undefined;
   let activeCardName: string | undefined;
+  let activeCardFigureId: string | undefined;
+  let activeCardFigureName: string | undefined;
   let journalCheckpoint: string | undefined;
 
   try {
@@ -240,6 +246,12 @@ export async function POST(request: Request) {
       activeCardName = typeof body.activeCardName === "string" && body.activeCardName.trim()
         ? body.activeCardName.trim()
         : "Perspective card";
+      if (typeof body.activeCardFigureId === "string" && body.activeCardFigureId.trim()) {
+        activeCardFigureId = body.activeCardFigureId.trim();
+        activeCardFigureName = typeof body.activeCardFigureName === "string" && body.activeCardFigureName.trim()
+          ? body.activeCardFigureName.trim()
+          : undefined;
+      }
     }
     if (typeof body.journalCheckpoint === "string" && body.journalCheckpoint.trim()) {
       journalCheckpoint = body.journalCheckpoint.trim();
@@ -297,10 +309,15 @@ export async function POST(request: Request) {
       await updateSession(sessionId, userId!, {
         perspectiveCardPrompt: activeCardPrompt,
         perspectiveCardName: activeCardName ?? "Perspective card",
+        ...(activeCardFigureId && activeCardFigureName
+          ? { perspectiveCardFigureId: activeCardFigureId, perspectiveCardFigureName: activeCardFigureName }
+          : {}),
       });
     } else if (!activeCardPrompt && session?.perspectiveCardPrompt) {
       activeCardPrompt = session.perspectiveCardPrompt;
       activeCardName = session.perspectiveCardName ?? "Perspective card";
+      activeCardFigureId = session.perspectiveCardFigureId;
+      activeCardFigureName = session.perspectiveCardFigureName;
     }
 
     const [
@@ -356,16 +373,32 @@ export async function POST(request: Request) {
   let ccIdToTitle = new Map<string, string>();
   let cgIdToTitle = new Map<string, string>();
 
+  let followedFiguresNudgeBlock = "";
+  if (userId && !incognito) {
+    const userSettings = await getUserSettings(userId);
+    if (userSettings?.followedFigureIds?.length) {
+      const figures = getFiguresByIds(userSettings.followedFigureIds);
+      const names = figures.map((f) => f.name).join(", ");
+      followedFiguresNudgeBlock = `\n\nFOLLOWED FAMOUS FIGURES (for contextual nudges):\nThe user follows these figures: ${names}. When the conversation reaches a reflective moment, a decision point, or a crossroads, you MAY invite them to consider: "What would [figure name] have to say about this?" Choose at most one figure per response when genuinely relevant. Weave their perspective naturally—don't force it.\n`;
+    }
+  }
+
   if (isLightweight) {
     const langInstr =
       language !== "en"
         ? `\n\nLANGUAGE: Respond in ${getLanguageName(language as LanguageCode)}.`
         : "";
     const cardInPrepend = messagesForModel[0]?.role === "assistant";
+    const figurePersonaBlock =
+      activeCardFigureName
+        ? `\n\n## Voice & Persona\nYou are speaking AS **${activeCardFigureName}**. Use their worldview, voice, and perspective. Ask questions and guide the user as this figure would—curious, insightful, and true to their character. The perspective card is your lens; your persona is how you hold it.\n`
+        : "";
     fullSystemPrompt =
       PERSPECTIVE_CARD_SYSTEM_PROMPT +
+      figurePersonaBlock +
       (cardInPrepend ? "" : "\n\nPERSPECTIVE CARD PROMPT:\n" + activeCardPrompt!) +
-      langInstr;
+      langInstr +
+      followedFiguresNudgeBlock;
     predictedContextResult = {
       mentalModels: [],
       longTermMemories: [],
@@ -634,9 +667,11 @@ export async function POST(request: Request) {
   ).trim() || "(none)";
   const optionsStyleInstruction =
     getUserTypeOptionsPrompt(userType as UserTypeId) || "Natural, conversational first-person.";
+
   fullSystemPrompt =
     SYSTEM_PROMPT.replace("[Insert Index Here]", indexContent)
       .replace("[Insert Context Here]", contextContent)
+      .replace("[Insert Followed Figures Nudge Here]", followedFiguresNudgeBlock)
       .replace("[Options Style Instruction]", optionsStyleInstruction) +
     languageInstruction +
     conversationStyleInstruction;

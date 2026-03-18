@@ -7,8 +7,10 @@ const MENTAL_MODEL_HREF_PREFIX = "#mm-";
 const LTM_HREF_PREFIX = "#ltm-";
 const CC_HREF_PREFIX = "#cc-";
 const CG_HREF_PREFIX = "#cg-";
+const FIGURE_HREF_PREFIX = "#figure-";
 
 const LTM_TOKEN_REGEX = /\[\[memory:([a-fA-F0-9]{24})\]\]/g;
+const FIGURE_TOKEN_REGEX = /\[\[figure:([a-z0-9_]+)\]\]/g;
 const CC_TOKEN_REGEX = /\[\[concept:([a-fA-F0-9]{24})\]\]/g;
 const CG_TOKEN_REGEX = /\[\[group:([a-fA-F0-9]{24})\]\]/g;
 const LEGACY_LTM_REGEX = /@ltm:([a-fA-F0-9]{24})/g;
@@ -104,16 +106,22 @@ function preprocessReferenceLinks(
   text: string,
   ltmIdToTitle: Map<string, string>,
   ccIdToTitle: Map<string, string>,
-  cgIdToTitle: Map<string, string>
+  cgIdToTitle: Map<string, string>,
+  figureIdToName: Map<string, string>
 ): string {
   const replaceLtm = (id: string) =>
     `[${ltmIdToTitle.get(id) ?? "Memory"}](${LTM_HREF_PREFIX}${id})`;
   const replaceCc = (id: string) =>
     `[${ccIdToTitle.get(id) ?? "Concept"}](${CC_HREF_PREFIX}${id})`;
   const replaceCg = (id: string) =>
-    `[${cgIdToTitle.get(id) ?? "Domain"}](${CG_HREF_PREFIX}${id})`;
+    `[${cgIdToTitle.get(id) ?? "Group"}](${CG_HREF_PREFIX}${id})`;
+  const toTitleCase = (s: string) =>
+    s.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  const replaceFigure = (id: string) =>
+    `[${figureIdToName.get(id) ?? toTitleCase(id)}](${FIGURE_HREF_PREFIX}${id})`;
 
   return text
+    .replace(FIGURE_TOKEN_REGEX, (_, id) => replaceFigure(id))
     .replace(LTM_TOKEN_REGEX, (_, id) => replaceLtm(id))
     .replace(LEGACY_LTM_REGEX, (_, id) => replaceLtm(id))
     .replace(CC_TOKEN_REGEX, (_, id) => replaceCc(id))
@@ -161,12 +169,51 @@ function preprocessMentalModelLinks(
   });
 }
 
+function FigureChip({
+  id,
+  name,
+  description,
+}: {
+  id: string;
+  name: string;
+  description: string | null;
+}) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  return (
+    <span
+      role="button"
+      tabIndex={0}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (description) setShowTooltip((v) => !v);
+      }}
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+      onFocus={() => setShowTooltip(true)}
+      onBlur={() => setShowTooltip(false)}
+      className="relative inline-flex items-baseline py-px px-1.5 rounded-lg text-sm font-medium bg-background text-foreground border-[0.6px] border-foreground cursor-pointer hover:opacity-90 transition-opacity duration-150 align-baseline"
+    >
+      {name}
+      {description && showTooltip && (
+        <span
+          className="absolute left-0 bottom-full mb-1 px-2 py-1.5 text-xs bg-neutral-800 dark:bg-neutral-200 text-neutral-100 dark:text-neutral-900 rounded-lg shadow-lg max-w-[280px] z-50 pointer-events-none animate-fade-in-up"
+          role="tooltip"
+        >
+          {description}
+        </span>
+      )}
+    </span>
+  );
+}
+
 export function ChatMarkdown({
   content,
   idToName,
   ltmIdToTitle = new Map(),
   ccIdToTitle = new Map(),
   cgIdToTitle = new Map(),
+  figureIdToName = new Map(),
+  figureIdToDescription = new Map(),
   onMentalModelClick,
   onLtmClick,
   onCustomConceptClick,
@@ -178,6 +225,8 @@ export function ChatMarkdown({
   ltmIdToTitle?: Map<string, string>;
   ccIdToTitle?: Map<string, string>;
   cgIdToTitle?: Map<string, string>;
+  figureIdToName?: Map<string, string>;
+  figureIdToDescription?: Map<string, string>;
   onMentalModelClick: (id: string, sourceMessage?: string) => void;
   onLtmClick?: (id: string) => void;
   onCustomConceptClick?: (id: string) => void;
@@ -188,7 +237,8 @@ export function ChatMarkdown({
     content,
     ltmIdToTitle,
     ccIdToTitle,
-    cgIdToTitle
+    cgIdToTitle,
+    figureIdToName
   );
   const processed = preprocessMentalModelLinks(withRefs, idToName);
 
@@ -197,6 +247,14 @@ export function ChatMarkdown({
       <ReactMarkdown
         components={{
           a: ({ href, children }) => {
+            if (href?.startsWith(FIGURE_HREF_PREFIX)) {
+              const id = href.slice(FIGURE_HREF_PREFIX.length);
+              const name = figureIdToName.get(id) ?? id.replace(/_/g, " ");
+              const description = figureIdToDescription.get(id) ?? null;
+              return (
+                <FigureChip id={id} name={name} description={description} />
+              );
+            }
             if (href?.startsWith(MENTAL_MODEL_HREF_PREFIX)) {
               const id = href.slice(MENTAL_MODEL_HREF_PREFIX.length);
               const preview = previewMap?.get(id);
@@ -236,7 +294,7 @@ export function ChatMarkdown({
             }
             if (href?.startsWith(CG_HREF_PREFIX)) {
               const id = href.slice(CG_HREF_PREFIX.length);
-              const label = cgIdToTitle.get(id) ?? "Domain";
+              const label = cgIdToTitle.get(id) ?? "Group";
               return onConceptGroupClick ? (
                 <ReferenceLink label={label} onClick={() => onConceptGroupClick(id)}>
                   {children}

@@ -13,10 +13,12 @@ type Segment =
   | { type: "mental_model"; id: string; name: string }
   | { type: "long_term_memory"; id: string; title: string }
   | { type: "custom_concept"; id: string; title: string }
-  | { type: "concept_group"; id: string; title: string };
+  | { type: "concept_group"; id: string; title: string }
+  | { type: "figure"; id: string; name: string };
 
-/** New format: [[id]] / [[memory:id]] / [[concept:id]] / [[group:id]] / [[Display Name]] */
-const MM_TOKEN_REGEX = /\[\[(?!memory:|concept:|group:)([a-z0-9_]+)\]\]/g;
+/** New format: [[id]] / [[memory:id]] / [[concept:id]] / [[group:id]] / [[figure:id]] / [[Display Name]] */
+const FIGURE_TOKEN_REGEX = /\[\[figure:([a-z0-9_]+)\]\]/g;
+const MM_TOKEN_REGEX = /\[\[(?!memory:|concept:|group:|figure:)([a-z0-9_]+)\]\]/g;
 const MM_NAME_TOKEN_REGEX = /\[\s*\[\s*([^\]]+?)\s*\]\s*\]/g; // [[Display Name]] - resolved via nameToId
 const LTM_TOKEN_REGEX = /\[\[memory:([a-fA-F0-9]{24})\]\]/g;
 const CC_TOKEN_REGEX = /\[\[concept:([a-fA-F0-9]{24})\]\]/g;
@@ -63,13 +65,20 @@ function parseUserMessageContent(
   idToName: Map<string, string>,
   ltmIdToTitle: Map<string, string>,
   ccIdToTitle: Map<string, string>,
-  cgIdToTitle: Map<string, string>
+  cgIdToTitle: Map<string, string>,
+  figureIdToName: Map<string, string>
 ): Segment[] {
   const nameToId = new Map<string, string>();
   idToName.forEach((name, id) => nameToId.set(name, id));
 
   const segments: Segment[] = [];
-  const matches: { index: number; type: "mm" | "ltm" | "cc" | "cd"; id: string; token: string }[] = [
+  const matches: { index: number; type: "mm" | "ltm" | "cc" | "cd" | "figure"; id: string; token: string }[] = [
+    ...[...content.matchAll(FIGURE_TOKEN_REGEX)].map((m) => ({
+      index: m.index!,
+      type: "figure" as const,
+      id: m[1],
+      token: m[0],
+    })),
     ...[...content.matchAll(LTM_TOKEN_REGEX)].map((m) => ({
       index: m.index!,
       type: "ltm" as const,
@@ -166,6 +175,13 @@ function parseUserMessageContent(
         id: match.id,
         name: idToName.get(match.id) ?? match.id.replace(/_/g, " "),
       });
+    } else if (match.type === "figure") {
+      const fallbackName = match.id.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+      segments.push({
+        type: "figure",
+        id: match.id,
+        name: figureIdToName.get(match.id) ?? fallbackName,
+      });
     } else if (match.type === "ltm") {
       segments.push({
         type: "long_term_memory",
@@ -176,7 +192,7 @@ function parseUserMessageContent(
       segments.push({
         type: "concept_group",
         id: match.id,
-        title: cgIdToTitle.get(match.id) ?? "Domain",
+        title: cgIdToTitle.get(match.id) ?? "Group",
       });
     } else {
       segments.push({
@@ -252,6 +268,8 @@ export function UserMessageContent({
   ltmIdToTitle,
   ccIdToTitle = new Map(),
   cgIdToTitle = new Map(),
+  figureIdToName = new Map(),
+  figureIdToDescription = new Map(),
   onMentalModelClick,
   onLtmClick,
   onCustomConceptClick,
@@ -264,6 +282,8 @@ export function UserMessageContent({
   ltmIdToTitle: Map<string, string>;
   ccIdToTitle?: Map<string, string>;
   cgIdToTitle?: Map<string, string>;
+  figureIdToName?: Map<string, string>;
+  figureIdToDescription?: Map<string, string>;
   onMentalModelClick: (id: string) => void;
   onLtmClick: (id: string) => void;
   onCustomConceptClick?: (id: string) => void;
@@ -271,7 +291,7 @@ export function UserMessageContent({
   previewMap?: Map<string, { oneLiner?: string; quickIntro?: string }>;
   chipStyle?: "user" | "assistant";
 }) {
-  const segments = parseUserMessageContent(content, idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle);
+  const segments = parseUserMessageContent(content, idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle, figureIdToName);
 
   if (segments.length === 0) {
     return <span className="whitespace-pre-wrap">{renderInlineMarkdownText(content, "plain")}</span>;
@@ -290,6 +310,18 @@ export function UserMessageContent({
               label={seg.name}
               tooltip={previewMap?.get(seg.id)?.oneLiner ?? previewMap?.get(seg.id)?.quickIntro ?? null}
               onClick={() => onMentalModelClick(seg.id)}
+              chipStyle={chipStyle}
+            />
+          );
+        }
+        if (seg.type === "figure") {
+          return (
+            <MentionChip
+              key={i}
+              label={seg.name}
+              tooltip={figureIdToDescription?.get(seg.id) ?? null}
+              onClick={() => {}}
+              toggleTooltipOnClick
               chipStyle={chipStyle}
             />
           );
@@ -334,11 +366,13 @@ function MentionChip({
   label,
   tooltip,
   onClick,
+  toggleTooltipOnClick = false,
   chipStyle = "user",
 }: {
   label: string;
   tooltip: string | null;
   onClick: () => void;
+  toggleTooltipOnClick?: boolean;
   chipStyle?: "user" | "assistant";
 }) {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -349,7 +383,11 @@ function MentionChip({
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        onClick();
+        if (toggleTooltipOnClick && tooltip) {
+          setShowTooltip((v) => !v);
+        } else {
+          onClick();
+        }
       }}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {

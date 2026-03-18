@@ -45,13 +45,13 @@ const DEFAULT_MENTION_TRANSLATIONS = {
   mentalModels: "Mental Models",
   longTermMemory: "Long Term Memory",
   customConcepts: "Custom Concepts",
-  myDomains: "My Domains",
-  hint: "/c concepts · /m models · /d domains · /g groups · /l memories",
+  myGroups: "My Groups",
+  hint: "@c concepts · @m models · @d/@g groups · @l memories",
   noResults: "No results",
   mentalModelSuffix: "Mental Model",
   memorySuffix: "Memory",
   conceptSuffix: "Concept",
-  domainSuffix: "Domain",
+  groupSuffix: "Group",
 };
 
 const CHIP_CLASS =
@@ -76,16 +76,16 @@ function getMentionState(
   cursorPosition: number
 ): { query: string; startIndex: number; mode: MentionMode; filterQuery: string } | null {
   const textBeforeCursor = value.slice(0, cursorPosition);
-  const lastSlash = textBeforeCursor.lastIndexOf("/");
-  if (lastSlash === -1) return null;
-  const afterSlash = textBeforeCursor.slice(lastSlash + 1);
-  if (/[\s/]/.test(afterSlash) || afterSlash.includes("/")) return null;
-  const query = afterSlash.toLowerCase();
+  const lastAt = textBeforeCursor.lastIndexOf("@");
+  if (lastAt === -1) return null;
+  const afterAt = textBeforeCursor.slice(lastAt + 1);
+  if (/[\s@]/.test(afterAt) || afterAt.includes("@")) return null;
+  const query = afterAt.toLowerCase();
 
   if (query.startsWith("c")) {
     return {
       query,
-      startIndex: lastSlash,
+      startIndex: lastAt,
       mode: "cc",
       filterQuery: query.slice(1).trim(),
     };
@@ -93,7 +93,7 @@ function getMentionState(
   if (query.startsWith("m")) {
     return {
       query,
-      startIndex: lastSlash,
+      startIndex: lastAt,
       mode: "mm",
       filterQuery: query.slice(1).trim(),
     };
@@ -101,7 +101,7 @@ function getMentionState(
   if (query.startsWith("d")) {
     return {
       query,
-      startIndex: lastSlash,
+      startIndex: lastAt,
       mode: "cd",
       filterQuery: query.slice(1).trim(),
     };
@@ -109,7 +109,7 @@ function getMentionState(
   if (query.startsWith("g")) {
     return {
       query,
-      startIndex: lastSlash,
+      startIndex: lastAt,
       mode: "cd",
       filterQuery: query.slice(1).trim(),
     };
@@ -117,14 +117,14 @@ function getMentionState(
   if (query.startsWith("l")) {
     return {
       query,
-      startIndex: lastSlash,
+      startIndex: lastAt,
       mode: "ltm",
       filterQuery: query.slice(1).trim(),
     };
   }
   return {
     query,
-    startIndex: lastSlash,
+    startIndex: lastAt,
     mode: "both",
     filterQuery: query,
   };
@@ -231,8 +231,8 @@ function findExactNameMatchesForRender(
 }
 
 function getMentionFilterPrefix(query: string): string {
-  if (!query) return "/";
-  return "/" + query[0];
+  if (!query) return "@";
+  return "@" + query[0];
 }
 
 function renderValueToHtml(
@@ -332,7 +332,7 @@ function renderValueToHtml(
   const getLabel = (m: (typeof tokenMatches)[0]) => {
     if (m.type === "mm") return mmMap.get(m.id) ?? m.id.replace(/_/g, " ");
     if (m.type === "ltm") return ltmMap.get(m.id) ?? "Memory";
-    if (m.type === "cd") return cgMap.get(m.id) ?? "Domain";
+    if (m.type === "cd") return cgMap.get(m.id) ?? "Group";
     return ccMap.get(m.id) ?? "Concept";
   };
   const allMatches: Match[] = [
@@ -451,13 +451,13 @@ export function MentionInput({
     mentalModels: string;
     longTermMemory: string;
     customConcepts: string;
-    myDomains: string;
+    myGroups: string;
     hint: string;
     noResults: string;
     mentalModelSuffix: string;
     memorySuffix: string;
     conceptSuffix: string;
-    domainSuffix: string;
+    groupSuffix: string;
   };
 }) {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -1099,7 +1099,7 @@ export function MentionInput({
               {filteredCG.length > 0 && (
                 <div className="px-3">
                   <p className="text-[10px] uppercase tracking-wide text-neutral-500 dark:text-neutral-400 font-medium px-2 py-1">
-                    {t.myDomains}
+                    {t.myGroups}
                   </p>
                   {filteredCG.map((m, i) => {
                     const opt: MentionOption = {
@@ -1244,7 +1244,7 @@ export function parseMentionsFromMessage(
   const ccMap = options?.ccIdToTitle ?? new Map<string, string>();
   const replaceCc = (id: string) => ccMap.get(id) ?? "Concept";
   const cgMap = options?.cgIdToTitle ?? new Map<string, string>();
-  const replaceCg = (id: string) => cgMap.get(id) ?? "Domain";
+  const replaceCg = (id: string) => cgMap.get(id) ?? "Group";
 
   let cleanedMessage: string;
   if (options?.idToName && options?.ltmIdToTitle) {

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-export type TourPanelId = "conversations" | "nuggets" | "cc" | "concepts" | "ltm" | "cg";
+export type TourPanelId = "conversations" | "cc" | "concepts" | "ltm" | "cg";
 
 export interface FeatureTourStep {
   target: string;

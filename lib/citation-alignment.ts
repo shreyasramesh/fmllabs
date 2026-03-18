@@ -136,6 +136,6 @@ export function sanitizeDisallowedCitations(
     })
     .replace(CG_CITATION_REGEX, (full, id: string) => {
       if (allowedCg.has(id)) return full;
-      return labels.conceptGroupLabels?.get(id) ?? "Domain";
+      return labels.conceptGroupLabels?.get(id) ?? "Group";
     });
 }

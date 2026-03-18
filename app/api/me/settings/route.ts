@@ -81,6 +81,14 @@ export async function PATCH(request: Request) {
     if (body.clonedVoiceName !== undefined) {
       updates.clonedVoiceName = typeof body.clonedVoiceName === "string" ? body.clonedVoiceName || undefined : undefined;
     }
+    if (body.followedFigureIds !== undefined) {
+      if (Array.isArray(body.followedFigureIds)) {
+        const ids = body.followedFigureIds
+          .filter((id: unknown): id is string => typeof id === "string")
+          .slice(0, 500); // Cap at 500
+        updates.followedFigureIds = ids;
+      }
+    }
 
     if (Object.keys(updates).length === 0) {
       const current = await getUserSettings(userId);

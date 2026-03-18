@@ -35,6 +35,8 @@ export interface Session {
   /** Stored when conversation started with a perspective card */
   perspectiveCardPrompt?: string;
   perspectiveCardName?: string;
+  perspectiveCardFigureId?: string;
+  perspectiveCardFigureName?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -59,6 +61,8 @@ interface SessionDoc {
   convertedToDeepConversation?: boolean;
   perspectiveCardPrompt?: string;
   perspectiveCardName?: string;
+  perspectiveCardFigureId?: string;
+  perspectiveCardFigureName?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -180,6 +184,8 @@ export interface UserSettings {
   language?: string;
   userType?: string;
   ttsSpeed?: number;
+  /** IDs of famous figures the user follows (for contextual nudges in chat) */
+  followedFigureIds?: string[];
   /** ElevenLabs Instant Voice Clone ID; when set, TTS uses this voice. Audio clips are never stored—only this ID. */
   clonedVoiceId?: string;
   clonedVoiceName?: string;
@@ -367,6 +373,8 @@ export async function updateSession(
     convertedToDeepConversation?: boolean;
     perspectiveCardPrompt?: string;
     perspectiveCardName?: string;
+    perspectiveCardFigureId?: string;
+    perspectiveCardFigureName?: string;
   }
 ): Promise<boolean> {
   const database = await getDb();
@@ -1234,13 +1242,14 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     clonedVoices: doc.clonedVoices,
     background: doc.background,
     weatherFormat: doc.weatherFormat,
+    followedFigureIds: doc.followedFigureIds,
     updatedAt: doc.updatedAt,
   };
 }
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat" | "followedFigureIds">>
 ): Promise<UserSettings> {
   const database = await getDb();
   const now = new Date();
@@ -1263,6 +1272,7 @@ export async function upsertUserSettings(
     clonedVoices: result.clonedVoices,
     background: result.background,
     weatherFormat: result.weatherFormat,
+    followedFigureIds: result.followedFigureIds,
     updatedAt: result.updatedAt,
   };
 }

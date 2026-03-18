@@ -1,0 +1,4510 @@
+categories:
+  - id: philosophy
+    name: Philosophy
+  - id: scientist
+    name: Scientist
+  - id: billionaires
+    name: Billionaires
+  - id: athletes
+    name: Athletes
+  - id: investors
+    name: Investors
+  - id: musicians
+    name: Musicians
+  - id: writers
+    name: Writers
+  - id: artists
+    name: Artists
+  - id: entrepreneurs
+    name: Entrepreneurs
+  - id: spiritual_teachers
+    name: Spiritual Teachers
+figures:
+  - id: marcus_aurelius
+    name: Marcus Aurelius
+    description: Roman emperor and Stoic philosopher
+    category: philosophy
+  - id: aristotle
+    name: Aristotle
+    description: Ancient Greek philosopher and polymath
+    category: philosophy
+  - id: plato
+    name: Plato
+    description: Ancient Greek philosopher, founder of the Academy
+    category: philosophy
+  - id: socrates
+    name: Socrates
+    description: Classical Greek philosopher, father of Western philosophy
+    category: philosophy
+  - id: epictetus
+    name: Epictetus
+    description: Stoic philosopher and former slave
+    category: philosophy
+  - id: seneca
+    name: Seneca
+    description: Roman Stoic philosopher and statesman
+    category: philosophy
+  - id: confucius
+    name: Confucius
+    description: Chinese philosopher and teacher
+    category: philosophy
+  - id: lao_tzu
+    name: Lao Tzu
+    description: Ancient Chinese philosopher, founder of Taoism
+    category: spiritual_teachers
+  - id: buddha
+    name: Buddha
+    description: Spiritual teacher and founder of Buddhism
+    category: spiritual_teachers
+  - id: friedrich_nietzsche
+    name: Friedrich Nietzsche
+    description: German philosopher and cultural critic
+    category: philosophy
+  - id: immanuel_kant
+    name: Immanuel Kant
+    description: German Enlightenment philosopher
+    category: philosophy
+  - id: david_hume
+    name: David Hume
+    description: Scottish philosopher and historian
+    category: philosophy
+  - id: ren_descartes
+    name: René Descartes
+    description: French philosopher and mathematician
+    category: philosophy
+  - id: jeanpaul_sartre
+    name: Jean-Paul Sartre
+    description: French existentialist philosopher
+    category: philosophy
+  - id: albert_camus
+    name: Albert Camus
+    description: French philosopher and novelist
+    category: philosophy
+  - id: simone_de_beauvoir
+    name: Simone de Beauvoir
+    description: French existentialist philosopher and writer
+    category: philosophy
+  - id: hannah_arendt
+    name: Hannah Arendt
+    description: German-American political philosopher
+    category: philosophy
+  - id: john_stuart_mill
+    name: John Stuart Mill
+    description: British philosopher and political economist
+    category: philosophy
+  - id: baruch_spinoza
+    name: Baruch Spinoza
+    description: Dutch rationalist philosopher
+    category: philosophy
+  - id: thomas_aquinas
+    name: Thomas Aquinas
+    description: Italian theologian and philosopher
+    category: philosophy
+  - id: augustine_of_hippo
+    name: Augustine of Hippo
+    description: Early Christian theologian and philosopher
+    category: philosophy
+  - id: diogenes
+    name: Diogenes
+    description: Ancient Greek Cynic philosopher
+    category: philosophy
+  - id: epicurus
+    name: Epicurus
+    description: Ancient Greek philosopher, founder of Epicureanism
+    category: philosophy
+  - id: zhuangzi
+    name: Zhuangzi
+    description: Chinese Taoist philosopher
+    category: philosophy
+  - id: alghazali
+    name: Al-Ghazali
+    description: Persian Islamic philosopher and theologian
+    category: philosophy
+  - id: ibn_sina
+    name: Ibn Sina
+    description: Persian polymath and philosopher
+    category: philosophy
+  - id: adi_shankara
+    name: Adi Shankara
+    description: Indian philosopher and theologian
+    category: philosophy
+  - id: arthur_schopenhauer
+    name: Arthur Schopenhauer
+    description: German philosopher known for pessimism
+    category: philosophy
+  - id: bertrand_russell
+    name: Bertrand Russell
+    description: British philosopher and logician
+    category: philosophy
+  - id: ludwig_wittgenstein
+    name: Ludwig Wittgenstein
+    description: Austrian-British philosopher
+    category: philosophy
+  - id: martin_heidegger
+    name: Martin Heidegger
+    description: German existentialist philosopher
+    category: philosophy
+  - id: karl_marx
+    name: Karl Marx
+    description: German philosopher and economist
+    category: philosophy
+  - id: michel_foucault
+    name: Michel Foucault
+    description: French philosopher and historian
+    category: philosophy
+  - id: john_rawls
+    name: John Rawls
+    description: American political philosopher
+    category: philosophy
+  - id: martha_nussbaum
+    name: Martha Nussbaum
+    description: American philosopher and ethicist
+    category: philosophy
+  - id: peter_singer
+    name: Peter Singer
+    description: Australian moral philosopher
+    category: philosophy
+  - id: daniel_dennett
+    name: Daniel Dennett
+    description: American philosopher of mind
+    category: philosophy
+  - id: slavoj_iek
+    name: Slavoj Žižek
+    description: Slovenian philosopher and cultural critic
+    category: philosophy
+  - id: cornel_west
+    name: Cornel West
+    description: American philosopher and public intellectual
+    category: philosophy
+  - id: alan_watts
+    name: Alan Watts
+    description: British philosopher and interpreter of Eastern philosophy
+    category: spiritual_teachers
+  - id: thich_nhat_hanh
+    name: Thich Nhat Hanh
+    description: Vietnamese Zen Buddhist monk and peace activist
+    category: spiritual_teachers
+  - id: dalai_lama
+    name: Dalai Lama
+    description: Tibetan Buddhist spiritual leader
+    category: spiritual_teachers
+  - id: rumi
+    name: Rumi
+    description: Persian poet and Sufi mystic
+    category: spiritual_teachers
+  - id: krishnamurti
+    name: Krishnamurti
+    description: Indian philosopher and spiritual teacher
+    category: spiritual_teachers
+  - id: ramana_maharshi
+    name: Ramana Maharshi
+    description: Indian Hindu sage and spiritual teacher
+    category: spiritual_teachers
+  - id: swami_vivekananda
+    name: Swami Vivekananda
+    description: Indian Hindu monk and spiritual leader
+    category: spiritual_teachers
+  - id: paramahansa_yogananda
+    name: Paramahansa Yogananda
+    description: Indian yogi and spiritual teacher
+    category: spiritual_teachers
+  - id: eckhart_tolle
+    name: Eckhart Tolle
+    description: Spiritual teacher and author
+    category: spiritual_teachers
+  - id: pema_chdrn
+    name: Pema Chödrön
+    description: American Tibetan Buddhist nun and teacher
+    category: spiritual_teachers
+  - id: carl_jung
+    name: Carl Jung
+    description: Swiss psychiatrist and psychoanalyst
+    category: scientist
+  - id: sigmund_freud
+    name: Sigmund Freud
+    description: Austrian founder of psychoanalysis
+    category: scientist
+  - id: albert_einstein
+    name: Albert Einstein
+    description: German-American physicist, theory of relativity
+    category: scientist
+  - id: isaac_newton
+    name: Isaac Newton
+    description: English physicist and mathematician
+    category: scientist
+  - id: marie_curie
+    name: Marie Curie
+    description: Polish-French physicist and chemist
+    category: scientist
+  - id: charles_darwin
+    name: Charles Darwin
+    description: English naturalist, theory of evolution
+    category: scientist
+  - id: stephen_hawking
+    name: Stephen Hawking
+    description: British theoretical physicist
+    category: scientist
+  - id: richard_feynman
+    name: Richard Feynman
+    description: American theoretical physicist
+    category: scientist
+  - id: neil_degrasse_tyson
+    name: Neil deGrasse Tyson
+    description: American astrophysicist and science communicator
+    category: scientist
+  - id: carl_sagan
+    name: Carl Sagan
+    description: American astronomer and science communicator
+    category: scientist
+  - id: jane_goodall
+    name: Jane Goodall
+    description: British primatologist and anthropologist
+    category: scientist
+  - id: rachel_carson
+    name: Rachel Carson
+    description: American marine biologist and conservationist
+    category: scientist
+  - id: nikola_tesla
+    name: Nikola Tesla
+    description: Serbian-American inventor and electrical engineer
+    category: scientist
+  - id: ada_lovelace
+    name: Ada Lovelace
+    description: English mathematician, first computer programmer
+    category: scientist
+  - id: alan_turing
+    name: Alan Turing
+    description: British mathematician and computer scientist
+    category: scientist
+  - id: rosalind_franklin
+    name: Rosalind Franklin
+    description: British chemist, contributed to DNA structure
+    category: scientist
+  - id: james_watson
+    name: James Watson
+    description: American molecular biologist, co-discoverer of DNA
+    category: scientist
+  - id: francis_crick
+    name: Francis Crick
+    description: British molecular biologist, co-discoverer of DNA
+    category: scientist
+  - id: gregor_mendel
+    name: Gregor Mendel
+    description: Austrian monk and geneticist
+    category: scientist
+  - id: louis_pasteur
+    name: Louis Pasteur
+    description: French microbiologist and chemist
+    category: scientist
+  - id: alexander_fleming
+    name: Alexander Fleming
+    description: Scottish physician and microbiologist
+    category: scientist
+  - id: galileo_galilei
+    name: Galileo Galilei
+    description: Italian astronomer and physicist
+    category: scientist
+  - id: johannes_kepler
+    name: Johannes Kepler
+    description: German astronomer and mathematician
+    category: scientist
+  - id: niels_bohr
+    name: Niels Bohr
+    description: Danish physicist, quantum theory pioneer
+    category: scientist
+  - id: werner_heisenberg
+    name: Werner Heisenberg
+    description: German theoretical physicist
+    category: scientist
+  - id: erwin_schrdinger
+    name: Erwin Schrödinger
+    description: Austrian physicist, quantum mechanics
+    category: scientist
+  - id: max_planck
+    name: Max Planck
+    description: German physicist, quantum theory founder
+    category: scientist
+  - id: michael_faraday
+    name: Michael Faraday
+    description: English scientist, electromagnetism
+    category: scientist
+  - id: thomas_edison
+    name: Thomas Edison
+    description: American inventor and businessman
+    category: scientist
+  - id: benjamin_franklin
+    name: Benjamin Franklin
+    description: American polymath and founding father
+    category: scientist
+  - id: leonardo_da_vinci
+    name: Leonardo da Vinci
+    description: Italian Renaissance polymath and artist
+    category: artists
+  - id: michelangelo
+    name: Michelangelo
+    description: Italian Renaissance sculptor and painter
+    category: artists
+  - id: vincent_van_gogh
+    name: Vincent van Gogh
+    description: Dutch Post-Impressionist painter
+    category: artists
+  - id: pablo_picasso
+    name: Pablo Picasso
+    description: Spanish painter and sculptor
+    category: artists
+  - id: claude_monet
+    name: Claude Monet
+    description: French Impressionist painter
+    category: artists
+  - id: frida_kahlo
+    name: Frida Kahlo
+    description: Mexican painter known for self-portraits
+    category: artists
+  - id: georgia_okeeffe
+    name: Georgia O'Keeffe
+    description: American modernist painter
+    category: artists
+  - id: andy_warhol
+    name: Andy Warhol
+    description: American pop artist
+    category: artists
+  - id: salvador_dal
+    name: Salvador Dalí
+    description: Spanish Surrealist painter
+    category: artists
+  - id: jackson_pollock
+    name: Jackson Pollock
+    description: American abstract expressionist painter
+    category: artists
+  - id: henri_matisse
+    name: Henri Matisse
+    description: French painter and sculptor
+    category: artists
+  - id: rembrandt
+    name: Rembrandt
+    description: Dutch painter and etcher
+    category: artists
+  - id: johannes_vermeer
+    name: Johannes Vermeer
+    description: Dutch Baroque painter
+    category: artists
+  - id: caravaggio
+    name: Caravaggio
+    description: Italian Baroque painter
+    category: artists
+  - id: gustav_klimt
+    name: Gustav Klimt
+    description: Austrian symbolist painter
+    category: artists
+  - id: edvard_munch
+    name: Edvard Munch
+    description: Norwegian expressionist painter
+    category: artists
+  - id: wassily_kandinsky
+    name: Wassily Kandinsky
+    description: Russian painter and art theorist
+    category: artists
+  - id: paul_czanne
+    name: Paul Cézanne
+    description: French Post-Impressionist painter
+    category: artists
+  - id: auguste_rodin
+    name: Auguste Rodin
+    description: French sculptor
+    category: artists
+  - id: yayoi_kusama
+    name: Yayoi Kusama
+    description: Japanese contemporary artist
+    category: artists
+  - id: banksy
+    name: Banksy
+    description: Anonymous British street artist
+    category: artists
+  - id: steve_jobs
+    name: Steve Jobs
+    description: Co-founder of Apple, entrepreneur
+    category: entrepreneurs
+  - id: elon_musk
+    name: Elon Musk
+    description: CEO of Tesla and SpaceX
+    category: entrepreneurs
+  - id: jeff_bezos
+    name: Jeff Bezos
+    description: Founder of Amazon
+    category: entrepreneurs
+  - id: bill_gates
+    name: Bill Gates
+    description: Co-founder of Microsoft
+    category: entrepreneurs
+  - id: mark_zuckerberg
+    name: Mark Zuckerberg
+    description: Co-founder of Facebook
+    category: entrepreneurs
+  - id: oprah_winfrey
+    name: Oprah Winfrey
+    description: Media mogul and philanthropist
+    category: entrepreneurs
+  - id: richard_branson
+    name: Richard Branson
+    description: Founder of Virgin Group
+    category: entrepreneurs
+  - id: howard_schultz
+    name: Howard Schultz
+    description: Former CEO of Starbucks
+    category: entrepreneurs
+  - id: reid_hoffman
+    name: Reid Hoffman
+    description: Co-founder of LinkedIn
+    category: entrepreneurs
+  - id: sara_blakely
+    name: Sara Blakely
+    description: Founder of Spanx
+    category: entrepreneurs
+  - id: travis_kalanick
+    name: Travis Kalanick
+    description: Co-founder of Uber
+    category: entrepreneurs
+  - id: brian_chesky
+    name: Brian Chesky
+    description: Co-founder of Airbnb
+    category: entrepreneurs
+  - id: drew_houston
+    name: Drew Houston
+    description: Co-founder of Dropbox
+    category: entrepreneurs
+  - id: kevin_systrom
+    name: Kevin Systrom
+    description: Co-founder of Instagram
+    category: entrepreneurs
+  - id: jan_koum
+    name: Jan Koum
+    description: Co-founder of WhatsApp
+    category: entrepreneurs
+  - id: evan_spiegel
+    name: Evan Spiegel
+    description: Co-founder of Snapchat
+    category: entrepreneurs
+  - id: jack_ma
+    name: Jack Ma
+    description: Founder of Alibaba
+    category: entrepreneurs
+  - id: masayoshi_son
+    name: Masayoshi Son
+    description: Founder of SoftBank
+    category: entrepreneurs
+  - id: larry_page
+    name: Larry Page
+    description: Co-founder of Google
+    category: entrepreneurs
+  - id: sergey_brin
+    name: Sergey Brin
+    description: Co-founder of Google
+    category: entrepreneurs
+  - id: reed_hastings
+    name: Reed Hastings
+    description: Co-founder of Netflix
+    category: entrepreneurs
+  - id: pierre_omidyar
+    name: Pierre Omidyar
+    description: Founder of eBay
+    category: entrepreneurs
+  - id: warren_buffett
+    name: Warren Buffett
+    description: CEO of Berkshire Hathaway, investor
+    category: investors
+  - id: charlie_munger
+    name: Charlie Munger
+    description: Vice chairman of Berkshire Hathaway
+    category: investors
+  - id: ray_dalio
+    name: Ray Dalio
+    description: Founder of Bridgewater Associates
+    category: investors
+  - id: george_soros
+    name: George Soros
+    description: Investor and philanthropist
+    category: investors
+  - id: peter_thiel
+    name: Peter Thiel
+    description: Co-founder of PayPal, investor
+    category: investors
+  - id: marc_andreessen
+    name: Marc Andreessen
+    description: Co-founder of Netscape, venture capitalist
+    category: investors
+  - id: ben_horowitz
+    name: Ben Horowitz
+    description: Co-founder of Andreessen Horowitz
+    category: investors
+  - id: mary_meeker
+    name: Mary Meeker
+    description: Venture capitalist and analyst
+    category: investors
+  - id: cathie_wood
+    name: Cathie Wood
+    description: Founder of ARK Invest
+    category: investors
+  - id: howard_marks
+    name: Howard Marks
+    description: Co-founder of Oaktree Capital
+    category: investors
+  - id: seth_klarman
+    name: Seth Klarman
+    description: Founder of Baupost Group
+    category: investors
+  - id: michael_burry
+    name: Michael Burry
+    description: Investor, predicted 2008 housing crash
+    category: investors
+  - id: john_bogle
+    name: John Bogle
+    description: Founder of Vanguard, index fund pioneer
+    category: investors
+  - id: benjamin_graham
+    name: Benjamin Graham
+    description: Value investing pioneer
+    category: investors
+  - id: philip_fisher
+    name: Philip Fisher
+    description: Growth investing pioneer
+    category: investors
+  - id: jim_simons
+    name: Jim Simons
+    description: Founder of Renaissance Technologies
+    category: investors
+  - id: stanley_druckenmiller
+    name: Stanley Druckenmiller
+    description: Investor and hedge fund manager
+    category: investors
+  - id: carl_icahn
+    name: Carl Icahn
+    description: Investor and activist
+    category: investors
+  - id: bill_ackman
+    name: Bill Ackman
+    description: Founder of Pershing Square
+    category: investors
+  - id: david_einhorn
+    name: David Einhorn
+    description: Founder of Greenlight Capital
+    category: investors
+  - id: maya_angelou
+    name: Maya Angelou
+    description: American poet and civil rights activist
+    category: writers
+  - id: james_baldwin
+    name: James Baldwin
+    description: American novelist and essayist
+    category: writers
+  - id: toni_morrison
+    name: Toni Morrison
+    description: American novelist and Nobel laureate
+    category: writers
+  - id: virginia_woolf
+    name: Virginia Woolf
+    description: English modernist writer
+    category: writers
+  - id: george_orwell
+    name: George Orwell
+    description: English novelist and essayist
+    category: writers
+  - id: ernest_hemingway
+    name: Ernest Hemingway
+    description: American novelist and journalist
+    category: writers
+  - id: gabriel_garca_mrquez
+    name: Gabriel García Márquez
+    description: Colombian novelist and Nobel laureate
+    category: writers
+  - id: haruki_murakami
+    name: Haruki Murakami
+    description: Japanese novelist
+    category: writers
+  - id: zadie_smith
+    name: Zadie Smith
+    description: British novelist and essayist
+    category: writers
+  - id: chimamanda_ngozi_adichie
+    name: Chimamanda Ngozi Adichie
+    description: Nigerian novelist
+    category: writers
+  - id: jk_rowling
+    name: J.K. Rowling
+    description: British author of Harry Potter
+    category: writers
+  - id: stephen_king
+    name: Stephen King
+    description: American horror and fantasy writer
+    category: writers
+  - id: margaret_atwood
+    name: Margaret Atwood
+    description: Canadian novelist and poet
+    category: writers
+  - id: octavia_butler
+    name: Octavia Butler
+    description: American science fiction writer
+    category: writers
+  - id: ursula_k_le_guin
+    name: Ursula K. Le Guin
+    description: American science fiction and fantasy writer
+    category: writers
+  - id: mary_shelley
+    name: Mary Shelley
+    description: English novelist, author of Frankenstein
+    category: writers
+  - id: jane_austen
+    name: Jane Austen
+    description: English novelist
+    category: writers
+  - id: charles_dickens
+    name: Charles Dickens
+    description: English novelist
+    category: writers
+  - id: leo_tolstoy
+    name: Leo Tolstoy
+    description: Russian novelist
+    category: writers
+  - id: fyodor_dostoevsky
+    name: Fyodor Dostoevsky
+    description: Russian novelist
+    category: writers
+  - id: franz_kafka
+    name: Franz Kafka
+    description: Czech novelist and short story writer
+    category: writers
+  - id: ralph_waldo_emerson
+    name: Ralph Waldo Emerson
+    description: American essayist and poet
+    category: writers
+  - id: henry_david_thoreau
+    name: Henry David Thoreau
+    description: American essayist and naturalist
+    category: writers
+  - id: ludwig_van_beethoven
+    name: Ludwig van Beethoven
+    description: German composer and pianist
+    category: musicians
+  - id: wolfgang_amadeus_mozart
+    name: Wolfgang Amadeus Mozart
+    description: Austrian composer
+    category: musicians
+  - id: johann_sebastian_bach
+    name: Johann Sebastian Bach
+    description: German composer and organist
+    category: musicians
+  - id: bob_dylan
+    name: Bob Dylan
+    description: American singer-songwriter and Nobel laureate
+    category: musicians
+  - id: david_bowie
+    name: David Bowie
+    description: British singer and songwriter
+    category: musicians
+  - id: prince
+    name: Prince
+    description: American singer, songwriter, and multi-instrumentalist
+    category: musicians
+  - id: aretha_franklin
+    name: Aretha Franklin
+    description: American singer, Queen of Soul
+    category: musicians
+  - id: nina_simone
+    name: Nina Simone
+    description: American singer and civil rights activist
+    category: musicians
+  - id: billie_holiday
+    name: Billie Holiday
+    description: American jazz singer
+    category: musicians
+  - id: ella_fitzgerald
+    name: Ella Fitzgerald
+    description: American jazz singer
+    category: musicians
+  - id: miles_davis
+    name: Miles Davis
+    description: American jazz trumpeter
+    category: musicians
+  - id: john_coltrane
+    name: John Coltrane
+    description: American jazz saxophonist
+    category: musicians
+  - id: duke_ellington
+    name: Duke Ellington
+    description: American jazz composer and bandleader
+    category: musicians
+  - id: thelonious_monk
+    name: Thelonious Monk
+    description: American jazz pianist
+    category: musicians
+  - id: stevie_wonder
+    name: Stevie Wonder
+    description: American singer-songwriter and multi-instrumentalist
+    category: musicians
+  - id: marvin_gaye
+    name: Marvin Gaye
+    description: American singer and songwriter
+    category: musicians
+  - id: joni_mitchell
+    name: Joni Mitchell
+    description: Canadian singer-songwriter
+    category: musicians
+  - id: leonard_cohen
+    name: Leonard Cohen
+    description: Canadian singer-songwriter and poet
+    category: musicians
+  - id: freddie_mercury
+    name: Freddie Mercury
+    description: British singer and Queen frontman
+    category: musicians
+  - id: john_lennon
+    name: John Lennon
+    description: British singer-songwriter and Beatle
+    category: musicians
+  - id: paul_mccartney
+    name: Paul McCartney
+    description: British singer-songwriter and Beatle
+    category: musicians
+  - id: beyonc
+    name: Beyoncé
+    description: American singer and performer
+    category: musicians
+  - id: taylor_swift
+    name: Taylor Swift
+    description: American singer-songwriter
+    category: musicians
+  - id: kendrick_lamar
+    name: Kendrick Lamar
+    description: American rapper and songwriter
+    category: musicians
+  - id: michael_jordan
+    name: Michael Jordan
+    description: American basketball legend
+    category: athletes
+  - id: lebron_james
+    name: LeBron James
+    description: American basketball player
+    category: athletes
+  - id: serena_williams
+    name: Serena Williams
+    description: American tennis champion
+    category: athletes
+  - id: venus_williams
+    name: Venus Williams
+    description: American tennis champion
+    category: athletes
+  - id: muhammad_ali
+    name: Muhammad Ali
+    description: American boxer and civil rights activist
+    category: athletes
+  - id: usain_bolt
+    name: Usain Bolt
+    description: Jamaican sprinter, fastest man alive
+    category: athletes
+  - id: pel
+    name: Pelé
+    description: Brazilian football legend
+    category: athletes
+  - id: diego_maradona
+    name: Diego Maradona
+    description: Argentine football legend
+    category: athletes
+  - id: lionel_messi
+    name: Lionel Messi
+    description: Argentine football player
+    category: athletes
+  - id: cristiano_ronaldo
+    name: Cristiano Ronaldo
+    description: Portuguese football player
+    category: athletes
+  - id: roger_federer
+    name: Roger Federer
+    description: Swiss tennis champion
+    category: athletes
+  - id: rafael_nadal
+    name: Rafael Nadal
+    description: Spanish tennis champion
+    category: athletes
+  - id: novak_djokovic
+    name: Novak Djokovic
+    description: Serbian tennis champion
+    category: athletes
+  - id: tiger_woods
+    name: Tiger Woods
+    description: American golfer
+    category: athletes
+  - id: jack_nicklaus
+    name: Jack Nicklaus
+    description: American golfer
+    category: athletes
+  - id: simone_biles
+    name: Simone Biles
+    description: American gymnast
+    category: athletes
+  - id: jesse_owens
+    name: Jesse Owens
+    description: American track and field athlete
+    category: athletes
+  - id: wilma_rudolph
+    name: Wilma Rudolph
+    description: American sprinter and Olympian
+    category: athletes
+  - id: billie_jean_king
+    name: Billie Jean King
+    description: American tennis champion and activist
+    category: athletes
+  - id: wayne_gretzky
+    name: Wayne Gretzky
+    description: Canadian ice hockey legend
+    category: athletes
+  - id: babe_ruth
+    name: Babe Ruth
+    description: American baseball legend
+    category: athletes
+  - id: jackie_robinson
+    name: Jackie Robinson
+    description: American baseball pioneer
+    category: athletes
+  - id: larry_ellison
+    name: Larry Ellison
+    description: Co-founder of Oracle
+    category: billionaires
+  - id: michael_bloomberg
+    name: Michael Bloomberg
+    description: Founder of Bloomberg LP, former NYC mayor
+    category: billionaires
+  - id: mukesh_ambani
+    name: Mukesh Ambani
+    description: Chairman of Reliance Industries
+    category: billionaires
+  - id: bernard_arnault
+    name: Bernard Arnault
+    description: CEO of LVMH
+    category: billionaires
+  - id: amancio_ortega
+    name: Amancio Ortega
+    description: Founder of Inditex (Zara)
+    category: billionaires
+  - id: carlos_slim
+    name: Carlos Slim
+    description: Mexican businessman and philanthropist
+    category: billionaires
+  - id: franois_pinault
+    name: François Pinault
+    description: Founder of Kering
+    category: billionaires
+  - id: phil_knight
+    name: Phil Knight
+    description: Co-founder of Nike
+    category: billionaires
+  - id: sam_walton
+    name: Sam Walton
+    description: Founder of Walmart
+    category: billionaires
+  - id: rupert_murdoch
+    name: Rupert Murdoch
+    description: Media mogul
+    category: billionaires
+  - id: blaise_pascal
+    name: Blaise Pascal
+    description: French mathematician and philosopher
+    category: philosophy
+  - id: buckminster_fuller
+    name: Buckminster Fuller
+    description: American architect and inventor
+    category: philosophy
+  - id: carl_rogers
+    name: Carl Rogers
+    description: American psychologist, humanistic approach
+    category: scientist
+  - id: cicero
+    name: Cicero
+    description: Roman philosopher and orator
+    category: philosophy
+  - id: clayton_christensen
+    name: Clayton Christensen
+    description: American business theorist
+    category: entrepreneurs
+  - id: gottfried_wilhelm_leibniz
+    name: Gottfried Wilhelm Leibniz
+    description: German philosopher and mathematician
+    category: philosophy
+  - id: william_james
+    name: William James
+    description: American philosopher and psychologist
+    category: philosophy
+  - id: john_dewey
+    name: John Dewey
+    description: American philosopher and educator
+    category: philosophy
+  - id: alfred_north_whitehead
+    name: Alfred North Whitehead
+    description: British mathematician and philosopher
+    category: philosophy
+  - id: gwf_hegel
+    name: G.W.F. Hegel
+    description: German idealist philosopher
+    category: philosophy
+  - id: sren_kierkegaard
+    name: Søren Kierkegaard
+    description: Danish existentialist philosopher
+    category: philosophy
+  - id: edmund_husserl
+    name: Edmund Husserl
+    description: German philosopher, founder of phenomenology
+    category: philosophy
+  - id: maurice_merleauponty
+    name: Maurice Merleau-Ponty
+    description: French phenomenologist
+    category: philosophy
+  - id: judith_butler
+    name: Judith Butler
+    description: American philosopher and gender theorist
+    category: philosophy
+  - id: noam_chomsky
+    name: Noam Chomsky
+    description: American linguist and philosopher
+    category: philosophy
+  - id: thomas_kuhn
+    name: Thomas Kuhn
+    description: American philosopher of science
+    category: philosophy
+  - id: karl_popper
+    name: Karl Popper
+    description: Austrian-British philosopher of science
+    category: philosophy
+  - id: john_locke
+    name: John Locke
+    description: English philosopher
+    category: philosophy
+  - id: thomas_hobbes
+    name: Thomas Hobbes
+    description: English philosopher
+    category: philosophy
+  - id: jeanjacques_rousseau
+    name: Jean-Jacques Rousseau
+    description: French philosopher and writer
+    category: philosophy
+  - id: voltaire
+    name: Voltaire
+    description: French Enlightenment writer and philosopher
+    category: philosophy
+  - id: montesquieu
+    name: Montesquieu
+    description: French political philosopher
+    category: philosophy
+  - id: adam_smith
+    name: Adam Smith
+    description: Scottish economist and philosopher
+    category: philosophy
+  - id: jeremy_bentham
+    name: Jeremy Bentham
+    description: English philosopher, utilitarianism
+    category: philosophy
+  - id: ge_moore
+    name: G.E. Moore
+    description: British philosopher
+    category: philosophy
+  - id: aj_ayer
+    name: A.J. Ayer
+    description: British philosopher, logical positivism
+    category: philosophy
+  - id: willard_van_orman_quine
+    name: Willard Van Orman Quine
+    description: American philosopher and logician
+    category: philosophy
+  - id: saul_kripke
+    name: Saul Kripke
+    description: American philosopher and logician
+    category: philosophy
+  - id: hilary_putnam
+    name: Hilary Putnam
+    description: American philosopher
+    category: philosophy
+  - id: thomas_nagel
+    name: Thomas Nagel
+    description: American philosopher
+    category: philosophy
+  - id: robert_nozick
+    name: Robert Nozick
+    description: American political philosopher
+    category: philosophy
+  - id: amartya_sen
+    name: Amartya Sen
+    description: Indian economist and philosopher
+    category: philosophy
+  - id: kwame_anthony_appiah
+    name: Kwame Anthony Appiah
+    description: British-American philosopher
+    category: philosophy
+  - id: jiddu_krishnamurti
+    name: Jiddu Krishnamurti
+    description: Indian philosopher and spiritual teacher
+    category: spiritual_teachers
+  - id: osho
+    name: Osho
+    description: Indian mystic and spiritual teacher
+    category: spiritual_teachers
+  - id: meister_eckhart
+    name: Meister Eckhart
+    description: German mystic and theologian
+    category: spiritual_teachers
+  - id: teresa_of_vila
+    name: Teresa of Ávila
+    description: Spanish mystic and saint
+    category: spiritual_teachers
+  - id: john_of_the_cross
+    name: John of the Cross
+    description: Spanish mystic and poet
+    category: spiritual_teachers
+  - id: francis_of_assisi
+    name: Francis of Assisi
+    description: Italian saint and mystic
+    category: spiritual_teachers
+  - id: thomas_merton
+    name: Thomas Merton
+    description: American Trappist monk and writer
+    category: spiritual_teachers
+  - id: joseph_campbell
+    name: Joseph Campbell
+    description: American mythologist and writer
+    category: spiritual_teachers
+  - id: deepak_chopra
+    name: Deepak Chopra
+    description: Indian-American author and alternative medicine advocate
+    category: spiritual_teachers
+  - id: wayne_dyer
+    name: Wayne Dyer
+    description: American self-help author and speaker
+    category: spiritual_teachers
+  - id: bren_brown
+    name: Brené Brown
+    description: American researcher and author
+    category: spiritual_teachers
+  - id: viktor_frankl
+    name: Viktor Frankl
+    description: Austrian psychiatrist and Holocaust survivor
+    category: scientist
+  - id: abraham_maslow
+    name: Abraham Maslow
+    description: American psychologist, hierarchy of needs
+    category: scientist
+  - id: bf_skinner
+    name: B.F. Skinner
+    description: American behaviorist psychologist
+    category: scientist
+  - id: ivan_pavlov
+    name: Ivan Pavlov
+    description: Russian physiologist, classical conditioning
+    category: scientist
+  - id: alfred_adler
+    name: Alfred Adler
+    description: Austrian psychiatrist, individual psychology
+    category: scientist
+  - id: karen_horney
+    name: Karen Horney
+    description: German psychoanalyst
+    category: scientist
+  - id: erik_erikson
+    name: Erik Erikson
+    description: German-American developmental psychologist
+    category: scientist
+  - id: jean_piaget
+    name: Jean Piaget
+    description: Swiss developmental psychologist
+    category: scientist
+  - id: lev_vygotsky
+    name: Lev Vygotsky
+    description: Russian psychologist
+    category: scientist
+  - id: daniel_kahneman
+    name: Daniel Kahneman
+    description: Israeli-American psychologist, behavioral economics
+    category: scientist
+  - id: amos_tversky
+    name: Amos Tversky
+    description: Israeli psychologist, behavioral economics
+    category: scientist
+  - id: mihaly_csikszentmihalyi
+    name: Mihaly Csikszentmihalyi
+    description: Hungarian psychologist, flow theory
+    category: scientist
+  - id: martin_seligman
+    name: Martin Seligman
+    description: American psychologist, positive psychology
+    category: scientist
+  - id: angela_duckworth
+    name: Angela Duckworth
+    description: American psychologist, grit research
+    category: scientist
+  - id: carol_dweck
+    name: Carol Dweck
+    description: American psychologist, growth mindset
+    category: scientist
+  - id: robert_cialdini
+    name: Robert Cialdini
+    description: American psychologist, influence and persuasion
+    category: scientist
+  - id: elizabeth_loftus
+    name: Elizabeth Loftus
+    description: American psychologist, memory research
+    category: scientist
+  - id: steven_pinker
+    name: Steven Pinker
+    description: Canadian-American psychologist and linguist
+    category: scientist
+  - id: oliver_sacks
+    name: Oliver Sacks
+    description: British neurologist and author
+    category: scientist
+  - id: antonio_damasio
+    name: Antonio Damasio
+    description: Portuguese neuroscientist
+    category: scientist
+  - id: vs_ramachandran
+    name: V.S. Ramachandran
+    description: Indian-American neuroscientist
+    category: scientist
+  - id: james_lovelock
+    name: James Lovelock
+    description: British scientist, Gaia hypothesis
+    category: scientist
+  - id: linus_pauling
+    name: Linus Pauling
+    description: American chemist and peace activist
+    category: scientist
+  - id: richard_dawkins
+    name: Richard Dawkins
+    description: British evolutionary biologist
+    category: scientist
+  - id: edward_o_wilson
+    name: Edward O. Wilson
+    description: American biologist, sociobiology
+    category: scientist
+  - id: stephen_jay_gould
+    name: Stephen Jay Gould
+    description: American paleontologist and evolutionary biologist
+    category: scientist
+  - id: jared_diamond
+    name: Jared Diamond
+    description: American geographer and author
+    category: scientist
+  - id: yuval_noah_harari
+    name: Yuval Noah Harari
+    description: Israeli historian and author
+    category: writers
+  - id: malcolm_gladwell
+    name: Malcolm Gladwell
+    description: Canadian journalist and author
+    category: writers
+  - id: atul_gawande
+    name: Atul Gawande
+    description: American surgeon and author
+    category: writers
+  - id: annie_dillard
+    name: Annie Dillard
+    description: American author and poet
+    category: writers
+  - id: joan_didion
+    name: Joan Didion
+    description: American writer and journalist
+    category: writers
+  - id: susan_sontag
+    name: Susan Sontag
+    description: American writer and critic
+    category: writers
+  - id: gore_vidal
+    name: Gore Vidal
+    description: American writer and public intellectual
+    category: writers
+  - id: christopher_hitchens
+    name: Christopher Hitchens
+    description: British-American author and journalist
+    category: writers
+  - id: tanehisi_coates
+    name: Ta-Nehisi Coates
+    description: American author and journalist
+    category: writers
+  - id: roxane_gay
+    name: Roxane Gay
+    description: American writer and professor
+    category: writers
+  - id: rebecca_solnit
+    name: Rebecca Solnit
+    description: American writer and activist
+    category: writers
+  - id: patti_smith
+    name: Patti Smith
+    description: American singer-songwriter and writer
+    category: writers
+  - id: nick_hornby
+    name: Nick Hornby
+    description: British novelist and essayist
+    category: writers
+  - id: dave_eggers
+    name: Dave Eggers
+    description: American writer and publisher
+    category: writers
+  - id: jonathan_franzen
+    name: Jonathan Franzen
+    description: American novelist
+    category: writers
+  - id: donna_tartt
+    name: Donna Tartt
+    description: American novelist
+    category: writers
+  - id: elena_ferrante
+    name: Elena Ferrante
+    description: Italian novelist
+    category: writers
+  - id: kazuo_ishiguro
+    name: Kazuo Ishiguro
+    description: British novelist and Nobel laureate
+    category: writers
+  - id: salman_rushdie
+    name: Salman Rushdie
+    description: British-Indian novelist
+    category: writers
+  - id: arundhati_roy
+    name: Arundhati Roy
+    description: Indian novelist and activist
+    category: writers
+  - id: orhan_pamuk
+    name: Orhan Pamuk
+    description: Turkish novelist and Nobel laureate
+    category: writers
+  - id: milan_kundera
+    name: Milan Kundera
+    description: Czech-French novelist
+    category: writers
+  - id: italo_calvino
+    name: Italo Calvino
+    description: Italian novelist
+    category: writers
+  - id: jorge_luis_borges
+    name: Jorge Luis Borges
+    description: Argentine short story writer and poet
+    category: writers
+  - id: pablo_neruda
+    name: Pablo Neruda
+    description: Chilean poet and diplomat
+    category: writers
+  - id: wh_auden
+    name: W.H. Auden
+    description: British-American poet
+    category: writers
+  - id: ts_eliot
+    name: T.S. Eliot
+    description: American-British poet
+    category: writers
+  - id: emily_dickinson
+    name: Emily Dickinson
+    description: American poet
+    category: writers
+  - id: walt_whitman
+    name: Walt Whitman
+    description: American poet
+    category: writers
+  - id: robert_frost
+    name: Robert Frost
+    description: American poet
+    category: writers
+  - id: langston_hughes
+    name: Langston Hughes
+    description: American poet and activist
+    category: writers
+  - id: sylvia_plath
+    name: Sylvia Plath
+    description: American poet and novelist
+    category: writers
+  - id: allen_ginsberg
+    name: Allen Ginsberg
+    description: American poet
+    category: writers
+  - id: mary_oliver
+    name: Mary Oliver
+    description: American poet
+    category: writers
+  - id: billy_collins
+    name: Billy Collins
+    description: American poet
+    category: writers
+  - id: wendell_berry
+    name: Wendell Berry
+    description: American novelist and poet
+    category: writers
+  - id: annie_leibovitz
+    name: Annie Leibovitz
+    description: American portrait photographer
+    category: artists
+  - id: ansel_adams
+    name: Ansel Adams
+    description: American landscape photographer
+    category: artists
+  - id: diane_arbus
+    name: Diane Arbus
+    description: American photographer
+    category: artists
+  - id: richard_avedon
+    name: Richard Avedon
+    description: American fashion and portrait photographer
+    category: artists
+  - id: dorothea_lange
+    name: Dorothea Lange
+    description: American documentary photographer
+    category: artists
+  - id: henri_cartierbresson
+    name: Henri Cartier-Bresson
+    description: French photographer
+    category: artists
+  - id: steve_mccurry
+    name: Steve McCurry
+    description: American photographer
+    category: artists
+  - id: sebastio_salgado
+    name: Sebastião Salgado
+    description: Brazilian photographer
+    category: artists
+  - id: ai_weiwei
+    name: Ai Weiwei
+    description: Chinese contemporary artist and activist
+    category: artists
+  - id: damien_hirst
+    name: Damien Hirst
+    description: British contemporary artist
+    category: artists
+  - id: jeff_koons
+    name: Jeff Koons
+    description: American artist
+    category: artists
+  - id: takashi_murakami
+    name: Takashi Murakami
+    description: Japanese contemporary artist
+    category: artists
+  - id: kara_walker
+    name: Kara Walker
+    description: American contemporary artist
+    category: artists
+  - id: kehinde_wiley
+    name: Kehinde Wiley
+    description: American portrait painter
+    category: artists
+  - id: jeanmichel_basquiat
+    name: Jean-Michel Basquiat
+    description: American neo-expressionist painter
+    category: artists
+  - id: keith_haring
+    name: Keith Haring
+    description: American pop artist
+    category: artists
+  - id: marina_abramovi
+    name: Marina Abramović
+    description: Serbian performance artist
+    category: artists
+  - id: yoko_ono
+    name: Yoko Ono
+    description: Japanese artist and musician
+    category: artists
+  - id: tracey_emin
+    name: Tracey Emin
+    description: British contemporary artist
+    category: artists
+  - id: louise_bourgeois
+    name: Louise Bourgeois
+    description: French-American sculptor
+    category: artists
+  - id: barbara_hepworth
+    name: Barbara Hepworth
+    description: British sculptor
+    category: artists
+  - id: henry_moore
+    name: Henry Moore
+    description: British sculptor
+    category: artists
+  - id: alexander_calder
+    name: Alexander Calder
+    description: American sculptor
+    category: artists
+  - id: constantin_brncui
+    name: Constantin Brâncuși
+    description: Romanian sculptor
+    category: artists
+  - id: frank_lloyd_wright
+    name: Frank Lloyd Wright
+    description: American architect
+    category: artists
+  - id: zaha_hadid
+    name: Zaha Hadid
+    description: British-Iraqi architect
+    category: artists
+  - id: norman_foster
+    name: Norman Foster
+    description: British architect
+    category: artists
+  - id: rem_koolhaas
+    name: Rem Koolhaas
+    description: Dutch architect
+    category: artists
+  - id: bjrk
+    name: Björk
+    description: Icelandic singer and artist
+    category: musicians
+  - id: radiohead
+    name: Radiohead
+    description: British rock band
+    category: musicians
+  - id: pink_floyd
+    name: Pink Floyd
+    description: British rock band
+    category: musicians
+  - id: the_beatles
+    name: The Beatles
+    description: British rock band
+    category: musicians
+  - id: led_zeppelin
+    name: Led Zeppelin
+    description: British rock band
+    category: musicians
+  - id: queen
+    name: Queen
+    description: British rock band
+    category: musicians
+  - id: fleetwood_mac
+    name: Fleetwood Mac
+    description: British-American rock band
+    category: musicians
+  - id: talking_heads
+    name: Talking Heads
+    description: American rock band
+    category: musicians
+  - id: nirvana
+    name: Nirvana
+    description: American rock band
+    category: musicians
+  - id: rem
+    name: R.E.M.
+    description: American rock band
+    category: musicians
+  - id: u2
+    name: U2
+    description: Irish rock band
+    category: musicians
+  - id: coldplay
+    name: Coldplay
+    description: British rock band
+    category: musicians
+  - id: adele
+    name: Adele
+    description: British singer-songwriter
+    category: musicians
+  - id: alicia_keys
+    name: Alicia Keys
+    description: American singer-songwriter
+    category: musicians
+  - id: john_legend
+    name: John Legend
+    description: American singer-songwriter
+    category: musicians
+  - id: bruno_mars
+    name: Bruno Mars
+    description: American singer-songwriter
+    category: musicians
+  - id: ed_sheeran
+    name: Ed Sheeran
+    description: British singer-songwriter
+    category: musicians
+  - id: billie_eilish
+    name: Billie Eilish
+    description: American singer-songwriter
+    category: musicians
+  - id: dua_lipa
+    name: Dua Lipa
+    description: British singer-songwriter
+    category: musicians
+  - id: lady_gaga
+    name: Lady Gaga
+    description: American singer and actress
+    category: musicians
+  - id: kanye_west
+    name: Kanye West
+    description: American rapper and producer
+    category: musicians
+  - id: jayz
+    name: Jay-Z
+    description: American rapper and entrepreneur
+    category: musicians
+  - id: nas
+    name: Nas
+    description: American rapper
+    category: musicians
+  - id: outkast
+    name: OutKast
+    description: American hip-hop duo
+    category: musicians
+  - id: tupac_shakur
+    name: Tupac Shakur
+    description: American rapper and actor
+    category: musicians
+  - id: the_notorious_big
+    name: The Notorious B.I.G.
+    description: American rapper
+    category: musicians
+  - id: eminem
+    name: Eminem
+    description: American rapper
+    category: musicians
+  - id: snoop_dogg
+    name: Snoop Dogg
+    description: American rapper
+    category: musicians
+  - id: dr_dre
+    name: Dr. Dre
+    description: American rapper and producer
+    category: musicians
+  - id: frank_sinatra
+    name: Frank Sinatra
+    description: American singer and actor
+    category: musicians
+  - id: tony_bennett
+    name: Tony Bennett
+    description: American singer
+    category: musicians
+  - id: nat_king_cole
+    name: Nat King Cole
+    description: American singer and pianist
+    category: musicians
+  - id: ray_charles
+    name: Ray Charles
+    description: American singer and pianist
+    category: musicians
+  - id: sam_cooke
+    name: Sam Cooke
+    description: American singer and songwriter
+    category: musicians
+  - id: otis_redding
+    name: Otis Redding
+    description: American singer
+    category: musicians
+  - id: curtis_mayfield
+    name: Curtis Mayfield
+    description: American singer and songwriter
+    category: musicians
+  - id: al_green
+    name: Al Green
+    description: American singer and pastor
+    category: musicians
+  - id: bob_marley
+    name: Bob Marley
+    description: Jamaican singer and songwriter
+    category: musicians
+  - id: fela_kuti
+    name: Fela Kuti
+    description: Nigerian musician and activist
+    category: musicians
+  - id: ali_farka_tour
+    name: Ali Farka Touré
+    description: Mali musician
+    category: musicians
+  - id: ravi_shankar
+    name: Ravi Shankar
+    description: Indian sitar player
+    category: musicians
+  - id: yoyo_ma
+    name: Yo-Yo Ma
+    description: American cellist
+    category: musicians
+  - id: itzhak_perlman
+    name: Itzhak Perlman
+    description: Israeli-American violinist
+    category: musicians
+  - id: lang_lang
+    name: Lang Lang
+    description: Chinese pianist
+    category: musicians
+  - id: herbie_hancock
+    name: Herbie Hancock
+    description: American jazz pianist
+    category: musicians
+  - id: chick_corea
+    name: Chick Corea
+    description: American jazz pianist
+    category: musicians
+  - id: keith_jarrett
+    name: Keith Jarrett
+    description: American jazz pianist
+    category: musicians
+  - id: oscar_peterson
+    name: Oscar Peterson
+    description: Canadian jazz pianist
+    category: musicians
+  - id: bill_evans
+    name: Bill Evans
+    description: American jazz pianist
+    category: musicians
+  - id: dave_brubeck
+    name: Dave Brubeck
+    description: American jazz pianist
+    category: musicians
+  - id: kobe_bryant
+    name: Kobe Bryant
+    description: American basketball player
+    category: athletes
+  - id: magic_johnson
+    name: Magic Johnson
+    description: American basketball player
+    category: athletes
+  - id: larry_bird
+    name: Larry Bird
+    description: American basketball player
+    category: athletes
+  - id: stephen_curry
+    name: Stephen Curry
+    description: American basketball player
+    category: athletes
+  - id: kevin_durant
+    name: Kevin Durant
+    description: American basketball player
+    category: athletes
+  - id: shaquille_oneal
+    name: Shaquille O'Neal
+    description: American basketball player
+    category: athletes
+  - id: kareem_abduljabbar
+    name: Kareem Abdul-Jabbar
+    description: American basketball player
+    category: athletes
+  - id: wilt_chamberlain
+    name: Wilt Chamberlain
+    description: American basketball player
+    category: athletes
+  - id: bill_russell
+    name: Bill Russell
+    description: American basketball player
+    category: athletes
+  - id: oscar_robertson
+    name: Oscar Robertson
+    description: American basketball player
+    category: athletes
+  - id: steffi_graf
+    name: Steffi Graf
+    description: German tennis player
+    category: athletes
+  - id: martina_navratilova
+    name: Martina Navratilova
+    description: Czech-American tennis player
+    category: athletes
+  - id: chris_evert
+    name: Chris Evert
+    description: American tennis player
+    category: athletes
+  - id: andre_agassi
+    name: Andre Agassi
+    description: American tennis player
+    category: athletes
+  - id: pete_sampras
+    name: Pete Sampras
+    description: American tennis player
+    category: athletes
+  - id: bjrn_borg
+    name: Björn Borg
+    description: Swedish tennis player
+    category: athletes
+  - id: john_mcenroe
+    name: John McEnroe
+    description: American tennis player
+    category: athletes
+  - id: jimmy_connors
+    name: Jimmy Connors
+    description: American tennis player
+    category: athletes
+  - id: arthur_ashe
+    name: Arthur Ashe
+    description: American tennis player
+    category: athletes
+  - id: althea_gibson
+    name: Althea Gibson
+    description: American tennis player
+    category: athletes
+  - id: nadia_comneci
+    name: Nadia Comăneci
+    description: Romanian gymnast
+    category: athletes
+  - id: mary_lou_retton
+    name: Mary Lou Retton
+    description: American gymnast
+    category: athletes
+  - id: carl_lewis
+    name: Carl Lewis
+    description: American track and field athlete
+    category: athletes
+  - id: florence_griffith_joyner
+    name: Florence Griffith Joyner
+    description: American sprinter
+    category: athletes
+  - id: jackie_joynerkersee
+    name: Jackie Joyner-Kersee
+    description: American heptathlete
+    category: athletes
+  - id: michael_phelps
+    name: Michael Phelps
+    description: American swimmer
+    category: athletes
+  - id: katie_ledecky
+    name: Katie Ledecky
+    description: American swimmer
+    category: athletes
+  - id: simone_manuel
+    name: Simone Manuel
+    description: American swimmer
+    category: athletes
+  - id: mike_tyson
+    name: Mike Tyson
+    description: American boxer
+    category: athletes
+  - id: floyd_mayweather
+    name: Floyd Mayweather
+    description: American boxer
+    category: athletes
+  - id: manny_pacquiao
+    name: Manny Pacquiao
+    description: Filipino boxer
+    category: athletes
+  - id: sugar_ray_robinson
+    name: Sugar Ray Robinson
+    description: American boxer
+    category: athletes
+  - id: roberto_clemente
+    name: Roberto Clemente
+    description: Puerto Rican baseball player
+    category: athletes
+  - id: hank_aaron
+    name: Hank Aaron
+    description: American baseball player
+    category: athletes
+  - id: willie_mays
+    name: Willie Mays
+    description: American baseball player
+    category: athletes
+  - id: ted_williams
+    name: Ted Williams
+    description: American baseball player
+    category: athletes
+  - id: sandy_koufax
+    name: Sandy Koufax
+    description: American baseball player
+    category: athletes
+  - id: nolan_ryan
+    name: Nolan Ryan
+    description: American baseball player
+    category: athletes
+  - id: cal_ripken_jr
+    name: Cal Ripken Jr.
+    description: American baseball player
+    category: athletes
+  - id: derek_jeter
+    name: Derek Jeter
+    description: American baseball player
+    category: athletes
+  - id: mariano_rivera
+    name: Mariano Rivera
+    description: Panamanian baseball player
+    category: athletes
+  - id: bobby_orr
+    name: Bobby Orr
+    description: Canadian ice hockey player
+    category: athletes
+  - id: gordie_howe
+    name: Gordie Howe
+    description: Canadian ice hockey player
+    category: athletes
+  - id: mario_lemieux
+    name: Mario Lemieux
+    description: Canadian ice hockey player
+    category: athletes
+  - id: sidney_crosby
+    name: Sidney Crosby
+    description: Canadian ice hockey player
+    category: athletes
+  - id: alex_ovechkin
+    name: Alex Ovechkin
+    description: Russian ice hockey player
+    category: athletes
+  - id: connor_mcdavid
+    name: Connor McDavid
+    description: Canadian ice hockey player
+    category: athletes
+  - id: zinedine_zidane
+    name: Zinedine Zidane
+    description: French football player
+    category: athletes
+  - id: ronaldinho
+    name: Ronaldinho
+    description: Brazilian football player
+    category: athletes
+  - id: kak
+    name: Kaká
+    description: Brazilian football player
+    category: athletes
+  - id: neymar
+    name: Neymar
+    description: Brazilian football player
+    category: athletes
+  - id: kylian_mbapp
+    name: Kylian Mbappé
+    description: French football player
+    category: athletes
+  - id: erling_haaland
+    name: Erling Haaland
+    description: Norwegian football player
+    category: athletes
+  - id: kevin_de_bruyne
+    name: Kevin De Bruyne
+    description: Belgian football player
+    category: athletes
+  - id: mohamed_salah
+    name: Mohamed Salah
+    description: Egyptian football player
+    category: athletes
+  - id: sundar_pichai
+    name: Sundar Pichai
+    description: CEO of Google
+    category: entrepreneurs
+  - id: satya_nadella
+    name: Satya Nadella
+    description: CEO of Microsoft
+    category: entrepreneurs
+  - id: tim_cook
+    name: Tim Cook
+    description: CEO of Apple
+    category: entrepreneurs
+  - id: jensen_huang
+    name: Jensen Huang
+    description: CEO of NVIDIA
+    category: entrepreneurs
+  - id: lisa_su
+    name: Lisa Su
+    description: CEO of AMD
+    category: entrepreneurs
+  - id: mary_barra
+    name: Mary Barra
+    description: CEO of General Motors
+    category: entrepreneurs
+  - id: ginni_rometty
+    name: Ginni Rometty
+    description: Former CEO of IBM
+    category: entrepreneurs
+  - id: sheryl_sandberg
+    name: Sheryl Sandberg
+    description: Former COO of Meta
+    category: entrepreneurs
+  - id: susan_wojcicki
+    name: Susan Wojcicki
+    description: Former CEO of YouTube
+    category: entrepreneurs
+  - id: whitney_wolfe_herd
+    name: Whitney Wolfe Herd
+    description: Founder of Bumble
+    category: entrepreneurs
+  - id: emily_weiss
+    name: Emily Weiss
+    description: Founder of Glossier
+    category: entrepreneurs
+  - id: jennifer_hyman
+    name: Jennifer Hyman
+    description: Co-founder of Rent the Runway
+    category: entrepreneurs
+  - id: anne_wojcicki
+    name: Anne Wojcicki
+    description: Co-founder of 23andMe
+    category: entrepreneurs
+  - id: elizabeth_holmes
+    name: Elizabeth Holmes
+    description: Founder of Theranos
+    category: entrepreneurs
+  - id: garrett_camp
+    name: Garrett Camp
+    description: Co-founder of Uber
+    category: entrepreneurs
+  - id: joe_gebbia
+    name: Joe Gebbia
+    description: Co-founder of Airbnb
+    category: entrepreneurs
+  - id: nathan_blecharczyk
+    name: Nathan Blecharczyk
+    description: Co-founder of Airbnb
+    category: entrepreneurs
+  - id: chad_hurley
+    name: Chad Hurley
+    description: Co-founder of YouTube
+    category: entrepreneurs
+  - id: steve_chen
+    name: Steve Chen
+    description: Co-founder of YouTube
+    category: entrepreneurs
+  - id: jawed_karim
+    name: Jawed Karim
+    description: Co-founder of YouTube
+    category: entrepreneurs
+  - id: max_levchin
+    name: Max Levchin
+    description: Co-founder of PayPal
+    category: entrepreneurs
+  - id: david_sacks
+    name: David Sacks
+    description: Former COO of PayPal
+    category: entrepreneurs
+  - id: mike_krieger
+    name: Mike Krieger
+    description: Co-founder of Instagram
+    category: entrepreneurs
+  - id: brian_acton
+    name: Brian Acton
+    description: Co-founder of WhatsApp
+    category: entrepreneurs
+  - id: bobby_murphy
+    name: Bobby Murphy
+    description: Co-founder of Snapchat
+    category: entrepreneurs
+  - id: stewart_butterfield
+    name: Stewart Butterfield
+    description: Co-founder of Slack
+    category: entrepreneurs
+  - id: daniel_ek
+    name: Daniel Ek
+    description: Co-founder of Spotify
+    category: entrepreneurs
+  - id: martin_lorentzon
+    name: Martin Lorentzon
+    description: Co-founder of Spotify
+    category: entrepreneurs
+  - id: marc_randolph
+    name: Marc Randolph
+    description: Co-founder of Netflix
+    category: entrepreneurs
+  - id: meg_whitman
+    name: Meg Whitman
+    description: Former CEO of eBay
+    category: entrepreneurs
+  - id: craig_newmark
+    name: Craig Newmark
+    description: Founder of Craigslist
+    category: entrepreneurs
+  - id: jimmy_wales
+    name: Jimmy Wales
+    description: Co-founder of Wikipedia
+    category: entrepreneurs
+  - id: larry_sanger
+    name: Larry Sanger
+    description: Co-founder of Wikipedia
+    category: entrepreneurs
+  - id: chad_meredith_hurley
+    name: Chad Meredith Hurley
+    description: Co-founder of YouTube
+    category: entrepreneurs
+  - id: dustin_moskovitz
+    name: Dustin Moskovitz
+    description: Co-founder of Facebook
+    category: entrepreneurs
+  - id: eduardo_saverin
+    name: Eduardo Saverin
+    description: Co-founder of Facebook
+    category: entrepreneurs
+  - id: sean_parker
+    name: Sean Parker
+    description: Former president of Facebook
+    category: entrepreneurs
+  - id: kevin_oleary
+    name: Kevin O'Leary
+    description: Canadian businessman and investor
+    category: investors
+  - id: mark_cuban
+    name: Mark Cuban
+    description: American entrepreneur and investor
+    category: investors
+  - id: chris_sacca
+    name: Chris Sacca
+    description: American venture capitalist
+    category: investors
+  - id: jason_calacanis
+    name: Jason Calacanis
+    description: American entrepreneur and investor
+    category: investors
+  - id: naval_ravikant
+    name: Naval Ravikant
+    description: Co-founder of AngelList
+    category: investors
+  - id: paul_graham
+    name: Paul Graham
+    description: Co-founder of Y Combinator
+    category: investors
+  - id: sam_altman
+    name: Sam Altman
+    description: Former president of Y Combinator
+    category: investors
+  - id: garry_tan
+    name: Garry Tan
+    description: President of Y Combinator
+    category: investors
+  - id: michael_seibel
+    name: Michael Seibel
+    description: CEO of Y Combinator
+    category: investors
+  - id: ron_conway
+    name: Ron Conway
+    description: American angel investor
+    category: investors
+  - id: vinod_khosla
+    name: Vinod Khosla
+    description: Founder of Khosla Ventures
+    category: investors
+  - id: jim_breyer
+    name: Jim Breyer
+    description: American venture capitalist
+    category: investors
+  - id: jim_goetz
+    name: Jim Goetz
+    description: American venture capitalist, Sequoia
+    category: investors
+  - id: roelof_botha
+    name: Roelof Botha
+    description: South African venture capitalist, Sequoia
+    category: investors
+  - id: alfred_lin
+    name: Alfred Lin
+    description: American venture capitalist, Sequoia
+    category: investors
+  - id: john_doerr
+    name: John Doerr
+    description: American venture capitalist, Kleiner Perkins
+    category: investors
+  - id: byron_deeter
+    name: Byron Deeter
+    description: American venture capitalist, Bessemer
+    category: investors
+  - id: danny_rimer
+    name: Danny Rimer
+    description: British venture capitalist, Index Ventures
+    category: investors
+  - id: bill_gurley
+    name: Bill Gurley
+    description: American venture capitalist, Benchmark
+    category: investors
+  - id: keith_rabois
+    name: Keith Rabois
+    description: American investor, Founders Fund
+    category: investors
+  - id: larry_fink
+    name: Larry Fink
+    description: CEO of BlackRock
+    category: billionaires
+  - id: jamie_dimon
+    name: Jamie Dimon
+    description: CEO of JPMorgan Chase
+    category: billionaires
+  - id: brian_moynihan
+    name: Brian Moynihan
+    description: CEO of Bank of America
+    category: billionaires
+  - id: david_solomon
+    name: David Solomon
+    description: CEO of Goldman Sachs
+    category: billionaires
+  - id: james_gorman
+    name: James Gorman
+    description: Former CEO of Morgan Stanley
+    category: billionaires
+  - id: andy_jassy
+    name: Andy Jassy
+    description: CEO of Amazon
+    category: billionaires
+  - id: pat_gelsinger
+    name: Pat Gelsinger
+    description: CEO of Intel
+    category: billionaires
+  - id: shantanu_narayen
+    name: Shantanu Narayen
+    description: CEO of Adobe
+    category: billionaires
+  - id: arvind_krishna
+    name: Arvind Krishna
+    description: CEO of IBM
+    category: billionaires
+  - id: chuck_robbins
+    name: Chuck Robbins
+    description: CEO of Cisco
+    category: billionaires
+  - id: ted_sarandos
+    name: Ted Sarandos
+    description: Co-CEO of Netflix
+    category: billionaires
+  - id: bob_iger
+    name: Bob Iger
+    description: CEO of Disney
+    category: billionaires
+  - id: brian_roberts
+    name: Brian Roberts
+    description: CEO of Comcast
+    category: billionaires
+  - id: hypatia
+    name: Hypatia
+    description: Alexandrian philosopher and mathematician
+    category: philosophy
+  - id: mary_wollstonecraft
+    name: Mary Wollstonecraft
+    description: English writer and philosopher
+    category: philosophy
+  - id: harriet_taylor_mill
+    name: Harriet Taylor Mill
+    description: English philosopher and women's rights advocate
+    category: philosophy
+  - id: elizabeth_anscombe
+    name: Elizabeth Anscombe
+    description: British philosopher
+    category: philosophy
+  - id: philippa_foot
+    name: Philippa Foot
+    description: British philosopher
+    category: philosophy
+  - id: iris_murdoch
+    name: Iris Murdoch
+    description: British novelist and philosopher
+    category: philosophy
+  - id: mary_midgley
+    name: Mary Midgley
+    description: British philosopher
+    category: philosophy
+  - id: susan_haack
+    name: Susan Haack
+    description: British-American philosopher
+    category: philosophy
+  - id: patricia_churchland
+    name: Patricia Churchland
+    description: Canadian-American philosopher
+    category: philosophy
+  - id: ruth_barcan_marcus
+    name: Ruth Barcan Marcus
+    description: American philosopher and logician
+    category: philosophy
+  - id: nancy_cartwright
+    name: Nancy Cartwright
+    description: American philosopher of science
+    category: philosophy
+  - id: helen_longino
+    name: Helen Longino
+    description: American philosopher of science
+    category: philosophy
+  - id: miranda_fricker
+    name: Miranda Fricker
+    description: British philosopher
+    category: philosophy
+  - id: linda_zagzebski
+    name: Linda Zagzebski
+    description: American philosopher
+    category: philosophy
+  - id: eleonore_stump
+    name: Eleonore Stump
+    description: American philosopher
+    category: philosophy
+  - id: onora_oneill
+    name: Onora O'Neill
+    description: British philosopher
+    category: philosophy
+  - id: christine_korsgaard
+    name: Christine Korsgaard
+    description: American philosopher
+    category: philosophy
+  - id: susan_wolf
+    name: Susan Wolf
+    description: American philosopher
+    category: philosophy
+  - id: bernard_williams
+    name: Bernard Williams
+    description: British philosopher
+    category: philosophy
+  - id: derek_parfit
+    name: Derek Parfit
+    description: British philosopher
+    category: philosophy
+  - id: alasdair_macintyre
+    name: Alasdair MacIntyre
+    description: Scottish-American philosopher
+    category: philosophy
+  - id: charles_taylor
+    name: Charles Taylor
+    description: Canadian philosopher
+    category: philosophy
+  - id: michael_sandel
+    name: Michael Sandel
+    description: American political philosopher
+    category: philosophy
+  - id: mencius
+    name: Mencius
+    description: Chinese Confucian philosopher
+    category: philosophy
+  - id: xunzi
+    name: Xunzi
+    description: Chinese Confucian philosopher
+    category: philosophy
+  - id: mozi
+    name: Mozi
+    description: Chinese philosopher
+    category: philosophy
+  - id: han_fei
+    name: Han Fei
+    description: Chinese legalist philosopher
+    category: philosophy
+  - id: ibn_rushd
+    name: Ibn Rushd
+    description: Andalusian philosopher
+    category: philosophy
+  - id: ibn_khaldun
+    name: Ibn Khaldun
+    description: Arab historian and philosopher
+    category: philosophy
+  - id: maimonides
+    name: Maimonides
+    description: Jewish philosopher and rabbi
+    category: philosophy
+  - id: avicenna
+    name: Avicenna
+    description: Persian polymath
+    category: philosophy
+  - id: francis_bacon
+    name: Francis Bacon
+    description: English philosopher and statesman
+    category: philosophy
+  - id: george_berkeley
+    name: George Berkeley
+    description: Irish philosopher
+    category: philosophy
+  - id: gottlob_frege
+    name: Gottlob Frege
+    description: German philosopher and logician
+    category: philosophy
+  - id: henri_bergson
+    name: Henri Bergson
+    description: French philosopher
+    category: philosophy
+  - id: jos_ortega_y_gasset
+    name: José Ortega y Gasset
+    description: Spanish philosopher
+    category: philosophy
+  - id: miguel_de_unamuno
+    name: Miguel de Unamuno
+    description: Spanish philosopher and writer
+    category: philosophy
+  - id: nishida_kitaro
+    name: Nishida Kitaro
+    description: Japanese philosopher
+    category: philosophy
+  - id: daisetz_suzuki
+    name: Daisetz Suzuki
+    description: Japanese Zen scholar
+    category: spiritual_teachers
+  - id: shunryu_suzuki
+    name: Shunryu Suzuki
+    description: Japanese Zen teacher
+    category: spiritual_teachers
+  - id: charlotte_joko_beck
+    name: Charlotte Joko Beck
+    description: American Zen teacher
+    category: spiritual_teachers
+  - id: sharon_salzberg
+    name: Sharon Salzberg
+    description: American meditation teacher
+    category: spiritual_teachers
+  - id: jon_kabatzinn
+    name: Jon Kabat-Zinn
+    description: American mindfulness teacher
+    category: spiritual_teachers
+  - id: jack_kornfield
+    name: Jack Kornfield
+    description: American Buddhist teacher
+    category: spiritual_teachers
+  - id: tara_brach
+    name: Tara Brach
+    description: American psychologist and meditation teacher
+    category: spiritual_teachers
+  - id: ram_dass
+    name: Ram Dass
+    description: American spiritual teacher
+    category: spiritual_teachers
+  - id: martha_beck
+    name: Martha Beck
+    description: American life coach and author
+    category: spiritual_teachers
+  - id: byron_katie
+    name: Byron Katie
+    description: American author and speaker
+    category: spiritual_teachers
+  - id: louise_hay
+    name: Louise Hay
+    description: American motivational author
+    category: spiritual_teachers
+  - id: norman_vincent_peale
+    name: Norman Vincent Peale
+    description: American minister and author
+    category: spiritual_teachers
+  - id: dale_carnegie
+    name: Dale Carnegie
+    description: American writer and lecturer
+    category: spiritual_teachers
+  - id: napoleon_hill
+    name: Napoleon Hill
+    description: American self-help author
+    category: spiritual_teachers
+  - id: tony_robbins
+    name: Tony Robbins
+    description: American motivational speaker
+    category: spiritual_teachers
+  - id: simon_sinek
+    name: Simon Sinek
+    description: British-American author and speaker
+    category: spiritual_teachers
+  - id: james_clear
+    name: James Clear
+    description: American author and speaker
+    category: spiritual_teachers
+  - id: ryan_holiday
+    name: Ryan Holiday
+    description: American author and speaker
+    category: spiritual_teachers
+  - id: greg_mckeown
+    name: Greg McKeown
+    description: British author and speaker
+    category: spiritual_teachers
+  - id: cal_newport
+    name: Cal Newport
+    description: American author and professor
+    category: spiritual_teachers
+  - id: adam_grant
+    name: Adam Grant
+    description: American psychologist and author
+    category: scientist
+  - id: robert_sapolsky
+    name: Robert Sapolsky
+    description: American neuroendocrinologist
+    category: scientist
+  - id: lisa_feldman_barrett
+    name: Lisa Feldman Barrett
+    description: American psychologist
+    category: scientist
+  - id: sapolsky
+    name: Sapolsky
+    description: American neuroendocrinologist
+    category: scientist
+  - id: andrew_huberman
+    name: Andrew Huberman
+    description: American neuroscientist
+    category: scientist
+  - id: matthew_walker
+    name: Matthew Walker
+    description: British sleep scientist
+    category: scientist
+  - id: sam_harris
+    name: Sam Harris
+    description: American neuroscientist and author
+    category: scientist
+  - id: max_born
+    name: Max Born
+    description: German physicist
+    category: scientist
+  - id: wolfgang_pauli
+    name: Wolfgang Pauli
+    description: Austrian physicist
+    category: scientist
+  - id: enrico_fermi
+    name: Enrico Fermi
+    description: Italian-American physicist
+    category: scientist
+  - id: murray_gellmann
+    name: Murray Gell-Mann
+    description: American physicist
+    category: scientist
+  - id: freeman_dyson
+    name: Freeman Dyson
+    description: British-American physicist
+    category: scientist
+  - id: roger_penrose
+    name: Roger Penrose
+    description: British mathematical physicist
+    category: scientist
+  - id: kip_thorne
+    name: Kip Thorne
+    description: American theoretical physicist
+    category: scientist
+  - id: brian_greene
+    name: Brian Greene
+    description: American physicist
+    category: scientist
+  - id: michio_kaku
+    name: Michio Kaku
+    description: American theoretical physicist
+    category: scientist
+  - id: lisa_randall
+    name: Lisa Randall
+    description: American theoretical physicist
+    category: scientist
+  - id: donna_strickland
+    name: Donna Strickland
+    description: Canadian physicist, Nobel laureate
+    category: scientist
+  - id: andrea_ghez
+    name: Andrea Ghez
+    description: American astrophysicist
+    category: scientist
+  - id: vera_rubin
+    name: Vera Rubin
+    description: American astronomer
+    category: scientist
+  - id: jocelyn_bell_burnell
+    name: Jocelyn Bell Burnell
+    description: British astrophysicist
+    category: scientist
+  - id: sally_ride
+    name: Sally Ride
+    description: American astronaut
+    category: scientist
+  - id: mae_jemison
+    name: Mae Jemison
+    description: American astronaut
+    category: scientist
+  - id: ellen_ochoa
+    name: Ellen Ochoa
+    description: American astronaut
+    category: scientist
+  - id: katherine_johnson
+    name: Katherine Johnson
+    description: American mathematician
+    category: scientist
+  - id: dorothy_vaughan
+    name: Dorothy Vaughan
+    description: American mathematician
+    category: scientist
+  - id: mary_jackson
+    name: Mary Jackson
+    description: American mathematician
+    category: scientist
+  - id: grace_hopper
+    name: Grace Hopper
+    description: American computer scientist
+    category: scientist
+  - id: barbara_liskov
+    name: Barbara Liskov
+    description: American computer scientist
+    category: scientist
+  - id: frances_allen
+    name: Frances Allen
+    description: American computer scientist
+    category: scientist
+  - id: shafi_goldwasser
+    name: Shafi Goldwasser
+    description: Israeli-American computer scientist
+    category: scientist
+  - id: feifei_li
+    name: Fei-Fei Li
+    description: American computer scientist
+    category: scientist
+  - id: yann_lecun
+    name: Yann LeCun
+    description: French-American computer scientist
+    category: scientist
+  - id: geoffrey_hinton
+    name: Geoffrey Hinton
+    description: British-Canadian computer scientist
+    category: scientist
+  - id: yoshua_bengio
+    name: Yoshua Bengio
+    description: Canadian computer scientist
+    category: scientist
+  - id: andrew_ng
+    name: Andrew Ng
+    description: British-American computer scientist
+    category: scientist
+  - id: demis_hassabis
+    name: Demis Hassabis
+    description: British AI researcher
+    category: scientist
+  - id: mustafa_suleyman
+    name: Mustafa Suleyman
+    description: British AI researcher
+    category: scientist
+  - id: ilya_sutskever
+    name: Ilya Sutskever
+    description: Israeli-Canadian AI researcher
+    category: scientist
+  - id: greg_brockman
+    name: Greg Brockman
+    description: American technologist
+    category: entrepreneurs
+  - id: dario_amodei
+    name: Dario Amodei
+    description: CEO of Anthropic
+    category: entrepreneurs
+  - id: daniela_amodei
+    name: Daniela Amodei
+    description: President of Anthropic
+    category: entrepreneurs
+  - id: eliezer_yudkowsky
+    name: Eliezer Yudkowsky
+    description: American AI researcher
+    category: scientist
+  - id: nick_bostrom
+    name: Nick Bostrom
+    description: Swedish philosopher
+    category: philosophy
+  - id: stuart_russell
+    name: Stuart Russell
+    description: British computer scientist
+    category: scientist
+  - id: rodney_brooks
+    name: Rodney Brooks
+    description: Australian roboticist
+    category: scientist
+  - id: cynthia_breazeal
+    name: Cynthia Breazeal
+    description: American roboticist
+    category: scientist
+  - id: kate_crawford
+    name: Kate Crawford
+    description: Australian AI researcher
+    category: scientist
+  - id: meredith_broussard
+    name: Meredith Broussard
+    description: American data journalist
+    category: writers
+  - id: cathy_oneil
+    name: Cathy O'Neil
+    description: American mathematician and author
+    category: writers
+  - id: virginia_eubanks
+    name: Virginia Eubanks
+    description: American author
+    category: writers
+  - id: safiya_noble
+    name: Safiya Noble
+    description: American author and professor
+    category: writers
+  - id: ruha_benjamin
+    name: Ruha Benjamin
+    description: American author and professor
+    category: writers
+  - id: timnit_gebru
+    name: Timnit Gebru
+    description: Ethiopian-American AI researcher
+    category: scientist
+  - id: joy_buolamwini
+    name: Joy Buolamwini
+    description: American AI researcher
+    category: scientist
+  - id: emily_bender
+    name: Emily Bender
+    description: American computational linguist
+    category: scientist
+  - id: margaret_mitchell
+    name: Margaret Mitchell
+    description: American AI researcher
+    category: scientist
+  - id: helen_nissenbaum
+    name: Helen Nissenbaum
+    description: American philosopher
+    category: philosophy
+  - id: shoshana_zuboff
+    name: Shoshana Zuboff
+    description: American author and professor
+    category: writers
+  - id: jaron_lanier
+    name: Jaron Lanier
+    description: American computer scientist
+    category: scientist
+  - id: tristan_harris
+    name: Tristan Harris
+    description: American technology ethicist
+    category: entrepreneurs
+  - id: aza_raskin
+    name: Aza Raskin
+    description: American technologist
+    category: entrepreneurs
+  - id: randall_munroe
+    name: Randall Munroe
+    description: American cartoonist and author
+    category: writers
+  - id: scott_adams
+    name: Scott Adams
+    description: American cartoonist
+    category: writers
+  - id: bill_watterson
+    name: Bill Watterson
+    description: American cartoonist
+    category: artists
+  - id: charles_schulz
+    name: Charles Schulz
+    description: American cartoonist
+    category: artists
+  - id: art_spiegelman
+    name: Art Spiegelman
+    description: American cartoonist
+    category: artists
+  - id: alison_bechdel
+    name: Alison Bechdel
+    description: American cartoonist
+    category: artists
+  - id: marjane_satrapi
+    name: Marjane Satrapi
+    description: Iranian-French graphic novelist
+    category: artists
+  - id: chris_ware
+    name: Chris Ware
+    description: American cartoonist
+    category: artists
+  - id: daniel_clowes
+    name: Daniel Clowes
+    description: American cartoonist
+    category: artists
+  - id: craig_thompson
+    name: Craig Thompson
+    description: American cartoonist
+    category: artists
+  - id: raina_telgemeier
+    name: Raina Telgemeier
+    description: American cartoonist
+    category: artists
+  - id: gene_luen_yang
+    name: Gene Luen Yang
+    description: American cartoonist
+    category: artists
+  - id: hayao_miyazaki
+    name: Hayao Miyazaki
+    description: Japanese animator
+    category: artists
+  - id: isao_takahata
+    name: Isao Takahata
+    description: Japanese animator
+    category: artists
+  - id: satoshi_kon
+    name: Satoshi Kon
+    description: Japanese animator
+    category: artists
+  - id: makoto_shinkai
+    name: Makoto Shinkai
+    description: Japanese animator
+    category: artists
+  - id: wes_anderson
+    name: Wes Anderson
+    description: American filmmaker
+    category: artists
+  - id: spike_lee
+    name: Spike Lee
+    description: American filmmaker
+    category: artists
+  - id: ava_duvernay
+    name: Ava DuVernay
+    description: American filmmaker
+    category: artists
+  - id: jordan_peele
+    name: Jordan Peele
+    description: American filmmaker
+    category: artists
+  - id: denis_villeneuve
+    name: Denis Villeneuve
+    description: Canadian filmmaker
+    category: artists
+  - id: christopher_nolan
+    name: Christopher Nolan
+    description: British filmmaker
+    category: artists
+  - id: guillermo_del_toro
+    name: Guillermo del Toro
+    description: Mexican filmmaker
+    category: artists
+  - id: bong_joonho
+    name: Bong Joon-ho
+    description: South Korean filmmaker
+    category: artists
+  - id: park_chanwook
+    name: Park Chan-wook
+    description: South Korean filmmaker
+    category: artists
+  - id: akira_kurosawa
+    name: Akira Kurosawa
+    description: Japanese filmmaker
+    category: artists
+  - id: yasujir_ozu
+    name: Yasujirō Ozu
+    description: Japanese filmmaker
+    category: artists
+  - id: federico_fellini
+    name: Federico Fellini
+    description: Italian filmmaker
+    category: artists
+  - id: ingmar_bergman
+    name: Ingmar Bergman
+    description: Swedish filmmaker
+    category: artists
+  - id: andrei_tarkovsky
+    name: Andrei Tarkovsky
+    description: Russian filmmaker
+    category: artists
+  - id: stanley_kubrick
+    name: Stanley Kubrick
+    description: American filmmaker
+    category: artists
+  - id: alfred_hitchcock
+    name: Alfred Hitchcock
+    description: British filmmaker
+    category: artists
+  - id: billy_wilder
+    name: Billy Wilder
+    description: American filmmaker
+    category: artists
+  - id: orson_welles
+    name: Orson Welles
+    description: American filmmaker
+    category: artists
+  - id: charlie_chaplin
+    name: Charlie Chaplin
+    description: British filmmaker
+    category: artists
+  - id: buster_keaton
+    name: Buster Keaton
+    description: American filmmaker
+    category: artists
+  - id: sergei_eisenstein
+    name: Sergei Eisenstein
+    description: Soviet filmmaker
+    category: artists
+  - id: fritz_lang
+    name: Fritz Lang
+    description: Austrian-German filmmaker
+    category: artists
+  - id: fw_murnau
+    name: F.W. Murnau
+    description: German filmmaker
+    category: artists
+  - id: leni_riefenstahl
+    name: Leni Riefenstahl
+    description: German filmmaker
+    category: artists
+  - id: jean_renoir
+    name: Jean Renoir
+    description: French filmmaker
+    category: artists
+  - id: jeanluc_godard
+    name: Jean-Luc Godard
+    description: French-Swiss filmmaker
+    category: artists
+  - id: franois_truffaut
+    name: François Truffaut
+    description: French filmmaker
+    category: artists
+  - id: agns_varda
+    name: Agnès Varda
+    description: French filmmaker
+    category: artists
+  - id: claire_denis
+    name: Claire Denis
+    description: French filmmaker
+    category: artists
+  - id: cline_sciamma
+    name: Céline Sciamma
+    description: French filmmaker
+    category: artists
+  - id: lynne_ramsay
+    name: Lynne Ramsay
+    description: Scottish filmmaker
+    category: artists
+  - id: andrea_arnold
+    name: Andrea Arnold
+    description: British filmmaker
+    category: artists
+  - id: mamoru_hosoda
+    name: Mamoru Hosoda
+    description: Japanese animator
+    category: artists
+  - id: masaaki_yuasa
+    name: Masaaki Yuasa
+    description: Japanese animator
+    category: artists
+  - id: naoko_takeuchi
+    name: Naoko Takeuchi
+    description: Japanese manga artist
+    category: artists
+  - id: rumiko_takahashi
+    name: Rumiko Takahashi
+    description: Japanese manga artist
+    category: artists
+  - id: osamu_tezuka
+    name: Osamu Tezuka
+    description: Japanese manga artist
+    category: artists
+  - id: akira_toriyama
+    name: Akira Toriyama
+    description: Japanese manga artist
+    category: artists
+  - id: eiichiro_oda
+    name: Eiichiro Oda
+    description: Japanese manga artist
+    category: artists
+  - id: diana_wynne_jones
+    name: Diana Wynne Jones
+    description: British fantasy writer
+    category: writers
+  - id: terry_pratchett
+    name: Terry Pratchett
+    description: British fantasy writer
+    category: writers
+  - id: neil_gaiman
+    name: Neil Gaiman
+    description: British fantasy writer
+    category: writers
+  - id: terry_brooks
+    name: Terry Brooks
+    description: American fantasy writer
+    category: writers
+  - id: brandon_sanderson
+    name: Brandon Sanderson
+    description: American fantasy writer
+    category: writers
+  - id: patrick_rothfuss
+    name: Patrick Rothfuss
+    description: American fantasy writer
+    category: writers
+  - id: george_rr_martin
+    name: George R.R. Martin
+    description: American fantasy writer
+    category: writers
+  - id: robin_hobb
+    name: Robin Hobb
+    description: American fantasy writer
+    category: writers
+  - id: nk_jemisin
+    name: N.K. Jemisin
+    description: American fantasy writer
+    category: writers
+  - id: nnedi_okorafor
+    name: Nnedi Okorafor
+    description: Nigerian-American fantasy writer
+    category: writers
+  - id: rf_kuang
+    name: R.F. Kuang
+    description: Chinese-American fantasy writer
+    category: writers
+  - id: alice_walker
+    name: Alice Walker
+    description: American novelist
+    category: writers
+  - id: zora_neale_hurston
+    name: Zora Neale Hurston
+    description: American novelist
+    category: writers
+  - id: ralph_ellison
+    name: Ralph Ellison
+    description: American novelist
+    category: writers
+  - id: richard_wright
+    name: Richard Wright
+    description: American novelist
+    category: writers
+  - id: colson_whitehead
+    name: Colson Whitehead
+    description: American novelist
+    category: writers
+  - id: jesmyn_ward
+    name: Jesmyn Ward
+    description: American novelist
+    category: writers
+  - id: ibram_x_kendi
+    name: Ibram X. Kendi
+    description: American author and historian
+    category: writers
+  - id: robin_diangelo
+    name: Robin DiAngelo
+    description: American author
+    category: writers
+  - id: isabel_wilkerson
+    name: Isabel Wilkerson
+    description: American journalist
+    category: writers
+  - id: michelle_alexander
+    name: Michelle Alexander
+    description: American author
+    category: writers
+  - id: angela_davis
+    name: Angela Davis
+    description: American activist and author
+    category: writers
+  - id: bell_hooks
+    name: bell hooks
+    description: American author and activist
+    category: writers
+  - id: audre_lorde
+    name: Audre Lorde
+    description: American writer and activist
+    category: writers
+  - id: gloria_steinem
+    name: Gloria Steinem
+    description: American journalist and activist
+    category: writers
+  - id: betty_friedan
+    name: Betty Friedan
+    description: American writer and activist
+    category: writers
+  - id: germaine_greer
+    name: Germaine Greer
+    description: Australian writer
+    category: writers
+  - id: gayatri_spivak
+    name: Gayatri Spivak
+    description: Indian philosopher
+    category: philosophy
+  - id: edward_said
+    name: Edward Said
+    description: Palestinian-American literary theorist
+    category: philosophy
+  - id: frantz_fanon
+    name: Frantz Fanon
+    description: Martinican philosopher
+    category: philosophy
+  - id: aim_csaire
+    name: Aimé Césaire
+    description: Martinican poet and philosopher
+    category: philosophy
+  - id: web_du_bois
+    name: W.E.B. Du Bois
+    description: American sociologist and activist
+    category: philosophy
+  - id: booker_t_washington
+    name: Booker T. Washington
+    description: American educator
+    category: philosophy
+  - id: marcus_garvey
+    name: Marcus Garvey
+    description: Jamaican activist
+    category: philosophy
+  - id: malcolm_x
+    name: Malcolm X
+    description: American activist
+    category: philosophy
+  - id: martin_luther_king_jr
+    name: Martin Luther King Jr.
+    description: American civil rights leader
+    category: spiritual_teachers
+  - id: rosa_parks
+    name: Rosa Parks
+    description: American civil rights activist
+    category: spiritual_teachers
+  - id: john_lewis
+    name: John Lewis
+    description: American civil rights leader
+    category: spiritual_teachers
+  - id: cesar_chavez
+    name: Cesar Chavez
+    description: American labor leader
+    category: spiritual_teachers
+  - id: dolores_huerta
+    name: Dolores Huerta
+    description: American labor leader
+    category: spiritual_teachers
+  - id: harvey_milk
+    name: Harvey Milk
+    description: American politician and activist
+    category: spiritual_teachers
+  - id: bayard_rustin
+    name: Bayard Rustin
+    description: American civil rights activist
+    category: spiritual_teachers
+  - id: ella_baker
+    name: Ella Baker
+    description: American civil rights activist
+    category: spiritual_teachers
+  - id: fannie_lou_hamer
+    name: Fannie Lou Hamer
+    description: American civil rights activist
+    category: spiritual_teachers
+  - id: shirley_chisholm
+    name: Shirley Chisholm
+    description: American politician
+    category: spiritual_teachers
+  - id: ruth_bader_ginsburg
+    name: Ruth Bader Ginsburg
+    description: American Supreme Court justice
+    category: spiritual_teachers
+  - id: thurgood_marshall
+    name: Thurgood Marshall
+    description: American Supreme Court justice
+    category: spiritual_teachers
+  - id: sandra_day_oconnor
+    name: Sandra Day O'Connor
+    description: American Supreme Court justice
+    category: spiritual_teachers
+  - id: sonia_sotomayor
+    name: Sonia Sotomayor
+    description: American Supreme Court justice
+    category: spiritual_teachers
+  - id: elena_kagan
+    name: Elena Kagan
+    description: American Supreme Court justice
+    category: spiritual_teachers
+  - id: ketanji_brown_jackson
+    name: Ketanji Brown Jackson
+    description: American Supreme Court justice
+    category: spiritual_teachers
+  - id: barack_obama
+    name: Barack Obama
+    description: 44th president of the United States
+    category: philosophy
+  - id: michelle_obama
+    name: Michelle Obama
+    description: American lawyer and author
+    category: writers
+  - id: hillary_clinton
+    name: Hillary Clinton
+    description: American politician
+    category: philosophy
+  - id: elizabeth_warren
+    name: Elizabeth Warren
+    description: American senator
+    category: philosophy
+  - id: bernie_sanders
+    name: Bernie Sanders
+    description: American senator
+    category: philosophy
+  - id: aoc
+    name: AOC
+    description: American politician
+    category: philosophy
+  - id: alexandria_ocasiocortez
+    name: Alexandria Ocasio-Cortez
+    description: American politician
+    category: philosophy
+  - id: stacey_abrams
+    name: Stacey Abrams
+    description: American politician
+    category: philosophy
+  - id: greta_thunberg
+    name: Greta Thunberg
+    description: Swedish climate activist
+    category: spiritual_teachers
+  - id: malala_yousafzai
+    name: Malala Yousafzai
+    description: Pakistani activist
+    category: spiritual_teachers
+  - id: emma_watson
+    name: Emma Watson
+    description: British actress and activist
+    category: spiritual_teachers
+  - id: angelina_jolie
+    name: Angelina Jolie
+    description: American actress and activist
+    category: spiritual_teachers
+  - id: natalie_portman
+    name: Natalie Portman
+    description: Israeli-American actress
+    category: artists
+  - id: lupita_nyongo
+    name: Lupita Nyong'o
+    description: Kenyan-Mexican actress
+    category: artists
+  - id: viola_davis
+    name: Viola Davis
+    description: American actress
+    category: artists
+  - id: meryl_streep
+    name: Meryl Streep
+    description: American actress
+    category: artists
+  - id: cate_blanchett
+    name: Cate Blanchett
+    description: Australian actress
+    category: artists
+  - id: frances_mcdormand
+    name: Frances McDormand
+    description: American actress
+    category: artists
+  - id: tilda_swinton
+    name: Tilda Swinton
+    description: British actress
+    category: artists
+  - id: judi_dench
+    name: Judi Dench
+    description: British actress
+    category: artists
+  - id: helen_mirren
+    name: Helen Mirren
+    description: British actress
+    category: artists
+  - id: maggie_smith
+    name: Maggie Smith
+    description: British actress
+    category: artists
+  - id: anthony_hopkins
+    name: Anthony Hopkins
+    description: British actor
+    category: artists
+  - id: daniel_daylewis
+    name: Daniel Day-Lewis
+    description: British actor
+    category: artists
+  - id: denzel_washington
+    name: Denzel Washington
+    description: American actor
+    category: artists
+  - id: morgan_freeman
+    name: Morgan Freeman
+    description: American actor
+    category: artists
+  - id: samuel_l_jackson
+    name: Samuel L. Jackson
+    description: American actor
+    category: artists
+  - id: forest_whitaker
+    name: Forest Whitaker
+    description: American actor
+    category: artists
+  - id: mahershala_ali
+    name: Mahershala Ali
+    description: American actor
+    category: artists
+  - id: chadwick_boseman
+    name: Chadwick Boseman
+    description: American actor
+    category: artists
+  - id: michael_b_jordan
+    name: Michael B. Jordan
+    description: American actor
+    category: artists
+  - id: idris_elba
+    name: Idris Elba
+    description: British actor
+    category: artists
+  - id: david_oyelowo
+    name: David Oyelowo
+    description: British actor
+    category: artists
+  - id: chiwetel_ejiofor
+    name: Chiwetel Ejiofor
+    description: British actor
+    category: artists
+  - id: benedict_cumberbatch
+    name: Benedict Cumberbatch
+    description: British actor
+    category: artists
+  - id: tom_hanks
+    name: Tom Hanks
+    description: American actor
+    category: artists
+  - id: robert_de_niro
+    name: Robert De Niro
+    description: American actor
+    category: artists
+  - id: al_pacino
+    name: Al Pacino
+    description: American actor
+    category: artists
+  - id: jack_nicholson
+    name: Jack Nicholson
+    description: American actor
+    category: artists
+  - id: marlon_brando
+    name: Marlon Brando
+    description: American actor
+    category: artists
+  - id: james_stewart
+    name: James Stewart
+    description: American actor
+    category: artists
+  - id: cary_grant
+    name: Cary Grant
+    description: British-American actor
+    category: artists
+  - id: humphrey_bogart
+    name: Humphrey Bogart
+    description: American actor
+    category: artists
+  - id: laurence_olivier
+    name: Laurence Olivier
+    description: British actor
+    category: artists
+  - id: alec_guinness
+    name: Alec Guinness
+    description: British actor
+    category: artists
+  - id: peter_sellers
+    name: Peter Sellers
+    description: British actor
+    category: artists
+  - id: monty_python
+    name: Monty Python
+    description: British comedy group
+    category: artists
+  - id: john_cleese
+    name: John Cleese
+    description: British comedian
+    category: artists
+  - id: eddie_murphy
+    name: Eddie Murphy
+    description: American comedian
+    category: artists
+  - id: dave_chappelle
+    name: Dave Chappelle
+    description: American comedian
+    category: artists
+  - id: chris_rock
+    name: Chris Rock
+    description: American comedian
+    category: artists
+  - id: richard_pryor
+    name: Richard Pryor
+    description: American comedian
+    category: artists
+  - id: george_carlin
+    name: George Carlin
+    description: American comedian
+    category: artists
+  - id: robin_williams
+    name: Robin Williams
+    description: American comedian and actor
+    category: artists
+  - id: jim_carrey
+    name: Jim Carrey
+    description: Canadian-American actor
+    category: artists
+  - id: steve_martin
+    name: Steve Martin
+    description: American comedian
+    category: artists
+  - id: bill_murray
+    name: Bill Murray
+    description: American actor
+    category: artists
+  - id: adam_driver
+    name: Adam Driver
+    description: American actor
+    category: artists
+  - id: joaquin_phoenix
+    name: Joaquin Phoenix
+    description: American actor
+    category: artists
+  - id: phoenix
+    name: Phoenix
+    description: American actor
+    category: artists
+  - id: willem_dafoe
+    name: Willem Dafoe
+    description: American actor
+    category: artists
+  - id: gary_oldman
+    name: Gary Oldman
+    description: British actor
+    category: artists
+  - id: daniel_kaluuya
+    name: Daniel Kaluuya
+    description: British actor
+    category: artists
+  - id: riz_ahmed
+    name: Riz Ahmed
+    description: British actor
+    category: artists
+  - id: dev_patel
+    name: Dev Patel
+    description: British actor
+    category: artists
+  - id: rami_malek
+    name: Rami Malek
+    description: American actor
+    category: artists
+  - id: oscar_isaac
+    name: Oscar Isaac
+    description: Guatemalan-American actor
+    category: artists
+  - id: pedro_pascal
+    name: Pedro Pascal
+    description: Chilean-American actor
+    category: artists
+  - id: linmanuel_miranda
+    name: Lin-Manuel Miranda
+    description: American composer and actor
+    category: musicians
+  - id: stephen_sondheim
+    name: Stephen Sondheim
+    description: American composer
+    category: musicians
+  - id: andrew_lloyd_webber
+    name: Andrew Lloyd Webber
+    description: British composer
+    category: musicians
+  - id: john_williams
+    name: John Williams
+    description: American composer
+    category: musicians
+  - id: hans_zimmer
+    name: Hans Zimmer
+    description: German composer
+    category: musicians
+  - id: ennio_morricone
+    name: Ennio Morricone
+    description: Italian composer
+    category: musicians
+  - id: philip_glass
+    name: Philip Glass
+    description: American composer
+    category: musicians
+  - id: steve_reich
+    name: Steve Reich
+    description: American composer
+    category: musicians
+  - id: john_cage
+    name: John Cage
+    description: American composer
+    category: musicians
+  - id: igor_stravinsky
+    name: Igor Stravinsky
+    description: Russian composer
+    category: musicians
+  - id: claude_debussy
+    name: Claude Debussy
+    description: French composer
+    category: musicians
+  - id: richard_wagner
+    name: Richard Wagner
+    description: German composer
+    category: musicians
+  - id: giuseppe_verdi
+    name: Giuseppe Verdi
+    description: Italian composer
+    category: musicians
+  - id: antonio_vivaldi
+    name: Antonio Vivaldi
+    description: Italian composer
+    category: musicians
+  - id: george_frideric_handel
+    name: George Frideric Handel
+    description: German-British composer
+    category: musicians
+  - id: franz_schubert
+    name: Franz Schubert
+    description: Austrian composer
+    category: musicians
+  - id: felix_mendelssohn
+    name: Felix Mendelssohn
+    description: German composer
+    category: musicians
+  - id: robert_schumann
+    name: Robert Schumann
+    description: German composer
+    category: musicians
+  - id: frdric_chopin
+    name: Frédéric Chopin
+    description: Polish composer
+    category: musicians
+  - id: johannes_brahms
+    name: Johannes Brahms
+    description: German composer
+    category: musicians
+  - id: gustav_mahler
+    name: Gustav Mahler
+    description: Austrian composer
+    category: musicians
+  - id: antonn_dvok
+    name: Antonín Dvořák
+    description: Czech composer
+    category: musicians
+  - id: pyotr_ilyich_tchaikovsky
+    name: Pyotr Ilyich Tchaikovsky
+    description: Russian composer
+    category: musicians
+  - id: sergei_rachmaninoff
+    name: Sergei Rachmaninoff
+    description: Russian composer
+    category: musicians
+  - id: dmitri_shostakovich
+    name: Dmitri Shostakovich
+    description: Russian composer
+    category: musicians
+  - id: clara_schumann
+    name: Clara Schumann
+    description: German pianist and composer
+    category: musicians
+  - id: fanny_mendelssohn
+    name: Fanny Mendelssohn
+    description: German pianist and composer
+    category: musicians
+  - id: hildegard_of_bingen
+    name: Hildegard of Bingen
+    description: German composer and mystic
+    category: musicians
+  - id: sarah_vaughan
+    name: Sarah Vaughan
+    description: American jazz singer
+    category: musicians
+  - id: dinah_washington
+    name: Dinah Washington
+    description: American singer
+    category: musicians
+  - id: etta_james
+    name: Etta James
+    description: American singer
+    category: musicians
+  - id: tina_turner
+    name: Tina Turner
+    description: American singer
+    category: musicians
+  - id: diana_ross
+    name: Diana Ross
+    description: American singer
+    category: musicians
+  - id: whitney_houston
+    name: Whitney Houston
+    description: American singer
+    category: musicians
+  - id: janet_jackson
+    name: Janet Jackson
+    description: American singer
+    category: musicians
+  - id: madonna
+    name: Madonna
+    description: American singer
+    category: musicians
+  - id: cher
+    name: Cher
+    description: American singer
+    category: musicians
+  - id: barbra_streisand
+    name: Barbra Streisand
+    description: American singer
+    category: musicians
+  - id: celine_dion
+    name: Celine Dion
+    description: Canadian singer
+    category: musicians
+  - id: shakira
+    name: Shakira
+    description: Colombian singer
+    category: musicians
+  - id: gloria_estefan
+    name: Gloria Estefan
+    description: Cuban-American singer
+    category: musicians
+  - id: selena
+    name: Selena
+    description: American singer
+    category: musicians
+  - id: jennifer_lopez
+    name: Jennifer Lopez
+    description: American singer and actress
+    category: musicians
+  - id: rihanna
+    name: Rihanna
+    description: Barbadian singer
+    category: musicians
+  - id: katy_perry
+    name: Katy Perry
+    description: American singer
+    category: musicians
+  - id: ariana_grande
+    name: Ariana Grande
+    description: American singer
+    category: musicians
+  - id: donna_summer
+    name: Donna Summer
+    description: American singer
+    category: musicians
+  - id: gloria_gaynor
+    name: Gloria Gaynor
+    description: American singer
+    category: musicians
+  - id: abba
+    name: ABBA
+    description: Swedish pop group
+    category: musicians
+  - id: acdc
+    name: AC/DC
+    description: Australian rock band
+    category: musicians
+  - id: metallica
+    name: Metallica
+    description: American metal band
+    category: musicians
+  - id: black_sabbath
+    name: Black Sabbath
+    description: British metal band
+    category: musicians
+  - id: the_rolling_stones
+    name: The Rolling Stones
+    description: British rock band
+    category: musicians
+  - id: the_who
+    name: The Who
+    description: British rock band
+    category: musicians
+  - id: the_clash
+    name: The Clash
+    description: British punk band
+    category: musicians
+  - id: sex_pistols
+    name: Sex Pistols
+    description: British punk band
+    category: musicians
+  - id: ramones
+    name: Ramones
+    description: American punk band
+    category: musicians
+  - id: blondie
+    name: Blondie
+    description: American rock band
+    category: musicians
+  - id: the_smiths
+    name: The Smiths
+    description: British rock band
+    category: musicians
+  - id: the_cure
+    name: The Cure
+    description: British rock band
+    category: musicians
+  - id: depeche_mode
+    name: Depeche Mode
+    description: British electronic band
+    category: musicians
+  - id: new_order
+    name: New Order
+    description: British rock band
+    category: musicians
+  - id: joy_division
+    name: Joy Division
+    description: British rock band
+    category: musicians
+  - id: kraftwerk
+    name: Kraftwerk
+    description: German electronic band
+    category: musicians
+  - id: daft_punk
+    name: Daft Punk
+    description: French electronic duo
+    category: musicians
+  - id: the_chemical_brothers
+    name: The Chemical Brothers
+    description: British electronic duo
+    category: musicians
+  - id: aphex_twin
+    name: Aphex Twin
+    description: British electronic musician
+    category: musicians
+  - id: brian_eno
+    name: Brian Eno
+    description: British musician and producer
+    category: musicians
+  - id: portishead
+    name: Portishead
+    description: British trip-hop band
+    category: musicians
+  - id: massive_attack
+    name: Massive Attack
+    description: British trip-hop band
+    category: musicians
+  - id: arcade_fire
+    name: Arcade Fire
+    description: Canadian rock band
+    category: musicians
+  - id: the_strokes
+    name: The Strokes
+    description: American rock band
+    category: musicians
+  - id: the_white_stripes
+    name: The White Stripes
+    description: American rock duo
+    category: musicians
+  - id: jack_white
+    name: Jack White
+    description: American musician
+    category: musicians
+  - id: the_black_keys
+    name: The Black Keys
+    description: American rock duo
+    category: musicians
+  - id: tame_impala
+    name: Tame Impala
+    description: Australian psychedelic project
+    category: musicians
+  - id: lcd_soundsystem
+    name: LCD Soundsystem
+    description: American dance-punk band
+    category: musicians
+  - id: vampire_weekend
+    name: Vampire Weekend
+    description: American rock band
+    category: musicians
+  - id: fleet_foxes
+    name: Fleet Foxes
+    description: American indie band
+    category: musicians
+  - id: bon_iver
+    name: Bon Iver
+    description: American indie project
+    category: musicians
+  - id: sufjan_stevens
+    name: Sufjan Stevens
+    description: American musician
+    category: musicians
+  - id: father_john_misty
+    name: Father John Misty
+    description: American musician
+    category: musicians
+  - id: the_national
+    name: The National
+    description: American rock band
+    category: musicians
+  - id: wilco
+    name: Wilco
+    description: American rock band
+    category: musicians
+  - id: my_morning_jacket
+    name: My Morning Jacket
+    description: American rock band
+    category: musicians
+  - id: the_flaming_lips
+    name: The Flaming Lips
+    description: American rock band
+    category: musicians
+  - id: animal_collective
+    name: Animal Collective
+    description: American experimental band
+    category: musicians
+  - id: grizzly_bear
+    name: Grizzly Bear
+    description: American indie band
+    category: musicians
+  - id: beach_house
+    name: Beach House
+    description: American dream pop band
+    category: musicians
+  - id: m83
+    name: M83
+    description: French electronic band
+    category: musicians
+  - id: sigur_rs
+    name: Sigur Rós
+    description: Icelandic post-rock band
+    category: musicians
+  - id: mogwai
+    name: Mogwai
+    description: Scottish post-rock band
+    category: musicians
+  - id: godspeed_you_black_emperor
+    name: Godspeed You! Black Emperor
+    description: Canadian post-rock band
+    category: musicians
+  - id: explosions_in_the_sky
+    name: Explosions in the Sky
+    description: American post-rock band
+    category: musicians
+  - id: charlie_parker
+    name: Charlie Parker
+    description: American jazz saxophonist
+    category: musicians
+  - id: dizzy_gillespie
+    name: Dizzy Gillespie
+    description: American jazz trumpeter
+    category: musicians
+  - id: charles_mingus
+    name: Charles Mingus
+    description: American jazz bassist
+    category: musicians
+  - id: ornette_coleman
+    name: Ornette Coleman
+    description: American jazz saxophonist
+    category: musicians
+  - id: sun_ra
+    name: Sun Ra
+    description: American jazz composer
+    category: musicians
+  - id: alice_coltrane
+    name: Alice Coltrane
+    description: American jazz pianist
+    category: musicians
+  - id: cecil_taylor
+    name: Cecil Taylor
+    description: American jazz pianist
+    category: musicians
+  - id: pharoah_sanders
+    name: Pharoah Sanders
+    description: American jazz saxophonist
+    category: musicians
+  - id: kamasi_washington
+    name: Kamasi Washington
+    description: American jazz saxophonist
+    category: musicians
+  - id: robert_glasper
+    name: Robert Glasper
+    description: American jazz pianist
+    category: musicians
+  - id: esperanza_spalding
+    name: Esperanza Spalding
+    description: American jazz bassist
+    category: musicians
+  - id: jacob_collier
+    name: Jacob Collier
+    description: British musician
+    category: musicians
+  - id: snarky_puppy
+    name: Snarky Puppy
+    description: American jazz fusion band
+    category: musicians
+  - id: badbadnotgood
+    name: Badbadnotgood
+    description: Canadian jazz band
+    category: musicians
+  - id: khruangbin
+    name: Khruangbin
+    description: American psychedelic band
+    category: musicians
+  - id: king_gizzard
+    name: King Gizzard
+    description: Australian rock band
+    category: musicians
+  - id: unknown_mortal_orchestra
+    name: Unknown Mortal Orchestra
+    description: New Zealand psychedelic band
+    category: musicians
+  - id: toro_y_moi
+    name: Toro y Moi
+    description: American musician
+    category: musicians
+  - id: mac_demarco
+    name: Mac DeMarco
+    description: Canadian musician
+    category: musicians
+  - id: clairo
+    name: Clairo
+    description: American musician
+    category: musicians
+  - id: olivia_rodrigo
+    name: Olivia Rodrigo
+    description: American singer-songwriter
+    category: musicians
+  - id: lorde
+    name: Lorde
+    description: New Zealand singer-songwriter
+    category: musicians
+  - id: halsey
+    name: Halsey
+    description: American singer-songwriter
+    category: musicians
+  - id: sza
+    name: SZA
+    description: American singer-songwriter
+    category: musicians
+  - id: doja_cat
+    name: Doja Cat
+    description: American singer
+    category: musicians
+  - id: megan_thee_stallion
+    name: Megan Thee Stallion
+    description: American rapper
+    category: musicians
+  - id: cardi_b
+    name: Cardi B
+    description: American rapper
+    category: musicians
+  - id: nicki_minaj
+    name: Nicki Minaj
+    description: Trinidadian-American rapper
+    category: musicians
+  - id: travis_scott
+    name: Travis Scott
+    description: American rapper
+    category: musicians
+  - id: post_malone
+    name: Post Malone
+    description: American rapper and singer
+    category: musicians
+  - id: drake
+    name: Drake
+    description: Canadian rapper
+    category: musicians
+  - id: the_weeknd
+    name: The Weeknd
+    description: Canadian singer
+    category: musicians
+  - id: bad_bunny
+    name: Bad Bunny
+    description: Puerto Rican rapper
+    category: musicians
+  - id: j_balvin
+    name: J Balvin
+    description: Colombian reggaeton artist
+    category: musicians
+  - id: rosala
+    name: Rosalía
+    description: Spanish singer
+    category: musicians
+  - id: bts
+    name: BTS
+    description: South Korean boy band
+    category: musicians
+  - id: blackpink
+    name: Blackpink
+    description: South Korean girl group
+    category: musicians
+  - id: twice
+    name: Twice
+    description: South Korean girl group
+    category: musicians
+  - id: stray_kids
+    name: Stray Kids
+    description: South Korean boy band
+    category: musicians
+  - id: newjeans
+    name: NewJeans
+    description: South Korean girl group
+    category: musicians
+  - id: fifty_fifty
+    name: Fifty Fifty
+    description: South Korean girl group
+    category: musicians
+  - id: le_sserafim
+    name: Le Sserafim
+    description: South Korean girl group
+    category: musicians
+  - id: aespa
+    name: Aespa
+    description: South Korean girl group
+    category: musicians
+  - id: iu
+    name: IU
+    description: South Korean singer
+    category: musicians
+  - id: taeyeon
+    name: Taeyeon
+    description: South Korean singer
+    category: musicians
+  - id: taemin
+    name: Taemin
+    description: South Korean singer
+    category: musicians
+  - id: jay_chou
+    name: Jay Chou
+    description: Taiwanese singer
+    category: musicians
+  - id: eason_chan
+    name: Eason Chan
+    description: Hong Kong singer
+    category: musicians
+  - id: faye_wong
+    name: Faye Wong
+    description: Chinese singer
+    category: musicians
+  - id: ar_rahman
+    name: A.R. Rahman
+    description: Indian composer
+    category: musicians
+  - id: lata_mangeshkar
+    name: Lata Mangeshkar
+    description: Indian playback singer
+    category: musicians
+  - id: rd_burman
+    name: R.D. Burman
+    description: Indian music director
+    category: musicians
+  - id: ilaiyaraaja
+    name: Ilaiyaraaja
+    description: Indian composer
+    category: musicians
+  - id: salman_khan
+    name: Salman Khan
+    description: Indian actor
+    category: artists
+  - id: shah_rukh_khan
+    name: Shah Rukh Khan
+    description: Indian actor
+    category: artists
+  - id: aamir_khan
+    name: Aamir Khan
+    description: Indian actor
+    category: artists
+  - id: amitabh_bachchan
+    name: Amitabh Bachchan
+    description: Indian actor
+    category: artists
+  - id: rajinikanth
+    name: Rajinikanth
+    description: Indian actor
+    category: artists
+  - id: kamal_haasan
+    name: Kamal Haasan
+    description: Indian actor
+    category: artists
+  - id: vijay
+    name: Vijay
+    description: Indian actor
+    category: artists
+  - id: vijay_deverakonda
+    name: Vijay Deverakonda
+    description: Indian actor
+    category: artists
+  - id: prabhas
+    name: Prabhas
+    description: Indian actor
+    category: artists
+  - id: allu_arjun
+    name: Allu Arjun
+    description: Indian actor
+    category: artists
+  - id: ram_charan
+    name: Ram Charan
+    description: Indian actor
+    category: artists
+  - id: jr_ntr
+    name: Jr NTR
+    description: Indian actor
+    category: artists
+  - id: mahesh_babu
+    name: Mahesh Babu
+    description: Indian actor
+    category: artists
+  - id: vijay_sethupathi
+    name: Vijay Sethupathi
+    description: Indian actor
+    category: artists
+  - id: dhanush
+    name: Dhanush
+    description: Indian actor
+    category: artists
+  - id: vikram
+    name: Vikram
+    description: Indian actor
+    category: artists
+  - id: mohanlal
+    name: Mohanlal
+    description: Indian actor
+    category: artists
+  - id: mammootty
+    name: Mammootty
+    description: Indian actor
+    category: artists
+  - id: fahadh_faasil
+    name: Fahadh Faasil
+    description: Indian actor
+    category: artists
+  - id: dulquer_salmaan
+    name: Dulquer Salmaan
+    description: Indian actor
+    category: artists
+  - id: nayanthara
+    name: Nayanthara
+    description: Indian actress
+    category: artists
+  - id: deepika_padukone
+    name: Deepika Padukone
+    description: Indian actress
+    category: artists
+  - id: alia_bhatt
+    name: Alia Bhatt
+    description: Indian actress
+    category: artists
+  - id: priyanka_chopra
+    name: Priyanka Chopra
+    description: Indian actress
+    category: artists
+  - id: kareena_kapoor
+    name: Kareena Kapoor
+    description: Indian actress
+    category: artists
+  - id: katrina_kaif
+    name: Katrina Kaif
+    description: Indian actress
+    category: artists
+  - id: anushka_sharma
+    name: Anushka Sharma
+    description: Indian actress
+    category: artists
+  - id: shraddha_kapoor
+    name: Shraddha Kapoor
+    description: Indian actress
+    category: artists
+  - id: sara_ali_khan
+    name: Sara Ali Khan
+    description: Indian actress
+    category: artists
+  - id: janhvi_kapoor
+    name: Janhvi Kapoor
+    description: Indian actress
+    category: artists
+  - id: kiara_advani
+    name: Kiara Advani
+    description: Indian actress
+    category: artists
+  - id: siddharth_malhotra
+    name: Siddharth Malhotra
+    description: Indian actor
+    category: artists
+  - id: varun_dhawan
+    name: Varun Dhawan
+    description: Indian actor
+    category: artists
+  - id: ranveer_singh
+    name: Ranveer Singh
+    description: Indian actor
+    category: artists
+  - id: ranbir_kapoor
+    name: Ranbir Kapoor
+    description: Indian actor
+    category: artists
+  - id: shahid_kapoor
+    name: Shahid Kapoor
+    description: Indian actor
+    category: artists
+  - id: hrithik_roshan
+    name: Hrithik Roshan
+    description: Indian actor
+    category: artists
+  - id: tiger_shroff
+    name: Tiger Shroff
+    description: Indian actor
+    category: athletes
+  - id: vidyut_jammwal
+    name: Vidyut Jammwal
+    description: Indian actor and martial artist
+    category: athletes
+  - id: giannis_antetokounmpo
+    name: Giannis Antetokounmpo
+    description: Greek basketball player
+    category: athletes
+  - id: luka_doncic
+    name: Luka Doncic
+    description: Slovenian basketball player
+    category: athletes
+  - id: nikola_jokic
+    name: Nikola Jokic
+    description: Serbian basketball player
+    category: athletes
+  - id: joel_embiid
+    name: Joel Embiid
+    description: Cameroonian basketball player
+    category: athletes
+  - id: jayson_tatum
+    name: Jayson Tatum
+    description: American basketball player
+    category: athletes
+  - id: anthony_edwards
+    name: Anthony Edwards
+    description: American basketball player
+    category: athletes
+  - id: victor_wembanyama
+    name: Victor Wembanyama
+    description: French basketball player
+    category: athletes
+  - id: caitlin_clark
+    name: Caitlin Clark
+    description: American basketball player
+    category: athletes
+  - id: diana_taurasi
+    name: Diana Taurasi
+    description: American basketball player
+    category: athletes
+  - id: sue_bird
+    name: Sue Bird
+    description: American basketball player
+    category: athletes
+  - id: maya_moore
+    name: Maya Moore
+    description: American basketball player
+    category: athletes
+  - id: breanna_stewart
+    name: Breanna Stewart
+    description: American basketball player
+    category: athletes
+  - id: aja_wilson
+    name: A'ja Wilson
+    description: American basketball player
+    category: athletes
+  - id: sabrina_ionescu
+    name: Sabrina Ionescu
+    description: American basketball player
+    category: athletes
+  - id: paige_bueckers
+    name: Paige Bueckers
+    description: American basketball player
+    category: athletes
+  - id: angel_reese
+    name: Angel Reese
+    description: American basketball player
+    category: athletes
+  - id: coco_gauff
+    name: Coco Gauff
+    description: American tennis player
+    category: athletes
+  - id: naomi_osaka
+    name: Naomi Osaka
+    description: Japanese tennis player
+    category: athletes
+  - id: emma_raducanu
+    name: Emma Raducanu
+    description: British tennis player
+    category: athletes
+  - id: iga_swiatek
+    name: Iga Swiatek
+    description: Polish tennis player
+    category: athletes
+  - id: aryna_sabalenka
+    name: Aryna Sabalenka
+    description: Belarusian tennis player
+    category: athletes
+  - id: elena_rybakina
+    name: Elena Rybakina
+    description: Kazakhstani tennis player
+    category: athletes
+  - id: jessica_pegula
+    name: Jessica Pegula
+    description: American tennis player
+    category: athletes
+  - id: ons_jabeur
+    name: Ons Jabeur
+    description: Tunisian tennis player
+    category: athletes
+  - id: carlos_alcaraz
+    name: Carlos Alcaraz
+    description: Spanish tennis player
+    category: athletes
+  - id: jannik_sinner
+    name: Jannik Sinner
+    description: Italian tennis player
+    category: athletes
+  - id: holger_rune
+    name: Holger Rune
+    description: Danish tennis player
+    category: athletes
+  - id: stefanos_tsitsipas
+    name: Stefanos Tsitsipas
+    description: Greek tennis player
+    category: athletes
+  - id: andrey_rublev
+    name: Andrey Rublev
+    description: Russian tennis player
+    category: athletes
+  - id: daniil_medvedev
+    name: Daniil Medvedev
+    description: Russian tennis player
+    category: athletes
+  - id: alexander_zverev
+    name: Alexander Zverev
+    description: German tennis player
+    category: athletes
+  - id: casper_ruud
+    name: Casper Ruud
+    description: Norwegian tennis player
+    category: athletes
+  - id: taylor_fritz
+    name: Taylor Fritz
+    description: American tennis player
+    category: athletes
+  - id: frances_tiafoe
+    name: Frances Tiafoe
+    description: American tennis player
+    category: athletes
+  - id: ben_shelton
+    name: Ben Shelton
+    description: American tennis player
+    category: athletes
+  - id: jude_bellingham
+    name: Jude Bellingham
+    description: English football player
+    category: athletes
+  - id: vinicius_jr
+    name: Vinicius Jr
+    description: Brazilian football player
+    category: athletes
+  - id: phil_foden
+    name: Phil Foden
+    description: English football player
+    category: athletes
+  - id: bukayo_saka
+    name: Bukayo Saka
+    description: English football player
+    category: athletes
+  - id: jamal_musiala
+    name: Jamal Musiala
+    description: German football player
+    category: athletes
+  - id: florian_wirtz
+    name: Florian Wirtz
+    description: German football player
+    category: athletes
+  - id: gavi
+    name: Gavi
+    description: Spanish football player
+    category: athletes
+  - id: pedri
+    name: Pedri
+    description: Spanish football player
+    category: athletes
+  - id: federico_valverde
+    name: Federico Valverde
+    description: Uruguayan football player
+    category: athletes
+  - id: rodri
+    name: Rodri
+    description: Spanish football player
+    category: athletes
+  - id: bernardo_silva
+    name: Bernardo Silva
+    description: Portuguese football player
+    category: athletes
+  - id: bruno_fernandes
+    name: Bruno Fernandes
+    description: Portuguese football player
+    category: athletes
+  - id: antonio_rdiger
+    name: Antonio Rüdiger
+    description: German football player
+    category: athletes
+  - id: virgil_van_dijk
+    name: Virgil van Dijk
+    description: Dutch football player
+    category: athletes
+  - id: alisson_becker
+    name: Alisson Becker
+    description: Brazilian football goalkeeper
+    category: athletes
+  - id: ederson
+    name: Ederson
+    description: Brazilian football goalkeeper
+    category: athletes
+  - id: thibaut_courtois
+    name: Thibaut Courtois
+    description: Belgian football goalkeeper
+    category: athletes
+  - id: marcandr_ter_stegen
+    name: Marc-André ter Stegen
+    description: German football goalkeeper
+    category: athletes
+  - id: manuel_neuer
+    name: Manuel Neuer
+    description: German football goalkeeper
+    category: athletes
+  - id: gianluigi_buffon
+    name: Gianluigi Buffon
+    description: Italian football goalkeeper
+    category: athletes
+  - id: iker_casillas
+    name: Iker Casillas
+    description: Spanish football goalkeeper
+    category: athletes
+  - id: edwin_van_der_sar
+    name: Edwin van der Sar
+    description: Dutch football goalkeeper
+    category: athletes
+  - id: peter_schmeichel
+    name: Peter Schmeichel
+    description: Danish football goalkeeper
+    category: athletes
+  - id: lev_yashin
+    name: Lev Yashin
+    description: Soviet football goalkeeper
+    category: athletes
+  - id: dino_zoff
+    name: Dino Zoff
+    description: Italian football goalkeeper
+    category: athletes
+  - id: gordon_banks
+    name: Gordon Banks
+    description: English football goalkeeper
+    category: athletes
+  - id: sepp_maier
+    name: Sepp Maier
+    description: German football goalkeeper
+    category: athletes
+  - id: thomas_mller
+    name: Thomas Müller
+    description: German football player
+    category: athletes
+  - id: robert_lewandowski
+    name: Robert Lewandowski
+    description: Polish football player
+    category: athletes
+  - id: karim_benzema
+    name: Karim Benzema
+    description: French football player
+    category: athletes
+  - id: harry_kane
+    name: Harry Kane
+    description: English football player
+    category: athletes
+  - id: zlatan_ibrahimovi
+    name: Zlatan Ibrahimović
+    description: Swedish football player
+    category: athletes
+  - id: wayne_rooney
+    name: Wayne Rooney
+    description: English football player
+    category: athletes
+  - id: frank_lampard
+    name: Frank Lampard
+    description: English football player
+    category: athletes
+  - id: steven_gerrard
+    name: Steven Gerrard
+    description: English football player
+    category: athletes
+  - id: paul_scholes
+    name: Paul Scholes
+    description: English football player
+    category: athletes
+  - id: roy_keane
+    name: Roy Keane
+    description: Irish football player
+    category: athletes
+  - id: patrick_vieira
+    name: Patrick Vieira
+    description: French football player
+    category: athletes
+  - id: claude_makll
+    name: Claude Makélélé
+    description: French football player
+    category: athletes
+  - id: andrea_pirlo
+    name: Andrea Pirlo
+    description: Italian football player
+    category: athletes
+  - id: xavi_hernndez
+    name: Xavi Hernández
+    description: Spanish football player
+    category: athletes
+  - id: andrs_iniesta
+    name: Andrés Iniesta
+    description: Spanish football player
+    category: athletes
+  - id: sergio_busquets
+    name: Sergio Busquets
+    description: Spanish football player
+    category: athletes
+  - id: luka_modric
+    name: Luka Modric
+    description: Croatian football player
+    category: athletes
+  - id: toni_kroos
+    name: Toni Kroos
+    description: German football player
+    category: athletes
+  - id: casemiro
+    name: Casemiro
+    description: Brazilian football player
+    category: athletes
+  - id: ngolo_kant
+    name: N'Golo Kanté
+    description: French football player
+    category: athletes
+  - id: declan_rice
+    name: Declan Rice
+    description: English football player
+    category: athletes
+  - id: enzo_fernndez
+    name: Enzo Fernández
+    description: Argentine football player
+    category: athletes
+  - id: moises_caicedo
+    name: Moises Caicedo
+    description: Ecuadorian football player
+    category: athletes
+  - id: martin_degaard
+    name: Martin Ødegaard
+    description: Norwegian football player
+    category: athletes
+  - id: bruno_guimares
+    name: Bruno Guimarães
+    description: Brazilian football player
+    category: athletes
+  - id: sandro_tonali
+    name: Sandro Tonali
+    description: Italian football player
+    category: athletes
+  - id: nicol_barella
+    name: Nicolò Barella
+    description: Italian football player
+    category: athletes
+  - id: frenkie_de_jong
+    name: Frenkie de Jong
+    description: Dutch football player
+    category: athletes
+  - id: aurlien_tchouamni
+    name: Aurélien Tchouaméni
+    description: French football player
+    category: athletes
+  - id: eduardo_camavinga
+    name: Eduardo Camavinga
+    description: French football player
+    category: athletes
+  - id: michael_dell
+    name: Michael Dell
+    description: Founder of Dell
+    category: billionaires
+  - id: eric_schmidt
+    name: Eric Schmidt
+    description: Former CEO of Google
+    category: billionaires
+  - id: dara_khosrowshahi
+    name: Dara Khosrowshahi
+    description: CEO of Uber
+    category: billionaires
+  - id: david_zaslav
+    name: David Zaslav
+    description: CEO of Warner Bros
+    category: billionaires
+  - id: john_stankey
+    name: John Stankey
+    description: CEO of AT&T
+    category: billionaires
+  - id: hans_vestberg
+    name: Hans Vestberg
+    description: CEO of Verizon
+    category: billionaires
+  - id: tim_armstrong
+    name: Tim Armstrong
+    description: Former CEO of AOL
+    category: billionaires
+  - id: marissa_mayer
+    name: Marissa Mayer
+    description: Former CEO of Yahoo
+    category: billionaires
+  - id: carly_fiorina
+    name: Carly Fiorina
+    description: Former CEO of HP
+    category: billionaires
+  - id: indra_nooyi
+    name: Indra Nooyi
+    description: Former CEO of PepsiCo
+    category: billionaires
+  - id: irene_rosenfeld
+    name: Irene Rosenfeld
+    description: Former CEO of Mondelez
+    category: billionaires
+  - id: ursula_burns
+    name: Ursula Burns
+    description: Former CEO of Xerox
+    category: billionaires
+  - id: virginia_rometty
+    name: Virginia Rometty
+    description: Former CEO of IBM
+    category: billionaires
+  - id: diane_greene
+    name: Diane Greene
+    description: Former CEO of VMware
+    category: billionaires
+  - id: patricia_russo
+    name: Patricia Russo
+    description: Former CEO of Lucent
+    category: billionaires
+  - id: anne_mulcahy
+    name: Anne Mulcahy
+    description: Former CEO of Xerox
+    category: billionaires
+  - id: andrea_jung
+    name: Andrea Jung
+    description: Former CEO of Avon
+    category: billionaires
+  - id: carol_bartz
+    name: Carol Bartz
+    description: Former CEO of Yahoo
+    category: billionaires
+  - id: terry_semel
+    name: Terry Semel
+    description: Former CEO of Yahoo
+    category: billionaires
