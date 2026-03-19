@@ -4,11 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import FunnelModule from "highcharts/modules/funnel";
-
-if (typeof Highcharts === "object") {
-  (FunnelModule as (h: typeof Highcharts) => void)(Highcharts);
-}
 
 interface BreakdownItem {
   name: string;
@@ -277,34 +272,36 @@ export default function AdminAnalyticsPage() {
 
   const funnelOptions = useMemo<Highcharts.Options>(() => {
     const base = chartBaseOptions();
+    const funnel = data?.funnel ?? [];
     return {
       ...base,
-      chart: { ...base.chart, type: "funnel", height: 360 },
+      chart: { ...base.chart, type: "bar", inverted: true, height: 360 },
       title: {
         text: "Funnel: Understand behaviors & bottlenecks",
         align: "left",
         style: { color: "#111827", fontSize: "14px", fontWeight: "600" },
       },
       legend: { enabled: false },
+      xAxis: { ...base.xAxis, allowDecimals: false },
+      yAxis: {
+        ...base.yAxis,
+        categories: funnel.map((f) => f.name),
+        reversed: true,
+      },
       plotOptions: {
-        funnel: {
-          dataLabels: {
-            enabled: true,
-            formatter() {
-              return `${this.point.name}: ${this.y}`;
-            },
-            style: { textOutline: "none", color: "#e5e7eb", fontSize: "12px" },
-          },
-          center: ["50%", "45%"],
-          width: "85%",
+        bar: {
+          dataLabels: { enabled: true },
+          borderRadius: 6,
         },
       },
       series: [
         {
-          type: "funnel",
+          type: "bar",
           name: "Sessions",
-          data: (data?.funnel ?? []).map((f) => [f.name, f.count]),
-          colors: ["#38bdf8", "#60a5fa", "#818cf8", "#a78bfa"],
+          data: funnel.map((f, i) => ({
+            y: f.count,
+            color: ["#38bdf8", "#60a5fa", "#818cf8", "#a78bfa"][i % 4],
+          })),
         },
       ],
     };
