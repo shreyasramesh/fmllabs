@@ -1595,8 +1595,6 @@ function MovingPills({
   onSelectPrompt: (card: { name: string; prompt: string }) => void;
   language: LanguageCode;
 }) {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const [hoveredRow, setHoveredRow] = useState<number | null>(null);
   const [carouselCards, setCarouselCards] = useState<
     { name: string; prompt: string; domain: string; subdomain: string }[] | null
   >(null);
@@ -1645,65 +1643,38 @@ function MovingPills({
     }));
     return [...starters, ...prompts];
   });
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReducedMotion(mq.matches);
-    const handler = () => setPrefersReducedMotion(mq.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-
+  const allPills = mixedRows.flat();
   return (
-    <div className="space-y-4 overflow-hidden">
-      {mixedRows.map((row, rowIndex) => (
-        <div
-          key={rowIndex}
-          className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
-          onMouseEnter={() => setHoveredRow(rowIndex)}
-          onMouseLeave={() => setHoveredRow(null)}
+    <div className="max-h-[min(50vh,320px)] overflow-y-auto overflow-x-hidden space-y-2 pr-1 -mr-1">
+      {allPills.map((pill, i) => (
+        <button
+          key={i}
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            playSelectionChime();
+            if (pill.type === "prompt") {
+              onSelectPrompt({ name: pill.cardName, prompt: pill.cardPrompt });
+            } else {
+              onSelectStarter(pill.label);
+            }
+          }}
+          className={`flex items-center gap-2 w-full px-4 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200 active:scale-[0.98] text-left ${
+            pill.type === "prompt"
+              ? "bg-[#eef7ff] dark:bg-[#1f2937] text-[#0f3d66] dark:text-[#bfdbfe] border-[#bcdcff] dark:border-[#334155] hover:bg-[#ddefff] dark:hover:bg-[#263244]"
+              : "bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-900 dark:text-neutral-100 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-300 dark:hover:bg-neutral-600"
+          }`}
+          aria-label={`${pill.type === "prompt" ? "Prompt lens" : "Conversation starter"}: ${pill.label}`}
+          title={pill.type === "prompt" ? "Prompt lens" : "Conversation starter"}
         >
-          <div
-            className={`flex gap-3 shrink-0 ${
-              prefersReducedMotion
-                ? ""
-                : rowIndex % 2 === 0
-                  ? "animate-marquee-left"
-                  : "animate-marquee-right"
-            } ${hoveredRow === rowIndex ? "marquee-paused" : ""}`}
-            style={{ width: "max-content" }}
-          >
-            {[...row, ...row].map((pill, i) => (
-              <button
-                key={`${rowIndex}-${i}`}
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  playSelectionChime();
-                  if (pill.type === "prompt") {
-                    onSelectPrompt({ name: pill.cardName, prompt: pill.cardPrompt });
-                  } else {
-                    onSelectStarter(pill.label);
-                  }
-                }}
-                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 active:scale-95 whitespace-nowrap ${
-                  pill.type === "prompt"
-                    ? "bg-[#eef7ff] dark:bg-[#1f2937] text-[#0f3d66] dark:text-[#bfdbfe] border-[#bcdcff] dark:border-[#334155] hover:bg-[#ddefff] dark:hover:bg-[#263244]"
-                    : "bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-900 dark:text-neutral-100 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-300 dark:hover:bg-neutral-600"
-                }`}
-                aria-label={`${pill.type === "prompt" ? "Prompt lens" : "Conversation starter"}: ${pill.label}`}
-                title={pill.type === "prompt" ? "Prompt lens" : "Conversation starter"}
-              >
-                {pill.type === "prompt" ? (
-                  <RippleIcon className="w-3.5 h-3.5 shrink-0" />
-                ) : (
-                  <ChatBubbleIcon className="w-3.5 h-3.5 shrink-0" />
-                )}
-                {pill.label}
-              </button>
-            ))}
-          </div>
-        </div>
+          {pill.type === "prompt" ? (
+            <RippleIcon className="w-3.5 h-3.5 shrink-0" />
+          ) : (
+            <ChatBubbleIcon className="w-3.5 h-3.5 shrink-0" />
+          )}
+          <span className="truncate">{pill.label}</span>
+        </button>
       ))}
     </div>
   );
