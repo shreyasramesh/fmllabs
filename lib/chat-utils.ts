@@ -402,3 +402,65 @@ export function extractMentalModelIdsFromMessages(
     .flatMap((m) => extractMentalModelIds(m.content));
   return [...new Set(ids)];
 }
+
+const MENTOR_RESPONSES_MARKER = "---MENTOR-RESPONSES---";
+const MENTOR_RESPONSES_END_MARKER = "---END-MENTOR-RESPONSES---";
+
+export interface MentorResponse {
+  figureId: string;
+  figureName: string;
+  content: string;
+}
+
+/**
+ * Parses the MENTOR-RESPONSES block from assistant content.
+ * Returns { contentWithoutBlock, mentorResponses }.
+ */
+export function parseMentorResponsesBlock(content: string): {
+  contentWithoutBlock: string;
+  mentorResponses: MentorResponse[] | null;
+} {
+  const idx = content.indexOf(MENTOR_RESPONSES_MARKER);
+  if (idx === -1) {
+    return { contentWithoutBlock: content, mentorResponses: null };
+  }
+  const afterMarker = content.slice(idx + MENTOR_RESPONSES_MARKER.length).trimStart();
+  const endIdx = afterMarker.indexOf(MENTOR_RESPONSES_END_MARKER);
+  if (endIdx === -1) {
+    return { contentWithoutBlock: content, mentorResponses: null };
+  }
+  const jsonStr = afterMarker.slice(0, endIdx).trim();
+  const contentBeforeBlock = content.slice(0, idx).trimEnd();
+  const contentAfterBlock = afterMarker.slice(endIdx + MENTOR_RESPONSES_END_MARKER.length).trimStart();
+  const contentWithoutBlock = [contentBeforeBlock, contentAfterBlock].filter(Boolean).join("\n\n");
+
+  try {
+    const parsed = JSON.parse(jsonStr) as { responses?: unknown };
+    if (!Array.isArray(parsed.responses)) return { contentWithoutBlock, mentorResponses: null };
+    const mentorResponses = parsed.responses
+      .filter(
+        (r): r is MentorResponse =>
+          r &&
+          typeof r === "object" &&
+          typeof (r as MentorResponse).figureId === "string" &&
+          typeof (r as MentorResponse).figureName === "string" &&
+          typeof (r as MentorResponse).content === "string"
+      )
+      .map((r) => ({
+        figureId: r.figureId,
+        figureName: r.figureName,
+        content: r.content,
+      }));
+    return { contentWithoutBlock, mentorResponses: mentorResponses.length > 0 ? mentorResponses : null };
+  } catch {
+    return { contentWithoutBlock, mentorResponses: null };
+  }
+}
+
+/**
+ * Builds the MENTOR-RESPONSES block for storage.
+ */
+export function buildMentorResponsesBlock(responses: MentorResponse[]): string {
+  const json = JSON.stringify({ responses });
+  return `${MENTOR_RESPONSES_MARKER}\n${json}\n${MENTOR_RESPONSES_END_MARKER}`;
+}

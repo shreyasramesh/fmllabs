@@ -10,6 +10,7 @@ import {
   parseRelevantContextFromStreamStart,
   parseJournalCheckpointBlock,
   parseJournalCheckpointFromStream,
+  parseMentorResponsesBlock,
   extractRelevanceContext,
   extractMentalModelIds,
   type RelevantContextItem,
@@ -71,6 +72,7 @@ interface Message {
   };
   perspectiveCard?: { name: string; prompt: string };
   journalCheckpoint?: string;
+  mentorResponses?: Array<{ figureId: string; figureName: string; content: string }>;
 }
 
 function processMessagesWithContext(msgs: Message[]): Message[] {
@@ -80,12 +82,16 @@ function processMessagesWithContext(msgs: Message[]): Message[] {
       const { contentWithoutBlock: afterCtx, relevantContext } =
         parseRelevantContextBlock(content);
       content = afterCtx;
+      const { contentWithoutBlock: afterMentor, mentorResponses } =
+        parseMentorResponsesBlock(content);
+      content = afterMentor;
       const { contentWithoutBlock: afterJournal } =
         parseJournalCheckpointBlock(content);
       return {
         ...m,
         content: afterJournal,
         selectedContexts: relevantContext ?? undefined,
+        mentorResponses: mentorResponses ?? undefined,
       };
     }
     return m;
@@ -472,7 +478,38 @@ function MessageBubble({
                 {message.perspectiveCard.name}
               </p>
             )}
-            {text ? (
+            {message.mentorResponses && message.mentorResponses.length > 0 ? (
+              <div className="space-y-4">
+                {message.mentorResponses.map((mr) => (
+                  <div
+                    key={mr.figureId}
+                    className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 overflow-hidden"
+                  >
+                    <div className="px-3 py-2 border-b border-neutral-200 dark:border-neutral-700">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
+                        {mr.figureName}
+                      </span>
+                    </div>
+                    <div className="px-3 py-2">
+                      <ChatMarkdown
+                        content={mr.content}
+                        idToName={idToName}
+                        ltmIdToTitle={ltmIdToTitle}
+                        ccIdToTitle={ccIdToTitle}
+                        cgIdToTitle={cgIdToTitle}
+                        figureIdToName={figureIdToName}
+                        figureIdToDescription={figureIdToDescription}
+                        onMentalModelClick={onMentalModelClick}
+                        onLtmClick={onLtmClick}
+                        onCustomConceptClick={onCustomConceptClick}
+                        onConceptGroupClick={onConceptGroupClick}
+                        previewMap={previewMap}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : text ? (
               <>
                 {isFindingGuide ? (
                   <span className="flex items-center gap-2">
@@ -1659,6 +1696,8 @@ export default function ChatPage() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [multiMentorMode, setMultiMentorMode] = useState(false);
+  const [selectedMentorFigureIds, setSelectedMentorFigureIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sessionLoading, setSessionLoading] = useState(!isNew && !incognitoMode);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(
@@ -2562,7 +2601,11 @@ export default function ChatPage() {
           },
         }),
     };
-    const assistantMessage: Message = { role: "assistant", content: "" };
+    const assistantPlaceholder =
+      multiMentorMode && selectedMentorFigureIds.length >= 2
+        ? `${selectedMentorFigureIds.length} mentors are responding…`
+        : "";
+    const assistantMessage: Message = { role: "assistant", content: assistantPlaceholder };
     const baseMessages = options?.messagesOverride ?? messages;
     setMessages((prev) =>
       options?.retry ? [...prev.slice(0, -2), userMessage, assistantMessage] : options?.messagesOverride ? [...options.messagesOverride, userMessage, assistantMessage] : [...prev, userMessage, assistantMessage]
@@ -2613,6 +2656,10 @@ export default function ChatPage() {
     }
     if (options?.journalCheckpoint) {
       chatBody.journalCheckpoint = options.journalCheckpoint;
+    }
+    if (multiMentorMode && selectedMentorFigureIds.length >= 2 && selectedMentorFigureIds.length <= 5) {
+      chatBody.multiMentorMode = true;
+      chatBody.multiMentorFigureIds = selectedMentorFigureIds;
     }
     if (isAnonymous || incognitoMode) {
       chatBody.messages = baseMessages.map((m) => ({ role: m.role, content: m.content }));
@@ -2668,8 +2715,10 @@ export default function ChatPage() {
       const { contentWithoutBlock: afterCtx, relevantContext } = contextBlockConsumed
         ? { contentWithoutBlock: messageContent, relevantContext: overlayContext ?? undefined }
         : parseRelevantContextBlock(accumulated);
+      const { contentWithoutBlock: afterMentor, mentorResponses } =
+        parseMentorResponsesBlock(afterCtx);
       const { contentWithoutBlock: contentWithoutJournal, journalCheckpoint } =
-        parseJournalCheckpointBlock(afterCtx);
+        parseJournalCheckpointBlock(afterMentor);
       const contentWithoutBlock = contentWithoutJournal;
       const resolvedContext =
         relevantContext ??
@@ -2699,6 +2748,7 @@ export default function ChatPage() {
               conceptGroups: resolvedContext.conceptGroups ?? [],
               perspectiveCards: resolvedContext.perspectiveCards ?? [],
             },
+            mentorResponses: mentorResponses ?? undefined,
           };
         }
         return next;
@@ -2733,7 +2783,7 @@ export default function ChatPage() {
       refetchSessions();
       refetchScore();
     }
-  }, [input, isLoading, currentSessionId, router, refetchSessions, refetchScore, messages, messages.length, sessions.length, dismissOnboarding, mentalModelsIndex, longTermMemories, customConcepts, conceptGroups, isAnonymous, incognitoMode, pendingCardContext]);
+  }, [input, isLoading, currentSessionId, router, refetchSessions, refetchScore, messages, messages.length, sessions.length, dismissOnboarding, mentalModelsIndex, longTermMemories, customConcepts, conceptGroups, isAnonymous, incognitoMode, pendingCardContext, multiMentorMode, selectedMentorFigureIds]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (
@@ -4424,6 +4474,72 @@ export default function ChatPage() {
                     )}
                         </button>
                 </div>
+                {!isAnonymous && !incognitoMode && followedFigureIds.length >= 2 && (
+                  <div className="flex flex-col items-center gap-2 w-full max-w-2xl animate-fade-in-up">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playSelectionChime();
+                        setMultiMentorMode((prev) => !prev);
+                        if (!multiMentorMode) setSelectedMentorFigureIds([]);
+                      }}
+                      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                        multiMentorMode
+                          ? "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200"
+                          : "text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      }`}
+                      aria-pressed={multiMentorMode}
+                      aria-label="Ask multiple mentors"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                      </svg>
+                      Ask multiple mentors
+                    </button>
+                    {multiMentorMode && (
+                      <div className="flex flex-wrap justify-center gap-1.5">
+                        {followedFigureIds
+                          .map((id) => figuresData?.figures?.find((f) => f.id === id))
+                          .filter(Boolean)
+                          .map((f) => f!)
+                          .map((f) => {
+                            const selected = selectedMentorFigureIds.includes(f.id);
+                            const canSelect = selected || selectedMentorFigureIds.length < 5;
+                            return (
+                              <button
+                                key={f.id}
+                                type="button"
+                                onClick={() => {
+                                  if (!canSelect && !selected) return;
+                                  setSelectedMentorFigureIds((prev) =>
+                                    selected
+                                      ? prev.filter((x) => x !== f.id)
+                                      : prev.length < 5
+                                        ? [...prev, f.id]
+                                        : prev
+                                  );
+                                }}
+                                disabled={!canSelect && !selected}
+                                className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                                  selected
+                                    ? "bg-foreground text-background"
+                                    : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                } ${(!canSelect && !selected) ? "opacity-50 cursor-not-allowed" : ""}`}
+                              >
+                                {f.name}
+                              </button>
+                            );
+                          })}
+                        <span className="text-xs text-neutral-500 dark:text-neutral-400 self-center">
+                          {selectedMentorFigureIds.length}/5 selected
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
                         <button
                           type="button"
                           onClick={() => {
@@ -4624,6 +4740,65 @@ export default function ChatPage() {
           )}
           {messages.length > 0 && (
           <div className="flex flex-col items-center justify-center px-4 pt-2 pb-2 sm:pt-3 sm:pb-3 min-w-0 gap-1.5 sm:gap-2">
+            {!isAnonymous && !incognitoMode && followedFigureIds.length >= 2 && (
+              <div className="flex flex-wrap items-center justify-center gap-1.5 w-full max-w-2xl">
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSelectionChime();
+                    setMultiMentorMode((prev) => !prev);
+                    if (!multiMentorMode) setSelectedMentorFigureIds([]);
+                  }}
+                  className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium transition-colors ${
+                    multiMentorMode
+                      ? "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200"
+                      : "text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                  }`}
+                  aria-pressed={multiMentorMode}
+                  aria-label="Ask multiple mentors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                  Ask mentors
+                </button>
+                {multiMentorMode && (
+                  <>
+                    {followedFigureIds
+                      .map((id) => figuresData?.figures?.find((f) => f.id === id))
+                      .filter(Boolean)
+                      .map((f) => f!)
+                      .slice(0, 8)
+                      .map((f) => {
+                        const selected = selectedMentorFigureIds.includes(f.id);
+                        const canSelect = selected || selectedMentorFigureIds.length < 5;
+                        return (
+                          <button
+                            key={f.id}
+                            type="button"
+                            onClick={() => {
+                              if (!canSelect && !selected) return;
+                              setSelectedMentorFigureIds((prev) =>
+                                selected ? prev.filter((x) => x !== f.id) : prev.length < 5 ? [...prev, f.id] : prev
+                              );
+                            }}
+                            disabled={!canSelect && !selected}
+                            className={`px-2 py-0.5 rounded-full text-[11px] font-medium transition-colors ${
+                              selected ? "bg-foreground text-background" : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400"
+                            } ${(!canSelect && !selected) ? "opacity-50 cursor-not-allowed" : ""}`}
+                          >
+                            {f.name}
+                          </button>
+                        );
+                      })}
+                    <span className="text-[11px] text-neutral-500 dark:text-neutral-400">{selectedMentorFigureIds.length}/5</span>
+                  </>
+                )}
+              </div>
+            )}
             <div className="min-w-0 max-w-2xl w-full flex items-stretch gap-1.5 sm:gap-2 min-h-[52px]" data-tour="input-area">
               <div className="relative flex-1 min-w-0">
                 <MentionInput

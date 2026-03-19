@@ -22,8 +22,12 @@ import {
   getRelevantContextBlockDelimiters,
   type RelevantContext,
 } from "@/lib/chat-utils";
-import { streamGenerateContent, generateTitle, predictRelevantContext } from "@/lib/gemini";
+import { streamGenerateContent, generateContent, generateTitle, predictRelevantContext } from "@/lib/gemini";
 import { getLanguageName, isValidLanguageCode, type LanguageCode } from "@/lib/languages";
+import {
+  buildMentorResponsesBlock,
+  type MentorResponse,
+} from "@/lib/chat-utils";
 import {
   buildCitedContextFromText,
   diffCitationsAgainstPredicted,
@@ -185,6 +189,8 @@ export async function POST(request: Request) {
   let activeCardFigureId: string | undefined;
   let activeCardFigureName: string | undefined;
   let journalCheckpoint: string | undefined;
+  let multiMentorMode = false;
+  let multiMentorFigureIds: string[] = [];
 
   try {
     const body = await request.json();
@@ -255,6 +261,14 @@ export async function POST(request: Request) {
     }
     if (typeof body.journalCheckpoint === "string" && body.journalCheckpoint.trim()) {
       journalCheckpoint = body.journalCheckpoint.trim();
+    }
+    if (body.multiMentorMode === true) {
+      multiMentorMode = true;
+      if (Array.isArray(body.multiMentorFigureIds)) {
+        multiMentorFigureIds = body.multiMentorFigureIds.filter(
+          (id: unknown) => typeof id === "string" && (id as string).trim().length > 0
+        );
+      }
     }
 
     if (!message || typeof message !== "string") {
@@ -374,12 +388,113 @@ export async function POST(request: Request) {
   let cgIdToTitle = new Map<string, string>();
 
   let followedFiguresNudgeBlock = "";
+  let userSettings: Awaited<ReturnType<typeof getUserSettings>> = null;
   if (userId && !incognito) {
-    const userSettings = await getUserSettings(userId);
+    userSettings = await getUserSettings(userId);
     if (userSettings?.followedFigureIds?.length) {
       const figures = getFiguresByIds(userSettings.followedFigureIds);
       const names = figures.map((f) => f.name).join(", ");
       followedFiguresNudgeBlock = `\n\nFOLLOWED FAMOUS FIGURES (for contextual nudges):\nThe user follows these figures: ${names}. When the conversation reaches a reflective moment, a decision point, or a crossroads, you MAY invite them to consider: "What would [figure name] have to say about this?" Choose at most one figure per response when genuinely relevant. Weave their perspective naturally—don't force it.\n`;
+    }
+  }
+
+  // Multi-mentor branch: get responses from 2–5 followed figures
+  if (
+    multiMentorMode &&
+    userId &&
+    !incognito &&
+    userSettings?.followedFigureIds?.length
+  ) {
+    const followedSet = new Set(userSettings.followedFigureIds);
+    const validFigureIds = multiMentorFigureIds.filter((id) => followedSet.has(id));
+    if (validFigureIds.length >= 2 && validFigureIds.length <= 5) {
+      const figures = getFiguresByIds(validFigureIds);
+      const langInstr =
+        language !== "en"
+          ? ` Respond in ${getLanguageName(language as LanguageCode)}.`
+          : "";
+
+      if (sessionId) {
+        await appendMessage(sessionId, "user", rawMessage ?? message, journalCheckpoint ? { journalCheckpoint } : undefined);
+      }
+
+      const mentorResponses: MentorResponse[] = [];
+
+      for (const figure of figures) {
+        const personaPrompt = `You are **${figure.name}** (${figure.description}). Respond to the user's question or situation in your voice, worldview, and perspective. Be concise (2–4 short paragraphs). Offer insight, a question, or a reframe—as this figure would. Do not use markdown formatting for citations or options.${langInstr}`;
+
+        const messagesForMentor: { role: "user" | "assistant"; content: string }[] = [
+          { role: "user", content: message },
+        ];
+
+        const text = await generateContent(personaPrompt, messagesForMentor, {
+          onUsage: (inputTokens, outputTokens) => {
+            const costUsd = computeGeminiCost(inputTokens, outputTokens);
+            recordUsageEvent({
+              userId,
+              service: "gemini",
+              eventType: "chat",
+              costUsd,
+              metadata: { inputTokens, outputTokens },
+            }).catch((e) => console.error("Gemini usage recording failed:", e));
+          },
+        });
+
+        mentorResponses.push({
+          figureId: figure.id,
+          figureName: figure.name,
+          content: text.trim(),
+        });
+      }
+
+      const mentorBlock = buildMentorResponsesBlock(mentorResponses);
+      const fullResponse = mentorBlock;
+
+      if (sessionId && userId) {
+        await appendMessage(sessionId, "assistant", fullResponse);
+        const allMessages = [
+          ...messagesForModel,
+          { role: "assistant", content: fullResponse },
+        ];
+        const mentalModelTags = extractMentalModelIdsFromMessages(allMessages);
+        generateTitle(allMessages, { userId, eventType: "generate_title" })
+          .then((title) =>
+            updateSession(sessionId, userId, { title, mentalModelTags })
+          )
+          .catch((e) => console.error("Title update failed:", e));
+      }
+
+      const { start: ctxStart, end: ctxEnd } = getRelevantContextBlockDelimiters();
+      const emptyContext = {
+        predictedContext: {
+          mentalModels: [],
+          longTermMemories: [],
+          customConcepts: [],
+          conceptGroups: [],
+          perspectiveCards: [],
+        },
+      };
+      const contextBlock = `${ctxStart}\n${JSON.stringify(emptyContext)}\n${ctxEnd}`;
+
+      const encoder = new TextEncoder();
+      const stream = new ReadableStream({
+        start(controller) {
+          controller.enqueue(encoder.encode(contextBlock));
+          controller.enqueue(encoder.encode(fullResponse));
+          controller.close();
+        },
+      });
+
+      return new Response(stream, {
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+          "Transfer-Encoding": "chunked",
+          "X-Context-Sent-Mental-Models": "[]",
+          "X-Context-Sent-LTMs": "[]",
+          "X-Context-Sent-Concept-Groups": "[]",
+          "X-Context-Sent-Custom-Concepts": "[]",
+        },
+      });
     }
   }
 

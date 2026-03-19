@@ -103,6 +103,45 @@ export async function* streamGenerateContent(
   }
 }
 
+/**
+ * Non-streaming generate: returns full response text.
+ * Used for multi-mentor mode where we need one complete response per figure.
+ */
+export async function generateContent(
+  systemPrompt: string,
+  messages: { role: "user" | "assistant"; content: string }[],
+  options?: StreamGenerateContentOptions
+): Promise<string> {
+  const model = getModel(systemPrompt);
+
+  const history = messages.slice(0, -1).map((m) => ({
+    role: m.role === "user" ? ("user" as const) : ("model" as const),
+    parts: [{ text: m.content }],
+  }));
+
+  const chat = model.startChat({ history });
+
+  const lastMessage = messages[messages.length - 1];
+  if (!lastMessage || lastMessage.role !== "user") {
+    throw new Error("Last message must be from user");
+  }
+
+  const result = await chat.sendMessage(lastMessage.content);
+  const response = result.response;
+  const text = response.text?.() ?? "";
+
+  const um = (response as { usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number; prompt_token_count?: number; candidates_token_count?: number } }).usageMetadata;
+  if (options?.onUsage && um) {
+    const inputTokens = um.promptTokenCount ?? um.prompt_token_count ?? 0;
+    const outputTokens = um.candidatesTokenCount ?? um.candidates_token_count ?? 0;
+    if (inputTokens > 0) {
+      options.onUsage(inputTokens, outputTokens);
+    }
+  }
+
+  return text;
+}
+
 export interface GeminiUsageContext {
   userId: string | null;
   eventType: string;
