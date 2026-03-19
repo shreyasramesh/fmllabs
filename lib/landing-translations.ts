@@ -22,7 +22,7 @@ export interface LandingTranslations {
 const EN: LandingTranslations = {
   whatShouldIDo: "What should I do?",
   ideas: "Ideas",
-  letsDigIn: "Let's dig in—with mental models that actually work",
+  letsDigIn: "Let's get into it: mental models that actually stick, designed for life outside the textbook.",
   readyToConversation: "Ready to have a conversation whenever you say something",
   drawPerspectiveCard: "Draw a perspective card",
   shiftHowYouLook: "Shift how you look at something—art, decisions, or any topic",

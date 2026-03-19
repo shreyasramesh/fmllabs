@@ -5,9 +5,6 @@ import { createPortal } from "react-dom";
 import { getOneLiner, getTryThis } from "@/lib/mental-models-utils";
 import { GenerateRelevantMessageButton } from "@/components/SharedIcons";
 import { playSelectionChime } from "@/lib/selection-chime";
-import { TTSButton } from "@/components/TTSButton";
-import { useTtsHighlight } from "@/components/TtsHighlightContext";
-import { TtsHighlightedText } from "@/components/TtsHighlightedText";
 
 export interface MentalModel {
   id: string;
@@ -79,19 +76,16 @@ function AccordionItem({
   content,
   defaultExpanded = false,
   dir,
-  textId,
 }: {
   label: string;
   content: string;
   defaultExpanded?: boolean;
   dir?: "rtl" | "ltr";
-  textId?: string;
 }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
-  const tts = useTtsHighlight();
 
   return (
-    <div className="border-b border-neutral-200 dark:border-neutral-700 last:border-b-0">
+    <div>
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
@@ -100,15 +94,6 @@ function AccordionItem({
         <span className="font-medium text-foreground pr-4 flex-1 min-w-0">
           {formatLabel(label)}
         </span>
-        <div onClick={(e) => e.stopPropagation()} className="shrink-0">
-          <TTSButton
-            text={content}
-            showOnHover={false}
-            ariaLabel={`Listen to ${label}`}
-            onTtsProgress={textId && tts ? (charEnd) => tts.setTtsHighlight({ textId, charEnd }) : undefined}
-            onTtsEnd={textId && tts ? () => tts.setTtsHighlight(null) : undefined}
-          />
-        </div>
         <span
           className={`shrink-0 text-lg transition-transform duration-200 ${
             expanded ? "rotate-45" : ""
@@ -119,11 +104,7 @@ function AccordionItem({
       </button>
       {expanded && (
         <p className="pb-3 pl-5 pr-3 text-neutral-800 dark:text-neutral-200 text-sm leading-relaxed break-words" dir={dir}>
-          {textId && tts?.ttsHighlight && "textId" in tts.ttsHighlight && tts.ttsHighlight.textId === textId ? (
-            <TtsHighlightedText text={content} charEnd={tts.ttsHighlight.charEnd} />
-          ) : (
-            content
-          )}
+          {content}
         </p>
       )}
     </div>
@@ -162,12 +143,10 @@ export function MentalModelModal({
   const handleClose = useCallback(() => {
     onClose();
   }, [onClose]);
-  const tts = useTtsHighlight();
 
   const [feedbackGiven, setFeedbackGiven] = useState<"helpful" | "not-helpful" | "removed" | null>(null);
   const [reflection, setReflection] = useState("");
   const [reflectionSaved, setReflectionSaved] = useState(false);
-  const [step, setStep] = useState(0);
   const [savedCelebration, setSavedCelebration] = useState(false);
   const [generateModal, setGenerateModal] = useState<{
     suggestion: string;
@@ -180,7 +159,6 @@ export function MentalModelModal({
     setFeedbackGiven(null);
     setReflection("");
     setReflectionSaved(false);
-    setStep(0);
     setSavedCelebration(false);
     setGenerateModal(null);
     setDeleteConfirmOpen(false);
@@ -236,21 +214,6 @@ export function MentalModelModal({
     : [];
 
   const tryThisItems = getTryThis(model);
-  const steps = [
-    ...(model.id.startsWith("custom_") ? [] : (["image"] as const)),
-    "idea",
-    "concept",
-    ...(tryThisItems.length > 0 ? (["try"] as const) : []),
-    "when",
-    ...(askYourselfItems.length > 0 ? (["ask"] as const) : []),
-    ...(canSaveToConcepts ? (["own"] as const) : []),
-    "dive",
-  ];
-  const totalSteps = steps.length;
-  const currentStepKey = steps[Math.min(step, totalSteps - 1)];
-
-  const goNext = () => setStep((s) => Math.min(s + 1, totalSteps - 1));
-  const goBack = () => setStep((s) => Math.max(s - 1, 0));
 
   const handleSaveToLibrary = async () => {
     try {
@@ -308,26 +271,6 @@ export function MentalModelModal({
             >
                 {model.name}
               </h2>
-              <div className="mt-2 flex items-center gap-1.5">
-                {Array.from({ length: totalSteps }).map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => {
-                      playSelectionChime();
-                      setStep(i);
-                    }}
-                    className={`h-1.5 rounded-full transition-all duration-200 ${
-                      i === step
-                        ? "w-6 bg-neutral-600 dark:bg-neutral-400"
-                        : i < step
-                          ? "w-1.5 bg-neutral-400/60 dark:bg-neutral-500/60"
-                          : "w-1.5 bg-neutral-300 dark:bg-neutral-600"
-                    }`}
-                    aria-label={`Step ${i + 1} of ${totalSteps}`}
-                  />
-                ))}
-              </div>
             </div>
             <div className="flex items-center gap-1">
               {model.id.startsWith("custom_") && onDeleteCustom && (
@@ -353,9 +296,10 @@ export function MentalModelModal({
             </div>
         </div>
 
-        <div className="relative flex-1 min-h-[min(400px,55vh)] overflow-y-auto p-4">
-          {currentStepKey === "image" && (
-            <div className="animate-fade-in-up flex flex-col items-center justify-center min-h-[min(350px,50vh)]">
+        <div className="relative flex-1 min-h-0 overflow-y-auto p-4">
+          <div className="space-y-8 pb-4 divide-y divide-neutral-200 dark:divide-neutral-700 [&>*]:pt-8 [&>*:first-child]:pt-0">
+          {!model.id.startsWith("custom_") && (
+            <div className="flex flex-col items-center pb-8">
               <div className="rounded-2xl overflow-hidden border border-neutral-200 dark:border-neutral-700 w-full max-w-md aspect-[4/3] bg-neutral-100 dark:bg-neutral-800">
                 <img
                   src={`/images/${model.id.replace(/_/g, "-")}.png`}
@@ -363,122 +307,42 @@ export function MentalModelModal({
                   className="w-full h-full object-cover"
                 />
               </div>
-              <button
-                onClick={goNext}
-                className="mt-6 px-5 py-2.5 rounded-2xl bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-medium text-sm transition-all duration-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 active:scale-[0.98]"
-              >
-                Next →
-              </button>
             </div>
           )}
 
-          {currentStepKey === "idea" && (
-            <div className="animate-fade-in-up space-y-6">
-              <div className="group/tts rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
-                    The big idea
-                  </p>
-                  <TTSButton
-                    text={getOneLiner(model)}
-                    showOnHover={false}
-                    ariaLabel="Listen"
-                    onTtsProgress={tts ? (charEnd) => tts.setTtsHighlight({ textId: `mm-${model.id}-one-liner`, charEnd }) : undefined}
-                    onTtsEnd={tts ? () => tts.setTtsHighlight(null) : undefined}
-                  />
-                </div>
+          <div className="divide-y divide-neutral-200 dark:divide-neutral-700 [&>*]:py-6 [&>*:first-child]:pt-0">
+            <div className="rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
+                <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
+                  The big idea
+                </p>
                 <blockquote className="border-l-4 border-neutral-400 dark:border-neutral-500 pl-5 py-3 text-lg font-medium text-foreground italic leading-relaxed mt-2" dir={isRtl ? "rtl" : undefined}>
-                  &ldquo;{tts?.ttsHighlight && "textId" in tts.ttsHighlight && tts.ttsHighlight.textId === `mm-${model.id}-one-liner` ? (
-                    <TtsHighlightedText text={getOneLiner(model)} charEnd={tts.ttsHighlight.charEnd} />
-                  ) : (
-                    getOneLiner(model)
-                  )}&rdquo;
+                  &ldquo;{getOneLiner(model)}&rdquo;
                 </blockquote>
               </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={goBack}
-                  className="px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors"
-                  aria-label="Back"
-                >
-                  ← Back
-                </button>
-                <button
-                  onClick={goNext}
-                  className="px-5 py-2.5 rounded-2xl bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-medium text-sm transition-all duration-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 active:scale-[0.98]"
-                >
-                  Next →
-                </button>
-              </div>
-            </div>
-          )}
 
-          {currentStepKey === "concept" && (
-            <div className="animate-fade-in-up space-y-6">
-              <div className="group/tts rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
-                    Meet the concept
-                  </p>
-                  <TTSButton
-                    text={model.quick_introduction}
-                    showOnHover={false}
-                    ariaLabel="Listen"
-                    onTtsProgress={tts ? (charEnd) => tts.setTtsHighlight({ textId: `mm-${model.id}-quick-intro`, charEnd }) : undefined}
-                    onTtsEnd={tts ? () => tts.setTtsHighlight(null) : undefined}
-                  />
-                </div>
+            <div className="space-y-6">
+              <div className="rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
+                <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
+                  Meet the concept
+                </p>
                 <p className="text-neutral-700 dark:text-neutral-300 text-base leading-relaxed mt-2" dir={isRtl ? "rtl" : undefined}>
-                  {tts?.ttsHighlight && "textId" in tts.ttsHighlight && tts.ttsHighlight.textId === `mm-${model.id}-quick-intro` ? (
-                    <TtsHighlightedText text={model.quick_introduction} charEnd={tts.ttsHighlight.charEnd} />
-                  ) : (
-                    model.quick_introduction
-                  )}
+                  {model.quick_introduction}
                 </p>
               </div>
               {relevanceContext && (
-                <div className="group/tts rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 p-4">
-                  <div className="flex items-center justify-between gap-2 mb-1">
-                    <p className="text-xs font-medium text-neutral-800 dark:text-neutral-200">
-                      Why this matters for your decision
-                    </p>
-                    <TTSButton
-                      text={relevanceContext}
-                      showOnHover={false}
-                      ariaLabel="Listen"
-                      onTtsProgress={tts ? (charEnd) => tts.setTtsHighlight({ textId: `mm-${model.id}-relevance`, charEnd }) : undefined}
-                      onTtsEnd={tts ? () => tts.setTtsHighlight(null) : undefined}
-                    />
-                  </div>
+                <div className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 p-4">
+                  <p className="text-xs font-medium text-neutral-800 dark:text-neutral-200 mb-1">
+                    Why this matters for your decision
+                  </p>
                   <p className="text-sm text-neutral-700 dark:text-neutral-300 italic">
-                    &ldquo;{tts?.ttsHighlight && "textId" in tts.ttsHighlight && tts.ttsHighlight.textId === `mm-${model.id}-relevance` ? (
-                      <TtsHighlightedText text={relevanceContext} charEnd={tts.ttsHighlight.charEnd} />
-                    ) : (
-                      relevanceContext
-                    )}&rdquo;
+                    &ldquo;{relevanceContext}&rdquo;
                   </p>
                 </div>
               )}
-              <div className="flex gap-2">
-                <button
-                  onClick={goBack}
-                  className="px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors"
-                  aria-label="Back"
-                >
-                  ← Back
-                </button>
-                <button
-                  onClick={goNext}
-                  className="px-5 py-2 rounded-2xl bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-medium text-sm transition-all duration-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 active:scale-[0.98]"
-                >
-                  Next →
-                </button>
-              </div>
             </div>
-          )}
 
-          {currentStepKey === "try" && (
-            <div className="animate-fade-in-up space-y-6">
+          {tryThisItems.length > 0 && (
+            <div className="space-y-6">
               <div className="rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
                 <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
                   Try it
@@ -498,21 +362,9 @@ export function MentalModelModal({
                         {i + 1}
                       </span>
                       <span className="flex-1 text-sm text-neutral-700 dark:text-neutral-300 pt-0.5 min-w-0" dir={isRtl ? "rtl" : undefined}>
-                        {tts?.ttsHighlight && "textId" in tts.ttsHighlight && tts.ttsHighlight.textId === `mm-${model.id}-try-${i}` ? (
-                          <TtsHighlightedText text={prompt} charEnd={tts.ttsHighlight.charEnd} />
-                        ) : (
-                          prompt
-                        )}
+                        {prompt}
                       </span>
                       <div className="flex items-center gap-1 shrink-0">
-                        <TTSButton
-                          text={prompt}
-                          showOnHover={false}
-                          ariaLabel="Listen"
-                          className="shrink-0"
-                          onTtsProgress={tts ? (charEnd) => tts.setTtsHighlight({ textId: `mm-${model.id}-try-${i}`, charEnd }) : undefined}
-                          onTtsEnd={tts ? () => tts.setTtsHighlight(null) : undefined}
-                        />
                         {onSendMessage && (
                           <GenerateRelevantMessageButton
                             label="Generate Relevant Message"
@@ -562,47 +414,17 @@ export function MentalModelModal({
                   </li>
                 ))}
               </ul>
-              <div className="flex gap-2">
-                <button
-                  onClick={goBack}
-                  className="px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors"
-                  aria-label="Back"
-                >
-                  ← Back
-                </button>
-                <button
-                  onClick={goNext}
-                  className="px-5 py-2 rounded-2xl bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-medium text-sm transition-all duration-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 active:scale-[0.98]"
-                >
-                  Next →
-                </button>
-              </div>
             </div>
           )}
 
-          {currentStepKey === "when" && (
-            <div className="animate-fade-in-up space-y-6">
-              <div className="group/tts rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
-                    When to use it
-                  </p>
-                  <TTSButton
-                    text={model.when_to_use.map((t) => formatLabel(t)).join(". ")}
-                    showOnHover={false}
-                    ariaLabel="Listen"
-                    onTtsProgress={tts ? (charEnd) => tts.setTtsHighlight({ textId: `mm-${model.id}-when-to-use`, charEnd }) : undefined}
-                    onTtsEnd={tts ? () => tts.setTtsHighlight(null) : undefined}
-                  />
-                </div>
+          <div className="space-y-6">
+              <div className="rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
+                <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
+                  When to use it
+                </p>
                 <p className="text-neutral-600 dark:text-neutral-400 text-sm mt-2">
                   This lens is especially useful when:
                 </p>
-                {tts?.ttsHighlight && "textId" in tts.ttsHighlight && tts.ttsHighlight.textId === `mm-${model.id}-when-to-use` ? (
-                  <p className="text-neutral-800 dark:text-neutral-200 text-sm mt-3" dir={isRtl ? "rtl" : undefined}>
-                    <TtsHighlightedText text={model.when_to_use.map((t) => formatLabel(t)).join(". ")} charEnd={tts.ttsHighlight.charEnd} />
-                  </p>
-                ) : (
                 <div className="flex flex-wrap gap-2 mt-3">
                 {model.when_to_use.map((tag) => (
                   <span
@@ -614,27 +436,11 @@ export function MentalModelModal({
                   </span>
                 ))}
                 </div>
-                )}
-                <div className="flex gap-2 mt-4">
-                  <button
-                    onClick={goBack}
-                    className="px-4 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                  >
-                    ← Back
-                  </button>
-                  <button
-                    onClick={goNext}
-                    className="px-5 py-2 rounded-2xl bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-medium text-sm transition-all duration-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 active:scale-[0.98]"
-                  >
-                    Next →
-                  </button>
-                </div>
               </div>
             </div>
-          )}
 
-          {currentStepKey === "ask" && (
-            <div className="animate-fade-in-up space-y-6">
+          {askYourselfItems.length > 0 && (
+            <div className="space-y-6">
               <div className="rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
                 <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
                   Ask yourself
@@ -652,21 +458,9 @@ export function MentalModelModal({
                     <div className="flex items-start gap-3 min-w-0 sm:flex-1">
                       <span className="text-neutral-500 mt-0.5 shrink-0">?</span>
                       <span className="flex-1 text-sm text-neutral-700 dark:text-neutral-300 pt-0.5 min-w-0" dir={isRtl ? "rtl" : undefined}>
-                        {tts?.ttsHighlight && "textId" in tts.ttsHighlight && tts.ttsHighlight.textId === `mm-${model.id}-ask-${i}` ? (
-                          <TtsHighlightedText text={q} charEnd={tts.ttsHighlight.charEnd} />
-                        ) : (
-                          q
-                        )}
+                        {q}
                       </span>
                       <div className="flex items-center gap-1 shrink-0">
-                        <TTSButton
-                          text={q}
-                          showOnHover={false}
-                          ariaLabel="Listen"
-                          className="shrink-0"
-                          onTtsProgress={tts ? (charEnd) => tts.setTtsHighlight({ textId: `mm-${model.id}-ask-${i}`, charEnd }) : undefined}
-                          onTtsEnd={tts ? () => tts.setTtsHighlight(null) : undefined}
-                        />
                         {onSendMessage && (
                           <GenerateRelevantMessageButton
                             label="Generate Relevant Message"
@@ -716,26 +510,11 @@ export function MentalModelModal({
                   </li>
                 ))}
               </ul>
-              <div className="flex gap-2">
-                <button
-                  onClick={goBack}
-                  className="px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors"
-                  aria-label="Back"
-                >
-                  ← Back
-                </button>
-                <button
-                  onClick={goNext}
-                  className="px-5 py-2 rounded-2xl bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-medium text-sm transition-all duration-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 active:scale-[0.98]"
-                >
-                  Next →
-                </button>
-              </div>
             </div>
           )}
 
-          {currentStepKey === "own" && (
-            <div className="animate-fade-in-up space-y-6">
+          {canSaveToConcepts && (
+            <div className="space-y-6">
               <div className="rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
                 <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
                   Own it
@@ -835,67 +614,43 @@ export function MentalModelModal({
                   Remove from Concept Gems
                 </button>
               ) : (
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-row items-center gap-2">
                   <button
                     onClick={handleSaveToLibrary}
-                    className="w-full px-5 py-3 rounded-2xl bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-medium text-sm transition-all duration-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 active:scale-[0.98]"
+                    className="flex-1 px-5 py-3 rounded-2xl bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-medium text-sm transition-all duration-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 active:scale-[0.98]"
                   >
-                    Add to Concept Gems ✨
+                    Add to Favorites
                   </button>
                   <button
                     onClick={handleNotHelpful}
-                    className="text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors"
+                    className="shrink-0 text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors border-0 outline-none focus:outline-none focus:ring-0"
                   >
                     Skip for now
                   </button>
                 </div>
               )}
 
-                <div className="flex justify-end gap-2 pt-6 mt-4 border-t border-neutral-200 dark:border-neutral-700">
-                  <button
-                    onClick={goBack}
-                    className="px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors"
-                    aria-label="Back"
-                  >
-                    ← Back
-                  </button>
-                  <button
-                    onClick={goNext}
-                    className="px-5 py-2 rounded-2xl bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-medium text-sm transition-all duration-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 active:scale-[0.98]"
-                  >
-                    Dive deeper →
-                  </button>
-                  <button
-                    onClick={handleClose}
-                    className="px-5 py-2 rounded-2xl border border-neutral-300 dark:border-neutral-600 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                  >
-                    Done
-                  </button>
-                </div>
               </div>
             </div>
           )}
 
-          {currentStepKey === "dive" && (
-            <div className="animate-fade-in-up space-y-6">
+          <div className="space-y-6">
               <div className="rounded-2xl bg-white dark:bg-neutral-900 p-5 border border-neutral-200 dark:border-neutral-700">
                 <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-4">
                   Dive deeper
                 </p>
-                <div className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 overflow-hidden min-w-0">
+                <div className="rounded-2xl bg-white dark:bg-neutral-900 overflow-hidden min-w-0">
                   <AccordionItem
                     label="In more detail"
                     content={model.in_more_detail}
                     defaultExpanded={false}
                     dir={isRtl ? "rtl" : undefined}
-                    textId={model.id ? `mm-${model.id}-in-more-detail` : undefined}
                   />
                   <AccordionItem
                     label="Why is it important?"
                     content={model.why_this_is_important}
                     defaultExpanded={false}
                     dir={isRtl ? "rtl" : undefined}
-                    textId={model.id ? `mm-${model.id}-why-important` : undefined}
                   />
                   <AccordionItem
                     label="How can you spot it?"
@@ -904,7 +659,6 @@ export function MentalModelModal({
                       .join("\n\n")}
                     defaultExpanded={false}
                     dir={isRtl ? "rtl" : undefined}
-                    textId={model.id ? `mm-${model.id}-how-spot` : undefined}
                   />
                   <AccordionItem
                     label="Examples"
@@ -913,14 +667,12 @@ export function MentalModelModal({
                       .join("\n\n")}
                     defaultExpanded={false}
                     dir={isRtl ? "rtl" : undefined}
-                    textId={model.id ? `mm-${model.id}-examples` : undefined}
                   />
                   <AccordionItem
                     label="Real world implications"
                     content={implications}
                     defaultExpanded={false}
                     dir={isRtl ? "rtl" : undefined}
-                    textId={model.id ? `mm-${model.id}-implications` : undefined}
                   />
                   <AccordionItem
                     label="Professional application"
@@ -929,7 +681,6 @@ export function MentalModelModal({
                       .join("\n\n")}
                     defaultExpanded={false}
                     dir={isRtl ? "rtl" : undefined}
-                    textId={model.id ? `mm-${model.id}-professional` : undefined}
                   />
                   <AccordionItem
                     label="How this can be misapplied"
@@ -938,7 +689,6 @@ export function MentalModelModal({
                       .join("\n\n")}
                     defaultExpanded={false}
                     dir={isRtl ? "rtl" : undefined}
-                    textId={model.id ? `mm-${model.id}-misapplied` : undefined}
                   />
                 </div>
                 {model.related_content?.length > 0 && (
@@ -969,24 +719,10 @@ export function MentalModelModal({
                     </div>
                   </div>
                 )}
-                <div className="flex justify-end gap-2 pt-6 mt-4 border-t border-neutral-200 dark:border-neutral-700">
-                  <button
-                    onClick={goBack}
-                    className="px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors"
-                    aria-label="Back"
-                  >
-                    ← Back
-                  </button>
-                  <button
-                    onClick={handleClose}
-                    className="px-5 py-2 rounded-2xl bg-foreground text-background font-medium text-sm transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
-                  >
-                    Done
-                  </button>
-                </div>
               </div>
             </div>
-          )}
+          </div>
+          </div>
         </div>
       </div>
 

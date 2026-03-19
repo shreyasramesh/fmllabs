@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { UserTypeProvider } from "@/components/UserTypeProvider";
 import { TtsSpeedProvider } from "@/components/TtsSpeedProvider";
 import { BackgroundProvider } from "@/components/BackgroundProvider";
-import { AnalyticsTracker } from "@/components/AnalyticsTracker";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -65,7 +65,12 @@ export default function RootLayout({
           />
         </head>
         <body className="antialiased min-h-screen bg-background">
-          <AnalyticsTracker />
+          <Script
+            src="https://datafa.st/js/script.js"
+            data-website-id="dfid_iRebNC9FUtKBFZ9BdJHom"
+            data-domain="fmllabs.ai"
+            strategy="afterInteractive"
+          />
           <ThemeProvider>
             <LanguageProvider>
               <UserTypeProvider>

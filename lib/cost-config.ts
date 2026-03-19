@@ -1,10 +1,16 @@
 /**
- * Cost configuration for paid services (gemini-2.5-flash-lite).
+ * Cost configuration for paid services (gemini-3.1-flash-lite).
  * Used by usage tracking and admin analytics.
  */
 
-export const GEMINI_INPUT_PRICE_PER_1M = 0.1;
-export const GEMINI_OUTPUT_PRICE_PER_1M = 0.4;
+export const GEMINI_INPUT_PRICE_PER_1M = 0.25;
+export const GEMINI_OUTPUT_PRICE_PER_1M = 1.5;
+
+/** Context caching (for future use if enabled):
+ * - $0.025 / 1M tokens (cache read)
+ * - $1.00 / 1M tokens per hour (storage)
+ * - 5,000 prompts/month free, then $14 / 1,000 search queries
+ */
 
 export const TRANSCRIBR_PRICE_PER_FETCH = 0.03;
 

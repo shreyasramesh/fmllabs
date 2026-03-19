@@ -1595,6 +1595,8 @@ function MovingPills({
   onSelectPrompt: (card: { name: string; prompt: string }) => void;
   language: LanguageCode;
 }) {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [hoveredRow, setHoveredRow] = useState<number | null>(null);
   const [carouselCards, setCarouselCards] = useState<
     { name: string; prompt: string; domain: string; subdomain: string }[] | null
   >(null);
@@ -1643,38 +1645,64 @@ function MovingPills({
     }));
     return [...starters, ...prompts];
   });
-  const allPills = mixedRows.flat();
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mq.matches);
+    const handler = () => setPrefersReducedMotion(mq.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
   return (
-    <div className="max-h-[min(50vh,320px)] overflow-y-auto overflow-x-hidden space-y-2 pr-1 -mr-1">
-      {allPills.map((pill, i) => (
-        <button
-          key={i}
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            playSelectionChime();
-            if (pill.type === "prompt") {
-              onSelectPrompt({ name: pill.cardName, prompt: pill.cardPrompt });
-            } else {
-              onSelectStarter(pill.label);
-            }
-          }}
-          className={`flex items-center gap-2 w-full px-4 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200 active:scale-[0.98] text-left ${
-            pill.type === "prompt"
-              ? "bg-[#eef7ff] dark:bg-[#1f2937] text-[#0f3d66] dark:text-[#bfdbfe] border-[#bcdcff] dark:border-[#334155] hover:bg-[#ddefff] dark:hover:bg-[#263244]"
-              : "bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-900 dark:text-neutral-100 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-300 dark:hover:bg-neutral-600"
-          }`}
-          aria-label={`${pill.type === "prompt" ? "Prompt lens" : "Conversation starter"}: ${pill.label}`}
-          title={pill.type === "prompt" ? "Prompt lens" : "Conversation starter"}
+    <div className="space-y-4 overflow-hidden">
+      {mixedRows.map((row, rowIndex) => (
+        <div
+          key={rowIndex}
+          className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
+          onMouseEnter={() => setHoveredRow(rowIndex)}
+          onMouseLeave={() => setHoveredRow(null)}
         >
-          {pill.type === "prompt" ? (
-            <RippleIcon className="w-3.5 h-3.5 shrink-0" />
-          ) : (
-            <ChatBubbleIcon className="w-3.5 h-3.5 shrink-0" />
-          )}
-          <span className="truncate">{pill.label}</span>
-        </button>
+          <div
+            className={`flex gap-3 shrink-0 ${
+              prefersReducedMotion
+                ? ""
+                : rowIndex % 2 === 0
+                  ? "animate-marquee-left"
+                  : "animate-marquee-right"
+            } ${hoveredRow === rowIndex ? "marquee-paused" : ""}`}
+            style={{ width: "max-content" }}
+          >
+            {[...row, ...row].map((pill, i) => (
+              <button
+                key={`${rowIndex}-${i}`}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  playSelectionChime();
+                  if (pill.type === "prompt") {
+                    onSelectPrompt({ name: pill.cardName, prompt: pill.cardPrompt });
+                  } else {
+                    onSelectStarter(pill.label);
+                  }
+                }}
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 active:scale-95 whitespace-nowrap ${
+                  pill.type === "prompt"
+                    ? "bg-[#eef7ff] dark:bg-[#1f2937] text-[#0f3d66] dark:text-[#bfdbfe] border-[#bcdcff] dark:border-[#334155] hover:bg-[#ddefff] dark:hover:bg-[#263244]"
+                    : "bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-900 dark:text-neutral-100 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-300 dark:hover:bg-neutral-600"
+                }`}
+                aria-label={`${pill.type === "prompt" ? "Prompt lens" : "Conversation starter"}: ${pill.label}`}
+                title={pill.type === "prompt" ? "Prompt lens" : "Conversation starter"}
+              >
+                {pill.type === "prompt" ? (
+                  <RippleIcon className="w-3.5 h-3.5 shrink-0" />
+                ) : (
+                  <ChatBubbleIcon className="w-3.5 h-3.5 shrink-0" />
+                )}
+                {pill.label}
+              </button>
+            ))}
+          </div>
+        </div>
       ))}
     </div>
   );
@@ -1912,8 +1940,6 @@ export default function ChatPage() {
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
-  const inputExpandInputRef = useRef<HTMLDivElement>(null);
-  const [inputExpandModalOpen, setInputExpandModalOpen] = useState(false);
   const justCreatedSessionRef = useRef<string | null>(null);
   const anonymousActiveRef = useRef(false);
   const ccAutoTagPopoverRef = useRef<HTMLDivElement>(null);
@@ -2800,13 +2826,6 @@ export default function ChatPage() {
   };
 
   useEffect(() => {
-    if (inputExpandModalOpen) {
-      const t = setTimeout(() => inputExpandInputRef.current?.focus(), 50);
-      return () => clearTimeout(t);
-    }
-  }, [inputExpandModalOpen]);
-
-  useEffect(() => {
     const handleCopy = (e: ClipboardEvent) => {
       const selection = window.getSelection();
       const selectedText = selection?.toString() ?? "";
@@ -2906,7 +2925,6 @@ export default function ChatPage() {
   const [previousRankIndex, setPreviousRankIndex] = useState(-1);
   const [showRankUpAnimation, setShowRankUpAnimation] = useState(false);
   const [isSafari, setIsSafari] = useState(false);
-  const [isMobileViewport, setIsMobileViewport] = useState(false);
   const selectedExportSections = EXPORT_DATA_SECTION_OPTIONS
     .filter(({ key }) => exportSelections[key])
     .map(({ key }) => key);
@@ -2989,15 +3007,6 @@ export default function ChatPage() {
     if (typeof navigator === "undefined") return;
     setIsSafari(/safari/i.test(navigator.userAgent) && !/chrome|crios/i.test(navigator.userAgent));
   }, []);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(max-width: 640px)");
-    const sync = () => setIsMobileViewport(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
@@ -3328,7 +3337,6 @@ export default function ChatPage() {
     setSelectedMentalModel(null);
     setLetterModalOpen(false);
     setSignInFeaturesModalOpen(false);
-    setInputExpandModalOpen(false);
     setFeedbackModalOpen(false);
     setIdeasModalOpen(false);
     setDeleteAllDataModalOpen(false);
@@ -3708,15 +3716,20 @@ export default function ChatPage() {
             )}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 shrink-0 overflow-visible">
+            {/* XP and weather hidden on mobile - available in Settings */}
             {!incognitoMode && !isAnonymous && userScore && (
-              <RankPill
-                score={userScore}
-                optimisticDelta={scoreOptimisticDelta}
-                onClick={() => setRankModalOpen(true)}
-                showRankUpAnimation={showRankUpAnimation}
-              />
+              <div className="hidden md:flex shrink-0">
+                <RankPill
+                  score={userScore}
+                  optimisticDelta={scoreOptimisticDelta}
+                  onClick={() => setRankModalOpen(true)}
+                  showRankUpAnimation={showRankUpAnimation}
+                />
+              </div>
             )}
-            <Clock weatherFormat={weatherFormat} onMoonPhaseChange={setMoonPhase} />
+            <div className="hidden md:flex shrink-0">
+              <Clock weatherFormat={weatherFormat} onMoonPhaseChange={setMoonPhase} />
+            </div>
             {!incognitoMode && !isAnonymous && (
               <div className="relative group/incognito">
                 <Link
@@ -4413,8 +4426,8 @@ export default function ChatPage() {
                 <h1 className="text-xl sm:text-2xl font-semibold text-foreground animate-fade-in-up">
                   {incognitoMode ? "Let's chat incognito" : getLandingTranslations(language).letsDigIn}
                 </h1>
-                <div className="w-full max-w-2xl flex items-stretch gap-1.5 sm:gap-2 min-h-[52px] animate-fade-in-up" data-tour="input-area">
-                  <div className="relative flex-1 min-w-0">
+                <div className="w-full max-w-2xl rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex flex-col overflow-hidden animate-fade-in-up" data-tour="input-area">
+                  <div className="relative flex-1 min-w-0 px-4 pt-5">
                     <MentionInput
                       inputRef={inputRef}
                       value={input}
@@ -4442,15 +4455,15 @@ export default function ChatPage() {
                       placeholder={
                         multiMentorMode && selectedMentorFigureIds.length >= 2
                           ? "What perspective would you like to ask the mentors about?"
-                          : "@ to search"
+                          : "What's on your mind | @ to search"
                       }
                       placeholderMobile={
                         multiMentorMode && selectedMentorFigureIds.length >= 2
                           ? "Ask mentors about…"
-                          : "@ to search"
+                          : "What's on your mind | @ to search"
                       }
                       disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed || !!pendingCardFetch}
-                      className="w-full h-[52px] max-h-[52px] py-3 pl-4 pr-4 sm:pr-10 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
+                      className="w-full h-[52px] max-h-[52px] py-0 pl-0 pr-0 border-0 rounded-none bg-transparent shadow-none resize-none focus:outline-none focus:ring-0 focus:border-0 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
                       onMentalModelClick={handleMentalModelClick}
                       onLtmClick={(id) => {
                         const ltm = longTermMemories.find((l) => l._id === id);
@@ -4471,79 +4484,51 @@ export default function ChatPage() {
                       }}
                       previewMap={previewMap}
                     />
-                    {isMobileViewport && !drawnPerspectiveCard && (
-                        <button
-                          type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          setInputExpandModalOpen(true);
-                        }}
-                        disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed || !!pendingCardFetch}
-                        className="absolute inset-0 z-10 sm:hidden rounded-2xl"
-                        aria-label="Open composer"
-                      />
-                    )}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setInputExpandModalOpen(true);
-                      }}
-                      disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed || !!pendingCardFetch}
-                      className="hidden absolute top-2 right-2 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 disabled:opacity-50"
-                      aria-label="Expand input"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                        <path d="M15 3h6v6" />
-                        <path d="M9 21H3v-6" />
-                            </svg>
-                    </button>
                           </div>
+                  <div className="flex items-center justify-between gap-2 px-2 pb-2 pt-0 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      playSelectionChime();
+                      setIdeasModalOpen(true);
+                    }}
+                    className="group relative overflow-hidden flex items-center gap-2 px-3 py-2 rounded-xl active:scale-[0.98] shrink-0"
+                  >
+                    <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-100 via-amber-50 to-yellow-50 dark:from-rose-900/40 dark:via-amber-900/30 dark:to-yellow-900/30 transition-opacity duration-300" aria-hidden />
+                    <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-200 via-amber-100 to-yellow-100 dark:from-rose-800/50 dark:via-amber-800/40 dark:to-yellow-800/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden />
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 w-5 h-5 text-foreground">
+                      <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+                      <path d="M9 18h6" />
+                      <path d="M10 22h4" />
+                    </svg>
+                    <span className="relative z-10">{getLandingTranslations(language).ideas}</span>
+                  </button>
+                  <div className="flex items-center gap-1 ml-auto">
                   <VoiceInputButton
                     onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
                     language={language}
                     disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed || !!pendingCardFetch}
                     ariaLabel="Voice input"
-                    className="!min-h-[48px] !min-w-[48px] sm:!min-h-[52px] sm:!min-w-[52px]"
+                    className="!min-h-[40px] !min-w-[40px] sm:!min-h-[44px] sm:!min-w-[44px]"
                   />
                   <button
                     onClick={() => sendMessage()}
                     disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed || !!pendingCardFetch}
                     aria-label="Send message"
-                    className="flex items-center justify-center gap-2 px-4 min-h-[48px] sm:min-h-[52px] rounded-2xl bg-accent text-white text-sm font-semibold transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
+                    className="flex items-center justify-center gap-1.5 p-2 min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px] rounded-xl bg-accent text-white transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
                   >
                     {isLoading ? (
                       <LoadingDots aria-label="Sending" />
                     ) : (
-                      <>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                          <path d="m22 2-7 20-4-9-9-4Z" />
-                          <path d="M22 2 11 13" />
-                        </svg>
-                        Send
-                      </>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                        <path d="m22 2-7 20-4-9-9-4Z" />
+                        <path d="M22 2 11 13" />
+                      </svg>
                     )}
-                        </button>
+                  </button>
+                  </div>
+                  </div>
                 </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            playSelectionChime();
-                    setIdeasModalOpen(true);
-                          }}
-                  className="group relative overflow-hidden flex items-center gap-2 px-5 py-3 rounded-2xl active:scale-[0.98] animate-fade-in-up"
-                        >
-                          <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-100 via-amber-50 to-yellow-50 dark:from-rose-900/40 dark:via-amber-900/30 dark:to-yellow-900/30 transition-opacity duration-300" aria-hidden />
-                          <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-200 via-amber-100 to-yellow-100 dark:from-rose-800/50 dark:via-amber-800/40 dark:to-yellow-800/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden />
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 w-5 h-5 text-foreground">
-                    <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
-                    <path d="M9 18h6" />
-                    <path d="M10 22h4" />
-                            </svg>
-                  <span className="relative z-10">{getLandingTranslations(language).ideas}</span>
-                        </button>
                       </div>
                 {isAnonymous && <LeaderboardEmbed />}
               </div>
@@ -4790,8 +4775,8 @@ export default function ChatPage() {
           )}
           {messages.length > 0 && (
           <div className="flex flex-col items-center justify-center px-4 pt-2 pb-2 sm:pt-3 sm:pb-3 min-w-0 gap-1.5 sm:gap-2">
-            <div className="min-w-0 max-w-2xl w-full flex items-stretch gap-1.5 sm:gap-2 min-h-[52px]" data-tour="input-area">
-              <div className="relative flex-1 min-w-0">
+            <div className="min-w-0 max-w-2xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex flex-col overflow-hidden min-h-[52px]" data-tour="input-area">
+              <div className="relative flex-1 min-w-0 px-4 pt-5">
                 <MentionInput
                   inputRef={inputRef}
                   value={input}
@@ -4819,15 +4804,15 @@ export default function ChatPage() {
                   placeholder={
                     multiMentorMode && selectedMentorFigureIds.length >= 2
                       ? "What perspective would you like to ask the mentors about?"
-                      : "@ to search"
+                      : "What's on your mind | @ to search"
                   }
                   placeholderMobile={
                     multiMentorMode && selectedMentorFigureIds.length >= 2
                       ? "Ask mentors about…"
-                      : "@ to search"
+                      : "What's on your mind | @ to search"
                   }
                   disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
-                  className="w-full h-[52px] max-h-[52px] py-3 pl-4 pr-4 sm:pr-10 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
+                  className="w-full h-[52px] max-h-[52px] py-0 pl-0 pr-0 border-0 rounded-none bg-transparent shadow-none resize-none focus:outline-none focus:ring-0 focus:border-0 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
                   onMentalModelClick={handleMentalModelClick}
                   onLtmClick={(id) => {
                     const ltm = longTermMemories.find((l) => l._id === id);
@@ -4848,205 +4833,37 @@ export default function ChatPage() {
                   }}
                   previewMap={previewMap}
                 />
-                {isMobileViewport && !drawnPerspectiveCard && (
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setInputExpandModalOpen(true);
-                    }}
-                    disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
-                    className="absolute inset-0 z-10 sm:hidden rounded-2xl"
-                    aria-label="Open composer"
-                  />
-                )}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setInputExpandModalOpen(true);
-                  }}
-                  disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
-                  className="hidden absolute top-2 right-2 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 disabled:opacity-50"
-                  aria-label="Expand input"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                    <path d="M15 3h6v6" />
-                    <path d="M9 21H3v-6" />
-                  </svg>
-                </button>
               </div>
+              <div className="flex items-center justify-end gap-1 px-2 pb-2 pt-0 shrink-0">
               <VoiceInputButton
                 onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
                 language={language}
                 disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                 ariaLabel="Voice input"
-                className="!min-h-[48px] !min-w-[48px] sm:!min-h-[52px] sm:!min-w-[52px]"
+                className="!min-h-[40px] !min-w-[40px] sm:!min-h-[44px] sm:!min-w-[44px]"
               />
               <button
                 onClick={() => sendMessage()}
                 disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
                 aria-label="Send message"
-                className="flex items-center justify-center gap-2 px-4 min-h-[48px] sm:min-h-[52px] rounded-2xl bg-accent text-white text-sm font-semibold transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
+                className="flex items-center justify-center p-2 min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px] rounded-xl bg-accent text-white transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
               >
                 {isLoading ? (
                   <LoadingDots aria-label="Sending" />
                 ) : (
-                  <>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                      <path d="m22 2-7 20-4-9-9-4Z" />
-                      <path d="M22 2 11 13" />
-                    </svg>
-                    Send
-                  </>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                    <path d="m22 2-7 20-4-9-9-4Z" />
+                    <path d="M22 2 11 13" />
+                  </svg>
                 )}
                 </button>
+              </div>
               </div>
           </div>
           )}
         </div>
       </main>
       </div>
-
-      {/* Expanded typing box modal */}
-      {inputExpandModalOpen && (
-        <>
-          <div
-            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm animate-fade-in"
-            onClick={() => setInputExpandModalOpen(false)}
-            aria-hidden
-          />
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
-            aria-hidden
-          >
-            <div
-              role="dialog"
-              aria-modal
-              aria-label="Compose message"
-              className="pointer-events-auto w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-700/30 animate-fade-in-up"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200/80 dark:border-neutral-700/20 shrink-0">
-                <h2 className="text-lg font-semibold text-foreground">Compose message</h2>
-                <button
-                  type="button"
-                  onClick={() => setInputExpandModalOpen(false)}
-                  className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shrink-0 text-neutral-600 dark:text-neutral-400"
-                  aria-label={getUiTranslations(language).close}
-                >
-                  ✕
-                </button>
-              </div>
-              <div className="flex-1 flex flex-col min-h-0 p-4 gap-3">
-                <MentionInput
-                  inputRef={inputExpandInputRef}
-                  value={input}
-                  onChange={setInput}
-                  placeholderTopAligned
-                  onKeyDown={(e) => {
-                    if (e.key === "Escape") {
-                      setInputExpandModalOpen(false);
-                      return;
-                    }
-                    if (
-                      (e.key === "Enter" && !e.shiftKey) ||
-                      (e.metaKey && e.key === "Enter") ||
-                      (e.ctrlKey && e.key === "Enter")
-                    ) {
-                      e.preventDefault();
-                      sendMessage();
-                      setInputExpandModalOpen(false);
-                    }
-                  }}
-                  mentalModels={Array.from(mentalModelsIndex.entries()).map(([id, name]) => ({
-                    id,
-                    name,
-                  }))}
-                  longTermMemories={longTermMemories.map((ltm) => ({
-                    _id: ltm._id,
-                    title: translatedTitles[ltm._id] ?? ltm.title,
-                    enrichmentPrompt: ltm.enrichmentPrompt,
-                  }))}
-                  customConcepts={customConcepts.map((cc) => ({
-                    _id: cc._id,
-                    title: translatedTitles[cc._id] ?? cc.title,
-                    enrichmentPrompt: cc.enrichmentPrompt,
-                  }))}
-                  conceptGroups={conceptGroups.map((cg) => ({
-                    _id: cg._id,
-                    title: translatedTitles[cg._id] ?? cg.title,
-                  }))}
-                  mentionTranslations={getMentionTranslations(language)}
-                  placeholder={
-                    multiMentorMode && selectedMentorFigureIds.length >= 2
-                      ? "What perspective would you like to ask the mentors about?"
-                      : "@ to search"
-                  }
-                  placeholderMobile={
-                    multiMentorMode && selectedMentorFigureIds.length >= 2
-                      ? "Ask mentors about…"
-                      : "@ to search"
-                  }
-                  disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
-                  className="w-full min-h-[200px] max-h-[50vh] py-4 px-4 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground overflow-y-auto flex-1"
-                  onMentalModelClick={handleMentalModelClick}
-                  onLtmClick={(id) => {
-                    const ltm = longTermMemories.find((l) => l._id === id);
-                    if (ltm) setLtmDetailModal(ltm);
-                  }}
-                  onCustomConceptClick={(id) => {
-                    const cc = customConcepts.find((c) => c._id === id);
-                    if (cc) openConceptDetail(cc);
-                  }}
-                  onConceptGroupClick={(id) => {
-                    const cg = conceptGroups.find((g) => g._id === id);
-                    if (cg) {
-                      fetch(`/api/me/concept-groups/${id}`)
-                        .then((r) => r.ok ? r.json() : Promise.reject())
-                        .then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] }))
-                        .catch(() => setCgDetailModal(cg));
-                    }
-                  }}
-                  previewMap={previewMap}
-                />
-                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                  <VoiceInputButton
-                    onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
-                    language={language}
-                    disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed || !!pendingCardFetch}
-                    ariaLabel="Voice input"
-                    className="!min-h-[44px] !min-w-[44px] sm:!min-h-[48px] sm:!min-w-[48px]"
-                  />
-                  <button
-                    onClick={() => {
-                      sendMessage();
-                      setInputExpandModalOpen(false);
-                    }}
-                    disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed || !!pendingCardFetch}
-                    aria-label="Send message"
-                    className="flex items-center justify-center gap-2 px-4 min-h-[44px] sm:min-h-[48px] rounded-2xl bg-accent text-white text-sm font-semibold transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
-                  >
-                    {isLoading ? (
-                      <LoadingDots aria-label="Sending" />
-                    ) : (
-                      <>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                          <path d="m22 2-7 20-4-9-9-4Z" />
-                          <path d="M22 2 11 13" />
-                        </svg>
-                        Send
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
 
       {/* Library - center modal (Claude-style), closable on all devices. Mental Models (concepts) available to anonymous users. */}
       {libraryPanelOpen && (libraryPanelOpen === "concepts" || !isAnonymous) && (
@@ -5245,7 +5062,27 @@ export default function ChatPage() {
               {libraryPanelOpen === "concepts" && (
                 <div className="space-y-4">
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks and biases, grouped by when to use. Star to add to Favorites.</p>
-                  <div className="flex items-start justify-end gap-2">
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleTeachMeClick}
+                      disabled={teachMeLoading}
+                      className="flex flex-1 items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-foreground border border-neutral-200 dark:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors disabled:opacity-60"
+                      aria-label="Learn a new mental model"
+                    >
+                    {teachMeLoading ? (
+                      <LoadingDots aria-label="Loading" />
+                    ) : (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                          <path d="M12 3v18" />
+                        </svg>
+                        <span>Learn a New Mental Model</span>
+                      </>
+                    )}
+                    </button>
                     {!isAnonymous && (
                       <button
                         type="button"
@@ -5261,26 +5098,6 @@ export default function ChatPage() {
                       </button>
                     )}
                   </div>
-                  <button
-                    type="button"
-                    onClick={handleTeachMeClick}
-                    disabled={teachMeLoading}
-                    className="flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-foreground border border-neutral-200 dark:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors disabled:opacity-60"
-                    aria-label="Learn a new mental model"
-                  >
-                    {teachMeLoading ? (
-                      <LoadingDots aria-label="Loading" />
-                    ) : (
-                      <>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                          <path d="M12 3v18" />
-                        </svg>
-                        <span>Learn a New Mental Model</span>
-                      </>
-                    )}
-                  </button>
                   <input type="search" placeholder="Search mental models..." value={mmSearchQuery} onChange={(e) => setMmSearchQuery(e.target.value)} className="w-full px-3 py-1.5 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground" aria-label="Search mental models" />
                   {(() => {
                     const q = mmSearchQuery.toLowerCase().trim();
@@ -6204,8 +6021,7 @@ export default function ChatPage() {
                   onClick={() => {
                     playSelectionChime();
                     closeModal();
-                    setInputExpandModalOpen(true);
-                    setTimeout(() => inputExpandInputRef.current?.focus(), 50);
+                    setTimeout(() => inputRef.current?.focus(), 50);
                   }}
                   className="px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 whitespace-nowrap"
                 >
@@ -7225,6 +7041,30 @@ export default function ChatPage() {
                     </div>
                   </div>
                 </section>
+
+                {/* XP & weather: shown in settings on mobile (hidden from header there) */}
+                {!isAnonymous && userScore && (
+                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8 md:hidden">
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">XP & Progress</h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">View your XP and progress.</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSettingsOpen(false);
+                      setRankModalOpen(true);
+                    }}
+                    className="flex items-center justify-between gap-2 w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-left"
+                  >
+                    <span className="text-sm font-medium tabular-nums">
+                      {(userScore.totalXp + scoreOptimisticDelta).toLocaleString()} XP
+                      <span className="text-neutral-500 dark:text-neutral-400 font-normal ml-1">
+                        ({(userScore.xpChangeToday ?? 0) + scoreOptimisticDelta > 0 ? `+${(userScore.xpChangeToday ?? 0) + scoreOptimisticDelta}` : "0"} today)
+                      </span>
+                    </span>
+                    <span className="text-xs text-neutral-500 dark:text-neutral-400">View full progress →</span>
+                  </button>
+                </section>
+                )}
 
                 {!isAnonymous && (
                 <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">

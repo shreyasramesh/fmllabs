@@ -928,7 +928,7 @@ export function MentionInput({
           handleInput();
         }}
         data-placeholder={displayPlaceholder}
-        className={`flex-1 min-h-0 overflow-y-auto ${className} ${
+        className={`flex-1 min-h-0 overflow-y-auto outline-none focus:outline-none ${className} ${
           isEmpty ? "empty" : ""
         } text-left`}
         style={{
@@ -937,11 +937,11 @@ export function MentionInput({
           }),
         }}
       />
-      {isEmpty && !isFocused && (
+      {isEmpty && (
         <span
           dir="ltr"
-          className={`pointer-events-none absolute left-4 right-4 text-neutral-500 dark:text-neutral-400 select-none whitespace-nowrap overflow-hidden text-ellipsis text-left ${
-            placeholderTopAligned ? "top-4" : "top-1/2 -translate-y-1/2"
+          className={`pointer-events-none absolute left-0 right-4 text-neutral-500 dark:text-neutral-400 select-none whitespace-nowrap overflow-hidden text-ellipsis text-left ${
+            placeholderTopAligned ? "top-4" : "top-0"
           }`}
           aria-hidden
         >

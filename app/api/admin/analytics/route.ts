@@ -11,10 +11,6 @@ function isAdmin(userId: string): boolean {
   return allowed.includes(userId);
 }
 
-function fallbackUserName(userId: string): string {
-  return `User ${userId.slice(0, 8)}`;
-}
-
 export async function GET(request: Request) {
   const { userId } = await auth();
   if (!userId || !isAdmin(userId)) {
@@ -44,28 +40,20 @@ export async function GET(request: Request) {
       string,
       Record<string, { costUsd: number; count: number; metadata?: Record<string, unknown> }>
     > = {};
-    const dailyTotals: Record<string, { costUsd: number; count: number }> = {};
-    const totalsByAudience: Record<"users" | "anonymous", { costUsd: number; count: number }> = {
-      users: { costUsd: 0, count: 0 },
-      anonymous: { costUsd: 0, count: 0 },
-    };
-
-    const addDaily = (dateKey: string, costUsd: number, count: number) => {
-      if (!dailyTotals[dateKey]) dailyTotals[dateKey] = { costUsd: 0, count: 0 };
-      dailyTotals[dateKey].costUsd += costUsd;
-      dailyTotals[dateKey].count += count;
-    };
-    const addAudience = (userKey: string, costUsd: number, count: number) => {
-      const bucket = userKey === "anonymous" ? "anonymous" : "users";
-      totalsByAudience[bucket].costUsd += costUsd;
-      totalsByAudience[bucket].count += count;
-    };
-
+    const dailyTotals: Record<string, number> = {};
+    const dailyTotalsByUser: Record<string, Record<string, number>> = {};
     const mongoEventsByHour: Record<string, { userId: string | null; count: number }[]> = {};
+
+    const addDaily = (userKey: string, dateKey: string, cost: number) => {
+      if (!dailyTotals[dateKey]) dailyTotals[dateKey] = 0;
+      dailyTotals[dateKey] += cost;
+      if (!dailyTotalsByUser[userKey]) dailyTotalsByUser[userKey] = {};
+      if (!dailyTotalsByUser[userKey][dateKey]) dailyTotalsByUser[userKey][dateKey] = 0;
+      dailyTotalsByUser[userKey][dateKey] += cost;
+    };
 
     for (const e of events) {
       const userKey = e.userId ?? "anonymous";
-      const dateKey = new Date(e.timestamp).toISOString().slice(0, 10);
       if (!byUserService[userKey]) byUserService[userKey] = {};
 
       if (e.service === "mongodb" && e.metadata?.proportional) {
@@ -85,14 +73,13 @@ export async function GET(request: Request) {
       }
       byUserService[userKey][svc].costUsd += e.costUsd;
       byUserService[userKey][svc].count += 1;
-      addDaily(dateKey, e.costUsd, 1);
-      addAudience(userKey, e.costUsd, 1);
+      const dateKey = new Date(e.timestamp).toISOString().slice(0, 10);
+      addDaily(userKey, dateKey, e.costUsd);
     }
 
     for (const [hourKey, userCounts] of Object.entries(mongoEventsByHour)) {
       const total = userCounts.reduce((s, u) => s + u.count, 0);
       if (total === 0) continue;
-      const dateKey = `${hourKey.slice(0, 10)}`;
       const costPerRequest = hourlyMongoRate / total;
       for (const { userId: uid, count } of userCounts) {
         const userKey = uid ?? "anonymous";
@@ -102,8 +89,8 @@ export async function GET(request: Request) {
         }
         byUserService[userKey].mongodb.costUsd += costPerRequest * count;
         byUserService[userKey].mongodb.count += count;
-        addDaily(dateKey, costPerRequest * count, count);
-        addAudience(userKey, costPerRequest * count, count);
+        const dateKey = hourKey.slice(0, 10);
+        addDaily(userKey, dateKey, costPerRequest * count);
       }
     }
 
@@ -143,41 +130,51 @@ export async function GET(request: Request) {
       const byUserId = new Map(
         progressDocs.map((d) => {
           const doc = d as { userId?: string; displayName?: string };
-          return [doc.userId ?? "", (doc.displayName ?? "").trim()];
+          const name = (doc.displayName ?? "").trim();
+          return [doc.userId ?? "", name || `User ${(doc.userId ?? "").slice(0, 8)}`];
         })
       );
       for (const id of userIds) {
-        const name = byUserId.get(id);
-        userNames[id] = name && name.length > 0 ? name : fallbackUserName(id);
+        userNames[id] = byUserId.get(id) ?? `User ${id.slice(0, 8)}`;
       }
     }
 
-    const daily = Object.entries(dailyTotals)
-      .map(([date, d]) => ({
-        date,
-        costUsd: Math.round(d.costUsd * 1e6) / 1e6,
-        count: d.count,
-      }))
-      .sort((a, b) => a.date.localeCompare(b.date));
+    const dailyTrend = Object.entries(dailyTotals)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([date, costUsd]) => ({ date, costUsd: Math.round(costUsd * 1e6) / 1e6 }));
+
+    const perUser: Record<
+      string,
+      { dailyTrend: { date: string; costUsd: number }[]; totalsByService: Record<string, { costUsd: number; count: number }> }
+    > = {};
+    for (const [u, services] of Object.entries(byUserService)) {
+      const svcTotals: Record<string, { costUsd: number; count: number }> = {};
+      for (const [svc, d] of Object.entries(services)) {
+        if (d.costUsd > 0 || d.count > 0) {
+          svcTotals[svc] = {
+            costUsd: Math.round(d.costUsd * 1e6) / 1e6,
+            count: d.count,
+          };
+        }
+      }
+      const daily = (dailyTotalsByUser[u] ?? {});
+      perUser[u] = {
+        dailyTrend: Object.entries(daily)
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([date, costUsd]) => ({ date, costUsd: Math.round(costUsd * 1e6) / 1e6 })),
+        totalsByService: svcTotals,
+      };
+    }
 
     return NextResponse.json({
       from: from.toISOString(),
       to: to.toISOString(),
       rows,
       totalsByService,
-      userNames,
-      totalsByAudience: {
-        users: {
-          costUsd: Math.round(totalsByAudience.users.costUsd * 1e6) / 1e6,
-          count: totalsByAudience.users.count,
-        },
-        anonymous: {
-          costUsd: Math.round(totalsByAudience.anonymous.costUsd * 1e6) / 1e6,
-          count: totalsByAudience.anonymous.count,
-        },
-      },
-      daily,
       totalCost: Math.round(totalCost * 1e6) / 1e6,
+      dailyTrend,
+      userNames,
+      perUser,
     });
   } catch (err) {
     console.error("Admin analytics error:", err);
