@@ -45,13 +45,13 @@ const DEFAULT_MENTION_TRANSLATIONS = {
   mentalModels: "Mental Models",
   longTermMemory: "Memory",
   customConcepts: "Custom Concepts",
-  myGroups: "My Groups",
-  hint: "@c concepts · @m models · @d/@g groups · @l memories",
+  myGroups: "My Frameworks",
+  hint: "@c concepts · @m models · @d/@g frameworks · @l memories",
   noResults: "No results",
   mentalModelSuffix: "Mental Model",
   memorySuffix: "Memory",
   conceptSuffix: "Concept",
-  groupSuffix: "Group",
+  groupSuffix: "Framework",
 };
 
 const CHIP_CLASS =

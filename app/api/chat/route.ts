@@ -24,10 +24,7 @@ import {
 } from "@/lib/chat-utils";
 import { streamGenerateContent, generateContent, generateTitle, predictRelevantContext } from "@/lib/gemini";
 import { getLanguageName, isValidLanguageCode, type LanguageCode } from "@/lib/languages";
-import {
-  buildMentorResponsesBlock,
-  type MentorResponse,
-} from "@/lib/chat-utils";
+import { type MentorResponse } from "@/lib/chat-utils";
 import {
   buildCitedContextFromText,
   diffCitationsAgainstPredicted,
@@ -105,7 +102,7 @@ Format them exactly like this, on a new line at the very end of your response:
 MENTAL MODELS INDEX:
 [Insert Index Here]
 
-USER CONTEXT (Memories, Concepts, Groups):
+USER CONTEXT (Memories, Concepts, Frameworks):
 [Insert Context Here]
 
 [Insert Followed Figures Nudge Here]`;
@@ -398,7 +395,7 @@ export async function POST(request: Request) {
     }
   }
 
-  // Multi-mentor branch: get responses from 2–5 followed figures
+  // Multi-mentor branch: get responses from 2–5 followed figures, then consolidate into one response
   if (
     multiMentorMode &&
     userId &&
@@ -447,8 +444,43 @@ export async function POST(request: Request) {
         });
       }
 
-      const mentorBlock = buildMentorResponsesBlock(mentorResponses);
-      const fullResponse = mentorBlock;
+      // Synthesize mentor perspectives into one consolidated multi-paragraph response with options
+      const mentorInput = mentorResponses
+        .map((mr) => `**${mr.figureName}:**\n${mr.content}`)
+        .join("\n\n");
+      const synthesizerPrompt = `You are synthesizing perspectives from multiple mentors into one coherent response. The user asked for their perspective on something.
+
+Weave together insights from all mentors into a single, flowing response. Use multiple paragraphs. Be empathetic, practical, and coherent—as if one wise voice is distilling the best of all perspectives. Do not list mentors by name in the body; integrate their wisdom naturally. Do not use markdown formatting for citations.
+
+At the end, provide exactly 4 follow-up options in the user's voice (first-person), as potential directions to continue the conversation. Format exactly:
+
+---OPTIONS---
+[First-person option 1]
+[First-person option 2]
+[First-person option 3]
+[First-person option 4]
+${langInstr}`;
+
+      const fullResponse = (
+        await generateContent(
+          synthesizerPrompt,
+          [
+            { role: "user", content: `User asked: ${message}\n\nMentor perspectives:\n\n${mentorInput}` },
+          ],
+          {
+            onUsage: (inputTokens, outputTokens) => {
+              const costUsd = computeGeminiCost(inputTokens, outputTokens);
+              recordUsageEvent({
+                userId,
+                service: "gemini",
+                eventType: "chat",
+                costUsd,
+                metadata: { inputTokens, outputTokens },
+              }).catch((e) => console.error("Gemini usage recording failed:", e));
+            },
+          }
+        )
+      ).trim();
 
       if (sessionId && userId) {
         await appendMessage(sessionId, "assistant", fullResponse);

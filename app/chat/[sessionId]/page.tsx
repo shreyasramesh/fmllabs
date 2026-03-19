@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useAuth, useUser, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import {
@@ -107,6 +107,8 @@ interface Session {
   convertedToDeepConversation?: boolean;
   perspectiveCardPrompt?: string;
   perspectiveCardName?: string;
+  perspectiveCardFigureId?: string;
+  perspectiveCardFigureName?: string;
   updatedAt: string;
 }
 
@@ -175,7 +177,7 @@ const EXPORT_DATA_SECTION_OPTIONS: Array<{
   { key: "messages", label: "Messages", description: "Full chat history for your sessions." },
   { key: "long_term_memory", label: "Memory", description: "Saved memory summaries and prompts." },
   { key: "custom_concepts", label: "Custom concepts", description: "Your created concepts and enrichments." },
-  { key: "concept_groups", label: "Concept groups", description: "Groups and linked concept IDs." },
+  { key: "concept_groups", label: "Concept frameworks", description: "Frameworks and linked concept IDs." },
   { key: "transcripts", label: "Saved transcripts", description: "Video transcript captures." },
   {
     key: "saved_mental_models",
@@ -241,6 +243,7 @@ function MessageBubble({
   onManualJournalCheckpoint,
   manualJournalLoading = false,
   isFindingGuide = false,
+  askMentorsSlot,
 }: {
   message: Message;
   messageIndex: number;
@@ -273,6 +276,8 @@ function MessageBubble({
   onManualJournalCheckpoint?: () => void;
   manualJournalLoading?: boolean;
   isFindingGuide?: boolean;
+  /** Renders next to Journal button on last assistant message */
+  askMentorsSlot?: React.ReactNode;
 }) {
   const { text, options } =
     message.role === "assistant"
@@ -713,6 +718,7 @@ function MessageBubble({
                     Journal
                   </button>
                 )}
+                {askMentorsSlot && isLastAssistant && askMentorsSlot}
                 {showConvertToDeep && onConvertToDeep && (
                   <button
                     type="button"
@@ -1878,7 +1884,7 @@ export default function ChatPage() {
     { label: "Custom concepts", description: "Define your own frameworks, values, or principles. The AI uses them to personalize responses.", icon: "concepts" },
     { label: "Mental models library", description: "Explore proven mental models and cognitive biases to improve thinking and decisions.", icon: "mental-models" },
     { label: "Memory", description: "The AI remembers key context from past conversations to give more relevant advice.", icon: "memory" },
-    { label: "Groups", description: "Group related concepts (e.g. career, health). The AI draws from them when relevant.", icon: "groups" },
+    { label: "Frameworks", description: "Framework related concepts (e.g. career, health). The AI draws from them when relevant.", icon: "groups" },
     { label: "Voice (speech to text + text to speech)", description: "Use your voice to ask questions and listen to AI responses with natural playback.", icon: "voice" },
     { label: "Summarize and collapse", description: "Collapse long chats into compact summaries and keep key insights easy to revisit.", icon: "summary" },
     { label: "Incognito mode", description: "Chat privately without saving to history. Conversations stay off the record.", icon: "ghost" },
@@ -3182,6 +3188,21 @@ export default function ChatPage() {
       .catch(() => {});
   }, []);
 
+  // Fetch followedFigureIds when user is logged in so "Ask mentors" button can show
+  useEffect(() => {
+    if (!userId || incognitoMode || isAnonymous) return;
+    fetch("/api/me/settings")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((settingsRes) => {
+        if (settingsRes?.followedFigureIds && Array.isArray(settingsRes.followedFigureIds)) {
+          setFollowedFigureIds(settingsRes.followedFigureIds);
+        } else {
+          setFollowedFigureIds([]);
+        }
+      })
+      .catch(() => setFollowedFigureIds([]));
+  }, [userId, incognitoMode, isAnonymous]);
+
   useEffect(() => {
     if (libraryPanelOpen !== "figures") return;
     setFiguresLoading(true);
@@ -3287,6 +3308,33 @@ export default function ChatPage() {
   const digitalGhostSubToName = Object.fromEntries(
     (subdomainsByDomain["digital_ghost"] ?? []).map((s) => [s.id, s.name])
   );
+
+  // Mentors selectable in multi-mentor mode depend on conversation type:
+  // - Regular conversation: all followed figures
+  // - Perspective card with figure: only followed figures in the same category
+  const selectableMentorFigureIds = useMemo(() => {
+    const conversationFigureId =
+      activeConversationFigure?.id ?? currentSession?.perspectiveCardFigureId;
+    if (!conversationFigureId || !figuresData?.figures) return followedFigureIds;
+    const cardFigure = figuresData.figures.find((f) => f.id === conversationFigureId);
+    const category = cardFigure?.category;
+    if (!category) return followedFigureIds;
+    const categorySet = new Set(
+      figuresData.figures.filter((f) => f.category === category).map((f) => f.id)
+    );
+    return followedFigureIds.filter((id) => categorySet.has(id));
+  }, [
+    followedFigureIds,
+    activeConversationFigure?.id,
+    currentSession?.perspectiveCardFigureId,
+    figuresData?.figures,
+  ]);
+
+  useEffect(() => {
+    setSelectedMentorFigureIds((prev) =>
+      prev.filter((id) => selectableMentorFigureIds.includes(id))
+    );
+  }, [selectableMentorFigureIds]);
 
   const closeAllModalsExceptLeftPanel = useCallback(() => {
     setWaysOfLookingAtModalOpen(false);
@@ -4412,8 +4460,16 @@ export default function ChatPage() {
                         title: translatedTitles[cg._id] ?? cg.title,
                       }))}
                       mentionTranslations={getMentionTranslations(language)}
-                      placeholder="@ to search"
-                      placeholderMobile="@ to search"
+                      placeholder={
+                        multiMentorMode && selectedMentorFigureIds.length >= 2
+                          ? "What perspective would you like to ask the mentors about?"
+                          : "@ to search"
+                      }
+                      placeholderMobile={
+                        multiMentorMode && selectedMentorFigureIds.length >= 2
+                          ? "Ask mentors about…"
+                          : "@ to search"
+                      }
                       disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed || !!pendingCardFetch}
                       className="w-full h-[52px] max-h-[52px] py-3 pl-4 pr-4 sm:pr-10 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
                       onMentalModelClick={handleMentalModelClick}
@@ -4492,72 +4548,6 @@ export default function ChatPage() {
                     )}
                         </button>
                 </div>
-                {!isAnonymous && !incognitoMode && followedFigureIds.length >= 2 && (
-                  <div className="flex flex-col items-center gap-2 w-full max-w-2xl animate-fade-in-up">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        playSelectionChime();
-                        setMultiMentorMode((prev) => !prev);
-                        if (!multiMentorMode) setSelectedMentorFigureIds([]);
-                      }}
-                      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                        multiMentorMode
-                          ? "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200"
-                          : "text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                      }`}
-                      aria-pressed={multiMentorMode}
-                      aria-label="Ask multiple mentors"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                      </svg>
-                      Ask multiple mentors
-                    </button>
-                    {multiMentorMode && (
-                      <div className="flex flex-wrap justify-center gap-1.5">
-                        {followedFigureIds
-                          .map((id) => figuresData?.figures?.find((f) => f.id === id))
-                          .filter(Boolean)
-                          .map((f) => f!)
-                          .map((f) => {
-                            const selected = selectedMentorFigureIds.includes(f.id);
-                            const canSelect = selected || selectedMentorFigureIds.length < 5;
-                            return (
-                              <button
-                                key={f.id}
-                                type="button"
-                                onClick={() => {
-                                  if (!canSelect && !selected) return;
-                                  setSelectedMentorFigureIds((prev) =>
-                                    selected
-                                      ? prev.filter((x) => x !== f.id)
-                                      : prev.length < 5
-                                        ? [...prev, f.id]
-                                        : prev
-                                  );
-                                }}
-                                disabled={!canSelect && !selected}
-                                className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
-                                  selected
-                                    ? "bg-foreground text-background"
-                                    : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                                } ${(!canSelect && !selected) ? "opacity-50 cursor-not-allowed" : ""}`}
-                              >
-                                {f.name}
-                              </button>
-                            );
-                          })}
-                        <span className="text-xs text-neutral-500 dark:text-neutral-400 self-center">
-                          {selectedMentorFigureIds.length}/5 selected
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                )}
                         <button
                           type="button"
                           onClick={() => {
@@ -4698,6 +4688,69 @@ export default function ChatPage() {
                   i === messages.length - 1 &&
                   m.content === "Finding your guide…"
                 }
+                askMentorsSlot={
+                  !isAnonymous && !incognitoMode && followedFigureIds.length >= 2 ? (
+                    <div className="inline-flex flex-wrap items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          playSelectionChime();
+                          setMultiMentorMode((prev) => !prev);
+                          if (!multiMentorMode) setSelectedMentorFigureIds([]);
+                        }}
+                        className={`inline-flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl text-[11px] font-medium transition-colors shrink-0 ${
+                          multiMentorMode
+                            ? "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800/60"
+                            : "text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                        }`}
+                        aria-pressed={multiMentorMode}
+                        aria-label="Ask multiple mentors"
+                        title="Get perspectives from 2–5 mentors"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
+                          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                          <circle cx="9" cy="7" r="4" />
+                          <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        Ask mentors
+                      </button>
+                      {multiMentorMode && (
+                        <>
+                          {selectableMentorFigureIds
+                            .map((id) => figuresData?.figures?.find((f) => f.id === id))
+                            .filter(Boolean)
+                            .map((f) => f!)
+                            .slice(0, 6)
+                            .map((f) => {
+                              const selected = selectedMentorFigureIds.includes(f.id);
+                              const canSelect = selected || selectedMentorFigureIds.length < 5;
+                              return (
+                                <button
+                                  key={f.id}
+                                  type="button"
+                                  onClick={() => {
+                                    if (!canSelect && !selected) return;
+                                    playSelectionChime();
+                                    setSelectedMentorFigureIds((prev) =>
+                                      selected ? prev.filter((x) => x !== f.id) : prev.length < 5 ? [...prev, f.id] : prev
+                                    );
+                                  }}
+                                  disabled={!canSelect && !selected}
+                                  className={`px-2 py-0.5 rounded-full text-[10px] font-medium transition-colors shrink-0 ${
+                                    selected ? "bg-foreground text-background" : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400"
+                                  } ${(!canSelect && !selected) ? "opacity-50 cursor-not-allowed" : ""}`}
+                                >
+                                  {f.name}
+                                </button>
+                              );
+                            })}
+                          <span className="text-[10px] text-neutral-500 dark:text-neutral-400">{selectedMentorFigureIds.length}/5</span>
+                        </>
+                      )}
+                    </div>
+                  ) : undefined
+                }
               />
             ))}
             <div ref={messagesEndRef} />
@@ -4758,65 +4811,6 @@ export default function ChatPage() {
           )}
           {messages.length > 0 && (
           <div className="flex flex-col items-center justify-center px-4 pt-2 pb-2 sm:pt-3 sm:pb-3 min-w-0 gap-1.5 sm:gap-2">
-            {!isAnonymous && !incognitoMode && followedFigureIds.length >= 2 && (
-              <div className="flex flex-wrap items-center justify-center gap-1.5 w-full max-w-2xl">
-                <button
-                  type="button"
-                  onClick={() => {
-                    playSelectionChime();
-                    setMultiMentorMode((prev) => !prev);
-                    if (!multiMentorMode) setSelectedMentorFigureIds([]);
-                  }}
-                  className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium transition-colors ${
-                    multiMentorMode
-                      ? "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200"
-                      : "text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                  }`}
-                  aria-pressed={multiMentorMode}
-                  aria-label="Ask multiple mentors"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                  Ask mentors
-                </button>
-                {multiMentorMode && (
-                  <>
-                    {followedFigureIds
-                      .map((id) => figuresData?.figures?.find((f) => f.id === id))
-                      .filter(Boolean)
-                      .map((f) => f!)
-                      .slice(0, 8)
-                      .map((f) => {
-                        const selected = selectedMentorFigureIds.includes(f.id);
-                        const canSelect = selected || selectedMentorFigureIds.length < 5;
-                        return (
-                          <button
-                            key={f.id}
-                            type="button"
-                            onClick={() => {
-                              if (!canSelect && !selected) return;
-                              setSelectedMentorFigureIds((prev) =>
-                                selected ? prev.filter((x) => x !== f.id) : prev.length < 5 ? [...prev, f.id] : prev
-                              );
-                            }}
-                            disabled={!canSelect && !selected}
-                            className={`px-2 py-0.5 rounded-full text-[11px] font-medium transition-colors ${
-                              selected ? "bg-foreground text-background" : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400"
-                            } ${(!canSelect && !selected) ? "opacity-50 cursor-not-allowed" : ""}`}
-                          >
-                            {f.name}
-                          </button>
-                        );
-                      })}
-                    <span className="text-[11px] text-neutral-500 dark:text-neutral-400">{selectedMentorFigureIds.length}/5</span>
-                  </>
-                )}
-              </div>
-            )}
             <div className="min-w-0 max-w-2xl w-full flex items-stretch gap-1.5 sm:gap-2 min-h-[52px]" data-tour="input-area">
               <div className="relative flex-1 min-w-0">
                 <MentionInput
@@ -4843,8 +4837,16 @@ export default function ChatPage() {
                     title: translatedTitles[cg._id] ?? cg.title,
                   }))}
                   mentionTranslations={getMentionTranslations(language)}
-                  placeholder="@ to search"
-                  placeholderMobile="@ to search"
+                  placeholder={
+                    multiMentorMode && selectedMentorFigureIds.length >= 2
+                      ? "What perspective would you like to ask the mentors about?"
+                      : "@ to search"
+                  }
+                  placeholderMobile={
+                    multiMentorMode && selectedMentorFigureIds.length >= 2
+                      ? "Ask mentors about…"
+                      : "@ to search"
+                  }
                   disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                   className="w-full h-[52px] max-h-[52px] py-3 pl-4 pr-4 sm:pr-10 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
                   onMentalModelClick={handleMentalModelClick}
@@ -4999,8 +5001,16 @@ export default function ChatPage() {
                     title: translatedTitles[cg._id] ?? cg.title,
                   }))}
                   mentionTranslations={getMentionTranslations(language)}
-                  placeholder="@ to search"
-                  placeholderMobile="@ to search"
+                  placeholder={
+                    multiMentorMode && selectedMentorFigureIds.length >= 2
+                      ? "What perspective would you like to ask the mentors about?"
+                      : "@ to search"
+                  }
+                  placeholderMobile={
+                    multiMentorMode && selectedMentorFigureIds.length >= 2
+                      ? "Ask mentors about…"
+                      : "@ to search"
+                  }
                   disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                   className="w-full min-h-[200px] max-h-[50vh] py-4 px-4 rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-neutral-300 dark:focus:border-neutral-600 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground overflow-y-auto flex-1"
                   onMentalModelClick={handleMentalModelClick}
@@ -5780,9 +5790,9 @@ export default function ChatPage() {
               )}
               {libraryPanelOpen === "cg" && (
                 <div className="space-y-4">
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Groups created via AI. Use when you want the agent to think in terms of a topic (e.g. finance, health) with related concepts.</p>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks created via AI. Use when you want the agent to think in terms of a topic (e.g. finance, health) with related concepts.</p>
                   <div className="flex items-center justify-end gap-1">
-                    <button type="button" onClick={() => { setCgCreateDomain(""); setCgCreateStep(1); setCgCreateQuestions([]); setCgCreateAnswers({}); setCgCreateConcepts([]); setCgCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Group</button>
+                    <button type="button" onClick={() => { setCgCreateDomain(""); setCgCreateStep(1); setCgCreateQuestions([]); setCgCreateAnswers({}); setCgCreateConcepts([]); setCgCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Framework</button>
                     <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Add From YouTube Transcript</button>
                   </div>
                   {conceptGroups.length > 0 ? (
@@ -8203,15 +8213,15 @@ export default function ChatPage() {
                     {ccCreateGroupSuggestions && (ccCreateGroupSuggestions.suggestedGroupIds.length > 0 || ccCreateGroupSuggestions.suggestedNewGroupNames.length > 0) && (
                       <div>
                         <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-2">
-                          Groups
+                          Frameworks
                         </label>
                         <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
-                          Select groups to add this concept to. All suggestions are pre-selected.
+                          Select frameworks to add this concept to. All suggestions are pre-selected.
                         </p>
                         <div className="space-y-2">
                           {ccCreateGroupSuggestions.suggestedGroupIds.length > 0 && (
                             <div>
-                              <p className="text-[10px] font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1.5">Existing groups</p>
+                              <p className="text-[10px] font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1.5">Existing frameworks</p>
                               <div className="flex flex-wrap gap-1.5">
                                 {ccCreateGroupSuggestions.suggestedGroupIds.map((gid) => {
                                   const cg = conceptGroups.find((g) => g._id === gid);
@@ -8737,7 +8747,7 @@ export default function ChatPage() {
                 <div>
                 <div className="flex items-center justify-between gap-2 mb-1.5">
                   <label className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
-                    Groups
+                    Frameworks
                   </label>
                   <div ref={ccAutoTagPopoverRef} className="relative">
                     <button

@@ -158,7 +158,7 @@ export async function POST(request: Request) {
 
     if (sections.includes("concept_groups")) {
       const groups = await db.collection("concept_groups").find({ userId }).sort({ updatedAt: -1 }).toArray();
-      lines.push("## Concept Groups");
+      lines.push("## Concept Frameworks");
       lines.push("");
       lines.push(
         toMarkdownTable(
