@@ -1,27 +1,58 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useLanguage } from "./LanguageProvider";
 import { LANGUAGES, getLanguageName, type LanguageCode } from "@/lib/languages";
 
 export function LanguageSelector() {
   const { language, setLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState<{ top?: number; bottom?: number; right?: number; left?: number } | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
+      const target = e.target as Node;
+      if (ref.current?.contains(target)) return;
+      if ((target as Element).closest?.("[data-language-dropdown]")) return;
+      setOpen(false);
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (open && buttonRef.current && typeof window !== "undefined") {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const dropdownWidth = Math.min(180, window.innerWidth - 32);
+      const wouldOverflowLeft = rect.right - dropdownWidth < 16;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      const openUpward = spaceBelow < 280 && spaceAbove > spaceBelow;
+      setPosition(
+        wouldOverflowLeft
+          ? {
+              top: openUpward ? undefined : rect.bottom + 4,
+              bottom: openUpward ? window.innerHeight - rect.top + 4 : undefined,
+              left: 16,
+            }
+          : {
+              top: openUpward ? undefined : rect.bottom + 4,
+              bottom: openUpward ? window.innerHeight - rect.top + 4 : undefined,
+              right: window.innerWidth - rect.right,
+            }
+      );
+    } else {
+      setPosition(null);
+    }
+  }, [open]);
+
   return (
     <div className="relative" ref={ref}>
       <button
+        ref={buttonRef}
         type="button"
         onClick={() => setOpen((o) => !o)}
         className="p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
@@ -39,18 +70,22 @@ export function LanguageSelector() {
           strokeLinejoin="round"
           className="w-5 h-5"
         >
-          <path d="m5 8 6 6" />
-          <path d="m4 14 6-6 2-3" />
-          <path d="M2 5h12" />
-          <path d="M7 2h1" />
-          <path d="m22 22-5-10-5 10" />
-          <path d="M14 18h6" />
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+          <path d="M2 12h20" />
         </svg>
       </button>
-      {open && (
+      {open && position && typeof document !== "undefined" && createPortal(
         <div
+          data-language-dropdown
           role="listbox"
-          className="absolute right-0 top-full mt-1 py-1 min-w-[160px] rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-lg z-50 max-h-64 overflow-y-auto"
+          className="fixed py-1 min-w-[160px] max-w-[min(180px,calc(100vw-2rem))] rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-lg z-[100] max-h-[min(70vh,320px)] overflow-y-auto"
+          style={{
+            ...(position.top !== undefined ? { top: position.top, bottom: "auto" } : { bottom: position.bottom, top: "auto" }),
+            ...(position.left !== undefined
+              ? { left: position.left, right: "auto" }
+              : { right: position.right ?? "auto", left: "auto" }),
+          }}
         >
           {LANGUAGES.map(({ code, name }) => (
             <button
@@ -71,7 +106,8 @@ export function LanguageSelector() {
               {name}
             </button>
           ))}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

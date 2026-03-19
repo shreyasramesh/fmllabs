@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { stripMarkdown } from "@/lib/strip-markdown";
 import { playSelectionChime, playStopChime } from "@/lib/selection-chime";
-import { useTtsSpeed } from "@/components/TtsSpeedProvider";
+import { useTtsSpeed, TTS_SPEEDS, cycleTtsSpeed } from "@/components/TtsSpeedProvider";
 import { useLanguage } from "@/components/LanguageProvider";
 
 export function TTSButton({
@@ -13,6 +13,7 @@ export function TTSButton({
   showOnHover = true,
   layout = "horizontal",
   ariaLabel = "Listen",
+  showSpeedControl = true,
   onTtsProgress,
   onTtsEnd,
 }: {
@@ -22,6 +23,8 @@ export function TTSButton({
   showOnHover?: boolean;
   layout?: "horizontal" | "vertical";
   ariaLabel?: string;
+  /** When false, hides speed label and reset button (e.g. for user messages). */
+  showSpeedControl?: boolean;
   /** Called with charEnd during playback for word highlighting. When provided, uses timestamp API. */
   onTtsProgress?: (charEnd: number) => void;
   /** Called when playback ends. */
@@ -32,7 +35,7 @@ export function TTSButton({
   const [paused, setPaused] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioUrlRef = useRef<string | null>(null);
-  const { speed } = useTtsSpeed();
+  const { speed, setSpeed } = useTtsSpeed();
   const { language } = useLanguage();
   const onTtsProgressRef = useRef(onTtsProgress);
   const onTtsEndRef = useRef(onTtsEnd);
@@ -66,7 +69,16 @@ export function TTSButton({
     };
   }, [resetAudio]);
 
-  const handleClick = useCallback(async () => {
+  const handleSpeedCycle = useCallback(() => {
+    playSelectionChime();
+    const next = cycleTtsSpeed(speed);
+    setSpeed(next);
+    if (audioRef.current) {
+      audioRef.current.playbackRate = next;
+    }
+  }, [speed, setSpeed]);
+
+  const handlePlayPauseClick = useCallback(async () => {
     if (disabled) return;
     if (audioRef.current && paused) {
       playSelectionChime();
@@ -188,72 +200,86 @@ export function TTSButton({
   const showRestart = !!audioRef.current && !loading;
   const buttonVisibilityClass = showOnHover ? "opacity-0 group-hover/tts:opacity-100" : "";
   const buttonBaseClass =
-    "p-1.5 rounded-lg text-neutral-500 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed";
-  const containerLayoutClass = layout === "vertical"
-    ? "inline-flex flex-col items-center gap-1"
-    : "inline-flex items-center gap-1";
-  const restartButton = showRestart && (
-    <button
-      type="button"
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        handleRestart();
-      }}
-      aria-label="Restart audio"
-      title="Restart audio"
-      className={buttonBaseClass}
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-        <path d="M12 5a7 7 0 1 1-6.32 10H3.75a.75.75 0 0 1-.53-1.28l2.5-2.5a.75.75 0 0 1 1.06 0l2.5 2.5A.75.75 0 0 1 8.75 15H7.23A5.5 5.5 0 1 0 12 6.5c-1.25 0-2.39.4-3.33 1.08a.75.75 0 0 1-.88-1.22A6.96 6.96 0 0 1 12 5z" />
-      </svg>
-    </button>
-  );
-  const mainButton = (
-    <button
-      type="button"
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        handleClick();
-      }}
-      disabled={disabled}
-      aria-label={currentAriaLabel}
-      title={currentAriaLabel}
-      className={buttonBaseClass}
-    >
-      {loading ? (
-        <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-      ) : playing ? (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-          <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7.5 0A.75.75 0 0115 4.5h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" />
-        </svg>
-      ) : paused ? (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-          <path fillRule="evenodd" d="M4.5 3.75C4.5 2.714 5.618 2.066 6.518 2.58l12.75 7.25c.91.518.91 1.83 0 2.348l-12.75 7.25C5.618 19.934 4.5 19.286 4.5 18.25V3.75z" clipRule="evenodd" />
-        </svg>
-      ) : (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-          <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 11-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
-          <path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z" />
-        </svg>
+    "p-1.5 rounded-lg text-current opacity-80 hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed";
+  const displaySpeed = TTS_SPEEDS.includes(speed as (typeof TTS_SPEEDS)[number]) ? speed : 1;
+  const speedLabel = displaySpeed === 1 ? "1X" : displaySpeed === 1.5 ? "1.5X" : "2X";
+  const showSecondaryButtons = playing || paused;
+
+  // Horizontal: [Speaker] and optionally [1X]; Reset below when playing (assistant only)
+  const mainRow = (
+    <div className="inline-flex items-center gap-1">
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handlePlayPauseClick();
+        }}
+        disabled={disabled}
+        aria-label={currentAriaLabel}
+        title={currentAriaLabel}
+        className={buttonBaseClass}
+      >
+        {loading ? (
+          <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+        ) : playing ? (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+            <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7.5 0A.75.75 0 0115 4.5h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" />
+          </svg>
+        ) : paused ? (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+            <path fillRule="evenodd" d="M4.5 3.75C4.5 2.714 5.618 2.066 6.518 2.58l12.75 7.25c.91.518.91 1.83 0 2.348l-12.75 7.25C5.618 19.934 4.5 19.286 4.5 18.25V3.75z" clipRule="evenodd" />
+          </svg>
+        ) : (
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+            <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 11-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
+            <path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z" />
+          </svg>
+        )}
+      </button>
+      {showSpeedControl && (
+        <button
+          type="button"
+          data-tts-speed
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleSpeedCycle();
+          }}
+          aria-label={`Speed ${speedLabel}. Click to cycle.`}
+          title={`Speed ${speedLabel}. Click to cycle 1X, 1.5X, 2X.`}
+          className={`${buttonBaseClass} py-1 px-1.5 min-w-[1.75rem] text-[11px] font-medium tabular-nums leading-none`}
+        >
+          {speedLabel}
+        </button>
       )}
-    </button>
+    </div>
+  );
+
+  const secondaryRow = showSpeedControl && showSecondaryButtons && showRestart && (
+    <div className="flex items-center justify-center mt-1">
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleRestart();
+        }}
+        aria-label="Restart audio"
+        title="Restart audio"
+        className={buttonBaseClass}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
+          <path d="M12 5a7 7 0 1 1-6.32 10H3.75a.75.75 0 0 1-.53-1.28l2.5-2.5a.75.75 0 0 1 1.06 0l2.5 2.5A.75.75 0 0 1 8.75 15H7.23A5.5 5.5 0 1 0 12 6.5c-1.25 0-2.39.4-3.33 1.08a.75.75 0 0 1-.88-1.22A6.96 6.96 0 0 1 12 5z" />
+        </svg>
+      </button>
+    </div>
   );
 
   return (
-    <span className={`${containerLayoutClass} ${buttonVisibilityClass} ${className}`}>
-      {layout === "vertical" ? (
-        <>
-          {mainButton}
-          {restartButton}
-        </>
-      ) : (
-        <>
-          {restartButton}
-          {mainButton}
-        </>
-      )}
+    <span className={`inline-flex flex-col items-end shrink-0 ${buttonVisibilityClass} ${className}`}>
+      {mainRow}
+      {secondaryRow}
     </span>
   );
 }

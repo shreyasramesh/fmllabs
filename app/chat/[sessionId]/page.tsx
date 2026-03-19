@@ -58,6 +58,8 @@ import { FeedbackModal } from "@/components/FeedbackModal";
 import { FeatureTour } from "@/components/FeatureTour";
 import { ChromeIcon } from "@/components/ChromeIcon";
 import { SettingsLanguageSelector } from "@/components/SettingsLanguageSelector";
+import { UserTypeSelector } from "@/components/UserTypeSelector";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import { LeaderboardEmbed } from "@/components/LeaderboardEmbed";
 
 interface Message {
@@ -442,21 +444,21 @@ function MessageBubble({
         </div>
       )}
       <div
-        className={`group/tts relative max-w-[85%] rounded-3xl px-4 py-3 pr-12 transition-shadow duration-200 ${
+        className={`group/tts relative max-w-[85%] rounded-3xl px-4 py-3 transition-shadow duration-200 ${
           message.role === "user"
             ? "bg-foreground text-background shadow-sm"
-            : "bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground"
+            : "bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground pr-14"
         }`}
         dir={isRtl ? "rtl" : undefined}
       >
-        {showTtsButton && !isFindingGuide && (
-        <div className="absolute top-2 right-2">
+        {showTtsButton && !isFindingGuide && message.role === "assistant" && (
+        <div className="absolute top-2 right-2 flex flex-col items-end shrink-0">
           <TTSButton
-              text={message.role === "assistant" ? assistantSpeechText : text}
-              plainText={message.role === "assistant" ? assistantSpeechText : userPlainText}
+              text={assistantSpeechText}
+              plainText={assistantSpeechText}
               showOnHover={false}
               layout="vertical"
-            ariaLabel="Listen to message"
+              ariaLabel="Listen to message"
               onTtsProgress={(charEnd) => onTtsProgress?.(messageIndex, charEnd)}
               onTtsEnd={onTtsEnd}
           />
@@ -1748,7 +1750,7 @@ export default function ChatPage() {
   } | null>(null);
   const [summarizeLoading, setSummarizeLoading] = useState(false);
   const [summarizeSuccess, setSummarizeSuccess] = useState(false);
-  const { speed: ttsSpeed, setSpeed: setTtsSpeed, clonedVoices, refreshSettings } = useTtsSpeed();
+  const { clonedVoices, refreshSettings } = useTtsSpeed();
   const [voiceCloneLoading, setVoiceCloneLoading] = useState(false);
   const [voiceCloneError, setVoiceCloneError] = useState<string | null>(null);
   const [voiceCloneRecording, setVoiceCloneRecording] = useState(false);
@@ -1973,6 +1975,13 @@ export default function ChatPage() {
     check(); // Initial check
     return () => el.removeEventListener("scroll", check);
   }, [messages, currentSession?.isCollapsed]);
+
+  // Auto-scroll to bottom when user sends a message (and during streaming)
+  useEffect(() => {
+    if (isLoading && messages.length > 0) {
+      scrollToBottom();
+    }
+  }, [messages, isLoading, scrollToBottom]);
 
   useEffect(() => {
     if (!ltmDetailModal) return;
@@ -4443,16 +4452,16 @@ export default function ChatPage() {
                       mentionTranslations={getMentionTranslations(language)}
                       placeholder={
                         multiMentorMode && selectedMentorFigureIds.length >= 2
-                          ? "What perspective would you like to ask the mentors about?"
+                          ? "What do you want to ask your mentors?"
                           : "What's on your mind | @ to search"
                       }
                       placeholderMobile={
                         multiMentorMode && selectedMentorFigureIds.length >= 2
-                          ? "Ask mentors about…"
+                          ? "What do you want to ask your mentors?"
                           : "What's on your mind | @ to search"
                       }
                       disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed || !!pendingCardFetch}
-                      className="w-full h-[52px] max-h-[52px] py-0 pl-0 pr-0 border-0 rounded-none bg-transparent shadow-none resize-none focus:outline-none focus:ring-0 focus:border-0 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
+                      className="w-full h-10 max-h-10 py-0 pl-0 pr-0 border-0 rounded-none bg-transparent shadow-none resize-none focus:outline-none focus:ring-0 focus:border-0 text-sm sm:text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
                       onMentalModelClick={handleMentalModelClick}
                       onLtmClick={(id) => {
                         const ltm = longTermMemories.find((l) => l._id === id);
@@ -4493,6 +4502,8 @@ export default function ChatPage() {
                     <span className="relative z-10">{getLandingTranslations(language).ideas}</span>
                   </button>
                   <div className="flex items-center gap-1 ml-auto">
+                  <UserTypeSelector />
+                  <LanguageSelector />
                   <VoiceInputButton
                     onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
                     language={language}
@@ -4643,7 +4654,7 @@ export default function ChatPage() {
                 }
                 askMentorsSlot={
                   !isAnonymous && !incognitoMode && followedFigureIds.length >= 2 ? (
-                    <div className="inline-flex flex-wrap items-center gap-1.5">
+                    <div className="inline-flex flex-col items-start gap-1.5">
                       <button
                         type="button"
                         onClick={() => {
@@ -4669,7 +4680,7 @@ export default function ChatPage() {
                         Ask mentors
                       </button>
                       {multiMentorMode && (
-                        <>
+                        <div className="flex flex-wrap items-center gap-1.5">
                           {selectableMentorFigureIds
                             .map((id) => figuresData?.figures?.find((f) => f.id === id))
                             .filter(Boolean)
@@ -4699,7 +4710,7 @@ export default function ChatPage() {
                               );
                             })}
                           <span className="text-[10px] text-neutral-500 dark:text-neutral-400">{selectedMentorFigureIds.length}/5</span>
-                        </>
+                        </div>
                       )}
                     </div>
                   ) : undefined
@@ -4717,14 +4728,14 @@ export default function ChatPage() {
             type="button"
             onClick={scrollToBottom}
             aria-label="Scroll to bottom"
-            className={`fixed right-2 md:right-8 z-40 flex items-center justify-center w-12 h-12 rounded-full bg-foreground text-background shadow-lg hover:opacity-90 active:scale-95 transition-all duration-200 ${
+            className={`fixed right-2 md:right-8 z-40 flex items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-white text-neutral-600 dark:text-neutral-600 shadow-md hover:shadow-lg hover:bg-neutral-50 active:scale-95 transition-all duration-200 ${
               currentSessionId && currentSession && messages.length >= 2
                 ? "bottom-[8.5rem] md:bottom-[7.5rem]" /* mobile: lifted above save-memory row; desktop: above input */
                 : "bottom-[5.5rem] md:bottom-[5rem]" /* mobile: inside bottom bar; desktop: above input only */
             }`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-              <path d="M12 5v14M19 12l-7 7-7-7" />
+              <path d="M7 12l5 5 5-5M7 5l5 5 5-5" />
             </svg>
           </button>
         )}
@@ -4763,9 +4774,9 @@ export default function ChatPage() {
             </div>
           )}
           {messages.length > 0 && (
-          <div className="flex flex-col items-center justify-center px-4 pt-2 pb-2 sm:pt-3 sm:pb-3 min-w-0 gap-1.5 sm:gap-2">
-            <div className="min-w-0 max-w-2xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex flex-col overflow-hidden min-h-[52px]" data-tour="input-area">
-              <div className="relative flex-1 min-w-0 px-4 pt-5">
+          <div className="flex flex-col items-center justify-center px-4 py-2 sm:py-2.5 min-w-0">
+            <div className="min-w-0 max-w-2xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex items-center overflow-hidden h-12 min-h-12" data-tour="input-area">
+              <div className="flex-1 min-w-0 flex items-center px-3">
                 <MentionInput
                   inputRef={inputRef}
                   value={input}
@@ -4792,16 +4803,17 @@ export default function ChatPage() {
                   mentionTranslations={getMentionTranslations(language)}
                   placeholder={
                     multiMentorMode && selectedMentorFigureIds.length >= 2
-                      ? "What perspective would you like to ask the mentors about?"
+                      ? "What do you want to ask your mentors?"
                       : "What's on your mind | @ to search"
                   }
                   placeholderMobile={
                     multiMentorMode && selectedMentorFigureIds.length >= 2
-                      ? "Ask mentors about…"
+                      ? "What do you want to ask your mentors?"
                       : "What's on your mind | @ to search"
                   }
                   disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
-                  className="w-full h-[52px] max-h-[52px] py-0 pl-0 pr-0 border-0 rounded-none bg-transparent shadow-none resize-none focus:outline-none focus:ring-0 focus:border-0 text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
+                  placeholderCentered
+                  className="w-full h-10 max-h-10 py-0 pl-0 pr-0 border-0 rounded-none bg-transparent shadow-none resize-none focus:outline-none focus:ring-0 focus:border-0 text-sm sm:text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
                   onMentalModelClick={handleMentalModelClick}
                   onLtmClick={(id) => {
                     const ltm = longTermMemories.find((l) => l._id === id);
@@ -4823,19 +4835,19 @@ export default function ChatPage() {
                   previewMap={previewMap}
                 />
               </div>
-              <div className="flex items-center justify-end gap-1 px-2 pb-2 pt-0 shrink-0">
+              <div className="flex items-center gap-1 pr-2 shrink-0">
               <VoiceInputButton
                 onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
                 language={language}
                 disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                 ariaLabel="Voice input"
-                className="!min-h-[40px] !min-w-[40px] sm:!min-h-[44px] sm:!min-w-[44px]"
+                className="!min-h-8 !min-w-8"
               />
               <button
                 onClick={() => sendMessage()}
                 disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
                 aria-label="Send message"
-                className="flex items-center justify-center p-2 min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px] rounded-xl bg-accent text-white transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
+                className="flex items-center justify-center p-2 min-h-8 min-w-8 rounded-xl bg-accent text-white transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
               >
                 {isLoading ? (
                   <LoadingDots aria-label="Sending" />
@@ -4914,16 +4926,6 @@ export default function ChatPage() {
               <div className="flex-1 overflow-y-auto px-4 pt-6 pb-4 min-h-0">
               {libraryPanelOpen === "conversations" && (
                 <div className="space-y-4">
-                  <Link
-                    href="/chat/new"
-                    onClick={() => { closeAllModalsExceptLeftPanel(); if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false); }}
-                    className="flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-foreground border border-neutral-200 dark:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                      <path d="M12 5v14M5 12h14" />
-                    </svg>
-                    {getLandingTranslations(language).newConversation}
-                  </Link>
                   <div className="relative">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none">
                       <circle cx="11" cy="11" r="8" />
@@ -6717,26 +6719,7 @@ export default function ChatPage() {
 
                 <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Audio</h3>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Speed for text-to-speech playback.</p>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Playback speed</label>
-                    <div className="flex flex-wrap gap-2">
-                      {[0.5, 1, 1.5, 2].map((s) => (
-                        <button
-                          key={s}
-                          type="button"
-                          onClick={() => setTtsSpeed(s)}
-                          className={`px-4 py-2 rounded-full text-sm font-medium tabular-nums transition-colors ${
-                            ttsSpeed === s
-                              ? "bg-foreground text-background"
-                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.75px] border-neutral-200/60 dark:border-white/12"
-                          }`}
-                        >
-                          {s}×
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                  {/* TTS speed is controlled on message bubbles (1X, 1.5X, 2X) and persisted across conversations. */}
                   {/* Voice cloning hidden - feature kept for future use. Change false to !isAnonymous to re-enable. */}
                   {false && (
                     <div className="mt-5">

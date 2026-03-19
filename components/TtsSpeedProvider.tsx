@@ -11,14 +11,21 @@ import {
 import { useAuth } from "@clerk/nextjs";
 
 const TTS_SPEED_STORAGE_KEY = "and-then-what-tts-speed";
-const MIN_SPEED = 0.5;
-const MAX_SPEED = 2;
+export const TTS_SPEEDS = [1, 1.5, 2] as const;
 const DEFAULT_SPEED = 1;
-const STEP = 0.5;
 
 function clampSpeed(v: number): number {
-  const clamped = Math.max(MIN_SPEED, Math.min(MAX_SPEED, v));
-  return Math.round(clamped / STEP) * STEP;
+  const rounded = Math.round(v * 2) / 2;
+  if (TTS_SPEEDS.includes(rounded as (typeof TTS_SPEEDS)[number])) return rounded;
+  return TTS_SPEEDS.reduce((prev, curr) =>
+    Math.abs(curr - v) < Math.abs(prev - v) ? curr : prev
+  );
+}
+
+export function cycleTtsSpeed(current: number): number {
+  const idx = TTS_SPEEDS.indexOf(current as (typeof TTS_SPEEDS)[number]);
+  const nextIdx = idx < 0 ? 0 : (idx + 1) % TTS_SPEEDS.length;
+  return TTS_SPEEDS[nextIdx];
 }
 
 const TtsSpeedContext = createContext<{

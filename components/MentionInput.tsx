@@ -423,6 +423,7 @@ export function MentionInput({
   onConceptGroupClick,
   previewMap,
   placeholderTopAligned = false,
+  placeholderCentered = false,
   mentionTranslations,
 }: {
   value: string;
@@ -446,6 +447,8 @@ export function MentionInput({
   previewMap?: Map<string, { oneLiner?: string; quickIntro?: string }>;
   /** Render placeholder at first text row instead of centered */
   placeholderTopAligned?: boolean;
+  /** Vertically center the placeholder in the input area */
+  placeholderCentered?: boolean;
   /** Translated labels for section headers, hint, etc. */
   mentionTranslations?: {
     mentalModels: string;
@@ -941,7 +944,7 @@ export function MentionInput({
         <span
           dir="ltr"
           className={`pointer-events-none absolute left-0 right-4 text-neutral-500 dark:text-neutral-400 select-none whitespace-nowrap overflow-hidden text-ellipsis text-left ${
-            placeholderTopAligned ? "top-4" : "top-0"
+            placeholderCentered ? "top-1/2 -translate-y-1/2" : placeholderTopAligned ? "top-4" : "top-0"
           }`}
           aria-hidden
         >
