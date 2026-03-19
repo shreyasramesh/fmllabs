@@ -18,6 +18,8 @@ export interface UserScore {
   rankIndex: number;
   xpInCurrentTier: number;
   xpToNextTier: number;
+  /** XP gained today (for live display) */
+  xpChangeToday?: number;
 }
 
 export function xpToRank(totalXp: number): {

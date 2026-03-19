@@ -448,11 +448,18 @@ export async function POST(request: Request) {
       const mentorInput = mentorResponses
         .map((mr) => `**${mr.figureName}:**\n${mr.content}`)
         .join("\n\n");
-      const synthesizerPrompt = `You are synthesizing perspectives from multiple mentors into one coherent response. The user asked for their perspective on something.
+      const synthesizerPrompt = `You are synthesizing perspectives from multiple mentors into one combined response. The user asked for their perspective on something.
 
-Weave together insights from all mentors into a single, flowing response. Use multiple paragraphs. Be empathetic, practical, and coherent—as if one wise voice is distilling the best of all perspectives. Do not list mentors by name in the body; integrate their wisdom naturally. Do not use markdown formatting for citations.
+Create ONE response message with distinct sections—one section per mentor. Each section must start with the mentor's name in bold, e.g. **Marcus Aurelius:** followed by their perspective (you may condense or refine their raw response for clarity and flow). Keep each mentor's voice and insights distinct. Use multiple paragraphs within sections as needed. Be empathetic and practical.
 
-At the end, provide exactly 4 follow-up options in the user's voice (first-person), as potential directions to continue the conversation. Format exactly:
+Format the body like this:
+**Mentor Name:**
+[Their perspective—1–3 paragraphs]
+
+**Next Mentor Name:**
+[Their perspective—1–3 paragraphs]
+
+Do not use markdown formatting for citations. At the end, provide exactly 4 follow-up options in the user's voice (first-person), as potential directions to continue the conversation. Format exactly:
 
 ---OPTIONS---
 [First-person option 1]

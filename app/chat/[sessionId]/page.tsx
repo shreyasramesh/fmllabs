@@ -534,7 +534,15 @@ function MessageBubble({
               </div>
             ) : text ? (
               <>
-                {isFindingGuide ? (
+                {/^\d+ mentors are responding…$/.test(text.trim()) && isLastMsg ? (
+                  <div className="flex flex-col gap-2 w-full max-w-[240px]">
+                    <span className="text-sm text-neutral-600 dark:text-neutral-400">{text}</span>
+                    <div
+                      className="gemini-loading-bar h-1.5 rounded-full overflow-hidden"
+                      aria-hidden
+                    />
+                  </div>
+                ) : isFindingGuide ? (
                   <span className="flex items-center gap-2">
                     <span>{text}</span>
                     <LoadingDots className="opacity-70 w-4 h-4" aria-hidden />

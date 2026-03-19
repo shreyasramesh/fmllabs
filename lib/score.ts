@@ -59,6 +59,8 @@ async function computeXpFromCounts(userId: string): Promise<number> {
 }
 
 const MONTH_KEY = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+const DAY_KEY = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
 export interface UserProgressDisplay {
   displayName?: string;
@@ -82,19 +84,28 @@ export async function getUserScore(
   const totalXp = Math.max(computedXp, storedXp);
   const storedMonth = progress?.currentMonth as string | undefined;
   const xpAtStartOfMonth = (progress?.xpAtStartOfMonth as number) ?? 0;
+  const currentDay = DAY_KEY(now);
+  const storedDay = progress?.currentDay as string | undefined;
+  const xpAtStartOfDay = (progress?.xpAtStartOfDay as number) ?? 0;
 
   const monthlyXp = storedMonth === currentMonth ? totalXp - xpAtStartOfMonth : totalXp;
+  const xpChangeToday =
+    storedDay === currentDay ? Math.max(0, totalXp - xpAtStartOfDay) : 0;
 
-  if (computedXp > storedXp || storedMonth !== currentMonth) {
+  if (computedXp > storedXp || storedMonth !== currentMonth || storedDay !== currentDay) {
     const isNewMonth = storedMonth !== currentMonth;
+    const isNewDay = storedDay !== currentDay;
     const newXpAtStart = isNewMonth ? totalXp : xpAtStartOfMonth;
     const newMonthlyXp = totalXp - newXpAtStart;
+    const newXpAtStartOfDay = isNewDay ? totalXp : xpAtStartOfDay;
     const update: Record<string, unknown> = {
       totalXp,
       updatedAt: now,
       currentMonth,
       xpAtStartOfMonth: newXpAtStart,
       monthlyXp: newMonthlyXp,
+      currentDay,
+      xpAtStartOfDay: newXpAtStartOfDay,
     };
     if (displayInfo?.displayName !== undefined) update.displayName = displayInfo.displayName;
     if (displayInfo?.imageUrl !== undefined) update.imageUrl = displayInfo.imageUrl;
@@ -114,6 +125,7 @@ export async function getUserScore(
     rankIndex,
     xpInCurrentTier,
     xpToNextTier,
+    xpChangeToday,
   };
 }
 
