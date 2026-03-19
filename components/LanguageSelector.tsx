@@ -97,12 +97,13 @@ export function LanguageSelector() {
                 setLanguage(code as LanguageCode);
                 setOpen(false);
               }}
-              className={`w-full px-4 py-2 text-left text-sm transition-colors ${
+              className={`w-full flex items-center gap-2 px-4 py-2 text-left text-sm transition-colors ${
                 language === code
-                  ? "bg-neutral-100 dark:bg-neutral-800 text-foreground font-medium"
+                  ? "bg-accent text-white font-semibold border-l-4 border-accent"
                   : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
               }`}
             >
+              {language === code && <span className="text-white shrink-0" aria-hidden>✓</span>}
               {name}
             </button>
           ))}

@@ -87,14 +87,14 @@ export function UserTypeSelector() {
               }}
               className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors ${
                 userType === id
-                  ? "bg-neutral-100 dark:bg-neutral-800 text-foreground font-medium"
+                  ? "bg-accent text-white font-semibold border-l-4 border-accent"
                   : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
               }`}
             >
               <span className="text-lg shrink-0" aria-hidden>{icon}</span>
               <div className="min-w-0">
                 <span className="block text-sm font-medium">{name}</span>
-                <span className="block text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+                <span className={`block text-xs mt-0.5 ${userType === id ? "text-white/90" : "text-neutral-500 dark:text-neutral-400"}`}>
                   {description}
                 </span>
               </div>
