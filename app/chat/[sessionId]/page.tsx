@@ -4205,7 +4205,7 @@ export default function ChatPage() {
           {currentSession?.isCollapsed && collapsedSummary ? (
             <div className="min-h-full flex items-center justify-center p-4">
               <div className="w-full max-w-2xl">
-              <div className="group/tts rounded-3xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm p-6 space-y-4 text-foreground">
+              <div className="rounded-3xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm p-6 space-y-4 text-foreground">
                 <h2 className="font-semibold text-lg">{collapsedSummary.title}</h2>
                 {collapsedSummary.chainOfThought && collapsedSummary.chainOfThought.length > 0 && (
                   <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 p-3">
@@ -4227,20 +4227,9 @@ export default function ChatPage() {
                   </div>
                 )}
                 <div className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap">
-                  {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === `collapsed-summary-${collapsedSummary._id}` ? (
-                    <TtsHighlightedText text={`${collapsedSummary.title}\n\n${collapsedSummary.summary}`.trim()} charEnd={ttsHighlight.charEnd} />
-                  ) : (
-                    collapsedSummary.summary
-                  )}
+                  {collapsedSummary.summary}
                 </div>
                 <div className="flex flex-wrap items-center gap-2 pt-1">
-                  <TTSButton
-                    text={`${collapsedSummary.title}\n\n${collapsedSummary.summary}`}
-                    showOnHover={false}
-                    ariaLabel="Listen to summary"
-                    onTtsProgress={(charEnd) => setTtsHighlight({ textId: `collapsed-summary-${collapsedSummary._id}`, charEnd })}
-                    onTtsEnd={() => setTtsHighlight(null)}
-                  />
                   <CopyButton
                     text={`${collapsedSummary.title}\n\n${collapsedSummary.summary}`}
                     aria-label="Copy summary"
@@ -6321,43 +6310,16 @@ export default function ChatPage() {
                   <label className="text-sm font-medium text-neutral-900 dark:text-neutral-100 min-w-0">
                     Summary
                   </label>
-                  <div className="flex items-center gap-1">
-                    <TTSButton
-                      text={summarizeModal.summary}
-                      showOnHover={false}
-                      ariaLabel="Listen to summary"
-                      onTtsProgress={(charEnd) => setTtsHighlight({ textId: "summarize-modal-summary", charEnd })}
-                      onTtsEnd={() => setTtsHighlight(null)}
-                    />
                   <CopyButton text={summarizeModal.summary} aria-label="Copy summary" />
                 </div>
-                </div>
                 <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-3 text-sm text-neutral-700 dark:text-neutral-200 whitespace-pre-wrap max-h-40 overflow-y-auto" dir={isRtlLanguage(language) ? "rtl" : undefined}>
-                  {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === "summarize-modal-summary" ? (
-                    <TtsHighlightedText text={summarizeModal.summary} charEnd={ttsHighlight.charEnd} />
-                  ) : (
-                    summarizeModal.summary
-                  )}
+                  {summarizeModal.summary}
                 </div>
               </div>
               <div>
-                <div className="flex items-center justify-between gap-2 mb-1">
-                  <label className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                <label className="block text-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1">
                   Enrichment prompt (for AI coach context)
                 </label>
-                  <TTSButton
-                    text={summarizeModal.enrichmentPrompt}
-                    showOnHover={false}
-                    ariaLabel="Listen to enrichment prompt"
-                    onTtsProgress={(charEnd) => setTtsHighlight({ textId: "summarize-modal-enrichment", charEnd })}
-                    onTtsEnd={() => setTtsHighlight(null)}
-                  />
-                </div>
-                {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === "summarize-modal-enrichment" ? (
-                  <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-3 text-sm text-neutral-700 dark:text-neutral-200 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
-                    <TtsHighlightedText text={summarizeModal.enrichmentPrompt} charEnd={ttsHighlight.charEnd} />
-                  </div>
-                ) : (
                 <textarea
                   value={summarizeModal.enrichmentPrompt}
                   onChange={(e) =>
@@ -6370,7 +6332,6 @@ export default function ChatPage() {
                   className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background dark:bg-neutral-900 text-sm text-foreground dark:text-neutral-100 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-foreground/20"
                   placeholder="1 dense sentence, max ~25 words (e.g. User weighing job change; values work-life balance.)"
                 />
-                )}
               </div>
             </div>
             <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
@@ -6482,47 +6443,21 @@ export default function ChatPage() {
                   <label className="text-sm font-medium text-neutral-900 dark:text-neutral-100 min-w-0">
                     Summary
                   </label>
-                  <div className="flex items-center gap-1">
-                    <TTSButton
-                      text={`${ltmDetailModal.title}\n\n${ltmDetailModal.summary}`}
-                      showOnHover={false}
-                      ariaLabel="Listen to summary"
-                      onTtsProgress={(charEnd) => setTtsHighlight({ textId: `ltm-${ltmDetailModal._id}-summary`, charEnd })}
-                      onTtsEnd={() => setTtsHighlight(null)}
-                    />
                   <CopyButton
                     text={`${ltmDetailModal.title}\n\n${ltmDetailModal.summary}`}
                     aria-label="Copy summary"
                   />
                 </div>
-                </div>
                 <div className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
-                  {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === `ltm-${ltmDetailModal._id}-summary` ? (
-                    <TtsHighlightedText text={`${ltmDetailModal.title}\n\n${ltmDetailModal.summary}`.trim()} charEnd={ttsHighlight.charEnd} />
-                  ) : (
-                    ltmDetailModal.summary
-                  )}
+                  {ltmDetailModal.summary}
                 </div>
               </div>
               <div>
-                <div className="flex items-center justify-between gap-2 mb-1">
-                  <label className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                <label className="block text-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1">
                   Enrichment prompt
                 </label>
-                  <TTSButton
-                    text={ltmDetailModal.enrichmentPrompt}
-                    showOnHover={false}
-                    ariaLabel="Listen to enrichment prompt"
-                    onTtsProgress={(charEnd) => setTtsHighlight({ textId: `ltm-${ltmDetailModal._id}-enrichment`, charEnd })}
-                    onTtsEnd={() => setTtsHighlight(null)}
-                  />
-                </div>
                 <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200" dir={isRtlLanguage(language) ? "rtl" : undefined}>
-                  {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === `ltm-${ltmDetailModal._id}-enrichment` ? (
-                    <TtsHighlightedText text={ltmDetailModal.enrichmentPrompt} charEnd={ttsHighlight.charEnd} />
-                  ) : (
-                    ltmDetailModal.enrichmentPrompt
-                  )}
+                  {ltmDetailModal.enrichmentPrompt}
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-2 pt-2">
@@ -8520,47 +8455,21 @@ export default function ChatPage() {
                   <label className="text-sm font-medium text-neutral-900 dark:text-neutral-100 min-w-0">
                     Summary
                   </label>
-                  <div className="flex items-center gap-1">
-                    <TTSButton
-                      text={`${ccDetailModal.title}\n\n${ccDetailModal.summary}`}
-                      showOnHover={false}
-                      ariaLabel="Listen to summary"
-                      onTtsProgress={(charEnd) => setTtsHighlight({ textId: `cc-${ccDetailModal._id}-summary`, charEnd })}
-                      onTtsEnd={() => setTtsHighlight(null)}
-                    />
                   <CopyButton
                     text={`${ccDetailModal.title}\n\n${ccDetailModal.summary}`}
                     aria-label="Copy summary"
                   />
                 </div>
-                </div>
                 <div className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
-                  {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === `cc-${ccDetailModal._id}-summary` ? (
-                    <TtsHighlightedText text={`${ccDetailModal.title}\n\n${ccDetailModal.summary}`.trim()} charEnd={ttsHighlight.charEnd} />
-                  ) : (
-                    ccDetailModal.summary
-                  )}
+                  {ccDetailModal.summary}
                 </div>
               </div>
               <div>
-                <div className="flex items-center justify-between gap-2 mb-1">
-                  <label className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                <label className="block text-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1">
                   Enrichment prompt
                 </label>
-                  <TTSButton
-                    text={ccDetailModal.enrichmentPrompt}
-                    showOnHover={false}
-                    ariaLabel="Listen to enrichment prompt"
-                    onTtsProgress={(charEnd) => setTtsHighlight({ textId: `cc-${ccDetailModal._id}-enrichment`, charEnd })}
-                    onTtsEnd={() => setTtsHighlight(null)}
-                  />
-                </div>
                 <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200" dir={isRtlLanguage(language) ? "rtl" : undefined}>
-                  {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === `cc-${ccDetailModal._id}-enrichment` ? (
-                    <TtsHighlightedText text={ccDetailModal.enrichmentPrompt} charEnd={ttsHighlight.charEnd} />
-                  ) : (
-                    ccDetailModal.enrichmentPrompt
-                  )}
+                  {ccDetailModal.enrichmentPrompt}
                 </p>
               </div>
                 <div>
@@ -10595,24 +10504,9 @@ export default function ChatPage() {
               </button>
             </div>
             <div className="p-4 space-y-4">
-              <div className="group/tts flex items-start gap-3">
-                <p className="flex-1 min-w-0 text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
-                  {ttsHighlight && "textId" in ttsHighlight && ttsHighlight.textId === "perspective-card-prompt" ? (
-                    <TtsHighlightedText text={drawnPerspectiveCard.card.prompt} charEnd={ttsHighlight.charEnd} />
-                  ) : (
-                    drawnPerspectiveCard.card.prompt
-                  )}
-                </p>
-                <TTSButton
-                  text={drawnPerspectiveCard.card.prompt}
-                  showOnHover={false}
-                  layout="vertical"
-                  ariaLabel="Listen to prompt"
-                  className="shrink-0"
-                  onTtsProgress={(charEnd) => setTtsHighlight({ textId: "perspective-card-prompt", charEnd })}
-                  onTtsEnd={() => setTtsHighlight(null)}
-                />
-              </div>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                {drawnPerspectiveCard.card.prompt}
+              </p>
               {drawnPerspectiveCard.card.follow_ups && drawnPerspectiveCard.card.follow_ups.length > 0 && (
                 <div>
                   <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100 mb-2">
