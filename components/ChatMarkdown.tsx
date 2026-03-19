@@ -150,9 +150,19 @@ function preprocessMentalModelLinks(
     );
   }
 
+  // Collapse accidental adjacent duplicates like [[id]] [[id]] that can occur
+  // when output already includes [[id]] and plain-name expansion adds another.
+  let deduped = result;
+  const repeatedTokenRegex = /\[\[([a-z0-9_]+)\]\]\s+\[\[\1\]\]/g;
+  let prev = "";
+  while (deduped !== prev) {
+    prev = deduped;
+    deduped = deduped.replace(repeatedTokenRegex, "[[$1]]");
+  }
+
   // Second: convert [[id]] or [[Display Name]] to markdown links
   // Match [[id]] (lowercase, underscores) or [[any text]] for display names
-  return result.replace(/\[\s*\[\s*([^\]]+?)\s*\]\s*\]/g, (_, content) => {
+  return deduped.replace(/\[\s*\[\s*([^\]]+?)\s*\]\s*\]/g, (_, content) => {
     const trimmed = content.trim();
     // If it's an id (lowercase, underscores), use it
     if (/^[a-z0-9_]+$/.test(trimmed)) {

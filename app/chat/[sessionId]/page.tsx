@@ -278,10 +278,28 @@ function MessageBubble({
     message.role === "assistant"
       ? parseAssistantMessage(message.content)
       : { text: message.content, options: [] };
+  const mentorFallbackOptions =
+    message.role === "assistant" &&
+    options.length === 0 &&
+    message.mentorResponses &&
+    message.mentorResponses.length > 0
+      ? (() => {
+          const perMentor = message.mentorResponses
+            .slice(0, 4)
+            .map((mr) => `I want to go deeper with ${mr.figureName}'s perspective.`);
+          if (perMentor.length >= 4) return perMentor;
+          const extras = [
+            "I want to combine these perspectives into one next step.",
+            "I want a concrete action plan based on this advice.",
+          ];
+          return [...perMentor, ...extras].slice(0, 4);
+        })()
+      : [];
+  const displayOptions = options.length > 0 ? options : mentorFallbackOptions;
   const isLastMsg = message.role === "assistant" && isLastAssistant;
   const showOptions =
     message.role === "assistant" &&
-    options.length > 0 &&
+    displayOptions.length > 0 &&
     isLastMsg;
 
   const ctx = message.role === "assistant" ? message.selectedContexts : undefined;
@@ -290,7 +308,7 @@ function MessageBubble({
     ? resolveTtsReferenceText(text, { idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle, figureIdToName })
     : "";
   const optionPlainTexts = message.role === "assistant"
-    ? options.map((option) =>
+    ? displayOptions.map((option) =>
         resolveTtsReferenceText(option, { idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle, figureIdToName })
       )
     : [];
@@ -711,7 +729,7 @@ function MessageBubble({
         )}
       {showOptions && (
         <div className="mt-2 flex flex-col gap-2 max-w-[85%]">
-          {options.map((opt, j) => (
+          {displayOptions.map((opt, j) => (
             <button
               key={j}
               onClick={() => {

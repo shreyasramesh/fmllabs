@@ -51,13 +51,13 @@ export function RankPill({
     <button
       type="button"
       onClick={onClick}
-      className={`flex items-center gap-2 px-2.5 py-1.5 rounded-full text-xs tabular-nums text-neutral-500 dark:text-neutral-400 font-medium transition-colors duration-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 ${
+      className={`flex items-center px-1.5 py-1.5 rounded-full text-xs tabular-nums text-neutral-500 dark:text-neutral-400 font-medium transition-colors duration-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 ${
         showRankUpAnimation ? "animate-pulse ring-2 ring-amber-400 dark:ring-amber-500" : ""
       }`}
       aria-label={`Rank: ${score.rank}, ${displayXp} XP. Click to view details.`}
       title={`${score.rank} · ${displayXp} XP`}
     >
-      <span className="flex items-center gap-2">
+      <span className="flex items-center">
       {score.rank === "Iron" ? (
         <div className="w-[34px] h-[34px] shrink-0 [&_svg]:w-full [&_svg]:h-full">
           <IronRankBadge className="w-full h-full" />
@@ -89,9 +89,6 @@ export function RankPill({
       ) : (
         <XpCoinIcon className="w-4 h-4 shrink-0" />
       )}
-      <span className="shrink-0">{score.rank}</span>
-      <span>·</span>
-      <span className="tabular-nums">{displayXp}</span>
       </span>
     </button>
   );

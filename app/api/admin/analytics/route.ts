@@ -11,6 +11,10 @@ function isAdmin(userId: string): boolean {
   return allowed.includes(userId);
 }
 
+function fallbackUserName(userId: string): string {
+  return `User ${userId.slice(0, 8)}`;
+}
+
 export async function GET(request: Request) {
   const { userId } = await auth();
   if (!userId || !isAdmin(userId)) {
@@ -40,11 +44,28 @@ export async function GET(request: Request) {
       string,
       Record<string, { costUsd: number; count: number; metadata?: Record<string, unknown> }>
     > = {};
+    const dailyTotals: Record<string, { costUsd: number; count: number }> = {};
+    const totalsByAudience: Record<"users" | "anonymous", { costUsd: number; count: number }> = {
+      users: { costUsd: 0, count: 0 },
+      anonymous: { costUsd: 0, count: 0 },
+    };
+
+    const addDaily = (dateKey: string, costUsd: number, count: number) => {
+      if (!dailyTotals[dateKey]) dailyTotals[dateKey] = { costUsd: 0, count: 0 };
+      dailyTotals[dateKey].costUsd += costUsd;
+      dailyTotals[dateKey].count += count;
+    };
+    const addAudience = (userKey: string, costUsd: number, count: number) => {
+      const bucket = userKey === "anonymous" ? "anonymous" : "users";
+      totalsByAudience[bucket].costUsd += costUsd;
+      totalsByAudience[bucket].count += count;
+    };
 
     const mongoEventsByHour: Record<string, { userId: string | null; count: number }[]> = {};
 
     for (const e of events) {
       const userKey = e.userId ?? "anonymous";
+      const dateKey = new Date(e.timestamp).toISOString().slice(0, 10);
       if (!byUserService[userKey]) byUserService[userKey] = {};
 
       if (e.service === "mongodb" && e.metadata?.proportional) {
@@ -64,11 +85,14 @@ export async function GET(request: Request) {
       }
       byUserService[userKey][svc].costUsd += e.costUsd;
       byUserService[userKey][svc].count += 1;
+      addDaily(dateKey, e.costUsd, 1);
+      addAudience(userKey, e.costUsd, 1);
     }
 
     for (const [hourKey, userCounts] of Object.entries(mongoEventsByHour)) {
       const total = userCounts.reduce((s, u) => s + u.count, 0);
       if (total === 0) continue;
+      const dateKey = `${hourKey.slice(0, 10)}`;
       const costPerRequest = hourlyMongoRate / total;
       for (const { userId: uid, count } of userCounts) {
         const userKey = uid ?? "anonymous";
@@ -78,6 +102,8 @@ export async function GET(request: Request) {
         }
         byUserService[userKey].mongodb.costUsd += costPerRequest * count;
         byUserService[userKey].mongodb.count += count;
+        addDaily(dateKey, costPerRequest * count, count);
+        addAudience(userKey, costPerRequest * count, count);
       }
     }
 
@@ -104,11 +130,53 @@ export async function GET(request: Request) {
 
     const totalCost = rows.reduce((s, r) => s + r.costUsd, 0);
 
+    const userIds = Array.from(
+      new Set(rows.map((r) => r.userId).filter((id) => id !== "anonymous"))
+    );
+    const userNames: Record<string, string> = { anonymous: "Anonymous" };
+    if (userIds.length > 0) {
+      const progressDocs = await db
+        .collection("user_progress")
+        .find({ userId: { $in: userIds } })
+        .project({ userId: 1, displayName: 1 })
+        .toArray();
+      const byUserId = new Map(
+        progressDocs.map((d) => {
+          const doc = d as { userId?: string; displayName?: string };
+          return [doc.userId ?? "", (doc.displayName ?? "").trim()];
+        })
+      );
+      for (const id of userIds) {
+        const name = byUserId.get(id);
+        userNames[id] = name && name.length > 0 ? name : fallbackUserName(id);
+      }
+    }
+
+    const daily = Object.entries(dailyTotals)
+      .map(([date, d]) => ({
+        date,
+        costUsd: Math.round(d.costUsd * 1e6) / 1e6,
+        count: d.count,
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
     return NextResponse.json({
       from: from.toISOString(),
       to: to.toISOString(),
       rows,
       totalsByService,
+      userNames,
+      totalsByAudience: {
+        users: {
+          costUsd: Math.round(totalsByAudience.users.costUsd * 1e6) / 1e6,
+          count: totalsByAudience.users.count,
+        },
+        anonymous: {
+          costUsd: Math.round(totalsByAudience.anonymous.costUsd * 1e6) / 1e6,
+          count: totalsByAudience.anonymous.count,
+        },
+      },
+      daily,
       totalCost: Math.round(totalCost * 1e6) / 1e6,
     });
   } catch (err) {
