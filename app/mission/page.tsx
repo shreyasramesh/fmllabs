@@ -32,6 +32,9 @@ export default function MissionPage() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-700 flex flex-wrap gap-4">
+          <Link href="/faq" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
+            FAQ
+          </Link>
           <Link href="/leaderboard" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
             Leaderboard
           </Link>

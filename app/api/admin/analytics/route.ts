@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getDb } from "@/lib/db";
 import { MONGODB_M10_HOURLY } from "@/lib/cost-config";
 import type { UsageEventDoc } from "@/lib/db";
+import { decryptUsageMetadata } from "@/lib/crypto-fields";
 
 function isAdmin(userId: string): boolean {
   const ids = process.env.ADMIN_USER_IDS?.trim();
@@ -56,7 +57,8 @@ export async function GET(request: Request) {
       const userKey = e.userId ?? "anonymous";
       if (!byUserService[userKey]) byUserService[userKey] = {};
 
-      if (e.service === "mongodb" && e.metadata?.proportional) {
+      const meta = decryptUsageMetadata(e.metadata);
+      if (e.service === "mongodb" && meta.proportional) {
         const hourKey = new Date(e.timestamp).toISOString().slice(0, 13);
         if (!mongoEventsByHour[hourKey]) mongoEventsByHour[hourKey] = [];
         const existing = mongoEventsByHour[hourKey].find(

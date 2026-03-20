@@ -1,4 +1,5 @@
 import { getDb, type UsageEventDoc, type UsageService } from "@/lib/db";
+import { encryptUsageMetadata } from "@/lib/crypto-fields";
 import {
   GEMINI_INPUT_PRICE_PER_1M,
   GEMINI_OUTPUT_PRICE_PER_1M,
@@ -26,7 +27,7 @@ export async function recordUsageEvent(params: {
       service: params.service,
       eventType: params.eventType,
       costUsd: params.costUsd,
-      metadata: params.metadata ?? {},
+      metadata: encryptUsageMetadata(params.metadata ?? {}) as UsageEventDoc["metadata"],
       timestamp: new Date(),
     };
     await db.collection<UsageEventDoc>("usage_events").insertOne(doc);

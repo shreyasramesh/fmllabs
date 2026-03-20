@@ -155,6 +155,9 @@ export async function LeaderboardSection({
           <Link href="/" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
             ← Back to fml labs
           </Link>
+          <Link href="/faq" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
+            FAQ
+          </Link>
           <Link href="/about" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
             About the Creator
           </Link>

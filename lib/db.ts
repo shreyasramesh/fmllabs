@@ -1,4 +1,30 @@
 import { MongoClient, Db, ObjectId } from "mongodb";
+import {
+  decryptConceptGroupFields,
+  decryptCustomConceptFields,
+  decryptHabitFields,
+  decryptLongTermMemoryFields,
+  decryptMessageFields,
+  decryptNuggetFields,
+  decryptSavedConceptFields,
+  decryptSavedPerspectiveCardFields,
+  decryptSessionFields,
+  decryptTranscriptFields,
+  decryptUserMentalModelFields,
+  decryptUserSettingsFields,
+  encryptConceptGroupFields,
+  encryptCustomConceptFields,
+  encryptHabitFields,
+  encryptLongTermMemoryFields,
+  encryptMessageFields,
+  encryptNuggetFields,
+  encryptSavedConceptFields,
+  encryptSavedPerspectiveCardFields,
+  encryptSessionFields,
+  encryptTranscriptFields,
+  encryptUserMentalModelFields,
+  encryptUserSettingsFields,
+} from "./crypto-fields";
 
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/and-then-what";
 
@@ -274,7 +300,8 @@ export interface UsageEventDoc {
   service: UsageService;
   eventType: string;
   costUsd: number;
-  metadata: Record<string, unknown>;
+  /** Encrypted JSON string when `ENCRYPTION_KEY` is set; legacy plaintext object otherwise */
+  metadata: Record<string, unknown> | string;
   timestamp: Date;
 }
 
@@ -285,20 +312,25 @@ export async function getSessions(userId: string): Promise<(Session & { _id: str
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return sessions.map((s) => ({ ...s, _id: s._id?.toString() ?? "" })) as (Session & { _id: string })[];
+  return sessions.map((s) =>
+    decryptSessionFields({ ...s, _id: s._id?.toString() ?? "" } as Session & { _id: string })
+  ) as (Session & { _id: string })[];
 }
 
 export async function createSession(userId: string, title?: string): Promise<Session & { _id: string }> {
   const database = await getDb();
   const now = new Date();
-  const session: Omit<Session, "_id"> = {
+  const session: Omit<Session, "_id"> = encryptSessionFields({
     userId,
     title: title || "New conversation",
     createdAt: now,
     updatedAt: now,
-  };
+  }) as Omit<Session, "_id">;
   const result = await database.collection("sessions").insertOne(session);
-  return { ...session, _id: result.insertedId.toString() } as Session & { _id: string };
+  return decryptSessionFields({
+    ...session,
+    _id: result.insertedId.toString(),
+  }) as Session & { _id: string };
 }
 
 export async function getSession(sessionId: string, userId: string): Promise<(Session & { _id: string }) | null> {
@@ -313,10 +345,10 @@ export async function getSession(sessionId: string, userId: string): Promise<(Se
     .collection<SessionDoc>("sessions")
     .findOne({ _id: id, userId });
   if (!session) return null;
-  return {
+  return decryptSessionFields({
     ...session,
     _id: session._id.toString(),
-  } as Session & { _id: string };
+  } as Session & { _id: string });
 }
 
 export async function getMessages(sessionId: string): Promise<Message[]> {
@@ -326,10 +358,12 @@ export async function getMessages(sessionId: string): Promise<Message[]> {
     .find({ sessionId })
     .sort({ createdAt: 1 })
     .toArray();
-  return messages.map((m) => ({
-    ...m,
-    _id: m._id?.toString(),
-  }));
+  return messages.map((m) =>
+    decryptMessageFields({
+      ...m,
+      _id: m._id?.toString(),
+    })
+  );
 }
 
 export async function truncateMessagesAfter(
@@ -382,13 +416,13 @@ export async function appendMessage(
   } catch {
     throw new Error("Invalid session ID");
   }
-  const doc: Message = {
+  const doc = encryptMessageFields({
     sessionId,
     role,
     content,
     ...(options?.journalCheckpoint ? { journalCheckpoint: options.journalCheckpoint } : {}),
     createdAt: new Date(),
-  };
+  }) as Message;
   await database.collection<Message>("messages").insertOne(doc);
   await database.collection<SessionDoc>("sessions").updateOne(
     { _id: id },
@@ -430,8 +464,9 @@ export async function updateSession(
     clearSecondOrder,
     ...rest
   } = updates;
+  const encryptedRest = encryptSessionFields<Record<string, unknown>>(rest as object);
   const $set: Record<string, unknown> = { updatedAt: new Date() };
-  for (const [k, v] of Object.entries(rest)) {
+  for (const [k, v] of Object.entries(encryptedRest)) {
     if (v !== undefined) {
       $set[k] = v;
     }
@@ -488,12 +523,15 @@ export async function addMentalModelTag(
   } catch {
     return false;
   }
+  const encTag =
+    encryptSessionFields<{ mentalModelTags?: string[] }>({ mentalModelTags: [tag] })
+      .mentalModelTags?.[0] ?? tag;
   const result = await database
     .collection<SessionDoc>("sessions")
     .updateOne(
       { _id: id, userId },
       {
-        $addToSet: { mentalModelTags: tag },
+        $addToSet: { mentalModelTags: encTag },
         $set: { updatedAt: new Date() },
       }
     );
@@ -517,11 +555,14 @@ export async function getSavedConcepts(
     .find({ userId })
     .sort({ savedAt: -1 })
     .toArray();
-  return docs.map((d) => ({
-    modelId: d.modelId,
-    savedAt: d.savedAt,
-    reflection: d.reflection,
-  }));
+  return docs.map((d) => {
+    const dec = decryptSavedConceptFields<SavedConcept>(d);
+    return {
+      modelId: dec.modelId,
+      savedAt: dec.savedAt,
+      reflection: dec.reflection,
+    };
+  });
 }
 
 export async function addSavedConcept(
@@ -530,6 +571,10 @@ export async function addSavedConcept(
   reflection?: string
 ): Promise<boolean> {
   const database = await getDb();
+  const enc =
+    reflection != null
+      ? encryptSavedConceptFields<{ reflection?: string }>({ reflection }).reflection
+      : undefined;
   const result = await database
     .collection<SavedConcept>("user_saved_concepts")
     .updateOne(
@@ -537,7 +582,7 @@ export async function addSavedConcept(
       {
         $set: {
           savedAt: new Date(),
-          ...(reflection != null && { reflection }),
+          ...(enc != null && { reflection: enc }),
         },
       },
       { upsert: true }
@@ -563,10 +608,12 @@ export async function getUserMentalModels(userId: string): Promise<UserMentalMod
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((d) => ({
-    ...d,
-    _id: d._id.toString(),
-  })) as UserMentalModel[];
+  return docs.map((d) =>
+    decryptUserMentalModelFields({
+      ...d,
+      _id: d._id.toString(),
+    } as UserMentalModel)
+  ) as UserMentalModel[];
 }
 
 export async function getUserMentalModelById(
@@ -578,7 +625,10 @@ export async function getUserMentalModelById(
     .collection<UserMentalModelDoc>("user_mental_models")
     .findOne({ userId, id });
   if (!doc) return null;
-  return { ...doc, _id: doc._id.toString() } as UserMentalModel;
+  return decryptUserMentalModelFields({
+    ...doc,
+    _id: doc._id.toString(),
+  } as UserMentalModel);
 }
 
 export async function createUserMentalModel(
@@ -587,7 +637,7 @@ export async function createUserMentalModel(
 ): Promise<UserMentalModel> {
   const database = await getDb();
   const now = new Date();
-  const doc: Omit<UserMentalModelDoc, "_id"> = {
+  const doc = encryptUserMentalModelFields({
     userId,
     id: model.id,
     name: model.name,
@@ -606,9 +656,12 @@ export async function createUserMentalModel(
     ask_yourself: model.ask_yourself,
     createdAt: now,
     updatedAt: now,
-  };
+  }) as Omit<UserMentalModelDoc, "_id">;
   const result = await database.collection("user_mental_models").insertOne(doc);
-  return { ...doc, _id: result.insertedId.toString() } as UserMentalModel;
+  return decryptUserMentalModelFields({
+    ...doc,
+    _id: result.insertedId.toString(),
+  }) as UserMentalModel;
 }
 
 export async function updateUserMentalModel(
@@ -617,11 +670,12 @@ export async function updateUserMentalModel(
   updates: Partial<Omit<UserMentalModel, "userId" | "id" | "createdAt" | "_id">>
 ): Promise<boolean> {
   const database = await getDb();
+  const enc = encryptUserMentalModelFields<Record<string, unknown>>(updates as object);
   const result = await database
     .collection<UserMentalModelDoc>("user_mental_models")
     .updateOne(
       { userId, id },
-      { $set: { ...updates, updatedAt: new Date() } }
+      { $set: { ...enc, updatedAt: new Date() } }
     );
   return result.modifiedCount > 0;
 }
@@ -643,7 +697,9 @@ export async function getLongTermMemories(
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((d) => ({ ...d, _id: d._id.toString() })) as (LongTermMemory & { _id: string })[];
+  return docs.map((d) =>
+    decryptLongTermMemoryFields({ ...d, _id: d._id.toString() } as LongTermMemory & { _id: string })
+  ) as (LongTermMemory & { _id: string })[];
 }
 
 export async function getLongTermMemory(
@@ -661,7 +717,10 @@ export async function getLongTermMemory(
     .collection<LongTermMemoryDoc>("long_term_memory")
     .findOne({ _id: oid, userId });
   if (!doc) return null;
-  return { ...doc, _id: doc._id.toString() } as LongTermMemory & { _id: string };
+  return decryptLongTermMemoryFields({
+    ...doc,
+    _id: doc._id.toString(),
+  } as LongTermMemory & { _id: string });
 }
 
 export async function getLongTermMemoriesByIds(
@@ -683,7 +742,9 @@ export async function getLongTermMemoriesByIds(
     .collection<LongTermMemoryDoc>("long_term_memory")
     .find({ _id: { $in: objectIds }, userId })
     .toArray();
-  return docs.map((d) => ({ ...d, _id: d._id.toString() })) as (LongTermMemory & { _id: string })[];
+  return docs.map((d) =>
+    decryptLongTermMemoryFields({ ...d, _id: d._id.toString() } as LongTermMemory & { _id: string })
+  ) as (LongTermMemory & { _id: string })[];
 }
 
 export async function getLongTermMemoryBySessionId(
@@ -695,7 +756,10 @@ export async function getLongTermMemoryBySessionId(
     .collection<LongTermMemoryDoc>("long_term_memory")
     .findOne({ userId, sourceSessionId });
   if (!doc) return null;
-  return { ...doc, _id: doc._id.toString() } as LongTermMemory & { _id: string };
+  return decryptLongTermMemoryFields({
+    ...doc,
+    _id: doc._id.toString(),
+  } as LongTermMemory & { _id: string });
 }
 
 export async function createLongTermMemory(
@@ -708,7 +772,7 @@ export async function createLongTermMemory(
 ): Promise<LongTermMemory & { _id: string }> {
   const database = await getDb();
   const now = new Date();
-  const doc: Omit<LongTermMemory, "_id"> = {
+  const doc = encryptLongTermMemoryFields({
     userId,
     sourceSessionId,
     title,
@@ -717,9 +781,12 @@ export async function createLongTermMemory(
     ...(chainOfThought?.length ? { chainOfThought } : {}),
     createdAt: now,
     updatedAt: now,
-  };
+  }) as Omit<LongTermMemory, "_id">;
   const result = await database.collection("long_term_memory").insertOne(doc);
-  return { ...doc, _id: result.insertedId.toString() } as LongTermMemory & { _id: string };
+  return decryptLongTermMemoryFields({
+    ...doc,
+    _id: result.insertedId.toString(),
+  }) as LongTermMemory & { _id: string };
 }
 
 export async function updateLongTermMemory(
@@ -734,11 +801,12 @@ export async function updateLongTermMemory(
   } catch {
     return false;
   }
+  const enc = encryptLongTermMemoryFields<Record<string, unknown>>(updates as object);
   const result = await database
     .collection<LongTermMemoryDoc>("long_term_memory")
     .updateOne(
       { _id: oid, userId },
-      { $set: { ...updates, updatedAt: new Date() } }
+      { $set: { ...enc, updatedAt: new Date() } }
     );
   return result.modifiedCount > 0;
 }
@@ -772,7 +840,9 @@ export async function getCustomConcepts(
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((d) => ({ ...d, _id: d._id.toString() })) as (CustomConcept & { _id: string })[];
+  return docs.map((d) =>
+    decryptCustomConceptFields({ ...d, _id: d._id.toString() } as CustomConcept & { _id: string })
+  ) as (CustomConcept & { _id: string })[];
 }
 
 export async function getCustomConcept(
@@ -790,7 +860,10 @@ export async function getCustomConcept(
     .collection<CustomConceptDoc>("custom_concepts")
     .findOne({ _id: oid, userId });
   if (!doc) return null;
-  return { ...doc, _id: doc._id.toString() } as CustomConcept & { _id: string };
+  return decryptCustomConceptFields({
+    ...doc,
+    _id: doc._id.toString(),
+  } as CustomConcept & { _id: string });
 }
 
 export async function getCustomConceptsByIds(
@@ -812,7 +885,9 @@ export async function getCustomConceptsByIds(
     .collection<CustomConceptDoc>("custom_concepts")
     .find({ _id: { $in: objectIds }, userId })
     .toArray();
-  return docs.map((d) => ({ ...d, _id: d._id.toString() })) as (CustomConcept & { _id: string })[];
+  return docs.map((d) =>
+    decryptCustomConceptFields({ ...d, _id: d._id.toString() } as CustomConcept & { _id: string })
+  ) as (CustomConcept & { _id: string })[];
 }
 
 export async function getCustomConceptEnrichmentPromptsWithIds(
@@ -826,9 +901,12 @@ export async function getCustomConceptEnrichmentPromptsWithIds(
     .project({ _id: 1, enrichmentPrompt: 1, title: 1 })
     .toArray();
   return docs
+    .map((d) =>
+      decryptCustomConceptFields<CustomConceptDoc & { _id: ObjectId }>(d as object)
+    )
     .filter((d) => d.enrichmentPrompt)
     .map((d) => ({
-      id: d._id.toString(),
+      id: d._id!.toString(),
       enrichmentPrompt: d.enrichmentPrompt,
       title: d.title,
     }));
@@ -844,7 +922,7 @@ export async function createCustomConcept(
 ): Promise<CustomConcept & { _id: string }> {
   const database = await getDb();
   const now = new Date();
-  const doc: Omit<CustomConcept, "_id"> = {
+  const doc = encryptCustomConceptFields({
     userId,
     title,
     summary,
@@ -854,9 +932,12 @@ export async function createCustomConcept(
       sourceTranscriptId !== "" && { sourceTranscriptId }),
     createdAt: now,
     updatedAt: now,
-  };
+  }) as Omit<CustomConcept, "_id">;
   const result = await database.collection("custom_concepts").insertOne(doc);
-  return { ...doc, _id: result.insertedId.toString() } as CustomConcept & { _id: string };
+  return decryptCustomConceptFields({
+    ...doc,
+    _id: result.insertedId.toString(),
+  }) as CustomConcept & { _id: string };
 }
 
 export async function updateCustomConcept(
@@ -877,11 +958,12 @@ export async function updateCustomConcept(
   } catch {
     return false;
   }
+  const enc = encryptCustomConceptFields<Record<string, unknown>>(updates as object);
   const result = await database
     .collection<CustomConceptDoc>("custom_concepts")
     .updateOne(
       { _id: oid, userId },
-      { $set: { ...updates, updatedAt: new Date() } }
+      { $set: { ...enc, updatedAt: new Date() } }
     );
   return result.modifiedCount > 0;
 }
@@ -954,7 +1036,9 @@ export async function getHabits(userId: string): Promise<(Habit & { _id: string 
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((d) => ({ ...d, _id: d._id.toString() })) as (Habit & { _id: string })[];
+  return docs.map((d) =>
+    decryptHabitFields({ ...d, _id: d._id.toString() } as Habit & { _id: string })
+  ) as (Habit & { _id: string })[];
 }
 
 export async function getHabit(id: string, userId: string): Promise<(Habit & { _id: string }) | null> {
@@ -978,7 +1062,7 @@ export async function createHabit(
 ): Promise<Habit & { _id: string }> {
   const database = await getDb();
   const now = new Date();
-  const doc: Omit<Habit, "_id"> = {
+  const doc = encryptHabitFields({
     userId,
     sourceType: habit.sourceType,
     sourceId: habit.sourceId,
@@ -988,9 +1072,12 @@ export async function createHabit(
     tips: habit.tips,
     createdAt: now,
     updatedAt: now,
-  };
+  }) as Omit<Habit, "_id">;
   const result = await database.collection("habits").insertOne(doc);
-  return { ...doc, _id: result.insertedId.toString() } as Habit & { _id: string };
+  return decryptHabitFields({
+    ...doc,
+    _id: result.insertedId.toString(),
+  }) as Habit & { _id: string };
 }
 
 export async function updateHabit(
@@ -1005,9 +1092,10 @@ export async function updateHabit(
   } catch {
     return false;
   }
+  const enc = encryptHabitFields<Record<string, unknown>>(updates as object);
   const result = await database
     .collection<HabitDoc>("habits")
-    .updateOne({ _id: oid, userId }, { $set: { ...updates, updatedAt: new Date() } });
+    .updateOne({ _id: oid, userId }, { $set: { ...enc, updatedAt: new Date() } });
   return result.modifiedCount > 0;
 }
 
@@ -1032,7 +1120,12 @@ export async function getSavedPerspectiveCards(
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((d) => ({ ...d, _id: d._id.toString() })) as (SavedPerspectiveCard & { _id: string })[];
+  return docs.map((d) =>
+    decryptSavedPerspectiveCardFields({
+      ...d,
+      _id: d._id.toString(),
+    } as SavedPerspectiveCard & { _id: string })
+  ) as (SavedPerspectiveCard & { _id: string })[];
 }
 
 export async function createSavedPerspectiveCard(
@@ -1045,7 +1138,7 @@ export async function createSavedPerspectiveCard(
 ): Promise<SavedPerspectiveCard & { _id: string }> {
   const database = await getDb();
   const now = new Date();
-  const doc: Omit<SavedPerspectiveCard, "_id"> = {
+  const doc = encryptSavedPerspectiveCardFields({
     userId,
     name,
     prompt,
@@ -1054,9 +1147,12 @@ export async function createSavedPerspectiveCard(
     sourceDeckName,
     createdAt: now,
     updatedAt: now,
-  };
+  }) as Omit<SavedPerspectiveCard, "_id">;
   const result = await database.collection("saved_perspective_cards").insertOne(doc);
-  return { ...doc, _id: result.insertedId.toString() } as SavedPerspectiveCard & { _id: string };
+  return decryptSavedPerspectiveCardFields({
+    ...doc,
+    _id: result.insertedId.toString(),
+  }) as SavedPerspectiveCard & { _id: string };
 }
 
 export async function deleteSavedPerspectiveCard(id: string, userId: string): Promise<boolean> {
@@ -1082,7 +1178,9 @@ export async function getConceptGroups(
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((d) => ({ ...d, _id: d._id.toString() })) as (ConceptGroup & { _id: string })[];
+  return docs.map((d) =>
+    decryptConceptGroupFields({ ...d, _id: d._id.toString() } as ConceptGroup & { _id: string })
+  ) as (ConceptGroup & { _id: string })[];
 }
 
 export async function getConceptGroup(
@@ -1100,7 +1198,10 @@ export async function getConceptGroup(
     .collection<ConceptGroupDoc>("concept_groups")
     .findOne({ _id: oid, userId });
   if (!doc) return null;
-  return { ...doc, _id: doc._id.toString() } as ConceptGroup & { _id: string };
+  return decryptConceptGroupFields({
+    ...doc,
+    _id: doc._id.toString(),
+  } as ConceptGroup & { _id: string });
 }
 
 export async function getConceptGroupsByIds(
@@ -1122,7 +1223,9 @@ export async function getConceptGroupsByIds(
     .collection<ConceptGroupDoc>("concept_groups")
     .find({ _id: { $in: objectIds }, userId })
     .toArray();
-  return docs.map((d) => ({ ...d, _id: d._id.toString() })) as (ConceptGroup & { _id: string })[];
+  return docs.map((d) =>
+    decryptConceptGroupFields({ ...d, _id: d._id.toString() } as ConceptGroup & { _id: string })
+  ) as (ConceptGroup & { _id: string })[];
 }
 
 export async function createConceptGroup(
@@ -1133,16 +1236,19 @@ export async function createConceptGroup(
 ): Promise<ConceptGroup & { _id: string }> {
   const database = await getDb();
   const now = new Date();
-  const doc: Omit<ConceptGroup, "_id"> = {
+  const doc = encryptConceptGroupFields({
     userId,
     title,
     conceptIds,
     ...(isCustomGroup && { isCustomGroup: true }),
     createdAt: now,
     updatedAt: now,
-  };
+  }) as Omit<ConceptGroup, "_id">;
   const result = await database.collection("concept_groups").insertOne(doc);
-  return { ...doc, _id: result.insertedId.toString() } as ConceptGroup & { _id: string };
+  return decryptConceptGroupFields({
+    ...doc,
+    _id: result.insertedId.toString(),
+  }) as ConceptGroup & { _id: string };
 }
 
 export async function updateConceptGroup(
@@ -1162,11 +1268,12 @@ export async function updateConceptGroup(
   } catch {
     return false;
   }
+  const enc = encryptConceptGroupFields<Record<string, unknown>>(updates as object);
   const payload: {
     $set: Record<string, unknown>;
     $unset?: Record<string, "">;
   } = {
-    $set: { ...updates, updatedAt: new Date() },
+    $set: { ...enc, updatedAt: new Date() },
   };
   if (options?.unsetLegacyFrameworkSummary) {
     payload.$unset = { summary: "" };
@@ -1226,7 +1333,11 @@ export async function getEnrichmentPrompts(userId: string): Promise<string[]> {
     .sort({ updatedAt: -1 })
     .project({ enrichmentPrompt: 1 })
     .toArray();
-  return docs.map((d) => d.enrichmentPrompt).filter(Boolean);
+  return docs
+    .map((d) =>
+      decryptLongTermMemoryFields<LongTermMemoryDoc>(d as object).enrichmentPrompt
+    )
+    .filter(Boolean);
 }
 
 export async function getEnrichmentPromptsWithIds(
@@ -1240,9 +1351,10 @@ export async function getEnrichmentPromptsWithIds(
     .project({ _id: 1, enrichmentPrompt: 1, title: 1 })
     .toArray();
   return docs
+    .map((d) => decryptLongTermMemoryFields<LongTermMemoryDoc>(d as object))
     .filter((d) => d.enrichmentPrompt)
     .map((d) => ({
-      id: d._id.toString(),
+      id: d._id!.toString(),
       enrichmentPrompt: d.enrichmentPrompt,
       title: d.title,
     }));
@@ -1275,7 +1387,9 @@ export async function getSavedTranscripts(
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((d) => ({ ...d, _id: d._id.toString() })) as (SavedTranscript & { _id: string })[];
+  return docs.map((d) =>
+    decryptTranscriptFields({ ...d, _id: d._id.toString() } as SavedTranscript & { _id: string })
+  ) as (SavedTranscript & { _id: string })[];
 }
 
 export async function getSavedTranscript(
@@ -1293,7 +1407,10 @@ export async function getSavedTranscript(
     .collection<SavedTranscriptDoc>("transcripts")
     .findOne({ _id: oid, userId });
   if (!doc) return null;
-  return { ...doc, _id: doc._id.toString() } as SavedTranscript & { _id: string };
+  return decryptTranscriptFields({
+    ...doc,
+    _id: doc._id.toString(),
+  } as SavedTranscript & { _id: string });
 }
 
 export async function getSavedTranscriptByVideoId(
@@ -1305,7 +1422,10 @@ export async function getSavedTranscriptByVideoId(
     .collection<SavedTranscriptDoc>("transcripts")
     .findOne({ videoId, userId });
   if (!doc) return null;
-  return { ...doc, _id: doc._id.toString() } as SavedTranscript & { _id: string };
+  return decryptTranscriptFields({
+    ...doc,
+    _id: doc._id.toString(),
+  } as SavedTranscript & { _id: string });
 }
 
 export async function saveTranscript(
@@ -1319,22 +1439,32 @@ export async function saveTranscript(
   const now = new Date();
   const existing = await getSavedTranscriptByVideoId(videoId, userId);
   if (existing) {
+    const encPart = encryptTranscriptFields<Record<string, unknown>>({
+      transcriptText,
+      videoTitle: videoTitle ?? existing.videoTitle,
+      channel: channel ?? existing.channel,
+    });
+    const $set = {
+      ...encPart,
+      updatedAt: now,
+    };
     await database
       .collection<SavedTranscriptDoc>("transcripts")
       .updateOne(
         { _id: new ObjectId(existing._id), userId },
         {
-          $set: {
-            transcriptText,
-            videoTitle: videoTitle ?? existing.videoTitle,
-            channel: channel ?? existing.channel,
-            updatedAt: now,
-          },
+          $set: $set as Record<string, unknown>,
         }
       );
-    return { ...existing, transcriptText, videoTitle: videoTitle ?? existing.videoTitle, channel: channel ?? existing.channel, updatedAt: now };
+    return {
+      ...existing,
+      transcriptText,
+      videoTitle: videoTitle ?? existing.videoTitle,
+      channel: channel ?? existing.channel,
+      updatedAt: now,
+    };
   }
-  const doc: Omit<SavedTranscript, "_id"> = {
+  const doc = encryptTranscriptFields({
     userId,
     videoId,
     videoTitle,
@@ -1342,9 +1472,12 @@ export async function saveTranscript(
     transcriptText,
     createdAt: now,
     updatedAt: now,
-  };
+  }) as Omit<SavedTranscript, "_id">;
   const result = await database.collection("transcripts").insertOne(doc);
-  return { ...doc, _id: result.insertedId.toString() } as SavedTranscript & { _id: string };
+  return decryptTranscriptFields({
+    ...doc,
+    _id: result.insertedId.toString(),
+  }) as SavedTranscript & { _id: string };
 }
 
 /** Persist a user journal as a transcript row (no YouTube URL). `videoId` is synthetic. */
@@ -1356,7 +1489,7 @@ export async function saveJournalTranscript(
   const database = await getDb();
   const now = new Date();
   const videoId = `journal_${new ObjectId().toHexString()}`;
-  const doc: Omit<SavedTranscript, "_id"> = {
+  const doc = encryptTranscriptFields({
     userId,
     videoId,
     videoTitle: journalTitle?.trim() || "Journal entry",
@@ -1364,9 +1497,12 @@ export async function saveJournalTranscript(
     transcriptText,
     createdAt: now,
     updatedAt: now,
-  };
+  }) as Omit<SavedTranscript, "_id">;
   const result = await database.collection("transcripts").insertOne(doc);
-  return { ...doc, _id: result.insertedId.toString() } as SavedTranscript & { _id: string };
+  return decryptTranscriptFields({
+    ...doc,
+    _id: result.insertedId.toString(),
+  }) as SavedTranscript & { _id: string };
 }
 
 export async function deleteSavedTranscript(id: string, userId: string): Promise<boolean> {
@@ -1395,11 +1531,14 @@ export async function updateTranscriptExtractedConcepts(
   } catch {
     return false;
   }
+  const enc = encryptTranscriptFields({ extractedConcepts: groups }) as {
+    extractedConcepts?: typeof groups;
+  };
   const result = await database
     .collection<SavedTranscriptDoc>("transcripts")
     .updateOne(
       { _id: oid, userId },
-      { $set: { extractedConcepts: groups, updatedAt: new Date() } }
+      { $set: { ...enc, updatedAt: new Date() } }
     );
   return result.modifiedCount > 0;
 }
@@ -1411,7 +1550,9 @@ export async function getNuggets(userId: string): Promise<(Nugget & { _id: strin
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((d) => ({ ...d, _id: d._id.toString() })) as (Nugget & { _id: string })[];
+  return docs.map((d) =>
+    decryptNuggetFields({ ...d, _id: d._id.toString() } as Nugget & { _id: string })
+  ) as (Nugget & { _id: string })[];
 }
 
 export async function createNugget(
@@ -1421,18 +1562,21 @@ export async function createNugget(
 ): Promise<Nugget & { _id: string }> {
   const database = await getDb();
   const now = new Date();
-  const doc: Omit<Nugget, "_id"> = {
+  const doc = encryptNuggetFields({
     userId,
     content: content.trim(),
     source: source?.trim() || undefined,
     createdAt: now,
     updatedAt: now,
-  };
+  }) as Omit<Nugget, "_id">;
   // MongoDB insertOne accepts docs without _id; it will be generated
   const result = await database
     .collection<NuggetDoc>("nuggets")
     .insertOne(doc as unknown as NuggetDoc);
-  return { ...doc, _id: result.insertedId.toString() } as Nugget & { _id: string };
+  return decryptNuggetFields({
+    ...doc,
+    _id: result.insertedId.toString(),
+  }) as Nugget & { _id: string };
 }
 
 export async function deleteNugget(id: string, userId: string): Promise<boolean> {
@@ -1455,7 +1599,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     .collection<UserSettingsDoc>("user_settings")
     .findOne({ userId });
   if (!doc) return null;
-  return {
+  return decryptUserSettingsFields({
     userId: doc.userId,
     theme: doc.theme,
     language: doc.language,
@@ -1469,7 +1613,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     followedFigureIds: doc.followedFigureIds,
     leaderboardOptIn: doc.leaderboardOptIn,
     updatedAt: doc.updatedAt,
-  };
+  });
 }
 
 export async function upsertUserSettings(
@@ -1478,15 +1622,16 @@ export async function upsertUserSettings(
 ): Promise<UserSettings> {
   const database = await getDb();
   const now = new Date();
+  const enc = encryptUserSettingsFields<Record<string, unknown>>(updates as object);
   const result = await database.collection<UserSettingsDoc>("user_settings").findOneAndUpdate(
     { userId },
-    { $set: { userId, ...updates, updatedAt: now } },
+    { $set: { userId, ...enc, updatedAt: now } },
     { upsert: true, returnDocument: "after" }
   );
   if (!result) {
-    return { userId, ...updates, updatedAt: now };
+    return decryptUserSettingsFields({ userId, ...updates, updatedAt: now });
   }
-  return {
+  return decryptUserSettingsFields({
     userId: result.userId,
     theme: result.theme,
     language: result.language,
@@ -1500,7 +1645,7 @@ export async function upsertUserSettings(
     followedFigureIds: result.followedFigureIds,
     leaderboardOptIn: result.leaderboardOptIn,
     updatedAt: result.updatedAt,
-  };
+  });
 }
 
 /** Delete all user data: sessions, messages, LTM, custom concepts, concept groups, saved concepts, transcripts, nuggets, settings */

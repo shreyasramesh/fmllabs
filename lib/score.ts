@@ -1,4 +1,5 @@
-import { getDb } from "./db";
+import { getDb, type Session, type UserSettings } from "./db";
+import { decryptSessionFields, decryptUserSettingsFields } from "./crypto-fields";
 import { xpToRank, type UserScore } from "./score-types";
 
 export { RANK_TIERS, type UserScore } from "./score-types";
@@ -14,35 +15,45 @@ async function computeXpFromCounts(userId: string): Promise<number> {
     savedConceptsCount,
     habitsCount,
     conceptGroupsCount,
-    perspectiveCardSessionsCount,
     savedPerspectiveCardsCount,
     userMentalModelsCount,
-    sessionsWithTags,
-    userSettings,
+    sessionDocsForXp,
+    userSettingsRaw,
   ] = await Promise.all([
     database.collection("sessions").countDocuments({ userId }),
     database.collection("custom_concepts").countDocuments({ userId }),
     database.collection("user_saved_concepts").countDocuments({ userId }),
     database.collection("habits").countDocuments({ userId }),
     database.collection("concept_groups").countDocuments({ userId }),
-    database
-      .collection("sessions")
-      .countDocuments({ userId, perspectiveCardPrompt: { $exists: true, $ne: "" } }),
     database.collection("saved_perspective_cards").countDocuments({ userId }),
     database.collection("user_mental_models").countDocuments({ userId }),
     database
       .collection("sessions")
-      .find({ userId, mentalModelTags: { $exists: true, $ne: [] } })
-      .project({ mentalModelTags: 1 })
+      .find({ userId })
+      .project({ perspectiveCardPrompt: 1, mentalModelTags: 1 })
       .toArray(),
     database.collection("user_settings").findOne({ userId }),
   ]);
 
+  const userSettings = userSettingsRaw
+    ? decryptUserSettingsFields<UserSettings>(userSettingsRaw)
+    : null;
+
+  let perspectiveCardSessionsCount = 0;
+  let mentalModelTagsXp = 0;
+  for (const raw of sessionDocsForXp) {
+    const s = decryptSessionFields<Session>(raw);
+    const p = s.perspectiveCardPrompt;
+    if (p != null && String(p).trim() !== "") {
+      perspectiveCardSessionsCount++;
+    }
+    const tags = s.mentalModelTags;
+    if (Array.isArray(tags) && tags.length > 0) {
+      mentalModelTagsXp += tags.length * 5;
+    }
+  }
+
   const personasCount = (userSettings?.followedFigureIds as string[] | undefined)?.length ?? 0;
-  const mentalModelTagsXp = sessionsWithTags.reduce(
-    (sum, s) => sum + ((s.mentalModelTags as string[])?.length ?? 0) * 5,
-    0
-  );
 
   return (
     sessionsCount * 10 +

@@ -75,6 +75,7 @@ Add these in Vercel → Project → Settings → Environment Variables:
 |----------|-------|-------|
 | `GEMINI_API_KEY` | Your key | From [Google AI Studio](https://aistudio.google.com/apikey) |
 | `MONGODB_URI` | Atlas connection string | From step 2 |
+| `ENCRYPTION_KEY` | 32-byte key, base64 | **Production:** required. Run `openssl rand -base64 32` once; store in Vercel secrets (never commit). Encrypts user content at rest in MongoDB (AES-256-GCM). Rotating the key requires re-encrypting existing documents (not automatic). |
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | `pk_live_...` or `pk_test_...` | From Clerk |
 | `CLERK_SECRET_KEY` | `sk_live_...` or `sk_test_...` | From Clerk |
 

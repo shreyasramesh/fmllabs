@@ -4866,13 +4866,17 @@ export default function ChatPage() {
             >
               Crafted with Intention
             </button>
-            <div className="mt-1 flex items-center justify-center gap-x-2 text-[10px] text-neutral-500 dark:text-neutral-400">
+            <div className="mt-1 flex items-center justify-center gap-x-2 text-[10px] text-neutral-500 dark:text-neutral-400 flex-wrap">
               <Link href="/terms-of-service" className="hover:text-foreground transition-colors whitespace-nowrap">
                 Terms of Service
               </Link>
               <span className="text-neutral-400 dark:text-neutral-500 shrink-0" aria-hidden>·</span>
               <Link href="/privacy-policy" className="hover:text-foreground transition-colors whitespace-nowrap">
                 Privacy Policy
+              </Link>
+              <span className="text-neutral-400 dark:text-neutral-500 shrink-0" aria-hidden>·</span>
+              <Link href="/faq" className="hover:text-foreground transition-colors whitespace-nowrap">
+                FAQ
               </Link>
             </div>
             <p className="mt-1.5 text-[10px] text-neutral-500 dark:text-neutral-400">
@@ -12072,7 +12076,7 @@ export default function ChatPage() {
                           });
                         }}
                         className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 bg-black/50 text-white hover:bg-red-600 transition-all duration-200 touch-manipulation"
-                        aria-label={`Remove ${cc.title} from ${cgDetailModal.isCustomGroup ? "group" : "domain"}`}
+                        aria-label={`Remove ${cc.title} from ${cgDetailModal.isCustomGroup ? "group" : "framework"}`}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -12107,7 +12111,7 @@ export default function ChatPage() {
                 </div>
               ) : (
                 <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                  No concepts in this {cgDetailModal.isCustomGroup ? "group" : "domain"} yet.
+                  No concepts in this {cgDetailModal.isCustomGroup ? "group" : "framework"} yet.
                 </p>
               )}
               <div className="flex flex-wrap items-center gap-2 pt-2">
@@ -12119,7 +12123,7 @@ export default function ChatPage() {
                   }}
                   className="px-4 py-2 rounded-full text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
                 >
-                  Delete {cgDetailModal.isCustomGroup ? "group" : "domain"}
+                  Delete {cgDetailModal.isCustomGroup ? "group" : "framework"}
                 </button>
               </div>
             </div>
@@ -12138,11 +12142,11 @@ export default function ChatPage() {
             className="bg-background rounded-3xl shadow-xl max-w-md w-full p-6 border border-neutral-200 dark:border-neutral-700"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="font-semibold text-lg">Delete {cgDeleteConfirmModal.isCustomGroup ? "group" : "domain"}?</h2>
+            <h2 className="font-semibold text-lg">Delete {cgDeleteConfirmModal.isCustomGroup ? "group" : "framework"}?</h2>
             <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
               {cgDeleteConfirmModal.isCustomGroup
                 ? `Deleting "${cgDeleteConfirmModal.title}" will remove the group. Concepts will remain in your library.`
-                : `Deleting "${cgDeleteConfirmModal.title}" will remove the domain and all its concepts.`}
+                : `Deleting "${cgDeleteConfirmModal.title}" will remove the framework and all its concepts.`}
             </p>
             <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-500">
               Are you sure you want to delete?

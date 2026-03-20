@@ -1,6 +1,30 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { getDb } from "@/lib/db";
+import {
+  getDb,
+  type ConceptGroup,
+  type CustomConcept,
+  type LongTermMemory,
+  type Message,
+  type Nugget,
+  type SavedConcept,
+  type SavedTranscript,
+  type Session,
+  type UserMentalModel,
+  type UserSettings,
+} from "@/lib/db";
+import {
+  decryptConceptGroupFields,
+  decryptCustomConceptFields,
+  decryptLongTermMemoryFields,
+  decryptMessageFields,
+  decryptNuggetFields,
+  decryptSavedConceptFields,
+  decryptSessionFields,
+  decryptTranscriptFields,
+  decryptUserMentalModelFields,
+  decryptUserSettingsFields,
+} from "@/lib/crypto-fields";
 import { getOneLiner, loadMentalModelContent } from "@/lib/mental-models";
 
 type ExportSection =
@@ -61,12 +85,22 @@ export async function POST(request: Request) {
     lines.push(`- **User ID:** ${userId}`);
     lines.push("");
 
-    const sessions = sections.includes("sessions") || sections.includes("messages")
-      ? await db.collection("sessions").find({ userId }).sort({ updatedAt: -1 }).toArray()
-      : [];
+    const sessionsRaw =
+      sections.includes("sessions") || sections.includes("messages")
+        ? await db.collection("sessions").find({ userId }).sort({ updatedAt: -1 }).toArray()
+        : [];
+    const sessions = sessionsRaw.map((s) =>
+      decryptSessionFields<Session & { _id: string }>({
+        ...s,
+        _id: s._id?.toString() ?? "",
+      })
+    );
 
     if (sections.includes("settings")) {
-      const settings = await db.collection("user_settings").findOne({ userId });
+      const settingsDoc = await db.collection("user_settings").findOne({ userId });
+      const settings = settingsDoc
+        ? decryptUserSettingsFields<UserSettings>(settingsDoc)
+        : null;
       lines.push("## Settings");
       lines.push("");
       lines.push("```json");
@@ -95,13 +129,17 @@ export async function POST(request: Request) {
 
     if (sections.includes("messages")) {
       const sessionIds = sessions.map((s) => s._id?.toString()).filter(Boolean);
-      const messages = sessionIds.length > 0
-        ? await db
-            .collection("messages")
-            .find({ sessionId: { $in: sessionIds } })
-            .sort({ createdAt: 1 })
-            .toArray()
-        : [];
+      const messagesRaw =
+        sessionIds.length > 0
+          ? await db
+              .collection("messages")
+              .find({ sessionId: { $in: sessionIds } })
+              .sort({ createdAt: 1 })
+              .toArray()
+          : [];
+      const messages = messagesRaw.map((m) =>
+        decryptMessageFields<Message & { _id?: string }>({ ...m, _id: m._id?.toString() })
+      );
       lines.push("## Messages");
       lines.push("");
       lines.push(
@@ -119,7 +157,14 @@ export async function POST(request: Request) {
     }
 
     if (sections.includes("long_term_memory")) {
-      const memories = await db.collection("long_term_memory").find({ userId }).sort({ updatedAt: -1 }).toArray();
+      const memoriesRaw = await db
+        .collection("long_term_memory")
+        .find({ userId })
+        .sort({ updatedAt: -1 })
+        .toArray();
+      const memories = memoriesRaw.map((m) =>
+        decryptLongTermMemoryFields<LongTermMemory & { _id: string }>({ ...m, _id: m._id?.toString() })
+      );
       lines.push("## Memory");
       lines.push("");
       lines.push(
@@ -138,7 +183,14 @@ export async function POST(request: Request) {
     }
 
     if (sections.includes("custom_concepts")) {
-      const concepts = await db.collection("custom_concepts").find({ userId }).sort({ updatedAt: -1 }).toArray();
+      const conceptsRaw = await db
+        .collection("custom_concepts")
+        .find({ userId })
+        .sort({ updatedAt: -1 })
+        .toArray();
+      const concepts = conceptsRaw.map((c) =>
+        decryptCustomConceptFields<CustomConcept & { _id: string }>({ ...c, _id: c._id?.toString() })
+      );
       lines.push("## Custom Concepts");
       lines.push("");
       lines.push(
@@ -157,7 +209,14 @@ export async function POST(request: Request) {
     }
 
     if (sections.includes("concept_groups")) {
-      const groups = await db.collection("concept_groups").find({ userId }).sort({ updatedAt: -1 }).toArray();
+      const groupsRaw = await db
+        .collection("concept_groups")
+        .find({ userId })
+        .sort({ updatedAt: -1 })
+        .toArray();
+      const groups = groupsRaw.map((g) =>
+        decryptConceptGroupFields<ConceptGroup & { _id: string }>({ ...g, _id: g._id?.toString() })
+      );
       lines.push("## Concept Frameworks");
       lines.push("");
       lines.push(
@@ -176,7 +235,14 @@ export async function POST(request: Request) {
     }
 
     if (sections.includes("nuggets")) {
-      const nuggets = await db.collection("nuggets").find({ userId }).sort({ updatedAt: -1 }).toArray();
+      const nuggetsRaw = await db
+        .collection("nuggets")
+        .find({ userId })
+        .sort({ updatedAt: -1 })
+        .toArray();
+      const nuggets = nuggetsRaw.map((n) =>
+        decryptNuggetFields<Nugget & { _id: string }>({ ...n, _id: n._id?.toString() })
+      );
       lines.push("## Nuggets");
       lines.push("");
       lines.push(
@@ -194,7 +260,14 @@ export async function POST(request: Request) {
     }
 
     if (sections.includes("transcripts")) {
-      const transcripts = await db.collection("transcripts").find({ userId }).sort({ updatedAt: -1 }).toArray();
+      const transcriptsRaw = await db
+        .collection("transcripts")
+        .find({ userId })
+        .sort({ updatedAt: -1 })
+        .toArray();
+      const transcripts = transcriptsRaw.map((t) =>
+        decryptTranscriptFields<SavedTranscript & { _id: string }>({ ...t, _id: t._id?.toString() })
+      );
       lines.push("## Saved Transcripts");
       lines.push("");
       lines.push(
@@ -214,8 +287,20 @@ export async function POST(request: Request) {
     }
 
     if (sections.includes("saved_mental_models")) {
-      const saved = await db.collection("user_saved_concepts").find({ userId }).sort({ savedAt: -1 }).toArray();
-      const userModels = await db.collection("user_mental_models").find({ userId }).sort({ updatedAt: -1 }).toArray();
+      const savedRaw = await db
+        .collection("user_saved_concepts")
+        .find({ userId })
+        .sort({ savedAt: -1 })
+        .toArray();
+      const saved = savedRaw.map((s) => decryptSavedConceptFields<SavedConcept>(s));
+      const userModelsRaw = await db
+        .collection("user_mental_models")
+        .find({ userId })
+        .sort({ updatedAt: -1 })
+        .toArray();
+      const userModels = userModelsRaw.map((m) =>
+        decryptUserMentalModelFields<UserMentalModel & { _id: string }>({ ...m, _id: m._id?.toString() })
+      );
       const fromSessions = sessions
         .flatMap((s) => (Array.isArray(s.mentalModelTags) ? s.mentalModelTags : []))
         .map((id) => ({ modelId: id, source: "session_tag" }));
@@ -227,10 +312,11 @@ export async function POST(request: Request) {
       const modelRows = allIds.map((id) => {
         const userModel = userModels.find((m) => m.id === id);
         if (userModel) {
-          const first = userModel.quick_introduction.split(/[.!?]/)[0]?.trim();
+          const intro = userModel.quick_introduction ?? "";
+          const first = intro.split(/[.!?]/)[0]?.trim();
           const oneLiner =
             userModel.one_liner?.trim() ||
-            (first ? `${first}.` : userModel.quick_introduction.slice(0, 80));
+            (first ? `${first}.` : intro.slice(0, 80));
           return {
             id,
             name: userModel.name,

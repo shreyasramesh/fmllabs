@@ -28,6 +28,8 @@ CLERK_SECRET_KEY=
 
 Get Clerk keys from [clerk.com](https://clerk.com). Get Gemini API key from [Google AI Studio](https://aistudio.google.com/).
 
+**Optional — data encryption:** Set `ENCRYPTION_KEY` (32 bytes, base64: `openssl rand -base64 32`) to AES-GCM–encrypt user content in MongoDB. Omit locally to store plaintext in dev; **production deployments should set it** (see [DEPLOYMENT.md](./DEPLOYMENT.md)).
+
 ### 2. Install and run
 
 ```bash
