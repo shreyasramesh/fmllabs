@@ -17,6 +17,18 @@ export interface LandingTranslations {
   deleteConversationConfirm: string;
   deleteConversationPermanent: string;
   searchConversations: string;
+  /** 1:1 mentor tile & picker */
+  mentorOneOnOneTitle: string;
+  mentorOneOnOneSubtitle: string;
+  mentorOneOnOneModalTitle: string;
+  mentorOneOnOneSearchPlaceholder: string;
+  mentorOneOnOneTapToChat: string;
+  mentorOneOnOneAllCategories: string;
+  /** New conversation chooser + second-order mode */
+  conversationChooserTitle: string;
+  secondOrderThinkingTitle: string;
+  secondOrderThinkingSubtitle: string;
+  secondOrderChipLabel: string;
 }
 
 const EN: LandingTranslations = {
@@ -36,9 +48,19 @@ const EN: LandingTranslations = {
   deleteConversationConfirm: "Delete conversation?",
   deleteConversationPermanent: "will be permanently deleted. This cannot be undone.",
   searchConversations: "Search conversations",
+  mentorOneOnOneTitle: "1:1 with a mentor",
+  mentorOneOnOneSubtitle: "Full coach mode—grounded in their voice, ideas, and worldview",
+  mentorOneOnOneModalTitle: "Choose a mentor",
+  mentorOneOnOneSearchPlaceholder: "Search by name or topic…",
+  mentorOneOnOneTapToChat: "Tap to start",
+  mentorOneOnOneAllCategories: "All",
+  conversationChooserTitle: "How would you like to start?",
+  secondOrderThinkingTitle: "Second-order thinking",
+  secondOrderThinkingSubtitle: "Consequences, incentives, and what happens next after that",
+  secondOrderChipLabel: "Second-order thinking",
 };
 
-const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
+const TRANSLATIONS: Partial<Record<LanguageCode, Partial<LandingTranslations>>> = {
   en: EN,
   hi: {
     whatShouldIDo: "मुझे क्या करना चाहिए?",
@@ -385,5 +407,5 @@ const TRANSLATIONS: Partial<Record<LanguageCode, LandingTranslations>> = {
 };
 
 export function getLandingTranslations(language: LanguageCode): LandingTranslations {
-  return TRANSLATIONS[language] ?? EN;
+  return { ...EN, ...(TRANSLATIONS[language] ?? {}) };
 }

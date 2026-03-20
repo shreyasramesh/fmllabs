@@ -910,7 +910,12 @@ export function MentionInput({
   );
 
   return (
-    <div ref={containerRef} className="relative flex-1 min-w-0 flex min-h-0">
+    <div
+      ref={containerRef}
+      className={`relative flex-1 min-w-0 overflow-hidden ${
+        placeholderCentered ? "h-10 shrink-0" : "flex min-h-0"
+      }`}
+    >
       <div
         ref={ref as React.RefObject<HTMLDivElement>}
         contentEditable={!disabled}
@@ -932,19 +937,29 @@ export function MentionInput({
         }}
         data-placeholder={displayPlaceholder}
         className={`flex-1 min-h-0 overflow-y-auto outline-none focus:outline-none ${className} ${
-          isEmpty ? "empty" : ""
-        } text-left`}
+          isEmpty ? "empty relative z-[1]" : ""
+        } text-left ${placeholderCentered ? "mention-input-singleline" : ""}`}
         style={{
-          ...(isEmpty && {
-            // Placeholder styling - use ::before in CSS or data attr
+          ...(placeholderCentered && {
+            lineHeight: "2.5rem",
+            height: "2.5rem",
+            minHeight: "2.5rem",
+            maxHeight: "2.5rem",
+            padding: 0,
+            margin: 0,
+            boxSizing: "border-box",
           }),
         }}
       />
       {isEmpty && (
         <span
           dir="ltr"
-          className={`pointer-events-none absolute left-0 right-4 text-neutral-500 dark:text-neutral-400 select-none whitespace-nowrap overflow-hidden text-ellipsis text-left ${
-            placeholderCentered ? "top-1/2 -translate-y-1/2" : placeholderTopAligned ? "top-4" : "top-0"
+          className={`pointer-events-none absolute z-0 text-neutral-500 dark:text-neutral-400 select-none whitespace-nowrap overflow-hidden text-ellipsis text-left text-sm sm:text-base ${
+            placeholderCentered
+              ? "mention-input-singleline-placeholder top-0 left-0 right-4"
+              : placeholderTopAligned
+                ? "top-4 left-0 right-4"
+                : "top-0 left-0 right-4"
           }`}
           aria-hidden
         >

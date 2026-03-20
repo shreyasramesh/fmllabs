@@ -22,10 +22,6 @@
 # production
 /build
 
-# chrome extension
-/chrome-extension/node_modules
-/chrome-extension/dist
-
 # misc
 .DS_Store
 *.pem

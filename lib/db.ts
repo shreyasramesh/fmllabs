@@ -37,6 +37,11 @@ export interface Session {
   perspectiveCardName?: string;
   perspectiveCardFigureId?: string;
   perspectiveCardFigureName?: string;
+  /** 1:1 mentor mode: full SYSTEM_PROMPT with this figure's voice */
+  oneOnOneMentorFigureId?: string;
+  oneOnOneMentorFigureName?: string;
+  /** Second-order thinking mode (minimal prompt; no RAG) */
+  secondOrderThinking?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -63,6 +68,9 @@ interface SessionDoc {
   perspectiveCardName?: string;
   perspectiveCardFigureId?: string;
   perspectiveCardFigureName?: string;
+  oneOnOneMentorFigureId?: string;
+  oneOnOneMentorFigureName?: string;
+  secondOrderThinking?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -395,6 +403,13 @@ export async function updateSession(
     perspectiveCardName?: string;
     perspectiveCardFigureId?: string;
     perspectiveCardFigureName?: string;
+    oneOnOneMentorFigureId?: string;
+    oneOnOneMentorFigureName?: string;
+    secondOrderThinking?: boolean;
+    /** Remove 1:1 mentor fields from the session document */
+    clearOneOnOneMentor?: boolean;
+    /** Remove second-order flag from the session document */
+    clearSecondOrder?: boolean;
   }
 ): Promise<boolean> {
   const database = await getDb();
@@ -404,12 +419,34 @@ export async function updateSession(
   } catch {
     return false;
   }
+  const {
+    clearOneOnOneMentor,
+    clearSecondOrder,
+    ...rest
+  } = updates;
+  const $set: Record<string, unknown> = { updatedAt: new Date() };
+  for (const [k, v] of Object.entries(rest)) {
+    if (v !== undefined) {
+      $set[k] = v;
+    }
+  }
+  const $unset: Record<string, ""> = {};
+  if (clearOneOnOneMentor) {
+    $unset.oneOnOneMentorFigureId = "";
+    $unset.oneOnOneMentorFigureName = "";
+  }
+  if (clearSecondOrder) {
+    $unset.secondOrderThinking = "";
+  }
+  const updateDoc: { $set: Record<string, unknown>; $unset?: Record<string, ""> } = {
+    $set,
+  };
+  if (Object.keys($unset).length > 0) {
+    updateDoc.$unset = $unset;
+  }
   const result = await database
     .collection<SessionDoc>("sessions")
-    .updateOne(
-      { _id: id, userId },
-      { $set: { ...updates, updatedAt: new Date() } }
-    );
+    .updateOne({ _id: id, userId }, updateDoc);
   return result.modifiedCount > 0;
 }
 

@@ -21,7 +21,6 @@ const isPublicRoute = createRouteMatcher([
   "/api/me/concepts(.*)",
   "/api/me/long-term-memory(.*)",
   "/api/me/usage/stt",
-  "/api/extension(.*)",
   "/manifest.json",
   "/icons(.*)",
 ]);

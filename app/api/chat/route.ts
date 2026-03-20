@@ -16,7 +16,7 @@ import {
   loadMentalModelsIndex,
   getIndexSummary,
 } from "@/lib/mental-models";
-import { getFiguresByIds } from "@/lib/famous-figures";
+import { getFiguresByIds, getFigureById, type FamousFigure } from "@/lib/famous-figures";
 import {
   extractMentalModelIdsFromMessages,
   getRelevantContextBlockDelimiters,
@@ -163,6 +163,92 @@ function compactPromptText(value: string | undefined, maxLen = 220): string {
     .slice(0, maxLen);
 }
 
+/** 1:1 mentor prompt: no mental models, user context, ---OPTIONS---, or journal blocks. */
+const MENTOR_ONE_ON_ONE_SYSTEM_PROMPT = `# Role: The Intellectual Mentor
+You are engaging in a private, 1:1 mentorship session. You are not a chatbot; you are a trusted advisor who thinks and reasons through the specific intellectual framework of **[[Insert Figure Name]]**.
+
+## The user must *feel* who this is
+Every reply should make the user sense a **real, particular mind** beside them—not generic advice with a famous name attached.
+- **Embodied voice:** Let this figure's priorities, temper, sense of what matters (beauty, rigor, mercy, rebellion, order—whatever defined them) show in **how** you phrase things, not only in what you recommend. Avoid flat "assistant" neutrality ("Here are three takeaways…") unless that dullness would itself be out of character for this figure—usually it isn't.
+- **Texture and rhythm:** Honor how this person tends to *move* through an idea—some are terse, some winding, some fierce, some gentle. Vary sentence length; allow an occasional line that could only come from **this** worldview.
+- **Emotional stakes:** Make felt what would *land* for this figure in the user's situation—what they'd warm to, resist, sharpen, or refuse to sugarcoat.
+- **One vivid beat:** When it fits, include a single concrete image, metaphor, or contrast that fits their habits of mind—without stacking clichés or repeating a catchphrase.
+
+## The Persona: Intellectual Fingerprint
+Do not perform a caricature. Instead, adopt their **intellectual fingerprints**: their core values, their typical logic leaps, and their specific "obsessions."
+- **Grounding:** Use the following bio for context: [[Insert Figure Bio]]
+- If the bio is thin or generic, lean on this figure's **domain** and **public reputation**—not invention. Prefer the spirit of their philosophy over filling gaps with plausible-sounding detail.
+- **Voice:** Use clear, modern language. Avoid "thespian" flourishes, archaic "thee/thou" speech, or repetitive catchphrases.
+- **Accuracy:** If the user asks for a specific fact about your life or work that you aren't sure of, prioritize the *spirit* of your philosophy over a "plausible" invention.
+
+## The Mentorship Stance
+Your goal is to help the user navigate their own life, not to lecture them on yours.
+- **Active Listening:** Validate the user's context before jumping into advice. Use "thinking aloud" to show how you are applying your philosophy to their specific problem.
+- **Socratic Inquiry:** When it genuinely helps, you may ask **at most one** sharp, insightful question to help the user reach their own epiphany. If they need a **direct answer**, a **definition**, or **straight facts**, skip the question and answer plainly—do not sound evasive.
+- **Constructive Friction:** A mentor is not a "yes-man." If the user's logic is flawed or their perspective is narrow, push back gently using your figure's known standards for excellence, ethics, or logic.
+
+## Conversational Guardrails
+- **Focus:** Stay in the room with the user. Do not reference other historical figures or your "contemporaries" unless the user brings them up.
+- **Language:** Match the **language of the user's message** unless they explicitly ask you to switch. (Additional language instructions may appear below—follow them if present.)
+- **Brevity:** Keep your responses concise (under 3 paragraphs) to maintain the feel of a real-time conversation. Long monologues kill the 1:1 feel.
+- **No Meta-Talk:** Never mention that you are an AI, a model, or a persona. Do not use "As an AI..." or append any machine-readable footers, options, checkpoints, or bracketed memory/model tags.
+
+## Formatting
+- Use **Markdown** for readability: use **bold sparingly** for key terms or core concepts; use *italics* for light emphasis.
+- Use bullet points only for lists of actionable steps.
+- End your response naturally, as a person would stop speaking.`;
+
+function buildMentorOneOnOneSystemPrompt(figure: FamousFigure): string {
+  const bio = compactPromptText(figure.description, 520);
+  const bioBlock =
+    bio ||
+    "(Bio unavailable or very short—infer cautiously from the figure's name and public domain; prefer general philosophical *spirit* over invented specifics.)";
+  return MENTOR_ONE_ON_ONE_SYSTEM_PROMPT.replace(/\[\[Insert Figure Name\]\]/g, figure.name).replace(
+    "[[Insert Figure Bio]]",
+    bioBlock
+  );
+}
+
+/** Rich persona block for perspective-card + famous figure (lightweight mode). */
+function buildPerspectiveFigurePersonaBlock(
+  figureName: string,
+  figure: FamousFigure | null
+): string {
+  const bio = figure ? compactPromptText(figure.description, 520) : "";
+  const grounding = bio
+    ? `**Grounding (stay true to this spirit, not a costume):**\n${bio}\n\n`
+    : `**Grounding:** No detailed bio is available—lean on **${figureName}**'s domain, era, and how they are publicly known to think and speak. Do not invent biographical facts.\n\n`;
+
+  return `## Voice & Persona — the user should *feel* who this is
+You are **${figureName}** holding this perspective card—not a neutral narrator summarizing a prompt. The card is the lens; **you** are the mind and temperament looking through it.
+
+${grounding}### Make it felt
+- **Embodied presence:** Write so the user senses a distinctive worldview—what this figure would notice first, refuse to rush past, or find beautiful or unacceptable. Avoid generic "helpful guide" prose with a famous name pasted on top.
+- **Texture and rhythm:** Match how this figure tends to *move* through an idea (patient, clipped, lyrical, surgical, playful—whatever fits). Let sentence rhythm carry personality.
+- **Stakes:** Show what would *matter* to this figure in what the user brought—not abstract praise, but the real tilt of their attention.
+- **No cardboard:** Skip repetitive catchphrases or theatrical voice. One subtle, true-to-them beat beats five loud imitations.
+
+If anything conflicts, prioritize **grounded spirit and documented worldview** over generic assistant habits.`;
+}
+
+/** Second-order thinking: minimal prompt, no mental-model index or RAG. */
+const SECOND_ORDER_SYSTEM_PROMPT = `# Role: Second-order thinking partner
+You help the user think past the first obvious answer. First-order thinking is "what happens next?"; second-order thinking is "what happens next *after that*?"—including incentives, feedback loops, and unintended consequences.
+
+## Your stance
+- **Probe consequences:** Surface tradeoffs, hidden assumptions, and who gains or loses if the first move plays out.
+- **Stay concrete:** Prefer specific scenarios over abstract theory.
+- **No laundry lists:** Offer a few sharp second-order angles, not a generic essay.
+- **Match the need:** If they need a direct answer or definition, give it first—then add one layer of second-order insight when it helps.
+
+## Guardrails
+- **No meta-talk:** Do not mention that you are an AI or a "mode." No machine-readable footers or bracketed tags.
+- **Language:** Match the language of the user's message unless they ask otherwise.
+- **Honesty:** If you lack domain facts, say so and reason from structure (incentives, time horizons) instead of inventing specifics.
+
+## Formatting
+Use **Markdown** sparingly. Use **bold** only for pivotal terms. Keep responses concise (under 3 paragraphs unless the user asks for depth).`;
+
 function prettyJson(value: unknown): string {
   return JSON.stringify(value, null, 2);
 }
@@ -197,6 +283,10 @@ export async function POST(request: Request) {
   let journalCheckpoint: string | undefined;
   let multiMentorMode = false;
   let multiMentorFigureIds: string[] = [];
+  let resolvedOneOnOneFigure: FamousFigure | null = null;
+  let mentorOneOnOne: FamousFigure | null = null;
+  let requestedSecondOrder = false;
+  let secondOrderMode = false;
 
   try {
     const body = await request.json();
@@ -276,6 +366,46 @@ export async function POST(request: Request) {
         );
       }
     }
+    if (typeof body.oneOnOneMentorFigureId === "string" && body.oneOnOneMentorFigureId.trim()) {
+      const fig = getFigureById(body.oneOnOneMentorFigureId.trim());
+      if (!fig) {
+        return NextResponse.json({ error: "Invalid mentor figure id" }, { status: 400 });
+      }
+      resolvedOneOnOneFigure = fig;
+    }
+    if (multiMentorMode && resolvedOneOnOneFigure) {
+      return NextResponse.json(
+        { error: "Cannot use multi-mentor mode with 1:1 mentor" },
+        { status: 400 }
+      );
+    }
+    if (resolvedOneOnOneFigure && typeof body.activeCardPrompt === "string" && body.activeCardPrompt.trim()) {
+      return NextResponse.json(
+        { error: "Cannot combine perspective card with 1:1 mentor in the same request" },
+        { status: 400 }
+      );
+    }
+    if (body.secondOrderThinking === true) {
+      requestedSecondOrder = true;
+    }
+    if (requestedSecondOrder && resolvedOneOnOneFigure) {
+      return NextResponse.json(
+        { error: "Cannot combine second-order mode with 1:1 mentor" },
+        { status: 400 }
+      );
+    }
+    if (requestedSecondOrder && multiMentorMode) {
+      return NextResponse.json(
+        { error: "Cannot combine second-order mode with multi-mentor" },
+        { status: 400 }
+      );
+    }
+    if (requestedSecondOrder && typeof body.activeCardPrompt === "string" && body.activeCardPrompt.trim()) {
+      return NextResponse.json(
+        { error: "Cannot combine second-order mode with a perspective card" },
+        { status: 400 }
+      );
+    }
 
     if (!message || typeof message !== "string") {
       return NextResponse.json(
@@ -296,6 +426,8 @@ export async function POST(request: Request) {
   let userMentalModels: Awaited<ReturnType<typeof getUserMentalModels>> = [];
 
   if (isAnonymous || incognito) {
+    mentorOneOnOne = resolvedOneOnOneFigure;
+    secondOrderMode = requestedSecondOrder;
     const history = bodyMessages
       .filter((m) => m.role === "user" || m.role === "assistant")
       .map((m) => ({
@@ -323,6 +455,20 @@ export async function POST(request: Request) {
     if (!session) {
       const newSession = await createSession(userId!);
       sessionId = newSession._id;
+      session = newSession;
+    }
+
+    if (session?.oneOnOneMentorFigureId && requestedSecondOrder) {
+      return NextResponse.json(
+        { error: "This conversation is already in 1:1 mentor mode; start a new chat for second-order thinking" },
+        { status: 400 }
+      );
+    }
+    if (session?.secondOrderThinking && resolvedOneOnOneFigure) {
+      return NextResponse.json(
+        { error: "This conversation is already in second-order mode; start a new chat for a 1:1 mentor" },
+        { status: 400 }
+      );
     }
 
     if (activeCardPrompt && sessionId) {
@@ -338,6 +484,28 @@ export async function POST(request: Request) {
       activeCardName = session.perspectiveCardName ?? "Perspective card";
       activeCardFigureId = session.perspectiveCardFigureId;
       activeCardFigureName = session.perspectiveCardFigureName;
+    }
+
+    if (resolvedOneOnOneFigure && sessionId) {
+      mentorOneOnOne = resolvedOneOnOneFigure;
+      await updateSession(sessionId, userId!, {
+        oneOnOneMentorFigureId: resolvedOneOnOneFigure.id,
+        oneOnOneMentorFigureName: resolvedOneOnOneFigure.name,
+        clearSecondOrder: true,
+      });
+    } else if (!resolvedOneOnOneFigure && session?.oneOnOneMentorFigureId) {
+      const fig = getFigureById(session.oneOnOneMentorFigureId);
+      if (fig) mentorOneOnOne = fig;
+    }
+
+    if (requestedSecondOrder && sessionId) {
+      secondOrderMode = true;
+      await updateSession(sessionId, userId!, {
+        secondOrderThinking: true,
+        clearOneOnOneMentor: true,
+      });
+    } else if (!requestedSecondOrder && session?.secondOrderThinking) {
+      secondOrderMode = true;
     }
 
     const [
@@ -382,6 +550,30 @@ export async function POST(request: Request) {
   const convertedToDeep = !isAnonymous && !incognito && sessionId
     ? (await getSession(sessionId, userId!))?.convertedToDeepConversation
     : false;
+  if (mentorOneOnOne && activeCardPrompt) {
+    return NextResponse.json(
+      { error: "Cannot use 1:1 mentor in a perspective-card session; start a new chat" },
+      { status: 400 }
+    );
+  }
+  if (mentorOneOnOne && secondOrderMode) {
+    return NextResponse.json(
+      { error: "Cannot combine 1:1 mentor with second-order mode" },
+      { status: 400 }
+    );
+  }
+  if (secondOrderMode && activeCardPrompt) {
+    return NextResponse.json(
+      { error: "Cannot use second-order mode in a perspective-card session; start a new chat" },
+      { status: 400 }
+    );
+  }
+  if (secondOrderMode && multiMentorMode) {
+    return NextResponse.json(
+      { error: "Cannot use second-order mode with multi-mentor" },
+      { status: 400 }
+    );
+  }
   const isLightweight =
     !!activeCardPrompt && !convertedToDeep;
 
@@ -395,7 +587,14 @@ export async function POST(request: Request) {
 
   let followedFiguresNudgeBlock = "";
   let userSettings: Awaited<ReturnType<typeof getUserSettings>> = null;
-  if (userId && !incognito) {
+  if (multiMentorMode && mentorOneOnOne) {
+    return NextResponse.json(
+      { error: "Cannot use multi-mentor mode with 1:1 mentor" },
+      { status: 400 }
+    );
+  }
+
+  if (userId && !incognito && !mentorOneOnOne && !secondOrderMode) {
     userSettings = await getUserSettings(userId);
     if (userSettings?.followedFigureIds?.length) {
       const figures = getFiguresByIds(userSettings.followedFigureIds);
@@ -407,6 +606,8 @@ export async function POST(request: Request) {
   // Multi-mentor branch: get responses from 2–5 followed figures, then consolidate into one response
   if (
     multiMentorMode &&
+    !mentorOneOnOne &&
+    !secondOrderMode &&
     userId &&
     !incognito &&
     userSettings?.followedFigureIds?.length
@@ -552,9 +753,11 @@ ${langInstr}`;
         ? `\n\nLANGUAGE: Respond in ${getLanguageName(language as LanguageCode)}.`
         : "";
     const cardInPrepend = messagesForModel[0]?.role === "assistant";
+    const perspectiveFigureForPersona =
+      activeCardFigureId ? getFigureById(activeCardFigureId) : null;
     const figurePersonaBlock =
       activeCardFigureName
-        ? `\n\n## Voice & Persona\nYou are speaking AS **${activeCardFigureName}**. Use their worldview, voice, and perspective. Ask questions and guide the user as this figure would—curious, insightful, and true to their character. The perspective card is your lens; your persona is how you hold it.\n`
+        ? `\n\n${buildPerspectiveFigurePersonaBlock(activeCardFigureName, perspectiveFigureForPersona)}\n`
         : "";
     fullSystemPrompt =
       PERSPECTIVE_CARD_SYSTEM_PROMPT +
@@ -570,6 +773,64 @@ ${langInstr}`;
       perspectiveCards: activeCardName && activeCardPrompt
         ? [{ id: "active", title: activeCardName, reason: "Applied perspective", prompt: activeCardPrompt }]
         : [],
+    };
+    const { start: ctxStart, end: ctxEnd } = getRelevantContextBlockDelimiters();
+    contextBlockForStream = `${ctxStart}\n${JSON.stringify({
+      predictedContext: predictedContextResult,
+    })}\n${ctxEnd}`;
+  } else if (secondOrderMode) {
+    const languageInstructionSo =
+      language !== "en"
+        ? `\n\nLANGUAGE: Respond in ${getLanguageName(language as LanguageCode)}. All your responses must be in that language.`
+        : "";
+    const userTypeStylePromptSo = getUserTypeStylePrompt(userType as UserTypeId);
+    const conversationStyleInstructionSo =
+      userTypeStylePromptSo
+        ? `\n\nCONVERSATION STYLE: ${userTypeStylePromptSo}`
+        : "";
+    fullSystemPrompt =
+      SECOND_ORDER_SYSTEM_PROMPT +
+      languageInstructionSo +
+      conversationStyleInstructionSo;
+    mmIdToName = new Map();
+    ltmIdToTitle = new Map();
+    ccIdToTitle = new Map();
+    cgIdToTitle = new Map();
+    predictedContextResult = {
+      mentalModels: [],
+      longTermMemories: [],
+      customConcepts: [],
+      conceptGroups: [],
+      perspectiveCards: [],
+    };
+    const { start: ctxStart, end: ctxEnd } = getRelevantContextBlockDelimiters();
+    contextBlockForStream = `${ctxStart}\n${JSON.stringify({
+      predictedContext: predictedContextResult,
+    })}\n${ctxEnd}`;
+  } else if (mentorOneOnOne) {
+    const languageInstructionMentor =
+      language !== "en"
+        ? `\n\nLANGUAGE: Respond in ${getLanguageName(language as LanguageCode)}. All your responses must be in that language.`
+        : "";
+    const userTypeStylePromptMentor = getUserTypeStylePrompt(userType as UserTypeId);
+    const conversationStyleInstructionMentor =
+      userTypeStylePromptMentor
+        ? `\n\nCONVERSATION STYLE: ${userTypeStylePromptMentor}`
+        : "";
+    fullSystemPrompt =
+      buildMentorOneOnOneSystemPrompt(mentorOneOnOne) +
+      languageInstructionMentor +
+      conversationStyleInstructionMentor;
+    mmIdToName = new Map();
+    ltmIdToTitle = new Map();
+    ccIdToTitle = new Map();
+    cgIdToTitle = new Map();
+    predictedContextResult = {
+      mentalModels: [],
+      longTermMemories: [],
+      customConcepts: [],
+      conceptGroups: [],
+      perspectiveCards: [],
     };
     const { start: ctxStart, end: ctxEnd } = getRelevantContextBlockDelimiters();
     contextBlockForStream = `${ctxStart}\n${JSON.stringify({
@@ -908,7 +1169,13 @@ ${langInstr}`;
   }
 
   if (process.env.NODE_ENV === "development") {
-    const modeLabel = isLightweight ? "lightweight (PERSPECTIVE_CARD_SYSTEM_PROMPT only)" : "full (SYSTEM_PROMPT + context)";
+    const modeLabel = secondOrderMode
+      ? "second-order (SECOND_ORDER_SYSTEM_PROMPT only, no RAG)"
+      : mentorOneOnOne
+        ? "mentor (MENTOR_ONE_ON_ONE_SYSTEM_PROMPT only, no RAG)"
+        : isLightweight
+          ? "lightweight (PERSPECTIVE_CARD_SYSTEM_PROMPT only)"
+          : "full (SYSTEM_PROMPT + context)";
     console.debug(formatDevLogBlock("[Chat] MODE", modeLabel));
     console.debug(formatDevLogBlock("[Chat] LLM SYSTEM PROMPT", systemPromptForGemini));
     const requestText = messagesForGemini
