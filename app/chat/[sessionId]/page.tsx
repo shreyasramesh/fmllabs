@@ -8952,7 +8952,25 @@ export default function ChatPage() {
           >
             {ccCreateStep === "input" ? (
               <>
-                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                <div className="relative p-4 pr-12 border-b border-neutral-200 dark:border-neutral-700">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!ccCreateLoading) {
+                        setCcCreateModal(false);
+                        setCcCreateStep("input");
+                        setCcCreateDraft(null);
+                        setCcCreateGroupSuggestions(null);
+                        setCcCreateSelectedGroupIds(new Set());
+                        setCcCreateSelectedNewGroupNames(new Set());
+                      }
+                    }}
+                    className="absolute top-4 right-4 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                    aria-label={getUiTranslations(language).close}
+                    disabled={ccCreateLoading}
+                  >
+                    ✕
+                  </button>
                   <h2 className="font-semibold text-lg mb-2">Create Custom Concept</h2>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
                     What do you want to remember? The AI will generate a summary and enrichment prompt for you to review and edit.
@@ -8969,21 +8987,6 @@ export default function ChatPage() {
                   />
                 </div>
                 <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex flex-wrap gap-2 justify-end items-center">
-                  <button
-                    onClick={() => {
-                      if (!ccCreateLoading) {
-                        setCcCreateModal(false);
-                        setCcCreateStep("input");
-                        setCcCreateDraft(null);
-                        setCcCreateGroupSuggestions(null);
-                        setCcCreateSelectedGroupIds(new Set());
-                        setCcCreateSelectedNewGroupNames(new Set());
-                      }
-                    }}
-                    className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
-                  >
-                    {getUiTranslations(language).cancel}
-                  </button>
                   <button
                     onClick={async () => {
                       if (!ccCreateInput.trim() || ccCreateLoading) return;
@@ -9049,7 +9052,25 @@ export default function ChatPage() {
             ) : (
               ccCreateDraft && (
                 <>
-                  <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                  <div className="relative p-4 pr-12 border-b border-neutral-200 dark:border-neutral-700">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!ccCreateLoading) {
+                          setCcCreateModal(false);
+                          setCcCreateStep("input");
+                          setCcCreateDraft(null);
+                          setCcCreateGroupSuggestions(null);
+                          setCcCreateSelectedGroupIds(new Set());
+                          setCcCreateSelectedNewGroupNames(new Set());
+                        }
+                      }}
+                      className="absolute top-4 right-4 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                      aria-label={getUiTranslations(language).close}
+                      disabled={ccCreateLoading}
+                    >
+                      ✕
+                    </button>
                     <h2 className="font-semibold text-lg mb-2">Review and edit</h2>
                     <p className="text-sm text-neutral-600 dark:text-neutral-400">
                       Edit the generated concept below, then click Save to add it to your custom concepts.
@@ -9306,7 +9327,29 @@ export default function ChatPage() {
             {!ccYoutubeResult ? (
               ccImportJournalMode ? (
               <>
-                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                <div className="relative p-4 pr-12 border-b border-neutral-200 dark:border-neutral-700">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      !ccYoutubeLoading &&
+                      (setCcYoutubeModal(false),
+                      setCcYoutubeUrl(""),
+                      setCcYoutubeExtractPrompt(""),
+                      setCcYoutubeTranscriptId(null),
+                      setCcYoutubeResult(null),
+                      setCcYoutubeError(null),
+                      setCcImportJournalMode(false),
+                      setCcJournalText(""),
+                      setCcJournalTitle(""),
+                      setCcJournalPersistLibrary(false),
+                      setCcJournalTranscriptId(null))
+                    }
+                    className="absolute top-4 right-4 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                    aria-label={getUiTranslations(language).close}
+                    disabled={ccYoutubeLoading}
+                  >
+                    ✕
+                  </button>
                   <h2 className="font-semibold text-lg mb-2">
                     {ccJournalTranscriptId ? "Re-extract from saved journal" : "Concepts from journal"}
                   </h2>
@@ -9374,26 +9417,6 @@ export default function ChatPage() {
                 <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
                   <button
                     type="button"
-                    onClick={() =>
-                      !ccYoutubeLoading &&
-                      (setCcYoutubeModal(false),
-                      setCcYoutubeUrl(""),
-                      setCcYoutubeExtractPrompt(""),
-                      setCcYoutubeTranscriptId(null),
-                      setCcYoutubeResult(null),
-                      setCcYoutubeError(null),
-                      setCcImportJournalMode(false),
-                      setCcJournalText(""),
-                      setCcJournalTitle(""),
-                      setCcJournalPersistLibrary(false),
-                      setCcJournalTranscriptId(null))
-                    }
-                    className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
-                  >
-                    {getUiTranslations(language).cancel}
-                  </button>
-                  <button
-                    type="button"
                     onClick={async () => {
                       if ((!ccJournalText.trim() && !ccJournalTranscriptId) || ccYoutubeLoading) return;
                       setCcYoutubeLoading(true);
@@ -9444,7 +9467,29 @@ export default function ChatPage() {
               </>
               ) : (
               <>
-                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                <div className="relative p-4 pr-12 border-b border-neutral-200 dark:border-neutral-700">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      !ccYoutubeLoading &&
+                      (setCcYoutubeModal(false),
+                      setCcYoutubeUrl(""),
+                      setCcYoutubeExtractPrompt(""),
+                      setCcYoutubeTranscriptId(null),
+                      setCcYoutubeResult(null),
+                      setCcYoutubeError(null),
+                      setCcImportJournalMode(false),
+                      setCcJournalText(""),
+                      setCcJournalTitle(""),
+                      setCcJournalPersistLibrary(false),
+                      setCcJournalTranscriptId(null))
+                    }
+                    className="absolute top-4 right-4 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                    aria-label={getUiTranslations(language).close}
+                    disabled={ccYoutubeLoading}
+                  >
+                    ✕
+                  </button>
                   <h2 className="font-semibold text-lg mb-2">
                     {ccYoutubeTranscriptId ? "Re-extract from saved transcript" : "Concepts from YouTube"}
                   </h2>
@@ -9483,26 +9528,6 @@ export default function ChatPage() {
                   </div>
                 </div>
                 <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      !ccYoutubeLoading &&
-                      (setCcYoutubeModal(false),
-                      setCcYoutubeUrl(""),
-                      setCcYoutubeExtractPrompt(""),
-                      setCcYoutubeTranscriptId(null),
-                      setCcYoutubeResult(null),
-                      setCcYoutubeError(null),
-                      setCcImportJournalMode(false),
-                      setCcJournalText(""),
-                      setCcJournalTitle(""),
-                      setCcJournalPersistLibrary(false),
-                      setCcJournalTranscriptId(null))
-                    }
-                    className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
-                  >
-                    {getUiTranslations(language).cancel}
-                  </button>
                   <button
                     type="button"
                     onClick={async () => {
@@ -9553,7 +9578,29 @@ export default function ChatPage() {
             )
             ) : (
               <>
-                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                <div className="relative p-4 pr-12 border-b border-neutral-200 dark:border-neutral-700">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      !ccYoutubeLoading &&
+                      (setCcYoutubeModal(false),
+                      setCcYoutubeUrl(""),
+                      setCcYoutubeExtractPrompt(""),
+                      setCcYoutubeTranscriptId(null),
+                      setCcYoutubeResult(null),
+                      setCcYoutubeError(null),
+                      setCcImportJournalMode(false),
+                      setCcJournalText(""),
+                      setCcJournalTitle(""),
+                      setCcJournalPersistLibrary(false),
+                      setCcJournalTranscriptId(null))
+                    }
+                    className="absolute top-4 right-4 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                    aria-label={getUiTranslations(language).close}
+                    disabled={ccYoutubeLoading}
+                  >
+                    ✕
+                  </button>
                   <h2 className="font-semibold text-lg mb-1">Review concepts</h2>
                   {ccYoutubeResult.source === "youtube" && ccYoutubeResult.videoTitle && (
                     <p className="text-sm text-neutral-600 dark:text-neutral-400 truncate" title={ccYoutubeResult.videoTitle}>
@@ -10750,15 +10797,27 @@ export default function ChatPage() {
             className="bg-background rounded-3xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
-              <h2 className="font-semibold text-lg mb-2">Create custom group</h2>
+            <div className="relative p-4 pr-12 border-b border-neutral-200 dark:border-neutral-700">
+              <button
+                type="button"
+                onClick={() =>
+                  !cgCustomCreateLoading &&
+                  (setCgCustomCreateModal(false), setCgCustomCreateTitle(""), setCgCustomCreateSelectedIds(new Set()))
+                }
+                className="absolute top-4 right-4 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                aria-label={getUiTranslations(language).close}
+                disabled={cgCustomCreateLoading}
+              >
+                ✕
+              </button>
+              <h2 className="font-semibold text-lg mb-2">Create custom framework</h2>
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                Name your group and select concepts to include.
+                Name your framework and select concepts to include.
               </p>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Group name</label>
+                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Framework name</label>
                 <input
                   type="text"
                   value={cgCustomCreateTitle}
@@ -10806,12 +10865,6 @@ export default function ChatPage() {
             </div>
             <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
               <button
-                onClick={() => !cgCustomCreateLoading && (setCgCustomCreateModal(false), setCgCustomCreateTitle(""), setCgCustomCreateSelectedIds(new Set()))}
-                className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
-              >
-                {getUiTranslations(language).cancel}
-              </button>
-              <button
                 onClick={async () => {
                   if (!cgCustomCreateTitle.trim() || cgCustomCreateLoading) return;
                   setCgCustomCreateLoading(true);
@@ -10841,7 +10894,7 @@ export default function ChatPage() {
                 disabled={!cgCustomCreateTitle.trim() || cgCustomCreateLoading}
                 className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
               >
-                {cgCustomCreateLoading ? "Creating…" : "Create group"}
+                {cgCustomCreateLoading ? "Creating…" : "Create framework"}
               </button>
             </div>
           </div>
@@ -10861,7 +10914,24 @@ export default function ChatPage() {
           >
             {cgCreateStep === 1 && (
               <>
-                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                <div className="relative p-4 pr-12 border-b border-neutral-200 dark:border-neutral-700">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      !cgCreateLoading &&
+                      (setCgCreateModal(false),
+                      setCgCreateStep(1),
+                      setCgCreateDomain(""),
+                      setCgCreateQuestions([]),
+                      setCgCreateAnswers({}),
+                      setCgCreateConcepts([]))
+                    }
+                    className="absolute top-4 right-4 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                    aria-label={getUiTranslations(language).close}
+                    disabled={cgCreateLoading}
+                  >
+                    ✕
+                  </button>
                   <h2 className="font-semibold text-lg mb-2">Create Domain</h2>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
                     What domain or goal? (e.g. Finance, Career, Health)
@@ -10878,12 +10948,6 @@ export default function ChatPage() {
                   />
                 </div>
                 <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
-                  <button
-                    onClick={() => !cgCreateLoading && (setCgCreateModal(false), setCgCreateStep(1), setCgCreateDomain(""), setCgCreateQuestions([]), setCgCreateAnswers({}), setCgCreateConcepts([]))}
-                    className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
-                  >
-                    {getUiTranslations(language).cancel}
-                  </button>
                   <button
                     onClick={async () => {
                       if (!cgCreateDomain.trim() || cgCreateLoading) return;
@@ -10922,7 +10986,24 @@ export default function ChatPage() {
             )}
             {cgCreateStep === 2 && cgCreateQuestions.length > 0 && (
               <>
-                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                <div className="relative p-4 pr-12 border-b border-neutral-200 dark:border-neutral-700">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      !cgCreateLoading &&
+                      (setCgCreateModal(false),
+                      setCgCreateStep(1),
+                      setCgCreateDomain(""),
+                      setCgCreateQuestions([]),
+                      setCgCreateAnswers({}),
+                      setCgCreateConcepts([]))
+                    }
+                    className="absolute top-4 right-4 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                    aria-label={getUiTranslations(language).close}
+                    disabled={cgCreateLoading}
+                  >
+                    ✕
+                  </button>
                   <h2 className="font-semibold text-lg mb-2">Answer these questions</h2>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
                     Suggested answers are pre-filled. Edit or clear any to tailor your concepts for &quot;{cgCreateDomain}&quot;
@@ -11006,7 +11087,24 @@ export default function ChatPage() {
             )}
             {cgCreateStep === 3 && cgCreateConcepts.length > 0 && (
               <>
-                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                <div className="relative p-4 pr-12 border-b border-neutral-200 dark:border-neutral-700">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      !cgCreateLoading &&
+                      (setCgCreateModal(false),
+                      setCgCreateStep(1),
+                      setCgCreateDomain(""),
+                      setCgCreateQuestions([]),
+                      setCgCreateAnswers({}),
+                      setCgCreateConcepts([]))
+                    }
+                    className="absolute top-4 right-4 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                    aria-label={getUiTranslations(language).close}
+                    disabled={cgCreateLoading}
+                  >
+                    ✕
+                  </button>
                   <h2 className="font-semibold text-lg mb-2">Review and edit concepts</h2>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
                     Edit the generated concepts, then click Save to create your domain.
