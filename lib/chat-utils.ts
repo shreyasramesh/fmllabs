@@ -250,6 +250,22 @@ function tryParseJournalCheckpointJson(jsonStr: string): JournalCheckpoint | nul
   }
 }
 
+/** First top-level `{ ... }` in s (balanced braces); for inline JSON after ---JOURNAL-CHECKPOINT--- */
+function extractFirstJsonObject(s: string): string | null {
+  const start = s.indexOf("{");
+  if (start === -1) return null;
+  let depth = 0;
+  for (let i = start; i < s.length; i++) {
+    const c = s[i];
+    if (c === "{") depth++;
+    else if (c === "}") {
+      depth--;
+      if (depth === 0) return s.slice(start, i + 1);
+    }
+  }
+  return null;
+}
+
 /**
  * Parses and strips the JOURNAL-CHECKPOINT block from assistant content.
  * Returns content without the block and the parsed journal checkpoint, or null if not found/invalid.
@@ -264,11 +280,28 @@ export function parseJournalCheckpointBlock(content: string): {
   }
   const afterMarker = content.slice(idx + JOURNAL_CHECKPOINT_MARKER.length).trimStart();
   const endIdx = afterMarker.indexOf(JOURNAL_CHECKPOINT_END_MARKER);
-  if (endIdx === -1) {
-    return { contentWithoutBlock: content, journalCheckpoint: null };
+
+  let jsonStr: string;
+  let contentAfterBlock: string;
+
+  if (endIdx !== -1) {
+    jsonStr = afterMarker.slice(0, endIdx).trim();
+    contentAfterBlock = afterMarker
+      .slice(endIdx + JOURNAL_CHECKPOINT_END_MARKER.length)
+      .trimStart();
+  } else {
+    // Model often omits ---END-JOURNAL-CHECKPOINT---; extract inline JSON after marker
+    const extracted = extractFirstJsonObject(afterMarker);
+    if (!extracted) {
+      return { contentWithoutBlock: content, journalCheckpoint: null };
+    }
+    jsonStr = extracted;
+    const jsonStartInAfter = afterMarker.indexOf(extracted);
+    const consumedEnd =
+      jsonStartInAfter >= 0 ? jsonStartInAfter + extracted.length : extracted.length;
+    contentAfterBlock = afterMarker.slice(consumedEnd).trimStart();
   }
-  const jsonStr = afterMarker.slice(0, endIdx).trim();
-  const contentAfterBlock = afterMarker.slice(endIdx + JOURNAL_CHECKPOINT_END_MARKER.length).trimStart();
+
   const contentWithoutBlock = (content.slice(0, idx).trimEnd() + "\n\n" + contentAfterBlock).trim();
   const journalCheckpoint = tryParseJournalCheckpointJson(jsonStr);
   return {

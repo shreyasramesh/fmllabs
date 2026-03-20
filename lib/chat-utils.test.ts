@@ -4,6 +4,7 @@ import {
   getRelevantContextBlockDelimiters,
   parseRelevantContextBlock,
   parseRelevantContextFromStreamStart,
+  parseJournalCheckpointBlock,
 } from "./chat-utils";
 
 test("parseRelevantContextFromStreamStart prefers predicted context in envelope", () => {
@@ -47,4 +48,33 @@ test("parseRelevantContextBlock prefers cited context in envelope", () => {
   const parsed = parseRelevantContextBlock(content);
   assert.equal(parsed.relevantContext?.mentalModels[0]?.id, "endowment_effect");
   assert.equal(parsed.contentWithoutBlock, "Model output.");
+});
+
+test("parseJournalCheckpointBlock parses standard block with END marker", () => {
+  const body = `Body text.
+
+---JOURNAL-CHECKPOINT---
+{"prompt": "Today I realized _____", "options": ["a", "b", "c", "d"]}
+---END-JOURNAL-CHECKPOINT---
+
+Tail`;
+  const { contentWithoutBlock, journalCheckpoint } = parseJournalCheckpointBlock(body);
+  assert.equal(journalCheckpoint?.prompt, "Today I realized _____");
+  assert.equal(journalCheckpoint?.options.length, 4);
+  assert.ok(contentWithoutBlock.includes("Body text"));
+  assert.ok(contentWithoutBlock.includes("Tail"));
+  assert.ok(!contentWithoutBlock.includes("JOURNAL-CHECKPOINT"));
+});
+
+test("parseJournalCheckpointBlock parses inline JSON when END marker omitted", () => {
+  const body = `Some reply.
+
+---JOURNAL-CHECKPOINT--- {"prompt": "Today I realized _____", "options": ["a", "b", "c", "d"]}
+
+More after`;
+  const { contentWithoutBlock, journalCheckpoint } = parseJournalCheckpointBlock(body);
+  assert.equal(journalCheckpoint?.prompt, "Today I realized _____");
+  assert.equal(journalCheckpoint?.options.length, 4);
+  assert.ok(contentWithoutBlock.includes("Some reply"));
+  assert.ok(contentWithoutBlock.includes("More after"));
 });

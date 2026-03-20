@@ -1731,6 +1731,8 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [multiMentorMode, setMultiMentorMode] = useState(false);
   const [selectedMentorFigureIds, setSelectedMentorFigureIds] = useState<string[]>([]);
+  /** Domain (category) for Ask mentors picker; null until user picks when multiple domains exist */
+  const [mentorPickerCategoryId, setMentorPickerCategoryId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [sessionLoading, setSessionLoading] = useState(!isNew && !incognitoMode);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(
@@ -3333,6 +3335,31 @@ export default function ChatPage() {
     );
   }, [selectableMentorFigureIds]);
 
+  const mentorDomainsForPicker = useMemo(() => {
+    if (!figuresData?.categories?.length || !selectableMentorFigureIds.length) return [];
+    const selectableSet = new Set(selectableMentorFigureIds);
+    return figuresData.categories.filter((cat) =>
+      figuresData.figures.some((f) => f.category === cat.id && selectableSet.has(f.id))
+    );
+  }, [figuresData, selectableMentorFigureIds]);
+
+  const mentorIdsInSelectedDomain = useMemo(() => {
+    if (!figuresData?.figures?.length || !selectableMentorFigureIds.length) return [];
+    const effectiveCategoryId =
+      mentorPickerCategoryId ??
+      (mentorDomainsForPicker.length === 1 ? mentorDomainsForPicker[0].id : null);
+    if (!effectiveCategoryId) return [];
+    return selectableMentorFigureIds.filter((id) => {
+      const f = figuresData.figures.find((ff) => ff.id === id);
+      return f?.category === effectiveCategoryId;
+    });
+  }, [
+    figuresData?.figures,
+    selectableMentorFigureIds,
+    mentorPickerCategoryId,
+    mentorDomainsForPicker,
+  ]);
+
   const closeAllModalsExceptLeftPanel = useCallback(() => {
     setWaysOfLookingAtModalOpen(false);
     setWaysOfLookingAtDrawMode(false);
@@ -4659,8 +4686,15 @@ export default function ChatPage() {
                         type="button"
                         onClick={() => {
                           playSelectionChime();
-                          setMultiMentorMode((prev) => !prev);
-                          if (!multiMentorMode) setSelectedMentorFigureIds([]);
+                          if (multiMentorMode) {
+                            setMultiMentorMode(false);
+                            setSelectedMentorFigureIds([]);
+                            setMentorPickerCategoryId(null);
+                          } else {
+                            setMultiMentorMode(true);
+                            setSelectedMentorFigureIds([]);
+                            setMentorPickerCategoryId(null);
+                          }
                         }}
                         className={`inline-flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl text-[11px] font-medium transition-colors shrink-0 ${
                           multiMentorMode
@@ -4680,36 +4714,73 @@ export default function ChatPage() {
                         Ask mentors
                       </button>
                       {multiMentorMode && (
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          {selectableMentorFigureIds
-                            .map((id) => figuresData?.figures?.find((f) => f.id === id))
-                            .filter(Boolean)
-                            .map((f) => f!)
-                            .slice(0, 6)
-                            .map((f) => {
-                              const selected = selectedMentorFigureIds.includes(f.id);
-                              const canSelect = selected || selectedMentorFigureIds.length < 5;
-                              return (
-                                <button
-                                  key={f.id}
-                                  type="button"
-                                  onClick={() => {
-                                    if (!canSelect && !selected) return;
-                                    playSelectionChime();
-                                    setSelectedMentorFigureIds((prev) =>
-                                      selected ? prev.filter((x) => x !== f.id) : prev.length < 5 ? [...prev, f.id] : prev
-                                    );
-                                  }}
-                                  disabled={!canSelect && !selected}
-                                  className={`px-2 py-0.5 rounded-full text-[10px] font-medium transition-colors shrink-0 ${
-                                    selected ? "bg-foreground text-background" : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400"
-                                  } ${(!canSelect && !selected) ? "opacity-50 cursor-not-allowed" : ""}`}
-                                >
-                                  {f.name}
-                                </button>
-                              );
-                            })}
-                          <span className="text-[10px] text-neutral-500 dark:text-neutral-400">{selectedMentorFigureIds.length}/5</span>
+                        <div className="flex flex-col gap-1.5 w-full max-w-[min(100%,28rem)]">
+                          {mentorDomainsForPicker.length > 1 && (
+                            <div
+                              className="flex flex-wrap items-center gap-1.5"
+                              role="group"
+                              aria-label="Mentor domains"
+                            >
+                              {mentorDomainsForPicker.map((cat) => {
+                                const isSelected = mentorPickerCategoryId === cat.id;
+                                return (
+                                  <button
+                                    key={cat.id}
+                                    type="button"
+                                    onClick={() => {
+                                      playSelectionChime();
+                                      setMentorPickerCategoryId(cat.id);
+                                      setSelectedMentorFigureIds((prev) =>
+                                        prev.filter(
+                                          (id) =>
+                                            figuresData?.figures?.find((ff) => ff.id === id)?.category === cat.id
+                                        )
+                                      );
+                                    }}
+                                    aria-pressed={isSelected}
+                                    aria-label={`Domain: ${cat.name}`}
+                                    className={`px-2 py-0.5 rounded-full text-[10px] font-medium transition-colors shrink-0 border-[0.75px] ${
+                                      isSelected
+                                        ? "bg-foreground text-background border-foreground"
+                                        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                    }`}
+                                  >
+                                    {cat.name}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+                          {(mentorDomainsForPicker.length === 1 || mentorPickerCategoryId != null) && (
+                            <div className="flex flex-wrap items-center gap-1.5">
+                              {mentorIdsInSelectedDomain.map((id) => {
+                                const f = figuresData?.figures?.find((ff) => ff.id === id);
+                                if (!f) return null;
+                                const selected = selectedMentorFigureIds.includes(f.id);
+                                const canSelect = selected || selectedMentorFigureIds.length < 5;
+                                return (
+                                  <button
+                                    key={f.id}
+                                    type="button"
+                                    onClick={() => {
+                                      if (!canSelect && !selected) return;
+                                      playSelectionChime();
+                                      setSelectedMentorFigureIds((prev) =>
+                                        selected ? prev.filter((x) => x !== f.id) : prev.length < 5 ? [...prev, f.id] : prev
+                                      );
+                                    }}
+                                    disabled={!canSelect && !selected}
+                                    className={`px-2 py-0.5 rounded-full text-[10px] font-medium transition-colors shrink-0 ${
+                                      selected ? "bg-foreground text-background" : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400"
+                                    } ${(!canSelect && !selected) ? "opacity-50 cursor-not-allowed" : ""}`}
+                                  >
+                                    {f.name}
+                                  </button>
+                                );
+                              })}
+                              <span className="text-[10px] text-neutral-500 dark:text-neutral-400">{selectedMentorFigureIds.length}/5</span>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
