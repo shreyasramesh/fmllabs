@@ -66,6 +66,16 @@ import { UserTypeSelector } from "@/components/UserTypeSelector";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { LeaderboardEmbed } from "@/components/LeaderboardEmbed";
 
+/** Library / inline panels: cards fill the row; min width ~17.5rem so more columns appear on wide screens. */
+const LIBRARY_RESPONSIVE_CARD_GRID =
+  "grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,17.5rem),1fr))]";
+/** Ways saved cards & category card grids — slightly denser tiles. */
+const LIBRARY_WAYS_COMPACT_CARD_GRID =
+  "grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,12rem),1fr))]";
+/** Framework (cg) group tiles — compact squares. */
+const LIBRARY_FRAMEWORK_TILE_GRID =
+  "grid gap-2 sm:gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,11rem),1fr))]";
+
 interface Message {
   role: "user" | "assistant";
   content: string;
@@ -2621,6 +2631,7 @@ export default function ChatPage() {
             activeSecondOrderRef.current = false;
             setPendingSecondOrder(false);
             setMessages([]);
+            setLibraryPanelOpen(null);
             setWaysOfLookingAtModalOpen(true);
             setWaysOfLookingAtDrawMode(true);
             setWaysOfLookingAtCategory(null);
@@ -3282,6 +3293,15 @@ export default function ChatPage() {
   }, []);
 
   const [libraryPanelOpen, setLibraryPanelOpen] = useState<"conversations" | "ltm" | "concepts" | "cc" | "cg" | "decks" | "figures" | "habits" | null>(null);
+  /** Non-modal library views: full main-area panel (not center overlay). */
+  const showLibraryInline =
+    libraryPanelOpen === "cc" ||
+    libraryPanelOpen === "concepts" ||
+    libraryPanelOpen === "ltm" ||
+    libraryPanelOpen === "cg" ||
+    libraryPanelOpen === "habits";
+  const showLibraryModal =
+    libraryPanelOpen === "conversations" || libraryPanelOpen === "figures";
   const [waysOfLookingAtModalOpen, setWaysOfLookingAtModalOpen] = useState(false);
   const [waysOfLookingAtDrawMode, setWaysOfLookingAtDrawMode] = useState(false);
   const [waysOfLookingAtCategory, setWaysOfLookingAtCategory] = useState<string | null>(null);
@@ -4151,6 +4171,87 @@ export default function ChatPage() {
     [language]
   );
 
+  const libraryInlineActive = showLibraryInline && (libraryPanelOpen === "concepts" || !isAnonymous);
+  const libraryInlineTitle =
+    libraryInlineActive && libraryPanelOpen
+      ? libraryPanelOpen === "concepts"
+        ? getUiTranslations(language).mentalModels
+        : libraryPanelOpen === "ltm"
+          ? getUiTranslations(language).longTermMemory
+          : libraryPanelOpen === "cc"
+            ? getUiTranslations(language).concepts
+            : libraryPanelOpen === "cg"
+              ? getUiTranslations(language).groups
+              : libraryPanelOpen === "habits"
+                ? getUiTranslations(language).habits
+                : ""
+      : null;
+
+  const waysMainHeaderTitle = useMemo(() => {
+    if (!waysOfLookingAtModalOpen) return null;
+    if (waysOfLookingAtDrawMode && !waysOfLookingAtCategory) {
+      return getLandingTranslations(language).drawPerspectiveCard;
+    }
+    if (waysOfLookingAtCity) {
+      return `${domainDisplayName[waysOfLookingAtCategory ?? ""] ?? "Urban Jungle"} — ${urbanJungleCityToName[waysOfLookingAtCity] ?? waysOfLookingAtCity}`;
+    }
+    if (waysOfLookingAtCuisine) {
+      return `${domainDisplayName["culinary_lab"] ?? "Culinary Lab"} — ${culinaryLabCuisineToName[waysOfLookingAtCuisine] ?? waysOfLookingAtCuisine}`;
+    }
+    if (waysOfLookingAtMicrocosm) {
+      return `${domainDisplayName["natural_microcosm"] ?? "Natural Microcosm"} — ${naturalMicrocosmSubToName[waysOfLookingAtMicrocosm] ?? waysOfLookingAtMicrocosm}`;
+    }
+    if (waysOfLookingAtHuman) {
+      return `${domainDisplayName["human_interface"] ?? "The Human Interface"} — ${humanInterfaceSubToName[waysOfLookingAtHuman] ?? waysOfLookingAtHuman}`;
+    }
+    if (waysOfLookingAtDigital) {
+      return `${domainDisplayName["digital_ghost"] ?? "Digital Ghost"} — ${digitalGhostSubToName[waysOfLookingAtDigital] ?? waysOfLookingAtDigital}`;
+    }
+    if (waysOfLookingAtCategory) {
+      return (
+        domainDisplayName[waysOfLookingAtCategory] ??
+        perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ??
+        getUiTranslations(language).promptGames
+      );
+    }
+    return getUiTranslations(language).promptGames;
+  }, [
+    waysOfLookingAtModalOpen,
+    waysOfLookingAtDrawMode,
+    waysOfLookingAtCategory,
+    waysOfLookingAtCity,
+    waysOfLookingAtCuisine,
+    waysOfLookingAtMicrocosm,
+    waysOfLookingAtHuman,
+    waysOfLookingAtDigital,
+    domainDisplayName,
+    urbanJungleCityToName,
+    culinaryLabCuisineToName,
+    naturalMicrocosmSubToName,
+    humanInterfaceSubToName,
+    digitalGhostSubToName,
+    perspectiveDecks,
+    language,
+  ]);
+
+  const waysHeaderShowBack =
+    waysOfLookingAtModalOpen &&
+    !!(waysOfLookingAtCategory ||
+      waysOfLookingAtCity ||
+      waysOfLookingAtCuisine ||
+      waysOfLookingAtMicrocosm ||
+      waysOfLookingAtHuman ||
+      waysOfLookingAtDigital);
+
+  const waysHeaderBack = useCallback(() => {
+    if (waysOfLookingAtDigital) setWaysOfLookingAtDigital(null);
+    else if (waysOfLookingAtHuman) setWaysOfLookingAtHuman(null);
+    else if (waysOfLookingAtMicrocosm) setWaysOfLookingAtMicrocosm(null);
+    else if (waysOfLookingAtCuisine) setWaysOfLookingAtCuisine(null);
+    else if (waysOfLookingAtCity) setWaysOfLookingAtCity(null);
+    else setWaysOfLookingAtCategory(null);
+  }, []);
+
   return (
     <TtsHighlightContext.Provider value={{ ttsHighlight, setTtsHighlight }}>
     <div className={`relative flex flex-col h-[100dvh] min-h-[100dvh] overflow-hidden chat-bg-area bg-background border-2 transition-[border-color,background] duration-300 ease-in-out ${incognitoMode ? "border-violet-400/70 dark:border-violet-500/60" : "border-transparent"}`}>
@@ -4162,36 +4263,62 @@ export default function ChatPage() {
             : "bg-background border-neutral-200 dark:border-neutral-800"
         }`}
       >
-        {/* Left: sidebar header (desktop only when sidebar open) - fades with sidebar */}
+        {/* Left (lg+): expanded sidebar title bar, or collapsed strip (w-14) with centered hamburger — aligns with collapsed aside */}
         <div
-          className={`hidden shrink-0 lg:flex w-72 items-center justify-between px-4 border-r overflow-hidden transition-[width,opacity] duration-300 ease-out ${incognitoMode ? "border-neutral-700 dark:border-neutral-300" : "border-neutral-200 dark:border-neutral-800"} ${sidebarOpen ? "lg:w-72 lg:opacity-100" : "lg:w-0 lg:min-w-0 lg:opacity-0 lg:pointer-events-none lg:border-r-0"}`}
+          className={`hidden shrink-0 lg:flex border-r overflow-hidden transition-[width,opacity] duration-300 ease-out ${incognitoMode ? "border-neutral-700 dark:border-neutral-300" : "border-neutral-200 dark:border-neutral-800"} ${
+            sidebarOpen
+              ? "w-72 min-w-0 items-center justify-between px-4"
+              : "w-14 min-w-14 items-center justify-center px-0"
+          }`}
         >
-          <Link
-            href="/"
-            className={`font-semibold text-lg min-w-0 truncate ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
-            title={PRODUCT_TAGLINE}
-          >
-            FigureMyLife Labs
-          </Link>
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className={`p-2 -mr-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl border-2 border-transparent transition-colors duration-200 active:scale-95 ${
-              incognitoMode
-                ? "text-neutral-100/80 dark:text-neutral-900/80 hover:border-neutral-500 dark:hover:border-neutral-400 hover:text-neutral-100 dark:hover:text-neutral-900"
-                : "text-neutral-500 hover:border-neutral-400 dark:hover:border-neutral-500"
-            }`}
-            aria-label="Close sidebar"
-          >
-            ✕
-          </button>
+          {sidebarOpen ? (
+            <>
+              <Link
+                href="/"
+                className={`font-semibold text-lg min-w-0 truncate ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
+                title={PRODUCT_TAGLINE}
+              >
+                FigureMyLife Labs
+              </Link>
+              <button
+                type="button"
+                onClick={() => setSidebarOpen(false)}
+                className={`p-2 -mr-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl border-2 border-transparent transition-colors duration-200 active:scale-95 ${
+                  incognitoMode
+                    ? "text-neutral-100/80 dark:text-neutral-900/80 hover:border-neutral-500 dark:hover:border-neutral-400 hover:text-neutral-100 dark:hover:text-neutral-900"
+                    : "text-neutral-500 hover:border-neutral-400 dark:hover:border-neutral-500"
+                }`}
+                aria-label="Close sidebar"
+              >
+                ✕
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(true)}
+              data-tour="menu-button"
+              className={`p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 ${
+                incognitoMode
+                  ? "text-neutral-100 dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200"
+                  : "text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              }`}
+              aria-label="Open menu"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          )}
         </div>
-        {/* Right: main header (always) */}
+        {/* Right: main header (always) — hamburger here only below lg (desktop uses left strip above) */}
         <div className="flex-1 min-w-0 flex items-center justify-between gap-1 sm:gap-4 px-3 sm:px-4">
           <div className="flex items-center gap-1 sm:gap-4 min-w-0 overflow-hidden">
             <button
+              type="button"
               onClick={() => setSidebarOpen(true)}
               data-tour="menu-button"
-              className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 shrink-0 ${
+              className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 shrink-0 lg:hidden ${
                 !sidebarOpen ? "" : "hidden"
               } ${
                 incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
@@ -4202,7 +4329,60 @@ export default function ChatPage() {
                 <path d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            {!sidebarOpen ? (
+            {libraryInlineTitle != null && libraryInlineTitle !== "" ? (
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                <h1 className="font-semibold text-base sm:text-lg truncate min-w-0 flex-1 text-foreground">
+                  {libraryInlineTitle}
+                </h1>
+                <button
+                  type="button"
+                  onClick={() => setLibraryPanelOpen(null)}
+                  className="p-2 min-w-[44px] min-h-[44px] shrink-0 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-600 dark:text-neutral-400"
+                  aria-label={getUiTranslations(language).close}
+                >
+                  ✕
+                </button>
+              </div>
+            ) : waysOfLookingAtModalOpen && waysMainHeaderTitle != null ? (
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                {waysHeaderShowBack && (
+                  <button
+                    type="button"
+                    onClick={waysHeaderBack}
+                    className="p-1.5 shrink-0 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 transition-colors"
+                    aria-label={
+                      waysOfLookingAtDigital || waysOfLookingAtHuman
+                        ? "Back to subdomains"
+                        : waysOfLookingAtMicrocosm
+                          ? "Back to subdomains"
+                          : waysOfLookingAtCuisine
+                            ? "Back to cuisines"
+                            : waysOfLookingAtCity
+                              ? "Back to cities"
+                              : "Back to categories"
+                    }
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                      <path d="M19 12H5M12 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                )}
+                <h1 className="font-semibold text-base sm:text-lg truncate min-w-0 flex-1 text-foreground">
+                  {waysMainHeaderTitle}
+                </h1>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setWaysOfLookingAtModalOpen(false);
+                    setWaysOfLookingAtDrawMode(false);
+                  }}
+                  className="p-2 min-w-[44px] min-h-[44px] shrink-0 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-600 dark:text-neutral-400"
+                  aria-label={getUiTranslations(language).close}
+                >
+                  ✕
+                </button>
+              </div>
+            ) : !sidebarOpen ? (
               <>
                 {incognitoMode ? (
                   <div className="group flex items-center gap-2 min-w-0 text-neutral-100 dark:text-neutral-900">
@@ -4440,14 +4620,14 @@ export default function ChatPage() {
           {/* Primary nav - Claude.ai pill style; icon-only when collapsed (Browser Use style) */}
           <nav className={`flex flex-col gap-0.5 shrink-0 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 ${sidebarOpen ? "mb-2" : ""}`} aria-label="Select view" data-tour="sidebar-nav">
             {[
-              { id: "conversations" as const, label: getUiTranslations(language).conversations, icon: "chat", onClick: () => { playSelectionChime(); setLibraryPanelOpen("conversations"); } },
-              { id: "cc" as const, label: getUiTranslations(language).concepts, icon: "concepts", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cc"); } },
-              { id: "concepts" as const, label: getUiTranslations(language).mentalModels, icon: "models", onClick: () => { playSelectionChime(); setLibraryPanelOpen("concepts"); } },
-              { id: "ltm" as const, label: getUiTranslations(language).longTermMemory, icon: "memory", onClick: () => { playSelectionChime(); setLibraryPanelOpen("ltm"); } },
-              { id: "cg" as const, label: getUiTranslations(language).groups, icon: "groups", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cg"); } },
+              { id: "conversations" as const, label: getUiTranslations(language).conversations, icon: "chat", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("conversations"); } },
+              { id: "cc" as const, label: getUiTranslations(language).concepts, icon: "concepts", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("cc"); } },
+              { id: "concepts" as const, label: getUiTranslations(language).mentalModels, icon: "models", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("concepts"); } },
+              { id: "ltm" as const, label: getUiTranslations(language).longTermMemory, icon: "memory", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("ltm"); } },
+              { id: "cg" as const, label: getUiTranslations(language).groups, icon: "groups", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("cg"); } },
               ...(!isAnonymous ? [
-                { id: "habits" as const, label: getUiTranslations(language).habits, icon: "habits" as const, onClick: () => { playSelectionChime(); setLibraryPanelOpen("habits"); } },
-                { id: "figures" as const, label: getUiTranslations(language).famousFigures, icon: "figures" as const, onClick: () => { playSelectionChime(); setLibraryPanelOpen("figures"); } },
+                { id: "habits" as const, label: getUiTranslations(language).habits, icon: "habits" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("habits"); } },
+                { id: "figures" as const, label: getUiTranslations(language).famousFigures, icon: "figures" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("figures"); } },
               ] : []),
             ].map(({ id, label, icon, onClick }) => {
               const isActive = libraryPanelOpen === id;
@@ -4520,9 +4700,13 @@ export default function ChatPage() {
           <div className={`border-t-[0.5px] border-neutral-200/60 dark:border-neutral-600/60 ${sidebarOpen ? "mt-1.5 pt-1.5" : "mt-1 pt-1"}`}>
             <button
               type="button"
-              onClick={() => { playSelectionChime(); setWaysOfLookingAtModalOpen(true); setWaysOfLookingAtDrawMode(false); setWaysOfLookingAtCategory(null); setWaysOfLookingAtCity(null); setWaysOfLookingAtCuisine(null); setWaysOfLookingAtMicrocosm(null); }}
+              onClick={() => { playSelectionChime(); setLibraryPanelOpen(null); setWaysOfLookingAtModalOpen(true); setWaysOfLookingAtDrawMode(false); setWaysOfLookingAtCategory(null); setWaysOfLookingAtCity(null); setWaysOfLookingAtCuisine(null); setWaysOfLookingAtMicrocosm(null); setWaysOfLookingAtHuman(null); setWaysOfLookingAtDigital(null); }}
               title={!sidebarOpen ? getUiTranslations(language).promptGames : undefined}
               className={`group relative overflow-hidden flex items-center w-full rounded-2xl text-left text-[13px] sm:text-[14px] font-medium transition-colors active:scale-[0.98] ${
+                waysOfLookingAtModalOpen
+                  ? "ring-2 ring-neutral-400 dark:ring-neutral-500"
+                  : ""
+              } ${
                 sidebarOpen ? "gap-2 px-3 py-1" : "justify-center p-2 lg:px-2 lg:py-2"
               }`}
             >
@@ -4754,6 +4938,1289 @@ export default function ChatPage() {
           />
         )}
 
+        {waysOfLookingAtModalOpen ? (
+          <div className="flex-1 min-h-0 flex flex-col overflow-hidden bg-background" role="region" aria-label={getUiTranslations(language).promptGames}>
+          <div
+            className="relative flex flex-col flex-1 min-h-0 w-full min-w-0 overflow-hidden bg-background"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex-1 overflow-y-auto w-full min-w-0 px-4 sm:px-6 lg:px-8 pt-4 pb-4">
+              {!waysOfLookingAtCategory ? (
+                <div className="space-y-4">
+                  {!isAnonymous && savedPerspectiveCards.length > 0 && (
+                    <div>
+                      <p className="text-sm font-medium text-foreground mb-2">My saved cards</p>
+                      <div className={LIBRARY_WAYS_COMPACT_CARD_GRID}>
+                        {savedPerspectiveCards.slice(0, 6).map((saved) => (
+                          <div
+                            key={saved._id}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => {
+                              playSelectionChime();
+                              setDrawnPerspectiveCard({
+                                card: {
+                                  id: saved._id,
+                                  name: saved.name,
+                                  prompt: saved.prompt,
+                                  follow_ups: saved.follow_ups ?? [],
+                                },
+                                deckId: "",
+                                deckName: saved.sourceDeckName ?? "Saved",
+                                savedId: saved._id,
+                              });
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key !== "Enter" && e.key !== " ") return;
+                              e.preventDefault();
+                              playSelectionChime();
+                              setDrawnPerspectiveCard({
+                                card: {
+                                  id: saved._id,
+                                  name: saved.name,
+                                  prompt: saved.prompt,
+                                  follow_ups: saved.follow_ups ?? [],
+                                },
+                                deckId: "",
+                                deckName: saved.sourceDeckName ?? "Saved",
+                                savedId: saved._id,
+                              });
+                            }}
+                            className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-500"
+                          >
+                            <div className="w-full flex flex-col items-start text-left flex-1 min-w-0 pr-8">
+                              <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                                {saved.name}
+                              </span>
+                              <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">
+                                {saved.prompt}
+                              </p>
+                              <p className="mt-auto pt-2 text-[11px] text-neutral-500 dark:text-neutral-400">
+                                Tap to open
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                playSelectionChime();
+                                try {
+                                  const res = await fetch(`/api/me/perspective-cards/${saved._id}`, { method: "DELETE" });
+                                  if (res.ok) refetchSavedPerspectiveCards();
+                                } catch {
+                                  /* ignore */
+                                }
+                              }}
+                              className="absolute top-3 right-3 p-1.5 rounded-lg opacity-60 hover:opacity-100 hover:bg-red-100 dark:hover:bg-red-900/30 text-neutral-500 hover:text-red-600 dark:hover:text-red-400 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-500 focus-visible:ring-offset-1"
+                              aria-label="Delete saved card"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                                <path d="M3 6h18" />
+                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                                <line x1="10" x2="10" y1="11" y2="17" />
+                                <line x1="14" x2="14" y1="11" y2="17" />
+                              </svg>
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      {savedPerspectiveCards.length > 6 && (
+                        <p className="text-xs text-neutral-500 mt-1">
+                          +{savedPerspectiveCards.length - 6} more saved
+                        </p>
+                      )}
+                    </div>
+                  )}
+                  <div className="p-4 rounded-2xl border border-dashed border-neutral-300 dark:border-neutral-600 bg-neutral-50/50 dark:bg-neutral-800/30">
+                    <p className="text-sm font-medium text-foreground mb-2">Generate a card from a topic</p>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">
+                      Enter any topic and the AI will create a perspective card with a prompt and follow-ups. You can then start a conversation with it.
+                    </p>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={generateTopicInput}
+                        onChange={(e) => { setGenerateTopicInput(e.target.value); setGenerateCardError(null); }}
+                        placeholder="e.g. morning routines, difficult conversations, a favorite place"
+                        className="flex-1 px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
+                        disabled={generateCardLoading}
+                      />
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          const topic = generateTopicInput.trim();
+                          if (!topic || generateCardLoading) return;
+                          playSelectionChime();
+                          setGenerateCardLoading(true);
+                          setGenerateCardError(null);
+                          try {
+                            const res = await fetch("/api/perspective-decks/generate", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ topic, language }),
+                            });
+                            const data = await res.json();
+                            if (!res.ok) throw new Error(data.error ?? "Failed to generate");
+                            const card = data.card;
+                            if (!card?.name || !card?.prompt) throw new Error("Invalid response");
+                            setDrawnPerspectiveCard({
+                              card: {
+                                id: "generated",
+                                name: card.name,
+                                prompt: card.prompt,
+                                follow_ups: card.follow_ups ?? [],
+                              },
+                              deckId: "",
+                              deckName: "Generated",
+                            });
+                            setGenerateTopicInput("");
+                          } catch (err) {
+                            setGenerateCardError(err instanceof Error ? err.message : "Failed to generate card");
+                          } finally {
+                            setGenerateCardLoading(false);
+                          }
+                        }}
+                        disabled={generateCardLoading || !generateTopicInput.trim()}
+                        className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                      >
+                        {generateCardLoading ? "Generating…" : "Generate"}
+                      </button>
+                    </div>
+                    {generateCardError && (
+                      <p className="text-xs text-red-600 dark:text-red-400 mt-2">{generateCardError}</p>
+                    )}
+                  </div>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {waysOfLookingAtDrawMode ? "Choose a domain" : "Choose a category to browse perspective cards."}
+                  </p>
+                  <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
+                    {perspectiveDecks.length === 0 ? (
+                      <p className="text-sm text-neutral-500 col-span-2">Loading categories…</p>
+                    ) : (
+                      [...new Set(perspectiveDecks.map((d) => (d.domain || "other").toLowerCase()))].map((domain) => {
+                        const deck = perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === domain);
+                        if (!deck) return null;
+                        return (
+                          <button
+                            key={domain}
+                            type="button"
+                            onClick={async () => {
+                              playSelectionChime();
+                              const subdomains = subdomainsByDomain[domain];
+                              const isDirectDrawDomain = !subdomains || subdomains.length === 0;
+                              if (waysOfLookingAtDrawMode && isDirectDrawDomain) {
+                                try {
+                                  const deck = perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === domain);
+                                  if (deck?.id) {
+                                    const res = await fetch(`/api/perspective-decks/${deck.id}/random?language=${language}`);
+                                    const data = await res.json();
+                                    if (data.card && data.deckId) {
+                                      setDrawnPerspectiveCard({ card: data.card, deckId: data.deckId, deckName: deck.name });
+                                      setWaysOfLookingAtModalOpen(false);
+                                      setWaysOfLookingAtDrawMode(false);
+                                    }
+                                  }
+                                } catch { /* ignore */ }
+                                return;
+                              }
+                              setWaysOfLookingAtCategory(domain);
+                              setWaysOfLookingAtCity(null);
+                              setWaysOfLookingAtCuisine(null);
+                              setWaysOfLookingAtMicrocosm(null);
+                              setWaysOfLookingAtHuman(null);
+                              setWaysOfLookingAtDigital(null);
+                            }}
+                            className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
+                          >
+                            <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
+                              <img
+                                src={`/images/perspective-decks/domains/${domain}.png`}
+                                alt={`${domainDisplayName[domain] ?? domain.replace(/_/g, " ")} cover art`}
+                                className="w-full h-28 object-cover"
+                                loading="lazy"
+                              />
+                            </div>
+                            <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
+                              {domainDisplayName[domain] ?? domain.replace(/_/g, " ")}
+                            </span>
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2">
+                              {perspectiveDecksConfig?.domains?.[domain]?.description?.trim() ?? deck.description}
+                            </p>
+                          </button>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+              ) : waysOfLookingAtCategory === "urban_jungle" && !waysOfLookingAtCity ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {waysOfLookingAtDrawMode ? "Choose a subdomain (city)" : "Choose a city to browse its 50 perspective cards."}
+                  </p>
+                  <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
+                    {(subdomainsByDomain["urban_jungle"] ?? []).map((city) => (
+                      <button
+                        key={city.id}
+                        type="button"
+                        onClick={async () => {
+                          playSelectionChime();
+                          if (waysOfLookingAtDrawMode) {
+                            try {
+                              const deckId = city.deck_id;
+                              if (deckId) {
+                                const res = await fetch(`/api/perspective-decks/${deckId}/random?language=${language}`);
+                                const data = await res.json();
+                                if (data.card && data.deckId) {
+                                  const deck = perspectiveDecks.find((d) => d.id === deckId);
+                                  setDrawnPerspectiveCard({
+                                    card: data.card,
+                                    deckId: data.deckId,
+                                    deckName: deck?.name ?? `${domainDisplayName["urban_jungle"] ?? "Urban Jungle"} — ${city.name}`,
+                                  });
+                                  setWaysOfLookingAtModalOpen(false);
+                                  setWaysOfLookingAtDrawMode(false);
+                                }
+                              }
+                            } catch { /* ignore */ }
+                            return;
+                          }
+                          setWaysOfLookingAtCity(city.id);
+                        }}
+                        className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
+                      >
+                        <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
+                          <img
+                            src={`/images/perspective-decks/subdomains/urban_jungle_${city.id}.png`}
+                            alt={`${city.name} cover art`}
+                            className="w-full h-28 object-cover"
+                            loading="lazy"
+                            onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
+                          />
+                          <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+                              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            </svg>
+                          </div>
+                        </div>
+                        <span className="text-base font-medium text-foreground group-hover:text-foreground">
+                          {city.name}
+                        </span>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          50 perspective cards for city and architecture
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : waysOfLookingAtCategory === "culinary_lab" && !waysOfLookingAtCuisine ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {waysOfLookingAtDrawMode ? "Choose a cuisine" : "Choose a cuisine to browse its 50 perspective cards."}
+                  </p>
+                  <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
+                    {(subdomainsByDomain["culinary_lab"] ?? []).map((cuisine) => (
+                      <button
+                        key={cuisine.id}
+                        type="button"
+                        onClick={async () => {
+                          playSelectionChime();
+                          if (waysOfLookingAtDrawMode) {
+                            try {
+                              const deckId = cuisine.deck_id;
+                              if (deckId) {
+                                const res = await fetch(`/api/perspective-decks/${deckId}/random?language=${language}`);
+                                const data = await res.json();
+                                if (data.card && data.deckId) {
+                                  const deck = perspectiveDecks.find((d) => d.id === deckId);
+                                  setDrawnPerspectiveCard({
+                                    card: data.card,
+                                    deckId: data.deckId,
+                                    deckName: deck?.name ?? `${domainDisplayName["culinary_lab"] ?? "Culinary Lab"} — ${cuisine.name}`,
+                                  });
+                                  setWaysOfLookingAtModalOpen(false);
+                                  setWaysOfLookingAtDrawMode(false);
+                                }
+                              }
+                            } catch { /* ignore */ }
+                            return;
+                          }
+                          setWaysOfLookingAtCuisine(cuisine.id);
+                        }}
+                        className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
+                      >
+                        <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
+                          <img
+                            src={`/images/perspective-decks/subdomains/culinary_lab_${cuisine.id}.png`}
+                            alt={`${cuisine.name} cover art`}
+                            className="w-full h-28 object-cover"
+                            loading="lazy"
+                            onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
+                          />
+                          <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                            </svg>
+                          </div>
+                        </div>
+                        <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
+                          {cuisine.name}
+                        </span>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          50 perspective cards for food and eating
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : waysOfLookingAtCategory === "natural_microcosm" && !waysOfLookingAtMicrocosm ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {waysOfLookingAtDrawMode ? "Choose a subdomain" : "Choose a subdomain to browse its 50 perspective cards."}
+                  </p>
+                  <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
+                    {(subdomainsByDomain["natural_microcosm"] ?? []).map((sub) => (
+                      <button
+                        key={sub.id}
+                        type="button"
+                        onClick={async () => {
+                          playSelectionChime();
+                          if (waysOfLookingAtDrawMode) {
+                            try {
+                              const deckId = sub.deck_id;
+                              if (deckId) {
+                                const res = await fetch(`/api/perspective-decks/${deckId}/random?language=${language}`);
+                                const data = await res.json();
+                                if (data.card && data.deckId) {
+                                  const deck = perspectiveDecks.find((d) => d.id === deckId);
+                                  setDrawnPerspectiveCard({
+                                    card: data.card,
+                                    deckId: data.deckId,
+                                    deckName: deck?.name ?? `${domainDisplayName["natural_microcosm"] ?? "Natural Microcosm"} — ${sub.name}`,
+                                  });
+                                  setWaysOfLookingAtModalOpen(false);
+                                  setWaysOfLookingAtDrawMode(false);
+                                }
+                              }
+                            } catch { /* ignore */ }
+                            return;
+                          }
+                          setWaysOfLookingAtMicrocosm(sub.id);
+                        }}
+                        className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
+                      >
+                        <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
+                          <img
+                            src={`/images/perspective-decks/subdomains/natural_microcosm_${sub.id}.png`}
+                            alt={`${sub.name} cover art`}
+                            className="w-full h-28 object-cover"
+                            loading="lazy"
+                            onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
+                          />
+                          <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                            </svg>
+                          </div>
+                        </div>
+                        <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
+                          {sub.name}
+                        </span>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          50 perspective cards for ecology and the outdoors
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : waysOfLookingAtCategory === "human_interface" && !waysOfLookingAtHuman ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {waysOfLookingAtDrawMode ? "Choose a subdomain" : "Choose a subdomain to browse its 50 perspective cards."}
+                  </p>
+                  <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
+                    {(subdomainsByDomain["human_interface"] ?? []).map((sub) => (
+                      <button
+                        key={sub.id}
+                        type="button"
+                        onClick={async () => {
+                          playSelectionChime();
+                          if (waysOfLookingAtDrawMode) {
+                            try {
+                              const deckId = sub.deck_id;
+                              if (deckId) {
+                                const res = await fetch(`/api/perspective-decks/${deckId}/random?language=${language}`);
+                                const data = await res.json();
+                                if (data.card && data.deckId) {
+                                  const deck = perspectiveDecks.find((d) => d.id === deckId);
+                                  setDrawnPerspectiveCard({
+                                    card: data.card,
+                                    deckId: data.deckId,
+                                    deckName: deck?.name ?? `${domainDisplayName["human_interface"] ?? "The Human Interface"} — ${sub.name}`,
+                                  });
+                                  setWaysOfLookingAtModalOpen(false);
+                                  setWaysOfLookingAtDrawMode(false);
+                                }
+                              }
+                            } catch { /* ignore */ }
+                            return;
+                          }
+                          setWaysOfLookingAtHuman(sub.id);
+                        }}
+                        className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
+                      >
+                        <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
+                          <img
+                            src={`/images/perspective-decks/subdomains/human_interface_${sub.id}.png`}
+                            alt={`${sub.name} cover art`}
+                            className="w-full h-28 object-cover"
+                            loading="lazy"
+                            onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
+                          />
+                          <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+                              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                              <circle cx="9" cy="7" r="4" />
+                              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                          </div>
+                        </div>
+                        <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
+                          {sub.name}
+                        </span>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          50 perspective cards for social observation and anthropology
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : waysOfLookingAtCategory === "digital_ghost" && !waysOfLookingAtDigital ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {waysOfLookingAtDrawMode ? "Choose a subdomain" : "Choose a subdomain to browse its 50 perspective cards."}
+                  </p>
+                  <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
+                    {(subdomainsByDomain["digital_ghost"] ?? []).map((sub) => (
+                      <button
+                        key={sub.id}
+                        type="button"
+                        onClick={async () => {
+                          playSelectionChime();
+                          if (waysOfLookingAtDrawMode) {
+                            try {
+                              const deckId = sub.deck_id;
+                              if (deckId) {
+                                const res = await fetch(`/api/perspective-decks/${deckId}/random?language=${language}`);
+                                const data = await res.json();
+                                if (data.card && data.deckId) {
+                                  const deck = perspectiveDecks.find((d) => d.id === deckId);
+                                  setDrawnPerspectiveCard({
+                                    card: data.card,
+                                    deckId: data.deckId,
+                                    deckName: deck?.name ?? `${domainDisplayName["digital_ghost"] ?? "Digital Ghost"} — ${sub.name}`,
+                                  });
+                                  setWaysOfLookingAtModalOpen(false);
+                                  setWaysOfLookingAtDrawMode(false);
+                                }
+                              }
+                            } catch { /* ignore */ }
+                            return;
+                          }
+                          setWaysOfLookingAtDigital(sub.id);
+                        }}
+                        className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
+                      >
+                        <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
+                          <img
+                            src={`/images/perspective-decks/subdomains/digital_ghost_${sub.id}.png`}
+                            alt={`${sub.name} cover art`}
+                            className="w-full h-28 object-cover"
+                            loading="lazy"
+                            onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
+                          />
+                          <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+                              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                              <line x1="8" y1="21" x2="16" y2="21" />
+                              <line x1="12" y1="17" x2="12" y2="21" />
+                            </svg>
+                          </div>
+                        </div>
+                        <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
+                          {sub.name}
+                        </span>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          50 perspective cards for technology and software
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {waysOfLookingAtCardsLoading ? (
+                    <p className="text-sm text-neutral-500">Loading cards…</p>
+                  ) : waysOfLookingAtCards && waysOfLookingAtCards.length > 0 ? (
+                    <div className={LIBRARY_WAYS_COMPACT_CARD_GRID}>
+                      {waysOfLookingAtCards.map((card) => {
+                        const deck = waysOfLookingAtCity
+                          ? perspectiveDecks.find((d) => d.id === urbanJungleCityToDeckId[waysOfLookingAtCity])
+                          : waysOfLookingAtCuisine
+                            ? perspectiveDecks.find((d) => d.id === culinaryLabCuisineToDeckId[waysOfLookingAtCuisine])
+                            : waysOfLookingAtMicrocosm
+                              ? perspectiveDecks.find((d) => d.id === naturalMicrocosmSubToDeckId[waysOfLookingAtMicrocosm])
+                              : waysOfLookingAtHuman
+                                ? perspectiveDecks.find((d) => d.id === humanInterfaceSubToDeckId[waysOfLookingAtHuman])
+                                : waysOfLookingAtDigital
+                                  ? perspectiveDecks.find((d) => d.id === digitalGhostSubToDeckId[waysOfLookingAtDigital])
+                                  : perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory);
+                        return (
+                          <button
+                            key={card.id}
+                            type="button"
+                            onClick={() => {
+                              playSelectionChime();
+                              setDrawnPerspectiveCard({
+                                card,
+                                deckId: deck?.id ?? "",
+                                deckName: deck?.name ?? getUiTranslations(language).promptGames,
+                              });
+                            }}
+                            className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px] cursor-pointer"
+                          >
+                            <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                              {card.name}
+                            </span>
+                            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">
+                              {card.prompt}
+                            </p>
+                            <p className="mt-auto pt-2 text-[11px] text-neutral-500 dark:text-neutral-400">
+                              Tap to open
+                            </p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-neutral-500">No cards in this category.</p>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+          </div>
+        ) : showLibraryInline && (libraryPanelOpen === "concepts" || !isAnonymous) ? (
+          <div className="flex-1 min-h-0 flex flex-col overflow-hidden bg-background" data-tour="library-inline">
+            <div className="flex-1 overflow-y-auto min-h-0 w-full min-w-0 px-4 sm:px-6 lg:px-8 pt-4 pb-4">
+              {libraryPanelOpen === "concepts" && (
+                <div className="space-y-4">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks and biases, grouped by when to use. Star to add to Favorites.</p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleTeachMeClick}
+                      disabled={teachMeLoading}
+                      className="flex flex-1 items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-foreground border border-neutral-200 dark:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors disabled:opacity-60"
+                      aria-label="Learn a new mental model"
+                    >
+                    {teachMeLoading ? (
+                      <LoadingDots aria-label="Loading" />
+                    ) : (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                          <path d="M12 3v18" />
+                        </svg>
+                        <span>Learn a New Mental Model</span>
+                      </>
+                    )}
+                    </button>
+                    {!isAnonymous && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMmCreateModalOpen(true);
+                          setMmCreateInput("");
+                          setMmCreateGenerated(null);
+                          setMmCreateError(null);
+                        }}
+                        className="shrink-0 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors"
+                      >
+                        + Create
+                      </button>
+                    )}
+                  </div>
+                  <input type="search" placeholder="Search mental models..." value={mmSearchQuery} onChange={(e) => setMmSearchQuery(e.target.value)} className="w-full px-3 py-1.5 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground" aria-label="Search mental models" />
+                  {(() => {
+                    const q = mmSearchQuery.toLowerCase().trim();
+                    const filteredModels = q
+                      ? mentalModelsWithWhenToUse.filter((m) => {
+                          const nameMatch = m.name.toLowerCase().includes(q);
+                          const tagMatch = (m.when_to_use ?? []).some((t) =>
+                            formatMmCategory(t).toLowerCase().includes(q)
+                          );
+                          const preview = mmPreviewMap.get(m.id);
+                          const oneLinerMatch = preview?.oneLiner?.toLowerCase().includes(q);
+                          const quickIntroMatch = preview?.quickIntro?.toLowerCase().includes(q);
+                          return nameMatch || tagMatch || oneLinerMatch || quickIntroMatch;
+                        })
+                      : mentalModelsWithWhenToUse;
+
+                    const byWhenToUse = new Map<string, { id: string; name: string }[]>();
+                    const uncategorized: { id: string; name: string }[] = [];
+                    for (const m of filteredModels) {
+                      if (m.when_to_use.length === 0) {
+                        uncategorized.push({ id: m.id, name: m.name });
+                      } else {
+                        for (const tag of m.when_to_use) {
+                          const existing = byWhenToUse.get(tag) ?? [];
+                          if (!existing.some((x) => x.id === m.id)) existing.push({ id: m.id, name: m.name });
+                          byWhenToUse.set(tag, existing);
+                        }
+                      }
+                    }
+
+                    const whenToUseOrder = [...byWhenToUse.keys()].sort((a, b) => {
+                      if (a === "custom") return -1;
+                      if (b === "custom") return 1;
+                      return formatMmCategory(a).localeCompare(formatMmCategory(b));
+                    });
+                    const categoryItems: { key: string; label: string; models: { id: string; name: string }[] }[] =
+                      whenToUseOrder.map((tag) => ({
+                        key: tag,
+                        label: formatMmCategory(tag),
+                        models: byWhenToUse.get(tag) ?? [],
+                      }));
+                    if (uncategorized.length > 0) {
+                      categoryItems.push({
+                        key: "uncategorized",
+                        label: "Other",
+                        models: uncategorized,
+                      });
+                    }
+
+                    const decisionCategory = categoryItems.find(
+                      (c) => normalizeMmCategory(c.label) === "decision-making"
+                    );
+                    const activeCategoryKey = categoryItems.some((c) => c.key === selectedMmCategory)
+                      ? selectedMmCategory
+                      : (decisionCategory?.key ?? categoryItems[0]?.key ?? "");
+                    const activeCategory = categoryItems.find((c) => c.key === activeCategoryKey);
+                    const activeModels = activeCategory?.models ?? [];
+
+                    const renderMmCard = (id: string, name: string) => {
+                      const preview = mmPreviewMap.get(id);
+                      const description = preview?.oneLiner ?? preview?.quickIntro ?? "Tap to explore";
+                      const isFavorite = mmFavorites.has(id);
+                      const hasImage = !id.startsWith("custom_");
+                      const isCustom = id.startsWith("custom_");
+                      return (
+                        <div key={id} className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]">
+                          {isCustom ? (
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); e.preventDefault(); setMmDeleteConfirmModal({ id, name }); }}
+                              className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
+                              aria-label={`Delete ${name}`}
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
+                                <path d="M10 11v6M14 11v6" />
+                              </svg>
+                            </button>
+                          ) : (
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); e.preventDefault(); toggleMmFavorite(id); }}
+                              className="absolute top-3 right-3 z-10 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors touch-manipulation"
+                            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+                          >
+                            {isFavorite ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden>
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                              </svg>
+                            ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4 text-neutral-400 dark:text-neutral-500" aria-hidden>
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                              </svg>
+                            )}
+                          </button>
+                          )}
+                          <div
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => handleMentalModelClick(id)}
+                            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleMentalModelClick(id); } }}
+                            className="flex flex-col items-start gap-2 flex-1 min-w-0 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-500 focus-visible:ring-offset-2 rounded-xl -m-1 p-1"
+                          >
+                            <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 h-28">
+                              {hasImage ? (
+                                <img
+                                  src={`/images/${id.replace(/_/g, "-")}.png`}
+                                  alt=""
+                                  className="w-full h-full object-cover"
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-neutral-500 dark:text-neutral-400">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                                    <path d="M12 3v18" />
+                                  </svg>
+                                </div>
+                              )}
+                            </div>
+                            <span className="text-base font-medium text-foreground group-hover:text-foreground line-clamp-2 pr-8">
+                              {name}
+                            </span>
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2 flex-1 min-h-0">
+                              {description}
+                            </p>
+                            <p className="text-[11px] text-neutral-400 dark:text-neutral-500 mt-auto pt-1">
+                              Tap to open
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    };
+                    if (mentalModelsWithWhenToUse.length === 0) {
+                      return <p className="text-xs text-neutral-500 dark:text-neutral-400">Loading mental models…</p>;
+                    }
+                    if (filteredModels.length === 0) {
+                      return <p className="text-xs text-neutral-500 dark:text-neutral-400">{q ? "No mental models match." : "No mental models."}</p>;
+                    }
+                    return (
+                      <div className="space-y-3">
+                        <div className="flex flex-wrap gap-2">
+                          {categoryItems.map((cat) => (
+                            <button
+                              key={cat.key}
+                              type="button"
+                              onClick={() => setSelectedMmCategory(cat.key)}
+                              className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
+                                activeCategoryKey === cat.key
+                                  ? "bg-foreground text-background border-foreground"
+                                  : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                              }`}
+                            >
+                              {cat.label}
+                            </button>
+                          ))}
+                          </div>
+                        <div className="flex items-center justify-between">
+                          <p className="text-[11px] font-medium text-neutral-500 uppercase tracking-wide">
+                            {activeCategory?.label ?? "Category"}
+                          </p>
+                          <span className="text-[11px] text-neutral-500">{activeModels.length} models</span>
+                        </div>
+                        {activeModels.length > 0 ? (
+                              <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
+                            {activeModels.map(({ id, name }) => renderMmCard(id, name))}
+                              </div>
+                            ) : (
+                          <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                            No models in this category.
+                              </p>
+                          )}
+                        </div>
+                    );
+                  })()}
+                        </div>
+              )}
+              {mmCreateModalOpen && !isAnonymous && (
+                <div
+                  className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40"
+                  onClick={(e) => e.target === e.currentTarget && setMmCreateModalOpen(false)}
+                  role="dialog"
+                  aria-modal
+                  aria-labelledby="mm-create-title"
+                >
+                  <div
+                    className="w-full max-w-md bg-background rounded-2xl shadow-xl border border-neutral-200 dark:border-neutral-700 p-4 space-y-4"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <h3 id="mm-create-title" className="text-base font-semibold text-foreground">Create mental model</h3>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Describe the mental model or cognitive bias you want. The AI will generate the full structure.</p>
+                    {!mmCreateGenerated ? (
+                      <>
+                        <textarea
+                          value={mmCreateInput}
+                          onChange={(e) => { setMmCreateInput(e.target.value); setMmCreateError(null); }}
+                          placeholder="e.g. A mental model about sunk cost fallacy in personal projects"
+                          rows={3}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-sm resize-y"
+                        />
+                        {mmCreateError && <p className="text-xs text-red-600 dark:text-red-400">{mmCreateError}</p>}
+                        <div className="flex gap-2 justify-end">
+                          <button
+                            type="button"
+                            onClick={() => setMmCreateModalOpen(false)}
+                            className="px-3 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors"
+                          >
+                            {getUiTranslations(language).cancel}
+                              </button>
+                          <button
+                            type="button"
+                            disabled={mmCreateLoading || !mmCreateInput.trim()}
+                            onClick={async () => {
+                              setMmCreateError(null);
+                              setMmCreateLoading(true);
+                              try {
+                                const r = await fetch("/api/me/mental-models/generate", {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ userInput: mmCreateInput.trim(), language }),
+                                });
+                                const data = await r.json().catch(() => ({}));
+                                if (!r.ok) throw new Error(data?.error ?? "Generation failed");
+                                setMmCreateGenerated(data);
+                              } catch (err) {
+                                setMmCreateError(err instanceof Error ? err.message : "Generation failed");
+                              } finally {
+                                setMmCreateLoading(false);
+                              }
+                            }}
+                            className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-xl hover:opacity-90 disabled:opacity-50"
+                          >
+                            {mmCreateLoading ? "Generating…" : "Generate"}
+                          </button>
+                                </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-3 bg-neutral-50 dark:bg-neutral-900 max-h-48 overflow-y-auto">
+                          <p className="text-sm font-medium text-foreground">{String(mmCreateGenerated?.name ?? "")}</p>
+                          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 line-clamp-3">{String(mmCreateGenerated?.quick_introduction ?? "")}</p>
+                            </div>
+                        {mmCreateError && <p className="text-xs text-red-600 dark:text-red-400">{mmCreateError}</p>}
+                        <div className="flex gap-2 justify-end">
+                          <button
+                            type="button"
+                            onClick={() => { setMmCreateGenerated(null); setMmCreateError(null); }}
+                            className="px-3 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors"
+                          >
+                            Back
+                            </button>
+                          <button
+                            type="button"
+                            disabled={mmCreateSaveLoading}
+                            onClick={async () => {
+                              setMmCreateError(null);
+                              setMmCreateSaveLoading(true);
+                              try {
+                                const r = await fetch("/api/me/mental-models", {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ model: mmCreateGenerated }),
+                                });
+                                const data = await r.json().catch(() => ({}));
+                                if (!r.ok) throw new Error(data?.error ?? "Save failed");
+                                setMmCreateModalOpen(false);
+                                setMmCreateGenerated(null);
+                                refetchScore();
+                                setMmCreateInput("");
+                                setMentalModelsRefreshKey((k) => k + 1);
+                                setSelectedMmCategory("custom");
+                              } catch (err) {
+                                setMmCreateError(err instanceof Error ? err.message : "Save failed");
+                              } finally {
+                                setMmCreateSaveLoading(false);
+                              }
+                            }}
+                            className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-xl hover:opacity-90 disabled:opacity-50"
+                          >
+                            {mmCreateSaveLoading ? "Saving…" : "Save"}
+                          </button>
+                              </div>
+                      </>
+                            )}
+                          </div>
+                </div>
+              )}
+              {libraryPanelOpen === "ltm" && (
+                <div className="space-y-4">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Summaries of past conversations. Use when you want the agent to remember your context, preferences, and what you&apos;ve shared before.</p>
+                  {longTermMemories.length > 0 ? (
+                    <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
+                      {longTermMemories.map((ltm) => (
+                        <div
+                          key={ltm._id}
+                          className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]"
+                        >
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              setLtmDeleteConfirmModal(ltm);
+                            }}
+                            className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
+                            aria-label={`Delete ${ltm.title}`}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                              <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
+                              <path d="M10 11v6M14 11v6" />
+                            </svg>
+                          </button>
+                          <div
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => setLtmDetailModal(ltm)}
+                            onKeyDown={(e) => e.key === "Enter" && setLtmDetailModal(ltm)}
+                            className="flex-1 min-w-0 cursor-pointer pr-10"
+                          >
+                            <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{ltm.title}</span>
+                            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{ltm.summary || ltm.enrichmentPrompt}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Summarize a conversation to add it here.</p>
+                  )}
+                </div>
+              )}
+              {libraryPanelOpen === "cc" && (
+                <div className="space-y-4">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    {getLandingTranslations(language).productTagline}. Ideas and contexts you define. Use when you want the agent to reference your own concepts, goals, or frameworks.
+                  </p>
+                  <div className="flex items-center justify-end gap-2">
+                    <div className="flex gap-1">
+                      <button type="button" onClick={() => setCgCustomCreateModal(true)} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Framework</button>
+                      <button type="button" onClick={() => { setCcCreateInput(""); setCcCreateStep("input"); setCcCreateDraft(null); setCcCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Add Concept</button>
+                    </div>
+                  </div>
+                  {customConcepts.length > 0 ? (
+                    <div className="space-y-3">
+                      <input type="search" placeholder="Search concepts..." value={ccSearchQuery} onChange={(e) => setCcSearchQuery(e.target.value)} className="w-full px-3 py-1.5 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground" aria-label="Search concepts" />
+                      {(() => {
+                        const q = ccSearchQuery.toLowerCase().trim();
+                        const filteredConcepts = q ? customConcepts.filter((cc) => cc.title.toLowerCase().includes(q) || cc.summary.toLowerCase().includes(q) || cc.enrichmentPrompt.toLowerCase().includes(q)) : customConcepts;
+                        const byGroupId = new Map<string, CustomConceptItem[]>();
+                        for (const g of conceptGroups) {
+                          const concepts = filteredConcepts.filter((cc) => (g.conceptIds ?? []).includes(cc._id));
+                          byGroupId.set(g._id, concepts);
+                        }
+                        const standalone = filteredConcepts.filter((cc) => !conceptGroups.some((g) => (g.conceptIds ?? []).includes(cc._id)));
+                        const toggleGroup = (key: string) => setCcGroupCollapsed((prev) => { const next = new Set(prev); if (next.has(key)) next.delete(key); else next.add(key); return next; });
+                        const hasGroupFilter = ccSelectedGroupKeys.size > 0;
+                        const isGroupVisible = (key: string) => !hasGroupFilter || ccSelectedGroupKeys.has(key);
+                        const toggleGroupFilter = (key: string) => {
+                          setCcSelectedGroupKeys((prev) => {
+                            const next = new Set(prev);
+                            if (next.has(key)) next.delete(key);
+                            else next.add(key);
+                            return next;
+                          });
+                        };
+                        if (filteredConcepts.length === 0 && conceptGroups.length === 0) return <p className="text-xs text-neutral-500">{q ? "No concepts match" : "No concepts"}</p>;
+                        return (
+                          <>
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                type="button"
+                                onClick={() => setCcSelectedGroupKeys(new Set())}
+                                className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
+                                  !hasGroupFilter
+                                    ? "bg-foreground text-background border-foreground"
+                                    : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                }`}
+                              >
+                                All
+                              </button>
+                              {conceptGroups.map((cg) => {
+                                const selected = ccSelectedGroupKeys.has(cg._id);
+                                return (
+                                  <button
+                                    key={`chip-${cg._id}`}
+                                    type="button"
+                                    onClick={() => toggleGroupFilter(cg._id)}
+                                    className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
+                                      selected
+                                        ? "bg-foreground text-background border-foreground"
+                                        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                    }`}
+                                  >
+                                    {cg.title}
+                                  </button>
+                                );
+                              })}
+                              {standalone.length > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={() => toggleGroupFilter("Standalone")}
+                                  className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
+                                    ccSelectedGroupKeys.has("Standalone")
+                                      ? "bg-foreground text-background border-foreground"
+                                      : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                  }`}
+                                >
+                                  Standalone
+                                </button>
+                              )}
+                            </div>
+                            {conceptGroups.filter((cg) => isGroupVisible(cg._id)).map((cg, i) => {
+                              const concepts = byGroupId.get(cg._id) ?? [];
+                              const isCollapsed = ccGroupCollapsed.has(cg._id);
+                              const isEmpty = (cg.conceptIds?.length ?? 0) === 0 || concepts.length === 0;
+                              return (
+                                <div key={cg._id} className={i === 0 ? "pt-0" : "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2"}>
+                                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                                    <button type="button" data-no-modal-border="true" onClick={() => toggleGroup(cg._id)} className="flex items-center justify-between flex-1 min-w-0 text-left px-1">
+                                      <p className="text-[10px] font-medium text-neutral-500 uppercase tracking-wide truncate">{cg.title}</p>
+                                      <span className="text-[10px] shrink-0 ml-1">{isCollapsed ? "▶" : "▼"}</span>
+                                  </button>
+                                    {isEmpty && (
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setCgDeleteConfirmModal(cg);
+                                        }}
+                                        className="p-1.5 rounded-lg text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors shrink-0"
+                                        aria-label={`Delete ${cg.title}`}
+                                      >
+                                        <TrashIcon className="w-4 h-4" />
+                                      </button>
+                                    )}
+                                  </div>
+                                  {!isCollapsed && (
+                                    <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
+                                      {concepts.length === 0 ? (
+                                        <p className="text-xs text-neutral-500 dark:text-neutral-400 py-2">No concepts in this group yet.</p>
+                                      ) : concepts.map((cc) => (
+                                        <div key={cc._id} className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]">
+                                          <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" /><path d="M10 11v6M14 11v6" /></svg>
+                                          </button>
+                                          <div role="button" tabIndex={0} onClick={() => openConceptDetail(cc)} onKeyDown={(e) => e.key === "Enter" && openConceptDetail(cc)} className="flex-1 min-w-0 cursor-pointer pr-10">
+                                            <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{cc.title}</span>
+                                            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{cc.summary || cc.enrichmentPrompt}</p>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                            {standalone.length > 0 && isGroupVisible("Standalone") && (
+                              <div className={conceptGroups.length === 0 ? "pt-0" : "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2"}>
+                                <button type="button" data-no-modal-border="true" onClick={() => toggleGroup("Standalone")} className="flex items-center justify-between w-full text-left px-1 mb-1.5">
+                                  <p className="text-[10px] font-medium text-neutral-500 uppercase tracking-wide">Standalone</p>
+                                  <span className="text-[10px]">{ccGroupCollapsed.has("Standalone") ? "▶" : "▼"}</span>
+                                </button>
+                                {!ccGroupCollapsed.has("Standalone") && (
+                                  <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
+                                    {standalone.map((cc) => (
+                                      <div key={cc._id} className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]">
+                                        <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
+                                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" /><path d="M10 11v6M14 11v6" /></svg>
+                                        </button>
+                                        <div role="button" tabIndex={0} onClick={() => openConceptDetail(cc)} onKeyDown={(e) => e.key === "Enter" && openConceptDetail(cc)} className="flex-1 min-w-0 cursor-pointer pr-10">
+                                          <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{cc.title}</span>
+                                          <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{cc.summary || cc.enrichmentPrompt}</p>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Create a custom concept to remember anything you want.</p>
+                  )}
+                </div>
+              )}
+              {libraryPanelOpen === "cg" && (
+                <div className="space-y-4">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks created via AI. Use when you want the agent to think in terms of a topic (e.g. finance, health) with related concepts.</p>
+                  <div className="flex items-center justify-end gap-1">
+                    <button type="button" onClick={() => { setCgCreateDomain(""); setCgCreateStep(1); setCgCreateQuestions([]); setCgCreateAnswers({}); setCgCreateConcepts([]); setCgCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Framework</button>
+                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeExtractProgress(null); setCcImportJournalMode(false); setCcJournalText(""); setCcJournalTitle(""); setCcJournalPersistLibrary(false); setCcJournalTranscriptId(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors" title="Create concepts from a YouTube video's transcript">+ From a video</button>
+                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeExtractProgress(null); setCcImportJournalMode(true); setCcJournalText(""); setCcJournalTitle(""); setCcJournalPersistLibrary(false); setCcJournalTranscriptId(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors" title="Create concepts from text you paste">+ From your writing</button>
+                  </div>
+                  {conceptGroups.length > 0 ? (
+                    <div className={LIBRARY_FRAMEWORK_TILE_GRID}>
+                      {conceptGroups.map((cg) => {
+                        const isEmpty = (cg.conceptIds?.length ?? 0) === 0;
+                        const openGroup = () => fetch(`/api/me/concept-groups/${cg._id}`).then((r) => r.ok ? r.json() : Promise.reject()).then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] })).catch(() => setCgDetailModal(cg));
+                        return (
+                          <div
+                            key={cg._id}
+                            role="button"
+                            tabIndex={0}
+                            onClick={openGroup}
+                            onKeyDown={(e) => e.key === "Enter" && openGroup()}
+                            className="relative flex flex-col items-center justify-center gap-1 p-3 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 cursor-pointer transition-colors text-center"
+                          >
+                            {isEmpty && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                  setCgDeleteConfirmModal(cg);
+                                }}
+                                className="absolute top-3 right-3 z-10 p-1.5 rounded-lg text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                                aria-label={`Delete ${cg.title}`}
+                              >
+                                <TrashIcon className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                            <div className="relative w-10 h-10 shrink-0 flex items-center justify-center">
+                              <div className="absolute inset-0 rounded-lg bg-neutral-200 dark:bg-neutral-700" style={{ transform: "translate(0,0)" }} />
+                              <div className="absolute inset-0 rounded-lg bg-neutral-300 dark:bg-neutral-600" style={{ transform: "translate(3px,3px)" }} />
+                              <div className="absolute inset-0 rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center" style={{ transform: "translate(6px,6px)" }}>
+                                <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">{(cg.conceptIds?.length ?? 0) || "—"}</span>
+                              </div>
+                            </div>
+                            <p className="text-sm font-medium truncate w-full">{cg.title}</p>
+                            <p className="text-[10px] text-neutral-500 dark:text-neutral-400">{cg.conceptIds?.length ?? 0} concepts</p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Create frameworks via AI or groups by selecting existing concepts.</p>
+                  )}
+                  {savedTranscripts.length > 0 && (
+                    <div className="pt-4 border-t border-neutral-200 dark:border-neutral-700">
+                      <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-2">My Transcripts</p>
+                      <div className="space-y-2">
+                        {savedTranscripts.map((t) => (
+                          <div
+                            key={t._id}
+                            className="flex items-center justify-between gap-2 p-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/30"
+                          >
+                            <div
+                              className="min-w-0 flex-1 cursor-pointer"
+                              role="button"
+                              tabIndex={0}
+                              onClick={() =>
+                                fetch(`/api/me/transcripts/${t._id}`)
+                                  .then((r) => r.ok ? r.json() : Promise.reject())
+                                  .then((data) =>
+                                    setTranscriptModalTranscript({
+                                      id: t._id,
+                                      videoId: data.videoId ?? t.videoId,
+                                      videoTitle: data.videoTitle ?? t.videoTitle,
+                                      channel: data.channel ?? t.channel,
+                                      sourceType: data.sourceType ?? t.sourceType,
+                                      transcriptText: data.transcriptText ?? "",
+                                      extractedConcepts: data.extractedConcepts,
+                                    })
+                                  )
+                                  .catch(() => {})
+                              }
+                              onKeyDown={(e) => e.key === "Enter" && (e.currentTarget as HTMLElement).click()}
+                            >
+                              {t.sourceType === "journal" ? (
+                                <span className="text-sm font-medium truncate block text-foreground">
+                                  {t.videoTitle || "Journal entry"}
+                                </span>
+                              ) : (
+                                <a
+                                  href={`https://www.youtube.com/watch?v=${t.videoId}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="text-sm font-medium truncate block hover:underline text-foreground"
+                                >
+                                  {t.videoTitle || t.videoId}
+                                </a>
+                              )}
+                              {t.sourceType === "journal" ? (
+                                <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">Journal</p>
+                              ) : (
+                                t.channel && <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">{t.channel}</p>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setReExtractError(null);
+                                  setReExtractConfirm({
+                                    transcriptId: t._id,
+                                    sourceType: t.sourceType === "journal" ? "journal" : "youtube",
+                                    videoTitle: t.videoTitle ?? undefined,
+                                  });
+                                }}
+                                className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
+                              >
+                                Re-extract
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => fetch(`/api/me/transcripts/${t._id}`, { method: "DELETE" }).then(() => refetchTranscripts())}
+                                className="p-1.5 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                                aria-label={`Delete transcript ${t.videoTitle || t.videoId}`}
+                              >
+                                <TrashIcon className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                </div>
+              )}
+                </div>
+              )}
+              {libraryPanelOpen === "habits" && (
+                <div className="space-y-4">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Habits you&apos;ve created from concepts and memories. Use in daily life—not sent to the AI.</p>
+                  {habits.length > 0 ? (
+                    <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
+                      {habits.map((h) => (
+                        <div
+                          key={h._id}
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => setHabitDetailModal(h)}
+                          onKeyDown={(e) => e.key === "Enter" && setHabitDetailModal(h)}
+                          className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]"
+                        >
+                            <button
+                              type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              setHabitDeleteConfirmModal(h);
+                            }}
+                            className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
+                            aria-label={`Delete ${h.name}`}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                              <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
+                              <path d="M10 11v6M14 11v6" />
+                            </svg>
+                            </button>
+                          <div className="flex-1 min-w-0 pr-10">
+                            <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
+                            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{h.description}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Promote a concept or memory to create a habit.</p>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+        <>
         <div
           className={`flex-1 min-h-0 flex flex-col transition-all duration-500 ${
             messages.length > 0
@@ -4991,6 +6458,7 @@ export default function ChatPage() {
                           }
                           router.push("/chat/new");
                         } else {
+                          setLibraryPanelOpen(null);
                           setWaysOfLookingAtModalOpen(true);
                           setWaysOfLookingAtDrawMode(true);
                           setWaysOfLookingAtCategory(null);
@@ -5544,11 +7012,14 @@ export default function ChatPage() {
           </div>
           )}
         </div>
+        </>
+        )}
+
       </main>
       </div>
 
-      {/* Library - center modal (Claude-style), closable on all devices. Mental Models (concepts) available to anonymous users. */}
-      {libraryPanelOpen && (libraryPanelOpen === "concepts" || !isAnonymous) && (
+      {/* Library - center modal only for Conversations & Personas. Other library items use the main-area panel. */}
+      {libraryPanelOpen && showLibraryModal && (
         <>
           <div
             className={`fixed inset-0 z-40 bg-black/30 animate-fade-in ${featureTourStep === null ? "backdrop-blur-sm" : ""}`}
@@ -5561,12 +7032,8 @@ export default function ChatPage() {
           >
             <div
               className={`pointer-events-auto w-full max-h-[90vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-800 animate-fade-in-up ${
-                libraryPanelOpen === "concepts"
-                  ? "max-w-[var(--modal-library-concepts-decks-max-w)]"
-                  : libraryPanelOpen === "figures"
-                    ? "max-w-[min(94vw,880px)]"
-                    : libraryPanelOpen === "habits"
-                      ? "max-w-[min(94vw,720px)]"
+                libraryPanelOpen === "figures"
+                  ? "max-w-[min(94vw,880px)]"
                   : "max-w-[min(94vw,608px)]"
               }`}
               data-tour="library-modal"
@@ -5574,26 +7041,16 @@ export default function ChatPage() {
             aria-modal
               aria-label={
                 libraryPanelOpen === "conversations" ? getUiTranslations(language).conversations :
-                libraryPanelOpen === "concepts" ? getUiTranslations(language).mentalModels :
-                libraryPanelOpen === "ltm" ? getUiTranslations(language).longTermMemory :
-                libraryPanelOpen === "cc" ? getUiTranslations(language).concepts :
-                libraryPanelOpen === "cg" ? getUiTranslations(language).groups :
-                libraryPanelOpen === "habits" ? getUiTranslations(language).habits :
                 libraryPanelOpen === "figures" ? getUiTranslations(language).famousFigures :
-                getUiTranslations(language).promptGames
+                ""
               }
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between gap-2 px-4 py-3 border-b-[0.75px] border-neutral-200/80 dark:border-white/8 shrink-0">
                 <h2 className="text-lg font-semibold text-foreground">
                   {libraryPanelOpen === "conversations" ? getUiTranslations(language).conversations :
-                   libraryPanelOpen === "concepts" ? getUiTranslations(language).mentalModels :
-                   libraryPanelOpen === "ltm" ? getUiTranslations(language).longTermMemory :
-                   libraryPanelOpen === "cc" ? getUiTranslations(language).concepts :
-                   libraryPanelOpen === "cg" ? getUiTranslations(language).groups :
-                   libraryPanelOpen === "habits" ? getUiTranslations(language).habits :
                    libraryPanelOpen === "figures" ? getUiTranslations(language).famousFigures :
-                   getUiTranslations(language).promptGames}
+                   ""}
                 </h2>
               <button
                 type="button"
@@ -5634,7 +7091,7 @@ export default function ChatPage() {
                         )}
                       </div>
                     ) : (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
                       {filteredSessions.map((s) => (
                         <div
                           key={s._id}
@@ -5731,709 +7188,6 @@ export default function ChatPage() {
                   </nav>
                 </div>
               )}
-              {libraryPanelOpen === "concepts" && (
-                <div className="space-y-4">
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks and biases, grouped by when to use. Star to add to Favorites.</p>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={handleTeachMeClick}
-                      disabled={teachMeLoading}
-                      className="flex flex-1 items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-foreground border border-neutral-200 dark:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors disabled:opacity-60"
-                      aria-label="Learn a new mental model"
-                    >
-                    {teachMeLoading ? (
-                      <LoadingDots aria-label="Loading" />
-                    ) : (
-                      <>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                          <path d="M12 3v18" />
-                        </svg>
-                        <span>Learn a New Mental Model</span>
-                      </>
-                    )}
-                    </button>
-                    {!isAnonymous && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setMmCreateModalOpen(true);
-                          setMmCreateInput("");
-                          setMmCreateGenerated(null);
-                          setMmCreateError(null);
-                        }}
-                        className="shrink-0 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors"
-                      >
-                        + Create
-                      </button>
-                    )}
-                  </div>
-                  <input type="search" placeholder="Search mental models..." value={mmSearchQuery} onChange={(e) => setMmSearchQuery(e.target.value)} className="w-full px-3 py-1.5 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground" aria-label="Search mental models" />
-                  {(() => {
-                    const q = mmSearchQuery.toLowerCase().trim();
-                    const filteredModels = q
-                      ? mentalModelsWithWhenToUse.filter((m) => {
-                          const nameMatch = m.name.toLowerCase().includes(q);
-                          const tagMatch = (m.when_to_use ?? []).some((t) =>
-                            formatMmCategory(t).toLowerCase().includes(q)
-                          );
-                          const preview = mmPreviewMap.get(m.id);
-                          const oneLinerMatch = preview?.oneLiner?.toLowerCase().includes(q);
-                          const quickIntroMatch = preview?.quickIntro?.toLowerCase().includes(q);
-                          return nameMatch || tagMatch || oneLinerMatch || quickIntroMatch;
-                        })
-                      : mentalModelsWithWhenToUse;
-
-                    const byWhenToUse = new Map<string, { id: string; name: string }[]>();
-                    const uncategorized: { id: string; name: string }[] = [];
-                    for (const m of filteredModels) {
-                      if (m.when_to_use.length === 0) {
-                        uncategorized.push({ id: m.id, name: m.name });
-                      } else {
-                        for (const tag of m.when_to_use) {
-                          const existing = byWhenToUse.get(tag) ?? [];
-                          if (!existing.some((x) => x.id === m.id)) existing.push({ id: m.id, name: m.name });
-                          byWhenToUse.set(tag, existing);
-                        }
-                      }
-                    }
-
-                    const whenToUseOrder = [...byWhenToUse.keys()].sort((a, b) => {
-                      if (a === "custom") return -1;
-                      if (b === "custom") return 1;
-                      return formatMmCategory(a).localeCompare(formatMmCategory(b));
-                    });
-                    const categoryItems: { key: string; label: string; models: { id: string; name: string }[] }[] =
-                      whenToUseOrder.map((tag) => ({
-                        key: tag,
-                        label: formatMmCategory(tag),
-                        models: byWhenToUse.get(tag) ?? [],
-                      }));
-                    if (uncategorized.length > 0) {
-                      categoryItems.push({
-                        key: "uncategorized",
-                        label: "Other",
-                        models: uncategorized,
-                      });
-                    }
-
-                    const decisionCategory = categoryItems.find(
-                      (c) => normalizeMmCategory(c.label) === "decision-making"
-                    );
-                    const activeCategoryKey = categoryItems.some((c) => c.key === selectedMmCategory)
-                      ? selectedMmCategory
-                      : (decisionCategory?.key ?? categoryItems[0]?.key ?? "");
-                    const activeCategory = categoryItems.find((c) => c.key === activeCategoryKey);
-                    const activeModels = activeCategory?.models ?? [];
-
-                    const renderMmCard = (id: string, name: string) => {
-                      const preview = mmPreviewMap.get(id);
-                      const description = preview?.oneLiner ?? preview?.quickIntro ?? "Tap to explore";
-                      const isFavorite = mmFavorites.has(id);
-                      const hasImage = !id.startsWith("custom_");
-                      const isCustom = id.startsWith("custom_");
-                      return (
-                        <div key={id} className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]">
-                          {isCustom ? (
-                            <button
-                              type="button"
-                              onClick={(e) => { e.stopPropagation(); e.preventDefault(); setMmDeleteConfirmModal({ id, name }); }}
-                              className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
-                              aria-label={`Delete ${name}`}
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
-                                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
-                                <path d="M10 11v6M14 11v6" />
-                              </svg>
-                            </button>
-                          ) : (
-                          <button
-                            type="button"
-                            onClick={(e) => { e.stopPropagation(); e.preventDefault(); toggleMmFavorite(id); }}
-                              className="absolute top-3 right-3 z-10 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors touch-manipulation"
-                            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-                          >
-                            {isFavorite ? (
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden>
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                              </svg>
-                            ) : (
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4 text-neutral-400 dark:text-neutral-500" aria-hidden>
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                              </svg>
-                            )}
-                          </button>
-                          )}
-                          <div
-                            role="button"
-                            tabIndex={0}
-                            onClick={() => handleMentalModelClick(id)}
-                            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleMentalModelClick(id); } }}
-                            className="flex flex-col items-start gap-2 flex-1 min-w-0 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-500 focus-visible:ring-offset-2 rounded-xl -m-1 p-1"
-                          >
-                            <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 h-28">
-                              {hasImage ? (
-                                <img
-                                  src={`/images/${id.replace(/_/g, "-")}.png`}
-                                  alt=""
-                                  className="w-full h-full object-cover"
-                                  loading="lazy"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-neutral-500 dark:text-neutral-400">
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
-                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                                    <path d="M12 3v18" />
-                                  </svg>
-                                </div>
-                              )}
-                            </div>
-                            <span className="text-base font-medium text-foreground group-hover:text-foreground line-clamp-2 pr-8">
-                              {name}
-                            </span>
-                            <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2 flex-1 min-h-0">
-                              {description}
-                            </p>
-                            <p className="text-[11px] text-neutral-400 dark:text-neutral-500 mt-auto pt-1">
-                              Tap to open
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    };
-                    if (mentalModelsWithWhenToUse.length === 0) {
-                      return <p className="text-xs text-neutral-500 dark:text-neutral-400">Loading mental models…</p>;
-                    }
-                    if (filteredModels.length === 0) {
-                      return <p className="text-xs text-neutral-500 dark:text-neutral-400">{q ? "No mental models match." : "No mental models."}</p>;
-                    }
-                    return (
-                      <div className="space-y-3">
-                        <div className="flex flex-wrap gap-2">
-                          {categoryItems.map((cat) => (
-                            <button
-                              key={cat.key}
-                              type="button"
-                              onClick={() => setSelectedMmCategory(cat.key)}
-                              className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
-                                activeCategoryKey === cat.key
-                                  ? "bg-foreground text-background border-foreground"
-                                  : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                              }`}
-                            >
-                              {cat.label}
-                            </button>
-                          ))}
-                          </div>
-                        <div className="flex items-center justify-between">
-                          <p className="text-[11px] font-medium text-neutral-500 uppercase tracking-wide">
-                            {activeCategory?.label ?? "Category"}
-                          </p>
-                          <span className="text-[11px] text-neutral-500">{activeModels.length} models</span>
-                        </div>
-                        {activeModels.length > 0 ? (
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            {activeModels.map(({ id, name }) => renderMmCard(id, name))}
-                              </div>
-                            ) : (
-                          <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                            No models in this category.
-                              </p>
-                          )}
-                        </div>
-                    );
-                  })()}
-                        </div>
-              )}
-              {mmCreateModalOpen && !isAnonymous && (
-                <div
-                  className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40"
-                  onClick={(e) => e.target === e.currentTarget && setMmCreateModalOpen(false)}
-                  role="dialog"
-                  aria-modal
-                  aria-labelledby="mm-create-title"
-                >
-                  <div
-                    className="w-full max-w-md bg-background rounded-2xl shadow-xl border border-neutral-200 dark:border-neutral-700 p-4 space-y-4"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <h3 id="mm-create-title" className="text-base font-semibold text-foreground">Create mental model</h3>
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Describe the mental model or cognitive bias you want. The AI will generate the full structure.</p>
-                    {!mmCreateGenerated ? (
-                      <>
-                        <textarea
-                          value={mmCreateInput}
-                          onChange={(e) => { setMmCreateInput(e.target.value); setMmCreateError(null); }}
-                          placeholder="e.g. A mental model about sunk cost fallacy in personal projects"
-                          rows={3}
-                          className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-sm resize-y"
-                        />
-                        {mmCreateError && <p className="text-xs text-red-600 dark:text-red-400">{mmCreateError}</p>}
-                        <div className="flex gap-2 justify-end">
-                          <button
-                            type="button"
-                            onClick={() => setMmCreateModalOpen(false)}
-                            className="px-3 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors"
-                          >
-                            {getUiTranslations(language).cancel}
-                              </button>
-                          <button
-                            type="button"
-                            disabled={mmCreateLoading || !mmCreateInput.trim()}
-                            onClick={async () => {
-                              setMmCreateError(null);
-                              setMmCreateLoading(true);
-                              try {
-                                const r = await fetch("/api/me/mental-models/generate", {
-                                  method: "POST",
-                                  headers: { "Content-Type": "application/json" },
-                                  body: JSON.stringify({ userInput: mmCreateInput.trim(), language }),
-                                });
-                                const data = await r.json().catch(() => ({}));
-                                if (!r.ok) throw new Error(data?.error ?? "Generation failed");
-                                setMmCreateGenerated(data);
-                              } catch (err) {
-                                setMmCreateError(err instanceof Error ? err.message : "Generation failed");
-                              } finally {
-                                setMmCreateLoading(false);
-                              }
-                            }}
-                            className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-xl hover:opacity-90 disabled:opacity-50"
-                          >
-                            {mmCreateLoading ? "Generating…" : "Generate"}
-                          </button>
-                                </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-3 bg-neutral-50 dark:bg-neutral-900 max-h-48 overflow-y-auto">
-                          <p className="text-sm font-medium text-foreground">{String(mmCreateGenerated?.name ?? "")}</p>
-                          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 line-clamp-3">{String(mmCreateGenerated?.quick_introduction ?? "")}</p>
-                            </div>
-                        {mmCreateError && <p className="text-xs text-red-600 dark:text-red-400">{mmCreateError}</p>}
-                        <div className="flex gap-2 justify-end">
-                          <button
-                            type="button"
-                            onClick={() => { setMmCreateGenerated(null); setMmCreateError(null); }}
-                            className="px-3 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors"
-                          >
-                            Back
-                            </button>
-                          <button
-                            type="button"
-                            disabled={mmCreateSaveLoading}
-                            onClick={async () => {
-                              setMmCreateError(null);
-                              setMmCreateSaveLoading(true);
-                              try {
-                                const r = await fetch("/api/me/mental-models", {
-                                  method: "POST",
-                                  headers: { "Content-Type": "application/json" },
-                                  body: JSON.stringify({ model: mmCreateGenerated }),
-                                });
-                                const data = await r.json().catch(() => ({}));
-                                if (!r.ok) throw new Error(data?.error ?? "Save failed");
-                                setMmCreateModalOpen(false);
-                                setMmCreateGenerated(null);
-                                refetchScore();
-                                setMmCreateInput("");
-                                setMentalModelsRefreshKey((k) => k + 1);
-                                setSelectedMmCategory("custom");
-                              } catch (err) {
-                                setMmCreateError(err instanceof Error ? err.message : "Save failed");
-                              } finally {
-                                setMmCreateSaveLoading(false);
-                              }
-                            }}
-                            className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-xl hover:opacity-90 disabled:opacity-50"
-                          >
-                            {mmCreateSaveLoading ? "Saving…" : "Save"}
-                          </button>
-                              </div>
-                      </>
-                            )}
-                          </div>
-                </div>
-              )}
-              {libraryPanelOpen === "ltm" && (
-                <div className="space-y-4">
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Summaries of past conversations. Use when you want the agent to remember your context, preferences, and what you&apos;ve shared before.</p>
-                  {longTermMemories.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {longTermMemories.map((ltm) => (
-                        <div
-                          key={ltm._id}
-                          className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]"
-                        >
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              e.preventDefault();
-                              setLtmDeleteConfirmModal(ltm);
-                            }}
-                            className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
-                            aria-label={`Delete ${ltm.title}`}
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
-                              <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
-                              <path d="M10 11v6M14 11v6" />
-                            </svg>
-                          </button>
-                          <div
-                            role="button"
-                            tabIndex={0}
-                            onClick={() => setLtmDetailModal(ltm)}
-                            onKeyDown={(e) => e.key === "Enter" && setLtmDetailModal(ltm)}
-                            className="flex-1 min-w-0 cursor-pointer pr-10"
-                          >
-                            <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{ltm.title}</span>
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{ltm.summary || ltm.enrichmentPrompt}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Summarize a conversation to add it here.</p>
-                  )}
-                </div>
-              )}
-              {libraryPanelOpen === "cc" && (
-                <div className="space-y-4">
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                    {getLandingTranslations(language).productTagline}. Ideas and contexts you define. Use when you want the agent to reference your own concepts, goals, or frameworks.
-                  </p>
-                  <div className="flex items-center justify-end gap-2">
-                    <div className="flex gap-1">
-                      <button type="button" onClick={() => setCgCustomCreateModal(true)} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Framework</button>
-                      <button type="button" onClick={() => { setCcCreateInput(""); setCcCreateStep("input"); setCcCreateDraft(null); setCcCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Add Concept</button>
-                    </div>
-                  </div>
-                  {customConcepts.length > 0 ? (
-                    <div className="space-y-3">
-                      <input type="search" placeholder="Search concepts..." value={ccSearchQuery} onChange={(e) => setCcSearchQuery(e.target.value)} className="w-full px-3 py-1.5 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground" aria-label="Search concepts" />
-                      {(() => {
-                        const q = ccSearchQuery.toLowerCase().trim();
-                        const filteredConcepts = q ? customConcepts.filter((cc) => cc.title.toLowerCase().includes(q) || cc.summary.toLowerCase().includes(q) || cc.enrichmentPrompt.toLowerCase().includes(q)) : customConcepts;
-                        const byGroupId = new Map<string, CustomConceptItem[]>();
-                        for (const g of conceptGroups) {
-                          const concepts = filteredConcepts.filter((cc) => (g.conceptIds ?? []).includes(cc._id));
-                          byGroupId.set(g._id, concepts);
-                        }
-                        const standalone = filteredConcepts.filter((cc) => !conceptGroups.some((g) => (g.conceptIds ?? []).includes(cc._id)));
-                        const toggleGroup = (key: string) => setCcGroupCollapsed((prev) => { const next = new Set(prev); if (next.has(key)) next.delete(key); else next.add(key); return next; });
-                        const hasGroupFilter = ccSelectedGroupKeys.size > 0;
-                        const isGroupVisible = (key: string) => !hasGroupFilter || ccSelectedGroupKeys.has(key);
-                        const toggleGroupFilter = (key: string) => {
-                          setCcSelectedGroupKeys((prev) => {
-                            const next = new Set(prev);
-                            if (next.has(key)) next.delete(key);
-                            else next.add(key);
-                            return next;
-                          });
-                        };
-                        if (filteredConcepts.length === 0 && conceptGroups.length === 0) return <p className="text-xs text-neutral-500">{q ? "No concepts match" : "No concepts"}</p>;
-                        return (
-                          <>
-                            <div className="flex flex-wrap gap-2">
-                              <button
-                                type="button"
-                                onClick={() => setCcSelectedGroupKeys(new Set())}
-                                className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
-                                  !hasGroupFilter
-                                    ? "bg-foreground text-background border-foreground"
-                                    : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                                }`}
-                              >
-                                All
-                              </button>
-                              {conceptGroups.map((cg) => {
-                                const selected = ccSelectedGroupKeys.has(cg._id);
-                                return (
-                                  <button
-                                    key={`chip-${cg._id}`}
-                                    type="button"
-                                    onClick={() => toggleGroupFilter(cg._id)}
-                                    className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
-                                      selected
-                                        ? "bg-foreground text-background border-foreground"
-                                        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                                    }`}
-                                  >
-                                    {cg.title}
-                                  </button>
-                                );
-                              })}
-                              {standalone.length > 0 && (
-                                <button
-                                  type="button"
-                                  onClick={() => toggleGroupFilter("Standalone")}
-                                  className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
-                                    ccSelectedGroupKeys.has("Standalone")
-                                      ? "bg-foreground text-background border-foreground"
-                                      : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                                  }`}
-                                >
-                                  Standalone
-                                </button>
-                              )}
-                            </div>
-                            {conceptGroups.filter((cg) => isGroupVisible(cg._id)).map((cg, i) => {
-                              const concepts = byGroupId.get(cg._id) ?? [];
-                              const isCollapsed = ccGroupCollapsed.has(cg._id);
-                              const isEmpty = (cg.conceptIds?.length ?? 0) === 0 || concepts.length === 0;
-                              return (
-                                <div key={cg._id} className={i === 0 ? "pt-0" : "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2"}>
-                                  <div className="flex items-center justify-between gap-2 mb-1.5">
-                                    <button type="button" data-no-modal-border="true" onClick={() => toggleGroup(cg._id)} className="flex items-center justify-between flex-1 min-w-0 text-left px-1">
-                                      <p className="text-[10px] font-medium text-neutral-500 uppercase tracking-wide truncate">{cg.title}</p>
-                                      <span className="text-[10px] shrink-0 ml-1">{isCollapsed ? "▶" : "▼"}</span>
-                                  </button>
-                                    {isEmpty && (
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setCgDeleteConfirmModal(cg);
-                                        }}
-                                        className="p-1.5 rounded-lg text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors shrink-0"
-                                        aria-label={`Delete ${cg.title}`}
-                                      >
-                                        <TrashIcon className="w-4 h-4" />
-                                      </button>
-                                    )}
-                                  </div>
-                                  {!isCollapsed && (
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                      {concepts.length === 0 ? (
-                                        <p className="text-xs text-neutral-500 dark:text-neutral-400 py-2">No concepts in this group yet.</p>
-                                      ) : concepts.map((cc) => (
-                                        <div key={cc._id} className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]">
-                                          <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" /><path d="M10 11v6M14 11v6" /></svg>
-                                          </button>
-                                          <div role="button" tabIndex={0} onClick={() => openConceptDetail(cc)} onKeyDown={(e) => e.key === "Enter" && openConceptDetail(cc)} className="flex-1 min-w-0 cursor-pointer pr-10">
-                                            <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{cc.title}</span>
-                                            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{cc.summary || cc.enrichmentPrompt}</p>
-                                          </div>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })}
-                            {standalone.length > 0 && isGroupVisible("Standalone") && (
-                              <div className={conceptGroups.length === 0 ? "pt-0" : "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2"}>
-                                <button type="button" data-no-modal-border="true" onClick={() => toggleGroup("Standalone")} className="flex items-center justify-between w-full text-left px-1 mb-1.5">
-                                  <p className="text-[10px] font-medium text-neutral-500 uppercase tracking-wide">Standalone</p>
-                                  <span className="text-[10px]">{ccGroupCollapsed.has("Standalone") ? "▶" : "▼"}</span>
-                                </button>
-                                {!ccGroupCollapsed.has("Standalone") && (
-                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    {standalone.map((cc) => (
-                                      <div key={cc._id} className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]">
-                                        <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); setCcDeleteConfirmModal(cc); }} className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation" aria-label={`Delete ${cc.title}`}>
-                                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" /><path d="M10 11v6M14 11v6" /></svg>
-                                        </button>
-                                        <div role="button" tabIndex={0} onClick={() => openConceptDetail(cc)} onKeyDown={(e) => e.key === "Enter" && openConceptDetail(cc)} className="flex-1 min-w-0 cursor-pointer pr-10">
-                                          <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{cc.title}</span>
-                                          <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{cc.summary || cc.enrichmentPrompt}</p>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                          </>
-                        );
-                      })()}
-                    </div>
-                  ) : (
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Create a custom concept to remember anything you want.</p>
-                  )}
-                </div>
-              )}
-              {libraryPanelOpen === "cg" && (
-                <div className="space-y-4">
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks created via AI. Use when you want the agent to think in terms of a topic (e.g. finance, health) with related concepts.</p>
-                  <div className="flex items-center justify-end gap-1">
-                    <button type="button" onClick={() => { setCgCreateDomain(""); setCgCreateStep(1); setCgCreateQuestions([]); setCgCreateAnswers({}); setCgCreateConcepts([]); setCgCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Framework</button>
-                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeExtractProgress(null); setCcImportJournalMode(false); setCcJournalText(""); setCcJournalTitle(""); setCcJournalPersistLibrary(false); setCcJournalTranscriptId(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors" title="Create concepts from a YouTube video's transcript">+ From a video</button>
-                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeExtractProgress(null); setCcImportJournalMode(true); setCcJournalText(""); setCcJournalTitle(""); setCcJournalPersistLibrary(false); setCcJournalTranscriptId(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors" title="Create concepts from text you paste">+ From your writing</button>
-                  </div>
-                  {conceptGroups.length > 0 ? (
-                    <div className="grid grid-cols-2 gap-2">
-                      {conceptGroups.map((cg) => {
-                        const isEmpty = (cg.conceptIds?.length ?? 0) === 0;
-                        const openGroup = () => fetch(`/api/me/concept-groups/${cg._id}`).then((r) => r.ok ? r.json() : Promise.reject()).then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] })).catch(() => setCgDetailModal(cg));
-                        return (
-                          <div
-                            key={cg._id}
-                            role="button"
-                            tabIndex={0}
-                            onClick={openGroup}
-                            onKeyDown={(e) => e.key === "Enter" && openGroup()}
-                            className="relative flex flex-col items-center justify-center gap-1 p-3 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 cursor-pointer transition-colors text-center"
-                          >
-                            {isEmpty && (
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  e.preventDefault();
-                                  setCgDeleteConfirmModal(cg);
-                                }}
-                                className="absolute top-3 right-3 z-10 p-1.5 rounded-lg text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
-                                aria-label={`Delete ${cg.title}`}
-                              >
-                                <TrashIcon className="w-3.5 h-3.5" />
-                              </button>
-                            )}
-                            <div className="relative w-10 h-10 shrink-0 flex items-center justify-center">
-                              <div className="absolute inset-0 rounded-lg bg-neutral-200 dark:bg-neutral-700" style={{ transform: "translate(0,0)" }} />
-                              <div className="absolute inset-0 rounded-lg bg-neutral-300 dark:bg-neutral-600" style={{ transform: "translate(3px,3px)" }} />
-                              <div className="absolute inset-0 rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center" style={{ transform: "translate(6px,6px)" }}>
-                                <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">{(cg.conceptIds?.length ?? 0) || "—"}</span>
-                              </div>
-                            </div>
-                            <p className="text-sm font-medium truncate w-full">{cg.title}</p>
-                            <p className="text-[10px] text-neutral-500 dark:text-neutral-400">{cg.conceptIds?.length ?? 0} concepts</p>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Create frameworks via AI or groups by selecting existing concepts.</p>
-                  )}
-                  {savedTranscripts.length > 0 && (
-                    <div className="pt-4 border-t border-neutral-200 dark:border-neutral-700">
-                      <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-2">My Transcripts</p>
-                      <div className="space-y-2">
-                        {savedTranscripts.map((t) => (
-                          <div
-                            key={t._id}
-                            className="flex items-center justify-between gap-2 p-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/30"
-                          >
-                            <div
-                              className="min-w-0 flex-1 cursor-pointer"
-                              role="button"
-                              tabIndex={0}
-                              onClick={() =>
-                                fetch(`/api/me/transcripts/${t._id}`)
-                                  .then((r) => r.ok ? r.json() : Promise.reject())
-                                  .then((data) =>
-                                    setTranscriptModalTranscript({
-                                      id: t._id,
-                                      videoId: data.videoId ?? t.videoId,
-                                      videoTitle: data.videoTitle ?? t.videoTitle,
-                                      channel: data.channel ?? t.channel,
-                                      sourceType: data.sourceType ?? t.sourceType,
-                                      transcriptText: data.transcriptText ?? "",
-                                      extractedConcepts: data.extractedConcepts,
-                                    })
-                                  )
-                                  .catch(() => {})
-                              }
-                              onKeyDown={(e) => e.key === "Enter" && (e.currentTarget as HTMLElement).click()}
-                            >
-                              {t.sourceType === "journal" ? (
-                                <span className="text-sm font-medium truncate block text-foreground">
-                                  {t.videoTitle || "Journal entry"}
-                                </span>
-                              ) : (
-                                <a
-                                  href={`https://www.youtube.com/watch?v=${t.videoId}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  onClick={(e) => e.stopPropagation()}
-                                  className="text-sm font-medium truncate block hover:underline text-foreground"
-                                >
-                                  {t.videoTitle || t.videoId}
-                                </a>
-                              )}
-                              {t.sourceType === "journal" ? (
-                                <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">Journal</p>
-                              ) : (
-                                t.channel && <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">{t.channel}</p>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setReExtractError(null);
-                                  setReExtractConfirm({
-                                    transcriptId: t._id,
-                                    sourceType: t.sourceType === "journal" ? "journal" : "youtube",
-                                    videoTitle: t.videoTitle ?? undefined,
-                                  });
-                                }}
-                                className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
-                              >
-                                Re-extract
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => fetch(`/api/me/transcripts/${t._id}`, { method: "DELETE" }).then(() => refetchTranscripts())}
-                                className="p-1.5 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
-                                aria-label={`Delete transcript ${t.videoTitle || t.videoId}`}
-                              >
-                                <TrashIcon className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                </div>
-              )}
-                </div>
-              )}
-              {libraryPanelOpen === "habits" && (
-                <div className="space-y-4">
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Habits you&apos;ve created from concepts and memories. Use in daily life—not sent to the AI.</p>
-                  {habits.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {habits.map((h) => (
-                        <div
-                          key={h._id}
-                          role="button"
-                          tabIndex={0}
-                          onClick={() => setHabitDetailModal(h)}
-                          onKeyDown={(e) => e.key === "Enter" && setHabitDetailModal(h)}
-                          className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]"
-                        >
-                            <button
-                              type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              e.preventDefault();
-                              setHabitDeleteConfirmModal(h);
-                            }}
-                            className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
-                            aria-label={`Delete ${h.name}`}
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
-                              <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
-                              <path d="M10 11v6M14 11v6" />
-                            </svg>
-                            </button>
-                          <div className="flex-1 min-w-0 pr-10">
-                            <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{h.description}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Promote a concept or memory to create a habit.</p>
-                  )}
-                </div>
-              )}
               {libraryPanelOpen === "figures" && (
                 <div className="space-y-4">
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Follow personas to get contextual nudges in chat: &quot;What would [persona] have to say about this?&quot;</p>
@@ -6512,7 +7266,7 @@ export default function ChatPage() {
                       }
                     };
                     return (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2 max-h-[50vh] overflow-y-auto">
+                      <div className={`${LIBRARY_RESPONSIVE_CARD_GRID} pt-2 max-h-[50vh] overflow-y-auto`}>
                         {filtered.map((f) => {
                           const isFollowing = followedFigureIds.includes(f.id);
                           return (
@@ -7924,6 +8678,7 @@ export default function ChatPage() {
                     }
                     router.push("/chat/new");
                   } else {
+                    setLibraryPanelOpen(null);
                     setWaysOfLookingAtModalOpen(true);
                     setWaysOfLookingAtDrawMode(true);
                     setWaysOfLookingAtCategory(null);
@@ -8052,12 +8807,15 @@ export default function ChatPage() {
                   onClick={() => {
                     playSelectionChime();
                     setIdeasModalOpen(false);
+                    setLibraryPanelOpen(null);
                     setWaysOfLookingAtModalOpen(true);
                     setWaysOfLookingAtDrawMode(true);
                     setWaysOfLookingAtCategory(null);
                     setWaysOfLookingAtCity(null);
                     setWaysOfLookingAtCuisine(null);
                     setWaysOfLookingAtMicrocosm(null);
+                    setWaysOfLookingAtHuman(null);
+                    setWaysOfLookingAtDigital(null);
                   }}
                   className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
                 >
@@ -8102,6 +8860,7 @@ export default function ChatPage() {
                   onClick={() => {
                     playSelectionChime();
                     setIdeasModalOpen(false);
+                    setWaysOfLookingAtModalOpen(false);
                     setLibraryPanelOpen("concepts");
                     setSidebarOpen(false);
                   }}
@@ -8211,7 +8970,7 @@ export default function ChatPage() {
               ) : mentorCatalogFilteredFigures.length === 0 ? (
                 <p className="text-sm text-neutral-500">No figures match.</p>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
                   {mentorCatalogFilteredFigures.map((f) => (
                     <button
                       key={f.id}
@@ -10500,6 +11259,7 @@ export default function ChatPage() {
                             setHabitPromoteModal(null);
                             setHabitPromoteStep("generate");
                             setHabitPromoteDraft(null);
+                            setWaysOfLookingAtModalOpen(false);
                             setLibraryPanelOpen("habits");
                             refetchScore();
                           }
@@ -11473,643 +12233,6 @@ export default function ChatPage() {
         />
       )}
 
-      {/* Ways of Looking At - dedicated modal with category selection and gallery-style browsing */}
-      {waysOfLookingAtModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => {
-            if (waysOfLookingAtDigital) setWaysOfLookingAtDigital(null);
-            else if (waysOfLookingAtHuman) setWaysOfLookingAtHuman(null);
-            else if (waysOfLookingAtMicrocosm) setWaysOfLookingAtMicrocosm(null);
-            else if (waysOfLookingAtCuisine) setWaysOfLookingAtCuisine(null);
-            else if (waysOfLookingAtCity) setWaysOfLookingAtCity(null);
-            else if (waysOfLookingAtCategory) setWaysOfLookingAtCategory(null);
-            else { setWaysOfLookingAtModalOpen(false); setWaysOfLookingAtDrawMode(false); }
-          }}
-          role="dialog"
-          aria-modal="true"
-          aria-label={getUiTranslations(language).promptGames}
-        >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,720px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
-              <div className="flex items-center gap-2">
-                {(waysOfLookingAtCategory || waysOfLookingAtCity || waysOfLookingAtCuisine || waysOfLookingAtMicrocosm || waysOfLookingAtHuman || waysOfLookingAtDigital) && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (waysOfLookingAtDigital) setWaysOfLookingAtDigital(null);
-                      else if (waysOfLookingAtHuman) setWaysOfLookingAtHuman(null);
-                      else if (waysOfLookingAtMicrocosm) setWaysOfLookingAtMicrocosm(null);
-                      else if (waysOfLookingAtCuisine) setWaysOfLookingAtCuisine(null);
-                      else if (waysOfLookingAtCity) setWaysOfLookingAtCity(null);
-                      else setWaysOfLookingAtCategory(null);
-                    }}
-                    className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 transition-colors"
-                    aria-label={waysOfLookingAtDigital || waysOfLookingAtHuman ? "Back to subdomains" : waysOfLookingAtMicrocosm ? "Back to subdomains" : waysOfLookingAtCuisine ? "Back to cuisines" : waysOfLookingAtCity ? "Back to cities" : "Back to categories"}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                      <path d="M19 12H5M12 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                )}
-                <h2 className="text-lg font-semibold text-foreground">
-                  {waysOfLookingAtDrawMode && !waysOfLookingAtCategory
-                    ? getLandingTranslations(language).drawPerspectiveCard
-                    : waysOfLookingAtCity
-                      ? `${domainDisplayName[waysOfLookingAtCategory ?? ""] ?? "Urban Jungle"} — ${urbanJungleCityToName[waysOfLookingAtCity] ?? waysOfLookingAtCity}`
-                      : waysOfLookingAtCuisine
-                        ? `${domainDisplayName["culinary_lab"] ?? "Culinary Lab"} — ${culinaryLabCuisineToName[waysOfLookingAtCuisine] ?? waysOfLookingAtCuisine}`
-                        : waysOfLookingAtMicrocosm
-                          ? `${domainDisplayName["natural_microcosm"] ?? "Natural Microcosm"} — ${naturalMicrocosmSubToName[waysOfLookingAtMicrocosm] ?? waysOfLookingAtMicrocosm}`
-                          : waysOfLookingAtHuman
-                            ? `${domainDisplayName["human_interface"] ?? "The Human Interface"} — ${humanInterfaceSubToName[waysOfLookingAtHuman] ?? waysOfLookingAtHuman}`
-                            : waysOfLookingAtDigital
-                              ? `${domainDisplayName["digital_ghost"] ?? "Digital Ghost"} — ${digitalGhostSubToName[waysOfLookingAtDigital] ?? waysOfLookingAtDigital}`
-                              : waysOfLookingAtCategory
-                                ? domainDisplayName[waysOfLookingAtCategory] ?? perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory)?.name ?? getUiTranslations(language).promptGames
-                                : getUiTranslations(language).promptGames}
-                </h2>
-              </div>
-              <button
-                type="button"
-                onClick={() => { setWaysOfLookingAtModalOpen(false); setWaysOfLookingAtDrawMode(false); }}
-                className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-600 dark:text-neutral-400"
-                aria-label={getUiTranslations(language).close}
-              >
-                ✕
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto px-4 pt-6 pb-4">
-              {!waysOfLookingAtCategory ? (
-                <div className="space-y-4">
-                  {!isAnonymous && savedPerspectiveCards.length > 0 && (
-                    <div>
-                      <p className="text-sm font-medium text-foreground mb-2">My saved cards</p>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                        {savedPerspectiveCards.slice(0, 6).map((saved) => (
-                          <div
-                            key={saved._id}
-                            role="button"
-                            tabIndex={0}
-                            onClick={() => {
-                              playSelectionChime();
-                              setDrawnPerspectiveCard({
-                                card: {
-                                  id: saved._id,
-                                  name: saved.name,
-                                  prompt: saved.prompt,
-                                  follow_ups: saved.follow_ups ?? [],
-                                },
-                                deckId: "",
-                                deckName: saved.sourceDeckName ?? "Saved",
-                                savedId: saved._id,
-                              });
-                            }}
-                            onKeyDown={(e) => {
-                              if (e.key !== "Enter" && e.key !== " ") return;
-                              e.preventDefault();
-                              playSelectionChime();
-                              setDrawnPerspectiveCard({
-                                card: {
-                                  id: saved._id,
-                                  name: saved.name,
-                                  prompt: saved.prompt,
-                                  follow_ups: saved.follow_ups ?? [],
-                                },
-                                deckId: "",
-                                deckName: saved.sourceDeckName ?? "Saved",
-                                savedId: saved._id,
-                              });
-                            }}
-                            className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-500"
-                          >
-                            <div className="w-full flex flex-col items-start text-left flex-1 min-w-0 pr-8">
-                              <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
-                                {saved.name}
-                              </span>
-                              <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">
-                                {saved.prompt}
-                              </p>
-                              <p className="mt-auto pt-2 text-[11px] text-neutral-500 dark:text-neutral-400">
-                                Tap to open
-                              </p>
-                            </div>
-                            <button
-                              type="button"
-                              onClick={async (e) => {
-                                e.stopPropagation();
-                                playSelectionChime();
-                                try {
-                                  const res = await fetch(`/api/me/perspective-cards/${saved._id}`, { method: "DELETE" });
-                                  if (res.ok) refetchSavedPerspectiveCards();
-                                } catch {
-                                  /* ignore */
-                                }
-                              }}
-                              className="absolute top-3 right-3 p-1.5 rounded-lg opacity-60 hover:opacity-100 hover:bg-red-100 dark:hover:bg-red-900/30 text-neutral-500 hover:text-red-600 dark:hover:text-red-400 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-500 focus-visible:ring-offset-1"
-                              aria-label="Delete saved card"
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                                <path d="M3 6h18" />
-                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                                <line x1="10" x2="10" y1="11" y2="17" />
-                                <line x1="14" x2="14" y1="11" y2="17" />
-                              </svg>
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                      {savedPerspectiveCards.length > 6 && (
-                        <p className="text-xs text-neutral-500 mt-1">
-                          +{savedPerspectiveCards.length - 6} more saved
-                        </p>
-                      )}
-                    </div>
-                  )}
-                  <div className="p-4 rounded-2xl border border-dashed border-neutral-300 dark:border-neutral-600 bg-neutral-50/50 dark:bg-neutral-800/30">
-                    <p className="text-sm font-medium text-foreground mb-2">Generate a card from a topic</p>
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">
-                      Enter any topic and the AI will create a perspective card with a prompt and follow-ups. You can then start a conversation with it.
-                    </p>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={generateTopicInput}
-                        onChange={(e) => { setGenerateTopicInput(e.target.value); setGenerateCardError(null); }}
-                        placeholder="e.g. morning routines, difficult conversations, a favorite place"
-                        className="flex-1 px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-                        disabled={generateCardLoading}
-                      />
-                      <button
-                        type="button"
-                        onClick={async () => {
-                          const topic = generateTopicInput.trim();
-                          if (!topic || generateCardLoading) return;
-                          playSelectionChime();
-                          setGenerateCardLoading(true);
-                          setGenerateCardError(null);
-                          try {
-                            const res = await fetch("/api/perspective-decks/generate", {
-                              method: "POST",
-                              headers: { "Content-Type": "application/json" },
-                              body: JSON.stringify({ topic, language }),
-                            });
-                            const data = await res.json();
-                            if (!res.ok) throw new Error(data.error ?? "Failed to generate");
-                            const card = data.card;
-                            if (!card?.name || !card?.prompt) throw new Error("Invalid response");
-                            setDrawnPerspectiveCard({
-                              card: {
-                                id: "generated",
-                                name: card.name,
-                                prompt: card.prompt,
-                                follow_ups: card.follow_ups ?? [],
-                              },
-                              deckId: "",
-                              deckName: "Generated",
-                            });
-                            setGenerateTopicInput("");
-                          } catch (err) {
-                            setGenerateCardError(err instanceof Error ? err.message : "Failed to generate card");
-                          } finally {
-                            setGenerateCardLoading(false);
-                          }
-                        }}
-                        disabled={generateCardLoading || !generateTopicInput.trim()}
-                        className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
-                      >
-                        {generateCardLoading ? "Generating…" : "Generate"}
-                      </button>
-                    </div>
-                    {generateCardError && (
-                      <p className="text-xs text-red-600 dark:text-red-400 mt-2">{generateCardError}</p>
-                    )}
-                  </div>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    {waysOfLookingAtDrawMode ? "Choose a domain" : "Choose a category to browse perspective cards."}
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {perspectiveDecks.length === 0 ? (
-                      <p className="text-sm text-neutral-500 col-span-2">Loading categories…</p>
-                    ) : (
-                      [...new Set(perspectiveDecks.map((d) => (d.domain || "other").toLowerCase()))].map((domain) => {
-                        const deck = perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === domain);
-                        if (!deck) return null;
-                        return (
-                          <button
-                            key={domain}
-                            type="button"
-                            onClick={async () => {
-                              playSelectionChime();
-                              const subdomains = subdomainsByDomain[domain];
-                              const isDirectDrawDomain = !subdomains || subdomains.length === 0;
-                              if (waysOfLookingAtDrawMode && isDirectDrawDomain) {
-                                try {
-                                  const deck = perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === domain);
-                                  if (deck?.id) {
-                                    const res = await fetch(`/api/perspective-decks/${deck.id}/random?language=${language}`);
-                                    const data = await res.json();
-                                    if (data.card && data.deckId) {
-                                      setDrawnPerspectiveCard({ card: data.card, deckId: data.deckId, deckName: deck.name });
-                                      setWaysOfLookingAtModalOpen(false);
-                                      setWaysOfLookingAtDrawMode(false);
-                                    }
-                                  }
-                                } catch { /* ignore */ }
-                                return;
-                              }
-                              setWaysOfLookingAtCategory(domain);
-                              setWaysOfLookingAtCity(null);
-                              setWaysOfLookingAtCuisine(null);
-                              setWaysOfLookingAtMicrocosm(null);
-                              setWaysOfLookingAtHuman(null);
-                              setWaysOfLookingAtDigital(null);
-                            }}
-                            className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
-                          >
-                            <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
-                              <img
-                                src={`/images/perspective-decks/domains/${domain}.png`}
-                                alt={`${domainDisplayName[domain] ?? domain.replace(/_/g, " ")} cover art`}
-                                className="w-full h-28 object-cover"
-                                loading="lazy"
-                              />
-                            </div>
-                            <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
-                              {domainDisplayName[domain] ?? domain.replace(/_/g, " ")}
-                            </span>
-                            <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2">
-                              {perspectiveDecksConfig?.domains?.[domain]?.description?.trim() ?? deck.description}
-                            </p>
-                          </button>
-                        );
-                      })
-                    )}
-                  </div>
-                </div>
-              ) : waysOfLookingAtCategory === "urban_jungle" && !waysOfLookingAtCity ? (
-                <div className="space-y-4">
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    {waysOfLookingAtDrawMode ? "Choose a subdomain (city)" : "Choose a city to browse its 50 perspective cards."}
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {(subdomainsByDomain["urban_jungle"] ?? []).map((city) => (
-                      <button
-                        key={city.id}
-                        type="button"
-                        onClick={async () => {
-                          playSelectionChime();
-                          if (waysOfLookingAtDrawMode) {
-                            try {
-                              const deckId = city.deck_id;
-                              if (deckId) {
-                                const res = await fetch(`/api/perspective-decks/${deckId}/random?language=${language}`);
-                                const data = await res.json();
-                                if (data.card && data.deckId) {
-                                  const deck = perspectiveDecks.find((d) => d.id === deckId);
-                                  setDrawnPerspectiveCard({
-                                    card: data.card,
-                                    deckId: data.deckId,
-                                    deckName: deck?.name ?? `${domainDisplayName["urban_jungle"] ?? "Urban Jungle"} — ${city.name}`,
-                                  });
-                                  setWaysOfLookingAtModalOpen(false);
-                                  setWaysOfLookingAtDrawMode(false);
-                                }
-                              }
-                            } catch { /* ignore */ }
-                            return;
-                          }
-                          setWaysOfLookingAtCity(city.id);
-                        }}
-                        className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
-                      >
-                        <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
-                          <img
-                            src={`/images/perspective-decks/subdomains/urban_jungle_${city.id}.png`}
-                            alt={`${city.name} cover art`}
-                            className="w-full h-28 object-cover"
-                            loading="lazy"
-                            onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
-                          />
-                          <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
-                              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                            </svg>
-                          </div>
-                        </div>
-                        <span className="text-base font-medium text-foreground group-hover:text-foreground">
-                          {city.name}
-                        </span>
-                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                          50 perspective cards for city and architecture
-                        </p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : waysOfLookingAtCategory === "culinary_lab" && !waysOfLookingAtCuisine ? (
-                <div className="space-y-4">
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    {waysOfLookingAtDrawMode ? "Choose a cuisine" : "Choose a cuisine to browse its 50 perspective cards."}
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {(subdomainsByDomain["culinary_lab"] ?? []).map((cuisine) => (
-                      <button
-                        key={cuisine.id}
-                        type="button"
-                        onClick={async () => {
-                          playSelectionChime();
-                          if (waysOfLookingAtDrawMode) {
-                            try {
-                              const deckId = cuisine.deck_id;
-                              if (deckId) {
-                                const res = await fetch(`/api/perspective-decks/${deckId}/random?language=${language}`);
-                                const data = await res.json();
-                                if (data.card && data.deckId) {
-                                  const deck = perspectiveDecks.find((d) => d.id === deckId);
-                                  setDrawnPerspectiveCard({
-                                    card: data.card,
-                                    deckId: data.deckId,
-                                    deckName: deck?.name ?? `${domainDisplayName["culinary_lab"] ?? "Culinary Lab"} — ${cuisine.name}`,
-                                  });
-                                  setWaysOfLookingAtModalOpen(false);
-                                  setWaysOfLookingAtDrawMode(false);
-                                }
-                              }
-                            } catch { /* ignore */ }
-                            return;
-                          }
-                          setWaysOfLookingAtCuisine(cuisine.id);
-                        }}
-                        className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
-                      >
-                        <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
-                          <img
-                            src={`/images/perspective-decks/subdomains/culinary_lab_${cuisine.id}.png`}
-                            alt={`${cuisine.name} cover art`}
-                            className="w-full h-28 object-cover"
-                            loading="lazy"
-                            onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
-                          />
-                          <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
-                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-                            </svg>
-                          </div>
-                        </div>
-                        <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
-                          {cuisine.name}
-                        </span>
-                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                          50 perspective cards for food and eating
-                        </p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : waysOfLookingAtCategory === "natural_microcosm" && !waysOfLookingAtMicrocosm ? (
-                <div className="space-y-4">
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    {waysOfLookingAtDrawMode ? "Choose a subdomain" : "Choose a subdomain to browse its 50 perspective cards."}
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {(subdomainsByDomain["natural_microcosm"] ?? []).map((sub) => (
-                      <button
-                        key={sub.id}
-                        type="button"
-                        onClick={async () => {
-                          playSelectionChime();
-                          if (waysOfLookingAtDrawMode) {
-                            try {
-                              const deckId = sub.deck_id;
-                              if (deckId) {
-                                const res = await fetch(`/api/perspective-decks/${deckId}/random?language=${language}`);
-                                const data = await res.json();
-                                if (data.card && data.deckId) {
-                                  const deck = perspectiveDecks.find((d) => d.id === deckId);
-                                  setDrawnPerspectiveCard({
-                                    card: data.card,
-                                    deckId: data.deckId,
-                                    deckName: deck?.name ?? `${domainDisplayName["natural_microcosm"] ?? "Natural Microcosm"} — ${sub.name}`,
-                                  });
-                                  setWaysOfLookingAtModalOpen(false);
-                                  setWaysOfLookingAtDrawMode(false);
-                                }
-                              }
-                            } catch { /* ignore */ }
-                            return;
-                          }
-                          setWaysOfLookingAtMicrocosm(sub.id);
-                        }}
-                        className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
-                      >
-                        <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
-                          <img
-                            src={`/images/perspective-decks/subdomains/natural_microcosm_${sub.id}.png`}
-                            alt={`${sub.name} cover art`}
-                            className="w-full h-28 object-cover"
-                            loading="lazy"
-                            onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
-                          />
-                          <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
-                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-                            </svg>
-                          </div>
-                        </div>
-                        <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
-                          {sub.name}
-                        </span>
-                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                          50 perspective cards for ecology and the outdoors
-                        </p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : waysOfLookingAtCategory === "human_interface" && !waysOfLookingAtHuman ? (
-                <div className="space-y-4">
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    {waysOfLookingAtDrawMode ? "Choose a subdomain" : "Choose a subdomain to browse its 50 perspective cards."}
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {(subdomainsByDomain["human_interface"] ?? []).map((sub) => (
-                      <button
-                        key={sub.id}
-                        type="button"
-                        onClick={async () => {
-                          playSelectionChime();
-                          if (waysOfLookingAtDrawMode) {
-                            try {
-                              const deckId = sub.deck_id;
-                              if (deckId) {
-                                const res = await fetch(`/api/perspective-decks/${deckId}/random?language=${language}`);
-                                const data = await res.json();
-                                if (data.card && data.deckId) {
-                                  const deck = perspectiveDecks.find((d) => d.id === deckId);
-                                  setDrawnPerspectiveCard({
-                                    card: data.card,
-                                    deckId: data.deckId,
-                                    deckName: deck?.name ?? `${domainDisplayName["human_interface"] ?? "The Human Interface"} — ${sub.name}`,
-                                  });
-                                  setWaysOfLookingAtModalOpen(false);
-                                  setWaysOfLookingAtDrawMode(false);
-                                }
-                              }
-                            } catch { /* ignore */ }
-                            return;
-                          }
-                          setWaysOfLookingAtHuman(sub.id);
-                        }}
-                        className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
-                      >
-                        <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
-                          <img
-                            src={`/images/perspective-decks/subdomains/human_interface_${sub.id}.png`}
-                            alt={`${sub.name} cover art`}
-                            className="w-full h-28 object-cover"
-                            loading="lazy"
-                            onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
-                          />
-                          <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
-                              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                              <circle cx="9" cy="7" r="4" />
-                              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                            </svg>
-                          </div>
-                        </div>
-                        <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
-                          {sub.name}
-                        </span>
-                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                          50 perspective cards for social observation and anthropology
-                        </p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : waysOfLookingAtCategory === "digital_ghost" && !waysOfLookingAtDigital ? (
-                <div className="space-y-4">
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    {waysOfLookingAtDrawMode ? "Choose a subdomain" : "Choose a subdomain to browse its 50 perspective cards."}
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {(subdomainsByDomain["digital_ghost"] ?? []).map((sub) => (
-                      <button
-                        key={sub.id}
-                        type="button"
-                        onClick={async () => {
-                          playSelectionChime();
-                          if (waysOfLookingAtDrawMode) {
-                            try {
-                              const deckId = sub.deck_id;
-                              if (deckId) {
-                                const res = await fetch(`/api/perspective-decks/${deckId}/random?language=${language}`);
-                                const data = await res.json();
-                                if (data.card && data.deckId) {
-                                  const deck = perspectiveDecks.find((d) => d.id === deckId);
-                                  setDrawnPerspectiveCard({
-                                    card: data.card,
-                                    deckId: data.deckId,
-                                    deckName: deck?.name ?? `${domainDisplayName["digital_ghost"] ?? "Digital Ghost"} — ${sub.name}`,
-                                  });
-                                  setWaysOfLookingAtModalOpen(false);
-                                  setWaysOfLookingAtDrawMode(false);
-                                }
-                              }
-                            } catch { /* ignore */ }
-                            return;
-                          }
-                          setWaysOfLookingAtDigital(sub.id);
-                        }}
-                        className="group flex flex-col items-start gap-2 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left cursor-pointer"
-                      >
-                        <div className="w-full overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
-                          <img
-                            src={`/images/perspective-decks/subdomains/digital_ghost_${sub.id}.png`}
-                            alt={`${sub.name} cover art`}
-                            className="w-full h-28 object-cover"
-                            loading="lazy"
-                            onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
-                          />
-                          <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
-                              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-                              <line x1="8" y1="21" x2="16" y2="21" />
-                              <line x1="12" y1="17" x2="12" y2="21" />
-                            </svg>
-                          </div>
-                        </div>
-                        <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
-                          {sub.name}
-                        </span>
-                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                          50 perspective cards for technology and software
-                        </p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {waysOfLookingAtCardsLoading ? (
-                    <p className="text-sm text-neutral-500">Loading cards…</p>
-                  ) : waysOfLookingAtCards && waysOfLookingAtCards.length > 0 ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                      {waysOfLookingAtCards.map((card) => {
-                        const deck = waysOfLookingAtCity
-                          ? perspectiveDecks.find((d) => d.id === urbanJungleCityToDeckId[waysOfLookingAtCity])
-                          : waysOfLookingAtCuisine
-                            ? perspectiveDecks.find((d) => d.id === culinaryLabCuisineToDeckId[waysOfLookingAtCuisine])
-                            : waysOfLookingAtMicrocosm
-                              ? perspectiveDecks.find((d) => d.id === naturalMicrocosmSubToDeckId[waysOfLookingAtMicrocosm])
-                              : waysOfLookingAtHuman
-                                ? perspectiveDecks.find((d) => d.id === humanInterfaceSubToDeckId[waysOfLookingAtHuman])
-                                : waysOfLookingAtDigital
-                                  ? perspectiveDecks.find((d) => d.id === digitalGhostSubToDeckId[waysOfLookingAtDigital])
-                                  : perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory);
-                        return (
-                          <button
-                            key={card.id}
-                            type="button"
-                            onClick={() => {
-                              playSelectionChime();
-                              setDrawnPerspectiveCard({
-                                card,
-                                deckId: deck?.id ?? "",
-                                deckName: deck?.name ?? getUiTranslations(language).promptGames,
-                              });
-                            }}
-                            className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px] cursor-pointer"
-                          >
-                            <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
-                              {card.name}
-                            </span>
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">
-                              {card.prompt}
-                            </p>
-                            <p className="mt-auto pt-2 text-[11px] text-neutral-500 dark:text-neutral-400">
-                              Tap to open
-                            </p>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-neutral-500">No cards in this category.</p>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
       {drawnPerspectiveCard && (
         <div
