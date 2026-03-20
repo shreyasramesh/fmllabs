@@ -39,6 +39,10 @@ export async function POST(request: Request) {
       | undefined;
     const conceptIds = body.conceptIds as string[] | undefined;
     const sourceVideoTitle = typeof body.sourceVideoTitle === "string" ? body.sourceVideoTitle.trim() || undefined : undefined;
+    const sourceTranscriptId =
+      typeof body.sourceTranscriptId === "string"
+        ? body.sourceTranscriptId.trim() || undefined
+        : undefined;
 
     // Custom group: title + existing conceptIds (no AI, no new concepts)
     if (title && typeof title === "string" && title.trim() && Array.isArray(conceptIds)) {
@@ -84,7 +88,8 @@ export async function POST(request: Request) {
           c.title.trim(),
           c.summary.trim(),
           c.enrichmentPrompt.trim(),
-          sourceVideoTitle
+          sourceVideoTitle,
+          sourceTranscriptId
         );
         newConceptIds.push(created._id!);
       }

@@ -6,7 +6,7 @@ export type ConceptExtractionProgress = { pass: number; total: number };
 
 /**
  * Reads a newline-delimited JSON stream from a successful fetch Response.
- * Invokes `onProgress` for each `{ progress: { pass, total } }` line.
+ * Invokes `onProgress` for each `{ progress: { pass, total } }` line (UI: "Chunk N of M").
  * Returns the final payload object (must include `groups`).
  */
 export async function consumeConceptExtractionNdjsonStream(

@@ -152,7 +152,13 @@ export async function POST(request: Request) {
               groups
             );
           }
-          send({ videoId, videoTitle, channel, groups });
+          send({
+            videoId,
+            videoTitle,
+            channel,
+            transcriptId: savedTranscriptId,
+            groups,
+          });
         } catch (e) {
           console.error("Failed to extract concepts from YouTube:", e);
           send({ error: "Failed to extract concepts from YouTube" });

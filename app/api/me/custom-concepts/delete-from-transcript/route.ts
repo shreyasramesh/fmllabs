@@ -1,0 +1,29 @@
+import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { deleteCustomConceptsFromTranscript } from "@/lib/db";
+
+export async function POST(request: Request) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  try {
+    const body = await request.json().catch(() => ({}));
+    const transcriptId =
+      typeof body.transcriptId === "string" ? body.transcriptId.trim() : "";
+    if (!transcriptId) {
+      return NextResponse.json(
+        { error: "transcriptId is required" },
+        { status: 400 }
+      );
+    }
+    const result = await deleteCustomConceptsFromTranscript(userId, transcriptId);
+    return NextResponse.json(result);
+  } catch (err) {
+    console.error("delete-from-transcript:", err);
+    return NextResponse.json(
+      { error: "Failed to delete concepts" },
+      { status: 500 }
+    );
+  }
+}

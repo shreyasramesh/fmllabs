@@ -100,6 +100,8 @@ export interface CustomConcept {
   enrichmentPrompt: string;
   /** When set, concept was extracted from a YouTube transcript */
   sourceVideoTitle?: string;
+  /** When set, concept was saved from extraction tied to this saved transcript row */
+  sourceTranscriptId?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -837,7 +839,8 @@ export async function createCustomConcept(
   title: string,
   summary: string,
   enrichmentPrompt: string,
-  sourceVideoTitle?: string
+  sourceVideoTitle?: string,
+  sourceTranscriptId?: string
 ): Promise<CustomConcept & { _id: string }> {
   const database = await getDb();
   const now = new Date();
@@ -847,6 +850,8 @@ export async function createCustomConcept(
     summary,
     enrichmentPrompt,
     ...(sourceVideoTitle != null && sourceVideoTitle !== "" && { sourceVideoTitle }),
+    ...(sourceTranscriptId != null &&
+      sourceTranscriptId !== "" && { sourceTranscriptId }),
     createdAt: now,
     updatedAt: now,
   };
@@ -862,6 +867,7 @@ export async function updateCustomConcept(
     summary?: string;
     enrichmentPrompt?: string;
     sourceVideoTitle?: string;
+    sourceTranscriptId?: string;
   }
 ): Promise<boolean> {
   const database = await getDb();
@@ -892,6 +898,53 @@ export async function deleteCustomConcept(id: string, userId: string): Promise<b
     .collection<CustomConceptDoc>("custom_concepts")
     .deleteOne({ _id: oid, userId });
   return result.deletedCount > 0;
+}
+
+/**
+ * Removes all custom concepts saved from a given saved transcript (video/journal),
+ * updates or removes affected concept groups, then deletes the concept documents.
+ */
+export async function deleteCustomConceptsFromTranscript(
+  userId: string,
+  transcriptId: string
+): Promise<{ deletedConcepts: number; removedEmptyGroups: number }> {
+  const database = await getDb();
+  const docs = await database
+    .collection<CustomConceptDoc>("custom_concepts")
+    .find({ userId, sourceTranscriptId: transcriptId })
+    .project({ _id: 1 })
+    .toArray();
+  const idsToDelete = new Set(docs.map((d) => d._id.toString()));
+  if (idsToDelete.size === 0) {
+    return { deletedConcepts: 0, removedEmptyGroups: 0 };
+  }
+
+  const groups = await getConceptGroups(userId);
+  let removedEmptyGroups = 0;
+  for (const g of groups) {
+    const newIds = g.conceptIds.filter((id) => !idsToDelete.has(id));
+    if (newIds.length === g.conceptIds.length) continue;
+    let gid: ObjectId;
+    try {
+      gid = new ObjectId(g._id);
+    } catch {
+      continue;
+    }
+    if (newIds.length === 0) {
+      await database
+        .collection<ConceptGroupDoc>("concept_groups")
+        .deleteOne({ _id: gid, userId });
+      removedEmptyGroups++;
+    } else {
+      await updateConceptGroup(g._id, userId, { conceptIds: newIds });
+    }
+  }
+
+  let deletedConcepts = 0;
+  for (const id of idsToDelete) {
+    if (await deleteCustomConcept(id, userId)) deletedConcepts++;
+  }
+  return { deletedConcepts, removedEmptyGroups };
 }
 
 export async function getHabits(userId: string): Promise<(Habit & { _id: string })[]> {

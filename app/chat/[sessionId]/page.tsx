@@ -1842,6 +1842,7 @@ export default function ChatPage() {
     channel?: string | null;
     journalTitle?: string | null;
     journalTranscriptId?: string | null;
+    youtubeTranscriptId?: string | null;
   } | null>(null);
   const [ccYoutubeError, setCcYoutubeError] = useState<string | null>(null);
   const [ccYoutubeExtractProgress, setCcYoutubeExtractProgress] = useState<{
@@ -1853,6 +1854,16 @@ export default function ChatPage() {
   const [ccJournalTitle, setCcJournalTitle] = useState("");
   const [ccJournalPersistLibrary, setCcJournalPersistLibrary] = useState(false);
   const [ccJournalTranscriptId, setCcJournalTranscriptId] = useState<string | null>(null);
+  /** Saved YouTube transcript display title when re-extracting (journal title uses ccJournalTitle). */
+  const [ccYoutubeReextractTitle, setCcYoutubeReextractTitle] = useState<string | null>(null);
+  /** Re-extract: choose replace (delete saved concepts) vs keep (may duplicate) */
+  const [reExtractConfirm, setReExtractConfirm] = useState<{
+    transcriptId: string;
+    sourceType: "youtube" | "journal";
+    videoTitle?: string;
+  } | null>(null);
+  const [reExtractDeleting, setReExtractDeleting] = useState(false);
+  const [reExtractError, setReExtractError] = useState<string | null>(null);
   const [ccAutoTagSuggestions, setCcAutoTagSuggestions] = useState<{
     suggestedGroupIds: string[];
     suggestedNewGroupNames: string[];
@@ -2330,6 +2341,41 @@ export default function ChatPage() {
       .then((data) => setSavedTranscripts(Array.isArray(data) ? data : []))
       .catch(() => setSavedTranscripts([]));
   }, [isAnonymous]);
+
+  /** Opens the video/journal concept extraction modal for a saved transcript (re-extract). */
+  const openConceptExtractionForTranscript = useCallback(
+    (ctx: {
+      transcriptId: string;
+      sourceType: "youtube" | "journal";
+      videoTitle?: string;
+    }) => {
+      if (ctx.sourceType === "journal") {
+        setCcImportJournalMode(true);
+        setCcJournalTranscriptId(ctx.transcriptId);
+        setCcYoutubeTranscriptId(null);
+        setCcYoutubeReextractTitle(null);
+        setCcJournalText("");
+        setCcJournalTitle(ctx.videoTitle ?? "");
+        setCcJournalPersistLibrary(false);
+      } else {
+        setCcImportJournalMode(false);
+        setCcYoutubeTranscriptId(ctx.transcriptId);
+        setCcJournalTranscriptId(null);
+        setCcYoutubeReextractTitle(ctx.videoTitle?.trim() || null);
+      }
+      setCcYoutubeUrl("");
+      setCcYoutubeResult(null);
+      setCcYoutubeError(null);
+      setCcYoutubeExtractProgress(null);
+      setCcYoutubeExtractPrompt("");
+      setCcYoutubeModal(true);
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (!ccYoutubeModal) setCcYoutubeReextractTitle(null);
+  }, [ccYoutubeModal]);
 
   const refetchHabits = useCallback(() => {
     if (isAnonymous) {
@@ -6262,7 +6308,7 @@ export default function ChatPage() {
                       })}
                     </div>
                   ) : (
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Create domains via AI or groups by selecting existing concepts.</p>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Create frameworks via AI or groups by selecting existing concepts.</p>
                   )}
                   {savedTranscripts.length > 0 && (
                     <div className="pt-4 border-t border-neutral-200 dark:border-neutral-700">
@@ -6320,23 +6366,12 @@ export default function ChatPage() {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  if (t.sourceType === "journal") {
-                                    setCcImportJournalMode(true);
-                                    setCcJournalTranscriptId(t._id);
-                                    setCcYoutubeTranscriptId(null);
-                                    setCcJournalText("");
-                                    setCcJournalTitle(t.videoTitle ?? "");
-                                    setCcJournalPersistLibrary(false);
-                                  } else {
-                                    setCcImportJournalMode(false);
-                                    setCcYoutubeTranscriptId(t._id);
-                                    setCcJournalTranscriptId(null);
-                                  }
-                                  setCcYoutubeUrl("");
-                                  setCcYoutubeResult(null);
-                                  setCcYoutubeError(null);
-                                  setCcYoutubeExtractProgress(null);
-                                  setCcYoutubeModal(true);
+                                  setReExtractError(null);
+                                  setReExtractConfirm({
+                                    transcriptId: t._id,
+                                    sourceType: t.sourceType === "journal" ? "journal" : "youtube",
+                                    videoTitle: t.videoTitle ?? undefined,
+                                  });
                                 }}
                                 className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
                               >
@@ -6839,26 +6874,15 @@ export default function ChatPage() {
             <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
               <button
                 onClick={() => {
-                  if (transcriptModalTranscript.sourceType === "journal") {
-                    setCcImportJournalMode(true);
-                    setCcJournalTranscriptId(transcriptModalTranscript.id);
-                    setCcYoutubeTranscriptId(null);
-                    setCcJournalText("");
-                    setCcJournalTitle(transcriptModalTranscript.videoTitle ?? "");
-                    setCcJournalPersistLibrary(false);
-                  } else {
-                    setCcImportJournalMode(false);
-                    setCcYoutubeTranscriptId(transcriptModalTranscript.id);
-                    setCcJournalTranscriptId(null);
-                  }
-                  setCcYoutubeUrl("");
-                  setCcYoutubeResult(null);
-                  setCcYoutubeError(null);
-                  setCcYoutubeExtractProgress(null);
+                  setReExtractError(null);
+                  setReExtractConfirm({
+                    transcriptId: transcriptModalTranscript.id,
+                    sourceType: transcriptModalTranscript.sourceType === "journal" ? "journal" : "youtube",
+                    videoTitle: transcriptModalTranscript.videoTitle ?? undefined,
+                  });
                   setTranscriptModalTranscript(null);
                   setTranscriptExtractedConceptOpen(null);
                   setTranscriptExtractedConceptsSectionOpen(true);
-                  setCcYoutubeModal(true);
                 }}
                 className="px-4 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
@@ -9053,6 +9077,100 @@ export default function ChatPage() {
         </div>
       )}
 
+      {reExtractConfirm && (
+        <div
+          className="fixed inset-0 z-[55] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => !reExtractDeleting && setReExtractConfirm(null)}
+          aria-modal
+          role="dialog"
+          aria-labelledby="re-extract-title"
+        >
+          <div
+            className="bg-background rounded-2xl shadow-xl max-w-md w-full border border-neutral-200 dark:border-neutral-700 p-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 id="re-extract-title" className="text-lg font-semibold text-foreground">
+              Re-extract concepts
+            </h2>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-2">
+              {reExtractConfirm.videoTitle ? (
+                <span className="font-medium text-foreground">{reExtractConfirm.videoTitle}</span>
+              ) : (
+                "This saved source"
+              )}{" "}
+              — how should we handle concepts you already saved from it?
+            </p>
+            {reExtractError && (
+              <p className="mt-3 text-sm text-red-600 dark:text-red-400">{reExtractError}</p>
+            )}
+            <div className="mt-4 space-y-2">
+              <button
+                type="button"
+                disabled={reExtractDeleting}
+                onClick={async () => {
+                  const ctx = reExtractConfirm;
+                  if (!ctx) return;
+                  setReExtractError(null);
+                  setReExtractDeleting(true);
+                  try {
+                    const res = await fetch("/api/me/custom-concepts/delete-from-transcript", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ transcriptId: ctx.transcriptId }),
+                    });
+                    const data = (await res.json().catch(() => ({}))) as { error?: string };
+                    if (!res.ok) {
+                      throw new Error(typeof data.error === "string" ? data.error : "Could not remove saved concepts");
+                    }
+                    refetchCustomConcepts();
+                    refetchConceptGroups();
+                    setReExtractConfirm(null);
+                    openConceptExtractionForTranscript(ctx);
+                  } catch (e) {
+                    setReExtractError(e instanceof Error ? e.message : "Something went wrong");
+                  } finally {
+                    setReExtractDeleting(false);
+                  }
+                }}
+                className="w-full text-left px-4 py-3 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+              >
+                <span className="font-medium text-foreground">Replace existing</span>
+                <span className="block text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+                  Delete all concepts previously saved from this video or journal entry, then run extraction again.
+                </span>
+              </button>
+              <button
+                type="button"
+                disabled={reExtractDeleting}
+                onClick={() => {
+                  const ctx = reExtractConfirm;
+                  if (!ctx) return;
+                  setReExtractError(null);
+                  setReExtractConfirm(null);
+                  openConceptExtractionForTranscript(ctx);
+                }}
+                className="w-full text-left px-4 py-3 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background hover:bg-neutral-50 dark:hover:bg-neutral-900/80 transition-colors disabled:opacity-50"
+              >
+                <span className="font-medium text-foreground">Keep existing (may duplicate)</span>
+                <span className="block text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+                  Leave saved concepts in your library. New extraction may overlap or duplicate similar ideas.
+                </span>
+              </button>
+            </div>
+            <div className="mt-4 flex justify-end">
+              <button
+                type="button"
+                disabled={reExtractDeleting}
+                onClick={() => setReExtractConfirm(null)}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {ccYoutubeModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
@@ -9108,6 +9226,14 @@ export default function ChatPage() {
                   <h2 className="font-semibold text-lg mb-2">
                     {ccJournalTranscriptId ? "Re-extract from saved journal" : "Concepts from journal"}
                   </h2>
+                  {ccJournalTranscriptId && (
+                    <p
+                      className="text-sm font-medium text-foreground mb-2 truncate"
+                      title={ccJournalTitle.trim() || undefined}
+                    >
+                      Title: {ccJournalTitle.trim() || "Untitled"}
+                    </p>
+                  )}
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
                     {ccJournalTranscriptId
                       ? "Use a different extraction focus and extract concepts again from your saved journal."
@@ -9123,7 +9249,7 @@ export default function ChatPage() {
                       className="text-sm text-neutral-600 dark:text-neutral-400"
                       aria-live="polite"
                     >
-                      Pass {ccYoutubeExtractProgress.pass} of {ccYoutubeExtractProgress.total}…
+                      Chunk {ccYoutubeExtractProgress.pass} of {ccYoutubeExtractProgress.total}…
                     </p>
                   )}
                   {!ccJournalTranscriptId && (
@@ -9219,6 +9345,7 @@ export default function ChatPage() {
                             journalTitle: (data.journalTitle as string | null | undefined) ?? null,
                             journalTranscriptId:
                               (data.journalTranscriptId as string | null | undefined) ?? null,
+                            youtubeTranscriptId: null,
                           });
                           refetchTranscripts();
                         } else {
@@ -9238,7 +9365,7 @@ export default function ChatPage() {
                   >
                     {ccYoutubeLoading
                       ? ccYoutubeExtractProgress
-                        ? `Pass ${ccYoutubeExtractProgress.pass} of ${ccYoutubeExtractProgress.total}…`
+                        ? `Chunk ${ccYoutubeExtractProgress.pass} of ${ccYoutubeExtractProgress.total}…`
                         : "Extracting…"
                       : "Extract concepts"}
                   </button>
@@ -9273,6 +9400,14 @@ export default function ChatPage() {
                   <h2 className="font-semibold text-lg mb-2">
                     {ccYoutubeTranscriptId ? "Re-extract from saved transcript" : "Concepts from YouTube"}
                   </h2>
+                  {ccYoutubeTranscriptId && (
+                    <p
+                      className="text-sm font-medium text-foreground mb-2 truncate"
+                      title={ccYoutubeReextractTitle?.trim() || undefined}
+                    >
+                      Title: {ccYoutubeReextractTitle?.trim() || "Untitled"}
+                    </p>
+                  )}
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
                     {ccYoutubeTranscriptId
                       ? "Use a different extraction focus and extract concepts again from your saved transcript."
@@ -9293,7 +9428,7 @@ export default function ChatPage() {
                       className="text-sm text-neutral-600 dark:text-neutral-400"
                       aria-live="polite"
                     >
-                      Pass {ccYoutubeExtractProgress.pass} of {ccYoutubeExtractProgress.total}…
+                      Chunk {ccYoutubeExtractProgress.pass} of {ccYoutubeExtractProgress.total}…
                     </p>
                   )}
                   {!ccYoutubeTranscriptId && (
@@ -9353,6 +9488,8 @@ export default function ChatPage() {
                             source: "youtube",
                             videoTitle: (data.videoTitle as string | null | undefined) ?? null,
                             channel: (data.channel as string | null | undefined) ?? null,
+                            youtubeTranscriptId:
+                              (data.transcriptId as string | null | undefined) ?? null,
                             groups: data.groups as {
                               domain: string;
                               concepts: {
@@ -9380,7 +9517,7 @@ export default function ChatPage() {
                   >
                     {ccYoutubeLoading
                       ? ccYoutubeExtractProgress
-                        ? `Pass ${ccYoutubeExtractProgress.pass} of ${ccYoutubeExtractProgress.total}…`
+                        ? `Chunk ${ccYoutubeExtractProgress.pass} of ${ccYoutubeExtractProgress.total}…`
                         : "Extracting…"
                       : "Extract concepts"}
                   </button>
@@ -9550,6 +9687,12 @@ export default function ChatPage() {
                             : ccYoutubeResult.journalTitle?.trim()
                               ? `Journal · ${ccYoutubeResult.journalTitle.trim()}`
                               : "Journal entry";
+                        const sourceTranscriptId =
+                          ccYoutubeTranscriptId ??
+                          ccJournalTranscriptId ??
+                          ccYoutubeResult.journalTranscriptId ??
+                          ccYoutubeResult.youtubeTranscriptId ??
+                          undefined;
                         for (const group of ccYoutubeResult.groups) {
                           const validConcepts = group.concepts.filter(
                             (c) => c.title?.trim() && c.summary?.trim() && c.enrichmentPrompt?.trim()
@@ -9562,6 +9705,9 @@ export default function ChatPage() {
                               domain: group.domain,
                               concepts: validConcepts,
                               sourceVideoTitle: provenanceSource,
+                              ...(sourceTranscriptId != null && sourceTranscriptId !== ""
+                                ? { sourceTranscriptId }
+                                : {}),
                             }),
                           });
                           if (cgRes.ok) refetchScore();
@@ -10745,9 +10891,9 @@ export default function ChatPage() {
                   >
                     ✕
                   </button>
-                  <h2 className="font-semibold text-lg mb-2">Create Domain</h2>
+                  <h2 className="font-semibold text-lg mb-2">Create framework</h2>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    What domain or goal? (e.g. Finance, Career, Health)
+                    What should we call it? Name your framework or focus area (e.g. Finance, Career, Health).
                   </p>
                 </div>
                 <div className="p-4 flex-1 overflow-y-auto">
@@ -10755,7 +10901,7 @@ export default function ChatPage() {
                     type="text"
                     value={cgCreateDomain}
                     onChange={(e) => setCgCreateDomain(e.target.value)}
-                    placeholder="e.g. Finance"
+                    placeholder="e.g. Personal finance"
                     className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
                     disabled={cgCreateLoading}
                   />
@@ -10819,7 +10965,7 @@ export default function ChatPage() {
                   </button>
                   <h2 className="font-semibold text-lg mb-2">Answer these questions</h2>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Suggested answers are pre-filled. Edit or clear any to tailor your concepts for &quot;{cgCreateDomain}&quot;
+                    Suggested answers are pre-filled. Edit or clear any to tailor concepts for your &quot;{cgCreateDomain}&quot; framework.
                   </p>
                 </div>
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -10920,7 +11066,7 @@ export default function ChatPage() {
                   </button>
                   <h2 className="font-semibold text-lg mb-2">Review and edit concepts</h2>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Edit the generated concepts, then click Save to create your domain.
+                    Edit the generated concepts, then click Save to create your framework.
                   </p>
                 </div>
                 <div className="flex-1 overflow-y-auto p-4 space-y-6">
@@ -11022,7 +11168,7 @@ export default function ChatPage() {
                     }
                     className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
                   >
-                    {cgCreateLoading ? "Saving…" : "Save domain"}
+                    {cgCreateLoading ? "Saving…" : "Save framework"}
                   </button>
                 </div>
               </>
