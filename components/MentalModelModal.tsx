@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { getOneLiner, getTryThis } from "@/lib/mental-models-utils";
 import { GenerateRelevantMessageButton } from "@/components/SharedIcons";
-import { playSelectionChime } from "@/lib/selection-chime";
 
 export interface MentalModel {
   id: string;
@@ -147,6 +146,8 @@ export function MentalModelModal({
   const [feedbackGiven, setFeedbackGiven] = useState<"helpful" | "not-helpful" | "removed" | null>(null);
   const [reflection, setReflection] = useState("");
   const [reflectionSaved, setReflectionSaved] = useState(false);
+  /** When false, show hint + pencil; when true, show textarea + Save note */
+  const [reflectionEditorOpen, setReflectionEditorOpen] = useState(false);
   const [savedCelebration, setSavedCelebration] = useState(false);
   const [generateModal, setGenerateModal] = useState<{
     suggestion: string;
@@ -159,6 +160,7 @@ export function MentalModelModal({
     setFeedbackGiven(null);
     setReflection("");
     setReflectionSaved(false);
+    setReflectionEditorOpen(false);
     setSavedCelebration(false);
     setGenerateModal(null);
     setDeleteConfirmOpen(false);
@@ -553,51 +555,82 @@ export function MentalModelModal({
                     </p>
                   </div>
                   {!reflectionSaved ? (
-                    <div>
-                      <label
-                        htmlFor="reflection"
-                        className="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
-                      >
-                        Optional: How might this apply to your situation?
-                      </label>
-                      <div className="flex gap-2">
+                    reflectionEditorOpen ? (
+                      <div>
+                        <label
+                          htmlFor="reflection"
+                          className="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1"
+                        >
+                          Optional: How might this apply to your situation?
+                        </label>
                         <textarea
                           id="reflection"
                           value={reflection}
                           onChange={(e) => setReflection(e.target.value)}
                           placeholder="Jot a quick note..."
-                          rows={2}
-                          className="flex-1 px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                          rows={3}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm resize-y focus:outline-none focus:ring-2 focus:ring-foreground/20"
                         />
+                        <div className="flex flex-wrap justify-end gap-2 mt-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setReflectionEditorOpen(false);
+                              setReflection("");
+                            }}
+                            className="px-3 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              if (!reflection.trim()) return;
+                              try {
+                                const res = await fetch(
+                                  `/api/me/concepts/${model.id}`,
+                                  {
+                                    method: "PATCH",
+                                    headers: {
+                                      "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({
+                                      reflection: reflection.trim(),
+                                    }),
+                                  }
+                                );
+                                if (res.ok) {
+                                  setReflectionSaved(true);
+                                  setReflectionEditorOpen(false);
+                                }
+                              } catch {
+                                /* ignore */
+                              }
+                            }}
+                            disabled={!reflection.trim()}
+                            className="px-3 py-2 rounded-xl bg-foreground text-background text-sm font-medium transition-all duration-200 hover:opacity-90 active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100"
+                          >
+                            Save note
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between gap-2 pt-1">
+                        <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                          Add a personal note (optional).
+                        </p>
                         <button
                           type="button"
-                          onClick={async () => {
-                            if (!reflection.trim()) return;
-                            try {
-                              const res = await fetch(
-                                `/api/me/concepts/${model.id}`,
-                                {
-                                  method: "PATCH",
-                                  headers: {
-                                    "Content-Type": "application/json",
-                                  },
-                                  body: JSON.stringify({
-                                    reflection: reflection.trim(),
-                                  }),
-                                }
-                              );
-                              if (res.ok) setReflectionSaved(true);
-                            } catch {
-                              /* ignore */
-                            }
-                          }}
-                          disabled={!reflection.trim()}
-                          className="px-3 py-2 rounded-xl bg-foreground text-background text-sm font-medium transition-all duration-200 hover:opacity-90 active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100 shrink-0"
+                          onClick={() => setReflectionEditorOpen(true)}
+                          className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 transition-colors shrink-0"
+                          aria-label="Add note"
                         >
-                          Save note
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                            <path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                          </svg>
                         </button>
                       </div>
-                    </div>
+                    )
                   ) : (
                     <p className="text-xs text-neutral-500">Note saved.</p>
                   )}

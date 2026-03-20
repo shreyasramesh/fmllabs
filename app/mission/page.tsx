@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
 
 export const metadata = {
   title: "The Mission of fml labs — fml labs",
-  description: "The mission and purpose of fml labs",
+  description: `${PRODUCT_TAGLINE} — The mission and purpose of fml labs`,
 };
 
 export default function MissionPage() {
@@ -17,6 +18,9 @@ export default function MissionPage() {
         </Link>
 
         <h1 className="text-2xl md:text-3xl font-semibold mb-2">The Mission of fml labs</h1>
+        <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base font-medium mb-6">
+          {PRODUCT_TAGLINE}
+        </p>
 
         <div className="prose prose-neutral dark:prose-invert max-w-none space-y-6 text-sm leading-relaxed">
           <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base">

@@ -6,12 +6,12 @@ import { LanguageProvider } from "@/components/LanguageProvider";
 import { UserTypeProvider } from "@/components/UserTypeProvider";
 import { TtsSpeedProvider } from "@/components/TtsSpeedProvider";
 import { BackgroundProvider } from "@/components/BackgroundProvider";
+import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "FigureMyLife Labs",
-  description:
-    "Improve your decisions through deeper thinking. Surface mental models and cognitive biases.",
+  description: PRODUCT_TAGLINE,
   manifest: "/manifest.json",
   icons: {
     icon: "/icon.svg",
@@ -21,6 +21,16 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: "default",
     title: "FigureMyLife Labs",
+  },
+  openGraph: {
+    title: "FigureMyLife Labs",
+    description: PRODUCT_TAGLINE,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FigureMyLife Labs",
+    description: PRODUCT_TAGLINE,
   },
 };
 

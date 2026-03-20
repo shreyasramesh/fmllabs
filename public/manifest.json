@@ -2,7 +2,7 @@
   "name": "FigureMyLife Labs",
   "short_name": "FigureMyLife Labs",
   "prefer_related_applications": false,
-  "description": "Decision-making coach. Think deeper with mental models and cognitive biases.",
+  "description": "Organize concepts, goals, and conversations so your past thinking actually shows up when you need it",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#fafafa",

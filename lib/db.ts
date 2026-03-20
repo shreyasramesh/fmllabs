@@ -115,6 +115,10 @@ export interface ConceptGroup {
   conceptIds: string[];
   /** When true, group was user-created (add existing concepts). Deleting does not delete concepts. */
   isCustomGroup?: boolean;
+  /** AI-generated narrative for the whole framework (optional). */
+  summary?: string;
+  /** Chain-of-thought chips (same style as long-term memory summaries). */
+  chainOfThought?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -1091,7 +1095,12 @@ export async function createConceptGroup(
 export async function updateConceptGroup(
   id: string,
   userId: string,
-  updates: { title?: string; conceptIds?: string[] }
+  updates: {
+    title?: string;
+    conceptIds?: string[];
+    summary?: string;
+    chainOfThought?: string[];
+  }
 ): Promise<boolean> {
   const database = await getDb();
   let oid: ObjectId;
@@ -1106,7 +1115,8 @@ export async function updateConceptGroup(
       { _id: oid, userId },
       { $set: { ...updates, updatedAt: new Date() } }
     );
-  return result.modifiedCount > 0;
+  /* matchedCount: idempotent updates (same summary) still succeed */
+  return result.matchedCount > 0;
 }
 
 export async function getConceptGroupEnrichmentWithIds(

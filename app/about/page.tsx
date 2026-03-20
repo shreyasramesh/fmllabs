@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ContactForm } from "@/components/ContactForm";
+import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
 
 export const metadata = {
   title: "About the Creator — fml labs",
-  description: "About Shreyas Ramesh, creator of fml labs",
+  description: `${PRODUCT_TAGLINE} — About Shreyas Ramesh, creator of fml labs`,
 };
 
 export default function AboutPage() {
@@ -18,7 +19,10 @@ export default function AboutPage() {
           ← Back to fml labs
         </Link>
 
-        <h1 className="text-2xl md:text-3xl font-semibold mb-6">About the Creator</h1>
+        <h1 className="text-2xl md:text-3xl font-semibold mb-2">About the Creator</h1>
+        <p className="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed mb-6 max-w-prose">
+          {PRODUCT_TAGLINE}
+        </p>
 
         <div className="mb-8">
           <Image

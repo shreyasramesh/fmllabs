@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
 
 export const metadata = {
   title: "Terms of Service — fml labs",
-  description: "Terms of Service for fml labs",
+  description: `${PRODUCT_TAGLINE} — Terms of Service for fml labs`,
 };
 
 export default function TermsOfServicePage() {

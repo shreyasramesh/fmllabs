@@ -38,6 +38,7 @@ import { getModalTranslations } from "@/lib/mental-model-modal-translations";
 import { getMentionTranslations } from "@/lib/mention-translations";
 import { getLandingTranslations } from "@/lib/landing-translations";
 import { APP_VERSION } from "@/lib/version";
+import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
 import { getUiTranslations } from "@/lib/ui-translations";
 import { playSelectionChime } from "@/lib/selection-chime";
 import { stripMarkdown } from "@/lib/strip-markdown";
@@ -55,7 +56,7 @@ import type { UserScore } from "@/lib/score-types";
 import { TtsHighlightContext, type TtsHighlightState } from "@/components/TtsHighlightContext";
 import { TtsHighlightedText } from "@/components/TtsHighlightedText";
 import { FeedbackModal } from "@/components/FeedbackModal";
-import { FeatureTour } from "@/components/FeatureTour";
+import { FeatureTour, type FeatureTourStep } from "@/components/FeatureTour";
 import { SettingsLanguageSelector } from "@/components/SettingsLanguageSelector";
 import { UserTypeSelector } from "@/components/UserTypeSelector";
 import { LanguageSelector } from "@/components/LanguageSelector";
@@ -148,6 +149,9 @@ interface ConceptGroupItem {
   conceptIds: string[];
   isCustomGroup?: boolean;
   concepts?: CustomConceptItem[];
+  /** AI-generated; same style as long-term memory */
+  summary?: string;
+  chainOfThought?: string[];
 }
 
 interface HabitItem {
@@ -1873,10 +1877,22 @@ export default function ChatPage() {
   const [convertToDeepSuccess, setConvertToDeepSuccess] = useState(false);
   const [restartLoading, setRestartLoading] = useState(false);
   const [ltmDetailModal, setLtmDetailModal] = useState<LongTermMemoryItem | null>(null);
+  const [ltmDetailEditing, setLtmDetailEditing] = useState(false);
+  const [ltmEditDraft, setLtmEditDraft] = useState<{
+    title: string;
+    summary: string;
+    enrichmentPrompt: string;
+  } | null>(null);
   const [ltmDeleteConfirmModal, setLtmDeleteConfirmModal] = useState<LongTermMemoryItem | null>(null);
   const [mmDeleteConfirmModal, setMmDeleteConfirmModal] = useState<{ id: string; name: string } | null>(null);
   const [customConcepts, setCustomConcepts] = useState<CustomConceptItem[]>([]);
   const [ccDetailModal, setCcDetailModal] = useState<CustomConceptItem | null>(null);
+  const [ccDetailEditing, setCcDetailEditing] = useState(false);
+  const [ccEditDraft, setCcEditDraft] = useState<{
+    title: string;
+    summary: string;
+    enrichmentPrompt: string;
+  } | null>(null);
   const [ccDeleteConfirmModal, setCcDeleteConfirmModal] = useState<CustomConceptItem | null>(null);
   const [generateModal, setGenerateModal] = useState<{
     type: "ltm" | "cc";
@@ -1899,6 +1915,7 @@ export default function ChatPage() {
     }[];
   }[]>([]);
   const [cgDetailModal, setCgDetailModal] = useState<ConceptGroupItem | null>(null);
+  const [cgFrameworkSummarizing, setCgFrameworkSummarizing] = useState(false);
   const [cgCreateModal, setCgCreateModal] = useState(false);
   const [cgCreateStep, setCgCreateStep] = useState<1 | 2 | 3 | 4>(1);
   const [cgCreateDomain, setCgCreateDomain] = useState("");
@@ -1967,15 +1984,60 @@ export default function ChatPage() {
   const PERSPECTIVE_CARD_START_KEY = "fml-perspective-card-start";
   const ONBOARDING_COMPLETE_KEY = "fml-labs-onboarding-complete";
   const FEATURE_TOUR_COMPLETE_KEY = "fml-labs-feature-tour-complete";
-  const FEATURE_TOUR_STEPS = [
-    { target: "[data-tour=menu-button]", title: "Open the menu", content: "Tap here to access conversations, concepts, mental models, memory, and groups.", ringClass: "ring-white dark:ring-neutral-300" },
-    { target: "[data-tour=sidebar-nav]", title: "Your library", content: "All your content in one place—let's explore each section.", ringClass: "ring-white dark:ring-neutral-300" },
-    { target: "[data-tour=tour-conversations]", title: "Conversations", content: "Your chat history. Start new conversations, pick up where you left off, or search through past chats.", panel: "conversations", ringClass: "ring-white dark:ring-neutral-300" },
-    { target: "[data-tour=tour-cc]", title: "Concepts", content: "Your custom frameworks and values. The AI uses them to personalize responses.", panel: "cc", ringClass: "ring-white dark:ring-neutral-300" },
-    { target: "[data-tour=tour-concepts]", title: "Mental Models", content: "Proven thinking frameworks and cognitive biases. Browse, search, and save your favorites.", panel: "concepts", ringClass: "ring-white dark:ring-neutral-300" },
-    { target: "[data-tour=input-area]", title: "Ask anything", content: "Type your question here. Use @ to search mental models and concepts. The AI uses them to help you think through decisions.", ringClass: "ring-white dark:ring-neutral-300" },
-    { target: "[data-tour=settings-button]", title: "Customize", content: "Change language, voice style, playback speed, and more in settings.", ringClass: "ring-white dark:ring-neutral-300" },
-  ] as const;
+  const featureTourSteps = useMemo((): FeatureTourStep[] => {
+    const t = getLandingTranslations(language);
+    return [
+      {
+        target: "[data-tour=menu-button]",
+        title: "Open the menu",
+        content:
+          "Tap here to access conversations, concepts, mental models, memory, and frameworks.",
+        ringClass: "ring-white dark:ring-neutral-300",
+      },
+      {
+        target: "[data-tour=sidebar-nav]",
+        title: "Your library",
+        content: `All your content in one place. ${t.productTagline}`,
+        ringClass: "ring-white dark:ring-neutral-300",
+      },
+      {
+        target: "[data-tour=tour-conversations]",
+        title: "Conversations",
+        content:
+          "Your chat history. Start new conversations, pick up where you left off, or search through past chats.",
+        panel: "conversations",
+        ringClass: "ring-white dark:ring-neutral-300",
+      },
+      {
+        target: "[data-tour=tour-cc]",
+        title: "Concepts",
+        content: "Your custom frameworks and values. The AI uses them to personalize responses.",
+        panel: "cc",
+        ringClass: "ring-white dark:ring-neutral-300",
+      },
+      {
+        target: "[data-tour=tour-concepts]",
+        title: "Mental Models",
+        content:
+          "Proven thinking frameworks and cognitive biases. Browse, search, and save your favorites.",
+        panel: "concepts",
+        ringClass: "ring-white dark:ring-neutral-300",
+      },
+      {
+        target: "[data-tour=input-area]",
+        title: "Ask anything",
+        content:
+          "Type your question here. Use @ to search mental models and concepts. The AI uses them to help you think through decisions.",
+        ringClass: "ring-white dark:ring-neutral-300",
+      },
+      {
+        target: "[data-tour=settings-button]",
+        title: "Customize",
+        content: "Change language, voice style, playback speed, and more in settings.",
+        ringClass: "ring-white dark:ring-neutral-300",
+      },
+    ];
+  }, [language]);
   const [onboardingStep, setOnboardingStep] = useState<0 | 1 | 2 | 3 | null>(null);
   const [featureTourStep, setFeatureTourStep] = useState<number | null>(null);
   const [signInFeaturesModalOpen, setSignInFeaturesModalOpen] = useState(false);
@@ -2044,6 +2106,13 @@ export default function ChatPage() {
   const inputRef = useRef<HTMLDivElement>(null);
   const justCreatedSessionRef = useRef<string | null>(null);
   const anonymousActiveRef = useRef(false);
+  /** Synced after pendingCardContext / pendingCardFetch state so session hydration effect can read without stale closures */
+  const pendingCardContextRef = useRef<{
+    prompt: string;
+    name: string;
+    figure?: { id: string; name: string; description?: string };
+  } | null>(null);
+  const pendingCardFetchRef = useRef<{ prompt: string; name: string } | null>(null);
   const ccAutoTagPopoverRef = useRef<HTMLDivElement>(null);
   const ccTranslatePopoverRef = useRef<HTMLDivElement>(null);
   const ccAutoTagSuggestionsRef = useRef(ccAutoTagSuggestions);
@@ -2474,7 +2543,7 @@ export default function ChatPage() {
       setSessionLoading(false);
       return;
     }
-    if (!isNew && sessionId && sessionId !== "new" && sessionId !== "incognito" && leftPanelReady) {
+    if (!isNew && sessionId && sessionId !== "new" && sessionId !== "incognito") {
       // Skip fetch when we just created this session and streamed the response.
       // Fetching would overwrite our streamed messages and cause a visible refresh.
       if (justCreatedSessionRef.current === sessionId) {
@@ -2737,8 +2806,15 @@ export default function ChatPage() {
       // Don't clear when we're streaming a response from a just-created session
       // (e.g. user selected a phrase from the carousel). Clearing would wipe the UI.
       // For anonymous users, we never set justCreatedSessionRef, so use anonymousActiveRef.
+      // Also keep 1:1 mentor / second-order / perspective-card flows started from Ideas or URL:
+      // those set active* refs before the first message; anonymousActiveRef only flips on send.
       const hasActiveConversation =
-        justCreatedSessionRef.current || (isAnonymous && anonymousActiveRef.current);
+        justCreatedSessionRef.current ||
+        (isAnonymous && anonymousActiveRef.current) ||
+        activeOneOnOneMentorRef.current != null ||
+        activeSecondOrderRef.current ||
+        pendingCardFetchRef.current != null ||
+        pendingCardContextRef.current != null;
       if (!(isNew && hasActiveConversation)) {
         setMessages([]);
         setCurrentSessionId(null);
@@ -2751,7 +2827,7 @@ export default function ChatPage() {
         setPendingSecondOrder(false);
       }
     }
-  }, [sessionId, isNew, isAnonymous, incognitoMode, router, leftPanelReady, language]);
+  }, [sessionId, isNew, isAnonymous, incognitoMode, router, language]);
 
   const [lastFailedUserMessage, setLastFailedUserMessage] = useState<string | null>(null);
   const [onboardingDismissed, setOnboardingDismissed] = useState(true);
@@ -2766,6 +2842,8 @@ export default function ChatPage() {
     description?: string;
   } | null>(null);
   const [pendingCardFetch, setPendingCardFetch] = useState<{ prompt: string; name: string } | null>(null);
+  pendingCardContextRef.current = pendingCardContext;
+  pendingCardFetchRef.current = pendingCardFetch;
 
   const startConversationFromPerspectiveCard = useCallback(
     ({ name, prompt }: { name: string; prompt: string }) => {
@@ -3335,6 +3413,7 @@ export default function ChatPage() {
   const [habitPromoteLanguage, setHabitPromoteLanguage] = useState<LanguageCode>("en");
   const [habitPromoteLoading, setHabitPromoteLoading] = useState(false);
   const [habitDetailModal, setHabitDetailModal] = useState<HabitItem | null>(null);
+  const [habitDetailEditing, setHabitDetailEditing] = useState(false);
   const [habitDetailEdit, setHabitDetailEdit] = useState<{ name: string; description: string; howToFollowThrough: string; tips: string } | null>(null);
   const [habitDeleteConfirmModal, setHabitDeleteConfirmModal] = useState<HabitItem | null>(null);
   const [userScore, setUserScore] = useState<UserScore | null>(null);
@@ -3656,6 +3735,24 @@ export default function ChatPage() {
     } else {
       setHabitDetailEdit(null);
     }
+  }, [habitDetailModal]);
+
+  useEffect(() => {
+    if (!ltmDetailModal) {
+      setLtmDetailEditing(false);
+      setLtmEditDraft(null);
+    }
+  }, [ltmDetailModal]);
+
+  useEffect(() => {
+    if (!ccDetailModal) {
+      setCcDetailEditing(false);
+      setCcEditDraft(null);
+    }
+  }, [ccDetailModal]);
+
+  useEffect(() => {
+    if (!habitDetailModal) setHabitDetailEditing(false);
   }, [habitDetailModal]);
 
   type PerspectiveDecksConfig = {
@@ -4149,7 +4246,7 @@ export default function ChatPage() {
           <Link
             href="/"
             className={`font-semibold text-lg min-w-0 truncate ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
-            title="FigureMyLife Labs"
+            title={PRODUCT_TAGLINE}
           >
             FigureMyLife Labs
           </Link>
@@ -4292,7 +4389,7 @@ export default function ChatPage() {
         {/* Mobile overlay: sidebar has its own header. Desktop: header is in shared top bar, no header here */}
         <div className="h-14 min-h-[44px] pt-[env(safe-area-inset-top)] shrink-0 lg:hidden">
           <div className="h-full px-4 flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800">
-            <Link href="/" className="font-semibold text-lg text-foreground min-w-0 truncate" title="FigureMyLife Labs">
+            <Link href="/" className="font-semibold text-lg text-foreground min-w-0 truncate" title={PRODUCT_TAGLINE}>
               FigureMyLife Labs
             </Link>
             <button
@@ -4805,7 +4902,7 @@ export default function ChatPage() {
                 <div className="w-full text-center animate-fade-in-up space-y-8">
                   <h1 className="text-2xl sm:text-3xl font-semibold text-foreground">Welcome to fml labs</h1>
                   <p className="text-base text-neutral-600 dark:text-neutral-400">
-                    A coach that helps you think through the long-term consequences of your choices—with mental models that actually work.
+                    {getLandingTranslations(language).productTagline}
                   </p>
                   <button
                     type="button"
@@ -4913,7 +5010,7 @@ export default function ChatPage() {
               <div className="flex w-full min-w-0 max-w-2xl flex-col items-center text-center px-2">
                 <div className={`flex flex-col items-center justify-center space-y-6 ${isAnonymous ? "min-h-[calc(100dvh-12rem)]" : ""}`}>
                 <h1 className="text-xl sm:text-2xl font-semibold text-foreground animate-fade-in-up">
-                  {incognitoMode ? "Let's chat incognito" : getLandingTranslations(language).letsDigIn}
+                  {incognitoMode ? "Let's chat incognito" : getLandingTranslations(language).productTagline}
                 </h1>
                 {!incognitoMode && (
                   <div className="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-3 gap-3 text-left animate-fade-in-up">
@@ -6035,10 +6132,12 @@ export default function ChatPage() {
               )}
               {libraryPanelOpen === "cc" && (
                 <div className="space-y-4">
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Ideas and contexts you define. Use when you want the agent to reference your own concepts, goals, or frameworks.</p>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    {getLandingTranslations(language).productTagline}. Ideas and contexts you define. Use when you want the agent to reference your own concepts, goals, or frameworks.
+                  </p>
                   <div className="flex items-center justify-end gap-2">
                     <div className="flex gap-1">
-                      <button type="button" onClick={() => setCgCustomCreateModal(true)} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Group</button>
+                      <button type="button" onClick={() => setCgCustomCreateModal(true)} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Framework</button>
                       <button type="button" onClick={() => { setCcCreateInput(""); setCcCreateStep("input"); setCcCreateDraft(null); setCcCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Add Concept</button>
                     </div>
                   </div>
@@ -7023,117 +7122,220 @@ export default function ChatPage() {
             className="bg-background rounded-3xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between">
-              <h2 className="font-semibold text-lg truncate pr-2">{ltmDetailModal.title}</h2>
-              <button
-                onClick={() => setLtmDetailModal(null)}
-                className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                aria-label={getUiTranslations(language).close}
-              >
-                ✕
-              </button>
+            <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between gap-2">
+              <h2 className="font-semibold text-lg truncate pr-2 min-w-0">
+                {ltmDetailEditing ? "Edit memory" : ltmDetailModal.title}
+              </h2>
+              <div className="flex items-center gap-1 shrink-0">
+                {!ltmDetailEditing ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLtmEditDraft({
+                        title: ltmDetailModal.title,
+                        summary: ltmDetailModal.summary,
+                        enrichmentPrompt: ltmDetailModal.enrichmentPrompt,
+                      });
+                      setLtmDetailEditing(true);
+                    }}
+                    className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 transition-colors"
+                    aria-label="Edit"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                      <path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+                  </button>
+                ) : null}
+                <button
+                  onClick={() => setLtmDetailModal(null)}
+                  className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  aria-label={getUiTranslations(language).close}
+                >
+                  ✕
+                </button>
+              </div>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
-              {ltmDetailModal.chainOfThought && ltmDetailModal.chainOfThought.length > 0 && (
-                <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 p-3">
-                  <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2.5">
-                    Chain-of-thought
-                  </p>
-                  <div className="flex flex-wrap items-center gap-x-2 gap-y-2" dir={isRtlLanguage(language) ? "rtl" : undefined}>
-                    {ltmDetailModal.chainOfThought.map((step, i) => (
-                      <React.Fragment key={i}>
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600 shadow-sm whitespace-nowrap">
-                          {step}
-                        </span>
-                        {i < ltmDetailModal.chainOfThought!.length - 1 && (
-                          <span className="text-neutral-400 dark:text-neutral-500 shrink-0 text-[10px] font-medium" aria-hidden>→</span>
-                        )}
-                      </React.Fragment>
-                    ))}
+              {ltmDetailEditing && ltmEditDraft ? (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Title</label>
+                    <input
+                      type="text"
+                      value={ltmEditDraft.title}
+                      onChange={(e) => setLtmEditDraft((d) => (d ? { ...d, title: e.target.value } : null))}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Summary</label>
+                    <textarea
+                      value={ltmEditDraft.summary}
+                      onChange={(e) => setLtmEditDraft((d) => (d ? { ...d, summary: e.target.value } : null))}
+                      rows={6}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm resize-y focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                      dir={isRtlLanguage(language) ? "rtl" : undefined}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Enrichment prompt</label>
+                    <textarea
+                      value={ltmEditDraft.enrichmentPrompt}
+                      onChange={(e) => setLtmEditDraft((d) => (d ? { ...d, enrichmentPrompt: e.target.value } : null))}
+                      rows={4}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm resize-y focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                      dir={isRtlLanguage(language) ? "rtl" : undefined}
+                    />
+                  </div>
+                  <div className="flex flex-wrap justify-end gap-2 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setLtmDetailEditing(false);
+                        setLtmEditDraft(null);
+                      }}
+                      className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    >
+                      {getUiTranslations(language).cancel}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (!ltmEditDraft?.title.trim() || !ltmDetailModal._id) return;
+                        try {
+                          const res = await fetch(`/api/me/long-term-memory/${ltmDetailModal._id}`, {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              title: ltmEditDraft.title.trim(),
+                              summary: ltmEditDraft.summary.trim(),
+                              enrichmentPrompt: ltmEditDraft.enrichmentPrompt.trim(),
+                            }),
+                          });
+                          if (res.ok) {
+                            const updated = await res.json();
+                            setLtmDetailModal(updated);
+                            setLongTermMemories((prev) =>
+                              prev.map((m) => (m._id === updated._id ? updated : m))
+                            );
+                            refetchLongTermMemories();
+                            setLtmDetailEditing(false);
+                            setLtmEditDraft(null);
+                          }
+                        } catch {
+                          /* ignore */
+                        }
+                      }}
+                      className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                    >
+                      Save
+                    </button>
                   </div>
                 </div>
+              ) : (
+                <>
+                  {ltmDetailModal.chainOfThought && ltmDetailModal.chainOfThought.length > 0 && (
+                    <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 p-3">
+                      <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2.5">
+                        Chain-of-thought
+                      </p>
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-2" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                        {ltmDetailModal.chainOfThought.map((step, i) => (
+                          <React.Fragment key={i}>
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600 shadow-sm whitespace-nowrap">
+                              {step}
+                            </span>
+                            {i < ltmDetailModal.chainOfThought!.length - 1 && (
+                              <span className="text-neutral-400 dark:text-neutral-500 shrink-0 text-[10px] font-medium" aria-hidden>→</span>
+                            )}
+                          </React.Fragment>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <label className="text-sm font-medium text-neutral-900 dark:text-neutral-100 min-w-0">
+                        Summary
+                      </label>
+                      <CopyButton
+                        text={`${ltmDetailModal.title}\n\n${ltmDetailModal.summary}`}
+                        aria-label="Copy summary"
+                      />
+                    </div>
+                    <div className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                      {ltmDetailModal.summary}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1">
+                      Enrichment prompt
+                    </label>
+                    <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                      {ltmDetailModal.enrichmentPrompt}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setHabitPromoteModal({ sourceType: "ltm", source: ltmDetailModal });
+                        setHabitPromoteStep("generate");
+                        setHabitPromoteDraft(null);
+                        setHabitPromoteLanguage(language);
+                        setLtmDetailModal(null);
+                      }}
+                      className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
+                    >
+                      {getUiTranslations(language).promoteToHabit}
+                    </button>
+                    <GenerateRelevantMessageButton
+                      label="Generate Relevant Message"
+                      expandOnHover={false}
+                      aria-label="Generate Relevant Message"
+                      onClick={async () => {
+                        const suggestion = `${ltmDetailModal.title}\n\n${ltmDetailModal.summary}\n\nEnrichment: ${ltmDetailModal.enrichmentPrompt}`;
+                        setGenerateModal({ type: "ltm", generatedText: "", loading: true });
+                        try {
+                          const res = await fetch("/api/generate-relevant-prompt", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              suggestion,
+                              messages: messages.map((m) => ({ role: m.role, content: m.content })),
+                            }),
+                          });
+                          const data = await res.json();
+                          setGenerateModal((prev) =>
+                            prev ? { ...prev, generatedText: data.text ?? suggestion, loading: false } : null
+                          );
+                        } catch {
+                          setGenerateModal((prev) =>
+                            prev ? { ...prev, generatedText: suggestion, loading: false } : null
+                          );
+                        }
+                      }}
+                    />
+                    <Link
+                      href={`/chat/${ltmDetailModal.sourceSessionId}`}
+                      onClick={() => setLtmDetailModal(null)}
+                      className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
+                    >
+                      View conversation →
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setLtmDeleteConfirmModal(ltmDetailModal);
+                        setLtmDetailModal(null);
+                      }}
+                      className="px-4 py-2 rounded-full text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+                    >
+                      Delete from memory
+                    </button>
+                  </div>
+                </>
               )}
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <label className="text-sm font-medium text-neutral-900 dark:text-neutral-100 min-w-0">
-                    Summary
-                  </label>
-                  <CopyButton
-                    text={`${ltmDetailModal.title}\n\n${ltmDetailModal.summary}`}
-                    aria-label="Copy summary"
-                  />
-                </div>
-                <div className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
-                  {ltmDetailModal.summary}
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1">
-                  Enrichment prompt
-                </label>
-                <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200" dir={isRtlLanguage(language) ? "rtl" : undefined}>
-                  {ltmDetailModal.enrichmentPrompt}
-                </p>
-              </div>
-              <div className="flex flex-wrap items-center gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setHabitPromoteModal({ sourceType: "ltm", source: ltmDetailModal });
-                    setHabitPromoteStep("generate");
-                    setHabitPromoteDraft(null);
-                    setHabitPromoteLanguage(language);
-                    setLtmDetailModal(null);
-                  }}
-                  className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
-                >
-                  {getUiTranslations(language).promoteToHabit}
-                </button>
-                <GenerateRelevantMessageButton
-                  label="Generate Relevant Message"
-                  expandOnHover={false}
-                  aria-label="Generate Relevant Message"
-                  onClick={async () => {
-                    const suggestion = `${ltmDetailModal.title}\n\n${ltmDetailModal.summary}\n\nEnrichment: ${ltmDetailModal.enrichmentPrompt}`;
-                    setGenerateModal({ type: "ltm", generatedText: "", loading: true });
-                    try {
-                      const res = await fetch("/api/generate-relevant-prompt", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                          suggestion,
-                          messages: messages.map((m) => ({ role: m.role, content: m.content })),
-                        }),
-                      });
-                      const data = await res.json();
-                      setGenerateModal((prev) =>
-                        prev ? { ...prev, generatedText: data.text ?? suggestion, loading: false } : null
-                      );
-                    } catch {
-                      setGenerateModal((prev) =>
-                        prev ? { ...prev, generatedText: suggestion, loading: false } : null
-                      );
-                    }
-                  }}
-                />
-                <Link
-                  href={`/chat/${ltmDetailModal.sourceSessionId}`}
-                  onClick={() => setLtmDetailModal(null)}
-                  className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
-                >
-                  View conversation →
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setLtmDeleteConfirmModal(ltmDetailModal);
-                    setLtmDetailModal(null);
-                  }}
-                  className="px-4 py-2 rounded-full text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
-                >
-                  Delete from memory
-                </button>
-              </div>
               {generateModal?.type === "ltm" && (
                 <div
                   className="absolute inset-0 flex items-center justify-center p-4 bg-black/50 rounded-3xl z-10"
@@ -7210,16 +7412,65 @@ export default function ChatPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200/80 dark:border-neutral-800 shrink-0">
-                <h2 id="settings-title" className="text-lg font-semibold text-foreground">Settings</h2>
-                <button
-                  type="button"
-                  onClick={() => setSettingsOpen(false)}
-                  className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shrink-0 text-neutral-600 dark:text-neutral-400"
-                  aria-label={getUiTranslations(language).close}
-                >
-                  ✕
-                </button>
+                <h2 id="settings-title" className="text-lg font-semibold text-foreground">
+                  Settings
+                </h2>
+                <div className="flex items-center gap-2 shrink-0">
+                  {user ? (
+                    <UserButton
+                      appearance={{
+                        elements: {
+                          rootBox: "shrink-0",
+                          avatarBox: "w-8 h-8 ring-0",
+                        },
+                      }}
+                    />
+                  ) : (
+                    <div className="hidden sm:flex items-center gap-1.5">
+                      <Link
+                        href="/sign-in"
+                        onClick={() => setSettingsOpen(false)}
+                        className="px-2.5 py-1.5 rounded-lg text-xs font-medium border border-neutral-300 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        href="/sign-up"
+                        onClick={() => setSettingsOpen(false)}
+                        className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                      >
+                        Create account
+                      </Link>
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setSettingsOpen(false)}
+                    className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shrink-0 text-neutral-600 dark:text-neutral-400"
+                    aria-label={getUiTranslations(language).close}
+                  >
+                    ✕
+                  </button>
+                </div>
               </div>
+              {isAnonymous && (
+                <div className="flex sm:hidden items-center gap-2 px-4 py-2 border-b border-neutral-200/80 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/40">
+                  <Link
+                    href="/sign-in"
+                    onClick={() => setSettingsOpen(false)}
+                    className="flex-1 text-center px-3 py-2 rounded-xl text-sm font-medium border-2 border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/sign-up"
+                    onClick={() => setSettingsOpen(false)}
+                    className="flex-1 text-center px-3 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                  >
+                    Create account
+                  </Link>
+                </div>
+              )}
               <div className="flex-1 overflow-y-auto p-4 sm:p-5 min-h-0 space-y-6">
                 <section>
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Appearance</h3>
@@ -7263,28 +7514,6 @@ export default function ChatPage() {
                   </div>
                 </section>
 
-                {!isAnonymous && (
-                  <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
-                    <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Library</h3>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSettingsOpen(false);
-                        setLibraryPanelOpen("figures");
-                      }}
-                      className="flex items-center gap-2 w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-left"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                      </svg>
-                      <span className="font-medium">{getUiTranslations(language).famousFigures}</span>
-                      <span className="text-xs text-neutral-500 dark:text-neutral-400 ml-auto">Follow personas for chat nudges</span>
-                    </button>
-                  </section>
-                )}
                 <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">Conversation</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">Language and tone for your conversations.</p>
@@ -8186,6 +8415,9 @@ export default function ChatPage() {
                 <h2 id="sign-in-features-title" className="text-lg font-semibold text-foreground">
                   Features unlocked with sign in
                 </h2>
+                <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                  {getLandingTranslations(language).productTagline}
+                </p>
                 <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
                   Everything below becomes available once you sign in.
                 </p>
@@ -8225,9 +8457,9 @@ export default function ChatPage() {
 
       {featureTourStep !== null && (
         <FeatureTour
-          steps={[...FEATURE_TOUR_STEPS]}
+          steps={featureTourSteps}
           currentStep={featureTourStep}
-          onNext={() => setFeatureTourStep((s) => Math.min((s ?? 0) + 1, FEATURE_TOUR_STEPS.length - 1))}
+          onNext={() => setFeatureTourStep((s) => Math.min((s ?? 0) + 1, featureTourSteps.length - 1))}
           onComplete={() => {
             try {
               localStorage.setItem(FEATURE_TOUR_COMPLETE_KEY, "true");
@@ -8385,7 +8617,7 @@ export default function ChatPage() {
               )}
             </h2>
             <p className="text-lg sm:text-xl text-neutral-700 dark:text-neutral-300 leading-relaxed max-w-prose mx-auto">
-              FigureMyLife Labs is proud to introduce a new coach that helps you think through the long-term consequences of your choices. FML uses deep questioning and proven mental frameworks to help you make smarter decisions.
+              {PRODUCT_TAGLINE}
             </p>
             <div className="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-700 text-center">
               <p className="letter-modal-script-location font-developer text-[1.4rem] leading-none md:text-[1.44em] text-neutral-600 dark:text-neutral-300">San Francisco</p>
@@ -9266,32 +9498,133 @@ export default function ChatPage() {
             className="bg-background rounded-3xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between">
+            <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between gap-2">
               <div className="min-w-0 flex-1 pr-2">
-                <h2 className="font-semibold text-lg truncate">{ccDetailModal.title}</h2>
-                {ccDetailModal.sourceVideoTitle && (
+                <h2 className="font-bold text-lg text-neutral-900 dark:text-neutral-100 truncate">
+                  {ccDetailEditing ? "Edit concept" : ccDetailModal.title}
+                </h2>
+                {!ccDetailEditing && ccDetailModal.sourceVideoTitle && (
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate mt-0.5" title={ccDetailModal.sourceVideoTitle}>
                     From: {ccDetailModal.sourceVideoTitle}
                   </p>
                 )}
               </div>
-              <button
-                onClick={() => {
-                  if (ccDetailModal._id.startsWith("extracted-")) setTranscriptExtractedConceptOpen(null);
-                  setCcDetailModal(null);
-                  setCcAutoTagSuggestions(null);
-                  setCcTranslatePopoverOpen(false);
-                }}
-                className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                aria-label={getUiTranslations(language).close}
-              >
-                ✕
-              </button>
+              <div className="flex items-center gap-1 shrink-0">
+                {!ccDetailModal._id.startsWith("extracted-") && !ccDetailEditing ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCcEditDraft({
+                        title: ccDetailModal.title,
+                        summary: ccDetailModal.summary,
+                        enrichmentPrompt: ccDetailModal.enrichmentPrompt,
+                      });
+                      setCcDetailEditing(true);
+                    }}
+                    className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 transition-colors"
+                    aria-label="Edit"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                      <path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+                  </button>
+                ) : null}
+                <button
+                  onClick={() => {
+                    if (ccDetailModal._id.startsWith("extracted-")) setTranscriptExtractedConceptOpen(null);
+                    setCcDetailModal(null);
+                    setCcAutoTagSuggestions(null);
+                    setCcTranslatePopoverOpen(false);
+                  }}
+                  className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  aria-label={getUiTranslations(language).close}
+                >
+                  ✕
+                </button>
+              </div>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
+              {ccDetailEditing && ccEditDraft && !ccDetailModal._id.startsWith("extracted-") ? (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Title</label>
+                    <input
+                      type="text"
+                      value={ccEditDraft.title}
+                      onChange={(e) => setCcEditDraft((d) => (d ? { ...d, title: e.target.value } : null))}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Summary</label>
+                    <textarea
+                      value={ccEditDraft.summary}
+                      onChange={(e) => setCcEditDraft((d) => (d ? { ...d, summary: e.target.value } : null))}
+                      rows={6}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm resize-y focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                      dir={isRtlLanguage(language) ? "rtl" : undefined}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Enrichment prompt</label>
+                    <textarea
+                      value={ccEditDraft.enrichmentPrompt}
+                      onChange={(e) => setCcEditDraft((d) => (d ? { ...d, enrichmentPrompt: e.target.value } : null))}
+                      rows={4}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm resize-y focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                      dir={isRtlLanguage(language) ? "rtl" : undefined}
+                    />
+                  </div>
+                  <div className="flex flex-wrap justify-end gap-2 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCcDetailEditing(false);
+                        setCcEditDraft(null);
+                      }}
+                      className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    >
+                      {getUiTranslations(language).cancel}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (!ccEditDraft?.title.trim() || !ccDetailModal._id) return;
+                        try {
+                          const res = await fetch(`/api/me/custom-concepts/${ccDetailModal._id}`, {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              title: ccEditDraft.title.trim(),
+                              summary: ccEditDraft.summary.trim(),
+                              enrichmentPrompt: ccEditDraft.enrichmentPrompt.trim(),
+                            }),
+                          });
+                          if (res.ok) {
+                            const updated = await res.json();
+                            setCcDetailModal(updated);
+                            setCustomConcepts((prev) =>
+                              prev.map((c) => (c._id === updated._id ? updated : c))
+                            );
+                            refetchCustomConcepts();
+                            setCcDetailEditing(false);
+                            setCcEditDraft(null);
+                          }
+                        } catch {
+                          /* ignore */
+                        }
+                      }}
+                      className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  <label className="text-sm font-medium text-neutral-900 dark:text-neutral-100 min-w-0">
+                  <label className="text-sm font-bold text-neutral-900 dark:text-neutral-100 min-w-0">
                     Summary
                   </label>
                   <CopyButton
@@ -9299,7 +9632,10 @@ export default function ChatPage() {
                     aria-label="Copy summary"
                   />
                 </div>
-                <div className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                <div
+                  className="text-sm font-medium text-neutral-800 dark:text-neutral-200 whitespace-pre-wrap"
+                  dir={isRtlLanguage(language) ? "rtl" : undefined}
+                >
                   {ccDetailModal.summary}
                 </div>
               </div>
@@ -9441,7 +9777,7 @@ export default function ChatPage() {
                   </div>
                 </div>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
-                  Tag this concept into one or more groups.
+                  Tag this concept into one or more frameworks.
                 </p>
                 <div className="flex flex-wrap gap-1.5 items-center">
                   {conceptGroups.map((cg) => {
@@ -9487,6 +9823,8 @@ export default function ChatPage() {
                   })}
                 </div>
               </div>
+                </>
+              )}
               {generateModal?.type === "cc" && (
                 <div
                   className="absolute inset-0 flex items-center justify-center p-4 bg-black/50 rounded-3xl z-10"
@@ -9541,123 +9879,129 @@ export default function ChatPage() {
                 </div>
               )}
             </div>
-            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex flex-nowrap items-center gap-2 min-w-0">
-              {!ccDetailModal._id.startsWith("extracted-") && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setHabitPromoteModal({ sourceType: "concept", source: ccDetailModal });
-                    setHabitPromoteStep("generate");
-                    setHabitPromoteDraft(null);
-                    setHabitPromoteLanguage(language);
-                    setCcDetailModal(null);
-                  }}
-                  className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors shrink-0"
-                >
-                  {getUiTranslations(language).promoteToHabit}
-                </button>
-              )}
-              <GenerateRelevantMessageButton
-                label={getModalTranslations(language).generateRelevantMessage}
-                aria-label={getModalTranslations(language).generateRelevantMessage}
-                onClick={async () => {
-                  const suggestion = `${ccDetailModal.title}\n\n${ccDetailModal.summary}\n\nEnrichment: ${ccDetailModal.enrichmentPrompt}`;
-                  setGenerateModal({ type: "cc", generatedText: "", loading: true });
-                  try {
-                    const res = await fetch("/api/generate-relevant-prompt", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        suggestion,
-                        messages: messages.map((m) => ({ role: m.role, content: m.content })),
-                      }),
-                    });
-                    const data = await res.json();
-                    setGenerateModal((prev) =>
-                      prev ? { ...prev, generatedText: data.text ?? suggestion, loading: false } : null
-                    );
-                  } catch {
-                    setGenerateModal((prev) =>
-                      prev ? { ...prev, generatedText: suggestion, loading: false } : null
-                    );
-                  }
-                }}
-              />
-              <div ref={ccTranslatePopoverRef} className="relative">
-                <button
-                  type="button"
-                  onClick={() => setCcTranslatePopoverOpen((o) => !o)}
-                  disabled={ccTranslating}
-                  className="px-3 py-2 rounded-xl text-sm border border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-foreground/20 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors disabled:opacity-60"
-                >
-                  {getModalTranslations(language).translateTo}
-                </button>
-                {ccTranslatePopoverOpen && (
-                  <div className="absolute left-0 bottom-full mb-1.5 z-20 min-w-[180px] max-h-64 overflow-y-auto rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-xl py-2 animate-fade-in-up">
-                    {LANGUAGES.map(({ code, name }) => (
-                      <button
-                        key={code}
-                        type="button"
-                        onClick={async () => {
-                          setCcTranslatePopoverOpen(false);
-                          setCcTranslating(true);
-                          try {
-                            const res = await fetch("/api/me/custom-concepts/translate", {
-                              method: "POST",
-                              headers: { "Content-Type": "application/json" },
-                              body: JSON.stringify({
-                                conceptId: ccDetailModal._id,
-                                targetLanguage: code,
-                              }),
-                            });
-                            const data = res.ok ? await res.json() : null;
-                            if (data) {
-                              setCustomConcepts((prev) =>
-                                prev.map((c) =>
-                                  c._id === ccDetailModal._id
-                                    ? {
-                                        ...c,
-                                        title: data.title ?? c.title,
-                                        summary: data.summary ?? c.summary,
-                                        enrichmentPrompt: data.enrichmentPrompt ?? c.enrichmentPrompt,
-                                      }
-                                    : c
-                                )
-                              );
-                              setCcDetailModal((prev) =>
-                                prev
-                                  ? {
-                                      ...prev,
-                                      title: data.title ?? prev.title,
-                                      summary: data.summary ?? prev.summary,
-                                      enrichmentPrompt: data.enrichmentPrompt ?? prev.enrichmentPrompt,
-                                    }
-                                  : null
-                              );
-                            }
-                          } finally {
-                            setCcTranslating(false);
-                          }
-                        }}
-                        className="w-full px-3 py-2 text-left text-sm text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700/80 transition-colors"
-                      >
-                        {name}
-                      </button>
-                    ))}
+            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex flex-wrap items-center justify-end gap-2 min-w-0">
+              {!ccDetailEditing && (
+                <>
+                  <GenerateRelevantMessageButton
+                    variant="text"
+                    label={getModalTranslations(language).generateRelevantMessageShort}
+                    title={getModalTranslations(language).generateRelevantMessage}
+                    aria-label={getModalTranslations(language).generateRelevantMessage}
+                    onClick={async () => {
+                      const suggestion = `${ccDetailModal.title}\n\n${ccDetailModal.summary}\n\nEnrichment: ${ccDetailModal.enrichmentPrompt}`;
+                      setGenerateModal({ type: "cc", generatedText: "", loading: true });
+                      try {
+                        const res = await fetch("/api/generate-relevant-prompt", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            suggestion,
+                            messages: messages.map((m) => ({ role: m.role, content: m.content })),
+                          }),
+                        });
+                        const data = await res.json();
+                        setGenerateModal((prev) =>
+                          prev ? { ...prev, generatedText: data.text ?? suggestion, loading: false } : null
+                        );
+                      } catch {
+                        setGenerateModal((prev) =>
+                          prev ? { ...prev, generatedText: suggestion, loading: false } : null
+                        );
+                      }
+                    }}
+                  />
+                  <div ref={ccTranslatePopoverRef} className="relative shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setCcTranslatePopoverOpen((o) => !o)}
+                      disabled={ccTranslating}
+                      className="whitespace-nowrap px-3 py-2 rounded-xl text-sm border border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-foreground/20 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors disabled:opacity-60"
+                    >
+                      {getModalTranslations(language).translateTo}
+                    </button>
+                    {ccTranslatePopoverOpen && (
+                      <div className="absolute left-0 bottom-full mb-1.5 z-20 min-w-[180px] max-h-64 overflow-y-auto rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-xl py-2 animate-fade-in-up">
+                        {LANGUAGES.map(({ code, name }) => (
+                          <button
+                            key={code}
+                            type="button"
+                            onClick={async () => {
+                              setCcTranslatePopoverOpen(false);
+                              setCcTranslating(true);
+                              try {
+                                const res = await fetch("/api/me/custom-concepts/translate", {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({
+                                    conceptId: ccDetailModal._id,
+                                    targetLanguage: code,
+                                  }),
+                                });
+                                const data = res.ok ? await res.json() : null;
+                                if (data) {
+                                  setCustomConcepts((prev) =>
+                                    prev.map((c) =>
+                                      c._id === ccDetailModal._id
+                                        ? {
+                                            ...c,
+                                            title: data.title ?? c.title,
+                                            summary: data.summary ?? c.summary,
+                                            enrichmentPrompt: data.enrichmentPrompt ?? c.enrichmentPrompt,
+                                          }
+                                        : c
+                                    )
+                                  );
+                                  setCcDetailModal((prev) =>
+                                    prev
+                                      ? {
+                                          ...prev,
+                                          title: data.title ?? prev.title,
+                                          summary: data.summary ?? prev.summary,
+                                          enrichmentPrompt: data.enrichmentPrompt ?? prev.enrichmentPrompt,
+                                        }
+                                      : null
+                                  );
+                                }
+                              } finally {
+                                setCcTranslating(false);
+                              }
+                            }}
+                            className="w-full px-3 py-2 text-left text-sm text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700/80 transition-colors"
+                          >
+                            {name}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setCcDeleteConfirmModal(ccDetailModal);
-                  setCcDetailModal(null);
-                }}
-                className="shrink-0 px-4 py-2 rounded-full text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
-                aria-label={getModalTranslations(language).deleteCustomConcept}
-              >
-                {getModalTranslations(language).deleteButton}
-              </button>
+                  {!ccDetailModal._id.startsWith("extracted-") && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setHabitPromoteModal({ sourceType: "concept", source: ccDetailModal });
+                        setHabitPromoteStep("generate");
+                        setHabitPromoteDraft(null);
+                        setHabitPromoteLanguage(language);
+                        setCcDetailModal(null);
+                      }}
+                      className="shrink-0 px-3 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+                    >
+                      {getUiTranslations(language).promoteToHabit}
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCcDeleteConfirmModal(ccDetailModal);
+                      setCcDetailModal(null);
+                    }}
+                    className="shrink-0 px-4 py-2 rounded-full text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+                    aria-label={getModalTranslations(language).deleteCustomConcept}
+                  >
+                    {getModalTranslations(language).deleteButton}
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -9924,57 +10268,96 @@ export default function ChatPage() {
             className="bg-background rounded-3xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between">
-              <h2 className="font-semibold text-lg truncate pr-2">{habitDetailEdit.name}</h2>
-              <button
-                onClick={() => setHabitDetailModal(null)}
-                className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                aria-label={getUiTranslations(language).close}
-              >
-                ✕
-              </button>
+            <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between gap-2">
+              <h2 className="font-semibold text-lg truncate pr-2 min-w-0">
+                {habitDetailEditing ? "Edit habit" : habitDetailModal.name}
+              </h2>
+              <div className="flex items-center gap-1 shrink-0">
+                {!habitDetailEditing ? (
+                  <button
+                    type="button"
+                    onClick={() => setHabitDetailEditing(true)}
+                    className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 transition-colors"
+                    aria-label="Edit"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                      <path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+                  </button>
+                ) : null}
+                <button
+                  onClick={() => setHabitDetailModal(null)}
+                  className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  aria-label={getUiTranslations(language).close}
+                >
+                  ✕
+                </button>
+              </div>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Habit name</label>
-                <input
-                  type="text"
-                  value={habitDetailEdit.name}
-                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, name: e.target.value } : null)}
-                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Description</label>
-                <textarea
-                  value={habitDetailEdit.description}
-                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, description: e.target.value } : null)}
-                  rows={4}
-                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">How to follow through</label>
-                <textarea
-                  value={habitDetailEdit.howToFollowThrough}
-                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, howToFollowThrough: e.target.value } : null)}
-                  rows={4}
-                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                  placeholder="One step per line"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Tips</label>
-                <textarea
-                  value={habitDetailEdit.tips}
-                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, tips: e.target.value } : null)}
-                  rows={3}
-                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                  placeholder="One tip per line"
-                />
-              </div>
+              {habitDetailEditing ? (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Habit name</label>
+                    <input
+                      type="text"
+                      value={habitDetailEdit.name}
+                      onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, name: e.target.value } : null)}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Description</label>
+                    <textarea
+                      value={habitDetailEdit.description}
+                      onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, description: e.target.value } : null)}
+                      rows={4}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">How to follow through</label>
+                    <textarea
+                      value={habitDetailEdit.howToFollowThrough}
+                      onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, howToFollowThrough: e.target.value } : null)}
+                      rows={4}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                      placeholder="One step per line"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Tips</label>
+                    <textarea
+                      value={habitDetailEdit.tips}
+                      onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, tips: e.target.value } : null)}
+                      rows={3}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                      placeholder="One tip per line"
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Habit name</p>
+                    <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{habitDetailModal.name}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Description</p>
+                    <p className="text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-wrap">{habitDetailModal.description}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">How to follow through</p>
+                    <p className="text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-wrap">{habitDetailModal.howToFollowThrough}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Tips</p>
+                    <p className="text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-wrap">{habitDetailModal.tips}</p>
+                  </div>
+                </>
+              )}
             </div>
-            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex flex-wrap gap-2 justify-end">
               <button
                 type="button"
                 onClick={() => {
@@ -9985,34 +10368,54 @@ export default function ChatPage() {
               >
                 Delete
               </button>
-              <button
-                type="button"
-                onClick={async () => {
-                  if (!habitDetailModal._id || !habitDetailEdit) return;
-                  try {
-                    const res = await fetch(`/api/me/habits/${habitDetailModal._id}`, {
-                      method: "PATCH",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        name: habitDetailEdit.name.trim(),
-                        description: habitDetailEdit.description.trim(),
-                        howToFollowThrough: habitDetailEdit.howToFollowThrough.trim(),
-                        tips: habitDetailEdit.tips.trim(),
-                      }),
-                    });
-                    if (res.ok) {
-                      const updated = await res.json();
-                      setHabits((prev) => prev.map((h) => (h._id === habitDetailModal._id ? updated : h)));
-                      setHabitDetailModal(updated);
-                    }
-                  } catch {
-                    /* ignore */
-                  }
-                }}
-                className="px-4 py-2 rounded-full text-sm font-medium bg-foreground text-background hover:opacity-90 transition-colors"
-              >
-                Save
-              </button>
+              {habitDetailEditing ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setHabitDetailEdit({
+                        name: habitDetailModal.name,
+                        description: habitDetailModal.description,
+                        howToFollowThrough: habitDetailModal.howToFollowThrough,
+                        tips: habitDetailModal.tips,
+                      });
+                      setHabitDetailEditing(false);
+                    }}
+                    className="px-4 py-2 rounded-full text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  >
+                    {getUiTranslations(language).cancel}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!habitDetailModal._id || !habitDetailEdit) return;
+                      try {
+                        const res = await fetch(`/api/me/habits/${habitDetailModal._id}`, {
+                          method: "PATCH",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            name: habitDetailEdit.name.trim(),
+                            description: habitDetailEdit.description.trim(),
+                            howToFollowThrough: habitDetailEdit.howToFollowThrough.trim(),
+                            tips: habitDetailEdit.tips.trim(),
+                          }),
+                        });
+                        if (res.ok) {
+                          const updated = await res.json();
+                          setHabits((prev) => prev.map((h) => (h._id === habitDetailModal._id ? updated : h)));
+                          setHabitDetailModal(updated);
+                          setHabitDetailEditing(false);
+                        }
+                      } catch {
+                        /* ignore */
+                      }
+                    }}
+                    className="px-4 py-2 rounded-full text-sm font-medium bg-foreground text-background hover:opacity-90 transition-colors"
+                  >
+                    Save
+                  </button>
+                </>
+              ) : null}
             </div>
           </div>
         </div>
@@ -10480,6 +10883,101 @@ export default function ChatPage() {
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  disabled={
+                    cgFrameworkSummarizing || (cgDetailModal.concepts ?? []).length === 0
+                  }
+                  onClick={async () => {
+                    if (!cgDetailModal._id) return;
+                    setCgFrameworkSummarizing(true);
+                    try {
+                      const res = await fetch(
+                        `/api/me/concept-groups/${cgDetailModal._id}/summarize`,
+                        {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ language }),
+                        }
+                      );
+                      const data = await res.json().catch(() => null);
+                      if (res.ok && data && data._id) {
+                        setCgDetailModal(data as ConceptGroupItem);
+                        setConceptGroups((prev) =>
+                          prev.map((g) =>
+                            g._id === data._id
+                              ? {
+                                  ...g,
+                                  summary: data.summary,
+                                  chainOfThought: data.chainOfThought,
+                                }
+                              : g
+                          )
+                        );
+                      }
+                    } finally {
+                      setCgFrameworkSummarizing(false);
+                    }
+                  }}
+                  className="px-3 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {cgFrameworkSummarizing
+                    ? "Summarizing…"
+                    : cgDetailModal.summary?.trim() ||
+                        (cgDetailModal.chainOfThought && cgDetailModal.chainOfThought.length > 0)
+                      ? "Regenerate summary"
+                      : "Summarize framework"}
+                </button>
+                {(cgDetailModal.concepts ?? []).length === 0 && (
+                  <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                    Add concepts to this framework to summarize.
+                  </span>
+                )}
+              </div>
+
+              {cgDetailModal.chainOfThought && cgDetailModal.chainOfThought.length > 0 && (
+                <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 p-3">
+                  <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2.5">
+                    Chain-of-thought
+                  </p>
+                  <div
+                    className="flex flex-wrap items-center gap-x-2 gap-y-2"
+                    dir={isRtlLanguage(language) ? "rtl" : undefined}
+                  >
+                    {cgDetailModal.chainOfThought.map((step, i) => (
+                      <React.Fragment key={i}>
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600 shadow-sm whitespace-nowrap">
+                          {step}
+                        </span>
+                        {i < cgDetailModal.chainOfThought!.length - 1 && (
+                          <span
+                            className="text-neutral-400 dark:text-neutral-500 shrink-0 text-[10px] font-medium"
+                            aria-hidden
+                          >
+                            →
+                          </span>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {cgDetailModal.summary?.trim() ? (
+                <div>
+                  <label className="block text-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1">
+                    Framework summary
+                  </label>
+                  <div
+                    className="text-sm font-medium text-neutral-800 dark:text-neutral-200 whitespace-pre-wrap"
+                    dir={isRtlLanguage(language) ? "rtl" : undefined}
+                  >
+                    {cgDetailModal.summary}
+                  </div>
+                </div>
+              ) : null}
+
               {(cgDetailModal.concepts ?? []).length > 0 ? (
                 <div className="space-y-2">
                   {(cgDetailModal.concepts ?? []).map((cc) => (

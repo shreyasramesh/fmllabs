@@ -1,8 +1,11 @@
 import type { LanguageCode } from "./languages";
+import { PRODUCT_TAGLINE } from "./product-tagline";
 
 export interface LandingTranslations {
   whatShouldIDo: string;
   ideas: string;
+  /** Primary value proposition (aligned with SEO / manifest). */
+  productTagline: string;
   letsDigIn: string;
   readyToConversation: string;
   drawPerspectiveCard: string;
@@ -34,6 +37,7 @@ export interface LandingTranslations {
 const EN: LandingTranslations = {
   whatShouldIDo: "What should I do?",
   ideas: "Ideas",
+  productTagline: PRODUCT_TAGLINE,
   letsDigIn: "Let's get into it — mental models that actually stick, designed for life outside the textbook",
   readyToConversation: "Ready to have a conversation whenever you say something",
   drawPerspectiveCard: "Draw a perspective card",

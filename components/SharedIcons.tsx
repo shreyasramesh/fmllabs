@@ -27,13 +27,29 @@ export function AIGenerateIcon({ className }: { className?: string }) {
   );
 }
 
-/** Generate Relevant Message button - icon only by default, text swipes right on hover (unless expandOnHover=false) */
+/** Generate Relevant Message button - icon only by default, text swipes right on hover (unless expandOnHover=false). Use variant="text" for a static text label (e.g. Custom Concepts modal footer). */
 export function GenerateRelevantMessageButton({
   label,
   expandOnHover = true,
+  variant = "icon",
   className = "",
   ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & { label: string; expandOnHover?: boolean }) {
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  label: string;
+  expandOnHover?: boolean;
+  variant?: "icon" | "text";
+}) {
+  if (variant === "text") {
+    return (
+      <button
+        type="button"
+        className={`shrink-0 px-3 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors ${className}`}
+        {...props}
+      >
+        {label}
+      </button>
+    );
+  }
   return (
     <button
       type="button"

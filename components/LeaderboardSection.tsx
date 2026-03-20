@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
 import { getLeaderboard } from "@/lib/score";
 
 function RankCell({ rank }: { rank: number }) {
@@ -107,6 +108,9 @@ export async function LeaderboardSection({
           Can you reach <span className="text-amber-500 dark:text-amber-400">Master</span>?
         </h2>
         <p className="text-neutral-600 dark:text-neutral-400 text-base max-w-2xl">
+          {PRODUCT_TAGLINE}
+        </p>
+        <p className="text-neutral-600 dark:text-neutral-400 text-base max-w-2xl mt-2">
           Build concepts, use mental models, and learn with perspective cards to earn XP and climb
           the leaderboard.
         </p>

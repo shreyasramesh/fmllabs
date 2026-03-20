@@ -1,8 +1,9 @@
 import { LeaderboardSection } from "@/components/LeaderboardSection";
+import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
 
 export const metadata = {
   title: "Leaderboard — FigureMyLife Labs",
-  description: "Top learners by XP. Compete with others and climb the leaderboard.",
+  description: `${PRODUCT_TAGLINE} — Top learners by XP. Climb the leaderboard.`,
 };
 
 export const dynamic = "force-dynamic";

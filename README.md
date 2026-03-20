@@ -1,5 +1,7 @@
 # fml labs
 
+**Organize concepts, goals, and conversations so your past thinking actually shows up when you need it.**
+
 A decision-making chat application that helps you think deeper. Uses mental models and cognitive biases from the index to surface relevant concepts and guide better decisions.
 
 ## Features

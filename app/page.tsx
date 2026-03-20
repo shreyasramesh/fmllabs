@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
+import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
 
 export const metadata = {
   title: "FigureMyLife Labs",
-  description:
-    "Improve your decisions through deeper thinking. Surface mental models and cognitive biases.",
+  description: PRODUCT_TAGLINE,
 };
 
 export default function HomePage() {

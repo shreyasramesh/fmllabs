@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
 
 export const metadata = {
   title: "Privacy Policy — fml labs",
-  description: "Privacy Policy for fml labs",
+  description: `${PRODUCT_TAGLINE} — Privacy Policy for fml labs`,
 };
 
 export default function PrivacyPolicyPage() {
