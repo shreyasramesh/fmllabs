@@ -160,6 +160,8 @@ export interface SavedTranscript {
   videoId: string;
   videoTitle?: string;
   channel?: string;
+  /** When omitted, treated as YouTube for backward compatibility. */
+  sourceType?: "youtube" | "journal";
   transcriptText: string;
   extractedConcepts?: ExtractedConceptGroup[];
   createdAt: Date;
@@ -1284,6 +1286,28 @@ export async function saveTranscript(
     videoId,
     videoTitle,
     channel,
+    transcriptText,
+    createdAt: now,
+    updatedAt: now,
+  };
+  const result = await database.collection("transcripts").insertOne(doc);
+  return { ...doc, _id: result.insertedId.toString() } as SavedTranscript & { _id: string };
+}
+
+/** Persist a user journal as a transcript row (no YouTube URL). `videoId` is synthetic. */
+export async function saveJournalTranscript(
+  userId: string,
+  transcriptText: string,
+  journalTitle?: string
+): Promise<SavedTranscript & { _id: string }> {
+  const database = await getDb();
+  const now = new Date();
+  const videoId = `journal_${new ObjectId().toHexString()}`;
+  const doc: Omit<SavedTranscript, "_id"> = {
+    userId,
+    videoId,
+    videoTitle: journalTitle?.trim() || "Journal entry",
+    sourceType: "journal",
     transcriptText,
     createdAt: now,
     updatedAt: now,

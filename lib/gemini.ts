@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { recordUsageEvent, computeGeminiCost } from "@/lib/usage";
+import { EXTRACT_CONCEPTS_MAX_CHARS } from "@/lib/extract-concepts-constants";
 
 const apiKey = process.env.GEMINI_API_KEY?.trim();
 if (!apiKey) {
@@ -539,16 +540,38 @@ Example: {"questions":["What is your primary goal?","What is your timeline?"],"s
   };
 }
 
-export async function generateConceptsFromTranscript(
-  transcriptText: string,
-  videoTitle?: string,
-  channel?: string,
-  languageName?: string,
-  extractPrompt?: string,
-  usageContext?: GeminiUsageContext
+export type ConceptExtractionSource = "youtube_transcript" | "journal";
+
+export type GenerateConceptsFromLongTextOptions = {
+  source: ConceptExtractionSource;
+  /** e.g. video title or journal entry title */
+  displayTitle?: string;
+  /** e.g. YouTube channel (ignored for journal) */
+  displaySubtitle?: string;
+  languageName?: string;
+  extractPrompt?: string;
+  usageContext?: GeminiUsageContext;
+};
+
+/**
+ * Extract domain-tagged custom concepts from long text (YouTube transcript or journal).
+ * Same JSON schema for both sources.
+ */
+export async function generateConceptsFromLongText(
+  rawText: string,
+  options: GenerateConceptsFromLongTextOptions
 ): Promise<{
   groups: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
 }> {
+  const {
+    source,
+    displayTitle,
+    displaySubtitle,
+    languageName,
+    extractPrompt,
+    usageContext,
+  } = options;
+
   const languageInstruction =
     languageName && languageName !== "English"
       ? ` Write all concept titles, summaries, enrichmentPrompts, and domain names in ${languageName}.`
@@ -557,23 +580,38 @@ export async function generateConceptsFromTranscript(
     extractPrompt && extractPrompt.trim()
       ? `\n\nUser's extraction focus: ${extractPrompt.trim()}\nPrioritize concepts that align with this.`
       : "";
-  const model = getModel();
-  const context = [
-    videoTitle && `Video title: ${videoTitle}`,
-    channel && `Channel: ${channel}`,
-    "Transcript:",
-    transcriptText.slice(0, 12000),
-  ]
-    .filter(Boolean)
-    .join("\n\n");
 
-  const result = await model.generateContent(
-    `You are extracting clear, reusable concepts from a YouTube video transcript. The user wants to save these as custom concepts for future AI conversations.
-${languageInstruction}${userExtractionInstruction}
+  const bodyText = rawText.slice(0, EXTRACT_CONCEPTS_MAX_CHARS);
+
+  const contextLines: string[] = [];
+  if (source === "youtube_transcript") {
+    if (displayTitle) contextLines.push(`Video title: ${displayTitle}`);
+    if (displaySubtitle) contextLines.push(`Channel: ${displaySubtitle}`);
+    contextLines.push("Transcript:", bodyText);
+  } else {
+    if (displayTitle) contextLines.push(`Journal entry title: ${displayTitle}`);
+    contextLines.push("Journal text:", bodyText);
+  }
+  const context = contextLines.join("\n\n");
+
+  const sourceIntro =
+    source === "youtube_transcript"
+      ? `You are extracting clear, reusable concepts from a YouTube video transcript. The user wants to save these as custom concepts for future AI conversations.
 
 ${context}
 
-Extract 3-8 distinct concepts from the transcript. Each concept should be a clear idea, framework, or insight that would be useful to remember for future reference. Auto-tag each concept into a domain/group (e.g. "Psychology", "Productivity", "Finance", "Career", "Health", "Learning").
+Extract 3-8 distinct concepts from the transcript. Each concept should be a clear idea, framework, or insight that would be useful to remember for future reference.`
+      : `You are extracting clear, reusable concepts from the user's personal journal or reflective writing. The user wants to save these as custom concepts (and group them into frameworks/domains) for future AI conversations. Paraphrase and generalize; do not copy long verbatim quotes. Respect that this is private.
+
+${context}
+
+Extract 3-8 distinct concepts from the journal text. Each concept should be a clear idea, framework, value, or insight worth remembering.`;
+
+  const result = await getModel().generateContent(
+    `${sourceIntro}
+${languageInstruction}${userExtractionInstruction}
+
+Auto-tag each concept into a domain/group (e.g. "Psychology", "Productivity", "Finance", "Career", "Health", "Learning", "Relationships").
 
 Return a JSON object with exactly one key:
 - "groups": An array of objects, each with:
@@ -610,6 +648,27 @@ Example: {"groups":[{"domain":"Psychology","concepts":[{"title":"...","summary":
     }))
     .filter((g) => g.concepts.length > 0);
   return { groups };
+}
+
+/** @deprecated Prefer generateConceptsFromLongText with source: "youtube_transcript" */
+export async function generateConceptsFromTranscript(
+  transcriptText: string,
+  videoTitle?: string,
+  channel?: string,
+  languageName?: string,
+  extractPrompt?: string,
+  usageContext?: GeminiUsageContext
+): Promise<{
+  groups: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
+}> {
+  return generateConceptsFromLongText(transcriptText, {
+    source: "youtube_transcript",
+    displayTitle: videoTitle,
+    displaySubtitle: channel,
+    languageName,
+    extractPrompt,
+    usageContext,
+  });
 }
 
 export async function generateConceptsFromDomainAndAnswers(

@@ -39,6 +39,7 @@ import { getMentionTranslations } from "@/lib/mention-translations";
 import { getLandingTranslations } from "@/lib/landing-translations";
 import { APP_VERSION } from "@/lib/version";
 import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
+import { EXTRACT_CONCEPTS_MAX_CHARS } from "@/lib/extract-concepts-constants";
 import { getUiTranslations } from "@/lib/ui-translations";
 import { playSelectionChime } from "@/lib/selection-chime";
 import { stripMarkdown } from "@/lib/strip-markdown";
@@ -1907,6 +1908,7 @@ export default function ChatPage() {
     videoId: string;
     videoTitle?: string;
     channel?: string;
+    sourceType?: "youtube" | "journal";
     extractedConcepts?: {
       domain: string;
       concepts: { title: string; summary: string; enrichmentPrompt: string }[];
@@ -1928,6 +1930,7 @@ export default function ChatPage() {
     videoId: string;
     videoTitle?: string;
     channel?: string;
+    sourceType?: "youtube" | "journal";
     transcriptText: string;
     extractedConcepts?: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
   } | null>(null);
@@ -1956,11 +1959,19 @@ export default function ChatPage() {
   const [ccYoutubeTranscriptId, setCcYoutubeTranscriptId] = useState<string | null>(null);
   const [ccYoutubeLoading, setCcYoutubeLoading] = useState(false);
   const [ccYoutubeResult, setCcYoutubeResult] = useState<{
-    videoTitle: string | null;
-    channel: string | null;
+    source: "youtube" | "journal";
     groups: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
+    videoTitle?: string | null;
+    channel?: string | null;
+    journalTitle?: string | null;
+    journalTranscriptId?: string | null;
   } | null>(null);
   const [ccYoutubeError, setCcYoutubeError] = useState<string | null>(null);
+  const [ccImportJournalMode, setCcImportJournalMode] = useState(false);
+  const [ccJournalText, setCcJournalText] = useState("");
+  const [ccJournalTitle, setCcJournalTitle] = useState("");
+  const [ccJournalPersistLibrary, setCcJournalPersistLibrary] = useState(false);
+  const [ccJournalTranscriptId, setCcJournalTranscriptId] = useState<string | null>(null);
   const [ccAutoTagSuggestions, setCcAutoTagSuggestions] = useState<{
     suggestedGroupIds: string[];
     suggestedNewGroupNames: string[];
@@ -6290,7 +6301,8 @@ export default function ChatPage() {
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks created via AI. Use when you want the agent to think in terms of a topic (e.g. finance, health) with related concepts.</p>
                   <div className="flex items-center justify-end gap-1">
                     <button type="button" onClick={() => { setCgCreateDomain(""); setCgCreateStep(1); setCgCreateQuestions([]); setCgCreateAnswers({}); setCgCreateConcepts([]); setCgCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Framework</button>
-                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Add From YouTube Transcript</button>
+                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcImportJournalMode(false); setCcJournalText(""); setCcJournalTitle(""); setCcJournalPersistLibrary(false); setCcJournalTranscriptId(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Add From YouTube Transcript</button>
+                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcImportJournalMode(true); setCcJournalText(""); setCcJournalTitle(""); setCcJournalPersistLibrary(false); setCcJournalTranscriptId(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Import from journal</button>
                   </div>
                   {conceptGroups.length > 0 ? (
                     <div className="grid grid-cols-2 gap-2">
@@ -6352,27 +6364,58 @@ export default function ChatPage() {
                               onClick={() =>
                                 fetch(`/api/me/transcripts/${t._id}`)
                                   .then((r) => r.ok ? r.json() : Promise.reject())
-                                  .then((data) => setTranscriptModalTranscript({ id: t._id, videoId: data.videoId ?? t.videoId, videoTitle: data.videoTitle ?? t.videoTitle, channel: data.channel ?? t.channel, transcriptText: data.transcriptText ?? "", extractedConcepts: data.extractedConcepts }))
+                                  .then((data) =>
+                                    setTranscriptModalTranscript({
+                                      id: t._id,
+                                      videoId: data.videoId ?? t.videoId,
+                                      videoTitle: data.videoTitle ?? t.videoTitle,
+                                      channel: data.channel ?? t.channel,
+                                      sourceType: data.sourceType ?? t.sourceType,
+                                      transcriptText: data.transcriptText ?? "",
+                                      extractedConcepts: data.extractedConcepts,
+                                    })
+                                  )
                                   .catch(() => {})
                               }
                               onKeyDown={(e) => e.key === "Enter" && (e.currentTarget as HTMLElement).click()}
                             >
-                              <a
-                                href={`https://www.youtube.com/watch?v=${t.videoId}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={(e) => e.stopPropagation()}
-                                className="text-sm font-medium truncate block hover:underline text-foreground"
-                              >
-                                {t.videoTitle || t.videoId}
-                              </a>
-                              {t.channel && <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">{t.channel}</p>}
+                              {t.sourceType === "journal" ? (
+                                <span className="text-sm font-medium truncate block text-foreground">
+                                  {t.videoTitle || "Journal entry"}
+                                </span>
+                              ) : (
+                                <a
+                                  href={`https://www.youtube.com/watch?v=${t.videoId}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="text-sm font-medium truncate block hover:underline text-foreground"
+                                >
+                                  {t.videoTitle || t.videoId}
+                                </a>
+                              )}
+                              {t.sourceType === "journal" ? (
+                                <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">Journal</p>
+                              ) : (
+                                t.channel && <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">{t.channel}</p>
+                              )}
                             </div>
                             <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
                               <button
                                 type="button"
                                 onClick={() => {
-                                  setCcYoutubeTranscriptId(t._id);
+                                  if (t.sourceType === "journal") {
+                                    setCcImportJournalMode(true);
+                                    setCcJournalTranscriptId(t._id);
+                                    setCcYoutubeTranscriptId(null);
+                                    setCcJournalText("");
+                                    setCcJournalTitle(t.videoTitle ?? "");
+                                    setCcJournalPersistLibrary(false);
+                                  } else {
+                                    setCcImportJournalMode(false);
+                                    setCcYoutubeTranscriptId(t._id);
+                                    setCcJournalTranscriptId(null);
+                                  }
                                   setCcYoutubeUrl("");
                                   setCcYoutubeResult(null);
                                   setCcYoutubeError(null);
@@ -6767,15 +6810,23 @@ export default function ChatPage() {
                 ✕
               </button>
               <h2 className="font-semibold text-lg truncate">{transcriptModalTranscript.videoTitle || "Transcript"}</h2>
-              {transcriptModalTranscript.channel && <p className="text-sm text-neutral-500 dark:text-neutral-400 truncate mt-0.5">{transcriptModalTranscript.channel}</p>}
-              <a
-                href={`https://www.youtube.com/watch?v=${transcriptModalTranscript.videoId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-blue-600 dark:text-blue-400 hover:underline mt-1 inline-block"
-              >
-                Open on YouTube
-              </a>
+              {transcriptModalTranscript.sourceType === "journal" ? (
+                <p className="text-sm text-neutral-500 dark:text-neutral-400 truncate mt-0.5">Journal</p>
+              ) : (
+                transcriptModalTranscript.channel && (
+                  <p className="text-sm text-neutral-500 dark:text-neutral-400 truncate mt-0.5">{transcriptModalTranscript.channel}</p>
+                )
+              )}
+              {transcriptModalTranscript.sourceType !== "journal" && (
+                <a
+                  href={`https://www.youtube.com/watch?v=${transcriptModalTranscript.videoId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-blue-600 dark:text-blue-400 hover:underline mt-1 inline-block"
+                >
+                  Open on YouTube
+                </a>
+              )}
             </div>
             {transcriptModalTranscript.extractedConcepts && transcriptModalTranscript.extractedConcepts.length > 0 && (
               <div className="px-4 pb-4 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
@@ -6806,7 +6857,12 @@ export default function ChatPage() {
                               enrichmentPrompt: c.enrichmentPrompt,
                               createdAt: "",
                               updatedAt: "",
-                              sourceVideoTitle: transcriptModalTranscript.videoTitle,
+                              sourceVideoTitle:
+                                transcriptModalTranscript.sourceType === "journal"
+                                  ? transcriptModalTranscript.videoTitle?.trim()
+                                    ? `Journal · ${transcriptModalTranscript.videoTitle.trim()}`
+                                    : "Journal entry"
+                                  : transcriptModalTranscript.videoTitle,
                             });
                             setTranscriptExtractedConceptOpen({ gi, ci });
                           }}
@@ -6866,7 +6922,18 @@ export default function ChatPage() {
             <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
               <button
                 onClick={() => {
-                  setCcYoutubeTranscriptId(transcriptModalTranscript.id);
+                  if (transcriptModalTranscript.sourceType === "journal") {
+                    setCcImportJournalMode(true);
+                    setCcJournalTranscriptId(transcriptModalTranscript.id);
+                    setCcYoutubeTranscriptId(null);
+                    setCcJournalText("");
+                    setCcJournalTitle(transcriptModalTranscript.videoTitle ?? "");
+                    setCcJournalPersistLibrary(false);
+                  } else {
+                    setCcImportJournalMode(false);
+                    setCcYoutubeTranscriptId(transcriptModalTranscript.id);
+                    setCcJournalTranscriptId(null);
+                  }
                   setCcYoutubeUrl("");
                   setCcYoutubeResult(null);
                   setCcYoutubeError(null);
@@ -9215,7 +9282,20 @@ export default function ChatPage() {
       {ccYoutubeModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
-          onClick={() => !ccYoutubeLoading && (setCcYoutubeModal(false), setCcYoutubeUrl(""), setCcYoutubeExtractPrompt(""), setCcYoutubeTranscriptId(null), setCcYoutubeResult(null), setCcYoutubeError(null))}
+          onClick={() =>
+            !ccYoutubeLoading &&
+            (setCcYoutubeModal(false),
+            setCcYoutubeUrl(""),
+            setCcYoutubeExtractPrompt(""),
+            setCcYoutubeTranscriptId(null),
+            setCcYoutubeResult(null),
+            setCcYoutubeError(null),
+            setCcImportJournalMode(false),
+            setCcJournalText(""),
+            setCcJournalTitle(""),
+            setCcJournalPersistLibrary(false),
+            setCcJournalTranscriptId(null))
+          }
           aria-modal
           role="dialog"
         >
@@ -9224,6 +9304,145 @@ export default function ChatPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {!ccYoutubeResult ? (
+              ccImportJournalMode ? (
+              <>
+                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                  <h2 className="font-semibold text-lg mb-2">
+                    {ccJournalTranscriptId ? "Re-extract from saved journal" : "Concepts from journal"}
+                  </h2>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {ccJournalTranscriptId
+                      ? "Use a different extraction focus and extract concepts again from your saved journal."
+                      : "Paste reflective or journal text. We extract concepts and auto-tag them into frameworks (domains). Extraction sends this text to the AI."}
+                  </p>
+                  <p className="text-xs text-amber-700 dark:text-amber-400 mt-2">
+                    Only the first {EXTRACT_CONCEPTS_MAX_CHARS.toLocaleString()} characters are used for extraction (longer entries are truncated).
+                  </p>
+                </div>
+                <div className="p-4 flex-1 space-y-3 overflow-y-auto">
+                  {ccYoutubeError && (
+                    <p className="text-sm text-red-600 dark:text-red-400">{ccYoutubeError}</p>
+                  )}
+                  {!ccJournalTranscriptId && (
+                    <textarea
+                      value={ccJournalText}
+                      onChange={(e) => setCcJournalText(e.target.value)}
+                      placeholder="Paste your journal entry here…"
+                      rows={14}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y min-h-[200px]"
+                      disabled={ccYoutubeLoading}
+                      dir={isRtlLanguage(language) ? "rtl" : undefined}
+                    />
+                  )}
+                  <div>
+                    <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                      Entry title (optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={ccJournalTitle}
+                      onChange={(e) => setCcJournalTitle(e.target.value)}
+                      placeholder="e.g. Morning pages — March 2025"
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                      disabled={ccYoutubeLoading || !!ccJournalTranscriptId}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                      What to extract (optional)
+                    </label>
+                    <textarea
+                      value={ccYoutubeExtractPrompt}
+                      onChange={(e) => setCcYoutubeExtractPrompt(e.target.value)}
+                      placeholder="e.g. Focus on career, relationships, or habits…"
+                      rows={2}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y"
+                      disabled={ccYoutubeLoading}
+                    />
+                  </div>
+                  <label className="flex items-start gap-2 text-sm text-neutral-700 dark:text-neutral-300 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={ccJournalPersistLibrary}
+                      onChange={(e) => setCcJournalPersistLibrary(e.target.checked)}
+                      disabled={ccYoutubeLoading || !!ccJournalTranscriptId}
+                      className="mt-1 rounded border-neutral-300 dark:border-neutral-600"
+                    />
+                    <span>Save journal text to library (for re-extract later).</span>
+                  </label>
+                </div>
+                <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      !ccYoutubeLoading &&
+                      (setCcYoutubeModal(false),
+                      setCcYoutubeUrl(""),
+                      setCcYoutubeExtractPrompt(""),
+                      setCcYoutubeTranscriptId(null),
+                      setCcYoutubeResult(null),
+                      setCcYoutubeError(null),
+                      setCcImportJournalMode(false),
+                      setCcJournalText(""),
+                      setCcJournalTitle(""),
+                      setCcJournalPersistLibrary(false),
+                      setCcJournalTranscriptId(null))
+                    }
+                    className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
+                  >
+                    {getUiTranslations(language).cancel}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if ((!ccJournalText.trim() && !ccJournalTranscriptId) || ccYoutubeLoading) return;
+                      setCcYoutubeLoading(true);
+                      setCcYoutubeResult(null);
+                      setCcYoutubeError(null);
+                      try {
+                        const body: Record<string, unknown> = {
+                          language,
+                          extractPrompt: ccYoutubeExtractPrompt.trim() || undefined,
+                        };
+                        if (ccJournalTranscriptId) {
+                          body.transcriptId = ccJournalTranscriptId;
+                          if (ccJournalTitle.trim()) body.title = ccJournalTitle.trim();
+                        } else {
+                          body.text = ccJournalText.trim();
+                          if (ccJournalTitle.trim()) body.title = ccJournalTitle.trim();
+                          if (ccJournalPersistLibrary) body.persist = true;
+                        }
+                        const res = await fetch("/api/me/custom-concepts/from-journal", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify(body),
+                        });
+                        const data = await res.json();
+                        if (res.ok && data.groups) {
+                          setCcYoutubeResult({
+                            source: "journal",
+                            groups: data.groups,
+                            journalTitle: data.journalTitle ?? null,
+                            journalTranscriptId: data.journalTranscriptId ?? null,
+                          });
+                          refetchTranscripts();
+                        } else {
+                          setCcYoutubeError(data.error ?? "Failed to extract concepts");
+                        }
+                      } catch {
+                        setCcYoutubeError("Failed to extract concepts");
+                      } finally {
+                        setCcYoutubeLoading(false);
+                      }
+                    }}
+                    disabled={(!ccJournalText.trim() && !ccJournalTranscriptId) || ccYoutubeLoading}
+                    className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                  >
+                    {ccYoutubeLoading ? "Extracting…" : "Extract concepts"}
+                  </button>
+                </div>
+              </>
+              ) : (
               <>
                 <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
                   <h2 className="font-semibold text-lg mb-2">
@@ -9265,12 +9484,27 @@ export default function ChatPage() {
                 </div>
                 <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
                   <button
-                    onClick={() => !ccYoutubeLoading && (setCcYoutubeModal(false), setCcYoutubeUrl(""), setCcYoutubeExtractPrompt(""), setCcYoutubeTranscriptId(null), setCcYoutubeResult(null), setCcYoutubeError(null))}
+                    type="button"
+                    onClick={() =>
+                      !ccYoutubeLoading &&
+                      (setCcYoutubeModal(false),
+                      setCcYoutubeUrl(""),
+                      setCcYoutubeExtractPrompt(""),
+                      setCcYoutubeTranscriptId(null),
+                      setCcYoutubeResult(null),
+                      setCcYoutubeError(null),
+                      setCcImportJournalMode(false),
+                      setCcJournalText(""),
+                      setCcJournalTitle(""),
+                      setCcJournalPersistLibrary(false),
+                      setCcJournalTranscriptId(null))
+                    }
                     className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
                   >
                     {getUiTranslations(language).cancel}
                   </button>
                   <button
+                    type="button"
                     onClick={async () => {
                       if ((!ccYoutubeUrl.trim() && !ccYoutubeTranscriptId) || ccYoutubeLoading) return;
                       setCcYoutubeLoading(true);
@@ -9294,6 +9528,7 @@ export default function ChatPage() {
                         const data = await res.json();
                         if (res.ok && data.groups) {
                           setCcYoutubeResult({
+                            source: "youtube",
                             videoTitle: data.videoTitle ?? null,
                             channel: data.channel ?? null,
                             groups: data.groups,
@@ -9315,14 +9550,29 @@ export default function ChatPage() {
                   </button>
                 </div>
               </>
+            )
             ) : (
               <>
                 <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
                   <h2 className="font-semibold text-lg mb-1">Review concepts</h2>
-                  {ccYoutubeResult.videoTitle && (
+                  {ccYoutubeResult.source === "youtube" && ccYoutubeResult.videoTitle && (
                     <p className="text-sm text-neutral-600 dark:text-neutral-400 truncate" title={ccYoutubeResult.videoTitle}>
                       {ccYoutubeResult.videoTitle}
                       {ccYoutubeResult.channel && ` · ${ccYoutubeResult.channel}`}
+                    </p>
+                  )}
+                  {ccYoutubeResult.source === "journal" && (
+                    <p
+                      className="text-sm text-neutral-600 dark:text-neutral-400 truncate"
+                      title={
+                        ccYoutubeResult.journalTitle?.trim()
+                          ? `Journal · ${ccYoutubeResult.journalTitle.trim()}`
+                          : "Journal entry"
+                      }
+                    >
+                      {ccYoutubeResult.journalTitle?.trim()
+                        ? `Journal · ${ccYoutubeResult.journalTitle.trim()}`
+                        : "Journal entry"}
                     </p>
                   )}
                 </div>
@@ -9435,6 +9685,12 @@ export default function ChatPage() {
                       if (ccYoutubeLoading || !ccYoutubeResult) return;
                       setCcYoutubeLoading(true);
                       try {
+                        const provenanceSource =
+                          ccYoutubeResult.source === "youtube"
+                            ? ccYoutubeResult.videoTitle ?? undefined
+                            : ccYoutubeResult.journalTitle?.trim()
+                              ? `Journal · ${ccYoutubeResult.journalTitle.trim()}`
+                              : "Journal entry";
                         for (const group of ccYoutubeResult.groups) {
                           const validConcepts = group.concepts.filter(
                             (c) => c.title?.trim() && c.summary?.trim() && c.enrichmentPrompt?.trim()
@@ -9446,7 +9702,7 @@ export default function ChatPage() {
                             body: JSON.stringify({
                               domain: group.domain,
                               concepts: validConcepts,
-                              sourceVideoTitle: ccYoutubeResult.videoTitle ?? undefined,
+                              sourceVideoTitle: provenanceSource,
                             }),
                           });
                           if (cgRes.ok) refetchScore();
@@ -9456,6 +9712,11 @@ export default function ChatPage() {
                         setCcYoutubeTranscriptId(null);
                         setCcYoutubeExtractPrompt("");
                         setCcYoutubeResult(null);
+                        setCcImportJournalMode(false);
+                        setCcJournalText("");
+                        setCcJournalTitle("");
+                        setCcJournalPersistLibrary(false);
+                        setCcJournalTranscriptId(null);
                         refetchCustomConcepts();
                         refetchConceptGroups();
                         refetchTranscripts();
