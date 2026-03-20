@@ -192,15 +192,15 @@ ${conversation}`
   };
 }
 
-/** Summarize a framework (concept group) with chain-of-thought chips — same chip style as LTM summaries. */
-export async function generateFrameworkSummary(
+/** Chain-of-thought chips for a framework (concept group) — same chip style as LTM summaries; no narrative summary. */
+export async function generateFrameworkChainOfThought(
   frameworkTitle: string,
   concepts: { title: string; summary: string; enrichmentPrompt: string }[],
   languageName?: string,
   usageContext?: GeminiUsageContext
-): Promise<{ summary: string; chainOfThought: string[] }> {
+): Promise<{ chainOfThought: string[] }> {
   if (concepts.length === 0) {
-    return { summary: "", chainOfThought: [] };
+    return { chainOfThought: [] };
   }
 
   const conceptsBlock = concepts
@@ -212,14 +212,14 @@ export async function generateFrameworkSummary(
 
   const languageInstruction =
     languageName && languageName !== "English"
-      ? ` Write the summary and chainOfThought in ${languageName}.`
+      ? ` Write the chainOfThought in ${languageName}.`
       : "";
 
   const model = getModel();
   const result = await model.generateContent(
-    `You are synthesizing a user's framework: a named collection of related custom concepts (ideas, goals, or principles they defined). Return a JSON object with exactly two keys:
+    `You are synthesizing a user's framework: a named collection of related custom concepts (ideas, goals, or principles they defined). Return a JSON object with exactly one key:
 - "chainOfThought": An array of 4-6 reasoning steps that show how these concepts connect and what unifies this framework. Each step is MAX 3 WORDS. Use plain, everyday language—no jargon, no abstract terms. Each chip must be instantly understandable at a glance. Prefer concrete phrases that capture themes across the concepts (e.g. "Work-life balance", "Career pivot").
-- "summary": A 2-4 paragraph narrative explaining what this framework is as a whole: how the concepts relate, what life area or domain they cover, and how someone might use these ideas together.
+Do not include a narrative summary or any other keys.
 ${languageInstruction}
 
 Return ONLY valid JSON, no markdown or extra text.
@@ -232,17 +232,13 @@ ${conceptsBlock}`
   const text = result.response.text().trim();
   const cleaned = text.replace(/^```json\s*/i, "").replace(/\s*```\s*$/i, "").trim();
   const parsed = JSON.parse(cleaned) as {
-    summary?: string;
     chainOfThought?: string[];
   };
   const chainOfThought = Array.isArray(parsed.chainOfThought)
     ? parsed.chainOfThought.filter((s): s is string => typeof s === "string")
     : [];
   if (usageContext) recordGeminiUsageFromResult(result, usageContext);
-  return {
-    summary: parsed.summary ?? "",
-    chainOfThought,
-  };
+  return { chainOfThought };
 }
 
 export async function generateJournalCheckpointSuggestion(

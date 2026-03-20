@@ -115,9 +115,7 @@ export interface ConceptGroup {
   conceptIds: string[];
   /** When true, group was user-created (add existing concepts). Deleting does not delete concepts. */
   isCustomGroup?: boolean;
-  /** AI-generated narrative for the whole framework (optional). */
-  summary?: string;
-  /** Chain-of-thought chips (same style as long-term memory summaries). */
+  /** Chain-of-thought chips only (same style as long-term memory summaries). */
   chainOfThought?: string[];
   createdAt: Date;
   updatedAt: Date;
@@ -1098,9 +1096,9 @@ export async function updateConceptGroup(
   updates: {
     title?: string;
     conceptIds?: string[];
-    summary?: string;
     chainOfThought?: string[];
-  }
+  },
+  options?: { unsetLegacyFrameworkSummary?: boolean }
 ): Promise<boolean> {
   const database = await getDb();
   let oid: ObjectId;
@@ -1109,13 +1107,19 @@ export async function updateConceptGroup(
   } catch {
     return false;
   }
+  const payload: {
+    $set: Record<string, unknown>;
+    $unset?: Record<string, "">;
+  } = {
+    $set: { ...updates, updatedAt: new Date() },
+  };
+  if (options?.unsetLegacyFrameworkSummary) {
+    payload.$unset = { summary: "" };
+  }
   const result = await database
     .collection<ConceptGroupDoc>("concept_groups")
-    .updateOne(
-      { _id: oid, userId },
-      { $set: { ...updates, updatedAt: new Date() } }
-    );
-  /* matchedCount: idempotent updates (same summary) still succeed */
+    .updateOne({ _id: oid, userId }, payload);
+  /* matchedCount: idempotent updates still succeed */
   return result.matchedCount > 0;
 }
 

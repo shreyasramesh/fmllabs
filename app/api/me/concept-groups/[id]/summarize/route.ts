@@ -5,7 +5,7 @@ import {
   getCustomConceptsByIds,
   updateConceptGroup,
 } from "@/lib/db";
-import { generateFrameworkSummary } from "@/lib/gemini";
+import { generateFrameworkChainOfThought } from "@/lib/gemini";
 import { getLanguageName, isValidLanguageCode } from "@/lib/languages";
 
 export async function POST(
@@ -42,7 +42,7 @@ export async function POST(
 
     if (!group.conceptIds.length) {
       return NextResponse.json(
-        { error: "Add at least one concept to this framework before summarizing." },
+        { error: "Add at least one concept to this framework first." },
         { status: 400 }
       );
     }
@@ -55,7 +55,7 @@ export async function POST(
       );
     }
 
-    const { summary, chainOfThought } = await generateFrameworkSummary(
+    const { chainOfThought } = await generateFrameworkChainOfThought(
       group.title,
       concepts.map((c) => ({
         title: c.title,
@@ -63,16 +63,18 @@ export async function POST(
         enrichmentPrompt: c.enrichmentPrompt,
       })),
       languageName,
-      { userId, eventType: "framework_summarize" }
+      { userId, eventType: "framework_chain_of_thought" }
     );
 
-    const updated = await updateConceptGroup(id, userId, {
-      summary,
-      chainOfThought,
-    });
+    const updated = await updateConceptGroup(
+      id,
+      userId,
+      { chainOfThought },
+      { unsetLegacyFrameworkSummary: true }
+    );
     if (!updated) {
       return NextResponse.json(
-        { error: "Failed to save summary" },
+        { error: "Failed to save chain-of-thought" },
         { status: 500 }
       );
     }
@@ -91,9 +93,9 @@ export async function POST(
 
     return NextResponse.json({ ...fresh, concepts: conceptsOut });
   } catch (err) {
-    console.error("Framework summarize error:", err);
+    console.error("Framework chain-of-thought error:", err);
     return NextResponse.json(
-      { error: "Failed to summarize framework" },
+      { error: "Failed to generate chain-of-thought" },
       { status: 500 }
     );
   }

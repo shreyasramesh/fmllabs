@@ -149,8 +149,6 @@ interface ConceptGroupItem {
   conceptIds: string[];
   isCustomGroup?: boolean;
   concepts?: CustomConceptItem[];
-  /** AI-generated; same style as long-term memory */
-  summary?: string;
   chainOfThought?: string[];
 }
 
@@ -10909,7 +10907,6 @@ export default function ChatPage() {
                             g._id === data._id
                               ? {
                                   ...g,
-                                  summary: data.summary,
                                   chainOfThought: data.chainOfThought,
                                 }
                               : g
@@ -10923,15 +10920,14 @@ export default function ChatPage() {
                   className="px-3 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {cgFrameworkSummarizing
-                    ? "Summarizing…"
-                    : cgDetailModal.summary?.trim() ||
-                        (cgDetailModal.chainOfThought && cgDetailModal.chainOfThought.length > 0)
-                      ? "Regenerate summary"
-                      : "Summarize framework"}
+                    ? "Generating…"
+                    : cgDetailModal.chainOfThought && cgDetailModal.chainOfThought.length > 0
+                      ? "Regenerate chips"
+                      : "Generate chain-of-thought"}
                 </button>
                 {(cgDetailModal.concepts ?? []).length === 0 && (
                   <span className="text-xs text-neutral-500 dark:text-neutral-400">
-                    Add concepts to this framework to summarize.
+                    Add concepts to this framework first.
                   </span>
                 )}
               </div>
@@ -10963,20 +10959,6 @@ export default function ChatPage() {
                   </div>
                 </div>
               )}
-
-              {cgDetailModal.summary?.trim() ? (
-                <div>
-                  <label className="block text-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1">
-                    Framework summary
-                  </label>
-                  <div
-                    className="text-sm font-medium text-neutral-800 dark:text-neutral-200 whitespace-pre-wrap"
-                    dir={isRtlLanguage(language) ? "rtl" : undefined}
-                  >
-                    {cgDetailModal.summary}
-                  </div>
-                </div>
-              ) : null}
 
               {(cgDetailModal.concepts ?? []).length > 0 ? (
                 <div className="space-y-2">
