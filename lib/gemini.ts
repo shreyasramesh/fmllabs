@@ -1,6 +1,10 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { recordUsageEvent, computeGeminiCost } from "@/lib/usage";
-import { EXTRACT_CONCEPTS_MAX_CHARS } from "@/lib/extract-concepts-constants";
+import {
+  EXTRACT_CONCEPTS_CHUNK_CHARS,
+  EXTRACT_CONCEPTS_CHUNK_OVERLAP_CHARS,
+  EXTRACT_CONCEPTS_MAX_TOTAL_CHARS,
+} from "@/lib/extract-concepts-constants";
 
 const apiKey = process.env.GEMINI_API_KEY?.trim();
 if (!apiKey) {
@@ -542,6 +546,8 @@ Example: {"questions":["What is your primary goal?","What is your timeline?"],"s
 
 export type ConceptExtractionSource = "youtube_transcript" | "journal";
 
+export type ChunkProgressInfo = { pass: number; total: number };
+
 export type GenerateConceptsFromLongTextOptions = {
   source: ConceptExtractionSource;
   /** e.g. video title or journal entry title */
@@ -551,10 +557,184 @@ export type GenerateConceptsFromLongTextOptions = {
   languageName?: string;
   extractPrompt?: string;
   usageContext?: GeminiUsageContext;
+  /** Called before each Gemini pass when text is split into multiple chunks */
+  onChunkProgress?: (info: ChunkProgressInfo) => void;
 };
+
+type ConceptGroupRow = {
+  domain: string;
+  concepts: { title: string; summary: string; enrichmentPrompt: string }[];
+};
+
+const CONCEPT_EXTRACTION_GENERATION_CONFIG = {
+  maxOutputTokens: 16384,
+  temperature: 0.35,
+} as const;
+
+/** Split long text into overlapping chunks for multiple extraction passes */
+function chunkTextForExtraction(
+  text: string,
+  chunkSize: number,
+  overlap: number
+): string[] {
+  const t = text;
+  if (t.length <= chunkSize) return [t];
+  const out: string[] = [];
+  let start = 0;
+  while (start < t.length) {
+    const end = Math.min(start + chunkSize, t.length);
+    out.push(t.slice(start, end));
+    if (end >= t.length) break;
+    start = Math.max(0, end - overlap);
+  }
+  return out;
+}
+
+function parseConceptGroupsResponse(rawResponse: string): ConceptGroupRow[] {
+  const text = rawResponse.trim();
+  const cleaned = text.replace(/^```json\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  const parsed = JSON.parse(cleaned) as {
+    groups?: { domain?: string; concepts?: { title?: string; summary?: string; enrichmentPrompt?: string }[] }[];
+  };
+  const rawGroups = Array.isArray(parsed.groups) ? parsed.groups : [];
+  return rawGroups
+    .filter((g) => g && (g.domain || (g.concepts && g.concepts.length > 0)))
+    .map((g) => ({
+      domain: (g.domain ?? "General").trim() || "General",
+      concepts: (Array.isArray(g.concepts) ? g.concepts : [])
+        .filter((c) => c && (c.title || c.summary || c.enrichmentPrompt))
+        .map((c) => ({
+          title: (c.title ?? "Concept").trim() || "Concept",
+          summary: (c.summary ?? "").trim(),
+          enrichmentPrompt: (c.enrichmentPrompt ?? "").trim(),
+        }))
+        .filter((c) => c.summary || c.enrichmentPrompt),
+    }))
+    .filter((g) => g.concepts.length > 0);
+}
+
+/** Merge chunk results: same domain (case-insensitive), dedupe concepts by title */
+function mergeConceptGroupsFromChunks(chunks: ConceptGroupRow[][]): ConceptGroupRow[] {
+  const flat = chunks.flat();
+  const map = new Map<string, { domain: string; concepts: ConceptGroupRow["concepts"] }>();
+  const domainKey = (d: string) =>
+    d.trim().toLowerCase().replace(/\s+/g, " ") || "general";
+  for (const g of flat) {
+    const key = domainKey(g.domain || "General");
+    const display = (g.domain || "General").trim() || "General";
+    const cur = map.get(key);
+    if (!cur) {
+      map.set(key, { domain: display, concepts: [...g.concepts] });
+    } else {
+      cur.concepts.push(...g.concepts);
+    }
+  }
+  const out: ConceptGroupRow[] = [];
+  for (const { domain, concepts } of map.values()) {
+    const seenTitles = new Set<string>();
+    const unique = concepts.filter((c) => {
+      const k = c.title.trim().toLowerCase();
+      if (!k || seenTitles.has(k)) return false;
+      seenTitles.add(k);
+      return true;
+    });
+    if (unique.length) out.push({ domain, concepts: unique });
+  }
+  return out;
+}
+
+function buildConceptExtractionPrompt(
+  source: ConceptExtractionSource,
+  bodyText: string,
+  options: {
+    displayTitle?: string;
+    displaySubtitle?: string;
+    partIndex: number;
+    partCount: number;
+    languageInstruction: string;
+    userExtractionInstruction: string;
+  }
+): string {
+  const {
+    displayTitle,
+    displaySubtitle,
+    partIndex,
+    partCount,
+    languageInstruction,
+    userExtractionInstruction,
+  } = options;
+
+  const multiPartNote =
+    partCount > 1
+      ? `\n\nIMPORTANT: The full ${source === "youtube_transcript" ? "transcript" : "text"} was split for processing. Below is ONLY part ${partIndex} of ${partCount}. Extract every substantive idea that appears in THIS segment only — do not invent content from other parts.`
+      : "";
+
+  const contextLines: string[] = [];
+  if (source === "youtube_transcript") {
+    if (displayTitle) contextLines.push(`Video title: ${displayTitle}`);
+    if (displaySubtitle) contextLines.push(`Channel: ${displaySubtitle}`);
+    contextLines.push("Transcript:", bodyText);
+  } else {
+    if (displayTitle) contextLines.push(`Journal entry title: ${displayTitle}`);
+    contextLines.push("Journal text:", bodyText);
+  }
+  const context = contextLines.join("\n\n");
+
+  const coverageInstruction =
+    source === "youtube_transcript"
+      ? `Extract every distinct, substantive concept from the ${partCount > 1 ? "transcript segment" : "transcript"}: frameworks, mental models, definitions, tactics, arguments, causes, warnings, stories-with-a-moral, and insights worth revisiting. There is NO maximum count — be exhaustive for this ${partCount > 1 ? "segment" : "video"}. Dense or long-form talks may yield many concepts. Skip only filler, greetings, and pure repetition.`
+      : `Extract every distinct, substantive concept from the ${partCount > 1 ? "text segment" : "journal text"}: values, insights, patterns, commitments, and ideas worth revisiting. There is NO maximum count — be thorough. Paraphrase and generalize; do not copy long verbatim quotes. Respect privacy.`;
+
+  const sourceIntro =
+    source === "youtube_transcript"
+      ? `You are extracting clear, reusable concepts from a YouTube video transcript. The user wants to save these as custom concepts for future AI conversations.
+
+${context}
+${multiPartNote}
+
+${coverageInstruction}`
+      : `You are extracting clear, reusable concepts from the user's personal journal or reflective writing. The user wants to save these as custom concepts (and group them into frameworks/domains) for future AI conversations.
+
+${context}
+${multiPartNote}
+
+${coverageInstruction}`;
+
+  return `${sourceIntro}
+${languageInstruction}${userExtractionInstruction}
+
+Auto-tag each concept into a domain/framework (e.g. "Psychology", "Productivity", "Finance", "Career", "Health", "Learning", "Relationships"). Use specific domains when they fit; split into multiple domains rather than overloading one bucket.
+
+Return a JSON object with exactly one key:
+- "groups": An array of objects, each with:
+  - "domain": A short domain name (2-5 words). Group concepts by domain/framework.
+  - "concepts": An array of objects, each with:
+    - "title": Short 3-8 word title
+    - "summary": 2-4 paragraph narrative
+    - "enrichmentPrompt": 1-2 sentence summary for the AI coach. State the core idea, then when it's relevant (e.g. "Relevant when user is X, Y, or Z."). 25-40 words. Written so the AI can match this concept to user dilemmas.
+
+If a concept doesn't fit a clear domain, use "General" or infer from context. Within this response, merge domains that are very similar (e.g. "Psychology" and "Behavioral Science" → "Psychology").
+
+Return ONLY valid JSON, no markdown or extra text.
+Example: {"groups":[{"domain":"Psychology","concepts":[{"title":"...","summary":"...","enrichmentPrompt":"..."}]}]}`;
+}
+
+async function generateConceptsOnePass(
+  prompt: string,
+  usageContext?: GeminiUsageContext
+): Promise<ConceptGroupRow[]> {
+  const result = await getModel().generateContent({
+    contents: [{ role: "user", parts: [{ text: prompt }]}],
+    generationConfig: CONCEPT_EXTRACTION_GENERATION_CONFIG,
+  });
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const text = result.response.text().trim();
+  return parseConceptGroupsResponse(text);
+}
 
 /**
  * Extract domain-tagged custom concepts from long text (YouTube transcript or journal).
+ * Long input is processed in overlapping chunks; results are merged and deduplicated.
  * Same JSON schema for both sources.
  */
 export async function generateConceptsFromLongText(
@@ -570,6 +750,7 @@ export async function generateConceptsFromLongText(
     languageName,
     extractPrompt,
     usageContext,
+    onChunkProgress,
   } = options;
 
   const languageInstruction =
@@ -578,76 +759,42 @@ export async function generateConceptsFromLongText(
       : "";
   const userExtractionInstruction =
     extractPrompt && extractPrompt.trim()
-      ? `\n\nUser's extraction focus: ${extractPrompt.trim()}\nPrioritize concepts that align with this.`
+      ? `\n\nUser's extraction focus: ${extractPrompt.trim()}\nPrioritize concepts that align with this, but still extract other important ideas from the text.`
       : "";
 
-  const bodyText = rawText.slice(0, EXTRACT_CONCEPTS_MAX_CHARS);
-
-  const contextLines: string[] = [];
-  if (source === "youtube_transcript") {
-    if (displayTitle) contextLines.push(`Video title: ${displayTitle}`);
-    if (displaySubtitle) contextLines.push(`Channel: ${displaySubtitle}`);
-    contextLines.push("Transcript:", bodyText);
-  } else {
-    if (displayTitle) contextLines.push(`Journal entry title: ${displayTitle}`);
-    contextLines.push("Journal text:", bodyText);
+  let text = rawText.trim();
+  if (text.length > EXTRACT_CONCEPTS_MAX_TOTAL_CHARS) {
+    text = text.slice(0, EXTRACT_CONCEPTS_MAX_TOTAL_CHARS);
   }
-  const context = contextLines.join("\n\n");
 
-  const sourceIntro =
-    source === "youtube_transcript"
-      ? `You are extracting clear, reusable concepts from a YouTube video transcript. The user wants to save these as custom concepts for future AI conversations.
-
-${context}
-
-Extract 3-8 distinct concepts from the transcript. Each concept should be a clear idea, framework, or insight that would be useful to remember for future reference.`
-      : `You are extracting clear, reusable concepts from the user's personal journal or reflective writing. The user wants to save these as custom concepts (and group them into frameworks/domains) for future AI conversations. Paraphrase and generalize; do not copy long verbatim quotes. Respect that this is private.
-
-${context}
-
-Extract 3-8 distinct concepts from the journal text. Each concept should be a clear idea, framework, value, or insight worth remembering.`;
-
-  const result = await getModel().generateContent(
-    `${sourceIntro}
-${languageInstruction}${userExtractionInstruction}
-
-Auto-tag each concept into a domain/group (e.g. "Psychology", "Productivity", "Finance", "Career", "Health", "Learning", "Relationships").
-
-Return a JSON object with exactly one key:
-- "groups": An array of objects, each with:
-  - "domain": A short domain name (2-4 words). Group concepts by domain.
-  - "concepts": An array of objects, each with:
-    - "title": Short 3-6 word title
-    - "summary": 2-4 paragraph narrative
-    - "enrichmentPrompt": 1-2 sentence summary for the AI coach. State the core idea, then when it's relevant (e.g., "Relevant when user is X, Y, or Z."). 25-40 words. Written so the AI can match this concept to user dilemmas.
-
-If a concept doesn't fit a clear domain, use "General" or infer from context. Merge domains that are very similar (e.g. "Psychology" and "Behavioral Science" → "Psychology").
-
-Return ONLY valid JSON, no markdown or extra text.
-Example: {"groups":[{"domain":"Psychology","concepts":[{"title":"...","summary":"...","enrichmentPrompt":"..."}]}]}`
+  const chunks = chunkTextForExtraction(
+    text,
+    EXTRACT_CONCEPTS_CHUNK_CHARS,
+    EXTRACT_CONCEPTS_CHUNK_OVERLAP_CHARS
   );
-  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
-  const text = result.response.text().trim();
-  const cleaned = text.replace(/^```json\s*/i, "").replace(/\s*```\s*$/i, "").trim();
-  const parsed = JSON.parse(cleaned) as {
-    groups?: { domain?: string; concepts?: { title?: string; summary?: string; enrichmentPrompt?: string }[] }[];
-  };
-  const rawGroups = Array.isArray(parsed.groups) ? parsed.groups : [];
-  const groups = rawGroups
-    .filter((g) => g && (g.domain || (g.concepts && g.concepts.length > 0)))
-    .map((g) => ({
-      domain: (g.domain ?? "General").trim() || "General",
-      concepts: (Array.isArray(g.concepts) ? g.concepts : [])
-        .filter((c) => c && (c.title || c.summary || c.enrichmentPrompt))
-        .map((c) => ({
-          title: (c.title ?? "Concept").trim() || "Concept",
-          summary: (c.summary ?? "").trim(),
-          enrichmentPrompt: (c.enrichmentPrompt ?? "").trim(),
-        }))
-        .filter((c) => c.summary || c.enrichmentPrompt),
-    }))
-    .filter((g) => g.concepts.length > 0);
-  return { groups };
+  const partCount = chunks.length;
+
+  const groupsPerChunk: ConceptGroupRow[][] = [];
+  for (let i = 0; i < chunks.length; i++) {
+    onChunkProgress?.({ pass: i + 1, total: partCount });
+    const prompt = buildConceptExtractionPrompt(source, chunks[i]!, {
+      displayTitle,
+      displaySubtitle,
+      partIndex: i + 1,
+      partCount,
+      languageInstruction,
+      userExtractionInstruction,
+    });
+    const groups = await generateConceptsOnePass(prompt, usageContext);
+    groupsPerChunk.push(groups);
+  }
+
+  const merged =
+    partCount <= 1
+      ? groupsPerChunk[0] ?? []
+      : mergeConceptGroupsFromChunks(groupsPerChunk);
+
+  return { groups: merged };
 }
 
 /** @deprecated Prefer generateConceptsFromLongText with source: "youtube_transcript" */
@@ -657,7 +804,8 @@ export async function generateConceptsFromTranscript(
   channel?: string,
   languageName?: string,
   extractPrompt?: string,
-  usageContext?: GeminiUsageContext
+  usageContext?: GeminiUsageContext,
+  onChunkProgress?: (info: ChunkProgressInfo) => void
 ): Promise<{
   groups: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
 }> {
@@ -668,6 +816,7 @@ export async function generateConceptsFromTranscript(
     languageName,
     extractPrompt,
     usageContext,
+    onChunkProgress,
   });
 }
 

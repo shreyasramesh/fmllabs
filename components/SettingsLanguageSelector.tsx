@@ -99,7 +99,7 @@ export function SettingsLanguageSelector() {
                       onClick={() => setLanguage(code)}
                       className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
                         language === code
-                          ? "bg-foreground text-background"
+                          ? "bg-[#B87B51] text-white dark:bg-foreground dark:text-background"
                           : "bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600"
                       }`}
                     >

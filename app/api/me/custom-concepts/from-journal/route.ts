@@ -8,8 +8,8 @@ import {
   updateTranscriptExtractedConcepts,
 } from "@/lib/db";
 import { recordMongoUsageRequest } from "@/lib/usage";
-
-const MAX_JOURNAL_CHARS = 50_000;
+import { EXTRACT_CONCEPTS_MAX_TOTAL_CHARS } from "@/lib/extract-concepts-constants";
+import { CONCEPT_EXTRACTION_NDJSON_CONTENT_TYPE } from "@/lib/concept-extraction-ndjson";
 
 export async function POST(request: Request) {
   const { userId } = await auth();
@@ -49,9 +49,9 @@ export async function POST(request: Request) {
       }
     }
 
-    if (text.length > MAX_JOURNAL_CHARS) {
+    if (text.length > EXTRACT_CONCEPTS_MAX_TOTAL_CHARS) {
       return NextResponse.json(
-        { error: `Journal text must be at most ${MAX_JOURNAL_CHARS} characters` },
+        { error: `Journal text must be at most ${EXTRACT_CONCEPTS_MAX_TOTAL_CHARS} characters` },
         { status: 400 }
       );
     }
@@ -75,23 +75,50 @@ export async function POST(request: Request) {
       savedTranscriptId = saved._id!;
     }
 
-    const { groups } = await generateConceptsFromLongText(text, {
-      source: "journal",
-      displayTitle: journalTitle,
-      languageName,
-      extractPrompt,
-      usageContext: { userId, eventType: "from_journal" },
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(controller) {
+        const send = (obj: unknown) => {
+          controller.enqueue(encoder.encode(`${JSON.stringify(obj)}\n`));
+        };
+        try {
+          const { groups } = await generateConceptsFromLongText(text, {
+            source: "journal",
+            displayTitle: journalTitle,
+            languageName,
+            extractPrompt,
+            usageContext: { userId, eventType: "from_journal" },
+            onChunkProgress: ({ pass, total }) => {
+              send({ progress: { pass, total } });
+            },
+          });
+          if (savedTranscriptId) {
+            await updateTranscriptExtractedConcepts(
+              savedTranscriptId,
+              userId,
+              groups
+            );
+          }
+          send({
+            source: "journal",
+            journalTitle: journalTitle ?? null,
+            journalTranscriptId: savedTranscriptId,
+            groups,
+          });
+        } catch (e) {
+          console.error("Failed to extract concepts from journal:", e);
+          send({ error: "Failed to extract concepts from journal" });
+        } finally {
+          controller.close();
+        }
+      },
     });
 
-    if (savedTranscriptId) {
-      await updateTranscriptExtractedConcepts(savedTranscriptId, userId, groups);
-    }
-
-    return NextResponse.json({
-      source: "journal",
-      journalTitle: journalTitle ?? null,
-      journalTranscriptId: savedTranscriptId,
-      groups,
+    return new Response(stream, {
+      headers: {
+        "Content-Type": CONCEPT_EXTRACTION_NDJSON_CONTENT_TYPE,
+        "Cache-Control": "no-store",
+      },
     });
   } catch (err) {
     console.error("Failed to extract concepts from journal:", err);

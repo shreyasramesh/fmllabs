@@ -8,6 +8,7 @@ import {
   updateTranscriptExtractedConcepts,
 } from "@/lib/db";
 import { recordUsageEvent, computeTranscribrCost, recordMongoUsageRequest } from "@/lib/usage";
+import { CONCEPT_EXTRACTION_NDJSON_CONTENT_TYPE } from "@/lib/concept-extraction-ndjson";
 
 function extractVideoId(urlOrId: string): string | null {
   const trimmed = urlOrId.trim();
@@ -126,24 +127,46 @@ export async function POST(request: Request) {
       });
     }
 
-    const { groups } = await generateConceptsFromTranscript(
-      transcriptText,
-      videoTitle ?? undefined,
-      channel ?? undefined,
-      languageName,
-      extractPrompt || undefined,
-      { userId, eventType: "from_youtube" }
-    );
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(controller) {
+        const send = (obj: unknown) => {
+          controller.enqueue(encoder.encode(`${JSON.stringify(obj)}\n`));
+        };
+        try {
+          const { groups } = await generateConceptsFromTranscript(
+            transcriptText,
+            videoTitle ?? undefined,
+            channel ?? undefined,
+            languageName,
+            extractPrompt || undefined,
+            { userId, eventType: "from_youtube" },
+            ({ pass, total }) => {
+              send({ progress: { pass, total } });
+            }
+          );
+          if (savedTranscriptId) {
+            await updateTranscriptExtractedConcepts(
+              savedTranscriptId,
+              userId,
+              groups
+            );
+          }
+          send({ videoId, videoTitle, channel, groups });
+        } catch (e) {
+          console.error("Failed to extract concepts from YouTube:", e);
+          send({ error: "Failed to extract concepts from YouTube" });
+        } finally {
+          controller.close();
+        }
+      },
+    });
 
-    if (savedTranscriptId) {
-      await updateTranscriptExtractedConcepts(savedTranscriptId, userId, groups);
-    }
-
-    return NextResponse.json({
-      videoId,
-      videoTitle,
-      channel,
-      groups,
+    return new Response(stream, {
+      headers: {
+        "Content-Type": CONCEPT_EXTRACTION_NDJSON_CONTENT_TYPE,
+        "Cache-Control": "no-store",
+      },
     });
   } catch (err) {
     console.error("Failed to extract concepts from YouTube:", err);

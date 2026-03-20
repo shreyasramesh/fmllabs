@@ -39,14 +39,17 @@ import { getMentionTranslations } from "@/lib/mention-translations";
 import { getLandingTranslations } from "@/lib/landing-translations";
 import { APP_VERSION } from "@/lib/version";
 import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
-import { EXTRACT_CONCEPTS_MAX_CHARS } from "@/lib/extract-concepts-constants";
+import {
+  EXTRACT_CONCEPTS_CHUNK_CHARS,
+  EXTRACT_CONCEPTS_MAX_TOTAL_CHARS,
+} from "@/lib/extract-concepts-constants";
+import { consumeConceptExtractionNdjsonStream } from "@/lib/concept-extraction-ndjson";
 import { getUiTranslations } from "@/lib/ui-translations";
 import { playSelectionChime } from "@/lib/selection-chime";
 import { stripMarkdown } from "@/lib/strip-markdown";
 import { resolveTtsReferenceText } from "@/lib/tts-reference-text";
 import { TTSButton } from "@/components/TTSButton";
 import { VoiceInputButton } from "@/components/VoiceInputButton";
-import { useTtsSpeed } from "@/components/TtsSpeedProvider";
 import { useBackground } from "@/components/BackgroundProvider";
 import Image from "next/image";
 import { DefaultIcon } from "@/components/ElementIcons";
@@ -1150,44 +1153,6 @@ const EXAMPLE_PILLS_BY_LANGUAGE: Record<LanguageCode, string[][]> = {
       "2つの良い選択肢で迷う",
     ],
   ],
-  zh: [
-    [
-      "换工作",
-      "新的工作机会",
-      "争取加薪",
-      "辞职",
-      "副业项目",
-      "工作与生活平衡",
-      "有毒职场",
-      "转换行业",
-      "继续一个失败中的项目",
-      "薪资谈判",
-    ],
-    [
-      "关系中的决定",
-      "搬到新城市",
-      "买房",
-      "大额消费",
-      "退休规划",
-      "投资理财",
-      "与他人发生冲突",
-      "承担财务风险",
-      "公平分摊费用",
-      "放弃一项投资",
-    ],
-    [
-      "创业",
-      "重返校园",
-      "家庭规划",
-      "健康习惯",
-      "拖延症",
-      "对某件事说不",
-      "坚持承诺",
-      "怀疑过去的决定",
-      "逃避必须面对的事情",
-      "在两个好选择之间做决定",
-    ],
-  ],
   es: [
     [
       "Cambio de carrera",
@@ -1224,44 +1189,6 @@ const EXAMPLE_PILLS_BY_LANGUAGE: Record<LanguageCode, string[][]> = {
       "Dudar de una decisión pasada",
       "Evitar algo que debo enfrentar",
       "Elegir entre dos buenas opciones",
-    ],
-  ],
-  ar: [
-    [
-      "تغيير المسار المهني",
-      "عرض عمل جديد",
-      "طلب زيادة في الراتب",
-      "ترك الوظيفة",
-      "مشروع جانبي",
-      "التوازن بين العمل والحياة",
-      "بيئة عمل سامة",
-      "تغيير المجال",
-      "الاستمرار في مشروع فاشل",
-      "التفاوض على الراتب",
-    ],
-    [
-      "قرار في علاقة",
-      "الانتقال إلى مدينة جديدة",
-      "شراء منزل",
-      "شراء كبير",
-      "التخطيط للتقاعد",
-      "استثمار المال",
-      "خلاف مع شخص",
-      "تحمل مخاطرة مالية",
-      "تقسيم التكاليف بعدل",
-      "التخلي عن استثمار",
-    ],
-    [
-      "بدء مشروع تجاري",
-      "العودة إلى الدراسة",
-      "التخطيط للعائلة",
-      "عادة صحية",
-      "المماطلة",
-      "قول لا لشيء ما",
-      "الالتزام بوعد",
-      "الشك في قرار سابق",
-      "تجنب أمر يجب مواجهته",
-      "الاختيار بين خيارين جيدين",
     ],
   ],
   fr: [
@@ -1378,44 +1305,6 @@ const EXAMPLE_PILLS_BY_LANGUAGE: Record<LanguageCode, string[][]> = {
       "Escolher entre duas boas opções",
     ],
   ],
-  ru: [
-    [
-      "Смена карьеры",
-      "Новое предложение о работе",
-      "Попросить повышение",
-      "Уволиться с работы",
-      "Сторонний проект",
-      "Баланс работы и жизни",
-      "Токсичное рабочее место",
-      "Сменить отрасль",
-      "Оставаться в провальном проекте",
-      "Переговоры о зарплате",
-    ],
-    [
-      "Решение в отношениях",
-      "Переезд в новый город",
-      "Покупка дома",
-      "Крупная покупка",
-      "Планирование пенсии",
-      "Инвестирование денег",
-      "Конфликт с кем-то",
-      "Финансовый риск",
-      "Справедливо разделить расходы",
-      "Отказаться от инвестиции",
-    ],
-    [
-      "Начать бизнес",
-      "Вернуться к учебе",
-      "Планирование семьи",
-      "Здоровая привычка",
-      "Прокрастинация",
-      "Сказать чему-то нет",
-      "Сдержать обязательство",
-      "Сомневаться в прошлом решении",
-      "Избегать того, с чем нужно столкнуться",
-      "Выбирать между двумя хорошими вариантами",
-    ],
-  ],
   ur: [
     [
       "کیریئر تبدیل کرنا",
@@ -1518,13 +1407,10 @@ const PERSPECTIVE_CARD_PHRASES: Record<
   ta: { intro: "இந்த வில்லை வழியாக பார்க்க உங்களை அழைக்கிறேன்:", outro: "உங்கள் மனதில் என்ன வருகிறது?", figureIntro: (name) => `${name} invites you to look through this lens:` },
   kn: { intro: "ಈ ಲೆನ್ಸ್ ಮೂಲಕ ನೋಡಲು ನಿಮ್ಮನ್ನು ಆಹ್ವಾನಿಸುತ್ತೇನೆ:", outro: "ನಿಮ್ಮ ಮನಸ್ಸಿಗೆ ಏನು ಬರುತ್ತದೆ?", figureIntro: (name) => `${name} invites you to look through this lens:` },
   ja: { intro: "このレンズを通して見るようにお誘いします:", outro: "何が思い浮かびますか？", figureIntro: (name) => `${name} invites you to look through this lens:` },
-  zh: { intro: "让我邀请您通过这个视角来看:", outro: "您想到了什么？", figureIntro: (name) => `${name} invites you to look through this lens:` },
   es: { intro: "Déjame invitarte a mirar a través de esta lente:", outro: "¿Qué te viene a la mente?", figureIntro: (name) => `${name} te invita a mirar a través de esta lente:` },
-  ar: { intro: "دعني أدعوك للنظر من خلال هذه العدسة:", outro: "ما الذي يخطر ببالك؟", figureIntro: (name) => `${name} invites you to look through this lens:` },
   fr: { intro: "Laissez-moi vous inviter à regarder à travers cette lentille:", outro: "Qu'est-ce qui vous vient à l'esprit ?", figureIntro: (name) => `${name} vous invite à regarder à travers cette lentille:` },
   bn: { intro: "আমি আপনাকে এই লেন্স দিয়ে দেখতে আমন্ত্রণ জানাচ্ছি:", outro: "আপনার মনে কী আসে?", figureIntro: (name) => `${name} invites you to look through this lens:` },
   pt: { intro: "Deixe-me convidá-lo a olhar através desta lente:", outro: "O que vem à sua mente?", figureIntro: (name) => `${name} convida você a olhar através desta lente:` },
-  ru: { intro: "Позвольте пригласить вас посмотреть через эту призму:", outro: "Что приходит вам на ум?", figureIntro: (name) => `${name} invites you to look through this lens:` },
   ur: { intro: "مجھے آپ کو اس لینس کے ذریعے دیکھنے کی دعوت دینے دیں:", outro: "آپ کے ذہن میں کیا آتا ہے؟", figureIntro: (name) => `${name} invites you to look through this lens:` },
   de: { intro: "Lass mich dich einladen, durch diese Linse zu schauen:", outro: "Was fällt dir ein?", figureIntro: (name) => `${name} lädt dich ein, durch diese Linse zu schauen:` },
   it: { intro: "Lascia che ti inviti a guardare attraverso questa lente:", outro: "Cosa ti viene in mente?", figureIntro: (name) => `${name} ti invita a guardare attraverso questa lente:` },
@@ -1853,21 +1739,12 @@ export default function ChatPage() {
   } | null>(null);
   const [summarizeLoading, setSummarizeLoading] = useState(false);
   const [summarizeSuccess, setSummarizeSuccess] = useState(false);
-  const { clonedVoices, refreshSettings } = useTtsSpeed();
-  const [voiceCloneLoading, setVoiceCloneLoading] = useState(false);
-  const [voiceCloneError, setVoiceCloneError] = useState<string | null>(null);
-  const [voiceCloneRecording, setVoiceCloneRecording] = useState(false);
-  const [voiceCloneRecordedBlob, setVoiceCloneRecordedBlob] = useState<Blob | null>(null);
-  const [voiceCloneLanguage, setVoiceCloneLanguage] = useState<LanguageCode | "all">("all");
   const [exportSelections, setExportSelections] = useState<Record<ExportDataSection, boolean>>(
     DEFAULT_EXPORT_SELECTIONS
   );
   const [exportSectionOpen, setExportSectionOpen] = useState(false);
   const [exportMarkdownLoading, setExportMarkdownLoading] = useState(false);
   const [exportMarkdownError, setExportMarkdownError] = useState<string | null>(null);
-  const voiceCloneMediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const voiceCloneChunksRef = useRef<Blob[]>([]);
-  const voiceCloneClosingRef = useRef(false);
   const { background, setBackground } = useBackground();
   const [weatherFormat, setWeatherFormat] = useState<WeatherFormat>("condition-temp");
   const [moonPhase, setMoonPhase] = useState<number | null>(null);
@@ -1967,6 +1844,10 @@ export default function ChatPage() {
     journalTranscriptId?: string | null;
   } | null>(null);
   const [ccYoutubeError, setCcYoutubeError] = useState<string | null>(null);
+  const [ccYoutubeExtractProgress, setCcYoutubeExtractProgress] = useState<{
+    pass: number;
+    total: number;
+  } | null>(null);
   const [ccImportJournalMode, setCcImportJournalMode] = useState(false);
   const [ccJournalText, setCcJournalText] = useState("");
   const [ccJournalTitle, setCcJournalTitle] = useState("");
@@ -3631,19 +3512,6 @@ export default function ChatPage() {
   }, [settingsOpen, userId]);
 
   useEffect(() => {
-    if (!settingsOpen) {
-      if (voiceCloneRecording) {
-        voiceCloneClosingRef.current = true;
-        voiceCloneMediaRecorderRef.current?.stop();
-        setVoiceCloneRecording(false);
-      }
-      setVoiceCloneRecordedBlob(null);
-    } else {
-      voiceCloneClosingRef.current = false;
-    }
-  }, [settingsOpen, voiceCloneRecording]);
-
-  useEffect(() => {
     if (!feedbackModalOpen) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") setFeedbackModalOpen(false);
@@ -4277,7 +4145,9 @@ export default function ChatPage() {
             <button
               onClick={() => setSidebarOpen(true)}
               data-tour="menu-button"
-              className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 shrink-0 lg:hidden ${
+              className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 shrink-0 ${
+                !sidebarOpen ? "" : "hidden"
+              } ${
                 incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
               }`}
               aria-label="Open menu"
@@ -4414,24 +4284,14 @@ export default function ChatPage() {
           </div>
         </div>
         <div className={`flex-1 min-h-0 flex flex-col overflow-y-auto overscroll-contain ${!sidebarOpen ? "lg:justify-center" : ""}`}>
-        {/* Hamburger to expand - centered with other buttons when closed (desktop only) */}
-        {!sidebarOpen && (
-          <div className="hidden lg:flex shrink-0 justify-center">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              data-tour="menu-button"
-              className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
-              aria-label="Open menu"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
-        )}
         {!isAnonymous && (
         <>
-        <div className={`flex flex-col min-w-0 px-2 py-1.5 ${sidebarOpen ? "flex-1 min-h-0" : "shrink-0 lg:gap-1"}`}>
+        <div
+          className={`flex flex-col min-w-0 min-h-0 ${sidebarOpen ? "flex-1 overflow-hidden" : "shrink-0 lg:gap-1"}`}
+        >
+          <div
+            className={`flex flex-col min-w-0 px-2 py-1.5 ${sidebarOpen ? "flex-1 min-h-0 overflow-y-auto overscroll-contain" : ""}`}
+          >
           {/* New conversation - always visible at top of sidebar */}
           {incognitoMode ? (
             <Link
@@ -4441,7 +4301,7 @@ export default function ChatPage() {
                 if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
               }}
               className={`flex items-center w-full rounded-xl border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0 ${
-                sidebarOpen ? "justify-center gap-2 px-3 py-2 mb-4" : "justify-center p-2 lg:px-2 lg:py-2"
+                sidebarOpen ? "justify-center gap-2 px-3 py-2 mb-2" : "justify-center p-2 lg:px-2 lg:py-2"
               }`}
               aria-label={getLandingTranslations(language).newConversation}
             >
@@ -4471,7 +4331,7 @@ export default function ChatPage() {
                 setNewConversationChooserModalOpen(true);
               }}
               className={`flex items-center w-full rounded-xl border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0 ${
-                sidebarOpen ? "justify-center gap-2 px-3 py-2 mb-4" : "justify-center p-2 lg:px-2 lg:py-2"
+                sidebarOpen ? "justify-center gap-2 px-3 py-2 mb-2" : "justify-center p-2 lg:px-2 lg:py-2"
               }`}
               aria-label={getLandingTranslations(language).newConversation}
             >
@@ -4481,8 +4341,58 @@ export default function ChatPage() {
               {sidebarOpen && <span className="truncate">{getLandingTranslations(language).newConversation}</span>}
             </button>
           )}
+          {sidebarOpen && (
+            <div className="grid grid-cols-2 gap-1.5 mb-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  setCcYoutubeUrl("");
+                  setCcYoutubeTranscriptId(null);
+                  setCcYoutubeExtractPrompt("");
+                  setCcYoutubeResult(null);
+                  setCcYoutubeError(null);
+                  setCcYoutubeExtractProgress(null);
+                  setCcImportJournalMode(false);
+                  setCcJournalText("");
+                  setCcJournalTitle("");
+                  setCcJournalPersistLibrary(false);
+                  setCcJournalTranscriptId(null);
+                  setCcYoutubeModal(true);
+                  if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+                }}
+                title="Create concepts from a YouTube video's transcript"
+                aria-label="Create concepts from a YouTube video transcript"
+                className="min-w-0 flex items-center justify-center rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-800/50 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-[10px] sm:text-[11px] font-medium text-foreground transition-colors px-1.5 py-1.5 text-center leading-tight"
+              >
+                <span className="line-clamp-2">From a video</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setCcYoutubeUrl("");
+                  setCcYoutubeTranscriptId(null);
+                  setCcYoutubeExtractPrompt("");
+                  setCcYoutubeResult(null);
+                  setCcYoutubeError(null);
+                  setCcYoutubeExtractProgress(null);
+                  setCcImportJournalMode(true);
+                  setCcJournalText("");
+                  setCcJournalTitle("");
+                  setCcJournalPersistLibrary(false);
+                  setCcJournalTranscriptId(null);
+                  setCcYoutubeModal(true);
+                  if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+                }}
+                title="Create concepts from text you paste (journal, notes, reflections)"
+                aria-label="Create concepts from your own writing"
+                className="min-w-0 flex items-center justify-center rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-800/50 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-[10px] sm:text-[11px] font-medium text-foreground transition-colors px-1.5 py-1.5 text-center leading-tight"
+              >
+                <span className="line-clamp-2">From your writing</span>
+              </button>
+            </div>
+          )}
           {/* Primary nav - Claude.ai pill style; icon-only when collapsed (Browser Use style) */}
-          <nav className={`flex flex-col gap-0.5 shrink-0 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 ${sidebarOpen ? "mb-4" : ""}`} aria-label="Select view" data-tour="sidebar-nav">
+          <nav className={`flex flex-col gap-0.5 shrink-0 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 ${sidebarOpen ? "mb-2" : ""}`} aria-label="Select view" data-tour="sidebar-nav">
             {[
               { id: "conversations" as const, label: getUiTranslations(language).conversations, icon: "chat", onClick: () => { playSelectionChime(); setLibraryPanelOpen("conversations"); } },
               { id: "cc" as const, label: getUiTranslations(language).concepts, icon: "concepts", onClick: () => { playSelectionChime(); setLibraryPanelOpen("cc"); } },
@@ -4503,7 +4413,7 @@ export default function ChatPage() {
                   data-tour={`tour-${id}`}
                   title={!sidebarOpen ? label : undefined}
                   className={`flex items-center w-full rounded-full text-left text-[13px] sm:text-[14px] font-medium transition-colors border-2 ${
-                    sidebarOpen ? "gap-2.5 px-3 py-1.5" : "justify-center p-2 lg:px-2 lg:py-2"
+                    sidebarOpen ? "gap-2 px-3 py-1" : "justify-center p-2 lg:px-2 lg:py-2"
                   } ${
                       isActive
                         ? "border-neutral-300 dark:border-neutral-400 bg-white dark:bg-neutral-700 text-foreground"
@@ -4561,13 +4471,13 @@ export default function ChatPage() {
             })}
           </nav>
 
-          <div className={`border-t-[0.5px] border-neutral-200/60 dark:border-neutral-600/60 ${sidebarOpen ? "mt-2 pt-2" : "mt-1 pt-1"}`}>
+          <div className={`border-t-[0.5px] border-neutral-200/60 dark:border-neutral-600/60 ${sidebarOpen ? "mt-1.5 pt-1.5" : "mt-1 pt-1"}`}>
             <button
               type="button"
               onClick={() => { playSelectionChime(); setWaysOfLookingAtModalOpen(true); setWaysOfLookingAtDrawMode(false); setWaysOfLookingAtCategory(null); setWaysOfLookingAtCity(null); setWaysOfLookingAtCuisine(null); setWaysOfLookingAtMicrocosm(null); }}
               title={!sidebarOpen ? getUiTranslations(language).promptGames : undefined}
               className={`group relative overflow-hidden flex items-center w-full rounded-2xl text-left text-[13px] sm:text-[14px] font-medium transition-colors active:scale-[0.98] ${
-                sidebarOpen ? "gap-2.5 px-3 py-1.5" : "justify-center p-2 lg:px-2 lg:py-2"
+                sidebarOpen ? "gap-2 px-3 py-1" : "justify-center p-2 lg:px-2 lg:py-2"
               }`}
             >
               <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-100 via-amber-50 to-yellow-50 dark:from-rose-900/40 dark:via-amber-900/30 dark:to-yellow-900/30 transition-opacity duration-300" aria-hidden />
@@ -4580,10 +4490,10 @@ export default function ChatPage() {
               {sidebarOpen && <span className="relative z-10 truncate text-foreground">{getUiTranslations(language).promptGames}</span>}
             </button>
           </div>
-
-            </div>
+          </div>
+        </div>
         {/* Accounts section - bottom of left panel (Browser Use style) */}
-        <div className="mt-auto shrink-0 px-2 py-3 border-t border-neutral-200/80 dark:border-neutral-800">
+        <div className="shrink-0 px-2 py-3 border-t border-neutral-200/80 dark:border-neutral-800">
             {user ? (
               <div
                 role="button"
@@ -5190,6 +5100,9 @@ export default function ChatPage() {
                   </div>
                   </div>
                 </div>
+                <p className="text-center text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 px-2 max-w-2xl w-full">
+                  FML Labs is AI and can make mistakes.
+                </p>
                       </div>
                 {isAnonymous && <LeaderboardEmbed />}
               </div>
@@ -5579,6 +5492,9 @@ export default function ChatPage() {
                 </button>
               </div>
               </div>
+              <p className="mt-1.5 text-center text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 max-w-2xl w-full px-2">
+                FML Labs is AI and can make mistakes.
+              </p>
           </div>
           )}
         </div>
@@ -6301,8 +6217,8 @@ export default function ChatPage() {
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks created via AI. Use when you want the agent to think in terms of a topic (e.g. finance, health) with related concepts.</p>
                   <div className="flex items-center justify-end gap-1">
                     <button type="button" onClick={() => { setCgCreateDomain(""); setCgCreateStep(1); setCgCreateQuestions([]); setCgCreateAnswers({}); setCgCreateConcepts([]); setCgCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Framework</button>
-                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcImportJournalMode(false); setCcJournalText(""); setCcJournalTitle(""); setCcJournalPersistLibrary(false); setCcJournalTranscriptId(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Add From YouTube Transcript</button>
-                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcImportJournalMode(true); setCcJournalText(""); setCcJournalTitle(""); setCcJournalPersistLibrary(false); setCcJournalTranscriptId(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Import from journal</button>
+                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeExtractProgress(null); setCcImportJournalMode(false); setCcJournalText(""); setCcJournalTitle(""); setCcJournalPersistLibrary(false); setCcJournalTranscriptId(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors" title="Create concepts from a YouTube video's transcript">+ From a video</button>
+                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeExtractProgress(null); setCcImportJournalMode(true); setCcJournalText(""); setCcJournalTitle(""); setCcJournalPersistLibrary(false); setCcJournalTranscriptId(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors" title="Create concepts from text you paste">+ From your writing</button>
                   </div>
                   {conceptGroups.length > 0 ? (
                     <div className="grid grid-cols-2 gap-2">
@@ -6419,6 +6335,7 @@ export default function ChatPage() {
                                   setCcYoutubeUrl("");
                                   setCcYoutubeResult(null);
                                   setCcYoutubeError(null);
+                                  setCcYoutubeExtractProgress(null);
                                   setCcYoutubeModal(true);
                                 }}
                                 className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
@@ -6937,6 +6854,7 @@ export default function ChatPage() {
                   setCcYoutubeUrl("");
                   setCcYoutubeResult(null);
                   setCcYoutubeError(null);
+                  setCcYoutubeExtractProgress(null);
                   setTranscriptModalTranscript(null);
                   setTranscriptExtractedConceptOpen(null);
                   setTranscriptExtractedConceptsSectionOpen(true);
@@ -7557,7 +7475,7 @@ export default function ChatPage() {
                           title={name}
                           className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-colors border-[0.75px] ${
                             background === id
-                              ? "border-foreground bg-neutral-100 dark:bg-neutral-800 text-foreground ring-2 ring-foreground/20"
+                              ? "border-[#B87B51] bg-[#B87B51]/12 dark:border-white/20 dark:bg-neutral-800 text-foreground ring-2 ring-[#B87B51]/25 dark:ring-foreground/20"
                               : "border-neutral-200/60 dark:border-white/12 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                           }`}
                         >
@@ -7580,6 +7498,53 @@ export default function ChatPage() {
                 </section>
 
                 <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
+                    Installation Guide
+                  </h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">
+                    Want an app-like experience on your phone or tablet?{" "}
+                    <span className="text-foreground font-medium">
+                      Use Safari or Chrome to &quot;Add to Home Screen&quot;
+                    </span>{" "}
+                    — then open the app from your home screen like any other app.
+                  </p>
+                  <ul className="space-y-2 text-xs text-neutral-600 dark:text-neutral-300 list-none pl-0">
+                    <li className="flex gap-2">
+                      <span className="text-neutral-400 shrink-0" aria-hidden>
+                        •
+                      </span>
+                      <span>
+                        <span className="font-medium text-foreground">iPhone / iPad:</span> Open this site in{" "}
+                        <strong className="font-semibold text-foreground">Safari</strong>. Tap the Share button, then{" "}
+                        <strong className="font-semibold text-foreground">Add to Home Screen</strong>.
+                      </span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="text-neutral-400 shrink-0" aria-hidden>
+                        •
+                      </span>
+                      <span>
+                        <span className="font-medium text-foreground">Android:</span> Open this site in{" "}
+                        <strong className="font-semibold text-foreground">Chrome</strong>. Tap the menu (⋮), then{" "}
+                        <strong className="font-semibold text-foreground">Add to Home Screen</strong> or{" "}
+                        <strong className="font-semibold text-foreground">Install app</strong>.
+                      </span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="text-neutral-400 shrink-0" aria-hidden>
+                        •
+                      </span>
+                      <span>
+                        <span className="font-medium text-foreground">Computer:</span> In{" "}
+                        <strong className="font-semibold text-foreground">Chrome</strong>, use the install icon in the address bar or the menu →{" "}
+                        <strong className="font-semibold text-foreground">Install</strong> /{" "}
+                        <strong className="font-semibold text-foreground">Create shortcut</strong>.
+                      </span>
+                    </li>
+                  </ul>
+                </section>
+
+                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">Conversation</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">Language and tone for your conversations.</p>
                   <div className="space-y-4">
@@ -7597,7 +7562,7 @@ export default function ChatPage() {
                             onClick={() => setUserType(id)}
                             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                               userType === id
-                                ? "bg-foreground text-background"
+                                ? "bg-[#B87B51] text-white dark:bg-foreground dark:text-background"
                                 : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.75px] border-neutral-200/60 dark:border-white/12"
                             }`}
                           >
@@ -7608,218 +7573,6 @@ export default function ChatPage() {
                       </div>
                     </div>
                   </div>
-                </section>
-
-                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
-                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Audio</h3>
-                  {/* TTS speed is controlled on message bubbles (1X, 1.5X, 2X) and persisted across conversations. */}
-                  {/* Voice cloning hidden - feature kept for future use. Change false to !isAnonymous to re-enable. */}
-                  {false && (
-                    <div className="mt-5">
-                      <label className="block text-sm font-medium text-foreground mb-2">Personalized Reflection Voice</label>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">
-                        Hear deeper reflections and second-order insights in your own voice. This can improve retention and make structured self-review feel more natural. Record a clip or upload 1-6 files (MP3, WAV, WebM, or OGG).
-                      </p>
-                      {clonedVoices.length > 0 && (
-                        <div className="mb-3 space-y-2">
-                          <p className="text-xs text-neutral-500 dark:text-neutral-400">Language voice assignments</p>
-                          {(() => {
-                            const latestForLanguage = clonedVoices
-                              .filter((v) => v.language === language)
-                              .at(-1);
-                            const latestForAll = clonedVoices
-                              .filter((v) => v.language === "all")
-                              .at(-1);
-                            const activeVoice = latestForLanguage ?? latestForAll ?? null;
-                            return (
-                          <div className="space-y-1.5">
-                            {clonedVoices.map((v) => (
-                              <div key={`${v.voiceId}:${v.language}`} className="flex items-center justify-between gap-2 rounded-xl border border-neutral-200/70 dark:border-white/12 bg-neutral-50 dark:bg-neutral-900 px-3 py-2">
-                                <div className="min-w-0">
-                                  <p className="text-sm font-medium text-foreground truncate">{v.name}</p>
-                                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                                    {v.language === "all"
-                                      ? "All languages"
-                                      : (LANGUAGES.find((l) => l.code === v.language)?.name ?? v.language)}
-                                  </p>
-                                </div>
-                                <div className="flex items-center gap-2 shrink-0">
-                                  {activeVoice &&
-                                    v.voiceId === activeVoice.voiceId &&
-                                    v.language === activeVoice.language && (
-                                      <span className="px-2 py-1 rounded-lg text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
-                                        Active for this language
-                                      </span>
-                                    )}
-                                  <button
-                                    type="button"
-                                    onClick={async () => {
-                                      setVoiceCloneError(null);
-                                      try {
-                                        const r = await fetch(`/api/me/voices/clone?voiceId=${encodeURIComponent(v.voiceId)}&language=${encodeURIComponent(v.language)}`, { method: "DELETE" });
-                                        if (!r.ok) throw new Error("Failed to remove");
-                                        refreshSettings();
-                                      } catch {
-                                        setVoiceCloneError("Failed to remove voice assignment");
-                                      }
-                                    }}
-                                    className="px-2 py-1 rounded-lg text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-foreground transition-colors"
-                                  >
-                                    Remove
-                                  </button>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                            );
-                          })()}
-                        </div>
-                      )}
-                      <form
-                        className="space-y-3"
-                        onSubmit={async (e) => {
-                          e.preventDefault();
-                          setVoiceCloneError(null);
-                          const form = e.currentTarget;
-                          const nameInput = form.querySelector<HTMLInputElement>('[name="voice-name"]');
-                          const name = nameInput?.value?.trim();
-                          const hasRecorded = !!voiceCloneRecordedBlob;
-                          if (!name || !hasRecorded) {
-                            setVoiceCloneError("Enter a name and record at least one audio clip.");
-                            return;
-                          }
-                          setVoiceCloneLoading(true);
-                          try {
-                            const fd = new FormData();
-                            fd.append("name", name);
-                            fd.append("language", voiceCloneLanguage);
-                            if (voiceCloneRecordedBlob) {
-                              const ext = voiceCloneRecordedBlob.type.includes("webm") ? "webm" : "ogg";
-                              fd.append("files", new File([voiceCloneRecordedBlob], `recording.${ext}`, { type: voiceCloneRecordedBlob.type }));
-                            }
-                            const r = await fetch("/api/me/voices/clone", {
-                              method: "POST",
-                              body: fd,
-                            });
-                            const data = await r.json().catch(() => ({}));
-                            if (!r.ok) {
-                              throw new Error(data?.error ?? "Voice cloning failed");
-                            }
-                            refreshSettings();
-                            form.reset();
-                            setVoiceCloneRecordedBlob(null);
-                          } catch (err) {
-                            setVoiceCloneError(err instanceof Error ? err.message : "Voice cloning failed");
-                          } finally {
-                            setVoiceCloneLoading(false);
-                          }
-                        }}
-                      >
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                          <input
-                            type="text"
-                            name="voice-name"
-                            placeholder="Voice name"
-                            maxLength={64}
-                            className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-white/12 bg-white dark:bg-neutral-900 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/10"
-                          />
-                          <select
-                            value={voiceCloneLanguage}
-                            onChange={(e) => setVoiceCloneLanguage(e.target.value as LanguageCode | "all")}
-                            className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-white/12 bg-white dark:bg-neutral-900 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/10"
-                          >
-                            <option value="all">All languages</option>
-                            {LANGUAGES.map(({ code, name }) => (
-                              <option key={code} value={code}>
-                                {name}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="flex flex-wrap gap-2 items-center">
-                          <button
-                            type="button"
-                            onClick={async () => {
-                              if (voiceCloneRecording) {
-                                voiceCloneMediaRecorderRef.current?.stop();
-                                setVoiceCloneRecording(false);
-                                return;
-                              }
-                              setVoiceCloneError(null);
-                              try {
-                                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                                const recorder = new MediaRecorder(stream);
-                                voiceCloneChunksRef.current = [];
-                                recorder.ondataavailable = (e) => {
-                                  if (e.data.size > 0) voiceCloneChunksRef.current.push(e.data);
-                                };
-                                recorder.onstop = () => {
-                                  stream.getTracks().forEach((t) => t.stop());
-                                  if (!voiceCloneClosingRef.current) {
-                                    const blob = new Blob(voiceCloneChunksRef.current, { type: recorder.mimeType || "audio/webm" });
-                                    setVoiceCloneRecordedBlob(blob);
-                                  }
-                                  voiceCloneClosingRef.current = false;
-                                };
-                                recorder.start();
-                                voiceCloneMediaRecorderRef.current = recorder;
-                                setVoiceCloneRecording(true);
-                              } catch {
-                                setVoiceCloneError("Microphone access denied or unavailable.");
-                              }
-                            }}
-                            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
-                              voiceCloneRecording
-                                ? "bg-red-500 text-white hover:bg-red-600"
-                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.75px] border-neutral-200/60 dark:border-white/12"
-                            }`}
-                          >
-                            {voiceCloneRecording ? (
-                              <>
-                                <span className="relative flex h-2 w-2">
-                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
-                                </span>
-                                Stop recording
-                              </>
-                            ) : (
-                              <>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                                  <path d="M8.25 4.5a3.75 3.75 0 117.5 0v8.25a3.75 3.75 0 11-7.5 0V4.5z" />
-                                  <path d="M6 10.5a.75.75 0 01.75.75v1.5a5.25 5.25 0 1010.5 0v-1.5a.75.75 0 011.5 0v1.5a6.751 6.751 0 01-6 6.709v2.291h3a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5h3v-2.291a6.751 6.751 0 01-6-6.709v-1.5A.75.75 0 016 10.5z" />
-                                </svg>
-                                Record clip
-                              </>
-                            )}
-                          </button>
-                          {voiceCloneRecordedBlob && (
-                            <span className="text-xs text-neutral-500 dark:text-neutral-400">
-                              Recorded ({Math.round((voiceCloneRecordedBlob?.size ?? 0) / 1024)} KB)
-                            </span>
-                          )}
-                          {voiceCloneRecordedBlob && (
-                            <button
-                              type="button"
-                              onClick={() => setVoiceCloneRecordedBlob(null)}
-                              className="text-xs text-neutral-500 hover:text-foreground"
-                            >
-                              Clear
-                            </button>
-                          )}
-                        </div>
-                        {voiceCloneError && (
-                          <p className="text-xs text-red-600 dark:text-red-400">{voiceCloneError}</p>
-                        )}
-                        <button
-                          type="submit"
-                          disabled={voiceCloneLoading}
-                          className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
-                        >
-                          {voiceCloneLoading ? "Generating…" : "Generate Personalized Voice"}
-                        </button>
-                      </form>
-                    </div>
-                  )}
                 </section>
 
                 <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
@@ -7839,12 +7592,12 @@ export default function ChatPage() {
                           onClick={() => updateWeatherFormat(id)}
                           className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors border ${
                             weatherFormat === id
-                              ? "bg-foreground text-background border-foreground"
+                              ? "bg-[#B87B51] text-white border-[#B87B51] dark:bg-foreground dark:text-background dark:border-foreground"
                               : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.75px] border-neutral-200/60 dark:border-white/12"
                           }`}
                         >
                           {label}
-                          <span className={`ml-2 text-xs ${weatherFormat === id ? "text-background/80" : "text-neutral-500 dark:text-neutral-400"}`}>
+                          <span className={`ml-2 text-xs ${weatherFormat === id ? "text-white/80 dark:text-background/80" : "text-neutral-500 dark:text-neutral-400"}`}>
                             {preview}
                           </span>
                         </button>
@@ -9311,6 +9064,7 @@ export default function ChatPage() {
             setCcYoutubeTranscriptId(null),
             setCcYoutubeResult(null),
             setCcYoutubeError(null),
+            setCcYoutubeExtractProgress(null),
             setCcImportJournalMode(false),
             setCcJournalText(""),
             setCcJournalTitle(""),
@@ -9338,6 +9092,7 @@ export default function ChatPage() {
                       setCcYoutubeTranscriptId(null),
                       setCcYoutubeResult(null),
                       setCcYoutubeError(null),
+                      setCcYoutubeExtractProgress(null),
                       setCcImportJournalMode(false),
                       setCcJournalText(""),
                       setCcJournalTitle(""),
@@ -9356,15 +9111,20 @@ export default function ChatPage() {
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
                     {ccJournalTranscriptId
                       ? "Use a different extraction focus and extract concepts again from your saved journal."
-                      : "Paste reflective or journal text. We extract concepts and auto-tag them into frameworks (domains). Extraction sends this text to the AI."}
-                  </p>
-                  <p className="text-xs text-amber-700 dark:text-amber-400 mt-2">
-                    Only the first {EXTRACT_CONCEPTS_MAX_CHARS.toLocaleString()} characters are used for extraction (longer entries are truncated).
+                      : "Paste reflective or journal text. We extract concepts and auto-tag them into frameworks. Extraction sends this text to the AI."}
                   </p>
                 </div>
                 <div className="p-4 flex-1 space-y-3 overflow-y-auto">
                   {ccYoutubeError && (
                     <p className="text-sm text-red-600 dark:text-red-400">{ccYoutubeError}</p>
+                  )}
+                  {ccYoutubeLoading && ccYoutubeExtractProgress && (
+                    <p
+                      className="text-sm text-neutral-600 dark:text-neutral-400"
+                      aria-live="polite"
+                    >
+                      Pass {ccYoutubeExtractProgress.pass} of {ccYoutubeExtractProgress.total}…
+                    </p>
                   )}
                   {!ccJournalTranscriptId && (
                     <textarea
@@ -9422,6 +9182,7 @@ export default function ChatPage() {
                       setCcYoutubeLoading(true);
                       setCcYoutubeResult(null);
                       setCcYoutubeError(null);
+                      setCcYoutubeExtractProgress(null);
                       try {
                         const body: Record<string, unknown> = {
                           language,
@@ -9440,28 +9201,46 @@ export default function ChatPage() {
                           headers: { "Content-Type": "application/json" },
                           body: JSON.stringify(body),
                         });
-                        const data = await res.json();
-                        if (res.ok && data.groups) {
+                        const data = await consumeConceptExtractionNdjsonStream(
+                          res,
+                          (p) => setCcYoutubeExtractProgress(p)
+                        );
+                        if (Array.isArray(data.groups)) {
                           setCcYoutubeResult({
                             source: "journal",
-                            groups: data.groups,
-                            journalTitle: data.journalTitle ?? null,
-                            journalTranscriptId: data.journalTranscriptId ?? null,
+                            groups: data.groups as {
+                              domain: string;
+                              concepts: {
+                                title: string;
+                                summary: string;
+                                enrichmentPrompt: string;
+                              }[];
+                            }[],
+                            journalTitle: (data.journalTitle as string | null | undefined) ?? null,
+                            journalTranscriptId:
+                              (data.journalTranscriptId as string | null | undefined) ?? null,
                           });
                           refetchTranscripts();
                         } else {
-                          setCcYoutubeError(data.error ?? "Failed to extract concepts");
+                          setCcYoutubeError("Failed to extract concepts");
                         }
-                      } catch {
-                        setCcYoutubeError("Failed to extract concepts");
+                      } catch (e) {
+                        setCcYoutubeError(
+                          e instanceof Error ? e.message : "Failed to extract concepts"
+                        );
                       } finally {
                         setCcYoutubeLoading(false);
+                        setCcYoutubeExtractProgress(null);
                       }
                     }}
                     disabled={(!ccJournalText.trim() && !ccJournalTranscriptId) || ccYoutubeLoading}
                     className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
                   >
-                    {ccYoutubeLoading ? "Extracting…" : "Extract concepts"}
+                    {ccYoutubeLoading
+                      ? ccYoutubeExtractProgress
+                        ? `Pass ${ccYoutubeExtractProgress.pass} of ${ccYoutubeExtractProgress.total}…`
+                        : "Extracting…"
+                      : "Extract concepts"}
                   </button>
                 </div>
               </>
@@ -9478,6 +9257,7 @@ export default function ChatPage() {
                       setCcYoutubeTranscriptId(null),
                       setCcYoutubeResult(null),
                       setCcYoutubeError(null),
+                      setCcYoutubeExtractProgress(null),
                       setCcImportJournalMode(false),
                       setCcJournalText(""),
                       setCcJournalTitle(""),
@@ -9498,10 +9278,23 @@ export default function ChatPage() {
                       ? "Use a different extraction focus and extract concepts again from your saved transcript."
                       : "Paste a YouTube video URL. We'll fetch the transcript and extract clear concepts, auto-tagged into domains."}
                   </p>
+                  {!ccYoutubeTranscriptId && (
+                    <p className="text-xs text-amber-700 dark:text-amber-400 mt-2">
+                      Long transcripts are processed in full (up to {EXTRACT_CONCEPTS_MAX_TOTAL_CHARS.toLocaleString()} characters), in overlapping segments of about {EXTRACT_CONCEPTS_CHUNK_CHARS.toLocaleString()} characters each. Extraction may run multiple AI passes for full coverage.
+                    </p>
+                  )}
                 </div>
                 <div className="p-4 flex-1 space-y-3 overflow-y-auto">
                   {ccYoutubeError && (
                     <p className="text-sm text-red-600 dark:text-red-400">{ccYoutubeError}</p>
+                  )}
+                  {ccYoutubeLoading && ccYoutubeExtractProgress && (
+                    <p
+                      className="text-sm text-neutral-600 dark:text-neutral-400"
+                      aria-live="polite"
+                    >
+                      Pass {ccYoutubeExtractProgress.pass} of {ccYoutubeExtractProgress.total}…
+                    </p>
                   )}
                   {!ccYoutubeTranscriptId && (
                   <input
@@ -9535,6 +9328,7 @@ export default function ChatPage() {
                       setCcYoutubeLoading(true);
                       setCcYoutubeResult(null);
                       setCcYoutubeError(null);
+                      setCcYoutubeExtractProgress(null);
                       try {
                         const body: Record<string, unknown> = {
                           language,
@@ -9550,28 +9344,45 @@ export default function ChatPage() {
                           headers: { "Content-Type": "application/json" },
                           body: JSON.stringify(body),
                         });
-                        const data = await res.json();
-                        if (res.ok && data.groups) {
+                        const data = await consumeConceptExtractionNdjsonStream(
+                          res,
+                          (p) => setCcYoutubeExtractProgress(p)
+                        );
+                        if (Array.isArray(data.groups)) {
                           setCcYoutubeResult({
                             source: "youtube",
-                            videoTitle: data.videoTitle ?? null,
-                            channel: data.channel ?? null,
-                            groups: data.groups,
+                            videoTitle: (data.videoTitle as string | null | undefined) ?? null,
+                            channel: (data.channel as string | null | undefined) ?? null,
+                            groups: data.groups as {
+                              domain: string;
+                              concepts: {
+                                title: string;
+                                summary: string;
+                                enrichmentPrompt: string;
+                              }[];
+                            }[],
                           });
                           refetchTranscripts();
                         } else {
-                          setCcYoutubeError(data.error ?? "Failed to extract concepts");
+                          setCcYoutubeError("Failed to extract concepts");
                         }
-                      } catch {
-                        setCcYoutubeError("Failed to extract concepts");
+                      } catch (e) {
+                        setCcYoutubeError(
+                          e instanceof Error ? e.message : "Failed to extract concepts"
+                        );
                       } finally {
                         setCcYoutubeLoading(false);
+                        setCcYoutubeExtractProgress(null);
                       }
                     }}
                     disabled={(!ccYoutubeUrl.trim() && !ccYoutubeTranscriptId) || ccYoutubeLoading}
                     className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
                   >
-                    {ccYoutubeLoading ? "Extracting…" : "Extract concepts"}
+                    {ccYoutubeLoading
+                      ? ccYoutubeExtractProgress
+                        ? `Pass ${ccYoutubeExtractProgress.pass} of ${ccYoutubeExtractProgress.total}…`
+                        : "Extracting…"
+                      : "Extract concepts"}
                   </button>
                 </div>
               </>
@@ -9589,6 +9400,7 @@ export default function ChatPage() {
                       setCcYoutubeTranscriptId(null),
                       setCcYoutubeResult(null),
                       setCcYoutubeError(null),
+                      setCcYoutubeExtractProgress(null),
                       setCcImportJournalMode(false),
                       setCcJournalText(""),
                       setCcJournalTitle(""),
@@ -9759,6 +9571,7 @@ export default function ChatPage() {
                         setCcYoutubeTranscriptId(null);
                         setCcYoutubeExtractPrompt("");
                         setCcYoutubeResult(null);
+                        setCcYoutubeExtractProgress(null);
                         setCcImportJournalMode(false);
                         setCcJournalText("");
                         setCcJournalTitle("");

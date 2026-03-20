@@ -5,13 +5,10 @@ export const LANGUAGES = [
   { code: "ta", name: "Tamil" },
   { code: "kn", name: "Kannada" },
   { code: "ja", name: "Japanese" },
-  { code: "zh", name: "Mandarin" },
   { code: "es", name: "Spanish" },
-  { code: "ar", name: "Arabic" },
   { code: "fr", name: "French" },
   { code: "bn", name: "Bengali" },
   { code: "pt", name: "Portuguese" },
-  { code: "ru", name: "Russian" },
   { code: "ur", name: "Urdu" },
   // European
   { code: "de", name: "German" },
@@ -37,7 +34,7 @@ export function isValidLanguageCode(code: string): code is LanguageCode {
   return LANGUAGES.some((l) => l.code === code);
 }
 
-const RTL_LANGUAGES: LanguageCode[] = ["ar", "ur"];
+const RTL_LANGUAGES: LanguageCode[] = ["ur"];
 
 export function isRtlLanguage(code: LanguageCode): boolean {
   return RTL_LANGUAGES.includes(code);
@@ -58,21 +55,9 @@ export const LANGUAGE_REGIONS = [
     languages: ["de", "es", "fr", "it", "nl", "pl", "pt", "ro", "uk", "tr"] as LanguageCode[],
   },
   {
-    id: "russia",
-    label: "Russia",
-    icon: "🇷🇺",
-    languages: ["ru"] as LanguageCode[],
-  },
-  {
-    id: "china",
-    label: "China",
-    icon: "🇨🇳",
-    languages: ["zh"] as LanguageCode[],
-  },
-  {
-    id: "east-asia",
-    label: "East Asia",
-    icon: "🌏",
+    id: "japan",
+    label: "Japan",
+    icon: "🇯🇵",
     languages: ["ja"] as LanguageCode[],
   },
   {
@@ -80,11 +65,5 @@ export const LANGUAGE_REGIONS = [
     label: "South Asia",
     icon: "🇮🇳",
     languages: ["hi", "ta", "kn", "bn", "ur"] as LanguageCode[],
-  },
-  {
-    id: "middle-east",
-    label: "Middle East",
-    icon: "🕌",
-    languages: ["ar"] as LanguageCode[],
   },
 ] as const;

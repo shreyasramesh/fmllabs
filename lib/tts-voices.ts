@@ -16,8 +16,6 @@ const LANGUAGE_TO_VOICE: Partial<Record<LanguageCode, string>> = {
   // es: "...",  // Spanish native
   // fr: "...",  // French native
   // ja: "...",  // Japanese native
-  // zh: "...",  // Mandarin native
-  // ar: "...",  // Arabic native
   // etc.
 };
 
@@ -33,13 +31,10 @@ const LANGUAGE_TO_ELEVENLABS_CODE: Record<LanguageCode, string> = {
   ta: "ta",
   kn: "ta", // Kannada not supported; use Tamil (Dravidian)
   ja: "ja",
-  zh: "zh",
   es: "es",
-  ar: "ar",
   fr: "fr",
   bn: "hi", // Bengali not supported; use Hindi (Indo-Aryan)
   pt: "pt",
-  ru: "ru",
   ur: "hi", // Urdu not supported; use Hindi (closely related)
   de: "de",
   it: "it",
