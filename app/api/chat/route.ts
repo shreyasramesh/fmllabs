@@ -231,24 +231,6 @@ ${grounding}### Make it felt
 If anything conflicts, prioritize **grounded spirit and documented worldview** over generic assistant habits.`;
 }
 
-/** Second-order thinking: minimal prompt, no mental-model index or RAG. */
-const SECOND_ORDER_SYSTEM_PROMPT = `# Role: Second-order thinking partner
-You help the user think past the first obvious answer. First-order thinking is "what happens next?"; second-order thinking is "what happens next *after that*?"—including incentives, feedback loops, and unintended consequences.
-
-## Your stance
-- **Probe consequences:** Surface tradeoffs, hidden assumptions, and who gains or loses if the first move plays out.
-- **Stay concrete:** Prefer specific scenarios over abstract theory.
-- **No laundry lists:** Offer a few sharp second-order angles, not a generic essay.
-- **Match the need:** If they need a direct answer or definition, give it first—then add one layer of second-order insight when it helps.
-
-## Guardrails
-- **No meta-talk:** Do not mention that you are an AI or a "mode." No machine-readable footers or bracketed tags.
-- **Language:** Match the language of the user's message unless they ask otherwise.
-- **Honesty:** If you lack domain facts, say so and reason from structure (incentives, time horizons) instead of inventing specifics.
-
-## Formatting
-Use **Markdown** sparingly. Use **bold** only for pivotal terms. Keep responses concise (under 3 paragraphs unless the user asks for depth).`;
-
 function prettyJson(value: unknown): string {
   return JSON.stringify(value, null, 2);
 }
@@ -287,6 +269,8 @@ export async function POST(request: Request) {
   let mentorOneOnOne: FamousFigure | null = null;
   let requestedSecondOrder = false;
   let secondOrderMode = false;
+  /** Set in body parse: 2–5 mentors (takes precedence over second-order). */
+  let multiMentorEligible = false;
 
   try {
     const body = await request.json();
@@ -366,6 +350,10 @@ export async function POST(request: Request) {
         );
       }
     }
+    multiMentorEligible =
+      multiMentorMode &&
+      multiMentorFigureIds.length >= 2 &&
+      multiMentorFigureIds.length <= 5;
     if (typeof body.oneOnOneMentorFigureId === "string" && body.oneOnOneMentorFigureId.trim()) {
       const fig = getFigureById(body.oneOnOneMentorFigureId.trim());
       if (!fig) {
@@ -388,15 +376,12 @@ export async function POST(request: Request) {
     if (body.secondOrderThinking === true) {
       requestedSecondOrder = true;
     }
+    if (multiMentorEligible) {
+      requestedSecondOrder = false;
+    }
     if (requestedSecondOrder && resolvedOneOnOneFigure) {
       return NextResponse.json(
         { error: "Cannot combine second-order mode with 1:1 mentor" },
-        { status: 400 }
-      );
-    }
-    if (requestedSecondOrder && multiMentorMode) {
-      return NextResponse.json(
-        { error: "Cannot combine second-order mode with multi-mentor" },
         { status: 400 }
       );
     }
@@ -479,7 +464,12 @@ export async function POST(request: Request) {
           ? { perspectiveCardFigureId: activeCardFigureId, perspectiveCardFigureName: activeCardFigureName }
           : {}),
       });
-    } else if (!activeCardPrompt && session?.perspectiveCardPrompt) {
+    } else if (
+      !activeCardPrompt &&
+      session?.perspectiveCardPrompt &&
+      !requestedSecondOrder &&
+      !session.secondOrderThinking
+    ) {
       activeCardPrompt = session.perspectiveCardPrompt;
       activeCardName = session.perspectiveCardName ?? "Perspective card";
       activeCardFigureId = session.perspectiveCardFigureId;
@@ -498,13 +488,18 @@ export async function POST(request: Request) {
       if (fig) mentorOneOnOne = fig;
     }
 
-    if (requestedSecondOrder && sessionId) {
+    if (multiMentorEligible && sessionId) {
+      await updateSession(sessionId, userId!, { clearSecondOrder: true });
+    }
+
+    if (requestedSecondOrder && sessionId && !multiMentorEligible) {
       secondOrderMode = true;
       await updateSession(sessionId, userId!, {
         secondOrderThinking: true,
         clearOneOnOneMentor: true,
+        clearPerspectiveCard: true,
       });
-    } else if (!requestedSecondOrder && session?.secondOrderThinking) {
+    } else if (!requestedSecondOrder && session?.secondOrderThinking && !multiMentorEligible) {
       secondOrderMode = true;
     }
 
@@ -788,8 +783,13 @@ ${langInstr}`;
       userTypeStylePromptSo
         ? `\n\nCONVERSATION STYLE: ${userTypeStylePromptSo}`
         : "";
+    const optionsStyleInstructionSo =
+      getUserTypeOptionsPrompt(userType as UserTypeId) || "Natural, conversational first-person.";
     fullSystemPrompt =
-      SECOND_ORDER_SYSTEM_PROMPT +
+      SYSTEM_PROMPT.replace("[Insert Index Here]", "(none)")
+        .replace("[Insert Context Here]", "(none)")
+        .replace("[Insert Followed Figures Nudge Here]", followedFiguresNudgeBlock)
+        .replace("[Options Style Instruction]", optionsStyleInstructionSo) +
       languageInstructionSo +
       conversationStyleInstructionSo;
     mmIdToName = new Map();
@@ -1170,7 +1170,7 @@ ${langInstr}`;
 
   if (process.env.NODE_ENV === "development") {
     const modeLabel = secondOrderMode
-      ? "second-order (SECOND_ORDER_SYSTEM_PROMPT only, no RAG)"
+      ? "second-order (SYSTEM_PROMPT, no RAG / empty index & context)"
       : mentorOneOnOne
         ? "mentor (MENTOR_ONE_ON_ONE_SYSTEM_PROMPT only, no RAG)"
         : isLightweight

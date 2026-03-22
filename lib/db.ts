@@ -450,6 +450,8 @@ export async function updateSession(
     clearOneOnOneMentor?: boolean;
     /** Remove second-order flag from the session document */
     clearSecondOrder?: boolean;
+    /** Remove perspective card fields from the session document */
+    clearPerspectiveCard?: boolean;
   }
 ): Promise<boolean> {
   const database = await getDb();
@@ -462,6 +464,7 @@ export async function updateSession(
   const {
     clearOneOnOneMentor,
     clearSecondOrder,
+    clearPerspectiveCard,
     ...rest
   } = updates;
   const encryptedRest = encryptSessionFields<Record<string, unknown>>(rest as object);
@@ -478,6 +481,12 @@ export async function updateSession(
   }
   if (clearSecondOrder) {
     $unset.secondOrderThinking = "";
+  }
+  if (clearPerspectiveCard) {
+    $unset.perspectiveCardPrompt = "";
+    $unset.perspectiveCardName = "";
+    $unset.perspectiveCardFigureId = "";
+    $unset.perspectiveCardFigureName = "";
   }
   const updateDoc: { $set: Record<string, unknown>; $unset?: Record<string, ""> } = {
     $set,

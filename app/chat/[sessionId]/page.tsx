@@ -477,19 +477,118 @@ function MessageBubble({
           Journal Checkpoint: {message.journalCheckpoint}
         </div>
       )}
-      <div
-        className={`group/tts relative max-w-[85%] rounded-3xl px-4 py-3 transition-shadow duration-200 ${
-          message.role === "user"
-            ? "bg-foreground text-background shadow-sm"
-            : `bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground ${
-                showTtsChrome ? "pr-14" : "pr-4"
-              }`
-        }`}
-        dir={isRtl ? "rtl" : undefined}
-      >
-        {showTtsChrome && (
-        <div className="absolute top-2 right-2 flex flex-col items-end shrink-0">
-          <TTSButton
+      {message.role === "assistant" && showTtsChrome ? (
+        <div className="flex flex-row items-start gap-2 max-w-[92%] w-full">
+          <div
+            className="group/tts flex-1 min-w-0 rounded-3xl px-4 py-3 transition-shadow duration-200 bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground"
+            dir={isRtl ? "rtl" : undefined}
+          >
+            <div className="message-bubble-text text-sm md:text-base">
+              {message.mentorOneOnOne && (
+                <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
+                  1:1 · {message.mentorOneOnOne.name}
+                </p>
+              )}
+              {message.secondOrderThinking && (
+                <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
+                  {getLandingTranslations(language).secondOrderChipLabel}
+                </p>
+              )}
+              {message.perspectiveCard && (
+                <p className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
+                  {message.perspectiveCard.name}
+                </p>
+              )}
+              {message.mentorResponses && message.mentorResponses.length > 0 ? (
+                <div className="space-y-4">
+                  {message.mentorResponses.map((mr) => (
+                    <div
+                      key={mr.figureId}
+                      className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 overflow-hidden"
+                    >
+                      <div className="px-3 py-2 border-b border-neutral-200 dark:border-neutral-700">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
+                          {mr.figureName}
+                        </span>
+                      </div>
+                      <div className="px-3 py-2">
+                        <ChatMarkdown
+                          content={mr.content}
+                          idToName={idToName}
+                          ltmIdToTitle={ltmIdToTitle}
+                          ccIdToTitle={ccIdToTitle}
+                          cgIdToTitle={cgIdToTitle}
+                          figureIdToName={figureIdToName}
+                          figureIdToDescription={figureIdToDescription}
+                          onMentalModelClick={onMentalModelClick}
+                          onLtmClick={onLtmClick}
+                          onCustomConceptClick={onCustomConceptClick}
+                          onConceptGroupClick={onConceptGroupClick}
+                          previewMap={previewMap}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : text ? (
+                <>
+                  {/^\d+ mentors are responding…$/.test(text.trim()) && isLastMsg ? (
+                    <div className="flex flex-col gap-2 w-full max-w-[240px]">
+                      <span className="text-sm text-neutral-600 dark:text-neutral-400">{text}</span>
+                      <div
+                        className="gemini-loading-bar h-1.5 rounded-full overflow-hidden"
+                        aria-hidden
+                      />
+                    </div>
+                  ) : isFindingGuide ? (
+                    <span className="flex items-center gap-2">
+                      <span>{text}</span>
+                      <LoadingDots className="opacity-70 w-4 h-4" aria-hidden />
+                    </span>
+                  ) : isSpeakingAssistantBody ? (
+                    <TtsHighlightedText
+                      text={assistantPlainText}
+                      charEnd={ttsHighlight}
+                    />
+                  ) : (
+                    <ChatMarkdown
+                      content={text}
+                      idToName={idToName}
+                      ltmIdToTitle={ltmIdToTitle}
+                      ccIdToTitle={ccIdToTitle}
+                      cgIdToTitle={cgIdToTitle}
+                      figureIdToName={figureIdToName}
+                      figureIdToDescription={figureIdToDescription}
+                      onMentalModelClick={onMentalModelClick}
+                      onLtmClick={onLtmClick}
+                      onCustomConceptClick={onCustomConceptClick}
+                      onConceptGroupClick={onConceptGroupClick}
+                      previewMap={previewMap}
+                    />
+                  )}
+                  {isLastMsg && isLoading && (
+                    <span
+                      className="inline-block w-0.5 h-4 ml-0.5 bg-foreground/80 animate-blink align-middle"
+                      aria-hidden
+                    />
+                  )}
+                  {isLastMsg && text === "Something went wrong." && onRetry && (
+                    <button
+                      type="button"
+                      onClick={onRetry}
+                      className="mt-2 inline-block px-3 py-1.5 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                    >
+                      Retry
+                    </button>
+                  )}
+                </>
+              ) : (
+                <LoadingDots className="opacity-70" />
+              )}
+            </div>
+          </div>
+          <div className="shrink-0 pt-0.5 flex flex-col items-center">
+            <TTSButton
               text={assistantSpeechText}
               plainText={assistantSpeechText}
               showOnHover={false}
@@ -497,147 +596,157 @@ function MessageBubble({
               ariaLabel="Listen to message"
               onTtsProgress={(charEnd) => onTtsProgress?.(messageIndex, charEnd)}
               onTtsEnd={onTtsEnd}
-          />
-        </div>
-        )}
-        {message.role === "user" ? (
-          <div className="flex flex-col gap-2">
-            <span className="message-bubble-text text-sm md:text-base">
-              {isUserTtsActive ? (
-                <TtsHighlightedText
-                  text={userPlainText}
-                  charEnd={ttsHighlight}
-                />
-              ) : (
-              <UserMessageContent
-                content={text}
-                idToName={idToName}
-                ltmIdToTitle={ltmIdToTitle}
-                ccIdToTitle={ccIdToTitle}
-                cgIdToTitle={cgIdToTitle}
-                figureIdToName={figureIdToName}
-                figureIdToDescription={figureIdToDescription}
-                onMentalModelClick={(id) => onMentalModelClick(id, text)}
-                onLtmClick={onLtmClick}
-                onCustomConceptClick={onCustomConceptClick}
-                onConceptGroupClick={onConceptGroupClick}
-                previewMap={previewMap}
-              />
-              )}
-            </span>
-            {message.perspectiveCard && (
-              <div className="mt-1 pt-2 border-t border-white/20 rounded-b-xl">
-                <p className="text-xs font-medium opacity-90 uppercase tracking-wider">{message.perspectiveCard.name}</p>
-                <p className="text-sm opacity-95 mt-0.5 leading-relaxed">{message.perspectiveCard.prompt}</p>
-              </div>
-            )}
+            />
           </div>
-        ) : (
-          <div className="message-bubble-text text-sm md:text-base">
-            {message.mentorOneOnOne && (
-              <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
-                1:1 · {message.mentorOneOnOne.name}
-              </p>
-            )}
-            {message.secondOrderThinking && (
-              <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
-                {getLandingTranslations(language).secondOrderChipLabel}
-              </p>
-            )}
-            {message.perspectiveCard && (
-              <p className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
-                {message.perspectiveCard.name}
-              </p>
-            )}
-            {message.mentorResponses && message.mentorResponses.length > 0 ? (
-              <div className="space-y-4">
-                {message.mentorResponses.map((mr) => (
-                  <div
-                    key={mr.figureId}
-                    className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 overflow-hidden"
-                  >
-                    <div className="px-3 py-2 border-b border-neutral-200 dark:border-neutral-700">
-                      <span className="text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
-                        {mr.figureName}
-                      </span>
-                    </div>
-                    <div className="px-3 py-2">
-                      <ChatMarkdown
-                        content={mr.content}
-                        idToName={idToName}
-                        ltmIdToTitle={ltmIdToTitle}
-                        ccIdToTitle={ccIdToTitle}
-                        cgIdToTitle={cgIdToTitle}
-                        figureIdToName={figureIdToName}
-                        figureIdToDescription={figureIdToDescription}
-                        onMentalModelClick={onMentalModelClick}
-                        onLtmClick={onLtmClick}
-                        onCustomConceptClick={onCustomConceptClick}
-                        onConceptGroupClick={onConceptGroupClick}
-                        previewMap={previewMap}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : text ? (
-              <>
-                {/^\d+ mentors are responding…$/.test(text.trim()) && isLastMsg ? (
-                  <div className="flex flex-col gap-2 w-full max-w-[240px]">
-                    <span className="text-sm text-neutral-600 dark:text-neutral-400">{text}</span>
-                    <div
-                      className="gemini-loading-bar h-1.5 rounded-full overflow-hidden"
-                      aria-hidden
-                    />
-                  </div>
-                ) : isFindingGuide ? (
-                  <span className="flex items-center gap-2">
-                    <span>{text}</span>
-                    <LoadingDots className="opacity-70 w-4 h-4" aria-hidden />
-                  </span>
-                ) : isSpeakingAssistantBody ? (
+        </div>
+      ) : (
+        <div
+          className={`group/tts relative max-w-[85%] rounded-3xl px-4 py-3 transition-shadow duration-200 ${
+            message.role === "user"
+              ? "bg-foreground text-background shadow-sm"
+              : "bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground pr-4"
+          }`}
+          dir={isRtl ? "rtl" : undefined}
+        >
+          {message.role === "user" ? (
+            <div className="flex flex-col gap-2">
+              <span className="message-bubble-text text-sm md:text-base">
+                {isUserTtsActive ? (
                   <TtsHighlightedText
-                    text={assistantPlainText}
+                    text={userPlainText}
                     charEnd={ttsHighlight}
                   />
                 ) : (
-                <ChatMarkdown
-                  content={text}
-                  idToName={idToName}
-                  ltmIdToTitle={ltmIdToTitle}
-                  ccIdToTitle={ccIdToTitle}
-                  cgIdToTitle={cgIdToTitle}
-                  figureIdToName={figureIdToName}
-                  figureIdToDescription={figureIdToDescription}
-                  onMentalModelClick={onMentalModelClick}
-                  onLtmClick={onLtmClick}
-                  onCustomConceptClick={onCustomConceptClick}
-                  onConceptGroupClick={onConceptGroupClick}
-                  previewMap={previewMap}
-                />
-                )}
-                {isLastMsg && isLoading && (
-                  <span
-                    className="inline-block w-0.5 h-4 ml-0.5 bg-foreground/80 animate-blink align-middle"
-                    aria-hidden
+                  <UserMessageContent
+                    content={text}
+                    idToName={idToName}
+                    ltmIdToTitle={ltmIdToTitle}
+                    ccIdToTitle={ccIdToTitle}
+                    cgIdToTitle={cgIdToTitle}
+                    figureIdToName={figureIdToName}
+                    figureIdToDescription={figureIdToDescription}
+                    onMentalModelClick={(id) => onMentalModelClick(id, text)}
+                    onLtmClick={onLtmClick}
+                    onCustomConceptClick={onCustomConceptClick}
+                    onConceptGroupClick={onConceptGroupClick}
+                    previewMap={previewMap}
                   />
                 )}
-                {isLastMsg && text === "Something went wrong." && onRetry && (
-                  <button
-                    type="button"
-                    onClick={onRetry}
-                    className="mt-2 inline-block px-3 py-1.5 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
-                  >
-                    Retry
-                  </button>
-                )}
-              </>
-            ) : (
-              <LoadingDots className="opacity-70" />
-            )}
-          </div>
-        )}
-      </div>
+              </span>
+              {message.perspectiveCard && (
+                <div className="mt-1 pt-2 border-t border-white/20 rounded-b-xl">
+                  <p className="text-xs font-medium opacity-90 uppercase tracking-wider">{message.perspectiveCard.name}</p>
+                  <p className="text-sm opacity-95 mt-0.5 leading-relaxed">{message.perspectiveCard.prompt}</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="message-bubble-text text-sm md:text-base">
+              {message.mentorOneOnOne && (
+                <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
+                  1:1 · {message.mentorOneOnOne.name}
+                </p>
+              )}
+              {message.secondOrderThinking && (
+                <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
+                  {getLandingTranslations(language).secondOrderChipLabel}
+                </p>
+              )}
+              {message.perspectiveCard && (
+                <p className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
+                  {message.perspectiveCard.name}
+                </p>
+              )}
+              {message.mentorResponses && message.mentorResponses.length > 0 ? (
+                <div className="space-y-4">
+                  {message.mentorResponses.map((mr) => (
+                    <div
+                      key={mr.figureId}
+                      className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 overflow-hidden"
+                    >
+                      <div className="px-3 py-2 border-b border-neutral-200 dark:border-neutral-700">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
+                          {mr.figureName}
+                        </span>
+                      </div>
+                      <div className="px-3 py-2">
+                        <ChatMarkdown
+                          content={mr.content}
+                          idToName={idToName}
+                          ltmIdToTitle={ltmIdToTitle}
+                          ccIdToTitle={ccIdToTitle}
+                          cgIdToTitle={cgIdToTitle}
+                          figureIdToName={figureIdToName}
+                          figureIdToDescription={figureIdToDescription}
+                          onMentalModelClick={onMentalModelClick}
+                          onLtmClick={onLtmClick}
+                          onCustomConceptClick={onCustomConceptClick}
+                          onConceptGroupClick={onConceptGroupClick}
+                          previewMap={previewMap}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : text ? (
+                <>
+                  {/^\d+ mentors are responding…$/.test(text.trim()) && isLastMsg ? (
+                    <div className="flex flex-col gap-2 w-full max-w-[240px]">
+                      <span className="text-sm text-neutral-600 dark:text-neutral-400">{text}</span>
+                      <div
+                        className="gemini-loading-bar h-1.5 rounded-full overflow-hidden"
+                        aria-hidden
+                      />
+                    </div>
+                  ) : isFindingGuide ? (
+                    <span className="flex items-center gap-2">
+                      <span>{text}</span>
+                      <LoadingDots className="opacity-70 w-4 h-4" aria-hidden />
+                    </span>
+                  ) : isSpeakingAssistantBody ? (
+                    <TtsHighlightedText
+                      text={assistantPlainText}
+                      charEnd={ttsHighlight}
+                    />
+                  ) : (
+                    <ChatMarkdown
+                      content={text}
+                      idToName={idToName}
+                      ltmIdToTitle={ltmIdToTitle}
+                      ccIdToTitle={ccIdToTitle}
+                      cgIdToTitle={cgIdToTitle}
+                      figureIdToName={figureIdToName}
+                      figureIdToDescription={figureIdToDescription}
+                      onMentalModelClick={onMentalModelClick}
+                      onLtmClick={onLtmClick}
+                      onCustomConceptClick={onCustomConceptClick}
+                      onConceptGroupClick={onConceptGroupClick}
+                      previewMap={previewMap}
+                    />
+                  )}
+                  {isLastMsg && isLoading && (
+                    <span
+                      className="inline-block w-0.5 h-4 ml-0.5 bg-foreground/80 animate-blink align-middle"
+                      aria-hidden
+                    />
+                  )}
+                  {isLastMsg && text === "Something went wrong." && onRetry && (
+                    <button
+                      type="button"
+                      onClick={onRetry}
+                      className="mt-2 inline-block px-3 py-1.5 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                    >
+                      Retry
+                    </button>
+                  )}
+                </>
+              ) : (
+                <LoadingDots className="opacity-70" />
+              )}
+            </div>
+          )}
+        </div>
+      )}
       {canGoBack && (
         <button
           type="button"
@@ -3125,7 +3234,12 @@ export default function ChatPage() {
     if (mentorForApi) {
       chatBody.oneOnOneMentorFigureId = mentorForApi.id;
     }
-    if (activeSecondOrderRef.current && !mentorForApi && !cardCtx) {
+    const useMultiMentorThisTurn =
+      multiMentorMode &&
+      selectedMentorFigureIds.length >= 2 &&
+      selectedMentorFigureIds.length <= 5 &&
+      !mentorForApi;
+    if (activeSecondOrderRef.current && !mentorForApi && !cardCtx && !useMultiMentorThisTurn) {
       chatBody.secondOrderThinking = true;
     }
     if (isAnonymous || incognitoMode) {
@@ -4273,25 +4387,25 @@ export default function ChatPage() {
         >
           {sidebarOpen ? (
             <>
-              <Link
-                href="/"
-                className={`font-semibold text-lg min-w-0 truncate ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
+          <Link
+            href="/"
+            className={`font-semibold text-lg min-w-0 truncate ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
                 title={PRODUCT_TAGLINE}
-              >
-                FigureMyLife Labs
-              </Link>
-              <button
+          >
+            FigureMyLife Labs
+          </Link>
+          <button
                 type="button"
-                onClick={() => setSidebarOpen(false)}
-                className={`p-2 -mr-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl border-2 border-transparent transition-colors duration-200 active:scale-95 ${
-                  incognitoMode
-                    ? "text-neutral-100/80 dark:text-neutral-900/80 hover:border-neutral-500 dark:hover:border-neutral-400 hover:text-neutral-100 dark:hover:text-neutral-900"
-                    : "text-neutral-500 hover:border-neutral-400 dark:hover:border-neutral-500"
-                }`}
-                aria-label="Close sidebar"
-              >
-                ✕
-              </button>
+            onClick={() => setSidebarOpen(false)}
+            className={`p-2 -mr-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl border-2 border-transparent transition-colors duration-200 active:scale-95 ${
+              incognitoMode
+                ? "text-neutral-100/80 dark:text-neutral-900/80 hover:border-neutral-500 dark:hover:border-neutral-400 hover:text-neutral-100 dark:hover:text-neutral-900"
+                : "text-neutral-500 hover:border-neutral-400 dark:hover:border-neutral-500"
+            }`}
+            aria-label="Close sidebar"
+          >
+            ✕
+          </button>
             </>
           ) : (
             <button
@@ -4407,16 +4521,16 @@ export default function ChatPage() {
             {/* XP and weather hidden on mobile - available in Settings */}
             {!incognitoMode && !isAnonymous && userScore && (
               <div className="hidden md:flex shrink-0">
-                <RankPill
-                  score={userScore}
-                  optimisticDelta={scoreOptimisticDelta}
-                  onClick={() => setRankModalOpen(true)}
-                  showRankUpAnimation={showRankUpAnimation}
-                />
+              <RankPill
+                score={userScore}
+                optimisticDelta={scoreOptimisticDelta}
+                onClick={() => setRankModalOpen(true)}
+                showRankUpAnimation={showRankUpAnimation}
+              />
               </div>
             )}
             <div className="hidden md:flex shrink-0">
-              <Clock weatherFormat={weatherFormat} onMoonPhaseChange={setMoonPhase} />
+            <Clock weatherFormat={weatherFormat} onMoonPhaseChange={setMoonPhase} />
             </div>
             {!incognitoMode && !isAnonymous && (
               <div className="relative group/incognito">
@@ -4520,7 +4634,7 @@ export default function ChatPage() {
           >
           {/* New conversation - always visible at top of sidebar */}
           {incognitoMode ? (
-            <Link
+          <Link
               href="/chat/incognito"
               onClick={() => {
                 closeAllModalsExceptLeftPanel();
@@ -4540,31 +4654,31 @@ export default function ChatPage() {
             <button
               type="button"
               onClick={() => {
-                closeAllModalsExceptLeftPanel();
-                if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
-                if (sessionId === "new" || sessionId === "incognito") {
-                  anonymousActiveRef.current = false;
-                  setMessages([]);
-                  setCurrentSessionId(null);
-                  setCurrentSession(null);
-                  setCollapsedSummary(null);
-                  setInput("");
+              closeAllModalsExceptLeftPanel();
+              if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+              if (sessionId === "new" || sessionId === "incognito") {
+                anonymousActiveRef.current = false;
+                setMessages([]);
+                setCurrentSessionId(null);
+                setCurrentSession(null);
+                setCollapsedSummary(null);
+                setInput("");
                   activeOneOnOneMentorRef.current = null;
                   setPendingOneOnOneMentor(null);
                   activeSecondOrderRef.current = false;
                   setPendingSecondOrder(false);
-                }
+              }
                 setNewConversationChooserModalOpen(true);
-              }}
-              className={`flex items-center w-full rounded-xl border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0 ${
+            }}
+            className={`flex items-center w-full rounded-xl border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0 ${
                 sidebarOpen ? "justify-center gap-2 px-3 py-2 mb-2" : "justify-center p-2 lg:px-2 lg:py-2"
-              }`}
-              aria-label={getLandingTranslations(language).newConversation}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                <path d="M12 5v14M5 12h14" />
-              </svg>
-              {sidebarOpen && <span className="truncate">{getLandingTranslations(language).newConversation}</span>}
+            }`}
+            aria-label={getLandingTranslations(language).newConversation}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            {sidebarOpen && <span className="truncate">{getLandingTranslations(language).newConversation}</span>}
             </button>
           )}
           {sidebarOpen && (
@@ -4721,7 +4835,7 @@ export default function ChatPage() {
             </button>
           </div>
           </div>
-        </div>
+            </div>
         {/* Accounts section - bottom of left panel (Browser Use style) */}
         <div className="shrink-0 px-2 py-3 border-t border-neutral-200/80 dark:border-neutral-800">
             {user ? (
@@ -4995,15 +5109,15 @@ export default function ChatPage() {
                             <div className="w-full flex flex-col items-start text-left flex-1 min-w-0 pr-8">
                               <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                                 {saved.name}
-                              </span>
+                          </span>
                               <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">
                                 {saved.prompt}
                               </p>
                               <p className="mt-auto pt-2 text-[11px] text-neutral-500 dark:text-neutral-400">
                                 Tap to open
                               </p>
-                            </div>
-                            <button
+                    </div>
+                    <button
                               type="button"
                               onClick={async (e) => {
                                 e.stopPropagation();
@@ -5024,18 +5138,18 @@ export default function ChatPage() {
                                 <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
                                 <line x1="10" x2="10" y1="11" y2="17" />
                                 <line x1="14" x2="14" y1="11" y2="17" />
-                              </svg>
-                            </button>
-                          </div>
+                    </svg>
+                  </button>
+                </div>
                         ))}
-                      </div>
+              </div>
                       {savedPerspectiveCards.length > 6 && (
                         <p className="text-xs text-neutral-500 mt-1">
                           +{savedPerspectiveCards.length - 6} more saved
                         </p>
                       )}
-                    </div>
-                  )}
+                </div>
+              )}
                   <div className="p-4 rounded-2xl border border-dashed border-neutral-300 dark:border-neutral-600 bg-neutral-50/50 dark:bg-neutral-800/30">
                     <p className="text-sm font-medium text-foreground mb-2">Generate a card from a topic</p>
                     <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">
@@ -5050,8 +5164,8 @@ export default function ChatPage() {
                         className="flex-1 px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
                         disabled={generateCardLoading}
                       />
-                      <button
-                        type="button"
+                  <button
+                    type="button"
                         onClick={async () => {
                           const topic = generateTopicInput.trim();
                           if (!topic || generateCardLoading) return;
@@ -5089,12 +5203,12 @@ export default function ChatPage() {
                         className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
                       >
                         {generateCardLoading ? "Generating…" : "Generate"}
-                      </button>
-                    </div>
+                  </button>
+                </div>
                     {generateCardError && (
                       <p className="text-xs text-red-600 dark:text-red-400 mt-2">{generateCardError}</p>
-                    )}
-                  </div>
+              )}
+            </div>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
                     {waysOfLookingAtDrawMode ? "Choose a domain" : "Choose a category to browse perspective cards."}
                   </p>
@@ -5106,9 +5220,9 @@ export default function ChatPage() {
                         const deck = perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === domain);
                         if (!deck) return null;
                         return (
-                          <button
+                        <button
                             key={domain}
-                            type="button"
+                          type="button"
                             onClick={async () => {
                               playSelectionChime();
                               const subdomains = subdomainsByDomain[domain];
@@ -5144,14 +5258,14 @@ export default function ChatPage() {
                                 className="w-full h-28 object-cover"
                                 loading="lazy"
                               />
-                            </div>
+                </div>
                             <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
                               {domainDisplayName[domain] ?? domain.replace(/_/g, " ")}
                             </span>
                             <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2">
                               {perspectiveDecksConfig?.domains?.[domain]?.description?.trim() ?? deck.description}
                             </p>
-                          </button>
+                    </button>
                         );
                       })
                     )}
@@ -5164,11 +5278,11 @@ export default function ChatPage() {
                   </p>
                   <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
                     {(subdomainsByDomain["urban_jungle"] ?? []).map((city) => (
-                      <button
+                        <button
                         key={city.id}
-                        type="button"
+                          type="button"
                         onClick={async () => {
-                          playSelectionChime();
+                            playSelectionChime();
                           if (waysOfLookingAtDrawMode) {
                             try {
                               const deckId = city.deck_id;
@@ -5213,10 +5327,10 @@ export default function ChatPage() {
                         <p className="text-xs text-neutral-500 dark:text-neutral-400">
                           50 perspective cards for city and architecture
                         </p>
-                      </button>
+                        </button>
                     ))}
-                  </div>
-                </div>
+                      </div>
+              </div>
               ) : waysOfLookingAtCategory === "culinary_lab" && !waysOfLookingAtCuisine ? (
                 <div className="space-y-4">
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -5228,7 +5342,7 @@ export default function ChatPage() {
                         key={cuisine.id}
                         type="button"
                         onClick={async () => {
-                          playSelectionChime();
+                        playSelectionChime();
                           if (waysOfLookingAtDrawMode) {
                             try {
                               const deckId = cuisine.deck_id;
@@ -5265,18 +5379,18 @@ export default function ChatPage() {
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
                               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
                             </svg>
-                          </div>
-                        </div>
+          </div>
+          </div>
                         <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
                           {cuisine.name}
                         </span>
                         <p className="text-xs text-neutral-500 dark:text-neutral-400">
                           50 perspective cards for food and eating
                         </p>
-                      </button>
+              </button>
                     ))}
-                  </div>
-                </div>
+              </div>
+            </div>
               ) : waysOfLookingAtCategory === "natural_microcosm" && !waysOfLookingAtMicrocosm ? (
                 <div className="space-y-4">
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -5284,11 +5398,11 @@ export default function ChatPage() {
                   </p>
                   <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
                     {(subdomainsByDomain["natural_microcosm"] ?? []).map((sub) => (
-                      <button
+                <button
                         key={sub.id}
-                        type="button"
+                  type="button"
                         onClick={async () => {
-                          playSelectionChime();
+                    playSelectionChime();
                           if (waysOfLookingAtDrawMode) {
                             try {
                               const deckId = sub.deck_id;
@@ -5324,9 +5438,9 @@ export default function ChatPage() {
                           <div className="hidden w-full h-28 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 flex items-center justify-center text-neutral-500 dark:text-neutral-400">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
                               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-                            </svg>
-                          </div>
-                        </div>
+                    </svg>
+              </div>
+          </div>
                         <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
                           {sub.name}
                         </span>
@@ -5335,8 +5449,8 @@ export default function ChatPage() {
                         </p>
                       </button>
                     ))}
-                  </div>
-                </div>
+        </div>
+      </div>
               ) : waysOfLookingAtCategory === "human_interface" && !waysOfLookingAtHuman ? (
                 <div className="space-y-4">
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -5344,9 +5458,9 @@ export default function ChatPage() {
                   </p>
                   <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
                     {(subdomainsByDomain["human_interface"] ?? []).map((sub) => (
-                      <button
+                <button
                         key={sub.id}
-                        type="button"
+                  type="button"
                         onClick={async () => {
                           playSelectionChime();
                           if (waysOfLookingAtDrawMode) {
@@ -5387,9 +5501,9 @@ export default function ChatPage() {
                               <circle cx="9" cy="7" r="4" />
                               <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                               <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                            </svg>
-                          </div>
-                        </div>
+                        </svg>
+                </div>
+              </div>
                         <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
                           {sub.name}
                         </span>
@@ -5398,8 +5512,8 @@ export default function ChatPage() {
                         </p>
                       </button>
                     ))}
-                  </div>
-                </div>
+            </div>
+          </div>
               ) : waysOfLookingAtCategory === "digital_ghost" && !waysOfLookingAtDigital ? (
                 <div className="space-y-4">
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -5407,9 +5521,9 @@ export default function ChatPage() {
                   </p>
                   <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
                     {(subdomainsByDomain["digital_ghost"] ?? []).map((sub) => (
-                      <button
+              <button
                         key={sub.id}
-                        type="button"
+                type="button"
                         onClick={async () => {
                           playSelectionChime();
                           if (waysOfLookingAtDrawMode) {
@@ -5450,17 +5564,17 @@ export default function ChatPage() {
                               <line x1="8" y1="21" x2="16" y2="21" />
                               <line x1="12" y1="17" x2="12" y2="21" />
                             </svg>
-                          </div>
-                        </div>
+                  </div>
+                      </div>
                         <span className="text-base font-medium text-foreground capitalize group-hover:text-foreground">
                           {sub.name}
-                        </span>
+                                  </span>
                         <p className="text-xs text-neutral-500 dark:text-neutral-400">
                           50 perspective cards for technology and software
                         </p>
-                      </button>
-                    ))}
-                  </div>
+                                  </button>
+                                ))}
+                              </div>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -5481,9 +5595,9 @@ export default function ChatPage() {
                                   ? perspectiveDecks.find((d) => d.id === digitalGhostSubToDeckId[waysOfLookingAtDigital])
                                   : perspectiveDecks.find((d) => (d.domain || "").toLowerCase() === waysOfLookingAtCategory);
                         return (
-                          <button
+                              <button
                             key={card.id}
-                            type="button"
+                                type="button"
                             onClick={() => {
                               playSelectionChime();
                               setDrawnPerspectiveCard({
@@ -5503,18 +5617,18 @@ export default function ChatPage() {
                             <p className="mt-auto pt-2 text-[11px] text-neutral-500 dark:text-neutral-400">
                               Tap to open
                             </p>
-                          </button>
+                              </button>
                         );
                       })}
-                    </div>
+                            </div>
                   ) : (
                     <p className="text-sm text-neutral-500">No cards in this category.</p>
                   )}
                 </div>
-              )}
-            </div>
-          </div>
-          </div>
+                          )}
+                        </div>
+                      </div>
+                </div>
         ) : showLibraryInline && (libraryPanelOpen === "concepts" || !isAnonymous) ? (
           <div className="flex-1 min-h-0 flex flex-col overflow-hidden bg-background" data-tour="library-inline">
             <div className="flex-1 overflow-y-auto min-h-0 w-full min-w-0 px-4 sm:px-6 lg:px-8 pt-4 pb-4">
@@ -5522,13 +5636,13 @@ export default function ChatPage() {
                 <div className="space-y-4">
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks and biases, grouped by when to use. Star to add to Favorites.</p>
                   <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={handleTeachMeClick}
-                      disabled={teachMeLoading}
+                  <button
+                    type="button"
+                    onClick={handleTeachMeClick}
+                    disabled={teachMeLoading}
                       className="flex flex-1 items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-foreground border border-neutral-200 dark:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors disabled:opacity-60"
-                      aria-label="Learn a new mental model"
-                    >
+                    aria-label="Learn a new mental model"
+                  >
                     {teachMeLoading ? (
                       <LoadingDots aria-label="Loading" />
                     ) : (
@@ -5541,7 +5655,7 @@ export default function ChatPage() {
                         <span>Learn a New Mental Model</span>
                       </>
                     )}
-                    </button>
+                  </button>
                     {!isAnonymous && (
                       <button
                         type="button"
@@ -6133,15 +6247,15 @@ export default function ChatPage() {
                                   {t.videoTitle || "Journal entry"}
                                 </span>
                               ) : (
-                                <a
-                                  href={`https://www.youtube.com/watch?v=${t.videoId}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  onClick={(e) => e.stopPropagation()}
-                                  className="text-sm font-medium truncate block hover:underline text-foreground"
-                                >
-                                  {t.videoTitle || t.videoId}
-                                </a>
+                              <a
+                                href={`https://www.youtube.com/watch?v=${t.videoId}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-sm font-medium truncate block hover:underline text-foreground"
+                              >
+                                {t.videoTitle || t.videoId}
+                              </a>
                               )}
                               {t.sourceType === "journal" ? (
                                 <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">Journal</p>
@@ -6440,7 +6554,13 @@ export default function ChatPage() {
           ) : (
           <div
             ref={messagesContainerRef}
-            className={`max-w-2xl mx-auto w-full min-w-0 px-4 py-6 no-touch-callout ${messages.length === 0 ? (isAnonymous ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-12" : "flex-1 min-h-0 flex flex-col items-center justify-center") : "space-y-6"}`}
+            className={`max-w-2xl mx-auto w-full min-w-0 no-touch-callout ${
+              messages.length === 0
+                ? isAnonymous
+                  ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-12 px-4 py-6"
+                  : "flex-1 min-h-0 flex flex-col items-center justify-center px-4 py-6"
+                : "px-3 py-4 sm:px-4 sm:py-5"
+            }`}
           >
             {messages.length === 0 && (
               <div className="flex w-full min-w-0 max-w-2xl flex-col items-center text-center px-2">
@@ -6625,6 +6745,8 @@ export default function ChatPage() {
                 {isAnonymous && <LeaderboardEmbed />}
               </div>
             )}
+            {messages.length > 0 && (
+            <div className="chat-thread-compact flex flex-col gap-[0.9rem] text-[60%] leading-[1.55]">
             {messages.map((m, i) => (
               <MessageBubble
                 key={i}
@@ -6771,6 +6893,8 @@ export default function ChatPage() {
                             setMultiMentorMode(true);
                             setSelectedMentorFigureIds([]);
                             setMentorPickerCategoryId(null);
+                            activeSecondOrderRef.current = false;
+                            setPendingSecondOrder(false);
                           }
                         }}
                         className={`inline-flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl text-[11px] font-medium transition-colors shrink-0 ${
@@ -6871,6 +6995,8 @@ export default function ChatPage() {
           </div>
           )}
           </div>
+          )}
+        </div>
         </div>
 
         {showScrollToBottom && !currentSession?.isCollapsed && messages.length > 0 && (
@@ -7528,14 +7654,14 @@ export default function ChatPage() {
                 )
               )}
               {transcriptModalTranscript.sourceType !== "journal" && (
-                <a
-                  href={`https://www.youtube.com/watch?v=${transcriptModalTranscript.videoId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blue-600 dark:text-blue-400 hover:underline mt-1 inline-block"
-                >
-                  Open on YouTube
-                </a>
+              <a
+                href={`https://www.youtube.com/watch?v=${transcriptModalTranscript.videoId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-blue-600 dark:text-blue-400 hover:underline mt-1 inline-block"
+              >
+                Open on YouTube
+              </a>
               )}
             </div>
             {transcriptModalTranscript.extractedConcepts && transcriptModalTranscript.extractedConcepts.length > 0 && (
@@ -7911,13 +8037,13 @@ export default function ChatPage() {
                     </svg>
                   </button>
                 ) : null}
-                <button
-                  onClick={() => setLtmDetailModal(null)}
-                  className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                  aria-label={getUiTranslations(language).close}
-                >
-                  ✕
-                </button>
+              <button
+                onClick={() => setLtmDetailModal(null)}
+                className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label={getUiTranslations(language).close}
+              >
+                ✕
+              </button>
               </div>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
@@ -7999,106 +8125,106 @@ export default function ChatPage() {
                 </div>
               ) : (
                 <>
-                  {ltmDetailModal.chainOfThought && ltmDetailModal.chainOfThought.length > 0 && (
-                    <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 p-3">
-                      <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2.5">
-                        Chain-of-thought
-                      </p>
-                      <div className="flex flex-wrap items-center gap-x-2 gap-y-2" dir={isRtlLanguage(language) ? "rtl" : undefined}>
-                        {ltmDetailModal.chainOfThought.map((step, i) => (
-                          <React.Fragment key={i}>
-                            <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600 shadow-sm whitespace-nowrap">
-                              {step}
-                            </span>
-                            {i < ltmDetailModal.chainOfThought!.length - 1 && (
-                              <span className="text-neutral-400 dark:text-neutral-500 shrink-0 text-[10px] font-medium" aria-hidden>→</span>
-                            )}
-                          </React.Fragment>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  <div>
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <label className="text-sm font-medium text-neutral-900 dark:text-neutral-100 min-w-0">
-                        Summary
-                      </label>
-                      <CopyButton
-                        text={`${ltmDetailModal.title}\n\n${ltmDetailModal.summary}`}
-                        aria-label="Copy summary"
-                      />
-                    </div>
-                    <div className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+              {ltmDetailModal.chainOfThought && ltmDetailModal.chainOfThought.length > 0 && (
+                <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 p-3">
+                  <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2.5">
+                    Chain-of-thought
+                  </p>
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-2" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                    {ltmDetailModal.chainOfThought.map((step, i) => (
+                      <React.Fragment key={i}>
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-600 shadow-sm whitespace-nowrap">
+                          {step}
+                        </span>
+                        {i < ltmDetailModal.chainOfThought!.length - 1 && (
+                          <span className="text-neutral-400 dark:text-neutral-500 shrink-0 text-[10px] font-medium" aria-hidden>→</span>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <label className="text-sm font-medium text-neutral-900 dark:text-neutral-100 min-w-0">
+                    Summary
+                  </label>
+                  <CopyButton
+                    text={`${ltmDetailModal.title}\n\n${ltmDetailModal.summary}`}
+                    aria-label="Copy summary"
+                  />
+                </div>
+                <div className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap" dir={isRtlLanguage(language) ? "rtl" : undefined}>
                       {ltmDetailModal.summary}
-                    </div>
-                  </div>
-                  <div>
+                </div>
+              </div>
+              <div>
                     <label className="block text-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1">
-                      Enrichment prompt
-                    </label>
-                    <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200" dir={isRtlLanguage(language) ? "rtl" : undefined}>
+                  Enrichment prompt
+                </label>
+                <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200" dir={isRtlLanguage(language) ? "rtl" : undefined}>
                       {ltmDetailModal.enrichmentPrompt}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2 pt-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setHabitPromoteModal({ sourceType: "ltm", source: ltmDetailModal });
-                        setHabitPromoteStep("generate");
-                        setHabitPromoteDraft(null);
-                        setHabitPromoteLanguage(language);
-                        setLtmDetailModal(null);
-                      }}
-                      className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
-                    >
-                      {getUiTranslations(language).promoteToHabit}
-                    </button>
-                    <GenerateRelevantMessageButton
-                      label="Generate Relevant Message"
-                      expandOnHover={false}
-                      aria-label="Generate Relevant Message"
-                      onClick={async () => {
-                        const suggestion = `${ltmDetailModal.title}\n\n${ltmDetailModal.summary}\n\nEnrichment: ${ltmDetailModal.enrichmentPrompt}`;
-                        setGenerateModal({ type: "ltm", generatedText: "", loading: true });
-                        try {
-                          const res = await fetch("/api/generate-relevant-prompt", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                              suggestion,
-                              messages: messages.map((m) => ({ role: m.role, content: m.content })),
-                            }),
-                          });
-                          const data = await res.json();
-                          setGenerateModal((prev) =>
-                            prev ? { ...prev, generatedText: data.text ?? suggestion, loading: false } : null
-                          );
-                        } catch {
-                          setGenerateModal((prev) =>
-                            prev ? { ...prev, generatedText: suggestion, loading: false } : null
-                          );
-                        }
-                      }}
-                    />
-                    <Link
-                      href={`/chat/${ltmDetailModal.sourceSessionId}`}
-                      onClick={() => setLtmDetailModal(null)}
-                      className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
-                    >
-                      View conversation →
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setLtmDeleteConfirmModal(ltmDetailModal);
-                        setLtmDetailModal(null);
-                      }}
-                      className="px-4 py-2 rounded-full text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
-                    >
-                      Delete from memory
-                    </button>
-                  </div>
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setHabitPromoteModal({ sourceType: "ltm", source: ltmDetailModal });
+                    setHabitPromoteStep("generate");
+                    setHabitPromoteDraft(null);
+                    setHabitPromoteLanguage(language);
+                    setLtmDetailModal(null);
+                  }}
+                  className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
+                >
+                  {getUiTranslations(language).promoteToHabit}
+                </button>
+                <GenerateRelevantMessageButton
+                  label="Generate Relevant Message"
+                  expandOnHover={false}
+                  aria-label="Generate Relevant Message"
+                  onClick={async () => {
+                    const suggestion = `${ltmDetailModal.title}\n\n${ltmDetailModal.summary}\n\nEnrichment: ${ltmDetailModal.enrichmentPrompt}`;
+                    setGenerateModal({ type: "ltm", generatedText: "", loading: true });
+                    try {
+                      const res = await fetch("/api/generate-relevant-prompt", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          suggestion,
+                          messages: messages.map((m) => ({ role: m.role, content: m.content })),
+                        }),
+                      });
+                      const data = await res.json();
+                      setGenerateModal((prev) =>
+                        prev ? { ...prev, generatedText: data.text ?? suggestion, loading: false } : null
+                      );
+                    } catch {
+                      setGenerateModal((prev) =>
+                        prev ? { ...prev, generatedText: suggestion, loading: false } : null
+                      );
+                    }
+                  }}
+                />
+                <Link
+                  href={`/chat/${ltmDetailModal.sourceSessionId}`}
+                  onClick={() => setLtmDetailModal(null)}
+                  className="px-4 py-2 rounded-full text-sm font-medium bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
+                >
+                  View conversation →
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLtmDeleteConfirmModal(ltmDetailModal);
+                    setLtmDetailModal(null);
+                  }}
+                  className="px-4 py-2 rounded-full text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+                >
+                  Delete from memory
+                </button>
+              </div>
                 </>
               )}
               {generateModal?.type === "ltm" && (
@@ -8208,21 +8334,21 @@ export default function ChatPage() {
                       </Link>
                     </div>
                   )}
-                  <button
-                    type="button"
-                    onClick={() => setSettingsOpen(false)}
-                    className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shrink-0 text-neutral-600 dark:text-neutral-400"
-                    aria-label={getUiTranslations(language).close}
-                  >
-                    ✕
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setSettingsOpen(false)}
+                  className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shrink-0 text-neutral-600 dark:text-neutral-400"
+                  aria-label={getUiTranslations(language).close}
+                >
+                  ✕
+                </button>
+              </div>
               </div>
               {isAnonymous && (
                 <div className="flex sm:hidden items-center gap-2 px-4 py-2 border-b border-neutral-200/80 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/40">
-                  <Link
+                    <Link
                     href="/sign-in"
-                    onClick={() => setSettingsOpen(false)}
+                      onClick={() => setSettingsOpen(false)}
                     className="flex-1 text-center px-3 py-2 rounded-xl text-sm font-medium border-2 border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
                   >
                     Sign In
@@ -8233,8 +8359,8 @@ export default function ChatPage() {
                     className="flex-1 text-center px-3 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
                   >
                     Create account
-                  </Link>
-                </div>
+                    </Link>
+                  </div>
               )}
               <div className="flex-1 overflow-y-auto p-4 sm:p-5 min-h-0 space-y-6">
                 <section>
@@ -8279,7 +8405,7 @@ export default function ChatPage() {
                   </div>
                 </section>
 
-                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
+                  <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
                     Installation Guide
                   </h3>
@@ -8324,7 +8450,7 @@ export default function ChatPage() {
                       </span>
                     </li>
                   </ul>
-                </section>
+                  </section>
 
                 <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">Conversation</h3>
@@ -10264,7 +10390,7 @@ export default function ChatPage() {
                           });
                           refetchTranscripts();
                         } else {
-                          setCcYoutubeError("Failed to extract concepts");
+                        setCcYoutubeError("Failed to extract concepts");
                         }
                       } catch (e) {
                         setCcYoutubeError(
@@ -10557,18 +10683,18 @@ export default function ChatPage() {
                     </svg>
                   </button>
                 ) : null}
-                <button
-                  onClick={() => {
-                    if (ccDetailModal._id.startsWith("extracted-")) setTranscriptExtractedConceptOpen(null);
-                    setCcDetailModal(null);
-                    setCcAutoTagSuggestions(null);
-                    setCcTranslatePopoverOpen(false);
-                  }}
-                  className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                  aria-label={getUiTranslations(language).close}
-                >
-                  ✕
-                </button>
+              <button
+                onClick={() => {
+                  if (ccDetailModal._id.startsWith("extracted-")) setTranscriptExtractedConceptOpen(null);
+                  setCcDetailModal(null);
+                  setCcAutoTagSuggestions(null);
+                  setCcTranslatePopoverOpen(false);
+                }}
+                className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label={getUiTranslations(language).close}
+              >
+                ✕
+              </button>
               </div>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
@@ -10910,98 +11036,98 @@ export default function ChatPage() {
             <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex flex-wrap items-center justify-end gap-2 min-w-0">
               {!ccDetailEditing && (
                 <>
-                  <GenerateRelevantMessageButton
+              <GenerateRelevantMessageButton
                     variant="text"
                     label={getModalTranslations(language).generateRelevantMessageShort}
                     title={getModalTranslations(language).generateRelevantMessage}
-                    aria-label={getModalTranslations(language).generateRelevantMessage}
-                    onClick={async () => {
-                      const suggestion = `${ccDetailModal.title}\n\n${ccDetailModal.summary}\n\nEnrichment: ${ccDetailModal.enrichmentPrompt}`;
-                      setGenerateModal({ type: "cc", generatedText: "", loading: true });
-                      try {
-                        const res = await fetch("/api/generate-relevant-prompt", {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({
-                            suggestion,
-                            messages: messages.map((m) => ({ role: m.role, content: m.content })),
-                          }),
-                        });
-                        const data = await res.json();
-                        setGenerateModal((prev) =>
-                          prev ? { ...prev, generatedText: data.text ?? suggestion, loading: false } : null
-                        );
-                      } catch {
-                        setGenerateModal((prev) =>
-                          prev ? { ...prev, generatedText: suggestion, loading: false } : null
-                        );
-                      }
-                    }}
-                  />
+                aria-label={getModalTranslations(language).generateRelevantMessage}
+                onClick={async () => {
+                  const suggestion = `${ccDetailModal.title}\n\n${ccDetailModal.summary}\n\nEnrichment: ${ccDetailModal.enrichmentPrompt}`;
+                  setGenerateModal({ type: "cc", generatedText: "", loading: true });
+                  try {
+                    const res = await fetch("/api/generate-relevant-prompt", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        suggestion,
+                        messages: messages.map((m) => ({ role: m.role, content: m.content })),
+                      }),
+                    });
+                    const data = await res.json();
+                    setGenerateModal((prev) =>
+                      prev ? { ...prev, generatedText: data.text ?? suggestion, loading: false } : null
+                    );
+                  } catch {
+                    setGenerateModal((prev) =>
+                      prev ? { ...prev, generatedText: suggestion, loading: false } : null
+                    );
+                  }
+                }}
+              />
                   <div ref={ccTranslatePopoverRef} className="relative shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => setCcTranslatePopoverOpen((o) => !o)}
-                      disabled={ccTranslating}
+                <button
+                  type="button"
+                  onClick={() => setCcTranslatePopoverOpen((o) => !o)}
+                  disabled={ccTranslating}
                       className="whitespace-nowrap px-3 py-2 rounded-xl text-sm border border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-foreground/20 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors disabled:opacity-60"
-                    >
-                      {getModalTranslations(language).translateTo}
-                    </button>
-                    {ccTranslatePopoverOpen && (
-                      <div className="absolute left-0 bottom-full mb-1.5 z-20 min-w-[180px] max-h-64 overflow-y-auto rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-xl py-2 animate-fade-in-up">
-                        {LANGUAGES.map(({ code, name }) => (
-                          <button
-                            key={code}
-                            type="button"
-                            onClick={async () => {
-                              setCcTranslatePopoverOpen(false);
-                              setCcTranslating(true);
-                              try {
-                                const res = await fetch("/api/me/custom-concepts/translate", {
-                                  method: "POST",
-                                  headers: { "Content-Type": "application/json" },
-                                  body: JSON.stringify({
-                                    conceptId: ccDetailModal._id,
-                                    targetLanguage: code,
-                                  }),
-                                });
-                                const data = res.ok ? await res.json() : null;
-                                if (data) {
-                                  setCustomConcepts((prev) =>
-                                    prev.map((c) =>
-                                      c._id === ccDetailModal._id
-                                        ? {
-                                            ...c,
-                                            title: data.title ?? c.title,
-                                            summary: data.summary ?? c.summary,
-                                            enrichmentPrompt: data.enrichmentPrompt ?? c.enrichmentPrompt,
-                                          }
-                                        : c
-                                    )
-                                  );
-                                  setCcDetailModal((prev) =>
-                                    prev
-                                      ? {
-                                          ...prev,
-                                          title: data.title ?? prev.title,
-                                          summary: data.summary ?? prev.summary,
-                                          enrichmentPrompt: data.enrichmentPrompt ?? prev.enrichmentPrompt,
-                                        }
-                                      : null
-                                  );
-                                }
-                              } finally {
-                                setCcTranslating(false);
-                              }
-                            }}
-                            className="w-full px-3 py-2 text-left text-sm text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700/80 transition-colors"
-                          >
-                            {name}
-                          </button>
-                        ))}
-                      </div>
-                    )}
+                >
+                  {getModalTranslations(language).translateTo}
+                </button>
+                {ccTranslatePopoverOpen && (
+                  <div className="absolute left-0 bottom-full mb-1.5 z-20 min-w-[180px] max-h-64 overflow-y-auto rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-xl py-2 animate-fade-in-up">
+                    {LANGUAGES.map(({ code, name }) => (
+                      <button
+                        key={code}
+                        type="button"
+                        onClick={async () => {
+                          setCcTranslatePopoverOpen(false);
+                          setCcTranslating(true);
+                          try {
+                            const res = await fetch("/api/me/custom-concepts/translate", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({
+                                conceptId: ccDetailModal._id,
+                                targetLanguage: code,
+                              }),
+                            });
+                            const data = res.ok ? await res.json() : null;
+                            if (data) {
+                              setCustomConcepts((prev) =>
+                                prev.map((c) =>
+                                  c._id === ccDetailModal._id
+                                    ? {
+                                        ...c,
+                                        title: data.title ?? c.title,
+                                        summary: data.summary ?? c.summary,
+                                        enrichmentPrompt: data.enrichmentPrompt ?? c.enrichmentPrompt,
+                                      }
+                                    : c
+                                )
+                              );
+                              setCcDetailModal((prev) =>
+                                prev
+                                  ? {
+                                      ...prev,
+                                      title: data.title ?? prev.title,
+                                      summary: data.summary ?? prev.summary,
+                                      enrichmentPrompt: data.enrichmentPrompt ?? prev.enrichmentPrompt,
+                                    }
+                                  : null
+                              );
+                            }
+                          } finally {
+                            setCcTranslating(false);
+                          }
+                        }}
+                        className="w-full px-3 py-2 text-left text-sm text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700/80 transition-colors"
+                      >
+                        {name}
+                      </button>
+                    ))}
                   </div>
+                )}
+              </div>
                   {!ccDetailModal._id.startsWith("extracted-") && (
                     <button
                       type="button"
@@ -11017,17 +11143,17 @@ export default function ChatPage() {
                       {getUiTranslations(language).promoteToHabit}
                     </button>
                   )}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setCcDeleteConfirmModal(ccDetailModal);
-                      setCcDetailModal(null);
-                    }}
-                    className="shrink-0 px-4 py-2 rounded-full text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
-                    aria-label={getModalTranslations(language).deleteCustomConcept}
-                  >
-                    {getModalTranslations(language).deleteButton}
-                  </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setCcDeleteConfirmModal(ccDetailModal);
+                  setCcDetailModal(null);
+                }}
+                className="shrink-0 px-4 py-2 rounded-full text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+                aria-label={getModalTranslations(language).deleteCustomConcept}
+              >
+                {getModalTranslations(language).deleteButton}
+              </button>
                 </>
               )}
             </div>
@@ -11314,63 +11440,63 @@ export default function ChatPage() {
                     </svg>
                   </button>
                 ) : null}
-                <button
-                  onClick={() => setHabitDetailModal(null)}
-                  className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                  aria-label={getUiTranslations(language).close}
-                >
-                  ✕
-                </button>
+              <button
+                onClick={() => setHabitDetailModal(null)}
+                className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label={getUiTranslations(language).close}
+              >
+                ✕
+              </button>
               </div>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {habitDetailEditing ? (
                 <>
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Habit name</label>
-                    <input
-                      type="text"
-                      value={habitDetailEdit.name}
-                      onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, name: e.target.value } : null)}
-                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Description</label>
-                    <textarea
-                      value={habitDetailEdit.description}
-                      onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, description: e.target.value } : null)}
-                      rows={4}
-                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">How to follow through</label>
-                    <textarea
-                      value={habitDetailEdit.howToFollowThrough}
-                      onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, howToFollowThrough: e.target.value } : null)}
-                      rows={4}
-                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                      placeholder="One step per line"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Tips</label>
-                    <textarea
-                      value={habitDetailEdit.tips}
-                      onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, tips: e.target.value } : null)}
-                      rows={3}
-                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                      placeholder="One tip per line"
-                    />
-                  </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Habit name</label>
+                <input
+                  type="text"
+                  value={habitDetailEdit.name}
+                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, name: e.target.value } : null)}
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Description</label>
+                <textarea
+                  value={habitDetailEdit.description}
+                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, description: e.target.value } : null)}
+                  rows={4}
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">How to follow through</label>
+                <textarea
+                  value={habitDetailEdit.howToFollowThrough}
+                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, howToFollowThrough: e.target.value } : null)}
+                  rows={4}
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                  placeholder="One step per line"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Tips</label>
+                <textarea
+                  value={habitDetailEdit.tips}
+                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, tips: e.target.value } : null)}
+                  rows={3}
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                  placeholder="One tip per line"
+                />
+              </div>
                 </>
               ) : (
                 <>
                   <div>
                     <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Habit name</p>
                     <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{habitDetailModal.name}</p>
-                  </div>
+            </div>
                   <div>
                     <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Description</p>
                     <p className="text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-wrap">{habitDetailModal.description}</p>
@@ -11413,36 +11539,36 @@ export default function ChatPage() {
                     className="px-4 py-2 rounded-full text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                   >
                     {getUiTranslations(language).cancel}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      if (!habitDetailModal._id || !habitDetailEdit) return;
-                      try {
-                        const res = await fetch(`/api/me/habits/${habitDetailModal._id}`, {
-                          method: "PATCH",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({
-                            name: habitDetailEdit.name.trim(),
-                            description: habitDetailEdit.description.trim(),
-                            howToFollowThrough: habitDetailEdit.howToFollowThrough.trim(),
-                            tips: habitDetailEdit.tips.trim(),
-                          }),
-                        });
-                        if (res.ok) {
-                          const updated = await res.json();
-                          setHabits((prev) => prev.map((h) => (h._id === habitDetailModal._id ? updated : h)));
-                          setHabitDetailModal(updated);
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!habitDetailModal._id || !habitDetailEdit) return;
+                  try {
+                    const res = await fetch(`/api/me/habits/${habitDetailModal._id}`, {
+                      method: "PATCH",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        name: habitDetailEdit.name.trim(),
+                        description: habitDetailEdit.description.trim(),
+                        howToFollowThrough: habitDetailEdit.howToFollowThrough.trim(),
+                        tips: habitDetailEdit.tips.trim(),
+                      }),
+                    });
+                    if (res.ok) {
+                      const updated = await res.json();
+                      setHabits((prev) => prev.map((h) => (h._id === habitDetailModal._id ? updated : h)));
+                      setHabitDetailModal(updated);
                           setHabitDetailEditing(false);
-                        }
-                      } catch {
-                        /* ignore */
-                      }
-                    }}
-                    className="px-4 py-2 rounded-full text-sm font-medium bg-foreground text-background hover:opacity-90 transition-colors"
-                  >
-                    Save
-                  </button>
+                    }
+                  } catch {
+                    /* ignore */
+                  }
+                }}
+                className="px-4 py-2 rounded-full text-sm font-medium bg-foreground text-background hover:opacity-90 transition-colors"
+              >
+                Save
+              </button>
                 </>
               ) : null}
             </div>
