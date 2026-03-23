@@ -44,7 +44,8 @@ import {
   EXTRACT_CONCEPTS_MAX_TOTAL_CHARS,
 } from "@/lib/extract-concepts-constants";
 import { consumeConceptExtractionNdjsonStream } from "@/lib/concept-extraction-ndjson";
-import { getUiTranslations } from "@/lib/ui-translations";
+import { getHabitBucketLabel, getUiTranslations } from "@/lib/ui-translations";
+import { HABIT_BUCKET_IDS, type HabitBucket } from "@/lib/habit-buckets";
 import { playSelectionChime } from "@/lib/selection-chime";
 import { stripMarkdown } from "@/lib/strip-markdown";
 import { resolveTtsReferenceText } from "@/lib/tts-reference-text";
@@ -169,8 +170,9 @@ interface ConceptGroupItem {
 interface HabitItem {
   _id: string;
   userId: string;
-  sourceType: "concept" | "ltm";
+  sourceType: "concept" | "ltm" | "manual";
   sourceId: string;
+  bucket?: HabitBucket;
   name: string;
   description: string;
   howToFollowThrough: string;
@@ -481,8 +483,8 @@ function MessageBubble({
         <div className="flex flex-row items-start gap-2 max-w-[92%] w-full">
           <div
             className="group/tts flex-1 min-w-0 rounded-3xl px-4 py-3 transition-shadow duration-200 bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground"
-            dir={isRtl ? "rtl" : undefined}
-          >
+        dir={isRtl ? "rtl" : undefined}
+      >
             <div className="message-bubble-text text-sm md:text-base">
               {message.mentorOneOnOne && (
                 <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
@@ -588,16 +590,16 @@ function MessageBubble({
             </div>
           </div>
           <div className="shrink-0 pt-0.5 flex flex-col items-center">
-            <TTSButton
+          <TTSButton
               text={assistantSpeechText}
               plainText={assistantSpeechText}
               showOnHover={false}
               layout="vertical"
-              ariaLabel="Listen to message"
+            ariaLabel="Listen to message"
               onTtsProgress={(charEnd) => onTtsProgress?.(messageIndex, charEnd)}
               onTtsEnd={onTtsEnd}
-            />
-          </div>
+          />
+        </div>
         </div>
       ) : (
         <div
@@ -608,40 +610,40 @@ function MessageBubble({
           }`}
           dir={isRtl ? "rtl" : undefined}
         >
-          {message.role === "user" ? (
-            <div className="flex flex-col gap-2">
-              <span className="message-bubble-text text-sm md:text-base">
-                {isUserTtsActive ? (
-                  <TtsHighlightedText
-                    text={userPlainText}
-                    charEnd={ttsHighlight}
-                  />
-                ) : (
-                  <UserMessageContent
-                    content={text}
-                    idToName={idToName}
-                    ltmIdToTitle={ltmIdToTitle}
-                    ccIdToTitle={ccIdToTitle}
-                    cgIdToTitle={cgIdToTitle}
-                    figureIdToName={figureIdToName}
-                    figureIdToDescription={figureIdToDescription}
-                    onMentalModelClick={(id) => onMentalModelClick(id, text)}
-                    onLtmClick={onLtmClick}
-                    onCustomConceptClick={onCustomConceptClick}
-                    onConceptGroupClick={onConceptGroupClick}
-                    previewMap={previewMap}
-                  />
-                )}
-              </span>
-              {message.perspectiveCard && (
-                <div className="mt-1 pt-2 border-t border-white/20 rounded-b-xl">
-                  <p className="text-xs font-medium opacity-90 uppercase tracking-wider">{message.perspectiveCard.name}</p>
-                  <p className="text-sm opacity-95 mt-0.5 leading-relaxed">{message.perspectiveCard.prompt}</p>
-                </div>
+        {message.role === "user" ? (
+          <div className="flex flex-col gap-2">
+            <span className="message-bubble-text text-sm md:text-base">
+              {isUserTtsActive ? (
+                <TtsHighlightedText
+                  text={userPlainText}
+                  charEnd={ttsHighlight}
+                />
+              ) : (
+              <UserMessageContent
+                content={text}
+                idToName={idToName}
+                ltmIdToTitle={ltmIdToTitle}
+                ccIdToTitle={ccIdToTitle}
+                cgIdToTitle={cgIdToTitle}
+                figureIdToName={figureIdToName}
+                figureIdToDescription={figureIdToDescription}
+                onMentalModelClick={(id) => onMentalModelClick(id, text)}
+                onLtmClick={onLtmClick}
+                onCustomConceptClick={onCustomConceptClick}
+                onConceptGroupClick={onConceptGroupClick}
+                previewMap={previewMap}
+              />
               )}
-            </div>
-          ) : (
-            <div className="message-bubble-text text-sm md:text-base">
+            </span>
+            {message.perspectiveCard && (
+              <div className="mt-1 pt-2 border-t border-white/20 rounded-b-xl">
+                <p className="text-xs font-medium opacity-90 uppercase tracking-wider">{message.perspectiveCard.name}</p>
+                <p className="text-sm opacity-95 mt-0.5 leading-relaxed">{message.perspectiveCard.prompt}</p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="message-bubble-text text-sm md:text-base">
               {message.mentorOneOnOne && (
                 <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
                   1:1 · {message.mentorOneOnOne.name}
@@ -652,44 +654,44 @@ function MessageBubble({
                   {getLandingTranslations(language).secondOrderChipLabel}
                 </p>
               )}
-              {message.perspectiveCard && (
-                <p className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
-                  {message.perspectiveCard.name}
-                </p>
-              )}
-              {message.mentorResponses && message.mentorResponses.length > 0 ? (
-                <div className="space-y-4">
-                  {message.mentorResponses.map((mr) => (
-                    <div
-                      key={mr.figureId}
-                      className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 overflow-hidden"
-                    >
-                      <div className="px-3 py-2 border-b border-neutral-200 dark:border-neutral-700">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
-                          {mr.figureName}
-                        </span>
-                      </div>
-                      <div className="px-3 py-2">
-                        <ChatMarkdown
-                          content={mr.content}
-                          idToName={idToName}
-                          ltmIdToTitle={ltmIdToTitle}
-                          ccIdToTitle={ccIdToTitle}
-                          cgIdToTitle={cgIdToTitle}
-                          figureIdToName={figureIdToName}
-                          figureIdToDescription={figureIdToDescription}
-                          onMentalModelClick={onMentalModelClick}
-                          onLtmClick={onLtmClick}
-                          onCustomConceptClick={onCustomConceptClick}
-                          onConceptGroupClick={onConceptGroupClick}
-                          previewMap={previewMap}
-                        />
-                      </div>
+            {message.perspectiveCard && (
+              <p className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
+                {message.perspectiveCard.name}
+              </p>
+            )}
+            {message.mentorResponses && message.mentorResponses.length > 0 ? (
+              <div className="space-y-4">
+                {message.mentorResponses.map((mr) => (
+                  <div
+                    key={mr.figureId}
+                    className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 overflow-hidden"
+                  >
+                    <div className="px-3 py-2 border-b border-neutral-200 dark:border-neutral-700">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
+                        {mr.figureName}
+                      </span>
                     </div>
-                  ))}
-                </div>
-              ) : text ? (
-                <>
+                    <div className="px-3 py-2">
+                      <ChatMarkdown
+                        content={mr.content}
+                        idToName={idToName}
+                        ltmIdToTitle={ltmIdToTitle}
+                        ccIdToTitle={ccIdToTitle}
+                        cgIdToTitle={cgIdToTitle}
+                        figureIdToName={figureIdToName}
+                        figureIdToDescription={figureIdToDescription}
+                        onMentalModelClick={onMentalModelClick}
+                        onLtmClick={onLtmClick}
+                        onCustomConceptClick={onCustomConceptClick}
+                        onConceptGroupClick={onConceptGroupClick}
+                        previewMap={previewMap}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : text ? (
+              <>
                   {/^\d+ mentors are responding…$/.test(text.trim()) && isLastMsg ? (
                     <div className="flex flex-col gap-2 w-full max-w-[240px]">
                       <span className="text-sm text-neutral-600 dark:text-neutral-400">{text}</span>
@@ -699,53 +701,53 @@ function MessageBubble({
                       />
                     </div>
                   ) : isFindingGuide ? (
-                    <span className="flex items-center gap-2">
-                      <span>{text}</span>
-                      <LoadingDots className="opacity-70 w-4 h-4" aria-hidden />
-                    </span>
-                  ) : isSpeakingAssistantBody ? (
-                    <TtsHighlightedText
-                      text={assistantPlainText}
-                      charEnd={ttsHighlight}
-                    />
-                  ) : (
-                    <ChatMarkdown
-                      content={text}
-                      idToName={idToName}
-                      ltmIdToTitle={ltmIdToTitle}
-                      ccIdToTitle={ccIdToTitle}
-                      cgIdToTitle={cgIdToTitle}
-                      figureIdToName={figureIdToName}
-                      figureIdToDescription={figureIdToDescription}
-                      onMentalModelClick={onMentalModelClick}
-                      onLtmClick={onLtmClick}
-                      onCustomConceptClick={onCustomConceptClick}
-                      onConceptGroupClick={onConceptGroupClick}
-                      previewMap={previewMap}
-                    />
-                  )}
-                  {isLastMsg && isLoading && (
-                    <span
-                      className="inline-block w-0.5 h-4 ml-0.5 bg-foreground/80 animate-blink align-middle"
-                      aria-hidden
-                    />
-                  )}
-                  {isLastMsg && text === "Something went wrong." && onRetry && (
-                    <button
-                      type="button"
-                      onClick={onRetry}
-                      className="mt-2 inline-block px-3 py-1.5 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
-                    >
-                      Retry
-                    </button>
-                  )}
-                </>
-              ) : (
-                <LoadingDots className="opacity-70" />
-              )}
-            </div>
-          )}
-        </div>
+                  <span className="flex items-center gap-2">
+                    <span>{text}</span>
+                    <LoadingDots className="opacity-70 w-4 h-4" aria-hidden />
+                  </span>
+                ) : isSpeakingAssistantBody ? (
+                  <TtsHighlightedText
+                    text={assistantPlainText}
+                    charEnd={ttsHighlight}
+                  />
+                ) : (
+                <ChatMarkdown
+                  content={text}
+                  idToName={idToName}
+                  ltmIdToTitle={ltmIdToTitle}
+                  ccIdToTitle={ccIdToTitle}
+                  cgIdToTitle={cgIdToTitle}
+                  figureIdToName={figureIdToName}
+                  figureIdToDescription={figureIdToDescription}
+                  onMentalModelClick={onMentalModelClick}
+                  onLtmClick={onLtmClick}
+                  onCustomConceptClick={onCustomConceptClick}
+                  onConceptGroupClick={onConceptGroupClick}
+                  previewMap={previewMap}
+                />
+                )}
+                {isLastMsg && isLoading && (
+                  <span
+                    className="inline-block w-0.5 h-4 ml-0.5 bg-foreground/80 animate-blink align-middle"
+                    aria-hidden
+                  />
+                )}
+                {isLastMsg && text === "Something went wrong." && onRetry && (
+                  <button
+                    type="button"
+                    onClick={onRetry}
+                    className="mt-2 inline-block px-3 py-1.5 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                  >
+                    Retry
+                  </button>
+                )}
+              </>
+            ) : (
+              <LoadingDots className="opacity-70" />
+            )}
+          </div>
+        )}
+      </div>
       )}
       {canGoBack && (
         <button
@@ -3479,13 +3481,35 @@ export default function ChatPage() {
     description: string;
     howToFollowThrough: string;
     tips: string;
+    bucket: HabitBucket;
   } | null>(null);
+  const [habitPromoteBucket, setHabitPromoteBucket] = useState<HabitBucket | null>(null);
   const [habitPromoteLanguage, setHabitPromoteLanguage] = useState<LanguageCode>("en");
   const [habitPromoteLoading, setHabitPromoteLoading] = useState(false);
   const [habitDetailModal, setHabitDetailModal] = useState<HabitItem | null>(null);
   const [habitDetailEditing, setHabitDetailEditing] = useState(false);
-  const [habitDetailEdit, setHabitDetailEdit] = useState<{ name: string; description: string; howToFollowThrough: string; tips: string } | null>(null);
+  const [habitDetailEdit, setHabitDetailEdit] = useState<{
+    name: string;
+    description: string;
+    howToFollowThrough: string;
+    tips: string;
+    bucket?: HabitBucket;
+  } | null>(null);
   const [habitDeleteConfirmModal, setHabitDeleteConfirmModal] = useState<HabitItem | null>(null);
+  const [habitCreateDraft, setHabitCreateDraft] = useState<{
+    bucket: HabitBucket;
+    name: string;
+    description: string;
+  } | null>(null);
+  const [habitCreateStep, setHabitCreateStep] = useState<"input" | "preview">("input");
+  const [habitCreatePreview, setHabitCreatePreview] = useState<{
+    name: string;
+    description: string;
+    howToFollowThrough: string;
+    tips: string;
+  } | null>(null);
+  const [habitCreateGenerating, setHabitCreateGenerating] = useState(false);
+  const [habitCreateSaving, setHabitCreateSaving] = useState(false);
   const [userScore, setUserScore] = useState<UserScore | null>(null);
   const [rankModalOpen, setRankModalOpen] = useState(false);
   const [scoreOptimisticDelta, setScoreOptimisticDelta] = useState(0);
@@ -3623,7 +3647,7 @@ export default function ChatPage() {
   );
 
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !mentorOneOnOneModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitDeleteConfirmModal && !rankModalOpen) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !mentorOneOnOneModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !rankModalOpen) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (journalCheckpointModal) setJournalCheckpointModal(null);
@@ -3642,17 +3666,23 @@ export default function ChatPage() {
         } else if (selectedMentalModel) setSelectedMentalModel(null);
         else if (habitDeleteConfirmModal) setHabitDeleteConfirmModal(null);
         else if (habitDetailModal) setHabitDetailModal(null);
+        else if (habitCreateDraft && !habitCreateGenerating && !habitCreateSaving) {
+          setHabitCreateDraft(null);
+          setHabitCreateStep("input");
+          setHabitCreatePreview(null);
+        }
         else if (habitPromoteModal && !habitPromoteLoading) {
           setHabitPromoteModal(null);
           setHabitPromoteStep("generate");
           setHabitPromoteDraft(null);
+          setHabitPromoteBucket(null);
         } else if (rankModalOpen) setRankModalOpen(false);
         else if (libraryPanelOpen) setLibraryPanelOpen(null);
       }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, mentorOneOnOneModalOpen, newConversationChooserModalOpen, journalCheckpointModal, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitDeleteConfirmModal, habitPromoteLoading, rankModalOpen]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, mentorOneOnOneModalOpen, newConversationChooserModalOpen, journalCheckpointModal, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, rankModalOpen]);
 
   // Reset journal checkpoint modal state when modal opens
   useEffect(() => {
@@ -3788,11 +3818,21 @@ export default function ChatPage() {
         description: habitDetailModal.description,
         howToFollowThrough: habitDetailModal.howToFollowThrough,
         tips: habitDetailModal.tips,
+        bucket: habitDetailModal.bucket,
       });
     } else {
       setHabitDetailEdit(null);
     }
   }, [habitDetailModal]);
+
+  const habitsGrouped = useMemo(() => {
+    const grouped = HABIT_BUCKET_IDS.map((bucket) => ({
+      bucket,
+      items: habits.filter((h) => h.bucket === bucket),
+    }));
+    const other = habits.filter((h) => !h.bucket);
+    return { grouped, other };
+  }, [habits]);
 
   useEffect(() => {
     if (!ltmDetailModal) {
@@ -6296,42 +6336,114 @@ export default function ChatPage() {
               )}
               {libraryPanelOpen === "habits" && (
                 <div className="space-y-4">
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Habits you&apos;ve created from concepts and memories. Use in daily life—not sent to the AI.</p>
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 flex-1">
+                      Habits for daily life—not sent to the AI. Create one here, or promote a concept or memory.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playSelectionChime();
+                        setHabitCreateDraft({
+                          bucket: HABIT_BUCKET_IDS[0],
+                          name: "",
+                          description: "",
+                        });
+                        setHabitCreateStep("input");
+                        setHabitCreatePreview(null);
+                      }}
+                      className="shrink-0 px-3 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                    >
+                      {getUiTranslations(language).createHabit}
+                    </button>
+                  </div>
                   {habits.length > 0 ? (
-                    <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
-                      {habits.map((h) => (
-                        <div
-                          key={h._id}
-                          role="button"
-                          tabIndex={0}
-                          onClick={() => setHabitDetailModal(h)}
-                          onKeyDown={(e) => e.key === "Enter" && setHabitDetailModal(h)}
-                          className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]"
-                        >
-                            <button
-                              type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              e.preventDefault();
-                              setHabitDeleteConfirmModal(h);
-                            }}
-                            className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
-                            aria-label={`Delete ${h.name}`}
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
-                              <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
-                              <path d="M10 11v6M14 11v6" />
-                            </svg>
-                            </button>
-                          <div className="flex-1 min-w-0 pr-10">
-                            <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{h.description}</p>
+                    <div className="space-y-6">
+                      {habitsGrouped.grouped.map(({ bucket, items }) =>
+                        items.length === 0 ? null : (
+                          <div key={bucket}>
+                            <h3 className="text-xs font-semibold text-neutral-600 dark:text-neutral-300 mb-2">
+                              {getHabitBucketLabel(getUiTranslations(language), bucket)}
+                            </h3>
+                            <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
+                              {items.map((h) => (
+                                <div
+                                  key={h._id}
+                                  role="button"
+                                  tabIndex={0}
+                                  onClick={() => setHabitDetailModal(h)}
+                                  onKeyDown={(e) => e.key === "Enter" && setHabitDetailModal(h)}
+                                  className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]"
+                                >
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      e.preventDefault();
+                                      setHabitDeleteConfirmModal(h);
+                                    }}
+                                    className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
+                                    aria-label={`Delete ${h.name}`}
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                                      <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
+                                      <path d="M10 11v6M14 11v6" />
+                                    </svg>
+                                  </button>
+                                  <div className="flex-1 min-w-0 pr-10">
+                                    <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
+                                    <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{h.description}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )
+                      )}
+                      {habitsGrouped.other.length > 0 ? (
+                        <div>
+                          <h3 className="text-xs font-semibold text-neutral-600 dark:text-neutral-300 mb-2">
+                            {getUiTranslations(language).habitBucketOther}
+                          </h3>
+                          <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
+                            {habitsGrouped.other.map((h) => (
+                              <div
+                                key={h._id}
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => setHabitDetailModal(h)}
+                                onKeyDown={(e) => e.key === "Enter" && setHabitDetailModal(h)}
+                                className="group relative flex flex-col p-4 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-left min-h-[100px]"
+                              >
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    setHabitDeleteConfirmModal(h);
+                                  }}
+                                  className="absolute top-3 right-3 z-20 p-1.5 rounded-lg opacity-70 hover:opacity-100 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 touch-manipulation"
+                                  aria-label={`Delete ${h.name}`}
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                                    <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
+                                    <path d="M10 11v6M14 11v6" />
+                                  </svg>
+                                </button>
+                                <div className="flex-1 min-w-0 pr-10">
+                                  <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
+                                  <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{h.description}</p>
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
-                      ))}
+                      ) : null}
                     </div>
                   ) : (
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Promote a concept or memory to create a habit.</p>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                      Use <span className="font-medium">Create habit</span> above, or open a concept or memory and choose Promote to Habit.
+                    </p>
                   )}
                 </div>
               )}
@@ -8173,6 +8285,7 @@ export default function ChatPage() {
                     setHabitPromoteModal({ sourceType: "ltm", source: ltmDetailModal });
                     setHabitPromoteStep("generate");
                     setHabitPromoteDraft(null);
+                    setHabitPromoteBucket(null);
                     setHabitPromoteLanguage(language);
                     setLtmDetailModal(null);
                   }}
@@ -11135,6 +11248,7 @@ export default function ChatPage() {
                         setHabitPromoteModal({ sourceType: "concept", source: ccDetailModal });
                         setHabitPromoteStep("generate");
                         setHabitPromoteDraft(null);
+                        setHabitPromoteBucket(null);
                         setHabitPromoteLanguage(language);
                         setCcDetailModal(null);
                       }}
@@ -11219,6 +11333,7 @@ export default function ChatPage() {
               setHabitPromoteModal(null);
               setHabitPromoteStep("generate");
               setHabitPromoteDraft(null);
+              setHabitPromoteBucket(null);
             }
           }}
           aria-modal
@@ -11250,6 +11365,28 @@ export default function ChatPage() {
                     </select>
                   </div>
                   <div>
+                    <span className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-2">
+                      {getUiTranslations(language).habitLifeArea}
+                    </span>
+                    <div className="space-y-2">
+                      {HABIT_BUCKET_IDS.map((b) => (
+                        <label
+                          key={b}
+                          className="flex items-start gap-2 cursor-pointer text-sm text-neutral-800 dark:text-neutral-200"
+                        >
+                          <input
+                            type="radio"
+                            name="habit-promote-bucket"
+                            className="mt-0.5"
+                            checked={habitPromoteBucket === b}
+                            onChange={() => setHabitPromoteBucket(b)}
+                          />
+                          <span>{getHabitBucketLabel(getUiTranslations(language), b)}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
                     <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Source</label>
                     <p className="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
                       {habitPromoteModal.source.title}: {(habitPromoteModal.source.summary || "").slice(0, 100)}…
@@ -11263,6 +11400,7 @@ export default function ChatPage() {
                         setHabitPromoteModal(null);
                         setHabitPromoteStep("generate");
                         setHabitPromoteDraft(null);
+                        setHabitPromoteBucket(null);
                       }
                     }}
                     className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
@@ -11271,7 +11409,7 @@ export default function ChatPage() {
                   </button>
                   <button
                     onClick={async () => {
-                      if (habitPromoteLoading) return;
+                      if (habitPromoteLoading || habitPromoteBucket === null) return;
                       setHabitPromoteLoading(true);
                       try {
                         const res = await fetch("/api/me/habits/generate", {
@@ -11281,6 +11419,7 @@ export default function ChatPage() {
                             sourceType: habitPromoteModal.sourceType,
                             sourceId: habitPromoteModal.source._id,
                             language: habitPromoteLanguage,
+                            bucket: habitPromoteBucket,
                           }),
                         });
                         if (!res.ok) throw new Error("Generate failed");
@@ -11290,6 +11429,7 @@ export default function ChatPage() {
                           description: data.description ?? "",
                           howToFollowThrough: data.howToFollowThrough ?? "",
                           tips: data.tips ?? "",
+                          bucket: habitPromoteBucket,
                         });
                         setHabitPromoteStep("preview");
                       } catch {
@@ -11298,7 +11438,7 @@ export default function ChatPage() {
                         setHabitPromoteLoading(false);
                       }
                     }}
-                    disabled={habitPromoteLoading}
+                    disabled={habitPromoteLoading || habitPromoteBucket === null}
                     className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
                   >
                     {habitPromoteLoading ? "Generating…" : "Generate"}
@@ -11315,6 +11455,26 @@ export default function ChatPage() {
                     </p>
                   </div>
                   <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">
+                        {getUiTranslations(language).habitLifeArea}
+                      </label>
+                      <select
+                        value={habitPromoteDraft.bucket}
+                        onChange={(e) =>
+                          setHabitPromoteDraft((d) =>
+                            d ? { ...d, bucket: e.target.value as HabitBucket } : null
+                          )
+                        }
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                      >
+                        {HABIT_BUCKET_IDS.map((b) => (
+                          <option key={b} value={b}>
+                            {getHabitBucketLabel(getUiTranslations(language), b)}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Habit name</label>
                       <input
@@ -11377,6 +11537,7 @@ export default function ChatPage() {
                             body: JSON.stringify({
                               sourceType: habitPromoteModal.sourceType,
                               sourceId: habitPromoteModal.source._id,
+                              bucket: habitPromoteDraft.bucket,
                               name: habitPromoteDraft.name.trim(),
                               description: habitPromoteDraft.description.trim(),
                               howToFollowThrough: habitPromoteDraft.howToFollowThrough.trim(),
@@ -11389,6 +11550,7 @@ export default function ChatPage() {
                             setHabitPromoteModal(null);
                             setHabitPromoteStep("generate");
                             setHabitPromoteDraft(null);
+                            setHabitPromoteBucket(null);
                             setWaysOfLookingAtModalOpen(false);
                             setLibraryPanelOpen("habits");
                             refetchScore();
@@ -11403,6 +11565,271 @@ export default function ChatPage() {
                       className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
                     >
                       Save
+                    </button>
+                  </div>
+                </>
+              )
+            )}
+          </div>
+        </div>
+      )}
+
+      {habitCreateDraft && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          onClick={() => {
+            if (!habitCreateGenerating && !habitCreateSaving) {
+              setHabitCreateDraft(null);
+              setHabitCreateStep("input");
+              setHabitCreatePreview(null);
+            }
+          }}
+          aria-modal
+          role="dialog"
+        >
+          <div
+            className="bg-background rounded-3xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {habitCreateStep === "input" ? (
+              <>
+                <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                  <h2 className="font-semibold text-lg mb-1">{getUiTranslations(language).createHabit}</h2>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {getUiTranslations(language).habitCreateInputHelper}
+                  </p>
+                </div>
+                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">
+                      {getUiTranslations(language).habitLifeArea}
+                    </label>
+                    <select
+                      value={habitCreateDraft.bucket}
+                      onChange={(e) =>
+                        setHabitCreateDraft((d) =>
+                          d ? { ...d, bucket: e.target.value as HabitBucket } : null
+                        )
+                      }
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                    >
+                      {HABIT_BUCKET_IDS.map((b) => (
+                        <option key={b} value={b}>
+                          {getHabitBucketLabel(getUiTranslations(language), b)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Habit name</label>
+                    <input
+                      type="text"
+                      value={habitCreateDraft.name}
+                      onChange={(e) => setHabitCreateDraft((d) => (d ? { ...d, name: e.target.value } : null))}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                      placeholder="Working title (the AI may refine it)"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Description</label>
+                    <textarea
+                      value={habitCreateDraft.description}
+                      onChange={(e) => setHabitCreateDraft((d) => (d ? { ...d, description: e.target.value } : null))}
+                      rows={5}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                      placeholder="What you want this habit to be—rough notes are fine"
+                    />
+                  </div>
+                </div>
+                <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!habitCreateGenerating) {
+                        setHabitCreateDraft(null);
+                        setHabitCreateStep("input");
+                        setHabitCreatePreview(null);
+                      }
+                    }}
+                    className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
+                    disabled={habitCreateGenerating}
+                  >
+                    {getUiTranslations(language).cancel}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const d = habitCreateDraft;
+                      if (!d || habitCreateGenerating || !d.name.trim() || !d.description.trim()) return;
+                      setHabitCreateGenerating(true);
+                      try {
+                        const res = await fetch("/api/me/habits/generate-manual", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            bucket: d.bucket,
+                            name: d.name.trim(),
+                            description: d.description.trim(),
+                            language,
+                          }),
+                        });
+                        if (!res.ok) throw new Error("generate failed");
+                        const data = await res.json();
+                        setHabitCreatePreview({
+                          name: data.name ?? "",
+                          description: data.description ?? "",
+                          howToFollowThrough: data.howToFollowThrough ?? "",
+                          tips: data.tips ?? "",
+                        });
+                        setHabitCreateStep("preview");
+                      } catch {
+                        /* ignore */
+                      } finally {
+                        setHabitCreateGenerating(false);
+                      }
+                    }}
+                    disabled={
+                      habitCreateGenerating ||
+                      !habitCreateDraft.name.trim() ||
+                      !habitCreateDraft.description.trim()
+                    }
+                    className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
+                  >
+                    {habitCreateGenerating ? "Generating…" : "Generate"}
+                  </button>
+                </div>
+              </>
+            ) : (
+              habitCreatePreview && (
+                <>
+                  <div className="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                    <h2 className="font-semibold text-lg mb-1">Review habit</h2>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                      {getUiTranslations(language).habitCreateReviewHelper}
+                    </p>
+                  </div>
+                  <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Habit name</label>
+                      <input
+                        type="text"
+                        value={habitCreatePreview.name}
+                        onChange={(e) =>
+                          setHabitCreatePreview((p) =>
+                            p ? { ...p, name: e.target.value } : null
+                          )
+                        }
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Description</label>
+                      <textarea
+                        value={habitCreatePreview.description}
+                        onChange={(e) =>
+                          setHabitCreatePreview((p) =>
+                            p ? { ...p, description: e.target.value } : null
+                          )
+                        }
+                        rows={4}
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">How to follow through</label>
+                      <textarea
+                        value={habitCreatePreview.howToFollowThrough}
+                        onChange={(e) =>
+                          setHabitCreatePreview((p) =>
+                            p ? { ...p, howToFollowThrough: e.target.value } : null
+                          )
+                        }
+                        rows={4}
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                        placeholder="One step per line"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Tips</label>
+                      <textarea
+                        value={habitCreatePreview.tips}
+                        onChange={(e) =>
+                          setHabitCreatePreview((p) =>
+                            p ? { ...p, tips: e.target.value } : null
+                          )
+                        }
+                        rows={3}
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                        placeholder="One tip per line"
+                      />
+                    </div>
+                  </div>
+                  <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!habitCreateSaving) {
+                          setHabitCreateStep("input");
+                          setHabitCreatePreview(null);
+                        }
+                      }}
+                      className="px-4 py-2 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                      disabled={habitCreateSaving}
+                    >
+                      Back
+                    </button>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (habitCreateSaving || !habitCreateDraft || !habitCreatePreview) return;
+                        const p = habitCreatePreview;
+                        if (
+                          !p.name.trim() ||
+                          !p.description.trim() ||
+                          !p.howToFollowThrough.trim() ||
+                          !p.tips.trim()
+                        )
+                          return;
+                        setHabitCreateSaving(true);
+                        try {
+                          const res = await fetch("/api/me/habits", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              sourceType: "manual",
+                              sourceId: "",
+                              bucket: habitCreateDraft.bucket,
+                              name: p.name.trim(),
+                              description: p.description.trim(),
+                              howToFollowThrough: p.howToFollowThrough.trim(),
+                              tips: p.tips.trim(),
+                            }),
+                          });
+                          if (res.ok) {
+                            const created = await res.json();
+                            setHabits((prev) => [created, ...prev]);
+                            setHabitCreateDraft(null);
+                            setHabitCreateStep("input");
+                            setHabitCreatePreview(null);
+                            setLibraryPanelOpen("habits");
+                            refetchScore();
+                          }
+                        } catch {
+                          /* ignore */
+                        } finally {
+                          setHabitCreateSaving(false);
+                        }
+                      }}
+                      disabled={
+                        habitCreateSaving ||
+                        !habitCreatePreview.name.trim() ||
+                        !habitCreatePreview.description.trim() ||
+                        !habitCreatePreview.howToFollowThrough.trim() ||
+                        !habitCreatePreview.tips.trim()
+                      }
+                      className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
+                    >
+                      {habitCreateSaving ? "Saving…" : "Save"}
                     </button>
                   </div>
                 </>
@@ -11453,6 +11880,30 @@ export default function ChatPage() {
               {habitDetailEditing ? (
                 <>
               <div>
+                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">
+                  {getUiTranslations(language).habitLifeArea}
+                </label>
+                <select
+                  value={habitDetailEdit.bucket ?? ""}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setHabitDetailEdit((d) =>
+                      d ? { ...d, bucket: v === "" ? undefined : (v as HabitBucket) } : null
+                    );
+                  }}
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                >
+                  {!habitDetailModal.bucket ? (
+                    <option value="">Select life area…</option>
+                  ) : null}
+                  {HABIT_BUCKET_IDS.map((b) => (
+                    <option key={b} value={b}>
+                      {getHabitBucketLabel(getUiTranslations(language), b)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
                 <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Habit name</label>
                 <input
                   type="text"
@@ -11494,6 +11945,28 @@ export default function ChatPage() {
               ) : (
                 <>
                   <div>
+                    <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                      {getUiTranslations(language).habitLifeArea}
+                    </p>
+                    <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                      {habitDetailModal.bucket
+                        ? getHabitBucketLabel(getUiTranslations(language), habitDetailModal.bucket)
+                        : getUiTranslations(language).habitBucketOther}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                      {getUiTranslations(language).habitSource}
+                    </p>
+                    <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                      {habitDetailModal.sourceType === "manual"
+                        ? getUiTranslations(language).habitSourceManual
+                        : habitDetailModal.sourceType === "concept"
+                          ? getUiTranslations(language).habitSourceFromConcept
+                          : getUiTranslations(language).habitSourceFromMemory}
+                    </p>
+                  </div>
+                  <div>
                     <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Habit name</p>
                     <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{habitDetailModal.name}</p>
             </div>
@@ -11533,6 +12006,7 @@ export default function ChatPage() {
                         description: habitDetailModal.description,
                         howToFollowThrough: habitDetailModal.howToFollowThrough,
                         tips: habitDetailModal.tips,
+                        bucket: habitDetailModal.bucket,
                       });
                       setHabitDetailEditing(false);
                     }}
@@ -11544,16 +12018,27 @@ export default function ChatPage() {
                 type="button"
                 onClick={async () => {
                   if (!habitDetailModal._id || !habitDetailEdit) return;
+                  if (!habitDetailModal.bucket && habitDetailEdit.bucket === undefined) return;
                   try {
+                    const payload: {
+                      name: string;
+                      description: string;
+                      howToFollowThrough: string;
+                      tips: string;
+                      bucket?: HabitBucket;
+                    } = {
+                      name: habitDetailEdit.name.trim(),
+                      description: habitDetailEdit.description.trim(),
+                      howToFollowThrough: habitDetailEdit.howToFollowThrough.trim(),
+                      tips: habitDetailEdit.tips.trim(),
+                    };
+                    if (habitDetailEdit.bucket !== undefined) {
+                      payload.bucket = habitDetailEdit.bucket;
+                    }
                     const res = await fetch(`/api/me/habits/${habitDetailModal._id}`, {
                       method: "PATCH",
                       headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        name: habitDetailEdit.name.trim(),
-                        description: habitDetailEdit.description.trim(),
-                        howToFollowThrough: habitDetailEdit.howToFollowThrough.trim(),
-                        tips: habitDetailEdit.tips.trim(),
-                      }),
+                      body: JSON.stringify(payload),
                     });
                     if (res.ok) {
                       const updated = await res.json();
@@ -11565,7 +12050,11 @@ export default function ChatPage() {
                     /* ignore */
                   }
                 }}
-                className="px-4 py-2 rounded-full text-sm font-medium bg-foreground text-background hover:opacity-90 transition-colors"
+                disabled={
+                  !habitDetailEdit.name.trim() ||
+                  (!habitDetailModal.bucket && habitDetailEdit.bucket === undefined)
+                }
+                className="px-4 py-2 rounded-full text-sm font-medium bg-foreground text-background hover:opacity-90 transition-colors disabled:opacity-50"
               >
                 Save
               </button>

@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import {
-  getHabit,
-  updateHabit,
   deleteHabit,
+  getHabit,
+  isHabitBucket,
+  type HabitBucket,
+  updateHabit,
 } from "@/lib/db";
 
 export async function GET(
@@ -61,11 +63,18 @@ export async function PATCH(
       description?: string;
       howToFollowThrough?: string;
       tips?: string;
+      bucket?: HabitBucket;
     } = {};
     if (typeof body.name === "string") updates.name = body.name;
     if (typeof body.description === "string") updates.description = body.description;
     if (typeof body.howToFollowThrough === "string") updates.howToFollowThrough = body.howToFollowThrough;
     if (typeof body.tips === "string") updates.tips = body.tips;
+    if (body.bucket !== undefined) {
+      if (!isHabitBucket(body.bucket)) {
+        return NextResponse.json({ error: "Invalid bucket" }, { status: 400 });
+      }
+      updates.bucket = body.bucket;
+    }
     if (Object.keys(updates).length === 0) {
       return NextResponse.json({ error: "No valid updates" }, { status: 400 });
     }

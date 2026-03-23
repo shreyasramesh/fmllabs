@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { getCustomConcept, getLongTermMemory } from "@/lib/db";
+import { getCustomConcept, getLongTermMemory, isHabitBucket } from "@/lib/db";
 import { generateHabitFromConceptOrLtm } from "@/lib/gemini";
 import { getLanguageName, isValidLanguageCode } from "@/lib/languages";
 
@@ -29,6 +29,12 @@ export async function POST(request: Request) {
         ? body.language
         : "en";
     const languageName = getLanguageName(languageCode);
+
+    const bucketRaw = body.bucket;
+    const bucket =
+      bucketRaw !== undefined && bucketRaw !== null && isHabitBucket(bucketRaw)
+        ? bucketRaw
+        : undefined;
 
     let source: { title: string; summary: string; enrichmentPrompt: string };
     if (sourceType === "concept") {
@@ -62,7 +68,8 @@ export async function POST(request: Request) {
     const result = await generateHabitFromConceptOrLtm(
       { type: sourceType, ...source },
       languageName,
-      { userId, eventType: "generate_habit" }
+      { userId, eventType: "generate_habit" },
+      bucket
     );
     return NextResponse.json(result);
   } catch (err) {

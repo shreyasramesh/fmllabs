@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import type { HabitBucket } from "@/lib/habit-buckets";
 import { recordUsageEvent, computeGeminiCost } from "@/lib/usage";
 import {
   EXTRACT_CONCEPTS_CHUNK_CHARS,
@@ -335,15 +336,33 @@ ${userInput}`
   };
 }
 
+const HABIT_BUCKET_PROMPTS: Record<HabitBucket, string> = {
+  creative:
+    "Creative: expressive practices such as art, music, writing, or making. Frame the habit as something the user can do regularly to nurture creativity and expression.",
+  intellectual:
+    "Intellectual: learning, reading, curiosity, travel-as-growth, or structured inquiry. Frame the habit as feeding the mind and exploration.",
+  wellbeing:
+    "Well-being: physical and mental care—movement, rest, mindfulness, sports, energy, and sustainable routines. Frame the habit as supporting health and balance.",
+  connection:
+    "Connection: relationships, community, rituals with others, shared meals, clubs, or social presence. Frame the habit as strengthening bonds and belonging.",
+};
+
 export async function generateHabitFromConceptOrLtm(
   source: { type: "concept" | "ltm"; title: string; summary: string; enrichmentPrompt: string },
   languageName?: string,
-  usageContext?: GeminiUsageContext
+  usageContext?: GeminiUsageContext,
+  bucket?: HabitBucket
 ): Promise<{ name: string; description: string; howToFollowThrough: string; tips: string }> {
   const languageInstruction =
     languageName && languageName !== "English"
       ? ` Write all content in ${languageName}.`
       : "";
+  const bucketBlock = bucket
+    ? `
+
+The user chose this life-area for the habit (stay aligned with it; examples are illustrative):
+- ${HABIT_BUCKET_PROMPTS[bucket]}`
+    : "";
   const model = getModel();
   const result = await model.generateContent(
     `You are converting a concept or memory into a daily habit the user can practice. Return a JSON object with exactly four keys:
@@ -351,7 +370,7 @@ export async function generateHabitFromConceptOrLtm(
 - "description": A 2-4 sentence description of what this habit is and why it matters for daily life.
 - "howToFollowThrough": Step-by-step instructions for how to practice this habit. Use newline-separated bullet points (one step per line).
 - "tips": Practical tips for sticking with it, avoiding pitfalls, or integrating into daily routine. Use newline-separated bullet points (one tip per line).
-${languageInstruction}
+${languageInstruction}${bucketBlock}
 
 Return ONLY valid JSON, no markdown or extra text.
 
@@ -372,6 +391,54 @@ Enrichment: ${source.enrichmentPrompt}`
   return {
     name: parsed.name ?? "Daily habit",
     description: parsed.description ?? "",
+    howToFollowThrough: parsed.howToFollowThrough ?? "",
+    tips: parsed.tips ?? "",
+  };
+}
+
+/** Expand a short manual draft into a full habit; refines name/description and generates steps and tips. */
+export async function generateHabitFromManualDraft(
+  input: { bucket: HabitBucket; name: string; description: string },
+  languageName?: string,
+  usageContext?: GeminiUsageContext
+): Promise<{ name: string; description: string; howToFollowThrough: string; tips: string }> {
+  const languageInstruction =
+    languageName && languageName !== "English"
+      ? ` Write all content in ${languageName}.`
+      : "";
+  const bucketBlock = `
+
+Life area for this habit (stay aligned):
+- ${HABIT_BUCKET_PROMPTS[input.bucket]}`;
+  const model = getModel();
+  const result = await model.generateContent(
+    `The user wants to practice a daily habit. They provided a working title and description (the description may be rough or brief).
+
+Your task — return a JSON object with exactly four keys:
+- "name": A clear, concise habit name (2-5 words). Refine their title if needed for clarity; keep their intent.
+- "description": A polished 2-4 sentence description of what this habit is and why it matters—clearer and more concrete than their draft, without changing their underlying intent.
+- "howToFollowThrough": Step-by-step instructions for practicing the habit. Use newline-separated lines (one step per line), like bullet points without bullets.
+- "tips": Practical tips for sticking with it, avoiding pitfalls, or fitting it into daily life. Newline-separated lines (one tip per line).
+
+User's working title: ${input.name.trim()}
+User's description:
+${input.description.trim()}
+${languageInstruction}${bucketBlock}
+
+Return ONLY valid JSON, no markdown or extra text.`
+  );
+  const text = result.response.text().trim();
+  const cleaned = text.replace(/^```json\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  const parsed = JSON.parse(cleaned) as {
+    name?: string;
+    description?: string;
+    howToFollowThrough?: string;
+    tips?: string;
+  };
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  return {
+    name: parsed.name?.trim() || input.name.trim() || "Daily habit",
+    description: parsed.description?.trim() || input.description.trim(),
     howToFollowThrough: parsed.howToFollowThrough ?? "",
     tips: parsed.tips ?? "",
   };

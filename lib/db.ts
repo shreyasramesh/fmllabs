@@ -25,6 +25,9 @@ import {
   encryptUserMentalModelFields,
   encryptUserSettingsFields,
 } from "./crypto-fields";
+import type { HabitBucket } from "./habit-buckets";
+export type { HabitBucket } from "./habit-buckets";
+export { HABIT_BUCKET_IDS, isHabitBucket } from "./habit-buckets";
 
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/and-then-what";
 
@@ -156,9 +159,12 @@ interface ConceptGroupDoc extends Omit<ConceptGroup, "_id"> {
 export interface Habit {
   _id?: string;
   userId: string;
-  /** Source: "concept" | "ltm" */
-  sourceType: "concept" | "ltm";
+  /** Source: linked concept/LTM, or manual (no upstream source). */
+  sourceType: "concept" | "ltm" | "manual";
+  /** Empty string when sourceType is manual. */
   sourceId: string;
+  /** Life-area bucket; omitted on legacy documents until user assigns one. */
+  bucket?: HabitBucket;
   name: string;
   description: string;
   howToFollowThrough: string;
@@ -1067,7 +1073,15 @@ export async function getHabit(id: string, userId: string): Promise<(Habit & { _
 
 export async function createHabit(
   userId: string,
-  habit: { sourceType: "concept" | "ltm"; sourceId: string; name: string; description: string; howToFollowThrough: string; tips: string }
+  habit: {
+    sourceType: "concept" | "ltm" | "manual";
+    sourceId: string;
+    bucket: HabitBucket;
+    name: string;
+    description: string;
+    howToFollowThrough: string;
+    tips: string;
+  }
 ): Promise<Habit & { _id: string }> {
   const database = await getDb();
   const now = new Date();
@@ -1075,6 +1089,7 @@ export async function createHabit(
     userId,
     sourceType: habit.sourceType,
     sourceId: habit.sourceId,
+    bucket: habit.bucket,
     name: habit.name,
     description: habit.description,
     howToFollowThrough: habit.howToFollowThrough,
@@ -1092,7 +1107,13 @@ export async function createHabit(
 export async function updateHabit(
   id: string,
   userId: string,
-  updates: { name?: string; description?: string; howToFollowThrough?: string; tips?: string }
+  updates: {
+    name?: string;
+    description?: string;
+    howToFollowThrough?: string;
+    tips?: string;
+    bucket?: HabitBucket;
+  }
 ): Promise<boolean> {
   const database = await getDb();
   let oid: ObjectId;
@@ -1101,10 +1122,13 @@ export async function updateHabit(
   } catch {
     return false;
   }
-  const enc = encryptHabitFields<Record<string, unknown>>(updates as object);
+  const { bucket: _b, ...textUpdates } = updates;
+  const enc = encryptHabitFields<Record<string, unknown>>(textUpdates as object);
+  const setDoc: Record<string, unknown> = { ...enc, updatedAt: new Date() };
+  if (updates.bucket !== undefined) setDoc.bucket = updates.bucket;
   const result = await database
     .collection<HabitDoc>("habits")
-    .updateOne({ _id: oid, userId }, { $set: { ...enc, updatedAt: new Date() } });
+    .updateOne({ _id: oid, userId }, { $set: setDoc });
   return result.modifiedCount > 0;
 }
 

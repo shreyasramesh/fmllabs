@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { getHabits, createHabit } from "@/lib/db";
+import { createHabit, getHabits, isHabitBucket } from "@/lib/db";
 
 export async function GET() {
   const { userId } = await auth();
@@ -26,17 +26,24 @@ export async function POST(request: Request) {
   }
   try {
     const body = await request.json().catch(() => ({}));
-    const sourceType = body.sourceType as "concept" | "ltm" | undefined;
+    const sourceType = body.sourceType as "concept" | "ltm" | "manual" | undefined;
     const sourceId = body.sourceId as string | undefined;
     const name = body.name as string | undefined;
     const description = body.description as string | undefined;
     const howToFollowThrough = body.howToFollowThrough as string | undefined;
     const tips = body.tips as string | undefined;
+    const bucket = body.bucket;
+    const isManual = sourceType === "manual";
+    const hasLinkedSource =
+      sourceType === "concept" || sourceType === "ltm";
     if (
       !sourceType ||
-      (sourceType !== "concept" && sourceType !== "ltm") ||
-      !sourceId ||
-      typeof sourceId !== "string" ||
+      (!isManual && !hasLinkedSource) ||
+      (!isManual &&
+        (!sourceId ||
+          typeof sourceId !== "string" ||
+          !String(sourceId).trim())) ||
+      !isHabitBucket(bucket) ||
       !name ||
       typeof name !== "string" ||
       !description ||
@@ -47,13 +54,17 @@ export async function POST(request: Request) {
       typeof tips !== "string"
     ) {
       return NextResponse.json(
-        { error: "sourceType, sourceId, name, description, howToFollowThrough, and tips are required" },
+        {
+          error:
+            "sourceType, bucket, name, description, howToFollowThrough, and tips are required; sourceId is required unless sourceType is manual",
+        },
         { status: 400 }
       );
     }
     const habit = await createHabit(userId, {
       sourceType,
-      sourceId: sourceId.trim(),
+      sourceId: isManual ? "" : String(sourceId).trim(),
+      bucket,
       name: name.trim(),
       description: description.trim(),
       howToFollowThrough: howToFollowThrough.trim(),

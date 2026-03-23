@@ -1,3 +1,4 @@
+import type { HabitBucket } from "./habit-buckets";
 import type { LanguageCode } from "./languages";
 
 export interface UiTranslations {
@@ -9,6 +10,19 @@ export interface UiTranslations {
   famousFigures: string;
   habits: string;
   promoteToHabit: string;
+  habitLifeArea: string;
+  habitBucketCreative: string;
+  habitBucketIntellectual: string;
+  habitBucketWellbeing: string;
+  habitBucketConnection: string;
+  habitBucketOther: string;
+  createHabit: string;
+  habitSourceManual: string;
+  habitSourceFromConcept: string;
+  habitSourceFromMemory: string;
+  habitSource: string;
+  habitCreateInputHelper: string;
+  habitCreateReviewHelper: string;
   settings: string;
   close: string;
   cancel: string;
@@ -24,6 +38,21 @@ const EN: UiTranslations = {
   famousFigures: "Personas",
   habits: "Habits",
   promoteToHabit: "Promote to Habit",
+  habitLifeArea: "Life area",
+  habitBucketCreative: "Creative (e.g. art, music, writing)",
+  habitBucketIntellectual: "Intellectual (e.g. reading, learning, travel)",
+  habitBucketWellbeing: "Well-being (e.g. yoga, meditation, sports)",
+  habitBucketConnection: "Connection (e.g. social clubs, rituals, shared meals)",
+  habitBucketOther: "Other",
+  createHabit: "Create habit",
+  habitSourceManual: "Created manually",
+  habitSourceFromConcept: "From a concept",
+  habitSourceFromMemory: "From memory",
+  habitSource: "Source",
+  habitCreateInputHelper:
+    "Choose a life area and describe the habit in your own words. The AI will sharpen the name and description and write follow-through steps and tips.",
+  habitCreateReviewHelper:
+    "Review and edit. Follow-through and tips were generated for you—you can change anything before saving.",
   settings: "Settings",
   close: "Close",
   cancel: "Cancel",
@@ -229,4 +258,19 @@ const TRANSLATIONS: Partial<Record<LanguageCode, Partial<UiTranslations>>> = {
 export function getUiTranslations(language: LanguageCode): UiTranslations {
   const t = TRANSLATIONS[language];
   return t ? { ...EN, ...t } : EN;
+}
+
+export function getHabitBucketLabel(t: UiTranslations, bucket: HabitBucket): string {
+  switch (bucket) {
+    case "creative":
+      return t.habitBucketCreative;
+    case "intellectual":
+      return t.habitBucketIntellectual;
+    case "wellbeing":
+      return t.habitBucketWellbeing;
+    case "connection":
+      return t.habitBucketConnection;
+    default:
+      return t.habitBucketOther;
+  }
 }
