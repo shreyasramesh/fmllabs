@@ -324,6 +324,14 @@ export function parseJournalCheckpointFromStream(content: string): {
 const OPTIONS_MARKER_REGEX = /-{2,3}\s*OPTIONS\s*-{2,3}/i;
 
 /**
+ * Some models emit [[model:snake_case_id]]; the app expects [[snake_case_id]].
+ * Normalizes so chips and citation extraction match.
+ */
+export function normalizeMentalModelCitationMarkup(text: string): string {
+  return text.replace(/\[\[model:([a-z0-9_]+)\]\]/gi, "[[$1]]");
+}
+
+/**
  * Parses an assistant message that may contain an OPTIONS block.
  * Format: main text, then "---OPTIONS---" (or "-- OPTIONS ---" etc.), then 4 options.
  * Options can be on separate lines or in one paragraph separated by ". ".
@@ -376,13 +384,14 @@ export function extractRelevanceContext(
   content: string,
   modelId: string
 ): string | null {
-  if (!content?.includes(`[[${modelId}]]`)) return null;
+  const text = normalizeMentalModelCitationMarkup(content);
+  if (!text?.includes(`[[${modelId}]]`)) return null;
   const escaped = modelId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const pattern = new RegExp(
     `[^.!?]*\\[\\[${escaped}\\]\\][^.!?]*[.!?]`,
     "i"
   );
-  const match = content.match(pattern);
+  const match = text.match(pattern);
   if (match) {
     return match[0]
       .replace(/\[\[[a-z0-9_]+\]\]/g, (m) =>
@@ -390,7 +399,7 @@ export function extractRelevanceContext(
       )
       .trim();
   }
-  const paraMatch = content.match(
+  const paraMatch = text.match(
     new RegExp(`[^\\n]*\\[\\[${escaped}\\]\\][^\\n]*`, "i")
   );
   if (paraMatch) {
@@ -408,14 +417,15 @@ export function extractMentalModelIds(
   text: string,
   nameToId?: Map<string, string>
 ): string[] {
+  const normalized = normalizeMentalModelCitationMarkup(text);
   const ids: string[] = [];
   // [[id]] format (lowercase, underscores)
-  for (const m of text.matchAll(/\[\[([a-z0-9_]+)\]\]/g)) {
+  for (const m of normalized.matchAll(/\[\[([a-z0-9_]+)\]\]/g)) {
     ids.push(m[1]);
   }
   // [[Display Name]] format - resolve via nameToId when provided
   if (nameToId && nameToId.size > 0) {
-    for (const m of text.matchAll(/\[\s*\[\s*([^\]]+?)\s*\]\s*\]/g)) {
+    for (const m of normalized.matchAll(/\[\s*\[\s*([^\]]+?)\s*\]\s*\]/g)) {
       const trimmed = m[1].trim();
       if (!/^[a-z0-9_]+$/.test(trimmed)) {
         const id = nameToId.get(trimmed);

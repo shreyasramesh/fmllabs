@@ -46,6 +46,7 @@ import {
 import { consumeConceptExtractionNdjsonStream } from "@/lib/concept-extraction-ndjson";
 import { getHabitBucketLabel, getUiTranslations } from "@/lib/ui-translations";
 import { HABIT_BUCKET_IDS, type HabitBucket } from "@/lib/habit-buckets";
+import { formatHabitIntendedPeriod, getHabitIntendedYearOptions } from "@/lib/habit-intended";
 import { playSelectionChime } from "@/lib/selection-chime";
 import { stripMarkdown } from "@/lib/strip-markdown";
 import { resolveTtsReferenceText } from "@/lib/tts-reference-text";
@@ -92,6 +93,8 @@ interface Message {
   mentorOneOnOne?: { id: string; name: string };
   /** Second-order thinking intro chip */
   secondOrderThinking?: boolean;
+  /** Plain vs citations (intro message before session is persisted); optional on history */
+  secondOrderPlain?: boolean;
   journalCheckpoint?: string;
   mentorResponses?: Array<{ figureId: string; figureName: string; content: string }>;
 }
@@ -133,6 +136,7 @@ interface Session {
   oneOnOneMentorFigureId?: string;
   oneOnOneMentorFigureName?: string;
   secondOrderThinking?: boolean;
+  secondOrderPlain?: boolean;
   updatedAt: string;
 }
 
@@ -173,12 +177,100 @@ interface HabitItem {
   sourceType: "concept" | "ltm" | "manual";
   sourceId: string;
   bucket?: HabitBucket;
+  intendedMonth?: number;
+  intendedYear?: number;
   name: string;
   description: string;
   howToFollowThrough: string;
   tips: string;
   createdAt: string;
   updatedAt: string;
+}
+
+function HabitIntendedPeriodFields({
+  month,
+  year,
+  onMonthChange,
+  onYearChange,
+  language,
+}: {
+  month: number | null;
+  year: number | null;
+  onMonthChange: (v: number | null) => void;
+  onYearChange: (v: number | null) => void;
+  language: LanguageCode;
+}) {
+  const t = getUiTranslations(language);
+  const years = useMemo(() => getHabitIntendedYearOptions(), []);
+  return (
+    <div>
+      <span className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-2">
+        {t.habitIntendedPeriod}
+      </span>
+      <div className="flex flex-wrap gap-3">
+        <div className="min-w-[9rem] flex-1">
+          <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+            {t.habitMonth}
+          </label>
+          <select
+            value={month === null ? "" : String(month)}
+            onChange={(e) => {
+              const v = e.target.value;
+              if (v === "") {
+                onMonthChange(null);
+                onYearChange(null);
+              } else {
+                const m = Number(v);
+                onMonthChange(m);
+                if (year === null) {
+                  onYearChange(new Date().getFullYear());
+                }
+              }
+            }}
+            className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+          >
+            <option value="">{t.habitIntendedNotSet}</option>
+            {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+              <option key={m} value={m}>
+                {new Intl.DateTimeFormat(language, { month: "long" }).format(
+                  new Date(2024, m - 1, 1)
+                )}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="min-w-[6rem] w-28">
+          <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+            {t.habitYear}
+          </label>
+          <select
+            value={year === null ? "" : String(year)}
+            onChange={(e) => {
+              const v = e.target.value;
+              if (v === "") {
+                onMonthChange(null);
+                onYearChange(null);
+              } else {
+                const y = Number(v);
+                onYearChange(y);
+                if (month === null) {
+                  onMonthChange(1);
+                }
+              }
+            }}
+            className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+          >
+            <option value="">{t.habitIntendedNotSet}</option>
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 type WeatherFormat = "condition-temp" | "emoji-temp" | "temp-only";
@@ -272,6 +364,7 @@ function MessageBubble({
   askMentorsSlot,
   language = "en",
   hideContextUsed = false,
+  secondOrderPlainForUi,
 }: {
   message: Message;
   messageIndex: number;
@@ -309,7 +402,14 @@ function MessageBubble({
   language?: LanguageCode;
   /** When true, hide "Context used" (mentor / perspective-card immersive chats). Convert-to-deep still shows if enabled. */
   hideContextUsed?: boolean;
+  /** When set for second-order intro bubbles: false = citations mode; undefined = treat as plain (legacy). */
+  secondOrderPlainForUi?: boolean;
 }) {
+  const secondOrderChipLabel =
+    message.secondOrderThinking &&
+    (secondOrderPlainForUi !== false
+      ? getLandingTranslations(language).secondOrderChipLabelPlain
+      : getLandingTranslations(language).secondOrderChipLabelWithCitations);
   const { text, options } =
     message.role === "assistant"
       ? parseAssistantMessage(message.content)
@@ -491,9 +591,9 @@ function MessageBubble({
                   1:1 · {message.mentorOneOnOne.name}
                 </p>
               )}
-              {message.secondOrderThinking && (
+              {secondOrderChipLabel && (
                 <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
-                  {getLandingTranslations(language).secondOrderChipLabel}
+                  {secondOrderChipLabel}
                 </p>
               )}
               {message.perspectiveCard && (
@@ -649,9 +749,9 @@ function MessageBubble({
                   1:1 · {message.mentorOneOnOne.name}
                 </p>
               )}
-              {message.secondOrderThinking && (
+              {secondOrderChipLabel && (
                 <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
-                  {getLandingTranslations(language).secondOrderChipLabel}
+                  {secondOrderChipLabel}
                 </p>
               )}
             {message.perspectiveCard && (
@@ -1065,23 +1165,10 @@ function CopyButton({
   );
 }
 
-type CarouselPillType = "starter" | "prompt";
-
 type CarouselStarterPill = {
   label: string;
   type: "starter";
 };
-
-type CarouselPromptPill = {
-  label: string;
-  type: "prompt";
-  cardName: string;
-  cardPrompt: string;
-  domain: string;
-  subdomain: string;
-};
-
-type CarouselPill = CarouselStarterPill | CarouselPromptPill;
 
 const EXAMPLE_PILLS_BY_LANGUAGE: Record<LanguageCode, string[][]> = {
   en: [
@@ -1501,16 +1588,6 @@ const EXAMPLE_PILLS_BY_LANGUAGE: Record<LanguageCode, string[][]> = {
   ],
 };
 
-function RippleIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <circle cx="12" cy="12" r="3" />
-      <circle cx="12" cy="12" r="7" />
-      <circle cx="12" cy="12" r="11" />
-    </svg>
-  );
-}
-
 function ChatBubbleIcon({ className }: { className?: string }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -1591,156 +1668,19 @@ function buildPerspectiveCardMessage(
   return `${intro}\n\n${prompt}\n\n${phrases.outro}`;
 }
 
-const PROMPT_LENSES_BY_LANGUAGE: Partial<
-  Record<LanguageCode, { name: string; prompt: string; domain: string; subdomain: string }[]>
-> = {
-  en: [
-    {
-      name: "Souvenir",
-      prompt:
-        "Pick something out from what you are looking at and hide it in the next thing you examine. What changes when you carry this detail forward?",
-      domain: "Art",
-      subdomain: "Art",
-    },
-    {
-      name: "Vertical City",
-      prompt:
-        "Look up. New York is built on the vertical—towers competing for sky. Trace one building from sidewalk to crown. How does height change what you notice?",
-      domain: "Urban Jungle",
-      subdomain: "New York",
-    },
-    {
-      name: "The Tadka Crackle",
-      prompt:
-        "Tadka—tempering—is chemistry in real time. Hot oil meets spice and sound arrives before taste. What changes when you hear the dish before you eat it?",
-      domain: "Culinary Lab",
-      subdomain: "Indian",
-    },
-    {
-      name: "Leaf Vein",
-      prompt:
-        "Pick up a fallen leaf and trace the veins. The architecture is invisible until you look closely. What did this network sustain when the leaf was alive?",
-      domain: "Natural Microcosm",
-      subdomain: "Forest Floor",
-    },
-    {
-      name: "Queue Choreography",
-      prompt:
-        "Watch the line at a counter—forward lean, phone check, subtle shuffle. The queue has rhythm. What unspoken rules decide who stands where?",
-      domain: "The Human Interface",
-      subdomain: "Coffee Shop",
-    },
-    {
-      name: "The Promise of the Button",
-      prompt:
-        "A button is a promise. Before you click, it holds intent—someone decided what should happen next. What did they assume you wanted?",
-      domain: "Digital Ghost",
-      subdomain: "Buttons & Controls",
-    },
-    {
-      name: "In black and white",
-      prompt:
-        "Remove color and focus only on light and dark. Where is the strongest contrast, and how does that change what feels important?",
-      domain: "Art",
-      subdomain: "Art",
-    },
-    {
-      name: "Subway Soundscape",
-      prompt:
-        "Close your eyes in a station. The rumble, brakes, announcements, buskers. What does the city sound like when you cannot see it?",
-      domain: "Urban Jungle",
-      subdomain: "New York",
-    },
-    {
-      name: "Thali Geometry",
-      prompt:
-        "A thali is a composition of bowls, space, and sequence. Where does your eye land first, and what changes if one part is removed?",
-      domain: "Culinary Lab",
-      subdomain: "Indian",
-    },
-    {
-      name: "Mushroom Fruiting",
-      prompt:
-        "A mushroom is only the fruiting body. The organism spreads underground as mycelium. If this visible part is only a signal, what is the hidden system?",
-      domain: "Natural Microcosm",
-      subdomain: "Forest Floor",
-    },
-    {
-      name: "Invisible Script",
-      prompt:
-        "Order, pay, wait, receive, sit. The script is invisible until someone breaks it. What does this routine reveal about belonging?",
-      domain: "The Human Interface",
-      subdomain: "Coffee Shop",
-    },
-    {
-      name: "The Click as Contract",
-      prompt:
-        "You click; the system responds—or doesn’t. The click is a contract between attention and feedback. What happens when that contract fails?",
-      domain: "Digital Ghost",
-      subdomain: "Buttons & Controls",
-    },
-  ],
-};
-
 function MovingPills({
   onSelectStarter,
-  onSelectPrompt,
   language,
 }: {
   onSelectStarter: (text: string) => void;
-  onSelectPrompt: (card: { name: string; prompt: string }) => void;
   language: LanguageCode;
 }) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
-  const [carouselCards, setCarouselCards] = useState<
-    { name: string; prompt: string; domain: string; subdomain: string }[] | null
-  >(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch(`/api/perspective-decks/carousel?language=${language}`)
-      .then((r) => (r.ok ? r.json() : Promise.reject()))
-      .then((data: { cards?: { name: string; prompt: string; domain: string; subdomain: string }[] }) => {
-        if (!cancelled && Array.isArray(data?.cards) && data.cards.length > 0) {
-          setCarouselCards(data.cards);
-        } else if (!cancelled) {
-          setCarouselCards([]);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setCarouselCards([]);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [language]);
-
   const starterRows = EXAMPLE_PILLS_BY_LANGUAGE[language] ?? EXAMPLE_PILLS_BY_LANGUAGE.en;
-  const promptCards =
-    carouselCards && carouselCards.length > 0
-      ? carouselCards
-      : (PROMPT_LENSES_BY_LANGUAGE.en ?? []);
-  const promptRows = promptCards.reduce<
-    { name: string; prompt: string; domain: string; subdomain: string }[][]
-  >((acc, card, idx) => {
-    const rowIndex = idx % 3;
-    if (!acc[rowIndex]) acc[rowIndex] = [];
-    acc[rowIndex].push(card);
-    return acc;
-  }, [[], [], []]);
-  const mixedRows: CarouselPill[][] = starterRows.map((row, rowIndex) => {
-    const starters: CarouselStarterPill[] = row.map((label) => ({ label, type: "starter" }));
-    const prompts: CarouselPromptPill[] = (promptRows[rowIndex] ?? []).map((card) => ({
-      label: `${card.subdomain} · ${card.name}`,
-      type: "prompt",
-      cardName: card.name,
-      cardPrompt: card.prompt,
-      domain: card.domain,
-      subdomain: card.subdomain,
-    }));
-    return [...starters, ...prompts];
-  });
+  const rows: CarouselStarterPill[][] = starterRows.map((row) =>
+    row.map((label) => ({ label, type: "starter" as const }))
+  );
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setPrefersReducedMotion(mq.matches);
@@ -1750,7 +1690,7 @@ function MovingPills({
   }, []);
   return (
     <div className="space-y-4 overflow-hidden">
-      {mixedRows.map((row, rowIndex) => (
+      {rows.map((row, rowIndex) => (
         <div
           key={rowIndex}
           className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
@@ -1775,25 +1715,13 @@ function MovingPills({
                   e.preventDefault();
                   e.stopPropagation();
                   playSelectionChime();
-                  if (pill.type === "prompt") {
-                    onSelectPrompt({ name: pill.cardName, prompt: pill.cardPrompt });
-                  } else {
-                    onSelectStarter(pill.label);
-                  }
+                  onSelectStarter(pill.label);
                 }}
-                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 active:scale-95 whitespace-nowrap ${
-                  pill.type === "prompt"
-                    ? "bg-[#eef7ff] dark:bg-[#1f2937] text-[#0f3d66] dark:text-[#bfdbfe] border-[#bcdcff] dark:border-[#334155] hover:bg-[#ddefff] dark:hover:bg-[#263244]"
-                    : "bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-900 dark:text-neutral-100 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-300 dark:hover:bg-neutral-600"
-                }`}
-                aria-label={`${pill.type === "prompt" ? "Prompt lens" : "Conversation starter"}: ${pill.label}`}
-                title={pill.type === "prompt" ? "Prompt lens" : "Conversation starter"}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 active:scale-95 whitespace-nowrap bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-900 dark:text-neutral-100 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-300 dark:hover:bg-neutral-600"
+                aria-label={`Conversation starter: ${pill.label}`}
+                title="Conversation starter"
               >
-                {pill.type === "prompt" ? (
-                  <RippleIcon className="w-3.5 h-3.5 shrink-0" />
-                ) : (
-                  <ChatBubbleIcon className="w-3.5 h-3.5 shrink-0" />
-                )}
+                <ChatBubbleIcon className="w-3.5 h-3.5 shrink-0" />
                 {pill.label}
               </button>
             ))}
@@ -1802,6 +1730,12 @@ function MovingPills({
       ))}
     </div>
   );
+}
+
+function formatJournalListDate(iso: string | undefined): string {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? "—" : d.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
 }
 
 export default function ChatPage() {
@@ -1840,7 +1774,11 @@ export default function ChatPage() {
   } | null>(null);
   /** Persists second-order mode for all turns (signed-in sessions + first anonymous message). */
   const activeSecondOrderRef = useRef(false);
+  /** When second-order is active: true = plain (no index/RAG), false = with citations. */
+  const activeSecondOrderPlainRef = useRef(false);
   const [pendingSecondOrder, setPendingSecondOrder] = useState(false);
+  /** Default off: plain second-order (no index / "Context used"). Toggle on to include citations. */
+  const [secondOrderCitationsEnabled, setSecondOrderCitationsEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [sessionLoading, setSessionLoading] = useState(!isNew && !incognitoMode);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(
@@ -1907,6 +1845,8 @@ export default function ChatPage() {
     videoTitle?: string;
     channel?: string;
     sourceType?: "youtube" | "journal";
+    createdAt?: string;
+    updatedAt?: string;
     extractedConcepts?: {
       domain: string;
       concepts: { title: string; summary: string; enrichmentPrompt: string }[];
@@ -1930,6 +1870,7 @@ export default function ChatPage() {
     channel?: string;
     sourceType?: "youtube" | "journal";
     transcriptText: string;
+    createdAt?: string;
     extractedConcepts?: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
   } | null>(null);
   const [transcriptExtractedConceptOpen, setTranscriptExtractedConceptOpen] = useState<{ gi: number; ci: number } | null>(null);
@@ -2463,6 +2404,40 @@ export default function ChatPage() {
       .catch(() => setSavedTranscripts([]));
   }, [isAnonymous]);
 
+  const [journalEntryJustSaved, setJournalEntryJustSaved] = useState(false);
+
+  const journalEntriesSorted = useMemo(() => {
+    return savedTranscripts
+      .filter((t) => t.sourceType === "journal")
+      .slice()
+      .sort((a, b) => {
+        const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return tb - ta;
+      });
+  }, [savedTranscripts]);
+
+  const openJournalEntryFlow = useCallback(() => {
+    playSelectionChime();
+    if (isAnonymous || incognitoMode) {
+      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/journal/new")}`);
+      return;
+    }
+    router.push("/chat/journal/new");
+  }, [isAnonymous, incognitoMode, router]);
+
+  useEffect(() => {
+    if (!isNew && !incognitoMode) return;
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("journalSaved") !== "1") return;
+    setJournalEntryJustSaved(true);
+    refetchTranscripts();
+    router.replace("/chat/new", { scroll: false });
+    const tid = window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
+    return () => clearTimeout(tid);
+  }, [isNew, incognitoMode, router, refetchTranscripts]);
+
   /** Opens the video/journal concept extraction modal for a saved transcript (re-extract). */
   const openConceptExtractionForTranscript = useCallback(
     (ctx: {
@@ -2622,14 +2597,17 @@ export default function ChatPage() {
               name: session.oneOnOneMentorFigureName,
             };
             activeSecondOrderRef.current = false;
+            activeSecondOrderPlainRef.current = false;
             setPendingSecondOrder(false);
           } else {
             activeOneOnOneMentorRef.current = null;
             if (session.secondOrderThinking) {
               activeSecondOrderRef.current = true;
+              activeSecondOrderPlainRef.current = session.secondOrderPlain !== false;
               setPendingOneOnOneMentor(null);
             } else {
               activeSecondOrderRef.current = false;
+              activeSecondOrderPlainRef.current = false;
               setPendingSecondOrder(false);
             }
           }
@@ -2720,12 +2698,23 @@ export default function ChatPage() {
             activeOneOnOneMentorRef.current = null;
             setPendingOneOnOneMentor(null);
             activeSecondOrderRef.current = true;
+            let plainHandoff = true;
+            try {
+              const parsed = JSON.parse(secondOrderStored) as { plain?: boolean };
+              if (parsed && typeof parsed === "object" && typeof parsed.plain === "boolean") {
+                plainHandoff = parsed.plain;
+              }
+            } catch {
+              plainHandoff = secondOrderStored === "1" || secondOrderStored === "true";
+            }
+            activeSecondOrderPlainRef.current = plainHandoff;
             setPendingSecondOrder(true);
             setMessages([
               {
                 role: "assistant",
                 content: buildSecondOrderMessage(language),
                 secondOrderThinking: true,
+                secondOrderPlain: plainHandoff,
               },
             ]);
             setSelectedMentorFigureIds([]);
@@ -2740,6 +2729,7 @@ export default function ChatPage() {
             activeOneOnOneMentorRef.current = null;
             setPendingOneOnOneMentor(null);
             activeSecondOrderRef.current = false;
+            activeSecondOrderPlainRef.current = false;
             setPendingSecondOrder(false);
             setMessages([]);
             setLibraryPanelOpen(null);
@@ -2762,6 +2752,7 @@ export default function ChatPage() {
             activeOneOnOneMentorRef.current = null;
             setPendingOneOnOneMentor(null);
             activeSecondOrderRef.current = false;
+            activeSecondOrderPlainRef.current = false;
             setPendingSecondOrder(false);
             setMessages([]);
             setMentorCatalogSearch("");
@@ -2838,16 +2829,39 @@ export default function ChatPage() {
             return;
           }
           const secondOrderQ = params.get("secondOrder");
-          if (secondOrderQ === "1") {
+          if (secondOrderQ === "plain" || secondOrderQ === "1") {
             activeOneOnOneMentorRef.current = null;
             setPendingOneOnOneMentor(null);
             activeSecondOrderRef.current = true;
+            activeSecondOrderPlainRef.current = true;
             setPendingSecondOrder(true);
             setMessages([
               {
                 role: "assistant",
                 content: buildSecondOrderMessage(language),
                 secondOrderThinking: true,
+                secondOrderPlain: true,
+              },
+            ]);
+            setSelectedMentorFigureIds([]);
+            setCurrentSessionId(null);
+            setCurrentSession(null);
+            setCollapsedSummary(null);
+            router.replace("/chat/new");
+            return;
+          }
+          if (secondOrderQ === "citations") {
+            activeOneOnOneMentorRef.current = null;
+            setPendingOneOnOneMentor(null);
+            activeSecondOrderRef.current = true;
+            activeSecondOrderPlainRef.current = false;
+            setPendingSecondOrder(true);
+            setMessages([
+              {
+                role: "assistant",
+                content: buildSecondOrderMessage(language),
+                secondOrderThinking: true,
+                secondOrderPlain: false,
               },
             ]);
             setSelectedMentorFigureIds([]);
@@ -2882,6 +2896,7 @@ export default function ChatPage() {
         activeOneOnOneMentorRef.current = null;
         setPendingOneOnOneMentor(null);
         activeSecondOrderRef.current = false;
+        activeSecondOrderPlainRef.current = false;
         setPendingSecondOrder(false);
       }
     }
@@ -2906,6 +2921,7 @@ export default function ChatPage() {
   const startConversationFromPerspectiveCard = useCallback(
     ({ name, prompt }: { name: string; prompt: string }) => {
       activeSecondOrderRef.current = false;
+      activeSecondOrderPlainRef.current = false;
       setPendingSecondOrder(false);
       setDrawnPerspectiveCard(null);
       setWaysOfLookingAtModalOpen(false);
@@ -2949,6 +2965,7 @@ export default function ChatPage() {
   const startConversationFromMentorOneOnOne = useCallback(
     (figure: { id: string; name: string; description: string }) => {
       activeSecondOrderRef.current = false;
+      activeSecondOrderPlainRef.current = false;
       setPendingSecondOrder(false);
       setMentorOneOnOneModalOpen(false);
       setIdeasModalOpen(false);
@@ -3002,7 +3019,7 @@ export default function ChatPage() {
     [router, sessionId, language]
   );
 
-  const startSecondOrderConversation = useCallback(() => {
+  const startSecondOrderConversation = useCallback((plain: boolean) => {
     setNewConversationChooserModalOpen(false);
     setIdeasModalOpen(false);
     activeOneOnOneMentorRef.current = null;
@@ -3013,19 +3030,21 @@ export default function ChatPage() {
     }
     if (sessionId !== "new" && sessionId !== "incognito") {
       try {
-        sessionStorage.setItem(SECOND_ORDER_START_KEY, "1");
+        sessionStorage.setItem(SECOND_ORDER_START_KEY, JSON.stringify({ plain }));
       } catch {
         /* ignore */
       }
-      router.push("/chat/new?secondOrder=1");
+      router.push(plain ? "/chat/new?secondOrder=plain" : "/chat/new?secondOrder=citations");
     } else {
       activeSecondOrderRef.current = true;
+      activeSecondOrderPlainRef.current = plain;
       setPendingSecondOrder(true);
       setMessages([
         {
           role: "assistant",
           content: buildSecondOrderMessage(language),
           secondOrderThinking: true,
+          secondOrderPlain: plain,
         },
       ]);
       setSelectedMentorFigureIds([]);
@@ -3104,6 +3123,7 @@ export default function ChatPage() {
       activeOneOnOneMentorRef.current = pendingOneOnOneMentor;
       setPendingOneOnOneMentor(null);
       activeSecondOrderRef.current = false;
+      activeSecondOrderPlainRef.current = false;
       setPendingSecondOrder(false);
     }
     if (pendingSecondOrder) {
@@ -3243,6 +3263,9 @@ export default function ChatPage() {
       !mentorForApi;
     if (activeSecondOrderRef.current && !mentorForApi && !cardCtx && !useMultiMentorThisTurn) {
       chatBody.secondOrderThinking = true;
+      if (activeSecondOrderPlainRef.current) {
+        chatBody.secondOrderPlain = true;
+      }
     }
     if (isAnonymous || incognitoMode) {
       chatBody.messages = baseMessages.map((m) => ({ role: m.role, content: m.content }));
@@ -3408,14 +3431,17 @@ export default function ChatPage() {
     setSidebarOpenState(open);
   }, []);
 
-  const [libraryPanelOpen, setLibraryPanelOpen] = useState<"conversations" | "ltm" | "concepts" | "cc" | "cg" | "decks" | "figures" | "habits" | null>(null);
+  const [libraryPanelOpen, setLibraryPanelOpen] = useState<
+    "conversations" | "ltm" | "concepts" | "cc" | "cg" | "decks" | "figures" | "habits" | "journal" | null
+  >(null);
   /** Non-modal library views: full main-area panel (not center overlay). */
   const showLibraryInline =
     libraryPanelOpen === "cc" ||
     libraryPanelOpen === "concepts" ||
     libraryPanelOpen === "ltm" ||
     libraryPanelOpen === "cg" ||
-    libraryPanelOpen === "habits";
+    libraryPanelOpen === "habits" ||
+    libraryPanelOpen === "journal";
   const showLibraryModal =
     libraryPanelOpen === "conversations" || libraryPanelOpen === "figures";
   const [waysOfLookingAtModalOpen, setWaysOfLookingAtModalOpen] = useState(false);
@@ -3482,6 +3508,8 @@ export default function ChatPage() {
     howToFollowThrough: string;
     tips: string;
     bucket: HabitBucket;
+    intendedMonth: number | null;
+    intendedYear: number | null;
   } | null>(null);
   const [habitPromoteBucket, setHabitPromoteBucket] = useState<HabitBucket | null>(null);
   const [habitPromoteLanguage, setHabitPromoteLanguage] = useState<LanguageCode>("en");
@@ -3494,12 +3522,16 @@ export default function ChatPage() {
     howToFollowThrough: string;
     tips: string;
     bucket?: HabitBucket;
+    intendedMonth: number | null;
+    intendedYear: number | null;
   } | null>(null);
   const [habitDeleteConfirmModal, setHabitDeleteConfirmModal] = useState<HabitItem | null>(null);
   const [habitCreateDraft, setHabitCreateDraft] = useState<{
     bucket: HabitBucket;
     name: string;
     description: string;
+    intendedMonth: number | null;
+    intendedYear: number | null;
   } | null>(null);
   const [habitCreateStep, setHabitCreateStep] = useState<"input" | "preview">("input");
   const [habitCreatePreview, setHabitCreatePreview] = useState<{
@@ -3748,7 +3780,7 @@ export default function ChatPage() {
   }, [isAnonymous, user]);
 
   useEffect(() => {
-    if (libraryPanelOpen === "cg") refetchTranscripts();
+    if (libraryPanelOpen === "cg" || libraryPanelOpen === "journal") refetchTranscripts();
   }, [libraryPanelOpen, refetchTranscripts]);
 
   useEffect(() => {
@@ -3819,6 +3851,14 @@ export default function ChatPage() {
         howToFollowThrough: habitDetailModal.howToFollowThrough,
         tips: habitDetailModal.tips,
         bucket: habitDetailModal.bucket,
+        intendedMonth:
+          typeof habitDetailModal.intendedMonth === "number"
+            ? habitDetailModal.intendedMonth
+            : null,
+        intendedYear:
+          typeof habitDetailModal.intendedYear === "number"
+            ? habitDetailModal.intendedYear
+            : null,
       });
     } else {
       setHabitDetailEdit(null);
@@ -4338,7 +4378,9 @@ export default function ChatPage() {
               ? getUiTranslations(language).groups
               : libraryPanelOpen === "habits"
                 ? getUiTranslations(language).habits
-                : ""
+                : libraryPanelOpen === "journal"
+                  ? getUiTranslations(language).journalEntries
+                  : ""
       : null;
 
   const waysMainHeaderTitle = useMemo(() => {
@@ -4706,6 +4748,7 @@ export default function ChatPage() {
                   activeOneOnOneMentorRef.current = null;
                   setPendingOneOnOneMentor(null);
                   activeSecondOrderRef.current = false;
+                  activeSecondOrderPlainRef.current = false;
                   setPendingSecondOrder(false);
               }
                 setNewConversationChooserModalOpen(true);
@@ -4781,6 +4824,7 @@ export default function ChatPage() {
               { id: "cg" as const, label: getUiTranslations(language).groups, icon: "groups", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("cg"); } },
               ...(!isAnonymous ? [
                 { id: "habits" as const, label: getUiTranslations(language).habits, icon: "habits" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("habits"); } },
+                { id: "journal" as const, label: getUiTranslations(language).journalEntries, icon: "journal" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("journal"); } },
                 { id: "figures" as const, label: getUiTranslations(language).famousFigures, icon: "figures" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("figures"); } },
               ] : []),
             ].map(({ id, label, icon, onClick }) => {
@@ -4835,6 +4879,13 @@ export default function ChatPage() {
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
                       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                       <path d="M22 4 12 14.01l-3-3" />
+                    </svg>
+                  )}
+                  {icon === "journal" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+                      <path d="M8 7h8" />
+                      <path d="M8 11h6" />
                     </svg>
                   )}
                   {icon === "figures" && (
@@ -6267,7 +6318,15 @@ export default function ChatPage() {
                               onClick={() =>
                                 fetch(`/api/me/transcripts/${t._id}`)
                                   .then((r) => r.ok ? r.json() : Promise.reject())
-                                  .then((data) =>
+                                  .then((data: {
+                                    videoId?: string;
+                                    videoTitle?: string;
+                                    channel?: string;
+                                    sourceType?: "youtube" | "journal";
+                                    transcriptText?: string;
+                                    extractedConcepts?: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
+                                    createdAt?: string | Date;
+                                  }) =>
                                     setTranscriptModalTranscript({
                                       id: t._id,
                                       videoId: data.videoId ?? t.videoId,
@@ -6276,6 +6335,12 @@ export default function ChatPage() {
                                       sourceType: data.sourceType ?? t.sourceType,
                                       transcriptText: data.transcriptText ?? "",
                                       extractedConcepts: data.extractedConcepts,
+                                      createdAt:
+                                        typeof data.createdAt === "string"
+                                          ? data.createdAt
+                                          : data.createdAt instanceof Date
+                                            ? data.createdAt.toISOString()
+                                            : t.createdAt,
                                     })
                                   )
                                   .catch(() => {})
@@ -6298,7 +6363,9 @@ export default function ChatPage() {
                               </a>
                               )}
                               {t.sourceType === "journal" ? (
-                                <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">Journal</p>
+                                <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">
+                                  {formatJournalListDate(t.createdAt)}
+                                </p>
                               ) : (
                                 t.channel && <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">{t.channel}</p>
                               )}
@@ -6336,25 +6403,26 @@ export default function ChatPage() {
               )}
               {libraryPanelOpen === "habits" && (
                 <div className="space-y-4">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400 flex-1">
-                      Habits for daily life—not sent to the AI. Create one here, or promote a concept or memory.
-                    </p>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    Habits for daily life—not sent to the AI. Create one here, or promote a concept or memory.
+                  </p>
+                  <div className="flex items-center justify-end gap-2">
                     <button
                       type="button"
                       onClick={() => {
-                        playSelectionChime();
                         setHabitCreateDraft({
                           bucket: HABIT_BUCKET_IDS[0],
                           name: "",
                           description: "",
+                          intendedMonth: null,
+                          intendedYear: null,
                         });
                         setHabitCreateStep("input");
                         setHabitCreatePreview(null);
                       }}
-                      className="shrink-0 px-3 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                      className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors"
                     >
-                      {getUiTranslations(language).createHabit}
+                      + {getUiTranslations(language).createHabit}
                     </button>
                   </div>
                   {habits.length > 0 ? (
@@ -6393,6 +6461,16 @@ export default function ChatPage() {
                                   <div className="flex-1 min-w-0 pr-10">
                                     <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
                                     <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{h.description}</p>
+                                    {typeof h.intendedMonth === "number" &&
+                                    typeof h.intendedYear === "number" ? (
+                                      <p className="text-[11px] text-neutral-500 dark:text-neutral-500 mt-1.5">
+                                        {formatHabitIntendedPeriod(
+                                          h.intendedMonth,
+                                          h.intendedYear,
+                                          language
+                                        )}
+                                      </p>
+                                    ) : null}
                                   </div>
                                 </div>
                               ))}
@@ -6433,6 +6511,16 @@ export default function ChatPage() {
                                 <div className="flex-1 min-w-0 pr-10">
                                   <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
                                   <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{h.description}</p>
+                                  {typeof h.intendedMonth === "number" &&
+                                  typeof h.intendedYear === "number" ? (
+                                    <p className="text-[11px] text-neutral-500 dark:text-neutral-500 mt-1.5">
+                                      {formatHabitIntendedPeriod(
+                                        h.intendedMonth,
+                                        h.intendedYear,
+                                        language
+                                      )}
+                                    </p>
+                                  ) : null}
                                 </div>
                               </div>
                             ))}
@@ -6443,6 +6531,106 @@ export default function ChatPage() {
                   ) : (
                     <p className="text-xs text-neutral-500 dark:text-neutral-400">
                       Use <span className="font-medium">Create habit</span> above, or open a concept or memory and choose Promote to Habit.
+                    </p>
+                  )}
+                </div>
+              )}
+              {libraryPanelOpen === "journal" && (
+                <div className="space-y-4">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    Freeform entries saved to your library—not sent as chat. Newest first.
+                  </p>
+                  <div className="flex items-center justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        router.push("/chat/journal/new");
+                      }}
+                      className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors"
+                    >
+                      + {getLandingTranslations(language).journalEntryButtonLabel}
+                    </button>
+                  </div>
+                  {journalEntriesSorted.length > 0 ? (
+                    <div className="space-y-2">
+                      {journalEntriesSorted.map((t) => (
+                        <div
+                          key={t._id}
+                          className="flex items-center justify-between gap-2 p-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/30"
+                        >
+                          <div
+                            className="min-w-0 flex-1 cursor-pointer"
+                            role="button"
+                            tabIndex={0}
+                            onClick={() =>
+                              fetch(`/api/me/transcripts/${t._id}`)
+                                .then((r) => (r.ok ? r.json() : Promise.reject()))
+                                .then((data) =>
+                                  setTranscriptModalTranscript({
+                                    id: t._id,
+                                    videoId: data.videoId ?? t.videoId,
+                                    videoTitle: data.videoTitle ?? t.videoTitle,
+                                    channel: data.channel ?? t.channel,
+                                    sourceType: data.sourceType ?? t.sourceType,
+                                    transcriptText: data.transcriptText ?? "",
+                                    extractedConcepts: data.extractedConcepts,
+                                    createdAt:
+                                      typeof data.createdAt === "string"
+                                        ? data.createdAt
+                                        : data.createdAt instanceof Date
+                                          ? data.createdAt.toISOString()
+                                          : t.createdAt,
+                                  })
+                                )
+                                .catch(() => {})
+                            }
+                            onKeyDown={(e) => e.key === "Enter" && (e.currentTarget as HTMLElement).click()}
+                          >
+                            <span className="text-sm font-medium truncate block text-foreground">
+                              {t.videoTitle || "Journal entry"}
+                            </span>
+                            <p className="text-[10px] text-neutral-500 dark:text-neutral-400">{formatJournalListDate(t.createdAt)}</p>
+                          </div>
+                          <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setReExtractError(null);
+                                setReExtractConfirm({
+                                  transcriptId: t._id,
+                                  sourceType: "journal",
+                                  videoTitle: t.videoTitle ?? undefined,
+                                });
+                              }}
+                              className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
+                            >
+                              Re-extract
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                fetch(`/api/me/transcripts/${t._id}`, { method: "DELETE" }).then(() => refetchTranscripts())
+                              }
+                              className="p-1.5 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                              aria-label={`Delete journal ${t.videoTitle || t._id}`}
+                            >
+                              <TrashIcon className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                      No journal entries yet.{" "}
+                      <button
+                        type="button"
+                        onClick={() => router.push("/chat/journal/new")}
+                        className="font-medium text-foreground underline underline-offset-2 hover:no-underline"
+                      >
+                        Write one
+                      </button>
+                      .
                     </p>
                   )}
                 </div>
@@ -6681,175 +6869,95 @@ export default function ChatPage() {
                   {incognitoMode ? "Let's chat incognito" : getLandingTranslations(language).productTagline}
                 </h1>
                 {!incognitoMode && (
-                  <div className="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-3 gap-3 text-left animate-fade-in-up">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        playSelectionChime();
-                        if (sessionId !== "new" && sessionId !== "incognito") {
-                          try {
-                            sessionStorage.setItem(OPEN_WAYS_FROM_CHOOSER_KEY, "1");
-                          } catch {
-                            /* ignore */
+                  <>
+                    <div className="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-3 text-left animate-fade-in-up">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          playSelectionChime();
+                          if (sessionId !== "new" && sessionId !== "incognito") {
+                            try {
+                              sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
+                            } catch {
+                              /* ignore */
+                            }
+                            router.push("/chat/new");
+                          } else {
+                            setMentorCatalogSearch("");
+                            setMentorCatalogCategoryId(null);
+                            setMentorOneOnOneModalOpen(true);
                           }
-                          router.push("/chat/new");
-                        } else {
-                          setLibraryPanelOpen(null);
-                          setWaysOfLookingAtModalOpen(true);
-                          setWaysOfLookingAtDrawMode(true);
-                          setWaysOfLookingAtCategory(null);
-                          setWaysOfLookingAtCity(null);
-                          setWaysOfLookingAtCuisine(null);
-                          setWaysOfLookingAtMicrocosm(null);
-                          setWaysOfLookingAtHuman(null);
-                          setWaysOfLookingAtDigital(null);
-                        }
-                      }}
-                      className="flex flex-col gap-1 px-4 py-3 rounded-2xl border border-neutral-200 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 active:scale-[0.98]"
-                    >
-                      <span className="font-medium text-foreground">{getLandingTranslations(language).drawPerspectiveCard}</span>
-                      <span className="text-xs text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).shiftHowYouLook}</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        playSelectionChime();
-                        if (sessionId !== "new" && sessionId !== "incognito") {
-                          try {
-                            sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
-                          } catch {
-                            /* ignore */
-                          }
-                          router.push("/chat/new");
-                        } else {
-                          setMentorCatalogSearch("");
-                          setMentorCatalogCategoryId(null);
-                          setMentorOneOnOneModalOpen(true);
-                        }
-                      }}
-                      className="flex flex-col gap-1 px-4 py-3 rounded-2xl border border-neutral-200 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 active:scale-[0.98]"
-                    >
-                      <span className="font-medium text-foreground">{getLandingTranslations(language).mentorOneOnOneTitle}</span>
-                      <span className="text-xs text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).mentorOneOnOneSubtitle}</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        playSelectionChime();
-                        startSecondOrderConversation();
-                      }}
-                      className="flex flex-col gap-1 px-4 py-3 rounded-2xl border border-neutral-200 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 active:scale-[0.98]"
-                    >
-                      <span className="font-medium text-foreground">{getLandingTranslations(language).secondOrderThinkingTitle}</span>
-                      <span className="text-xs text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).secondOrderThinkingSubtitle}</span>
-                    </button>
-                  </div>
-                )}
-                <div className="w-full max-w-2xl rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex flex-col overflow-hidden animate-fade-in-up" data-tour="input-area">
-                  <div className="relative flex-1 min-w-0 px-4 pt-5">
-                    <MentionInput
-                      inputRef={inputRef}
-                      value={input}
-                      onChange={setInput}
-                      onKeyDown={handleKeyDown}
-                      mentalModels={Array.from(mentalModelsIndex.entries()).map(([id, name]) => ({
-                        id,
-                        name,
-                      }))}
-                      longTermMemories={longTermMemories.map((ltm) => ({
-                        _id: ltm._id,
-                        title: translatedTitles[ltm._id] ?? ltm.title,
-                        enrichmentPrompt: ltm.enrichmentPrompt,
-                      }))}
-                      customConcepts={customConcepts.map((cc) => ({
-                        _id: cc._id,
-                        title: translatedTitles[cc._id] ?? cc.title,
-                        enrichmentPrompt: cc.enrichmentPrompt,
-                      }))}
-                      conceptGroups={conceptGroups.map((cg) => ({
-                        _id: cg._id,
-                        title: translatedTitles[cg._id] ?? cg.title,
-                      }))}
-                      mentionTranslations={getMentionTranslations(language)}
-                      placeholder={
-                        multiMentorMode && selectedMentorFigureIds.length >= 2
-                          ? "What do you want to ask your mentors?"
-                          : "What's on your mind | @ to search"
-                      }
-                      placeholderMobile={
-                        multiMentorMode && selectedMentorFigureIds.length >= 2
-                          ? "What do you want to ask your mentors?"
-                          : "What's on your mind | @ to search"
-                      }
-                      disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed || !!pendingCardFetch}
-                      className="w-full h-10 max-h-10 py-0 pl-0 pr-0 border-0 rounded-none bg-transparent shadow-none resize-none focus:outline-none focus:ring-0 focus:border-0 text-sm sm:text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
-                      onMentalModelClick={handleMentalModelClick}
-                      onLtmClick={(id) => {
-                        const ltm = longTermMemories.find((l) => l._id === id);
-                        if (ltm) setLtmDetailModal(ltm);
-                      }}
-                      onCustomConceptClick={(id) => {
-                        const cc = customConcepts.find((c) => c._id === id);
-                        if (cc) openConceptDetail(cc);
-                      }}
-                      onConceptGroupClick={(id) => {
-                        const cg = conceptGroups.find((g) => g._id === id);
-                        if (cg) {
-                          fetch(`/api/me/concept-groups/${id}`)
-                            .then((r) => r.ok ? r.json() : Promise.reject())
-                            .then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] }))
-                            .catch(() => setCgDetailModal(cg));
-                        }
-                      }}
-                      previewMap={previewMap}
-                    />
-                          </div>
-                  <div className="flex items-center justify-between gap-2 px-2 pb-2 pt-0 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      playSelectionChime();
-                      setIdeasModalOpen(true);
-                    }}
-                    className="group relative overflow-hidden flex items-center gap-2 px-3 py-2 rounded-xl active:scale-[0.98] shrink-0"
-                  >
-                    <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-100 via-amber-50 to-yellow-50 dark:from-rose-900/40 dark:via-amber-900/30 dark:to-yellow-900/30 transition-opacity duration-300" aria-hidden />
-                    <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-200 via-amber-100 to-yellow-100 dark:from-rose-800/50 dark:via-amber-800/40 dark:to-yellow-800/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden />
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 w-5 h-5 text-foreground">
-                      <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
-                      <path d="M9 18h6" />
-                      <path d="M10 22h4" />
-                    </svg>
-                    <span className="relative z-10">{getLandingTranslations(language).ideas}</span>
-                  </button>
-                  <div className="flex items-center gap-1 ml-auto">
-                  <UserTypeSelector />
-                  <LanguageSelector />
-                  <VoiceInputButton
-                    onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
-                    language={language}
-                    disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed || !!pendingCardFetch}
-                    ariaLabel="Voice input"
-                    className="!min-h-[40px] !min-w-[40px] sm:!min-h-[44px] sm:!min-w-[44px]"
-                  />
-                  <button
-                    onClick={() => sendMessage()}
-                    disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed || !!pendingCardFetch}
-                    aria-label="Send message"
-                    className="flex items-center justify-center gap-1.5 p-2 min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px] rounded-xl bg-accent text-white transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
-                  >
-                    {isLoading ? (
-                      <LoadingDots aria-label="Sending" />
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                        <path d="m22 2-7 20-4-9-9-4Z" />
-                        <path d="M22 2 11 13" />
-                      </svg>
+                        }}
+                        className="flex flex-col gap-1 px-4 py-3 rounded-2xl border border-neutral-200 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 active:scale-[0.98]"
+                      >
+                        <span className="font-medium text-foreground">{getLandingTranslations(language).mentorOneOnOneTitle}</span>
+                        <span className="text-xs text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).mentorOneOnOneSubtitle}</span>
+                      </button>
+                      <div className="rounded-2xl border border-neutral-200 dark:border-neutral-600 bg-background overflow-hidden flex flex-col hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            playSelectionChime();
+                            startSecondOrderConversation(!secondOrderCitationsEnabled);
+                          }}
+                          className="flex flex-col gap-1 px-4 py-3 text-left w-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors active:scale-[0.98]"
+                        >
+                          <span className="font-medium text-foreground">{getLandingTranslations(language).secondOrderThinkingTitle}</span>
+                          <span className="text-xs text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).secondOrderThinkingSubtitle}</span>
+                        </button>
+                        <div
+                          className="flex items-center justify-between gap-2 px-4 py-2.5 border-t border-neutral-200 dark:border-neutral-600 bg-neutral-50/50 dark:bg-neutral-900/30"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <span className="text-xs text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).secondOrderCitationsToggleLabel}</span>
+                          <button
+                            type="button"
+                            role="switch"
+                            aria-checked={secondOrderCitationsEnabled}
+                            aria-label={getLandingTranslations(language).secondOrderCitationsToggleLabel}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSecondOrderCitationsEnabled((v) => !v);
+                            }}
+                            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+                              secondOrderCitationsEnabled ? "bg-accent" : "bg-neutral-300 dark:bg-neutral-600"
+                            }`}
+                          >
+                            <span
+                              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
+                                secondOrderCitationsEnabled ? "translate-x-6" : "translate-x-1"
+                              }`}
+                            />
+                          </button>
+                        </div>
+                      </div>
+                      <div className="sm:col-span-2 flex justify-center w-full">
+                        <button
+                          type="button"
+                          onClick={openJournalEntryFlow}
+                          className="w-full max-w-md flex flex-col gap-1 px-4 py-3 rounded-2xl border border-neutral-200 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 active:scale-[0.98] text-left"
+                        >
+                          <span className="font-medium text-foreground">{getLandingTranslations(language).journalEntryButtonLabel}</span>
+                          <span className="text-xs text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).journalEntryButtonSubtitle}</span>
+                        </button>
+                      </div>
+                    </div>
+                    {journalEntryJustSaved && (
+                      <p className="text-sm text-emerald-600 dark:text-emerald-400 animate-fade-in-up" role="status">
+                        {getLandingTranslations(language).journalEntrySavedHint}
+                      </p>
                     )}
-                  </button>
-                  </div>
-                  </div>
-                </div>
+                    <div className="w-full max-w-2xl mt-6 text-left animate-fade-in-up" data-tour="input-area">
+                      <MovingPills
+                        language={language}
+                        onSelectStarter={(text) => {
+                          playSelectionChime();
+                          sendMessage(text);
+                        }}
+                      />
+                    </div>
+                  </>
+                )}
                 <p className="text-center text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 px-2 max-w-2xl w-full">
                   FML Labs is AI and can make mistakes.
                 </p>
@@ -7006,6 +7114,7 @@ export default function ChatPage() {
                             setSelectedMentorFigureIds([]);
                             setMentorPickerCategoryId(null);
                             activeSecondOrderRef.current = false;
+                            activeSecondOrderPlainRef.current = false;
                             setPendingSecondOrder(false);
                           }
                         }}
@@ -7100,7 +7209,19 @@ export default function ChatPage() {
                   ) : undefined
                 }
                 language={language}
-                hideContextUsed={suppressJournalAndAskMentors}
+                secondOrderPlainForUi={
+                  m.secondOrderThinking
+                    ? currentSession?.secondOrderThinking
+                      ? currentSession.secondOrderPlain !== false
+                      : m.secondOrderPlain !== false
+                    : undefined
+                }
+                hideContextUsed={
+                  suppressJournalAndAskMentors ||
+                  (currentSession?.secondOrderThinking === true
+                    ? currentSession.secondOrderPlain !== false
+                    : activeSecondOrderRef.current && activeSecondOrderPlainRef.current)
+                }
               />
             ))}
             <div ref={messagesEndRef} />
@@ -7759,7 +7880,9 @@ export default function ChatPage() {
               </button>
               <h2 className="font-semibold text-lg truncate">{transcriptModalTranscript.videoTitle || "Transcript"}</h2>
               {transcriptModalTranscript.sourceType === "journal" ? (
-                <p className="text-sm text-neutral-500 dark:text-neutral-400 truncate mt-0.5">Journal</p>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400 truncate mt-0.5">
+                  {formatJournalListDate(transcriptModalTranscript.createdAt)}
+                </p>
               ) : (
                 transcriptModalTranscript.channel && (
                   <p className="text-sm text-neutral-500 dark:text-neutral-400 truncate mt-0.5">{transcriptModalTranscript.channel}</p>
@@ -8915,44 +9038,6 @@ export default function ChatPage() {
                   setNewConversationChooserModalOpen(false);
                   if (sessionId !== "new" && sessionId !== "incognito") {
                     try {
-                      sessionStorage.setItem(OPEN_WAYS_FROM_CHOOSER_KEY, "1");
-                    } catch {
-                      /* ignore */
-                    }
-                    router.push("/chat/new");
-                  } else {
-                    setLibraryPanelOpen(null);
-                    setWaysOfLookingAtModalOpen(true);
-                    setWaysOfLookingAtDrawMode(true);
-                    setWaysOfLookingAtCategory(null);
-                    setWaysOfLookingAtCity(null);
-                    setWaysOfLookingAtCuisine(null);
-                    setWaysOfLookingAtMicrocosm(null);
-                    setWaysOfLookingAtHuman(null);
-                    setWaysOfLookingAtDigital(null);
-                  }
-                }}
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
-              >
-                <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
-                    <rect width="18" height="14" x="3" y="3" rx="2" />
-                    <path d="M3 9h18" />
-                    <path d="M3 15h18" />
-                  </svg>
-                </span>
-                <div className="min-w-0">
-                  <p className="font-medium text-foreground">{getLandingTranslations(language).drawPerspectiveCard}</p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).shiftHowYouLook}</p>
-                </div>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  playSelectionChime();
-                  setNewConversationChooserModalOpen(false);
-                  if (sessionId !== "new" && sessionId !== "incognito") {
-                    try {
                       sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
                     } catch {
                       /* ignore */
@@ -8979,30 +9064,77 @@ export default function ChatPage() {
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).mentorOneOnOneSubtitle}</p>
                 </div>
               </button>
+              <div className="w-full rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background overflow-hidden flex flex-col">
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSelectionChime();
+                    startSecondOrderConversation(!secondOrderCitationsEnabled);
+                  }}
+                  className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors active:scale-[0.98]"
+                >
+                  <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
+                      <path d="M12 2v4" />
+                      <path d="m16 6 2-2" />
+                      <path d="M18 12h4" />
+                      <path d="m16 18 2 2" />
+                      <path d="M12 18v4" />
+                      <path d="m8 18-2 2" />
+                      <path d="M6 12H2" />
+                      <path d="m8 6 2-2" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </span>
+                  <div className="min-w-0">
+                    <p className="font-medium text-foreground">{getLandingTranslations(language).secondOrderThinkingTitle}</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).secondOrderThinkingSubtitle}</p>
+                  </div>
+                </button>
+                <div
+                  className="flex items-center justify-between gap-2 px-4 py-2.5 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/30"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <span className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).secondOrderCitationsToggleLabel}</span>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={secondOrderCitationsEnabled}
+                    aria-label={getLandingTranslations(language).secondOrderCitationsToggleLabel}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSecondOrderCitationsEnabled((v) => !v);
+                    }}
+                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+                      secondOrderCitationsEnabled ? "bg-accent" : "bg-neutral-300 dark:bg-neutral-600"
+                    }`}
+                  >
+                    <span
+                      className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
+                        secondOrderCitationsEnabled ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
+              </div>
               <button
                 type="button"
                 onClick={() => {
-                  playSelectionChime();
-                  startSecondOrderConversation();
+                  setNewConversationChooserModalOpen(false);
+                  openJournalEntryFlow();
                 }}
                 className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
               >
                 <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
-                    <path d="M12 2v4" />
-                    <path d="m16 6 2-2" />
-                    <path d="M18 12h4" />
-                    <path d="m16 18 2 2" />
-                    <path d="M12 18v4" />
-                    <path d="m8 18-2 2" />
-                    <path d="M6 12H2" />
-                    <path d="m8 6 2-2" />
-                    <circle cx="12" cy="12" r="3" />
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+                    <path d="M8 7h8" />
+                    <path d="M8 11h6" />
                   </svg>
                 </span>
                 <div className="min-w-0">
-                  <p className="font-medium text-foreground">{getLandingTranslations(language).secondOrderThinkingTitle}</p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).secondOrderThinkingSubtitle}</p>
+                  <p className="font-medium text-foreground">{getLandingTranslations(language).journalEntryButtonLabel}</p>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).journalEntryButtonSubtitle}</p>
                 </div>
               </button>
             </div>
@@ -9127,10 +9259,6 @@ export default function ChatPage() {
                   onSelectStarter={(text) => {
                     setIdeasModalOpen(false);
                     sendMessage(text);
-                  }}
-                  onSelectPrompt={(card) => {
-                    setIdeasModalOpen(false);
-                    startConversationFromPerspectiveCard(card);
                   }}
                 />
               </div>
@@ -11430,6 +11558,8 @@ export default function ChatPage() {
                           howToFollowThrough: data.howToFollowThrough ?? "",
                           tips: data.tips ?? "",
                           bucket: habitPromoteBucket,
+                          intendedMonth: null,
+                          intendedYear: null,
                         });
                         setHabitPromoteStep("preview");
                       } catch {
@@ -11475,6 +11605,17 @@ export default function ChatPage() {
                         ))}
                       </select>
                     </div>
+                    <HabitIntendedPeriodFields
+                      month={habitPromoteDraft.intendedMonth}
+                      year={habitPromoteDraft.intendedYear}
+                      onMonthChange={(v) =>
+                        setHabitPromoteDraft((d) => (d ? { ...d, intendedMonth: v } : null))
+                      }
+                      onYearChange={(v) =>
+                        setHabitPromoteDraft((d) => (d ? { ...d, intendedYear: v } : null))
+                      }
+                      language={language}
+                    />
                     <div>
                       <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Habit name</label>
                       <input
@@ -11542,6 +11683,13 @@ export default function ChatPage() {
                               description: habitPromoteDraft.description.trim(),
                               howToFollowThrough: habitPromoteDraft.howToFollowThrough.trim(),
                               tips: habitPromoteDraft.tips.trim(),
+                              ...(typeof habitPromoteDraft.intendedMonth === "number" &&
+                              typeof habitPromoteDraft.intendedYear === "number"
+                                ? {
+                                    intendedMonth: habitPromoteDraft.intendedMonth,
+                                    intendedYear: habitPromoteDraft.intendedYear,
+                                  }
+                                : {}),
                             }),
                           });
                           if (res.ok) {
@@ -11640,6 +11788,19 @@ export default function ChatPage() {
                       placeholder="What you want this habit to be—rough notes are fine"
                     />
                   </div>
+                  {habitCreateDraft ? (
+                    <HabitIntendedPeriodFields
+                      month={habitCreateDraft.intendedMonth}
+                      year={habitCreateDraft.intendedYear}
+                      onMonthChange={(v) =>
+                        setHabitCreateDraft((d) => (d ? { ...d, intendedMonth: v } : null))
+                      }
+                      onYearChange={(v) =>
+                        setHabitCreateDraft((d) => (d ? { ...d, intendedYear: v } : null))
+                      }
+                      language={language}
+                    />
+                  ) : null}
                 </div>
                 <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
                   <button
@@ -11763,6 +11924,19 @@ export default function ChatPage() {
                         placeholder="One tip per line"
                       />
                     </div>
+                    {habitCreateDraft ? (
+                      <HabitIntendedPeriodFields
+                        month={habitCreateDraft.intendedMonth}
+                        year={habitCreateDraft.intendedYear}
+                        onMonthChange={(v) =>
+                          setHabitCreateDraft((d) => (d ? { ...d, intendedMonth: v } : null))
+                        }
+                        onYearChange={(v) =>
+                          setHabitCreateDraft((d) => (d ? { ...d, intendedYear: v } : null))
+                        }
+                        language={language}
+                      />
+                    ) : null}
                   </div>
                   <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
                     <button
@@ -11803,6 +11977,13 @@ export default function ChatPage() {
                               description: p.description.trim(),
                               howToFollowThrough: p.howToFollowThrough.trim(),
                               tips: p.tips.trim(),
+                              ...(typeof habitCreateDraft.intendedMonth === "number" &&
+                              typeof habitCreateDraft.intendedYear === "number"
+                                ? {
+                                    intendedMonth: habitCreateDraft.intendedMonth,
+                                    intendedYear: habitCreateDraft.intendedYear,
+                                  }
+                                : {}),
                             }),
                           });
                           if (res.ok) {
@@ -11941,6 +12122,17 @@ export default function ChatPage() {
                   placeholder="One tip per line"
                 />
               </div>
+              <HabitIntendedPeriodFields
+                month={habitDetailEdit.intendedMonth}
+                year={habitDetailEdit.intendedYear}
+                onMonthChange={(v) =>
+                  setHabitDetailEdit((d) => (d ? { ...d, intendedMonth: v } : null))
+                }
+                onYearChange={(v) =>
+                  setHabitDetailEdit((d) => (d ? { ...d, intendedYear: v } : null))
+                }
+                language={language}
+              />
                 </>
               ) : (
                 <>
@@ -11966,6 +12158,21 @@ export default function ChatPage() {
                           : getUiTranslations(language).habitSourceFromMemory}
                     </p>
                   </div>
+                  {typeof habitDetailModal.intendedMonth === "number" &&
+                  typeof habitDetailModal.intendedYear === "number" ? (
+                    <div>
+                      <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
+                        {getUiTranslations(language).habitIntendedPeriod}
+                      </p>
+                      <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                        {formatHabitIntendedPeriod(
+                          habitDetailModal.intendedMonth,
+                          habitDetailModal.intendedYear,
+                          language
+                        )}
+                      </p>
+                    </div>
+                  ) : null}
                   <div>
                     <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Habit name</p>
                     <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{habitDetailModal.name}</p>
@@ -12007,6 +12214,14 @@ export default function ChatPage() {
                         howToFollowThrough: habitDetailModal.howToFollowThrough,
                         tips: habitDetailModal.tips,
                         bucket: habitDetailModal.bucket,
+                        intendedMonth:
+                          typeof habitDetailModal.intendedMonth === "number"
+                            ? habitDetailModal.intendedMonth
+                            : null,
+                        intendedYear:
+                          typeof habitDetailModal.intendedYear === "number"
+                            ? habitDetailModal.intendedYear
+                            : null,
                       });
                       setHabitDetailEditing(false);
                     }}
@@ -12026,11 +12241,15 @@ export default function ChatPage() {
                       howToFollowThrough: string;
                       tips: string;
                       bucket?: HabitBucket;
+                      intendedMonth: number | null;
+                      intendedYear: number | null;
                     } = {
                       name: habitDetailEdit.name.trim(),
                       description: habitDetailEdit.description.trim(),
                       howToFollowThrough: habitDetailEdit.howToFollowThrough.trim(),
                       tips: habitDetailEdit.tips.trim(),
+                      intendedMonth: habitDetailEdit.intendedMonth,
+                      intendedYear: habitDetailEdit.intendedYear,
                     };
                     if (habitDetailEdit.bucket !== undefined) {
                       payload.bucket = habitDetailEdit.bucket;

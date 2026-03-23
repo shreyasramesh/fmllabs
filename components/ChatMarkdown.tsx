@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { normalizeMentalModelCitationMarkup } from "@/lib/chat-utils";
 
 const MENTAL_MODEL_HREF_PREFIX = "#mm-";
 const LTM_HREF_PREFIX = "#ltm-";
@@ -131,17 +132,45 @@ function preprocessReferenceLinks(
     .replace(LEGACY_CG_REGEX, (_, id) => replaceCg(id));
 }
 
+/**
+ * Models often emit **Display name** [[id]] or **[[id]]**; the chip already shows the name,
+ * so drop redundant bold around the citation.
+ */
+function stripDuplicateBoldAroundMentalModelCitations(
+  text: string,
+  idToName: Map<string, string>
+): string {
+  let s = text;
+  // **[[snake_case_id]]** → [[id]]
+  s = s.replace(/\*\*\s*(\[\[[a-z0-9_]+\]\])\s*\*\*/g, "$1");
+
+  for (const [id, name] of idToName) {
+    const escId = id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const escName = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    s = s.replace(
+      new RegExp(`\\*\\*${escName}\\*\\*\\s*(?=\\[\\[${escId}\\]\\])`, "gi"),
+      ""
+    );
+    s = s.replace(
+      new RegExp(`(\\[\\[${escId}\\]\\])\\s*\\*\\*${escName}\\*\\*`, "gi"),
+      "$1"
+    );
+  }
+  return s;
+}
+
 function preprocessMentalModelLinks(
   text: string,
   idToName: Map<string, string>
 ): string {
+  const normalized = normalizeMentalModelCitationMarkup(text);
   // Build name -> id map and sort names by length descending to avoid partial matches
   const nameToId = new Map<string, string>();
   idToName.forEach((name, id) => nameToId.set(name, id));
   const names = [...nameToId.keys()].sort((a, b) => b.length - a.length);
 
   // First: convert plain mental model names to [[id]] format (so they become links)
-  let result = text;
+  let result = normalized;
   for (const name of names) {
     const id = nameToId.get(name)!;
     result = result.replace(
@@ -159,6 +188,8 @@ function preprocessMentalModelLinks(
     prev = deduped;
     deduped = deduped.replace(repeatedTokenRegex, "[[$1]]");
   }
+
+  deduped = stripDuplicateBoldAroundMentalModelCitations(deduped, idToName);
 
   // Second: convert [[id]] or [[Display Name]] to markdown links
   // Match [[id]] (lowercase, underscores) or [[any text]] for display names

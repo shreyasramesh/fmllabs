@@ -1,4 +1,7 @@
-import type { RelevantContext } from "./chat-utils";
+import {
+  normalizeMentalModelCitationMarkup,
+  type RelevantContext,
+} from "./chat-utils";
 
 const MM_CITATION_REGEX = /\[\[([a-z0-9_]+)\]\]/g;
 const LTM_CITATION_REGEX = /\[\[memory:([a-fA-F0-9]{24})\]\]/g;
@@ -38,13 +41,14 @@ export function extractCitedContextIds(text: string): {
   customConcepts: string[];
   conceptGroups: string[];
 } {
+  const t = normalizeMentalModelCitationMarkup(text);
   return {
-    mentalModels: unique([...text.matchAll(MM_CITATION_REGEX)].map((m) => m[1])),
+    mentalModels: unique([...t.matchAll(MM_CITATION_REGEX)].map((m) => m[1])),
     longTermMemories: unique(
-      [...text.matchAll(LTM_CITATION_REGEX)].map((m) => m[1])
+      [...t.matchAll(LTM_CITATION_REGEX)].map((m) => m[1])
     ),
-    customConcepts: unique([...text.matchAll(CC_CITATION_REGEX)].map((m) => m[1])),
-    conceptGroups: unique([...text.matchAll(CG_CITATION_REGEX)].map((m) => m[1])),
+    customConcepts: unique([...t.matchAll(CC_CITATION_REGEX)].map((m) => m[1])),
+    conceptGroups: unique([...t.matchAll(CG_CITATION_REGEX)].map((m) => m[1])),
   };
 }
 
@@ -114,16 +118,21 @@ export function hasCitationMismatches(diff: CitationAlignmentDiff): boolean {
 export function sanitizeDisallowedCitations(
   text: string,
   predicted: RelevantContext,
-  labels: CitationLabelMaps = {}
+  labels: CitationLabelMaps = {},
+  /** Ids that appear in the mental-models index actually shown to the model this turn (predicted is only a subset). */
+  mentalModelIdsInFullIndex?: Set<string>
 ): string {
   const allowedMm = new Set(predicted.mentalModels.map((m) => m.id));
   const allowedLtm = new Set(predicted.longTermMemories.map((m) => m.id));
   const allowedCc = new Set(predicted.customConcepts.map((m) => m.id));
   const allowedCg = new Set(predicted.conceptGroups.map((m) => m.id));
 
-  return text
+  const t = normalizeMentalModelCitationMarkup(text);
+  return t
     .replace(MM_CITATION_REGEX, (full, id: string) => {
-      if (allowedMm.has(id)) return full;
+      if (allowedMm.has(id) || mentalModelIdsInFullIndex?.has(id)) {
+        return full;
+      }
       return labels.mentalModelLabels?.get(id) ?? id.replace(/_/g, " ");
     })
     .replace(LTM_CITATION_REGEX, (full, id: string) => {

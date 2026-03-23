@@ -32,6 +32,30 @@ export interface LandingTranslations {
   secondOrderThinkingTitle: string;
   secondOrderThinkingSubtitle: string;
   secondOrderChipLabel: string;
+  /** Second-order plain (no index / user-library context in prompt) */
+  secondOrderPlainTitle: string;
+  secondOrderPlainSubtitle: string;
+  /** Second-order with mental models & saved context (citations) */
+  secondOrderWithCitationsTitle: string;
+  secondOrderWithCitationsSubtitle: string;
+  secondOrderChipLabelPlain: string;
+  secondOrderChipLabelWithCitations: string;
+  /** Toggle on second-order start card: mental models & saved context in the thread */
+  secondOrderCitationsToggleLabel: string;
+  /** Freeform journal save (landing / chooser; not chat) */
+  journalEntryButtonLabel: string;
+  /** Short line under landing / chooser tile */
+  journalEntryButtonSubtitle: string;
+  journalEntryModalTitle: string;
+  journalEntryModalSubtitle: string;
+  journalEntryTitlePlaceholder: string;
+  journalEntryBodyPlaceholder: string;
+  journalEntrySave: string;
+  journalEntryCancel: string;
+  journalEntrySaveError: string;
+  journalEntrySavedHint: string;
+  journalEntryBack: string;
+  journalEntrySignInPrompt: string;
 }
 
 const EN: LandingTranslations = {
@@ -62,6 +86,26 @@ const EN: LandingTranslations = {
   secondOrderThinkingTitle: "Second-order thinking",
   secondOrderThinkingSubtitle: "Consequences, incentives, and what happens next after that",
   secondOrderChipLabel: "Second-order thinking",
+  secondOrderPlainTitle: "Second-order (plain)",
+  secondOrderPlainSubtitle: "Same reasoning frame—no models, memories, or citation tags",
+  secondOrderWithCitationsTitle: "Second-order (with citations)",
+  secondOrderWithCitationsSubtitle: "Second-order reasoning plus your mental models & saved context",
+  secondOrderChipLabelPlain: "Second-order (plain)",
+  secondOrderChipLabelWithCitations: "Second-order (with citations)",
+  secondOrderCitationsToggleLabel: "Citations",
+  journalEntryButtonLabel: "Add a Journal Entry",
+  journalEntryButtonSubtitle: "Write freely; saved to your library—not sent as chat.",
+  journalEntryModalTitle: "Add a Journal Entry",
+  journalEntryModalSubtitle:
+    "Write freely. This is saved to your library—not sent as a chat message. You can extract concepts from it later if you want.",
+  journalEntryTitlePlaceholder: "Title (optional)",
+  journalEntryBodyPlaceholder: "Write whatever you feel…",
+  journalEntrySave: "Save",
+  journalEntryCancel: "Cancel",
+  journalEntrySaveError: "Couldn’t save. Try again.",
+  journalEntrySavedHint: "Saved to your library.",
+  journalEntryBack: "Back",
+  journalEntrySignInPrompt: "Sign in to save journal entries to your library.",
 };
 
 const TRANSLATIONS: Partial<Record<LanguageCode, Partial<LandingTranslations>>> = {

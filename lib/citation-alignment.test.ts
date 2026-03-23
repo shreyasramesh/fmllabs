@@ -28,6 +28,13 @@ test("extractCitedContextIds parses all citation categories", () => {
   assert.deepEqual(ids.conceptGroups, ["fedcbafedcbafedcbafedcba"]);
 });
 
+test("extractCitedContextIds parses [[model:id]] as mental model id", () => {
+  const ids = extractCitedContextIds(
+    "See [[model:regression_to_the_mean]] and [[map_is_not_the_territory]]."
+  );
+  assert.deepEqual(ids.mentalModels, ["regression_to_the_mean", "map_is_not_the_territory"]);
+});
+
 test("diffCitationsAgainstPredicted identifies disallowed citations", () => {
   const predicted: RelevantContext = {
     ...emptyContext(),
@@ -59,5 +66,28 @@ test("sanitizeDisallowedCitations replaces disallowed references with plain labe
   assert.equal(
     sanitized,
     "Keep [[confirmation_bias]] but remove Endowment Effect."
+  );
+});
+
+test("sanitizeDisallowedCitations keeps mental models in full index when not in predicted", () => {
+  const predicted: RelevantContext = {
+    ...emptyContext(),
+    mentalModels: [{ id: "confirmation_bias", reason: "predicted" }],
+  };
+  const fullIndex = new Set(["confirmation_bias", "endowment_effect"]);
+  const sanitized = sanitizeDisallowedCitations(
+    "[[confirmation_bias]] and [[endowment_effect]] both stay.",
+    predicted,
+    {
+      mentalModelLabels: new Map([
+        ["confirmation_bias", "Confirmation Bias"],
+        ["endowment_effect", "Endowment Effect"],
+      ]),
+    },
+    fullIndex
+  );
+  assert.equal(
+    sanitized,
+    "[[confirmation_bias]] and [[endowment_effect]] both stay."
   );
 });

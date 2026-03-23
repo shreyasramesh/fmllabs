@@ -9,6 +9,8 @@ export interface UiTranslations {
   groups: string;
   famousFigures: string;
   habits: string;
+  /** Library sidebar: saved journal transcripts */
+  journalEntries: string;
   promoteToHabit: string;
   habitLifeArea: string;
   habitBucketCreative: string;
@@ -23,6 +25,11 @@ export interface UiTranslations {
   habitSource: string;
   habitCreateInputHelper: string;
   habitCreateReviewHelper: string;
+  /** Optional label for month/year when the user plans to start the habit */
+  habitIntendedPeriod: string;
+  habitMonth: string;
+  habitYear: string;
+  habitIntendedNotSet: string;
   settings: string;
   close: string;
   cancel: string;
@@ -37,6 +44,7 @@ const EN: UiTranslations = {
   groups: "Frameworks",
   famousFigures: "Personas",
   habits: "Habits",
+  journalEntries: "Journal",
   promoteToHabit: "Promote to Habit",
   habitLifeArea: "Life area",
   habitBucketCreative: "Creative (e.g. art, music, writing)",
@@ -53,6 +61,10 @@ const EN: UiTranslations = {
     "Choose a life area and describe the habit in your own words. The AI will sharpen the name and description and write follow-through steps and tips.",
   habitCreateReviewHelper:
     "Review and edit. Follow-through and tips were generated for you—you can change anything before saving.",
+  habitIntendedPeriod: "Plan to start (optional)",
+  habitMonth: "Month",
+  habitYear: "Year",
+  habitIntendedNotSet: "Not set",
   settings: "Settings",
   close: "Close",
   cancel: "Cancel",

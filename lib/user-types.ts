@@ -24,7 +24,8 @@ const USER_TYPE_STYLE_PROMPTS: Record<UserTypeId, string> = {
   casual: "Extra relaxed, use 'like' and 'you know' naturally. Very conversational. Feels like texting a friend.",
   thoughtful:
     "More reflective and philosophical. Pause for depth. Use 'I wonder' and 'it seems'. Invite contemplation.",
-  direct: "Brevity first. No hedging. Get to the point quickly. Short sentences. Say what you mean.",
+  direct:
+    "Brevity first—short sentences, no hedging—but stay kind: acknowledge the feeling in one beat, then get to the point.",
 };
 
 /** Style for follow-up options specifically - how the user would phrase them. */
@@ -39,7 +40,7 @@ const USER_TYPE_OPTIONS_PROMPTS: Record<UserTypeId, string> = {
   casual: "Relaxed, like texting. Use 'like' and 'you know' naturally. Very conversational.",
   thoughtful:
     "Reflective, philosophical. Use 'I wonder...', 'it seems...'. Invite contemplation.",
-  direct: "Very brief. 2–5 words per option when possible. No hedging. Get to the point.",
+  direct: "Very brief first-person options (2–8 words when possible). No hedging, but not harsh.",
 };
 
 export function getUserTypeStylePrompt(id: UserTypeId): string {

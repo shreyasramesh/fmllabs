@@ -6,7 +6,7 @@ import {
 } from "@/lib/perspective-decks";
 import { isValidLanguageCode } from "@/lib/languages";
 
-/** Deck ID + card ID pairs for the landing page carousel (same order as PROMPT_LENSES_BY_LANGUAGE.en) */
+/** Deck ID + card ID pairs for `/api/perspective-decks/carousel` (perspective prompt cards; not used by the chat starter carousel UI). */
 const CAROUSEL_CARDS: { deckId: string; cardId: string }[] = [
   { deckId: "ways_of_looking_at_art", cardId: "souvenir" },
   { deckId: "urban_jungle_new_york", cardId: "ny_vertical_city" },

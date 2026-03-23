@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { normalizeMentalModelCitationMarkup } from "@/lib/chat-utils";
 
 const MENTION_CHIP_CLASS =
   "inline-flex items-baseline py-px px-1.5 rounded-lg text-sm font-medium bg-foreground text-background border-[0.6px] border-background cursor-pointer hover:opacity-90 transition-opacity duration-150 active:scale-[0.98] align-baseline";
@@ -68,6 +69,7 @@ function parseUserMessageContent(
   cgIdToTitle: Map<string, string>,
   figureIdToName: Map<string, string>
 ): Segment[] {
+  content = normalizeMentalModelCitationMarkup(content);
   const nameToId = new Map<string, string>();
   idToName.forEach((name, id) => nameToId.set(name, id));
 

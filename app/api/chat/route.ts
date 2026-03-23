@@ -40,31 +40,54 @@ import {
 } from "@/lib/user-types";
 import { recordUsageEvent, computeGeminiCost, recordMongoUsageRequest } from "@/lib/usage";
 
-const SYSTEM_PROMPT = `You are an empathetic confidant, anxiety-relief guide, and wise friend. Your role is to help users talk through their anxieties by providing grounding facts, validating their emotions, and gently helping them find clarity and calm.
+const SYSTEM_PROMPT_CORE = `You are a deeply empathetic confidant, anxiety-relief guide, and wise friend. Your **primary** job is to help the user feel seen, understood, and less alone. Bring in **grounded facts** when they would genuinely steady, clarify, or comfort—not as a substitute for warmth.
 
-## Opening & Length (strict)
-- **One-line opening only:** Start with a single short sentence of validation or acknowledgment (e.g. one line). Do **not** use multi-sentence or multi-paragraph warm-up intros. No stacked metaphors or long empathy preambles before you get to the point.
-- **Digestible size:** Aim for roughly **half** the length of a typical long chat reply. Prefer fewer, tighter paragraphs over exhaustive exploration in one turn. The user should be able to read your answer in under a minute when possible.
+## Empathy first (always)
+- **Attune before you fix:** Start by reflecting what they seem to be feeling or what matters to them (stress, fear, grief, hope, ambivalence—use their words when you can). Sound like a caring human, not a case file.
+- **Validate:** Normalize difficult feelings without minimizing. Never imply they are overreacting, silly, or irrational for caring about this.
+- **Pacing:** Stay with their emotional reality for at least a short beat before shifting into analysis. If they asked purely for information, you may answer directly while still sounding kind.
 
-## Core Behavior & Tone
-- **Empathetic Validation:** Speak like a deeply supportive, non-judgmental friend. Validate their emotions briefly, then move on—never make them feel silly for being anxious.
-- **Fact-Based Reassurance:** When the user is anxious about a specific scenario, ground them with clear, logical facts (e.g., animal behavior, technology limits, probabilities). Answer factual questions directly and clearly to help de-escalate their worry.
-- **Absolve Misplaced Guilt:** If the user is blaming themselves for something outside their control, use gentle logic to explain why it is not their fault. 
-- **Gentle Exploration:** Once you have provided factual reassurance, use light Socratic questioning to help them process the event or figure out their next step (e.g., "How are you feeling now that you know the facts?", "What would help you let this go?"). 
+## Grounded facts (when they help)
+- **Facts as care:** When clear facts would reduce uncertainty, correct a harmful misconception, or soothe realistic worry, offer them plainly and gently—not as a debater, and not as a wall of data.
+- **Be honest:** Prefer truthful, clear explanations. If you are unsure of a fact, say so and give what you can responsibly; do not bluff.
+- **Absolve misplaced guilt:** If they blame themselves for something outside their control, combine compassion with gentle logic.
 
-## Recognizing the Conclusion
-- **Synthesize & Close:** When the user lands on a clear realization, accepts the reassurance, or expresses that their anxiety has lifted, shift your stance. 
-- **Stop Exploring:** Drop the questioning. Do not force them to dig deeper if they are ready to move on.
-- **Validate:** Acknowledge their relief or conclusion, briefly summarize the grounding fact that helped them get there, and offer a supportive closing statement.
+## Exploration
+- After attunement (and facts if relevant), you may offer **at most one** soft question if it helps them reflect—never an interrogation. If they need a straight answer, give it without deflection.
+
+## Recognizing the conclusion
+- **Synthesize & close:** When they land on a realization, accept reassurance, or say they feel better, meet them there.
+- **Stop exploring:** Do not push deeper if they are ready to stop.
+- **Validate:** Acknowledge their relief; if a fact helped, name it briefly in plain language with warmth.
+
+## Length & shape
+- **Opening:** Use **one or two short sentences** of acknowledgment at the start when it helps—warmth beats a rigid formula. No long stacked metaphors or multi-paragraph preambles.
+- **Digestible:** Aim for roughly **half** the length of a typical long chat reply when possible; the user should be able to read your answer in under a minute.
 
 ## Formatting & Readability
-- **Keep it scannable:** Use short paragraphs (1–2 sentences preferred; avoid 4+ sentence blocks). Avoid walls of text. 
+- **Keep it scannable:** Short paragraphs (1–2 sentences preferred; avoid 4+ sentence blocks). Avoid walls of text.
 - **Emphasis:** Use markdown **bolding** for key phrases to guide the eye.
 - **Lists:** Use standard markdown bullet points to break down facts or logic when truly needed. NEVER use asterisks as decorative bullets.
-- **Conciseness:** Get straight to the point while maintaining your warm tone.
+- **Warmth over cleverness:** Prefer simple, sincere phrasing over clinical or corporate tone.
+`;
 
-## System Tagging & Syntax Strict Rules
-- **Mental Models:** When a model genuinely fits **this** turn, you may cite it with the exact ID from the index: [[model_id]].
+const SECOND_ORDER_REASONING_ADDENDUM = `
+## Second-order thinking (this conversation)
+- **Human stakes first:** Before you map chains of consequences, briefly acknowledge why this matters to the user—emotionally or practically—so the analysis does not feel cold or abstract.
+- Prioritize **second-order reasoning**: not only immediate outcomes, but what tends to happen *next*, how incentives shift, who adjusts, and what feedback loops or unintended effects may appear.
+- Stay anchored in **what the user actually said**—use their wording and situation; do not invent private facts about them.
+- When you explore consequences, keep steps **clear and concrete** rather than abstract theory.
+`;
+
+const SECOND_ORDER_PLAIN_LANGUAGE_FOOTER = `
+## No saved context or citation syntax (plain mode)
+- You have **no** mental model index, memories, or user library in this thread. Do **not** pretend to cite saved items.
+- Do **not** use bracket tags such as [[...]], [[memory:ID]], [[concept:ID]], [[group:ID]], or mental-model id brackets. Answer in natural language only.
+`;
+
+const SYSTEM_PROMPT_TAGGING = `## System Tagging & Syntax Strict Rules
+- **Person first, tools second:** The reply should read as support for a real person. Mental models and saved context are **backup** for clarity—never a substitute for naming what is at stake for them in plain, caring language.
+- **Mental Models:** When a model genuinely fits **this** turn, cite it with the exact **id** from the index only: put nothing inside the brackets but the id, e.g. [[regression_to_the_mean]]. Do **not** use a model: prefix or [[model:…]]—that breaks rendering.
     - Do **not** reference mental models in most turns; only when they clearly sharpen the user's situation. Never stack many model name-drops in one reply.
     - **Always explain in plain language tied to their context:** After or alongside a citation, briefly say what the idea *means for them right here*—as if you are teaching the insight through their story, not listing textbook labels. Only cite a model when you can weave that explanation naturally into the conversation.
 - **Memories & Concepts:** Reference saved context using these formats:
@@ -72,7 +95,9 @@ const SYSTEM_PROMPT = `You are an empathetic confidant, anxiety-relief guide, an
     - Custom concepts: [[concept:ID]]
     - Concept groups: [[group:ID]]
 
-## Optional: Journal Checkpoint
+`;
+
+const SYSTEM_PROMPT_JOURNAL_AND_OPTIONS = `## Optional: Journal Checkpoint
 When the conversation reaches a reflective moment—the user lands on a conclusion, expresses a realization, or identifies a concrete next step—you MAY include a journal checkpoint. This is OPTIONAL; omit it if the moment does not warrant it. Include at most 2 journal checkpoints per conversation total; if you have already included 2, do not add another. **Only include a journal checkpoint in your final or concluding response**—never in intermediate responses during an ongoing back-and-forth.
 
 If you include it, place it AFTER your main text and BEFORE ---OPTIONS---. Format exactly (always include all three lines; the closing ---END-JOURNAL-CHECKPOINT--- is required so the app can parse it):
@@ -93,6 +118,7 @@ ALWAYS end EVERY response with exactly 4 follow-up options the user can choose f
 - **Nature of Options:** These must NOT be questions. They are "thought paths" or "declarative statements" that the user can select to go deeper, ask for more facts, or pivot. 
 - **Content:** Each option should represent a potential answer to your gentle questions, a request for more reassurance, or a specific path of exploration.
 - **Exception for Closures:** If the user has reached a conclusion, the options must reflect action, commitment, or closure (e.g., "I feel better about this now," "I'm ready to move on").
+- **Phrasing:** [Options Style Instruction]
 
 Format them exactly like this, on a new line at the very end of your response:
 
@@ -102,7 +128,9 @@ Format them exactly like this, on a new line at the very end of your response:
 [First-person declarative path 3]
 [First-person declarative path 4]
 
-***
+`;
+
+const SYSTEM_PROMPT_INDEX_FOOTER = `***
 
 MENTAL MODELS INDEX:
 [Insert Index Here]
@@ -271,6 +299,8 @@ export async function POST(request: Request) {
   let secondOrderMode = false;
   /** Set in body parse: 2–5 mentors (takes precedence over second-order). */
   let multiMentorEligible = false;
+  /** Set in body parse: second-order plain mode (no index/RAG in prompt). */
+  let bodySecondOrderPlain = false;
 
   try {
     const body = await request.json();
@@ -376,6 +406,9 @@ export async function POST(request: Request) {
     if (body.secondOrderThinking === true) {
       requestedSecondOrder = true;
     }
+    if (body.secondOrderPlain === true) {
+      bodySecondOrderPlain = true;
+    }
     if (multiMentorEligible) {
       requestedSecondOrder = false;
     }
@@ -409,6 +442,7 @@ export async function POST(request: Request) {
   let ccEnrichmentWithIds: { id: string; enrichmentPrompt: string; title?: string }[] = [];
   let conceptGroupEnrichment: { id: string; title: string; enrichmentPrompts: string[] }[] = [];
   let userMentalModels: Awaited<ReturnType<typeof getUserMentalModels>> = [];
+  let session: Awaited<ReturnType<typeof getSession>> = null;
 
   if (isAnonymous || incognito) {
     mentorOneOnOne = resolvedOneOnOneFigure;
@@ -431,7 +465,7 @@ export async function POST(request: Request) {
       { role: "user" as const, content: message },
     ];
   } else {
-    let session = sessionId ? await getSession(sessionId, userId!) : null;
+    session = sessionId ? await getSession(sessionId, userId!) : null;
 
     if (!session && sessionId) {
       return NextResponse.json({ error: "Session not found" }, { status: 404 });
@@ -496,6 +530,7 @@ export async function POST(request: Request) {
       secondOrderMode = true;
       await updateSession(sessionId, userId!, {
         secondOrderThinking: true,
+        secondOrderPlain: bodySecondOrderPlain,
         clearOneOnOneMentor: true,
         clearPerspectiveCard: true,
       });
@@ -540,6 +575,18 @@ export async function POST(request: Request) {
     ];
     ltmEnrichmentWithIds = ltmEnrichmentWithIdsRes;
     ccEnrichmentWithIds = ccEnrichmentRes;
+  }
+
+  let secondOrderPlainMode = false;
+  if (secondOrderMode) {
+    if (requestedSecondOrder) {
+      secondOrderPlainMode = bodySecondOrderPlain;
+    } else if (isAnonymous || incognito) {
+      secondOrderPlainMode = bodySecondOrderPlain;
+    } else if (session) {
+      // Legacy sessions omit secondOrderPlain — treat as plain (previous default).
+      secondOrderPlainMode = session.secondOrderPlain !== false;
+    }
   }
 
   const convertedToDeep = !isAnonymous && !incognito && sessionId
@@ -589,7 +636,7 @@ export async function POST(request: Request) {
     );
   }
 
-  if (userId && !incognito && !mentorOneOnOne && !secondOrderMode) {
+  if (userId && !incognito && !mentorOneOnOne && !(secondOrderMode && secondOrderPlainMode)) {
     userSettings = await getUserSettings(userId);
     if (userSettings?.followedFigureIds?.length) {
       const figures = getFiguresByIds(userSettings.followedFigureIds);
@@ -773,7 +820,7 @@ ${langInstr}`;
     contextBlockForStream = `${ctxStart}\n${JSON.stringify({
       predictedContext: predictedContextResult,
     })}\n${ctxEnd}`;
-  } else if (secondOrderMode) {
+  } else if (secondOrderMode && secondOrderPlainMode) {
     const languageInstructionSo =
       language !== "en"
         ? `\n\nLANGUAGE: Respond in ${getLanguageName(language as LanguageCode)}. All your responses must be in that language.`
@@ -786,10 +833,13 @@ ${langInstr}`;
     const optionsStyleInstructionSo =
       getUserTypeOptionsPrompt(userType as UserTypeId) || "Natural, conversational first-person.";
     fullSystemPrompt =
-      SYSTEM_PROMPT.replace("[Insert Index Here]", "(none)")
-        .replace("[Insert Context Here]", "(none)")
-        .replace("[Insert Followed Figures Nudge Here]", followedFiguresNudgeBlock)
-        .replace("[Options Style Instruction]", optionsStyleInstructionSo) +
+      SYSTEM_PROMPT_CORE +
+      SECOND_ORDER_REASONING_ADDENDUM +
+      SECOND_ORDER_PLAIN_LANGUAGE_FOOTER +
+      SYSTEM_PROMPT_JOURNAL_AND_OPTIONS.replace(
+        "[Options Style Instruction]",
+        optionsStyleInstructionSo
+      ) +
       languageInstructionSo +
       conversationStyleInstructionSo;
     mmIdToName = new Map();
@@ -1062,7 +1112,7 @@ ${langInstr}`;
           ""
         )}`
       : "AVAILABLE CONTEXT FOR THIS TURN: (none predicted)";
-  const citationFormatGuide = `REFERENCE FORMAT GUIDE:\n- Mental model: [[model_id]]\n- Long-term memory: [[memory:ID]]\n- Custom concept: [[concept:ID]]\n- Concept group: [[group:ID]]`;
+  const citationFormatGuide = `REFERENCE FORMAT GUIDE:\n- Mental model: [[mental_model_id]] only — e.g. [[regression_to_the_mean]] — never [[model:mental_model_id]]\n- Long-term memory: [[memory:ID]]\n- Custom concept: [[concept:ID]]\n- Concept group: [[group:ID]]`;
 
   const languageInstruction =
     language !== "en"
@@ -1092,8 +1142,17 @@ ${langInstr}`;
   const optionsStyleInstruction =
     getUserTypeOptionsPrompt(userType as UserTypeId) || "Natural, conversational first-person.";
 
+  const secondOrderWithCitations = secondOrderMode && !secondOrderPlainMode;
+  const systemPromptTemplate =
+    SYSTEM_PROMPT_CORE +
+    (secondOrderWithCitations ? SECOND_ORDER_REASONING_ADDENDUM : "") +
+    SYSTEM_PROMPT_TAGGING +
+    SYSTEM_PROMPT_JOURNAL_AND_OPTIONS +
+    SYSTEM_PROMPT_INDEX_FOOTER;
+
   fullSystemPrompt =
-    SYSTEM_PROMPT.replace("[Insert Index Here]", indexContent)
+    systemPromptTemplate
+      .replace("[Insert Index Here]", indexContent)
       .replace("[Insert Context Here]", contextContent)
       .replace("[Insert Followed Figures Nudge Here]", followedFiguresNudgeBlock)
       .replace("[Options Style Instruction]", optionsStyleInstruction) +
@@ -1170,7 +1229,9 @@ ${langInstr}`;
 
   if (process.env.NODE_ENV === "development") {
     const modeLabel = secondOrderMode
-      ? "second-order (SYSTEM_PROMPT, no RAG / empty index & context)"
+      ? secondOrderPlainMode
+        ? "second-order plain (core + second-order addendum + journal/options; no index/RAG)"
+        : "second-order + citations (full SYSTEM_PROMPT + second-order addendum + RAG)"
       : mentorOneOnOne
         ? "mentor (MENTOR_ONE_ON_ONE_SYSTEM_PROMPT only, no RAG)"
         : isLightweight
@@ -1253,7 +1314,8 @@ ${langInstr}`;
               const sanitized = sanitizeDisallowedCitations(
                 fullResponse,
                 predictedContextResult,
-                citationLabels
+                citationLabels,
+                new Set(mmIdToName.keys())
               );
               if (sanitized !== fullResponse) {
                 fullResponse = sanitized;

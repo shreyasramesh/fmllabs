@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createHabit, getHabits, isHabitBucket } from "@/lib/db";
+import {
+  isValidIntendedMonth,
+  isValidIntendedYear,
+} from "@/lib/habit-intended";
 
 export async function GET() {
   const { userId } = await auth();
@@ -33,6 +37,8 @@ export async function POST(request: Request) {
     const howToFollowThrough = body.howToFollowThrough as string | undefined;
     const tips = body.tips as string | undefined;
     const bucket = body.bucket;
+    const hasIntendedMonth = "intendedMonth" in body;
+    const hasIntendedYear = "intendedYear" in body;
     const isManual = sourceType === "manual";
     const hasLinkedSource =
       sourceType === "concept" || sourceType === "ltm";
@@ -61,6 +67,28 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+    let intendedMonth: number | undefined;
+    let intendedYear: number | undefined;
+    if (hasIntendedMonth || hasIntendedYear) {
+      const im = body.intendedMonth;
+      const iy = body.intendedYear;
+      if (
+        typeof im !== "number" ||
+        typeof iy !== "number" ||
+        !isValidIntendedMonth(im) ||
+        !isValidIntendedYear(iy)
+      ) {
+        return NextResponse.json(
+          {
+            error:
+              "intendedMonth and intendedYear must both be valid numbers when either is provided",
+          },
+          { status: 400 }
+        );
+      }
+      intendedMonth = im;
+      intendedYear = iy;
+    }
     const habit = await createHabit(userId, {
       sourceType,
       sourceId: isManual ? "" : String(sourceId).trim(),
@@ -69,6 +97,9 @@ export async function POST(request: Request) {
       description: description.trim(),
       howToFollowThrough: howToFollowThrough.trim(),
       tips: tips.trim(),
+      ...(intendedMonth !== undefined && intendedYear !== undefined
+        ? { intendedMonth, intendedYear }
+        : {}),
     });
     return NextResponse.json(habit);
   } catch (err) {

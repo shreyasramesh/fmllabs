@@ -18,6 +18,12 @@ const genAI = new GoogleGenerativeAI(apiKey);
 
 const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
 
+/** Chat-only: slightly higher temperature for more natural, varied empathetic phrasing (not used for extraction/summaries). */
+export const CHAT_GENERATION_CONFIG = {
+  temperature: 0.88,
+  topP: 0.95,
+} as const;
+
 function formatDevLogBlock(title: string, content: string): string {
   const divider = "=".repeat(28);
   return `\n${divider} ${title} ${divider}\n${content}\n${"=".repeat(
@@ -74,7 +80,10 @@ export async function* streamGenerateContent(
     parts: [{ text: m.content }],
   }));
 
-  const chat = model.startChat({ history });
+  const chat = model.startChat({
+    history,
+    generationConfig: CHAT_GENERATION_CONFIG,
+  });
 
   const lastMessage = messages[messages.length - 1];
   if (!lastMessage || lastMessage.role !== "user") {
@@ -125,7 +134,10 @@ export async function generateContent(
     parts: [{ text: m.content }],
   }));
 
-  const chat = model.startChat({ history });
+  const chat = model.startChat({
+    history,
+    generationConfig: CHAT_GENERATION_CONFIG,
+  });
 
   const lastMessage = messages[messages.length - 1];
   if (!lastMessage || lastMessage.role !== "user") {

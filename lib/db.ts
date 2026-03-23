@@ -69,8 +69,10 @@ export interface Session {
   /** 1:1 mentor mode: full SYSTEM_PROMPT with this figure's voice */
   oneOnOneMentorFigureId?: string;
   oneOnOneMentorFigureName?: string;
-  /** Second-order thinking mode (minimal prompt; no RAG) */
+  /** Second-order thinking mode */
   secondOrderThinking?: boolean;
+  /** When true with secondOrderThinking, no mental-model index or user-library context in the prompt (plain language only). */
+  secondOrderPlain?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -100,6 +102,7 @@ interface SessionDoc {
   oneOnOneMentorFigureId?: string;
   oneOnOneMentorFigureName?: string;
   secondOrderThinking?: boolean;
+  secondOrderPlain?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -165,6 +168,9 @@ export interface Habit {
   sourceId: string;
   /** Life-area bucket; omitted on legacy documents until user assigns one. */
   bucket?: HabitBucket;
+  /** Optional month (1–12) and year when the user plans to start this habit. */
+  intendedMonth?: number;
+  intendedYear?: number;
   name: string;
   description: string;
   howToFollowThrough: string;
@@ -452,9 +458,10 @@ export async function updateSession(
     oneOnOneMentorFigureId?: string;
     oneOnOneMentorFigureName?: string;
     secondOrderThinking?: boolean;
+    secondOrderPlain?: boolean;
     /** Remove 1:1 mentor fields from the session document */
     clearOneOnOneMentor?: boolean;
-    /** Remove second-order flag from the session document */
+    /** Remove second-order flags from the session document */
     clearSecondOrder?: boolean;
     /** Remove perspective card fields from the session document */
     clearPerspectiveCard?: boolean;
@@ -487,6 +494,7 @@ export async function updateSession(
   }
   if (clearSecondOrder) {
     $unset.secondOrderThinking = "";
+    $unset.secondOrderPlain = "";
   }
   if (clearPerspectiveCard) {
     $unset.perspectiveCardPrompt = "";
@@ -1068,7 +1076,10 @@ export async function getHabit(id: string, userId: string): Promise<(Habit & { _
     .collection<HabitDoc>("habits")
     .findOne({ _id: oid, userId });
   if (!doc) return null;
-  return { ...doc, _id: doc._id.toString() } as Habit & { _id: string };
+  return decryptHabitFields({
+    ...doc,
+    _id: doc._id.toString(),
+  }) as Habit & { _id: string };
 }
 
 export async function createHabit(
@@ -1081,6 +1092,8 @@ export async function createHabit(
     description: string;
     howToFollowThrough: string;
     tips: string;
+    intendedMonth?: number;
+    intendedYear?: number;
   }
 ): Promise<Habit & { _id: string }> {
   const database = await getDb();
@@ -1090,6 +1103,9 @@ export async function createHabit(
     sourceType: habit.sourceType,
     sourceId: habit.sourceId,
     bucket: habit.bucket,
+    ...(habit.intendedMonth !== undefined && habit.intendedYear !== undefined
+      ? { intendedMonth: habit.intendedMonth, intendedYear: habit.intendedYear }
+      : {}),
     name: habit.name,
     description: habit.description,
     howToFollowThrough: habit.howToFollowThrough,
@@ -1113,6 +1129,8 @@ export async function updateHabit(
     howToFollowThrough?: string;
     tips?: string;
     bucket?: HabitBucket;
+    intendedMonth?: number | null;
+    intendedYear?: number | null;
   }
 ): Promise<boolean> {
   const database = await getDb();
@@ -1122,13 +1140,37 @@ export async function updateHabit(
   } catch {
     return false;
   }
-  const { bucket: _b, ...textUpdates } = updates;
+  const {
+    bucket: _b,
+    intendedMonth: im,
+    intendedYear: iy,
+    ...textUpdates
+  } = updates;
   const enc = encryptHabitFields<Record<string, unknown>>(textUpdates as object);
   const setDoc: Record<string, unknown> = { ...enc, updatedAt: new Date() };
   if (updates.bucket !== undefined) setDoc.bucket = updates.bucket;
+
+  const unsetDoc: Record<string, ""> = {};
+  if (im !== undefined && iy !== undefined) {
+    if (im === null && iy === null) {
+      unsetDoc.intendedMonth = "";
+      unsetDoc.intendedYear = "";
+    } else if (typeof im === "number" && typeof iy === "number") {
+      setDoc.intendedMonth = im;
+      setDoc.intendedYear = iy;
+    } else {
+      return false;
+    }
+  }
+
+  const updateOp: Record<string, unknown> = { $set: setDoc };
+  if (Object.keys(unsetDoc).length > 0) {
+    updateOp.$unset = unsetDoc;
+  }
+
   const result = await database
     .collection<HabitDoc>("habits")
-    .updateOne({ _id: oid, userId }, { $set: setDoc });
+    .updateOne({ _id: oid, userId }, updateOp);
   return result.modifiedCount > 0;
 }
 

@@ -7,6 +7,10 @@ import {
   type HabitBucket,
   updateHabit,
 } from "@/lib/db";
+import {
+  isValidIntendedMonth,
+  isValidIntendedYear,
+} from "@/lib/habit-intended";
 
 export async function GET(
   _request: Request,
@@ -64,6 +68,8 @@ export async function PATCH(
       howToFollowThrough?: string;
       tips?: string;
       bucket?: HabitBucket;
+      intendedMonth?: number | null;
+      intendedYear?: number | null;
     } = {};
     if (typeof body.name === "string") updates.name = body.name;
     if (typeof body.description === "string") updates.description = body.description;
@@ -74,6 +80,30 @@ export async function PATCH(
         return NextResponse.json({ error: "Invalid bucket" }, { status: 400 });
       }
       updates.bucket = body.bucket;
+    }
+    if ("intendedMonth" in body && "intendedYear" in body) {
+      const im = body.intendedMonth;
+      const iy = body.intendedYear;
+      if (im === null && iy === null) {
+        updates.intendedMonth = null;
+        updates.intendedYear = null;
+      } else if (
+        typeof im === "number" &&
+        typeof iy === "number" &&
+        isValidIntendedMonth(im) &&
+        isValidIntendedYear(iy)
+      ) {
+        updates.intendedMonth = im;
+        updates.intendedYear = iy;
+      } else {
+        return NextResponse.json(
+          {
+            error:
+              "intendedMonth and intendedYear must both be null (clear) or both valid numbers",
+          },
+          { status: 400 }
+        );
+      }
     }
     if (Object.keys(updates).length === 0) {
       return NextResponse.json({ error: "No valid updates" }, { status: 400 });

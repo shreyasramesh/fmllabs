@@ -1,3 +1,4 @@
+import { normalizeMentalModelCitationMarkup } from "@/lib/chat-utils";
 import { stripMarkdown } from "@/lib/strip-markdown";
 
 const FIGURE_TOKEN_REGEX = /\[\[figure:([a-z0-9_]+)\]\]/g;
@@ -31,8 +32,10 @@ export function resolveTtsReferenceText(
   const nameToId = new Map<string, string>();
   idToName?.forEach((name, id) => nameToId.set(name, id));
 
+  const normalized = normalizeMentalModelCitationMarkup(text);
+
   return stripMarkdown(
-    text
+    normalized
       .replace(FIGURE_TOKEN_REGEX, (_, id: string) =>
         figureIdToName?.get(id) ?? id.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
       )
