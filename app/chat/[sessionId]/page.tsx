@@ -1688,28 +1688,21 @@ function MovingPills({
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
   }, []);
+  const pillButtonClass =
+    "inline-flex items-start gap-1.5 px-3 py-2 sm:px-4 sm:items-center rounded-full text-sm font-medium border transition-all duration-200 active:scale-95 bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-900 dark:text-neutral-100 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-300 dark:hover:bg-neutral-600 whitespace-normal text-left max-w-full sm:whitespace-nowrap";
+
   return (
-    <div className="space-y-4 overflow-hidden">
-      {rows.map((row, rowIndex) => (
-        <div
-          key={rowIndex}
-          className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
-          onMouseEnter={() => setHoveredRow(rowIndex)}
-          onMouseLeave={() => setHoveredRow(null)}
-        >
+    <>
+      {/* Narrow viewports: wrap so nothing overflows horizontally */}
+      <div className="space-y-3 sm:hidden w-full min-w-0 max-w-full">
+        {rows.map((row, rowIndex) => (
           <div
-            className={`flex gap-3 shrink-0 ${
-              prefersReducedMotion
-                ? ""
-                : rowIndex % 2 === 0
-                  ? "animate-marquee-left"
-                  : "animate-marquee-right"
-            } ${hoveredRow === rowIndex ? "marquee-paused" : ""}`}
-            style={{ width: "max-content" }}
+            key={rowIndex}
+            className="flex flex-wrap gap-2 justify-center w-full min-w-0"
           >
-            {[...row, ...row].map((pill, i) => (
+            {row.map((pill, i) => (
               <button
-                key={`${rowIndex}-${i}`}
+                key={`${rowIndex}-m-${i}`}
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
@@ -1717,18 +1710,59 @@ function MovingPills({
                   playSelectionChime();
                   onSelectStarter(pill.label);
                 }}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 active:scale-95 whitespace-nowrap bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-900 dark:text-neutral-100 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-300 dark:hover:bg-neutral-600"
+                className={pillButtonClass}
                 aria-label={`Conversation starter: ${pill.label}`}
                 title="Conversation starter"
               >
-                <ChatBubbleIcon className="w-3.5 h-3.5 shrink-0" />
-                {pill.label}
+                <ChatBubbleIcon className="w-3.5 h-3.5 shrink-0 mt-0.5 sm:mt-0" />
+                <span className="min-w-0 break-words">{pill.label}</span>
               </button>
             ))}
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+      {/* sm+: horizontal marquee */}
+      <div className="hidden sm:block space-y-4 overflow-hidden w-full min-w-0">
+        {rows.map((row, rowIndex) => (
+          <div
+            key={rowIndex}
+            className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
+            onMouseEnter={() => setHoveredRow(rowIndex)}
+            onMouseLeave={() => setHoveredRow(null)}
+          >
+            <div
+              className={`flex gap-3 shrink-0 ${
+                prefersReducedMotion
+                  ? ""
+                  : rowIndex % 2 === 0
+                    ? "animate-marquee-left"
+                    : "animate-marquee-right"
+              } ${hoveredRow === rowIndex ? "marquee-paused" : ""}`}
+              style={{ width: "max-content" }}
+            >
+              {[...row, ...row].map((pill, i) => (
+                <button
+                  key={`${rowIndex}-${i}`}
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    playSelectionChime();
+                    onSelectStarter(pill.label);
+                  }}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 active:scale-95 whitespace-nowrap bg-neutral-200/80 dark:bg-neutral-700/80 text-neutral-900 dark:text-neutral-100 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-300 dark:hover:bg-neutral-600"
+                  aria-label={`Conversation starter: ${pill.label}`}
+                  title="Conversation starter"
+                >
+                  <ChatBubbleIcon className="w-3.5 h-3.5 shrink-0" />
+                  {pill.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -6862,7 +6896,7 @@ export default function ChatPage() {
         ) : (
         <>
         <div
-          className={`flex-1 min-h-0 flex flex-col transition-all duration-500 ${
+          className={`flex-1 min-h-0 min-w-0 flex flex-col overflow-x-hidden transition-all duration-500 ${
             messages.length > 0
               ? "pb-24 md:pb-0 overflow-y-auto scroll-smooth"
               : isAnonymous
@@ -6870,7 +6904,7 @@ export default function ChatPage() {
                 : "pb-0 overflow-visible"
           } ${convertToDeepSuccess ? "animate-convert-to-deep" : ""}`}
         >
-          <div ref={messagesScrollRef} className={`flex-1 min-h-0 min-w-0 ${messages.length > 0 || (messages.length === 0 && isAnonymous) ? "overflow-y-auto" : "overflow-visible flex flex-col"}`}>
+          <div ref={messagesScrollRef} className={`flex-1 min-h-0 min-w-0 overflow-x-hidden ${messages.length > 0 || (messages.length === 0 && isAnonymous) ? "overflow-y-auto" : "overflow-visible flex flex-col"}`}>
           {currentSession?.isCollapsed && collapsedSummary ? (
             <div className="min-h-full flex items-center justify-center p-4">
               <div className="w-full max-w-2xl">
@@ -7076,7 +7110,7 @@ export default function ChatPage() {
           ) : (
           <div
             ref={messagesContainerRef}
-            className={`max-w-2xl mx-auto w-full min-w-0 no-touch-callout ${
+            className={`max-w-2xl mx-auto w-full min-w-0 no-touch-callout overflow-x-hidden ${
               messages.length === 0
                 ? isAnonymous
                   ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-12 px-4 py-6"
@@ -7085,14 +7119,14 @@ export default function ChatPage() {
             }`}
           >
             {messages.length === 0 && (
-              <div className="flex w-full min-w-0 max-w-2xl flex-col items-center text-center px-2">
-                <div className={`flex flex-col items-center justify-center space-y-6 ${isAnonymous ? "min-h-[calc(100dvh-12rem)]" : ""}`}>
-                <h1 className="text-xl sm:text-2xl font-semibold text-foreground animate-fade-in-up">
+              <div className="flex w-full min-w-0 max-w-2xl flex-col items-center text-center px-2 sm:px-4 overflow-x-hidden">
+                <div className={`flex w-full max-w-full min-w-0 flex-col items-center justify-center space-y-6 ${isAnonymous ? "min-h-[calc(100dvh-12rem)]" : ""}`}>
+                <h1 className="w-full max-w-full px-1 sm:px-2 text-xl sm:text-2xl font-semibold text-foreground animate-fade-in-up break-words text-balance leading-snug">
                   {incognitoMode ? "Let's chat incognito" : getLandingTranslations(language).productTagline}
                 </h1>
                 {!incognitoMode && (
                   <>
-                    <div className="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-3 text-left animate-fade-in-up">
+                    <div className="w-full min-w-0 max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-3 text-left animate-fade-in-up">
                       <button
                         type="button"
                         onClick={() => {
@@ -7110,22 +7144,22 @@ export default function ChatPage() {
                             setMentorOneOnOneModalOpen(true);
                           }
                         }}
-                        className="flex flex-col gap-1 px-4 py-3 rounded-2xl border border-neutral-200 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 active:scale-[0.98]"
+                        className="flex min-w-0 w-full flex-col gap-1 px-4 py-3 rounded-2xl border border-neutral-200 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 active:scale-[0.98]"
                       >
-                        <span className="font-medium text-foreground">{getLandingTranslations(language).mentorOneOnOneTitle}</span>
-                        <span className="text-xs text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).mentorOneOnOneSubtitle}</span>
+                        <span className="font-medium text-foreground break-words">{getLandingTranslations(language).mentorOneOnOneTitle}</span>
+                        <span className="text-xs text-neutral-600 dark:text-neutral-400 break-words">{getLandingTranslations(language).mentorOneOnOneSubtitle}</span>
                       </button>
-                      <div className="rounded-2xl border border-neutral-200 dark:border-neutral-600 bg-background overflow-hidden flex flex-col hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200">
+                      <div className="rounded-2xl border border-neutral-200 dark:border-neutral-600 bg-background overflow-hidden flex flex-col min-w-0 w-full hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200">
                         <button
                           type="button"
                           onClick={() => {
                             playSelectionChime();
                             startSecondOrderConversation(!secondOrderCitationsEnabled);
                           }}
-                          className="flex flex-col gap-1 px-4 py-3 text-left w-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors active:scale-[0.98]"
+                          className="flex flex-col gap-1 px-4 py-3 text-left w-full min-w-0 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors active:scale-[0.98]"
                         >
-                          <span className="font-medium text-foreground">{getLandingTranslations(language).secondOrderThinkingTitle}</span>
-                          <span className="text-xs text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).secondOrderThinkingSubtitle}</span>
+                          <span className="font-medium text-foreground break-words">{getLandingTranslations(language).secondOrderThinkingTitle}</span>
+                          <span className="text-xs text-neutral-600 dark:text-neutral-400 break-words">{getLandingTranslations(language).secondOrderThinkingSubtitle}</span>
                         </button>
                         <div
                           className="flex items-center justify-between gap-2 px-4 py-2.5 border-t border-neutral-200 dark:border-neutral-600 bg-neutral-50/50 dark:bg-neutral-900/30"
@@ -7153,14 +7187,14 @@ export default function ChatPage() {
                           </button>
                         </div>
                       </div>
-                      <div className="sm:col-span-2 flex justify-center w-full">
+                      <div className="sm:col-span-2 flex justify-center w-full min-w-0">
                         <button
                           type="button"
                           onClick={openJournalEntryFlow}
-                          className="w-full max-w-md flex flex-col gap-1 px-4 py-3 rounded-2xl border border-neutral-200 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 active:scale-[0.98] text-left"
+                          className="w-full max-w-md min-w-0 flex flex-col gap-1 px-4 py-3 rounded-2xl border border-neutral-200 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 active:scale-[0.98] text-left"
                         >
-                          <span className="font-medium text-foreground">{getLandingTranslations(language).journalEntryButtonLabel}</span>
-                          <span className="text-xs text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).journalEntryButtonSubtitle}</span>
+                          <span className="font-medium text-foreground break-words">{getLandingTranslations(language).journalEntryButtonLabel}</span>
+                          <span className="text-xs text-neutral-600 dark:text-neutral-400 break-words">{getLandingTranslations(language).journalEntryButtonSubtitle}</span>
                         </button>
                       </div>
                     </div>
@@ -7169,7 +7203,7 @@ export default function ChatPage() {
                         {getLandingTranslations(language).journalEntrySavedHint}
                       </p>
                     )}
-                    <div className="w-full max-w-2xl mt-6 text-left animate-fade-in-up" data-tour="input-area">
+                    <div className="w-full max-w-2xl min-w-0 mt-6 text-left animate-fade-in-up overflow-x-hidden" data-tour="input-area">
                       <MovingPills
                         language={language}
                         onSelectStarter={(text) => {
@@ -9477,7 +9511,7 @@ export default function ChatPage() {
                   </div>
                 </button>
               </div>
-              <div className="pt-2 border-t border-neutral-200 dark:border-neutral-700">
+              <div className="pt-2 border-t border-neutral-200 dark:border-neutral-700 min-w-0 overflow-x-hidden w-full">
                 <MovingPills
                   language={language}
                   onSelectStarter={(text) => {
