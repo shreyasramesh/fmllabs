@@ -54,12 +54,10 @@ import { useBackground } from "@/components/BackgroundProvider";
 import Image from "next/image";
 import { DefaultIcon } from "@/components/ElementIcons";
 import { Clock } from "@/components/Clock";
-import { RankPill } from "@/components/RankPill";
-import { HeaderStatsPill } from "@/components/HeaderStatsPill";
 import { RankModal } from "@/components/RankModal";
 import { StatsOverviewModal } from "@/components/StatsOverviewModal";
 import type { UserScore } from "@/lib/score-types";
-import type { DashboardStats } from "@/lib/dashboard-stats";
+import { EMPTY_DASHBOARD_STATS, type DashboardStats } from "@/lib/dashboard-stats";
 import { FeedbackModal } from "@/components/FeedbackModal";
 import { FeatureTour, type FeatureTourStep } from "@/components/FeatureTour";
 import { SettingsLanguageSelector } from "@/components/SettingsLanguageSelector";
@@ -4774,27 +4772,16 @@ export default function ChatPage() {
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3 shrink-0 overflow-visible">
-            {/* Streak, words, XP — same as home dashboard; XP opens rank modal */}
             {!incognitoMode && !isAnonymous && userScore && (
-              <div className="flex shrink-0 min-w-0">
-                {dashboardStats ? (
-                  <HeaderStatsPill
-                    stats={dashboardStats}
-                    score={userScore}
-                    optimisticDelta={scoreOptimisticDelta}
-                    onPillClick={() => setStatsOverviewModalOpen(true)}
-                    showRankUpAnimation={showRankUpAnimation}
-                    compact
-                  />
-                ) : (
-                  <RankPill
-                    score={userScore}
-                    optimisticDelta={scoreOptimisticDelta}
-                    onClick={() => setRankModalOpen(true)}
-                    showRankUpAnimation={showRankUpAnimation}
-                  />
-                )}
-              </div>
+              <button
+                type="button"
+                onClick={() => setStatsOverviewModalOpen(true)}
+                className={`shrink-0 rounded-full border border-neutral-200/80 bg-neutral-100/80 px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-neutral-200/80 dark:border-white/12 dark:bg-neutral-800/80 dark:hover:bg-neutral-700/80 sm:px-3 sm:text-sm ${
+                  showRankUpAnimation ? "ring-2 ring-amber-400 dark:ring-amber-500" : ""
+                }`}
+              >
+                View Stats
+              </button>
             )}
             <div className="hidden md:flex shrink-0">
             <Clock weatherFormat={weatherFormat} onMoonPhaseChange={setMoonPhase} />
@@ -12863,9 +12850,9 @@ export default function ChatPage() {
         </div>
       )}
 
-      {statsOverviewModalOpen && dashboardStats && userScore && (
+      {statsOverviewModalOpen && userScore && (
         <StatsOverviewModal
-          stats={dashboardStats}
+          stats={dashboardStats ?? EMPTY_DASHBOARD_STATS}
           score={userScore}
           optimisticDelta={scoreOptimisticDelta}
           onClose={() => setStatsOverviewModalOpen(false)}
