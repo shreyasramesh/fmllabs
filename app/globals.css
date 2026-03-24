@@ -5,8 +5,8 @@
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
-  /* Slightly smaller global typography scale (closer to Claude-like sizing) */
-  font-size: 15px;
+  /* Root rem scale: was 15px; +20% app-wide (Tailwind text-* and rem utilities follow this). */
+  font-size: 18px;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }

@@ -11,6 +11,23 @@ export interface UiTranslations {
   habits: string;
   /** Library sidebar: saved journal transcripts */
   journalEntries: string;
+  /** Journal library row: AI mentor reflections status */
+  journalMentorFinding: string;
+  /** Pending state under avatar bubbles */
+  journalMentorResponding: string;
+  /** Use {{count}} for the number of mentors */
+  journalMentorListReady: string;
+  /** Modal caption under bubbles when reflections are ready */
+  journalMentorModalReadyCaption: string;
+  journalMentorTapHint: string;
+  journalMentorFailed: string;
+  journalMentorModalTitle: string;
+  journalMentorRegenerate: string;
+  journalMentorRegenerateBusy: string;
+  /** Legacy journal entries with no reflections yet */
+  journalMentorGenerate: string;
+  journalMentorGenerateBlurb: string;
+  journalMentorListPromptGenerate: string;
   promoteToHabit: string;
   habitLifeArea: string;
   habitBucketCreative: string;
@@ -50,6 +67,20 @@ const EN: UiTranslations = {
   famousFigures: "Personas",
   habits: "Habits",
   journalEntries: "Journal",
+  journalMentorFinding: "Finding mentors…",
+  journalMentorResponding: "Mentors are responding",
+  journalMentorListReady: "{{count}} mentors wrote to you. Click to read.",
+  journalMentorModalReadyCaption:
+    "{{count}} mentors reflected on your entry and provided their wisdom",
+  journalMentorTapHint: "Tap an icon to read that mentor’s reflection.",
+  journalMentorFailed: "Reflections unavailable",
+  journalMentorModalTitle: "Mentor reflections",
+  journalMentorRegenerate: "Regenerate",
+  journalMentorRegenerateBusy: "Regenerating…",
+  journalMentorGenerate: "Generate mentor reflections",
+  journalMentorGenerateBlurb:
+    "Invite a few mentors from our catalog to respond in their own voices to what you wrote.",
+  journalMentorListPromptGenerate: "Open to generate mentor reflections",
   promoteToHabit: "Promote to Habit",
   habitLifeArea: "Life area",
   habitBucketCreative: "Creative (e.g. art, music, writing)",

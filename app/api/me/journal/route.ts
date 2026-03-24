@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { saveJournalTranscript } from "@/lib/db";
+import { saveJournalTranscript, updateJournalMentorReflections } from "@/lib/db";
 import { resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
 import { inferJournalTitleFromContent } from "@/lib/journal-title";
+import { runJournalMentorReflections } from "@/lib/journal-mentor-reflections";
 import { recordMongoUsageRequest } from "@/lib/usage";
 import { EXTRACT_CONCEPTS_MAX_TOTAL_CHARS } from "@/lib/extract-concepts-constants";
 
@@ -58,8 +59,16 @@ export async function POST(request: Request) {
     }
 
     const saved = await saveJournalTranscript(userId, text, title, entryDate);
+    const transcriptId = saved._id;
+    void updateJournalMentorReflections(transcriptId, userId, { status: "pending" }).then((ok) => {
+      if (ok) {
+        void runJournalMentorReflections(transcriptId, userId).catch((e) =>
+          console.error("Journal mentor reflections failed:", e)
+        );
+      }
+    });
     return NextResponse.json({
-      id: saved._id,
+      id: transcriptId,
       videoTitle: saved.videoTitle ?? "Journal entry",
     });
   } catch (err) {

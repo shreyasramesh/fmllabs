@@ -49,8 +49,6 @@ import { HABIT_BUCKET_IDS, type HabitBucket } from "@/lib/habit-buckets";
 import { formatHabitIntendedPeriod, getHabitIntendedYearOptions } from "@/lib/habit-intended";
 import { playSelectionChime } from "@/lib/selection-chime";
 import { stripMarkdown } from "@/lib/strip-markdown";
-import { resolveTtsReferenceText } from "@/lib/tts-reference-text";
-import { TTSButton } from "@/components/TTSButton";
 import { VoiceInputButton } from "@/components/VoiceInputButton";
 import { useBackground } from "@/components/BackgroundProvider";
 import Image from "next/image";
@@ -59,8 +57,6 @@ import { Clock } from "@/components/Clock";
 import { RankPill } from "@/components/RankPill";
 import { RankModal } from "@/components/RankModal";
 import type { UserScore } from "@/lib/score-types";
-import { TtsHighlightContext, type TtsHighlightState } from "@/components/TtsHighlightContext";
-import { TtsHighlightedText } from "@/components/TtsHighlightedText";
 import { FeedbackModal } from "@/components/FeedbackModal";
 import { FeatureTour, type FeatureTourStep } from "@/components/FeatureTour";
 import { SettingsLanguageSelector } from "@/components/SettingsLanguageSelector";
@@ -77,6 +73,173 @@ const LIBRARY_WAYS_COMPACT_CARD_GRID =
 /** Framework (cg) group tiles — compact squares. */
 const LIBRARY_FRAMEWORK_TILE_GRID =
   "grid gap-2 sm:gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,11rem),1fr))]";
+
+type JournalMentorLibraryRow = {
+  sourceType?: "youtube" | "journal";
+  journalMentorReflectionsStatus?: "pending" | "ready" | "failed";
+  journalMentorReflections?: { figureId: string; figureName: string; reflection: string }[];
+};
+
+function hueFromFigureId(id: string): number {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+  return h % 360;
+}
+
+function figureInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0]!.slice(0, 2).toUpperCase();
+  return (parts[0]![0] + parts[parts.length - 1]![0]).toUpperCase();
+}
+
+function MentorAvatarBubble({
+  figureId,
+  figureName,
+  size,
+  showDot = false,
+  interactive = false,
+  selected = false,
+  onClick,
+}: {
+  figureId: string;
+  figureName: string;
+  size: number;
+  showDot?: boolean;
+  interactive?: boolean;
+  selected?: boolean;
+  onClick?: () => void;
+}) {
+  const hue = hueFromFigureId(figureId);
+  const initials = figureInitials(figureName);
+  const fontSize = Math.max(9, Math.round(size * 0.32));
+  const circleClass = `rounded-full border-2 border-violet-400/35 dark:border-violet-500/45 flex items-center justify-center shrink-0 shadow-sm transition-transform ${
+    interactive ? "cursor-pointer hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background" : ""
+  } ${selected ? "ring-2 ring-violet-500 dark:ring-violet-400 ring-offset-2 ring-offset-neutral-50 dark:ring-offset-neutral-900" : ""}`;
+  const circleStyle = {
+    width: size,
+    height: size,
+    background: `linear-gradient(145deg, hsl(${hue}, 38%, 40%) 0%, hsl(${(hue + 28) % 360}, 36%, 30%) 100%)`,
+  } as const;
+  const inner = (
+    <span className="text-white font-semibold leading-none" style={{ fontSize }}>
+      {initials}
+    </span>
+  );
+  return (
+    <div className="flex flex-col items-center gap-0.5">
+      {interactive && onClick ? (
+        <button
+          type="button"
+          onClick={onClick}
+          className={circleClass}
+          style={circleStyle}
+          title={figureName}
+          aria-label={`Open reflection from ${figureName}`}
+          aria-expanded={selected}
+        >
+          {inner}
+        </button>
+      ) : (
+        <div className={circleClass} style={circleStyle} title={figureName}>
+          {inner}
+        </div>
+      )}
+      {showDot ? (
+        <span className="w-1 h-1 rounded-full bg-violet-400/50 dark:bg-violet-400/45 shrink-0" aria-hidden />
+      ) : null}
+    </div>
+  );
+}
+
+function MentorPendingBubbleSkeleton({ size, showDot = false }: { size: number; showDot?: boolean }) {
+  return (
+    <div className="flex flex-col items-center gap-0.5">
+      <div
+        className="rounded-full border-2 border-neutral-300/70 dark:border-neutral-600/80 bg-neutral-200/80 dark:bg-neutral-700/80 animate-pulse shrink-0"
+        style={{ width: size, height: size }}
+      />
+      {showDot ? (
+        <span className="w-1 h-1 rounded-full bg-neutral-400/45 shrink-0" aria-hidden />
+      ) : null}
+    </div>
+  );
+}
+
+function JournalMentorListHint({
+  row,
+  language,
+}: {
+  row: JournalMentorLibraryRow;
+  language: LanguageCode;
+}) {
+  if (row.sourceType !== "journal") return null;
+  const ui = getUiTranslations(language);
+  const status = row.journalMentorReflectionsStatus;
+  const n = row.journalMentorReflections?.length ?? 0;
+  const bubbleSize = 26;
+  if (status === "pending") {
+    return (
+      <div className="mt-1.5 flex flex-col gap-1">
+        <div className="flex items-center gap-1.5">
+          {[0, 1, 2].map((i) => (
+            <MentorPendingBubbleSkeleton key={i} size={bubbleSize} showDot={false} />
+          ))}
+        </div>
+        <p className="text-[10px] text-neutral-500 dark:text-neutral-400 font-serif italic">
+          {ui.journalMentorResponding}
+        </p>
+      </div>
+    );
+  }
+  if (status === "ready" && n >= 1) {
+    const refs = row.journalMentorReflections ?? [];
+    return (
+      <div className="mt-1.5 flex flex-col gap-1">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {refs.map((m) => (
+            <MentorAvatarBubble
+              key={m.figureId}
+              figureId={m.figureId}
+              figureName={m.figureName}
+              size={bubbleSize}
+              showDot={false}
+            />
+          ))}
+        </div>
+        <p className="text-[10px] text-neutral-600 dark:text-neutral-400 font-serif">
+          {ui.journalMentorListReady.replace(/\{\{count\}\}/g, String(n))}
+        </p>
+      </div>
+    );
+  }
+  if (status === "failed") {
+    return (
+      <div className="mt-1.5 flex flex-col gap-1">
+        <div className="flex items-center gap-1.5 opacity-50">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="rounded-full border-2 border-neutral-300/60 dark:border-neutral-600 shrink-0 bg-neutral-100 dark:bg-neutral-800"
+              style={{ width: bubbleSize, height: bubbleSize }}
+            />
+          ))}
+        </div>
+        <p className="text-[10px] text-amber-800/90 dark:text-amber-400/85 font-serif">
+          {ui.journalMentorFailed}
+        </p>
+      </div>
+    );
+  }
+  if (status === undefined) {
+    return (
+      <p className="text-[10px] text-neutral-500 dark:text-neutral-500 mt-0.5">
+        {ui.journalMentorListPromptGenerate}
+      </p>
+    );
+  }
+  return null;
+}
 
 interface Message {
   role: "user" | "assistant";
@@ -290,7 +453,7 @@ const EXPORT_DATA_SECTION_OPTIONS: Array<{
   label: string;
   description: string;
 }> = [
-  { key: "settings", label: "Settings", description: "Theme, language, voice, and app preferences." },
+  { key: "settings", label: "Settings", description: "Theme, language, and app preferences." },
   { key: "sessions", label: "Sessions", description: "Conversation list and metadata." },
   { key: "messages", label: "Messages", description: "Full chat history for your sessions." },
   { key: "long_term_memory", label: "Memory", description: "Saved memory summaries and prompts." },
@@ -352,10 +515,6 @@ function MessageBubble({
   onPerspectiveCardClick,
   previewMap,
   isRtl,
-  ttsHighlight,
-  onTtsProgress,
-  onTtsEnd,
-  showTtsButton = true,
   showConvertToDeep = false,
   onConvertToDeep,
   onManualJournalCheckpoint,
@@ -388,10 +547,6 @@ function MessageBubble({
   onPerspectiveCardClick?: (card: { name: string; prompt: string }) => void;
   previewMap?: Map<string, { oneLiner?: string; quickIntro?: string }>;
   isRtl?: boolean;
-  ttsHighlight?: number;
-  onTtsProgress?: (messageIndex: number, charEnd: number) => void;
-  onTtsEnd?: () => void;
-  showTtsButton?: boolean;
   showConvertToDeep?: boolean;
   onConvertToDeep?: () => void;
   onManualJournalCheckpoint?: () => void;
@@ -440,51 +595,6 @@ function MessageBubble({
 
   const ctx = message.role === "assistant" ? message.selectedContexts : undefined;
   const ctxCount = ctx && ctx.mentalModels.length + ctx.longTermMemories.length + (ctx.customConcepts?.length ?? 0) + (ctx.conceptGroups?.length ?? 0) + (ctx.perspectiveCards?.length ?? 0);
-  const assistantPlainText = message.role === "assistant"
-    ? resolveTtsReferenceText(text, { idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle, figureIdToName })
-    : "";
-  const optionPlainTexts = message.role === "assistant"
-    ? displayOptions.map((option) =>
-        resolveTtsReferenceText(option, { idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle, figureIdToName })
-      )
-    : [];
-  const assistantOptionsPrefix = optionPlainTexts.length > 0 ? " Follow-up options: " : "";
-  const assistantSpeechText = message.role === "assistant"
-    ? (assistantPlainText + assistantOptionsPrefix + optionPlainTexts.join(". ")).trim()
-    : text;
-  const userPlainText = message.role === "user"
-    ? resolveTtsReferenceText(text, { idToName, ltmIdToTitle, ccIdToTitle, cgIdToTitle, figureIdToName })
-    : "";
-  const isAssistantTtsActive =
-    message.role === "assistant" && typeof ttsHighlight === "number" && ttsHighlight >= 0;
-  const isUserTtsActive =
-    message.role === "user" && typeof ttsHighlight === "number" && ttsHighlight >= 0;
-  const isSpeakingAssistantBody = isAssistantTtsActive && ttsHighlight < assistantPlainText.length;
-  const activeOptionHighlight = (() => {
-    if (!isAssistantTtsActive || optionPlainTexts.length === 0) return null;
-
-    let cursor = assistantPlainText.length + assistantOptionsPrefix.length;
-    for (let index = 0; index < optionPlainTexts.length; index++) {
-      const optionText = optionPlainTexts[index];
-      const optionStart = cursor;
-      const optionEnd = optionStart + optionText.length;
-      const optionRangeEnd = optionEnd + (index < optionPlainTexts.length - 1 ? 2 : 0);
-
-      if (ttsHighlight >= optionStart && ttsHighlight < optionRangeEnd) {
-        return {
-          index,
-          charEnd: Math.min(
-            Math.max(ttsHighlight - optionStart, 0),
-            Math.max(optionText.length - 1, 0)
-          ),
-        };
-      }
-
-      cursor = optionEnd + (index < optionPlainTexts.length - 1 ? 2 : 0);
-    }
-
-    return null;
-  })();
   const [ctxExpanded, setCtxExpanded] = useState(false);
   const [ctxReasonPillKey, setCtxReasonPillKey] = useState<string | null>(null);
   const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -561,13 +671,6 @@ function MessageBubble({
     messageIndex < totalMessages - 1 &&
     !isLoading;
 
-  /** Hide speaker + speed until the assistant reply has finished streaming (avoids TTS on partial text). */
-  const showTtsChrome =
-    showTtsButton &&
-    !isFindingGuide &&
-    message.role === "assistant" &&
-    !isLoading;
-
   return (
     <div
       className={`group/msg flex flex-col animate-fade-in-up gap-1.5 ${
@@ -579,130 +682,7 @@ function MessageBubble({
           Journal Checkpoint: {message.journalCheckpoint}
         </div>
       )}
-      {message.role === "assistant" && showTtsChrome ? (
-        <div className="flex flex-row items-start gap-2 max-w-[92%] w-full">
-          <div
-            className="group/tts flex-1 min-w-0 rounded-3xl px-4 py-3 transition-shadow duration-200 bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground"
-        dir={isRtl ? "rtl" : undefined}
-      >
-            <div className="message-bubble-text text-sm md:text-base">
-              {message.mentorOneOnOne && (
-                <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
-                  1:1 · {message.mentorOneOnOne.name}
-                </p>
-              )}
-              {secondOrderChipLabel && (
-                <p className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
-                  {secondOrderChipLabel}
-                </p>
-              )}
-              {message.perspectiveCard && (
-                <p className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
-                  {message.perspectiveCard.name}
-                </p>
-              )}
-              {message.mentorResponses && message.mentorResponses.length > 0 ? (
-                <div className="space-y-4">
-                  {message.mentorResponses.map((mr) => (
-                    <div
-                      key={mr.figureId}
-                      className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 overflow-hidden"
-                    >
-                      <div className="px-3 py-2 border-b border-neutral-200 dark:border-neutral-700">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
-                          {mr.figureName}
-                        </span>
-                      </div>
-                      <div className="px-3 py-2">
-                        <ChatMarkdown
-                          content={mr.content}
-                          idToName={idToName}
-                          ltmIdToTitle={ltmIdToTitle}
-                          ccIdToTitle={ccIdToTitle}
-                          cgIdToTitle={cgIdToTitle}
-                          figureIdToName={figureIdToName}
-                          figureIdToDescription={figureIdToDescription}
-                          onMentalModelClick={onMentalModelClick}
-                          onLtmClick={onLtmClick}
-                          onCustomConceptClick={onCustomConceptClick}
-                          onConceptGroupClick={onConceptGroupClick}
-                          previewMap={previewMap}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : text ? (
-                <>
-                  {/^\d+ mentors are responding…$/.test(text.trim()) && isLastMsg ? (
-                    <div className="flex flex-col gap-2 w-full max-w-[240px]">
-                      <span className="text-sm text-neutral-600 dark:text-neutral-400">{text}</span>
-                      <div
-                        className="gemini-loading-bar h-1.5 rounded-full overflow-hidden"
-                        aria-hidden
-                      />
-                    </div>
-                  ) : isFindingGuide ? (
-                    <span className="flex items-center gap-2">
-                      <span>{text}</span>
-                      <LoadingDots className="opacity-70 w-4 h-4" aria-hidden />
-                    </span>
-                  ) : isSpeakingAssistantBody ? (
-                    <TtsHighlightedText
-                      text={assistantPlainText}
-                      charEnd={ttsHighlight}
-                    />
-                  ) : (
-                    <ChatMarkdown
-                      content={text}
-                      idToName={idToName}
-                      ltmIdToTitle={ltmIdToTitle}
-                      ccIdToTitle={ccIdToTitle}
-                      cgIdToTitle={cgIdToTitle}
-                      figureIdToName={figureIdToName}
-                      figureIdToDescription={figureIdToDescription}
-                      onMentalModelClick={onMentalModelClick}
-                      onLtmClick={onLtmClick}
-                      onCustomConceptClick={onCustomConceptClick}
-                      onConceptGroupClick={onConceptGroupClick}
-                      previewMap={previewMap}
-                    />
-                  )}
-                  {isLastMsg && isLoading && (
-                    <span
-                      className="inline-block w-0.5 h-4 ml-0.5 bg-foreground/80 animate-blink align-middle"
-                      aria-hidden
-                    />
-                  )}
-                  {isLastMsg && text === "Something went wrong." && onRetry && (
-                    <button
-                      type="button"
-                      onClick={onRetry}
-                      className="mt-2 inline-block px-3 py-1.5 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
-                    >
-                      Retry
-                    </button>
-                  )}
-                </>
-              ) : (
-                <LoadingDots className="opacity-70" />
-              )}
-            </div>
-          </div>
-          <div className="shrink-0 pt-0.5 flex flex-col items-center">
-          <TTSButton
-              text={assistantSpeechText}
-              plainText={assistantSpeechText}
-              showOnHover={false}
-              layout="vertical"
-            ariaLabel="Listen to message"
-              onTtsProgress={(charEnd) => onTtsProgress?.(messageIndex, charEnd)}
-              onTtsEnd={onTtsEnd}
-          />
-        </div>
-        </div>
-      ) : (
-        <div
+      <div
           className={`group/tts relative max-w-[85%] rounded-3xl px-4 py-3 transition-shadow duration-200 ${
             message.role === "user"
               ? "bg-foreground text-background shadow-sm"
@@ -713,12 +693,6 @@ function MessageBubble({
         {message.role === "user" ? (
           <div className="flex flex-col gap-2">
             <span className="message-bubble-text text-sm md:text-base">
-              {isUserTtsActive ? (
-                <TtsHighlightedText
-                  text={userPlainText}
-                  charEnd={ttsHighlight}
-                />
-              ) : (
               <UserMessageContent
                 content={text}
                 idToName={idToName}
@@ -733,7 +707,6 @@ function MessageBubble({
                 onConceptGroupClick={onConceptGroupClick}
                 previewMap={previewMap}
               />
-              )}
             </span>
             {message.perspectiveCard && (
               <div className="mt-1 pt-2 border-t border-white/20 rounded-b-xl">
@@ -805,11 +778,6 @@ function MessageBubble({
                     <span>{text}</span>
                     <LoadingDots className="opacity-70 w-4 h-4" aria-hidden />
                   </span>
-                ) : isSpeakingAssistantBody ? (
-                  <TtsHighlightedText
-                    text={assistantPlainText}
-                    charEnd={ttsHighlight}
-                  />
                 ) : (
                 <ChatMarkdown
                   content={text}
@@ -848,7 +816,6 @@ function MessageBubble({
           </div>
         )}
       </div>
-      )}
       {canGoBack && (
         <button
           type="button"
@@ -1027,12 +994,6 @@ function MessageBubble({
               className="message-bubble-option px-3 py-2 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 text-sm transition-all duration-200 active:scale-[0.98] hover:border-neutral-400 dark:hover:border-neutral-500 text-left opacity-0 animate-fade-in-up"
               style={{ animationDelay: `${j * 80}ms`, animationFillMode: "forwards" }}
             >
-              {activeOptionHighlight?.index === j ? (
-                <TtsHighlightedText
-                  text={optionPlainTexts[j] ?? stripMarkdown(opt).trim()}
-                  charEnd={activeOptionHighlight.charEnd}
-                />
-              ) : (
               <UserMessageContent
                 content={opt}
                 idToName={idToName}
@@ -1048,7 +1009,6 @@ function MessageBubble({
                 onConceptGroupClick={onConceptGroupClick}
                 previewMap={previewMap}
               />
-              )}
             </button>
           ))}
         </div>
@@ -1867,7 +1827,6 @@ export default function ChatPage() {
   const { background, setBackground } = useBackground();
   const [weatherFormat, setWeatherFormat] = useState<WeatherFormat>("condition-temp");
   const [moonPhase, setMoonPhase] = useState<number | null>(null);
-  const [ttsHighlight, setTtsHighlight] = useState<TtsHighlightState>(null);
   const [conceptSavedToast, setConceptSavedToast] = useState(false);
   const [convertToDeepSuccess, setConvertToDeepSuccess] = useState(false);
   const [restartLoading, setRestartLoading] = useState(false);
@@ -1915,6 +1874,9 @@ export default function ChatPage() {
       domain: string;
       concepts: { title: string; summary: string; enrichmentPrompt: string }[];
     }[];
+    journalMentorReflections?: { figureId: string; figureName: string; reflection: string }[];
+    journalMentorReflectionsStatus?: "pending" | "ready" | "failed";
+    journalMentorReflectionsUpdatedAt?: string | Date;
   }[]>([]);
   const [cgDetailModal, setCgDetailModal] = useState<ConceptGroupItem | null>(null);
   const [cgFrameworkSummarizing, setCgFrameworkSummarizing] = useState(false);
@@ -1939,8 +1901,14 @@ export default function ChatPage() {
     transcriptText: string;
     createdAt?: string;
     extractedConcepts?: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
+    journalMentorReflections?: { figureId: string; figureName: string; reflection: string }[];
+    journalMentorReflectionsStatus?: "pending" | "ready" | "failed";
+    journalMentorReflectionsUpdatedAt?: string | Date;
   } | null>(null);
   const [transcriptExtractedConceptOpen, setTranscriptExtractedConceptOpen] = useState<{ gi: number; ci: number } | null>(null);
+  const [mentorReflectionsRegenerateLoading, setMentorReflectionsRegenerateLoading] = useState(false);
+  /** Transcript modal: which mentor avatar is selected to show reflection bubble (figureId or null). */
+  const [journalMentorBubbleOpenId, setJournalMentorBubbleOpenId] = useState<string | null>(null);
   const [transcriptExtractedConceptsSectionOpen, setTranscriptExtractedConceptsSectionOpen] = useState(true);
   const [cgCustomCreateModal, setCgCustomCreateModal] = useState(false);
   const [cgCustomCreateTitle, setCgCustomCreateTitle] = useState("");
@@ -2063,7 +2031,7 @@ export default function ChatPage() {
       {
         target: "[data-tour=settings-button]",
         title: "Customize",
-        content: "Change language, voice style, playback speed, and more in settings.",
+        content: "Change language and more in settings.",
         ringClass: "ring-white dark:ring-neutral-300",
       },
     ];
@@ -2086,7 +2054,7 @@ export default function ChatPage() {
     { label: "Mental models library", description: "Explore proven mental models and cognitive biases to improve thinking and decisions.", icon: "mental-models" },
     { label: "Memory", description: "The AI remembers key context from past conversations to give more relevant advice.", icon: "memory" },
     { label: "Frameworks", description: "Framework related concepts (e.g. career, health). The AI draws from them when relevant.", icon: "groups" },
-    { label: "Voice (speech to text + text to speech)", description: "Use your voice to ask questions and listen to AI responses with natural playback.", icon: "voice" },
+    { label: "Voice input (speech to text)", description: "Use your voice to dictate messages in the composer.", icon: "voice" },
     { label: "Summarize and collapse", description: "Collapse long chats into compact summaries and keep key insights easy to revisit.", icon: "summary" },
     { label: "Incognito mode", description: "Chat privately without saving to history. Conversations stay off the record.", icon: "ghost" },
   ];
@@ -2565,6 +2533,50 @@ export default function ChatPage() {
     const tid = window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
     return () => clearTimeout(tid);
   }, [isNew, incognitoMode, router, refetchTranscripts]);
+
+  useEffect(() => {
+    setJournalMentorBubbleOpenId(null);
+  }, [transcriptModalTranscript?.id]);
+
+  useEffect(() => {
+    if (!transcriptModalTranscript?.id) return;
+    const row = savedTranscripts.find((s) => s._id === transcriptModalTranscript.id);
+    if (!row) return;
+    setTranscriptModalTranscript((prev) => {
+      if (!prev || prev.id !== row._id) return prev;
+      if (typeof row.journalMentorReflectionsStatus !== "string") return prev;
+      return {
+        ...prev,
+        journalMentorReflections: row.journalMentorReflections,
+        journalMentorReflectionsStatus: row.journalMentorReflectionsStatus,
+        journalMentorReflectionsUpdatedAt: row.journalMentorReflectionsUpdatedAt,
+      };
+    });
+  }, [savedTranscripts, transcriptModalTranscript?.id]);
+
+  useEffect(() => {
+    if (isAnonymous || incognitoMode) return;
+    const hasPending = savedTranscripts.some(
+      (t) => t.sourceType === "journal" && t.journalMentorReflectionsStatus === "pending"
+    );
+    const modalPending =
+      transcriptModalTranscript?.sourceType === "journal" &&
+      transcriptModalTranscript?.journalMentorReflectionsStatus === "pending";
+    if (!hasPending && !modalPending && !journalEntryJustSaved) return;
+    const timer = window.setInterval(() => {
+      refetchTranscripts();
+    }, 3500);
+    return () => window.clearInterval(timer);
+  }, [
+    savedTranscripts,
+    transcriptModalTranscript?.id,
+    transcriptModalTranscript?.sourceType,
+    transcriptModalTranscript?.journalMentorReflectionsStatus,
+    journalEntryJustSaved,
+    isAnonymous,
+    incognitoMode,
+    refetchTranscripts,
+  ]);
 
   /** Opens the video/journal concept extraction modal for a saved transcript (re-extract). */
   const openConceptExtractionForTranscript = useCallback(
@@ -4592,7 +4604,6 @@ export default function ChatPage() {
   }, []);
 
   return (
-    <TtsHighlightContext.Provider value={{ ttsHighlight, setTtsHighlight }}>
     <div className={`relative flex flex-col h-[100dvh] min-h-[100dvh] overflow-hidden chat-bg-area bg-background border-2 transition-[border-color,background] duration-300 ease-in-out ${incognitoMode ? "border-violet-400/70 dark:border-violet-500/60" : "border-transparent"}`}>
       {/* Shared top bar - fixed on mobile so it stays visible when scrolling */}
       <header
@@ -6471,6 +6482,13 @@ export default function ChatPage() {
                                     journalEntryMonth?: number;
                                     journalEntryYear?: number;
                                     extractedConcepts?: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
+                                    journalMentorReflections?: {
+                                      figureId: string;
+                                      figureName: string;
+                                      reflection: string;
+                                    }[];
+                                    journalMentorReflectionsStatus?: "pending" | "ready" | "failed";
+                                    journalMentorReflectionsUpdatedAt?: string | Date;
                                     createdAt?: string | Date;
                                   }) =>
                                     setTranscriptModalTranscript({
@@ -6484,6 +6502,9 @@ export default function ChatPage() {
                                       journalEntryMonth: data.journalEntryMonth ?? t.journalEntryMonth,
                                       journalEntryYear: data.journalEntryYear ?? t.journalEntryYear,
                                       extractedConcepts: data.extractedConcepts,
+                                      journalMentorReflections: data.journalMentorReflections,
+                                      journalMentorReflectionsStatus: data.journalMentorReflectionsStatus,
+                                      journalMentorReflectionsUpdatedAt: data.journalMentorReflectionsUpdatedAt,
                                       createdAt:
                                         typeof data.createdAt === "string"
                                           ? data.createdAt
@@ -6521,6 +6542,7 @@ export default function ChatPage() {
                                       {truncateJournalListPreview(t.transcriptText)}
                                     </p>
                                   ) : null}
+                                  <JournalMentorListHint row={t} language={language} />
                                 </>
                               ) : (
                                 t.channel && <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">{t.channel}</p>
@@ -6807,6 +6829,13 @@ export default function ChatPage() {
                                     domain: string;
                                     concepts: { title: string; summary: string; enrichmentPrompt: string }[];
                                   }[];
+                                  journalMentorReflections?: {
+                                    figureId: string;
+                                    figureName: string;
+                                    reflection: string;
+                                  }[];
+                                  journalMentorReflectionsStatus?: "pending" | "ready" | "failed";
+                                  journalMentorReflectionsUpdatedAt?: string | Date;
                                   createdAt?: string | Date;
                                 }) =>
                                   setTranscriptModalTranscript({
@@ -6820,6 +6849,9 @@ export default function ChatPage() {
                                     journalEntryMonth: data.journalEntryMonth ?? t.journalEntryMonth,
                                     journalEntryYear: data.journalEntryYear ?? t.journalEntryYear,
                                     extractedConcepts: data.extractedConcepts,
+                                    journalMentorReflections: data.journalMentorReflections,
+                                    journalMentorReflectionsStatus: data.journalMentorReflectionsStatus,
+                                    journalMentorReflectionsUpdatedAt: data.journalMentorReflectionsUpdatedAt,
                                     createdAt:
                                       typeof data.createdAt === "string"
                                         ? data.createdAt
@@ -6843,6 +6875,7 @@ export default function ChatPage() {
                                 {truncateJournalListPreview(t.transcriptText)}
                               </p>
                             ) : null}
+                            <JournalMentorListHint row={t} language={language} />
                           </div>
                           <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
                             <button
@@ -7298,9 +7331,6 @@ export default function ChatPage() {
                 }
                 previewMap={previewMap}
                 isRtl={isRtlLanguage(language)}
-                ttsHighlight={ttsHighlight && "messageIndex" in ttsHighlight && ttsHighlight.messageIndex === i ? ttsHighlight.charEnd : undefined}
-                onTtsProgress={(msgIdx, charEnd) => setTtsHighlight({ messageIndex: msgIdx, charEnd })}
-                onTtsEnd={() => setTtsHighlight(null)}
                 showConvertToDeep={
                   !isAnonymous &&
                   !!currentSessionId &&
@@ -8117,18 +8147,28 @@ export default function ChatPage() {
       {transcriptModalTranscript && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
-          onClick={() => { setTranscriptModalTranscript(null); setTranscriptExtractedConceptOpen(null); setTranscriptExtractedConceptsSectionOpen(true); }}
+          onClick={() => {
+            setTranscriptModalTranscript(null);
+            setTranscriptExtractedConceptOpen(null);
+            setTranscriptExtractedConceptsSectionOpen(true);
+            setMentorReflectionsRegenerateLoading(false);
+          }}
           aria-modal
           role="dialog"
         >
           <div
-            className="bg-background rounded-3xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
+            className="bg-background rounded-3xl shadow-xl max-w-2xl w-full w-[min(100%,42rem)] max-h-[min(85vh,100dvh-1.5rem)] min-h-0 overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative p-4 pr-12 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <button
                 type="button"
-                onClick={() => { setTranscriptModalTranscript(null); setTranscriptExtractedConceptOpen(null); setTranscriptExtractedConceptsSectionOpen(true); }}
+                onClick={() => {
+                  setTranscriptModalTranscript(null);
+                  setTranscriptExtractedConceptOpen(null);
+                  setTranscriptExtractedConceptsSectionOpen(true);
+                  setMentorReflectionsRegenerateLoading(false);
+                }}
                 className="absolute top-4 right-4 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                 aria-label={getUiTranslations(language).close}
               >
@@ -8211,42 +8251,198 @@ export default function ChatPage() {
                 )}
               </div>
             )}
-            <div className="flex-1 overflow-y-auto p-4">
-              <div className="max-w-[65ch] mx-auto text-[15px] leading-relaxed text-foreground">
-                {(() => {
-                  const t = transcriptModalTranscript.transcriptText.trim();
-                  if (!t) return null;
-                  const hasParagraphs = /\n\n|\n/.test(t);
-                  let paragraphs: string[];
-                  if (hasParagraphs) {
-                    paragraphs = t.split(/\n\n+/).map((p) => p.replace(/\n/g, " ").trim()).filter(Boolean);
-                  } else {
-                    const sentences = t.split(/(?<=[.!?])\s+/).filter((s) => s.trim());
-                    paragraphs = [];
-                    for (let i = 0; i < sentences.length; i += 3) {
-                      paragraphs.push(sentences.slice(i, i + 3).join(" "));
-                    }
-                    if (paragraphs.length === 0 && t) paragraphs = [t];
-                  }
-                  return paragraphs.map((p, i) => (
-                    <p key={i} className="mb-4 last:mb-0">
-                      {p.split(/\s*>>\s*/).filter(Boolean).map((segment, j) => (
-                        <span key={j}>
-                          {j > 0 && (
-                            <>
-                              <br />
-                              <span className="text-amber-500/90 dark:text-amber-400/80 font-medium select-none mr-1" aria-hidden>»</span>
-                            </>
-                          )}
-                          {segment}
-                        </span>
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+                <div className="p-4 pb-6">
+                  <div className="max-w-[65ch] mx-auto text-[15px] leading-relaxed text-foreground">
+                    {(() => {
+                      const t = transcriptModalTranscript.transcriptText.trim();
+                      if (!t) return null;
+                      const hasParagraphs = /\n\n|\n/.test(t);
+                      let paragraphs: string[];
+                      if (hasParagraphs) {
+                        paragraphs = t.split(/\n\n+/).map((p) => p.replace(/\n/g, " ").trim()).filter(Boolean);
+                      } else {
+                        const sentences = t.split(/(?<=[.!?])\s+/).filter((s) => s.trim());
+                        paragraphs = [];
+                        for (let i = 0; i < sentences.length; i += 3) {
+                          paragraphs.push(sentences.slice(i, i + 3).join(" "));
+                        }
+                        if (paragraphs.length === 0 && t) paragraphs = [t];
+                      }
+                      return paragraphs.map((p, i) => (
+                        <p key={i} className="mb-4 last:mb-0">
+                          {p.split(/\s*>>\s*/).filter(Boolean).map((segment, j) => (
+                            <span key={j}>
+                              {j > 0 && (
+                                <>
+                                  <br />
+                                  <span className="text-amber-500/90 dark:text-amber-400/80 font-medium select-none mr-1" aria-hidden>»</span>
+                                </>
+                              )}
+                              {segment}
+                            </span>
+                          ))}
+                        </p>
+                      ));
+                    })()}
+                  </div>
+                </div>
+            {transcriptModalTranscript.sourceType === "journal" &&
+              (typeof transcriptModalTranscript.journalMentorReflectionsStatus === "string" ? (
+              <div className="px-4 py-4 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/40">
+                {(transcriptModalTranscript.journalMentorReflectionsStatus === "ready" ||
+                  transcriptModalTranscript.journalMentorReflectionsStatus === "failed") && (
+                  <div className="flex justify-end mb-3">
+                    <button
+                      type="button"
+                      disabled={mentorReflectionsRegenerateLoading}
+                      onClick={() => {
+                        setMentorReflectionsRegenerateLoading(true);
+                        fetch(`/api/me/transcripts/${transcriptModalTranscript.id}/mentor-reflections`, {
+                          method: "POST",
+                        })
+                          .then((r) => {
+                            if (r.ok) refetchTranscripts();
+                          })
+                          .finally(() => setMentorReflectionsRegenerateLoading(false));
+                      }}
+                      className="px-3 py-1.5 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
+                    >
+                      {mentorReflectionsRegenerateLoading
+                        ? getUiTranslations(language).journalMentorRegenerateBusy
+                        : getUiTranslations(language).journalMentorRegenerate}
+                    </button>
+                  </div>
+                )}
+                <div className="flex flex-col items-center gap-3">
+                  <div className="flex items-start justify-center gap-4 sm:gap-5 flex-wrap">
+                    {transcriptModalTranscript.journalMentorReflectionsStatus === "pending" &&
+                      [0, 1, 2].map((i) => (
+                        <MentorPendingBubbleSkeleton key={i} size={44} />
                       ))}
+                    {transcriptModalTranscript.journalMentorReflectionsStatus === "ready" &&
+                      transcriptModalTranscript.journalMentorReflections &&
+                      transcriptModalTranscript.journalMentorReflections.map((m) => (
+                        <MentorAvatarBubble
+                          key={m.figureId}
+                          figureId={m.figureId}
+                          figureName={m.figureName}
+                          size={44}
+                          interactive
+                          selected={journalMentorBubbleOpenId === m.figureId}
+                          onClick={() =>
+                            setJournalMentorBubbleOpenId((prev) =>
+                              prev === m.figureId ? null : m.figureId
+                            )
+                          }
+                        />
+                      ))}
+                    {transcriptModalTranscript.journalMentorReflectionsStatus === "failed" &&
+                      [0, 1, 2].map((i) => (
+                        <div
+                          key={i}
+                          className="rounded-full border-2 border-neutral-400/50 dark:border-neutral-500 shrink-0 bg-neutral-200/80 dark:bg-neutral-800 opacity-45"
+                          style={{ width: 44, height: 44 }}
+                        />
+                      ))}
+                  </div>
+                  {transcriptModalTranscript.journalMentorReflectionsStatus === "pending" && (
+                    <p className="text-sm text-center font-serif text-violet-600/90 dark:text-violet-300/85 max-w-sm">
+                      {getUiTranslations(language).journalMentorResponding}
                     </p>
-                  ));
-                })()}
+                  )}
+                  {transcriptModalTranscript.journalMentorReflectionsStatus === "ready" &&
+                    transcriptModalTranscript.journalMentorReflections &&
+                    transcriptModalTranscript.journalMentorReflections.length > 0 && (
+                      <div className="flex flex-col gap-1 items-center">
+                        <p className="text-sm text-center font-serif text-violet-600/90 dark:text-violet-300/85 max-w-sm px-1">
+                          {getUiTranslations(language).journalMentorModalReadyCaption.replace(
+                            /\{\{count\}\}/g,
+                            String(transcriptModalTranscript.journalMentorReflections.length)
+                          )}
+                        </p>
+                        <p className="text-xs text-center text-neutral-500 dark:text-neutral-500 max-w-sm px-1">
+                          {getUiTranslations(language).journalMentorTapHint}
+                        </p>
+                      </div>
+                    )}
+                  {transcriptModalTranscript.journalMentorReflectionsStatus === "failed" && (
+                    <p className="text-sm text-center font-serif text-amber-800 dark:text-amber-400/90 max-w-sm">
+                      {getUiTranslations(language).journalMentorFailed}
+                    </p>
+                  )}
+                  {transcriptModalTranscript.journalMentorReflectionsStatus === "ready" &&
+                    journalMentorBubbleOpenId &&
+                    transcriptModalTranscript.journalMentorReflections &&
+                    (() => {
+                      const open = transcriptModalTranscript.journalMentorReflections.find(
+                        (x) => x.figureId === journalMentorBubbleOpenId
+                      );
+                      if (!open) return null;
+                      return (
+                        <div
+                          className="w-full max-w-lg mx-auto mt-2 rounded-2xl border border-violet-200/80 dark:border-neutral-700 bg-white/95 dark:bg-neutral-950 px-4 py-3 shadow-md dark:shadow-black/40 text-left relative"
+                          role="region"
+                          aria-label={`Reflection from ${open.figureName}`}
+                        >
+                          <div
+                            className="absolute -top-2 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-l border-t border-violet-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-950"
+                            aria-hidden
+                          />
+                          <p className="text-sm font-semibold text-foreground pr-6">{open.figureName}</p>
+                          <p className="text-sm text-neutral-600 dark:text-neutral-300 mt-2 whitespace-pre-wrap leading-relaxed">
+                            {open.reflection}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => setJournalMentorBubbleOpenId(null)}
+                            className="absolute top-2 right-2 p-1 rounded-lg text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 text-lg leading-none"
+                            aria-label={getUiTranslations(language).close}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      );
+                    })()}
+                </div>
               </div>
+              ) : (
+              <div className="px-4 py-4 border-t border-neutral-200 dark:border-neutral-700 shrink-0 bg-neutral-50/50 dark:bg-neutral-900/40">
+                <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center max-w-md mx-auto leading-relaxed">
+                  {getUiTranslations(language).journalMentorGenerateBlurb}
+                </p>
+                <div className="flex justify-center mt-4">
+                  <button
+                    type="button"
+                    disabled={mentorReflectionsRegenerateLoading}
+                    onClick={() => {
+                      setMentorReflectionsRegenerateLoading(true);
+                      fetch(`/api/me/transcripts/${transcriptModalTranscript.id}/mentor-reflections`, {
+                        method: "POST",
+                      })
+                        .then((r) => {
+                          if (r.ok) {
+                            setTranscriptModalTranscript((prev) =>
+                              prev && prev.id === transcriptModalTranscript.id
+                                ? { ...prev, journalMentorReflectionsStatus: "pending" }
+                                : prev
+                            );
+                            refetchTranscripts();
+                          }
+                        })
+                        .finally(() => setMentorReflectionsRegenerateLoading(false));
+                    }}
+                    className="px-4 py-2 text-sm font-medium rounded-xl border border-violet-300/60 dark:border-violet-500/50 bg-violet-500/10 dark:bg-violet-500/15 text-violet-800 dark:text-violet-200 hover:bg-violet-500/20 dark:hover:bg-violet-500/25 disabled:opacity-50 transition-colors"
+                  >
+                    {mentorReflectionsRegenerateLoading
+                      ? getUiTranslations(language).journalMentorRegenerateBusy
+                      : getUiTranslations(language).journalMentorGenerate}
+                  </button>
+                </div>
+              </div>
+              ))}
             </div>
-            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
+            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end shrink-0">
               <button
                 type="button"
                 title="Run AI concept extraction again on this saved text"
@@ -8260,6 +8456,7 @@ export default function ChatPage() {
                   setTranscriptModalTranscript(null);
                   setTranscriptExtractedConceptOpen(null);
                   setTranscriptExtractedConceptsSectionOpen(true);
+                  setMentorReflectionsRegenerateLoading(false);
                 }}
                 className="px-4 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
@@ -8270,7 +8467,12 @@ export default function ChatPage() {
                 onClick={() => {
                   fetch(`/api/me/transcripts/${transcriptModalTranscript.id}`, { method: "DELETE" })
                     .then(() => refetchTranscripts())
-                    .then(() => { setTranscriptModalTranscript(null); setTranscriptExtractedConceptOpen(null); setTranscriptExtractedConceptsSectionOpen(true); });
+                    .then(() => {
+                      setTranscriptModalTranscript(null);
+                      setTranscriptExtractedConceptOpen(null);
+                      setTranscriptExtractedConceptsSectionOpen(true);
+                      setMentorReflectionsRegenerateLoading(false);
+                    });
                 }}
                 className="px-4 py-2 rounded-xl text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition-colors"
               >
@@ -8369,7 +8571,7 @@ export default function ChatPage() {
       {summarizeModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
-          onClick={() => { setSummarizeModal(null); setTtsHighlight(null); }}
+          onClick={() => { setSummarizeModal(null); }}
           aria-modal
           role="dialog"
         >
@@ -8498,7 +8700,7 @@ export default function ChatPage() {
       {ltmDetailModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
-          onClick={() => { setLtmDetailModal(null); setTtsHighlight(null); }}
+          onClick={() => { setLtmDetailModal(null); }}
           aria-modal
           role="dialog"
         >
@@ -11142,7 +11344,6 @@ export default function ChatPage() {
             setCcDetailModal(null);
             setCcAutoTagSuggestions(null);
             setCcTranslatePopoverOpen(false);
-            setTtsHighlight(null);
           }}
           aria-modal
           role="dialog"
@@ -13333,7 +13534,7 @@ export default function ChatPage() {
       {drawnPerspectiveCard && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => { setDrawnPerspectiveCard(null); setTtsHighlight(null); }}
+          onClick={() => { setDrawnPerspectiveCard(null); }}
           role="dialog"
           aria-modal="true"
           aria-labelledby="perspective-card-title"
@@ -13352,7 +13553,7 @@ export default function ChatPage() {
                 </p>
               </div>
               <button
-                onClick={() => { setDrawnPerspectiveCard(null); setTtsHighlight(null); }}
+                onClick={() => { setDrawnPerspectiveCard(null); }}
                 className="p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                 aria-label={getUiTranslations(language).close}
               >
@@ -13472,6 +13673,5 @@ export default function ChatPage() {
         </div>
       )}
     </div>
-    </TtsHighlightContext.Provider>
   );
 }

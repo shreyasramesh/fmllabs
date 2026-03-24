@@ -208,8 +208,20 @@ export interface SavedTranscript {
   journalEntryYear?: number;
   transcriptText: string;
   extractedConcepts?: ExtractedConceptGroup[];
+  /** AI mentor reflections for journal entries only */
+  journalMentorReflections?: JournalMentorReflectionItem[];
+  journalMentorReflectionsStatus?: JournalMentorReflectionsStatus;
+  journalMentorReflectionsUpdatedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export type JournalMentorReflectionsStatus = "pending" | "ready" | "failed";
+
+export interface JournalMentorReflectionItem {
+  figureId: string;
+  figureName: string;
+  reflection: string;
 }
 
 interface SavedTranscriptDoc extends Omit<SavedTranscript, "_id"> {
@@ -1625,6 +1637,40 @@ export async function updateTranscriptExtractedConcepts(
       { _id: oid, userId },
       { $set: { ...enc, updatedAt: new Date() } }
     );
+  return result.modifiedCount > 0;
+}
+
+export async function updateJournalMentorReflections(
+  id: string,
+  userId: string,
+  payload: {
+    status: JournalMentorReflectionsStatus;
+    reflections?: JournalMentorReflectionItem[];
+  }
+): Promise<boolean> {
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return false;
+  }
+  const now = new Date();
+  const $set: Record<string, unknown> = {
+    journalMentorReflectionsStatus: payload.status,
+    journalMentorReflectionsUpdatedAt: now,
+    updatedAt: now,
+  };
+  if (payload.status === "ready" && payload.reflections !== undefined) {
+    $set.journalMentorReflections = payload.reflections;
+  }
+  if (payload.status === "failed") {
+    $set.journalMentorReflections = [];
+  }
+  const result = await database.collection<SavedTranscriptDoc>("transcripts").updateOne(
+    { _id: oid, userId, sourceType: "journal" },
+    { $set }
+  );
   return result.modifiedCount > 0;
 }
 
