@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import {
   getSession,
   getMessages,
@@ -39,6 +39,10 @@ import {
   type UserTypeId,
 } from "@/lib/user-types";
 import { recordUsageEvent, computeGeminiCost, recordMongoUsageRequest } from "@/lib/usage";
+import {
+  buildUserPreferredNamePromptSuffix,
+  resolveUserDisplayNameForPrompt,
+} from "@/lib/user-display-name";
 
 const SYSTEM_PROMPT_CORE = `You are a deeply empathetic confidant, anxiety-relief guide, and wise friend. Your **primary** job is to help the user feel seen, understood, and less alone. Bring in **grounded facts** when they would genuinely steady, clarify, or comfort—not as a substitute for warmth.
 
@@ -636,14 +640,27 @@ export async function POST(request: Request) {
     );
   }
 
-  if (userId && !incognito && !mentorOneOnOne && !(secondOrderMode && secondOrderPlainMode)) {
+  if (userId && !incognito) {
     userSettings = await getUserSettings(userId);
-    if (userSettings?.followedFigureIds?.length) {
+    if (
+      userSettings?.followedFigureIds?.length &&
+      !mentorOneOnOne &&
+      !(secondOrderMode && secondOrderPlainMode)
+    ) {
       const figures = getFiguresByIds(userSettings.followedFigureIds);
       const names = figures.map((f) => f.name).join(", ");
       followedFiguresNudgeBlock = `\n\nFOLLOWED FAMOUS FIGURES (sparing use):\nThe user follows these figures: ${names}. Their perspectives are valuable **when** they clearly fit—but **do not** reference a famous figure every response. **Default:** answer without invoking a figure; use them only when a reflective moment, decision point, or crossroads genuinely calls for that lens. At most one figure per reply, only when additive. Weave naturally—never force "What would X say?" as a habit.\n`;
     }
   }
+
+  const clerkUser = userId ? await currentUser() : null;
+  const userNamePromptSuffix = buildUserPreferredNamePromptSuffix(
+    resolveUserDisplayNameForPrompt({
+      preferredName: !incognito ? userSettings?.preferredName : undefined,
+      clerkFirstName: clerkUser?.firstName ?? null,
+      clerkFullName: clerkUser?.fullName ?? null,
+    })
+  );
 
   // Multi-mentor branch: get responses from 2–5 followed figures, then consolidate into one response
   if (
@@ -670,7 +687,7 @@ export async function POST(request: Request) {
       const mentorResponses: MentorResponse[] = [];
 
       for (const figure of figures) {
-        const personaPrompt = `You are **${figure.name}** (${figure.description}). Respond to the user's question or situation in your voice, worldview, and perspective. Be concise (2–4 short paragraphs). Offer insight, a question, or a reframe—as this figure would. Do not use markdown formatting for citations or options.${langInstr}`;
+        const personaPrompt = `You are **${figure.name}** (${figure.description}). Respond to the user's question or situation in your voice, worldview, and perspective. Be concise (2–4 short paragraphs). Offer insight, a question, or a reframe—as this figure would. Do not use markdown formatting for citations or options.${userNamePromptSuffix}${langInstr}`;
 
         const messagesForMentor: { role: "user" | "assistant"; content: string }[] = [
           { role: "user", content: message },
@@ -718,7 +735,7 @@ Do not use markdown formatting for citations. At the end, provide exactly 4 foll
 [First-person option 2]
 [First-person option 3]
 [First-person option 4]
-${langInstr}`;
+${userNamePromptSuffix}${langInstr}`;
 
       const fullResponse = (
         await generateContent(
@@ -806,6 +823,7 @@ ${langInstr}`;
       figurePersonaBlock +
       (cardInPrepend ? "" : "\n\nPERSPECTIVE CARD PROMPT:\n" + activeCardPrompt!) +
       langInstr +
+      userNamePromptSuffix +
       followedFiguresNudgeBlock;
     predictedContextResult = {
       mentalModels: [],
@@ -841,7 +859,8 @@ ${langInstr}`;
         optionsStyleInstructionSo
       ) +
       languageInstructionSo +
-      conversationStyleInstructionSo;
+      conversationStyleInstructionSo +
+      userNamePromptSuffix;
     mmIdToName = new Map();
     ltmIdToTitle = new Map();
     ccIdToTitle = new Map();
@@ -870,7 +889,8 @@ ${langInstr}`;
     fullSystemPrompt =
       buildMentorOneOnOneSystemPrompt(mentorOneOnOne) +
       languageInstructionMentor +
-      conversationStyleInstructionMentor;
+      conversationStyleInstructionMentor +
+      userNamePromptSuffix;
     mmIdToName = new Map();
     ltmIdToTitle = new Map();
     ccIdToTitle = new Map();
@@ -1157,7 +1177,8 @@ ${langInstr}`;
       .replace("[Insert Followed Figures Nudge Here]", followedFiguresNudgeBlock)
       .replace("[Options Style Instruction]", optionsStyleInstruction) +
     languageInstruction +
-    conversationStyleInstruction;
+    conversationStyleInstruction +
+    userNamePromptSuffix;
 
   ltmIdToTitle = new Map(
     ltmEnrichmentWithIds.map((e) => [

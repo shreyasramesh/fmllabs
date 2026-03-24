@@ -3636,6 +3636,7 @@ export default function ChatPage() {
   const [figuresCategoryFilter, setFiguresCategoryFilter] = useState<string>("all");
   const [followedFigureIds, setFollowedFigureIds] = useState<string[]>([]);
   const [leaderboardOptIn, setLeaderboardOptIn] = useState(false);
+  const [preferredNameInput, setPreferredNameInput] = useState("");
   const [habits, setHabits] = useState<HabitItem[]>([]);
   const [habitListFilterMonth, setHabitListFilterMonth] = useState<number | null>(null);
   const [habitListFilterYear, setHabitListFilterYear] = useState<number | null>(null);
@@ -3892,6 +3893,11 @@ export default function ChatPage() {
       .then((data) => {
         if (data?.leaderboardOptIn === true) setLeaderboardOptIn(true);
         else setLeaderboardOptIn(false);
+        if (typeof data?.preferredName === "string") {
+          setPreferredNameInput(data.preferredName);
+        } else {
+          setPreferredNameInput("");
+        }
       })
       .catch(() => {});
   }, [settingsOpen, userId]);
@@ -9153,6 +9159,47 @@ export default function ChatPage() {
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">Language and tone for your conversations.</p>
                   <div className="space-y-4">
                     <SettingsLanguageSelector />
+                    {!isAnonymous && user && (
+                      <div>
+                        <label
+                          htmlFor="settings-preferred-name"
+                          className="block text-sm font-medium text-foreground mb-2"
+                        >
+                          Preferred name
+                        </label>
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
+                          The assistant uses this when talking with you so replies feel more natural. Leave blank to use your account name
+                          {user.firstName?.trim()
+                            ? ` (${user.firstName.trim()})`
+                            : user.fullName?.trim()
+                              ? ` (${user.fullName.trim().split(/\s+/)[0]})`
+                              : ""}
+                          .
+                        </p>
+                        <input
+                          id="settings-preferred-name"
+                          type="text"
+                          autoComplete="name"
+                          maxLength={80}
+                          value={preferredNameInput}
+                          onChange={(e) => setPreferredNameInput(e.target.value.slice(0, 80))}
+                          onBlur={() => {
+                            if (!userId) return;
+                            fetch("/api/me/settings", {
+                              method: "PATCH",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ preferredName: preferredNameInput.trim() }),
+                            }).catch(() => {});
+                          }}
+                          placeholder={
+                            user.firstName?.trim() ||
+                            user.fullName?.trim()?.split(/\s+/)[0] ||
+                            "Your name"
+                          }
+                          className="w-full rounded-xl border border-neutral-200/80 dark:border-white/12 bg-background px-3 py-2 text-sm text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                        />
+                      </div>
+                    )}
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Voice style</label>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">

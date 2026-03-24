@@ -281,6 +281,8 @@ export interface UserSettings {
   weatherFormat?: "condition-temp" | "emoji-temp" | "temp-only";
   /** When true, user appears on the global XP leaderboard */
   leaderboardOptIn?: boolean;
+  /** How the assistant should address the user; falls back to Clerk name when unset */
+  preferredName?: string;
   updatedAt: Date;
 }
 
@@ -1743,13 +1745,14 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     weatherFormat: doc.weatherFormat,
     followedFigureIds: doc.followedFigureIds,
     leaderboardOptIn: doc.leaderboardOptIn,
+    preferredName: doc.preferredName,
     updatedAt: doc.updatedAt,
   });
 }
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat" | "followedFigureIds" | "leaderboardOptIn">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat" | "followedFigureIds" | "leaderboardOptIn" | "preferredName">>
 ): Promise<UserSettings> {
   const database = await getDb();
   const now = new Date();
@@ -1775,6 +1778,7 @@ export async function upsertUserSettings(
     weatherFormat: result.weatherFormat,
     followedFigureIds: result.followedFigureIds,
     leaderboardOptIn: result.leaderboardOptIn,
+    preferredName: result.preferredName,
     updatedAt: result.updatedAt,
   });
 }

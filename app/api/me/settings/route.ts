@@ -8,6 +8,7 @@ const TTS_MIN = 0.5;
 const TTS_MAX = 2;
 const BACKGROUND_ELEMENTS = ["default", "air", "water", "earth", "fire"] as const;
 const WEATHER_FORMATS = ["condition-temp", "emoji-temp", "temp-only"] as const;
+const PREFERRED_NAME_MAX = 80;
 
 function clampTtsSpeed(v: number): number {
   return Math.max(TTS_MIN, Math.min(TTS_MAX, v));
@@ -91,6 +92,12 @@ export async function PATCH(request: Request) {
     }
     if (body.leaderboardOptIn !== undefined) {
       updates.leaderboardOptIn = Boolean(body.leaderboardOptIn);
+    }
+    if (body.preferredName !== undefined) {
+      if (typeof body.preferredName === "string") {
+        const t = body.preferredName.trim();
+        updates.preferredName = t.length > 0 ? t.slice(0, PREFERRED_NAME_MAX) : "";
+      }
     }
 
     if (Object.keys(updates).length === 0) {

@@ -432,6 +432,7 @@ export function encryptUserSettingsFields<T>(doc: object): T {
     const cv = encClonedVoices(o.clonedVoices as ClonedVoiceSettingFields[]);
     if (cv !== undefined) o.clonedVoices = cv;
   }
+  if (typeof o.preferredName === "string") o.preferredName = enc(o.preferredName);
   return o as T;
 }
 
@@ -443,6 +444,7 @@ export function decryptUserSettingsFields<T>(doc: object): T {
     const cv = decClonedVoices(o.clonedVoices as ClonedVoiceSettingFields[]);
     if (cv !== undefined) o.clonedVoices = cv;
   }
+  if (typeof o.preferredName === "string") o.preferredName = dec(o.preferredName);
   return o as T;
 }
 
