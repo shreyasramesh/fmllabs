@@ -4681,7 +4681,7 @@ export default function ChatPage() {
         </div>
         {/* Right: main header (always) — hamburger here only below lg (desktop uses left strip above) */}
         <div className="flex-1 min-w-0 flex items-center justify-between gap-1 sm:gap-4 px-3 sm:px-4">
-          <div className="flex items-center gap-1 sm:gap-4 min-w-0 overflow-hidden">
+          <div className="flex flex-1 min-w-0 items-center gap-1 sm:gap-4">
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}
@@ -4697,6 +4697,7 @@ export default function ChatPage() {
                 <path d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
+            <div className="flex min-w-0 flex-1 items-center overflow-hidden">
             {libraryInlineTitle != null && libraryInlineTitle !== "" ? (
               <div className="flex items-center gap-2 min-w-0 flex-1">
                 <h1 className="font-semibold text-base sm:text-lg truncate min-w-0 flex-1 text-foreground">
@@ -4770,6 +4771,7 @@ export default function ChatPage() {
                 {currentSession?.title || (currentSessionId ? getLandingTranslations(language).conversation : getLandingTranslations(language).newConversation)}
               </h1>
             )}
+            </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3 shrink-0 overflow-visible">
             {/* Streak, words, XP — same as home dashboard; XP opens rank modal */}
