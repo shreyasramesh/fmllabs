@@ -55,8 +55,11 @@ import Image from "next/image";
 import { DefaultIcon } from "@/components/ElementIcons";
 import { Clock } from "@/components/Clock";
 import { RankPill } from "@/components/RankPill";
+import { HeaderStatsPill } from "@/components/HeaderStatsPill";
 import { RankModal } from "@/components/RankModal";
+import { StatsOverviewModal } from "@/components/StatsOverviewModal";
 import type { UserScore } from "@/lib/score-types";
+import type { DashboardStats } from "@/lib/dashboard-stats";
 import { FeedbackModal } from "@/components/FeedbackModal";
 import { FeatureTour, type FeatureTourStep } from "@/components/FeatureTour";
 import { SettingsLanguageSelector } from "@/components/SettingsLanguageSelector";
@@ -2637,19 +2640,23 @@ export default function ChatPage() {
 
   const refetchScore = useCallback(() => {
     if (isAnonymous || incognitoMode) return;
-    fetch("/api/me/score", { cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (!data) return;
-        setUserScore(data);
-        setScoreOptimisticDelta(0);
-        setPreviousRankIndex((prev) => {
-          if (data.rankIndex > prev && prev >= 0) {
-            setShowRankUpAnimation(true);
-            setTimeout(() => setShowRankUpAnimation(false), 2500);
-          }
-          return data.rankIndex;
-        });
+    Promise.all([
+      fetch("/api/me/score", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/me/dashboard-stats", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)),
+    ])
+      .then(([data, dash]) => {
+        if (data) {
+          setUserScore(data);
+          setScoreOptimisticDelta(0);
+          setPreviousRankIndex((prev) => {
+            if (data.rankIndex > prev && prev >= 0) {
+              setShowRankUpAnimation(true);
+              setTimeout(() => setShowRankUpAnimation(false), 2500);
+            }
+            return data.rankIndex;
+          });
+        }
+        if (dash) setDashboardStats(dash);
       })
       .catch(() => {});
   }, [isAnonymous, incognitoMode]);
@@ -3687,7 +3694,9 @@ export default function ChatPage() {
   const [habitCreateGenerating, setHabitCreateGenerating] = useState(false);
   const [habitCreateSaving, setHabitCreateSaving] = useState(false);
   const [userScore, setUserScore] = useState<UserScore | null>(null);
+  const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
   const [rankModalOpen, setRankModalOpen] = useState(false);
+  const [statsOverviewModalOpen, setStatsOverviewModalOpen] = useState(false);
   const [scoreOptimisticDelta, setScoreOptimisticDelta] = useState(0);
   const [previousRankIndex, setPreviousRankIndex] = useState(-1);
   const [showRankUpAnimation, setShowRankUpAnimation] = useState(false);
@@ -3823,7 +3832,7 @@ export default function ChatPage() {
   );
 
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !mentorOneOnOneModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !rankModalOpen) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !mentorOneOnOneModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (journalCheckpointModal) setJournalCheckpointModal(null);
@@ -3852,13 +3861,14 @@ export default function ChatPage() {
           setHabitPromoteStep("generate");
           setHabitPromoteDraft(null);
           setHabitPromoteBucket(null);
-        } else if (rankModalOpen) setRankModalOpen(false);
+        } else if (statsOverviewModalOpen) setStatsOverviewModalOpen(false);
+        else if (rankModalOpen) setRankModalOpen(false);
         else if (libraryPanelOpen) setLibraryPanelOpen(null);
       }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, mentorOneOnOneModalOpen, newConversationChooserModalOpen, journalCheckpointModal, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, rankModalOpen]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, mentorOneOnOneModalOpen, newConversationChooserModalOpen, journalCheckpointModal, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen]);
 
   // Reset journal checkpoint modal state when modal opens
   useEffect(() => {
@@ -3989,6 +3999,8 @@ export default function ChatPage() {
       refetchScore();
     } else {
       setUserScore(null);
+      setDashboardStats(null);
+      setStatsOverviewModalOpen(false);
     }
   }, [userId, incognitoMode, isAnonymous, refetchScore]);
 
@@ -4760,15 +4772,26 @@ export default function ChatPage() {
             )}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 shrink-0 overflow-visible">
-            {/* XP and weather hidden on mobile - available in Settings */}
+            {/* Streak, words, XP — same as home dashboard; XP opens rank modal */}
             {!incognitoMode && !isAnonymous && userScore && (
-              <div className="hidden md:flex shrink-0">
-              <RankPill
-                score={userScore}
-                optimisticDelta={scoreOptimisticDelta}
-                onClick={() => setRankModalOpen(true)}
-                showRankUpAnimation={showRankUpAnimation}
-              />
+              <div className="flex shrink-0 min-w-0">
+                {dashboardStats ? (
+                  <HeaderStatsPill
+                    stats={dashboardStats}
+                    score={userScore}
+                    optimisticDelta={scoreOptimisticDelta}
+                    onPillClick={() => setStatsOverviewModalOpen(true)}
+                    showRankUpAnimation={showRankUpAnimation}
+                    compact
+                  />
+                ) : (
+                  <RankPill
+                    score={userScore}
+                    optimisticDelta={scoreOptimisticDelta}
+                    onClick={() => setRankModalOpen(true)}
+                    showRankUpAnimation={showRankUpAnimation}
+                  />
+                )}
               </div>
             )}
             <div className="hidden md:flex shrink-0">
@@ -9257,7 +9280,7 @@ export default function ChatPage() {
                   </div>
                 </section>
 
-                {/* XP & weather: shown in settings on mobile (hidden from header there) */}
+                {/* XP detail & weather format: extra controls on small screens (header has quick stats; clock is md+) */}
                 {!isAnonymous && userScore && (
                 <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8 md:hidden">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">XP & Progress</h3>
@@ -12836,6 +12859,19 @@ export default function ChatPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {statsOverviewModalOpen && dashboardStats && userScore && (
+        <StatsOverviewModal
+          stats={dashboardStats}
+          score={userScore}
+          optimisticDelta={scoreOptimisticDelta}
+          onClose={() => setStatsOverviewModalOpen(false)}
+          onViewRankDetails={() => {
+            setStatsOverviewModalOpen(false);
+            setRankModalOpen(true);
+          }}
+        />
       )}
 
       {rankModalOpen && userScore && (

@@ -1,4 +1,6 @@
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { DashboardHome } from "@/components/DashboardHome";
 import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
 
 export const metadata = {
@@ -6,7 +8,10 @@ export const metadata = {
   description: PRODUCT_TAGLINE,
 };
 
-export default function HomePage() {
-  redirect("/chat/new");
-  return null;
+export default async function HomePage() {
+  const { userId } = await auth();
+  if (!userId) {
+    redirect("/chat/new");
+  }
+  return <DashboardHome />;
 }
