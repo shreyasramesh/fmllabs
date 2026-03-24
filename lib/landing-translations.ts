@@ -48,7 +48,8 @@ export interface LandingTranslations {
   journalEntryButtonSubtitle: string;
   journalEntryModalTitle: string;
   journalEntryModalSubtitle: string;
-  journalEntryTitlePlaceholder: string;
+  /** Optional calendar date for the entry (defaults to today on save). */
+  journalEntryDateHint: string;
   journalEntryBodyPlaceholder: string;
   journalEntrySave: string;
   journalEntryCancel: string;
@@ -97,8 +98,8 @@ const EN: LandingTranslations = {
   journalEntryButtonSubtitle: "Write freely; saved to your library—not sent as chat.",
   journalEntryModalTitle: "Add a Journal Entry",
   journalEntryModalSubtitle:
-    "Write freely. This is saved to your library—not sent as a chat message. You can extract concepts from it later if you want.",
-  journalEntryTitlePlaceholder: "Title (optional)",
+    "Write freely. This is saved to your library—not sent as a chat message. A short title is generated from what you write. You can extract concepts from it later if you want.",
+  journalEntryDateHint: "Entry date (optional — defaults to today)",
   journalEntryBodyPlaceholder: "Write whatever you feel…",
   journalEntrySave: "Save",
   journalEntryCancel: "Cancel",

@@ -1732,10 +1732,36 @@ function MovingPills({
   );
 }
 
-function formatJournalListDate(iso: string | undefined): string {
-  if (!iso) return "—";
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? "—" : d.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+type JournalEntryDateFields = {
+  journalEntryDay?: number;
+  journalEntryMonth?: number;
+  journalEntryYear?: number;
+  createdAt?: string;
+};
+
+function formatJournalEntryListDate(t: JournalEntryDateFields): string {
+  if (
+    typeof t.journalEntryYear === "number" &&
+    typeof t.journalEntryMonth === "number" &&
+    typeof t.journalEntryDay === "number"
+  ) {
+    const d = new Date(t.journalEntryYear, t.journalEntryMonth - 1, t.journalEntryDay);
+    return Number.isNaN(d.getTime()) ? "—" : d.toLocaleDateString(undefined, { dateStyle: "medium" });
+  }
+  if (t.createdAt) {
+    const d = new Date(t.createdAt);
+    return Number.isNaN(d.getTime()) ? "—" : d.toLocaleDateString(undefined, { dateStyle: "medium" });
+  }
+  return "—";
+}
+
+const JOURNAL_LIST_PREVIEW_MAX = 160;
+
+function truncateJournalListPreview(text: string | undefined, max = JOURNAL_LIST_PREVIEW_MAX): string {
+  if (!text?.trim()) return "";
+  const normalized = text.replace(/\s+/g, " ").trim();
+  if (normalized.length <= max) return normalized;
+  return `${normalized.slice(0, max - 3).trimEnd()}...`;
 }
 
 export default function ChatPage() {
@@ -1845,6 +1871,10 @@ export default function ChatPage() {
     videoTitle?: string;
     channel?: string;
     sourceType?: "youtube" | "journal";
+    journalEntryDay?: number;
+    journalEntryMonth?: number;
+    journalEntryYear?: number;
+    transcriptText?: string;
     createdAt?: string;
     updatedAt?: string;
     extractedConcepts?: {
@@ -1869,6 +1899,9 @@ export default function ChatPage() {
     videoTitle?: string;
     channel?: string;
     sourceType?: "youtube" | "journal";
+    journalEntryDay?: number;
+    journalEntryMonth?: number;
+    journalEntryYear?: number;
     transcriptText: string;
     createdAt?: string;
     extractedConcepts?: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
@@ -2407,15 +2440,76 @@ export default function ChatPage() {
   const [journalEntryJustSaved, setJournalEntryJustSaved] = useState(false);
 
   const journalEntriesSorted = useMemo(() => {
+    const sortKey = (t: (typeof savedTranscripts)[number]) => {
+      if (
+        typeof t.journalEntryYear === "number" &&
+        typeof t.journalEntryMonth === "number" &&
+        typeof t.journalEntryDay === "number"
+      ) {
+        return new Date(t.journalEntryYear, t.journalEntryMonth - 1, t.journalEntryDay).getTime();
+      }
+      return t.createdAt ? new Date(t.createdAt).getTime() : 0;
+    };
     return savedTranscripts
       .filter((t) => t.sourceType === "journal")
       .slice()
-      .sort((a, b) => {
-        const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-        const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        return tb - ta;
-      });
+      .sort((a, b) => sortKey(a) - sortKey(b));
   }, [savedTranscripts]);
+
+  /** Month/year sections, ascending (oldest month first); entries within each month ascending by day. */
+  const journalEntriesGroupedByMonthYear = useMemo(() => {
+    type T = (typeof savedTranscripts)[number];
+    const getMonthBucket = (t: T) => {
+      if (
+        typeof t.journalEntryYear === "number" &&
+        typeof t.journalEntryMonth === "number"
+      ) {
+        const y = t.journalEntryYear;
+        const m = t.journalEntryMonth;
+        return {
+          key: `${y}-${String(m).padStart(2, "0")}`,
+          monthStart: new Date(y, m - 1, 1).getTime(),
+          label: new Intl.DateTimeFormat(language, { month: "long", year: "numeric" }).format(
+            new Date(y, m - 1, 1)
+          ),
+        };
+      }
+      if (t.createdAt) {
+        const d = new Date(t.createdAt);
+        if (!Number.isNaN(d.getTime())) {
+          const y = d.getFullYear();
+          const m = d.getMonth() + 1;
+          return {
+            key: `${y}-${String(m).padStart(2, "0")}`,
+            monthStart: new Date(y, m - 1, 1).getTime(),
+            label: new Intl.DateTimeFormat(language, { month: "long", year: "numeric" }).format(
+              new Date(y, m - 1, 1)
+            ),
+          };
+        }
+      }
+      return {
+        key: "unknown",
+        monthStart: 0,
+        label: "—",
+      };
+    };
+
+    const map = new Map<
+      string,
+      { label: string; monthStart: number; items: T[] }
+    >();
+    for (const t of journalEntriesSorted) {
+      const { key, monthStart, label } = getMonthBucket(t);
+      let g = map.get(key);
+      if (!g) {
+        g = { label, monthStart, items: [] };
+        map.set(key, g);
+      }
+      g.items.push(t);
+    }
+    return [...map.values()].sort((a, b) => a.monthStart - b.monthStart);
+  }, [journalEntriesSorted, language]);
 
   const openJournalEntryFlow = useCallback(() => {
     playSelectionChime();
@@ -3497,6 +3591,9 @@ export default function ChatPage() {
   const [followedFigureIds, setFollowedFigureIds] = useState<string[]>([]);
   const [leaderboardOptIn, setLeaderboardOptIn] = useState(false);
   const [habits, setHabits] = useState<HabitItem[]>([]);
+  const [habitListFilterMonth, setHabitListFilterMonth] = useState<number | null>(null);
+  const [habitListFilterYear, setHabitListFilterYear] = useState<number | null>(null);
+  const habitListFilterYearOptions = useMemo(() => getHabitIntendedYearOptions(), []);
   const [habitPromoteModal, setHabitPromoteModal] = useState<{
     sourceType: "concept" | "ltm";
     source: CustomConceptItem | LongTermMemoryItem;
@@ -3865,14 +3962,26 @@ export default function ChatPage() {
     }
   }, [habitDetailModal]);
 
+  const habitsFiltered = useMemo(() => {
+    if (habitListFilterMonth === null && habitListFilterYear === null) return habits;
+    return habits.filter((h) => {
+      const iy = h.intendedYear;
+      const im = h.intendedMonth;
+      if (typeof iy !== "number" || typeof im !== "number") return false;
+      if (habitListFilterYear !== null && iy !== habitListFilterYear) return false;
+      if (habitListFilterMonth !== null && im !== habitListFilterMonth) return false;
+      return true;
+    });
+  }, [habits, habitListFilterMonth, habitListFilterYear]);
+
   const habitsGrouped = useMemo(() => {
     const grouped = HABIT_BUCKET_IDS.map((bucket) => ({
       bucket,
-      items: habits.filter((h) => h.bucket === bucket),
+      items: habitsFiltered.filter((h) => h.bucket === bucket),
     }));
-    const other = habits.filter((h) => !h.bucket);
+    const other = habitsFiltered.filter((h) => !h.bucket);
     return { grouped, other };
-  }, [habits]);
+  }, [habitsFiltered]);
 
   useEffect(() => {
     if (!ltmDetailModal) {
@@ -6324,6 +6433,9 @@ export default function ChatPage() {
                                     channel?: string;
                                     sourceType?: "youtube" | "journal";
                                     transcriptText?: string;
+                                    journalEntryDay?: number;
+                                    journalEntryMonth?: number;
+                                    journalEntryYear?: number;
                                     extractedConcepts?: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
                                     createdAt?: string | Date;
                                   }) =>
@@ -6334,6 +6446,9 @@ export default function ChatPage() {
                                       channel: data.channel ?? t.channel,
                                       sourceType: data.sourceType ?? t.sourceType,
                                       transcriptText: data.transcriptText ?? "",
+                                      journalEntryDay: data.journalEntryDay ?? t.journalEntryDay,
+                                      journalEntryMonth: data.journalEntryMonth ?? t.journalEntryMonth,
+                                      journalEntryYear: data.journalEntryYear ?? t.journalEntryYear,
                                       extractedConcepts: data.extractedConcepts,
                                       createdAt:
                                         typeof data.createdAt === "string"
@@ -6363,9 +6478,16 @@ export default function ChatPage() {
                               </a>
                               )}
                               {t.sourceType === "journal" ? (
-                                <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">
-                                  {formatJournalListDate(t.createdAt)}
-                                </p>
+                                <>
+                                  <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">
+                                    {formatJournalEntryListDate(t)}
+                                  </p>
+                                  {truncateJournalListPreview(t.transcriptText) ? (
+                                    <p className="text-[10px] text-neutral-500 dark:text-neutral-500 line-clamp-2 mt-0.5">
+                                      {truncateJournalListPreview(t.transcriptText)}
+                                    </p>
+                                  ) : null}
+                                </>
                               ) : (
                                 t.channel && <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate">{t.channel}</p>
                               )}
@@ -6382,6 +6504,7 @@ export default function ChatPage() {
                                   });
                                 }}
                                 className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
+                                title="Run AI concept extraction again on this saved text"
                               >
                                 Re-extract
                               </button>
@@ -6426,6 +6549,71 @@ export default function ChatPage() {
                     </button>
                   </div>
                   {habits.length > 0 ? (
+                    <>
+                      <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/30 p-3 flex flex-col sm:flex-row sm:items-end gap-3">
+                        <span className="text-xs font-medium text-neutral-700 dark:text-neutral-300 shrink-0">
+                          {getUiTranslations(language).habitListFilterLabel}
+                        </span>
+                        <div className="flex flex-wrap gap-3 min-w-0 flex-1">
+                          <div className="min-w-[9rem] flex-1 sm:flex-initial sm:min-w-[7rem]">
+                            <label className="block text-[10px] text-neutral-500 dark:text-neutral-400 mb-1">
+                              {getUiTranslations(language).habitMonth}
+                            </label>
+                            <select
+                              value={habitListFilterMonth === null ? "" : String(habitListFilterMonth)}
+                              onChange={(e) => {
+                                const v = e.target.value;
+                                setHabitListFilterMonth(v === "" ? null : Number(v));
+                              }}
+                              className="w-full px-2 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-xs"
+                            >
+                              <option value="">{getUiTranslations(language).habitFilterAny}</option>
+                              {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                                <option key={m} value={m}>
+                                  {new Intl.DateTimeFormat(language, { month: "long" }).format(
+                                    new Date(2024, m - 1, 1)
+                                  )}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="min-w-[6rem] w-28">
+                            <label className="block text-[10px] text-neutral-500 dark:text-neutral-400 mb-1">
+                              {getUiTranslations(language).habitYear}
+                            </label>
+                            <select
+                              value={habitListFilterYear === null ? "" : String(habitListFilterYear)}
+                              onChange={(e) => {
+                                const v = e.target.value;
+                                setHabitListFilterYear(v === "" ? null : Number(v));
+                              }}
+                              className="w-full px-2 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-xs"
+                            >
+                              <option value="">{getUiTranslations(language).habitFilterAny}</option>
+                              {habitListFilterYearOptions.map((y) => (
+                                <option key={y} value={y}>
+                                  {y}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      {habitsFiltered.length === 0 ? (
+                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          {getUiTranslations(language).habitListNoMatch}{" "}
+                          <button
+                            type="button"
+                            className="font-medium text-foreground underline underline-offset-2 hover:no-underline"
+                            onClick={() => {
+                              setHabitListFilterMonth(null);
+                              setHabitListFilterYear(null);
+                            }}
+                          >
+                            {getUiTranslations(language).habitListClearFilter}
+                          </button>
+                        </p>
+                      ) : (
                     <div className="space-y-6">
                       {habitsGrouped.grouped.map(({ bucket, items }) =>
                         items.length === 0 ? null : (
@@ -6528,6 +6716,8 @@ export default function ChatPage() {
                         </div>
                       ) : null}
                     </div>
+                      )}
+                    </>
                   ) : (
                     <p className="text-xs text-neutral-500 dark:text-neutral-400">
                       Use <span className="font-medium">Create habit</span> above, or open a concept or memory and choose Promote to Habit.
@@ -6538,7 +6728,7 @@ export default function ChatPage() {
               {libraryPanelOpen === "journal" && (
                 <div className="space-y-4">
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                    Freeform entries saved to your library—not sent as chat. Newest first.
+                    Freeform entries saved to your library—not sent as chat. Grouped by month, oldest first.
                   </p>
                   <div className="flex items-center justify-end gap-2">
                     <button
@@ -6552,8 +6742,13 @@ export default function ChatPage() {
                     </button>
                   </div>
                   {journalEntriesSorted.length > 0 ? (
-                    <div className="space-y-2">
-                      {journalEntriesSorted.map((t) => (
+                    <div className="space-y-5">
+                      {journalEntriesGroupedByMonthYear.map((group) => (
+                        <div key={`${group.monthStart}-${group.label}`} className="space-y-2">
+                          <h3 className="text-xs font-semibold text-neutral-600 dark:text-neutral-300">
+                            {group.label}
+                          </h3>
+                          {group.items.map((t) => (
                         <div
                           key={t._id}
                           className="flex items-center justify-between gap-2 p-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/30"
@@ -6565,7 +6760,21 @@ export default function ChatPage() {
                             onClick={() =>
                               fetch(`/api/me/transcripts/${t._id}`)
                                 .then((r) => (r.ok ? r.json() : Promise.reject()))
-                                .then((data) =>
+                                .then((data: {
+                                  videoId?: string;
+                                  videoTitle?: string;
+                                  channel?: string;
+                                  sourceType?: "youtube" | "journal";
+                                  transcriptText?: string;
+                                  journalEntryDay?: number;
+                                  journalEntryMonth?: number;
+                                  journalEntryYear?: number;
+                                  extractedConcepts?: {
+                                    domain: string;
+                                    concepts: { title: string; summary: string; enrichmentPrompt: string }[];
+                                  }[];
+                                  createdAt?: string | Date;
+                                }) =>
                                   setTranscriptModalTranscript({
                                     id: t._id,
                                     videoId: data.videoId ?? t.videoId,
@@ -6573,6 +6782,9 @@ export default function ChatPage() {
                                     channel: data.channel ?? t.channel,
                                     sourceType: data.sourceType ?? t.sourceType,
                                     transcriptText: data.transcriptText ?? "",
+                                    journalEntryDay: data.journalEntryDay ?? t.journalEntryDay,
+                                    journalEntryMonth: data.journalEntryMonth ?? t.journalEntryMonth,
+                                    journalEntryYear: data.journalEntryYear ?? t.journalEntryYear,
                                     extractedConcepts: data.extractedConcepts,
                                     createdAt:
                                       typeof data.createdAt === "string"
@@ -6589,7 +6801,14 @@ export default function ChatPage() {
                             <span className="text-sm font-medium truncate block text-foreground">
                               {t.videoTitle || "Journal entry"}
                             </span>
-                            <p className="text-[10px] text-neutral-500 dark:text-neutral-400">{formatJournalListDate(t.createdAt)}</p>
+                            <p className="text-[10px] text-neutral-500 dark:text-neutral-400">
+                              {formatJournalEntryListDate(t)}
+                            </p>
+                            {truncateJournalListPreview(t.transcriptText) ? (
+                              <p className="text-[10px] text-neutral-500 dark:text-neutral-500 line-clamp-2 mt-0.5">
+                                {truncateJournalListPreview(t.transcriptText)}
+                              </p>
+                            ) : null}
                           </div>
                           <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
                             <button
@@ -6603,6 +6822,7 @@ export default function ChatPage() {
                                 });
                               }}
                               className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
+                              title="Run AI concept extraction again on this saved text"
                             >
                               Re-extract
                             </button>
@@ -6617,6 +6837,8 @@ export default function ChatPage() {
                               <TrashIcon className="w-3.5 h-3.5" />
                             </button>
                           </div>
+                        </div>
+                          ))}
                         </div>
                       ))}
                     </div>
@@ -7881,7 +8103,7 @@ export default function ChatPage() {
               <h2 className="font-semibold text-lg truncate">{transcriptModalTranscript.videoTitle || "Transcript"}</h2>
               {transcriptModalTranscript.sourceType === "journal" ? (
                 <p className="text-sm text-neutral-500 dark:text-neutral-400 truncate mt-0.5">
-                  {formatJournalListDate(transcriptModalTranscript.createdAt)}
+                  {formatJournalEntryListDate(transcriptModalTranscript)}
                 </p>
               ) : (
                 transcriptModalTranscript.channel && (
@@ -7992,6 +8214,8 @@ export default function ChatPage() {
             </div>
             <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
               <button
+                type="button"
+                title="Run AI concept extraction again on this saved text"
                 onClick={() => {
                   setReExtractError(null);
                   setReExtractConfirm({

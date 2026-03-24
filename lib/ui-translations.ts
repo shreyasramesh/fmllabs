@@ -30,6 +30,11 @@ export interface UiTranslations {
   habitMonth: string;
   habitYear: string;
   habitIntendedNotSet: string;
+  /** Habits list: filter by planned start month/year */
+  habitListFilterLabel: string;
+  habitFilterAny: string;
+  habitListNoMatch: string;
+  habitListClearFilter: string;
   settings: string;
   close: string;
   cancel: string;
@@ -65,6 +70,10 @@ const EN: UiTranslations = {
   habitMonth: "Month",
   habitYear: "Year",
   habitIntendedNotSet: "Not set",
+  habitListFilterLabel: "Filter by planned start",
+  habitFilterAny: "Any",
+  habitListNoMatch: "No habits match this filter.",
+  habitListClearFilter: "Clear filter",
   settings: "Settings",
   close: "Close",
   cancel: "Cancel",

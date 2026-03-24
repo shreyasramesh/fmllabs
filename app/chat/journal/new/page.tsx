@@ -14,7 +14,7 @@ export default function JournalNewPage() {
   const { language } = useLanguage();
   const t = getLandingTranslations(language);
 
-  const [title, setTitle] = useState("");
+  const [entryDate, setEntryDate] = useState("");
   const [text, setText] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +30,7 @@ export default function JournalNewPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           text: body,
-          title: title.trim() || undefined,
+          ...(entryDate.trim() ? { entryDate: entryDate.trim() } : {}),
         }),
       });
       if (!res.ok) {
@@ -43,7 +43,7 @@ export default function JournalNewPage() {
     } finally {
       setSaving(false);
     }
-  }, [text, title, router, t.journalEntrySaveError]);
+  }, [text, entryDate, router, t.journalEntrySaveError]);
 
   return (
     <div className="min-h-[100dvh] flex flex-col bg-background text-foreground">
@@ -85,14 +85,18 @@ export default function JournalNewPage() {
           <>
             <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-4">{t.journalEntryModalSubtitle}</p>
             <div className="flex-1 min-h-0 flex flex-col gap-3">
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder={t.journalEntryTitlePlaceholder}
-                disabled={saving}
-                className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-              />
+              <div>
+                <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                  {t.journalEntryDateHint}
+                </label>
+                <input
+                  type="date"
+                  value={entryDate}
+                  onChange={(e) => setEntryDate(e.target.value)}
+                  disabled={saving}
+                  className="w-full max-w-xs px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                />
+              </div>
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}

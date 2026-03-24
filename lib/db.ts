@@ -202,6 +202,10 @@ export interface SavedTranscript {
   channel?: string;
   /** When omitted, treated as YouTube for backward compatibility. */
   sourceType?: "youtube" | "journal";
+  /** Calendar date the user assigned to the entry (journal only); display and sorting. */
+  journalEntryDay?: number;
+  journalEntryMonth?: number;
+  journalEntryYear?: number;
   transcriptText: string;
   extractedConcepts?: ExtractedConceptGroup[];
   createdAt: Date;
@@ -1559,7 +1563,8 @@ export async function saveTranscript(
 export async function saveJournalTranscript(
   userId: string,
   transcriptText: string,
-  journalTitle?: string
+  journalTitle?: string,
+  journalEntryDate?: { day: number; month: number; year: number }
 ): Promise<SavedTranscript & { _id: string }> {
   const database = await getDb();
   const now = new Date();
@@ -1570,6 +1575,11 @@ export async function saveJournalTranscript(
     videoTitle: journalTitle?.trim() || "Journal entry",
     sourceType: "journal",
     transcriptText,
+    ...(journalEntryDate && {
+      journalEntryDay: journalEntryDate.day,
+      journalEntryMonth: journalEntryDate.month,
+      journalEntryYear: journalEntryDate.year,
+    }),
     createdAt: now,
     updatedAt: now,
   }) as Omit<SavedTranscript, "_id">;
