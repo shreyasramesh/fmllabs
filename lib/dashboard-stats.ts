@@ -17,18 +17,6 @@ export interface DashboardStats {
   journalEntriesCount: number;
 }
 
-/** Placeholder when dashboard stats have not loaded yet. */
-export const EMPTY_DASHBOARD_STATS: DashboardStats = {
-  streakDays: 0,
-  userWordCount: 0,
-  sessionCount: 0,
-  savedConceptsCount: 0,
-  customConceptsCount: 0,
-  conceptGroupsCount: 0,
-  habitsCount: 0,
-  journalEntriesCount: 0,
-};
-
 /** UTC date key YYYY-MM-DD for streak boundaries (consistent server-side). */
 function dateKeyUtc(d: Date): string {
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;

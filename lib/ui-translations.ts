@@ -28,6 +28,10 @@ export interface UiTranslations {
   journalMentorGenerate: string;
   journalMentorGenerateBlurb: string;
   journalMentorListPromptGenerate: string;
+  /** Journal transcript modal: continue from a mentor reflection into 1:1 chat */
+  journalMentorContinueOneOnOne: string;
+  /** Shown in main chat while opening a 1:1 from a journal reflection */
+  journalMentorConversationLoading: string;
   promoteToHabit: string;
   habitLifeArea: string;
   habitBucketCreative: string;
@@ -81,6 +85,8 @@ const EN: UiTranslations = {
   journalMentorGenerateBlurb:
     "Invite a few mentors from our catalog to respond in their own voices to what you wrote.",
   journalMentorListPromptGenerate: "Open to generate mentor reflections",
+  journalMentorContinueOneOnOne: "Continue 1:1 with mentor",
+  journalMentorConversationLoading: "Loading conversation…",
   promoteToHabit: "Promote to Habit",
   habitLifeArea: "Life area",
   habitBucketCreative: "Creative (e.g. art, music, writing)",

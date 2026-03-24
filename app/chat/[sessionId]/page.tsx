@@ -57,7 +57,7 @@ import { Clock } from "@/components/Clock";
 import { RankModal } from "@/components/RankModal";
 import { StatsOverviewModal } from "@/components/StatsOverviewModal";
 import type { UserScore } from "@/lib/score-types";
-import { EMPTY_DASHBOARD_STATS, type DashboardStats } from "@/lib/dashboard-stats";
+import type { DashboardStats } from "@/lib/dashboard-stats";
 import { FeedbackModal } from "@/components/FeedbackModal";
 import { FeatureTour, type FeatureTourStep } from "@/components/FeatureTour";
 import { SettingsLanguageSelector } from "@/components/SettingsLanguageSelector";
@@ -114,9 +114,9 @@ function MentorAvatarBubble({
   const hue = hueFromFigureId(figureId);
   const initials = figureInitials(figureName);
   const fontSize = Math.max(9, Math.round(size * 0.32));
-  const circleClass = `rounded-full border-2 border-violet-400/35 dark:border-violet-500/45 flex items-center justify-center shrink-0 shadow-sm transition-transform ${
-    interactive ? "cursor-pointer hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background" : ""
-  } ${selected ? "ring-2 ring-violet-500 dark:ring-violet-400 ring-offset-2 ring-offset-neutral-50 dark:ring-offset-neutral-900" : ""}`;
+  const circleClass = `rounded-full border-2 border-amber-400/40 dark:border-amber-500/45 flex items-center justify-center shrink-0 shadow-sm transition-transform ${
+    interactive ? "cursor-pointer hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background" : ""
+  } ${selected ? "ring-2 ring-accent dark:ring-accent ring-offset-2 ring-offset-neutral-50 dark:ring-offset-neutral-900" : ""}`;
   const circleStyle = {
     width: size,
     height: size,
@@ -147,7 +147,7 @@ function MentorAvatarBubble({
         </div>
       )}
       {showDot ? (
-        <span className="w-1 h-1 rounded-full bg-violet-400/50 dark:bg-violet-400/45 shrink-0" aria-hidden />
+        <span className="w-1 h-1 rounded-full bg-amber-500/55 dark:bg-amber-400/50 shrink-0" aria-hidden />
       ) : null}
     </div>
   );
@@ -1581,6 +1581,14 @@ const PERSPECTIVE_CARD_PHRASES: Record<
 };
 
 const MENTOR_ONE_ON_ONE_START_KEY = "fml-mentor-one-on-one-start";
+const MENTOR_JOURNAL_BRIDGE_MAX_JOURNAL = 8000;
+const MENTOR_JOURNAL_BRIDGE_MAX_REFLECTION = 6000;
+
+function truncateMentorJournalBridgeText(s: string, max: number): string {
+  const t = s.trim();
+  if (t.length <= max) return t;
+  return t.slice(0, max);
+}
 const SECOND_ORDER_START_KEY = "fml-second-order-start";
 const OPEN_WAYS_FROM_CHOOSER_KEY = "fml-open-ways-from-chooser";
 const MENTOR_PICKER_FROM_CHOOSER_KEY = "fml-open-mentor-picker-from-chooser";
@@ -1793,6 +1801,20 @@ export default function ChatPage() {
     name: string;
     description?: string;
   } | null>(null);
+  /** First 1:1 turn only: journal entry + reflection when continuing from journal modal */
+  const mentorJournalBridgeRef = useRef<{ journalText: string; reflectionText: string } | null>(null);
+  /** After journal→1:1 handoff: send journal text as first user message once sendMessage exists */
+  const journalBridgeAutoSendTextRef = useRef<string | null>(null);
+  const [journalBridgeAutoSendTrigger, setJournalBridgeAutoSendTrigger] = useState(0);
+  /** True until sendMessage runs after journal→1:1 (covers empty chat before first messages render). */
+  const [mentorJournalBridgePending, setMentorJournalBridgePending] = useState(false);
+  const queueJournalBridgeAutoSend = useCallback((text: string) => {
+    const t = text.trim();
+    if (!t) return;
+    journalBridgeAutoSendTextRef.current = t;
+    setMentorJournalBridgePending(true);
+    setJournalBridgeAutoSendTrigger((n) => n + 1);
+  }, []);
   /** Persists second-order mode for all turns (signed-in sessions + first anonymous message). */
   const activeSecondOrderRef = useRef(false);
   /** When second-order is active: true = plain (no index/RAG), false = with citations. */
@@ -2808,19 +2830,25 @@ export default function ChatPage() {
               figureId: string;
               figureName: string;
               figureDescription?: string;
+              journalText?: string;
+              reflectionText?: string;
             };
             const figure = {
               id: parsed.figureId,
               name: parsed.figureName,
               description: parsed.figureDescription,
             };
-            setMessages([
-              {
-                role: "assistant",
-                content: buildMentorOneOnOneMessage(language, figure),
-                mentorOneOnOne: { id: figure.id, name: figure.name },
-              },
-            ]);
+            if (typeof parsed.journalText === "string" || typeof parsed.reflectionText === "string") {
+              mentorJournalBridgeRef.current = {
+                journalText: typeof parsed.journalText === "string" ? parsed.journalText : "",
+                reflectionText: typeof parsed.reflectionText === "string" ? parsed.reflectionText : "",
+              };
+            } else {
+              mentorJournalBridgeRef.current = null;
+            }
+            const journalForAutoSend =
+              typeof parsed.journalText === "string" ? parsed.journalText.trim() : "";
+            const useJournalBridgeAutoReply = journalForAutoSend.length > 0;
             activeOneOnOneMentorRef.current = {
               id: figure.id,
               name: figure.name,
@@ -2835,6 +2863,18 @@ export default function ChatPage() {
             setCurrentSessionId(null);
             setCurrentSession(null);
             setCollapsedSummary(null);
+            if (useJournalBridgeAutoReply) {
+              setMessages([]);
+              queueJournalBridgeAutoSend(journalForAutoSend);
+            } else {
+              setMessages([
+                {
+                  role: "assistant",
+                  content: buildMentorOneOnOneMessage(language, figure),
+                  mentorOneOnOne: { id: figure.id, name: figure.name },
+                },
+              ]);
+            }
             return;
           }
           const secondOrderStored = sessionStorage.getItem(SECOND_ORDER_START_KEY);
@@ -2945,6 +2985,7 @@ export default function ChatPage() {
           const mentorName = params.get("mentorName");
           const mentorDescription = params.get("mentorDescription");
           if (mentorId && mentorName) {
+            mentorJournalBridgeRef.current = null;
             const figure = {
               id: mentorId,
               name: mentorName,
@@ -3045,7 +3086,7 @@ export default function ChatPage() {
         setPendingSecondOrder(false);
       }
     }
-  }, [sessionId, isNew, isAnonymous, incognitoMode, router, language]);
+  }, [sessionId, isNew, isAnonymous, incognitoMode, router, language, queueJournalBridgeAutoSend]);
 
   const [lastFailedUserMessage, setLastFailedUserMessage] = useState<string | null>(null);
   const [onboardingDismissed, setOnboardingDismissed] = useState(true);
@@ -3108,7 +3149,10 @@ export default function ChatPage() {
   );
 
   const startConversationFromMentorOneOnOne = useCallback(
-    (figure: { id: string; name: string; description: string }) => {
+    (
+      figure: { id: string; name: string; description: string },
+      journalBridge?: { journalText: string; reflectionText: string }
+    ) => {
       activeSecondOrderRef.current = false;
       activeSecondOrderPlainRef.current = false;
       setPendingSecondOrder(false);
@@ -3117,8 +3161,21 @@ export default function ChatPage() {
       setMentorCatalogSearch("");
       setMentorCatalogCategoryId(null);
       setSelectedMentorFigureIds([]);
+      const bridgePayload = journalBridge
+        ? {
+            journalText: truncateMentorJournalBridgeText(
+              journalBridge.journalText,
+              MENTOR_JOURNAL_BRIDGE_MAX_JOURNAL
+            ),
+            reflectionText: truncateMentorJournalBridgeText(
+              journalBridge.reflectionText,
+              MENTOR_JOURNAL_BRIDGE_MAX_REFLECTION
+            ),
+          }
+        : null;
+      mentorJournalBridgeRef.current = bridgePayload;
+      setLibraryPanelOpen(null);
       if (typeof window !== "undefined" && window.innerWidth < 1024) {
-        setLibraryPanelOpen(null);
         setSidebarOpen(false);
       }
       if (sessionId !== "new" && sessionId !== "incognito") {
@@ -3129,6 +3186,9 @@ export default function ChatPage() {
               figureId: figure.id,
               figureName: figure.name,
               figureDescription: figure.description,
+              ...(bridgePayload
+                ? { journalText: bridgePayload.journalText, reflectionText: bridgePayload.reflectionText }
+                : {}),
             })
           );
         } catch {
@@ -3143,13 +3203,6 @@ export default function ChatPage() {
           name: figure.name,
           description: figure.description,
         };
-        setMessages([
-          {
-            role: "assistant",
-            content: buildMentorOneOnOneMessage(language, figure),
-            mentorOneOnOne: { id: figure.id, name: figure.name },
-          },
-        ]);
         setPendingOneOnOneMentor({
           id: figure.id,
           name: figure.name,
@@ -3158,10 +3211,23 @@ export default function ChatPage() {
         setCurrentSessionId(null);
         setCurrentSession(null);
         setCollapsedSummary(null);
-        inputRef.current?.focus();
+        const journalTrimmed = bridgePayload?.journalText?.trim() ?? "";
+        if (bridgePayload && journalTrimmed.length > 0) {
+          setMessages([]);
+          queueJournalBridgeAutoSend(journalTrimmed);
+        } else {
+          setMessages([
+            {
+              role: "assistant",
+              content: buildMentorOneOnOneMessage(language, figure),
+              mentorOneOnOne: { id: figure.id, name: figure.name },
+            },
+          ]);
+          inputRef.current?.focus();
+        }
       }
     },
-    [router, sessionId, language]
+    [router, sessionId, language, queueJournalBridgeAutoSend]
   );
 
   const startSecondOrderConversation = useCallback((plain: boolean) => {
@@ -3255,6 +3321,7 @@ export default function ChatPage() {
   const sendMessage = useCallback(async (overrideText?: string, options?: { retry?: boolean; messagesOverride?: Message[]; activeCardPrompt?: string; activeCardName?: string; journalCheckpoint?: string }) => {
     const rawText = (overrideText ?? input).trim();
     if (!rawText || isLoading) return;
+    setMentorJournalBridgePending(false);
     playSelectionChime();
 
     if (isAnonymous) anonymousActiveRef.current = true;
@@ -3263,6 +3330,10 @@ export default function ChatPage() {
     if (cardCtx) setPendingCardContext(null);
 
     const hadPendingMentor = pendingOneOnOneMentor !== null;
+    const journalBridgeSnapshot =
+      hadPendingMentor && mentorJournalBridgeRef.current
+        ? { ...mentorJournalBridgeRef.current }
+        : null;
     const hadPendingSecondOrder = pendingSecondOrder;
     if (pendingOneOnOneMentor) {
       activeOneOnOneMentorRef.current = pendingOneOnOneMentor;
@@ -3270,6 +3341,9 @@ export default function ChatPage() {
       activeSecondOrderRef.current = false;
       activeSecondOrderPlainRef.current = false;
       setPendingSecondOrder(false);
+    }
+    if (journalBridgeSnapshot) {
+      mentorJournalBridgeRef.current = null;
     }
     if (pendingSecondOrder) {
       activeSecondOrderRef.current = true;
@@ -3365,7 +3439,7 @@ export default function ChatPage() {
       if (!isAnonymous && !incognitoMode) {
         chatBody.prependMessages = [{ role: "assistant", content: buildPerspectiveCardMessage(languageRef.current, cardCtx.prompt, cardCtx.figure) }];
       }
-    } else if (hadPendingMentor && mentorForApi && !cardCtx) {
+    } else if (hadPendingMentor && mentorForApi && !cardCtx && !journalBridgeSnapshot) {
       if (!isAnonymous && !incognitoMode) {
         chatBody.prependMessages = [
           { role: "assistant", content: buildMentorOneOnOneMessage(languageRef.current, mentorForApi) },
@@ -3400,6 +3474,9 @@ export default function ChatPage() {
     }
     if (mentorForApi) {
       chatBody.oneOnOneMentorFigureId = mentorForApi.id;
+    }
+    if (journalBridgeSnapshot && mentorForApi) {
+      chatBody.mentorJournalContext = journalBridgeSnapshot;
     }
     const useMultiMentorThisTurn =
       multiMentorMode &&
@@ -3535,6 +3612,14 @@ export default function ChatPage() {
       refetchScore();
     }
   }, [input, isLoading, currentSessionId, router, refetchSessions, refetchScore, messages, messages.length, sessions.length, dismissOnboarding, mentalModelsIndex, longTermMemories, customConcepts, conceptGroups, isAnonymous, incognitoMode, pendingCardContext, pendingOneOnOneMentor, pendingSecondOrder, multiMentorMode, selectedMentorFigureIds]);
+
+  useEffect(() => {
+    if (journalBridgeAutoSendTrigger === 0) return;
+    const text = journalBridgeAutoSendTextRef.current;
+    if (!text) return;
+    journalBridgeAutoSendTextRef.current = null;
+    void sendMessage(text);
+  }, [journalBridgeAutoSendTrigger, sendMessage]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (
@@ -3699,6 +3784,12 @@ export default function ChatPage() {
   const [previousRankIndex, setPreviousRankIndex] = useState(-1);
   const [showRankUpAnimation, setShowRankUpAnimation] = useState(false);
   const [isSafari, setIsSafari] = useState(false);
+
+  useEffect(() => {
+    if (!statsOverviewModalOpen || dashboardStats) return;
+    if (isAnonymous || incognitoMode) return;
+    refetchScore();
+  }, [statsOverviewModalOpen, dashboardStats, isAnonymous, incognitoMode, refetchScore]);
   const selectedExportSections = EXPORT_DATA_SECTION_OPTIONS
     .filter(({ key }) => exportSelections[key])
     .map(({ key }) => key);
@@ -4772,17 +4863,6 @@ export default function ChatPage() {
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3 shrink-0 overflow-visible">
-            {!incognitoMode && !isAnonymous && userScore && (
-              <button
-                type="button"
-                onClick={() => setStatsOverviewModalOpen(true)}
-                className={`shrink-0 rounded-full border border-neutral-200/80 bg-neutral-100/80 px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-neutral-200/80 dark:border-white/12 dark:bg-neutral-800/80 dark:hover:bg-neutral-700/80 sm:px-3 sm:text-sm ${
-                  showRankUpAnimation ? "ring-2 ring-amber-400 dark:ring-amber-500" : ""
-                }`}
-              >
-                View Stats
-              </button>
-            )}
             <div className="hidden md:flex shrink-0">
             <Clock weatherFormat={weatherFormat} onMoonPhaseChange={setMoonPhase} />
             </div>
@@ -4936,67 +5016,36 @@ export default function ChatPage() {
             {sidebarOpen && <span className="truncate">{getLandingTranslations(language).newConversation}</span>}
             </button>
           )}
-          {sidebarOpen && (
-            <div className="grid grid-cols-2 gap-1.5 mb-3 shrink-0">
-              <button
-                type="button"
-                onClick={() => {
-                  setCcYoutubeUrl("");
-                  setCcYoutubeTranscriptId(null);
-                  setCcYoutubeExtractPrompt("");
-                  setCcYoutubeResult(null);
-                  setCcYoutubeError(null);
-                  setCcYoutubeExtractProgress(null);
-                  setCcImportJournalMode(false);
-                  setCcJournalText("");
-                  setCcJournalTitle("");
-                  setCcJournalPersistLibrary(false);
-                  setCcJournalTranscriptId(null);
-                  setCcYoutubeModal(true);
-                  if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
-                }}
-                title="Create concepts from a YouTube video's transcript"
-                aria-label="Create concepts from a YouTube video transcript"
-                className="min-w-0 flex items-center justify-center rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-800/50 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-[10px] sm:text-[11px] font-medium text-foreground transition-colors px-1.5 py-1.5 text-center leading-tight"
-              >
-                <span className="line-clamp-2">From a video</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setCcYoutubeUrl("");
-                  setCcYoutubeTranscriptId(null);
-                  setCcYoutubeExtractPrompt("");
-                  setCcYoutubeResult(null);
-                  setCcYoutubeError(null);
-                  setCcYoutubeExtractProgress(null);
-                  setCcImportJournalMode(true);
-                  setCcJournalText("");
-                  setCcJournalTitle("");
-                  setCcJournalPersistLibrary(false);
-                  setCcJournalTranscriptId(null);
-                  setCcYoutubeModal(true);
-                  if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
-                }}
-                title="Create concepts from text you paste (journal, notes, reflections)"
-                aria-label="Create concepts from your own writing"
-                className="min-w-0 flex items-center justify-center rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-800/50 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-[10px] sm:text-[11px] font-medium text-foreground transition-colors px-1.5 py-1.5 text-center leading-tight"
-              >
-                <span className="line-clamp-2">From your writing</span>
-              </button>
-            </div>
+          {sidebarOpen && !isAnonymous && (
+            <button
+              type="button"
+              onClick={() => {
+                router.push("/chat/journal/new");
+                if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+              }}
+              title={getLandingTranslations(language).journalEntryButtonLabel}
+              aria-label={getLandingTranslations(language).journalEntryButtonLabel}
+              className="w-full shrink-0 flex items-center justify-center gap-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-800/50 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-[11px] sm:text-[12px] font-medium text-foreground transition-colors px-2 py-2 mb-3 text-center"
+            >
+              <span className="text-sm leading-none" aria-hidden>
+                +
+              </span>
+              <span className="truncate">{getLandingTranslations(language).journalEntryButtonLabel}</span>
+            </button>
           )}
           {/* Primary nav - Claude.ai pill style; icon-only when collapsed (Browser Use style) */}
           <nav className={`flex flex-col gap-0.5 shrink-0 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 ${sidebarOpen ? "mb-2" : ""}`} aria-label="Select view" data-tour="sidebar-nav">
             {[
               { id: "conversations" as const, label: getUiTranslations(language).conversations, icon: "chat", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("conversations"); } },
+              ...(!isAnonymous ? [
+                { id: "journal" as const, label: getUiTranslations(language).journalEntries, icon: "journal" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("journal"); } },
+              ] : []),
               { id: "cc" as const, label: getUiTranslations(language).concepts, icon: "concepts", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("cc"); } },
               { id: "concepts" as const, label: getUiTranslations(language).mentalModels, icon: "models", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("concepts"); } },
               { id: "ltm" as const, label: getUiTranslations(language).longTermMemory, icon: "memory", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("ltm"); } },
               { id: "cg" as const, label: getUiTranslations(language).groups, icon: "groups", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("cg"); } },
               ...(!isAnonymous ? [
                 { id: "habits" as const, label: getUiTranslations(language).habits, icon: "habits" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("habits"); } },
-                { id: "journal" as const, label: getUiTranslations(language).journalEntries, icon: "journal" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("journal"); } },
                 { id: "figures" as const, label: getUiTranslations(language).famousFigures, icon: "figures" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("figures"); } },
               ] : []),
             ].map(({ id, label, icon, onClick }) => {
@@ -5005,7 +5054,10 @@ export default function ChatPage() {
                 <button
                   key={id}
                   type="button"
-                  onClick={onClick}
+                  onClick={() => {
+                    onClick();
+                    if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+                  }}
                   data-tour={`tour-${id}`}
                   title={!sidebarOpen ? label : undefined}
                   className={`flex items-center w-full rounded-full text-left text-[13px] sm:text-[14px] font-medium transition-colors border-2 ${
@@ -5077,7 +5129,19 @@ export default function ChatPage() {
           <div className={`border-t-[0.5px] border-neutral-200/60 dark:border-neutral-600/60 ${sidebarOpen ? "mt-1.5 pt-1.5" : "mt-1 pt-1"}`}>
             <button
               type="button"
-              onClick={() => { playSelectionChime(); setLibraryPanelOpen(null); setWaysOfLookingAtModalOpen(true); setWaysOfLookingAtDrawMode(false); setWaysOfLookingAtCategory(null); setWaysOfLookingAtCity(null); setWaysOfLookingAtCuisine(null); setWaysOfLookingAtMicrocosm(null); setWaysOfLookingAtHuman(null); setWaysOfLookingAtDigital(null); }}
+              onClick={() => {
+                playSelectionChime();
+                setLibraryPanelOpen(null);
+                setWaysOfLookingAtModalOpen(true);
+                setWaysOfLookingAtDrawMode(false);
+                setWaysOfLookingAtCategory(null);
+                setWaysOfLookingAtCity(null);
+                setWaysOfLookingAtCuisine(null);
+                setWaysOfLookingAtMicrocosm(null);
+                setWaysOfLookingAtHuman(null);
+                setWaysOfLookingAtDigital(null);
+                if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+              }}
               title={!sidebarOpen ? getUiTranslations(language).promptGames : undefined}
               className={`group relative overflow-hidden flex items-center w-full rounded-2xl text-left text-[13px] sm:text-[14px] font-medium transition-colors active:scale-[0.98] ${
                 waysOfLookingAtModalOpen
@@ -5099,73 +5163,6 @@ export default function ChatPage() {
           </div>
           </div>
             </div>
-        {/* Accounts section - bottom of left panel (Browser Use style) */}
-        <div className="shrink-0 px-2 py-3 border-t border-neutral-200/80 dark:border-neutral-800">
-            {user ? (
-              <div
-                role="button"
-                tabIndex={0}
-                aria-label="Account menu"
-                className={`flex items-center gap-2 min-w-0 rounded-xl border-[0.75px] px-2 py-2 w-full transition-colors cursor-pointer ${
-                  sidebarOpen
-                    ? "border-neutral-200 dark:border-white/12 hover:border-neutral-300 dark:hover:border-white/18"
-                    : "border-neutral-200 dark:border-transparent hover:border-neutral-300 dark:hover:border-transparent justify-center lg:px-2"
-                }`}
-                    onClick={(e) => {
-                  const trigger = (e.currentTarget as HTMLElement).querySelector("button");
-                  if (trigger && !trigger.contains(e.target as Node)) {
-                    trigger.click();
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault();
-                    (e.currentTarget as HTMLElement).querySelector("button")?.click();
-                  }
-                }}
-              >
-                <UserButton
-                  appearance={{
-                    elements: {
-                      rootBox: "shrink-0",
-                      avatarBox: "w-8 h-8 ring-0",
-                    },
-                  }}
-                />
-                {sidebarOpen && (
-                  <div className="min-w-0 flex-1 truncate">
-                    <p className="text-sm font-medium text-foreground truncate">
-                      {user.firstName && user.lastName
-                        ? `${user.firstName} ${user.lastName}`
-                        : user.primaryEmailAddress?.emailAddress ?? "Account"}
-                    </p>
-                    {user.primaryEmailAddress?.emailAddress && (
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate">
-                        {user.primaryEmailAddress.emailAddress}
-                      </p>
-                    )}
-                    </div>
-                  )}
-              </div>
-            ) : (
-              <div className={`flex gap-2 ${sidebarOpen ? "flex-wrap" : "flex-col items-center"}`}>
-                <Link
-                  href="/sign-in"
-                  onClick={() => typeof window !== "undefined" && window.innerWidth < 1024 && setSidebarOpen(false)}
-                  className="px-3 py-2 rounded-xl text-sm font-medium border-2 border-neutral-300 dark:border-neutral-600/35 hover:border-neutral-400 dark:hover:border-neutral-500/45 text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/sign-up"
-                  onClick={() => typeof window !== "undefined" && window.innerWidth < 1024 && setSidebarOpen(false)}
-                  className="px-3 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
-                >
-                  Create account
-                </Link>
-                </div>
-          )}
-        </div>
         </>
         )}
         {isAnonymous && (
@@ -7172,6 +7169,40 @@ export default function ChatPage() {
             {messages.length === 0 && (
               <div className="flex w-full min-w-0 max-w-2xl flex-col items-center text-center px-2 sm:px-4 overflow-x-hidden">
                 <div className={`flex w-full max-w-full min-w-0 flex-col items-center justify-center space-y-6 ${isAnonymous ? "min-h-[calc(100dvh-12rem)]" : ""}`}>
+                {mentorJournalBridgePending ? (
+                  <div
+                    className="flex flex-col items-center justify-center gap-4 py-16 sm:py-20 min-h-[40vh]"
+                    role="status"
+                    aria-live="polite"
+                    aria-busy="true"
+                  >
+                    <svg
+                      className="h-10 w-10 text-accent animate-spin"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      aria-hidden
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                    <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                      {getUiTranslations(language).journalMentorConversationLoading}
+                    </p>
+                  </div>
+                ) : (
+                  <>
                 <h1 className="w-full max-w-full px-1 sm:px-2 text-xl sm:text-2xl font-semibold text-foreground animate-fade-in-up break-words text-balance leading-snug">
                   {incognitoMode ? "Let's chat incognito" : getLandingTranslations(language).productTagline}
                 </h1>
@@ -7268,7 +7299,9 @@ export default function ChatPage() {
                 <p className="text-center text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 px-2 max-w-2xl w-full">
                   FML Labs is AI and can make mistakes.
                 </p>
-                      </div>
+                  </>
+                )}
+                </div>
                 {isAnonymous && <LeaderboardEmbed />}
               </div>
             )}
@@ -7403,8 +7436,25 @@ export default function ChatPage() {
                   !suppressJournalAndAskMentors &&
                   !isAnonymous &&
                   !incognitoMode &&
-                  followedFigureIds.length >= 2 ? (
+                  ((messages.length >= 2 && (!currentSession || !currentSession.isCollapsed)) ||
+                    followedFigureIds.length >= 2) ? (
                     <div className="inline-flex flex-col items-start gap-1.5">
+                      <div className="inline-flex flex-wrap items-center gap-1.5">
+                        {messages.length >= 2 && (!currentSession || !currentSession.isCollapsed) && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              playSelectionChime();
+                              setSummarizeLanguageModal({ selectedLanguage: language });
+                            }}
+                            title="Summarize this conversation and save it to memory"
+                            className="inline-flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors shrink-0"
+                          >
+                            <SparklesIcon className="w-3 h-3" />
+                            Save to memory
+                          </button>
+                        )}
+                        {followedFigureIds.length >= 2 && (
                       <button
                         type="button"
                         onClick={() => {
@@ -7439,7 +7489,9 @@ export default function ChatPage() {
                         </svg>
                         Ask mentors
                       </button>
-                      {multiMentorMode && (
+                        )}
+                      </div>
+                      {followedFigureIds.length >= 2 && multiMentorMode && (
                         <div className="flex flex-col gap-1.5 w-full max-w-[min(100%,28rem)]">
                           {mentorDomainsForPicker.length > 1 && (
                             <div
@@ -7541,11 +7593,7 @@ export default function ChatPage() {
             type="button"
             onClick={scrollToBottom}
             aria-label="Scroll to bottom"
-            className={`fixed right-2 md:right-8 z-40 flex items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-white text-neutral-600 dark:text-neutral-600 shadow-md hover:shadow-lg hover:bg-neutral-50 active:scale-95 transition-all duration-200 ${
-              currentSessionId && currentSession && messages.length >= 2
-                ? "bottom-[8.5rem] md:bottom-[7.5rem]" /* mobile: lifted above save-memory row; desktop: above input */
-                : "bottom-[5.5rem] md:bottom-[5rem]" /* mobile: inside bottom bar; desktop: above input only */
-            }`}
+            className="fixed right-2 md:right-8 z-40 flex items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-white text-neutral-600 dark:text-neutral-600 shadow-md hover:shadow-lg hover:bg-neutral-50 active:scale-95 transition-all duration-200 bottom-[5.5rem] md:bottom-[5rem]"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
               <path d="M7 12l5 5 5-5M7 5l5 5 5-5" />
@@ -7564,28 +7612,6 @@ export default function ChatPage() {
         )}
         {/* Bottom bar - fixed on mobile when scrolling. Shown only for ongoing conversations; new conversation uses centered input. */}
         <div className={`fixed inset-x-0 bottom-0 z-30 flex flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background ${messages.length === 0 ? "hidden" : ""}`}>
-          {!isAnonymous && messages.length >= 2 && (!currentSession || !currentSession.isCollapsed) && (
-            <div className="px-4 pt-1 pb-0.5 sm:pt-1.5 sm:pb-1">
-              <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
-                <p className="min-w-0 flex-1 truncate text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
-                  Save a concise memory of this conversation for later.
-                </p>
-              <button
-                  onClick={() => {
-                    if (incognitoMode) return;
-                    playSelectionChime();
-                    setSummarizeLanguageModal({ selectedLanguage: language });
-                  }}
-                disabled={incognitoMode}
-                  title={incognitoMode ? "Not available in incognito" : "Summarize this conversation and save it to memory"}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 px-3 py-1.5 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-600 hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                  <SparklesIcon className="w-3.5 h-3.5" />
-                  <span>Save to memory</span>
-              </button>
-              </div>
-            </div>
-          )}
           {messages.length > 0 && (
           <div className="flex flex-col items-center justify-center px-4 py-2 sm:py-2.5 min-w-0">
             <div className="min-w-0 max-w-2xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex items-center overflow-hidden h-12 min-h-12" data-tour="input-area">
@@ -8365,7 +8391,7 @@ export default function ChatPage() {
                       ))}
                   </div>
                   {transcriptModalTranscript.journalMentorReflectionsStatus === "pending" && (
-                    <p className="text-sm text-center font-serif text-violet-600/90 dark:text-violet-300/85 max-w-sm">
+                    <p className="text-sm text-center font-serif text-amber-800/95 dark:text-amber-300/90 max-w-sm">
                       {getUiTranslations(language).journalMentorResponding}
                     </p>
                   )}
@@ -8373,7 +8399,7 @@ export default function ChatPage() {
                     transcriptModalTranscript.journalMentorReflections &&
                     transcriptModalTranscript.journalMentorReflections.length > 0 && (
                       <div className="flex flex-col gap-1 items-center">
-                        <p className="text-sm text-center font-serif text-violet-600/90 dark:text-violet-300/85 max-w-sm px-1">
+                        <p className="text-sm text-center font-serif text-amber-800/95 dark:text-amber-300/90 max-w-sm px-1">
                           {getUiTranslations(language).journalMentorModalReadyCaption.replace(
                             /\{\{count\}\}/g,
                             String(transcriptModalTranscript.journalMentorReflections.length)
@@ -8399,18 +8425,43 @@ export default function ChatPage() {
                       if (!open) return null;
                       return (
                         <div
-                          className="w-full max-w-lg mx-auto mt-2 rounded-2xl border border-violet-200/80 dark:border-neutral-700 bg-white/95 dark:bg-neutral-950 px-4 py-3 shadow-md dark:shadow-black/40 text-left relative"
+                          className="w-full max-w-lg mx-auto mt-2 rounded-2xl border border-amber-200/90 dark:border-neutral-700 bg-white/95 dark:bg-neutral-950 px-4 py-3 shadow-md dark:shadow-black/40 text-left relative"
                           role="region"
                           aria-label={`Reflection from ${open.figureName}`}
                         >
                           <div
-                            className="absolute -top-2 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-l border-t border-violet-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-950"
+                            className="absolute -top-2 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-l border-t border-amber-200/90 dark:border-neutral-700 bg-white dark:bg-neutral-950"
                             aria-hidden
                           />
                           <p className="text-sm font-semibold text-foreground pr-6">{open.figureName}</p>
                           <p className="text-sm text-neutral-600 dark:text-neutral-300 mt-2 whitespace-pre-wrap leading-relaxed">
                             {open.reflection}
                           </p>
+                          <div className="mt-4 pt-3 border-t border-amber-100/95 dark:border-neutral-700">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                playSelectionChime();
+                                const fig = figuresData?.figures?.find((f) => f.id === open.figureId);
+                                setTranscriptModalTranscript(null);
+                                setJournalMentorBubbleOpenId(null);
+                                startConversationFromMentorOneOnOne(
+                                  {
+                                    id: open.figureId,
+                                    name: open.figureName,
+                                    description: fig?.description ?? "",
+                                  },
+                                  {
+                                    journalText: transcriptModalTranscript.transcriptText,
+                                    reflectionText: open.reflection,
+                                  }
+                                );
+                              }}
+                              className="w-full px-4 py-2.5 rounded-xl text-sm font-medium text-center bg-accent hover:bg-accent/90 text-white shadow-sm transition-colors"
+                            >
+                              {getUiTranslations(language).journalMentorContinueOneOnOne}
+                            </button>
+                          </div>
                           <button
                             type="button"
                             onClick={() => setJournalMentorBubbleOpenId(null)}
@@ -8450,7 +8501,7 @@ export default function ChatPage() {
                         })
                         .finally(() => setMentorReflectionsRegenerateLoading(false));
                     }}
-                    className="px-4 py-2 text-sm font-medium rounded-xl border border-violet-300/60 dark:border-violet-500/50 bg-violet-500/10 dark:bg-violet-500/15 text-violet-800 dark:text-violet-200 hover:bg-violet-500/20 dark:hover:bg-violet-500/25 disabled:opacity-50 transition-colors"
+                    className="px-4 py-2 text-sm font-medium rounded-xl border border-amber-300/70 dark:border-amber-600/45 bg-amber-500/10 dark:bg-amber-500/15 text-amber-900 dark:text-amber-100 hover:bg-amber-500/15 dark:hover:bg-amber-500/25 disabled:opacity-50 transition-colors"
                   >
                     {mentorReflectionsRegenerateLoading
                       ? getUiTranslations(language).journalMentorRegenerateBusy
@@ -9166,6 +9217,31 @@ export default function ChatPage() {
                   </ul>
                   </section>
 
+                {!isAnonymous && userScore && (
+                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
+                    Your stats
+                  </h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">
+                    Streak, words in chat, conversations, and XP — open the full snapshot anytime.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!dashboardStats) refetchScore();
+                      setSettingsOpen(false);
+                      setStatsOverviewModalOpen(true);
+                    }}
+                    className="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-left"
+                  >
+                    <span className="text-sm font-medium">
+                      View streak &amp; stats
+                    </span>
+                    <span className="text-xs text-neutral-500 dark:text-neutral-400 shrink-0">Open →</span>
+                  </button>
+                </section>
+                )}
+
                 <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">Conversation</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">Language and tone for your conversations.</p>
@@ -9268,30 +9344,6 @@ export default function ChatPage() {
                     </div>
                   </div>
                 </section>
-
-                {/* XP detail & weather format: extra controls on small screens (header has quick stats; clock is md+) */}
-                {!isAnonymous && userScore && (
-                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8 md:hidden">
-                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">XP & Progress</h3>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">View your XP and progress.</p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSettingsOpen(false);
-                      setRankModalOpen(true);
-                    }}
-                    className="flex items-center justify-between gap-2 w-full px-3 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-left"
-                  >
-                    <span className="text-sm font-medium tabular-nums">
-                      {(userScore.totalXp + scoreOptimisticDelta).toLocaleString()} XP
-                      <span className="text-neutral-500 dark:text-neutral-400 font-normal ml-1">
-                        ({(userScore.xpChangeToday ?? 0) + scoreOptimisticDelta > 0 ? `+${(userScore.xpChangeToday ?? 0) + scoreOptimisticDelta}` : "0"} today)
-                      </span>
-                    </span>
-                    <span className="text-xs text-neutral-500 dark:text-neutral-400">View full progress →</span>
-                  </button>
-                </section>
-                )}
 
                 {!isAnonymous && (
                 <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
@@ -12850,9 +12902,24 @@ export default function ChatPage() {
         </div>
       )}
 
-      {statsOverviewModalOpen && userScore && (
+      {statsOverviewModalOpen && userScore && !dashboardStats && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          role="status"
+          aria-live="polite"
+          onClick={() => setStatsOverviewModalOpen(false)}
+        >
+          <div
+            className="bg-background rounded-2xl px-6 py-4 border border-neutral-200 dark:border-neutral-700 text-sm text-foreground"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Loading stats…
+          </div>
+        </div>
+      )}
+      {statsOverviewModalOpen && dashboardStats && userScore && (
         <StatsOverviewModal
-          stats={dashboardStats ?? EMPTY_DASHBOARD_STATS}
+          stats={dashboardStats}
           score={userScore}
           optimisticDelta={scoreOptimisticDelta}
           onClose={() => setStatsOverviewModalOpen(false)}

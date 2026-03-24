@@ -241,6 +241,13 @@ function buildMentorOneOnOneSystemPrompt(figure: FamousFigure): string {
   );
 }
 
+/** Continuity when the user opens 1:1 from a journal mentor reflection (first turn only). */
+function buildMentorJournalBridgeSection(journalText: string, reflectionText: string): string {
+  const j = compactPromptText(journalText, 6000);
+  const r = compactPromptText(reflectionText, 4000);
+  return `\n\n## Continuity from the user's journal\nThe user continued this 1:1 from a journal entry where you had already reflected on what they wrote. **Their first message in this chat is that same journal entry**—reply in your full voice and style as the natural next beat: respond to what they shared, deepen the thread, or open the next question, informed by your prior reflection below. Ground your reply in both their entry and your earlier reflection; do not repeat your earlier reflection verbatim unless a brief callback helps.\n\n### Their journal entry (excerpt)\n${j || "(none)"}\n\n### Your earlier reflection on that entry\n${r || "(none)"}\n`;
+}
+
 /** Rich persona block for perspective-card + famous figure (lightweight mode). */
 function buildPerspectiveFigurePersonaBlock(
   figureName: string,
@@ -305,6 +312,7 @@ export async function POST(request: Request) {
   let multiMentorEligible = false;
   /** Set in body parse: second-order plain mode (no index/RAG in prompt). */
   let bodySecondOrderPlain = false;
+  let mentorJournalBridgeFromBody: { journalText: string; reflectionText: string } | null = null;
 
   try {
     const body = await request.json();
@@ -413,12 +421,31 @@ export async function POST(request: Request) {
     if (body.secondOrderPlain === true) {
       bodySecondOrderPlain = true;
     }
+    if (
+      body.mentorJournalContext &&
+      typeof body.mentorJournalContext === "object" &&
+      body.mentorJournalContext !== null
+    ) {
+      const ctx = body.mentorJournalContext as { journalText?: unknown; reflectionText?: unknown };
+      if (typeof ctx.journalText === "string" && typeof ctx.reflectionText === "string") {
+        mentorJournalBridgeFromBody = {
+          journalText: ctx.journalText,
+          reflectionText: ctx.reflectionText,
+        };
+      }
+    }
     if (multiMentorEligible) {
       requestedSecondOrder = false;
     }
     if (requestedSecondOrder && resolvedOneOnOneFigure) {
       return NextResponse.json(
         { error: "Cannot combine second-order mode with 1:1 mentor" },
+        { status: 400 }
+      );
+    }
+    if (mentorJournalBridgeFromBody && !resolvedOneOnOneFigure) {
+      return NextResponse.json(
+        { error: "mentorJournalContext requires oneOnOneMentorFigureId" },
         { status: 400 }
       );
     }
@@ -447,6 +474,7 @@ export async function POST(request: Request) {
   let conceptGroupEnrichment: { id: string; title: string; enrichmentPrompts: string[] }[] = [];
   let userMentalModels: Awaited<ReturnType<typeof getUserMentalModels>> = [];
   let session: Awaited<ReturnType<typeof getSession>> = null;
+  let useMentorJournalBridge = false;
 
   if (isAnonymous || incognito) {
     mentorOneOnOne = resolvedOneOnOneFigure;
@@ -468,6 +496,10 @@ export async function POST(request: Request) {
       ...history,
       { role: "user" as const, content: message },
     ];
+    useMentorJournalBridge =
+      !!mentorJournalBridgeFromBody &&
+      !!mentorOneOnOne &&
+      bodyMessages.filter((m) => m.role === "user").length === 1;
   } else {
     session = sessionId ? await getSession(sessionId, userId!) : null;
 
@@ -577,6 +609,10 @@ export async function POST(request: Request) {
       })),
       { role: "user" as const, content: message },
     ];
+    useMentorJournalBridge =
+      !!mentorJournalBridgeFromBody &&
+      !!mentorOneOnOne &&
+      existingMessages.length === 0;
     ltmEnrichmentWithIds = ltmEnrichmentWithIdsRes;
     ccEnrichmentWithIds = ccEnrichmentRes;
   }
@@ -886,8 +922,18 @@ ${userNamePromptSuffix}${langInstr}`;
       userTypeStylePromptMentor
         ? `\n\nCONVERSATION STYLE: ${userTypeStylePromptMentor}`
         : "";
+    let mentorOneOnOnePromptBase = buildMentorOneOnOneSystemPrompt(mentorOneOnOne);
+    if (
+      useMentorJournalBridge &&
+      mentorJournalBridgeFromBody
+    ) {
+      mentorOneOnOnePromptBase += buildMentorJournalBridgeSection(
+        mentorJournalBridgeFromBody.journalText,
+        mentorJournalBridgeFromBody.reflectionText
+      );
+    }
     fullSystemPrompt =
-      buildMentorOneOnOneSystemPrompt(mentorOneOnOne) +
+      mentorOneOnOnePromptBase +
       languageInstructionMentor +
       conversationStyleInstructionMentor +
       userNamePromptSuffix;

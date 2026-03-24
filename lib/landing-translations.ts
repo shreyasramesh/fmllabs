@@ -94,7 +94,7 @@ const EN: LandingTranslations = {
   secondOrderChipLabelPlain: "Second-order (plain)",
   secondOrderChipLabelWithCitations: "Second-order (with citations)",
   secondOrderCitationsToggleLabel: "Citations",
-  journalEntryButtonLabel: "Add a Journal Entry",
+  journalEntryButtonLabel: "Add Journal Entry",
   journalEntryButtonSubtitle: "Write freely; saved to your library—not sent as chat.",
   journalEntryModalTitle: "Add a Journal Entry",
   journalEntryModalSubtitle:
