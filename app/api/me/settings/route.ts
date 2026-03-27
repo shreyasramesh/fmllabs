@@ -6,12 +6,33 @@ import { isValidUserTypeId } from "@/lib/user-types";
 
 const TTS_MIN = 0.5;
 const TTS_MAX = 2;
+const GOAL_CALORIES_MIN = 800;
+const GOAL_CALORIES_MAX = 6000;
+const GOAL_MACRO_MIN = 10;
+const GOAL_MACRO_MAX = 1000;
 const BACKGROUND_ELEMENTS = ["default", "air", "water", "earth", "fire"] as const;
 const WEATHER_FORMATS = ["condition-temp", "emoji-temp", "temp-only"] as const;
 const PREFERRED_NAME_MAX = 80;
 
 function clampTtsSpeed(v: number): number {
   return Math.max(TTS_MIN, Math.min(TTS_MAX, v));
+}
+
+function parseNumberish(v: unknown): number | null {
+  if (typeof v === "number") return Number.isFinite(v) ? v : null;
+  if (typeof v === "string") {
+    const parsed = parseFloat(v);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  return null;
+}
+
+function clampGoalCalories(v: number): number {
+  return Math.round(Math.max(GOAL_CALORIES_MIN, Math.min(GOAL_CALORIES_MAX, v)));
+}
+
+function clampGoalMacro(v: number): number {
+  return Math.round(Math.max(GOAL_MACRO_MIN, Math.min(GOAL_MACRO_MAX, v)));
 }
 
 function isValidBackground(b: unknown): b is "default" | "air" | "water" | "earth" | "fire" {
@@ -61,9 +82,33 @@ export async function PATCH(request: Request) {
       }
     }
     if (body.ttsSpeed !== undefined) {
-      const v = typeof body.ttsSpeed === "number" ? body.ttsSpeed : parseFloat(body.ttsSpeed);
-      if (!Number.isNaN(v)) {
+      const v = parseNumberish(body.ttsSpeed);
+      if (v !== null) {
         updates.ttsSpeed = clampTtsSpeed(v);
+      }
+    }
+    if (body.goalCaloriesTarget !== undefined) {
+      const v = parseNumberish(body.goalCaloriesTarget);
+      if (v !== null) {
+        updates.goalCaloriesTarget = clampGoalCalories(v);
+      }
+    }
+    if (body.goalCarbsGrams !== undefined) {
+      const v = parseNumberish(body.goalCarbsGrams);
+      if (v !== null) {
+        updates.goalCarbsGrams = clampGoalMacro(v);
+      }
+    }
+    if (body.goalProteinGrams !== undefined) {
+      const v = parseNumberish(body.goalProteinGrams);
+      if (v !== null) {
+        updates.goalProteinGrams = clampGoalMacro(v);
+      }
+    }
+    if (body.goalFatGrams !== undefined) {
+      const v = parseNumberish(body.goalFatGrams);
+      if (v !== null) {
+        updates.goalFatGrams = clampGoalMacro(v);
       }
     }
     if (body.background !== undefined) {

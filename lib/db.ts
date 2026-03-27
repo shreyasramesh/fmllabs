@@ -283,6 +283,11 @@ export interface UserSettings {
   clonedVoices?: ClonedVoiceSetting[];
   background?: BackgroundElement;
   weatherFormat?: "condition-temp" | "emoji-temp" | "temp-only";
+  /** Daily nutrition goals shown on landing cards. */
+  goalCaloriesTarget?: number;
+  goalCarbsGrams?: number;
+  goalProteinGrams?: number;
+  goalFatGrams?: number;
   /** When true, user appears on the global XP leaderboard */
   leaderboardOptIn?: boolean;
   /** How the assistant should address the user; falls back to Clerk name when unset */
@@ -1686,6 +1691,31 @@ export async function updateJournalMentorReflections(
   return result.modifiedCount > 0;
 }
 
+export async function updateSavedTranscriptText(
+  id: string,
+  userId: string,
+  transcriptText: string
+): Promise<(SavedTranscript & { _id: string }) | null> {
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return null;
+  }
+  const enc = encryptTranscriptFields({ transcriptText }) as { transcriptText?: string };
+  const result = await database.collection<SavedTranscriptDoc>("transcripts").findOneAndUpdate(
+    { _id: oid, userId },
+    { $set: { ...enc, updatedAt: new Date() } },
+    { returnDocument: "after" }
+  );
+  if (!result) return null;
+  return decryptTranscriptFields({
+    ...result,
+    _id: result._id.toString(),
+  } as SavedTranscript & { _id: string });
+}
+
 export async function getNuggets(userId: string): Promise<(Nugget & { _id: string })[]> {
   const database = await getDb();
   const docs = await database
@@ -1753,6 +1783,10 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     clonedVoices: doc.clonedVoices,
     background: doc.background,
     weatherFormat: doc.weatherFormat,
+    goalCaloriesTarget: doc.goalCaloriesTarget,
+    goalCarbsGrams: doc.goalCarbsGrams,
+    goalProteinGrams: doc.goalProteinGrams,
+    goalFatGrams: doc.goalFatGrams,
     followedFigureIds: doc.followedFigureIds,
     leaderboardOptIn: doc.leaderboardOptIn,
     preferredName: doc.preferredName,
@@ -1762,7 +1796,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat" | "followedFigureIds" | "leaderboardOptIn" | "preferredName">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "followedFigureIds" | "leaderboardOptIn" | "preferredName">>
 ): Promise<UserSettings> {
   const database = await getDb();
   const now = new Date();
@@ -1786,6 +1820,10 @@ export async function upsertUserSettings(
     clonedVoices: result.clonedVoices,
     background: result.background,
     weatherFormat: result.weatherFormat,
+    goalCaloriesTarget: result.goalCaloriesTarget,
+    goalCarbsGrams: result.goalCarbsGrams,
+    goalProteinGrams: result.goalProteinGrams,
+    goalFatGrams: result.goalFatGrams,
     followedFigureIds: result.followedFigureIds,
     leaderboardOptIn: result.leaderboardOptIn,
     preferredName: result.preferredName,

@@ -66,6 +66,28 @@ export interface LandingTranslations {
   calorieTrackerDone: string;
   calorieTrackerSavedEntry: string;
   calorieTrackerSavedEntries: string;
+  nutritionGoalsButtonLabel: string;
+  nutritionGoalsModalTitle: string;
+  nutritionGoalCaloriesLabel: string;
+  nutritionGoalCarbsLabel: string;
+  nutritionGoalProteinLabel: string;
+  nutritionGoalFatLabel: string;
+  nutritionGoalsSaveError: string;
+  nutritionAnalysisButtonLabel: string;
+  nutritionAnalysisModalTitle: string;
+  nutritionAnalysisModalSubtitle: string;
+  nutritionAnalysisFocusLabel: string;
+  nutritionAnalysisFocusPlaceholder: string;
+  nutritionAnalysisScopeToday: string;
+  nutritionAnalysisScopeSelectedDay: string;
+  nutritionAnalysisGenerate: string;
+  nutritionAnalysisGenerating: string;
+  nutritionAnalysisNoDataError: string;
+  nutritionAnalysisRequestError: string;
+  nutritionAnalysisSummaryHeading: string;
+  nutritionAnalysisGoalStatusHeading: string;
+  nutritionAnalysisHighlightsHeading: string;
+  nutritionAnalysisTipsHeading: string;
 }
 
 const EN: LandingTranslations = {
@@ -126,6 +148,30 @@ const EN: LandingTranslations = {
   calorieTrackerDone: "Done",
   calorieTrackerSavedEntry: "Saved to journal entry.",
   calorieTrackerSavedEntries: "Saved to journal entries.",
+  nutritionGoalsButtonLabel: "Set goals",
+  nutritionGoalsModalTitle: "Nutrition goals",
+  nutritionGoalCaloriesLabel: "Calories target",
+  nutritionGoalCarbsLabel: "Carbs target (g)",
+  nutritionGoalProteinLabel: "Protein target (g)",
+  nutritionGoalFatLabel: "Fat target (g)",
+  nutritionGoalsSaveError: "Couldn’t save goals. Try again.",
+  nutritionAnalysisButtonLabel: "Analyze nutrition",
+  nutritionAnalysisModalTitle: "Nutrition analysis",
+  nutritionAnalysisModalSubtitle:
+    "Get a simple report based on your goals and your nutrition/exercise logs for the day.",
+  nutritionAnalysisFocusLabel: "Optional focus",
+  nutritionAnalysisFocusPlaceholder:
+    "e.g. Focus on protein balance, late-night eating, and workout fuel",
+  nutritionAnalysisScopeToday: "Today",
+  nutritionAnalysisScopeSelectedDay: "Selected day",
+  nutritionAnalysisGenerate: "Generate report",
+  nutritionAnalysisGenerating: "Generating report...",
+  nutritionAnalysisNoDataError: "Add a nutrition or exercise log first for this day.",
+  nutritionAnalysisRequestError: "Couldn’t generate report. Try again.",
+  nutritionAnalysisSummaryHeading: "Summary",
+  nutritionAnalysisGoalStatusHeading: "Goal status",
+  nutritionAnalysisHighlightsHeading: "Highlights",
+  nutritionAnalysisTipsHeading: "Tips for tomorrow",
 };
 
 const TRANSLATIONS: Partial<Record<LanguageCode, Partial<LandingTranslations>>> = {

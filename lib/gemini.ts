@@ -331,8 +331,42 @@ export interface CalorieTrackingFinalizeResult {
   };
   exercise?: {
     caloriesBurned: number | null;
+    carbsUsedGrams?: number | null;
+    fatUsedGrams?: number | null;
+    proteinDeltaGrams?: number | null;
     notes: string;
   };
+}
+
+export interface NutritionDailyReportInput {
+  dayLabel: string;
+  focusPrompt?: string;
+  goals: {
+    caloriesTarget: number;
+    carbsTargetGrams: number;
+    proteinTargetGrams: number;
+    fatTargetGrams: number;
+  };
+  totals: {
+    caloriesFood: number;
+    caloriesExercise: number;
+    caloriesRemaining: number;
+    carbsGrams: number;
+    proteinGrams: number;
+    fatGrams: number;
+  };
+}
+
+export interface NutritionDailyReportResult {
+  summary: string;
+  goalStatus: string;
+  highlights: string[];
+  tomorrowTips: string[];
+}
+
+export interface CalorieTrackingEnrichedEntryResult {
+  nutritionEntry?: string;
+  exerciseEntry?: string;
 }
 
 function toFiniteNumberOrNull(v: unknown): number | null {
@@ -342,6 +376,66 @@ function toFiniteNumberOrNull(v: unknown): number | null {
     return Number.isFinite(n) ? n : null;
   }
   return null;
+}
+
+export async function enrichCalorieTrackingEntries(
+  inputText: string,
+  clarificationAnswers: string[],
+  usageContext?: GeminiUsageContext
+): Promise<CalorieTrackingEnrichedEntryResult> {
+  const text = inputText.trim().slice(0, 8_000);
+  const answers = clarificationAnswers
+    .map((a) => a.trim())
+    .filter(Boolean)
+    .slice(0, 2);
+  if (!text) return {};
+  const model = getModel();
+  const result = await model.generateContent(
+    `You rewrite calorie-tracker logs into focused, type-specific enriched entries.
+
+Task:
+- Produce a nutrition-only entry (food/drink details only).
+- Produce an exercise-only entry (workout/activity details only).
+- If one type is absent, return empty string for that type.
+
+Rules:
+- Do not mix nutrition details into exercise entry.
+- Do not mix exercise details into nutrition entry.
+- Keep each entry concise (1-3 sentences), factual, and plain language.
+- Keep same language as user input.
+- Do not include headings, markdown, bullets, or extra commentary.
+
+Return ONLY valid JSON with exactly:
+{
+  "nutritionEntry": "string",
+  "exerciseEntry": "string"
+}
+
+Original input:
+${text}
+
+Clarification answers:
+${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"}`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const raw = result.response.text().trim();
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  try {
+    const parsed = JSON.parse(cleaned) as {
+      nutritionEntry?: unknown;
+      exerciseEntry?: unknown;
+    };
+    const nutritionEntry =
+      typeof parsed.nutritionEntry === "string" ? parsed.nutritionEntry.trim().slice(0, 1200) : "";
+    const exerciseEntry =
+      typeof parsed.exerciseEntry === "string" ? parsed.exerciseEntry.trim().slice(0, 1200) : "";
+    return {
+      ...(nutritionEntry ? { nutritionEntry } : {}),
+      ...(exerciseEntry ? { exerciseEntry } : {}),
+    };
+  } catch {
+    return {};
+  }
 }
 
 export async function analyzeCalorieTrackingInput(
@@ -424,6 +518,9 @@ Return ONLY valid JSON with exactly this shape:
   } | null,
   "exercise": {
     "caloriesBurned": number | null,
+    "carbsUsedGrams": number | null,
+    "fatUsedGrams": number | null,
+    "proteinDeltaGrams": number | null,
     "notes": "short note"
   } | null
 }
@@ -458,6 +555,9 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
       } | null;
       exercise?: {
         caloriesBurned?: unknown;
+        carbsUsedGrams?: unknown;
+        fatUsedGrams?: unknown;
+        proteinDeltaGrams?: unknown;
         notes?: unknown;
       } | null;
     };
@@ -488,6 +588,9 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
       parsed.exercise && typeof parsed.exercise === "object"
         ? {
             caloriesBurned: toFiniteNumberOrNull(parsed.exercise.caloriesBurned),
+            carbsUsedGrams: toFiniteNumberOrNull(parsed.exercise.carbsUsedGrams),
+            fatUsedGrams: toFiniteNumberOrNull(parsed.exercise.fatUsedGrams),
+            proteinDeltaGrams: toFiniteNumberOrNull(parsed.exercise.proteinDeltaGrams),
             notes: typeof parsed.exercise.notes === "string" ? parsed.exercise.notes.trim() : "",
           }
         : undefined;
@@ -512,6 +615,195 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
         notes: "",
       },
     };
+  }
+}
+
+export async function generateNutritionDailyReport(
+  input: NutritionDailyReportInput,
+  usageContext?: GeminiUsageContext
+): Promise<NutritionDailyReportResult> {
+  const focusPrompt = (input.focusPrompt ?? "").trim().slice(0, 600);
+  const model = getModel();
+  const result = await model.generateContent(
+    `You are a practical nutrition and exercise coach.
+
+Given one day of tracked data and daily goals, return a short, simple report with helpful guidance for tomorrow.
+
+Rules:
+- Use plain language.
+- Be supportive but honest.
+- Do not provide medical diagnosis or medical claims.
+- Keep it practical and specific.
+- Mention both nutrition intake and exercise impact when relevant.
+- Tips should be actionable tomorrow and realistic.
+
+Return ONLY valid JSON with exactly this shape:
+{
+  "summary": "2-4 short sentences",
+  "goalStatus": "1-2 concise sentences comparing today's totals to goals",
+  "highlights": ["bullet point", "..."],
+  "tomorrowTips": ["tip 1", "tip 2", "tip 3"]
+}
+
+Constraints:
+- highlights: 2 to 4 items
+- tomorrowTips: 3 to 5 items
+- each tip should be 1 sentence
+
+DAY CONTEXT:
+- Day label: ${input.dayLabel}
+- Focus request: ${focusPrompt || "(none)"}
+
+GOALS:
+- Calories target: ${input.goals.caloriesTarget} kcal
+- Carbs target: ${input.goals.carbsTargetGrams} g
+- Protein target: ${input.goals.proteinTargetGrams} g
+- Fat target: ${input.goals.fatTargetGrams} g
+
+TODAY TOTALS:
+- Calories from food: ${input.totals.caloriesFood} kcal
+- Calories burned from exercise: ${input.totals.caloriesExercise} kcal
+- Calories remaining vs goal: ${input.totals.caloriesRemaining} kcal
+- Carbs: ${input.totals.carbsGrams} g
+- Protein: ${input.totals.proteinGrams} g
+- Fat: ${input.totals.fatGrams} g`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const raw = result.response.text().trim();
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  try {
+    const parsed = JSON.parse(cleaned) as {
+      summary?: unknown;
+      goalStatus?: unknown;
+      highlights?: unknown;
+      tomorrowTips?: unknown;
+    };
+    const highlights = Array.isArray(parsed.highlights)
+      ? parsed.highlights
+          .map((item) => (typeof item === "string" ? item.trim() : ""))
+          .filter(Boolean)
+          .slice(0, 4)
+      : [];
+    const tomorrowTips = Array.isArray(parsed.tomorrowTips)
+      ? parsed.tomorrowTips
+          .map((item) => (typeof item === "string" ? item.trim() : ""))
+          .filter(Boolean)
+          .slice(0, 5)
+      : [];
+    return {
+      summary:
+        typeof parsed.summary === "string" && parsed.summary.trim()
+          ? parsed.summary.trim()
+          : "You logged your day, and this gives us a solid baseline for tomorrow.",
+      goalStatus:
+        typeof parsed.goalStatus === "string" && parsed.goalStatus.trim()
+          ? parsed.goalStatus.trim()
+          : "Your intake and exercise are now mapped against your goals.",
+      highlights:
+        highlights.length > 0
+          ? highlights
+          : [
+              `Calories logged: ${input.totals.caloriesFood} kcal`,
+              `Exercise burn logged: ${input.totals.caloriesExercise} kcal`,
+            ],
+      tomorrowTips:
+        tomorrowTips.length > 0
+          ? tomorrowTips
+          : [
+              "Plan your main meals early so your calorie target is easier to hit.",
+              "Prioritize protein at each meal to support satiety and recovery.",
+              "Add one short workout or walk to improve your calorie balance tomorrow.",
+            ],
+    };
+  } catch {
+    return {
+      summary: "I analyzed your nutrition and exercise logs for the day.",
+      goalStatus: "You can use this snapshot to make a clearer plan for tomorrow.",
+      highlights: [
+        `Calories logged: ${input.totals.caloriesFood} kcal`,
+        `Exercise burn logged: ${input.totals.caloriesExercise} kcal`,
+      ],
+      tomorrowTips: [
+        "Pre-plan meals and snacks so your calorie total is intentional.",
+        "Target protein early in the day to stay on track with macros.",
+        "Schedule a realistic workout block before your day gets busy.",
+      ],
+    };
+  }
+}
+
+export async function completeExerciseFuelEstimate(
+  inputText: string,
+  clarificationAnswers: string[],
+  currentExercise: {
+    caloriesBurned: number | null;
+    carbsUsedGrams?: number | null;
+    fatUsedGrams?: number | null;
+    proteinDeltaGrams?: number | null;
+    notes?: string;
+  },
+  usageContext?: GeminiUsageContext
+): Promise<{
+  carbsUsedGrams: number | null;
+  fatUsedGrams: number | null;
+  proteinDeltaGrams: number | null;
+}> {
+  const text = inputText.trim().slice(0, 8_000);
+  const answers = clarificationAnswers
+    .map((a) => a.trim())
+    .filter(Boolean)
+    .slice(0, 2);
+  const model = getModel();
+  const result = await model.generateContent(
+    `You estimate exercise fuel breakdown for a workout log.
+
+Given the user context and an existing calories-burned estimate, return best-effort numeric estimates for:
+- carbsUsedGrams
+- fatUsedGrams
+- proteinDeltaGrams (negative if net protein breakdown)
+
+Rules:
+- Return numbers (not strings) when possible.
+- Keep values plausible for the activity intensity and duration.
+- If truly not inferable, return null.
+- Do not include markdown or extra text.
+
+Return ONLY valid JSON:
+{
+  "carbsUsedGrams": number | null,
+  "fatUsedGrams": number | null,
+  "proteinDeltaGrams": number | null
+}
+
+Original input:
+${text}
+
+Clarification answers:
+${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"}
+
+Existing exercise estimate:
+- Calories burned: ${currentExercise.caloriesBurned ?? "unknown"} kcal
+- Carbs used: ${currentExercise.carbsUsedGrams ?? "unknown"} g
+- Fat used: ${currentExercise.fatUsedGrams ?? "unknown"} g
+- Protein delta: ${currentExercise.proteinDeltaGrams ?? "unknown"} g
+- Notes: ${(currentExercise.notes ?? "").trim() || "none"}`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const raw = result.response.text().trim();
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  try {
+    const parsed = JSON.parse(cleaned) as {
+      carbsUsedGrams?: unknown;
+      fatUsedGrams?: unknown;
+      proteinDeltaGrams?: unknown;
+    };
+    return {
+      carbsUsedGrams: toFiniteNumberOrNull(parsed.carbsUsedGrams),
+      fatUsedGrams: toFiniteNumberOrNull(parsed.fatUsedGrams),
+      proteinDeltaGrams: toFiniteNumberOrNull(parsed.proteinDeltaGrams),
+    };
+  } catch {
+    return { carbsUsedGrams: null, fatUsedGrams: null, proteinDeltaGrams: null };
   }
 }
 

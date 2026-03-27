@@ -284,6 +284,7 @@ export function VoiceInputButton({
   disabled = false,
   className = "",
   ariaLabel = "Voice input",
+  compactStopWhileListening = false,
 }: {
   onTranscription: (text: string) => void;
   onLongPress?: () => void;
@@ -291,6 +292,7 @@ export function VoiceInputButton({
   disabled?: boolean;
   className?: string;
   ariaLabel?: string;
+  compactStopWhileListening?: boolean;
 }) {
   const [listening, setListening] = useState(false);
   const [supported, setSupported] = useState(false);
@@ -495,6 +497,18 @@ export function VoiceInputButton({
   if (!supported) return null;
 
   if (listening) {
+    if (compactStopWhileListening) {
+      return (
+        <button
+          type="button"
+          onClick={() => void finishAndPaste()}
+          aria-label="Stop voice input"
+          className={`relative flex items-center justify-center min-w-[52px] min-h-[52px] rounded-2xl border border-red-500/80 text-white bg-red-500 hover:bg-red-600 transition-all duration-200 shrink-0 ${className}`}
+        >
+          <span className="w-3 h-3 bg-white rounded-[2px]" aria-hidden />
+        </button>
+      );
+    }
     return (
       <div
         className={`relative flex items-center gap-1 rounded-xl px-1.5 py-1 min-h-[44px] bg-neutral-100/95 dark:bg-neutral-800/95 border border-neutral-300 dark:border-neutral-600 shrink-0 min-w-0 max-w-full ${className}`}

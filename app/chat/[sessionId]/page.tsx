@@ -1768,6 +1768,34 @@ function getJournalCategoryLabel(
   return null;
 }
 
+function getJournalCategoryLabelWithRegular(
+  category: "nutrition" | "exercise" | undefined
+): "Regular" | "Nutrition" | "Exercise" {
+  if (category === "nutrition") return "Nutrition";
+  if (category === "exercise") return "Exercise";
+  return "Regular";
+}
+
+function journalEntryDayKey(t: {
+  journalEntryYear?: number;
+  journalEntryMonth?: number;
+  journalEntryDay?: number;
+  createdAt?: string;
+}): string | null {
+  if (
+    typeof t.journalEntryYear === "number" &&
+    typeof t.journalEntryMonth === "number" &&
+    typeof t.journalEntryDay === "number"
+  ) {
+    return toDayKey(new Date(t.journalEntryYear, t.journalEntryMonth - 1, t.journalEntryDay));
+  }
+  if (t.createdAt) {
+    const d = new Date(t.createdAt);
+    if (!Number.isNaN(d.getTime())) return toDayKey(d);
+  }
+  return null;
+}
+
 const JOURNAL_LIST_PREVIEW_MAX = 160;
 const LANDING_TYPED_PLACEHOLDERS = [
   "Ask me to plan your day",
@@ -1776,6 +1804,16 @@ const LANDING_TYPED_PLACEHOLDERS = [
   "Break down a hard decision",
   "Use @ to pull in your saved context",
 ];
+const DEFAULT_NUTRITION_GOALS = {
+  caloriesTarget: 2000,
+  carbsGrams: 250,
+  proteinGrams: 125,
+  fatGrams: 56,
+};
+const GOAL_CALORIES_MIN = 800;
+const GOAL_CALORIES_MAX = 6000;
+const GOAL_MACRO_MIN = 10;
+const GOAL_MACRO_MAX = 1000;
 
 function truncateJournalListPreview(text: string | undefined, max = JOURNAL_LIST_PREVIEW_MAX): string {
   if (!text?.trim()) return "";
@@ -1828,6 +1866,150 @@ function isNonNull<T>(value: T | null): value is T {
   return value !== null;
 }
 
+function extractEstimatedNumber(text: string, pattern: RegExp): number | null {
+  const match = text.match(pattern);
+  if (!match?.[1]) return null;
+  const value = Number(match[1]);
+  return Number.isFinite(value) ? value : null;
+}
+
+function summarizeNutritionForDay(
+  entries: Array<{
+    sourceType?: "youtube" | "journal";
+    transcriptText?: string;
+    journalCategory?: "nutrition" | "exercise";
+    journalEntryYear?: number;
+    journalEntryMonth?: number;
+    journalEntryDay?: number;
+    createdAt?: string;
+  }>,
+  dayKey: string,
+  caloriesTarget: number
+): {
+  caloriesFood: number;
+  caloriesExercise: number;
+  caloriesRemaining: number;
+  carbsGrams: number;
+  proteinGrams: number;
+  fatGrams: number;
+} {
+  let caloriesFood = 0;
+  let caloriesExercise = 0;
+  let carbsGrams = 0;
+  let proteinGrams = 0;
+  let fatGrams = 0;
+
+  for (const t of entries) {
+    if (t.sourceType !== "journal" || !t.transcriptText) continue;
+    let itemDayKey: string | null = null;
+    if (
+      typeof t.journalEntryYear === "number" &&
+      typeof t.journalEntryMonth === "number" &&
+      typeof t.journalEntryDay === "number"
+    ) {
+      itemDayKey = toDayKey(new Date(t.journalEntryYear, t.journalEntryMonth - 1, t.journalEntryDay));
+    } else if (t.createdAt) {
+      const d = new Date(t.createdAt);
+      if (!Number.isNaN(d.getTime())) itemDayKey = toDayKey(d);
+    }
+    if (itemDayKey !== dayKey) continue;
+
+    if (t.journalCategory === "nutrition") {
+      const calories = extractEstimatedNumber(t.transcriptText, /- Calories:\s*([\d.]+)\s*kcal/i);
+      const carbs = extractEstimatedNumber(t.transcriptText, /- Carbs:\s*([\d.]+)\s*g/i);
+      const protein = extractEstimatedNumber(t.transcriptText, /- Protein:\s*([\d.]+)\s*g/i);
+      const fat = extractEstimatedNumber(t.transcriptText, /- Fat:\s*([\d.]+)\s*g/i);
+      if (calories !== null) caloriesFood += calories;
+      if (carbs !== null) carbsGrams += carbs;
+      if (protein !== null) proteinGrams += protein;
+      if (fat !== null) fatGrams += fat;
+    }
+
+    if (t.journalCategory === "exercise") {
+      const burned = extractEstimatedNumber(t.transcriptText, /- Calories burned:\s*([\d.]+)\s*kcal/i);
+      if (burned !== null) caloriesExercise += burned;
+    }
+  }
+
+  return {
+    caloriesFood: Math.round(caloriesFood),
+    caloriesExercise: Math.round(caloriesExercise),
+    caloriesRemaining: Math.max(0, Math.round(caloriesTarget - caloriesFood + caloriesExercise)),
+    carbsGrams: Math.round(carbsGrams),
+    proteinGrams: Math.round(proteinGrams),
+    fatGrams: Math.round(fatGrams),
+  };
+}
+
+function hasMeaningfulNutritionData(snapshot: {
+  caloriesFood: number;
+  caloriesExercise: number;
+  carbsGrams: number;
+  proteinGrams: number;
+  fatGrams: number;
+}): boolean {
+  return (
+    snapshot.caloriesFood > 0 ||
+    snapshot.caloriesExercise > 0 ||
+    snapshot.carbsGrams > 0 ||
+    snapshot.proteinGrams > 0 ||
+    snapshot.fatGrams > 0
+  );
+}
+
+function extractCalorieJournalDisplaySections(text: string): {
+  enrichedEntry: string | null;
+  assumptions: string[];
+} {
+  const normalized = text.replace(/\r/g, "");
+  const enrichedMatch = /Enriched entry:\s*([\s\S]*?)(?:\n\n|$)/i.exec(normalized);
+  const enrichedEntry = enrichedMatch?.[1]?.trim() ? enrichedMatch[1].trim() : null;
+
+  const assumptionsHeaderIdx = normalized.search(/Assumptions:\s*/i);
+  if (assumptionsHeaderIdx < 0) {
+    return { enrichedEntry, assumptions: [] };
+  }
+  const assumptionsBlock = normalized.slice(assumptionsHeaderIdx).replace(/^Assumptions:\s*/i, "").trim();
+  if (!assumptionsBlock) return { enrichedEntry, assumptions: [] };
+
+  const assumptions = assumptionsBlock
+    .split(/\n+/)
+    .flatMap((line) => line.split(/\s+-\s+/))
+    .map((part) => part.replace(/^\s*-\s*/, "").trim())
+    .filter(Boolean);
+
+  return { enrichedEntry, assumptions };
+}
+
+function clampToRange(value: number, min: number, max: number): number {
+  return Math.round(Math.max(min, Math.min(max, value)));
+}
+
+function normalizeGoalValue(
+  value: unknown,
+  fallback: number,
+  min: number,
+  max: number
+): number {
+  const parsed = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(parsed)) return fallback;
+  return clampToRange(parsed, min, max);
+}
+
+function getGoalSpectrumTextClass(current: number, target: number): string {
+  if (!Number.isFinite(current) || !Number.isFinite(target) || target <= 0) {
+    return "text-foreground";
+  }
+  const ratio = current / target;
+  if (ratio <= 0.25) return "text-red-600 dark:text-red-400";
+  if (ratio <= 0.5) return "text-orange-600 dark:text-orange-400";
+  if (ratio <= 0.9) return "text-yellow-600 dark:text-yellow-400";
+  if (ratio <= 1.1) return "text-emerald-600 dark:text-emerald-400";
+  if (ratio <= 1.35) return "text-yellow-600 dark:text-yellow-400";
+  if (ratio <= 1.6) return "text-orange-600 dark:text-orange-400";
+  return "text-red-600 dark:text-red-400";
+}
+
 type LandingActivityKind =
   | "session"
   | "journal"
@@ -1864,6 +2046,7 @@ export default function ChatPage() {
   const isNew = sessionId === "new";
   const incognitoMode = sessionId === "incognito";
   const [selectedLandingDayKey, setSelectedLandingDayKey] = useState(() => toDayKey(new Date()));
+  const [journalPanelSelectedDayKey, setJournalPanelSelectedDayKey] = useState(() => toDayKey(new Date()));
   const [brandLogoParty, setBrandLogoParty] = useState(false);
   const brandLogoPartyTimeoutRef = useRef<number | null>(null);
   const [headerCalendarOpen, setHeaderCalendarOpen] = useState(false);
@@ -1872,6 +2055,8 @@ export default function ChatPage() {
     return new Date(now.getFullYear(), now.getMonth(), 1);
   });
   const headerCalendarRef = useRef<HTMLDivElement | null>(null);
+  const journalPanelDaysScrollerRef = useRef<HTMLDivElement | null>(null);
+  const journalPanelDaysAutoScrolledRef = useRef(false);
 
   const [sessions, setSessions] = useState<Session[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -1944,6 +2129,17 @@ export default function ChatPage() {
   const [exportMarkdownError, setExportMarkdownError] = useState<string | null>(null);
   const { background, setBackground } = useBackground();
   const [weatherFormat, setWeatherFormat] = useState<WeatherFormat>("condition-temp");
+  const [nutritionGoals, setNutritionGoals] = useState(() => ({ ...DEFAULT_NUTRITION_GOALS }));
+  const [goalsModalOpen, setGoalsModalOpen] = useState(false);
+  const [goalsDraft, setGoalsDraft] = useState(() => ({
+    caloriesTarget: String(DEFAULT_NUTRITION_GOALS.caloriesTarget),
+    carbsGrams: String(DEFAULT_NUTRITION_GOALS.carbsGrams),
+    proteinGrams: String(DEFAULT_NUTRITION_GOALS.proteinGrams),
+    fatGrams: String(DEFAULT_NUTRITION_GOALS.fatGrams),
+  }));
+  const [goalsSaving, setGoalsSaving] = useState(false);
+  const [goalsSaveError, setGoalsSaveError] = useState<string | null>(null);
+  const [landingNutritionBannerOpen, setLandingNutritionBannerOpen] = useState(true);
   const [moonPhase, setMoonPhase] = useState<number | null>(null);
   const [conceptSavedToast, setConceptSavedToast] = useState(false);
   const [convertToDeepSuccess, setConvertToDeepSuccess] = useState(false);
@@ -2044,6 +2240,19 @@ export default function ChatPage() {
   } | null>(null);
   const [transcriptExtractedConceptOpen, setTranscriptExtractedConceptOpen] = useState<{ gi: number; ci: number } | null>(null);
   const [mentorReflectionsRegenerateLoading, setMentorReflectionsRegenerateLoading] = useState(false);
+  const [transcriptStatsEditing, setTranscriptStatsEditing] = useState(false);
+  const [transcriptStatsSaving, setTranscriptStatsSaving] = useState(false);
+  const [transcriptStatsError, setTranscriptStatsError] = useState<string | null>(null);
+  const [transcriptStatsDraft, setTranscriptStatsDraft] = useState<{
+    caloriesFood: string;
+    carbsGrams: string;
+    proteinGrams: string;
+    fatGrams: string;
+    caloriesExercise: string;
+    carbsUsedGrams: string;
+    fatUsedGrams: string;
+    proteinDeltaGrams: string;
+  } | null>(null);
   /** Transcript modal: which mentor avatar is selected to show reflection bubble (figureId or null). */
   const [journalMentorBubbleOpenId, setJournalMentorBubbleOpenId] = useState<string | null>(null);
   const [transcriptExtractedConceptsSectionOpen, setTranscriptExtractedConceptsSectionOpen] = useState(true);
@@ -2238,6 +2447,8 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const landingDaysScrollerRef = useRef<HTMLDivElement>(null);
+  const landingDaysAutoScrolledRef = useRef(false);
   const inputRef = useRef<HTMLDivElement>(null);
   const justCreatedSessionRef = useRef<string | null>(null);
   const anonymousActiveRef = useRef(false);
@@ -2649,6 +2860,55 @@ export default function ChatPage() {
     }
     return [...map.values()].sort((a, b) => a.monthStart - b.monthStart);
   }, [journalEntriesSorted, language]);
+  const journalPanelLast7Days = useMemo(() => {
+    const today = new Date();
+    const days: { key: string; date: Date }[] = [];
+    for (let offset = 6; offset >= 0; offset -= 1) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - offset);
+      days.push({ key: toDayKey(d), date: d });
+    }
+    return days;
+  }, []);
+  const journalPanelDayCounts = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const t of journalEntriesSorted) {
+      const dayKey = journalEntryDayKey(t);
+      if (!dayKey) continue;
+      map.set(dayKey, (map.get(dayKey) ?? 0) + 1);
+    }
+    return map;
+  }, [journalEntriesSorted]);
+  const selectedJournalPanelEntries = useMemo(
+    () =>
+      journalEntriesSorted
+        .filter((t) => journalEntryDayKey(t) === journalPanelSelectedDayKey)
+        .slice()
+        .sort((a, b) => {
+          const ta = (() => {
+            if (
+              typeof a.journalEntryYear === "number" &&
+              typeof a.journalEntryMonth === "number" &&
+              typeof a.journalEntryDay === "number"
+            ) {
+              return new Date(a.journalEntryYear, a.journalEntryMonth - 1, a.journalEntryDay).getTime();
+            }
+            return a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          })();
+          const tb = (() => {
+            if (
+              typeof b.journalEntryYear === "number" &&
+              typeof b.journalEntryMonth === "number" &&
+              typeof b.journalEntryDay === "number"
+            ) {
+              return new Date(b.journalEntryYear, b.journalEntryMonth - 1, b.journalEntryDay).getTime();
+            }
+            return b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          })();
+          return tb - ta;
+        }),
+    [journalEntriesSorted, journalPanelSelectedDayKey]
+  );
 
   const [calorieTrackerModalOpen, setCalorieTrackerModalOpen] = useState(false);
   const [calorieTrackerInput, setCalorieTrackerInput] = useState("");
@@ -2671,6 +2931,9 @@ export default function ChatPage() {
     };
     exercise?: {
       caloriesBurned: number | null;
+      carbsUsedGrams?: number | null;
+      fatUsedGrams?: number | null;
+      proteinDeltaGrams?: number | null;
       notes: string;
     };
     savedEntries?: Array<{ id: string; category: "nutrition" | "exercise"; title: string }>;
@@ -2681,6 +2944,21 @@ export default function ChatPage() {
   const [journalEntrySaving, setJournalEntrySaving] = useState(false);
   const [journalEntrySaveError, setJournalEntrySaveError] = useState<string | null>(null);
   const [journalTypeChooserOpen, setJournalTypeChooserOpen] = useState(false);
+  const [nutritionReportModalOpen, setNutritionReportModalOpen] = useState(false);
+  const [nutritionReportDayScope, setNutritionReportDayScope] = useState<"today" | "selected_day">("today");
+  const [nutritionReportFocusPrompt, setNutritionReportFocusPrompt] = useState("");
+  const [nutritionReportLoading, setNutritionReportLoading] = useState(false);
+  const [nutritionReportError, setNutritionReportError] = useState<string | null>(null);
+  const [nutritionReportResult, setNutritionReportResult] = useState<{
+    dayKey: string;
+    dayLabel: string;
+    report: {
+      summary: string;
+      goalStatus: string;
+      highlights: string[];
+      tomorrowTips: string[];
+    };
+  } | null>(null);
 
   const resetJournalEntryModal = useCallback(() => {
     setJournalEntryModalOpen(false);
@@ -2794,6 +3072,9 @@ export default function ChatPage() {
           };
           exercise?: {
             caloriesBurned: number | null;
+            carbsUsedGrams?: number | null;
+            fatUsedGrams?: number | null;
+            proteinDeltaGrams?: number | null;
             notes: string;
           };
           savedEntries?: Array<{ id: string; category: "nutrition" | "exercise"; title: string }>;
@@ -3132,6 +3413,199 @@ export default function ChatPage() {
     }
     return chips;
   }, [headerCalendarMonth]);
+  const selectedLandingDayNutrition = useMemo(
+    () =>
+      summarizeNutritionForDay(
+        journalEntriesSorted,
+        selectedLandingDayKey,
+        nutritionGoals.caloriesTarget
+      ),
+    [journalEntriesSorted, nutritionGoals.caloriesTarget, selectedLandingDayKey]
+  );
+  const todayLandingDayKey = useMemo(() => toDayKey(new Date()), []);
+  const todayLandingNutrition = useMemo(
+    () =>
+      summarizeNutritionForDay(
+        journalEntriesSorted,
+        todayLandingDayKey,
+        nutritionGoals.caloriesTarget
+      ),
+    [journalEntriesSorted, nutritionGoals.caloriesTarget, todayLandingDayKey]
+  );
+  const activeNutritionReportDayKey =
+    nutritionReportDayScope === "selected_day" ? selectedLandingDayKey : todayLandingDayKey;
+  const activeNutritionReportSnapshot =
+    nutritionReportDayScope === "selected_day" ? selectedLandingDayNutrition : todayLandingNutrition;
+  const canRunNutritionReport = hasMeaningfulNutritionData(activeNutritionReportSnapshot);
+  const transcriptModalNutritionSnapshot = useMemo(() => {
+    if (!transcriptModalTranscript) return null;
+    if (transcriptModalTranscript.sourceType !== "journal") return null;
+    if (
+      transcriptModalTranscript.journalCategory !== "nutrition" &&
+      transcriptModalTranscript.journalCategory !== "exercise"
+    ) {
+      return null;
+    }
+    const text = transcriptModalTranscript.transcriptText ?? "";
+    const isExerciseEntry = transcriptModalTranscript.journalCategory === "exercise";
+    const caloriesFood =
+      transcriptModalTranscript.journalCategory === "nutrition"
+        ? extractEstimatedNumber(text, /- Calories:\s*([\d.]+)\s*kcal/i) ?? 0
+        : 0;
+    const caloriesExercise =
+      transcriptModalTranscript.journalCategory === "exercise"
+        ? extractEstimatedNumber(text, /- Calories burned:\s*([\d.]+)\s*kcal/i) ?? 0
+        : 0;
+    const carbsGrams = extractEstimatedNumber(text, /- Carbs:\s*([\d.]+)\s*g/i) ?? 0;
+    const proteinGrams = extractEstimatedNumber(text, /- Protein:\s*([\d.]+)\s*g/i) ?? 0;
+    const fatGrams = extractEstimatedNumber(text, /- Fat:\s*([\d.]+)\s*g/i) ?? 0;
+    const llmCarbsUsed = extractEstimatedNumber(text, /- Carbs used:\s*([-\d.]+)\s*g/i);
+    const llmFatUsed = extractEstimatedNumber(text, /- Fat used:\s*([-\d.]+)\s*g/i);
+    const llmProteinDelta = extractEstimatedNumber(text, /- Protein delta:\s*([-\d.]+)\s*g/i);
+    const estimatedCarbsUsedGrams = isExerciseEntry
+      ? llmCarbsUsed
+      : 0;
+    const estimatedFatUsedGrams = isExerciseEntry
+      ? llmFatUsed
+      : 0;
+    const estimatedProteinDeltaGrams = isExerciseEntry
+      ? llmProteinDelta
+      : 0;
+    return {
+      mode: isExerciseEntry ? ("exercise" as const) : ("nutrition" as const),
+      caloriesFood: Math.round(caloriesFood),
+      caloriesExercise: Math.round(caloriesExercise),
+      caloriesRemaining: Math.max(
+        0,
+        Math.round(nutritionGoals.caloriesTarget - caloriesFood + caloriesExercise)
+      ),
+      carbsGrams: Math.round(carbsGrams),
+      proteinGrams: Math.round(proteinGrams),
+      fatGrams: Math.round(fatGrams),
+      estimatedCarbsUsedGrams,
+      estimatedFatUsedGrams,
+      estimatedProteinDeltaGrams,
+    };
+  }, [nutritionGoals.caloriesTarget, transcriptModalTranscript]);
+  const showTranscriptMentorReflections =
+    transcriptModalTranscript?.sourceType === "journal" &&
+    transcriptModalTranscript?.journalCategory !== "nutrition" &&
+    transcriptModalTranscript?.journalCategory !== "exercise";
+  const beginTranscriptStatsEdit = useCallback(() => {
+    if (!transcriptModalNutritionSnapshot) return;
+    setTranscriptStatsDraft({
+      caloriesFood: String(transcriptModalNutritionSnapshot.caloriesFood),
+      carbsGrams: String(transcriptModalNutritionSnapshot.carbsGrams),
+      proteinGrams: String(transcriptModalNutritionSnapshot.proteinGrams),
+      fatGrams: String(transcriptModalNutritionSnapshot.fatGrams),
+      caloriesExercise: String(transcriptModalNutritionSnapshot.caloriesExercise),
+      carbsUsedGrams:
+        transcriptModalNutritionSnapshot.estimatedCarbsUsedGrams == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.estimatedCarbsUsedGrams),
+      fatUsedGrams:
+        transcriptModalNutritionSnapshot.estimatedFatUsedGrams == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.estimatedFatUsedGrams),
+      proteinDeltaGrams:
+        transcriptModalNutritionSnapshot.estimatedProteinDeltaGrams == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.estimatedProteinDeltaGrams),
+    });
+    setTranscriptStatsError(null);
+    setTranscriptStatsEditing(true);
+  }, [transcriptModalNutritionSnapshot]);
+  const saveTranscriptStatsEdit = useCallback(async () => {
+    if (!transcriptModalTranscript) return;
+    if (!transcriptStatsDraft) return;
+    if (transcriptModalTranscript.journalCategory !== "nutrition" && transcriptModalTranscript.journalCategory !== "exercise") {
+      return;
+    }
+    const toNum = (s: string) => {
+      const n = Number(s.trim());
+      return Number.isFinite(n) ? n : null;
+    };
+    setTranscriptStatsSaving(true);
+    setTranscriptStatsError(null);
+    try {
+      let payload: Record<string, number>;
+      if (transcriptModalTranscript.journalCategory === "nutrition") {
+        const calories = toNum(transcriptStatsDraft.caloriesFood);
+        const carbsGrams = toNum(transcriptStatsDraft.carbsGrams);
+        const proteinGrams = toNum(transcriptStatsDraft.proteinGrams);
+        const fatGrams = toNum(transcriptStatsDraft.fatGrams);
+        if (calories == null || carbsGrams == null || proteinGrams == null || fatGrams == null) {
+          throw new Error("Please enter valid nutrition numbers.");
+        }
+        payload = { calories, carbsGrams, proteinGrams, fatGrams };
+      } else {
+        const caloriesBurned = toNum(transcriptStatsDraft.caloriesExercise);
+        const carbsUsedGrams = toNum(transcriptStatsDraft.carbsUsedGrams);
+        const fatUsedGrams = toNum(transcriptStatsDraft.fatUsedGrams);
+        const proteinDeltaGrams = toNum(transcriptStatsDraft.proteinDeltaGrams);
+        if (
+          caloriesBurned == null ||
+          carbsUsedGrams == null ||
+          fatUsedGrams == null ||
+          proteinDeltaGrams == null
+        ) {
+          throw new Error("Please enter valid exercise numbers.");
+        }
+        payload = { caloriesBurned, carbsUsedGrams, fatUsedGrams, proteinDeltaGrams };
+      }
+      const res = await fetch(`/api/me/transcripts/${encodeURIComponent(transcriptModalTranscript.id)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const updated = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        transcriptText?: string;
+      };
+      if (!res.ok) {
+        throw new Error(updated.error || "Failed to update journal stats.");
+      }
+      if (typeof updated.transcriptText === "string") {
+        const nextText = updated.transcriptText;
+        setTranscriptModalTranscript((prev) =>
+          prev && prev.id === transcriptModalTranscript.id
+            ? { ...prev, transcriptText: nextText }
+            : prev
+        );
+      }
+      setTranscriptStatsEditing(false);
+      setTranscriptStatsDraft(null);
+      refetchTranscripts();
+    } catch (err) {
+      setTranscriptStatsError(err instanceof Error ? err.message : "Failed to update journal stats.");
+    } finally {
+      setTranscriptStatsSaving(false);
+    }
+  }, [refetchTranscripts, transcriptModalTranscript, transcriptStatsDraft]);
+
+  useEffect(() => {
+    if (!transcriptModalTranscript) {
+      setTranscriptStatsEditing(false);
+      setTranscriptStatsSaving(false);
+      setTranscriptStatsError(null);
+      setTranscriptStatsDraft(null);
+    }
+  }, [transcriptModalTranscript]);
+
+  useEffect(() => {
+    if (messages.length !== 0 || incognitoMode) {
+      landingDaysAutoScrolledRef.current = false;
+      return;
+    }
+    if (landingDaysAutoScrolledRef.current) return;
+    const el = landingDaysScrollerRef.current;
+    if (!el) return;
+    const rafId = window.requestAnimationFrame(() => {
+      el.scrollLeft = el.scrollWidth;
+      landingDaysAutoScrolledRef.current = true;
+    });
+    return () => window.cancelAnimationFrame(rafId);
+  }, [messages.length, incognitoMode, landingCalendarDays.length]);
 
   useEffect(() => {
     if (!isNew && !incognitoMode) return;
@@ -3282,6 +3756,10 @@ export default function ChatPage() {
   useEffect(() => {
     refetchLongTermMemories();
   }, [refetchLongTermMemories]);
+
+  useEffect(() => {
+    refetchTranscripts();
+  }, [refetchTranscripts]);
 
   useEffect(() => {
     refetchCustomConcepts();
@@ -4481,6 +4959,39 @@ export default function ChatPage() {
         if (data?.weatherFormat === "condition-temp" || data?.weatherFormat === "emoji-temp" || data?.weatherFormat === "temp-only") {
           setWeatherFormat(data.weatherFormat);
         }
+        const nextGoals = {
+          caloriesTarget: normalizeGoalValue(
+            data?.goalCaloriesTarget,
+            DEFAULT_NUTRITION_GOALS.caloriesTarget,
+            GOAL_CALORIES_MIN,
+            GOAL_CALORIES_MAX
+          ),
+          carbsGrams: normalizeGoalValue(
+            data?.goalCarbsGrams,
+            DEFAULT_NUTRITION_GOALS.carbsGrams,
+            GOAL_MACRO_MIN,
+            GOAL_MACRO_MAX
+          ),
+          proteinGrams: normalizeGoalValue(
+            data?.goalProteinGrams,
+            DEFAULT_NUTRITION_GOALS.proteinGrams,
+            GOAL_MACRO_MIN,
+            GOAL_MACRO_MAX
+          ),
+          fatGrams: normalizeGoalValue(
+            data?.goalFatGrams,
+            DEFAULT_NUTRITION_GOALS.fatGrams,
+            GOAL_MACRO_MIN,
+            GOAL_MACRO_MAX
+          ),
+        };
+        setNutritionGoals(nextGoals);
+        setGoalsDraft({
+          caloriesTarget: String(nextGoals.caloriesTarget),
+          carbsGrams: String(nextGoals.carbsGrams),
+          proteinGrams: String(nextGoals.proteinGrams),
+          fatGrams: String(nextGoals.fatGrams),
+        });
       })
       .catch(() => {});
     return () => {
@@ -4507,14 +5018,183 @@ export default function ChatPage() {
     [userId]
   );
 
+  const openGoalsModal = useCallback(() => {
+    if (isAnonymous || incognitoMode) {
+      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
+      return;
+    }
+    setGoalsDraft({
+      caloriesTarget: String(nutritionGoals.caloriesTarget),
+      carbsGrams: String(nutritionGoals.carbsGrams),
+      proteinGrams: String(nutritionGoals.proteinGrams),
+      fatGrams: String(nutritionGoals.fatGrams),
+    });
+    setGoalsSaveError(null);
+    setGoalsModalOpen(true);
+  }, [incognitoMode, isAnonymous, nutritionGoals, router]);
+
+  const saveNutritionGoals = useCallback(async () => {
+    if (isAnonymous || incognitoMode || !userId) return;
+    const nextGoals = {
+      caloriesTarget: normalizeGoalValue(
+        goalsDraft.caloriesTarget,
+        nutritionGoals.caloriesTarget,
+        GOAL_CALORIES_MIN,
+        GOAL_CALORIES_MAX
+      ),
+      carbsGrams: normalizeGoalValue(
+        goalsDraft.carbsGrams,
+        nutritionGoals.carbsGrams,
+        GOAL_MACRO_MIN,
+        GOAL_MACRO_MAX
+      ),
+      proteinGrams: normalizeGoalValue(
+        goalsDraft.proteinGrams,
+        nutritionGoals.proteinGrams,
+        GOAL_MACRO_MIN,
+        GOAL_MACRO_MAX
+      ),
+      fatGrams: normalizeGoalValue(
+        goalsDraft.fatGrams,
+        nutritionGoals.fatGrams,
+        GOAL_MACRO_MIN,
+        GOAL_MACRO_MAX
+      ),
+    };
+    setGoalsSaving(true);
+    setGoalsSaveError(null);
+    try {
+      const res = await fetch("/api/me/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          goalCaloriesTarget: nextGoals.caloriesTarget,
+          goalCarbsGrams: nextGoals.carbsGrams,
+          goalProteinGrams: nextGoals.proteinGrams,
+          goalFatGrams: nextGoals.fatGrams,
+        }),
+      });
+      if (!res.ok) {
+        const j = (await res.json().catch(() => ({}))) as { error?: string };
+        throw new Error(j.error || "Could not save goals.");
+      }
+      setNutritionGoals(nextGoals);
+      setGoalsDraft({
+        caloriesTarget: String(nextGoals.caloriesTarget),
+        carbsGrams: String(nextGoals.carbsGrams),
+        proteinGrams: String(nextGoals.proteinGrams),
+        fatGrams: String(nextGoals.fatGrams),
+      });
+      setGoalsModalOpen(false);
+    } catch {
+      setGoalsSaveError(getLandingTranslations(language).nutritionGoalsSaveError);
+    } finally {
+      setGoalsSaving(false);
+    }
+  }, [goalsDraft, incognitoMode, isAnonymous, language, nutritionGoals, userId]);
+
+  const resetNutritionReportModal = useCallback(() => {
+    setNutritionReportModalOpen(false);
+    setNutritionReportDayScope("today");
+    setNutritionReportFocusPrompt("");
+    setNutritionReportLoading(false);
+    setNutritionReportError(null);
+    setNutritionReportResult(null);
+  }, []);
+
+  const openNutritionReportModal = useCallback(() => {
+    playSelectionChime();
+    if (isAnonymous || incognitoMode) {
+      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
+      return;
+    }
+    setNutritionReportDayScope("today");
+    setNutritionReportFocusPrompt("");
+    setNutritionReportLoading(false);
+    setNutritionReportError(null);
+    setNutritionReportResult(null);
+    setNutritionReportModalOpen(true);
+  }, [incognitoMode, isAnonymous, router]);
+
+  const runNutritionReport = useCallback(async () => {
+    if (isAnonymous || incognitoMode || !userId) return;
+    if (!canRunNutritionReport) {
+      setNutritionReportError(getLandingTranslations(language).nutritionAnalysisNoDataError);
+      return;
+    }
+    setNutritionReportLoading(true);
+    setNutritionReportError(null);
+    setNutritionReportResult(null);
+    try {
+      const res = await fetch("/api/me/nutrition-report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dayScope: nutritionReportDayScope,
+          selectedDayKey: selectedLandingDayKey,
+          focusPrompt: nutritionReportFocusPrompt.trim().slice(0, 600),
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        dayKey?: string;
+        dayLabel?: string;
+        report?: {
+          summary?: string;
+          goalStatus?: string;
+          highlights?: string[];
+          tomorrowTips?: string[];
+        };
+      };
+      if (!res.ok || !data.report || !data.dayKey || !data.dayLabel) {
+        throw new Error(data.error || "Could not generate nutrition report.");
+      }
+      setNutritionReportResult({
+        dayKey: data.dayKey,
+        dayLabel: data.dayLabel,
+        report: {
+          summary: data.report.summary ?? "",
+          goalStatus: data.report.goalStatus ?? "",
+          highlights: Array.isArray(data.report.highlights) ? data.report.highlights : [],
+          tomorrowTips: Array.isArray(data.report.tomorrowTips) ? data.report.tomorrowTips : [],
+        },
+      });
+    } catch (err) {
+      const message =
+        err instanceof Error && err.message.includes("No nutrition or exercise activity")
+          ? getLandingTranslations(language).nutritionAnalysisNoDataError
+          : getLandingTranslations(language).nutritionAnalysisRequestError;
+      setNutritionReportError(message);
+    } finally {
+      setNutritionReportLoading(false);
+    }
+  }, [
+    canRunNutritionReport,
+    incognitoMode,
+    isAnonymous,
+    language,
+    nutritionReportDayScope,
+    nutritionReportFocusPrompt,
+    selectedLandingDayKey,
+    userId,
+  ]);
+
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !mentorOneOnOneModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionReportModalOpen && !mentorOneOnOneModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (journalCheckpointModal) setJournalCheckpointModal(null);
         else if (newConversationChooserModalOpen) setNewConversationChooserModalOpen(false);
         else if (mentorOneOnOneModalOpen) setMentorOneOnOneModalOpen(false);
         else if (ideasModalOpen) setIdeasModalOpen(false);
+        else if (transcriptModalTranscript) {
+          setTranscriptModalTranscript(null);
+          setTranscriptExtractedConceptOpen(null);
+          setTranscriptExtractedConceptsSectionOpen(true);
+          setMentorReflectionsRegenerateLoading(false);
+        }
+        else if (nutritionReportModalOpen && !nutritionReportLoading) resetNutritionReportModal();
+        else if (goalsModalOpen && !goalsSaving) setGoalsModalOpen(false);
         else if (journalTypeChooserOpen) setJournalTypeChooserOpen(false);
         else if (journalEntryModalOpen && !journalEntrySaving) resetJournalEntryModal();
         else if (calorieTrackerModalOpen) resetCalorieTrackerModal();
@@ -4547,7 +5227,7 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, journalEntryModalOpen, journalTypeChooserOpen, journalEntrySaving, mentorOneOnOneModalOpen, newConversationChooserModalOpen, journalCheckpointModal, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetJournalEntryModal]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, nutritionReportModalOpen, nutritionReportLoading, journalEntrySaving, mentorOneOnOneModalOpen, newConversationChooserModalOpen, journalCheckpointModal, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetJournalEntryModal, resetNutritionReportModal]);
 
   useEffect(() => {
     if (!headerCalendarOpen) return;
@@ -4699,6 +5379,21 @@ export default function ChatPage() {
   useEffect(() => {
     if (libraryPanelOpen === "cg" || libraryPanelOpen === "journal") refetchTranscripts();
   }, [libraryPanelOpen, refetchTranscripts]);
+  useEffect(() => {
+    if (libraryPanelOpen !== "journal") {
+      journalPanelDaysAutoScrolledRef.current = false;
+      return;
+    }
+    setJournalPanelSelectedDayKey(toDayKey(new Date()));
+    if (journalPanelDaysAutoScrolledRef.current) return;
+    const el = journalPanelDaysScrollerRef.current;
+    if (!el) return;
+    const rafId = window.requestAnimationFrame(() => {
+      el.scrollLeft = el.scrollWidth;
+      journalPanelDaysAutoScrolledRef.current = true;
+    });
+    return () => window.cancelAnimationFrame(rafId);
+  }, [libraryPanelOpen]);
 
   useEffect(() => {
     fetch("/api/famous-figures")
@@ -4976,6 +5671,7 @@ export default function ChatPage() {
   const closeAllModalsExceptLeftPanel = useCallback(() => {
     setHeaderCalendarOpen(false);
     setJournalTypeChooserOpen(false);
+    setGoalsModalOpen(false);
     setWaysOfLookingAtModalOpen(false);
     setWaysOfLookingAtDrawMode(false);
     setWaysOfLookingAtCategory(null);
@@ -4992,6 +5688,7 @@ export default function ChatPage() {
     setIdeasModalOpen(false);
     resetJournalEntryModal();
     resetCalorieTrackerModal();
+    resetNutritionReportModal();
     setNewConversationChooserModalOpen(false);
     setMentorOneOnOneModalOpen(false);
     setDeleteAllDataModalOpen(false);
@@ -5001,7 +5698,7 @@ export default function ChatPage() {
     setCcDeleteConfirmModal(null);
     setCgDeleteConfirmModal(null);
     setGoBackConfirmModal(null);
-  }, [resetCalorieTrackerModal, resetJournalEntryModal]);
+  }, [resetCalorieTrackerModal, resetJournalEntryModal, resetNutritionReportModal]);
 
   const handleBrandLinkClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -5433,7 +6130,7 @@ export default function ChatPage() {
             href="/chat/new"
             onClick={handleBrandLinkClick}
             className={`group inline-flex items-center gap-1.5 font-semibold text-lg min-w-0 truncate ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
-            title={PRODUCT_TAGLINE}
+                title={PRODUCT_TAGLINE}
           >
             <span className="truncate">FigureMyLife Labs</span>
             <span
@@ -7464,9 +8161,9 @@ export default function ChatPage() {
                             >
                               {t.sourceType === "journal" ? (
                                 <div className="flex items-center gap-2 min-w-0">
-                                  <span className="text-sm font-medium truncate block text-foreground">
-                                    {t.videoTitle || "Journal entry"}
-                                  </span>
+                                <span className="text-sm font-medium truncate block text-foreground">
+                                  {t.videoTitle || "Journal entry"}
+                                </span>
                                   {getJournalCategoryLabel(t.journalCategory) ? (
                                     <span className="shrink-0 px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
                                       {getJournalCategoryLabel(t.journalCategory)}
@@ -7501,21 +8198,23 @@ export default function ChatPage() {
                               )}
                             </div>
                             <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setReExtractError(null);
-                                  setReExtractConfirm({
-                                    transcriptId: t._id,
-                                    sourceType: t.sourceType === "journal" ? "journal" : "youtube",
-                                    videoTitle: t.videoTitle ?? undefined,
-                                  });
-                                }}
-                                className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
-                                title="Run AI concept extraction again on this saved text"
-                              >
-                                Re-extract
-                              </button>
+                              {!(t.sourceType === "journal" && (t.journalCategory === "nutrition" || t.journalCategory === "exercise")) && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setReExtractError(null);
+                                    setReExtractConfirm({
+                                      transcriptId: t._id,
+                                      sourceType: t.sourceType === "journal" ? "journal" : "youtube",
+                                      videoTitle: t.videoTitle ?? undefined,
+                                    });
+                                  }}
+                                  className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
+                                  title="Run AI concept extraction again on this saved text"
+                                >
+                                  Re-extract
+                                </button>
+                              )}
                               <button
                                 type="button"
                                 onClick={() => fetch(`/api/me/transcripts/${t._id}`, { method: "DELETE" }).then(() => refetchTranscripts())}
@@ -7736,7 +8435,7 @@ export default function ChatPage() {
               {libraryPanelOpen === "journal" && (
                 <div className="space-y-4">
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                    Freeform entries saved to your library—not sent as chat. Grouped by month, oldest first.
+                    Freeform entries saved to your library—not sent as chat. Filtered by selected day.
                   </p>
                   <div className="flex items-center justify-end gap-2">
                     <button
@@ -7749,14 +8448,49 @@ export default function ChatPage() {
                       + {getLandingTranslations(language).journalEntryButtonLabel}
                     </button>
                   </div>
-                  {journalEntriesSorted.length > 0 ? (
-                    <div className="space-y-5">
-                      {journalEntriesGroupedByMonthYear.map((group) => (
-                        <div key={`${group.monthStart}-${group.label}`} className="space-y-2">
-                          <h3 className="text-xs font-semibold text-neutral-600 dark:text-neutral-300">
-                            {group.label}
-                          </h3>
-                          {group.items.map((t) => (
+                  <div className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background px-2.5 py-2">
+                    <div className="mb-1.5 flex items-center justify-between px-0.5">
+                      <p className="text-xs font-semibold text-foreground">Last 7 days</p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        {selectedJournalPanelEntries.length} item
+                        {selectedJournalPanelEntries.length === 1 ? "" : "s"}
+                      </p>
+                    </div>
+                    <div ref={journalPanelDaysScrollerRef} className="overflow-x-auto">
+                      <div className="flex min-w-max gap-1.5">
+                        {journalPanelLast7Days.map(({ key, date }) => {
+                          const selected = key === journalPanelSelectedDayKey;
+                          const hasActivity = (journalPanelDayCounts.get(key) ?? 0) > 0;
+                          return (
+                            <button
+                              key={key}
+                              type="button"
+                              onClick={() => setJournalPanelSelectedDayKey(key)}
+                              className={`relative w-14 shrink-0 flex flex-col items-center justify-center rounded-lg border px-1 py-2 transition-colors ${
+                                selected
+                                  ? "border-foreground bg-neutral-100 dark:bg-neutral-800"
+                                  : "border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70"
+                              }`}
+                              aria-pressed={selected}
+                            >
+                              <span className="text-[9px] text-neutral-500 dark:text-neutral-400">
+                                {new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(date)}
+                              </span>
+                              <span className="text-base font-semibold text-foreground leading-none mt-0.5">
+                                {date.getDate()}
+                              </span>
+                              {hasActivity && (
+                                <span className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                  {selectedJournalPanelEntries.length > 0 ? (
+                    <div className="space-y-2">
+                      {selectedJournalPanelEntries.map((t) => (
                         <div
                           key={t._id}
                           className="flex items-center justify-between gap-2 p-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/30"
@@ -7824,11 +8558,9 @@ export default function ChatPage() {
                               <span className="text-sm font-medium truncate block text-foreground">
                                 {t.videoTitle || "Journal entry"}
                               </span>
-                              {getJournalCategoryLabel(t.journalCategory) ? (
-                                <span className="shrink-0 px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
-                                  {getJournalCategoryLabel(t.journalCategory)}
-                                </span>
-                              ) : null}
+                              <span className="shrink-0 px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+                                {getJournalCategoryLabelWithRegular(t.journalCategory)}
+                              </span>
                             </div>
                             <p className="text-[10px] text-neutral-500 dark:text-neutral-400">
                               {formatJournalEntryListDate(t)}
@@ -7841,21 +8573,23 @@ export default function ChatPage() {
                             <JournalMentorListHint row={t} language={language} />
                           </div>
                           <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setReExtractError(null);
-                                setReExtractConfirm({
-                                  transcriptId: t._id,
-                                  sourceType: "journal",
-                                  videoTitle: t.videoTitle ?? undefined,
-                                });
-                              }}
-                              className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
-                              title="Run AI concept extraction again on this saved text"
-                            >
-                              Re-extract
-                            </button>
+                            {t.journalCategory !== "nutrition" && t.journalCategory !== "exercise" && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setReExtractError(null);
+                                  setReExtractConfirm({
+                                    transcriptId: t._id,
+                                    sourceType: "journal",
+                                    videoTitle: t.videoTitle ?? undefined,
+                                  });
+                                }}
+                                className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
+                                title="Run AI concept extraction again on this saved text"
+                              >
+                                Re-extract
+                              </button>
+                            )}
                             <button
                               type="button"
                               onClick={() =>
@@ -7868,13 +8602,11 @@ export default function ChatPage() {
                             </button>
                           </div>
                         </div>
-                          ))}
-                        </div>
                       ))}
                     </div>
                   ) : (
                     <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                      No journal entries yet.{" "}
+                      No journal entries for this day.{" "}
                       <button
                         type="button"
                         onClick={openJournalTypeChooser}
@@ -8106,17 +8838,17 @@ export default function ChatPage() {
           ) : (
           <div
             ref={messagesContainerRef}
-            className={`max-w-2xl mx-auto w-full min-w-0 no-touch-callout overflow-x-hidden ${
+            className={`max-w-2xl lg:max-w-4xl mx-auto w-full min-w-0 no-touch-callout overflow-x-hidden ${
               messages.length === 0
                 ? isAnonymous
-                  ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-36 sm:pb-40 px-4 py-6"
-                  : "flex-1 min-h-0 flex flex-col items-center justify-center md:justify-start pb-36 sm:pb-40 md:pb-8 px-4 py-6 md:pt-10"
+                  ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-36 sm:pb-40 px-4 py-5"
+                  : "flex-1 min-h-0 flex flex-col items-center justify-center md:justify-start pb-36 sm:pb-40 md:pb-8 px-4 py-4 md:pt-8"
                 : "px-3 py-4 sm:px-4 sm:py-5"
             }`}
           >
             {messages.length === 0 && (
-              <div className="flex w-full min-w-0 max-w-2xl flex-col items-center text-center px-2 sm:px-4 overflow-x-hidden">
-                <div className={`flex w-full max-w-full min-w-0 flex-col items-center justify-center space-y-6 ${isAnonymous ? "min-h-[calc(100dvh-12rem)]" : ""}`}>
+              <div className="flex w-full min-w-0 max-w-2xl lg:max-w-4xl flex-col items-center text-center px-2 sm:px-4 overflow-x-hidden">
+                <div className={`flex w-full max-w-full min-w-0 flex-col items-center justify-center space-y-4 lg:space-y-5 ${isAnonymous ? "min-h-[calc(100dvh-12rem)]" : ""}`}>
                 {mentorJournalBridgePending ? (
                   <div
                     className="flex flex-col items-center justify-center gap-4 py-16 sm:py-20 min-h-[40vh]"
@@ -8151,58 +8883,152 @@ export default function ChatPage() {
                   </div>
                 ) : (
                   <>
-                    <div className="w-full max-w-2xl min-w-0 space-y-5 animate-fade-in-up">
-                      {!incognitoMode && (
-                        <div className="w-full rounded-3xl border border-neutral-200 dark:border-neutral-700 bg-background px-3 py-3">
-                          <div className="mb-2 flex items-center justify-between px-1">
-                            <p className="text-sm font-medium text-foreground">
+                    <div className="w-full max-w-2xl lg:max-w-4xl min-w-0 space-y-3 sm:space-y-4 animate-fade-in-up">
+                {!incognitoMode && (
+                        <div className="w-full rounded-2xl border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 px-2.5 py-2 animate-fade-in-down">
+                          <div className="mb-1.5 flex items-center justify-between px-0.5">
+                            <p className="text-xs font-semibold text-foreground">
+                              Nutrition summary
+                            </p>
+                            <button
+                              type="button"
+                              onClick={() => setLandingNutritionBannerOpen((prev) => !prev)}
+                              className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium border border-orange-200 dark:border-orange-800 text-neutral-700 dark:text-neutral-200 hover:bg-orange-100/70 dark:hover:bg-orange-900/35 transition-colors"
+                              aria-label={landingNutritionBannerOpen ? "Collapse nutrition banner" : "Expand nutrition banner"}
+                            >
+                              {landingNutritionBannerOpen ? "▲" : "▼"}
+                            </button>
+                          </div>
+                          {landingNutritionBannerOpen && (
+                            <div className="w-full flex gap-1.5 overflow-x-auto sm:grid sm:grid-cols-2 sm:overflow-visible">
+                              <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-1.5 text-left">
+                                <div className="flex items-center gap-2">
+                                  <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-orange-100 dark:bg-orange-900/40">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                                      <path d="M12 3s2.5 2.2 2.5 5c0 1.6-1.3 2.7-2.5 3.9-1.2-1.2-2.5-2.3-2.5-3.9 0-2.8 2.5-5 2.5-5Z" />
+                                      <path d="M7 13a5 5 0 0 0 10 0c0-3.4-2.7-5.4-5-7.6-2.3 2.2-5 4.2-5 7.6Z" />
+                                    </svg>
+                                  </span>
+                                  <p className="text-sm sm:text-base font-semibold text-foreground">Calories</p>
+                                </div>
+                                <div className="mt-1 grid grid-cols-3 gap-1">
+                                  <div className="min-w-0">
+                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                      {selectedLandingDayNutrition.caloriesFood}
+                                    </p>
+                                    <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Food</p>
+                                  </div>
+                                  <div className="min-w-0">
+                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                      {selectedLandingDayNutrition.caloriesExercise}
+                                    </p>
+                                    <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Exercise</p>
+                                  </div>
+                                  <div className="min-w-0">
+                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                      {selectedLandingDayNutrition.caloriesRemaining}
+                                    </p>
+                                    <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Remaining</p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-1.5 text-left">
+                                <div className="flex items-center gap-2">
+                                  <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
+                                      <circle cx="12" cy="12" r="8" stroke="#D946EF" strokeWidth="2.4" strokeDasharray="9 4" strokeLinecap="round" />
+                                    </svg>
+                                  </span>
+                                  <p className="text-sm sm:text-base font-semibold text-foreground">Macros</p>
+                                </div>
+                                <div className="mt-1 grid grid-cols-3 gap-1">
+                                  <div className="min-w-0">
+                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                      {selectedLandingDayNutrition.carbsGrams}/{nutritionGoals.carbsGrams}
+                                    </p>
+                                    <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Carbs (g)</p>
+                                  </div>
+                                  <div className="min-w-0">
+                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                      {selectedLandingDayNutrition.proteinGrams}/{nutritionGoals.proteinGrams}
+                                    </p>
+                                    <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Protein (g)</p>
+                                  </div>
+                                  <div className="min-w-0">
+                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                      {selectedLandingDayNutrition.fatGrams}/{nutritionGoals.fatGrams}
+                                    </p>
+                                    <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Fat (g)</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                {!incognitoMode && (
+                        <div className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background px-2.5 py-2">
+                          <div className="mb-1.5 flex items-center justify-between px-0.5">
+                            <p className="text-xs font-semibold text-foreground">
                               Last 7 days
                             </p>
-                            <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                              {selectedLandingDayActivityItems.length} item{selectedLandingDayActivityItems.length === 1 ? "" : "s"}
-                            </p>
+                            <div className="flex items-center gap-2">
+                              <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                                {selectedLandingDayActivityItems.length} item{selectedLandingDayActivityItems.length === 1 ? "" : "s"}
+                              </p>
+                              {!isAnonymous && (
+                                <>
+                                  <button
+                                    type="button"
+                                    onClick={openNutritionReportModal}
+                                    className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                  >
+                                    {getLandingTranslations(language).nutritionAnalysisButtonLabel}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={openGoalsModal}
+                                    className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                  >
+                                    {getLandingTranslations(language).nutritionGoalsButtonLabel}
+                                  </button>
+                                </>
+                              )}
+                            </div>
                           </div>
-                          <div className="overflow-x-auto">
-                            <div className="grid grid-cols-7 gap-1.5 sm:gap-2 min-w-[120%] sm:min-w-0">
+                          <div ref={landingDaysScrollerRef} className="overflow-x-auto">
+                            <div className="flex min-w-max gap-1.5 sm:grid sm:grid-cols-7 sm:gap-1.5 sm:min-w-0">
                               {landingCalendarDays.map(({ key, date }) => {
                                 const selected = key === selectedLandingDayKey;
                                 const hasActivity = (landingDayActivityCount.get(key) ?? 0) > 0;
                                 return (
-                                  <button
+                      <button
                                     key={key}
-                                    type="button"
+                        type="button"
                                     onClick={() => setSelectedLandingDayKey(key)}
-                                    className={`relative flex flex-col items-center justify-center rounded-xl border px-1.5 py-2.5 transition-colors ${
+                                    className={`relative w-14 sm:w-auto shrink-0 flex flex-col items-center justify-center rounded-lg border px-1 py-2 transition-colors ${
                                       selected
                                         ? "border-foreground bg-neutral-100 dark:bg-neutral-800"
                                         : "border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70"
                                     }`}
                                     aria-pressed={selected}
                                   >
-                                    <span className="text-[10px] sm:text-[11px] text-neutral-500 dark:text-neutral-400">
+                                    <span className="text-[9px] sm:text-[10px] text-neutral-500 dark:text-neutral-400">
                                       {new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(date)}
                                     </span>
-                                    <span className="text-sm font-semibold text-foreground">{date.getDate()}</span>
+                                    <span className="text-base sm:text-sm font-semibold text-foreground leading-none mt-0.5">{date.getDate()}</span>
                                     {hasActivity && (
-                                      <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+                                      <span className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
                                     )}
-                                  </button>
+                          </button>
                                 );
                               })}
-                            </div>
-                          </div>
+                        </div>
+                      </div>
                         </div>
                       )}
-
-                      <div className="w-full px-2">
-                        <p className="text-3xl" aria-hidden>👋</p>
-                        <h1 className="mt-1 text-3xl sm:text-4xl font-semibold text-foreground leading-tight">
-                          Chat with me right away.
-                        </h1>
-                        <p className="mt-2 text-base sm:text-lg text-neutral-700 dark:text-neutral-300">
-                          Tell me what you did today and I&apos;ll help you think, plan, and make progress.
-                        </p>
-                      </div>
 
                       {!incognitoMode && (
                         <div className="w-full text-left">
@@ -8211,11 +9037,11 @@ export default function ChatPage() {
                               No activity yet for this day.
                             </p>
                           ) : (
-                            <div className="space-y-2">
+                            <div className="space-y-1.5">
                               {selectedLandingDayActivityItems.map((item) => (
-                                <button
+                        <button
                                   key={item.id}
-                                  type="button"
+                          type="button"
                                   onClick={() => {
                                     if (item.kind === "session") {
                                       router.push(`/chat/${item.entityId}`);
@@ -8291,9 +9117,9 @@ export default function ChatPage() {
                                       });
                                     }
                                   }}
-                                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 px-3 py-2 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                                  className="w-full rounded-lg border border-neutral-200/80 dark:border-neutral-700/80 px-2.5 py-1.5 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
                                 >
-                                  <p className="text-sm font-medium text-foreground truncate">{item.title}</p>
+                                  <p className="text-[13px] font-medium text-foreground truncate">{item.title}</p>
                                   <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
                                     {item.kind === "session" ? "Conversation" :
                                       item.kind === "journal" ? (item.sublabel ? `Journal entry · ${item.sublabel}` : "Journal entry") :
@@ -8304,17 +9130,17 @@ export default function ChatPage() {
                                       item.kind === "savedModel" ? "Saved model" :
                                       "Perspective card"}
                                   </p>
-                                </button>
+                        </button>
                               ))}
-                            </div>
+                      </div>
                           )}
-                        </div>
+                    </div>
                       )}
-                      {journalEntryJustSaved && (
+                    {journalEntryJustSaved && (
                         <p className="text-sm text-emerald-600 dark:text-emerald-400" role="status">
-                          {getLandingTranslations(language).journalEntrySavedHint}
-                        </p>
-                      )}
+                        {getLandingTranslations(language).journalEntrySavedHint}
+                      </p>
+                    )}
                     </div>
                   </>
                 )}
@@ -8631,7 +9457,7 @@ export default function ChatPage() {
         <div className="fixed inset-x-0 bottom-0 z-30 flex flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background">
           <div className="flex flex-col items-center justify-center px-4 py-2 sm:py-2.5 min-w-0">
             {messages.length === 0 && !incognitoMode && (
-              <div className="w-full max-w-2xl mb-2 flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-0.5">
+              <div className="w-full max-w-2xl lg:max-w-4xl mb-2 flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-0.5">
                 <button
                   type="button"
                   onClick={() => {
@@ -8679,7 +9505,7 @@ export default function ChatPage() {
                 </button>
               </div>
             )}
-            <div className="min-w-0 max-w-2xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex items-center overflow-hidden h-12 min-h-12" data-tour="input-area">
+            <div className="min-w-0 max-w-2xl lg:max-w-4xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex items-center overflow-hidden h-12 min-h-12" data-tour="input-area">
               <div className="flex-1 min-w-0 flex items-center px-3">
                 <MentionInput
                   inputRef={inputRef}
@@ -8745,6 +9571,7 @@ export default function ChatPage() {
                 language={language}
                 disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                 ariaLabel="Voice input"
+                compactStopWhileListening
                 className="!min-h-8 !min-w-8"
               />
               <button
@@ -9361,10 +10188,303 @@ export default function ChatPage() {
             )}
             <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
                 <div className="p-4 pb-6">
-                  <div className="max-w-[65ch] mx-auto text-[15px] leading-relaxed text-foreground">
+                  {transcriptModalNutritionSnapshot && (
+                    <div className="w-full mb-4">
+                      <div className="mb-2 flex items-center justify-end gap-2">
+                        {transcriptStatsError && (
+                          <p className="text-xs text-red-600 dark:text-red-400 mr-auto">{transcriptStatsError}</p>
+                        )}
+                        {transcriptStatsEditing ? (
+                          <>
+                            <button
+                              type="button"
+                              disabled={transcriptStatsSaving}
+                              onClick={() => {
+                                setTranscriptStatsEditing(false);
+                                setTranscriptStatsError(null);
+                              }}
+                              className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="button"
+                              disabled={transcriptStatsSaving}
+                              onClick={() => void saveTranscriptStatsEdit()}
+                              className="px-2 py-1 rounded-md text-[11px] font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                            >
+                              {transcriptStatsSaving ? "Saving..." : "Save stats"}
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={beginTranscriptStatsEdit}
+                            className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                          >
+                            Edit stats
+                          </button>
+                        )}
+                      </div>
+                      <div className="w-full flex gap-1.5 overflow-x-auto sm:grid sm:grid-cols-2 sm:overflow-visible">
+                        {transcriptModalNutritionSnapshot.mode === "exercise" ? (
+                          <>
+                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-1.5 text-left">
+                              <div className="flex items-center gap-2">
+                                <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-orange-100 dark:bg-orange-900/40">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                                    <path d="M12 3s2.5 2.2 2.5 5c0 1.6-1.3 2.7-2.5 3.9-1.2-1.2-2.5-2.3-2.5-3.9 0-2.8 2.5-5 2.5-5Z" />
+                                    <path d="M7 13a5 5 0 0 0 10 0c0-3.4-2.7-5.4-5-7.6-2.3 2.2-5 4.2-5 7.6Z" />
+                                  </svg>
+                                </span>
+                                <p className="text-sm sm:text-base font-semibold text-foreground">Exercise burn</p>
+                              </div>
+                              <div className="mt-1">
+                                {transcriptStatsEditing ? (
+                                  <input
+                                    type="number"
+                                    inputMode="decimal"
+                                    value={transcriptStatsDraft?.caloriesExercise ?? ""}
+                                    onChange={(e) =>
+                                      setTranscriptStatsDraft((prev) =>
+                                        prev ? { ...prev, caloriesExercise: e.target.value } : prev
+                                      )
+                                    }
+                                    className="w-full max-w-[140px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                                  />
+                                ) : (
+                                  <p className="text-2xl sm:text-3xl font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                    {transcriptModalNutritionSnapshot.caloriesExercise}
+                                  </p>
+                                )}
+                                <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Calories burned (kcal)</p>
+                              </div>
+                            </div>
+
+                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-1.5 text-left">
+                              <div className="flex items-center gap-2">
+                                <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
+                                    <circle cx="12" cy="12" r="8" stroke="#D946EF" strokeWidth="2.4" strokeDasharray="9 4" strokeLinecap="round" />
+                                  </svg>
+                                </span>
+                                <p className="text-sm sm:text-base font-semibold text-foreground">Estimated fuel used</p>
+                              </div>
+                              <div className="mt-1 grid grid-cols-3 gap-1">
+                                <div className="min-w-0">
+                                  {transcriptStatsEditing ? (
+                                    <input
+                                      type="number"
+                                      inputMode="decimal"
+                                      value={transcriptStatsDraft?.carbsUsedGrams ?? ""}
+                                      onChange={(e) =>
+                                        setTranscriptStatsDraft((prev) =>
+                                          prev ? { ...prev, carbsUsedGrams: e.target.value } : prev
+                                        )
+                                      }
+                                      className="w-full max-w-[96px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                                    />
+                                  ) : (
+                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                      {transcriptModalNutritionSnapshot.estimatedCarbsUsedGrams == null
+                                        ? "unknown"
+                                        : `${transcriptModalNutritionSnapshot.estimatedCarbsUsedGrams}g`}
+                                    </p>
+                                  )}
+                                  <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Carbs used</p>
+                                </div>
+                                <div className="min-w-0">
+                                  {transcriptStatsEditing ? (
+                                    <input
+                                      type="number"
+                                      inputMode="decimal"
+                                      value={transcriptStatsDraft?.fatUsedGrams ?? ""}
+                                      onChange={(e) =>
+                                        setTranscriptStatsDraft((prev) =>
+                                          prev ? { ...prev, fatUsedGrams: e.target.value } : prev
+                                        )
+                                      }
+                                      className="w-full max-w-[96px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                                    />
+                                  ) : (
+                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                      {transcriptModalNutritionSnapshot.estimatedFatUsedGrams == null
+                                        ? "unknown"
+                                        : `${transcriptModalNutritionSnapshot.estimatedFatUsedGrams}g`}
+                                    </p>
+                                  )}
+                                  <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Fat used</p>
+                                </div>
+                                <div className="min-w-0">
+                                  {transcriptStatsEditing ? (
+                                    <input
+                                      type="number"
+                                      inputMode="decimal"
+                                      value={transcriptStatsDraft?.proteinDeltaGrams ?? ""}
+                                      onChange={(e) =>
+                                        setTranscriptStatsDraft((prev) =>
+                                          prev ? { ...prev, proteinDeltaGrams: e.target.value } : prev
+                                        )
+                                      }
+                                      className="w-full max-w-[96px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                                    />
+                                  ) : (
+                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                      {transcriptModalNutritionSnapshot.estimatedProteinDeltaGrams == null
+                                        ? "unknown"
+                                        : `${transcriptModalNutritionSnapshot.estimatedProteinDeltaGrams >= 0 ? "+" : ""}${transcriptModalNutritionSnapshot.estimatedProteinDeltaGrams}g`}
+                                    </p>
+                                  )}
+                                  <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Protein delta</p>
+                                </div>
+                              </div>
+                              <p className="mt-1 text-[10px] text-neutral-500 dark:text-neutral-400">
+                                Estimated from calories burned using blended carb/fat/protein energy assumptions.
+                              </p>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-1.5 text-left">
+                              <div className="flex items-center gap-2">
+                                <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-orange-100 dark:bg-orange-900/40">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                                    <path d="M12 3s2.5 2.2 2.5 5c0 1.6-1.3 2.7-2.5 3.9-1.2-1.2-2.5-2.3-2.5-3.9 0-2.8 2.5-5 2.5-5Z" />
+                                    <path d="M7 13a5 5 0 0 0 10 0c0-3.4-2.7-5.4-5-7.6-2.3 2.2-5 4.2-5 7.6Z" />
+                                  </svg>
+                                </span>
+                                <p className="text-sm sm:text-base font-semibold text-foreground">Calories</p>
+                              </div>
+                              <div className="mt-1">
+                                {transcriptStatsEditing ? (
+                                  <input
+                                    type="number"
+                                    inputMode="decimal"
+                                    value={transcriptStatsDraft?.caloriesFood ?? ""}
+                                    onChange={(e) =>
+                                      setTranscriptStatsDraft((prev) =>
+                                        prev ? { ...prev, caloriesFood: e.target.value } : prev
+                                      )
+                                    }
+                                    className="w-full max-w-[140px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                                  />
+                                ) : (
+                                  <p className="text-2xl sm:text-3xl font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                    {transcriptModalNutritionSnapshot.caloriesFood}
+                                  </p>
+                                )}
+                                <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Calories added (kcal)</p>
+                              </div>
+                            </div>
+
+                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-1.5 text-left">
+                              <div className="flex items-center gap-2">
+                                <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
+                                    <circle cx="12" cy="12" r="8" stroke="#D946EF" strokeWidth="2.4" strokeDasharray="9 4" strokeLinecap="round" />
+                                  </svg>
+                                </span>
+                                <p className="text-sm sm:text-base font-semibold text-foreground">Macros</p>
+                              </div>
+                              <div className="mt-1 grid grid-cols-3 gap-1">
+                                <div className="min-w-0">
+                                  {transcriptStatsEditing ? (
+                                    <input
+                                      type="number"
+                                      inputMode="decimal"
+                                      value={transcriptStatsDraft?.carbsGrams ?? ""}
+                                      onChange={(e) =>
+                                        setTranscriptStatsDraft((prev) =>
+                                          prev ? { ...prev, carbsGrams: e.target.value } : prev
+                                        )
+                                      }
+                                      className="w-full max-w-[96px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                                    />
+                                  ) : (
+                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                      {transcriptModalNutritionSnapshot.carbsGrams}
+                                    </p>
+                                  )}
+                                  <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Carbs (g)</p>
+                                </div>
+                                <div className="min-w-0">
+                                  {transcriptStatsEditing ? (
+                                    <input
+                                      type="number"
+                                      inputMode="decimal"
+                                      value={transcriptStatsDraft?.proteinGrams ?? ""}
+                                      onChange={(e) =>
+                                        setTranscriptStatsDraft((prev) =>
+                                          prev ? { ...prev, proteinGrams: e.target.value } : prev
+                                        )
+                                      }
+                                      className="w-full max-w-[96px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                                    />
+                                  ) : (
+                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                      {transcriptModalNutritionSnapshot.proteinGrams}
+                                    </p>
+                                  )}
+                                  <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Protein (g)</p>
+                                </div>
+                                <div className="min-w-0">
+                                  {transcriptStatsEditing ? (
+                                    <input
+                                      type="number"
+                                      inputMode="decimal"
+                                      value={transcriptStatsDraft?.fatGrams ?? ""}
+                                      onChange={(e) =>
+                                        setTranscriptStatsDraft((prev) =>
+                                          prev ? { ...prev, fatGrams: e.target.value } : prev
+                                        )
+                                      }
+                                      className="w-full max-w-[96px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                                    />
+                                  ) : (
+                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                      {transcriptModalNutritionSnapshot.fatGrams}
+                                    </p>
+                                  )}
+                                  <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Fat (g)</p>
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  <div className="w-full text-[15px] leading-relaxed text-foreground">
                     {(() => {
                       const t = transcriptModalTranscript.transcriptText.trim();
                       if (!t) return null;
+                      if (
+                        transcriptModalTranscript.sourceType === "journal" &&
+                        (transcriptModalTranscript.journalCategory === "nutrition" ||
+                          transcriptModalTranscript.journalCategory === "exercise")
+                      ) {
+                        const sections = extractCalorieJournalDisplaySections(t);
+                        return (
+                          <div className="space-y-4">
+                            {sections.enrichedEntry && (
+                              <p>
+                                <span className="font-medium">Enriched entry:</span>{" "}
+                                {sections.enrichedEntry}
+                              </p>
+                            )}
+                            {sections.assumptions.length > 0 && (
+                              <div>
+                                <p className="font-medium">Assumptions:</p>
+                                <div className="mt-1 space-y-1">
+                                  {sections.assumptions.map((assumption, idx) => (
+                                    <p key={`${assumption}-${idx}`}>{assumption}</p>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      }
                       const hasParagraphs = /\n\n|\n/.test(t);
                       let paragraphs: string[];
                       if (hasParagraphs) {
@@ -9395,7 +10515,7 @@ export default function ChatPage() {
                     })()}
                   </div>
                 </div>
-            {transcriptModalTranscript.sourceType === "journal" &&
+            {showTranscriptMentorReflections &&
               (typeof transcriptModalTranscript.journalMentorReflectionsStatus === "string" ? (
               <div className="px-4 py-4 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/40">
                 {(transcriptModalTranscript.journalMentorReflectionsStatus === "ready" ||
@@ -9576,25 +10696,29 @@ export default function ChatPage() {
               ))}
             </div>
             <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end shrink-0">
-              <button
-                type="button"
-                title="Run AI concept extraction again on this saved text"
-                onClick={() => {
-                  setReExtractError(null);
-                  setReExtractConfirm({
-                    transcriptId: transcriptModalTranscript.id,
-                    sourceType: transcriptModalTranscript.sourceType === "journal" ? "journal" : "youtube",
-                    videoTitle: transcriptModalTranscript.videoTitle ?? undefined,
-                  });
-                  setTranscriptModalTranscript(null);
-                  setTranscriptExtractedConceptOpen(null);
-                  setTranscriptExtractedConceptsSectionOpen(true);
-                  setMentorReflectionsRegenerateLoading(false);
-                }}
-                className="px-4 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-              >
-                Re-extract
-              </button>
+              {!(transcriptModalTranscript.sourceType === "journal" &&
+                (transcriptModalTranscript.journalCategory === "nutrition" ||
+                  transcriptModalTranscript.journalCategory === "exercise")) && (
+                <button
+                  type="button"
+                  title="Run AI concept extraction again on this saved text"
+                  onClick={() => {
+                    setReExtractError(null);
+                    setReExtractConfirm({
+                      transcriptId: transcriptModalTranscript.id,
+                      sourceType: transcriptModalTranscript.sourceType === "journal" ? "journal" : "youtube",
+                      videoTitle: transcriptModalTranscript.videoTitle ?? undefined,
+                    });
+                    setTranscriptModalTranscript(null);
+                    setTranscriptExtractedConceptOpen(null);
+                    setTranscriptExtractedConceptsSectionOpen(true);
+                    setMentorReflectionsRegenerateLoading(false);
+                  }}
+                  className="px-4 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                >
+                  Re-extract
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => {
@@ -10637,6 +11761,296 @@ export default function ChatPage() {
         <FeedbackModal onClose={() => setFeedbackModalOpen(false)} />
       )}
 
+      {goalsModalOpen && (
+        <div
+          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => {
+            if (!goalsSaving) setGoalsModalOpen(false);
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={getLandingTranslations(language).nutritionGoalsModalTitle}
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,420px)] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700">
+              <h2 className="text-lg font-semibold text-foreground">
+                {getLandingTranslations(language).nutritionGoalsModalTitle}
+              </h2>
+              <button
+                type="button"
+                onClick={() => setGoalsModalOpen(false)}
+                disabled={goalsSaving}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 space-y-3">
+              <div>
+                <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                  {getLandingTranslations(language).nutritionGoalCaloriesLabel}
+                </label>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min={GOAL_CALORIES_MIN}
+                  max={GOAL_CALORIES_MAX}
+                  step={1}
+                  value={goalsDraft.caloriesTarget}
+                  onChange={(e) => setGoalsDraft((prev) => ({ ...prev, caloriesTarget: e.target.value }))}
+                  disabled={goalsSaving}
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div>
+                  <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                    {getLandingTranslations(language).nutritionGoalCarbsLabel}
+                  </label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    min={GOAL_MACRO_MIN}
+                    max={GOAL_MACRO_MAX}
+                    step={1}
+                    value={goalsDraft.carbsGrams}
+                    onChange={(e) => setGoalsDraft((prev) => ({ ...prev, carbsGrams: e.target.value }))}
+                    disabled={goalsSaving}
+                    className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                    {getLandingTranslations(language).nutritionGoalProteinLabel}
+                  </label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    min={GOAL_MACRO_MIN}
+                    max={GOAL_MACRO_MAX}
+                    step={1}
+                    value={goalsDraft.proteinGrams}
+                    onChange={(e) => setGoalsDraft((prev) => ({ ...prev, proteinGrams: e.target.value }))}
+                    disabled={goalsSaving}
+                    className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                    {getLandingTranslations(language).nutritionGoalFatLabel}
+                  </label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    min={GOAL_MACRO_MIN}
+                    max={GOAL_MACRO_MAX}
+                    step={1}
+                    value={goalsDraft.fatGrams}
+                    onChange={(e) => setGoalsDraft((prev) => ({ ...prev, fatGrams: e.target.value }))}
+                    disabled={goalsSaving}
+                    className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                  />
+                </div>
+              </div>
+              {goalsSaveError && (
+                <p className="text-sm text-red-600 dark:text-red-400">{goalsSaveError}</p>
+              )}
+              <div className="flex justify-end gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setGoalsModalOpen(false)}
+                  disabled={goalsSaving}
+                  className="px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                >
+                  {getLandingTranslations(language).journalEntryCancel}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void saveNutritionGoals()}
+                  disabled={goalsSaving}
+                  className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                >
+                  {goalsSaving ? "Saving..." : getLandingTranslations(language).journalEntrySave}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {nutritionReportModalOpen && (
+        <div
+          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => {
+            if (!nutritionReportLoading) resetNutritionReportModal();
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={getLandingTranslations(language).nutritionAnalysisModalTitle}
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <h2 className="text-lg font-semibold text-foreground pr-2">
+                {getLandingTranslations(language).nutritionAnalysisModalTitle}
+              </h2>
+              <button
+                type="button"
+                onClick={resetNutritionReportModal}
+                disabled={nutritionReportLoading}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 space-y-3 overflow-y-auto">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                {getLandingTranslations(language).nutritionAnalysisModalSubtitle}
+              </p>
+
+              <div>
+                <p className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                  {getLandingTranslations(language).nutritionAnalysisScopeToday} / {getLandingTranslations(language).nutritionAnalysisScopeSelectedDay}
+                </p>
+                <div className="inline-flex rounded-xl border border-neutral-200 dark:border-neutral-700 p-1">
+                  <button
+                    type="button"
+                    onClick={() => setNutritionReportDayScope("today")}
+                    disabled={nutritionReportLoading}
+                    className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${
+                      nutritionReportDayScope === "today"
+                        ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
+                        : "text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    }`}
+                  >
+                    {getLandingTranslations(language).nutritionAnalysisScopeToday}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setNutritionReportDayScope("selected_day")}
+                    disabled={nutritionReportLoading}
+                    className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${
+                      nutritionReportDayScope === "selected_day"
+                        ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
+                        : "text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    }`}
+                  >
+                    {getLandingTranslations(language).nutritionAnalysisScopeSelectedDay}
+                  </button>
+                </div>
+                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                  {nutritionReportDayScope === "today"
+                    ? getLandingTranslations(language).nutritionAnalysisScopeToday
+                    : `${getLandingTranslations(language).nutritionAnalysisScopeSelectedDay}: ${selectedLandingDayDate.toLocaleDateString(undefined, { dateStyle: "medium" })}`}
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                  {getLandingTranslations(language).nutritionAnalysisFocusLabel}
+                </label>
+                <textarea
+                  value={nutritionReportFocusPrompt}
+                  onChange={(e) => setNutritionReportFocusPrompt(e.target.value.slice(0, 600))}
+                  disabled={nutritionReportLoading}
+                  rows={3}
+                  placeholder={getLandingTranslations(language).nutritionAnalysisFocusPlaceholder}
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
+                />
+              </div>
+
+              {!canRunNutritionReport && (
+                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                  {getLandingTranslations(language).nutritionAnalysisNoDataError}
+                </p>
+              )}
+
+              {nutritionReportError && (
+                <p className="text-sm text-red-600 dark:text-red-400">{nutritionReportError}</p>
+              )}
+
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => void runNutritionReport()}
+                  disabled={nutritionReportLoading || !canRunNutritionReport}
+                  className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                >
+                  {nutritionReportLoading
+                    ? getLandingTranslations(language).nutritionAnalysisGenerating
+                    : getLandingTranslations(language).nutritionAnalysisGenerate}
+                </button>
+              </div>
+
+              {nutritionReportResult && (
+                <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-3 bg-neutral-50/60 dark:bg-neutral-900/40">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    {nutritionReportResult.dayLabel}
+                  </p>
+                  <div>
+                    <p className="text-xs font-semibold text-foreground mb-1">
+                      {getLandingTranslations(language).nutritionAnalysisSummaryHeading}
+                    </p>
+                    <p className="text-sm text-neutral-700 dark:text-neutral-200">
+                      {nutritionReportResult.report.summary}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-foreground mb-1">
+                      {getLandingTranslations(language).nutritionAnalysisGoalStatusHeading}
+                    </p>
+                    <p className="text-sm text-neutral-700 dark:text-neutral-200">
+                      {nutritionReportResult.report.goalStatus}
+                    </p>
+                  </div>
+                  {nutritionReportResult.report.highlights.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-foreground mb-1">
+                        {getLandingTranslations(language).nutritionAnalysisHighlightsHeading}
+                      </p>
+                      <ul className="space-y-1">
+                        {nutritionReportResult.report.highlights.map((item, idx) => (
+                          <li key={`${item}-${idx}`} className="text-sm text-neutral-700 dark:text-neutral-200">
+                            - {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {nutritionReportResult.report.tomorrowTips.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-foreground mb-1">
+                        {getLandingTranslations(language).nutritionAnalysisTipsHeading}
+                      </p>
+                      <ul className="space-y-1">
+                        {nutritionReportResult.report.tomorrowTips.map((item, idx) => (
+                          <li key={`${item}-${idx}`} className="text-sm text-neutral-700 dark:text-neutral-200">
+                            - {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {journalTypeChooserOpen && (
         <div
           className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
@@ -10746,14 +12160,29 @@ export default function ChatPage() {
                   className="w-full max-w-xs px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
                 />
               </div>
-              <textarea
-                value={journalEntryText}
-                onChange={(e) => setJournalEntryText(e.target.value)}
-                placeholder={getLandingTranslations(language).journalEntryBodyPlaceholder}
-                disabled={journalEntrySaving}
-                rows={10}
-                className="w-full min-h-[200px] px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
-              />
+              <div className="flex items-end gap-2">
+                <textarea
+                  value={journalEntryText}
+                  onChange={(e) => setJournalEntryText(e.target.value)}
+                  placeholder={getLandingTranslations(language).journalEntryBodyPlaceholder}
+                  disabled={journalEntrySaving}
+                  rows={10}
+                  className="flex-1 min-h-[200px] px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
+                />
+                <VoiceInputButton
+                  language={language}
+                  disabled={journalEntrySaving}
+                  ariaLabel="Journal voice input"
+                  compactStopWhileListening
+                  onTranscription={(text) =>
+                    setJournalEntryText((prev) =>
+                      prev.trim()
+                        ? `${prev}${/\s$/.test(prev) ? "" : " "}${text}`
+                        : text
+                    )
+                  }
+                />
+              </div>
               {journalEntrySaveError && (
                 <p className="text-sm text-red-600 dark:text-red-400">{journalEntrySaveError}</p>
               )}
@@ -10825,14 +12254,29 @@ export default function ChatPage() {
                       className="w-full max-w-xs px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
                     />
                   </div>
-                  <textarea
-                    value={calorieTrackerInput}
-                    onChange={(e) => setCalorieTrackerInput(e.target.value)}
-                    rows={6}
-                    disabled={calorieTrackerLoading}
-                    placeholder="e.g. Breakfast: 2 eggs + toast, lunch: chicken bowl; workout: 30 min run"
-                    className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
-                  />
+                  <div className="flex items-end gap-2">
+                    <textarea
+                      value={calorieTrackerInput}
+                      onChange={(e) => setCalorieTrackerInput(e.target.value)}
+                      rows={6}
+                      disabled={calorieTrackerLoading}
+                      placeholder="e.g. Breakfast: 2 eggs + toast, lunch: chicken bowl; workout: 30 min run"
+                      className="flex-1 px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
+                    />
+                    <VoiceInputButton
+                      language={language}
+                      disabled={calorieTrackerLoading}
+                      ariaLabel="Calorie tracker voice input"
+                      compactStopWhileListening
+                      onTranscription={(text) =>
+                        setCalorieTrackerInput((prev) =>
+                          prev.trim()
+                            ? `${prev}${/\s$/.test(prev) ? "" : " "}${text}`
+                            : text
+                        )
+                      }
+                    />
+                  </div>
                   <button
                     type="button"
                     onClick={() => void runCalorieTrackerAnalyze()}
@@ -10904,6 +12348,9 @@ export default function ChatPage() {
                       <div className="text-sm text-foreground">
                         <p className="font-medium">Exercise</p>
                         <p>Calories burned: {calorieTrackerResult.exercise.caloriesBurned ?? "unknown"} kcal</p>
+                        <p>Carbs used: {calorieTrackerResult.exercise.carbsUsedGrams ?? "unknown"} g</p>
+                        <p>Fat used: {calorieTrackerResult.exercise.fatUsedGrams ?? "unknown"} g</p>
+                        <p>Protein delta: {calorieTrackerResult.exercise.proteinDeltaGrams ?? "unknown"} g</p>
                       </div>
                     )}
                     {calorieTrackerResult.assumptions.length > 0 && (
