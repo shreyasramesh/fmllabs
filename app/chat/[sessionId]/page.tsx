@@ -3547,7 +3547,8 @@ export default function ChatPage() {
       return "What's on your mind | @ to search";
     }
     if (landingPlaceholderTransitioning) {
-      return "Loading next idea ✨";
+      const cursor = landingPlaceholderCursorOn ? "|" : "";
+      return `${landingPlaceholderText}${cursor}`;
     }
     const cursor = landingPlaceholderCursorOn ? "|" : "";
     return `${landingPlaceholderText}${cursor}`;
@@ -9628,8 +9629,8 @@ export default function ChatPage() {
                             </button>
                           </div>
                           {landingNutritionBannerOpen && (
-                            <div className="w-full flex gap-1.5 overflow-x-auto sm:grid sm:grid-cols-2 sm:overflow-visible">
-                              <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-1.5 text-left">
+                            <div className="w-full grid grid-cols-2 gap-1.5">
+                              <div className="min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-1.5 text-left">
                                 <div className="flex items-center gap-2">
                                   <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-orange-100 dark:bg-orange-900/40">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
@@ -9637,57 +9638,57 @@ export default function ChatPage() {
                                       <path d="M7 13a5 5 0 0 0 10 0c0-3.4-2.7-5.4-5-7.6-2.3 2.2-5 4.2-5 7.6Z" />
                                     </svg>
                                   </span>
-                                  <p className="text-sm sm:text-base font-semibold text-foreground">Calories</p>
+                                  <p className="text-xs sm:text-base font-semibold text-foreground">Calories</p>
                                 </div>
                                 <div className="mt-1 grid grid-cols-3 gap-1">
                                   <div className="min-w-0">
-                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                    <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
                                       {selectedLandingDayNutrition.caloriesFood}
                                     </p>
-                                    <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Food</p>
+                                    <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Food</p>
                                   </div>
                                   <div className="min-w-0">
-                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                    <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
                                       {selectedLandingDayNutrition.caloriesExercise}
                                     </p>
-                                    <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Exercise</p>
+                                    <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Exercise</p>
                                   </div>
                                   <div className="min-w-0">
-                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                    <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
                                       {selectedLandingDayNutrition.caloriesRemaining}
                                     </p>
-                                    <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Remaining</p>
+                                    <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Remaining</p>
                                   </div>
                                 </div>
                               </div>
 
-                              <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-1.5 text-left">
+                              <div className="min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-1.5 text-left">
                                 <div className="flex items-center gap-2">
                                   <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
                                       <circle cx="12" cy="12" r="8" stroke="#D946EF" strokeWidth="2.4" strokeDasharray="9 4" strokeLinecap="round" />
                                     </svg>
                                   </span>
-                                  <p className="text-sm sm:text-base font-semibold text-foreground">Macros</p>
+                                  <p className="text-xs sm:text-base font-semibold text-foreground">Macros</p>
                                 </div>
                                 <div className="mt-1 grid grid-cols-3 gap-1">
                                   <div className="min-w-0">
-                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                    <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
                                       {selectedLandingDayNutrition.carbsGrams}/{nutritionGoals.carbsGrams}
                                     </p>
-                                    <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Carbs (g)</p>
+                                    <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Carbs (g)</p>
                                   </div>
                                   <div className="min-w-0">
-                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                    <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
                                       {selectedLandingDayNutrition.proteinGrams}/{nutritionGoals.proteinGrams}
                                     </p>
-                                    <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Protein (g)</p>
+                                    <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Protein (g)</p>
                                   </div>
                                   <div className="min-w-0">
-                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                    <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
                                       {selectedLandingDayNutrition.fatGrams}/{nutritionGoals.fatGrams}
                                     </p>
-                                    <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Fat (g)</p>
+                                    <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Fat (g)</p>
                                   </div>
                                 </div>
                               </div>
@@ -9698,40 +9699,40 @@ export default function ChatPage() {
 
                 {!incognitoMode && (
                         <div className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background px-2.5 py-2">
-                          <div className="mb-1.5 flex items-center justify-between px-0.5">
-                            <p className="text-xs font-semibold text-foreground">
-                              Last 7 days
-                            </p>
-                            <div className="flex items-center gap-2">
-                              <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                          <div className="mb-1.5 px-0.5">
+                            <div className="flex items-center justify-between gap-2">
+                              <p className="text-[11px] sm:text-xs whitespace-nowrap font-semibold text-foreground">
+                                Last 7 days
+                              </p>
+                              <p className="text-[11px] sm:text-xs whitespace-nowrap text-neutral-500 dark:text-neutral-400">
                                 {selectedLandingDayActivityItems.length} item{selectedLandingDayActivityItems.length === 1 ? "" : "s"}
                               </p>
-                              {!isAnonymous && (
-                                <>
-                      <button
-                        type="button"
-                                    onClick={openNutritionReportModal}
-                                    className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                                  >
-                                    {getLandingTranslations(language).nutritionAnalysisButtonLabel}
-                      </button>
-                        <button
-                          type="button"
-                                    onClick={openGoalsModal}
-                                    className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                                  >
-                                    {getLandingTranslations(language).nutritionGoalsButtonLabel}
-                        </button>
-                                  <button
-                                    type="button"
-                                    onClick={openWeeklySummaryModal}
-                                    className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                                  >
-                                    {getLandingTranslations(language).weeklySummaryButtonLabel}
-                                  </button>
-                                </>
-                              )}
                             </div>
+                            {!isAnonymous && (
+                              <div className="mt-1.5 flex items-center gap-1.5 overflow-x-auto pb-0.5 sm:mt-0 sm:pb-0 sm:gap-2 sm:justify-end sm:overflow-visible">
+                                <button
+                                  type="button"
+                                  onClick={openNutritionReportModal}
+                                  className="shrink-0 px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-[11px] whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                >
+                                  {getLandingTranslations(language).nutritionAnalysisButtonLabel}
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={openGoalsModal}
+                                  className="shrink-0 px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-[11px] whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                >
+                                  {getLandingTranslations(language).nutritionGoalsButtonLabel}
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={openWeeklySummaryModal}
+                                  className="shrink-0 px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-[11px] whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                >
+                                  {getLandingTranslations(language).weeklySummaryButtonLabel}
+                                </button>
+                              </div>
+                            )}
                           </div>
                           <div ref={landingDaysScrollerRef} className="overflow-x-auto">
                             <div className="flex min-w-max gap-1.5 sm:grid sm:grid-cols-7 sm:gap-1.5 sm:min-w-0">
