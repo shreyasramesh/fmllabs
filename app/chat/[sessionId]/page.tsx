@@ -5047,8 +5047,8 @@ export default function ChatPage() {
               <Image
                 src="/icon.svg"
                 alt="FML Labs"
-                width={28}
-                height={28}
+                width={34}
+                height={34}
                 className="rounded-md"
               />
             </Link>
