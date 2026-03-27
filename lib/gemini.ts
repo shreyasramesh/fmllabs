@@ -311,6 +311,210 @@ ${conversation}`
   };
 }
 
+export type CalorieTrackingIntent = "nutrition" | "exercise" | "mixed";
+
+export interface CalorieTrackingAnalyzeResult {
+  intent: CalorieTrackingIntent;
+  questions: string[];
+}
+
+export interface CalorieTrackingFinalizeResult {
+  intent: CalorieTrackingIntent;
+  confidence: "low" | "medium" | "high";
+  assumptions: string[];
+  nutrition?: {
+    calories: number | null;
+    proteinGrams: number | null;
+    carbsGrams: number | null;
+    fatGrams: number | null;
+    notes: string;
+  };
+  exercise?: {
+    caloriesBurned: number | null;
+    notes: string;
+  };
+}
+
+function toFiniteNumberOrNull(v: unknown): number | null {
+  if (typeof v === "number" && Number.isFinite(v)) return v;
+  if (typeof v === "string" && v.trim() !== "") {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }
+  return null;
+}
+
+export async function analyzeCalorieTrackingInput(
+  inputText: string,
+  usageContext?: GeminiUsageContext
+): Promise<CalorieTrackingAnalyzeResult> {
+  const text = inputText.trim().slice(0, 8_000);
+  if (!text) {
+    return { intent: "nutrition", questions: [] };
+  }
+  const model = getModel();
+  const result = await model.generateContent(
+    `You are helping with calorie tracking and nutrition/workout logging.
+
+Classify the user's text into:
+- "nutrition": food/drink intake only
+- "exercise": workout/activity only
+- "mixed": contains both food/drink and exercise
+
+Then decide if clarification questions are needed before estimating calories/macros.
+Rules:
+- Ask at most 2 clarification questions total.
+- Ask concise, specific questions only if needed for a better estimate.
+- If enough detail is already present, return an empty questions array.
+
+Return ONLY valid JSON with exactly:
+{
+  "intent": "nutrition" | "exercise" | "mixed",
+  "questions": ["...", "..."] // 0 to 2 items
+}
+
+User input:
+${text}`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const raw = result.response.text().trim();
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  try {
+    const parsed = JSON.parse(cleaned) as { intent?: string; questions?: unknown };
+    const intent: CalorieTrackingIntent =
+      parsed.intent === "exercise" || parsed.intent === "mixed" ? parsed.intent : "nutrition";
+    const questions = Array.isArray(parsed.questions)
+      ? parsed.questions
+          .map((q) => (typeof q === "string" ? q.trim() : ""))
+          .filter((q) => q.length > 0)
+          .slice(0, 2)
+      : [];
+    return { intent, questions };
+  } catch {
+    return { intent: "nutrition", questions: [] };
+  }
+}
+
+export async function finalizeCalorieTrackingEstimate(
+  inputText: string,
+  clarificationAnswers: string[],
+  usageContext?: GeminiUsageContext
+): Promise<CalorieTrackingFinalizeResult> {
+  const text = inputText.trim().slice(0, 8_000);
+  const answers = clarificationAnswers
+    .map((a) => a.trim())
+    .filter(Boolean)
+    .slice(0, 2);
+  const model = getModel();
+  const result = await model.generateContent(
+    `You estimate nutrition and exercise calories from user logs.
+
+Use the user's original text and any clarification answers to produce your best estimate.
+Return ONLY valid JSON with exactly this shape:
+{
+  "intent": "nutrition" | "exercise" | "mixed",
+  "confidence": "low" | "medium" | "high",
+  "assumptions": ["short assumption", "..."],
+  "nutrition": {
+    "calories": number | null,
+    "proteinGrams": number | null,
+    "carbsGrams": number | null,
+    "fatGrams": number | null,
+    "notes": "short note"
+  } | null,
+  "exercise": {
+    "caloriesBurned": number | null,
+    "notes": "short note"
+  } | null
+}
+
+Rules:
+- For nutrition-only, set exercise to null.
+- For exercise-only, set nutrition to null.
+- For mixed, provide both.
+- Use null when unknown instead of inventing exact values.
+- Keep assumptions concise and grounded.
+
+Original input:
+${text}
+
+Clarification answers:
+${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"}`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const raw = result.response.text().trim();
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  try {
+    const parsed = JSON.parse(cleaned) as {
+      intent?: string;
+      confidence?: string;
+      assumptions?: unknown;
+      nutrition?: {
+        calories?: unknown;
+        proteinGrams?: unknown;
+        carbsGrams?: unknown;
+        fatGrams?: unknown;
+        notes?: unknown;
+      } | null;
+      exercise?: {
+        caloriesBurned?: unknown;
+        notes?: unknown;
+      } | null;
+    };
+
+    const intent: CalorieTrackingIntent =
+      parsed.intent === "exercise" || parsed.intent === "mixed" ? parsed.intent : "nutrition";
+    const confidence: "low" | "medium" | "high" =
+      parsed.confidence === "low" || parsed.confidence === "high" ? parsed.confidence : "medium";
+    const assumptions = Array.isArray(parsed.assumptions)
+      ? parsed.assumptions
+          .map((s) => (typeof s === "string" ? s.trim() : ""))
+          .filter(Boolean)
+          .slice(0, 6)
+      : [];
+
+    const nutrition =
+      parsed.nutrition && typeof parsed.nutrition === "object"
+        ? {
+            calories: toFiniteNumberOrNull(parsed.nutrition.calories),
+            proteinGrams: toFiniteNumberOrNull(parsed.nutrition.proteinGrams),
+            carbsGrams: toFiniteNumberOrNull(parsed.nutrition.carbsGrams),
+            fatGrams: toFiniteNumberOrNull(parsed.nutrition.fatGrams),
+            notes: typeof parsed.nutrition.notes === "string" ? parsed.nutrition.notes.trim() : "",
+          }
+        : undefined;
+
+    const exercise =
+      parsed.exercise && typeof parsed.exercise === "object"
+        ? {
+            caloriesBurned: toFiniteNumberOrNull(parsed.exercise.caloriesBurned),
+            notes: typeof parsed.exercise.notes === "string" ? parsed.exercise.notes.trim() : "",
+          }
+        : undefined;
+
+    return {
+      intent,
+      confidence,
+      assumptions,
+      nutrition,
+      exercise,
+    };
+  } catch {
+    return {
+      intent: "nutrition",
+      confidence: "low",
+      assumptions: [],
+      nutrition: {
+        calories: null,
+        proteinGrams: null,
+        carbsGrams: null,
+        fatGrams: null,
+        notes: "",
+      },
+    };
+  }
+}
+
 export async function generateConceptFromUserInput(
   userInput: string,
   languageName?: string,

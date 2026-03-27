@@ -202,6 +202,10 @@ export interface SavedTranscript {
   channel?: string;
   /** When omitted, treated as YouTube for backward compatibility. */
   sourceType?: "youtube" | "journal";
+  /** Journal subtype used for calorie tracking entries. */
+  journalCategory?: "nutrition" | "exercise";
+  /** Optional shared id to link related journal rows (e.g. mixed nutrition+exercise input). */
+  journalBatchId?: string;
   /** Calendar date the user assigned to the entry (journal only); display and sorting. */
   journalEntryDay?: number;
   journalEntryMonth?: number;
@@ -1578,7 +1582,11 @@ export async function saveJournalTranscript(
   userId: string,
   transcriptText: string,
   journalTitle?: string,
-  journalEntryDate?: { day: number; month: number; year: number }
+  journalEntryDate?: { day: number; month: number; year: number },
+  options?: {
+    journalCategory?: "nutrition" | "exercise";
+    journalBatchId?: string;
+  }
 ): Promise<SavedTranscript & { _id: string }> {
   const database = await getDb();
   const now = new Date();
@@ -1588,6 +1596,8 @@ export async function saveJournalTranscript(
     videoId,
     videoTitle: journalTitle?.trim() || "Journal entry",
     sourceType: "journal",
+    ...(options?.journalCategory ? { journalCategory: options.journalCategory } : {}),
+    ...(options?.journalBatchId ? { journalBatchId: options.journalBatchId } : {}),
     transcriptText,
     ...(journalEntryDate && {
       journalEntryDay: journalEntryDate.day,

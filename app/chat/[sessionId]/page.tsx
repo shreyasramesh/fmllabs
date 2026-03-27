@@ -1760,7 +1760,22 @@ function formatJournalEntryListDate(t: JournalEntryDateFields): string {
   return "—";
 }
 
+function getJournalCategoryLabel(
+  category: "nutrition" | "exercise" | undefined
+): string | null {
+  if (category === "nutrition") return "Nutrition";
+  if (category === "exercise") return "Exercise";
+  return null;
+}
+
 const JOURNAL_LIST_PREVIEW_MAX = 160;
+const LANDING_TYPED_PLACEHOLDERS = [
+  "Ask me to plan your day",
+  "Reflect on your wins and struggles",
+  "Design a better routine with me",
+  "Break down a hard decision",
+  "Use @ to pull in your saved context",
+];
 
 function truncateJournalListPreview(text: string | undefined, max = JOURNAL_LIST_PREVIEW_MAX): string {
   if (!text?.trim()) return "";
@@ -1776,11 +1791,37 @@ function toDayKey(d: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+function getTodayDateInputValue(): string {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const dd = String(now.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
 function dayKeyFromIso(iso?: string): string | null {
   if (!iso) return null;
   const parsed = new Date(iso);
   if (Number.isNaN(parsed.getTime())) return null;
   return toDayKey(parsed);
+}
+
+function dateFromDayKey(dayKey: string): Date | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dayKey);
+  if (!match) return null;
+  const year = Number(match[1]);
+  const monthIndex = Number(match[2]) - 1;
+  const day = Number(match[3]);
+  const parsed = new Date(year, monthIndex, day);
+  if (
+    Number.isNaN(parsed.getTime()) ||
+    parsed.getFullYear() !== year ||
+    parsed.getMonth() !== monthIndex ||
+    parsed.getDate() !== day
+  ) {
+    return null;
+  }
+  return parsed;
 }
 
 function isNonNull<T>(value: T | null): value is T {
@@ -1802,6 +1843,7 @@ type LandingDayActivityItem = {
   kind: LandingActivityKind;
   dayKey: string;
   title: string;
+  sublabel?: string;
   timestamp: number;
   entityId: string;
 };
@@ -1822,10 +1864,23 @@ export default function ChatPage() {
   const isNew = sessionId === "new";
   const incognitoMode = sessionId === "incognito";
   const [selectedLandingDayKey, setSelectedLandingDayKey] = useState(() => toDayKey(new Date()));
+  const [brandLogoParty, setBrandLogoParty] = useState(false);
+  const brandLogoPartyTimeoutRef = useRef<number | null>(null);
+  const [headerCalendarOpen, setHeaderCalendarOpen] = useState(false);
+  const [headerCalendarMonth, setHeaderCalendarMonth] = useState(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), 1);
+  });
+  const headerCalendarRef = useRef<HTMLDivElement | null>(null);
 
   const [sessions, setSessions] = useState<Session[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [landingPlaceholderIndex, setLandingPlaceholderIndex] = useState(0);
+  const [landingPlaceholderText, setLandingPlaceholderText] = useState("");
+  const [landingPlaceholderDeleting, setLandingPlaceholderDeleting] = useState(false);
+  const [landingPlaceholderTransitioning, setLandingPlaceholderTransitioning] = useState(false);
+  const [landingPlaceholderCursorOn, setLandingPlaceholderCursorOn] = useState(true);
   const [multiMentorMode, setMultiMentorMode] = useState(false);
   const [selectedMentorFigureIds, setSelectedMentorFigureIds] = useState<string[]>([]);
   /** Domain (category) for Ask mentors picker; null until user picks when multiple domains exist */
@@ -1942,6 +1997,8 @@ export default function ChatPage() {
     videoTitle?: string;
     channel?: string;
     sourceType?: "youtube" | "journal";
+    journalCategory?: "nutrition" | "exercise";
+    journalBatchId?: string;
     journalEntryDay?: number;
     journalEntryMonth?: number;
     journalEntryYear?: number;
@@ -1973,6 +2030,8 @@ export default function ChatPage() {
     videoTitle?: string;
     channel?: string;
     sourceType?: "youtube" | "journal";
+    journalCategory?: "nutrition" | "exercise";
+    journalBatchId?: string;
     journalEntryDay?: number;
     journalEntryMonth?: number;
     journalEntryYear?: number;
@@ -2591,14 +2650,219 @@ export default function ChatPage() {
     return [...map.values()].sort((a, b) => a.monthStart - b.monthStart);
   }, [journalEntriesSorted, language]);
 
-  const openJournalEntryFlow = useCallback(() => {
+  const [calorieTrackerModalOpen, setCalorieTrackerModalOpen] = useState(false);
+  const [calorieTrackerInput, setCalorieTrackerInput] = useState("");
+  const [calorieTrackerEntryDate, setCalorieTrackerEntryDate] = useState(() => getTodayDateInputValue());
+  const [calorieTrackerQuestions, setCalorieTrackerQuestions] = useState<string[]>([]);
+  const [calorieTrackerAnswers, setCalorieTrackerAnswers] = useState<string[]>([]);
+  const [calorieTrackerStep, setCalorieTrackerStep] = useState<"input" | "questions" | "result">("input");
+  const [calorieTrackerLoading, setCalorieTrackerLoading] = useState(false);
+  const [calorieTrackerError, setCalorieTrackerError] = useState<string | null>(null);
+  const [calorieTrackerResult, setCalorieTrackerResult] = useState<{
+    intent: "nutrition" | "exercise" | "mixed";
+    confidence: "low" | "medium" | "high";
+    assumptions: string[];
+    nutrition?: {
+      calories: number | null;
+      proteinGrams: number | null;
+      carbsGrams: number | null;
+      fatGrams: number | null;
+      notes: string;
+    };
+    exercise?: {
+      caloriesBurned: number | null;
+      notes: string;
+    };
+    savedEntries?: Array<{ id: string; category: "nutrition" | "exercise"; title: string }>;
+  } | null>(null);
+  const [journalEntryModalOpen, setJournalEntryModalOpen] = useState(false);
+  const [journalEntryDate, setJournalEntryDate] = useState(() => getTodayDateInputValue());
+  const [journalEntryText, setJournalEntryText] = useState("");
+  const [journalEntrySaving, setJournalEntrySaving] = useState(false);
+  const [journalEntrySaveError, setJournalEntrySaveError] = useState<string | null>(null);
+  const [journalTypeChooserOpen, setJournalTypeChooserOpen] = useState(false);
+
+  const resetJournalEntryModal = useCallback(() => {
+    setJournalEntryModalOpen(false);
+    setJournalEntryDate(getTodayDateInputValue());
+    setJournalEntryText("");
+    setJournalEntrySaving(false);
+    setJournalEntrySaveError(null);
+  }, []);
+
+  const openJournalTypeChooser = useCallback(() => {
     playSelectionChime();
     if (isAnonymous || incognitoMode) {
-      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/journal/new")}`);
+      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
       return;
     }
-    router.push("/chat/journal/new");
-  }, [isAnonymous, incognitoMode, router]);
+    setJournalTypeChooserOpen(true);
+  }, [incognitoMode, isAnonymous, router]);
+
+  const openJournalEntryFlow = useCallback(() => {
+    setJournalEntryDate(getTodayDateInputValue());
+    setJournalEntryText("");
+    setJournalEntrySaveError(null);
+    setJournalEntryModalOpen(true);
+  }, []);
+
+  const saveJournalEntryFromModal = useCallback(async () => {
+    const body = journalEntryText.trim();
+    if (!body) return;
+    setJournalEntrySaving(true);
+    setJournalEntrySaveError(null);
+    try {
+      const res = await fetch("/api/me/journal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: body,
+          ...(journalEntryDate.trim() ? { entryDate: journalEntryDate.trim() } : {}),
+        }),
+      });
+      if (!res.ok) {
+        const j = (await res.json().catch(() => ({}))) as { error?: string };
+        throw new Error(j.error || "save failed");
+      }
+      refetchTranscripts();
+      setJournalEntryJustSaved(true);
+      if (typeof window !== "undefined") {
+        window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
+      }
+      resetJournalEntryModal();
+    } catch {
+      setJournalEntrySaveError(getLandingTranslations(language).journalEntrySaveError);
+    } finally {
+      setJournalEntrySaving(false);
+    }
+  }, [journalEntryDate, journalEntryText, language, refetchTranscripts, resetJournalEntryModal]);
+
+  const resetCalorieTrackerModal = useCallback(() => {
+    setCalorieTrackerModalOpen(false);
+    setCalorieTrackerInput("");
+    setCalorieTrackerEntryDate(getTodayDateInputValue());
+    setCalorieTrackerQuestions([]);
+    setCalorieTrackerAnswers([]);
+    setCalorieTrackerStep("input");
+    setCalorieTrackerLoading(false);
+    setCalorieTrackerError(null);
+    setCalorieTrackerResult(null);
+  }, []);
+
+  const openCalorieTrackerModal = useCallback(() => {
+    playSelectionChime();
+    if (isAnonymous || incognitoMode) {
+      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
+      return;
+    }
+    setCalorieTrackerInput("");
+    setCalorieTrackerEntryDate(getTodayDateInputValue());
+    setCalorieTrackerQuestions([]);
+    setCalorieTrackerAnswers([]);
+    setCalorieTrackerStep("input");
+    setCalorieTrackerError(null);
+    setCalorieTrackerResult(null);
+    setCalorieTrackerModalOpen(true);
+  }, [incognitoMode, isAnonymous, router]);
+
+  const finalizeCalorieTracker = useCallback(
+    async (answers: string[]) => {
+      setCalorieTrackerLoading(true);
+      setCalorieTrackerError(null);
+      try {
+        const res = await fetch("/api/me/journal/calorie", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "finalize",
+            text: calorieTrackerInput.trim(),
+            answers,
+            ...(calorieTrackerEntryDate.trim() ? { entryDate: calorieTrackerEntryDate.trim() } : {}),
+          }),
+        });
+        const data = (await res.json().catch(() => ({}))) as {
+          error?: string;
+          intent?: "nutrition" | "exercise" | "mixed";
+          confidence?: "low" | "medium" | "high";
+          assumptions?: string[];
+          nutrition?: {
+            calories: number | null;
+            proteinGrams: number | null;
+            carbsGrams: number | null;
+            fatGrams: number | null;
+            notes: string;
+          };
+          exercise?: {
+            caloriesBurned: number | null;
+            notes: string;
+          };
+          savedEntries?: Array<{ id: string; category: "nutrition" | "exercise"; title: string }>;
+        };
+        if (!res.ok) {
+          throw new Error(data.error || "Could not estimate calories right now.");
+        }
+        setCalorieTrackerResult({
+          intent: data.intent ?? "nutrition",
+          confidence: data.confidence ?? "medium",
+          assumptions: Array.isArray(data.assumptions) ? data.assumptions : [],
+          nutrition: data.nutrition,
+          exercise: data.exercise,
+          savedEntries: data.savedEntries,
+        });
+        setCalorieTrackerStep("result");
+        refetchTranscripts();
+        setJournalEntryJustSaved(true);
+        if (typeof window !== "undefined") {
+          window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
+        }
+      } catch (err) {
+        setCalorieTrackerError(
+          err instanceof Error ? err.message : "Could not estimate calories right now."
+        );
+      } finally {
+        setCalorieTrackerLoading(false);
+      }
+    },
+    [calorieTrackerEntryDate, calorieTrackerInput, refetchTranscripts]
+  );
+
+  const runCalorieTrackerAnalyze = useCallback(async () => {
+    const text = calorieTrackerInput.trim();
+    if (!text) return;
+    setCalorieTrackerLoading(true);
+    setCalorieTrackerError(null);
+    try {
+      const res = await fetch("/api/me/journal/calorie", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "analyze", text }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        questions?: string[];
+      };
+      if (!res.ok) throw new Error(data.error || "Could not analyze this entry.");
+      const questions = Array.isArray(data.questions)
+        ? data.questions
+            .map((q) => (typeof q === "string" ? q.trim() : ""))
+            .filter(Boolean)
+            .slice(0, 2)
+        : [];
+      if (questions.length > 0) {
+        setCalorieTrackerQuestions(questions);
+        setCalorieTrackerAnswers(Array(questions.length).fill(""));
+        setCalorieTrackerStep("questions");
+      } else {
+        await finalizeCalorieTracker([]);
+      }
+    } catch (err) {
+      setCalorieTrackerError(
+        err instanceof Error ? err.message : "Could not analyze this entry."
+      );
+    } finally {
+      setCalorieTrackerLoading(false);
+    }
+  }, [calorieTrackerInput, finalizeCalorieTracker]);
 
   const landingDayActivityItems = useMemo<LandingDayActivityItem[]>(() => {
     const sessionItems: LandingDayActivityItem[] = sessions
@@ -2635,6 +2899,7 @@ export default function ChatPage() {
           kind: "journal" as const,
           dayKey: toDayKey(date),
           title: truncateJournalListPreview(t.videoTitle || t.transcriptText, 72) || "Journal entry",
+          sublabel: getJournalCategoryLabel(t.journalCategory) ?? undefined,
           timestamp: date.getTime(),
           entityId: t._id,
         };
@@ -2793,6 +3058,80 @@ export default function ChatPage() {
     () => landingDayActivityItems.filter((item) => item.dayKey === selectedLandingDayKey),
     [landingDayActivityItems, selectedLandingDayKey]
   );
+  const shouldAnimateLandingPlaceholder =
+    messages.length === 0 &&
+    !incognitoMode &&
+    input.trim().length === 0 &&
+    !(multiMentorMode && selectedMentorFigureIds.length >= 2);
+  const landingAnimatedPlaceholder = useMemo(() => {
+    if (!shouldAnimateLandingPlaceholder) {
+      return "What's on your mind | @ to search";
+    }
+    if (landingPlaceholderTransitioning) {
+      return "Loading next idea ✨";
+    }
+    const cursor = landingPlaceholderCursorOn ? "|" : "";
+    return `${landingPlaceholderText}${cursor}`;
+  }, [
+    shouldAnimateLandingPlaceholder,
+    landingPlaceholderTransitioning,
+    landingPlaceholderCursorOn,
+    landingPlaceholderText,
+  ]);
+  const selectedLandingDayDate = useMemo(
+    () => dateFromDayKey(selectedLandingDayKey) ?? new Date(),
+    [selectedLandingDayKey]
+  );
+  const headerCalendarLabel = useMemo(() => {
+    const todayKey = toDayKey(new Date());
+    if (selectedLandingDayKey === todayKey) return "Today";
+    return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(
+      selectedLandingDayDate
+    );
+  }, [selectedLandingDayDate, selectedLandingDayKey]);
+  const headerCalendarCells = useMemo(() => {
+    const year = headerCalendarMonth.getFullYear();
+    const month = headerCalendarMonth.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const leadingBlankCount = firstDay.getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const cells: Array<Date | null> = [];
+    for (let i = 0; i < leadingBlankCount; i += 1) cells.push(null);
+    for (let day = 1; day <= daysInMonth; day += 1) {
+      cells.push(new Date(year, month, day));
+    }
+    return cells;
+  }, [headerCalendarMonth]);
+  const headerCalendarMonthChips = useMemo(() => {
+    const start = new Date(
+      headerCalendarMonth.getFullYear(),
+      headerCalendarMonth.getMonth() - 2,
+      1
+    );
+    const chips: Array<
+      | { type: "month"; key: string; label: string; date: Date; selected: boolean }
+      | { type: "year"; key: string; label: string }
+    > = [];
+    let previousYear: number | null = null;
+    for (let i = 0; i < 5; i += 1) {
+      const d = new Date(start.getFullYear(), start.getMonth() + i, 1);
+      const currentYear = d.getFullYear();
+      if (previousYear !== null && currentYear !== previousYear) {
+        chips.push({ type: "year", key: `year-${currentYear}`, label: String(currentYear) });
+      }
+      chips.push({
+        type: "month",
+        key: `month-${d.getFullYear()}-${d.getMonth()}`,
+        label: new Intl.DateTimeFormat(undefined, { month: "short" }).format(d),
+        date: d,
+        selected:
+          d.getFullYear() === headerCalendarMonth.getFullYear() &&
+          d.getMonth() === headerCalendarMonth.getMonth(),
+      });
+      previousYear = currentYear;
+    }
+    return chips;
+  }, [headerCalendarMonth]);
 
   useEffect(() => {
     if (!isNew && !incognitoMode) return;
@@ -4169,13 +4508,16 @@ export default function ChatPage() {
   );
 
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !mentorOneOnOneModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !mentorOneOnOneModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (journalCheckpointModal) setJournalCheckpointModal(null);
         else if (newConversationChooserModalOpen) setNewConversationChooserModalOpen(false);
         else if (mentorOneOnOneModalOpen) setMentorOneOnOneModalOpen(false);
         else if (ideasModalOpen) setIdeasModalOpen(false);
+        else if (journalTypeChooserOpen) setJournalTypeChooserOpen(false);
+        else if (journalEntryModalOpen && !journalEntrySaving) resetJournalEntryModal();
+        else if (calorieTrackerModalOpen) resetCalorieTrackerModal();
         else if (drawnPerspectiveCard) setDrawnPerspectiveCard(null);
         else if (waysOfLookingAtModalOpen) {
           if (waysOfLookingAtDigital) setWaysOfLookingAtDigital(null);
@@ -4205,7 +4547,86 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, mentorOneOnOneModalOpen, newConversationChooserModalOpen, journalCheckpointModal, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, journalEntryModalOpen, journalTypeChooserOpen, journalEntrySaving, mentorOneOnOneModalOpen, newConversationChooserModalOpen, journalCheckpointModal, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetJournalEntryModal]);
+
+  useEffect(() => {
+    if (!headerCalendarOpen) return;
+    const onPointerDown = (event: MouseEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (headerCalendarRef.current?.contains(target)) return;
+      setHeaderCalendarOpen(false);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setHeaderCalendarOpen(false);
+    };
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [headerCalendarOpen]);
+
+  useEffect(() => {
+    setHeaderCalendarMonth(
+      new Date(selectedLandingDayDate.getFullYear(), selectedLandingDayDate.getMonth(), 1)
+    );
+  }, [selectedLandingDayDate]);
+
+  useEffect(() => {
+    if (!shouldAnimateLandingPlaceholder) {
+      setLandingPlaceholderText("");
+      setLandingPlaceholderDeleting(false);
+      setLandingPlaceholderTransitioning(false);
+      return;
+    }
+    const options = LANDING_TYPED_PLACEHOLDERS;
+    const target = options[landingPlaceholderIndex % options.length] ?? "";
+    const timer = window.setTimeout(() => {
+      if (landingPlaceholderTransitioning) {
+        setLandingPlaceholderTransitioning(false);
+        return;
+      }
+      if (!landingPlaceholderDeleting) {
+        if (landingPlaceholderText.length < target.length) {
+          setLandingPlaceholderText(target.slice(0, landingPlaceholderText.length + 1));
+        } else {
+          setLandingPlaceholderDeleting(true);
+        }
+        return;
+      }
+      if (landingPlaceholderText.length > 0) {
+        setLandingPlaceholderText(landingPlaceholderText.slice(0, -1));
+        return;
+      }
+      setLandingPlaceholderDeleting(false);
+      setLandingPlaceholderTransitioning(true);
+      setLandingPlaceholderIndex((prev) => (prev + 1) % options.length);
+    }, landingPlaceholderTransitioning ? 380 : !landingPlaceholderDeleting
+      ? landingPlaceholderText.length < target.length
+        ? 42
+        : 1200
+      : 24);
+    return () => window.clearTimeout(timer);
+  }, [
+    shouldAnimateLandingPlaceholder,
+    landingPlaceholderDeleting,
+    landingPlaceholderIndex,
+    landingPlaceholderText,
+    landingPlaceholderTransitioning,
+  ]);
+
+  useEffect(() => {
+    if (!shouldAnimateLandingPlaceholder || landingPlaceholderTransitioning) {
+      setLandingPlaceholderCursorOn(true);
+      return;
+    }
+    const timer = window.setInterval(() => {
+      setLandingPlaceholderCursorOn((prev) => !prev);
+    }, 420);
+    return () => window.clearInterval(timer);
+  }, [shouldAnimateLandingPlaceholder, landingPlaceholderTransitioning]);
 
   // Reset journal checkpoint modal state when modal opens
   useEffect(() => {
@@ -4553,6 +4974,8 @@ export default function ChatPage() {
   }, [figuresData?.figures, mentorCatalogCategoryId, mentorCatalogSearch]);
 
   const closeAllModalsExceptLeftPanel = useCallback(() => {
+    setHeaderCalendarOpen(false);
+    setJournalTypeChooserOpen(false);
     setWaysOfLookingAtModalOpen(false);
     setWaysOfLookingAtDrawMode(false);
     setWaysOfLookingAtCategory(null);
@@ -4567,6 +4990,8 @@ export default function ChatPage() {
     setSignInFeaturesModalOpen(false);
     setFeedbackModalOpen(false);
     setIdeasModalOpen(false);
+    resetJournalEntryModal();
+    resetCalorieTrackerModal();
     setNewConversationChooserModalOpen(false);
     setMentorOneOnOneModalOpen(false);
     setDeleteAllDataModalOpen(false);
@@ -4576,6 +5001,32 @@ export default function ChatPage() {
     setCcDeleteConfirmModal(null);
     setCgDeleteConfirmModal(null);
     setGoBackConfirmModal(null);
+  }, [resetCalorieTrackerModal, resetJournalEntryModal]);
+
+  const handleBrandLinkClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      closeAllModalsExceptLeftPanel();
+      if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+      setBrandLogoParty(true);
+      if (brandLogoPartyTimeoutRef.current) {
+        window.clearTimeout(brandLogoPartyTimeoutRef.current);
+      }
+      brandLogoPartyTimeoutRef.current = window.setTimeout(() => {
+        setBrandLogoParty(false);
+        router.push("/chat/new");
+      }, 650);
+    },
+    [closeAllModalsExceptLeftPanel, router]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (brandLogoPartyTimeoutRef.current) {
+        window.clearTimeout(brandLogoPartyTimeoutRef.current);
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -4979,11 +5430,41 @@ export default function ChatPage() {
           {sidebarOpen ? (
             <>
           <Link
-            href="/"
-            className={`font-semibold text-lg min-w-0 truncate ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
-                title={PRODUCT_TAGLINE}
+            href="/chat/new"
+            onClick={handleBrandLinkClick}
+            className={`group inline-flex items-center gap-1.5 font-semibold text-lg min-w-0 truncate ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
+            title={PRODUCT_TAGLINE}
           >
-            FigureMyLife Labs
+            <span className="truncate">FigureMyLife Labs</span>
+            <span
+              aria-hidden
+              className={`inline-flex items-center transition-all duration-300 ${
+                brandLogoParty ? "max-w-10 opacity-100" : "max-w-0 opacity-0"
+              }`}
+            >
+              <Image
+                src="/icon.svg"
+                alt=""
+                width={18}
+                height={18}
+                className="rounded-sm dark:hidden animate-bounce"
+              />
+              <Image
+                src="/icon-dark.svg"
+                alt=""
+                width={18}
+                height={18}
+                className="hidden rounded-sm dark:block animate-bounce"
+              />
+            </span>
+            <span
+              aria-hidden
+              className={`text-sm transition-all duration-300 ${
+                brandLogoParty ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"
+              }`}
+            >
+              ✨
+            </span>
           </Link>
           <button
                 type="button"
@@ -5049,10 +5530,17 @@ export default function ChatPage() {
                 alt="FML Labs"
                 width={34}
                 height={34}
-                className="rounded-md"
+                className="rounded-md dark:hidden"
+              />
+              <Image
+                src="/icon-dark.svg"
+                alt="FML Labs"
+                width={34}
+                height={34}
+                className="hidden rounded-md dark:block"
               />
             </Link>
-            <div className="flex min-w-0 flex-1 items-center overflow-hidden">
+            <div className="flex min-w-0 flex-1 items-center overflow-visible">
             {libraryInlineTitle != null && libraryInlineTitle !== "" ? (
               <div className="flex items-center gap-2 min-w-0 flex-1">
                 <h1 className="font-semibold text-base sm:text-lg truncate min-w-0 flex-1 text-foreground">
@@ -5107,7 +5595,145 @@ export default function ChatPage() {
                 </button>
               </div>
             ) : !sidebarOpen ? (
-              <>
+              <div className="flex items-center gap-2 min-w-0">
+                {messages.length === 0 && !incognitoMode && !libraryPanelOpen && !waysOfLookingAtModalOpen && (
+                  <div className="relative shrink-0" ref={headerCalendarRef}>
+                    <button
+                      type="button"
+                      onClick={() => setHeaderCalendarOpen((prev) => !prev)}
+                      aria-expanded={headerCalendarOpen}
+                      aria-haspopup="dialog"
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background px-3 py-1.5 text-sm font-medium text-foreground hover:bg-orange-50 dark:hover:bg-neutral-800 transition-colors"
+                    >
+                      <span>{headerCalendarLabel}</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-3.5 h-3.5 transition-transform ${headerCalendarOpen ? "rotate-180" : ""}`}>
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
+
+                    {headerCalendarOpen && (
+                      <div className="absolute left-0 top-full mt-2 z-[60] w-[min(90vw,320px)] rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-xl p-3">
+                        <div className="mb-2 flex items-center justify-between">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setHeaderCalendarMonth(
+                                (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1)
+                              )
+                            }
+                            className="h-8 w-8 rounded-lg border border-neutral-200 dark:border-neutral-700 text-foreground hover:bg-orange-50 dark:hover:bg-neutral-800 transition-colors"
+                            aria-label="Previous month"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 mx-auto">
+                              <path d="m15 18-6-6 6-6" />
+                            </svg>
+                          </button>
+                          <p className="text-sm font-semibold text-foreground">
+                            {new Intl.DateTimeFormat(undefined, {
+                              month: "long",
+                              year: "numeric",
+                            }).format(headerCalendarMonth)}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setHeaderCalendarMonth(
+                                (prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1)
+                              )
+                            }
+                            className="h-8 w-8 rounded-lg border border-neutral-200 dark:border-neutral-700 text-foreground hover:bg-orange-50 dark:hover:bg-neutral-800 transition-colors"
+                            aria-label="Next month"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 mx-auto">
+                              <path d="m9 18 6-6-6-6" />
+                            </svg>
+                          </button>
+                        </div>
+
+                        <div className="grid grid-cols-7 gap-1 mb-1">
+                          {["S", "M", "T", "W", "T", "F", "S"].map((label, idx) => (
+                            <div key={`${label}-${idx}`} className="text-center text-[11px] font-medium text-neutral-500 dark:text-neutral-400 py-1">
+                              {label}
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="grid grid-cols-7 gap-1">
+                          {headerCalendarCells.map((cellDate, idx) => {
+                            if (!cellDate) {
+                              return <div key={`blank-${idx}`} className="h-9" aria-hidden />;
+                            }
+                            const dayKey = toDayKey(cellDate);
+                            const isSelected = dayKey === selectedLandingDayKey;
+                            const isToday = dayKey === toDayKey(new Date());
+                            const hasActivity = (landingDayActivityCount.get(dayKey) ?? 0) > 0;
+                            return (
+                              <button
+                                key={dayKey}
+                                type="button"
+                                onClick={() => {
+                                  setSelectedLandingDayKey(dayKey);
+                                  setHeaderCalendarOpen(false);
+                                }}
+                                className={`relative h-9 rounded-lg border text-sm transition-colors ${
+                                  isSelected
+                                    ? "border-foreground bg-neutral-100 dark:bg-neutral-800 text-foreground font-semibold"
+                                    : "border-transparent text-foreground hover:bg-orange-50 dark:hover:bg-neutral-800"
+                                } ${isToday && !isSelected ? "border-neutral-200 dark:border-neutral-700" : ""}`}
+                              >
+                                {cellDate.getDate()}
+                                {hasActivity && (
+                                  <span
+                                    className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full ${
+                                      isSelected ? "bg-foreground" : "bg-accent"
+                                    }`}
+                                    aria-hidden
+                                  />
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        <div className="mt-3 pt-3 border-t border-neutral-200 dark:border-neutral-700">
+                          <div className="flex items-center gap-2 overflow-x-auto pb-0.5">
+                            {headerCalendarMonthChips.map((chip) =>
+                              chip.type === "year" ? (
+                                <span
+                                  key={chip.key}
+                                  className="shrink-0 px-3 py-1.5 text-sm font-medium text-neutral-600 dark:text-neutral-300"
+                                >
+                                  {chip.label}
+                                </span>
+                              ) : (
+                                <button
+                                  key={chip.key}
+                                  type="button"
+                                  onClick={() =>
+                                    setHeaderCalendarMonth(
+                                      new Date(
+                                        chip.date.getFullYear(),
+                                        chip.date.getMonth(),
+                                        1
+                                      )
+                                    )
+                                  }
+                                  className={`shrink-0 rounded-xl border px-3 py-1.5 text-sm transition-colors ${
+                                    chip.selected
+                                      ? "border-foreground bg-neutral-100 dark:bg-neutral-800 text-foreground font-medium"
+                                      : "border-neutral-300 dark:border-neutral-600 text-foreground hover:bg-orange-50 dark:hover:bg-neutral-800"
+                                  }`}
+                                >
+                                  {chip.label}
+                                </button>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
                 {incognitoMode ? (
                   <div className="group flex items-center gap-2 min-w-0 text-neutral-100 dark:text-neutral-900">
                     <span className="shrink-0 w-6 h-6 flex items-center justify-center" aria-hidden>
@@ -5120,7 +5746,7 @@ export default function ChatPage() {
                     {currentSession.title}
                   </span>
                 ) : null}
-              </>
+              </div>
             ) : (
               <h1 className="font-medium truncate">
                 {currentSession?.title || (currentSessionId ? getLandingTranslations(language).conversation : getLandingTranslations(language).newConversation)}
@@ -5208,8 +5834,42 @@ export default function ChatPage() {
         {/* Mobile overlay: sidebar has its own header. Desktop: header is in shared top bar, no header here */}
         <div className="h-14 min-h-[44px] pt-[env(safe-area-inset-top)] shrink-0 lg:hidden">
           <div className="h-full px-4 flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800">
-            <Link href="/" className="font-semibold text-lg text-foreground min-w-0 truncate" title={PRODUCT_TAGLINE}>
-              FigureMyLife Labs
+            <Link
+              href="/chat/new"
+              onClick={handleBrandLinkClick}
+              className="inline-flex items-center gap-1.5 font-semibold text-lg text-foreground min-w-0 truncate"
+              title={PRODUCT_TAGLINE}
+            >
+              <span className="truncate">FigureMyLife Labs</span>
+              <span
+                aria-hidden
+                className={`inline-flex items-center transition-all duration-300 ${
+                  brandLogoParty ? "max-w-10 opacity-100" : "max-w-0 opacity-0"
+                }`}
+              >
+                <Image
+                  src="/icon.svg"
+                  alt=""
+                  width={18}
+                  height={18}
+                  className="rounded-sm dark:hidden animate-bounce"
+                />
+                <Image
+                  src="/icon-dark.svg"
+                  alt=""
+                  width={18}
+                  height={18}
+                  className="hidden rounded-sm dark:block animate-bounce"
+                />
+              </span>
+              <span
+                aria-hidden
+                className={`text-sm transition-all duration-300 ${
+                  brandLogoParty ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"
+                }`}
+              >
+                ✨
+              </span>
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}
@@ -5286,7 +5946,7 @@ export default function ChatPage() {
             <button
               type="button"
               onClick={() => {
-                router.push("/chat/journal/new");
+                openJournalTypeChooser();
                 if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
               }}
               title={getLandingTranslations(language).journalEntryButtonLabel}
@@ -6758,6 +7418,8 @@ export default function ChatPage() {
                                     videoTitle?: string;
                                     channel?: string;
                                     sourceType?: "youtube" | "journal";
+                                    journalCategory?: "nutrition" | "exercise";
+                                    journalBatchId?: string;
                                     transcriptText?: string;
                                     journalEntryDay?: number;
                                     journalEntryMonth?: number;
@@ -6778,6 +7440,8 @@ export default function ChatPage() {
                                       videoTitle: data.videoTitle ?? t.videoTitle,
                                       channel: data.channel ?? t.channel,
                                       sourceType: data.sourceType ?? t.sourceType,
+                                      journalCategory: data.journalCategory ?? t.journalCategory,
+                                      journalBatchId: data.journalBatchId ?? t.journalBatchId,
                                       transcriptText: data.transcriptText ?? "",
                                       journalEntryDay: data.journalEntryDay ?? t.journalEntryDay,
                                       journalEntryMonth: data.journalEntryMonth ?? t.journalEntryMonth,
@@ -6799,9 +7463,16 @@ export default function ChatPage() {
                               onKeyDown={(e) => e.key === "Enter" && (e.currentTarget as HTMLElement).click()}
                             >
                               {t.sourceType === "journal" ? (
-                                <span className="text-sm font-medium truncate block text-foreground">
-                                  {t.videoTitle || "Journal entry"}
-                                </span>
+                                <div className="flex items-center gap-2 min-w-0">
+                                  <span className="text-sm font-medium truncate block text-foreground">
+                                    {t.videoTitle || "Journal entry"}
+                                  </span>
+                                  {getJournalCategoryLabel(t.journalCategory) ? (
+                                    <span className="shrink-0 px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+                                      {getJournalCategoryLabel(t.journalCategory)}
+                                    </span>
+                                  ) : null}
+                                </div>
                               ) : (
                               <a
                                 href={`https://www.youtube.com/watch?v=${t.videoId}`}
@@ -7071,7 +7742,7 @@ export default function ChatPage() {
                     <button
                       type="button"
                       onClick={() => {
-                        router.push("/chat/journal/new");
+                        openJournalTypeChooser();
                       }}
                       className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors"
                     >
@@ -7102,6 +7773,8 @@ export default function ChatPage() {
                                   videoTitle?: string;
                                   channel?: string;
                                   sourceType?: "youtube" | "journal";
+                                  journalCategory?: "nutrition" | "exercise";
+                                  journalBatchId?: string;
                                   transcriptText?: string;
                                   journalEntryDay?: number;
                                   journalEntryMonth?: number;
@@ -7125,6 +7798,8 @@ export default function ChatPage() {
                                     videoTitle: data.videoTitle ?? t.videoTitle,
                                     channel: data.channel ?? t.channel,
                                     sourceType: data.sourceType ?? t.sourceType,
+                                    journalCategory: data.journalCategory ?? t.journalCategory,
+                                    journalBatchId: data.journalBatchId ?? t.journalBatchId,
                                     transcriptText: data.transcriptText ?? "",
                                     journalEntryDay: data.journalEntryDay ?? t.journalEntryDay,
                                     journalEntryMonth: data.journalEntryMonth ?? t.journalEntryMonth,
@@ -7145,9 +7820,16 @@ export default function ChatPage() {
                             }
                             onKeyDown={(e) => e.key === "Enter" && (e.currentTarget as HTMLElement).click()}
                           >
-                            <span className="text-sm font-medium truncate block text-foreground">
-                              {t.videoTitle || "Journal entry"}
-                            </span>
+                            <div className="flex items-center gap-2 min-w-0">
+                              <span className="text-sm font-medium truncate block text-foreground">
+                                {t.videoTitle || "Journal entry"}
+                              </span>
+                              {getJournalCategoryLabel(t.journalCategory) ? (
+                                <span className="shrink-0 px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+                                  {getJournalCategoryLabel(t.journalCategory)}
+                                </span>
+                              ) : null}
+                            </div>
                             <p className="text-[10px] text-neutral-500 dark:text-neutral-400">
                               {formatJournalEntryListDate(t)}
                             </p>
@@ -7195,7 +7877,7 @@ export default function ChatPage() {
                       No journal entries yet.{" "}
                       <button
                         type="button"
-                        onClick={() => router.push("/chat/journal/new")}
+                        onClick={openJournalTypeChooser}
                         className="font-medium text-foreground underline underline-offset-2 hover:no-underline"
                       >
                         Write one
@@ -7428,7 +8110,7 @@ export default function ChatPage() {
               messages.length === 0
                 ? isAnonymous
                   ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-36 sm:pb-40 px-4 py-6"
-                  : "flex-1 min-h-0 flex flex-col items-center justify-center pb-36 sm:pb-40 px-4 py-6"
+                  : "flex-1 min-h-0 flex flex-col items-center justify-center md:justify-start pb-36 sm:pb-40 md:pb-8 px-4 py-6 md:pt-10"
                 : "px-3 py-4 sm:px-4 sm:py-5"
             }`}
           >
@@ -7523,18 +8205,13 @@ export default function ChatPage() {
                       </div>
 
                       {!incognitoMode && (
-                        <div className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background/80 p-3 text-left">
-                          <p className="text-sm font-medium text-foreground">
-                            {new Intl.DateTimeFormat(undefined, { dateStyle: "full" }).format(
-                              new Date(`${selectedLandingDayKey}T00:00:00`)
-                            )}
-                          </p>
+                        <div className="w-full text-left">
                           {selectedLandingDayActivityItems.length === 0 ? (
-                            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+                            <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">
                               No activity yet for this day.
                             </p>
                           ) : (
-                            <div className="mt-2 space-y-2">
+                            <div className="space-y-2">
                               {selectedLandingDayActivityItems.map((item) => (
                                 <button
                                   key={item.id}
@@ -7553,6 +8230,8 @@ export default function ChatPage() {
                                         videoTitle: row.videoTitle,
                                         channel: row.channel,
                                         sourceType: row.sourceType,
+                                        journalCategory: row.journalCategory,
+                                        journalBatchId: row.journalBatchId,
                                         journalEntryDay: row.journalEntryDay,
                                         journalEntryMonth: row.journalEntryMonth,
                                         journalEntryYear: row.journalEntryYear,
@@ -7617,7 +8296,7 @@ export default function ChatPage() {
                                   <p className="text-sm font-medium text-foreground truncate">{item.title}</p>
                                   <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
                                     {item.kind === "session" ? "Conversation" :
-                                      item.kind === "journal" ? "Journal entry" :
+                                      item.kind === "journal" ? (item.sublabel ? `Journal entry · ${item.sublabel}` : "Journal entry") :
                                       item.kind === "memory" ? "Memory" :
                                       item.kind === "habit" ? "Habit" :
                                       item.kind === "concept" ? "Concept" :
@@ -7957,20 +8636,6 @@ export default function ChatPage() {
                   type="button"
                   onClick={() => {
                     playSelectionChime();
-                    setPendingOneOnOneMentor(null);
-                    activeOneOnOneMentorRef.current = null;
-                    activeSecondOrderRef.current = false;
-                    activeSecondOrderPlainRef.current = false;
-                    setPendingSecondOrder(false);
-                  }}
-                  className="shrink-0 rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
-                >
-                  Normal chat
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    playSelectionChime();
                     if (sessionId !== "new" && sessionId !== "incognito") {
                       try {
                         sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
@@ -8005,6 +8670,13 @@ export default function ChatPage() {
                 >
                   Journal
                 </button>
+                <button
+                  type="button"
+                  onClick={openCalorieTrackerModal}
+                  className="shrink-0 rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                >
+                  {getLandingTranslations(language).calorieTrackerChipLabel}
+                </button>
               </div>
             )}
             <div className="min-w-0 max-w-2xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex items-center overflow-hidden h-12 min-h-12" data-tour="input-area">
@@ -8036,12 +8708,12 @@ export default function ChatPage() {
                   placeholder={
                     multiMentorMode && selectedMentorFigureIds.length >= 2
                       ? "What do you want to ask your mentors?"
-                      : "What's on your mind | @ to search"
+                      : landingAnimatedPlaceholder
                   }
                   placeholderMobile={
                     multiMentorMode && selectedMentorFigureIds.length >= 2
                       ? "What do you want to ask your mentors?"
-                      : "What's on your mind | @ to search"
+                      : landingAnimatedPlaceholder
                   }
                   disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
                   placeholderCentered
@@ -9965,6 +10637,309 @@ export default function ChatPage() {
         <FeedbackModal onClose={() => setFeedbackModalOpen(false)} />
       )}
 
+      {journalTypeChooserOpen && (
+        <div
+          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => setJournalTypeChooserOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Choose journal type"
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,440px)] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700">
+              <h2 className="text-lg font-semibold text-foreground">
+                Choose journal type
+              </h2>
+              <button
+                type="button"
+                onClick={() => setJournalTypeChooserOpen(false)}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 space-y-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setJournalTypeChooserOpen(false);
+                  openJournalEntryFlow();
+                }}
+                className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 px-4 py-3 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+              >
+                <p className="text-sm font-semibold text-foreground">Regular journal</p>
+                <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1">
+                  Write a freeform entry and save it to your library.
+                </p>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setJournalTypeChooserOpen(false);
+                  openCalorieTrackerModal();
+                }}
+                className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 px-4 py-3 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+              >
+                <p className="text-sm font-semibold text-foreground">
+                  {getLandingTranslations(language).calorieTrackerChipLabel}
+                </p>
+                <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1">
+                  Tell me what you ate or exercised and I&apos;ll estimate calories and macros.
+                </p>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {journalEntryModalOpen && (
+        <div
+          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => {
+            if (!journalEntrySaving) resetJournalEntryModal();
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={getLandingTranslations(language).journalEntryModalTitle}
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <h2 className="text-lg font-semibold text-foreground pr-2">
+                {getLandingTranslations(language).journalEntryModalTitle}
+              </h2>
+              <button
+                type="button"
+                onClick={resetJournalEntryModal}
+                disabled={journalEntrySaving}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 space-y-3 overflow-y-auto">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                {getLandingTranslations(language).journalEntryModalSubtitle}
+              </p>
+              <div>
+                <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                  {getLandingTranslations(language).journalEntryDateHint}
+                </label>
+                <input
+                  type="date"
+                  value={journalEntryDate}
+                  onChange={(e) => setJournalEntryDate(e.target.value)}
+                  disabled={journalEntrySaving}
+                  className="w-full max-w-xs px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                />
+              </div>
+              <textarea
+                value={journalEntryText}
+                onChange={(e) => setJournalEntryText(e.target.value)}
+                placeholder={getLandingTranslations(language).journalEntryBodyPlaceholder}
+                disabled={journalEntrySaving}
+                rows={10}
+                className="w-full min-h-[200px] px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
+              />
+              {journalEntrySaveError && (
+                <p className="text-sm text-red-600 dark:text-red-400">{journalEntrySaveError}</p>
+              )}
+              <div className="flex flex-wrap items-center justify-end gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={resetJournalEntryModal}
+                  disabled={journalEntrySaving}
+                  className="px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                >
+                  {getLandingTranslations(language).journalEntryCancel}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void saveJournalEntryFromModal()}
+                  disabled={journalEntrySaving || !journalEntryText.trim()}
+                  className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                >
+                  {journalEntrySaving ? "Saving..." : getLandingTranslations(language).journalEntrySave}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {calorieTrackerModalOpen && (
+        <div
+          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={resetCalorieTrackerModal}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Calorie tracker"
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <h2 className="text-lg font-semibold text-foreground pr-2">{getLandingTranslations(language).calorieTrackerModalTitle}</h2>
+              <button
+                type="button"
+                onClick={resetCalorieTrackerModal}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 space-y-3 overflow-y-auto">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                {getLandingTranslations(language).calorieTrackerModalSubtitle}
+              </p>
+
+              {calorieTrackerStep === "input" && (
+                <>
+                  <div>
+                    <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                      {getLandingTranslations(language).journalEntryDateHint}
+                    </label>
+                    <input
+                      type="date"
+                      value={calorieTrackerEntryDate}
+                      onChange={(e) => setCalorieTrackerEntryDate(e.target.value)}
+                      disabled={calorieTrackerLoading}
+                      className="w-full max-w-xs px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    />
+                  </div>
+                  <textarea
+                    value={calorieTrackerInput}
+                    onChange={(e) => setCalorieTrackerInput(e.target.value)}
+                    rows={6}
+                    disabled={calorieTrackerLoading}
+                    placeholder="e.g. Breakfast: 2 eggs + toast, lunch: chicken bowl; workout: 30 min run"
+                    className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => void runCalorieTrackerAnalyze()}
+                    disabled={calorieTrackerLoading || !calorieTrackerInput.trim()}
+                    className="w-full px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
+                  >
+                    {calorieTrackerLoading ? "Analyzing..." : getLandingTranslations(language).calorieTrackerContinue}
+                  </button>
+                </>
+              )}
+
+              {calorieTrackerStep === "questions" && (
+                <>
+                  <div className="space-y-2">
+                    {calorieTrackerQuestions.map((q, idx) => (
+                      <div key={idx} className="space-y-1">
+                        <p className="text-sm font-medium text-foreground">{q}</p>
+                        <input
+                          type="text"
+                          value={calorieTrackerAnswers[idx] ?? ""}
+                          onChange={(e) =>
+                            setCalorieTrackerAnswers((prev) =>
+                              prev.map((v, i) => (i === idx ? e.target.value : v))
+                            )
+                          }
+                          disabled={calorieTrackerLoading}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setCalorieTrackerStep("input")}
+                      disabled={calorieTrackerLoading}
+                      className="flex-1 px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
+                    >
+                      {getLandingTranslations(language).calorieTrackerBack}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void finalizeCalorieTracker(calorieTrackerAnswers)}
+                      disabled={calorieTrackerLoading}
+                      className="flex-1 px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
+                    >
+                      {calorieTrackerLoading ? "Estimating..." : getLandingTranslations(language).calorieTrackerGetEstimate}
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {calorieTrackerStep === "result" && calorieTrackerResult && (
+                <>
+                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-2">
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                      Confidence: {calorieTrackerResult.confidence}
+                    </p>
+                    {calorieTrackerResult.nutrition && (
+                      <div className="text-sm text-foreground">
+                        <p className="font-medium">Nutrition</p>
+                        <p>Calories: {calorieTrackerResult.nutrition.calories ?? "unknown"} kcal</p>
+                        <p>Protein: {calorieTrackerResult.nutrition.proteinGrams ?? "unknown"} g</p>
+                        <p>Carbs: {calorieTrackerResult.nutrition.carbsGrams ?? "unknown"} g</p>
+                        <p>Fat: {calorieTrackerResult.nutrition.fatGrams ?? "unknown"} g</p>
+                      </div>
+                    )}
+                    {calorieTrackerResult.exercise && (
+                      <div className="text-sm text-foreground">
+                        <p className="font-medium">Exercise</p>
+                        <p>Calories burned: {calorieTrackerResult.exercise.caloriesBurned ?? "unknown"} kcal</p>
+                      </div>
+                    )}
+                    {calorieTrackerResult.assumptions.length > 0 && (
+                      <div>
+                        <p className="text-xs font-medium text-neutral-600 dark:text-neutral-400">Assumptions</p>
+                        <ul className="mt-1 space-y-1">
+                          {calorieTrackerResult.assumptions.map((a, i) => (
+                            <li key={i} className="text-xs text-neutral-600 dark:text-neutral-400">- {a}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-sm text-emerald-600 dark:text-emerald-400">
+                    {calorieTrackerResult.savedEntries && calorieTrackerResult.savedEntries.length > 1
+                      ? getLandingTranslations(language).calorieTrackerSavedEntries
+                      : getLandingTranslations(language).calorieTrackerSavedEntry}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={resetCalorieTrackerModal}
+                    className="w-full px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90"
+                  >
+                    {getLandingTranslations(language).calorieTrackerDone}
+                  </button>
+                </>
+              )}
+
+              {calorieTrackerError && (
+                <p className="text-sm text-red-600 dark:text-red-400">{calorieTrackerError}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {newConversationChooserModalOpen && (
         <div
           className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
@@ -10084,7 +11059,7 @@ export default function ChatPage() {
                 type="button"
                 onClick={() => {
                   setNewConversationChooserModalOpen(false);
-                  openJournalEntryFlow();
+                  openJournalTypeChooser();
                 }}
                 className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
               >

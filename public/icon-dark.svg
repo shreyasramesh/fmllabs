@@ -1,0 +1,19 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Playful orange mascot icon for dark theme">
+  <rect width="512" height="512" rx="120" fill="#1F1A17" />
+
+  <path
+    d="M256 112C188 112 132 168 132 236V350C132 359 139 366 148 366C157 366 164 361 170 354C176 346 183 343 190 352C197 361 205 368 216 368C227 368 235 361 242 352C249 343 256 343 263 352C270 361 278 368 289 368C300 368 308 361 315 352C322 343 329 346 335 354C341 361 348 366 357 366C366 366 373 359 373 350V236C373 168 324 112 256 112Z"
+    fill="#D97757"
+  />
+
+  <path d="M256 94C270 94 282 103 286 116C273 114 262 108 256 96C250 108 239 114 226 116C230 103 242 94 256 94Z" fill="#E88F72" />
+
+  <circle cx="220" cy="228" r="20" fill="#F5F2ED" />
+  <circle cx="292" cy="228" r="20" fill="#F5F2ED" />
+  <circle cx="220" cy="232" r="9.5" fill="#2E2E2E" />
+  <circle cx="292" cy="232" r="9.5" fill="#2E2E2E" />
+  <circle cx="226" cy="225" r="3" fill="#FFFFFF" />
+  <circle cx="298" cy="225" r="3" fill="#FFFFFF" />
+
+  <path d="M242 286C246 294 252 298 256 298C260 298 266 294 270 286" stroke="#F5F2ED" stroke-width="9" stroke-linecap="round" />
+</svg>

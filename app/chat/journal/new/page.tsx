@@ -8,13 +8,21 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { getLandingTranslations } from "@/lib/landing-translations";
 
+function getTodayDateInputValue(): string {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const dd = String(now.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
 export default function JournalNewPage() {
   const router = useRouter();
   const { userId, isLoaded } = useAuth();
   const { language } = useLanguage();
   const t = getLandingTranslations(language);
 
-  const [entryDate, setEntryDate] = useState("");
+  const [entryDate, setEntryDate] = useState(() => getTodayDateInputValue());
   const [text, setText] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);

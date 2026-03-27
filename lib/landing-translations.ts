@@ -57,6 +57,15 @@ export interface LandingTranslations {
   journalEntrySavedHint: string;
   journalEntryBack: string;
   journalEntrySignInPrompt: string;
+  calorieTrackerChipLabel: string;
+  calorieTrackerModalTitle: string;
+  calorieTrackerModalSubtitle: string;
+  calorieTrackerContinue: string;
+  calorieTrackerBack: string;
+  calorieTrackerGetEstimate: string;
+  calorieTrackerDone: string;
+  calorieTrackerSavedEntry: string;
+  calorieTrackerSavedEntries: string;
 }
 
 const EN: LandingTranslations = {
@@ -99,7 +108,7 @@ const EN: LandingTranslations = {
   journalEntryModalTitle: "Add a Journal Entry",
   journalEntryModalSubtitle:
     "Write freely. This is saved to your library—not sent as a chat message. A short title is generated from what you write. You can extract concepts from it later if you want.",
-  journalEntryDateHint: "Entry date (optional — defaults to today)",
+  journalEntryDateHint: "Entry date",
   journalEntryBodyPlaceholder: "Write whatever you feel…",
   journalEntrySave: "Save",
   journalEntryCancel: "Cancel",
@@ -107,6 +116,16 @@ const EN: LandingTranslations = {
   journalEntrySavedHint: "Saved to your library.",
   journalEntryBack: "Back",
   journalEntrySignInPrompt: "Sign in to save journal entries to your library.",
+  calorieTrackerChipLabel: "Calorie tracker",
+  calorieTrackerModalTitle: "Calorie tracker journal",
+  calorieTrackerModalSubtitle:
+    "Tell me what you ate or exercised and I'll calculate the nutritional content or calories burned",
+  calorieTrackerContinue: "Continue",
+  calorieTrackerBack: "Back",
+  calorieTrackerGetEstimate: "Get estimate",
+  calorieTrackerDone: "Done",
+  calorieTrackerSavedEntry: "Saved to journal entry.",
+  calorieTrackerSavedEntries: "Saved to journal entries.",
 };
 
 const TRANSLATIONS: Partial<Record<LanguageCode, Partial<LandingTranslations>>> = {

@@ -107,6 +107,20 @@ export function DashboardHome() {
           <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 max-w-md mx-auto">
             A quick look at your learning and conversations on FigureMyLife Labs.
           </p>
+          <div className="mt-5 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+            <Link
+              href="/chat/new"
+              className="inline-flex items-center justify-center rounded-xl bg-foreground px-6 py-3 text-sm font-semibold text-background hover:opacity-90 transition-opacity"
+            >
+              Continue to App
+            </Link>
+            <Link
+              href="/leaderboard"
+              className="inline-flex items-center justify-center rounded-xl border border-neutral-300 dark:border-neutral-600 px-6 py-3 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+            >
+              View Leaderboard
+            </Link>
+          </div>
         </div>
 
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
@@ -223,21 +237,6 @@ export function DashboardHome() {
                 : "Loading…"
             }
           />
-        </div>
-
-        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-          <Link
-            href="/chat/new"
-            className="inline-flex items-center justify-center rounded-xl bg-foreground px-6 py-3 text-sm font-semibold text-background hover:opacity-90 transition-opacity"
-          >
-            Continue to chat
-          </Link>
-          <Link
-            href="/leaderboard"
-            className="inline-flex items-center justify-center rounded-xl border border-neutral-300 dark:border-neutral-600 px-6 py-3 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-          >
-            View leaderboard
-          </Link>
         </div>
 
         <footer className="mt-16 pt-8 border-t border-neutral-200 dark:border-neutral-800 text-center text-xs text-neutral-500 dark:text-neutral-400">
