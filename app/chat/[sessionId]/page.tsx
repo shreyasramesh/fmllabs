@@ -7480,32 +7480,34 @@ export default function ChatPage() {
                               {selectedLandingDayActivityItems.length} item{selectedLandingDayActivityItems.length === 1 ? "" : "s"}
                             </p>
                           </div>
-                          <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
-                            {landingCalendarDays.map(({ key, date }) => {
-                              const selected = key === selectedLandingDayKey;
-                              const hasActivity = (landingDayActivityCount.get(key) ?? 0) > 0;
-                              return (
-                                <button
-                                  key={key}
-                                  type="button"
-                                  onClick={() => setSelectedLandingDayKey(key)}
-                                  className={`relative flex flex-col items-center justify-center rounded-xl border px-1.5 py-2.5 transition-colors ${
-                                    selected
-                                      ? "border-foreground bg-neutral-100 dark:bg-neutral-800"
-                                      : "border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70"
-                                  }`}
-                                  aria-pressed={selected}
-                                >
-                                  <span className="text-[10px] sm:text-[11px] text-neutral-500 dark:text-neutral-400">
-                                    {new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(date)}
-                                  </span>
-                                  <span className="text-sm font-semibold text-foreground">{date.getDate()}</span>
-                                  {hasActivity && (
-                                    <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
-                                  )}
-                                </button>
-                              );
-                            })}
+                          <div className="overflow-x-auto">
+                            <div className="grid grid-cols-7 gap-1.5 sm:gap-2 min-w-[120%] sm:min-w-0">
+                              {landingCalendarDays.map(({ key, date }) => {
+                                const selected = key === selectedLandingDayKey;
+                                const hasActivity = (landingDayActivityCount.get(key) ?? 0) > 0;
+                                return (
+                                  <button
+                                    key={key}
+                                    type="button"
+                                    onClick={() => setSelectedLandingDayKey(key)}
+                                    className={`relative flex flex-col items-center justify-center rounded-xl border px-1.5 py-2.5 transition-colors ${
+                                      selected
+                                        ? "border-foreground bg-neutral-100 dark:bg-neutral-800"
+                                        : "border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70"
+                                    }`}
+                                    aria-pressed={selected}
+                                  >
+                                    <span className="text-[10px] sm:text-[11px] text-neutral-500 dark:text-neutral-400">
+                                      {new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(date)}
+                                    </span>
+                                    <span className="text-sm font-semibold text-foreground">{date.getDate()}</span>
+                                    {hasActivity && (
+                                      <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+                                    )}
+                                  </button>
+                                );
+                              })}
+                            </div>
                           </div>
                         </div>
                       )}
@@ -7950,7 +7952,7 @@ export default function ChatPage() {
         <div className="fixed inset-x-0 bottom-0 z-30 flex flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background">
           <div className="flex flex-col items-center justify-center px-4 py-2 sm:py-2.5 min-w-0">
             {messages.length === 0 && !incognitoMode && (
-              <div className="w-full max-w-2xl mb-2 flex flex-wrap items-center justify-center gap-1.5">
+              <div className="w-full max-w-2xl mb-2 flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-0.5">
                 <button
                   type="button"
                   onClick={() => {
@@ -7961,7 +7963,7 @@ export default function ChatPage() {
                     activeSecondOrderPlainRef.current = false;
                     setPendingSecondOrder(false);
                   }}
-                  className="rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                  className="shrink-0 rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
                 >
                   Normal chat
                 </button>
@@ -7982,7 +7984,7 @@ export default function ChatPage() {
                     setMentorCatalogCategoryId(null);
                     setMentorOneOnOneModalOpen(true);
                   }}
-                  className="rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                  className="shrink-0 rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
                 >
                   1:1 mentor
                 </button>
@@ -7992,14 +7994,14 @@ export default function ChatPage() {
                     playSelectionChime();
                     startSecondOrderConversation(!secondOrderCitationsEnabled);
                   }}
-                  className="rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                  className="shrink-0 rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
                 >
                   Second-order
                 </button>
                 <button
                   type="button"
                   onClick={openJournalEntryFlow}
-                  className="rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                  className="shrink-0 rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
                 >
                   Journal
                 </button>
