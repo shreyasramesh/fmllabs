@@ -12761,15 +12761,15 @@ export default function ChatPage() {
 
               {goalsWizardStep === "daily_goals" && (
                 <div className="space-y-3">
-                  <h3 className="text-xl font-semibold text-foreground">
-                    {getLandingTranslations(language).nutritionGoalsWizardDailyGoalsTitle}
-                  </h3>
                   <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-3">
                     <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-1">
                       {getLandingTranslations(language).nutritionGoalsWizardCaloriesGoalTitle}
                     </p>
                     <p className="text-3xl font-semibold">{goalsDraft.caloriesTarget} kcal</p>
                   </div>
+                  <h3 className="text-xl font-semibold text-foreground">
+                    {getLandingTranslations(language).nutritionGoalsWizardDailyGoalsTitle}
+                  </h3>
                   {!goalsWizardActive && (
                     <button
                       type="button"
