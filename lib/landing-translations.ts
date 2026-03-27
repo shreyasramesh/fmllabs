@@ -117,6 +117,28 @@ export interface LandingTranslations {
   nutritionAnalysisGoalStatusHeading: string;
   nutritionAnalysisHighlightsHeading: string;
   nutritionAnalysisTipsHeading: string;
+  weeklySummaryButtonLabel: string;
+  weeklySummaryModalTitle: string;
+  weeklySummaryLoading: string;
+  weeklySummaryTabThisWeek: string;
+  weeklySummaryTabLastWeek: string;
+  weeklySummaryTabWeeksAgo: string;
+  weeklySummaryUnderBudgetLabel: string;
+  weeklySummaryTrackedDaysLabel: string;
+  weeklySummaryCaloriesHeading: string;
+  weeklySummaryCaloriesFoodCol: string;
+  weeklySummaryCaloriesExerciseCol: string;
+  weeklySummaryCaloriesRemainingCol: string;
+  weeklySummaryMacrosHeading: string;
+  weeklySummaryMacrosCarbsCol: string;
+  weeklySummaryMacrosProteinCol: string;
+  weeklySummaryMacrosFatCol: string;
+  weeklySummaryTotalRowLabel: string;
+  weeklySummaryDailyGoalFootnote: string;
+  weeklySummaryCaloriesUnit: string;
+  weeklySummaryConsistencyHeading: string;
+  weeklySummaryFoodEntriesLabel: string;
+  weeklySummaryExerciseEntriesLabel: string;
 }
 
 const EN: LandingTranslations = {
@@ -230,6 +252,28 @@ const EN: LandingTranslations = {
   nutritionAnalysisGoalStatusHeading: "Goal status",
   nutritionAnalysisHighlightsHeading: "Highlights",
   nutritionAnalysisTipsHeading: "Tips for tomorrow",
+  weeklySummaryButtonLabel: "Weekly Summary",
+  weeklySummaryModalTitle: "Weekly Summary",
+  weeklySummaryLoading: "Loading weekly summary...",
+  weeklySummaryTabThisWeek: "This week",
+  weeklySummaryTabLastWeek: "Last week",
+  weeklySummaryTabWeeksAgo: "weeks ago",
+  weeklySummaryUnderBudgetLabel: "calories under budget this week",
+  weeklySummaryTrackedDaysLabel: "out of 7 days tracked this week",
+  weeklySummaryCaloriesHeading: "Calories",
+  weeklySummaryCaloriesFoodCol: "Food",
+  weeklySummaryCaloriesExerciseCol: "Exercise",
+  weeklySummaryCaloriesRemainingCol: "Remaining",
+  weeklySummaryMacrosHeading: "Macronutrients",
+  weeklySummaryMacrosCarbsCol: "Carbs",
+  weeklySummaryMacrosProteinCol: "Protein",
+  weeklySummaryMacrosFatCol: "Fat",
+  weeklySummaryTotalRowLabel: "Total",
+  weeklySummaryDailyGoalFootnote: "Based on a daily goal of",
+  weeklySummaryCaloriesUnit: "calories",
+  weeklySummaryConsistencyHeading: "Consistency Stats",
+  weeklySummaryFoodEntriesLabel: "Food entries",
+  weeklySummaryExerciseEntriesLabel: "Exercise entries",
 };
 
 const TRANSLATIONS: Partial<Record<LanguageCode, Partial<LandingTranslations>>> = {

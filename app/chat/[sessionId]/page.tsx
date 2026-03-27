@@ -64,6 +64,8 @@ import { SettingsLanguageSelector } from "@/components/SettingsLanguageSelector"
 import { UserTypeSelector } from "@/components/UserTypeSelector";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { LeaderboardEmbed } from "@/components/LeaderboardEmbed";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 
 /** Library / inline panels: cards fill the row; min width ~17.5rem so more columns appear on wide screens. */
 const LIBRARY_RESPONSIVE_CARD_GRID =
@@ -1817,6 +1819,36 @@ const GOAL_MACRO_MAX = 1000;
 const GOAL_PERCENT_MIN = 5;
 const GOAL_PERCENT_MAX = 85;
 
+function chartBaseOptions(): Highcharts.Options {
+  return {
+    chart: {
+      backgroundColor: "transparent",
+      style: { fontFamily: "Inter, system-ui, sans-serif" },
+    },
+    credits: { enabled: false },
+    title: { text: undefined },
+    legend: {
+      itemStyle: { color: "#737373", fontSize: "12px" },
+    },
+    xAxis: {
+      labels: { style: { color: "#737373", fontSize: "11px" } },
+      lineColor: "#e5e5e5",
+      tickColor: "#e5e5e5",
+    },
+    yAxis: {
+      title: { text: undefined },
+      gridLineColor: "#e5e5e5",
+      labels: { style: { color: "#737373", fontSize: "11px" } },
+    },
+    tooltip: {
+      backgroundColor: "#111827",
+      borderColor: "#1f2937",
+      style: { color: "#f9fafb" },
+      shared: true,
+    },
+  };
+}
+
 type GoalsWizardStep =
   | "age"
   | "weight"
@@ -3085,6 +3117,44 @@ export default function ChatPage() {
       goalStatus: string;
       highlights: string[];
       tomorrowTips: string[];
+    };
+  } | null>(null);
+  const [weeklySummaryModalOpen, setWeeklySummaryModalOpen] = useState(false);
+  const [weeklySummaryWeekOffset, setWeeklySummaryWeekOffset] = useState(0);
+  const [weeklySummaryLoading, setWeeklySummaryLoading] = useState(false);
+  const [weeklySummaryError, setWeeklySummaryError] = useState<string | null>(null);
+  const [weeklySummaryResult, setWeeklySummaryResult] = useState<{
+    weekOffset: number;
+    weekStartDayKey: string;
+    weekEndDayKey: string;
+    weekStartLabel: string;
+    weekEndLabel: string;
+    caloriesTargetPerDay: number;
+    caloriesUnderBudget: number;
+    trackedDays: number;
+    foodEntries: number;
+    exerciseEntries: number;
+    rows: Array<{
+      dayKey: string;
+      weekdayLabel: string;
+      monthDayLabel: string;
+      caloriesFood: number;
+      caloriesExercise: number;
+      caloriesRemaining: number;
+      carbsGrams: number;
+      proteinGrams: number;
+      fatGrams: number;
+      tracked: boolean;
+      foodEntries: number;
+      exerciseEntries: number;
+    }>;
+    totals: {
+      caloriesFood: number;
+      caloriesExercise: number;
+      caloriesRemaining: number;
+      carbsGrams: number;
+      proteinGrams: number;
+      fatGrams: number;
     };
   } | null>(null);
 
@@ -5590,8 +5660,253 @@ export default function ChatPage() {
     userId,
   ]);
 
+  const resetWeeklySummaryModal = useCallback(() => {
+    setWeeklySummaryModalOpen(false);
+    setWeeklySummaryWeekOffset(0);
+    setWeeklySummaryLoading(false);
+    setWeeklySummaryError(null);
+    setWeeklySummaryResult(null);
+  }, []);
+
+  const openWeeklySummaryModal = useCallback(() => {
+    playSelectionChime();
+    if (isAnonymous || incognitoMode) {
+      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
+      return;
+    }
+    setWeeklySummaryWeekOffset(0);
+    setWeeklySummaryLoading(false);
+    setWeeklySummaryError(null);
+    setWeeklySummaryResult(null);
+    setWeeklySummaryModalOpen(true);
+  }, [incognitoMode, isAnonymous, router]);
+
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionReportModalOpen && !mentorOneOnOneModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
+    if (!weeklySummaryModalOpen) return;
+    if (isAnonymous || incognitoMode || !userId) return;
+    let cancelled = false;
+    setWeeklySummaryLoading(true);
+    setWeeklySummaryError(null);
+    fetch("/api/me/nutrition-weekly-summary", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ weekOffset: weeklySummaryWeekOffset }),
+    })
+      .then(async (res) => {
+        const data = (await res.json().catch(() => ({}))) as {
+          error?: string;
+          weekOffset?: number;
+          weekStartDayKey?: string;
+          weekEndDayKey?: string;
+          weekStartLabel?: string;
+          weekEndLabel?: string;
+          caloriesTargetPerDay?: number;
+          caloriesUnderBudget?: number;
+          trackedDays?: number;
+          foodEntries?: number;
+          exerciseEntries?: number;
+          rows?: unknown;
+          totals?: {
+            caloriesFood?: number;
+            caloriesExercise?: number;
+            caloriesRemaining?: number;
+            carbsGrams?: number;
+            proteinGrams?: number;
+            fatGrams?: number;
+          };
+        };
+        if (!res.ok || !Array.isArray(data.rows)) {
+          throw new Error(data.error || "Could not load weekly summary.");
+        }
+        if (cancelled) return;
+        const rows = data.rows as Array<{
+          dayKey: string;
+          weekdayLabel: string;
+          monthDayLabel: string;
+          caloriesFood: number;
+          caloriesExercise: number;
+          caloriesRemaining: number;
+          carbsGrams: number;
+          proteinGrams: number;
+          fatGrams: number;
+          tracked: boolean;
+          foodEntries: number;
+          exerciseEntries: number;
+        }>;
+        setWeeklySummaryResult({
+          weekOffset: typeof data.weekOffset === "number" ? data.weekOffset : weeklySummaryWeekOffset,
+          weekStartDayKey: data.weekStartDayKey ?? "",
+          weekEndDayKey: data.weekEndDayKey ?? "",
+          weekStartLabel: data.weekStartLabel ?? "",
+          weekEndLabel: data.weekEndLabel ?? "",
+          caloriesTargetPerDay:
+            typeof data.caloriesTargetPerDay === "number" ? data.caloriesTargetPerDay : nutritionGoals.caloriesTarget,
+          caloriesUnderBudget:
+            typeof data.caloriesUnderBudget === "number" ? data.caloriesUnderBudget : 0,
+          trackedDays: typeof data.trackedDays === "number" ? data.trackedDays : 0,
+          foodEntries: typeof data.foodEntries === "number" ? data.foodEntries : 0,
+          exerciseEntries: typeof data.exerciseEntries === "number" ? data.exerciseEntries : 0,
+          rows,
+          totals: {
+            caloriesFood: Number(data.totals?.caloriesFood ?? 0),
+            caloriesExercise: Number(data.totals?.caloriesExercise ?? 0),
+            caloriesRemaining: Number(data.totals?.caloriesRemaining ?? 0),
+            carbsGrams: Number(data.totals?.carbsGrams ?? 0),
+            proteinGrams: Number(data.totals?.proteinGrams ?? 0),
+            fatGrams: Number(data.totals?.fatGrams ?? 0),
+          },
+        });
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setWeeklySummaryError("Couldn’t load weekly summary. Try again.");
+      })
+      .finally(() => {
+        if (cancelled) return;
+        setWeeklySummaryLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    incognitoMode,
+    isAnonymous,
+    nutritionGoals.caloriesTarget,
+    userId,
+    weeklySummaryModalOpen,
+    weeklySummaryWeekOffset,
+  ]);
+
+  const weeklyCaloriesChartOptions = useMemo<Highcharts.Options>(() => {
+    if (!weeklySummaryResult) return { ...chartBaseOptions() };
+    const categories = weeklySummaryResult.rows.map((row) => `${row.weekdayLabel} ${row.monthDayLabel}`);
+    return {
+      ...chartBaseOptions(),
+      chart: { ...chartBaseOptions().chart, type: "column", height: 320 },
+      title: {
+        text: getLandingTranslations(language).weeklySummaryCaloriesHeading,
+        align: "left",
+        style: { color: "#111827", fontSize: "14px", fontWeight: "600" },
+      },
+      xAxis: {
+        ...chartBaseOptions().xAxis,
+        categories,
+      },
+      yAxis: {
+        ...chartBaseOptions().yAxis,
+        allowDecimals: false,
+      },
+      plotOptions: {
+        column: { borderRadius: 4, pointPadding: 0.08, groupPadding: 0.12 },
+      },
+      series: [
+        {
+          type: "column",
+          name: getLandingTranslations(language).weeklySummaryCaloriesFoodCol,
+          data: weeklySummaryResult.rows.map((row) => (row.tracked ? row.caloriesFood : null)),
+          color: "#f59e0b",
+        },
+        {
+          type: "column",
+          name: getLandingTranslations(language).weeklySummaryCaloriesExerciseCol,
+          data: weeklySummaryResult.rows.map((row) => (row.tracked ? row.caloriesExercise : null)),
+          color: "#60a5fa",
+        },
+        {
+          type: "spline",
+          name: getLandingTranslations(language).weeklySummaryCaloriesRemainingCol,
+          data: weeklySummaryResult.rows.map((row) => (row.tracked ? row.caloriesRemaining : null)),
+          color: "#34d399",
+          lineWidth: 2,
+          marker: { radius: 3 },
+        },
+        {
+          type: "line",
+          name: getLandingTranslations(language).nutritionGoalCaloriesLabel,
+          data: weeklySummaryResult.rows.map(() => weeklySummaryResult.caloriesTargetPerDay),
+          color: "#ef4444",
+          dashStyle: "ShortDash",
+          lineWidth: 2,
+          marker: { enabled: false },
+        },
+      ],
+    };
+  }, [language, weeklySummaryResult]);
+
+  const weeklyMacrosChartOptions = useMemo<Highcharts.Options>(() => {
+    if (!weeklySummaryResult) return { ...chartBaseOptions() };
+    const categories = weeklySummaryResult.rows.map((row) => `${row.weekdayLabel} ${row.monthDayLabel}`);
+    return {
+      ...chartBaseOptions(),
+      chart: { ...chartBaseOptions().chart, type: "column", height: 320 },
+      title: {
+        text: getLandingTranslations(language).weeklySummaryMacrosHeading,
+        align: "left",
+        style: { color: "#111827", fontSize: "14px", fontWeight: "600" },
+      },
+      xAxis: {
+        ...chartBaseOptions().xAxis,
+        categories,
+      },
+      yAxis: {
+        ...chartBaseOptions().yAxis,
+        allowDecimals: false,
+      },
+      plotOptions: {
+        column: { borderRadius: 4, pointPadding: 0.08, groupPadding: 0.12 },
+      },
+      series: [
+        {
+          type: "column",
+          name: getLandingTranslations(language).weeklySummaryMacrosCarbsCol,
+          data: weeklySummaryResult.rows.map((row) => (row.tracked ? row.carbsGrams : null)),
+          color: "#a78bfa",
+        },
+        {
+          type: "column",
+          name: getLandingTranslations(language).weeklySummaryMacrosProteinCol,
+          data: weeklySummaryResult.rows.map((row) => (row.tracked ? row.proteinGrams : null)),
+          color: "#f472b6",
+        },
+        {
+          type: "column",
+          name: getLandingTranslations(language).weeklySummaryMacrosFatCol,
+          data: weeklySummaryResult.rows.map((row) => (row.tracked ? row.fatGrams : null)),
+          color: "#f97316",
+        },
+        {
+          type: "line",
+          name: getLandingTranslations(language).nutritionGoalCarbsLabel,
+          data: weeklySummaryResult.rows.map(() => nutritionGoals.carbsGrams),
+          color: "#6366f1",
+          dashStyle: "ShortDash",
+          lineWidth: 2,
+          marker: { enabled: false },
+        },
+        {
+          type: "line",
+          name: getLandingTranslations(language).nutritionGoalProteinLabel,
+          data: weeklySummaryResult.rows.map(() => nutritionGoals.proteinGrams),
+          color: "#db2777",
+          dashStyle: "ShortDash",
+          lineWidth: 2,
+          marker: { enabled: false },
+        },
+        {
+          type: "line",
+          name: getLandingTranslations(language).nutritionGoalFatLabel,
+          data: weeklySummaryResult.rows.map(() => nutritionGoals.fatGrams),
+          color: "#ea580c",
+          dashStyle: "ShortDash",
+          lineWidth: 2,
+          marker: { enabled: false },
+        },
+      ],
+    };
+  }, [language, nutritionGoals.carbsGrams, nutritionGoals.fatGrams, nutritionGoals.proteinGrams, weeklySummaryResult]);
+
+  useEffect(() => {
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionReportModalOpen && !weeklySummaryModalOpen && !mentorOneOnOneModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (journalCheckpointModal) setJournalCheckpointModal(null);
@@ -5605,6 +5920,7 @@ export default function ChatPage() {
           setMentorReflectionsRegenerateLoading(false);
         }
         else if (nutritionReportModalOpen && !nutritionReportLoading) resetNutritionReportModal();
+        else if (weeklySummaryModalOpen && !weeklySummaryLoading) resetWeeklySummaryModal();
         else if (goalsModalOpen && !goalsSaving && !goalsCalculatorLoading && !goalsRecalculateLoading) setGoalsModalOpen(false);
         else if (journalTypeChooserOpen) setJournalTypeChooserOpen(false);
         else if (journalEntryModalOpen && !journalEntrySaving) resetJournalEntryModal();
@@ -5638,7 +5954,7 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, nutritionReportModalOpen, nutritionReportLoading, journalEntrySaving, mentorOneOnOneModalOpen, newConversationChooserModalOpen, journalCheckpointModal, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetJournalEntryModal, resetNutritionReportModal]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, nutritionReportModalOpen, nutritionReportLoading, weeklySummaryModalOpen, weeklySummaryLoading, journalEntrySaving, mentorOneOnOneModalOpen, newConversationChooserModalOpen, journalCheckpointModal, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetJournalEntryModal, resetNutritionReportModal, resetWeeklySummaryModal]);
 
   useEffect(() => {
     if (!headerCalendarOpen) return;
@@ -6100,6 +6416,7 @@ export default function ChatPage() {
     resetJournalEntryModal();
     resetCalorieTrackerModal();
     resetNutritionReportModal();
+    resetWeeklySummaryModal();
     setNewConversationChooserModalOpen(false);
     setMentorOneOnOneModalOpen(false);
     setDeleteAllDataModalOpen(false);
@@ -6109,7 +6426,7 @@ export default function ChatPage() {
     setCcDeleteConfirmModal(null);
     setCgDeleteConfirmModal(null);
     setGoBackConfirmModal(null);
-  }, [resetCalorieTrackerModal, resetJournalEntryModal, resetNutritionReportModal]);
+  }, [resetCalorieTrackerModal, resetJournalEntryModal, resetNutritionReportModal, resetWeeklySummaryModal]);
 
   const handleBrandLinkClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -8610,21 +8927,21 @@ export default function ChatPage() {
                             </div>
                             <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
                               {!(t.sourceType === "journal" && (t.journalCategory === "nutrition" || t.journalCategory === "exercise")) && (
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setReExtractError(null);
-                                    setReExtractConfirm({
-                                      transcriptId: t._id,
-                                      sourceType: t.sourceType === "journal" ? "journal" : "youtube",
-                                      videoTitle: t.videoTitle ?? undefined,
-                                    });
-                                  }}
-                                  className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
-                                  title="Run AI concept extraction again on this saved text"
-                                >
-                                  Re-extract
-                                </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setReExtractError(null);
+                                  setReExtractConfirm({
+                                    transcriptId: t._id,
+                                    sourceType: t.sourceType === "journal" ? "journal" : "youtube",
+                                    videoTitle: t.videoTitle ?? undefined,
+                                  });
+                                }}
+                                className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
+                                title="Run AI concept extraction again on this saved text"
+                              >
+                                Re-extract
+                              </button>
                               )}
                               <button
                                 type="button"
@@ -8966,9 +9283,9 @@ export default function ChatPage() {
                             onKeyDown={(e) => e.key === "Enter" && (e.currentTarget as HTMLElement).click()}
                           >
                             <div className="flex items-center gap-2 min-w-0">
-                              <span className="text-sm font-medium truncate block text-foreground">
-                                {t.videoTitle || "Journal entry"}
-                              </span>
+                            <span className="text-sm font-medium truncate block text-foreground">
+                              {t.videoTitle || "Journal entry"}
+                            </span>
                               <span className="shrink-0 px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
                                 {getJournalCategoryLabelWithRegular(t.journalCategory)}
                               </span>
@@ -8985,21 +9302,21 @@ export default function ChatPage() {
                           </div>
                           <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
                             {t.journalCategory !== "nutrition" && t.journalCategory !== "exercise" && (
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setReExtractError(null);
-                                  setReExtractConfirm({
-                                    transcriptId: t._id,
-                                    sourceType: "journal",
-                                    videoTitle: t.videoTitle ?? undefined,
-                                  });
-                                }}
-                                className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
-                                title="Run AI concept extraction again on this saved text"
-                              >
-                                Re-extract
-                              </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setReExtractError(null);
+                                setReExtractConfirm({
+                                  transcriptId: t._id,
+                                  sourceType: "journal",
+                                  videoTitle: t.videoTitle ?? undefined,
+                                });
+                              }}
+                              className="px-2 py-1.5 text-xs font-medium text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors"
+                              title="Run AI concept extraction again on this saved text"
+                            >
+                              Re-extract
+                            </button>
                             )}
                             <button
                               type="button"
@@ -9391,19 +9708,26 @@ export default function ChatPage() {
                               </p>
                               {!isAnonymous && (
                                 <>
-                                  <button
-                                    type="button"
+                      <button
+                        type="button"
                                     onClick={openNutritionReportModal}
                                     className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                                   >
                                     {getLandingTranslations(language).nutritionAnalysisButtonLabel}
-                                  </button>
-                                  <button
-                                    type="button"
+                      </button>
+                        <button
+                          type="button"
                                     onClick={openGoalsModal}
                                     className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                                   >
                                     {getLandingTranslations(language).nutritionGoalsButtonLabel}
+                        </button>
+                                  <button
+                                    type="button"
+                                    onClick={openWeeklySummaryModal}
+                                    className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                  >
+                                    {getLandingTranslations(language).weeklySummaryButtonLabel}
                                   </button>
                                 </>
                               )}
@@ -9415,9 +9739,9 @@ export default function ChatPage() {
                                 const selected = key === selectedLandingDayKey;
                                 const hasActivity = (landingDayActivityCount.get(key) ?? 0) > 0;
                                 return (
-                      <button
+                          <button
                                     key={key}
-                        type="button"
+                            type="button"
                                     onClick={() => setSelectedLandingDayKey(key)}
                                     className={`relative w-14 sm:w-auto shrink-0 flex flex-col items-center justify-center rounded-lg border px-1 py-2 transition-colors ${
                                       selected
@@ -11110,25 +11434,25 @@ export default function ChatPage() {
               {!(transcriptModalTranscript.sourceType === "journal" &&
                 (transcriptModalTranscript.journalCategory === "nutrition" ||
                   transcriptModalTranscript.journalCategory === "exercise")) && (
-                <button
-                  type="button"
-                  title="Run AI concept extraction again on this saved text"
-                  onClick={() => {
-                    setReExtractError(null);
-                    setReExtractConfirm({
-                      transcriptId: transcriptModalTranscript.id,
-                      sourceType: transcriptModalTranscript.sourceType === "journal" ? "journal" : "youtube",
-                      videoTitle: transcriptModalTranscript.videoTitle ?? undefined,
-                    });
-                    setTranscriptModalTranscript(null);
-                    setTranscriptExtractedConceptOpen(null);
-                    setTranscriptExtractedConceptsSectionOpen(true);
-                    setMentorReflectionsRegenerateLoading(false);
-                  }}
-                  className="px-4 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                >
-                  Re-extract
-                </button>
+              <button
+                type="button"
+                title="Run AI concept extraction again on this saved text"
+                onClick={() => {
+                  setReExtractError(null);
+                  setReExtractConfirm({
+                    transcriptId: transcriptModalTranscript.id,
+                    sourceType: transcriptModalTranscript.sourceType === "journal" ? "journal" : "youtube",
+                    videoTitle: transcriptModalTranscript.videoTitle ?? undefined,
+                  });
+                  setTranscriptModalTranscript(null);
+                  setTranscriptExtractedConceptOpen(null);
+                  setTranscriptExtractedConceptsSectionOpen(true);
+                  setMentorReflectionsRegenerateLoading(false);
+                }}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                Re-extract
+              </button>
               )}
               <button
                 type="button"
@@ -12440,6 +12764,12 @@ export default function ChatPage() {
                   <h3 className="text-xl font-semibold text-foreground">
                     {getLandingTranslations(language).nutritionGoalsWizardDailyGoalsTitle}
                   </h3>
+                  <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-3">
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                      {getLandingTranslations(language).nutritionGoalsWizardCaloriesGoalTitle}
+                    </p>
+                    <p className="text-3xl font-semibold">{goalsDraft.caloriesTarget} kcal</p>
+                  </div>
                   {!goalsWizardActive && (
                     <button
                       type="button"
@@ -12532,12 +12862,6 @@ export default function ChatPage() {
                   {goalsCalculatorRationale && (
                     <p className="text-xs text-neutral-600 dark:text-neutral-400">{goalsCalculatorRationale}</p>
                   )}
-                  <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-3">
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                      {getLandingTranslations(language).nutritionGoalsWizardCaloriesGoalTitle}
-                    </p>
-                    <p className="text-3xl font-semibold">{goalsDraft.caloriesTarget} kcal</p>
-                  </div>
                 </div>
               )}
 
@@ -12750,6 +13074,169 @@ export default function ChatPage() {
                     </div>
                   )}
                 </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {weeklySummaryModalOpen && (
+        <div
+          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => {
+            if (!weeklySummaryLoading) resetWeeklySummaryModal();
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={getLandingTranslations(language).weeklySummaryModalTitle}
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,760px)] max-h-[88vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <h2 className="text-lg font-semibold text-foreground pr-2">
+                {getLandingTranslations(language).weeklySummaryModalTitle}
+              </h2>
+              <button
+                type="button"
+                onClick={resetWeeklySummaryModal}
+                disabled={weeklySummaryLoading}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="px-4 pt-3 pb-2 border-b border-neutral-200 dark:border-neutral-700 overflow-x-auto shrink-0">
+              <div className="flex min-w-max gap-2">
+                {([0, 1, 2, 3] as const).map((offset) => {
+                  const label =
+                    offset === 0
+                      ? getLandingTranslations(language).weeklySummaryTabThisWeek
+                      : offset === 1
+                        ? getLandingTranslations(language).weeklySummaryTabLastWeek
+                        : `${offset} ${getLandingTranslations(language).weeklySummaryTabWeeksAgo}`;
+                  const selected = weeklySummaryWeekOffset === offset;
+                  return (
+                    <button
+                      key={offset}
+                      type="button"
+                      onClick={() => setWeeklySummaryWeekOffset(offset)}
+                      disabled={weeklySummaryLoading}
+                      className={`px-3 py-1.5 rounded-lg text-sm transition-colors border ${
+                        selected
+                          ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 border-neutral-900 dark:border-neutral-100"
+                          : "border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="p-4 space-y-4 overflow-y-auto">
+              {weeklySummaryError && (
+                <p className="text-sm text-red-600 dark:text-red-400">{weeklySummaryError}</p>
+              )}
+              {weeklySummaryLoading && (
+                <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {getLandingTranslations(language).weeklySummaryLoading}
+                </p>
+              )}
+
+              {weeklySummaryResult && (
+                <>
+                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 bg-neutral-50/60 dark:bg-neutral-900/40">
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                      {getLandingTranslations(language).nutritionGoalsWizardDailyGoalCalculator}
+                    </p>
+                    <p className="text-3xl font-semibold text-foreground">
+                      {weeklySummaryResult.caloriesTargetPerDay.toLocaleString()} kcal
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 bg-neutral-50/60 dark:bg-neutral-900/40">
+                    <p className="text-sm text-foreground">
+                      {weeklySummaryResult.weekStartLabel} - {weeklySummaryResult.weekEndLabel}
+                    </p>
+                    <div className="mt-2 pt-2 border-t border-neutral-200 dark:border-neutral-700">
+                      <p className="text-2xl font-semibold text-emerald-600 dark:text-emerald-400">
+                        {weeklySummaryResult.caloriesUnderBudget.toLocaleString()}{" "}
+                        <span className="text-base font-medium text-foreground">
+                          {getLandingTranslations(language).weeklySummaryUnderBudgetLabel}
+                        </span>
+                      </p>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                        {weeklySummaryResult.trackedDays}{" "}
+                        {getLandingTranslations(language).weeklySummaryTrackedDaysLabel}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 bg-white/70 dark:bg-neutral-900/70">
+                    <HighchartsReact highcharts={Highcharts} options={weeklyCaloriesChartOptions} />
+                    <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
+                      <p className="text-neutral-600 dark:text-neutral-400">
+                        {getLandingTranslations(language).weeklySummaryCaloriesFoodCol}:{" "}
+                        <span className="font-semibold text-foreground">{weeklySummaryResult.totals.caloriesFood.toLocaleString()}</span>
+                      </p>
+                      <p className="text-neutral-600 dark:text-neutral-400">
+                        {getLandingTranslations(language).weeklySummaryCaloriesExerciseCol}:{" "}
+                        <span className="font-semibold text-foreground">{weeklySummaryResult.totals.caloriesExercise.toLocaleString()}</span>
+                      </p>
+                      <p className="text-neutral-600 dark:text-neutral-400">
+                        {getLandingTranslations(language).weeklySummaryCaloriesRemainingCol}:{" "}
+                        <span className="font-semibold text-foreground">{weeklySummaryResult.totals.caloriesRemaining.toLocaleString()}</span>
+                      </p>
+                    </div>
+                    <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
+                      * {getLandingTranslations(language).weeklySummaryDailyGoalFootnote}{" "}
+                      {weeklySummaryResult.caloriesTargetPerDay.toLocaleString()}{" "}
+                      {getLandingTranslations(language).weeklySummaryCaloriesUnit}
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 bg-white/70 dark:bg-neutral-900/70">
+                    <HighchartsReact highcharts={Highcharts} options={weeklyMacrosChartOptions} />
+                    <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
+                      <p className="text-neutral-600 dark:text-neutral-400">
+                        {getLandingTranslations(language).weeklySummaryMacrosCarbsCol}:{" "}
+                        <span className="font-semibold text-foreground">{weeklySummaryResult.totals.carbsGrams.toLocaleString()}</span>
+                      </p>
+                      <p className="text-neutral-600 dark:text-neutral-400">
+                        {getLandingTranslations(language).weeklySummaryMacrosProteinCol}:{" "}
+                        <span className="font-semibold text-foreground">{weeklySummaryResult.totals.proteinGrams.toLocaleString()}</span>
+                      </p>
+                      <p className="text-neutral-600 dark:text-neutral-400">
+                        {getLandingTranslations(language).weeklySummaryMacrosFatCol}:{" "}
+                        <span className="font-semibold text-foreground">{weeklySummaryResult.totals.fatGrams.toLocaleString()}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3">
+                    <h3 className="text-lg font-semibold text-foreground mb-2">
+                      {getLandingTranslations(language).weeklySummaryConsistencyHeading}
+                    </h3>
+                    <div className="divide-y divide-neutral-200 dark:divide-neutral-700">
+                      <div className="flex items-center justify-between py-1.5 text-sm">
+                        <span>{getLandingTranslations(language).weeklySummaryFoodEntriesLabel}</span>
+                        <span className="font-semibold">{weeklySummaryResult.foodEntries}</span>
+                      </div>
+                      <div className="flex items-center justify-between py-1.5 text-sm">
+                        <span>{getLandingTranslations(language).weeklySummaryExerciseEntriesLabel}</span>
+                        <span className="font-semibold">{weeklySummaryResult.exerciseEntries}</span>
+                      </div>
+                    </div>
+                  </div>
+                </>
               )}
             </div>
           </div>
