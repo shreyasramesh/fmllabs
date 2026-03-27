@@ -333,6 +333,8 @@ interface ConceptGroupItem {
   isCustomGroup?: boolean;
   concepts?: CustomConceptItem[];
   chainOfThought?: string[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface HabitItem {
@@ -1767,6 +1769,43 @@ function truncateJournalListPreview(text: string | undefined, max = JOURNAL_LIST
   return `${normalized.slice(0, max - 3).trimEnd()}...`;
 }
 
+function toDayKey(d: Date): string {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function dayKeyFromIso(iso?: string): string | null {
+  if (!iso) return null;
+  const parsed = new Date(iso);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return toDayKey(parsed);
+}
+
+function isNonNull<T>(value: T | null): value is T {
+  return value !== null;
+}
+
+type LandingActivityKind =
+  | "session"
+  | "journal"
+  | "memory"
+  | "habit"
+  | "concept"
+  | "framework"
+  | "savedModel"
+  | "perspectiveCard";
+
+type LandingDayActivityItem = {
+  id: string;
+  kind: LandingActivityKind;
+  dayKey: string;
+  title: string;
+  timestamp: number;
+  entityId: string;
+};
+
 export default function ChatPage() {
   const params = useParams();
   const router = useRouter();
@@ -1782,6 +1821,7 @@ export default function ChatPage() {
   const sessionId = params.sessionId as string;
   const isNew = sessionId === "new";
   const incognitoMode = sessionId === "incognito";
+  const [selectedLandingDayKey, setSelectedLandingDayKey] = useState(() => toDayKey(new Date()));
 
   const [sessions, setSessions] = useState<Session[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -1880,6 +1920,21 @@ export default function ChatPage() {
   const [ccCreateInput, setCcCreateInput] = useState("");
   const [ccCreateStep, setCcCreateStep] = useState<"input" | "preview">("input");
   const [conceptGroups, setConceptGroups] = useState<ConceptGroupItem[]>([]);
+  const [mentalModelsIndex, setMentalModelsIndex] = useState<
+    Map<string, string>
+  >(new Map());
+  const [savedPerspectiveCards, setSavedPerspectiveCards] = useState<
+    {
+      _id: string;
+      name: string;
+      prompt: string;
+      follow_ups: string[];
+      sourceDeckName?: string;
+      createdAt?: string;
+      updatedAt?: string;
+    }[]
+  >([]);
+  const [habits, setHabits] = useState<HabitItem[]>([]);
   const [translatedTitles, setTranslatedTitles] = useState<Record<string, string>>({});
   const [savedTranscripts, setSavedTranscripts] = useState<{
     _id: string;
@@ -2333,7 +2388,7 @@ export default function ChatPage() {
   }, [cgCustomCreateModal, cgCustomCreateLoading]);
 
   const [savedConcepts, setSavedConcepts] = useState<
-    { modelId: string }[]
+    { modelId: string; savedAt?: string; reflection?: string }[]
   >([]);
 
   const refetchSessions = useCallback(() => {
@@ -2545,6 +2600,200 @@ export default function ChatPage() {
     router.push("/chat/journal/new");
   }, [isAnonymous, incognitoMode, router]);
 
+  const landingDayActivityItems = useMemo<LandingDayActivityItem[]>(() => {
+    const sessionItems: LandingDayActivityItem[] = sessions
+      .map((s) => {
+        const dayKey = dayKeyFromIso(s.updatedAt);
+        const ts = s.updatedAt ? new Date(s.updatedAt).getTime() : NaN;
+        if (!dayKey || Number.isNaN(ts)) return null;
+        return {
+          id: `session-${s._id}`,
+          kind: "session" as const,
+          dayKey,
+          title: (s.title || "Untitled chat").trim() || "Untitled chat",
+          timestamp: ts,
+          entityId: s._id,
+        };
+      })
+      .filter(isNonNull);
+
+    const journalItems: LandingDayActivityItem[] = journalEntriesSorted
+      .map((t) => {
+        let date: Date | null = null;
+        if (
+          typeof t.journalEntryYear === "number" &&
+          typeof t.journalEntryMonth === "number" &&
+          typeof t.journalEntryDay === "number"
+        ) {
+          date = new Date(t.journalEntryYear, t.journalEntryMonth - 1, t.journalEntryDay);
+        } else if (t.createdAt) {
+          date = new Date(t.createdAt);
+        }
+        if (!date || Number.isNaN(date.getTime()) || !t._id || !t.transcriptText) return null;
+        return {
+          id: `journal-${t._id}`,
+          kind: "journal" as const,
+          dayKey: toDayKey(date),
+          title: truncateJournalListPreview(t.videoTitle || t.transcriptText, 72) || "Journal entry",
+          timestamp: date.getTime(),
+          entityId: t._id,
+        };
+      })
+      .filter(isNonNull);
+
+    const memoryItems: LandingDayActivityItem[] = longTermMemories
+      .map((m) => {
+        const sourceIso = m.updatedAt || m.createdAt;
+        if (!sourceIso) return null;
+        const dayKey = dayKeyFromIso(sourceIso);
+        const ts = new Date(sourceIso).getTime();
+        if (!dayKey || Number.isNaN(ts)) return null;
+        return {
+          id: `memory-${m._id}`,
+          kind: "memory" as const,
+          dayKey,
+          title: (m.title || "Memory").trim() || "Memory",
+          timestamp: ts,
+          entityId: m._id,
+        };
+      })
+      .filter(isNonNull);
+
+    const habitItems: LandingDayActivityItem[] = habits
+      .map((h) => {
+        const sourceIso = h.updatedAt || h.createdAt;
+        if (!sourceIso) return null;
+        const dayKey = dayKeyFromIso(sourceIso);
+        const ts = new Date(sourceIso).getTime();
+        if (!dayKey || Number.isNaN(ts)) return null;
+        return {
+          id: `habit-${h._id}`,
+          kind: "habit" as const,
+          dayKey,
+          title: (h.name || "Habit").trim() || "Habit",
+          timestamp: ts,
+          entityId: h._id,
+        };
+      })
+      .filter(isNonNull);
+
+    const conceptItems: LandingDayActivityItem[] = customConcepts
+      .map((c) => {
+        const sourceIso = c.updatedAt || c.createdAt;
+        if (!sourceIso) return null;
+        const dayKey = dayKeyFromIso(sourceIso);
+        const ts = new Date(sourceIso).getTime();
+        if (!dayKey || Number.isNaN(ts)) return null;
+        return {
+          id: `concept-${c._id}`,
+          kind: "concept" as const,
+          dayKey,
+          title: (c.title || "Concept").trim() || "Concept",
+          timestamp: ts,
+          entityId: c._id,
+        };
+      })
+      .filter(isNonNull);
+
+    const frameworkItems: LandingDayActivityItem[] = conceptGroups
+      .map((cg) => {
+        const sourceIso = cg.updatedAt || cg.createdAt;
+        if (!sourceIso) return null;
+        const dayKey = dayKeyFromIso(sourceIso);
+        const ts = new Date(sourceIso).getTime();
+        if (!dayKey || Number.isNaN(ts)) return null;
+        return {
+          id: `framework-${cg._id}`,
+          kind: "framework" as const,
+          dayKey,
+          title: (cg.title || "Framework").trim() || "Framework",
+          timestamp: ts,
+          entityId: cg._id,
+        };
+      })
+      .filter(isNonNull);
+
+    const savedModelItems: LandingDayActivityItem[] = savedConcepts
+      .map((sc) => {
+        const dayKey = dayKeyFromIso(sc.savedAt);
+        const ts = sc.savedAt ? new Date(sc.savedAt).getTime() : NaN;
+        if (!dayKey || Number.isNaN(ts)) return null;
+        const modelName = mentalModelsIndex.get(sc.modelId) || `Model ${sc.modelId}`;
+        return {
+          id: `saved-model-${sc.modelId}`,
+          kind: "savedModel" as const,
+          dayKey,
+          title: modelName,
+          timestamp: ts,
+          entityId: sc.modelId,
+        };
+      })
+      .filter(isNonNull);
+
+    const perspectiveCardItems: LandingDayActivityItem[] = savedPerspectiveCards
+      .map((card) => {
+        const sourceIso = card.updatedAt || card.createdAt;
+        if (!sourceIso) return null;
+        const dayKey = dayKeyFromIso(sourceIso);
+        const ts = new Date(sourceIso).getTime();
+        if (!dayKey || Number.isNaN(ts)) return null;
+        return {
+          id: `perspective-card-${card._id}`,
+          kind: "perspectiveCard" as const,
+          dayKey,
+          title: (card.name || "Perspective card").trim() || "Perspective card",
+          timestamp: ts,
+          entityId: card._id,
+        };
+      })
+      .filter(isNonNull);
+
+    return [
+      ...sessionItems,
+      ...journalItems,
+      ...memoryItems,
+      ...habitItems,
+      ...conceptItems,
+      ...frameworkItems,
+      ...savedModelItems,
+      ...perspectiveCardItems,
+    ].sort((a, b) => b.timestamp - a.timestamp);
+  }, [
+    conceptGroups,
+    customConcepts,
+    habits,
+    journalEntriesSorted,
+    longTermMemories,
+    mentalModelsIndex,
+    savedConcepts,
+    savedPerspectiveCards,
+    sessions,
+  ]);
+
+  const landingCalendarDays = useMemo(() => {
+    const today = new Date();
+    const days: { key: string; date: Date }[] = [];
+    for (let offset = 6; offset >= 0; offset--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - offset);
+      days.push({ key: toDayKey(d), date: d });
+    }
+    return days;
+  }, []);
+
+  const landingDayActivityCount = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const item of landingDayActivityItems) {
+      map.set(item.dayKey, (map.get(item.dayKey) ?? 0) + 1);
+    }
+    return map;
+  }, [landingDayActivityItems]);
+
+  const selectedLandingDayActivityItems = useMemo(
+    () => landingDayActivityItems.filter((item) => item.dayKey === selectedLandingDayKey),
+    [landingDayActivityItems, selectedLandingDayKey]
+  );
+
   useEffect(() => {
     if (!isNew && !incognitoMode) return;
     if (typeof window === "undefined") return;
@@ -2681,10 +2930,6 @@ export default function ChatPage() {
       .catch(() => {});
   }, [isAnonymous, incognitoMode]);
 
-  const [mentalModelsIndex, setMentalModelsIndex] = useState<
-    Map<string, string>
-  >(new Map());
-
   useEffect(() => {
     refetchSessions();
   }, [refetchSessions]);
@@ -2706,6 +2951,11 @@ export default function ChatPage() {
   useEffect(() => {
     refetchConceptGroups();
   }, [refetchConceptGroups]);
+
+  useEffect(() => {
+    refetchHabits();
+    refetchSavedPerspectiveCards();
+  }, [refetchHabits, refetchSavedPerspectiveCards]);
 
   useEffect(() => {
     if (language === "en" || isAnonymous) {
@@ -3703,7 +3953,6 @@ export default function ChatPage() {
     deckName: string;
     savedId?: string;
   } | null>(null);
-  const [savedPerspectiveCards, setSavedPerspectiveCards] = useState<{ _id: string; name: string; prompt: string; follow_ups: string[]; sourceDeckName?: string }[]>([]);
   const [saveCardLoading, setSaveCardLoading] = useState(false);
   const [generateTopicInput, setGenerateTopicInput] = useState("");
   const [generateCardLoading, setGenerateCardLoading] = useState(false);
@@ -3727,7 +3976,6 @@ export default function ChatPage() {
   const [followedFigureIds, setFollowedFigureIds] = useState<string[]>([]);
   const [leaderboardOptIn, setLeaderboardOptIn] = useState(false);
   const [preferredNameInput, setPreferredNameInput] = useState("");
-  const [habits, setHabits] = useState<HabitItem[]>([]);
   const [habitListFilterMonth, setHabitListFilterMonth] = useState<number | null>(null);
   const [habitListFilterYear, setHabitListFilterYear] = useState<number | null>(null);
   const habitListFilterYearOptions = useMemo(() => getHabitIntendedYearOptions(), []);
@@ -4786,6 +5034,24 @@ export default function ChatPage() {
                 <path d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
+            <Link
+              href="/chat/new"
+              onClick={() => {
+                closeAllModalsExceptLeftPanel();
+                if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+              }}
+              className="shrink-0 p-1 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              aria-label="Go to landing page"
+              title="Go to landing page"
+            >
+              <Image
+                src="/icon.svg"
+                alt="FML Labs"
+                width={28}
+                height={28}
+                className="rounded-md"
+              />
+            </Link>
             <div className="flex min-w-0 flex-1 items-center overflow-hidden">
             {libraryInlineTitle != null && libraryInlineTitle !== "" ? (
               <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -7161,8 +7427,8 @@ export default function ChatPage() {
             className={`max-w-2xl mx-auto w-full min-w-0 no-touch-callout overflow-x-hidden ${
               messages.length === 0
                 ? isAnonymous
-                  ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-12 px-4 py-6"
-                  : "flex-1 min-h-0 flex flex-col items-center justify-center px-4 py-6"
+                  ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-36 sm:pb-40 px-4 py-6"
+                  : "flex-1 min-h-0 flex flex-col items-center justify-center pb-36 sm:pb-40 px-4 py-6"
                 : "px-3 py-4 sm:px-4 sm:py-5"
             }`}
           >
@@ -7203,102 +7469,172 @@ export default function ChatPage() {
                   </div>
                 ) : (
                   <>
-                <h1 className="w-full max-w-full px-1 sm:px-2 text-xl sm:text-2xl font-semibold text-foreground animate-fade-in-up break-words text-balance leading-snug">
-                  {incognitoMode ? "Let's chat incognito" : getLandingTranslations(language).productTagline}
-                </h1>
-                {!incognitoMode && (
-                  <>
-                    <div className="w-full min-w-0 max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-3 text-left animate-fade-in-up">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          playSelectionChime();
-                          if (sessionId !== "new" && sessionId !== "incognito") {
-                            try {
-                              sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
-                            } catch {
-                              /* ignore */
-                            }
-                            router.push("/chat/new");
-                          } else {
-                            setMentorCatalogSearch("");
-                            setMentorCatalogCategoryId(null);
-                            setMentorOneOnOneModalOpen(true);
-                          }
-                        }}
-                        className="flex min-w-0 w-full flex-col gap-1 px-4 py-3 rounded-2xl border border-neutral-200 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 active:scale-[0.98]"
-                      >
-                        <span className="font-medium text-foreground break-words">{getLandingTranslations(language).mentorOneOnOneTitle}</span>
-                        <span className="text-xs text-neutral-600 dark:text-neutral-400 break-words">{getLandingTranslations(language).mentorOneOnOneSubtitle}</span>
-                      </button>
-                      <div className="rounded-2xl border border-neutral-200 dark:border-neutral-600 bg-background overflow-hidden flex flex-col min-w-0 w-full hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            playSelectionChime();
-                            startSecondOrderConversation(!secondOrderCitationsEnabled);
-                          }}
-                          className="flex flex-col gap-1 px-4 py-3 text-left w-full min-w-0 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors active:scale-[0.98]"
-                        >
-                          <span className="font-medium text-foreground break-words">{getLandingTranslations(language).secondOrderThinkingTitle}</span>
-                          <span className="text-xs text-neutral-600 dark:text-neutral-400 break-words">{getLandingTranslations(language).secondOrderThinkingSubtitle}</span>
-                        </button>
-                        <div
-                          className="flex items-center justify-between gap-2 px-4 py-2.5 border-t border-neutral-200 dark:border-neutral-600 bg-neutral-50/50 dark:bg-neutral-900/30"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <span className="text-xs text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).secondOrderCitationsToggleLabel}</span>
-                          <button
-                            type="button"
-                            role="switch"
-                            aria-checked={secondOrderCitationsEnabled}
-                            aria-label={getLandingTranslations(language).secondOrderCitationsToggleLabel}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSecondOrderCitationsEnabled((v) => !v);
-                            }}
-                            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
-                              secondOrderCitationsEnabled ? "bg-accent" : "bg-neutral-300 dark:bg-neutral-600"
-                            }`}
-                          >
-                            <span
-                              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
-                                secondOrderCitationsEnabled ? "translate-x-6" : "translate-x-1"
-                              }`}
-                            />
-                          </button>
+                    <div className="w-full max-w-2xl min-w-0 space-y-5 animate-fade-in-up">
+                      {!incognitoMode && (
+                        <div className="w-full rounded-3xl border border-neutral-200 dark:border-neutral-700 bg-background px-3 py-3">
+                          <div className="mb-2 flex items-center justify-between px-1">
+                            <p className="text-sm font-medium text-foreground">
+                              Last 7 days
+                            </p>
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                              {selectedLandingDayActivityItems.length} item{selectedLandingDayActivityItems.length === 1 ? "" : "s"}
+                            </p>
+                          </div>
+                          <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
+                            {landingCalendarDays.map(({ key, date }) => {
+                              const selected = key === selectedLandingDayKey;
+                              const hasActivity = (landingDayActivityCount.get(key) ?? 0) > 0;
+                              return (
+                                <button
+                                  key={key}
+                                  type="button"
+                                  onClick={() => setSelectedLandingDayKey(key)}
+                                  className={`relative flex flex-col items-center justify-center rounded-xl border px-1.5 py-2.5 transition-colors ${
+                                    selected
+                                      ? "border-foreground bg-neutral-100 dark:bg-neutral-800"
+                                      : "border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70"
+                                  }`}
+                                  aria-pressed={selected}
+                                >
+                                  <span className="text-[10px] sm:text-[11px] text-neutral-500 dark:text-neutral-400">
+                                    {new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(date)}
+                                  </span>
+                                  <span className="text-sm font-semibold text-foreground">{date.getDate()}</span>
+                                  {hasActivity && (
+                                    <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
+                      )}
+
+                      <div className="w-full px-2">
+                        <p className="text-3xl" aria-hidden>👋</p>
+                        <h1 className="mt-1 text-3xl sm:text-4xl font-semibold text-foreground leading-tight">
+                          Chat with me right away.
+                        </h1>
+                        <p className="mt-2 text-base sm:text-lg text-neutral-700 dark:text-neutral-300">
+                          Tell me what you did today and I&apos;ll help you think, plan, and make progress.
+                        </p>
                       </div>
-                      <div className="sm:col-span-2 flex justify-center w-full min-w-0">
-                        <button
-                          type="button"
-                          onClick={openJournalEntryFlow}
-                          className="w-full max-w-md min-w-0 flex flex-col gap-1 px-4 py-3 rounded-2xl border border-neutral-200 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 active:scale-[0.98] text-left"
-                        >
-                          <span className="font-medium text-foreground break-words">{getLandingTranslations(language).journalEntryButtonLabel}</span>
-                          <span className="text-xs text-neutral-600 dark:text-neutral-400 break-words">{getLandingTranslations(language).journalEntryButtonSubtitle}</span>
-                        </button>
-                      </div>
+
+                      {!incognitoMode && (
+                        <div className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background/80 p-3 text-left">
+                          <p className="text-sm font-medium text-foreground">
+                            {new Intl.DateTimeFormat(undefined, { dateStyle: "full" }).format(
+                              new Date(`${selectedLandingDayKey}T00:00:00`)
+                            )}
+                          </p>
+                          {selectedLandingDayActivityItems.length === 0 ? (
+                            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+                              No activity yet for this day.
+                            </p>
+                          ) : (
+                            <div className="mt-2 space-y-2">
+                              {selectedLandingDayActivityItems.map((item) => (
+                                <button
+                                  key={item.id}
+                                  type="button"
+                                  onClick={() => {
+                                    if (item.kind === "session") {
+                                      router.push(`/chat/${item.entityId}`);
+                                      return;
+                                    }
+                                    if (item.kind === "journal") {
+                                      const row = savedTranscripts.find((t) => t._id === item.entityId);
+                                      if (!row || !row.transcriptText) return;
+                                      setTranscriptModalTranscript({
+                                        id: row._id,
+                                        videoId: row.videoId,
+                                        videoTitle: row.videoTitle,
+                                        channel: row.channel,
+                                        sourceType: row.sourceType,
+                                        journalEntryDay: row.journalEntryDay,
+                                        journalEntryMonth: row.journalEntryMonth,
+                                        journalEntryYear: row.journalEntryYear,
+                                        transcriptText: row.transcriptText,
+                                        createdAt: row.createdAt,
+                                        extractedConcepts: row.extractedConcepts,
+                                        journalMentorReflections: row.journalMentorReflections,
+                                        journalMentorReflectionsStatus: row.journalMentorReflectionsStatus,
+                                        journalMentorReflectionsUpdatedAt: row.journalMentorReflectionsUpdatedAt,
+                                      });
+                                      return;
+                                    }
+                                    if (item.kind === "memory") {
+                                      const ltm = longTermMemories.find((m) => m._id === item.entityId);
+                                      if (ltm) setLtmDetailModal(ltm);
+                                      return;
+                                    }
+                                    if (item.kind === "habit") {
+                                      const habit = habits.find((h) => h._id === item.entityId);
+                                      if (habit) setHabitDetailModal(habit);
+                                      return;
+                                    }
+                                    if (item.kind === "concept") {
+                                      const cc = customConcepts.find((c) => c._id === item.entityId);
+                                      if (cc) openConceptDetail(cc);
+                                      return;
+                                    }
+                                    if (item.kind === "framework") {
+                                      const cg = conceptGroups.find((g) => g._id === item.entityId);
+                                      if (!cg) return;
+                                      fetch(`/api/me/concept-groups/${cg._id}`)
+                                        .then((r) => r.ok ? r.json() : Promise.reject())
+                                        .then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] }))
+                                        .catch(() => setCgDetailModal(cg));
+                                      return;
+                                    }
+                                    if (item.kind === "savedModel") {
+                                      fetch(`/api/mental-models/${encodeURIComponent(item.entityId)}?language=${language}`, { cache: "no-store" })
+                                        .then((r) => (r.ok ? r.json() : Promise.reject()))
+                                        .then((model: MentalModel) => setSelectedMentalModel(model))
+                                        .catch(() => {});
+                                      return;
+                                    }
+                                    if (item.kind === "perspectiveCard") {
+                                      const card = savedPerspectiveCards.find((c) => c._id === item.entityId);
+                                      if (!card) return;
+                                      setDrawnPerspectiveCard({
+                                        card: {
+                                          id: card._id,
+                                          name: card.name,
+                                          prompt: card.prompt,
+                                          follow_ups: card.follow_ups ?? [],
+                                        },
+                                        deckId: "",
+                                        deckName: card.sourceDeckName ?? "Saved",
+                                        savedId: card._id,
+                                      });
+                                    }
+                                  }}
+                                  className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 px-3 py-2 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                                >
+                                  <p className="text-sm font-medium text-foreground truncate">{item.title}</p>
+                                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                                    {item.kind === "session" ? "Conversation" :
+                                      item.kind === "journal" ? "Journal entry" :
+                                      item.kind === "memory" ? "Memory" :
+                                      item.kind === "habit" ? "Habit" :
+                                      item.kind === "concept" ? "Concept" :
+                                      item.kind === "framework" ? "Framework" :
+                                      item.kind === "savedModel" ? "Saved model" :
+                                      "Perspective card"}
+                                  </p>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      {journalEntryJustSaved && (
+                        <p className="text-sm text-emerald-600 dark:text-emerald-400" role="status">
+                          {getLandingTranslations(language).journalEntrySavedHint}
+                        </p>
+                      )}
                     </div>
-                    {journalEntryJustSaved && (
-                      <p className="text-sm text-emerald-600 dark:text-emerald-400 animate-fade-in-up" role="status">
-                        {getLandingTranslations(language).journalEntrySavedHint}
-                      </p>
-                    )}
-                    <div className="w-full max-w-2xl min-w-0 mt-6 text-left animate-fade-in-up overflow-x-hidden" data-tour="input-area">
-                      <MovingPills
-                        language={language}
-                        onSelectStarter={(text) => {
-                          playSelectionChime();
-                          sendMessage(text);
-                        }}
-                      />
-                    </div>
-                  </>
-                )}
-                <p className="text-center text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 px-2 max-w-2xl w-full">
-                  FML Labs is AI and can make mistakes.
-                </p>
                   </>
                 )}
                 </div>
@@ -7610,10 +7946,65 @@ export default function ChatPage() {
             </Link>
           </p>
         )}
-        {/* Bottom bar - fixed on mobile when scrolling. Shown only for ongoing conversations; new conversation uses centered input. */}
-        <div className={`fixed inset-x-0 bottom-0 z-30 flex flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background ${messages.length === 0 ? "hidden" : ""}`}>
-          {messages.length > 0 && (
+        {/* Bottom bar - fixed on mobile when scrolling. Also shown on new conversations for a faster first message. */}
+        <div className="fixed inset-x-0 bottom-0 z-30 flex flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background">
           <div className="flex flex-col items-center justify-center px-4 py-2 sm:py-2.5 min-w-0">
+            {messages.length === 0 && !incognitoMode && (
+              <div className="w-full max-w-2xl mb-2 flex flex-wrap items-center justify-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSelectionChime();
+                    setPendingOneOnOneMentor(null);
+                    activeOneOnOneMentorRef.current = null;
+                    activeSecondOrderRef.current = false;
+                    activeSecondOrderPlainRef.current = false;
+                    setPendingSecondOrder(false);
+                  }}
+                  className="rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                >
+                  Normal chat
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSelectionChime();
+                    if (sessionId !== "new" && sessionId !== "incognito") {
+                      try {
+                        sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
+                      } catch {
+                        /* ignore */
+                      }
+                      router.push("/chat/new");
+                      return;
+                    }
+                    setMentorCatalogSearch("");
+                    setMentorCatalogCategoryId(null);
+                    setMentorOneOnOneModalOpen(true);
+                  }}
+                  className="rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                >
+                  1:1 mentor
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSelectionChime();
+                    startSecondOrderConversation(!secondOrderCitationsEnabled);
+                  }}
+                  className="rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                >
+                  Second-order
+                </button>
+                <button
+                  type="button"
+                  onClick={openJournalEntryFlow}
+                  className="rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                >
+                  Journal
+                </button>
+              </div>
+            )}
             <div className="min-w-0 max-w-2xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex items-center overflow-hidden h-12 min-h-12" data-tour="input-area">
               <div className="flex-1 min-w-0 flex items-center px-3">
                 <MentionInput
@@ -7703,7 +8094,6 @@ export default function ChatPage() {
                 FML Labs is AI and can make mistakes.
               </p>
           </div>
-          )}
         </div>
         </>
         )}
