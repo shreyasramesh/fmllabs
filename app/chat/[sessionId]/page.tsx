@@ -9640,7 +9640,7 @@ export default function ChatPage() {
                                   </span>
                                   <p className="text-xs sm:text-base font-semibold text-foreground">Calories</p>
                                 </div>
-                                <div className="mt-1 grid grid-cols-3 gap-1">
+                                <div className="mt-1 grid grid-cols-3 gap-1 pr-1">
                                   <div className="min-w-0">
                                     <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
                                       {selectedLandingDayNutrition.caloriesFood}
@@ -9671,7 +9671,7 @@ export default function ChatPage() {
                                   </span>
                                   <p className="text-xs sm:text-base font-semibold text-foreground">Macros</p>
                                 </div>
-                                <div className="mt-1 grid grid-cols-3 gap-1">
+                                <div className="mt-1 grid grid-cols-3 gap-1 pr-1">
                                   <div className="min-w-0">
                                     <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
                                       {selectedLandingDayNutrition.carbsGrams}/{nutritionGoals.carbsGrams}
