@@ -9700,11 +9700,11 @@ export default function ChatPage() {
                 {!incognitoMode && (
                         <div className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background px-2.5 py-2">
                           <div className="mb-1.5 px-0.5">
-                            <div className="flex items-center justify-between gap-2">
-                              <p className="text-[11px] sm:text-xs whitespace-nowrap font-semibold text-foreground">
+                            <div className="hidden sm:flex items-center justify-between gap-2">
+                              <p className="text-xs whitespace-nowrap font-semibold text-foreground">
                                 Last 7 days
                               </p>
-                              <p className="text-[11px] sm:text-xs whitespace-nowrap text-neutral-500 dark:text-neutral-400">
+                              <p className="text-xs whitespace-nowrap text-neutral-500 dark:text-neutral-400">
                                 {selectedLandingDayActivityItems.length} item{selectedLandingDayActivityItems.length === 1 ? "" : "s"}
                               </p>
                             </div>
