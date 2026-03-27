@@ -72,6 +72,35 @@ export interface LandingTranslations {
   nutritionGoalCarbsLabel: string;
   nutritionGoalProteinLabel: string;
   nutritionGoalFatLabel: string;
+  nutritionGoalCarbsPercentLabel: string;
+  nutritionGoalProteinPercentLabel: string;
+  nutritionGoalFatPercentLabel: string;
+  nutritionGoalsCalculatorLabel: string;
+  nutritionGoalsWizardStepLabel: string;
+  nutritionGoalsWizardNext: string;
+  nutritionGoalsWizardFinish: string;
+  nutritionGoalsWizardUseCalculator: string;
+  nutritionGoalsWizardAgePrompt: string;
+  nutritionGoalsWizardWeightPrompt: string;
+  nutritionGoalsWizardGoalPrompt: string;
+  nutritionGoalsWizardHeightPrompt: string;
+  nutritionGoalsWizardGenderPrompt: string;
+  nutritionGoalsWizardTargetWeightPrompt: string;
+  nutritionGoalsWizardPacePrompt: string;
+  nutritionGoalsWizardDailyGoalsTitle: string;
+  nutritionGoalsWizardDailyGoalCalculator: string;
+  nutritionGoalsWizardCaloriesGoalTitle: string;
+  nutritionGoalsWizardMale: string;
+  nutritionGoalsWizardFemale: string;
+  nutritionGoalsWizardLoseWeight: string;
+  nutritionGoalsWizardMaintainWeight: string;
+  nutritionGoalsWizardGainWeight: string;
+  nutritionGoalsWizardPaceExtreme: string;
+  nutritionGoalsWizardPaceModerate: string;
+  nutritionGoalsWizardPaceMild: string;
+  nutritionGoalsWizardCalculating: string;
+  nutritionGoalsWizardRecalculating: string;
+  nutritionGoalsWizardCalculationError: string;
   nutritionGoalsSaveError: string;
   nutritionAnalysisButtonLabel: string;
   nutritionAnalysisModalTitle: string;
@@ -154,6 +183,35 @@ const EN: LandingTranslations = {
   nutritionGoalCarbsLabel: "Carbs target (g)",
   nutritionGoalProteinLabel: "Protein target (g)",
   nutritionGoalFatLabel: "Fat target (g)",
+  nutritionGoalCarbsPercentLabel: "Carbohydrates %",
+  nutritionGoalProteinPercentLabel: "Protein %",
+  nutritionGoalFatPercentLabel: "Fat %",
+  nutritionGoalsCalculatorLabel: "Daily goals calculator",
+  nutritionGoalsWizardStepLabel: "Step",
+  nutritionGoalsWizardNext: "Next",
+  nutritionGoalsWizardFinish: "Finish",
+  nutritionGoalsWizardUseCalculator: "Use daily calorie goal calculator",
+  nutritionGoalsWizardAgePrompt: "How old are you?",
+  nutritionGoalsWizardWeightPrompt: "What's your weight?",
+  nutritionGoalsWizardGoalPrompt: "What's your goal?",
+  nutritionGoalsWizardHeightPrompt: "How tall are you?",
+  nutritionGoalsWizardGenderPrompt: "What's your gender?",
+  nutritionGoalsWizardTargetWeightPrompt: "What is your target weight?",
+  nutritionGoalsWizardPacePrompt: "How quickly do you want to reach your goal?",
+  nutritionGoalsWizardDailyGoalsTitle: "Daily Goals",
+  nutritionGoalsWizardDailyGoalCalculator: "Daily Calorie Goal",
+  nutritionGoalsWizardCaloriesGoalTitle: "Daily Calorie Goal",
+  nutritionGoalsWizardMale: "Male",
+  nutritionGoalsWizardFemale: "Female",
+  nutritionGoalsWizardLoseWeight: "Lose Weight",
+  nutritionGoalsWizardMaintainWeight: "Maintain Weight",
+  nutritionGoalsWizardGainWeight: "Gain Weight",
+  nutritionGoalsWizardPaceExtreme: "Extreme",
+  nutritionGoalsWizardPaceModerate: "Moderate",
+  nutritionGoalsWizardPaceMild: "Mild",
+  nutritionGoalsWizardCalculating: "Calculating with AI...",
+  nutritionGoalsWizardRecalculating: "Updating macro grams with AI...",
+  nutritionGoalsWizardCalculationError: "Couldn’t calculate goals. Try again.",
   nutritionGoalsSaveError: "Couldn’t save goals. Try again.",
   nutritionAnalysisButtonLabel: "Analyze nutrition",
   nutritionAnalysisModalTitle: "Nutrition analysis",

@@ -1814,6 +1814,50 @@ const GOAL_CALORIES_MIN = 800;
 const GOAL_CALORIES_MAX = 6000;
 const GOAL_MACRO_MIN = 10;
 const GOAL_MACRO_MAX = 1000;
+const GOAL_PERCENT_MIN = 5;
+const GOAL_PERCENT_MAX = 85;
+
+type GoalsWizardStep =
+  | "age"
+  | "weight"
+  | "goal"
+  | "height"
+  | "gender"
+  | "target_weight"
+  | "pace"
+  | "daily_goals";
+
+type GoalsWizardGender = "male" | "female";
+type GoalsWizardGoal = "lose_weight" | "maintain_weight" | "gain_weight";
+type GoalsWizardPace = "extreme" | "moderate" | "mild";
+type WeightUnit = "kg" | "lb";
+type HeightUnit = "ft" | "cm";
+
+const GOALS_WIZARD_STEPS: GoalsWizardStep[] = [
+  "age",
+  "weight",
+  "goal",
+  "height",
+  "gender",
+  "target_weight",
+  "pace",
+  "daily_goals",
+];
+
+type GoalsWizardProfile = {
+  age: string;
+  gender: GoalsWizardGender;
+  heightUnit: HeightUnit;
+  heightFeet: string;
+  heightInches: string;
+  heightCm: string;
+  weightValue: string;
+  weightUnit: WeightUnit;
+  goal: GoalsWizardGoal;
+  targetWeightValue: string;
+  targetWeightUnit: WeightUnit;
+  pace: GoalsWizardPace;
+};
 
 function truncateJournalListPreview(text: string | undefined, max = JOURNAL_LIST_PREVIEW_MAX): string {
   if (!text?.trim()) return "";
@@ -1985,6 +2029,75 @@ function clampToRange(value: number, min: number, max: number): number {
   return Math.round(Math.max(min, Math.min(max, value)));
 }
 
+function toNumericInputValue(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "string" && value.trim()) {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) return parsed;
+  }
+  return null;
+}
+
+function kgFromWeightInput(value: string, unit: WeightUnit): number | null {
+  const numeric = toNumericInputValue(value);
+  if (numeric === null || numeric <= 0) return null;
+  if (unit === "lb") return numeric * 0.45359237;
+  return numeric;
+}
+
+function cmFromHeightInput(profile: GoalsWizardProfile): number | null {
+  if (profile.heightUnit === "cm") {
+    const cm = toNumericInputValue(profile.heightCm);
+    return cm !== null && cm > 0 ? cm : null;
+  }
+  const feet = toNumericInputValue(profile.heightFeet);
+  const inches = toNumericInputValue(profile.heightInches);
+  if (feet === null && inches === null) return null;
+  const totalInches = (feet ?? 0) * 12 + (inches ?? 0);
+  if (totalInches <= 0) return null;
+  return totalInches * 2.54;
+}
+
+function deriveMacroPercentsFromGoals(goals: {
+  caloriesTarget: number;
+  carbsGrams: number;
+  proteinGrams: number;
+  fatGrams: number;
+}): { carbs: number; protein: number; fat: number } {
+  const totalMacroCalories = goals.carbsGrams * 4 + goals.proteinGrams * 4 + goals.fatGrams * 9;
+  const denominator = goals.caloriesTarget > 0 ? goals.caloriesTarget : totalMacroCalories;
+  if (!Number.isFinite(denominator) || denominator <= 0) {
+    return { carbs: 40, protein: 30, fat: 30 };
+  }
+  const carbs = Math.max(
+    GOAL_PERCENT_MIN,
+    Math.min(GOAL_PERCENT_MAX, Math.round((goals.carbsGrams * 4 * 100) / denominator))
+  );
+  const protein = Math.max(
+    GOAL_PERCENT_MIN,
+    Math.min(GOAL_PERCENT_MAX, Math.round((goals.proteinGrams * 4 * 100) / denominator))
+  );
+  const fat = Math.max(GOAL_PERCENT_MIN, Math.min(GOAL_PERCENT_MAX, 100 - carbs - protein));
+  return { carbs, protein, fat };
+}
+
+function createDefaultGoalsWizardProfile(): GoalsWizardProfile {
+  return {
+    age: "32",
+    gender: "male",
+    heightUnit: "ft",
+    heightFeet: "5",
+    heightInches: "7",
+    heightCm: "170",
+    weightValue: "73",
+    weightUnit: "kg",
+    goal: "lose_weight",
+    targetWeightValue: "68",
+    targetWeightUnit: "kg",
+    pace: "extreme",
+  };
+}
+
 function normalizeGoalValue(
   value: unknown,
   fallback: number,
@@ -2139,6 +2252,21 @@ export default function ChatPage() {
   }));
   const [goalsSaving, setGoalsSaving] = useState(false);
   const [goalsSaveError, setGoalsSaveError] = useState<string | null>(null);
+  const [goalsWizardActive, setGoalsWizardActive] = useState(false);
+  const [goalsWizardStepIndex, setGoalsWizardStepIndex] = useState(0);
+  const [goalsWizardProfile, setGoalsWizardProfile] = useState<GoalsWizardProfile>(() =>
+    createDefaultGoalsWizardProfile()
+  );
+  const [goalsMacroPercents, setGoalsMacroPercents] = useState({
+    carbs: "40",
+    protein: "30",
+    fat: "30",
+  });
+  const [goalsCalculatorLoading, setGoalsCalculatorLoading] = useState(false);
+  const [goalsRecalculateLoading, setGoalsRecalculateLoading] = useState(false);
+  const [goalsCalculatorRationale, setGoalsCalculatorRationale] = useState("");
+  const [goalsWizardError, setGoalsWizardError] = useState<string | null>(null);
+  const skipGoalsMacroRecalculateRef = useRef(false);
   const [landingNutritionBannerOpen, setLandingNutritionBannerOpen] = useState(true);
   const [moonPhase, setMoonPhase] = useState<number | null>(null);
   const [conceptSavedToast, setConceptSavedToast] = useState(false);
@@ -5029,6 +5157,20 @@ export default function ChatPage() {
       proteinGrams: String(nutritionGoals.proteinGrams),
       fatGrams: String(nutritionGoals.fatGrams),
     });
+    const derivedPercents = deriveMacroPercentsFromGoals(nutritionGoals);
+    skipGoalsMacroRecalculateRef.current = true;
+    setGoalsMacroPercents({
+      carbs: String(derivedPercents.carbs),
+      protein: String(derivedPercents.protein),
+      fat: String(derivedPercents.fat),
+    });
+    setGoalsWizardProfile(createDefaultGoalsWizardProfile());
+    setGoalsWizardActive(false);
+    setGoalsWizardStepIndex(GOALS_WIZARD_STEPS.indexOf("daily_goals"));
+    setGoalsCalculatorLoading(false);
+    setGoalsRecalculateLoading(false);
+    setGoalsCalculatorRationale("");
+    setGoalsWizardError(null);
     setGoalsSaveError(null);
     setGoalsModalOpen(true);
   }, [incognitoMode, isAnonymous, nutritionGoals, router]);
@@ -5092,6 +5234,275 @@ export default function ChatPage() {
       setGoalsSaving(false);
     }
   }, [goalsDraft, incognitoMode, isAnonymous, language, nutritionGoals, userId]);
+
+  const goalsWizardStep = GOALS_WIZARD_STEPS[goalsWizardStepIndex] ?? "age";
+
+  const goalsRecommendedRangeLabel = useMemo(() => {
+    const weightKg = kgFromWeightInput(goalsWizardProfile.weightValue, goalsWizardProfile.weightUnit);
+    if (weightKg === null) return null;
+    let minKg = weightKg * 0.97;
+    let maxKg = weightKg * 1.03;
+    if (goalsWizardProfile.goal === "lose_weight") {
+      minKg = weightKg * 0.82;
+      maxKg = weightKg * 0.95;
+    } else if (goalsWizardProfile.goal === "gain_weight") {
+      minKg = weightKg * 1.03;
+      maxKg = weightKg * 1.15;
+    }
+    const unit = goalsWizardProfile.targetWeightUnit;
+    const toUnit = (kg: number) => (unit === "lb" ? kg * 2.2046226218 : kg);
+    const minValue = Math.round(toUnit(minKg));
+    const maxValue = Math.round(toUnit(maxKg));
+    return `${minValue}-${maxValue} ${unit}`;
+  }, [
+    goalsWizardProfile.goal,
+    goalsWizardProfile.targetWeightUnit,
+    goalsWizardProfile.weightUnit,
+    goalsWizardProfile.weightValue,
+  ]);
+
+  const runGoalsFinishCalculation = useCallback(async () => {
+    if (isAnonymous || incognitoMode || !userId) return false;
+    const age = toNumericInputValue(goalsWizardProfile.age);
+    const heightCm = cmFromHeightInput(goalsWizardProfile);
+    const currentWeightKg = kgFromWeightInput(
+      goalsWizardProfile.weightValue,
+      goalsWizardProfile.weightUnit
+    );
+    const targetWeightKg = kgFromWeightInput(
+      goalsWizardProfile.targetWeightValue,
+      goalsWizardProfile.targetWeightUnit
+    );
+    if (age === null || heightCm === null || currentWeightKg === null || targetWeightKg === null) {
+      setGoalsWizardError(getLandingTranslations(language).nutritionGoalsWizardCalculationError);
+      return false;
+    }
+    setGoalsCalculatorLoading(true);
+    setGoalsWizardError(null);
+    try {
+      const res = await fetch("/api/me/nutrition-goals/calculate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "finish",
+          age: Math.round(age),
+          gender: goalsWizardProfile.gender,
+          heightCm: Math.round(heightCm),
+          currentWeightKg,
+          targetWeightKg,
+          goal: goalsWizardProfile.goal,
+          pace: goalsWizardProfile.pace,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        caloriesTarget?: unknown;
+        carbsPercent?: unknown;
+        proteinPercent?: unknown;
+        fatPercent?: unknown;
+        carbsGrams?: unknown;
+        proteinGrams?: unknown;
+        fatGrams?: unknown;
+        rationale?: unknown;
+      };
+      if (!res.ok) throw new Error(data.error || "Could not calculate goals.");
+      const caloriesTarget = normalizeGoalValue(
+        data.caloriesTarget,
+        nutritionGoals.caloriesTarget,
+        GOAL_CALORIES_MIN,
+        GOAL_CALORIES_MAX
+      );
+      const carbsGrams = normalizeGoalValue(
+        data.carbsGrams,
+        nutritionGoals.carbsGrams,
+        GOAL_MACRO_MIN,
+        GOAL_MACRO_MAX
+      );
+      const proteinGrams = normalizeGoalValue(
+        data.proteinGrams,
+        nutritionGoals.proteinGrams,
+        GOAL_MACRO_MIN,
+        GOAL_MACRO_MAX
+      );
+      const fatGrams = normalizeGoalValue(
+        data.fatGrams,
+        nutritionGoals.fatGrams,
+        GOAL_MACRO_MIN,
+        GOAL_MACRO_MAX
+      );
+      setGoalsDraft({
+        caloriesTarget: String(caloriesTarget),
+        carbsGrams: String(carbsGrams),
+        proteinGrams: String(proteinGrams),
+        fatGrams: String(fatGrams),
+      });
+      skipGoalsMacroRecalculateRef.current = true;
+      setGoalsMacroPercents({
+        carbs: String(
+          normalizeGoalValue(data.carbsPercent, 40, GOAL_PERCENT_MIN, GOAL_PERCENT_MAX)
+        ),
+        protein: String(
+          normalizeGoalValue(data.proteinPercent, 30, GOAL_PERCENT_MIN, GOAL_PERCENT_MAX)
+        ),
+        fat: String(normalizeGoalValue(data.fatPercent, 30, GOAL_PERCENT_MIN, GOAL_PERCENT_MAX)),
+      });
+      setGoalsCalculatorRationale(
+        typeof data.rationale === "string" ? data.rationale.trim().slice(0, 280) : ""
+      );
+      return true;
+    } catch {
+      setGoalsWizardError(getLandingTranslations(language).nutritionGoalsWizardCalculationError);
+      return false;
+    } finally {
+      setGoalsCalculatorLoading(false);
+    }
+  }, [goalsWizardProfile, incognitoMode, isAnonymous, language, nutritionGoals, userId]);
+
+  const handleGoalsWizardBack = useCallback(() => {
+    if (!goalsWizardActive) return;
+    if (goalsWizardStepIndex <= 0) {
+      setGoalsWizardActive(false);
+      setGoalsWizardStepIndex(GOALS_WIZARD_STEPS.indexOf("daily_goals"));
+      return;
+    }
+    setGoalsWizardStepIndex((idx) => Math.max(0, idx - 1));
+  }, [goalsWizardActive, goalsWizardStepIndex]);
+
+  const handleGoalsWizardNext = useCallback(async () => {
+    setGoalsWizardError(null);
+    const step = GOALS_WIZARD_STEPS[goalsWizardStepIndex] ?? "age";
+    if (step === "pace") {
+      const ok = await runGoalsFinishCalculation();
+      if (!ok) return;
+      setGoalsWizardStepIndex(GOALS_WIZARD_STEPS.indexOf("daily_goals"));
+      return;
+    }
+    if (step !== "daily_goals") {
+      setGoalsWizardStepIndex((idx) => Math.min(GOALS_WIZARD_STEPS.length - 1, idx + 1));
+    }
+  }, [goalsWizardStepIndex, runGoalsFinishCalculation]);
+
+  useEffect(() => {
+    if (!goalsModalOpen || goalsWizardStep !== "daily_goals") return;
+    if (skipGoalsMacroRecalculateRef.current) {
+      skipGoalsMacroRecalculateRef.current = false;
+      return;
+    }
+    if (isAnonymous || incognitoMode || !userId) return;
+    const caloriesTarget = toNumericInputValue(goalsDraft.caloriesTarget);
+    const carbsPercent = toNumericInputValue(goalsMacroPercents.carbs);
+    const proteinPercent = toNumericInputValue(goalsMacroPercents.protein);
+    const fatPercent = toNumericInputValue(goalsMacroPercents.fat);
+    if (
+      caloriesTarget === null ||
+      carbsPercent === null ||
+      proteinPercent === null ||
+      fatPercent === null
+    ) {
+      return;
+    }
+    const timer = window.setTimeout(async () => {
+      setGoalsRecalculateLoading(true);
+      setGoalsWizardError(null);
+      try {
+        const res = await fetch("/api/me/nutrition-goals/calculate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "recalculate",
+            caloriesTarget,
+            carbsPercent,
+            proteinPercent,
+            fatPercent,
+          }),
+        });
+        const data = (await res.json().catch(() => ({}))) as {
+          error?: string;
+          caloriesTarget?: unknown;
+          carbsPercent?: unknown;
+          proteinPercent?: unknown;
+          fatPercent?: unknown;
+          carbsGrams?: unknown;
+          proteinGrams?: unknown;
+          fatGrams?: unknown;
+          rationale?: unknown;
+        };
+        if (!res.ok) throw new Error(data.error || "Could not recalculate goals.");
+        setGoalsDraft((prev) => ({
+          ...prev,
+          caloriesTarget: String(
+            normalizeGoalValue(
+              data.caloriesTarget,
+              toNumericInputValue(prev.caloriesTarget) ?? nutritionGoals.caloriesTarget,
+              GOAL_CALORIES_MIN,
+              GOAL_CALORIES_MAX
+            )
+          ),
+          carbsGrams: String(
+            normalizeGoalValue(
+              data.carbsGrams,
+              toNumericInputValue(prev.carbsGrams) ?? nutritionGoals.carbsGrams,
+              GOAL_MACRO_MIN,
+              GOAL_MACRO_MAX
+            )
+          ),
+          proteinGrams: String(
+            normalizeGoalValue(
+              data.proteinGrams,
+              toNumericInputValue(prev.proteinGrams) ?? nutritionGoals.proteinGrams,
+              GOAL_MACRO_MIN,
+              GOAL_MACRO_MAX
+            )
+          ),
+          fatGrams: String(
+            normalizeGoalValue(
+              data.fatGrams,
+              toNumericInputValue(prev.fatGrams) ?? nutritionGoals.fatGrams,
+              GOAL_MACRO_MIN,
+              GOAL_MACRO_MAX
+            )
+          ),
+        }));
+        skipGoalsMacroRecalculateRef.current = true;
+        setGoalsMacroPercents({
+          carbs: String(
+            normalizeGoalValue(data.carbsPercent, carbsPercent, GOAL_PERCENT_MIN, GOAL_PERCENT_MAX)
+          ),
+          protein: String(
+            normalizeGoalValue(
+              data.proteinPercent,
+              proteinPercent,
+              GOAL_PERCENT_MIN,
+              GOAL_PERCENT_MAX
+            )
+          ),
+          fat: String(
+            normalizeGoalValue(data.fatPercent, fatPercent, GOAL_PERCENT_MIN, GOAL_PERCENT_MAX)
+          ),
+        });
+        if (typeof data.rationale === "string" && data.rationale.trim()) {
+          setGoalsCalculatorRationale(data.rationale.trim().slice(0, 280));
+        }
+      } catch {
+        setGoalsWizardError(getLandingTranslations(language).nutritionGoalsWizardCalculationError);
+      } finally {
+        setGoalsRecalculateLoading(false);
+      }
+    }, 550);
+    return () => window.clearTimeout(timer);
+  }, [
+    goalsDraft.caloriesTarget,
+    goalsMacroPercents.carbs,
+    goalsMacroPercents.fat,
+    goalsMacroPercents.protein,
+    goalsModalOpen,
+    nutritionGoals,
+    goalsWizardStep,
+    incognitoMode,
+    isAnonymous,
+    language,
+    userId,
+  ]);
 
   const resetNutritionReportModal = useCallback(() => {
     setNutritionReportModalOpen(false);
@@ -5194,7 +5605,7 @@ export default function ChatPage() {
           setMentorReflectionsRegenerateLoading(false);
         }
         else if (nutritionReportModalOpen && !nutritionReportLoading) resetNutritionReportModal();
-        else if (goalsModalOpen && !goalsSaving) setGoalsModalOpen(false);
+        else if (goalsModalOpen && !goalsSaving && !goalsCalculatorLoading && !goalsRecalculateLoading) setGoalsModalOpen(false);
         else if (journalTypeChooserOpen) setJournalTypeChooserOpen(false);
         else if (journalEntryModalOpen && !journalEntrySaving) resetJournalEntryModal();
         else if (calorieTrackerModalOpen) resetCalorieTrackerModal();
@@ -5227,7 +5638,7 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, nutritionReportModalOpen, nutritionReportLoading, journalEntrySaving, mentorOneOnOneModalOpen, newConversationChooserModalOpen, journalCheckpointModal, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetJournalEntryModal, resetNutritionReportModal]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, nutritionReportModalOpen, nutritionReportLoading, journalEntrySaving, mentorOneOnOneModalOpen, newConversationChooserModalOpen, journalCheckpointModal, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetJournalEntryModal, resetNutritionReportModal]);
 
   useEffect(() => {
     if (!headerCalendarOpen) return;
@@ -11765,7 +12176,9 @@ export default function ChatPage() {
         <div
           className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
           onClick={() => {
-            if (!goalsSaving) setGoalsModalOpen(false);
+            if (!goalsSaving && !goalsCalculatorLoading && !goalsRecalculateLoading) {
+              setGoalsModalOpen(false);
+            }
           }}
           role="dialog"
           aria-modal="true"
@@ -11776,109 +12189,401 @@ export default function ChatPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700">
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="text-base sm:text-lg font-semibold text-foreground">
                 {getLandingTranslations(language).nutritionGoalsModalTitle}
               </h2>
-              <button
-                type="button"
-                onClick={() => setGoalsModalOpen(false)}
-                disabled={goalsSaving}
-                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
-                aria-label={getUiTranslations(language).close}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
-              </button>
+              <div className="flex items-center gap-1">
+                {goalsWizardActive && goalsWizardStepIndex > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleGoalsWizardBack}
+                    disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading}
+                    className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                    aria-label={getLandingTranslations(language).calorieTrackerBack}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                      <path d="m15 18-6-6 6-6" />
+                    </svg>
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setGoalsModalOpen(false)}
+                  disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading}
+                  className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                  aria-label={getUiTranslations(language).close}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                  </svg>
+                </button>
+              </div>
             </div>
-            <div className="p-4 space-y-3">
-              <div>
-                <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                  {getLandingTranslations(language).nutritionGoalCaloriesLabel}
-                </label>
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  min={GOAL_CALORIES_MIN}
-                  max={GOAL_CALORIES_MAX}
-                  step={1}
-                  value={goalsDraft.caloriesTarget}
-                  onChange={(e) => setGoalsDraft((prev) => ({ ...prev, caloriesTarget: e.target.value }))}
-                  disabled={goalsSaving}
-                  className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                />
+            {goalsWizardActive && (
+              <div className="px-4 pt-3">
+                <div className="h-1.5 bg-neutral-200 dark:bg-neutral-800 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-[#295a8a] transition-all duration-300"
+                    style={{ width: `${((goalsWizardStepIndex + 1) / GOALS_WIZARD_STEPS.length) * 100}%` }}
+                  />
+                </div>
+                <p className="mt-1 text-[11px] text-neutral-500 dark:text-neutral-400">
+                  {getLandingTranslations(language).nutritionGoalsWizardStepLabel} {goalsWizardStepIndex + 1}/
+                  {GOALS_WIZARD_STEPS.length}
+                </p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <div>
-                  <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                    {getLandingTranslations(language).nutritionGoalCarbsLabel}
-                  </label>
+            )}
+            <div className="p-4 space-y-3 max-h-[70vh] overflow-y-auto">
+              {goalsWizardStep === "age" && (
+                <div className="space-y-2">
+                  <p className="text-2xl font-medium text-center">{getLandingTranslations(language).nutritionGoalsWizardAgePrompt}</p>
                   <input
                     type="number"
                     inputMode="numeric"
-                    min={GOAL_MACRO_MIN}
-                    max={GOAL_MACRO_MAX}
-                    step={1}
-                    value={goalsDraft.carbsGrams}
-                    onChange={(e) => setGoalsDraft((prev) => ({ ...prev, carbsGrams: e.target.value }))}
-                    disabled={goalsSaving}
+                    min={12}
+                    max={100}
+                    value={goalsWizardProfile.age}
+                    onChange={(e) => setGoalsWizardProfile((prev) => ({ ...prev, age: e.target.value }))}
                     className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
                   />
                 </div>
-                <div>
-                  <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                    {getLandingTranslations(language).nutritionGoalProteinLabel}
-                  </label>
-                  <input
-                    type="number"
-                    inputMode="numeric"
-                    min={GOAL_MACRO_MIN}
-                    max={GOAL_MACRO_MAX}
-                    step={1}
-                    value={goalsDraft.proteinGrams}
-                    onChange={(e) => setGoalsDraft((prev) => ({ ...prev, proteinGrams: e.target.value }))}
-                    disabled={goalsSaving}
-                    className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                  />
+              )}
+
+              {goalsWizardStep === "weight" && (
+                <div className="space-y-2">
+                  <p className="text-2xl font-medium text-center">{getLandingTranslations(language).nutritionGoalsWizardWeightPrompt}</p>
+                  <div className="grid grid-cols-[1fr_auto] gap-2">
+                    <input
+                      type="number"
+                      inputMode="decimal"
+                      value={goalsWizardProfile.weightValue}
+                      onChange={(e) =>
+                        setGoalsWizardProfile((prev) => ({ ...prev, weightValue: e.target.value }))
+                      }
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    />
+                    <select
+                      value={goalsWizardProfile.weightUnit}
+                      onChange={(e) =>
+                        setGoalsWizardProfile((prev) => ({ ...prev, weightUnit: e.target.value as WeightUnit }))
+                      }
+                      className="px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    >
+                      <option value="kg">kg</option>
+                      <option value="lb">lb</option>
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                    {getLandingTranslations(language).nutritionGoalFatLabel}
-                  </label>
-                  <input
-                    type="number"
-                    inputMode="numeric"
-                    min={GOAL_MACRO_MIN}
-                    max={GOAL_MACRO_MAX}
-                    step={1}
-                    value={goalsDraft.fatGrams}
-                    onChange={(e) => setGoalsDraft((prev) => ({ ...prev, fatGrams: e.target.value }))}
-                    disabled={goalsSaving}
-                    className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                  />
+              )}
+
+              {goalsWizardStep === "goal" && (
+                <div className="space-y-2">
+                  <p className="text-2xl font-medium text-center">{getLandingTranslations(language).nutritionGoalsWizardGoalPrompt}</p>
+                  {([
+                    ["lose_weight", getLandingTranslations(language).nutritionGoalsWizardLoseWeight],
+                    ["maintain_weight", getLandingTranslations(language).nutritionGoalsWizardMaintainWeight],
+                    ["gain_weight", getLandingTranslations(language).nutritionGoalsWizardGainWeight],
+                  ] as const).map(([value, label]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setGoalsWizardProfile((prev) => ({ ...prev, goal: value }))}
+                      className={`w-full text-left px-3 py-2 rounded-xl border text-sm ${
+                        goalsWizardProfile.goal === value
+                          ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25"
+                          : "border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
                 </div>
-              </div>
+              )}
+
+              {goalsWizardStep === "height" && (
+                <div className="space-y-2">
+                  <p className="text-2xl font-medium text-center">{getLandingTranslations(language).nutritionGoalsWizardHeightPrompt}</p>
+                  <div className="grid grid-cols-[1fr_auto] gap-2">
+                    {goalsWizardProfile.heightUnit === "ft" ? (
+                      <div className="grid grid-cols-2 gap-2">
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          value={goalsWizardProfile.heightFeet}
+                          onChange={(e) =>
+                            setGoalsWizardProfile((prev) => ({ ...prev, heightFeet: e.target.value }))
+                          }
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                          placeholder="ft"
+                        />
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          value={goalsWizardProfile.heightInches}
+                          onChange={(e) =>
+                            setGoalsWizardProfile((prev) => ({ ...prev, heightInches: e.target.value }))
+                          }
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                          placeholder="in"
+                        />
+                      </div>
+                    ) : (
+                      <input
+                        type="number"
+                        inputMode="numeric"
+                        value={goalsWizardProfile.heightCm}
+                        onChange={(e) =>
+                          setGoalsWizardProfile((prev) => ({ ...prev, heightCm: e.target.value }))
+                        }
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        placeholder="cm"
+                      />
+                    )}
+                    <select
+                      value={goalsWizardProfile.heightUnit}
+                      onChange={(e) =>
+                        setGoalsWizardProfile((prev) => ({ ...prev, heightUnit: e.target.value as HeightUnit }))
+                      }
+                      className="px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    >
+                      <option value="ft">ft</option>
+                      <option value="cm">cm</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              {goalsWizardStep === "gender" && (
+                <div className="space-y-2">
+                  <p className="text-2xl font-medium text-center">{getLandingTranslations(language).nutritionGoalsWizardGenderPrompt}</p>
+                  {([
+                    ["male", getLandingTranslations(language).nutritionGoalsWizardMale],
+                    ["female", getLandingTranslations(language).nutritionGoalsWizardFemale],
+                  ] as const).map(([value, label]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setGoalsWizardProfile((prev) => ({ ...prev, gender: value }))}
+                      className={`w-full text-left px-3 py-2 rounded-xl border text-sm ${
+                        goalsWizardProfile.gender === value
+                          ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25"
+                          : "border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {goalsWizardStep === "target_weight" && (
+                <div className="space-y-2">
+                  <p className="text-2xl font-medium text-center">
+                    {getLandingTranslations(language).nutritionGoalsWizardTargetWeightPrompt}
+                  </p>
+                  {goalsRecommendedRangeLabel && (
+                    <p className="text-center text-sm text-neutral-600 dark:text-neutral-400">
+                      Recommended range: {goalsRecommendedRangeLabel}
+                    </p>
+                  )}
+                  <div className="grid grid-cols-[1fr_auto] gap-2">
+                    <input
+                      type="number"
+                      inputMode="decimal"
+                      value={goalsWizardProfile.targetWeightValue}
+                      onChange={(e) =>
+                        setGoalsWizardProfile((prev) => ({ ...prev, targetWeightValue: e.target.value }))
+                      }
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    />
+                    <select
+                      value={goalsWizardProfile.targetWeightUnit}
+                      onChange={(e) =>
+                        setGoalsWizardProfile((prev) => ({ ...prev, targetWeightUnit: e.target.value as WeightUnit }))
+                      }
+                      className="px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    >
+                      <option value="kg">kg</option>
+                      <option value="lb">lb</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              {goalsWizardStep === "pace" && (
+                <div className="space-y-2">
+                  <p className="text-2xl font-medium text-center">{getLandingTranslations(language).nutritionGoalsWizardPacePrompt}</p>
+                  {([
+                    ["extreme", getLandingTranslations(language).nutritionGoalsWizardPaceExtreme],
+                    ["moderate", getLandingTranslations(language).nutritionGoalsWizardPaceModerate],
+                    ["mild", getLandingTranslations(language).nutritionGoalsWizardPaceMild],
+                  ] as const).map(([value, label]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setGoalsWizardProfile((prev) => ({ ...prev, pace: value }))}
+                      className={`w-full text-left px-3 py-2 rounded-xl border text-sm ${
+                        goalsWizardProfile.pace === value
+                          ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25"
+                          : "border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {goalsWizardStep === "daily_goals" && (
+                <div className="space-y-3">
+                  <h3 className="text-xl font-semibold text-foreground">
+                    {getLandingTranslations(language).nutritionGoalsWizardDailyGoalsTitle}
+                  </h3>
+                  {!goalsWizardActive && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setGoalsWizardActive(true);
+                        setGoalsWizardStepIndex(0);
+                        setGoalsWizardError(null);
+                      }}
+                      className="inline-flex items-center gap-2 text-sm font-medium text-[#295a8a] dark:text-blue-300 hover:opacity-85 transition-opacity"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="w-4 h-4"
+                        aria-hidden
+                      >
+                        <rect x="4" y="3" width="16" height="18" rx="2" />
+                        <line x1="8" y1="7" x2="16" y2="7" />
+                        <line x1="8" y1="12" x2="10" y2="12" />
+                        <line x1="12" y1="12" x2="14" y2="12" />
+                        <line x1="16" y1="12" x2="16" y2="12" />
+                        <line x1="8" y1="16" x2="10" y2="16" />
+                        <line x1="12" y1="16" x2="14" y2="16" />
+                        <line x1="16" y1="16" x2="16" y2="16" />
+                      </svg>
+                      {getLandingTranslations(language).nutritionGoalsWizardUseCalculator}
+                    </button>
+                  )}
+                  <div>
+                    <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                      {getLandingTranslations(language).nutritionGoalCaloriesLabel}
+                    </label>
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      min={GOAL_CALORIES_MIN}
+                      max={GOAL_CALORIES_MAX}
+                      step={1}
+                      value={goalsDraft.caloriesTarget}
+                      onChange={(e) =>
+                        setGoalsDraft((prev) => ({ ...prev, caloriesTarget: e.target.value }))
+                      }
+                      disabled={goalsSaving || goalsRecalculateLoading}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    {([
+                      [
+                        "carbs",
+                        getLandingTranslations(language).nutritionGoalCarbsPercentLabel,
+                        goalsDraft.carbsGrams,
+                      ],
+                      [
+                        "protein",
+                        getLandingTranslations(language).nutritionGoalProteinPercentLabel,
+                        goalsDraft.proteinGrams,
+                      ],
+                      ["fat", getLandingTranslations(language).nutritionGoalFatPercentLabel, goalsDraft.fatGrams],
+                    ] as const).map(([key, label, grams]) => (
+                      <div key={key} className="grid grid-cols-[1fr_86px_80px] gap-2 items-end">
+                        <div>
+                          <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                            {label}
+                          </label>
+                          <input
+                            type="number"
+                            inputMode="numeric"
+                            min={GOAL_PERCENT_MIN}
+                            max={GOAL_PERCENT_MAX}
+                            step={1}
+                            value={goalsMacroPercents[key]}
+                            onChange={(e) =>
+                              setGoalsMacroPercents((prev) => ({ ...prev, [key]: e.target.value }))
+                            }
+                            disabled={goalsSaving || goalsRecalculateLoading}
+                            className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                          />
+                        </div>
+                        <div className="text-sm text-neutral-500 dark:text-neutral-400 pb-2">%</div>
+                        <div className="text-sm font-medium pb-2">{grams}g</div>
+                      </div>
+                    ))}
+                  </div>
+                  {goalsCalculatorRationale && (
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400">{goalsCalculatorRationale}</p>
+                  )}
+                  <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-3">
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                      {getLandingTranslations(language).nutritionGoalsWizardCaloriesGoalTitle}
+                    </p>
+                    <p className="text-3xl font-semibold">{goalsDraft.caloriesTarget} kcal</p>
+                  </div>
+                </div>
+              )}
+
               {goalsSaveError && (
                 <p className="text-sm text-red-600 dark:text-red-400">{goalsSaveError}</p>
+              )}
+              {goalsWizardError && (
+                <p className="text-sm text-red-600 dark:text-red-400">{goalsWizardError}</p>
+              )}
+              {(goalsCalculatorLoading || goalsRecalculateLoading) && (
+                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                  {goalsCalculatorLoading
+                    ? getLandingTranslations(language).nutritionGoalsWizardCalculating
+                    : getLandingTranslations(language).nutritionGoalsWizardRecalculating}
+                </p>
               )}
               <div className="flex justify-end gap-2 pt-1">
                 <button
                   type="button"
                   onClick={() => setGoalsModalOpen(false)}
-                  disabled={goalsSaving}
+                  disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading}
                   className="px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
                 >
                   {getLandingTranslations(language).journalEntryCancel}
                 </button>
-                <button
-                  type="button"
-                  onClick={() => void saveNutritionGoals()}
-                  disabled={goalsSaving}
-                  className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
-                >
-                  {goalsSaving ? "Saving..." : getLandingTranslations(language).journalEntrySave}
-                </button>
+                {goalsWizardStep === "daily_goals" ? (
+                  <button
+                    type="button"
+                    onClick={() => void saveNutritionGoals()}
+                    disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading}
+                    className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                  >
+                    {goalsSaving ? "Saving..." : getLandingTranslations(language).journalEntrySave}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => void handleGoalsWizardNext()}
+                    disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading}
+                    className="px-4 py-2 rounded-xl text-sm font-medium bg-[#295a8a] text-white hover:opacity-90 transition-opacity disabled:opacity-50"
+                  >
+                    {goalsWizardStep === "pace"
+                      ? getLandingTranslations(language).nutritionGoalsWizardFinish
+                      : getLandingTranslations(language).nutritionGoalsWizardNext}
+                  </button>
+                )}
               </div>
             </div>
           </div>

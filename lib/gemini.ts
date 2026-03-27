@@ -369,6 +369,27 @@ export interface CalorieTrackingEnrichedEntryResult {
   exerciseEntry?: string;
 }
 
+export interface NutritionGoalsProfileInput {
+  age: number;
+  gender: "male" | "female";
+  heightCm: number;
+  currentWeightKg: number;
+  targetWeightKg: number;
+  goal: "lose_weight" | "maintain_weight" | "gain_weight";
+  pace: "extreme" | "moderate" | "mild";
+}
+
+export interface NutritionGoalsResult {
+  caloriesTarget: number | null;
+  carbsPercent: number | null;
+  proteinPercent: number | null;
+  fatPercent: number | null;
+  carbsGrams: number | null;
+  proteinGrams: number | null;
+  fatGrams: number | null;
+  rationale?: string;
+}
+
 function toFiniteNumberOrNull(v: unknown): number | null {
   if (typeof v === "number" && Number.isFinite(v)) return v;
   if (typeof v === "string" && v.trim() !== "") {
@@ -804,6 +825,157 @@ Existing exercise estimate:
     };
   } catch {
     return { carbsUsedGrams: null, fatUsedGrams: null, proteinDeltaGrams: null };
+  }
+}
+
+export async function calculateNutritionGoalsFromProfile(
+  input: NutritionGoalsProfileInput,
+  usageContext?: GeminiUsageContext
+): Promise<NutritionGoalsResult> {
+  const model = getModel();
+  const result = await model.generateContent(
+    `You are a practical nutrition goal planner.
+
+Given a user profile and goal, calculate a realistic daily calorie target and macro split.
+
+Return ONLY valid JSON with exactly this shape:
+{
+  "caloriesTarget": number,
+  "carbsPercent": number,
+  "proteinPercent": number,
+  "fatPercent": number,
+  "carbsGrams": number,
+  "proteinGrams": number,
+  "fatGrams": number,
+  "rationale": "short explanation"
+}
+
+Rules:
+- Percentages should sum close to 100.
+- Grams must be coherent with calories and percentages.
+- Use realistic values for the declared goal and pace.
+- Keep rationale to 1-2 concise sentences.
+- No markdown or extra text.
+
+Profile:
+- Age: ${Math.round(input.age)}
+- Gender: ${input.gender}
+- Height: ${input.heightCm} cm
+- Current weight: ${input.currentWeightKg} kg
+- Target weight: ${input.targetWeightKg} kg
+- Goal: ${input.goal}
+- Pace: ${input.pace}`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const raw = result.response.text().trim();
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  try {
+    const parsed = JSON.parse(cleaned) as {
+      caloriesTarget?: unknown;
+      carbsPercent?: unknown;
+      proteinPercent?: unknown;
+      fatPercent?: unknown;
+      carbsGrams?: unknown;
+      proteinGrams?: unknown;
+      fatGrams?: unknown;
+      rationale?: unknown;
+    };
+    return {
+      caloriesTarget: toFiniteNumberOrNull(parsed.caloriesTarget),
+      carbsPercent: toFiniteNumberOrNull(parsed.carbsPercent),
+      proteinPercent: toFiniteNumberOrNull(parsed.proteinPercent),
+      fatPercent: toFiniteNumberOrNull(parsed.fatPercent),
+      carbsGrams: toFiniteNumberOrNull(parsed.carbsGrams),
+      proteinGrams: toFiniteNumberOrNull(parsed.proteinGrams),
+      fatGrams: toFiniteNumberOrNull(parsed.fatGrams),
+      rationale: typeof parsed.rationale === "string" ? parsed.rationale.trim().slice(0, 280) : "",
+    };
+  } catch {
+    return {
+      caloriesTarget: null,
+      carbsPercent: null,
+      proteinPercent: null,
+      fatPercent: null,
+      carbsGrams: null,
+      proteinGrams: null,
+      fatGrams: null,
+      rationale: "",
+    };
+  }
+}
+
+export async function recalculateNutritionGoalsFromPercentages(
+  input: {
+    caloriesTarget: number;
+    carbsPercent: number;
+    proteinPercent: number;
+    fatPercent: number;
+  },
+  usageContext?: GeminiUsageContext
+): Promise<NutritionGoalsResult> {
+  const model = getModel();
+  const result = await model.generateContent(
+    `You normalize macro percentages and compute macro grams for a fixed calorie target.
+
+Return ONLY valid JSON with exactly this shape:
+{
+  "caloriesTarget": number,
+  "carbsPercent": number,
+  "proteinPercent": number,
+  "fatPercent": number,
+  "carbsGrams": number,
+  "proteinGrams": number,
+  "fatGrams": number,
+  "rationale": "short explanation"
+}
+
+Rules:
+- Keep caloriesTarget exactly the same as input.
+- Normalize percentages so they sum to 100 if needed.
+- Grams should match calories + percentages.
+- No markdown or extra text.
+
+Input:
+- Calories target: ${input.caloriesTarget}
+- Carbs: ${input.carbsPercent}%
+- Protein: ${input.proteinPercent}%
+- Fat: ${input.fatPercent}%`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const raw = result.response.text().trim();
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  try {
+    const parsed = JSON.parse(cleaned) as {
+      caloriesTarget?: unknown;
+      carbsPercent?: unknown;
+      proteinPercent?: unknown;
+      fatPercent?: unknown;
+      carbsGrams?: unknown;
+      proteinGrams?: unknown;
+      fatGrams?: unknown;
+      rationale?: unknown;
+    };
+    return {
+      caloriesTarget: toFiniteNumberOrNull(parsed.caloriesTarget),
+      carbsPercent: toFiniteNumberOrNull(parsed.carbsPercent),
+      proteinPercent: toFiniteNumberOrNull(parsed.proteinPercent),
+      fatPercent: toFiniteNumberOrNull(parsed.fatPercent),
+      carbsGrams: toFiniteNumberOrNull(parsed.carbsGrams),
+      proteinGrams: toFiniteNumberOrNull(parsed.proteinGrams),
+      fatGrams: toFiniteNumberOrNull(parsed.fatGrams),
+      rationale: typeof parsed.rationale === "string" ? parsed.rationale.trim().slice(0, 280) : "",
+    };
+  } catch {
+    return {
+      caloriesTarget: null,
+      carbsPercent: null,
+      proteinPercent: null,
+      fatPercent: null,
+      carbsGrams: null,
+      proteinGrams: null,
+      fatGrams: null,
+      rationale: "",
+    };
   }
 }
 
