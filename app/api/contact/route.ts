@@ -1,10 +1,8 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
+import { sendEmail } from "@/lib/mail";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const TO_EMAIL = "shreyas.ramesh@gmail.com";
-const FROM_EMAIL = process.env.CONTACT_FROM_EMAIL ?? "fml labs <onboarding@resend.dev>";
 
 export async function POST(request: Request) {
   try {
@@ -41,8 +39,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Contact form is not configured" }, { status: 503 });
     }
 
-    const { data, error } = await resend.emails.send({
-      from: FROM_EMAIL,
+    const result = await sendEmail({
       to: [TO_EMAIL],
       replyTo: [senderEmail],
       subject: type === "feedback"
@@ -54,13 +51,7 @@ export async function POST(request: Request) {
         <p>${trimmedMessage.replace(/\n/g, "<br>")}</p>
       `,
     });
-
-    if (error) {
-      console.error("Resend error:", error);
-      return NextResponse.json({ error: "Failed to send message" }, { status: 500 });
-    }
-
-    return NextResponse.json({ success: true, id: data?.id });
+    return NextResponse.json({ success: true, id: result.id });
   } catch (err) {
     console.error("Contact API error:", err);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });

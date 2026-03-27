@@ -1831,6 +1831,68 @@ export async function upsertUserSettings(
   });
 }
 
+export async function listKnownUserIds(): Promise<string[]> {
+  const database = await getDb();
+  const [settingsIds, transcriptIds] = await Promise.all([
+    database.collection<UserSettingsDoc>("user_settings").distinct("userId", {}),
+    database.collection<SavedTranscriptDoc>("transcripts").distinct("userId", { sourceType: "journal" }),
+  ]);
+  const userIds = new Set<string>();
+  for (const id of settingsIds) {
+    if (typeof id === "string" && id.trim()) userIds.add(id);
+  }
+  for (const id of transcriptIds) {
+    if (typeof id === "string" && id.trim()) userIds.add(id);
+  }
+  return Array.from(userIds);
+}
+
+export async function claimWeeklyReflectionSend(
+  userId: string,
+  weekKey: string
+): Promise<boolean> {
+  const database = await getDb();
+  await database
+    .collection("weekly_reflection_sends")
+    .createIndex({ userId: 1, weekKey: 1 }, { unique: true });
+  const now = new Date();
+  const result = await database.collection("weekly_reflection_sends").updateOne(
+    { userId, weekKey },
+    {
+      $setOnInsert: {
+        userId,
+        weekKey,
+        createdAt: now,
+      },
+      $set: {
+        updatedAt: now,
+      },
+    },
+    { upsert: true }
+  );
+  return result.upsertedCount > 0;
+}
+
+export async function markWeeklyReflectionSendStatus(
+  userId: string,
+  weekKey: string,
+  status: "sent" | "failed",
+  details?: { error?: string; emailId?: string }
+): Promise<void> {
+  const database = await getDb();
+  await database.collection("weekly_reflection_sends").updateOne(
+    { userId, weekKey },
+    {
+      $set: {
+        status,
+        error: details?.error?.slice(0, 500),
+        emailId: details?.emailId,
+        updatedAt: new Date(),
+      },
+    }
+  );
+}
+
 /** Delete all user data: sessions, messages, LTM, custom concepts, concept groups, saved concepts, transcripts, nuggets, settings */
 export async function deleteAllUserData(userId: string): Promise<void> {
   const database = await getDb();

@@ -78,12 +78,23 @@ Add these in Vercel → Project → Settings → Environment Variables:
 | `ENCRYPTION_KEY` | 32-byte key, base64 | **Production:** required. Run `openssl rand -base64 32` once; store in Vercel secrets (never commit). Encrypts user content at rest in MongoDB (AES-256-GCM). Rotating the key requires re-encrypting existing documents (not automatic). |
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | `pk_live_...` or `pk_test_...` | From Clerk |
 | `CLERK_SECRET_KEY` | `sk_live_...` or `sk_test_...` | From Clerk |
+| `RESEND_API_KEY` | Resend API key | Required for contact + weekly reflection emails |
+| `CONTACT_FROM_EMAIL` | Verified sender address | Used as sender for outgoing mail |
+| `CRON_SECRET` | Strong random string | Protects `/api/cron/weekly-reflections` |
 
 **Optional:**
 - `GEMINI_MODEL` — default: `gemini-2.5-flash-lite`
 - `MONGODB_MAX_POOL_SIZE` — default: `10` (increase for M10+ clusters)
 
 7. Click **Deploy**
+
+### Scheduled Weekly Reflection Email
+
+- The repo includes `vercel.json` cron config for `/api/cron/weekly-reflections` (runs hourly).
+- The endpoint itself gates execution to **Sunday 10:00 AM America/New_York** and requires `CRON_SECRET`.
+- Manual test after deploy:
+  - `GET https://<your-domain>/api/cron/weekly-reflections?force=1`
+  - Header: `Authorization: Bearer <CRON_SECRET>`
 
 ---
 

@@ -364,6 +364,22 @@ export interface NutritionDailyReportResult {
   tomorrowTips: string[];
 }
 
+export interface WeeklyJournalReflectionInput {
+  weekLabel: string;
+  journalEntries: Array<{ dayKey: string; text: string }>;
+  emotionSignals: string[];
+  behaviorSignals: string[];
+  followedMentorReflections: Array<{ figureName: string; reflection: string; dayKey: string }>;
+}
+
+export interface WeeklyJournalReflectionResult {
+  summary: string;
+  emotionPatterns: string[];
+  behaviorPatterns: string[];
+  mentorInsights: string[];
+  nextWeekActions: string[];
+}
+
 export interface CalorieTrackingEnrichedEntryResult {
   nutritionEntry?: string;
   exerciseEntry?: string;
@@ -750,6 +766,115 @@ TODAY TOTALS:
         "Schedule a realistic workout block before your day gets busy.",
       ],
     };
+  }
+}
+
+export async function generateWeeklyJournalReflection(
+  input: WeeklyJournalReflectionInput,
+  usageContext?: GeminiUsageContext
+): Promise<WeeklyJournalReflectionResult> {
+  const journals = input.journalEntries
+    .slice(0, 24)
+    .map((entry, idx) => `${idx + 1}. [${entry.dayKey}] ${entry.text.slice(0, 500)}`)
+    .join("\n");
+  const mentorLines = input.followedMentorReflections
+    .slice(0, 24)
+    .map((entry, idx) => `${idx + 1}. [${entry.dayKey}] ${entry.figureName}: ${entry.reflection.slice(0, 240)}`)
+    .join("\n");
+  const model = getModel();
+  const result = await model.generateContent(
+    `You are a compassionate weekly reflection coach.
+
+You will summarize a user's weekly journal entries and provide practical reflection guidance.
+
+Return ONLY valid JSON with exactly this shape:
+{
+  "summary": "2-4 short sentences",
+  "emotionPatterns": ["pattern 1", "pattern 2", "..."],
+  "behaviorPatterns": ["pattern 1", "pattern 2", "..."],
+  "mentorInsights": ["insight 1", "..."],
+  "nextWeekActions": ["action 1", "action 2", "action 3"]
+}
+
+Rules:
+- Be specific to the provided entries.
+- Do not provide medical diagnosis or treatment.
+- Keep tone supportive and practical.
+- emotionPatterns: 2-4 items.
+- behaviorPatterns: 2-4 items.
+- mentorInsights: 1-3 items (if no mentor content, return a neutral encouragement item).
+- nextWeekActions: 3-5 concrete actions.
+
+WEEK:
+${input.weekLabel}
+
+HEURISTIC SIGNALS:
+- Emotions: ${input.emotionSignals.length ? input.emotionSignals.join(", ") : "none detected"}
+- Behaviors: ${input.behaviorSignals.length ? input.behaviorSignals.join(", ") : "none detected"}
+
+JOURNAL ENTRIES:
+${journals || "(no entries this week)"}
+
+FOLLOWED MENTOR REFLECTIONS:
+${mentorLines || "(none available)"}`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const raw = result.response.text().trim();
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  const defaultResult: WeeklyJournalReflectionResult = {
+    summary:
+      input.journalEntries.length > 0
+        ? "You showed up this week, and your entries reveal meaningful patterns you can build on."
+        : "You had a lighter journaling week, which is okay. A brief weekly check-in can still keep you connected to your goals.",
+    emotionPatterns:
+      input.emotionSignals.length > 0
+        ? input.emotionSignals.slice(0, 3)
+        : ["Your emotional pattern is not clear from this week, which can happen with fewer entries."],
+    behaviorPatterns:
+      input.behaviorSignals.length > 0
+        ? input.behaviorSignals.slice(0, 3)
+        : ["Your behavior pattern appears mixed; a small consistent routine can help next week."],
+    mentorInsights:
+      input.followedMentorReflections.length > 0
+        ? input.followedMentorReflections.slice(0, 2).map((item) => `${item.figureName}: ${item.reflection}`)
+        : ["No followed mentor reflections were available this week, so focus on one small reflection habit."],
+    nextWeekActions: [
+      "Set aside 5 minutes on three days to journal one key emotion and one behavior.",
+      "Pick one repeatable action you can do every morning or evening.",
+      "Review your entries on Sunday and identify one thing to continue and one thing to change.",
+    ],
+  };
+  try {
+    const parsed = JSON.parse(cleaned) as {
+      summary?: unknown;
+      emotionPatterns?: unknown;
+      behaviorPatterns?: unknown;
+      mentorInsights?: unknown;
+      nextWeekActions?: unknown;
+    };
+    const toStringArray = (value: unknown, max: number): string[] =>
+      Array.isArray(value)
+        ? value
+            .map((item) => (typeof item === "string" ? item.trim() : ""))
+            .filter(Boolean)
+            .slice(0, max)
+        : [];
+    const emotionPatterns = toStringArray(parsed.emotionPatterns, 4);
+    const behaviorPatterns = toStringArray(parsed.behaviorPatterns, 4);
+    const mentorInsights = toStringArray(parsed.mentorInsights, 3);
+    const nextWeekActions = toStringArray(parsed.nextWeekActions, 5);
+    return {
+      summary:
+        typeof parsed.summary === "string" && parsed.summary.trim()
+          ? parsed.summary.trim()
+          : defaultResult.summary,
+      emotionPatterns: emotionPatterns.length > 0 ? emotionPatterns : defaultResult.emotionPatterns,
+      behaviorPatterns: behaviorPatterns.length > 0 ? behaviorPatterns : defaultResult.behaviorPatterns,
+      mentorInsights: mentorInsights.length > 0 ? mentorInsights : defaultResult.mentorInsights,
+      nextWeekActions: nextWeekActions.length > 0 ? nextWeekActions : defaultResult.nextWeekActions,
+    };
+  } catch {
+    return defaultResult;
   }
 }
 

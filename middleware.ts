@@ -15,6 +15,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/contact",
   "/api/tts",
   "/api/tts-with-timestamps",
+  "/api/cron/weekly-reflections",
   "/api/mental-models(.*)",
   "/api/famous-figures",
   "/api/generate-relevant-prompt",
