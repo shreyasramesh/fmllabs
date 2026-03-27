@@ -199,7 +199,7 @@ export function buildWeeklyReflectionAggregate(args: {
         createdAt: row.createdAt ? new Date(row.createdAt).toISOString() : undefined,
       };
     })
-    .filter((row): row is { id: string; dayKey: string; text: string; createdAt?: string } => row !== null)
+    .filter((row): row is { id: string; dayKey: string; text: string; createdAt: string | undefined } => row !== null)
     .sort((a, b) => a.dayKey.localeCompare(b.dayKey));
 
   const followedSet = new Set(args.followedFigureIds.filter(Boolean));
