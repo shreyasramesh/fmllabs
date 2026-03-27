@@ -120,6 +120,14 @@ export function isSundayTenAmInTimeZone(
   return parts.weekday === 0 && parts.hour === 10;
 }
 
+export function isSundayInTimeZone(
+  now: Date,
+  timeZone = WEEKLY_REFLECTION_TIMEZONE
+): boolean {
+  const parts = getTimeZoneDateParts(now, timeZone);
+  return parts.weekday === 0;
+}
+
 function dayKeyFromTranscript(
   row: Pick<SavedTranscript, "journalEntryYear" | "journalEntryMonth" | "journalEntryDay" | "createdAt">,
   timeZone = WEEKLY_REFLECTION_TIMEZONE

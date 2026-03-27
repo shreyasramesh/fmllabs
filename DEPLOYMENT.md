@@ -90,8 +90,9 @@ Add these in Vercel → Project → Settings → Environment Variables:
 
 ### Scheduled Weekly Reflection Email
 
-- The repo includes `vercel.json` cron config for `/api/cron/weekly-reflections` (runs hourly).
-- The endpoint itself gates execution to **Sunday 10:00 AM America/New_York** and requires `CRON_SECRET`.
+- The repo includes `vercel.json` cron config for `/api/cron/weekly-reflections` (runs daily at `14:00 UTC` to satisfy Hobby plan limits).
+- The endpoint itself gates execution to **Sunday (America/New_York)** and requires `CRON_SECRET`.
+- Weekly dedupe (`weekKey`) prevents duplicate sends if the route is invoked more than once.
 - Manual test after deploy:
   - `GET https://<your-domain>/api/cron/weekly-reflections?force=1`
   - Header: `Authorization: Bearer <CRON_SECRET>`

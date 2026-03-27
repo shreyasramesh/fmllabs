@@ -11,7 +11,7 @@ import { sendEmail } from "@/lib/mail";
 import {
   buildWeeklyReflectionAggregate,
   getCurrentWeekWindow,
-  isSundayTenAmInTimeZone,
+  isSundayInTimeZone,
   WEEKLY_REFLECTION_TIMEZONE,
 } from "@/lib/weekly-reflection";
 
@@ -99,11 +99,13 @@ export async function GET(request: Request) {
   const force = url.searchParams.get("force") === "1";
   const now = new Date();
   const weekWindow = getCurrentWeekWindow(now, WEEKLY_REFLECTION_TIMEZONE);
-  if (!force && !isSundayTenAmInTimeZone(now, WEEKLY_REFLECTION_TIMEZONE)) {
+  // Hobby cron runs at most once per day, so we gate by Sunday.
+  // Dedup by weekKey prevents duplicate weekly sends.
+  if (!force && !isSundayInTimeZone(now, WEEKLY_REFLECTION_TIMEZONE)) {
     return NextResponse.json({
       ok: true,
       skipped: true,
-      reason: "Outside scheduled run window",
+      reason: "Outside scheduled weekday window",
       timeZone: WEEKLY_REFLECTION_TIMEZONE,
       now: now.toISOString(),
     });
