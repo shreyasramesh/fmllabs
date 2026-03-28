@@ -2894,6 +2894,7 @@ export default function ChatPage() {
   const ccAutoTagSuggestionsRef = useRef(ccAutoTagSuggestions);
   ccAutoTagSuggestionsRef.current = ccAutoTagSuggestions;
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+  const lastAutoScrolledAssistantIndexRef = useRef<number | null>(null);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -2921,12 +2922,31 @@ export default function ChatPage() {
     return () => el.removeEventListener("scroll", check);
   }, [messages, currentSession?.isCollapsed]);
 
-  // Auto-scroll to bottom when user sends a message (and during streaming)
+  // Auto-scroll behavior:
+  // - while waiting for assistant, keep latest content visible at bottom
+  // - once assistant response starts, snap to the start of that assistant message
   useEffect(() => {
-    if (isLoading && messages.length > 0) {
-      scrollToBottom();
+    if (!isLoading || messages.length === 0) return;
+    const lastIndex = messages.length - 1;
+    const lastMessage = messages[lastIndex];
+    if (lastMessage.role === "assistant") {
+      if (lastAutoScrolledAssistantIndexRef.current === lastIndex) return;
+      lastAutoScrolledAssistantIndexRef.current = lastIndex;
+      const el = document.getElementById(`assistant-msg-${lastIndex}`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        setShowScrollToBottom(false);
+      }
+      return;
     }
+    scrollToBottom();
   }, [messages, isLoading, scrollToBottom]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      lastAutoScrolledAssistantIndexRef.current = null;
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     if (!ltmDetailModal) return;
@@ -10571,8 +10591,8 @@ export default function ChatPage() {
             {messages.length > 0 && (
             <div className="chat-thread-compact flex flex-col gap-[0.9rem] text-[60%] leading-[1.55]">
             {messages.map((m, i) => (
+              <div key={i} id={m.role === "assistant" ? `assistant-msg-${i}` : undefined}>
               <MessageBubble
-                key={i}
                 message={m}
                 messageIndex={i}
                 totalMessages={messages.length}
@@ -10696,11 +10716,10 @@ export default function ChatPage() {
                   m.content === "Finding your guide…"
                 }
                 askMentorsSlot={
-                  !suppressJournalAndAskMentors &&
                   !isAnonymous &&
                   !incognitoMode &&
                   ((messages.length >= 2 && (!currentSession || !currentSession.isCollapsed)) ||
-                    followedFigureIds.length >= 2) ? (
+                    (!suppressJournalAndAskMentors && followedFigureIds.length >= 2)) ? (
                     <div className="inline-flex flex-col items-start gap-1.5">
                       <div className="inline-flex flex-wrap items-center gap-1.5">
                         {messages.length >= 2 && (!currentSession || !currentSession.isCollapsed) && (
@@ -10717,7 +10736,7 @@ export default function ChatPage() {
                             Save to memory
                           </button>
                         )}
-                        {followedFigureIds.length >= 2 && (
+                        {!suppressJournalAndAskMentors && followedFigureIds.length >= 2 && (
                       <button
                         type="button"
                         onClick={() => {
@@ -10754,7 +10773,7 @@ export default function ChatPage() {
                       </button>
                         )}
                       </div>
-                      {followedFigureIds.length >= 2 && multiMentorMode && (
+                      {!suppressJournalAndAskMentors && followedFigureIds.length >= 2 && multiMentorMode && (
                         <div className="flex flex-col gap-1.5 w-full max-w-[min(100%,28rem)]">
                           {mentorDomainsForPicker.length > 1 && (
                             <div
@@ -10842,6 +10861,7 @@ export default function ChatPage() {
                     : activeSecondOrderRef.current && activeSecondOrderPlainRef.current)
                 }
               />
+              </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
