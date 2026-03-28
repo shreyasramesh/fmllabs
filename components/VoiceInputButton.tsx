@@ -57,7 +57,9 @@ async function startElevenLabsStt(
   onPartialTranscript?: (text: string) => void,
   onOrbNodesChange?: (nodes: { input: GainNode; output: GainNode } | null) => void
 ): Promise<SttSession> {
-  const tokenRes = await fetch("/api/elevenlabs/stt-token", { method: "POST" });
+  const tokenResPromise = fetch("/api/elevenlabs/stt-token", { method: "POST" });
+  const streamPromise = navigator.mediaDevices.getUserMedia({ audio: true });
+  const tokenRes = await tokenResPromise;
   if (!tokenRes.ok) {
     const data = await tokenRes.json().catch(() => ({}));
     throw new Error(data?.error ?? "Failed to get STT token");
@@ -66,7 +68,7 @@ async function startElevenLabsStt(
   if (!token) throw new Error("Invalid token response");
 
   const langCode = getLanguageCodeForTts(language);
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  const stream = await streamPromise;
   const ctx = new AudioContext();
   const source = ctx.createMediaStreamSource(stream);
   const orbInput = ctx.createGain();
@@ -295,6 +297,7 @@ export function VoiceInputButton({
   compactStopWhileListening?: boolean;
 }) {
   const [listening, setListening] = useState(false);
+  const [starting, setStarting] = useState(false);
   const [supported, setSupported] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [holdProgress, setHoldProgress] = useState(0);
@@ -308,6 +311,7 @@ export function VoiceInputButton({
   const holdProgressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const holdStartRef = useRef<number>(0);
   const didLongPressRef = useRef(false);
+  const startAttemptRef = useRef(0);
 
   useEffect(() => {
     setSupported(
@@ -327,6 +331,7 @@ export function VoiceInputButton({
   }, []);
 
   const stopListening = useCallback(() => {
+    startAttemptRef.current += 1;
     if (autoStopTimerRef.current) {
       clearTimeout(autoStopTimerRef.current);
       autoStopTimerRef.current = null;
@@ -336,16 +341,20 @@ export function VoiceInputButton({
       session.cleanup();
       cleanupRef.current = null;
     }
+    setStarting(false);
     setListening(false);
     setAudioLevel(0);
     setOrbNodes(null);
   }, []);
 
   const startListening = useCallback(async () => {
-    if (disabled || !supported) return;
+    if (disabled || !supported || listening || starting) return;
+    const attemptId = startAttemptRef.current + 1;
+    startAttemptRef.current = attemptId;
     pendingTranscriptRef.current = [];
     partialTranscriptRef.current = "";
     setAudioLevel(0);
+    setStarting(true);
     try {
       const session = await startElevenLabsStt(
         language,
@@ -365,12 +374,20 @@ export function VoiceInputButton({
         },
         (nodes) => setOrbNodes(nodes)
       );
+      if (startAttemptRef.current !== attemptId) {
+        session.cleanup();
+        return;
+      }
       cleanupRef.current = session;
+      setStarting(false);
       setListening(true);
     } catch (err) {
+      if (startAttemptRef.current === attemptId) {
+        setStarting(false);
+      }
       console.warn("Failed to start speech recognition:", err);
     }
-  }, [language, disabled, supported, stopListening]);
+  }, [language, disabled, listening, starting, supported, stopListening]);
 
   const cancelListening = useCallback(() => {
     pendingTranscriptRef.current = [];
@@ -452,11 +469,11 @@ export function VoiceInputButton({
       didLongPressRef.current = false;
       return;
     }
-    if (!listening) {
+    if (!listening && !starting) {
       playSelectionChime();
-      startListening();
+      void startListening();
     }
-  }, [listening, startListening]);
+  }, [listening, starting, startListening]);
 
   useEffect(() => {
     if (!listening) return;
@@ -496,7 +513,7 @@ export function VoiceInputButton({
 
   if (!supported) return null;
 
-  if (listening) {
+  if (listening || starting) {
     if (compactStopWhileListening) {
       return (
         <button
@@ -505,7 +522,11 @@ export function VoiceInputButton({
           aria-label="Stop voice input"
           className={`relative flex items-center justify-center min-w-[52px] min-h-[52px] rounded-2xl border border-red-500/80 text-white bg-red-500 hover:bg-red-600 transition-all duration-200 shrink-0 ${className}`}
         >
-          <span className="w-3 h-3 bg-white rounded-[2px]" aria-hidden />
+          {starting ? (
+            <span className="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden />
+          ) : (
+            <span className="w-3 h-3 bg-white rounded-[2px]" aria-hidden />
+          )}
         </button>
       );
     }
