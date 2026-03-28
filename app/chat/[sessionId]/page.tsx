@@ -10097,7 +10097,7 @@ export default function ChatPage() {
               messages.length === 0
                 ? isAnonymous
                   ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-36 sm:pb-40 px-4 py-5"
-                  : `flex-1 min-h-0 flex flex-col items-center justify-center md:justify-start ${
+                  : `flex-1 min-h-0 flex flex-col items-center justify-start ${
                       !incognitoMode && landingTab === "deepThinking" ? "pb-4 md:pb-6" : "pb-36 sm:pb-40 md:pb-8"
                     } px-4 py-4 md:pt-8`
                 : "px-3 py-4 sm:px-4 sm:py-5"
@@ -10105,7 +10105,7 @@ export default function ChatPage() {
           >
             {messages.length === 0 && (
               <div className="flex w-full min-w-0 max-w-2xl lg:max-w-4xl flex-col items-center text-center px-2 sm:px-4 overflow-x-hidden">
-                <div className={`flex w-full max-w-full min-w-0 flex-col items-center justify-center space-y-4 lg:space-y-5 ${isAnonymous ? "min-h-[calc(100dvh-12rem)]" : ""}`}>
+                <div className={`flex w-full max-w-full min-w-0 flex-col items-center justify-start space-y-4 lg:space-y-5 ${isAnonymous ? "min-h-[calc(100dvh-12rem)]" : ""}`}>
                 {mentorJournalBridgePending ? (
                   <div
                     className="flex flex-col items-center justify-center gap-4 py-16 sm:py-20 min-h-[40vh]"
