@@ -385,6 +385,14 @@ export interface CalorieTrackingEnrichedEntryResult {
   exerciseEntry?: string;
 }
 
+export interface NutritionImageTranscriptionResult {
+  dishName: string;
+  foodsDetected: string[];
+  portionAssumptions: string[];
+  nutritionLogDraft: string;
+  confidence: "low" | "medium" | "high";
+}
+
 export interface NutritionGoalsProfileInput {
   age: number;
   gender: "male" | "female";
@@ -472,6 +480,106 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
     };
   } catch {
     return {};
+  }
+}
+
+export async function transcribeNutritionImage(
+  input: { imageBase64: string; mimeType: string; hintText?: string },
+  usageContext?: GeminiUsageContext
+): Promise<NutritionImageTranscriptionResult> {
+  const cleanBase64 = input.imageBase64.trim();
+  const hintText = (input.hintText ?? "").trim().slice(0, 600);
+  const imageModel = genAI.getGenerativeModel({
+    model: "gemini-3.1-flash-image-preview",
+  });
+  const result = await imageModel.generateContent({
+    contents: [
+      {
+        role: "user",
+        parts: [
+          {
+            text: `You are helping users log nutrition from food images.
+
+Analyze the image and return ONLY valid JSON in this exact shape:
+{
+  "dishName": "short likely dish name",
+  "foodsDetected": ["food item", "..."],
+  "portionAssumptions": ["short assumption", "..."],
+  "nutritionLogDraft": "1-3 sentence plain-text draft for a nutrition log, mentioning visible foods and likely portions",
+  "confidence": "low" | "medium" | "high"
+}
+
+Rules:
+- Be concrete and practical.
+- If uncertain, say "likely" and include assumptions.
+- Keep foodsDetected to max 8 items.
+- Keep portionAssumptions to max 6 items.
+- No markdown, no extra keys, no surrounding text.
+
+Optional user hint:
+${hintText || "(none)"}`,
+          },
+          {
+            inlineData: {
+              mimeType: input.mimeType,
+              data: cleanBase64,
+            },
+          },
+        ],
+      },
+    ],
+  });
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const raw = result.response.text().trim();
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  try {
+    const parsed = JSON.parse(cleaned) as {
+      dishName?: unknown;
+      foodsDetected?: unknown;
+      portionAssumptions?: unknown;
+      nutritionLogDraft?: unknown;
+      confidence?: unknown;
+    };
+    const foodsDetected = Array.isArray(parsed.foodsDetected)
+      ? parsed.foodsDetected
+          .map((item) => (typeof item === "string" ? item.trim() : ""))
+          .filter(Boolean)
+          .slice(0, 8)
+      : [];
+    const portionAssumptions = Array.isArray(parsed.portionAssumptions)
+      ? parsed.portionAssumptions
+          .map((item) => (typeof item === "string" ? item.trim() : ""))
+          .filter(Boolean)
+          .slice(0, 6)
+      : [];
+    const confidence: "low" | "medium" | "high" =
+      parsed.confidence === "low" || parsed.confidence === "high" ? parsed.confidence : "medium";
+    const dishName = typeof parsed.dishName === "string" ? parsed.dishName.trim().slice(0, 120) : "";
+    const nutritionLogDraft =
+      typeof parsed.nutritionLogDraft === "string" && parsed.nutritionLogDraft.trim()
+        ? parsed.nutritionLogDraft.trim().slice(0, 1200)
+        : [
+            dishName ? `Likely dish: ${dishName}.` : "",
+            foodsDetected.length > 0 ? `Visible foods: ${foodsDetected.join(", ")}.` : "",
+            portionAssumptions.length > 0 ? `Assumptions: ${portionAssumptions.join("; ")}.` : "",
+          ]
+            .filter(Boolean)
+            .join(" ");
+    return {
+      dishName,
+      foodsDetected,
+      portionAssumptions,
+      nutritionLogDraft,
+      confidence,
+    };
+  } catch {
+    return {
+      dishName: "",
+      foodsDetected: [],
+      portionAssumptions: [],
+      nutritionLogDraft: "Could not confidently parse the image. Please describe what you ate in text.",
+      confidence: "low",
+    };
   }
 }
 

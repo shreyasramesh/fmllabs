@@ -2003,6 +2003,73 @@ function dateFromDayKey(dayKey: string): Date | null {
   return parsed;
 }
 
+function estimateBase64Bytes(value: string): number {
+  const noPadding = value.replace(/=+$/, "");
+  return Math.floor((noPadding.length * 3) / 4);
+}
+
+async function loadImageFromFile(file: File): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const image = new window.Image();
+    image.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(image);
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("Could not decode image file."));
+    };
+    image.src = objectUrl;
+  });
+}
+
+async function compressImageForUpload(
+  file: File,
+  maxBytes = 5 * 1024 * 1024
+): Promise<{ dataUrl: string; base64: string; mimeType: string }> {
+  const image = await loadImageFromFile(file);
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Could not initialize image processor.");
+
+  const maxDimension = 1600;
+  const scale = Math.min(1, maxDimension / Math.max(image.width, image.height));
+  let width = Math.max(1, Math.round(image.width * scale));
+  let height = Math.max(1, Math.round(image.height * scale));
+  const outputMimeType = "image/jpeg";
+
+  const toDataUrl = (quality: number): string => {
+    canvas.width = width;
+    canvas.height = height;
+    ctx.clearRect(0, 0, width, height);
+    ctx.drawImage(image, 0, 0, width, height);
+    return canvas.toDataURL(outputMimeType, quality);
+  };
+
+  let dataUrl = "";
+  let quality = 0.88;
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    dataUrl = toDataUrl(quality);
+    const b64 = dataUrl.split(",")[1] ?? "";
+    if (estimateBase64Bytes(b64) <= maxBytes) {
+      return { dataUrl, base64: b64, mimeType: outputMimeType };
+    }
+    if (quality > 0.52) {
+      quality -= 0.08;
+    } else {
+      width = Math.max(640, Math.round(width * 0.85));
+      height = Math.max(640, Math.round(height * 0.85));
+    }
+  }
+
+  const fallbackBase64 = dataUrl.split(",")[1] ?? "";
+  if (fallbackBase64 && estimateBase64Bytes(fallbackBase64) <= maxBytes) {
+    return { dataUrl, base64: fallbackBase64, mimeType: outputMimeType };
+  }
+  throw new Error("Image is too large after compression. Please retake closer to the food.");
+}
+
 function isNonNull<T>(value: T | null): value is T {
   return value !== null;
 }
@@ -3175,6 +3242,10 @@ export default function ChatPage() {
   const [calorieTrackerModalOpen, setCalorieTrackerModalOpen] = useState(false);
   const [calorieTrackerInput, setCalorieTrackerInput] = useState("");
   const [calorieTrackerEntryDate, setCalorieTrackerEntryDate] = useState(() => getTodayDateInputValue());
+  const calorieTrackerImageInputRef = useRef<HTMLInputElement | null>(null);
+  const [calorieTrackerImagePreview, setCalorieTrackerImagePreview] = useState<string | null>(null);
+  const [calorieTrackerImageProcessing, setCalorieTrackerImageProcessing] = useState(false);
+  const [calorieTrackerImageError, setCalorieTrackerImageError] = useState<string | null>(null);
   const [calorieTrackerQuestions, setCalorieTrackerQuestions] = useState<string[]>([]);
   const [calorieTrackerAnswers, setCalorieTrackerAnswers] = useState<string[]>([]);
   const [calorieTrackerStep, setCalorieTrackerStep] = useState<"input" | "questions" | "result">("input");
@@ -3319,6 +3390,9 @@ export default function ChatPage() {
     setCalorieTrackerModalOpen(false);
     setCalorieTrackerInput("");
     setCalorieTrackerEntryDate(getTodayDateInputValue());
+    setCalorieTrackerImagePreview(null);
+    setCalorieTrackerImageProcessing(false);
+    setCalorieTrackerImageError(null);
     setCalorieTrackerQuestions([]);
     setCalorieTrackerAnswers([]);
     setCalorieTrackerStep("input");
@@ -3335,6 +3409,9 @@ export default function ChatPage() {
     }
     setCalorieTrackerInput("");
     setCalorieTrackerEntryDate(getTodayDateInputValue());
+    setCalorieTrackerImagePreview(null);
+    setCalorieTrackerImageProcessing(false);
+    setCalorieTrackerImageError(null);
     setCalorieTrackerQuestions([]);
     setCalorieTrackerAnswers([]);
     setCalorieTrackerStep("input");
@@ -3342,6 +3419,58 @@ export default function ChatPage() {
     setCalorieTrackerResult(null);
     setCalorieTrackerModalOpen(true);
   }, [incognitoMode, isAnonymous, router]);
+
+  const handleCalorieTrackerImageSelected = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      setCalorieTrackerImageError(null);
+      setCalorieTrackerImageProcessing(true);
+      try {
+        if (!file.type.startsWith("image/")) {
+          throw new Error("Please capture an image file.");
+        }
+        if (file.size > 20 * 1024 * 1024) {
+          throw new Error("Image is very large. Please retake with a lower camera resolution.");
+        }
+        const { dataUrl, base64, mimeType } = await compressImageForUpload(file);
+        if (!base64) throw new Error("Invalid image payload.");
+        setCalorieTrackerImagePreview(dataUrl);
+        const res = await fetch("/api/me/journal/calorie/image-transcribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            imageBase64: base64,
+            mimeType,
+            hintText: calorieTrackerInput.trim().slice(0, 600),
+          }),
+        });
+        const data = (await res.json().catch(() => ({}))) as {
+          error?: string;
+          nutritionLogDraft?: string;
+        };
+        if (!res.ok) {
+          throw new Error(data.error || "Could not transcribe this image.");
+        }
+        const draft = (data.nutritionLogDraft ?? "").trim();
+        if (draft) {
+          setCalorieTrackerInput((prev) => {
+            const existing = prev.trim();
+            if (!existing) return draft;
+            return `${existing}\n\n${draft}`;
+          });
+        }
+      } catch (err) {
+        setCalorieTrackerImageError(
+          err instanceof Error ? err.message : "Could not transcribe this image."
+        );
+      } finally {
+        if (e.target) e.target.value = "";
+        setCalorieTrackerImageProcessing(false);
+      }
+    },
+    [calorieTrackerInput]
+  );
 
   const finalizeCalorieTracker = useCallback(
     async (answers: string[]) => {
@@ -13620,13 +13749,13 @@ export default function ChatPage() {
                       value={calorieTrackerInput}
                       onChange={(e) => setCalorieTrackerInput(e.target.value)}
                       rows={6}
-                      disabled={calorieTrackerLoading}
+                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
                       placeholder="e.g. Breakfast: 2 eggs + toast, lunch: chicken bowl; workout: 30 min run"
                       className="flex-1 px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
                     />
                     <VoiceInputButton
                       language={language}
-                      disabled={calorieTrackerLoading}
+                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
                       ariaLabel="Calorie tracker voice input"
                       compactStopWhileListening
                       onTranscription={(text) =>
@@ -13638,10 +13767,51 @@ export default function ChatPage() {
                       }
                     />
                   </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <input
+                      ref={calorieTrackerImageInputRef}
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      className="hidden"
+                      onChange={(e) => void handleCalorieTrackerImageSelected(e)}
+                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCalorieTrackerImageError(null);
+                        calorieTrackerImageInputRef.current?.click();
+                      }}
+                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                      className="px-3 py-1.5 rounded-xl text-xs font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
+                    >
+                      {calorieTrackerImageProcessing ? "Analyzing image..." : "Use camera photo"}
+                    </button>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                      Capture a food photo to prefill your nutrition log.
+                    </p>
+                  </div>
+                  {calorieTrackerImagePreview && (
+                    <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-2">
+                      <img
+                        src={calorieTrackerImagePreview}
+                        alt="Captured nutrition image"
+                        className="w-full max-h-48 object-cover rounded-lg"
+                      />
+                    </div>
+                  )}
+                  {calorieTrackerImageError && (
+                    <p className="text-xs text-red-600 dark:text-red-400">{calorieTrackerImageError}</p>
+                  )}
                   <button
                     type="button"
                     onClick={() => void runCalorieTrackerAnalyze()}
-                    disabled={calorieTrackerLoading || !calorieTrackerInput.trim()}
+                    disabled={
+                      calorieTrackerLoading ||
+                      calorieTrackerImageProcessing ||
+                      !calorieTrackerInput.trim()
+                    }
                     className="w-full px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
                   >
                     {calorieTrackerLoading ? "Analyzing..." : getLandingTranslations(language).calorieTrackerContinue}
