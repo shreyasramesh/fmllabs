@@ -615,6 +615,18 @@ body {
     font-size: 1.4rem !important;
     line-height: 1 !important;
   }
+
+  /* Keep mobile scrolling behavior, but hide visible scrollbars. */
+  .mobile-hide-scrollbar {
+    -ms-overflow-style: none; /* IE/Edge legacy */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .mobile-hide-scrollbar::-webkit-scrollbar {
+    display: none; /* WebKit */
+    width: 0;
+    height: 0;
+  }
 }
 
 /* Override fixed pixel font sizes on mobile - they don't scale with html font-size */

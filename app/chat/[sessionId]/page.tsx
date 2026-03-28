@@ -9839,10 +9839,10 @@ export default function ChatPage() {
               ? "pb-24 md:pb-0 overflow-hidden"
               : isAnonymous
                 ? "pb-24 md:pb-0 overflow-hidden"
-                : "pb-0 overflow-visible"
+                : "pb-0 overflow-hidden"
           } ${convertToDeepSuccess ? "animate-convert-to-deep" : ""}`}
         >
-          <div ref={messagesScrollRef} className={`flex-1 min-h-0 min-w-0 overflow-x-hidden ${messages.length > 0 ? "overflow-y-auto" : "overflow-hidden flex flex-col"}`}>
+          <div ref={messagesScrollRef} className="flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto flex flex-col mobile-hide-scrollbar">
           {currentSession?.isCollapsed && collapsedSummary ? (
             <div className="min-h-full flex items-center justify-center p-4">
               <div className="w-full max-w-2xl">
@@ -10061,7 +10061,7 @@ export default function ChatPage() {
           >
             {messages.length === 0 && (
               <div className="flex w-full min-w-0 max-w-2xl lg:max-w-4xl flex-col items-center text-center px-2 sm:px-4 overflow-x-hidden">
-                <div className={`flex w-full max-w-full min-w-0 flex-1 min-h-0 flex-col items-center justify-center space-y-4 lg:space-y-5 ${isAnonymous ? "min-h-[calc(100dvh-12rem)]" : ""}`}>
+                <div className={`flex w-full max-w-full min-w-0 flex-col items-center justify-center space-y-4 lg:space-y-5 ${isAnonymous ? "min-h-[calc(100dvh-12rem)]" : ""}`}>
                 {mentorJournalBridgePending ? (
                   <div
                     className="flex flex-col items-center justify-center gap-4 py-16 sm:py-20 min-h-[40vh]"
@@ -10096,7 +10096,7 @@ export default function ChatPage() {
                   </div>
                 ) : (
                   <>
-                    <div className="w-full max-w-2xl lg:max-w-4xl min-w-0 flex-1 min-h-0 flex flex-col gap-3 sm:gap-4 animate-fade-in-up">
+                    <div className="w-full max-w-2xl lg:max-w-4xl min-w-0 flex flex-col gap-3 sm:gap-4 animate-fade-in-up">
                 {!incognitoMode && (
                         <div
                           className="order-2 w-full animate-fade-in-down"
@@ -10496,7 +10496,7 @@ export default function ChatPage() {
                       )}
 
                       {!incognitoMode && (
-                        <div className="order-3 w-full min-h-0 text-left overflow-y-auto overscroll-contain pr-0.5">
+                        <div className="order-3 w-full text-left">
                           {selectedLandingDayActivityItems.length === 0 ? (
                             <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">
                               No activity yet for this day.
