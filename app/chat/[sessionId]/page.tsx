@@ -6383,14 +6383,6 @@ export default function ChatPage() {
           color: "#60a5fa",
         },
         {
-          type: "spline",
-          name: getLandingTranslations(language).weeklySummaryCaloriesRemainingCol,
-          data: weeklySummaryResult.rows.map((row) => (row.tracked ? row.caloriesRemaining : null)),
-          color: "#34d399",
-          lineWidth: 2,
-          marker: { radius: 3 },
-        },
-        {
           type: "line",
           name: getLandingTranslations(language).nutritionGoalCaloriesLabel,
           data: weeklySummaryResult.rows.map(() => weeklySummaryResult.caloriesTargetPerDay),
@@ -8854,37 +8846,146 @@ export default function ChatPage() {
                         </div>
                       );
                     };
+                    const renderMmMobileCard = (id: string, name: string) => {
+                      const preview = mmPreviewMap.get(id);
+                      const description = preview?.oneLiner ?? preview?.quickIntro ?? "Tap to explore";
+                      const isFavorite = mmFavorites.has(id);
+                      const hasImage = !id.startsWith("custom_");
+                      const isCustom = id.startsWith("custom_");
+                      return (
+                        <div key={`mobile-${id}`} className="relative rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-3">
+                          <div className="flex items-start gap-3">
+                            <div className="w-14 h-14 shrink-0 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800">
+                              {hasImage ? (
+                                <img
+                                  src={`/images/${id.replace(/_/g, "-")}.png`}
+                                  alt=""
+                                  className="w-full h-full object-cover"
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-neutral-500 dark:text-neutral-400">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                                    <path d="M12 3v18" />
+                                  </svg>
+                                </div>
+                              )}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleMentalModelClick(id)}
+                              className="flex-1 min-w-0 text-left"
+                            >
+                              <p className="text-sm font-semibold text-foreground pr-8 line-clamp-2">{name}</p>
+                              <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-400 line-clamp-2">{description}</p>
+                            </button>
+                            {isCustom ? (
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); e.preventDefault(); setMmDeleteConfirmModal({ id, name }); }}
+                                className="shrink-0 p-1.5 rounded-lg text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                                aria-label={`Delete ${name}`}
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                                  <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" />
+                                  <path d="M10 11v6M14 11v6" />
+                                </svg>
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); e.preventDefault(); toggleMmFavorite(id); }}
+                                className="shrink-0 p-1.5 rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 transition-colors"
+                                aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+                              >
+                                {isFavorite ? (
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden>
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                  </svg>
+                                ) : (
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4 text-neutral-400 dark:text-neutral-500" aria-hidden>
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                  </svg>
+                                )}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    };
                     if (mentalModelsWithWhenToUse.length === 0) {
                       return <p className="text-xs text-neutral-500 dark:text-neutral-400">Loading mental models…</p>;
                     }
                     if (filteredModels.length === 0) {
                       return <p className="text-xs text-neutral-500 dark:text-neutral-400">{q ? "No mental models match." : "No mental models."}</p>;
                     }
+                    const mobileActiveCategory =
+                      categoryItems.find(
+                        (cat) => normalizeMmCategory(cat.key) === normalizeMmCategory(selectedMmCategory)
+                      ) ?? categoryItems[0];
                     return (
                       <div className="space-y-3">
-                        {categoryItems.map((cat, index) => (
-                          <div
-                            key={cat.key}
-                            className={index === 0 ? "space-y-2" : "space-y-2 border-t border-neutral-200 dark:border-neutral-700 pt-3 mt-3"}
-                          >
-                            <div className="flex items-center justify-between">
-                              <p className="text-[11px] font-medium text-neutral-500 uppercase tracking-wide">
-                                {cat.label}
-                              </p>
-                              <span className="text-[11px] text-neutral-500">{cat.models.length} models</span>
-                            </div>
-                            {cat.models.length > 0 ? (
-                              <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
-                                {cat.models.map(({ id, name }) => renderMmCard(id, name))}
-                              </div>
-                            ) : (
-                              <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                                No models in this category.
-                              </p>
-                            )}
+                        <div className="sm:hidden space-y-2">
+                          <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+                            {categoryItems.map((cat) => {
+                              const active =
+                                mobileActiveCategory &&
+                                normalizeMmCategory(mobileActiveCategory.key) === normalizeMmCategory(cat.key);
+                              return (
+                                <button
+                                  key={`mobile-chip-${cat.key}`}
+                                  type="button"
+                                  onClick={() => setSelectedMmCategory(cat.key)}
+                                  className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
+                                    active
+                                      ? "border-neutral-400 dark:border-neutral-500 bg-neutral-100 dark:bg-neutral-800 text-foreground"
+                                      : "border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300"
+                                  }`}
+                                >
+                                  {cat.label} · {cat.models.length}
+                                </button>
+                              );
+                            })}
                           </div>
-                        ))}
+                          {mobileActiveCategory ? (
+                            <div className="space-y-2">
+                              {mobileActiveCategory.models.map(({ id, name }) =>
+                                renderMmMobileCard(id, name)
+                              )}
+                            </div>
+                          ) : (
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                              No models in this category.
+                            </p>
+                          )}
                         </div>
+                        <div className="hidden sm:block space-y-3">
+                          {categoryItems.map((cat, index) => (
+                            <div
+                              key={cat.key}
+                              className={index === 0 ? "space-y-2" : "space-y-2 border-t border-neutral-200 dark:border-neutral-700 pt-3 mt-3"}
+                            >
+                              <div className="flex items-center justify-between">
+                                <p className="text-[11px] font-medium text-neutral-500 uppercase tracking-wide">
+                                  {cat.label}
+                                </p>
+                                <span className="text-[11px] text-neutral-500">{cat.models.length} models</span>
+                              </div>
+                              {cat.models.length > 0 ? (
+                                <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
+                                  {cat.models.map(({ id, name }) => renderMmCard(id, name))}
+                                </div>
+                              ) : (
+                                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                                  No models in this category.
+                                </p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     );
                   })()}
                         </div>
@@ -9735,13 +9836,13 @@ export default function ChatPage() {
         <div
           className={`flex-1 min-h-0 min-w-0 flex flex-col overflow-x-hidden transition-all duration-500 ${
             messages.length > 0
-              ? "pb-24 md:pb-0 overflow-y-auto scroll-smooth"
+              ? "pb-24 md:pb-0 overflow-hidden"
               : isAnonymous
-                ? "pb-24 md:pb-0 overflow-y-auto scroll-smooth"
+                ? "pb-24 md:pb-0 overflow-hidden"
                 : "pb-0 overflow-visible"
           } ${convertToDeepSuccess ? "animate-convert-to-deep" : ""}`}
         >
-          <div ref={messagesScrollRef} className={`flex-1 min-h-0 min-w-0 overflow-x-hidden ${messages.length > 0 || (messages.length === 0 && isAnonymous) ? "overflow-y-auto" : "overflow-visible flex flex-col"}`}>
+          <div ref={messagesScrollRef} className={`flex-1 min-h-0 min-w-0 overflow-x-hidden ${messages.length > 0 ? "overflow-y-auto" : "overflow-hidden flex flex-col"}`}>
           {currentSession?.isCollapsed && collapsedSummary ? (
             <div className="min-h-full flex items-center justify-center p-4">
               <div className="w-full max-w-2xl">
@@ -9960,7 +10061,7 @@ export default function ChatPage() {
           >
             {messages.length === 0 && (
               <div className="flex w-full min-w-0 max-w-2xl lg:max-w-4xl flex-col items-center text-center px-2 sm:px-4 overflow-x-hidden">
-                <div className={`flex w-full max-w-full min-w-0 flex-col items-center justify-center space-y-4 lg:space-y-5 ${isAnonymous ? "min-h-[calc(100dvh-12rem)]" : ""}`}>
+                <div className={`flex w-full max-w-full min-w-0 flex-1 min-h-0 flex-col items-center justify-center space-y-4 lg:space-y-5 ${isAnonymous ? "min-h-[calc(100dvh-12rem)]" : ""}`}>
                 {mentorJournalBridgePending ? (
                   <div
                     className="flex flex-col items-center justify-center gap-4 py-16 sm:py-20 min-h-[40vh]"
@@ -9995,7 +10096,7 @@ export default function ChatPage() {
                   </div>
                 ) : (
                   <>
-                    <div className="w-full max-w-2xl lg:max-w-4xl min-w-0 flex flex-col gap-3 sm:gap-4 animate-fade-in-up">
+                    <div className="w-full max-w-2xl lg:max-w-4xl min-w-0 flex-1 min-h-0 flex flex-col gap-3 sm:gap-4 animate-fade-in-up">
                 {!incognitoMode && (
                         <div
                           className="order-2 w-full animate-fade-in-down"
@@ -10013,20 +10114,24 @@ export default function ChatPage() {
                               <p className="text-xs sm:text-base font-semibold text-foreground">Calories</p>
                             </div>
                             <div className="mt-1 grid grid-cols-3 gap-2 pr-2">
-                              <div className="min-w-0">
-                                <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
-                                  {selectedLandingDayNutrition.caloriesFood}
+                              <div className="min-w-0 flex flex-col">
+                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
+                                  <span className="text-base sm:text-xl font-semibold text-foreground">
+                                    {selectedLandingDayNutrition.caloriesFood}
+                                  </span>
                                 </p>
                                 <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Food</p>
                               </div>
-                              <div className="min-w-0">
-                                <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
-                                  {selectedLandingDayNutrition.caloriesExercise}
+                              <div className="min-w-0 flex flex-col">
+                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
+                                  <span className="text-base sm:text-xl font-semibold text-foreground">
+                                    {selectedLandingDayNutrition.caloriesExercise}
+                                  </span>
                                 </p>
                                 <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Exercise</p>
                               </div>
-                              <div className="min-w-0">
-                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
+                              <div className="min-w-0 flex flex-col">
+                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
                                   <span className="text-base sm:text-xl font-semibold text-foreground">
                                     {selectedLandingDayNutrition.caloriesRemaining}
                                   </span>
@@ -10391,7 +10496,7 @@ export default function ChatPage() {
                       )}
 
                       {!incognitoMode && (
-                        <div className="order-3 w-full text-left">
+                        <div className="order-3 w-full min-h-0 text-left overflow-y-auto overscroll-contain pr-0.5">
                           {selectedLandingDayActivityItems.length === 0 ? (
                             <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">
                               No activity yet for this day.
@@ -13787,9 +13892,21 @@ export default function ChatPage() {
               {weeklySummaryResult && (
                 <>
                   <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 bg-neutral-50/60 dark:bg-neutral-900/40">
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                      {getLandingTranslations(language).nutritionGoalsWizardDailyGoalCalculator}
-                    </p>
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        {getLandingTranslations(language).nutritionGoalsWizardDailyGoalCalculator}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          resetWeeklySummaryModal();
+                          openGoalsModal();
+                        }}
+                        className="shrink-0 rounded-md border border-neutral-200 dark:border-neutral-700 px-2 py-1 text-[11px] font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                      >
+                        Change goals
+                      </button>
+                    </div>
                     <p className="text-3xl font-semibold text-foreground">
                       {weeklySummaryResult.caloriesTargetPerDay.toLocaleString()} kcal
                     </p>
@@ -13861,15 +13978,62 @@ export default function ChatPage() {
                     <h3 className="text-lg font-semibold text-foreground mb-2">
                       {getLandingTranslations(language).weeklySummaryConsistencyHeading}
                     </h3>
-                    <div className="divide-y divide-neutral-200 dark:divide-neutral-700">
-                      <div className="flex items-center justify-between py-1.5 text-sm">
-                        <span>{getLandingTranslations(language).weeklySummaryFoodEntriesLabel}</span>
-                        <span className="font-semibold">{weeklySummaryResult.foodEntries}</span>
-                      </div>
-                      <div className="flex items-center justify-between py-1.5 text-sm">
-                        <span>{getLandingTranslations(language).weeklySummaryExerciseEntriesLabel}</span>
-                        <span className="font-semibold">{weeklySummaryResult.exerciseEntries}</span>
-                      </div>
+                    <div className="space-y-3">
+                      {[
+                        {
+                          key: "nutrition",
+                          label: "Nutrition journal",
+                          total: weeklySummaryResult.foodEntries,
+                          getCount: (row: (typeof weeklySummaryResult.rows)[number]) => row.foodEntries,
+                        },
+                        {
+                          key: "exercise",
+                          label: "Exercise journal",
+                          total: weeklySummaryResult.exerciseEntries,
+                          getCount: (row: (typeof weeklySummaryResult.rows)[number]) => row.exerciseEntries,
+                        },
+                      ].map((section) => (
+                        <div
+                          key={section.key}
+                          className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-2.5 bg-neutral-50/60 dark:bg-neutral-900/40"
+                        >
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm font-medium text-foreground">{section.label}</p>
+                            <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                              {section.total} entr{section.total === 1 ? "y" : "ies"}
+                            </p>
+                          </div>
+                          <div className="mt-2 grid grid-cols-7 gap-1 text-center">
+                            {weeklySummaryResult.rows.map((row) => (
+                              <p
+                                key={`${section.key}-${row.dayKey}-weekday`}
+                                className="text-[10px] font-medium text-neutral-500 dark:text-neutral-400"
+                              >
+                                {row.weekdayLabel.slice(0, 1)}
+                              </p>
+                            ))}
+                            {weeklySummaryResult.rows.map((row) => {
+                              const entryCount = section.getCount(row);
+                              const hasEntry = entryCount > 0;
+                              const parsedDate = dateFromDayKey(row.dayKey);
+                              const dayNum = parsedDate ? parsedDate.getDate() : Number(row.monthDayLabel);
+                              return (
+                                <div
+                                  key={`${section.key}-${row.dayKey}-day`}
+                                  className={`mx-auto flex h-8 w-8 items-center justify-center rounded-full border text-xs font-semibold ${
+                                    hasEntry
+                                      ? "bg-orange-500 border-orange-500 text-white"
+                                      : "bg-background border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
+                                  }`}
+                                  title={`${row.weekdayLabel} ${row.monthDayLabel}: ${entryCount} ${entryCount === 1 ? "entry" : "entries"}`}
+                                >
+                                  {dayNum}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </>
