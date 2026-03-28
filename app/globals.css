@@ -553,8 +553,9 @@ body {
   :root {
     --mobile-unified-font-size: 0.75rem; /* Matches Tailwind text-xs ("No conversations yet") */
     --mobile-unified-line-height: 1.1rem;
-    --mobile-bubble-font-size: calc(var(--mobile-unified-font-size) * 1.2);
-    --mobile-bubble-line-height: calc(var(--mobile-unified-line-height) * 1.2);
+    /* Reduce mobile conversation bubble text by ~15% from previous bubble scale. */
+    --mobile-bubble-font-size: calc(var(--mobile-unified-font-size) * 1.02);
+    --mobile-bubble-line-height: calc(var(--mobile-unified-line-height) * 1.02);
   }
 
   body,

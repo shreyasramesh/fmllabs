@@ -694,10 +694,10 @@ function MessageBubble({
         </div>
       )}
       <div
-          className={`group/tts relative max-w-[85%] rounded-3xl px-4 py-3 transition-shadow duration-200 ${
+          className={`group/tts relative rounded-3xl px-4 py-3 transition-shadow duration-200 ${
             message.role === "user"
-              ? "bg-foreground text-background shadow-sm"
-              : "bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground pr-4"
+              ? "max-w-[85%] bg-foreground text-background shadow-sm"
+              : "w-full max-w-full sm:max-w-[85%] bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground pr-4"
           }`}
           dir={isRtl ? "rtl" : undefined}
         >
@@ -840,7 +840,7 @@ function MessageBubble({
         hideContextUsed &&
         showConvertToDeep &&
         onConvertToDeep && (
-          <div className="mt-2 max-w-[85%] flex flex-wrap items-center gap-2">
+          <div className="mt-2 w-full max-w-full sm:max-w-[85%] flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={onConvertToDeep}
@@ -852,7 +852,7 @@ function MessageBubble({
           </div>
         )}
       {message.role === "assistant" && !hideContextUsed && ctx && ctxCount !== undefined && (
-          <div className="mt-2 max-w-[85%] flex flex-col items-start">
+          <div className="mt-2 w-full max-w-full sm:max-w-[85%] flex flex-col items-start">
             {ctxExpanded ? (
               <div
                 className="w-full rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-gradient-to-br from-neutral-50/95 to-neutral-100/80 dark:from-neutral-800 dark:to-neutral-900 shadow-sm overflow-visible text-foreground"
@@ -994,7 +994,7 @@ function MessageBubble({
           </div>
         )}
       {showOptions && (
-        <div className="mt-2 flex flex-col gap-2 max-w-[85%]">
+        <div className="mt-2 flex flex-col gap-2 w-full max-w-full sm:max-w-[85%]">
           {displayOptions.map((opt, j) => (
             <button
               key={j}
@@ -2392,19 +2392,6 @@ const LANDING_TAB_ACTIVITY_GROUP_ORDER: Record<LandingTab, LandingActivityGroupK
   deepThinking: ["session", "perspectiveCard"],
 };
 
-const DEFAULT_LANDING_ACTIVITY_COLLAPSED: Record<LandingActivityGroupKey, boolean> = {
-  journalRegular: true,
-  journalNutrition: true,
-  journalExercise: true,
-  session: true,
-  habit: true,
-  memory: true,
-  concept: true,
-  framework: true,
-  savedModel: true,
-  perspectiveCard: true,
-};
-
 function landingActivityGroupKey(item: LandingDayActivityItem): LandingActivityGroupKey {
   if (item.kind === "journal") {
     if (item.journalCategory === "nutrition") return "journalNutrition";
@@ -2477,9 +2464,10 @@ export default function ChatPage() {
   const [landingPlaceholderDeleting, setLandingPlaceholderDeleting] = useState(false);
   const [landingPlaceholderTransitioning, setLandingPlaceholderTransitioning] = useState(false);
   const [landingPlaceholderCursorOn, setLandingPlaceholderCursorOn] = useState(true);
-  const [landingActivityCollapsedByKind, setLandingActivityCollapsedByKind] = useState<Record<LandingActivityGroupKey, boolean>>(
-    () => ({ ...DEFAULT_LANDING_ACTIVITY_COLLAPSED })
-  );
+  const [landingActivityGroupModal, setLandingActivityGroupModal] = useState<{
+    title: string;
+    items: LandingDayActivityItem[];
+  } | null>(null);
   const [multiMentorMode, setMultiMentorMode] = useState(false);
   const [selectedMentorFigureIds, setSelectedMentorFigureIds] = useState<string[]>([]);
   /** Domain (category) for Ask mentors picker; null until user picks when multiple domains exist */
@@ -4180,10 +4168,6 @@ export default function ChatPage() {
       selectedLandingDayDate
     );
   }, [selectedLandingDayDate, selectedLandingDayKey]);
-  const selectedLandingDayMobileLabel = useMemo(
-    () => new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(selectedLandingDayDate),
-    [selectedLandingDayDate]
-  );
   const headerCalendarCells = useMemo(() => {
     const year = headerCalendarMonth.getFullYear();
     const month = headerCalendarMonth.getMonth();
@@ -6362,12 +6346,15 @@ export default function ChatPage() {
     savedTranscripts,
   ]);
 
-  const toggleLandingActivityGroup = useCallback((groupKey: LandingActivityGroupKey) => {
-    setLandingActivityCollapsedByKind((prev) => ({
-      ...prev,
-      [groupKey]: !prev[groupKey],
-    }));
-  }, []);
+  const openLandingActivityGroupModal = useCallback(
+    (group: { label: string; items: LandingDayActivityItem[] }) => {
+      setLandingActivityGroupModal({
+        title: group.label,
+        items: group.items,
+      });
+    },
+    []
+  );
 
   const resetWeeklySummaryModal = useCallback(() => {
     setWeeklySummaryModalOpen(false);
@@ -10199,7 +10186,7 @@ export default function ChatPage() {
                   ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-36 sm:pb-40 px-4 py-5"
                   : `flex-1 min-h-0 flex flex-col items-center justify-start ${
                       !incognitoMode && landingTab === "deepThinking" ? "pb-4 md:pb-6" : "pb-36 sm:pb-40 md:pb-8"
-                    } px-4 py-4 md:pt-8`
+                    } px-4 pt-1 md:pt-8`
                 : "px-3 py-4 sm:px-4 sm:py-5"
             }`}
           >
@@ -10246,8 +10233,8 @@ export default function ChatPage() {
                           className="order-2 w-full animate-fade-in-down"
                         >
                           {!isAnonymous && landingTab === "journaling" ? (
-                            <div className="w-full grid grid-cols-1 min-[420px]:grid-cols-2 gap-2">
-                          <div className="min-w-0 rounded-lg border border-orange-200 dark:border-orange-800/60 bg-background p-2 sm:p-1.5 text-left">
+                            <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-2">
+                          <div className="min-w-0 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background p-2 sm:p-1.5 text-left">
                             <div className="flex items-center gap-2">
                               <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-orange-100 dark:bg-orange-900/40">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
@@ -10302,7 +10289,7 @@ export default function ChatPage() {
                             </div>
                           </div>
 
-                          <div className="min-w-0 rounded-lg border border-orange-200 dark:border-orange-800/60 bg-background p-2 sm:p-1.5 text-left">
+                          <div className="min-w-0 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background p-2 sm:p-1.5 text-left">
                             <div className="flex items-center gap-2">
                               <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
@@ -10531,22 +10518,22 @@ export default function ChatPage() {
                       )}
 
                 {!incognitoMode && (
-                        <div className="order-1 w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background px-2.5 py-2">
+                        <div className="order-1 w-full rounded-2xl bg-background px-2.5 py-2">
                           <div className="mb-1.5 px-0.5">
-                            <div className="mb-2 grid grid-cols-2 gap-1">
+                            <div className="mb-2 grid grid-cols-2 gap-1 border-b border-neutral-200 dark:border-neutral-700">
                           <button
                             type="button"
                                 onClick={() => {
                                   if (!isAnonymous) setLandingTab("journaling");
                                 }}
                                 disabled={isAnonymous}
-                                className={`w-full rounded-full px-3 py-1 text-[11px] font-semibold border transition-colors ${
+                                className={`w-full rounded-t-xl px-3 py-1.5 text-xs sm:text-sm font-semibold border transition-colors ${
                                   isAnonymous
                                     ? "border-neutral-200 dark:border-neutral-700 bg-neutral-100/70 dark:bg-neutral-800/60 text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-80"
                                     :
                                   landingTab === "journaling"
-                                    ? "border-neutral-400 dark:border-neutral-500 bg-neutral-100 dark:bg-neutral-800 text-foreground ring-1 ring-neutral-300/70 dark:ring-neutral-500/70 shadow-sm"
-                                    : "border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                                    ? "border-neutral-300 dark:border-neutral-600 border-b-background dark:border-b-neutral-900 bg-background dark:bg-neutral-900 text-foreground -mb-px"
+                                    : "border-transparent text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/80"
                                 }`}
                                 aria-pressed={landingTab === "journaling"}
                               >
@@ -10555,30 +10542,19 @@ export default function ChatPage() {
                               <button
                                 type="button"
                                 onClick={() => setLandingTab("deepThinking")}
-                                className={`w-full rounded-full px-3 py-1 text-[11px] font-semibold border transition-colors ${
+                                className={`w-full rounded-t-xl px-3 py-1.5 text-xs sm:text-sm font-semibold border transition-colors ${
                                   landingTab === "deepThinking"
-                                    ? "border-neutral-400 dark:border-neutral-500 bg-neutral-100 dark:bg-neutral-800 text-foreground ring-1 ring-neutral-300/70 dark:ring-neutral-500/70 shadow-sm"
-                                    : "border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                                    ? "border-neutral-300 dark:border-neutral-600 border-b-background dark:border-b-neutral-900 bg-background dark:bg-neutral-900 text-foreground -mb-px"
+                                    : "border-transparent text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/80"
                                 }`}
                                 aria-pressed={landingTab === "deepThinking"}
                               >
                                 {getLandingTranslations(language).deepThinkingTabLabel}
                           </button>
                         </div>
-                            <div className="flex sm:hidden items-center justify-between gap-2">
-                              <p className="text-xs whitespace-nowrap font-semibold text-foreground">
-                                {getLandingTranslations(language).landingSelectedDateLabel}: {selectedLandingDayMobileLabel}
-                              </p>
-                              <p className="text-xs whitespace-nowrap text-neutral-500 dark:text-neutral-400">
-                                {selectedLandingDayActivityItems.length} item{selectedLandingDayActivityItems.length === 1 ? "" : "s"}
-                              </p>
-                      </div>
-                            <div className="hidden sm:flex items-center justify-between gap-2">
-                              <p className="text-xs whitespace-nowrap font-semibold text-foreground">
+                            <div className="hidden sm:flex items-center gap-2">
+                              <p className="text-xs sm:text-sm whitespace-nowrap font-semibold text-foreground">
                                 Last 7 days
-                              </p>
-                              <p className="text-xs whitespace-nowrap text-neutral-500 dark:text-neutral-400">
-                                {selectedLandingDayActivityItems.length} item{selectedLandingDayActivityItems.length === 1 ? "" : "s"}
                               </p>
                             </div>
                             {!isAnonymous && landingTab === "journaling" && (
@@ -10586,21 +10562,21 @@ export default function ChatPage() {
                         <button
                           type="button"
                                   onClick={openGoalsModal}
-                                  className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-[11px] whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 transition-colors"
+                                  className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs lg:text-sm whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 transition-colors"
                                 >
                                   {getLandingTranslations(language).nutritionGoalsButtonLabel}
                                 </button>
                                 <button
                                   type="button"
                                   onClick={openNutritionReportModal}
-                                  className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-[11px] whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 transition-colors"
+                                  className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs lg:text-sm whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 transition-colors"
                                 >
                                   {getLandingTranslations(language).nutritionAnalysisButtonLabel}
                                 </button>
                                 <button
                                   type="button"
                                   onClick={openWeeklySummaryModal}
-                                  className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-[11px] whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 transition-colors"
+                                  className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs lg:text-sm whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 transition-colors"
                                 >
                                   {getLandingTranslations(language).weeklySummaryButtonLabel}
                         </button>
@@ -10624,10 +10600,10 @@ export default function ChatPage() {
                                     }`}
                                     aria-pressed={selected}
                                   >
-                                    <span className="text-[9px] sm:text-[10px] text-neutral-500 dark:text-neutral-400">
+                                    <span className="text-[9px] sm:text-xs text-neutral-500 dark:text-neutral-400">
                                       {new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(date)}
                                     </span>
-                                    <span className="text-base sm:text-sm font-semibold text-foreground leading-none mt-0.5">{date.getDate()}</span>
+                                    <span className="text-base sm:text-base lg:text-lg font-semibold text-foreground leading-none mt-0.5">{date.getDate()}</span>
                                     {hasActivity && (
                                       <span className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
                                     )}
@@ -10636,69 +10612,42 @@ export default function ChatPage() {
                               })}
                         </div>
                       </div>
-                        </div>
-                      )}
-
-                      {!incognitoMode && (
-                        <div className="order-3 w-full text-left">
-                          {selectedLandingDayActivityItems.length === 0 ? (
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">
-                              No activity yet for this day.
-                            </p>
-                          ) : (
-                            <div className="space-y-3">
-                              {selectedLandingDayActivityGroups.map((group) => (
-                                <div key={group.groupKey} className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-2">
-                                  <div className="mb-1.5 flex items-center justify-between">
-                                    <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-600 dark:text-neutral-300">
-                                      {group.label}
-                                    </p>
-                                    <div className="flex items-center gap-2">
-                                      <p className="text-[10px] text-neutral-500 dark:text-neutral-400">
-                                        {group.items.length}
+                          {!incognitoMode && (
+                            <div className="mt-2 space-y-2">
+                              {selectedLandingDayActivityItems.length === 0 ? (
+                                <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center py-2">
+                                  No activity yet for this day.
+                                </p>
+                              ) : (
+                                selectedLandingDayActivityGroups.map((group) => (
+                                  <div
+                                    key={`summary-${group.groupKey}`}
+                                    className="rounded-lg border border-neutral-200 dark:border-neutral-700 px-2.5 py-2"
+                                  >
+                                    <div className="flex items-center justify-between gap-2">
+                                      <p className="text-[11px] sm:text-xs lg:text-sm font-semibold uppercase tracking-wide text-neutral-600 dark:text-neutral-300">
+                                        {group.label}
                                       </p>
-                                      <button
-                                        type="button"
-                                        onClick={() => toggleLandingActivityGroup(group.groupKey)}
-                                        className="inline-flex items-center justify-center rounded-md border border-neutral-200 dark:border-neutral-700 px-1.5 py-0.5 text-[10px] text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                                        aria-expanded={!landingActivityCollapsedByKind[group.groupKey]}
-                                        aria-label={`${landingActivityCollapsedByKind[group.groupKey] ? "Expand" : "Collapse"} ${group.label}`}
-                                      >
-                                        {landingActivityCollapsedByKind[group.groupKey] ? "Expand" : "Collapse"}
-                                      </button>
+                                      <div className="flex items-center gap-2">
+                                        <p className="text-[10px] sm:text-xs lg:text-sm text-neutral-500 dark:text-neutral-400">
+                                          {group.items.length} item{group.items.length === 1 ? "" : "s"}
+                                        </p>
+                                        <button
+                                          type="button"
+                                          onClick={() => openLandingActivityGroupModal(group)}
+                                          className="inline-flex items-center justify-center rounded-md border border-neutral-200 dark:border-neutral-700 px-2 py-0.5 text-[10px] sm:text-xs lg:text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                          aria-label={`View ${group.label}`}
+                                        >
+                                          View
+                                        </button>
+                                      </div>
                                     </div>
                                   </div>
-                                  {!landingActivityCollapsedByKind[group.groupKey] && (
-                                    <div className="space-y-1.5">
-                                      {group.items.map((item) => (
-                                        <button
-                                          key={item.id}
-                                          type="button"
-                                          onClick={() => handleLandingActivityClick(item)}
-                                          className="w-full rounded-lg border border-neutral-200 dark:border-neutral-700 px-2.5 py-1.5 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
-                                        >
-                                          <p className="text-[13px] font-medium text-foreground truncate">{item.title}</p>
-                                          <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
-                                            {item.kind === "journal"
-                                              ? item.sublabel
-                                                ? `Journal entry · ${item.sublabel}`
-                                                : "Journal entry"
-                                              : LANDING_ACTIVITY_GROUP_LABEL[landingActivityGroupKey(item)].replace(/s$/, "")}
-                                            {" · "}
-                                            {new Date(item.timestamp).toLocaleTimeString(undefined, {
-                                              hour: "numeric",
-                                              minute: "2-digit",
-                                            })}
-                                          </p>
-                                        </button>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-                              ))}
-                      </div>
+                                ))
+                              )}
+                            </div>
                           )}
-                    </div>
+                        </div>
                       )}
                     {journalEntryJustSaved && (
                         <p className="text-sm text-emerald-600 dark:text-emerald-400" role="status">
@@ -14184,6 +14133,63 @@ export default function ChatPage() {
                   </div>
                 </>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {landingActivityGroupModal && (
+        <div
+          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => setLandingActivityGroupModal(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={landingActivityGroupModal.title}
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <h2 className="text-lg font-semibold text-foreground pr-2">{landingActivityGroupModal.title}</h2>
+              <button
+                type="button"
+                onClick={() => setLandingActivityGroupModal(null)}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 space-y-2 overflow-y-auto">
+              {landingActivityGroupModal.items.map((item) => (
+                <button
+                  key={`modal-${item.id}`}
+                  type="button"
+                  onClick={() => {
+                    setLandingActivityGroupModal(null);
+                    handleLandingActivityClick(item);
+                  }}
+                  className="w-full rounded-lg border border-neutral-200 dark:border-neutral-700 px-2.5 py-2 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                >
+                  <p className="text-[13px] font-medium text-foreground truncate">{item.title}</p>
+                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                    {item.kind === "journal"
+                      ? item.sublabel
+                        ? `Journal entry · ${item.sublabel}`
+                        : "Journal entry"
+                      : LANDING_ACTIVITY_GROUP_LABEL[landingActivityGroupKey(item)].replace(/s$/, "")}
+                    {" · "}
+                    {new Date(item.timestamp).toLocaleTimeString(undefined, {
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                </button>
+              ))}
             </div>
           </div>
         </div>

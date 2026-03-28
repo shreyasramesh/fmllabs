@@ -520,7 +520,7 @@ export function VoiceInputButton({
           type="button"
           onClick={() => void finishAndPaste()}
           aria-label="Stop voice input"
-          className={`relative flex items-center justify-center min-w-[52px] min-h-[52px] rounded-2xl border border-red-500/80 text-white bg-red-500 hover:bg-red-600 transition-all duration-200 shrink-0 ${className}`}
+          className={`relative flex items-center justify-center min-w-[52px] min-h-[52px] rounded-2xl border !border-red-500/80 !text-white !bg-red-500 hover:!bg-red-600 transition-all duration-200 shrink-0 ${className}`}
         >
           {starting ? (
             <span className="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden />
