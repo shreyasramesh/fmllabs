@@ -9188,7 +9188,7 @@ export default function ChatPage() {
                     {getLandingTranslations(language).productTagline}. Ideas and contexts you define. Use when you want the agent to reference your own concepts, goals, or frameworks.
                   </p>
                   {customConcepts.length > 0 ? (
-                    <div className="space-y-3">
+                    <div className="space-y-4 sm:space-y-3">
                       <div className="flex items-center gap-2">
                         <input type="search" placeholder="Search concepts..." value={ccSearchQuery} onChange={(e) => setCcSearchQuery(e.target.value)} className="h-11 flex-1 min-w-0 px-3 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground" aria-label="Search concepts" />
                         <button type="button" onClick={() => { setCcCreateInput(""); setCcCreateStep("input"); setCcCreateDraft(null); setCcCreateModal(true); }} className="h-11 shrink-0 px-4 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Add Concept</button>
