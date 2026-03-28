@@ -3387,6 +3387,14 @@ export default function ChatPage() {
   const [landingJournalImageError, setLandingJournalImageError] = useState<string | null>(null);
   const [landingJournalSaving, setLandingJournalSaving] = useState(false);
   const [landingJournalSaveError, setLandingJournalSaveError] = useState<string | null>(null);
+  const [landingSaveQuestionsModalOpen, setLandingSaveQuestionsModalOpen] = useState(false);
+  const [landingSaveQuestionsLoading, setLandingSaveQuestionsLoading] = useState(false);
+  const [landingSaveQuestionsError, setLandingSaveQuestionsError] = useState<string | null>(null);
+  const [landingSaveQuestions, setLandingSaveQuestions] = useState<string[]>([]);
+  const [landingSaveAnswers, setLandingSaveAnswers] = useState<string[]>([]);
+  const [landingSavePendingType, setLandingSavePendingType] = useState<"regular" | "calorie">("regular");
+  const [landingSavePendingText, setLandingSavePendingText] = useState("");
+  const [landingSavePendingDayKey, setLandingSavePendingDayKey] = useState("");
   const [journalEntryModalOpen, setJournalEntryModalOpen] = useState(false);
   const [journalEntryDate, setJournalEntryDate] = useState(() => getTodayDateInputValue());
   const [journalEntryText, setJournalEntryText] = useState("");
@@ -3718,8 +3726,19 @@ export default function ChatPage() {
     }
   }, []);
 
-  const createLandingJournalEntry = useCallback(async () => {
-    const bodyText = input.trim();
+  const resetLandingSaveQuestionsModal = useCallback(() => {
+    setLandingSaveQuestionsModalOpen(false);
+    setLandingSaveQuestionsLoading(false);
+    setLandingSaveQuestionsError(null);
+    setLandingSaveQuestions([]);
+    setLandingSaveAnswers([]);
+    setLandingSavePendingText("");
+    setLandingSavePendingDayKey("");
+    setLandingSavePendingType("regular");
+  }, []);
+
+  const finalizeLandingJournalEntry = useCallback(async (answers: string[]) => {
+    const bodyText = landingSavePendingText.trim();
     if (!bodyText) return;
     if (isAnonymous || incognitoMode) {
       router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
@@ -3729,13 +3748,23 @@ export default function ChatPage() {
     setLandingJournalSaveError(null);
     const deviceNow = new Date();
     try {
-      const entryDate = selectedLandingDayKey;
-      if (landingJournalEntryType === "regular") {
+      const entryDate = landingSavePendingDayKey || selectedLandingDayKey;
+      if (landingSavePendingType === "regular") {
+        const clarifiedAnswers = answers
+          .map((a) => a.trim())
+          .filter(Boolean)
+          .slice(0, 2);
+        const textToSave =
+          clarifiedAnswers.length > 0
+            ? `${bodyText}\n\nClarifications:\n${clarifiedAnswers
+                .map((a, i) => `${i + 1}. ${a}`)
+                .join("\n")}`
+            : bodyText;
         const res = await fetch("/api/me/journal", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            text: bodyText,
+            text: textToSave,
             entryDate,
             journalEntryTime: {
               hour: deviceNow.getHours(),
@@ -3754,7 +3783,10 @@ export default function ChatPage() {
           body: JSON.stringify({
             action: "finalize",
             text: bodyText,
-            answers: [],
+            answers: answers
+              .map((a) => a.trim())
+              .filter(Boolean)
+              .slice(0, 2),
             entryDate,
             journalEntryTime: {
               hour: deviceNow.getHours(),
@@ -3770,6 +3802,7 @@ export default function ChatPage() {
       setInput("");
       setLandingJournalImagePreview(null);
       setLandingJournalImageError(null);
+      resetLandingSaveQuestionsModal();
       refetchTranscripts();
       setJournalEntryJustSaved(true);
       if (typeof window !== "undefined") {
@@ -3784,10 +3817,77 @@ export default function ChatPage() {
     }
   }, [
     incognitoMode,
+    isAnonymous,
+    landingSavePendingDayKey,
+    landingSavePendingText,
+    landingSavePendingType,
+    refetchTranscripts,
+    resetLandingSaveQuestionsModal,
+    router,
+    selectedLandingDayKey,
+  ]);
+
+  const createLandingJournalEntry = useCallback(async () => {
+    const bodyText = input.trim();
+    if (!bodyText) return;
+    if (isAnonymous || incognitoMode) {
+      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
+      return;
+    }
+    setLandingJournalSaveError(null);
+    setLandingSaveQuestionsError(null);
+    setLandingSavePendingText(bodyText);
+    setLandingSavePendingDayKey(selectedLandingDayKey);
+    setLandingSavePendingType(landingJournalEntryType);
+
+    if (landingJournalEntryType === "calorie") {
+      setLandingSaveQuestionsLoading(true);
+      try {
+        const res = await fetch("/api/me/journal/calorie", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "analyze", text: bodyText }),
+        });
+        const data = (await res.json().catch(() => ({}))) as {
+          error?: string;
+          questions?: string[];
+        };
+        if (!res.ok) throw new Error(data.error || "Could not analyze this entry.");
+        const questions = Array.isArray(data.questions)
+          ? data.questions
+              .map((q) => (typeof q === "string" ? q.trim() : ""))
+              .filter(Boolean)
+              .slice(0, 2)
+          : [];
+        const safeQuestions =
+          questions.length > 0
+            ? questions
+            : ["Any portion sizes, ingredients, or exercise details to clarify before saving?"];
+        setLandingSaveQuestions(safeQuestions);
+        setLandingSaveAnswers(Array(safeQuestions.length).fill(""));
+        setLandingSaveQuestionsModalOpen(true);
+      } catch (err) {
+        setLandingJournalSaveError(
+          err instanceof Error ? err.message : "Could not analyze this entry right now."
+        );
+      } finally {
+        setLandingSaveQuestionsLoading(false);
+      }
+      return;
+    }
+
+    const regularQuestions = [
+      "What feeling best describes this entry?",
+      "What is one next step you want to take?",
+    ];
+    setLandingSaveQuestions(regularQuestions);
+    setLandingSaveAnswers(Array(regularQuestions.length).fill(""));
+    setLandingSaveQuestionsModalOpen(true);
+  }, [
+    incognitoMode,
     input,
     isAnonymous,
     landingJournalEntryType,
-    refetchTranscripts,
     router,
     selectedLandingDayKey,
   ]);
@@ -11012,7 +11112,7 @@ export default function ChatPage() {
                     sessionLoading ||
                     !!currentSession?.isCollapsed ||
                     (messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
-                      ? landingJournalSaving || landingJournalImageProcessing
+                      ? landingJournalSaving || landingJournalImageProcessing || landingSaveQuestionsLoading
                       : isLoading)
                   }
                   placeholderCentered={!(messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling")}
@@ -11057,7 +11157,7 @@ export default function ChatPage() {
                   <button
                     type="button"
                     onClick={() => landingJournalCameraInputRef.current?.click()}
-                    disabled={landingJournalSaving || landingJournalImageProcessing}
+                    disabled={landingJournalSaving || landingJournalImageProcessing || landingSaveQuestionsLoading}
                     className="inline-flex items-center justify-center min-h-[52px] min-w-[52px] rounded-2xl border border-neutral-200/70 dark:border-neutral-700/80 bg-neutral-50/70 dark:bg-neutral-900/40 text-neutral-700 dark:text-neutral-200 hover:border-orange-300/80 dark:hover:border-orange-700/60 hover:bg-orange-50/60 dark:hover:bg-orange-900/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0"
                     aria-label="Take picture"
                     title="Take picture"
@@ -11080,7 +11180,7 @@ export default function ChatPage() {
                   sessionLoading ||
                   !!currentSession?.isCollapsed ||
                   (messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
-                    ? landingJournalSaving || landingJournalImageProcessing
+                    ? landingJournalSaving || landingJournalImageProcessing || landingSaveQuestionsLoading
                     : isLoading)
                 }
                 ariaLabel="Voice input"
@@ -11133,7 +11233,7 @@ export default function ChatPage() {
                     <button
                       type="button"
                       onClick={retryLandingJournalImageAnalysis}
-                      disabled={landingJournalImageProcessing || landingJournalSaving}
+                      disabled={landingJournalImageProcessing || landingJournalSaving || landingSaveQuestionsLoading}
                       className="shrink-0 rounded-md border border-neutral-200 dark:border-neutral-700 px-2 py-1 text-[10px] sm:text-[11px] font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Retry photo
@@ -14084,6 +14184,85 @@ export default function ChatPage() {
                   </div>
                 </>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {landingSaveQuestionsModalOpen && (
+        <div
+          className="fixed inset-0 z-[53] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => {
+            if (!landingJournalSaving) resetLandingSaveQuestionsModal();
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Before saving"
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <h2 className="text-lg font-semibold text-foreground pr-2">
+                Before saving
+              </h2>
+              <button
+                type="button"
+                onClick={resetLandingSaveQuestionsModal}
+                disabled={landingJournalSaving}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 space-y-3 overflow-y-auto">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                Answer these quick questions before saving your entry.
+              </p>
+              {landingSaveQuestionsError && (
+                <p className="text-sm text-red-600 dark:text-red-400">{landingSaveQuestionsError}</p>
+              )}
+              <div className="space-y-2">
+                {landingSaveQuestions.map((q, idx) => (
+                  <div key={`landing-save-q-${idx}`} className="space-y-1">
+                    <p className="text-sm font-medium text-foreground">{q}</p>
+                    <input
+                      type="text"
+                      value={landingSaveAnswers[idx] ?? ""}
+                      onChange={(e) =>
+                        setLandingSaveAnswers((prev) =>
+                          prev.map((v, i) => (i === idx ? e.target.value : v))
+                        )
+                      }
+                      disabled={landingJournalSaving}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="flex gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={resetLandingSaveQuestionsModal}
+                  disabled={landingJournalSaving}
+                  className="flex-1 px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
+                >
+                  {getUiTranslations(language).cancel}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void finalizeLandingJournalEntry(landingSaveAnswers)}
+                  disabled={landingJournalSaving}
+                  className="flex-1 px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
+                >
+                  {landingJournalSaving ? "Saving..." : "Save entry"}
+                </button>
+              </div>
             </div>
           </div>
         </div>
