@@ -7075,7 +7075,7 @@ export default function ChatPage() {
                     </button>
 
                     {headerCalendarOpen && (
-                      <div className="absolute left-0 top-full mt-2 z-[60] w-[min(90vw,320px)] rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-xl p-3">
+                      <div className="absolute right-0 sm:right-auto sm:left-0 top-full mt-2 z-[60] w-[min(90vw,320px)] rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-xl p-3">
                         <div className="mb-2 flex items-center justify-between">
                           <button
                             type="button"
