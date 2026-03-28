@@ -250,6 +250,7 @@ export async function POST(request: Request) {
       });
       const assumptions = estimate.assumptions.slice(0, 8);
       const batchId = `calorie_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const entryNow = new Date();
       const savedRows: Array<{ id: string; category: "nutrition" | "exercise"; title: string }> = [];
       let nutritionFocusedEntryForAssumptions = "";
       let exerciseFocusedEntryForAssumptions = "";
@@ -288,7 +289,11 @@ export async function POST(request: Request) {
           nutritionText,
           nutritionTitle,
           entryDate,
-          { journalCategory: "nutrition", journalBatchId: batchId }
+          {
+            journalCategory: "nutrition",
+            journalBatchId: batchId,
+            journalEntryTime: { hour: entryNow.getHours(), minute: entryNow.getMinutes() },
+          }
         );
         savedRows.push({
           id: saved._id,
@@ -356,7 +361,11 @@ export async function POST(request: Request) {
           exerciseText,
           exerciseTitle,
           entryDate,
-          { journalCategory: "exercise", journalBatchId: batchId }
+          {
+            journalCategory: "exercise",
+            journalBatchId: batchId,
+            journalEntryTime: { hour: entryNow.getHours(), minute: entryNow.getMinutes() },
+          }
         );
         savedRows.push({
           id: saved._id,

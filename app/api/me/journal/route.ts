@@ -58,7 +58,10 @@ export async function POST(request: Request) {
       title = "Journal entry";
     }
 
-    const saved = await saveJournalTranscript(userId, text, title, entryDate);
+    const now = new Date();
+    const saved = await saveJournalTranscript(userId, text, title, entryDate, {
+      journalEntryTime: { hour: now.getHours(), minute: now.getMinutes() },
+    });
     const transcriptId = saved._id;
     void updateJournalMentorReflections(transcriptId, userId, { status: "pending" }).then((ok) => {
       if (ok) {

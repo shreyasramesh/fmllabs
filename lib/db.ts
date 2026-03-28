@@ -210,6 +210,9 @@ export interface SavedTranscript {
   journalEntryDay?: number;
   journalEntryMonth?: number;
   journalEntryYear?: number;
+  /** Optional local entry time assigned to journal entries for same-day ordering. */
+  journalEntryHour?: number;
+  journalEntryMinute?: number;
   transcriptText: string;
   extractedConcepts?: ExtractedConceptGroup[];
   /** AI mentor reflections for journal entries only */
@@ -1591,11 +1594,14 @@ export async function saveJournalTranscript(
   options?: {
     journalCategory?: "nutrition" | "exercise";
     journalBatchId?: string;
+    journalEntryTime?: { hour: number; minute: number };
   }
 ): Promise<SavedTranscript & { _id: string }> {
   const database = await getDb();
   const now = new Date();
   const videoId = `journal_${new ObjectId().toHexString()}`;
+  const entryHour = options?.journalEntryTime?.hour ?? now.getHours();
+  const entryMinute = options?.journalEntryTime?.minute ?? now.getMinutes();
   const doc = encryptTranscriptFields({
     userId,
     videoId,
@@ -1609,6 +1615,8 @@ export async function saveJournalTranscript(
       journalEntryMonth: journalEntryDate.month,
       journalEntryYear: journalEntryDate.year,
     }),
+    journalEntryHour: Math.max(0, Math.min(23, Math.floor(entryHour))),
+    journalEntryMinute: Math.max(0, Math.min(59, Math.floor(entryMinute))),
     createdAt: now,
     updatedAt: now,
   }) as Omit<SavedTranscript, "_id">;

@@ -46,6 +46,8 @@ function toJournalItem(row: {
   journalEntryDay?: number;
   journalEntryMonth?: number;
   journalEntryYear?: number;
+  journalEntryHour?: number;
+  journalEntryMinute?: number;
   videoTitle?: string;
   transcriptText?: string;
   createdAt?: string;
@@ -57,7 +59,9 @@ function toJournalItem(row: {
     typeof row.journalEntryMonth === "number" &&
     typeof row.journalEntryDay === "number"
   ) {
-    date = new Date(row.journalEntryYear, row.journalEntryMonth - 1, row.journalEntryDay);
+    const hour = typeof row.journalEntryHour === "number" ? row.journalEntryHour : 0;
+    const minute = typeof row.journalEntryMinute === "number" ? row.journalEntryMinute : 0;
+    date = new Date(row.journalEntryYear, row.journalEntryMonth - 1, row.journalEntryDay, hour, minute, 0, 0);
   } else if (row.createdAt) {
     date = new Date(row.createdAt);
   }
@@ -71,7 +75,10 @@ function toJournalItem(row: {
     title,
     preview,
     typeLabel: getJournalTypeLabel(row.journalCategory),
-    dateText: date.toLocaleDateString(undefined, { dateStyle: "medium" }),
+    dateText: `${date.toLocaleDateString(undefined, { dateStyle: "medium" })} · ${date.toLocaleTimeString(undefined, {
+      hour: "numeric",
+      minute: "2-digit",
+    })}`,
   };
 }
 
@@ -135,6 +142,8 @@ export default function JournalNewPage() {
               journalEntryDay?: number;
               journalEntryMonth?: number;
               journalEntryYear?: number;
+              journalEntryHour?: number;
+              journalEntryMinute?: number;
               videoTitle?: string;
               transcriptText?: string;
               createdAt?: string;

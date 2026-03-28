@@ -1743,6 +1743,8 @@ type JournalEntryDateFields = {
   journalEntryDay?: number;
   journalEntryMonth?: number;
   journalEntryYear?: number;
+  journalEntryHour?: number;
+  journalEntryMinute?: number;
   createdAt?: string;
 };
 
@@ -1752,12 +1754,24 @@ function formatJournalEntryListDate(t: JournalEntryDateFields): string {
     typeof t.journalEntryMonth === "number" &&
     typeof t.journalEntryDay === "number"
   ) {
-    const d = new Date(t.journalEntryYear, t.journalEntryMonth - 1, t.journalEntryDay);
-    return Number.isNaN(d.getTime()) ? "—" : d.toLocaleDateString(undefined, { dateStyle: "medium" });
+    const hour = typeof t.journalEntryHour === "number" ? t.journalEntryHour : 0;
+    const minute = typeof t.journalEntryMinute === "number" ? t.journalEntryMinute : 0;
+    const d = new Date(t.journalEntryYear, t.journalEntryMonth - 1, t.journalEntryDay, hour, minute, 0, 0);
+    return Number.isNaN(d.getTime())
+      ? "—"
+      : `${d.toLocaleDateString(undefined, { dateStyle: "medium" })} · ${d.toLocaleTimeString(undefined, {
+          hour: "numeric",
+          minute: "2-digit",
+        })}`;
   }
   if (t.createdAt) {
     const d = new Date(t.createdAt);
-    return Number.isNaN(d.getTime()) ? "—" : d.toLocaleDateString(undefined, { dateStyle: "medium" });
+    return Number.isNaN(d.getTime())
+      ? "—"
+      : `${d.toLocaleDateString(undefined, { dateStyle: "medium" })} · ${d.toLocaleTimeString(undefined, {
+          hour: "numeric",
+          minute: "2-digit",
+        })}`;
   }
   return "—";
 }
@@ -1796,6 +1810,24 @@ function journalEntryDayKey(t: {
     if (!Number.isNaN(d.getTime())) return toDayKey(d);
   }
   return null;
+}
+
+function journalEntryTimestamp(t: JournalEntryDateFields): number {
+  if (
+    typeof t.journalEntryYear === "number" &&
+    typeof t.journalEntryMonth === "number" &&
+    typeof t.journalEntryDay === "number"
+  ) {
+    const hour = typeof t.journalEntryHour === "number" ? t.journalEntryHour : 0;
+    const minute = typeof t.journalEntryMinute === "number" ? t.journalEntryMinute : 0;
+    const d = new Date(t.journalEntryYear, t.journalEntryMonth - 1, t.journalEntryDay, hour, minute, 0, 0);
+    if (!Number.isNaN(d.getTime())) return d.getTime();
+  }
+  if (t.createdAt) {
+    const d = new Date(t.createdAt);
+    if (!Number.isNaN(d.getTime())) return d.getTime();
+  }
+  return 0;
 }
 
 const JOURNAL_LIST_PREVIEW_MAX = 160;
@@ -2203,10 +2235,71 @@ type LandingDayActivityItem = {
   kind: LandingActivityKind;
   dayKey: string;
   title: string;
+  journalCategory?: "nutrition" | "exercise";
   sublabel?: string;
   timestamp: number;
   entityId: string;
 };
+
+type LandingActivityGroupKey =
+  | "journalRegular"
+  | "journalNutrition"
+  | "journalExercise"
+  | "session"
+  | "memory"
+  | "habit"
+  | "concept"
+  | "framework"
+  | "savedModel"
+  | "perspectiveCard";
+
+const LANDING_ACTIVITY_GROUP_LABEL: Record<LandingActivityGroupKey, string> = {
+  journalRegular: "Journal Entries",
+  journalNutrition: "Nutrition Entries",
+  journalExercise: "Exercise Entries",
+  session: "Conversations",
+  memory: "Memory",
+  habit: "Habits",
+  concept: "Concepts",
+  framework: "Frameworks",
+  savedModel: "Saved models",
+  perspectiveCard: "Perspective cards",
+};
+
+const LANDING_ACTIVITY_GROUP_ORDER: LandingActivityGroupKey[] = [
+  "journalRegular",
+  "journalNutrition",
+  "journalExercise",
+  "session",
+  "habit",
+  "memory",
+  "concept",
+  "framework",
+  "savedModel",
+  "perspectiveCard",
+];
+
+const DEFAULT_LANDING_ACTIVITY_COLLAPSED: Record<LandingActivityGroupKey, boolean> = {
+  journalRegular: true,
+  journalNutrition: true,
+  journalExercise: true,
+  session: true,
+  habit: true,
+  memory: true,
+  concept: true,
+  framework: true,
+  savedModel: true,
+  perspectiveCard: true,
+};
+
+function landingActivityGroupKey(item: LandingDayActivityItem): LandingActivityGroupKey {
+  if (item.kind === "journal") {
+    if (item.journalCategory === "nutrition") return "journalNutrition";
+    if (item.journalCategory === "exercise") return "journalExercise";
+    return "journalRegular";
+  }
+  return item.kind;
+}
 
 export default function ChatPage() {
   const params = useParams();
@@ -2244,6 +2337,9 @@ export default function ChatPage() {
   const [landingPlaceholderDeleting, setLandingPlaceholderDeleting] = useState(false);
   const [landingPlaceholderTransitioning, setLandingPlaceholderTransitioning] = useState(false);
   const [landingPlaceholderCursorOn, setLandingPlaceholderCursorOn] = useState(true);
+  const [landingActivityCollapsedByKind, setLandingActivityCollapsedByKind] = useState<Record<LandingActivityGroupKey, boolean>>(
+    () => ({ ...DEFAULT_LANDING_ACTIVITY_COLLAPSED })
+  );
   const [multiMentorMode, setMultiMentorMode] = useState(false);
   const [selectedMentorFigureIds, setSelectedMentorFigureIds] = useState<string[]>([]);
   /** Domain (category) for Ask mentors picker; null until user picks when multiple domains exist */
@@ -2391,6 +2487,8 @@ export default function ChatPage() {
     journalEntryDay?: number;
     journalEntryMonth?: number;
     journalEntryYear?: number;
+    journalEntryHour?: number;
+    journalEntryMinute?: number;
     transcriptText?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -2424,6 +2522,8 @@ export default function ChatPage() {
     journalEntryDay?: number;
     journalEntryMonth?: number;
     journalEntryYear?: number;
+    journalEntryHour?: number;
+    journalEntryMinute?: number;
     transcriptText: string;
     createdAt?: string;
     extractedConcepts?: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
@@ -2983,16 +3083,7 @@ export default function ChatPage() {
   const [journalEntryJustSaved, setJournalEntryJustSaved] = useState(false);
 
   const journalEntriesSorted = useMemo(() => {
-    const sortKey = (t: (typeof savedTranscripts)[number]) => {
-      if (
-        typeof t.journalEntryYear === "number" &&
-        typeof t.journalEntryMonth === "number" &&
-        typeof t.journalEntryDay === "number"
-      ) {
-        return new Date(t.journalEntryYear, t.journalEntryMonth - 1, t.journalEntryDay).getTime();
-      }
-      return t.createdAt ? new Date(t.createdAt).getTime() : 0;
-    };
+    const sortKey = (t: (typeof savedTranscripts)[number]) => journalEntryTimestamp(t);
     return savedTranscripts
       .filter((t) => t.sourceType === "journal")
       .slice()
@@ -3077,29 +3168,7 @@ export default function ChatPage() {
       journalEntriesSorted
         .filter((t) => journalEntryDayKey(t) === journalPanelSelectedDayKey)
         .slice()
-        .sort((a, b) => {
-          const ta = (() => {
-            if (
-              typeof a.journalEntryYear === "number" &&
-              typeof a.journalEntryMonth === "number" &&
-              typeof a.journalEntryDay === "number"
-            ) {
-              return new Date(a.journalEntryYear, a.journalEntryMonth - 1, a.journalEntryDay).getTime();
-            }
-            return a.createdAt ? new Date(a.createdAt).getTime() : 0;
-          })();
-          const tb = (() => {
-            if (
-              typeof b.journalEntryYear === "number" &&
-              typeof b.journalEntryMonth === "number" &&
-              typeof b.journalEntryDay === "number"
-            ) {
-              return new Date(b.journalEntryYear, b.journalEntryMonth - 1, b.journalEntryDay).getTime();
-            }
-            return b.createdAt ? new Date(b.createdAt).getTime() : 0;
-          })();
-          return tb - ta;
-        }),
+        .sort((a, b) => journalEntryTimestamp(b) - journalEntryTimestamp(a)),
     [journalEntriesSorted, journalPanelSelectedDayKey]
   );
 
@@ -3138,7 +3207,7 @@ export default function ChatPage() {
   const [journalEntrySaveError, setJournalEntrySaveError] = useState<string | null>(null);
   const [journalTypeChooserOpen, setJournalTypeChooserOpen] = useState(false);
   const [nutritionReportModalOpen, setNutritionReportModalOpen] = useState(false);
-  const [nutritionReportDayScope, setNutritionReportDayScope] = useState<"today" | "selected_day">("today");
+  const [nutritionReportDayKey, setNutritionReportDayKey] = useState(() => toDayKey(new Date()));
   const [nutritionReportFocusPrompt, setNutritionReportFocusPrompt] = useState("");
   const [nutritionReportLoading, setNutritionReportLoading] = useState(false);
   const [nutritionReportError, setNutritionReportError] = useState<string | null>(null);
@@ -3411,8 +3480,9 @@ export default function ChatPage() {
           kind: "journal" as const,
           dayKey: toDayKey(date),
           title: truncateJournalListPreview(t.videoTitle || t.transcriptText, 72) || "Journal entry",
+          journalCategory: t.journalCategory,
           sublabel: getJournalCategoryLabel(t.journalCategory) ?? undefined,
-          timestamp: date.getTime(),
+          timestamp: journalEntryTimestamp(t),
           entityId: t._id,
         };
       })
@@ -3570,6 +3640,22 @@ export default function ChatPage() {
     () => landingDayActivityItems.filter((item) => item.dayKey === selectedLandingDayKey),
     [landingDayActivityItems, selectedLandingDayKey]
   );
+  const selectedLandingDayActivityGroups = useMemo(() => {
+    const grouped = new Map<LandingActivityGroupKey, LandingDayActivityItem[]>();
+    for (const item of selectedLandingDayActivityItems) {
+      const groupKey = landingActivityGroupKey(item);
+      const existing = grouped.get(groupKey);
+      if (existing) existing.push(item);
+      else grouped.set(groupKey, [item]);
+    }
+    return LANDING_ACTIVITY_GROUP_ORDER
+      .map((groupKey) => ({
+        groupKey,
+        label: LANDING_ACTIVITY_GROUP_LABEL[groupKey],
+        items: grouped.get(groupKey) ?? [],
+      }))
+      .filter((group) => group.items.length > 0);
+  }, [selectedLandingDayActivityItems]);
   const shouldAnimateLandingPlaceholder =
     messages.length === 0 &&
     !incognitoMode &&
@@ -3594,6 +3680,10 @@ export default function ChatPage() {
   const selectedLandingDayDate = useMemo(
     () => dateFromDayKey(selectedLandingDayKey) ?? new Date(),
     [selectedLandingDayKey]
+  );
+  const nutritionReportSelectedDate = useMemo(
+    () => dateFromDayKey(nutritionReportDayKey) ?? new Date(),
+    [nutritionReportDayKey]
   );
   const headerCalendarLabel = useMemo(() => {
     const todayKey = toDayKey(new Date());
@@ -3654,20 +3744,15 @@ export default function ChatPage() {
       ),
     [journalEntriesSorted, nutritionGoals.caloriesTarget, selectedLandingDayKey]
   );
-  const todayLandingDayKey = useMemo(() => toDayKey(new Date()), []);
-  const todayLandingNutrition = useMemo(
+  const activeNutritionReportSnapshot = useMemo(
     () =>
       summarizeNutritionForDay(
         journalEntriesSorted,
-        todayLandingDayKey,
+        nutritionReportDayKey,
         nutritionGoals.caloriesTarget
       ),
-    [journalEntriesSorted, nutritionGoals.caloriesTarget, todayLandingDayKey]
+    [journalEntriesSorted, nutritionGoals.caloriesTarget, nutritionReportDayKey]
   );
-  const activeNutritionReportDayKey =
-    nutritionReportDayScope === "selected_day" ? selectedLandingDayKey : todayLandingDayKey;
-  const activeNutritionReportSnapshot =
-    nutritionReportDayScope === "selected_day" ? selectedLandingDayNutrition : todayLandingNutrition;
   const canRunNutritionReport = hasMeaningfulNutritionData(activeNutritionReportSnapshot);
   const transcriptModalNutritionSnapshot = useMemo(() => {
     if (!transcriptModalTranscript) return null;
@@ -5610,7 +5695,7 @@ export default function ChatPage() {
 
   const resetNutritionReportModal = useCallback(() => {
     setNutritionReportModalOpen(false);
-    setNutritionReportDayScope("today");
+    setNutritionReportDayKey(getTodayDateInputValue());
     setNutritionReportFocusPrompt("");
     setNutritionReportLoading(false);
     setNutritionReportError(null);
@@ -5623,13 +5708,13 @@ export default function ChatPage() {
       router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
       return;
     }
-    setNutritionReportDayScope("today");
+    setNutritionReportDayKey(selectedLandingDayKey);
     setNutritionReportFocusPrompt("");
     setNutritionReportLoading(false);
     setNutritionReportError(null);
     setNutritionReportResult(null);
     setNutritionReportModalOpen(true);
-  }, [incognitoMode, isAnonymous, router]);
+  }, [incognitoMode, isAnonymous, router, selectedLandingDayKey]);
 
   const runNutritionReport = useCallback(async () => {
     if (isAnonymous || incognitoMode || !userId) return;
@@ -5645,8 +5730,8 @@ export default function ChatPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          dayScope: nutritionReportDayScope,
-          selectedDayKey: selectedLandingDayKey,
+          dayScope: "selected_day",
+          selectedDayKey: nutritionReportDayKey,
           focusPrompt: nutritionReportFocusPrompt.trim().slice(0, 600),
         }),
       });
@@ -5688,11 +5773,105 @@ export default function ChatPage() {
     incognitoMode,
     isAnonymous,
     language,
-    nutritionReportDayScope,
+    nutritionReportDayKey,
     nutritionReportFocusPrompt,
-    selectedLandingDayKey,
     userId,
   ]);
+
+  const handleLandingActivityClick = useCallback((item: LandingDayActivityItem) => {
+    if (item.kind === "session") {
+      router.push(`/chat/${item.entityId}`);
+      return;
+    }
+    if (item.kind === "journal") {
+      const row = savedTranscripts.find((t) => t._id === item.entityId);
+      if (!row || !row.transcriptText) return;
+      setTranscriptModalTranscript({
+        id: row._id,
+        videoId: row.videoId,
+        videoTitle: row.videoTitle,
+        channel: row.channel,
+        sourceType: row.sourceType,
+        journalCategory: row.journalCategory,
+        journalBatchId: row.journalBatchId,
+        journalEntryDay: row.journalEntryDay,
+        journalEntryMonth: row.journalEntryMonth,
+        journalEntryYear: row.journalEntryYear,
+        journalEntryHour: row.journalEntryHour,
+        journalEntryMinute: row.journalEntryMinute,
+        transcriptText: row.transcriptText,
+        createdAt: row.createdAt,
+        extractedConcepts: row.extractedConcepts,
+        journalMentorReflections: row.journalMentorReflections,
+        journalMentorReflectionsStatus: row.journalMentorReflectionsStatus,
+        journalMentorReflectionsUpdatedAt: row.journalMentorReflectionsUpdatedAt,
+      });
+      return;
+    }
+    if (item.kind === "memory") {
+      const ltm = longTermMemories.find((m) => m._id === item.entityId);
+      if (ltm) setLtmDetailModal(ltm);
+      return;
+    }
+    if (item.kind === "habit") {
+      const habit = habits.find((h) => h._id === item.entityId);
+      if (habit) setHabitDetailModal(habit);
+      return;
+    }
+    if (item.kind === "concept") {
+      const cc = customConcepts.find((c) => c._id === item.entityId);
+      if (cc) openConceptDetail(cc);
+      return;
+    }
+    if (item.kind === "framework") {
+      const cg = conceptGroups.find((g) => g._id === item.entityId);
+      if (!cg) return;
+      fetch(`/api/me/concept-groups/${cg._id}`)
+        .then((r) => r.ok ? r.json() : Promise.reject())
+        .then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] }))
+        .catch(() => setCgDetailModal(cg));
+      return;
+    }
+    if (item.kind === "savedModel") {
+      fetch(`/api/mental-models/${encodeURIComponent(item.entityId)}?language=${language}`, { cache: "no-store" })
+        .then((r) => (r.ok ? r.json() : Promise.reject()))
+        .then((model: MentalModel) => setSelectedMentalModel(model))
+        .catch(() => {});
+      return;
+    }
+    if (item.kind === "perspectiveCard") {
+      const card = savedPerspectiveCards.find((c) => c._id === item.entityId);
+      if (!card) return;
+      setDrawnPerspectiveCard({
+        card: {
+          id: card._id,
+          name: card.name,
+          prompt: card.prompt,
+          follow_ups: card.follow_ups ?? [],
+        },
+        deckId: "",
+        deckName: card.sourceDeckName ?? "Saved",
+        savedId: card._id,
+      });
+    }
+  }, [
+    conceptGroups,
+    customConcepts,
+    habits,
+    language,
+    longTermMemories,
+    openConceptDetail,
+    router,
+    savedPerspectiveCards,
+    savedTranscripts,
+  ]);
+
+  const toggleLandingActivityGroup = useCallback((groupKey: LandingActivityGroupKey) => {
+    setLandingActivityCollapsedByKind((prev) => ({
+      ...prev,
+      [groupKey]: !prev[groupKey],
+    }));
+  }, []);
 
   const resetWeeklySummaryModal = useCallback(() => {
     setWeeklySummaryModalOpen(false);
@@ -8887,6 +9066,8 @@ export default function ChatPage() {
                                     journalEntryDay?: number;
                                     journalEntryMonth?: number;
                                     journalEntryYear?: number;
+                                    journalEntryHour?: number;
+                                    journalEntryMinute?: number;
                                     extractedConcepts?: { domain: string; concepts: { title: string; summary: string; enrichmentPrompt: string }[] }[];
                                     journalMentorReflections?: {
                                       figureId: string;
@@ -8909,6 +9090,8 @@ export default function ChatPage() {
                                       journalEntryDay: data.journalEntryDay ?? t.journalEntryDay,
                                       journalEntryMonth: data.journalEntryMonth ?? t.journalEntryMonth,
                                       journalEntryYear: data.journalEntryYear ?? t.journalEntryYear,
+                                      journalEntryHour: data.journalEntryHour ?? t.journalEntryHour,
+                                      journalEntryMinute: data.journalEntryMinute ?? t.journalEntryMinute,
                                       extractedConcepts: data.extractedConcepts,
                                       journalMentorReflections: data.journalMentorReflections,
                                       journalMentorReflectionsStatus: data.journalMentorReflectionsStatus,
@@ -9279,6 +9462,8 @@ export default function ChatPage() {
                                   journalEntryDay?: number;
                                   journalEntryMonth?: number;
                                   journalEntryYear?: number;
+                                  journalEntryHour?: number;
+                                  journalEntryMinute?: number;
                                   extractedConcepts?: {
                                     domain: string;
                                     concepts: { title: string; summary: string; enrichmentPrompt: string }[];
@@ -9304,6 +9489,8 @@ export default function ChatPage() {
                                     journalEntryDay: data.journalEntryDay ?? t.journalEntryDay,
                                     journalEntryMonth: data.journalEntryMonth ?? t.journalEntryMonth,
                                     journalEntryYear: data.journalEntryYear ?? t.journalEntryYear,
+                                    journalEntryHour: data.journalEntryHour ?? t.journalEntryHour,
+                                    journalEntryMinute: data.journalEntryMinute ?? t.journalEntryMinute,
                                     extractedConcepts: data.extractedConcepts,
                                     journalMentorReflections: data.journalMentorReflections,
                                     journalMentorReflectionsStatus: data.journalMentorReflectionsStatus,
@@ -9810,100 +9997,55 @@ export default function ChatPage() {
                               No activity yet for this day.
                             </p>
                           ) : (
-                            <div className="space-y-1.5">
-                              {selectedLandingDayActivityItems.map((item) => (
-                        <button
-                                  key={item.id}
-                          type="button"
-                                  onClick={() => {
-                                    if (item.kind === "session") {
-                                      router.push(`/chat/${item.entityId}`);
-                                      return;
-                                    }
-                                    if (item.kind === "journal") {
-                                      const row = savedTranscripts.find((t) => t._id === item.entityId);
-                                      if (!row || !row.transcriptText) return;
-                                      setTranscriptModalTranscript({
-                                        id: row._id,
-                                        videoId: row.videoId,
-                                        videoTitle: row.videoTitle,
-                                        channel: row.channel,
-                                        sourceType: row.sourceType,
-                                        journalCategory: row.journalCategory,
-                                        journalBatchId: row.journalBatchId,
-                                        journalEntryDay: row.journalEntryDay,
-                                        journalEntryMonth: row.journalEntryMonth,
-                                        journalEntryYear: row.journalEntryYear,
-                                        transcriptText: row.transcriptText,
-                                        createdAt: row.createdAt,
-                                        extractedConcepts: row.extractedConcepts,
-                                        journalMentorReflections: row.journalMentorReflections,
-                                        journalMentorReflectionsStatus: row.journalMentorReflectionsStatus,
-                                        journalMentorReflectionsUpdatedAt: row.journalMentorReflectionsUpdatedAt,
-                                      });
-                                      return;
-                                    }
-                                    if (item.kind === "memory") {
-                                      const ltm = longTermMemories.find((m) => m._id === item.entityId);
-                                      if (ltm) setLtmDetailModal(ltm);
-                                      return;
-                                    }
-                                    if (item.kind === "habit") {
-                                      const habit = habits.find((h) => h._id === item.entityId);
-                                      if (habit) setHabitDetailModal(habit);
-                                      return;
-                                    }
-                                    if (item.kind === "concept") {
-                                      const cc = customConcepts.find((c) => c._id === item.entityId);
-                                      if (cc) openConceptDetail(cc);
-                                      return;
-                                    }
-                                    if (item.kind === "framework") {
-                                      const cg = conceptGroups.find((g) => g._id === item.entityId);
-                                      if (!cg) return;
-                                      fetch(`/api/me/concept-groups/${cg._id}`)
-                                        .then((r) => r.ok ? r.json() : Promise.reject())
-                                        .then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] }))
-                                        .catch(() => setCgDetailModal(cg));
-                                      return;
-                                    }
-                                    if (item.kind === "savedModel") {
-                                      fetch(`/api/mental-models/${encodeURIComponent(item.entityId)}?language=${language}`, { cache: "no-store" })
-                                        .then((r) => (r.ok ? r.json() : Promise.reject()))
-                                        .then((model: MentalModel) => setSelectedMentalModel(model))
-                                        .catch(() => {});
-                                      return;
-                                    }
-                                    if (item.kind === "perspectiveCard") {
-                                      const card = savedPerspectiveCards.find((c) => c._id === item.entityId);
-                                      if (!card) return;
-                                      setDrawnPerspectiveCard({
-                                        card: {
-                                          id: card._id,
-                                          name: card.name,
-                                          prompt: card.prompt,
-                                          follow_ups: card.follow_ups ?? [],
-                                        },
-                                        deckId: "",
-                                        deckName: card.sourceDeckName ?? "Saved",
-                                        savedId: card._id,
-                                      });
-                                    }
-                                  }}
-                                  className="w-full rounded-lg border border-neutral-200/80 dark:border-neutral-700/80 px-2.5 py-1.5 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
-                                >
-                                  <p className="text-[13px] font-medium text-foreground truncate">{item.title}</p>
-                                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
-                                    {item.kind === "session" ? "Conversation" :
-                                      item.kind === "journal" ? (item.sublabel ? `Journal entry · ${item.sublabel}` : "Journal entry") :
-                                      item.kind === "memory" ? "Memory" :
-                                      item.kind === "habit" ? "Habit" :
-                                      item.kind === "concept" ? "Concept" :
-                                      item.kind === "framework" ? "Framework" :
-                                      item.kind === "savedModel" ? "Saved model" :
-                                      "Perspective card"}
-                                  </p>
-                        </button>
+                            <div className="space-y-3">
+                              {selectedLandingDayActivityGroups.map((group) => (
+                                <div key={group.groupKey} className="rounded-xl border border-neutral-200/80 dark:border-neutral-700/80 p-2">
+                                  <div className="mb-1.5 flex items-center justify-between">
+                                    <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-600 dark:text-neutral-300">
+                                      {group.label}
+                                    </p>
+                                    <div className="flex items-center gap-2">
+                                      <p className="text-[10px] text-neutral-500 dark:text-neutral-400">
+                                        {group.items.length}
+                                      </p>
+                                      <button
+                                        type="button"
+                                        onClick={() => toggleLandingActivityGroup(group.groupKey)}
+                                        className="inline-flex items-center justify-center rounded-md border border-neutral-200 dark:border-neutral-700 px-1.5 py-0.5 text-[10px] text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                        aria-expanded={!landingActivityCollapsedByKind[group.groupKey]}
+                                        aria-label={`${landingActivityCollapsedByKind[group.groupKey] ? "Expand" : "Collapse"} ${group.label}`}
+                                      >
+                                        {landingActivityCollapsedByKind[group.groupKey] ? "Expand" : "Collapse"}
+                                      </button>
+                                    </div>
+                                  </div>
+                                  {!landingActivityCollapsedByKind[group.groupKey] && (
+                                    <div className="space-y-1.5">
+                                      {group.items.map((item) => (
+                                        <button
+                                          key={item.id}
+                                          type="button"
+                                          onClick={() => handleLandingActivityClick(item)}
+                                          className="w-full rounded-lg border border-neutral-200/80 dark:border-neutral-700/80 px-2.5 py-1.5 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                                        >
+                                          <p className="text-[13px] font-medium text-foreground truncate">{item.title}</p>
+                                          <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                                            {item.kind === "journal"
+                                              ? item.sublabel
+                                                ? `Journal entry · ${item.sublabel}`
+                                                : "Journal entry"
+                                              : LANDING_ACTIVITY_GROUP_LABEL[landingActivityGroupKey(item)].replace(/s$/, "")}
+                                            {" · "}
+                                            {new Date(item.timestamp).toLocaleTimeString(undefined, {
+                                              hour: "numeric",
+                                              minute: "2-digit",
+                                            })}
+                                          </p>
+                                        </button>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
                               ))}
                       </div>
                           )}
@@ -12990,39 +13132,25 @@ export default function ChatPage() {
 
               <div>
                 <p className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                  {getLandingTranslations(language).nutritionAnalysisScopeToday} / {getLandingTranslations(language).nutritionAnalysisScopeSelectedDay}
+                  {getLandingTranslations(language).nutritionAnalysisScopeSelectedDay}
                 </p>
-                <div className="inline-flex rounded-xl border border-neutral-200 dark:border-neutral-700 p-1">
-                  <button
-                    type="button"
-                    onClick={() => setNutritionReportDayScope("today")}
-                    disabled={nutritionReportLoading}
-                    className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${
-                      nutritionReportDayScope === "today"
-                        ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                        : "text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                    }`}
-                  >
-                    {getLandingTranslations(language).nutritionAnalysisScopeToday}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setNutritionReportDayScope("selected_day")}
-                    disabled={nutritionReportLoading}
-                    className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${
-                      nutritionReportDayScope === "selected_day"
-                        ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                        : "text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                    }`}
-                  >
-                    {getLandingTranslations(language).nutritionAnalysisScopeSelectedDay}
-                  </button>
-                </div>
-                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-                  {nutritionReportDayScope === "today"
-                    ? getLandingTranslations(language).nutritionAnalysisScopeToday
-                    : `${getLandingTranslations(language).nutritionAnalysisScopeSelectedDay}: ${selectedLandingDayDate.toLocaleDateString(undefined, { dateStyle: "medium" })}`}
+                <p className="text-sm text-foreground">
+                  {nutritionReportSelectedDate.toLocaleDateString(undefined, { dateStyle: "medium" })}
                 </p>
+                <label className="mt-2 block text-xs text-neutral-500 dark:text-neutral-400">
+                  Choose another date
+                </label>
+                <input
+                  type="date"
+                  value={nutritionReportDayKey}
+                  onChange={(e) => {
+                    const nextDayKey = e.target.value.trim();
+                    if (!nextDayKey) return;
+                    setNutritionReportDayKey(nextDayKey);
+                  }}
+                  disabled={nutritionReportLoading}
+                  className="mt-1 w-full sm:w-auto px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                />
               </div>
 
               <div>
