@@ -2195,36 +2195,3 @@ export async function generateTitle(
   return text.trim().slice(0, 60) || "Conversation";
 }
 
-/** Minimal processing: suggest a short source/label (3-8 words) for a nugget. */
-export async function suggestNuggetSource(content: string): Promise<string> {
-  const trimmed = content.trim().slice(0, 500);
-  if (!trimmed) return "";
-  const model = getModel();
-  const result = await model.generateContent(
-    `Suggest a very short label (3-8 words) for this quote/snippet. Examples: "From podcast", "Productivity insight", "Book highlight". Return ONLY the label, no quotes. If unclear, return "Saved quote".\n\nContent:\n${trimmed}`
-  );
-  const text = result.response.text().trim();
-  return text.slice(0, 60) || "Saved quote";
-}
-
-/** Minimally improve nugget text for clarity without losing original meaning. */
-export async function improveNuggetText(content: string): Promise<string> {
-  const trimmed = content.trim().slice(0, 2000);
-  if (!trimmed) return "";
-  const model = getModel();
-  const result = await model.generateContent(
-    `Improve this quote/snippet for clarity. Fix grammar, remove filler, make it more readable. Preserve the original meaning and tone. Return ONLY the improved text, no explanations.\n\nOriginal:\n${trimmed}`
-  );
-  return result.response.text().trim() || trimmed;
-}
-
-/** Return meaning and context for a nugget. */
-export async function explainNugget(content: string): Promise<string> {
-  const trimmed = content.trim().slice(0, 2000);
-  if (!trimmed) return "";
-  const model = getModel();
-  const result = await model.generateContent(
-    `Explain the meaning and context of this quote/snippet in 2-4 short sentences. What is the core idea? When might it be useful? Be concise and insightful.\n\nQuote:\n${trimmed}`
-  );
-  return result.response.text().trim() || "";
-}

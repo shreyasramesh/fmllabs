@@ -4,9 +4,10 @@ import {
   getDb,
   type ConceptGroup,
   type CustomConcept,
+  type Habit,
   type LongTermMemory,
   type Message,
-  type Nugget,
+  type SavedPerspectiveCard,
   type SavedConcept,
   type SavedTranscript,
   type Session,
@@ -16,9 +17,10 @@ import {
 import {
   decryptConceptGroupFields,
   decryptCustomConceptFields,
+  decryptHabitFields,
   decryptLongTermMemoryFields,
   decryptMessageFields,
-  decryptNuggetFields,
+  decryptSavedPerspectiveCardFields,
   decryptSavedConceptFields,
   decryptSessionFields,
   decryptTranscriptFields,
@@ -34,8 +36,9 @@ type ExportSection =
   | "long_term_memory"
   | "custom_concepts"
   | "concept_groups"
-  | "nuggets"
+  | "habits"
   | "transcripts"
+  | "saved_perspective_cards"
   | "saved_mental_models";
 
 const ALL_SECTIONS: ExportSection[] = [
@@ -45,8 +48,9 @@ const ALL_SECTIONS: ExportSection[] = [
   "long_term_memory",
   "custom_concepts",
   "concept_groups",
-  "nuggets",
+  "habits",
   "transcripts",
+  "saved_perspective_cards",
   "saved_mental_models",
 ];
 
@@ -114,13 +118,27 @@ export async function POST(request: Request) {
       lines.push("");
       lines.push(
         toMarkdownTable(
-          ["Session ID", "Title", "Created", "Updated", "Tags"],
+          ["Session ID", "Title", "Created", "Updated", "Tags", "Mode", "Figure", "Second-order", "Converted to deep"],
           sessions.map((s) => [
             s._id?.toString(),
             s.title,
             s.createdAt ? new Date(s.createdAt).toISOString() : "",
             s.updatedAt ? new Date(s.updatedAt).toISOString() : "",
             Array.isArray(s.mentalModelTags) ? s.mentalModelTags.join(", ") : "",
+            s.perspectiveCardPrompt
+              ? "perspective_card"
+              : s.oneOnOneMentorFigureId
+                ? "mentor_1_on_1"
+                : s.secondOrderThinking
+                  ? "second_order"
+                  : "standard",
+            s.oneOnOneMentorFigureName || s.perspectiveCardFigureName || "",
+            s.secondOrderThinking
+              ? s.secondOrderPlain === false
+                ? "on (with citations)"
+                : "on (plain)"
+              : "off",
+            s.convertedToDeepConversation ? "yes" : "no",
           ])
         )
       );
@@ -234,25 +252,38 @@ export async function POST(request: Request) {
       lines.push("");
     }
 
-    if (sections.includes("nuggets")) {
-      const nuggetsRaw = await db
-        .collection("nuggets")
-        .find({ userId })
-        .sort({ updatedAt: -1 })
-        .toArray();
-      const nuggets = nuggetsRaw.map((n) =>
-        decryptNuggetFields<Nugget & { _id: string }>({ ...n, _id: n._id?.toString() })
+    if (sections.includes("habits")) {
+      const habitsRaw = await db.collection("habits").find({ userId }).sort({ updatedAt: -1 }).toArray();
+      const habits = habitsRaw.map((h) =>
+        decryptHabitFields<Habit & { _id: string }>({ ...h, _id: h._id?.toString() })
       );
-      lines.push("## Nuggets");
+      lines.push("## Habits");
       lines.push("");
       lines.push(
         toMarkdownTable(
-          ["ID", "Content", "Source", "Updated"],
-          nuggets.map((n) => [
-            n._id?.toString(),
-            n.content,
-            n.source,
-            n.updatedAt ? new Date(n.updatedAt).toISOString() : "",
+          [
+            "ID",
+            "Name",
+            "Description",
+            "Source type",
+            "Source ID",
+            "Bucket",
+            "Planned start",
+            "How to follow through",
+            "Tips",
+            "Updated",
+          ],
+          habits.map((h) => [
+            h._id?.toString(),
+            h.name,
+            h.description,
+            h.sourceType,
+            h.sourceId,
+            h.bucket ?? "",
+            h.intendedMonth && h.intendedYear ? `${h.intendedYear}-${String(h.intendedMonth).padStart(2, "0")}` : "",
+            h.howToFollowThrough,
+            h.tips,
+            h.updatedAt ? new Date(h.updatedAt).toISOString() : "",
           ])
         )
       );
@@ -272,14 +303,67 @@ export async function POST(request: Request) {
       lines.push("");
       lines.push(
         toMarkdownTable(
-          ["ID", "Video ID", "Video Title", "Channel", "Transcript", "Updated"],
+          [
+            "ID",
+            "Source type",
+            "Journal category",
+            "Date",
+            "Time",
+            "Batch ID",
+            "Video ID",
+            "Video Title",
+            "Channel",
+            "Mentor reflections status",
+            "Transcript",
+            "Updated",
+          ],
           transcripts.map((t) => [
             t._id?.toString(),
+            t.sourceType ?? "youtube",
+            t.journalCategory ?? "",
+            t.journalEntryYear && t.journalEntryMonth && t.journalEntryDay
+              ? `${t.journalEntryYear}-${String(t.journalEntryMonth).padStart(2, "0")}-${String(t.journalEntryDay).padStart(2, "0")}`
+              : "",
+            typeof t.journalEntryHour === "number" && typeof t.journalEntryMinute === "number"
+              ? `${String(t.journalEntryHour).padStart(2, "0")}:${String(t.journalEntryMinute).padStart(2, "0")}`
+              : "",
+            t.journalBatchId ?? "",
             t.videoId,
             t.videoTitle,
             t.channel,
+            t.journalMentorReflectionsStatus ?? "",
             typeof t.transcriptText === "string" ? t.transcriptText.replace(/\n/g, " ") : "",
             t.updatedAt ? new Date(t.updatedAt).toISOString() : "",
+          ])
+        )
+      );
+      lines.push("");
+    }
+
+    if (sections.includes("saved_perspective_cards")) {
+      const cardsRaw = await db
+        .collection("saved_perspective_cards")
+        .find({ userId })
+        .sort({ updatedAt: -1 })
+        .toArray();
+      const cards = cardsRaw.map((c) =>
+        decryptSavedPerspectiveCardFields<SavedPerspectiveCard & { _id: string }>({
+          ...c,
+          _id: c._id?.toString(),
+        })
+      );
+      lines.push("## Saved Perspective Cards");
+      lines.push("");
+      lines.push(
+        toMarkdownTable(
+          ["ID", "Name", "Prompt", "Follow-ups", "Source deck", "Updated"],
+          cards.map((c) => [
+            c._id?.toString(),
+            c.name,
+            c.prompt,
+            Array.isArray(c.follow_ups) ? c.follow_ups.join(" | ") : "",
+            c.sourceDeckName || c.sourceDeckId || "",
+            c.updatedAt ? new Date(c.updatedAt).toISOString() : "",
           ])
         )
       );

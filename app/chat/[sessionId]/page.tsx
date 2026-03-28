@@ -450,7 +450,9 @@ type ExportDataSection =
   | "long_term_memory"
   | "custom_concepts"
   | "concept_groups"
+  | "habits"
   | "transcripts"
+  | "saved_perspective_cards"
   | "saved_mental_models";
 
 const EXPORT_DATA_SECTION_OPTIONS: Array<{
@@ -464,7 +466,9 @@ const EXPORT_DATA_SECTION_OPTIONS: Array<{
   { key: "long_term_memory", label: "Memory", description: "Saved memory summaries and prompts." },
   { key: "custom_concepts", label: "Custom concepts", description: "Your created concepts and enrichments." },
   { key: "concept_groups", label: "Concept frameworks", description: "Frameworks and linked concept IDs." },
-  { key: "transcripts", label: "Saved transcripts", description: "Video transcript captures." },
+  { key: "habits", label: "Habits", description: "Habit entries, sources, and follow-through plans." },
+  { key: "transcripts", label: "Saved transcripts", description: "Journal + transcript entries with metadata." },
+  { key: "saved_perspective_cards", label: "Saved perspective cards", description: "Saved card prompts and follow-ups." },
   {
     key: "saved_mental_models",
     label: "Saved mental models",
@@ -479,7 +483,9 @@ const DEFAULT_EXPORT_SELECTIONS: Record<ExportDataSection, boolean> = {
   long_term_memory: true,
   custom_concepts: true,
   concept_groups: true,
+  habits: true,
   transcripts: true,
+  saved_perspective_cards: true,
   saved_mental_models: true,
 };
 
@@ -2287,6 +2293,51 @@ function getGoalSpectrumTextClass(current: number, target: number): string {
   return "text-red-600 dark:text-red-400";
 }
 
+function getMacroMeterFillClass(
+  macroType: "carbs" | "protein" | "fat",
+  current: number,
+  target: number
+): string {
+  if (!Number.isFinite(current) || !Number.isFinite(target) || target <= 0) {
+    return "bg-neutral-400 dark:bg-neutral-500";
+  }
+  const ratio = current / target;
+  if (macroType === "protein") {
+    // Protein uses the inverse goal-progress scale:
+    // 0-25% red, 25-50% orange, 50-75% yellow, 75-100% green, >100% deep green.
+    if (ratio <= 0.25) return "bg-red-500 dark:bg-red-400";
+    if (ratio <= 0.5) return "bg-orange-500 dark:bg-orange-400";
+    if (ratio <= 0.75) return "bg-yellow-500 dark:bg-yellow-400";
+    if (ratio <= 1) return "bg-emerald-500 dark:bg-emerald-400";
+    return "bg-emerald-800 dark:bg-emerald-700";
+  }
+  // Carbs and fat share this threshold scale:
+  // 0-50% green, 50-75% yellow, 75-100% red, >100% deep red.
+  if (ratio <= 0.5) return "bg-emerald-500 dark:bg-emerald-400";
+  if (ratio <= 0.75) return "bg-yellow-500 dark:bg-yellow-400";
+  if (ratio <= 1) return "bg-red-500 dark:bg-red-400";
+  return "bg-red-800 dark:bg-red-700";
+}
+
+function getMacroMeterWidth(current: number, target: number): string {
+  if (!Number.isFinite(current) || !Number.isFinite(target) || target <= 0) {
+    return "0%";
+  }
+  return `${Math.max(0, Math.min(100, (current / target) * 100))}%`;
+}
+
+function getCaloriesRemainingMeterFillClass(remaining: number, target: number): string {
+  if (!Number.isFinite(remaining) || !Number.isFinite(target) || target <= 0) {
+    return "bg-neutral-400 dark:bg-neutral-500";
+  }
+  const ratio = remaining / target;
+  if (ratio < 0) return "bg-red-800 dark:bg-red-700";
+  if (ratio < 0.15) return "bg-red-500 dark:bg-red-400";
+  if (ratio < 0.35) return "bg-orange-500 dark:bg-orange-400";
+  if (ratio < 0.6) return "bg-yellow-500 dark:bg-yellow-400";
+  return "bg-emerald-500 dark:bg-emerald-400";
+}
+
 type LandingActivityKind =
   | "session"
   | "journal"
@@ -2307,6 +2358,9 @@ type LandingDayActivityItem = {
   timestamp: number;
   entityId: string;
 };
+
+type LandingTab = "journaling" | "deepThinking";
+const LANDING_TAB_STORAGE_KEY = "fml_landing_tab";
 
 type LandingActivityGroupKey =
   | "journalRegular"
@@ -2333,18 +2387,10 @@ const LANDING_ACTIVITY_GROUP_LABEL: Record<LandingActivityGroupKey, string> = {
   perspectiveCard: "Perspective cards",
 };
 
-const LANDING_ACTIVITY_GROUP_ORDER: LandingActivityGroupKey[] = [
-  "journalRegular",
-  "journalNutrition",
-  "journalExercise",
-  "session",
-  "habit",
-  "memory",
-  "concept",
-  "framework",
-  "savedModel",
-  "perspectiveCard",
-];
+const LANDING_TAB_ACTIVITY_GROUP_ORDER: Record<LandingTab, LandingActivityGroupKey[]> = {
+  journaling: ["journalRegular", "journalNutrition", "journalExercise"],
+  deepThinking: ["session", "perspectiveCard"],
+};
 
 const DEFAULT_LANDING_ACTIVITY_COLLAPSED: Record<LandingActivityGroupKey, boolean> = {
   journalRegular: true,
@@ -2368,6 +2414,11 @@ function landingActivityGroupKey(item: LandingDayActivityItem): LandingActivityG
   return item.kind;
 }
 
+function landingActivityMatchesTab(item: LandingDayActivityItem, tab: LandingTab): boolean {
+  const groupKey = landingActivityGroupKey(item);
+  return LANDING_TAB_ACTIVITY_GROUP_ORDER[tab].includes(groupKey);
+}
+
 export default function ChatPage() {
   const params = useParams();
   const router = useRouter();
@@ -2383,6 +2434,8 @@ export default function ChatPage() {
   const sessionId = params.sessionId as string;
   const isNew = sessionId === "new";
   const incognitoMode = sessionId === "incognito";
+  const [landingTab, setLandingTab] = useState<LandingTab>("journaling");
+  const landingTabStorageReadyRef = useRef(false);
   const [selectedLandingDayKey, setSelectedLandingDayKey] = useState(() => toDayKey(new Date()));
   const [journalPanelSelectedDayKey, setJournalPanelSelectedDayKey] = useState(() => toDayKey(new Date()));
   const [brandLogoParty, setBrandLogoParty] = useState(false);
@@ -2395,6 +2448,20 @@ export default function ChatPage() {
   const headerCalendarRef = useRef<HTMLDivElement | null>(null);
   const journalPanelDaysScrollerRef = useRef<HTMLDivElement | null>(null);
   const journalPanelDaysAutoScrolledRef = useRef(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const saved = window.sessionStorage.getItem(LANDING_TAB_STORAGE_KEY);
+    if (saved === "deepThinking" || saved === "journaling") {
+      setLandingTab(saved);
+    }
+    landingTabStorageReadyRef.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !landingTabStorageReadyRef.current) return;
+    window.sessionStorage.setItem(LANDING_TAB_STORAGE_KEY, landingTab);
+  }, [landingTab]);
 
   const [sessions, setSessions] = useState<Session[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -2441,8 +2508,8 @@ export default function ChatPage() {
   /** When second-order is active: true = plain (no index/RAG), false = with citations. */
   const activeSecondOrderPlainRef = useRef(false);
   const [pendingSecondOrder, setPendingSecondOrder] = useState(false);
-  /** Default off: plain second-order (no index / "Context used"). Toggle on to include citations. */
-  const [secondOrderCitationsEnabled, setSecondOrderCitationsEnabled] = useState(false);
+  /** Default on: cite mental models + saved context in second-order mode. */
+  const [secondOrderCitationsEnabled, setSecondOrderCitationsEnabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [sessionLoading, setSessionLoading] = useState(!isNew && !incognitoMode);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(
@@ -2495,7 +2562,6 @@ export default function ChatPage() {
   const [goalsCalculatorRationale, setGoalsCalculatorRationale] = useState("");
   const [goalsWizardError, setGoalsWizardError] = useState<string | null>(null);
   const skipGoalsMacroRecalculateRef = useRef(false);
-  const [landingNutritionBannerOpen, setLandingNutritionBannerOpen] = useState(true);
   const [moonPhase, setMoonPhase] = useState<number | null>(null);
   const [conceptSavedToast, setConceptSavedToast] = useState(false);
   const [convertToDeepSuccess, setConvertToDeepSuccess] = useState(false);
@@ -2755,14 +2821,12 @@ export default function ChatPage() {
     ? mentalModelsLoaded
     : sessionsLoaded && conceptsLoaded && ltmLoaded && ccLoaded && cgLoaded && mentalModelsLoaded;
   const signInFeatures = [
-    { label: "Saved conversations", description: "Access your full chat history across devices. Pick up where you left off.", icon: "chat" },
-    { label: "Custom concepts", description: "Define your own frameworks, values, or principles. The AI uses them to personalize responses.", icon: "concepts" },
-    { label: "Mental models library", description: "Explore proven mental models and cognitive biases to improve thinking and decisions.", icon: "mental-models" },
-    { label: "Memory", description: "The AI remembers key context from past conversations to give more relevant advice.", icon: "memory" },
-    { label: "Frameworks", description: "Framework related concepts (e.g. career, health). The AI draws from them when relevant.", icon: "groups" },
+    { label: "Deep thinking chat", description: "Start conversations and explore ideas without saving history.", icon: "chat" },
+    { label: "Second-order thinking", description: "Use second-order reasoning mode in real time, without saving.", icon: "groups" },
+    { label: "One-to-one with a mentor", description: "Chat with a mentor persona in-session without persistence.", icon: "chat" },
+    { label: "Mental models library", description: "Browse proven mental models and cognitive biases instantly.", icon: "mental-models" },
+    { label: "Perspective Lenses", description: "Use card-style perspective prompts to rethink situations.", icon: "groups" },
     { label: "Voice input (speech to text)", description: "Use your voice to dictate messages in the composer.", icon: "voice" },
-    { label: "Summarize and collapse", description: "Collapse long chats into compact summaries and keep key insights easy to revisit.", icon: "summary" },
-    { label: "Incognito mode", description: "Chat privately without saving to history. Conversations stay off the record.", icon: "ghost" },
   ];
   const signInFeatureIconSvg = (name: string) => {
     if (name === "chat") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>;
@@ -2830,7 +2894,7 @@ export default function ChatPage() {
     setShowScrollToBottom(false);
   }, []);
 
-  // Selection-based actions (Save Nugget, Learn) only shown via context menu on right-click, not on selection
+  // Selection actions are shown via context menu on right-click, not on selection.
 
   useEffect(() => {
     if (isAnonymous && !isNew) {
@@ -3271,6 +3335,13 @@ export default function ChatPage() {
     };
     savedEntries?: Array<{ id: string; category: "nutrition" | "exercise"; title: string }>;
   } | null>(null);
+  const [landingJournalEntryType, setLandingJournalEntryType] = useState<"regular" | "calorie">("regular");
+  const landingJournalCameraInputRef = useRef<HTMLInputElement | null>(null);
+  const [landingJournalImagePreview, setLandingJournalImagePreview] = useState<string | null>(null);
+  const [landingJournalImageProcessing, setLandingJournalImageProcessing] = useState(false);
+  const [landingJournalImageError, setLandingJournalImageError] = useState<string | null>(null);
+  const [landingJournalSaving, setLandingJournalSaving] = useState(false);
+  const [landingJournalSaveError, setLandingJournalSaveError] = useState<string | null>(null);
   const [journalEntryModalOpen, setJournalEntryModalOpen] = useState(false);
   const [journalEntryDate, setJournalEntryDate] = useState(() => getTodayDateInputValue());
   const [journalEntryText, setJournalEntryText] = useState("");
@@ -3360,6 +3431,7 @@ export default function ChatPage() {
     if (!body) return;
     setJournalEntrySaving(true);
     setJournalEntrySaveError(null);
+    const deviceNow = new Date();
     try {
       const res = await fetch("/api/me/journal", {
         method: "POST",
@@ -3367,6 +3439,10 @@ export default function ChatPage() {
         body: JSON.stringify({
           text: body,
           ...(journalEntryDate.trim() ? { entryDate: journalEntryDate.trim() } : {}),
+          journalEntryTime: {
+            hour: deviceNow.getHours(),
+            minute: deviceNow.getMinutes(),
+          },
         }),
       });
       if (!res.ok) {
@@ -3476,6 +3552,7 @@ export default function ChatPage() {
     async (answers: string[]) => {
       setCalorieTrackerLoading(true);
       setCalorieTrackerError(null);
+      const deviceNow = new Date();
       try {
         const res = await fetch("/api/me/journal/calorie", {
           method: "POST",
@@ -3485,6 +3562,10 @@ export default function ChatPage() {
             text: calorieTrackerInput.trim(),
             answers,
             ...(calorieTrackerEntryDate.trim() ? { entryDate: calorieTrackerEntryDate.trim() } : {}),
+            journalEntryTime: {
+              hour: deviceNow.getHours(),
+              minute: deviceNow.getMinutes(),
+            },
           }),
         });
         const data = (await res.json().catch(() => ({}))) as {
@@ -3535,6 +3616,136 @@ export default function ChatPage() {
     },
     [calorieTrackerEntryDate, calorieTrackerInput, refetchTranscripts]
   );
+
+  const handleLandingJournalImageSelected = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      setLandingJournalImageError(null);
+      setLandingJournalImageProcessing(true);
+      try {
+        if (!file.type.startsWith("image/")) {
+          throw new Error("Please capture an image file.");
+        }
+        if (file.size > 20 * 1024 * 1024) {
+          throw new Error("Image is very large. Please retake with a lower camera resolution.");
+        }
+        const { dataUrl, base64, mimeType } = await compressImageForUpload(file);
+        if (!base64) throw new Error("Invalid image payload.");
+        setLandingJournalImagePreview(dataUrl);
+        const res = await fetch("/api/me/journal/calorie/image-transcribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            imageBase64: base64,
+            mimeType,
+            hintText: input.trim().slice(0, 600),
+          }),
+        });
+        const data = (await res.json().catch(() => ({}))) as {
+          error?: string;
+          nutritionLogDraft?: string;
+        };
+        if (!res.ok) {
+          throw new Error(data.error || "Could not transcribe this image.");
+        }
+        const draft = (data.nutritionLogDraft ?? "").trim();
+        setInput(draft);
+      } catch (err) {
+        setLandingJournalImageError(
+          err instanceof Error ? err.message : "Could not transcribe this image."
+        );
+      } finally {
+        if (e.target) e.target.value = "";
+        setLandingJournalImageProcessing(false);
+      }
+    },
+    []
+  );
+
+  const retryLandingJournalImageAnalysis = useCallback(() => {
+    setLandingJournalImagePreview(null);
+    setLandingJournalImageError(null);
+    setInput("");
+    if (landingJournalCameraInputRef.current) {
+      landingJournalCameraInputRef.current.value = "";
+      landingJournalCameraInputRef.current.click();
+    }
+  }, []);
+
+  const createLandingJournalEntry = useCallback(async () => {
+    const bodyText = input.trim();
+    if (!bodyText) return;
+    if (isAnonymous || incognitoMode) {
+      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
+      return;
+    }
+    setLandingJournalSaving(true);
+    setLandingJournalSaveError(null);
+    const deviceNow = new Date();
+    try {
+      const entryDate = selectedLandingDayKey;
+      if (landingJournalEntryType === "regular") {
+        const res = await fetch("/api/me/journal", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: bodyText,
+            entryDate,
+            journalEntryTime: {
+              hour: deviceNow.getHours(),
+              minute: deviceNow.getMinutes(),
+            },
+          }),
+        });
+        if (!res.ok) {
+          const j = (await res.json().catch(() => ({}))) as { error?: string };
+          throw new Error(j.error || "Could not save journal entry.");
+        }
+      } else {
+        const res = await fetch("/api/me/journal/calorie", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "finalize",
+            text: bodyText,
+            answers: [],
+            entryDate,
+            journalEntryTime: {
+              hour: deviceNow.getHours(),
+              minute: deviceNow.getMinutes(),
+            },
+          }),
+        });
+        if (!res.ok) {
+          const j = (await res.json().catch(() => ({}))) as { error?: string };
+          throw new Error(j.error || "Could not save calorie entry.");
+        }
+      }
+      setInput("");
+      setLandingJournalImagePreview(null);
+      setLandingJournalImageError(null);
+      refetchTranscripts();
+      setJournalEntryJustSaved(true);
+      if (typeof window !== "undefined") {
+        window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
+      }
+    } catch (err) {
+      setLandingJournalSaveError(
+        err instanceof Error ? err.message : "Could not save your entry right now."
+      );
+    } finally {
+      setLandingJournalSaving(false);
+    }
+  }, [
+    incognitoMode,
+    input,
+    isAnonymous,
+    landingJournalEntryType,
+    refetchTranscripts,
+    router,
+    selectedLandingDayKey,
+  ]);
 
   const runCalorieTrackerAnalyze = useCallback(async () => {
     const text = calorieTrackerInput.trim();
@@ -3766,8 +3977,11 @@ export default function ChatPage() {
   }, [landingDayActivityItems]);
 
   const selectedLandingDayActivityItems = useMemo(
-    () => landingDayActivityItems.filter((item) => item.dayKey === selectedLandingDayKey),
-    [landingDayActivityItems, selectedLandingDayKey]
+    () =>
+      landingDayActivityItems.filter(
+        (item) => item.dayKey === selectedLandingDayKey && landingActivityMatchesTab(item, landingTab)
+      ),
+    [landingDayActivityItems, landingTab, selectedLandingDayKey]
   );
   const selectedLandingDayActivityGroups = useMemo(() => {
     const grouped = new Map<LandingActivityGroupKey, LandingDayActivityItem[]>();
@@ -3777,14 +3991,14 @@ export default function ChatPage() {
       if (existing) existing.push(item);
       else grouped.set(groupKey, [item]);
     }
-    return LANDING_ACTIVITY_GROUP_ORDER
+    return LANDING_TAB_ACTIVITY_GROUP_ORDER[landingTab]
       .map((groupKey) => ({
         groupKey,
         label: LANDING_ACTIVITY_GROUP_LABEL[groupKey],
         items: grouped.get(groupKey) ?? [],
       }))
       .filter((group) => group.items.length > 0);
-  }, [selectedLandingDayActivityItems]);
+  }, [landingTab, selectedLandingDayActivityItems]);
   const shouldAnimateLandingPlaceholder =
     messages.length === 0 &&
     !incognitoMode &&
@@ -3821,6 +4035,10 @@ export default function ChatPage() {
       selectedLandingDayDate
     );
   }, [selectedLandingDayDate, selectedLandingDayKey]);
+  const selectedLandingDayMobileLabel = useMemo(
+    () => new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(selectedLandingDayDate),
+    [selectedLandingDayDate]
+  );
   const headerCalendarCells = useMemo(() => {
     const year = headerCalendarMonth.getFullYear();
     const month = headerCalendarMonth.getMonth();
@@ -5141,7 +5359,11 @@ export default function ChatPage() {
       (e.ctrlKey && e.key === "Enter")
     ) {
       e.preventDefault();
-      sendMessage();
+      if (messages.length === 0 && !incognitoMode && landingTab === "journaling") {
+        void createLandingJournalEntry();
+      } else {
+        sendMessage();
+      }
     }
   };
 
@@ -6743,6 +6965,7 @@ export default function ChatPage() {
 
   const closeAllModalsExceptLeftPanel = useCallback(() => {
     setHeaderCalendarOpen(false);
+    setLibraryPanelOpen(null);
     setJournalTypeChooserOpen(false);
     setGoalsModalOpen(false);
     setWaysOfLookingAtModalOpen(false);
@@ -7206,28 +7429,23 @@ export default function ChatPage() {
             className={`group inline-flex items-center gap-1.5 font-semibold text-lg min-w-0 truncate ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
                 title={PRODUCT_TAGLINE}
           >
-            <span className="truncate">FigureMyLife Labs</span>
-            <span
-              aria-hidden
-              className={`inline-flex items-center transition-all duration-300 ${
-                brandLogoParty ? "max-w-10 opacity-100" : "max-w-0 opacity-0"
-              }`}
-            >
+            <span aria-hidden className="inline-flex items-center">
               <Image
                 src="/icon.svg"
                 alt=""
-                width={18}
-                height={18}
-                className="rounded-sm dark:hidden animate-bounce"
+                width={24}
+                height={24}
+                className={`rounded-sm dark:hidden ${brandLogoParty ? "animate-bounce" : ""}`}
               />
               <Image
                 src="/icon-dark.svg"
                 alt=""
-                width={18}
-                height={18}
-                className="hidden rounded-sm dark:block animate-bounce"
+                width={24}
+                height={24}
+                className={`hidden rounded-sm dark:block ${brandLogoParty ? "animate-bounce" : ""}`}
               />
             </span>
+            <span className="truncate">FigureMyLife Labs</span>
             <span
               aria-hidden
               className={`text-sm transition-all duration-300 ${
@@ -7296,20 +7514,13 @@ export default function ChatPage() {
               aria-label="Go to landing page"
               title="Go to landing page"
             >
-              <Image
-                src="/icon.svg"
-                alt="FML Labs"
-                width={34}
-                height={34}
-                className="rounded-md dark:hidden"
-              />
-              <Image
-                src="/icon-dark.svg"
-                alt="FML Labs"
-                width={34}
-                height={34}
-                className="hidden rounded-md dark:block"
-              />
+              <span className="inline-flex items-center justify-center min-w-[34px] min-h-[34px] rounded-md border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M3 10.5 12 3l9 7.5" />
+                  <path d="M5.5 9.5V21h13V9.5" />
+                  <path d="M10 21v-6h4v6" />
+                </svg>
+              </span>
             </Link>
             <div className="flex min-w-0 flex-1 items-center overflow-visible">
             {libraryInlineTitle != null && libraryInlineTitle !== "" ? (
@@ -7317,14 +7528,6 @@ export default function ChatPage() {
                 <h1 className="font-semibold text-base sm:text-lg truncate min-w-0 flex-1 text-foreground">
                   {libraryInlineTitle}
                 </h1>
-                <button
-                  type="button"
-                  onClick={() => setLibraryPanelOpen(null)}
-                  className="p-2 min-w-[44px] min-h-[44px] shrink-0 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-600 dark:text-neutral-400"
-                  aria-label={getUiTranslations(language).close}
-                >
-                  ✕
-                </button>
               </div>
             ) : waysOfLookingAtModalOpen && waysMainHeaderTitle != null ? (
               <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -7529,23 +7732,6 @@ export default function ChatPage() {
             <div className="hidden md:flex shrink-0">
             <Clock weatherFormat={weatherFormat} onMoonPhaseChange={setMoonPhase} />
             </div>
-            {!incognitoMode && !isAnonymous && (
-              <div className="relative group/incognito">
-                <Link
-                  href="/chat/incognito"
-                  onClick={() => {
-                    if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
-                  }}
-                  className="block p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-300 ease-in-out"
-                  aria-label="Use incognito"
-                >
-                  <GhostIcon className="w-5 h-5" />
-                </Link>
-                <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 text-xs font-medium text-white bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover/incognito:opacity-100 transition-opacity duration-200 z-50">
-                  Use Incognito Mode
-                </span>
-              </div>
-            )}
             <ThemeToggle inverted={incognitoMode} moonPhase={moonPhase} />
             <button
               type="button"
@@ -7611,28 +7797,23 @@ export default function ChatPage() {
               className="inline-flex items-center gap-1.5 font-semibold text-lg text-foreground min-w-0 truncate"
               title={PRODUCT_TAGLINE}
             >
-              <span className="truncate">FigureMyLife Labs</span>
-              <span
-                aria-hidden
-                className={`inline-flex items-center transition-all duration-300 ${
-                  brandLogoParty ? "max-w-10 opacity-100" : "max-w-0 opacity-0"
-                }`}
-              >
+              <span aria-hidden className="inline-flex items-center">
                 <Image
                   src="/icon.svg"
                   alt=""
-                  width={18}
-                  height={18}
-                  className="rounded-sm dark:hidden animate-bounce"
+                  width={24}
+                  height={24}
+                  className={`rounded-sm dark:hidden ${brandLogoParty ? "animate-bounce" : ""}`}
                 />
                 <Image
                   src="/icon-dark.svg"
                   alt=""
-                  width={18}
-                  height={18}
-                  className="hidden rounded-sm dark:block animate-bounce"
+                  width={24}
+                  height={24}
+                  className={`hidden rounded-sm dark:block ${brandLogoParty ? "animate-bounce" : ""}`}
                 />
               </span>
+              <span className="truncate">FigureMyLife Labs</span>
               <span
                 aria-hidden
                 className={`text-sm transition-all duration-300 ${
@@ -7642,16 +7823,6 @@ export default function ChatPage() {
                 ✨
               </span>
             </Link>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-sm font-medium shrink-0"
-              aria-label="Back to conversation"
-            >
-              Conversation
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </button>
           </div>
         </div>
         <div className={`flex-1 min-h-0 flex flex-col overflow-y-auto overscroll-contain ${!sidebarOpen ? "lg:justify-center" : ""}`}>
@@ -7663,79 +7834,30 @@ export default function ChatPage() {
           <div
             className={`flex flex-col min-w-0 px-2 py-1.5 ${sidebarOpen ? "flex-1 min-h-0 overflow-y-auto overscroll-contain" : ""}`}
           >
-          {/* New conversation - always visible at top of sidebar */}
-          {incognitoMode ? (
           <Link
-              href="/chat/incognito"
-              onClick={() => {
-                closeAllModalsExceptLeftPanel();
-                if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
-              }}
-              className={`flex items-center w-full rounded-xl border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0 ${
-                sidebarOpen ? "justify-center gap-2 px-3 py-2 mb-2" : "justify-center p-2 lg:px-2 lg:py-2"
-              }`}
-              aria-label={getLandingTranslations(language).newConversation}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                <path d="M12 5v14M5 12h14" />
-              </svg>
-              {sidebarOpen && <span className="truncate">{getLandingTranslations(language).newConversation}</span>}
-            </Link>
-          ) : (
-            <button
-              type="button"
-              onClick={() => {
+            href="/chat/new"
+            onClick={() => {
               closeAllModalsExceptLeftPanel();
               if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
-              if (sessionId === "new" || sessionId === "incognito") {
-                anonymousActiveRef.current = false;
-                setMessages([]);
-                setCurrentSessionId(null);
-                setCurrentSession(null);
-                setCollapsedSummary(null);
-                setInput("");
-                  activeOneOnOneMentorRef.current = null;
-                  setPendingOneOnOneMentor(null);
-                  activeSecondOrderRef.current = false;
-                  activeSecondOrderPlainRef.current = false;
-                  setPendingSecondOrder(false);
-              }
-                setNewConversationChooserModalOpen(true);
             }}
-            className={`flex items-center w-full rounded-xl border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0 ${
-                sidebarOpen ? "justify-center gap-2 px-3 py-2 mb-2" : "justify-center p-2 lg:px-2 lg:py-2"
+            className={`flex items-center w-full rounded-xl border border-neutral-200/90 dark:border-neutral-700 bg-white/90 dark:bg-neutral-900 hover:border-orange-200 dark:hover:border-orange-700/60 hover:bg-orange-50/60 dark:hover:bg-orange-900/20 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0 ${
+              sidebarOpen ? "justify-center gap-2 px-3 py-2 mb-2" : "justify-center p-2 lg:px-2 lg:py-2"
             }`}
-            aria-label={getLandingTranslations(language).newConversation}
+            aria-label="Home"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-              <path d="M12 5v14M5 12h14" />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+              <path d="M3 10.5 12 3l9 7.5" />
+              <path d="M5.5 9.5V21h13V9.5" />
+              <path d="M10 21v-6h4v6" />
             </svg>
-            {sidebarOpen && <span className="truncate">{getLandingTranslations(language).newConversation}</span>}
-            </button>
-          )}
-          {sidebarOpen && !isAnonymous && (
-            <button
-              type="button"
-              onClick={() => {
-                openJournalTypeChooser();
-                if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
-              }}
-              title={getLandingTranslations(language).journalEntryButtonLabel}
-              aria-label={getLandingTranslations(language).journalEntryButtonLabel}
-              className="w-full shrink-0 flex items-center justify-center gap-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-800/50 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-[11px] sm:text-[12px] font-medium text-foreground transition-colors px-2 py-2 mb-3 text-center"
-            >
-              <span className="text-sm leading-none" aria-hidden>
-                +
-              </span>
-              <span className="truncate">{getLandingTranslations(language).journalEntryButtonLabel}</span>
-            </button>
-          )}
+            {sidebarOpen && <span className="truncate">Home</span>}
+          </Link>
           {/* Primary nav - Claude.ai pill style; icon-only when collapsed (Browser Use style) */}
           <nav className={`flex flex-col gap-0.5 shrink-0 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 ${sidebarOpen ? "mb-2" : ""}`} aria-label="Select view" data-tour="sidebar-nav">
             {[
               { id: "conversations" as const, label: getUiTranslations(language).conversations, icon: "chat", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("conversations"); } },
               ...(!isAnonymous ? [
-                { id: "journal" as const, label: getUiTranslations(language).journalEntries, icon: "journal" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("journal"); } },
+                { id: "journal" as const, label: "Journals", icon: "journal" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("journal"); } },
               ] : []),
               { id: "cc" as const, label: getUiTranslations(language).concepts, icon: "concepts", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("cc"); } },
               { id: "concepts" as const, label: getUiTranslations(language).mentalModels, icon: "models", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("concepts"); } },
@@ -7823,41 +7945,6 @@ export default function ChatPage() {
             })}
           </nav>
 
-          <div className={`border-t-[0.5px] border-neutral-200/60 dark:border-neutral-600/60 ${sidebarOpen ? "mt-1.5 pt-1.5" : "mt-1 pt-1"}`}>
-            <button
-              type="button"
-              onClick={() => {
-                playSelectionChime();
-                setLibraryPanelOpen(null);
-                setWaysOfLookingAtModalOpen(true);
-                setWaysOfLookingAtDrawMode(false);
-                setWaysOfLookingAtCategory(null);
-                setWaysOfLookingAtCity(null);
-                setWaysOfLookingAtCuisine(null);
-                setWaysOfLookingAtMicrocosm(null);
-                setWaysOfLookingAtHuman(null);
-                setWaysOfLookingAtDigital(null);
-                if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
-              }}
-              title={!sidebarOpen ? getUiTranslations(language).promptGames : undefined}
-              className={`group relative overflow-hidden flex items-center w-full rounded-2xl text-left text-[13px] sm:text-[14px] font-medium transition-colors active:scale-[0.98] ${
-                waysOfLookingAtModalOpen
-                  ? "ring-2 ring-neutral-400 dark:ring-neutral-500"
-                  : ""
-              } ${
-                sidebarOpen ? "gap-2 px-3 py-1" : "justify-center p-2 lg:px-2 lg:py-2"
-              }`}
-            >
-              <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-100 via-amber-50 to-yellow-50 dark:from-rose-900/40 dark:via-amber-900/30 dark:to-yellow-900/30 transition-opacity duration-300" aria-hidden />
-              <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-200 via-amber-100 to-yellow-100 dark:from-rose-800/50 dark:via-amber-800/40 dark:to-yellow-800/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden />
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 w-4 h-4 shrink-0 text-foreground">
-                <rect width="18" height="14" x="3" y="3" rx="2" />
-                <path d="M3 9h18" />
-                <path d="M3 15h18" />
-              </svg>
-              {sidebarOpen && <span className="relative z-10 truncate text-foreground">{getUiTranslations(language).promptGames}</span>}
-            </button>
-          </div>
           </div>
             </div>
         </>
@@ -7866,7 +7953,7 @@ export default function ChatPage() {
           <div className={`px-3 py-2 flex flex-col gap-2 items-center ${sidebarOpen ? "flex-1 min-h-0" : "shrink-0 lg:hidden"}`}>
             <p className="w-full max-w-[220px] flex items-center gap-1.5 text-[13px] sm:text-[14px] font-medium text-neutral-600 dark:text-neutral-400 text-left">
               <SparklesIcon className="w-3.5 h-3.5 shrink-0" />
-              <span>Sign in to unlock:</span>
+              <span>Available without sign in:</span>
             </p>
             <ul className="space-y-1 w-full flex flex-col items-center">
               {signInFeatures.map((item, i) => (
@@ -7875,14 +7962,12 @@ export default function ChatPage() {
                   className="w-full max-w-[220px] animate-slide-in-from-left opacity-0 [animation-fill-mode:forwards]"
                   style={{ animationDelay: `${i * 80}ms` }}
                 >
-                  <button
-                    type="button"
-                    onClick={() => setSignInFeaturesModalOpen(true)}
+                  <div
                     className="flex items-center gap-2 w-full px-2.5 py-1.5 rounded-xl text-[12px] sm:text-[13px] text-left border border-transparent bg-background text-neutral-600 dark:text-neutral-400"
                   >
                     <span className="text-neutral-500 shrink-0">{signInFeatureIconSvg(item.icon)}</span>
                     <span className="truncate">{item.label}</span>
-                  </button>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -8677,15 +8762,6 @@ export default function ChatPage() {
                       });
                     }
 
-                    const decisionCategory = categoryItems.find(
-                      (c) => normalizeMmCategory(c.label) === "decision-making"
-                    );
-                    const activeCategoryKey = categoryItems.some((c) => c.key === selectedMmCategory)
-                      ? selectedMmCategory
-                      : (decisionCategory?.key ?? categoryItems[0]?.key ?? "");
-                    const activeCategory = categoryItems.find((c) => c.key === activeCategoryKey);
-                    const activeModels = activeCategory?.models ?? [];
-
                     const renderMmCard = (id: string, name: string) => {
                       const preview = mmPreviewMap.get(id);
                       const description = preview?.oneLiner ?? preview?.quickIntro ?? "Tap to explore";
@@ -8770,37 +8846,28 @@ export default function ChatPage() {
                     }
                     return (
                       <div className="space-y-3">
-                        <div className="flex flex-wrap gap-2">
-                          {categoryItems.map((cat) => (
-                            <button
-                              key={cat.key}
-                              type="button"
-                              onClick={() => setSelectedMmCategory(cat.key)}
-                              className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
-                                activeCategoryKey === cat.key
-                                  ? "bg-foreground text-background border-foreground"
-                                  : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                              }`}
-                            >
-                              {cat.label}
-                            </button>
-                          ))}
-                          </div>
-                        <div className="flex items-center justify-between">
-                          <p className="text-[11px] font-medium text-neutral-500 uppercase tracking-wide">
-                            {activeCategory?.label ?? "Category"}
-                          </p>
-                          <span className="text-[11px] text-neutral-500">{activeModels.length} models</span>
-                        </div>
-                        {activeModels.length > 0 ? (
+                        {categoryItems.map((cat, index) => (
+                          <div
+                            key={cat.key}
+                            className={index === 0 ? "space-y-2" : "space-y-2 border-t border-neutral-200 dark:border-neutral-700 pt-3 mt-3"}
+                          >
+                            <div className="flex items-center justify-between">
+                              <p className="text-[11px] font-medium text-neutral-500 uppercase tracking-wide">
+                                {cat.label}
+                              </p>
+                              <span className="text-[11px] text-neutral-500">{cat.models.length} models</span>
+                            </div>
+                            {cat.models.length > 0 ? (
                               <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
-                            {activeModels.map(({ id, name }) => renderMmCard(id, name))}
+                                {cat.models.map(({ id, name }) => renderMmCard(id, name))}
                               </div>
                             ) : (
-                          <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                            No models in this category.
+                              <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                                No models in this category.
                               </p>
-                          )}
+                            )}
+                          </div>
+                        ))}
                         </div>
                     );
                   })()}
@@ -8964,15 +9031,12 @@ export default function ChatPage() {
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">
                     {getLandingTranslations(language).productTagline}. Ideas and contexts you define. Use when you want the agent to reference your own concepts, goals, or frameworks.
                   </p>
-                  <div className="flex items-center justify-end gap-2">
-                    <div className="flex gap-1">
-                      <button type="button" onClick={() => setCgCustomCreateModal(true)} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Framework</button>
-                      <button type="button" onClick={() => { setCcCreateInput(""); setCcCreateStep("input"); setCcCreateDraft(null); setCcCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Add Concept</button>
-                    </div>
-                  </div>
                   {customConcepts.length > 0 ? (
                     <div className="space-y-3">
-                      <input type="search" placeholder="Search concepts..." value={ccSearchQuery} onChange={(e) => setCcSearchQuery(e.target.value)} className="w-full px-3 py-1.5 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground" aria-label="Search concepts" />
+                      <div className="flex items-center gap-2">
+                        <input type="search" placeholder="Search concepts..." value={ccSearchQuery} onChange={(e) => setCcSearchQuery(e.target.value)} className="h-11 flex-1 min-w-0 px-3 text-sm rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground" aria-label="Search concepts" />
+                        <button type="button" onClick={() => { setCcCreateInput(""); setCcCreateStep("input"); setCcCreateDraft(null); setCcCreateModal(true); }} className="h-11 shrink-0 px-4 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Add Concept</button>
+                      </div>
                       {(() => {
                         const q = ccSearchQuery.toLowerCase().trim();
                         const filteredConcepts = q ? customConcepts.filter((cc) => cc.title.toLowerCase().includes(q) || cc.summary.toLowerCase().includes(q) || cc.enrichmentPrompt.toLowerCase().includes(q)) : customConcepts;
@@ -8983,63 +9047,10 @@ export default function ChatPage() {
                         }
                         const standalone = filteredConcepts.filter((cc) => !conceptGroups.some((g) => (g.conceptIds ?? []).includes(cc._id)));
                         const toggleGroup = (key: string) => setCcGroupCollapsed((prev) => { const next = new Set(prev); if (next.has(key)) next.delete(key); else next.add(key); return next; });
-                        const hasGroupFilter = ccSelectedGroupKeys.size > 0;
-                        const isGroupVisible = (key: string) => !hasGroupFilter || ccSelectedGroupKeys.has(key);
-                        const toggleGroupFilter = (key: string) => {
-                          setCcSelectedGroupKeys((prev) => {
-                            const next = new Set(prev);
-                            if (next.has(key)) next.delete(key);
-                            else next.add(key);
-                            return next;
-                          });
-                        };
                         if (filteredConcepts.length === 0 && conceptGroups.length === 0) return <p className="text-xs text-neutral-500">{q ? "No concepts match" : "No concepts"}</p>;
                         return (
                           <>
-                            <div className="flex flex-wrap gap-2">
-                              <button
-                                type="button"
-                                onClick={() => setCcSelectedGroupKeys(new Set())}
-                                className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
-                                  !hasGroupFilter
-                                    ? "bg-foreground text-background border-foreground"
-                                    : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                                }`}
-                              >
-                                All
-                              </button>
-                              {conceptGroups.map((cg) => {
-                                const selected = ccSelectedGroupKeys.has(cg._id);
-                                return (
-                                  <button
-                                    key={`chip-${cg._id}`}
-                                    type="button"
-                                    onClick={() => toggleGroupFilter(cg._id)}
-                                    className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
-                                      selected
-                                        ? "bg-foreground text-background border-foreground"
-                                        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                                    }`}
-                                  >
-                                    {cg.title}
-                                  </button>
-                                );
-                              })}
-                              {standalone.length > 0 && (
-                                <button
-                                  type="button"
-                                  onClick={() => toggleGroupFilter("Standalone")}
-                                  className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
-                                    ccSelectedGroupKeys.has("Standalone")
-                                      ? "bg-foreground text-background border-foreground"
-                                      : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                                  }`}
-                                >
-                                  Standalone
-                                </button>
-                              )}
-                            </div>
-                            {conceptGroups.filter((cg) => isGroupVisible(cg._id)).map((cg, i) => {
+                            {conceptGroups.map((cg, i) => {
                               const concepts = byGroupId.get(cg._id) ?? [];
                               const isCollapsed = ccGroupCollapsed.has(cg._id);
                               const isEmpty = (cg.conceptIds?.length ?? 0) === 0 || concepts.length === 0;
@@ -9084,7 +9095,7 @@ export default function ChatPage() {
                                 </div>
                               );
                             })}
-                            {standalone.length > 0 && isGroupVisible("Standalone") && (
+                            {standalone.length > 0 && (
                               <div className={conceptGroups.length === 0 ? "pt-0" : "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2"}>
                                 <button type="button" data-no-modal-border="true" onClick={() => toggleGroup("Standalone")} className="flex items-center justify-between w-full text-left px-1 mb-1.5">
                                   <p className="text-[10px] font-medium text-neutral-500 uppercase tracking-wide">Standalone</p>
@@ -9856,7 +9867,10 @@ export default function ChatPage() {
                 <div className="w-full animate-fade-in-up space-y-6">
                   <h2 className="text-2xl md:text-xl font-semibold text-foreground text-center">A note from the developer</h2>
                   <p className="text-base text-neutral-600 dark:text-neutral-400 text-center">
-                    Here&apos;s what fml labs is about:
+                    fml labs combines daily productivity and wellness in one place.
+                  </p>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">
+                    I built this because my own interests sit at the intersection of getting meaningful work done and staying physically and mentally well.
                   </p>
                   <div className="space-y-4">
                     <div className="flex gap-4 items-start">
@@ -9867,8 +9881,8 @@ export default function ChatPage() {
                         </svg>
                       </div>
                       <div>
-                        <p className="font-medium text-foreground">Mental models</p>
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Proven frameworks and biases to help you think through decisions.</p>
+                        <p className="font-medium text-foreground">Deep thinking tools</p>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Second-order thinking, mentor conversations, and mental models to improve decisions.</p>
                       </div>
                     </div>
                     <div className="flex gap-4 items-start">
@@ -9878,8 +9892,8 @@ export default function ChatPage() {
                         </svg>
                       </div>
                       <div>
-                        <p className="font-medium text-foreground">Deep questioning</p>
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Not surface-level advice—we dig into the long-term consequences.</p>
+                        <p className="font-medium text-foreground">Journaling and reflection</p>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Capture daily entries, reflect consistently, and convert thoughts into clearer next steps.</p>
                       </div>
                     </div>
                     <div className="flex gap-4 items-start">
@@ -9890,8 +9904,8 @@ export default function ChatPage() {
                         </svg>
                       </div>
                       <div>
-                        <p className="font-medium text-foreground">Long-term thinking</p>
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Focus on choices that matter for your future.</p>
+                        <p className="font-medium text-foreground">Nutrition and wellness tracking</p>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Log food and exercise, set goals, and use analysis to improve your day-to-day habits.</p>
                       </div>
                     </div>
                   </div>
@@ -9965,94 +9979,329 @@ export default function ChatPage() {
                   </div>
                 ) : (
                   <>
-                    <div className="w-full max-w-2xl lg:max-w-4xl min-w-0 space-y-3 sm:space-y-4 animate-fade-in-up">
+                    <div className="w-full max-w-2xl lg:max-w-4xl min-w-0 flex flex-col gap-3 sm:gap-4 animate-fade-in-up">
                 {!incognitoMode && (
-                        <div className="w-full rounded-2xl border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 px-2.5 py-2 animate-fade-in-down">
-                          <div className="mb-1.5 flex items-center justify-between px-0.5">
-                            <p className="text-xs font-semibold text-foreground">
-                              Nutrition summary
-                            </p>
-                            <button
-                              type="button"
-                              onClick={() => setLandingNutritionBannerOpen((prev) => !prev)}
-                              className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium border border-orange-200 dark:border-orange-800 text-neutral-700 dark:text-neutral-200 hover:bg-orange-100/70 dark:hover:bg-orange-900/35 transition-colors"
-                              aria-label={landingNutritionBannerOpen ? "Collapse nutrition banner" : "Expand nutrition banner"}
-                            >
-                              {landingNutritionBannerOpen ? "▲" : "▼"}
-                            </button>
-                          </div>
-                          {landingNutritionBannerOpen && (
+                        <div
+                          className="order-2 w-full animate-fade-in-down"
+                        >
+                          {landingTab === "journaling" ? (
                             <div className="w-full grid grid-cols-1 min-[420px]:grid-cols-2 gap-2">
-                              <div className="min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-2 sm:p-1.5 text-left">
-                                <div className="flex items-center gap-2">
-                                  <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-orange-100 dark:bg-orange-900/40">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                                      <path d="M12 3s2.5 2.2 2.5 5c0 1.6-1.3 2.7-2.5 3.9-1.2-1.2-2.5-2.3-2.5-3.9 0-2.8 2.5-5 2.5-5Z" />
-                                      <path d="M7 13a5 5 0 0 0 10 0c0-3.4-2.7-5.4-5-7.6-2.3 2.2-5 4.2-5 7.6Z" />
+                          <div className="min-w-0 rounded-lg border border-orange-200 dark:border-orange-800/60 bg-background p-2 sm:p-1.5 text-left">
+                            <div className="flex items-center gap-2">
+                              <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-orange-100 dark:bg-orange-900/40">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                                  <path d="M12 3s2.5 2.2 2.5 5c0 1.6-1.3 2.7-2.5 3.9-1.2-1.2-2.5-2.3-2.5-3.9 0-2.8 2.5-5 2.5-5Z" />
+                                  <path d="M7 13a5 5 0 0 0 10 0c0-3.4-2.7-5.4-5-7.6-2.3 2.2-5 4.2-5 7.6Z" />
+                                </svg>
+                              </span>
+                              <p className="text-xs sm:text-base font-semibold text-foreground">Calories</p>
+                            </div>
+                            <div className="mt-1 grid grid-cols-3 gap-2 pr-2">
+                              <div className="min-w-0">
+                                <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                  {selectedLandingDayNutrition.caloriesFood}
+                                </p>
+                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Food</p>
+                              </div>
+                              <div className="min-w-0">
+                                <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                  {selectedLandingDayNutrition.caloriesExercise}
+                                </p>
+                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Exercise</p>
+                              </div>
+                              <div className="min-w-0">
+                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
+                                  <span className="text-base sm:text-xl font-semibold text-foreground">
+                                    {selectedLandingDayNutrition.caloriesRemaining}
+                                  </span>
+                                  <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">
+                                    /{nutritionGoals.caloriesTarget}
+                                  </span>
+                                </p>
+                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Remaining</p>
+                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
+                                  <div
+                                    className={`h-full rounded-full transition-colors ${getCaloriesRemainingMeterFillClass(
+                                      selectedLandingDayNutrition.caloriesRemaining,
+                                      nutritionGoals.caloriesTarget
+                                    )}`}
+                                    style={{
+                                      width: getMacroMeterWidth(
+                                        selectedLandingDayNutrition.caloriesRemaining,
+                                        nutritionGoals.caloriesTarget
+                                      ),
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="min-w-0 rounded-lg border border-orange-200 dark:border-orange-800/60 bg-background p-2 sm:p-1.5 text-left">
+                            <div className="flex items-center gap-2">
+                              <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
+                                  <circle cx="12" cy="12" r="8" stroke="#D946EF" strokeWidth="2.4" strokeDasharray="9 4" strokeLinecap="round" />
+                                </svg>
+                              </span>
+                              <p className="text-xs sm:text-base font-semibold text-foreground">Macros (g)</p>
+                            </div>
+                            <div className="mt-1 grid grid-cols-3 gap-2 pr-1">
+                              <div className="min-w-0">
+                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
+                                  <span className="text-base sm:text-xl font-semibold text-foreground">
+                                    {selectedLandingDayNutrition.carbsGrams}
+                                  </span>
+                                  <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">
+                                    /{nutritionGoals.carbsGrams}
+                                  </span>
+                                </p>
+                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Carbs</p>
+                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
+                                  <div
+                                    className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
+                                      "carbs",
+                                      selectedLandingDayNutrition.carbsGrams,
+                                      nutritionGoals.carbsGrams
+                                    )}`}
+                                    style={{
+                                      width: getMacroMeterWidth(
+                                        selectedLandingDayNutrition.carbsGrams,
+                                        nutritionGoals.carbsGrams
+                                      ),
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                              <div className="min-w-0">
+                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
+                                  <span className="text-base sm:text-xl font-semibold text-foreground">
+                                    {selectedLandingDayNutrition.proteinGrams}
+                                  </span>
+                                  <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">
+                                    /{nutritionGoals.proteinGrams}
+                                  </span>
+                                </p>
+                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Protein</p>
+                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
+                                  <div
+                                    className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
+                                      "protein",
+                                      selectedLandingDayNutrition.proteinGrams,
+                                      nutritionGoals.proteinGrams
+                                    )}`}
+                                    style={{
+                                      width: getMacroMeterWidth(
+                                        selectedLandingDayNutrition.proteinGrams,
+                                        nutritionGoals.proteinGrams
+                                      ),
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                              <div className="min-w-0">
+                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
+                                  <span className="text-base sm:text-xl font-semibold text-foreground">
+                                    {selectedLandingDayNutrition.fatGrams}
+                                  </span>
+                                  <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">
+                                    /{nutritionGoals.fatGrams}
+                                  </span>
+                                </p>
+                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Fat</p>
+                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
+                                  <div
+                                    className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
+                                      "fat",
+                                      selectedLandingDayNutrition.fatGrams,
+                                      nutritionGoals.fatGrams
+                                    )}`}
+                                    style={{
+                                      width: getMacroMeterWidth(
+                                        selectedLandingDayNutrition.fatGrams,
+                                        nutritionGoals.fatGrams
+                                      ),
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                            </div>
+                          ) : (
+                            <div className="space-y-2">
+                              <div className="w-full rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background overflow-hidden flex flex-col">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    playSelectionChime();
+                                    startSecondOrderConversation(!secondOrderCitationsEnabled);
+                                  }}
+                                  className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-orange-50 dark:hover:bg-orange-900/25 transition-colors active:scale-[0.98]"
+                                >
+                                  <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-accent">
+                                      <path d="M5 19h2l2.2-12H7.2Z" fill="currentColor" />
+                                      <rect x="11" y="7" width="2" height="12" rx="0.45" fill="currentColor" />
+                                      <rect x="15" y="7" width="2" height="12" rx="0.45" fill="currentColor" />
                                     </svg>
                                   </span>
-                                  <p className="text-xs sm:text-base font-semibold text-foreground">Calories</p>
-                                </div>
-                                <div className="mt-1 grid grid-cols-3 gap-2 pr-1">
                                   <div className="min-w-0">
-                                    <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
-                                      {selectedLandingDayNutrition.caloriesFood}
-                                    </p>
-                                    <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Food</p>
+                                    <p className="font-medium text-foreground">{getLandingTranslations(language).secondOrderThinkingTitle}</p>
+                                    <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).secondOrderThinkingSubtitle}</p>
                                   </div>
-                                  <div className="min-w-0">
-                                    <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
-                                      {selectedLandingDayNutrition.caloriesExercise}
-                                    </p>
-                                    <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Exercise</p>
-                                  </div>
-                                  <div className="min-w-0">
-                                    <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
-                                      {selectedLandingDayNutrition.caloriesRemaining}
-                                    </p>
-                                    <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Remaining</p>
-                                  </div>
+                                </button>
+                                <div
+                                  className="flex items-center justify-between gap-2 px-4 py-2.5 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/30"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <span className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).secondOrderCitationsToggleLabel}</span>
+                                  <button
+                                    type="button"
+                                    role="switch"
+                                    aria-checked={secondOrderCitationsEnabled}
+                                    aria-label={getLandingTranslations(language).secondOrderCitationsToggleLabel}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSecondOrderCitationsEnabled((v) => !v);
+                                    }}
+                                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+                                      secondOrderCitationsEnabled ? "bg-accent" : "bg-neutral-300 dark:bg-neutral-600"
+                                    }`}
+                                  >
+                                    <span
+                                      className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
+                                        secondOrderCitationsEnabled ? "translate-x-6" : "translate-x-1"
+                                      }`}
+                                    />
+                                  </button>
                                 </div>
                               </div>
 
-                              <div className="min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-2 sm:p-1.5 text-left">
-                                <div className="flex items-center gap-2">
-                                  <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
-                                      <circle cx="12" cy="12" r="8" stroke="#D946EF" strokeWidth="2.4" strokeDasharray="9 4" strokeLinecap="round" />
-                                    </svg>
-                                  </span>
-                                  <p className="text-xs sm:text-base font-semibold text-foreground">Macros</p>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  playSelectionChime();
+                                  if (sessionId !== "new" && sessionId !== "incognito") {
+                                    try {
+                                      sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
+                                    } catch {
+                                      /* ignore */
+                                    }
+                                    router.push("/chat/new");
+                                  } else {
+                                    setMentorCatalogSearch("");
+                                    setMentorCatalogCategoryId(null);
+                                    setMentorOneOnOneModalOpen(true);
+                                  }
+                                }}
+                                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-orange-50 dark:hover:bg-orange-900/25 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+                              >
+                                <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                  </svg>
+                                </span>
+                                <div className="min-w-0">
+                                  <p className="font-medium text-foreground">{getLandingTranslations(language).mentorOneOnOneTitle}</p>
+                                  <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).mentorOneOnOneSubtitle}</p>
                                 </div>
-                                <div className="mt-1 grid grid-cols-3 gap-2 pr-1">
-                                  <div className="min-w-0">
-                                    <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
-                                      {selectedLandingDayNutrition.carbsGrams}/{nutritionGoals.carbsGrams}
-                                    </p>
-                                    <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Carbs (g)</p>
-                                  </div>
-                                  <div className="min-w-0">
-                                    <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
-                                      {selectedLandingDayNutrition.proteinGrams}/{nutritionGoals.proteinGrams}
-                                    </p>
-                                    <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Protein (g)</p>
-                                  </div>
-                                  <div className="min-w-0">
-                                    <p className="text-sm sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
-                                      {selectedLandingDayNutrition.fatGrams}/{nutritionGoals.fatGrams}
-                                    </p>
-                                    <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Fat (g)</p>
-                                  </div>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  playSelectionChime();
+                                  void handleTeachMeClick();
+                                }}
+                                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-orange-50 dark:hover:bg-orange-900/25 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+                              >
+                                <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                                    <path d="M12 3v18" />
+                                  </svg>
+                                </span>
+                                <div className="min-w-0">
+                                  <p className="font-medium text-foreground">Learn a New Mental Model</p>
+                                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Discover a fresh framework to apply right now.</p>
                                 </div>
-                              </div>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  playSelectionChime();
+                                  setLibraryPanelOpen(null);
+                                  setWaysOfLookingAtModalOpen(true);
+                                  setWaysOfLookingAtDrawMode(false);
+                                  setWaysOfLookingAtCategory(null);
+                                  setWaysOfLookingAtCity(null);
+                                  setWaysOfLookingAtCuisine(null);
+                                  setWaysOfLookingAtMicrocosm(null);
+                                  setWaysOfLookingAtHuman(null);
+                                  setWaysOfLookingAtDigital(null);
+                                }}
+                                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-orange-50 dark:hover:bg-orange-900/25 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+                              >
+                                <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
+                                    <rect width="18" height="14" x="3" y="3" rx="2" />
+                                    <path d="M3 9h18" />
+                                    <path d="M3 15h18" />
+                                  </svg>
+                                </span>
+                                <div className="min-w-0">
+                                  <p className="font-medium text-foreground">{getUiTranslations(language).promptGames}</p>
+                                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Use card-style lenses to rethink your situation.</p>
+                                </div>
+                              </button>
                             </div>
                           )}
                         </div>
                       )}
 
                 {!incognitoMode && (
-                        <div className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background px-2.5 py-2">
+                        <div className="order-1 w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background px-2.5 py-2">
                           <div className="mb-1.5 px-0.5">
+                            <div className="mb-2 grid grid-cols-2 gap-1">
+                              <button
+                                type="button"
+                                onClick={() => setLandingTab("journaling")}
+                                className={`w-full rounded-full px-3 py-1 text-[11px] font-semibold border transition-colors ${
+                                  landingTab === "journaling"
+                                    ? "border-neutral-400 dark:border-neutral-500 bg-neutral-100 dark:bg-neutral-800 text-foreground ring-1 ring-neutral-300/70 dark:ring-neutral-500/70 shadow-sm"
+                                    : "border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                                }`}
+                                aria-pressed={landingTab === "journaling"}
+                              >
+                                {getLandingTranslations(language).journalingTabLabel}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setLandingTab("deepThinking")}
+                                className={`w-full rounded-full px-3 py-1 text-[11px] font-semibold border transition-colors ${
+                                  landingTab === "deepThinking"
+                                    ? "border-neutral-400 dark:border-neutral-500 bg-neutral-100 dark:bg-neutral-800 text-foreground ring-1 ring-neutral-300/70 dark:ring-neutral-500/70 shadow-sm"
+                                    : "border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                                }`}
+                                aria-pressed={landingTab === "deepThinking"}
+                              >
+                                {getLandingTranslations(language).deepThinkingTabLabel}
+                              </button>
+                            </div>
+                            <div className="flex sm:hidden items-center justify-between gap-2">
+                              <p className="text-xs whitespace-nowrap font-semibold text-foreground">
+                                {getLandingTranslations(language).landingSelectedDateLabel}: {selectedLandingDayMobileLabel}
+                              </p>
+                              <p className="text-xs whitespace-nowrap text-neutral-500 dark:text-neutral-400">
+                                {selectedLandingDayActivityItems.length} item{selectedLandingDayActivityItems.length === 1 ? "" : "s"}
+                              </p>
+                            </div>
                             <div className="hidden sm:flex items-center justify-between gap-2">
                               <p className="text-xs whitespace-nowrap font-semibold text-foreground">
                                 Last 7 days
@@ -10061,33 +10310,33 @@ export default function ChatPage() {
                                 {selectedLandingDayActivityItems.length} item{selectedLandingDayActivityItems.length === 1 ? "" : "s"}
                               </p>
                             </div>
-                            {!isAnonymous && (
+                            {!isAnonymous && landingTab === "journaling" && (
                               <div className="mt-1.5 flex flex-wrap items-center gap-1.5 sm:mt-0 sm:gap-2 sm:justify-end">
                                 <button
                                   type="button"
-                                  onClick={openNutritionReportModal}
-                                  className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-[11px] whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                                >
-                                  {getLandingTranslations(language).nutritionAnalysisButtonLabel}
-                                </button>
-                                <button
-                                  type="button"
                                   onClick={openGoalsModal}
-                                  className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-[11px] whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                  className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-[11px] whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 transition-colors"
                                 >
                                   {getLandingTranslations(language).nutritionGoalsButtonLabel}
                                 </button>
                                 <button
                                   type="button"
+                                  onClick={openNutritionReportModal}
+                                  className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-[11px] whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 transition-colors"
+                                >
+                                  {getLandingTranslations(language).nutritionAnalysisButtonLabel}
+                                </button>
+                                <button
+                                  type="button"
                                   onClick={openWeeklySummaryModal}
-                                  className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-[11px] whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                  className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-[11px] whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 transition-colors"
                                 >
                                   {getLandingTranslations(language).weeklySummaryButtonLabel}
                                 </button>
                               </div>
                             )}
                           </div>
-                          <div ref={landingDaysScrollerRef} className="overflow-x-auto">
+                          <div ref={landingDaysScrollerRef} className="hidden sm:block overflow-x-auto">
                             <div className="flex min-w-max gap-1.5 sm:grid sm:grid-cols-7 sm:gap-1.5 sm:min-w-0">
                               {landingCalendarDays.map(({ key, date }) => {
                                 const selected = key === selectedLandingDayKey;
@@ -10120,7 +10369,7 @@ export default function ChatPage() {
                       )}
 
                       {!incognitoMode && (
-                        <div className="w-full text-left">
+                        <div className="order-3 w-full text-left">
                           {selectedLandingDayActivityItems.length === 0 ? (
                             <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">
                               No activity yet for this day.
@@ -10128,7 +10377,7 @@ export default function ChatPage() {
                           ) : (
                             <div className="space-y-3">
                               {selectedLandingDayActivityGroups.map((group) => (
-                                <div key={group.groupKey} className="rounded-xl border border-neutral-200/80 dark:border-neutral-700/80 p-2">
+                                <div key={group.groupKey} className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-2">
                                   <div className="mb-1.5 flex items-center justify-between">
                                     <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-600 dark:text-neutral-300">
                                       {group.label}
@@ -10155,7 +10404,7 @@ export default function ChatPage() {
                                           key={item.id}
                                           type="button"
                                           onClick={() => handleLandingActivityClick(item)}
-                                          className="w-full rounded-lg border border-neutral-200/80 dark:border-neutral-700/80 px-2.5 py-1.5 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                                          className="w-full rounded-lg border border-neutral-200 dark:border-neutral-700 px-2.5 py-1.5 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
                                         >
                                           <p className="text-[13px] font-medium text-foreground truncate">{item.title}</p>
                                           <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
@@ -10501,55 +10750,49 @@ export default function ChatPage() {
         <div className="fixed inset-x-0 bottom-0 z-30 flex flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background">
           <div className="flex flex-col items-center justify-center px-4 py-2 sm:py-2.5 min-w-0">
             {messages.length === 0 && !incognitoMode && (
-              <div className="w-full max-w-2xl lg:max-w-4xl mb-2 flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-0.5">
-                <button
-                  type="button"
-                  onClick={() => {
-                    playSelectionChime();
-                    if (sessionId !== "new" && sessionId !== "incognito") {
-                      try {
-                        sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
-                      } catch {
-                        /* ignore */
-                      }
-                      router.push("/chat/new");
-                      return;
-                    }
-                    setMentorCatalogSearch("");
-                    setMentorCatalogCategoryId(null);
-                    setMentorOneOnOneModalOpen(true);
-                  }}
-                  className="shrink-0 rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
-                >
-                  1:1 mentor
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    playSelectionChime();
-                    startSecondOrderConversation(!secondOrderCitationsEnabled);
-                  }}
-                  className="shrink-0 rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
-                >
-                  Second-order
-                </button>
-                <button
-                  type="button"
-                  onClick={openJournalEntryFlow}
-                  className="shrink-0 rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
-                >
-                  Journal
-                </button>
-                <button
-                  type="button"
-                  onClick={openCalorieTrackerModal}
-                  className="shrink-0 rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800"
-                >
-                  {getLandingTranslations(language).calorieTrackerChipLabel}
-                </button>
+              <div className="w-full max-w-2xl lg:max-w-4xl mb-2 space-y-1.5">
+                <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-0.5">
+                  {landingTab === "journaling" && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => setLandingJournalEntryType("regular")}
+                        className={`shrink-0 rounded-full border px-3 py-1.5 text-xs sm:text-sm transition-colors ${
+                          landingJournalEntryType === "regular"
+                            ? "border-orange-200 dark:border-orange-700/60 bg-background text-foreground"
+                            : "border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:border-orange-300 dark:hover:border-orange-600"
+                        }`}
+                        aria-pressed={landingJournalEntryType === "regular"}
+                      >
+                        Journal entry
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setLandingJournalEntryType("calorie")}
+                        className={`shrink-0 rounded-full border px-3 py-1.5 text-xs sm:text-sm transition-colors ${
+                          landingJournalEntryType === "calorie"
+                            ? "border-orange-200 dark:border-orange-700/60 bg-background text-foreground"
+                            : "border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:border-orange-300 dark:hover:border-orange-600"
+                        }`}
+                        aria-pressed={landingJournalEntryType === "calorie"}
+                      >
+                        {getLandingTranslations(language).calorieTrackerChipLabel} entry
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
             )}
-            <div className="min-w-0 max-w-2xl lg:max-w-4xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex items-center overflow-hidden h-12 min-h-12" data-tour="input-area">
+            {!(messages.length === 0 && !incognitoMode && landingTab === "deepThinking") && (
+              <>
+            <div
+              className={`min-w-0 max-w-2xl lg:max-w-4xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex overflow-hidden ${
+                messages.length === 0 && !incognitoMode && landingTab === "journaling"
+                  ? "items-center min-h-12 max-h-40 py-1.5"
+                  : "items-center h-12 min-h-12"
+              }`}
+              data-tour="input-area"
+            >
               <div className="flex-1 min-w-0 flex items-center px-3">
                 <MentionInput
                   inputRef={inputRef}
@@ -10576,18 +10819,37 @@ export default function ChatPage() {
                   }))}
                   mentionTranslations={getMentionTranslations(language)}
                   placeholder={
-                    multiMentorMode && selectedMentorFigureIds.length >= 2
+                    messages.length === 0 && !incognitoMode && landingTab === "journaling"
+                      ? landingJournalEntryType === "regular"
+                        ? "Write your journal entry..."
+                        : "Tell me what you ate or exercised..."
+                      : multiMentorMode && selectedMentorFigureIds.length >= 2
                       ? "What do you want to ask your mentors?"
                       : landingAnimatedPlaceholder
                   }
                   placeholderMobile={
-                    multiMentorMode && selectedMentorFigureIds.length >= 2
+                    messages.length === 0 && !incognitoMode && landingTab === "journaling"
+                      ? landingJournalEntryType === "regular"
+                        ? "Write your journal entry..."
+                        : "Tell me what you ate or exercised..."
+                      : multiMentorMode && selectedMentorFigureIds.length >= 2
                       ? "What do you want to ask your mentors?"
                       : landingAnimatedPlaceholder
                   }
-                  disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
-                  placeholderCentered
-                  className="w-full h-10 max-h-10 py-0 pl-0 pr-0 border-0 rounded-none bg-transparent shadow-none resize-none focus:outline-none focus:ring-0 focus:border-0 text-sm sm:text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground whitespace-nowrap overflow-x-auto overflow-y-hidden"
+                  disabled={
+                    sessionLoading ||
+                    !!currentSession?.isCollapsed ||
+                    (messages.length === 0 && !incognitoMode && landingTab === "journaling"
+                      ? landingJournalSaving || landingJournalImageProcessing
+                      : isLoading)
+                  }
+                  placeholderCentered={!(messages.length === 0 && !incognitoMode && landingTab === "journaling")}
+                  placeholderTopAligned={messages.length === 0 && !incognitoMode && landingTab === "journaling"}
+                  className={`w-full pl-0 pr-0 border-0 rounded-none bg-transparent shadow-none resize-none focus:outline-none focus:ring-0 focus:border-0 text-sm sm:text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground ${
+                    messages.length === 0 && !incognitoMode && landingTab === "journaling"
+                      ? "min-h-10 max-h-32 py-2 whitespace-pre-wrap break-words overflow-x-hidden overflow-y-auto leading-5"
+                      : "h-10 max-h-10 py-0 whitespace-nowrap overflow-x-auto overflow-y-hidden"
+                  }`}
                   onMentalModelClick={handleMentalModelClick}
                   onLtmClick={(id) => {
                     const ltm = longTermMemories.find((l) => l._id === id);
@@ -10610,34 +10872,109 @@ export default function ChatPage() {
                 />
               </div>
               <div className="flex items-center gap-1 pr-2 shrink-0">
+              {messages.length === 0 && !incognitoMode && landingTab === "journaling" && (
+                <>
+                  <input
+                    ref={landingJournalCameraInputRef}
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    className="hidden"
+                    onChange={handleLandingJournalImageSelected}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => landingJournalCameraInputRef.current?.click()}
+                    disabled={landingJournalSaving || landingJournalImageProcessing}
+                    className="inline-flex items-center justify-center min-h-[52px] min-w-[52px] rounded-2xl border border-neutral-200/70 dark:border-neutral-700/80 bg-neutral-50/70 dark:bg-neutral-900/40 text-neutral-700 dark:text-neutral-200 hover:border-orange-300/80 dark:hover:border-orange-700/60 hover:bg-orange-50/60 dark:hover:bg-orange-900/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0"
+                    aria-label="Take picture"
+                    title="Take picture"
+                  >
+                    {landingJournalImageProcessing ? (
+                      <LoadingDots aria-label="Processing image" />
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                        <path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z" />
+                        <circle cx="12" cy="13" r="3.5" />
+                      </svg>
+                    )}
+                  </button>
+                </>
+              )}
               <VoiceInputButton
                 onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
                 language={language}
-                disabled={isLoading || sessionLoading || !!currentSession?.isCollapsed}
+                disabled={
+                  sessionLoading ||
+                  !!currentSession?.isCollapsed ||
+                  (messages.length === 0 && !incognitoMode && landingTab === "journaling"
+                    ? landingJournalSaving || landingJournalImageProcessing
+                    : isLoading)
+                }
                 ariaLabel="Voice input"
                 compactStopWhileListening
-                className="!min-h-8 !min-w-8"
+                className="!min-h-[52px] !min-w-[52px] !rounded-2xl !border-neutral-200/70 dark:!border-neutral-700/80 !bg-neutral-50/70 dark:!bg-neutral-900/40 hover:!border-orange-300/80 dark:hover:!border-orange-700/60 hover:!bg-orange-50/60 dark:hover:!bg-orange-900/20"
               />
-              <button
-                onClick={() => sendMessage()}
-                disabled={isLoading || sessionLoading || !input.trim() || !!currentSession?.isCollapsed}
-                aria-label="Send message"
-                className="flex items-center justify-center p-2 min-h-8 min-w-8 rounded-xl bg-accent text-white transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
-              >
-                {isLoading ? (
-                  <LoadingDots aria-label="Sending" />
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                    <path d="m22 2-7 20-4-9-9-4Z" />
-                    <path d="M22 2 11 13" />
-                  </svg>
-                )}
+              {!(messages.length === 0 && !incognitoMode && landingTab === "journaling") && (
+                <button
+                  onClick={() => {
+                    sendMessage();
+                  }}
+                  disabled={
+                    !input.trim() ||
+                    sessionLoading ||
+                    !!currentSession?.isCollapsed ||
+                    isLoading
+                  }
+                  aria-label="Send message"
+                  className="flex items-center justify-center gap-1.5 p-2 min-h-8 min-w-8 rounded-xl bg-accent text-white transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
+                >
+                  {isLoading ? (
+                    <LoadingDots aria-label="Sending" />
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                      <path d="m22 2-7 20-4-9-9-4Z" />
+                      <path d="M22 2 11 13" />
+                    </svg>
+                  )}
                 </button>
+              )}
               </div>
               </div>
+              {messages.length === 0 && !incognitoMode && landingTab === "journaling" && landingJournalImagePreview && (
+                <div className="mt-1 w-full max-w-2xl lg:max-w-4xl px-2">
+                  <div className="flex items-center justify-between gap-2 rounded-xl border border-neutral-200 dark:border-neutral-700 px-2 py-1.5">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <img
+                        src={landingJournalImagePreview}
+                        alt="Uploaded food preview"
+                        className="h-8 w-8 rounded object-cover border border-neutral-200 dark:border-neutral-700"
+                      />
+                      <p className="text-[11px] sm:text-xs text-neutral-600 dark:text-neutral-300 truncate">
+                        Photo analyzed. You can retry with a new picture.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={retryLandingJournalImageAnalysis}
+                      disabled={landingJournalImageProcessing || landingJournalSaving}
+                      className="shrink-0 rounded-md border border-neutral-200 dark:border-neutral-700 px-2 py-1 text-[10px] sm:text-[11px] font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Retry photo
+                    </button>
+                  </div>
+                </div>
+              )}
+              {messages.length === 0 && !incognitoMode && landingTab === "journaling" && (landingJournalImageError || landingJournalSaveError) && (
+                <p className="mt-1 text-center text-[11px] sm:text-xs text-red-600 dark:text-red-400 max-w-2xl w-full px-2">
+                  {landingJournalImageError ?? landingJournalSaveError}
+                </p>
+              )}
               <p className="mt-1.5 text-center text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 max-w-2xl w-full px-2">
                 FML Labs is AI and can make mistakes.
               </p>
+              </>
+            )}
           </div>
         </div>
         </>
@@ -11428,7 +11765,7 @@ export default function ChatPage() {
                                     <circle cx="12" cy="12" r="8" stroke="#D946EF" strokeWidth="2.4" strokeDasharray="9 4" strokeLinecap="round" />
                                   </svg>
                                 </span>
-                                <p className="text-sm sm:text-base font-semibold text-foreground">Macros</p>
+                                <p className="text-sm sm:text-base font-semibold text-foreground">Macros (g)</p>
                               </div>
                               <div className="mt-1 grid grid-cols-3 gap-1">
                                 <div className="min-w-0">
@@ -11449,7 +11786,7 @@ export default function ChatPage() {
                                       {transcriptModalNutritionSnapshot.carbsGrams}
                                     </p>
                                   )}
-                                  <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Carbs (g)</p>
+                                  <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Carbs</p>
                                 </div>
                                 <div className="min-w-0">
                                   {transcriptStatsEditing ? (
@@ -11469,7 +11806,7 @@ export default function ChatPage() {
                                       {transcriptModalNutritionSnapshot.proteinGrams}
                                     </p>
                                   )}
-                                  <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Protein (g)</p>
+                                  <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Protein</p>
                                 </div>
                                 <div className="min-w-0">
                                   {transcriptStatsEditing ? (
@@ -11489,7 +11826,7 @@ export default function ChatPage() {
                                       {transcriptModalNutritionSnapshot.fatGrams}
                                     </p>
                                   )}
-                                  <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Fat (g)</p>
+                                  <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Fat</p>
                                 </div>
                               </div>
                             </div>
@@ -12623,31 +12960,6 @@ export default function ChatPage() {
                   >
                     View leaderboard →
                   </Link>
-                </section>
-                )}
-
-                {!isAnonymous && (
-                <section className="pt-6 border-t border-neutral-100 dark:border-neutral-700/20">
-                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Help</h3>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Get familiar with the app.</p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSettingsOpen(false);
-                      setFeatureTourStep(0);
-                    }}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border-[0.75px] border-neutral-200 dark:border-white/12"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                      <circle cx="12" cy="12" r="10" />
-                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                      <path d="M12 17h.01" />
-                    </svg>
-                    Show feature tour
-                  </button>
-                  <p className="mt-1.5 text-xs text-neutral-500 dark:text-neutral-400">
-                    Walk through the main features of the app.
-                  </p>
                 </section>
                 )}
 
@@ -13947,39 +14259,6 @@ export default function ChatPage() {
               </button>
             </div>
             <div className="p-4 space-y-3">
-              <button
-                type="button"
-                onClick={() => {
-                  playSelectionChime();
-                  setNewConversationChooserModalOpen(false);
-                  if (sessionId !== "new" && sessionId !== "incognito") {
-                    try {
-                      sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
-                    } catch {
-                      /* ignore */
-                    }
-                    router.push("/chat/new");
-                  } else {
-                    setMentorCatalogSearch("");
-                    setMentorCatalogCategoryId(null);
-                    setMentorOneOnOneModalOpen(true);
-                  }
-                }}
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
-              >
-                <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                </span>
-                <div className="min-w-0">
-                  <p className="font-medium text-foreground">{getLandingTranslations(language).mentorOneOnOneTitle}</p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).mentorOneOnOneSubtitle}</p>
-                </div>
-              </button>
               <div className="w-full rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background overflow-hidden flex flex-col">
                 <button
                   type="button"
@@ -13987,19 +14266,13 @@ export default function ChatPage() {
                     playSelectionChime();
                     startSecondOrderConversation(!secondOrderCitationsEnabled);
                   }}
-                  className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors active:scale-[0.98]"
+                  className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-orange-50 dark:hover:bg-orange-900/25 transition-colors active:scale-[0.98]"
                 >
-                  <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
-                      <path d="M12 2v4" />
-                      <path d="m16 6 2-2" />
-                      <path d="M18 12h4" />
-                      <path d="m16 18 2 2" />
-                      <path d="M12 18v4" />
-                      <path d="m8 18-2 2" />
-                      <path d="M6 12H2" />
-                      <path d="m8 6 2-2" />
-                      <circle cx="12" cy="12" r="3" />
+                  <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-accent">
+                      <path d="M5 19h2l2.2-12H7.2Z" fill="currentColor" />
+                      <rect x="11" y="7" width="2" height="12" rx="0.45" fill="currentColor" />
+                      <rect x="15" y="7" width="2" height="12" rx="0.45" fill="currentColor" />
                     </svg>
                   </span>
                   <div className="min-w-0">
@@ -14033,6 +14306,89 @@ export default function ChatPage() {
                   </button>
                 </div>
               </div>
+              <button
+                type="button"
+                onClick={() => {
+                  playSelectionChime();
+                  setNewConversationChooserModalOpen(false);
+                  if (sessionId !== "new" && sessionId !== "incognito") {
+                    try {
+                      sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
+                    } catch {
+                      /* ignore */
+                    }
+                    router.push("/chat/new");
+                  } else {
+                    setMentorCatalogSearch("");
+                    setMentorCatalogCategoryId(null);
+                    setMentorOneOnOneModalOpen(true);
+                  }
+                }}
+                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-orange-50 dark:hover:bg-orange-900/25 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+              >
+                <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                </span>
+                <div className="min-w-0">
+                  <p className="font-medium text-foreground">{getLandingTranslations(language).mentorOneOnOneTitle}</p>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).mentorOneOnOneSubtitle}</p>
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  playSelectionChime();
+                  setNewConversationChooserModalOpen(false);
+                  void handleTeachMeClick();
+                }}
+                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-orange-50 dark:hover:bg-orange-900/25 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+              >
+                <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                    <path d="M12 3v18" />
+                  </svg>
+                </span>
+                <div className="min-w-0">
+                  <p className="font-medium text-foreground">Learn a New Mental Model</p>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Discover a fresh framework to apply right now.</p>
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  playSelectionChime();
+                  setNewConversationChooserModalOpen(false);
+                  setLibraryPanelOpen(null);
+                  setWaysOfLookingAtModalOpen(true);
+                  setWaysOfLookingAtDrawMode(false);
+                  setWaysOfLookingAtCategory(null);
+                  setWaysOfLookingAtCity(null);
+                  setWaysOfLookingAtCuisine(null);
+                  setWaysOfLookingAtMicrocosm(null);
+                  setWaysOfLookingAtHuman(null);
+                  setWaysOfLookingAtDigital(null);
+                }}
+                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-orange-50 dark:hover:bg-orange-900/25 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+              >
+                <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
+                    <rect width="18" height="14" x="3" y="3" rx="2" />
+                    <path d="M3 9h18" />
+                    <path d="M3 15h18" />
+                  </svg>
+                </span>
+                <div className="min-w-0">
+                  <p className="font-medium text-foreground">{getUiTranslations(language).promptGames}</p>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Use card-style lenses to rethink your situation.</p>
+                </div>
+              </button>
               <button
                 type="button"
                 onClick={() => {

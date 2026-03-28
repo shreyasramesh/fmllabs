@@ -752,4 +752,18 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Global interactive hover tint: keep it subtle and warm (app-wide). */
+  .hover\:bg-neutral-50:hover,
+  .hover\:bg-neutral-100:hover,
+  .hover\:bg-neutral-200:hover {
+    background-color: rgb(255 247 237) !important; /* orange-50 */
+  }
+
+  .dark .dark\:hover\:bg-neutral-700:hover,
+  .dark .dark\:hover\:bg-neutral-700\/70:hover,
+  .dark .dark\:hover\:bg-neutral-800:hover,
+  .dark .dark\:hover\:bg-neutral-800\/70:hover {
+    background-color: rgb(124 45 18 / 0.2) !important; /* subtle orange tint */
+  }
 }

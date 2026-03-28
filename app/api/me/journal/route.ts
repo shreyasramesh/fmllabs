@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { saveJournalTranscript, updateJournalMentorReflections } from "@/lib/db";
 import { resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
+import { getPacificTimeParts, parseJournalEntryTimeFromBody } from "@/lib/journal-entry-time";
 import { inferJournalTitleFromContent } from "@/lib/journal-title";
 import { runJournalMentorReflections } from "@/lib/journal-mentor-reflections";
 import { recordMongoUsageRequest } from "@/lib/usage";
@@ -58,9 +59,9 @@ export async function POST(request: Request) {
       title = "Journal entry";
     }
 
-    const now = new Date();
+    const journalEntryTime = parseJournalEntryTimeFromBody(body) ?? getPacificTimeParts();
     const saved = await saveJournalTranscript(userId, text, title, entryDate, {
-      journalEntryTime: { hour: now.getHours(), minute: now.getMinutes() },
+      journalEntryTime,
     });
     const transcriptId = saved._id;
     void updateJournalMentorReflections(transcriptId, userId, { status: "pending" }).then((ok) => {

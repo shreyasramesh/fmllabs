@@ -958,7 +958,7 @@ export function MentionInput({
             placeholderCentered
               ? "mention-input-singleline-placeholder top-0 left-0 right-4"
               : placeholderTopAligned
-                ? "top-4 left-0 right-4"
+                ? "top-1/2 -translate-y-1/2 left-0 right-4"
                 : "top-0 left-0 right-4"
           }`}
           aria-hidden

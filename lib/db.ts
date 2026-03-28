@@ -5,7 +5,6 @@ import {
   decryptHabitFields,
   decryptLongTermMemoryFields,
   decryptMessageFields,
-  decryptNuggetFields,
   decryptSavedConceptFields,
   decryptSavedPerspectiveCardFields,
   decryptSessionFields,
@@ -17,7 +16,6 @@ import {
   encryptHabitFields,
   encryptLongTermMemoryFields,
   encryptMessageFields,
-  encryptNuggetFields,
   encryptSavedConceptFields,
   encryptSavedPerspectiveCardFields,
   encryptSessionFields,
@@ -25,6 +23,7 @@ import {
   encryptUserMentalModelFields,
   encryptUserSettingsFields,
 } from "./crypto-fields";
+import { getPacificTimeParts } from "./journal-entry-time";
 import type { HabitBucket } from "./habit-buckets";
 export type { HabitBucket } from "./habit-buckets";
 export { HABIT_BUCKET_IDS, isHabitBucket } from "./habit-buckets";
@@ -248,19 +247,6 @@ export interface SavedPerspectiveCard {
 }
 
 interface SavedPerspectiveCardDoc extends Omit<SavedPerspectiveCard, "_id"> {
-  _id: ObjectId;
-}
-
-export interface Nugget {
-  _id?: string;
-  userId: string;
-  content: string;
-  source?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface NuggetDoc extends Omit<Nugget, "_id"> {
   _id: ObjectId;
 }
 
@@ -1600,8 +1586,9 @@ export async function saveJournalTranscript(
   const database = await getDb();
   const now = new Date();
   const videoId = `journal_${new ObjectId().toHexString()}`;
-  const entryHour = options?.journalEntryTime?.hour ?? now.getHours();
-  const entryMinute = options?.journalEntryTime?.minute ?? now.getMinutes();
+  const pacificFallbackTime = getPacificTimeParts(now);
+  const entryHour = options?.journalEntryTime?.hour ?? pacificFallbackTime.hour;
+  const entryMinute = options?.journalEntryTime?.minute ?? pacificFallbackTime.minute;
   const doc = encryptTranscriptFields({
     userId,
     videoId,
@@ -1722,56 +1709,6 @@ export async function updateSavedTranscriptText(
     ...result,
     _id: result._id.toString(),
   } as SavedTranscript & { _id: string });
-}
-
-export async function getNuggets(userId: string): Promise<(Nugget & { _id: string })[]> {
-  const database = await getDb();
-  const docs = await database
-    .collection<NuggetDoc>("nuggets")
-    .find({ userId })
-    .sort({ updatedAt: -1 })
-    .toArray();
-  return docs.map((d) =>
-    decryptNuggetFields({ ...d, _id: d._id.toString() } as Nugget & { _id: string })
-  ) as (Nugget & { _id: string })[];
-}
-
-export async function createNugget(
-  userId: string,
-  content: string,
-  source?: string
-): Promise<Nugget & { _id: string }> {
-  const database = await getDb();
-  const now = new Date();
-  const doc = encryptNuggetFields({
-    userId,
-    content: content.trim(),
-    source: source?.trim() || undefined,
-    createdAt: now,
-    updatedAt: now,
-  }) as Omit<Nugget, "_id">;
-  // MongoDB insertOne accepts docs without _id; it will be generated
-  const result = await database
-    .collection<NuggetDoc>("nuggets")
-    .insertOne(doc as unknown as NuggetDoc);
-  return decryptNuggetFields({
-    ...doc,
-    _id: result.insertedId.toString(),
-  }) as Nugget & { _id: string };
-}
-
-export async function deleteNugget(id: string, userId: string): Promise<boolean> {
-  const database = await getDb();
-  let oid: ObjectId;
-  try {
-    oid = new ObjectId(id);
-  } catch {
-    return false;
-  }
-  const result = await database
-    .collection<NuggetDoc>("nuggets")
-    .deleteOne({ _id: oid, userId });
-  return result.deletedCount > 0;
 }
 
 export async function getUserSettings(userId: string): Promise<UserSettings | null> {
@@ -1901,7 +1838,7 @@ export async function markWeeklyReflectionSendStatus(
   );
 }
 
-/** Delete all user data: sessions, messages, LTM, custom concepts, concept groups, saved concepts, transcripts, nuggets, settings */
+/** Delete all user data stored in app DB collections for this user. */
 export async function deleteAllUserData(userId: string): Promise<void> {
   const database = await getDb();
   const sessions = await database
@@ -1919,10 +1856,11 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   await database.collection<ConceptGroupDoc>("concept_groups").deleteMany({ userId });
   await database.collection<SavedConcept>("user_saved_concepts").deleteMany({ userId });
   await database.collection<SavedTranscriptDoc>("transcripts").deleteMany({ userId });
-  await database.collection<NuggetDoc>("nuggets").deleteMany({ userId });
   await database.collection<UserMentalModelDoc>("user_mental_models").deleteMany({ userId });
   await database.collection<UserSettingsDoc>("user_settings").deleteMany({ userId });
   await database.collection<SavedPerspectiveCardDoc>("saved_perspective_cards").deleteMany({ userId });
   await database.collection<HabitDoc>("habits").deleteMany({ userId });
   await database.collection("user_progress").deleteMany({ userId });
+  await database.collection("weekly_reflection_sends").deleteMany({ userId });
+  await database.collection<UsageEventDoc>("usage_events").deleteMany({ userId });
 }

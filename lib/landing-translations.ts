@@ -139,6 +139,9 @@ export interface LandingTranslations {
   weeklySummaryConsistencyHeading: string;
   weeklySummaryFoodEntriesLabel: string;
   weeklySummaryExerciseEntriesLabel: string;
+  journalingTabLabel: string;
+  deepThinkingTabLabel: string;
+  landingSelectedDateLabel: string;
 }
 
 const EN: LandingTranslations = {
@@ -175,7 +178,7 @@ const EN: LandingTranslations = {
   secondOrderWithCitationsSubtitle: "Second-order reasoning plus your mental models & saved context",
   secondOrderChipLabelPlain: "Second-order (plain)",
   secondOrderChipLabelWithCitations: "Second-order (with citations)",
-  secondOrderCitationsToggleLabel: "Citations",
+  secondOrderCitationsToggleLabel: "Cite mental models & saved context",
   journalEntryButtonLabel: "Add Journal Entry",
   journalEntryButtonSubtitle: "Write freely; saved to your library—not sent as chat.",
   journalEntryModalTitle: "Add a Journal Entry",
@@ -274,6 +277,9 @@ const EN: LandingTranslations = {
   weeklySummaryConsistencyHeading: "Consistency Stats",
   weeklySummaryFoodEntriesLabel: "Food entries",
   weeklySummaryExerciseEntriesLabel: "Exercise entries",
+  journalingTabLabel: "Journaling",
+  deepThinkingTabLabel: "Deep Thinking",
+  landingSelectedDateLabel: "Selected date",
 };
 
 const TRANSLATIONS: Partial<Record<LanguageCode, Partial<LandingTranslations>>> = {

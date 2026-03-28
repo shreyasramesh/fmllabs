@@ -404,23 +404,6 @@ export function decryptTranscriptFields<T>(doc: object): T {
   return o as T;
 }
 
-// --- Nuggets ---
-
-export function encryptNuggetFields<T>(doc: object): T {
-  if (!isEncryptionEnabled()) return { ...doc } as T;
-  const o = { ...doc } as Record<string, unknown>;
-  if (typeof o.content === "string") o.content = enc(o.content);
-  if (typeof o.source === "string") o.source = enc(o.source);
-  return o as T;
-}
-
-export function decryptNuggetFields<T>(doc: object): T {
-  const o = { ...doc } as Record<string, unknown>;
-  if (typeof o.content === "string") o.content = dec(o.content);
-  if (typeof o.source === "string") o.source = dec(o.source);
-  return o as T;
-}
-
 // --- User settings (sensitive voice fields only) ---
 
 export function encryptUserSettingsFields<T>(doc: object): T {

@@ -70,7 +70,7 @@ const EN: UiTranslations = {
   groups: "Frameworks",
   famousFigures: "Personas",
   habits: "Habits",
-  journalEntries: "Journal",
+  journalEntries: "Journals",
   journalMentorFinding: "Finding mentors…",
   journalMentorResponding: "Mentors are responding",
   journalMentorListReady: "{{count}} mentors wrote to you. Click to read.",
@@ -114,7 +114,7 @@ const EN: UiTranslations = {
   settings: "Settings",
   close: "Close",
   cancel: "Cancel",
-  promptGames: "Ways of Looking At",
+  promptGames: "Perspective Lenses",
 };
 
 const TRANSLATIONS: Partial<Record<LanguageCode, Partial<UiTranslations>>> = {

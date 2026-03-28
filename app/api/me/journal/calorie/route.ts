@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
+import { getPacificTimeParts, parseJournalEntryTimeFromBody } from "@/lib/journal-entry-time";
 import { saveJournalTranscript } from "@/lib/db";
 import { inferJournalTitleFromContent } from "@/lib/journal-title";
 import {
@@ -240,6 +241,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Invalid entry date" }, { status: 400 });
       }
 
+      const journalEntryTime = parseJournalEntryTimeFromBody(body) ?? getPacificTimeParts();
       const estimate = await finalizeCalorieTrackingEstimate(text, answers, {
         userId,
         eventType: "calorie_journal_finalize",
@@ -250,7 +252,6 @@ export async function POST(request: Request) {
       });
       const assumptions = estimate.assumptions.slice(0, 8);
       const batchId = `calorie_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-      const entryNow = new Date();
       const savedRows: Array<{ id: string; category: "nutrition" | "exercise"; title: string }> = [];
       let nutritionFocusedEntryForAssumptions = "";
       let exerciseFocusedEntryForAssumptions = "";
@@ -292,7 +293,7 @@ export async function POST(request: Request) {
           {
             journalCategory: "nutrition",
             journalBatchId: batchId,
-            journalEntryTime: { hour: entryNow.getHours(), minute: entryNow.getMinutes() },
+            journalEntryTime,
           }
         );
         savedRows.push({
@@ -364,7 +365,7 @@ export async function POST(request: Request) {
           {
             journalCategory: "exercise",
             journalBatchId: batchId,
-            journalEntryTime: { hour: entryNow.getHours(), minute: entryNow.getMinutes() },
+            journalEntryTime,
           }
         );
         savedRows.push({

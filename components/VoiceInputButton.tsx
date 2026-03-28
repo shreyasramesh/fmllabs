@@ -602,7 +602,7 @@ export function VoiceInputButton({
       onContextMenu={(e) => e.preventDefault()}
       disabled={disabled}
       aria-label={ariaLabel}
-      className={`relative flex items-center justify-center min-w-[52px] min-h-[52px] rounded-2xl border border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 select-none touch-manipulation no-touch-callout [-webkit-tap-highlight-color:transparent] ${className}`}
+      className={`relative flex items-center justify-center min-w-[52px] min-h-[52px] rounded-2xl border border-neutral-200/70 dark:border-neutral-700/80 text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 select-none touch-manipulation no-touch-callout [-webkit-tap-highlight-color:transparent] ${className}`}
     >
       {onLongPress && !disabled && holdProgress === 0 && (
         <span
