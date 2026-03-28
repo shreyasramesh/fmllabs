@@ -2909,6 +2909,25 @@ export default function ChatPage() {
     }
   }, [isAnonymous, isNew, router]);
 
+  // Keep scrolling inside the chat surface and prevent viewport-level scrolling,
+  // which can show browser scrollbars on mobile even when inner scrollbars are hidden.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
+    const prevBodyOverscroll = body.style.overscrollBehaviorY;
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.overscrollBehaviorY = "none";
+    return () => {
+      html.style.overflow = prevHtmlOverflow;
+      body.style.overflow = prevBodyOverflow;
+      body.style.overscrollBehaviorY = prevBodyOverscroll;
+    };
+  }, []);
+
   useEffect(() => {
     const el = messagesScrollRef.current;
     if (!el) return;
@@ -5388,7 +5407,7 @@ export default function ChatPage() {
       if (messages.length === 0 && !incognitoMode && landingTab === "journaling") {
         void createLandingJournalEntry();
       } else {
-        sendMessage();
+      sendMessage();
       }
     }
   };
@@ -7603,7 +7622,7 @@ export default function ChatPage() {
               <div className="flex items-center gap-2 min-w-0">
                 {messages.length === 0 && !incognitoMode && !libraryPanelOpen && !waysOfLookingAtModalOpen && (
                   <div className="relative shrink-0" ref={headerCalendarRef}>
-                    <button
+                <button
                       type="button"
                       onClick={() => setHeaderCalendarOpen((prev) => !prev)}
                       aria-expanded={headerCalendarOpen}
@@ -7675,8 +7694,8 @@ export default function ChatPage() {
                             return (
                               <button
                                 key={dayKey}
-                                type="button"
-                                onClick={() => {
+                  type="button"
+                  onClick={() => {
                                   setSelectedLandingDayKey(dayKey);
                                   setHeaderCalendarOpen(false);
                                 }}
@@ -7695,10 +7714,10 @@ export default function ChatPage() {
                                     aria-hidden
                                   />
                                 )}
-                              </button>
+                </button>
                             );
                           })}
-                        </div>
+              </div>
 
                         <div className="mt-3 pt-3 border-t border-neutral-200 dark:border-neutral-700">
                           <div className="flex items-center gap-2 overflow-x-auto pb-0.5">
@@ -7869,17 +7888,17 @@ export default function ChatPage() {
             href="/chat/new"
             onClick={handleHomeNavigation}
             className={`flex items-center w-full rounded-xl border border-neutral-200/90 dark:border-neutral-700 bg-white/90 dark:bg-neutral-900 hover:border-orange-200 dark:hover:border-orange-700/60 hover:bg-orange-50/60 dark:hover:bg-orange-900/20 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0 ${
-              sidebarOpen ? "justify-center gap-2 px-3 py-2 mb-2" : "justify-center p-2 lg:px-2 lg:py-2"
-            }`}
+                sidebarOpen ? "justify-center gap-2 px-3 py-2 mb-2" : "justify-center p-2 lg:px-2 lg:py-2"
+              }`}
             aria-label="Home"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
               <path d="M3 10.5 12 3l9 7.5" />
               <path d="M5.5 9.5V21h13V9.5" />
               <path d="M10 21v-6h4v6" />
-            </svg>
+              </svg>
             {sidebarOpen && <span className="truncate">Home</span>}
-          </Link>
+            </Link>
           {/* Primary nav - Claude.ai pill style; icon-only when collapsed (Browser Use style) */}
           <nav className={`flex flex-col gap-0.5 shrink-0 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 ${sidebarOpen ? "mb-2" : ""}`} aria-label="Select view" data-tour="sidebar-nav">
             {[
@@ -8954,10 +8973,10 @@ export default function ChatPage() {
                                 mobileActiveCategory &&
                                 normalizeMmCategory(mobileActiveCategory.key) === normalizeMmCategory(cat.key);
                               return (
-                                <button
+                            <button
                                   key={`mobile-chip-${cat.key}`}
-                                  type="button"
-                                  onClick={() => setSelectedMmCategory(cat.key)}
+                              type="button"
+                              onClick={() => setSelectedMmCategory(cat.key)}
                                   className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
                                     active
                                       ? "border-neutral-400 dark:border-neutral-500 bg-neutral-100 dark:bg-neutral-800 text-foreground"
@@ -8965,7 +8984,7 @@ export default function ChatPage() {
                                   }`}
                                 >
                                   {cat.label} · {cat.models.length}
-                                </button>
+                            </button>
                               );
                             })}
                           </div>
@@ -8987,25 +9006,25 @@ export default function ChatPage() {
                               key={cat.key}
                               className={index === 0 ? "space-y-2" : "space-y-2 border-t border-neutral-200 dark:border-neutral-700 pt-3 mt-3"}
                             >
-                              <div className="flex items-center justify-between">
-                                <p className="text-[11px] font-medium text-neutral-500 uppercase tracking-wide">
+                        <div className="flex items-center justify-between">
+                          <p className="text-[11px] font-medium text-neutral-500 uppercase tracking-wide">
                                   {cat.label}
-                                </p>
+                          </p>
                                 <span className="text-[11px] text-neutral-500">{cat.models.length} models</span>
-                              </div>
+                        </div>
                               {cat.models.length > 0 ? (
-                                <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
+                              <div className={LIBRARY_RESPONSIVE_CARD_GRID}>
                                   {cat.models.map(({ id, name }) => renderMmCard(id, name))}
-                                </div>
-                              ) : (
-                                <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                                  No models in this category.
-                                </p>
-                              )}
+                              </div>
+                            ) : (
+                          <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                            No models in this category.
+                              </p>
+                          )}
                             </div>
                           ))}
                         </div>
-                      </div>
+                        </div>
                     );
                   })()}
                         </div>
@@ -9862,11 +9881,14 @@ export default function ChatPage() {
                 : "pb-0 overflow-hidden"
           } ${convertToDeepSuccess ? "animate-convert-to-deep" : ""}`}
         >
-          <div ref={messagesScrollRef} className="flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto flex flex-col mobile-hide-scrollbar">
+          <div
+            ref={messagesScrollRef}
+            className="flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto flex flex-col mobile-hide-scrollbar hide-scrollbar"
+          >
           {currentSession?.isCollapsed && collapsedSummary ? (
-            <div className="min-h-full flex items-center justify-center p-4">
-              <div className="w-full max-w-2xl">
-              <div className="rounded-3xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm p-6 space-y-4 text-foreground">
+            <div className="min-h-full flex items-start md:items-center justify-center p-3 sm:p-4">
+              <div className="w-full max-w-2xl min-h-0">
+              <div className="rounded-3xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm p-4 sm:p-6 space-y-4 text-foreground max-h-[calc(100dvh-8.5rem)] md:max-h-none overflow-y-auto mobile-hide-scrollbar hide-scrollbar">
                 <h2 className="font-semibold text-lg">{collapsedSummary.title}</h2>
                 {collapsedSummary.chainOfThought && collapsedSummary.chainOfThought.length > 0 && (
                   <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 p-3">
@@ -10075,7 +10097,9 @@ export default function ChatPage() {
               messages.length === 0
                 ? isAnonymous
                   ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-36 sm:pb-40 px-4 py-5"
-                  : "flex-1 min-h-0 flex flex-col items-center justify-center md:justify-start pb-36 sm:pb-40 md:pb-8 px-4 py-4 md:pt-8"
+                  : `flex-1 min-h-0 flex flex-col items-center justify-center md:justify-start ${
+                      !incognitoMode && landingTab === "deepThinking" ? "pb-4 md:pb-6" : "pb-36 sm:pb-40 md:pb-8"
+                    } px-4 py-4 md:pt-8`
                 : "px-3 py-4 sm:px-4 sm:py-5"
             }`}
           >
@@ -10319,23 +10343,23 @@ export default function ChatPage() {
                                 </div>
                               </div>
 
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  playSelectionChime();
-                                  if (sessionId !== "new" && sessionId !== "incognito") {
-                                    try {
-                                      sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
-                                    } catch {
-                                      /* ignore */
-                                    }
-                                    router.push("/chat/new");
-                                  } else {
-                                    setMentorCatalogSearch("");
-                                    setMentorCatalogCategoryId(null);
-                                    setMentorOneOnOneModalOpen(true);
-                                  }
-                                }}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          playSelectionChime();
+                          if (sessionId !== "new" && sessionId !== "incognito") {
+                            try {
+                              sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
+                            } catch {
+                              /* ignore */
+                            }
+                            router.push("/chat/new");
+                          } else {
+                            setMentorCatalogSearch("");
+                            setMentorCatalogCategoryId(null);
+                            setMentorOneOnOneModalOpen(true);
+                          }
+                        }}
                                 className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-orange-50 dark:hover:bg-orange-900/25 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
                               >
                                 <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
@@ -10350,12 +10374,12 @@ export default function ChatPage() {
                                   <p className="font-medium text-foreground">{getLandingTranslations(language).mentorOneOnOneTitle}</p>
                                   <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).mentorOneOnOneSubtitle}</p>
                                 </div>
-                              </button>
+                      </button>
 
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  playSelectionChime();
+                        <button
+                          type="button"
+                          onClick={() => {
+                            playSelectionChime();
                                   void handleTeachMeClick();
                                 }}
                                 className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-orange-50 dark:hover:bg-orange-900/25 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
@@ -10371,7 +10395,7 @@ export default function ChatPage() {
                                   <p className="font-medium text-foreground">Learn a New Mental Model</p>
                                   <p className="text-sm text-neutral-600 dark:text-neutral-400">Discover a fresh framework to apply right now.</p>
                                 </div>
-                              </button>
+                        </button>
 
                               <button
                                 type="button"
@@ -10410,8 +10434,8 @@ export default function ChatPage() {
                         <div className="order-1 w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background px-2.5 py-2">
                           <div className="mb-1.5 px-0.5">
                             <div className="mb-2 grid grid-cols-2 gap-1">
-                              <button
-                                type="button"
+                          <button
+                            type="button"
                                 onClick={() => {
                                   if (!isAnonymous) setLandingTab("journaling");
                                 }}
@@ -10439,8 +10463,8 @@ export default function ChatPage() {
                                 aria-pressed={landingTab === "deepThinking"}
                               >
                                 {getLandingTranslations(language).deepThinkingTabLabel}
-                              </button>
-                            </div>
+                          </button>
+                        </div>
                             <div className="flex sm:hidden items-center justify-between gap-2">
                               <p className="text-xs whitespace-nowrap font-semibold text-foreground">
                                 {getLandingTranslations(language).landingSelectedDateLabel}: {selectedLandingDayMobileLabel}
@@ -10448,7 +10472,7 @@ export default function ChatPage() {
                               <p className="text-xs whitespace-nowrap text-neutral-500 dark:text-neutral-400">
                                 {selectedLandingDayActivityItems.length} item{selectedLandingDayActivityItems.length === 1 ? "" : "s"}
                               </p>
-                            </div>
+                      </div>
                             <div className="hidden sm:flex items-center justify-between gap-2">
                               <p className="text-xs whitespace-nowrap font-semibold text-foreground">
                                 Last 7 days
@@ -10459,8 +10483,8 @@ export default function ChatPage() {
                             </div>
                             {!isAnonymous && landingTab === "journaling" && (
                               <div className="mt-1.5 flex flex-wrap items-center gap-1.5 sm:mt-0 sm:gap-2 sm:justify-end">
-                                <button
-                                  type="button"
+                        <button
+                          type="button"
                                   onClick={openGoalsModal}
                                   className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-[11px] whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 transition-colors"
                                 >
@@ -10479,10 +10503,10 @@ export default function ChatPage() {
                                   className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-[11px] whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 transition-colors"
                                 >
                                   {getLandingTranslations(language).weeklySummaryButtonLabel}
-                                </button>
-                              </div>
+                        </button>
+                      </div>
                             )}
-                          </div>
+                    </div>
                           <div ref={landingDaysScrollerRef} className="hidden sm:block overflow-x-auto">
                             <div className="flex min-w-max gap-1.5 sm:grid sm:grid-cols-7 sm:gap-1.5 sm:min-w-0">
                               {landingCalendarDays.map(({ key, date }) => {
@@ -10894,7 +10918,8 @@ export default function ChatPage() {
           </p>
         )}
         {/* Bottom bar - fixed on mobile when scrolling. Also shown on new conversations for a faster first message. */}
-        <div className="fixed inset-x-0 bottom-0 z-30 flex flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background">
+        {!((messages.length === 0 && !incognitoMode && landingTab === "deepThinking") || (!!currentSession?.isCollapsed && !!collapsedSummary)) && (
+        <div className={`${sidebarOpen ? "hidden lg:flex" : "flex"} fixed inset-x-0 bottom-0 z-30 flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background`}>
           <div className="flex flex-col items-center justify-center px-4 py-2 sm:py-2.5 min-w-0">
             {messages.length === 0 && !incognitoMode && (
               <div className="w-full max-w-2xl lg:max-w-4xl mb-2 space-y-1.5">
@@ -10930,7 +10955,7 @@ export default function ChatPage() {
                 </div>
               </div>
             )}
-            {!(messages.length === 0 && !incognitoMode && landingTab === "deepThinking") && (
+            {!((messages.length === 0 && !incognitoMode && landingTab === "deepThinking") || (!!currentSession?.isCollapsed && !!collapsedSummary)) && (
               <>
             <div
               className={`min-w-0 max-w-2xl lg:max-w-4xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex overflow-hidden ${
@@ -11067,7 +11092,7 @@ export default function ChatPage() {
                 } !border-neutral-200/70 dark:!border-neutral-700/80 !bg-neutral-50/70 dark:!bg-neutral-900/40 hover:!border-orange-300/80 dark:hover:!border-orange-700/60 hover:!bg-orange-50/60 dark:hover:!bg-orange-900/20`}
               />
               {!(messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling") && (
-                <button
+              <button
                   onClick={() => {
                     sendMessage();
                   }}
@@ -11077,17 +11102,17 @@ export default function ChatPage() {
                     !!currentSession?.isCollapsed ||
                     isLoading
                   }
-                  aria-label="Send message"
+                aria-label="Send message"
                   className="flex items-center justify-center gap-1.5 p-2 min-h-8 min-w-8 rounded-xl bg-accent text-white transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shrink-0"
-                >
-                  {isLoading ? (
-                    <LoadingDots aria-label="Sending" />
-                  ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                      <path d="m22 2-7 20-4-9-9-4Z" />
-                      <path d="M22 2 11 13" />
-                    </svg>
-                  )}
+              >
+                {isLoading ? (
+                  <LoadingDots aria-label="Sending" />
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                    <path d="m22 2-7 20-4-9-9-4Z" />
+                    <path d="M22 2 11 13" />
+                  </svg>
+                )}
                 </button>
               )}
               </div>
@@ -11125,9 +11150,10 @@ export default function ChatPage() {
                 FML Labs is AI and can make mistakes.
               </p>
               </>
-            )}
-          </div>
+          )}
         </div>
+        </div>
+        )}
         </>
         )}
 
@@ -14549,10 +14575,10 @@ export default function ChatPage() {
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).mentorOneOnOneSubtitle}</p>
                 </div>
               </button>
-              <button
-                type="button"
-                onClick={() => {
-                  playSelectionChime();
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSelectionChime();
                   setNewConversationChooserModalOpen(false);
                   void handleTeachMeClick();
                 }}
@@ -14563,15 +14589,15 @@ export default function ChatPage() {
                     <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                     <path d="M12 3v18" />
-                  </svg>
-                </span>
-                <div className="min-w-0">
+                    </svg>
+                  </span>
+                  <div className="min-w-0">
                   <p className="font-medium text-foreground">Learn a New Mental Model</p>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">Discover a fresh framework to apply right now.</p>
-                </div>
-              </button>
-              <button
-                type="button"
+                  </div>
+                </button>
+                  <button
+                    type="button"
                 onClick={() => {
                   playSelectionChime();
                   setNewConversationChooserModalOpen(false);
@@ -15073,7 +15099,7 @@ export default function ChatPage() {
             <div className="space-y-2 max-w-prose mx-auto">
               <p className="text-lg sm:text-xl text-neutral-700 dark:text-neutral-300 leading-relaxed">
                 fml labs combines daily productivity and wellness in one place.
-              </p>
+            </p>
               <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
                 I built this because my interests sit at the intersection of getting meaningful work done and staying physically and mentally well.
               </p>

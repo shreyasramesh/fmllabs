@@ -760,6 +760,18 @@ body {
   -webkit-touch-callout: none;
 }
 
+/* Hide scrollbar UI but keep scrolling functional. */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE/Edge legacy */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* WebKit */
+  width: 0;
+  height: 0;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
