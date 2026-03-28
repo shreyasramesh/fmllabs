@@ -13,10 +13,15 @@ export default function AboutPage() {
     <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-2xl mx-auto px-4 py-12 md:py-16">
         <Link
-          href="/"
-          className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground mb-8 inline-block"
+          href="/chat/new"
+          aria-label="Home"
+          title="Home"
+          className="mb-8 inline-flex items-center justify-center rounded-xl border border-neutral-200/90 dark:border-neutral-700 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:text-foreground hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors"
         >
-          ← Back to fml labs
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden>
+            <path d="m3 10 9-7 9 7" />
+            <path d="M5 9.5V20h14V9.5" />
+          </svg>
         </Link>
 
         <h1 className="text-2xl md:text-3xl font-semibold mb-2">About the Creator</h1>
@@ -87,8 +92,8 @@ export default function AboutPage() {
           <Link href="/privacy-policy" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
             Privacy Policy
           </Link>
-          <Link href="/" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
-            ← Back to fml labs
+          <Link href="/chat/new" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
+            Home
           </Link>
         </div>
       </div>

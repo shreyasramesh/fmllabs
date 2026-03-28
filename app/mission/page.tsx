@@ -11,10 +11,15 @@ export default function MissionPage() {
     <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-2xl mx-auto px-4 py-12 md:py-16">
         <Link
-          href="/"
-          className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground mb-8 inline-block"
+          href="/chat/new"
+          aria-label="Home"
+          title="Home"
+          className="mb-8 inline-flex items-center justify-center rounded-xl border border-neutral-200/90 dark:border-neutral-700 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:text-foreground hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors"
         >
-          ← Back to fml labs
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden>
+            <path d="m3 10 9-7 9 7" />
+            <path d="M5 9.5V20h14V9.5" />
+          </svg>
         </Link>
 
         <h1 className="text-2xl md:text-3xl font-semibold mb-2">The Mission of fml labs</h1>
@@ -24,10 +29,14 @@ export default function MissionPage() {
 
         <div className="prose prose-neutral dark:prose-invert max-w-none space-y-6 text-sm leading-relaxed">
           <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base">
-            This site is a <strong>personal research project</strong> and <strong>technical demonstration</strong>. It serves as a playground for Shreyas to combine cutting-edge AI research with robust cloud infrastructure expertise to explore complex, real-world reasoning challenges.
+            fml labs is built to support one practical goal: help people make better decisions day-to-day by combining
+            <strong> deep thinking </strong> with <strong>daily execution</strong>.
           </p>
           <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base">
-            <strong>fml labs</strong> is entirely non-commercial and is maintained solely for the purpose of showcasing experimental AI engineering techniques and personal skill development.
+            The product intentionally lives at the intersection of <strong>productivity and wellness</strong> - journaling, reflection, nutrition tracking, and mental models in one workflow - so insight is easier to turn into consistent action.
+          </p>
+          <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base">
+            It is a personal, evolving project focused on building useful AI systems that are calm, practical, and grounded in everyday life.
           </p>
         </div>
 
@@ -47,8 +56,8 @@ export default function MissionPage() {
           <Link href="/privacy-policy" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
             Privacy Policy
           </Link>
-          <Link href="/" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
-            ← Back to fml labs
+          <Link href="/chat/new" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
+            Home
           </Link>
         </div>
       </div>

@@ -2463,6 +2463,12 @@ export default function ChatPage() {
     window.sessionStorage.setItem(LANDING_TAB_STORAGE_KEY, landingTab);
   }, [landingTab]);
 
+  useEffect(() => {
+    if (isAnonymous && landingTab === "journaling") {
+      setLandingTab("deepThinking");
+    }
+  }, [isAnonymous, landingTab]);
+
   const [sessions, setSessions] = useState<Session[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -2821,12 +2827,12 @@ export default function ChatPage() {
     ? mentalModelsLoaded
     : sessionsLoaded && conceptsLoaded && ltmLoaded && ccLoaded && cgLoaded && mentalModelsLoaded;
   const signInFeatures = [
-    { label: "Deep thinking chat", description: "Start conversations and explore ideas without saving history.", icon: "chat" },
-    { label: "Second-order thinking", description: "Use second-order reasoning mode in real time, without saving.", icon: "groups" },
-    { label: "One-to-one with a mentor", description: "Chat with a mentor persona in-session without persistence.", icon: "chat" },
-    { label: "Mental models library", description: "Browse proven mental models and cognitive biases instantly.", icon: "mental-models" },
-    { label: "Perspective Lenses", description: "Use card-style perspective prompts to rethink situations.", icon: "groups" },
-    { label: "Voice input (speech to text)", description: "Use your voice to dictate messages in the composer.", icon: "voice" },
+    { label: "Saved conversations", description: "Store your chat history and return to past threads anytime.", icon: "chat" },
+    { label: "Journaling + calorie tracking", description: "Create journal and nutrition entries with persistent day-by-day history.", icon: "summary" },
+    { label: "Custom concepts and groups", description: "Save your own concepts and organize them into reusable groups.", icon: "concepts" },
+    { label: "Long-term memory", description: "Keep important context and reflections available across conversations.", icon: "memory" },
+    { label: "Habits and weekly summaries", description: "Track routines over time and review progress with summaries.", icon: "groups" },
+    { label: "Data export and account-level history", description: "Export your saved data and keep a durable personal record.", icon: "summary" },
   ];
   const signInFeatureIconSvg = (name: string) => {
     if (name === "chat") return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>;
@@ -7015,6 +7021,33 @@ export default function ChatPage() {
     [closeAllModalsExceptLeftPanel, router]
   );
 
+  const handleHomeNavigation = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      closeAllModalsExceptLeftPanel();
+      if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+      anonymousActiveRef.current = false;
+      activeSecondOrderRef.current = false;
+      activeSecondOrderPlainRef.current = false;
+      activeOneOnOneMentorRef.current = null;
+      setPendingSecondOrder(false);
+      setPendingOneOnOneMentor(null);
+      setPendingCardContext(null);
+      setPendingCardFetch(null);
+      setSelectedMentorFigureIds([]);
+      setMultiMentorMode(false);
+      setMessages([]);
+      setCurrentSessionId(null);
+      setCurrentSession(null);
+      setCollapsedSummary(null);
+      setInput("");
+      setLandingTab(isAnonymous ? "deepThinking" : "journaling");
+      router.push("/chat/new");
+    },
+    [closeAllModalsExceptLeftPanel, isAnonymous, router]
+  );
+
   useEffect(() => {
     return () => {
       if (brandLogoPartyTimeoutRef.current) {
@@ -7506,10 +7539,7 @@ export default function ChatPage() {
             </button>
             <Link
               href="/chat/new"
-              onClick={() => {
-                closeAllModalsExceptLeftPanel();
-                if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
-              }}
+              onClick={handleHomeNavigation}
               className="shrink-0 p-1 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               aria-label="Go to landing page"
               title="Go to landing page"
@@ -7556,17 +7586,6 @@ export default function ChatPage() {
                 <h1 className="font-semibold text-base sm:text-lg truncate min-w-0 flex-1 text-foreground">
                   {waysMainHeaderTitle}
                 </h1>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setWaysOfLookingAtModalOpen(false);
-                    setWaysOfLookingAtDrawMode(false);
-                  }}
-                  className="p-2 min-w-[44px] min-h-[44px] shrink-0 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-600 dark:text-neutral-400"
-                  aria-label={getUiTranslations(language).close}
-                >
-                  ✕
-                </button>
               </div>
             ) : !sidebarOpen ? (
               <div className="flex items-center gap-2 min-w-0">
@@ -7836,10 +7855,7 @@ export default function ChatPage() {
           >
           <Link
             href="/chat/new"
-            onClick={() => {
-              closeAllModalsExceptLeftPanel();
-              if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
-            }}
+            onClick={handleHomeNavigation}
             className={`flex items-center w-full rounded-xl border border-neutral-200/90 dark:border-neutral-700 bg-white/90 dark:bg-neutral-900 hover:border-orange-200 dark:hover:border-orange-700/60 hover:bg-orange-50/60 dark:hover:bg-orange-900/20 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0 ${
               sidebarOpen ? "justify-center gap-2 px-3 py-2 mb-2" : "justify-center p-2 lg:px-2 lg:py-2"
             }`}
@@ -7951,22 +7967,22 @@ export default function ChatPage() {
         )}
         {isAnonymous && (
           <div className={`px-3 py-2 flex flex-col gap-2 items-center ${sidebarOpen ? "flex-1 min-h-0" : "shrink-0 lg:hidden"}`}>
-            <p className="w-full max-w-[220px] flex items-center gap-1.5 text-[13px] sm:text-[14px] font-medium text-neutral-600 dark:text-neutral-400 text-left">
+            <p className="w-full max-w-[320px] flex items-center gap-1.5 text-[13px] sm:text-[14px] font-medium text-neutral-600 dark:text-neutral-400 text-left">
               <SparklesIcon className="w-3.5 h-3.5 shrink-0" />
-              <span>Available without sign in:</span>
+              <span>Available after sign in:</span>
             </p>
             <ul className="space-y-1 w-full flex flex-col items-center">
               {signInFeatures.map((item, i) => (
                 <li
                   key={i}
-                  className="w-full max-w-[220px] animate-slide-in-from-left opacity-0 [animation-fill-mode:forwards]"
+                  className="w-full max-w-[320px] animate-slide-in-from-left opacity-0 [animation-fill-mode:forwards]"
                   style={{ animationDelay: `${i * 80}ms` }}
                 >
                   <div
                     className="flex items-center gap-2 w-full px-2.5 py-1.5 rounded-xl text-[12px] sm:text-[13px] text-left border border-transparent bg-background text-neutral-600 dark:text-neutral-400"
                   >
                     <span className="text-neutral-500 shrink-0">{signInFeatureIconSvg(item.icon)}</span>
-                    <span className="truncate">{item.label}</span>
+                    <span className="leading-snug break-words">{item.label}</span>
                   </div>
                 </li>
               ))}
@@ -9984,7 +10000,7 @@ export default function ChatPage() {
                         <div
                           className="order-2 w-full animate-fade-in-down"
                         >
-                          {landingTab === "journaling" ? (
+                          {!isAnonymous && landingTab === "journaling" ? (
                             <div className="w-full grid grid-cols-1 min-[420px]:grid-cols-2 gap-2">
                           <div className="min-w-0 rounded-lg border border-orange-200 dark:border-orange-800/60 bg-background p-2 sm:p-1.5 text-left">
                             <div className="flex items-center gap-2">
@@ -10271,8 +10287,14 @@ export default function ChatPage() {
                             <div className="mb-2 grid grid-cols-2 gap-1">
                               <button
                                 type="button"
-                                onClick={() => setLandingTab("journaling")}
+                                onClick={() => {
+                                  if (!isAnonymous) setLandingTab("journaling");
+                                }}
+                                disabled={isAnonymous}
                                 className={`w-full rounded-full px-3 py-1 text-[11px] font-semibold border transition-colors ${
+                                  isAnonymous
+                                    ? "border-neutral-200 dark:border-neutral-700 bg-neutral-100/70 dark:bg-neutral-800/60 text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-80"
+                                    :
                                   landingTab === "journaling"
                                     ? "border-neutral-400 dark:border-neutral-500 bg-neutral-100 dark:bg-neutral-800 text-foreground ring-1 ring-neutral-300/70 dark:ring-neutral-500/70 shadow-sm"
                                     : "border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800"
@@ -10752,7 +10774,7 @@ export default function ChatPage() {
             {messages.length === 0 && !incognitoMode && (
               <div className="w-full max-w-2xl lg:max-w-4xl mb-2 space-y-1.5">
                 <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-0.5">
-                  {landingTab === "journaling" && (
+                  {!isAnonymous && landingTab === "journaling" && (
                     <>
                       <button
                         type="button"
@@ -10787,7 +10809,7 @@ export default function ChatPage() {
               <>
             <div
               className={`min-w-0 max-w-2xl lg:max-w-4xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex overflow-hidden ${
-                messages.length === 0 && !incognitoMode && landingTab === "journaling"
+                messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
                   ? "items-center min-h-12 max-h-40 py-1.5"
                   : "items-center h-12 min-h-12"
               }`}
@@ -10819,7 +10841,7 @@ export default function ChatPage() {
                   }))}
                   mentionTranslations={getMentionTranslations(language)}
                   placeholder={
-                    messages.length === 0 && !incognitoMode && landingTab === "journaling"
+                    messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
                       ? landingJournalEntryType === "regular"
                         ? "Write your journal entry..."
                         : "Tell me what you ate or exercised..."
@@ -10828,7 +10850,7 @@ export default function ChatPage() {
                       : landingAnimatedPlaceholder
                   }
                   placeholderMobile={
-                    messages.length === 0 && !incognitoMode && landingTab === "journaling"
+                    messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
                       ? landingJournalEntryType === "regular"
                         ? "Write your journal entry..."
                         : "Tell me what you ate or exercised..."
@@ -10839,14 +10861,14 @@ export default function ChatPage() {
                   disabled={
                     sessionLoading ||
                     !!currentSession?.isCollapsed ||
-                    (messages.length === 0 && !incognitoMode && landingTab === "journaling"
+                    (messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
                       ? landingJournalSaving || landingJournalImageProcessing
                       : isLoading)
                   }
-                  placeholderCentered={!(messages.length === 0 && !incognitoMode && landingTab === "journaling")}
-                  placeholderTopAligned={messages.length === 0 && !incognitoMode && landingTab === "journaling"}
+                  placeholderCentered={!(messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling")}
+                  placeholderTopAligned={messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"}
                   className={`w-full pl-0 pr-0 border-0 rounded-none bg-transparent shadow-none resize-none focus:outline-none focus:ring-0 focus:border-0 text-sm sm:text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground ${
-                    messages.length === 0 && !incognitoMode && landingTab === "journaling"
+                    messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
                       ? "min-h-10 max-h-32 py-2 whitespace-pre-wrap break-words overflow-x-hidden overflow-y-auto leading-5"
                       : "h-10 max-h-10 py-0 whitespace-nowrap overflow-x-auto overflow-y-hidden"
                   }`}
@@ -10872,7 +10894,7 @@ export default function ChatPage() {
                 />
               </div>
               <div className="flex items-center gap-1 pr-2 shrink-0">
-              {messages.length === 0 && !incognitoMode && landingTab === "journaling" && (
+              {messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling" && (
                 <>
                   <input
                     ref={landingJournalCameraInputRef}
@@ -10907,15 +10929,19 @@ export default function ChatPage() {
                 disabled={
                   sessionLoading ||
                   !!currentSession?.isCollapsed ||
-                  (messages.length === 0 && !incognitoMode && landingTab === "journaling"
+                  (messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
                     ? landingJournalSaving || landingJournalImageProcessing
                     : isLoading)
                 }
                 ariaLabel="Voice input"
                 compactStopWhileListening
-                className="!min-h-[52px] !min-w-[52px] !rounded-2xl !border-neutral-200/70 dark:!border-neutral-700/80 !bg-neutral-50/70 dark:!bg-neutral-900/40 hover:!border-orange-300/80 dark:hover:!border-orange-700/60 hover:!bg-orange-50/60 dark:hover:!bg-orange-900/20"
+                className={`${
+                  messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
+                    ? "!min-h-[52px] !min-w-[52px] !rounded-2xl"
+                    : "!min-h-8 !min-w-8 !rounded-xl"
+                } !border-neutral-200/70 dark:!border-neutral-700/80 !bg-neutral-50/70 dark:!bg-neutral-900/40 hover:!border-orange-300/80 dark:hover:!border-orange-700/60 hover:!bg-orange-50/60 dark:hover:!bg-orange-900/20`}
               />
-              {!(messages.length === 0 && !incognitoMode && landingTab === "journaling") && (
+              {!(messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling") && (
                 <button
                   onClick={() => {
                     sendMessage();
@@ -10941,7 +10967,7 @@ export default function ChatPage() {
               )}
               </div>
               </div>
-              {messages.length === 0 && !incognitoMode && landingTab === "journaling" && landingJournalImagePreview && (
+              {messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling" && landingJournalImagePreview && (
                 <div className="mt-1 w-full max-w-2xl lg:max-w-4xl px-2">
                   <div className="flex items-center justify-between gap-2 rounded-xl border border-neutral-200 dark:border-neutral-700 px-2 py-1.5">
                     <div className="flex items-center gap-2 min-w-0">
@@ -10965,7 +10991,7 @@ export default function ChatPage() {
                   </div>
                 </div>
               )}
-              {messages.length === 0 && !incognitoMode && landingTab === "journaling" && (landingJournalImageError || landingJournalSaveError) && (
+              {messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling" && (landingJournalImageError || landingJournalSaveError) && (
                 <p className="mt-1 text-center text-[11px] sm:text-xs text-red-600 dark:text-red-400 max-w-2xl w-full px-2">
                   {landingJournalImageError ?? landingJournalSaveError}
                 </p>
@@ -11571,42 +11597,6 @@ export default function ChatPage() {
                 <div className="p-4 pb-6">
                   {transcriptModalNutritionSnapshot && (
                     <div className="w-full mb-4">
-                      <div className="mb-2 flex items-center justify-end gap-2">
-                        {transcriptStatsError && (
-                          <p className="text-xs text-red-600 dark:text-red-400 mr-auto">{transcriptStatsError}</p>
-                        )}
-                        {transcriptStatsEditing ? (
-                          <>
-                            <button
-                              type="button"
-                              disabled={transcriptStatsSaving}
-                              onClick={() => {
-                                setTranscriptStatsEditing(false);
-                                setTranscriptStatsError(null);
-                              }}
-                              className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
-                            >
-                              Cancel
-                            </button>
-                            <button
-                              type="button"
-                              disabled={transcriptStatsSaving}
-                              onClick={() => void saveTranscriptStatsEdit()}
-                              className="px-2 py-1 rounded-md text-[11px] font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
-                            >
-                              {transcriptStatsSaving ? "Saving..." : "Save stats"}
-                            </button>
-                          </>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={beginTranscriptStatsEdit}
-                            className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                          >
-                            Edit stats
-                          </button>
-                        )}
-                      </div>
                       <div className="w-full flex gap-1.5 overflow-x-auto sm:grid sm:grid-cols-2 sm:overflow-visible">
                         {transcriptModalNutritionSnapshot.mode === "exercise" ? (
                           <>
@@ -11831,6 +11821,42 @@ export default function ChatPage() {
                               </div>
                             </div>
                           </>
+                        )}
+                      </div>
+                      <div className="mt-2 flex items-center justify-end gap-2">
+                        {transcriptStatsError && (
+                          <p className="text-xs text-red-600 dark:text-red-400 mr-auto">{transcriptStatsError}</p>
+                        )}
+                        {transcriptStatsEditing ? (
+                          <>
+                            <button
+                              type="button"
+                              disabled={transcriptStatsSaving}
+                              onClick={() => {
+                                setTranscriptStatsEditing(false);
+                                setTranscriptStatsError(null);
+                              }}
+                              className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="button"
+                              disabled={transcriptStatsSaving}
+                              onClick={() => void saveTranscriptStatsEdit()}
+                              className="px-2 py-1 rounded-md text-[11px] font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                            >
+                              {transcriptStatsSaving ? "Saving..." : "Save stats"}
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={beginTranscriptStatsEdit}
+                            className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                          >
+                            Edit stats
+                          </button>
                         )}
                       </div>
                     </div>
@@ -14860,9 +14886,14 @@ export default function ChatPage() {
                 />
               )}
             </h2>
-            <p className="text-lg sm:text-xl text-neutral-700 dark:text-neutral-300 leading-relaxed max-w-prose mx-auto">
-              {PRODUCT_TAGLINE}
-            </p>
+            <div className="space-y-2 max-w-prose mx-auto">
+              <p className="text-lg sm:text-xl text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                fml labs combines daily productivity and wellness in one place.
+              </p>
+              <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                I built this because my interests sit at the intersection of getting meaningful work done and staying physically and mentally well.
+              </p>
+            </div>
             <div className="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-700 text-center">
               <p className="letter-modal-script-location font-developer text-[1.4rem] leading-none md:text-[1.44em] text-neutral-600 dark:text-neutral-300">San Francisco</p>
               <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm">
