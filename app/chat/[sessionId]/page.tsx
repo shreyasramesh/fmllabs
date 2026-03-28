@@ -1828,7 +1828,15 @@ function chartBaseOptions(): Highcharts.Options {
     credits: { enabled: false },
     title: { text: undefined },
     legend: {
-      itemStyle: { color: "#737373", fontSize: "12px" },
+      layout: "horizontal",
+      align: "left",
+      verticalAlign: "bottom",
+      margin: 8,
+      symbolRadius: 0,
+      symbolWidth: 12,
+      symbolHeight: 10,
+      itemDistance: 10,
+      itemStyle: { color: "#737373", fontSize: "11px" },
     },
     xAxis: {
       labels: { style: { color: "#737373", fontSize: "11px" } },
@@ -1845,6 +1853,31 @@ function chartBaseOptions(): Highcharts.Options {
       borderColor: "#1f2937",
       style: { color: "#f9fafb" },
       shared: true,
+    },
+    responsive: {
+      rules: [
+        {
+          condition: { maxWidth: 420 },
+          chartOptions: {
+            chart: {
+              spacingLeft: 4,
+              spacingRight: 4,
+            },
+            legend: {
+              itemStyle: { fontSize: "10px" },
+              itemDistance: 8,
+              symbolWidth: 10,
+              symbolHeight: 8,
+            },
+            xAxis: {
+              labels: { style: { fontSize: "10px" } },
+            },
+            yAxis: {
+              labels: { style: { fontSize: "10px" } },
+            },
+          },
+        },
+      ],
     },
   };
 }
@@ -5829,6 +5862,7 @@ export default function ChatPage() {
           dashStyle: "ShortDash",
           lineWidth: 2,
           marker: { enabled: false },
+          showInLegend: false,
         },
       ],
     };
@@ -5883,6 +5917,7 @@ export default function ChatPage() {
           dashStyle: "ShortDash",
           lineWidth: 2,
           marker: { enabled: false },
+          showInLegend: false,
         },
         {
           type: "line",
@@ -5892,6 +5927,7 @@ export default function ChatPage() {
           dashStyle: "ShortDash",
           lineWidth: 2,
           marker: { enabled: false },
+          showInLegend: false,
         },
         {
           type: "line",
@@ -5901,6 +5937,7 @@ export default function ChatPage() {
           dashStyle: "ShortDash",
           lineWidth: 2,
           marker: { enabled: false },
+          showInLegend: false,
         },
       ],
     };
@@ -13206,6 +13243,9 @@ export default function ChatPage() {
 
                   <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 bg-white/70 dark:bg-neutral-900/70">
                     <HighchartsReact highcharts={Highcharts} options={weeklyMacrosChartOptions} />
+                    <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
+                      Dashed lines indicate daily macro targets.
+                    </p>
                     <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
                       <p className="text-neutral-600 dark:text-neutral-400">
                         {getLandingTranslations(language).weeklySummaryMacrosCarbsCol}:{" "}
