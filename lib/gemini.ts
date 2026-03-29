@@ -318,6 +318,27 @@ export interface CalorieTrackingAnalyzeResult {
   questions: string[];
 }
 
+export interface CalorieTrackingNutritionFacts {
+  totalCarbohydratesGrams: number | null;
+  dietaryFiberGrams: number | null;
+  sugarGrams: number | null;
+  addedSugarsGrams: number | null;
+  sugarAlcoholsGrams: number | null;
+  netCarbsGrams: number | null;
+  saturatedFatGrams: number | null;
+  transFatGrams: number | null;
+  polyunsaturatedFatGrams: number | null;
+  monounsaturatedFatGrams: number | null;
+  cholesterolMg: number | null;
+  sodiumMg: number | null;
+  calciumMg: number | null;
+  ironMg: number | null;
+  potassiumMg: number | null;
+  vitaminAIu: number | null;
+  vitaminCMg: number | null;
+  vitaminDMcg: number | null;
+}
+
 export interface CalorieTrackingFinalizeResult {
   intent: CalorieTrackingIntent;
   confidence: "low" | "medium" | "high";
@@ -327,6 +348,7 @@ export interface CalorieTrackingFinalizeResult {
     proteinGrams: number | null;
     carbsGrams: number | null;
     fatGrams: number | null;
+    facts?: CalorieTrackingNutritionFacts;
     notes: string;
   };
   exercise?: {
@@ -951,6 +973,26 @@ Return ONLY valid JSON with exactly this shape:
     "proteinGrams": number | null,
     "carbsGrams": number | null,
     "fatGrams": number | null,
+    "facts": {
+      "totalCarbohydratesGrams": number | null,
+      "dietaryFiberGrams": number | null,
+      "sugarGrams": number | null,
+      "addedSugarsGrams": number | null,
+      "sugarAlcoholsGrams": number | null,
+      "netCarbsGrams": number | null,
+      "saturatedFatGrams": number | null,
+      "transFatGrams": number | null,
+      "polyunsaturatedFatGrams": number | null,
+      "monounsaturatedFatGrams": number | null,
+      "cholesterolMg": number | null,
+      "sodiumMg": number | null,
+      "calciumMg": number | null,
+      "ironMg": number | null,
+      "potassiumMg": number | null,
+      "vitaminAIu": number | null,
+      "vitaminCMg": number | null,
+      "vitaminDMcg": number | null
+    },
     "notes": "short note"
   } | null,
   "exercise": {
@@ -967,6 +1009,7 @@ Rules:
 - For exercise-only, set nutrition to null.
 - For mixed, provide both.
 - Use null when unknown instead of inventing exact values.
+- For nutrition facts, provide your best realistic estimate per field when nutrition exists.
 - Keep assumptions concise and grounded.
 
 Original input:
@@ -988,6 +1031,26 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
         proteinGrams?: unknown;
         carbsGrams?: unknown;
         fatGrams?: unknown;
+        facts?: {
+          totalCarbohydratesGrams?: unknown;
+          dietaryFiberGrams?: unknown;
+          sugarGrams?: unknown;
+          addedSugarsGrams?: unknown;
+          sugarAlcoholsGrams?: unknown;
+          netCarbsGrams?: unknown;
+          saturatedFatGrams?: unknown;
+          transFatGrams?: unknown;
+          polyunsaturatedFatGrams?: unknown;
+          monounsaturatedFatGrams?: unknown;
+          cholesterolMg?: unknown;
+          sodiumMg?: unknown;
+          calciumMg?: unknown;
+          ironMg?: unknown;
+          potassiumMg?: unknown;
+          vitaminAIu?: unknown;
+          vitaminCMg?: unknown;
+          vitaminDMcg?: unknown;
+        };
         notes?: unknown;
       } | null;
       exercise?: {
@@ -1017,6 +1080,26 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
             proteinGrams: toFiniteNumberOrNull(parsed.nutrition.proteinGrams),
             carbsGrams: toFiniteNumberOrNull(parsed.nutrition.carbsGrams),
             fatGrams: toFiniteNumberOrNull(parsed.nutrition.fatGrams),
+            facts: {
+              totalCarbohydratesGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.totalCarbohydratesGrams),
+              dietaryFiberGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.dietaryFiberGrams),
+              sugarGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.sugarGrams),
+              addedSugarsGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.addedSugarsGrams),
+              sugarAlcoholsGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.sugarAlcoholsGrams),
+              netCarbsGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.netCarbsGrams),
+              saturatedFatGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.saturatedFatGrams),
+              transFatGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.transFatGrams),
+              polyunsaturatedFatGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.polyunsaturatedFatGrams),
+              monounsaturatedFatGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.monounsaturatedFatGrams),
+              cholesterolMg: toFiniteNumberOrNull(parsed.nutrition.facts?.cholesterolMg),
+              sodiumMg: toFiniteNumberOrNull(parsed.nutrition.facts?.sodiumMg),
+              calciumMg: toFiniteNumberOrNull(parsed.nutrition.facts?.calciumMg),
+              ironMg: toFiniteNumberOrNull(parsed.nutrition.facts?.ironMg),
+              potassiumMg: toFiniteNumberOrNull(parsed.nutrition.facts?.potassiumMg),
+              vitaminAIu: toFiniteNumberOrNull(parsed.nutrition.facts?.vitaminAIu),
+              vitaminCMg: toFiniteNumberOrNull(parsed.nutrition.facts?.vitaminCMg),
+              vitaminDMcg: toFiniteNumberOrNull(parsed.nutrition.facts?.vitaminDMcg),
+            },
             notes: typeof parsed.nutrition.notes === "string" ? parsed.nutrition.notes.trim() : "",
           }
         : undefined;
@@ -1049,6 +1132,26 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
         proteinGrams: null,
         carbsGrams: null,
         fatGrams: null,
+        facts: {
+          totalCarbohydratesGrams: null,
+          dietaryFiberGrams: null,
+          sugarGrams: null,
+          addedSugarsGrams: null,
+          sugarAlcoholsGrams: null,
+          netCarbsGrams: null,
+          saturatedFatGrams: null,
+          transFatGrams: null,
+          polyunsaturatedFatGrams: null,
+          monounsaturatedFatGrams: null,
+          cholesterolMg: null,
+          sodiumMg: null,
+          calciumMg: null,
+          ironMg: null,
+          potassiumMg: null,
+          vitaminAIu: null,
+          vitaminCMg: null,
+          vitaminDMcg: null,
+        },
         notes: "",
       },
     };

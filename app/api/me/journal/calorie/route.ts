@@ -47,6 +47,26 @@ function formatNutritionJournalText(entryText: string, answers: string[], estima
   proteinGrams: number | null;
   carbsGrams: number | null;
   fatGrams: number | null;
+  facts?: {
+    totalCarbohydratesGrams: number | null;
+    dietaryFiberGrams: number | null;
+    sugarGrams: number | null;
+    addedSugarsGrams: number | null;
+    sugarAlcoholsGrams: number | null;
+    netCarbsGrams: number | null;
+    saturatedFatGrams: number | null;
+    transFatGrams: number | null;
+    polyunsaturatedFatGrams: number | null;
+    monounsaturatedFatGrams: number | null;
+    cholesterolMg: number | null;
+    sodiumMg: number | null;
+    calciumMg: number | null;
+    ironMg: number | null;
+    potassiumMg: number | null;
+    vitaminAIu: number | null;
+    vitaminCMg: number | null;
+    vitaminDMcg: number | null;
+  };
   notes: string;
 }, assumptions: string[]): string {
   const lines: string[] = [];
@@ -64,6 +84,24 @@ function formatNutritionJournalText(entryText: string, answers: string[], estima
   lines.push(`- Protein: ${estimate.proteinGrams ?? "unknown"} g`);
   lines.push(`- Carbs: ${estimate.carbsGrams ?? "unknown"} g`);
   lines.push(`- Fat: ${estimate.fatGrams ?? "unknown"} g`);
+  lines.push(`- Total Carbohydrates: ${estimate.facts?.totalCarbohydratesGrams ?? "unknown"} g`);
+  lines.push(`- Dietary Fiber: ${estimate.facts?.dietaryFiberGrams ?? "unknown"} g`);
+  lines.push(`- Sugar: ${estimate.facts?.sugarGrams ?? "unknown"} g`);
+  lines.push(`- Added Sugars: ${estimate.facts?.addedSugarsGrams ?? "unknown"} g`);
+  lines.push(`- Sugar Alcohols: ${estimate.facts?.sugarAlcoholsGrams ?? "unknown"} g`);
+  lines.push(`- Net Carbs: ${estimate.facts?.netCarbsGrams ?? "unknown"} g`);
+  lines.push(`- Saturated Fat: ${estimate.facts?.saturatedFatGrams ?? "unknown"} g`);
+  lines.push(`- Trans Fat: ${estimate.facts?.transFatGrams ?? "unknown"} g`);
+  lines.push(`- Polyunsaturated Fat: ${estimate.facts?.polyunsaturatedFatGrams ?? "unknown"} g`);
+  lines.push(`- Monounsaturated Fat: ${estimate.facts?.monounsaturatedFatGrams ?? "unknown"} g`);
+  lines.push(`- Cholesterol: ${estimate.facts?.cholesterolMg ?? "unknown"} mg`);
+  lines.push(`- Sodium: ${estimate.facts?.sodiumMg ?? "unknown"} mg`);
+  lines.push(`- Calcium: ${estimate.facts?.calciumMg ?? "unknown"} mg`);
+  lines.push(`- Iron: ${estimate.facts?.ironMg ?? "unknown"} mg`);
+  lines.push(`- Potassium: ${estimate.facts?.potassiumMg ?? "unknown"} mg`);
+  lines.push(`- Vitamin A: ${estimate.facts?.vitaminAIu ?? "unknown"} IU`);
+  lines.push(`- Vitamin C: ${estimate.facts?.vitaminCMg ?? "unknown"} mg`);
+  lines.push(`- Vitamin D: ${estimate.facts?.vitaminDMcg ?? "unknown"} mcg`);
   if (estimate.notes.trim()) lines.push(`- Notes: ${estimate.notes.trim()}`);
   if (assumptions.length > 0) {
     lines.push("");
@@ -308,6 +346,26 @@ export async function POST(request: Request) {
           proteinGrams: null,
           carbsGrams: null,
           fatGrams: null,
+          facts: {
+            totalCarbohydratesGrams: null,
+            dietaryFiberGrams: null,
+            sugarGrams: null,
+            addedSugarsGrams: null,
+            sugarAlcoholsGrams: null,
+            netCarbsGrams: null,
+            saturatedFatGrams: null,
+            transFatGrams: null,
+            polyunsaturatedFatGrams: null,
+            monounsaturatedFatGrams: null,
+            cholesterolMg: null,
+            sodiumMg: null,
+            calciumMg: null,
+            ironMg: null,
+            potassiumMg: null,
+            vitaminAIu: null,
+            vitaminCMg: null,
+            vitaminDMcg: null,
+          },
           notes: "",
         };
         const nutritionFocusedEntry =

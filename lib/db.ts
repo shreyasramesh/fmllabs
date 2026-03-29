@@ -258,6 +258,20 @@ interface ReusableJournalTagDoc extends Omit<ReusableJournalTag, "_id"> {
   _id: ObjectId;
 }
 
+export interface WeightEntry {
+  _id?: string;
+  userId: string;
+  weightKg: number;
+  targetWeightKg?: number | null;
+  recordedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface WeightEntryDoc extends Omit<WeightEntry, "_id"> {
+  _id?: ObjectId;
+}
+
 export type JournalMentorReflectionsStatus = "pending" | "ready" | "failed";
 
 export interface JournalMentorReflectionItem {
@@ -1752,7 +1766,7 @@ export async function getReusableJournalItems(
 
   return docs.map((d) => ({
     ...d,
-    _id: d._id.toString(),
+    _id: d._id?.toString() ?? "",
   }));
 }
 
@@ -1831,6 +1845,53 @@ export async function getReusableJournalTags(
     .find(filter)
     .sort({ usageCount: -1, lastUsedAt: -1, updatedAt: -1 })
     .limit(limit)
+    .toArray();
+  return docs.map((d) => ({
+    ...d,
+    _id: d._id.toString(),
+  }));
+}
+
+export async function addWeightEntry(
+  userId: string,
+  weightKg: number,
+  options?: { targetWeightKg?: number | null; recordedAt?: Date }
+): Promise<WeightEntry & { _id: string }> {
+  const database = await getDb();
+  const now = new Date();
+  const recordedAt = options?.recordedAt ?? now;
+  const targetWeightKg =
+    typeof options?.targetWeightKg === "number" && Number.isFinite(options.targetWeightKg)
+      ? options.targetWeightKg
+      : null;
+  const doc: Omit<WeightEntryDoc, "_id"> = {
+    userId,
+    weightKg,
+    targetWeightKg,
+    recordedAt,
+    createdAt: now,
+    updatedAt: now,
+  };
+  const collection = database.collection<WeightEntryDoc>("user_weight_entries");
+  await collection.createIndex({ userId: 1, recordedAt: -1, createdAt: -1 });
+  const result = await collection.insertOne(doc);
+  return {
+    ...doc,
+    _id: result.insertedId.toString(),
+  };
+}
+
+export async function getWeightEntries(
+  userId: string,
+  limit = 500
+): Promise<Array<WeightEntry & { _id: string }>> {
+  const database = await getDb();
+  const safeLimit = Math.max(1, Math.min(2000, Math.floor(limit)));
+  const docs = await database
+    .collection<WeightEntryDoc>("user_weight_entries")
+    .find({ userId })
+    .sort({ recordedAt: -1, createdAt: -1 })
+    .limit(safeLimit)
     .toArray();
   return docs.map((d) => ({
     ...d,
@@ -2090,6 +2151,7 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   await database.collection<HabitDoc>("habits").deleteMany({ userId });
   await database.collection<SavedNutritionExerciseItemDoc>("user_reusable_journal_items").deleteMany({ userId });
   await database.collection<ReusableJournalTagDoc>("user_reusable_journal_tags").deleteMany({ userId });
+  await database.collection<WeightEntryDoc>("user_weight_entries").deleteMany({ userId });
   await database.collection("user_progress").deleteMany({ userId });
   await database.collection("weekly_reflection_sends").deleteMany({ userId });
   await database.collection<UsageEventDoc>("usage_events").deleteMany({ userId });

@@ -76,6 +76,30 @@ type SpeechRecognitionCtor = new () => {
   stop: () => void;
 };
 
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    let settled = false;
+    const timer = setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      reject(new Error("Timed out"));
+    }, timeoutMs);
+    promise
+      .then((value) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        resolve(value);
+      })
+      .catch((err) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        reject(err);
+      });
+  });
+}
+
 function getSpeechRecognitionCtor(): SpeechRecognitionCtor | null {
   if (typeof window === "undefined") return null;
   const w = window as Window & {
@@ -434,7 +458,6 @@ async function startNativeSpeechStt(
       resolveStopWait = null;
     }
   });
-
   try {
     await SpeechRecognition.start({
       language: getLanguageCodeForTts(language),
@@ -459,7 +482,8 @@ async function startNativeSpeechStt(
     },
     requestCommit: async () => {
       try {
-        await SpeechRecognition.stop();
+        // Avoid awaiting stop() directly; on some Android devices it can hang.
+        void SpeechRecognition.stop();
       } catch {
         /* ignore */
       }
@@ -506,6 +530,7 @@ export function VoiceInputButton({
   const pendingTranscriptRef = useRef<string[]>([]);
   const partialTranscriptRef = useRef("");
   const autoStopTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const commitInFlightRef = useRef(false);
   const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const holdProgressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const holdStartRef = useRef<number>(0);
@@ -571,48 +596,83 @@ export function VoiceInputButton({
     setStarting(true);
     try {
       let session: SttSession;
-      try {
-        session = await startElevenLabsStt(
-          language,
-          (text) => {
-            pendingTranscriptRef.current.push(text);
-            partialTranscriptRef.current = "";
-          },
-          (err) => {
-            console.warn("ElevenLabs STT:", err);
-            stopListening();
-          },
-          (level) => {
-            setAudioLevel((prev) => Math.max(level, prev * 0.9));
-          },
-          (partialText) => {
-            partialTranscriptRef.current = partialText;
-          },
-          (nodes) => setOrbNodes(nodes)
-        );
-      } catch (primaryErr) {
+      if (Capacitor.isNativePlatform()) {
         try {
-          if (Capacitor.isNativePlatform()) {
-            console.warn("Realtime STT unavailable, falling back to native speech:", primaryErr);
-            session = await startNativeSpeechStt(
+          session = await startNativeSpeechStt(
+            language,
+            (text) => {
+              pendingTranscriptRef.current.push(text);
+              partialTranscriptRef.current = "";
+            },
+            (err) => {
+              console.warn("Native Speech STT:", err);
+              stopListening();
+            },
+            (partialText) => {
+              partialTranscriptRef.current = partialText;
+            }
+          );
+        } catch (nativeErr) {
+          try {
+            console.warn("Native speech unavailable, falling back to realtime STT:", nativeErr);
+            session = await startElevenLabsStt(
               language,
               (text) => {
                 pendingTranscriptRef.current.push(text);
                 partialTranscriptRef.current = "";
               },
               (err) => {
-                console.warn("Native Speech STT:", err);
+                console.warn("ElevenLabs STT:", err);
+                stopListening();
+              },
+              (level) => {
+                setAudioLevel((prev) => Math.max(level, prev * 0.9));
+              },
+              (partialText) => {
+                partialTranscriptRef.current = partialText;
+              },
+              (nodes) => setOrbNodes(nodes)
+            );
+          } catch (primaryErr) {
+            console.warn("Realtime STT unavailable, falling back to Web Speech:", primaryErr);
+            session = await startWebSpeechStt(
+              language,
+              (text) => {
+                pendingTranscriptRef.current.push(text);
+                partialTranscriptRef.current = "";
+              },
+              (err) => {
+                console.warn("Web Speech STT:", err);
                 stopListening();
               },
               (partialText) => {
                 partialTranscriptRef.current = partialText;
               }
             );
-          } else {
-            throw primaryErr;
           }
-        } catch (nativeErr) {
-          console.warn("Native speech unavailable, falling back to Web Speech:", nativeErr);
+        }
+      } else {
+        try {
+          session = await startElevenLabsStt(
+            language,
+            (text) => {
+              pendingTranscriptRef.current.push(text);
+              partialTranscriptRef.current = "";
+            },
+            (err) => {
+              console.warn("ElevenLabs STT:", err);
+              stopListening();
+            },
+            (level) => {
+              setAudioLevel((prev) => Math.max(level, prev * 0.9));
+            },
+            (partialText) => {
+              partialTranscriptRef.current = partialText;
+            },
+            (nodes) => setOrbNodes(nodes)
+          );
+        } catch (primaryErr) {
+          console.warn("Realtime STT unavailable, falling back to Web Speech:", primaryErr);
           session = await startWebSpeechStt(
             language,
             (text) => {
@@ -652,23 +712,29 @@ export function VoiceInputButton({
   }, [stopListening]);
 
   const finishAndPaste = useCallback(async () => {
+    if (commitInFlightRef.current) return;
+    commitInFlightRef.current = true;
     const session = cleanupRef.current;
-    if (session) {
-      try {
-        await session.requestCommit();
-      } catch {
-        /* best effort */
+    try {
+      if (session) {
+        try {
+          await withTimeout(session.requestCommit(), 1600);
+        } catch {
+          /* best effort */
+        }
       }
+      const text = [...pendingTranscriptRef.current, partialTranscriptRef.current]
+        .join(" ")
+        .replace(/\s+/g, " ")
+        .trim();
+      pendingTranscriptRef.current = [];
+      partialTranscriptRef.current = "";
+      playStopChime();
+      stopListening();
+      if (text) onTranscription(text);
+    } finally {
+      commitInFlightRef.current = false;
     }
-    const text = [...pendingTranscriptRef.current, partialTranscriptRef.current]
-      .join(" ")
-      .replace(/\s+/g, " ")
-      .trim();
-    pendingTranscriptRef.current = [];
-    partialTranscriptRef.current = "";
-    playStopChime();
-    stopListening();
-    if (text) onTranscription(text);
   }, [onTranscription, stopListening]);
 
   const clearHoldProgress = useCallback(() => {

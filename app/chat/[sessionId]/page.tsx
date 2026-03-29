@@ -2122,6 +2122,147 @@ function extractEstimatedNumber(text: string, pattern: RegExp): number | null {
   return Number.isFinite(value) ? value : null;
 }
 
+type NutritionFactsDaySummary = {
+  calories: number | null;
+  totalCarbohydratesGrams: number | null;
+  dietaryFiberGrams: number | null;
+  sugarGrams: number | null;
+  addedSugarsGrams: number | null;
+  sugarAlcoholsGrams: number | null;
+  netCarbsGrams: number | null;
+  proteinGrams: number | null;
+  totalFatGrams: number | null;
+  saturatedFatGrams: number | null;
+  transFatGrams: number | null;
+  polyunsaturatedFatGrams: number | null;
+  monounsaturatedFatGrams: number | null;
+  cholesterolMg: number | null;
+  sodiumMg: number | null;
+  calciumMg: number | null;
+  ironMg: number | null;
+  potassiumMg: number | null;
+  vitaminAIu: number | null;
+  vitaminCMg: number | null;
+  vitaminDMcg: number | null;
+};
+
+const NUTRITION_FACT_PATTERNS: Array<{ key: keyof NutritionFactsDaySummary; pattern: RegExp }> = [
+  { key: "calories", pattern: /- Calories:\s*([\d.]+)\s*kcal/i },
+  { key: "totalCarbohydratesGrams", pattern: /- Total Carbohydrates:\s*([\d.]+)\s*g/i },
+  { key: "dietaryFiberGrams", pattern: /- Dietary Fiber:\s*([\d.]+)\s*g/i },
+  { key: "sugarGrams", pattern: /- Sugar:\s*([\d.]+)\s*g/i },
+  { key: "addedSugarsGrams", pattern: /- Added Sugars:\s*([\d.]+)\s*g/i },
+  { key: "sugarAlcoholsGrams", pattern: /- Sugar Alcohols:\s*([\d.]+)\s*g/i },
+  { key: "netCarbsGrams", pattern: /- Net Carbs:\s*([\d.]+)\s*g/i },
+  { key: "proteinGrams", pattern: /- Protein:\s*([\d.]+)\s*g/i },
+  { key: "totalFatGrams", pattern: /- Fat:\s*([\d.]+)\s*g/i },
+  { key: "saturatedFatGrams", pattern: /- Saturated Fat:\s*([\d.]+)\s*g/i },
+  { key: "transFatGrams", pattern: /- Trans Fat:\s*([\d.]+)\s*g/i },
+  { key: "polyunsaturatedFatGrams", pattern: /- Polyunsaturated Fat:\s*([\d.]+)\s*g/i },
+  { key: "monounsaturatedFatGrams", pattern: /- Monounsaturated Fat:\s*([\d.]+)\s*g/i },
+  { key: "cholesterolMg", pattern: /- Cholesterol:\s*([\d.]+)\s*mg/i },
+  { key: "sodiumMg", pattern: /- Sodium:\s*([\d.]+)\s*mg/i },
+  { key: "calciumMg", pattern: /- Calcium:\s*([\d.]+)\s*mg/i },
+  { key: "ironMg", pattern: /- Iron:\s*([\d.]+)\s*mg/i },
+  { key: "potassiumMg", pattern: /- Potassium:\s*([\d.]+)\s*mg/i },
+  { key: "vitaminAIu", pattern: /- Vitamin A:\s*([\d.]+)\s*IU/i },
+  { key: "vitaminCMg", pattern: /- Vitamin C:\s*([\d.]+)\s*mg/i },
+  { key: "vitaminDMcg", pattern: /- Vitamin D:\s*([\d.]+)\s*mcg/i },
+];
+
+function getEmptyNutritionFactsSummary(): NutritionFactsDaySummary {
+  return {
+    calories: null,
+    totalCarbohydratesGrams: null,
+    dietaryFiberGrams: null,
+    sugarGrams: null,
+    addedSugarsGrams: null,
+    sugarAlcoholsGrams: null,
+    netCarbsGrams: null,
+    proteinGrams: null,
+    totalFatGrams: null,
+    saturatedFatGrams: null,
+    transFatGrams: null,
+    polyunsaturatedFatGrams: null,
+    monounsaturatedFatGrams: null,
+    cholesterolMg: null,
+    sodiumMg: null,
+    calciumMg: null,
+    ironMg: null,
+    potassiumMg: null,
+    vitaminAIu: null,
+    vitaminCMg: null,
+    vitaminDMcg: null,
+  };
+}
+
+function summarizeNutritionFactsForDay(
+  entries: Array<{
+    sourceType?: "youtube" | "journal";
+    transcriptText?: string;
+    journalCategory?: "nutrition" | "exercise";
+    journalEntryYear?: number;
+    journalEntryMonth?: number;
+    journalEntryDay?: number;
+    createdAt?: string;
+  }>,
+  dayKey: string
+): NutritionFactsDaySummary {
+  const totals: Record<keyof NutritionFactsDaySummary, number> = {
+    calories: 0,
+    totalCarbohydratesGrams: 0,
+    dietaryFiberGrams: 0,
+    sugarGrams: 0,
+    addedSugarsGrams: 0,
+    sugarAlcoholsGrams: 0,
+    netCarbsGrams: 0,
+    proteinGrams: 0,
+    totalFatGrams: 0,
+    saturatedFatGrams: 0,
+    transFatGrams: 0,
+    polyunsaturatedFatGrams: 0,
+    monounsaturatedFatGrams: 0,
+    cholesterolMg: 0,
+    sodiumMg: 0,
+    calciumMg: 0,
+    ironMg: 0,
+    potassiumMg: 0,
+    vitaminAIu: 0,
+    vitaminCMg: 0,
+    vitaminDMcg: 0,
+  };
+  const seen = new Set<keyof NutritionFactsDaySummary>();
+
+  for (const t of entries) {
+    if (t.sourceType !== "journal" || !t.transcriptText || t.journalCategory !== "nutrition") continue;
+    let itemDayKey: string | null = null;
+    if (
+      typeof t.journalEntryYear === "number" &&
+      typeof t.journalEntryMonth === "number" &&
+      typeof t.journalEntryDay === "number"
+    ) {
+      itemDayKey = toDayKey(new Date(t.journalEntryYear, t.journalEntryMonth - 1, t.journalEntryDay));
+    } else if (t.createdAt) {
+      const d = new Date(t.createdAt);
+      if (!Number.isNaN(d.getTime())) itemDayKey = toDayKey(d);
+    }
+    if (itemDayKey !== dayKey) continue;
+
+    for (const { key, pattern } of NUTRITION_FACT_PATTERNS) {
+      const value = extractEstimatedNumber(t.transcriptText, pattern);
+      if (value == null) continue;
+      totals[key] += value;
+      seen.add(key);
+    }
+  }
+
+  const result = getEmptyNutritionFactsSummary();
+  for (const { key } of NUTRITION_FACT_PATTERNS) {
+    result[key] = seen.has(key) ? Math.round(totals[key]) : null;
+  }
+  return result;
+}
+
 function summarizeNutritionForDay(
   entries: Array<{
     sourceType?: "youtube" | "journal";
@@ -2396,7 +2537,7 @@ type LandingDayActivityItem = {
 
 type LandingTab = "journaling" | "deepThinking";
 const LANDING_TAB_STORAGE_KEY = "fml_landing_tab";
-type LandingJournalChipKey = "gratitude" | "reflection" | "nutrition" | "exercise";
+type LandingJournalChipKey = "gratitude" | "reflection" | "nutrition" | "exercise" | "weight";
 type ReusableJournalSuggestion = {
   id: string;
   kind: "nutrition" | "exercise";
@@ -2412,6 +2553,14 @@ type MentorRecommendationSuggestion = {
   description: string;
   category: string;
   reason: string;
+};
+
+type WeightTrackerEntry = {
+  id: string;
+  weightKg: number;
+  targetWeightKg: number | null;
+  recordedAt: string;
+  createdAt: string;
 };
 
 type LandingActivityGroupKey =
@@ -2447,9 +2596,10 @@ const LANDING_TAB_ACTIVITY_GROUP_ORDER: Record<LandingTab, LandingActivityGroupK
 const LANDING_JOURNAL_CHIPS: Array<{
   key: LandingJournalChipKey;
   label: string;
-  flow: "regular" | "calorie";
+  flow: "regular" | "calorie" | "weight";
 }> = [
   { key: "nutrition", label: "Nutrition entry", flow: "calorie" },
+  { key: "weight", label: "Weight entry", flow: "weight" },
   { key: "gratitude", label: "Gratitude entry", flow: "regular" },
   { key: "exercise", label: "Exercise entry", flow: "calorie" },
   { key: "reflection", label: "Reflection entry", flow: "regular" },
@@ -2472,6 +2622,10 @@ const LANDING_JOURNAL_EXAMPLES: Record<LandingJournalChipKey, string[]> = {
     "Workout: 35-minute strength session (upper body), then 12 minutes incline walk.",
     "Activity: 45-minute brisk walk + 20-minute yoga mobility routine in the evening.",
   ],
+  weight: [
+    "Morning check-in: 73.2 kg after waking up.",
+    "Post-workout check: 72.9 kg. Feeling lighter this week.",
+  ],
 };
 
 const LANDING_JOURNAL_MODAL_TITLE: Record<LandingJournalChipKey, string> = {
@@ -2479,10 +2633,12 @@ const LANDING_JOURNAL_MODAL_TITLE: Record<LandingJournalChipKey, string> = {
   reflection: "Reflection Journal",
   nutrition: "Nutrition entry",
   exercise: "Exercise entry",
+  weight: "Weight tracker",
 };
 
 const LANDING_JOURNAL_CARD_DESCRIPTION: Record<LandingJournalChipKey, string> = {
   nutrition: "Log meals for better calorie and macro accuracy.",
+  weight: "Track progress with a simple trend chart.",
   gratitude: "Capture one thing you appreciate today.",
   exercise: "Track workouts, intensity, and duration quickly.",
   reflection: "Note what worked and what to improve next.",
@@ -2511,6 +2667,14 @@ function renderLandingJournalIcon(key: LandingJournalChipKey) {
       return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
           <path d="M13 2 5 13h6l-1 9 9-12h-6z" />
+        </svg>
+      );
+    case "weight":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
+          <path d="M5 7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z" />
+          <path d="M8 11a4 4 0 0 1 8 0" />
+          <path d="m12 11 2-2" />
         </svg>
       );
     case "reflection":
@@ -3524,6 +3688,26 @@ export default function ChatPage() {
       proteinGrams: number | null;
       carbsGrams: number | null;
       fatGrams: number | null;
+      facts?: {
+        totalCarbohydratesGrams: number | null;
+        dietaryFiberGrams: number | null;
+        sugarGrams: number | null;
+        addedSugarsGrams: number | null;
+        sugarAlcoholsGrams: number | null;
+        netCarbsGrams: number | null;
+        saturatedFatGrams: number | null;
+        transFatGrams: number | null;
+        polyunsaturatedFatGrams: number | null;
+        monounsaturatedFatGrams: number | null;
+        cholesterolMg: number | null;
+        sodiumMg: number | null;
+        calciumMg: number | null;
+        ironMg: number | null;
+        potassiumMg: number | null;
+        vitaminAIu: number | null;
+        vitaminCMg: number | null;
+        vitaminDMcg: number | null;
+      };
       notes: string;
     };
     exercise?: {
@@ -3562,6 +3746,7 @@ export default function ChatPage() {
   const [weeklySummaryWeekOffset, setWeeklySummaryWeekOffset] = useState(0);
   const [weeklySummaryLoading, setWeeklySummaryLoading] = useState(false);
   const [weeklySummaryError, setWeeklySummaryError] = useState<string | null>(null);
+  const [nutritionDayViewModalOpen, setNutritionDayViewModalOpen] = useState(false);
   const [weeklySummaryResult, setWeeklySummaryResult] = useState<{
     weekOffset: number;
     weekStartDayKey: string;
@@ -3596,6 +3781,15 @@ export default function ChatPage() {
       fatGrams: number;
     };
   } | null>(null);
+  const [weightTrackerModalOpen, setWeightTrackerModalOpen] = useState(false);
+  const [weightTrackerLoading, setWeightTrackerLoading] = useState(false);
+  const [weightTrackerSaving, setWeightTrackerSaving] = useState(false);
+  const [weightTrackerError, setWeightTrackerError] = useState<string | null>(null);
+  const [weightTrackerEntries, setWeightTrackerEntries] = useState<WeightTrackerEntry[]>([]);
+  const [weightTrackerRange, setWeightTrackerRange] = useState<"week" | "month" | "year" | "all">("week");
+  const [weightTrackerWeightInput, setWeightTrackerWeightInput] = useState("");
+  const [weightTrackerTargetInput, setWeightTrackerTargetInput] = useState("");
+  const [weightTrackerAddOpen, setWeightTrackerAddOpen] = useState(false);
 
   const resetJournalEntryModal = useCallback(() => {
     setJournalEntryModalOpen(false);
@@ -3706,6 +3900,12 @@ export default function ChatPage() {
       }
       if (chip === "nutrition" || chip === "exercise") {
         openCalorieTrackerModal(chip);
+        return;
+      }
+      if (chip === "weight") {
+        setWeightTrackerModalOpen(true);
+        setWeightTrackerRange("week");
+        setWeightTrackerAddOpen(false);
         return;
       }
       openJournalEntryFlow(chip);
@@ -3840,6 +4040,26 @@ export default function ChatPage() {
             proteinGrams: number | null;
             carbsGrams: number | null;
             fatGrams: number | null;
+            facts?: {
+              totalCarbohydratesGrams: number | null;
+              dietaryFiberGrams: number | null;
+              sugarGrams: number | null;
+              addedSugarsGrams: number | null;
+              sugarAlcoholsGrams: number | null;
+              netCarbsGrams: number | null;
+              saturatedFatGrams: number | null;
+              transFatGrams: number | null;
+              polyunsaturatedFatGrams: number | null;
+              monounsaturatedFatGrams: number | null;
+              cholesterolMg: number | null;
+              sodiumMg: number | null;
+              calciumMg: number | null;
+              ironMg: number | null;
+              potassiumMg: number | null;
+              vitaminAIu: number | null;
+              vitaminCMg: number | null;
+              vitaminDMcg: number | null;
+            };
             notes: string;
           };
           exercise?: {
@@ -4219,6 +4439,10 @@ export default function ChatPage() {
         nutritionGoals.caloriesTarget
       ),
     [journalEntriesSorted, nutritionGoals.caloriesTarget, selectedLandingDayKey]
+  );
+  const selectedLandingDayNutritionFacts = useMemo(
+    () => summarizeNutritionFactsForDay(journalEntriesSorted, selectedLandingDayKey),
+    [journalEntriesSorted, selectedLandingDayKey]
   );
   const activeNutritionReportSnapshot = useMemo(
     () =>
@@ -6553,6 +6777,112 @@ export default function ChatPage() {
     setWeeklySummaryModalOpen(true);
   }, [incognitoMode, isAnonymous, router]);
 
+  const resetWeightTrackerModal = useCallback(() => {
+    setWeightTrackerModalOpen(false);
+    setWeightTrackerLoading(false);
+    setWeightTrackerSaving(false);
+    setWeightTrackerError(null);
+    setWeightTrackerEntries([]);
+    setWeightTrackerRange("week");
+    setWeightTrackerWeightInput("");
+    setWeightTrackerTargetInput("");
+    setWeightTrackerAddOpen(false);
+  }, []);
+
+  const fetchWeightTracker = useCallback(async () => {
+    setWeightTrackerLoading(true);
+    setWeightTrackerError(null);
+    try {
+      const res = await fetch("/api/me/journal/weight");
+      const data = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        currentWeightKg?: number | null;
+        targetWeightKg?: number | null;
+        entries?: WeightTrackerEntry[];
+      };
+      if (!res.ok) throw new Error(data.error || "Could not load weight tracker.");
+      const entries = Array.isArray(data.entries) ? data.entries : [];
+      setWeightTrackerEntries(entries);
+      setWeightTrackerWeightInput(
+        typeof data.currentWeightKg === "number" ? String(data.currentWeightKg) : ""
+      );
+      setWeightTrackerTargetInput(
+        typeof data.targetWeightKg === "number" ? String(data.targetWeightKg) : ""
+      );
+    } catch (err) {
+      setWeightTrackerError(err instanceof Error ? err.message : "Could not load weight tracker.");
+      setWeightTrackerEntries([]);
+    } finally {
+      setWeightTrackerLoading(false);
+    }
+  }, []);
+
+  const openWeightTrackerModal = useCallback(() => {
+    playSelectionChime();
+    if (isAnonymous || incognitoMode) {
+      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
+      return;
+    }
+    setWeightTrackerModalOpen(true);
+    setWeightTrackerRange("week");
+    setWeightTrackerAddOpen(false);
+  }, [incognitoMode, isAnonymous, router]);
+
+  useEffect(() => {
+    if (!weightTrackerModalOpen) return;
+    if (isAnonymous || incognitoMode || !userId) return;
+    void fetchWeightTracker();
+  }, [fetchWeightTracker, incognitoMode, isAnonymous, userId, weightTrackerModalOpen]);
+
+  const saveWeightTrackerEntry = useCallback(async () => {
+    if (weightTrackerSaving) return;
+    const parsedWeight = Number.parseFloat(weightTrackerWeightInput);
+    if (!Number.isFinite(parsedWeight)) {
+      setWeightTrackerError("Please enter a valid current weight.");
+      return;
+    }
+    const parsedTarget =
+      weightTrackerTargetInput.trim() === "" ? null : Number.parseFloat(weightTrackerTargetInput);
+    if (parsedTarget != null && !Number.isFinite(parsedTarget)) {
+      setWeightTrackerError("Please enter a valid target weight.");
+      return;
+    }
+    setWeightTrackerSaving(true);
+    setWeightTrackerError(null);
+    try {
+      const res = await fetch("/api/me/journal/weight", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          weightKg: parsedWeight,
+          targetWeightKg: parsedTarget,
+          recordedAt: new Date().toISOString(),
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        entries?: WeightTrackerEntry[];
+      };
+      if (!res.ok) throw new Error(data.error || "Could not save weight entry.");
+      const entries = Array.isArray(data.entries) ? data.entries : [];
+      setWeightTrackerEntries(entries);
+      setWeightTrackerWeightInput(
+        entries.length > 0 && Number.isFinite(entries[0]!.weightKg) ? String(entries[0]!.weightKg) : ""
+      );
+      setWeightTrackerAddOpen(false);
+      refetchTranscripts();
+    } catch (err) {
+      setWeightTrackerError(err instanceof Error ? err.message : "Could not save weight entry.");
+    } finally {
+      setWeightTrackerSaving(false);
+    }
+  }, [
+    refetchTranscripts,
+    weightTrackerSaving,
+    weightTrackerTargetInput,
+    weightTrackerWeightInput,
+  ]);
+
   useEffect(() => {
     if (!weeklySummaryModalOpen) return;
     if (isAnonymous || incognitoMode || !userId) return;
@@ -6773,8 +7103,109 @@ export default function ChatPage() {
     };
   }, [language, nutritionGoals.carbsGrams, nutritionGoals.fatGrams, nutritionGoals.proteinGrams, weeklySummaryResult]);
 
+  const weightTrackerCurrentKg = useMemo(
+    () => (weightTrackerEntries.length > 0 ? weightTrackerEntries[0]!.weightKg : null),
+    [weightTrackerEntries]
+  );
+  const weightTrackerTargetKg = useMemo(() => {
+    const row = weightTrackerEntries.find((entry) => typeof entry.targetWeightKg === "number");
+    return row?.targetWeightKg ?? null;
+  }, [weightTrackerEntries]);
+
+  const weightTrackerFilteredChronological = useMemo(() => {
+    const now = Date.now();
+    const rangeMs =
+      weightTrackerRange === "week"
+        ? 7 * 24 * 60 * 60 * 1000
+        : weightTrackerRange === "month"
+          ? 30 * 24 * 60 * 60 * 1000
+          : weightTrackerRange === "year"
+            ? 365 * 24 * 60 * 60 * 1000
+            : null;
+    const filtered = weightTrackerEntries.filter((entry) => {
+      if (rangeMs == null) return true;
+      const ts = new Date(entry.recordedAt || entry.createdAt).getTime();
+      return Number.isFinite(ts) && now - ts <= rangeMs;
+    });
+    return filtered
+      .slice()
+      .sort(
+        (a, b) =>
+          new Date(a.recordedAt || a.createdAt).getTime() - new Date(b.recordedAt || b.createdAt).getTime()
+      );
+  }, [weightTrackerEntries, weightTrackerRange]);
+
+  const weightTrackerChartOptions = useMemo<Highcharts.Options>(() => {
+    const rows = weightTrackerFilteredChronological;
+    if (rows.length === 0) {
+      return {
+        ...chartBaseOptions(),
+        chart: { ...chartBaseOptions().chart, type: "line", height: 240 },
+        title: { text: "" },
+        series: [],
+      };
+    }
+    const categories = rows.map((row) => {
+      const date = new Date(row.recordedAt || row.createdAt);
+      if (weightTrackerRange === "week") {
+        return new Intl.DateTimeFormat(undefined, { hour: "2-digit", minute: "2-digit" }).format(date);
+      }
+      if (weightTrackerRange === "year") {
+        return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(date);
+      }
+      return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(date);
+    });
+    const values = rows.map((row) => row.weightKg);
+    const target = weightTrackerTargetKg;
+    const allValues = [...values, ...(typeof target === "number" ? [target] : [])];
+    const min = Math.min(...allValues);
+    const max = Math.max(...allValues);
+    return {
+      ...chartBaseOptions(),
+      chart: { ...chartBaseOptions().chart, type: "line", height: 240 },
+      title: { text: "" },
+      xAxis: {
+        ...chartBaseOptions().xAxis,
+        categories,
+      },
+      yAxis: {
+        ...chartBaseOptions().yAxis,
+        title: { text: "kg" },
+        min: Math.floor(min - 2),
+        max: Math.ceil(max + 2),
+      },
+      tooltip: {
+        shared: true,
+        valueSuffix: " kg",
+      },
+      series: [
+        {
+          type: "line",
+          name: "Current Weight",
+          data: values,
+          color: "#1D4ED8",
+          lineWidth: 3,
+          marker: { enabled: true, radius: 4 },
+        },
+        ...(typeof target === "number"
+          ? [
+              {
+                type: "line" as const,
+                name: "Target Weight",
+                data: rows.map(() => target),
+                color: "#16A34A",
+                lineWidth: 2,
+                dashStyle: "Dash",
+                marker: { enabled: false },
+              },
+            ]
+          : []),
+      ],
+    };
+  }, [weightTrackerFilteredChronological, weightTrackerRange, weightTrackerTargetKg]);
+
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionReportModalOpen && !weeklySummaryModalOpen && !mentorOneOnOneModalOpen && !askMentorsRecommendModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !weightTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionReportModalOpen && !nutritionDayViewModalOpen && !weeklySummaryModalOpen && !mentorOneOnOneModalOpen && !askMentorsRecommendModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (journalCheckpointModal) setJournalCheckpointModal(null);
@@ -6788,8 +7219,10 @@ export default function ChatPage() {
           setTranscriptExtractedConceptsSectionOpen(true);
           setMentorReflectionsRegenerateLoading(false);
         }
+        else if (nutritionDayViewModalOpen) setNutritionDayViewModalOpen(false);
         else if (nutritionReportModalOpen && !nutritionReportLoading) resetNutritionReportModal();
         else if (weeklySummaryModalOpen && !weeklySummaryLoading) resetWeeklySummaryModal();
+        else if (weightTrackerModalOpen && !weightTrackerSaving) resetWeightTrackerModal();
         else if (goalsModalOpen && !goalsSaving && !goalsCalculatorLoading && !goalsRecalculateLoading && !goalsCoachLoading) setGoalsModalOpen(false);
         else if (journalTypeChooserOpen) setJournalTypeChooserOpen(false);
         else if (journalEntryModalOpen && !journalEntrySaving) resetJournalEntryModal();
@@ -6823,7 +7256,7 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, goalsCoachLoading, nutritionReportModalOpen, nutritionReportLoading, weeklySummaryModalOpen, weeklySummaryLoading, journalEntrySaving, mentorOneOnOneModalOpen, askMentorsRecommendModalOpen, newConversationChooserModalOpen, journalCheckpointModal, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetJournalEntryModal, resetNutritionReportModal, resetWeeklySummaryModal]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, weightTrackerModalOpen, weightTrackerSaving, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, goalsCoachLoading, nutritionReportModalOpen, nutritionReportLoading, nutritionDayViewModalOpen, weeklySummaryModalOpen, weeklySummaryLoading, journalEntrySaving, mentorOneOnOneModalOpen, askMentorsRecommendModalOpen, newConversationChooserModalOpen, journalCheckpointModal, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetNutritionReportModal, resetWeeklySummaryModal]);
 
   useEffect(() => {
     if (!headerCalendarOpen) return;
@@ -7401,6 +7834,8 @@ export default function ChatPage() {
     setIdeasModalOpen(false);
     resetJournalEntryModal();
     resetCalorieTrackerModal();
+    resetWeightTrackerModal();
+    setNutritionDayViewModalOpen(false);
     resetNutritionReportModal();
     resetWeeklySummaryModal();
     setNewConversationChooserModalOpen(false);
@@ -7413,7 +7848,7 @@ export default function ChatPage() {
     setCcDeleteConfirmModal(null);
     setCgDeleteConfirmModal(null);
     setGoBackConfirmModal(null);
-  }, [resetCalorieTrackerModal, resetJournalEntryModal, resetNutritionReportModal, resetWeeklySummaryModal]);
+  }, [resetCalorieTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetNutritionReportModal, resetWeeklySummaryModal]);
 
   const handleBrandLinkClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -10607,7 +11042,11 @@ export default function ChatPage() {
                                 <div className={`${landingJournalingExpandedCard === "snapshot" ? "block" : "hidden"} sm:block px-3 pb-3 sm:pt-3`}>
                                   <p className="hidden sm:block mb-2 text-sm font-semibold text-foreground">Today snapshot</p>
                                   <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-2">
-                                    <div className="min-w-0 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-background p-2 sm:p-1.5 text-left">
+                                    <button
+                                      type="button"
+                                      onClick={() => setNutritionDayViewModalOpen(true)}
+                                      className="min-w-0 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:!bg-neutral-900 p-2 sm:p-1.5 text-left hover:bg-neutral-100 dark:hover:!bg-neutral-800/80 active:bg-neutral-100 dark:active:bg-neutral-800/90 focus-visible:bg-neutral-100 dark:focus-visible:bg-neutral-800/80 transition-colors [-webkit-tap-highlight-color:transparent]"
+                                    >
                                       <div className="flex items-center gap-2">
                                         <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-accent/15 dark:bg-accent/30">
                                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
@@ -10652,9 +11091,13 @@ export default function ChatPage() {
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
+                                    </button>
 
-                                    <div className="min-w-0 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-background p-2 sm:p-1.5 text-left">
+                                    <button
+                                      type="button"
+                                      onClick={() => setNutritionDayViewModalOpen(true)}
+                                      className="min-w-0 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:!bg-neutral-900 p-2 sm:p-1.5 text-left hover:bg-neutral-100 dark:hover:!bg-neutral-800/80 active:bg-neutral-100 dark:active:bg-neutral-800/90 focus-visible:bg-neutral-100 dark:focus-visible:bg-neutral-800/80 transition-colors [-webkit-tap-highlight-color:transparent]"
+                                    >
                                       <div className="flex items-center gap-2">
                                         <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
                                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
@@ -10731,7 +11174,7 @@ export default function ChatPage() {
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
+                                    </button>
                                   </div>
 
                                   <div className="mt-2 space-y-2">
@@ -14571,6 +15014,252 @@ export default function ChatPage() {
         </div>
       )}
 
+      {weightTrackerModalOpen && (
+        <div
+          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => {
+            if (!weightTrackerSaving) resetWeightTrackerModal();
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Weight tracker"
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[88vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <h2 className="text-lg font-semibold text-foreground pr-2">Weight Tracker</h2>
+              <button
+                type="button"
+                onClick={resetWeightTrackerModal}
+                disabled={weightTrackerSaving}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 space-y-3 overflow-y-auto">
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Current Weight</p>
+                  <p className="mt-1 text-3xl font-semibold text-foreground">
+                    {typeof weightTrackerCurrentKg === "number" ? `${weightTrackerCurrentKg} kg` : "--"}
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Target Weight</p>
+                  <p className="mt-1 text-3xl font-semibold text-foreground">
+                    {typeof weightTrackerTargetKg === "number" ? `${weightTrackerTargetKg} kg` : "--"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {[
+                  { key: "week", label: "Week" },
+                  { key: "month", label: "Month" },
+                  { key: "year", label: "Year" },
+                  { key: "all", label: "All time" },
+                ].map((opt) => {
+                  const selected = weightTrackerRange === opt.key;
+                  return (
+                    <button
+                      key={opt.key}
+                      type="button"
+                      onClick={() => setWeightTrackerRange(opt.key as "week" | "month" | "year" | "all")}
+                      className={`px-3 py-1.5 rounded-lg border text-sm transition-colors ${
+                        selected
+                          ? "bg-accent text-white border-accent"
+                          : "border-neutral-200 dark:border-neutral-700 text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  );
+                })}
+                <button
+                  type="button"
+                  onClick={() => setWeightTrackerAddOpen((v) => !v)}
+                  disabled={weightTrackerSaving}
+                  className="ml-auto h-9 w-9 rounded-lg border border-neutral-200 dark:border-neutral-700 text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  aria-label="Add weight entry"
+                >
+                  +
+                </button>
+              </div>
+
+              {weightTrackerAddOpen && (
+                <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">Current weight (kg)</label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={weightTrackerWeightInput}
+                        onChange={(e) => setWeightTrackerWeightInput(e.target.value)}
+                        disabled={weightTrackerSaving}
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">Target weight (kg)</label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={weightTrackerTargetInput}
+                        onChange={(e) => setWeightTrackerTargetInput(e.target.value)}
+                        disabled={weightTrackerSaving}
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setWeightTrackerAddOpen(false)}
+                      disabled={weightTrackerSaving}
+                      className="px-3 py-1.5 rounded-lg border border-neutral-300 dark:border-neutral-600 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void saveWeightTrackerEntry()}
+                      disabled={weightTrackerSaving || !weightTrackerWeightInput.trim()}
+                      className="px-3 py-1.5 rounded-lg bg-foreground text-background text-sm hover:opacity-90 transition-opacity disabled:opacity-50"
+                    >
+                      {weightTrackerSaving ? "Saving..." : "Save entry"}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {weightTrackerError && (
+                <p className="text-sm text-red-600 dark:text-red-400">{weightTrackerError}</p>
+              )}
+
+              {weightTrackerLoading ? (
+                <p className="text-sm text-neutral-500 dark:text-neutral-400">Loading weight tracker...</p>
+              ) : (
+                <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-2">
+                  <HighchartsReact highcharts={Highcharts} options={weightTrackerChartOptions} />
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <h3 className="text-2xl font-semibold text-foreground">Weight Entries</h3>
+                {weightTrackerEntries.length === 0 ? (
+                  <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                    No weight entries yet. Add your first entry to see your trend.
+                  </p>
+                ) : (
+                  <div className="space-y-3">
+                    {weightTrackerEntries.map((entry) => (
+                      <div key={entry.id} className="rounded-xl border border-neutral-200 dark:border-neutral-700 px-3 py-2">
+                        <p className="text-3xl font-semibold text-foreground">{entry.weightKg} kg</p>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                          {new Date(entry.recordedAt || entry.createdAt).toLocaleString(undefined, {
+                            weekday: "long",
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                            hour: "numeric",
+                            minute: "2-digit",
+                          })}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {nutritionDayViewModalOpen && (
+        <div
+          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => setNutritionDayViewModalOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Nutrition day view"
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[88vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <h2 className="text-lg font-semibold text-foreground pr-2">Day View</h2>
+              <button
+                type="button"
+                onClick={() => setNutritionDayViewModalOpen(false)}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 overflow-y-auto">
+              <p className="text-sm sm:text-base font-medium text-foreground mb-3">
+                {new Intl.DateTimeFormat(undefined, {
+                  weekday: "long",
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                }).format(selectedLandingDayDate)}
+              </p>
+              <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 overflow-hidden">
+                <div className="px-3 py-2 border-b border-neutral-200 dark:border-neutral-700 bg-neutral-50/70 dark:bg-neutral-900/40">
+                  <p className="text-sm font-medium text-neutral-600 dark:text-neutral-300">Nutrition Facts</p>
+                </div>
+                <div className="divide-y divide-neutral-200 dark:divide-neutral-700">
+                  {[
+                    { label: "Calories", value: selectedLandingDayNutritionFacts.calories, unit: "kcal" },
+                    { label: "Total Carbohydrates", value: selectedLandingDayNutritionFacts.totalCarbohydratesGrams, unit: "g" },
+                    { label: "Dietary Fiber", value: selectedLandingDayNutritionFacts.dietaryFiberGrams, unit: "g", indent: true },
+                    { label: "Sugar", value: selectedLandingDayNutritionFacts.sugarGrams, unit: "g", indent: true },
+                    { label: "Added Sugars", value: selectedLandingDayNutritionFacts.addedSugarsGrams, unit: "g", indent: true },
+                    { label: "Sugar Alcohols", value: selectedLandingDayNutritionFacts.sugarAlcoholsGrams, unit: "g", indent: true },
+                    { label: "Net Carbs", value: selectedLandingDayNutritionFacts.netCarbsGrams, unit: "g", indent: true },
+                    { label: "Protein", value: selectedLandingDayNutritionFacts.proteinGrams, unit: "g" },
+                    { label: "Total Fat", value: selectedLandingDayNutritionFacts.totalFatGrams, unit: "g" },
+                    { label: "Saturated Fat", value: selectedLandingDayNutritionFacts.saturatedFatGrams, unit: "g", indent: true },
+                    { label: "Trans Fat", value: selectedLandingDayNutritionFacts.transFatGrams, unit: "g", indent: true },
+                    { label: "Polyunsaturated Fat", value: selectedLandingDayNutritionFacts.polyunsaturatedFatGrams, unit: "g", indent: true },
+                    { label: "Monounsaturated Fat", value: selectedLandingDayNutritionFacts.monounsaturatedFatGrams, unit: "g", indent: true },
+                    { label: "Cholesterol", value: selectedLandingDayNutritionFacts.cholesterolMg, unit: "mg" },
+                    { label: "Sodium", value: selectedLandingDayNutritionFacts.sodiumMg, unit: "mg" },
+                    { label: "Calcium", value: selectedLandingDayNutritionFacts.calciumMg, unit: "mg" },
+                    { label: "Iron", value: selectedLandingDayNutritionFacts.ironMg, unit: "mg" },
+                    { label: "Potassium", value: selectedLandingDayNutritionFacts.potassiumMg, unit: "mg" },
+                    { label: "Vitamin A", value: selectedLandingDayNutritionFacts.vitaminAIu, unit: "IU" },
+                    { label: "Vitamin C", value: selectedLandingDayNutritionFacts.vitaminCMg, unit: "mg" },
+                    { label: "Vitamin D", value: selectedLandingDayNutritionFacts.vitaminDMcg, unit: "mcg" },
+                  ].map((row) => (
+                    <div key={row.label} className={`flex items-center justify-between gap-3 px-3 py-2 ${row.indent ? "pl-6" : ""}`}>
+                      <p className="text-sm text-foreground">{row.label}</p>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-300">
+                        {row.value == null ? "-" : `${row.value} ${row.unit}`}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {landingActivityGroupModal && (
         <div
           className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
@@ -14685,6 +15374,19 @@ export default function ChatPage() {
                   Tell me what you ate or exercised and I&apos;ll estimate calories and macros.
                 </p>
               </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setJournalTypeChooserOpen(false);
+                  openWeightTrackerModal();
+                }}
+                className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 px-4 py-3 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+              >
+                <p className="text-sm font-semibold text-foreground">Weight tracker</p>
+                <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1">
+                  Log your weight and track trends over time.
+                </p>
+              </button>
             </div>
           </div>
         </div>
@@ -14775,6 +15477,7 @@ export default function ChatPage() {
                   disabled={journalEntrySaving}
                   ariaLabel="Journal voice input"
                   compactStopWhileListening
+                  className="!border-neutral-200/60 dark:!border-neutral-800/90 !bg-neutral-50/60 dark:!bg-neutral-900/35"
                   onTranscription={(text) =>
                     setJournalEntryText((prev) =>
                       prev.trim()
@@ -14924,19 +15627,6 @@ export default function ChatPage() {
                       placeholder="e.g. Breakfast: 2 eggs + toast, lunch: chicken bowl; workout: 30 min run"
                       className="flex-1 px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
                     />
-                    <VoiceInputButton
-                      language={language}
-                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
-                      ariaLabel="Calorie tracker voice input"
-                      compactStopWhileListening
-                      onTranscription={(text) =>
-                        setCalorieTrackerInput((prev) =>
-                          prev.trim()
-                            ? `${prev}${/\s$/.test(prev) ? "" : " "}${text}`
-                            : text
-                        )
-                      }
-                    />
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <input
@@ -14963,7 +15653,7 @@ export default function ChatPage() {
                         calorieTrackerImageInputRef.current?.click();
                       }}
                       disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
-                      className="px-3 py-1.5 rounded-xl text-xs font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
+                      className="h-[34px] px-3 rounded-xl text-xs font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
                     >
                       {calorieTrackerImageProcessing ? "Analyzing image..." : "Use camera photo"}
                     </button>
@@ -14974,10 +15664,24 @@ export default function ChatPage() {
                         calorieTrackerUploadInputRef.current?.click();
                       }}
                       disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
-                      className="px-3 py-1.5 rounded-xl text-xs font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
+                      className="h-[34px] px-3 rounded-xl text-xs font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
                     >
                       Upload photo
                     </button>
+                    <VoiceInputButton
+                      language={language}
+                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                      ariaLabel="Calorie tracker voice input"
+                      compactStopWhileListening
+                      className="!h-[34px] !min-h-[34px] !w-[34px] !min-w-[34px] !rounded-xl !border-neutral-300 dark:!border-neutral-600 !bg-background !text-neutral-500 dark:!text-neutral-300 hover:!bg-neutral-100 dark:hover:!bg-neutral-800"
+                      onTranscription={(text) =>
+                        setCalorieTrackerInput((prev) =>
+                          prev.trim()
+                            ? `${prev}${/\s$/.test(prev) ? "" : " "}${text}`
+                            : text
+                        )
+                      }
+                    />
                     <p className="text-xs text-neutral-500 dark:text-neutral-400">
                       Take or upload a photo to prefill your nutrition log.
                     </p>
