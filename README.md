@@ -64,6 +64,10 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for step-by-step instructions.
 3. In Vercel: Import repo → Add env vars → Deploy
 4. Configure Clerk with production URLs
 
+## Android app (Capacitor)
+
+Android packaging and install instructions are documented in [ANDROID.md](./ANDROID.md).
+
 ## Perspective Deck Translation Workflow
 
 Use this workflow whenever you add or update translated perspective decks.

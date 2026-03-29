@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getUserSettings, upsertUserSettings } from "@/lib/db";
 import { isValidLanguageCode } from "@/lib/languages";
 import { isValidUserTypeId } from "@/lib/user-types";
+import { normalizeReminderPreferences } from "@/lib/reminder-settings";
 
 const TTS_MIN = 0.5;
 const TTS_MAX = 2;
@@ -143,6 +144,9 @@ export async function PATCH(request: Request) {
         const t = body.preferredName.trim();
         updates.preferredName = t.length > 0 ? t.slice(0, PREFERRED_NAME_MAX) : "";
       }
+    }
+    if (body.reminderPreferences !== undefined) {
+      updates.reminderPreferences = normalizeReminderPreferences(body.reminderPreferences);
     }
 
     if (Object.keys(updates).length === 0) {

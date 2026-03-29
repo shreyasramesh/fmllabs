@@ -66,6 +66,14 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 import { LeaderboardEmbed } from "@/components/LeaderboardEmbed";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import { Capacitor } from "@capacitor/core";
+import {
+  DEFAULT_REMINDER_PREFERENCES,
+  normalizeReminderPreferences,
+  type ReminderPreferences,
+  type ReminderType,
+} from "@/lib/reminder-settings";
+import { syncNativeReminders } from "@/lib/native-reminders";
 
 /** Library / inline panels: cards fill the row; min width ~17.5rem so more columns appear on wide screens. */
 const LIBRARY_RESPONSIVE_CARD_GRID =
@@ -442,6 +450,21 @@ function HabitIntendedPeriodFields({
 }
 
 type WeatherFormat = "condition-temp" | "emoji-temp" | "temp-only";
+const REMINDER_TYPES: ReminderType[] = ["nutrition", "exercise", "gratitude"];
+const REMINDER_TYPE_LABELS: Record<ReminderType, string> = {
+  nutrition: "Nutrition",
+  exercise: "Exercise",
+  gratitude: "Gratitude journal",
+};
+const WEEKDAY_SHORT: Array<{ day: number; label: string }> = [
+  { day: 0, label: "S" },
+  { day: 1, label: "M" },
+  { day: 2, label: "T" },
+  { day: 3, label: "W" },
+  { day: 4, label: "T" },
+  { day: 5, label: "F" },
+  { day: 6, label: "S" },
+];
 const LETTER_MODAL_TITLE = "a note from the developer";
 type ExportDataSection =
   | "settings"
@@ -2531,6 +2554,14 @@ export default function ChatPage() {
   const [exportMarkdownError, setExportMarkdownError] = useState<string | null>(null);
   const { background, setBackground } = useBackground();
   const [weatherFormat, setWeatherFormat] = useState<WeatherFormat>("condition-temp");
+  const [reminderPreferences, setReminderPreferences] = useState<ReminderPreferences>(
+    DEFAULT_REMINDER_PREFERENCES
+  );
+  const [reminderSaveState, setReminderSaveState] = useState<{
+    saving: boolean;
+    message: string | null;
+    error: string | null;
+  }>({ saving: false, message: null, error: null });
   const [nutritionGoals, setNutritionGoals] = useState(() => ({ ...DEFAULT_NUTRITION_GOALS }));
   const [goalsModalOpen, setGoalsModalOpen] = useState(false);
   const [goalsDraft, setGoalsDraft] = useState(() => ({
@@ -5756,6 +5787,11 @@ export default function ChatPage() {
         if (data?.weatherFormat === "condition-temp" || data?.weatherFormat === "emoji-temp" || data?.weatherFormat === "temp-only") {
           setWeatherFormat(data.weatherFormat);
         }
+        const nextReminderPreferences = normalizeReminderPreferences(data?.reminderPreferences);
+        setReminderPreferences(nextReminderPreferences);
+        if (Capacitor.isNativePlatform()) {
+          void syncNativeReminders(nextReminderPreferences);
+        }
         const nextGoals = {
           caloriesTarget: normalizeGoalValue(
             data?.goalCaloriesTarget,
@@ -5814,6 +5850,89 @@ export default function ChatPage() {
     },
     [userId]
   );
+
+  const toggleReminderEnabled = useCallback((type: ReminderType) => {
+    setReminderPreferences((prev) => ({
+      ...prev,
+      [type]: { ...prev[type], enabled: !prev[type].enabled },
+    }));
+  }, []);
+
+  const updateReminderTime = useCallback((type: ReminderType, value: string) => {
+    const [h, m] = value.split(":");
+    const hour = Number(h);
+    const minute = Number(m);
+    if (!Number.isInteger(hour) || hour < 0 || hour > 23) return;
+    if (!Number.isInteger(minute) || minute < 0 || minute > 59) return;
+    setReminderPreferences((prev) => ({
+      ...prev,
+      [type]: { ...prev[type], hour, minute },
+    }));
+  }, []);
+
+  const toggleReminderDay = useCallback((type: ReminderType, day: number) => {
+    setReminderPreferences((prev) => {
+      const currentDays = prev[type].days;
+      const hasDay = currentDays.includes(day);
+      const nextDays = hasDay ? currentDays.filter((d) => d !== day) : [...currentDays, day];
+      return {
+        ...prev,
+        [type]: {
+          ...prev[type],
+          days: nextDays.length > 0 ? nextDays : currentDays,
+        },
+      };
+    });
+  }, []);
+
+  const saveReminderPreferences = useCallback(async () => {
+    if (!userId) {
+      setReminderSaveState({
+        saving: false,
+        message: null,
+        error: "Please sign in to save reminders.",
+      });
+      return;
+    }
+    setReminderSaveState({ saving: true, message: null, error: null });
+    try {
+      const payload = normalizeReminderPreferences(reminderPreferences);
+      const res = await fetch("/api/me/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reminderPreferences: payload }),
+      });
+      if (!res.ok) {
+        const j = (await res.json().catch(() => ({}))) as { error?: string };
+        throw new Error(j.error || "Could not save reminder settings.");
+      }
+      setReminderPreferences(payload);
+
+      const nativeSync = await syncNativeReminders(payload);
+      if (!nativeSync.ok && nativeSync.reason === "permission-denied") {
+        setReminderSaveState({
+          saving: false,
+          message: null,
+          error: "Reminder settings saved, but Android notification permission is disabled.",
+        });
+        return;
+      }
+
+      setReminderSaveState({
+        saving: false,
+        message: Capacitor.isNativePlatform()
+          ? "Reminders updated on this device."
+          : "Reminder settings saved. Install the Android app to receive device notifications.",
+        error: null,
+      });
+    } catch (err) {
+      setReminderSaveState({
+        saving: false,
+        message: null,
+        error: err instanceof Error ? err.message : "Could not save reminder settings.",
+      });
+    }
+  }, [reminderPreferences, userId]);
 
   const openGoalsModal = useCallback(() => {
     if (isAnonymous || incognitoMode) {
@@ -13139,6 +13258,104 @@ export default function ChatPage() {
                     </div>
                   </div>
                 </section>
+
+                {!isAnonymous && (
+                  <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
+                    <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
+                      Reminder notifications
+                    </h3>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">
+                      Set days and times for nutrition, exercise, and gratitude reminders.
+                    </p>
+                    <div className="space-y-3">
+                      {REMINDER_TYPES.map((type) => {
+                        const schedule = reminderPreferences[type];
+                        const timeValue = `${String(schedule.hour).padStart(2, "0")}:${String(
+                          schedule.minute
+                        ).padStart(2, "0")}`;
+                        return (
+                          <div
+                            key={type}
+                            className="rounded-xl border border-neutral-200/70 dark:border-white/12 bg-neutral-50/70 dark:bg-neutral-900/60 p-3"
+                          >
+                            <div className="flex items-center justify-between gap-3">
+                              <label className="text-sm font-medium text-foreground">
+                                {REMINDER_TYPE_LABELS[type]}
+                              </label>
+                              <button
+                                type="button"
+                                role="switch"
+                                aria-checked={schedule.enabled}
+                                onClick={() => toggleReminderEnabled(type)}
+                                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${
+                                  schedule.enabled
+                                    ? "bg-emerald-500 dark:bg-emerald-500"
+                                    : "bg-neutral-200 dark:bg-neutral-700"
+                                }`}
+                              >
+                                <span
+                                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition-transform ${
+                                    schedule.enabled ? "translate-x-5" : "translate-x-1"
+                                  }`}
+                                />
+                              </button>
+                            </div>
+                            <div className="mt-3 flex flex-wrap items-center gap-2">
+                              <label className="text-xs text-neutral-500 dark:text-neutral-400">
+                                Time
+                              </label>
+                              <input
+                                type="time"
+                                value={timeValue}
+                                onChange={(e) => updateReminderTime(type, e.target.value)}
+                                className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background px-2 py-1 text-sm text-foreground"
+                              />
+                            </div>
+                            <div className="mt-3 flex flex-wrap gap-1.5">
+                              {WEEKDAY_SHORT.map(({ day, label }) => {
+                                const selected = schedule.days.includes(day);
+                                return (
+                                  <button
+                                    key={`${type}-${day}`}
+                                    type="button"
+                                    onClick={() => toggleReminderDay(type, day)}
+                                    className={`w-8 h-8 rounded-lg text-xs font-semibold border transition-colors ${
+                                      selected
+                                        ? "bg-[#B87B51] text-white border-[#B87B51] dark:bg-foreground dark:text-background dark:border-foreground"
+                                        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/70 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                    }`}
+                                  >
+                                    {label}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-3 flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => void saveReminderPreferences()}
+                        disabled={reminderSaveState.saving}
+                        className="px-3 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-60"
+                      >
+                        {reminderSaveState.saving ? "Saving..." : "Save reminder schedule"}
+                      </button>
+                      {reminderSaveState.message && (
+                        <span className="text-xs text-emerald-600 dark:text-emerald-400">
+                          {reminderSaveState.message}
+                        </span>
+                      )}
+                      {reminderSaveState.error && (
+                        <span className="text-xs text-rose-600 dark:text-rose-400">
+                          {reminderSaveState.error}
+                        </span>
+                      )}
+                    </div>
+                  </section>
+                )}
 
                 {!isAnonymous && (
                 <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">

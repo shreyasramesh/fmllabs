@@ -281,6 +281,12 @@ export interface UserSettings {
   leaderboardOptIn?: boolean;
   /** How the assistant should address the user; falls back to Clerk name when unset */
   preferredName?: string;
+  /** Local reminder schedule preferences for Android notifications. */
+  reminderPreferences?: {
+    nutrition: { enabled: boolean; hour: number; minute: number; days: number[] };
+    exercise: { enabled: boolean; hour: number; minute: number; days: number[] };
+    gratitude: { enabled: boolean; hour: number; minute: number; days: number[] };
+  };
   updatedAt: Date;
 }
 
@@ -1735,13 +1741,14 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     followedFigureIds: doc.followedFigureIds,
     leaderboardOptIn: doc.leaderboardOptIn,
     preferredName: doc.preferredName,
+    reminderPreferences: doc.reminderPreferences as UserSettings["reminderPreferences"],
     updatedAt: doc.updatedAt,
   });
 }
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "followedFigureIds" | "leaderboardOptIn" | "preferredName">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "followedFigureIds" | "leaderboardOptIn" | "preferredName" | "reminderPreferences">>
 ): Promise<UserSettings> {
   const database = await getDb();
   const now = new Date();
@@ -1772,6 +1779,7 @@ export async function upsertUserSettings(
     followedFigureIds: result.followedFigureIds,
     leaderboardOptIn: result.leaderboardOptIn,
     preferredName: result.preferredName,
+    reminderPreferences: result.reminderPreferences as UserSettings["reminderPreferences"],
     updatedAt: result.updatedAt,
   });
 }
