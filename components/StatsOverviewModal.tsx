@@ -56,7 +56,7 @@ export function StatsOverviewModal({
         </div>
 
         <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-8 min-h-0">
-          <section>
+          <section className="rounded-2xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-950/60 p-4">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3">
               Activity
             </h3>
@@ -67,7 +67,7 @@ export function StatsOverviewModal({
             </ul>
           </section>
 
-          <section>
+          <section className="rounded-2xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-950/60 p-4">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3">
               Learning & XP
             </h3>
@@ -86,14 +86,14 @@ export function StatsOverviewModal({
                 onClick={() => {
                   onViewRankDetails();
                 }}
-                className="mt-4 w-full rounded-xl border border-neutral-300 dark:border-neutral-600 px-4 py-3 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                className="mt-4 w-full rounded-xl border border-neutral-300 dark:border-neutral-700 px-4 py-3 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors"
               >
                 Learning rank &amp; XP breakdown
               </button>
             )}
           </section>
 
-          <section>
+          <section className="rounded-2xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-950/60 p-4">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3">
               Library
             </h3>

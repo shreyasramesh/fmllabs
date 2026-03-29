@@ -429,6 +429,18 @@ export interface ReusableJournalTagItem {
   aliases?: string[];
 }
 
+export interface MentorRecommendationCandidate {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+}
+
+export interface MentorRecommendationItem {
+  id: string;
+  reason: string;
+}
+
 export interface NutritionImageTranscriptionResult {
   dishName: string;
   foodsDetected: string[];
@@ -546,6 +558,76 @@ ${text}`
         aliases: [],
       },
     ];
+  }
+}
+
+export async function recommendMentorsForQuery(
+  userQuery: string,
+  candidates: MentorRecommendationCandidate[],
+  desiredCount = 3,
+  usageContext?: GeminiUsageContext
+): Promise<MentorRecommendationItem[]> {
+  const query = userQuery.trim().slice(0, 400);
+  if (!query || candidates.length === 0) return [];
+  const targetCount = Math.max(1, Math.min(5, Math.floor(desiredCount)));
+  const shortlist = candidates.slice(0, 120);
+  const listBlock = shortlist
+    .map((c) => `- ${c.id} | ${c.name} | ${c.category} | ${c.description}`)
+    .join("\n");
+
+  const model = getModel();
+  const result = await model.generateContent(
+    `You are selecting mentors for a 1:1 guidance chat.
+
+User request:
+${query}
+
+Candidate mentors (id | name | category | description):
+${listBlock}
+
+Pick exactly ${targetCount} mentors that best match the request.
+Favor practical relevance and diversity of perspective.
+
+Return ONLY valid JSON:
+{
+  "suggestions": [
+    { "id": "mentor_id", "reason": "short reason, max 16 words" },
+    { "id": "mentor_id", "reason": "short reason, max 16 words" },
+    { "id": "mentor_id", "reason": "short reason, max 16 words" }
+  ]
+}
+
+Rules:
+- suggestion ids must come from the candidate list.
+- Do not repeat ids.
+- Keep reasons concrete and simple.
+- No markdown, no extra keys, no extra text.`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const raw = result.response.text().trim();
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  try {
+    const parsed = JSON.parse(cleaned) as {
+      suggestions?: Array<{ id?: unknown; reason?: unknown }>;
+    };
+    const suggestions = Array.isArray(parsed.suggestions) ? parsed.suggestions : [];
+    const allowed = new Set(shortlist.map((c) => c.id));
+    const dedupe = new Set<string>();
+    const normalized: MentorRecommendationItem[] = [];
+    for (const row of suggestions) {
+      const id = typeof row.id === "string" ? row.id.trim() : "";
+      if (!id || !allowed.has(id) || dedupe.has(id)) continue;
+      dedupe.add(id);
+      const reason =
+        typeof row.reason === "string" && row.reason.trim()
+          ? row.reason.trim().slice(0, 160)
+          : "Strong match for your request.";
+      normalized.push({ id, reason });
+      if (normalized.length >= targetCount) break;
+    }
+    return normalized;
+  } catch {
+    return [];
   }
 }
 
@@ -709,6 +791,90 @@ ${hintText || "(none)"}`,
   }
 }
 
+function isGenericClarifyingQuestion(question: string): boolean {
+  const q = question.toLowerCase().trim();
+  return (
+    q.length < 10 ||
+    /^(anything else|any other details|can you share more details|more details|what else)\??$/.test(q) ||
+    q.includes("share more context") ||
+    q.includes("additional information")
+  );
+}
+
+function maybeQuestion(value: string): string {
+  const trimmed = value.trim().replace(/\s+/g, " ").slice(0, 180);
+  if (!trimmed) return "";
+  return /[?]$/.test(trimmed) ? trimmed : `${trimmed}?`;
+}
+
+function inputHasNutritionQuantitySignals(text: string): boolean {
+  return /\b\d+(\.\d+)?\s?(g|gram|grams|oz|ounce|ounces|ml|cup|cups|tbsp|tsp|serving|servings|slice|slices|piece|pieces)\b/i.test(
+    text
+  );
+}
+
+function inputHasExerciseIntensitySignals(text: string): boolean {
+  return /\b(\d+(\.\d+)?\s?(min|mins|minute|minutes|hour|hours|km|mile|miles|mph|kph)|pace|hr zone|heart rate|incline|resistance|sets|reps)\b/i.test(
+    text
+  );
+}
+
+function fallbackClarifyingQuestions(intent: CalorieTrackingIntent, inputText: string): string[] {
+  const text = inputText.toLowerCase();
+  if (intent === "nutrition") {
+    const questions: string[] = [];
+    if (!inputHasNutritionQuantitySignals(text)) {
+      questions.push("What portions did you have for each item (for example cups, grams, or number of servings)?");
+    }
+    if (!/\b(oil|butter|sauce|dressing|fried|baked|grilled|brand|protein shake|milk)\b/i.test(text)) {
+      questions.push("How was it prepared, and were oils, sauces, dressings, or branded products involved?");
+    }
+    return questions.slice(0, 2);
+  }
+  if (intent === "exercise") {
+    const questions: string[] = [];
+    if (!inputHasExerciseIntensitySignals(text)) {
+      questions.push("How long was the workout, and what intensity or pace did you maintain?");
+    }
+    if (!/\b(weight|kg|lb|incline|resistance|sets|reps)\b/i.test(text)) {
+      questions.push("Any key details like body weight, incline/resistance, or sets and reps?");
+    }
+    return questions.slice(0, 2);
+  }
+  return [
+    "For the nutrition part, what portions did you have for each food or drink item?",
+    "For the exercise part, how long and how intense was the activity?",
+  ];
+}
+
+function sanitizeClarifyingQuestions(
+  rawQuestions: unknown,
+  intent: CalorieTrackingIntent,
+  inputText: string
+): string[] {
+  if (!Array.isArray(rawQuestions)) {
+    return fallbackClarifyingQuestions(intent, inputText).slice(0, 2);
+  }
+  const base = rawQuestions
+    ? rawQuestions
+        .map((q) => (typeof q === "string" ? maybeQuestion(q) : ""))
+        .filter(Boolean)
+    : [];
+  if (base.length === 0) return [];
+  const dedupe = new Set<string>();
+  const cleaned = base
+    .filter((q) => !isGenericClarifyingQuestion(q))
+    .filter((q) => {
+      const key = q.toLowerCase();
+      if (dedupe.has(key)) return false;
+      dedupe.add(key);
+      return true;
+    })
+    .slice(0, 2);
+  if (cleaned.length > 0) return cleaned;
+  return fallbackClarifyingQuestions(intent, inputText).slice(0, 2);
+}
+
 export async function analyzeCalorieTrackingInput(
   inputText: string,
   usageContext?: GeminiUsageContext
@@ -729,8 +895,13 @@ Classify the user's text into:
 Then decide if clarification questions are needed before estimating calories/macros.
 Rules:
 - Ask at most 2 clarification questions total.
-- Ask concise, specific questions only if needed for a better estimate.
+- Questions must be directly tied to missing information in THIS specific user input.
+- Prioritize the highest-impact missing fields for calorie and macro accuracy:
+  - Nutrition: portion size/amount, preparation method, sauces/oils, key ingredients, brand when relevant.
+  - Exercise: duration, intensity/pace, resistance/incline/sets-reps, body-weight context when relevant.
+- Never ask broad/generic questions like "anything else?".
 - If enough detail is already present, return an empty questions array.
+- Keep each question short, concrete, and answerable in one line.
 
 Return ONLY valid JSON with exactly:
 {
@@ -748,15 +919,10 @@ ${text}`
     const parsed = JSON.parse(cleaned) as { intent?: string; questions?: unknown };
     const intent: CalorieTrackingIntent =
       parsed.intent === "exercise" || parsed.intent === "mixed" ? parsed.intent : "nutrition";
-    const questions = Array.isArray(parsed.questions)
-      ? parsed.questions
-          .map((q) => (typeof q === "string" ? q.trim() : ""))
-          .filter((q) => q.length > 0)
-          .slice(0, 2)
-      : [];
+    const questions = sanitizeClarifyingQuestions(parsed.questions, intent, text);
     return { intent, questions };
   } catch {
-    return { intent: "nutrition", questions: [] };
+    return { intent: "nutrition", questions: fallbackClarifyingQuestions("nutrition", text) };
   }
 }
 

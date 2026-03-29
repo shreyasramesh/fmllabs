@@ -2406,6 +2406,13 @@ type ReusableJournalSuggestion = {
   usageCount: number;
   lastUsedAt: string;
 };
+type MentorRecommendationSuggestion = {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  reason: string;
+};
 
 type LandingActivityGroupKey =
   | "journalRegular"
@@ -2474,6 +2481,51 @@ const LANDING_JOURNAL_MODAL_TITLE: Record<LandingJournalChipKey, string> = {
   exercise: "Exercise entry",
 };
 
+const LANDING_JOURNAL_CARD_DESCRIPTION: Record<LandingJournalChipKey, string> = {
+  nutrition: "Log meals for better calorie and macro accuracy.",
+  gratitude: "Capture one thing you appreciate today.",
+  exercise: "Track workouts, intensity, and duration quickly.",
+  reflection: "Note what worked and what to improve next.",
+};
+
+function renderLandingJournalIcon(key: LandingJournalChipKey) {
+  switch (key) {
+    case "nutrition":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
+          <path d="M4 3v5" />
+          <path d="M6 3v5" />
+          <path d="M8 3v5" />
+          <path d="M6 8v13" />
+          <ellipse cx="16.5" cy="6.5" rx="2.5" ry="3" />
+          <path d="M16.5 9.5V21" />
+        </svg>
+      );
+    case "gratitude":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
+          <path d="M12 21s-7-4.6-9-9a5.3 5.3 0 0 1 9-5 5.3 5.3 0 0 1 9 5c-2 4.4-9 9-9 9Z" />
+        </svg>
+      );
+    case "exercise":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
+          <path d="M13 2 5 13h6l-1 9 9-12h-6z" />
+        </svg>
+      );
+    case "reflection":
+    default:
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
+          <path d="M4 4h16v16H4z" />
+          <path d="M8 8h8" />
+          <path d="M8 12h8" />
+          <path d="M8 16h5" />
+        </svg>
+      );
+  }
+}
+
 function landingActivityGroupKey(item: LandingDayActivityItem): LandingActivityGroupKey {
   if (item.kind === "journal") {
     if (item.journalCategory === "nutrition") return "journalNutrition";
@@ -2504,6 +2556,9 @@ export default function ChatPage() {
   const isNew = sessionId === "new";
   const incognitoMode = sessionId === "incognito";
   const [landingTab, setLandingTab] = useState<LandingTab>("journaling");
+  const [landingJournalingExpandedCard, setLandingJournalingExpandedCard] = useState<
+    "insights" | "snapshot" | null
+  >(null);
   const landingTabStorageReadyRef = useRef(false);
   const [selectedLandingDayKey, setSelectedLandingDayKey] = useState(() => toDayKey(new Date()));
   const [journalPanelSelectedDayKey, setJournalPanelSelectedDayKey] = useState(() => toDayKey(new Date()));
@@ -2537,6 +2592,12 @@ export default function ChatPage() {
       setLandingTab("deepThinking");
     }
   }, [isAnonymous, landingTab]);
+
+  useEffect(() => {
+    if (landingTab !== "journaling") {
+      setLandingJournalingExpandedCard(null);
+    }
+  }, [landingTab]);
 
   const [sessions, setSessions] = useState<Session[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -5502,6 +5563,18 @@ export default function ChatPage() {
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [ideasModalOpen, setIdeasModalOpen] = useState(false);
   const [mentorOneOnOneModalOpen, setMentorOneOnOneModalOpen] = useState(false);
+  const [mentorSuggestionsSectionOpen, setMentorSuggestionsSectionOpen] = useState(false);
+  const [mentorFiltersSectionOpen, setMentorFiltersSectionOpen] = useState(false);
+  const [mentorRecommendationInput, setMentorRecommendationInput] = useState("");
+  const [mentorRecommendations, setMentorRecommendations] = useState<MentorRecommendationSuggestion[]>([]);
+  const [mentorRecommendationsLoading, setMentorRecommendationsLoading] = useState(false);
+  const [mentorRecommendationsError, setMentorRecommendationsError] = useState<string | null>(null);
+  const [askMentorsRecommendModalOpen, setAskMentorsRecommendModalOpen] = useState(false);
+  const [askMentorsRecommendationInput, setAskMentorsRecommendationInput] = useState("");
+  const [askMentorsRecommendations, setAskMentorsRecommendations] = useState<MentorRecommendationSuggestion[]>([]);
+  const [askMentorsRecommendationsLoading, setAskMentorsRecommendationsLoading] = useState(false);
+  const [askMentorsRecommendationsError, setAskMentorsRecommendationsError] = useState<string | null>(null);
+  const [askMentorsSelectedFigureIds, setAskMentorsSelectedFigureIds] = useState<string[]>([]);
   const [newConversationChooserModalOpen, setNewConversationChooserModalOpen] = useState(false);
   /** Category filter for Ideas → 1:1 mentor catalog (distinct from Ask mentors domain picker) */
   const [mentorCatalogCategoryId, setMentorCatalogCategoryId] = useState<string | null>(null);
@@ -6701,11 +6774,12 @@ export default function ChatPage() {
   }, [language, nutritionGoals.carbsGrams, nutritionGoals.fatGrams, nutritionGoals.proteinGrams, weeklySummaryResult]);
 
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionReportModalOpen && !weeklySummaryModalOpen && !mentorOneOnOneModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionReportModalOpen && !weeklySummaryModalOpen && !mentorOneOnOneModalOpen && !askMentorsRecommendModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (journalCheckpointModal) setJournalCheckpointModal(null);
         else if (newConversationChooserModalOpen) setNewConversationChooserModalOpen(false);
+        else if (askMentorsRecommendModalOpen) setAskMentorsRecommendModalOpen(false);
         else if (mentorOneOnOneModalOpen) setMentorOneOnOneModalOpen(false);
         else if (ideasModalOpen) setIdeasModalOpen(false);
         else if (transcriptModalTranscript) {
@@ -6749,7 +6823,7 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, goalsCoachLoading, nutritionReportModalOpen, nutritionReportLoading, weeklySummaryModalOpen, weeklySummaryLoading, journalEntrySaving, mentorOneOnOneModalOpen, newConversationChooserModalOpen, journalCheckpointModal, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetJournalEntryModal, resetNutritionReportModal, resetWeeklySummaryModal]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, goalsCoachLoading, nutritionReportModalOpen, nutritionReportLoading, weeklySummaryModalOpen, weeklySummaryLoading, journalEntrySaving, mentorOneOnOneModalOpen, askMentorsRecommendModalOpen, newConversationChooserModalOpen, journalCheckpointModal, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetJournalEntryModal, resetNutritionReportModal, resetWeeklySummaryModal]);
 
   useEffect(() => {
     if (!headerCalendarOpen) return;
@@ -7190,6 +7264,122 @@ export default function ChatPage() {
     return list;
   }, [figuresData?.figures, mentorCatalogCategoryId, mentorCatalogSearch]);
 
+  const requestMentorRecommendations = useCallback(async () => {
+    const query = mentorRecommendationInput.trim();
+    if (!query) return;
+    setMentorRecommendationsLoading(true);
+    setMentorRecommendationsError(null);
+    try {
+      const res = await fetch("/api/mentor-recommendations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query,
+          categoryId: mentorCatalogCategoryId ?? undefined,
+          count: 3,
+        }),
+      });
+      const data = (await res.json().catch(() => null)) as
+        | { suggestions?: MentorRecommendationSuggestion[]; error?: string }
+        | null;
+      if (!res.ok) {
+        setMentorRecommendations([]);
+        setMentorRecommendationsError(data?.error || "Could not generate mentor suggestions.");
+        return;
+      }
+      const suggestions = Array.isArray(data?.suggestions)
+        ? data!.suggestions.filter(
+            (row): row is MentorRecommendationSuggestion =>
+              !!row &&
+              typeof row.id === "string" &&
+              typeof row.name === "string" &&
+              typeof row.description === "string" &&
+              typeof row.category === "string" &&
+              typeof row.reason === "string"
+          )
+        : [];
+      setMentorRecommendations(suggestions.slice(0, 3));
+      if (suggestions.length === 0) {
+        setMentorRecommendationsError("No strong matches found. Try a more specific description.");
+      }
+    } catch {
+      setMentorRecommendations([]);
+      setMentorRecommendationsError("Could not generate mentor suggestions.");
+    } finally {
+      setMentorRecommendationsLoading(false);
+    }
+  }, [mentorRecommendationInput, mentorCatalogCategoryId]);
+
+  const requestAskMentorRecommendations = useCallback(async () => {
+    const query = askMentorsRecommendationInput.trim();
+    if (!query) return;
+    setAskMentorsRecommendationsLoading(true);
+    setAskMentorsRecommendationsError(null);
+    try {
+      const res = await fetch("/api/mentor-recommendations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query,
+          categoryId: mentorPickerCategoryId ?? undefined,
+          count: 5,
+        }),
+      });
+      const data = (await res.json().catch(() => null)) as
+        | { suggestions?: MentorRecommendationSuggestion[]; error?: string }
+        | null;
+      if (!res.ok) {
+        setAskMentorsRecommendations([]);
+        setAskMentorsSelectedFigureIds([]);
+        setAskMentorsRecommendationsError(data?.error || "Could not generate mentor suggestions.");
+        return;
+      }
+      const suggestions = Array.isArray(data?.suggestions)
+        ? data!.suggestions.filter(
+            (row): row is MentorRecommendationSuggestion =>
+              !!row &&
+              typeof row.id === "string" &&
+              typeof row.name === "string" &&
+              typeof row.description === "string" &&
+              typeof row.category === "string" &&
+              typeof row.reason === "string"
+          )
+        : [];
+      setAskMentorsRecommendations(suggestions.slice(0, 5));
+      setAskMentorsSelectedFigureIds(suggestions.slice(0, 5).map((s) => s.id));
+      if (suggestions.length === 0) {
+        setAskMentorsRecommendationsError("No strong matches found. Try a more specific description.");
+      }
+    } catch {
+      setAskMentorsRecommendations([]);
+      setAskMentorsSelectedFigureIds([]);
+      setAskMentorsRecommendationsError("Could not generate mentor suggestions.");
+    } finally {
+      setAskMentorsRecommendationsLoading(false);
+    }
+  }, [askMentorsRecommendationInput, mentorPickerCategoryId]);
+
+  useEffect(() => {
+    if (!mentorOneOnOneModalOpen) {
+      setMentorSuggestionsSectionOpen(false);
+      setMentorFiltersSectionOpen(false);
+      setMentorRecommendationInput("");
+      setMentorRecommendations([]);
+      setMentorRecommendationsError(null);
+      setMentorRecommendationsLoading(false);
+    }
+  }, [mentorOneOnOneModalOpen]);
+
+  useEffect(() => {
+    if (!askMentorsRecommendModalOpen) {
+      setAskMentorsRecommendationInput("");
+      setAskMentorsRecommendations([]);
+      setAskMentorsRecommendationsError(null);
+      setAskMentorsRecommendationsLoading(false);
+      setAskMentorsSelectedFigureIds([]);
+    }
+  }, [askMentorsRecommendModalOpen]);
+
   const closeAllModalsExceptLeftPanel = useCallback(() => {
     setHeaderCalendarOpen(false);
     setLibraryPanelOpen(null);
@@ -7215,6 +7405,7 @@ export default function ChatPage() {
     resetWeeklySummaryModal();
     setNewConversationChooserModalOpen(false);
     setMentorOneOnOneModalOpen(false);
+    setAskMentorsRecommendModalOpen(false);
     setDeleteAllDataModalOpen(false);
     setMmCreateModalOpen(false);
     setDeleteSessionConfirmModal(null);
@@ -7736,7 +7927,7 @@ export default function ChatPage() {
               aria-label="Go to landing page"
               title="Go to landing page"
             >
-              <span className="inline-flex items-center justify-center min-w-[34px] min-h-[34px] rounded-md border border-neutral-200 dark:border-neutral-500/80 text-neutral-700 dark:text-neutral-200">
+              <span className="inline-flex items-center justify-center min-w-[34px] min-h-[34px] rounded-md border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
                   <path d="M3 10.5 12 3l9 7.5" />
                   <path d="M5.5 9.5V21h13V9.5" />
@@ -7788,7 +7979,7 @@ export default function ChatPage() {
                       onClick={() => setHeaderCalendarOpen((prev) => !prev)}
                       aria-expanded={headerCalendarOpen}
                       aria-haspopup="dialog"
-                      className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-200 dark:border-neutral-500/80 bg-background px-3 py-1.5 text-sm font-medium text-foreground hover:bg-orange-50 dark:hover:bg-neutral-800 transition-colors"
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background px-3 py-1.5 text-sm font-medium text-foreground hover:bg-accent/10 dark:hover:bg-accent/20 transition-colors"
                     >
                       <span>{headerCalendarLabel}</span>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-3.5 h-3.5 transition-transform ${headerCalendarOpen ? "rotate-180" : ""}`}>
@@ -7806,7 +7997,7 @@ export default function ChatPage() {
                                 (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1)
                               )
                             }
-                            className="h-8 w-8 rounded-lg border border-neutral-200 dark:border-neutral-700 text-foreground hover:bg-orange-50 dark:hover:bg-neutral-800 transition-colors"
+                            className="h-8 w-8 rounded-lg border border-neutral-200 dark:border-neutral-700 text-foreground hover:bg-accent/10 dark:hover:bg-accent/20 transition-colors"
                             aria-label="Previous month"
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 mx-auto">
@@ -7826,7 +8017,7 @@ export default function ChatPage() {
                                 (prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1)
                               )
                             }
-                            className="h-8 w-8 rounded-lg border border-neutral-200 dark:border-neutral-700 text-foreground hover:bg-orange-50 dark:hover:bg-neutral-800 transition-colors"
+                            className="h-8 w-8 rounded-lg border border-neutral-200 dark:border-neutral-700 text-foreground hover:bg-accent/10 dark:hover:bg-accent/20 transition-colors"
                             aria-label="Next month"
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 mx-auto">
@@ -7863,7 +8054,7 @@ export default function ChatPage() {
                                 className={`relative h-9 rounded-lg border text-sm transition-colors ${
                                   isSelected
                                     ? "border-foreground bg-neutral-100 dark:bg-neutral-800 text-foreground font-semibold"
-                                    : "border-transparent text-foreground hover:bg-orange-50 dark:hover:bg-neutral-800"
+                                    : "border-transparent text-foreground hover:bg-accent/10 dark:hover:bg-accent/20"
                                 } ${isToday && !isSelected ? "border-neutral-200 dark:border-neutral-700" : ""}`}
                               >
                                 {cellDate.getDate()}
@@ -7906,7 +8097,7 @@ export default function ChatPage() {
                                   className={`shrink-0 rounded-xl border px-3 py-1.5 text-sm transition-colors ${
                                     chip.selected
                                       ? "border-foreground bg-neutral-100 dark:bg-neutral-800 text-foreground font-medium"
-                                      : "border-neutral-300 dark:border-neutral-600 text-foreground hover:bg-orange-50 dark:hover:bg-neutral-800"
+                                      : "border-neutral-300 dark:border-neutral-600 text-foreground hover:bg-accent/10 dark:hover:bg-accent/20"
                                   }`}
                                 >
                                   {chip.label}
@@ -8048,7 +8239,7 @@ export default function ChatPage() {
           <Link
             href="/chat/new"
             onClick={handleHomeNavigation}
-            className={`flex items-center w-full rounded-xl border border-neutral-200/90 dark:border-neutral-700 bg-white/90 dark:bg-neutral-900 hover:border-orange-200 dark:hover:border-orange-700/60 hover:bg-orange-50/60 dark:hover:bg-orange-900/20 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0 ${
+            className={`flex items-center w-full rounded-xl border border-neutral-200/90 dark:border-neutral-700 bg-white/90 dark:bg-neutral-900 hover:border-accent/50 dark:hover:border-accent/60 hover:bg-accent/10 dark:hover:bg-accent/20 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0 ${
                 sidebarOpen ? "justify-center gap-2 px-3 py-2 mb-2" : "justify-center p-2 lg:px-2 lg:py-2"
               }`}
             aria-label="Home"
@@ -10309,172 +10500,275 @@ export default function ChatPage() {
                         <div
                           className="order-2 w-full animate-fade-in-down"
                         >
-                          {!isAnonymous && landingTab === "journaling" && (
-                            <div className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-sm p-3 mb-2.5">
-                              <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
-                                Choose an entry type to open the journal modal.
-                              </p>
-                              <div className="flex flex-wrap gap-2">
-                                {LANDING_JOURNAL_CHIPS.map((chip) => (
-                                  <button
-                                    key={chip.key}
-                                    type="button"
-                                    onClick={() => openLandingJournalChip(chip.key)}
-                                    className="rounded-full border border-neutral-300 dark:border-neutral-600 bg-background px-3 py-1.5 text-xs sm:text-sm text-foreground hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
-                                  >
-                                    {chip.label}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                          )}
                           {!isAnonymous && landingTab === "journaling" ? (
-                            <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-2">
-                          <div className="min-w-0 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background p-2 sm:p-1.5 text-left">
-                            <div className="flex items-center gap-2">
-                              <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-orange-100 dark:bg-orange-900/40">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                                  <path d="M12 3s2.5 2.2 2.5 5c0 1.6-1.3 2.7-2.5 3.9-1.2-1.2-2.5-2.3-2.5-3.9 0-2.8 2.5-5 2.5-5Z" />
-                                  <path d="M7 13a5 5 0 0 0 10 0c0-3.4-2.7-5.4-5-7.6-2.3 2.2-5 4.2-5 7.6Z" />
-                                </svg>
-                              </span>
-                              <p className="text-xs sm:text-base font-semibold text-foreground">Calories</p>
-                            </div>
-                            <div className="mt-1 grid grid-cols-3 gap-2 pr-2">
-                              <div className="min-w-0 flex flex-col">
-                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
-                                  <span className="text-base sm:text-xl font-semibold text-foreground">
-                                    {selectedLandingDayNutrition.caloriesFood}
-                                  </span>
-                                </p>
-                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Food</p>
-                              </div>
-                              <div className="min-w-0 flex flex-col">
-                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
-                                  <span className="text-base sm:text-xl font-semibold text-foreground">
-                                    {selectedLandingDayNutrition.caloriesExercise}
-                                  </span>
-                                </p>
-                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Exercise</p>
-                              </div>
-                              <div className="min-w-0 flex flex-col">
-                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
-                                  <span className="text-base sm:text-xl font-semibold text-foreground">
-                                    {selectedLandingDayNutrition.caloriesRemaining}
-                                  </span>
-                                  <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">
-                                    /{nutritionGoals.caloriesTarget}
-                                  </span>
-                                </p>
-                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Remaining</p>
-                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
-                                  <div
-                                    className={`h-full rounded-full transition-colors ${getCaloriesRemainingMeterFillClass(
-                                      selectedLandingDayNutrition.caloriesRemaining,
-                                      nutritionGoals.caloriesTarget
-                                    )}`}
-                                    style={{
-                                      width: getMacroMeterWidth(
-                                        selectedLandingDayNutrition.caloriesRemaining,
-                                        nutritionGoals.caloriesTarget
-                                      ),
-                                    }}
-                                  />
+                            <div className="w-full space-y-2.5">
+                              <div className="w-full rounded-2xl border border-neutral-200 dark:border-white/10 bg-background p-3 shadow-sm">
+                                <p className="mb-2 text-xs text-neutral-500 dark:text-neutral-400">Choose entry type</p>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                  {LANDING_JOURNAL_CHIPS.map((chip) => (
+                                    <button
+                                      key={chip.key}
+                                      type="button"
+                                      onClick={() => openLandingJournalChip(chip.key)}
+                                      className="flex items-center gap-3 w-full px-3 py-3 rounded-2xl border border-neutral-200 dark:border-white/15 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/40 text-left transition-all duration-200 active:scale-[0.98]"
+                                    >
+                                      <span className="shrink-0 w-9 h-9 rounded-xl bg-accent/15 dark:bg-accent/25 flex items-center justify-center">
+                                        {renderLandingJournalIcon(chip.key)}
+                                      </span>
+                                      <span className="min-w-0">
+                                        <span className="block text-sm font-semibold text-foreground">{chip.label}</span>
+                                        <span className="block text-xs text-neutral-600 dark:text-neutral-400">
+                                          {LANDING_JOURNAL_CARD_DESCRIPTION[chip.key]}
+                                        </span>
+                                      </span>
+                                    </button>
+                                  ))}
                                 </div>
                               </div>
-                            </div>
-                          </div>
 
-                          <div className="min-w-0 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background p-2 sm:p-1.5 text-left">
-                            <div className="flex items-center gap-2">
-                              <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
-                                  <circle cx="12" cy="12" r="8" stroke="#D946EF" strokeWidth="2.4" strokeDasharray="9 4" strokeLinecap="round" />
-                                </svg>
-                              </span>
-                              <p className="text-xs sm:text-base font-semibold text-foreground">Macros (g)</p>
-                            </div>
-                            <div className="mt-1 grid grid-cols-3 gap-2 pr-1">
-                              <div className="min-w-0">
-                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
-                                  <span className="text-base sm:text-xl font-semibold text-foreground">
-                                    {selectedLandingDayNutrition.carbsGrams}
-                                  </span>
-                                  <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">
-                                    /{nutritionGoals.carbsGrams}
-                                  </span>
-                                </p>
-                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Carbs</p>
-                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
-                                  <div
-                                    className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
-                                      "carbs",
-                                      selectedLandingDayNutrition.carbsGrams,
-                                      nutritionGoals.carbsGrams
-                                    )}`}
-                                    style={{
-                                      width: getMacroMeterWidth(
-                                        selectedLandingDayNutrition.carbsGrams,
-                                        nutritionGoals.carbsGrams
-                                      ),
-                                    }}
-                                  />
+                              <div className="w-full rounded-2xl border border-neutral-200/70 dark:border-white/10 bg-background">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setLandingJournalingExpandedCard((prev) => (prev === "insights" ? null : "insights"))
+                                  }
+                                  className="sm:hidden w-full flex items-center justify-between gap-2 px-3 py-2.5 text-left"
+                                  aria-expanded={landingJournalingExpandedCard === "insights"}
+                                >
+                                  <span className="text-sm font-semibold text-foreground">Insights &amp; tools</span>
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className={`h-4 w-4 text-neutral-500 transition-transform ${
+                                      landingJournalingExpandedCard === "insights" ? "rotate-180" : ""
+                                    }`}
+                                  >
+                                    <path d="m6 9 6 6 6-6" />
+                                  </svg>
+                                </button>
+                                <div className={`${landingJournalingExpandedCard === "insights" ? "block" : "hidden"} sm:block px-3 pb-3 sm:pt-3`}>
+                                  <p className="hidden sm:block mb-2 text-sm font-semibold text-foreground">Insights &amp; tools</p>
+                                  <div className="flex flex-wrap gap-2">
+                                    <button
+                                      type="button"
+                                      onClick={openGoalsModal}
+                                      className="rounded-full border border-neutral-200 dark:border-neutral-800 bg-background px-3 py-1.5 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70 transition-colors"
+                                    >
+                                      {getLandingTranslations(language).nutritionGoalsButtonLabel}
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={openNutritionReportModal}
+                                      className="rounded-full border border-neutral-200 dark:border-neutral-800 bg-background px-3 py-1.5 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70 transition-colors"
+                                    >
+                                      {getLandingTranslations(language).nutritionAnalysisButtonLabel}
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={openWeeklySummaryModal}
+                                      className="rounded-full border border-neutral-200 dark:border-neutral-800 bg-background px-3 py-1.5 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70 transition-colors"
+                                    >
+                                      {getLandingTranslations(language).weeklySummaryButtonLabel}
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
-                              <div className="min-w-0">
-                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
-                                  <span className="text-base sm:text-xl font-semibold text-foreground">
-                                    {selectedLandingDayNutrition.proteinGrams}
-                                  </span>
-                                  <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">
-                                    /{nutritionGoals.proteinGrams}
-                                  </span>
-                                </p>
-                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Protein</p>
-                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
-                                  <div
-                                    className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
-                                      "protein",
-                                      selectedLandingDayNutrition.proteinGrams,
-                                      nutritionGoals.proteinGrams
-                                    )}`}
-                                    style={{
-                                      width: getMacroMeterWidth(
-                                        selectedLandingDayNutrition.proteinGrams,
-                                        nutritionGoals.proteinGrams
-                                      ),
-                                    }}
-                                  />
+
+                              <div className="w-full rounded-2xl border border-neutral-200/70 dark:border-white/10 bg-background">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setLandingJournalingExpandedCard((prev) => (prev === "snapshot" ? null : "snapshot"))
+                                  }
+                                  className="sm:hidden w-full flex items-center justify-between gap-2 px-3 py-2.5 text-left"
+                                  aria-expanded={landingJournalingExpandedCard === "snapshot"}
+                                >
+                                  <span className="text-sm font-semibold text-foreground">Today snapshot</span>
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className={`h-4 w-4 text-neutral-500 transition-transform ${
+                                      landingJournalingExpandedCard === "snapshot" ? "rotate-180" : ""
+                                    }`}
+                                  >
+                                    <path d="m6 9 6 6 6-6" />
+                                  </svg>
+                                </button>
+                                <div className={`${landingJournalingExpandedCard === "snapshot" ? "block" : "hidden"} sm:block px-3 pb-3 sm:pt-3`}>
+                                  <p className="hidden sm:block mb-2 text-sm font-semibold text-foreground">Today snapshot</p>
+                                  <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-2">
+                                    <div className="min-w-0 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-background p-2 sm:p-1.5 text-left">
+                                      <div className="flex items-center gap-2">
+                                        <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-accent/15 dark:bg-accent/30">
+                                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                                            <path d="M12 3s2.5 2.2 2.5 5c0 1.6-1.3 2.7-2.5 3.9-1.2-1.2-2.5-2.3-2.5-3.9 0-2.8 2.5-5 2.5-5Z" />
+                                            <path d="M7 13a5 5 0 0 0 10 0c0-3.4-2.7-5.4-5-7.6-2.3 2.2-5 4.2-5 7.6Z" />
+                                          </svg>
+                                        </span>
+                                        <p className="text-xs sm:text-base font-semibold text-foreground">Calories</p>
+                                      </div>
+                                      <div className="mt-1 grid grid-cols-3 gap-2 pr-2">
+                                        <div className="min-w-0 flex flex-col">
+                                          <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
+                                            <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.caloriesFood}</span>
+                                          </p>
+                                          <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Food</p>
+                                        </div>
+                                        <div className="min-w-0 flex flex-col">
+                                          <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
+                                            <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.caloriesExercise}</span>
+                                          </p>
+                                          <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Exercise</p>
+                                        </div>
+                                        <div className="min-w-0 flex flex-col">
+                                          <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
+                                            <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.caloriesRemaining}</span>
+                                            <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">/{nutritionGoals.caloriesTarget}</span>
+                                          </p>
+                                          <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Remaining</p>
+                                          <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
+                                            <div
+                                              className={`h-full rounded-full transition-colors ${getCaloriesRemainingMeterFillClass(
+                                                selectedLandingDayNutrition.caloriesRemaining,
+                                                nutritionGoals.caloriesTarget
+                                              )}`}
+                                              style={{
+                                                width: getMacroMeterWidth(
+                                                  selectedLandingDayNutrition.caloriesRemaining,
+                                                  nutritionGoals.caloriesTarget
+                                                ),
+                                              }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div className="min-w-0 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-background p-2 sm:p-1.5 text-left">
+                                      <div className="flex items-center gap-2">
+                                        <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
+                                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
+                                            <circle cx="12" cy="12" r="8" stroke="#D946EF" strokeWidth="2.4" strokeDasharray="9 4" strokeLinecap="round" />
+                                          </svg>
+                                        </span>
+                                        <p className="text-xs sm:text-base font-semibold text-foreground">Macros (g)</p>
+                                      </div>
+                                      <div className="mt-1 grid grid-cols-3 gap-2 pr-1">
+                                        <div className="min-w-0">
+                                          <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
+                                            <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.carbsGrams}</span>
+                                            <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">/{nutritionGoals.carbsGrams}</span>
+                                          </p>
+                                          <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Carbs</p>
+                                          <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
+                                            <div
+                                              className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
+                                                "carbs",
+                                                selectedLandingDayNutrition.carbsGrams,
+                                                nutritionGoals.carbsGrams
+                                              )}`}
+                                              style={{
+                                                width: getMacroMeterWidth(
+                                                  selectedLandingDayNutrition.carbsGrams,
+                                                  nutritionGoals.carbsGrams
+                                                ),
+                                              }}
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="min-w-0">
+                                          <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
+                                            <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.proteinGrams}</span>
+                                            <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">/{nutritionGoals.proteinGrams}</span>
+                                          </p>
+                                          <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Protein</p>
+                                          <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
+                                            <div
+                                              className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
+                                                "protein",
+                                                selectedLandingDayNutrition.proteinGrams,
+                                                nutritionGoals.proteinGrams
+                                              )}`}
+                                              style={{
+                                                width: getMacroMeterWidth(
+                                                  selectedLandingDayNutrition.proteinGrams,
+                                                  nutritionGoals.proteinGrams
+                                                ),
+                                              }}
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="min-w-0">
+                                          <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
+                                            <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.fatGrams}</span>
+                                            <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">/{nutritionGoals.fatGrams}</span>
+                                          </p>
+                                          <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Fat</p>
+                                          <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
+                                            <div
+                                              className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
+                                                "fat",
+                                                selectedLandingDayNutrition.fatGrams,
+                                                nutritionGoals.fatGrams
+                                              )}`}
+                                              style={{
+                                                width: getMacroMeterWidth(
+                                                  selectedLandingDayNutrition.fatGrams,
+                                                  nutritionGoals.fatGrams
+                                                ),
+                                              }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div className="mt-2 space-y-2">
+                                    {selectedLandingDayActivityItems.length === 0 ? (
+                                      <p className="rounded-lg border border-neutral-200 dark:border-neutral-800 px-2.5 py-2 text-sm text-neutral-600 dark:text-neutral-400">
+                                        No activity yet for this day.
+                                      </p>
+                                    ) : (
+                                      selectedLandingDayActivityGroups.map((group) => (
+                                        <div
+                                          key={`summary-${group.groupKey}`}
+                                          className="rounded-lg border border-neutral-200 dark:border-neutral-800 px-2.5 py-2"
+                                        >
+                                          <div className="flex items-center justify-between gap-2">
+                                            <p className="text-[11px] sm:text-xs lg:text-sm font-semibold uppercase tracking-wide text-neutral-600 dark:text-neutral-300">
+                                              {group.label}
+                                            </p>
+                                            <div className="flex items-center gap-2">
+                                              <p className="text-[10px] sm:text-xs lg:text-sm text-neutral-500 dark:text-neutral-400">
+                                                {group.items.length} item{group.items.length === 1 ? "" : "s"}
+                                              </p>
+                                              <button
+                                                type="button"
+                                                onClick={() => openLandingActivityGroupModal(group)}
+                                                className="inline-flex items-center justify-center rounded-md border border-neutral-200 dark:border-neutral-800 px-2 py-0.5 text-[10px] sm:text-xs lg:text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                                aria-label={`View ${group.label}`}
+                                              >
+                                                View
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      ))
+                                    )}
+                                  </div>
                                 </div>
                               </div>
-                              <div className="min-w-0">
-                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
-                                  <span className="text-base sm:text-xl font-semibold text-foreground">
-                                    {selectedLandingDayNutrition.fatGrams}
-                                  </span>
-                                  <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">
-                                    /{nutritionGoals.fatGrams}
-                                  </span>
-                                </p>
-                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Fat</p>
-                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
-                                  <div
-                                    className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
-                                      "fat",
-                                      selectedLandingDayNutrition.fatGrams,
-                                      nutritionGoals.fatGrams
-                                    )}`}
-                                    style={{
-                                      width: getMacroMeterWidth(
-                                        selectedLandingDayNutrition.fatGrams,
-                                        nutritionGoals.fatGrams
-                                      ),
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
                             </div>
                           ) : (
                             <div className="space-y-2">
@@ -10485,7 +10779,7 @@ export default function ChatPage() {
                                     playSelectionChime();
                                     startSecondOrderConversation(!secondOrderCitationsEnabled);
                                   }}
-                                  className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-orange-50 dark:hover:bg-orange-900/25 transition-colors active:scale-[0.98]"
+                                  className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-accent/10 dark:hover:bg-accent/20 transition-colors active:scale-[0.98]"
                                 >
                                   <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-accent">
@@ -10543,7 +10837,7 @@ export default function ChatPage() {
                             setMentorOneOnOneModalOpen(true);
                           }
                         }}
-                                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-orange-50 dark:hover:bg-orange-900/25 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+                                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/60 text-left transition-all duration-200 active:scale-[0.98]"
                               >
                                 <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
@@ -10565,7 +10859,7 @@ export default function ChatPage() {
                             playSelectionChime();
                                   void handleTeachMeClick();
                                 }}
-                                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-orange-50 dark:hover:bg-orange-900/25 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+                                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/60 text-left transition-all duration-200 active:scale-[0.98]"
                               >
                                 <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
@@ -10594,7 +10888,7 @@ export default function ChatPage() {
                                   setWaysOfLookingAtHuman(null);
                                   setWaysOfLookingAtDigital(null);
                                 }}
-                                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-orange-50 dark:hover:bg-orange-900/25 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+                                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/60 text-left transition-all duration-200 active:scale-[0.98]"
                               >
                                 <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
@@ -10616,20 +10910,54 @@ export default function ChatPage() {
                 {!incognitoMode && (
                         <div className="order-1 w-full rounded-2xl bg-background px-2.5 py-2">
                           <div className="mb-1.5 px-0.5">
-                            <div className="mb-2 grid grid-cols-2 gap-1">
+                            <div className="sm:hidden mb-2">
+                              <p className="mb-1 text-[11px] font-semibold text-foreground">Last 7 days</p>
+                              <div ref={landingDaysScrollerRef} className="overflow-x-auto">
+                                <div className="flex min-w-max gap-1.5">
+                                  {landingCalendarDays.map(({ key, date }) => {
+                                    const selected = key === selectedLandingDayKey;
+                                    const hasActivity = (landingDayActivityCount.get(key) ?? 0) > 0;
+                                    return (
+                                      <button
+                                        key={`mobile-landing-day-${key}`}
+                                        type="button"
+                                        onClick={() => setSelectedLandingDayKey(key)}
+                                        className={`relative w-11 shrink-0 flex flex-col items-center justify-center rounded-lg border px-1 py-1.5 transition-colors ${
+                                          selected
+                                            ? "border-foreground dark:border-neutral-500 bg-neutral-100 dark:bg-neutral-800"
+                                            : "border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70"
+                                        }`}
+                                        aria-pressed={selected}
+                                      >
+                                        <span className="text-[9px] text-neutral-500 dark:text-neutral-400">
+                                          {new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(date)}
+                                        </span>
+                                        <span className="text-sm font-semibold text-foreground leading-none mt-0.5">
+                                          {date.getDate()}
+                                        </span>
+                                        {hasActivity && (
+                                          <span className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+                                        )}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="mb-2 grid grid-cols-2 gap-3">
                           <button
                             type="button"
                                 onClick={() => {
                                   if (!isAnonymous) setLandingTab("journaling");
                                 }}
                                 disabled={isAnonymous}
-                                className={`w-full rounded-t-xl px-3 py-1.5 text-xs sm:text-sm font-semibold border transition-colors ${
+                                className={`w-full px-1 py-1.5 text-xs sm:text-sm text-center border-b-[3px] transition-colors ${
                                   isAnonymous
-                                    ? "border-neutral-200 dark:border-neutral-700 bg-neutral-100/70 dark:bg-neutral-800/60 text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-80"
+                                    ? "border-transparent text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-80"
                                     :
                                   landingTab === "journaling"
-                                    ? "border-neutral-300 dark:border-neutral-600 border-b-background dark:border-b-neutral-900 bg-background dark:bg-neutral-900 text-foreground -mb-px"
-                                    : "border-neutral-200 dark:border-neutral-700 border-b-transparent bg-transparent text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/80"
+                                    ? "font-semibold text-foreground border-foreground dark:border-neutral-100"
+                                    : "font-medium text-neutral-600 dark:text-neutral-300 border-transparent hover:text-foreground"
                                 }`}
                                 aria-pressed={landingTab === "journaling"}
                               >
@@ -10638,10 +10966,10 @@ export default function ChatPage() {
                               <button
                                 type="button"
                                 onClick={() => setLandingTab("deepThinking")}
-                                className={`w-full rounded-t-xl px-3 py-1.5 text-xs sm:text-sm font-semibold border transition-colors ${
+                                className={`w-full px-1 py-1.5 text-xs sm:text-sm text-center border-b-[3px] transition-colors ${
                                   landingTab === "deepThinking"
-                                    ? "border-neutral-300 dark:border-neutral-600 border-b-background dark:border-b-neutral-900 bg-background dark:bg-neutral-900 text-foreground -mb-px"
-                                    : "border-neutral-200 dark:border-neutral-700 border-b-transparent bg-transparent text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/80"
+                                    ? "font-semibold text-foreground border-foreground dark:border-neutral-100"
+                                    : "font-medium text-neutral-600 dark:text-neutral-300 border-transparent hover:text-foreground"
                                 }`}
                                 aria-pressed={landingTab === "deepThinking"}
                               >
@@ -10653,31 +10981,6 @@ export default function ChatPage() {
                                 Last 7 days
                               </p>
                             </div>
-                            {!isAnonymous && landingTab === "journaling" && (
-                              <div className="mt-1.5 flex flex-wrap items-center gap-1.5 sm:mt-0 sm:gap-2 sm:justify-end">
-                        <button
-                          type="button"
-                                  onClick={openGoalsModal}
-                                  className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs lg:text-sm whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 transition-colors"
-                                >
-                                  {getLandingTranslations(language).nutritionGoalsButtonLabel}
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={openNutritionReportModal}
-                                  className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs lg:text-sm whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 transition-colors"
-                                >
-                                  {getLandingTranslations(language).nutritionAnalysisButtonLabel}
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={openWeeklySummaryModal}
-                                  className="px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs lg:text-sm whitespace-nowrap font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 transition-colors"
-                                >
-                                  {getLandingTranslations(language).weeklySummaryButtonLabel}
-                        </button>
-                      </div>
-                            )}
                     </div>
                           <div ref={landingDaysScrollerRef} className="hidden sm:block overflow-x-auto">
                             <div className="flex min-w-max gap-1.5 sm:grid sm:grid-cols-7 sm:gap-1.5 sm:min-w-0">
@@ -10691,7 +10994,7 @@ export default function ChatPage() {
                                     onClick={() => setSelectedLandingDayKey(key)}
                                     className={`relative w-14 sm:w-auto shrink-0 flex flex-col items-center justify-center rounded-lg border px-1 py-2 transition-colors ${
                                       selected
-                                        ? "border-foreground bg-neutral-100 dark:bg-neutral-800"
+                                        ? "border-foreground dark:border-neutral-500 bg-neutral-100 dark:bg-neutral-800"
                                         : "border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70"
                                     }`}
                                     aria-pressed={selected}
@@ -10708,7 +11011,7 @@ export default function ChatPage() {
                               })}
                         </div>
                       </div>
-                          {!incognitoMode && (
+                          {!incognitoMode && landingTab !== "journaling" && (
                             <div className="mt-2 space-y-2">
                               {selectedLandingDayActivityItems.length === 0 ? (
                                 <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center py-2">
@@ -10888,10 +11191,14 @@ export default function ChatPage() {
                   !isAnonymous &&
                   !incognitoMode &&
                   ((messages.length >= 2 && (!currentSession || !currentSession.isCollapsed)) ||
+                    !!currentSession?.secondOrderThinking ||
+                    activeSecondOrderRef.current ||
                     (!suppressJournalAndAskMentors && followedFigureIds.length >= 2)) ? (
                     <div className="inline-flex flex-col items-start gap-1.5">
                       <div className="inline-flex flex-wrap items-center gap-1.5">
-                        {messages.length >= 2 && (!currentSession || !currentSession.isCollapsed) && (
+                        {(messages.length >= 2 ||
+                          !!currentSession?.secondOrderThinking ||
+                          activeSecondOrderRef.current) && (
                           <button
                             type="button"
                             onClick={() => {
@@ -10915,9 +11222,9 @@ export default function ChatPage() {
                             setSelectedMentorFigureIds([]);
                             setMentorPickerCategoryId(null);
                           } else {
-                            setMultiMentorMode(true);
                             setSelectedMentorFigureIds([]);
                             setMentorPickerCategoryId(null);
+                            setAskMentorsRecommendModalOpen(true);
                             activeSecondOrderRef.current = false;
                             activeSecondOrderPlainRef.current = false;
                             setPendingSecondOrder(false);
@@ -11162,7 +11469,7 @@ export default function ChatPage() {
                   messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
                     ? "!min-h-[52px] !min-w-[52px] !rounded-2xl"
                     : "!min-h-8 !min-w-8 !rounded-xl"
-                } !border-neutral-200/70 dark:!border-neutral-400/70 !bg-neutral-50/70 dark:!bg-neutral-900/40 hover:!border-orange-300/80 dark:hover:!border-orange-500/70 hover:!bg-orange-50/60 dark:hover:!bg-orange-900/20`}
+                } !border-neutral-200/70 dark:!border-neutral-400/70 !bg-neutral-50/70 dark:!bg-neutral-900/40 hover:!border-accent/70 dark:hover:!border-accent/70 hover:!bg-accent/10 dark:hover:!bg-accent/20`}
               />
               {!(messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling") && (
               <button
@@ -11751,10 +12058,10 @@ export default function ChatPage() {
                       <div className="w-full flex gap-1.5 overflow-x-auto sm:grid sm:grid-cols-2 sm:overflow-visible">
                         {transcriptModalNutritionSnapshot.mode === "exercise" ? (
                           <>
-                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-1.5 text-left">
+                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-accent/25 dark:border-accent/40 bg-accent/10 dark:bg-accent/15 p-1.5 text-left">
                               <div className="flex items-center gap-2">
-                                <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-orange-100 dark:bg-orange-900/40">
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                                <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-accent/15 dark:bg-accent/30">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-accent">
                                     <path d="M12 3s2.5 2.2 2.5 5c0 1.6-1.3 2.7-2.5 3.9-1.2-1.2-2.5-2.3-2.5-3.9 0-2.8 2.5-5 2.5-5Z" />
                                     <path d="M7 13a5 5 0 0 0 10 0c0-3.4-2.7-5.4-5-7.6-2.3 2.2-5 4.2-5 7.6Z" />
                                   </svg>
@@ -11783,7 +12090,7 @@ export default function ChatPage() {
                               </div>
                             </div>
 
-                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-1.5 text-left">
+                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-accent/25 dark:border-accent/40 bg-accent/10 dark:bg-accent/15 p-1.5 text-left">
                               <div className="flex items-center gap-2">
                                 <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
@@ -11867,10 +12174,10 @@ export default function ChatPage() {
                           </>
                         ) : (
                           <>
-                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-1.5 text-left">
+                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-accent/25 dark:border-accent/40 bg-accent/10 dark:bg-accent/15 p-1.5 text-left">
                               <div className="flex items-center gap-2">
-                                <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-orange-100 dark:bg-orange-900/40">
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                                <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-accent/15 dark:bg-accent/30">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-accent">
                                     <path d="M12 3s2.5 2.2 2.5 5c0 1.6-1.3 2.7-2.5 3.9-1.2-1.2-2.5-2.3-2.5-3.9 0-2.8 2.5-5 2.5-5Z" />
                                     <path d="M7 13a5 5 0 0 0 10 0c0-3.4-2.7-5.4-5-7.6-2.3 2.2-5 4.2-5 7.6Z" />
                                   </svg>
@@ -11899,7 +12206,7 @@ export default function ChatPage() {
                               </div>
                             </div>
 
-                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-orange-100 dark:border-orange-900/40 bg-orange-50/70 dark:bg-orange-950/20 p-1.5 text-left">
+                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-accent/25 dark:border-accent/40 bg-accent/10 dark:bg-accent/15 p-1.5 text-left">
                               <div className="flex items-center gap-2">
                                 <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
@@ -14243,7 +14550,7 @@ export default function ChatPage() {
                                   key={`${section.key}-${row.dayKey}-day`}
                                   className={`mx-auto flex h-8 w-8 items-center justify-center rounded-full border text-xs font-semibold ${
                                     hasEntry
-                                      ? "bg-orange-500 border-orange-500 text-white"
+                                      ? "bg-accent border-accent text-white"
                                       : "bg-background border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
                                   }`}
                                   title={`${row.weekdayLabel} ${row.monthDayLabel}: ${entryCount} ${entryCount === 1 ? "entry" : "entries"}`}
@@ -14837,7 +15144,7 @@ export default function ChatPage() {
                     playSelectionChime();
                     startSecondOrderConversation(!secondOrderCitationsEnabled);
                   }}
-                  className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-orange-50 dark:hover:bg-orange-900/25 transition-colors active:scale-[0.98]"
+                  className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-accent/10 dark:hover:bg-accent/20 transition-colors active:scale-[0.98]"
                 >
                   <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-accent">
@@ -14895,7 +15202,7 @@ export default function ChatPage() {
                     setMentorOneOnOneModalOpen(true);
                   }
                 }}
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-orange-50 dark:hover:bg-orange-900/25 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/60 text-left transition-all duration-200 active:scale-[0.98]"
               >
                 <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
@@ -14917,7 +15224,7 @@ export default function ChatPage() {
                   setNewConversationChooserModalOpen(false);
                   void handleTeachMeClick();
                 }}
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-orange-50 dark:hover:bg-orange-900/25 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/60 text-left transition-all duration-200 active:scale-[0.98]"
               >
                 <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
@@ -14946,7 +15253,7 @@ export default function ChatPage() {
                   setWaysOfLookingAtHuman(null);
                   setWaysOfLookingAtDigital(null);
                 }}
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-orange-50 dark:hover:bg-orange-900/25 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
+                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/60 text-left transition-all duration-200 active:scale-[0.98]"
               >
                 <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
@@ -14994,7 +15301,7 @@ export default function ChatPage() {
           aria-label={getLandingTranslations(language).ideas}
         >
           <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,640px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,640px)] max-h-[92vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
@@ -15110,6 +15417,128 @@ export default function ChatPage() {
         </div>
       )}
 
+      {askMentorsRecommendModalOpen && (
+        <div
+          className="fixed inset-0 z-[56] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => setAskMentorsRecommendModalOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Ask mentors recommendations"
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,640px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <h2 className="text-lg font-semibold text-foreground">Ask mentors</h2>
+              <button
+                type="button"
+                onClick={() => setAskMentorsRecommendModalOpen(false)}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 space-y-3 overflow-y-auto">
+              <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-2">
+                <p className="text-sm font-medium text-foreground">
+                  What are you looking for help with?
+                </p>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                  We will suggest 5 mentors with short reasoning, then you can pick multiple.
+                </p>
+                <textarea
+                  value={askMentorsRecommendationInput}
+                  onChange={(e) => setAskMentorsRecommendationInput(e.target.value)}
+                  placeholder="Example: I need strategic + execution advice for a startup pivot."
+                  rows={2}
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 resize-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => void requestAskMentorRecommendations()}
+                  disabled={askMentorsRecommendationsLoading || !askMentorsRecommendationInput.trim()}
+                  className="w-full px-3 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
+                >
+                  {askMentorsRecommendationsLoading ? "Finding top mentors..." : "Suggest 5 mentors"}
+                </button>
+                {askMentorsRecommendationsError && (
+                  <p className="text-xs text-red-600 dark:text-red-400">{askMentorsRecommendationsError}</p>
+                )}
+              </div>
+
+              {askMentorsRecommendations.length > 0 && (
+                <div className="space-y-2">
+                  {askMentorsRecommendations.map((s) => {
+                    const selected = askMentorsSelectedFigureIds.includes(s.id);
+                    const canSelect = selected || askMentorsSelectedFigureIds.length < 5;
+                    return (
+                      <button
+                        key={`ask-mentor-reco-${s.id}`}
+                        type="button"
+                        onClick={() => {
+                          if (!canSelect && !selected) return;
+                          setAskMentorsSelectedFigureIds((prev) =>
+                            selected
+                              ? prev.filter((id) => id !== s.id)
+                              : prev.length < 5
+                                ? [...prev, s.id]
+                                : prev
+                          );
+                        }}
+                        className={`w-full rounded-xl border px-3 py-2 text-left transition-colors ${
+                          selected
+                            ? "border-foreground bg-neutral-100 dark:bg-neutral-800"
+                            : "border-neutral-200 dark:border-neutral-700 bg-background hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                        } ${!canSelect && !selected ? "opacity-60 cursor-not-allowed" : ""}`}
+                      >
+                        <p className="text-sm font-semibold text-foreground">{s.name}</p>
+                        <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+                          {s.reason}
+                        </p>
+                      </button>
+                    );
+                  })}
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    Select between 2 and 5 mentors ({askMentorsSelectedFigureIds.length}/5 selected).
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAskMentorsRecommendModalOpen(false);
+                        setMultiMentorMode(true);
+                      }}
+                      className="flex-1 px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    >
+                      Pick manually instead
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMultiMentorMode(true);
+                        setSelectedMentorFigureIds(askMentorsSelectedFigureIds.slice(0, 5));
+                        setAskMentorsRecommendModalOpen(false);
+                      }}
+                      disabled={
+                        askMentorsSelectedFigureIds.length < 2 || askMentorsSelectedFigureIds.length > 5
+                      }
+                      className="flex-1 px-3 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
+                    >
+                      Use selected mentors
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {mentorOneOnOneModalOpen && (
         <div
           className="fixed inset-0 z-[55] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
@@ -15139,44 +15568,155 @@ export default function ChatPage() {
               </button>
             </div>
             <div className="px-4 pt-3 pb-2 shrink-0 space-y-2 border-b border-neutral-200/80 dark:border-neutral-700/80">
-              <input
-                type="search"
-                value={mentorCatalogSearch}
-                onChange={(e) => setMentorCatalogSearch(e.target.value)}
-                placeholder={getLandingTranslations(language).mentorOneOnOneSearchPlaceholder}
-                className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-              />
-              {figuresData?.categories && figuresData.categories.length > 0 && (
-                <div className="flex flex-wrap gap-2">
+              <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-sm font-medium text-foreground">
+                    Need help choosing? Get 3 suggested mentors
+                  </p>
                   <button
                     type="button"
-                    onClick={() => setMentorCatalogCategoryId(null)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                      mentorCatalogCategoryId === null
-                        ? "bg-accent text-white"
-                        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                    }`}
+                    onClick={() => setMentorSuggestionsSectionOpen((v) => !v)}
+                    className="inline-flex items-center gap-1 rounded-lg border border-neutral-200 dark:border-neutral-700 px-2 py-1 text-[11px] font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    aria-expanded={mentorSuggestionsSectionOpen}
                   >
-                    {getLandingTranslations(language).mentorOneOnOneAllCategories}
-                  </button>
-                  {figuresData.categories.map((cat) => (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      onClick={() =>
-                        setMentorCatalogCategoryId((prev) => (prev === cat.id ? null : cat.id))
-                      }
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                        mentorCatalogCategoryId === cat.id
-                          ? "bg-accent text-white"
-                          : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                    {mentorSuggestionsSectionOpen ? "Collapse" : "Expand"}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={`w-3.5 h-3.5 transition-transform ${
+                        mentorSuggestionsSectionOpen ? "rotate-180" : ""
                       }`}
                     >
-                      {cat.name}
-                    </button>
-                  ))}
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </button>
                 </div>
-              )}
+                {mentorSuggestionsSectionOpen && (
+                  <div className="mt-2 space-y-2">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    Example: "Someone practical for startup execution anxiety."
+                  </p>
+                  <textarea
+                    value={mentorRecommendationInput}
+                    onChange={(e) => setMentorRecommendationInput(e.target.value)}
+                    placeholder="Briefly describe what you're looking for..."
+                    rows={2}
+                    className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 resize-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => void requestMentorRecommendations()}
+                    disabled={mentorRecommendationsLoading || !mentorRecommendationInput.trim()}
+                    className="w-full px-3 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
+                  >
+                    {mentorRecommendationsLoading ? "Finding top mentors..." : "Suggest 3 mentors"}
+                  </button>
+                  {mentorRecommendationsError && (
+                    <p className="text-xs text-red-600 dark:text-red-400">{mentorRecommendationsError}</p>
+                  )}
+                  {mentorRecommendations.length > 0 && (
+                    <div className="space-y-2">
+                      {mentorRecommendations.map((s) => (
+                        <button
+                          key={`mentor-reco-${s.id}`}
+                          type="button"
+                          onClick={() => {
+                            playSelectionChime();
+                            startConversationFromMentorOneOnOne({
+                              id: s.id,
+                              name: s.name,
+                              description: s.description,
+                            });
+                          }}
+                          className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background px-3 py-2 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                        >
+                          <p className="text-sm font-semibold text-foreground">{s.name}</p>
+                          <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+                            {s.reason}
+                          </p>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  </div>
+                )}
+              </div>
+              <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-sm font-medium text-foreground">
+                    Filter mentors by name or category
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setMentorFiltersSectionOpen((v) => !v)}
+                    className="inline-flex items-center gap-1 rounded-lg border border-neutral-200 dark:border-neutral-700 px-2 py-1 text-[11px] font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    aria-expanded={mentorFiltersSectionOpen}
+                  >
+                    {mentorFiltersSectionOpen ? "Collapse" : "Expand"}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={`w-3.5 h-3.5 transition-transform ${
+                        mentorFiltersSectionOpen ? "rotate-180" : ""
+                      }`}
+                    >
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </button>
+                </div>
+                {mentorFiltersSectionOpen && (
+                  <div className="mt-2 space-y-2">
+                  <input
+                    type="search"
+                    value={mentorCatalogSearch}
+                    onChange={(e) => setMentorCatalogSearch(e.target.value)}
+                    placeholder={getLandingTranslations(language).mentorOneOnOneSearchPlaceholder}
+                    className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
+                  />
+                  {figuresData?.categories && figuresData.categories.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setMentorCatalogCategoryId(null)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                          mentorCatalogCategoryId === null
+                            ? "bg-accent text-white"
+                            : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                        }`}
+                      >
+                        {getLandingTranslations(language).mentorOneOnOneAllCategories}
+                      </button>
+                      {figuresData.categories.map((cat) => (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          onClick={() =>
+                            setMentorCatalogCategoryId((prev) => (prev === cat.id ? null : cat.id))
+                          }
+                          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                            mentorCatalogCategoryId === cat.id
+                              ? "bg-accent text-white"
+                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                          }`}
+                        >
+                          {cat.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="flex-1 min-h-0 overflow-y-auto p-4">
               {!figuresData?.figures?.length ? (
