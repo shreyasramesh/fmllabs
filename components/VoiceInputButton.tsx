@@ -49,12 +49,26 @@ type SttSession = {
   requestCommit: () => Promise<void>;
 };
 
+type SpeechRecognitionResultLike = {
+  isFinal: boolean;
+  0?: { transcript?: string };
+};
+
+type SpeechRecognitionEventLike = {
+  resultIndex: number;
+  results: ArrayLike<SpeechRecognitionResultLike>;
+};
+
+type SpeechRecognitionErrorEventLike = {
+  error?: string;
+};
+
 type SpeechRecognitionCtor = new () => {
   lang: string;
   continuous: boolean;
   interimResults: boolean;
-  onresult: ((event: SpeechRecognitionEvent) => void) | null;
-  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEventLike) => void) | null;
   onend: (() => void) | null;
   start: () => void;
   stop: () => void;
@@ -326,7 +340,7 @@ async function startWebSpeechStt(
   let closed = false;
   let resolveEnd: (() => void) | null = null;
 
-  recognition.onresult = (event: SpeechRecognitionEvent) => {
+  recognition.onresult = (event: SpeechRecognitionEventLike) => {
     let interim = "";
     const finals: string[] = [];
     for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -339,7 +353,7 @@ async function startWebSpeechStt(
     if (interim) onPartialTranscript?.(interim);
     if (finals.length > 0) onCommittedTranscript(finals.join(" "));
   };
-  recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+  recognition.onerror = (event: SpeechRecognitionErrorEventLike) => {
     if (closed) return;
     onError(event.error || "Speech recognition error");
   };
