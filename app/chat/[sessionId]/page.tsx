@@ -3787,7 +3787,7 @@ export default function ChatPage() {
   const [weightTrackerSaving, setWeightTrackerSaving] = useState(false);
   const [weightTrackerError, setWeightTrackerError] = useState<string | null>(null);
   const [weightTrackerEntries, setWeightTrackerEntries] = useState<WeightTrackerEntry[]>([]);
-  const [weightTrackerRange, setWeightTrackerRange] = useState<"week" | "month" | "year" | "all">("week");
+  const [weightTrackerRange, setWeightTrackerRange] = useState<"week" | "month" | "year">("week");
   const [weightTrackerWeightInput, setWeightTrackerWeightInput] = useState("");
   const [weightTrackerTargetInput, setWeightTrackerTargetInput] = useState("");
   const [weightTrackerAddOpen, setWeightTrackerAddOpen] = useState(false);
@@ -7122,11 +7122,8 @@ export default function ChatPage() {
         ? 7 * 24 * 60 * 60 * 1000
         : weightTrackerRange === "month"
           ? 30 * 24 * 60 * 60 * 1000
-          : weightTrackerRange === "year"
-            ? 365 * 24 * 60 * 60 * 1000
-            : null;
+          : 365 * 24 * 60 * 60 * 1000;
     const filtered = weightTrackerEntries.filter((entry) => {
-      if (rangeMs == null) return true;
       const ts = new Date(entry.recordedAt || entry.createdAt).getTime();
       return Number.isFinite(ts) && now - ts <= rangeMs;
     });
@@ -10946,28 +10943,25 @@ export default function ChatPage() {
                         >
                           {!isAnonymous && landingTab === "journaling" ? (
                             <div className="w-full space-y-2.5">
-                              <div className="w-full rounded-2xl border border-neutral-200 dark:border-white/10 bg-background p-3 shadow-sm">
-                                <p className="mb-2 text-xs text-neutral-500 dark:text-neutral-400">Choose entry type</p>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                  {LANDING_JOURNAL_CHIPS.map((chip) => (
-                                    <button
-                                      key={chip.key}
-                                      type="button"
-                                      onClick={() => openLandingJournalChip(chip.key)}
-                                      className="flex items-center gap-3 w-full px-3 py-3 rounded-2xl border border-neutral-200 dark:border-white/15 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/40 text-left transition-all duration-200 active:scale-[0.98]"
-                                    >
-                                      <span className="shrink-0 w-9 h-9 rounded-xl bg-accent/15 dark:bg-accent/25 flex items-center justify-center">
-                                        {renderLandingJournalIcon(chip.key)}
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                {LANDING_JOURNAL_CHIPS.map((chip) => (
+                                  <button
+                                    key={chip.key}
+                                    type="button"
+                                    onClick={() => openLandingJournalChip(chip.key)}
+                                    className="flex items-center gap-3 w-full px-3 py-3 rounded-2xl border border-neutral-200 dark:border-white/15 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/40 text-left transition-all duration-200 active:scale-[0.98]"
+                                  >
+                                    <span className="shrink-0 w-9 h-9 rounded-xl bg-accent/15 dark:bg-accent/25 flex items-center justify-center">
+                                      {renderLandingJournalIcon(chip.key)}
+                                    </span>
+                                    <span className="min-w-0">
+                                      <span className="block text-sm font-semibold text-foreground">{chip.label}</span>
+                                      <span className="block text-xs text-neutral-600 dark:text-neutral-400">
+                                        {LANDING_JOURNAL_CARD_DESCRIPTION[chip.key]}
                                       </span>
-                                      <span className="min-w-0">
-                                        <span className="block text-sm font-semibold text-foreground">{chip.label}</span>
-                                        <span className="block text-xs text-neutral-600 dark:text-neutral-400">
-                                          {LANDING_JOURNAL_CARD_DESCRIPTION[chip.key]}
-                                        </span>
-                                      </span>
-                                    </button>
-                                  ))}
-                                </div>
+                                    </span>
+                                  </button>
+                                ))}
                               </div>
 
                               <div className="w-full rounded-2xl border border-neutral-200/70 dark:border-white/10 bg-background">
@@ -15066,19 +15060,18 @@ export default function ChatPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 {[
                   { key: "week", label: "Week" },
                   { key: "month", label: "Month" },
                   { key: "year", label: "Year" },
-                  { key: "all", label: "All time" },
                 ].map((opt) => {
                   const selected = weightTrackerRange === opt.key;
                   return (
                     <button
                       key={opt.key}
                       type="button"
-                      onClick={() => setWeightTrackerRange(opt.key as "week" | "month" | "year" | "all")}
+                      onClick={() => setWeightTrackerRange(opt.key as "week" | "month" | "year")}
                       className={`px-3 py-1.5 rounded-lg border text-sm transition-colors ${
                         selected
                           ? "bg-accent text-white border-accent"
@@ -15093,7 +15086,7 @@ export default function ChatPage() {
                   type="button"
                   onClick={() => setWeightTrackerAddOpen((v) => !v)}
                   disabled={weightTrackerSaving}
-                  className="ml-auto shrink-0 h-11 w-11 sm:h-9 sm:w-9 rounded-lg border border-neutral-200 dark:border-neutral-700 text-lg leading-none font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  className="shrink-0 h-11 w-11 sm:h-9 sm:w-9 rounded-lg border border-neutral-200 dark:border-neutral-700 text-lg leading-none font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                   aria-label="Add weight entry"
                 >
                   +
