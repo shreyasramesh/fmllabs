@@ -103,3 +103,11 @@ adb install -r android/app/build/outputs/apk/release/app-release.apk
 - This phase uses hosted WebView mode (Next.js server APIs remain remote).
 - `webkitSpeechRecognition` support can vary by Android WebView; keep fallback UX.
 - If auth behavior differs on phone, re-check Clerk production domain + redirect setup.
+
+## 8) Clerk auth return-to-app configuration
+
+To send users back from external browser auth into the Android app, set Clerk redirect URLs to the custom scheme callback:
+
+- `ai.fmllabs.app://auth-callback?redirect=/chat/new`
+
+In Clerk dashboard, ensure this callback is included in allowed redirect URLs for sign-in/sign-up flows.

@@ -31,6 +31,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <!-- Custom scheme callback for auth return-to-app (Clerk). -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="ai.fmllabs.app" android:host="auth-callback" />
+            </intent-filter>
+
+            <!-- Optional app-link handling for hosted domain links. -->
+            <intent-filter android:autoVerify="false">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" android:host="www.fmllabs.ai" />
+                <data android:scheme="https" android:host="fmllabs.ai" />
+            </intent-filter>
+
         </activity>
 
         <provider

@@ -74,6 +74,7 @@ import {
   type ReminderType,
 } from "@/lib/reminder-settings";
 import { syncNativeReminders } from "@/lib/native-reminders";
+import { playLlmResponseStartHaptic, playLlmResponseVisibleHaptic } from "@/lib/conversation-haptics";
 
 /** Library / inline panels: cards fill the row; min width ~17.5rem so more columns appear on wide screens. */
 const LIBRARY_RESPONSIVE_CARD_GRID =
@@ -800,10 +801,10 @@ function MessageBubble({
             ) : text ? (
               <>
                   {/^\d+ mentors are responding…$/.test(text.trim()) && isLastMsg ? (
-                    <div className="flex flex-col gap-2 w-full max-w-[240px]">
+                    <div className="inline-flex flex-col gap-2 w-fit max-w-[240px]">
                       <span className="text-sm text-neutral-600 dark:text-neutral-400">{text}</span>
                       <div
-                        className="gemini-loading-bar h-1.5 rounded-full overflow-hidden"
+                        className="gemini-loading-bar h-1.5 w-[180px] max-w-full rounded-full overflow-hidden"
                         aria-hidden
                       />
                     </div>
@@ -5268,6 +5269,7 @@ export default function ChatPage() {
     setInput("");
     setIsLoading(true);
     setLastFailedUserMessage(null);
+    void playLlmResponseStartHaptic();
 
     const userMessage: Message = {
       role: "user",
@@ -5403,6 +5405,7 @@ export default function ChatPage() {
       let messageContent = "";
       let contextBlockConsumed = false;
       let overlayContext: RelevantContext | null = null;
+      let didFireVisibleHaptic = false;
 
       while (true) {
         const { done, value } = await reader.read();
@@ -5429,6 +5432,11 @@ export default function ChatPage() {
           }
           return next;
         });
+        const visibleContent = contextBlockConsumed ? messageContent : "";
+        if (!didFireVisibleHaptic && visibleContent.trim().length > 0) {
+          didFireVisibleHaptic = true;
+          void playLlmResponseVisibleHaptic();
+        }
       }
 
       const { contentWithoutBlock: afterCtx, relevantContext } = contextBlockConsumed
@@ -5472,6 +5480,10 @@ export default function ChatPage() {
         }
         return next;
       });
+      if (!didFireVisibleHaptic && contentWithoutBlock.trim().length > 0) {
+        didFireVisibleHaptic = true;
+        void playLlmResponseVisibleHaptic();
+      }
       const journalCheckpointCount = baseMessages.filter((m) => m.journalCheckpoint).length;
       if (journalCheckpoint && !isAnonymous && !incognitoMode && journalCheckpointCount < 2) {
         setJournalCheckpointModal({

@@ -7,6 +7,7 @@ import { UserTypeProvider } from "@/components/UserTypeProvider";
 import { TtsSpeedProvider } from "@/components/TtsSpeedProvider";
 import { BackgroundProvider } from "@/components/BackgroundProvider";
 import { NativeHaptics } from "@/components/NativeHaptics";
+import { NativeAppUrlHandler } from "@/components/NativeAppUrlHandler";
 import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
 import "./globals.css";
 
@@ -76,6 +77,7 @@ export default function RootLayout({
           />
         </head>
         <body className="antialiased min-h-screen bg-background">
+          <NativeAppUrlHandler />
           <NativeHaptics />
           <Script
             src="https://datafa.st/js/script.js"

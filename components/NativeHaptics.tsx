@@ -4,13 +4,15 @@ import { useEffect } from "react";
 import { Capacitor } from "@capacitor/core";
 import { Haptics, ImpactStyle } from "@capacitor/haptics";
 
-const HAPTIC_THROTTLE_MS = 70;
+const HAPTIC_THROTTLE_MS = 120;
 
 function isInteractiveElement(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return false;
   if (target.closest("[data-haptic='off']")) return false;
 
-  return !!target.closest("button, a, [role='button'], input[type='checkbox'], input[type='radio']");
+  return !!target.closest(
+    "[data-haptic='on'], button, a, [role='button'], input, select, textarea, summary"
+  );
 }
 
 export function NativeHaptics() {
@@ -19,6 +21,16 @@ export function NativeHaptics() {
 
     let lastImpactAt = 0;
 
+    const pulse = async () => {
+      try {
+        await Haptics.impact({ style: ImpactStyle.Medium });
+      } catch {
+        if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+          navigator.vibrate(18);
+        }
+      }
+    };
+
     const onClick = (event: Event) => {
       if (!isInteractiveElement(event.target)) return;
 
@@ -26,9 +38,7 @@ export function NativeHaptics() {
       if (now - lastImpactAt < HAPTIC_THROTTLE_MS) return;
       lastImpactAt = now;
 
-      void Haptics.impact({ style: ImpactStyle.Light }).catch(() => {
-        // Ignore plugin-level failures to keep UI interactions uninterrupted.
-      });
+      void pulse();
     };
 
     document.addEventListener("click", onClick, { capture: true });
