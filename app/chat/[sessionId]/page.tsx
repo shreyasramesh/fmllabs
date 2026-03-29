@@ -3193,7 +3193,8 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const landingDaysScrollerRef = useRef<HTMLDivElement>(null);
+  const landingDaysScrollerMobileRef = useRef<HTMLDivElement>(null);
+  const landingDaysScrollerDesktopRef = useRef<HTMLDivElement>(null);
   const landingDaysAutoScrolledRef = useRef(false);
   const inputRef = useRef<HTMLDivElement>(null);
   const justCreatedSessionRef = useRef<string | null>(null);
@@ -4615,10 +4616,12 @@ export default function ChatPage() {
       return;
     }
     if (landingDaysAutoScrolledRef.current) return;
-    const el = landingDaysScrollerRef.current;
-    if (!el) return;
+    const mobileEl = landingDaysScrollerMobileRef.current;
+    const desktopEl = landingDaysScrollerDesktopRef.current;
+    if (!mobileEl && !desktopEl) return;
     const rafId = window.requestAnimationFrame(() => {
-      el.scrollLeft = el.scrollWidth;
+      if (mobileEl) mobileEl.scrollLeft = mobileEl.scrollWidth;
+      if (desktopEl) desktopEl.scrollLeft = desktopEl.scrollWidth;
       landingDaysAutoScrolledRef.current = true;
     });
     return () => window.cancelAnimationFrame(rafId);
@@ -8254,6 +8257,12 @@ export default function ChatPage() {
     else setWaysOfLookingAtCategory(null);
   }, []);
 
+  const shouldHideBottomBar =
+    (messages.length === 0 &&
+      !incognitoMode &&
+      (landingTab === "deepThinking" || (!isAnonymous && landingTab === "journaling"))) ||
+    (!!currentSession?.isCollapsed && !!collapsedSummary);
+
   return (
     <div className={`relative flex flex-col h-[100dvh] min-h-[100dvh] overflow-hidden chat-bg-area bg-background border-2 transition-[border-color,background] duration-300 ease-in-out ${incognitoMode ? "border-violet-400/70 dark:border-violet-500/60" : "border-transparent"}`}>
       {/* Shared top bar - fixed on mobile so it stays visible when scrolling */}
@@ -10663,7 +10672,7 @@ export default function ChatPage() {
           className={`flex-1 min-h-0 min-w-0 flex flex-col overflow-x-hidden transition-all duration-500 ${
             messages.length > 0
               ? "pb-24 md:pb-0 overflow-hidden"
-              : isAnonymous
+              : !shouldHideBottomBar && isAnonymous
                 ? "pb-24 md:pb-0 overflow-hidden"
                 : "pb-0 overflow-hidden"
           } ${convertToDeepSuccess ? "animate-convert-to-deep" : ""}`}
@@ -11355,7 +11364,7 @@ export default function ChatPage() {
                           <div className="mb-1.5 px-0.5">
                             <div className="sm:hidden mb-2">
                               <p className="mb-1 text-[11px] font-semibold text-foreground">Last 7 days</p>
-                              <div ref={landingDaysScrollerRef} className="overflow-x-auto">
+                              <div ref={landingDaysScrollerMobileRef} className="overflow-x-auto">
                                 <div className="flex min-w-max gap-1.5">
                                   {landingCalendarDays.map(({ key, date }) => {
                                     const selected = key === selectedLandingDayKey;
@@ -11425,7 +11434,7 @@ export default function ChatPage() {
                               </p>
                             </div>
                     </div>
-                          <div ref={landingDaysScrollerRef} className="hidden sm:block overflow-x-auto">
+                          <div ref={landingDaysScrollerDesktopRef} className="hidden sm:block overflow-x-auto">
                             <div className="flex min-w-max gap-1.5 sm:grid sm:grid-cols-7 sm:gap-1.5 sm:min-w-0">
                               {landingCalendarDays.map(({ key, date }) => {
                                 const selected = key === selectedLandingDayKey;
@@ -11813,15 +11822,14 @@ export default function ChatPage() {
           </p>
         )}
         {/* Bottom bar - fixed on mobile when scrolling. Also shown on new conversations for a faster first message. */}
-        {!((messages.length === 0 && !incognitoMode && (landingTab === "deepThinking" || (!isAnonymous && landingTab === "journaling"))) || (!!currentSession?.isCollapsed && !!collapsedSummary)) && (
+        {!shouldHideBottomBar && (
         <div className={`${sidebarOpen ? "hidden lg:flex" : "flex"} fixed inset-x-0 bottom-0 z-30 flex-col ${
           messages.length === 0 && !incognitoMode && landingTab === "journaling"
             ? "border-t-0"
             : "border-t border-neutral-200 dark:border-neutral-800"
         } shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background`}>
           <div className="flex flex-col items-center justify-center px-4 py-2 sm:py-2.5 min-w-0">
-            {!((messages.length === 0 && !incognitoMode && landingTab === "deepThinking") || (!!currentSession?.isCollapsed && !!collapsedSummary)) && (
-              <>
+            <>
             {!(messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling") && (
             <div
               className={`min-w-0 max-w-2xl lg:max-w-4xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex overflow-hidden ${
@@ -11945,7 +11953,6 @@ export default function ChatPage() {
                 FML Labs is AI and can make mistakes.
               </p>
               </>
-          )}
         </div>
         </div>
         )}
@@ -15086,7 +15093,7 @@ export default function ChatPage() {
                   type="button"
                   onClick={() => setWeightTrackerAddOpen((v) => !v)}
                   disabled={weightTrackerSaving}
-                  className="ml-auto h-9 w-9 rounded-lg border border-neutral-200 dark:border-neutral-700 text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  className="ml-auto shrink-0 h-11 w-11 sm:h-9 sm:w-9 rounded-lg border border-neutral-200 dark:border-neutral-700 text-lg leading-none font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                   aria-label="Add weight entry"
                 >
                   +
