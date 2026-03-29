@@ -13,6 +13,7 @@
     "mobile:open:android": "npx cap open android",
     "mobile:apk:debug": "cd android && ./gradlew assembleDebug",
     "mobile:apk:release": "cd android && ./gradlew assembleRelease",
+    "mobile:install:debug": "npm run mobile:sync && npm run mobile:apk:debug && adb install -r android/app/build/outputs/apk/debug/app-debug.apk",
     "mobile:aab:release": "cd android && ./gradlew bundleRelease",
     "test": "tsx --test \"lib/**/*.test.ts\"",
     "generate-icons": "node scripts/generate-pwa-icons.mjs",
