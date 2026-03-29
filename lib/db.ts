@@ -222,6 +222,42 @@ export interface SavedTranscript {
   updatedAt: Date;
 }
 
+export interface SavedNutritionExerciseItem {
+  _id?: string;
+  userId: string;
+  kind: "nutrition" | "exercise";
+  canonicalName: string;
+  displayName: string;
+  sampleEntry: string;
+  usageCount: number;
+  aliases?: string[];
+  createdAt: Date;
+  updatedAt: Date;
+  lastUsedAt: Date;
+}
+
+interface SavedNutritionExerciseItemDoc extends Omit<SavedNutritionExerciseItem, "_id"> {
+  _id: ObjectId;
+}
+
+export interface ReusableJournalTag {
+  _id?: string;
+  userId: string;
+  kind: "nutrition" | "exercise";
+  tag: string;
+  displayName: string;
+  aliases?: string[];
+  sampleEntry: string;
+  usageCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+  lastUsedAt: Date;
+}
+
+interface ReusableJournalTagDoc extends Omit<ReusableJournalTag, "_id"> {
+  _id: ObjectId;
+}
+
 export type JournalMentorReflectionsStatus = "pending" | "ready" | "failed";
 
 export interface JournalMentorReflectionItem {
@@ -277,6 +313,8 @@ export interface UserSettings {
   goalCarbsGrams?: number;
   goalProteinGrams?: number;
   goalFatGrams?: number;
+  /** User-entered natural-language objective for nutrition coaching. */
+  nutritionGoalIntent?: string;
   /** When true, user appears on the global XP leaderboard */
   leaderboardOptIn?: boolean;
   /** How the assistant should address the user; falls back to Clerk name when unset */
@@ -292,6 +330,27 @@ export interface UserSettings {
 
 interface UserSettingsDoc extends UserSettings {
   _id?: ObjectId;
+}
+
+function normalizeReusableItemName(text: string): string {
+  const cleaned = text
+    .toLowerCase()
+    .replace(/[`~!@#$%^&*()_=+[{\]}\\|;:'",<>/?]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return cleaned.slice(0, 120);
+}
+
+function buildReusableAliases(canonicalName: string): string[] {
+  const aliases = new Set<string>();
+  aliases.add(canonicalName);
+  const words = canonicalName.split(" ").filter(Boolean);
+  if (words.length >= 2) {
+    aliases.add(words.slice(0, 2).join(" "));
+    aliases.add(words.slice(-2).join(" "));
+  }
+  if (words.length >= 1) aliases.add(words[0]);
+  return Array.from(aliases).map((a) => a.slice(0, 80)).filter(Boolean).slice(0, 6);
 }
 
 /** User-created mental models; same schema as MentalModel, stored per user. */
@@ -1620,6 +1679,165 @@ export async function saveJournalTranscript(
   }) as SavedTranscript & { _id: string };
 }
 
+export async function upsertReusableJournalItem(
+  userId: string,
+  kind: "nutrition" | "exercise",
+  entryText: string,
+  preferredDisplayName?: string
+): Promise<void> {
+  const database = await getDb();
+  const baseText = preferredDisplayName?.trim() || entryText.trim();
+  if (!baseText) return;
+  const canonicalName = normalizeReusableItemName(baseText);
+  if (!canonicalName) return;
+
+  const displayName = baseText.slice(0, 140);
+  const sampleEntry = entryText.trim().slice(0, 500);
+  const now = new Date();
+
+  await database
+    .collection<SavedNutritionExerciseItemDoc>("user_reusable_journal_items")
+    .createIndex({ userId: 1, kind: 1, canonicalName: 1 }, { unique: true });
+
+  await database
+    .collection<SavedNutritionExerciseItemDoc>("user_reusable_journal_items")
+    .updateOne(
+      { userId, kind, canonicalName },
+      {
+        $setOnInsert: {
+          userId,
+          kind,
+          canonicalName,
+          createdAt: now,
+        },
+        $set: {
+          displayName,
+          sampleEntry,
+          aliases: buildReusableAliases(canonicalName),
+          updatedAt: now,
+          lastUsedAt: now,
+        },
+        $inc: { usageCount: 1 },
+      },
+      { upsert: true }
+    );
+}
+
+export async function getReusableJournalItems(
+  userId: string,
+  kind: "nutrition" | "exercise",
+  query?: string,
+  limit = 8
+): Promise<Array<SavedNutritionExerciseItem & { _id: string }>> {
+  const database = await getDb();
+  const safeLimit = Math.max(1, Math.min(20, Math.floor(limit)));
+  const q = normalizeReusableItemName(query ?? "");
+  const filter: Record<string, unknown> = { userId, kind };
+
+  if (q) {
+    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    filter.$or = [
+      { canonicalName: { $regex: escaped, $options: "i" } },
+      { displayName: { $regex: escaped, $options: "i" } },
+      { aliases: { $elemMatch: { $regex: escaped, $options: "i" } } },
+    ];
+  }
+
+  const docs = await database
+    .collection<SavedNutritionExerciseItemDoc>("user_reusable_journal_items")
+    .find(filter)
+    .sort({ usageCount: -1, lastUsedAt: -1, updatedAt: -1 })
+    .limit(safeLimit)
+    .toArray();
+
+  return docs.map((d) => ({
+    ...d,
+    _id: d._id.toString(),
+  }));
+}
+
+export async function upsertReusableJournalTags(
+  userId: string,
+  kind: "nutrition" | "exercise",
+  tags: Array<{ tag: string; displayName?: string; aliases?: string[] }>,
+  sampleEntry: string
+): Promise<void> {
+  const database = await getDb();
+  const now = new Date();
+  const cleanSample = sampleEntry.trim().slice(0, 500);
+  if (!cleanSample) return;
+
+  await database
+    .collection<ReusableJournalTagDoc>("user_reusable_journal_tags")
+    .createIndex({ userId: 1, kind: 1, tag: 1 }, { unique: true });
+
+  for (const raw of tags.slice(0, 6)) {
+    const tag = normalizeReusableItemName(raw.tag);
+    if (!tag) continue;
+    const displayName = (raw.displayName?.trim() || tag.replace(/_/g, " ")).slice(0, 80);
+    const aliases = Array.isArray(raw.aliases)
+      ? raw.aliases.map((a) => normalizeReusableItemName(a)).filter(Boolean).slice(0, 8)
+      : buildReusableAliases(tag);
+    await database
+      .collection<ReusableJournalTagDoc>("user_reusable_journal_tags")
+      .updateOne(
+        { userId, kind, tag },
+        {
+          $setOnInsert: {
+            userId,
+            kind,
+            tag,
+            createdAt: now,
+          },
+          $set: {
+            displayName,
+            aliases,
+            sampleEntry: cleanSample,
+            updatedAt: now,
+            lastUsedAt: now,
+          },
+          $inc: { usageCount: 1 },
+        },
+        { upsert: true }
+      );
+  }
+}
+
+export async function getReusableJournalTags(
+  userId: string,
+  kind: "nutrition" | "exercise",
+  query?: string,
+  options?: { minUsageCount?: number; limit?: number }
+): Promise<Array<ReusableJournalTag & { _id: string }>> {
+  const database = await getDb();
+  const minUsageCount = Math.max(1, Math.floor(options?.minUsageCount ?? 1));
+  const limit = Math.max(1, Math.min(30, Math.floor(options?.limit ?? 8)));
+  const q = normalizeReusableItemName(query ?? "");
+  const filter: Record<string, unknown> = {
+    userId,
+    kind,
+    usageCount: { $gte: minUsageCount },
+  };
+  if (q) {
+    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    filter.$or = [
+      { tag: { $regex: escaped, $options: "i" } },
+      { displayName: { $regex: escaped, $options: "i" } },
+      { aliases: { $elemMatch: { $regex: escaped, $options: "i" } } },
+    ];
+  }
+  const docs = await database
+    .collection<ReusableJournalTagDoc>("user_reusable_journal_tags")
+    .find(filter)
+    .sort({ usageCount: -1, lastUsedAt: -1, updatedAt: -1 })
+    .limit(limit)
+    .toArray();
+  return docs.map((d) => ({
+    ...d,
+    _id: d._id.toString(),
+  }));
+}
+
 export async function deleteSavedTranscript(id: string, userId: string): Promise<boolean> {
   const database = await getDb();
   let oid: ObjectId;
@@ -1738,6 +1956,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     goalCarbsGrams: doc.goalCarbsGrams,
     goalProteinGrams: doc.goalProteinGrams,
     goalFatGrams: doc.goalFatGrams,
+    nutritionGoalIntent: doc.nutritionGoalIntent,
     followedFigureIds: doc.followedFigureIds,
     leaderboardOptIn: doc.leaderboardOptIn,
     preferredName: doc.preferredName,
@@ -1748,7 +1967,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "followedFigureIds" | "leaderboardOptIn" | "preferredName" | "reminderPreferences">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "nutritionGoalIntent" | "followedFigureIds" | "leaderboardOptIn" | "preferredName" | "reminderPreferences">>
 ): Promise<UserSettings> {
   const database = await getDb();
   const now = new Date();
@@ -1776,6 +1995,7 @@ export async function upsertUserSettings(
     goalCarbsGrams: result.goalCarbsGrams,
     goalProteinGrams: result.goalProteinGrams,
     goalFatGrams: result.goalFatGrams,
+    nutritionGoalIntent: result.nutritionGoalIntent,
     followedFigureIds: result.followedFigureIds,
     leaderboardOptIn: result.leaderboardOptIn,
     preferredName: result.preferredName,
@@ -1868,6 +2088,8 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   await database.collection<UserSettingsDoc>("user_settings").deleteMany({ userId });
   await database.collection<SavedPerspectiveCardDoc>("saved_perspective_cards").deleteMany({ userId });
   await database.collection<HabitDoc>("habits").deleteMany({ userId });
+  await database.collection<SavedNutritionExerciseItemDoc>("user_reusable_journal_items").deleteMany({ userId });
+  await database.collection<ReusableJournalTagDoc>("user_reusable_journal_tags").deleteMany({ userId });
   await database.collection("user_progress").deleteMany({ userId });
   await database.collection("weekly_reflection_sends").deleteMany({ userId });
   await database.collection<UsageEventDoc>("usage_events").deleteMany({ userId });

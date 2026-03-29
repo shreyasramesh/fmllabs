@@ -14,6 +14,7 @@ const GOAL_MACRO_MAX = 1000;
 const BACKGROUND_ELEMENTS = ["default", "air", "water", "earth", "fire"] as const;
 const WEATHER_FORMATS = ["condition-temp", "emoji-temp", "temp-only"] as const;
 const PREFERRED_NAME_MAX = 80;
+const NUTRITION_GOAL_INTENT_MAX = 500;
 
 function clampTtsSpeed(v: number): number {
   return Math.max(TTS_MIN, Math.min(TTS_MAX, v));
@@ -110,6 +111,11 @@ export async function PATCH(request: Request) {
       const v = parseNumberish(body.goalFatGrams);
       if (v !== null) {
         updates.goalFatGrams = clampGoalMacro(v);
+      }
+    }
+    if (body.nutritionGoalIntent !== undefined) {
+      if (typeof body.nutritionGoalIntent === "string") {
+        updates.nutritionGoalIntent = body.nutritionGoalIntent.trim().slice(0, NUTRITION_GOAL_INTENT_MAX);
       }
     }
     if (body.background !== undefined) {

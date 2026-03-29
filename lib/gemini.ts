@@ -364,6 +364,44 @@ export interface NutritionDailyReportResult {
   tomorrowTips: string[];
 }
 
+export interface NutritionGoalGuidanceInput {
+  userGoalIntent: string;
+  periodLabel: string;
+  goals: {
+    caloriesTargetPerDay: number;
+    carbsTargetGrams: number;
+    proteinTargetGrams: number;
+    fatTargetGrams: number;
+  };
+  weeklyTotals: {
+    caloriesFood: number;
+    caloriesExercise: number;
+    carbsGrams: number;
+    proteinGrams: number;
+    fatGrams: number;
+    trackedDays: number;
+    foodEntries: number;
+    exerciseEntries: number;
+  };
+  dailyRows: Array<{
+    dayKey: string;
+    caloriesFood: number;
+    caloriesExercise: number;
+    carbsGrams: number;
+    proteinGrams: number;
+    fatGrams: number;
+    foodEntries: number;
+    exerciseEntries: number;
+  }>;
+}
+
+export interface NutritionGoalGuidanceResult {
+  summary: string;
+  badPatterns: string[];
+  keepInMind: string[];
+  onTrackNuggets: string[];
+}
+
 export interface WeeklyJournalReflectionInput {
   weekLabel: string;
   journalEntries: Array<{ dayKey: string; text: string }>;
@@ -383,6 +421,12 @@ export interface WeeklyJournalReflectionResult {
 export interface CalorieTrackingEnrichedEntryResult {
   nutritionEntry?: string;
   exerciseEntry?: string;
+}
+
+export interface ReusableJournalTagItem {
+  tag: string;
+  displayName: string;
+  aliases?: string[];
 }
 
 export interface NutritionImageTranscriptionResult {
@@ -421,6 +465,88 @@ function toFiniteNumberOrNull(v: unknown): number | null {
     return Number.isFinite(n) ? n : null;
   }
   return null;
+}
+
+function normalizeTagToken(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[`~!@#$%^&*()_=+[{\]}\\|;:'",<>/?]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 60);
+}
+
+export async function extractReusableJournalTags(
+  kind: "nutrition" | "exercise",
+  entryText: string,
+  usageContext?: GeminiUsageContext
+): Promise<ReusableJournalTagItem[]> {
+  const text = entryText.trim().slice(0, 1200);
+  if (!text) return [];
+  const model = getModel();
+  const result = await model.generateContent(
+    `You normalize ${kind} logs into reusable canonical tags.
+
+Task:
+- Extract 1 to 4 reusable items from the text.
+- Collapse wording variants into one canonical tag.
+
+Rules:
+- tag: snake_case, short, canonical, max 4 words.
+- displayName: human-friendly short label.
+- aliases: optional short variants users might type.
+- Keep only concrete food/drink items or exercise activity items.
+- Do NOT include portions, adjectives like "big", or time-of-day words in tag.
+- Return only valid JSON.
+
+Return exactly:
+{
+  "items": [
+    { "tag": "string", "displayName": "string", "aliases": ["string"] }
+  ]
+}
+
+Kind: ${kind}
+Text:
+${text}`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const raw = result.response.text().trim();
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  try {
+    const parsed = JSON.parse(cleaned) as {
+      items?: Array<{ tag?: unknown; displayName?: unknown; aliases?: unknown }>;
+    };
+    const items = Array.isArray(parsed.items) ? parsed.items : [];
+    const normalizedItems: ReusableJournalTagItem[] = [];
+    for (const item of items) {
+      const tag = typeof item.tag === "string" ? normalizeTagToken(item.tag) : "";
+      if (!tag) continue;
+      const displayName =
+        typeof item.displayName === "string" && item.displayName.trim()
+          ? item.displayName.trim().slice(0, 80)
+          : tag.replace(/_/g, " ");
+      const aliases = Array.isArray(item.aliases)
+        ? item.aliases
+            .map((a) => (typeof a === "string" ? normalizeTagToken(a) : ""))
+            .filter(Boolean)
+            .slice(0, 6)
+        : [];
+      normalizedItems.push({ tag, displayName, aliases });
+      if (normalizedItems.length >= 4) break;
+    }
+    return normalizedItems;
+  } catch {
+    const fallbackTag = normalizeTagToken(text.split(/[.,;:\n]/)[0] ?? "");
+    if (!fallbackTag) return [];
+    return [
+      {
+        tag: fallbackTag,
+        displayName: fallbackTag.replace(/_/g, " ").slice(0, 80),
+        aliases: [],
+      },
+    ];
+  }
 }
 
 export async function enrichCalorieTrackingEntries(
@@ -872,6 +998,130 @@ TODAY TOTALS:
         "Pre-plan meals and snacks so your calorie total is intentional.",
         "Target protein early in the day to stay on track with macros.",
         "Schedule a realistic workout block before your day gets busy.",
+      ],
+    };
+  }
+}
+
+export async function generateNutritionGoalGuidance(
+  input: NutritionGoalGuidanceInput,
+  usageContext?: GeminiUsageContext
+): Promise<NutritionGoalGuidanceResult> {
+  const model = getModel();
+  const rowsBlock = input.dailyRows
+    .slice(0, 7)
+    .map(
+      (row) =>
+        `${row.dayKey}: food ${row.caloriesFood} kcal, exercise burn ${row.caloriesExercise} kcal, carbs ${row.carbsGrams}g, protein ${row.proteinGrams}g, fat ${row.fatGrams}g, food entries ${row.foodEntries}, exercise entries ${row.exerciseEntries}`
+    )
+    .join("\n");
+
+  const result = await model.generateContent(
+    `You are a practical nutrition accountability coach.
+
+Given a user's weekly nutrition/exercise data and their own goal statement, provide clear, supportive guidance.
+
+Return ONLY valid JSON with exactly:
+{
+  "summary": "2-4 concise sentences",
+  "badPatterns": ["pattern 1", "pattern 2", "..."],
+  "keepInMind": ["thing to remember 1", "..."],
+  "onTrackNuggets": ["small practical nugget 1", "..."]
+}
+
+Rules:
+- Be specific to the supplied numbers and trend.
+- Identify likely unhelpful patterns (macro imbalance, calorie inconsistency, missing protein distribution, under-logging, etc) without shaming.
+- Keep advice behavior-focused and realistic.
+- Do not provide medical diagnosis.
+- badPatterns: 2-5 items
+- keepInMind: 3-6 items
+- onTrackNuggets: 3-6 items
+
+USER GOAL (natural language):
+${input.userGoalIntent || "(not provided)"}
+
+PERIOD:
+${input.periodLabel}
+
+TARGETS (per day):
+- Calories: ${input.goals.caloriesTargetPerDay} kcal
+- Carbs: ${input.goals.carbsTargetGrams} g
+- Protein: ${input.goals.proteinTargetGrams} g
+- Fat: ${input.goals.fatTargetGrams} g
+
+WEEKLY TOTALS:
+- Calories from food: ${input.weeklyTotals.caloriesFood} kcal
+- Calories burned from exercise: ${input.weeklyTotals.caloriesExercise} kcal
+- Carbs: ${input.weeklyTotals.carbsGrams} g
+- Protein: ${input.weeklyTotals.proteinGrams} g
+- Fat: ${input.weeklyTotals.fatGrams} g
+- Tracked days: ${input.weeklyTotals.trackedDays}
+- Food entries: ${input.weeklyTotals.foodEntries}
+- Exercise entries: ${input.weeklyTotals.exerciseEntries}
+
+DAILY BREAKDOWN:
+${rowsBlock || "(no daily rows)"}`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const raw = result.response.text().trim();
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  try {
+    const parsed = JSON.parse(cleaned) as {
+      summary?: unknown;
+      badPatterns?: unknown;
+      keepInMind?: unknown;
+      onTrackNuggets?: unknown;
+    };
+    const toList = (value: unknown, max: number): string[] =>
+      Array.isArray(value)
+        ? value
+            .map((v) => (typeof v === "string" ? v.trim() : ""))
+            .filter(Boolean)
+            .slice(0, max)
+        : [];
+    const badPatterns = toList(parsed.badPatterns, 5);
+    const keepInMind = toList(parsed.keepInMind, 6);
+    const onTrackNuggets = toList(parsed.onTrackNuggets, 6);
+    return {
+      summary:
+        typeof parsed.summary === "string" && parsed.summary.trim()
+          ? parsed.summary.trim()
+          : "Your weekly logs show useful patterns we can use to keep you closer to your goal.",
+      badPatterns:
+        badPatterns.length > 0
+          ? badPatterns
+          : ["Inconsistent day-to-day intake is making progress harder to measure."],
+      keepInMind:
+        keepInMind.length > 0
+          ? keepInMind
+          : [
+              "Aim for consistency first, then precision.",
+              "Spread protein across meals to improve satiety and recovery.",
+              "Use planned snacks to reduce reactive eating.",
+            ],
+      onTrackNuggets:
+        onTrackNuggets.length > 0
+          ? onTrackNuggets
+          : [
+              "Pre-log your first meal each day.",
+              "Set a protein floor for breakfast.",
+              "Plan one fallback meal for busy days.",
+            ],
+    };
+  } catch {
+    return {
+      summary: "Your weekly nutrition data gives a strong baseline for better consistency next week.",
+      badPatterns: ["Energy and macro intake appear uneven across days."],
+      keepInMind: [
+        "Consistency beats perfection.",
+        "Prioritize protein and total calories before fine-tuning.",
+        "Keep logging even on imperfect days.",
+      ],
+      onTrackNuggets: [
+        "Pre-plan one high-protein meal daily.",
+        "Decide your snack limit before the day starts.",
+        "Schedule workouts at a fixed time block.",
       ],
     };
   }

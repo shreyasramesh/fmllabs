@@ -2,11 +2,18 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
 import { getPacificTimeParts, parseJournalEntryTimeFromBody } from "@/lib/journal-entry-time";
-import { saveJournalTranscript } from "@/lib/db";
+import {
+  getReusableJournalTags,
+  getReusableJournalItems,
+  saveJournalTranscript,
+  upsertReusableJournalItem,
+  upsertReusableJournalTags,
+} from "@/lib/db";
 import { inferJournalTitleFromContent } from "@/lib/journal-title";
 import {
   analyzeCalorieTrackingInput,
   completeExerciseFuelEstimate,
+  extractReusableJournalTags,
   enrichCalorieTrackingEntries,
   finalizeCalorieTrackingEstimate,
 } from "@/lib/gemini";
@@ -197,6 +204,45 @@ function buildExerciseEntryFallback(estimate: {
   return parts.join(" ").trim();
 }
 
+function pickReusableDisplayName(entryText: string): string {
+  const firstLine = entryText
+    .split("\n")
+    .map((s) => s.trim())
+    .find(Boolean);
+  if (!firstLine) return "";
+  const short = firstLine.split(/[.!?]/)[0]?.trim() ?? firstLine;
+  return short.slice(0, 120);
+}
+
+function normalizeTagToken(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[`~!@#$%^&*()=+[{\]}\\|;:'",<>/?]+/g, " ")
+    .replace(/\s+/g, "_")
+    .trim()
+    .slice(0, 60);
+}
+
+async function persistReusableTags(
+  userId: string,
+  kind: "nutrition" | "exercise",
+  entryText: string
+): Promise<void> {
+  const extracted = await extractReusableJournalTags(kind, entryText, {
+    userId,
+    eventType: "calorie_journal_extract_reusable_tags",
+  }).catch(() => []);
+  const fallbackDisplay = pickReusableDisplayName(entryText) || entryText.slice(0, 80);
+  const fallbackTag = normalizeTagToken(fallbackDisplay);
+  const tags = extracted.length
+    ? extracted
+    : fallbackTag
+      ? [{ tag: fallbackTag, displayName: fallbackDisplay, aliases: [] }]
+      : [];
+  if (tags.length === 0) return;
+  await upsertReusableJournalTags(userId, kind, tags, entryText).catch(() => {});
+}
+
 export async function POST(request: Request) {
   const { userId } = await auth();
   if (!userId) {
@@ -301,6 +347,13 @@ export async function POST(request: Request) {
           category: "nutrition",
           title: saved.videoTitle ?? "Nutrition log",
         });
+        await upsertReusableJournalItem(
+          userId,
+          "nutrition",
+          nutritionFocusedEntry,
+          pickReusableDisplayName(nutritionFocusedEntry)
+        ).catch(() => {});
+        await persistReusableTags(userId, "nutrition", nutritionFocusedEntry);
       }
 
       if (estimate.intent === "exercise" || estimate.intent === "mixed") {
@@ -373,6 +426,13 @@ export async function POST(request: Request) {
           category: "exercise",
           title: saved.videoTitle ?? "Exercise log",
         });
+        await upsertReusableJournalItem(
+          userId,
+          "exercise",
+          exerciseFocusedEntry,
+          pickReusableDisplayName(exerciseFocusedEntry)
+        ).catch(() => {});
+        await persistReusableTags(userId, "exercise", exerciseFocusedEntry);
         estimate.exercise = exerciseEstimate;
       }
 
@@ -403,6 +463,58 @@ export async function POST(request: Request) {
       { error: "Failed calorie journal request" },
       { status: 500 }
     );
+  }
+}
+
+export async function GET(request: Request) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  try {
+    const { searchParams } = new URL(request.url);
+    const kindParam = searchParams.get("kind");
+    const q = (searchParams.get("q") ?? "").trim();
+    const limitRaw = Number.parseInt(searchParams.get("limit") ?? "8", 10);
+    const minUsageRaw = Number.parseInt(searchParams.get("minUsage") ?? "3", 10);
+    const kind = kindParam === "exercise" ? "exercise" : kindParam === "nutrition" ? "nutrition" : null;
+    if (!kind) {
+      return NextResponse.json({ error: "kind must be nutrition or exercise" }, { status: 400 });
+    }
+    const limit = Number.isFinite(limitRaw) ? limitRaw : 8;
+    const minUsage = Number.isFinite(minUsageRaw) ? Math.max(1, minUsageRaw) : 3;
+    const tags = await getReusableJournalTags(userId, kind, q, {
+      minUsageCount: minUsage,
+      limit,
+    });
+    const mappedTags = tags.map((item) => ({
+      id: item._id,
+      kind: item.kind,
+      canonicalName: item.tag,
+      displayName: item.displayName,
+      sampleEntry: item.sampleEntry,
+      usageCount: item.usageCount,
+      lastUsedAt: item.lastUsedAt,
+    }));
+    if (mappedTags.length > 0) {
+      return NextResponse.json({ items: mappedTags });
+    }
+
+    // Backward-compatible fallback: still show strongly repeated legacy canonical items.
+    const items = await getReusableJournalItems(userId, kind, q, limit);
+    const mappedItems = items.map((item) => ({
+      id: item._id,
+      kind: item.kind,
+      canonicalName: item.canonicalName,
+      displayName: item.displayName,
+      sampleEntry: item.sampleEntry,
+      usageCount: item.usageCount,
+      lastUsedAt: item.lastUsedAt,
+    })).filter((item) => item.usageCount >= minUsage);
+    return NextResponse.json({ items: mappedItems });
+  } catch (err) {
+    console.error("Calorie journal suggestions error:", err);
+    return NextResponse.json({ error: "Failed to fetch suggestions" }, { status: 500 });
   }
 }
 

@@ -2396,6 +2396,16 @@ type LandingDayActivityItem = {
 
 type LandingTab = "journaling" | "deepThinking";
 const LANDING_TAB_STORAGE_KEY = "fml_landing_tab";
+type LandingJournalChipKey = "gratitude" | "reflection" | "nutrition" | "exercise";
+type ReusableJournalSuggestion = {
+  id: string;
+  kind: "nutrition" | "exercise";
+  canonicalName: string;
+  displayName: string;
+  sampleEntry: string;
+  usageCount: number;
+  lastUsedAt: string;
+};
 
 type LandingActivityGroupKey =
   | "journalRegular"
@@ -2425,6 +2435,43 @@ const LANDING_ACTIVITY_GROUP_LABEL: Record<LandingActivityGroupKey, string> = {
 const LANDING_TAB_ACTIVITY_GROUP_ORDER: Record<LandingTab, LandingActivityGroupKey[]> = {
   journaling: ["journalRegular", "journalNutrition", "journalExercise"],
   deepThinking: ["session", "perspectiveCard"],
+};
+
+const LANDING_JOURNAL_CHIPS: Array<{
+  key: LandingJournalChipKey;
+  label: string;
+  flow: "regular" | "calorie";
+}> = [
+  { key: "nutrition", label: "Nutrition entry", flow: "calorie" },
+  { key: "gratitude", label: "Gratitude entry", flow: "regular" },
+  { key: "exercise", label: "Exercise entry", flow: "calorie" },
+  { key: "reflection", label: "Reflection entry", flow: "regular" },
+];
+
+const LANDING_JOURNAL_EXAMPLES: Record<LandingJournalChipKey, string[]> = {
+  gratitude: [
+    "I am grateful that my partner made tea for me this morning when I was rushing.",
+    "Today I appreciated my body for carrying me through a full workday and a walk.",
+  ],
+  reflection: [
+    "I kept checking my phone during deep work. Tomorrow I will keep it in another room for the first 90 minutes.",
+    "I felt tense in a meeting, but I stayed calm and asked clarifying questions instead of reacting.",
+  ],
+  nutrition: [
+    "Breakfast: Greek yogurt with berries and granola. Lunch: rice bowl with chicken and veggies. Snack: protein bar.",
+    "Dinner: 2 chapatis, dal, paneer curry, cucumber salad. Dessert: one small cookie.",
+  ],
+  exercise: [
+    "Workout: 35-minute strength session (upper body), then 12 minutes incline walk.",
+    "Activity: 45-minute brisk walk + 20-minute yoga mobility routine in the evening.",
+  ],
+};
+
+const LANDING_JOURNAL_MODAL_TITLE: Record<LandingJournalChipKey, string> = {
+  gratitude: "Gratitude Journal",
+  reflection: "Reflection Journal",
+  nutrition: "Nutrition entry",
+  exercise: "Exercise entry",
 };
 
 function landingActivityGroupKey(item: LandingDayActivityItem): LandingActivityGroupKey {
@@ -2598,6 +2645,19 @@ export default function ChatPage() {
   const [goalsRecalculateLoading, setGoalsRecalculateLoading] = useState(false);
   const [goalsCalculatorRationale, setGoalsCalculatorRationale] = useState("");
   const [goalsWizardError, setGoalsWizardError] = useState<string | null>(null);
+  const [nutritionGoalIntent, setNutritionGoalIntent] = useState("");
+  const [goalsCoachIntentDraft, setGoalsCoachIntentDraft] = useState("");
+  const [goalsCoachLoading, setGoalsCoachLoading] = useState(false);
+  const [goalsCoachError, setGoalsCoachError] = useState<string | null>(null);
+  const [goalsCoachResult, setGoalsCoachResult] = useState<{
+    periodLabel: string;
+    guidance: {
+      summary: string;
+      badPatterns: string[];
+      keepInMind: string[];
+      onTrackNuggets: string[];
+    };
+  } | null>(null);
   const skipGoalsMacroRecalculateRef = useRef(false);
   const [moonPhase, setMoonPhase] = useState<number | null>(null);
   const [conceptSavedToast, setConceptSavedToast] = useState(false);
@@ -3383,6 +3443,7 @@ export default function ChatPage() {
   const [calorieTrackerInput, setCalorieTrackerInput] = useState("");
   const [calorieTrackerEntryDate, setCalorieTrackerEntryDate] = useState(() => getTodayDateInputValue());
   const calorieTrackerImageInputRef = useRef<HTMLInputElement | null>(null);
+  const calorieTrackerUploadInputRef = useRef<HTMLInputElement | null>(null);
   const [calorieTrackerImagePreview, setCalorieTrackerImagePreview] = useState<string | null>(null);
   const [calorieTrackerImageProcessing, setCalorieTrackerImageProcessing] = useState(false);
   const [calorieTrackerImageError, setCalorieTrackerImageError] = useState<string | null>(null);
@@ -3391,6 +3452,8 @@ export default function ChatPage() {
   const [calorieTrackerStep, setCalorieTrackerStep] = useState<"input" | "questions" | "result">("input");
   const [calorieTrackerLoading, setCalorieTrackerLoading] = useState(false);
   const [calorieTrackerError, setCalorieTrackerError] = useState<string | null>(null);
+  const [calorieTrackerSuggestions, setCalorieTrackerSuggestions] = useState<ReusableJournalSuggestion[]>([]);
+  const [calorieTrackerSuggestionsLoading, setCalorieTrackerSuggestionsLoading] = useState(false);
   const [calorieTrackerResult, setCalorieTrackerResult] = useState<{
     intent: "nutrition" | "exercise" | "mixed";
     confidence: "low" | "medium" | "high";
@@ -3411,21 +3474,8 @@ export default function ChatPage() {
     };
     savedEntries?: Array<{ id: string; category: "nutrition" | "exercise"; title: string }>;
   } | null>(null);
-  const [landingJournalEntryType, setLandingJournalEntryType] = useState<"regular" | "calorie">("regular");
-  const landingJournalCameraInputRef = useRef<HTMLInputElement | null>(null);
-  const [landingJournalImagePreview, setLandingJournalImagePreview] = useState<string | null>(null);
-  const [landingJournalImageProcessing, setLandingJournalImageProcessing] = useState(false);
-  const [landingJournalImageError, setLandingJournalImageError] = useState<string | null>(null);
-  const [landingJournalSaving, setLandingJournalSaving] = useState(false);
-  const [landingJournalSaveError, setLandingJournalSaveError] = useState<string | null>(null);
-  const [landingSaveQuestionsModalOpen, setLandingSaveQuestionsModalOpen] = useState(false);
-  const [landingSaveQuestionsLoading, setLandingSaveQuestionsLoading] = useState(false);
-  const [landingSaveQuestionsError, setLandingSaveQuestionsError] = useState<string | null>(null);
-  const [landingSaveQuestions, setLandingSaveQuestions] = useState<string[]>([]);
-  const [landingSaveAnswers, setLandingSaveAnswers] = useState<string[]>([]);
-  const [landingSavePendingType, setLandingSavePendingType] = useState<"regular" | "calorie">("regular");
-  const [landingSavePendingText, setLandingSavePendingText] = useState("");
-  const [landingSavePendingDayKey, setLandingSavePendingDayKey] = useState("");
+  const [selectedLandingJournalChip, setSelectedLandingJournalChip] =
+    useState<LandingJournalChipKey>("gratitude");
   const [journalEntryModalOpen, setJournalEntryModalOpen] = useState(false);
   const [journalEntryDate, setJournalEntryDate] = useState(() => getTodayDateInputValue());
   const [journalEntryText, setJournalEntryText] = useState("");
@@ -3503,7 +3553,8 @@ export default function ChatPage() {
     setJournalTypeChooserOpen(true);
   }, [incognitoMode, isAnonymous, router]);
 
-  const openJournalEntryFlow = useCallback(() => {
+  const openJournalEntryFlow = useCallback((chip: LandingJournalChipKey = "gratitude") => {
+    setSelectedLandingJournalChip(chip);
     setJournalEntryDate(getTodayDateInputValue());
     setJournalEntryText("");
     setJournalEntrySaveError(null);
@@ -3558,15 +3609,18 @@ export default function ChatPage() {
     setCalorieTrackerStep("input");
     setCalorieTrackerLoading(false);
     setCalorieTrackerError(null);
+    setCalorieTrackerSuggestions([]);
+    setCalorieTrackerSuggestionsLoading(false);
     setCalorieTrackerResult(null);
   }, []);
 
-  const openCalorieTrackerModal = useCallback(() => {
+  const openCalorieTrackerModal = useCallback((chip: LandingJournalChipKey = "nutrition") => {
     playSelectionChime();
     if (isAnonymous || incognitoMode) {
       router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
       return;
     }
+    setSelectedLandingJournalChip(chip);
     setCalorieTrackerInput("");
     setCalorieTrackerEntryDate(getTodayDateInputValue());
     setCalorieTrackerImagePreview(null);
@@ -3576,9 +3630,72 @@ export default function ChatPage() {
     setCalorieTrackerAnswers([]);
     setCalorieTrackerStep("input");
     setCalorieTrackerError(null);
+    setCalorieTrackerSuggestions([]);
+    setCalorieTrackerSuggestionsLoading(false);
     setCalorieTrackerResult(null);
     setCalorieTrackerModalOpen(true);
   }, [incognitoMode, isAnonymous, router]);
+
+  const openLandingJournalChip = useCallback(
+    (chip: LandingJournalChipKey) => {
+      playSelectionChime();
+      if (isAnonymous || incognitoMode) {
+        router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
+        return;
+      }
+      if (chip === "nutrition" || chip === "exercise") {
+        openCalorieTrackerModal(chip);
+        return;
+      }
+      openJournalEntryFlow(chip);
+    },
+    [incognitoMode, isAnonymous, openCalorieTrackerModal, openJournalEntryFlow, router]
+  );
+
+  const fetchCalorieTrackerSuggestions = useCallback(
+    async (queryText: string) => {
+      const kind =
+        selectedLandingJournalChip === "exercise" ? "exercise" : "nutrition";
+      const q = queryText.trim().slice(0, 80);
+      setCalorieTrackerSuggestionsLoading(true);
+      try {
+        const params = new URLSearchParams({
+          kind,
+          limit: "10",
+          ...(q ? { q } : {}),
+        });
+        const res = await fetch(`/api/me/journal/calorie?${params.toString()}`);
+        const data = (await res.json().catch(() => ({}))) as {
+          items?: ReusableJournalSuggestion[];
+        };
+        if (!res.ok) throw new Error("failed");
+        setCalorieTrackerSuggestions(Array.isArray(data.items) ? data.items : []);
+      } catch {
+        setCalorieTrackerSuggestions([]);
+      } finally {
+        setCalorieTrackerSuggestionsLoading(false);
+      }
+    },
+    [selectedLandingJournalChip]
+  );
+
+  useEffect(() => {
+    if (!calorieTrackerModalOpen || calorieTrackerStep !== "input") return;
+    let cancelled = false;
+    const t = window.setTimeout(() => {
+      if (cancelled) return;
+      void fetchCalorieTrackerSuggestions(calorieTrackerInput);
+    }, 220);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(t);
+    };
+  }, [
+    calorieTrackerInput,
+    calorieTrackerModalOpen,
+    calorieTrackerStep,
+    fetchCalorieTrackerSuggestions,
+  ]);
 
   const handleCalorieTrackerImageSelected = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -3701,227 +3818,6 @@ export default function ChatPage() {
     [calorieTrackerEntryDate, calorieTrackerInput, refetchTranscripts]
   );
 
-  const handleLandingJournalImageSelected = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      setLandingJournalImageError(null);
-      setLandingJournalImageProcessing(true);
-      try {
-        if (!file.type.startsWith("image/")) {
-          throw new Error("Please capture an image file.");
-        }
-        if (file.size > 20 * 1024 * 1024) {
-          throw new Error("Image is very large. Please retake with a lower camera resolution.");
-        }
-        const { dataUrl, base64, mimeType } = await compressImageForUpload(file);
-        if (!base64) throw new Error("Invalid image payload.");
-        setLandingJournalImagePreview(dataUrl);
-        const res = await fetch("/api/me/journal/calorie/image-transcribe", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            imageBase64: base64,
-            mimeType,
-            hintText: input.trim().slice(0, 600),
-          }),
-        });
-        const data = (await res.json().catch(() => ({}))) as {
-          error?: string;
-          nutritionLogDraft?: string;
-        };
-        if (!res.ok) {
-          throw new Error(data.error || "Could not transcribe this image.");
-        }
-        const draft = (data.nutritionLogDraft ?? "").trim();
-        setInput(draft);
-      } catch (err) {
-        setLandingJournalImageError(
-          err instanceof Error ? err.message : "Could not transcribe this image."
-        );
-      } finally {
-        if (e.target) e.target.value = "";
-        setLandingJournalImageProcessing(false);
-      }
-    },
-    []
-  );
-
-  const retryLandingJournalImageAnalysis = useCallback(() => {
-    setLandingJournalImagePreview(null);
-    setLandingJournalImageError(null);
-    setInput("");
-    if (landingJournalCameraInputRef.current) {
-      landingJournalCameraInputRef.current.value = "";
-      landingJournalCameraInputRef.current.click();
-    }
-  }, []);
-
-  const resetLandingSaveQuestionsModal = useCallback(() => {
-    setLandingSaveQuestionsModalOpen(false);
-    setLandingSaveQuestionsLoading(false);
-    setLandingSaveQuestionsError(null);
-    setLandingSaveQuestions([]);
-    setLandingSaveAnswers([]);
-    setLandingSavePendingText("");
-    setLandingSavePendingDayKey("");
-    setLandingSavePendingType("regular");
-  }, []);
-
-  const finalizeLandingJournalEntry = useCallback(async (answers: string[]) => {
-    const bodyText = landingSavePendingText.trim();
-    if (!bodyText) return;
-    if (isAnonymous || incognitoMode) {
-      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
-      return;
-    }
-    setLandingJournalSaving(true);
-    setLandingJournalSaveError(null);
-    const deviceNow = new Date();
-    try {
-      const entryDate = landingSavePendingDayKey || selectedLandingDayKey;
-      if (landingSavePendingType === "regular") {
-        const clarifiedAnswers = answers
-          .map((a) => a.trim())
-          .filter(Boolean)
-          .slice(0, 2);
-        const textToSave =
-          clarifiedAnswers.length > 0
-            ? `${bodyText}\n\nClarifications:\n${clarifiedAnswers
-                .map((a, i) => `${i + 1}. ${a}`)
-                .join("\n")}`
-            : bodyText;
-        const res = await fetch("/api/me/journal", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            text: textToSave,
-            entryDate,
-            journalEntryTime: {
-              hour: deviceNow.getHours(),
-              minute: deviceNow.getMinutes(),
-            },
-          }),
-        });
-        if (!res.ok) {
-          const j = (await res.json().catch(() => ({}))) as { error?: string };
-          throw new Error(j.error || "Could not save journal entry.");
-        }
-      } else {
-        const res = await fetch("/api/me/journal/calorie", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "finalize",
-            text: bodyText,
-            answers: answers
-              .map((a) => a.trim())
-              .filter(Boolean)
-              .slice(0, 2),
-            entryDate,
-            journalEntryTime: {
-              hour: deviceNow.getHours(),
-              minute: deviceNow.getMinutes(),
-            },
-          }),
-        });
-        if (!res.ok) {
-          const j = (await res.json().catch(() => ({}))) as { error?: string };
-          throw new Error(j.error || "Could not save calorie entry.");
-        }
-      }
-      setInput("");
-      setLandingJournalImagePreview(null);
-      setLandingJournalImageError(null);
-      resetLandingSaveQuestionsModal();
-      refetchTranscripts();
-      setJournalEntryJustSaved(true);
-      if (typeof window !== "undefined") {
-        window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
-      }
-    } catch (err) {
-      setLandingJournalSaveError(
-        err instanceof Error ? err.message : "Could not save your entry right now."
-      );
-    } finally {
-      setLandingJournalSaving(false);
-    }
-  }, [
-    incognitoMode,
-    isAnonymous,
-    landingSavePendingDayKey,
-    landingSavePendingText,
-    landingSavePendingType,
-    refetchTranscripts,
-    resetLandingSaveQuestionsModal,
-    router,
-    selectedLandingDayKey,
-  ]);
-
-  const createLandingJournalEntry = useCallback(async () => {
-    const bodyText = input.trim();
-    if (!bodyText) return;
-    if (isAnonymous || incognitoMode) {
-      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
-      return;
-    }
-    setLandingJournalSaveError(null);
-    setLandingSaveQuestionsError(null);
-    setLandingSavePendingText(bodyText);
-    setLandingSavePendingDayKey(selectedLandingDayKey);
-    setLandingSavePendingType(landingJournalEntryType);
-
-    if (landingJournalEntryType === "calorie") {
-      setLandingSaveQuestionsLoading(true);
-      try {
-        const res = await fetch("/api/me/journal/calorie", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "analyze", text: bodyText }),
-        });
-        const data = (await res.json().catch(() => ({}))) as {
-          error?: string;
-          questions?: string[];
-        };
-        if (!res.ok) throw new Error(data.error || "Could not analyze this entry.");
-        const questions = Array.isArray(data.questions)
-          ? data.questions
-              .map((q) => (typeof q === "string" ? q.trim() : ""))
-              .filter(Boolean)
-              .slice(0, 2)
-          : [];
-        const safeQuestions =
-          questions.length > 0
-            ? questions
-            : ["Any portion sizes, ingredients, or exercise details to clarify before saving?"];
-        setLandingSaveQuestions(safeQuestions);
-        setLandingSaveAnswers(Array(safeQuestions.length).fill(""));
-        setLandingSaveQuestionsModalOpen(true);
-      } catch (err) {
-        setLandingJournalSaveError(
-          err instanceof Error ? err.message : "Could not analyze this entry right now."
-        );
-      } finally {
-        setLandingSaveQuestionsLoading(false);
-      }
-      return;
-    }
-
-    const regularQuestions = [
-      "What feeling best describes this entry?",
-      "What is one next step you want to take?",
-    ];
-    setLandingSaveQuestions(regularQuestions);
-    setLandingSaveAnswers(Array(regularQuestions.length).fill(""));
-    setLandingSaveQuestionsModalOpen(true);
-  }, [
-    incognitoMode,
-    input,
-    isAnonymous,
-    landingJournalEntryType,
-    router,
-    selectedLandingDayKey,
-  ]);
 
   const runCalorieTrackerAnalyze = useCallback(async () => {
     const text = calorieTrackerInput.trim();
@@ -5543,7 +5439,7 @@ export default function ChatPage() {
     ) {
       e.preventDefault();
       if (messages.length === 0 && !incognitoMode && landingTab === "journaling") {
-        void createLandingJournalEntry();
+        return;
       } else {
       sendMessage();
       }
@@ -5848,6 +5744,12 @@ export default function ChatPage() {
           proteinGrams: String(nextGoals.proteinGrams),
           fatGrams: String(nextGoals.fatGrams),
         });
+        const nextNutritionGoalIntent =
+          typeof data?.nutritionGoalIntent === "string"
+            ? data.nutritionGoalIntent.trim().slice(0, 500)
+            : "";
+        setNutritionGoalIntent(nextNutritionGoalIntent);
+        setGoalsCoachIntentDraft(nextNutritionGoalIntent);
       })
       .catch(() => {});
     return () => {
@@ -5983,8 +5885,12 @@ export default function ChatPage() {
     setGoalsCalculatorRationale("");
     setGoalsWizardError(null);
     setGoalsSaveError(null);
+    setGoalsCoachIntentDraft(nutritionGoalIntent);
+    setGoalsCoachError(null);
+    setGoalsCoachResult(null);
+    setGoalsCoachLoading(false);
     setGoalsModalOpen(true);
-  }, [incognitoMode, isAnonymous, nutritionGoals, router]);
+  }, [incognitoMode, isAnonymous, nutritionGoalIntent, nutritionGoals, router]);
 
   const saveNutritionGoals = useCallback(async () => {
     if (isAnonymous || incognitoMode || !userId) return;
@@ -6014,6 +5920,7 @@ export default function ChatPage() {
         GOAL_MACRO_MAX
       ),
     };
+    const nextNutritionGoalIntent = goalsCoachIntentDraft.trim().slice(0, 500);
     setGoalsSaving(true);
     setGoalsSaveError(null);
     try {
@@ -6025,6 +5932,7 @@ export default function ChatPage() {
           goalCarbsGrams: nextGoals.carbsGrams,
           goalProteinGrams: nextGoals.proteinGrams,
           goalFatGrams: nextGoals.fatGrams,
+          nutritionGoalIntent: nextNutritionGoalIntent,
         }),
       });
       if (!res.ok) {
@@ -6038,13 +5946,66 @@ export default function ChatPage() {
         proteinGrams: String(nextGoals.proteinGrams),
         fatGrams: String(nextGoals.fatGrams),
       });
+      setNutritionGoalIntent(nextNutritionGoalIntent);
       setGoalsModalOpen(false);
     } catch {
       setGoalsSaveError(getLandingTranslations(language).nutritionGoalsSaveError);
     } finally {
       setGoalsSaving(false);
     }
-  }, [goalsDraft, incognitoMode, isAnonymous, language, nutritionGoals, userId]);
+  }, [goalsCoachIntentDraft, goalsDraft, incognitoMode, isAnonymous, language, nutritionGoals, userId]);
+
+  const runGoalsCoachHelp = useCallback(async () => {
+    if (isAnonymous || incognitoMode || !userId) return;
+    const goalIntent = goalsCoachIntentDraft.trim().slice(0, 500);
+    if (!goalIntent) {
+      setGoalsCoachError("Please describe what you want to achieve first.");
+      setGoalsCoachResult(null);
+      return;
+    }
+    setGoalsCoachLoading(true);
+    setGoalsCoachError(null);
+    try {
+      const res = await fetch("/api/me/nutrition-goals/help", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nutritionGoalIntent: goalIntent }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        periodLabel?: string;
+        guidance?: {
+          summary?: string;
+          badPatterns?: string[];
+          keepInMind?: string[];
+          onTrackNuggets?: string[];
+        };
+      };
+      if (!res.ok) {
+        throw new Error(data.error || "Could not generate coaching help.");
+      }
+      const guidance = data.guidance;
+      if (!guidance || typeof guidance.summary !== "string") {
+        throw new Error("Could not generate coaching help.");
+      }
+      setGoalsCoachResult({
+        periodLabel: typeof data.periodLabel === "string" ? data.periodLabel : "This week",
+        guidance: {
+          summary: guidance.summary,
+          badPatterns: Array.isArray(guidance.badPatterns) ? guidance.badPatterns : [],
+          keepInMind: Array.isArray(guidance.keepInMind) ? guidance.keepInMind : [],
+          onTrackNuggets: Array.isArray(guidance.onTrackNuggets) ? guidance.onTrackNuggets : [],
+        },
+      });
+    } catch (err) {
+      setGoalsCoachError(
+        err instanceof Error ? err.message : "Could not generate coaching help."
+      );
+      setGoalsCoachResult(null);
+    } finally {
+      setGoalsCoachLoading(false);
+    }
+  }, [goalsCoachIntentDraft, incognitoMode, isAnonymous, userId]);
 
   const goalsWizardStep = GOALS_WIZARD_STEPS[goalsWizardStepIndex] ?? "age";
 
@@ -6755,7 +6716,7 @@ export default function ChatPage() {
         }
         else if (nutritionReportModalOpen && !nutritionReportLoading) resetNutritionReportModal();
         else if (weeklySummaryModalOpen && !weeklySummaryLoading) resetWeeklySummaryModal();
-        else if (goalsModalOpen && !goalsSaving && !goalsCalculatorLoading && !goalsRecalculateLoading) setGoalsModalOpen(false);
+        else if (goalsModalOpen && !goalsSaving && !goalsCalculatorLoading && !goalsRecalculateLoading && !goalsCoachLoading) setGoalsModalOpen(false);
         else if (journalTypeChooserOpen) setJournalTypeChooserOpen(false);
         else if (journalEntryModalOpen && !journalEntrySaving) resetJournalEntryModal();
         else if (calorieTrackerModalOpen) resetCalorieTrackerModal();
@@ -6788,7 +6749,7 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, nutritionReportModalOpen, nutritionReportLoading, weeklySummaryModalOpen, weeklySummaryLoading, journalEntrySaving, mentorOneOnOneModalOpen, newConversationChooserModalOpen, journalCheckpointModal, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetJournalEntryModal, resetNutritionReportModal, resetWeeklySummaryModal]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, goalsCoachLoading, nutritionReportModalOpen, nutritionReportLoading, weeklySummaryModalOpen, weeklySummaryLoading, journalEntrySaving, mentorOneOnOneModalOpen, newConversationChooserModalOpen, journalCheckpointModal, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetJournalEntryModal, resetNutritionReportModal, resetWeeklySummaryModal]);
 
   useEffect(() => {
     if (!headerCalendarOpen) return;
@@ -10298,7 +10259,10 @@ export default function ChatPage() {
                 ? isAnonymous
                   ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-36 sm:pb-40 px-4 py-5"
                   : `flex-1 min-h-0 flex flex-col items-center justify-start ${
-                      !incognitoMode && landingTab === "deepThinking" ? "pb-4 md:pb-6" : "pb-36 sm:pb-40 md:pb-8"
+                      !incognitoMode &&
+                      (landingTab === "deepThinking" || (!isAnonymous && landingTab === "journaling"))
+                        ? "pb-4 md:pb-6"
+                        : "pb-36 sm:pb-40 md:pb-8"
                     } px-4 pt-1 md:pt-8`
                 : "px-3 py-4 sm:px-4 sm:py-5"
             }`}
@@ -10345,6 +10309,25 @@ export default function ChatPage() {
                         <div
                           className="order-2 w-full animate-fade-in-down"
                         >
+                          {!isAnonymous && landingTab === "journaling" && (
+                            <div className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-sm p-3 mb-2.5">
+                              <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
+                                Choose an entry type to open the journal modal.
+                              </p>
+                              <div className="flex flex-wrap gap-2">
+                                {LANDING_JOURNAL_CHIPS.map((chip) => (
+                                  <button
+                                    key={chip.key}
+                                    type="button"
+                                    onClick={() => openLandingJournalChip(chip.key)}
+                                    className="rounded-full border border-neutral-300 dark:border-neutral-600 bg-background px-3 py-1.5 text-xs sm:text-sm text-foreground hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                                  >
+                                    {chip.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                           {!isAnonymous && landingTab === "journaling" ? (
                             <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-2">
                           <div className="min-w-0 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background p-2 sm:p-1.5 text-left">
@@ -10633,7 +10616,7 @@ export default function ChatPage() {
                 {!incognitoMode && (
                         <div className="order-1 w-full rounded-2xl bg-background px-2.5 py-2">
                           <div className="mb-1.5 px-0.5">
-                            <div className="mb-2 grid grid-cols-2 gap-1 border-b border-neutral-200 dark:border-neutral-700">
+                            <div className="mb-2 grid grid-cols-2 gap-1">
                           <button
                             type="button"
                                 onClick={() => {
@@ -10646,7 +10629,7 @@ export default function ChatPage() {
                                     :
                                   landingTab === "journaling"
                                     ? "border-neutral-300 dark:border-neutral-600 border-b-background dark:border-b-neutral-900 bg-background dark:bg-neutral-900 text-foreground -mb-px"
-                                    : "border-transparent text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/80"
+                                    : "border-neutral-200 dark:border-neutral-700 border-b-transparent bg-transparent text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/80"
                                 }`}
                                 aria-pressed={landingTab === "journaling"}
                               >
@@ -10658,7 +10641,7 @@ export default function ChatPage() {
                                 className={`w-full rounded-t-xl px-3 py-1.5 text-xs sm:text-sm font-semibold border transition-colors ${
                                   landingTab === "deepThinking"
                                     ? "border-neutral-300 dark:border-neutral-600 border-b-background dark:border-b-neutral-900 bg-background dark:bg-neutral-900 text-foreground -mb-px"
-                                    : "border-transparent text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/80"
+                                    : "border-neutral-200 dark:border-neutral-700 border-b-transparent bg-transparent text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/80"
                                 }`}
                                 aria-pressed={landingTab === "deepThinking"}
                               >
@@ -11080,45 +11063,16 @@ export default function ChatPage() {
           </p>
         )}
         {/* Bottom bar - fixed on mobile when scrolling. Also shown on new conversations for a faster first message. */}
-        {!((messages.length === 0 && !incognitoMode && landingTab === "deepThinking") || (!!currentSession?.isCollapsed && !!collapsedSummary)) && (
-        <div className={`${sidebarOpen ? "hidden lg:flex" : "flex"} fixed inset-x-0 bottom-0 z-30 flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background`}>
+        {!((messages.length === 0 && !incognitoMode && (landingTab === "deepThinking" || (!isAnonymous && landingTab === "journaling"))) || (!!currentSession?.isCollapsed && !!collapsedSummary)) && (
+        <div className={`${sidebarOpen ? "hidden lg:flex" : "flex"} fixed inset-x-0 bottom-0 z-30 flex-col ${
+          messages.length === 0 && !incognitoMode && landingTab === "journaling"
+            ? "border-t-0"
+            : "border-t border-neutral-200 dark:border-neutral-800"
+        } shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background`}>
           <div className="flex flex-col items-center justify-center px-4 py-2 sm:py-2.5 min-w-0">
-            {messages.length === 0 && !incognitoMode && (
-              <div className="w-full max-w-2xl lg:max-w-4xl mb-2 space-y-1.5">
-                <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-0.5">
-                  {!isAnonymous && landingTab === "journaling" && (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => setLandingJournalEntryType("regular")}
-                        className={`shrink-0 rounded-full border px-3 py-1.5 text-xs sm:text-sm transition-colors ${
-                          landingJournalEntryType === "regular"
-                            ? "border-orange-200 dark:border-orange-700/60 bg-background text-foreground"
-                            : "border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:border-orange-300 dark:hover:border-orange-600"
-                        }`}
-                        aria-pressed={landingJournalEntryType === "regular"}
-                      >
-                        Journal entry
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setLandingJournalEntryType("calorie")}
-                        className={`shrink-0 rounded-full border px-3 py-1.5 text-xs sm:text-sm transition-colors ${
-                          landingJournalEntryType === "calorie"
-                            ? "border-orange-200 dark:border-orange-700/60 bg-background text-foreground"
-                            : "border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:border-orange-300 dark:hover:border-orange-600"
-                        }`}
-                        aria-pressed={landingJournalEntryType === "calorie"}
-                      >
-                        {getLandingTranslations(language).calorieTrackerChipLabel} entry
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
             {!((messages.length === 0 && !incognitoMode && landingTab === "deepThinking") || (!!currentSession?.isCollapsed && !!collapsedSummary)) && (
               <>
+            {!(messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling") && (
             <div
               className={`min-w-0 max-w-2xl lg:max-w-4xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex overflow-hidden ${
                 messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
@@ -11153,36 +11107,24 @@ export default function ChatPage() {
                   }))}
                   mentionTranslations={getMentionTranslations(language)}
                   placeholder={
-                    messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
-                      ? landingJournalEntryType === "regular"
-                        ? "Write your journal entry..."
-                        : "Tell me what you ate or exercised..."
-                      : multiMentorMode && selectedMentorFigureIds.length >= 2
+                    multiMentorMode && selectedMentorFigureIds.length >= 2
                       ? "What do you want to ask your mentors?"
                       : landingAnimatedPlaceholder
                   }
                   placeholderMobile={
-                    messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
-                      ? landingJournalEntryType === "regular"
-                        ? "Write your journal entry..."
-                        : "Tell me what you ate or exercised..."
-                      : multiMentorMode && selectedMentorFigureIds.length >= 2
+                    multiMentorMode && selectedMentorFigureIds.length >= 2
                       ? "What do you want to ask your mentors?"
                       : landingAnimatedPlaceholder
                   }
                   disabled={
                     sessionLoading ||
                     !!currentSession?.isCollapsed ||
-                    (messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
-                      ? landingJournalSaving || landingJournalImageProcessing || landingSaveQuestionsLoading
-                      : isLoading)
+                    isLoading
                   }
-                  placeholderCentered={!(messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling")}
-                  placeholderTopAligned={messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"}
+                  placeholderCentered
+                  placeholderTopAligned={false}
                   className={`w-full pl-0 pr-0 border-0 rounded-none bg-transparent shadow-none resize-none focus:outline-none focus:ring-0 focus:border-0 text-sm sm:text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground ${
-                    messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
-                      ? "min-h-10 max-h-32 py-2 whitespace-pre-wrap break-words overflow-x-hidden overflow-y-auto leading-5"
-                      : "h-10 max-h-10 py-0 whitespace-nowrap overflow-x-auto overflow-y-hidden"
+                    "h-10 max-h-10 py-0 whitespace-nowrap overflow-x-auto overflow-y-hidden"
                   }`}
                   onMentalModelClick={handleMentalModelClick}
                   onLtmClick={(id) => {
@@ -11206,44 +11148,13 @@ export default function ChatPage() {
                 />
               </div>
               <div className="flex items-center gap-1 pr-2 shrink-0">
-              {messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling" && (
-                <>
-                  <input
-                    ref={landingJournalCameraInputRef}
-                    type="file"
-                    accept="image/*"
-                    capture="environment"
-                    className="hidden"
-                    onChange={handleLandingJournalImageSelected}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => landingJournalCameraInputRef.current?.click()}
-                    disabled={landingJournalSaving || landingJournalImageProcessing || landingSaveQuestionsLoading}
-                    className="inline-flex items-center justify-center min-h-[52px] min-w-[52px] rounded-2xl border border-neutral-200/70 dark:border-neutral-400/70 bg-neutral-50/70 dark:bg-neutral-900/40 text-neutral-700 dark:text-neutral-200 hover:border-orange-300/80 dark:hover:border-orange-500/70 hover:bg-orange-50/60 dark:hover:bg-orange-900/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0"
-                    aria-label="Take picture"
-                    title="Take picture"
-                  >
-                    {landingJournalImageProcessing ? (
-                      <LoadingDots aria-label="Processing image" />
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                        <path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z" />
-                        <circle cx="12" cy="13" r="3.5" />
-                      </svg>
-                    )}
-                  </button>
-                </>
-              )}
               <VoiceInputButton
                 onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
                 language={language}
                 disabled={
                   sessionLoading ||
                   !!currentSession?.isCollapsed ||
-                  (messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
-                    ? landingJournalSaving || landingJournalImageProcessing || landingSaveQuestionsLoading
-                    : isLoading)
+                  isLoading
                 }
                 ariaLabel="Voice input"
                 compactStopWhileListening
@@ -11279,35 +11190,7 @@ export default function ChatPage() {
               )}
               </div>
               </div>
-              {messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling" && landingJournalImagePreview && (
-                <div className="mt-1 w-full max-w-2xl lg:max-w-4xl px-2">
-                  <div className="flex items-center justify-between gap-2 rounded-xl border border-neutral-200 dark:border-neutral-700 px-2 py-1.5">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <img
-                        src={landingJournalImagePreview}
-                        alt="Uploaded food preview"
-                        className="h-8 w-8 rounded object-cover border border-neutral-200 dark:border-neutral-700"
-                      />
-                      <p className="text-[11px] sm:text-xs text-neutral-600 dark:text-neutral-300 truncate">
-                        Photo analyzed. You can retry with a new picture.
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={retryLandingJournalImageAnalysis}
-                      disabled={landingJournalImageProcessing || landingJournalSaving || landingSaveQuestionsLoading}
-                      className="shrink-0 rounded-md border border-neutral-200 dark:border-neutral-700 px-2 py-1 text-[10px] sm:text-[11px] font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      Retry photo
-                    </button>
-                  </div>
-                </div>
-              )}
-              {messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling" && (landingJournalImageError || landingJournalSaveError) && (
-                <p className="mt-1 text-center text-[11px] sm:text-xs text-red-600 dark:text-red-400 max-w-2xl w-full px-2">
-                  {landingJournalImageError ?? landingJournalSaveError}
-                </p>
-              )}
+            )}
               <p className="mt-1.5 text-center text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 max-w-2xl w-full px-2">
                 FML Labs is AI and can make mistakes.
               </p>
@@ -13513,7 +13396,7 @@ export default function ChatPage() {
         <div
           className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
           onClick={() => {
-            if (!goalsSaving && !goalsCalculatorLoading && !goalsRecalculateLoading) {
+            if (!goalsSaving && !goalsCalculatorLoading && !goalsRecalculateLoading && !goalsCoachLoading) {
               setGoalsModalOpen(false);
             }
           }}
@@ -13534,7 +13417,7 @@ export default function ChatPage() {
                   <button
                     type="button"
                     onClick={handleGoalsWizardBack}
-                    disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading}
+                    disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading || goalsCoachLoading}
                     className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
                     aria-label={getLandingTranslations(language).calorieTrackerBack}
                   >
@@ -13546,7 +13429,7 @@ export default function ChatPage() {
                 <button
                   type="button"
                   onClick={() => setGoalsModalOpen(false)}
-                  disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading}
+                  disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading || goalsCoachLoading}
                   className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
                   aria-label={getUiTranslations(language).close}
                 >
@@ -13875,11 +13758,88 @@ export default function ChatPage() {
                   {goalsCalculatorRationale && (
                     <p className="text-xs text-neutral-600 dark:text-neutral-400">{goalsCalculatorRationale}</p>
                   )}
+                  <div className="pt-1 space-y-2">
+                    <label className="block text-xs text-neutral-500 dark:text-neutral-400">
+                      What do you want to achieve?
+                    </label>
+                    <textarea
+                      value={goalsCoachIntentDraft}
+                      onChange={(e) => setGoalsCoachIntentDraft(e.target.value.slice(0, 500))}
+                      disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading || goalsCoachLoading}
+                      rows={3}
+                      placeholder="Example: I want steady fat loss while preserving muscle and reducing late-night snacking."
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
+                    />
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                        {goalsCoachIntentDraft.length}/500
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => void runGoalsCoachHelp()}
+                        disabled={
+                          goalsSaving ||
+                          goalsCalculatorLoading ||
+                          goalsRecalculateLoading ||
+                          goalsCoachLoading ||
+                          !goalsCoachIntentDraft.trim()
+                        }
+                        className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#295a8a] text-white hover:opacity-90 transition-opacity disabled:opacity-50"
+                      >
+                        {goalsCoachLoading ? "Working..." : "I need some help"}
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
 
               {goalsSaveError && (
                 <p className="text-sm text-red-600 dark:text-red-400">{goalsSaveError}</p>
+              )}
+              {goalsCoachError && (
+                <p className="text-sm text-red-600 dark:text-red-400">{goalsCoachError}</p>
+              )}
+              {goalsCoachResult && (
+                <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-2 bg-neutral-50/60 dark:bg-neutral-900/40">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">{goalsCoachResult.periodLabel}</p>
+                  <p className="text-sm text-neutral-700 dark:text-neutral-200">{goalsCoachResult.guidance.summary}</p>
+                  {goalsCoachResult.guidance.badPatterns.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-foreground mb-1">Patterns to watch</p>
+                      <ul className="space-y-1">
+                        {goalsCoachResult.guidance.badPatterns.map((item, idx) => (
+                          <li key={`goals-help-bad-${idx}`} className="text-sm text-neutral-700 dark:text-neutral-200">
+                            - {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {goalsCoachResult.guidance.keepInMind.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-foreground mb-1">Keep in mind</p>
+                      <ul className="space-y-1">
+                        {goalsCoachResult.guidance.keepInMind.map((item, idx) => (
+                          <li key={`goals-help-keep-${idx}`} className="text-sm text-neutral-700 dark:text-neutral-200">
+                            - {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {goalsCoachResult.guidance.onTrackNuggets.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-foreground mb-1">Useful nuggets</p>
+                      <ul className="space-y-1">
+                        {goalsCoachResult.guidance.onTrackNuggets.map((item, idx) => (
+                          <li key={`goals-help-nugget-${idx}`} className="text-sm text-neutral-700 dark:text-neutral-200">
+                            - {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
               )}
               {goalsWizardError && (
                 <p className="text-sm text-red-600 dark:text-red-400">{goalsWizardError}</p>
@@ -13895,7 +13855,7 @@ export default function ChatPage() {
                 <button
                   type="button"
                   onClick={() => setGoalsModalOpen(false)}
-                  disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading}
+                  disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading || goalsCoachLoading}
                   className="px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
                 >
                   {getLandingTranslations(language).journalEntryCancel}
@@ -13904,7 +13864,7 @@ export default function ChatPage() {
                   <button
                     type="button"
                     onClick={() => void saveNutritionGoals()}
-                    disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading}
+                    disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading || goalsCoachLoading}
                     className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
                   >
                     {goalsSaving ? "Saving..." : getLandingTranslations(language).journalEntrySave}
@@ -13913,7 +13873,7 @@ export default function ChatPage() {
                   <button
                     type="button"
                     onClick={() => void handleGoalsWizardNext()}
-                    disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading}
+                    disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading || goalsCoachLoading}
                     className="px-4 py-2 rounded-xl text-sm font-medium bg-[#295a8a] text-white hover:opacity-90 transition-opacity disabled:opacity-50"
                   >
                     {goalsWizardStep === "pace"
@@ -14361,85 +14321,6 @@ export default function ChatPage() {
         </div>
       )}
 
-      {landingSaveQuestionsModalOpen && (
-        <div
-          className="fixed inset-0 z-[53] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => {
-            if (!landingJournalSaving) resetLandingSaveQuestionsModal();
-          }}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Before saving"
-        >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
-              <h2 className="text-lg font-semibold text-foreground pr-2">
-                Before saving
-              </h2>
-              <button
-                type="button"
-                onClick={resetLandingSaveQuestionsModal}
-                disabled={landingJournalSaving}
-                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
-                aria-label={getUiTranslations(language).close}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
-              </button>
-            </div>
-            <div className="p-4 space-y-3 overflow-y-auto">
-              <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                Answer these quick questions before saving your entry.
-              </p>
-              {landingSaveQuestionsError && (
-                <p className="text-sm text-red-600 dark:text-red-400">{landingSaveQuestionsError}</p>
-              )}
-              <div className="space-y-2">
-                {landingSaveQuestions.map((q, idx) => (
-                  <div key={`landing-save-q-${idx}`} className="space-y-1">
-                    <p className="text-sm font-medium text-foreground">{q}</p>
-                    <input
-                      type="text"
-                      value={landingSaveAnswers[idx] ?? ""}
-                      onChange={(e) =>
-                        setLandingSaveAnswers((prev) =>
-                          prev.map((v, i) => (i === idx ? e.target.value : v))
-                        )
-                      }
-                      disabled={landingJournalSaving}
-                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                    />
-                  </div>
-                ))}
-              </div>
-              <div className="flex gap-2 pt-1">
-                <button
-                  type="button"
-                  onClick={resetLandingSaveQuestionsModal}
-                  disabled={landingJournalSaving}
-                  className="flex-1 px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
-                >
-                  {getUiTranslations(language).cancel}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => void finalizeLandingJournalEntry(landingSaveAnswers)}
-                  disabled={landingJournalSaving}
-                  className="flex-1 px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
-                >
-                  {landingJournalSaving ? "Saving..." : "Save entry"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {journalTypeChooserOpen && (
         <div
           className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
@@ -14518,7 +14399,7 @@ export default function ChatPage() {
           >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground pr-2">
-                {getLandingTranslations(language).journalEntryModalTitle}
+                {LANDING_JOURNAL_MODAL_TITLE[selectedLandingJournalChip]}
               </h2>
               <button
                 type="button"
@@ -14535,8 +14416,32 @@ export default function ChatPage() {
             </div>
             <div className="p-4 space-y-3 overflow-y-auto">
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                {getLandingTranslations(language).journalEntryModalSubtitle}
+                {selectedLandingJournalChip === "gratitude"
+                  ? "Capture specific moments you appreciate."
+                  : "Reflect on what happened and what you want to improve next."}
               </p>
+              <div className="space-y-2">
+                <p className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                  Example entries
+                </p>
+                <div className="overflow-x-auto pb-1.5">
+                  <div className="flex min-w-max gap-2.5">
+                  {LANDING_JOURNAL_EXAMPLES[selectedLandingJournalChip]
+                    .slice(0, 2)
+                    .map((example, idx) => (
+                      <button
+                        key={`journal-example-${idx}`}
+                        type="button"
+                        onClick={() => setJournalEntryText(example)}
+                        disabled={journalEntrySaving}
+                        className="w-[min(82vw,420px)] sm:w-[min(72vw,460px)] shrink-0 rounded-3xl border border-neutral-200/90 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/70 px-4 py-3 text-left text-[15px] leading-snug text-neutral-900 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors"
+                      >
+                        {example}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
               <div>
                 <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
                   {getLandingTranslations(language).journalEntryDateHint}
@@ -14611,7 +14516,9 @@ export default function ChatPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
-              <h2 className="text-lg font-semibold text-foreground pr-2">{getLandingTranslations(language).calorieTrackerModalTitle}</h2>
+              <h2 className="text-lg font-semibold text-foreground pr-2">
+                {LANDING_JOURNAL_MODAL_TITLE[selectedLandingJournalChip]}
+              </h2>
               <button
                 type="button"
                 onClick={resetCalorieTrackerModal}
@@ -14626,11 +14533,69 @@ export default function ChatPage() {
             </div>
             <div className="p-4 space-y-3 overflow-y-auto">
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                {getLandingTranslations(language).calorieTrackerModalSubtitle}
+                {selectedLandingJournalChip === "nutrition"
+                  ? "Log meals or snacks with as much detail as you know."
+                  : "Log your workout details so calories and macro impact can be estimated."}
               </p>
 
               {calorieTrackerStep === "input" && (
                 <>
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                      Example entries
+                    </p>
+                    <div className="overflow-x-auto pb-1.5">
+                      <div className="flex min-w-max gap-2.5">
+                      {LANDING_JOURNAL_EXAMPLES[selectedLandingJournalChip]
+                        .slice(0, 2)
+                        .map((example, idx) => (
+                          <button
+                            key={`calorie-example-${idx}`}
+                            type="button"
+                            onClick={() => setCalorieTrackerInput(example)}
+                            disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                            className="w-[min(82vw,420px)] sm:w-[min(72vw,460px)] shrink-0 rounded-3xl border border-neutral-200/90 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/70 px-4 py-3 text-left text-[15px] leading-snug text-neutral-900 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors"
+                          >
+                            {example}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <p className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                      Reuse from your history
+                    </p>
+                    {calorieTrackerSuggestionsLoading ? (
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">Loading suggestions...</p>
+                    ) : calorieTrackerSuggestions.length > 0 ? (
+                      <div className="overflow-x-auto pb-1">
+                        <div className="flex min-w-max gap-2">
+                          {calorieTrackerSuggestions.slice(0, 8).map((item) => (
+                            <button
+                              key={item.id}
+                              type="button"
+                              onClick={() =>
+                                setCalorieTrackerInput((prev) =>
+                                  prev.trim()
+                                    ? `${prev.trim()}\n${item.sampleEntry}`
+                                    : item.sampleEntry
+                                )
+                              }
+                              className="shrink-0 rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs text-neutral-800 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                              title={item.sampleEntry}
+                            >
+                              {item.displayName}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        Your frequent items will appear here after you save a few entries.
+                      </p>
+                    )}
+                  </div>
                   <div>
                     <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
                       {getLandingTranslations(language).journalEntryDateHint}
@@ -14676,6 +14641,14 @@ export default function ChatPage() {
                       onChange={(e) => void handleCalorieTrackerImageSelected(e)}
                       disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
                     />
+                    <input
+                      ref={calorieTrackerUploadInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => void handleCalorieTrackerImageSelected(e)}
+                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                    />
                     <button
                       type="button"
                       onClick={() => {
@@ -14687,8 +14660,19 @@ export default function ChatPage() {
                     >
                       {calorieTrackerImageProcessing ? "Analyzing image..." : "Use camera photo"}
                     </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCalorieTrackerImageError(null);
+                        calorieTrackerUploadInputRef.current?.click();
+                      }}
+                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                      className="px-3 py-1.5 rounded-xl text-xs font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
+                    >
+                      Upload photo
+                    </button>
                     <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                      Capture a food photo to prefill your nutrition log.
+                      Take or upload a photo to prefill your nutrition log.
                     </p>
                   </div>
                   {calorieTrackerImagePreview && (
