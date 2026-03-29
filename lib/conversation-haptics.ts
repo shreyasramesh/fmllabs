@@ -5,9 +5,11 @@ import { Haptics, ImpactStyle, NotificationType } from "@capacitor/haptics";
 
 let lastStartAt = 0;
 let lastChunkAt = 0;
+let lastTickAt = 0;
 
 const START_THROTTLE_MS = 400;
 const CHUNK_THROTTLE_MS = 700;
+const TICK_THROTTLE_MS = 280;
 
 function canUseNativeHaptics(): boolean {
   return Capacitor.isNativePlatform();
@@ -36,6 +38,19 @@ export async function playLlmResponseVisibleHaptic(): Promise<void> {
     await Haptics.notification({ type: NotificationType.Success });
   } catch {
     if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate(18);
+  }
+}
+
+export async function playLlmStreamingTickHaptic(): Promise<void> {
+  if (!canUseNativeHaptics()) return;
+  const now = Date.now();
+  if (now - lastTickAt < TICK_THROTTLE_MS) return;
+  lastTickAt = now;
+
+  try {
+    await Haptics.impact({ style: ImpactStyle.Light });
+  } catch {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate(8);
   }
 }
 

@@ -74,7 +74,11 @@ import {
   type ReminderType,
 } from "@/lib/reminder-settings";
 import { syncNativeReminders } from "@/lib/native-reminders";
-import { playLlmResponseStartHaptic, playLlmResponseVisibleHaptic } from "@/lib/conversation-haptics";
+import {
+  playLlmResponseStartHaptic,
+  playLlmResponseVisibleHaptic,
+  playLlmStreamingTickHaptic,
+} from "@/lib/conversation-haptics";
 
 /** Library / inline panels: cards fill the row; min width ~17.5rem so more columns appear on wide screens. */
 const LIBRARY_RESPONSIVE_CARD_GRID =
@@ -623,6 +627,12 @@ function MessageBubble({
       : [];
   const displayOptions = options.length > 0 ? options : mentorFallbackOptions;
   const isLastMsg = message.role === "assistant" && isLastAssistant;
+  const isAssistantDotsLoading =
+    message.role === "assistant" &&
+    isLastMsg &&
+    isLoading &&
+    text.trim().length === 0 &&
+    !(message.mentorResponses && message.mentorResponses.length > 0);
   const showOptions =
     message.role === "assistant" &&
     displayOptions.length > 0 &&
@@ -721,7 +731,9 @@ function MessageBubble({
           className={`group/tts relative rounded-3xl px-4 py-3 transition-shadow duration-200 ${
             message.role === "user"
               ? "max-w-[85%] bg-foreground text-background shadow-sm"
-              : "w-full max-w-full sm:max-w-[85%] bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground pr-4"
+              : isAssistantDotsLoading
+                ? "inline-flex w-auto max-w-[120px] rounded-2xl px-3 py-2 bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground"
+                : "w-full max-w-full sm:max-w-[85%] bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground pr-4"
           }`}
           dir={isRtl ? "rtl" : undefined}
         >
@@ -846,7 +858,7 @@ function MessageBubble({
                 )}
               </>
             ) : (
-              <LoadingDots className="opacity-70" />
+              <LoadingDots className="opacity-70" pulseHaptics={isLastMsg && isLoading} pulseMs={450} />
             )}
           </div>
         )}
@@ -1101,10 +1113,23 @@ function LanguageChangeBanner({ onDismiss }: { onDismiss: () => void }) {
 function LoadingDots({
   className = "",
   "aria-label": ariaLabel,
+  pulseHaptics = false,
+  pulseMs = 450,
 }: {
   className?: string;
   "aria-label"?: string;
+  pulseHaptics?: boolean;
+  pulseMs?: number;
 }) {
+  useEffect(() => {
+    if (!pulseHaptics) return;
+    void playLlmStreamingTickHaptic();
+    const id = window.setInterval(() => {
+      void playLlmStreamingTickHaptic();
+    }, pulseMs);
+    return () => window.clearInterval(id);
+  }, [pulseHaptics, pulseMs]);
+
   return (
     <span
       className={`inline-flex gap-0.5 ${className}`}
