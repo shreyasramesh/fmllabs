@@ -49,6 +49,26 @@ type SttSession = {
   requestCommit: () => Promise<void>;
 };
 
+type SpeechRecognitionCtor = new () => {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+};
+
+function getSpeechRecognitionCtor(): SpeechRecognitionCtor | null {
+  if (typeof window === "undefined") return null;
+  const w = window as Window & {
+    SpeechRecognition?: SpeechRecognitionCtor;
+    webkitSpeechRecognition?: SpeechRecognitionCtor;
+  };
+  return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
+}
+
 async function startElevenLabsStt(
   language: LanguageCode,
   onCommittedTranscript: (text: string) => void,
@@ -240,8 +260,18 @@ async function startElevenLabsStt(
   const waitForOpen = (): Promise<void> =>
     new Promise((resolve, reject) => {
       if (ws.readyState === WebSocket.OPEN) return resolve();
-      ws.onopen = () => resolve();
-      ws.onerror = () => reject(new Error("WebSocket failed to open"));
+      const onOpen = () => {
+        ws.removeEventListener("open", onOpen);
+        ws.removeEventListener("error", onErr);
+        resolve();
+      };
+      const onErr = () => {
+        ws.removeEventListener("open", onOpen);
+        ws.removeEventListener("error", onErr);
+        reject(new Error("WebSocket failed to open"));
+      };
+      ws.addEventListener("open", onOpen);
+      ws.addEventListener("error", onErr);
     });
 
   await waitForOpen();
@@ -279,6 +309,82 @@ async function startElevenLabsStt(
   return { cleanup, requestCommit };
 }
 
+async function startWebSpeechStt(
+  language: LanguageCode,
+  onCommittedTranscript: (text: string) => void,
+  onError: (err: string) => void,
+  onPartialTranscript?: (text: string) => void
+): Promise<SttSession> {
+  const Ctor = getSpeechRecognitionCtor();
+  if (!Ctor) throw new Error("Web Speech API not available");
+
+  const recognition = new Ctor();
+  recognition.lang = getLanguageCodeForTts(language) || "en";
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  let closed = false;
+  let resolveEnd: (() => void) | null = null;
+
+  recognition.onresult = (event: SpeechRecognitionEvent) => {
+    let interim = "";
+    const finals: string[] = [];
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const r = event.results[i];
+      const t = r?.[0]?.transcript?.trim();
+      if (!t) continue;
+      if (r.isFinal) finals.push(t);
+      else interim = t;
+    }
+    if (interim) onPartialTranscript?.(interim);
+    if (finals.length > 0) onCommittedTranscript(finals.join(" "));
+  };
+  recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+    if (closed) return;
+    onError(event.error || "Speech recognition error");
+  };
+  recognition.onend = () => {
+    if (resolveEnd) {
+      resolveEnd();
+      resolveEnd = null;
+    }
+  };
+
+  recognition.start();
+
+  return {
+    cleanup: () => {
+      if (closed) return;
+      closed = true;
+      recognition.onresult = null;
+      recognition.onerror = null;
+      recognition.onend = null;
+      try {
+        recognition.stop();
+      } catch {
+        /* ignore */
+      }
+    },
+    requestCommit: async () => {
+      if (closed) return;
+      await new Promise<void>((resolve) => {
+        resolveEnd = resolve;
+        try {
+          recognition.stop();
+        } catch {
+          resolve();
+        }
+        setTimeout(() => {
+          if (resolveEnd) {
+            resolveEnd = null;
+            resolve();
+          }
+        }, 500);
+      });
+    },
+  };
+}
+
 export function VoiceInputButton({
   onTranscription,
   onLongPress,
@@ -314,10 +420,13 @@ export function VoiceInputButton({
   const startAttemptRef = useRef(0);
 
   useEffect(() => {
-    setSupported(
+    const hasWebSpeech = !!getSpeechRecognitionCtor();
+    const hasRealtimeSocketPath =
       typeof window !== "undefined" &&
-        !!navigator.mediaDevices?.getUserMedia &&
-        !!window.WebSocket
+      !!navigator.mediaDevices?.getUserMedia &&
+      !!window.WebSocket;
+    setSupported(
+      hasRealtimeSocketPath || hasWebSpeech
     );
   }, []);
 
@@ -356,24 +465,43 @@ export function VoiceInputButton({
     setAudioLevel(0);
     setStarting(true);
     try {
-      const session = await startElevenLabsStt(
-        language,
-        (text) => {
-          pendingTranscriptRef.current.push(text);
-          partialTranscriptRef.current = "";
-        },
-        (err) => {
-          console.warn("ElevenLabs STT:", err);
-          stopListening();
-        },
-        (level) => {
-          setAudioLevel((prev) => Math.max(level, prev * 0.9));
-        },
-        (partialText) => {
-          partialTranscriptRef.current = partialText;
-        },
-        (nodes) => setOrbNodes(nodes)
-      );
+      let session: SttSession;
+      try {
+        session = await startElevenLabsStt(
+          language,
+          (text) => {
+            pendingTranscriptRef.current.push(text);
+            partialTranscriptRef.current = "";
+          },
+          (err) => {
+            console.warn("ElevenLabs STT:", err);
+            stopListening();
+          },
+          (level) => {
+            setAudioLevel((prev) => Math.max(level, prev * 0.9));
+          },
+          (partialText) => {
+            partialTranscriptRef.current = partialText;
+          },
+          (nodes) => setOrbNodes(nodes)
+        );
+      } catch (primaryErr) {
+        console.warn("Realtime STT unavailable, falling back to Web Speech:", primaryErr);
+        session = await startWebSpeechStt(
+          language,
+          (text) => {
+            pendingTranscriptRef.current.push(text);
+            partialTranscriptRef.current = "";
+          },
+          (err) => {
+            console.warn("Web Speech STT:", err);
+            stopListening();
+          },
+          (partialText) => {
+            partialTranscriptRef.current = partialText;
+          }
+        );
+      }
       if (startAttemptRef.current !== attemptId) {
         session.cleanup();
         return;

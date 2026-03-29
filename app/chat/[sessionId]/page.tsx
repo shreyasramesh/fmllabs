@@ -77,7 +77,6 @@ import { syncNativeReminders } from "@/lib/native-reminders";
 import {
   playLlmResponseStartHaptic,
   playLlmResponseVisibleHaptic,
-  playLlmStreamingTickHaptic,
 } from "@/lib/conversation-haptics";
 
 /** Library / inline panels: cards fill the row; min width ~17.5rem so more columns appear on wide screens. */
@@ -858,7 +857,7 @@ function MessageBubble({
                 )}
               </>
             ) : (
-              <LoadingDots className="opacity-70" pulseHaptics={isLastMsg && isLoading} pulseMs={450} />
+              <LoadingDots className="opacity-70" />
             )}
           </div>
         )}
@@ -1113,23 +1112,10 @@ function LanguageChangeBanner({ onDismiss }: { onDismiss: () => void }) {
 function LoadingDots({
   className = "",
   "aria-label": ariaLabel,
-  pulseHaptics = false,
-  pulseMs = 450,
 }: {
   className?: string;
   "aria-label"?: string;
-  pulseHaptics?: boolean;
-  pulseMs?: number;
 }) {
-  useEffect(() => {
-    if (!pulseHaptics) return;
-    void playLlmStreamingTickHaptic();
-    const id = window.setInterval(() => {
-      void playLlmStreamingTickHaptic();
-    }, pulseMs);
-    return () => window.clearInterval(id);
-  }, [pulseHaptics, pulseMs]);
-
   return (
     <span
       className={`inline-flex gap-0.5 ${className}`}
@@ -7475,35 +7461,6 @@ export default function ChatPage() {
     (s.title ?? "").toLowerCase().includes(sessionSearchQuery.toLowerCase())
   );
 
-  const HIDDEN_TAGS_KEY = "chat-hidden-tags";
-  const [hiddenTagsSessions, setHiddenTagsSessions] = useState<Set<string>>(
-    () => new Set()
-  );
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(HIDDEN_TAGS_KEY);
-      const ids = raw ? JSON.parse(raw) : [];
-      if (Array.isArray(ids) && ids.length > 0) {
-        setHiddenTagsSessions(new Set(ids));
-      }
-    } catch {
-      /* ignore */
-    }
-  }, []);
-  const toggleTagsHidden = useCallback((sessionId: string) => {
-    setHiddenTagsSessions((prev) => {
-      const next = new Set(prev);
-      if (next.has(sessionId)) next.delete(sessionId);
-      else next.add(sessionId);
-      try {
-        localStorage.setItem(HIDDEN_TAGS_KEY, JSON.stringify([...next]));
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
-  }, []);
-
   useEffect(() => {
     const requestedLang = language;
     fetch(`/api/mental-models?language=${requestedLang}`, { cache: "no-store" })
@@ -7714,7 +7671,7 @@ export default function ChatPage() {
     <div className={`relative flex flex-col h-[100dvh] min-h-[100dvh] overflow-hidden chat-bg-area bg-background border-2 transition-[border-color,background] duration-300 ease-in-out ${incognitoMode ? "border-violet-400/70 dark:border-violet-500/60" : "border-transparent"}`}>
       {/* Shared top bar - fixed on mobile so it stays visible when scrolling */}
       <header
-        className={`h-14 min-h-[44px] pt-[env(safe-area-inset-top)] flex border-b shrink-0 fixed top-0 left-0 right-0 z-20 md:relative md:top-auto md:left-auto md:right-auto ${
+        className={`h-[calc(56px+env(safe-area-inset-top))] min-h-[44px] pt-[env(safe-area-inset-top)] flex items-center border-b shrink-0 fixed top-0 left-0 right-0 z-20 md:relative md:top-auto md:left-auto md:right-auto ${
           incognitoMode
             ? "bg-neutral-900 dark:bg-neutral-100 border-neutral-700 dark:border-neutral-300 text-neutral-100 dark:text-neutral-900"
             : "bg-background border-neutral-200 dark:border-neutral-800"
@@ -7814,11 +7771,11 @@ export default function ChatPage() {
             <Link
               href="/chat/new"
               onClick={handleHomeNavigation}
-              className="shrink-0 p-1 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              className="shrink-0 p-1.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               aria-label="Go to landing page"
               title="Go to landing page"
             >
-              <span className="inline-flex items-center justify-center min-w-[34px] min-h-[34px] rounded-md border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200">
+              <span className="inline-flex items-center justify-center min-w-[34px] min-h-[34px] rounded-md border border-neutral-200 dark:border-neutral-500/80 text-neutral-700 dark:text-neutral-200">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
                   <path d="M3 10.5 12 3l9 7.5" />
                   <path d="M5.5 9.5V21h13V9.5" />
@@ -7870,7 +7827,7 @@ export default function ChatPage() {
                       onClick={() => setHeaderCalendarOpen((prev) => !prev)}
                       aria-expanded={headerCalendarOpen}
                       aria-haspopup="dialog"
-                      className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background px-3 py-1.5 text-sm font-medium text-foreground hover:bg-orange-50 dark:hover:bg-neutral-800 transition-colors"
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-200 dark:border-neutral-500/80 bg-background px-3 py-1.5 text-sm font-medium text-foreground hover:bg-orange-50 dark:hover:bg-neutral-800 transition-colors"
                     >
                       <span>{headerCalendarLabel}</span>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-3.5 h-3.5 transition-transform ${headerCalendarOpen ? "rotate-180" : ""}`}>
@@ -11263,7 +11220,7 @@ export default function ChatPage() {
                     type="button"
                     onClick={() => landingJournalCameraInputRef.current?.click()}
                     disabled={landingJournalSaving || landingJournalImageProcessing || landingSaveQuestionsLoading}
-                    className="inline-flex items-center justify-center min-h-[52px] min-w-[52px] rounded-2xl border border-neutral-200/70 dark:border-neutral-700/80 bg-neutral-50/70 dark:bg-neutral-900/40 text-neutral-700 dark:text-neutral-200 hover:border-orange-300/80 dark:hover:border-orange-700/60 hover:bg-orange-50/60 dark:hover:bg-orange-900/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0"
+                    className="inline-flex items-center justify-center min-h-[52px] min-w-[52px] rounded-2xl border border-neutral-200/70 dark:border-neutral-400/70 bg-neutral-50/70 dark:bg-neutral-900/40 text-neutral-700 dark:text-neutral-200 hover:border-orange-300/80 dark:hover:border-orange-500/70 hover:bg-orange-50/60 dark:hover:bg-orange-900/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0"
                     aria-label="Take picture"
                     title="Take picture"
                   >
@@ -11294,7 +11251,7 @@ export default function ChatPage() {
                   messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
                     ? "!min-h-[52px] !min-w-[52px] !rounded-2xl"
                     : "!min-h-8 !min-w-8 !rounded-xl"
-                } !border-neutral-200/70 dark:!border-neutral-700/80 !bg-neutral-50/70 dark:!bg-neutral-900/40 hover:!border-orange-300/80 dark:hover:!border-orange-700/60 hover:!bg-orange-50/60 dark:hover:!bg-orange-900/20`}
+                } !border-neutral-200/70 dark:!border-neutral-400/70 !bg-neutral-50/70 dark:!bg-neutral-900/40 hover:!border-orange-300/80 dark:hover:!border-orange-500/70 hover:!bg-orange-50/60 dark:hover:!bg-orange-900/20`}
               />
               {!(messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling") && (
               <button
@@ -11483,51 +11440,6 @@ export default function ChatPage() {
                               </svg>
                             </button>
                           </div>
-                          {s.mentalModelTags && s.mentalModelTags.length > 0 && !hiddenTagsSessions.has(s._id) && (
-                            <div className="flex flex-wrap items-center gap-1.5 px-3 pb-1">
-                              <div className="flex flex-wrap gap-1">
-                                {s.mentalModelTags.map((id) => (
-                                  <button
-                                    key={id}
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                      setLibraryPanelOpen(null);
-                                      handleMentalModelClick(id);
-                                    }}
-                                    className="inline-flex px-2 py-0.5 rounded-lg text-[9px] font-medium bg-neutral-200 dark:bg-neutral-600 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-500 transition-all duration-200 active:scale-95"
-                                  >
-                                    {mentalModelsIndex.get(id) ?? id.replace(/_/g, " ")}
-                                  </button>
-                                ))}
-                              </div>
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  toggleTagsHidden(s._id);
-                                }}
-                                className="text-[9px] text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 underline-offset-2 hover:underline"
-                              >
-                                Hide tags
-                              </button>
-                            </div>
-                          )}
-                          {s.mentalModelTags && s.mentalModelTags.length > 0 && hiddenTagsSessions.has(s._id) && (
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                toggleTagsHidden(s._id);
-                              }}
-                              className="px-3 pb-1 text-left text-[9px] text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-400"
-                            >
-                              Show {s.mentalModelTags.length} tags
-                            </button>
-                          )}
                         </div>
                       ))}
                       </div>
