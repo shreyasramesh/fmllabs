@@ -2,6 +2,8 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { Capacitor } from "@capacitor/core";
+import { SpeechRecognition } from "@capacitor-community/speech-recognition";
 import { playSelectionChime, playStopChime } from "@/lib/selection-chime";
 import { getLanguageCodeForTts } from "@/lib/tts-voices";
 import type { LanguageCode } from "@/lib/languages";
@@ -399,6 +401,83 @@ async function startWebSpeechStt(
   };
 }
 
+async function startNativeSpeechStt(
+  language: LanguageCode,
+  onCommittedTranscript: (text: string) => void,
+  onError: (err: string) => void,
+  onPartialTranscript?: (text: string) => void
+): Promise<SttSession> {
+  const availability = await SpeechRecognition.available();
+  if (!availability.available) throw new Error("Native speech recognition unavailable");
+
+  const permission = await SpeechRecognition.checkPermissions();
+  if (permission.speechRecognition !== "granted") {
+    const requested = await SpeechRecognition.requestPermissions();
+    if (requested.speechRecognition !== "granted") {
+      throw new Error("Speech recognition permission denied");
+    }
+  }
+
+  let resolveStopWait: (() => void) | null = null;
+  let cleaned = false;
+  let lastPartial = "";
+
+  const partialHandle = await SpeechRecognition.addListener("partialResults", ({ matches }) => {
+    const text = matches?.[0]?.trim() ?? "";
+    if (!text) return;
+    lastPartial = text;
+    onPartialTranscript?.(text);
+  });
+  const listeningStateHandle = await SpeechRecognition.addListener("listeningState", ({ status }) => {
+    if (status === "stopped" && resolveStopWait) {
+      resolveStopWait();
+      resolveStopWait = null;
+    }
+  });
+
+  try {
+    await SpeechRecognition.start({
+      language: getLanguageCodeForTts(language),
+      maxResults: 5,
+      partialResults: true,
+      popup: false,
+    });
+  } catch (err) {
+    await partialHandle.remove();
+    await listeningStateHandle.remove();
+    throw err;
+  }
+
+  return {
+    cleanup: () => {
+      if (cleaned) return;
+      cleaned = true;
+      void SpeechRecognition.stop().catch(() => {});
+      void partialHandle.remove();
+      void listeningStateHandle.remove();
+      void SpeechRecognition.removeAllListeners().catch(() => {});
+    },
+    requestCommit: async () => {
+      try {
+        await SpeechRecognition.stop();
+      } catch {
+        /* ignore */
+      }
+      await new Promise<void>((resolve) => {
+        resolveStopWait = resolve;
+        setTimeout(() => {
+          if (resolveStopWait) {
+            resolveStopWait();
+            resolveStopWait = null;
+          }
+        }, 900);
+      });
+      const finalText = lastPartial.trim();
+      if (finalText) onCommittedTranscript(finalText);
+    },
+  };
+}
+
 export function VoiceInputButton({
   onTranscription,
   onLongPress,
@@ -434,14 +513,26 @@ export function VoiceInputButton({
   const startAttemptRef = useRef(0);
 
   useEffect(() => {
+    let cancelled = false;
     const hasWebSpeech = !!getSpeechRecognitionCtor();
     const hasRealtimeSocketPath =
       typeof window !== "undefined" &&
       !!navigator.mediaDevices?.getUserMedia &&
       !!window.WebSocket;
-    setSupported(
-      hasRealtimeSocketPath || hasWebSpeech
-    );
+    if (Capacitor.isNativePlatform()) {
+      SpeechRecognition.available()
+        .then(({ available }) => {
+          if (!cancelled) setSupported(available || hasRealtimeSocketPath || hasWebSpeech);
+        })
+        .catch(() => {
+          if (!cancelled) setSupported(hasRealtimeSocketPath || hasWebSpeech);
+        });
+    } else {
+      setSupported(hasRealtimeSocketPath || hasWebSpeech);
+    }
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -500,21 +591,43 @@ export function VoiceInputButton({
           (nodes) => setOrbNodes(nodes)
         );
       } catch (primaryErr) {
-        console.warn("Realtime STT unavailable, falling back to Web Speech:", primaryErr);
-        session = await startWebSpeechStt(
-          language,
-          (text) => {
-            pendingTranscriptRef.current.push(text);
-            partialTranscriptRef.current = "";
-          },
-          (err) => {
-            console.warn("Web Speech STT:", err);
-            stopListening();
-          },
-          (partialText) => {
-            partialTranscriptRef.current = partialText;
+        try {
+          if (Capacitor.isNativePlatform()) {
+            console.warn("Realtime STT unavailable, falling back to native speech:", primaryErr);
+            session = await startNativeSpeechStt(
+              language,
+              (text) => {
+                pendingTranscriptRef.current.push(text);
+                partialTranscriptRef.current = "";
+              },
+              (err) => {
+                console.warn("Native Speech STT:", err);
+                stopListening();
+              },
+              (partialText) => {
+                partialTranscriptRef.current = partialText;
+              }
+            );
+          } else {
+            throw primaryErr;
           }
-        );
+        } catch (nativeErr) {
+          console.warn("Native speech unavailable, falling back to Web Speech:", nativeErr);
+          session = await startWebSpeechStt(
+            language,
+            (text) => {
+              pendingTranscriptRef.current.push(text);
+              partialTranscriptRef.current = "";
+            },
+            (err) => {
+              console.warn("Web Speech STT:", err);
+              stopListening();
+            },
+            (partialText) => {
+              partialTranscriptRef.current = partialText;
+            }
+          );
+        }
       }
       if (startAttemptRef.current !== attemptId) {
         session.cleanup();

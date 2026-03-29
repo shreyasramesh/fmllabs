@@ -23,6 +23,7 @@
     "verify-perspective-decks": "node scripts/verify-perspective-decks.mjs"
   },
   "dependencies": {
+    "@capacitor-community/speech-recognition": "^7.0.1",
     "@capacitor/android": "^8.3.0",
     "@capacitor/app": "^8.1.0",
     "@capacitor/cli": "^8.3.0",
