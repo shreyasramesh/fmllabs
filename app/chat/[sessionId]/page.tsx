@@ -2688,6 +2688,14 @@ type LandingDayActivityItem = {
 
 type LandingTab = "journaling" | "pomodoro" | "deepThinking";
 const LANDING_TAB_STORAGE_KEY = "fml_landing_tab";
+type PomodoroThemeId = "water" | "air" | "fire" | "earth";
+const POMODORO_THEME_STORAGE_KEY = "fml_pomodoro_theme";
+const POMODORO_THEME_OPTIONS: Array<{ id: PomodoroThemeId; label: string; image: string }> = [
+  { id: "water", label: "Water", image: "/images/water.png" },
+  { id: "air", label: "Air", image: "/images/wind.png" },
+  { id: "fire", label: "Fire", image: "/images/fire.png" },
+  { id: "earth", label: "Earth", image: "/images/earth.png" },
+];
 type LandingJournalChipKey = "gratitude" | "reflection" | "nutrition" | "exercise" | "weight";
 type ReusableJournalSuggestion = {
   id: string;
@@ -4030,12 +4038,16 @@ export default function ChatPage() {
   const [weightTrackerAddOpen, setWeightTrackerAddOpen] = useState(false);
   const [focusTrackerEntries, setFocusTrackerEntries] = useState<FocusTrackerEntry[]>([]);
   const [focusSessionTagInput, setFocusSessionTagInput] = useState("");
+  const [customFocusTagInput, setCustomFocusTagInput] = useState("");
+  const [customFocusMinutesInput, setCustomFocusMinutesInput] = useState("25");
   const [focusTrackerLoading, setFocusTrackerLoading] = useState(false);
   const [focusTrackerSaving, setFocusTrackerSaving] = useState(false);
   const [focusTrackerError, setFocusTrackerError] = useState<string | null>(null);
   const [focusTrackerDeletingEntryId, setFocusTrackerDeletingEntryId] = useState<string | null>(null);
   const [pomodoroDurationMinutes, setPomodoroDurationMinutes] = useState(25);
   const [pomodoroSecondsRemaining, setPomodoroSecondsRemaining] = useState(25 * 60);
+  const [pomodoroEndsAtMs, setPomodoroEndsAtMs] = useState<number | null>(null);
+  const [pomodoroTheme, setPomodoroTheme] = useState<PomodoroThemeId>("water");
   const [pomodoroCustomMinutesInput, setPomodoroCustomMinutesInput] = useState("25");
   const [pomodoroRunning, setPomodoroRunning] = useState(false);
   const [pomodoroSessionStartIso, setPomodoroSessionStartIso] = useState<string | null>(null);
@@ -4045,6 +4057,19 @@ export default function ChatPage() {
   const [pomodoroFinalSecondAnimationActive, setPomodoroFinalSecondAnimationActive] = useState(false);
   const pomodoroFinalSecondTimeoutRef = useRef<number | null>(null);
   const pomodoroPrevSecondsRef = useRef(pomodoroSecondsRemaining);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const saved = window.localStorage.getItem(POMODORO_THEME_STORAGE_KEY);
+    if (saved === "water" || saved === "air" || saved === "fire" || saved === "earth") {
+      setPomodoroTheme(saved);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(POMODORO_THEME_STORAGE_KEY, pomodoroTheme);
+  }, [pomodoroTheme]);
 
   const resetJournalEntryModal = useCallback(() => {
     setJournalEntryModalOpen(false);
@@ -7674,8 +7699,8 @@ export default function ChatPage() {
   }, []);
 
   const saveFocusSession = useCallback(
-    async (minutes: number, startedAt: Date, endedAt: Date, tag: string) => {
-      if (focusTrackerSaving) return;
+    async (minutes: number, startedAt: Date, endedAt: Date, tag: string): Promise<boolean> => {
+      if (focusTrackerSaving) return false;
       setFocusTrackerSaving(true);
       setFocusTrackerError(null);
       try {
@@ -7700,8 +7725,10 @@ export default function ChatPage() {
         if (typeof window !== "undefined") {
           window.setTimeout(() => setPomodoroJustLogged(false), 4000);
         }
+        return true;
       } catch (err) {
         setFocusTrackerError(err instanceof Error ? err.message : "Could not save focus session.");
+        return false;
       } finally {
         setFocusTrackerSaving(false);
       }
@@ -7730,6 +7757,27 @@ export default function ChatPage() {
     }
   }, [focusTrackerDeletingEntryId]);
 
+  const addCustomFocusEntry = useCallback(async () => {
+    if (focusTrackerSaving) return;
+    const tag = customFocusTagInput.trim();
+    if (!tag) {
+      setFocusTrackerError("Please add a tag for the custom focus entry.");
+      return;
+    }
+    const minutes = Number.parseInt(customFocusMinutesInput.trim(), 10);
+    if (!Number.isFinite(minutes) || minutes < 1 || minutes > 600) {
+      setFocusTrackerError("Custom focus minutes must be between 1 and 600.");
+      return;
+    }
+    const endedAt = new Date();
+    const startedAt = new Date(endedAt.getTime() - minutes * 60_000);
+    const saved = await saveFocusSession(minutes, startedAt, endedAt, tag);
+    if (saved) {
+      setCustomFocusTagInput("");
+      setCustomFocusMinutesInput("25");
+    }
+  }, [customFocusMinutesInput, customFocusTagInput, focusTrackerSaving, saveFocusSession]);
+
   useEffect(() => {
     if (isAnonymous || incognitoMode || !userId) return;
     if (landingTab !== "pomodoro") return;
@@ -7754,20 +7802,42 @@ export default function ChatPage() {
   useEffect(() => {
     if (pomodoroRunning || pomodoroSessionStartIso) return;
     setPomodoroSecondsRemaining(pomodoroDurationMinutes * 60);
+    setPomodoroEndsAtMs(null);
   }, [pomodoroDurationMinutes, pomodoroRunning, pomodoroSessionStartIso]);
 
   useEffect(() => {
     setPomodoroCustomMinutesInput(String(pomodoroDurationMinutes));
   }, [pomodoroDurationMinutes]);
 
+  const recalcPomodoroRemainingFromClock = useCallback(() => {
+    if (!pomodoroRunning || pomodoroEndsAtMs == null) return;
+    const remaining = Math.max(0, Math.ceil((pomodoroEndsAtMs - Date.now()) / 1000));
+    setPomodoroSecondsRemaining(remaining);
+  }, [pomodoroEndsAtMs, pomodoroRunning]);
+
   useEffect(() => {
     if (!pomodoroRunning) return;
     if (isNativePomodoroLiveSupported()) return;
+    recalcPomodoroRemainingFromClock();
     const id = window.setInterval(() => {
-      setPomodoroSecondsRemaining((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
+      recalcPomodoroRemainingFromClock();
+    }, 250);
     return () => window.clearInterval(id);
-  }, [pomodoroRunning]);
+  }, [pomodoroRunning, recalcPomodoroRemainingFromClock]);
+
+  useEffect(() => {
+    if (isNativePomodoroLiveSupported()) return;
+    if (!pomodoroRunning) return;
+    const handleVisibilityOrFocus = () => recalcPomodoroRemainingFromClock();
+    window.addEventListener("focus", handleVisibilityOrFocus, { passive: true });
+    window.addEventListener("pageshow", handleVisibilityOrFocus, { passive: true });
+    document.addEventListener("visibilitychange", handleVisibilityOrFocus, { passive: true });
+    return () => {
+      window.removeEventListener("focus", handleVisibilityOrFocus);
+      window.removeEventListener("pageshow", handleVisibilityOrFocus);
+      document.removeEventListener("visibilitychange", handleVisibilityOrFocus);
+    };
+  }, [pomodoroRunning, recalcPomodoroRemainingFromClock]);
 
   useEffect(() => {
     if (!pomodoroRunning || pomodoroSecondsRemaining > 0) return;
@@ -7782,6 +7852,7 @@ export default function ChatPage() {
     if (!isNativePomodoroLiveSupported()) {
       void notifyPomodoroCompleted();
     }
+    setPomodoroEndsAtMs(null);
     setPomodoroRunning(false);
   }, [pomodoroRunning, pomodoroSecondsRemaining]);
 
@@ -7795,6 +7866,11 @@ export default function ChatPage() {
         setPomodoroSecondsRemaining(Math.max(0, Math.round(state.remainingSeconds)));
       }
       setPomodoroRunning(state.running === true);
+      if (state.running === true) {
+        setPomodoroEndsAtMs(Date.now() + Math.max(0, Math.round(state.remainingSeconds)) * 1000);
+      } else if (state.source === "pause" || state.source === "reset" || state.source === "end" || state.completed) {
+        setPomodoroEndsAtMs(null);
+      }
       if (state.running && !pomodoroSessionStartIso) {
         setPomodoroSessionStartIso(new Date().toISOString());
       }
@@ -7849,6 +7925,8 @@ export default function ChatPage() {
   const startPomodoro = useCallback(() => {
     if (pomodoroRunning) return;
     const durationSeconds = pomodoroDurationMinutes * 60;
+    const now = Date.now();
+    setPomodoroEndsAtMs(now + Math.max(1, pomodoroSecondsRemaining) * 1000);
     if (!pomodoroSessionStartIso) {
       setPomodoroSessionStartIso(new Date().toISOString());
       void startNativePomodoroLive(durationSeconds, Math.max(1, pomodoroSecondsRemaining));
@@ -7860,11 +7938,17 @@ export default function ChatPage() {
   }, [pomodoroDurationMinutes, pomodoroRunning, pomodoroSecondsRemaining, pomodoroSessionStartIso]);
 
   const pausePomodoro = useCallback(() => {
+    if (pomodoroEndsAtMs != null) {
+      const remaining = Math.max(0, Math.ceil((pomodoroEndsAtMs - Date.now()) / 1000));
+      setPomodoroSecondsRemaining(remaining);
+    }
+    setPomodoroEndsAtMs(null);
     void pauseNativePomodoroLive();
     setPomodoroRunning(false);
-  }, []);
+  }, [pomodoroEndsAtMs]);
 
   const resetPomodoro = useCallback(() => {
+    setPomodoroEndsAtMs(null);
     void resetNativePomodoroLive(pomodoroDurationMinutes * 60);
     setPomodoroRunning(false);
     setPomodoroSecondsRemaining(pomodoroDurationMinutes * 60);
@@ -7889,6 +7973,7 @@ export default function ChatPage() {
     const endedAt = new Date();
     const startedAt = new Date(endedAt.getTime() - elapsedSeconds * 1000);
     const minutesToLog = Math.max(1, Math.round(elapsedSeconds / 60));
+    setPomodoroEndsAtMs(null);
     void endNativePomodoroLive();
     setPomodoroRunning(false);
     await saveFocusSession(minutesToLog, startedAt, endedAt, tag);
@@ -7911,6 +7996,7 @@ export default function ChatPage() {
     }
     setPomodoroDurationMinutes(parsed);
     setPomodoroSecondsRemaining(parsed * 60);
+    setPomodoroEndsAtMs(null);
     setFocusTrackerError(null);
   }, [pomodoroCustomMinutesInput]);
 
@@ -9363,12 +9449,68 @@ export default function ChatPage() {
       ))}
     </div>
   ) : null;
+  const pomodoroThemeBackdrop = (
+    <div className={`pointer-events-none absolute inset-0 overflow-hidden pomodoro-theme-backdrop pomodoro-theme-${pomodoroTheme}`} aria-hidden>
+      <span className="pomodoro-theme-veil pomodoro-theme-veil-a" />
+      <span className="pomodoro-theme-veil pomodoro-theme-veil-b" />
+      <span className="pomodoro-theme-veil pomodoro-theme-veil-c" />
+    </div>
+  );
+  const pomodoroThemeMotionOverlay = (
+    <div className={`pointer-events-none absolute inset-0 overflow-hidden pomodoro-theme-motion pomodoro-theme-${pomodoroTheme}`} aria-hidden>
+      {Array.from({ length: 10 }).map((_, index) => (
+        <span key={`pomodoro-theme-motion-${index}`} className="pomodoro-theme-motion-dot" />
+      ))}
+    </div>
+  );
+  const pomodoroThemeSelector = (
+    <div>
+      <div className="flex flex-wrap items-center justify-center gap-1.5">
+        {POMODORO_THEME_OPTIONS.map((theme) => (
+          <button
+            key={`pomodoro-theme-${theme.id}`}
+            type="button"
+            onClick={() => setPomodoroTheme(theme.id)}
+            className={`rounded-full border px-2.5 py-1 text-xs font-medium transition-colors ${
+              pomodoroTheme === theme.id
+                ? "border-foreground text-foreground bg-neutral-100 dark:bg-neutral-800"
+                : "border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            }`}
+          >
+            <span className="inline-flex items-center gap-1.5">
+              <Image
+                src={theme.image}
+                alt={`${theme.label} symbol`}
+                width={14}
+                height={14}
+                className="h-[14px] w-[14px] shrink-0 object-contain"
+              />
+              <span>{theme.label}</span>
+            </span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 
   if (isPomodoroFocusMode) {
     return (
-      <div className="relative flex h-[100dvh] min-h-[100dvh] items-center justify-center bg-background px-4">
+      <div className={`relative flex h-[100dvh] min-h-[100dvh] items-center justify-center bg-background px-4 pomodoro-theme-${pomodoroTheme}`}>
         {pomodoroConfettiOverlay}
-        <div className="w-full max-w-4xl text-center overflow-visible">
+        {pomodoroThemeBackdrop}
+        {pomodoroThemeMotionOverlay}
+        <button
+          type="button"
+          onClick={() => {
+            playSelectionChime();
+            setLandingTab("journaling");
+          }}
+          className="absolute left-4 top-[calc(12px+env(safe-area-inset-top))] z-[96] rounded-xl border border-neutral-300 dark:border-neutral-600 px-3 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+        >
+          Return to home
+        </button>
+        <div className="relative z-10 w-full max-w-4xl text-center overflow-visible">
+          <div className="mb-4">{pomodoroThemeSelector}</div>
           <p
             className={`pomodoro-started-clock font-black tracking-[-0.04em] text-foreground leading-none ${
               shouldAnimatePomodoroLastSecond ? "pomodoro-last-second-scroll" : ""
@@ -12392,9 +12534,13 @@ export default function ChatPage() {
                           </div>
                             </div>
                           ) : !isAnonymous && landingTab === "pomodoro" ? (
-                            <div className={pomodoroSessionStartIso ? "min-h-[62vh] flex items-center justify-center" : "space-y-3"}>
+                            <div className={`${pomodoroSessionStartIso ? "min-h-[62vh] flex items-center justify-center" : "space-y-3"} pomodoro-theme-${pomodoroTheme}`}>
                               {pomodoroSessionStartIso ? (
-                                <div className="w-full max-w-xl rounded-3xl border border-neutral-200/70 dark:border-white/10 bg-background p-6 sm:p-8 text-center space-y-6 overflow-visible">
+                                <div className="relative w-full max-w-xl rounded-3xl border border-neutral-200/70 dark:border-white/10 bg-background/90 p-6 sm:p-8 text-center overflow-hidden backdrop-blur-[1px]">
+                                  {pomodoroThemeBackdrop}
+                                  {pomodoroThemeMotionOverlay}
+                                  <div className="relative z-10 space-y-6 overflow-visible">
+                                  {pomodoroThemeSelector}
                                   <p
                                     className={`font-black tracking-[-0.04em] text-foreground leading-none ${
                                       shouldAnimatePomodoroLastSecond ? "pomodoro-last-second-scroll" : ""
@@ -12433,28 +12579,17 @@ export default function ChatPage() {
                                   {focusTrackerError && (
                                     <p className="text-xs text-red-600 dark:text-red-400">{focusTrackerError}</p>
                                   )}
+                                  </div>
                                 </div>
                               ) : (
                               <>
-                              <div className="rounded-2xl border border-neutral-200/70 dark:border-white/10 bg-background p-3 sm:p-4">
-                                <div className="flex items-center justify-between gap-2">
+                              <div className="relative rounded-2xl border border-neutral-200/70 dark:border-white/10 bg-background/90 p-3 sm:p-4 overflow-hidden backdrop-blur-[1px]">
+                                {pomodoroThemeBackdrop}
+                                <div className="relative z-10">
+                                <div className="flex flex-wrap items-start justify-between gap-2">
                                   <p className="text-sm sm:text-base font-semibold text-foreground">Focus timer</p>
-                                  <div className="flex items-center gap-1">
-                                    {[30, 60, 90].map((minutes) => (
-                                      <button
-                                        key={`pomodoro-duration-${minutes}`}
-                                        type="button"
-                                        onClick={() => setPomodoroDurationMinutes(minutes)}
-                                        disabled={pomodoroRunning || !!pomodoroSessionStartIso}
-                                        className={`rounded-full px-2.5 py-1 text-xs font-medium border transition-colors ${
-                                          pomodoroDurationMinutes === minutes
-                                            ? "border-foreground text-foreground bg-neutral-100 dark:bg-neutral-800"
-                                            : "border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                                        } disabled:opacity-50`}
-                                      >
-                                        {minutes}m
-                                      </button>
-                                    ))}
+                                  <div className="sm:min-w-[320px]">
+                                    {pomodoroThemeSelector}
                                   </div>
                                 </div>
                                 <div className="mt-2 flex items-center gap-2">
@@ -12478,6 +12613,26 @@ export default function ChatPage() {
                                     Set minutes
                                   </button>
                                 </div>
+                                <div className="mt-2">
+                                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mb-1">Quick presets</p>
+                                  <div className="flex items-center gap-1">
+                                    {[30, 60, 90].map((minutes) => (
+                                      <button
+                                        key={`pomodoro-duration-${minutes}`}
+                                        type="button"
+                                        onClick={() => setPomodoroDurationMinutes(minutes)}
+                                        disabled={pomodoroRunning || !!pomodoroSessionStartIso}
+                                        className={`rounded-full px-2.5 py-1 text-xs font-medium border transition-colors ${
+                                          pomodoroDurationMinutes === minutes
+                                            ? "border-foreground text-foreground bg-neutral-100 dark:bg-neutral-800"
+                                            : "border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                        } disabled:opacity-50`}
+                                      >
+                                        {minutes}m
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
                                 <p
                                   className="pomodoro-setup-clock mt-3 font-black tracking-[-0.04em] text-foreground leading-none"
                                 >
@@ -12492,7 +12647,7 @@ export default function ChatPage() {
                                   }}
                                   placeholder="Tag this focus session (required)"
                                   disabled={focusTrackerSaving}
-                                  className="w-full rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background px-3 py-2 text-sm"
+                                  className="mt-4 w-full rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background px-3 py-2 text-sm"
                                   aria-label="Focus session tag"
                                 />
                                 <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -12502,30 +12657,7 @@ export default function ChatPage() {
                                     disabled={pomodoroRunning}
                                     className="rounded-xl bg-foreground text-background px-4 py-2 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
                                   >
-                                    {pomodoroSessionStartIso ? "Resume" : "Start"}
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={pausePomodoro}
-                                    disabled={!pomodoroRunning}
-                                    className="rounded-xl border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
-                                  >
-                                    Pause
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => void endPomodoro()}
-                                    disabled={!pomodoroSessionStartIso || focusTrackerSaving}
-                                    className="rounded-xl bg-orange-500 text-white px-4 py-2 text-sm font-medium hover:bg-orange-400 transition-colors disabled:opacity-50"
-                                  >
-                                    End
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={resetPomodoro}
-                                    className="rounded-xl border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                                  >
-                                    Reset
+                                    Start
                                   </button>
                                 </div>
                                 {focusTrackerSaving && (
@@ -12537,6 +12669,7 @@ export default function ChatPage() {
                                 {focusTrackerError && (
                                   <p className="mt-2 text-xs text-red-600 dark:text-red-400">{focusTrackerError}</p>
                                 )}
+                                </div>
                               </div>
                               <div className="rounded-2xl border border-neutral-200/70 dark:border-white/10 bg-background p-3 sm:p-4 space-y-2">
                                 <div className="flex items-center justify-between gap-2">
@@ -12549,6 +12682,49 @@ export default function ChatPage() {
                                 <p className="text-2xl sm:text-3xl font-semibold text-foreground">
                                   {todayFocusSummary.minutes} min
                                 </p>
+                                <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/70 dark:bg-neutral-900/60 p-2.5 space-y-2">
+                                  <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                                    Add custom focus entry
+                                  </p>
+                                  <div className="flex flex-wrap items-end gap-2">
+                                    <div className="min-w-[180px] flex-1">
+                                      <label className="mb-1 block text-[11px] text-neutral-500 dark:text-neutral-400">
+                                        Tag
+                                      </label>
+                                      <input
+                                        type="text"
+                                        value={customFocusTagInput}
+                                        onChange={(e) => setCustomFocusTagInput(e.target.value.slice(0, 60))}
+                                        placeholder="e.g. Deep work, Reading"
+                                        disabled={focusTrackerSaving}
+                                        className="w-full rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background px-2.5 py-1.5 text-xs sm:text-sm"
+                                      />
+                                    </div>
+                                    <div className="w-[110px]">
+                                      <label className="mb-1 block text-[11px] text-neutral-500 dark:text-neutral-400">
+                                        Minutes
+                                      </label>
+                                      <input
+                                        type="number"
+                                        min={1}
+                                        max={600}
+                                        step={1}
+                                        value={customFocusMinutesInput}
+                                        onChange={(e) => setCustomFocusMinutesInput(e.target.value)}
+                                        disabled={focusTrackerSaving}
+                                        className="w-full rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background px-2.5 py-1.5 text-xs sm:text-sm"
+                                      />
+                                    </div>
+                                    <button
+                                      type="button"
+                                      onClick={() => void addCustomFocusEntry()}
+                                      disabled={focusTrackerSaving}
+                                      className="h-[34px] rounded-lg border border-neutral-300 dark:border-neutral-600 px-3 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                                    >
+                                      Add entry
+                                    </button>
+                                  </div>
+                                </div>
                                 {focusTrackerLoading ? (
                                   <p className="text-sm text-neutral-500 dark:text-neutral-400">Loading focus sessions...</p>
                                 ) : todayFocusSummary.rows.length > 0 ? (
@@ -12567,7 +12743,7 @@ export default function ChatPage() {
                                           </p>
                                           {entry.tag && (
                                             <p className="mt-0.5 inline-flex max-w-[180px] truncate rounded-md bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 text-[10px] sm:text-xs text-neutral-700 dark:text-neutral-300">
-                                              #{entry.tag}
+                                              {entry.tag}
                                             </p>
                                           )}
                                         </div>
