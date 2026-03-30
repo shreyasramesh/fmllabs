@@ -353,6 +353,53 @@ ${normalizedText}`
   return text || normalizedText;
 }
 
+export type ChatInputLens =
+  | "contrarian"
+  | "systems_thinker"
+  | "stoic"
+  | "casual_friend"
+  | "playful_coach";
+
+export async function refineChatMessageWithLens(
+  messageText: string,
+  lens: ChatInputLens,
+  usageContext?: GeminiUsageContext
+): Promise<string> {
+  const normalizedText = messageText.trim();
+  const model = getModel();
+  const lensInstruction: Record<ChatInputLens, string> = {
+    contrarian:
+      "The Contrarian: respectfully challenge assumptions, add one alternative interpretation, and reduce overconfidence.",
+    systems_thinker:
+      "The Systems Thinker: map dependencies, constraints, feedback loops, and likely second-order effects in plain language.",
+    stoic:
+      "The Stoic: separate what is in control vs outside control, reframe calmly, and orient toward practical action.",
+    casual_friend:
+      "Casual Friend: keep it warm, conversational, and relatable, as if speaking to a trusted friend.",
+    playful_coach:
+      "Playful Coach: keep it light and energizing, with encouraging tone and playful phrasing without being childish.",
+  };
+  const result = await model.generateContent(
+    `You are rewriting a user's next chat message through a selected lens while preserving intent.
+
+Lens:
+${lensInstruction[lens]}
+
+Rules:
+- Keep first-person voice and original intent.
+- Do not add fabricated facts.
+- Keep it concise: 1-4 sentences.
+- Preserve emotionally important details.
+- Return ONLY the rewritten message text. No bullets, no title, no commentary.
+
+User message draft:
+${normalizedText}`
+  );
+  const text = result.response.text().trim();
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  return text || normalizedText;
+}
+
 export type CalorieTrackingIntent = "nutrition" | "exercise" | "mixed";
 
 export interface CalorieTrackingAnalyzeResult {

@@ -487,6 +487,85 @@ const JOURNAL_REFINE_PERSONAS: Array<{ id: JournalRefinePersonaId; label: string
   { id: "systems_thinker", label: "The Systems Thinker" },
   { id: "stoic", label: "The Stoic" },
 ];
+
+type ChatInputLensId =
+  | "none"
+  | "contrarian"
+  | "systems_thinker"
+  | "stoic"
+  | "casual_friend"
+  | "playful_coach";
+const CHAT_INPUT_LENSES: Array<{ id: ChatInputLensId; label: string }> = [
+  { id: "none", label: "No lens" },
+  { id: "contrarian", label: "Contrarian" },
+  { id: "systems_thinker", label: "Systems Thinker" },
+  { id: "stoic", label: "Stoic" },
+  { id: "casual_friend", label: "Casual Friend" },
+  { id: "playful_coach", label: "Playful Coach" },
+];
+const CHAT_INPUT_LENS_DESCRIPTIONS: Record<ChatInputLensId, string> = {
+  none: "Sends your message unchanged.",
+  contrarian: "Challenges assumptions and stress-tests your thinking.",
+  systems_thinker: "Maps dependencies, constraints, and second-order effects.",
+  stoic: "Reframes around what is in your control and next grounded action.",
+  casual_friend: "Makes the tone warmer, lighter, and conversational.",
+  playful_coach: "Adds energizing, playful momentum while staying practical.",
+};
+
+function detectAutoSuggestedChatLens(sourceText: string): {
+  suggested: Exclude<ChatInputLensId, "none"> | null;
+  reason: string;
+} {
+  const text = sourceText.trim().toLowerCase();
+  if (!text) return { suggested: null, reason: "" };
+
+  if (/\b(fun|playful|joke|humou?r|hype|pump me up|pep talk|roast me)\b/.test(text)) {
+    return {
+      suggested: "playful_coach",
+      reason: "Detected fun/energy language.",
+    };
+  }
+  if (/\b(system|dependency|dependencies|trade[- ]?off|second[- ]?order|feedback loop|downstream|interconnected)\b/.test(text)) {
+    return {
+      suggested: "systems_thinker",
+      reason: "Detected systems/dependency language.",
+    };
+  }
+  if (/\b(stress|stressed|anxious|anxiety|overwhelmed|panic|burnout|spiral|angry|annoyed)\b/.test(text)) {
+    return {
+      suggested: "stoic",
+      reason: "Detected stress/overwhelm language.",
+    };
+  }
+  if (/\b(always|never|obviously|clearly|must|definitely|for sure|everyone|no one)\b/.test(text)) {
+    return {
+      suggested: "contrarian",
+      reason: "Detected certainty-heavy phrasing.",
+    };
+  }
+  if (/\b(vent|idk|i don't know|kinda|sorta|just talk|quick chat|low key|casual)\b/.test(text)) {
+    return {
+      suggested: "casual_friend",
+      reason: "Detected casual/conversational intent.",
+    };
+  }
+  return { suggested: null, reason: "" };
+}
+
+function buildChatLensHoverText(
+  lensId: ChatInputLensId,
+  suggestedLens: Exclude<ChatInputLensId, "none"> | null,
+  suggestedReason: string
+): string {
+  const base = CHAT_INPUT_LENS_DESCRIPTIONS[lensId];
+  if (lensId !== "none" && lensId === suggestedLens) {
+    return `${base} Suggested for this draft: ${suggestedReason}`;
+  }
+  if (suggestedLens) {
+    return `${base} Current auto-suggestion: ${CHAT_INPUT_LENSES.find((lens) => lens.id === suggestedLens)?.label ?? "None"} (${suggestedReason})`;
+  }
+  return `${base} No strong auto-suggestion for this draft yet.`;
+}
 const LETTER_MODAL_TITLE = "a note from the developer";
 type ExportDataSection =
   | "settings"
@@ -659,8 +738,15 @@ function MessageBubble({
   const ctxCount = ctx && ctx.mentalModels.length + ctx.longTermMemories.length + (ctx.customConcepts?.length ?? 0) + (ctx.conceptGroups?.length ?? 0) + (ctx.perspectiveCards?.length ?? 0);
   const [ctxExpanded, setCtxExpanded] = useState(false);
   const [ctxReasonPillKey, setCtxReasonPillKey] = useState<string | null>(null);
+  const [assistantFeedback, setAssistantFeedback] = useState<"up" | "down" | null>(null);
+  const [assistantFeedbackNotice, setAssistantFeedbackNotice] = useState<"good" | "bad" | null>(null);
+  const [copiedAssistantResponse, setCopiedAssistantResponse] = useState(false);
+  const [assistantMoreMenuOpen, setAssistantMoreMenuOpen] = useState(false);
+  const assistantMoreMenuRef = useRef<HTMLDivElement | null>(null);
+  const assistantMoreMenuButtonRef = useRef<HTMLButtonElement | null>(null);
   const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const didLongPressRef = useRef(false);
+  const assistantMoreMenuId = `assistant-more-menu-${messageIndex}`;
 
   const ctxItems: { type: "mm" | "ltm" | "cc" | "cg" | "card"; id: string; title: string; reason: string; prompt?: string }[] = ctx
     ? [
@@ -713,6 +799,47 @@ function MessageBubble({
     [text, ctxItems, onMentalModelClick, onLtmClick, onCustomConceptClick, onConceptGroupClick, onPerspectiveCardClick]
   );
 
+  const handleAssistantCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(text.trim() ? text : message.content);
+      setCopiedAssistantResponse(true);
+      if (typeof window !== "undefined") {
+        window.setTimeout(() => setCopiedAssistantResponse(false), 1200);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, [message.content, text]);
+
+  useEffect(() => {
+    if (!assistantMoreMenuOpen) return;
+    const handlePointerDown = (event: MouseEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (assistantMoreMenuRef.current?.contains(target)) return;
+      if (assistantMoreMenuButtonRef.current?.contains(target)) return;
+      setAssistantMoreMenuOpen(false);
+    };
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setAssistantMoreMenuOpen(false);
+      assistantMoreMenuButtonRef.current?.focus();
+    };
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [assistantMoreMenuOpen]);
+
+  useEffect(() => {
+    if (!assistantFeedbackNotice) return;
+    if (typeof window === "undefined") return;
+    const timeout = window.setTimeout(() => setAssistantFeedbackNotice(null), 1400);
+    return () => window.clearTimeout(timeout);
+  }, [assistantFeedbackNotice]);
+
   const pillStyles = {
     mm: "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 border-amber-200/60 dark:border-amber-700/50 hover:bg-amber-200/80 dark:hover:bg-amber-800/50 hover:border-amber-300 dark:hover:border-amber-600/60",
     ltm: "bg-teal-100 dark:bg-teal-900/40 text-teal-800 dark:text-teal-200 border-teal-200/60 dark:border-teal-700/50 hover:bg-teal-200/80 dark:hover:bg-teal-800/50 hover:border-teal-300 dark:hover:border-teal-600/60",
@@ -732,6 +859,10 @@ function MessageBubble({
     onGoBackInTime &&
     messageIndex < totalMessages - 1 &&
     !isLoading;
+  const hasAdditionalAssistantActions =
+    canGoBack ||
+    (message.role === "assistant" && hideContextUsed && showConvertToDeep && !!onConvertToDeep) ||
+    (message.role === "assistant" && !hideContextUsed && !!ctx && ctxCount !== undefined);
 
   return (
     <div
@@ -880,172 +1011,322 @@ function MessageBubble({
           </div>
         )}
       </div>
-      {canGoBack && (
-        <button
-          type="button"
-          onClick={() => onGoBackInTime?.(messageIndex, message)}
-          className="mt-1.5 opacity-100 md:opacity-0 md:group-hover/msg:opacity-100 transition-opacity text-xs text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 focus:opacity-100"
-        >
-          Go back to here
-        </button>
-      )}
-      {message.role === "assistant" &&
-        hideContextUsed &&
-        showConvertToDeep &&
-        onConvertToDeep && (
-          <div className="mt-2 w-full max-w-full sm:max-w-[85%] flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={onConvertToDeep}
-              className="relative overflow-hidden shimmer-button py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm shrink-0 min-w-0"
-              title="Use full context (mental models, memories) for this conversation"
-            >
-              <span className="relative z-10 sm:whitespace-normal">Convert to: Deep Conversation</span>
-            </button>
-          </div>
-        )}
-      {message.role === "assistant" && !hideContextUsed && ctx && ctxCount !== undefined && (
-          <div className="mt-2 w-full max-w-full sm:max-w-[85%] flex flex-col items-start">
-            {ctxExpanded ? (
+      {message.role === "assistant" && isLastAssistant && (
+        <div className="mt-1.5 w-full max-w-full sm:max-w-[85%]">
+          <div className="relative inline-flex flex-col items-start">
+            {assistantMoreMenuOpen && (
               <div
-                className="w-full rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-gradient-to-br from-neutral-50/95 to-neutral-100/80 dark:from-neutral-800 dark:to-neutral-900 shadow-sm overflow-visible text-foreground"
-                onPointerDownCapture={(e) => {
-                  if (ctxReasonPillKey && !(e.target as HTMLElement).closest("[data-context-pill]")) {
-                    setCtxReasonPillKey(null);
-                  }
-                }}
+                ref={assistantMoreMenuRef}
+                id={assistantMoreMenuId}
+                role="menu"
+                aria-label="More assistant actions"
+                className="absolute bottom-full left-0 z-20 mb-2 w-max max-w-[86vw] max-h-[62vh] overflow-y-auto rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background shadow-xl"
               >
-                <div className="px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-2 border-b border-neutral-200/60 dark:border-white/10">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 shrink-0">
-                    Context used
-                  </span>
-                  <div className="flex flex-wrap items-center gap-2 min-w-0">
-                    {showConvertToDeep && onConvertToDeep && (
-                      <button
-                        type="button"
-                        onClick={onConvertToDeep}
-                        className="relative overflow-hidden shimmer-button py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm shrink-0 min-w-0"
-                        title="Use full context (mental models, memories) for this conversation"
-                      >
-                        <span className="relative z-10 whitespace-normal">Convert to: Deep Conversation</span>
-                      </button>
-                    )}
+                <div className="p-2 space-y-1.5">
+                  {canGoBack && (
                     <button
                       type="button"
-                      onClick={() => { setCtxExpanded(false); setCtxReasonPillKey(null); }}
-                      className="text-xs font-medium text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+                      onClick={() => {
+                        setAssistantMoreMenuOpen(false);
+                        onGoBackInTime?.(messageIndex, message);
+                      }}
+                      className="inline-flex w-full items-center justify-start gap-2 rounded-xl px-3 py-2 text-left text-[11px] font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                     >
-                      Collapse
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5 text-accent">
+                        <path d="M9 14L4 9l5-5" />
+                        <path d="M20 20v-7a4 4 0 0 0-4-4H4" />
+                      </svg>
+                      Go back to here
                     </button>
-                  </div>
-                </div>
-                <div className="p-3 flex flex-wrap gap-2">
-                  {ctxCount === 0 ? (
-                    <span className="text-xs text-neutral-500 dark:text-neutral-400 italic">
-                      No mental models or memories used
-                    </span>
-                  ) : (
-                    ctxItems.map((item) => {
-                      const key = `${item.type}-${item.id}`;
-                      const isShowingReason = ctxReasonPillKey === key;
-                      return (
-                        <div key={key} className="relative" data-context-pill>
+                  )}
+                  {onManualJournalCheckpoint && isLastAssistant && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAssistantMoreMenuOpen(false);
+                        onManualJournalCheckpoint();
+                      }}
+                      disabled={manualJournalLoading}
+                      className="inline-flex w-full items-center justify-start gap-2 rounded-xl px-3 py-2 text-left text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors disabled:opacity-70 disabled:cursor-wait"
+                    >
+                      {manualJournalLoading ? (
+                        <svg className="h-3.5 w-3.5 animate-spin text-accent" viewBox="0 0 24 24" fill="none" aria-hidden>
+                          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.25" strokeWidth="2" />
+                          <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                        </svg>
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5 text-accent">
+                          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
+                        </svg>
+                      )}
+                      Journal
+                    </button>
+                  )}
+                  {message.role === "assistant" &&
+                    hideContextUsed &&
+                    showConvertToDeep &&
+                    onConvertToDeep && (
+                      <div className="w-full">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAssistantMoreMenuOpen(false);
+                            onConvertToDeep();
+                          }}
+                          className="relative inline-flex w-full items-center justify-start gap-2 overflow-hidden shimmer-button py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm"
+                          title="Use full context (mental models, memories) for this conversation"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5 text-accent">
+                            <path d="M12 3v6" />
+                            <path d="M12 15v6" />
+                            <path d="m8 7 4-4 4 4" />
+                            <path d="m16 17-4 4-4-4" />
+                          </svg>
+                          <span className="relative z-10 sm:whitespace-normal">Convert to: Deep Conversation</span>
+                        </button>
+                      </div>
+                    )}
+                  {message.role === "assistant" && !hideContextUsed && ctx && ctxCount !== undefined && (
+                    <div className="flex flex-col items-start">
+                      {ctxExpanded ? (
+                        <div
+                          className="w-full rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-gradient-to-br from-neutral-50/95 to-neutral-100/80 dark:from-neutral-800 dark:to-neutral-900 shadow-sm overflow-visible text-foreground"
+                          onPointerDownCapture={(e) => {
+                            if (ctxReasonPillKey && !(e.target as HTMLElement).closest("[data-context-pill]")) {
+                              setCtxReasonPillKey(null);
+                            }
+                          }}
+                        >
+                          <div className="px-3.5 py-2.5 flex flex-col items-start gap-2 border-b border-neutral-200/60 dark:border-white/10">
+                            <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 shrink-0">
+                              Context used
+                            </span>
+                            <div className="flex flex-col items-start gap-2 min-w-0">
+                              {showConvertToDeep && onConvertToDeep && (
+                                <button
+                                  type="button"
+                                  onClick={onConvertToDeep}
+                                  className="relative inline-flex items-center justify-start overflow-hidden shimmer-button py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm"
+                                  title="Use full context (mental models, memories) for this conversation"
+                                >
+                                  <span className="relative z-10 whitespace-normal">Convert to: Deep Conversation</span>
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setCtxExpanded(false);
+                                  setCtxReasonPillKey(null);
+                                }}
+                                className="text-xs font-medium text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+                              >
+                                Collapse
+                              </button>
+                            </div>
+                          </div>
+                          <div className="p-3 flex flex-wrap gap-2">
+                            {ctxCount === 0 ? (
+                              <span className="text-xs text-neutral-500 dark:text-neutral-400 italic">
+                                No mental models or memories used
+                              </span>
+                            ) : (
+                              ctxItems.map((item) => {
+                                const key = `${item.type}-${item.id}`;
+                                const isShowingReason = ctxReasonPillKey === key;
+                                return (
+                                  <div key={key} className="relative" data-context-pill>
+                                    <button
+                                      type="button"
+                                      className={`inline-flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl text-xs font-medium border transition-all duration-200 shadow-sm shrink-0 ${pillStyles[item.type]}`}
+                                      onPointerDown={(e) => {
+                                        e.preventDefault();
+                                        didLongPressRef.current = false;
+                                        longPressTimerRef.current = setTimeout(() => {
+                                          longPressTimerRef.current = null;
+                                          didLongPressRef.current = true;
+                                          openContextFor(item.type, item.id, item.type === "card" ? item.prompt : undefined);
+                                        }, 500);
+                                      }}
+                                      onPointerUp={() => {
+                                        if (longPressTimerRef.current) {
+                                          clearTimeout(longPressTimerRef.current);
+                                          longPressTimerRef.current = null;
+                                          if (!didLongPressRef.current) {
+                                            setCtxReasonPillKey((prev) => (prev === key ? null : key));
+                                          }
+                                        }
+                                        didLongPressRef.current = false;
+                                      }}
+                                      onPointerLeave={() => {
+                                        if (longPressTimerRef.current) {
+                                          clearTimeout(longPressTimerRef.current);
+                                          longPressTimerRef.current = null;
+                                        }
+                                        didLongPressRef.current = false;
+                                      }}
+                                      onContextMenu={(e) => e.preventDefault()}
+                                      title={item.reason || (item.type === "mm" ? "Hold to open mental model" : item.type === "ltm" ? "Hold to open memory" : item.type === "cc" ? "Hold to open concept" : item.type === "cg" ? "Hold to open domain" : "Applied perspective")}
+                                    >
+                                      <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${pillDotColors[item.type]}`} aria-hidden />
+                                      <span>{item.title}</span>
+                                    </button>
+                                    {isShowingReason && (
+                                      <div
+                                        className="absolute left-0 right-0 top-full mt-1 z-10 py-2 px-2.5 rounded-lg text-[11px] text-neutral-600 dark:text-neutral-300 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-600 shadow-lg max-h-32 overflow-y-auto"
+                                        role="tooltip"
+                                      >
+                                        <p className="font-medium text-neutral-500 dark:text-neutral-400 mb-0.5">Why it was used</p>
+                                        <p className="break-words">{item.reason || "No reason provided"}</p>
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-stretch gap-1.5 w-full">
                           <button
                             type="button"
-                            className={`inline-flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl text-xs font-medium border transition-all duration-200 shadow-sm shrink-0 ${pillStyles[item.type]}`}
-                            onPointerDown={(e) => {
-                              e.preventDefault();
-                              didLongPressRef.current = false;
-                              longPressTimerRef.current = setTimeout(() => {
-                                longPressTimerRef.current = null;
-                                didLongPressRef.current = true;
-                                openContextFor(item.type, item.id, item.type === "card" ? item.prompt : undefined);
-                              }, 500);
-                            }}
-                            onPointerUp={() => {
-                              if (longPressTimerRef.current) {
-                                clearTimeout(longPressTimerRef.current);
-                                longPressTimerRef.current = null;
-                                if (!didLongPressRef.current) {
-                                  setCtxReasonPillKey((prev) => (prev === key ? null : key));
-                                }
-                              }
-                              didLongPressRef.current = false;
-                            }}
-                            onPointerLeave={() => {
-                              if (longPressTimerRef.current) {
-                                clearTimeout(longPressTimerRef.current);
-                                longPressTimerRef.current = null;
-                              }
-                              didLongPressRef.current = false;
-                            }}
-                            onContextMenu={(e) => e.preventDefault()}
-                            title={item.reason || (item.type === "mm" ? "Hold to open mental model" : item.type === "ltm" ? "Hold to open memory" : item.type === "cc" ? "Hold to open concept" : item.type === "cg" ? "Hold to open domain" : "Applied perspective")}
+                            onClick={() => setCtxExpanded(true)}
+                            className="inline-flex w-full items-center gap-2 py-1.5 px-3 rounded-xl text-[11px] font-medium bg-gradient-to-r from-neutral-100 to-neutral-50 dark:from-neutral-800 dark:to-neutral-800 text-neutral-600 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-600 hover:from-neutral-200 hover:to-neutral-100 dark:hover:from-neutral-700 dark:hover:to-neutral-700 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 shadow-sm"
                           >
-                            <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${pillDotColors[item.type]}`} aria-hidden />
-                            <span>{item.title}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5 text-accent">
+                              <circle cx="12" cy="12" r="3" />
+                              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                            </svg>
+                            Context used ({ctxCount})
                           </button>
-                          {isShowingReason && (
-                            <div
-                              className="absolute left-0 right-0 top-full mt-1 z-10 py-2 px-2.5 rounded-lg text-[11px] text-neutral-600 dark:text-neutral-300 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-600 shadow-lg max-h-32 overflow-y-auto"
-                              role="tooltip"
+                          {askMentorsSlot && isLastAssistant && <div className="w-full">{askMentorsSlot}</div>}
+                          {showConvertToDeep && onConvertToDeep && (
+                            <button
+                              type="button"
+                              onClick={onConvertToDeep}
+                              className="relative inline-flex w-full items-center justify-start gap-2 overflow-hidden shimmer-button py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm"
+                              title="Use full context (mental models, memories) for this conversation"
                             >
-                              <p className="font-medium text-neutral-500 dark:text-neutral-400 mb-0.5">Why it was used</p>
-                              <p className="break-words">{item.reason || "No reason provided"}</p>
-                            </div>
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5 text-accent">
+                                <path d="M12 3v6" />
+                                <path d="M12 15v6" />
+                                <path d="m8 7 4-4 4 4" />
+                                <path d="m16 17-4 4-4-4" />
+                              </svg>
+                              <span className="relative z-10 sm:whitespace-normal">Convert to: Deep Conversation</span>
+                            </button>
                           )}
                         </div>
-                      );
-                    })
+                      )}
+                    </div>
+                  )}
+                  {!hasAdditionalAssistantActions && (
+                    <p className="px-1 py-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+                      No additional actions yet.
+                    </p>
                   )}
                 </div>
               </div>
-            ) : (
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setCtxExpanded(true)}
-                  className="inline-flex items-center gap-2 py-1.5 px-3 rounded-xl text-xs font-medium bg-gradient-to-r from-neutral-100 to-neutral-50 dark:from-neutral-800 dark:to-neutral-800 text-neutral-600 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-600 hover:from-neutral-200 hover:to-neutral-100 dark:hover:from-neutral-700 dark:hover:to-neutral-700 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-500 transition-all duration-200 shadow-sm shrink-0"
-                >
-                  <span className="flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 dark:bg-amber-500" aria-hidden />
-                    <span className="w-1.5 h-1.5 rounded-full bg-teal-400 dark:bg-teal-500" aria-hidden />
-                    <span className="w-1.5 h-1.5 rounded-full bg-violet-400 dark:bg-violet-500" aria-hidden />
-                  </span>
-                  Context used ({ctxCount})
-                </button>
-                {onManualJournalCheckpoint && isLastAssistant && (
-                  <button
-                    type="button"
-                    onClick={onManualJournalCheckpoint}
-                    disabled={manualJournalLoading}
-                    className="inline-flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm disabled:opacity-70 disabled:cursor-wait shrink-0"
-                    title="Add a journal checkpoint"
-                  >
-                    {manualJournalLoading && (
-                      <svg className="w-3 h-3 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden>
-                        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.25" strokeWidth="2" />
-                        <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                      </svg>
-                    )}
-                    Journal
-                  </button>
+            )}
+            <div className="inline-flex items-center gap-1 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/60 px-1.5 py-1">
+              <button
+                type="button"
+                onClick={() =>
+                  setAssistantFeedback((prev) => {
+                    const next = prev === "up" ? null : "up";
+                    setAssistantFeedbackNotice(next ? "good" : null);
+                    return next;
+                  })
+                }
+                className={`rounded-xl p-2 transition-colors ${
+                  assistantFeedback === "up"
+                    ? "text-accent bg-accent/10"
+                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                }`}
+                aria-label="Good response"
+                title="Good response"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                  <path d="M14 9V5a3 3 0 0 0-3-3l-1 4-3 4v10h11.2a2 2 0 0 0 2-1.7l1-7A2 2 0 0 0 19.2 9H14Z" />
+                  <path d="M7 10H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setAssistantFeedback((prev) => {
+                    const next = prev === "down" ? null : "down";
+                    setAssistantFeedbackNotice(next ? "bad" : null);
+                    return next;
+                  })
+                }
+                className={`rounded-xl p-2 transition-colors ${
+                  assistantFeedback === "down"
+                    ? "text-accent bg-accent/10"
+                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                }`}
+                aria-label="Bad response"
+                title="Bad response"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                  <path d="M10 15v4a3 3 0 0 0 3 3l1-4 3-4V4H5.8a2 2 0 0 0-2 1.7l-1 7A2 2 0 0 0 4.8 15H10Z" />
+                  <path d="M17 14h3a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleAssistantCopy()}
+                className={`rounded-xl p-2 transition-colors ${
+                  copiedAssistantResponse
+                    ? "text-neutral-700 dark:text-neutral-200 bg-neutral-200 dark:bg-neutral-700"
+                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                }`}
+                aria-label="Copy response"
+                title="Copy response"
+              >
+                {copiedAssistantResponse ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                    <path d="M20 6L9 17l-5-5" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                  </svg>
                 )}
-                {askMentorsSlot && isLastAssistant && askMentorsSlot}
-                {showConvertToDeep && onConvertToDeep && (
-                  <button
-                    type="button"
-                    onClick={onConvertToDeep}
-                    className="relative overflow-hidden shimmer-button py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 shadow-sm shrink-0 min-w-0"
-                    title="Use full context (mental models, memories) for this conversation"
-                  >
-                    <span className="relative z-10 sm:whitespace-normal">Convert to: Deep Conversation</span>
-                  </button>
-                )}
-              </div>
+              </button>
+              <button
+                ref={assistantMoreMenuButtonRef}
+                type="button"
+                onClick={() => setAssistantMoreMenuOpen((prev) => !prev)}
+                className={`rounded-xl p-2 transition-colors ${
+                  assistantMoreMenuOpen
+                    ? "text-neutral-700 dark:text-neutral-200 bg-neutral-200 dark:bg-neutral-700"
+                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                }`}
+                aria-label="More options"
+                aria-haspopup="menu"
+                aria-expanded={assistantMoreMenuOpen}
+                aria-controls={assistantMoreMenuId}
+                title="More"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden>
+                  <circle cx="12" cy="5" r="1.8" />
+                  <circle cx="12" cy="12" r="1.8" />
+                  <circle cx="12" cy="19" r="1.8" />
+                </svg>
+              </button>
+            </div>
+            {assistantFeedbackNotice && (
+              <p className="mt-1.5 px-1 text-[11px] text-accent" role="status">
+                {assistantFeedbackNotice === "good"
+                  ? "Feedback submitted: good response."
+                  : "Feedback submitted: needs improvement."}
+              </p>
             )}
           </div>
-        )}
+        </div>
+      )}
       {showOptions && (
         <div className="mt-2 flex flex-col gap-2 w-full max-w-full sm:max-w-[85%]">
           {displayOptions.map((opt, j) => (
@@ -1055,7 +1336,7 @@ function MessageBubble({
                 playSelectionChime();
                 onOptionSelect(opt);
               }}
-              className="message-bubble-option px-3 py-2 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 text-sm transition-all duration-200 active:scale-[0.98] hover:border-neutral-400 dark:hover:border-neutral-500 text-left opacity-0 animate-fade-in-up"
+              className="message-bubble-option inline-flex w-fit max-w-full self-start px-3 py-2 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 text-sm transition-all duration-200 active:scale-[0.98] hover:border-neutral-400 dark:hover:border-neutral-500 text-left opacity-0 animate-fade-in-up"
               style={{ animationDelay: `${j * 80}ms`, animationFillMode: "forwards" }}
             >
               <UserMessageContent
@@ -2970,6 +3251,11 @@ export default function ChatPage() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [chatInputLens, setChatInputLens] = useState<ChatInputLensId>("none");
+  const [chatInputLensLoading, setChatInputLensLoading] = useState(false);
+  const [chatInputLensError, setChatInputLensError] = useState<string | null>(null);
+  const [chatInputLensRefinedText, setChatInputLensRefinedText] = useState("");
+  const [chatInputLensHoverId, setChatInputLensHoverId] = useState<ChatInputLensId | null>(null);
   const [landingPlaceholderIndex, setLandingPlaceholderIndex] = useState(0);
   const [landingPlaceholderText, setLandingPlaceholderText] = useState("");
   const [landingPlaceholderDeleting, setLandingPlaceholderDeleting] = useState(false);
@@ -6064,6 +6350,56 @@ export default function ChatPage() {
     setOnboardingDismissed(true);
   }, []);
 
+  const handleMainInputChange = useCallback((nextValue: string) => {
+    setInput(nextValue);
+    if (chatInputLensRefinedText) setChatInputLensRefinedText("");
+    if (chatInputLensError) setChatInputLensError(null);
+  }, [chatInputLensError, chatInputLensRefinedText]);
+
+  const refineMainInputWithLens = useCallback(async () => {
+    const trimmed = input.trim();
+    if (!trimmed || chatInputLens === "none" || chatInputLensLoading) return;
+    setChatInputLensLoading(true);
+    setChatInputLensError(null);
+    try {
+      const res = await fetch("/api/chat/refine", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: trimmed,
+          lens: chatInputLens,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { refinedText?: string; error?: string };
+      if (!res.ok) {
+        throw new Error(data.error || "Could not refine message.");
+      }
+      const refinedText = typeof data.refinedText === "string" ? data.refinedText.trim() : "";
+      if (!refinedText) {
+        throw new Error("Could not refine message.");
+      }
+      setChatInputLensRefinedText(refinedText);
+    } catch (error) {
+      setChatInputLensError(error instanceof Error ? error.message : "Could not refine message.");
+    } finally {
+      setChatInputLensLoading(false);
+    }
+  }, [chatInputLens, chatInputLensLoading, input]);
+
+  const chatLensSignalText = useMemo(() => {
+    const trimmed = input.trim();
+    if (trimmed) return trimmed;
+    const recentConversation = messages
+      .slice(-4)
+      .map((m) => m.content)
+      .join(" ");
+    return recentConversation.trim();
+  }, [input, messages]);
+  const autoSuggestedChatLensMeta = useMemo(
+    () => detectAutoSuggestedChatLens(chatLensSignalText),
+    [chatLensSignalText]
+  );
+
   const sendMessage = useCallback(async (overrideText?: string, options?: { retry?: boolean; messagesOverride?: Message[]; activeCardPrompt?: string; activeCardName?: string; journalCheckpoint?: string }) => {
     const rawText = (overrideText ?? input).trim();
     if (!rawText || isLoading) return;
@@ -6121,6 +6457,8 @@ export default function ChatPage() {
       dismissOnboarding();
     }
     setInput("");
+    setChatInputLensRefinedText("");
+    setChatInputLensError(null);
     setIsLoading(true);
     setLastFailedUserMessage(null);
     void playLlmResponseStartHaptic();
@@ -13216,8 +13554,8 @@ export default function ChatPage() {
                     !!currentSession?.secondOrderThinking ||
                     activeSecondOrderRef.current ||
                     (!suppressJournalAndAskMentors && followedFigureIds.length >= 2)) ? (
-                    <div className="inline-flex flex-col items-start gap-1.5">
-                      <div className="inline-flex flex-wrap items-center gap-1.5">
+                    <div className="flex flex-col items-stretch gap-1.5 w-full">
+                      <div className="flex flex-col items-stretch gap-1.5 w-full">
                         {(messages.length >= 2 ||
                           !!currentSession?.secondOrderThinking ||
                           activeSecondOrderRef.current) && (
@@ -13228,9 +13566,9 @@ export default function ChatPage() {
                               setSummarizeLanguageModal({ selectedLanguage: language });
                             }}
                             title="Summarize this conversation and save it to memory"
-                            className="inline-flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors shrink-0"
+                            className="inline-flex w-full items-center justify-start gap-1.5 py-1.5 px-2.5 rounded-xl text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors"
                           >
-                            <SparklesIcon className="w-3 h-3" />
+                            <SparklesIcon className="w-3 h-3 text-accent" />
                             Save to memory
                           </button>
                         )}
@@ -13252,7 +13590,7 @@ export default function ChatPage() {
                             setPendingSecondOrder(false);
                           }
                         }}
-                        className={`inline-flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl text-[11px] font-medium transition-colors shrink-0 ${
+                        className={`inline-flex w-full items-center justify-start gap-1.5 py-1.5 px-2.5 rounded-xl text-[11px] font-medium transition-colors ${
                           multiMentorMode
                             ? "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800/60"
                             : "text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700"
@@ -13261,7 +13599,7 @@ export default function ChatPage() {
                         aria-label="Ask multiple mentors"
                         title="Get perspectives from 2–5 mentors"
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 text-accent">
                           <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                           <circle cx="9" cy="7" r="4" />
                           <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
@@ -13413,7 +13751,7 @@ export default function ChatPage() {
                 <MentionInput
                   inputRef={inputRef}
                   value={input}
-                  onChange={setInput}
+                  onChange={handleMainInputChange}
                   onKeyDown={handleKeyDown}
                   mentalModels={Array.from(mentalModelsIndex.entries()).map(([id, name]) => ({
                     id,
@@ -13477,7 +13815,11 @@ export default function ChatPage() {
               </div>
               <div className="flex items-center gap-1 pr-2 shrink-0">
               <VoiceInputButton
-                onTranscription={(text) => setInput((prev) => (prev ? prev + " " + text : text))}
+                onTranscription={(text) => {
+                  if (chatInputLensRefinedText) setChatInputLensRefinedText("");
+                  if (chatInputLensError) setChatInputLensError(null);
+                  setInput((prev) => (prev ? prev + " " + text : text));
+                }}
                 language={language}
                 disabled={
                   sessionLoading ||
@@ -13517,6 +13859,134 @@ export default function ChatPage() {
                 </button>
               )}
                   </div>
+                </div>
+              )}
+              {!isLandingUtilityTab && (
+                <div className="mt-1.5 max-w-2xl lg:max-w-4xl w-full px-1">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {CHAT_INPUT_LENSES.map((lens) => {
+                      const selected = chatInputLens === lens.id;
+                      const isSuggested =
+                        lens.id !== "none" &&
+                        autoSuggestedChatLensMeta.suggested != null &&
+                        autoSuggestedChatLensMeta.suggested === lens.id;
+                      const tooltipId = `chat-lens-tooltip-${lens.id}`;
+                      const tooltipText = buildChatLensHoverText(
+                        lens.id,
+                        autoSuggestedChatLensMeta.suggested,
+                        autoSuggestedChatLensMeta.reason
+                      );
+                      return (
+                        <div key={`chat-lens-${lens.id}`} className="relative inline-flex">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setChatInputLens(lens.id);
+                              if (chatInputLensRefinedText) setChatInputLensRefinedText("");
+                              if (chatInputLensError) setChatInputLensError(null);
+                            }}
+                            onMouseEnter={() => setChatInputLensHoverId(lens.id)}
+                            onMouseLeave={() =>
+                              setChatInputLensHoverId((prev) => (prev === lens.id ? null : prev))
+                            }
+                            onFocus={() => setChatInputLensHoverId(lens.id)}
+                            onBlur={() =>
+                              setChatInputLensHoverId((prev) => (prev === lens.id ? null : prev))
+                            }
+                            className={`rounded-full border px-2.5 py-1 text-[10px] sm:text-xs font-medium transition-colors ${
+                              selected
+                                ? "border-accent text-accent bg-accent/10"
+                                : isSuggested
+                                  ? "border-accent/60 text-accent bg-accent/5"
+                                  : "border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                            }`}
+                            aria-pressed={selected}
+                            aria-describedby={chatInputLensHoverId === lens.id ? tooltipId : undefined}
+                          >
+                            <span className="inline-flex items-center gap-1">
+                              {lens.label}
+                              {isSuggested && (
+                                <span className="rounded-full bg-accent/15 px-1.5 py-0.5 text-[9px] font-semibold text-accent">
+                                  Suggested
+                                </span>
+                              )}
+                            </span>
+                          </button>
+                          {chatInputLensHoverId === lens.id && (
+                            <div
+                              id={tooltipId}
+                              role="tooltip"
+                              className="pointer-events-none absolute left-1/2 top-full z-20 mt-1.5 w-[min(80vw,280px)] -translate-x-1/2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background px-2.5 py-2 text-[11px] leading-relaxed text-neutral-600 dark:text-neutral-300 shadow-lg"
+                            >
+                              {tooltipText}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                    {autoSuggestedChatLensMeta.suggested && chatInputLens === "none" && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setChatInputLens(autoSuggestedChatLensMeta.suggested ?? "none");
+                          if (chatInputLensRefinedText) setChatInputLensRefinedText("");
+                          if (chatInputLensError) setChatInputLensError(null);
+                        }}
+                        className="rounded-xl border border-accent/50 bg-accent/10 px-2.5 py-1 text-[10px] sm:text-xs font-medium text-accent hover:bg-accent/15 transition-colors"
+                        title={`Apply auto-suggested lens: ${autoSuggestedChatLensMeta.reason}`}
+                      >
+                        Use suggested lens
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => void refineMainInputWithLens()}
+                      disabled={
+                        chatInputLensLoading ||
+                        !input.trim() ||
+                        chatInputLens === "none" ||
+                        sessionLoading ||
+                        !!currentSession?.isCollapsed ||
+                        isLoading
+                      }
+                      className="ml-auto rounded-xl border border-neutral-300 dark:border-neutral-600 px-2.5 py-1 text-[10px] sm:text-xs font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                    >
+                      {chatInputLensLoading ? "Refining..." : "Refine message"}
+                    </button>
+                  </div>
+                  {chatInputLensError && (
+                    <p className="mt-1 text-[11px] text-red-600 dark:text-red-400">{chatInputLensError}</p>
+                  )}
+                  {chatInputLensRefinedText && (
+                    <div className="mt-1.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/50 p-2">
+                      <p className="text-[10px] sm:text-xs font-medium text-neutral-500 dark:text-neutral-400">
+                        Refined with {CHAT_INPUT_LENSES.find((lens) => lens.id === chatInputLens)?.label ?? "lens"}
+                      </p>
+                      <p className="mt-1 text-sm text-foreground whitespace-pre-wrap">
+                        {chatInputLensRefinedText}
+                      </p>
+                      <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setInput(chatInputLensRefinedText);
+                            setChatInputLensRefinedText("");
+                            setChatInputLensError(null);
+                          }}
+                          className="rounded-lg bg-foreground text-background px-2.5 py-1 text-[10px] sm:text-xs font-medium hover:opacity-90 transition-opacity"
+                        >
+                          Use refined
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setChatInputLensRefinedText("")}
+                          className="rounded-lg border border-neutral-300 dark:border-neutral-600 px-2.5 py-1 text-[10px] sm:text-xs font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                        >
+                          Keep original
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
               <p className="mt-1.5 text-center text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 max-w-2xl w-full px-2">
