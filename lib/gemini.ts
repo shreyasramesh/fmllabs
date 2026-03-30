@@ -565,6 +565,18 @@ export interface NutritionImageTranscriptionResult {
   portionAssumptions: string[];
   nutritionLogDraft: string;
   confidence: "low" | "medium" | "high";
+  nutritionIntelligence?: {
+    probableMealType?: string;
+    proteinSources?: string[];
+    carbSources?: string[];
+    fatSources?: string[];
+    fiberSources?: string[];
+    sugarSources?: string[];
+    cookingMethods?: string[];
+    saucesAndDressings?: string[];
+    portionConfidenceNotes?: string[];
+    missingDetailsToConfirm?: string[];
+  };
 }
 
 export interface NutritionGoalsProfileInput {
@@ -861,8 +873,20 @@ Analyze the image and return ONLY valid JSON in this exact shape:
   "dishName": "short likely dish name",
   "foodsDetected": ["food item", "..."],
   "portionAssumptions": ["short assumption", "..."],
-  "nutritionLogDraft": "1-3 sentence plain-text draft for a nutrition log, mentioning visible foods and likely portions",
-  "confidence": "low" | "medium" | "high"
+  "nutritionLogDraft": "2-5 sentence plain-text draft for a nutrition log with foods, likely portions, prep method, and key uncertainty notes",
+  "confidence": "low" | "medium" | "high",
+  "nutritionIntelligence": {
+    "probableMealType": "breakfast|lunch|dinner|snack or short phrase",
+    "proteinSources": ["item", "..."],
+    "carbSources": ["item", "..."],
+    "fatSources": ["item", "..."],
+    "fiberSources": ["item", "..."],
+    "sugarSources": ["item", "..."],
+    "cookingMethods": ["grilled|fried|baked|raw|steamed|...", "..."],
+    "saucesAndDressings": ["item", "..."],
+    "portionConfidenceNotes": ["how certain/uncertain and why", "..."],
+    "missingDetailsToConfirm": ["question to ask user that would improve macro estimate", "..."]
+  }
 }
 
 Rules:
@@ -870,6 +894,10 @@ Rules:
 - If uncertain, say "likely" and include assumptions.
 - Keep foodsDetected to max 8 items.
 - Keep portionAssumptions to max 6 items.
+- For nutritionIntelligence arrays, keep each array to max 5 items.
+- Prioritize extraction details that materially affect calories/macros:
+  portion sizes, oils/butter, sauces/dressings, breading/batter, cooking method, sweeteners, and beverages.
+- Add "missingDetailsToConfirm" only for high-impact unknowns (e.g., portion size, sauce amount, oil usage).
 - No markdown, no extra keys, no surrounding text.
 
 Optional user hint:
@@ -895,6 +923,7 @@ ${hintText || "(none)"}`,
       portionAssumptions?: unknown;
       nutritionLogDraft?: unknown;
       confidence?: unknown;
+      nutritionIntelligence?: unknown;
     };
     const foodsDetected = Array.isArray(parsed.foodsDetected)
       ? parsed.foodsDetected
@@ -911,6 +940,34 @@ ${hintText || "(none)"}`,
     const confidence: "low" | "medium" | "high" =
       parsed.confidence === "low" || parsed.confidence === "high" ? parsed.confidence : "medium";
     const dishName = typeof parsed.dishName === "string" ? parsed.dishName.trim().slice(0, 120) : "";
+    const asStringList = (value: unknown, max: number): string[] =>
+      Array.isArray(value)
+        ? value
+            .map((item) => (typeof item === "string" ? item.trim() : ""))
+            .filter(Boolean)
+            .slice(0, max)
+        : [];
+    const intelligenceObj =
+      parsed.nutritionIntelligence && typeof parsed.nutritionIntelligence === "object"
+        ? (parsed.nutritionIntelligence as Record<string, unknown>)
+        : null;
+    const nutritionIntelligence = intelligenceObj
+      ? {
+          probableMealType:
+            typeof intelligenceObj.probableMealType === "string"
+              ? intelligenceObj.probableMealType.trim().slice(0, 80)
+              : undefined,
+          proteinSources: asStringList(intelligenceObj.proteinSources, 5),
+          carbSources: asStringList(intelligenceObj.carbSources, 5),
+          fatSources: asStringList(intelligenceObj.fatSources, 5),
+          fiberSources: asStringList(intelligenceObj.fiberSources, 5),
+          sugarSources: asStringList(intelligenceObj.sugarSources, 5),
+          cookingMethods: asStringList(intelligenceObj.cookingMethods, 5),
+          saucesAndDressings: asStringList(intelligenceObj.saucesAndDressings, 5),
+          portionConfidenceNotes: asStringList(intelligenceObj.portionConfidenceNotes, 5),
+          missingDetailsToConfirm: asStringList(intelligenceObj.missingDetailsToConfirm, 5),
+        }
+      : undefined;
     const nutritionLogDraft =
       typeof parsed.nutritionLogDraft === "string" && parsed.nutritionLogDraft.trim()
         ? parsed.nutritionLogDraft.trim().slice(0, 1200)
@@ -918,6 +975,15 @@ ${hintText || "(none)"}`,
             dishName ? `Likely dish: ${dishName}.` : "",
             foodsDetected.length > 0 ? `Visible foods: ${foodsDetected.join(", ")}.` : "",
             portionAssumptions.length > 0 ? `Assumptions: ${portionAssumptions.join("; ")}.` : "",
+            nutritionIntelligence?.cookingMethods?.length
+              ? `Likely prep: ${nutritionIntelligence.cookingMethods.join(", ")}.`
+              : "",
+            nutritionIntelligence?.saucesAndDressings?.length
+              ? `Possible sauces/dressings: ${nutritionIntelligence.saucesAndDressings.join(", ")}.`
+              : "",
+            nutritionIntelligence?.missingDetailsToConfirm?.length
+              ? `Need to confirm: ${nutritionIntelligence.missingDetailsToConfirm.join("; ")}.`
+              : "",
           ]
             .filter(Boolean)
             .join(" ");
@@ -927,6 +993,7 @@ ${hintText || "(none)"}`,
       portionAssumptions,
       nutritionLogDraft,
       confidence,
+      ...(nutritionIntelligence ? { nutritionIntelligence } : {}),
     };
   } catch {
     return {

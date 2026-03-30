@@ -315,6 +315,44 @@ interface FocusEntryDoc extends Omit<FocusEntry, "_id"> {
   _id?: ObjectId;
 }
 
+export interface NutritionDailyReportSnapshot {
+  _id?: string;
+  userId: string;
+  dayKey: string;
+  entryDay: number;
+  entryMonth: number;
+  entryYear: number;
+  dayLabel: string;
+  focusPrompt?: string;
+  goals: {
+    caloriesTarget: number;
+    carbsTargetGrams: number;
+    proteinTargetGrams: number;
+    fatTargetGrams: number;
+  };
+  totals: {
+    caloriesFood: number;
+    caloriesExercise: number;
+    caloriesRemaining: number;
+    carbsGrams: number;
+    proteinGrams: number;
+    fatGrams: number;
+  };
+  report: {
+    summary: string;
+    goalStatus: string;
+    highlights: string[];
+    tomorrowTips: string[];
+  };
+  generatedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface NutritionDailyReportSnapshotDoc extends Omit<NutritionDailyReportSnapshot, "_id"> {
+  _id?: ObjectId;
+}
+
 export type JournalMentorReflectionsStatus = "pending" | "ready" | "failed";
 
 export interface JournalMentorReflectionItem {
@@ -382,6 +420,8 @@ export interface UserSettings {
     exercise: { enabled: boolean; hour: number; minute: number; days: number[] };
     gratitude: { enabled: boolean; hour: number; minute: number; days: number[] };
   };
+  /** Android local notification toggle for the nightly (9 PM) nutrition report alert. */
+  nightlyNutritionReportNotificationEnabled?: boolean;
   updatedAt: Date;
 }
 
@@ -2027,6 +2067,88 @@ export async function deleteFocusEntry(id: string, userId: string): Promise<bool
   return result.deletedCount > 0;
 }
 
+function parseDayKeyParts(dayKey: string): { year: number; month: number; day: number } | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dayKey);
+  if (!match) return null;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  if (!Number.isInteger(year) || !Number.isInteger(month) || !Number.isInteger(day)) return null;
+  if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+  return { year, month, day };
+}
+
+export async function getDailyNutritionReport(
+  userId: string,
+  dayKey: string
+): Promise<(NutritionDailyReportSnapshot & { _id: string }) | null> {
+  const parts = parseDayKeyParts(dayKey);
+  if (!parts) return null;
+  const database = await getDb();
+  const doc = await database
+    .collection<NutritionDailyReportSnapshotDoc>("user_nutrition_daily_reports")
+    .findOne({ userId, dayKey });
+  if (!doc?._id) return null;
+  return {
+    ...doc,
+    _id: doc._id.toString(),
+  };
+}
+
+export async function upsertDailyNutritionReport(
+  userId: string,
+  input: {
+    dayKey: string;
+    dayLabel: string;
+    focusPrompt?: string;
+    goals: NutritionDailyReportSnapshot["goals"];
+    totals: NutritionDailyReportSnapshot["totals"];
+    report: NutritionDailyReportSnapshot["report"];
+    generatedAt?: Date;
+  }
+): Promise<NutritionDailyReportSnapshot & { _id: string }> {
+  const parts = parseDayKeyParts(input.dayKey);
+  if (!parts) {
+    throw new Error("Invalid dayKey");
+  }
+  const database = await getDb();
+  const collection = database.collection<NutritionDailyReportSnapshotDoc>("user_nutrition_daily_reports");
+  await collection.createIndex({ userId: 1, dayKey: 1 }, { unique: true });
+  await collection.createIndex({ userId: 1, entryYear: -1, entryMonth: -1, entryDay: -1, updatedAt: -1 });
+  const now = new Date();
+  const generatedAt = input.generatedAt ?? now;
+  const result = await collection.findOneAndUpdate(
+    { userId, dayKey: input.dayKey },
+    {
+      $set: {
+        userId,
+        dayKey: input.dayKey,
+        entryYear: parts.year,
+        entryMonth: parts.month,
+        entryDay: parts.day,
+        dayLabel: input.dayLabel,
+        focusPrompt: input.focusPrompt ?? "",
+        goals: input.goals,
+        totals: input.totals,
+        report: input.report,
+        generatedAt,
+        updatedAt: now,
+      },
+      $setOnInsert: {
+        createdAt: now,
+      },
+    },
+    { upsert: true, returnDocument: "after" }
+  );
+  if (!result?._id) {
+    throw new Error("Failed to save daily nutrition report");
+  }
+  return {
+    ...result,
+    _id: result._id.toString(),
+  };
+}
+
 export async function deleteSavedTranscript(id: string, userId: string): Promise<boolean> {
   const database = await getDb();
   let oid: ObjectId;
@@ -2150,13 +2272,14 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     leaderboardOptIn: doc.leaderboardOptIn,
     preferredName: doc.preferredName,
     reminderPreferences: doc.reminderPreferences as UserSettings["reminderPreferences"],
+    nightlyNutritionReportNotificationEnabled: doc.nightlyNutritionReportNotificationEnabled,
     updatedAt: doc.updatedAt,
   });
 }
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "nutritionGoalIntent" | "followedFigureIds" | "leaderboardOptIn" | "preferredName" | "reminderPreferences">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "nutritionGoalIntent" | "followedFigureIds" | "leaderboardOptIn" | "preferredName" | "reminderPreferences" | "nightlyNutritionReportNotificationEnabled">>
 ): Promise<UserSettings> {
   const database = await getDb();
   const now = new Date();
@@ -2189,6 +2312,7 @@ export async function upsertUserSettings(
     leaderboardOptIn: result.leaderboardOptIn,
     preferredName: result.preferredName,
     reminderPreferences: result.reminderPreferences as UserSettings["reminderPreferences"],
+    nightlyNutritionReportNotificationEnabled: result.nightlyNutritionReportNotificationEnabled,
     updatedAt: result.updatedAt,
   });
 }
@@ -2281,6 +2405,7 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   await database.collection<ReusableJournalTagDoc>("user_reusable_journal_tags").deleteMany({ userId });
   await database.collection<WeightEntryDoc>("user_weight_entries").deleteMany({ userId });
   await database.collection<FocusEntryDoc>("user_focus_entries").deleteMany({ userId });
+  await database.collection<NutritionDailyReportSnapshotDoc>("user_nutrition_daily_reports").deleteMany({ userId });
   await database.collection("user_progress").deleteMany({ userId });
   await database.collection("weekly_reflection_sends").deleteMany({ userId });
   await database.collection<UsageEventDoc>("usage_events").deleteMany({ userId });

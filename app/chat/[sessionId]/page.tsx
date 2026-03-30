@@ -3010,6 +3010,7 @@ export default function ChatPage() {
   const [reminderPreferences, setReminderPreferences] = useState<ReminderPreferences>(
     DEFAULT_REMINDER_PREFERENCES
   );
+  const [nightlyNutritionReportNotificationEnabled, setNightlyNutritionReportNotificationEnabled] = useState(false);
   const [reminderSaveState, setReminderSaveState] = useState<{
     saving: boolean;
     message: string | null;
@@ -3939,6 +3940,8 @@ export default function ChatPage() {
       tomorrowTips: string[];
     };
   } | null>(null);
+  const [localMinuteTick, setLocalMinuteTick] = useState(() => Math.floor(Date.now() / 60000));
+  const [viewportWidthPx, setViewportWidthPx] = useState(390);
   const [weeklySummaryModalOpen, setWeeklySummaryModalOpen] = useState(false);
   const [weeklySummaryWeekOffset, setWeeklySummaryWeekOffset] = useState(0);
   const [weeklySummaryLoading, setWeeklySummaryLoading] = useState(false);
@@ -4769,6 +4772,39 @@ export default function ChatPage() {
   const nutritionReportSelectedDate = useMemo(
     () => dateFromDayKey(nutritionReportDayKey) ?? new Date(),
     [nutritionReportDayKey]
+  );
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setLocalMinuteTick(Math.floor(Date.now() / 60000));
+    }, 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const updateViewportWidth = () => setViewportWidthPx(Math.max(320, window.innerWidth || 390));
+    updateViewportWidth();
+    window.addEventListener("resize", updateViewportWidth, { passive: true });
+    return () => window.removeEventListener("resize", updateViewportWidth);
+  }, []);
+  const pomodoroFullscreenFontSize = useMemo(
+    () => `${Math.max(180, Math.min(Math.round(viewportWidthPx * 0.58), 380))}px`,
+    [viewportWidthPx]
+  );
+  const pomodoroActiveCardFontSize = useMemo(
+    () => `${Math.max(140, Math.min(Math.round(viewportWidthPx * 0.46), 240))}px`,
+    [viewportWidthPx]
+  );
+  const pomodoroSetupCardFontSize = useMemo(
+    () => `${Math.max(120, Math.min(Math.round(viewportWidthPx * 0.42), 200))}px`,
+    [viewportWidthPx]
+  );
+  const isSelectedLandingDayToday = useMemo(
+    () => selectedLandingDayKey === toDayKey(new Date()),
+    [selectedLandingDayKey, localMinuteTick]
+  );
+  const shouldShowDailyReportBanner = useMemo(
+    () => !isAnonymous && landingTab === "journaling" && isSelectedLandingDayToday && new Date().getHours() >= 19,
+    [isAnonymous, isSelectedLandingDayToday, landingTab, localMinuteTick]
   );
   const headerCalendarLabel = useMemo(() => {
     const todayKey = toDayKey(new Date());
@@ -6427,8 +6463,12 @@ export default function ChatPage() {
         }
         const nextReminderPreferences = normalizeReminderPreferences(data?.reminderPreferences);
         setReminderPreferences(nextReminderPreferences);
+        setNightlyNutritionReportNotificationEnabled(data?.nightlyNutritionReportNotificationEnabled === true);
         if (Capacitor.isNativePlatform()) {
-          void syncNativeReminders(nextReminderPreferences);
+          void syncNativeReminders(nextReminderPreferences, {
+            nightlyNutritionReportNotificationEnabled:
+              data?.nightlyNutritionReportNotificationEnabled === true,
+          });
         }
         const nextGoals = {
           caloriesTarget: normalizeGoalValue(
@@ -6544,7 +6584,10 @@ export default function ChatPage() {
       const res = await fetch("/api/me/settings", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reminderPreferences: payload }),
+        body: JSON.stringify({
+          reminderPreferences: payload,
+          nightlyNutritionReportNotificationEnabled,
+        }),
       });
       if (!res.ok) {
         const j = (await res.json().catch(() => ({}))) as { error?: string };
@@ -6552,7 +6595,9 @@ export default function ChatPage() {
       }
       setReminderPreferences(payload);
 
-      const nativeSync = await syncNativeReminders(payload);
+      const nativeSync = await syncNativeReminders(payload, {
+        nightlyNutritionReportNotificationEnabled,
+      });
       if (!nativeSync.ok && nativeSync.reason === "permission-denied") {
         setReminderSaveState({
           saving: false,
@@ -6576,7 +6621,7 @@ export default function ChatPage() {
         error: err instanceof Error ? err.message : "Could not save reminder settings.",
       });
     }
-  }, [reminderPreferences, userId]);
+  }, [nightlyNutritionReportNotificationEnabled, reminderPreferences, userId]);
 
   const openGoalsModal = useCallback(() => {
     if (isAnonymous || incognitoMode) {
@@ -7018,9 +7063,61 @@ export default function ChatPage() {
     setNutritionReportModalOpen(true);
   }, [incognitoMode, isAnonymous, router, selectedLandingDayKey]);
 
-  const runNutritionReport = useCallback(async () => {
+  const normalizeNutritionReportPayload = useCallback((data: {
+    dayKey?: string;
+    dayLabel?: string;
+    report?: {
+      summary?: string;
+      goalStatus?: string;
+      highlights?: string[];
+      tomorrowTips?: string[];
+    };
+  }) => {
+    if (!data.report || !data.dayKey || !data.dayLabel) return null;
+    return {
+      dayKey: data.dayKey,
+      dayLabel: data.dayLabel,
+      report: {
+        summary: data.report.summary ?? "",
+        goalStatus: data.report.goalStatus ?? "",
+        highlights: Array.isArray(data.report.highlights) ? data.report.highlights : [],
+        tomorrowTips: Array.isArray(data.report.tomorrowTips) ? data.report.tomorrowTips : [],
+      },
+    };
+  }, []);
+
+  const loadSavedNutritionReport = useCallback(async (
+    dayKey: string,
+    options?: { applyToState?: boolean }
+  ): Promise<boolean> => {
+    const res = await fetch(`/api/me/nutrition-report?dayKey=${encodeURIComponent(dayKey)}`, {
+      method: "GET",
+      cache: "no-store",
+    });
+    if (!res.ok) return false;
+    const data = (await res.json().catch(() => ({}))) as {
+      dayKey?: string;
+      dayLabel?: string;
+      report?: {
+        summary?: string;
+        goalStatus?: string;
+        highlights?: string[];
+        tomorrowTips?: string[];
+      };
+    };
+    const normalized = normalizeNutritionReportPayload(data);
+    if (!normalized) return false;
+    if (options?.applyToState !== false) {
+      setNutritionReportResult(normalized);
+    }
+    return true;
+  }, [normalizeNutritionReportPayload]);
+
+  const runNutritionReport = useCallback(async (options?: { dayKey?: string; focusPrompt?: string; bypassDataGuard?: boolean }) => {
     if (isAnonymous || incognitoMode || !userId) return;
-    if (!canRunNutritionReport) {
+    const targetDayKey = options?.dayKey ?? nutritionReportDayKey;
+    const targetFocusPrompt = (options?.focusPrompt ?? nutritionReportFocusPrompt).trim().slice(0, 600);
+    if (!options?.bypassDataGuard && targetDayKey === nutritionReportDayKey && !canRunNutritionReport) {
       setNutritionReportError(getLandingTranslations(language).nutritionAnalysisNoDataError);
       return;
     }
@@ -7033,8 +7130,8 @@ export default function ChatPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           dayScope: "selected_day",
-          selectedDayKey: nutritionReportDayKey,
-          focusPrompt: nutritionReportFocusPrompt.trim().slice(0, 600),
+          selectedDayKey: targetDayKey,
+          focusPrompt: targetFocusPrompt,
         }),
       });
       const data = (await res.json().catch(() => ({}))) as {
@@ -7048,19 +7145,11 @@ export default function ChatPage() {
           tomorrowTips?: string[];
         };
       };
-      if (!res.ok || !data.report || !data.dayKey || !data.dayLabel) {
+      const normalized = normalizeNutritionReportPayload(data);
+      if (!res.ok || !normalized) {
         throw new Error(data.error || "Could not generate nutrition report.");
       }
-      setNutritionReportResult({
-        dayKey: data.dayKey,
-        dayLabel: data.dayLabel,
-        report: {
-          summary: data.report.summary ?? "",
-          goalStatus: data.report.goalStatus ?? "",
-          highlights: Array.isArray(data.report.highlights) ? data.report.highlights : [],
-          tomorrowTips: Array.isArray(data.report.tomorrowTips) ? data.report.tomorrowTips : [],
-        },
-      });
+      setNutritionReportResult(normalized);
     } catch (err) {
       const message =
         err instanceof Error && err.message.includes("No nutrition or exercise activity")
@@ -7077,8 +7166,57 @@ export default function ChatPage() {
     language,
     nutritionReportDayKey,
     nutritionReportFocusPrompt,
+    normalizeNutritionReportPayload,
     userId,
   ]);
+
+  const openDailyNutritionReportBanner = useCallback(async () => {
+    if (isAnonymous || incognitoMode || !userId) return;
+    const todayDayKey = toDayKey(new Date());
+    setNutritionReportDayKey(todayDayKey);
+    setNutritionReportFocusPrompt("");
+    setNutritionReportError(null);
+    setNutritionReportResult(null);
+    setNutritionReportModalOpen(true);
+    setNutritionReportLoading(true);
+    try {
+      const loadedFromDb = await loadSavedNutritionReport(todayDayKey);
+      if (!loadedFromDb) {
+        await runNutritionReport({ dayKey: todayDayKey, focusPrompt: "", bypassDataGuard: true });
+      }
+    } catch {
+      await runNutritionReport({ dayKey: todayDayKey, focusPrompt: "", bypassDataGuard: true });
+    } finally {
+      setNutritionReportLoading(false);
+    }
+  }, [incognitoMode, isAnonymous, loadSavedNutritionReport, runNutritionReport, userId]);
+
+  const dailyReportAutogenDayRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (isAnonymous || incognitoMode || !userId || landingTab !== "journaling") return;
+    const now = new Date();
+    if (now.getHours() < 21) return;
+    const todayDayKey = toDayKey(now);
+    if (dailyReportAutogenDayRef.current === todayDayKey) return;
+    dailyReportAutogenDayRef.current = todayDayKey;
+    void (async () => {
+      try {
+        const hasSaved = await loadSavedNutritionReport(todayDayKey, { applyToState: false });
+        if (hasSaved) return;
+        await fetch("/api/me/nutrition-report", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            dayScope: "selected_day",
+            selectedDayKey: todayDayKey,
+            focusPrompt: "",
+          }),
+        });
+      } catch {
+        // Silent background retry is not required; next minute tick/day entry can attempt again.
+      }
+    })();
+  }, [incognitoMode, isAnonymous, landingTab, loadSavedNutritionReport, localMinuteTick, userId]);
 
   const handleLandingActivityClick = useCallback((item: LandingDayActivityItem) => {
     if (item.kind === "session") {
@@ -7993,6 +8131,7 @@ export default function ChatPage() {
       .then((data) => {
         if (data?.leaderboardOptIn === true) setLeaderboardOptIn(true);
         else setLeaderboardOptIn(false);
+        setNightlyNutritionReportNotificationEnabled(data?.nightlyNutritionReportNotificationEnabled === true);
         if (typeof data?.preferredName === "string") {
           setPreferredNameInput(data.preferredName);
         } else {
@@ -8895,8 +9034,8 @@ export default function ChatPage() {
       <div className="relative flex h-[100dvh] min-h-[100dvh] items-center justify-center overflow-hidden bg-background px-4">
         <div className="w-full max-w-4xl text-center">
           <p
-            className="font-semibold tracking-tight text-foreground leading-[0.9]"
-            style={{ fontSize: "clamp(120px, 36vw, 420px)" }}
+            className="font-black tracking-[-0.04em] text-foreground leading-[0.82] whitespace-nowrap"
+            style={{ fontSize: pomodoroFullscreenFontSize }}
           >
             {pomodoroClockLabel}
           </p>
@@ -11669,6 +11808,15 @@ export default function ChatPage() {
                                       {getLandingTranslations(language).weeklySummaryButtonLabel}
                                     </button>
                                   </div>
+                                  {shouldShowDailyReportBanner && (
+                                    <button
+                                      type="button"
+                                      onClick={() => void openDailyNutritionReportBanner()}
+                                      className="mt-2 w-full rounded-xl border border-amber-200/90 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-900/20 px-3 py-2 text-left text-xs sm:text-sm font-medium text-amber-800 dark:text-amber-200 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
+                                    >
+                                      Your daily report is ready, click to view
+                                    </button>
+                                  )}
                                 </div>
                               </div>
 
@@ -11896,7 +12044,12 @@ export default function ChatPage() {
                             <div className={pomodoroSessionStartIso ? "min-h-[62vh] flex items-center justify-center" : "space-y-3"}>
                               {pomodoroSessionStartIso ? (
                                 <div className="w-full max-w-xl rounded-3xl border border-neutral-200/70 dark:border-white/10 bg-background p-6 sm:p-8 text-center space-y-6">
-                                  <p className="font-semibold tracking-tight text-foreground" style={{ fontSize: "clamp(110px, 32vw, 360px)" }}>{pomodoroClockLabel}</p>
+                                  <p
+                                    className="font-black tracking-[-0.04em] text-foreground leading-[0.84] whitespace-nowrap"
+                                    style={{ fontSize: pomodoroActiveCardFontSize }}
+                                  >
+                                    {pomodoroClockLabel}
+                                  </p>
                                   <div className="flex flex-wrap items-center justify-center gap-2">
                                     <button
                                       type="button"
@@ -11972,7 +12125,12 @@ export default function ChatPage() {
                                     Set minutes
                                   </button>
                                 </div>
-                                <p className="mt-3 font-semibold tracking-tight text-foreground" style={{ fontSize: "clamp(96px, 28vw, 220px)" }}>{pomodoroClockLabel}</p>
+                                <p
+                                  className="mt-3 font-black tracking-[-0.04em] text-foreground leading-[0.84] whitespace-nowrap"
+                                  style={{ fontSize: pomodoroSetupCardFontSize }}
+                                >
+                                  {pomodoroClockLabel}
+                                </p>
                                 <div className="mt-3 flex flex-wrap items-center gap-2">
                                   <button
                                     type="button"
@@ -14721,6 +14879,35 @@ export default function ChatPage() {
                     <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">
                       Set days and times for nutrition, exercise, and gratitude reminders.
                     </p>
+                    <div className="mb-3 rounded-xl border border-neutral-200/70 dark:border-white/12 bg-neutral-50/70 dark:bg-neutral-900/60 p-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium text-foreground">Nightly daily-report notification</p>
+                          <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                            Send a 9:00 PM reminder when your daily nutrition report is ready.
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={nightlyNutritionReportNotificationEnabled}
+                          onClick={() =>
+                            setNightlyNutritionReportNotificationEnabled((prev) => !prev)
+                          }
+                          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${
+                            nightlyNutritionReportNotificationEnabled
+                              ? "bg-emerald-500 dark:bg-emerald-500"
+                              : "bg-neutral-200 dark:bg-neutral-700"
+                          }`}
+                        >
+                          <span
+                            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition-transform ${
+                              nightlyNutritionReportNotificationEnabled ? "translate-x-5" : "translate-x-1"
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </div>
                     <div className="space-y-3">
                       {REMINDER_TYPES.map((type) => {
                         const schedule = reminderPreferences[type];
@@ -16286,7 +16473,7 @@ export default function ChatPage() {
 
       {journalEntryModalOpen && (
         <div
-          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          className="fixed inset-0 z-[52] flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto bg-black/50 animate-fade-in backdrop-blur-sm"
           onClick={() => {
             if (!journalEntrySaving) resetJournalEntryModal();
           }}
@@ -16295,7 +16482,7 @@ export default function ChatPage() {
           aria-label={getLandingTranslations(language).journalEntryModalTitle}
         >
           <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            className="relative mt-3 sm:mt-0 rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[92dvh] sm:max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
@@ -16407,14 +16594,14 @@ export default function ChatPage() {
 
       {calorieTrackerModalOpen && (
         <div
-          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          className="fixed inset-0 z-[52] flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto bg-black/50 animate-fade-in backdrop-blur-sm"
           onClick={resetCalorieTrackerModal}
           role="dialog"
           aria-modal="true"
           aria-label="Calorie tracker"
         >
           <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            className="relative mt-3 sm:mt-0 rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[92dvh] sm:max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">

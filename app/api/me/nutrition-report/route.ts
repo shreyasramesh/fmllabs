@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { getSavedTranscripts, getUserSettings } from "@/lib/db";
+import {
+  getDailyNutritionReport,
+  getSavedTranscripts,
+  getUserSettings,
+  upsertDailyNutritionReport,
+} from "@/lib/db";
 import { generateNutritionDailyReport } from "@/lib/gemini";
 import { recordMongoUsageRequest } from "@/lib/usage";
 
@@ -66,6 +71,35 @@ function extractEstimatedNumber(text: string, pattern: RegExp): number | null {
 function asFiniteNumberOrFallback(value: unknown, fallback: number): number {
   const parsed = typeof value === "number" ? value : Number(value);
   return Number.isFinite(parsed) ? Math.round(parsed) : fallback;
+}
+
+export async function GET(request: Request) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  recordMongoUsageRequest(userId).catch(() => {});
+  try {
+    const url = new URL(request.url);
+    const rawDayKey = url.searchParams.get("dayKey");
+    const dayKey = rawDayKey && dateFromDayKey(rawDayKey) ? rawDayKey : toDayKey(new Date());
+    const saved = await getDailyNutritionReport(userId, dayKey);
+    if (!saved) {
+      return NextResponse.json({ error: "Daily report not found" }, { status: 404 });
+    }
+    return NextResponse.json({
+      dayKey: saved.dayKey,
+      dayLabel: saved.dayLabel,
+      goals: saved.goals,
+      totals: saved.totals,
+      report: saved.report,
+      generatedAt: saved.generatedAt,
+      saved: true,
+    });
+  } catch (err) {
+    console.error("Nutrition report fetch error:", err);
+    return NextResponse.json({ error: "Failed to fetch nutrition report" }, { status: 500 });
+  }
 }
 
 export async function POST(request: Request) {
@@ -183,6 +217,15 @@ export async function POST(request: Request) {
       },
       { userId, eventType: "nutrition_daily_report" }
     );
+    await upsertDailyNutritionReport(userId, {
+      dayKey: targetDayKey,
+      dayLabel,
+      focusPrompt,
+      goals,
+      totals,
+      report,
+      generatedAt: new Date(),
+    });
 
     return NextResponse.json({
       dayKey: targetDayKey,
@@ -191,6 +234,7 @@ export async function POST(request: Request) {
       goals,
       totals,
       report,
+      saved: true,
     });
   } catch (err) {
     console.error("Nutrition report error:", err);

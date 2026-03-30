@@ -24,6 +24,8 @@ const REMINDER_BODIES: Record<ReminderType, string> = {
   gratitude: "Capture one gratitude moment in your journal.",
 };
 
+const NIGHTLY_DAILY_REPORT_BASE_ID = 1400;
+
 function toCapacitorWeekday(day: number): number {
   return day + 1; // JS 0-6 (Sun-Sat) => Capacitor 1-7
 }
@@ -34,10 +36,14 @@ function allManagedIds(): number[] {
     const base = BASE_IDS[type];
     for (let day = 0; day <= 6; day++) ids.push(base + day);
   }
+  for (let day = 0; day <= 6; day++) ids.push(NIGHTLY_DAILY_REPORT_BASE_ID + day);
   return ids;
 }
 
-function buildNotifications(preferences: ReminderPreferences): LocalNotificationSchema[] {
+function buildNotifications(
+  preferences: ReminderPreferences,
+  options?: { nightlyNutritionReportNotificationEnabled?: boolean }
+): LocalNotificationSchema[] {
   const notifications: LocalNotificationSchema[] = [];
   for (const type of Object.keys(BASE_IDS) as ReminderType[]) {
     const schedule = preferences[type];
@@ -59,10 +65,31 @@ function buildNotifications(preferences: ReminderPreferences): LocalNotification
       });
     }
   }
+  if (options?.nightlyNutritionReportNotificationEnabled) {
+    for (let day = 0; day <= 6; day++) {
+      notifications.push({
+        id: NIGHTLY_DAILY_REPORT_BASE_ID + day,
+        title: "Your daily report is ready",
+        body: "Your daily report is ready, click to view.",
+        schedule: {
+          repeats: true,
+          allowWhileIdle: true,
+          on: {
+            weekday: toCapacitorWeekday(day),
+            hour: 21,
+            minute: 0,
+          },
+        },
+      });
+    }
+  }
   return notifications;
 }
 
-export async function syncNativeReminders(preferences: ReminderPreferences): Promise<{
+export async function syncNativeReminders(
+  preferences: ReminderPreferences,
+  options?: { nightlyNutritionReportNotificationEnabled?: boolean }
+): Promise<{
   ok: boolean;
   reason?: "not-native" | "permission-denied";
 }> {
@@ -78,7 +105,7 @@ export async function syncNativeReminders(preferences: ReminderPreferences): Pro
     notifications: allManagedIds().map((id) => ({ id })),
   });
 
-  const notifications = buildNotifications(preferences);
+  const notifications = buildNotifications(preferences, options);
   if (notifications.length > 0) {
     await LocalNotifications.schedule({ notifications });
   }

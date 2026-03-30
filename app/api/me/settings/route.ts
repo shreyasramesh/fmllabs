@@ -154,6 +154,9 @@ export async function PATCH(request: Request) {
     if (body.reminderPreferences !== undefined) {
       updates.reminderPreferences = normalizeReminderPreferences(body.reminderPreferences);
     }
+    if (body.nightlyNutritionReportNotificationEnabled !== undefined) {
+      updates.nightlyNutritionReportNotificationEnabled = Boolean(body.nightlyNutritionReportNotificationEnabled);
+    }
 
     if (Object.keys(updates).length === 0) {
       const current = await getUserSettings(userId);
