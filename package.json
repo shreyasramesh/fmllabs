@@ -14,6 +14,7 @@
     "mobile:apk:debug": "cd android && ./gradlew assembleDebug",
     "mobile:apk:release": "cd android && ./gradlew assembleRelease",
     "mobile:install:debug": "npm run mobile:sync && npm run mobile:apk:debug && adb install -r android/app/build/outputs/apk/debug/app-debug.apk",
+    "mobile:install:debug:local": "export JAVA_HOME=\"/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home\" && export ANDROID_SDK_ROOT=\"/opt/homebrew/share/android-commandlinetools\" && export PATH=\"$JAVA_HOME/bin:$PATH\" && npm run mobile:install:debug",
     "mobile:aab:release": "cd android && ./gradlew bundleRelease",
     "test": "tsx --test \"lib/**/*.test.ts\"",
     "generate-icons": "node scripts/generate-pwa-icons.mjs",

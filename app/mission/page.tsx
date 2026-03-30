@@ -32,6 +32,9 @@ export default function MissionPage() {
             In a world of cognitive surrender, start taking back control.
           </p>
           <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base">
+            Design inspired by the penco calendar and claude.
+          </p>
+          <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base">
             fml labs is built to support one practical goal: help people make better decisions day-to-day by combining
             <strong> deep thinking </strong> with <strong>daily execution</strong>.
           </p>
