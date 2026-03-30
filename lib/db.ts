@@ -298,6 +298,23 @@ interface WeightEntryDoc extends Omit<WeightEntry, "_id"> {
   _id?: ObjectId;
 }
 
+export interface FocusEntry {
+  _id?: string;
+  userId: string;
+  minutes: number;
+  startedAt: Date;
+  endedAt: Date;
+  entryDay: number;
+  entryMonth: number;
+  entryYear: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface FocusEntryDoc extends Omit<FocusEntry, "_id"> {
+  _id?: ObjectId;
+}
+
 export type JournalMentorReflectionsStatus = "pending" | "ready" | "failed";
 
 export interface JournalMentorReflectionItem {
@@ -1931,6 +1948,85 @@ export async function getWeightEntries(
   }));
 }
 
+export async function addFocusEntry(
+  userId: string,
+  input: {
+    minutes: number;
+    startedAt: Date;
+    endedAt: Date;
+    entryDay: number;
+    entryMonth: number;
+    entryYear: number;
+  }
+): Promise<FocusEntry & { _id: string }> {
+  const database = await getDb();
+  const now = new Date();
+  const doc: Omit<FocusEntryDoc, "_id"> = {
+    userId,
+    minutes: input.minutes,
+    startedAt: input.startedAt,
+    endedAt: input.endedAt,
+    entryDay: input.entryDay,
+    entryMonth: input.entryMonth,
+    entryYear: input.entryYear,
+    createdAt: now,
+    updatedAt: now,
+  };
+  const collection = database.collection<FocusEntryDoc>("user_focus_entries");
+  await collection.createIndex({ userId: 1, entryYear: -1, entryMonth: -1, entryDay: -1, endedAt: -1 });
+  const result = await collection.insertOne(doc);
+  return {
+    ...doc,
+    _id: result.insertedId.toString(),
+  };
+}
+
+export async function getFocusEntries(
+  userId: string,
+  options?: {
+    day?: number;
+    month?: number;
+    year?: number;
+    limit?: number;
+  }
+): Promise<Array<FocusEntry & { _id: string }>> {
+  const database = await getDb();
+  const safeLimit = Math.max(1, Math.min(2000, Math.floor(options?.limit ?? 500)));
+  const filter: {
+    userId: string;
+    entryDay?: number;
+    entryMonth?: number;
+    entryYear?: number;
+  } = { userId };
+  if (typeof options?.day === "number") filter.entryDay = options.day;
+  if (typeof options?.month === "number") filter.entryMonth = options.month;
+  if (typeof options?.year === "number") filter.entryYear = options.year;
+  const docs = await database
+    .collection<FocusEntryDoc>("user_focus_entries")
+    .find(filter)
+    .sort({ endedAt: -1, createdAt: -1 })
+    .limit(safeLimit)
+    .toArray();
+  return docs.map((d) => ({
+    ...d,
+    _id: d._id.toString(),
+  }));
+}
+
+export async function deleteFocusEntry(id: string, userId: string): Promise<boolean> {
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return false;
+  }
+  const result = await database
+    .collection<FocusEntryDoc>("user_focus_entries")
+    .deleteOne({ _id: oid, userId });
+  return result.deletedCount > 0;
+}
+
 export async function deleteSavedTranscript(id: string, userId: string): Promise<boolean> {
   const database = await getDb();
   let oid: ObjectId;
@@ -2184,6 +2280,7 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   await database.collection<SavedNutritionExerciseItemDoc>("user_reusable_journal_items").deleteMany({ userId });
   await database.collection<ReusableJournalTagDoc>("user_reusable_journal_tags").deleteMany({ userId });
   await database.collection<WeightEntryDoc>("user_weight_entries").deleteMany({ userId });
+  await database.collection<FocusEntryDoc>("user_focus_entries").deleteMany({ userId });
   await database.collection("user_progress").deleteMany({ userId });
   await database.collection("weekly_reflection_sends").deleteMany({ userId });
   await database.collection<UsageEventDoc>("usage_events").deleteMany({ userId });

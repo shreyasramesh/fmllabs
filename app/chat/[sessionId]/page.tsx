@@ -2666,7 +2666,7 @@ type LandingDayActivityItem = {
   entityId: string;
 };
 
-type LandingTab = "journaling" | "deepThinking";
+type LandingTab = "journaling" | "pomodoro" | "deepThinking";
 const LANDING_TAB_STORAGE_KEY = "fml_landing_tab";
 type LandingJournalChipKey = "gratitude" | "reflection" | "nutrition" | "exercise" | "weight";
 type ReusableJournalSuggestion = {
@@ -2720,6 +2720,17 @@ type WeightTrackerEntry = {
   createdAt: string;
 };
 
+type FocusTrackerEntry = {
+  id: string;
+  minutes: number;
+  startedAt: string;
+  endedAt: string;
+  day: number;
+  month: number;
+  year: number;
+  createdAt: string;
+};
+
 type LandingActivityGroupKey =
   | "journalRegular"
   | "journalNutrition"
@@ -2747,6 +2758,7 @@ const LANDING_ACTIVITY_GROUP_LABEL: Record<LandingActivityGroupKey, string> = {
 
 const LANDING_TAB_ACTIVITY_GROUP_ORDER: Record<LandingTab, LandingActivityGroupKey[]> = {
   journaling: ["journalRegular", "journalNutrition", "journalExercise"],
+  pomodoro: [],
   deepThinking: ["session", "perspectiveCard"],
 };
 
@@ -2897,7 +2909,7 @@ export default function ChatPage() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const saved = window.sessionStorage.getItem(LANDING_TAB_STORAGE_KEY);
-    if (saved === "deepThinking" || saved === "journaling") {
+    if (saved === "deepThinking" || saved === "journaling" || saved === "pomodoro") {
       setLandingTab(saved);
     }
     landingTabStorageReadyRef.current = true;
@@ -2909,7 +2921,7 @@ export default function ChatPage() {
   }, [landingTab]);
 
   useEffect(() => {
-    if (isAnonymous && landingTab === "journaling") {
+    if (isAnonymous && (landingTab === "journaling" || landingTab === "pomodoro")) {
       setLandingTab("deepThinking");
     }
   }, [isAnonymous, landingTab]);
@@ -3956,6 +3968,8 @@ export default function ChatPage() {
       carbsGrams: number;
       proteinGrams: number;
       fatGrams: number;
+      focusMinutes: number;
+      focusSessions: number;
       tracked: boolean;
       foodEntries: number;
       exerciseEntries: number;
@@ -3967,6 +3981,8 @@ export default function ChatPage() {
       carbsGrams: number;
       proteinGrams: number;
       fatGrams: number;
+      focusMinutes: number;
+      focusSessions: number;
     };
   } | null>(null);
   const [weightTrackerModalOpen, setWeightTrackerModalOpen] = useState(false);
@@ -3978,6 +3994,18 @@ export default function ChatPage() {
   const [weightTrackerWeightInput, setWeightTrackerWeightInput] = useState("");
   const [weightTrackerTargetInput, setWeightTrackerTargetInput] = useState("");
   const [weightTrackerAddOpen, setWeightTrackerAddOpen] = useState(false);
+  const [focusTrackerEntries, setFocusTrackerEntries] = useState<FocusTrackerEntry[]>([]);
+  const [focusTrackerLoading, setFocusTrackerLoading] = useState(false);
+  const [focusTrackerSaving, setFocusTrackerSaving] = useState(false);
+  const [focusTrackerError, setFocusTrackerError] = useState<string | null>(null);
+  const [focusTrackerDeletingEntryId, setFocusTrackerDeletingEntryId] = useState<string | null>(null);
+  const [pomodoroDurationMinutes, setPomodoroDurationMinutes] = useState(25);
+  const [pomodoroMsRemaining, setPomodoroMsRemaining] = useState(25 * 60 * 1000);
+  const [pomodoroCustomMinutesInput, setPomodoroCustomMinutesInput] = useState("25");
+  const [pomodoroRunning, setPomodoroRunning] = useState(false);
+  const [pomodoroSessionStartIso, setPomodoroSessionStartIso] = useState<string | null>(null);
+  const [pomodoroSessionEndAtMs, setPomodoroSessionEndAtMs] = useState<number | null>(null);
+  const [pomodoroJustLogged, setPomodoroJustLogged] = useState(false);
 
   const resetJournalEntryModal = useCallback(() => {
     setJournalEntryModalOpen(false);
@@ -4810,6 +4838,33 @@ export default function ChatPage() {
     () => summarizeNutritionFactContributorsForDay(journalEntriesSorted, selectedLandingDayKey),
     [journalEntriesSorted, selectedLandingDayKey]
   );
+  const selectedLandingDayFocusSummary = useMemo(() => {
+    let minutes = 0;
+    let sessions = 0;
+    const rows: FocusTrackerEntry[] = [];
+    for (const entry of focusTrackerEntries) {
+      const key = `${String(entry.year).padStart(4, "0")}-${String(entry.month).padStart(2, "0")}-${String(
+        entry.day
+      ).padStart(2, "0")}`;
+      if (key !== selectedLandingDayKey) continue;
+      minutes += Number.isFinite(entry.minutes) ? entry.minutes : 0;
+      sessions += 1;
+      rows.push(entry);
+    }
+    rows.sort((a, b) => new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime());
+    return { minutes, sessions, rows };
+  }, [focusTrackerEntries, selectedLandingDayKey]);
+  const pomodoroClockLabel = useMemo(() => {
+    const safeMs = Math.max(0, pomodoroMsRemaining);
+    const minutes = Math.floor(safeMs / 60_000);
+    const seconds = Math.floor((safeMs % 60_000) / 1000);
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  }, [pomodoroMsRemaining]);
+  const pomodoroTenthsLabel = useMemo(() => {
+    const safeMs = Math.max(0, pomodoroMsRemaining);
+    const tenths = Math.floor((safeMs % 1000) / 100);
+    return String(tenths);
+  }, [pomodoroMsRemaining]);
   useEffect(() => {
     if (!nutritionDayViewModalOpen) {
       setNutritionDayViewExpandedContributors({});
@@ -6096,7 +6151,7 @@ export default function ChatPage() {
       (e.ctrlKey && e.key === "Enter")
     ) {
       e.preventDefault();
-      if (messages.length === 0 && !incognitoMode && landingTab === "journaling") {
+      if (messages.length === 0 && !incognitoMode && (landingTab === "journaling" || landingTab === "pomodoro")) {
         return;
       } else {
       sendMessage();
@@ -7256,6 +7311,177 @@ export default function ChatPage() {
     weightTrackerWeightInput,
   ]);
 
+  const fetchFocusTrackerEntries = useCallback(async () => {
+    setFocusTrackerLoading(true);
+    setFocusTrackerError(null);
+    try {
+      const res = await fetch("/api/me/journal/focus?limit=1000");
+      const data = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        entries?: FocusTrackerEntry[];
+      };
+      if (!res.ok) throw new Error(data.error || "Could not load focus sessions.");
+      setFocusTrackerEntries(Array.isArray(data.entries) ? data.entries : []);
+    } catch (err) {
+      setFocusTrackerEntries([]);
+      setFocusTrackerError(err instanceof Error ? err.message : "Could not load focus sessions.");
+    } finally {
+      setFocusTrackerLoading(false);
+    }
+  }, []);
+
+  const saveFocusSession = useCallback(
+    async (minutes: number, startedAt: Date, endedAt: Date) => {
+      if (focusTrackerSaving) return;
+      setFocusTrackerSaving(true);
+      setFocusTrackerError(null);
+      try {
+        const res = await fetch("/api/me/journal/focus", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            minutes,
+            startedAt: startedAt.toISOString(),
+            endedAt: endedAt.toISOString(),
+          }),
+        });
+        const data = (await res.json().catch(() => ({}))) as {
+          error?: string;
+          entries?: FocusTrackerEntry[];
+        };
+        if (!res.ok) throw new Error(data.error || "Could not save focus session.");
+        setFocusTrackerEntries(Array.isArray(data.entries) ? data.entries : []);
+        setPomodoroJustLogged(true);
+        if (typeof window !== "undefined") {
+          window.setTimeout(() => setPomodoroJustLogged(false), 4000);
+        }
+      } catch (err) {
+        setFocusTrackerError(err instanceof Error ? err.message : "Could not save focus session.");
+      } finally {
+        setFocusTrackerSaving(false);
+      }
+    },
+    [focusTrackerSaving]
+  );
+
+  const deleteFocusSession = useCallback(async (entryId: string) => {
+    if (!entryId || focusTrackerDeletingEntryId) return;
+    setFocusTrackerDeletingEntryId(entryId);
+    setFocusTrackerError(null);
+    try {
+      const res = await fetch(`/api/me/journal/focus?id=${encodeURIComponent(entryId)}`, {
+        method: "DELETE",
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        entries?: FocusTrackerEntry[];
+      };
+      if (!res.ok) throw new Error(data.error || "Could not delete focus session.");
+      setFocusTrackerEntries(Array.isArray(data.entries) ? data.entries : []);
+    } catch (err) {
+      setFocusTrackerError(err instanceof Error ? err.message : "Could not delete focus session.");
+    } finally {
+      setFocusTrackerDeletingEntryId(null);
+    }
+  }, [focusTrackerDeletingEntryId]);
+
+  useEffect(() => {
+    if (isAnonymous || incognitoMode || !userId) return;
+    if (landingTab !== "pomodoro") return;
+    void fetchFocusTrackerEntries();
+  }, [fetchFocusTrackerEntries, incognitoMode, isAnonymous, landingTab, userId]);
+
+  useEffect(() => {
+    if (pomodoroRunning || pomodoroSessionStartIso) return;
+    setPomodoroMsRemaining(pomodoroDurationMinutes * 60 * 1000);
+  }, [pomodoroDurationMinutes, pomodoroRunning, pomodoroSessionStartIso]);
+
+  useEffect(() => {
+    setPomodoroCustomMinutesInput(String(pomodoroDurationMinutes));
+  }, [pomodoroDurationMinutes]);
+
+  useEffect(() => {
+    if (!pomodoroRunning) return;
+    if (pomodoroSessionEndAtMs == null) return;
+    let rafId = 0;
+    const tick = () => {
+      const remaining = Math.max(0, pomodoroSessionEndAtMs - Date.now());
+      setPomodoroMsRemaining(remaining);
+      if (remaining > 0 && pomodoroRunning) {
+        rafId = window.requestAnimationFrame(tick);
+      }
+    };
+    rafId = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(rafId);
+  }, [pomodoroRunning, pomodoroSessionEndAtMs]);
+
+  useEffect(() => {
+    if (!pomodoroRunning || pomodoroMsRemaining > 0) return;
+    setPomodoroRunning(false);
+    setPomodoroSessionEndAtMs(null);
+  }, [pomodoroMsRemaining, pomodoroRunning]);
+
+  const startPomodoro = useCallback(() => {
+    if (pomodoroRunning) return;
+    if (!pomodoroSessionStartIso) {
+      setPomodoroSessionStartIso(new Date().toISOString());
+    }
+    setPomodoroSessionEndAtMs(Date.now() + Math.max(0, pomodoroMsRemaining));
+    setFocusTrackerError(null);
+    setPomodoroRunning(true);
+  }, [pomodoroMsRemaining, pomodoroRunning, pomodoroSessionStartIso]);
+
+  const pausePomodoro = useCallback(() => {
+    if (pomodoroSessionEndAtMs != null) {
+      setPomodoroMsRemaining(Math.max(0, pomodoroSessionEndAtMs - Date.now()));
+    }
+    setPomodoroRunning(false);
+    setPomodoroSessionEndAtMs(null);
+  }, [pomodoroSessionEndAtMs]);
+
+  const resetPomodoro = useCallback(() => {
+    setPomodoroRunning(false);
+    setPomodoroMsRemaining(pomodoroDurationMinutes * 60 * 1000);
+    setPomodoroSessionStartIso(null);
+    setPomodoroSessionEndAtMs(null);
+    setFocusTrackerError(null);
+  }, [pomodoroDurationMinutes]);
+
+  const endPomodoro = useCallback(async () => {
+    if (!pomodoroSessionStartIso) return;
+    if (focusTrackerSaving) return;
+    const elapsedMs = Math.max(0, pomodoroDurationMinutes * 60 * 1000 - pomodoroMsRemaining);
+    if (elapsedMs <= 0) {
+      setFocusTrackerError("No focused time to log yet.");
+      return;
+    }
+    const endedAt = new Date();
+    const startedAt = new Date(endedAt.getTime() - elapsedMs);
+    const minutesToLog = Math.max(1, Math.round(elapsedMs / 60_000));
+    setPomodoroRunning(false);
+    setPomodoroSessionEndAtMs(null);
+    await saveFocusSession(minutesToLog, startedAt, endedAt);
+    setPomodoroSessionStartIso(null);
+    setPomodoroMsRemaining(pomodoroDurationMinutes * 60 * 1000);
+  }, [
+    focusTrackerSaving,
+    pomodoroDurationMinutes,
+    pomodoroMsRemaining,
+    pomodoroSessionStartIso,
+    saveFocusSession,
+  ]);
+
+  const applyCustomPomodoroMinutes = useCallback(() => {
+    const parsed = Number.parseInt(pomodoroCustomMinutesInput.trim(), 10);
+    if (!Number.isFinite(parsed) || parsed < 1 || parsed > 600) {
+      setFocusTrackerError("Duration must be between 1 and 600 minutes.");
+      return;
+    }
+    setPomodoroDurationMinutes(parsed);
+    setPomodoroMsRemaining(parsed * 60 * 1000);
+    setFocusTrackerError(null);
+  }, [pomodoroCustomMinutesInput]);
+
   useEffect(() => {
     if (!weeklySummaryModalOpen) return;
     if (isAnonymous || incognitoMode || !userId) return;
@@ -7288,6 +7514,8 @@ export default function ChatPage() {
             carbsGrams?: number;
             proteinGrams?: number;
             fatGrams?: number;
+            focusMinutes?: number;
+            focusSessions?: number;
           };
         };
         if (!res.ok || !Array.isArray(data.rows)) {
@@ -7304,6 +7532,8 @@ export default function ChatPage() {
           carbsGrams: number;
           proteinGrams: number;
           fatGrams: number;
+          focusMinutes?: number;
+          focusSessions?: number;
           tracked: boolean;
           foodEntries: number;
           exerciseEntries: number;
@@ -7321,7 +7551,11 @@ export default function ChatPage() {
           trackedDays: typeof data.trackedDays === "number" ? data.trackedDays : 0,
           foodEntries: typeof data.foodEntries === "number" ? data.foodEntries : 0,
           exerciseEntries: typeof data.exerciseEntries === "number" ? data.exerciseEntries : 0,
-          rows,
+          rows: rows.map((row) => ({
+            ...row,
+            focusMinutes: Number(row.focusMinutes ?? 0),
+            focusSessions: Number(row.focusSessions ?? 0),
+          })),
           totals: {
             caloriesFood: Number(data.totals?.caloriesFood ?? 0),
             caloriesExercise: Number(data.totals?.caloriesExercise ?? 0),
@@ -7329,6 +7563,8 @@ export default function ChatPage() {
             carbsGrams: Number(data.totals?.carbsGrams ?? 0),
             proteinGrams: Number(data.totals?.proteinGrams ?? 0),
             fatGrams: Number(data.totals?.fatGrams ?? 0),
+            focusMinutes: Number(data.totals?.focusMinutes ?? 0),
+            focusSessions: Number(data.totals?.focusSessions ?? 0),
           },
         });
       })
@@ -7475,6 +7711,44 @@ export default function ChatPage() {
       ],
     };
   }, [language, nutritionGoals.carbsGrams, nutritionGoals.fatGrams, nutritionGoals.proteinGrams, weeklySummaryResult]);
+
+  const weeklyFocusChartOptions = useMemo<Highcharts.Options>(() => {
+    if (!weeklySummaryResult) return { ...chartBaseOptions() };
+    const categories = weeklySummaryResult.rows.map((row) => `${row.weekdayLabel} ${row.monthDayLabel}`);
+    return {
+      ...chartBaseOptions(),
+      chart: { ...chartBaseOptions().chart, type: "line", height: 300 },
+      title: {
+        text: "Focus Time",
+        align: "left",
+        style: { color: "#111827", fontSize: "14px", fontWeight: "600" },
+      },
+      xAxis: {
+        categories,
+        labels: { style: { color: "#6B7280", fontSize: "11px" } },
+      },
+      yAxis: {
+        title: { text: "Minutes", style: { color: "#6B7280", fontSize: "11px" } },
+        labels: { style: { color: "#6B7280", fontSize: "11px" } },
+        min: 0,
+      },
+      tooltip: {
+        shared: true,
+        valueSuffix: " min",
+      },
+      series: [
+        {
+          type: "line",
+          name: "Focus",
+          data: weeklySummaryResult.rows.map((row) => row.focusMinutes),
+          color: "#F97316",
+          lineWidth: 3,
+          marker: { radius: 4, symbol: "circle" },
+        },
+      ],
+      legend: { enabled: false },
+    };
+  }, [weeklySummaryResult]);
 
   const weightTrackerCurrentKg = useMemo(
     () => (weightTrackerEntries.length > 0 ? weightTrackerEntries[0]!.weightKg : null),
@@ -8624,11 +8898,68 @@ export default function ChatPage() {
     else setWaysOfLookingAtCategory(null);
   }, []);
 
+  const isLandingUtilityTab =
+    messages.length === 0 &&
+    !incognitoMode &&
+    !isAnonymous &&
+    (landingTab === "journaling" || landingTab === "pomodoro");
   const shouldHideBottomBar =
     (messages.length === 0 &&
       !incognitoMode &&
-      (landingTab === "deepThinking" || (!isAnonymous && landingTab === "journaling"))) ||
+      (landingTab === "deepThinking" || (!isAnonymous && (landingTab === "journaling" || landingTab === "pomodoro")))) ||
     (!!currentSession?.isCollapsed && !!collapsedSummary);
+  const isPomodoroFocusMode =
+    messages.length === 0 &&
+    !incognitoMode &&
+    !isAnonymous &&
+    landingTab === "pomodoro" &&
+    !!pomodoroSessionStartIso;
+
+  if (isPomodoroFocusMode) {
+    return (
+      <div className="relative flex h-[100dvh] min-h-[100dvh] items-center justify-center overflow-hidden bg-background px-4">
+        <div className="w-full max-w-4xl text-center">
+          <p
+            className="font-semibold tracking-tight text-foreground leading-[0.9]"
+            style={{ fontSize: "clamp(220px, 58vw, 420px)" }}
+          >
+            {pomodoroClockLabel}
+            <span className="align-top text-[0.28em] opacity-80">.{pomodoroTenthsLabel}</span>
+          </p>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={pomodoroRunning ? pausePomodoro : startPomodoro}
+              className="rounded-2xl border border-neutral-300 dark:border-neutral-600 px-6 py-3 text-lg font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+            >
+              {pomodoroRunning ? "Pause" : "Restart"}
+            </button>
+            <button
+              type="button"
+              onClick={() => void endPomodoro()}
+              disabled={!pomodoroSessionStartIso || focusTrackerSaving}
+              className="rounded-2xl bg-orange-500 text-white px-6 py-3 text-lg font-medium hover:bg-orange-400 transition-colors disabled:opacity-50"
+            >
+              End
+            </button>
+            <button
+              type="button"
+              onClick={resetPomodoro}
+              className="rounded-2xl border border-neutral-300 dark:border-neutral-600 px-6 py-3 text-lg font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+            >
+              Reset
+            </button>
+          </div>
+          {focusTrackerSaving && (
+            <p className="mt-4 text-sm text-neutral-500 dark:text-neutral-400">Saving focus session...</p>
+          )}
+          {focusTrackerError && (
+            <p className="mt-4 text-sm text-red-600 dark:text-red-400">{focusTrackerError}</p>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`relative flex flex-col h-[100dvh] min-h-[100dvh] overflow-hidden chat-bg-area bg-background border-2 transition-[border-color,background] duration-300 ease-in-out ${incognitoMode ? "border-violet-400/70 dark:border-violet-500/60" : "border-transparent"}`}>
@@ -11262,7 +11593,8 @@ export default function ChatPage() {
                   ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-36 sm:pb-40 px-4 py-5"
                   : `flex-1 min-h-0 flex flex-col items-center justify-start ${
                       !incognitoMode &&
-                      (landingTab === "deepThinking" || (!isAnonymous && landingTab === "journaling"))
+                      (landingTab === "deepThinking" ||
+                        (!isAnonymous && (landingTab === "journaling" || landingTab === "pomodoro")))
                         ? "pb-4 md:pb-6"
                         : "pb-36 sm:pb-40 md:pb-8"
                     } px-4 pt-1 md:pt-8`
@@ -11586,6 +11918,184 @@ export default function ChatPage() {
                                 ))}
                           </div>
                             </div>
+                          ) : !isAnonymous && landingTab === "pomodoro" ? (
+                            <div className={pomodoroSessionStartIso ? "min-h-[62vh] flex items-center justify-center" : "space-y-3"}>
+                              {pomodoroSessionStartIso ? (
+                                <div className="w-full max-w-xl rounded-3xl border border-neutral-200/70 dark:border-white/10 bg-background p-6 sm:p-8 text-center space-y-6">
+                                  <p className="text-5xl sm:text-7xl font-semibold tracking-tight text-foreground">{pomodoroClockLabel}</p>
+                                  <div className="flex items-center justify-center gap-2">
+                                    <button
+                                      type="button"
+                                      onClick={pomodoroRunning ? pausePomodoro : startPomodoro}
+                                      className="rounded-xl border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                    >
+                                      Pause
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => void endPomodoro()}
+                                      disabled={!pomodoroSessionStartIso || focusTrackerSaving}
+                                      className="rounded-xl bg-orange-500 text-white px-4 py-2 text-sm font-medium hover:bg-orange-400 transition-colors disabled:opacity-50"
+                                    >
+                                      End
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={resetPomodoro}
+                                      className="rounded-xl border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                    >
+                                      Reset
+                                    </button>
+                                  </div>
+                                  {focusTrackerSaving && (
+                                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Saving focus session...</p>
+                                  )}
+                                  {focusTrackerError && (
+                                    <p className="text-xs text-red-600 dark:text-red-400">{focusTrackerError}</p>
+                                  )}
+                                </div>
+                              ) : (
+                              <>
+                              <div className="rounded-2xl border border-neutral-200/70 dark:border-white/10 bg-background p-3 sm:p-4">
+                                <div className="flex items-center justify-between gap-2">
+                                  <p className="text-sm sm:text-base font-semibold text-foreground">Focus timer</p>
+                                  <div className="flex items-center gap-1">
+                                    {[15, 25, 50].map((minutes) => (
+                                      <button
+                                        key={`pomodoro-duration-${minutes}`}
+                                        type="button"
+                                        onClick={() => setPomodoroDurationMinutes(minutes)}
+                                        disabled={pomodoroRunning || !!pomodoroSessionStartIso}
+                                        className={`rounded-full px-2.5 py-1 text-xs font-medium border transition-colors ${
+                                          pomodoroDurationMinutes === minutes
+                                            ? "border-foreground text-foreground bg-neutral-100 dark:bg-neutral-800"
+                                            : "border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                        } disabled:opacity-50`}
+                                      >
+                                        {minutes}m
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                                <div className="mt-2 flex items-center gap-2">
+                                  <input
+                                    type="number"
+                                    min={1}
+                                    max={600}
+                                    step={1}
+                                    value={pomodoroCustomMinutesInput}
+                                    onChange={(e) => setPomodoroCustomMinutesInput(e.target.value)}
+                                    disabled={pomodoroRunning || !!pomodoroSessionStartIso}
+                                    className="w-24 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background px-3 py-1.5 text-sm"
+                                    aria-label="Custom focus duration minutes"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={applyCustomPomodoroMinutes}
+                                    disabled={pomodoroRunning || !!pomodoroSessionStartIso}
+                                    className="rounded-xl border border-neutral-300 dark:border-neutral-600 px-3 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                                  >
+                                    Set minutes
+                                  </button>
+                                </div>
+                                <p className="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight text-foreground">{pomodoroClockLabel}</p>
+                                <div className="mt-3 flex items-center gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={startPomodoro}
+                                    disabled={pomodoroRunning}
+                                    className="rounded-xl bg-foreground text-background px-4 py-2 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+                                  >
+                                    {pomodoroSessionStartIso ? "Resume" : "Start"}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={pausePomodoro}
+                                    disabled={!pomodoroRunning}
+                                    className="rounded-xl border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                                  >
+                                    Pause
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => void endPomodoro()}
+                                    disabled={!pomodoroSessionStartIso || focusTrackerSaving}
+                                    className="rounded-xl bg-orange-500 text-white px-4 py-2 text-sm font-medium hover:bg-orange-400 transition-colors disabled:opacity-50"
+                                  >
+                                    End
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={resetPomodoro}
+                                    className="rounded-xl border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                  >
+                                    Reset
+                                  </button>
+                                </div>
+                                {focusTrackerSaving && (
+                                  <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">Saving focus session...</p>
+                                )}
+                                {pomodoroJustLogged && (
+                                  <p className="mt-2 text-xs text-emerald-600 dark:text-emerald-400">Focus session logged.</p>
+                                )}
+                                {focusTrackerError && (
+                                  <p className="mt-2 text-xs text-red-600 dark:text-red-400">{focusTrackerError}</p>
+                                )}
+                              </div>
+                              <div className="rounded-2xl border border-neutral-200/70 dark:border-white/10 bg-background p-3 sm:p-4 space-y-2">
+                                <div className="flex items-center justify-between gap-2">
+                                  <p className="text-sm sm:text-base font-semibold text-foreground">Daily focus summary</p>
+                                  <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
+                                    {selectedLandingDayFocusSummary.sessions} session
+                                    {selectedLandingDayFocusSummary.sessions === 1 ? "" : "s"}
+                                  </p>
+                                </div>
+                                <p className="text-2xl sm:text-3xl font-semibold text-foreground">
+                                  {selectedLandingDayFocusSummary.minutes} min
+                                </p>
+                                {focusTrackerLoading ? (
+                                  <p className="text-sm text-neutral-500 dark:text-neutral-400">Loading focus sessions...</p>
+                                ) : selectedLandingDayFocusSummary.rows.length > 0 ? (
+                                  <div className="space-y-1.5">
+                                    {selectedLandingDayFocusSummary.rows.slice(0, 6).map((entry) => (
+                                      <div
+                                        key={entry.id}
+                                        className="flex items-center justify-between rounded-lg border border-neutral-200 dark:border-neutral-700 px-2.5 py-2"
+                                      >
+                                        <p className="text-xs sm:text-sm text-foreground">
+                                          {new Date(entry.endedAt).toLocaleTimeString(undefined, {
+                                            hour: "numeric",
+                                            minute: "2-digit",
+                                          })}
+                                        </p>
+                                        <div className="flex items-center gap-2">
+                                          <p className="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-300">
+                                            {entry.minutes} min
+                                          </p>
+                                          <button
+                                            type="button"
+                                            onClick={() => void deleteFocusSession(entry.id)}
+                                            disabled={focusTrackerDeletingEntryId === entry.id}
+                                            className="inline-flex items-center justify-center rounded-md p-1 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors disabled:opacity-50"
+                                            aria-label="Delete focus session"
+                                          >
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                                              <path d="M9 3.75A2.25 2.25 0 0 1 11.25 1.5h1.5A2.25 2.25 0 0 1 15 3.75V4.5h3a.75.75 0 0 1 0 1.5h-.56l-.68 12.06A2.25 2.25 0 0 1 14.5 20.25h-5a2.25 2.25 0 0 1-2.25-2.19L6.57 6H6a.75.75 0 0 1 0-1.5h3v-.75Zm1.5.75h3v-.75a.75.75 0 0 0-.75-.75h-1.5a.75.75 0 0 0-.75.75v.75Zm-1.93 1.5.67 12a.75.75 0 0 0 .75.72h5a.75.75 0 0 0 .75-.72l.67-12H8.57Z" />
+                                            </svg>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                                    No focus sessions logged for this day yet.
+                                  </p>
+                                )}
+                              </div>
+                              </>
+                              )}
+                            </div>
                           ) : (
                             <div className="space-y-2">
                               <div className="w-full rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background overflow-hidden flex flex-col">
@@ -11760,7 +12270,7 @@ export default function ChatPage() {
                                 </div>
                               </div>
                             </div>
-                            <div className="mb-2 grid grid-cols-2 gap-3">
+                            <div className="mb-2 grid grid-cols-3 gap-3">
                           <button
                             type="button"
                                 onClick={() => {
@@ -11778,6 +12288,23 @@ export default function ChatPage() {
                                 aria-pressed={landingTab === "journaling"}
                               >
                                 {getLandingTranslations(language).journalingTabLabel}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (!isAnonymous) setLandingTab("pomodoro");
+                                }}
+                                disabled={isAnonymous}
+                                className={`w-full px-1 py-1.5 text-xs sm:text-sm text-center border-b-[3px] transition-colors ${
+                                  isAnonymous
+                                    ? "border-transparent text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-80"
+                                    : landingTab === "pomodoro"
+                                      ? "font-semibold text-foreground border-foreground dark:border-neutral-100"
+                                      : "font-medium text-neutral-600 dark:text-neutral-300 border-transparent hover:text-foreground"
+                                }`}
+                                aria-pressed={landingTab === "pomodoro"}
+                              >
+                                Pomodoro
                               </button>
                               <button
                                 type="button"
@@ -11827,7 +12354,7 @@ export default function ChatPage() {
                               })}
                         </div>
                       </div>
-                          {!incognitoMode && landingTab !== "journaling" && (
+                          {!incognitoMode && landingTab === "deepThinking" && (
                             <div className="mt-2 space-y-2">
                               {selectedLandingDayActivityItems.length === 0 ? (
                                 <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center py-2">
@@ -12188,16 +12715,16 @@ export default function ChatPage() {
         {/* Bottom bar - fixed on mobile when scrolling. Also shown on new conversations for a faster first message. */}
         {!shouldHideBottomBar && (
         <div className={`${sidebarOpen ? "hidden lg:flex" : "flex"} fixed inset-x-0 bottom-0 z-30 flex-col ${
-          messages.length === 0 && !incognitoMode && landingTab === "journaling"
+          isLandingUtilityTab
             ? "border-t-0"
             : "border-t border-neutral-200 dark:border-neutral-800"
         } shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background`}>
           <div className="flex flex-col items-center justify-center px-4 py-2 sm:py-2.5 min-w-0">
             <>
-            {!(messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling") && (
+            {!isLandingUtilityTab && (
             <div
               className={`min-w-0 max-w-2xl lg:max-w-4xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex overflow-hidden ${
-                messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
+                isLandingUtilityTab
                   ? "items-center min-h-12 max-h-40 py-1.5"
                   : "items-center h-12 min-h-12"
               }`}
@@ -12281,12 +12808,12 @@ export default function ChatPage() {
                 ariaLabel="Voice input"
                 compactStopWhileListening
                 className={`${
-                  messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling"
+                  isLandingUtilityTab
                     ? "!min-h-[52px] !min-w-[52px] !rounded-2xl"
                     : "!min-h-8 !min-w-8 !rounded-xl"
                 } !border-neutral-200/70 dark:!border-neutral-400/70 !bg-neutral-50/70 dark:!bg-neutral-900/40 hover:!border-accent/70 dark:hover:!border-accent/70 hover:!bg-accent/10 dark:hover:!bg-accent/20`}
               />
-              {!(messages.length === 0 && !incognitoMode && !isAnonymous && landingTab === "journaling") && (
+              {!isLandingUtilityTab && (
               <button
                   onClick={() => {
                     sendMessage();
@@ -15312,6 +15839,20 @@ export default function ChatPage() {
                       <p className="text-neutral-600 dark:text-neutral-400">
                         {getLandingTranslations(language).weeklySummaryMacrosFatCol}:{" "}
                         <span className="font-semibold text-foreground">{weeklySummaryResult.totals.fatGrams.toLocaleString()}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 bg-white/70 dark:bg-neutral-900/70">
+                    <HighchartsReact highcharts={Highcharts} options={weeklyFocusChartOptions} />
+                    <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
+                      <p className="text-neutral-600 dark:text-neutral-400">
+                        Total focus minutes:{" "}
+                        <span className="font-semibold text-foreground">{weeklySummaryResult.totals.focusMinutes.toLocaleString()}</span>
+                      </p>
+                      <p className="text-neutral-600 dark:text-neutral-400">
+                        Focus sessions:{" "}
+                        <span className="font-semibold text-foreground">{weeklySummaryResult.totals.focusSessions.toLocaleString()}</span>
                       </p>
                     </div>
                   </div>
