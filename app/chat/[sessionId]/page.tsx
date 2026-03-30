@@ -2451,7 +2451,7 @@ function summarizeNutritionForDay(
     caloriesRemaining: Math.max(0, Math.round(caloriesTarget - caloriesFood + caloriesExercise)),
     carbsGrams: Math.max(0, Math.round(carbsGrams)),
     proteinGrams: Math.max(0, Math.round(proteinGrams)),
-    fatGrams: Math.max(0, Math.round(fatGrams)),
+    fatGrams: Math.round(fatGrams),
   };
 }
 
@@ -8653,8 +8653,8 @@ export default function ChatPage() {
           <Link
             href="/chat/new"
             onClick={handleBrandLinkClick}
-            className={`group inline-flex items-center gap-1.5 font-semibold text-lg min-w-0 truncate ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
-                title={PRODUCT_TAGLINE}
+            className={`group inline-flex items-center gap-1.5 font-semibold text-[12px] sm:text-lg min-w-0 ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
+            title={PRODUCT_TAGLINE}
           >
             <span aria-hidden className="inline-flex items-center">
               <Image
@@ -8672,7 +8672,7 @@ export default function ChatPage() {
                 className={`hidden rounded-sm dark:block ${brandLogoParty ? "animate-bounce" : ""}`}
               />
             </span>
-            <span className="truncate">FigureMyLife Labs</span>
+            <span className="whitespace-nowrap">f*** my life → figure my life</span>
             <span
               aria-hidden
               className={`text-sm transition-all duration-300 ${
@@ -9007,7 +9007,7 @@ export default function ChatPage() {
             <Link
               href="/chat/new"
               onClick={handleBrandLinkClick}
-              className="inline-flex items-center gap-1.5 font-semibold text-lg text-foreground min-w-0 truncate"
+              className="inline-flex items-center gap-1.5 font-semibold text-[12px] sm:text-lg text-foreground min-w-0"
               title={PRODUCT_TAGLINE}
             >
               <span aria-hidden className="inline-flex items-center">
@@ -9026,7 +9026,7 @@ export default function ChatPage() {
                   className={`hidden rounded-sm dark:block ${brandLogoParty ? "animate-bounce" : ""}`}
                 />
               </span>
-              <span className="truncate">FigureMyLife Labs</span>
+              <span className="whitespace-nowrap">f*** my life → figure my life</span>
               <span
                 aria-hidden
                 className={`text-sm transition-all duration-300 ${
