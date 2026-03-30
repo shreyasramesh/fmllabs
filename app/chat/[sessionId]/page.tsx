@@ -4000,11 +4000,10 @@ export default function ChatPage() {
   const [focusTrackerError, setFocusTrackerError] = useState<string | null>(null);
   const [focusTrackerDeletingEntryId, setFocusTrackerDeletingEntryId] = useState<string | null>(null);
   const [pomodoroDurationMinutes, setPomodoroDurationMinutes] = useState(25);
-  const [pomodoroMsRemaining, setPomodoroMsRemaining] = useState(25 * 60 * 1000);
+  const [pomodoroSecondsRemaining, setPomodoroSecondsRemaining] = useState(25 * 60);
   const [pomodoroCustomMinutesInput, setPomodoroCustomMinutesInput] = useState("25");
   const [pomodoroRunning, setPomodoroRunning] = useState(false);
   const [pomodoroSessionStartIso, setPomodoroSessionStartIso] = useState<string | null>(null);
-  const [pomodoroSessionEndAtMs, setPomodoroSessionEndAtMs] = useState<number | null>(null);
   const [pomodoroJustLogged, setPomodoroJustLogged] = useState(false);
 
   const resetJournalEntryModal = useCallback(() => {
@@ -4855,16 +4854,11 @@ export default function ChatPage() {
     return { minutes, sessions, rows };
   }, [focusTrackerEntries, selectedLandingDayKey]);
   const pomodoroClockLabel = useMemo(() => {
-    const safeMs = Math.max(0, pomodoroMsRemaining);
-    const minutes = Math.floor(safeMs / 60_000);
-    const seconds = Math.floor((safeMs % 60_000) / 1000);
+    const safe = Math.max(0, pomodoroSecondsRemaining);
+    const minutes = Math.floor(safe / 60);
+    const seconds = safe % 60;
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-  }, [pomodoroMsRemaining]);
-  const pomodoroTenthsLabel = useMemo(() => {
-    const safeMs = Math.max(0, pomodoroMsRemaining);
-    const tenths = Math.floor((safeMs % 1000) / 100);
-    return String(tenths);
-  }, [pomodoroMsRemaining]);
+  }, [pomodoroSecondsRemaining]);
   useEffect(() => {
     if (!nutritionDayViewModalOpen) {
       setNutritionDayViewExpandedContributors({});
@@ -7393,7 +7387,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (pomodoroRunning || pomodoroSessionStartIso) return;
-    setPomodoroMsRemaining(pomodoroDurationMinutes * 60 * 1000);
+    setPomodoroSecondsRemaining(pomodoroDurationMinutes * 60);
   }, [pomodoroDurationMinutes, pomodoroRunning, pomodoroSessionStartIso]);
 
   useEffect(() => {
@@ -7402,71 +7396,56 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (!pomodoroRunning) return;
-    if (pomodoroSessionEndAtMs == null) return;
-    let rafId = 0;
-    const tick = () => {
-      const remaining = Math.max(0, pomodoroSessionEndAtMs - Date.now());
-      setPomodoroMsRemaining(remaining);
-      if (remaining > 0 && pomodoroRunning) {
-        rafId = window.requestAnimationFrame(tick);
-      }
-    };
-    rafId = window.requestAnimationFrame(tick);
-    return () => window.cancelAnimationFrame(rafId);
-  }, [pomodoroRunning, pomodoroSessionEndAtMs]);
+    const id = window.setInterval(() => {
+      setPomodoroSecondsRemaining((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => window.clearInterval(id);
+  }, [pomodoroRunning]);
 
   useEffect(() => {
-    if (!pomodoroRunning || pomodoroMsRemaining > 0) return;
+    if (!pomodoroRunning || pomodoroSecondsRemaining > 0) return;
     setPomodoroRunning(false);
-    setPomodoroSessionEndAtMs(null);
-  }, [pomodoroMsRemaining, pomodoroRunning]);
+  }, [pomodoroRunning, pomodoroSecondsRemaining]);
 
   const startPomodoro = useCallback(() => {
     if (pomodoroRunning) return;
     if (!pomodoroSessionStartIso) {
       setPomodoroSessionStartIso(new Date().toISOString());
     }
-    setPomodoroSessionEndAtMs(Date.now() + Math.max(0, pomodoroMsRemaining));
     setFocusTrackerError(null);
     setPomodoroRunning(true);
-  }, [pomodoroMsRemaining, pomodoroRunning, pomodoroSessionStartIso]);
+  }, [pomodoroRunning, pomodoroSessionStartIso]);
 
   const pausePomodoro = useCallback(() => {
-    if (pomodoroSessionEndAtMs != null) {
-      setPomodoroMsRemaining(Math.max(0, pomodoroSessionEndAtMs - Date.now()));
-    }
     setPomodoroRunning(false);
-    setPomodoroSessionEndAtMs(null);
-  }, [pomodoroSessionEndAtMs]);
+  }, []);
 
   const resetPomodoro = useCallback(() => {
     setPomodoroRunning(false);
-    setPomodoroMsRemaining(pomodoroDurationMinutes * 60 * 1000);
+    setPomodoroSecondsRemaining(pomodoroDurationMinutes * 60);
     setPomodoroSessionStartIso(null);
-    setPomodoroSessionEndAtMs(null);
     setFocusTrackerError(null);
   }, [pomodoroDurationMinutes]);
 
   const endPomodoro = useCallback(async () => {
     if (!pomodoroSessionStartIso) return;
     if (focusTrackerSaving) return;
-    const elapsedMs = Math.max(0, pomodoroDurationMinutes * 60 * 1000 - pomodoroMsRemaining);
-    if (elapsedMs <= 0) {
+    const elapsedSeconds = Math.max(0, pomodoroDurationMinutes * 60 - pomodoroSecondsRemaining);
+    if (elapsedSeconds <= 0) {
       setFocusTrackerError("No focused time to log yet.");
       return;
     }
     const endedAt = new Date();
-    const startedAt = new Date(endedAt.getTime() - elapsedMs);
-    const minutesToLog = Math.max(1, Math.round(elapsedMs / 60_000));
+    const startedAt = new Date(endedAt.getTime() - elapsedSeconds * 1000);
+    const minutesToLog = Math.max(1, Math.round(elapsedSeconds / 60));
     setPomodoroRunning(false);
-    setPomodoroSessionEndAtMs(null);
     await saveFocusSession(minutesToLog, startedAt, endedAt);
     setPomodoroSessionStartIso(null);
-    setPomodoroMsRemaining(pomodoroDurationMinutes * 60 * 1000);
+    setPomodoroSecondsRemaining(pomodoroDurationMinutes * 60);
   }, [
     focusTrackerSaving,
     pomodoroDurationMinutes,
-    pomodoroMsRemaining,
+    pomodoroSecondsRemaining,
     pomodoroSessionStartIso,
     saveFocusSession,
   ]);
@@ -7478,7 +7457,7 @@ export default function ChatPage() {
       return;
     }
     setPomodoroDurationMinutes(parsed);
-    setPomodoroMsRemaining(parsed * 60 * 1000);
+    setPomodoroSecondsRemaining(parsed * 60);
     setFocusTrackerError(null);
   }, [pomodoroCustomMinutesInput]);
 
@@ -8924,7 +8903,6 @@ export default function ChatPage() {
             style={{ fontSize: "clamp(220px, 58vw, 420px)" }}
           >
             {pomodoroClockLabel}
-            <span className="align-top text-[0.28em] opacity-80">.{pomodoroTenthsLabel}</span>
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <button
