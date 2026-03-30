@@ -73,11 +73,20 @@ import {
   type ReminderPreferences,
   type ReminderType,
 } from "@/lib/reminder-settings";
-import { syncNativeReminders } from "@/lib/native-reminders";
+import { notifyPomodoroCompleted, syncNativeReminders } from "@/lib/native-reminders";
 import {
   playLlmResponseStartHaptic,
   playLlmResponseVisibleHaptic,
 } from "@/lib/conversation-haptics";
+import {
+  addNativePomodoroLiveListener,
+  endNativePomodoroLive,
+  isNativePomodoroLiveSupported,
+  pauseNativePomodoroLive,
+  resetNativePomodoroLive,
+  resumeNativePomodoroLive,
+  startNativePomodoroLive,
+} from "@/lib/native-pomodoro-live";
 
 /** Library / inline panels: cards fill the row; min width ~17.5rem so more columns appear on wide screens. */
 const LIBRARY_RESPONSIVE_CARD_GRID =
@@ -454,11 +463,12 @@ function HabitIntendedPeriodFields({
 }
 
 type WeatherFormat = "condition-temp" | "emoji-temp" | "temp-only";
-const REMINDER_TYPES: ReminderType[] = ["nutrition", "exercise", "gratitude"];
+const REMINDER_TYPES: ReminderType[] = ["nutrition", "exercise", "gratitude", "weight"];
 const REMINDER_TYPE_LABELS: Record<ReminderType, string> = {
   nutrition: "Nutrition",
   exercise: "Exercise",
   gratitude: "Gratitude journal",
+  weight: "Weight tracker",
 };
 const WEEKDAY_SHORT: Array<{ day: number; label: string }> = [
   { day: 0, label: "S" },
@@ -468,6 +478,14 @@ const WEEKDAY_SHORT: Array<{ day: number; label: string }> = [
   { day: 4, label: "T" },
   { day: 5, label: "F" },
   { day: 6, label: "S" },
+];
+
+type JournalRefinePersonaId = "critical" | "contrarian" | "systems_thinker" | "stoic";
+const JOURNAL_REFINE_PERSONAS: Array<{ id: JournalRefinePersonaId; label: string }> = [
+  { id: "critical", label: "Critical" },
+  { id: "contrarian", label: "The Contrarian" },
+  { id: "systems_thinker", label: "The Systems Thinker" },
+  { id: "stoic", label: "The Stoic" },
 ];
 const LETTER_MODAL_TITLE = "a note from the developer";
 type ExportDataSection =
@@ -2648,6 +2666,8 @@ function getCaloriesRemainingMeterFillClass(remaining: number, target: number): 
 type LandingActivityKind =
   | "session"
   | "journal"
+  | "weightEntry"
+  | "focusEntry"
   | "memory"
   | "habit"
   | "concept"
@@ -2722,6 +2742,7 @@ type WeightTrackerEntry = {
 
 type FocusTrackerEntry = {
   id: string;
+  tag?: string;
   minutes: number;
   startedAt: string;
   endedAt: string;
@@ -2735,6 +2756,8 @@ type LandingActivityGroupKey =
   | "journalRegular"
   | "journalNutrition"
   | "journalExercise"
+  | "journalWeight"
+  | "journalFocus"
   | "session"
   | "memory"
   | "habit"
@@ -2747,6 +2770,8 @@ const LANDING_ACTIVITY_GROUP_LABEL: Record<LandingActivityGroupKey, string> = {
   journalRegular: "Journal Entries",
   journalNutrition: "Nutrition Entries",
   journalExercise: "Exercise Entries",
+  journalWeight: "Weight Entries",
+  journalFocus: "Focus Entries",
   session: "Conversations",
   memory: "Memory",
   habit: "Habits",
@@ -2757,7 +2782,7 @@ const LANDING_ACTIVITY_GROUP_LABEL: Record<LandingActivityGroupKey, string> = {
 };
 
 const LANDING_TAB_ACTIVITY_GROUP_ORDER: Record<LandingTab, LandingActivityGroupKey[]> = {
-  journaling: ["journalRegular", "journalNutrition", "journalExercise"],
+  journaling: ["journalRegular", "journalNutrition", "journalExercise", "journalWeight", "journalFocus"],
   pomodoro: [],
   deepThinking: ["session", "perspectiveCard"],
 };
@@ -2865,6 +2890,8 @@ function landingActivityGroupKey(item: LandingDayActivityItem): LandingActivityG
     if (item.journalCategory === "exercise") return "journalExercise";
     return "journalRegular";
   }
+  if (item.kind === "weightEntry") return "journalWeight";
+  if (item.kind === "focusEntry") return "journalFocus";
   return item.kind;
 }
 
@@ -3846,11 +3873,12 @@ export default function ChatPage() {
   const [calorieTrackerImageError, setCalorieTrackerImageError] = useState<string | null>(null);
   const [calorieTrackerQuestions, setCalorieTrackerQuestions] = useState<string[]>([]);
   const [calorieTrackerAnswers, setCalorieTrackerAnswers] = useState<string[]>([]);
-  const [calorieTrackerStep, setCalorieTrackerStep] = useState<"input" | "questions" | "review" | "result">("input");
+  const [calorieTrackerStep, setCalorieTrackerStep] = useState<"choose" | "input" | "questions" | "review" | "result">("choose");
   const [calorieTrackerLoading, setCalorieTrackerLoading] = useState(false);
   const [calorieTrackerError, setCalorieTrackerError] = useState<string | null>(null);
   const [calorieTrackerSuggestions, setCalorieTrackerSuggestions] = useState<ReusableJournalSuggestion[]>([]);
   const [calorieTrackerSuggestionsLoading, setCalorieTrackerSuggestionsLoading] = useState(false);
+  const [calorieTrackerSuggestionQuery, setCalorieTrackerSuggestionQuery] = useState("");
   const [calorieTrackerResult, setCalorieTrackerResult] = useState<{
     intent: "nutrition" | "exercise" | "mixed";
     confidence: "low" | "medium" | "high";
@@ -3924,6 +3952,10 @@ export default function ChatPage() {
   const [journalEntryText, setJournalEntryText] = useState("");
   const [journalEntrySaving, setJournalEntrySaving] = useState(false);
   const [journalEntrySaveError, setJournalEntrySaveError] = useState<string | null>(null);
+  const [journalRefinePersona, setJournalRefinePersona] = useState<JournalRefinePersonaId>("critical");
+  const [journalRefineLoading, setJournalRefineLoading] = useState(false);
+  const [journalRefineError, setJournalRefineError] = useState<string | null>(null);
+  const [journalRefinedText, setJournalRefinedText] = useState("");
   const [journalTypeChooserOpen, setJournalTypeChooserOpen] = useState(false);
   const [nutritionReportModalOpen, setNutritionReportModalOpen] = useState(false);
   const [nutritionReportDayKey, setNutritionReportDayKey] = useState(() => toDayKey(new Date()));
@@ -3941,7 +3973,6 @@ export default function ChatPage() {
     };
   } | null>(null);
   const [localMinuteTick, setLocalMinuteTick] = useState(() => Math.floor(Date.now() / 60000));
-  const [viewportWidthPx, setViewportWidthPx] = useState(390);
   const [weeklySummaryModalOpen, setWeeklySummaryModalOpen] = useState(false);
   const [weeklySummaryWeekOffset, setWeeklySummaryWeekOffset] = useState(0);
   const [weeklySummaryLoading, setWeeklySummaryLoading] = useState(false);
@@ -3998,6 +4029,7 @@ export default function ChatPage() {
   const [weightTrackerTargetInput, setWeightTrackerTargetInput] = useState("");
   const [weightTrackerAddOpen, setWeightTrackerAddOpen] = useState(false);
   const [focusTrackerEntries, setFocusTrackerEntries] = useState<FocusTrackerEntry[]>([]);
+  const [focusSessionTagInput, setFocusSessionTagInput] = useState("");
   const [focusTrackerLoading, setFocusTrackerLoading] = useState(false);
   const [focusTrackerSaving, setFocusTrackerSaving] = useState(false);
   const [focusTrackerError, setFocusTrackerError] = useState<string | null>(null);
@@ -4008,6 +4040,11 @@ export default function ChatPage() {
   const [pomodoroRunning, setPomodoroRunning] = useState(false);
   const [pomodoroSessionStartIso, setPomodoroSessionStartIso] = useState<string | null>(null);
   const [pomodoroJustLogged, setPomodoroJustLogged] = useState(false);
+  const [pomodoroConfettiVisible, setPomodoroConfettiVisible] = useState(false);
+  const pomodoroConfettiTimeoutRef = useRef<number | null>(null);
+  const [pomodoroFinalSecondAnimationActive, setPomodoroFinalSecondAnimationActive] = useState(false);
+  const pomodoroFinalSecondTimeoutRef = useRef<number | null>(null);
+  const pomodoroPrevSecondsRef = useRef(pomodoroSecondsRemaining);
 
   const resetJournalEntryModal = useCallback(() => {
     setJournalEntryModalOpen(false);
@@ -4015,6 +4052,10 @@ export default function ChatPage() {
     setJournalEntryText("");
     setJournalEntrySaving(false);
     setJournalEntrySaveError(null);
+    setJournalRefinePersona("critical");
+    setJournalRefineLoading(false);
+    setJournalRefineError(null);
+    setJournalRefinedText("");
   }, []);
 
   const openJournalTypeChooser = useCallback(() => {
@@ -4031,6 +4072,10 @@ export default function ChatPage() {
     setJournalEntryDate(getTodayDateInputValue());
     setJournalEntryText("");
     setJournalEntrySaveError(null);
+    setJournalRefinePersona("critical");
+    setJournalRefineLoading(false);
+    setJournalRefineError(null);
+    setJournalRefinedText("");
     setJournalEntryModalOpen(true);
   }, []);
 
@@ -4070,6 +4115,36 @@ export default function ChatPage() {
     }
   }, [journalEntryDate, journalEntryText, language, refetchTranscripts, resetJournalEntryModal]);
 
+  const refineJournalEntryFromModal = useCallback(async () => {
+    const body = journalEntryText.trim();
+    const isRefinableType =
+      selectedLandingJournalChip === "gratitude" || selectedLandingJournalChip === "reflection";
+    if (!body || !isRefinableType) return;
+    setJournalRefineLoading(true);
+    setJournalRefineError(null);
+    setJournalRefinedText("");
+    try {
+      const res = await fetch("/api/me/journal/refine", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: body,
+          entryType: selectedLandingJournalChip,
+          persona: journalRefinePersona,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { error?: string; refinedText?: string };
+      if (!res.ok || typeof data.refinedText !== "string" || !data.refinedText.trim()) {
+        throw new Error(data.error || "Refinement failed.");
+      }
+      setJournalRefinedText(data.refinedText.trim());
+    } catch {
+      setJournalRefineError("Could not refine your entry right now. Please try again.");
+    } finally {
+      setJournalRefineLoading(false);
+    }
+  }, [journalEntryText, journalRefinePersona, selectedLandingJournalChip]);
+
   const resetCalorieTrackerModal = useCallback(() => {
     setCalorieTrackerModalOpen(false);
     setCalorieTrackerInput("");
@@ -4080,11 +4155,12 @@ export default function ChatPage() {
     setCalorieTrackerImageError(null);
     setCalorieTrackerQuestions([]);
     setCalorieTrackerAnswers([]);
-    setCalorieTrackerStep("input");
+    setCalorieTrackerStep("choose");
     setCalorieTrackerLoading(false);
     setCalorieTrackerError(null);
     setCalorieTrackerSuggestions([]);
     setCalorieTrackerSuggestionsLoading(false);
+    setCalorieTrackerSuggestionQuery("");
     setCalorieTrackerResult(null);
     setCalorieTrackerReviewDraft(null);
     setCalorieTrackerReviewAnswers([]);
@@ -4105,10 +4181,11 @@ export default function ChatPage() {
     setCalorieTrackerImageError(null);
     setCalorieTrackerQuestions([]);
     setCalorieTrackerAnswers([]);
-    setCalorieTrackerStep("input");
+    setCalorieTrackerStep("choose");
     setCalorieTrackerError(null);
     setCalorieTrackerSuggestions([]);
     setCalorieTrackerSuggestionsLoading(false);
+    setCalorieTrackerSuggestionQuery("");
     setCalorieTrackerResult(null);
     setCalorieTrackerReviewDraft(null);
     setCalorieTrackerReviewAnswers([]);
@@ -4165,11 +4242,13 @@ export default function ChatPage() {
   );
 
   useEffect(() => {
-    if (!calorieTrackerModalOpen || calorieTrackerStep !== "input") return;
+    if (!calorieTrackerModalOpen) return;
+    if (!(calorieTrackerStep === "choose" || calorieTrackerStep === "input")) return;
     let cancelled = false;
     const t = window.setTimeout(() => {
       if (cancelled) return;
-      void fetchCalorieTrackerSuggestions(calorieTrackerInput);
+      const query = calorieTrackerStep === "choose" ? calorieTrackerSuggestionQuery : calorieTrackerInput;
+      void fetchCalorieTrackerSuggestions(query);
     }, 220);
     return () => {
       cancelled = true;
@@ -4177,6 +4256,7 @@ export default function ChatPage() {
     };
   }, [
     calorieTrackerInput,
+    calorieTrackerSuggestionQuery,
     calorieTrackerModalOpen,
     calorieTrackerStep,
     fetchCalorieTrackerSuggestions,
@@ -4483,6 +4563,61 @@ export default function ChatPage() {
     }
   }, [calorieTrackerInput, finalizeCalorieTracker, previewCalorieTrackerForReview, selectedLandingJournalChip]);
 
+  const reuseNutritionSuggestionExact = useCallback(async (suggestion: ReusableJournalSuggestion) => {
+    if (selectedLandingJournalChip !== "nutrition") return;
+    if (calorieTrackerLoading || calorieTrackerImageProcessing) return;
+    setCalorieTrackerLoading(true);
+    setCalorieTrackerError(null);
+    const deviceNow = new Date();
+    try {
+      const res = await fetch("/api/me/journal/calorie", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "reuse_snapshot",
+          sourceTranscriptId: suggestion.id,
+          ...(calorieTrackerEntryDate.trim() ? { entryDate: calorieTrackerEntryDate.trim() } : {}),
+          journalEntryTime: {
+            hour: deviceNow.getHours(),
+            minute: deviceNow.getMinutes(),
+          },
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) throw new Error(data.error || "Could not reuse this nutrition entry.");
+      refetchTranscripts();
+      setJournalEntryJustSaved(true);
+      if (typeof window !== "undefined") {
+        window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
+      }
+      resetCalorieTrackerModal();
+    } catch (err) {
+      setCalorieTrackerError(
+        err instanceof Error ? err.message : "Could not reuse this nutrition entry."
+      );
+    } finally {
+      setCalorieTrackerLoading(false);
+    }
+  }, [
+    calorieTrackerEntryDate,
+    calorieTrackerImageProcessing,
+    calorieTrackerLoading,
+    refetchTranscripts,
+    resetCalorieTrackerModal,
+    selectedLandingJournalChip,
+  ]);
+
+  const handleCalorieTrackerSuggestionSelect = useCallback(async (suggestion: ReusableJournalSuggestion) => {
+    if (selectedLandingJournalChip === "nutrition") {
+      await reuseNutritionSuggestionExact(suggestion);
+      return;
+    }
+    setCalorieTrackerInput(suggestion.sampleEntry ?? "");
+    setCalorieTrackerCustomTag(suggestion.displayName ?? "");
+    setCalorieTrackerError(null);
+    setCalorieTrackerStep("input");
+  }, [reuseNutritionSuggestionExact, selectedLandingJournalChip]);
+
   const calorieTrackerReviewGuidance = useMemo(() => {
     if (calorieTrackerStep !== "review" || !calorieTrackerReviewDraft) return null;
     const calories = parseNullableNumericInput(calorieTrackerReviewDraft.calories);
@@ -4569,6 +4704,49 @@ export default function ChatPage() {
           sublabel: getJournalCategoryLabel(t.journalCategory) ?? undefined,
           timestamp: journalEntryTimestamp(t),
           entityId: t._id,
+        };
+      })
+      .filter(isNonNull);
+
+    const weightItems: LandingDayActivityItem[] = weightTrackerEntries
+      .map((entry) => {
+        const sourceIso = entry.recordedAt || entry.createdAt;
+        if (!sourceIso) return null;
+        const dayKey = dayKeyFromIso(sourceIso);
+        const ts = new Date(sourceIso).getTime();
+        if (!dayKey || Number.isNaN(ts)) return null;
+        const weightText = Number.isFinite(entry.weightKg) ? `${entry.weightKg} kg` : "--";
+        return {
+          id: `weight-entry-${entry.id}`,
+          kind: "weightEntry" as const,
+          dayKey,
+          title: `Weight check-in: ${weightText}`,
+          sublabel: "Weight",
+          timestamp: ts,
+          entityId: entry.id,
+        };
+      })
+      .filter(isNonNull);
+
+    const focusItems: LandingDayActivityItem[] = focusTrackerEntries
+      .map((entry) => {
+        const sourceIso = entry.endedAt || entry.createdAt;
+        if (!sourceIso) return null;
+        const dayKey = dayKeyFromIso(sourceIso);
+        const ts = new Date(sourceIso).getTime();
+        if (!dayKey || Number.isNaN(ts)) return null;
+        const minutesText = Number.isFinite(entry.minutes) ? `${entry.minutes} min` : "--";
+        const title = entry.tag?.trim()
+          ? `Focus: ${entry.tag.trim()} (${minutesText})`
+          : `Focus session (${minutesText})`;
+        return {
+          id: `focus-entry-${entry.id}`,
+          kind: "focusEntry" as const,
+          dayKey,
+          title,
+          sublabel: "Focus",
+          timestamp: ts,
+          entityId: entry.id,
         };
       })
       .filter(isNonNull);
@@ -4683,6 +4861,8 @@ export default function ChatPage() {
     return [
       ...sessionItems,
       ...journalItems,
+      ...weightItems,
+      ...focusItems,
       ...memoryItems,
       ...habitItems,
       ...conceptItems,
@@ -4695,6 +4875,8 @@ export default function ChatPage() {
     customConcepts,
     habits,
     journalEntriesSorted,
+    focusTrackerEntries,
+    weightTrackerEntries,
     longTermMemories,
     mentalModelsIndex,
     savedConcepts,
@@ -4779,25 +4961,6 @@ export default function ChatPage() {
     }, 60_000);
     return () => window.clearInterval(timer);
   }, []);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const updateViewportWidth = () => setViewportWidthPx(Math.max(320, window.innerWidth || 390));
-    updateViewportWidth();
-    window.addEventListener("resize", updateViewportWidth, { passive: true });
-    return () => window.removeEventListener("resize", updateViewportWidth);
-  }, []);
-  const pomodoroFullscreenFontSize = useMemo(
-    () => `${Math.max(180, Math.min(Math.round(viewportWidthPx * 0.58), 380))}px`,
-    [viewportWidthPx]
-  );
-  const pomodoroActiveCardFontSize = useMemo(
-    () => `${Math.max(140, Math.min(Math.round(viewportWidthPx * 0.46), 240))}px`,
-    [viewportWidthPx]
-  );
-  const pomodoroSetupCardFontSize = useMemo(
-    () => `${Math.max(120, Math.min(Math.round(viewportWidthPx * 0.42), 200))}px`,
-    [viewportWidthPx]
-  );
   const isSelectedLandingDayToday = useMemo(
     () => selectedLandingDayKey === toDayKey(new Date()),
     [selectedLandingDayKey, localMinuteTick]
@@ -4873,7 +5036,8 @@ export default function ChatPage() {
     () => summarizeNutritionFactContributorsForDay(journalEntriesSorted, selectedLandingDayKey),
     [journalEntriesSorted, selectedLandingDayKey]
   );
-  const selectedLandingDayFocusSummary = useMemo(() => {
+  const todayFocusSummary = useMemo(() => {
+    const todayKey = toDayKey(new Date());
     let minutes = 0;
     let sessions = 0;
     const rows: FocusTrackerEntry[] = [];
@@ -4881,20 +5045,35 @@ export default function ChatPage() {
       const key = `${String(entry.year).padStart(4, "0")}-${String(entry.month).padStart(2, "0")}-${String(
         entry.day
       ).padStart(2, "0")}`;
-      if (key !== selectedLandingDayKey) continue;
+      if (key !== todayKey) continue;
       minutes += Number.isFinite(entry.minutes) ? entry.minutes : 0;
       sessions += 1;
       rows.push(entry);
     }
     rows.sort((a, b) => new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime());
     return { minutes, sessions, rows };
-  }, [focusTrackerEntries, selectedLandingDayKey]);
+  }, [focusTrackerEntries, localMinuteTick]);
   const pomodoroClockLabel = useMemo(() => {
     const safe = Math.max(0, pomodoroSecondsRemaining);
     const minutes = Math.floor(safe / 60);
     const seconds = safe % 60;
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   }, [pomodoroSecondsRemaining]);
+  const shouldAnimatePomodoroLastSecond = pomodoroFinalSecondAnimationActive;
+  const pomodoroConfettiPieces = useMemo(
+    () =>
+      Array.from({ length: 42 }, (_, i) => ({
+        id: i,
+        leftPercent: Math.round((i / 42) * 100),
+        hue: (i * 47) % 360,
+        delayMs: (i % 10) * 45,
+        durationMs: 1200 + (i % 6) * 170,
+        driftPx: ((i % 7) - 3) * 12,
+        sizePx: 8 + (i % 4) * 3,
+        rotateDeg: ((i % 9) - 4) * 36,
+      })),
+    []
+  );
   useEffect(() => {
     if (!nutritionDayViewModalOpen) {
       setNutritionDayViewExpandedContributors({});
@@ -7248,6 +7427,22 @@ export default function ChatPage() {
       });
       return;
     }
+    if (item.kind === "weightEntry") {
+      playSelectionChime();
+      if (isAnonymous || incognitoMode) {
+        router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
+      } else {
+        setWeightTrackerModalOpen(true);
+        setWeightTrackerRange("week");
+        setWeightTrackerAddOpen(false);
+      }
+      return;
+    }
+    if (item.kind === "focusEntry") {
+      playSelectionChime();
+      setLandingTab("pomodoro");
+      return;
+    }
     if (item.kind === "memory") {
       const ltm = longTermMemories.find((m) => m._id === item.entityId);
       if (ltm) setLtmDetailModal(ltm);
@@ -7394,6 +7589,22 @@ export default function ChatPage() {
     void fetchWeightTracker();
   }, [fetchWeightTracker, incognitoMode, isAnonymous, userId, weightTrackerModalOpen]);
 
+  useEffect(() => {
+    if (isAnonymous || incognitoMode || !userId) return;
+    if (landingTab !== "journaling") return;
+    if (weightTrackerEntries.length > 0 || weightTrackerLoading || weightTrackerModalOpen) return;
+    void fetchWeightTracker();
+  }, [
+    fetchWeightTracker,
+    incognitoMode,
+    isAnonymous,
+    landingTab,
+    userId,
+    weightTrackerEntries.length,
+    weightTrackerLoading,
+    weightTrackerModalOpen,
+  ]);
+
   const saveWeightTrackerEntry = useCallback(async () => {
     if (weightTrackerSaving) return;
     const parsedWeight = Number.parseFloat(weightTrackerWeightInput);
@@ -7463,7 +7674,7 @@ export default function ChatPage() {
   }, []);
 
   const saveFocusSession = useCallback(
-    async (minutes: number, startedAt: Date, endedAt: Date) => {
+    async (minutes: number, startedAt: Date, endedAt: Date, tag: string) => {
       if (focusTrackerSaving) return;
       setFocusTrackerSaving(true);
       setFocusTrackerError(null);
@@ -7472,6 +7683,7 @@ export default function ChatPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            tag,
             minutes,
             startedAt: startedAt.toISOString(),
             endedAt: endedAt.toISOString(),
@@ -7483,6 +7695,7 @@ export default function ChatPage() {
         };
         if (!res.ok) throw new Error(data.error || "Could not save focus session.");
         setFocusTrackerEntries(Array.isArray(data.entries) ? data.entries : []);
+        setFocusSessionTagInput("");
         setPomodoroJustLogged(true);
         if (typeof window !== "undefined") {
           window.setTimeout(() => setPomodoroJustLogged(false), 4000);
@@ -7524,6 +7737,21 @@ export default function ChatPage() {
   }, [fetchFocusTrackerEntries, incognitoMode, isAnonymous, landingTab, userId]);
 
   useEffect(() => {
+    if (isAnonymous || incognitoMode || !userId) return;
+    if (landingTab !== "journaling") return;
+    if (focusTrackerEntries.length > 0 || focusTrackerLoading) return;
+    void fetchFocusTrackerEntries();
+  }, [
+    fetchFocusTrackerEntries,
+    focusTrackerEntries.length,
+    focusTrackerLoading,
+    incognitoMode,
+    isAnonymous,
+    landingTab,
+    userId,
+  ]);
+
+  useEffect(() => {
     if (pomodoroRunning || pomodoroSessionStartIso) return;
     setPomodoroSecondsRemaining(pomodoroDurationMinutes * 60);
   }, [pomodoroDurationMinutes, pomodoroRunning, pomodoroSessionStartIso]);
@@ -7534,6 +7762,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (!pomodoroRunning) return;
+    if (isNativePomodoroLiveSupported()) return;
     const id = window.setInterval(() => {
       setPomodoroSecondsRemaining((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
@@ -7542,32 +7771,116 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (!pomodoroRunning || pomodoroSecondsRemaining > 0) return;
+    setPomodoroConfettiVisible(true);
+    if (pomodoroConfettiTimeoutRef.current !== null) {
+      window.clearTimeout(pomodoroConfettiTimeoutRef.current);
+    }
+    pomodoroConfettiTimeoutRef.current = window.setTimeout(() => {
+      setPomodoroConfettiVisible(false);
+      pomodoroConfettiTimeoutRef.current = null;
+    }, 2200);
+    if (!isNativePomodoroLiveSupported()) {
+      void notifyPomodoroCompleted();
+    }
     setPomodoroRunning(false);
   }, [pomodoroRunning, pomodoroSecondsRemaining]);
 
+  useEffect(() => {
+    if (!isNativePomodoroLiveSupported()) return;
+    let cancelled = false;
+    let handle: { remove: () => Promise<void> } | null = null;
+    void addNativePomodoroLiveListener((state) => {
+      if (cancelled) return;
+      if (Number.isFinite(state.remainingSeconds)) {
+        setPomodoroSecondsRemaining(Math.max(0, Math.round(state.remainingSeconds)));
+      }
+      setPomodoroRunning(state.running === true);
+      if (state.running && !pomodoroSessionStartIso) {
+        setPomodoroSessionStartIso(new Date().toISOString());
+      }
+      if (state.source === "end" || state.completed) {
+        setPomodoroRunning(false);
+      }
+      if (state.completed) {
+        setPomodoroSessionStartIso(null);
+      }
+    }).then((h) => {
+      if (cancelled) {
+        void h?.remove();
+        return;
+      }
+      handle = h;
+    });
+    return () => {
+      cancelled = true;
+      if (handle) void handle.remove();
+    };
+  }, [pomodoroSessionStartIso]);
+
+  useEffect(() => {
+    const previous = pomodoroPrevSecondsRef.current;
+    if (previous === 1 && pomodoroSecondsRemaining === 0) {
+      setPomodoroFinalSecondAnimationActive(true);
+      if (pomodoroFinalSecondTimeoutRef.current !== null) {
+        window.clearTimeout(pomodoroFinalSecondTimeoutRef.current);
+      }
+      pomodoroFinalSecondTimeoutRef.current = window.setTimeout(() => {
+        setPomodoroFinalSecondAnimationActive(false);
+        pomodoroFinalSecondTimeoutRef.current = null;
+      }, 520);
+    }
+    pomodoroPrevSecondsRef.current = pomodoroSecondsRemaining;
+  }, [pomodoroSecondsRemaining]);
+
+  useEffect(
+    () => () => {
+      if (pomodoroConfettiTimeoutRef.current !== null) {
+        window.clearTimeout(pomodoroConfettiTimeoutRef.current);
+        pomodoroConfettiTimeoutRef.current = null;
+      }
+      if (pomodoroFinalSecondTimeoutRef.current !== null) {
+        window.clearTimeout(pomodoroFinalSecondTimeoutRef.current);
+        pomodoroFinalSecondTimeoutRef.current = null;
+      }
+    },
+    []
+  );
+
   const startPomodoro = useCallback(() => {
     if (pomodoroRunning) return;
+    const durationSeconds = pomodoroDurationMinutes * 60;
     if (!pomodoroSessionStartIso) {
       setPomodoroSessionStartIso(new Date().toISOString());
+      void startNativePomodoroLive(durationSeconds, Math.max(1, pomodoroSecondsRemaining));
+    } else {
+      void resumeNativePomodoroLive(durationSeconds, Math.max(1, pomodoroSecondsRemaining));
     }
     setFocusTrackerError(null);
     setPomodoroRunning(true);
-  }, [pomodoroRunning, pomodoroSessionStartIso]);
+  }, [pomodoroDurationMinutes, pomodoroRunning, pomodoroSecondsRemaining, pomodoroSessionStartIso]);
 
   const pausePomodoro = useCallback(() => {
+    void pauseNativePomodoroLive();
     setPomodoroRunning(false);
   }, []);
 
   const resetPomodoro = useCallback(() => {
+    void resetNativePomodoroLive(pomodoroDurationMinutes * 60);
     setPomodoroRunning(false);
     setPomodoroSecondsRemaining(pomodoroDurationMinutes * 60);
     setPomodoroSessionStartIso(null);
+    setFocusSessionTagInput("");
     setFocusTrackerError(null);
   }, [pomodoroDurationMinutes]);
 
   const endPomodoro = useCallback(async () => {
     if (!pomodoroSessionStartIso) return;
     if (focusTrackerSaving) return;
+    const tag = focusSessionTagInput.trim();
+    if (!tag) {
+      setFocusTrackerError("Please add a tag before ending this focus session.");
+      return;
+    }
     const elapsedSeconds = Math.max(0, pomodoroDurationMinutes * 60 - pomodoroSecondsRemaining);
     if (elapsedSeconds <= 0) {
       setFocusTrackerError("No focused time to log yet.");
@@ -7576,11 +7889,13 @@ export default function ChatPage() {
     const endedAt = new Date();
     const startedAt = new Date(endedAt.getTime() - elapsedSeconds * 1000);
     const minutesToLog = Math.max(1, Math.round(elapsedSeconds / 60));
+    void endNativePomodoroLive();
     setPomodoroRunning(false);
-    await saveFocusSession(minutesToLog, startedAt, endedAt);
+    await saveFocusSession(minutesToLog, startedAt, endedAt, tag);
     setPomodoroSessionStartIso(null);
     setPomodoroSecondsRemaining(pomodoroDurationMinutes * 60);
   }, [
+    focusSessionTagInput,
     focusTrackerSaving,
     pomodoroDurationMinutes,
     pomodoroSecondsRemaining,
@@ -9028,17 +9343,52 @@ export default function ChatPage() {
     (!!currentSession?.isCollapsed && !!collapsedSummary);
   const isPomodoroFocusMode =
     !incognitoMode && !isAnonymous && landingTab === "pomodoro" && !!pomodoroSessionStartIso;
+  const pomodoroConfettiOverlay = pomodoroConfettiVisible ? (
+    <div className="pointer-events-none fixed inset-0 z-[95] overflow-hidden" aria-hidden>
+      {pomodoroConfettiPieces.map((piece) => (
+        <span
+          key={piece.id}
+          className="pomodoro-confetti-piece"
+          style={{
+            left: `${piece.leftPercent}%`,
+            width: `${piece.sizePx}px`,
+            height: `${Math.round(piece.sizePx * 0.6)}px`,
+            backgroundColor: `hsl(${piece.hue} 92% 58%)`,
+            animationDelay: `${piece.delayMs}ms`,
+            animationDuration: `${piece.durationMs}ms`,
+            ["--pomodoro-confetti-drift" as string]: `${piece.driftPx}px`,
+            ["--pomodoro-confetti-rotate" as string]: `${piece.rotateDeg}deg`,
+          }}
+        />
+      ))}
+    </div>
+  ) : null;
 
   if (isPomodoroFocusMode) {
     return (
-      <div className="relative flex h-[100dvh] min-h-[100dvh] items-center justify-center overflow-hidden bg-background px-4">
-        <div className="w-full max-w-4xl text-center">
+      <div className="relative flex h-[100dvh] min-h-[100dvh] items-center justify-center bg-background px-4">
+        {pomodoroConfettiOverlay}
+        <div className="w-full max-w-4xl text-center overflow-visible">
           <p
-            className="font-black tracking-[-0.04em] text-foreground leading-[0.82] whitespace-nowrap"
-            style={{ fontSize: pomodoroFullscreenFontSize }}
+            className={`pomodoro-started-clock font-black tracking-[-0.04em] text-foreground leading-none ${
+              shouldAnimatePomodoroLastSecond ? "pomodoro-last-second-scroll" : ""
+            }`}
           >
             {pomodoroClockLabel}
           </p>
+          <div className="mt-4 flex justify-center">
+            <input
+              type="text"
+              value={focusSessionTagInput}
+              onChange={(e) => {
+                setFocusSessionTagInput(e.target.value.slice(0, 60));
+                if (focusTrackerError) setFocusTrackerError(null);
+              }}
+              placeholder="Tag this focus session (required)"
+              className="w-full max-w-md rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background px-3 py-2 text-base"
+              aria-label="Focus session tag"
+            />
+          </div>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <button
               type="button"
@@ -9076,6 +9426,7 @@ export default function ChatPage() {
 
   return (
     <div className={`relative flex flex-col h-[100dvh] min-h-[100dvh] overflow-hidden chat-bg-area bg-background border-2 transition-[border-color,background] duration-300 ease-in-out ${incognitoMode ? "border-violet-400/70 dark:border-violet-500/60" : "border-transparent"}`}>
+      {pomodoroConfettiOverlay}
       {/* Shared top bar - fixed on mobile so it stays visible when scrolling */}
       <header
         className={`h-[calc(56px+env(safe-area-inset-top))] min-h-[44px] pt-[env(safe-area-inset-top)] flex items-center border-b shrink-0 fixed top-0 left-0 right-0 z-20 md:relative md:top-auto md:left-auto md:right-auto ${
@@ -9098,7 +9449,7 @@ export default function ChatPage() {
             href="/chat/new"
             onClick={handleBrandLinkClick}
             className={`group inline-flex flex-1 min-w-0 pr-2 items-center gap-1.5 font-semibold tracking-tight text-[14px] xl:text-[15px] ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
-            title={PRODUCT_TAGLINE}
+                title={PRODUCT_TAGLINE}
           >
             <span aria-hidden className="inline-flex items-center shrink-0">
               <Image
@@ -11981,7 +12332,7 @@ export default function ChatPage() {
                               </div>
                             </div>
                                     </button>
-                                  </div>
+                          </div>
 
                                   <div className="mt-2 space-y-2">
                                     {selectedLandingDayActivityItems.length === 0 ? (
@@ -12043,10 +12394,12 @@ export default function ChatPage() {
                           ) : !isAnonymous && landingTab === "pomodoro" ? (
                             <div className={pomodoroSessionStartIso ? "min-h-[62vh] flex items-center justify-center" : "space-y-3"}>
                               {pomodoroSessionStartIso ? (
-                                <div className="w-full max-w-xl rounded-3xl border border-neutral-200/70 dark:border-white/10 bg-background p-6 sm:p-8 text-center space-y-6">
+                                <div className="w-full max-w-xl rounded-3xl border border-neutral-200/70 dark:border-white/10 bg-background p-6 sm:p-8 text-center space-y-6 overflow-visible">
                                   <p
-                                    className="font-black tracking-[-0.04em] text-foreground leading-[0.84] whitespace-nowrap"
-                                    style={{ fontSize: pomodoroActiveCardFontSize }}
+                                    className={`font-black tracking-[-0.04em] text-foreground leading-none ${
+                                      shouldAnimatePomodoroLastSecond ? "pomodoro-last-second-scroll" : ""
+                                    }`}
+                                    style={{ fontSize: "min(24vw, 240px)" }}
                                   >
                                     {pomodoroClockLabel}
                                   </p>
@@ -12087,7 +12440,7 @@ export default function ChatPage() {
                                 <div className="flex items-center justify-between gap-2">
                                   <p className="text-sm sm:text-base font-semibold text-foreground">Focus timer</p>
                                   <div className="flex items-center gap-1">
-                                    {[15, 25, 50].map((minutes) => (
+                                    {[30, 60, 90].map((minutes) => (
                                       <button
                                         key={`pomodoro-duration-${minutes}`}
                                         type="button"
@@ -12126,11 +12479,22 @@ export default function ChatPage() {
                                   </button>
                                 </div>
                                 <p
-                                  className="mt-3 font-black tracking-[-0.04em] text-foreground leading-[0.84] whitespace-nowrap"
-                                  style={{ fontSize: pomodoroSetupCardFontSize }}
+                                  className="pomodoro-setup-clock mt-3 font-black tracking-[-0.04em] text-foreground leading-none"
                                 >
                                   {pomodoroClockLabel}
                                 </p>
+                                <input
+                                  type="text"
+                                  value={focusSessionTagInput}
+                                  onChange={(e) => {
+                                    setFocusSessionTagInput(e.target.value.slice(0, 60));
+                                    if (focusTrackerError) setFocusTrackerError(null);
+                                  }}
+                                  placeholder="Tag this focus session (required)"
+                                  disabled={focusTrackerSaving}
+                                  className="w-full rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background px-3 py-2 text-sm"
+                                  aria-label="Focus session tag"
+                                />
                                 <div className="mt-3 flex flex-wrap items-center gap-2">
                                   <button
                                     type="button"
@@ -12178,28 +12542,35 @@ export default function ChatPage() {
                                 <div className="flex items-center justify-between gap-2">
                                   <p className="text-sm sm:text-base font-semibold text-foreground">Daily focus summary</p>
                                   <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
-                                    {selectedLandingDayFocusSummary.sessions} session
-                                    {selectedLandingDayFocusSummary.sessions === 1 ? "" : "s"}
+                                    {todayFocusSummary.sessions} session
+                                    {todayFocusSummary.sessions === 1 ? "" : "s"}
                                   </p>
                                 </div>
                                 <p className="text-2xl sm:text-3xl font-semibold text-foreground">
-                                  {selectedLandingDayFocusSummary.minutes} min
+                                  {todayFocusSummary.minutes} min
                                 </p>
                                 {focusTrackerLoading ? (
                                   <p className="text-sm text-neutral-500 dark:text-neutral-400">Loading focus sessions...</p>
-                                ) : selectedLandingDayFocusSummary.rows.length > 0 ? (
+                                ) : todayFocusSummary.rows.length > 0 ? (
                                   <div className="space-y-1.5">
-                                    {selectedLandingDayFocusSummary.rows.slice(0, 6).map((entry) => (
+                                    {todayFocusSummary.rows.slice(0, 6).map((entry) => (
                                       <div
                                         key={entry.id}
                                         className="flex items-center justify-between rounded-lg border border-neutral-200 dark:border-neutral-700 px-2.5 py-2"
                                       >
-                                        <p className="text-xs sm:text-sm text-foreground">
-                                          {new Date(entry.endedAt).toLocaleTimeString(undefined, {
-                                            hour: "numeric",
-                                            minute: "2-digit",
-                                          })}
-                                        </p>
+                                        <div className="min-w-0">
+                                          <p className="text-xs sm:text-sm text-foreground">
+                                            {new Date(entry.endedAt).toLocaleTimeString(undefined, {
+                                              hour: "numeric",
+                                              minute: "2-digit",
+                                            })}
+                                          </p>
+                                          {entry.tag && (
+                                            <p className="mt-0.5 inline-flex max-w-[180px] truncate rounded-md bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 text-[10px] sm:text-xs text-neutral-700 dark:text-neutral-300">
+                                              #{entry.tag}
+                                            </p>
+                                          )}
+                                        </div>
                                         <div className="flex items-center gap-2">
                                           <p className="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-300">
                                             {entry.minutes} min
@@ -12221,7 +12592,7 @@ export default function ChatPage() {
                                   </div>
                                 ) : (
                                   <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                                    No focus sessions logged for this day yet.
+                                    No focus sessions logged for today yet.
                                   </p>
                                 )}
                               </div>
@@ -14877,7 +15248,7 @@ export default function ChatPage() {
                       Reminder notifications
                     </h3>
                     <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">
-                      Set days and times for nutrition, exercise, and gratitude reminders.
+                      Set days and times for nutrition, exercise, gratitude, and weight reminders.
                     </p>
                     <div className="mb-3 rounded-xl border border-neutral-200/70 dark:border-white/12 bg-neutral-50/70 dark:bg-neutral-900/60 p-3">
                       <div className="flex items-center justify-between gap-3">
@@ -16545,7 +16916,11 @@ export default function ChatPage() {
               <div className="flex items-end gap-2">
                 <textarea
                   value={journalEntryText}
-                  onChange={(e) => setJournalEntryText(e.target.value)}
+                  onChange={(e) => {
+                    setJournalEntryText(e.target.value);
+                    if (journalRefinedText) setJournalRefinedText("");
+                    if (journalRefineError) setJournalRefineError(null);
+                  }}
                   placeholder={getLandingTranslations(language).journalEntryBodyPlaceholder}
                   disabled={journalEntrySaving}
                   rows={10}
@@ -16566,6 +16941,71 @@ export default function ChatPage() {
                   }
                 />
               </div>
+              {(selectedLandingJournalChip === "gratitude" || selectedLandingJournalChip === "reflection") && (
+                <div className="rounded-xl border border-neutral-200/80 dark:border-neutral-700 bg-neutral-50/70 dark:bg-neutral-900/60 p-3 space-y-2.5">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                      Refine with persona lens
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => void refineJournalEntryFromModal()}
+                      disabled={journalEntrySaving || journalRefineLoading || !journalEntryText.trim()}
+                      className="px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                    >
+                      {journalRefineLoading ? "Refining..." : "Refine draft"}
+                    </button>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {JOURNAL_REFINE_PERSONAS.map((persona) => {
+                      const selected = journalRefinePersona === persona.id;
+                      return (
+                        <button
+                          key={persona.id}
+                          type="button"
+                          onClick={() => {
+                            setJournalRefinePersona(persona.id);
+                            setJournalRefineError(null);
+                          }}
+                          disabled={journalEntrySaving || journalRefineLoading}
+                          className={`px-2.5 py-1.5 rounded-lg text-xs border transition-colors disabled:opacity-50 ${
+                            selected
+                              ? "bg-[#B87B51] text-white border-[#B87B51] dark:bg-foreground dark:text-background dark:border-foreground"
+                              : "border-neutral-300 dark:border-neutral-600 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                          }`}
+                        >
+                          {persona.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {journalRefineError && (
+                    <p className="text-xs text-red-600 dark:text-red-400">{journalRefineError}</p>
+                  )}
+                  {journalRefinedText && (
+                    <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-background p-2.5 space-y-2">
+                      <p className="text-[11px] uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
+                        Refined draft
+                      </p>
+                      <p className="text-sm text-foreground whitespace-pre-wrap">{journalRefinedText}</p>
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setJournalEntryText(journalRefinedText);
+                            setJournalRefinedText("");
+                            setJournalRefineError(null);
+                          }}
+                          disabled={journalEntrySaving || journalRefineLoading}
+                          className="px-3 py-1.5 rounded-lg text-xs font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                        >
+                          Use refined draft
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
               {journalEntrySaveError && (
                 <p className="text-sm text-red-600 dark:text-red-400">{journalEntrySaveError}</p>
               )}
@@ -16626,6 +17066,107 @@ export default function ChatPage() {
                   ? "Log meals or snacks with as much detail as you know."
                   : "Log your workout details so calories and macro impact can be estimated."}
               </p>
+
+              {calorieTrackerStep === "choose" && (
+                <>
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                      Choose from your past entries
+                    </p>
+                    <input
+                      type="text"
+                      value={calorieTrackerSuggestionQuery}
+                      onChange={(e) => setCalorieTrackerSuggestionQuery(e.target.value)}
+                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                      placeholder="Search by term"
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    />
+                    {calorieTrackerSuggestionsLoading ? (
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">Loading options...</p>
+                    ) : calorieTrackerSuggestions.length > 0 ? (
+                      <div className="space-y-1.5 max-h-64 overflow-y-auto">
+                        {calorieTrackerSuggestions.map((suggestion) => (
+                          <button
+                            key={suggestion.id}
+                            type="button"
+                            onClick={() => void handleCalorieTrackerSuggestionSelect(suggestion)}
+                            disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                            className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 px-3 py-2 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                          >
+                            {(() => {
+                              const fallbackTitle =
+                                suggestion.sampleEntry
+                                  .split("\n")
+                                  .map((s) => s.trim())
+                                  .find(Boolean)
+                                  ?.slice(0, 80) || "Saved entry";
+                              const title = suggestion.displayName?.trim() || fallbackTitle;
+                              const lastUsed = suggestion.lastUsedAt
+                                ? new Date(suggestion.lastUsedAt)
+                                : null;
+                              const lastUsedLabel =
+                                lastUsed && !Number.isNaN(lastUsed.getTime())
+                                  ? lastUsed.toLocaleDateString(undefined, {
+                                      month: "short",
+                                      day: "numeric",
+                                      year: "numeric",
+                                    })
+                                  : "Unknown";
+                              const nutritionMeta = suggestion.nutritionSnapshot;
+                              const macroBits =
+                                nutritionMeta
+                                  ? [
+                                      `P ${nutritionMeta.proteinGrams ?? "?"}g`,
+                                      `C ${nutritionMeta.carbsGrams ?? "?"}g`,
+                                      `F ${nutritionMeta.fatGrams ?? "?"}g`,
+                                      `${nutritionMeta.calories ?? "?"} kcal`,
+                                    ].join(" • ")
+                                  : null;
+                              return (
+                                <>
+                                  <p className="text-sm font-medium text-foreground truncate">{title}</p>
+                                  {selectedLandingJournalChip === "nutrition" && macroBits && (
+                                    <p className="text-[11px] text-neutral-600 dark:text-neutral-300 truncate">
+                                      {macroBits}
+                                    </p>
+                                  )}
+                                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400 truncate">
+                                    Last used: {lastUsedLabel}
+                                  </p>
+                                  {selectedLandingJournalChip !== "nutrition" && (
+                                    <p className="text-[11px] text-neutral-500 dark:text-neutral-400 truncate">
+                                      {suggestion.sampleEntry}
+                                    </p>
+                                  )}
+                                </>
+                              );
+                            })()}
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        No matching past entries found.
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex justify-end pt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCalorieTrackerInput("");
+                        setCalorieTrackerCustomTag("");
+                        setCalorieTrackerError(null);
+                        setCalorieTrackerStep("input");
+                      }}
+                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                      className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                    >
+                      Create New
+                    </button>
+                  </div>
+                </>
+              )}
 
               {calorieTrackerStep === "input" && (
                 <>

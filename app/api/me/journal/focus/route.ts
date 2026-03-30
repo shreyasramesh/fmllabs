@@ -28,6 +28,14 @@ function parseOptionalPositiveInteger(value: unknown): number | null {
   return rounded;
 }
 
+function parseRequiredTag(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim().replace(/\s+/g, " ");
+  if (!trimmed) return null;
+  if (trimmed.length > 60) return null;
+  return trimmed;
+}
+
 function normalizeDatePartsFromBody(body: Record<string, unknown>, fallback: Date): {
   day: number;
   month: number;
@@ -92,6 +100,7 @@ export async function GET(request: Request) {
       ...summary,
       entries: rows.map((row) => ({
         id: row._id,
+        tag: row.tag ?? "",
         minutes: row.minutes,
         startedAt: row.startedAt,
         endedAt: row.endedAt,
@@ -119,6 +128,10 @@ export async function POST(request: Request) {
     if (minutes == null || minutes > 600) {
       return NextResponse.json({ error: "minutes must be between 1 and 600" }, { status: 400 });
     }
+    const tag = parseRequiredTag(body.tag);
+    if (!tag) {
+      return NextResponse.json({ error: "tag is required and must be 1-60 characters" }, { status: 400 });
+    }
     const endedAt = parseOptionalDate(body.endedAt) ?? new Date();
     const startedAt =
       parseOptionalDate(body.startedAt) ?? new Date(endedAt.getTime() - Math.max(1, minutes) * 60_000);
@@ -127,6 +140,7 @@ export async function POST(request: Request) {
     }
     const { day, month, year } = normalizeDatePartsFromBody(body, endedAt);
     await addFocusEntry(userId, {
+      tag,
       minutes,
       startedAt,
       endedAt,
@@ -140,6 +154,7 @@ export async function POST(request: Request) {
       ...summary,
       entries: rows.map((row) => ({
         id: row._id,
+        tag: row.tag ?? "",
         minutes: row.minutes,
         startedAt: row.startedAt,
         endedAt: row.endedAt,
@@ -180,6 +195,7 @@ export async function DELETE(request: Request) {
       ...summary,
       entries: rows.map((row) => ({
         id: row._id,
+        tag: row.tag ?? "",
         minutes: row.minutes,
         startedAt: row.startedAt,
         endedAt: row.endedAt,

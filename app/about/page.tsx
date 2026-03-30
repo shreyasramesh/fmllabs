@@ -41,6 +41,9 @@ export default function AboutPage() {
         </div>
 
         <div className="prose prose-neutral dark:prose-invert max-w-none space-y-6 text-sm leading-relaxed">
+          <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base font-medium">
+            In a world of cognitive surrender, start taking back control.
+          </p>
           <section>
             <h2 className="text-lg font-medium mt-8 mb-3">Shreyas Ramesh</h2>
             <p className="text-neutral-600 dark:text-neutral-400 mb-4">

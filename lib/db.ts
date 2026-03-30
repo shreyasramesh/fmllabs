@@ -284,6 +284,20 @@ interface ReusableJournalTagDoc extends Omit<ReusableJournalTag, "_id"> {
   _id: ObjectId;
 }
 
+export interface ReusableNutritionEntryUsage {
+  _id?: string;
+  userId: string;
+  sourceTranscriptId: string;
+  usageCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+  lastUsedAt: Date;
+}
+
+interface ReusableNutritionEntryUsageDoc extends Omit<ReusableNutritionEntryUsage, "_id"> {
+  _id?: ObjectId;
+}
+
 export interface WeightEntry {
   _id?: string;
   userId: string;
@@ -301,6 +315,7 @@ interface WeightEntryDoc extends Omit<WeightEntry, "_id"> {
 export interface FocusEntry {
   _id?: string;
   userId: string;
+  tag?: string;
   minutes: number;
   startedAt: Date;
   endedAt: Date;
@@ -419,6 +434,7 @@ export interface UserSettings {
     nutrition: { enabled: boolean; hour: number; minute: number; days: number[] };
     exercise: { enabled: boolean; hour: number; minute: number; days: number[] };
     gratitude: { enabled: boolean; hour: number; minute: number; days: number[] };
+    weight: { enabled: boolean; hour: number; minute: number; days: number[] };
   };
   /** Android local notification toggle for the nightly (9 PM) nutrition report alert. */
   nightlyNutritionReportNotificationEnabled?: boolean;
@@ -1941,6 +1957,78 @@ export async function getReusableJournalTags(
   }));
 }
 
+export async function getReusableJournalTagById(
+  userId: string,
+  id: string
+): Promise<(ReusableJournalTag & { _id: string }) | null> {
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return null;
+  }
+  const doc = await database
+    .collection<ReusableJournalTagDoc>("user_reusable_journal_tags")
+    .findOne({ _id: oid, userId });
+  if (!doc) return null;
+  return { ...doc, _id: doc._id.toString() };
+}
+
+export async function getReusableNutritionEntryUsageMap(
+  userId: string,
+  sourceTranscriptIds: string[]
+): Promise<Record<string, { usageCount: number; lastUsedAt: Date }>> {
+  const ids = sourceTranscriptIds
+    .map((id) => id.trim())
+    .filter(Boolean)
+    .slice(0, 2000);
+  if (ids.length === 0) return {};
+  const database = await getDb();
+  const docs = await database
+    .collection<ReusableNutritionEntryUsageDoc>("user_reusable_nutrition_entry_usage")
+    .find({ userId, sourceTranscriptId: { $in: ids } })
+    .toArray();
+  const map: Record<string, { usageCount: number; lastUsedAt: Date }> = {};
+  for (const d of docs) {
+    map[d.sourceTranscriptId] = {
+      usageCount: Math.max(0, Number.isFinite(d.usageCount) ? d.usageCount : 0),
+      lastUsedAt: d.lastUsedAt ?? d.updatedAt ?? d.createdAt,
+    };
+  }
+  return map;
+}
+
+export async function incrementReusableNutritionEntryUsage(
+  userId: string,
+  sourceTranscriptId: string
+): Promise<void> {
+  const cleanId = sourceTranscriptId.trim();
+  if (!cleanId) return;
+  const database = await getDb();
+  const now = new Date();
+  const collection = database.collection<ReusableNutritionEntryUsageDoc>("user_reusable_nutrition_entry_usage");
+  await collection.createIndex({ userId: 1, sourceTranscriptId: 1 }, { unique: true });
+  await collection.updateOne(
+    { userId, sourceTranscriptId: cleanId },
+    {
+      $setOnInsert: {
+        userId,
+        sourceTranscriptId: cleanId,
+        createdAt: now,
+      },
+      $set: {
+        updatedAt: now,
+        lastUsedAt: now,
+      },
+      $inc: {
+        usageCount: 1,
+      },
+    },
+    { upsert: true }
+  );
+}
+
 export async function addWeightEntry(
   userId: string,
   weightKg: number,
@@ -1991,6 +2079,7 @@ export async function getWeightEntries(
 export async function addFocusEntry(
   userId: string,
   input: {
+    tag: string;
     minutes: number;
     startedAt: Date;
     endedAt: Date;
@@ -2003,6 +2092,7 @@ export async function addFocusEntry(
   const now = new Date();
   const doc: Omit<FocusEntryDoc, "_id"> = {
     userId,
+    tag: input.tag,
     minutes: input.minutes,
     startedAt: input.startedAt,
     endedAt: input.endedAt,
@@ -2406,6 +2496,7 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   await database.collection<WeightEntryDoc>("user_weight_entries").deleteMany({ userId });
   await database.collection<FocusEntryDoc>("user_focus_entries").deleteMany({ userId });
   await database.collection<NutritionDailyReportSnapshotDoc>("user_nutrition_daily_reports").deleteMany({ userId });
+  await database.collection<ReusableNutritionEntryUsageDoc>("user_reusable_nutrition_entry_usage").deleteMany({ userId });
   await database.collection("user_progress").deleteMany({ userId });
   await database.collection("weekly_reflection_sends").deleteMany({ userId });
   await database.collection<UsageEventDoc>("usage_events").deleteMany({ userId });

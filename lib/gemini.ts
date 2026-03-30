@@ -311,6 +311,48 @@ ${conversation}`
   };
 }
 
+export type JournalPersonaLens = "critical" | "contrarian" | "systems_thinker" | "stoic";
+
+export async function refineJournalEntryWithPersona(
+  entryText: string,
+  entryType: "gratitude" | "reflection",
+  persona: JournalPersonaLens,
+  usageContext?: GeminiUsageContext
+): Promise<string> {
+  const normalizedText = entryText.trim();
+  const model = getModel();
+  const personaInstruction: Record<JournalPersonaLens, string> = {
+    critical:
+      "Critical: tighten vague claims, ask what evidence supports each claim, and surface blind spots while staying constructive.",
+    contrarian:
+      "The Contrarian: challenge defaults and assumptions, suggest alternative interpretations, and avoid performative certainty.",
+    systems_thinker:
+      "The Systems Thinker: connect immediate events to patterns, feedback loops, triggers, and second-order effects.",
+    stoic:
+      "The Stoic: focus on what is within control, identify what must be accepted, and steer toward calm practical action.",
+  };
+  const entryTypeLabel = entryType === "gratitude" ? "gratitude journal" : "reflection journal";
+  const result = await model.generateContent(
+    `You are refining a user's ${entryTypeLabel} draft while preserving their voice.
+
+Persona lens:
+${personaInstruction[persona]}
+
+Rules:
+- Keep this in first-person, natural tone, and emotionally honest.
+- Preserve concrete details from the original draft.
+- Improve clarity and depth, but do not add fabricated facts.
+- Keep it concise: 3-7 sentences.
+- Return ONLY the rewritten entry text. No title, bullets, or commentary.
+
+User draft:
+${normalizedText}`
+  );
+  const text = result.response.text().trim();
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  return text || normalizedText;
+}
+
 export type CalorieTrackingIntent = "nutrition" | "exercise" | "mixed";
 
 export interface CalorieTrackingAnalyzeResult {

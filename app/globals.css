@@ -606,6 +606,18 @@ body {
     line-height: var(--mobile-bubble-line-height) !important;
   }
 
+  /* Pomodoro setup clock must stay large on mobile despite global p/span font overrides. */
+  .pomodoro-setup-clock {
+    font-size: clamp(72px, 20vw, 110px) !important;
+    line-height: 0.92 !important;
+  }
+
+  /* Pomodoro started countdown in fullscreen mode on mobile. */
+  .pomodoro-started-clock {
+    font-size: clamp(88px, 24vw, 140px) !important;
+    line-height: 0.9 !important;
+  }
+
   /* Keep the developer note script text readable on phones. */
   .letter-modal-script-title {
     font-size: 1.8rem !important;
@@ -628,6 +640,41 @@ body {
     width: 0;
     height: 0;
   }
+}
+
+/* Pomodoro started countdown default sizing (desktop/tablet). */
+.pomodoro-started-clock {
+  font-size: min(30vw, 300px);
+  line-height: 0.9;
+}
+
+/* Pomodoro setup countdown default sizing (desktop/tablet). */
+.pomodoro-setup-clock {
+  font-size: min(22vw, 200px);
+  line-height: 0.92;
+}
+
+@keyframes pomodoro-last-second-disc-scroll {
+  0% {
+    transform: translateY(0.38em) scale(0.965);
+    opacity: 0.2;
+    filter: blur(2px);
+  }
+  60% {
+    transform: translateY(-0.07em) scale(1.02);
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.pomodoro-last-second-scroll {
+  animation: pomodoro-last-second-disc-scroll 520ms cubic-bezier(0.2, 0.88, 0.2, 1) 1;
+  will-change: transform, opacity, filter;
 }
 
 /* Override fixed pixel font sizes on mobile - they don't scale with html font-size */
@@ -753,6 +800,31 @@ body {
 }
 .star-shimmer {
   animation: star-shimmer 2s ease-in-out infinite;
+}
+
+@keyframes pomodoro-confetti-fall {
+  0% {
+    transform: translate3d(0, -14vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--pomodoro-confetti-drift, 0px), 112vh, 0)
+      rotate(var(--pomodoro-confetti-rotate, 0deg));
+    opacity: 0;
+  }
+}
+
+.pomodoro-confetti-piece {
+  position: absolute;
+  top: -12vh;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.15);
+  animation-name: pomodoro-confetti-fall;
+  animation-timing-function: cubic-bezier(0.14, 0.67, 0.21, 1);
+  animation-fill-mode: forwards;
 }
 
 

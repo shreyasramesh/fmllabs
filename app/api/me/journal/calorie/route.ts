@@ -3,7 +3,11 @@ import { auth } from "@clerk/nextjs/server";
 import { resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
 import { getPacificTimeParts, parseJournalEntryTimeFromBody } from "@/lib/journal-entry-time";
 import {
+  getReusableNutritionEntryUsageMap,
   getReusableJournalTags,
+  getSavedTranscript,
+  getSavedTranscripts,
+  incrementReusableNutritionEntryUsage,
   saveJournalTranscript,
   upsertReusableJournalItem,
   upsertReusableJournalTags,
@@ -253,6 +257,54 @@ function pickReusableDisplayName(entryText: string): string {
   return short.slice(0, 120);
 }
 
+function extractEnrichedEntryFromJournalText(text: string): string {
+  const marker = "Enriched entry:";
+  const idx = text.indexOf(marker);
+  if (idx < 0) return text.trim().slice(0, 500);
+  const after = text.slice(idx + marker.length).trimStart();
+  const stopMatch = after.match(/\n(?:Clarifications:|- Calories:|- Calories burned:|Assumptions:)/);
+  const body = (stopMatch ? after.slice(0, stopMatch.index) : after).trim();
+  return body.slice(0, 500);
+}
+
+function parseOptionalMetric(text: string, pattern: RegExp): number | null | undefined {
+  const match = pattern.exec(text);
+  if (!match) return undefined;
+  const raw = (match[1] ?? "").trim();
+  if (!raw || raw.toLowerCase() === "unknown") return null;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : null;
+}
+
+function parseNutritionSnapshotFromJournalText(text: string) {
+  return {
+    calories: parseOptionalMetric(text, /- Calories:\s*([^\n]+?)\s*kcal/i),
+    proteinGrams: parseOptionalMetric(text, /- Protein:\s*([^\n]+?)\s*g/i),
+    carbsGrams: parseOptionalMetric(text, /- Carbs:\s*([^\n]+?)\s*g/i),
+    fatGrams: parseOptionalMetric(text, /- Fat:\s*([^\n]+?)\s*g/i),
+    facts: {
+      totalCarbohydratesGrams: parseOptionalMetric(text, /- Total Carbohydrates:\s*([^\n]+?)\s*g/i),
+      dietaryFiberGrams: parseOptionalMetric(text, /- Dietary Fiber:\s*([^\n]+?)\s*g/i),
+      sugarGrams: parseOptionalMetric(text, /- Sugar:\s*([^\n]+?)\s*g/i),
+      addedSugarsGrams: parseOptionalMetric(text, /- Added Sugars:\s*([^\n]+?)\s*g/i),
+      sugarAlcoholsGrams: parseOptionalMetric(text, /- Sugar Alcohols:\s*([^\n]+?)\s*g/i),
+      netCarbsGrams: parseOptionalMetric(text, /- Net Carbs:\s*([^\n]+?)\s*g/i),
+      saturatedFatGrams: parseOptionalMetric(text, /- Saturated Fat:\s*([^\n]+?)\s*g/i),
+      transFatGrams: parseOptionalMetric(text, /- Trans Fat:\s*([^\n]+?)\s*g/i),
+      polyunsaturatedFatGrams: parseOptionalMetric(text, /- Polyunsaturated Fat:\s*([^\n]+?)\s*g/i),
+      monounsaturatedFatGrams: parseOptionalMetric(text, /- Monounsaturated Fat:\s*([^\n]+?)\s*g/i),
+      cholesterolMg: parseOptionalMetric(text, /- Cholesterol:\s*([^\n]+?)\s*mg/i),
+      sodiumMg: parseOptionalMetric(text, /- Sodium:\s*([^\n]+?)\s*mg/i),
+      calciumMg: parseOptionalMetric(text, /- Calcium:\s*([^\n]+?)\s*mg/i),
+      ironMg: parseOptionalMetric(text, /- Iron:\s*([^\n]+?)\s*mg/i),
+      potassiumMg: parseOptionalMetric(text, /- Potassium:\s*([^\n]+?)\s*mg/i),
+      vitaminAIu: parseOptionalMetric(text, /- Vitamin A:\s*([^\n]+?)\s*IU/i),
+      vitaminCMg: parseOptionalMetric(text, /- Vitamin C:\s*([^\n]+?)\s*mg/i),
+      vitaminDMcg: parseOptionalMetric(text, /- Vitamin D:\s*([^\n]+?)\s*mcg/i),
+    },
+  };
+}
+
 function normalizeTagToken(text: string): string {
   return text
     .toLowerCase()
@@ -334,14 +386,17 @@ export async function POST(request: Request) {
     const action = typeof body.action === "string" ? body.action.trim() : "";
     const rawText = typeof body.text === "string" ? body.text : "";
     const text = rawText.trim();
-    if (!text) {
-      return NextResponse.json({ error: "Text is required" }, { status: 400 });
-    }
-    if (text.length > EXTRACT_CONCEPTS_MAX_TOTAL_CHARS) {
-      return NextResponse.json(
-        { error: `Text must be at most ${EXTRACT_CONCEPTS_MAX_TOTAL_CHARS} characters` },
-        { status: 400 }
-      );
+    const requiresText = action === "analyze" || action === "finalize";
+    if (requiresText) {
+      if (!text) {
+        return NextResponse.json({ error: "Text is required" }, { status: 400 });
+      }
+      if (text.length > EXTRACT_CONCEPTS_MAX_TOTAL_CHARS) {
+        return NextResponse.json(
+          { error: `Text must be at most ${EXTRACT_CONCEPTS_MAX_TOTAL_CHARS} characters` },
+          { status: 400 }
+        );
+      }
     }
 
     if (action === "analyze") {
@@ -350,6 +405,81 @@ export async function POST(request: Request) {
         eventType: "calorie_journal_analyze",
       });
       return NextResponse.json(analysis);
+    }
+
+    if (action === "reuse_snapshot") {
+      const sourceTranscriptId =
+        typeof body.sourceTranscriptId === "string" ? body.sourceTranscriptId.trim() : "";
+      if (!sourceTranscriptId) {
+        return NextResponse.json({ error: "sourceTranscriptId is required" }, { status: 400 });
+      }
+      const source = await getSavedTranscript(sourceTranscriptId, userId);
+      if (!source || source.sourceType !== "journal" || source.journalCategory !== "nutrition") {
+        return NextResponse.json({ error: "Reusable nutrition source entry not found" }, { status: 404 });
+      }
+      let entryDate: { day: number; month: number; year: number };
+      try {
+        entryDate = normalizeDatePartsFromBody(body);
+      } catch {
+        return NextResponse.json({ error: "Invalid entry date" }, { status: 400 });
+      }
+      const journalEntryTime = parseJournalEntryTimeFromBody(body) ?? getPacificTimeParts();
+      const nutritionSnapshot = parseNutritionSnapshotFromJournalText(source.transcriptText);
+      const nutritionEstimate = {
+        calories: nutritionSnapshot.calories ?? null,
+        proteinGrams: nutritionSnapshot.proteinGrams ?? null,
+        carbsGrams: nutritionSnapshot.carbsGrams ?? null,
+        fatGrams: nutritionSnapshot.fatGrams ?? null,
+        facts: {
+          totalCarbohydratesGrams: nutritionSnapshot.facts.totalCarbohydratesGrams ?? null,
+          dietaryFiberGrams: nutritionSnapshot.facts.dietaryFiberGrams ?? null,
+          sugarGrams: nutritionSnapshot.facts.sugarGrams ?? null,
+          addedSugarsGrams: nutritionSnapshot.facts.addedSugarsGrams ?? null,
+          sugarAlcoholsGrams: nutritionSnapshot.facts.sugarAlcoholsGrams ?? null,
+          netCarbsGrams: nutritionSnapshot.facts.netCarbsGrams ?? null,
+          saturatedFatGrams: nutritionSnapshot.facts.saturatedFatGrams ?? null,
+          transFatGrams: nutritionSnapshot.facts.transFatGrams ?? null,
+          polyunsaturatedFatGrams: nutritionSnapshot.facts.polyunsaturatedFatGrams ?? null,
+          monounsaturatedFatGrams: nutritionSnapshot.facts.monounsaturatedFatGrams ?? null,
+          cholesterolMg: nutritionSnapshot.facts.cholesterolMg ?? null,
+          sodiumMg: nutritionSnapshot.facts.sodiumMg ?? null,
+          calciumMg: nutritionSnapshot.facts.calciumMg ?? null,
+          ironMg: nutritionSnapshot.facts.ironMg ?? null,
+          potassiumMg: nutritionSnapshot.facts.potassiumMg ?? null,
+          vitaminAIu: nutritionSnapshot.facts.vitaminAIu ?? null,
+          vitaminCMg: nutritionSnapshot.facts.vitaminCMg ?? null,
+          vitaminDMcg: nutritionSnapshot.facts.vitaminDMcg ?? null,
+        },
+        notes: "",
+      };
+      const nutritionText = formatNutritionJournalText(
+        extractEnrichedEntryFromJournalText(source.transcriptText),
+        [],
+        nutritionEstimate,
+        [],
+        ""
+      );
+      const saved = await saveJournalTranscript(
+        userId,
+        nutritionText,
+        source.videoTitle || "Nutrition log",
+        entryDate,
+        {
+          journalCategory: "nutrition",
+          journalEntryTime,
+        }
+      );
+      await incrementReusableNutritionEntryUsage(userId, sourceTranscriptId).catch(() => {});
+      return NextResponse.json({
+        reused: true,
+        savedEntries: [
+          {
+            id: saved._id,
+            category: "nutrition",
+            title: saved.videoTitle ?? "Nutrition log",
+          },
+        ],
+      });
     }
 
     if (action === "finalize") {
@@ -769,6 +899,42 @@ export async function GET(request: Request) {
     }
     const limit = Number.isFinite(limitRaw) ? limitRaw : 8;
     const minUsage = Number.isFinite(minUsageRaw) ? Math.max(1, minUsageRaw) : 3;
+    if (kind === "nutrition") {
+      const rows = await getSavedTranscripts(userId);
+      const queryLower = q.toLowerCase();
+      const nutritionRows = rows
+        .filter((row) => row.sourceType === "journal" && row.journalCategory === "nutrition")
+        .filter((row) => {
+          if (!queryLower) return true;
+          const hay = `${row.videoTitle ?? ""} ${row.transcriptText ?? ""}`.toLowerCase();
+          return hay.includes(queryLower);
+        })
+        .slice(0, 250);
+      const usageMap = await getReusableNutritionEntryUsageMap(
+        userId,
+        nutritionRows.map((r) => r._id)
+      );
+      const mapped = nutritionRows.map((row) => {
+        const usage = usageMap[row._id];
+        const snapshot = parseNutritionSnapshotFromJournalText(row.transcriptText);
+        return {
+          id: row._id,
+          kind: "nutrition" as const,
+          canonicalName: row._id,
+          displayName: (row.videoTitle ?? "").trim() || "Nutrition entry",
+          sampleEntry: extractEnrichedEntryFromJournalText(row.transcriptText),
+          nutritionSnapshot: snapshot,
+          usageCount: usage?.usageCount ?? 0,
+          lastUsedAt: (usage?.lastUsedAt ?? row.updatedAt ?? row.createdAt).toISOString(),
+        };
+      });
+      mapped.sort((a, b) => {
+        if (b.usageCount !== a.usageCount) return b.usageCount - a.usageCount;
+        return new Date(b.lastUsedAt).getTime() - new Date(a.lastUsedAt).getTime();
+      });
+      const filteredByUsage = mapped.filter((item) => item.usageCount >= minUsage || minUsage <= 1);
+      return NextResponse.json({ items: filteredByUsage.slice(0, limit) });
+    }
     const tags = await getReusableJournalTags(userId, kind, q, {
       minUsageCount: minUsage,
       limit,

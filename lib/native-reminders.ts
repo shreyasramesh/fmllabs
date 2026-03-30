@@ -10,21 +10,25 @@ const BASE_IDS: Record<ReminderType, number> = {
   nutrition: 1100,
   exercise: 1200,
   gratitude: 1300,
+  weight: 1500,
 };
 
 const REMINDER_TITLES: Record<ReminderType, string> = {
   nutrition: "Nutrition check-in",
   exercise: "Exercise check-in",
   gratitude: "Gratitude journal",
+  weight: "Weight check-in",
 };
 
 const REMINDER_BODIES: Record<ReminderType, string> = {
   nutrition: "Log what you ate today. Small entries keep consistency high.",
   exercise: "Log your movement today, even if it was a short walk.",
   gratitude: "Capture one gratitude moment in your journal.",
+  weight: "Log your weight to keep your progress trend up to date.",
 };
 
 const NIGHTLY_DAILY_REPORT_BASE_ID = 1400;
+const POMODORO_COMPLETION_NOTIFICATION_ID = 1600;
 
 function toCapacitorWeekday(day: number): number {
   return day + 1; // JS 0-6 (Sun-Sat) => Capacitor 1-7
@@ -109,6 +113,36 @@ export async function syncNativeReminders(
   if (notifications.length > 0) {
     await LocalNotifications.schedule({ notifications });
   }
+
+  return { ok: true };
+}
+
+export async function notifyPomodoroCompleted(): Promise<{
+  ok: boolean;
+  reason?: "not-native" | "permission-denied";
+}> {
+  if (!Capacitor.isNativePlatform()) return { ok: true, reason: "not-native" };
+
+  let permissions: PermissionStatus = await LocalNotifications.checkPermissions();
+  if (permissions.display !== "granted") {
+    permissions = await LocalNotifications.requestPermissions();
+  }
+  if (permissions.display !== "granted") return { ok: false, reason: "permission-denied" };
+
+  await LocalNotifications.cancel({
+    notifications: [{ id: POMODORO_COMPLETION_NOTIFICATION_ID }],
+  });
+
+  await LocalNotifications.schedule({
+    notifications: [
+      {
+        id: POMODORO_COMPLETION_NOTIFICATION_ID,
+        title: "Pomodoro complete",
+        body: "Nice work. Your focus session just ended.",
+        schedule: { at: new Date(Date.now() + 120) },
+      },
+    ],
+  });
 
   return { ok: true };
 }
