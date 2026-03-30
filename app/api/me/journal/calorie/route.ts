@@ -264,7 +264,8 @@ function normalizeTagToken(text: string): string {
 async function persistReusableTags(
   userId: string,
   kind: "nutrition" | "exercise",
-  entryText: string
+  entryText: string,
+  customTag?: string
 ): Promise<void> {
   const extracted = await extractReusableJournalTags(kind, entryText, {
     userId,
@@ -277,6 +278,15 @@ async function persistReusableTags(
     : fallbackTag
       ? [{ tag: fallbackTag, displayName: fallbackDisplay, aliases: [] }]
       : [];
+  const customTagClean = (customTag ?? "").trim();
+  const customTagToken = normalizeTagToken(customTagClean);
+  if (customTagToken) {
+    tags.unshift({
+      tag: customTagToken,
+      displayName: customTagClean.slice(0, 80),
+      aliases: [],
+    });
+  }
   if (tags.length === 0) return;
   await upsertReusableJournalTags(userId, kind, tags, entryText).catch(() => {});
 }
@@ -312,12 +322,132 @@ export async function POST(request: Request) {
     }
 
     if (action === "finalize") {
+      const persist = body.persist !== false;
+      const customTag =
+        typeof body.customTag === "string" && body.customTag.trim()
+          ? body.customTag.trim().slice(0, 80)
+          : "";
       const answers = Array.isArray(body.answers)
         ? body.answers
             .map((a) => (typeof a === "string" ? a.trim() : ""))
             .filter((a) => a.length > 0)
             .slice(0, 2)
         : [];
+      const parseOptionalNullableNumber = (value: unknown): number | null | undefined => {
+        if (value === undefined) return undefined;
+        if (value === null) return null;
+        if (typeof value === "string" && value.trim() === "") return null;
+        const n = Number(value);
+        if (!Number.isFinite(n)) return undefined;
+        return n;
+      };
+      const rawNutritionOverrides = body.nutritionOverrides;
+      let nutritionOverrides:
+        | {
+            calories?: number | null;
+            proteinGrams?: number | null;
+            carbsGrams?: number | null;
+            fatGrams?: number | null;
+            facts?: {
+              totalCarbohydratesGrams?: number | null;
+              dietaryFiberGrams?: number | null;
+              sugarGrams?: number | null;
+              addedSugarsGrams?: number | null;
+              sugarAlcoholsGrams?: number | null;
+              netCarbsGrams?: number | null;
+              saturatedFatGrams?: number | null;
+              transFatGrams?: number | null;
+              polyunsaturatedFatGrams?: number | null;
+              monounsaturatedFatGrams?: number | null;
+              cholesterolMg?: number | null;
+              sodiumMg?: number | null;
+              calciumMg?: number | null;
+              ironMg?: number | null;
+              potassiumMg?: number | null;
+              vitaminAIu?: number | null;
+              vitaminCMg?: number | null;
+              vitaminDMcg?: number | null;
+            };
+          }
+        | null = null;
+      if (rawNutritionOverrides !== undefined) {
+        if (!rawNutritionOverrides || typeof rawNutritionOverrides !== "object") {
+          return NextResponse.json({ error: "Invalid nutrition overrides" }, { status: 400 });
+        }
+        const obj = rawNutritionOverrides as Record<string, unknown>;
+        const calories = parseOptionalNullableNumber(obj.calories);
+        const proteinGrams = parseOptionalNullableNumber(obj.proteinGrams);
+        const carbsGrams = parseOptionalNullableNumber(obj.carbsGrams);
+        const fatGrams = parseOptionalNullableNumber(obj.fatGrams);
+        let facts:
+          | {
+              totalCarbohydratesGrams?: number | null;
+              dietaryFiberGrams?: number | null;
+              sugarGrams?: number | null;
+              addedSugarsGrams?: number | null;
+              sugarAlcoholsGrams?: number | null;
+              netCarbsGrams?: number | null;
+              saturatedFatGrams?: number | null;
+              transFatGrams?: number | null;
+              polyunsaturatedFatGrams?: number | null;
+              monounsaturatedFatGrams?: number | null;
+              cholesterolMg?: number | null;
+              sodiumMg?: number | null;
+              calciumMg?: number | null;
+              ironMg?: number | null;
+              potassiumMg?: number | null;
+              vitaminAIu?: number | null;
+              vitaminCMg?: number | null;
+              vitaminDMcg?: number | null;
+            }
+          | undefined = undefined;
+        if (obj.facts !== undefined) {
+          if (!obj.facts || typeof obj.facts !== "object") {
+            return NextResponse.json({ error: "Invalid dietary facts overrides" }, { status: 400 });
+          }
+          const factsObj = obj.facts as Record<string, unknown>;
+          const factKeys = [
+            "totalCarbohydratesGrams",
+            "dietaryFiberGrams",
+            "sugarGrams",
+            "addedSugarsGrams",
+            "sugarAlcoholsGrams",
+            "netCarbsGrams",
+            "saturatedFatGrams",
+            "transFatGrams",
+            "polyunsaturatedFatGrams",
+            "monounsaturatedFatGrams",
+            "cholesterolMg",
+            "sodiumMg",
+            "calciumMg",
+            "ironMg",
+            "potassiumMg",
+            "vitaminAIu",
+            "vitaminCMg",
+            "vitaminDMcg",
+          ] as const;
+          facts = {};
+          for (const key of factKeys) {
+            const parsed = parseOptionalNullableNumber(factsObj[key]);
+            if (factsObj[key] !== undefined && parsed === undefined) {
+              return NextResponse.json(
+                { error: "Dietary facts overrides must be valid numbers or null" },
+                { status: 400 }
+              );
+            }
+            facts[key] = parsed;
+          }
+        }
+        if (
+          (obj.calories !== undefined && calories === undefined) ||
+          (obj.proteinGrams !== undefined && proteinGrams === undefined) ||
+          (obj.carbsGrams !== undefined && carbsGrams === undefined) ||
+          (obj.fatGrams !== undefined && fatGrams === undefined)
+        ) {
+          return NextResponse.json({ error: "Nutrition overrides must be valid numbers or null" }, { status: 400 });
+        }
+        nutritionOverrides = { calories, proteinGrams, carbsGrams, fatGrams, facts };
+      }
       let entryDate: { day: number; month: number; year: number };
       try {
         entryDate = normalizeDatePartsFromBody(body);
@@ -330,6 +460,63 @@ export async function POST(request: Request) {
         userId,
         eventType: "calorie_journal_finalize",
       });
+      if (nutritionOverrides && estimate.nutrition) {
+        if (nutritionOverrides.calories !== undefined) estimate.nutrition.calories = nutritionOverrides.calories;
+        if (nutritionOverrides.proteinGrams !== undefined) {
+          estimate.nutrition.proteinGrams = nutritionOverrides.proteinGrams;
+        }
+        if (nutritionOverrides.carbsGrams !== undefined) estimate.nutrition.carbsGrams = nutritionOverrides.carbsGrams;
+        if (nutritionOverrides.fatGrams !== undefined) estimate.nutrition.fatGrams = nutritionOverrides.fatGrams;
+        if (nutritionOverrides.facts) {
+          if (!estimate.nutrition.facts) {
+            estimate.nutrition.facts = {
+              totalCarbohydratesGrams: null,
+              dietaryFiberGrams: null,
+              sugarGrams: null,
+              addedSugarsGrams: null,
+              sugarAlcoholsGrams: null,
+              netCarbsGrams: null,
+              saturatedFatGrams: null,
+              transFatGrams: null,
+              polyunsaturatedFatGrams: null,
+              monounsaturatedFatGrams: null,
+              cholesterolMg: null,
+              sodiumMg: null,
+              calciumMg: null,
+              ironMg: null,
+              potassiumMg: null,
+              vitaminAIu: null,
+              vitaminCMg: null,
+              vitaminDMcg: null,
+            };
+          }
+          const facts = nutritionOverrides.facts;
+          if (facts.totalCarbohydratesGrams !== undefined) estimate.nutrition.facts.totalCarbohydratesGrams = facts.totalCarbohydratesGrams;
+          if (facts.dietaryFiberGrams !== undefined) estimate.nutrition.facts.dietaryFiberGrams = facts.dietaryFiberGrams;
+          if (facts.sugarGrams !== undefined) estimate.nutrition.facts.sugarGrams = facts.sugarGrams;
+          if (facts.addedSugarsGrams !== undefined) estimate.nutrition.facts.addedSugarsGrams = facts.addedSugarsGrams;
+          if (facts.sugarAlcoholsGrams !== undefined) estimate.nutrition.facts.sugarAlcoholsGrams = facts.sugarAlcoholsGrams;
+          if (facts.netCarbsGrams !== undefined) estimate.nutrition.facts.netCarbsGrams = facts.netCarbsGrams;
+          if (facts.saturatedFatGrams !== undefined) estimate.nutrition.facts.saturatedFatGrams = facts.saturatedFatGrams;
+          if (facts.transFatGrams !== undefined) estimate.nutrition.facts.transFatGrams = facts.transFatGrams;
+          if (facts.polyunsaturatedFatGrams !== undefined) estimate.nutrition.facts.polyunsaturatedFatGrams = facts.polyunsaturatedFatGrams;
+          if (facts.monounsaturatedFatGrams !== undefined) estimate.nutrition.facts.monounsaturatedFatGrams = facts.monounsaturatedFatGrams;
+          if (facts.cholesterolMg !== undefined) estimate.nutrition.facts.cholesterolMg = facts.cholesterolMg;
+          if (facts.sodiumMg !== undefined) estimate.nutrition.facts.sodiumMg = facts.sodiumMg;
+          if (facts.calciumMg !== undefined) estimate.nutrition.facts.calciumMg = facts.calciumMg;
+          if (facts.ironMg !== undefined) estimate.nutrition.facts.ironMg = facts.ironMg;
+          if (facts.potassiumMg !== undefined) estimate.nutrition.facts.potassiumMg = facts.potassiumMg;
+          if (facts.vitaminAIu !== undefined) estimate.nutrition.facts.vitaminAIu = facts.vitaminAIu;
+          if (facts.vitaminCMg !== undefined) estimate.nutrition.facts.vitaminCMg = facts.vitaminCMg;
+          if (facts.vitaminDMcg !== undefined) estimate.nutrition.facts.vitaminDMcg = facts.vitaminDMcg;
+        }
+      }
+      if (!persist) {
+        return NextResponse.json({
+          ...estimate,
+          savedEntries: [],
+        });
+      }
       const enrichedEntries = await enrichCalorieTrackingEntries(text, answers, {
         userId,
         eventType: "calorie_journal_enrich_entries",
@@ -411,7 +598,7 @@ export async function POST(request: Request) {
           nutritionFocusedEntry,
           pickReusableDisplayName(nutritionFocusedEntry)
         ).catch(() => {});
-        await persistReusableTags(userId, "nutrition", nutritionFocusedEntry);
+        await persistReusableTags(userId, "nutrition", nutritionFocusedEntry, customTag);
       }
 
       if (estimate.intent === "exercise" || estimate.intent === "mixed") {
@@ -490,7 +677,7 @@ export async function POST(request: Request) {
           exerciseFocusedEntry,
           pickReusableDisplayName(exerciseFocusedEntry)
         ).catch(() => {});
-        await persistReusableTags(userId, "exercise", exerciseFocusedEntry);
+        await persistReusableTags(userId, "exercise", exerciseFocusedEntry, customTag);
         estimate.exercise = exerciseEstimate;
       }
 

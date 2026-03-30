@@ -339,6 +339,14 @@ export interface CalorieTrackingNutritionFacts {
   vitaminDMcg: number | null;
 }
 
+export interface NutritionFactsFromMacrosInput {
+  entryText: string;
+  calories: number;
+  proteinGrams: number;
+  carbsGrams: number;
+  fatGrams: number;
+}
+
 export interface CalorieTrackingFinalizeResult {
   intent: CalorieTrackingIntent;
   confidence: "low" | "medium" | "high";
@@ -358,6 +366,94 @@ export interface CalorieTrackingFinalizeResult {
     proteinDeltaGrams?: number | null;
     notes: string;
   };
+}
+
+export async function estimateNutritionFactsFromMacros(
+  input: NutritionFactsFromMacrosInput,
+  usageContext?: GeminiUsageContext
+): Promise<CalorieTrackingNutritionFacts> {
+  const model = getModel();
+  const result = await model.generateContent(
+    `You estimate detailed nutrition facts from meal descriptions and known macro totals.
+
+Return ONLY valid JSON with exactly this shape:
+{
+  "totalCarbohydratesGrams": number | null,
+  "dietaryFiberGrams": number | null,
+  "sugarGrams": number | null,
+  "addedSugarsGrams": number | null,
+  "sugarAlcoholsGrams": number | null,
+  "netCarbsGrams": number | null,
+  "saturatedFatGrams": number | null,
+  "transFatGrams": number | null,
+  "polyunsaturatedFatGrams": number | null,
+  "monounsaturatedFatGrams": number | null,
+  "cholesterolMg": number | null,
+  "sodiumMg": number | null,
+  "calciumMg": number | null,
+  "ironMg": number | null,
+  "potassiumMg": number | null,
+  "vitaminAIu": number | null,
+  "vitaminCMg": number | null,
+  "vitaminDMcg": number | null
+}
+
+Rules:
+- Respect these known totals closely: calories=${input.calories}, protein=${input.proteinGrams}g, carbs=${input.carbsGrams}g, fat=${input.fatGrams}g.
+- Keep sub-components realistic and internally consistent (e.g. fiber <= total carbs, net carbs ~= total carbs - fiber - sugar alcohols when applicable).
+- Use null only when a value is genuinely unknowable from context.
+
+Entry context:
+${input.entryText.trim().slice(0, 4000)}`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const raw = result.response.text().trim();
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  const fallback: CalorieTrackingNutritionFacts = {
+    totalCarbohydratesGrams: null,
+    dietaryFiberGrams: null,
+    sugarGrams: null,
+    addedSugarsGrams: null,
+    sugarAlcoholsGrams: null,
+    netCarbsGrams: null,
+    saturatedFatGrams: null,
+    transFatGrams: null,
+    polyunsaturatedFatGrams: null,
+    monounsaturatedFatGrams: null,
+    cholesterolMg: null,
+    sodiumMg: null,
+    calciumMg: null,
+    ironMg: null,
+    potassiumMg: null,
+    vitaminAIu: null,
+    vitaminCMg: null,
+    vitaminDMcg: null,
+  };
+  try {
+    const parsed = JSON.parse(cleaned) as Record<string, unknown>;
+    return {
+      totalCarbohydratesGrams: toFiniteNumberOrNull(parsed.totalCarbohydratesGrams),
+      dietaryFiberGrams: toFiniteNumberOrNull(parsed.dietaryFiberGrams),
+      sugarGrams: toFiniteNumberOrNull(parsed.sugarGrams),
+      addedSugarsGrams: toFiniteNumberOrNull(parsed.addedSugarsGrams),
+      sugarAlcoholsGrams: toFiniteNumberOrNull(parsed.sugarAlcoholsGrams),
+      netCarbsGrams: toFiniteNumberOrNull(parsed.netCarbsGrams),
+      saturatedFatGrams: toFiniteNumberOrNull(parsed.saturatedFatGrams),
+      transFatGrams: toFiniteNumberOrNull(parsed.transFatGrams),
+      polyunsaturatedFatGrams: toFiniteNumberOrNull(parsed.polyunsaturatedFatGrams),
+      monounsaturatedFatGrams: toFiniteNumberOrNull(parsed.monounsaturatedFatGrams),
+      cholesterolMg: toFiniteNumberOrNull(parsed.cholesterolMg),
+      sodiumMg: toFiniteNumberOrNull(parsed.sodiumMg),
+      calciumMg: toFiniteNumberOrNull(parsed.calciumMg),
+      ironMg: toFiniteNumberOrNull(parsed.ironMg),
+      potassiumMg: toFiniteNumberOrNull(parsed.potassiumMg),
+      vitaminAIu: toFiniteNumberOrNull(parsed.vitaminAIu),
+      vitaminCMg: toFiniteNumberOrNull(parsed.vitaminCMg),
+      vitaminDMcg: toFiniteNumberOrNull(parsed.vitaminDMcg),
+    };
+  } catch {
+    return fallback;
+  }
 }
 
 export interface NutritionDailyReportInput {
@@ -714,11 +810,17 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
 }
 
 export async function transcribeNutritionImage(
-  input: { imageBase64: string; mimeType: string; hintText?: string },
+  input: {
+    imageBase64: string;
+    mimeType: string;
+    hintText?: string;
+    mode?: "nutrition" | "exercise";
+  },
   usageContext?: GeminiUsageContext
 ): Promise<NutritionImageTranscriptionResult> {
   const cleanBase64 = input.imageBase64.trim();
   const hintText = (input.hintText ?? "").trim().slice(0, 600);
+  const mode = input.mode === "exercise" ? "exercise" : "nutrition";
   const imageModel = genAI.getGenerativeModel({
     model: "gemini-3.1-flash-image-preview",
   });
@@ -728,7 +830,31 @@ export async function transcribeNutritionImage(
         role: "user",
         parts: [
           {
-            text: `You are helping users log nutrition from food images.
+            text:
+              mode === "exercise"
+                ? `You are helping users log exercise/workout details from screenshots (for example Fitbit workout summaries).
+
+Analyze the image and return ONLY valid JSON in this exact shape:
+{
+  "dishName": "short workout/activity label",
+  "foodsDetected": ["key activity metric", "..."],
+  "portionAssumptions": ["short assumption", "..."],
+  "nutritionLogDraft": "1-3 sentence plain-text draft for an exercise log, including activity type, duration, intensity, distance/pace/heart rate/calories when visible",
+  "confidence": "low" | "medium" | "high"
+}
+
+Rules:
+- Focus only on exercise/workout information visible in the screenshot.
+- Do NOT mention nutrition guidance or say this is a nutrition box.
+- Be concrete and practical.
+- If uncertain, say "likely" and include assumptions.
+- Keep foodsDetected to max 8 items.
+- Keep portionAssumptions to max 6 items.
+- No markdown, no extra keys, no surrounding text.
+
+Optional user hint:
+${hintText || "(none)"}`
+                : `You are helping users log nutrition from food images.
 
 Analyze the image and return ONLY valid JSON in this exact shape:
 {
@@ -807,7 +933,10 @@ ${hintText || "(none)"}`,
       dishName: "",
       foodsDetected: [],
       portionAssumptions: [],
-      nutritionLogDraft: "Could not confidently parse the image. Please describe what you ate in text.",
+      nutritionLogDraft:
+        mode === "exercise"
+          ? "Could not confidently parse the workout screenshot. Please describe your activity details in text."
+          : "Could not confidently parse the image. Please describe what you ate in text.",
       confidence: "low",
     };
   }

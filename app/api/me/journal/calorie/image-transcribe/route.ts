@@ -30,10 +30,12 @@ export async function POST(request: Request) {
       imageBase64?: unknown;
       mimeType?: unknown;
       hintText?: unknown;
+      mode?: unknown;
     };
     const imageBase64 = typeof body.imageBase64 === "string" ? body.imageBase64.trim() : "";
     const mimeType = typeof body.mimeType === "string" ? body.mimeType.trim().toLowerCase() : "";
     const hintText = typeof body.hintText === "string" ? body.hintText : "";
+    const mode = body.mode === "exercise" ? "exercise" : "nutrition";
 
     if (!imageBase64) {
       return NextResponse.json({ error: "Image is required" }, { status: 400 });
@@ -46,14 +48,14 @@ export async function POST(request: Request) {
     }
 
     const transcription = await transcribeNutritionImage(
-      { imageBase64, mimeType, hintText },
+      { imageBase64, mimeType, hintText, mode },
       { userId, eventType: "calorie_journal_image_transcribe" }
     );
     return NextResponse.json(transcription);
   } catch (err) {
     console.error("Calorie image transcription error:", err);
     return NextResponse.json(
-      { error: "Failed to transcribe nutrition image" },
+      { error: "Failed to transcribe image" },
       { status: 500 }
     );
   }

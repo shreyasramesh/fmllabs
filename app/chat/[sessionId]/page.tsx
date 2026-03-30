@@ -1662,7 +1662,7 @@ const SECOND_ORDER_PHRASES: Partial<
 > & { en: { intro: string; outro: string } } = {
   en: {
     intro:
-      "You're in **second-order thinking** mode. We'll push past the first answer—consequences, incentives, and what happens next after that.",
+      "You're in **metacognition** mode. We'll push past the first answer—consequences, incentives, and what happens next after that.",
     outro: "What's the situation or decision on your mind?",
   },
 };
@@ -2317,7 +2317,13 @@ function summarizeNutritionForDay(
 
     if (t.journalCategory === "exercise") {
       const burned = extractEstimatedNumber(t.transcriptText, /- Calories burned:\s*([\d.]+)\s*kcal/i);
+      const carbsUsed = extractEstimatedNumber(t.transcriptText, /- Carbs used:\s*([-\d.]+)\s*g/i);
+      const fatUsed = extractEstimatedNumber(t.transcriptText, /- Fat used:\s*([-\d.]+)\s*g/i);
+      const proteinDelta = extractEstimatedNumber(t.transcriptText, /- Protein delta:\s*([-\d.]+)\s*g/i);
       if (burned !== null) caloriesExercise += burned;
+      if (carbsUsed !== null) carbsGrams -= carbsUsed;
+      if (fatUsed !== null) fatGrams -= fatUsed;
+      if (proteinDelta !== null) proteinGrams += proteinDelta;
     }
   }
 
@@ -2325,9 +2331,9 @@ function summarizeNutritionForDay(
     caloriesFood: Math.round(caloriesFood),
     caloriesExercise: Math.round(caloriesExercise),
     caloriesRemaining: Math.max(0, Math.round(caloriesTarget - caloriesFood + caloriesExercise)),
-    carbsGrams: Math.round(carbsGrams),
-    proteinGrams: Math.round(proteinGrams),
-    fatGrams: Math.round(fatGrams),
+    carbsGrams: Math.max(0, Math.round(carbsGrams)),
+    proteinGrams: Math.max(0, Math.round(proteinGrams)),
+    fatGrams: Math.max(0, Math.round(fatGrams)),
   };
 }
 
@@ -2382,6 +2388,13 @@ function toNumericInputValue(value: unknown): number | null {
     if (Number.isFinite(parsed)) return parsed;
   }
   return null;
+}
+
+function parseNullableNumericInput(value: string): number | null {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  const parsed = Number(trimmed);
+  return Number.isFinite(parsed) ? parsed : null;
 }
 
 function kgFromWeightInput(value: string, unit: WeightUnit): number | null {
@@ -3667,6 +3680,7 @@ export default function ChatPage() {
 
   const [calorieTrackerModalOpen, setCalorieTrackerModalOpen] = useState(false);
   const [calorieTrackerInput, setCalorieTrackerInput] = useState("");
+  const [calorieTrackerCustomTag, setCalorieTrackerCustomTag] = useState("");
   const [calorieTrackerEntryDate, setCalorieTrackerEntryDate] = useState(() => getTodayDateInputValue());
   const calorieTrackerImageInputRef = useRef<HTMLInputElement | null>(null);
   const calorieTrackerUploadInputRef = useRef<HTMLInputElement | null>(null);
@@ -3675,7 +3689,7 @@ export default function ChatPage() {
   const [calorieTrackerImageError, setCalorieTrackerImageError] = useState<string | null>(null);
   const [calorieTrackerQuestions, setCalorieTrackerQuestions] = useState<string[]>([]);
   const [calorieTrackerAnswers, setCalorieTrackerAnswers] = useState<string[]>([]);
-  const [calorieTrackerStep, setCalorieTrackerStep] = useState<"input" | "questions" | "result">("input");
+  const [calorieTrackerStep, setCalorieTrackerStep] = useState<"input" | "questions" | "review" | "result">("input");
   const [calorieTrackerLoading, setCalorieTrackerLoading] = useState(false);
   const [calorieTrackerError, setCalorieTrackerError] = useState<string | null>(null);
   const [calorieTrackerSuggestions, setCalorieTrackerSuggestions] = useState<ReusableJournalSuggestion[]>([]);
@@ -3720,6 +3734,32 @@ export default function ChatPage() {
     };
     savedEntries?: Array<{ id: string; category: "nutrition" | "exercise"; title: string }>;
   } | null>(null);
+  type CalorieTrackerReviewDraft = {
+    calories: string;
+    proteinGrams: string;
+    carbsGrams: string;
+    fatGrams: string;
+    totalCarbohydratesGrams: string;
+    dietaryFiberGrams: string;
+    sugarGrams: string;
+    addedSugarsGrams: string;
+    sugarAlcoholsGrams: string;
+    netCarbsGrams: string;
+    saturatedFatGrams: string;
+    transFatGrams: string;
+    polyunsaturatedFatGrams: string;
+    monounsaturatedFatGrams: string;
+    cholesterolMg: string;
+    sodiumMg: string;
+    calciumMg: string;
+    ironMg: string;
+    potassiumMg: string;
+    vitaminAIu: string;
+    vitaminCMg: string;
+    vitaminDMcg: string;
+  };
+  const [calorieTrackerReviewDraft, setCalorieTrackerReviewDraft] = useState<CalorieTrackerReviewDraft | null>(null);
+  const [calorieTrackerReviewAnswers, setCalorieTrackerReviewAnswers] = useState<string[]>([]);
   const [selectedLandingJournalChip, setSelectedLandingJournalChip] =
     useState<LandingJournalChipKey>("gratitude");
   const [journalEntryModalOpen, setJournalEntryModalOpen] = useState(false);
@@ -3856,6 +3896,7 @@ export default function ChatPage() {
   const resetCalorieTrackerModal = useCallback(() => {
     setCalorieTrackerModalOpen(false);
     setCalorieTrackerInput("");
+    setCalorieTrackerCustomTag("");
     setCalorieTrackerEntryDate(getTodayDateInputValue());
     setCalorieTrackerImagePreview(null);
     setCalorieTrackerImageProcessing(false);
@@ -3868,6 +3909,8 @@ export default function ChatPage() {
     setCalorieTrackerSuggestions([]);
     setCalorieTrackerSuggestionsLoading(false);
     setCalorieTrackerResult(null);
+    setCalorieTrackerReviewDraft(null);
+    setCalorieTrackerReviewAnswers([]);
   }, []);
 
   const openCalorieTrackerModal = useCallback((chip: LandingJournalChipKey = "nutrition") => {
@@ -3878,6 +3921,7 @@ export default function ChatPage() {
     }
     setSelectedLandingJournalChip(chip);
     setCalorieTrackerInput("");
+    setCalorieTrackerCustomTag("");
     setCalorieTrackerEntryDate(getTodayDateInputValue());
     setCalorieTrackerImagePreview(null);
     setCalorieTrackerImageProcessing(false);
@@ -3889,6 +3933,8 @@ export default function ChatPage() {
     setCalorieTrackerSuggestions([]);
     setCalorieTrackerSuggestionsLoading(false);
     setCalorieTrackerResult(null);
+    setCalorieTrackerReviewDraft(null);
+    setCalorieTrackerReviewAnswers([]);
     setCalorieTrackerModalOpen(true);
   }, [incognitoMode, isAnonymous, router]);
 
@@ -3982,6 +4028,7 @@ export default function ChatPage() {
             imageBase64: base64,
             mimeType,
             hintText: calorieTrackerInput.trim().slice(0, 600),
+            mode: selectedLandingJournalChip === "exercise" ? "exercise" : "nutrition",
           }),
         });
         const data = (await res.json().catch(() => ({}))) as {
@@ -4008,22 +4055,61 @@ export default function ChatPage() {
         setCalorieTrackerImageProcessing(false);
       }
     },
-    [calorieTrackerInput]
+    [calorieTrackerInput, selectedLandingJournalChip]
   );
 
   const finalizeCalorieTracker = useCallback(
-    async (answers: string[]) => {
+    async (
+      answers: string[],
+      options?: {
+        persist?: boolean;
+        nutritionOverrides?: {
+          calories: number | null;
+          proteinGrams: number | null;
+          carbsGrams: number | null;
+          fatGrams: number | null;
+          facts?: {
+            totalCarbohydratesGrams: number | null;
+            dietaryFiberGrams: number | null;
+            sugarGrams: number | null;
+            addedSugarsGrams: number | null;
+            sugarAlcoholsGrams: number | null;
+            netCarbsGrams: number | null;
+            saturatedFatGrams: number | null;
+            transFatGrams: number | null;
+            polyunsaturatedFatGrams: number | null;
+            monounsaturatedFatGrams: number | null;
+            cholesterolMg: number | null;
+            sodiumMg: number | null;
+            calciumMg: number | null;
+            ironMg: number | null;
+            potassiumMg: number | null;
+            vitaminAIu: number | null;
+            vitaminCMg: number | null;
+            vitaminDMcg: number | null;
+          };
+        };
+      }
+    ) => {
       setCalorieTrackerLoading(true);
       setCalorieTrackerError(null);
       const deviceNow = new Date();
+      const persist = options?.persist ?? true;
       try {
         const res = await fetch("/api/me/journal/calorie", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             action: "finalize",
+            persist,
             text: calorieTrackerInput.trim(),
             answers,
+            ...(calorieTrackerCustomTag.trim()
+              ? { customTag: calorieTrackerCustomTag.trim() }
+              : {}),
+            ...(options?.nutritionOverrides
+              ? { nutritionOverrides: options.nutritionOverrides }
+              : {}),
             ...(calorieTrackerEntryDate.trim() ? { entryDate: calorieTrackerEntryDate.trim() } : {}),
             journalEntryTime: {
               hour: deviceNow.getHours(),
@@ -4075,29 +4161,75 @@ export default function ChatPage() {
         if (!res.ok) {
           throw new Error(data.error || "Could not estimate calories right now.");
         }
-        setCalorieTrackerResult({
+        const nextResult = {
           intent: data.intent ?? "nutrition",
           confidence: data.confidence ?? "medium",
           assumptions: Array.isArray(data.assumptions) ? data.assumptions : [],
           nutrition: data.nutrition,
           exercise: data.exercise,
           savedEntries: data.savedEntries,
-        });
-        setCalorieTrackerStep("result");
-        refetchTranscripts();
-        setJournalEntryJustSaved(true);
-        if (typeof window !== "undefined") {
-          window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
+        };
+        setCalorieTrackerResult(nextResult);
+        if (persist) {
+          setCalorieTrackerStep("result");
+          refetchTranscripts();
+          setJournalEntryJustSaved(true);
+          if (typeof window !== "undefined") {
+            window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
+          }
         }
+        return nextResult;
       } catch (err) {
         setCalorieTrackerError(
           err instanceof Error ? err.message : "Could not estimate calories right now."
         );
+        return null;
       } finally {
         setCalorieTrackerLoading(false);
       }
     },
-    [calorieTrackerEntryDate, calorieTrackerInput, refetchTranscripts]
+    [calorieTrackerCustomTag, calorieTrackerEntryDate, calorieTrackerInput, refetchTranscripts]
+  );
+
+  const previewCalorieTrackerForReview = useCallback(
+    async (answers: string[]) => {
+      const result = await finalizeCalorieTracker(answers, { persist: false });
+      if (!result) return;
+      if (result.nutrition) {
+        const toDraftString = (value: number | null | undefined) =>
+          value == null ? "" : String(value);
+        setCalorieTrackerReviewDraft({
+          calories: toDraftString(result.nutrition.calories),
+          proteinGrams: toDraftString(result.nutrition.proteinGrams),
+          carbsGrams: toDraftString(result.nutrition.carbsGrams),
+          fatGrams: toDraftString(result.nutrition.fatGrams),
+          totalCarbohydratesGrams: toDraftString(result.nutrition.facts?.totalCarbohydratesGrams),
+          dietaryFiberGrams: toDraftString(result.nutrition.facts?.dietaryFiberGrams),
+          sugarGrams: toDraftString(result.nutrition.facts?.sugarGrams),
+          addedSugarsGrams: toDraftString(result.nutrition.facts?.addedSugarsGrams),
+          sugarAlcoholsGrams: toDraftString(result.nutrition.facts?.sugarAlcoholsGrams),
+          netCarbsGrams: toDraftString(result.nutrition.facts?.netCarbsGrams),
+          saturatedFatGrams: toDraftString(result.nutrition.facts?.saturatedFatGrams),
+          transFatGrams: toDraftString(result.nutrition.facts?.transFatGrams),
+          polyunsaturatedFatGrams: toDraftString(result.nutrition.facts?.polyunsaturatedFatGrams),
+          monounsaturatedFatGrams: toDraftString(result.nutrition.facts?.monounsaturatedFatGrams),
+          cholesterolMg: toDraftString(result.nutrition.facts?.cholesterolMg),
+          sodiumMg: toDraftString(result.nutrition.facts?.sodiumMg),
+          calciumMg: toDraftString(result.nutrition.facts?.calciumMg),
+          ironMg: toDraftString(result.nutrition.facts?.ironMg),
+          potassiumMg: toDraftString(result.nutrition.facts?.potassiumMg),
+          vitaminAIu: toDraftString(result.nutrition.facts?.vitaminAIu),
+          vitaminCMg: toDraftString(result.nutrition.facts?.vitaminCMg),
+          vitaminDMcg: toDraftString(result.nutrition.facts?.vitaminDMcg),
+        });
+        setCalorieTrackerReviewAnswers(answers);
+        setCalorieTrackerStep("review");
+        return;
+      }
+      // Fallback safety: if nutrition estimate is unexpectedly absent, save directly.
+      await finalizeCalorieTracker(answers, { persist: true });
+    },
+    [finalizeCalorieTracker]
   );
 
 
@@ -4128,7 +4260,11 @@ export default function ChatPage() {
         setCalorieTrackerAnswers(Array(questions.length).fill(""));
         setCalorieTrackerStep("questions");
       } else {
-        await finalizeCalorieTracker([]);
+        if (selectedLandingJournalChip === "nutrition") {
+          await previewCalorieTrackerForReview([]);
+        } else {
+          await finalizeCalorieTracker([], { persist: true });
+        }
       }
     } catch (err) {
       setCalorieTrackerError(
@@ -4137,7 +4273,54 @@ export default function ChatPage() {
     } finally {
       setCalorieTrackerLoading(false);
     }
-  }, [calorieTrackerInput, finalizeCalorieTracker]);
+  }, [calorieTrackerInput, finalizeCalorieTracker, previewCalorieTrackerForReview, selectedLandingJournalChip]);
+
+  const calorieTrackerReviewGuidance = useMemo(() => {
+    if (calorieTrackerStep !== "review" || !calorieTrackerReviewDraft) return null;
+    const calories = parseNullableNumericInput(calorieTrackerReviewDraft.calories);
+    const carbs = parseNullableNumericInput(calorieTrackerReviewDraft.carbsGrams);
+    const protein = parseNullableNumericInput(calorieTrackerReviewDraft.proteinGrams);
+    const fat = parseNullableNumericInput(calorieTrackerReviewDraft.fatGrams);
+
+    const caloriesPct =
+      calories != null && nutritionGoals.caloriesTarget > 0
+        ? Math.round((calories / nutritionGoals.caloriesTarget) * 100)
+        : null;
+    const carbsPct =
+      carbs != null && nutritionGoals.carbsGrams > 0
+        ? Math.round((carbs / nutritionGoals.carbsGrams) * 100)
+        : null;
+    const proteinPct =
+      protein != null && nutritionGoals.proteinGrams > 0
+        ? Math.round((protein / nutritionGoals.proteinGrams) * 100)
+        : null;
+    const fatPct =
+      fat != null && nutritionGoals.fatGrams > 0
+        ? Math.round((fat / nutritionGoals.fatGrams) * 100)
+        : null;
+
+    const tips: string[] = [];
+    if (proteinPct != null && proteinPct < 25) {
+      tips.push("Protein is low for this log. Consider adding lean protein like Greek yogurt, eggs, tofu, chicken, or lentils.");
+    }
+    if (carbsPct != null && carbsPct > 45) {
+      tips.push("Carbs are high relative to target. Swap part of refined carbs for vegetables, legumes, or higher-fiber whole grains.");
+    }
+    if (fatPct != null && fatPct > 45) {
+      tips.push("Fat contribution is high. Try grilling/baking instead of frying and reduce added oils, creamy dressings, or cheese portions.");
+    }
+    if (caloriesPct != null && caloriesPct > 50) {
+      tips.push("This single log is calorie-dense. To balance the day, choose lower-calorie sides such as salad, broth-based soup, or fruit.");
+    }
+    if (caloriesPct != null && proteinPct != null && caloriesPct > 30 && proteinPct < 20) {
+      tips.push("Calories are high without much protein. A better alternative is adding a protein source first, then reducing carb/fat extras.");
+    }
+    if (tips.length === 0) {
+      tips.push("This looks reasonably aligned with your goals. Keep portions consistent and pair meals with high-fiber produce for better control.");
+    }
+
+    return { caloriesPct, carbsPct, proteinPct, fatPct, tips };
+  }, [calorieTrackerReviewDraft, calorieTrackerStep, nutritionGoals.caloriesTarget, nutritionGoals.carbsGrams, nutritionGoals.fatGrams, nutritionGoals.proteinGrams]);
 
   const landingDayActivityItems = useMemo<LandingDayActivityItem[]>(() => {
     const sessionItems: LandingDayActivityItem[] = sessions
@@ -10834,7 +11017,7 @@ export default function ChatPage() {
                       </div>
                       <div>
                         <p className="font-medium text-foreground">Deep thinking tools</p>
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Second-order thinking, mentor conversations, and mental models to improve decisions.</p>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">Metacognition, mentor conversations, and mental models to improve decisions.</p>
                       </div>
                     </div>
                     <div className="flex gap-4 items-start">
@@ -10943,27 +11126,6 @@ export default function ChatPage() {
                         >
                           {!isAnonymous && landingTab === "journaling" ? (
                             <div className="w-full space-y-2.5">
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                {LANDING_JOURNAL_CHIPS.map((chip) => (
-                                  <button
-                                    key={chip.key}
-                                    type="button"
-                                    onClick={() => openLandingJournalChip(chip.key)}
-                                    className="flex items-center gap-3 w-full px-3 py-3 rounded-2xl border border-neutral-200 dark:border-white/15 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/40 text-left transition-all duration-200 active:scale-[0.98]"
-                                  >
-                                    <span className="shrink-0 w-9 h-9 rounded-xl bg-accent/15 dark:bg-accent/25 flex items-center justify-center">
-                                      {renderLandingJournalIcon(chip.key)}
-                                    </span>
-                                    <span className="min-w-0">
-                                      <span className="block text-sm font-semibold text-foreground">{chip.label}</span>
-                                      <span className="block text-xs text-neutral-600 dark:text-neutral-400">
-                                        {LANDING_JOURNAL_CARD_DESCRIPTION[chip.key]}
-                                      </span>
-                                    </span>
-                                  </button>
-                                ))}
-                              </div>
-
                               <div className="w-full rounded-2xl border border-neutral-200/70 dark:border-white/10 bg-background">
                                 <button
                                   type="button"
@@ -11214,6 +11376,27 @@ export default function ChatPage() {
                                     )}
                                   </div>
                                 </div>
+                              </div>
+
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                {LANDING_JOURNAL_CHIPS.map((chip) => (
+                                  <button
+                                    key={chip.key}
+                                    type="button"
+                                    onClick={() => openLandingJournalChip(chip.key)}
+                                    className="flex items-center gap-3 w-full px-3 py-3 rounded-2xl border border-neutral-200 dark:border-white/15 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/40 text-left transition-all duration-200 active:scale-[0.98]"
+                                  >
+                                    <span className="shrink-0 w-9 h-9 rounded-xl bg-accent/15 dark:bg-accent/25 flex items-center justify-center">
+                                      {renderLandingJournalIcon(chip.key)}
+                                    </span>
+                                    <span className="min-w-0">
+                                      <span className="block text-sm font-semibold text-foreground">{chip.label}</span>
+                                      <span className="block text-xs text-neutral-600 dark:text-neutral-400">
+                                        {LANDING_JOURNAL_CARD_DESCRIPTION[chip.key]}
+                                      </span>
+                                    </span>
+                                  </button>
+                                ))}
                               </div>
                             </div>
                           ) : (
@@ -15618,6 +15801,19 @@ export default function ChatPage() {
                       className="w-full max-w-xs px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
                     />
                   </div>
+                  <div>
+                    <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                      Custom tag (optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={calorieTrackerCustomTag}
+                      onChange={(e) => setCalorieTrackerCustomTag(e.target.value)}
+                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                      placeholder="e.g. post-workout, quick-lunch, high-protein"
+                      className="w-full max-w-xs px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    />
+                  </div>
                   <div className="flex items-end gap-2">
                     <textarea
                       value={calorieTrackerInput}
@@ -15744,11 +15940,231 @@ export default function ChatPage() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => void finalizeCalorieTracker(calorieTrackerAnswers)}
+                      onClick={() =>
+                        void (selectedLandingJournalChip === "nutrition"
+                          ? previewCalorieTrackerForReview(calorieTrackerAnswers)
+                          : finalizeCalorieTracker(calorieTrackerAnswers, { persist: true }))
+                      }
                       disabled={calorieTrackerLoading}
                       className="flex-1 px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
                     >
                       {calorieTrackerLoading ? "Estimating..." : getLandingTranslations(language).calorieTrackerGetEstimate}
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {calorieTrackerStep === "review" && calorieTrackerResult && calorieTrackerReviewDraft && (
+                <>
+                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-2">
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                      Confidence: {calorieTrackerResult.confidence}
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      Review and edit before saving
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <label className="block space-y-1">
+                        <span className="text-xs text-neutral-500 dark:text-neutral-400">Calories (kcal)</span>
+                        <input
+                          type="number"
+                          step="0.1"
+                          value={calorieTrackerReviewDraft.calories}
+                          onChange={(e) =>
+                            setCalorieTrackerReviewDraft((prev) =>
+                              prev ? { ...prev, calories: e.target.value } : prev
+                            )
+                          }
+                          disabled={calorieTrackerLoading}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        />
+                      </label>
+                      <label className="block space-y-1">
+                        <span className="text-xs text-neutral-500 dark:text-neutral-400">Protein (g)</span>
+                        <input
+                          type="number"
+                          step="0.1"
+                          value={calorieTrackerReviewDraft.proteinGrams}
+                          onChange={(e) =>
+                            setCalorieTrackerReviewDraft((prev) =>
+                              prev ? { ...prev, proteinGrams: e.target.value } : prev
+                            )
+                          }
+                          disabled={calorieTrackerLoading}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        />
+                      </label>
+                      <label className="block space-y-1">
+                        <span className="text-xs text-neutral-500 dark:text-neutral-400">Carbs (g)</span>
+                        <input
+                          type="number"
+                          step="0.1"
+                          value={calorieTrackerReviewDraft.carbsGrams}
+                          onChange={(e) =>
+                            setCalorieTrackerReviewDraft((prev) =>
+                              prev ? { ...prev, carbsGrams: e.target.value } : prev
+                            )
+                          }
+                          disabled={calorieTrackerLoading}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        />
+                      </label>
+                      <label className="block space-y-1">
+                        <span className="text-xs text-neutral-500 dark:text-neutral-400">Fat (g)</span>
+                        <input
+                          type="number"
+                          step="0.1"
+                          value={calorieTrackerReviewDraft.fatGrams}
+                          onChange={(e) =>
+                            setCalorieTrackerReviewDraft((prev) =>
+                              prev ? { ...prev, fatGrams: e.target.value } : prev
+                            )
+                          }
+                          disabled={calorieTrackerLoading}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        />
+                      </label>
+                    </div>
+                    <p className="text-xs font-medium text-neutral-600 dark:text-neutral-300 pt-1">
+                      Dietary facts
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        ["Total Carbs (g)", "totalCarbohydratesGrams"],
+                        ["Dietary Fiber (g)", "dietaryFiberGrams"],
+                        ["Sugar (g)", "sugarGrams"],
+                        ["Added Sugars (g)", "addedSugarsGrams"],
+                        ["Sugar Alcohols (g)", "sugarAlcoholsGrams"],
+                        ["Net Carbs (g)", "netCarbsGrams"],
+                        ["Saturated Fat (g)", "saturatedFatGrams"],
+                        ["Trans Fat (g)", "transFatGrams"],
+                        ["Polyunsat. Fat (g)", "polyunsaturatedFatGrams"],
+                        ["Monounsat. Fat (g)", "monounsaturatedFatGrams"],
+                        ["Cholesterol (mg)", "cholesterolMg"],
+                        ["Sodium (mg)", "sodiumMg"],
+                        ["Calcium (mg)", "calciumMg"],
+                        ["Iron (mg)", "ironMg"],
+                        ["Potassium (mg)", "potassiumMg"],
+                        ["Vitamin A (IU)", "vitaminAIu"],
+                        ["Vitamin C (mg)", "vitaminCMg"],
+                        ["Vitamin D (mcg)", "vitaminDMcg"],
+                      ].map(([label, key]) => (
+                        <label key={key} className="block space-y-1">
+                          <span className="text-xs text-neutral-500 dark:text-neutral-400">{label}</span>
+                          <input
+                            type="number"
+                            step="0.1"
+                            value={calorieTrackerReviewDraft[key as keyof typeof calorieTrackerReviewDraft]}
+                            onChange={(e) =>
+                              setCalorieTrackerReviewDraft((prev) =>
+                                prev
+                                  ? {
+                                      ...prev,
+                                      [key]: e.target.value,
+                                    }
+                                  : prev
+                              )
+                            }
+                            disabled={calorieTrackerLoading}
+                            className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                          />
+                        </label>
+                      ))}
+                    </div>
+                    {calorieTrackerReviewGuidance && (
+                      <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/70 dark:bg-neutral-900/40 p-3 space-y-2">
+                        <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                          Daily goal impact (this log)
+                        </p>
+                        <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+                          <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                            Calories: {calorieTrackerReviewGuidance.caloriesPct == null ? "--" : `${calorieTrackerReviewGuidance.caloriesPct}%`}
+                          </p>
+                          <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                            Protein: {calorieTrackerReviewGuidance.proteinPct == null ? "--" : `${calorieTrackerReviewGuidance.proteinPct}%`}
+                          </p>
+                          <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                            Carbs: {calorieTrackerReviewGuidance.carbsPct == null ? "--" : `${calorieTrackerReviewGuidance.carbsPct}%`}
+                          </p>
+                          <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                            Fat: {calorieTrackerReviewGuidance.fatPct == null ? "--" : `${calorieTrackerReviewGuidance.fatPct}%`}
+                          </p>
+                        </div>
+                        <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300 pt-1">
+                          Better macro-management alternatives
+                        </p>
+                        <ul className="space-y-1">
+                          {calorieTrackerReviewGuidance.tips.map((tip, idx) => (
+                            <li key={`review-tip-${idx}`} className="text-xs text-neutral-600 dark:text-neutral-400">
+                              - {tip}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setCalorieTrackerStep(calorieTrackerQuestions.length > 0 ? "questions" : "input")
+                      }
+                      disabled={calorieTrackerLoading}
+                      className="flex-1 px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
+                    >
+                      {getLandingTranslations(language).calorieTrackerBack}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const parseField = (value: string): number | null => {
+                          const trimmed = value.trim();
+                          if (!trimmed) return null;
+                          const n = Number(trimmed);
+                          return Number.isFinite(n) ? n : null;
+                        };
+                        void finalizeCalorieTracker(calorieTrackerReviewAnswers, {
+                          persist: true,
+                          nutritionOverrides: {
+                            calories: parseField(calorieTrackerReviewDraft.calories),
+                            proteinGrams: parseField(calorieTrackerReviewDraft.proteinGrams),
+                            carbsGrams: parseField(calorieTrackerReviewDraft.carbsGrams),
+                            fatGrams: parseField(calorieTrackerReviewDraft.fatGrams),
+                            facts: {
+                              totalCarbohydratesGrams: parseField(
+                                calorieTrackerReviewDraft.totalCarbohydratesGrams
+                              ),
+                              dietaryFiberGrams: parseField(calorieTrackerReviewDraft.dietaryFiberGrams),
+                              sugarGrams: parseField(calorieTrackerReviewDraft.sugarGrams),
+                              addedSugarsGrams: parseField(calorieTrackerReviewDraft.addedSugarsGrams),
+                              sugarAlcoholsGrams: parseField(
+                                calorieTrackerReviewDraft.sugarAlcoholsGrams
+                              ),
+                              netCarbsGrams: parseField(calorieTrackerReviewDraft.netCarbsGrams),
+                              saturatedFatGrams: parseField(calorieTrackerReviewDraft.saturatedFatGrams),
+                              transFatGrams: parseField(calorieTrackerReviewDraft.transFatGrams),
+                              polyunsaturatedFatGrams: parseField(
+                                calorieTrackerReviewDraft.polyunsaturatedFatGrams
+                              ),
+                              monounsaturatedFatGrams: parseField(
+                                calorieTrackerReviewDraft.monounsaturatedFatGrams
+                              ),
+                              cholesterolMg: parseField(calorieTrackerReviewDraft.cholesterolMg),
+                              sodiumMg: parseField(calorieTrackerReviewDraft.sodiumMg),
+                              calciumMg: parseField(calorieTrackerReviewDraft.calciumMg),
+                              ironMg: parseField(calorieTrackerReviewDraft.ironMg),
+                              potassiumMg: parseField(calorieTrackerReviewDraft.potassiumMg),
+                              vitaminAIu: parseField(calorieTrackerReviewDraft.vitaminAIu),
+                              vitaminCMg: parseField(calorieTrackerReviewDraft.vitaminCMg),
+                              vitaminDMcg: parseField(calorieTrackerReviewDraft.vitaminDMcg),
+                            },
+                          },
+                        });
+                      }}
+                      disabled={calorieTrackerLoading}
+                      className="flex-1 px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
+                    >
+                      {calorieTrackerLoading ? "Saving..." : getLandingTranslations(language).journalEntrySave}
                     </button>
                   </div>
                 </>

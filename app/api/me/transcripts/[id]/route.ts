@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getSavedTranscript, deleteSavedTranscript, updateSavedTranscriptText } from "@/lib/db";
+import { estimateNutritionFactsFromMacros } from "@/lib/gemini";
 
 export async function GET(
   _request: Request,
@@ -75,6 +76,13 @@ function upsertStatLine(lines: string[], label: string, value: number, unit: str
   return [...lines, nextLine];
 }
 
+function extractNutritionContextFromTranscript(text: string): string {
+  const normalized = text.replace(/\r/g, "");
+  const enrichedMatch = /Enriched entry:\s*([\s\S]*?)(?:\n\n|$)/i.exec(normalized);
+  if (enrichedMatch?.[1]?.trim()) return enrichedMatch[1].trim();
+  return normalized.slice(0, 1200).trim();
+}
+
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -125,10 +133,75 @@ export async function PATCH(
       ) {
         return NextResponse.json({ error: "Invalid nutrition stats payload" }, { status: 400 });
       }
+      const nutritionContextText = extractNutritionContextFromTranscript(transcript.transcriptText ?? "");
+      const regeneratedFacts = await estimateNutritionFactsFromMacros(
+        {
+          entryText: nutritionContextText,
+          calories,
+          proteinGrams,
+          carbsGrams,
+          fatGrams,
+        },
+        { userId, eventType: "transcript_nutrition_reestimate_on_edit" }
+      );
       lines = upsertStatLine(lines, "Calories", calories, "kcal");
       lines = upsertStatLine(lines, "Protein", proteinGrams, "g");
       lines = upsertStatLine(lines, "Carbs", carbsGrams, "g");
       lines = upsertStatLine(lines, "Fat", fatGrams, "g");
+      if (regeneratedFacts.totalCarbohydratesGrams != null) {
+        lines = upsertStatLine(lines, "Total Carbohydrates", regeneratedFacts.totalCarbohydratesGrams, "g");
+      }
+      if (regeneratedFacts.dietaryFiberGrams != null) {
+        lines = upsertStatLine(lines, "Dietary Fiber", regeneratedFacts.dietaryFiberGrams, "g");
+      }
+      if (regeneratedFacts.sugarGrams != null) {
+        lines = upsertStatLine(lines, "Sugar", regeneratedFacts.sugarGrams, "g");
+      }
+      if (regeneratedFacts.addedSugarsGrams != null) {
+        lines = upsertStatLine(lines, "Added Sugars", regeneratedFacts.addedSugarsGrams, "g");
+      }
+      if (regeneratedFacts.sugarAlcoholsGrams != null) {
+        lines = upsertStatLine(lines, "Sugar Alcohols", regeneratedFacts.sugarAlcoholsGrams, "g");
+      }
+      if (regeneratedFacts.netCarbsGrams != null) {
+        lines = upsertStatLine(lines, "Net Carbs", regeneratedFacts.netCarbsGrams, "g");
+      }
+      if (regeneratedFacts.saturatedFatGrams != null) {
+        lines = upsertStatLine(lines, "Saturated Fat", regeneratedFacts.saturatedFatGrams, "g");
+      }
+      if (regeneratedFacts.transFatGrams != null) {
+        lines = upsertStatLine(lines, "Trans Fat", regeneratedFacts.transFatGrams, "g");
+      }
+      if (regeneratedFacts.polyunsaturatedFatGrams != null) {
+        lines = upsertStatLine(lines, "Polyunsaturated Fat", regeneratedFacts.polyunsaturatedFatGrams, "g");
+      }
+      if (regeneratedFacts.monounsaturatedFatGrams != null) {
+        lines = upsertStatLine(lines, "Monounsaturated Fat", regeneratedFacts.monounsaturatedFatGrams, "g");
+      }
+      if (regeneratedFacts.cholesterolMg != null) {
+        lines = upsertStatLine(lines, "Cholesterol", regeneratedFacts.cholesterolMg, "mg");
+      }
+      if (regeneratedFacts.sodiumMg != null) {
+        lines = upsertStatLine(lines, "Sodium", regeneratedFacts.sodiumMg, "mg");
+      }
+      if (regeneratedFacts.calciumMg != null) {
+        lines = upsertStatLine(lines, "Calcium", regeneratedFacts.calciumMg, "mg");
+      }
+      if (regeneratedFacts.ironMg != null) {
+        lines = upsertStatLine(lines, "Iron", regeneratedFacts.ironMg, "mg");
+      }
+      if (regeneratedFacts.potassiumMg != null) {
+        lines = upsertStatLine(lines, "Potassium", regeneratedFacts.potassiumMg, "mg");
+      }
+      if (regeneratedFacts.vitaminAIu != null) {
+        lines = upsertStatLine(lines, "Vitamin A", regeneratedFacts.vitaminAIu, "IU");
+      }
+      if (regeneratedFacts.vitaminCMg != null) {
+        lines = upsertStatLine(lines, "Vitamin C", regeneratedFacts.vitaminCMg, "mg");
+      }
+      if (regeneratedFacts.vitaminDMcg != null) {
+        lines = upsertStatLine(lines, "Vitamin D", regeneratedFacts.vitaminDMcg, "mcg");
+      }
     } else {
       const caloriesBurned = parseNumberish(body.caloriesBurned);
       const carbsUsedGrams = parseNumberish(body.carbsUsedGrams);
