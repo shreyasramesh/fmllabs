@@ -435,6 +435,7 @@ export interface UserSettings {
     exercise: { enabled: boolean; hour: number; minute: number; days: number[] };
     gratitude: { enabled: boolean; hour: number; minute: number; days: number[] };
     weight: { enabled: boolean; hour: number; minute: number; days: number[] };
+    mentalModel: { enabled: boolean; hour: number; minute: number; days: number[] };
   };
   /** Android local notification toggle for the nightly (9 PM) nutrition report alert. */
   nightlyNutritionReportNotificationEnabled?: boolean;

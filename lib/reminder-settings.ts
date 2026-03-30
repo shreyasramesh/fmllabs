@@ -1,4 +1,4 @@
-export type ReminderType = "nutrition" | "exercise" | "gratitude" | "weight";
+export type ReminderType = "nutrition" | "exercise" | "gratitude" | "weight" | "mentalModel";
 
 export type ReminderSchedule = {
   enabled: boolean;
@@ -16,6 +16,7 @@ export const DEFAULT_REMINDER_PREFERENCES: ReminderPreferences = {
   exercise: { enabled: false, hour: 18, minute: 0, days: DEFAULT_DAYS },
   gratitude: { enabled: false, hour: 21, minute: 0, days: [0, 1, 2, 3, 4, 5, 6] },
   weight: { enabled: false, hour: 7, minute: 30, days: [1, 3, 5] },
+  mentalModel: { enabled: false, hour: 12, minute: 30, days: DEFAULT_DAYS },
 };
 
 function clampHour(v: unknown, fallback: number): number {
@@ -51,6 +52,7 @@ export function normalizeReminderPreferences(input: unknown): ReminderPreference
     exercise: normalizeOne(obj.exercise, DEFAULT_REMINDER_PREFERENCES.exercise),
     gratitude: normalizeOne(obj.gratitude, DEFAULT_REMINDER_PREFERENCES.gratitude),
     weight: normalizeOne(obj.weight, DEFAULT_REMINDER_PREFERENCES.weight),
+    mentalModel: normalizeOne(obj.mentalModel, DEFAULT_REMINDER_PREFERENCES.mentalModel),
   };
 }
 

@@ -11,6 +11,7 @@ const BASE_IDS: Record<ReminderType, number> = {
   exercise: 1200,
   gratitude: 1300,
   weight: 1500,
+  mentalModel: 1700,
 };
 
 const REMINDER_TITLES: Record<ReminderType, string> = {
@@ -18,6 +19,7 @@ const REMINDER_TITLES: Record<ReminderType, string> = {
   exercise: "Exercise check-in",
   gratitude: "Gratitude journal",
   weight: "Weight check-in",
+  mentalModel: "Mental model spark",
 };
 
 const REMINDER_BODIES: Record<ReminderType, string> = {
@@ -25,7 +27,25 @@ const REMINDER_BODIES: Record<ReminderType, string> = {
   exercise: "Log your movement today, even if it was a short walk.",
   gratitude: "Capture one gratitude moment in your journal.",
   weight: "Log your weight to keep your progress trend up to date.",
+  mentalModel: "Quick reset: apply one mental model to your next decision.",
 };
+
+const MENTAL_MODEL_PROMPTS = [
+  "First Principles: what assumptions can you strip away?",
+  "Second-order thinking: what happens after this decision?",
+  "Inversion: what would make this fail?",
+  "Opportunity cost: what are you saying no to?",
+  "Circle of control: what part is truly in your control?",
+  "80/20 rule: where is most impact coming from?",
+  "Systems lens: what dependencies are driving this?",
+  "Probabilistic thinking: what outcome is most likely?",
+  "Margin of safety: what buffer do you need?",
+  "Regret minimization: what would future-you prefer?",
+];
+
+function randomMentalModelPrompt(): string {
+  return MENTAL_MODEL_PROMPTS[Math.floor(Math.random() * MENTAL_MODEL_PROMPTS.length)]!;
+}
 
 const NIGHTLY_DAILY_REPORT_BASE_ID = 1400;
 const POMODORO_COMPLETION_NOTIFICATION_ID = 1600;
@@ -53,10 +73,11 @@ function buildNotifications(
     const schedule = preferences[type];
     if (!schedule.enabled) continue;
     for (const day of schedule.days) {
+      const isMentalModel = type === "mentalModel";
       notifications.push({
         id: BASE_IDS[type] + day,
         title: REMINDER_TITLES[type],
-        body: REMINDER_BODIES[type],
+        body: isMentalModel ? randomMentalModelPrompt() : REMINDER_BODIES[type],
         schedule: {
           repeats: true,
           allowWhileIdle: true,
