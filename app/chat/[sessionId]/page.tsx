@@ -8896,7 +8896,7 @@ export default function ChatPage() {
         <div className="w-full max-w-4xl text-center">
           <p
             className="font-semibold tracking-tight text-foreground leading-[0.9]"
-            style={{ fontSize: "clamp(60px, 25vw, 400px)" }}
+            style={{ fontSize: "clamp(120px, 36vw, 420px)" }}
           >
             {pomodoroClockLabel}
           </p>
@@ -11896,8 +11896,8 @@ export default function ChatPage() {
                             <div className={pomodoroSessionStartIso ? "min-h-[62vh] flex items-center justify-center" : "space-y-3"}>
                               {pomodoroSessionStartIso ? (
                                 <div className="w-full max-w-xl rounded-3xl border border-neutral-200/70 dark:border-white/10 bg-background p-6 sm:p-8 text-center space-y-6">
-                                  <p className="font-semibold tracking-tight text-foreground" style={{ fontSize: "clamp(60px, 25vw, 400px)" }}>{pomodoroClockLabel}</p>
-                                  <div className="flex items-center justify-center gap-2">
+                                  <p className="font-semibold tracking-tight text-foreground" style={{ fontSize: "clamp(110px, 32vw, 360px)" }}>{pomodoroClockLabel}</p>
+                                  <div className="flex flex-wrap items-center justify-center gap-2">
                                     <button
                                       type="button"
                                       onClick={pomodoroRunning ? pausePomodoro : startPomodoro}
@@ -11972,8 +11972,8 @@ export default function ChatPage() {
                                     Set minutes
                                   </button>
                                 </div>
-                                <p className="mt-3 font-semibold tracking-tight text-foreground" style={{ fontSize: "clamp(60px, 22vw, 160px)" }}>{pomodoroClockLabel}</p>
-                                <div className="mt-3 flex items-center gap-2">
+                                <p className="mt-3 font-semibold tracking-tight text-foreground" style={{ fontSize: "clamp(96px, 28vw, 220px)" }}>{pomodoroClockLabel}</p>
+                                <div className="mt-3 flex flex-wrap items-center gap-2">
                                   <button
                                     type="button"
                                     onClick={startPomodoro}
