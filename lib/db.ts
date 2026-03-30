@@ -248,6 +248,32 @@ export interface ReusableJournalTag {
   displayName: string;
   aliases?: string[];
   sampleEntry: string;
+  nutritionSnapshot?: {
+    calories?: number | null;
+    proteinGrams?: number | null;
+    carbsGrams?: number | null;
+    fatGrams?: number | null;
+    facts?: {
+      totalCarbohydratesGrams?: number | null;
+      dietaryFiberGrams?: number | null;
+      sugarGrams?: number | null;
+      addedSugarsGrams?: number | null;
+      sugarAlcoholsGrams?: number | null;
+      netCarbsGrams?: number | null;
+      saturatedFatGrams?: number | null;
+      transFatGrams?: number | null;
+      polyunsaturatedFatGrams?: number | null;
+      monounsaturatedFatGrams?: number | null;
+      cholesterolMg?: number | null;
+      sodiumMg?: number | null;
+      calciumMg?: number | null;
+      ironMg?: number | null;
+      potassiumMg?: number | null;
+      vitaminAIu?: number | null;
+      vitaminCMg?: number | null;
+      vitaminDMcg?: number | null;
+    };
+  };
   usageCount: number;
   createdAt: Date;
   updatedAt: Date;
@@ -1774,7 +1800,10 @@ export async function upsertReusableJournalTags(
   userId: string,
   kind: "nutrition" | "exercise",
   tags: Array<{ tag: string; displayName?: string; aliases?: string[] }>,
-  sampleEntry: string
+  sampleEntry: string,
+  options?: {
+    nutritionSnapshot?: ReusableJournalTag["nutritionSnapshot"];
+  }
 ): Promise<void> {
   const database = await getDb();
   const now = new Date();
@@ -1807,6 +1836,9 @@ export async function upsertReusableJournalTags(
             displayName,
             aliases,
             sampleEntry: cleanSample,
+            ...(options?.nutritionSnapshot
+              ? { nutritionSnapshot: options.nutritionSnapshot }
+              : {}),
             updatedAt: now,
             lastUsedAt: now,
           },

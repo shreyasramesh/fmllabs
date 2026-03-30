@@ -4,7 +4,6 @@ import { resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
 import { getPacificTimeParts, parseJournalEntryTimeFromBody } from "@/lib/journal-entry-time";
 import {
   getReusableJournalTags,
-  getReusableJournalItems,
   saveJournalTranscript,
   upsertReusableJournalItem,
   upsertReusableJournalTags,
@@ -68,7 +67,7 @@ function formatNutritionJournalText(entryText: string, answers: string[], estima
     vitaminDMcg: number | null;
   };
   notes: string;
-}, assumptions: string[]): string {
+}, assumptions: string[], customTag?: string): string {
   const lines: string[] = [];
   lines.push("Calorie Tracking Journal (Nutrition)");
   lines.push("");
@@ -102,6 +101,7 @@ function formatNutritionJournalText(entryText: string, answers: string[], estima
   lines.push(`- Vitamin A: ${estimate.facts?.vitaminAIu ?? "unknown"} IU`);
   lines.push(`- Vitamin C: ${estimate.facts?.vitaminCMg ?? "unknown"} mg`);
   lines.push(`- Vitamin D: ${estimate.facts?.vitaminDMcg ?? "unknown"} mcg`);
+  if ((customTag ?? "").trim()) lines.push(`- Tag: ${(customTag ?? "").trim()}`);
   if (estimate.notes.trim()) lines.push(`- Notes: ${estimate.notes.trim()}`);
   if (assumptions.length > 0) {
     lines.push("");
@@ -117,7 +117,7 @@ function formatExerciseJournalText(entryText: string, answers: string[], estimat
   fatUsedGrams?: number | null;
   proteinDeltaGrams?: number | null;
   notes: string;
-}, assumptions: string[]): string {
+}, assumptions: string[], customTag?: string): string {
   const lines: string[] = [];
   lines.push("Calorie Tracking Journal (Exercise)");
   lines.push("");
@@ -133,6 +133,7 @@ function formatExerciseJournalText(entryText: string, answers: string[], estimat
   lines.push(`- Carbs used: ${estimate.carbsUsedGrams ?? "unknown"} g`);
   lines.push(`- Fat used: ${estimate.fatUsedGrams ?? "unknown"} g`);
   lines.push(`- Protein delta: ${estimate.proteinDeltaGrams ?? "unknown"} g`);
+  if ((customTag ?? "").trim()) lines.push(`- Tag: ${(customTag ?? "").trim()}`);
   if (estimate.notes.trim()) lines.push(`- Notes: ${estimate.notes.trim()}`);
   if (assumptions.length > 0) {
     lines.push("");
@@ -265,7 +266,35 @@ async function persistReusableTags(
   userId: string,
   kind: "nutrition" | "exercise",
   entryText: string,
-  customTag?: string
+  customTag?: string,
+  options?: {
+    nutritionSnapshot?: {
+      calories?: number | null;
+      proteinGrams?: number | null;
+      carbsGrams?: number | null;
+      fatGrams?: number | null;
+      facts?: {
+        totalCarbohydratesGrams?: number | null;
+        dietaryFiberGrams?: number | null;
+        sugarGrams?: number | null;
+        addedSugarsGrams?: number | null;
+        sugarAlcoholsGrams?: number | null;
+        netCarbsGrams?: number | null;
+        saturatedFatGrams?: number | null;
+        transFatGrams?: number | null;
+        polyunsaturatedFatGrams?: number | null;
+        monounsaturatedFatGrams?: number | null;
+        cholesterolMg?: number | null;
+        sodiumMg?: number | null;
+        calciumMg?: number | null;
+        ironMg?: number | null;
+        potassiumMg?: number | null;
+        vitaminAIu?: number | null;
+        vitaminCMg?: number | null;
+        vitaminDMcg?: number | null;
+      };
+    };
+  }
 ): Promise<void> {
   const extracted = await extractReusableJournalTags(kind, entryText, {
     userId,
@@ -288,7 +317,9 @@ async function persistReusableTags(
     });
   }
   if (tags.length === 0) return;
-  await upsertReusableJournalTags(userId, kind, tags, entryText).catch(() => {});
+  await upsertReusableJournalTags(userId, kind, tags, entryText, {
+    nutritionSnapshot: kind === "nutrition" ? options?.nutritionSnapshot : undefined,
+  }).catch(() => {});
 }
 
 export async function POST(request: Request) {
@@ -567,7 +598,8 @@ export async function POST(request: Request) {
           nutritionFocusedEntry,
           answers,
           nutritionEstimate,
-          nutritionAssumptions.length > 0 ? nutritionAssumptions : assumptions
+          nutritionAssumptions.length > 0 ? nutritionAssumptions : assumptions,
+          customTag
         );
         const nutritionTitle = await inferCalorieJournalTitle(
           userId,
@@ -598,7 +630,15 @@ export async function POST(request: Request) {
           nutritionFocusedEntry,
           pickReusableDisplayName(nutritionFocusedEntry)
         ).catch(() => {});
-        await persistReusableTags(userId, "nutrition", nutritionFocusedEntry, customTag);
+        await persistReusableTags(userId, "nutrition", nutritionFocusedEntry, customTag, {
+          nutritionSnapshot: {
+            calories: nutritionEstimate.calories,
+            proteinGrams: nutritionEstimate.proteinGrams,
+            carbsGrams: nutritionEstimate.carbsGrams,
+            fatGrams: nutritionEstimate.fatGrams,
+            facts: nutritionEstimate.facts,
+          },
+        });
       }
 
       if (estimate.intent === "exercise" || estimate.intent === "mixed") {
@@ -646,7 +686,8 @@ export async function POST(request: Request) {
           exerciseFocusedEntry,
           answers,
           exerciseEstimate,
-          exerciseAssumptions.length > 0 ? exerciseAssumptions : assumptions
+          exerciseAssumptions.length > 0 ? exerciseAssumptions : assumptions,
+          customTag
         );
         const exerciseTitle = await inferCalorieJournalTitle(
           userId,
@@ -721,7 +762,7 @@ export async function GET(request: Request) {
     const kindParam = searchParams.get("kind");
     const q = (searchParams.get("q") ?? "").trim();
     const limitRaw = Number.parseInt(searchParams.get("limit") ?? "8", 10);
-    const minUsageRaw = Number.parseInt(searchParams.get("minUsage") ?? "3", 10);
+    const minUsageRaw = Number.parseInt(searchParams.get("minUsage") ?? "1", 10);
     const kind = kindParam === "exercise" ? "exercise" : kindParam === "nutrition" ? "nutrition" : null;
     if (!kind) {
       return NextResponse.json({ error: "kind must be nutrition or exercise" }, { status: 400 });
@@ -738,25 +779,11 @@ export async function GET(request: Request) {
       canonicalName: item.tag,
       displayName: item.displayName,
       sampleEntry: item.sampleEntry,
+      nutritionSnapshot: item.nutritionSnapshot,
       usageCount: item.usageCount,
       lastUsedAt: item.lastUsedAt,
     }));
-    if (mappedTags.length > 0) {
-      return NextResponse.json({ items: mappedTags });
-    }
-
-    // Backward-compatible fallback: still show strongly repeated legacy canonical items.
-    const items = await getReusableJournalItems(userId, kind, q, limit);
-    const mappedItems = items.map((item) => ({
-      id: item._id,
-      kind: item.kind,
-      canonicalName: item.canonicalName,
-      displayName: item.displayName,
-      sampleEntry: item.sampleEntry,
-      usageCount: item.usageCount,
-      lastUsedAt: item.lastUsedAt,
-    })).filter((item) => item.usageCount >= minUsage);
-    return NextResponse.json({ items: mappedItems });
+    return NextResponse.json({ items: mappedTags });
   } catch (err) {
     console.error("Calorie journal suggestions error:", err);
     return NextResponse.json({ error: "Failed to fetch suggestions" }, { status: 500 });

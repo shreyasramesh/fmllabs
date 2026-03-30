@@ -732,7 +732,7 @@ function MessageBubble({
               ? "max-w-[85%] bg-foreground text-background shadow-sm"
               : isAssistantDotsLoading
                 ? "inline-flex w-auto max-w-[120px] rounded-2xl px-3 py-2 bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground"
-                : "w-full max-w-full sm:max-w-[85%] bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground pr-4"
+              : "w-full max-w-full sm:max-w-[85%] bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground pr-4"
           }`}
           dir={isRtl ? "rtl" : undefined}
         >
@@ -2146,6 +2146,13 @@ type NutritionFactsDaySummary = {
   vitaminDMcg: number | null;
 };
 
+type NutritionFactContributor = {
+  label: string;
+  value: number;
+};
+
+type NutritionFactContributorsByKey = Partial<Record<keyof NutritionFactsDaySummary, NutritionFactContributor[]>>;
+
 const NUTRITION_FACT_PATTERNS: Array<{ key: keyof NutritionFactsDaySummary; pattern: RegExp }> = [
   { key: "calories", pattern: /- Calories:\s*([\d.]+)\s*kcal/i },
   { key: "totalCarbohydratesGrams", pattern: /- Total Carbohydrates:\s*([\d.]+)\s*g/i },
@@ -2168,6 +2175,35 @@ const NUTRITION_FACT_PATTERNS: Array<{ key: keyof NutritionFactsDaySummary; patt
   { key: "vitaminAIu", pattern: /- Vitamin A:\s*([\d.]+)\s*IU/i },
   { key: "vitaminCMg", pattern: /- Vitamin C:\s*([\d.]+)\s*mg/i },
   { key: "vitaminDMcg", pattern: /- Vitamin D:\s*([\d.]+)\s*mcg/i },
+];
+
+const NUTRITION_FACT_DAY_VIEW_ROWS: Array<{
+  key: keyof NutritionFactsDaySummary;
+  label: string;
+  unit: string;
+  indent?: boolean;
+}> = [
+  { key: "calories", label: "Calories", unit: "kcal" },
+  { key: "totalCarbohydratesGrams", label: "Total Carbohydrates", unit: "g" },
+  { key: "dietaryFiberGrams", label: "Dietary Fiber", unit: "g", indent: true },
+  { key: "sugarGrams", label: "Sugar", unit: "g", indent: true },
+  { key: "addedSugarsGrams", label: "Added Sugars", unit: "g", indent: true },
+  { key: "sugarAlcoholsGrams", label: "Sugar Alcohols", unit: "g", indent: true },
+  { key: "netCarbsGrams", label: "Net Carbs", unit: "g", indent: true },
+  { key: "proteinGrams", label: "Protein", unit: "g" },
+  { key: "totalFatGrams", label: "Total Fat", unit: "g" },
+  { key: "saturatedFatGrams", label: "Saturated Fat", unit: "g", indent: true },
+  { key: "transFatGrams", label: "Trans Fat", unit: "g", indent: true },
+  { key: "polyunsaturatedFatGrams", label: "Polyunsaturated Fat", unit: "g", indent: true },
+  { key: "monounsaturatedFatGrams", label: "Monounsaturated Fat", unit: "g", indent: true },
+  { key: "cholesterolMg", label: "Cholesterol", unit: "mg" },
+  { key: "sodiumMg", label: "Sodium", unit: "mg" },
+  { key: "calciumMg", label: "Calcium", unit: "mg" },
+  { key: "ironMg", label: "Iron", unit: "mg" },
+  { key: "potassiumMg", label: "Potassium", unit: "mg" },
+  { key: "vitaminAIu", label: "Vitamin A", unit: "IU" },
+  { key: "vitaminCMg", label: "Vitamin C", unit: "mg" },
+  { key: "vitaminDMcg", label: "Vitamin D", unit: "mcg" },
 ];
 
 function getEmptyNutritionFactsSummary(): NutritionFactsDaySummary {
@@ -2259,6 +2295,88 @@ function summarizeNutritionFactsForDay(
   const result = getEmptyNutritionFactsSummary();
   for (const { key } of NUTRITION_FACT_PATTERNS) {
     result[key] = seen.has(key) ? Math.round(totals[key]) : null;
+  }
+  return result;
+}
+
+function getNutritionContributorLabel(entry: {
+  videoTitle?: string;
+  transcriptText?: string;
+}): string {
+  const title = entry.videoTitle?.trim();
+  if (title) return title;
+  const foodLine = entry.transcriptText?.match(/- Food:\s*(.+)/i)?.[1]?.trim();
+  if (foodLine) return foodLine;
+  return "Entry";
+}
+
+function summarizeNutritionFactContributorsForDay(
+  entries: Array<{
+    sourceType?: "youtube" | "journal";
+    transcriptText?: string;
+    journalCategory?: "nutrition" | "exercise";
+    journalEntryYear?: number;
+    journalEntryMonth?: number;
+    journalEntryDay?: number;
+    createdAt?: string;
+    videoTitle?: string;
+  }>,
+  dayKey: string
+): NutritionFactContributorsByKey {
+  const perKeyTotalsByLabel: Record<keyof NutritionFactsDaySummary, Map<string, number>> = {
+    calories: new Map(),
+    totalCarbohydratesGrams: new Map(),
+    dietaryFiberGrams: new Map(),
+    sugarGrams: new Map(),
+    addedSugarsGrams: new Map(),
+    sugarAlcoholsGrams: new Map(),
+    netCarbsGrams: new Map(),
+    proteinGrams: new Map(),
+    totalFatGrams: new Map(),
+    saturatedFatGrams: new Map(),
+    transFatGrams: new Map(),
+    polyunsaturatedFatGrams: new Map(),
+    monounsaturatedFatGrams: new Map(),
+    cholesterolMg: new Map(),
+    sodiumMg: new Map(),
+    calciumMg: new Map(),
+    ironMg: new Map(),
+    potassiumMg: new Map(),
+    vitaminAIu: new Map(),
+    vitaminCMg: new Map(),
+    vitaminDMcg: new Map(),
+  };
+
+  for (const t of entries) {
+    if (t.sourceType !== "journal" || !t.transcriptText || t.journalCategory !== "nutrition") continue;
+    let itemDayKey: string | null = null;
+    if (
+      typeof t.journalEntryYear === "number" &&
+      typeof t.journalEntryMonth === "number" &&
+      typeof t.journalEntryDay === "number"
+    ) {
+      itemDayKey = toDayKey(new Date(t.journalEntryYear, t.journalEntryMonth - 1, t.journalEntryDay));
+    } else if (t.createdAt) {
+      const d = new Date(t.createdAt);
+      if (!Number.isNaN(d.getTime())) itemDayKey = toDayKey(d);
+    }
+    if (itemDayKey !== dayKey) continue;
+
+    const label = getNutritionContributorLabel(t);
+    for (const { key, pattern } of NUTRITION_FACT_PATTERNS) {
+      const value = extractEstimatedNumber(t.transcriptText, pattern);
+      if (value == null || value <= 0) continue;
+      perKeyTotalsByLabel[key].set(label, (perKeyTotalsByLabel[key].get(label) ?? 0) + value);
+    }
+  }
+
+  const result: NutritionFactContributorsByKey = {};
+  for (const { key } of NUTRITION_FACT_PATTERNS) {
+    const contributors = Array.from(perKeyTotalsByLabel[key].entries())
+      .map(([label, value]) => ({ label, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 3);
+    if (contributors.length > 0) result[key] = contributors;
   }
   return result;
 }
@@ -2557,6 +2675,32 @@ type ReusableJournalSuggestion = {
   canonicalName: string;
   displayName: string;
   sampleEntry: string;
+  nutritionSnapshot?: {
+    calories?: number | null;
+    proteinGrams?: number | null;
+    carbsGrams?: number | null;
+    fatGrams?: number | null;
+    facts?: {
+      totalCarbohydratesGrams?: number | null;
+      dietaryFiberGrams?: number | null;
+      sugarGrams?: number | null;
+      addedSugarsGrams?: number | null;
+      sugarAlcoholsGrams?: number | null;
+      netCarbsGrams?: number | null;
+      saturatedFatGrams?: number | null;
+      transFatGrams?: number | null;
+      polyunsaturatedFatGrams?: number | null;
+      monounsaturatedFatGrams?: number | null;
+      cholesterolMg?: number | null;
+      sodiumMg?: number | null;
+      calciumMg?: number | null;
+      ironMg?: number | null;
+      potassiumMg?: number | null;
+      vitaminAIu?: number | null;
+      vitaminCMg?: number | null;
+      vitaminDMcg?: number | null;
+    };
+  };
   usageCount: number;
   lastUsedAt: string;
 };
@@ -3788,6 +3932,9 @@ export default function ChatPage() {
   const [weeklySummaryLoading, setWeeklySummaryLoading] = useState(false);
   const [weeklySummaryError, setWeeklySummaryError] = useState<string | null>(null);
   const [nutritionDayViewModalOpen, setNutritionDayViewModalOpen] = useState(false);
+  const [nutritionDayViewExpandedContributors, setNutritionDayViewExpandedContributors] = useState<
+    Partial<Record<keyof NutritionFactsDaySummary, boolean>>
+  >({});
   const [weeklySummaryResult, setWeeklySummaryResult] = useState<{
     weekOffset: number;
     weekStartDayKey: string;
@@ -4171,12 +4318,12 @@ export default function ChatPage() {
         };
         setCalorieTrackerResult(nextResult);
         if (persist) {
-          setCalorieTrackerStep("result");
-          refetchTranscripts();
-          setJournalEntryJustSaved(true);
-          if (typeof window !== "undefined") {
-            window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
-          }
+        setCalorieTrackerStep("result");
+        refetchTranscripts();
+        setJournalEntryJustSaved(true);
+        if (typeof window !== "undefined") {
+          window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
+        }
         }
         return nextResult;
       } catch (err) {
@@ -4191,45 +4338,76 @@ export default function ChatPage() {
     [calorieTrackerCustomTag, calorieTrackerEntryDate, calorieTrackerInput, refetchTranscripts]
   );
 
+  const buildCalorieTrackerReviewDraftFromNutrition = useCallback(
+    (nutrition: {
+      calories?: number | null;
+      proteinGrams?: number | null;
+      carbsGrams?: number | null;
+      fatGrams?: number | null;
+      facts?: {
+        totalCarbohydratesGrams?: number | null;
+        dietaryFiberGrams?: number | null;
+        sugarGrams?: number | null;
+        addedSugarsGrams?: number | null;
+        sugarAlcoholsGrams?: number | null;
+        netCarbsGrams?: number | null;
+        saturatedFatGrams?: number | null;
+        transFatGrams?: number | null;
+        polyunsaturatedFatGrams?: number | null;
+        monounsaturatedFatGrams?: number | null;
+        cholesterolMg?: number | null;
+        sodiumMg?: number | null;
+        calciumMg?: number | null;
+        ironMg?: number | null;
+        potassiumMg?: number | null;
+        vitaminAIu?: number | null;
+        vitaminCMg?: number | null;
+        vitaminDMcg?: number | null;
+      };
+    }): CalorieTrackerReviewDraft => {
+      const toDraftString = (value: number | null | undefined) => (value == null ? "" : String(value));
+      return {
+        calories: toDraftString(nutrition.calories),
+        proteinGrams: toDraftString(nutrition.proteinGrams),
+        carbsGrams: toDraftString(nutrition.carbsGrams),
+        fatGrams: toDraftString(nutrition.fatGrams),
+        totalCarbohydratesGrams: toDraftString(nutrition.facts?.totalCarbohydratesGrams),
+        dietaryFiberGrams: toDraftString(nutrition.facts?.dietaryFiberGrams),
+        sugarGrams: toDraftString(nutrition.facts?.sugarGrams),
+        addedSugarsGrams: toDraftString(nutrition.facts?.addedSugarsGrams),
+        sugarAlcoholsGrams: toDraftString(nutrition.facts?.sugarAlcoholsGrams),
+        netCarbsGrams: toDraftString(nutrition.facts?.netCarbsGrams),
+        saturatedFatGrams: toDraftString(nutrition.facts?.saturatedFatGrams),
+        transFatGrams: toDraftString(nutrition.facts?.transFatGrams),
+        polyunsaturatedFatGrams: toDraftString(nutrition.facts?.polyunsaturatedFatGrams),
+        monounsaturatedFatGrams: toDraftString(nutrition.facts?.monounsaturatedFatGrams),
+        cholesterolMg: toDraftString(nutrition.facts?.cholesterolMg),
+        sodiumMg: toDraftString(nutrition.facts?.sodiumMg),
+        calciumMg: toDraftString(nutrition.facts?.calciumMg),
+        ironMg: toDraftString(nutrition.facts?.ironMg),
+        potassiumMg: toDraftString(nutrition.facts?.potassiumMg),
+        vitaminAIu: toDraftString(nutrition.facts?.vitaminAIu),
+        vitaminCMg: toDraftString(nutrition.facts?.vitaminCMg),
+        vitaminDMcg: toDraftString(nutrition.facts?.vitaminDMcg),
+      };
+    },
+    []
+  );
+
   const previewCalorieTrackerForReview = useCallback(
     async (answers: string[]) => {
       const result = await finalizeCalorieTracker(answers, { persist: false });
       if (!result) return;
       if (result.nutrition) {
-        const toDraftString = (value: number | null | undefined) =>
-          value == null ? "" : String(value);
-        setCalorieTrackerReviewDraft({
-          calories: toDraftString(result.nutrition.calories),
-          proteinGrams: toDraftString(result.nutrition.proteinGrams),
-          carbsGrams: toDraftString(result.nutrition.carbsGrams),
-          fatGrams: toDraftString(result.nutrition.fatGrams),
-          totalCarbohydratesGrams: toDraftString(result.nutrition.facts?.totalCarbohydratesGrams),
-          dietaryFiberGrams: toDraftString(result.nutrition.facts?.dietaryFiberGrams),
-          sugarGrams: toDraftString(result.nutrition.facts?.sugarGrams),
-          addedSugarsGrams: toDraftString(result.nutrition.facts?.addedSugarsGrams),
-          sugarAlcoholsGrams: toDraftString(result.nutrition.facts?.sugarAlcoholsGrams),
-          netCarbsGrams: toDraftString(result.nutrition.facts?.netCarbsGrams),
-          saturatedFatGrams: toDraftString(result.nutrition.facts?.saturatedFatGrams),
-          transFatGrams: toDraftString(result.nutrition.facts?.transFatGrams),
-          polyunsaturatedFatGrams: toDraftString(result.nutrition.facts?.polyunsaturatedFatGrams),
-          monounsaturatedFatGrams: toDraftString(result.nutrition.facts?.monounsaturatedFatGrams),
-          cholesterolMg: toDraftString(result.nutrition.facts?.cholesterolMg),
-          sodiumMg: toDraftString(result.nutrition.facts?.sodiumMg),
-          calciumMg: toDraftString(result.nutrition.facts?.calciumMg),
-          ironMg: toDraftString(result.nutrition.facts?.ironMg),
-          potassiumMg: toDraftString(result.nutrition.facts?.potassiumMg),
-          vitaminAIu: toDraftString(result.nutrition.facts?.vitaminAIu),
-          vitaminCMg: toDraftString(result.nutrition.facts?.vitaminCMg),
-          vitaminDMcg: toDraftString(result.nutrition.facts?.vitaminDMcg),
-        });
+        setCalorieTrackerReviewDraft(buildCalorieTrackerReviewDraftFromNutrition(result.nutrition));
         setCalorieTrackerReviewAnswers(answers);
         setCalorieTrackerStep("review");
-        return;
-      }
+      return;
+    }
       // Fallback safety: if nutrition estimate is unexpectedly absent, save directly.
       await finalizeCalorieTracker(answers, { persist: true });
     },
-    [finalizeCalorieTracker]
+    [buildCalorieTrackerReviewDraftFromNutrition, finalizeCalorieTracker]
   );
 
 
@@ -4628,6 +4806,15 @@ export default function ChatPage() {
     () => summarizeNutritionFactsForDay(journalEntriesSorted, selectedLandingDayKey),
     [journalEntriesSorted, selectedLandingDayKey]
   );
+  const selectedLandingDayNutritionFactContributors = useMemo(
+    () => summarizeNutritionFactContributorsForDay(journalEntriesSorted, selectedLandingDayKey),
+    [journalEntriesSorted, selectedLandingDayKey]
+  );
+  useEffect(() => {
+    if (!nutritionDayViewModalOpen) {
+      setNutritionDayViewExpandedContributors({});
+    }
+  }, [nutritionDayViewModalOpen, selectedLandingDayKey]);
   const activeNutritionReportSnapshot = useMemo(
     () =>
       summarizeNutritionForDay(
@@ -11206,56 +11393,56 @@ export default function ChatPage() {
                                 </button>
                                 <div className={`${landingJournalingExpandedCard === "snapshot" ? "block" : "hidden"} sm:block px-3 pb-3 sm:pt-3`}>
                                   <p className="hidden sm:block mb-2 text-sm font-semibold text-foreground">Today snapshot</p>
-                                  <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-2">
+                            <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-2">
                                     <button
                                       type="button"
                                       onClick={() => setNutritionDayViewModalOpen(true)}
                                       className="min-w-0 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:!bg-neutral-900 p-2 sm:p-1.5 text-left hover:bg-neutral-100 dark:hover:!bg-neutral-800/80 active:bg-neutral-100 dark:active:bg-neutral-800/90 focus-visible:bg-neutral-100 dark:focus-visible:bg-neutral-800/80 transition-colors [-webkit-tap-highlight-color:transparent]"
                                     >
-                                      <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2">
                                         <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-accent/15 dark:bg-accent/30">
-                                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                                            <path d="M12 3s2.5 2.2 2.5 5c0 1.6-1.3 2.7-2.5 3.9-1.2-1.2-2.5-2.3-2.5-3.9 0-2.8 2.5-5 2.5-5Z" />
-                                            <path d="M7 13a5 5 0 0 0 10 0c0-3.4-2.7-5.4-5-7.6-2.3 2.2-5 4.2-5 7.6Z" />
-                                          </svg>
-                                        </span>
-                                        <p className="text-xs sm:text-base font-semibold text-foreground">Calories</p>
-                                      </div>
-                                      <div className="mt-1 grid grid-cols-3 gap-2 pr-2">
-                                        <div className="min-w-0 flex flex-col">
-                                          <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                                  <path d="M12 3s2.5 2.2 2.5 5c0 1.6-1.3 2.7-2.5 3.9-1.2-1.2-2.5-2.3-2.5-3.9 0-2.8 2.5-5 2.5-5Z" />
+                                  <path d="M7 13a5 5 0 0 0 10 0c0-3.4-2.7-5.4-5-7.6-2.3 2.2-5 4.2-5 7.6Z" />
+                                </svg>
+                              </span>
+                              <p className="text-xs sm:text-base font-semibold text-foreground">Calories</p>
+                            </div>
+                            <div className="mt-1 grid grid-cols-3 gap-2 pr-2">
+                              <div className="min-w-0 flex flex-col">
+                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
                                             <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.caloriesFood}</span>
-                                          </p>
-                                          <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Food</p>
-                                        </div>
-                                        <div className="min-w-0 flex flex-col">
-                                          <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
+                                </p>
+                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Food</p>
+                              </div>
+                              <div className="min-w-0 flex flex-col">
+                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
                                             <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.caloriesExercise}</span>
-                                          </p>
-                                          <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Exercise</p>
-                                        </div>
-                                        <div className="min-w-0 flex flex-col">
-                                          <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
+                                </p>
+                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Exercise</p>
+                              </div>
+                              <div className="min-w-0 flex flex-col">
+                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
                                             <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.caloriesRemaining}</span>
                                             <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">/{nutritionGoals.caloriesTarget}</span>
-                                          </p>
-                                          <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Remaining</p>
-                                          <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
-                                            <div
-                                              className={`h-full rounded-full transition-colors ${getCaloriesRemainingMeterFillClass(
-                                                selectedLandingDayNutrition.caloriesRemaining,
-                                                nutritionGoals.caloriesTarget
-                                              )}`}
-                                              style={{
-                                                width: getMacroMeterWidth(
-                                                  selectedLandingDayNutrition.caloriesRemaining,
-                                                  nutritionGoals.caloriesTarget
-                                                ),
-                                              }}
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
+                                </p>
+                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Remaining</p>
+                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
+                                  <div
+                                    className={`h-full rounded-full transition-colors ${getCaloriesRemainingMeterFillClass(
+                                      selectedLandingDayNutrition.caloriesRemaining,
+                                      nutritionGoals.caloriesTarget
+                                    )}`}
+                                    style={{
+                                      width: getMacroMeterWidth(
+                                        selectedLandingDayNutrition.caloriesRemaining,
+                                        nutritionGoals.caloriesTarget
+                                      ),
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
                                     </button>
 
                                     <button
@@ -11263,82 +11450,82 @@ export default function ChatPage() {
                                       onClick={() => setNutritionDayViewModalOpen(true)}
                                       className="min-w-0 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:!bg-neutral-900 p-2 sm:p-1.5 text-left hover:bg-neutral-100 dark:hover:!bg-neutral-800/80 active:bg-neutral-100 dark:active:bg-neutral-800/90 focus-visible:bg-neutral-100 dark:focus-visible:bg-neutral-800/80 transition-colors [-webkit-tap-highlight-color:transparent]"
                                     >
-                                      <div className="flex items-center gap-2">
-                                        <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
-                                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
-                                            <circle cx="12" cy="12" r="8" stroke="#D946EF" strokeWidth="2.4" strokeDasharray="9 4" strokeLinecap="round" />
-                                          </svg>
-                                        </span>
-                                        <p className="text-xs sm:text-base font-semibold text-foreground">Macros (g)</p>
-                                      </div>
-                                      <div className="mt-1 grid grid-cols-3 gap-2 pr-1">
-                                        <div className="min-w-0">
-                                          <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                              <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
+                                  <circle cx="12" cy="12" r="8" stroke="#D946EF" strokeWidth="2.4" strokeDasharray="9 4" strokeLinecap="round" />
+                                </svg>
+                              </span>
+                              <p className="text-xs sm:text-base font-semibold text-foreground">Macros (g)</p>
+                            </div>
+                            <div className="mt-1 grid grid-cols-3 gap-2 pr-1">
+                              <div className="min-w-0">
+                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
                                             <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.carbsGrams}</span>
                                             <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">/{nutritionGoals.carbsGrams}</span>
-                                          </p>
-                                          <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Carbs</p>
-                                          <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
-                                            <div
-                                              className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
-                                                "carbs",
-                                                selectedLandingDayNutrition.carbsGrams,
-                                                nutritionGoals.carbsGrams
-                                              )}`}
-                                              style={{
-                                                width: getMacroMeterWidth(
-                                                  selectedLandingDayNutrition.carbsGrams,
-                                                  nutritionGoals.carbsGrams
-                                                ),
-                                              }}
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="min-w-0">
-                                          <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
+                                </p>
+                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Carbs</p>
+                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
+                                  <div
+                                    className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
+                                      "carbs",
+                                      selectedLandingDayNutrition.carbsGrams,
+                                      nutritionGoals.carbsGrams
+                                    )}`}
+                                    style={{
+                                      width: getMacroMeterWidth(
+                                        selectedLandingDayNutrition.carbsGrams,
+                                        nutritionGoals.carbsGrams
+                                      ),
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                              <div className="min-w-0">
+                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
                                             <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.proteinGrams}</span>
                                             <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">/{nutritionGoals.proteinGrams}</span>
-                                          </p>
-                                          <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Protein</p>
-                                          <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
-                                            <div
-                                              className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
-                                                "protein",
-                                                selectedLandingDayNutrition.proteinGrams,
-                                                nutritionGoals.proteinGrams
-                                              )}`}
-                                              style={{
-                                                width: getMacroMeterWidth(
-                                                  selectedLandingDayNutrition.proteinGrams,
-                                                  nutritionGoals.proteinGrams
-                                                ),
-                                              }}
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="min-w-0">
-                                          <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
+                                </p>
+                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Protein</p>
+                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
+                                  <div
+                                    className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
+                                      "protein",
+                                      selectedLandingDayNutrition.proteinGrams,
+                                      nutritionGoals.proteinGrams
+                                    )}`}
+                                    style={{
+                                      width: getMacroMeterWidth(
+                                        selectedLandingDayNutrition.proteinGrams,
+                                        nutritionGoals.proteinGrams
+                                      ),
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                              <div className="min-w-0">
+                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
                                             <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.fatGrams}</span>
                                             <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">/{nutritionGoals.fatGrams}</span>
-                                          </p>
-                                          <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Fat</p>
-                                          <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
-                                            <div
-                                              className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
-                                                "fat",
-                                                selectedLandingDayNutrition.fatGrams,
-                                                nutritionGoals.fatGrams
-                                              )}`}
-                                              style={{
-                                                width: getMacroMeterWidth(
-                                                  selectedLandingDayNutrition.fatGrams,
-                                                  nutritionGoals.fatGrams
-                                                ),
-                                              }}
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
+                                </p>
+                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Fat</p>
+                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
+                                  <div
+                                    className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
+                                      "fat",
+                                      selectedLandingDayNutrition.fatGrams,
+                                      nutritionGoals.fatGrams
+                                    )}`}
+                                    style={{
+                                      width: getMacroMeterWidth(
+                                        selectedLandingDayNutrition.fatGrams,
+                                        nutritionGoals.fatGrams
+                                      ),
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
                                     </button>
                                   </div>
 
@@ -11397,7 +11584,7 @@ export default function ChatPage() {
                                     </span>
                                   </button>
                                 ))}
-                              </div>
+                          </div>
                             </div>
                           ) : (
                             <div className="space-y-2">
@@ -11610,7 +11797,7 @@ export default function ChatPage() {
                                 Last 7 days
                               </p>
                             </div>
-                    </div>
+                      </div>
                           <div ref={landingDaysScrollerDesktopRef} className="hidden sm:block overflow-x-auto">
                             <div className="flex min-w-max gap-1.5 sm:grid sm:grid-cols-7 sm:gap-1.5 sm:min-w-0">
                               {landingCalendarDays.map(({ key, date }) => {
@@ -12123,9 +12310,9 @@ export default function ChatPage() {
                 )}
                 </button>
               )}
-              </div>
-              </div>
-            )}
+                  </div>
+                </div>
+              )}
               <p className="mt-1.5 text-center text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 max-w-2xl w-full px-2">
                 FML Labs is AI and can make mistakes.
               </p>
@@ -15251,9 +15438,9 @@ export default function ChatPage() {
                 ].map((opt) => {
                   const selected = weightTrackerRange === opt.key;
                   return (
-                    <button
+                <button
                       key={opt.key}
-                      type="button"
+                  type="button"
                       onClick={() => setWeightTrackerRange(opt.key as "week" | "month" | "year")}
                       className={`px-3 py-1.5 rounded-lg border text-sm transition-colors ${
                         selected
@@ -15352,12 +15539,12 @@ export default function ChatPage() {
                             month: "long",
                             day: "numeric",
                             year: "numeric",
-                            hour: "numeric",
-                            minute: "2-digit",
-                          })}
-                        </p>
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </p>
                       </div>
-                    ))}
+              ))}
                   </div>
                 )}
               </div>
@@ -15406,37 +15593,44 @@ export default function ChatPage() {
                   <p className="text-sm font-medium text-neutral-600 dark:text-neutral-300">Nutrition Facts</p>
                 </div>
                 <div className="divide-y divide-neutral-200 dark:divide-neutral-700">
-                  {[
-                    { label: "Calories", value: selectedLandingDayNutritionFacts.calories, unit: "kcal" },
-                    { label: "Total Carbohydrates", value: selectedLandingDayNutritionFacts.totalCarbohydratesGrams, unit: "g" },
-                    { label: "Dietary Fiber", value: selectedLandingDayNutritionFacts.dietaryFiberGrams, unit: "g", indent: true },
-                    { label: "Sugar", value: selectedLandingDayNutritionFacts.sugarGrams, unit: "g", indent: true },
-                    { label: "Added Sugars", value: selectedLandingDayNutritionFacts.addedSugarsGrams, unit: "g", indent: true },
-                    { label: "Sugar Alcohols", value: selectedLandingDayNutritionFacts.sugarAlcoholsGrams, unit: "g", indent: true },
-                    { label: "Net Carbs", value: selectedLandingDayNutritionFacts.netCarbsGrams, unit: "g", indent: true },
-                    { label: "Protein", value: selectedLandingDayNutritionFacts.proteinGrams, unit: "g" },
-                    { label: "Total Fat", value: selectedLandingDayNutritionFacts.totalFatGrams, unit: "g" },
-                    { label: "Saturated Fat", value: selectedLandingDayNutritionFacts.saturatedFatGrams, unit: "g", indent: true },
-                    { label: "Trans Fat", value: selectedLandingDayNutritionFacts.transFatGrams, unit: "g", indent: true },
-                    { label: "Polyunsaturated Fat", value: selectedLandingDayNutritionFacts.polyunsaturatedFatGrams, unit: "g", indent: true },
-                    { label: "Monounsaturated Fat", value: selectedLandingDayNutritionFacts.monounsaturatedFatGrams, unit: "g", indent: true },
-                    { label: "Cholesterol", value: selectedLandingDayNutritionFacts.cholesterolMg, unit: "mg" },
-                    { label: "Sodium", value: selectedLandingDayNutritionFacts.sodiumMg, unit: "mg" },
-                    { label: "Calcium", value: selectedLandingDayNutritionFacts.calciumMg, unit: "mg" },
-                    { label: "Iron", value: selectedLandingDayNutritionFacts.ironMg, unit: "mg" },
-                    { label: "Potassium", value: selectedLandingDayNutritionFacts.potassiumMg, unit: "mg" },
-                    { label: "Vitamin A", value: selectedLandingDayNutritionFacts.vitaminAIu, unit: "IU" },
-                    { label: "Vitamin C", value: selectedLandingDayNutritionFacts.vitaminCMg, unit: "mg" },
-                    { label: "Vitamin D", value: selectedLandingDayNutritionFacts.vitaminDMcg, unit: "mcg" },
-                  ].map((row) => (
-                    <div key={row.label} className={`flex items-center justify-between gap-3 px-3 py-2 ${row.indent ? "pl-6" : ""}`}>
-                      <p className="text-sm text-foreground">{row.label}</p>
-                      <p className="text-sm text-neutral-600 dark:text-neutral-300">
-                        {row.value == null ? "-" : `${row.value} ${row.unit}`}
+                  {NUTRITION_FACT_DAY_VIEW_ROWS.map((row) => (
+                    <div key={row.label} className={`flex items-start justify-between gap-3 px-3 py-2 ${row.indent ? "pl-6" : ""}`}>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm text-foreground">{row.label}</p>
+                          {(selectedLandingDayNutritionFactContributors[row.key] ?? []).length > 0 && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setNutritionDayViewExpandedContributors((prev) => ({
+                                  ...prev,
+                                  [row.key]: !prev[row.key],
+                                }))
+                              }
+                              className="text-[11px] px-1.5 py-0.5 rounded border border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                            >
+                              {nutritionDayViewExpandedContributors[row.key] ? "Hide top 3" : "Show top 3"}
+                            </button>
+                          )}
+                  </div>
+                        {nutritionDayViewExpandedContributors[row.key] &&
+                          (selectedLandingDayNutritionFactContributors[row.key] ?? []).length > 0 && (
+                            <div className="mt-1 space-y-0.5">
+                              {(selectedLandingDayNutritionFactContributors[row.key] ?? []).slice(0, 3).map((item, idx) => (
+                                <p key={`${row.key}-${item.label}-${idx}`} className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-tight">
+                                  {idx + 1}. {item.label} {Math.round(item.value)}
+                                  {row.unit}
+                                </p>
+                ))}
+              </div>
+                          )}
+                      </div>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-300 whitespace-nowrap">
+                        {selectedLandingDayNutritionFacts[row.key] == null ? "-" : `${selectedLandingDayNutritionFacts[row.key]} ${row.unit}`}
                       </p>
-                    </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
+              </div>
               </div>
             </div>
           </div>
@@ -15457,8 +15651,8 @@ export default function ChatPage() {
           >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground pr-2">{landingActivityGroupModal.title}</h2>
-              <button
-                type="button"
+                <button
+                  type="button"
                 onClick={() => setLandingActivityGroupModal(null)}
                 className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                 aria-label={getUiTranslations(language).close}
@@ -15467,7 +15661,7 @@ export default function ChatPage() {
                   <path d="M18 6 6 18" />
                   <path d="m6 6 12 12" />
                 </svg>
-              </button>
+                </button>
             </div>
             <div className="p-4 space-y-2 overflow-y-auto">
               {landingActivityGroupModal.items.map((item) => (
@@ -15757,7 +15951,7 @@ export default function ChatPage() {
                   </div>
                   <div className="space-y-1.5">
                     <p className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
-                      Reuse from your history
+                      Reuse tagged items
                     </p>
                     {calorieTrackerSuggestionsLoading ? (
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">Loading suggestions...</p>
@@ -15768,24 +15962,63 @@ export default function ChatPage() {
                             <button
                               key={item.id}
                               type="button"
-                              onClick={() =>
-                                setCalorieTrackerInput((prev) =>
-                                  prev.trim()
-                                    ? `${prev.trim()}\n${item.sampleEntry}`
-                                    : item.sampleEntry
-                                )
-                              }
+                              onClick={() => {
+                                setCalorieTrackerInput(item.sampleEntry || "");
+                                setCalorieTrackerCustomTag(item.displayName || item.canonicalName.replace(/_/g, " "));
+                                if (
+                                  selectedLandingJournalChip === "nutrition" &&
+                                  item.nutritionSnapshot
+                                ) {
+                                  setCalorieTrackerResult({
+                                    intent: "nutrition",
+                                    confidence: "high",
+                                    assumptions: [],
+                                    nutrition: {
+                                      calories: item.nutritionSnapshot.calories ?? null,
+                                      proteinGrams: item.nutritionSnapshot.proteinGrams ?? null,
+                                      carbsGrams: item.nutritionSnapshot.carbsGrams ?? null,
+                                      fatGrams: item.nutritionSnapshot.fatGrams ?? null,
+                                      facts: {
+                                        totalCarbohydratesGrams: item.nutritionSnapshot.facts?.totalCarbohydratesGrams ?? null,
+                                        dietaryFiberGrams: item.nutritionSnapshot.facts?.dietaryFiberGrams ?? null,
+                                        sugarGrams: item.nutritionSnapshot.facts?.sugarGrams ?? null,
+                                        addedSugarsGrams: item.nutritionSnapshot.facts?.addedSugarsGrams ?? null,
+                                        sugarAlcoholsGrams: item.nutritionSnapshot.facts?.sugarAlcoholsGrams ?? null,
+                                        netCarbsGrams: item.nutritionSnapshot.facts?.netCarbsGrams ?? null,
+                                        saturatedFatGrams: item.nutritionSnapshot.facts?.saturatedFatGrams ?? null,
+                                        transFatGrams: item.nutritionSnapshot.facts?.transFatGrams ?? null,
+                                        polyunsaturatedFatGrams: item.nutritionSnapshot.facts?.polyunsaturatedFatGrams ?? null,
+                                        monounsaturatedFatGrams: item.nutritionSnapshot.facts?.monounsaturatedFatGrams ?? null,
+                                        cholesterolMg: item.nutritionSnapshot.facts?.cholesterolMg ?? null,
+                                        sodiumMg: item.nutritionSnapshot.facts?.sodiumMg ?? null,
+                                        calciumMg: item.nutritionSnapshot.facts?.calciumMg ?? null,
+                                        ironMg: item.nutritionSnapshot.facts?.ironMg ?? null,
+                                        potassiumMg: item.nutritionSnapshot.facts?.potassiumMg ?? null,
+                                        vitaminAIu: item.nutritionSnapshot.facts?.vitaminAIu ?? null,
+                                        vitaminCMg: item.nutritionSnapshot.facts?.vitaminCMg ?? null,
+                                        vitaminDMcg: item.nutritionSnapshot.facts?.vitaminDMcg ?? null,
+                                      },
+                                      notes: "",
+                                    },
+                                  });
+                                  setCalorieTrackerReviewAnswers([]);
+                                  setCalorieTrackerReviewDraft(
+                                    buildCalorieTrackerReviewDraftFromNutrition(item.nutritionSnapshot)
+                                  );
+                                  setCalorieTrackerStep("review");
+                                }
+                              }}
                               className="shrink-0 rounded-full border border-neutral-200 dark:border-neutral-700 px-3 py-1.5 text-xs text-neutral-800 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                              title={item.sampleEntry}
+                              title={`${item.sampleEntry}${item.nutritionSnapshot ? "\n\nSelecting this tag reuses saved nutrition values." : ""}`}
                             >
-                              {item.displayName}
+                              #{(item.displayName || item.canonicalName).trim().replace(/\s+/g, "-")}
                             </button>
                           ))}
                         </div>
                       </div>
                     ) : (
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                        Your frequent items will appear here after you save a few entries.
+                        Tagged items will appear here after you save entries with tags.
                       </p>
                     )}
                   </div>
@@ -16796,44 +17029,44 @@ export default function ChatPage() {
                 </div>
                 {mentorFiltersSectionOpen && (
                   <div className="mt-2 space-y-2">
-                  <input
-                    type="search"
-                    value={mentorCatalogSearch}
-                    onChange={(e) => setMentorCatalogSearch(e.target.value)}
-                    placeholder={getLandingTranslations(language).mentorOneOnOneSearchPlaceholder}
-                    className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-                  />
-                  {figuresData?.categories && figuresData.categories.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setMentorCatalogCategoryId(null)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                          mentorCatalogCategoryId === null
-                            ? "bg-accent text-white"
-                            : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                        }`}
-                      >
-                        {getLandingTranslations(language).mentorOneOnOneAllCategories}
-                      </button>
-                      {figuresData.categories.map((cat) => (
-                        <button
-                          key={cat.id}
-                          type="button"
-                          onClick={() =>
-                            setMentorCatalogCategoryId((prev) => (prev === cat.id ? null : cat.id))
-                          }
-                          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                            mentorCatalogCategoryId === cat.id
-                              ? "bg-accent text-white"
-                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                          }`}
-                        >
-                          {cat.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+              <input
+                type="search"
+                value={mentorCatalogSearch}
+                onChange={(e) => setMentorCatalogSearch(e.target.value)}
+                placeholder={getLandingTranslations(language).mentorOneOnOneSearchPlaceholder}
+                className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
+              />
+              {figuresData?.categories && figuresData.categories.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setMentorCatalogCategoryId(null)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                      mentorCatalogCategoryId === null
+                        ? "bg-accent text-white"
+                        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                    }`}
+                  >
+                    {getLandingTranslations(language).mentorOneOnOneAllCategories}
+                  </button>
+                  {figuresData.categories.map((cat) => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() =>
+                        setMentorCatalogCategoryId((prev) => (prev === cat.id ? null : cat.id))
+                      }
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                        mentorCatalogCategoryId === cat.id
+                          ? "bg-accent text-white"
+                          : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                      }`}
+                    >
+                      {cat.name}
+                    </button>
+                  ))}
+                </div>
+              )}
                   </div>
                 )}
               </div>
