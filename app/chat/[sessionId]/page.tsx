@@ -8653,10 +8653,10 @@ export default function ChatPage() {
           <Link
             href="/chat/new"
             onClick={handleBrandLinkClick}
-            className={`group inline-flex items-center gap-1.5 font-semibold text-[12px] sm:text-lg min-w-0 ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
+            className={`group inline-flex flex-1 min-w-0 pr-2 items-center gap-1.5 font-semibold tracking-tight text-[14px] xl:text-[15px] ${incognitoMode ? "text-neutral-100 dark:text-neutral-900" : "text-foreground"}`}
             title={PRODUCT_TAGLINE}
           >
-            <span aria-hidden className="inline-flex items-center">
+            <span aria-hidden className="inline-flex items-center shrink-0">
               <Image
                 src="/icon.svg"
                 alt=""
@@ -8675,7 +8675,7 @@ export default function ChatPage() {
             <span className="whitespace-nowrap">f*** my life → figure my life</span>
             <span
               aria-hidden
-              className={`text-sm transition-all duration-300 ${
+              className={`shrink-0 text-sm transition-all duration-300 ${
                 brandLogoParty ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"
               }`}
             >
