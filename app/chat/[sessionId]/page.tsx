@@ -12788,12 +12788,16 @@ export default function ChatPage() {
               ? "pb-36 sm:pb-40 md:pb-0 overflow-hidden"
               : !shouldHideBottomBar && isAnonymous
                 ? "pb-36 sm:pb-40 md:pb-0 overflow-hidden"
-                : "pb-0 overflow-hidden"
+                : showAndroidLandingTabs
+                  ? "pb-24 sm:pb-0 overflow-hidden"
+                  : "pb-0 overflow-hidden"
           } ${convertToDeepSuccess ? "animate-convert-to-deep" : ""}`}
         >
           <div
             ref={messagesScrollRef}
-            className="flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto flex flex-col mobile-hide-scrollbar hide-scrollbar"
+            className={`flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto flex flex-col mobile-hide-scrollbar hide-scrollbar ${
+              showAndroidLandingTabs ? "pb-28" : ""
+            }`}
           >
           {currentSession?.isCollapsed && collapsedSummary ? (
             <div className="min-h-full flex items-start md:items-center justify-center p-3 sm:p-4">
@@ -13018,7 +13022,9 @@ export default function ChatPage() {
             }`}
           >
             {messages.length === 0 && (
-              <div className="flex w-full min-w-0 max-w-2xl lg:max-w-4xl flex-col items-center text-center px-2 sm:px-4 overflow-x-hidden">
+              <div className={`flex w-full min-w-0 max-w-2xl lg:max-w-4xl flex-col items-center text-center px-2 sm:px-4 overflow-x-hidden ${
+                showAndroidLandingTabs ? "pb-28" : ""
+              }`}>
                 <div className={`flex w-full max-w-full min-w-0 flex-col items-center justify-start space-y-4 lg:space-y-5 ${isAnonymous ? "min-h-[calc(100dvh-12rem)]" : ""}`}>
                 {mentorJournalBridgePending ? (
                   <div
@@ -16729,9 +16735,9 @@ export default function ChatPage() {
         <FeedbackModal onClose={() => setFeedbackModalOpen(false)} />
       )}
       {showAndroidLandingTabs && (
-        <div className="fixed left-1/2 -translate-x-1/2 bottom-[calc(env(safe-area-inset-bottom)+10px)] z-40 pointer-events-none sm:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 pointer-events-none sm:hidden flex justify-center pb-[calc(env(safe-area-inset-bottom)+8px)]">
           <div
-            className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-neutral-200/80 dark:border-neutral-600/70 bg-white/55 dark:bg-neutral-900/50 backdrop-blur-md px-2.5 py-1.5 text-[13px] shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
+            className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-neutral-200/80 dark:border-neutral-600/70 bg-white/55 dark:bg-neutral-950/85 backdrop-blur-md px-2.5 py-1.5 text-[13px] shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
             aria-label="Landing tabs"
           >
             <button
