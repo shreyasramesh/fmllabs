@@ -3095,7 +3095,7 @@ const LANDING_ACTIVITY_GROUP_LABEL: Record<LandingActivityGroupKey, string> = {
 
 const LANDING_TAB_ACTIVITY_GROUP_ORDER: Record<LandingTab, LandingActivityGroupKey[]> = {
   journaling: ["journalRegular", "journalNutrition", "journalExercise", "journalWeight", "journalFocus"],
-  pomodoro: [],
+  pomodoro: ["journalFocus"],
   deepThinking: ["session", "perspectiveCard"],
 };
 
@@ -3230,7 +3230,7 @@ export default function ChatPage() {
   const [landingTab, setLandingTab] = useState<LandingTab>("journaling");
   const [landingJournalingExpandedCard, setLandingJournalingExpandedCard] = useState<
     "insights" | "snapshot" | null
-  >(null);
+  >("snapshot");
   const landingTabStorageReadyRef = useRef(false);
   const [selectedLandingDayKey, setSelectedLandingDayKey] = useState(() => toDayKey(new Date()));
   const [journalPanelSelectedDayKey, setJournalPanelSelectedDayKey] = useState(() => toDayKey(new Date()));
@@ -4356,6 +4356,10 @@ export default function ChatPage() {
   const [focusSessionTagInput, setFocusSessionTagInput] = useState("");
   const [customFocusTagInput, setCustomFocusTagInput] = useState("");
   const [customFocusMinutesInput, setCustomFocusMinutesInput] = useState("25");
+  const [customFocusTimeInput, setCustomFocusTimeInput] = useState(() => {
+    const now = new Date();
+    return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+  });
   const [focusTrackerLoading, setFocusTrackerLoading] = useState(false);
   const [focusTrackerSaving, setFocusTrackerSaving] = useState(false);
   const [focusTrackerError, setFocusTrackerError] = useState<string | null>(null);
@@ -5257,13 +5261,14 @@ export default function ChatPage() {
     return days;
   }, []);
 
-  const landingDayActivityCount = useMemo(() => {
+  const landingDayActivityCountForTab = useMemo(() => {
     const map = new Map<string, number>();
     for (const item of landingDayActivityItems) {
+      if (!landingActivityMatchesTab(item, landingTab)) continue;
       map.set(item.dayKey, (map.get(item.dayKey) ?? 0) + 1);
     }
     return map;
-  }, [landingDayActivityItems]);
+  }, [landingDayActivityItems, landingTab]);
 
   const selectedLandingDayActivityItems = useMemo(
     () =>
@@ -8243,14 +8248,34 @@ export default function ChatPage() {
       setFocusTrackerError("Custom focus minutes must be between 1 and 600.");
       return;
     }
-    const endedAt = new Date();
+    const match = /^(\d{2}):(\d{2})$/.exec(customFocusTimeInput.trim());
+    if (!match) {
+      setFocusTrackerError("Please choose a valid time for the custom focus entry.");
+      return;
+    }
+    const hour = Number.parseInt(match[1], 10);
+    const minute = Number.parseInt(match[2], 10);
+    if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+      setFocusTrackerError("Please choose a valid time for the custom focus entry.");
+      return;
+    }
+    const baseDate = selectedLandingDayDate ?? new Date();
+    const endedAt = new Date(baseDate);
+    endedAt.setHours(hour, minute, 0, 0);
     const startedAt = new Date(endedAt.getTime() - minutes * 60_000);
     const saved = await saveFocusSession(minutes, startedAt, endedAt, tag);
     if (saved) {
       setCustomFocusTagInput("");
       setCustomFocusMinutesInput("25");
     }
-  }, [customFocusMinutesInput, customFocusTagInput, focusTrackerSaving, saveFocusSession]);
+  }, [
+    customFocusMinutesInput,
+    customFocusTagInput,
+    customFocusTimeInput,
+    focusTrackerSaving,
+    saveFocusSession,
+    selectedLandingDayDate,
+  ]);
 
   useEffect(() => {
     if (isAnonymous || incognitoMode || !userId) return;
@@ -10269,7 +10294,7 @@ export default function ChatPage() {
                             const dayKey = toDayKey(cellDate);
                             const isSelected = dayKey === selectedLandingDayKey;
                             const isToday = dayKey === toDayKey(new Date());
-                            const hasActivity = (landingDayActivityCount.get(dayKey) ?? 0) > 0;
+                            const hasActivity = (landingDayActivityCountForTab.get(dayKey) ?? 0) > 0;
                             return (
                               <button
                                 key={dayKey}
@@ -10286,12 +10311,16 @@ export default function ChatPage() {
                               >
                                 {cellDate.getDate()}
                                 {hasActivity && (
-                                  <span
-                                    className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full ${
-                                      isSelected ? "bg-foreground" : "bg-accent"
-                                    }`}
-                                    aria-hidden
-                                  />
+                                  <>
+                                    <span
+                                      className="pointer-events-none absolute left-1 right-1 top-1/2 rotate-45 border-t border-black/70 dark:border-white/70"
+                                      aria-hidden
+                                    />
+                                    <span
+                                      className="pointer-events-none absolute left-1 right-1 top-1/2 -rotate-45 border-t border-black/70 dark:border-white/70"
+                                      aria-hidden
+                                    />
+                                  </>
                                 )}
                 </button>
                             );
@@ -12962,29 +12991,32 @@ export default function ChatPage() {
                                       </p>
                                     ) : (
                                       selectedLandingDayActivityGroups.map((group) => (
-                                        <div
+                                        <button
                                           key={`summary-${group.groupKey}`}
-                                          className="rounded-lg border border-neutral-200 dark:border-neutral-800 px-2.5 py-2"
+                                          type="button"
+                                          onClick={() => openLandingActivityGroupModal(group)}
+                                          className="w-full rounded-xl border border-neutral-200 dark:border-neutral-800 px-3 py-2.5 text-left bg-background hover:bg-neutral-50 dark:hover:bg-neutral-900/70 hover:border-neutral-300 dark:hover:border-neutral-700 transition-all duration-200 active:scale-[0.99]"
+                                          aria-label={`Open ${group.label}`}
                                         >
                                           <div className="flex items-center justify-between gap-2">
-                                            <p className="text-[11px] sm:text-xs lg:text-sm font-semibold uppercase tracking-wide text-neutral-600 dark:text-neutral-300">
-                                              {group.label}
-                                            </p>
-                                            <div className="flex items-center gap-2">
-                                              <p className="text-[10px] sm:text-xs lg:text-sm text-neutral-500 dark:text-neutral-400">
-                                                {group.items.length} item{group.items.length === 1 ? "" : "s"}
+                                            <div className="min-w-0">
+                                              <p className="text-[11px] sm:text-xs lg:text-sm font-semibold uppercase tracking-wide text-neutral-700 dark:text-neutral-200">
+                                                {group.label}
                                               </p>
-                                              <button
-                                                type="button"
-                                                onClick={() => openLandingActivityGroupModal(group)}
-                                                className="inline-flex items-center justify-center rounded-md border border-neutral-200 dark:border-neutral-800 px-2 py-0.5 text-[10px] sm:text-xs lg:text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                                                aria-label={`View ${group.label}`}
-                                              >
-                                                View
-                                              </button>
+                                              <p className="mt-0.5 text-[10px] sm:text-xs text-neutral-500 dark:text-neutral-400">
+                                                Tap to view entries
+                                              </p>
+                                            </div>
+                                            <div className="flex items-center gap-2 shrink-0">
+                                              <span className="inline-flex items-center justify-center rounded-full border border-neutral-200 dark:border-neutral-700 px-2 py-0.5 text-[10px] sm:text-xs text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-900">
+                                                {group.items.length} item{group.items.length === 1 ? "" : "s"}
+                                              </span>
+                                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-neutral-400 dark:text-neutral-500">
+                                                <path d="m9 18 6-6-6-6" />
+                                              </svg>
                                             </div>
                                           </div>
-                                        </div>
+                                        </button>
                                       ))
                                     )}
                                   </div>
@@ -13194,6 +13226,18 @@ export default function ChatPage() {
                                         className="w-full rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background px-2.5 py-1.5 text-xs sm:text-sm"
                                       />
                                     </div>
+                                    <div className="w-[150px] sm:w-[158px]">
+                                      <label className="mb-1 block text-[11px] text-neutral-500 dark:text-neutral-400">
+                                        Time
+                                      </label>
+                                      <input
+                                        type="time"
+                                        value={customFocusTimeInput}
+                                        onChange={(e) => setCustomFocusTimeInput(e.target.value)}
+                                        disabled={focusTrackerSaving}
+                                        className="w-full rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background px-2.5 py-1.5 text-xs sm:text-sm"
+                                      />
+                                    </div>
                                     <button
                                       type="button"
                                       onClick={() => void addCustomFocusEntry()}
@@ -13211,7 +13255,7 @@ export default function ChatPage() {
                                     {todayFocusSummary.rows.slice(0, 6).map((entry) => (
                                       <div
                                         key={entry.id}
-                                        className="flex items-center justify-between rounded-lg border border-neutral-200 dark:border-neutral-700 px-2.5 py-2"
+                                        className="flex items-start justify-between rounded-lg border border-neutral-200 dark:border-neutral-700 px-2.5 py-2"
                                       >
                                         <div className="min-w-0">
                                           <p className="text-xs sm:text-sm text-foreground">
@@ -13226,8 +13270,8 @@ export default function ChatPage() {
                                             </p>
                                           )}
                                         </div>
-                                        <div className="flex items-center gap-2">
-                                          <p className="text-xs sm:text-sm font-medium text-neutral-600 dark:text-neutral-300">
+                                        <div className="flex items-start gap-2 pt-0.5">
+                                          <p className="text-xs sm:text-sm font-medium leading-[1.2] text-neutral-600 dark:text-neutral-300">
                                             {entry.minutes} min
                                           </p>
                                           <button
@@ -13441,7 +13485,7 @@ export default function ChatPage() {
                                 <div className="flex min-w-max gap-1.5">
                                   {landingCalendarDays.map(({ key, date }) => {
                                     const selected = key === selectedLandingDayKey;
-                                    const hasActivity = (landingDayActivityCount.get(key) ?? 0) > 0;
+                                    const hasActivity = (landingDayActivityCountForTab.get(key) ?? 0) > 0;
                                     return (
                                       <button
                                         key={`mobile-landing-day-${key}`}
@@ -13461,7 +13505,10 @@ export default function ChatPage() {
                                           {date.getDate()}
                                         </span>
                                         {hasActivity && (
-                                          <span className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+                                          <>
+                                            <span className="pointer-events-none absolute left-1 right-1 top-1/2 rotate-45 border-t border-black/70 dark:border-white/70" aria-hidden />
+                                            <span className="pointer-events-none absolute left-1 right-1 top-1/2 -rotate-45 border-t border-black/70 dark:border-white/70" aria-hidden />
+                                          </>
                                         )}
                                       </button>
                                     );
@@ -13528,7 +13575,7 @@ export default function ChatPage() {
                             <div className="flex min-w-max gap-1.5 sm:grid sm:grid-cols-7 sm:gap-1.5 sm:min-w-0">
                               {landingCalendarDays.map(({ key, date }) => {
                                 const selected = key === selectedLandingDayKey;
-                                const hasActivity = (landingDayActivityCount.get(key) ?? 0) > 0;
+                                const hasActivity = (landingDayActivityCountForTab.get(key) ?? 0) > 0;
                                 return (
                           <button
                                     key={key}
@@ -13546,7 +13593,10 @@ export default function ChatPage() {
                                     </span>
                                     <span className="text-base sm:text-base lg:text-lg font-semibold text-foreground leading-none mt-0.5">{date.getDate()}</span>
                                     {hasActivity && (
-                                      <span className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+                                      <>
+                                        <span className="pointer-events-none absolute left-1 right-1 top-1/2 rotate-45 border-t border-black/70 dark:border-white/70" aria-hidden />
+                                        <span className="pointer-events-none absolute left-1 right-1 top-1/2 -rotate-45 border-t border-black/70 dark:border-white/70" aria-hidden />
+                                      </>
                                     )}
                           </button>
                                 );
@@ -13561,29 +13611,32 @@ export default function ChatPage() {
                                 </p>
                               ) : (
                                 selectedLandingDayActivityGroups.map((group) => (
-                                  <div
+                                  <button
                                     key={`summary-${group.groupKey}`}
-                                    className="rounded-lg border border-neutral-200 dark:border-neutral-700 px-2.5 py-2"
+                                    type="button"
+                                    onClick={() => openLandingActivityGroupModal(group)}
+                                    className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 px-3 py-2.5 text-left bg-background hover:bg-neutral-50 dark:hover:bg-neutral-900/70 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all duration-200 active:scale-[0.99]"
+                                    aria-label={`Open ${group.label}`}
                                   >
                                     <div className="flex items-center justify-between gap-2">
-                                      <p className="text-[11px] sm:text-xs lg:text-sm font-semibold uppercase tracking-wide text-neutral-600 dark:text-neutral-300">
-                                        {group.label}
-                                      </p>
-                                      <div className="flex items-center gap-2">
-                                        <p className="text-[10px] sm:text-xs lg:text-sm text-neutral-500 dark:text-neutral-400">
-                                          {group.items.length} item{group.items.length === 1 ? "" : "s"}
+                                      <div className="min-w-0">
+                                        <p className="text-[11px] sm:text-xs lg:text-sm font-semibold uppercase tracking-wide text-neutral-700 dark:text-neutral-200">
+                                          {group.label}
                                         </p>
-                                        <button
-                                          type="button"
-                                          onClick={() => openLandingActivityGroupModal(group)}
-                                          className="inline-flex items-center justify-center rounded-md border border-neutral-200 dark:border-neutral-700 px-2 py-0.5 text-[10px] sm:text-xs lg:text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                                          aria-label={`View ${group.label}`}
-                                        >
-                                          View
-                                        </button>
+                                        <p className="mt-0.5 text-[10px] sm:text-xs text-neutral-500 dark:text-neutral-400">
+                                          Tap to view entries
+                                        </p>
+                                      </div>
+                                      <div className="flex items-center gap-2 shrink-0">
+                                        <span className="inline-flex items-center justify-center rounded-full border border-neutral-200 dark:border-neutral-700 px-2 py-0.5 text-[10px] sm:text-xs text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-900">
+                                          {group.items.length} item{group.items.length === 1 ? "" : "s"}
+                                        </span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-neutral-400 dark:text-neutral-500">
+                                          <path d="m9 18 6-6-6-6" />
+                                        </svg>
                                       </div>
                                     </div>
-                                  </div>
+                                  </button>
                                 ))
                               )}
                             </div>
