@@ -10194,6 +10194,24 @@ export default function ChatPage() {
     () => Capacitor.isNativePlatform() && Capacitor.getPlatform() === "android",
     []
   );
+  const showAndroidLandingTabs =
+    isAndroidNativeApp &&
+    !incognitoMode &&
+    messages.length === 0 &&
+    !waysOfLookingAtModalOpen &&
+    !libraryPanelOpen &&
+    !selectedMentalModel &&
+    !drawnPerspectiveCard &&
+    !ideasModalOpen &&
+    !calorieTrackerModalOpen &&
+    !weightTrackerModalOpen &&
+    !journalEntryModalOpen &&
+    !journalTypeChooserOpen &&
+    !goalsModalOpen &&
+    !nutritionReportModalOpen &&
+    !dailyReportModalOpen &&
+    !nutritionDayViewModalOpen &&
+    !weeklySummaryModalOpen;
   const pomodoroConfettiOverlay = pomodoroConfettiVisible ? (
     <div className="pointer-events-none fixed inset-0 z-[95] overflow-hidden" aria-hidden>
       {pomodoroConfettiPieces.map((piece) => (
@@ -12770,9 +12788,7 @@ export default function ChatPage() {
               ? "pb-36 sm:pb-40 md:pb-0 overflow-hidden"
               : !shouldHideBottomBar && isAnonymous
                 ? "pb-36 sm:pb-40 md:pb-0 overflow-hidden"
-                : isAndroidNativeApp
-                  ? "pb-24 sm:pb-0 overflow-hidden"
-                  : "pb-0 overflow-hidden"
+                : "pb-0 overflow-hidden"
           } ${convertToDeepSuccess ? "animate-convert-to-deep" : ""}`}
         >
           <div
@@ -13849,63 +13865,6 @@ export default function ChatPage() {
                                 {getLandingTranslations(language).deepThinkingTabLabel}
                           </button>
                         </div>
-                            {isAndroidNativeApp && (
-                              <div className="fixed left-1/2 -translate-x-1/2 bottom-[calc(env(safe-area-inset-bottom)+10px)] z-30 pointer-events-none sm:hidden">
-                                <div
-                                  className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-neutral-200 dark:border-neutral-700 bg-background/95 dark:bg-neutral-900/90 backdrop-blur px-2.5 py-1.5 text-[13px] shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
-                                  aria-label="Landing tabs"
-                                >
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      if (!isAnonymous) setLandingTab("journaling");
-                                    }}
-                                    disabled={isAnonymous}
-                                    className={`px-2 py-1 rounded-full transition-colors ${
-                                      isAnonymous
-                                        ? "text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-80"
-                                        : landingTab === "journaling"
-                                          ? "font-semibold text-[#B87B51] bg-[#B87B51]/12 dark:bg-[#B87B51]/20"
-                                          : "font-medium text-neutral-600 dark:text-neutral-300"
-                                    }`}
-                                    aria-pressed={landingTab === "journaling"}
-                                  >
-                                    {getLandingTranslations(language).journalingTabLabel}
-                                  </button>
-                                  <span className="text-neutral-300 dark:text-neutral-600">|</span>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      if (!isAnonymous) setLandingTab("pomodoro");
-                                    }}
-                                    disabled={isAnonymous}
-                                    className={`px-2 py-1 rounded-full transition-colors ${
-                                      isAnonymous
-                                        ? "text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-80"
-                                        : landingTab === "pomodoro"
-                                          ? "font-semibold text-[#B87B51] bg-[#B87B51]/12 dark:bg-[#B87B51]/20"
-                                          : "font-medium text-neutral-600 dark:text-neutral-300"
-                                    }`}
-                                    aria-pressed={landingTab === "pomodoro"}
-                                  >
-                                    Pomodoro
-                                  </button>
-                                  <span className="text-neutral-300 dark:text-neutral-600">|</span>
-                                  <button
-                                    type="button"
-                                    onClick={() => setLandingTab("deepThinking")}
-                                    className={`px-2 py-1 rounded-full transition-colors ${
-                                      landingTab === "deepThinking"
-                                        ? "font-semibold text-[#B87B51] bg-[#B87B51]/12 dark:bg-[#B87B51]/20"
-                                        : "font-medium text-neutral-600 dark:text-neutral-300"
-                                    }`}
-                                    aria-pressed={landingTab === "deepThinking"}
-                                  >
-                                    {getLandingTranslations(language).deepThinkingTabLabel}
-                                  </button>
-                                </div>
-                              </div>
-                            )}
                             <div className="hidden sm:flex items-center gap-2">
                               <p className="text-xs sm:text-sm whitespace-nowrap font-semibold text-foreground">
                                 Last 7 days
@@ -16768,6 +16727,63 @@ export default function ChatPage() {
 
       {feedbackModalOpen && (
         <FeedbackModal onClose={() => setFeedbackModalOpen(false)} />
+      )}
+      {showAndroidLandingTabs && (
+        <div className="fixed left-1/2 -translate-x-1/2 bottom-[calc(env(safe-area-inset-bottom)+10px)] z-40 pointer-events-none sm:hidden">
+          <div
+            className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-neutral-200/80 dark:border-neutral-600/70 bg-white/55 dark:bg-neutral-900/50 backdrop-blur-md px-2.5 py-1.5 text-[13px] shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
+            aria-label="Landing tabs"
+          >
+            <button
+              type="button"
+              onClick={() => {
+                if (!isAnonymous) setLandingTab("journaling");
+              }}
+              disabled={isAnonymous}
+              className={`px-2 py-1 rounded-full transition-colors ${
+                isAnonymous
+                  ? "text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-80"
+                  : landingTab === "journaling"
+                    ? "font-semibold text-[#B87B51] bg-[#B87B51]/12 dark:bg-[#B87B51]/20"
+                    : "font-medium text-neutral-600 dark:text-neutral-300"
+              }`}
+              aria-pressed={landingTab === "journaling"}
+            >
+              {getLandingTranslations(language).journalingTabLabel}
+            </button>
+            <span className="text-neutral-300 dark:text-neutral-600">|</span>
+            <button
+              type="button"
+              onClick={() => {
+                if (!isAnonymous) setLandingTab("pomodoro");
+              }}
+              disabled={isAnonymous}
+              className={`px-2 py-1 rounded-full transition-colors ${
+                isAnonymous
+                  ? "text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-80"
+                  : landingTab === "pomodoro"
+                    ? "font-semibold text-[#B87B51] bg-[#B87B51]/12 dark:bg-[#B87B51]/20"
+                    : "font-medium text-neutral-600 dark:text-neutral-300"
+              }`}
+              aria-pressed={landingTab === "pomodoro"}
+            >
+              Pomodoro
+            </button>
+            <span className="text-neutral-300 dark:text-neutral-600">|</span>
+            <button
+              type="button"
+              onClick={() => setLandingTab("deepThinking")}
+              className={`px-2 py-1 rounded-full transition-colors ${
+                landingTab === "deepThinking"
+                  ? "font-semibold text-[#B87B51] bg-[#B87B51]/12 dark:bg-[#B87B51]/20"
+                  : "font-medium text-neutral-600 dark:text-neutral-300"
+              }`}
+              aria-pressed={landingTab === "deepThinking"}
+            >
+              {getLandingTranslations(language).deepThinkingTabLabel}
+            </button>
+          </div>
+        </div>
       )}
 
       {goalsModalOpen && (
