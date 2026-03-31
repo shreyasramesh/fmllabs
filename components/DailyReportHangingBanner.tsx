@@ -21,6 +21,7 @@ export function DailyReportHangingBanner() {
   const [minuteTick, setMinuteTick] = useState(() => Math.floor(Date.now() / 60000));
   const [visible, setVisible] = useState(false);
   const [dismissedDayKey, setDismissedDayKey] = useState<string | null>(null);
+  const [dismissStateReady, setDismissStateReady] = useState(false);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -36,10 +37,13 @@ export function DailyReportHangingBanner() {
       setDismissedDayKey(dismissed);
     } catch {
       setDismissedDayKey(null);
+    } finally {
+      setDismissStateReady(true);
     }
   }, []);
 
   useEffect(() => {
+    if (!dismissStateReady) return;
     if (!userId) {
       setVisible(false);
       return;
@@ -94,7 +98,7 @@ export function DailyReportHangingBanner() {
     return () => {
       active = false;
     };
-  }, [dismissedDayKey, minuteTick, pathname, userId]);
+  }, [dismissStateReady, dismissedDayKey, minuteTick, pathname, userId]);
 
   if (!visible) return null;
 
