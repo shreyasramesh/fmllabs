@@ -440,6 +440,7 @@ export function encryptHabitFields<T>(doc: object): T {
   if (typeof o.description === "string") o.description = enc(o.description);
   if (typeof o.howToFollowThrough === "string") o.howToFollowThrough = enc(o.howToFollowThrough);
   if (typeof o.tips === "string") o.tips = enc(o.tips);
+  if (typeof o.researchNotes === "string") o.researchNotes = enc(o.researchNotes);
   return o as T;
 }
 
@@ -449,6 +450,7 @@ export function decryptHabitFields<T>(doc: object): T {
   if (typeof o.description === "string") o.description = dec(o.description);
   if (typeof o.howToFollowThrough === "string") o.howToFollowThrough = dec(o.howToFollowThrough);
   if (typeof o.tips === "string") o.tips = dec(o.tips);
+  if (typeof o.researchNotes === "string") o.researchNotes = dec(o.researchNotes);
   return o as T;
 }
 

@@ -96,7 +96,7 @@ const LIBRARY_WAYS_COMPACT_CARD_GRID =
   "grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,12rem),1fr))]";
 /** Framework (cg) group tiles — compact squares. */
 const LIBRARY_FRAMEWORK_TILE_GRID =
-  "grid gap-2 sm:gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,11rem),1fr))]";
+  "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3";
 
 type JournalMentorLibraryRow = {
   sourceType?: "youtube" | "journal";
@@ -375,6 +375,8 @@ interface HabitItem {
   description: string;
   howToFollowThrough: string;
   tips: string;
+  researchNotes?: string;
+  researchUpdatedAt?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -593,8 +595,8 @@ const EXPORT_DATA_SECTION_OPTIONS: Array<{
   { key: "messages", label: "Messages", description: "Full chat history for your sessions." },
   { key: "long_term_memory", label: "Memory", description: "Saved memory summaries and prompts." },
   { key: "custom_concepts", label: "Custom concepts", description: "Your created concepts and enrichments." },
-  { key: "concept_groups", label: "Concept frameworks", description: "Frameworks and linked concept IDs." },
-  { key: "habits", label: "Habits", description: "Habit entries, sources, and follow-through plans." },
+  { key: "concept_groups", label: "Concept Playgrounds", description: "Playgrounds and linked concept IDs." },
+  { key: "habits", label: "30 Day Experiments", description: "Experiment entries, sources, and follow-through plans." },
   { key: "transcripts", label: "Saved transcripts", description: "Journal + transcript entries with metadata." },
   { key: "saved_perspective_cards", label: "Saved perspective cards", description: "Saved card prompts and follow-ups." },
   {
@@ -3086,9 +3088,9 @@ const LANDING_ACTIVITY_GROUP_LABEL: Record<LandingActivityGroupKey, string> = {
   journalFocus: "Focus Entries",
   session: "Conversations",
   memory: "Memory",
-  habit: "Habits",
+  habit: "30 Day Experiments",
   concept: "Concepts",
-  framework: "Frameworks",
+  framework: "Playgrounds",
   savedModel: "Saved models",
   perspectiveCard: "Perspective cards",
 };
@@ -3603,7 +3605,7 @@ export default function ChatPage() {
         target: "[data-tour=menu-button]",
         title: "Open the menu",
         content:
-          "Tap here to access conversations, concepts, mental models, memory, and frameworks.",
+          "Tap here to access conversations, concepts, mental models, memory, and playgrounds.",
         ringClass: "ring-white dark:ring-neutral-300",
       },
       {
@@ -3623,7 +3625,7 @@ export default function ChatPage() {
       {
         target: "[data-tour=tour-cc]",
         title: "Concepts",
-        content: "Your custom frameworks and values. The AI uses them to personalize responses.",
+        content: "Your custom playgrounds and values. The AI uses them to personalize responses.",
         panel: "cc",
         ringClass: "ring-white dark:ring-neutral-300",
       },
@@ -4283,7 +4285,6 @@ export default function ChatPage() {
   const [journalTypeChooserOpen, setJournalTypeChooserOpen] = useState(false);
   const [nutritionReportModalOpen, setNutritionReportModalOpen] = useState(false);
   const [nutritionReportDayKey, setNutritionReportDayKey] = useState(() => toDayKey(new Date()));
-  const [nutritionReportFocusPrompt, setNutritionReportFocusPrompt] = useState("");
   const [nutritionReportLoading, setNutritionReportLoading] = useState(false);
   const [nutritionReportError, setNutritionReportError] = useState<string | null>(null);
   const [nutritionReportResult, setNutritionReportResult] = useState<{
@@ -4294,6 +4295,29 @@ export default function ChatPage() {
       goalStatus: string;
       highlights: string[];
       tomorrowTips: string[];
+    };
+  } | null>(null);
+  const [dailyReportModalOpen, setDailyReportModalOpen] = useState(false);
+  const [dailyReportDayKey, setDailyReportDayKey] = useState(() => toDayKey(new Date()));
+  const [dailyReportLoading, setDailyReportLoading] = useState(false);
+  const [dailyReportError, setDailyReportError] = useState<string | null>(null);
+  const [dailyReportResult, setDailyReportResult] = useState<{
+    dayKey: string;
+    dayLabel: string;
+    mentorFigureName: string;
+    report: {
+      coachIntro: string;
+      summary: string;
+      wins: string[];
+      momentumSignals: string[];
+      tomorrowGamePlan: string[];
+      sectionCards: Array<{
+        key: "conversations" | "memories" | "focus" | "nutrition_exercise" | "journaling";
+        title: string;
+        body: string;
+        accent: "violet" | "teal" | "emerald" | "amber" | "rose" | "sky";
+      }>;
+      closingNote: string;
     };
   } | null>(null);
   const [localMinuteTick, setLocalMinuteTick] = useState(() => Math.floor(Date.now() / 60000));
@@ -4887,8 +4911,8 @@ export default function ChatPage() {
       await finalizeCalorieTracker([], { persist: true, sourceText: hydratedText });
       return;
     }
-    const text = calorieTrackerInput.trim();
-    if (!text) return;
+    const text = hydratedText;
+    if (!text.trim()) return;
     setCalorieTrackerLoading(true);
     setCalorieTrackerError(null);
     try {
@@ -5322,20 +5346,16 @@ export default function ChatPage() {
     () => dateFromDayKey(nutritionReportDayKey) ?? new Date(),
     [nutritionReportDayKey]
   );
+  const dailyReportSelectedDate = useMemo(
+    () => dateFromDayKey(dailyReportDayKey) ?? new Date(),
+    [dailyReportDayKey]
+  );
   useEffect(() => {
     const timer = window.setInterval(() => {
       setLocalMinuteTick(Math.floor(Date.now() / 60000));
     }, 60_000);
     return () => window.clearInterval(timer);
   }, []);
-  const isSelectedLandingDayToday = useMemo(
-    () => selectedLandingDayKey === toDayKey(new Date()),
-    [selectedLandingDayKey, localMinuteTick]
-  );
-  const shouldShowDailyReportBanner = useMemo(
-    () => !isAnonymous && landingTab === "journaling" && isSelectedLandingDayToday && new Date().getHours() >= 19,
-    [isAnonymous, isSelectedLandingDayToday, landingTab, localMinuteTick]
-  );
   const headerCalendarLabel = useMemo(() => {
     const todayKey = toDayKey(new Date());
     if (selectedLandingDayKey === todayKey) return "Today";
@@ -7000,6 +7020,9 @@ export default function ChatPage() {
   const [habitPromoteLoading, setHabitPromoteLoading] = useState(false);
   const [habitDetailModal, setHabitDetailModal] = useState<HabitItem | null>(null);
   const [habitDetailEditing, setHabitDetailEditing] = useState(false);
+  const [habitFollowThroughExpanded, setHabitFollowThroughExpanded] = useState(false);
+  const [habitResearchLoading, setHabitResearchLoading] = useState(false);
+  const [habitResearchError, setHabitResearchError] = useState<string | null>(null);
   const [habitDetailEdit, setHabitDetailEdit] = useState<{
     name: string;
     description: string;
@@ -7726,7 +7749,6 @@ export default function ChatPage() {
   const resetNutritionReportModal = useCallback(() => {
     setNutritionReportModalOpen(false);
     setNutritionReportDayKey(getTodayDateInputValue());
-    setNutritionReportFocusPrompt("");
     setNutritionReportLoading(false);
     setNutritionReportError(null);
     setNutritionReportResult(null);
@@ -7739,11 +7761,23 @@ export default function ChatPage() {
       return;
     }
     setNutritionReportDayKey(selectedLandingDayKey);
-    setNutritionReportFocusPrompt("");
     setNutritionReportLoading(false);
     setNutritionReportError(null);
     setNutritionReportResult(null);
     setNutritionReportModalOpen(true);
+  }, [incognitoMode, isAnonymous, router, selectedLandingDayKey]);
+
+  const openDailyReportModal = useCallback(() => {
+    playSelectionChime();
+    if (isAnonymous || incognitoMode) {
+      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
+      return;
+    }
+    setDailyReportDayKey(selectedLandingDayKey);
+    setDailyReportLoading(false);
+    setDailyReportError(null);
+    setDailyReportResult(null);
+    setDailyReportModalOpen(true);
   }, [incognitoMode, isAnonymous, router, selectedLandingDayKey]);
 
   const normalizeNutritionReportPayload = useCallback((data: {
@@ -7799,7 +7833,7 @@ export default function ChatPage() {
   const runNutritionReport = useCallback(async (options?: { dayKey?: string; focusPrompt?: string; bypassDataGuard?: boolean }) => {
     if (isAnonymous || incognitoMode || !userId) return;
     const targetDayKey = options?.dayKey ?? nutritionReportDayKey;
-    const targetFocusPrompt = (options?.focusPrompt ?? nutritionReportFocusPrompt).trim().slice(0, 600);
+    const targetFocusPrompt = (options?.focusPrompt ?? "").trim().slice(0, 600);
     if (!options?.bypassDataGuard && targetDayKey === nutritionReportDayKey && !canRunNutritionReport) {
       setNutritionReportError(getLandingTranslations(language).nutritionAnalysisNoDataError);
       return;
@@ -7848,31 +7882,208 @@ export default function ChatPage() {
     isAnonymous,
     language,
     nutritionReportDayKey,
-    nutritionReportFocusPrompt,
     normalizeNutritionReportPayload,
     userId,
   ]);
 
-  const openDailyNutritionReportBanner = useCallback(async () => {
+  const resetDailyReportModal = useCallback(() => {
+    setDailyReportModalOpen(false);
+    setDailyReportDayKey(getTodayDateInputValue());
+    setDailyReportLoading(false);
+    setDailyReportError(null);
+    setDailyReportResult(null);
+  }, []);
+
+  const normalizeDailyReportPayload = useCallback((data: {
+    dayKey?: string;
+    dayLabel?: string;
+    mentorFigureName?: string;
+    report?: {
+      coachIntro?: string;
+      summary?: string;
+      wins?: string[];
+      momentumSignals?: string[];
+      tomorrowGamePlan?: string[];
+      sectionCards?: Array<{
+        key?: string;
+        title?: string;
+        body?: string;
+        accent?: string;
+      }>;
+      closingNote?: string;
+    };
+  }) => {
+    if (!data.dayKey || !data.dayLabel || !data.report) return null;
+    const cards = Array.isArray(data.report.sectionCards)
+      ? data.report.sectionCards
+          .map((card) => {
+            const key = card?.key;
+            if (
+              key !== "conversations" &&
+              key !== "memories" &&
+              key !== "focus" &&
+              key !== "nutrition_exercise" &&
+              key !== "journaling"
+            ) {
+              return null;
+            }
+            const accentRaw = card?.accent;
+            const accent =
+              accentRaw === "violet" ||
+              accentRaw === "teal" ||
+              accentRaw === "emerald" ||
+              accentRaw === "amber" ||
+              accentRaw === "rose" ||
+              accentRaw === "sky"
+                ? accentRaw
+                : "sky";
+            return {
+              key,
+              title: typeof card?.title === "string" ? card.title : "",
+              body: typeof card?.body === "string" ? card.body : "",
+              accent,
+            };
+          })
+          .filter((card): card is {
+            key: "conversations" | "memories" | "focus" | "nutrition_exercise" | "journaling";
+            title: string;
+            body: string;
+            accent: "violet" | "teal" | "emerald" | "amber" | "rose" | "sky";
+          } => card !== null)
+      : [];
+    return {
+      dayKey: data.dayKey,
+      dayLabel: data.dayLabel,
+      mentorFigureName: typeof data.mentorFigureName === "string" ? data.mentorFigureName : "",
+      report: {
+        coachIntro: typeof data.report.coachIntro === "string" ? data.report.coachIntro : "",
+        summary: typeof data.report.summary === "string" ? data.report.summary : "",
+        wins: Array.isArray(data.report.wins) ? data.report.wins.filter((v): v is string => typeof v === "string") : [],
+        momentumSignals: Array.isArray(data.report.momentumSignals)
+          ? data.report.momentumSignals.filter((v): v is string => typeof v === "string")
+          : [],
+        tomorrowGamePlan: Array.isArray(data.report.tomorrowGamePlan)
+          ? data.report.tomorrowGamePlan.filter((v): v is string => typeof v === "string")
+          : [],
+        sectionCards: cards,
+        closingNote: typeof data.report.closingNote === "string" ? data.report.closingNote : "",
+      },
+    };
+  }, []);
+
+  const loadSavedDailyReport = useCallback(async (
+    dayKey: string,
+    options?: { applyToState?: boolean }
+  ): Promise<boolean> => {
+    const res = await fetch(`/api/me/daily-report?dayKey=${encodeURIComponent(dayKey)}`, {
+      method: "GET",
+      cache: "no-store",
+    });
+    if (!res.ok) return false;
+    const data = (await res.json().catch(() => ({}))) as {
+      dayKey?: string;
+      dayLabel?: string;
+      mentorFigureName?: string;
+      report?: {
+        coachIntro?: string;
+        summary?: string;
+        wins?: string[];
+        momentumSignals?: string[];
+        tomorrowGamePlan?: string[];
+        sectionCards?: Array<{
+          key?: string;
+          title?: string;
+          body?: string;
+          accent?: string;
+        }>;
+        closingNote?: string;
+      };
+    };
+    const normalized = normalizeDailyReportPayload(data);
+    if (!normalized) return false;
+    if (options?.applyToState !== false) {
+      setDailyReportResult(normalized);
+    }
+    return true;
+  }, [normalizeDailyReportPayload]);
+
+  const runDailyReport = useCallback(async (options?: { dayKey?: string }) => {
+    if (isAnonymous || incognitoMode || !userId) return;
+    const targetDayKey = options?.dayKey ?? dailyReportDayKey;
+    setDailyReportLoading(true);
+    setDailyReportError(null);
+    setDailyReportResult(null);
+    try {
+      const res = await fetch("/api/me/daily-report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dayScope: "selected_day",
+          selectedDayKey: targetDayKey,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        dayKey?: string;
+        dayLabel?: string;
+        mentorFigureName?: string;
+        report?: {
+          coachIntro?: string;
+          summary?: string;
+          wins?: string[];
+          momentumSignals?: string[];
+          tomorrowGamePlan?: string[];
+          sectionCards?: Array<{
+            key?: string;
+            title?: string;
+            body?: string;
+            accent?: string;
+          }>;
+          closingNote?: string;
+        };
+      };
+      const normalized = normalizeDailyReportPayload(data);
+      if (!res.ok || !normalized) {
+        throw new Error(data.error || "Could not generate daily report.");
+      }
+      setDailyReportResult(normalized);
+    } catch (err) {
+      const message =
+        err instanceof Error && err.message.includes("No daily activity found")
+          ? getLandingTranslations(language).dailyReportNoDataError
+          : getLandingTranslations(language).dailyReportRequestError;
+      setDailyReportError(message);
+    } finally {
+      setDailyReportLoading(false);
+    }
+  }, [
+    dailyReportDayKey,
+    incognitoMode,
+    isAnonymous,
+    language,
+    normalizeDailyReportPayload,
+    userId,
+  ]);
+
+  const openDailyReportBanner = useCallback(async () => {
     if (isAnonymous || incognitoMode || !userId) return;
     const todayDayKey = toDayKey(new Date());
-    setNutritionReportDayKey(todayDayKey);
-    setNutritionReportFocusPrompt("");
-    setNutritionReportError(null);
-    setNutritionReportResult(null);
-    setNutritionReportModalOpen(true);
-    setNutritionReportLoading(true);
+    setDailyReportDayKey(todayDayKey);
+    setDailyReportError(null);
+    setDailyReportResult(null);
+    setDailyReportModalOpen(true);
+    setDailyReportLoading(true);
     try {
-      const loadedFromDb = await loadSavedNutritionReport(todayDayKey);
+      const loadedFromDb = await loadSavedDailyReport(todayDayKey);
       if (!loadedFromDb) {
-        await runNutritionReport({ dayKey: todayDayKey, focusPrompt: "", bypassDataGuard: true });
+        await runDailyReport({ dayKey: todayDayKey });
       }
     } catch {
-      await runNutritionReport({ dayKey: todayDayKey, focusPrompt: "", bypassDataGuard: true });
+      await runDailyReport({ dayKey: todayDayKey });
     } finally {
-      setNutritionReportLoading(false);
+      setDailyReportLoading(false);
     }
-  }, [incognitoMode, isAnonymous, loadSavedNutritionReport, runNutritionReport, userId]);
+  }, [incognitoMode, isAnonymous, loadSavedDailyReport, runDailyReport, userId]);
 
   const dailyReportAutogenDayRef = useRef<string | null>(null);
   useEffect(() => {
@@ -7884,22 +8095,34 @@ export default function ChatPage() {
     dailyReportAutogenDayRef.current = todayDayKey;
     void (async () => {
       try {
-        const hasSaved = await loadSavedNutritionReport(todayDayKey, { applyToState: false });
+        const hasSaved = await loadSavedDailyReport(todayDayKey, { applyToState: false });
         if (hasSaved) return;
-        await fetch("/api/me/nutrition-report", {
+        await fetch("/api/me/daily-report", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             dayScope: "selected_day",
             selectedDayKey: todayDayKey,
-            focusPrompt: "",
           }),
         });
       } catch {
         // Silent background retry is not required; next minute tick/day entry can attempt again.
       }
     })();
-  }, [incognitoMode, isAnonymous, landingTab, loadSavedNutritionReport, localMinuteTick, userId]);
+  }, [incognitoMode, isAnonymous, landingTab, loadSavedDailyReport, localMinuteTick, userId]);
+
+  const dailyReportQueryOpenedRef = useRef(false);
+  useEffect(() => {
+    if (dailyReportQueryOpenedRef.current) return;
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("openDailyReport") !== "1") return;
+    dailyReportQueryOpenedRef.current = true;
+    void openDailyReportBanner();
+    const clean = new URL(window.location.href);
+    clean.searchParams.delete("openDailyReport");
+    window.history.replaceState({}, "", clean.pathname + clean.search + clean.hash);
+  }, [openDailyReportBanner]);
 
   const handleLandingActivityClick = useCallback((item: LandingDayActivityItem) => {
     if (item.kind === "session") {
@@ -8866,7 +9089,7 @@ export default function ChatPage() {
   }, [weightTrackerFilteredChronological, weightTrackerRange, weightTrackerTargetKg]);
 
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !weightTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionReportModalOpen && !nutritionDayViewModalOpen && !weeklySummaryModalOpen && !mentorOneOnOneModalOpen && !askMentorsRecommendModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !weightTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionReportModalOpen && !dailyReportModalOpen && !nutritionDayViewModalOpen && !weeklySummaryModalOpen && !mentorOneOnOneModalOpen && !askMentorsRecommendModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (journalCheckpointModal) setJournalCheckpointModal(null);
@@ -8881,6 +9104,7 @@ export default function ChatPage() {
           setMentorReflectionsRegenerateLoading(false);
         }
         else if (nutritionDayViewModalOpen) setNutritionDayViewModalOpen(false);
+        else if (dailyReportModalOpen && !dailyReportLoading) resetDailyReportModal();
         else if (nutritionReportModalOpen && !nutritionReportLoading) resetNutritionReportModal();
         else if (weeklySummaryModalOpen && !weeklySummaryLoading) resetWeeklySummaryModal();
         else if (weightTrackerModalOpen && !weightTrackerSaving) resetWeightTrackerModal();
@@ -8917,7 +9141,7 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, weightTrackerModalOpen, weightTrackerSaving, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, goalsCoachLoading, nutritionReportModalOpen, nutritionReportLoading, nutritionDayViewModalOpen, weeklySummaryModalOpen, weeklySummaryLoading, journalEntrySaving, mentorOneOnOneModalOpen, askMentorsRecommendModalOpen, newConversationChooserModalOpen, journalCheckpointModal, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetNutritionReportModal, resetWeeklySummaryModal]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, weightTrackerModalOpen, weightTrackerSaving, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, goalsCoachLoading, nutritionReportModalOpen, nutritionReportLoading, dailyReportModalOpen, dailyReportLoading, nutritionDayViewModalOpen, weeklySummaryModalOpen, weeklySummaryLoading, journalEntrySaving, mentorOneOnOneModalOpen, askMentorsRecommendModalOpen, newConversationChooserModalOpen, journalCheckpointModal, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetDailyReportModal, resetNutritionReportModal, resetWeeklySummaryModal]);
 
   useEffect(() => {
     if (!headerCalendarOpen) return;
@@ -9175,6 +9399,11 @@ export default function ChatPage() {
     }
   }, [habitDetailModal]);
 
+  useEffect(() => {
+    setHabitResearchError(null);
+    setHabitResearchLoading(false);
+  }, [habitDetailModal?._id]);
+
   const habitsFiltered = useMemo(() => {
     if (habitListFilterMonth === null && habitListFilterYear === null) return habits;
     return habits.filter((h) => {
@@ -9213,6 +9442,33 @@ export default function ChatPage() {
   useEffect(() => {
     if (!habitDetailModal) setHabitDetailEditing(false);
   }, [habitDetailModal]);
+
+  useEffect(() => {
+    setHabitFollowThroughExpanded(false);
+  }, [habitDetailModal?._id]);
+
+  const generateHabitResearch = useCallback(async () => {
+    if (!habitDetailModal?._id || habitResearchLoading) return;
+    setHabitResearchError(null);
+    setHabitResearchLoading(true);
+    try {
+      const res = await fetch(`/api/me/habits/${habitDetailModal._id}/research`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ language }),
+      });
+      const data = (await res.json().catch(() => ({}))) as HabitItem & { error?: string };
+      if (!res.ok) throw new Error(data.error || "Could not generate research.");
+      setHabits((prev) => prev.map((h) => (h._id === habitDetailModal._id ? data : h)));
+      setHabitDetailModal(data);
+    } catch (err) {
+      setHabitResearchError(
+        err instanceof Error ? err.message : "Could not generate research right now."
+      );
+    } finally {
+      setHabitResearchLoading(false);
+    }
+  }, [habitDetailModal, habitResearchLoading, language]);
 
   type PerspectiveDecksConfig = {
     decks: { id: string; name: string; description: string; domain: string }[];
@@ -9503,6 +9759,7 @@ export default function ChatPage() {
     resetCalorieTrackerModal();
     resetWeightTrackerModal();
     setNutritionDayViewModalOpen(false);
+    resetDailyReportModal();
     resetNutritionReportModal();
     resetWeeklySummaryModal();
     setNewConversationChooserModalOpen(false);
@@ -9515,7 +9772,7 @@ export default function ChatPage() {
     setCcDeleteConfirmModal(null);
     setCgDeleteConfirmModal(null);
     setGoBackConfirmModal(null);
-  }, [resetCalorieTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetNutritionReportModal, resetWeeklySummaryModal]);
+  }, [resetCalorieTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetDailyReportModal, resetNutritionReportModal, resetWeeklySummaryModal]);
 
   const handleBrandLinkClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -9933,6 +10190,10 @@ export default function ChatPage() {
     (!!currentSession?.isCollapsed && !!collapsedSummary);
   const isPomodoroFocusMode =
     !incognitoMode && !isAnonymous && landingTab === "pomodoro" && !!pomodoroSessionStartIso;
+  const isAndroidNativeApp = useMemo(
+    () => Capacitor.isNativePlatform() && Capacitor.getPlatform() === "android",
+    []
+  );
   const pomodoroConfettiOverlay = pomodoroConfettiVisible ? (
     <div className="pointer-events-none fixed inset-0 z-[95] overflow-hidden" aria-hidden>
       {pomodoroConfettiPieces.map((piece) => (
@@ -10179,7 +10440,7 @@ export default function ChatPage() {
               aria-label="Go to landing page"
               title="Go to landing page"
             >
-              <span className="inline-flex items-center justify-center min-w-[34px] min-h-[34px] rounded-md border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200">
+              <span className="inline-flex items-center justify-center min-w-[34px] min-h-[34px] rounded-md text-neutral-700 dark:text-neutral-200">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
                   <path d="M3 10.5 12 3l9 7.5" />
                   <path d="M5.5 9.5V21h13V9.5" />
@@ -10231,7 +10492,7 @@ export default function ChatPage() {
                       onClick={() => setHeaderCalendarOpen((prev) => !prev)}
                       aria-expanded={headerCalendarOpen}
                       aria-haspopup="dialog"
-                      className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background px-3 py-1.5 text-sm font-medium text-foreground hover:bg-accent/10 dark:hover:bg-accent/20 transition-colors"
+                      className="inline-flex items-center gap-1.5 rounded-xl bg-background px-3 py-1.5 text-sm font-medium text-foreground hover:bg-accent/10 dark:hover:bg-accent/20 transition-colors"
                     >
                       <span>{headerCalendarLabel}</span>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-3.5 h-3.5 transition-transform ${headerCalendarOpen ? "rotate-180" : ""}`}>
@@ -10512,15 +10773,15 @@ export default function ChatPage() {
             {[
               { id: "conversations" as const, label: getUiTranslations(language).conversations, icon: "chat", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("conversations"); } },
               ...(!isAnonymous ? [
-                { id: "journal" as const, label: "Journals", icon: "journal" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("journal"); } },
+                { id: "habits" as const, label: getUiTranslations(language).habits, icon: "habits" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("habits"); } },
               ] : []),
-              { id: "cc" as const, label: getUiTranslations(language).concepts, icon: "concepts", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("cc"); } },
+              { id: "cg" as const, label: getUiTranslations(language).groups, icon: "groups", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("cg"); } },
               { id: "concepts" as const, label: getUiTranslations(language).mentalModels, icon: "models", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("concepts"); } },
               { id: "ltm" as const, label: getUiTranslations(language).longTermMemory, icon: "memory", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("ltm"); } },
-              { id: "cg" as const, label: getUiTranslations(language).groups, icon: "groups", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("cg"); } },
               ...(!isAnonymous ? [
-                { id: "habits" as const, label: getUiTranslations(language).habits, icon: "habits" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("habits"); } },
                 { id: "figures" as const, label: getUiTranslations(language).famousFigures, icon: "figures" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("figures"); } },
+                { id: "journal" as const, label: "Journals", icon: "journal" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("journal"); } },
+                { id: "cc" as const, label: getUiTranslations(language).concepts, icon: "concepts", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("cc"); } },
               ] : []),
             ].map(({ id, label, icon, onClick }) => {
               const isActive = libraryPanelOpen === id;
@@ -11903,6 +12164,13 @@ export default function ChatPage() {
                     <div className={LIBRARY_FRAMEWORK_TILE_GRID}>
                       {conceptGroups.map((cg) => {
                         const isEmpty = (cg.conceptIds?.length ?? 0) === 0;
+                        const topConceptId =
+                          Array.isArray(cg.conceptIds) && cg.conceptIds.length > 0
+                            ? cg.conceptIds[0]
+                            : null;
+                        const topConcept = topConceptId
+                          ? customConcepts.find((cc) => cc._id === topConceptId) ?? null
+                          : null;
                         const openGroup = () => fetch(`/api/me/concept-groups/${cg._id}`).then((r) => r.ok ? r.json() : Promise.reject()).then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] })).catch(() => setCgDetailModal(cg));
                         return (
                           <div
@@ -11911,7 +12179,7 @@ export default function ChatPage() {
                             tabIndex={0}
                             onClick={openGroup}
                             onKeyDown={(e) => e.key === "Enter" && openGroup()}
-                            className="relative flex flex-col items-center justify-center gap-1 p-3 rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 cursor-pointer transition-colors text-center"
+                            className="relative flex flex-col gap-2 p-3 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all duration-200"
                           >
                             {isEmpty && (
                               <button
@@ -11927,27 +12195,43 @@ export default function ChatPage() {
                                 <TrashIcon className="w-3.5 h-3.5" />
                               </button>
                             )}
-                            <div className="relative w-10 h-10 shrink-0 flex items-center justify-center">
-                              <div className="absolute inset-0 rounded-lg bg-neutral-200 dark:bg-neutral-700" style={{ transform: "translate(0,0)" }} />
-                              <div className="absolute inset-0 rounded-lg bg-neutral-300 dark:bg-neutral-600" style={{ transform: "translate(3px,3px)" }} />
-                              <div className="absolute inset-0 rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center" style={{ transform: "translate(6px,6px)" }}>
-                                <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">{(cg.conceptIds?.length ?? 0) || "—"}</span>
-                              </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-semibold text-foreground truncate">{cg.title}</p>
+                              <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                                {(cg.conceptIds?.length ?? 0)} concept{(cg.conceptIds?.length ?? 0) === 1 ? "" : "s"}
+                              </p>
                             </div>
-                            <p className="text-sm font-medium truncate w-full">{cg.title}</p>
-                            <p className="text-[10px] text-neutral-500 dark:text-neutral-400">{cg.conceptIds?.length ?? 0} concepts</p>
+                            <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/50 px-2.5 py-2">
+                              <p className="text-[10px] font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
+                                Top concept
+                              </p>
+                              <p className="mt-0.5 text-xs font-medium text-foreground truncate">
+                                {topConcept?.title || "No concept yet"}
+                              </p>
+                              <p className="mt-1 text-[11px] text-neutral-600 dark:text-neutral-300 line-clamp-2">
+                                {topConcept?.summary || topConcept?.enrichmentPrompt || "Open this playground to add or organize concepts."}
+                              </p>
+                            </div>
+                            <div className="inline-flex items-center gap-1.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                              <span>Open details</span>
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                                <path d="m9 18 6-6-6-6" />
+                              </svg>
+                            </div>
                           </div>
                         );
                       })}
                     </div>
                   ) : (
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Create frameworks via AI or groups by selecting existing concepts.</p>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Create playgrounds via AI or groups by selecting existing concepts.</p>
                   )}
-                  {savedTranscripts.length > 0 && (
+                  {savedTranscripts.filter((t) => !t.sourceType || t.sourceType === "youtube").length > 0 && (
                     <div className="pt-4 border-t border-neutral-200 dark:border-neutral-700">
-                      <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-2">My Transcripts</p>
+                      <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-2">My YouTube Transcripts</p>
                       <div className="space-y-2">
-                        {savedTranscripts.map((t) => (
+                        {savedTranscripts
+                          .filter((t) => !t.sourceType || t.sourceType === "youtube")
+                          .map((t) => (
                           <div
                             key={t._id}
                             className="flex items-center justify-between gap-2 p-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/30"
@@ -12087,7 +12371,7 @@ export default function ChatPage() {
               {libraryPanelOpen === "habits" && (
                 <div className="space-y-4">
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                    Habits for daily life—not sent to the AI. Create one here, or promote a concept or memory.
+                    30 day experiments for daily life—not sent to the AI. Create one here, or promote a concept or memory.
                   </p>
                   <div className="flex items-center justify-end gap-2">
                     <button
@@ -12803,21 +13087,19 @@ export default function ChatPage() {
                                     </button>
                                     <button
                                       type="button"
+                                      onClick={openDailyReportModal}
+                                      className="rounded-full border border-neutral-200 dark:border-neutral-800 bg-background px-3 py-1.5 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70 transition-colors"
+                                    >
+                                      {getLandingTranslations(language).dailyReportButtonLabel}
+                                    </button>
+                                    <button
+                                      type="button"
                                       onClick={openWeeklySummaryModal}
                                       className="rounded-full border border-neutral-200 dark:border-neutral-800 bg-background px-3 py-1.5 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70 transition-colors"
                                     >
                                       {getLandingTranslations(language).weeklySummaryButtonLabel}
                                     </button>
                                   </div>
-                                  {shouldShowDailyReportBanner && (
-                                    <button
-                                      type="button"
-                                      onClick={() => void openDailyNutritionReportBanner()}
-                                      className="mt-2 w-full rounded-xl border border-amber-200/90 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-900/20 px-3 py-2 text-left text-xs sm:text-sm font-medium text-amber-800 dark:text-amber-200 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
-                                    >
-                                      Your daily report is ready, click to view
-                                    </button>
-                                  )}
                                 </div>
                               </div>
 
@@ -13516,7 +13798,7 @@ export default function ChatPage() {
                                 </div>
                               </div>
                             </div>
-                            <div className="mb-2 grid grid-cols-3 gap-3">
+                            <div className={`${isAndroidNativeApp ? "hidden" : "mb-2 grid grid-cols-3 gap-3"}`}>
                           <button
                             type="button"
                                 onClick={() => {
@@ -13565,6 +13847,60 @@ export default function ChatPage() {
                                 {getLandingTranslations(language).deepThinkingTabLabel}
                           </button>
                         </div>
+                            {isAndroidNativeApp && (
+                              <div className="fixed left-1/2 -translate-x-1/2 bottom-[calc(env(safe-area-inset-bottom)+74px)] z-30 pointer-events-none sm:hidden">
+                                <div className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-neutral-200 dark:border-neutral-700 bg-background/95 dark:bg-neutral-900/90 backdrop-blur px-3 py-1.5 text-xs">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      if (!isAnonymous) setLandingTab("journaling");
+                                    }}
+                                    disabled={isAnonymous}
+                                    className={`transition-colors ${
+                                      isAnonymous
+                                        ? "text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-80"
+                                        : landingTab === "journaling"
+                                          ? "font-semibold text-foreground"
+                                          : "font-medium text-neutral-600 dark:text-neutral-300"
+                                    }`}
+                                    aria-pressed={landingTab === "journaling"}
+                                  >
+                                    {getLandingTranslations(language).journalingTabLabel}
+                                  </button>
+                                  <span className="text-neutral-400 dark:text-neutral-500">|</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      if (!isAnonymous) setLandingTab("pomodoro");
+                                    }}
+                                    disabled={isAnonymous}
+                                    className={`transition-colors ${
+                                      isAnonymous
+                                        ? "text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-80"
+                                        : landingTab === "pomodoro"
+                                          ? "font-semibold text-foreground"
+                                          : "font-medium text-neutral-600 dark:text-neutral-300"
+                                    }`}
+                                    aria-pressed={landingTab === "pomodoro"}
+                                  >
+                                    Pomodoro
+                                  </button>
+                                  <span className="text-neutral-400 dark:text-neutral-500">|</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => setLandingTab("deepThinking")}
+                                    className={`transition-colors ${
+                                      landingTab === "deepThinking"
+                                        ? "font-semibold text-foreground"
+                                        : "font-medium text-neutral-600 dark:text-neutral-300"
+                                    }`}
+                                    aria-pressed={landingTab === "deepThinking"}
+                                  >
+                                    {getLandingTranslations(language).deepThinkingTabLabel}
+                                  </button>
+                                </div>
+                              </div>
+                            )}
                             <div className="hidden sm:flex items-center gap-2">
                               <p className="text-xs sm:text-sm whitespace-nowrap font-semibold text-foreground">
                                 Last 7 days
@@ -16924,6 +17260,192 @@ export default function ChatPage() {
         </div>
       )}
 
+      {dailyReportModalOpen && (
+        <div
+          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => {
+            if (!dailyReportLoading) resetDailyReportModal();
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={getLandingTranslations(language).dailyReportModalTitle}
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,760px)] max-h-[88vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-3 py-2.5 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <div>
+                <h2 className="text-lg font-semibold text-foreground pr-2">
+                  {getLandingTranslations(language).dailyReportModalTitle}
+                </h2>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                  {getLandingTranslations(language).dailyReportModalSubtitle}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={resetDailyReportModal}
+                disabled={dailyReportLoading}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 space-y-4 overflow-y-auto">
+              <div className="flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <p className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                    {getLandingTranslations(language).nutritionAnalysisScopeSelectedDay}
+                  </p>
+                  <p className="text-sm text-foreground">
+                    {dailyReportSelectedDate.toLocaleDateString(undefined, { dateStyle: "medium" })}
+                  </p>
+                </div>
+                <div className="flex items-end gap-2">
+                  <div>
+                    <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                      {getLandingTranslations(language).dailyReportChooseDateLabel}
+                    </label>
+                    <input
+                      type="date"
+                      value={dailyReportDayKey}
+                      onChange={(e) => {
+                        const nextDayKey = e.target.value.trim();
+                        if (!nextDayKey) return;
+                        setDailyReportDayKey(nextDayKey);
+                      }}
+                      disabled={dailyReportLoading}
+                      className="px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => void runDailyReport()}
+                    disabled={dailyReportLoading}
+                    className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                  >
+                    {dailyReportLoading
+                      ? getLandingTranslations(language).dailyReportGenerating
+                      : getLandingTranslations(language).dailyReportGenerate}
+                  </button>
+                </div>
+              </div>
+
+              {dailyReportError && (
+                <p className="text-sm text-red-600 dark:text-red-400">{dailyReportError}</p>
+              )}
+
+              {dailyReportResult && (
+                <div className="space-y-4">
+                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-gradient-to-br from-amber-50 via-background to-rose-50 dark:from-amber-900/20 dark:via-neutral-950 dark:to-rose-900/20 p-4 space-y-2">
+                    <p className="text-xs uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
+                      {dailyReportResult.dayLabel}
+                    </p>
+                    {dailyReportResult.mentorFigureName && (
+                      <p className="text-xs text-neutral-600 dark:text-neutral-300">
+                        {getLandingTranslations(language).dailyReportCoachStyleLabel}: {dailyReportResult.mentorFigureName}
+                      </p>
+                    )}
+                    <p className="text-base font-semibold text-foreground">
+                      {dailyReportResult.report.coachIntro}
+                    </p>
+                    <p className="text-sm text-neutral-700 dark:text-neutral-200">
+                      {dailyReportResult.report.summary}
+                    </p>
+                  </div>
+
+                  {dailyReportResult.report.wins.length > 0 && (
+                    <div className="rounded-2xl border border-emerald-200/70 dark:border-emerald-700/40 bg-emerald-50/70 dark:bg-emerald-900/20 p-4">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-emerald-800 dark:text-emerald-200 mb-2">
+                        {getLandingTranslations(language).dailyReportWinsHeading}
+                      </p>
+                      <ul className="space-y-1">
+                        {dailyReportResult.report.wins.map((item, idx) => (
+                          <li key={`daily-win-${idx}`} className="text-sm text-emerald-900/90 dark:text-emerald-100">
+                            - {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {dailyReportResult.report.momentumSignals.length > 0 && (
+                    <div className="rounded-2xl border border-sky-200/70 dark:border-sky-700/40 bg-sky-50/70 dark:bg-sky-900/20 p-4">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-sky-800 dark:text-sky-200 mb-2">
+                        {getLandingTranslations(language).dailyReportMomentumHeading}
+                      </p>
+                      <ul className="space-y-1">
+                        {dailyReportResult.report.momentumSignals.map((item, idx) => (
+                          <li key={`daily-momentum-${idx}`} className="text-sm text-sky-900/90 dark:text-sky-100">
+                            - {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {dailyReportResult.report.sectionCards.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {dailyReportResult.report.sectionCards.map((card) => (
+                        <div
+                          key={`daily-card-${card.key}`}
+                          className={`rounded-2xl border p-3 ${
+                            card.accent === "violet"
+                              ? "border-violet-200/80 dark:border-violet-700/40 bg-violet-50/60 dark:bg-violet-900/20"
+                              : card.accent === "teal"
+                                ? "border-teal-200/80 dark:border-teal-700/40 bg-teal-50/60 dark:bg-teal-900/20"
+                                : card.accent === "emerald"
+                                  ? "border-emerald-200/80 dark:border-emerald-700/40 bg-emerald-50/60 dark:bg-emerald-900/20"
+                                  : card.accent === "amber"
+                                    ? "border-amber-200/80 dark:border-amber-700/40 bg-amber-50/60 dark:bg-amber-900/20"
+                                    : card.accent === "rose"
+                                      ? "border-rose-200/80 dark:border-rose-700/40 bg-rose-50/60 dark:bg-rose-900/20"
+                                      : "border-sky-200/80 dark:border-sky-700/40 bg-sky-50/60 dark:bg-sky-900/20"
+                          }`}
+                        >
+                          <p className="text-xs font-semibold uppercase tracking-wide text-foreground/90 mb-1">
+                            {card.title}
+                          </p>
+                          <p className="text-sm text-neutral-700 dark:text-neutral-200">
+                            {card.body}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {dailyReportResult.report.tomorrowGamePlan.length > 0 && (
+                    <div className="rounded-2xl border border-amber-200/80 dark:border-amber-700/40 bg-amber-50/70 dark:bg-amber-900/20 p-4">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-amber-800 dark:text-amber-200 mb-2">
+                        {getLandingTranslations(language).dailyReportTomorrowHeading}
+                      </p>
+                      <ul className="space-y-1">
+                        {dailyReportResult.report.tomorrowGamePlan.map((item, idx) => (
+                          <li key={`daily-plan-${idx}`} className="text-sm text-amber-900/90 dark:text-amber-100">
+                            - {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {dailyReportResult.report.closingNote && (
+                    <p className="text-sm font-medium text-foreground text-center py-1">
+                      {dailyReportResult.report.closingNote}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {nutritionReportModalOpen && (
         <div
           className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
@@ -16955,46 +17477,44 @@ export default function ChatPage() {
                 </svg>
               </button>
             </div>
-            <div className="p-4 space-y-3 overflow-y-auto">
-              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+            <div className="p-3 space-y-2.5 overflow-y-auto">
+              <p className="text-[13px] leading-snug text-neutral-600 dark:text-neutral-400">
                 {getLandingTranslations(language).nutritionAnalysisModalSubtitle}
               </p>
 
-              <div>
-                <p className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                  {getLandingTranslations(language).nutritionAnalysisScopeSelectedDay}
-                </p>
-                <p className="text-sm text-foreground">
-                  {nutritionReportSelectedDate.toLocaleDateString(undefined, { dateStyle: "medium" })}
-                </p>
-                <label className="mt-2 block text-xs text-neutral-500 dark:text-neutral-400">
-                  Choose another date
-                </label>
-                <input
-                  type="date"
-                  value={nutritionReportDayKey}
-                  onChange={(e) => {
-                    const nextDayKey = e.target.value.trim();
-                    if (!nextDayKey) return;
-                    setNutritionReportDayKey(nextDayKey);
-                  }}
-                  disabled={nutritionReportLoading}
-                  className="mt-1 w-full sm:w-auto px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                  {getLandingTranslations(language).nutritionAnalysisFocusLabel}
-                </label>
-                <textarea
-                  value={nutritionReportFocusPrompt}
-                  onChange={(e) => setNutritionReportFocusPrompt(e.target.value.slice(0, 600))}
-                  disabled={nutritionReportLoading}
-                  rows={3}
-                  placeholder={getLandingTranslations(language).nutritionAnalysisFocusPlaceholder}
-                  className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2 items-end">
+                <div>
+                  <p className="block text-xs text-neutral-500 dark:text-neutral-400 mb-0.5">
+                    {getLandingTranslations(language).nutritionAnalysisScopeSelectedDay}
+                  </p>
+                  <p className="text-sm text-foreground">
+                    {nutritionReportSelectedDate.toLocaleDateString(undefined, { dateStyle: "medium" })}
+                  </p>
+                  <label className="mt-1.5 block text-xs text-neutral-500 dark:text-neutral-400">
+                    Choose another date
+                  </label>
+                  <input
+                    type="date"
+                    value={nutritionReportDayKey}
+                    onChange={(e) => {
+                      const nextDayKey = e.target.value.trim();
+                      if (!nextDayKey) return;
+                      setNutritionReportDayKey(nextDayKey);
+                    }}
+                    disabled={nutritionReportLoading}
+                    className="mt-1 w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => void runNutritionReport()}
+                  disabled={nutritionReportLoading || !canRunNutritionReport}
+                  className="w-full sm:w-auto px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                >
+                  {nutritionReportLoading
+                    ? getLandingTranslations(language).nutritionAnalysisGenerating
+                    : getLandingTranslations(language).nutritionAnalysisGenerate}
+                </button>
               </div>
 
               {!canRunNutritionReport && (
@@ -17006,19 +17526,6 @@ export default function ChatPage() {
               {nutritionReportError && (
                 <p className="text-sm text-red-600 dark:text-red-400">{nutritionReportError}</p>
               )}
-
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => void runNutritionReport()}
-                  disabled={nutritionReportLoading || !canRunNutritionReport}
-                  className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
-                >
-                  {nutritionReportLoading
-                    ? getLandingTranslations(language).nutritionAnalysisGenerating
-                    : getLandingTranslations(language).nutritionAnalysisGenerate}
-                </button>
-              </div>
 
               {nutritionReportResult && (
                 <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-3 bg-neutral-50/60 dark:bg-neutral-900/40">
@@ -17602,6 +18109,7 @@ export default function ChatPage() {
                   <div className="flex items-start gap-2">
                     <button
                       type="button"
+                      data-no-modal-border="true"
                       onClick={() => {
                         setLandingActivityGroupModal(null);
                         handleLandingActivityClick(item);
@@ -22050,8 +22558,127 @@ export default function ChatPage() {
                     <p className="text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-wrap">{habitDetailModal.description}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">How to follow through</p>
-                    <p className="text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-wrap">{habitDetailModal.howToFollowThrough}</p>
+                    <div className="mb-1 flex items-center justify-between gap-2">
+                      <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+                        Research brief
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => void generateHabitResearch()}
+                        disabled={habitResearchLoading}
+                        className="inline-flex items-center rounded-full border border-neutral-300 dark:border-neutral-600 px-2.5 py-1 text-[11px] font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
+                      >
+                        {habitResearchLoading
+                          ? "Generating…"
+                          : habitDetailModal.researchNotes
+                            ? "Refresh research"
+                            : "Generate research"}
+                      </button>
+                    </div>
+                    {habitResearchError ? (
+                      <p className="text-xs text-red-600 dark:text-red-400">{habitResearchError}</p>
+                    ) : habitDetailModal.researchNotes ? (
+                      <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/70 dark:bg-neutral-900/60 px-3 py-2">
+                        <div className="text-sm text-neutral-700 dark:text-neutral-300">
+                          <ChatMarkdown
+                            content={habitDetailModal.researchNotes}
+                            idToName={mentalModelsIndex}
+                            ltmIdToTitle={
+                              new Map(
+                                longTermMemories.map((ltm) => [
+                                  ltm._id,
+                                  translatedTitles[ltm._id] ?? ltm.title,
+                                ])
+                              )
+                            }
+                            ccIdToTitle={
+                              new Map(
+                                customConcepts.map((cc) => [
+                                  cc._id,
+                                  translatedTitles[cc._id] ?? cc.title,
+                                ])
+                              )
+                            }
+                            cgIdToTitle={
+                              new Map(
+                                conceptGroups.map((cg) => [
+                                  cg._id,
+                                  translatedTitles[cg._id] ?? cg.title,
+                                ])
+                              )
+                            }
+                            onMentalModelClick={handleMentalModelClick}
+                            onLtmClick={(id) => {
+                              const item = longTermMemories.find((m) => m._id === id);
+                              if (item) setLtmDetailModal(item);
+                            }}
+                            onCustomConceptClick={(id) => {
+                              const item = customConcepts.find((c) => c._id === id);
+                              if (item) openConceptDetail(item);
+                            }}
+                            onConceptGroupClick={(id) => {
+                              const item = conceptGroups.find((g) => g._id === id);
+                              if (!item) return;
+                              fetch(`/api/me/concept-groups/${id}`)
+                                .then((r) => (r.ok ? r.json() : Promise.reject()))
+                                .then((data) =>
+                                  setCgDetailModal({ ...item, concepts: data.concepts ?? [] })
+                                )
+                                .catch(() => setCgDetailModal(item));
+                            }}
+                            previewMap={previewMap}
+                            compact
+                          />
+                        </div>
+                        {habitDetailModal.researchUpdatedAt ? (
+                          <p className="mt-2 text-[11px] text-neutral-500 dark:text-neutral-400">
+                            Updated{" "}
+                            {new Date(habitDetailModal.researchUpdatedAt).toLocaleString(undefined, {
+                              month: "short",
+                              day: "numeric",
+                              hour: "numeric",
+                              minute: "2-digit",
+                            })}
+                          </p>
+                        ) : null}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        Generate a focused research brief to understand this 30 day experiment better.
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => setHabitFollowThroughExpanded((prev) => !prev)}
+                      className="w-full inline-flex items-center justify-between gap-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50/70 dark:bg-neutral-900/60 px-3 py-2 text-left hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                      aria-expanded={habitFollowThroughExpanded}
+                    >
+                      <span className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                        How to follow through
+                      </span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={`h-4 w-4 text-neutral-500 dark:text-neutral-400 transition-transform ${
+                          habitFollowThroughExpanded ? "rotate-180" : ""
+                        }`}
+                        aria-hidden
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
+                    {habitFollowThroughExpanded && (
+                      <p className="mt-2 text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-wrap">
+                        {habitDetailModal.howToFollowThrough}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Tips</p>
@@ -22263,7 +22890,7 @@ export default function ChatPage() {
               >
                 ✕
               </button>
-              <h2 className="font-semibold text-lg mb-2">Create custom framework</h2>
+              <h2 className="font-semibold text-lg mb-2">Create custom playground</h2>
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
                 Name your framework and select concepts to include.
               </p>
@@ -22347,7 +22974,7 @@ export default function ChatPage() {
                 disabled={!cgCustomCreateTitle.trim() || cgCustomCreateLoading}
                 className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
               >
-                {cgCustomCreateLoading ? "Creating…" : "Create framework"}
+                {cgCustomCreateLoading ? "Creating…" : "Create playground"}
               </button>
             </div>
           </div>
@@ -22385,7 +23012,7 @@ export default function ChatPage() {
                   >
                     ✕
                   </button>
-                  <h2 className="font-semibold text-lg mb-2">Create framework</h2>
+                  <h2 className="font-semibold text-lg mb-2">Create playground</h2>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
                     What should we call it? Name your framework or focus area (e.g. Finance, Career, Health).
                   </p>

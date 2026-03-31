@@ -94,8 +94,8 @@ function buildNotifications(
     for (let day = 0; day <= 6; day++) {
       notifications.push({
         id: NIGHTLY_DAILY_REPORT_BASE_ID + day,
-        title: "Your daily report is ready",
-        body: "Your daily report is ready, click to view.",
+        title: "Your daily coach report is ready",
+        body: "Open your daily recap to carry momentum into tomorrow.",
         schedule: {
           repeats: true,
           allowWhileIdle: true,

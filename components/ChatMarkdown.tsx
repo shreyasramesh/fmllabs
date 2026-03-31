@@ -260,6 +260,7 @@ export function ChatMarkdown({
   onCustomConceptClick,
   onConceptGroupClick,
   previewMap,
+  compact = false,
 }: {
   content: string;
   idToName: Map<string, string>;
@@ -273,6 +274,7 @@ export function ChatMarkdown({
   onCustomConceptClick?: (id: string) => void;
   onConceptGroupClick?: (id: string) => void;
   previewMap?: Map<string, MentalModelPreview>;
+  compact?: boolean;
 }) {
   const withRefs = preprocessReferenceLinks(
     content,
@@ -284,7 +286,9 @@ export function ChatMarkdown({
   const processed = preprocessMentalModelLinks(withRefs, idToName);
 
   return (
-    <div className="prose prose-sm sm:prose-base prose-neutral dark:prose-invert max-w-prose leading-relaxed prose-p:my-3 prose-ul:my-2 prose-li:my-0.5">
+    <div
+      className={`prose ${compact ? "prose-sm" : "prose-sm sm:prose-base"} prose-neutral dark:prose-invert max-w-prose leading-relaxed prose-p:my-3 prose-ul:my-2 prose-li:my-0.5`}
+    >
       <ReactMarkdown
         components={{
           a: ({ href, children }) => {

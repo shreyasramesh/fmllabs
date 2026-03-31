@@ -108,6 +108,7 @@ export interface LandingTranslations {
   nutritionGoalsWizardCalculationError: string;
   nutritionGoalsSaveError: string;
   nutritionAnalysisButtonLabel: string;
+  dailyReportButtonLabel: string;
   nutritionAnalysisModalTitle: string;
   nutritionAnalysisModalSubtitle: string;
   nutritionAnalysisFocusLabel: string;
@@ -122,6 +123,18 @@ export interface LandingTranslations {
   nutritionAnalysisGoalStatusHeading: string;
   nutritionAnalysisHighlightsHeading: string;
   nutritionAnalysisTipsHeading: string;
+  dailyReportBannerCta: string;
+  dailyReportModalTitle: string;
+  dailyReportModalSubtitle: string;
+  dailyReportChooseDateLabel: string;
+  dailyReportGenerate: string;
+  dailyReportGenerating: string;
+  dailyReportNoDataError: string;
+  dailyReportRequestError: string;
+  dailyReportCoachStyleLabel: string;
+  dailyReportWinsHeading: string;
+  dailyReportMomentumHeading: string;
+  dailyReportTomorrowHeading: string;
   weeklySummaryButtonLabel: string;
   weeklySummaryModalTitle: string;
   weeklySummaryLoading: string;
@@ -252,6 +265,7 @@ const EN: LandingTranslations = {
   nutritionGoalsWizardCalculationError: "Couldn’t calculate goals. Try again.",
   nutritionGoalsSaveError: "Couldn’t save goals. Try again.",
   nutritionAnalysisButtonLabel: "Analyze nutrition",
+  dailyReportButtonLabel: "Daily report",
   nutritionAnalysisModalTitle: "Nutrition analysis",
   nutritionAnalysisModalSubtitle:
     "Get a simple report based on your goals and your nutrition/exercise logs for the day.",
@@ -268,6 +282,18 @@ const EN: LandingTranslations = {
   nutritionAnalysisGoalStatusHeading: "Goal status",
   nutritionAnalysisHighlightsHeading: "Highlights",
   nutritionAnalysisTipsHeading: "Tips for tomorrow",
+  dailyReportBannerCta: "Your daily report is ready. Open your coach recap for tomorrow",
+  dailyReportModalTitle: "Daily report",
+  dailyReportModalSubtitle: "Your coach-style day recap with momentum for tomorrow",
+  dailyReportChooseDateLabel: "Choose date",
+  dailyReportGenerate: "Generate report",
+  dailyReportGenerating: "Generating...",
+  dailyReportNoDataError: "Add some activity entries first for this day.",
+  dailyReportRequestError: "Could not generate your daily report. Try again.",
+  dailyReportCoachStyleLabel: "Coach style",
+  dailyReportWinsHeading: "Today's wins",
+  dailyReportMomentumHeading: "Momentum signals",
+  dailyReportTomorrowHeading: "Tomorrow game plan",
   weeklySummaryButtonLabel: "Weekly Summary",
   weeklySummaryModalTitle: "Weekly Summary",
   weeklySummaryLoading: "Loading weekly summary...",

@@ -176,6 +176,9 @@ export interface Habit {
   description: string;
   howToFollowThrough: string;
   tips: string;
+  /** AI-generated research notes to better understand this experiment. */
+  researchNotes?: string;
+  researchUpdatedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -367,6 +370,54 @@ export interface NutritionDailyReportSnapshot {
 }
 
 interface NutritionDailyReportSnapshotDoc extends Omit<NutritionDailyReportSnapshot, "_id"> {
+  _id?: ObjectId;
+}
+
+export interface DailyLifeReportSnapshot {
+  _id?: string;
+  userId: string;
+  dayKey: string;
+  entryDay: number;
+  entryMonth: number;
+  entryYear: number;
+  dayLabel: string;
+  mentorFigureId?: string;
+  mentorFigureName?: string;
+  report: {
+    coachIntro: string;
+    summary: string;
+    wins: string[];
+    momentumSignals: string[];
+    tomorrowGamePlan: string[];
+    sectionCards: Array<{
+      key: "conversations" | "memories" | "focus" | "nutrition_exercise" | "journaling";
+      title: string;
+      body: string;
+      accent: "violet" | "teal" | "emerald" | "amber" | "rose" | "sky";
+    }>;
+    closingNote: string;
+  };
+  snapshot: {
+    conversationsCount: number;
+    conversationMessagesCount: number;
+    memoriesTouchedCount: number;
+    focusSessionsCount: number;
+    focusMinutes: number;
+    nutritionEntriesCount: number;
+    exerciseEntriesCount: number;
+    journalEntriesCount: number;
+    caloriesFood: number;
+    caloriesExercise: number;
+    carbsGrams: number;
+    proteinGrams: number;
+    fatGrams: number;
+  };
+  generatedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface DailyLifeReportSnapshotDoc extends Omit<DailyLifeReportSnapshot, "_id"> {
   _id?: ObjectId;
 }
 
@@ -1331,6 +1382,8 @@ export async function updateHabit(
     description?: string;
     howToFollowThrough?: string;
     tips?: string;
+    researchNotes?: string;
+    researchUpdatedAt?: Date;
     bucket?: HabitBucket;
     intendedMonth?: number | null;
     intendedYear?: number | null;
@@ -1345,6 +1398,7 @@ export async function updateHabit(
   }
   const {
     bucket: _b,
+    researchUpdatedAt: researchUpdatedAt,
     intendedMonth: im,
     intendedYear: iy,
     ...textUpdates
@@ -1352,6 +1406,9 @@ export async function updateHabit(
   const enc = encryptHabitFields<Record<string, unknown>>(textUpdates as object);
   const setDoc: Record<string, unknown> = { ...enc, updatedAt: new Date() };
   if (updates.bucket !== undefined) setDoc.bucket = updates.bucket;
+  if (researchUpdatedAt instanceof Date) {
+    setDoc.researchUpdatedAt = researchUpdatedAt;
+  }
 
   const unsetDoc: Record<string, ""> = {};
   if (im !== undefined && iy !== undefined) {
@@ -2248,6 +2305,77 @@ export async function upsertDailyNutritionReport(
   };
 }
 
+export async function getDailyLifeReport(
+  userId: string,
+  dayKey: string
+): Promise<(DailyLifeReportSnapshot & { _id: string }) | null> {
+  const parts = parseDayKeyParts(dayKey);
+  if (!parts) return null;
+  const database = await getDb();
+  const doc = await database
+    .collection<DailyLifeReportSnapshotDoc>("user_daily_life_reports")
+    .findOne({ userId, dayKey });
+  if (!doc?._id) return null;
+  return {
+    ...doc,
+    _id: doc._id.toString(),
+  };
+}
+
+export async function upsertDailyLifeReport(
+  userId: string,
+  input: {
+    dayKey: string;
+    dayLabel: string;
+    mentorFigureId?: string;
+    mentorFigureName?: string;
+    report: DailyLifeReportSnapshot["report"];
+    snapshot: DailyLifeReportSnapshot["snapshot"];
+    generatedAt?: Date;
+  }
+): Promise<DailyLifeReportSnapshot & { _id: string }> {
+  const parts = parseDayKeyParts(input.dayKey);
+  if (!parts) {
+    throw new Error("Invalid dayKey");
+  }
+  const database = await getDb();
+  const collection = database.collection<DailyLifeReportSnapshotDoc>("user_daily_life_reports");
+  await collection.createIndex({ userId: 1, dayKey: 1 }, { unique: true });
+  await collection.createIndex({ userId: 1, entryYear: -1, entryMonth: -1, entryDay: -1, updatedAt: -1 });
+  const now = new Date();
+  const generatedAt = input.generatedAt ?? now;
+  const result = await collection.findOneAndUpdate(
+    { userId, dayKey: input.dayKey },
+    {
+      $set: {
+        userId,
+        dayKey: input.dayKey,
+        entryYear: parts.year,
+        entryMonth: parts.month,
+        entryDay: parts.day,
+        dayLabel: input.dayLabel,
+        mentorFigureId: input.mentorFigureId ?? "",
+        mentorFigureName: input.mentorFigureName ?? "",
+        report: input.report,
+        snapshot: input.snapshot,
+        generatedAt,
+        updatedAt: now,
+      },
+      $setOnInsert: {
+        createdAt: now,
+      },
+    },
+    { upsert: true, returnDocument: "after" }
+  );
+  if (!result?._id) {
+    throw new Error("Failed to save daily life report");
+  }
+  return {
+    ...result,
+    _id: result._id.toString(),
+  };
+}
+
 export async function deleteSavedTranscript(id: string, userId: string): Promise<boolean> {
   const database = await getDb();
   let oid: ObjectId;
@@ -2505,6 +2633,7 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   await database.collection<WeightEntryDoc>("user_weight_entries").deleteMany({ userId });
   await database.collection<FocusEntryDoc>("user_focus_entries").deleteMany({ userId });
   await database.collection<NutritionDailyReportSnapshotDoc>("user_nutrition_daily_reports").deleteMany({ userId });
+  await database.collection<DailyLifeReportSnapshotDoc>("user_daily_life_reports").deleteMany({ userId });
   await database.collection<ReusableNutritionEntryUsageDoc>("user_reusable_nutrition_entry_usage").deleteMany({ userId });
   await database.collection("user_progress").deleteMany({ userId });
   await database.collection("weekly_reflection_sends").deleteMany({ userId });

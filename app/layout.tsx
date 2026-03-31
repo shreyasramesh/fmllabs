@@ -8,6 +8,7 @@ import { TtsSpeedProvider } from "@/components/TtsSpeedProvider";
 import { BackgroundProvider } from "@/components/BackgroundProvider";
 import { NativeHaptics } from "@/components/NativeHaptics";
 import { NativeAppUrlHandler } from "@/components/NativeAppUrlHandler";
+import { DailyReportHangingBanner } from "@/components/DailyReportHangingBanner";
 import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
 import "./globals.css";
 
@@ -89,7 +90,10 @@ export default function RootLayout({
             <LanguageProvider>
               <UserTypeProvider>
                 <TtsSpeedProvider>
-                  <BackgroundProvider>{children}</BackgroundProvider>
+                  <BackgroundProvider>
+                    <DailyReportHangingBanner />
+                    {children}
+                  </BackgroundProvider>
                 </TtsSpeedProvider>
               </UserTypeProvider>
             </LanguageProvider>

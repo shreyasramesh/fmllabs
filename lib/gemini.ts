@@ -578,6 +578,51 @@ export interface NutritionDailyReportResult {
   tomorrowTips: string[];
 }
 
+export interface DailyLifeReportInput {
+  dayLabel: string;
+  mentorStyle?: {
+    figureId: string;
+    figureName: string;
+    figureDescription?: string;
+  } | null;
+  snapshot: {
+    conversationsCount: number;
+    conversationMessagesCount: number;
+    memoriesTouchedCount: number;
+    focusSessionsCount: number;
+    focusMinutes: number;
+    nutritionEntriesCount: number;
+    exerciseEntriesCount: number;
+    journalEntriesCount: number;
+    caloriesFood: number;
+    caloriesExercise: number;
+    carbsGrams: number;
+    proteinGrams: number;
+    fatGrams: number;
+  };
+  excerpts: {
+    journal: string[];
+    memories: string[];
+    conversations: string[];
+    focusTags: string[];
+  };
+}
+
+export interface DailyLifeReportResult {
+  coachIntro: string;
+  summary: string;
+  wins: string[];
+  momentumSignals: string[];
+  tomorrowGamePlan: string[];
+  sectionCards: Array<{
+    key: "conversations" | "memories" | "focus" | "nutrition_exercise" | "journaling";
+    title: string;
+    body: string;
+    accent: "violet" | "teal" | "emerald" | "amber" | "rose" | "sky";
+  }>;
+  closingNote: string;
+}
+
 export interface NutritionGoalGuidanceInput {
   userGoalIntent: string;
   periodLabel: string;
@@ -1564,6 +1609,254 @@ TODAY TOTALS:
   }
 }
 
+export async function generateDailyLifeReport(
+  input: DailyLifeReportInput,
+  usageContext?: GeminiUsageContext
+): Promise<DailyLifeReportResult> {
+  const model = getModel();
+  const mentorStyleBlock = input.mentorStyle
+    ? `Mentor style for today:
+- Figure: ${input.mentorStyle.figureName} (${input.mentorStyle.figureId})
+- Voice cues: ${input.mentorStyle.figureDescription?.trim() || "Use an encouraging, thoughtful coach tone inspired by this figure."}`
+    : `Mentor style for today:
+- Figure: default coach
+- Voice cues: encouraging, motivational, grounded, practical, warm`;
+  const result = await model.generateContent(
+    `You are a motivational daily coach writing a beautiful end-of-day report.
+
+Core behavior:
+- Be supportive, optimistic, and practical.
+- Sound like a caring coach, never critical or shaming.
+- Celebrate progress, even when the day was imperfect.
+- Build excitement for tomorrow with clear next actions.
+- Do not provide medical diagnosis or medical claims.
+
+${mentorStyleBlock}
+
+Return ONLY valid JSON with exactly this shape:
+{
+  "coachIntro": "1-2 short motivational sentences",
+  "summary": "2-4 short sentences covering the day holistically",
+  "wins": ["win 1", "win 2", "..."],
+  "momentumSignals": ["signal 1", "signal 2", "..."],
+  "tomorrowGamePlan": ["action 1", "action 2", "action 3"],
+  "sectionCards": [
+    { "key": "conversations", "title": "...", "body": "...", "accent": "violet" },
+    { "key": "memories", "title": "...", "body": "...", "accent": "teal" },
+    { "key": "focus", "title": "...", "body": "...", "accent": "emerald" },
+    { "key": "nutrition_exercise", "title": "...", "body": "...", "accent": "amber" },
+    { "key": "journaling", "title": "...", "body": "...", "accent": "rose" }
+  ],
+  "closingNote": "1 short encouraging sentence for tomorrow"
+}
+
+Constraints:
+- wins: 2 to 5 items
+- momentumSignals: 2 to 5 items
+- tomorrowGamePlan: exactly 3 to 5 items
+- sectionCards: exactly 5 items with the listed keys
+- body fields: 1-3 concise sentences
+- Allowed accent values only: violet, teal, emerald, amber, rose, sky
+
+DAY:
+- Label: ${input.dayLabel}
+
+AGGREGATED SNAPSHOT:
+- Conversations: ${input.snapshot.conversationsCount}
+- Conversation messages: ${input.snapshot.conversationMessagesCount}
+- Memories touched: ${input.snapshot.memoriesTouchedCount}
+- Focus sessions: ${input.snapshot.focusSessionsCount}
+- Focus minutes: ${input.snapshot.focusMinutes}
+- Nutrition entries: ${input.snapshot.nutritionEntriesCount}
+- Exercise entries: ${input.snapshot.exerciseEntriesCount}
+- Journal entries: ${input.snapshot.journalEntriesCount}
+- Calories food: ${input.snapshot.caloriesFood} kcal
+- Calories exercise: ${input.snapshot.caloriesExercise} kcal
+- Carbs: ${input.snapshot.carbsGrams} g
+- Protein: ${input.snapshot.proteinGrams} g
+- Fat: ${input.snapshot.fatGrams} g
+
+EXCERPTS:
+- Journal notes:
+${(input.excerpts.journal.length > 0 ? input.excerpts.journal : ["(none)"]).map((v) => `  - ${v}`).join("\n")}
+- Memory notes:
+${(input.excerpts.memories.length > 0 ? input.excerpts.memories : ["(none)"]).map((v) => `  - ${v}`).join("\n")}
+- Conversation snippets:
+${(input.excerpts.conversations.length > 0 ? input.excerpts.conversations : ["(none)"]).map((v) => `  - ${v}`).join("\n")}
+- Focus tags:
+${(input.excerpts.focusTags.length > 0 ? input.excerpts.focusTags : ["(none)"]).map((v) => `  - ${v}`).join("\n")}`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const raw = result.response.text().trim();
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  try {
+    const parsed = JSON.parse(cleaned) as {
+      coachIntro?: unknown;
+      summary?: unknown;
+      wins?: unknown;
+      momentumSignals?: unknown;
+      tomorrowGamePlan?: unknown;
+      sectionCards?: unknown;
+      closingNote?: unknown;
+    };
+    const toList = (value: unknown, max: number) =>
+      Array.isArray(value)
+        ? value
+            .map((item) => (typeof item === "string" ? item.trim() : ""))
+            .filter(Boolean)
+            .slice(0, max)
+        : [];
+    const allowedAccents = new Set(["violet", "teal", "emerald", "amber", "rose", "sky"]);
+    const cardMap = new Map<string, { title: string; body: string; accent: "violet" | "teal" | "emerald" | "amber" | "rose" | "sky" }>();
+    if (Array.isArray(parsed.sectionCards)) {
+      for (const card of parsed.sectionCards) {
+        if (!card || typeof card !== "object") continue;
+        const c = card as Record<string, unknown>;
+        const key = typeof c.key === "string" ? c.key : "";
+        const title = typeof c.title === "string" ? c.title.trim() : "";
+        const body = typeof c.body === "string" ? c.body.trim() : "";
+        const accentRaw = typeof c.accent === "string" ? c.accent : "";
+        if (!key || !title || !body || !allowedAccents.has(accentRaw)) continue;
+        if (key === "conversations" || key === "memories" || key === "focus" || key === "nutrition_exercise" || key === "journaling") {
+          cardMap.set(key, {
+            title,
+            body,
+            accent: accentRaw as "violet" | "teal" | "emerald" | "amber" | "rose" | "sky",
+          });
+        }
+      }
+    }
+    const fallbackCards: DailyLifeReportResult["sectionCards"] = [
+      {
+        key: "conversations",
+        title: "Conversations",
+        body: `You had ${input.snapshot.conversationsCount} conversation touches today. Keep that reflective momentum going.`,
+        accent: "violet",
+      },
+      {
+        key: "memories",
+        title: "Memory",
+        body: `${input.snapshot.memoriesTouchedCount} memory signals were active today. You are turning experiences into reusable clarity.`,
+        accent: "teal",
+      },
+      {
+        key: "focus",
+        title: "Focus",
+        body: `${input.snapshot.focusSessionsCount} focus sessions totaling ${input.snapshot.focusMinutes} minutes. Consistency beats intensity.`,
+        accent: "emerald",
+      },
+      {
+        key: "nutrition_exercise",
+        title: "Nutrition + Exercise",
+        body: `Food ${input.snapshot.caloriesFood} kcal and exercise burn ${input.snapshot.caloriesExercise} kcal were logged. Keep showing up for your body.`,
+        accent: "amber",
+      },
+      {
+        key: "journaling",
+        title: "Journaling",
+        body: `${input.snapshot.journalEntriesCount} journal entries were captured. Reflection is compounding.`,
+        accent: "rose",
+      },
+    ];
+    const sectionCards = fallbackCards.map((fallback) => {
+      const parsedCard = cardMap.get(fallback.key);
+      return parsedCard ? { ...fallback, ...parsedCard } : fallback;
+    });
+    const wins = toList(parsed.wins, 5);
+    const momentumSignals = toList(parsed.momentumSignals, 5);
+    const tomorrowGamePlan = toList(parsed.tomorrowGamePlan, 5);
+    return {
+      coachIntro:
+        typeof parsed.coachIntro === "string" && parsed.coachIntro.trim()
+          ? parsed.coachIntro.trim()
+          : "Your day has real momentum in it. Let's carry that energy into tomorrow.",
+      summary:
+        typeof parsed.summary === "string" && parsed.summary.trim()
+          ? parsed.summary.trim()
+          : "You captured meaningful signals across your day. This report turns those signals into a practical next step.",
+      wins:
+        wins.length > 0
+          ? wins
+          : [
+              `You logged ${input.snapshot.journalEntriesCount} journal entries.`,
+              `You completed ${input.snapshot.focusSessionsCount} focus sessions.`,
+            ],
+      momentumSignals:
+        momentumSignals.length > 0
+          ? momentumSignals
+          : [
+              "Consistency is visible in your tracking behavior.",
+              "Your reflection and action loops are getting tighter.",
+            ],
+      tomorrowGamePlan:
+        tomorrowGamePlan.length > 0
+          ? tomorrowGamePlan
+          : [
+              "Choose your top 1 priority before the day starts.",
+              "Protect one focused work block on your calendar.",
+              "Close the day with one short reflection entry.",
+            ],
+      sectionCards,
+      closingNote:
+        typeof parsed.closingNote === "string" && parsed.closingNote.trim()
+          ? parsed.closingNote.trim()
+          : "Tomorrow is already set up for a strong start. Keep moving one deliberate step at a time.",
+    };
+  } catch {
+    return {
+      coachIntro: "Your day has real momentum in it. Let's carry that energy into tomorrow.",
+      summary: "You captured meaningful signals across your day. This report turns those signals into practical next steps.",
+      wins: [
+        `You logged ${input.snapshot.journalEntriesCount} journal entries.`,
+        `You completed ${input.snapshot.focusSessionsCount} focus sessions.`,
+      ],
+      momentumSignals: [
+        "Consistency is visible in your tracking behavior.",
+        "Your reflection and action loops are getting tighter.",
+      ],
+      tomorrowGamePlan: [
+        "Choose your top 1 priority before the day starts.",
+        "Protect one focused work block on your calendar.",
+        "Close the day with one short reflection entry.",
+      ],
+      sectionCards: [
+        {
+          key: "conversations",
+          title: "Conversations",
+          body: `You had ${input.snapshot.conversationsCount} conversation touches today. Keep that reflective momentum going.`,
+          accent: "violet",
+        },
+        {
+          key: "memories",
+          title: "Memory",
+          body: `${input.snapshot.memoriesTouchedCount} memory signals were active today. You are turning experiences into reusable clarity.`,
+          accent: "teal",
+        },
+        {
+          key: "focus",
+          title: "Focus",
+          body: `${input.snapshot.focusSessionsCount} focus sessions totaling ${input.snapshot.focusMinutes} minutes. Consistency beats intensity.`,
+          accent: "emerald",
+        },
+        {
+          key: "nutrition_exercise",
+          title: "Nutrition + Exercise",
+          body: `Food ${input.snapshot.caloriesFood} kcal and exercise burn ${input.snapshot.caloriesExercise} kcal were logged. Keep showing up for your body.`,
+          accent: "amber",
+        },
+        {
+          key: "journaling",
+          title: "Journaling",
+          body: `${input.snapshot.journalEntriesCount} journal entries were captured. Reflection is compounding.`,
+          accent: "rose",
+        },
+      ],
+      closingNote:
+        "Tomorrow is already set up for a strong start. Keep moving one deliberate step at a time.",
+    };
+  }
+}
+
 export async function generateNutritionGoalGuidance(
   input: NutritionGoalGuidanceInput,
   usageContext?: GeminiUsageContext
@@ -2166,6 +2459,54 @@ Return ONLY valid JSON, no markdown or extra text.`
     howToFollowThrough: parsed.howToFollowThrough ?? "",
     tips: parsed.tips ?? "",
   };
+}
+
+export async function generateHabitResearchNotes(
+  input: {
+    name: string;
+    description: string;
+    howToFollowThrough: string;
+    tips: string;
+    bucket?: HabitBucket;
+  },
+  languageName?: string,
+  usageContext?: GeminiUsageContext
+): Promise<string> {
+  const languageInstruction =
+    languageName && languageName !== "English"
+      ? ` Write all content in ${languageName}.`
+      : "";
+  const bucketBlock = input.bucket
+    ? `\nLife area: ${HABIT_BUCKET_PROMPTS[input.bucket]}`
+    : "";
+  const model = getModel();
+  const result = await model.generateContent(
+    `You are creating a practical research brief for a user's 30-day experiment.
+
+Return a concise markdown brief with exactly these headings:
+## What this experiment is testing
+## What to research (high-value)
+## Questions to answer this month
+## Success signals to track weekly
+## Common mistakes to avoid
+
+Rules:
+- Keep it practical and evidence-oriented.
+- Use short bullet points under each heading.
+- Avoid fluff or generic motivation language.
+- Tailor to the specific experiment details.
+${languageInstruction}${bucketBlock}
+
+Experiment name: ${input.name}
+Description: ${input.description}
+How to follow through: ${input.howToFollowThrough}
+Tips: ${input.tips}
+
+Return ONLY markdown text, no JSON and no extra commentary.`
+  );
+  const text = result.response.text().trim();
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  return text;
 }
 
 /** Generated mental model (id will be assigned server-side as custom_<hex>). */
