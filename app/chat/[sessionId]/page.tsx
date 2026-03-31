@@ -5766,11 +5766,17 @@ export default function ChatPage() {
   // Letter modal: only show when user clicks "Crafted with Intention" (no longer auto-show for first-time; that's now in onboarding step 3)
 
   useEffect(() => {
-    refetchSavedConcepts();
+    const timer = window.setTimeout(() => {
+      refetchSavedConcepts();
+    }, 180);
+    return () => window.clearTimeout(timer);
   }, [refetchSavedConcepts]);
 
   useEffect(() => {
-    refetchLongTermMemories();
+    const timer = window.setTimeout(() => {
+      refetchLongTermMemories();
+    }, 220);
+    return () => window.clearTimeout(timer);
   }, [refetchLongTermMemories]);
 
   useEffect(() => {
@@ -5778,16 +5784,25 @@ export default function ChatPage() {
   }, [refetchTranscripts]);
 
   useEffect(() => {
-    refetchCustomConcepts();
+    const timer = window.setTimeout(() => {
+      refetchCustomConcepts();
+    }, 260);
+    return () => window.clearTimeout(timer);
   }, [refetchCustomConcepts]);
 
   useEffect(() => {
-    refetchConceptGroups();
+    const timer = window.setTimeout(() => {
+      refetchConceptGroups();
+    }, 300);
+    return () => window.clearTimeout(timer);
   }, [refetchConceptGroups]);
 
   useEffect(() => {
-    refetchHabits();
-    refetchSavedPerspectiveCards();
+    const timer = window.setTimeout(() => {
+      refetchHabits();
+      refetchSavedPerspectiveCards();
+    }, 340);
+    return () => window.clearTimeout(timer);
   }, [refetchHabits, refetchSavedPerspectiveCards]);
 
   useEffect(() => {
@@ -9047,15 +9062,19 @@ export default function ChatPage() {
   }, [libraryPanelOpen]);
 
   useEffect(() => {
-    fetch("/api/famous-figures")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data?.categories && data?.figures) {
-          setFiguresData({ categories: data.categories, figures: data.figures });
-        }
-      })
-      .catch(() => {});
-  }, []);
+    if (figuresData) return;
+    const timer = window.setTimeout(() => {
+      fetch("/api/famous-figures")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data) => {
+          if (data?.categories && data?.figures) {
+            setFiguresData({ categories: data.categories, figures: data.figures });
+          }
+        })
+        .catch(() => {});
+    }, 420);
+    return () => window.clearTimeout(timer);
+  }, [figuresData]);
 
   // Fetch followedFigureIds when user is logged in so "Ask mentors" button can show
   useEffect(() => {
@@ -9074,6 +9093,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (libraryPanelOpen !== "figures") return;
+    if (figuresData && (!userId || followedFigureIds.length > 0)) return;
     setFiguresLoading(true);
     Promise.all([
       fetch("/api/famous-figures").then((r) => (r.ok ? r.json() : null)),
