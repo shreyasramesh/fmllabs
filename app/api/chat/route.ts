@@ -252,6 +252,11 @@ const DETAILED_RESPONSE_VERBOSITY_ADDENDUM = `
 - Still stay readable and avoid repetitive filler.
 `;
 
+const RESPONSE_VERBOSITY_MAX_OUTPUT_TOKENS: Record<ResponseVerbosity, number> = {
+  compact: 320,
+  detailed: 820,
+};
+
 function buildMentorOneOnOneSystemPrompt(figure: FamousFigure): string {
   const bio = compactPromptText(figure.description, 520);
   const bioBlock =
@@ -1386,13 +1391,13 @@ ${userNamePromptSuffix}${langInstr}`;
       async start(controller) {
         try {
           controller.enqueue(encoder.encode(contextBlockForStream));
-        const responseMaxOutputTokens =
-          responseVerbosity === "compact" ? 360 : undefined;
+          const responseMaxOutputTokens =
+            RESPONSE_VERBOSITY_MAX_OUTPUT_TOKENS[responseVerbosity];
           for await (const chunk of streamGenerateContent(
             systemPromptForGemini,
             messagesForGemini,
             {
-            maxOutputTokens: responseMaxOutputTokens,
+              maxOutputTokens: responseMaxOutputTokens,
               onUsage: (inputTokens, outputTokens) => {
                 const costUsd = computeGeminiCost(inputTokens, outputTokens);
                 recordUsageEvent({

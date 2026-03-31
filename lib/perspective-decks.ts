@@ -51,6 +51,10 @@ export interface PerspectiveDeck {
 }
 
 const indexCache = new Map<string, PerspectiveDeckIndex>();
+type ParsedPerspectiveDeck = Omit<Partial<PerspectiveDeck>, "cards"> & {
+  cards?: PerspectiveCard[];
+};
+const deckFileCache = new Map<string, ParsedPerspectiveDeck | null>();
 
 function getIndexPath(language?: string | null): string {
   const base = path.join(process.cwd(), "perspective-decks", "perspective-decks-index.yaml");
@@ -92,10 +96,18 @@ export function loadPerspectiveDeck(deckId: string, language?: string | null): P
   if (!entry) return null;
 
   const filePath = getDeckFilePath(entry.path, language);
-  if (!fs.existsSync(filePath)) return null;
-
-  const content = fs.readFileSync(filePath, "utf-8");
-  const parsed = yaml.parse(content) as PerspectiveDeck;
+  const cached = deckFileCache.get(filePath);
+  let parsed = cached;
+  if (parsed === undefined) {
+    if (!fs.existsSync(filePath)) {
+      deckFileCache.set(filePath, null);
+      return null;
+    }
+    const content = fs.readFileSync(filePath, "utf-8");
+    const parsedYaml = yaml.parse(content) as ParsedPerspectiveDeck;
+    parsed = parsedYaml?.cards?.length ? parsedYaml : null;
+    deckFileCache.set(filePath, parsed);
+  }
   if (!parsed?.cards?.length) return null;
 
   return {
