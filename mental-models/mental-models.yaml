@@ -2908,58 +2908,65 @@ mental_models:
   - id: loss_aversion_bias
     name: Loss Aversion Bias
     quick_introduction: |
-      Loss aversion is the tendency to prefer avoiding losses over acquiring equivalent gains.
-      People feel the pain of losing roughly twice as strongly as they feel the pleasure of gaining.
+      We often feel the pain of losing something more intensely than the
+      pleasure of gaining something of equal value.
     one_liner: Losses feel roughly twice as painful as equivalent gains feel good.
     try_this:
-      - "Ask yourself: Am I overvaluing what I'd lose vs. what I'd gain?"
-      - Reframe the choice as gains instead of losses and see if your view changes.
-      - Notice when fear of losing is driving the decision more than the actual upside.
+      - Before deciding, list both gains and losses side by side with equal weight.
+      - Reframe the same choice once as a gain and once as a loss; notice what changes.
+      - Use a 24-hour pause for high-stakes choices that feel urgent.
     ask_yourself:
-      - What would I choose if I were starting from zero?
-      - Am I holding on because of what I'd lose, or because the future is genuinely better?
+      - What would I choose if I started from zero today?
+      - Am I focused more on what I might lose than what I could gain?
+      - Is fear of loss clouding this decision?
     in_more_detail: |
-      Developed by Daniel Kahneman and Amos Tversky, loss aversion describes how losses and gains
-      are perceived asymmetrically. The psychological impact of losing $100 is typically much
-      greater than the satisfaction of gaining $100. This bias influences decisions across
-      finance, negotiations, and everyday choices, often leading to risk-averse behavior
-      when potential losses are salient.
+      At the heart of loss aversion bias is our tendency to prefer avoiding losses
+      rather than pursuing gains, even when the objective value is equal.
+      Our brains react more strongly to the possibility of losing than to the
+      possibility of gaining.
+
+      For example, the disappointment of losing $10 often feels more intense than
+      the satisfaction of gaining $10. This does not apply only to money; it also
+      shows up in opportunities, possessions, relationships, and status.
     why_this_is_important: |
-      Understanding loss aversion helps you recognize when fear of loss is driving decisions
-      more than rational analysis. It explains why people hold onto losing investments, avoid
-      necessary changes, and make suboptimal choices in negotiations and career decisions.
+      1. It can make you miss valuable opportunities by focusing too much on what
+      you might lose instead of what you might gain.
+
+      2. It can lead to overly conservative decisions that keep you stuck in
+      mediocre situations longer than necessary.
+
+      3. Understanding this bias helps you evaluate choices more objectively by
+      weighing real risks against potential upside.
     when_to_use:
       - decision-making
       - investing
       - career_moves
       - risk_assessment
     how_can_you_spot_it:
-      emotional_reaction_to_losses: |
-        Notice when the prospect of losing something triggers disproportionate anxiety
-        or resistance compared to the upside of a potential gain.
-      reluctance_to_change: |
-        Hesitation to switch strategies, leave a job, or sell an asset even when
-        objective analysis suggests it's the better option.
-      framing_sensitivity: |
-        Decisions shift dramatically based on whether options are framed as gains
-        or losses, even when the outcomes are equivalent.
-      overvaluing_what_you_have: |
-        The endowment effect—placing higher value on things you own simply because
-        you own them—often accompanies loss aversion.
+      status_quo_preference: |
+        You stick with the current path even when better options exist, because
+        change feels risky.
+      disproportionate_worry: |
+        You spend more mental energy on what could go wrong than on what could go
+        right.
+      sunk_cost_clinging: |
+        You keep investing time, money, or effort into something that is not
+        working because you do not want to "waste" what you already put in.
+      deal_urgency: |
+        You feel pressure to act on sales, limited-time offers, or "opportunities"
+        mainly because you fear missing out.
     examples:
       investing: |
-        Holding onto a declining stock to "avoid realizing the loss" while missing
-        better investment opportunities elsewhere.
+        Refusing to sell a losing investment because realizing the loss feels
+        worse than moving on to a better option.
       career: |
-        Staying in an unfulfilling job because leaving feels like losing security,
-        even when the new opportunity offers greater growth.
+        Staying in a role that no longer fits because leaving feels like giving
+        up security.
       negotiations: |
-        Rejecting a fair offer because it's framed as "giving up" something,
-        rather than "gaining" an agreement.
-      product_design: |
-        Free trials that convert to paid—users experience "losing" the service
-        when the trial ends, which motivates subscription more than "gaining"
-        a new service would.
+        Rejecting a reasonable offer because any concession feels like losing.
+      purchasing: |
+        Buying quickly during "limited time" promotions to avoid missing out,
+        even when the purchase is not necessary.
     real_world_implications: |
       Loss aversion shapes markets, policy, and individual behavior. It explains
       why insurance and warranties sell well, why people avoid beneficial change,

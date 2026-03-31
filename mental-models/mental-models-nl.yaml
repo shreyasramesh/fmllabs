@@ -2724,8 +2724,8 @@ mental_models:
   - id: loss_aversion_bias
     name: Verliesaversiebias
     quick_introduction: |
-      Verliesaversie is de neiging om het vermijden van verliezen te verkiezen boven het behalen van gelijkwaardige winsten.
-      Mensen ervaren de pijn van verlies ongeveer twee keer zo sterk als het plezier van winst.
+      We often feel the pain of losing something more intensely than the
+      pleasure of gaining something of equal value.
     one_liner: Verliezen voelen ongeveer twee keer zo pijnlijk als gelijkwaardige winsten goed voelen.
     try_this:
       - "Vraag jezelf af: waardeer ik te veel wat ik zou verliezen ten opzichte van wat ik zou winnen?"

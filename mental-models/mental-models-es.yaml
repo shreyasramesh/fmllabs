@@ -2698,8 +2698,8 @@ mental_models:
   - id: loss_aversion_bias
     name: Sesgo de aversión a la pérdida
     quick_introduction: |
-      La aversión a la pérdida es la tendencia a preferir evitar pérdidas antes que adquirir ganancias equivalentes.
-      Las personas sienten el dolor de perder aproximadamente el doble de intensamente de lo que sienten el placer de ganar.
+      We often feel the pain of losing something more intensely than the
+      pleasure of gaining something of equal value.
     one_liner: Las pérdidas se sienten aproximadamente el doble de dolorosas de lo que se sienten bien las ganancias equivalentes.
     try_this:
       - "Pregúntate: ¿Estoy sobrevalorando lo que perdería frente a lo que ganaría?"

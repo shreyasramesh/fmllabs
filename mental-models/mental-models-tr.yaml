@@ -2655,8 +2655,8 @@ mental_models:
   - id: loss_aversion_bias
     name: Kayıp Kaçınma Yanılgısı
     quick_introduction: |
-      Kayıp kaçınma, eşdeğer kazançlar elde etmekten ziyade kayıplardan kaçınmayı tercih etme eğilimidir.
-      İnsanlar, kazanmanın verdiği zevki hissettiklerinden yaklaşık iki kat daha güçlü bir şekilde kaybetmenin acısını hissederler.
+      We often feel the pain of losing something more intensely than the
+      pleasure of gaining something of equal value.
     one_liner: Kayıplar, eşdeğer kazançların verdiği iyi hissiyattan yaklaşık iki kat daha acı verici hissedilir.
     try_this:
       - "Kendinize sorun: Kaybedeceklerimi kazanacaklarıma göre fazla mı değerlendiriyorum?"

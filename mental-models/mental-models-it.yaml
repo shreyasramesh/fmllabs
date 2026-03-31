@@ -2847,8 +2847,8 @@ mental_models:
   - id: loss_aversion_bias
     name: Avversione alla perdita
     quick_introduction: |
-      L'avversione alla perdita è la tendenza a preferire evitare le perdite piuttosto che acquisire guadagni equivalenti.
-      Le persone sentono il dolore della perdita circa due volte più intensamente di quanto sentano il piacere del guadagno.
+      We often feel the pain of losing something more intensely than the
+      pleasure of gaining something of equal value.
     one_liner: Le perdite sembrano circa due volte più dolorose di quanto i guadagni equivalenti siano piacevoli.
     try_this:
       - "Chiediti: sto sopravvalutando ciò che perderei rispetto a ciò che guadagnerei?"

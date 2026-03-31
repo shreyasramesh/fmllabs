@@ -44,6 +44,12 @@ import {
   resolveUserDisplayNameForPrompt,
 } from "@/lib/user-display-name";
 
+type ResponseVerbosity = "compact" | "detailed";
+
+function parseResponseVerbosity(value: unknown): ResponseVerbosity | undefined {
+  return value === "compact" || value === "detailed" ? value : undefined;
+}
+
 const SYSTEM_PROMPT_CORE = `You are a deeply empathetic confidant, anxiety-relief guide, and wise friend. Your **primary** job is to help the user feel seen, understood, and less alone. Bring in **grounded facts** when they would genuinely steady, clarify, or comfort—not as a substitute for warmth.
 
 ## Empathy first (always)
@@ -230,6 +236,22 @@ Your goal is to help the user navigate their own life, not to lecture them on yo
 - Use bullet points only for lists of actionable steps.
 - End your response naturally, as a person would stop speaking.`;
 
+const COMPACT_RESPONSE_VERBOSITY_ADDENDUM = `
+## Response verbosity mode: compact
+- This mode is STRICT: keep the main reply short and scannable.
+- Target about 60-120 words for the main body (excluding ---OPTIONS--- and optional journal block).
+- Use at most 2 short paragraphs OR 3 concise bullets.
+- No long preamble, no repeated restatements, and no stacked mental-model name dropping.
+- If the user asks for "deeper" or "full detail", give a compact answer first, then offer one short follow-up path.
+`;
+
+const DETAILED_RESPONSE_VERBOSITY_ADDENDUM = `
+## Response verbosity mode: detailed
+- You may provide a more thorough explanation when it helps the user decide well.
+- Add one extra layer of reasoning (tradeoffs, risks, second-order effects) when relevant.
+- Still stay readable and avoid repetitive filler.
+`;
+
 function buildMentorOneOnOneSystemPrompt(figure: FamousFigure): string {
   const bio = compactPromptText(figure.description, 520);
   const bioBlock =
@@ -308,6 +330,8 @@ export async function POST(request: Request) {
   let mentorOneOnOne: FamousFigure | null = null;
   let requestedSecondOrder = false;
   let secondOrderMode = false;
+  let requestedResponseVerbosity: ResponseVerbosity | undefined;
+  let responseVerbosity: ResponseVerbosity = "compact";
   /** Set in body parse: 2–5 mentors (takes precedence over second-order). */
   let multiMentorEligible = false;
   /** Set in body parse: second-order plain mode (no index/RAG in prompt). */
@@ -322,6 +346,7 @@ export async function POST(request: Request) {
     if (typeof body.userType === "string" && isValidUserTypeId(body.userType)) {
       userType = body.userType;
     }
+    requestedResponseVerbosity = parseResponseVerbosity(body.responseVerbosity);
     sessionId = body.sessionId;
     incognito = body.incognito === true;
     message = body.message;
@@ -477,6 +502,7 @@ export async function POST(request: Request) {
   let useMentorJournalBridge = false;
 
   if (isAnonymous || incognito) {
+    responseVerbosity = requestedResponseVerbosity ?? "compact";
     mentorOneOnOne = resolvedOneOnOneFigure;
     secondOrderMode = requestedSecondOrder;
     const history = bodyMessages
@@ -508,9 +534,28 @@ export async function POST(request: Request) {
     }
 
     if (!session) {
-      const newSession = await createSession(userId!);
+      const newSession = await createSession(
+        userId!,
+        undefined,
+        requestedResponseVerbosity ?? "compact"
+      );
       sessionId = newSession._id;
       session = newSession;
+    }
+
+    responseVerbosity =
+      requestedResponseVerbosity ??
+      (session?.responseVerbosity === "detailed" || session?.responseVerbosity === "compact"
+        ? session.responseVerbosity
+        : "compact");
+    if (sessionId) {
+      const currentSessionVerbosity =
+        session?.responseVerbosity === "detailed" || session?.responseVerbosity === "compact"
+          ? session.responseVerbosity
+          : "compact";
+      if (currentSessionVerbosity !== responseVerbosity) {
+        await updateSession(sessionId, userId!, { responseVerbosity });
+      }
     }
 
     if (session?.oneOnOneMentorFigureId && requestedSecondOrder) {
@@ -666,6 +711,10 @@ export async function POST(request: Request) {
   let ltmIdToTitle = new Map<string, string>();
   let ccIdToTitle = new Map<string, string>();
   let cgIdToTitle = new Map<string, string>();
+  const responseVerbosityInstruction =
+    responseVerbosity === "detailed"
+      ? DETAILED_RESPONSE_VERBOSITY_ADDENDUM
+      : COMPACT_RESPONSE_VERBOSITY_ADDENDUM;
 
   let followedFiguresNudgeBlock = "";
   let userSettings: Awaited<ReturnType<typeof getUserSettings>> = null;
@@ -859,6 +908,7 @@ ${userNamePromptSuffix}${langInstr}`;
       figurePersonaBlock +
       (cardInPrepend ? "" : "\n\nPERSPECTIVE CARD PROMPT:\n" + activeCardPrompt!) +
       langInstr +
+      responseVerbosityInstruction +
       userNamePromptSuffix +
       followedFiguresNudgeBlock;
     predictedContextResult = {
@@ -895,6 +945,7 @@ ${userNamePromptSuffix}${langInstr}`;
         optionsStyleInstructionSo
       ) +
       languageInstructionSo +
+      responseVerbosityInstruction +
       conversationStyleInstructionSo +
       userNamePromptSuffix;
     mmIdToName = new Map();
@@ -935,6 +986,7 @@ ${userNamePromptSuffix}${langInstr}`;
     fullSystemPrompt =
       mentorOneOnOnePromptBase +
       languageInstructionMentor +
+      responseVerbosityInstruction +
       conversationStyleInstructionMentor +
       userNamePromptSuffix;
     mmIdToName = new Map();
@@ -1223,6 +1275,7 @@ ${userNamePromptSuffix}${langInstr}`;
       .replace("[Insert Followed Figures Nudge Here]", followedFiguresNudgeBlock)
       .replace("[Options Style Instruction]", optionsStyleInstruction) +
     languageInstruction +
+    responseVerbosityInstruction +
     conversationStyleInstruction +
     userNamePromptSuffix;
 
@@ -1333,10 +1386,13 @@ ${userNamePromptSuffix}${langInstr}`;
       async start(controller) {
         try {
           controller.enqueue(encoder.encode(contextBlockForStream));
+        const responseMaxOutputTokens =
+          responseVerbosity === "compact" ? 360 : undefined;
           for await (const chunk of streamGenerateContent(
             systemPromptForGemini,
             messagesForGemini,
             {
+            maxOutputTokens: responseMaxOutputTokens,
               onUsage: (inputTokens, outputTokens) => {
                 const costUsd = computeGeminiCost(inputTokens, outputTokens);
                 recordUsageEvent({

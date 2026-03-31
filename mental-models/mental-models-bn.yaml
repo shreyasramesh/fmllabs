@@ -2277,8 +2277,8 @@ mental_models:
   - id: loss_aversion_bias
     name: ক্ষতি এড়ানোর পক্ষপাত (Loss Aversion Bias)
     quick_introduction: |
-      ক্ষতি এড়ানোর পক্ষপাত হল সমপরিমাণ লাভের চেয়ে ক্ষতি এড়াতে অগ্রাধিকার দেওয়ার প্রবণতা।
-      মানুষ লাভের আনন্দ উপভোগ করার চেয়ে ক্ষতির বেদনা প্রায় দ্বিগুণ বেশি অনুভব করে।
+      We often feel the pain of losing something more intensely than the
+      pleasure of gaining something of equal value.
     one_liner: সমপরিমাণ লাভ যতখানি আনন্দ দেয়, ক্ষতি তার চেয়ে প্রায় দ্বিগুণ বেদনাদায়ক মনে হয়।
     try_this:
       - "নিজেকে জিজ্ঞাসা করুন: আমি যা হারাবো তা যা লাভ করবো তার চেয়ে বেশি মূল্য দিচ্ছি কি?"

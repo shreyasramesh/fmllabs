@@ -2764,8 +2764,8 @@ mental_models:
   - id: loss_aversion_bias
     name: Viés de Aversão à Perda
     quick_introduction: |
-      A aversão à perda é a tendência de preferir evitar perdas a adquirir ganhos equivalentes.
-      As pessoas sentem a dor de perder aproximadamente duas vezes mais intensamente do que sentem o prazer de ganhar.
+      We often feel the pain of losing something more intensely than the
+      pleasure of gaining something of equal value.
     one_liner: Perdas parecem aproximadamente duas vezes mais dolorosas do que ganhos equivalentes são prazerosos.
     try_this:
       - "Pergunte a si mesmo: Estou supervalorizando o que perderia em comparação com o que ganharia?"

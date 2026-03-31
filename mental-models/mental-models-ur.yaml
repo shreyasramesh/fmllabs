@@ -2312,8 +2312,8 @@ mental_models:
   - id: loss_aversion_bias
     name: نقصان سے بچاؤ کا تعصب (Loss Aversion Bias)
     quick_introduction: |
-      نقصان سے بچاؤ وہ رجحان ہے جو افراد کو مساوی فوائد حاصل کرنے کی بجائے نقصانات سے بچنے کو ترجیح دینے پر مجبور کرتا ہے۔
-      لوگ فائدہ حاصل کرنے کی خوشی کے مقابلے میں نقصان اٹھانے کا درد تقریباً دو گنا زیادہ محسوس کرتے ہیں۔
+      We often feel the pain of losing something more intensely than the
+      pleasure of gaining something of equal value.
     one_liner: نقصانات، مساوی فوائد کے احساس سے تقریباً دو گنا زیادہ تکلیف دہ محسوس ہوتے ہیں۔
     try_this:
       - "خود سے پوچھیں: کیا میں جو کھو سکتا ہوں اس کی قدر، جو حاصل کر سکتا ہوں اس سے زیادہ تو نہیں کر رہا؟"

@@ -717,7 +717,9 @@ export async function POST(request: Request) {
           notes: "",
         };
         const nutritionFocusedEntry =
-          enrichedEntries.nutritionEntry?.trim() || buildNutritionEntryFallback(nutritionEstimate);
+          enrichedEntries.nutritionEntry?.trim() ||
+          text.trim() ||
+          buildNutritionEntryFallback(nutritionEstimate);
         nutritionFocusedEntryForAssumptions = nutritionFocusedEntry;
         const { nutritionAssumptions } = splitAssumptionsByType(
           assumptions,

@@ -2240,8 +2240,8 @@ mental_models:
   - id: loss_aversion_bias
     name: 損失回避バイアス
     quick_introduction: |
-      損失回避とは、同等の利益を得ることよりも損失を避けることを好む傾向のことです。
-      人は、得る喜びよりも失う痛みを約2倍強く感じると言われています。
+      We often feel the pain of losing something more intensely than the
+      pleasure of gaining something of equal value.
     one_liner: 同等の利益を得た時の喜びよりも、損失を被った時の痛みは約2倍強く感じられます。
     try_this:
       - 自問自答してみましょう：得られるものより失うものを過大評価していませんか？

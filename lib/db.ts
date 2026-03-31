@@ -55,6 +55,7 @@ export interface Session {
   _id?: string;
   userId: string;
   title?: string;
+  responseVerbosity?: "compact" | "detailed";
   mentalModelTags?: string[];
   isCollapsed?: boolean;
   longTermMemoryId?: string;
@@ -90,6 +91,7 @@ interface SessionDoc {
   _id: ObjectId;
   userId: string;
   title?: string;
+  responseVerbosity?: "compact" | "detailed";
   mentalModelTags?: string[];
   isCollapsed?: boolean;
   longTermMemoryId?: string;
@@ -524,12 +526,17 @@ export async function getSessions(userId: string): Promise<(Session & { _id: str
   ) as (Session & { _id: string })[];
 }
 
-export async function createSession(userId: string, title?: string): Promise<Session & { _id: string }> {
+export async function createSession(
+  userId: string,
+  title?: string,
+  responseVerbosity?: "compact" | "detailed"
+): Promise<Session & { _id: string }> {
   const database = await getDb();
   const now = new Date();
   const session: Omit<Session, "_id"> = encryptSessionFields({
     userId,
     title: title || "New conversation",
+    responseVerbosity,
     createdAt: now,
     updatedAt: now,
   }) as Omit<Session, "_id">;
@@ -642,6 +649,7 @@ export async function updateSession(
   userId: string,
   updates: {
     title?: string;
+    responseVerbosity?: "compact" | "detailed";
     mentalModelTags?: string[];
     isCollapsed?: boolean;
     longTermMemoryId?: string;

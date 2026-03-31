@@ -2780,8 +2780,8 @@ mental_models:
   - id: loss_aversion_bias
     name: Biais d'aversion à la perte
     quick_introduction: |
-      L'aversion à la perte est la tendance à préférer éviter les pertes plutôt qu'à acquérir des gains équivalents.
-      Les gens ressentent la douleur de la perte environ deux fois plus fortement qu'ils ne ressentent le plaisir du gain.
+      We often feel the pain of losing something more intensely than the
+      pleasure of gaining something of equal value.
     one_liner: Les pertes semblent environ deux fois plus douloureuses que les gains équivalents sont agréables.
     try_this:
       - "Demandez-vous : Est-ce que je surévalue ce que je perdrais par rapport à ce que je gagnerais ?"

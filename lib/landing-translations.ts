@@ -29,6 +29,9 @@ export interface LandingTranslations {
   mentorOneOnOneAllCategories: string;
   /** New conversation chooser + second-order mode */
   conversationChooserTitle: string;
+  conversationResponseStyleLabel: string;
+  conversationResponseStyleCompact: string;
+  conversationResponseStyleDetailed: string;
   secondOrderThinkingTitle: string;
   secondOrderThinkingSubtitle: string;
   secondOrderChipLabel: string;
@@ -42,6 +45,8 @@ export interface LandingTranslations {
   secondOrderChipLabelWithCitations: string;
   /** Toggle on second-order start card: mental models & saved context in the thread */
   secondOrderCitationsToggleLabel: string;
+  secondOrderCitationsHelpOn: string;
+  secondOrderCitationsHelpOff: string;
   /** Freeform journal save (landing / chooser; not chat) */
   journalEntryButtonLabel: string;
   /** Short line under landing / chooser tile */
@@ -169,9 +174,12 @@ const EN: LandingTranslations = {
   mentorOneOnOneTapToChat: "Tap to start",
   mentorOneOnOneAllCategories: "All",
   conversationChooserTitle: "How would you like to start?",
-  secondOrderThinkingTitle: "Metacognition",
+  conversationResponseStyleLabel: "Response style",
+  conversationResponseStyleCompact: "Compact (default)",
+  conversationResponseStyleDetailed: "Detailed",
+  secondOrderThinkingTitle: "Think deeper (metacognition)",
   secondOrderThinkingSubtitle:
-    "Ability to observe and understand your own thinking process and derive deep insights",
+    "Get help thinking through what happens next, tradeoffs, and blind spots.",
   secondOrderChipLabel: "Metacognition",
   secondOrderPlainTitle: "Metacognition (plain)",
   secondOrderPlainSubtitle: "Same reasoning frame—no models, memories, or citation tags",
@@ -179,7 +187,11 @@ const EN: LandingTranslations = {
   secondOrderWithCitationsSubtitle: "Second-order reasoning plus your mental models & saved context",
   secondOrderChipLabelPlain: "Metacognition (plain)",
   secondOrderChipLabelWithCitations: "Metacognition (with citations)",
-  secondOrderCitationsToggleLabel: "Cite mental models & saved context",
+  secondOrderCitationsToggleLabel: "Use your saved models & memories",
+  secondOrderCitationsHelpOn:
+    "On: I use your saved context in this mode for more personalized guidance.",
+  secondOrderCitationsHelpOff:
+    "Off: I only use what you type in this chat (no saved context).",
   journalEntryButtonLabel: "Add Journal Entry",
   journalEntryButtonSubtitle: "Write freely; saved to your library—not sent as chat.",
   journalEntryModalTitle: "Add a Journal Entry",

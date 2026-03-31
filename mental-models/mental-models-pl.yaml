@@ -2943,8 +2943,8 @@ mental_models:
   - id: loss_aversion_bias
     name: Awersja do strat
     quick_introduction: |
-      Awersja do strat to tendencja do unikania strat preferowanego nad uzyskanie równoważnych zysków.
-      Ludzie odczuwają ból straty mniej więcej dwukrotnie silniej niż przyjemność zysku.
+      We often feel the pain of losing something more intensely than the
+      pleasure of gaining something of equal value.
     one_liner: Straty odczuwamy mniej więcej dwukrotnie boleśniej, niż zyski o tej samej wartości dają radości.
     try_this:
       - "Zadaj sobie pytanie: Czy przeceniam to, co mógłbym stracić, w porównaniu do tego, co mógłbym zyskać?"

@@ -2765,8 +2765,8 @@ mental_models:
   - id: loss_aversion_bias
     name: Biasul de aversiune față de pierdere
     quick_introduction: |
-      Aversiunea față de pierdere este tendința de a prefera evitarea pierderilor în detrimentul obținerii unor câștiguri echivalente.
-      Oamenii simt durerea pierderii de aproximativ două ori mai puternic decât bucuria câștigului.
+      We often feel the pain of losing something more intensely than the
+      pleasure of gaining something of equal value.
     one_liner: Pierderile par de aproximativ două ori mai dureroase decât se simt câștigurile echivalente.
     try_this:
       - "Întreabă-te: Supra-evaluez ceea ce aș pierde comparativ cu ceea ce aș câștiga?"

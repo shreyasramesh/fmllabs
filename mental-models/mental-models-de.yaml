@@ -2493,8 +2493,8 @@ mental_models:
   - id: loss_aversion_bias
     name: Verlustvermeidungs-Bias
     quick_introduction: |
-      Verlustvermeidung ist die Tendenz, es vorzuziehen, Verluste zu vermeiden, anstatt gleichwertige Gewinne zu erzielen.
-      Menschen empfinden den Schmerz des Verlierens etwa doppelt so stark wie das Vergnügen des Gewinnens.
+      We often feel the pain of losing something more intensely than the
+      pleasure of gaining something of equal value.
     one_liner: Verluste fühlen sich etwa doppelt so schmerzhaft an, wie sich gleichwertige Gewinne gut anfühlen.
     try_this:
       - "Fragen Sie sich: Überschätze ich das, was ich verlieren würde, im Vergleich zu dem, was ich gewinnen würde?"

@@ -66,6 +66,7 @@ export function getModel(systemInstruction?: string) {
 
 export interface StreamGenerateContentOptions {
   onUsage?: (inputTokens: number, outputTokens: number) => void;
+  maxOutputTokens?: number;
 }
 
 export async function* streamGenerateContent(
@@ -82,7 +83,10 @@ export async function* streamGenerateContent(
 
   const chat = model.startChat({
     history,
-    generationConfig: CHAT_GENERATION_CONFIG,
+    generationConfig:
+      typeof options?.maxOutputTokens === "number"
+        ? { ...CHAT_GENERATION_CONFIG, maxOutputTokens: options.maxOutputTokens }
+        : CHAT_GENERATION_CONFIG,
   });
 
   const lastMessage = messages[messages.length - 1];
@@ -136,7 +140,10 @@ export async function generateContent(
 
   const chat = model.startChat({
     history,
-    generationConfig: CHAT_GENERATION_CONFIG,
+    generationConfig:
+      typeof options?.maxOutputTokens === "number"
+        ? { ...CHAT_GENERATION_CONFIG, maxOutputTokens: options.maxOutputTokens }
+        : CHAT_GENERATION_CONFIG,
   });
 
   const lastMessage = messages[messages.length - 1];

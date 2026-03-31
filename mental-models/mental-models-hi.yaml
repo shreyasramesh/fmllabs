@@ -2344,8 +2344,8 @@ mental_models:
   - id: loss_aversion_bias
     name: हानि से बचाव का पूर्वाग्रह
     quick_introduction: |
-      हानि से बचाव वह प्रवृत्ति है जिसमें समान लाभ प्राप्त करने की तुलना में हानि से बचना अधिक पसंद किया जाता है।
-      लोग लगभग दोगुना दर्द महसूस करते हैं जब वे कुछ खोते हैं, बजाय इसके कि वे कुछ प्राप्त करके खुशी महसूस करें।
+      We often feel the pain of losing something more intensely than the
+      pleasure of gaining something of equal value.
     one_liner: हानि से बचना समान लाभ प्राप्त करने से लगभग दोगुना कष्टप्रद लगता है।
     try_this:
       - "खुद से पूछें: क्या मैं जो खोऊंगा उसका मूल्यांकन, जो मुझे मिलेगा, उसके मुकाबले अधिक कर रहा हूँ?"

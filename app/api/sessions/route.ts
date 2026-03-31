@@ -27,7 +27,12 @@ export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => ({}));
     const title = body.title as string | undefined;
-    const session = await createSession(userId, title);
+    const responseVerbosityRaw = body.responseVerbosity;
+    const responseVerbosity =
+      responseVerbosityRaw === "compact" || responseVerbosityRaw === "detailed"
+        ? responseVerbosityRaw
+        : undefined;
+    const session = await createSession(userId, title, responseVerbosity);
     return NextResponse.json(session);
   } catch (err) {
     console.error("Failed to create session:", err);
