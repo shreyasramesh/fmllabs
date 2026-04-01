@@ -83,6 +83,49 @@ function extractNutritionContextFromTranscript(text: string): string {
   return normalized.slice(0, 1200).trim();
 }
 
+const NUTRITION_FACT_LINE_SPECS: Array<{
+  key:
+    | "totalCarbohydratesGrams"
+    | "dietaryFiberGrams"
+    | "sugarGrams"
+    | "addedSugarsGrams"
+    | "sugarAlcoholsGrams"
+    | "netCarbsGrams"
+    | "saturatedFatGrams"
+    | "transFatGrams"
+    | "polyunsaturatedFatGrams"
+    | "monounsaturatedFatGrams"
+    | "cholesterolMg"
+    | "sodiumMg"
+    | "calciumMg"
+    | "ironMg"
+    | "potassiumMg"
+    | "vitaminAIu"
+    | "vitaminCMg"
+    | "vitaminDMcg";
+  label: string;
+  unit: string;
+}> = [
+  { key: "totalCarbohydratesGrams", label: "Total Carbohydrates", unit: "g" },
+  { key: "dietaryFiberGrams", label: "Dietary Fiber", unit: "g" },
+  { key: "sugarGrams", label: "Sugar", unit: "g" },
+  { key: "addedSugarsGrams", label: "Added Sugars", unit: "g" },
+  { key: "sugarAlcoholsGrams", label: "Sugar Alcohols", unit: "g" },
+  { key: "netCarbsGrams", label: "Net Carbs", unit: "g" },
+  { key: "saturatedFatGrams", label: "Saturated Fat", unit: "g" },
+  { key: "transFatGrams", label: "Trans Fat", unit: "g" },
+  { key: "polyunsaturatedFatGrams", label: "Polyunsaturated Fat", unit: "g" },
+  { key: "monounsaturatedFatGrams", label: "Monounsaturated Fat", unit: "g" },
+  { key: "cholesterolMg", label: "Cholesterol", unit: "mg" },
+  { key: "sodiumMg", label: "Sodium", unit: "mg" },
+  { key: "calciumMg", label: "Calcium", unit: "mg" },
+  { key: "ironMg", label: "Iron", unit: "mg" },
+  { key: "potassiumMg", label: "Potassium", unit: "mg" },
+  { key: "vitaminAIu", label: "Vitamin A", unit: "IU" },
+  { key: "vitaminCMg", label: "Vitamin C", unit: "mg" },
+  { key: "vitaminDMcg", label: "Vitamin D", unit: "mcg" },
+];
+
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -116,6 +159,7 @@ export async function PATCH(
       carbsUsedGrams?: unknown;
       fatUsedGrams?: unknown;
       proteinDeltaGrams?: unknown;
+      facts?: unknown;
     };
     const rawLines = (transcript.transcriptText ?? "").split(/\r?\n/);
     let lines = rawLines.slice();
@@ -148,59 +192,26 @@ export async function PATCH(
       lines = upsertStatLine(lines, "Protein", proteinGrams, "g");
       lines = upsertStatLine(lines, "Carbs", carbsGrams, "g");
       lines = upsertStatLine(lines, "Fat", fatGrams, "g");
-      if (regeneratedFacts.totalCarbohydratesGrams != null) {
-        lines = upsertStatLine(lines, "Total Carbohydrates", regeneratedFacts.totalCarbohydratesGrams, "g");
+      const factOverridesRaw =
+        body.facts && typeof body.facts === "object"
+          ? (body.facts as Record<string, unknown>)
+          : null;
+      const factsByKey: Record<string, number | null | undefined> = {
+        ...regeneratedFacts,
+      };
+      if (factOverridesRaw) {
+        for (const { key } of NUTRITION_FACT_LINE_SPECS) {
+          if (!(key in factOverridesRaw)) continue;
+          const parsedOverride = parseNumberish(factOverridesRaw[key]);
+          if (parsedOverride != null) {
+            factsByKey[key] = parsedOverride;
+          }
+        }
       }
-      if (regeneratedFacts.dietaryFiberGrams != null) {
-        lines = upsertStatLine(lines, "Dietary Fiber", regeneratedFacts.dietaryFiberGrams, "g");
-      }
-      if (regeneratedFacts.sugarGrams != null) {
-        lines = upsertStatLine(lines, "Sugar", regeneratedFacts.sugarGrams, "g");
-      }
-      if (regeneratedFacts.addedSugarsGrams != null) {
-        lines = upsertStatLine(lines, "Added Sugars", regeneratedFacts.addedSugarsGrams, "g");
-      }
-      if (regeneratedFacts.sugarAlcoholsGrams != null) {
-        lines = upsertStatLine(lines, "Sugar Alcohols", regeneratedFacts.sugarAlcoholsGrams, "g");
-      }
-      if (regeneratedFacts.netCarbsGrams != null) {
-        lines = upsertStatLine(lines, "Net Carbs", regeneratedFacts.netCarbsGrams, "g");
-      }
-      if (regeneratedFacts.saturatedFatGrams != null) {
-        lines = upsertStatLine(lines, "Saturated Fat", regeneratedFacts.saturatedFatGrams, "g");
-      }
-      if (regeneratedFacts.transFatGrams != null) {
-        lines = upsertStatLine(lines, "Trans Fat", regeneratedFacts.transFatGrams, "g");
-      }
-      if (regeneratedFacts.polyunsaturatedFatGrams != null) {
-        lines = upsertStatLine(lines, "Polyunsaturated Fat", regeneratedFacts.polyunsaturatedFatGrams, "g");
-      }
-      if (regeneratedFacts.monounsaturatedFatGrams != null) {
-        lines = upsertStatLine(lines, "Monounsaturated Fat", regeneratedFacts.monounsaturatedFatGrams, "g");
-      }
-      if (regeneratedFacts.cholesterolMg != null) {
-        lines = upsertStatLine(lines, "Cholesterol", regeneratedFacts.cholesterolMg, "mg");
-      }
-      if (regeneratedFacts.sodiumMg != null) {
-        lines = upsertStatLine(lines, "Sodium", regeneratedFacts.sodiumMg, "mg");
-      }
-      if (regeneratedFacts.calciumMg != null) {
-        lines = upsertStatLine(lines, "Calcium", regeneratedFacts.calciumMg, "mg");
-      }
-      if (regeneratedFacts.ironMg != null) {
-        lines = upsertStatLine(lines, "Iron", regeneratedFacts.ironMg, "mg");
-      }
-      if (regeneratedFacts.potassiumMg != null) {
-        lines = upsertStatLine(lines, "Potassium", regeneratedFacts.potassiumMg, "mg");
-      }
-      if (regeneratedFacts.vitaminAIu != null) {
-        lines = upsertStatLine(lines, "Vitamin A", regeneratedFacts.vitaminAIu, "IU");
-      }
-      if (regeneratedFacts.vitaminCMg != null) {
-        lines = upsertStatLine(lines, "Vitamin C", regeneratedFacts.vitaminCMg, "mg");
-      }
-      if (regeneratedFacts.vitaminDMcg != null) {
-        lines = upsertStatLine(lines, "Vitamin D", regeneratedFacts.vitaminDMcg, "mcg");
+      for (const { key, label, unit } of NUTRITION_FACT_LINE_SPECS) {
+        const value = factsByKey[key];
+        if (value == null) continue;
+        lines = upsertStatLine(lines, label, value, unit);
       }
     } else {
       const caloriesBurned = parseNumberish(body.caloriesBurned);

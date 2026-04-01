@@ -2500,6 +2500,9 @@ const NUTRITION_FACT_PATTERNS: Array<{ key: keyof NutritionFactsDaySummary; patt
   { key: "vitaminCMg", pattern: /- Vitamin C:\s*([\d.]+)\s*mg/i },
   { key: "vitaminDMcg", pattern: /- Vitamin D:\s*([\d.]+)\s*mcg/i },
 ];
+const NUTRITION_FACT_PATTERN_BY_KEY = new Map<keyof NutritionFactsDaySummary, RegExp>(
+  NUTRITION_FACT_PATTERNS.map(({ key, pattern }) => [key, pattern])
+);
 
 const NUTRITION_FACT_DAY_VIEW_ROWS: Array<{
   key: keyof NutritionFactsDaySummary;
@@ -2529,6 +2532,27 @@ const NUTRITION_FACT_DAY_VIEW_ROWS: Array<{
   { key: "vitaminCMg", label: "Vitamin C", unit: "mg" },
   { key: "vitaminDMcg", label: "Vitamin D", unit: "mcg" },
 ];
+
+const NUTRITION_FACT_EDIT_FIELDS = [
+  { label: "Total Carbs (g)", key: "totalCarbohydratesGrams" },
+  { label: "Dietary Fiber (g)", key: "dietaryFiberGrams" },
+  { label: "Sugar (g)", key: "sugarGrams" },
+  { label: "Added Sugars (g)", key: "addedSugarsGrams" },
+  { label: "Sugar Alcohols (g)", key: "sugarAlcoholsGrams" },
+  { label: "Net Carbs (g)", key: "netCarbsGrams" },
+  { label: "Saturated Fat (g)", key: "saturatedFatGrams" },
+  { label: "Trans Fat (g)", key: "transFatGrams" },
+  { label: "Polyunsat. Fat (g)", key: "polyunsaturatedFatGrams" },
+  { label: "Monounsat. Fat (g)", key: "monounsaturatedFatGrams" },
+  { label: "Cholesterol (mg)", key: "cholesterolMg" },
+  { label: "Sodium (mg)", key: "sodiumMg" },
+  { label: "Calcium (mg)", key: "calciumMg" },
+  { label: "Iron (mg)", key: "ironMg" },
+  { label: "Potassium (mg)", key: "potassiumMg" },
+  { label: "Vitamin A (IU)", key: "vitaminAIu" },
+  { label: "Vitamin C (mg)", key: "vitaminCMg" },
+  { label: "Vitamin D (mcg)", key: "vitaminDMcg" },
+] as const;
 
 function getEmptyNutritionFactsSummary(): NutritionFactsDaySummary {
   return {
@@ -3522,6 +3546,24 @@ export default function ChatPage() {
     carbsUsedGrams: string;
     fatUsedGrams: string;
     proteinDeltaGrams: string;
+    totalCarbohydratesGrams: string;
+    dietaryFiberGrams: string;
+    sugarGrams: string;
+    addedSugarsGrams: string;
+    sugarAlcoholsGrams: string;
+    netCarbsGrams: string;
+    saturatedFatGrams: string;
+    transFatGrams: string;
+    polyunsaturatedFatGrams: string;
+    monounsaturatedFatGrams: string;
+    cholesterolMg: string;
+    sodiumMg: string;
+    calciumMg: string;
+    ironMg: string;
+    potassiumMg: string;
+    vitaminAIu: string;
+    vitaminCMg: string;
+    vitaminDMcg: string;
   } | null>(null);
   /** Transcript modal: which mentor avatar is selected to show reflection bubble (figureId or null). */
   const [journalMentorBubbleOpenId, setJournalMentorBubbleOpenId] = useState<string | null>(null);
@@ -4193,10 +4235,11 @@ export default function ChatPage() {
   const [calorieTrackerEntryDate, setCalorieTrackerEntryDate] = useState(() => getTodayDateInputValue());
   const calorieTrackerImageInputRef = useRef<HTMLInputElement | null>(null);
   const calorieTrackerUploadInputRef = useRef<HTMLInputElement | null>(null);
-  const [calorieTrackerImagePreview, setCalorieTrackerImagePreview] = useState<string | null>(null);
+  const [calorieTrackerImageAnalyses, setCalorieTrackerImageAnalyses] = useState<
+    Array<{ id: string; previewUrl: string; extractedText: string }>
+  >([]);
   const [calorieTrackerImageProcessing, setCalorieTrackerImageProcessing] = useState(false);
   const [calorieTrackerImageError, setCalorieTrackerImageError] = useState<string | null>(null);
-  const [calorieTrackerImageExtractedText, setCalorieTrackerImageExtractedText] = useState("");
   const [calorieTrackerQuestions, setCalorieTrackerQuestions] = useState<string[]>([]);
   const [calorieTrackerAnswers, setCalorieTrackerAnswers] = useState<string[]>([]);
   const [calorieTrackerStep, setCalorieTrackerStep] = useState<"choose" | "input" | "questions" | "review" | "result">("choose");
@@ -4519,10 +4562,9 @@ export default function ChatPage() {
     setCalorieTrackerInput("");
     setCalorieTrackerCustomTag("");
     setCalorieTrackerEntryDate(getTodayDateInputValue());
-    setCalorieTrackerImagePreview(null);
+    setCalorieTrackerImageAnalyses([]);
     setCalorieTrackerImageProcessing(false);
     setCalorieTrackerImageError(null);
-    setCalorieTrackerImageExtractedText("");
     setCalorieTrackerQuestions([]);
     setCalorieTrackerAnswers([]);
     setCalorieTrackerStep("choose");
@@ -4546,10 +4588,9 @@ export default function ChatPage() {
     setCalorieTrackerInput("");
     setCalorieTrackerCustomTag("");
     setCalorieTrackerEntryDate(getTodayDateInputValue());
-    setCalorieTrackerImagePreview(null);
+    setCalorieTrackerImageAnalyses([]);
     setCalorieTrackerImageProcessing(false);
     setCalorieTrackerImageError(null);
-    setCalorieTrackerImageExtractedText("");
     setCalorieTrackerQuestions([]);
     setCalorieTrackerAnswers([]);
     setCalorieTrackerStep("choose");
@@ -4635,40 +4676,49 @@ export default function ChatPage() {
 
   const handleCalorieTrackerImageSelected = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
+      const files = Array.from(e.target.files ?? []);
+      if (files.length === 0) return;
       setCalorieTrackerImageError(null);
       setCalorieTrackerImageProcessing(true);
       try {
-        if (!file.type.startsWith("image/")) {
-          throw new Error("Please capture an image file.");
+        const appended: Array<{ id: string; previewUrl: string; extractedText: string }> = [];
+        for (const file of files) {
+          if (!file.type.startsWith("image/")) {
+            throw new Error("Please capture an image file.");
+          }
+          if (file.size > 20 * 1024 * 1024) {
+            throw new Error("Image is very large. Please retake with a lower camera resolution.");
+          }
+          const { dataUrl, base64, mimeType } = await compressImageForUpload(file);
+          if (!base64) throw new Error("Invalid image payload.");
+          const res = await fetch("/api/me/journal/calorie/image-transcribe", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              imageBase64: base64,
+              mimeType,
+              hintText: calorieTrackerInput.trim().slice(0, 600),
+              mode: selectedLandingJournalChip === "exercise" ? "exercise" : "nutrition",
+            }),
+          });
+          const data = (await res.json().catch(() => ({}))) as {
+            error?: string;
+            nutritionLogDraft?: string;
+          };
+          if (!res.ok) {
+            throw new Error(data.error || "Could not transcribe this image.");
+          }
+          const draft = (data.nutritionLogDraft ?? "").trim();
+          if (draft) {
+            appended.push({
+              id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+              previewUrl: dataUrl,
+              extractedText: draft,
+            });
+          }
         }
-        if (file.size > 20 * 1024 * 1024) {
-          throw new Error("Image is very large. Please retake with a lower camera resolution.");
-        }
-        const { dataUrl, base64, mimeType } = await compressImageForUpload(file);
-        if (!base64) throw new Error("Invalid image payload.");
-        setCalorieTrackerImagePreview(dataUrl);
-        const res = await fetch("/api/me/journal/calorie/image-transcribe", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            imageBase64: base64,
-            mimeType,
-            hintText: calorieTrackerInput.trim().slice(0, 600),
-            mode: selectedLandingJournalChip === "exercise" ? "exercise" : "nutrition",
-          }),
-        });
-        const data = (await res.json().catch(() => ({}))) as {
-          error?: string;
-          nutritionLogDraft?: string;
-        };
-        if (!res.ok) {
-          throw new Error(data.error || "Could not transcribe this image.");
-        }
-        const draft = (data.nutritionLogDraft ?? "").trim();
-        if (draft) {
-          setCalorieTrackerImageExtractedText(draft);
+        if (appended.length > 0) {
+          setCalorieTrackerImageAnalyses((prev) => [...prev, ...appended]);
         }
       } catch (err) {
         setCalorieTrackerImageError(
@@ -4679,17 +4729,20 @@ export default function ChatPage() {
         setCalorieTrackerImageProcessing(false);
       }
     },
-    [selectedLandingJournalChip]
+    [calorieTrackerInput, selectedLandingJournalChip]
   );
 
   const buildCalorieTrackerHydratedInput = useCallback(() => {
-    const extracted = calorieTrackerImageExtractedText.trim();
+    const extracted = calorieTrackerImageAnalyses
+      .map((item, idx) => `Photo ${idx + 1} analysis:\n${item.extractedText.trim()}`)
+      .filter((chunk) => chunk.trim().length > 0)
+      .join("\n\n");
     const context = calorieTrackerInput.trim();
     if (extracted && context) {
       return `${extracted}\n\nAdditional user context:\n${context}`;
     }
     return extracted || context;
-  }, [calorieTrackerImageExtractedText, calorieTrackerInput]);
+  }, [calorieTrackerImageAnalyses, calorieTrackerInput]);
 
   const finalizeCalorieTracker = useCallback(
     async (
@@ -4729,7 +4782,7 @@ export default function ChatPage() {
       setCalorieTrackerError(null);
       const deviceNow = new Date();
       const persist = options?.persist ?? true;
-      const sourceText = (options?.sourceText ?? calorieTrackerInput).trim();
+      const sourceText = (options?.sourceText ?? buildCalorieTrackerHydratedInput()).trim();
       if (!sourceText) {
         setCalorieTrackerError("Please add text details or upload a photo first.");
         setCalorieTrackerLoading(false);
@@ -4828,7 +4881,7 @@ export default function ChatPage() {
         setCalorieTrackerLoading(false);
       }
     },
-    [calorieTrackerCustomTag, calorieTrackerEntryDate, calorieTrackerInput, refetchTranscripts]
+    [buildCalorieTrackerHydratedInput, calorieTrackerCustomTag, calorieTrackerEntryDate, refetchTranscripts]
   );
 
   const buildCalorieTrackerReviewDraftFromNutrition = useCallback(
@@ -5501,6 +5554,47 @@ export default function ChatPage() {
     const llmCarbsUsed = extractEstimatedNumber(text, /- Carbs used:\s*([-\d.]+)\s*g/i);
     const llmFatUsed = extractEstimatedNumber(text, /- Fat used:\s*([-\d.]+)\s*g/i);
     const llmProteinDelta = extractEstimatedNumber(text, /- Protein delta:\s*([-\d.]+)\s*g/i);
+    const dietaryFacts = {
+      totalCarbohydratesGrams: extractEstimatedNumber(
+        text,
+        NUTRITION_FACT_PATTERN_BY_KEY.get("totalCarbohydratesGrams") ?? /$^/
+      ),
+      dietaryFiberGrams: extractEstimatedNumber(
+        text,
+        NUTRITION_FACT_PATTERN_BY_KEY.get("dietaryFiberGrams") ?? /$^/
+      ),
+      sugarGrams: extractEstimatedNumber(text, NUTRITION_FACT_PATTERN_BY_KEY.get("sugarGrams") ?? /$^/),
+      addedSugarsGrams: extractEstimatedNumber(
+        text,
+        NUTRITION_FACT_PATTERN_BY_KEY.get("addedSugarsGrams") ?? /$^/
+      ),
+      sugarAlcoholsGrams: extractEstimatedNumber(
+        text,
+        NUTRITION_FACT_PATTERN_BY_KEY.get("sugarAlcoholsGrams") ?? /$^/
+      ),
+      netCarbsGrams: extractEstimatedNumber(text, NUTRITION_FACT_PATTERN_BY_KEY.get("netCarbsGrams") ?? /$^/),
+      saturatedFatGrams: extractEstimatedNumber(
+        text,
+        NUTRITION_FACT_PATTERN_BY_KEY.get("saturatedFatGrams") ?? /$^/
+      ),
+      transFatGrams: extractEstimatedNumber(text, NUTRITION_FACT_PATTERN_BY_KEY.get("transFatGrams") ?? /$^/),
+      polyunsaturatedFatGrams: extractEstimatedNumber(
+        text,
+        NUTRITION_FACT_PATTERN_BY_KEY.get("polyunsaturatedFatGrams") ?? /$^/
+      ),
+      monounsaturatedFatGrams: extractEstimatedNumber(
+        text,
+        NUTRITION_FACT_PATTERN_BY_KEY.get("monounsaturatedFatGrams") ?? /$^/
+      ),
+      cholesterolMg: extractEstimatedNumber(text, NUTRITION_FACT_PATTERN_BY_KEY.get("cholesterolMg") ?? /$^/),
+      sodiumMg: extractEstimatedNumber(text, NUTRITION_FACT_PATTERN_BY_KEY.get("sodiumMg") ?? /$^/),
+      calciumMg: extractEstimatedNumber(text, NUTRITION_FACT_PATTERN_BY_KEY.get("calciumMg") ?? /$^/),
+      ironMg: extractEstimatedNumber(text, NUTRITION_FACT_PATTERN_BY_KEY.get("ironMg") ?? /$^/),
+      potassiumMg: extractEstimatedNumber(text, NUTRITION_FACT_PATTERN_BY_KEY.get("potassiumMg") ?? /$^/),
+      vitaminAIu: extractEstimatedNumber(text, NUTRITION_FACT_PATTERN_BY_KEY.get("vitaminAIu") ?? /$^/),
+      vitaminCMg: extractEstimatedNumber(text, NUTRITION_FACT_PATTERN_BY_KEY.get("vitaminCMg") ?? /$^/),
+      vitaminDMcg: extractEstimatedNumber(text, NUTRITION_FACT_PATTERN_BY_KEY.get("vitaminDMcg") ?? /$^/),
+    };
     const estimatedCarbsUsedGrams = isExerciseEntry
       ? llmCarbsUsed
       : 0;
@@ -5524,6 +5618,7 @@ export default function ChatPage() {
       estimatedCarbsUsedGrams,
       estimatedFatUsedGrams,
       estimatedProteinDeltaGrams,
+      dietaryFacts,
     };
   }, [nutritionGoals.caloriesTarget, transcriptModalTranscript]);
   const showTranscriptMentorReflections =
@@ -5550,6 +5645,78 @@ export default function ChatPage() {
         transcriptModalNutritionSnapshot.estimatedProteinDeltaGrams == null
           ? ""
           : String(transcriptModalNutritionSnapshot.estimatedProteinDeltaGrams),
+      totalCarbohydratesGrams:
+        transcriptModalNutritionSnapshot.dietaryFacts.totalCarbohydratesGrams == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.totalCarbohydratesGrams),
+      dietaryFiberGrams:
+        transcriptModalNutritionSnapshot.dietaryFacts.dietaryFiberGrams == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.dietaryFiberGrams),
+      sugarGrams:
+        transcriptModalNutritionSnapshot.dietaryFacts.sugarGrams == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.sugarGrams),
+      addedSugarsGrams:
+        transcriptModalNutritionSnapshot.dietaryFacts.addedSugarsGrams == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.addedSugarsGrams),
+      sugarAlcoholsGrams:
+        transcriptModalNutritionSnapshot.dietaryFacts.sugarAlcoholsGrams == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.sugarAlcoholsGrams),
+      netCarbsGrams:
+        transcriptModalNutritionSnapshot.dietaryFacts.netCarbsGrams == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.netCarbsGrams),
+      saturatedFatGrams:
+        transcriptModalNutritionSnapshot.dietaryFacts.saturatedFatGrams == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.saturatedFatGrams),
+      transFatGrams:
+        transcriptModalNutritionSnapshot.dietaryFacts.transFatGrams == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.transFatGrams),
+      polyunsaturatedFatGrams:
+        transcriptModalNutritionSnapshot.dietaryFacts.polyunsaturatedFatGrams == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.polyunsaturatedFatGrams),
+      monounsaturatedFatGrams:
+        transcriptModalNutritionSnapshot.dietaryFacts.monounsaturatedFatGrams == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.monounsaturatedFatGrams),
+      cholesterolMg:
+        transcriptModalNutritionSnapshot.dietaryFacts.cholesterolMg == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.cholesterolMg),
+      sodiumMg:
+        transcriptModalNutritionSnapshot.dietaryFacts.sodiumMg == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.sodiumMg),
+      calciumMg:
+        transcriptModalNutritionSnapshot.dietaryFacts.calciumMg == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.calciumMg),
+      ironMg:
+        transcriptModalNutritionSnapshot.dietaryFacts.ironMg == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.ironMg),
+      potassiumMg:
+        transcriptModalNutritionSnapshot.dietaryFacts.potassiumMg == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.potassiumMg),
+      vitaminAIu:
+        transcriptModalNutritionSnapshot.dietaryFacts.vitaminAIu == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.vitaminAIu),
+      vitaminCMg:
+        transcriptModalNutritionSnapshot.dietaryFacts.vitaminCMg == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.vitaminCMg),
+      vitaminDMcg:
+        transcriptModalNutritionSnapshot.dietaryFacts.vitaminDMcg == null
+          ? ""
+          : String(transcriptModalNutritionSnapshot.dietaryFacts.vitaminDMcg),
     });
     setTranscriptStatsError(null);
     setTranscriptStatsEditing(true);
@@ -5567,7 +5734,7 @@ export default function ChatPage() {
     setTranscriptStatsSaving(true);
     setTranscriptStatsError(null);
     try {
-      let payload: Record<string, number>;
+      let payload: Record<string, unknown>;
       if (transcriptModalTranscript.journalCategory === "nutrition") {
         const calories = toNum(transcriptStatsDraft.caloriesFood);
         const carbsGrams = toNum(transcriptStatsDraft.carbsGrams);
@@ -5576,7 +5743,32 @@ export default function ChatPage() {
         if (calories == null || carbsGrams == null || proteinGrams == null || fatGrams == null) {
           throw new Error("Please enter valid nutrition numbers.");
         }
-        payload = { calories, carbsGrams, proteinGrams, fatGrams };
+        payload = {
+          calories,
+          carbsGrams,
+          proteinGrams,
+          fatGrams,
+          facts: {
+            totalCarbohydratesGrams: toNum(transcriptStatsDraft.totalCarbohydratesGrams),
+            dietaryFiberGrams: toNum(transcriptStatsDraft.dietaryFiberGrams),
+            sugarGrams: toNum(transcriptStatsDraft.sugarGrams),
+            addedSugarsGrams: toNum(transcriptStatsDraft.addedSugarsGrams),
+            sugarAlcoholsGrams: toNum(transcriptStatsDraft.sugarAlcoholsGrams),
+            netCarbsGrams: toNum(transcriptStatsDraft.netCarbsGrams),
+            saturatedFatGrams: toNum(transcriptStatsDraft.saturatedFatGrams),
+            transFatGrams: toNum(transcriptStatsDraft.transFatGrams),
+            polyunsaturatedFatGrams: toNum(transcriptStatsDraft.polyunsaturatedFatGrams),
+            monounsaturatedFatGrams: toNum(transcriptStatsDraft.monounsaturatedFatGrams),
+            cholesterolMg: toNum(transcriptStatsDraft.cholesterolMg),
+            sodiumMg: toNum(transcriptStatsDraft.sodiumMg),
+            calciumMg: toNum(transcriptStatsDraft.calciumMg),
+            ironMg: toNum(transcriptStatsDraft.ironMg),
+            potassiumMg: toNum(transcriptStatsDraft.potassiumMg),
+            vitaminAIu: toNum(transcriptStatsDraft.vitaminAIu),
+            vitaminCMg: toNum(transcriptStatsDraft.vitaminCMg),
+            vitaminDMcg: toNum(transcriptStatsDraft.vitaminDMcg),
+          },
+        };
       } else {
         const caloriesBurned = toNum(transcriptStatsDraft.caloriesExercise);
         const carbsUsedGrams = toNum(transcriptStatsDraft.carbsUsedGrams);
@@ -15285,6 +15477,39 @@ export default function ChatPage() {
                           </>
                         )}
                       </div>
+                      {transcriptModalNutritionSnapshot.mode === "nutrition" && (
+                        <div className="mt-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50/70 dark:bg-neutral-900/40 p-2">
+                          <p className="text-[11px] font-medium text-neutral-600 dark:text-neutral-300 mb-2">
+                            Dietary facts
+                          </p>
+                          <div className="grid grid-cols-2 gap-2">
+                            {NUTRITION_FACT_EDIT_FIELDS.map(({ label, key }) => (
+                              <label key={key} className="block space-y-1">
+                                <span className="text-[11px] text-neutral-500 dark:text-neutral-400">{label}</span>
+                                {transcriptStatsEditing ? (
+                                  <input
+                                    type="number"
+                                    step="0.1"
+                                    value={transcriptStatsDraft?.[key] ?? ""}
+                                    onChange={(e) =>
+                                      setTranscriptStatsDraft((prev) =>
+                                        prev ? { ...prev, [key]: e.target.value } : prev
+                                      )
+                                    }
+                                    className="w-full px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-xs"
+                                  />
+                                ) : (
+                                  <p className="text-xs font-medium text-foreground">
+                                    {transcriptModalNutritionSnapshot.dietaryFacts[key] == null
+                                      ? "--"
+                                      : transcriptModalNutritionSnapshot.dietaryFacts[key]}
+                                  </p>
+                                )}
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                       <div className="mt-2 flex items-center justify-end gap-2">
                         {transcriptStatsError && (
                           <p className="text-xs text-red-600 dark:text-red-400 mr-auto">{transcriptStatsError}</p>
@@ -18571,7 +18796,7 @@ export default function ChatPage() {
                       onClick={() => {
                         setCalorieTrackerInput("");
                         setCalorieTrackerCustomTag("");
-                        setCalorieTrackerImageExtractedText("");
+                        setCalorieTrackerImageAnalyses([]);
                         setCalorieTrackerError(null);
                         setCalorieTrackerStep("input");
                       }}
@@ -18633,20 +18858,6 @@ export default function ChatPage() {
                       className="w-full max-w-xs px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
                     />
                   </div>
-                  <div className="flex items-end gap-2">
-                    <textarea
-                      value={calorieTrackerInput}
-                      onChange={(e) => setCalorieTrackerInput(e.target.value)}
-                      rows={6}
-                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
-                      placeholder={
-                        calorieTrackerImageExtractedText.trim()
-                          ? "Optional: add edits, missing details, portions, brands, or context for the uploaded image"
-                          : "e.g. Breakfast: 2 eggs + toast, lunch: chicken bowl; workout: 30 min run"
-                      }
-                      className="flex-1 px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
-                    />
-                  </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <input
                       ref={calorieTrackerImageInputRef}
@@ -18661,6 +18872,7 @@ export default function ChatPage() {
                       ref={calorieTrackerUploadInputRef}
                       type="file"
                       accept="image/*"
+                      multiple
                       className="hidden"
                       onChange={(e) => void handleCalorieTrackerImageSelected(e)}
                       disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
@@ -18687,6 +18899,16 @@ export default function ChatPage() {
                     >
                       Upload photo
                     </button>
+                    {calorieTrackerImageAnalyses.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setCalorieTrackerImageAnalyses([])}
+                        disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                        className="h-[34px] px-3 rounded-xl text-xs font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
+                      >
+                        Clear photos
+                      </button>
+                    )}
                     <VoiceInputButton
                       language={language}
                       disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
@@ -18702,26 +18924,43 @@ export default function ChatPage() {
                       }
                     />
                     <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                      We extract text from the photo first. Then add optional context in the box before saving.
+                      Add one or more photos. Each photo is analyzed independently and included in the final nutrition estimate.
                     </p>
                   </div>
-                  {calorieTrackerImageExtractedText.trim() && (
-                    <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/50 p-2.5">
-                      <p className="text-[11px] font-medium text-neutral-600 dark:text-neutral-300 mb-1">
-                        Extracted from image
-                      </p>
-                      <p className="text-xs text-neutral-600 dark:text-neutral-300 whitespace-pre-wrap line-clamp-5">
-                        {calorieTrackerImageExtractedText}
-                      </p>
-                    </div>
-                  )}
-                  {calorieTrackerImagePreview && (
-                    <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-2">
-                      <img
-                        src={calorieTrackerImagePreview}
-                        alt="Captured nutrition image"
-                        className="w-full max-h-48 object-cover rounded-lg"
-                      />
+                  <div className="flex items-end gap-2">
+                    <textarea
+                      value={calorieTrackerInput}
+                      onChange={(e) => setCalorieTrackerInput(e.target.value)}
+                      rows={6}
+                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                      placeholder={
+                        calorieTrackerImageAnalyses.length > 0
+                          ? "Optional: add edits, missing details, portions, brands, or context for the uploaded image(s)"
+                          : "e.g. Breakfast: 2 eggs + toast, lunch: chicken bowl; workout: 30 min run"
+                      }
+                      className="flex-1 px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
+                    />
+                  </div>
+                  {calorieTrackerImageAnalyses.length > 0 && (
+                    <div className="space-y-2">
+                      {calorieTrackerImageAnalyses.map((analysis, idx) => (
+                        <div
+                          key={analysis.id}
+                          className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/50 p-2.5"
+                        >
+                          <p className="text-[11px] font-medium text-neutral-600 dark:text-neutral-300 mb-1">
+                            Photo {idx + 1} extraction
+                          </p>
+                          <p className="text-xs text-neutral-600 dark:text-neutral-300 whitespace-pre-wrap line-clamp-5">
+                            {analysis.extractedText}
+                          </p>
+                          <img
+                            src={analysis.previewUrl}
+                            alt={`Captured nutrition image ${idx + 1}`}
+                            className="mt-2 w-full max-h-48 object-cover rounded-lg"
+                          />
+                        </div>
+                      ))}
                     </div>
                   )}
                   {calorieTrackerImageError && (
@@ -18733,7 +18972,7 @@ export default function ChatPage() {
                     disabled={
                       calorieTrackerLoading ||
                       calorieTrackerImageProcessing ||
-                      (!calorieTrackerInput.trim() && !calorieTrackerImageExtractedText.trim())
+                      (!calorieTrackerInput.trim() && calorieTrackerImageAnalyses.length === 0)
                     }
                     className="w-full px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
                   >
@@ -18866,32 +19105,13 @@ export default function ChatPage() {
                       Dietary facts
                     </p>
                     <div className="grid grid-cols-2 gap-2">
-                      {[
-                        ["Total Carbs (g)", "totalCarbohydratesGrams"],
-                        ["Dietary Fiber (g)", "dietaryFiberGrams"],
-                        ["Sugar (g)", "sugarGrams"],
-                        ["Added Sugars (g)", "addedSugarsGrams"],
-                        ["Sugar Alcohols (g)", "sugarAlcoholsGrams"],
-                        ["Net Carbs (g)", "netCarbsGrams"],
-                        ["Saturated Fat (g)", "saturatedFatGrams"],
-                        ["Trans Fat (g)", "transFatGrams"],
-                        ["Polyunsat. Fat (g)", "polyunsaturatedFatGrams"],
-                        ["Monounsat. Fat (g)", "monounsaturatedFatGrams"],
-                        ["Cholesterol (mg)", "cholesterolMg"],
-                        ["Sodium (mg)", "sodiumMg"],
-                        ["Calcium (mg)", "calciumMg"],
-                        ["Iron (mg)", "ironMg"],
-                        ["Potassium (mg)", "potassiumMg"],
-                        ["Vitamin A (IU)", "vitaminAIu"],
-                        ["Vitamin C (mg)", "vitaminCMg"],
-                        ["Vitamin D (mcg)", "vitaminDMcg"],
-                      ].map(([label, key]) => (
+                      {NUTRITION_FACT_EDIT_FIELDS.map(({ label, key }) => (
                         <label key={key} className="block space-y-1">
                           <span className="text-xs text-neutral-500 dark:text-neutral-400">{label}</span>
                           <input
                             type="number"
                             step="0.1"
-                            value={calorieTrackerReviewDraft[key as keyof typeof calorieTrackerReviewDraft]}
+                            value={calorieTrackerReviewDraft[key]}
                             onChange={(e) =>
                               setCalorieTrackerReviewDraft((prev) =>
                                 prev
