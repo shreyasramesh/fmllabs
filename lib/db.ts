@@ -450,6 +450,15 @@ interface SavedPerspectiveCardDoc extends Omit<SavedPerspectiveCard, "_id"> {
 }
 
 export type BackgroundElement = "default" | "air" | "water" | "earth" | "fire";
+export type NutritionFatLossMethod =
+  | "calorie_counting"
+  | "intermittent_fasting"
+  | "diet_based";
+export type NutritionDietTemplate = "balanced" | "low_carb" | "high_protein" | "low_fat";
+export type NutritionMethodConfig = {
+  intermittentFastingEatingWindowHours?: number;
+  dietBasedTemplate?: NutritionDietTemplate;
+};
 export interface ClonedVoiceSetting {
   voiceId: string;
   name: string;
@@ -476,6 +485,12 @@ export interface UserSettings {
   goalCarbsGrams?: number;
   goalProteinGrams?: number;
   goalFatGrams?: number;
+  /** Primary fat-loss approach selected in daily goals calculator. */
+  nutritionFatLossMethod?: NutritionFatLossMethod;
+  /** Multi-select fat-loss approaches selected in daily goals calculator. */
+  nutritionFatLossMethods?: NutritionFatLossMethod[];
+  /** Optional method-specific configuration (fasting window / macro template). */
+  nutritionMethodConfig?: NutritionMethodConfig;
   /** User-entered natural-language objective for nutrition coaching. */
   nutritionGoalIntent?: string;
   /** When true, user appears on the global XP leaderboard */
@@ -2479,6 +2494,24 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     .collection<UserSettingsDoc>("user_settings")
     .findOne({ userId });
   if (!doc) return null;
+  const nutritionFatLossMethods: NutritionFatLossMethod[] = Array.isArray(doc.nutritionFatLossMethods)
+    ? doc.nutritionFatLossMethods
+        .filter(
+          (m): m is NutritionFatLossMethod =>
+            m === "calorie_counting" || m === "intermittent_fasting" || m === "diet_based"
+        )
+        .slice(0, 3)
+    : [];
+  const nutritionFatLossMethod: NutritionFatLossMethod = nutritionFatLossMethods[0]
+    ? nutritionFatLossMethods[0]
+    : doc.nutritionFatLossMethod === "intermittent_fasting" ||
+        doc.nutritionFatLossMethod === "diet_based"
+      ? doc.nutritionFatLossMethod
+      : "calorie_counting";
+  const nutritionMethodConfig =
+    doc.nutritionMethodConfig && typeof doc.nutritionMethodConfig === "object"
+      ? (doc.nutritionMethodConfig as NutritionMethodConfig)
+      : undefined;
   return decryptUserSettingsFields({
     userId: doc.userId,
     theme: doc.theme,
@@ -2494,6 +2527,10 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     goalCarbsGrams: doc.goalCarbsGrams,
     goalProteinGrams: doc.goalProteinGrams,
     goalFatGrams: doc.goalFatGrams,
+    nutritionFatLossMethod,
+    nutritionFatLossMethods:
+      nutritionFatLossMethods.length > 0 ? nutritionFatLossMethods : [nutritionFatLossMethod],
+    nutritionMethodConfig,
     nutritionGoalIntent: doc.nutritionGoalIntent,
     followedFigureIds: doc.followedFigureIds,
     leaderboardOptIn: doc.leaderboardOptIn,
@@ -2506,7 +2543,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "nutritionGoalIntent" | "followedFigureIds" | "leaderboardOptIn" | "preferredName" | "reminderPreferences" | "nightlyNutritionReportNotificationEnabled">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "weatherFormat" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "nutritionFatLossMethod" | "nutritionFatLossMethods" | "nutritionMethodConfig" | "nutritionGoalIntent" | "followedFigureIds" | "leaderboardOptIn" | "preferredName" | "reminderPreferences" | "nightlyNutritionReportNotificationEnabled">>
 ): Promise<UserSettings> {
   const database = await getDb();
   const now = new Date();
@@ -2519,6 +2556,24 @@ export async function upsertUserSettings(
   if (!result) {
     return decryptUserSettingsFields({ userId, ...updates, updatedAt: now });
   }
+  const nutritionFatLossMethods: NutritionFatLossMethod[] = Array.isArray(result.nutritionFatLossMethods)
+    ? result.nutritionFatLossMethods
+        .filter(
+          (m): m is NutritionFatLossMethod =>
+            m === "calorie_counting" || m === "intermittent_fasting" || m === "diet_based"
+        )
+        .slice(0, 3)
+    : [];
+  const nutritionFatLossMethod: NutritionFatLossMethod = nutritionFatLossMethods[0]
+    ? nutritionFatLossMethods[0]
+    : result.nutritionFatLossMethod === "intermittent_fasting" ||
+        result.nutritionFatLossMethod === "diet_based"
+      ? result.nutritionFatLossMethod
+      : "calorie_counting";
+  const nutritionMethodConfig =
+    result.nutritionMethodConfig && typeof result.nutritionMethodConfig === "object"
+      ? (result.nutritionMethodConfig as NutritionMethodConfig)
+      : undefined;
   return decryptUserSettingsFields({
     userId: result.userId,
     theme: result.theme,
@@ -2534,6 +2589,10 @@ export async function upsertUserSettings(
     goalCarbsGrams: result.goalCarbsGrams,
     goalProteinGrams: result.goalProteinGrams,
     goalFatGrams: result.goalFatGrams,
+    nutritionFatLossMethod,
+    nutritionFatLossMethods:
+      nutritionFatLossMethods.length > 0 ? nutritionFatLossMethods : [nutritionFatLossMethod],
+    nutritionMethodConfig,
     nutritionGoalIntent: result.nutritionGoalIntent,
     followedFigureIds: result.followedFigureIds,
     leaderboardOptIn: result.leaderboardOptIn,

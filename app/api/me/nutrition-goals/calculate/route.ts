@@ -16,6 +16,12 @@ const GOAL_MACRO_MAX = 1000;
 type GoalDirection = "lose_weight" | "maintain_weight" | "gain_weight";
 type GoalPace = "extreme" | "moderate" | "mild";
 type GoalGender = "male" | "female";
+type NutritionFatLossMethod = "calorie_counting" | "intermittent_fasting" | "diet_based";
+type NutritionDietTemplate = "balanced" | "low_carb" | "high_protein" | "low_fat";
+type NutritionMethodConfig = {
+  intermittentFastingEatingWindowHours?: number;
+  dietBasedTemplate?: NutritionDietTemplate;
+};
 
 function parseNumberish(v: unknown): number | null {
   if (typeof v === "number") return Number.isFinite(v) ? v : null;
@@ -96,6 +102,100 @@ function isGoalGender(v: unknown): v is GoalGender {
   return v === "male" || v === "female";
 }
 
+function normalizeFatLossMethods(
+  singleValue: unknown,
+  multiValue: unknown
+): { selectedMethods: NutritionFatLossMethod[]; primaryMethod: NutritionFatLossMethod } {
+  const fromMulti = Array.isArray(multiValue)
+    ? multiValue
+        .filter(
+          (m): m is NutritionFatLossMethod =>
+            m === "calorie_counting" || m === "intermittent_fasting" || m === "diet_based"
+        )
+        .slice(0, 3)
+    : [];
+  if (fromMulti.length > 0) {
+    return { selectedMethods: fromMulti, primaryMethod: fromMulti[0] };
+  }
+  const primaryMethod: NutritionFatLossMethod =
+    singleValue === "intermittent_fasting" || singleValue === "diet_based"
+      ? singleValue
+      : "calorie_counting";
+  return { selectedMethods: [primaryMethod], primaryMethod };
+}
+
+function normalizeMethodConfig(
+  methods: NutritionFatLossMethod[],
+  value: unknown
+): NutritionMethodConfig {
+  const raw = value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+  const config: NutritionMethodConfig = {};
+  if (methods.includes("intermittent_fasting")) {
+    const parsedHours = parseNumberish(raw.intermittentFastingEatingWindowHours);
+    config.intermittentFastingEatingWindowHours =
+      parsedHours === null
+        ? 8
+        : Math.max(4, Math.min(16, Math.round(parsedHours)));
+  }
+  if (methods.includes("diet_based")) {
+    const template = raw.dietBasedTemplate;
+    if (
+      template === "balanced" ||
+      template === "low_carb" ||
+      template === "high_protein" ||
+      template === "low_fat"
+    ) {
+      config.dietBasedTemplate = template;
+    } else {
+      config.dietBasedTemplate = "balanced";
+    }
+  }
+  return config;
+}
+
+function getDietTemplatePercents(template: NutritionDietTemplate): { carbs: number; protein: number; fat: number } {
+  if (template === "low_carb") return { carbs: 25, protein: 35, fat: 40 };
+  if (template === "high_protein") return { carbs: 30, protein: 40, fat: 30 };
+  if (template === "low_fat") return { carbs: 50, protein: 30, fat: 20 };
+  return { carbs: 40, protein: 30, fat: 30 };
+}
+
+function blendPercents(
+  base: { carbs: number; protein: number; fat: number },
+  target: { carbs: number; protein: number; fat: number },
+  targetWeight: number
+): { carbs: number; protein: number; fat: number } {
+  const w = Math.max(0, Math.min(1, targetWeight));
+  return normalizeMacroPercents({
+    carbs: Math.round(base.carbs * (1 - w) + target.carbs * w),
+    protein: Math.round(base.protein * (1 - w) + target.protein * w),
+    fat: Math.round(base.fat * (1 - w) + target.fat * w),
+  });
+}
+
+function buildMethodRationale(
+  method: NutritionFatLossMethod,
+  config: NutritionMethodConfig
+): string {
+  if (method === "intermittent_fasting") {
+    const hours = config.intermittentFastingEatingWindowHours ?? 8;
+    return `Method: Intermittent fasting. Keep the calorie budget unchanged and aim for an eating window of about ${hours} hours.`;
+  }
+  if (method === "diet_based") {
+    const template = config.dietBasedTemplate ?? "balanced";
+    const label =
+      template === "low_carb"
+        ? "low carb"
+        : template === "high_protein"
+          ? "high protein"
+          : template === "low_fat"
+            ? "low fat"
+            : "balanced";
+    return `Method: Diet-based (${label}). Macro split is biased toward this template while keeping calories coherent.`;
+  }
+  return "Method: Calorie counting. Prioritize calorie budget consistency with practical macro distribution.";
+}
+
 export async function POST(request: Request) {
   const { userId } = await auth();
   if (!userId) {
@@ -117,7 +217,16 @@ export async function POST(request: Request) {
       carbsPercent?: unknown;
       proteinPercent?: unknown;
       fatPercent?: unknown;
+      nutritionFatLossMethod?: unknown;
+      nutritionFatLossMethods?: unknown;
+      nutritionMethodConfig?: unknown;
     };
+    const { selectedMethods: nutritionFatLossMethods, primaryMethod: nutritionFatLossMethod } =
+      normalizeFatLossMethods(body.nutritionFatLossMethod, body.nutritionFatLossMethods);
+    const nutritionMethodConfig = normalizeMethodConfig(
+      nutritionFatLossMethods,
+      body.nutritionMethodConfig
+    );
 
     if (body.action === "finish") {
       const age = parseNumberish(body.age);
@@ -167,25 +276,57 @@ export async function POST(request: Request) {
         ),
         fat: clamp(llm.fatPercent ?? fallbackPercents.fat, GOAL_PERCENT_MIN, GOAL_PERCENT_MAX),
       });
+      const methodAdjustedPercents =
+        nutritionFatLossMethods.includes("diet_based")
+          ? blendPercents(
+              percents,
+              getDietTemplatePercents(nutritionMethodConfig.dietBasedTemplate ?? "balanced"),
+              0.45
+            )
+          : percents;
       const grams = {
-        carbsGrams: clamp(llm.carbsGrams ?? fallbackGrams.carbsGrams, GOAL_MACRO_MIN, GOAL_MACRO_MAX),
-        proteinGrams: clamp(
-          llm.proteinGrams ?? fallbackGrams.proteinGrams,
+        carbsGrams: clamp(
+          gramsFromPercents(caloriesTarget, methodAdjustedPercents).carbsGrams ??
+            llm.carbsGrams ??
+            fallbackGrams.carbsGrams,
           GOAL_MACRO_MIN,
           GOAL_MACRO_MAX
         ),
-        fatGrams: clamp(llm.fatGrams ?? fallbackGrams.fatGrams, GOAL_MACRO_MIN, GOAL_MACRO_MAX),
+        proteinGrams: clamp(
+          gramsFromPercents(caloriesTarget, methodAdjustedPercents).proteinGrams ??
+            llm.proteinGrams ??
+            fallbackGrams.proteinGrams,
+          GOAL_MACRO_MIN,
+          GOAL_MACRO_MAX
+        ),
+        fatGrams: clamp(
+          gramsFromPercents(caloriesTarget, methodAdjustedPercents).fatGrams ??
+            llm.fatGrams ??
+            fallbackGrams.fatGrams,
+          GOAL_MACRO_MIN,
+          GOAL_MACRO_MAX
+        ),
       };
+      const methodRationaleLines = nutritionFatLossMethods.map((m) =>
+        buildMethodRationale(m, nutritionMethodConfig)
+      );
+      const methodRationale = methodRationaleLines.join(" ");
 
       return NextResponse.json({
         caloriesTarget,
-        carbsPercent: percents.carbs,
-        proteinPercent: percents.protein,
-        fatPercent: percents.fat,
+        carbsPercent: methodAdjustedPercents.carbs,
+        proteinPercent: methodAdjustedPercents.protein,
+        fatPercent: methodAdjustedPercents.fat,
         carbsGrams: grams.carbsGrams,
         proteinGrams: grams.proteinGrams,
         fatGrams: grams.fatGrams,
-        rationale: llm.rationale ?? "",
+        rationale: [llm.rationale, methodRationale].filter(Boolean).join(" "),
+        nutritionFatLossMethods,
+        nutritionFatLossMethod,
+        nutritionMethodConfig,
+        methodRationale,
+        methodRationaleLines,
+        primaryMethod: nutritionFatLossMethod,
       });
     }
 
@@ -229,20 +370,39 @@ export async function POST(request: Request) {
         ),
         fat: clamp(llm.fatPercent ?? normalizedPercents.fat, GOAL_PERCENT_MIN, GOAL_PERCENT_MAX),
       });
+      const methodAdjustedPercents =
+        nutritionFatLossMethods.includes("diet_based")
+          ? blendPercents(
+              returnedPercents,
+              getDietTemplatePercents(nutritionMethodConfig.dietBasedTemplate ?? "balanced"),
+              0.4
+            )
+          : returnedPercents;
+      const adjustedGrams = gramsFromPercents(normalizedCalories, methodAdjustedPercents);
+      const methodRationaleLines = nutritionFatLossMethods.map((m) =>
+        buildMethodRationale(m, nutritionMethodConfig)
+      );
+      const methodRationale = methodRationaleLines.join(" ");
 
       return NextResponse.json({
         caloriesTarget: normalizedCalories,
-        carbsPercent: returnedPercents.carbs,
-        proteinPercent: returnedPercents.protein,
-        fatPercent: returnedPercents.fat,
-        carbsGrams: clamp(llm.carbsGrams ?? fallbackGrams.carbsGrams, GOAL_MACRO_MIN, GOAL_MACRO_MAX),
+        carbsPercent: methodAdjustedPercents.carbs,
+        proteinPercent: methodAdjustedPercents.protein,
+        fatPercent: methodAdjustedPercents.fat,
+        carbsGrams: clamp(adjustedGrams.carbsGrams ?? llm.carbsGrams ?? fallbackGrams.carbsGrams, GOAL_MACRO_MIN, GOAL_MACRO_MAX),
         proteinGrams: clamp(
-          llm.proteinGrams ?? fallbackGrams.proteinGrams,
+          adjustedGrams.proteinGrams ?? llm.proteinGrams ?? fallbackGrams.proteinGrams,
           GOAL_MACRO_MIN,
           GOAL_MACRO_MAX
         ),
-        fatGrams: clamp(llm.fatGrams ?? fallbackGrams.fatGrams, GOAL_MACRO_MIN, GOAL_MACRO_MAX),
-        rationale: llm.rationale ?? "",
+        fatGrams: clamp(adjustedGrams.fatGrams ?? llm.fatGrams ?? fallbackGrams.fatGrams, GOAL_MACRO_MIN, GOAL_MACRO_MAX),
+        rationale: [llm.rationale, methodRationale].filter(Boolean).join(" "),
+        nutritionFatLossMethods,
+        nutritionFatLossMethod,
+        nutritionMethodConfig,
+        methodRationale,
+        methodRationaleLines,
+        primaryMethod: nutritionFatLossMethod,
       });
     }
 

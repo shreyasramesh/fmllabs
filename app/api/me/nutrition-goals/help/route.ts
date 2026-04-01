@@ -19,14 +19,24 @@ function asFiniteNumberOrFallback(value: unknown, fallback: number): number {
 
 function findMostRecentTrackedWeek(
   savedTranscripts: Awaited<ReturnType<typeof getSavedTranscripts>>,
-  caloriesTargetPerDay: number
+  caloriesTargetPerDay: number,
+  nutritionFatLossMethod: unknown,
+  nutritionFatLossMethods: unknown,
+  nutritionMethodConfig: unknown
 ): {
   summary: ReturnType<typeof buildWeeklySummary>;
   weekOffsetUsed: number;
 } | null {
   const MAX_LOOKBACK_WEEKS = 12;
   for (let weekOffset = 0; weekOffset <= MAX_LOOKBACK_WEEKS; weekOffset += 1) {
-    const summary = buildWeeklySummary(savedTranscripts, caloriesTargetPerDay, weekOffset);
+    const summary = buildWeeklySummary(
+      savedTranscripts,
+      caloriesTargetPerDay,
+      nutritionFatLossMethod,
+      nutritionFatLossMethods,
+      nutritionMethodConfig,
+      weekOffset
+    );
     if (summary.foodEntries > 0 || summary.exerciseEntries > 0) {
       return { summary, weekOffsetUsed: weekOffset };
     }
@@ -83,7 +93,10 @@ export async function POST(request: Request) {
 
     const trackedWeek = findMostRecentTrackedWeek(
       savedTranscripts,
-      goals.caloriesTargetPerDay
+      goals.caloriesTargetPerDay,
+      settings?.nutritionFatLossMethod,
+      settings?.nutritionFatLossMethods,
+      settings?.nutritionMethodConfig
     );
     if (!trackedWeek) {
       return NextResponse.json(

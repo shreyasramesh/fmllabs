@@ -15,6 +15,8 @@ const BACKGROUND_ELEMENTS = ["default", "air", "water", "earth", "fire"] as cons
 const WEATHER_FORMATS = ["condition-temp", "emoji-temp", "temp-only"] as const;
 const PREFERRED_NAME_MAX = 80;
 const NUTRITION_GOAL_INTENT_MAX = 500;
+const FASTING_WINDOW_MIN_HOURS = 4;
+const FASTING_WINDOW_MAX_HOURS = 16;
 
 function clampTtsSpeed(v: number): number {
   return Math.max(TTS_MIN, Math.min(TTS_MAX, v));
@@ -43,6 +45,42 @@ function isValidBackground(b: unknown): b is "default" | "air" | "water" | "eart
 
 function isValidWeatherFormat(v: unknown): v is "condition-temp" | "emoji-temp" | "temp-only" {
   return typeof v === "string" && WEATHER_FORMATS.includes(v as (typeof WEATHER_FORMATS)[number]);
+}
+
+function isNutritionFatLossMethod(
+  value: unknown
+): value is "calorie_counting" | "intermittent_fasting" | "diet_based" {
+  return (
+    value === "calorie_counting" ||
+    value === "intermittent_fasting" ||
+    value === "diet_based"
+  );
+}
+
+function normalizeNutritionMethodConfig(
+  value: unknown
+): { intermittentFastingEatingWindowHours?: number; dietBasedTemplate?: "balanced" | "low_carb" | "high_protein" | "low_fat" } {
+  if (!value || typeof value !== "object") return {};
+  const obj = value as Record<string, unknown>;
+  const next: {
+    intermittentFastingEatingWindowHours?: number;
+    dietBasedTemplate?: "balanced" | "low_carb" | "high_protein" | "low_fat";
+  } = {};
+  const fastingHours = parseNumberish(obj.intermittentFastingEatingWindowHours);
+  if (fastingHours !== null) {
+    next.intermittentFastingEatingWindowHours = Math.round(
+      Math.max(FASTING_WINDOW_MIN_HOURS, Math.min(FASTING_WINDOW_MAX_HOURS, fastingHours))
+    );
+  }
+  if (
+    obj.dietBasedTemplate === "balanced" ||
+    obj.dietBasedTemplate === "low_carb" ||
+    obj.dietBasedTemplate === "high_protein" ||
+    obj.dietBasedTemplate === "low_fat"
+  ) {
+    next.dietBasedTemplate = obj.dietBasedTemplate;
+  }
+  return next;
 }
 
 export async function GET() {
@@ -112,6 +150,23 @@ export async function PATCH(request: Request) {
       if (v !== null) {
         updates.goalFatGrams = clampGoalMacro(v);
       }
+    }
+    if (body.nutritionFatLossMethod !== undefined && isNutritionFatLossMethod(body.nutritionFatLossMethod)) {
+      updates.nutritionFatLossMethod = body.nutritionFatLossMethod;
+    }
+    if (body.nutritionFatLossMethods !== undefined && Array.isArray(body.nutritionFatLossMethods)) {
+      const methods = body.nutritionFatLossMethods
+        .filter((m: unknown): m is "calorie_counting" | "intermittent_fasting" | "diet_based" =>
+          isNutritionFatLossMethod(m)
+        )
+        .slice(0, 3);
+      if (methods.length > 0) {
+        updates.nutritionFatLossMethods = methods;
+        updates.nutritionFatLossMethod = methods[0];
+      }
+    }
+    if (body.nutritionMethodConfig !== undefined) {
+      updates.nutritionMethodConfig = normalizeNutritionMethodConfig(body.nutritionMethodConfig);
     }
     if (body.nutritionGoalIntent !== undefined) {
       if (typeof body.nutritionGoalIntent === "string") {

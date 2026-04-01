@@ -88,10 +88,24 @@ export interface LandingTranslations {
   nutritionGoalsWizardAgePrompt: string;
   nutritionGoalsWizardWeightPrompt: string;
   nutritionGoalsWizardGoalPrompt: string;
+  nutritionGoalsWizardMethodPrompt: string;
   nutritionGoalsWizardHeightPrompt: string;
   nutritionGoalsWizardGenderPrompt: string;
   nutritionGoalsWizardTargetWeightPrompt: string;
   nutritionGoalsWizardPacePrompt: string;
+  nutritionGoalsWizardMethodCalorieCountingLabel: string;
+  nutritionGoalsWizardMethodCalorieCountingDesc: string;
+  nutritionGoalsWizardMethodIntermittentFastingLabel: string;
+  nutritionGoalsWizardMethodIntermittentFastingDesc: string;
+  nutritionGoalsWizardMethodDietBasedLabel: string;
+  nutritionGoalsWizardMethodDietBasedDesc: string;
+  nutritionGoalsWizardFastingWindowLabel: string;
+  nutritionGoalsWizardDietTemplateLabel: string;
+  nutritionGoalsWizardDietTemplateBalanced: string;
+  nutritionGoalsWizardDietTemplateLowCarb: string;
+  nutritionGoalsWizardDietTemplateHighProtein: string;
+  nutritionGoalsWizardDietTemplateLowFat: string;
+  nutritionGoalsWizardMethodSummaryPrefix: string;
   nutritionGoalsWizardDailyGoalsTitle: string;
   nutritionGoalsWizardDailyGoalCalculator: string;
   nutritionGoalsWizardCaloriesGoalTitle: string;
@@ -155,6 +169,7 @@ export interface LandingTranslations {
   weeklySummaryDailyGoalFootnote: string;
   weeklySummaryCaloriesUnit: string;
   weeklySummaryConsistencyHeading: string;
+  weeklySummaryMethodProgressHeading: string;
   weeklySummaryFoodEntriesLabel: string;
   weeklySummaryExerciseEntriesLabel: string;
   journalingTabLabel: string;
@@ -245,10 +260,27 @@ const EN: LandingTranslations = {
   nutritionGoalsWizardAgePrompt: "How old are you?",
   nutritionGoalsWizardWeightPrompt: "What's your weight?",
   nutritionGoalsWizardGoalPrompt: "What's your goal?",
+  nutritionGoalsWizardMethodPrompt: "Which fat-loss method do you want to use?",
   nutritionGoalsWizardHeightPrompt: "How tall are you?",
   nutritionGoalsWizardGenderPrompt: "What's your gender?",
   nutritionGoalsWizardTargetWeightPrompt: "What is your target weight?",
   nutritionGoalsWizardPacePrompt: "How quickly do you want to reach your goal?",
+  nutritionGoalsWizardMethodCalorieCountingLabel: "Calorie counting",
+  nutritionGoalsWizardMethodCalorieCountingDesc:
+    "Track calorie budget directly and use macros as support.",
+  nutritionGoalsWizardMethodIntermittentFastingLabel: "Intermittent fasting",
+  nutritionGoalsWizardMethodIntermittentFastingDesc:
+    "Keep calories aligned while eating in a consistent time window.",
+  nutritionGoalsWizardMethodDietBasedLabel: "Diet-based",
+  nutritionGoalsWizardMethodDietBasedDesc:
+    "Bias your macro split toward a chosen diet template.",
+  nutritionGoalsWizardFastingWindowLabel: "Eating window (hours)",
+  nutritionGoalsWizardDietTemplateLabel: "Diet template",
+  nutritionGoalsWizardDietTemplateBalanced: "Balanced",
+  nutritionGoalsWizardDietTemplateLowCarb: "Low carb",
+  nutritionGoalsWizardDietTemplateHighProtein: "High protein",
+  nutritionGoalsWizardDietTemplateLowFat: "Low fat",
+  nutritionGoalsWizardMethodSummaryPrefix: "Selected method:",
   nutritionGoalsWizardDailyGoalsTitle: "Daily Goals",
   nutritionGoalsWizardDailyGoalCalculator: "Daily Calorie Goal",
   nutritionGoalsWizardCaloriesGoalTitle: "Daily Calorie Goal",
@@ -314,6 +346,7 @@ const EN: LandingTranslations = {
   weeklySummaryDailyGoalFootnote: "Based on a daily goal of",
   weeklySummaryCaloriesUnit: "calories",
   weeklySummaryConsistencyHeading: "Consistency Stats",
+  weeklySummaryMethodProgressHeading: "Method progress",
   weeklySummaryFoodEntriesLabel: "Food entries",
   weeklySummaryExerciseEntriesLabel: "Exercise entries",
   journalingTabLabel: "Journaling",

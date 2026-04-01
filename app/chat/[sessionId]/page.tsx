@@ -2215,6 +2215,9 @@ const GOAL_MACRO_MIN = 10;
 const GOAL_MACRO_MAX = 1000;
 const GOAL_PERCENT_MIN = 5;
 const GOAL_PERCENT_MAX = 85;
+const DEFAULT_NUTRITION_FAT_LOSS_METHOD = "calorie_counting" as const;
+const DEFAULT_FASTING_EATING_WINDOW_HOURS = 8;
+const DEFAULT_DIET_BASED_TEMPLATE = "balanced" as const;
 
 function chartBaseOptions(): Highcharts.Options {
   return {
@@ -2283,6 +2286,7 @@ type GoalsWizardStep =
   | "age"
   | "weight"
   | "goal"
+  | "method"
   | "height"
   | "gender"
   | "target_weight"
@@ -2292,6 +2296,12 @@ type GoalsWizardStep =
 type GoalsWizardGender = "male" | "female";
 type GoalsWizardGoal = "lose_weight" | "maintain_weight" | "gain_weight";
 type GoalsWizardPace = "extreme" | "moderate" | "mild";
+type NutritionFatLossMethod = "calorie_counting" | "intermittent_fasting" | "diet_based";
+type NutritionDietTemplate = "balanced" | "low_carb" | "high_protein" | "low_fat";
+type NutritionMethodConfig = {
+  intermittentFastingEatingWindowHours: number;
+  dietBasedTemplate: NutritionDietTemplate;
+};
 type WeightUnit = "kg" | "lb";
 type HeightUnit = "ft" | "cm";
 
@@ -2299,6 +2309,7 @@ const GOALS_WIZARD_STEPS: GoalsWizardStep[] = [
   "age",
   "weight",
   "goal",
+  "method",
   "height",
   "gender",
   "target_weight",
@@ -2923,6 +2934,64 @@ function createDefaultGoalsWizardProfile(): GoalsWizardProfile {
   };
 }
 
+function normalizeNutritionFatLossMethod(value: unknown): NutritionFatLossMethod {
+  if (value === "intermittent_fasting" || value === "diet_based") return value;
+  return "calorie_counting";
+}
+
+function nutritionMethodLabel(method: NutritionFatLossMethod): string {
+  if (method === "intermittent_fasting") return "Intermittent fasting";
+  if (method === "diet_based") return "Diet-based";
+  return "Calorie counting";
+}
+
+function formatHourLabel(hour: number): string {
+  const normalized = ((hour % 24) + 24) % 24;
+  const whole = Math.floor(normalized);
+  const minutes = Math.round((normalized - whole) * 60);
+  const adjustedHour = minutes === 60 ? (whole + 1) % 24 : whole;
+  const adjustedMinutes = minutes === 60 ? 0 : minutes;
+  const displayHour = adjustedHour % 12 === 0 ? 12 : adjustedHour % 12;
+  const suffix = adjustedHour >= 12 ? "PM" : "AM";
+  return `${displayHour}:${String(adjustedMinutes).padStart(2, "0")} ${suffix}`;
+}
+
+function formatMinuteOfDay(minuteOfDay: number): string {
+  const bounded = Math.max(0, Math.min(1439, Math.floor(minuteOfDay)));
+  const hour = Math.floor(bounded / 60);
+  const minute = bounded % 60;
+  return formatHourLabel(hour + minute / 60);
+}
+
+function parseExerciseDurationMinutesFromText(text: string): number {
+  const match = text.match(/- Duration:\s*([\d.]+)\s*(?:min|mins|minute|minutes)\b/i);
+  const value = match?.[1] ? Number(match[1]) : NaN;
+  if (!Number.isFinite(value)) return 45;
+  return Math.max(5, Math.min(360, Math.round(value)));
+}
+
+function normalizeNutritionMethodConfigInput(
+  value: unknown
+): NutritionMethodConfig {
+  const obj = value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+  const fastingRaw = toNumericInputValue(obj.intermittentFastingEatingWindowHours);
+  const fastingHours =
+    fastingRaw === null
+      ? DEFAULT_FASTING_EATING_WINDOW_HOURS
+      : clampToRange(fastingRaw, 4, 16);
+  const template =
+    obj.dietBasedTemplate === "low_carb" ||
+    obj.dietBasedTemplate === "high_protein" ||
+    obj.dietBasedTemplate === "low_fat" ||
+    obj.dietBasedTemplate === "balanced"
+      ? obj.dietBasedTemplate
+      : DEFAULT_DIET_BASED_TEMPLATE;
+  return {
+    intermittentFastingEatingWindowHours: fastingHours,
+    dietBasedTemplate: template,
+  };
+}
+
 function normalizeGoalValue(
   value: unknown,
   fallback: number,
@@ -3255,7 +3324,7 @@ export default function ChatPage() {
   const incognitoMode = sessionId === "incognito";
   const [landingTab, setLandingTab] = useState<LandingTab>("journaling");
   const [landingJournalingExpandedCard, setLandingJournalingExpandedCard] = useState<
-    "insights" | "snapshot" | null
+    "insights" | "snapshot" | "entries" | null
   >("snapshot");
   const landingTabStorageReadyRef = useRef(false);
   const [selectedLandingDayKey, setSelectedLandingDayKey] = useState(() => toDayKey(new Date()));
@@ -3393,6 +3462,14 @@ export default function ChatPage() {
     error: string | null;
   }>({ saving: false, message: null, error: null });
   const [nutritionGoals, setNutritionGoals] = useState(() => ({ ...DEFAULT_NUTRITION_GOALS }));
+  const [nutritionFatLossMethods, setNutritionFatLossMethods] = useState<NutritionFatLossMethod[]>([
+    DEFAULT_NUTRITION_FAT_LOSS_METHOD,
+  ]);
+  const [nutritionMethodConfig, setNutritionMethodConfig] = useState<NutritionMethodConfig>(
+    () => normalizeNutritionMethodConfigInput(null)
+  );
+  const nutritionFatLossMethod =
+    nutritionFatLossMethods[0] ?? DEFAULT_NUTRITION_FAT_LOSS_METHOD;
   const [goalsModalOpen, setGoalsModalOpen] = useState(false);
   const [goalsDraft, setGoalsDraft] = useState(() => ({
     caloriesTarget: String(DEFAULT_NUTRITION_GOALS.caloriesTarget),
@@ -4398,7 +4475,58 @@ export default function ChatPage() {
       tracked: boolean;
       foodEntries: number;
       exerciseEntries: number;
+      methodAdherenceScore: number;
+      methodAdherent: boolean;
+      methodLabel: string;
+      methodDetail: string;
+      timelineEvents: Array<{
+        type: "nutrition" | "weight" | "exercise" | "focus";
+        startMinute: number;
+        endMinute: number;
+        label: string;
+        color: string;
+      }>;
     }>;
+    methodProgress: {
+      method: NutritionFatLossMethod;
+      selectedMethods: NutritionFatLossMethod[];
+      methodLabel: string;
+      summaryText: string;
+      adherenceScore: number;
+      adherentDays: number;
+      trackedMethodDays: number;
+      detailNote: string;
+      visualizations: Array<{
+        method: NutritionFatLossMethod;
+        title: string;
+        subtitle: string;
+        eatingPct: number;
+        maintenancePct: number;
+        segments: Array<{
+          label: string;
+          pct: number;
+          color: string;
+        }>;
+        timeline?: {
+          startHour: number;
+          endHour: number;
+          windowHours: number;
+          meals: Array<{
+            label: string;
+            hour: number;
+            color: string;
+            inWindow: boolean;
+          }>;
+          entryTimestamps: Array<{
+            dayKey: string;
+            weekdayLabel: string;
+            monthDayLabel: string;
+            hour: number;
+            minute: number;
+          }>;
+        };
+      }>;
+    };
     totals: {
       caloriesFood: number;
       caloriesExercise: number;
@@ -5476,6 +5604,78 @@ export default function ChatPage() {
     () => summarizeNutritionFactContributorsForDay(journalEntriesSorted, selectedLandingDayKey),
     [journalEntriesSorted, selectedLandingDayKey]
   );
+  const selectedLandingDayTimelineEvents = useMemo(() => {
+    const journalById = new Map(
+      journalEntriesSorted
+        .filter((entry): entry is (typeof journalEntriesSorted)[number] & { _id: string } => Boolean(entry._id))
+        .map((entry) => [entry._id, entry])
+    );
+    const focusById = new Map(focusTrackerEntries.map((entry) => [entry.id, entry]));
+    const events: Array<{
+      type: "nutrition" | "weight" | "exercise" | "focus";
+      startMinute: number;
+      endMinute: number;
+      label: string;
+      color: string;
+    }> = [];
+    for (const item of selectedLandingDayActivityItems) {
+      const date = new Date(item.timestamp);
+      if (Number.isNaN(date.getTime())) continue;
+      const startMinute = Math.max(0, Math.min(1439, date.getHours() * 60 + date.getMinutes()));
+      if (item.kind === "journal" && item.journalCategory === "nutrition") {
+        events.push({
+          type: "nutrition",
+          startMinute,
+          endMinute: startMinute,
+          label: "Nutrition",
+          color: "#0ea5e9",
+        });
+        continue;
+      }
+      if (item.kind === "journal" && item.journalCategory === "exercise") {
+        const journal = journalById.get(item.entityId);
+        const duration = parseExerciseDurationMinutesFromText(journal?.transcriptText ?? "");
+        events.push({
+          type: "exercise",
+          startMinute,
+          endMinute: Math.min(1440, startMinute + duration),
+          label: `Exercise (${duration}m)`,
+          color: "#f97316",
+        });
+        continue;
+      }
+      if (item.kind === "weightEntry") {
+        events.push({
+          type: "weight",
+          startMinute,
+          endMinute: startMinute,
+          label: "Weight",
+          color: "#10b981",
+        });
+        continue;
+      }
+      if (item.kind === "focusEntry") {
+        const focus = focusById.get(item.entityId);
+        if (!focus) continue;
+        const start = new Date(focus.startedAt);
+        const end = new Date(focus.endedAt);
+        if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) continue;
+        const focusStartMinute = Math.max(0, Math.min(1439, start.getHours() * 60 + start.getMinutes()));
+        const focusEndMinute = Math.max(
+          focusStartMinute + 1,
+          Math.min(1440, end.getHours() * 60 + end.getMinutes())
+        );
+        events.push({
+          type: "focus",
+          startMinute: focusStartMinute,
+          endMinute: focusEndMinute,
+          label: `Focus (${Math.max(1, Math.round(focus.minutes))}m)`,
+          color: "#8b5cf6",
+        });
+      }
+    }
+    return events.sort((a, b) => a.startMinute - b.startMinute);
+  }, [focusTrackerEntries, journalEntriesSorted, selectedLandingDayActivityItems]);
   const todayFocusSummary = useMemo(() => {
     const todayKey = toDayKey(new Date());
     let minutes = 0;
@@ -7405,6 +7605,18 @@ export default function ChatPage() {
           typeof data?.nutritionGoalIntent === "string"
             ? data.nutritionGoalIntent.trim().slice(0, 500)
             : "";
+        const nextNutritionFatLossMethods = Array.isArray(data?.nutritionFatLossMethods)
+          ? data.nutritionFatLossMethods
+              .map((m: unknown) => normalizeNutritionFatLossMethod(m))
+              .slice(0, 3)
+          : [normalizeNutritionFatLossMethod(data?.nutritionFatLossMethod)];
+        const normalizedMethods =
+          nextNutritionFatLossMethods.length > 0
+            ? nextNutritionFatLossMethods
+            : [DEFAULT_NUTRITION_FAT_LOSS_METHOD];
+        const nextNutritionMethodConfig = normalizeNutritionMethodConfigInput(data?.nutritionMethodConfig);
+        setNutritionFatLossMethods(normalizedMethods);
+        setNutritionMethodConfig(nextNutritionMethodConfig);
         setNutritionGoalIntent(nextNutritionGoalIntent);
         setGoalsCoachIntentDraft(nextNutritionGoalIntent);
       })
@@ -7594,6 +7806,9 @@ export default function ChatPage() {
           goalCarbsGrams: nextGoals.carbsGrams,
           goalProteinGrams: nextGoals.proteinGrams,
           goalFatGrams: nextGoals.fatGrams,
+          nutritionFatLossMethods,
+          nutritionFatLossMethod,
+          nutritionMethodConfig,
           nutritionGoalIntent: nextNutritionGoalIntent,
         }),
       });
@@ -7615,7 +7830,18 @@ export default function ChatPage() {
     } finally {
       setGoalsSaving(false);
     }
-  }, [goalsCoachIntentDraft, goalsDraft, incognitoMode, isAnonymous, language, nutritionGoals, userId]);
+  }, [
+    goalsCoachIntentDraft,
+    goalsDraft,
+    incognitoMode,
+    isAnonymous,
+    language,
+    nutritionFatLossMethods,
+    nutritionFatLossMethod,
+    nutritionGoals,
+    nutritionMethodConfig,
+    userId,
+  ]);
 
   const runGoalsCoachHelp = useCallback(async () => {
     if (isAnonymous || incognitoMode || !userId) return;
@@ -7726,6 +7952,9 @@ export default function ChatPage() {
           targetWeightKg,
           goal: goalsWizardProfile.goal,
           pace: goalsWizardProfile.pace,
+          nutritionFatLossMethods,
+          nutritionFatLossMethod,
+          nutritionMethodConfig,
         }),
       });
       const data = (await res.json().catch(() => ({}))) as {
@@ -7738,6 +7967,10 @@ export default function ChatPage() {
         proteinGrams?: unknown;
         fatGrams?: unknown;
         rationale?: unknown;
+        methodRationale?: unknown;
+        nutritionFatLossMethods?: unknown;
+        nutritionFatLossMethod?: unknown;
+        nutritionMethodConfig?: unknown;
       };
       if (!res.ok) throw new Error(data.error || "Could not calculate goals.");
       const caloriesTarget = normalizeGoalValue(
@@ -7781,8 +8014,25 @@ export default function ChatPage() {
         fat: String(normalizeGoalValue(data.fatPercent, 30, GOAL_PERCENT_MIN, GOAL_PERCENT_MAX)),
       });
       setGoalsCalculatorRationale(
-        typeof data.rationale === "string" ? data.rationale.trim().slice(0, 280) : ""
+        [
+          typeof data.rationale === "string" ? data.rationale.trim() : "",
+          typeof data.methodRationale === "string" ? data.methodRationale.trim() : "",
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .slice(0, 320)
       );
+      const returnedMethods = Array.isArray(data.nutritionFatLossMethods)
+        ? data.nutritionFatLossMethods
+            .map((m) => normalizeNutritionFatLossMethod(m))
+            .slice(0, 3)
+        : [normalizeNutritionFatLossMethod(data.nutritionFatLossMethod ?? nutritionFatLossMethod)];
+      setNutritionFatLossMethods(
+        returnedMethods.length > 0 ? returnedMethods : [DEFAULT_NUTRITION_FAT_LOSS_METHOD]
+      );
+      if (data.nutritionMethodConfig !== undefined) {
+        setNutritionMethodConfig(normalizeNutritionMethodConfigInput(data.nutritionMethodConfig));
+      }
       return true;
     } catch {
       setGoalsWizardError(getLandingTranslations(language).nutritionGoalsWizardCalculationError);
@@ -7790,7 +8040,17 @@ export default function ChatPage() {
     } finally {
       setGoalsCalculatorLoading(false);
     }
-  }, [goalsWizardProfile, incognitoMode, isAnonymous, language, nutritionGoals, userId]);
+  }, [
+    goalsWizardProfile,
+    incognitoMode,
+    isAnonymous,
+    language,
+    nutritionFatLossMethods,
+    nutritionFatLossMethod,
+    nutritionGoals,
+    nutritionMethodConfig,
+    userId,
+  ]);
 
   const handleGoalsWizardBack = useCallback(() => {
     if (!goalsWizardActive) return;
@@ -7848,6 +8108,9 @@ export default function ChatPage() {
             carbsPercent,
             proteinPercent,
             fatPercent,
+            nutritionFatLossMethods,
+            nutritionFatLossMethod,
+            nutritionMethodConfig,
           }),
         });
         const data = (await res.json().catch(() => ({}))) as {
@@ -7860,6 +8123,7 @@ export default function ChatPage() {
           proteinGrams?: unknown;
           fatGrams?: unknown;
           rationale?: unknown;
+          methodRationale?: unknown;
         };
         if (!res.ok) throw new Error(data.error || "Could not recalculate goals.");
         setGoalsDraft((prev) => ({
@@ -7915,7 +8179,14 @@ export default function ChatPage() {
           ),
         });
         if (typeof data.rationale === "string" && data.rationale.trim()) {
-          setGoalsCalculatorRationale(data.rationale.trim().slice(0, 280));
+          const combinedRationale = [
+            data.rationale.trim(),
+            typeof data.methodRationale === "string" ? data.methodRationale.trim() : "",
+          ]
+            .filter(Boolean)
+            .join(" ")
+            .slice(0, 320);
+          setGoalsCalculatorRationale(combinedRationale);
         }
       } catch {
         setGoalsWizardError(getLandingTranslations(language).nutritionGoalsWizardCalculationError);
@@ -7930,7 +8201,10 @@ export default function ChatPage() {
     goalsMacroPercents.fat,
     goalsMacroPercents.protein,
     goalsModalOpen,
+    nutritionFatLossMethods,
+    nutritionFatLossMethod,
     nutritionGoals,
+    nutritionMethodConfig,
     goalsWizardStep,
     incognitoMode,
     isAnonymous,
@@ -8939,6 +9213,17 @@ export default function ChatPage() {
           foodEntries?: number;
           exerciseEntries?: number;
           rows?: unknown;
+          methodProgress?: {
+            method?: unknown;
+            selectedMethods?: unknown;
+            methodLabel?: unknown;
+            summaryText?: unknown;
+            adherenceScore?: unknown;
+            adherentDays?: unknown;
+            trackedMethodDays?: unknown;
+            detailNote?: unknown;
+            visualizations?: unknown;
+          };
           totals?: {
             caloriesFood?: number;
             caloriesExercise?: number;
@@ -8969,6 +9254,17 @@ export default function ChatPage() {
           tracked: boolean;
           foodEntries: number;
           exerciseEntries: number;
+          methodAdherenceScore?: number;
+          methodAdherent?: boolean;
+          methodLabel?: string;
+          methodDetail?: string;
+          timelineEvents?: Array<{
+            type?: unknown;
+            startMinute?: unknown;
+            endMinute?: unknown;
+            label?: unknown;
+            color?: unknown;
+          }>;
         }>;
         setWeeklySummaryResult({
           weekOffset: typeof data.weekOffset === "number" ? data.weekOffset : weeklySummaryWeekOffset,
@@ -8987,7 +9283,191 @@ export default function ChatPage() {
             ...row,
             focusMinutes: Number(row.focusMinutes ?? 0),
             focusSessions: Number(row.focusSessions ?? 0),
+            methodAdherenceScore: Number(row.methodAdherenceScore ?? 0),
+            methodAdherent: Boolean(row.methodAdherent),
+            methodLabel: typeof row.methodLabel === "string" ? row.methodLabel : "",
+            methodDetail: typeof row.methodDetail === "string" ? row.methodDetail : "",
+            timelineEvents: Array.isArray(row.timelineEvents)
+              ? row.timelineEvents
+                  .map((event) => {
+                    const normalizedType: "nutrition" | "weight" | "exercise" | "focus" =
+                      event?.type === "nutrition" ||
+                      event?.type === "weight" ||
+                      event?.type === "exercise" ||
+                      event?.type === "focus"
+                        ? event.type
+                        : "nutrition";
+                    return {
+                      type: normalizedType,
+                      startMinute: Number(event?.startMinute ?? 0),
+                      endMinute: Number(event?.endMinute ?? event?.startMinute ?? 0),
+                      label: typeof event?.label === "string" ? event.label : "",
+                      color: typeof event?.color === "string" ? event.color : "#9ca3af",
+                    };
+                  })
+                  .filter(
+                    (event) =>
+                      Number.isFinite(event.startMinute) &&
+                      Number.isFinite(event.endMinute) &&
+                      event.startMinute >= 0 &&
+                      event.endMinute >= event.startMinute
+                  )
+              : [],
           })),
+          methodProgress: {
+            method: normalizeNutritionFatLossMethod(data.methodProgress?.method),
+            selectedMethods: Array.isArray(data.methodProgress?.selectedMethods)
+              ? data.methodProgress.selectedMethods
+                  .map((m) => normalizeNutritionFatLossMethod(m))
+                  .slice(0, 3)
+              : [normalizeNutritionFatLossMethod(data.methodProgress?.method)],
+            methodLabel:
+              typeof data.methodProgress?.methodLabel === "string"
+                ? data.methodProgress.methodLabel
+                : "Calorie counting",
+            summaryText:
+              typeof data.methodProgress?.summaryText === "string"
+                ? data.methodProgress.summaryText
+                : "",
+            adherenceScore: Number(data.methodProgress?.adherenceScore ?? 0),
+            adherentDays: Number(data.methodProgress?.adherentDays ?? 0),
+            trackedMethodDays: Number(data.methodProgress?.trackedMethodDays ?? 0),
+            detailNote:
+              typeof data.methodProgress?.detailNote === "string"
+                ? data.methodProgress.detailNote
+                : "",
+            visualizations: Array.isArray(data.methodProgress?.visualizations)
+              ? data.methodProgress.visualizations
+                  .map((item) => {
+                    const obj = item && typeof item === "object" ? (item as Record<string, unknown>) : {};
+                    const method = normalizeNutritionFatLossMethod(obj.method);
+                    return {
+                      method,
+                      title: typeof obj.title === "string" ? obj.title : nutritionMethodLabel(method),
+                      subtitle: typeof obj.subtitle === "string" ? obj.subtitle : "",
+                      eatingPct: Number(obj.eatingPct ?? 0),
+                      maintenancePct: Number(obj.maintenancePct ?? 0),
+                      segments: Array.isArray(obj.segments)
+                        ? obj.segments
+                            .map((segment) => {
+                              const segmentObj =
+                                segment && typeof segment === "object"
+                                  ? (segment as Record<string, unknown>)
+                                  : null;
+                              if (!segmentObj) return null;
+                              return {
+                                label:
+                                  typeof segmentObj.label === "string" ? segmentObj.label : "Segment",
+                                pct: Number(segmentObj.pct ?? 0),
+                                color:
+                                  typeof segmentObj.color === "string"
+                                    ? segmentObj.color
+                                    : "#0ea5e9",
+                              };
+                            })
+                            .filter(
+                              (
+                                segment
+                              ): segment is {
+                                label: string;
+                                pct: number;
+                                color: string;
+                              } =>
+                                Boolean(
+                                  segment &&
+                                    Number.isFinite(segment.pct) &&
+                                    segment.pct > 0
+                                )
+                            )
+                        : [],
+                      timeline:
+                        obj.timeline && typeof obj.timeline === "object"
+                          ? (() => {
+                              const timelineObj = obj.timeline as Record<string, unknown>;
+                              const meals = Array.isArray(timelineObj.meals)
+                                ? timelineObj.meals
+                                    .map((meal) => {
+                                      const mealObj =
+                                        meal && typeof meal === "object"
+                                          ? (meal as Record<string, unknown>)
+                                          : null;
+                                      if (!mealObj) return null;
+                                      return {
+                                        label: typeof mealObj.label === "string" ? mealObj.label : "Meal",
+                                        hour: Number(mealObj.hour ?? 0),
+                                        color:
+                                          typeof mealObj.color === "string"
+                                            ? mealObj.color
+                                            : "#9ca3af",
+                                        inWindow: Boolean(mealObj.inWindow),
+                                      };
+                                    })
+                                    .filter(
+                                      (
+                                        meal
+                                      ): meal is {
+                                        label: string;
+                                        hour: number;
+                                        color: string;
+                                        inWindow: boolean;
+                                      } => Boolean(meal && Number.isFinite(meal.hour))
+                                    )
+                                : [];
+                              const entryTimestamps = Array.isArray(timelineObj.entryTimestamps)
+                                ? timelineObj.entryTimestamps
+                                    .map((entry) => {
+                                      const entryObj =
+                                        entry && typeof entry === "object"
+                                          ? (entry as Record<string, unknown>)
+                                          : null;
+                                      if (!entryObj) return null;
+                                      return {
+                                        dayKey:
+                                          typeof entryObj.dayKey === "string"
+                                            ? entryObj.dayKey
+                                            : "",
+                                        weekdayLabel:
+                                          typeof entryObj.weekdayLabel === "string"
+                                            ? entryObj.weekdayLabel
+                                            : "",
+                                        monthDayLabel:
+                                          typeof entryObj.monthDayLabel === "string"
+                                            ? entryObj.monthDayLabel
+                                            : "",
+                                        hour: Number(entryObj.hour ?? 0),
+                                        minute: Number(entryObj.minute ?? 0),
+                                      };
+                                    })
+                                    .filter(
+                                      (
+                                        entry
+                                      ): entry is {
+                                        dayKey: string;
+                                        weekdayLabel: string;
+                                        monthDayLabel: string;
+                                        hour: number;
+                                        minute: number;
+                                      } =>
+                                        Boolean(
+                                          entry &&
+                                            Number.isFinite(entry.hour) &&
+                                            Number.isFinite(entry.minute)
+                                        )
+                                    )
+                                : [];
+                              return {
+                                startHour: Number(timelineObj.startHour ?? 12),
+                                endHour: Number(timelineObj.endHour ?? 20),
+                                windowHours: Number(timelineObj.windowHours ?? 8),
+                                meals,
+                                entryTimestamps,
+                              };
+                            })()
+                          : undefined,
+                    };
+                  })
+              : [],
+          },
           totals: {
             caloriesFood: Number(data.totals?.caloriesFood ?? 0),
             caloriesExercise: Number(data.totals?.caloriesExercise ?? 0),
@@ -13476,9 +13956,173 @@ export default function ChatPage() {
                                     </button>
                           </div>
 
-                                  <div className="mt-2 space-y-2">
+                                  <div className="mt-2 rounded-xl border border-neutral-200 dark:border-neutral-800 p-2 bg-background">
+                                    <p className="text-[11px] sm:text-xs font-semibold text-foreground">
+                                      Daily timeline (12 AM - 12 AM)
+                                    </p>
+                                    <div className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[10px] text-neutral-600 dark:text-neutral-400">
+                                      <span className="inline-flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-sky-500" aria-hidden />Nutrition</span>
+                                      <span className="inline-flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />Weight</span>
+                                      <span className="inline-flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-orange-500" aria-hidden />Exercise</span>
+                                      <span className="inline-flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-violet-500" aria-hidden />Focus</span>
+                                    </div>
+                                    <div className="mt-1.5 relative h-9 rounded-md border border-orange-400/80 dark:border-orange-300/80 bg-white dark:bg-neutral-950 overflow-hidden">
+                                      <div className="absolute inset-0 bg-[linear-gradient(to_right,transparent_0%,transparent_calc(25%-1px),rgba(148,163,184,0.35)_25%,transparent_calc(25%+1px),transparent_calc(50%-1px),rgba(148,163,184,0.35)_50%,transparent_calc(50%+1px),transparent_calc(75%-1px),rgba(148,163,184,0.35)_75%,transparent_calc(75%+1px),transparent_100%)]" />
+                                      {selectedLandingDayTimelineEvents.map((event, idx) => {
+                                        const leftPct = Math.max(
+                                          0,
+                                          Math.min(100, (event.startMinute / 1440) * 100)
+                                        );
+                                        const durationMinutes = Math.max(1, event.endMinute - event.startMinute);
+                                        const widthPct = Math.max(
+                                          0.35,
+                                          Math.min(100, (durationMinutes / 1440) * 100)
+                                        );
+                                        if (event.type === "focus" || event.type === "exercise") {
+                                          const topClass =
+                                            event.type === "exercise" ? "top-1 h-[12px]" : "top-[20px] h-[12px]";
+                                          return (
+                                            <div
+                                              key={`landing-timeline-band-${selectedLandingDayKey}-${idx}`}
+                                              className={`absolute rounded-sm ${topClass}`}
+                                              style={{
+                                                left: `${leftPct}%`,
+                                                width: `${widthPct}%`,
+                                                backgroundColor: event.color,
+                                              }}
+                                              title={`${event.label} - ${formatMinuteOfDay(event.startMinute)} to ${formatMinuteOfDay(event.endMinute)}`}
+                                            />
+                                          );
+                                        }
+                                        return (
+                                          <div
+                                            key={`landing-timeline-line-${selectedLandingDayKey}-${idx}`}
+                                            className="absolute top-0 bottom-0 w-[2px]"
+                                            style={{ left: `${leftPct}%`, backgroundColor: event.color }}
+                                            title={`${event.label} - ${formatMinuteOfDay(event.startMinute)}`}
+                                          />
+                                        );
+                                      })}
+                                    </div>
+                                    <div className="mt-0.5 sm:hidden flex items-center gap-1 overflow-x-auto whitespace-nowrap pb-0.5">
+                                      {selectedLandingDayTimelineEvents
+                                        .filter((event) => event.type === "nutrition" || event.type === "weight")
+                                        .map((event, idx) => (
+                                          <span
+                                            key={`landing-line-time-mobile-${selectedLandingDayKey}-${idx}`}
+                                            className="inline-flex items-center gap-1 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/85 dark:bg-neutral-900/75 px-1.5 py-0.5 text-[9px] text-neutral-600 dark:text-neutral-300"
+                                          >
+                                            <span
+                                              className="inline-block h-1.5 w-1.5 rounded-full"
+                                              style={{ backgroundColor: event.color }}
+                                              aria-hidden
+                                            />
+                                            {formatMinuteOfDay(event.startMinute)}
+                                          </span>
+                                        ))}
+                                    </div>
+                                    <div className="mt-0.5 relative h-4 hidden sm:block">
+                                      {selectedLandingDayTimelineEvents
+                                        .filter((event) => event.type === "nutrition" || event.type === "weight")
+                                        .map((event, idx) => {
+                                          const leftPct = Math.max(
+                                            0,
+                                            Math.min(100, (event.startMinute / 1440) * 100)
+                                          );
+                                          return (
+                                            <span
+                                              key={`landing-line-time-desktop-${selectedLandingDayKey}-${idx}`}
+                                              className={`absolute -translate-x-1/2 text-[9px] leading-none ${
+                                                idx % 2 === 0
+                                                  ? "top-0 text-neutral-600 dark:text-neutral-300"
+                                                  : "top-2 text-neutral-500 dark:text-neutral-400"
+                                              }`}
+                                              style={{ left: `${leftPct}%` }}
+                                            >
+                                              {formatMinuteOfDay(event.startMinute)}
+                                            </span>
+                                          );
+                                        })}
+                                    </div>
+                                    <div className="mt-0.5 flex items-center justify-between text-[10px] text-neutral-500 dark:text-neutral-400">
+                                      <span>12 AM</span>
+                                      <span>6 AM</span>
+                                      <span>12 PM</span>
+                                      <span>6 PM</span>
+                                      <span>12 AM</span>
+                                    </div>
+                                    {selectedLandingDayTimelineEvents.length > 0 && (
+                                      <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[10px] text-neutral-600 dark:text-neutral-400">
+                                        {(() => {
+                                          const nutritionCount = selectedLandingDayTimelineEvents.filter(
+                                            (event) => event.type === "nutrition"
+                                          ).length;
+                                          const weightCount = selectedLandingDayTimelineEvents.filter(
+                                            (event) => event.type === "weight"
+                                          ).length;
+                                          const exerciseCount = selectedLandingDayTimelineEvents.filter(
+                                            (event) => event.type === "exercise"
+                                          ).length;
+                                          const focusCount = selectedLandingDayTimelineEvents.filter(
+                                            (event) => event.type === "focus"
+                                          ).length;
+                                          return (
+                                            <>
+                                              <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 px-2 py-0.5">
+                                                <span className="h-1.5 w-1.5 rounded-full bg-sky-500" aria-hidden />
+                                                Nutrition {nutritionCount}
+                                              </span>
+                                              <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 px-2 py-0.5">
+                                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
+                                                Weight {weightCount}
+                                              </span>
+                                              <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 px-2 py-0.5">
+                                                <span className="h-1.5 w-1.5 rounded-full bg-orange-500" aria-hidden />
+                                                Exercise {exerciseCount}
+                                              </span>
+                                              <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 px-2 py-0.5">
+                                                <span className="h-1.5 w-1.5 rounded-full bg-violet-500" aria-hidden />
+                                                Focus {focusCount}
+                                              </span>
+                                            </>
+                                          );
+                                        })()}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="w-full rounded-2xl border border-neutral-200/70 dark:border-white/10 bg-background">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setLandingJournalingExpandedCard((prev) => (prev === "entries" ? null : "entries"))
+                                  }
+                                  className="sm:hidden w-full flex items-center justify-between gap-2 px-3 py-2.5 text-left"
+                                  aria-expanded={landingJournalingExpandedCard === "entries"}
+                                >
+                                  <span className="text-sm font-semibold text-foreground">Today&apos;s entries</span>
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className={`h-4 w-4 text-neutral-500 transition-transform ${
+                                      landingJournalingExpandedCard === "entries" ? "rotate-180" : ""
+                                    }`}
+                                  >
+                                    <path d="m6 9 6 6 6-6" />
+                                  </svg>
+                                </button>
+                                <div className={`${landingJournalingExpandedCard === "entries" ? "block" : "hidden"} sm:block px-3 pb-3 sm:pt-3 space-y-2`}>
+                                  <p className="hidden sm:block text-sm font-semibold text-foreground">Today&apos;s entries</p>
+                                  <div className="space-y-2">
                                     {selectedLandingDayActivityItems.length === 0 ? (
-                                      <p className="rounded-lg border border-neutral-200 dark:border-neutral-800 px-2.5 py-2 text-sm text-neutral-600 dark:text-neutral-400">
+                                      <p className="rounded-lg border border-neutral-200 dark:border-neutral-800 px-2.5 py-2 text-sm text-neutral-600 dark:text-neutral-400 bg-background">
                                         No activity yet for this day.
                                       </p>
                                     ) : (
@@ -17143,6 +17787,112 @@ export default function ChatPage() {
                 </div>
               )}
 
+              {goalsWizardStep === "method" && (
+                <div className="space-y-3">
+                  <p className="text-2xl font-medium text-center">
+                    {getLandingTranslations(language).nutritionGoalsWizardMethodPrompt}
+                  </p>
+                  {([
+                    [
+                      "calorie_counting",
+                      getLandingTranslations(language).nutritionGoalsWizardMethodCalorieCountingLabel,
+                      getLandingTranslations(language).nutritionGoalsWizardMethodCalorieCountingDesc,
+                    ],
+                    [
+                      "intermittent_fasting",
+                      getLandingTranslations(language).nutritionGoalsWizardMethodIntermittentFastingLabel,
+                      getLandingTranslations(language).nutritionGoalsWizardMethodIntermittentFastingDesc,
+                    ],
+                    [
+                      "diet_based",
+                      getLandingTranslations(language).nutritionGoalsWizardMethodDietBasedLabel,
+                      getLandingTranslations(language).nutritionGoalsWizardMethodDietBasedDesc,
+                    ],
+                  ] as const).map(([value, label, desc]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() =>
+                        setNutritionFatLossMethods((prev) => {
+                          const exists = prev.includes(value);
+                          if (exists) {
+                            const next = prev.filter((m) => m !== value);
+                            return next.length > 0 ? next : [DEFAULT_NUTRITION_FAT_LOSS_METHOD];
+                          }
+                          return [...prev, value].slice(0, 3);
+                        })
+                      }
+                      className={`w-full text-left px-3 py-2 rounded-xl border transition-colors ${
+                        nutritionFatLossMethods.includes(value)
+                          ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25"
+                          : "border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      }`}
+                    >
+                      <p className="text-sm font-medium text-foreground">{label}</p>
+                      <p className="text-xs text-neutral-600 dark:text-neutral-300 mt-0.5">{desc}</p>
+                    </button>
+                  ))}
+
+                  {nutritionFatLossMethods.includes("intermittent_fasting") && (
+                    <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-1 bg-neutral-50/60 dark:bg-neutral-900/40">
+                      <label className="block text-xs text-neutral-500 dark:text-neutral-400">
+                        {getLandingTranslations(language).nutritionGoalsWizardFastingWindowLabel}
+                      </label>
+                      <input
+                        type="number"
+                        inputMode="numeric"
+                        min={4}
+                        max={16}
+                        step={1}
+                        value={nutritionMethodConfig.intermittentFastingEatingWindowHours}
+                        onChange={(e) =>
+                          setNutritionMethodConfig((prev) => ({
+                            ...prev,
+                            intermittentFastingEatingWindowHours: clampToRange(
+                              toNumericInputValue(e.target.value) ?? DEFAULT_FASTING_EATING_WINDOW_HOURS,
+                              4,
+                              16
+                            ),
+                          }))
+                        }
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                      />
+                    </div>
+                  )}
+
+                  {nutritionFatLossMethods.includes("diet_based") && (
+                    <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-1 bg-neutral-50/60 dark:bg-neutral-900/40">
+                      <label className="block text-xs text-neutral-500 dark:text-neutral-400">
+                        {getLandingTranslations(language).nutritionGoalsWizardDietTemplateLabel}
+                      </label>
+                      <select
+                        value={nutritionMethodConfig.dietBasedTemplate}
+                        onChange={(e) =>
+                          setNutritionMethodConfig((prev) => ({
+                            ...prev,
+                            dietBasedTemplate: (e.target.value as NutritionDietTemplate) || DEFAULT_DIET_BASED_TEMPLATE,
+                          }))
+                        }
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                      >
+                        <option value="balanced">
+                          {getLandingTranslations(language).nutritionGoalsWizardDietTemplateBalanced}
+                        </option>
+                        <option value="low_carb">
+                          {getLandingTranslations(language).nutritionGoalsWizardDietTemplateLowCarb}
+                        </option>
+                        <option value="high_protein">
+                          {getLandingTranslations(language).nutritionGoalsWizardDietTemplateHighProtein}
+                        </option>
+                        <option value="low_fat">
+                          {getLandingTranslations(language).nutritionGoalsWizardDietTemplateLowFat}
+                        </option>
+                      </select>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {goalsWizardStep === "height" && (
                 <div className="space-y-2">
                   <p className="text-2xl font-medium text-center">{getLandingTranslations(language).nutritionGoalsWizardHeightPrompt}</p>
@@ -17284,6 +18034,18 @@ export default function ChatPage() {
                       {getLandingTranslations(language).nutritionGoalsWizardCaloriesGoalTitle}
                     </p>
                     <p className="text-3xl font-semibold">{goalsDraft.caloriesTarget} kcal</p>
+                    <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-300">
+                      {getLandingTranslations(language).nutritionGoalsWizardMethodSummaryPrefix}{" "}
+                      {nutritionFatLossMethods
+                        .map((method) =>
+                          method === "intermittent_fasting"
+                            ? getLandingTranslations(language).nutritionGoalsWizardMethodIntermittentFastingLabel
+                            : method === "diet_based"
+                              ? getLandingTranslations(language).nutritionGoalsWizardMethodDietBasedLabel
+                              : getLandingTranslations(language).nutritionGoalsWizardMethodCalorieCountingLabel
+                        )
+                        .join(", ")}
+                    </p>
                   </div>
                   <h3 className="text-xl font-semibold text-foreground">
                     {getLandingTranslations(language).nutritionGoalsWizardDailyGoalsTitle}
