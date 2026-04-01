@@ -3614,6 +3614,7 @@ export default function ChatPage() {
   const [transcriptStatsEditing, setTranscriptStatsEditing] = useState(false);
   const [transcriptStatsSaving, setTranscriptStatsSaving] = useState(false);
   const [transcriptStatsError, setTranscriptStatsError] = useState<string | null>(null);
+  const [transcriptNutritionHeader, setTranscriptNutritionHeader] = useState<"entry" | "daily">("entry");
   const [transcriptStatsDraft, setTranscriptStatsDraft] = useState<{
     caloriesFood: string;
     carbsGrams: string;
@@ -5729,6 +5730,23 @@ export default function ChatPage() {
     [journalEntriesSorted, nutritionGoals.caloriesTarget, nutritionReportDayKey]
   );
   const canRunNutritionReport = hasMeaningfulNutritionData(activeNutritionReportSnapshot);
+  const transcriptModalDayKey = useMemo(() => {
+    if (!transcriptModalTranscript) return null;
+    return journalEntryDayKey({
+      journalEntryYear: transcriptModalTranscript.journalEntryYear,
+      journalEntryMonth: transcriptModalTranscript.journalEntryMonth,
+      journalEntryDay: transcriptModalTranscript.journalEntryDay,
+      createdAt: transcriptModalTranscript.createdAt,
+    });
+  }, [transcriptModalTranscript]);
+  const transcriptModalDailyNutrition = useMemo(() => {
+    if (!transcriptModalDayKey) return null;
+    return summarizeNutritionForDay(journalEntriesSorted, transcriptModalDayKey, nutritionGoals.caloriesTarget);
+  }, [journalEntriesSorted, nutritionGoals.caloriesTarget, transcriptModalDayKey]);
+  const transcriptModalDailyNutritionFacts = useMemo(() => {
+    if (!transcriptModalDayKey) return null;
+    return summarizeNutritionFactsForDay(journalEntriesSorted, transcriptModalDayKey);
+  }, [journalEntriesSorted, transcriptModalDayKey]);
   const transcriptModalNutritionSnapshot = useMemo(() => {
     if (!transcriptModalTranscript) return null;
     if (transcriptModalTranscript.sourceType !== "journal") return null;
@@ -6020,7 +6038,10 @@ export default function ChatPage() {
       setTranscriptStatsSaving(false);
       setTranscriptStatsError(null);
       setTranscriptStatsDraft(null);
+      setTranscriptNutritionHeader("entry");
+      return;
     }
+    setTranscriptNutritionHeader("entry");
   }, [transcriptModalTranscript]);
 
   useEffect(() => {
@@ -15895,6 +15916,40 @@ export default function ChatPage() {
                 <div className="p-4 pb-6">
                   {transcriptModalNutritionSnapshot && (
                     <div className="w-full mb-4">
+                      {transcriptModalNutritionSnapshot.mode === "nutrition" && (
+                        <div className="mb-2 inline-flex items-center rounded-lg p-0.5 bg-neutral-50 dark:bg-neutral-900/50">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setTranscriptNutritionHeader("entry");
+                            }}
+                            className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                              transcriptNutritionHeader === "entry"
+                                ? "bg-background text-foreground"
+                                : "text-neutral-600 dark:text-neutral-400"
+                            }`}
+                          >
+                            Macros nutrition
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setTranscriptNutritionHeader("daily");
+                              setTranscriptStatsEditing(false);
+                              setTranscriptStatsError(null);
+                            }}
+                            className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                              transcriptNutritionHeader === "daily"
+                                ? "bg-background text-foreground"
+                                : "text-neutral-600 dark:text-neutral-400"
+                            }`}
+                          >
+                            Daily nutrition
+                          </button>
+                        </div>
+                      )}
+                      {(transcriptModalNutritionSnapshot.mode === "exercise" ||
+                        transcriptNutritionHeader === "entry") && (
                       <div className="w-full flex gap-1.5 overflow-x-auto sm:grid sm:grid-cols-2 sm:overflow-visible">
                         {transcriptModalNutritionSnapshot.mode === "exercise" ? (
                           <>
@@ -16121,39 +16176,32 @@ export default function ChatPage() {
                           </>
                         )}
                       </div>
-                      {transcriptModalNutritionSnapshot.mode === "nutrition" && (
-                        <div className="mt-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50/70 dark:bg-neutral-900/40 p-2">
-                          <p className="text-[11px] font-medium text-neutral-600 dark:text-neutral-300 mb-2">
-                            Dietary facts
-                          </p>
-                          <div className="grid grid-cols-2 gap-2">
-                            {NUTRITION_FACT_EDIT_FIELDS.map(({ label, key }) => (
-                              <label key={key} className="block space-y-1">
-                                <span className="text-[11px] text-neutral-500 dark:text-neutral-400">{label}</span>
-                                {transcriptStatsEditing ? (
-                                  <input
-                                    type="number"
-                                    step="0.1"
-                                    value={transcriptStatsDraft?.[key] ?? ""}
-                                    onChange={(e) =>
-                                      setTranscriptStatsDraft((prev) =>
-                                        prev ? { ...prev, [key]: e.target.value } : prev
-                                      )
-                                    }
-                                    className="w-full px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-xs"
-                                  />
-                                ) : (
-                                  <p className="text-xs font-medium text-foreground">
-                                    {transcriptModalNutritionSnapshot.dietaryFacts[key] == null
-                                      ? "--"
-                                      : transcriptModalNutritionSnapshot.dietaryFacts[key]}
-                                  </p>
-                                )}
-                              </label>
-                            ))}
-                          </div>
-                        </div>
                       )}
+                      {transcriptModalNutritionSnapshot.mode === "nutrition" &&
+                        transcriptNutritionHeader === "daily" &&
+                        transcriptModalDailyNutritionFacts &&
+                        transcriptModalDailyNutrition &&
+                        (
+                          <div className="space-y-2">
+                            <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50/70 dark:bg-neutral-900/40 p-2">
+                              <p className="text-[11px] font-medium text-neutral-600 dark:text-neutral-300 mb-2">
+                                Daily dietary facts
+                              </p>
+                              <div className="grid grid-cols-2 gap-2">
+                                {NUTRITION_FACT_EDIT_FIELDS.map(({ label, key }) => (
+                                  <div key={`daily-${key}`} className="space-y-1">
+                                    <p className="text-[11px] text-neutral-500 dark:text-neutral-400">{label}</p>
+                                    <p className="text-xs font-medium text-foreground">
+                                      {transcriptModalDailyNutritionFacts[key] == null
+                                        ? "--"
+                                        : transcriptModalDailyNutritionFacts[key]}
+                                    </p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       <div className="mt-2 flex items-center justify-end gap-2">
                         {transcriptStatsError && (
                           <p className="text-xs text-red-600 dark:text-red-400 mr-auto">{transcriptStatsError}</p>
