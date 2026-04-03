@@ -2,13 +2,10 @@
 
 import React from "react";
 
-import type { LandingTabOption } from "@/components/landing/types";
-
 interface LandingTopBarProps {
   eyebrow: string;
   title: string;
   subtitle: string;
-  tabs: LandingTabOption[];
   selectedDateLabel: string;
   onOpenCalendar: () => void;
 }
@@ -17,7 +14,6 @@ export function LandingTopBar({
   eyebrow,
   title,
   subtitle,
-  tabs,
   selectedDateLabel,
   onOpenCalendar,
 }: LandingTopBarProps) {
@@ -37,25 +33,6 @@ export function LandingTopBar({
         </div>
 
         <div className="flex flex-col items-stretch gap-3 sm:items-end">
-          <div className="inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-full border border-neutral-200/80 bg-neutral-100/80 p-1 dark:border-white/10 dark:bg-white/5">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={tab.onSelect}
-                disabled={tab.disabled}
-                aria-pressed={tab.selected}
-                className={`rounded-full px-3 py-2 text-xs font-medium transition-colors sm:px-4 ${
-                  tab.selected
-                    ? "bg-white text-foreground shadow-sm dark:bg-neutral-900"
-                    : "text-neutral-600 hover:text-foreground dark:text-neutral-300 dark:hover:text-white"
-                } ${tab.disabled ? "cursor-not-allowed opacity-50" : ""}`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
           <button
             type="button"
             onClick={onOpenCalendar}

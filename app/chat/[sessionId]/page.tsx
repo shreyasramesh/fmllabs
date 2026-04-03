@@ -3051,8 +3051,6 @@ type LandingDayActivityItem = {
   entityId: string;
 };
 
-type LandingTab = "journaling" | "pomodoro" | "deepThinking";
-const LANDING_TAB_STORAGE_KEY = "fml_landing_tab";
 type PomodoroThemeId = "water" | "air" | "fire" | "earth";
 const POMODORO_THEME_STORAGE_KEY = "fml_pomodoro_theme";
 const POMODORO_THEME_OPTIONS: Array<{ id: PomodoroThemeId; label: string; image: string }> = [
@@ -3154,11 +3152,20 @@ const LANDING_ACTIVITY_GROUP_LABEL: Record<LandingActivityGroupKey, string> = {
   perspectiveCard: "Perspective cards",
 };
 
-const LANDING_TAB_ACTIVITY_GROUP_ORDER: Record<LandingTab, LandingActivityGroupKey[]> = {
-  journaling: ["journalRegular", "journalNutrition", "journalExercise", "journalWeight", "journalFocus"],
-  pomodoro: ["journalFocus"],
-  deepThinking: ["session", "perspectiveCard"],
-};
+const LANDING_ACTIVITY_GROUP_ORDER: LandingActivityGroupKey[] = [
+  "journalRegular",
+  "journalNutrition",
+  "journalExercise",
+  "journalWeight",
+  "journalFocus",
+  "session",
+  "memory",
+  "habit",
+  "concept",
+  "framework",
+  "savedModel",
+  "perspectiveCard",
+];
 
 const LANDING_JOURNAL_CHIPS: Array<{
   key: LandingJournalChipKey;
@@ -3268,11 +3275,6 @@ function landingActivityGroupKey(item: LandingDayActivityItem): LandingActivityG
   return item.kind;
 }
 
-function landingActivityMatchesTab(item: LandingDayActivityItem, tab: LandingTab): boolean {
-  const groupKey = landingActivityGroupKey(item);
-  return LANDING_TAB_ACTIVITY_GROUP_ORDER[tab].includes(groupKey);
-}
-
 export default function ChatPage() {
   const params = useParams();
   const router = useRouter();
@@ -3289,8 +3291,6 @@ export default function ChatPage() {
   const sessionId = params.sessionId as string;
   const isNew = sessionId === "new";
   const incognitoMode = sessionId === "incognito";
-  const [landingTab, setLandingTab] = useState<LandingTab>("journaling");
-  const landingTabStorageReadyRef = useRef(false);
   const [selectedLandingDayKey, setSelectedLandingDayKey] = useState(() => toDayKey(new Date()));
   const [journalPanelSelectedDayKey, setJournalPanelSelectedDayKey] = useState(() => toDayKey(new Date()));
   const [brandLogoParty, setBrandLogoParty] = useState(false);
@@ -3303,26 +3303,6 @@ export default function ChatPage() {
   const headerCalendarRef = useRef<HTMLDivElement | null>(null);
   const journalPanelDaysScrollerRef = useRef<HTMLDivElement | null>(null);
   const journalPanelDaysAutoScrolledRef = useRef(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const saved = window.sessionStorage.getItem(LANDING_TAB_STORAGE_KEY);
-    if (saved === "deepThinking" || saved === "journaling" || saved === "pomodoro") {
-      setLandingTab(saved);
-    }
-    landingTabStorageReadyRef.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !landingTabStorageReadyRef.current) return;
-    window.sessionStorage.setItem(LANDING_TAB_STORAGE_KEY, landingTab);
-  }, [landingTab]);
-
-  useEffect(() => {
-    if (isAnonymous && (landingTab === "journaling" || landingTab === "pomodoro")) {
-      setLandingTab("deepThinking");
-    }
-  }, [isAnonymous, landingTab]);
 
   const [sessions, setSessions] = useState<Session[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -4500,6 +4480,7 @@ export default function ChatPage() {
   const [pomodoroCustomMinutesInput, setPomodoroCustomMinutesInput] = useState("25");
   const [pomodoroRunning, setPomodoroRunning] = useState(false);
   const [pomodoroSessionStartIso, setPomodoroSessionStartIso] = useState<string | null>(null);
+  const [pomodoroFullscreenDismissed, setPomodoroFullscreenDismissed] = useState(false);
   const [pomodoroJustLogged, setPomodoroJustLogged] = useState(false);
   const [pomodoroConfettiVisible, setPomodoroConfettiVisible] = useState(false);
   const pomodoroConfettiTimeoutRef = useRef<number | null>(null);
@@ -5472,18 +5453,14 @@ export default function ChatPage() {
   const landingDayActivityCountForTab = useMemo(() => {
     const map = new Map<string, number>();
     for (const item of landingDayActivityItems) {
-      if (!landingActivityMatchesTab(item, landingTab)) continue;
       map.set(item.dayKey, (map.get(item.dayKey) ?? 0) + 1);
     }
     return map;
-  }, [landingDayActivityItems, landingTab]);
+  }, [landingDayActivityItems]);
 
   const selectedLandingDayActivityItems = useMemo(
-    () =>
-      landingDayActivityItems.filter(
-        (item) => item.dayKey === selectedLandingDayKey && landingActivityMatchesTab(item, landingTab)
-      ),
-    [landingDayActivityItems, landingTab, selectedLandingDayKey]
+    () => landingDayActivityItems.filter((item) => item.dayKey === selectedLandingDayKey),
+    [landingDayActivityItems, selectedLandingDayKey]
   );
   const selectedLandingDayActivityGroups = useMemo(() => {
     const grouped = new Map<LandingActivityGroupKey, LandingDayActivityItem[]>();
@@ -5493,14 +5470,14 @@ export default function ChatPage() {
       if (existing) existing.push(item);
       else grouped.set(groupKey, [item]);
     }
-    return LANDING_TAB_ACTIVITY_GROUP_ORDER[landingTab]
+    return LANDING_ACTIVITY_GROUP_ORDER
       .map((groupKey) => ({
         groupKey,
         label: LANDING_ACTIVITY_GROUP_LABEL[groupKey],
         items: grouped.get(groupKey) ?? [],
       }))
       .filter((group) => group.items.length > 0);
-  }, [landingTab, selectedLandingDayActivityItems]);
+  }, [selectedLandingDayActivityItems]);
   const shouldAnimateLandingPlaceholder =
     messages.length === 0 &&
     !incognitoMode &&
@@ -8189,7 +8166,6 @@ export default function ChatPage() {
     }
     if (item.kind === "focusEntry") {
       playSelectionChime();
-      setLandingTab("pomodoro");
       return;
     }
     if (item.kind === "memory") {
@@ -8366,14 +8342,14 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (isAnonymous || incognitoMode || !userId) return;
-    if (landingTab !== "journaling") return;
+    if (messages.length !== 0) return;
     if (weightTrackerEntries.length > 0 || weightTrackerLoading || weightTrackerModalOpen) return;
     void fetchWeightTracker();
   }, [
     fetchWeightTracker,
     incognitoMode,
     isAnonymous,
-    landingTab,
+    messages.length,
     userId,
     weightTrackerEntries.length,
     weightTrackerLoading,
@@ -8550,13 +8526,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (isAnonymous || incognitoMode || !userId) return;
-    if (landingTab !== "pomodoro") return;
-    void fetchFocusTrackerEntries();
-  }, [fetchFocusTrackerEntries, incognitoMode, isAnonymous, landingTab, userId]);
-
-  useEffect(() => {
-    if (isAnonymous || incognitoMode || !userId) return;
-    if (landingTab !== "journaling") return;
+    if (messages.length !== 0) return;
     if (focusTrackerEntries.length > 0 || focusTrackerLoading) return;
     void fetchFocusTrackerEntries();
   }, [
@@ -8565,7 +8535,7 @@ export default function ChatPage() {
     focusTrackerLoading,
     incognitoMode,
     isAnonymous,
-    landingTab,
+    messages.length,
     userId,
   ]);
 
@@ -8574,6 +8544,11 @@ export default function ChatPage() {
     setPomodoroSecondsRemaining(pomodoroDurationMinutes * 60);
     setPomodoroEndsAtMs(null);
   }, [pomodoroDurationMinutes, pomodoroRunning, pomodoroSessionStartIso]);
+  useEffect(() => {
+    if (pomodoroSessionStartIso) {
+      setPomodoroFullscreenDismissed(false);
+    }
+  }, [pomodoroSessionStartIso]);
 
   useEffect(() => {
     setPomodoroCustomMinutesInput(String(pomodoroDurationMinutes));
@@ -10051,7 +10026,6 @@ export default function ChatPage() {
       setCurrentSession(null);
       setCollapsedSummary(null);
       replaceComposerInput("");
-      setLandingTab(isAnonymous ? "deepThinking" : "journaling");
       router.push("/chat/new");
     },
     [closeAllModalsExceptLeftPanel, isAnonymous, replaceComposerInput, router]
@@ -10419,15 +10393,14 @@ export default function ChatPage() {
   const isLandingUtilityTab =
     messages.length === 0 &&
     !incognitoMode &&
-    !isAnonymous &&
-    (landingTab === "journaling" || landingTab === "pomodoro");
+    !isAnonymous;
   const shouldHideBottomBar =
     (messages.length === 0 &&
       !incognitoMode &&
-      (landingTab === "deepThinking" || (!isAnonymous && (landingTab === "journaling" || landingTab === "pomodoro")))) ||
+      !isAnonymous) ||
     (!!currentSession?.isCollapsed && !!collapsedSummary);
   const isPomodoroFocusMode =
-    !incognitoMode && !isAnonymous && landingTab === "pomodoro" && !!pomodoroSessionStartIso;
+    !incognitoMode && !isAnonymous && !!pomodoroSessionStartIso && !pomodoroFullscreenDismissed;
   const pomodoroConfettiOverlay = pomodoroConfettiVisible ? (
     <div className="pointer-events-none fixed inset-0 z-[95] overflow-hidden" aria-hidden>
       {pomodoroConfettiPieces.map((piece) => (
@@ -10502,7 +10475,7 @@ export default function ChatPage() {
           type="button"
           onClick={() => {
             playSelectionChime();
-            setLandingTab("journaling");
+            setPomodoroFullscreenDismissed(true);
           }}
           className="absolute left-4 top-[calc(12px+env(safe-area-inset-top))] z-[96] rounded-xl border border-neutral-300 dark:border-neutral-600 px-3 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
         >
@@ -13233,11 +13206,7 @@ export default function ChatPage() {
                 ? isAnonymous
                   ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-36 sm:pb-40 px-4 py-5"
                   : `flex-1 min-h-0 flex flex-col items-center justify-start ${
-                      !incognitoMode &&
-                      (landingTab === "deepThinking" ||
-                        (!isAnonymous && (landingTab === "journaling" || landingTab === "pomodoro")))
-                        ? "pb-4 md:pb-6"
-                        : "pb-36 sm:pb-40 md:pb-8"
+                      !incognitoMode && !isAnonymous ? "pb-4 md:pb-6" : "pb-36 sm:pb-40 md:pb-8"
                     } px-4 pt-1 md:pt-8`
                 : "px-3 py-4 sm:px-4 sm:py-5"
             }`}
@@ -13285,43 +13254,13 @@ export default function ChatPage() {
                         title={landingShellTitle}
                         subtitle={landingShellSubtitle}
                         selectedDateLabel={headerCalendarLabel}
-                        tabs={[
-                          {
-                            id: "journaling",
-                            label: landingTranslations.journalingTabLabel,
-                            selected: landingTab === "journaling",
-                            disabled: isAnonymous,
-                            onSelect: () => {
-                              if (!isAnonymous) setLandingTab("journaling");
-                            },
-                          },
-                          {
-                            id: "pomodoro",
-                            label: "Pomodoro",
-                            selected: landingTab === "pomodoro",
-                            disabled: isAnonymous,
-                            onSelect: () => {
-                              if (!isAnonymous) setLandingTab("pomodoro");
-                            },
-                          },
-                          {
-                            id: "deepThinking",
-                            label: landingTranslations.deepThinkingTabLabel,
-                            selected: landingTab === "deepThinking",
-                            onSelect: () => setLandingTab("deepThinking"),
-                          },
-                        ]}
                         dateItems={landingDateStripItems}
                         dateStripLabel={landingTranslations.landingDateStripLabel}
                         dateStripHint={landingTranslations.landingDateStripHint}
                         onOpenCalendar={openLandingHeaderCalendar}
-                        mode={landingTab}
                         focusCanvasEyebrow={landingTranslations.landingFocusCanvasEyebrow}
                         focusCanvasTitle={landingTranslations.landingFocusCanvasTitle}
                         focusCanvasSubtitle={landingTranslations.landingFocusCanvasSubtitle}
-                        focusCanvasModeJournaling={landingTranslations.landingFocusCanvasModeJournaling}
-                        focusCanvasModePomodoro={landingTranslations.landingFocusCanvasModePomodoro}
-                        focusCanvasModeDeepThinking={landingTranslations.landingFocusCanvasModeDeepThinking}
                         nutritionLabel={landingTranslations.landingNutritionLabel}
                         caloriesRemainingLabel={landingTranslations.landingCaloriesRemainingLabel}
                         foodLoggedLabel={landingTranslations.landingFoodLoggedLabel}
@@ -13852,9 +13791,7 @@ export default function ChatPage() {
                         isLoading
                       }
                       isLoading={isLoading}
-                      canSubmit={
-                        !(messages.length === 0 && !incognitoMode && (landingTab === "journaling" || landingTab === "pomodoro"))
-                      }
+                      canSubmit={!(messages.length === 0 && !incognitoMode && !isAnonymous)}
                       language={language}
                       onMentalModelClick={handleMentalModelClick}
                       onLtmClick={(id) => {

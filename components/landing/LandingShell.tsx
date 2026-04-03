@@ -14,8 +14,6 @@ import type {
   LandingNutritionGoals,
   LandingNutritionSummary,
   LandingQuickCaptureItem,
-  LandingTabId,
-  LandingTabOption,
   LandingTimelineEvent,
 } from "@/components/landing/types";
 
@@ -47,18 +45,13 @@ interface LandingShellProps {
   title: string;
   subtitle: string;
   selectedDateLabel: string;
-  tabs: LandingTabOption[];
   dateItems: LandingDateItem[];
   dateStripLabel: string;
   dateStripHint: string;
   onOpenCalendar: () => void;
-  mode: LandingTabId;
   focusCanvasEyebrow: string;
   focusCanvasTitle: string;
   focusCanvasSubtitle: string;
-  focusCanvasModeJournaling: string;
-  focusCanvasModePomodoro: string;
-  focusCanvasModeDeepThinking: string;
   nutritionLabel: string;
   caloriesRemainingLabel: string;
   foodLoggedLabel: string;
@@ -161,18 +154,13 @@ export function LandingShell({
   title,
   subtitle,
   selectedDateLabel,
-  tabs,
   dateItems,
   dateStripLabel,
   dateStripHint,
   onOpenCalendar,
-  mode,
   focusCanvasEyebrow,
   focusCanvasTitle,
   focusCanvasSubtitle,
-  focusCanvasModeJournaling,
-  focusCanvasModePomodoro,
-  focusCanvasModeDeepThinking,
   nutritionLabel,
   caloriesRemainingLabel,
   foodLoggedLabel,
@@ -280,7 +268,6 @@ export function LandingShell({
         eyebrow={dashboardEyebrow}
         title={title}
         subtitle={subtitle}
-        tabs={tabs}
         selectedDateLabel={selectedDateLabel}
         onOpenCalendar={onOpenCalendar}
       />
@@ -288,13 +275,9 @@ export function LandingShell({
       <LandingDateStrip label={dateStripLabel} hint={dateStripHint} items={dateItems} />
 
       <LandingFocusCanvas
-        mode={mode}
         eyebrow={focusCanvasEyebrow}
         title={focusCanvasTitle}
         subtitle={focusCanvasSubtitle}
-        journalingModeLabel={focusCanvasModeJournaling}
-        pomodoroModeLabel={focusCanvasModePomodoro}
-        deepThinkingModeLabel={focusCanvasModeDeepThinking}
         nutritionLabel={nutritionLabel}
         caloriesRemainingLabel={caloriesRemainingLabel}
         foodLoggedLabel={foodLoggedLabel}
@@ -320,6 +303,9 @@ export function LandingShell({
         focusTrackerSaving={focusTrackerSaving}
         focusTrackerError={focusTrackerError}
         pomodoroJustLogged={pomodoroJustLogged}
+        weightCurrentKg={weightCurrentKg}
+        weightTargetKg={weightTargetKg}
+        weightEntryCount={weightEntryCount}
         customFocusTagInput={customFocusTagInput}
         customFocusMinutesInput={customFocusMinutesInput}
         customFocusTimeInput={customFocusTimeInput}
@@ -332,6 +318,7 @@ export function LandingShell({
         onPausePomodoro={onPausePomodoro}
         onResetPomodoro={onResetPomodoro}
         onEndPomodoro={onEndPomodoro}
+        onOpenWeight={onOpenWeight}
         onCustomFocusTagInputChange={onCustomFocusTagInputChange}
         onCustomFocusMinutesInputChange={onCustomFocusMinutesInputChange}
         onCustomFocusTimeInputChange={onCustomFocusTimeInputChange}

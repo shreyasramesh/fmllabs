@@ -2,16 +2,6 @@
 
 import type { ReactNode } from "react";
 
-export type LandingTabId = "journaling" | "pomodoro" | "deepThinking";
-
-export interface LandingTabOption {
-  id: LandingTabId;
-  label: string;
-  selected: boolean;
-  disabled?: boolean;
-  onSelect: () => void;
-}
-
 export interface LandingDateItem {
   key: string;
   weekdayLabel: string;
