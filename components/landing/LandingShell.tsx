@@ -29,12 +29,12 @@ function ModuleCard({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-[1.8rem] border border-neutral-200/70 bg-white/90 p-4 shadow-[0_18px_48px_rgba(15,23,42,0.06)] backdrop-blur dark:border-white/10 dark:bg-neutral-950/80">
-      <h3 className="text-base font-semibold text-foreground">{eyebrow} Module</h3>
+    <section className="rounded-2xl border border-neutral-200/70 bg-white/90 px-3 py-3 shadow-[0_12px_32px_rgba(15,23,42,0.05)] backdrop-blur dark:border-white/10 dark:bg-neutral-950/80">
+      <h3 className="text-[13px] font-semibold text-foreground">{eyebrow}</h3>
       {description && (
-        <p className="mt-0.5 text-[13px] text-neutral-500 dark:text-neutral-400">{description}</p>
+        <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">{description}</p>
       )}
-      <div className="mt-3">{children}</div>
+      <div className="mt-2">{children}</div>
     </section>
   );
 }
@@ -51,11 +51,11 @@ function ToggleRow({
   onChange: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 py-2">
+    <div className="flex items-center justify-between gap-2 py-1.5">
       <div className="min-w-0">
-        <p className="text-sm text-foreground">{label}</p>
+        <p className="text-[13px] leading-snug text-foreground">{label}</p>
         {description && (
-          <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">{description}</p>
+          <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">{description}</p>
         )}
       </div>
       <button
@@ -63,13 +63,13 @@ function ToggleRow({
         role="switch"
         aria-checked={checked}
         onClick={onChange}
-        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors ${
+        className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors ${
           checked ? "bg-[#C87B3A]" : "bg-neutral-300 dark:bg-neutral-600"
         }`}
       >
         <span
-          className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
-            checked ? "translate-x-6" : "translate-x-1"
+          className={`pointer-events-none inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition ${
+            checked ? "translate-x-[1.1rem]" : "translate-x-0.5"
           }`}
         />
       </button>
@@ -87,13 +87,13 @@ function SegmentedPicker({
   options: readonly { key: string; label: string }[];
 }) {
   return (
-    <div className="inline-flex rounded-lg border border-neutral-200 bg-neutral-100 p-0.5 dark:border-neutral-700 dark:bg-neutral-800">
+    <div className="inline-flex rounded-md border border-neutral-200 bg-neutral-100 p-px dark:border-neutral-700 dark:bg-neutral-800">
       {options.map((opt) => (
         <button
           key={opt.key}
           type="button"
           onClick={() => onChange(opt.key)}
-          className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+          className={`rounded-[5px] px-2.5 py-1 text-[11px] font-medium transition-colors ${
             value === opt.key
               ? "bg-white text-foreground shadow-sm dark:bg-neutral-700"
               : "text-neutral-500 hover:text-foreground dark:text-neutral-400"
@@ -117,10 +117,10 @@ function ChevronRow({
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center justify-between gap-2 rounded-xl border border-neutral-200 px-3 py-2.5 text-left text-sm font-medium text-foreground transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900"
+      className="flex w-full items-center justify-between gap-2 rounded-lg border border-neutral-200 px-2.5 py-1.5 text-left text-[13px] font-medium text-foreground transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900"
     >
       {label}
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0 text-neutral-400">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0 text-neutral-400">
         <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
       </svg>
     </button>
@@ -240,6 +240,7 @@ interface LandingShellProps {
   responseVerbosity: "compact" | "detailed";
   onResponseVerbosityChange: (value: "compact" | "detailed") => void;
   onStartMindLabConversation: () => void;
+  onOpenConversations: () => void;
 }
 
 export function LandingShell({
@@ -355,6 +356,7 @@ export function LandingShell({
   responseVerbosity,
   onResponseVerbosityChange,
   onStartMindLabConversation,
+  onOpenConversations,
 }: LandingShellProps) {
   const distanceToTarget =
     weightCurrentKg != null && weightTargetKg != null
@@ -420,17 +422,36 @@ export function LandingShell({
         onAddCustomFocusEntry={onAddCustomFocusEntry}
       />
 
+      {/* Row 1: Quick Capture · Mind Lab · Mentor Hub */}
       <div className="grid gap-4 xl:grid-cols-3">
+        <ModuleCard eyebrow="Quick Capture" title="Quick Capture Panel">
+          <div className="grid grid-cols-3 gap-1.5">
+            {quickCaptures.map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                onClick={item.onClick}
+                className="flex flex-col items-center gap-1 rounded-lg border border-neutral-200 px-1.5 py-2 transition-colors hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+              >
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FBF4EC] text-[#B87B51] dark:bg-[#241a14] dark:text-[#E8C3A0]">
+                  {item.icon}
+                </span>
+                <span className="text-[11px] font-medium text-foreground">{item.label}</span>
+              </button>
+            ))}
+          </div>
+        </ModuleCard>
+
         <ModuleCard eyebrow="Mind Lab" title={mindLabTitle}>
           {featuredMentalModelName && (
             <button
               type="button"
               onClick={onOpenMentalModels}
-              className="flex w-full items-center justify-between gap-2 rounded-xl border-l-[3px] border-neutral-300 bg-neutral-50 px-3 py-2.5 text-left transition-colors hover:bg-neutral-100 dark:border-neutral-600 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+              className="flex w-full items-center justify-between gap-2 rounded-lg border-l-[3px] border-neutral-300 bg-neutral-50 px-2.5 py-2 text-left transition-colors hover:bg-neutral-100 dark:border-neutral-600 dark:bg-neutral-900 dark:hover:bg-neutral-800"
             >
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-foreground">{featuredMentalModelName}</p>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">Interactive mental model</p>
+                <p className="truncate text-[13px] font-semibold text-foreground">{featuredMentalModelName}</p>
+                <p className="text-[11px] text-neutral-500 dark:text-neutral-400">Interactive mental model</p>
               </div>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0 text-neutral-400">
                 <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
@@ -446,8 +467,8 @@ export function LandingShell({
             />
           </div>
 
-          <div className="mt-3 flex items-center justify-between gap-3">
-            <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Response style</p>
+          <div className="mt-2 flex items-center justify-between gap-2">
+            <p className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">Response style</p>
             <SegmentedPicker
               value={responseVerbosity}
               onChange={(v) => onResponseVerbosityChange(v as "compact" | "detailed")}
@@ -458,14 +479,14 @@ export function LandingShell({
             />
           </div>
 
-          <div className="mt-3">
+          <div className="mt-2">
             <button
               type="button"
               onClick={onStartMindLabConversation}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#C87B3A] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#B56D30]"
+              className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#C87B3A] px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition-colors hover:bg-[#B56D30]"
             >
               Start conversation
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
                 <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
               </svg>
             </button>
@@ -475,65 +496,78 @@ export function LandingShell({
             <ChevronRow label={learnMentalModelLabel} onClick={onOpenLearnMentalModel} />
           </div>
           {conversationCount > 0 && (
-            <div className="mt-3 border-t border-neutral-100 pt-3 dark:border-neutral-800">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                Conversations
-              </p>
-              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-                {conversationCount} item{conversationCount !== 1 ? "s" : ""}, tap to view
-              </p>
-            </div>
+            <button
+              type="button"
+              onClick={onOpenConversations}
+              className="mt-2 flex w-full items-center justify-between border-t border-neutral-100 pt-2 text-left transition-colors hover:opacity-70 dark:border-neutral-800"
+            >
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                  Conversations
+                </p>
+                <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                  {conversationCount} item{conversationCount !== 1 ? "s" : ""}, tap to view
+                </p>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0 text-neutral-400">
+                <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+              </svg>
+            </button>
           )}
         </ModuleCard>
 
         <ModuleCard eyebrow="Mentor Hub" title={mentorHubTitle}>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5">
             {mentors.slice(0, 5).map((mentor) => (
-              <div key={mentor.id} className="relative">
+              <span
+                key={mentor.id}
+                className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-neutral-50 py-0.5 pl-0.5 pr-2.5 dark:border-neutral-700 dark:bg-neutral-900"
+              >
                 <span
-                  className="flex h-12 w-12 items-center justify-center rounded-full text-xs font-semibold text-white"
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[9px] font-semibold text-white"
                   style={{ backgroundColor: `hsl(${mentor.hue} 70% 45%)` }}
                 >
                   {mentor.initials}
                 </span>
-                <span className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-[#5A7D5B] dark:border-neutral-950">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="white" className="h-2.5 w-2.5">
-                    <path d="M9.765 3.205a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0l-2.25-2.25a.75.75 0 111.06-1.06l1.72 1.72 3.72-3.72a.75.75 0 011.06 0z" />
-                  </svg>
-                </span>
-              </div>
+                <span className="truncate text-[12px] font-medium text-foreground">{mentor.name}</span>
+              </span>
             ))}
             {mentorCount === 0 && (
-              <p className="text-sm text-neutral-500 dark:text-neutral-400">{followMentorsHint}</p>
+              <p className="text-[13px] text-neutral-500 dark:text-neutral-400">{followMentorsHint}</p>
             )}
           </div>
-          <div className="mt-3 divide-y divide-neutral-100 dark:divide-neutral-800">
-            <ToggleRow
-              label="1:1 with a mentor (coach mode)"
-              description="Coaching avatar optimizes 1:1 with a mentor, guided conversation style."
-              checked={mentorCount > 0}
-              onChange={onOpenOneOnOneMentor}
-            />
-          </div>
-          <div className="mt-2">
+          <div className="mt-2 flex flex-col gap-1.5">
+            <button
+              type="button"
+              onClick={onOpenOneOnOneMentor}
+              className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#C87B3A] px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition-colors hover:bg-[#B56D30]"
+            >
+              1:1 with a mentor
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+              </svg>
+            </button>
             <button
               type="button"
               onClick={onOpenAskMentors}
-              className="w-full rounded-xl border border-neutral-200 px-3 py-2.5 text-center text-sm font-medium text-foreground transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900"
+              className="w-full rounded-lg border border-neutral-200 px-2.5 py-1.5 text-center text-[13px] font-medium text-foreground transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900"
             >
               {askMentorsLabel}
             </button>
           </div>
         </ModuleCard>
+      </div>
 
+      {/* Row 2: Growth Studio · Weight · Activity */}
+      <div className="grid gap-4 xl:grid-cols-3">
         <ModuleCard eyebrow="Growth Studio" title={growthStudioTitle}>
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div>
-              <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center justify-between text-[13px]">
                 <span className="text-foreground">Active 30-Day Experiments</span>
                 <span className="font-semibold text-foreground">{habitsCount}</span>
               </div>
-              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
+              <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
                 <div
                   className="h-full rounded-full bg-[#5A7D5B] transition-all"
                   style={{ width: `${Math.min(100, habitsCount * 12)}%` }}
@@ -541,10 +575,10 @@ export function LandingShell({
               </div>
             </div>
             <div>
-              <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center justify-between text-[13px]">
                 <span className="text-foreground">Progress</span>
               </div>
-              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
+              <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
                 <div
                   className="h-full rounded-full bg-[#A0522D] transition-all"
                   style={{ width: `${Math.min(100, habitsCount > 0 ? 45 : 0)}%` }}
@@ -552,103 +586,81 @@ export function LandingShell({
               </div>
             </div>
           </div>
-          <div className="mt-3">
+          <div className="mt-2">
             <ChevronRow label="Playgrounds" onClick={onOpenPlaygrounds} />
           </div>
         </ModuleCard>
-      </div>
 
-      <div className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-        <ModuleCard eyebrow="Quick Capture" title="Quick Capture Panel">
-          <div className="grid grid-cols-3 gap-2">
-            {quickCaptures.map((item) => (
-              <button
-                key={item.key}
-                type="button"
-                onClick={item.onClick}
-                className="flex flex-col items-center gap-1.5 rounded-xl border border-neutral-200 px-2 py-3 transition-colors hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
-              >
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FBF4EC] text-[#B87B51] dark:bg-[#241a14] dark:text-[#E8C3A0]">
-                  {item.icon}
-                </span>
-                <span className="text-xs font-medium text-foreground">{item.label}</span>
-              </button>
-            ))}
+        <ModuleCard
+          eyebrow="Weight"
+          title={weightTitle}
+          description={weightDescription}
+        >
+          <div className="grid grid-cols-2 gap-1.5">
+            <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-2.5 py-2 dark:border-neutral-800 dark:bg-neutral-900">
+              <p className="text-lg font-semibold text-foreground">
+                {weightCurrentKg == null ? "--" : `${weightCurrentKg.toFixed(1)} kg`}
+              </p>
+              <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">{currentWeightLabel}</p>
+            </div>
+            <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-2.5 py-2 dark:border-neutral-800 dark:bg-neutral-900">
+              <p className="text-lg font-semibold text-foreground">
+                {weightTargetKg == null ? "--" : `${weightTargetKg.toFixed(1)} kg`}
+              </p>
+              <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">{targetWeightLabel}</p>
+            </div>
+          </div>
+          <div className="mt-2 flex items-center justify-between gap-2 rounded-xl border border-neutral-200 bg-neutral-50 px-2.5 py-2 dark:border-neutral-800 dark:bg-neutral-900">
+            <div>
+              <p className="text-[13px] font-medium text-foreground">
+                {distanceToTarget == null ? noTargetYetLabel : `${distanceToTarget} kg to target`}
+              </p>
+              <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                {weightEntryCount} logged entr{weightEntryCount === 1 ? "y" : "ies"}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={onOpenWeight}
+              className="rounded-full border border-neutral-300 px-2.5 py-1 text-[13px] font-medium text-neutral-700 transition-colors hover:bg-white dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-950"
+            >
+              {openLabel}
+            </button>
           </div>
         </ModuleCard>
 
-        <div className="space-y-4">
-          <ModuleCard
-            eyebrow="Weight"
-            title={weightTitle}
-            description={weightDescription}
-          >
-            <div className="grid grid-cols-2 gap-2">
-              <div className="rounded-[1.2rem] border border-neutral-200 bg-neutral-50 px-3 py-3 dark:border-neutral-800 dark:bg-neutral-900">
-                <p className="text-2xl font-semibold text-foreground">
-                  {weightCurrentKg == null ? "--" : `${weightCurrentKg.toFixed(1)} kg`}
-                </p>
-                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{currentWeightLabel}</p>
-              </div>
-              <div className="rounded-[1.2rem] border border-neutral-200 bg-neutral-50 px-3 py-3 dark:border-neutral-800 dark:bg-neutral-900">
-                <p className="text-2xl font-semibold text-foreground">
-                  {weightTargetKg == null ? "--" : `${weightTargetKg.toFixed(1)} kg`}
-                </p>
-                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{targetWeightLabel}</p>
-              </div>
-            </div>
-            <div className="mt-3 flex items-center justify-between gap-3 rounded-[1.2rem] border border-neutral-200 bg-neutral-50 px-3 py-3 dark:border-neutral-800 dark:bg-neutral-900">
-              <div>
-                <p className="text-sm font-medium text-foreground">
-                  {distanceToTarget == null ? noTargetYetLabel : `${distanceToTarget} kg to target`}
-                </p>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                  {weightEntryCount} logged entr{weightEntryCount === 1 ? "y" : "ies"}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={onOpenWeight}
-                className="rounded-full border border-neutral-300 px-3 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-white dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-950"
-              >
-                {openLabel}
-              </button>
-            </div>
-          </ModuleCard>
-
-          <ModuleCard
-            eyebrow="Activity"
-            title={activityTitle}
-            description={activityDescription}
-          >
-            <div className="space-y-2">
-              {activityGroups.length === 0 ? (
-                <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                  No activity yet for this day.
-                </p>
-              ) : (
-                activityGroups.map((group) => (
-                  <button
-                    key={group.key}
-                    type="button"
-                    onClick={group.onClick}
-                    className="flex w-full items-center justify-between gap-3 rounded-[1.2rem] border border-neutral-200 px-3 py-3 text-left transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900"
-                  >
-                    <span>
-                      <span className="block text-sm font-semibold text-foreground">{group.label}</span>
-                      <span className="block text-xs text-neutral-500 dark:text-neutral-400">
-                        {tapToInspectLabel}
-                      </span>
+        <ModuleCard
+          eyebrow="Activity"
+          title={activityTitle}
+          description={activityDescription}
+        >
+          <div className="space-y-1.5">
+            {activityGroups.length === 0 ? (
+              <p className="text-[13px] text-neutral-500 dark:text-neutral-400">
+                No activity yet for this day.
+              </p>
+            ) : (
+              activityGroups.map((group) => (
+                <button
+                  key={group.key}
+                  type="button"
+                  onClick={group.onClick}
+                  className="flex w-full items-center justify-between gap-2 rounded-xl border border-neutral-200 px-2.5 py-2 text-left transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900"
+                >
+                  <span>
+                    <span className="block text-[13px] font-semibold text-foreground">{group.label}</span>
+                    <span className="block text-[11px] text-neutral-500 dark:text-neutral-400">
+                      {tapToInspectLabel}
                     </span>
-                    <span className="rounded-full border border-neutral-200 px-2 py-1 text-xs text-neutral-500 dark:border-neutral-700 dark:text-neutral-400">
-                      {group.count}
-                    </span>
-                  </button>
-                ))
-              )}
-            </div>
-          </ModuleCard>
-        </div>
+                  </span>
+                  <span className="rounded-full border border-neutral-200 px-1.5 py-0.5 text-[11px] text-neutral-500 dark:border-neutral-700 dark:text-neutral-400">
+                    {group.count}
+                  </span>
+                </button>
+              ))
+            )}
+          </div>
+        </ModuleCard>
       </div>
 
       <LandingTimelineCard eyebrow={timelineEyebrow} dayLabel={timelineLabel} events={timelineEvents} />

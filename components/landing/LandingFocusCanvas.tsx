@@ -355,41 +355,43 @@ export function LandingFocusCanvas({
                   <div className="absolute inset-[7rem] rounded-full border border-[#EADFD3]/60 bg-[radial-gradient(circle,rgba(255,250,240,0.97),rgba(255,245,228,0.94)_70%,rgba(255,240,218,0.88)_100%)] shadow-[inset_0_0_30px_rgba(255,230,190,0.3)] dark:border-[#5F4634]/50 dark:bg-[radial-gradient(circle,rgba(55,40,28,0.97),rgba(42,30,22,0.94)_70%,rgba(32,24,18,0.9)_100%)] sm:inset-[8.5rem]" />
 
 
-                  <div className="relative z-10 flex flex-col items-center text-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="h-6 w-6 text-neutral-500 dark:text-neutral-400"
-                      aria-hidden
-                    >
-                      <circle cx="12" cy="12" r="8" />
-                      <path d="M12 8v4l2.5 1.5" />
-                    </svg>
-                    <p className="mt-4 text-5xl font-semibold tracking-[-0.06em] text-foreground sm:text-6xl">
-                      {pomodoroClockLabel}
-                    </p>
-                    <button
-                      type="button"
-                      onClick={onOpenNutrition}
-                      className="mt-2 transition-opacity hover:opacity-80"
-                    >
-                      <span className="block text-[13px] text-neutral-500 dark:text-neutral-400">calories</span>
-                      <span className="mt-0.5 flex items-baseline justify-center gap-1">
-                        <span className="text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl">
-                          {caloriesConsumed}
-                        </span>
-                        <span className="text-lg text-neutral-400 dark:text-neutral-500">
-                          / {nutritionGoals.caloriesTarget}
-                        </span>
-                      </span>
-                    </button>
-                    
-                  </div>
+                  <button
+                    type="button"
+                    onClick={onOpenNutrition}
+                    className="relative z-10 flex flex-col items-center gap-1.5 text-center transition-opacity hover:opacity-80"
+                  >
+                    {/* Calories */}
+                    <div className="flex items-baseline gap-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#5BA3D9" className="h-3.5 w-3.5 self-center shrink-0" aria-hidden>
+                        <path d="M12.556 3.252c-.155-.07-.326-.07-.48 0a12.764 12.764 0 0 0-4.1 3.26C6.32 8.39 5 10.76 5 13.5a5 5 0 0 0 10 0c0-2.74-1.32-5.11-2.976-6.988a12.764 12.764 0 0 0-1.468-1.26Zm-2.433 6.212a.75.75 0 0 1 1.354 0l.04.088c.427.93.713 1.636.713 2.448a1.98 1.98 0 1 1-3.96 0c0-.812.286-1.518.713-2.448l.04-.088a.755.755 0 0 1 1.1 0Z"/>
+                      </svg>
+                      <span className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{caloriesConsumed}</span>
+                      <span className="text-sm text-neutral-400 dark:text-neutral-500">/ {nutritionGoals.caloriesTarget}</span>
+                    </div>
+                    <span className="text-[10px] font-medium uppercase tracking-wider text-neutral-400 dark:text-neutral-500">kcal</span>
+
+                    {/* Macros row */}
+                    <div className="mt-1 flex items-center gap-3">
+                      {/* Protein */}
+                      <div className="flex items-center gap-1">
+                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: "#9B5FD6" }} />
+                        <span className="text-[11px] font-semibold text-foreground">{nutrition.proteinGrams}g</span>
+                        <span className="text-[10px] text-neutral-400 dark:text-neutral-500">P</span>
+                      </div>
+                      {/* Carbs */}
+                      <div className="flex items-center gap-1">
+                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: "#E5A030" }} />
+                        <span className="text-[11px] font-semibold text-foreground">{nutrition.carbsGrams}g</span>
+                        <span className="text-[10px] text-neutral-400 dark:text-neutral-500">C</span>
+                      </div>
+                      {/* Fat */}
+                      <div className="flex items-center gap-1">
+                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: "#D96050" }} />
+                        <span className="text-[11px] font-semibold text-foreground">{nutrition.fatGrams}g</span>
+                        <span className="text-[10px] text-neutral-400 dark:text-neutral-500">F</span>
+                      </div>
+                    </div>
+                  </button>
                 </div>
 
                 <div className="mt-4 w-full max-w-[34rem] space-y-3">

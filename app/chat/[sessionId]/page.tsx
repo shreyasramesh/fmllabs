@@ -13426,6 +13426,7 @@ export default function ChatPage() {
                         responseVerbosity={newConversationResponseVerbosity}
                         onResponseVerbosityChange={setNewConversationResponseVerbosity}
                         onStartMindLabConversation={() => startSecondOrderConversation(!secondOrderCitationsEnabled, newConversationResponseVerbosity)}
+                        onOpenConversations={() => { playSelectionChime(); setLibraryPanelOpen("conversations"); }}
                       />
                       )}
                     {journalEntryJustSaved && (
