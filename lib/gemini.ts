@@ -3146,6 +3146,76 @@ Return ONLY valid JSON, no markdown, no extra text:
   }
 }
 
+export type BrainDumpCategory = "reflection" | "concept" | "experiment";
+
+export interface BrainDumpResult {
+  category: BrainDumpCategory;
+  title: string;
+  reflectionText?: string;
+  conceptSummary?: string;
+  conceptEnrichmentPrompt?: string;
+  experimentDescription?: string;
+  experimentHowTo?: string;
+  experimentTips?: string;
+}
+
+export async function categorizeBrainDump(
+  transcript: string,
+  usageContext?: GeminiUsageContext
+): Promise<BrainDumpResult> {
+  const model = getModel();
+  const result = await model.generateContent(
+    `You are an AI assistant that categorizes a user's voice brain-dump into exactly one of three types and generates structured data for it.
+
+Categories:
+1. "reflection" — The user is journaling, venting, processing emotions, reviewing their day, expressing gratitude, or reflecting on experiences.
+2. "concept" — The user is articulating an idea, principle, mental model, framework, or insight they want to remember and apply later.
+3. "experiment" — The user is describing a behavior change, daily practice, habit, or 30-day challenge they want to try.
+
+Return a JSON object with these keys:
+- "category": one of "reflection", "concept", or "experiment"
+- "title": A concise 3-8 word title
+
+If category is "reflection":
+- "reflectionText": A cleaned-up, well-written version of the transcript as a journal entry (1-4 paragraphs). Preserve the user's voice and meaning.
+
+If category is "concept":
+- "conceptSummary": A 2-4 paragraph narrative expanding on the idea, its context, and why it matters.
+- "conceptEnrichmentPrompt": A 1-2 sentence summary (25-40 words) for an AI coach. State the core idea, then when it's relevant. Example: "Prioritize the 20% of efforts that yield 80% of results. Relevant when user is overwhelmed or optimizing for impact."
+
+If category is "experiment":
+- "experimentDescription": A 2-4 sentence description of the habit and why it matters.
+- "experimentHowTo": Step-by-step instructions (newline-separated lines, one step per line).
+- "experimentTips": Practical tips for sticking with it (newline-separated lines, one tip per line).
+
+Return ONLY valid JSON, no markdown or extra text.
+
+User's brain dump transcript:
+${transcript}`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const text = result.response.text().trim();
+  const cleaned = text.replace(/^```json\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  const parsed = JSON.parse(cleaned) as Record<string, unknown>;
+
+  const category = (["reflection", "concept", "experiment"] as const).includes(
+    parsed.category as BrainDumpCategory
+  )
+    ? (parsed.category as BrainDumpCategory)
+    : "reflection";
+
+  return {
+    category,
+    title: typeof parsed.title === "string" ? parsed.title.trim().slice(0, 120) : "Brain Dump",
+    reflectionText: typeof parsed.reflectionText === "string" ? parsed.reflectionText.trim() : undefined,
+    conceptSummary: typeof parsed.conceptSummary === "string" ? parsed.conceptSummary.trim() : undefined,
+    conceptEnrichmentPrompt: typeof parsed.conceptEnrichmentPrompt === "string" ? parsed.conceptEnrichmentPrompt.trim() : undefined,
+    experimentDescription: typeof parsed.experimentDescription === "string" ? parsed.experimentDescription.trim() : undefined,
+    experimentHowTo: typeof parsed.experimentHowTo === "string" ? parsed.experimentHowTo.trim() : undefined,
+    experimentTips: typeof parsed.experimentTips === "string" ? parsed.experimentTips.trim() : undefined,
+  };
+}
+
 export async function generateTitle(
   messages: { role: string; content: string }[],
   usageContext?: GeminiUsageContext

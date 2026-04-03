@@ -13829,6 +13829,12 @@ export default function ChatPage() {
                         thoughtReviewing={thoughtReviewing}
                         onReviewThought={reviewThoughtOfTheDay}
                         onOpenThoughtConcept={openThoughtConcept}
+                        language={language}
+                        onBrainDumpSaved={(category) => {
+                          if (category === "reflection") refetchTranscripts();
+                          else if (category === "concept") refetchCustomConcepts();
+                          else if (category === "experiment") refetchHabits();
+                        }}
                       />
                       )}
                     {journalEntryJustSaved && (
