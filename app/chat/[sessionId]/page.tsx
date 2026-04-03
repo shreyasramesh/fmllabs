@@ -8371,7 +8371,13 @@ export default function ChatPage() {
   );
   const landingMentorSummaries = useMemo(() => {
     const figureMap = new Map((figuresData?.figures ?? []).map((figure) => [figure.id, figure]));
-    return followedFigureIds.flatMap((id) => {
+    const convCounts = new Map<string, number>();
+    for (const s of sessions) {
+      if (s.oneOnOneMentorFigureId) {
+        convCounts.set(s.oneOnOneMentorFigureId, (convCounts.get(s.oneOnOneMentorFigureId) ?? 0) + 1);
+      }
+    }
+    const all = followedFigureIds.flatMap((id) => {
       const figure = figureMap.get(id);
       if (!figure) return [];
       return [
@@ -8384,7 +8390,9 @@ export default function ChatPage() {
         },
       ];
     });
-  }, [figuresData?.figures, followedFigureIds]);
+    all.sort((a, b) => (convCounts.get(b.id) ?? 0) - (convCounts.get(a.id) ?? 0));
+    return all.slice(0, 5);
+  }, [figuresData?.figures, followedFigureIds, sessions]);
 
   const resetWeeklySummaryModal = useCallback(() => {
     setWeeklySummaryModalOpen(false);
@@ -13624,6 +13632,16 @@ export default function ChatPage() {
                             setMentorOneOnOneModalOpen(true);
                           }
                         }}
+                        onSelectMentor={(mentorId) => {
+                          const mentor = landingMentorSummaries.find((m) => m.id === mentorId);
+                          if (!mentor) return;
+                          playSelectionChime();
+                          startConversationFromMentorOneOnOne(
+                            { id: mentor.id, name: mentor.name, description: mentor.description ?? "" },
+                            undefined,
+                            newConversationResponseVerbosity
+                          );
+                        }}
                         onOpenAskMentors={() => {
                           playSelectionChime();
                           if (multiMentorMode) {
@@ -13639,6 +13657,93 @@ export default function ChatPage() {
                             setPendingSecondOrder(false);
                           }
                         }}
+                        askMentorsContent={
+                                  <div className="space-y-2">
+                            <p className="text-sm font-medium text-foreground">What are you looking for help with?</p>
+                            <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                              We will suggest 5 mentors with short reasoning, then you can pick multiple.
+                            </p>
+                            <BufferedTextarea
+                              value={askMentorsRecommendationInput}
+                              syncRevision={askMentorsRecommendationInputRevision}
+                              onValueChange={setAskMentorsRecommendationInput}
+                              onImmediateValueChange={(nextValue) => {
+                                askMentorsRecommendationInputRef.current = nextValue;
+                              }}
+                              placeholder="Example: I need strategic + execution advice for a startup pivot."
+                              rows={2}
+                              className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 resize-none"
+                            />
+                                  <button
+                                    type="button"
+                              onClick={() => void requestAskMentorRecommendations()}
+                              disabled={askMentorsRecommendationsLoading || !askMentorsRecommendationInput.trim()}
+                              className="w-full px-3 py-2 rounded-xl border border-[#B87B51] bg-[#FBF4EC] text-[13px] font-medium text-[#7C522D] transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                            >
+                              {askMentorsRecommendationsLoading ? "Finding top mentors..." : "Suggest 5 mentors"}
+                                  </button>
+                            {askMentorsRecommendationsError && (
+                              <p className="text-xs text-red-600 dark:text-red-400">{askMentorsRecommendationsError}</p>
+                            )}
+                            {askMentorsRecommendations.length > 0 && (
+                              <div className="space-y-2">
+                                {askMentorsRecommendations.map((s) => {
+                                  const selected = askMentorsSelectedFigureIds.includes(s.id);
+                                  const canSelect = selected || askMentorsSelectedFigureIds.length < 5;
+                                  return (
+                                    <button
+                                      key={`ask-mentor-inline-${s.id}`}
+                                      type="button"
+                                      onClick={() => {
+                                        if (!canSelect && !selected) return;
+                                        setAskMentorsSelectedFigureIds((prev) =>
+                                          selected
+                                            ? prev.filter((id) => id !== s.id)
+                                            : prev.length < 5
+                                              ? [...prev, s.id]
+                                              : prev
+                                        );
+                                      }}
+                                      className={`w-full rounded-xl border px-3 py-2 text-left transition-colors ${
+                                        selected
+                                          ? "border-foreground bg-neutral-100 dark:bg-neutral-800"
+                                          : "border-neutral-200 dark:border-neutral-700 bg-background hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                                      } ${!canSelect && !selected ? "opacity-60 cursor-not-allowed" : ""}`}
+                                    >
+                                      <p className="text-sm font-semibold text-foreground">{s.name}</p>
+                                      <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">{s.reason}</p>
+                                    </button>
+                                  );
+                                })}
+                                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                                  Select between 2 and 5 mentors ({askMentorsSelectedFigureIds.length}/5 selected).
+                                </p>
+                                <div className="flex gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                      setMultiMentorMode(true);
+                                    }}
+                                    className="flex-1 px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                  >
+                                    Pick manually instead
+                                </button>
+                                    <button
+                                      type="button"
+                                    onClick={() => {
+                                      setMultiMentorMode(true);
+                                      setSelectedMentorFigureIds(askMentorsSelectedFigureIds.slice(0, 5));
+                                    }}
+                                    disabled={askMentorsSelectedFigureIds.length < 2 || askMentorsSelectedFigureIds.length > 5}
+                                    className="flex-1 px-3 py-2 rounded-xl border border-[#B87B51] bg-[#FBF4EC] text-[13px] font-medium text-[#7C522D] hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                                  >
+                                    Use selected mentors
+                                    </button>
+                                  </div>
+                                </div>
+                            )}
+                              </div>
+                        }
                         onOpenMentalModels={() => {
                           playSelectionChime();
                           setWaysOfLookingAtModalOpen(false);

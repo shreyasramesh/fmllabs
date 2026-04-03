@@ -648,6 +648,13 @@ body {
   line-height: 0.9;
 }
 
+/* Focus Timer countdown on the landing page module. */
+.landing-focus-timer-clock {
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
 /* Pomodoro setup countdown default sizing (desktop/tablet). */
 .pomodoro-setup-clock {
   font-size: min(22vw, 200px);

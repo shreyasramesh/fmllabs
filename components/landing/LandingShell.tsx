@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 import { LandingCaffeineChart } from "@/components/landing/LandingCaffeineChart";
 import { LandingDateStrip } from "@/components/landing/LandingDateStrip";
@@ -25,6 +25,83 @@ import type {
   LandingTimelineEvent,
   LandingWeeklySummaryPreview,
 } from "@/components/landing/types";
+
+const SCROLLSPY_SECTIONS = [
+  { id: "sec-focus", label: "Focus" },
+  { id: "sec-mentor", label: "Mentor Hub" },
+  { id: "sec-summary", label: "Summary" },
+  { id: "sec-activity", label: "Activity" },
+  { id: "sec-timeline", label: "Timeline" },
+  { id: "sec-caffeine", label: "Caffeine" },
+  { id: "sec-sleep", label: "Sleep" },
+] as const;
+
+function ScrollspyNav() {
+  const [activeId, setActiveId] = useState<string>(SCROLLSPY_SECTIONS[0].id);
+
+  useEffect(() => {
+    const els = SCROLLSPY_SECTIONS.map((s) => document.getElementById(s.id)).filter(Boolean) as HTMLElement[];
+    if (els.length === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        let topmost: { id: string; top: number } | null = null;
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const rect = entry.boundingClientRect;
+            if (!topmost || rect.top < topmost.top) {
+              topmost = { id: entry.target.id, top: rect.top };
+            }
+          }
+        }
+        if (topmost) setActiveId(topmost.id);
+      },
+      { rootMargin: "-20% 0px -60% 0px", threshold: 0 }
+    );
+    for (const el of els) observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const scrollTo = useCallback((id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
+  return (
+    <nav
+      className="fixed right-2 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-end gap-1.5 sm:flex"
+      aria-label="Page sections"
+    >
+      {SCROLLSPY_SECTIONS.map((s) => {
+        const isActive = activeId === s.id;
+        return (
+          <button
+            key={s.id}
+            type="button"
+            onClick={() => scrollTo(s.id)}
+            className="group flex items-center gap-2"
+            aria-label={s.label}
+          >
+            <span
+              className={`pointer-events-none text-[10px] font-medium transition-opacity ${
+                isActive
+                  ? "text-[#7C522D] opacity-100 dark:text-[#D6A67E]"
+                  : "text-neutral-400 opacity-0 group-hover:opacity-100 dark:text-neutral-500"
+              }`}
+            >
+              {s.label}
+            </span>
+            <span
+              className={`block rounded-full transition-all ${
+                isActive
+                  ? "h-1.5 w-5 bg-[#B87B51] dark:bg-[#D6A67E]"
+                  : "h-1 w-3 bg-neutral-300 group-hover:w-4 group-hover:bg-neutral-400 dark:bg-neutral-600 dark:group-hover:bg-neutral-500"
+              }`}
+            />
+          </button>
+        );
+      })}
+    </nav>
+  );
+}
 
 function ModuleCard({
   eyebrow,
@@ -203,7 +280,9 @@ interface LandingShellProps {
   weightTargetKg: number | null;
   weightEntryCount: number;
   onOpenOneOnOneMentor: () => void;
+  onSelectMentor: (mentorId: string) => void;
   onOpenAskMentors: () => void;
+  askMentorsContent: React.ReactNode;
   onOpenMentalModels: () => void;
   onOpenLearnMentalModel: () => void;
   onOpenPromptGames: () => void;
@@ -330,7 +409,9 @@ export function LandingShell({
   weightTargetKg,
   weightEntryCount,
   onOpenOneOnOneMentor,
+  onSelectMentor,
   onOpenAskMentors,
+  askMentorsContent,
   onOpenMentalModels,
   onOpenLearnMentalModel,
   onOpenPromptGames,
@@ -396,6 +477,8 @@ export function LandingShell({
 
   const [sleepHoursInput, setSleepHoursInput] = useState("7.5");
   const [hrvInput, setHrvInput] = useState("");
+  const [sleepFormOpen, setSleepFormOpen] = useState(false);
+  const [selectedMentorId, setSelectedMentorId] = useState<string | null>(null);
 
   const lastSleep = sleepEntries.length > 0 ? sleepEntries[0] : null;
 
@@ -409,6 +492,8 @@ export function LandingShell({
 
   return (
     <div className="w-full max-w-[88rem] min-w-0 overflow-hidden space-y-4 animate-fade-in-up">
+      <ScrollspyNav />
+
       <LandingTopBar
         eyebrow={dashboardEyebrow}
         title={title}
@@ -419,67 +504,180 @@ export function LandingShell({
 
       <LandingDateStrip label={dateStripLabel} hint={dateStripHint} items={dateItems} />
 
-      <LandingFocusCanvas
-        eyebrow={focusCanvasEyebrow}
-        title={focusCanvasTitle}
-        subtitle={focusCanvasSubtitle}
-        nutritionLabel={nutritionLabel}
-        caloriesRemainingLabel={caloriesRemainingLabel}
-        foodLoggedLabel={foodLoggedLabel}
-        carbsLabel={carbsLabel}
-        proteinLabel={proteinLabel}
-        focusSummaryLabel={focusSummaryLabel}
-        noFocusLoggedLabel={noFocusLoggedLabel}
-        liveFocusLabel={liveFocusLabel}
-        quickCaptureTitle={quickCaptureTitle}
-        manualFocusLogTitle={manualFocusLogTitle}
-        nutrition={nutrition}
-        nutritionGoals={nutritionGoals}
-        focusSummaryMinutes={focusSummaryMinutes}
-        focusSummarySessions={focusSummarySessions}
-        focusSummaryRows={focusSummaryRows}
-        quickCaptures={quickCaptures.slice(0, 4)}
-        pomodoroClockLabel={pomodoroClockLabel}
-        pomodoroRunning={pomodoroRunning}
-        pomodoroSessionActive={pomodoroSessionActive}
-        pomodoroDurationMinutes={pomodoroDurationMinutes}
-        pomodoroCustomMinutesInput={pomodoroCustomMinutesInput}
-        focusSessionTagInput={focusSessionTagInput}
-        focusTrackerSaving={focusTrackerSaving}
-        focusTrackerError={focusTrackerError}
-        pomodoroJustLogged={pomodoroJustLogged}
-        customFocusTagInput={customFocusTagInput}
-        customFocusMinutesInput={customFocusMinutesInput}
-        customFocusTimeInput={customFocusTimeInput}
-        onOpenNutrition={onOpenNutrition}
-        onPomodoroCustomMinutesInputChange={onPomodoroCustomMinutesInputChange}
-        onApplyCustomPomodoroMinutes={onApplyCustomPomodoroMinutes}
-        onSelectPomodoroDuration={onSelectPomodoroDuration}
-        onFocusSessionTagInputChange={onFocusSessionTagInputChange}
-        onStartPomodoro={onStartPomodoro}
-        onPausePomodoro={onPausePomodoro}
-        onResetPomodoro={onResetPomodoro}
-        onEndPomodoro={onEndPomodoro}
-        onCustomFocusTagInputChange={onCustomFocusTagInputChange}
-        onCustomFocusMinutesInputChange={onCustomFocusMinutesInputChange}
-        onCustomFocusTimeInputChange={onCustomFocusTimeInputChange}
-        onAddCustomFocusEntry={onAddCustomFocusEntry}
-      />
-
-      {/* Thought of the Day banner */}
-      {thoughtOfTheDay && (
-        <LandingThoughtOfTheDayBanner
-          thought={thoughtOfTheDay}
-          onReview={onReviewThought}
-          onOpenConcept={onOpenThoughtConcept}
-          reviewing={thoughtReviewing}
+      <div id="sec-focus" className="grid gap-4 xl:grid-cols-2">
+        <LandingFocusCanvas
+          eyebrow={focusCanvasEyebrow}
+          title={focusCanvasTitle}
+          subtitle={focusCanvasSubtitle}
+          nutritionLabel={nutritionLabel}
+          carbsLabel={carbsLabel}
+          proteinLabel={proteinLabel}
+          foodLoggedLabel={foodLoggedLabel}
+          nutrition={nutrition}
+          nutritionGoals={nutritionGoals}
+          onOpenNutrition={onOpenNutrition}
         />
-      )}
 
-      {/* Row 1: Quick Capture · Mind Lab · Mentor Hub */}
-      <div className="grid gap-4 xl:grid-cols-3">
-        <ModuleCard eyebrow="Quick Capture" title="Quick Capture Panel">
-          <div className="grid grid-cols-3 gap-1.5">
+        {/* Right column: Focus Timer + Quick Capture stacked */}
+        <div className="flex flex-col gap-4">
+        {/* Focus Timer Module */}
+        <section className="flex w-full flex-1 flex-col overflow-hidden rounded-[2.2rem] border border-neutral-200/70 bg-white/90 p-4 shadow-[0_28px_80px_rgba(15,23,42,0.09)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900 sm:p-5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
+            Focus Timer
+          </p>
+          <p className="landing-focus-timer-clock mt-2 font-black text-foreground">
+            {pomodoroClockLabel}
+          </p>
+
+          <div className="mt-4 flex flex-col gap-3">
+            {/* Duration pills + tag */}
+            <div className="flex flex-wrap items-center gap-2">
+              {[30, 60, 90].map((minutes) => (
+                <button
+                  key={`focus-timer-dur-${minutes}`}
+                  type="button"
+                  onClick={() => onSelectPomodoroDuration(minutes)}
+                  disabled={focusTrackerSaving || pomodoroSessionActive}
+                  className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                    pomodoroDurationMinutes === minutes
+                      ? "border-[#B87B51] bg-[#FBF4EC] text-[#7C522D] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7]"
+                      : "border-neutral-300 bg-white/80 text-neutral-700 hover:bg-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+                  } disabled:opacity-50`}
+                >
+                  {minutes}m
+                </button>
+              ))}
+            </div>
+
+            <input
+              type="text"
+              value={focusSessionTagInput}
+              onChange={(event) => onFocusSessionTagInputChange(event.target.value)}
+              placeholder="Tag this focus session..."
+              disabled={focusTrackerSaving}
+              className="w-full rounded-full border border-neutral-300 bg-white/88 px-4 py-2.5 text-sm dark:border-neutral-700 dark:bg-neutral-800"
+            />
+
+            {/* Start / Pause / Resume */}
+            <button
+              type="button"
+              onClick={pomodoroSessionActive ? (pomodoroRunning ? onPausePomodoro : onStartPomodoro) : onStartPomodoro}
+              disabled={focusTrackerSaving}
+              className="w-full rounded-full border border-[#B87B51] bg-[#FBF4EC] px-5 py-2.5 text-sm font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+            >
+              {pomodoroSessionActive ? (pomodoroRunning ? "Pause" : "Resume") : "Start Focus Session"}
+            </button>
+
+            {/* Custom minutes + Reset + End */}
+            <div className="flex flex-wrap items-center gap-2">
+              <input
+                type="number"
+                min={1}
+                max={600}
+                step={1}
+                value={pomodoroCustomMinutesInput}
+                onChange={(event) => onPomodoroCustomMinutesInputChange(event.target.value)}
+                disabled={focusTrackerSaving || pomodoroSessionActive}
+                className="w-24 rounded-full border border-neutral-300 bg-white/88 px-4 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-800"
+              />
+              <button
+                type="button"
+                onClick={onApplyCustomPomodoroMinutes}
+                disabled={focusTrackerSaving || pomodoroSessionActive}
+                className="rounded-full border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-white disabled:opacity-50 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900"
+              >
+                Set minutes
+              </button>
+              <button
+                type="button"
+                onClick={onResetPomodoro}
+                disabled={focusTrackerSaving}
+                className="rounded-full border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-white disabled:opacity-50 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900"
+              >
+                Reset
+              </button>
+              {pomodoroSessionActive && (
+                <button
+                  type="button"
+                  onClick={onEndPomodoro}
+                  disabled={focusTrackerSaving}
+                  className="rounded-full border border-[#DDAA7C] px-4 py-2 text-sm font-medium text-[#7C522D] transition-colors hover:bg-[#FBF4EC] disabled:opacity-50 dark:border-[#6A4A33] dark:text-[#E8C3A0] dark:hover:bg-[#241a14]"
+                >
+                  End
+                </button>
+              )}
+            </div>
+
+            {/* Status message */}
+            {(focusTrackerError || pomodoroJustLogged) && (
+              <p
+                className={`text-center text-sm ${
+                  focusTrackerError
+                    ? "text-red-600 dark:text-red-400"
+                    : "text-emerald-600 dark:text-emerald-400"
+                }`}
+              >
+                {focusTrackerError ?? "Focus session logged."}
+              </p>
+            )}
+
+            {/* Conversation toggles + start */}
+            <div className="rounded-[1.35rem] border border-neutral-200/80 bg-neutral-50/75 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-900">
+              <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
+                <ToggleRow
+                  label="Show citations"
+                  checked={secondOrderCitationsEnabled}
+                  onChange={onToggleSecondOrderCitations}
+                />
+                <ToggleRow
+                  label="Detailed responses"
+                  checked={responseVerbosity === "detailed"}
+                  onChange={() => onResponseVerbosityChange(responseVerbosity === "detailed" ? "compact" : "detailed")}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={onStartMindLabConversation}
+                className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+              >
+                Start conversation
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                  <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Hidden inputs preserved for custom focus entry */}
+          <div className="hidden">
+            <input
+              type="text"
+              value={customFocusTagInput}
+              onChange={(event) => onCustomFocusTagInputChange(event.target.value)}
+            />
+            <input
+              type="number"
+              value={customFocusMinutesInput}
+              onChange={(event) => onCustomFocusMinutesInputChange(event.target.value)}
+            />
+            <input
+              type="time"
+              value={customFocusTimeInput}
+              onChange={(event) => onCustomFocusTimeInputChange(event.target.value)}
+            />
+            <button type="button" onClick={onAddCustomFocusEntry}>
+              {manualFocusLogTitle}
+            </button>
+            <span>{quickCaptureTitle}</span>
+            <span>{liveFocusLabel}</span>
+            <span>{caloriesRemainingLabel}</span>
+          </div>
+        </section>
+
+        {/* Quick Capture — below Focus Timer */}
+        <section className="overflow-hidden rounded-2xl border border-neutral-200/70 bg-white/90 px-3 py-3 shadow-[0_12px_32px_rgba(15,23,42,0.05)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900">
+          <h3 className="truncate text-[13px] font-semibold text-foreground">Quick Capture</h3>
+          <div className="mt-2 grid grid-cols-3 gap-1.5">
             {quickCaptures.map((item) => (
               <button
                 key={item.key}
@@ -493,127 +691,200 @@ export function LandingShell({
                 <span className="text-[11px] font-medium text-foreground">{item.label}</span>
               </button>
             ))}
-          </div>
-        </ModuleCard>
-
-        <ModuleCard eyebrow="Mind Lab" title={mindLabTitle}>
-          {featuredMentalModelName && (
+            {/* Sleep & Recovery quick capture button */}
             <button
               type="button"
-              onClick={onOpenMentalModels}
-              className="flex w-full items-center justify-between gap-2 rounded-lg border-l-[3px] border-neutral-300 bg-neutral-50 px-2.5 py-2 text-left transition-colors hover:bg-neutral-100 dark:border-neutral-600 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+              onClick={() => setSleepFormOpen((prev) => !prev)}
+              className={`flex flex-col items-center gap-1 rounded-lg border px-1.5 py-2 transition-colors ${
+                sleepFormOpen
+                  ? "border-[#DDB691] bg-[#FBF4EC] dark:border-[#6A4A33] dark:bg-[#241a14]"
+                  : "border-neutral-200 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+              }`}
             >
-              <div className="min-w-0">
-                <p className="truncate text-[13px] font-semibold text-foreground">{featuredMentalModelName}</p>
-                <p className="text-[11px] text-neutral-500 dark:text-neutral-400">Interactive mental model</p>
-              </div>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0 text-neutral-400">
-                <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-              </svg>
-            </button>
-          )}
-
-          <div className="mt-2 divide-y divide-neutral-100 dark:divide-neutral-800">
-            <ToggleRow
-              label="Think deeper (metacognition)"
-              checked={secondOrderCitationsEnabled}
-              onChange={onToggleSecondOrderCitations}
-            />
-          </div>
-
-          <div className="mt-2 flex items-center justify-between gap-2">
-            <p className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">Response style</p>
-            <SegmentedPicker
-              value={responseVerbosity}
-              onChange={(v) => onResponseVerbosityChange(v as "compact" | "detailed")}
-              options={[
-                { key: "compact", label: "Compact" },
-                { key: "detailed", label: "Detailed" },
-              ]}
-            />
-          </div>
-
-          <div className="mt-2">
-            <button
-              type="button"
-              onClick={onStartMindLabConversation}
-              className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
-            >
-              Start conversation
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
-                <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-              </svg>
-            </button>
-          </div>
-
-          <div className="mt-2">
-            <ChevronRow label={learnMentalModelLabel} onClick={onOpenLearnMentalModel} />
-          </div>
-          {conversationCount > 0 && (
-            <button
-              type="button"
-              onClick={onOpenConversations}
-              className="mt-2 flex w-full items-center justify-between border-t border-neutral-100 pt-2 text-left transition-colors hover:opacity-70 dark:border-neutral-800"
-            >
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                  Conversations
-                </p>
-                <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
-                  {conversationCount} item{conversationCount !== 1 ? "s" : ""}, tap to view
-                </p>
-              </div>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0 text-neutral-400">
-                <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-              </svg>
-            </button>
-          )}
-        </ModuleCard>
-
-        <ModuleCard eyebrow="Mentor Hub" title={mentorHubTitle}>
-          <div className="flex flex-wrap items-center gap-1.5">
-            {mentors.slice(0, 5).map((mentor) => (
-              <span
-                key={mentor.id}
-                className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-neutral-50 py-0.5 pl-0.5 pr-2.5 dark:border-neutral-700 dark:bg-neutral-900"
-              >
-                <span
-                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[9px] font-semibold text-white"
-                  style={{ backgroundColor: `hsl(${mentor.hue} 70% 45%)` }}
-                >
-                  {mentor.initials}
-                </span>
-                <span className="truncate text-[12px] font-medium text-foreground">{mentor.name}</span>
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FBF4EC] text-[#B87B51] dark:bg-[#241a14] dark:text-[#E8C3A0]">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+                  <path fillRule="evenodd" d="M7.455 2.004a.75.75 0 01.26.77 7 7 0 009.958 7.967.75.75 0 011.067.853A8.5 8.5 0 116.647 1.921a.75.75 0 01.808.083z" clipRule="evenodd" />
+                </svg>
               </span>
-            ))}
-            {mentorCount === 0 && (
-              <p className="text-[13px] text-neutral-500 dark:text-neutral-400">{followMentorsHint}</p>
+              <span className="text-[11px] font-medium text-foreground">Sleep</span>
+            </button>
+          </div>
+
+          {/* Inline sleep entry form */}
+          {sleepFormOpen && (
+            <div className="mt-2 space-y-2 rounded-xl border border-neutral-200 bg-neutral-50 p-2.5 dark:border-neutral-700 dark:bg-neutral-900">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                Log last night
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+                    Sleep (hours)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.5"
+                    min="0.5"
+                    max="24"
+                    value={sleepHoursInput}
+                    onChange={(e) => setSleepHoursInput(e.target.value)}
+                    className="mt-0.5 w-full rounded-lg border border-neutral-200 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] dark:border-neutral-700 dark:bg-neutral-800"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+                    HRV (ms, optional)
+                  </label>
+                  <input
+                    type="number"
+                    step="1"
+                    min="1"
+                    max="300"
+                    placeholder="—"
+                    value={hrvInput}
+                    onChange={(e) => setHrvInput(e.target.value)}
+                    className="mt-0.5 w-full rounded-lg border border-neutral-200 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] dark:border-neutral-700 dark:bg-neutral-800"
+                  />
+                </div>
+              </div>
+              <button
+                type="button"
+                disabled={sleepSaving}
+                onClick={handleSaveSleep}
+                className="w-full rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-medium text-[#7C522D] transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+              >
+                {sleepSaving ? "Saving…" : "Log last night"}
+              </button>
+              {lastSleep && (
+                <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                  Last: {lastSleep.sleepHours}h sleep
+                  {lastSleep.hrvMs != null ? ` · ${lastSleep.hrvMs} ms HRV` : ""}
+                  {" · "}
+                  {lastSleep.dayKey}
+                </p>
+              )}
+            </div>
+          )}
+        </section>
+        </div>
+      </div>
+
+      {/* Thought of the Day banner */}
+      {thoughtOfTheDay && (
+        <LandingThoughtOfTheDayBanner
+          thought={thoughtOfTheDay}
+          onReview={onReviewThought}
+          onOpenConcept={onOpenThoughtConcept}
+          reviewing={thoughtReviewing}
+        />
+      )}
+
+      {/* Mentor Hub — full width */}
+      <div id="sec-mentor">
+      <ModuleCard eyebrow="Mentor Hub" title={mentorHubTitle}>
+        <div className="grid gap-4 xl:grid-cols-2">
+          {/* Left: mentors + 1:1 + mind lab links */}
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-1.5">
+              {mentors.slice(0, 5).map((mentor) => {
+                const isSelected = selectedMentorId === mentor.id;
+                return (
+                  <button
+                    key={mentor.id}
+                    type="button"
+                    onClick={() => setSelectedMentorId(isSelected ? null : mentor.id)}
+                    className={`inline-flex items-center gap-1.5 rounded-full border py-0.5 pl-0.5 pr-2.5 transition-colors ${
+                      isSelected
+                        ? "border-[#B87B51] bg-[#FBF4EC] ring-1 ring-[#B87B51]/30 dark:border-[#D6A67E] dark:bg-[#241a14] dark:ring-[#D6A67E]/20"
+                        : "border-neutral-200 bg-neutral-50 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                    }`}
+                  >
+                    <span
+                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[9px] font-semibold text-white"
+                      style={{ backgroundColor: `hsl(${mentor.hue} 70% 45%)` }}
+                    >
+                      {mentor.initials}
+                    </span>
+                    <span className="truncate text-[12px] font-medium text-foreground">{mentor.name}</span>
+                  </button>
+                );
+              })}
+              {mentorCount === 0 && (
+                <p className="text-[13px] text-neutral-500 dark:text-neutral-400">{followMentorsHint}</p>
+              )}
+            </div>
+
+            {selectedMentorId ? (
+              <button
+                type="button"
+                onClick={() => onSelectMentor(selectedMentorId)}
+                className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+              >
+                Chat with {mentors.find((m) => m.id === selectedMentorId)?.name ?? "mentor"}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                  <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                </svg>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={onOpenOneOnOneMentor}
+                className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-1.5 text-[13px] font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-900"
+              >
+                Browse all mentors
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                  <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                </svg>
+              </button>
+            )}
+
+            {featuredMentalModelName && (
+              <button
+                type="button"
+                onClick={onOpenMentalModels}
+                className="flex w-full items-center justify-between gap-2 rounded-lg border-l-[3px] border-neutral-300 bg-neutral-50 px-2.5 py-2 text-left transition-colors hover:bg-neutral-100 dark:border-neutral-600 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-[13px] font-semibold text-foreground">{featuredMentalModelName}</p>
+                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400">Interactive mental model</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0 text-neutral-400">
+                  <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                </svg>
+              </button>
+            )}
+
+            <ChevronRow label={learnMentalModelLabel} onClick={onOpenLearnMentalModel} />
+
+            {conversationCount > 0 && (
+              <button
+                type="button"
+                onClick={onOpenConversations}
+                className="flex w-full items-center justify-between border-t border-neutral-100 pt-2 text-left transition-colors hover:opacity-70 dark:border-neutral-800"
+              >
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                    Conversations
+                  </p>
+                  <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                    {conversationCount} item{conversationCount !== 1 ? "s" : ""}, tap to view
+                  </p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0 text-neutral-400">
+                  <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                </svg>
+              </button>
             )}
           </div>
-          <div className="mt-2 flex flex-col gap-1.5">
-            <button
-              type="button"
-              onClick={onOpenOneOnOneMentor}
-              className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
-            >
-              1:1 with a mentor
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
-                <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-              </svg>
-            </button>
-            <button
-              type="button"
-              onClick={onOpenAskMentors}
-              className="w-full rounded-lg border border-neutral-200 px-2.5 py-1.5 text-center text-[13px] font-medium text-foreground transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900"
-            >
-              {askMentorsLabel}
-            </button>
-          </div>
-        </ModuleCard>
+
+          {/* Right: Ask mentors inline form */}
+          <div>{askMentorsContent}</div>
+        </div>
+      </ModuleCard>
       </div>
 
       {/* Row 2: Weekly Summary · Growth Studio · Weight */}
-      <div className="grid gap-4 xl:grid-cols-3">
+      <div id="sec-summary" className="grid gap-4 xl:grid-cols-3">
         <ModuleCard eyebrow="Weekly Summary" title={weeklySummaryLabel}>
           {weeklySummary ? (
             <>
@@ -750,8 +1021,8 @@ export function LandingShell({
         </ModuleCard>
       </div>
 
-      {/* Row 3: Activity · Sleep & Recovery */}
-      <div className="grid gap-4 xl:grid-cols-3">
+      {/* Row 3: Activity */}
+      <div id="sec-activity" className="grid gap-4 xl:grid-cols-3">
         <ModuleCard
           eyebrow="Activity"
           title={activityTitle}
@@ -784,65 +1055,19 @@ export function LandingShell({
             )}
           </div>
         </ModuleCard>
-
-        <ModuleCard eyebrow="Sleep &amp; Recovery" title="Log Last Night">
-          <div className="space-y-2">
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
-                  Sleep (hours)
-                </label>
-                <input
-                  type="number"
-                  step="0.5"
-                  min="0.5"
-                  max="24"
-                  value={sleepHoursInput}
-                  onChange={(e) => setSleepHoursInput(e.target.value)}
-                  className="mt-0.5 w-full rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-indigo-400 dark:border-neutral-700 dark:bg-neutral-900"
-                />
-              </div>
-              <div>
-                <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
-                  HRV (ms, optional)
-                </label>
-                <input
-                  type="number"
-                  step="1"
-                  min="1"
-                  max="300"
-                  placeholder="—"
-                  value={hrvInput}
-                  onChange={(e) => setHrvInput(e.target.value)}
-                  className="mt-0.5 w-full rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-indigo-400 dark:border-neutral-700 dark:bg-neutral-900"
-                />
-              </div>
-            </div>
-            <button
-              type="button"
-              disabled={sleepSaving}
-              onClick={handleSaveSleep}
-              className="w-full rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-medium text-[#7C522D] transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
-            >
-              {sleepSaving ? "Saving…" : "Log last night"}
-            </button>
-            {lastSleep && (
-              <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
-                Last: {lastSleep.sleepHours}h sleep
-                {lastSleep.hrvMs != null ? ` · ${lastSleep.hrvMs} ms HRV` : ""}
-                {" · "}
-                {lastSleep.dayKey}
-              </p>
-            )}
-          </div>
-        </ModuleCard>
       </div>
 
-      <LandingTimelineCard eyebrow={timelineEyebrow} dayLabel={timelineLabel} events={timelineEvents} />
+      <div id="sec-timeline">
+        <LandingTimelineCard eyebrow={timelineEyebrow} dayLabel={timelineLabel} events={timelineEvents} />
+      </div>
 
-      <LandingCaffeineChart intakes={caffeineIntakes} focusWindow={caffeineFocusWindow} />
+      <div id="sec-caffeine">
+        <LandingCaffeineChart intakes={caffeineIntakes} focusWindow={caffeineFocusWindow} />
+      </div>
 
-      <LandingSleepRecoveryChart entries={sleepEntries} focusSuggestion={sleepFocusSuggestion} />
+      <div id="sec-sleep">
+        <LandingSleepRecoveryChart entries={sleepEntries} focusSuggestion={sleepFocusSuggestion} />
+      </div>
     </div>
   );
 }
