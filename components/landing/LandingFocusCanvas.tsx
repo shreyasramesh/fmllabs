@@ -14,6 +14,10 @@ function clampRatio(current: number, target: number): number {
   return Math.max(0, Math.min(1, current / target));
 }
 
+function circleCircumference(radius: number): number {
+  return 2 * Math.PI * radius;
+}
+
 const ORB_STYLES = [
   "bg-sky-100/85 text-sky-700 shadow-[0_0_28px_rgba(96,165,250,0.45)] ring-sky-200/80 dark:bg-sky-950/70 dark:text-sky-200 dark:ring-sky-700/50",
   "bg-emerald-100/85 text-emerald-700 shadow-[0_0_28px_rgba(52,211,153,0.42)] ring-emerald-200/80 dark:bg-emerald-950/70 dark:text-emerald-200 dark:ring-emerald-700/50",
@@ -121,10 +125,104 @@ export function LandingFocusCanvas({
     nutritionGoals.caloriesTarget
   );
   const focusRatio = Math.max(0, Math.min(1, focusSummaryMinutes / Math.max(30, pomodoroDurationMinutes)));
+  const carbsRatio = clampRatio(nutrition.carbsGrams, nutritionGoals.carbsGrams);
   const proteinRatio = clampRatio(nutrition.proteinGrams, nutritionGoals.proteinGrams);
   const fatRatio = clampRatio(nutrition.fatGrams, nutritionGoals.fatGrams);
+  const caloriesConsumed = Math.max(0, nutritionGoals.caloriesTarget - nutrition.caloriesRemaining);
   const leftOrbs = quickCaptures.slice(0, 3);
   const rightOrbs = quickCaptures.slice(3, 6);
+  const ringMetrics = [
+    {
+      key: "calories",
+      radius: 126,
+      strokeWidth: 14,
+      ratio: caloriesRatio,
+      color: "#7FB1DA",
+      track: "rgba(226, 216, 203, 0.95)",
+      rotation: 142,
+      label: nutritionLabel,
+      value: `${caloriesConsumed}/${nutritionGoals.caloriesTarget}`,
+    },
+    {
+      key: "focus",
+      radius: 104,
+      strokeWidth: 11,
+      ratio: focusRatio,
+      color: "#84B78E",
+      track: "rgba(232, 223, 211, 0.88)",
+      rotation: 308,
+      label: focusSummaryLabel,
+      value: `${focusSummaryMinutes}m`,
+    },
+    {
+      key: "protein",
+      radius: 84,
+      strokeWidth: 9,
+      ratio: proteinRatio,
+      color: "#B987E6",
+      track: "rgba(234, 225, 214, 0.8)",
+      rotation: 334,
+      label: proteinLabel,
+      value: `${nutrition.proteinGrams}/${nutritionGoals.proteinGrams}g`,
+    },
+    {
+      key: "carbs",
+      radius: 68,
+      strokeWidth: 8,
+      ratio: carbsRatio,
+      color: "#F1B562",
+      track: "rgba(235, 226, 215, 0.72)",
+      rotation: 24,
+      label: carbsLabel,
+      value: `${nutrition.carbsGrams}/${nutritionGoals.carbsGrams}g`,
+    },
+  ] as const;
+  const topLegendPills = [
+    { key: "nutrition", label: nutritionLabel, color: "#7FB1DA" },
+    { key: "focus", label: focusSummaryLabel, color: "#84B78E" },
+  ] as const;
+  const metricPills = [
+    {
+      key: "calories",
+      label: caloriesRemainingLabel,
+      value: `${nutrition.caloriesRemaining}`,
+      tint: "border-sky-200/95 bg-white/92 text-sky-800 shadow-[0_0_35px_rgba(96,165,250,0.22)] dark:border-sky-800/60 dark:bg-sky-950/55 dark:text-sky-200",
+      position: "left-[-0.75rem] top-[29%] lg:left-[-1.5rem]",
+      width: "w-[12rem]",
+      valueClassName: "text-[2.05rem]",
+      paddingClassName: "px-4 py-3",
+    },
+    {
+      key: "focus",
+      label: focusSummaryLabel,
+      value: `${focusSummaryMinutes}m`,
+      tint: "border-emerald-200/95 bg-white/92 text-emerald-800 shadow-[0_0_35px_rgba(52,211,153,0.2)] dark:border-emerald-800/60 dark:bg-emerald-950/55 dark:text-emerald-200",
+      position: "left-1/2 top-[16%] -translate-x-1/2",
+      width: "w-[16.5rem]",
+      valueClassName: "text-[2.35rem]",
+      paddingClassName: "px-5 py-2.5",
+    },
+    {
+      key: "protein",
+      label: proteinLabel,
+      value: `${nutrition.proteinGrams}g`,
+      tint: "border-violet-200/95 bg-white/92 text-violet-800 shadow-[0_0_32px_rgba(185,135,230,0.18)] dark:border-violet-800/60 dark:bg-violet-950/55 dark:text-violet-200",
+      position: "left-[1.75rem] bottom-[12%] lg:left-[2.5rem]",
+      width: "w-[9.5rem]",
+      valueClassName: "text-[1.9rem]",
+      paddingClassName: "px-4 py-2.5",
+    },
+    {
+      key: "fat",
+      label: "Fat",
+      value: `${nutrition.fatGrams}g`,
+      tint: "border-amber-200/95 bg-white/92 text-amber-800 shadow-[0_0_32px_rgba(251,191,36,0.18)] dark:border-amber-800/60 dark:bg-amber-950/55 dark:text-amber-200",
+      position: "right-[1.25rem] bottom-[12%] lg:right-[2rem]",
+      width: "w-[9.5rem]",
+      valueClassName: "text-[1.9rem]",
+      paddingClassName: "px-4 py-2.5",
+    },
+  ] as const;
 
   return (
     <section className="w-full rounded-[2.2rem] border border-neutral-200/70 bg-white/90 p-4 shadow-[0_28px_80px_rgba(15,23,42,0.09)] backdrop-blur dark:border-white/10 dark:bg-neutral-950/85 sm:p-5">
@@ -165,53 +263,65 @@ export function LandingFocusCanvas({
                     className="absolute inset-0 h-full w-full"
                     aria-hidden
                   >
-                    <circle cx="160" cy="160" r="126" fill="none" stroke="rgba(229,220,210,0.95)" strokeWidth="12" />
-                    <circle
-                      cx="160"
-                      cy="160"
-                      r="126"
-                      fill="none"
-                      stroke="#7FB1DA"
-                      strokeWidth="12"
-                      strokeLinecap="round"
-                      strokeDasharray={`${Math.max(28, Math.round(250 * caloriesRatio))} 790`}
-                      transform="rotate(140 160 160)"
-                    />
-                    <circle cx="160" cy="160" r="102" fill="none" stroke="rgba(229,220,210,0.8)" strokeWidth="10" />
-                    <circle
-                      cx="160"
-                      cy="160"
-                      r="102"
-                      fill="none"
-                      stroke="#7DAF87"
-                      strokeWidth="10"
-                      strokeLinecap="round"
-                      strokeDasharray={`${Math.max(24, Math.round(220 * focusRatio))} 642`}
-                      transform="rotate(300 160 160)"
-                    />
-                    <circle cx="160" cy="160" r="82" fill="none" stroke="rgba(229,220,210,0.7)" strokeWidth="8" />
-                    <circle
-                      cx="160"
-                      cy="160"
-                      r="82"
-                      fill="none"
-                      stroke="#85B68B"
-                      strokeWidth="8"
-                      strokeLinecap="round"
-                      strokeDasharray={`${Math.max(20, Math.round(180 * (proteinRatio * 0.65 + fatRatio * 0.35)))} 515`}
-                      transform="rotate(330 160 160)"
-                    />
+                    {ringMetrics.map((ring) => {
+                      const circumference = circleCircumference(ring.radius);
+                      return (
+                        <g key={ring.key}>
+                          <circle
+                            cx="160"
+                            cy="160"
+                            r={ring.radius}
+                            fill="none"
+                            stroke={ring.track}
+                            strokeWidth={ring.strokeWidth}
+                          />
+                          <circle
+                            cx="160"
+                            cy="160"
+                            r={ring.radius}
+                            fill="none"
+                            stroke={ring.color}
+                            strokeWidth={ring.strokeWidth}
+                            strokeLinecap="round"
+                            strokeDasharray={circumference}
+                            strokeDashoffset={circumference * (1 - ring.ratio)}
+                            transform={`rotate(${ring.rotation} 160 160)`}
+                          />
+                        </g>
+                      );
+                    })}
                   </svg>
 
-                  <div className="absolute top-[2.1rem] text-center text-[13px] font-medium leading-tight text-foreground sm:top-[2.55rem] sm:text-[16px]">
-                    <div>{nutritionLabel}</div>
-                    <div>{liveFocusLabel}</div>
+                  <div className="absolute top-[1.65rem] flex flex-wrap items-center justify-center gap-2 text-center text-[11px] font-medium leading-tight sm:top-[1.9rem] sm:text-[13px]">
+                    {topLegendPills.map((pill) => (
+                      <span
+                        key={`ring-label-${pill.key}`}
+                        className="inline-flex items-center gap-2 rounded-full bg-white/88 px-3 py-1 text-foreground shadow-sm ring-1 ring-[#E8DCCE] dark:bg-neutral-900/78 dark:ring-white/10"
+                      >
+                        <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: pill.color }} />
+                        {pill.label}
+                      </span>
+                    ))}
                   </div>
 
                   <div className="absolute inset-[3.1rem] rounded-full border border-[#EADFD3] bg-[radial-gradient(circle,rgba(255,247,230,0.96),rgba(255,239,210,0.94)_70%,rgba(255,232,186,0.88)_100%)] shadow-[0_0_45px_rgba(251,191,36,0.22)] dark:border-[#5F4634] dark:bg-[radial-gradient(circle,rgba(70,51,35,0.96),rgba(52,38,28,0.94)_70%,rgba(38,28,20,0.9)_100%)] sm:inset-[3.7rem]">
                     <div className="absolute inset-[0.7rem] rounded-full border border-[#ECD7BC]/80 dark:border-[#70513A]/70" />
                     <div className="absolute inset-[1.15rem] rounded-full border border-dashed border-[#D7B98C]/80 dark:border-[#8B6C4D]/60" />
                   </div>
+
+                  {metricPills.map((pill) => (
+                    <div
+                      key={pill.key}
+                      className={`absolute z-10 hidden md:flex ${pill.width} flex-col items-center rounded-[1.6rem] border text-center backdrop-blur ${pill.tint} ${pill.position} ${pill.paddingClassName}`}
+                    >
+                      <span className="text-[10px] font-medium uppercase tracking-[0.18em] opacity-75">
+                        {pill.label}
+                      </span>
+                      <span className={`mt-1 font-semibold leading-none tracking-[-0.04em] ${pill.valueClassName}`}>
+                        {pill.value}
+                      </span>
+                    </div>
+                  ))}
 
                   <div className="relative z-10 flex flex-col items-center text-center">
                     <svg
@@ -228,11 +338,11 @@ export function LandingFocusCanvas({
                       <circle cx="12" cy="12" r="8" />
                       <path d="M12 8v4l2.5 1.5" />
                     </svg>
-                    <p className="mt-3 text-5xl font-semibold tracking-[-0.06em] text-foreground sm:text-6xl">
+                    <p className="mt-4 text-5xl font-semibold tracking-[-0.06em] text-foreground sm:text-6xl">
                       {pomodoroClockLabel}
                     </p>
                     <p className="mt-2 text-[13px] text-neutral-600 dark:text-neutral-300">
-                      {caloriesRemainingLabel}:
+                      {caloriesRemainingLabel}
                     </p>
                     <button
                       type="button"
@@ -241,6 +351,28 @@ export function LandingFocusCanvas({
                     >
                       {nutrition.caloriesRemaining}
                     </button>
+                    <div className="mt-4 flex flex-wrap items-center justify-center gap-1.5 text-[10px] text-neutral-500 dark:text-neutral-400">
+                      {[
+                        {
+                          key: "protein-mini",
+                          color: "#B987E6",
+                          value: `${nutrition.proteinGrams}/${nutritionGoals.proteinGrams}g`,
+                        },
+                        {
+                          key: "carbs-mini",
+                          color: "#F1B562",
+                          value: `${nutrition.carbsGrams}/${nutritionGoals.carbsGrams}g`,
+                        },
+                      ].map((ring) => (
+                        <span
+                          key={`ring-value-${ring.key}`}
+                          className="inline-flex items-center gap-1.5 rounded-full bg-white/78 px-3 py-1 ring-1 ring-[#E8DCCE] shadow-sm dark:bg-neutral-900/72 dark:ring-white/10"
+                        >
+                          <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: ring.color }} />
+                          {ring.value}
+                        </span>
+                      ))}
+                    </div>
                   </div>
 
                   <p className="absolute bottom-[1.9rem] left-1/2 -translate-x-1/2 text-center text-[12px] font-semibold text-foreground sm:bottom-[2.35rem] sm:text-[15px]">
@@ -288,15 +420,24 @@ export function LandingFocusCanvas({
                   <div className="grid grid-cols-5 overflow-hidden rounded-[1.35rem] border border-[#E4D8CB] bg-white/86 text-center dark:border-white/10 dark:bg-neutral-900/86">
                     <div className="border-r border-[#EDE2D7] px-3 py-2 dark:border-white/10">
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">{carbsLabel}</p>
-                      <p className="mt-1 text-xl font-semibold text-foreground">{nutrition.carbsGrams}</p>
+                      <div className="mt-1 flex items-center justify-center gap-1">
+                        <span className="text-xl font-semibold text-foreground">{nutrition.carbsGrams}</span>
+                        <span className="text-[11px] text-neutral-400">/{nutritionGoals.carbsGrams}</span>
+                      </div>
                     </div>
                     <div className="border-r border-[#EDE2D7] px-3 py-2 dark:border-white/10">
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">{proteinLabel}</p>
-                      <p className="mt-1 text-xl font-semibold text-foreground">{nutrition.proteinGrams}</p>
+                      <div className="mt-1 flex items-center justify-center gap-1">
+                        <span className="text-xl font-semibold text-foreground">{nutrition.proteinGrams}</span>
+                        <span className="text-[11px] text-neutral-400">/{nutritionGoals.proteinGrams}</span>
+                      </div>
                     </div>
                     <div className="border-r border-[#EDE2D7] px-3 py-2 dark:border-white/10">
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">Fat</p>
-                      <p className="mt-1 text-xl font-semibold text-foreground">{nutrition.fatGrams}</p>
+                      <div className="mt-1 flex items-center justify-center gap-1">
+                        <span className="text-xl font-semibold text-foreground">{nutrition.fatGrams}</span>
+                        <span className="text-[11px] text-neutral-400">/{nutritionGoals.fatGrams}</span>
+                      </div>
                     </div>
                     <div className="border-r border-[#EDE2D7] px-3 py-2 dark:border-white/10">
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">Exercise</p>
