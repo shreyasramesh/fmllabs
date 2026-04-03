@@ -13420,6 +13420,12 @@ export default function ChatPage() {
                         timelineEyebrow={landingTranslations.landingTimelineEyebrow}
                         timelineLabel={headerCalendarLabel}
                         timelineEvents={selectedLandingDayTimelineEvents}
+                        featuredMentalModelName={mentalModelsIndex.size > 0 ? [...mentalModelsIndex.values()][0] : null}
+                        secondOrderCitationsEnabled={secondOrderCitationsEnabled}
+                        onToggleSecondOrderCitations={() => setSecondOrderCitationsEnabled((v) => !v)}
+                        responseVerbosity={newConversationResponseVerbosity}
+                        onResponseVerbosityChange={setNewConversationResponseVerbosity}
+                        onStartMindLabConversation={() => startSecondOrderConversation(!secondOrderCitationsEnabled, newConversationResponseVerbosity)}
                       />
                       )}
                     {journalEntryJustSaved && (
@@ -13794,124 +13800,124 @@ export default function ChatPage() {
                   previewMap={previewMap}
                 />
                 <div className="relative w-full max-w-2xl lg:max-w-4xl">
-                  <button
-                    ref={chatInputLensMenuButtonRef}
-                    type="button"
-                    onClick={() => setChatInputLensMenuOpen((prev) => !prev)}
-                    className="mt-1 w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-neutral-300 dark:border-neutral-600 px-2 py-1 text-[11px] font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                    aria-expanded={chatInputLensMenuOpen}
-                    aria-haspopup="menu"
-                    aria-label="Refine options"
+                <button
+                  ref={chatInputLensMenuButtonRef}
+                  type="button"
+                  onClick={() => setChatInputLensMenuOpen((prev) => !prev)}
+                  className="mt-1 w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-neutral-300 dark:border-neutral-600 px-2 py-1 text-[11px] font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  aria-expanded={chatInputLensMenuOpen}
+                  aria-haspopup="menu"
+                  aria-label="Refine options"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5" aria-hidden>
+                    <path d="m12 3 1.8 3.7L18 8.5l-3 2.9.7 4.1-3.7-2-3.7 2 .7-4.1-3-2.9 4.2-1.8L12 3Z" />
+                    <path d="M19 16v5" />
+                    <path d="M16.5 18.5h5" />
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`h-3 w-3 transition-transform ${chatInputLensMenuOpen ? "rotate-180" : ""}`}>
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
+                {chatInputLensMenuOpen && (
+                  <div
+                    ref={chatInputLensMenuRef}
+                    role="menu"
+                    aria-label="Lens options"
+                    className="absolute bottom-full right-0 z-[70] mb-1.5 w-max max-w-[86vw] max-h-[62vh] overflow-y-auto rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background shadow-xl p-1.5"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5" aria-hidden>
-                      <path d="m12 3 1.8 3.7L18 8.5l-3 2.9.7 4.1-3.7-2-3.7 2 .7-4.1-3-2.9 4.2-1.8L12 3Z" />
-                      <path d="M19 16v5" />
-                      <path d="M16.5 18.5h5" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`h-3 w-3 transition-transform ${chatInputLensMenuOpen ? "rotate-180" : ""}`}>
-                      <path d="m6 9 6 6 6-6" />
-                    </svg>
-                  </button>
-                  {chatInputLensMenuOpen && (
-                    <div
-                      ref={chatInputLensMenuRef}
-                      role="menu"
-                      aria-label="Lens options"
-                      className="absolute bottom-full right-0 z-[70] mb-1.5 w-max max-w-[86vw] max-h-[62vh] overflow-y-auto rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background shadow-xl p-1.5"
-                    >
-                      <div className="inline-grid grid-cols-1 gap-1">
-                        {CHAT_INPUT_LENSES.map((lens) => {
-                          const selected = chatInputLens === lens.id;
-                          const isSuggested =
-                            lens.id !== "none" &&
-                            autoSuggestedChatLensMeta.suggested != null &&
-                            autoSuggestedChatLensMeta.suggested === lens.id;
-                          return (
-                            <button
-                              key={`chat-lens-menu-${lens.id}`}
-                              type="button"
-                              onClick={() => {
-                                setChatInputLens(lens.id);
-                                if (chatInputLensRefinedText) setChatInputLensRefinedText("");
-                                if (chatInputLensError) setChatInputLensError(null);
-                              }}
-                              className={`inline-flex w-full rounded-lg border px-2.5 py-1.5 text-left text-[11px] font-medium leading-snug transition-colors ${
-                                selected
-                                  ? "border-accent text-accent bg-accent/10"
-                                  : isSuggested
-                                    ? "border-accent/60 text-accent bg-accent/5"
-                                    : "border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                              }`}
-                              aria-pressed={selected}
-                            >
-                              <span className="inline-flex items-center gap-1.5">
-                                {lens.label}
-                                {isSuggested && (
-                                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
-                                )}
-                              </span>
-                            </button>
-                          );
-                        })}
-                        <button
-                          type="button"
-                          onClick={() => void refineMainInputWithLens()}
-                          disabled={
-                            chatInputLensLoading ||
-                            !input.trim() ||
-                            chatInputLens === "none" ||
-                            sessionLoading ||
-                            !!currentSession?.isCollapsed ||
-                            isLoading
-                          }
-                          className="inline-flex w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-2.5 py-1.5 text-[11px] font-medium leading-snug text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
-                        >
-                          {chatInputLensLoading ? "Refining..." : "Refine message"}
-                        </button>
-                      </div>
-                      {chatInputLensError && (
-                        <p className="px-0.5 text-[11px] text-red-600 dark:text-red-400">{chatInputLensError}</p>
-                      )}
-                      {chatInputLensRefinedText && (
-                        <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/50 p-2">
-                          <p className="text-[10px] font-medium text-neutral-500 dark:text-neutral-400">
-                            Refined with {CHAT_INPUT_LENSES.find((lens) => lens.id === chatInputLens)?.label ?? "lens"}
-                          </p>
-                          <p className="mt-1 text-sm text-foreground whitespace-pre-wrap">
-                            {chatInputLensRefinedText}
-                          </p>
-                          <div className="mt-1.5 flex flex-wrap items-center gap-2">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                replaceComposerInput(chatInputLensRefinedText);
-                                setChatInputLensRefinedText("");
-                                setChatInputLensError(null);
-                                setChatInputLensMenuOpen(false);
-                              }}
-                              className="rounded-lg bg-foreground text-background px-2.5 py-1 text-[10px] font-medium hover:opacity-90 transition-opacity"
-                            >
-                              Use refined
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setChatInputLensRefinedText("")}
-                              className="rounded-lg border border-neutral-300 dark:border-neutral-600 px-2.5 py-1 text-[10px] font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                            >
-                              Keep original
-                            </button>
-                          </div>
-                        </div>
-                      )}
+                    <div className="inline-grid grid-cols-1 gap-1">
+                      {CHAT_INPUT_LENSES.map((lens) => {
+                        const selected = chatInputLens === lens.id;
+                        const isSuggested =
+                          lens.id !== "none" &&
+                          autoSuggestedChatLensMeta.suggested != null &&
+                          autoSuggestedChatLensMeta.suggested === lens.id;
+                        return (
+                          <button
+                            key={`chat-lens-menu-${lens.id}`}
+                            type="button"
+                            onClick={() => {
+                              setChatInputLens(lens.id);
+                              if (chatInputLensRefinedText) setChatInputLensRefinedText("");
+                              if (chatInputLensError) setChatInputLensError(null);
+                            }}
+                            className={`inline-flex w-full rounded-lg border px-2.5 py-1.5 text-left text-[11px] font-medium leading-snug transition-colors ${
+                              selected
+                                ? "border-accent text-accent bg-accent/10"
+                                : isSuggested
+                                  ? "border-accent/60 text-accent bg-accent/5"
+                                  : "border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                            }`}
+                            aria-pressed={selected}
+                          >
+                            <span className="inline-flex items-center gap-1.5">
+                              {lens.label}
+                              {isSuggested && (
+                                <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+                              )}
+                            </span>
+                          </button>
+                        );
+                      })}
+                      <button
+                        type="button"
+                        onClick={() => void refineMainInputWithLens()}
+                        disabled={
+                          chatInputLensLoading ||
+                          !input.trim() ||
+                          chatInputLens === "none" ||
+                          sessionLoading ||
+                          !!currentSession?.isCollapsed ||
+                          isLoading
+                        }
+                        className="inline-flex w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-2.5 py-1.5 text-[11px] font-medium leading-snug text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                      >
+                        {chatInputLensLoading ? "Refining..." : "Refine message"}
+                      </button>
                     </div>
-                  )}
-                </div>
-                <p className="mt-1.5 text-center text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 max-w-2xl w-full px-2">
-                  FixMyLife Labs is AI and can make mistakes.
-                </p>
+                    {chatInputLensError && (
+                      <p className="px-0.5 text-[11px] text-red-600 dark:text-red-400">{chatInputLensError}</p>
+                    )}
+                    {chatInputLensRefinedText && (
+                      <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/50 p-2">
+                        <p className="text-[10px] font-medium text-neutral-500 dark:text-neutral-400">
+                          Refined with {CHAT_INPUT_LENSES.find((lens) => lens.id === chatInputLens)?.label ?? "lens"}
+                        </p>
+                        <p className="mt-1 text-sm text-foreground whitespace-pre-wrap">
+                          {chatInputLensRefinedText}
+                        </p>
+                        <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                                replaceComposerInput(chatInputLensRefinedText);
+                              setChatInputLensRefinedText("");
+                              setChatInputLensError(null);
+                              setChatInputLensMenuOpen(false);
+                            }}
+                            className="rounded-lg bg-foreground text-background px-2.5 py-1 text-[10px] font-medium hover:opacity-90 transition-opacity"
+                          >
+                            Use refined
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setChatInputLensRefinedText("")}
+                            className="rounded-lg border border-neutral-300 dark:border-neutral-600 px-2.5 py-1 text-[10px] font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                          >
+                            Keep original
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
-            </div>
-          </div>
+              <p className="mt-1.5 text-center text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 max-w-2xl w-full px-2">
+                  FixMyLife Labs is AI and can make mistakes.
+              </p>
+              </div>
+        </div>
+        </div>
         )}
 
         </>

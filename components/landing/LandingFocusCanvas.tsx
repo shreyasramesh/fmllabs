@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useCallback } from "react";
 
 import type {
   LandingFocusSummaryRow,
@@ -16,6 +16,15 @@ function clampRatio(current: number, target: number): number {
 
 function circleCircumference(radius: number): number {
   return 2 * Math.PI * radius;
+}
+
+function degToRad(deg: number): number {
+  return (deg - 90) * (Math.PI / 180);
+}
+
+function pointOnCircle(cx: number, cy: number, r: number, deg: number) {
+  const rad = degToRad(deg);
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
 
 const ORB_STYLES = [
@@ -129,100 +138,92 @@ export function LandingFocusCanvas({
   const proteinRatio = clampRatio(nutrition.proteinGrams, nutritionGoals.proteinGrams);
   const fatRatio = clampRatio(nutrition.fatGrams, nutritionGoals.fatGrams);
   const caloriesConsumed = Math.max(0, nutritionGoals.caloriesTarget - nutrition.caloriesRemaining);
-  const leftOrbs = quickCaptures.slice(0, 3);
-  const rightOrbs = quickCaptures.slice(3, 6);
   const ringMetrics = [
     {
       key: "calories",
-      radius: 126,
-      strokeWidth: 14,
+      radius: 140,
+      strokeWidth: 18,
       ratio: caloriesRatio,
-      color: "#7FB1DA",
-      track: "rgba(226, 216, 203, 0.95)",
-      rotation: 142,
+      gradientStart: "#5BA3D9",
+      gradientEnd: "#A8D4F5",
+      glow: "rgba(91,163,217,0.45)",
+      track: "rgba(220, 210, 198, 0.5)",
+      rotation: -90,
       label: nutritionLabel,
-      value: `${caloriesConsumed}/${nutritionGoals.caloriesTarget}`,
+      displayValue: `${caloriesConsumed}`,
+      displayUnit: `/ ${nutritionGoals.caloriesTarget}`,
+      labelAngle: 45,
+      fontSize: 11,
     },
     {
       key: "focus",
-      radius: 104,
-      strokeWidth: 11,
+      radius: 116,
+      strokeWidth: 16,
       ratio: focusRatio,
-      color: "#84B78E",
-      track: "rgba(232, 223, 211, 0.88)",
-      rotation: 308,
+      gradientStart: "#4DA065",
+      gradientEnd: "#A8DCAF",
+      glow: "rgba(77,160,101,0.4)",
+      track: "rgba(224, 214, 202, 0.45)",
+      rotation: -90,
       label: focusSummaryLabel,
-      value: `${focusSummaryMinutes}m`,
+      displayValue: `${focusSummaryMinutes}`,
+      displayUnit: "m",
+      labelAngle: 135,
+      fontSize: 10,
     },
     {
       key: "protein",
-      radius: 84,
-      strokeWidth: 9,
+      radius: 94,
+      strokeWidth: 14,
       ratio: proteinRatio,
-      color: "#B987E6",
-      track: "rgba(234, 225, 214, 0.8)",
-      rotation: 334,
+      gradientStart: "#9B5FD6",
+      gradientEnd: "#D4B0F5",
+      glow: "rgba(155,95,214,0.38)",
+      track: "rgba(228, 218, 206, 0.4)",
+      rotation: -90,
       label: proteinLabel,
-      value: `${nutrition.proteinGrams}/${nutritionGoals.proteinGrams}g`,
+      displayValue: `${nutrition.proteinGrams}`,
+      displayUnit: `/ ${nutritionGoals.proteinGrams}g`,
+      labelAngle: 225,
+      fontSize: 9.5,
     },
     {
       key: "carbs",
-      radius: 68,
-      strokeWidth: 8,
+      radius: 74,
+      strokeWidth: 12,
       ratio: carbsRatio,
-      color: "#F1B562",
-      track: "rgba(235, 226, 215, 0.72)",
-      rotation: 24,
+      gradientStart: "#E5A030",
+      gradientEnd: "#F5D78A",
+      glow: "rgba(229,160,48,0.35)",
+      track: "rgba(230, 220, 208, 0.38)",
+      rotation: -90,
       label: carbsLabel,
-      value: `${nutrition.carbsGrams}/${nutritionGoals.carbsGrams}g`,
-    },
-  ] as const;
-  const topLegendPills = [
-    { key: "nutrition", label: nutritionLabel, color: "#7FB1DA" },
-    { key: "focus", label: focusSummaryLabel, color: "#84B78E" },
-  ] as const;
-  const metricPills = [
-    {
-      key: "calories",
-      label: caloriesRemainingLabel,
-      value: `${nutrition.caloriesRemaining}`,
-      tint: "border-sky-200/95 bg-white/92 text-sky-800 shadow-[0_0_35px_rgba(96,165,250,0.22)] dark:border-sky-800/60 dark:bg-sky-950/55 dark:text-sky-200",
-      position: "left-[-0.75rem] top-[29%] lg:left-[-1.5rem]",
-      width: "w-[12rem]",
-      valueClassName: "text-[2.05rem]",
-      paddingClassName: "px-4 py-3",
-    },
-    {
-      key: "focus",
-      label: focusSummaryLabel,
-      value: `${focusSummaryMinutes}m`,
-      tint: "border-emerald-200/95 bg-white/92 text-emerald-800 shadow-[0_0_35px_rgba(52,211,153,0.2)] dark:border-emerald-800/60 dark:bg-emerald-950/55 dark:text-emerald-200",
-      position: "left-1/2 top-[16%] -translate-x-1/2",
-      width: "w-[16.5rem]",
-      valueClassName: "text-[2.35rem]",
-      paddingClassName: "px-5 py-2.5",
-    },
-    {
-      key: "protein",
-      label: proteinLabel,
-      value: `${nutrition.proteinGrams}g`,
-      tint: "border-violet-200/95 bg-white/92 text-violet-800 shadow-[0_0_32px_rgba(185,135,230,0.18)] dark:border-violet-800/60 dark:bg-violet-950/55 dark:text-violet-200",
-      position: "left-[1.75rem] bottom-[12%] lg:left-[2.5rem]",
-      width: "w-[9.5rem]",
-      valueClassName: "text-[1.9rem]",
-      paddingClassName: "px-4 py-2.5",
+      displayValue: `${nutrition.carbsGrams}`,
+      displayUnit: `/ ${nutritionGoals.carbsGrams}g`,
+      labelAngle: 315,
+      fontSize: 9,
     },
     {
       key: "fat",
+      radius: 56,
+      strokeWidth: 11,
+      ratio: fatRatio,
+      gradientStart: "#D96050",
+      gradientEnd: "#F5A898",
+      glow: "rgba(217,96,80,0.32)",
+      track: "rgba(232, 222, 210, 0.35)",
+      rotation: -90,
       label: "Fat",
-      value: `${nutrition.fatGrams}g`,
-      tint: "border-amber-200/95 bg-white/92 text-amber-800 shadow-[0_0_32px_rgba(251,191,36,0.18)] dark:border-amber-800/60 dark:bg-amber-950/55 dark:text-amber-200",
-      position: "right-[1.25rem] bottom-[12%] lg:right-[2rem]",
-      width: "w-[9.5rem]",
-      valueClassName: "text-[1.9rem]",
-      paddingClassName: "px-4 py-2.5",
+      displayValue: `${nutrition.fatGrams}`,
+      displayUnit: `/ ${nutritionGoals.fatGrams}g`,
+      labelAngle: 180,
+      fontSize: 8.5,
     },
   ] as const;
+  const [activeRing, setActiveRing] = useState<string | null>(null);
+  const handleRingClick = useCallback((key: string) => {
+    setActiveRing((prev) => (prev === key ? null : key));
+  }, []);
 
   return (
     <section className="w-full rounded-[2.2rem] border border-neutral-200/70 bg-white/90 p-4 shadow-[0_28px_80px_rgba(15,23,42,0.09)] backdrop-blur dark:border-white/10 dark:bg-neutral-950/85 sm:p-5">
@@ -240,33 +241,48 @@ export function LandingFocusCanvas({
         </div>
 
         <div className="relative rounded-[2.2rem] border border-[#ECD9C8] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,247,238,0.96)_58%,rgba(255,244,236,0.92)_100%)] px-4 py-6 dark:border-[#60402B] dark:bg-[radial-gradient(circle_at_top,rgba(42,30,22,0.98),rgba(24,19,15,0.96)_58%,rgba(20,15,12,0.92)_100%)] sm:px-6">
-          <div className="mx-auto flex max-w-[64rem] items-center justify-center gap-3 sm:gap-6">
-            <div className="hidden md:flex min-w-[72px] flex-col items-center gap-6">
-              {leftOrbs.map((item, index) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  onClick={item.onClick}
-                  title={item.label}
-                  className={`flex h-16 w-16 items-center justify-center rounded-full ring-1 backdrop-blur transition-transform hover:scale-105 ${ORB_STYLES[index % ORB_STYLES.length]}`}
-                >
-                  <span className="scale-110">{item.icon}</span>
-                </button>
-              ))}
-            </div>
-
+          <div className="mx-auto flex max-w-[64rem] items-center justify-center">
             <div className="min-w-0 flex-1">
               <div className="mx-auto flex max-w-[30rem] flex-col items-center">
-                <div className="relative flex h-[20rem] w-[20rem] items-center justify-center sm:h-[24rem] sm:w-[24rem]">
+                <div className="relative flex h-[20rem] w-[20rem] items-center justify-center overflow-visible sm:h-[24rem] sm:w-[24rem]">
                   <svg
                     viewBox="0 0 320 320"
                     className="absolute inset-0 h-full w-full"
                     aria-hidden
                   >
+                    <defs>
+                      {ringMetrics.map((ring) => (
+                        <React.Fragment key={`defs-${ring.key}`}>
+                          <linearGradient id={`grad-${ring.key}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor={ring.gradientStart} />
+                            <stop offset="100%" stopColor={ring.gradientEnd} />
+                          </linearGradient>
+                          <filter id={`glow-${ring.key}`} x="-30%" y="-30%" width="160%" height="160%">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+                            <feFlood floodColor={ring.glow} result="color" />
+                            <feComposite in="color" in2="blur" operator="in" result="shadow" />
+                            <feMerge>
+                              <feMergeNode in="shadow" />
+                              <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                          </filter>
+                        </React.Fragment>
+                      ))}
+                    </defs>
                     {ringMetrics.map((ring) => {
                       const circumference = circleCircumference(ring.radius);
+                      const isActive = activeRing === ring.key;
+                      const labelPos = pointOnCircle(160, 160, ring.radius, ring.labelAngle);
                       return (
-                        <g key={ring.key}>
+                        <g key={ring.key} style={{ cursor: "pointer" }} onClick={() => handleRingClick(ring.key)}>
+                          <circle
+                            cx="160"
+                            cy="160"
+                            r={ring.radius}
+                            fill="none"
+                            stroke="transparent"
+                            strokeWidth={ring.strokeWidth + 10}
+                          />
                           <circle
                             cx="160"
                             cy="160"
@@ -274,54 +290,70 @@ export function LandingFocusCanvas({
                             fill="none"
                             stroke={ring.track}
                             strokeWidth={ring.strokeWidth}
+                            opacity={activeRing && !isActive ? 0.35 : 1}
                           />
                           <circle
                             cx="160"
                             cy="160"
                             r={ring.radius}
                             fill="none"
-                            stroke={ring.color}
-                            strokeWidth={ring.strokeWidth}
+                            stroke={`url(#grad-${ring.key})`}
+                            strokeWidth={isActive ? ring.strokeWidth + 4 : ring.strokeWidth}
                             strokeLinecap="round"
                             strokeDasharray={circumference}
                             strokeDashoffset={circumference * (1 - ring.ratio)}
                             transform={`rotate(${ring.rotation} 160 160)`}
+                            filter={`url(#glow-${ring.key})`}
+                            opacity={activeRing && !isActive ? 0.4 : 1}
+                            style={{ transition: "stroke-width 0.2s ease, opacity 0.2s ease" }}
                           />
+                          {isActive && (
+                            <g>
+                              <rect
+                                x={labelPos.x - 28}
+                                y={labelPos.y - 16}
+                                width="56"
+                                height="32"
+                                rx="10"
+                                fill="white"
+                                fillOpacity="0.95"
+                                stroke={ring.gradientStart}
+                                strokeWidth="1.4"
+                                strokeOpacity="0.55"
+                              />
+                              <text
+                                x={labelPos.x}
+                                y={labelPos.y - 3}
+                                textAnchor="middle"
+                                dominantBaseline="auto"
+                                fill={ring.gradientStart}
+                                fontSize={ring.fontSize + 1}
+                                fontWeight="700"
+                                fontFamily="system-ui, sans-serif"
+                              >
+                                {ring.displayValue}
+                              </text>
+                              <text
+                                x={labelPos.x}
+                                y={labelPos.y + ring.fontSize}
+                                textAnchor="middle"
+                                dominantBaseline="auto"
+                                fill="rgba(120,110,100,0.75)"
+                                fontSize={ring.fontSize * 0.72}
+                                fontWeight="500"
+                                fontFamily="system-ui, sans-serif"
+                              >
+                                {ring.label} {ring.displayUnit}
+                              </text>
+                            </g>
+                          )}
                         </g>
                       );
                     })}
                   </svg>
 
-                  <div className="absolute top-[1.65rem] flex flex-wrap items-center justify-center gap-2 text-center text-[11px] font-medium leading-tight sm:top-[1.9rem] sm:text-[13px]">
-                    {topLegendPills.map((pill) => (
-                      <span
-                        key={`ring-label-${pill.key}`}
-                        className="inline-flex items-center gap-2 rounded-full bg-white/88 px-3 py-1 text-foreground shadow-sm ring-1 ring-[#E8DCCE] dark:bg-neutral-900/78 dark:ring-white/10"
-                      >
-                        <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: pill.color }} />
-                        {pill.label}
-                      </span>
-                    ))}
-                  </div>
+                  <div className="absolute inset-[7rem] rounded-full border border-[#EADFD3]/60 bg-[radial-gradient(circle,rgba(255,250,240,0.97),rgba(255,245,228,0.94)_70%,rgba(255,240,218,0.88)_100%)] shadow-[inset_0_0_30px_rgba(255,230,190,0.3)] dark:border-[#5F4634]/50 dark:bg-[radial-gradient(circle,rgba(55,40,28,0.97),rgba(42,30,22,0.94)_70%,rgba(32,24,18,0.9)_100%)] sm:inset-[8.5rem]" />
 
-                  <div className="absolute inset-[3.1rem] rounded-full border border-[#EADFD3] bg-[radial-gradient(circle,rgba(255,247,230,0.96),rgba(255,239,210,0.94)_70%,rgba(255,232,186,0.88)_100%)] shadow-[0_0_45px_rgba(251,191,36,0.22)] dark:border-[#5F4634] dark:bg-[radial-gradient(circle,rgba(70,51,35,0.96),rgba(52,38,28,0.94)_70%,rgba(38,28,20,0.9)_100%)] sm:inset-[3.7rem]">
-                    <div className="absolute inset-[0.7rem] rounded-full border border-[#ECD7BC]/80 dark:border-[#70513A]/70" />
-                    <div className="absolute inset-[1.15rem] rounded-full border border-dashed border-[#D7B98C]/80 dark:border-[#8B6C4D]/60" />
-                  </div>
-
-                  {metricPills.map((pill) => (
-                    <div
-                      key={pill.key}
-                      className={`absolute z-10 hidden md:flex ${pill.width} flex-col items-center rounded-[1.6rem] border text-center backdrop-blur ${pill.tint} ${pill.position} ${pill.paddingClassName}`}
-                    >
-                      <span className="text-[10px] font-medium uppercase tracking-[0.18em] opacity-75">
-                        {pill.label}
-                      </span>
-                      <span className={`mt-1 font-semibold leading-none tracking-[-0.04em] ${pill.valueClassName}`}>
-                        {pill.value}
-                      </span>
-                    </div>
-                  ))}
 
                   <div className="relative z-10 flex flex-col items-center text-center">
                     <svg
@@ -341,43 +373,23 @@ export function LandingFocusCanvas({
                     <p className="mt-4 text-5xl font-semibold tracking-[-0.06em] text-foreground sm:text-6xl">
                       {pomodoroClockLabel}
                     </p>
-                    <p className="mt-2 text-[13px] text-neutral-600 dark:text-neutral-300">
-                      {caloriesRemainingLabel}
-                    </p>
                     <button
                       type="button"
                       onClick={onOpenNutrition}
-                      className="mt-0.5 text-3xl font-semibold tracking-[-0.04em] text-foreground transition-opacity hover:opacity-80 sm:text-4xl"
+                      className="mt-2 transition-opacity hover:opacity-80"
                     >
-                      {nutrition.caloriesRemaining}
-                    </button>
-                    <div className="mt-4 flex flex-wrap items-center justify-center gap-1.5 text-[10px] text-neutral-500 dark:text-neutral-400">
-                      {[
-                        {
-                          key: "protein-mini",
-                          color: "#B987E6",
-                          value: `${nutrition.proteinGrams}/${nutritionGoals.proteinGrams}g`,
-                        },
-                        {
-                          key: "carbs-mini",
-                          color: "#F1B562",
-                          value: `${nutrition.carbsGrams}/${nutritionGoals.carbsGrams}g`,
-                        },
-                      ].map((ring) => (
-                        <span
-                          key={`ring-value-${ring.key}`}
-                          className="inline-flex items-center gap-1.5 rounded-full bg-white/78 px-3 py-1 ring-1 ring-[#E8DCCE] shadow-sm dark:bg-neutral-900/72 dark:ring-white/10"
-                        >
-                          <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: ring.color }} />
-                          {ring.value}
+                      <span className="block text-[13px] text-neutral-500 dark:text-neutral-400">calories</span>
+                      <span className="mt-0.5 flex items-baseline justify-center gap-1">
+                        <span className="text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl">
+                          {caloriesConsumed}
                         </span>
-                      ))}
-                    </div>
+                        <span className="text-lg text-neutral-400 dark:text-neutral-500">
+                          / {nutritionGoals.caloriesTarget}
+                        </span>
+                      </span>
+                    </button>
+                    
                   </div>
-
-                  <p className="absolute bottom-[1.9rem] left-1/2 -translate-x-1/2 text-center text-[12px] font-semibold text-foreground sm:bottom-[2.35rem] sm:text-[15px]">
-                    Pomodoro controls
-                  </p>
                 </div>
 
                 <div className="mt-4 w-full max-w-[34rem] space-y-3">
@@ -523,19 +535,6 @@ export function LandingFocusCanvas({
               </div>
             </div>
 
-            <div className="hidden md:flex min-w-[72px] flex-col items-center gap-6">
-              {rightOrbs.map((item, index) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  onClick={item.onClick}
-                  title={item.label}
-                  className={`flex h-16 w-16 items-center justify-center rounded-full ring-1 backdrop-blur transition-transform hover:scale-105 ${ORB_STYLES[(index + 3) % ORB_STYLES.length]}`}
-                >
-                  <span className="scale-110">{item.icon}</span>
-                </button>
-              ))}
-            </div>
           </div>
 
           {quickCaptures.length > 0 && (

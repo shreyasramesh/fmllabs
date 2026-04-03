@@ -25,18 +25,105 @@ function ModuleCard({
 }: {
   eyebrow: string;
   title: string;
-  description: string;
+  description?: string;
   children: React.ReactNode;
 }) {
   return (
     <section className="rounded-[1.8rem] border border-neutral-200/70 bg-white/90 p-4 shadow-[0_18px_48px_rgba(15,23,42,0.06)] backdrop-blur dark:border-white/10 dark:bg-neutral-950/80">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#B87B51] dark:text-[#D6A67E]">
-        {eyebrow}
-      </p>
-      <h3 className="mt-2 text-lg font-semibold text-foreground">{title}</h3>
-      <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">{description}</p>
-      <div className="mt-4">{children}</div>
+      <h3 className="text-base font-semibold text-foreground">{eyebrow} Module</h3>
+      {description && (
+        <p className="mt-0.5 text-[13px] text-neutral-500 dark:text-neutral-400">{description}</p>
+      )}
+      <div className="mt-3">{children}</div>
     </section>
+  );
+}
+
+function ToggleRow({
+  label,
+  description,
+  checked,
+  onChange,
+}: {
+  label: string;
+  description?: string;
+  checked: boolean;
+  onChange: () => void;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-3 py-2">
+      <div className="min-w-0">
+        <p className="text-sm text-foreground">{label}</p>
+        {description && (
+          <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">{description}</p>
+        )}
+      </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        onClick={onChange}
+        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors ${
+          checked ? "bg-[#C87B3A]" : "bg-neutral-300 dark:bg-neutral-600"
+        }`}
+      >
+        <span
+          className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
+            checked ? "translate-x-6" : "translate-x-1"
+          }`}
+        />
+      </button>
+    </div>
+  );
+}
+
+function SegmentedPicker({
+  value,
+  onChange,
+  options,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  options: readonly { key: string; label: string }[];
+}) {
+  return (
+    <div className="inline-flex rounded-lg border border-neutral-200 bg-neutral-100 p-0.5 dark:border-neutral-700 dark:bg-neutral-800">
+      {options.map((opt) => (
+        <button
+          key={opt.key}
+          type="button"
+          onClick={() => onChange(opt.key)}
+          className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+            value === opt.key
+              ? "bg-white text-foreground shadow-sm dark:bg-neutral-700"
+              : "text-neutral-500 hover:text-foreground dark:text-neutral-400"
+          }`}
+        >
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function ChevronRow({
+  label,
+  onClick,
+}: {
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex w-full items-center justify-between gap-2 rounded-xl border border-neutral-200 px-3 py-2.5 text-left text-sm font-medium text-foreground transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900"
+    >
+      {label}
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0 text-neutral-400">
+        <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+      </svg>
+    </button>
   );
 }
 
@@ -147,6 +234,12 @@ interface LandingShellProps {
   timelineEyebrow: string;
   timelineLabel: string;
   timelineEvents: LandingTimelineEvent[];
+  featuredMentalModelName: string | null;
+  secondOrderCitationsEnabled: boolean;
+  onToggleSecondOrderCitations: () => void;
+  responseVerbosity: "compact" | "detailed";
+  onResponseVerbosityChange: (value: "compact" | "detailed") => void;
+  onStartMindLabConversation: () => void;
 }
 
 export function LandingShell({
@@ -256,6 +349,12 @@ export function LandingShell({
   timelineEyebrow,
   timelineLabel,
   timelineEvents,
+  featuredMentalModelName,
+  secondOrderCitationsEnabled,
+  onToggleSecondOrderCitations,
+  responseVerbosity,
+  onResponseVerbosityChange,
+  onStartMindLabConversation,
 }: LandingShellProps) {
   const distanceToTarget =
     weightCurrentKg != null && weightTargetKg != null
@@ -322,172 +421,157 @@ export function LandingShell({
       />
 
       <div className="grid gap-4 xl:grid-cols-3">
-        <ModuleCard
-          eyebrow="Mind Lab"
-          title={mindLabTitle}
-          description={mindLabDescription}
-        >
-          <div className="grid grid-cols-2 gap-2">
+        <ModuleCard eyebrow="Mind Lab" title={mindLabTitle}>
+          {featuredMentalModelName && (
             <button
               type="button"
               onClick={onOpenMentalModels}
-              className="rounded-[1.2rem] border border-neutral-200 bg-neutral-50 px-3 py-3 text-left transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+              className="flex w-full items-center justify-between gap-2 rounded-xl border-l-[3px] border-neutral-300 bg-neutral-50 px-3 py-2.5 text-left transition-colors hover:bg-neutral-100 dark:border-neutral-600 dark:bg-neutral-900 dark:hover:bg-neutral-800"
             >
-              <p className="text-2xl font-semibold text-foreground">{mentalModelCount}</p>
-              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{mentalModelsLabel}</p>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-foreground">{featuredMentalModelName}</p>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400">Interactive mental model</p>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0 text-neutral-400">
+                <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+              </svg>
             </button>
-            <button
-              type="button"
-              onClick={onOpenPromptGames}
-              className="rounded-[1.2rem] border border-neutral-200 bg-neutral-50 px-3 py-3 text-left transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
-            >
-              <p className="text-2xl font-semibold text-foreground">{perspectiveCardCount}</p>
-              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{savedPerspectiveCardsLabel}</p>
-            </button>
-            <div className="rounded-[1.2rem] border border-neutral-200 bg-neutral-50 px-3 py-3 dark:border-neutral-800 dark:bg-neutral-900">
-              <p className="text-2xl font-semibold text-foreground">{conceptCount + frameworkCount}</p>
-              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{conceptsAndPlaygroundsLabel}</p>
-            </div>
-            <div className="rounded-[1.2rem] border border-neutral-200 bg-neutral-50 px-3 py-3 dark:border-neutral-800 dark:bg-neutral-900">
-              <p className="text-2xl font-semibold text-foreground">{longTermMemoryCount}</p>
-              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{savedMemoriesLabel}</p>
-            </div>
+          )}
+
+          <div className="mt-2 divide-y divide-neutral-100 dark:divide-neutral-800">
+            <ToggleRow
+              label="Think deeper (metacognition)"
+              checked={secondOrderCitationsEnabled}
+              onChange={onToggleSecondOrderCitations}
+            />
           </div>
-          <div className="mt-3 flex flex-wrap gap-2">
+
+          <div className="mt-3 flex items-center justify-between gap-3">
+            <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Response style</p>
+            <SegmentedPicker
+              value={responseVerbosity}
+              onChange={(v) => onResponseVerbosityChange(v as "compact" | "detailed")}
+              options={[
+                { key: "compact", label: "Compact" },
+                { key: "detailed", label: "Detailed" },
+              ]}
+            />
+          </div>
+
+          <div className="mt-3">
             <button
               type="button"
-              onClick={onOpenLearnMentalModel}
-              className="rounded-full bg-foreground px-3.5 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90"
+              onClick={onStartMindLabConversation}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#C87B3A] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#B56D30]"
             >
-              {learnMentalModelLabel}
-            </button>
-            <button
-              type="button"
-              onClick={onOpenPromptGames}
-              className="rounded-full border border-neutral-300 px-3.5 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900"
-            >
-              {promptGamesLabel}
+              Start conversation
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+                <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+              </svg>
             </button>
           </div>
+
+          <div className="mt-2">
+            <ChevronRow label={learnMentalModelLabel} onClick={onOpenLearnMentalModel} />
+          </div>
+          {conversationCount > 0 && (
+            <div className="mt-3 border-t border-neutral-100 pt-3 dark:border-neutral-800">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                Conversations
+              </p>
+              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                {conversationCount} item{conversationCount !== 1 ? "s" : ""}, tap to view
+              </p>
+            </div>
+          )}
         </ModuleCard>
 
-        <ModuleCard
-          eyebrow="Mentor Hub"
-          title={mentorHubTitle}
-          description={mentorHubDescription}
-        >
+        <ModuleCard eyebrow="Mentor Hub" title={mentorHubTitle}>
           <div className="flex flex-wrap items-center gap-2">
             {mentors.slice(0, 5).map((mentor) => (
-              <div
-                key={mentor.id}
-                className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 px-2 py-1 dark:border-neutral-800 dark:bg-neutral-900"
-              >
+              <div key={mentor.id} className="relative">
                 <span
-                  className="flex h-8 w-8 items-center justify-center rounded-full text-[11px] font-semibold text-white"
+                  className="flex h-12 w-12 items-center justify-center rounded-full text-xs font-semibold text-white"
                   style={{ backgroundColor: `hsl(${mentor.hue} 70% 45%)` }}
                 >
                   {mentor.initials}
                 </span>
-                <span className="max-w-[8rem] truncate text-xs text-neutral-700 dark:text-neutral-200">
-                  {mentor.name}
+                <span className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-[#5A7D5B] dark:border-neutral-950">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="white" className="h-2.5 w-2.5">
+                    <path d="M9.765 3.205a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0l-2.25-2.25a.75.75 0 111.06-1.06l1.72 1.72 3.72-3.72a.75.75 0 011.06 0z" />
+                  </svg>
                 </span>
               </div>
             ))}
             {mentorCount === 0 && (
-              <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                {followMentorsHint}
-              </p>
+              <p className="text-sm text-neutral-500 dark:text-neutral-400">{followMentorsHint}</p>
             )}
           </div>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={onOpenOneOnOneMentor}
-              className="rounded-full bg-foreground px-3.5 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90"
-            >
-              {mentorChatLabel}
-            </button>
+          <div className="mt-3 divide-y divide-neutral-100 dark:divide-neutral-800">
+            <ToggleRow
+              label="1:1 with a mentor (coach mode)"
+              description="Coaching avatar optimizes 1:1 with a mentor, guided conversation style."
+              checked={mentorCount > 0}
+              onChange={onOpenOneOnOneMentor}
+            />
+          </div>
+          <div className="mt-2">
             <button
               type="button"
               onClick={onOpenAskMentors}
-              className="rounded-full border border-neutral-300 px-3.5 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900"
+              className="w-full rounded-xl border border-neutral-200 px-3 py-2.5 text-center text-sm font-medium text-foreground transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900"
             >
               {askMentorsLabel}
             </button>
           </div>
         </ModuleCard>
 
-        <ModuleCard
-          eyebrow="Growth Studio"
-          title={growthStudioTitle}
-          description={growthStudioDescription}
-        >
-          <div className="grid grid-cols-2 gap-2">
-            <div className="rounded-[1.2rem] border border-neutral-200 bg-neutral-50 px-3 py-3 dark:border-neutral-800 dark:bg-neutral-900">
-              <p className="text-2xl font-semibold text-foreground">{habitsCount}</p>
-              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{experimentsLabel}</p>
+        <ModuleCard eyebrow="Growth Studio" title={growthStudioTitle}>
+          <div className="space-y-3">
+            <div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-foreground">Active 30-Day Experiments</span>
+                <span className="font-semibold text-foreground">{habitsCount}</span>
+              </div>
+              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
+                <div
+                  className="h-full rounded-full bg-[#5A7D5B] transition-all"
+                  style={{ width: `${Math.min(100, habitsCount * 12)}%` }}
+                />
+              </div>
             </div>
-            <div className="rounded-[1.2rem] border border-neutral-200 bg-neutral-50 px-3 py-3 dark:border-neutral-800 dark:bg-neutral-900">
-              <p className="text-2xl font-semibold text-foreground">{conversationCount}</p>
-              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{savedConversationsLabel}</p>
+            <div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-foreground">Progress</span>
+              </div>
+              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
+                <div
+                  className="h-full rounded-full bg-[#A0522D] transition-all"
+                  style={{ width: `${Math.min(100, habitsCount > 0 ? 45 : 0)}%` }}
+                />
+              </div>
             </div>
           </div>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={onOpenGoals}
-              className="rounded-full bg-foreground px-3.5 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90"
-            >
-              {setGoalsLabel}
-            </button>
-            <button
-              type="button"
-              onClick={onOpenWeeklySummary}
-              className="rounded-full border border-neutral-300 px-3.5 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900"
-            >
-              {weeklySummaryLabel}
-            </button>
-            <button
-              type="button"
-              onClick={onOpenHabits}
-              className="rounded-full border border-neutral-300 px-3.5 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900"
-            >
-              Experiments
-            </button>
-            <button
-              type="button"
-              onClick={onOpenPlaygrounds}
-              className="rounded-full border border-neutral-300 px-3.5 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900"
-            >
-              Playgrounds
-            </button>
+          <div className="mt-3">
+            <ChevronRow label="Playgrounds" onClick={onOpenPlaygrounds} />
           </div>
         </ModuleCard>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-        <ModuleCard
-          eyebrow="Quick Capture"
-          title="Journal, nutrition, exercise, and reflections"
-          description="Fast capture actions stay lightweight while preserving the existing journaling flows."
-        >
-          <div className="grid gap-2 sm:grid-cols-2">
+        <ModuleCard eyebrow="Quick Capture" title="Quick Capture Panel">
+          <div className="grid grid-cols-3 gap-2">
             {quickCaptures.map((item) => (
               <button
                 key={item.key}
                 type="button"
                 onClick={item.onClick}
-                className="flex items-center gap-3 rounded-[1.2rem] border border-neutral-200 px-3 py-3 text-left transition-colors hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                className="flex flex-col items-center gap-1.5 rounded-xl border border-neutral-200 px-2 py-3 transition-colors hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#FBF4EC] text-[#B87B51] dark:bg-[#241a14] dark:text-[#E8C3A0]">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FBF4EC] text-[#B87B51] dark:bg-[#241a14] dark:text-[#E8C3A0]">
                   {item.icon}
                 </span>
-                <span className="min-w-0">
-                  <span className="block text-sm font-semibold text-foreground">{item.label}</span>
-                  <span className="block text-xs text-neutral-500 dark:text-neutral-400">
-                    {item.description}
-                  </span>
-                </span>
+                <span className="text-xs font-medium text-foreground">{item.label}</span>
               </button>
             ))}
           </div>
