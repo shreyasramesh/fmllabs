@@ -124,11 +124,12 @@ const WeightSparkline = React.memo(function WeightSparkline({
               dashStyle: "Dash",
               zIndex: 3,
               label: {
-                text: `Target ${targetKg} kg`,
-                align: "right",
+                text: `Target: ${targetKg} kg`,
+                align: "left",
+                verticalAlign: "bottom",
                 style: { color: "#16a34a", fontSize: "9px", fontWeight: "600" },
-                x: -4,
-                y: -4,
+                x: 2,
+                y: -3,
               },
             },
           ]
@@ -158,14 +159,7 @@ const WeightSparkline = React.memo(function WeightSparkline({
         gridLineColor: "#f0f0f0",
         plotLines,
       },
-      tooltip: {
-        backgroundColor: "rgba(255,255,255,0.96)",
-        borderColor: "#e5e5e5",
-        borderRadius: 8,
-        shadow: false,
-        style: { fontSize: "12px" },
-        pointFormat: "<b>{point.y:.1f} kg</b>",
-      },
+      tooltip: { enabled: false },
       plotOptions: {
         spline: {
           lineWidth: 2.5,
@@ -185,6 +179,12 @@ const WeightSparkline = React.memo(function WeightSparkline({
             fillColor: lineColor,
             lineColor: "#fff",
             lineWidth: 2,
+          },
+          dataLabels: {
+            enabled: true,
+            format: "{y:.1f}",
+            style: { color: lineColor, fontSize: "9px", fontWeight: "600", textOutline: "2px white" },
+            y: -8,
           },
         },
       ],
