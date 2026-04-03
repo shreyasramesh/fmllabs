@@ -61,7 +61,10 @@ export function LandingBrainDump({ language = "en", onSaved }: LandingBrainDumpP
   const [transcript, setTranscript] = useState("");
   const [fields, setFields] = useState<BrainDumpFields | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => setMounted(true), []);
 
   const resetAll = useCallback(() => {
     setPhase("idle");
@@ -160,7 +163,7 @@ export function LandingBrainDump({ language = "en", onSaved }: LandingBrainDumpP
     return () => window.removeEventListener("keydown", handleKey);
   }, [phase, resetAll]);
 
-  if (typeof document === "undefined") return null;
+  if (!mounted) return null;
 
   if (phase === "idle") {
     return createPortal(

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 
 import { LandingCaffeineChart } from "@/components/landing/LandingCaffeineChart";
 import { LandingDateStrip } from "@/components/landing/LandingDateStrip";
@@ -23,6 +25,7 @@ import type {
   LandingThoughtOfTheDay,
   LandingTimelineEvent,
   LandingWeeklySummaryPreview,
+  LandingWeightPoint,
 } from "@/components/landing/types";
 
 const SCROLLSPY_SECTIONS = [
@@ -89,6 +92,111 @@ function SectionPicker() {
     </nav>
   );
 }
+
+const WeightSparkline = React.memo(function WeightSparkline({
+  points,
+  targetKg,
+}: {
+  points: LandingWeightPoint[];
+  targetKg: number | null;
+}) {
+  const options = React.useMemo<Highcharts.Options>(() => {
+    if (points.length < 2) return {};
+    const weights = points.map((p) => p.weightKg);
+    const categories = points.map((p) => p.dateLabel);
+    const first = weights[0]!;
+    const last = weights[weights.length - 1]!;
+    const lineColor = last < first ? "#16a34a" : last > first ? "#dc2626" : "#2563eb";
+
+    const yMin = Math.min(...weights, ...(targetKg != null ? [targetKg] : []));
+    const yMax = Math.max(...weights, ...(targetKg != null ? [targetKg] : []));
+    const padding = Math.max(0.5, (yMax - yMin) * 0.15);
+
+    const plotLines: Highcharts.YAxisPlotLinesOptions[] =
+      targetKg != null
+        ? [
+            {
+              value: targetKg,
+              color: "#16a34a",
+              width: 2,
+              dashStyle: "Dash",
+              zIndex: 3,
+              label: {
+                text: `Target ${targetKg} kg`,
+                align: "right",
+                style: { color: "#16a34a", fontSize: "9px", fontWeight: "600" },
+                x: -4,
+                y: -4,
+              },
+            },
+          ]
+        : [];
+
+    return {
+      chart: {
+        backgroundColor: "transparent",
+        height: 140,
+        style: { fontFamily: "Inter, system-ui, sans-serif" },
+        spacing: [8, 8, 4, 8],
+      },
+      credits: { enabled: false },
+      title: { text: undefined },
+      legend: { enabled: false },
+      xAxis: {
+        categories,
+        lineColor: "#e5e5e5",
+        tickColor: "transparent",
+        labels: { enabled: false },
+      },
+      yAxis: {
+        title: { text: "kg", style: { color: "#a3a3a3", fontSize: "10px" } },
+        labels: { style: { color: "#a3a3a3", fontSize: "10px" } },
+        min: yMin - padding,
+        max: yMax + padding,
+        gridLineColor: "#f0f0f0",
+        plotLines,
+      },
+      tooltip: {
+        backgroundColor: "rgba(255,255,255,0.96)",
+        borderColor: "#e5e5e5",
+        borderRadius: 8,
+        shadow: false,
+        style: { fontSize: "12px" },
+        pointFormat: "<b>{point.y:.1f} kg</b>",
+      },
+      plotOptions: {
+        spline: {
+          lineWidth: 2.5,
+          states: { hover: { lineWidthPlus: 1 } },
+        },
+      },
+      series: [
+        {
+          type: "spline",
+          name: "Weight",
+          data: weights,
+          color: lineColor,
+          marker: {
+            enabled: true,
+            symbol: "circle",
+            radius: 4.5,
+            fillColor: lineColor,
+            lineColor: "#fff",
+            lineWidth: 2,
+          },
+        },
+      ],
+    };
+  }, [points, targetKg]);
+
+  if (points.length < 2) return null;
+
+  return (
+    <div className="w-full overflow-hidden">
+      <HighchartsReact highcharts={Highcharts} options={options} />
+    </div>
+  );
+});
 
 function ModuleCard({
   eyebrow,
@@ -261,11 +369,11 @@ interface LandingShellProps {
   conceptCount: number;
   frameworkCount: number;
   perspectiveCardCount: number;
-  habitsCount: number;
   conversationCount: number;
   weightCurrentKg: number | null;
   weightTargetKg: number | null;
   weightEntryCount: number;
+  weightWeekPoints: LandingWeightPoint[];
   onOpenOneOnOneMentor: () => void;
   onSelectMentor: (mentorId: string) => void;
   onOpenAskMentors: () => void;
@@ -276,7 +384,6 @@ interface LandingShellProps {
   onOpenGoals: () => void;
   onOpenWeeklySummary: () => void;
   onOpenHabits: () => void;
-  onOpenPlaygrounds: () => void;
   onOpenWeight: () => void;
   mindLabTitle: string;
   mindLabDescription: string;
@@ -291,8 +398,6 @@ interface LandingShellProps {
   followMentorsHint: string;
   mentorChatLabel: string;
   askMentorsLabel: string;
-  growthStudioTitle: string;
-  growthStudioDescription: string;
   experimentsLabel: string;
   savedConversationsLabel: string;
   setGoalsLabel: string;
@@ -390,11 +495,11 @@ export function LandingShell({
   conceptCount,
   frameworkCount,
   perspectiveCardCount,
-  habitsCount,
   conversationCount,
   weightCurrentKg,
   weightTargetKg,
   weightEntryCount,
+  weightWeekPoints,
   onOpenOneOnOneMentor,
   onSelectMentor,
   onOpenAskMentors,
@@ -405,7 +510,6 @@ export function LandingShell({
   onOpenGoals,
   onOpenWeeklySummary,
   onOpenHabits,
-  onOpenPlaygrounds,
   onOpenWeight,
   mindLabTitle,
   mindLabDescription,
@@ -420,8 +524,6 @@ export function LandingShell({
   followMentorsHint,
   mentorChatLabel,
   askMentorsLabel,
-  growthStudioTitle,
-  growthStudioDescription,
   experimentsLabel,
   savedConversationsLabel,
   setGoalsLabel,
@@ -905,7 +1007,7 @@ export function LandingShell({
       </ModuleCard>
       </div>
 
-      {/* Row 2: Weekly Summary · Growth Studio · Weight */}
+      {/* Row 2: Weekly Summary · Weight · Activity */}
       <div id="sec-summary" className="grid gap-4 xl:grid-cols-3">
         <ModuleCard eyebrow="Weekly Summary" title={weeklySummaryLabel}>
           {weeklySummary ? (
@@ -973,78 +1075,51 @@ export function LandingShell({
           )}
         </ModuleCard>
 
-        <ModuleCard eyebrow="Growth Studio" title={growthStudioTitle}>
-          <div className="space-y-2">
-            <div>
-              <div className="flex items-center justify-between text-[13px]">
-                <span className="text-foreground">Active 30-Day Experiments</span>
-                <span className="font-semibold text-foreground">{habitsCount}</span>
-              </div>
-              <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
-                <div
-                  className="h-full rounded-full bg-[#5A7D5B] transition-all"
-                  style={{ width: `${Math.min(100, habitsCount * 12)}%` }}
-                />
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center justify-between text-[13px]">
-                <span className="text-foreground">Progress</span>
-              </div>
-              <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
-                <div
-                  className="h-full rounded-full bg-[#A0522D] transition-all"
-                  style={{ width: `${Math.min(100, habitsCount > 0 ? 45 : 0)}%` }}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="mt-2">
-            <ChevronRow label="Playgrounds" onClick={onOpenPlaygrounds} />
-          </div>
-        </ModuleCard>
-
         <ModuleCard
           eyebrow="Weight"
           title={weightTitle}
           description={weightDescription}
         >
-          <div className="grid grid-cols-2 gap-1.5">
-            <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-2.5 py-2 dark:border-neutral-800 dark:bg-neutral-900">
-              <p className="text-lg font-semibold text-foreground">
+          {/* Sparkline chart */}
+          {weightWeekPoints.length >= 2 ? (
+            <WeightSparkline points={weightWeekPoints} targetKg={weightTargetKg} />
+          ) : (
+            <p className="text-[13px] text-neutral-400 dark:text-neutral-500">
+              {weightWeekPoints.length === 1 ? "Log one more entry to see your trend." : "No entries this week."}
+            </p>
+          )}
+
+          <div className="mt-2 grid grid-cols-2 gap-1.5">
+            <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-2.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
+              <p className="text-base font-semibold text-foreground">
                 {weightCurrentKg == null ? "--" : `${weightCurrentKg.toFixed(1)} kg`}
               </p>
-              <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">{currentWeightLabel}</p>
+              <p className="text-[10px] text-neutral-500 dark:text-neutral-400">{currentWeightLabel}</p>
             </div>
-            <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-2.5 py-2 dark:border-neutral-800 dark:bg-neutral-900">
-              <p className="text-lg font-semibold text-foreground">
+            <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-2.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
+              <p className="text-base font-semibold text-foreground">
                 {weightTargetKg == null ? "--" : `${weightTargetKg.toFixed(1)} kg`}
               </p>
-              <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">{targetWeightLabel}</p>
+              <p className="text-[10px] text-neutral-500 dark:text-neutral-400">{targetWeightLabel}</p>
             </div>
           </div>
-          <div className="mt-2 flex items-center justify-between gap-2 rounded-xl border border-neutral-200 bg-neutral-50 px-2.5 py-2 dark:border-neutral-800 dark:bg-neutral-900">
-            <div>
-              <p className="text-[13px] font-medium text-foreground">
-                {distanceToTarget == null ? noTargetYetLabel : `${distanceToTarget} kg to target`}
-              </p>
-              <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
-                {weightEntryCount} logged entr{weightEntryCount === 1 ? "y" : "ies"}
-              </p>
-            </div>
+          <div className="mt-1.5 flex items-center justify-between">
+            <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+              {distanceToTarget == null ? noTargetYetLabel : `${distanceToTarget} kg to target`}
+              {" · "}
+              {weightEntryCount} entr{weightEntryCount === 1 ? "y" : "ies"}
+            </p>
             <button
               type="button"
               onClick={onOpenWeight}
-              className="rounded-full border border-neutral-300 px-2.5 py-1 text-[13px] font-medium text-neutral-700 transition-colors hover:bg-white dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-950"
+              className="rounded-full border border-neutral-300 px-2 py-0.5 text-[11px] font-medium text-neutral-700 transition-colors hover:bg-white dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-950"
             >
               {openLabel}
             </button>
           </div>
         </ModuleCard>
-      </div>
 
-      {/* Row 3: Activity */}
-      <div id="sec-activity" className="grid gap-4 xl:grid-cols-3">
+        <div id="sec-activity">
         <ModuleCard
           eyebrow="Activity"
           title={activityTitle}
@@ -1077,6 +1152,7 @@ export function LandingShell({
             )}
           </div>
         </ModuleCard>
+        </div>
       </div>
 
       <div id="sec-timeline">

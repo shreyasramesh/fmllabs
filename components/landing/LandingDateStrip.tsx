@@ -24,7 +24,7 @@ export function LandingDateStrip({ label, hint, items }: LandingDateStripProps) 
         </div>
       </div>
 
-      <div className="mt-4 overflow-x-auto">
+      <div className="mt-4 overflow-x-auto overflow-y-hidden">
         <div className="flex min-w-max gap-2 lg:grid lg:min-w-0 lg:grid-cols-7">
           {items.map((item) => (
             <button

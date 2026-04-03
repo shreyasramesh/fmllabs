@@ -105,6 +105,11 @@ export interface FocusDurationSuggestion {
   reason: string;
 }
 
+export interface LandingWeightPoint {
+  dateLabel: string;
+  weightKg: number;
+}
+
 export interface LandingThoughtOfTheDay {
   conceptId: string;
   title: string;

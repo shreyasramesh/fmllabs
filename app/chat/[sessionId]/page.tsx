@@ -9518,6 +9518,27 @@ export default function ChatPage() {
     return row?.targetWeightKg ?? null;
   }, [weightTrackerEntries]);
 
+  const landingWeightWeekPoints = useMemo(() => {
+    const now = Date.now();
+    const weekMs = 7 * 24 * 60 * 60 * 1000;
+    return weightTrackerEntries
+      .filter((e) => {
+        const ts = new Date(e.recordedAt || e.createdAt).getTime();
+        return Number.isFinite(ts) && now - ts <= weekMs;
+      })
+      .sort(
+        (a, b) =>
+          new Date(a.recordedAt || a.createdAt).getTime() -
+          new Date(b.recordedAt || b.createdAt).getTime()
+      )
+      .map((e) => ({
+        dateLabel: new Intl.DateTimeFormat(language, { weekday: "short", day: "numeric" }).format(
+          new Date(e.recordedAt || e.createdAt)
+        ),
+        weightKg: e.weightKg,
+      }));
+  }, [weightTrackerEntries, language]);
+
   const weightTrackerFilteredChronological = useMemo(() => {
     const now = Date.now();
     const rangeMs =
@@ -13608,11 +13629,11 @@ export default function ChatPage() {
                         conceptCount={customConcepts.length}
                         frameworkCount={conceptGroups.length}
                         perspectiveCardCount={savedPerspectiveCards.length}
-                        habitsCount={habits.length}
                         conversationCount={sessions.length}
                         weightCurrentKg={weightTrackerCurrentKg}
                         weightTargetKg={weightTrackerTargetKg}
                         weightEntryCount={weightTrackerEntries.length}
+                        weightWeekPoints={landingWeightWeekPoints}
                         onOpenOneOnOneMentor={() => {
                           playSelectionChime();
                           activeResponseVerbosityRef.current = newConversationResponseVerbosity;
@@ -13775,11 +13796,6 @@ export default function ChatPage() {
                           setWaysOfLookingAtModalOpen(false);
                           setLibraryPanelOpen("habits");
                         }}
-                        onOpenPlaygrounds={() => {
-                          playSelectionChime();
-                          setWaysOfLookingAtModalOpen(false);
-                          setLibraryPanelOpen("cg");
-                        }}
                         onOpenWeight={openWeightTrackerModal}
                         mindLabTitle={landingTranslations.landingMindLabTitle}
                         mindLabDescription={landingTranslations.landingMindLabDescription}
@@ -13794,8 +13810,6 @@ export default function ChatPage() {
                         followMentorsHint={landingTranslations.landingFollowMentorsHint}
                         mentorChatLabel={landingTranslations.landingMentorChatLabel}
                         askMentorsLabel={landingTranslations.landingAskMentorsLabel}
-                        growthStudioTitle={landingTranslations.landingGrowthStudioTitle}
-                        growthStudioDescription={landingTranslations.landingGrowthStudioDescription}
                         experimentsLabel={landingTranslations.landingExperimentsLabel}
                         savedConversationsLabel={landingTranslations.landingSavedConversationsLabel}
                         setGoalsLabel={landingTranslations.landingSetGoalsLabel}
