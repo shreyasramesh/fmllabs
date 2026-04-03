@@ -8,7 +8,6 @@ import { LandingFocusCanvas } from "@/components/landing/LandingFocusCanvas";
 import { LandingSleepRecoveryChart } from "@/components/landing/LandingSleepRecoveryChart";
 import { LandingThoughtOfTheDayBanner } from "@/components/landing/LandingThoughtOfTheDay";
 import { LandingTimelineCard } from "@/components/landing/LandingTimelineCard";
-import { LandingTopBar } from "@/components/landing/LandingTopBar";
 import type {
   CaffeineFocusWindow,
   CaffeineIntake,
@@ -36,7 +35,7 @@ const SCROLLSPY_SECTIONS = [
   { id: "sec-sleep", label: "Sleep" },
 ] as const;
 
-function ScrollspyNav() {
+function SectionPicker() {
   const [activeId, setActiveId] = useState<string>(SCROLLSPY_SECTIONS[0].id);
 
   useEffect(() => {
@@ -67,7 +66,7 @@ function ScrollspyNav() {
 
   return (
     <nav
-      className="fixed right-2 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-end gap-1.5 sm:flex"
+      className="flex items-center gap-1 overflow-x-auto scrollbar-none"
       aria-label="Page sections"
     >
       {SCROLLSPY_SECTIONS.map((s) => {
@@ -77,25 +76,13 @@ function ScrollspyNav() {
             key={s.id}
             type="button"
             onClick={() => scrollTo(s.id)}
-            className="group flex items-center gap-2"
-            aria-label={s.label}
+            className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ${
+              isActive
+                ? "bg-[#FBF4EC] text-[#7C522D] dark:bg-[#241a14] dark:text-[#D6A67E]"
+                : "text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600 dark:text-neutral-500 dark:hover:bg-neutral-800 dark:hover:text-neutral-300"
+            }`}
           >
-            <span
-              className={`pointer-events-none text-[10px] font-medium transition-opacity ${
-                isActive
-                  ? "text-[#7C522D] opacity-100 dark:text-[#D6A67E]"
-                  : "text-neutral-400 opacity-0 group-hover:opacity-100 dark:text-neutral-500"
-              }`}
-            >
-              {s.label}
-            </span>
-            <span
-              className={`block rounded-full transition-all ${
-                isActive
-                  ? "h-1.5 w-5 bg-[#B87B51] dark:bg-[#D6A67E]"
-                  : "h-1 w-3 bg-neutral-300 group-hover:w-4 group-hover:bg-neutral-400 dark:bg-neutral-600 dark:group-hover:bg-neutral-500"
-              }`}
-            />
+            {s.label}
           </button>
         );
       })}
@@ -492,15 +479,50 @@ export function LandingShell({
 
   return (
     <div className="w-full max-w-[88rem] min-w-0 overflow-hidden space-y-4 animate-fade-in-up">
-      <ScrollspyNav />
+      <section className="sticky top-0 z-30 w-full overflow-hidden rounded-[2rem] border border-neutral-200/70 bg-white/95 p-4 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/95 sm:p-5">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
+                {dashboardEyebrow}
+              </p>
+              <SectionPicker />
+            </div>
+            <h1 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-[2rem]">
+              {title}
+            </h1>
+            <p className="mt-1 max-w-2xl text-sm text-neutral-600 dark:text-neutral-400">
+              {subtitle}
+            </p>
+          </div>
 
-      <LandingTopBar
-        eyebrow={dashboardEyebrow}
-        title={title}
-        subtitle={subtitle}
-        selectedDateLabel={selectedDateLabel}
-        onOpenCalendar={onOpenCalendar}
-      />
+          <div className="flex flex-col items-stretch gap-3 sm:items-end">
+            <button
+              type="button"
+              onClick={onOpenCalendar}
+              className="inline-flex items-center justify-between gap-3 rounded-full border border-[#E9D5C2] bg-[#FBF4EC] px-4 py-2 text-sm font-medium text-[#7C522D] transition-colors hover:bg-[#F8EBDD] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#E8C3A0] dark:hover:bg-[#2B2019]"
+            >
+              <span>{selectedDateLabel}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4"
+                aria-hidden
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <path d="M16 2v4" />
+                <path d="M8 2v4" />
+                <path d="M3 10h18" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
 
       <LandingDateStrip label={dateStripLabel} hint={dateStripHint} items={dateItems} />
 
