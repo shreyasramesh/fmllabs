@@ -74,7 +74,7 @@ import {
   type ReminderPreferences,
   type ReminderType,
 } from "@/lib/reminder-settings";
-import { notifyPomodoroCompleted, syncNativeReminders } from "@/lib/native-reminders";
+import { notifyPomodoroCompleted, scheduleCaffeineFocusNotification, syncNativeReminders } from "@/lib/native-reminders";
 import {
   playLlmResponseStartHaptic,
   playLlmResponseVisibleHaptic,
@@ -2936,6 +2936,75 @@ function parseExerciseDurationMinutesFromText(text: string): number {
   return Math.max(5, Math.min(360, Math.round(value)));
 }
 
+const CAFFEINE_HALF_LIFE_MINUTES = 300;
+
+function parseCaffeineMgFromJournalText(text: string): number | null {
+  const match = /- Caffeine:\s*([\d.]+)\s*mg/i.exec(text);
+  if (match) {
+    const n = Number(match[1]);
+    if (Number.isFinite(n) && n > 0) return n;
+  }
+  const lower = text.toLowerCase();
+  if (/\bespresso\b/.test(lower)) return 63;
+  if (/\bmatcha\b/.test(lower)) return 70;
+  if (/\benergy\s*drink\b/.test(lower)) return 80;
+  if (/\bcoffee\b/.test(lower)) return 95;
+  if (/\bgreen\s*tea\b/.test(lower)) return 28;
+  if (/\bblack\s*tea\b/.test(lower)) return 47;
+  if (/\btea\b/.test(lower)) return 47;
+  return null;
+}
+
+function computeCaffeineAtMinute(
+  intakes: ReadonlyArray<{ minuteOfDay: number; mg: number }>,
+  minute: number
+): number {
+  let total = 0;
+  for (const intake of intakes) {
+    const elapsed = minute - intake.minuteOfDay;
+    if (elapsed < 0) continue;
+    total += intake.mg * Math.pow(0.5, elapsed / CAFFEINE_HALF_LIFE_MINUTES);
+  }
+  return total;
+}
+
+function computePeakFocusWindow(
+  intakes: ReadonlyArray<{ minuteOfDay: number; mg: number }>
+): { startMinute: number; endMinute: number } | null {
+  if (intakes.length === 0) return null;
+  let bestStart = 0;
+  let bestAvg = 0;
+  const earliest = Math.min(...intakes.map((i) => i.minuteOfDay));
+  const searchStart = earliest + 20;
+  const searchEnd = Math.min(1380, earliest + 720);
+  for (let start = searchStart; start <= searchEnd; start += 5) {
+    let sum = 0;
+    for (let m = start; m < start + 60; m += 5) {
+      sum += computeCaffeineAtMinute(intakes, m);
+    }
+    const avg = sum / 12;
+    if (avg > bestAvg) {
+      bestAvg = avg;
+      bestStart = start;
+    }
+  }
+  if (bestAvg <= 0) return null;
+  return { startMinute: bestStart, endMinute: Math.min(1440, bestStart + 60) };
+}
+
+function computeSuggestedFocusMinutes(
+  sleepHours: number,
+  hrvMs: number | null
+): { minutes: number; reason: string } {
+  if (sleepHours >= 7 && hrvMs != null && hrvMs >= 50)
+    return { minutes: 90, reason: "Well recovered — deep work" };
+  if (sleepHours >= 7)
+    return { minutes: 60, reason: "Good sleep — steady focus" };
+  if (sleepHours >= 5)
+    return { minutes: 30, reason: "Light sleep — shorter sprints" };
+  return { minutes: 15, reason: "Low recovery — micro sessions" };
+}
+
 function normalizeNutritionMethodConfigInput(
   value: unknown
 ): NutritionMethodConfig {
@@ -4452,6 +4521,27 @@ export default function ChatPage() {
       focusSessions: number;
     };
   } | null>(null);
+  const [landingWeeklySummary, setLandingWeeklySummary] = useState<{
+    weekStartLabel: string;
+    weekEndLabel: string;
+    trackedDays: number;
+    caloriesUnderBudget: number;
+    foodEntries: number;
+    exerciseEntries: number;
+    focusMinutes: number;
+    rows: Array<{
+      dayKey: string;
+      weekdayLabel: string;
+      tracked: boolean;
+      foodEntries: number;
+      exerciseEntries: number;
+      focusMinutes: number;
+    }>;
+  } | null>(null);
+  const [sleepEntries, setSleepEntries] = useState<
+    Array<{ sleepHours: number; hrvMs: number | null; dayKey: string }>
+  >([]);
+  const [sleepSaving, setSleepSaving] = useState(false);
   const [weightTrackerModalOpen, setWeightTrackerModalOpen] = useState(false);
   const [weightTrackerLoading, setWeightTrackerLoading] = useState(false);
   const [weightTrackerSaving, setWeightTrackerSaving] = useState(false);
@@ -5690,6 +5780,41 @@ export default function ChatPage() {
     }
     return events.sort((a, b) => a.startMinute - b.startMinute);
   }, [focusTrackerEntries, journalEntriesSorted, selectedLandingDayActivityItems]);
+
+  const selectedLandingDayCaffeineIntakes = useMemo(() => {
+    const journalById = new Map(
+      journalEntriesSorted
+        .filter((entry): entry is (typeof journalEntriesSorted)[number] & { _id: string } => Boolean(entry._id))
+        .map((entry) => [entry._id, entry])
+    );
+    const intakes: Array<{ minuteOfDay: number; mg: number }> = [];
+    for (const item of selectedLandingDayActivityItems) {
+      if (item.kind !== "journal" || item.journalCategory !== "nutrition") continue;
+      const entry = journalById.get(item.entityId);
+      if (!entry?.transcriptText) continue;
+      const mg = parseCaffeineMgFromJournalText(entry.transcriptText);
+      if (mg == null || mg <= 0) continue;
+      const date = new Date(item.timestamp);
+      if (Number.isNaN(date.getTime())) continue;
+      intakes.push({
+        minuteOfDay: Math.max(0, Math.min(1439, date.getHours() * 60 + date.getMinutes())),
+        mg,
+      });
+    }
+    return intakes.sort((a, b) => a.minuteOfDay - b.minuteOfDay);
+  }, [journalEntriesSorted, selectedLandingDayActivityItems]);
+
+  const selectedLandingDayCaffeineFocusWindow = useMemo(
+    () => computePeakFocusWindow(selectedLandingDayCaffeineIntakes),
+    [selectedLandingDayCaffeineIntakes]
+  );
+
+  useEffect(() => {
+    if (!selectedLandingDayCaffeineFocusWindow) return;
+    if (selectedLandingDayKey !== toDayKey(new Date())) return;
+    scheduleCaffeineFocusNotification(selectedLandingDayCaffeineFocusWindow.startMinute).catch(() => {});
+  }, [selectedLandingDayCaffeineFocusWindow, selectedLandingDayKey]);
+
   const selectedLandingDayFocusSummary = useMemo(() => {
     let minutes = 0;
     let sessions = 0;
@@ -9051,6 +9176,95 @@ export default function ChatPage() {
     weeklySummaryModalOpen,
     weeklySummaryWeekOffset,
   ]);
+
+  useEffect(() => {
+    if (isAnonymous || incognitoMode || !userId) return;
+    let cancelled = false;
+    fetch("/api/me/nutrition-weekly-summary", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ weekOffset: 0 }),
+    })
+      .then(async (res) => {
+        if (cancelled) return;
+        const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+        if (!res.ok || !Array.isArray(data.rows)) return;
+        const rows = (data.rows as Array<Record<string, unknown>>).map((r) => ({
+          dayKey: typeof r.dayKey === "string" ? r.dayKey : "",
+          weekdayLabel: typeof r.weekdayLabel === "string" ? r.weekdayLabel : "",
+          tracked: Boolean(r.tracked),
+          foodEntries: Number(r.foodEntries ?? 0),
+          exerciseEntries: Number(r.exerciseEntries ?? 0),
+          focusMinutes: Number(r.focusMinutes ?? 0),
+        }));
+        setLandingWeeklySummary({
+          weekStartLabel: typeof data.weekStartLabel === "string" ? data.weekStartLabel : "",
+          weekEndLabel: typeof data.weekEndLabel === "string" ? data.weekEndLabel : "",
+          trackedDays: typeof data.trackedDays === "number" ? data.trackedDays : 0,
+          caloriesUnderBudget: typeof data.caloriesUnderBudget === "number" ? data.caloriesUnderBudget : 0,
+          foodEntries: typeof data.foodEntries === "number" ? data.foodEntries : 0,
+          exerciseEntries: typeof data.exerciseEntries === "number" ? data.exerciseEntries : 0,
+          focusMinutes: Number((data.totals as Record<string, unknown> | undefined)?.focusMinutes ?? 0),
+          rows,
+        });
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [isAnonymous, incognitoMode, userId, journalEntryJustSaved]);
+
+  useEffect(() => {
+    if (isAnonymous || incognitoMode || !userId) return;
+    let cancelled = false;
+    fetch("/api/me/sleep?limit=30")
+      .then(async (res) => {
+        if (cancelled) return;
+        const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+        if (!res.ok || !Array.isArray(data.entries)) return;
+        setSleepEntries(
+          (data.entries as Array<Record<string, unknown>>).map((e) => ({
+            sleepHours: Number(e.sleepHours ?? 0),
+            hrvMs: e.hrvMs != null ? Number(e.hrvMs) : null,
+            dayKey: typeof e.dayKey === "string" ? e.dayKey : "",
+          }))
+        );
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [isAnonymous, incognitoMode, userId]);
+
+  const saveSleepEntry = useCallback(
+    async (sleepHours: number, hrvMs: number | null) => {
+      setSleepSaving(true);
+      try {
+        const res = await fetch("/api/me/sleep", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sleepHours, hrvMs }),
+        });
+        const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+        if (res.ok && Array.isArray(data.entries)) {
+          setSleepEntries(
+            (data.entries as Array<Record<string, unknown>>).map((e) => ({
+              sleepHours: Number(e.sleepHours ?? 0),
+              hrvMs: e.hrvMs != null ? Number(e.hrvMs) : null,
+              dayKey: typeof e.dayKey === "string" ? e.dayKey : "",
+            }))
+          );
+        }
+      } catch {
+        // silently ignore
+      } finally {
+        setSleepSaving(false);
+      }
+    },
+    []
+  );
+
+  const sleepFocusSuggestion = useMemo(() => {
+    if (sleepEntries.length === 0) return null;
+    const latest = sleepEntries[0];
+    return computeSuggestedFocusMinutes(latest.sleepHours, latest.hrvMs);
+  }, [sleepEntries]);
 
   const weeklyCaloriesChartOptions = useMemo<Highcharts.Options>(() => {
     if (!weeklySummaryResult) return { ...chartBaseOptions() };
@@ -13420,6 +13634,8 @@ export default function ChatPage() {
                         timelineEyebrow={landingTranslations.landingTimelineEyebrow}
                         timelineLabel={headerCalendarLabel}
                         timelineEvents={selectedLandingDayTimelineEvents}
+                        caffeineIntakes={selectedLandingDayCaffeineIntakes}
+                        caffeineFocusWindow={selectedLandingDayCaffeineFocusWindow}
                         featuredMentalModelName={mentalModelsIndex.size > 0 ? [...mentalModelsIndex.values()][0] : null}
                         secondOrderCitationsEnabled={secondOrderCitationsEnabled}
                         onToggleSecondOrderCitations={() => setSecondOrderCitationsEnabled((v) => !v)}
@@ -13427,6 +13643,11 @@ export default function ChatPage() {
                         onResponseVerbosityChange={setNewConversationResponseVerbosity}
                         onStartMindLabConversation={() => startSecondOrderConversation(!secondOrderCitationsEnabled, newConversationResponseVerbosity)}
                         onOpenConversations={() => { playSelectionChime(); setLibraryPanelOpen("conversations"); }}
+                        weeklySummary={landingWeeklySummary}
+                        sleepEntries={sleepEntries}
+                        sleepFocusSuggestion={sleepFocusSuggestion}
+                        sleepSaving={sleepSaving}
+                        onSaveSleepEntry={saveSleepEntry}
                       />
                       )}
                     {journalEntryJustSaved && (

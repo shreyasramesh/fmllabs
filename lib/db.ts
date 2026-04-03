@@ -335,6 +335,22 @@ interface FocusEntryDoc extends Omit<FocusEntry, "_id"> {
   _id?: ObjectId;
 }
 
+export interface SleepEntry {
+  _id?: string;
+  userId: string;
+  sleepHours: number;
+  hrvMs: number | null;
+  entryDay: number;
+  entryMonth: number;
+  entryYear: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface SleepEntryDoc extends Omit<SleepEntry, "_id"> {
+  _id?: ObjectId;
+}
+
 export interface DailyLifeReportSnapshot {
   _id?: string;
   userId: string;
@@ -2195,6 +2211,69 @@ export async function deleteFocusEntry(id: string, userId: string): Promise<bool
   return result.deletedCount > 0;
 }
 
+export async function addSleepEntry(
+  userId: string,
+  input: {
+    sleepHours: number;
+    hrvMs: number | null;
+    entryDay: number;
+    entryMonth: number;
+    entryYear: number;
+  }
+): Promise<SleepEntry & { _id: string }> {
+  const database = await getDb();
+  const now = new Date();
+  const doc: Omit<SleepEntryDoc, "_id"> = {
+    userId,
+    sleepHours: input.sleepHours,
+    hrvMs: input.hrvMs,
+    entryDay: input.entryDay,
+    entryMonth: input.entryMonth,
+    entryYear: input.entryYear,
+    createdAt: now,
+    updatedAt: now,
+  };
+  const collection = database.collection<SleepEntryDoc>("user_sleep_entries");
+  await collection.createIndex({ userId: 1, entryYear: -1, entryMonth: -1, entryDay: -1 });
+  const result = await collection.insertOne(doc);
+  return {
+    ...doc,
+    _id: result.insertedId.toString(),
+  };
+}
+
+export async function getSleepEntries(
+  userId: string,
+  options?: { limit?: number }
+): Promise<Array<SleepEntry & { _id: string }>> {
+  const database = await getDb();
+  const safeLimit = Math.max(1, Math.min(200, Math.floor(options?.limit ?? 30)));
+  const docs = await database
+    .collection<SleepEntryDoc>("user_sleep_entries")
+    .find({ userId })
+    .sort({ entryYear: -1, entryMonth: -1, entryDay: -1 })
+    .limit(safeLimit)
+    .toArray();
+  return docs.map((d) => ({
+    ...d,
+    _id: d._id.toString(),
+  }));
+}
+
+export async function deleteSleepEntry(id: string, userId: string): Promise<boolean> {
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return false;
+  }
+  const result = await database
+    .collection<SleepEntryDoc>("user_sleep_entries")
+    .deleteOne({ _id: oid, userId });
+  return result.deletedCount > 0;
+}
+
 function parseDayKeyParts(dayKey: string): { year: number; month: number; day: number } | null {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dayKey);
   if (!match) return null;
@@ -2573,6 +2652,7 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   await database.collection<ReusableJournalTagDoc>("user_reusable_journal_tags").deleteMany({ userId });
   await database.collection<WeightEntryDoc>("user_weight_entries").deleteMany({ userId });
   await database.collection<FocusEntryDoc>("user_focus_entries").deleteMany({ userId });
+  await database.collection<SleepEntryDoc>("user_sleep_entries").deleteMany({ userId });
   await database.collection<DailyLifeReportSnapshotDoc>("user_daily_life_reports").deleteMany({ userId });
   await database.collection<ReusableNutritionEntryUsageDoc>("user_reusable_nutrition_entry_usage").deleteMany({ userId });
   await database.collection("user_progress").deleteMany({ userId });

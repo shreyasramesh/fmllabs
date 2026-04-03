@@ -381,6 +381,7 @@ export interface CalorieTrackingNutritionFacts {
   vitaminAIu: number | null;
   vitaminCMg: number | null;
   vitaminDMcg: number | null;
+  caffeineMg: number | null;
 }
 
 export interface NutritionFactsFromMacrosInput {
@@ -439,7 +440,8 @@ Return ONLY valid JSON with exactly this shape:
   "potassiumMg": number | null,
   "vitaminAIu": number | null,
   "vitaminCMg": number | null,
-  "vitaminDMcg": number | null
+  "vitaminDMcg": number | null,
+  "caffeineMg": number | null
 }
 
 Rules:
@@ -472,6 +474,7 @@ ${input.entryText.trim().slice(0, 4000)}`
     vitaminAIu: null,
     vitaminCMg: null,
     vitaminDMcg: null,
+    caffeineMg: null,
   };
   try {
     const parsed = JSON.parse(cleaned) as Record<string, unknown>;
@@ -494,6 +497,7 @@ ${input.entryText.trim().slice(0, 4000)}`
       vitaminAIu: toFiniteNumberOrNull(parsed.vitaminAIu),
       vitaminCMg: toFiniteNumberOrNull(parsed.vitaminCMg),
       vitaminDMcg: toFiniteNumberOrNull(parsed.vitaminDMcg),
+      caffeineMg: toFiniteNumberOrNull(parsed.caffeineMg),
     };
   } catch {
     return fallback;
@@ -1250,7 +1254,8 @@ Return ONLY valid JSON with exactly this shape:
       "potassiumMg": number | null,
       "vitaminAIu": number | null,
       "vitaminCMg": number | null,
-      "vitaminDMcg": number | null
+      "vitaminDMcg": number | null,
+      "caffeineMg": number | null
     },
     "notes": "short note"
   } | null,
@@ -1309,6 +1314,7 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
           vitaminAIu?: unknown;
           vitaminCMg?: unknown;
           vitaminDMcg?: unknown;
+          caffeineMg?: unknown;
         };
         notes?: unknown;
       } | null;
@@ -1358,6 +1364,7 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
               vitaminAIu: toFiniteNumberOrNull(parsed.nutrition.facts?.vitaminAIu),
               vitaminCMg: toFiniteNumberOrNull(parsed.nutrition.facts?.vitaminCMg),
               vitaminDMcg: toFiniteNumberOrNull(parsed.nutrition.facts?.vitaminDMcg),
+              caffeineMg: toFiniteNumberOrNull(parsed.nutrition.facts?.caffeineMg),
             },
             notes: typeof parsed.nutrition.notes === "string" ? parsed.nutrition.notes.trim() : "",
           }
@@ -1410,6 +1417,7 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
           vitaminAIu: null,
           vitaminCMg: null,
           vitaminDMcg: null,
+          caffeineMg: null,
         },
         notes: "",
       },

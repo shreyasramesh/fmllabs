@@ -48,6 +48,7 @@ function randomMentalModelPrompt(): string {
 }
 
 const POMODORO_COMPLETION_NOTIFICATION_ID = 1600;
+const CAFFEINE_FOCUS_NOTIFICATION_ID = 1800;
 
 function toCapacitorWeekday(day: number): number {
   return day + 1; // JS 0-6 (Sun-Sat) => Capacitor 1-7
@@ -135,6 +136,41 @@ export async function notifyPomodoroCompleted(): Promise<{
         title: "Pomodoro complete",
         body: "Nice work. Your focus session just ended.",
         schedule: { at: new Date(Date.now() + 120) },
+      },
+    ],
+  });
+
+  return { ok: true };
+}
+
+export async function scheduleCaffeineFocusNotification(focusWindowStartMinute: number): Promise<{
+  ok: boolean;
+  reason?: "not-native" | "permission-denied";
+}> {
+  if (!Capacitor.isNativePlatform()) return { ok: true, reason: "not-native" };
+
+  let permissions: PermissionStatus = await LocalNotifications.checkPermissions();
+  if (permissions.display !== "granted") {
+    permissions = await LocalNotifications.requestPermissions();
+  }
+  if (permissions.display !== "granted") return { ok: false, reason: "permission-denied" };
+
+  await LocalNotifications.cancel({
+    notifications: [{ id: CAFFEINE_FOCUS_NOTIFICATION_ID }],
+  });
+
+  const now = new Date();
+  const notifyMinute = focusWindowStartMinute - 5;
+  const notifyDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), Math.floor(notifyMinute / 60), notifyMinute % 60, 0, 0);
+  if (notifyDate.getTime() <= Date.now()) return { ok: true };
+
+  await LocalNotifications.schedule({
+    notifications: [
+      {
+        id: CAFFEINE_FOCUS_NOTIFICATION_ID,
+        title: "Peak Focus Window",
+        body: "Your caffeine levels peak soon. Great time for deep thinking.",
+        schedule: { at: notifyDate },
       },
     ],
   });

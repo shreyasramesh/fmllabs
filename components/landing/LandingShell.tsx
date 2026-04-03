@@ -1,12 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
+import { LandingCaffeineChart } from "@/components/landing/LandingCaffeineChart";
 import { LandingDateStrip } from "@/components/landing/LandingDateStrip";
 import { LandingFocusCanvas } from "@/components/landing/LandingFocusCanvas";
+import { LandingSleepRecoveryChart } from "@/components/landing/LandingSleepRecoveryChart";
 import { LandingTimelineCard } from "@/components/landing/LandingTimelineCard";
 import { LandingTopBar } from "@/components/landing/LandingTopBar";
 import type {
+  CaffeineFocusWindow,
+  CaffeineIntake,
+  FocusDurationSuggestion,
   LandingActivityGroupSummary,
   LandingDateItem,
   LandingFigureSummary,
@@ -14,7 +19,9 @@ import type {
   LandingNutritionGoals,
   LandingNutritionSummary,
   LandingQuickCaptureItem,
+  LandingSleepEntry,
   LandingTimelineEvent,
+  LandingWeeklySummaryPreview,
 } from "@/components/landing/types";
 
 function ModuleCard({
@@ -29,7 +36,7 @@ function ModuleCard({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-neutral-200/70 bg-white/90 px-3 py-3 shadow-[0_12px_32px_rgba(15,23,42,0.05)] backdrop-blur dark:border-white/10 dark:bg-neutral-950/80">
+    <section className="rounded-2xl border border-neutral-200/70 bg-white/90 px-3 py-3 shadow-[0_12px_32px_rgba(15,23,42,0.05)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900">
       <h3 className="text-[13px] font-semibold text-foreground">{eyebrow}</h3>
       {description && (
         <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">{description}</p>
@@ -234,6 +241,8 @@ interface LandingShellProps {
   timelineEyebrow: string;
   timelineLabel: string;
   timelineEvents: LandingTimelineEvent[];
+  caffeineIntakes: CaffeineIntake[];
+  caffeineFocusWindow: CaffeineFocusWindow | null;
   featuredMentalModelName: string | null;
   secondOrderCitationsEnabled: boolean;
   onToggleSecondOrderCitations: () => void;
@@ -241,6 +250,11 @@ interface LandingShellProps {
   onResponseVerbosityChange: (value: "compact" | "detailed") => void;
   onStartMindLabConversation: () => void;
   onOpenConversations: () => void;
+  weeklySummary: LandingWeeklySummaryPreview | null;
+  sleepEntries: LandingSleepEntry[];
+  sleepFocusSuggestion: FocusDurationSuggestion | null;
+  sleepSaving: boolean;
+  onSaveSleepEntry: (sleepHours: number, hrvMs: number | null) => void;
 }
 
 export function LandingShell({
@@ -350,6 +364,8 @@ export function LandingShell({
   timelineEyebrow,
   timelineLabel,
   timelineEvents,
+  caffeineIntakes,
+  caffeineFocusWindow,
   featuredMentalModelName,
   secondOrderCitationsEnabled,
   onToggleSecondOrderCitations,
@@ -357,11 +373,29 @@ export function LandingShell({
   onResponseVerbosityChange,
   onStartMindLabConversation,
   onOpenConversations,
+  weeklySummary,
+  sleepEntries,
+  sleepFocusSuggestion,
+  sleepSaving,
+  onSaveSleepEntry,
 }: LandingShellProps) {
   const distanceToTarget =
     weightCurrentKg != null && weightTargetKg != null
       ? Math.abs(weightCurrentKg - weightTargetKg).toFixed(1)
       : null;
+
+  const [sleepHoursInput, setSleepHoursInput] = useState("7.5");
+  const [hrvInput, setHrvInput] = useState("");
+
+  const lastSleep = sleepEntries.length > 0 ? sleepEntries[0] : null;
+
+  function handleSaveSleep() {
+    const hours = parseFloat(sleepHoursInput);
+    if (isNaN(hours) || hours < 0.5 || hours > 24) return;
+    const hrv = hrvInput.trim() ? parseFloat(hrvInput) : null;
+    if (hrv != null && (isNaN(hrv) || hrv < 1 || hrv > 300)) return;
+    onSaveSleepEntry(Math.round(hours * 10) / 10, hrv != null ? Math.round(hrv) : null);
+  }
 
   return (
     <div className="w-full max-w-[88rem] min-w-0 space-y-4 animate-fade-in-up">
@@ -483,7 +517,7 @@ export function LandingShell({
             <button
               type="button"
               onClick={onStartMindLabConversation}
-              className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#C87B3A] px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition-colors hover:bg-[#B56D30]"
+              className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
             >
               Start conversation
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
@@ -540,7 +574,7 @@ export function LandingShell({
             <button
               type="button"
               onClick={onOpenOneOnOneMentor}
-              className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#C87B3A] px-3 py-1.5 text-[13px] font-semibold text-white shadow-sm transition-colors hover:bg-[#B56D30]"
+              className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
             >
               1:1 with a mentor
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
@@ -558,8 +592,74 @@ export function LandingShell({
         </ModuleCard>
       </div>
 
-      {/* Row 2: Growth Studio · Weight · Activity */}
+      {/* Row 2: Weekly Summary · Growth Studio · Weight */}
       <div className="grid gap-4 xl:grid-cols-3">
+        <ModuleCard eyebrow="Weekly Summary" title={weeklySummaryLabel}>
+          {weeklySummary ? (
+            <>
+              <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                {weeklySummary.weekStartLabel} – {weeklySummary.weekEndLabel}
+              </p>
+
+              <div className="mt-2 grid grid-cols-7 gap-1 text-center">
+                {weeklySummary.rows.map((row) => {
+                  const hasActivity = row.foodEntries > 0 || row.exerciseEntries > 0 || row.focusMinutes > 0;
+                  return (
+                    <div key={row.dayKey} className="flex flex-col items-center gap-0.5">
+                      <span className="text-[9px] font-medium text-neutral-400 dark:text-neutral-500">
+                        {row.weekdayLabel.slice(0, 1)}
+                      </span>
+                      <span
+                        className={`flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-semibold ${
+                          hasActivity
+                            ? "bg-emerald-500/15 text-emerald-700 dark:bg-emerald-400/20 dark:text-emerald-300"
+                            : "bg-neutral-100 text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500"
+                        }`}
+                      >
+                        {row.foodEntries + row.exerciseEntries || "·"}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-2.5 grid grid-cols-3 gap-1.5">
+                <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
+                  <p className="text-lg font-semibold text-foreground">{weeklySummary.trackedDays}<span className="text-[11px] font-normal text-neutral-400">/7</span></p>
+                  <p className="text-[10px] text-neutral-500 dark:text-neutral-400">Days tracked</p>
+                </div>
+                <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
+                  <p className={`text-lg font-semibold ${weeklySummary.caloriesUnderBudget >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
+                    {Math.abs(weeklySummary.caloriesUnderBudget).toLocaleString()}
+                  </p>
+                  <p className="text-[10px] text-neutral-500 dark:text-neutral-400">
+                    {weeklySummary.caloriesUnderBudget >= 0 ? "Under budget" : "Over budget"}
+                  </p>
+                </div>
+                <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
+                  <p className="text-lg font-semibold text-foreground">{weeklySummary.foodEntries}</p>
+                  <p className="text-[10px] text-neutral-500 dark:text-neutral-400">Meals logged</p>
+                </div>
+              </div>
+
+              <div className="mt-2">
+                <button
+                  type="button"
+                  onClick={onOpenWeeklySummary}
+                  className="w-full rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-medium text-[#7C522D] transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                >
+                  View full report
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="space-y-2">
+              <div className="h-6 w-3/4 animate-pulse rounded bg-neutral-200 dark:bg-neutral-700" />
+              <div className="h-20 animate-pulse rounded-lg bg-neutral-200 dark:bg-neutral-700" />
+            </div>
+          )}
+        </ModuleCard>
+
         <ModuleCard eyebrow="Growth Studio" title={growthStudioTitle}>
           <div className="space-y-2">
             <div>
@@ -628,7 +728,10 @@ export function LandingShell({
             </button>
           </div>
         </ModuleCard>
+      </div>
 
+      {/* Row 3: Activity · Sleep & Recovery */}
+      <div className="grid gap-4 xl:grid-cols-3">
         <ModuleCard
           eyebrow="Activity"
           title={activityTitle}
@@ -661,9 +764,65 @@ export function LandingShell({
             )}
           </div>
         </ModuleCard>
+
+        <ModuleCard eyebrow="Sleep &amp; Recovery" title="Log Last Night">
+          <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+                  Sleep (hours)
+                </label>
+                <input
+                  type="number"
+                  step="0.5"
+                  min="0.5"
+                  max="24"
+                  value={sleepHoursInput}
+                  onChange={(e) => setSleepHoursInput(e.target.value)}
+                  className="mt-0.5 w-full rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-indigo-400 dark:border-neutral-700 dark:bg-neutral-900"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+                  HRV (ms, optional)
+                </label>
+                <input
+                  type="number"
+                  step="1"
+                  min="1"
+                  max="300"
+                  placeholder="—"
+                  value={hrvInput}
+                  onChange={(e) => setHrvInput(e.target.value)}
+                  className="mt-0.5 w-full rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-indigo-400 dark:border-neutral-700 dark:bg-neutral-900"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              disabled={sleepSaving}
+              onClick={handleSaveSleep}
+              className="w-full rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-medium text-[#7C522D] transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+            >
+              {sleepSaving ? "Saving…" : "Log last night"}
+            </button>
+            {lastSleep && (
+              <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                Last: {lastSleep.sleepHours}h sleep
+                {lastSleep.hrvMs != null ? ` · ${lastSleep.hrvMs} ms HRV` : ""}
+                {" · "}
+                {lastSleep.dayKey}
+              </p>
+            )}
+          </div>
+        </ModuleCard>
       </div>
 
       <LandingTimelineCard eyebrow={timelineEyebrow} dayLabel={timelineLabel} events={timelineEvents} />
+
+      <LandingCaffeineChart intakes={caffeineIntakes} focusWindow={caffeineFocusWindow} />
+
+      <LandingSleepRecoveryChart entries={sleepEntries} focusSuggestion={sleepFocusSuggestion} />
     </div>
   );
 }

@@ -60,8 +60,47 @@ export interface LandingNutritionGoals {
   fatGrams: number;
 }
 
+export interface CaffeineIntake {
+  minuteOfDay: number;
+  mg: number;
+}
+
+export interface CaffeineFocusWindow {
+  startMinute: number;
+  endMinute: number;
+}
+
 export interface LandingFocusSummaryRow {
   id: string;
   label: string;
   minutes: number;
+}
+
+export interface LandingWeeklySummaryPreview {
+  weekStartLabel: string;
+  weekEndLabel: string;
+  trackedDays: number;
+  caloriesUnderBudget: number;
+  foodEntries: number;
+  exerciseEntries: number;
+  focusMinutes: number;
+  rows: Array<{
+    dayKey: string;
+    weekdayLabel: string;
+    tracked: boolean;
+    foodEntries: number;
+    exerciseEntries: number;
+    focusMinutes: number;
+  }>;
+}
+
+export interface LandingSleepEntry {
+  sleepHours: number;
+  hrvMs: number | null;
+  dayKey: string;
+}
+
+export interface FocusDurationSuggestion {
+  minutes: number;
+  reason: string;
 }

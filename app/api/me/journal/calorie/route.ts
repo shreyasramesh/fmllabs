@@ -69,6 +69,7 @@ function formatNutritionJournalText(entryText: string, answers: string[], estima
     vitaminAIu: number | null;
     vitaminCMg: number | null;
     vitaminDMcg: number | null;
+    caffeineMg: number | null;
   };
   notes: string;
 }, assumptions: string[], customTag?: string): string {
@@ -105,6 +106,7 @@ function formatNutritionJournalText(entryText: string, answers: string[], estima
   lines.push(`- Vitamin A: ${estimate.facts?.vitaminAIu ?? "unknown"} IU`);
   lines.push(`- Vitamin C: ${estimate.facts?.vitaminCMg ?? "unknown"} mg`);
   lines.push(`- Vitamin D: ${estimate.facts?.vitaminDMcg ?? "unknown"} mcg`);
+  lines.push(`- Caffeine: ${estimate.facts?.caffeineMg ?? "unknown"} mg`);
   if ((customTag ?? "").trim()) lines.push(`- Tag: ${(customTag ?? "").trim()}`);
   if (estimate.notes.trim()) lines.push(`- Notes: ${estimate.notes.trim()}`);
   if (assumptions.length > 0) {
@@ -301,6 +303,7 @@ function parseNutritionSnapshotFromJournalText(text: string) {
       vitaminAIu: parseOptionalMetric(text, /- Vitamin A:\s*([^\n]+?)\s*IU/i),
       vitaminCMg: parseOptionalMetric(text, /- Vitamin C:\s*([^\n]+?)\s*mg/i),
       vitaminDMcg: parseOptionalMetric(text, /- Vitamin D:\s*([^\n]+?)\s*mcg/i),
+      caffeineMg: parseOptionalMetric(text, /- Caffeine:\s*([^\n]+?)\s*mg/i),
     },
   };
 }
@@ -344,6 +347,7 @@ async function persistReusableTags(
         vitaminAIu?: number | null;
         vitaminCMg?: number | null;
         vitaminDMcg?: number | null;
+        caffeineMg?: number | null;
       };
     };
   }
@@ -449,6 +453,7 @@ export async function POST(request: Request) {
           vitaminAIu: nutritionSnapshot.facts.vitaminAIu ?? null,
           vitaminCMg: nutritionSnapshot.facts.vitaminCMg ?? null,
           vitaminDMcg: nutritionSnapshot.facts.vitaminDMcg ?? null,
+          caffeineMg: nutritionSnapshot.facts.caffeineMg ?? null,
         },
         notes: "",
       };
@@ -528,6 +533,7 @@ export async function POST(request: Request) {
               vitaminAIu?: number | null;
               vitaminCMg?: number | null;
               vitaminDMcg?: number | null;
+              caffeineMg?: number | null;
             };
           }
         | null = null;
@@ -560,6 +566,7 @@ export async function POST(request: Request) {
               vitaminAIu?: number | null;
               vitaminCMg?: number | null;
               vitaminDMcg?: number | null;
+              caffeineMg?: number | null;
             }
           | undefined = undefined;
         if (obj.facts !== undefined) {
@@ -586,6 +593,7 @@ export async function POST(request: Request) {
             "vitaminAIu",
             "vitaminCMg",
             "vitaminDMcg",
+            "caffeineMg",
           ] as const;
           facts = {};
           for (const key of factKeys) {
@@ -649,6 +657,7 @@ export async function POST(request: Request) {
               vitaminAIu: null,
               vitaminCMg: null,
               vitaminDMcg: null,
+              caffeineMg: null,
             };
           }
           const facts = nutritionOverrides.facts;
@@ -670,6 +679,7 @@ export async function POST(request: Request) {
           if (facts.vitaminAIu !== undefined) estimate.nutrition.facts.vitaminAIu = facts.vitaminAIu;
           if (facts.vitaminCMg !== undefined) estimate.nutrition.facts.vitaminCMg = facts.vitaminCMg;
           if (facts.vitaminDMcg !== undefined) estimate.nutrition.facts.vitaminDMcg = facts.vitaminDMcg;
+          if (facts.caffeineMg !== undefined) estimate.nutrition.facts.caffeineMg = facts.caffeineMg;
         }
       }
       if (!persist) {
@@ -713,6 +723,7 @@ export async function POST(request: Request) {
             vitaminAIu: null,
             vitaminCMg: null,
             vitaminDMcg: null,
+            caffeineMg: null,
           },
           notes: "",
         };

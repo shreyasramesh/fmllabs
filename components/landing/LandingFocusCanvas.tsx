@@ -226,7 +226,7 @@ export function LandingFocusCanvas({
   }, []);
 
   return (
-    <section className="w-full rounded-[2.2rem] border border-neutral-200/70 bg-white/90 p-4 shadow-[0_28px_80px_rgba(15,23,42,0.09)] backdrop-blur dark:border-white/10 dark:bg-neutral-950/85 sm:p-5">
+    <section className="w-full rounded-[2.2rem] border border-neutral-200/70 bg-white/90 p-4 shadow-[0_28px_80px_rgba(15,23,42,0.09)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900 sm:p-5">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col items-center gap-2 text-center">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
@@ -240,7 +240,7 @@ export function LandingFocusCanvas({
           </p>
         </div>
 
-        <div className="relative rounded-[2.2rem] border border-[#ECD9C8] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,247,238,0.96)_58%,rgba(255,244,236,0.92)_100%)] px-4 py-6 dark:border-[#60402B] dark:bg-[radial-gradient(circle_at_top,rgba(42,30,22,0.98),rgba(24,19,15,0.96)_58%,rgba(20,15,12,0.92)_100%)] sm:px-6">
+        <div className="relative rounded-[2.2rem] border border-[#ECD9C8] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,247,238,0.96)_58%,rgba(255,244,236,0.92)_100%)] px-4 py-6 dark:border-neutral-700 dark:bg-none dark:bg-neutral-800 sm:px-6">
           <div className="mx-auto flex max-w-[64rem] items-center justify-center">
             <div className="min-w-0 flex-1">
               <div className="mx-auto flex max-w-[30rem] flex-col items-center">
@@ -352,7 +352,7 @@ export function LandingFocusCanvas({
                     })}
                   </svg>
 
-                  <div className="absolute inset-[7rem] rounded-full border border-[#EADFD3]/60 bg-[radial-gradient(circle,rgba(255,250,240,0.97),rgba(255,245,228,0.94)_70%,rgba(255,240,218,0.88)_100%)] shadow-[inset_0_0_30px_rgba(255,230,190,0.3)] dark:border-[#5F4634]/50 dark:bg-[radial-gradient(circle,rgba(55,40,28,0.97),rgba(42,30,22,0.94)_70%,rgba(32,24,18,0.9)_100%)] sm:inset-[8.5rem]" />
+                  <div className="absolute inset-[7rem] rounded-full border border-[#EADFD3]/60 bg-[radial-gradient(circle,rgba(255,250,240,0.97),rgba(255,245,228,0.94)_70%,rgba(255,240,218,0.88)_100%)] shadow-[inset_0_0_30px_rgba(255,230,190,0.3)] dark:border-neutral-700/50 dark:bg-none dark:bg-neutral-800 dark:shadow-none sm:inset-[8.5rem]" />
 
 
                   <button
@@ -405,7 +405,7 @@ export function LandingFocusCanvas({
                         className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
                           pomodoroDurationMinutes === minutes
                             ? "border-[#B87B51] bg-[#FBF4EC] text-[#7C522D] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7]"
-                            : "border-neutral-300 bg-white/80 text-neutral-700 hover:bg-white dark:border-neutral-700 dark:bg-neutral-900/80 dark:text-neutral-200 dark:hover:bg-neutral-900"
+                            : "border-neutral-300 bg-white/80 text-neutral-700 hover:bg-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
                         } disabled:opacity-50`}
                       >
                         {minutes}m
@@ -418,20 +418,20 @@ export function LandingFocusCanvas({
                       onChange={(event) => onFocusSessionTagInputChange(event.target.value)}
                       placeholder="Tag this focus session..."
                       disabled={focusTrackerSaving}
-                      className="min-w-[15rem] flex-1 rounded-full border border-neutral-300 bg-white/88 px-5 py-2.5 text-sm dark:border-neutral-700 dark:bg-neutral-950/85"
+                      className="min-w-[15rem] flex-1 rounded-full border border-neutral-300 bg-white/88 px-5 py-2.5 text-sm dark:border-neutral-700 dark:bg-neutral-800"
                     />
 
                     <button
                       type="button"
                       onClick={pomodoroSessionActive ? (pomodoroRunning ? onPausePomodoro : onStartPomodoro) : onStartPomodoro}
                       disabled={focusTrackerSaving}
-                      className="rounded-full bg-white/90 px-5 py-2.5 text-sm font-semibold text-foreground shadow-sm ring-1 ring-[#E4D8CB] transition-colors hover:bg-white disabled:opacity-50 dark:bg-neutral-900/90 dark:ring-white/10 dark:hover:bg-neutral-900"
+                      className="rounded-full bg-white/90 px-5 py-2.5 text-sm font-semibold text-foreground shadow-sm ring-1 ring-[#E4D8CB] transition-colors hover:bg-white disabled:opacity-50 dark:bg-neutral-900 dark:ring-white/10 dark:hover:bg-neutral-800"
                     >
                       {pomodoroSessionActive ? (pomodoroRunning ? "Pause" : "Resume") : "Start"}
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-5 overflow-hidden rounded-[1.35rem] border border-[#E4D8CB] bg-white/86 text-center dark:border-white/10 dark:bg-neutral-900/86">
+                  <div className="grid grid-cols-5 overflow-hidden rounded-[1.35rem] border border-[#E4D8CB] bg-white/86 text-center dark:border-white/10 dark:bg-neutral-900">
                     <div className="border-r border-[#EDE2D7] px-3 py-2 dark:border-white/10">
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">{carbsLabel}</p>
                       <div className="mt-1 flex items-center justify-center gap-1">
@@ -472,7 +472,7 @@ export function LandingFocusCanvas({
                       value={pomodoroCustomMinutesInput}
                       onChange={(event) => onPomodoroCustomMinutesInputChange(event.target.value)}
                       disabled={focusTrackerSaving || pomodoroSessionActive}
-                      className="w-24 rounded-full border border-neutral-300 bg-white/88 px-4 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-950/85"
+                      className="w-24 rounded-full border border-neutral-300 bg-white/88 px-4 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-950"
                     />
                     <button
                       type="button"
@@ -514,7 +514,7 @@ export function LandingFocusCanvas({
                     </p>
                   )}
 
-                  <div className="rounded-[1.35rem] border border-neutral-200/80 bg-white/75 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-900/60">
+                  <div className="rounded-[1.35rem] border border-neutral-200/80 bg-white/75 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-900">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500 dark:text-neutral-400">
