@@ -26,12 +26,20 @@ function formatTime(minuteOfDay: number): string {
   return `${h12}:${String(m).padStart(2, "0")} ${suffix}`;
 }
 
+function getPstMinuteOfDay(): number {
+  const now = new Date();
+  const pst = new Date(now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
+  return pst.getHours() * 60 + pst.getMinutes();
+}
+
 interface LandingCaffeineChartProps {
   intakes: CaffeineIntake[];
   focusWindow: CaffeineFocusWindow | null;
 }
 
 export function LandingCaffeineChart({ intakes, focusWindow }: LandingCaffeineChartProps) {
+  const nowMinute = useMemo(getPstMinuteOfDay, []);
+
   const chartOptions = useMemo<Highcharts.Options>(() => {
     if (intakes.length === 0) return {};
 
@@ -103,6 +111,23 @@ export function LandingCaffeineChart({ intakes, focusWindow }: LandingCaffeineCh
         lineColor: "#e5e5e5",
         tickColor: "#e5e5e5",
         plotBands,
+        plotLines: nowMinute >= startMinute && nowMinute <= endMinute
+          ? [
+              {
+                value: nowMinute,
+                color: "#B87B51",
+                width: 2,
+                dashStyle: "Dash",
+                zIndex: 5,
+                label: {
+                  text: "Now",
+                  style: { color: "#B87B51", fontSize: "9px", fontWeight: "700" },
+                  align: "center",
+                  y: -4,
+                },
+              },
+            ]
+          : [],
       },
       yAxis: {
         title: { text: undefined },
@@ -166,7 +191,7 @@ export function LandingCaffeineChart({ intakes, focusWindow }: LandingCaffeineCh
         ],
       },
     };
-  }, [intakes, focusWindow]);
+  }, [intakes, focusWindow, nowMinute]);
 
   if (intakes.length === 0) return null;
 

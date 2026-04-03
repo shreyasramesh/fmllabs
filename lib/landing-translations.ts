@@ -195,6 +195,7 @@ export interface LandingTranslations {
   landingActivityDescription: string;
   landingTapToInspectLabel: string;
   landingTimelineEyebrow: string;
+  landingHeroHabitsLabel: string;
 }
 
 const EN: LandingTranslations = {
@@ -395,6 +396,7 @@ const EN: LandingTranslations = {
     "Group summaries stay connected to the underlying existing day-level landing activity modal.",
   landingTapToInspectLabel: "Tap to inspect entries",
   landingTimelineEyebrow: "Timeline",
+  landingHeroHabitsLabel: "Hero Habits",
 };
 
 const TRANSLATIONS: Partial<Record<LanguageCode, Partial<LandingTranslations>>> = {

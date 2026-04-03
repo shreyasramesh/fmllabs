@@ -179,6 +179,14 @@ export interface Habit {
   /** AI-generated research notes to better understand this experiment. */
   researchNotes?: string;
   researchUpdatedAt?: Date;
+  /** When true, habit appears in the Hero Habits landing module. */
+  isHeroHabit?: boolean;
+  /** AI-estimated calorie impact when the habit is completed once. */
+  calorieImpact?: {
+    type: "intake" | "burn";
+    calories: number;
+    label: string;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -1347,6 +1355,8 @@ export async function createHabit(
     tips: string;
     intendedMonth?: number;
     intendedYear?: number;
+    isHeroHabit?: boolean;
+    calorieImpact?: { type: "intake" | "burn"; calories: number; label: string };
   }
 ): Promise<Habit & { _id: string }> {
   const database = await getDb();
@@ -1363,6 +1373,8 @@ export async function createHabit(
     description: habit.description,
     howToFollowThrough: habit.howToFollowThrough,
     tips: habit.tips,
+    ...(habit.isHeroHabit ? { isHeroHabit: true } : {}),
+    ...(habit.calorieImpact ? { calorieImpact: habit.calorieImpact } : {}),
     createdAt: now,
     updatedAt: now,
   }) as Omit<Habit, "_id">;
@@ -1386,6 +1398,8 @@ export async function updateHabit(
     bucket?: HabitBucket;
     intendedMonth?: number | null;
     intendedYear?: number | null;
+    isHeroHabit?: boolean;
+    calorieImpact?: { type: "intake" | "burn"; calories: number; label: string } | null;
   }
 ): Promise<boolean> {
   const database = await getDb();
@@ -1400,11 +1414,21 @@ export async function updateHabit(
     researchUpdatedAt: researchUpdatedAt,
     intendedMonth: im,
     intendedYear: iy,
+    isHeroHabit: _hero,
+    calorieImpact: _cal,
     ...textUpdates
   } = updates;
   const enc = encryptHabitFields<Record<string, unknown>>(textUpdates as object);
   const setDoc: Record<string, unknown> = { ...enc, updatedAt: new Date() };
   if (updates.bucket !== undefined) setDoc.bucket = updates.bucket;
+  if (updates.isHeroHabit !== undefined) setDoc.isHeroHabit = updates.isHeroHabit;
+  if (updates.calorieImpact !== undefined) {
+    if (updates.calorieImpact === null) {
+      setDoc.calorieImpact = null;
+    } else {
+      setDoc.calorieImpact = updates.calorieImpact;
+    }
+  }
   if (researchUpdatedAt instanceof Date) {
     setDoc.researchUpdatedAt = researchUpdatedAt;
   }
@@ -1443,6 +1467,140 @@ export async function deleteHabit(id: string, userId: string): Promise<boolean> 
   }
   const result = await database.collection<HabitDoc>("habits").deleteOne({ _id: oid, userId });
   return result.deletedCount > 0;
+}
+
+// ---------------------------------------------------------------------------
+// Habit completions (daily check-offs for 30-day experiments)
+// ---------------------------------------------------------------------------
+
+export interface HabitCompletion {
+  _id?: string;
+  userId: string;
+  habitId: string;
+  dateKey: string;
+  completedAt: Date;
+  /** ID of the journal transcript created for calorie tracking (if applicable). */
+  journalTranscriptId?: string;
+}
+
+interface HabitCompletionDoc extends Omit<HabitCompletion, "_id"> {
+  _id: ObjectId;
+}
+
+let habitCompletionIndexEnsured = false;
+
+async function ensureHabitCompletionIndex(db: Db) {
+  if (habitCompletionIndexEnsured) return;
+  await db
+    .collection("habit_completions")
+    .createIndex({ userId: 1, habitId: 1, dateKey: 1 }, { unique: true });
+  habitCompletionIndexEnsured = true;
+}
+
+export async function getHabitCompletions(
+  userId: string,
+  fromDateKey: string,
+  toDateKey: string
+): Promise<Array<{ habitId: string; dateKey: string }>> {
+  const database = await getDb();
+  await ensureHabitCompletionIndex(database);
+  const docs = await database
+    .collection<HabitCompletionDoc>("habit_completions")
+    .find({
+      userId,
+      dateKey: { $gte: fromDateKey, $lte: toDateKey },
+    })
+    .project<{ habitId: string; dateKey: string }>({ habitId: 1, dateKey: 1, _id: 0 })
+    .toArray();
+  return docs;
+}
+
+export async function toggleHabitCompletion(
+  userId: string,
+  habitId: string,
+  dateKey: string,
+  calorieImpact?: { type: "intake" | "burn"; calories: number; label: string } | null
+): Promise<{ completed: boolean }> {
+  const database = await getDb();
+  await ensureHabitCompletionIndex(database);
+  const col = database.collection<HabitCompletionDoc>("habit_completions");
+  const existing = await col.findOne({ userId, habitId, dateKey });
+  if (existing) {
+    if (existing.journalTranscriptId) {
+      try {
+        await database.collection("transcripts").deleteOne({
+          _id: new ObjectId(existing.journalTranscriptId),
+          userId,
+        });
+      } catch {
+        /* best-effort cleanup */
+      }
+    }
+    await col.deleteOne({ _id: existing._id });
+    return { completed: false };
+  }
+
+  let journalTranscriptId: string | undefined;
+  if (calorieImpact && calorieImpact.calories > 0) {
+    const [yearStr, monthStr, dayStr] = dateKey.split("-");
+    const entryDate = {
+      day: parseInt(dayStr, 10),
+      month: parseInt(monthStr, 10),
+      year: parseInt(yearStr, 10),
+    };
+
+    let transcriptText: string;
+    if (calorieImpact.type === "intake") {
+      transcriptText = [
+        "Calorie Tracking Journal (Nutrition)",
+        "",
+        `Enriched entry:`,
+        calorieImpact.label,
+        "",
+        "Nutritional estimate:",
+        `- Calories: ${calorieImpact.calories} kcal`,
+        `- Carbs: 0 g`,
+        `- Protein: 0 g`,
+        `- Fat: 0 g`,
+        "",
+        "Source: Habit completion",
+      ].join("\n");
+    } else {
+      transcriptText = [
+        "Calorie Tracking Journal (Exercise)",
+        "",
+        `Activity:`,
+        calorieImpact.label,
+        "",
+        "Exercise estimate:",
+        `- Calories burned: ${calorieImpact.calories} kcal`,
+        `- Carbs used: 0 g`,
+        `- Fat used: 0 g`,
+        `- Protein delta: 0 g`,
+        "",
+        "Source: Habit completion",
+      ].join("\n");
+    }
+
+    const journalEntry = await saveJournalTranscript(
+      userId,
+      transcriptText,
+      `Habit: ${calorieImpact.label}`,
+      entryDate,
+      { journalCategory: calorieImpact.type === "intake" ? "nutrition" : "exercise" }
+    );
+    journalTranscriptId = journalEntry._id;
+  }
+
+  await col.insertOne({
+    _id: new ObjectId(),
+    userId,
+    habitId,
+    dateKey,
+    completedAt: new Date(),
+    ...(journalTranscriptId ? { journalTranscriptId } : {}),
+  });
+  return { completed: true };
 }
 
 export async function getSavedPerspectiveCards(

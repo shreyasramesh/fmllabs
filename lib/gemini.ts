@@ -2185,7 +2185,7 @@ export async function generateHabitFromConceptOrLtm(
   languageName?: string,
   usageContext?: GeminiUsageContext,
   bucket?: HabitBucket
-): Promise<{ name: string; description: string; howToFollowThrough: string; tips: string }> {
+): Promise<{ name: string; description: string; howToFollowThrough: string; tips: string; calorieImpact: { type: "intake" | "burn"; calories: number; label: string } | null }> {
   const languageInstruction =
     languageName && languageName !== "English"
       ? ` Write all content in ${languageName}.`
@@ -2198,11 +2198,12 @@ The user chose this life-area for the habit (stay aligned with it; examples are 
     : "";
   const model = getModel();
   const result = await model.generateContent(
-    `You are converting a concept or memory into a daily habit the user can practice. Return a JSON object with exactly four keys:
+    `You are converting a concept or memory into a daily habit the user can practice. Return a JSON object with exactly five keys:
 - "name": A short 2-5 word name for the habit (e.g. "Morning reflection", "Pause before reacting").
-- "description": A 2-4 sentence description of what this habit is and why it matters for daily life.
-- "howToFollowThrough": Step-by-step instructions for how to practice this habit. Use newline-separated bullet points (one step per line).
-- "tips": Practical tips for sticking with it, avoiding pitfalls, or integrating into daily routine. Use newline-separated bullet points (one tip per line).
+- "description": A rich 2-3 paragraph description. The first paragraph describes the habit concretely—what it is, when and how to do it. The second paragraph explains the deeper benefit and why it matters. An optional third paragraph connects it to long-term growth. Write in a warm, grounded tone. Separate paragraphs with "\\n\\n".
+- "howToFollowThrough": 4-6 actionable steps. Each step should be a complete, specific instruction (not vague), written as "- Step text" with steps separated by "\\n". Example: "- Set a timer for ten minutes to avoid checking the clock during your practice."
+- "tips": 3-5 practical tips for sticking with the habit, reducing friction, or avoiding common pitfalls. Each tip should be concrete and specific, written as "- Tip text" with tips separated by "\\n". Example: "- Place your yoga mat out the night before to reduce friction when you wake up."
+- "calorieImpact": Estimate the calorie impact of completing this habit once. Return an object with three keys: "type" ("intake" if the habit involves consuming food/drink, "burn" if it involves physical activity or energy expenditure), "calories" (estimated kcal as a positive integer), and "label" (a short human-readable label like "Morning coffee ~5 kcal" or "Standing 3 hrs ~150 kcal burned"). If the habit has no meaningful calorie impact (e.g. meditation, journaling), return null.
 ${languageInstruction}${bucketBlock}
 
 Return ONLY valid JSON, no markdown or extra text.
@@ -2219,13 +2220,24 @@ Enrichment: ${source.enrichmentPrompt}`
     description?: string;
     howToFollowThrough?: string;
     tips?: string;
+    calorieImpact?: { type?: string; calories?: number; label?: string } | null;
   };
   if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const rawCal = parsed.calorieImpact;
+  const calorieImpact =
+    rawCal &&
+    (rawCal.type === "intake" || rawCal.type === "burn") &&
+    typeof rawCal.calories === "number" &&
+    rawCal.calories > 0 &&
+    typeof rawCal.label === "string"
+      ? { type: rawCal.type as "intake" | "burn", calories: Math.round(rawCal.calories), label: rawCal.label }
+      : null;
   return {
     name: parsed.name ?? "Daily habit",
     description: parsed.description ?? "",
     howToFollowThrough: parsed.howToFollowThrough ?? "",
     tips: parsed.tips ?? "",
+    calorieImpact,
   };
 }
 
@@ -2234,7 +2246,7 @@ export async function generateHabitFromManualDraft(
   input: { bucket: HabitBucket; name: string; description: string },
   languageName?: string,
   usageContext?: GeminiUsageContext
-): Promise<{ name: string; description: string; howToFollowThrough: string; tips: string }> {
+): Promise<{ name: string; description: string; howToFollowThrough: string; tips: string; calorieImpact: { type: "intake" | "burn"; calories: number; label: string } | null }> {
   const languageInstruction =
     languageName && languageName !== "English"
       ? ` Write all content in ${languageName}.`
@@ -2247,11 +2259,12 @@ Life area for this habit (stay aligned):
   const result = await model.generateContent(
     `The user wants to practice a daily habit. They provided a working title and description (the description may be rough or brief).
 
-Your task — return a JSON object with exactly four keys:
+Your task — return a JSON object with exactly five keys:
 - "name": A clear, concise habit name (2-5 words). Refine their title if needed for clarity; keep their intent.
-- "description": A polished 2-4 sentence description of what this habit is and why it matters—clearer and more concrete than their draft, without changing their underlying intent.
-- "howToFollowThrough": Step-by-step instructions for practicing the habit. Use newline-separated lines (one step per line), like bullet points without bullets.
-- "tips": Practical tips for sticking with it, avoiding pitfalls, or fitting it into daily life. Newline-separated lines (one tip per line).
+- "description": A rich 2-3 paragraph description that elevates the user's rough draft into something polished and inspiring, without changing their underlying intent. The first paragraph describes the habit concretely—what it is, when and how to do it. The second paragraph explains the deeper benefit and why it matters. An optional third paragraph connects it to long-term growth. Write in a warm, grounded tone. Separate paragraphs with "\\n\\n".
+- "howToFollowThrough": 4-6 actionable steps. Each step should be a complete, specific instruction (not vague), written as "- Step text" with steps separated by "\\n". Example: "- Set a timer for ten minutes to avoid checking the clock during your practice."
+- "tips": 3-5 practical tips for sticking with the habit, reducing friction, or avoiding common pitfalls. Each tip should be concrete and specific, written as "- Tip text" with tips separated by "\\n". Example: "- Place your yoga mat out the night before to reduce friction when you wake up."
+- "calorieImpact": Estimate the calorie impact of completing this habit once. Return an object with three keys: "type" ("intake" if the habit involves consuming food/drink, "burn" if it involves physical activity or energy expenditure), "calories" (estimated kcal as a positive integer), and "label" (a short human-readable label like "Morning coffee ~5 kcal" or "Standing 3 hrs ~150 kcal burned"). If the habit has no meaningful calorie impact (e.g. meditation, journaling), return null.
 
 User's working title: ${input.name.trim()}
 User's description:
@@ -2267,14 +2280,62 @@ Return ONLY valid JSON, no markdown or extra text.`
     description?: string;
     howToFollowThrough?: string;
     tips?: string;
+    calorieImpact?: { type?: string; calories?: number; label?: string } | null;
   };
   if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const rawCal = parsed.calorieImpact;
+  const calorieImpact =
+    rawCal &&
+    (rawCal.type === "intake" || rawCal.type === "burn") &&
+    typeof rawCal.calories === "number" &&
+    rawCal.calories > 0 &&
+    typeof rawCal.label === "string"
+      ? { type: rawCal.type as "intake" | "burn", calories: Math.round(rawCal.calories), label: rawCal.label }
+      : null;
   return {
     name: parsed.name?.trim() || input.name.trim() || "Daily habit",
     description: parsed.description?.trim() || input.description.trim(),
     howToFollowThrough: parsed.howToFollowThrough ?? "",
     tips: parsed.tips ?? "",
+    calorieImpact,
   };
+}
+
+export async function estimateHabitCalorieImpact(
+  input: { name: string; description: string },
+  usageContext?: GeminiUsageContext
+): Promise<{ type: "intake" | "burn"; calories: number; label: string } | null> {
+  const model = getModel();
+  const result = await model.generateContent(
+    `Given a daily habit, estimate its calorie impact for one completion. Return a JSON object with three keys:
+- "type": "intake" if the habit involves consuming food or drink (adds calories), or "burn" if it involves physical activity or energy expenditure (burns calories).
+- "calories": estimated kcal as a positive integer.
+- "label": a short human-readable label (e.g. "Morning coffee ~5 kcal" or "Standing 3 hrs ~150 kcal burned").
+
+If the habit has no meaningful calorie impact (e.g. meditation, journaling, reading), return the JSON value null.
+
+Return ONLY valid JSON, no markdown or extra text.
+
+Habit name: ${input.name}
+Description: ${input.description}`
+  );
+  const text = result.response.text().trim();
+  const cleaned = text.replace(/^```json\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  if (cleaned === "null") return null;
+  try {
+    const parsed = JSON.parse(cleaned) as { type?: string; calories?: number; label?: string } | null;
+    if (
+      parsed &&
+      (parsed.type === "intake" || parsed.type === "burn") &&
+      typeof parsed.calories === "number" &&
+      parsed.calories > 0 &&
+      typeof parsed.label === "string"
+    ) {
+      return { type: parsed.type as "intake" | "burn", calories: Math.round(parsed.calories), label: parsed.label };
+    }
+  } catch { /* invalid JSON */ }
+  return null;
 }
 
 export async function generateHabitResearchNotes(

@@ -70,11 +70,13 @@ export async function PATCH(
       bucket?: HabitBucket;
       intendedMonth?: number | null;
       intendedYear?: number | null;
+      isHeroHabit?: boolean;
     } = {};
     if (typeof body.name === "string") updates.name = body.name;
     if (typeof body.description === "string") updates.description = body.description;
     if (typeof body.howToFollowThrough === "string") updates.howToFollowThrough = body.howToFollowThrough;
     if (typeof body.tips === "string") updates.tips = body.tips;
+    if (typeof body.isHeroHabit === "boolean") updates.isHeroHabit = body.isHeroHabit;
     if (body.bucket !== undefined) {
       if (!isHabitBucket(body.bucket)) {
         return NextResponse.json({ error: "Invalid bucket" }, { status: 400 });

@@ -378,6 +378,8 @@ interface HabitItem {
   tips: string;
   researchNotes?: string;
   researchUpdatedAt?: string;
+  isHeroHabit?: boolean;
+  calorieImpact?: { type: "intake" | "burn"; calories: number; label: string } | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -2718,7 +2720,11 @@ function summarizeNutritionForDay(
     createdAt?: string;
   }>,
   dayKey: string,
-  caloriesTarget: number
+  caloriesTarget: number,
+  habitCalories?: {
+    habits: Array<{ _id: string; calorieImpact?: { type: "intake" | "burn"; calories: number; label: string } | null }>;
+    completions: Record<string, string[]>;
+  }
 ): {
   caloriesFood: number;
   caloriesExercise: number;
@@ -2735,6 +2741,7 @@ function summarizeNutritionForDay(
 
   for (const t of entries) {
     if (t.sourceType !== "journal" || !t.transcriptText) continue;
+    if (t.transcriptText.includes("Source: Habit completion")) continue;
     let itemDayKey: string | null = null;
     if (
       typeof t.journalEntryYear === "number" &&
@@ -2768,6 +2775,19 @@ function summarizeNutritionForDay(
       if (carbsUsed !== null) carbsGrams -= carbsUsed;
       if (fatUsed !== null) fatGrams -= fatUsed;
       if (proteinDelta !== null) proteinGrams += proteinDelta;
+    }
+  }
+
+  if (habitCalories) {
+    for (const h of habitCalories.habits) {
+      if (!h.calorieImpact || h.calorieImpact.calories <= 0) continue;
+      const completedDays = habitCalories.completions[h._id];
+      if (!completedDays || !completedDays.includes(dayKey)) continue;
+      if (h.calorieImpact.type === "intake") {
+        caloriesFood += h.calorieImpact.calories;
+      } else {
+        caloriesExercise += h.calorieImpact.calories;
+      }
     }
   }
 
@@ -3561,6 +3581,7 @@ export default function ChatPage() {
     }[]
   >([]);
   const [habits, setHabits] = useState<HabitItem[]>([]);
+  const [habitCompletions, setHabitCompletions] = useState<Record<string, string[]>>({});
   const [translatedTitles, setTranslatedTitles] = useState<Record<string, string>>({});
   const [savedTranscripts, setSavedTranscripts] = useState<{
     _id: string;
@@ -4344,6 +4365,8 @@ export default function ChatPage() {
   const [calorieTrackerSuggestions, setCalorieTrackerSuggestions] = useState<ReusableJournalSuggestion[]>([]);
   const [calorieTrackerSuggestionsLoading, setCalorieTrackerSuggestionsLoading] = useState(false);
   const [calorieTrackerSuggestionQuery, setCalorieTrackerSuggestionQuery] = useState("");
+  const calorieTrackerSuggestTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const fetchCalorieTrackerSuggestionsRef = useRef<(q: string) => void>(() => {});
   const [calorieTrackerFrequentMeals, setCalorieTrackerFrequentMeals] = useState<ReusableJournalSuggestion[]>([]);
   const [calorieTrackerMoreOptionsOpen, setCalorieTrackerMoreOptionsOpen] = useState(false);
   const [calorieTrackerResult, setCalorieTrackerResult] = useState<{
@@ -4596,6 +4619,10 @@ export default function ChatPage() {
     calorieTrackerInputRef.current = nextValue;
     setCalorieTrackerInput(nextValue);
     setCalorieTrackerInputRevision((prev) => prev + 1);
+    if (calorieTrackerSuggestTimerRef.current) clearTimeout(calorieTrackerSuggestTimerRef.current);
+    calorieTrackerSuggestTimerRef.current = setTimeout(() => {
+      fetchCalorieTrackerSuggestionsRef.current(calorieTrackerInputRef.current);
+    }, 420);
   }, []);
 
   const replaceCalorieTrackerCustomTag = useCallback((nextValue: string) => {
@@ -4857,7 +4884,10 @@ export default function ChatPage() {
       const kind =
         selectedLandingJournalChip === "exercise" ? "exercise" : "nutrition";
       const q = queryText.trim().slice(0, 80);
-      setCalorieTrackerSuggestionsLoading(true);
+      setCalorieTrackerSuggestionsLoading((prev) => {
+        if (prev) return prev;
+        return true;
+      });
       try {
         const params = new URLSearchParams({
           kind,
@@ -4880,20 +4910,15 @@ export default function ChatPage() {
   );
 
   useEffect(() => {
+    fetchCalorieTrackerSuggestionsRef.current = fetchCalorieTrackerSuggestions;
+  }, [fetchCalorieTrackerSuggestions]);
+
+  useEffect(() => {
     if (!calorieTrackerModalOpen) return;
     if (!(calorieTrackerStep === "choose" || calorieTrackerStep === "input")) return;
-    let cancelled = false;
-    const t = window.setTimeout(() => {
-      if (cancelled) return;
-      const query = calorieTrackerStep === "choose" ? calorieTrackerSuggestionQuery : calorieTrackerInput;
-      void fetchCalorieTrackerSuggestions(query);
-    }, 220);
-    return () => {
-      cancelled = true;
-      window.clearTimeout(t);
-    };
+    const query = calorieTrackerStep === "choose" ? calorieTrackerSuggestionQuery : calorieTrackerInputRef.current;
+    void fetchCalorieTrackerSuggestions(query);
   }, [
-    calorieTrackerInput,
     calorieTrackerSuggestionQuery,
     calorieTrackerModalOpen,
     calorieTrackerStep,
@@ -5750,9 +5775,10 @@ export default function ChatPage() {
       summarizeNutritionForDay(
         journalEntriesSorted,
         selectedLandingDayKey,
-        nutritionGoals.caloriesTarget
+        nutritionGoals.caloriesTarget,
+        { habits, completions: habitCompletions }
       ),
-    [journalEntriesSorted, nutritionGoals.caloriesTarget, selectedLandingDayKey]
+    [journalEntriesSorted, nutritionGoals.caloriesTarget, selectedLandingDayKey, habits, habitCompletions]
   );
   const selectedLandingDayNutritionFacts = useMemo(
     () => summarizeNutritionFactsForDay(journalEntriesSorted, selectedLandingDayKey),
@@ -5939,8 +5965,8 @@ export default function ChatPage() {
   }, [transcriptModalTranscript]);
   const transcriptModalDailyNutrition = useMemo(() => {
     if (!transcriptModalDayKey) return null;
-    return summarizeNutritionForDay(journalEntriesSorted, transcriptModalDayKey, nutritionGoals.caloriesTarget);
-  }, [journalEntriesSorted, nutritionGoals.caloriesTarget, transcriptModalDayKey]);
+    return summarizeNutritionForDay(journalEntriesSorted, transcriptModalDayKey, nutritionGoals.caloriesTarget, { habits, completions: habitCompletions });
+  }, [journalEntriesSorted, nutritionGoals.caloriesTarget, transcriptModalDayKey, habits, habitCompletions]);
   const transcriptModalDailyNutritionFacts = useMemo(() => {
     if (!transcriptModalDayKey) return null;
     return summarizeNutritionFactsForDay(journalEntriesSorted, transcriptModalDayKey);
@@ -6344,6 +6370,54 @@ export default function ChatPage() {
       .catch(() => setHabits([]));
   }, [isAnonymous]);
 
+  const fetchHabitCompletions = useCallback(() => {
+    if (isAnonymous) {
+      setHabitCompletions({});
+      return;
+    }
+    const today = new Date();
+    const from = new Date(today);
+    from.setDate(today.getDate() - 6);
+    const fmt = (d: Date) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    fetch(`/api/me/habits/completions?from=${fmt(from)}&to=${fmt(today)}`, { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data: Array<{ habitId: string; dateKey: string }>) => {
+        if (!Array.isArray(data)) { setHabitCompletions({}); return; }
+        const map: Record<string, string[]> = {};
+        for (const c of data) {
+          (map[c.habitId] ??= []).push(c.dateKey);
+        }
+        setHabitCompletions(map);
+      })
+      .catch(() => setHabitCompletions({}));
+  }, [isAnonymous]);
+
+  const handleToggleHabitCompletion = useCallback(
+    (habitId: string, dateKey: string) => {
+      setHabitCompletions((prev) => {
+        const arr = prev[habitId] ?? [];
+        const has = arr.includes(dateKey);
+        return {
+          ...prev,
+          [habitId]: has ? arr.filter((k) => k !== dateKey) : [...arr, dateKey],
+        };
+      });
+      fetch(`/api/me/habits/${habitId}/toggle-completion`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dateKey }),
+      })
+        .then((r) => {
+          if (r.ok) refetchTranscripts();
+        })
+        .catch(() => {
+          fetchHabitCompletions();
+        });
+    },
+    [fetchHabitCompletions, refetchTranscripts]
+  );
+
   const refetchSavedPerspectiveCards = useCallback(() => {
     if (isAnonymous) {
       setSavedPerspectiveCards([]);
@@ -6420,9 +6494,10 @@ export default function ChatPage() {
     const timer = window.setTimeout(() => {
       refetchHabits();
       refetchSavedPerspectiveCards();
+      fetchHabitCompletions();
     }, 340);
     return () => window.clearTimeout(timer);
-  }, [refetchHabits, refetchSavedPerspectiveCards]);
+  }, [refetchHabits, refetchSavedPerspectiveCards, fetchHabitCompletions]);
 
   useEffect(() => {
     if (language === "en" || isAnonymous) {
@@ -7611,6 +7686,7 @@ export default function ChatPage() {
     bucket: HabitBucket;
     intendedMonth: number | null;
     intendedYear: number | null;
+    calorieImpact?: { type: "intake" | "burn"; calories: number; label: string } | null;
   } | null>(null);
   const [habitPromoteBucket, setHabitPromoteBucket] = useState<HabitBucket | null>(null);
   const [habitPromoteLanguage, setHabitPromoteLanguage] = useState<LanguageCode>("en");
@@ -7619,15 +7695,13 @@ export default function ChatPage() {
   const [habitDetailEditing, setHabitDetailEditing] = useState(false);
   const [habitFollowThroughExpanded, setHabitFollowThroughExpanded] = useState(false);
   const [habitResearchLoading, setHabitResearchLoading] = useState(false);
+  const [habitCalorieEstimating, setHabitCalorieEstimating] = useState(false);
   const [habitResearchError, setHabitResearchError] = useState<string | null>(null);
   const [habitDetailEdit, setHabitDetailEdit] = useState<{
     name: string;
     description: string;
-    howToFollowThrough: string;
-    tips: string;
     bucket?: HabitBucket;
-    intendedMonth: number | null;
-    intendedYear: number | null;
+    isHeroHabit: boolean;
   } | null>(null);
   const [habitDeleteConfirmModal, setHabitDeleteConfirmModal] = useState<HabitItem | null>(null);
   const [habitCreateDraft, setHabitCreateDraft] = useState<{
@@ -7636,6 +7710,7 @@ export default function ChatPage() {
     description: string;
     intendedMonth: number | null;
     intendedYear: number | null;
+    isHeroHabit: boolean;
   } | null>(null);
   const [habitCreateStep, setHabitCreateStep] = useState<"input" | "preview">("input");
   const [habitCreatePreview, setHabitCreatePreview] = useState<{
@@ -7643,6 +7718,7 @@ export default function ChatPage() {
     description: string;
     howToFollowThrough: string;
     tips: string;
+    calorieImpact?: { type: "intake" | "burn"; calories: number; label: string } | null;
   } | null>(null);
   const [habitCreateGenerating, setHabitCreateGenerating] = useState(false);
   const [habitCreateSaving, setHabitCreateSaving] = useState(false);
@@ -9961,17 +10037,8 @@ export default function ChatPage() {
       setHabitDetailEdit({
         name: habitDetailModal.name,
         description: habitDetailModal.description,
-        howToFollowThrough: habitDetailModal.howToFollowThrough,
-        tips: habitDetailModal.tips,
         bucket: habitDetailModal.bucket,
-        intendedMonth:
-          typeof habitDetailModal.intendedMonth === "number"
-            ? habitDetailModal.intendedMonth
-            : null,
-        intendedYear:
-          typeof habitDetailModal.intendedYear === "number"
-            ? habitDetailModal.intendedYear
-            : null,
+        isHeroHabit: habitDetailModal.isHeroHabit ?? false,
       });
     } else {
       setHabitDetailEdit(null);
@@ -12957,6 +13024,7 @@ export default function ChatPage() {
                           description: "",
                           intendedMonth: null,
                           intendedYear: null,
+                          isHeroHabit: false,
                         });
                         setHabitCreateStep("input");
                         setHabitCreatePreview(null);
@@ -13065,7 +13133,12 @@ export default function ChatPage() {
                                     </svg>
                                   </button>
                                   <div className="flex-1 min-w-0 pr-10">
-                                    <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
+                                      {h.isHeroHabit && (
+                                        <span className="shrink-0 inline-flex items-center rounded-full bg-[#5A9E8A]/15 px-1.5 py-0.5 text-[10px] font-medium text-[#5A9E8A]">Hero</span>
+                                      )}
+                                    </div>
                                     <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{h.description}</p>
                                     {typeof h.intendedMonth === "number" &&
                                     typeof h.intendedYear === "number" ? (
@@ -13115,7 +13188,12 @@ export default function ChatPage() {
                                   </svg>
                                 </button>
                                 <div className="flex-1 min-w-0 pr-10">
-                                  <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
+                                    {h.isHeroHabit && (
+                                      <span className="shrink-0 inline-flex items-center rounded-full bg-[#5A9E8A]/15 px-1.5 py-0.5 text-[10px] font-medium text-[#5A9E8A]">Hero</span>
+                                    )}
+                                  </div>
                                   <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">{h.description}</p>
                                   {typeof h.intendedMonth === "number" &&
                                   typeof h.intendedYear === "number" ? (
@@ -13897,6 +13975,14 @@ export default function ChatPage() {
                         thoughtReviewing={thoughtReviewing}
                         onReviewThought={reviewThoughtOfTheDay}
                         onOpenThoughtConcept={openThoughtConcept}
+                        heroHabits={habits.filter((h) => h.isHeroHabit).map((h) => ({ _id: h._id, name: h.name }))}
+                        heroHabitCompletions={habitCompletions}
+                        heroHabitsLabel={landingTranslations.landingHeroHabitsLabel}
+                        onToggleHabitCompletion={handleToggleHabitCompletion}
+                        onOpenHabitDetail={(habitId) => {
+                          playSelectionChime();
+                          setLibraryPanelOpen("habits");
+                        }}
                       />
                       )}
                     {!incognitoMode && (
@@ -21579,6 +21665,7 @@ export default function ChatPage() {
                           bucket: habitPromoteBucket,
                           intendedMonth: null,
                           intendedYear: null,
+                          calorieImpact: data.calorieImpact ?? null,
                         });
                         setHabitPromoteStep("preview");
                       } catch {
@@ -21702,6 +21789,7 @@ export default function ChatPage() {
                               description: habitPromoteDraft.description.trim(),
                               howToFollowThrough: habitPromoteDraft.howToFollowThrough.trim(),
                               tips: habitPromoteDraft.tips.trim(),
+                              ...(habitPromoteDraft.calorieImpact ? { calorieImpact: habitPromoteDraft.calorieImpact } : {}),
                               ...(typeof habitPromoteDraft.intendedMonth === "number" &&
                               typeof habitPromoteDraft.intendedYear === "number"
                                 ? {
@@ -21807,19 +21895,18 @@ export default function ChatPage() {
                       placeholder="What you want this habit to be—rough notes are fine"
                     />
                   </div>
-                  {habitCreateDraft ? (
-                    <HabitIntendedPeriodFields
-                      month={habitCreateDraft.intendedMonth}
-                      year={habitCreateDraft.intendedYear}
-                      onMonthChange={(v) =>
-                        setHabitCreateDraft((d) => (d ? { ...d, intendedMonth: v } : null))
+                  <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={habitCreateDraft.isHeroHabit}
+                      onChange={(e) =>
+                        setHabitCreateDraft((d) => d ? { ...d, isHeroHabit: e.target.checked } : null)
                       }
-                      onYearChange={(v) =>
-                        setHabitCreateDraft((d) => (d ? { ...d, intendedYear: v } : null))
-                      }
-                      language={language}
+                      className="h-4 w-4 rounded border-neutral-300 text-[#5A9E8A] accent-[#5A9E8A] focus:ring-[#5A9E8A] dark:border-neutral-600"
                     />
-                  ) : null}
+                    <span className="text-sm font-medium text-neutral-900 dark:text-neutral-100">Hero Habit</span>
+                    <span className="text-[11px] text-neutral-500 dark:text-neutral-400">Show on landing page</span>
+                  </label>
                 </div>
                 <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end">
                   <button
@@ -21860,6 +21947,7 @@ export default function ChatPage() {
                           description: data.description ?? "",
                           howToFollowThrough: data.howToFollowThrough ?? "",
                           tips: data.tips ?? "",
+                          calorieImpact: data.calorieImpact ?? null,
                         });
                         setHabitCreateStep("preview");
                       } catch {
@@ -21996,6 +22084,8 @@ export default function ChatPage() {
                               description: p.description.trim(),
                               howToFollowThrough: p.howToFollowThrough.trim(),
                               tips: p.tips.trim(),
+                              isHeroHabit: habitCreateDraft.isHeroHabit,
+                              ...(p.calorieImpact ? { calorieImpact: p.calorieImpact } : {}),
                               ...(typeof habitCreateDraft.intendedMonth === "number" &&
                               typeof habitCreateDraft.intendedYear === "number"
                                 ? {
@@ -22051,9 +22141,16 @@ export default function ChatPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between gap-2">
-              <h2 className="font-semibold text-lg truncate pr-2 min-w-0">
-                {habitDetailEditing ? "Edit habit" : habitDetailModal.name}
-              </h2>
+              <div className="flex items-center gap-2 min-w-0 pr-2">
+                <h2 className="font-semibold text-lg truncate min-w-0">
+                  {habitDetailEditing ? "Edit habit" : habitDetailModal.name}
+                </h2>
+                {!habitDetailEditing && habitDetailModal.isHeroHabit && (
+                  <span className="shrink-0 inline-flex items-center rounded-full bg-[#5A9E8A]/15 px-2 py-0.5 text-[11px] font-medium text-[#5A9E8A]">
+                    Hero
+                  </span>
+                )}
+              </div>
               <div className="flex items-center gap-1 shrink-0">
                 {!habitDetailEditing ? (
                   <button
@@ -22079,127 +22176,111 @@ export default function ChatPage() {
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {habitDetailEditing ? (
                 <>
-              <div>
-                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">
-                  {getUiTranslations(language).habitLifeArea}
-                </label>
-                <select
-                  value={habitDetailEdit.bucket ?? ""}
-                  onChange={(e) => {
-                    const v = e.target.value;
-                    setHabitDetailEdit((d) =>
-                      d ? { ...d, bucket: v === "" ? undefined : (v as HabitBucket) } : null
-                    );
-                  }}
-                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                >
-                  {!habitDetailModal.bucket ? (
-                    <option value="">Select life area…</option>
-                  ) : null}
-                  {HABIT_BUCKET_IDS.map((b) => (
-                    <option key={b} value={b}>
-                      {getHabitBucketLabel(getUiTranslations(language), b)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Habit name</label>
-                <input
-                  type="text"
-                  value={habitDetailEdit.name}
-                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, name: e.target.value } : null)}
-                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Description</label>
-                <textarea
-                  value={habitDetailEdit.description}
-                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, description: e.target.value } : null)}
-                  rows={4}
-                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">How to follow through</label>
-                <textarea
-                  value={habitDetailEdit.howToFollowThrough}
-                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, howToFollowThrough: e.target.value } : null)}
-                  rows={4}
-                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                  placeholder="One step per line"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Tips</label>
-                <textarea
-                  value={habitDetailEdit.tips}
-                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, tips: e.target.value } : null)}
-                  rows={3}
-                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                  placeholder="One tip per line"
-                />
-              </div>
-              <HabitIntendedPeriodFields
-                month={habitDetailEdit.intendedMonth}
-                year={habitDetailEdit.intendedYear}
-                onMonthChange={(v) =>
-                  setHabitDetailEdit((d) => (d ? { ...d, intendedMonth: v } : null))
-                }
-                onYearChange={(v) =>
-                  setHabitDetailEdit((d) => (d ? { ...d, intendedYear: v } : null))
-                }
-                language={language}
-              />
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Habit name</label>
+                    <input
+                      type="text"
+                      value={habitDetailEdit.name}
+                      onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, name: e.target.value } : null)}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">
+                      {getUiTranslations(language).habitLifeArea}
+                    </label>
+                    <select
+                      value={habitDetailEdit.bucket ?? ""}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        setHabitDetailEdit((d) =>
+                          d ? { ...d, bucket: v === "" ? undefined : (v as HabitBucket) } : null
+                        );
+                      }}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                    >
+                      {!habitDetailModal.bucket ? (
+                        <option value="">Select life area…</option>
+                      ) : null}
+                      {HABIT_BUCKET_IDS.map((b) => (
+                        <option key={b} value={b}>
+                          {getHabitBucketLabel(getUiTranslations(language), b)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Description</label>
+                    <textarea
+                      value={habitDetailEdit.description}
+                      onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, description: e.target.value } : null)}
+                      rows={2}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                    />
+                  </div>
+                  <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={habitDetailEdit.isHeroHabit}
+                      onChange={(e) =>
+                        setHabitDetailEdit((d) => d ? { ...d, isHeroHabit: e.target.checked } : null)
+                      }
+                      className="h-4 w-4 rounded border-neutral-300 text-[#5A9E8A] accent-[#5A9E8A] focus:ring-[#5A9E8A] dark:border-neutral-600"
+                    />
+                    <span className="text-sm font-medium text-neutral-900 dark:text-neutral-100">Hero Habit</span>
+                    <span className="text-[11px] text-neutral-500 dark:text-neutral-400">Show on landing page</span>
+                  </label>
                 </>
               ) : (
                 <>
                   <div>
-                    <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                      {getUiTranslations(language).habitLifeArea}
-                    </p>
-                    <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                    <span className="inline-flex items-center rounded-full border border-neutral-200 dark:border-neutral-700 bg-neutral-50/70 dark:bg-neutral-900/60 px-2.5 py-1 text-xs font-medium text-neutral-600 dark:text-neutral-300">
                       {habitDetailModal.bucket
                         ? getHabitBucketLabel(getUiTranslations(language), habitDetailModal.bucket)
                         : getUiTranslations(language).habitBucketOther}
-                    </p>
+                    </span>
                   </div>
                   <div>
-                    <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                      {getUiTranslations(language).habitSource}
-                    </p>
-                    <p className="text-sm text-neutral-700 dark:text-neutral-300">
-                      {habitDetailModal.sourceType === "manual"
-                        ? getUiTranslations(language).habitSourceManual
-                        : habitDetailModal.sourceType === "concept"
-                          ? getUiTranslations(language).habitSourceFromConcept
-                          : getUiTranslations(language).habitSourceFromMemory}
-                    </p>
-                  </div>
-                  {typeof habitDetailModal.intendedMonth === "number" &&
-                  typeof habitDetailModal.intendedYear === "number" ? (
-                    <div>
-                      <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
-                        {getUiTranslations(language).habitIntendedPeriod}
-                      </p>
-                      <p className="text-sm text-neutral-700 dark:text-neutral-300">
-                        {formatHabitIntendedPeriod(
-                          habitDetailModal.intendedMonth,
-                          habitDetailModal.intendedYear,
-                          language
-                        )}
-                      </p>
-                    </div>
-                  ) : null}
-                  <div>
-                    <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Habit name</p>
-                    <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{habitDetailModal.name}</p>
-            </div>
-                  <div>
-                    <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Description</p>
                     <p className="text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-wrap">{habitDetailModal.description}</p>
                   </div>
+                  {habitDetailModal.calorieImpact && habitDetailModal.calorieImpact.calories > 0 ? (
+                    <div className="flex items-center gap-2 rounded-lg border border-neutral-200/60 bg-neutral-50/50 px-3 py-2 dark:border-neutral-700/50 dark:bg-neutral-800/30">
+                      <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold text-white ${habitDetailModal.calorieImpact.type === "burn" ? "bg-orange-500" : "bg-[#5A9E8A]"}`}>
+                        {habitDetailModal.calorieImpact.type === "burn" ? "−" : "+"}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                          {habitDetailModal.calorieImpact.calories} kcal {habitDetailModal.calorieImpact.type === "burn" ? "burned" : "intake"}
+                        </p>
+                        <p className="text-[11px] text-neutral-500 dark:text-neutral-400 truncate">
+                          {habitDetailModal.calorieImpact.label}
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={habitCalorieEstimating}
+                      onClick={async () => {
+                        if (!habitDetailModal._id || habitCalorieEstimating) return;
+                        setHabitCalorieEstimating(true);
+                        try {
+                          const res = await fetch(`/api/me/habits/${habitDetailModal._id}/estimate-calories`, { method: "POST" });
+                          if (res.ok) {
+                            const data = await res.json();
+                            const updated = { ...habitDetailModal, calorieImpact: data.calorieImpact ?? null };
+                            setHabits((prev) => prev.map((h) => (h._id === habitDetailModal._id ? updated : h)));
+                            setHabitDetailModal(updated);
+                          }
+                        } catch { /* ignore */ } finally {
+                          setHabitCalorieEstimating(false);
+                        }
+                      }}
+                      className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50/70 dark:bg-neutral-900/60 px-3 py-2 text-xs font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-60"
+                    >
+                      {habitCalorieEstimating ? "Estimating…" : "Estimate calorie impact"}
+                    </button>
+                  )}
                   <div>
                     <div className="mb-1 flex items-center justify-between gap-2">
                       <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
@@ -22291,42 +22372,6 @@ export default function ChatPage() {
                       </p>
                     )}
                   </div>
-                  <div>
-                    <button
-                      type="button"
-                      onClick={() => setHabitFollowThroughExpanded((prev) => !prev)}
-                      className="w-full inline-flex items-center justify-between gap-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50/70 dark:bg-neutral-900/60 px-3 py-2 text-left hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                      aria-expanded={habitFollowThroughExpanded}
-                    >
-                      <span className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
-                        How to follow through
-                      </span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className={`h-4 w-4 text-neutral-500 dark:text-neutral-400 transition-transform ${
-                          habitFollowThroughExpanded ? "rotate-180" : ""
-                        }`}
-                        aria-hidden
-                      >
-                        <path d="m6 9 6 6 6-6" />
-                      </svg>
-                    </button>
-                    {habitFollowThroughExpanded && (
-                      <p className="mt-2 text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-wrap">
-                        {habitDetailModal.howToFollowThrough}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">Tips</p>
-                    <p className="text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-wrap">{habitDetailModal.tips}</p>
-                  </div>
                 </>
               )}
             </div>
@@ -22349,17 +22394,8 @@ export default function ChatPage() {
                       setHabitDetailEdit({
                         name: habitDetailModal.name,
                         description: habitDetailModal.description,
-                        howToFollowThrough: habitDetailModal.howToFollowThrough,
-                        tips: habitDetailModal.tips,
                         bucket: habitDetailModal.bucket,
-                        intendedMonth:
-                          typeof habitDetailModal.intendedMonth === "number"
-                            ? habitDetailModal.intendedMonth
-                            : null,
-                        intendedYear:
-                          typeof habitDetailModal.intendedYear === "number"
-                            ? habitDetailModal.intendedYear
-                            : null,
+                        isHeroHabit: habitDetailModal.isHeroHabit ?? false,
                       });
                       setHabitDetailEditing(false);
                     }}
@@ -22376,18 +22412,12 @@ export default function ChatPage() {
                     const payload: {
                       name: string;
                       description: string;
-                      howToFollowThrough: string;
-                      tips: string;
                       bucket?: HabitBucket;
-                      intendedMonth: number | null;
-                      intendedYear: number | null;
+                      isHeroHabit: boolean;
                     } = {
                       name: habitDetailEdit.name.trim(),
                       description: habitDetailEdit.description.trim(),
-                      howToFollowThrough: habitDetailEdit.howToFollowThrough.trim(),
-                      tips: habitDetailEdit.tips.trim(),
-                      intendedMonth: habitDetailEdit.intendedMonth,
-                      intendedYear: habitDetailEdit.intendedYear,
+                      isHeroHabit: habitDetailEdit.isHeroHabit,
                     };
                     if (habitDetailEdit.bucket !== undefined) {
                       payload.bucket = habitDetailEdit.bucket;

@@ -110,6 +110,10 @@ export interface LandingWeightPoint {
   weightKg: number;
 }
 
+export interface LandingHabitCompletionMap {
+  [habitId: string]: string[];
+}
+
 export interface LandingThoughtOfTheDay {
   conceptId: string;
   title: string;

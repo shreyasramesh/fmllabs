@@ -10,6 +10,7 @@ import { LandingFocusCanvas } from "@/components/landing/LandingFocusCanvas";
 import { LandingSleepRecoveryChart } from "@/components/landing/LandingSleepRecoveryChart";
 import { LandingThoughtOfTheDayBanner } from "@/components/landing/LandingThoughtOfTheDay";
 import { LandingTimelineCard } from "@/components/landing/LandingTimelineCard";
+import { LandingHeroHabits } from "@/components/landing/LandingHeroHabits";
 import type {
   CaffeineFocusWindow,
   CaffeineIntake,
@@ -18,6 +19,7 @@ import type {
   LandingDateItem,
   LandingFigureSummary,
   LandingFocusSummaryRow,
+  LandingHabitCompletionMap,
   LandingNutritionGoals,
   LandingNutritionSummary,
   LandingQuickCaptureItem,
@@ -432,6 +434,11 @@ interface LandingShellProps {
   thoughtReviewing: boolean;
   onReviewThought: () => void;
   onOpenThoughtConcept: () => void;
+  heroHabits: Array<{ _id: string; name: string }>;
+  heroHabitCompletions: LandingHabitCompletionMap;
+  heroHabitsLabel: string;
+  onToggleHabitCompletion: (habitId: string, dateKey: string) => void;
+  onOpenHabitDetail: (habitId: string) => void;
 }
 
 export function LandingShell({
@@ -558,6 +565,11 @@ export function LandingShell({
   thoughtReviewing,
   onReviewThought,
   onOpenThoughtConcept,
+  heroHabits,
+  heroHabitCompletions,
+  heroHabitsLabel,
+  onToggleHabitCompletion,
+  onOpenHabitDetail,
 }: LandingShellProps) {
   const distanceToTarget =
     weightCurrentKg != null && weightTargetKg != null
@@ -1006,6 +1018,18 @@ export function LandingShell({
         </div>
       </ModuleCard>
       </div>
+
+      {/* Hero Habits — GitHub-style contribution grid */}
+      {heroHabits.length > 0 && (
+        <ModuleCard eyebrow={heroHabitsLabel} title={heroHabitsLabel}>
+          <LandingHeroHabits
+            habits={heroHabits}
+            completions={heroHabitCompletions}
+            onToggle={onToggleHabitCompletion}
+            onOpenHabit={onOpenHabitDetail}
+          />
+        </ModuleCard>
+      )}
 
       {/* Row 2: Weekly Summary · Weight · Activity */}
       <div id="sec-summary" className="grid gap-4 xl:grid-cols-3">

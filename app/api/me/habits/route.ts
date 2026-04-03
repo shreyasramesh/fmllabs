@@ -89,6 +89,17 @@ export async function POST(request: Request) {
       intendedMonth = im;
       intendedYear = iy;
     }
+    const isHeroHabit = body.isHeroHabit === true;
+    const rawCal = body.calorieImpact;
+    const calorieImpact =
+      rawCal &&
+      typeof rawCal === "object" &&
+      (rawCal.type === "intake" || rawCal.type === "burn") &&
+      typeof rawCal.calories === "number" &&
+      rawCal.calories > 0 &&
+      typeof rawCal.label === "string"
+        ? { type: rawCal.type as "intake" | "burn", calories: Math.round(rawCal.calories), label: rawCal.label as string }
+        : undefined;
     const habit = await createHabit(userId, {
       sourceType,
       sourceId: isManual ? "" : String(sourceId).trim(),
@@ -97,6 +108,8 @@ export async function POST(request: Request) {
       description: description.trim(),
       howToFollowThrough: howToFollowThrough.trim(),
       tips: tips.trim(),
+      ...(isHeroHabit ? { isHeroHabit: true } : {}),
+      ...(calorieImpact ? { calorieImpact } : {}),
       ...(intendedMonth !== undefined && intendedYear !== undefined
         ? { intendedMonth, intendedYear }
         : {}),

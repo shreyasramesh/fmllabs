@@ -12,6 +12,19 @@ function clampRatio(current: number, target: number): number {
   return Math.max(0, Math.min(1, current / target));
 }
 
+function rawRatio(current: number, target: number): number {
+  if (!Number.isFinite(current) || !Number.isFinite(target) || target <= 0) return 0;
+  return Math.max(0, current / target);
+}
+
+function darkenHex(hex: string, factor: number): string {
+  const h = hex.replace("#", "");
+  const r = Math.round(parseInt(h.slice(0, 2), 16) * factor);
+  const g = Math.round(parseInt(h.slice(2, 4), 16) * factor);
+  const b = Math.round(parseInt(h.slice(4, 6), 16) * factor);
+  return `#${Math.min(255, r).toString(16).padStart(2, "0")}${Math.min(255, g).toString(16).padStart(2, "0")}${Math.min(255, b).toString(16).padStart(2, "0")}`;
+}
+
 function circleCircumference(radius: number): number {
   return 2 * Math.PI * radius;
 }
@@ -54,9 +67,9 @@ export function LandingFocusCanvas({
     nutritionGoals.caloriesTarget - nutrition.caloriesRemaining,
     nutritionGoals.caloriesTarget
   );
-  const carbsRatio = clampRatio(nutrition.carbsGrams, nutritionGoals.carbsGrams);
-  const proteinRatio = clampRatio(nutrition.proteinGrams, nutritionGoals.proteinGrams);
-  const fatRatio = clampRatio(nutrition.fatGrams, nutritionGoals.fatGrams);
+  const carbsRatio = rawRatio(nutrition.carbsGrams, nutritionGoals.carbsGrams);
+  const proteinRatio = rawRatio(nutrition.proteinGrams, nutritionGoals.proteinGrams);
+  const fatRatio = rawRatio(nutrition.fatGrams, nutritionGoals.fatGrams);
   const caloriesConsumed = Math.max(0, nutritionGoals.caloriesTarget - nutrition.caloriesRemaining);
 
   const carbsCalories = nutrition.carbsGrams * 4;
@@ -69,16 +82,25 @@ export function LandingFocusCanvas({
     { key: "cal-fat", cal: fatCalories, gradientStart: "#C4705E", gradientEnd: "#E8AFA0", glow: "rgba(196,112,94,0.30)" },
   ];
   const rawTotal = rawSegments.reduce((s, seg) => s + seg.cal, 0);
+  const rawCalorieRatio = rawTotal / calTarget;
   const scaleFactor = rawTotal > calTarget ? calTarget / rawTotal : 1;
   const calorieSegments = rawSegments.map((seg) => ({
     ...seg,
     ratio: Math.max(0, Math.min(1, (seg.cal / calTarget) * scaleFactor)),
   }));
+  const overflowCalorieRatio = rawCalorieRatio > 1 ? Math.min(rawCalorieRatio - 1, 1) : 0;
+  const overflowSegments = overflowCalorieRatio > 0
+    ? rawSegments.map((seg) => ({
+        ...seg,
+        ratio: Math.max(0, Math.min(overflowCalorieRatio, (seg.cal / rawTotal) * overflowCalorieRatio)),
+      }))
+    : [];
 
   const CAL_RING_RADIUS = 140;
   const CAL_RING_STROKE = 20;
   const CAL_RING_TRACK = "rgba(220, 210, 198, 0.5)";
 
+  const DARKEN = 0.65;
   const ringMetrics = [
     {
       key: "protein",
@@ -87,6 +109,8 @@ export function LandingFocusCanvas({
       ratio: proteinRatio,
       gradientStart: "#5A9E8A",
       gradientEnd: "#A6D4C4",
+      darkStart: darkenHex("#5A9E8A", DARKEN),
+      darkEnd: darkenHex("#A6D4C4", DARKEN),
       glow: "rgba(90,158,138,0.35)",
       track: "rgba(228, 218, 206, 0.4)",
       rotation: -90,
@@ -103,6 +127,8 @@ export function LandingFocusCanvas({
       ratio: carbsRatio,
       gradientStart: "#D49A42",
       gradientEnd: "#F2D28A",
+      darkStart: darkenHex("#D49A42", DARKEN),
+      darkEnd: darkenHex("#F2D28A", DARKEN),
       glow: "rgba(212,154,66,0.35)",
       track: "rgba(230, 220, 208, 0.38)",
       rotation: -90,
@@ -119,6 +145,8 @@ export function LandingFocusCanvas({
       ratio: fatRatio,
       gradientStart: "#C4705E",
       gradientEnd: "#E8AFA0",
+      darkStart: darkenHex("#C4705E", DARKEN),
+      darkEnd: darkenHex("#E8AFA0", DARKEN),
       glow: "rgba(196,112,94,0.30)",
       track: "rgba(232, 222, 210, 0.35)",
       rotation: -90,
@@ -128,7 +156,7 @@ export function LandingFocusCanvas({
       labelAngle: 315,
       fontSize: 9,
     },
-  ] as const;
+  ];
 
   const [activeRing, setActiveRing] = useState<string | null>(null);
   const handleRingClick = useCallback((key: string, e: React.MouseEvent) => {
@@ -175,6 +203,10 @@ export function LandingFocusCanvas({
                             <stop offset="0%" stopColor={seg.gradientStart} />
                             <stop offset="100%" stopColor={seg.gradientEnd} />
                           </linearGradient>
+                          <linearGradient id={`grad-dark-${seg.key}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor={darkenHex(seg.gradientStart, DARKEN)} />
+                            <stop offset="100%" stopColor={darkenHex(seg.gradientEnd, DARKEN)} />
+                          </linearGradient>
                           <filter id={`glow-${seg.key}`} x="-30%" y="-30%" width="160%" height="160%">
                             <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
                             <feFlood floodColor={seg.glow} result="color" />
@@ -191,6 +223,10 @@ export function LandingFocusCanvas({
                           <linearGradient id={`grad-${ring.key}`} x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stopColor={ring.gradientStart} />
                             <stop offset="100%" stopColor={ring.gradientEnd} />
+                          </linearGradient>
+                          <linearGradient id={`grad-dark-${ring.key}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor={ring.darkStart} />
+                            <stop offset="100%" stopColor={ring.darkEnd} />
                           </linearGradient>
                           <filter id={`glow-${ring.key}`} x="-30%" y="-30%" width="160%" height="160%">
                             <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
@@ -217,7 +253,7 @@ export function LandingFocusCanvas({
                         const circumference = circleCircumference(CAL_RING_RADIUS);
                         const isActive = activeRing === "calories";
                         let cumulativeAngle = -90;
-                        return calorieSegments.map((seg) => {
+                        const arcs = calorieSegments.map((seg) => {
                           const startAngle = cumulativeAngle;
                           cumulativeAngle += seg.ratio * 360;
                           if (seg.ratio <= 0) return null;
@@ -237,6 +273,28 @@ export function LandingFocusCanvas({
                             />
                           );
                         });
+                        let overCumulativeAngle = -90;
+                        const overflowArcs = overflowSegments.map((seg) => {
+                          const startAngle = overCumulativeAngle;
+                          overCumulativeAngle += seg.ratio * 360;
+                          if (seg.ratio <= 0) return null;
+                          return (
+                            <circle
+                              key={`${seg.key}-overflow`}
+                              cx="160" cy="160" r={CAL_RING_RADIUS} fill="none"
+                              stroke={`url(#grad-dark-${seg.key})`}
+                              strokeWidth={isActive ? CAL_RING_STROKE + 4 : CAL_RING_STROKE}
+                              strokeLinecap="butt"
+                              strokeDasharray={circumference}
+                              strokeDashoffset={circumference * (1 - seg.ratio)}
+                              transform={`rotate(${startAngle} 160 160)`}
+                              filter={`url(#glow-${seg.key})`}
+                              opacity={activeRing && !isActive ? 0.4 : 1}
+                              style={{ transition: "stroke-width 0.2s ease, opacity 0.2s ease" }}
+                            />
+                          );
+                        });
+                        return [...arcs, ...overflowArcs];
                       })()}
                       {activeRing === "calories" && (() => {
                         const labelPos = pointOnCircle(160, 160, CAL_RING_RADIUS, 45);
@@ -259,6 +317,8 @@ export function LandingFocusCanvas({
                       const circumference = circleCircumference(ring.radius);
                       const isActive = activeRing === ring.key;
                       const labelPos = pointOnCircle(160, 160, ring.radius, ring.labelAngle);
+                      const firstLap = Math.min(ring.ratio, 1);
+                      const overflowLap = ring.ratio > 1 ? Math.min(ring.ratio - 1, 1) : 0;
                       return (
                         <g key={ring.key} style={{ cursor: "pointer" }} onClick={(e) => handleRingClick(ring.key, e)}>
                           <circle cx="160" cy="160" r={ring.radius} fill="none" stroke="transparent" strokeWidth={ring.strokeWidth + 10} />
@@ -273,12 +333,26 @@ export function LandingFocusCanvas({
                             strokeWidth={isActive ? ring.strokeWidth + 4 : ring.strokeWidth}
                             strokeLinecap="round"
                             strokeDasharray={circumference}
-                            strokeDashoffset={circumference * (1 - ring.ratio)}
+                            strokeDashoffset={circumference * (1 - firstLap)}
                             transform={`rotate(${ring.rotation} 160 160)`}
                             filter={`url(#glow-${ring.key})`}
                             opacity={activeRing && !isActive ? 0.4 : 1}
                             style={{ transition: "stroke-width 0.2s ease, opacity 0.2s ease" }}
                           />
+                          {overflowLap > 0 && (
+                            <circle
+                              cx="160" cy="160" r={ring.radius} fill="none"
+                              stroke={`url(#grad-dark-${ring.key})`}
+                              strokeWidth={isActive ? ring.strokeWidth + 4 : ring.strokeWidth}
+                              strokeLinecap="round"
+                              strokeDasharray={circumference}
+                              strokeDashoffset={circumference * (1 - overflowLap)}
+                              transform={`rotate(${ring.rotation} 160 160)`}
+                              filter={`url(#glow-${ring.key})`}
+                              opacity={activeRing && !isActive ? 0.4 : 1}
+                              style={{ transition: "stroke-width 0.2s ease, opacity 0.2s ease" }}
+                            />
+                          )}
                           {isActive && (
                             <g>
                               <rect x={labelPos.x - 42} y={labelPos.y - 22} width="84" height="44" rx="12" fill="white" fillOpacity="0.96" stroke={ring.gradientStart} strokeWidth="1.2" strokeOpacity="0.5" />

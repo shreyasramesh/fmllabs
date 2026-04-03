@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import type { LandingTimelineEvent } from "@/components/landing/types";
 
 function formatMinuteShort(minuteOfDay: number): string {
@@ -77,6 +78,12 @@ interface LandingTimelineCardProps {
 
 const TIME_TICKS = [0, 180, 360, 540, 720, 900, 1080, 1260, 1440];
 
+function getPstMinuteOfDay(): number {
+  const now = new Date();
+  const pst = new Date(now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
+  return pst.getHours() * 60 + pst.getMinutes();
+}
+
 export function LandingTimelineCard({ eyebrow, dayLabel, events }: LandingTimelineCardProps) {
   const nutritionCount = events.filter((e) => e.type === "nutrition").length;
   const weightCount = events.filter((e) => e.type === "weight").length;
@@ -87,6 +94,8 @@ export function LandingTimelineCard({ eyebrow, dayLabel, events }: LandingTimeli
   const pointEvents = events.filter((e) => e.type === "nutrition" || e.type === "weight");
 
   const toPercent = (minute: number) => (Math.max(0, Math.min(1440, minute)) / 1440) * 100;
+
+  const nowMinute = useMemo(getPstMinuteOfDay, []);
 
   return (
     <section className="w-full overflow-hidden rounded-[2rem] border border-white/60 bg-white/50 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] sm:p-5">
@@ -141,6 +150,15 @@ export function LandingTimelineCard({ eyebrow, dayLabel, events }: LandingTimeli
               style={{ left: `${toPercent(minute)}%` }}
             />
           ))}
+
+          {/* Current time (PST) indicator */}
+          <div
+            className="absolute top-0 z-10 flex flex-col items-center"
+            style={{ left: `${toPercent(nowMinute)}%`, transform: "translateX(-50%)" }}
+          >
+            <div className="h-2.5 w-[2px] rounded-full bg-[#B87B51]" />
+            <span className="mt-0.5 text-[8px] font-bold text-[#B87B51]">Now</span>
+          </div>
 
           {/* Point-event icon markers below the rail */}
           {pointEvents.map((event, i) => (
