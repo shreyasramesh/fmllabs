@@ -32,12 +32,12 @@ import type {
 
 const SCROLLSPY_SECTIONS = [
   { id: "sec-focus", label: "Focus" },
-  { id: "sec-mentor", label: "Mentor Hub" },
+  { id: "sec-timeline", label: "Timeline" },
   { id: "sec-summary", label: "Summary" },
   { id: "sec-activity", label: "Activity" },
-  { id: "sec-timeline", label: "Timeline" },
   { id: "sec-caffeine", label: "Caffeine" },
   { id: "sec-sleep", label: "Sleep" },
+  { id: "sec-mentor", label: "Mentor Hub" },
 ] as const;
 
 function SectionPicker() {
@@ -640,6 +640,7 @@ export function LandingShell({
 
       <LandingDateStrip label={dateStripLabel} hint={dateStripHint} items={dateItems} />
 
+      {/* 1. Focus Canvas + Hero Habits — most-used daily modules */}
       <div id="sec-focus" className="grid gap-4 xl:grid-cols-2">
         <LandingFocusCanvas
           eyebrow={focusCanvasEyebrow}
@@ -654,9 +655,27 @@ export function LandingShell({
           onOpenNutrition={onOpenNutrition}
         />
 
-        {/* Right column: Focus Timer + Quick Capture stacked */}
-        <div className="flex flex-col gap-4">
-        {/* Focus Timer Module */}
+        {heroHabits.length > 0 ? (
+          <ModuleCard eyebrow={heroHabitsLabel} title={heroHabitsLabel}>
+            <LandingHeroHabits
+              habits={heroHabits}
+              completions={heroHabitCompletions}
+              onToggle={onToggleHabitCompletion}
+              onOpenHabit={onOpenHabitDetail}
+            />
+          </ModuleCard>
+        ) : (
+          <div />
+        )}
+      </div>
+
+      {/* 2. Timeline swim lanes — daily activity overview */}
+      <div id="sec-timeline">
+        <LandingTimelineCard eyebrow={timelineEyebrow} dayLabel={timelineLabel} events={timelineEvents} />
+      </div>
+
+      {/* 3. Focus Timer + Quick Capture — daily action tools */}
+      <div className="grid gap-4 xl:grid-cols-2">
         <section className="flex w-full flex-1 flex-col overflow-hidden rounded-[2.2rem] border border-white/60 bg-white/50 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] sm:p-5">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
             Focus Timer
@@ -666,7 +685,6 @@ export function LandingShell({
           </p>
 
           <div className="mt-4 flex flex-col gap-3">
-            {/* Duration pills + tag */}
             <div className="flex flex-wrap items-center gap-2">
               {[30, 60, 90].map((minutes) => (
                 <button
@@ -694,7 +712,6 @@ export function LandingShell({
               className="w-full rounded-full border border-neutral-300 bg-white/88 px-4 py-2.5 text-sm dark:border-neutral-700 dark:bg-neutral-800"
             />
 
-            {/* Start / Pause / Resume */}
             <button
               type="button"
               onClick={pomodoroSessionActive ? (pomodoroRunning ? onPausePomodoro : onStartPomodoro) : onStartPomodoro}
@@ -704,7 +721,6 @@ export function LandingShell({
               {pomodoroSessionActive ? (pomodoroRunning ? "Pause" : "Resume") : "Start Focus Session"}
             </button>
 
-            {/* Custom minutes + Reset + End */}
             <div className="flex flex-wrap items-center gap-2">
               <input
                 type="number"
@@ -744,7 +760,6 @@ export function LandingShell({
               )}
             </div>
 
-            {/* Status message */}
             {(focusTrackerError || pomodoroJustLogged) && (
               <p
                 className={`text-center text-sm ${
@@ -756,35 +771,8 @@ export function LandingShell({
                 {focusTrackerError ?? "Focus session logged."}
               </p>
             )}
-
-            {/* Conversation toggles + start */}
-            <div className="rounded-[1.35rem] border border-neutral-200/80 bg-neutral-50/75 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-900">
-              <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
-                <ToggleRow
-                  label="Show citations"
-                  checked={secondOrderCitationsEnabled}
-                  onChange={onToggleSecondOrderCitations}
-                />
-                <ToggleRow
-                  label="Detailed responses"
-                  checked={responseVerbosity === "detailed"}
-                  onChange={() => onResponseVerbosityChange(responseVerbosity === "detailed" ? "compact" : "detailed")}
-                />
-              </div>
-              <button
-                type="button"
-                onClick={onStartMindLabConversation}
-                className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
-              >
-                Start conversation
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
-                  <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-                </svg>
-              </button>
-            </div>
           </div>
 
-          {/* Hidden inputs preserved for custom focus entry */}
           <div className="hidden">
             <input
               type="text"
@@ -810,7 +798,6 @@ export function LandingShell({
           </div>
         </section>
 
-        {/* Quick Capture — below Focus Timer */}
         <section className="overflow-hidden rounded-2xl border border-white/60 bg-white/50 px-3 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04]">
           <h3 className="truncate text-[13px] font-semibold text-foreground">Quick Capture</h3>
           <div className="mt-2 grid grid-cols-3 gap-1.5">
@@ -827,7 +814,6 @@ export function LandingShell({
                 <span className="text-[11px] font-medium text-foreground">{item.label}</span>
               </button>
             ))}
-            {/* Sleep & Recovery quick capture button */}
             <button
               type="button"
               onClick={() => setSleepFormOpen((prev) => !prev)}
@@ -846,7 +832,6 @@ export function LandingShell({
             </button>
           </div>
 
-          {/* Inline sleep entry form */}
           {sleepFormOpen && (
             <div className="mt-2 space-y-2 rounded-xl border border-neutral-200 bg-neutral-50 p-2.5 dark:border-neutral-700 dark:bg-neutral-900">
               <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
@@ -902,10 +887,9 @@ export function LandingShell({
             </div>
           )}
         </section>
-        </div>
       </div>
 
-      {/* Thought of the Day banner */}
+      {/* 4. Thought of the Day banner */}
       {thoughtOfTheDay && (
         <LandingThoughtOfTheDayBanner
           thought={thoughtOfTheDay}
@@ -915,123 +899,7 @@ export function LandingShell({
         />
       )}
 
-      {/* Mentor Hub — full width */}
-      <div id="sec-mentor">
-      <ModuleCard eyebrow="Mentor Hub" title={mentorHubTitle}>
-        <div className="grid gap-4 xl:grid-cols-2">
-          {/* Left: mentors + 1:1 + mind lab links */}
-          <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-1.5">
-              {mentors.slice(0, 5).map((mentor) => {
-                const isSelected = selectedMentorId === mentor.id;
-                return (
-                  <button
-                    key={mentor.id}
-                    type="button"
-                    onClick={() => setSelectedMentorId(isSelected ? null : mentor.id)}
-                    className={`inline-flex items-center gap-1.5 rounded-full border py-0.5 pl-0.5 pr-2.5 transition-colors ${
-                      isSelected
-                        ? "border-[#B87B51] bg-[#FBF4EC] ring-1 ring-[#B87B51]/30 dark:border-[#D6A67E] dark:bg-[#241a14] dark:ring-[#D6A67E]/20"
-                        : "border-neutral-200 bg-neutral-50 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
-                    }`}
-                  >
-                    <span
-                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[9px] font-semibold text-white"
-                      style={{ backgroundColor: `hsl(${mentor.hue} 70% 45%)` }}
-                    >
-                      {mentor.initials}
-                    </span>
-                    <span className="truncate text-[12px] font-medium text-foreground">{mentor.name}</span>
-                  </button>
-                );
-              })}
-              {mentorCount === 0 && (
-                <p className="text-[13px] text-neutral-500 dark:text-neutral-400">{followMentorsHint}</p>
-              )}
-            </div>
-
-            {selectedMentorId ? (
-              <button
-                type="button"
-                onClick={() => onSelectMentor(selectedMentorId)}
-                className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
-              >
-                Chat with {mentors.find((m) => m.id === selectedMentorId)?.name ?? "mentor"}
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
-                  <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-                </svg>
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={onOpenOneOnOneMentor}
-                className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-1.5 text-[13px] font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-900"
-              >
-                Browse all mentors
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
-                  <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-                </svg>
-              </button>
-            )}
-
-            {featuredMentalModelName && (
-              <button
-                type="button"
-                onClick={onOpenMentalModels}
-                className="flex w-full items-center justify-between gap-2 rounded-lg border-l-[3px] border-neutral-300 bg-neutral-50 px-2.5 py-2 text-left transition-colors hover:bg-neutral-100 dark:border-neutral-600 dark:bg-neutral-900 dark:hover:bg-neutral-800"
-              >
-                <div className="min-w-0">
-                  <p className="truncate text-[13px] font-semibold text-foreground">{featuredMentalModelName}</p>
-                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400">Interactive mental model</p>
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0 text-neutral-400">
-                  <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-                </svg>
-              </button>
-            )}
-
-            <ChevronRow label={learnMentalModelLabel} onClick={onOpenLearnMentalModel} />
-
-            {conversationCount > 0 && (
-              <button
-                type="button"
-                onClick={onOpenConversations}
-                className="flex w-full items-center justify-between border-t border-neutral-100 pt-2 text-left transition-colors hover:opacity-70 dark:border-neutral-800"
-              >
-                <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                    Conversations
-                  </p>
-                  <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
-                    {conversationCount} item{conversationCount !== 1 ? "s" : ""}, tap to view
-                  </p>
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0 text-neutral-400">
-                  <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-                </svg>
-              </button>
-            )}
-          </div>
-
-          {/* Right: Ask mentors inline form */}
-          <div>{askMentorsContent}</div>
-        </div>
-      </ModuleCard>
-      </div>
-
-      {/* Hero Habits — GitHub-style contribution grid */}
-      {heroHabits.length > 0 && (
-        <ModuleCard eyebrow={heroHabitsLabel} title={heroHabitsLabel}>
-          <LandingHeroHabits
-            habits={heroHabits}
-            completions={heroHabitCompletions}
-            onToggle={onToggleHabitCompletion}
-            onOpenHabit={onOpenHabitDetail}
-          />
-        </ModuleCard>
-      )}
-
-      {/* Row 2: Weekly Summary · Weight · Activity */}
+      {/* 5. Weekly Summary · Weight · Activity — periodic review */}
       <div id="sec-summary" className="grid gap-4 xl:grid-cols-3">
         <ModuleCard eyebrow="Weekly Summary" title={weeklySummaryLabel}>
           {weeklySummary ? (
@@ -1104,7 +972,6 @@ export function LandingShell({
           title={weightTitle}
           description={weightDescription}
         >
-          {/* Sparkline chart */}
           {weightWeekPoints.length >= 2 ? (
             <WeightSparkline points={weightWeekPoints} targetKg={weightTargetKg} />
           ) : (
@@ -1179,16 +1046,176 @@ export function LandingShell({
         </div>
       </div>
 
-      <div id="sec-timeline">
-        <LandingTimelineCard eyebrow={timelineEyebrow} dayLabel={timelineLabel} events={timelineEvents} />
-      </div>
-
+      {/* 6. Caffeine Decay Curve — reference chart */}
       <div id="sec-caffeine">
         <LandingCaffeineChart intakes={caffeineIntakes} focusWindow={caffeineFocusWindow} />
       </div>
 
+      {/* 7. Sleep & Recovery — reference chart */}
       <div id="sec-sleep">
         <LandingSleepRecoveryChart entries={sleepEntries} focusSuggestion={sleepFocusSuggestion} />
+      </div>
+
+      {/* 8. Mentor Hub — on-demand, lowest daily frequency */}
+      <div id="sec-mentor">
+      <ModuleCard eyebrow="Mentor Hub" title={mentorHubTitle}>
+        <div className="grid gap-4 xl:grid-cols-2">
+          {/* Left column: structured action groups */}
+          <div className="space-y-4">
+            {/* Group 1: 1:1 Mentor Chat */}
+            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/60 p-3 dark:border-neutral-800 dark:bg-neutral-900/60">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
+                1:1 Mentor Chat
+              </p>
+              <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                Pick a mentor for a private coaching conversation.
+              </p>
+              <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                {mentors.slice(0, 5).map((mentor) => {
+                  const isSelected = selectedMentorId === mentor.id;
+                  return (
+                    <button
+                      key={mentor.id}
+                      type="button"
+                      onClick={() => setSelectedMentorId(isSelected ? null : mentor.id)}
+                      className={`inline-flex items-center gap-1.5 rounded-full border py-0.5 pl-0.5 pr-2.5 transition-colors ${
+                        isSelected
+                          ? "border-[#B87B51] bg-[#FBF4EC] ring-1 ring-[#B87B51]/30 dark:border-[#D6A67E] dark:bg-[#241a14] dark:ring-[#D6A67E]/20"
+                          : "border-neutral-200 bg-white hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                      }`}
+                    >
+                      <span
+                        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[9px] font-semibold text-white"
+                        style={{ backgroundColor: `hsl(${mentor.hue} 70% 45%)` }}
+                      >
+                        {mentor.initials}
+                      </span>
+                      <span className="truncate text-[12px] font-medium text-foreground">{mentor.name}</span>
+                    </button>
+                  );
+                })}
+                {mentorCount === 0 && (
+                  <p className="text-[12px] text-neutral-500 dark:text-neutral-400">{followMentorsHint}</p>
+                )}
+              </div>
+              <div className="mt-2">
+                {selectedMentorId ? (
+                  <button
+                    type="button"
+                    onClick={() => onSelectMentor(selectedMentorId)}
+                    className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                  >
+                    Chat with {mentors.find((m) => m.id === selectedMentorId)?.name ?? "mentor"}
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                      <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={onOpenOneOnOneMentor}
+                    className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-neutral-300 px-3 py-1.5 text-[13px] font-medium text-neutral-700 transition-colors hover:bg-white dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800"
+                  >
+                    Browse all mentors
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                      <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Group 2: New Conversation */}
+            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/60 p-3 dark:border-neutral-800 dark:bg-neutral-900/60">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
+                New Conversation
+              </p>
+              <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                Start a metacognition session with optional settings.
+              </p>
+              <div className="mt-2 divide-y divide-neutral-100 dark:divide-neutral-800">
+                <ToggleRow
+                  label="Show citations"
+                  checked={secondOrderCitationsEnabled}
+                  onChange={onToggleSecondOrderCitations}
+                />
+                <ToggleRow
+                  label="Detailed responses"
+                  checked={responseVerbosity === "detailed"}
+                  onChange={() => onResponseVerbosityChange(responseVerbosity === "detailed" ? "compact" : "detailed")}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={onStartMindLabConversation}
+                className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+              >
+                Start conversation
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                  <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                </svg>
+              </button>
+              {conversationCount > 0 && (
+                <button
+                  type="button"
+                  onClick={onOpenConversations}
+                  className="mt-2 flex w-full items-center justify-between text-left transition-colors hover:opacity-70"
+                >
+                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                    {conversationCount} past conversation{conversationCount !== 1 ? "s" : ""}
+                  </p>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0 text-neutral-400">
+                    <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              )}
+            </div>
+
+            {/* Group 3: Explore — mental models and learning */}
+            {(featuredMentalModelName || true) && (
+              <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/60 p-3 dark:border-neutral-800 dark:bg-neutral-900/60">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
+                  Explore
+                </p>
+                <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                  Mental models, frameworks, and interactive learning.
+                </p>
+                <div className="mt-2 space-y-1.5">
+                  {featuredMentalModelName && (
+                    <button
+                      type="button"
+                      onClick={onOpenMentalModels}
+                      className="flex w-full items-center justify-between gap-2 rounded-lg border border-neutral-200 bg-white px-2.5 py-2 text-left transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate text-[13px] font-semibold text-foreground">{featuredMentalModelName}</p>
+                        <p className="text-[11px] text-neutral-500 dark:text-neutral-400">Interactive mental model</p>
+                      </div>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0 text-neutral-400">
+                        <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  )}
+                  <ChevronRow label={learnMentalModelLabel} onClick={onOpenLearnMentalModel} />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Right column: Ask Mentors */}
+          <div>
+            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/60 p-3 dark:border-neutral-800 dark:bg-neutral-900/60">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
+                Ask Mentors
+              </p>
+              <p className="mt-0.5 mb-2 text-[11px] text-neutral-500 dark:text-neutral-400">
+                Get recommendations from multiple mentors at once.
+              </p>
+              {askMentorsContent}
+            </div>
+          </div>
+        </div>
+      </ModuleCard>
       </div>
 
     </div>

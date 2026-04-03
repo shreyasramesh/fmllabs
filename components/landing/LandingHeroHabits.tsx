@@ -111,10 +111,55 @@ export const LandingHeroHabits = React.memo(function LandingHeroHabits({
         </div>
       </div>
 
-      {/* Grid */}
-      <div className="w-full">
-        {/* Day-of-week header */}
-        <div className="grid items-center gap-y-2.5" style={{ gridTemplateColumns: "1fr repeat(7, 36px)" }}>
+      {/* Mobile: name + today toggle list */}
+      <div className="flex flex-col gap-2 sm:hidden">
+        {habitStats.map(({ habit, set, streak, doneToday }) => (
+          <div
+            key={habit._id}
+            className="flex items-center gap-3 rounded-xl border border-neutral-200/60 bg-neutral-50/40 px-3 py-2.5 dark:border-neutral-700/50 dark:bg-neutral-800/30"
+          >
+            <button
+              type="button"
+              onClick={() => onToggle(habit._id, today)}
+              className={[
+                "shrink-0 w-8 h-8 rounded-lg transition-all duration-150 flex items-center justify-center",
+                doneToday
+                  ? "bg-[#5A9E8A] shadow-sm"
+                  : "bg-neutral-200/50 border border-neutral-300/60 dark:bg-neutral-700/40 dark:border-neutral-600/50",
+                "hover:scale-110 active:scale-95",
+              ].join(" ")}
+              aria-label={`Toggle ${habit.name} today`}
+            >
+              {doneToday && (
+                <svg viewBox="0 0 16 16" className="w-4 h-4" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3.5 8.5 6.5 11.5 12.5 5" />
+                </svg>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => onOpenHabit(habit._id)}
+              className="min-w-0 flex-1 text-left"
+            >
+              <span className="text-sm font-semibold text-neutral-800 dark:text-neutral-100 line-clamp-1">
+                {habit.name}
+              </span>
+            </button>
+            {streak > 0 && (
+              <span className="shrink-0 inline-flex items-center gap-0.5 rounded-full bg-[#5A9E8A]/10 px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-[#5A9E8A]">
+                {streak}
+                <svg viewBox="0 0 12 14" className="w-2.5 h-2.5" fill="#5A9E8A" aria-hidden>
+                  <path d="M6 0C6 0 2 4.5 2 8a4 4 0 0 0 8 0C10 4.5 6 0 6 0Z" />
+                </svg>
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop: full 7-day grid */}
+      <div className="hidden sm:block w-full">
+        <div className="mx-auto grid w-fit items-center gap-y-2.5" style={{ gridTemplateColumns: "max-content repeat(7, 36px)" }}>
           <div />
           {DAY_LABELS.map((label, i) => (
             <div
@@ -125,14 +170,12 @@ export const LandingHeroHabits = React.memo(function LandingHeroHabits({
             </div>
           ))}
 
-          {/* Habit rows */}
           {habitStats.map(({ habit, set, streak }) => (
             <React.Fragment key={habit._id}>
-              {/* Name + streak */}
               <button
                 type="button"
                 onClick={() => onOpenHabit(habit._id)}
-                className="flex items-center gap-1.5 min-w-0 pr-3 text-left group"
+                className="flex items-center gap-1.5 min-w-0 max-w-[14rem] pr-3 text-left group"
               >
                 <span className="text-[13px] font-semibold text-neutral-800 dark:text-neutral-100 truncate group-hover:text-[#5A9E8A] transition-colors">
                   {habit.name}
@@ -147,7 +190,6 @@ export const LandingHeroHabits = React.memo(function LandingHeroHabits({
                 )}
               </button>
 
-              {/* 7 day cells */}
               {dateGrid.map((dateKey) => {
                 const completed = set.has(dateKey);
                 const isToday = dateKey === today;

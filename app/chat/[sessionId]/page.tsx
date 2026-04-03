@@ -3223,6 +3223,7 @@ type LandingActivityKind =
   | "journal"
   | "weightEntry"
   | "focusEntry"
+  | "sleepEntry"
   | "memory"
   | "habit"
   | "concept"
@@ -3236,6 +3237,7 @@ type LandingDayActivityItem = {
   dayKey: string;
   title: string;
   journalCategory?: "nutrition" | "exercise";
+  hasCaffeine?: boolean;
   sublabel?: string;
   timestamp: number;
   entityId: string;
@@ -3319,6 +3321,8 @@ type LandingActivityGroupKey =
   | "journalExercise"
   | "journalWeight"
   | "journalFocus"
+  | "journalSleep"
+  | "journalCaffeine"
   | "session"
   | "memory"
   | "habit"
@@ -3333,6 +3337,8 @@ const LANDING_ACTIVITY_GROUP_LABEL: Record<LandingActivityGroupKey, string> = {
   journalExercise: "Exercise Entries",
   journalWeight: "Weight Entries",
   journalFocus: "Focus Entries",
+  journalSleep: "Sleep Entries",
+  journalCaffeine: "Caffeine Entries",
   session: "Conversations",
   memory: "Memory",
   habit: "30 Day Experiments",
@@ -3348,9 +3354,10 @@ const LANDING_ACTIVITY_GROUP_ORDER: LandingActivityGroupKey[] = [
   "journalExercise",
   "journalWeight",
   "journalFocus",
+  "journalSleep",
+  "journalCaffeine",
   "session",
   "memory",
-  "habit",
   "concept",
   "framework",
   "savedModel",
@@ -3462,6 +3469,7 @@ function landingActivityGroupKey(item: LandingDayActivityItem): LandingActivityG
   }
   if (item.kind === "weightEntry") return "journalWeight";
   if (item.kind === "focusEntry") return "journalFocus";
+  if (item.kind === "sleepEntry") return "journalSleep";
   return item.kind;
 }
 
@@ -5017,7 +5025,7 @@ export default function ChatPage() {
     if (!calorieTrackerModalOpen) return;
     if (!(calorieTrackerStep === "choose" || calorieTrackerStep === "input")) return;
     const query = calorieTrackerStep === "choose" ? calorieTrackerSuggestionQuery : calorieTrackerInputRef.current;
-    void fetchCalorieTrackerSuggestions(query);
+      void fetchCalorieTrackerSuggestions(query);
   }, [
     calorieTrackerSuggestionQuery,
     calorieTrackerModalOpen,
@@ -5518,12 +5526,14 @@ export default function ChatPage() {
           date = new Date(t.createdAt);
         }
         if (!date || Number.isNaN(date.getTime()) || !t._id || !t.transcriptText) return null;
+        const caffeineMg = t.journalCategory === "nutrition" ? parseCaffeineMgFromJournalText(t.transcriptText) : null;
         return {
           id: `journal-${t._id}`,
           kind: "journal" as const,
           dayKey: toDayKey(date),
           title: truncateJournalListPreview(t.videoTitle || t.transcriptText, 72) || "Journal entry",
           journalCategory: t.journalCategory,
+          hasCaffeine: caffeineMg != null && caffeineMg > 0,
           sublabel: getJournalCategoryLabel(t.journalCategory) ?? undefined,
           timestamp: journalEntryTimestamp(t),
           entityId: t._id,
@@ -5681,11 +5691,32 @@ export default function ChatPage() {
       })
       .filter(isNonNull);
 
+    const sleepItems: LandingDayActivityItem[] = sleepEntries
+      .map((entry) => {
+        if (!entry.dayKey) return null;
+        const [y, m, d] = entry.dayKey.split("-").map(Number);
+        const date = new Date(y, m - 1, d, 7, 0, 0);
+        if (Number.isNaN(date.getTime())) return null;
+        const hoursText = Number.isFinite(entry.sleepHours) ? `${entry.sleepHours}h` : "--";
+        const hrvPart = entry.hrvMs != null && Number.isFinite(entry.hrvMs) ? `, HRV ${entry.hrvMs}ms` : "";
+        return {
+          id: `sleep-${entry.dayKey}`,
+          kind: "sleepEntry" as const,
+          dayKey: entry.dayKey,
+          title: `Sleep: ${hoursText}${hrvPart}`,
+          sublabel: "Sleep",
+          timestamp: date.getTime(),
+          entityId: entry.dayKey,
+        };
+      })
+      .filter(isNonNull);
+
     return [
       ...sessionItems,
       ...journalItems,
       ...weightItems,
       ...focusItems,
+      ...sleepItems,
       ...memoryItems,
       ...habitItems,
       ...conceptItems,
@@ -5700,6 +5731,7 @@ export default function ChatPage() {
     journalEntriesSorted,
     focusTrackerEntries,
     weightTrackerEntries,
+    sleepEntries,
     longTermMemories,
     mentalModelsIndex,
     savedConcepts,
@@ -5737,6 +5769,11 @@ export default function ChatPage() {
       const existing = grouped.get(groupKey);
       if (existing) existing.push(item);
       else grouped.set(groupKey, [item]);
+      if (item.hasCaffeine) {
+        const caffeineGroup = grouped.get("journalCaffeine");
+        if (caffeineGroup) caffeineGroup.push(item);
+        else grouped.set("journalCaffeine", [item]);
+    }
     }
     return LANDING_ACTIVITY_GROUP_ORDER
       .map((groupKey) => ({
@@ -5896,7 +5933,7 @@ export default function ChatPage() {
     );
     const focusById = new Map(focusTrackerEntries.map((entry) => [entry.id, entry]));
     const events: Array<{
-      type: "nutrition" | "weight" | "exercise" | "focus";
+      type: "nutrition" | "weight" | "exercise" | "focus" | "sleep" | "caffeine";
       startMinute: number;
       endMinute: number;
       label: string;
@@ -5914,6 +5951,19 @@ export default function ChatPage() {
           label: "Nutrition",
           color: "#0ea5e9",
         });
+        const entry = journalById.get(item.entityId);
+        if (entry?.transcriptText) {
+          const mg = parseCaffeineMgFromJournalText(entry.transcriptText);
+          if (mg != null && mg > 0) {
+            events.push({
+              type: "caffeine",
+              startMinute,
+              endMinute: startMinute,
+              label: `Caffeine (${mg}mg)`,
+              color: "#a16207",
+            });
+          }
+        }
         continue;
       }
       if (item.kind === "journal" && item.journalCategory === "exercise") {
@@ -5958,8 +6008,21 @@ export default function ChatPage() {
         });
       }
     }
+    for (const entry of sleepEntries) {
+      if (entry.dayKey !== selectedLandingDayKey) continue;
+      const endMin = Math.min(1440, Math.round(entry.sleepHours * 60));
+      if (endMin <= 0) continue;
+      const hrvPart = entry.hrvMs != null && Number.isFinite(entry.hrvMs) ? `, HRV ${entry.hrvMs}ms` : "";
+      events.push({
+        type: "sleep",
+        startMinute: 0,
+        endMinute: endMin,
+        label: `Sleep (${entry.sleepHours}h${hrvPart})`,
+        color: "#6366f1",
+      });
+    }
     return events.sort((a, b) => a.startMinute - b.startMinute);
-  }, [focusTrackerEntries, journalEntriesSorted, selectedLandingDayActivityItems]);
+  }, [focusTrackerEntries, journalEntriesSorted, selectedLandingDayActivityItems, sleepEntries, selectedLandingDayKey]);
 
   const selectedLandingDayCaffeineIntakes = useMemo(() => {
     const journalById = new Map(
@@ -13237,7 +13300,7 @@ export default function ChatPage() {
                                   </button>
                                   <div className="flex-1 min-w-0 pr-10">
                                     <div className="flex items-center gap-1.5">
-                                      <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
+                                    <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
                                       {h.isHeroHabit && (
                                         <span className="shrink-0 inline-flex items-center rounded-full bg-[#5A9E8A]/15 px-1.5 py-0.5 text-[10px] font-medium text-[#5A9E8A]">Hero</span>
                                       )}
@@ -13292,7 +13355,7 @@ export default function ChatPage() {
                                 </button>
                                 <div className="flex-1 min-w-0 pr-10">
                                   <div className="flex items-center gap-1.5">
-                                    <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
+                                  <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{h.name}</span>
                                     {h.isHeroHabit && (
                                       <span className="shrink-0 inline-flex items-center rounded-full bg-[#5A9E8A]/15 px-1.5 py-0.5 text-[10px] font-medium text-[#5A9E8A]">Hero</span>
                                     )}
@@ -14088,7 +14151,7 @@ export default function ChatPage() {
                         }}
                       />
                       )}
-                    {!incognitoMode && (
+                {!incognitoMode && (
                       <LandingBrainDump
                         language={language}
                         onSaved={(category) => {
@@ -14098,7 +14161,7 @@ export default function ChatPage() {
                           else if (category === "weight") void fetchWeightTracker();
                         }}
                       />
-                    )}
+                      )}
                     {journalEntryJustSaved && (
                         <p className="text-sm text-emerald-600 dark:text-emerald-400" role="status">
                         {landingTranslations.journalEntrySavedHint}
@@ -18112,9 +18175,9 @@ export default function ChatPage() {
             </div>
             <div className="p-4 space-y-3 overflow-y-auto">
               {selectedLandingJournalChip !== "nutrition" && (
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
                   Log your workout details so calories and macro impact can be estimated.
-                </p>
+              </p>
               )}
 
               {calorieTrackerStep === "choose" && (
@@ -18232,11 +18295,11 @@ export default function ChatPage() {
                           const label = meal.displayName?.trim() || meal.sampleEntry.split("\n").map((s) => s.trim()).find(Boolean)?.slice(0, 40) || "Meal";
                           const kcal = meal.nutritionSnapshot?.calories;
                           return (
-                            <button
+                          <button
                               key={meal.id}
-                              type="button"
+                            type="button"
                               onClick={() => void handleCalorieTrackerSuggestionSelect(meal)}
-                              disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                            disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
                               className="flex items-center gap-1.5 rounded-full border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-3 py-1.5 text-[13px] font-medium text-foreground hover:border-amber-400 hover:bg-amber-50 dark:hover:border-amber-600 dark:hover:bg-amber-950/40 transition-colors disabled:opacity-50"
                             >
                               <span className="truncate max-w-[140px]">{label}</span>
@@ -18245,7 +18308,7 @@ export default function ChatPage() {
                                   {kcal} kcal
                                 </span>
                               )}
-                            </button>
+                          </button>
                           );
                         })}
                       </div>
@@ -18296,7 +18359,7 @@ export default function ChatPage() {
                             </button>
                           );
                         })}
-                      </div>
+                  </div>
                     )}
                   </div>
 
@@ -18369,7 +18432,7 @@ export default function ChatPage() {
                       <button
                         type="button"
                         onClick={() => setCalorieTrackerImageAnalyses([])}
-                        disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
                         className="h-8 px-2 rounded-lg text-[11px] font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors text-neutral-600 dark:text-neutral-300"
                       >
                         Clear photos
@@ -18814,14 +18877,14 @@ export default function ChatPage() {
                       </button>
                     )}
                   </div>
-                  {calorieTrackerResult.assumptions.length > 0 && (
+                    {calorieTrackerResult.assumptions.length > 0 && (
                     <details className="text-xs text-neutral-500 dark:text-neutral-400">
                       <summary className="cursor-pointer font-medium hover:text-foreground transition-colors">Assumptions made</summary>
                       <ul className="mt-1 space-y-0.5 pl-3">
-                        {calorieTrackerResult.assumptions.map((a, i) => (
+                          {calorieTrackerResult.assumptions.map((a, i) => (
                           <li key={i}>- {a}</li>
-                        ))}
-                      </ul>
+                          ))}
+                        </ul>
                     </details>
                   )}
                   <div className="flex gap-2">
@@ -18834,13 +18897,13 @@ export default function ChatPage() {
                         Log another
                       </button>
                     )}
-                    <button
-                      type="button"
-                      onClick={resetCalorieTrackerModal}
+                  <button
+                    type="button"
+                    onClick={resetCalorieTrackerModal}
                       className={`${selectedLandingJournalChip === "nutrition" ? "flex-1" : "w-full"} px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity`}
-                    >
+                  >
                       Done
-                    </button>
+                  </button>
                   </div>
                 </>
               )}
@@ -22246,8 +22309,8 @@ export default function ChatPage() {
             <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 min-w-0 pr-2">
                 <h2 className="font-semibold text-lg truncate min-w-0">
-                  {habitDetailEditing ? "Edit habit" : habitDetailModal.name}
-                </h2>
+                {habitDetailEditing ? "Edit habit" : habitDetailModal.name}
+              </h2>
                 {!habitDetailEditing && habitDetailModal.isHeroHabit && (
                   <span className="shrink-0 inline-flex items-center rounded-full bg-[#5A9E8A]/15 px-2 py-0.5 text-[11px] font-medium text-[#5A9E8A]">
                     Hero
@@ -22288,39 +22351,39 @@ export default function ChatPage() {
                       className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">
-                      {getUiTranslations(language).habitLifeArea}
-                    </label>
-                    <select
-                      value={habitDetailEdit.bucket ?? ""}
-                      onChange={(e) => {
-                        const v = e.target.value;
-                        setHabitDetailEdit((d) =>
-                          d ? { ...d, bucket: v === "" ? undefined : (v as HabitBucket) } : null
-                        );
-                      }}
-                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                    >
-                      {!habitDetailModal.bucket ? (
-                        <option value="">Select life area…</option>
-                      ) : null}
-                      {HABIT_BUCKET_IDS.map((b) => (
-                        <option key={b} value={b}>
-                          {getHabitBucketLabel(getUiTranslations(language), b)}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Description</label>
-                    <textarea
-                      value={habitDetailEdit.description}
-                      onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, description: e.target.value } : null)}
+              <div>
+                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">
+                  {getUiTranslations(language).habitLifeArea}
+                </label>
+                <select
+                  value={habitDetailEdit.bucket ?? ""}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setHabitDetailEdit((d) =>
+                      d ? { ...d, bucket: v === "" ? undefined : (v as HabitBucket) } : null
+                    );
+                  }}
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                >
+                  {!habitDetailModal.bucket ? (
+                    <option value="">Select life area…</option>
+                  ) : null}
+                  {HABIT_BUCKET_IDS.map((b) => (
+                    <option key={b} value={b}>
+                      {getHabitBucketLabel(getUiTranslations(language), b)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Description</label>
+                <textarea
+                  value={habitDetailEdit.description}
+                  onChange={(e) => setHabitDetailEdit((d) => d ? { ...d, description: e.target.value } : null)}
                       rows={2}
-                      className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
-                    />
-                  </div>
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                />
+              </div>
                   <label className="flex items-center gap-2.5 cursor-pointer select-none">
                     <input
                       type="checkbox"
@@ -22357,9 +22420,9 @@ export default function ChatPage() {
                         </p>
                         <p className="text-[11px] text-neutral-500 dark:text-neutral-400 truncate">
                           {habitDetailModal.calorieImpact.label}
-                        </p>
-                      </div>
+                      </p>
                     </div>
+            </div>
                   ) : (
                     <button
                       type="button"

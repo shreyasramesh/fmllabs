@@ -37,7 +37,7 @@ export interface LandingFigureSummary {
 }
 
 export interface LandingTimelineEvent {
-  type: "nutrition" | "weight" | "exercise" | "focus";
+  type: "nutrition" | "weight" | "exercise" | "focus" | "sleep" | "caffeine";
   startMinute: number;
   endMinute: number;
   label: string;

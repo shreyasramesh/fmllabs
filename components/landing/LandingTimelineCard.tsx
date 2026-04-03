@@ -19,55 +19,47 @@ function formatMinuteOfDay(minuteOfDay: number): string {
   return `${h12}:${String(m).padStart(2, "0")} ${suffix}`;
 }
 
-const SEGMENT_COLORS: Record<LandingTimelineEvent["type"], { bar: string; barDark: string }> = {
-  nutrition: { bar: "#6DA37E", barDark: "#4ade80" },
-  exercise: { bar: "#6DA37E", barDark: "#4ade80" },
-  weight: { bar: "#E8C170", barDark: "#fbbf24" },
-  focus: { bar: "#6DA37E", barDark: "#4ade80" },
-};
+type EventType = LandingTimelineEvent["type"];
 
-function eventTintClass(type: LandingTimelineEvent["type"]): string {
-  switch (type) {
-    case "nutrition":
-      return "bg-sky-100 text-sky-600 ring-sky-200/80 dark:bg-sky-900/60 dark:text-sky-300 dark:ring-sky-700/70";
-    case "weight":
-      return "bg-emerald-100 text-emerald-600 ring-emerald-200/80 dark:bg-emerald-900/60 dark:text-emerald-300 dark:ring-emerald-700/70";
-    case "exercise":
-      return "bg-amber-100 text-amber-600 ring-amber-200/80 dark:bg-amber-900/60 dark:text-amber-300 dark:ring-amber-700/70";
-    case "focus":
-      return "bg-teal-100 text-teal-600 ring-teal-200/80 dark:bg-teal-900/60 dark:text-teal-300 dark:ring-teal-700/70";
-    default:
-      return "bg-neutral-100 text-neutral-500 ring-neutral-200/80 dark:bg-neutral-800 dark:text-neutral-300 dark:ring-neutral-700/70";
-  }
+interface LaneConfig {
+  type: EventType;
+  label: string;
+  dot: string;
+  dotDark: string;
+  bar: string;
+  barDark: string;
+  isRange: boolean;
 }
 
-function TimelineMarkerIcon({ type }: { type: LandingTimelineEvent["type"] }) {
-  if (type === "nutrition") {
-    return (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3" aria-hidden>
-        <path d="M8 3v8" /><path d="M6 3v5" /><path d="M10 3v5" /><path d="M8 11v10" /><path d="M16 3c1.7 2 2 4.4 0 7v11" />
-      </svg>
-    );
+const LANES: LaneConfig[] = [
+  { type: "sleep",     label: "Sleep",     dot: "#818cf8", dotDark: "#a5b4fc", bar: "#818cf8", barDark: "#a5b4fc", isRange: true },
+  { type: "nutrition", label: "Nutrition",  dot: "#0ea5e9", dotDark: "#38bdf8", bar: "#0ea5e9", barDark: "#38bdf8", isRange: false },
+  { type: "caffeine",  label: "Caffeine",   dot: "#d97706", dotDark: "#fbbf24", bar: "#d97706", barDark: "#fbbf24", isRange: false },
+  { type: "exercise",  label: "Exercise",   dot: "#f97316", dotDark: "#fb923c", bar: "#f97316", barDark: "#fb923c", isRange: true },
+  { type: "focus",     label: "Focus",      dot: "#8b5cf6", dotDark: "#a78bfa", bar: "#8b5cf6", barDark: "#a78bfa", isRange: true },
+  { type: "weight",    label: "Weight",     dot: "#10b981", dotDark: "#34d399", bar: "#10b981", barDark: "#34d399", isRange: false },
+];
+
+function LaneIcon({ type, className }: { type: EventType; className?: string }) {
+  const cls = className ?? "h-3.5 w-3.5";
+  const props = { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, className: cls, "aria-hidden": true as const };
+
+  switch (type) {
+    case "nutrition":
+      return <svg {...props}><path d="M8 3v8" /><path d="M6 3v5" /><path d="M10 3v5" /><path d="M8 11v10" /><path d="M16 3c1.7 2 2 4.4 0 7v11" /></svg>;
+    case "weight":
+      return <svg {...props}><path d="M6 7h12l1 10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2Z" /><path d="M9.5 9a2.5 2.5 0 0 1 5 0" /><path d="M12 11l1.5-1.5" /></svg>;
+    case "exercise":
+      return <svg {...props}><path d="M6 9v6" /><path d="M18 9v6" /><path d="M3 10v4" /><path d="M21 10v4" /><path d="M6 12h12" /></svg>;
+    case "focus":
+      return <svg {...props}><circle cx="12" cy="12" r="8" /><path d="M12 8v4l2.5 1.5" /></svg>;
+    case "sleep":
+      return <svg {...props}><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg>;
+    case "caffeine":
+      return <svg {...props}><path d="M17 8h1a4 4 0 1 1 0 8h-1" /><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" /><line x1="6" x2="6" y1="2" y2="4" /><line x1="10" x2="10" y1="2" y2="4" /><line x1="14" x2="14" y1="2" y2="4" /></svg>;
+    default:
+      return <svg {...props}><circle cx="12" cy="12" r="8" /></svg>;
   }
-  if (type === "weight") {
-    return (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3" aria-hidden>
-        <path d="M6 7h12l1 10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2Z" /><path d="M9.5 9a2.5 2.5 0 0 1 5 0" /><path d="M12 11l1.5-1.5" />
-      </svg>
-    );
-  }
-  if (type === "exercise") {
-    return (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3" aria-hidden>
-        <path d="M6 9v6" /><path d="M18 9v6" /><path d="M3 10v4" /><path d="M21 10v4" /><path d="M6 12h12" />
-      </svg>
-    );
-  }
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3" aria-hidden>
-      <circle cx="12" cy="12" r="8" /><path d="M12 8v4l2.5 1.5" />
-    </svg>
-  );
 }
 
 interface LandingTimelineCardProps {
@@ -77,6 +69,8 @@ interface LandingTimelineCardProps {
 }
 
 const TIME_TICKS = [0, 180, 360, 540, 720, 900, 1080, 1260, 1440];
+const LANE_HEIGHT = 30;
+const GUTTER_WIDTH = 106;
 
 function getPstMinuteOfDay(): number {
   const now = new Date();
@@ -85,108 +79,170 @@ function getPstMinuteOfDay(): number {
 }
 
 export function LandingTimelineCard({ eyebrow, dayLabel, events }: LandingTimelineCardProps) {
-  const nutritionCount = events.filter((e) => e.type === "nutrition").length;
-  const weightCount = events.filter((e) => e.type === "weight").length;
-  const exerciseCount = events.filter((e) => e.type === "exercise").length;
-  const focusCount = events.filter((e) => e.type === "focus").length;
+  const nowMinute = useMemo(getPstMinuteOfDay, []);
 
-  const rangeEvents = events.filter((e) => e.type === "focus" || e.type === "exercise");
-  const pointEvents = events.filter((e) => e.type === "nutrition" || e.type === "weight");
+  const eventsByType = useMemo(() => {
+    const map = new Map<EventType, LandingTimelineEvent[]>();
+    for (const e of events) {
+      const arr = map.get(e.type);
+      if (arr) arr.push(e);
+      else map.set(e.type, [e]);
+    }
+    return map;
+  }, [events]);
+
+  const activeLanes = useMemo(
+    () => LANES.filter((lane) => (eventsByType.get(lane.type)?.length ?? 0) > 0),
+    [eventsByType],
+  );
 
   const toPercent = (minute: number) => (Math.max(0, Math.min(1440, minute)) / 1440) * 100;
 
-  const nowMinute = useMemo(getPstMinuteOfDay, []);
-
   return (
     <section className="w-full overflow-hidden rounded-[2rem] border border-white/60 bg-white/50 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] sm:p-5">
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#B87B51] dark:text-[#D6A67E]">
-            {eyebrow}
-          </p>
-          <h2 className="mt-1 text-lg font-semibold text-foreground sm:text-xl">
-            {dayLabel} activity
-          </h2>
-        </div>
-        <div className="flex flex-wrap items-center gap-2 text-[11px] text-neutral-500 dark:text-neutral-400">
-          <span className="flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-full bg-sky-500" />Nutrition {nutritionCount}</span>
-          <span className="flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />Weight {weightCount}</span>
-          <span className="flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-full bg-amber-500" />Exercise {exerciseCount}</span>
-          <span className="flex items-center gap-1"><span className="inline-block h-2 w-2 rounded-full bg-teal-500" />Focus {focusCount}</span>
-        </div>
+      <div>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#B87B51] dark:text-[#D6A67E]">
+          {eyebrow}
+        </p>
+        <h2 className="mt-1 text-lg font-semibold text-foreground sm:text-xl">
+          {dayLabel} activity
+        </h2>
       </div>
 
-      <div className="mt-4 rounded-2xl border border-[#E8D8C7]/80 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,247,238,0.94)_58%,rgba(255,244,236,0.9)_100%)] px-4 py-5 dark:border-neutral-700 dark:bg-none dark:bg-neutral-800 sm:px-5">
-        {/* Rail container */}
-        <div className="relative mx-auto" style={{ paddingBottom: "2.5rem" }}>
-          {/* Background rail */}
-          <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-neutral-200/80 dark:bg-neutral-700">
-            {/* Range-event segments (focus, exercise) */}
-            {rangeEvents.map((event, i) => {
-              const left = toPercent(event.startMinute);
-              const width = Math.max(0.5, toPercent(event.endMinute) - left);
-              const colors = SEGMENT_COLORS[event.type];
-              return (
+      <div className="mt-4 rounded-2xl border border-[#E8D8C7]/80 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,247,238,0.94)_58%,rgba(255,244,236,0.9)_100%)] px-2 py-4 dark:border-neutral-700 dark:bg-none dark:bg-neutral-800 sm:px-4">
+        {activeLanes.length === 0 ? (
+          <p className="py-2 text-center text-[13px] text-neutral-400 dark:text-neutral-500">
+            No activity yet for this day.
+          </p>
+        ) : (
+          <div className="relative flex">
+            {/* Left gutter with lane labels */}
+            <div className="flex-none" style={{ width: GUTTER_WIDTH }}>
+              {activeLanes.map((lane, idx) => (
                 <div
-                  key={`seg-${event.type}-${i}`}
-                  className="absolute inset-y-0 rounded-full"
-                  style={{
-                    left: `${left}%`,
-                    width: `${width}%`,
-                    backgroundColor: colors.bar,
-                    opacity: 0.85,
-                  }}
-                  title={`${event.label} · ${formatMinuteOfDay(event.startMinute)}–${formatMinuteOfDay(event.endMinute)}`}
-                />
-              );
-            })}
-          </div>
-
-          {/* Tick marks on the rail */}
-          {TIME_TICKS.map((minute) => (
-            <div
-              key={`tick-${minute}`}
-              className="absolute top-0 h-2.5 w-px bg-neutral-300/70 dark:bg-neutral-600/70"
-              style={{ left: `${toPercent(minute)}%` }}
-            />
-          ))}
-
-          {/* Current time (PST) indicator */}
-          <div
-            className="absolute top-0 z-10 flex flex-col items-center"
-            style={{ left: `${toPercent(nowMinute)}%`, transform: "translateX(-50%)" }}
-          >
-            <div className="h-2.5 w-[2px] rounded-full bg-[#B87B51]" />
-            <span className="mt-0.5 text-[8px] font-bold text-[#B87B51]">Now</span>
-          </div>
-
-          {/* Point-event icon markers below the rail */}
-          {pointEvents.map((event, i) => (
-            <div
-              key={`marker-${event.type}-${i}`}
-              className="absolute -translate-x-1/2"
-              style={{ left: `${toPercent(event.startMinute)}%`, top: "1rem" }}
-              title={`${event.label} · ${formatMinuteOfDay(event.startMinute)}`}
-            >
-              <span className={`flex h-6 w-6 items-center justify-center rounded-full ring-1 shadow-sm ${eventTintClass(event.type)}`}>
-                <TimelineMarkerIcon type={event.type} />
-              </span>
+                  key={lane.type}
+                  className={`flex items-center gap-1.5 pr-2 ${idx % 2 === 1 ? "bg-neutral-50/60 dark:bg-neutral-700/20" : ""}`}
+                  style={{ height: LANE_HEIGHT }}
+                >
+                  <span
+                    className="flex h-5 w-5 flex-none items-center justify-center rounded-full"
+                    style={{ backgroundColor: `${lane.dot}20` }}
+                  >
+                    <LaneIcon type={lane.type} className="h-2.5 w-2.5" />
+                  </span>
+                  <span className="truncate text-[11px] font-medium text-neutral-600 dark:text-neutral-300">
+                    {lane.label}
+                  </span>
+                  <span className="ml-auto flex-none text-[10px] tabular-nums font-semibold text-neutral-400 dark:text-neutral-500">
+                    {eventsByType.get(lane.type)?.length ?? 0}
+                  </span>
+                </div>
+              ))}
             </div>
-          ))}
 
-          {/* Time labels below the markers */}
-          <div className="absolute left-0 right-0" style={{ top: "2.75rem" }}>
-            {TIME_TICKS.map((minute) => (
-              <span
-                key={`label-${minute}`}
-                className="absolute -translate-x-1/2 text-[10px] font-medium text-neutral-400 dark:text-neutral-500"
-                style={{ left: `${toPercent(minute)}%` }}
+            {/* Track area */}
+            <div className="relative min-w-0 flex-1">
+              {/* Tick grid lines spanning all lanes */}
+              {TIME_TICKS.map((minute) => (
+                <div
+                  key={`grid-${minute}`}
+                  className="absolute top-0 w-px bg-neutral-200/60 dark:bg-neutral-600/40"
+                  style={{
+                    left: `${toPercent(minute)}%`,
+                    height: activeLanes.length * LANE_HEIGHT,
+                  }}
+                />
+              ))}
+
+              {/* Now indicator spanning all lanes */}
+              <div
+                className="absolute top-0 z-20 flex flex-col items-center"
+                style={{
+                  left: `${toPercent(nowMinute)}%`,
+                  height: activeLanes.length * LANE_HEIGHT,
+                  transform: "translateX(-50%)",
+                }}
               >
-                {formatMinuteShort(minute % 1440)}
-              </span>
-            ))}
+                <div
+                  className="w-px border-l border-dashed border-[#B87B51]/70 dark:border-[#D6A67E]/70"
+                  style={{ height: activeLanes.length * LANE_HEIGHT }}
+                />
+                <span className="mt-0.5 rounded-sm bg-[#B87B51]/10 px-1 text-[7px] font-bold uppercase tracking-wide text-[#B87B51] dark:text-[#D6A67E]">
+                  Now
+                </span>
+              </div>
+
+              {/* Swim lanes */}
+              {activeLanes.map((lane, idx) => {
+                const laneEvents = eventsByType.get(lane.type) ?? [];
+                return (
+                  <div
+                    key={lane.type}
+                    className={`relative ${idx % 2 === 1 ? "bg-neutral-50/60 dark:bg-neutral-700/20" : ""}`}
+                    style={{ height: LANE_HEIGHT }}
+                  >
+                    {/* Thin horizontal track line */}
+                    <div
+                      className="absolute left-0 right-0 h-px bg-neutral-200/80 dark:bg-neutral-600/50"
+                      style={{ top: LANE_HEIGHT / 2 }}
+                    />
+
+                    {/* Events */}
+                    {laneEvents.map((event, i) => {
+                      if (lane.isRange) {
+                        const left = toPercent(event.startMinute);
+                        const width = Math.max(0.6, toPercent(event.endMinute) - left);
+                        return (
+                          <div
+                            key={`bar-${lane.type}-${i}`}
+                            className="absolute z-10 rounded-full"
+                            style={{
+                              left: `${left}%`,
+                              width: `${width}%`,
+                              height: 8,
+                              top: (LANE_HEIGHT - 8) / 2,
+                              backgroundColor: lane.bar,
+                              opacity: 0.8,
+                            }}
+                            title={`${event.label} · ${formatMinuteOfDay(event.startMinute)}–${formatMinuteOfDay(event.endMinute)}`}
+                          />
+                        );
+                      }
+                      const left = toPercent(event.startMinute);
+                      return (
+                        <div
+                          key={`dot-${lane.type}-${i}`}
+                          className="absolute z-10 -translate-x-1/2 rounded-full"
+                          style={{
+                            left: `${left}%`,
+                            width: 8,
+                            height: 8,
+                            top: (LANE_HEIGHT - 8) / 2,
+                            backgroundColor: lane.dot,
+                          }}
+                          title={`${event.label} · ${formatMinuteOfDay(event.startMinute)}`}
+                        />
+                      );
+                    })}
+                  </div>
+                );
+              })}
+
+              {/* Time axis labels */}
+              <div className="relative mt-2" style={{ height: 16 }}>
+                {TIME_TICKS.map((minute) => (
+                  <span
+                    key={`label-${minute}`}
+                    className="absolute -translate-x-1/2 text-[11px] font-medium text-neutral-500 dark:text-neutral-400 select-none"
+                    style={{ left: `${toPercent(minute)}%` }}
+                  >
+                    {formatMinuteShort(minute % 1440)}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

@@ -168,7 +168,7 @@ export function LandingFocusCanvas({
   }, []);
 
   return (
-    <section className="w-full overflow-hidden rounded-[2.2rem] border border-white/60 bg-white/50 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] sm:p-5">
+    <section onClick={handleBackgroundClick} className="w-full overflow-hidden rounded-[2.2rem] border border-white/60 bg-white/50 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] sm:p-5">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col items-center gap-2 text-center">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
@@ -185,13 +185,12 @@ export function LandingFocusCanvas({
         </div>
 
         <div className="relative rounded-[2.2rem] border border-[#ECD9C8] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,247,238,0.96)_58%,rgba(255,244,236,0.92)_100%)] px-4 py-6 dark:border-neutral-700 dark:bg-none dark:bg-neutral-800 sm:px-6">
-          <div className="mx-auto flex max-w-[64rem] items-center justify-center">
-            <div className="min-w-0 flex-1">
+          <div className="mx-auto max-w-[64rem]">
               <div className="mx-auto flex max-w-[30rem] flex-col items-center">
-                <div className="relative flex aspect-square w-full max-w-[18rem] items-center justify-center overflow-hidden sm:max-w-[24rem]">
+                <div className="mx-auto w-full max-w-[18rem] sm:max-w-[24rem]">
                   <svg
                     viewBox="0 0 320 320"
-                    className="absolute inset-0 h-full w-full"
+                    className="block w-full"
                     aria-hidden
                     onClick={handleBackgroundClick}
                   >
@@ -418,7 +417,6 @@ export function LandingFocusCanvas({
                   </div>
                 </button>
               </div>
-            </div>
           </div>
         </div>
       </div>
