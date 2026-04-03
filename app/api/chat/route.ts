@@ -126,6 +126,23 @@ Format them exactly like this, on a new line at the very end of your response:
 
 `;
 
+const SYSTEM_PROMPT_QUESTIONS = `## Clarifying Questions (optional)
+When the user's request is vague, has multiple valid directions, or would benefit from understanding their goals, constraints, or context first, you MAY choose to ask structured clarifying questions INSTEAD of answering directly.
+
+Format (1–4 questions, 2–5 options each):
+
+---QUESTIONS---
+[{"prompt":"Your question here?","options":["Option A","Option B","Option C"]},{"prompt":"Second question?","options":["X","Y","Z"]}]
+---END-QUESTIONS---
+
+Guidelines:
+- Use this ONLY when clarification will materially improve your response. If you already have enough context, answer directly with ---OPTIONS--- as usual.
+- Keep questions concise and each option concrete and distinct.
+- You may include "Other..." as the last option to invite free-text input from the user.
+- When you use ---QUESTIONS---, do NOT also include ---OPTIONS--- in the same response.
+- After the user answers your questions, give a full response with ---OPTIONS--- as normal.
+`;
+
 const SYSTEM_PROMPT_INDEX_FOOTER = `***
 
 MENTAL MODELS INDEX:
@@ -205,7 +222,7 @@ Your goal is to help the user navigate their own life, not to lecture them on yo
 - **Focus:** Stay in the room with the user. Do not reference other historical figures or your "contemporaries" unless the user brings them up.
 - **Language:** Match the **language of the user's message** unless they explicitly ask you to switch. (Additional language instructions may appear below—follow them if present.)
 - **Brevity:** Keep your responses concise (under 3 paragraphs) to maintain the feel of a real-time conversation. Long monologues kill the 1:1 feel.
-- **No Meta-Talk:** Never mention that you are an AI, a model, or a persona. Do not use "As an AI..." or append any machine-readable footers, options, checkpoints, or bracketed memory/model tags.
+- **No Meta-Talk:** Never mention that you are an AI, a model, or a persona. Do not use "As an AI..." or append bracketed memory/model tags. The only structured block you may use is the ---QUESTIONS--- format described below.
 
 ## Formatting
 - Use **Markdown** for readability: use **bold sparingly** for key terms or core concepts; use *italics* for light emphasis.
@@ -921,6 +938,7 @@ ${userNamePromptSuffix}${langInstr}`;
         "[Options Style Instruction]",
         optionsStyleInstructionSo
       ) +
+      SYSTEM_PROMPT_QUESTIONS +
       languageInstructionSo +
       responseVerbosityInstruction +
       conversationStyleInstructionSo +
@@ -962,6 +980,7 @@ ${userNamePromptSuffix}${langInstr}`;
     }
     fullSystemPrompt =
       mentorOneOnOnePromptBase +
+      SYSTEM_PROMPT_QUESTIONS +
       languageInstructionMentor +
       responseVerbosityInstruction +
       conversationStyleInstructionMentor +
@@ -1243,6 +1262,7 @@ ${userNamePromptSuffix}${langInstr}`;
     (secondOrderWithCitations ? SECOND_ORDER_REASONING_ADDENDUM : "") +
     SYSTEM_PROMPT_TAGGING +
     SYSTEM_PROMPT_OPTIONS +
+    (secondOrderWithCitations ? SYSTEM_PROMPT_QUESTIONS : "") +
     SYSTEM_PROMPT_INDEX_FOOTER;
 
   fullSystemPrompt =

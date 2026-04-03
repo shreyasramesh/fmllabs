@@ -10,6 +10,7 @@ import {
   parseRelevantContextFromStreamStart,
   parseJournalCheckpointBlock,
   parseMentorResponsesBlock,
+  parseQuestionsBlock,
   extractRelevanceContext,
   extractMentalModelIds,
   type RelevantContextItem,
@@ -285,6 +286,7 @@ interface Message {
   /** Plain vs citations (intro message before session is persisted); optional on history */
   secondOrderPlain?: boolean;
   mentorResponses?: Array<{ figureId: string; figureName: string; content: string }>;
+  questions?: Array<{ prompt: string; options: string[] }>;
 }
 
 type ResponseVerbosity = "compact" | "detailed";
@@ -301,11 +303,14 @@ function processMessagesWithContext(msgs: Message[]): Message[] {
       content = afterMentor;
       const { contentWithoutBlock: afterJournal } =
         parseJournalCheckpointBlock(content);
+      const { contentWithoutBlock: afterQuestions, questions } =
+        parseQuestionsBlock(afterJournal);
       return {
         ...m,
-        content: afterJournal,
+        content: afterQuestions,
         selectedContexts: relevantContext ?? undefined,
         mentorResponses: mentorResponses ?? undefined,
+        questions: questions ?? undefined,
       };
     }
     return m;
@@ -704,6 +709,9 @@ function MessageBubble({
     (secondOrderPlainForUi !== false
       ? getLandingTranslations(language).secondOrderChipLabelPlain
       : getLandingTranslations(language).secondOrderChipLabelWithCitations);
+  const [qaAnswers, setQaAnswers] = useState<Record<number, string>>({});
+  const [qaOtherText, setQaOtherText] = useState<Record<number, string>>({});
+  const [qaSubmitted, setQaSubmitted] = useState(false);
   const { text, options } =
     message.role === "assistant"
       ? parseAssistantMessage(message.content)
@@ -742,9 +750,12 @@ function MessageBubble({
     isLoading &&
     text.trim().length === 0 &&
     !(message.mentorResponses && message.mentorResponses.length > 0);
+  const hasQuestions = !!(message.questions && message.questions.length > 0);
+  const showQuestions = isAssistantResponseComplete && hasQuestions && !qaSubmitted;
   const showOptions =
     isAssistantResponseComplete &&
-    displayOptions.length > 0;
+    displayOptions.length > 0 &&
+    !hasQuestions;
 
   const ctx = message.role === "assistant" ? message.selectedContexts : undefined;
   const ctxCount = ctx && ctx.mentalModels.length + ctx.longTermMemories.length + (ctx.customConcepts?.length ?? 0) + (ctx.conceptGroups?.length ?? 0) + (ctx.perspectiveCards?.length ?? 0);
@@ -1294,6 +1305,95 @@ function MessageBubble({
                   : "Feedback submitted: needs improvement."}
               </p>
             )}
+          </div>
+        </div>
+      )}
+      {showQuestions && message.questions && (
+        <div className="mt-3 w-full max-w-full sm:max-w-[85%] rounded-2xl border border-neutral-200/80 dark:border-neutral-700/70 bg-white/60 dark:bg-neutral-800/50 backdrop-blur-xl p-4 shadow-sm opacity-0 animate-fade-in-up" style={{ animationFillMode: "forwards" }}>
+          <div className="flex flex-col gap-4">
+            {message.questions.map((q, qi) => {
+              const LABELS = "ABCDEFGHIJ";
+              const selected = qaAnswers[qi];
+              const isOtherSelected = selected === "__other__";
+              return (
+                <div key={qi} className="flex flex-col gap-2">
+                  <p className="text-sm font-semibold text-foreground">
+                    <span className="mr-1.5 text-accent">{qi + 1}.</span>
+                    {q.prompt}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {q.options.map((opt, oi) => {
+                      const isOther = oi === q.options.length - 1 && /^other/i.test(opt);
+                      const optKey = isOther ? "__other__" : opt;
+                      const isSelected = selected === optKey;
+                      return (
+                        <button
+                          key={oi}
+                          type="button"
+                          onClick={() => {
+                            setQaAnswers((prev) => ({ ...prev, [qi]: optKey }));
+                            if (!isOther) setQaOtherText((prev) => { const n = { ...prev }; delete n[qi]; return n; });
+                          }}
+                          className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-sm transition-all duration-150 border ${
+                            isSelected
+                              ? "border-accent bg-accent/10 text-accent font-medium shadow-sm"
+                              : "border-neutral-300 dark:border-neutral-600 bg-background text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500"
+                          }`}
+                        >
+                          <span className={`inline-flex h-5 w-5 items-center justify-center rounded-md text-[11px] font-bold ${
+                            isSelected
+                              ? "bg-accent text-white"
+                              : "bg-neutral-200 dark:bg-neutral-700 text-neutral-500 dark:text-neutral-400"
+                          }`}>
+                            {LABELS[oi] ?? oi + 1}
+                          </span>
+                          {opt}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {isOtherSelected && (
+                    <input
+                      type="text"
+                      placeholder="Type your answer..."
+                      value={qaOtherText[qi] ?? ""}
+                      onChange={(e) => setQaOtherText((prev) => ({ ...prev, [qi]: e.target.value }))}
+                      className="mt-1 w-full rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background px-3 py-2 text-sm text-foreground placeholder:text-neutral-400 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                      autoFocus
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          <div className="mt-4 flex justify-end">
+            <button
+              type="button"
+              disabled={(() => {
+                if (!message.questions) return true;
+                for (let i = 0; i < message.questions.length; i++) {
+                  if (qaAnswers[i] === undefined) return true;
+                  if (qaAnswers[i] === "__other__" && !qaOtherText[i]?.trim()) return true;
+                }
+                return false;
+              })()}
+              onClick={() => {
+                if (!message.questions) return;
+                const lines = message.questions.map((q, qi) => {
+                  const answer = qaAnswers[qi] === "__other__"
+                    ? (qaOtherText[qi]?.trim() || "Other")
+                    : qaAnswers[qi];
+                  return `${qi + 1}. ${q.prompt}\n   → ${answer}`;
+                });
+                setQaSubmitted(true);
+                playSelectionChime();
+                onOptionSelect(lines.join("\n\n"));
+              }}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-accent px-4 py-2 text-sm font-medium text-white transition-all hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]"
+            >
+              Continue
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4"><path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" /></svg>
+            </button>
           </div>
         </div>
       )}
@@ -7486,7 +7586,9 @@ export default function ChatPage() {
         parseMentorResponsesBlock(afterCtx);
       const { contentWithoutBlock: contentWithoutJournal } =
         parseJournalCheckpointBlock(afterMentor);
-      const contentWithoutBlock = contentWithoutJournal;
+      const { contentWithoutBlock: contentWithoutQuestions, questions: parsedQuestions } =
+        parseQuestionsBlock(contentWithoutJournal);
+      const contentWithoutBlock = contentWithoutQuestions;
       const resolvedContext =
         relevantContext ??
         (() => {
@@ -7516,6 +7618,7 @@ export default function ChatPage() {
               perspectiveCards: resolvedContext.perspectiveCards ?? [],
             },
             mentorResponses: mentorResponses ?? undefined,
+            questions: parsedQuestions ?? undefined,
           };
         }
         return next;

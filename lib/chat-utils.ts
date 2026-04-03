@@ -305,6 +305,99 @@ export function parseJournalCheckpointBlock(content: string): {
   };
 }
 
+const QUESTIONS_MARKER = "---QUESTIONS---";
+const QUESTIONS_END_MARKER = "---END-QUESTIONS---";
+
+export interface QuestionsBlockItem {
+  prompt: string;
+  options: string[];
+}
+
+function extractFirstJsonArray(s: string): string | null {
+  const start = s.indexOf("[");
+  if (start === -1) return null;
+  let depth = 0;
+  for (let i = start; i < s.length; i++) {
+    const c = s[i];
+    if (c === "[") depth++;
+    else if (c === "]") {
+      depth--;
+      if (depth === 0) return s.slice(start, i + 1);
+    }
+  }
+  return null;
+}
+
+function tryParseQuestionsJson(jsonStr: string): QuestionsBlockItem[] | null {
+  const cleaned = jsonStr
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```\s*$/i, "")
+    .trim();
+  try {
+    const parsed = JSON.parse(cleaned) as unknown;
+    if (!Array.isArray(parsed) || parsed.length === 0) return null;
+    const items: QuestionsBlockItem[] = [];
+    for (const raw of parsed.slice(0, 4)) {
+      if (!raw || typeof raw !== "object") continue;
+      const obj = raw as Record<string, unknown>;
+      const prompt = typeof obj.prompt === "string" ? obj.prompt.trim() : "";
+      if (!prompt) continue;
+      const options = Array.isArray(obj.options)
+        ? obj.options.filter((o): o is string => typeof o === "string" && o.trim().length > 0).slice(0, 6)
+        : [];
+      if (options.length < 2) continue;
+      items.push({ prompt, options });
+    }
+    return items.length > 0 ? items : null;
+  } catch {
+    return null;
+  }
+}
+
+export function parseQuestionsBlock(content: string): {
+  contentWithoutBlock: string;
+  questions: QuestionsBlockItem[] | null;
+} {
+  const idx = content.indexOf(QUESTIONS_MARKER);
+  if (idx === -1) {
+    return { contentWithoutBlock: content, questions: null };
+  }
+  const afterMarker = content.slice(idx + QUESTIONS_MARKER.length).trimStart();
+  const endIdx = afterMarker.indexOf(QUESTIONS_END_MARKER);
+
+  let jsonStr: string;
+  let contentAfterBlock: string;
+
+  if (endIdx !== -1) {
+    jsonStr = afterMarker.slice(0, endIdx).trim();
+    contentAfterBlock = afterMarker
+      .slice(endIdx + QUESTIONS_END_MARKER.length)
+      .trimStart();
+  } else {
+    const extracted = extractFirstJsonArray(afterMarker);
+    if (!extracted) {
+      return { contentWithoutBlock: content, questions: null };
+    }
+    jsonStr = extracted;
+    const jsonStartInAfter = afterMarker.indexOf(extracted);
+    const consumedEnd =
+      jsonStartInAfter >= 0 ? jsonStartInAfter + extracted.length : extracted.length;
+    contentAfterBlock = afterMarker.slice(consumedEnd).trimStart();
+  }
+
+  let textBefore = content.slice(0, idx).trimEnd();
+  if (contentAfterBlock) {
+    textBefore = (textBefore + "\n\n" + contentAfterBlock).trim();
+  }
+  const optionsMatch = textBefore.match(OPTIONS_MARKER_REGEX);
+  const contentWithoutBlock = optionsMatch && optionsMatch.index !== undefined
+    ? textBefore.slice(0, optionsMatch.index).trimEnd()
+    : textBefore;
+
+  const questions = tryParseQuestionsJson(jsonStr);
+  return { contentWithoutBlock, questions };
+}
+
 const OPTIONS_MARKER_REGEX = /-{2,3}\s*OPTIONS\s*-{2,3}/i;
 
 /**
